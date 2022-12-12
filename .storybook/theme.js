@@ -2,7 +2,7 @@ import { create } from '@storybook/theming';
 
 export default create({
   base: 'light',
-  brandTitle: 'UNDP Design system',
-  brandUrl: 'https://www.undp.org/',
-  brandImage: './images/undp-logo-blue.svg'
+  brandTitle: 'UNDRR Mangrove',
+  brandUrl: 'https://khawkins98.github.io/undrr-mangrove',
+  brandImage: './images/undrr-logo-blue.svg'
 });

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import undpLogoSvg from '../../../../assets/images/undp-logo-blue.svg';
+import undpLogoSvg from '../../../../assets/images/undrr-logo-blue.svg';
 import { getMegaMenu } from '../../../../assets/js/navigation-data';
 import { navigationInitialize } from '../../../../assets/js/navigation';
 // import { desktopView } from '../../../../assets/js/undp';

@@ -1,6 +1,6 @@
 import React from 'react';
-import logowhite from '../../assets/images/undp-logo-white.svg';
-import logo from '../../assets/images/undp-logo-blue.svg';
+import logowhite from '../../assets/images/undrr-logo-white.svg';
+import logo from '../../assets/images/undrr-logo-blue.svg';
 import user from '../../assets/images/user.svg';
 import { Breadcrumbcomponent } from '../../Components/Navigationcomponents/Breadcrumbs/Breadcrumbs';
 import GlobalHeader from '../../Components/Navigationcomponents/Mainnavigation/GlobalHeader/GlobalHeader';
