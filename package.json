@@ -1,7 +1,7 @@
 {
   "name": "@khawkins/undrr-mangrove",
-  "version": "1.0.11",
-  "description": "Design System for UNDP",
+  "version": "1.0.0-alpha.1",
+  "description": "Design System for UNDRR",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
