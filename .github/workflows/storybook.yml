@@ -4,7 +4,7 @@ on:
     branches:
       - main
   push:
-    paths: ["stories/**", "src/components/**", ".github/workflows/storybook.yml", "package.json"] # Trigger the action only when files change in the folders defined here
+    paths: ["stories/**", "src/components/**", ".github/workflows/storybook.yml", "package.json", "webpack.entries.js"] # Trigger the action only when files change in the folders defined here
     branches: ["main"]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
