@@ -4,6 +4,7 @@ npm-debug.log
 yarn-error.log
 /vendor
 /storybook-static
+/docs
 /docs-build
 /stories/assets/css/style.css
 /stories/assets/css/style.css.map
