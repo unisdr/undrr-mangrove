@@ -28,7 +28,7 @@ div.stats-card {
     @include transition(300ms all);
 
     color: $color-gray-200;
-    font-family: $Font-Family-SohneBreit;
+    font-family: $Font-Family-Roboto;
     font-size: $spacing-11;
     letter-spacing: 0.05rem;
     line-height: 1.1;
@@ -184,7 +184,7 @@ div.stats-card {
 :lang(my) {
   div.stats-card {
     h2 {
-      font-family: $Font-Family-NotoSans;
+      font-family: $Font-Family-Roboto;
     }
   }
 }
@@ -192,7 +192,7 @@ div.stats-card {
 #{$cyrillic} {
   div.stats-card {
     h2 {
-      font-family: $Font-Family-ProximaNova;
+      font-family: $Font-Family-Roboto;
     }
   }
 }

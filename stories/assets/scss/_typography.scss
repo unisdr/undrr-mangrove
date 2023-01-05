@@ -9,7 +9,7 @@ html {
 
 body {
   color: $color-black;
-  font-family: $Font-Family-ProximaNova;
+  font-family: $Font-Family-Roboto;
   font-size: 1rem;
   line-height: 1.4;
 
@@ -19,7 +19,7 @@ body {
 }
 
 button {
-  font-family: $Font-Family-ProximaNova;
+  font-family: $Font-Family-Roboto;
 }
 
 h1,
@@ -39,7 +39,7 @@ caption {
 }
 
 h1 {
-  font-family: $Font-Family-SohneBreit;
+  font-family: $Font-Family-Roboto;
   font-size: 2.938rem;
   letter-spacing: 0.06rem;
   line-height: 1.08;
@@ -196,7 +196,7 @@ a {
 // burmese lang
 :lang(my) {
   body {
-    font-family: $Font-Family-NotoSans;
+    font-family: $Font-Family-Roboto;
     line-height: 1.7;
   }
 
@@ -210,7 +210,7 @@ a {
   }
 
   h1 {
-    font-family: $Font-Family-NotoSans;
+    font-family: $Font-Family-Roboto;
     font-size: 2.625rem;
 
     @include devicebreak(medium) {
@@ -279,7 +279,7 @@ a {
     h5,
     h6,
     p {
-      font-family: $Font-Family-NotoSans;
+      font-family: $Font-Family-Roboto;
     }
 
     .sbdocs-h1 {
@@ -312,7 +312,7 @@ a {
 /* Cyrillic scripts */
 #{$cyrillic} {
   h1 {
-    font-family: $Font-Family-ProximaNova;
+    font-family: $Font-Family-Roboto;
   }
 }
 

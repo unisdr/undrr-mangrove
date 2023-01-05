@@ -51,7 +51,7 @@ textarea {
   border-radius: 0;
   box-sizing: border-box;
   display: block;
-  font-family: $Font-Family-ProximaNova;
+  font-family: $Font-Family-Roboto;
   font-size: $font-size-16;
   height: 46px;
   margin-top: $spacing-03;
@@ -195,6 +195,6 @@ input[type='date']::-webkit-calendar-picker-indicator {
   input[type=tel],
   input[type=date],
   textarea {
-    font-family: $Font-Family-NotoSans;
+    font-family: $Font-Family-Roboto;
   }
 }

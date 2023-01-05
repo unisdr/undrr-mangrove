@@ -90,7 +90,7 @@
     }
 
     h2 {
-      font-family: $Font-Family-SohneBreit;
+      font-family: $Font-Family-Roboto;
       font-weight: 700;
       margin-bottom: 0;
       text-transform: uppercase;
@@ -183,7 +183,7 @@
 :lang(my) {
   .pagehero-content {
     h2 {
-      font-family: $Font-Family-NotoSans;
+      font-family: $Font-Family-Roboto;
     }
   }
 }
@@ -191,7 +191,7 @@
 #{$cyrillic} {
   .pagehero-content {
     h2 {
-      font-family: $Font-Family-ProximaNova;
+      font-family: $Font-Family-Roboto;
     }
   }
 }
