@@ -9,15 +9,13 @@ export const variant_options = {
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 
-export function SidebarFirstLevel({
+export const SidebarFirstLevel = ({
   mode, active, text, variant, ...props
-}) {
-  return (
-    <div className={cls('sidebar_item', variant_options[`${variant}`])} {...props}>
-      <Heading type="6" label={text} />
-    </div>
-  );
-}
+}) => (
+  <div className={cls('sidebar_item', variant_options[`${variant}`])} {...props}>
+    <Heading type="6" label={text} />
+  </div>
+);
 
 SidebarFirstLevel.defaultProps = {
   variant: 'default',

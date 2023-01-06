@@ -1,10 +1,8 @@
 import React from 'react';
 import '../../../assets/scss/_typography.scss';
 
-export function P({ label, className, tabIndex }) {
-  return (
-    <p className={className} tabIndex={tabIndex}>
-      { label }
-    </p>
-  );
-}
+export const P = ({ label, className, tabIndex }) => (
+  <p className={className} tabIndex={tabIndex}>
+    { label }
+  </p>
+);

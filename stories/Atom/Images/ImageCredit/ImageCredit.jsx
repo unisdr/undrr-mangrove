@@ -1,10 +1,8 @@
 import React from 'react';
 import './image-credit.scss';
 
-export function Imagecredit({ label }) {
-  return (
-    <div className="credits">
-      {label}
-    </div>
-  );
-}
+export const Imagecredit = ({ label }) => (
+  <div className="credits">
+    {label}
+  </div>
+);

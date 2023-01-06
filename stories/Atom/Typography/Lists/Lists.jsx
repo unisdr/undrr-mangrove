@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function List({ data, type }) {
+export const List = ({ data, type }) => {
   const ListTag = `${type}`;
   return (
     <ListTag>
@@ -9,4 +9,4 @@ export function List({ data, type }) {
       ))}
     </ListTag>
   );
-}
+};
