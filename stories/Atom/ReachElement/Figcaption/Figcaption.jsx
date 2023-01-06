@@ -2,7 +2,7 @@ import React from 'react';
 import Img from '../../../assets/images/figcaption.jpg';
 import './figcaption.scss';
 
-export const Figcaption = ({ details }) => {
+export function Figcaption({ details }) {
   const image = {
     src: Img,
     alt: 'icon',
@@ -13,4 +13,4 @@ export const Figcaption = ({ details }) => {
       <figcaption>{details}</figcaption>
     </figure>
   );
-};
+}

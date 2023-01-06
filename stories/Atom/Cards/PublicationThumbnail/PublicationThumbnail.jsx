@@ -2,7 +2,7 @@ import React from 'react';
 import './publication-thumbnail.scss';
 import user from '../../../assets/images/publication-thumbnail.png';
 
-export const Publicationthumb = ({ Hovercolors }) => {
+export function Publicationthumb({ Hovercolors }) {
   const image = {
     src: user,
     alt: 'Image',
@@ -13,4 +13,4 @@ export const Publicationthumb = ({ Hovercolors }) => {
       <img src={image.src} alt={image.alt} />
     </div>
   );
-};
+}

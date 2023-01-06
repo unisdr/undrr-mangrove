@@ -51,21 +51,21 @@ export function Footer({
                   {args.color === 'default' ? (
                     <>
                       <span className="icon-globe">
-                      <Icons src={IconsGlobeWhite} alt="icon-global" />
-                    </span>
+                        <Icons src={IconsGlobeWhite} alt="icon-global" />
+                      </span>
                       <span className="icon-search">
-                      <Icons src={IconsSearchWhite} alt="icon-search" />
-                    </span>
+                        <Icons src={IconsSearchWhite} alt="icon-search" />
+                      </span>
                     </>
                   ) : (
                     <>
-                    <span className="icon-globe">
-                       <Icons src={IconsGlobe} alt="icon-global" />
-                     </span>
-                    <span className="icon-search">
-                       <Icons src={IconsSearch} alt="icon-search" />
-                     </span>
-                  </>
+                      <span className="icon-globe">
+                        <Icons src={IconsGlobe} alt="icon-global" />
+                      </span>
+                      <span className="icon-search">
+                        <Icons src={IconsSearch} alt="icon-search" />
+                      </span>
+                    </>
                   )}
 
                 </div>

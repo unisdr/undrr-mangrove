@@ -1,13 +1,13 @@
-@import '../../../../assets/scss/mixins';
-@import '../../../../assets/scss/variables';
-@import '../../../../assets/scss/breakpoints';
+@import url('../../../../assets/scss/mixins');
+@import url('../../../../assets/scss/variables');
+@import url('../../../../assets/scss/breakpoints');
 
 .chip {
   align-items: center;
   background: $color-gray-200;
   border: none;
   border-radius: 20px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
   display: inline-flex;
   min-height: 1.875rem;
   padding: $spacing-02 $spacing-05;

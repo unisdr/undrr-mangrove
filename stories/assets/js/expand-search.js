@@ -5,7 +5,7 @@ export const expandSearch = () => {
   const $expand = jQuery('.expand-search');
   const $expandInput = jQuery('.expand-search input');
 
-  $expandInput.on('input', function() {
+  $expandInput.on('input', function () {
     if (jQuery(this).val().length >= 1) {
       jQuery(this).parent($expand).find('.close-button').addClass('show');
     } else {
@@ -20,8 +20,7 @@ export const expandSearch = () => {
     jQuery(this).parent($expand).toggleClass('open');
     if (jQuery(this).parent($expand).hasClass('open')) {
       jQuery(this).siblings('input').focus();
-    }
-    else {
+    } else {
       jQuery(this).siblings($expandInput).focusout();
       jQuery(this).siblings('.close-button').removeClass('show');
     }

@@ -3,7 +3,7 @@ import './cta-link.scss';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 
-export const Ctalink = ({ label, Type, ...args }) => {
+export function Ctalink({ label, Type, ...args }) {
   let type = 'arrow';
   if (Type == 'Space') {
     type = 'space';
@@ -13,16 +13,20 @@ export const Ctalink = ({ label, Type, ...args }) => {
   return (
     <>
       {`${button_type}` === 'span' || `${button_type}` === 'inline'
-      ? (
-        <span className={cls('cta__link', `cta--${type}`)}>
-          {label} <i/>
-        </span>
-      )
-      : (
-        <a className={cls('cta__link', `cta--${type}`)} href="#">
-          {label} <i/>
-        </a>
-      )}
+        ? (
+          <span className={cls('cta__link', `cta--${type}`)}>
+            {label}
+            {' '}
+            <i />
+          </span>
+        )
+        : (
+          <a className={cls('cta__link', `cta--${type}`)} href="#">
+            {label}
+            {' '}
+            <i />
+          </a>
+        )}
     </>
   );
-};
+}

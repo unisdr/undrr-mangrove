@@ -1,5 +1,5 @@
-@import '../../assets/scss/variables';
-@import '../../assets/scss/mixins';
+@import url('../../assets/scss/variables');
+@import url('../../assets/scss/mixins');
 
 /* icon start */
 
@@ -139,9 +139,11 @@
 .icons-container {
   display: flex;
   flex-wrap: wrap;
+
   > div > div {
     margin: 0 auto;
   }
+
   p {
     font-size: 14px;
     margin-top: 10px;

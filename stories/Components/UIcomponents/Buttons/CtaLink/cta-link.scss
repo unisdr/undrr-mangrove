@@ -1,6 +1,6 @@
-@import '../../../../assets/scss/mixins';
-@import '../../../../assets/scss/variables';
-@import '../../../../assets/scss/breakpoints';
+@import url('../../../../assets/scss/mixins');
+@import url('../../../../assets/scss/variables');
+@import url('../../../../assets/scss/breakpoints');
 
 .cta__link {
   @extend %button;

@@ -1,7 +1,6 @@
-@import './variables';
-@import './mixins';
-@import './breakpoints';
-
+@import url('./variables');
+@import url('./mixins');
+@import url('./breakpoints');
 
 /* base start */
 .color-white {
@@ -35,7 +34,8 @@
 .overlay-grey {
   &::before {
     @extend %absolute__content;
-    background: rgba(0, 0, 0, 0.2);
+
+    background: rgb(0 0 0 / 20%);
   }
 }
 
@@ -64,7 +64,6 @@
     background: $color-black;
   }
 }
-
 
 /* animation start */
 *[data-viewport='true'] {
@@ -159,7 +158,7 @@
 
 // global colors
 // color map gradient
-$colors: ('yellow': rgba(255, 235, 0, 0.8), 'red': rgba(230 45 45 / 78%), 'green': rgba(92 222 83 / 82%), 'blue': rgba(94 232 246 / 82%));
+$colors: ('yellow': rgb(255 235 0 / 80%), 'red': rgba(230 45 45 / 78%), 'green': rgba(92 222 83 / 82%), 'blue': rgba(94 232 246 / 82%));
 
 @each $name, $color in $colors {
   .#{$name} {

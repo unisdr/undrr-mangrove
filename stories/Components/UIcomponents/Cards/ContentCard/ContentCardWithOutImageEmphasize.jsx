@@ -13,9 +13,9 @@ export const hovercolors_options = {
   green: 'green',
 };
 
-export const ContentCardWithOutImageEmphasize = ({
+export function ContentCardWithOutImageEmphasize({
   data, Hovercolors,
-}) => {
+}) {
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <div className="grid-x grid-margin-x">
@@ -26,7 +26,7 @@ export const ContentCardWithOutImageEmphasize = ({
               <Heading type="6" label={item.contenttile} />
               <div className="content-caption">
                 <Heading type="4" label={item.contentnametwo} />
-                <Ctalink label={item.button} Type="Space" button_option="span"/>
+                <Ctalink label={item.button} Type="Space" button_option="span" />
               </div>
             </a>
           </div>
@@ -34,7 +34,7 @@ export const ContentCardWithOutImageEmphasize = ({
       ))}
     </div>
   );
-};
+}
 
 ContentCardWithOutImageEmphasize.defaultProps = {
   Hovercolors: 'default',

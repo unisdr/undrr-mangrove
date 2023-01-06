@@ -1,7 +1,7 @@
 /* typograpgy start */
-@import './variables';
-@import './breakpoints';
-@import './mixins';
+@import url('./variables');
+@import url('./breakpoints');
+@import url('./mixins');
 
 html {
   -webkit-tap-highlight-color: transparent;
@@ -179,19 +179,20 @@ hr {
     background-position: 100% 100%, -30px 100%;
     background-size: 100% 2px, 0 2px;
   }
-  to {
+
+  100% {
     background-position: calc(100% + 30px) 100%, 0 100%;
     background-size: 0 2px, 100% 2px;
   }
 }
 
 a {
-  color: $color-black;
-  text-decoration: none;
   @extend %paragragh-font-20 !optional;
   @extend %animate-link !optional;
-}
 
+  color: $color-black;
+  text-decoration: none;
+}
 
 // burmese lang
 :lang(my) {
@@ -315,6 +316,5 @@ a {
     font-family: $Font-Family-Roboto;
   }
 }
-
 
 /* typograpgy end */

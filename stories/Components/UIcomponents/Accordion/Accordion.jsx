@@ -3,9 +3,9 @@ import { accordion } from '../../../assets/js/accordion';
 import './accordion.scss';
 import { P } from '../../../Atom/BaseTypography/Paragraph/Paragraph';
 
-export const Accordion = ({
-  headerText, descriptionText
-}) => {
+export function Accordion({
+  headerText, descriptionText,
+}) {
   useEffect(() => {
     accordion();
   }, []);
@@ -35,4 +35,4 @@ export const Accordion = ({
       </li>
     </ul>
   );
-};
+}

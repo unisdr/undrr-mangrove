@@ -24,7 +24,7 @@ export function modal() {
   });
 
   // handle escape key
-  jQuery(document).keydown(function(e) {
+  jQuery(document).keydown((e) => {
     if (e.keyCode == 27 && $modalClose) {
       $modalClose.trigger('click');
     }

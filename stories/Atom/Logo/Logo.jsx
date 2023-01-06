@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const Logo = ({ src, alt }) => (
-  <img src={src} alt={alt} />
-);
+export function Logo({ src, alt }) {
+  return <img src={src} alt={alt} />;
+}

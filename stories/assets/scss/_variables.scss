@@ -53,7 +53,6 @@ $font-size-35: 2.188rem;
 // FONTS FAMILY
 $Font-Family-Roboto: 'Roboto', sans-serif;
 
-
 // SPACING variables
 $spacing-01: 0.125rem;
 $spacing-02: 0.25rem;
@@ -96,10 +95,10 @@ $header-height-xlarge: 115px;
 $header-height-medium: 75px;
 
 // GRADIENT COLOR LIST
-$yellow-gradient: $color-yellow 30%, rgba(255, 235, 0, 0) 110%;
-$red-gradient: $color-red 30%, rgb(240, 49, 49, 0) 110%;
-$green-gradient: $color-green 30%, rgba(0, 0, 0, 0) 110%;
-$blue-gradient: $color-azure 30%, rgb(101, 204, 244, 0) 110%;
+$yellow-gradient: $color-yellow 30%, rgb(255 235 0 / 0%) 110%;
+$red-gradient: $color-red 30%, rgb(240 49 49 / 0%) 110%;
+$green-gradient: $color-green 30%, rgb(0 0 0 / 0%) 110%;
+$blue-gradient: $color-azure 30%, rgb(101 204 244 / 0%) 110%;
 
 //SDG color
 $sdg-red: #e5243b;
@@ -142,6 +141,6 @@ $sdg-hover-navy-blue: #a2c2d8;
 $author-image-radius: 50%;
 
 // language selectors
-$cyrillic: ":lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)";
+$cyrillic: ':lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)';
 
 /* variables end */

@@ -1,5 +1,4 @@
-
-  class MultiSelect {
+class MultiSelect {
   constructor(element) {
     this.classOpen = 'open';
 
@@ -76,22 +75,23 @@
 }
 
 export function multiSelect() {
-  (function( $ ) {
-    jQuery(".multi-select").each(function( index ) {
+  (function ($) {
+    jQuery('.multi-select').each(function (index) {
       const numberOfCheck = jQuery(this).find('input:checkbox:checked').length;
-      if(numberOfCheck > 0){
-        jQuery(this).find('button').first().find('span').remove();
-        jQuery(this).find('button').first().append('<span> (' + numberOfCheck + ') </span>');
+      if (numberOfCheck > 0) {
+        jQuery(this).find('button').first().find('span')
+          .remove();
+        jQuery(this).find('button').first().append(`<span> (${numberOfCheck}) </span>`);
       }
     });
     const searchOption = jQuery('.multi-select li input:checkbox');
     jQuery(searchOption).on('click', function () {
       const numberOfChecked = jQuery(this).parents('.multi-select').find('input:checkbox:checked').length;
       const filterButton = jQuery(this).parents('ul').not('.sub-menu').siblings();
-      if(numberOfChecked > 0){
+      if (numberOfChecked > 0) {
         filterButton.find('span').remove();
-        filterButton.append('<span> (' + numberOfChecked + ') </span>');
-      }else{
+        filterButton.append(`<span> (${numberOfChecked}) </span>`);
+      } else {
         filterButton.find('span').remove();
       }
     });
@@ -100,5 +100,5 @@ export function multiSelect() {
       const multiSelect = new MultiSelect(select);
       multiSelect.init();
     });
-  })(jQuery);
+  }(jQuery));
 }

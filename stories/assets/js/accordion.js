@@ -1,8 +1,8 @@
 /* accordion JS start custom */
 export function accordion(accordionSelector, accordionSiblingSelector, accordionActiveSelector) {
-  const accordionElement = accordionSelector ? accordionSelector : '.accordion';
-  const accordionPanel = accordionSiblingSelector ? accordionSiblingSelector : '.accordion__panel';
-  const accordionActiveElement = accordionActiveSelector ? accordionActiveSelector : 'accordion--active';
+  const accordionElement = accordionSelector || '.accordion';
+  const accordionPanel = accordionSiblingSelector || '.accordion__panel';
+  const accordionActiveElement = accordionActiveSelector || 'accordion--active';
 
   // Accordion Trigger Function as callback for Click and Keypress Events.
   const accordionTrigger = (currentElem, accordionListItem, accordinSiblingElement, accordionActiveElem) => {
@@ -39,6 +39,6 @@ export function accordion(accordionSelector, accordionSiblingSelector, accordion
         if (keycode == 13) accordionTrigger(jQuery(this), accordionListItem, accordionSibling, accordionActiveClass);
       });
     });
-  }
+  };
   accordionClick(accordionElement, accordionPanel, accordionActiveElement);
 }
