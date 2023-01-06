@@ -1,9 +1,9 @@
 import React from 'react';
 import './buttons.scss';
 
-export const CtaButton = ({
+export function CtaButton({
   label, Type, State, For_Primary, ...props
-}) => {
+}) {
   const type = (Type == 'Secondary') ? 'secondary' : 'primary';
   const state = (State == 'Disabled') ? 'disabled' : '';
   const for_primary = (For_Primary == 'No Arrow') ? 'without-arrow' : 'arrow';
@@ -13,4 +13,4 @@ export const CtaButton = ({
       {label}
     </a>
   );
-};
+}

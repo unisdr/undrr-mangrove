@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 
-export const Textarea = ({
+export function Textarea({
   type, rows, cols, placeholder, labelText, errorText, minlength, helpText, State,
-}) => {
+}) {
   let state;
   const states = ['Focus', 'Error', 'Disabled'];
   state = states.includes(State) ? State.toLowerCase() : ' ';
@@ -24,4 +24,4 @@ export const Textarea = ({
       {(State == 'Error') && <p className="error">{ errorText }</p>}
     </>
   );
-};
+}

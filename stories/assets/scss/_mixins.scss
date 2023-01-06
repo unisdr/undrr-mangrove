@@ -165,7 +165,7 @@
 %frosted-bg {
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
-  background: rgba(247, 247, 247, 0.8);
+  background: rgb(247 247 247 / 80%);
 }
 
 %footer-block {
@@ -509,7 +509,7 @@
 
 %header {
   background-color: $color-gray-100;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
   height: 7.1875rem;
   left: 0;
   position: fixed;

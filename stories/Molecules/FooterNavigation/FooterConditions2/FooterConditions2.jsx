@@ -7,9 +7,9 @@ export const variant_options = {
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 
-export const FooterConditions2 = ({
+export function FooterConditions2({
   style, text, footerdata2, ...args
-}) => {
+}) {
   let screen_variant = variant_options[`${args.variant}`];
   return (
     <ul className={cls('footer-lists', `${screen_variant}`)}>
@@ -18,7 +18,7 @@ export const FooterConditions2 = ({
       ))}
     </ul>
   );
-};
+}
 
 FooterConditions2.defaultProps = {
   variant: 'default',

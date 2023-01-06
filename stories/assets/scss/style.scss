@@ -2,7 +2,7 @@
 @import './variables';
 @import './mixins';
 @import './grid';
-@import './swiper';
+// @import './swiper';
 @import './typography';
 @import './base';
 
@@ -39,11 +39,11 @@
 @import '../../Components/Forms/Dropdowns/CustomSelect/custom-select';
 @import '../../Components/Forms/Dropdowns/Multiselect/multi-select';
 @import '../../Components/Forms/InputFields/input-fields';
-@import '../../Components/Forms/NewsLetterSignUp/newsletter-signup';
+// @import '../../Components/Forms/NewsLetterSignUp/newsletter-signup';
 @import '../../Components/Forms/Radio/radio';
 @import '../../Components/Forms/Select/select';
 @import '../../Components/Navigationcomponents/Breadcrumbs/breadcrumbs';
-@import '../../Components/Navigationcomponents/Menu/menu';
+// @import '../../Components/Navigationcomponents/Menu/menu';
 @import '../../Components/Navigationcomponents/Pagination/pagination';
 @import '../../Components/Navigationcomponents/Sidebar/sidebar';
 @import '../../Components/UIcomponents/Accordion/accordion';
@@ -58,59 +58,59 @@
 @import '../../Components/UIcomponents/Cards/ImageRevelCTACard/image-revel-cta-card';
 @import '../../Components/UIcomponents/Cards/ParallaxCard/parallax-cards';
 @import '../../Components/UIcomponents/Cards/StatsCards/stats-cards';
-@import '../../Components/UIcomponents/Carousel/FixedSizeCarousel/fixed-size-carousel';
-@import '../../Components/UIcomponents/Carousel/FluidImageSizeCarousel/fluid-image-size-carousel';
-@import '../../Components/UIcomponents/Carousel/ImageOnlyCarousel/image-only-carousel';
+// @import '../../Components/UIcomponents/Carousel/FixedSizeCarousel/fixed-size-carousel';
+// @import '../../Components/UIcomponents/Carousel/FluidImageSizeCarousel/fluid-image-size-carousel';
+// @import '../../Components/UIcomponents/Carousel/ImageOnlyCarousel/image-only-carousel';
 @import '../../Components/UIcomponents/Hero/HomePageHero/homepage-hero';
 @import '../../Components/UIcomponents/Hero/PageHero/page-hero';
 @import '../../Components/UIcomponents/Hero/PageHeroCards/pagehero-cards';
 @import '../../Components/UIcomponents/LanguageSwitcher/language-switcher';
-@import '../../Components/UIcomponents/Modal/modal';
+// @import '../../Components/UIcomponents/Modal/modal';
 @import '../../Components/UIcomponents/Tab/tab';
-@import '../../Components/Navigationcomponents/Mainnavigation/CountrySiteHeader/country-site-header';
-@import '../../Components/Navigationcomponents/Mainnavigation/GlobalHeader/global-header';
+// @import '../../Components/Navigationcomponents/Mainnavigation/CountrySiteHeader/country-site-header';
+// @import '../../Components/Navigationcomponents/Mainnavigation/GlobalHeader/global-header';
 
 //Molecules
-@import '../../Molecules/Blocks/CountryCard/country-card';
-@import '../../Molecules/Blocks/DownloadCard/download-card';
-@import '../../Molecules/Blocks/StatsPanel/stats-panel';
-@import '../../Molecules/DownloadRow/download-row';
+// @import '../../Molecules/Blocks/CountryCard/country-card';
+// @import '../../Molecules/Blocks/DownloadCard/download-card';
+// @import '../../Molecules/Blocks/StatsPanel/stats-panel';
+// @import '../../Molecules/DownloadRow/download-row';
 @import '../../Molecules/FooterNavigation/FooterConditions/footer-condition';
 @import '../../Molecules/FooterNavigation/FooterConditions2/footer-condition2';
 @import '../../Molecules/FooterNavigation/FooterIcons/footer-icons';
 @import '../../Molecules/FooterNavigation/FooterLists/footer-lists';
 @import '../../Molecules/FooterNavigation/FooterLogo/footer-logo';
 @import '../../Molecules/ImageCaption/image-caption';
-@import '../../Molecules/ParallaxCard/parallax-card';
+// @import '../../Molecules/ParallaxCard/parallax-card';
 @import '../../Molecules/SidebarData/sidebar-data';
 @import '../../Molecules/Text/CtaBlock/cta-block';
 @import '../../Molecules/Text/BlockquoteComponent/blockquotecomp';
 @import '../../Molecules/Text/HeadingBig/headingbig';
 @import '../../Molecules/Text/Page/page';
 @import '../../Molecules/Text/Post/post';
-@import '../../Molecules/Text/ProjectDetails/project-details';
-@import '../../Molecules/Text/SectionHeader/section-header';
+// @import '../../Molecules/Text/ProjectDetails/project-details';
+// @import '../../Molecules/Text/SectionHeader/section-header';
 @import '../../Molecules/Text/SmallCopy/smallcopy';
 @import '../../Molecules/Text/Tertiary/tertiary';
-@import '../../Molecules/Sdg/sdg';
-@import '../../Molecules/Sdgmodal/sdgmodal';
+// @import '../../Molecules/Sdg/sdg';
+// @import '../../Molecules/Sdgmodal/sdgmodal';
 
-//Organisum
-@import '../../Organism/Blocks/AuthorSummary/author-summary';
-@import '../../Organism/Blocks/FeaturedContentCard/FeaturedCard/featured-card';
-@import '../../Organism/Blocks/FeaturedContentCard/PagewideContentCard/page-wide-card';
-@import '../../Organism/Footer/footer';
-@import '../../Organism/Stats/stats';
-@import '../../Organism/Text/PostHeader/post-header';
-@import '../../Organism/Text/ProjectDetail/project-detail';
+//Organism
+// @import '../../Organism/Blocks/AuthorSummary/author-summary';
+// @import '../../Organism/Blocks/FeaturedContentCard/FeaturedCard/featured-card';
+// @import '../../Organism/Blocks/FeaturedContentCard/PagewideContentCard/page-wide-card';
+// @import '../../Organism/Footer/footer';
+// @import '../../Organism/Stats/stats';
+// @import '../../Organism/Text/PostHeader/post-header';
+// @import '../../Organism/Text/ProjectDetail/project-detail';
 
 //Patterns
-@import '../../Patterns/DownloadModal/download-modal';
-@import '../../Patterns/FilterAndSearchBar/filter-and-search-bar';
-@import '../../Patterns/StatsSlider/stats-slider';
+// @import '../../Patterns/DownloadModal/download-modal';
+// @import '../../Patterns/FilterAndSearchBar/filter-and-search-bar';
+// @import '../../Patterns/StatsSlider/stats-slider';
 
 //Utilities
-@import '../../Utilities/FrostedImage/frosted-background';
+// @import '../../Utilities/FrostedImage/frosted-background';
 @import '../../Utilities/Loader/loader';
-@import '../../Utilities/ProgressBar/progress-bar';
-@import '../../Utilities/ScrollBar/scrollbar';
+// @import '../../Utilities/ProgressBar/progress-bar';
+// @import '../../Utilities/ScrollBar/scrollbar';

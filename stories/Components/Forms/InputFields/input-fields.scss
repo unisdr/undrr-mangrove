@@ -34,13 +34,13 @@ label {
   margin-top: $spacing-03;
 }
 
-input[type=text],
-input[type=number],
-input[type=email],
-input[type=password],
-input[type=search],
-input[type=tel],
-input[type=date],
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'],
+input[type='search'],
+input[type='tel'],
+input[type='date'],
 textarea {
   @extend %background-white;
 
@@ -51,7 +51,7 @@ textarea {
   border-radius: 0;
   box-sizing: border-box;
   display: block;
-  font-family: $Font-Family-ProximaNova;
+  font-family: $Font-Family-Roboto;
   font-size: $font-size-16;
   height: 46px;
   margin-top: $spacing-03;
@@ -67,8 +67,8 @@ textarea {
     outline: 0;
   }
 
-  input[type=date],
-  input[type=search] {
+  input[type='date'],
+  input[type='search'] {
     padding-left: $spacing-08;
     position: relative;
   }
@@ -88,7 +88,7 @@ textarea {
   }
 }
 
-input[type=date] {
+input[type='date'] {
   background:
     url(#{$img-path-Icon}/calender-black.svg) no-repeat left
     14px bottom 12px;
@@ -101,7 +101,7 @@ input[type=date] {
   }
 }
 
-input[type=search] {
+input[type='search'] {
   background: url(#{$img-path-Icon}/search-black.svg) no-repeat left 14px bottom 12px;
   color: #a9b1b7;
   padding-left: 2.5rem;
@@ -131,23 +131,23 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 [dir='rtl'] {
-  input[type=text],
-  input[type=number],
-  input[type=email],
-  input[type=password],
-  input[type=search],
-  input[type=tel],
-  input[type=date],
+  input[type='text'],
+  input[type='number'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='date'],
   textarea {
     @media (hover: none) and (pointer: coarse) {
-      input[type=date] {
+      input[type='date'] {
         padding-right: $spacing-06;
       }
     }
   }
 
-  input[type=date],
-  input[type=search] {
+  input[type='date'],
+  input[type='search'] {
     background:
       url(#{$img-path-Icon}/calender-black.svg) no-repeat
       right 14px bottom 12px;
@@ -157,13 +157,13 @@ input[type='date']::-webkit-calendar-picker-indicator {
     text-align: right;
   }
 
-  input[type=search] {
+  input[type='search'] {
     background:
       url(#{$img-path-Icon}/search-black.svg) no-repeat
       right 14px bottom 12px;
   }
 
-  input[type=date] {
+  input[type='date'] {
     &.disabled {
       background-image: url(#{$img-path-Icon}/date-disabled.svg);
     }
@@ -187,14 +187,14 @@ input[type='date']::-webkit-calendar-picker-indicator {
     line-height: 1.7;
   }
 
-  input[type=text],
-  input[type=number],
-  input[type=email],
-  input[type=password],
-  input[type=search],
-  input[type=tel],
-  input[type=date],
+  input[type='text'],
+  input[type='number'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='date'],
   textarea {
-    font-family: $Font-Family-NotoSans;
+    font-family: $Font-Family-Roboto;
   }
 }

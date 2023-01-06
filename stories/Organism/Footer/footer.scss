@@ -126,8 +126,8 @@
 // * footer icons start *//
 .footer-icons {
   display: flex;
-  padding-left: 0;
   flex-wrap: wrap;
+  padding-left: 0;
 
   li {
     list-style: none;
@@ -144,8 +144,8 @@
       display: block;
       font-size: 0;
       height: 20px;
-      margin-inline-start: $spacing-07;
       margin-block-end: $spacing-05;
+      margin-inline-start: $spacing-07;
       width: 20px;
 
       @each $name in $socials {
@@ -184,16 +184,16 @@
     // li {
     //   padding: 0;
 
-      // a {
-      //   margin-left: $spacing-07;
-      //   margin-right: 0;
-      // }
+    // a {
+    //   margin-left: $spacing-07;
+    //   margin-right: 0;
+    // }
 
-      // &:last-of-type {
-      //   a {
-      //     margin-left: 0;
-      //   }
-      // }
+    // &:last-of-type {
+    //   a {
+    //     margin-left: 0;
+    //   }
+    // }
     // }
   }
 }
@@ -458,7 +458,7 @@
   }
 }
 
-[dir=rtl] {
+[dir='rtl'] {
   .icons-search {
     text-align: right;
 

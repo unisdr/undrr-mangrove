@@ -50,12 +50,12 @@
     }
 
     &::-webkit-scrollbar {
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: rgb(0 0 0 / 30%);
       width: 4px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgb(0 0 0 / 60%);
     }
 
     li {
@@ -106,7 +106,7 @@
 
   .select-box {
     button {
-      font-family: $Font-Family-NotoSans;
+      font-family: $Font-Family-Roboto;
     }
   }
 }

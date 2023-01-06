@@ -7,9 +7,9 @@ import { Video } from '../../../../Atom/Video/Video';
 import { Heading } from '../../../../Atom/Typography/Heading/Heading';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 
-export const Homepagehero = ({
+export function Homepagehero({
   title, content, button, variant, ...args
-}) => {
+}) {
   useEffect(() => {
     expandToSize('.homepage-hero-full');
   }, []);
@@ -24,18 +24,17 @@ export const Homepagehero = ({
             <img src={BackgroundImg} alt={BackgroundImg} />
           </div>
         )}
-       <div className="grid-x homepage-hero-content">
+      <div className="grid-x homepage-hero-content">
         <div className="cell large-7 medium-9 medium-offset-1">
-          <Heading type="1" className="color-white" label={title} dataViewport="true"/>
-          {content && <Heading type="4" className="color-white" label={content} dataViewport="true"/>}
+          <Heading type="1" className="color-white" label={title} dataViewport="true" />
+          {content && <Heading type="4" className="color-white" label={content} dataViewport="true" />}
           <CtaButton label={button} />
         </div>
       </div>
     </div>
   );
-};
+}
 
 Homepagehero.defaultProps = {
   variant: 'image',
 };
-

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './footer.scss';
 import '../../assets/scss/_grid.scss';
 import { FooterLogo } from '../../Molecules/FooterNavigation/FooterLogo/FooterLogo';
-import { SignUp } from '../../Components/Forms/NewsLetterSignUp/NewsLetterSignUp';
+// import { SignUp } from '../../Components/Forms/NewsLetterSignUp/NewsLetterSignUp';
 import { FooterLists } from '../../Molecules/FooterNavigation/FooterLists/FooterLists';
 import { FooterConditions } from '../../Molecules/FooterNavigation/FooterConditions/FooterConditions';
 import { FooterConditions2 } from '../../Molecules/FooterNavigation/FooterConditions2/FooterConditions2';
@@ -37,9 +37,9 @@ export function Footer({
                   <FooterLogo src={src} headerText={headerText} alt={alt} logolink={logolink} style={args.color} />
                 )}
               </div>
-              <div className="cell medium-4">
+              {/* <div className="cell medium-4">
                 <SignUp element={element} type={type} required={required} mode={mode} label={label} button={button} errorText={errorText} placeholder={placeholder} variant={args.color === 'default' ? args.color : 'inverted'} />
-              </div>
+              </div> */}
             </div>
             <div className="grid-x grid-margin-x" data-accordion="mobile">
               <FooterLists data={data} headerText={menutitle} ariacontrol="footer-panel-1" arialabel="footer-item-1" variant={args.color === 'default' ? args.color : 'inverted'} />
@@ -51,21 +51,21 @@ export function Footer({
                   {args.color === 'default' ? (
                     <>
                       <span className="icon-globe">
-                      <Icons src={IconsGlobeWhite} alt="icon-global" />
-                    </span>
+                        <Icons src={IconsGlobeWhite} alt="icon-global" />
+                      </span>
                       <span className="icon-search">
-                      <Icons src={IconsSearchWhite} alt="icon-search" />
-                    </span>
+                        <Icons src={IconsSearchWhite} alt="icon-search" />
+                      </span>
                     </>
                   ) : (
                     <>
-                    <span className="icon-globe">
-                       <Icons src={IconsGlobe} alt="icon-global" />
-                     </span>
-                    <span className="icon-search">
-                       <Icons src={IconsSearch} alt="icon-search" />
-                     </span>
-                  </>
+                      <span className="icon-globe">
+                        <Icons src={IconsGlobe} alt="icon-global" />
+                      </span>
+                      <span className="icon-search">
+                        <Icons src={IconsSearch} alt="icon-search" />
+                      </span>
+                    </>
                   )}
 
                 </div>

@@ -7,16 +7,16 @@ let timeoutId;
 let triggerResizeStart = (el) => {
   el.trigger('resizestart');
   isStart = !isStart;
-}
+};
 
 // Resize Ended
 let triggerResizeEnd = (el) => {
   clearTimeout(timeoutId);
-  timeoutId = setTimeout(function () {
+  timeoutId = setTimeout(() => {
     el.trigger('resizeend');
     isStart = !isStart;
   }, delay);
-}
+};
 
 // Resize Event Callback
 const resizeEventsTrigger = (el) => {
@@ -26,7 +26,7 @@ const resizeEventsTrigger = (el) => {
 // Custom Windows Resize Function.
 export function windowResize(elem, fn) {
   // Resize Event Observer.
-  elem.resize(function () {
+  elem.resize(() => {
     resizeEventsTrigger(elem);
   });
 
@@ -36,4 +36,4 @@ export function windowResize(elem, fn) {
 
   // Resize after callback.
   elem.on('resizeend', fn);
-};
+}

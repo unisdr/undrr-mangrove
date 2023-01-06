@@ -13,9 +13,9 @@ export const hovercolors_options = {
   green: 'green',
 };
 
-export const ContentCardImage = ({
+export function ContentCardImage({
   data, Hovercolors,
-}) => {
+}) {
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <div className="grid-x grid-margin-x content-card-wrapper">
@@ -29,7 +29,7 @@ export const ContentCardImage = ({
               </div>
               <div className="content-caption">
                 <Heading type="5" label={item.contentname} />
-                <Ctalink label={item.button} Type="Space" button_option="span"/>
+                <Ctalink label={item.button} Type="Space" button_option="span" />
               </div>
             </a>
           </div>
@@ -37,7 +37,7 @@ export const ContentCardImage = ({
       ))}
     </div>
   );
-};
+}
 
 ContentCardImage.defaultProps = {
   Hovercolors: 'yellow',

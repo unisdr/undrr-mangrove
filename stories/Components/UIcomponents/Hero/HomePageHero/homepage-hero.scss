@@ -161,7 +161,7 @@
   }
 }
 
-[dir=rtl] {
+[dir='rtl'] {
   .homepage-hero {
     @include devicebreak(medium) {
       &-tall-content {

@@ -2,7 +2,7 @@ import React from 'react';
 import './page.scss';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 
-export const Page = ({ headerText, countryText, style }) => {
+export function Page({ headerText, countryText, style }) {
   let style_variant = style ? ` ${style}` : '';
   return (
     <div className={['page-title', `${style_variant}`].join('')}>
@@ -10,4 +10,4 @@ export const Page = ({ headerText, countryText, style }) => {
       <Heading type="2" label={countryText} />
     </div>
   );
-};
+}

@@ -7,7 +7,7 @@ export const variant_options = {
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 
-export const FooterIcons = ({ ...args }) => {
+export function FooterIcons({ ...args }) {
   let screen_variant = variant_options[`${args.variant}`];
   return (
     <ul className={cls('footer-icons', `${screen_variant}`)}>
@@ -18,7 +18,7 @@ export const FooterIcons = ({ ...args }) => {
       <li><a href="#" className="youtube" title="Youtube">youtube</a></li>
     </ul>
   );
-};
+}
 
 FooterIcons.defaultProps = {
   variant: 'default',
