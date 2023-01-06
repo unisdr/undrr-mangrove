@@ -1,5 +1,5 @@
-@import url('./variables');
-@import url('./breakpoints');
+@import './variables';
+@import './breakpoints';
 
 //background image gradient
 @mixin background-image($deg, $colorname, $opacity) {
