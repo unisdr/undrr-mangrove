@@ -1,6 +1,6 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { ContentCardWithOutImage } from './ContentCardWithOutImage';
-import img from '../../../../assets/images/card-thumbnail.jpg';
+import { VerticalCard } from './VerticalCard';
+import img from '../../../../assets/images/card-image.png';
 
 export const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -9,26 +9,28 @@ export const getCaptionForLocale = (locale) => {
         contentdata: [
           {
             contenttile: "CONTENT TAG",
-            contentname: "Title of the post goes here and it’s two lines",
-            paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus mollis pharetra ex, a laoreet purus vulputate eget.",
-            button: "READ MORE",
+            contentname: "Title in large size",
+            text: `Text in body style Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populaPations and communities. This paper explores health risks from climate change in a global context, setting out key risks anactions`,
+            share: "Social Share Button",
+            label1: "Label 1",
+            label2: "Label 2",
+            button: "Primary link as button",
             link:"#",
             imgback: img,
+        
           }
         ]
       };
-    return engText;
+      return engText;
     case "arabic":
       const arabicText = {
         contentdata: [
           {
             contenttile: "علامة المحتوى",
             contentname: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
-            paragraph: "الألم بحد ذاته يسبب الكثير من الألم ، لكن التركيز الأساسي ينصب على العميل. من جعبة اليخت الناعمة ، عدد كبير من اللحم البقري النقي",
             button: "اقرأ أكث",
             link:"#",
             imgback: img,
-            size:'medium-4',
           }
         ]
       };
@@ -39,7 +41,6 @@ export const getCaptionForLocale = (locale) => {
           {
             contenttile: "အကြောင်းအရာ TAG",
             contentname: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
-            paragraph: "နာကျင်မှုသည်ကိုယ်တိုင်နာကျင်မှုများစွာရှိသော်လည်းအဓိကအာရုံစိုက်သူမှာ ၀ ယ်သူဖြစ်သည်။ ရွက်လှေ၏နူးညံ့သောကျည်တောက်မှအမဲသားစစ်စစ်ကိုလိုသည်ထက်ပိုစားသည်",
             button: "ပိုပြီးဖတ်ပါ",
             link:"#",
             imgback: img,
@@ -53,7 +54,6 @@ export const getCaptionForLocale = (locale) => {
           {
             contenttile: "コンテンツタグ",
             contentname: "投稿のタイトルはここにあり、2行です",
-            paragraph: "痛み自体は多くの痛みですが、主な焦点は顧客にあります。 ヨットのやわらかい矢筒から、たっぷりの純粋な牛肉",
             button: "続きを読む",
             link:"#",
             imgback: img,
@@ -65,10 +65,13 @@ export const getCaptionForLocale = (locale) => {
       const dummy = {
         contentdata: [
           {
-            contenttile: "CONTENT TAG",
-            contentname: "Title of the post goes here and it’s two lines",
-            paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus mollis pharetra ex, a laoreet purus vulputate eget.",
-            button: "READ MORE",
+            contenttile: "VERTICAL CARD",
+            contentname: "Title in large size",
+            text: `Text in body style Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populaPations and communities. This paper explores health risks from climate change in a global context, setting out key risks anactions`,
+            share: "Social Share Button",
+            label1: "Label 1",
+            label2: "Label 2",
+            button: "Primary link as button",
             link:"#",
             imgback: img,
           }
@@ -78,22 +81,20 @@ export const getCaptionForLocale = (locale) => {
   }
 };
 
-<Meta title="Components/UI components/Cards/Content card/Without image/Without emphasize" argTypes={{
+<Meta title="Components/UI components/Cards/Vertical Card" argTypes={{
   Hovercolors: {
-    options: ['default', 'yellow', 'red', 'green', 'blue'],
+    options: ['yellow', 'red', 'green', 'blue'],
     control: { type: 'inline-radio' },
-    defaultValue: 'default'
+    defaultValue: 'yellow'
   }
 }}/>
 
+# MANGROVE CARD (VERTICAL)
 
-
-# Content Cards
-
-The Content Card components are cards with information and/or image.
+The Mangrove Vertical Card components are cards with information and/or image.
 
 ### Overview
-The Content Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+The Mangrove Vertical Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
 
 #### When to use:
 
@@ -105,28 +106,37 @@ When a card with data, CTA link and image is to be displayed.
 It consists of a title, paragraph, CTA link, and/or image with colors like green, yellow, red, blue.
 
 ### Content
-There are two types of Content card components: Content Card with Image and Content Card without Image.
+There are two types of Mangrove Vertical Card components: Mangrove Vertical Card with Image and Mangrove Vertical Card without Image.
 
 ### Behaviors
 
 #### States
-Content Card without image:
-There are two states in content Cards: Default, Hover.
+Mangrove Vertical Card with image:
+There are two states in mangrove Vertical Cards: Default, Hover.
 
-Default: It shows the title, paragraph, CTA link, and content card without Image and title, paragraph, and CTA Link.
+Default: It shows the title, paragraph, CTA link, and mangrove Vertical Card with Image and title, paragraph, and CTA Link for mangrove Vertical Card with Image.
 
-Hover: In the hover state, when the mouse hovers over the content Card will display the title, content card, and CTA Link. On hover, the background color is changing to the accent color of the page.
+Hover: In the hover state, when the mouse hovers over the mangrove Vertical Card with Image, the image is displayed. Along with Title, Image, and CTA Link. On hover, the background color is changing to one of the predefined accent colors: red, blue, yellow (default), or green.
 
-Content Card w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
+Mangrove Vertical Card without image:
+There are two states in mangrove Vertical Cards: Default, Hover.
+
+Default: It shows the title, paragraph, CTA link, and mangrove Vertical Card without Image and title, paragraph, and CTA Link.
+
+
+
+Hover: In the hover state, when the mouse hovers over the mangrove Vertical Card will display the title, mangrove Vertical Card, and CTA Link. On hover, the background color is changing to the accent color of the page.
+
+Mangrove Vertical Card w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
 
 <Canvas>
-<Story name="Without emphasize">
+<Story name="Vertical Card">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <ContentCardWithOutImage
+      <VerticalCard
         data={caption.contentdata} {...args}
-      ></ContentCardWithOutImage>
+      ></VerticalCard>
     );
   }}
 </Story>

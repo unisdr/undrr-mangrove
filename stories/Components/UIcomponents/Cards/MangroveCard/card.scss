@@ -1,0 +1,209 @@
+@import '../../../../assets/scss/variables';
+@import '../../../../assets/scss/mixins';
+
+/* content-card start */
+$colors: ('yellow': $color-yellow, 'red': $color-red, 'green': $color-green, 'blue': $color-azure, 'gray': $color-gray-100);
+$backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'green': $color-light-green, 'blue': $color-light-azure, 'gray': $color-gray-100);
+
+//MG CARD using CSS GRID
+.mg-card {
+
+  // Vertical CARD
+  &__vc {
+      max-width: 25rem;
+  }
+
+  // Horizontal CARD
+  &__hc {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 300px 1fr auto;  
+      background: #ffffff;
+      color: #101010;
+
+      @media (min-width: 31.25em){
+          grid-template-columns: 160px repeat(2, 1fr);
+          grid-template-rows: 1fr auto;
+      }
+
+      @media (min-width: 50em){
+          grid-template-columns: 300px repeat(2, 1fr);
+      }
+
+      @media (min-width: 59em){
+          grid-template-columns: 330px repeat(2, 1fr);
+      }
+  }
+
+  // Main Card css
+  &__visual {
+
+      background-color: #0071d2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+  }
+
+  &__image {
+      width: 100%;
+      height: 100%;
+  }
+  
+
+  &__share {
+      display: inline-block;
+      position: absolute;
+      padding: .56em;
+      cursor: pointer;
+  }
+
+
+  &__label {
+      padding: .3em .5em;
+      margin-right: .5em;
+      background: rgb(230, 230, 230);
+      border-radius: .3em;
+      font-size: .85em;
+      color: #0071d2;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+
+      // &:hover {
+      //     background: #eef0f7;
+      // }
+
+      // &--active {
+      //     background: #d4d4d4;
+      //     font-weight: bold;
+      // }
+  }
+
+  &__content {
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
+  padding: 1.5rem;
+  background-color: #ffffff;
+
+      @media (min-width: 31.25em){
+          grid-column: 2 / 4;
+          grid-row: 1 / 2;
+      }
+  }
+
+
+  &__title {
+      padding-top: 1.5em;
+
+      a {
+          font-size: 1.5em;
+          font-weight: bold;
+          color: #005aaa;
+          text-decoration: none;
+          display: inline-block;
+          cursor: pointer;
+
+          // &:hover {
+          //     background: #2dabff;
+          // }
+  
+          &.active {
+              background: #d4d4d4;
+              font-weight: bold;
+          }
+      }
+
+  }
+
+  &__text {
+      line-height: 1.2em;
+  }
+
+  &__text-link {
+      cursor: pointer;
+
+      &:hover {
+          background: #eef0f7;
+      }
+
+  }
+
+  &__button {
+      background: #0071d2;
+      color: white;
+      text-decoration: none;
+      padding: .5em 1em;
+      // border-radius: .5em;
+      display: inline-block;
+      margin-top: .5em;
+
+      // &:hover {
+      //     background:#2dabff;
+      // }
+  }
+
+
+} //END of CARD
+
+//Accessible CARD CSS RULES
+
+.mg-card__title a::after {
+  bottom: 0;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-property: -webkit-box-shadow;
+  transition-property: -webkit-box-shadow;
+  transition-property: box-shadow;
+  transition-property: box-shadow, -webkit-box-shadow;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  z-index: 100;
+}
+.mg-card {
+  position: relative;
+  display: inline-block;
+}
+.mg-card__label,
+.mg-card__text-link,
+.mg-card__button {
+  position: relative;
+  z-index: 101;
+}
+.mg-card__share {
+  z-index: 101;
+}
+.mg-card__label:hover,
+.mg-card__text-link:hover {
+  text-decoration: underline;
+}
+
+[dir='rtl'] {
+  .content-card {
+    .image {
+      &::before {
+        @include transform(scaleX(-1));
+      }
+    }
+
+    &:hover {
+      .cta {
+        &--space::after {
+          @include transform(translate(-50%, 0) rotate(180deg));
+        }
+
+        &--arrow::after {
+          margin-left: 0;
+          margin-right: 0.25rem;
+        }
+      }
+    }
+  }
+}
+
+
+/* content-card start */

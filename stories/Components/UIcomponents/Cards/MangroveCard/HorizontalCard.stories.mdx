@@ -1,6 +1,6 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { ContentCardImage } from './ContentCardImage';
-import img from '../../../../assets/images/card-thumbnail.jpg';
+import { HorizontalCard } from './HorizontalCard';
+import img from '../../../../assets/images/card-image.png';
 
 export const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -9,10 +9,15 @@ export const getCaptionForLocale = (locale) => {
         contentdata: [
           {
             contenttile: "CONTENT TAG",
-            contentname: "Title of the post goes here and it’s two lines",
-            button: "READ MORE",
+            contentname: "Title in large size",
+            text: `Text in body style Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populaPations and communities. This paper explores health risks from climate change in a global context, setting out key risks anactions`,
+            share: "Social Share Button",
+            label1: "Label 1",
+            label2: "Label 2",
+            button: "Primary link as button",
             link:"#",
             imgback: img,
+        
           }
         ]
       };
@@ -60,9 +65,13 @@ export const getCaptionForLocale = (locale) => {
       const dummy = {
         contentdata: [
           {
-            contenttile: "CONTENT TAG",
-            contentname: "Title of the post goes here and it’s two lines",
-            button: "READ MORE",
+            contenttile: "HORIZONTAL CARD",
+            contentname: "Title in large size",
+            text: `Text in body style Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populaPations and communities. This paper explores health risks from climate change in a global context, setting out key risks anactions`,
+            share: "Social Share Button",
+            label1: "Label 1",
+            label2: "Label 2",
+            button: "Primary link as button",
             link:"#",
             imgback: img,
           }
@@ -72,7 +81,7 @@ export const getCaptionForLocale = (locale) => {
   }
 };
 
-<Meta title="Components/UI components/Cards/Content card/With image" argTypes={{
+<Meta title="Components/UI components/Cards/Horizontal Card" argTypes={{
   Hovercolors: {
     options: ['yellow', 'red', 'green', 'blue'],
     control: { type: 'inline-radio' },
@@ -80,12 +89,12 @@ export const getCaptionForLocale = (locale) => {
   }
 }}/>
 
-# Content Cards
+# MANGROVE CARD (Horizontal)
 
-The Content Card components are cards with information and/or image.
+The Mangrove Horzontal Card components are cards with information and/or image.
 
 ### Overview
-The Content Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+The Mangrove Horzontal Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
 
 #### When to use:
 
@@ -97,37 +106,37 @@ When a card with data, CTA link and image is to be displayed.
 It consists of a title, paragraph, CTA link, and/or image with colors like green, yellow, red, blue.
 
 ### Content
-There are two types of Content card components: Content Card with Image and Content Card without Image.
+There are two types of Mangrove Horzontal Card components: Mangrove Horzontal Card with Image and Mangrove Horzontal Card without Image.
 
 ### Behaviors
 
 #### States
-Content Card with image:
-There are two states in content Cards: Default, Hover.
+Mangrove Horzontal Card with image:
+There are two states in mangrove Horzontal Cards: Default, Hover.
 
-Default: It shows the title, paragraph, CTA link, and content card with Image and title, paragraph, and CTA Link for content Card with Image.
+Default: It shows the title, paragraph, CTA link, and mangrove Horzontal Card with Image and title, paragraph, and CTA Link for mangrove Horzontal Card with Image.
 
-Hover: In the hover state, when the mouse hovers over the content Card with Image, the image is displayed. Along with Title, Image, and CTA Link. On hover, the background color is changing to one of the predefined accent colors: red, blue, yellow (default), or green.
+Hover: In the hover state, when the mouse hovers over the mangrove Horzontal Card with Image, the image is displayed. Along with Title, Image, and CTA Link. On hover, the background color is changing to one of the predefined accent colors: red, blue, yellow (default), or green.
 
-Content Card without image:
-There are two states in content Cards: Default, Hover.
+Mangrove Horzontal Card without image:
+There are two states in mangrove Horzontal Cards: Default, Hover.
 
-Default: It shows the title, paragraph, CTA link, and content card without Image and title, paragraph, and CTA Link.
+Default: It shows the title, paragraph, CTA link, and mangrove Horzontal Card without Image and title, paragraph, and CTA Link.
 
 
 
-Hover: In the hover state, when the mouse hovers over the content Card will display the title, content card, and CTA Link. On hover, the background color is changing to the accent color of the page.
+Hover: In the hover state, when the mouse hovers over the mangrove Horzontal Card will display the title, mangrove Horzontal Card, and CTA Link. On hover, the background color is changing to the accent color of the page.
 
-Content Card w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
+Mangrove Horzontal Card w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
 
 <Canvas>
-<Story name="With image">
+<Story name="Horizontal Card">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <ContentCardImage
+      <HorizontalCard
         data={caption.contentdata} {...args}
-      ></ContentCardImage>
+      ></HorizontalCard>
     );
   }}
 </Story>
