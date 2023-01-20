@@ -23,7 +23,7 @@ export function ParentHero({
 
     <>
       <h5>HERO MAIN (The Parent kitchen sink)</h5>
-      <section className="mg-card__hero" style={heroStyle}>
+      <section className="mg-hero" style={heroStyle}>
 
         {data.map((item, index) => (
           <div key={index} className="mg-hero__overlay">
