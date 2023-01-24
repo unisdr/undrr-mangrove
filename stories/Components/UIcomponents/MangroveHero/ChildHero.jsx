@@ -38,7 +38,7 @@ export function ChildHero({
                 <a href="#" className="text-xxl">{item.title}</a>
               </header>
 
-              <div className="mg-hero__subtitle">{item.subtitle}</div>
+              <div className="mg-hero__summaryText">{item.summaryText}</div>
 
               <div className="mg-hero__buttons">
                 <a href={item.link} className="mg-hero__button mg-hero__button-primary">{item.primary_button}</a>
