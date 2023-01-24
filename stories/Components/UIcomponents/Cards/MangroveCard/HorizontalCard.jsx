@@ -38,7 +38,7 @@ export function HorizontalCard({
                 <a href={item.link}>{item.title}</a>
               </header>
 
-              <p className="mg-card__text">{item.summaryText}</p>
+              <p className="mg-card__summaryText">{item.summaryText}</p>
 
               <a href={item.link} className="mg-card__button">{item.button}</a>
 

@@ -115,8 +115,9 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
 
   }
 
-  &__text {
+  &__summaryText {
       line-height: 1.2em;
+      padding-top: 1em;
   }
 
   &__button {
@@ -167,8 +168,7 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
 .mg-card__share {
   z-index: 101;
 }
-.mg-card__label:hover,
-.mg-card__text-link:hover {
+.mg-card__label:hover{
   text-decoration: underline;
 }
 
