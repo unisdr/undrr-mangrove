@@ -1,0 +1,168 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { ChildHero } from './ChildHero';
+import img from '../../../assets/images/hero_background.png';
+
+export const getCaptionForLocale = (locale) => {
+  switch (locale) {
+    case "english":
+      const engText = {
+        contentdata: [
+          {
+            title: "Text in xl large size",
+            summaryText: "Blurb in large size",
+            label: "Label or breadcrumb (default label size)",
+            primary_button: "Primary link as button",
+            link:"#",
+            imgback: img,
+        
+          }
+        ]
+      };
+      return engText;
+    case "arabic":
+      const arabicText = {
+        contentdata: [
+          {
+            title: "علامة المحتوى",
+            summaryText: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
+            detail: "اقرأ أكث",
+            label: "Label or breadcrumb (default label size)",
+            primary_button: "Primary link as button",
+            link:"#",
+            imgback: img,
+          }
+        ]
+      };
+      return arabicText;
+    case "burmese":
+      const burmeseText = {
+        contentdata: [
+          {
+            title: "အကြောင်းအရာ TAG",
+            summaryText: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
+            detail: "ပိုပြီးဖတ်ပါ",
+            label: "Label or breadcrumb (default label size)",
+            primary_button: "Primary link as button",
+            link:"#",
+            imgback: img,
+          }
+        ]
+      };
+      return burmeseText;
+    case "japanese":
+      const japaneseText = {
+        contentdata: [
+          {
+            title: "コンテンツタグ",
+            summaryText: "投稿のタイトルはここにあり、2行です",
+            detail: "続きを読む",
+            label: "Label or breadcrumb (default label size)",
+            primary_button: "Primary link as button",
+            link:"#",
+            imgback: img,
+          }
+        ]
+      };
+      return japaneseText;
+    default:
+      const dummy = {
+        contentdata: [
+          {
+            title: "Text in xl large size",
+            summaryText: "Blurb in large size",
+            label: "Label or breadcrumb (default label size)",
+            primary_button: "Primary link as button",
+            link:"#",
+            imgback: img,
+          }
+        ]
+      };
+      return dummy;
+  }
+};
+
+<Meta title="Components/UI components/Hero/Child Hero" argTypes={{
+  Hovercolors: {
+    options: ['yellow', 'red', 'green', 'blue'],
+    control: { type: 'inline-radio' },
+    defaultValue: 'yellow'
+  }
+}}/>
+
+# Mangrove Hero (Sub)
+
+The Mangrove Hero components are cards with information and/or image.
+
+### Overview
+The Mangrove Hero component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+
+#### When to use:
+
+When a card with data, CTA link and image is to be displayed.
+
+### Formatting
+
+#### Default
+It consists of a title, paragraph, CTA link, and/or image with colors like green, yellow, red, blue.
+
+### Content
+There are two types of Mangrove Hero components: Mangrove Hero with Image and Mangrove Hero without Image.
+
+### Behaviors
+
+#### States
+Mangrove Hero with image:
+There are two states in mangrove Heros: Default, Hover.
+
+Default: It shows the title, paragraph, CTA link, and mangrove Hero with Image and title, paragraph, and CTA Link for mangrove Hero with Image.
+
+Hover: In the hover state, when the mouse hovers over the mangrove Hero with Image, the image is displayed. Along with Title, Image, and CTA Link. On hover, the background color is changing to one of the predefined accent colors: red, blue, yellow (default), or green.
+
+Mangrove Hero without image:
+There are two states in mangrove Heros: Default, Hover.
+
+Default: It shows the title, paragraph, CTA link, and mangrove Hero without Image and title, paragraph, and CTA Link.
+
+
+
+Hover: In the hover state, when the mouse hovers over the mangrove Hero will display the title, mangrove Hero, and CTA Link. On hover, the background color is changing to the accent color of the page.
+
+Mangrove Hero w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
+
+<Canvas>
+<Story name="Child Hero">
+  {(args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <ChildHero
+        data={caption.contentdata} {...args}
+      ></ChildHero>
+    );
+  }}
+</Story>
+</Canvas>
+
+### Usage
+- Choose the Hover color and emphasize options from the control tab of canvas.
+- Grab the HTML from the HTML tab and also include the CSS files listed below.
+- Optional for grid layout: Add .content-data CSS class to the .grid-x  on which you want inside items, set margin-bottom property css, and make sure to add foundation grid (https://get.foundation/sites/docs/grid.html) or any other grid system if you are creating a grid for card..
+
+### CSS and JS References
+
+#### CSS:
+Add the base layout style from
+
+- https://khawkins98.github.io/undrr-mangrove/css/base-minimal.min.css
+- https://khawkins98.github.io/undrr-mangrove/css/components/cta-link.min.css
+- https://khawkins98.github.io/undrr-mangrove/css/components/content-card.min.css
+- https://khawkins98.github.io/undrr-mangrove/css/components/buttons.min.css - if “View more” button is used
+
+#### JS:
+NA
+
+### Interactions
+- Hover state applies to the image only.
+- By clicking on the CTA Link, the associated page is opened.
+
+### Changelog
+1.0 — Released component

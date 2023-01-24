@@ -1,0 +1,204 @@
+@import '../../../assets/scss/variables';
+@import '../../../assets/scss/mixins';
+
+
+//HERO MAIN (The Parent kitchen sink) css
+
+.mg-hero {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    position: relative;
+    width: 99vw;
+    margin-left:calc(50% - (50vw) );
+    
+    //Media queries
+
+    @media (max-width: 31.25em) {
+        max-width: fit-content;
+    }
+
+    @media (max-width: 50em) {
+        max-width: fit-content;
+    }
+
+    &__overlay{
+        background-color: #fff;
+        width: max-content;
+        padding: 1.5em;
+        margin-left: 2em;
+
+        @media (max-width: 31.25em){
+            margin-left: 0;
+            background-color: darkgray;
+        }
+    
+        @media (max-width: 50em){
+            margin-left: 0;
+            background-color: darkgray;
+        }
+
+        &.child {
+            margin-bottom: 1em;
+
+            .mg-hero__buttons {
+                margin-top: 0;
+                margin-bottom: 2.8em;
+            }
+
+            @media (max-width: 31.25em){
+                margin-left: 0;
+                background-color: darkgray;
+                margin-bottom: 0;
+            }
+        
+            @media (max-width: 50em){
+                margin-left: 0;
+                background-color: darkgray;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &__content { 
+        margin-top: 0.5em;
+
+    }
+
+    &__meta {
+        padding-bottom: 1.3em;
+
+        &.meta-detail {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    &__label {
+
+            padding: .3em 0;
+            margin-right: .5em;
+            // background: rgb(230, 230, 230);
+            // border-radius: .3em;
+            font-size: .85em;
+            font-weight: bold;
+            color: #0b0f12;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+
+            &.detail {
+                font-weight: normal;
+            }
+        
+    }
+
+    &__title {
+        margin-bottom: 1.3em;
+
+        a {
+            font-weight: bold;
+            color: #005aaa;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+
+            // &:hover {
+            //     background: #2dabff;
+            // }
+    
+            &.active {
+                background: #d4d4d4;
+                font-weight: bold;
+            }
+
+            @media (max-width: 31.25em){
+                font-size: 1.5em;
+            }
+        
+            @media (max-width: 50em){
+                font-size: 1.7em;
+            }
+
+            &.text-xxl {
+
+                font-size: 2.5em;
+
+                @media (max-width: 31.25em){
+                    font-size: 1.5em;
+                }
+            
+                @media (max-width: 50em){
+                    font-size: 1.7em;
+                }
+            }
+
+            &.text-xl {
+                
+                font-size: 2.4em;
+
+                @media (max-width: 31.25em){
+                    font-size: 1.4em;
+                }
+            
+                @media (max-width: 50em){
+                    font-size: 1.6em;
+                }
+            }
+
+        }
+
+    }
+
+    &__summaryText {
+        font-size: 1.5em;
+        font-weight: 400;
+        margin-bottom: 1em;
+    }
+
+    &__buttons {
+        margin-bottom: 1em;
+        //Media queries
+
+        @media (max-width: 31.25em){
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 50em){
+            display: flex;
+            flex-direction: column;
+        }
+
+    }
+
+    &__button {
+        color: white;
+        font-size: .8em;
+        text-decoration: none;
+        padding: .3em .5em;
+        // border-radius: .5em;
+        display: inline-block;
+        margin-top: .5em;
+        
+
+        // &:hover {
+        //     background:#2dabff;
+        // }
+
+        &.mg-hero__button-primary {
+            background-color: #a9a9a9;
+        }
+
+        &.mg-hero__button-secondary {
+            background-color: #b8b4b4;
+        }
+
+        &.mg-hero__button-tertiary {
+            background-color: #e4e4e4;
+        }
+        
+    }
+
+}
+
