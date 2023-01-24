@@ -119,15 +119,6 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
       line-height: 1.2em;
   }
 
-  &__text-link {
-      cursor: pointer;
-
-      &:hover {
-          background: #eef0f7;
-      }
-
-  }
-
   &__button {
       background: #0071d2;
       color: white;
@@ -169,7 +160,6 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
   display: inline-block;
 }
 .mg-card__label,
-.mg-card__text-link,
 .mg-card__button {
   position: relative;
   z-index: 101;
