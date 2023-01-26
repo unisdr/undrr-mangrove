@@ -120,6 +120,12 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
       padding-top: 1em;
   }
 
+  &__text-link {
+      color: #005aaa;
+      text-decoration: none;
+      cursor: pointer;
+  }
+
   &__button {
       background: #0071d2;
       color: white;
@@ -168,7 +174,8 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
 .mg-card__share {
   z-index: 101;
 }
-.mg-card__label:hover{
+.mg-card__label,
+.mg-card__text-link:hover {
   text-decoration: underline;
 }
 
