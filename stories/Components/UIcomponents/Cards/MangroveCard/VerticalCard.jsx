@@ -1,7 +1,6 @@
 /* eslint-disable react/no-danger */
 import React, { Fragment } from 'react';
 import DOMPurify from 'dompurify';
-
 import './card.scss';
 import '../../../../assets/scss/_grid.scss';
 

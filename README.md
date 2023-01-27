@@ -1,20 +1,18 @@
-# United Nations Development Programme Design system
+# Mangrove: the UNDRR component library
+
+[View the component library](https://unisdr.github.io/undrr-mangrove/)
+
+## 🚨 Pre-alpha warning 🚨
+
+This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
 ## Purpose
 
-The purpose of this project is to create unified user interfaces for UNDP by the designer and developers.
+This project stops short of being a full design system and instead focus on providing usable components that are informed by the UNDRR brand guidelines and project styles. 
 
-These projects will have consistent look and feel and accessible in nature by just following the guidelines in the documentation.
+These components offer consistency, documentation and portability to speed quality development with the expected look and feel. These will also help reduce entropy, critical in ensuring websites remain accessible. 
 
-By unifiying design elements into reusable components, development will simplify and accelerate the development of these digital products.
-
-The Guide is a living document created to meet the needs of UNDP's front-end developers and designers. If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us.
-
-## Demo
-Living Style Guide & Documentation: [Storybook](https://design.undp.org)
-
-## Starter project
-Static generator using Design System as dependency: [UNDP Design System starter template](https://github.com/khawkins/undrr-mangrove-starter-template)
+If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us in the issue queue.
 
 ## Development
 
@@ -34,20 +32,9 @@ yarn run storybook
 yarn run build-storybook
 
 # linting on codebase
-yarn run lint
+# WARNING: the linter config will currently make non-helpful changes 
+# yarn run lint
 ```
-
-## List of components
-
-View available Components [here](https://design.undp.org). Every components have its own documentations page on the link provided.
-
-
-## Credits
-
-The design system is based on:
-
-- [Storybook](https://storybook.js.org/)
-
 
 ## Compiled assets
 
@@ -81,5 +68,11 @@ The design system is based on:
 | Components/UI components/Stats Card Slider  | stories/Organism/Statscardslider  |
 | Utilities/Progress Bar Navigation  | stories/Atom/Navigation/ProgressBarNavigation  |
 
+## Credit
+
+The base configuration and bootstrapping of this [Storybook](https://storybook.js.org/)-powered library was done based off the [UNDP Design System](https://github.com/undp/design-system), which is MIT licenced, but done with their kind blessing.
+
 ## LICENSE
-MIT license.
+
+Components and code are MIT licenced. The UNDRR look and feel is proprietary.
+

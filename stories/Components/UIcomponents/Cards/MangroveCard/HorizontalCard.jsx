@@ -1,7 +1,6 @@
 /* eslint-disable react/no-danger */
 import React, { Fragment } from 'react';
 import DOMPurify from 'dompurify';
-
 import './card.scss';
 import '../../../../assets/scss/_grid.scss';
 
@@ -40,9 +39,8 @@ export function HorizontalCard({
               <header className="mg-card__title">
                 <a href={item.link}>{item.title}</a>
               </header>
-
               <p className="mg-card__summaryText" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }} />
-
+              <p className="mg-card__summaryText">{item.summaryText}</p>
               <a href={item.link} className="mg-card__button">{item.button}</a>
 
             </div>
