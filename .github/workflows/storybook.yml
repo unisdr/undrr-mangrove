@@ -34,6 +34,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
   # Deployment job
   deploy:
+    if: github.ref == 'refs/heads/main' # only deploy if branch is master
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
