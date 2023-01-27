@@ -23,6 +23,11 @@ $backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'gre
       padding-right: $spacing-44;
     }
   }
+
+  .swiper-wrapper {
+    display: grid;
+    grid-auto-flow: column;
+  }
 }
 
 [dir='rtl'] {
