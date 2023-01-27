@@ -1,4 +1,6 @@
+/* eslint-disable react/no-danger */
 import React, { Fragment } from 'react';
+import DOMPurify from 'dompurify';
 import './card.scss';
 import '../../../../assets/scss/_grid.scss';
 
@@ -11,17 +13,17 @@ export const hovercolors_options = {
   green: 'green',
 };
 
-export function HorizontalCard({
+export function VerticalCard({
   data, Hovercolors,
 }) {
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <>
-      <h5>HORIZONTAL CARD</h5>
+      <h5>VERTICAL CARD</h5>
       <article className="mg-card">
 
         {data.map((item, index) => (
-          <div key={index} className="mg-card__hc">
+          <div key={index} className="mg-card__vc">
             <div className="mg-card__visual">
               <img src={item.imgback} alt={item.imgback} className="mg-card__image" />
               <a href={item.link} className="mg-card__share">{item.share}</a>
@@ -38,7 +40,7 @@ export function HorizontalCard({
                 <a href={item.link}>{item.title}</a>
               </header>
 
-              <p className="mg-card__summaryText">{item.summaryText}</p>
+              <p className="mg-card__summaryText" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }} />
 
               <a href={item.link} className="mg-card__button">{item.button}</a>
 
@@ -51,6 +53,6 @@ export function HorizontalCard({
   );
 }
 
-HorizontalCard.defaultProps = {
+VerticalCard.defaultProps = {
   Hovercolors: 'yellow',
 };
