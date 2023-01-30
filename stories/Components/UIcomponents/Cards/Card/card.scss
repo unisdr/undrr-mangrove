@@ -2,8 +2,8 @@
 @import '../../../../assets/scss/mixins';
 
 /* content-card start */
-$colors: ('yellow': $color-yellow, 'red': $color-red, 'green': $color-green, 'blue': $color-azure, 'gray': $color-gray-100);
-$backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'green': $color-light-green, 'blue': $color-light-azure, 'gray': $color-gray-100);
+$colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red, 'green': $mg-color-green, 'blue':$mg-color-azure, 'gray': $mg-color-neutral-100);
+$backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 'green': $mg-color-green-light, 'blue': $mg-color-azure-light, 'gray': $mg-color-neutral-100);
 
 //MG CARD using CSS GRID
 .mg-card {

@@ -10,17 +10,17 @@ label {
   &.error {
     @extend %paragragh-font-20;
 
-    color: $color-black;
+    color: $mg-color-black;
     margin-top: 0;
   }
 
   &.disabled {
-    color: $color-gray-400;
+    color: $mg-color-neutral-400;
   }
 }
 
 .help {
-  color: $color-gray-500;
+  color: $mg-color-neutral-500;
   display: block;
   font-size: $font-size-14;
   margin-bottom: 0;
@@ -28,7 +28,7 @@ label {
 }
 
 .error {
-  color: $color-red;
+  color: $mg-color-red;
   font-size: $font-size-16;
   margin-bottom: 0;
   margin-top: $spacing-03;
@@ -47,7 +47,7 @@ textarea {
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  border: 2px solid $color-black;
+  border: 2px solid $mg-color-black;
   border-radius: 0;
   box-sizing: border-box;
   display: block;
@@ -59,11 +59,11 @@ textarea {
   width: 100%;
 
   &::placeholder {
-    color: $color-gray-500;
+    color: $mg-color-neutral-500;
   }
 
   &:focus {
-    box-shadow: 0 0 4px $color-blue-800;
+    box-shadow: 0 0 4px $mg-color-blue-800;
     outline: 0;
   }
 
@@ -74,17 +74,17 @@ textarea {
   }
 
   &.disabled {
-    background-color: $color-white;
-    border: 2px solid $color-gray-400;
-    color: $color-gray-400;
+    background-color: $mg-color-white;
+    border: 2px solid $mg-color-neutral-400;
+    color: $mg-color-neutral-400;
 
     &::placeholder {
-      color: $color-gray-400;
+      color: $mg-color-neutral-400;
     }
   }
 
   &.error {
-    border: 2px solid $color-red;
+    border: 2px solid $mg-color-red;
   }
 }
 
@@ -92,8 +92,8 @@ input[type='date'] {
   background:
     url(#{$img-path-Icon}/calender-black.svg) no-repeat left
     14px bottom 12px;
-  background-color: $color-white;
-  color: $color-gray-500;
+  background-color: $mg-color-white;
+  color: $mg-color-neutral-500;
   padding-left: $spacing-08;
 
   &.disabled {
@@ -113,7 +113,7 @@ input[type='search'] {
 
 .help {
   &.disabled {
-    color: $color-gray-400;
+    color: $mg-color-neutral-400;
   }
 }
 
@@ -151,7 +151,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
     background:
       url(#{$img-path-Icon}/calender-black.svg) no-repeat
       right 14px bottom 12px;
-    background-color: $color-white;
+    background-color: $mg-color-white;
     padding-left: 0.635rem;
     padding-right: $spacing-08;
     text-align: right;

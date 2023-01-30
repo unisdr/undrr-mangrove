@@ -124,7 +124,7 @@
 }
 
 %border-bottom {
-  border-bottom: 1px solid $color-gray-400;
+  border-bottom: 1px solid $mg-color-neutral-400;
 }
 
 %img-cover {
@@ -142,7 +142,7 @@
 
 %footer-block {
   align-items: center;
-  border-bottom: 1px solid $color-white;
+  border-bottom: 1px solid $mg-color-white;
   justify-content: space-between;
   margin-bottom: $spacing-07;
 }
@@ -178,32 +178,32 @@
 }
 
 %sidebar-selected {
-  background-color: $color-blue-600;
+  background-color: $mg-color-blue-600;
 
   h6 {
-    color: $color-white;
+    color: $mg-color-white;
   }
 
   &:hover {
-    background-color: $color-blue-600;
+    background-color: $mg-color-blue-600;
   }
 }
 
 %checbox-radio-before {
   -webkit-appearance: none;
   appearance: none;
-  border: 2px solid $color-dark-red;
+  border: 2px solid $mg-color-red-900;
   cursor: pointer;
   height: 16px;
   margin: 0;
   width: 16px;
 
   &:hover {
-    border-color: $color-light-pink;
+    border-color: $sendai-purple-400;
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $color-blue-800;
+    box-shadow: 0 0 4px $mg-color-blue-800;
     outline: 0;
   }
 }
@@ -277,8 +277,8 @@
 }
 
 %select_default {
-  border: 2px solid $color-black;
-  color: $color-black;
+  border: 2px solid $mg-color-black;
+  color: $mg-color-black;
   cursor: pointer;
   font-size: $font-size-16;
   font-weight: 600;
@@ -291,7 +291,7 @@
 }
 
 %select_option {
-  border: 2px solid $color-black;
+  border: 2px solid $mg-color-black;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -301,7 +301,7 @@
   width: 100%;
 
   &:focus {
-    box-shadow: 0 0 4px $color-blue-800;
+    box-shadow: 0 0 4px $mg-color-blue-800;
     outline: 0;
   }
 }
@@ -376,13 +376,13 @@
 
 %expand_search {
   border: 0;
-  border-bottom: 1px solid $color-black;
+  border-bottom: 1px solid $mg-color-black;
   border-radius: 0;
   cursor: pointer;
 }
 
 %header {
-  background-color: $color-gray-100;
+  background-color: $mg-color-neutral-100;
   box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
   height: 7.1875rem;
   left: 0;
@@ -412,25 +412,25 @@
 %footerlink {
   @extend %img_none;
 
-  color: $color-white;
+  color: $mg-color-white;
   font-size: $font-size-16;
   line-height: 1.4;
 
   &:hover {
-    color: $color-blue-100;
+    color: $mg-color-blue-100;
   }
 }
 
 %footerlinkinvert {
-  color: $color-black;
+  color: $mg-color-black;
 
   &:hover {
-    color: $color-gray-600;
+    color: $mg-color-neutral-600;
   }
 }
 
 %selectoption {
-  border-top: 1px solid $color-gray-400;
+  border-top: 1px solid $mg-color-neutral-400;
   cursor: pointer;
   margin-bottom: 0;
   padding: 0;
@@ -516,7 +516,7 @@
     &::before {
       @extend %pseudo-icon;
 
-      background-color: $color-red;
+      background-color: $mg-color-red;
       display: none;
       height: 2px;
       right: 0;
@@ -529,8 +529,8 @@
 
       @include transform(rotate(45deg));
 
-      border-right: 2px solid $color-red;
-      border-top: 2px solid $color-red;
+      border-right: 2px solid $mg-color-red;
+      border-top: 2px solid $mg-color-red;
       height: $spacing-04;
       right: 0;
       top: 2px;
@@ -551,8 +551,8 @@
 
 %animate-link {
   background-image:
-    linear-gradient($color-dark-red, $color-dark-red),
-    linear-gradient($color-dark-red, $color-dark-red);
+    linear-gradient($mg-color-red-900, $mg-color-red-900),
+    linear-gradient($mg-color-red-900, $mg-color-red-900);
   background-position: 100% 100%, -30px 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px, 0 1px;

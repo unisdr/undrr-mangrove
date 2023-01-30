@@ -9,7 +9,7 @@
   @extend %sidebar;
 
   &:hover {
-    background-color: $color-gray-200;
+    background-color: $mg-color-neutral-200;
   }
 
   &.open {

@@ -25,7 +25,7 @@
   }
 
   .color__title {
-    color: $color-black;
+    color: $mg-color-black;
     font-size: 0.813rem;
     min-height: 28px;
 
@@ -40,7 +40,7 @@
 }
 
 .Primary-text {
-  color: $color-black;
+  color: $mg-color-black;
   font-size: $font-size-12;
   margin-top: -1.538rem;
   text-align: center;
@@ -88,7 +88,7 @@
       }
 
       &.p-blue-100 {
-        background-color: $color-blue-100;
+        background-color: $mg-color-blue-100;
       }
 
       &.p-blue-200 {
@@ -100,7 +100,7 @@
       }
 
       &.p-blue-400 {
-        background-color: $color-blue-400;
+        background-color: $mg-color-blue-400;
       }
 
       &.p-blue-500 {
@@ -108,7 +108,7 @@
       }
 
       &.p-blue-600 {
-        background-color: $color-blue-600;
+        background-color: $mg-color-blue-600;
       }
 
       &.p-blue-700 {
@@ -116,39 +116,39 @@
       }
 
       &.p-gray-100 {
-        background-color: $color-gray-100;
+        background-color: $mg-color-neutral-100;
       }
 
       &.p-gray-200 {
-        background-color: $color-gray-200;
+        background-color: $mg-color-neutral-200;
       }
 
       &.p-gray-300 {
-        background-color: $color-gray-300;
+        background-color: $mg-color-neutral-300;
       }
 
       &.p-gray-400 {
-        background-color: $color-gray-400;
+        background-color: $mg-color-neutral-400;
       }
 
       &.p-gray-500 {
-        background-color: $color-gray-500;
+        background-color: $mg-color-neutral-500;
       }
 
       &.p-gray-600 {
-        background-color: $color-gray-600;
+        background-color: $mg-color-neutral-600;
       }
 
       &.p-gray-700 {
-        background-color: $color-gray-700;
+        background-color: $mg-color-neutral-700;
       }
 
       &.light-yellow {
-        background-color: $color-light-yellow;
+        background-color: $mg-color-yellow-light;
       }
 
       &.yellow {
-        background-color: $color-yellow;
+        background-color: $mg-color-yellow;
       }
 
       &.dark-yellow {
@@ -156,23 +156,23 @@
       }
 
       &.light-red {
-        background-color: $color-light-red;
+        background-color: $mg-color-red-600;
       }
 
       &.red {
-        background-color: $color-red;
+        background-color: $mg-color-red;
       }
 
       &.dark-red {
-        background-color: $color-dark-red;
+        background-color: $mg-color-red-900;
       }
 
       &.light-green {
-        background-color: $color-light-green;
+        background-color: $mg-color-green-light;
       }
 
       &.green {
-        background-color: $color-green;
+        background-color: $mg-color-green;
       }
 
       &.dark-green {
@@ -180,11 +180,11 @@
       }
 
       &.light-azure {
-        background-color: $color-light-azure;
+        background-color: $mg-color-azure-light;
       }
 
       &.azure {
-        background-color: $color-azure;
+        background-color:$mg-color-azure;
       }
 
       &.dark-azure {
@@ -226,27 +226,27 @@
       }
 
       &.p-gray-100 {
-        background-color: $color-gray-100;
+        background-color: $mg-color-neutral-100;
       }
 
       &.p-gray-200 {
-        background-color: $color-gray-200;
+        background-color: $mg-color-neutral-200;
       }
 
       &.p-gray-400 {
-        background-color: $color-gray-400;
+        background-color: $mg-color-neutral-400;
       }
 
       &.p-gray-700 {
-        background-color: $color-gray-700;
+        background-color: $mg-color-neutral-700;
       }
 
       &.p-blue-600 {
-        background-color: $color-blue-600;
+        background-color: $mg-color-blue-600;
       }
 
       &.dark-red {
-        background-color: $color-dark-red;
+        background-color: $mg-color-red-900;
       }
     }
 
