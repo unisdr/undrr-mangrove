@@ -4,40 +4,87 @@ $img-path-Icon: '../../../assets/icons';
 $img-path-Iconback: '../../assets/icons';
 $img-path-Iconfourback: '../../../../assets/icons';
 
-// COLORS
-$color-black: #000;
-$color-white: #fff;
-$color-blue-100: #b5d5f5;
-$color-blue-200: #94c4f5;
-$color-blue-300: #6babeb;
-$color-blue-400: #4f95dd;
-$color-blue-500: #3288ce;
-$color-blue-600: #006eb5;
-$color-blue-700: #1f5a95;
-$color-blue-800: #0468b1;
-$color-gray-100: #fafafa;
-$color-gray-200: #f7f7f7;
-$color-gray-300: #edeff0;
-$color-gray-400: #d4d6d8;
-$color-gray-500: #a9b1b7;
-$color-gray-600: #55606e;
-$color-gray-700: #232e3d;
-$color-light-yellow: #ffe17e;
-$color-yellow: #ffeb00;
-$color-dark-yellow: #fbc412;
-$color-light-red: #ffbcb7;
-$color-red: #ee402d;
-$color-dark-red: #d12800;
-$color-light-green: #b8ecb6;
-$color-green: #6de354;
-$color-dark-green: #59ba47;
-$color-light-azure: #a2daf3;
-$color-azure: #60d4f2;
-$color-dark-azure: #00c1ff;
-$color-light-pink: #ffb4ae;
-$color-silvery-moonlight: #ced0d3;
-$color-shuttle-gray: #55606f;
-$color-ebony-clay: #232e3e;
+// MG-COLORS BASIC
+$mg-color-black: #000;
+$mg-color-almost-black: #333;
+$mg-color-white: #fff;
+$mg-color-corporate-blue: #004f91;
+$mg-color-link-blue: #106cb8;
+$mg-color-medium-blue: #6093bd;
+$mg-color-light-blue: #9abbd6;
+$mg-color-extra-light-blue:#dde8f0;
+$mg-color-dark-grey: #666;
+$mg-color-light-grey: #f2f2f2;
+$mg-color-medium-grey-1: #bababa;
+$mg-color-medium-grey-2: #ccc;
+$mg-color-medium-grey-3: #e3e3e3;
+
+//MG-COLORS BLUE SHADES (#004f91)
+$mg-color-blue-0:#ffffff;
+$mg-color-blue-50:#e6edf4;
+$mg-color-blue-100:#ccdce9;
+$mg-color-blue-200:#b3cade;
+$mg-color-blue-300:#99b9d3;
+$mg-color-blue-400:#80a7c8;
+$mg-color-blue-500:#6695bd;
+$mg-color-blue-600:#4d84b2;
+$mg-color-blue-700:#3372a7;
+$mg-color-blue-800:#1a619c;
+$mg-color-blue-900:#004f91;
+
+//MG-COLORS BLACK SHADES (#000)
+$mg-color-black-0:#ffffff;
+$mg-color-black-50:#e6e6e6;
+$mg-color-black-100:#cccccc;
+$mg-color-black-200:#b3b3b3;
+$mg-color-black-300:#999999;
+$mg-color-black-400:#808080;
+$mg-color-black-500:#666666;
+$mg-color-black-600:#4d4d4d;
+$mg-color-black-700:#333333;
+$mg-color-black-800:#1a1a1a;
+$mg-color-black-900:#000000;
+
+// MG-COLORS ACCENT
+$mg-color-accent-100:#f4e496;
+$mg-color-accent-200:#d3cea9;
+$mg-color-accent-300:#fdf6d9;
+$mg-color-accent-400:#0a6969;
+
+// COLORS SENDAI
+$mg-color-sendai-red:#c10920;
+$mg-color-sendai-red-200:#d45363;
+$mg-color-sendai-red-400:#cd3a4d;
+$mg-color-sendai-red-800:#c72236;
+$mg-color-sendai-red-900:#c10920;
+
+$mg-color-sendai-orange: #eb752a;
+$mg-color-sendai-orange-200:#f19e6a;
+$mg-color-sendai-orange-400:#ef9155;
+$mg-color-sendai-orange-800:#ed833f;
+$mg-color-sendai-orange-900:#eb752a;
+
+$mg-color-sendai-purple:#962987;
+$mg-color-sendai-purple-200:#b669ab;
+$mg-color-sendai-purple-400:#ab549f;
+$mg-color-sendai-purple-800:#a13e93;
+$mg-color-sendai-purple-900:#962987;
+
+$mg-color-sendai-turquoise:#00afae;
+$mg-color-sendai-turquoise-200:#4dc7c6;
+$mg-color-sendai-turquoise-400:#33bfbe;
+$mg-color-sendai-turquoise-800:#1ab7b6;
+$mg-color-sendai-turquoise-900:#00afae;
+
+//COLORS HOVER
+$mg-hover-blue: $mg-color-blue-400;
+
+//COMPONENT COLORS
+$mg-color-label: $mg-color-blue-700;
+$mg-color-label--hover: $mg-color-black-800;
+$mg-color-button-background: $mg-color-blue-900;
+$mg-color-button-background--hover: $mg-color-white;
+
 
 // FONT SIZE
 $font-size-12: 0.75rem;
@@ -93,50 +140,6 @@ $width-1440: 90rem;
 // Header height
 $header-height-xlarge: 115px;
 $header-height-medium: 75px;
-
-// GRADIENT COLOR LIST
-$yellow-gradient: $color-yellow 30%, rgb(255 235 0 / 0%) 110%;
-$red-gradient: $color-red 30%, rgb(240 49 49 / 0%) 110%;
-$green-gradient: $color-green 30%, rgb(0 0 0 / 0%) 110%;
-$blue-gradient: $color-azure 30%, rgb(101 204 244 / 0%) 110%;
-
-//SDG color
-$sdg-red: #e5243b;
-$sdg-mustard: #dda63a;
-$sdg-kelly-green: #4c9f38;
-$sdg-dark-red: #c5192d;
-$sdg-red-orange: #ff3a21;
-$sdg-bright-blue: #26bde2;
-$sdg-yellow: #fcc30b;
-$sdg-burgundy-red: #a21942;
-$sdg-orange: #fd6925;
-$sdg-magenta: #dd1367;
-$sdg-golden-yellow: #fd9d24;
-$sdg-dark-mustard: #bf8b2e;
-$sdg-dark-green: #3f7e44;
-$sdg-blue: #0a97d9;
-$sdg-lime-green: #56c02b;
-$sdg-royal-blue: #00689d;
-$sdg-navy-blue: #19486a;
-
-//SDG hover color
-$sdg-hover-red: #dc9099;
-$sdg-hover-mustard: #d3bb8a;
-$sdg-hover-kelly-green: #9fd092;
-$sdg-hover-dark-red: #ce8f97;
-$sdg-hover-red-orange: #ce9890;
-$sdg-hover-bright-blue: #9ac8d3;
-$sdg-hover-yellow: #d3c79d;
-$sdg-hover-burgundy-red: #ce94a6;
-$sdg-hover-orange: #d2aa98;
-$sdg-hover-magenta: #c994aa;
-$sdg-hover-golden-yellow: #c7b094;
-$sdg-hover-dark-mustard: #ceba98;
-$sdg-hover-dark-green: #a2d7a6;
-$sdg-hover-blue: #a1c6d7;
-$sdg-hover-lime-green: #abce9e;
-$sdg-hover-royal-blue: #748f9d;
-$sdg-hover-navy-blue: #a2c2d8;
 
 $author-image-radius: 50%;
 
