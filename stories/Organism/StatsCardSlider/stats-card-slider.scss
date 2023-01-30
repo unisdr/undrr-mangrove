@@ -1,14 +1,14 @@
 @import '../../assets/scss/breakpoints';
 @import '../../assets/scss/variables';
 
-$backgroundcolors: ('yellow': $color-light-yellow, 'red': $color-light-red, 'green': $color-light-green, 'blue': $color-light-azure, 'gray': $color-gray-100);
+$backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 'green': $mg-color-green-light, 'blue': $mg-color-azure-light, 'gray': $mg-color-neutral-100);
 
 .stats-slider {
   .stats-card.small {
     max-width: 100%;
 
     &:hover {
-      background-color: $color-light-yellow;
+      background-color: $mg-color-yellow-light;
 
       @each $name, $color in $backgroundcolors {
         &.#{$name} {

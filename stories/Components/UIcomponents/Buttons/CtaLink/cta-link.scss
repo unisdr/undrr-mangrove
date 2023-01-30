@@ -6,7 +6,7 @@
   @extend %button;
   @extend %img_none;
 
-  color: $color-black;
+  color: $mg-color-black;
 
   &.cta--arrow {
     @extend %chevron-right-expanded;

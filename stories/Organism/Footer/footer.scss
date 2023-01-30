@@ -206,7 +206,7 @@
 
     @include devicebreak(small) {
       &::after {
-        border-bottom: 2px solid $color-gray-400;
+        border-bottom: 2px solid $mg-color-neutral-400;
         content: '';
         position: absolute;
         width: calc(100% - 1.3rem);
@@ -215,7 +215,7 @@
 
     &.inverted {
       .footer-heading {
-        color: $color-black;
+        color: $mg-color-black;
 
         &::before {
           background: url(#{$img-path-Iconback}/chevron-down.svg) no-repeat center center;
@@ -233,7 +233,7 @@
   &-heading {
     background: transparent;
     border: 0;
-    color: $color-white;
+    color: $mg-color-white;
     display: block;
     font-size: $font-size-16;
     font-weight: 700;
@@ -322,13 +322,13 @@
   }
 
   h5 {
-    color: $color-white;
+    color: $mg-color-white;
     margin: 0 $spacing-05;
   }
 
   &.inverted {
     h5 {
-      color: $color-black;
+      color: $mg-color-black;
     }
   }
 }
@@ -336,9 +336,9 @@
 
 /* footer start */
 .footer {
-  background-color: $color-gray-100;
-  background-color: $color-blue-600;
-  color: $color-white;
+  background-color: $mg-color-neutral-100;
+  background-color: $mg-color-blue-600;
+  color: $mg-color-white;
   padding: $spacing-09 $spacing-04 $spacing-08;
 
   @include devicebreak(medium) {
@@ -428,13 +428,13 @@
   }
 
   &.inverted {
-    background-color: $color-gray-100;
-    color: $color-black;
+    background-color: $mg-color-neutral-100;
+    color: $mg-color-black;
 
     .footer {
       &-head,
       &-top {
-        border-color: $color-gray-700;
+        border-color: $mg-color-neutral-700;
       }
     }
   }

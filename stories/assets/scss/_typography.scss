@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  color: $color-black;
+  color: $mg-color-black;
   font-family: $Font-Family-Roboto;
   font-size: 1rem;
   line-height: 1.4;
@@ -170,7 +170,7 @@ dd {
 
 hr {
   // border-width: 2px;
-  border: 1px solid $color-black;
+  border: 1px solid $mg-color-black;
 }
 
 // link animation
@@ -190,7 +190,7 @@ a {
   @extend %paragragh-font-20 !optional;
   @extend %animate-link !optional;
 
-  color: $color-black;
+  color: $mg-color-black;
   text-decoration: none;
 }
 

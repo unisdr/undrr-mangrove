@@ -5,8 +5,8 @@
 /* Tab start */
 .tabs {
   > ul {
-    background-color: $color-white;
-    border-bottom: 2px solid $color-gray-300;
+    background-color: $mg-color-white;
+    border-bottom: 2px solid $mg-color-neutral-300;
     list-style: none;
     padding-left: 0;
 
@@ -28,12 +28,12 @@
       text-transform: uppercase;
 
       &.is-active {
-        border-bottom: 2px solid $color-dark-red;
+        border-bottom: 2px solid $mg-color-red-900;
       }
 
       &:hover {
         @include devicebreak(large) {
-          border-bottom: 2px solid $color-gray-500;
+          border-bottom: 2px solid $mg-color-neutral-500;
         }
       }
 
@@ -46,7 +46,7 @@
   }
 
   .tabs-content {
-    background-color: $color-white;
+    background-color: $mg-color-white;
 
     .tabs-panel {
       display: none;

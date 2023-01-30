@@ -12,7 +12,7 @@
 
   &.show-small {
     h6 {
-      border-bottom: 2px solid $color-black;
+      border-bottom: 2px solid $mg-color-black;
 
       &::after {
         @include transform(translateY(-50%) rotateZ(-180deg));
@@ -34,14 +34,14 @@
     @include devicebreak(medium) {
       a {
         &:hover {
-          background-color: $color-gray-300;
+          background-color: $mg-color-neutral-300;
         }
       }
     }
   }
 
   h6 {
-    background-color: $color-gray-300;
+    background-color: $mg-color-neutral-300;
     cursor: pointer;
     display: block;
     margin-bottom: 0;
@@ -78,8 +78,8 @@
 
       & > a {
         @include devicebreak(medium) {
-          background-color: $color-blue-600;
-          color: $color-white;
+          background-color: $mg-color-blue-600;
+          color: $mg-color-white;
         }
       }
 
@@ -95,7 +95,7 @@
     }
 
     & > li {
-      background-color: $color-gray-300;
+      background-color: $mg-color-neutral-300;
       position: relative;
 
       @include devicebreak(medium) {
@@ -152,11 +152,11 @@
 
         &:first-of-type a {
           background-color: transparent;
-          color: $color-black;
+          color: $mg-color-black;
 
           @include devicebreak(medium) {
             &:hover {
-              background-color: $color-gray-300;
+              background-color: $mg-color-neutral-300;
             }
           }
         }

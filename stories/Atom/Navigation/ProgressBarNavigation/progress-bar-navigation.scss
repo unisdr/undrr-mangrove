@@ -4,7 +4,7 @@
 
 // * progress navigation start *//
 .progress-container {
-  background: $color-gray-300;
+  background: $mg-color-neutral-300;
   height: 0.75rem;
   width: 100%;
 
@@ -30,25 +30,25 @@
 
   &.yellow {
     .progress-bar {
-      background: $color-yellow;
+      background: $mg-color-yellow;
     }
   }
 
   &.red {
     .progress-bar {
-      background: $color-red;
+      background: $mg-color-red;
     }
   }
 
   &.green {
     .progress-bar {
-      background: $color-green;
+      background: $mg-color-green;
     }
   }
 
   &.blue {
     .progress-bar {
-      background: $color-azure;
+      background:$mg-color-azure;
     }
   }
 }

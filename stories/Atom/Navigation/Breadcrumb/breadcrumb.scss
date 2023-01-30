@@ -7,13 +7,13 @@
   @extend %border-none;
   @extend %img_none;
 
-  color: $color-dark-red;
+  color: $mg-color-red-900;
   font-size: $font-size-12;
   font-weight: 600;
   text-transform: uppercase;
 
   &:hover {
-    color: $color-red;
+    color: $mg-color-red;
   }
 }
 // * breadcrumb end *//

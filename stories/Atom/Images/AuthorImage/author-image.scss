@@ -24,17 +24,17 @@ div.author__img {
 
   &:hover {
 
-    $colors: ('yellow': $color-yellow, 'red': $color-red, 'green': $color-green, 'blue': $color-azure);
+    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red, 'green': $mg-color-green, 'blue':$mg-color-azure);
 
     &::before {
-      @include background-image(45deg, $color-yellow , transparent 53%);
+      @include background-image(45deg, $mg-color-yellow , transparent 53%);
 
       opacity: 0.75;
     }
 
     @each $name, $color in $colors {
       &.#{$name}::before {
-        @include background-image(45deg, $color-yellow , transparent 53%);
+        @include background-image(45deg, $mg-color-yellow , transparent 53%);
       }
     }
   }

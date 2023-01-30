@@ -25,7 +25,7 @@ table {
       @extend %border-none;
 
       &:nth-child(even) {
-        background-color: $color-gray-200;
+        background-color: $mg-color-neutral-200;
       }
     }
   }
@@ -35,7 +35,7 @@ table {
 
     th,
     td {
-      border: 1px solid $color-gray-400;
+      border: 1px solid $mg-color-neutral-400;
     }
   }
 
@@ -61,14 +61,14 @@ table {
 
     &.border {
       tr {
-        border: 1px solid $color-gray-400;
+        border: 1px solid $mg-color-neutral-400;
 
         th,
         td {
           @extend %border-none;
 
           @include devicebreak(medium) {
-            border: 1px solid $color-gray-400;
+            border: 1px solid $mg-color-neutral-400;
           }
         }
       }
@@ -91,7 +91,7 @@ td {
 thead {
   tr {
     th {
-      background-color: $color-gray-300;
+      background-color: $mg-color-neutral-300;
       font-weight: 600;
       text-align: left;
     }
