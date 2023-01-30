@@ -5,29 +5,29 @@
 .button {
   @extend %button;
 
-  color: $color-white;
+  color: $mg-color-white;
   cursor: pointer;
   justify-content: center;
   padding: $spacing-05 $spacing-06;
 
   &:focus-visible {
-    box-shadow: 0 0 4px $color-blue-800;
+    box-shadow: 0 0 4px $mg-color-blue-800;
     outline: 0;
   }
 }
 
 button {
   &:focus-visible {
-    box-shadow: 0 0 4px $color-blue-800;
+    box-shadow: 0 0 4px $mg-color-blue-800;
     outline: 0;
   }
 }
 
 .button.button-primary {
-  background-color: $color-dark-red;
+  background-color: $mg-color-red-900;
 
   &:hover {
-    background-color: $color-red;
+    background-color: $mg-color-red;
   }
 
   &.button-arrow {
@@ -55,16 +55,16 @@ button {
 }
 
 .button.button-secondary {
-  background-color: $color-blue-600;
+  background-color: $mg-color-blue-600;
 
   &:hover {
-    background-color: $color-blue-400;
+    background-color: $mg-color-blue-400;
   }
 }
 
 .button.disabled {
-  background-color: $color-gray-400;
-  color: $color-gray-300;
+  background-color: $mg-color-neutral-400;
+  color: $mg-color-neutral-300;
   pointer-events: none;
 }
 

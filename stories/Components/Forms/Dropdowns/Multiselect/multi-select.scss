@@ -19,7 +19,7 @@
     }
 
     ul {
-      background-color: $color-white;
+      background-color: $mg-color-white;
       border-top: 0;
       display: block;
 
@@ -43,7 +43,7 @@
   > button {
     @extend %select_default;
 
-    background: $color-white;
+    background: $mg-color-white;
     display: flex;
     max-width: 100%;
     text-align: left;
@@ -70,7 +70,7 @@
 
       .form-check {
         &:hover {
-          background-color: $color-gray-100;
+          background-color: $mg-color-neutral-100;
         }
       }
     }
@@ -81,7 +81,7 @@
       &.open {
         ul {
           border: 0;
-          border-top: solid 1px $color-gray-400;
+          border-top: solid 1px $mg-color-neutral-400;
           display: block;
           overflow: visible;
           padding: 0 0 0 $spacing-08;
@@ -95,7 +95,7 @@
       }
 
       button {
-        background: $color-white;
+        background: $mg-color-white;
         border: 0;
         cursor: pointer;
         display: block;
@@ -107,7 +107,7 @@
         width: calc(100% + 2rem);
 
         &:hover {
-          background-color: $color-gray-100;
+          background-color: $mg-color-neutral-100;
         }
 
         &::after {
@@ -123,7 +123,7 @@
       list-style: none;
 
       > li {
-        border-top: 1px solid $color-gray-400;
+        border-top: 1px solid $mg-color-neutral-400;
         margin-bottom: 0;
 
         &:first-of-type {
@@ -131,7 +131,7 @@
         }
 
         > .checkbox-wrapper:hover {
-          background-color: $color-gray-100;
+          background-color: $mg-color-neutral-100;
         }
       }
     }

@@ -17,7 +17,7 @@
       position: relative;
 
       &::after {
-        color: $color-dark-red;
+        color: $mg-color-red-900;
         content: '/';
         font-weight: bold;
         position: absolute;
@@ -43,7 +43,7 @@
 
       a {
         background: none;
-        color: $color-dark-red;
+        color: $mg-color-red-900;
         font-size: $font-size-12;
         font-weight: 600;
         letter-spacing: 0.03em;
@@ -51,7 +51,7 @@
         transition: opacity 0.2s ease;
 
         &:hover {
-          color: $color-red;
+          color: $mg-color-red;
         }
       }
     }
@@ -60,14 +60,14 @@
   &.white {
     li {
       &::after {
-        color: $color-white;
+        color: $mg-color-white;
       }
 
       a {
-        color: $color-white;
+        color: $mg-color-white;
 
         &:hover {
-          color: $color-white;
+          color: $mg-color-white;
           opacity: 0.7;
         }
       }
@@ -75,7 +75,7 @@
 
     &:last-of-type,
     li:last-of-type {
-      color: $color-white;
+      color: $mg-color-white;
     }
   }
 }

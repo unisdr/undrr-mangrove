@@ -3,7 +3,7 @@
 
 /* image caption start */
 .image__caption {
-  border-bottom: 2px solid $color-black;
+  border-bottom: 2px solid $mg-color-black;
 
   @include devicebreak(medium) {
     display: flex;
@@ -12,7 +12,7 @@
   }
 
   p {
-    color: $color-gray-600;
+    color: $mg-color-neutral-600;
     font-size: $font-size-14;
     margin-bottom: $spacing-05;
 
@@ -23,7 +23,7 @@
     }
 
     + .credits {
-      border-top: 1px solid $color-gray-500;
+      border-top: 1px solid $mg-color-neutral-500;
       display: flex;
       flex-shrink: 0;
       flex-wrap: wrap;
@@ -31,7 +31,7 @@
       padding-top: $spacing-05;
 
       @include devicebreak(medium) {
-        border-left: 1px solid $color-gray-500;
+        border-left: 1px solid $mg-color-neutral-500;
         border-top: 0;
         display: block;
         margin-bottom: 0;
@@ -72,7 +72,7 @@
 
       + .credits {
         @include devicebreak(medium) {
-          border-right: 1px solid $color-gray-500;
+          border-right: 1px solid $mg-color-neutral-500;
           border-top: 0;
           display: block;
           margin-right: $spacing-07;

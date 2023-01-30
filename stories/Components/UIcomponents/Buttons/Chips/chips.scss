@@ -4,7 +4,7 @@
 
 .chip {
   align-items: center;
-  background: $color-gray-200;
+  background: $mg-color-neutral-200;
   border: none;
   border-radius: 20px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
@@ -13,7 +13,7 @@
   padding: $spacing-02 $spacing-05;
 
   &:hover {
-    background-color: $color-gray-300;
+    background-color: $mg-color-neutral-300;
   }
 
   &.chip__cross {

@@ -14,12 +14,12 @@
     text-transform: uppercase;
 
     &:hover {
-      color: $color-gray-600;
+      color: $mg-color-neutral-600;
       cursor: pointer;
     }
 
     &.selected {
-      border-bottom: 2px solid $color-dark-red;
+      border-bottom: 2px solid $mg-color-red-900;
       padding-bottom: $spacing-02;
     }
   }

@@ -6,7 +6,7 @@
 div.stats-card {
   @include transition(300ms all);
 
-  background-color: $color-gray-200;
+  background-color: $mg-color-neutral-200;
   box-sizing: border-box;
   overflow-wrap: break-word;
 
@@ -27,21 +27,21 @@ div.stats-card {
   h2 {
     @include transition(300ms all);
 
-    color: $color-gray-200;
+    color: $mg-color-neutral-200;
     font-family: $Font-Family-Roboto;
     font-size: $spacing-11;
     letter-spacing: 0.05rem;
     line-height: 1.1;
     margin-bottom: $spacing-06;
     text-shadow:
-      -1px -1px 0 $color-black,
-      1px -1px 0 $color-black,
-      -1px 1px 0 $color-black,
-      1px 1px 0 $color-black;
+      -1px -1px 0 $mg-color-black,
+      1px -1px 0 $mg-color-black,
+      -1px 1px 0 $mg-color-black,
+      1px 1px 0 $mg-color-black;
 
-    @supports (-webkit-text-stroke: 2px $color-black) {
+    @supports (-webkit-text-stroke: 2px $mg-color-black) {
       text-shadow: none;
-      -webkit-text-stroke: 2px $color-black;
+      -webkit-text-stroke: 2px $mg-color-black;
     }
 
     @include devicebreak(medium) {
@@ -165,12 +165,12 @@ div.stats-card {
 
   &:hover {
     // color map
-    $colors: ('yellow': $color-yellow, 'red': $color-red, 'green': $color-green, 'blue': $color-azure);
+    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red, 'green': $mg-color-green, 'blue':$mg-color-azure);
 
-    background-color: $color-yellow;
+    background-color: $mg-color-yellow;
 
     & h2 {
-      color: $color-black;
+      color: $mg-color-black;
     }
 
     @each $name, $color in $colors {

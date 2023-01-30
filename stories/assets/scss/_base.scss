@@ -4,11 +4,11 @@
 
 /* base start */
 .color-white {
-  color: $color-white;
+  color: $mg-color-white;
 }
 
 .color-black {
-  color: $color-black;
+  color: $mg-color-black;
 }
 
 .show-large {
@@ -51,9 +51,9 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: $color-black;
+    background: $mg-color-black;
     background-clip: padding-box;
-    border: 2px solid $color-white;
+    border: 2px solid $mg-color-white;
   }
 
   &::-webkit-scrollbar-corner {
@@ -61,7 +61,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: $color-black;
+    background: $mg-color-black;
   }
 }
 
@@ -133,27 +133,27 @@
 }
 
 .background-yellow {
-  background-color: $color-light-yellow;
+  background-color: $mg-color-yellow-light;
 }
 
 .background-red {
-  background-color: $color-light-red;
+  background-color: $mg-color-red-600;
 }
 
 .background-green {
-  background-color: $color-light-green;
+  background-color: $mg-color-green-light;
 }
 
 .background-blue {
-  background-color: $color-blue-100;
+  background-color: $mg-color-blue-100;
 }
 
 .background-gray {
-  background-color: $color-gray-100;
+  background-color: $mg-color-neutral-100;
 }
 
 .background-white {
-  background-color: $color-white;
+  background-color: $mg-color-white;
 }
 
 // global colors
@@ -345,7 +345,7 @@ $colors: ('yellow': rgb(255 235 0 / 80%), 'red': rgba(230 45 45 / 78%), 'green':
 }
 
 // color map solid
-$colors-solid: ('yellow': $color-yellow, 'red': $color-red, 'green': $color-green, 'blue': $color-azure);
+$colors-solid: ('yellow': $mg-color-yellow, 'red': $mg-color-red, 'green': $mg-color-green, 'blue':$mg-color-azure);
 
 @each $name, $color in $colors-solid {
   .#{$name} {
@@ -389,7 +389,7 @@ $colors-solid: ('yellow': $color-yellow, 'red': $color-red, 'green': $color-gree
 }
 
 // color map light-color content card only
-$colors-light: ('yellow': $color-light-yellow, 'red': $color-light-red, 'green': $color-light-green, 'blue': $color-light-azure);
+$colors-light: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 'green': $mg-color-green-light, 'blue': $mg-color-azure-light);
 
 @each $name, $color in $colors-light {
   .#{$name} {
