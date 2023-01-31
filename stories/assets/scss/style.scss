@@ -44,16 +44,10 @@
 @import '../../Components/Navigationcomponents/Pagination/pagination';
 @import '../../Components/Navigationcomponents/Sidebar/sidebar';
 @import '../../Components/UIcomponents/Accordion/accordion';
-@import '../../Components/UIcomponents/Author/AuthorCard/author-card';
-@import '../../Components/UIcomponents/Author/AuthorColumn/author-column';
 @import '../../Components/UIcomponents/Buttons/Chips/Chips';
 @import '../../Components/UIcomponents/Buttons/CtaButton/buttons';
 @import '../../Components/UIcomponents/Buttons/CtaLink/cta-link';
-@import '../../Components/UIcomponents/Cards/BioCard/bio-card';
 @import '../../Components/UIcomponents/Cards/Card/card';
-@import '../../Components/UIcomponents/Cards/FeaturedCard/featured-content-card';
-@import '../../Components/UIcomponents/Cards/ImageRevelCTACard/image-revel-cta-card';
-@import '../../Components/UIcomponents/Cards/ParallaxCard/parallax-cards';
 @import '../../Components/UIcomponents/Cards/StatsCards/stats-cards';
 
 @import '../../Components/UIcomponents/Hero/hero';
@@ -64,18 +58,12 @@
 
 //Molecules
 
-@import '../../Molecules/FooterNavigation/FooterConditions/footer-condition';
-@import '../../Molecules/FooterNavigation/FooterConditions2/footer-condition2';
-@import '../../Molecules/FooterNavigation/FooterIcons/footer-icons';
-@import '../../Molecules/FooterNavigation/FooterLists/footer-lists';
-@import '../../Molecules/FooterNavigation/FooterLogo/footer-logo';
 @import '../../Molecules/ImageCaption/image-caption';
 @import '../../Molecules/SidebarData/sidebar-data';
 @import '../../Molecules/Text/CtaBlock/cta-block';
 @import '../../Molecules/Text/BlockquoteComponent/blockquotecomp';
 @import '../../Molecules/Text/HeadingBig/headingbig';
 @import '../../Molecules/Text/Page/page';
-@import '../../Molecules/Text/Post/post';
 
 @import '../../Molecules/Text/SmallCopy/smallcopy';
 @import '../../Molecules/Text/Tertiary/tertiary';
