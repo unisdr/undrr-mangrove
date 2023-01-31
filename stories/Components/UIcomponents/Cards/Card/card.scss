@@ -18,8 +18,8 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: 300px 1fr auto;  
-      background: #ffffff;
-      color: #101010;
+      background: $mg-color-white;
+      color: $mg-color-neutral-800;
 
       @media (min-width: 31.25em){
           grid-template-columns: 160px repeat(2, 1fr);
@@ -38,7 +38,7 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   // Main Card css
   &__visual {
 
-      background-color: #0071d2;
+      background-color: $mg-color-blue-800;
       display: flex;
       align-items: flex-end;
       justify-content: flex-end;
@@ -61,10 +61,10 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   &__label {
       padding: .3em .5em;
       margin-right: .5em;
-      background: rgb(230, 230, 230);
+      background: $mg-color-neutral-50;
       border-radius: .3em;
       font-size: .85em;
-      color: #0071d2;
+      color: $mg-color-blue-800;
       text-decoration: none;
       display: inline-block;
       cursor: pointer;
@@ -83,7 +83,7 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   grid-column: 1 / 3;
   grid-row: 2 / 3;
   padding: 1.5rem;
-  background-color: #ffffff;
+  background-color: $mg-color-white;
 
       @media (min-width: 31.25em){
           grid-column: 2 / 4;
@@ -98,7 +98,7 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
       a {
           font-size: 1.5em;
           font-weight: bold;
-          color: #005aaa;
+          color: $mg-color-blue-800;
           text-decoration: none;
           display: inline-block;
           cursor: pointer;
@@ -108,7 +108,7 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
           // }
   
           &.active {
-              background: #d4d4d4;
+              background: $mg-color-neutral-50;
               font-weight: bold;
           }
       }
@@ -121,23 +121,23 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   }
 
   &__text-link {
-      color: #005aaa;
+      color: $mg-color-blue-800;
       text-decoration: none;
       cursor: pointer;
   }
 
 &__button {
-      background: #0071d2;
-      color: white;
+      background: $mg-color-blue;
+      color: $mg-color-white;
       text-decoration: none;
       padding: .5em 1em;
       // border-radius: .5em;
       display: inline-block;
       margin-top: .5em;
 
-      // &:hover {
-      //     background:#2dabff;
-      // }
+      &:hover {
+          background: $mg-color-hover-primary;
+      }
   }
 
 
