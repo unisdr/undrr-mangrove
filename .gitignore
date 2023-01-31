@@ -6,8 +6,8 @@ yarn-error.log
 /storybook-static
 /docs
 /docs-build
-/stories/assets/css/style.css
-/stories/assets/css/style.css.map
+/stories/assets/css/style*.css
+/stories/assets/css/style*.css.map
 .DS_Store
 .scannerwork
 .vscode/
