@@ -23,19 +23,19 @@
     }
 
     &__overlay{
-        background-color: #fff;
+        background-color: $mg-color-white;
         width: max-content;
         padding: 1.5em;
         margin-left: 2em;
 
         @media (max-width: 31.25em){
             margin-left: 0;
-            background-color: darkgray;
+            background-color: $mg-color-neutral-600;
         }
     
         @media (max-width: 50em){
             margin-left: 0;
-            background-color: darkgray;
+            background-color: $mg-color-neutral-600;
         }
 
         &.child {
@@ -48,13 +48,13 @@
 
             @media (max-width: 31.25em){
                 margin-left: 0;
-                background-color: darkgray;
+                background-color: $mg-color-neutral-600;
                 margin-bottom: 0;
             }
         
             @media (max-width: 50em){
                 margin-left: 0;
-                background-color: darkgray;
+                background-color: $mg-color-neutral-600;
                 margin-bottom: 0;
             }
         }
@@ -82,10 +82,14 @@
             // border-radius: .3em;
             font-size: .85em;
             font-weight: bold;
-            color: #0b0f12;
+            color: $mg-color-neutral-800;
             text-decoration: none;
             display: inline-block;
             cursor: pointer;
+
+            // &:hover {
+            //     background-color: $mg-color-hover-primary;
+            // }
 
             &.detail {
                 font-weight: normal;
@@ -98,7 +102,7 @@
 
         a {
             font-weight: bold;
-            color: #005aaa;
+            color: $mg-color-blue-800;
             text-decoration: none;
             display: inline-block;
             cursor: pointer;
@@ -108,7 +112,7 @@
             // }
     
             &.active {
-                background: #d4d4d4;
+                background: $mg-color-neutral-50;
                 font-weight: bold;
             }
 
@@ -173,7 +177,7 @@
     }
 
     &__button {
-        color: white;
+        color: $mg-color-white;
         font-size: .8em;
         text-decoration: none;
         padding: .3em .5em;
@@ -182,20 +186,28 @@
         margin-top: .5em;
         
 
-        // &:hover {
-        //     background:#2dabff;
-        // }
-
         &.mg-hero__button-primary {
-            background-color: #a9a9a9;
+            background-color: $mg-color-neutral-300;
+            
+            &:hover {
+                background-color: $mg-color-hover-primary;
+            }
         }
 
         &.mg-hero__button-secondary {
-            background-color: #b8b4b4;
+            background-color: $mg-color-neutral-200;
+            
+            &:hover {
+                background-color: $mg-color-hover-primary;
+            }
         }
 
         &.mg-hero__button-tertiary {
-            background-color: #e4e4e4;
+            background-color: $mg-color-neutral-50;
+
+            &:hover {
+                background-color: $mg-color-hover-primary;
+            }
         }
         
     }
