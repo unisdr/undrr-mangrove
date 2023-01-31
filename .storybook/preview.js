@@ -5,7 +5,7 @@ import { initializeRTL } from 'storybook-addon-rtl';
 import renderToHTML from './renderToHTML'
 
 // import preventionweb styles
-import preventionweb from '!!style-loader?injectType=lazyStyleTag!sass-loader!../stories/assets/scss/style-preventionweb.scss'
+import preventionweb from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss'
 
 // import the decorator from the CSS Variables Theme addon
 import cssVariablesTheme from '@etchteam/storybook-addon-css-variables-theme'
@@ -185,5 +185,4 @@ const setDirection = (Story, options) => {
 }
 
 // Trigger callback in Storybook Addons.
-  export const decorators = [getLangCode, sbFrameReset, setDirection, cssVariablesTheme,
-  ];
+  export const decorators = [getLangCode, sbFrameReset, setDirection, cssVariablesTheme, ];
