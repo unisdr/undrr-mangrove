@@ -1,8 +1,8 @@
 // image variables
-$img-path: '../../../assets/images';
-$img-path-Icon: '../../../assets/icons';
-$img-path-Iconback: '../../assets/icons';
-$img-path-Iconfourback: '../../../../assets/icons';
+$img-path: '~/stories/assets/images';
+$img-path-Icon: '~/stories/assets/icons';
+$img-path-Iconback: '~/stories/assets/icons';
+$img-path-Iconfourback: '~/stories/assets/icons';
 
 // MG-COLORS BASIC
 $mg-color-black: #000;
@@ -95,7 +95,7 @@ $mg-color-button-background: $mg-color-blue-900;
 $mg-color-button-background--hover: $mg-color-white;
 
 
-// SENDAI COLORS 
+// SENDAI COLORS
 $sendai-red:#c10920;
 $sendai-red-200:#d45363;
 $sendai-red-400:#cd3a4d;
@@ -131,7 +131,7 @@ $mg-color-medium-grey-1: $mg-color-neutral-200;;
 $mg-color-medium-grey-2: $mg-color-neutral-100;
 $mg-color-medium-grey-3:$mg-color-neutral-300;
 
-$mg-color-dark-grey: $mg-color-neutral-600; 
+$mg-color-dark-grey: $mg-color-neutral-600;
 
 
 // FONT SIZE
