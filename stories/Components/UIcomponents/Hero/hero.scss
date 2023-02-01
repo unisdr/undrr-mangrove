@@ -1,216 +1,202 @@
 @import '../../../assets/scss/variables';
 @import '../../../assets/scss/mixins';
 
-
 //HERO MAIN (The Parent kitchen sink) css
 
 .mg-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-left: calc(50% - (50vw));
+  position: relative;
+  width: 99vw;
 
-    display: grid;
-    grid-template-columns: 1fr;
-    position: relative;
-    width: 99vw;
-    margin-left:calc(50% - (50vw) );
+  //Media queries
 
-    //Media queries
+  @media (max-width: 31.25em) {
+    max-width: fit-content;
+  }
+
+  @media (max-width: 50em) {
+    max-width: fit-content;
+  }
+
+  &__overlay {
+    background-color: $mg-color-white;
+    margin-left: 2em;
+    padding: 1.5em;
+    width: max-content;
 
     @media (max-width: 31.25em) {
-        max-width: fit-content;
+      background-color: $mg-color-neutral-600;
+      margin-left: 0;
     }
 
     @media (max-width: 50em) {
-        max-width: fit-content;
+      background-color: $mg-color-neutral-600;
+      margin-left: 0;
     }
 
-    &__overlay{
-        background-color: $mg-color-white;
-        width: max-content;
-        padding: 1.5em;
-        margin-left: 2em;
+    &.child {
+      margin-bottom: 1em;
 
-        @media (max-width: 31.25em){
-            margin-left: 0;
-            background-color: $mg-color-neutral-600;
-        }
+      .mg-hero__buttons {
+        margin-bottom: 2.8em;
+        margin-top: 0;
+      }
 
-        @media (max-width: 50em){
-            margin-left: 0;
-            background-color: $mg-color-neutral-600;
-        }
+      @media (max-width: 31.25em) {
+        background-color: $mg-color-neutral-600;
+        margin-bottom: 0;
+        margin-left: 0;
+      }
 
-        &.child {
-            margin-bottom: 1em;
-
-            .mg-hero__buttons {
-                margin-top: 0;
-                margin-bottom: 2.8em;
-            }
-
-            @media (max-width: 31.25em){
-                margin-left: 0;
-                background-color: $mg-color-neutral-600;
-                margin-bottom: 0;
-            }
-
-            @media (max-width: 50em){
-                margin-left: 0;
-                background-color: $mg-color-neutral-600;
-                margin-bottom: 0;
-            }
-        }
+      @media (max-width: 50em) {
+        background-color: $mg-color-neutral-600;
+        margin-bottom: 0;
+        margin-left: 0;
+      }
     }
+  }
 
-    &__content {
-        margin-top: 0.5em;
+  &__content {
+    margin-top: 0.5em;
+  }
 
+  &__meta {
+    padding-bottom: 1.3em;
+
+    &.meta-detail {
+      display: flex;
+      flex-direction: column;
     }
+  }
 
-    &__meta {
-        padding-bottom: 1.3em;
+  &__label {
+    color: $mg-color-neutral-800;
+    cursor: pointer;
+    display: inline-block;
+    // background: rgb(230, 230, 230);
+    // border-radius: .3em;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-right: 0.5em;
+    padding: 0.3em 0;
+    text-decoration: none;
 
-        &.meta-detail {
-            display: flex;
-            flex-direction: column;
-        }
+    // &:hover {
+    //     background-color: $mg-color-hover-primary;
+    // }
+
+    &.detail {
+      font-weight: normal;
     }
+  }
 
-    &__label {
+  &__title {
+    margin-bottom: 1.3em;
 
-            padding: .3em 0;
-            margin-right: .5em;
-            // background: rgb(230, 230, 230);
-            // border-radius: .3em;
-            font-size: .85em;
-            font-weight: bold;
-            color: $mg-color-neutral-800;
-            text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
+    a {
+      color: $mg-color-blue-800;
+      cursor: pointer;
+      display: inline-block;
+      font-weight: bold;
+      text-decoration: none;
 
-            // &:hover {
-            //     background-color: $mg-color-hover-primary;
-            // }
+      // &:hover {
+      //     background: #2dabff;
+      // }
 
-            &.detail {
-                font-weight: normal;
-            }
+      &.active {
+        background: $mg-color-neutral-50;
+        font-weight: bold;
+      }
 
-    }
-
-    &__title {
-        margin-bottom: 1.3em;
-
-        a {
-            font-weight: bold;
-            color: $mg-color-blue-800;
-            text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
-
-            // &:hover {
-            //     background: #2dabff;
-            // }
-
-            &.active {
-                background: $mg-color-neutral-50;
-                font-weight: bold;
-            }
-
-            @media (max-width: 31.25em){
-                font-size: 1.5em;
-            }
-
-            @media (max-width: 50em){
-                font-size: 1.7em;
-            }
-
-            &.text-xxl {
-
-                font-size: 2.5em;
-
-                @media (max-width: 31.25em){
-                    font-size: 1.5em;
-                }
-
-                @media (max-width: 50em){
-                    font-size: 1.7em;
-                }
-            }
-
-            &.text-xl {
-
-                font-size: 2.4em;
-
-                @media (max-width: 31.25em){
-                    font-size: 1.4em;
-                }
-
-                @media (max-width: 50em){
-                    font-size: 1.6em;
-                }
-            }
-
-        }
-
-    }
-
-    &__summaryText {
+      @media (max-width: 31.25em) {
         font-size: 1.5em;
-        font-weight: 400;
-        margin-bottom: 1em;
+      }
+
+      @media (max-width: 50em) {
+        font-size: 1.7em;
+      }
+
+      &.text-xxl {
+        font-size: 2.5em;
+
+        @media (max-width: 31.25em) {
+          font-size: 1.5em;
+        }
+
+        @media (max-width: 50em) {
+          font-size: 1.7em;
+        }
+      }
+
+      &.text-xl {
+        font-size: 2.4em;
+
+        @media (max-width: 31.25em) {
+          font-size: 1.4em;
+        }
+
+        @media (max-width: 50em) {
+          font-size: 1.6em;
+        }
+      }
+    }
+  }
+
+  &__summaryText {
+    font-size: 1.5em;
+    font-weight: 400;
+    margin-bottom: 1em;
+  }
+
+  &__buttons {
+    margin-bottom: 1em;
+    //Media queries
+
+    @media (max-width: 31.25em) {
+      display: flex;
+      flex-direction: column;
     }
 
-    &__buttons {
-        margin-bottom: 1em;
-        //Media queries
+    @media (max-width: 50em) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 
-        @media (max-width: 31.25em){
-            display: flex;
-            flex-direction: column;
-        }
+  &__button {
+    color: $mg-color-white;
+    // border-radius: .5em;
+    display: inline-block;
+    font-size: 0.8em;
+    margin-top: 0.5em;
+    padding: 0.3em 0.5em;
+    text-decoration: none;
 
-        @media (max-width: 50em){
-            display: flex;
-            flex-direction: column;
-        }
+    &.mg-hero__button-primary {
+      background-color: $mg-color-button-background;
 
+      &:hover {
+        background-color: $mg-color-button-background--hover;
+      }
     }
 
-    &__button {
-        color: $mg-color-white;
-        font-size: .8em;
-        text-decoration: none;
-        padding: .3em .5em;
-        // border-radius: .5em;
-        display: inline-block;
-        margin-top: .5em;
+    &.mg-hero__button-secondary {
+      background-color: $mg-color-neutral-200;
 
-
-        &.mg-hero__button-primary {
-            background-color: $mg-color-button-background;
-
-            &:hover {
-                background-color: $mg-color-button-background--hover;
-            }
-        }
-
-        &.mg-hero__button-secondary {
-            background-color: $mg-color-neutral-200;
-
-            &:hover {
-                background-color: $mg-color-hover-primary;
-            }
-        }
-
-        &.mg-hero__button-tertiary {
-            background-color: $mg-color-neutral-50;
-
-            &:hover {
-                background-color: $mg-color-hover-primary;
-            }
-        }
-
+      &:hover {
+        background-color: $mg-color-hover-primary;
+      }
     }
 
+    &.mg-hero__button-tertiary {
+      background-color: $mg-color-neutral-50;
+
+      &:hover {
+        background-color: $mg-color-hover-primary;
+      }
+    }
+  }
 }
-

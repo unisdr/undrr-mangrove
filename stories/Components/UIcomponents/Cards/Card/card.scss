@@ -10,144 +10,137 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
 
   // Vertical CARD
   &__vc {
-      max-width: 25rem;
+    max-width: 25rem;
   }
 
   // Horizontal CARD
   &__hc {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: 300px 1fr auto;  
-      background: $mg-color-white;
-      color: $mg-color-neutral-800;
+    background: $mg-color-white;
+    color: $mg-color-neutral-800;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 300px 1fr auto;
 
-      @media (min-width: 31.25em){
-          grid-template-columns: 160px repeat(2, 1fr);
-          grid-template-rows: 1fr auto;
-      }
+    @media (min-width: 31.25em) {
+      grid-template-columns: 160px repeat(2, 1fr);
+      grid-template-rows: 1fr auto;
+    }
 
-      @media (min-width: 50em){
-          grid-template-columns: 300px repeat(2, 1fr);
-      }
+    @media (min-width: 50em) {
+      grid-template-columns: 300px repeat(2, 1fr);
+    }
 
-      @media (min-width: 59em){
-          grid-template-columns: 330px repeat(2, 1fr);
-      }
+    @media (min-width: 59em) {
+      grid-template-columns: 330px repeat(2, 1fr);
+    }
   }
 
   // Main Card css
   &__visual {
-
-      background-color: $mg-color-blue-800;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
+    align-items: flex-end;
+    background-color: $mg-color-blue-800;
+    display: flex;
+    justify-content: flex-end;
   }
 
   &__image {
-      width: 100%;
-      height: 100%;
+    height: 100%;
+    width: 100%;
   }
-  
 
   &__share {
-      display: inline-block;
-      position: absolute;
-      padding: .56em;
-      cursor: pointer;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.56em;
+    position: absolute;
   }
 
-
   &__label {
-      padding: .3em .5em;
-      margin-right: .5em;
-      background: $mg-color-neutral-50;
-      border-radius: .3em;
-      font-size: .85em;
-      color: $mg-color-blue-800;
-      text-decoration: none;
-      display: inline-block;
-      cursor: pointer;
+    background: $mg-color-neutral-50;
+    border-radius: 0.3em;
+    color: $mg-color-blue-800;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.85em;
+    margin-right: 0.5em;
+    padding: 0.3em 0.5em;
+    text-decoration: none;
 
-      // &:hover {
-      //     background: #eef0f7;
-      // }
+    // &:hover {
+    //     background: #eef0f7;
+    // }
 
-      // &--active {
-      //     background: #d4d4d4;
-      //     font-weight: bold;
-      // }
+    // &--active {
+    //     background: #d4d4d4;
+    //     font-weight: bold;
+    // }
   }
 
   &__content {
-  grid-column: 1 / 3;
-  grid-row: 2 / 3;
-  padding: 1.5rem;
-  background-color: $mg-color-white;
+    background-color: $mg-color-white;
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    padding: 1.5rem;
 
-      @media (min-width: 31.25em){
-          grid-column: 2 / 4;
-          grid-row: 1 / 2;
-      }
+    @media (min-width: 31.25em) {
+      grid-column: 2 / 4;
+      grid-row: 1 / 2;
+    }
   }
 
-
   &__title {
-      padding-top: 1.5em;
+    padding-top: 1.5em;
 
-      a {
-          font-size: 1.5em;
-          font-weight: bold;
-          color: $mg-color-blue-800;
-          text-decoration: none;
-          display: inline-block;
-          cursor: pointer;
+    a {
+      color: $mg-color-blue-800;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 1.5em;
+      font-weight: bold;
+      text-decoration: none;
 
-          // &:hover {
-          //     background: #2dabff;
-          // }
-  
-          &.active {
-              background: $mg-color-neutral-50;
-              font-weight: bold;
-          }
+      // &:hover {
+      //     background: #2dabff;
+      // }
+
+      &.active {
+        background: $mg-color-neutral-50;
+        font-weight: bold;
       }
-
+    }
   }
 
   &__summaryText {
-      line-height: 1.2em;
-      padding-top: 1em;
+    line-height: 1.2em;
+    padding-top: 1em;
   }
 
   &__text-link {
-      color: $mg-color-blue-800;
-      text-decoration: none;
-      cursor: pointer;
+    color: $mg-color-blue-800;
+    cursor: pointer;
+    text-decoration: none;
   }
 
-&__button {
-      background: $mg-color-blue;
-      color: $mg-color-white;
-      text-decoration: none;
-      padding: .5em 1em;
-      // border-radius: .5em;
-      display: inline-block;
-      margin-top: .5em;
+  &__button {
+    background: $mg-color-blue;
+    color: $mg-color-white;
+    // border-radius: .5em;
+    display: inline-block;
+    margin-top: 0.5em;
+    padding: 0.5em 1em;
+    text-decoration: none;
 
-      &:hover {
-          background: $mg-color-hover-primary;
-      }
+    &:hover {
+      background: $mg-color-hover-primary;
+    }
   }
-
-
 } //END of CARD
 
 //Accessible CARD CSS RULES
 
 .mg-card__title a::after {
   bottom: 0;
-  content: "";
+  content: '';
   left: 0;
   position: absolute;
   right: 0;
@@ -162,18 +155,22 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   transition-timing-function: ease-in-out;
   z-index: 100;
 }
+
 .mg-card {
-  position: relative;
   display: inline-block;
+  position: relative;
 }
+
 .mg-card__label,
 .mg-card__button {
   position: relative;
   z-index: 101;
 }
+
 .mg-card__share {
   z-index: 101;
 }
+
 .mg-card__label,
 .mg-card__text-link:hover {
   text-decoration: underline;
@@ -201,6 +198,5 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
     }
   }
 }
-
 
 /* content-card start */

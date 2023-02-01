@@ -38,7 +38,7 @@ module.exports = (type = 'css') => {
       objKey = `js/${fileName}`;
     }
 
-    // if templates/pages create a seperate directory
+    // if templates/pages create a separate directory
     if (file.indexOf('Templates') > 0) {
       objKey = `${cssPathPrefix}/templates/${fileName}`;
     }

@@ -8,15 +8,14 @@ $img-path-Iconfourback: '~/stories/assets/icons';
 $mg-color-black: #000;
 $mg-color-white: #fff;
 
-$mg-color-orange:#eb752a; //from sendai orange
-$mg-color-red:#c10920; //from sendai red
-$mg-color-blue:#004f91; //from corporate blue
-
+$mg-color-orange: #eb752a; //from sendai orange
+$mg-color-red: #c10920; //from sendai red
+$mg-color-blue: #004f91; //from corporate blue
 
 //Required by UNDP so will be replaced with our colors
-$mg-color-green:#008484;
-$mg-color-green-light:#90ee90;
-$mg-color-yellow: #ffff00;
+$mg-color-green: #008484;
+$mg-color-green-light: #90ee90;
+$mg-color-yellow: #ff0;
 $mg-color-yellow-light: lightyellow;
 $mg-color-azure: #f0ffff;
 $mg-color-azure-light: #f0f8f8;
@@ -28,62 +27,62 @@ $mg-color-green-dark: #006400;
 $mg-color-azure-dark: #d4e3e3;
 
 //MG-COLORS NEUTRAL SHADES (#000)
-$mg-color-neutral-0:#ffffff;
-$mg-color-neutral-50:#e6e6e6;
-$mg-color-neutral-100:#cccccc;
-$mg-color-neutral-200:#b3b3b3;
-$mg-color-neutral-300:#999999;
-$mg-color-neutral-400:#808080;
-$mg-color-neutral-500:#666666;
-$mg-color-neutral-600:#4d4d4d;
-$mg-color-neutral-700:#333333;
-$mg-color-neutral-800:#1a1a1a;
-$mg-color-neutral-900:#000000;
+$mg-color-neutral-0: #fff;
+$mg-color-neutral-50: #e6e6e6;
+$mg-color-neutral-100: #ccc;
+$mg-color-neutral-200: #b3b3b3;
+$mg-color-neutral-300: #999;
+$mg-color-neutral-400: #808080;
+$mg-color-neutral-500: #666;
+$mg-color-neutral-600: #4d4d4d;
+$mg-color-neutral-700: #333;
+$mg-color-neutral-800: #1a1a1a;
+$mg-color-neutral-900: #000;
 
 //MG-COLORS BLUE SHADES (#004f91)
-$mg-color-blue-0:#ffffff;
-$mg-color-blue-50:#e6edf4;
-$mg-color-blue-100:#ccdce9;
-$mg-color-blue-200:#b3cade;
-$mg-color-blue-300:#99b9d3;
-$mg-color-blue-400:#80a7c8;
-$mg-color-blue-500:#6695bd;
-$mg-color-blue-600:#4d84b2;
-$mg-color-blue-700:#3372a7;
-$mg-color-blue-800:#1a619c;
-$mg-color-blue-900:#004f91;
+$mg-color-blue-0: #fff;
+$mg-color-blue-50: #e6edf4;
+$mg-color-blue-100: #ccdce9;
+$mg-color-blue-200: #b3cade;
+$mg-color-blue-300: #99b9d3;
+$mg-color-blue-400: #80a7c8;
+$mg-color-blue-500: #6695bd;
+$mg-color-blue-600: #4d84b2;
+$mg-color-blue-700: #3372a7;
+$mg-color-blue-800: #1a619c;
+$mg-color-blue-900: #004f91;
 
 //MG-COLORS ORANGE SHADES (#eb752a)
-$mg-color-orange-0:#ffffff;
-$mg-color-orange-50:#fdf1ea;
-$mg-color-orange-100:#fbe3d4;
-$mg-color-orange-200:#f9d6bf;
-$mg-color-orange-300:#f7c8aa;
-$mg-color-orange-400:#f5ba95;
-$mg-color-orange-500:#f3ac7f;
-$mg-color-orange-600:#f19e6a;
-$mg-color-orange-700:#ef9155;
-$mg-color-orange-800:#ed833f;
-$mg-color-orange-900:#eb752a;
+$mg-color-orange-0: #fff;
+$mg-color-orange-50: #fdf1ea;
+$mg-color-orange-100: #fbe3d4;
+$mg-color-orange-200: #f9d6bf;
+$mg-color-orange-300: #f7c8aa;
+$mg-color-orange-400: #f5ba95;
+$mg-color-orange-500: #f3ac7f;
+$mg-color-orange-600: #f19e6a;
+$mg-color-orange-700: #ef9155;
+$mg-color-orange-800: #ed833f;
+$mg-color-orange-900: #eb752a;
 
 //MG-COLORS RED SHADES (#c10920)
-$mg-color-red-0:#ffffff;
-$mg-color-red-50:#f9e6e9;
-$mg-color-red-100:#f3ced2;
-$mg-color-red-200:#ecb5bc;
-$mg-color-red-300:#e69da6;
-$mg-color-red-400:#e08490;
-$mg-color-red-500:#da6b79;
-$mg-color-red-600:#d45363;
-$mg-color-red-700:#cd3a4d;
-$mg-color-red-800:#c72236;
-$mg-color-red-900:#c10920;
+$mg-color-red-0: #fff;
+$mg-color-red-50: #f9e6e9;
+$mg-color-red-100: #f3ced2;
+$mg-color-red-200: #ecb5bc;
+$mg-color-red-300: #e69da6;
+$mg-color-red-400: #e08490;
+$mg-color-red-500: #da6b79;
+$mg-color-red-600: #d45363;
+$mg-color-red-700: #cd3a4d;
+$mg-color-red-800: #c72236;
+$mg-color-red-900: #c10920;
 
 // MG-COLORS ACCENT
-$mg-color-accent-100:#f4e496;
-$mg-color-accent-200:#d3cea9;
-$mg-color-accent-300:#fdf6d9;
-$mg-color-accent-400:#0a6969;
+$mg-color-accent-100: #f4e496;
+$mg-color-accent-200: #d3cea9;
+$mg-color-accent-300: #fdf6d9;
+$mg-color-accent-400: #0a6969;
 
 //MG-COLORS HOVER
 $mg-color-hover-primary: $mg-color-blue-500;
@@ -94,45 +93,43 @@ $mg-color-label--hover: $mg-color-neutral-800;
 $mg-color-button-background: $mg-color-blue-900;
 $mg-color-button-background--hover: $mg-color-white;
 
-
 // SENDAI COLORS
-$sendai-red:#c10920;
-$sendai-red-200:#d45363;
-$sendai-red-400:#cd3a4d;
-$sendai-red-800:#c72236;
-$sendai-red-900:#c10920;
+$sendai-red: #c10920;
+$sendai-red-200: #d45363;
+$sendai-red-400: #cd3a4d;
+$sendai-red-800: #c72236;
+$sendai-red-900: #c10920;
 
 $sendai-orange: #eb752a;
-$sendai-orange-200:#f19e6a;
-$sendai-orange-400:#ef9155;
-$sendai-orange-800:#ed833f;
-$sendai-orange-900:#eb752a;
+$sendai-orange-200: #f19e6a;
+$sendai-orange-400: #ef9155;
+$sendai-orange-800: #ed833f;
+$sendai-orange-900: #eb752a;
 
-$sendai-purple:#962987;
-$sendai-purple-200:#b669ab;
-$sendai-purple-400:#ab549f;
-$sendai-purple-800:#a13e93;
-$sendai-purple-900:#962987;
+$sendai-purple: #962987;
+$sendai-purple-200: #b669ab;
+$sendai-purple-400: #ab549f;
+$sendai-purple-800: #a13e93;
+$sendai-purple-900: #962987;
 
-$sendai-turquoise:#00afae;
-$sendai-turquoise-200:#4dc7c6;
-$sendai-turquoise-400:#33bfbe;
-$sendai-turquoise-800:#1ab7b6;
-$sendai-turquoise-900:#00afae;
+$sendai-turquoise: #00afae;
+$sendai-turquoise-200: #4dc7c6;
+$sendai-turquoise-400: #33bfbe;
+$sendai-turquoise-800: #1ab7b6;
+$sendai-turquoise-900: #00afae;
 
 //We can get rid of these
 $mg-color-corporate-blue: $mg-color-blue;
 $mg-color-link-blue: $mg-color-blue-800;
-$mg-color-medium-blue: $mg-color-blue-500;;
+$mg-color-medium-blue: $mg-color-blue-500;
 $mg-color-light-blue: $mg-color-blue-400;
-$mg-color-extra-light-blue:$mg-color-blue-100;
+$mg-color-extra-light-blue: $mg-color-blue-100;
 $mg-color-light-grey: $mg-color-neutral-50;
-$mg-color-medium-grey-1: $mg-color-neutral-200;;
+$mg-color-medium-grey-1: $mg-color-neutral-200;
 $mg-color-medium-grey-2: $mg-color-neutral-100;
-$mg-color-medium-grey-3:$mg-color-neutral-300;
+$mg-color-medium-grey-3: $mg-color-neutral-300;
 
 $mg-color-dark-grey: $mg-color-neutral-600;
-
 
 // FONT SIZE
 $font-size-12: 0.75rem;

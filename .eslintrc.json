@@ -6,8 +6,7 @@
 		"jquery": true
 	},
 	"extends": [
-		"plugin:react/recommended",
-		"airbnb",
+		"plugin:storybook/recommended",
 		"plugin:mdx/recommended"
 	],
 	"parserOptions": {
@@ -80,7 +79,7 @@
 	},
 	"overrides": [
 		{
-			"files": ["stories/**/*.jsx", "stories/**/*.mdx"]
-		}
+      "files": ["*.stories.@(ts|tsx|js|jsx|mdx|mjs|cjs)"]
+    }
 	]
 }

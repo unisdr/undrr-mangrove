@@ -11,7 +11,7 @@
     "scss": "sass --watch ./stories/assets/scss/style.scss:./stories/assets/css/style.css ./stories/assets/scss/style-preventionweb.scss:./stories/assets/css/style-preventionweb.css",
     "lint": "yarn run lint:css && yarn run lint:js",
     "lint:css": "stylelint ./stories/**/*.scss --fix",
-    "lint:js": "eslint --ignore-pattern '*.mdx' --ignore-pattern '**/Table.jsx' ./stories --fix"
+    "lint:js": "eslint --ignore-pattern '**/Table.jsx' ./stories --fix"
   },
   "keywords": [],
   "author": "",
