@@ -17,7 +17,7 @@
 // --blue: blue;
 @mixin variableToCustomProp($variableName, $variable) {
   --#{$variableName}: #{meta.inspect($variable)};
-  @debug " --#{$variableName}: #{meta.inspect($variable)}";
+  // @debug " --#{$variableName}: #{meta.inspect($variable)}";
 }
 
 //background image gradient
