@@ -5,7 +5,7 @@ const cssPathPrefix = 'css';
 
 /*
 * Get entry points for webpack
-* CSS and JS seperately
+* CSS and JS separately
 */
 module.exports = (type = 'css') => {
   let files = {};

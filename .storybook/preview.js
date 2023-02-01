@@ -4,6 +4,14 @@ import { initializeRTL } from 'storybook-addon-rtl';
 // import { addParameters } from '@storybook/react'
 import renderToHTML from './renderToHTML'
 
+// Theme switcher options
+// https://github.com/etchteam/storybook-addon-css-variables-theme#readme
+import themeDefault from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss'
+import themePreventionweb from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss'
+
+// import the decorator from the CSS Variables Theme addon
+import cssVariablesTheme from '@etchteam/storybook-addon-css-variables-theme'
+
 // include fonts globally
 import '../stories/assets/scss/_fonts.scss';
 
@@ -38,6 +46,13 @@ export const parameters = {
       order: ['Getting started',['Intro','How to use our design system?','Browser support'], 'Design decisions', 'Components', 'Utilities' ],
       includeName: true
     },
+  },
+  cssVariables: {
+    files: {
+      'Default UNDRR Theme': themeDefault,
+      'Preventionweb Theme': themePreventionweb,
+    },
+    defaultTheme: 'Default UNDRR Theme'
   },
 }
 
@@ -131,7 +146,7 @@ const sbFrameReset = (Story, context) => {
   const iframeBody = document.querySelector('body');
   // Get Storybook sidebar items in an array.
   const sidebarItem = parent.document.querySelectorAll('.sidebar-item');
-  // Add click event listner on each sidebar item.
+  // Add click event listener on each sidebar item.
   sidebarItem.forEach(function (item, i) {
     item.addEventListener('click', function (e) {
       // Classes to remove.
@@ -174,4 +189,4 @@ const setDirection = (Story, options) => {
 }
 
 // Trigger callback in Storybook Addons.
-export const decorators = [getLangCode, sbFrameReset, setDirection];
+  export const decorators = [getLangCode, sbFrameReset, setDirection, cssVariablesTheme, ];
