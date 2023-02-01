@@ -123,7 +123,7 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   }
 
   &__button {
-    background: $mg-color-button-background;
+    background: var(--mg-color-button-background);
     color: $mg-color-white;
     // border-radius: .5em;
     display: inline-block;
