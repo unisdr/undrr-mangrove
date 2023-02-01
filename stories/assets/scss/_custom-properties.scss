@@ -1,0 +1,5 @@
+// Mangrove's CSS custom properties.
+// These power theming across components.
+:root {
+  @include variableToCustomProp(mg-color-button-background, $mg-color-button-background);
+}

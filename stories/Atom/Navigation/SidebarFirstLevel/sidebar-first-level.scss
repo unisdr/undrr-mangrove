@@ -1,9 +1,8 @@
 @import '../../../assets/scss/mixins';
 @import '../../../assets/scss/breakpoints';
 @import '../../../assets/scss/variables';
-@import '../../../assets/scss/typography';
 
-// * Slidebar start *//
+// * Sidebar start *//
 .sidebar_item {
   @extend %border-bottom;
   @extend %sidebar;

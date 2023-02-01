@@ -7,7 +7,7 @@ import renderToHTML from './renderToHTML'
 // Theme switcher options
 // https://github.com/etchteam/storybook-addon-css-variables-theme#readme
 import themeDefault from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss'
-import themePreventionweb from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss'
+import themePreventionWeb from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss'
 
 // import the decorator from the CSS Variables Theme addon
 import cssVariablesTheme from '@etchteam/storybook-addon-css-variables-theme'
@@ -50,7 +50,7 @@ export const parameters = {
   cssVariables: {
     files: {
       'Default UNDRR Theme': themeDefault,
-      'Preventionweb Theme': themePreventionweb,
+      'PreventionWeb Theme': themePreventionWeb,
     },
     defaultTheme: 'Default UNDRR Theme'
   },
