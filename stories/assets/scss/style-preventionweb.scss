@@ -1,8 +1,10 @@
 @import './normalize';
+@import './variables';
 @import './variables-preventionweb';
-@import './custom-properties';
+@import './breakpoints';
 @import './mixins';
 @import './grid';
 @import './typography';
 @import './base';
-@import './components'
+@import './custom-properties';
+@import './components';
