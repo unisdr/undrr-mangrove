@@ -40,15 +40,6 @@
   transition: $transitions;
 }
 
-//transition-delay
-@mixin transitiondelay($transitiondelay...) {
-  -webkit-transition-delay: $transitiondelay;
-  -moz-transition-delay: $transitiondelay;
-  -ms-transition-delay: $transitiondelay;
-  -o-transition-delay: $transitiondelay;
-  transition-delay: $transitiondelay;
-}
-
 //transform
 @mixin transform($transforms) {
   -webkit-transform: $transforms;
