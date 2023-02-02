@@ -1,5 +1,5 @@
 import React from 'react';
-import './details.scss';
+// import './details.scss';
 
 export const DetailsTag = ({ summary, details }) => (
   <details>

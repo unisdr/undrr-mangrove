@@ -1,5 +1,5 @@
 import React from 'react';
-import './code.scss';
+// import './code.scss';
 
 export const Code = ({ label }) => (
   <code>

@@ -1,5 +1,5 @@
 import React from 'react';
-import './sectionheader.scss';
+// import './sectionheader.scss';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 
 export function SectionHeader({ headerText, descriptionText }) {

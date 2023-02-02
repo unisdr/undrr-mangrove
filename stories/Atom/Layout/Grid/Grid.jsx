@@ -1,5 +1,5 @@
 import React from 'react';
-import './grid.scss';
+// import './grid.scss';
 
 export function Grid() {
   return (

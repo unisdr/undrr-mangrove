@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { sidebarNav, sidebarMenu } from '../../../assets/js/sidebar';
 import { Sidebardata } from '../../../Molecules/SidebarData/SidebarData';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
-import './sidebar.scss';
+// import './sidebar.scss';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 

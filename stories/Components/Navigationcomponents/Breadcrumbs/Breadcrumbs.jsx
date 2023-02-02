@@ -1,5 +1,5 @@
 import React from 'react';
-import './breadcrumbs.scss';
+// import './breadcrumbs.scss';
 
 export function Breadcrumbcomponent({ data, Color, ...args }) {
   const lastIndex = data.length - 1;

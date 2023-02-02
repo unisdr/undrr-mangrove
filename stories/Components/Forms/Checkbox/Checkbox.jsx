@@ -1,6 +1,6 @@
 import React from 'react';
-import './checkbox.scss';
-import '../../../assets/scss/_typography.scss';
+// import './checkbox.scss';
+// import '../../../assets/scss/_typography.scss';
 
 export function Checkbox({
   label, value, arialabel, id, label_pos,

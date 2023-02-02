@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 import React, { Fragment } from 'react';
 import DOMPurify from 'dompurify';
-import './card.scss';
+// import './card.scss';
 import '../../../../assets/scss/_grid.scss';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);

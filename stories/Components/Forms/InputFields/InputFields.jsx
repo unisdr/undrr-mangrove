@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import './input-fields.scss';
-import '../../../assets/scss/_typography.scss';
+// import './input-fields.scss';
+// import '../../../assets/scss/_typography.scss';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 

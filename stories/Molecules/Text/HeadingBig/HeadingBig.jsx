@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import './headingbig.scss';
-import '../../../assets/scss/_grid.scss';
+// import './headingbig.scss';
+// import '../../../assets/scss/_grid.scss';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 import { List } from '../../../Atom/Typography/Lists/Lists';
 import { changeBackground } from '../../../assets/js/smooth-bg-change';

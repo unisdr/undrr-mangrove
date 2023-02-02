@@ -1,5 +1,5 @@
 import React from 'react';
-import './select.scss';
+// import './select.scss';
 
 function Select({ text }) {
   return (

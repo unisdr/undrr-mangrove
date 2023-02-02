@@ -1,5 +1,5 @@
 import React from 'react';
-import './chips.scss';
+// import './chips.scss';
 
 export function Chips({ label, Type }) {
   return (

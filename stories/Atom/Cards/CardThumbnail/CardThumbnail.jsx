@@ -1,5 +1,5 @@
 import React from 'react';
-import './card-thumbnail.scss';
+// import './card-thumbnail.scss';
 
 export const hover_color_options = {
   yellow: 'yellow',

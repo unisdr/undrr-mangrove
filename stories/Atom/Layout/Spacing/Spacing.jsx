@@ -1,5 +1,5 @@
 import React from 'react';
-import './spacing.scss';
+// import './spacing.scss';
 
 export function Spacing() {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
-import './radio.scss';
-import '../../../assets/scss/_typography.scss';
+// import './radio.scss';
+// import '../../../assets/scss/_typography.scss';
 
 export function Radio({
   label, id, name, label_pos,

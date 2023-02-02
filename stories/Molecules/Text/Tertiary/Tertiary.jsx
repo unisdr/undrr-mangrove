@@ -1,5 +1,5 @@
 import React from 'react';
-import './tertiary.scss';
+// import './tertiary.scss';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 import { P } from '../../../Atom/BaseTypography/Paragraph/Paragraph';
 
