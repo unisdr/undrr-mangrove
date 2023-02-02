@@ -10,7 +10,7 @@ module.exports = {
     { name: 'storybook-design-token', options: {
       preserveCSSVars: true ,
       // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
-    } }
+    } },
     "@storybook/addon-links",
     "@storybook/addon-actions",
     "@storybook/addon-docs",
