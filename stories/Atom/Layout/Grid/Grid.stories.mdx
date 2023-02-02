@@ -1,4 +1,5 @@
 import { Meta, Story, Source} from '@storybook/addon-docs';
+import { Grid } from './Grid';
 
 <Meta title="Design decisions/Grid layout" parameters={{
     viewMode: "docs",
@@ -8,23 +9,17 @@ import { Meta, Story, Source} from '@storybook/addon-docs';
   }}/>
 
 # Grid system
-A grid is a series of rows where the developer specifies the content. This Design system is based on Foundation Grid, more you can find about grid system here (https://get.foundation/sites/docs/xy-grid.html)
+A grid is a series of rows where the developer specifies the content. This grid system is based on CSS Grid.
 
-#### When to use:
-- When the user needs to control the layout in two dimensions. With Grid users have rows and columns, cells, and grid areas (a group of more than one cell) and items must be placed in these cells or Grid areas
+Note this implementation is to be done.
+
+<Canvas>
+  <Grid></Grid>;
+</Canvas>
 
 ### Usage
-Design system is based on [Foundation Grid](https://get.foundation/sites/docs/xy-grid.html), you can get more detail about the layout and grid from their [getting started guide](https://get.foundation/sites/docs/index.html).
+To come.
 
-**Note**: As the base of the design system is using Foundation grid but component are independent of grid system, that means components can be used with any other grid system (eg: bootstrap)
-
-### CSS and JS References
-#### CSS:
-Add the base layout style from below path which includes the grid system of Foundation.
-- https://unisdr.github.io/undrr-mangrove/css/base-minimal.min.css
-
-#### JS:
-- NA
 
 ### Changelog
 1.0 — Released component

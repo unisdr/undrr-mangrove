@@ -1,5 +1,8 @@
 // A rollup of all Mangrove components
 
+// Normalize
+@import '../../Utilities/Normalize/normalize';
+
 // Atom
 @import '../../Atom/BaseTypography/Foundational/foundational';
 @import '../../Atom/BaseTypography/Abbr/abbr';

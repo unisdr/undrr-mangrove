@@ -1,7 +1,7 @@
 import React from 'react';
 import './grid.scss';
 
-export function Layout() {
+export function Grid() {
   return (
     <>
       <div className="grid_name">Basic</div>

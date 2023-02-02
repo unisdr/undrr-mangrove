@@ -1,6 +1,4 @@
 /node_modules
-/.idea
-npm-debug.log
 yarn-error.log
 /vendor
 /storybook-static
@@ -14,3 +12,4 @@ yarn-error.log
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
+npm-debug.log

@@ -14,8 +14,8 @@ module.exports = (type = 'css') => {
     './node_modules',
     './stories/assets/**/lib/**',
     './stories/**/_!(swiper)*.scss', // no partials
-    './stories/**/normalize.scss', // merged atom into base styling
-    './stories/**/style.scss', // we don't need this file
+    // './stories/**/normalize.scss', // merged atom into base styling
+    // './stories/**/style.scss', // we don't need this file
     './stories/Atom/**', // merged atom into base styling
     './stories/**/*.mdx',
     './stories/**/*.jsx',

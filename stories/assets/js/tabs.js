@@ -7,6 +7,7 @@ export function tabs() {
 
   // Init foundation tabs function on each tablist.
   jQuery($tabs).each((i, elem) => {
-    let tab = new Foundation.Tabs(jQuery(elem));
+    // let tab = new Foundation.Tabs(jQuery(elem));
+    console.log('Founation js has been removed, tabs will be rewritten')
   });
 }
