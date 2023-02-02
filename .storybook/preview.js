@@ -27,6 +27,11 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  designToken: {
+    // https://github.com/UX-and-I/storybook-design-token
+    defaultTab: 'Colors',
+    disable: true
+  },
   html: {
     prettier: {
       tabWidth: 2,

@@ -4,6 +4,13 @@ $img-path-Icon: '~/stories/assets/icons';
 $img-path-Iconback: '~/stories/assets/icons';
 $img-path-Iconfourback: '~/stories/assets/icons';
 
+/**
+ * @tokens Colors
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
 // MG-COLORS BASIC
 $mg-color-black: #000;
 $mg-color-white: #fff;
@@ -91,6 +98,13 @@ $mg-color-label--hover: $mg-color-neutral-800;
 $mg-color-button-background: $mg-color-blue-900;
 $mg-color-button-background--hover: $mg-color-white;
 
+/**
+ * @tokens Sendai Framework Colors
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
 // SENDAI COLORS
 $sendai-red: #c10920;
 $sendai-red-200: #d45363;
@@ -128,6 +142,13 @@ $mg-color-medium-grey-2: $mg-color-neutral-100;
 $mg-color-medium-grey-3: $mg-color-neutral-300;
 $mg-color-dark-grey: $mg-color-neutral-600;
 
+/**
+ * @tokens Font sizes
+ * @presenter FontSize
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
 // FONT SIZE
 $font-size-12: 0.75rem;
 $font-size-14: 0.875rem;
@@ -141,6 +162,11 @@ $font-size-35: 2.188rem;
 
 // FONTS FAMILY
 $Font-Family-Roboto: 'Roboto', sans-serif;
+
+/**
+ * @tokens Spacing
+ * @presenter Spacing
+ */
 
 // SPACING variables
 $spacing-01: 0.125rem;
@@ -169,6 +195,11 @@ $spacing-330: 20.625rem;
 $spacing-320: 20rem;
 $spacing-400: 25rem;
 
+/**
+ * @tokens Screen sizes
+ * @presenter Spacing
+ */
+
 // Width variables
 $width-150: 9.375rem;
 $width-180: 11.25rem;
@@ -178,6 +209,10 @@ $width-840: 52.5rem;
 $width-900: 56.25rem;
 $width-1096: 68.5rem;
 $width-1440: 90rem;
+
+/**
+  * @tokens-end
+  */
 
 // Header height
 $header-height-xlarge: 115px;

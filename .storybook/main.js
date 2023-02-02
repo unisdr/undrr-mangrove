@@ -7,6 +7,10 @@ module.exports = {
   staticDirs: ['../stories/assets'],
   stories: ["../stories/**/*.stories.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
+    { name: 'storybook-design-token', options: {
+      preserveCSSVars: true ,
+      // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
+    } }
     "@storybook/addon-links",
     "@storybook/addon-actions",
     "@storybook/addon-docs",
