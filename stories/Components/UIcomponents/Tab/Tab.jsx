@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { tabs } from '../../../assets/js/tabs';
-import './tab.scss';
+// import './tab.scss';
 import { BodyColumnTwo } from '../../../Molecules/Text/BodyColumn/BodyColumn';
 
 export function Tab({ tabdata }) {

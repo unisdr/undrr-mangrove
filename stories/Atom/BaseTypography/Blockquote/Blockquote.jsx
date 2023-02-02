@@ -1,5 +1,5 @@
 import React from 'react';
-import './blockquote.scss';
+// import './blockquote.scss';
 
 export const Blockquote = ({ text, citeText }) => (
   <>

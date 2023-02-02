@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { accordion } from '../../../assets/js/accordion';
-import './accordion.scss';
+// import './accordion.scss';
 import { P } from '../../../Atom/BaseTypography/Paragraph/Paragraph';
 
 export function Accordion({

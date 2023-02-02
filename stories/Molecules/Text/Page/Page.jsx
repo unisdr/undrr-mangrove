@@ -1,5 +1,5 @@
 import React from 'react';
-import './page.scss';
+// import './page.scss';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 
 export function Page({ headerText, countryText, style }) {

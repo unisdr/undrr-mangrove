@@ -1,5 +1,5 @@
 import React from 'react';
-import './smallcopy.scss';
+// import './smallcopy.scss';
 
 export function Smallcopy({
   locationName, phoneName, phonenumber, emailName, emailid,

@@ -1,5 +1,5 @@
 import React from 'react';
-import './cite.scss';
+// import './cite.scss';
 
 export const Cite = ({ label }) => (
   <cite>

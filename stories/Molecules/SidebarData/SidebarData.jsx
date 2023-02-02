@@ -1,5 +1,5 @@
 import React from 'react';
-import './sidebar-data.scss';
+// import './sidebar-data.scss';
 
 export function Sidebardata({ data, headerText }) {
   return (

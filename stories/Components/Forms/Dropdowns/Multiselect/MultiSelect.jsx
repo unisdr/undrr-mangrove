@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './multi-select.scss';
+// import './multi-select.scss';
 import { multiSelect } from '../../../../assets/js/multi-select';
 import { Checkbox } from '../../Checkbox/Checkbox';
 import { Radio } from '../../Radio/Radio';

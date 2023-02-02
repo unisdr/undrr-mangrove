@@ -1,5 +1,5 @@
 import React from 'react';
-import './buttons.scss';
+// import './buttons.scss';
 
 export function CtaButton({
   label, Type, State, For_Primary, ...props

@@ -1,5 +1,5 @@
 import React from 'react';
-import './table.scss';
+// import './table.scss';
 
 const TableScroll = ({ tableType, children }) => (tableType == 'scroll' ?
 	<div className="scroll" tabIndex="0">

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import './custom-select.scss';
-import '../../../../assets/scss/_typography.scss';
+// import './custom-select.scss';
+// import '../../../../assets/scss/_typography.scss';
 import { select } from '../../../../assets/js/select';
 
 function CustomSelect({ text }) {

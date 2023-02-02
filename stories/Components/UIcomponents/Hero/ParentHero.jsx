@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import './hero.scss';
-import '../../../assets/scss/_grid.scss';
+// import './hero.scss';
+// import '../../../assets/scss/_grid.scss';
 import imgPath from '../../../assets/images/hero_background.png';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);

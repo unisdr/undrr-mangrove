@@ -1,5 +1,5 @@
 import React from 'react';
-import './image.scss';
+// import './image.scss';
 import mongoliaGoat from '../../../assets/images/Mongolia-cashmere-goats.jpg';
 import mongoliaGoatmd from '../../../assets/images/Mongolia-cashmere-goats-md.jpg';
 import mongoliaGoatsm from '../../../assets/images/Mongolia-cashmere-goats-sm.jpg';

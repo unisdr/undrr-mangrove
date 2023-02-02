@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { fitText } from '../../../../assets/js/fitText';
-import './stats-cards.scss';
+// import './stats-cards.scss';
 import { Heading } from '../../../../Atom/Typography/Heading/Heading';
 import { P } from '../../../../Atom/BaseTypography/Paragraph/Paragraph';
 

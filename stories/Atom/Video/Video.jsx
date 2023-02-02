@@ -1,5 +1,5 @@
 import React from 'react';
-import './video.scss';
+// import './video.scss';
 
 export const Video = ({ src, width, height }) => (
   <video
@@ -13,6 +13,6 @@ export const Video = ({ src, width, height }) => (
     <source src={src} type="video/mp4" />
     <track kind="captions" srcLang="en" label="english_captions" />
     <track kind="captions" srcLang="ar" label="arabic_captions" />
-    Your browser does not support HTML5 video. 
+    Your browser does not support HTML5 video.
   </video>
 );

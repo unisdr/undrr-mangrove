@@ -1,5 +1,5 @@
 import React from 'react';
-import './mark.scss';
+// import './mark.scss';
 
 export const Mark = ({ label }) => (
   <p>

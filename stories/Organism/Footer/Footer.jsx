@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import './footer.scss';
-import '../../assets/scss/_grid.scss';
+// import './footer.scss';
+// import '../../assets/scss/_grid.scss';
 import { FooterLogo } from '../../Molecules/FooterNavigation/FooterLogo/FooterLogo';
 // import { SignUp } from '../../Components/Forms/NewsLetterSignUp/NewsLetterSignUp';
 import { FooterLists } from '../../Molecules/FooterNavigation/FooterLists/FooterLists';

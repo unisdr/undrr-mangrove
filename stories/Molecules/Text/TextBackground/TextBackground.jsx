@@ -1,6 +1,6 @@
 import React from 'react';
-import './textbackground.scss';
-import '../../../assets/scss/_grid.scss';
+// import './textbackground.scss';
+// import '../../../assets/scss/_grid.scss';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 
 export function TextBackground({ headerText, descriptionText }) {

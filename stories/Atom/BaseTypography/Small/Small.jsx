@@ -1,5 +1,5 @@
 import React from 'react';
-import './small.scss';
+// import './small.scss';
 
 export const Small = ({ label }) => (
   <p>
