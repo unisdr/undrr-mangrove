@@ -89,7 +89,6 @@ export const globalTypes = {
 
 //       return anysort(previousMeta.kind, nextMeta.kind, [
 //         'Getting started/**',
-//         'Foundation/**',
 //         'Components/**',
 //         'Patterns/**',
 //         'Utilities/**',
