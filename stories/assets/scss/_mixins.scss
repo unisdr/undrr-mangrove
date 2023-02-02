@@ -1,25 +1,3 @@
-// required for our variableToCustomProp
-@use 'sass:meta';
-
-// A utility to ensure we create our custom props consistently
-// We include it here to avoid recursive imports.
-// And the use case is different from other mixins,
-// and exclusive to the variable.scss.
-// https://github.com/unisdr/undrr-mangrove/pull/15
-//
-// input
-// $blue: blue;
-//
-// syntax:
-// @include: variableToCustomProp($blue);
-//
-// output
-// --blue: blue;
-@mixin variableToCustomProp($variableName, $variable) {
-  --#{$variableName}: #{meta.inspect($variable)};
-  // @debug " --#{$variableName}: #{meta.inspect($variable)}";
-}
-
 //background image gradient
 @mixin background-image($deg, $colorname, $opacity) {
   background: linear-gradient($deg, $colorname, $opacity);
