@@ -34,7 +34,8 @@ button {
     &::after {
       @include transition(0.2s ease);
 
-      background: url(#{$img-path-Iconfourback}/chevron-right-black.svg) no-repeat left center;
+      background: url(#{$img-path-Iconfourback}/chevron-right-black.svg)
+        no-repeat left center;
       content: '';
       height: 20px;
       margin-left: $spacing-04;
@@ -42,12 +43,13 @@ button {
     }
 
     &:hover::after {
-      @include translate(70%,0);
+      @include translate(70%, 0);
     }
 
     &.disabled {
       &::after {
-        background: url(#{$img-path-Iconfourback}/chevron-right-white.svg) no-repeat left center;
+        background: url(#{$img-path-Iconfourback}/chevron-right-white.svg)
+          no-repeat left center;
         content: '';
       }
     }
@@ -80,7 +82,7 @@ button {
         }
 
         &:hover::after {
-          @include transform(translate(-50%,0) rotate(180deg));
+          @include transform(translate(-50%, 0) rotate(180deg));
         }
       }
     }

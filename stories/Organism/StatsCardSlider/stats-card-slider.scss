@@ -1,7 +1,13 @@
 @import '../../assets/scss/variables';
 @import '../../assets/scss/breakpoints';
 
-$backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 'green': $mg-color-green-light, 'blue': $mg-color-azure-light, 'gray': $mg-color-neutral-100);
+$backgroundcolors: (
+  'yellow': $mg-color-yellow-light,
+  'red': $mg-color-red-600,
+  'green': $mg-color-green-light,
+  'blue': $mg-color-azure-light,
+  'gray': $mg-color-neutral-100,
+);
 
 .stats-slider {
   .stats-card.small {

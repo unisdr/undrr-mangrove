@@ -21,12 +21,13 @@
 
       @include transition(0.2s ease);
 
-      background: url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg) no-repeat left center;
+      background: url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg)
+        no-repeat left center;
     }
 
     &:hover {
       &::after {
-        @include translate(70%,0);
+        @include translate(70%, 0);
       }
     }
   }
@@ -45,7 +46,7 @@
       }
 
       &:hover::after {
-        @include transform(translate(-50%,0) rotate(180deg));
+        @include transform(translate(-50%, 0) rotate(180deg));
       }
     }
 

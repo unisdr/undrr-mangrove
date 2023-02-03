@@ -4,7 +4,7 @@ import React from 'react';
 export function Grid() {
   return (
     <>
-      <div className="grid_name">Basic</div>
+      <div className="grid-name">Basic</div>
       <div className="grid_description">
         The structure of grid uses .grid-x and .cell as its base.
         Without defining a gutter type the cells will simply split up the space
@@ -106,7 +106,7 @@ export function Grid() {
           <div className="column">12/1/1 cells </div>
         </div>
       </div>
-      <div className="grid_name">Gutters</div>
+      <div className="grid-name">Gutters</div>
       <div className="grid_description">
         The defining feature of the XY grid is the ability to use margin AND
         padding grids in harmony. To define a grid type, simply set
@@ -171,7 +171,7 @@ export function Grid() {
           <div className="column">12/2/2 cells </div>
         </div>
       </div>
-      <div className="grid_name">Grid Container</div>
+      <div className="grid-name">Grid Container</div>
       <div className="grid_description">
         The grid defaults to the full width of the available space. To contain
         it horizontally use the grid-container class. The container will be
@@ -192,7 +192,7 @@ export function Grid() {
           </div>
         </div>
       </div>
-      <div className="grid_name">Grid Container Fluid</div>
+      <div className="grid-name">Grid Container Fluid</div>
       <div className="grid_description">
         To stretch the content to the full width of the available space, simply
         add the class fluid to your grid-container.
@@ -210,7 +210,7 @@ export function Grid() {
           </div>
         </div>
       </div>
-      <div className="grid_name">Auto Sizing</div>
+      <div className="grid-name">Auto Sizing</div>
       <div className="grid_description">
         If the class .auto or .[size]-auto is added to the cell, it will take up
         the remaining space.
@@ -250,7 +250,7 @@ export function Grid() {
           <div className="column">Expand! </div>
         </div>
       </div>
-      <div className="grid_name">Responsive Adjustments</div>
+      <div className="grid-name">Responsive Adjustments</div>
       <div className="grid_description">
         To switch back to the auto behavior from a percentage or shrink
         behavior, use the classes .[size]-auto or .[size]-shrink. In the below
@@ -277,7 +277,7 @@ export function Grid() {
           <div className="column">Six</div>
         </div>
       </div>
-      <div className="grid_name">
+      <div className="grid-name">
         Collapse Cells
         <div>X Grid only</div>
       </div>
@@ -296,7 +296,7 @@ export function Grid() {
           <div className="column">  Gutters at small no gutters at medium.</div>
         </div>
       </div>
-      <div className="grid_name">Offsets</div>
+      <div className="grid-name">Offsets</div>
       <div className="grid_description">
         Offsets work by applying margin-left to a grid.
       </div>
@@ -308,7 +308,7 @@ export function Grid() {
           <div className="column"> 4 cell </div>
         </div>
       </div>
-      <div className="grid_name">
+      <div className="grid-name">
         Block Grids
         <div>X Grid only</div>
       </div>
@@ -338,7 +338,7 @@ export function Grid() {
           <div className="column"> 4 cell</div>
         </div>
       </div>
-      <div className="grid_name">Grid Frame</div>
+      <div className="grid-name">Grid Frame</div>
       <div className="grid_description">
         The XY grid incorporates the grid frame from Foundation for Apps plus
         many other useful features. To start, add .grid-frame to the grid. This
@@ -346,7 +346,7 @@ export function Grid() {
       </div>
       <div className="grid-y medium-grid-frame">
         <div className="cell shrink header medium-cell-block-container">
-          <div className="grid_name">Grid Frame Header</div>
+          <div className="grid-name">Grid Frame Header</div>
           <div className="grid-x grid-padding-x">
             <div className="cell medium-4 grid--layout">
               <div className="column"> A medium 4 cell</div>

@@ -4,7 +4,7 @@
 
 /* author image */
 
-div.author__img {
+.author__img {
   border-radius: $author-image-radius;
   height: 80px;
   min-width: 80px;
@@ -23,17 +23,22 @@ div.author__img {
   }
 
   &:hover {
-    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red-900, 'green': $mg-color-green, 'blue':$mg-color-azure);
+    $colors: (
+      'yellow': $mg-color-yellow,
+      'red': $mg-color-red-900,
+      'green': $mg-color-green,
+      'blue': $mg-color-azure,
+    );
 
     &::before {
-      @include background-image(45deg, $mg-color-yellow , transparent 53%);
+      @include background-image(45deg, $mg-color-yellow, transparent 53%);
 
       opacity: 0.75;
     }
 
     @each $name, $color in $colors {
       &.#{$name}::before {
-        @include background-image(45deg, $mg-color-yellow , transparent 53%);
+        @include background-image(45deg, $mg-color-yellow, transparent 53%);
       }
     }
   }
