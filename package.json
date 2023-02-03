@@ -92,9 +92,8 @@
     "storybook-addon-rtl": "^0.4.4",
     "style-loader": "^3.3.1",
     "stylelint": "^14.15",
-    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-recommended-scss": "^8.0",
-    "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-config-standard": "^29.0.0",
     "stylelint-scss": "^4.3",
     "svg-spritemap-webpack-plugin": "^4.5.0",
@@ -111,6 +110,8 @@
     "gsap": "^3.11.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "stylelint-config-sass-guidelines": "^9.0.1",
+    "stylelint-prettier": "^2.0.0",
     "swiper": "^8.4.5"
   },
   "resolutions": {
