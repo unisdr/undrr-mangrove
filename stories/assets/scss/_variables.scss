@@ -102,7 +102,6 @@ $mg-color-link-blue: $mg-color-blue-800;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-
 // Unclear if these are needed
 $undrr-color-corporate-blue: $mg-color-blue-900;
 
@@ -228,17 +227,17 @@ $mg-breakpoint-desktop: 1440px;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
- $mg-color-label: $mg-color-blue-700;
- $mg-color-label--hover: $mg-color-neutral-800;
- $mg-color-button-background: $mg-color-blue-900;
- $mg-color-button-background--hover: $mg-color-white;
+$mg-color-label: $mg-color-blue-700;
+$mg-color-label--hover: $mg-color-neutral-800;
+$mg-color-button-background: $mg-color-blue-900;
+$mg-color-button-background--hover: $mg-color-white;
 
- /**
+/**
  * @tokens Component sizing
  * @presenter Spacing
  */
 
- $author-image-radius: 50%;
+$author-image-radius: 50%;
 
 /**
   * @tokens-end
@@ -259,8 +258,6 @@ $mg-color-green-dark: #006400;
 // Header height
 $header-height-xlarge: 115px;
 $header-height-medium: 75px;
-
-
 
 // language selectors
 $cyrillic: ':lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)';
