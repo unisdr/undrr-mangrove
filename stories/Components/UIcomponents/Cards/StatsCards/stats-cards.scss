@@ -165,7 +165,7 @@ div.stats-card {
 
   &:hover {
     // color map
-    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red, 'green': $mg-color-green, 'blue':$mg-color-azure);
+    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red-900, 'green': $mg-color-green, 'blue':$mg-color-azure);
 
     background-color: $mg-color-yellow;
 

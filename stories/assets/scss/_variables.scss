@@ -4,41 +4,15 @@ $img-path-Icon: '~/stories/assets/icons';
 $img-path-Iconback: '~/stories/assets/icons';
 $img-path-Iconfourback: '~/stories/assets/icons';
 
-// MG-COLORS BASIC
-$mg-color-black: #000;
-$mg-color-white: #fff;
-
-$mg-color-orange: #eb752a; //from sendai orange
-$mg-color-red: #c10920; //from sendai red
-$mg-color-blue: #004f91; //from corporate blue
-
-// Legacy: Required by UNDP
-$mg-color-green: #008484;
-$mg-color-green-light: #90ee90;
-$mg-color-yellow: #ff0;
-$mg-color-yellow-light: lightyellow;
-$mg-color-yellow-dark: #d6d624;
-$mg-color-azure: #f0ffff;
-$mg-color-azure-dark: #d4e3e3;
-$mg-color-azure-light: #f0f8f8;
-$mg-color-ebony-clay: #3d4242;
-$mg-color-green-dark: #006400;
-
-//MG-COLORS NEUTRAL SHADES (#000)
-$mg-color-neutral-0: #fff;
-$mg-color-neutral-50: #e6e6e6;
-$mg-color-neutral-100: #ccc;
-$mg-color-neutral-200: #b3b3b3;
-$mg-color-neutral-300: #999;
-$mg-color-neutral-400: #808080;
-$mg-color-neutral-500: #666;
-$mg-color-neutral-600: #4d4d4d;
-$mg-color-neutral-700: #333;
-$mg-color-neutral-800: #1a1a1a;
-$mg-color-neutral-900: #000;
+/**
+ * @tokens Colors - basic
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
 
 //MG-COLORS BLUE SHADES (#004f91)
-$mg-color-blue-0: #fff;
+// $mg-color-blue-0: #fff;
 $mg-color-blue-50: #e6edf4;
 $mg-color-blue-100: #ccdce9;
 $mg-color-blue-200: #b3cade;
@@ -51,7 +25,7 @@ $mg-color-blue-800: #1a619c;
 $mg-color-blue-900: #004f91;
 
 //MG-COLORS ORANGE SHADES (#eb752a)
-$mg-color-orange-0: #fff;
+// $mg-color-orange-0: #fff;
 $mg-color-orange-50: #fdf1ea;
 $mg-color-orange-100: #fbe3d4;
 $mg-color-orange-200: #f9d6bf;
@@ -64,7 +38,7 @@ $mg-color-orange-800: #ed833f;
 $mg-color-orange-900: #eb752a;
 
 //MG-COLORS RED SHADES (#c10920)
-$mg-color-red-0: #fff;
+// $mg-color-red-0: #fff;
 $mg-color-red-50: #f9e6e9;
 $mg-color-red-100: #f3ced2;
 $mg-color-red-200: #ecb5bc;
@@ -76,59 +50,100 @@ $mg-color-red-700: #cd3a4d;
 $mg-color-red-800: #c72236;
 $mg-color-red-900: #c10920;
 
+/**
+ * @tokens Colors - neutral
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
+$mg-color-neutral-0: #fff;
+$mg-color-neutral-50: #e6e6e6;
+$mg-color-neutral-100: #ccc;
+$mg-color-neutral-200: #b3b3b3;
+$mg-color-neutral-300: #999;
+$mg-color-neutral-400: #808080;
+$mg-color-neutral-500: #666;
+$mg-color-neutral-600: #4d4d4d;
+$mg-color-neutral-700: #333;
+$mg-color-neutral-800: #1a1a1a;
+$mg-color-neutral-900: #000;
+
+$mg-color-black: $mg-color-neutral-900; // alias of mg-color-neutral-900
+$mg-color-white: $mg-color-neutral-0; // alias of mg-color-neutral-0
+
+/**
+ * @tokens Colors - accent
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
 // MG-COLORS ACCENT
 $mg-color-accent-100: #f4e496;
 $mg-color-accent-200: #d3cea9;
 $mg-color-accent-300: #fdf6d9;
 $mg-color-accent-400: #0a6969;
 
-//MG-COLORS HOVER
-$mg-color-hover-primary: $mg-color-blue-500;
+/**
+ * @tokens Colors - interactive
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
 
-//MG-COMPONENT COLORS
-$mg-color-label: $mg-color-blue-700;
-$mg-color-label--hover: $mg-color-neutral-800;
-$mg-color-button-background: $mg-color-blue-900;
-$mg-color-button-background--hover: $mg-color-white;
+$mg-color-hover-primary: $mg-color-blue-500;
+$mg-color-link-blue: $mg-color-blue-800;
+
+/**
+ * @tokens UNDRR Colors
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
+// Unclear if these are needed
+$undrr-color-corporate-blue: $mg-color-blue-900;
+
+/**
+ * @tokens Sendai Framework Colors
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
 
 // SENDAI COLORS
-$sendai-red: #c10920;
-$sendai-red-200: #d45363;
-$sendai-red-400: #cd3a4d;
+$sendai-red-400: #d45363;
+$sendai-red-600: #cd3a4d;
 $sendai-red-800: #c72236;
 $sendai-red-900: #c10920;
+$sendai-red: $sendai-red-900; // alias
 
-$sendai-orange: #eb752a;
-$sendai-orange-200: #f19e6a;
-$sendai-orange-400: #ef9155;
+$sendai-orange-400: #f19e6a;
+$sendai-orange-600: #ef9155;
 $sendai-orange-800: #ed833f;
 $sendai-orange-900: #eb752a;
+$sendai-orange: $sendai-orange-900; // alias
 
-$sendai-purple: #962987;
-$sendai-purple-200: #b669ab;
-$sendai-purple-400: #ab549f;
+$sendai-purple-400: #b669ab;
+$sendai-purple-600: #ab549f;
 $sendai-purple-800: #a13e93;
 $sendai-purple-900: #962987;
+$sendai-purple: $sendai-purple-900; // alias
 
-$sendai-turquoise: #00afae;
-$sendai-turquoise-200: #4dc7c6;
-$sendai-turquoise-400: #33bfbe;
+$sendai-turquoise-400: #4dc7c6;
+$sendai-turquoise-600: #33bfbe;
 $sendai-turquoise-800: #1ab7b6;
 $sendai-turquoise-900: #00afae;
+$sendai-turquoise: $sendai-turquoise-900; // alias
 
-//We can get rid of these
-$mg-color-corporate-blue: $mg-color-blue;
-$mg-color-link-blue: $mg-color-blue-800;
-$mg-color-medium-blue: $mg-color-blue-500;
-$mg-color-light-blue: $mg-color-blue-400;
-$mg-color-extra-light-blue: $mg-color-blue-100;
-$mg-color-light-grey: $mg-color-neutral-50;
-$mg-color-medium-grey-1: $mg-color-neutral-200;
-$mg-color-medium-grey-2: $mg-color-neutral-100;
-$mg-color-medium-grey-3: $mg-color-neutral-300;
-$mg-color-dark-grey: $mg-color-neutral-600;
+/**
+ * @tokens Font sizes
+ * @presenter FontSize
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
 
-// FONT SIZE
 $font-size-12: 0.75rem;
 $font-size-14: 0.875rem;
 $font-size-16: 1rem;
@@ -139,10 +154,22 @@ $font-size-26: 1.625rem;
 $font-size-32: 2rem;
 $font-size-35: 2.188rem;
 
-// FONTS FAMILY
+/**
+ * @tokens Font families
+ * @presenter FontFamily
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
 $Font-Family-Roboto: 'Roboto', sans-serif;
 
-// SPACING variables
+/**
+ * @tokens Spacing
+ * @presenter Spacing
+ */
+
+// todo: reduce the number of options and use the mg-spacing-100, mg-spacing-200 naming
+
 $spacing-01: 0.125rem;
 $spacing-02: 0.25rem;
 $spacing-03: 0.5rem;
@@ -167,9 +194,14 @@ $spacing-100: 6.25rem;
 $spacing-136: 8.5rem;
 $spacing-330: 20.625rem;
 $spacing-320: 20rem;
-$spacing-400: 25rem;
 
-// Width variables
+/**
+ * @tokens Widths
+ * @presenter Spacing
+ */
+
+// These are legacy from the UNDP systems and do not appear to be used, they may be deleted or greatly scaled back.
+
 $width-150: 9.375rem;
 $width-180: 11.25rem;
 $width-600: 37.5rem;
@@ -179,11 +211,53 @@ $width-900: 56.25rem;
 $width-1096: 68.5rem;
 $width-1440: 90rem;
 
+/**
+ * @tokens Breakpoints
+ * @presenter Spacing
+ */
+
+$mg-breakpoint-mobile: 480px;
+$mg-breakpoint-tablet: 1024px;
+$mg-breakpoint-desktop: 1440px;
+
+/**
+ * @tokens Colors - component
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
+$mg-color-label: $mg-color-blue-700;
+$mg-color-label--hover: $mg-color-neutral-800;
+$mg-color-button-background: $mg-color-blue-900;
+$mg-color-button-background--hover: $mg-color-white;
+
+/**
+ * @tokens Component sizing
+ * @presenter Spacing
+ */
+
+$author-image-radius: 50%;
+
+/**
+  * @tokens-end
+  */
+
+// Legacy: Required by UNDP
+$mg-color-green: #008484;
+$mg-color-green-light: #90ee90;
+$mg-color-yellow: #ff0;
+$mg-color-yellow-light: lightyellow;
+$mg-color-yellow-dark: #d6d624;
+$mg-color-azure: #f0ffff;
+$mg-color-azure-dark: #d4e3e3;
+$mg-color-azure-light: #f0f8f8;
+$mg-color-ebony-clay: #3d4242;
+$mg-color-green-dark: #006400;
+
 // Header height
 $header-height-xlarge: 115px;
 $header-height-medium: 75px;
-
-$author-image-radius: 50%;
 
 // language selectors
 $cyrillic: ':lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)';

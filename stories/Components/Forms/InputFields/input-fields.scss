@@ -28,7 +28,7 @@ label {
 }
 
 .error {
-  color: $mg-color-red;
+  color: $mg-color-red-900;
   font-size: $font-size-16;
   margin-bottom: 0;
   margin-top: $spacing-03;
@@ -84,7 +84,7 @@ textarea {
   }
 
   &.error {
-    border: 2px solid $mg-color-red;
+    border: 2px solid $mg-color-red-900;
   }
 }
 
