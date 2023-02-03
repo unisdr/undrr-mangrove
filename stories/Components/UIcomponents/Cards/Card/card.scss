@@ -3,11 +3,25 @@
 // @import '../../../../assets/scss/mixins';
 
 /* content-card start */
-$colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red-900, 'green': $mg-color-green, 'blue':$mg-color-azure, 'gray': $mg-color-neutral-100);
-$backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 'green': $mg-color-green-light, 'blue': $mg-color-azure-light, 'gray': $mg-color-neutral-100);
+$colors: (
+  'yellow': $mg-color-yellow,
+  'red': $mg-color-red-900,
+  'green': $mg-color-green,
+  'blue': $mg-color-azure,
+  'gray': $mg-color-neutral-100,
+);
+$backgroundcolors: (
+  'yellow': $mg-color-yellow-light,
+  'red': $mg-color-red-600,
+  'green': $mg-color-green-light,
+  'blue': $mg-color-azure-light,
+  'gray': $mg-color-neutral-100,
+);
 
 //MG CARD using CSS GRID
 .mg-card {
+  display: inline-block;
+  position: relative;
 
   // Vertical CARD
   &__vc {
@@ -54,6 +68,7 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
     display: inline-block;
     padding: 0.56em;
     position: absolute;
+    z-index: 101;
   }
 
   &__label {
@@ -103,12 +118,30 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
       // &:hover {
       //     background: #2dabff;
       // }
-
-      &.active {
-        background: $mg-color-neutral-50;
-        font-weight: bold;
-      }
     }
+
+    .active {
+      background: $mg-color-neutral-50;
+      font-weight: bold;
+    }
+  }
+
+  &__title a::after {
+    bottom: 0;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transition-duration: 125ms;
+    transition-duration: 125ms;
+    -webkit-transition-property: -webkit-box-shadow;
+    transition-property: -webkit-box-shadow;
+    transition-property: box-shadow;
+    transition-property: box-shadow, -webkit-box-shadow;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out;
+    z-index: 100;
   }
 
   &__summaryText {
@@ -120,6 +153,17 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
     color: $mg-color-blue-800;
     cursor: pointer;
     text-decoration: none;
+  }
+
+  &__label,
+  &__button {
+    position: relative;
+    z-index: 101;
+  }
+
+  &__label,
+  &__text-link:hover {
+    text-decoration: underline;
   }
 
   &__button {
@@ -137,67 +181,27 @@ $backgroundcolors: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 
   }
 } //END of CARD
 
-//Accessible CARD CSS RULES
+// [dir='rtl'] {
+//   .content-card {
+//     .image {
+//       &::before {
+//         @include transform(scaleX(-1));
+//       }
+//     }
 
-.mg-card__title a::after {
-  bottom: 0;
-  content: '';
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-transition-property: -webkit-box-shadow;
-  transition-property: -webkit-box-shadow;
-  transition-property: box-shadow;
-  transition-property: box-shadow, -webkit-box-shadow;
-  -webkit-transition-timing-function: ease-in-out;
-  transition-timing-function: ease-in-out;
-  z-index: 100;
-}
+//     &:hover {
+//       .cta {
+//         &--space::after {
+//           @include transform(translate(-50%, 0) rotate(180deg));
+//         }
 
-.mg-card {
-  display: inline-block;
-  position: relative;
-}
+//         &--arrow::after {
+//           margin-left: 0;
+//           margin-right: 0.25rem;
+//         }
+//       }
+//     }
+//   }
+// }
 
-.mg-card__label,
-.mg-card__button {
-  position: relative;
-  z-index: 101;
-}
-
-.mg-card__share {
-  z-index: 101;
-}
-
-.mg-card__label,
-.mg-card__text-link:hover {
-  text-decoration: underline;
-}
-
-[dir='rtl'] {
-  .content-card {
-    .image {
-      &::before {
-        @include transform(scaleX(-1));
-      }
-    }
-
-    &:hover {
-      .cta {
-        &--space::after {
-          @include transform(translate(-50%, 0) rotate(180deg));
-        }
-
-        &--arrow::after {
-          margin-left: 0;
-          margin-right: 0.25rem;
-        }
-      }
-    }
-  }
-}
-
-/* content-card start */
+/* content-card end */

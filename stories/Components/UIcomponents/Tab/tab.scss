@@ -14,6 +14,16 @@
       padding-left: $spacing-09;
     }
 
+    .is-active {
+      border-bottom: 2px solid $mg-color-red-900;
+    }
+
+    a {
+      @extend %img_none;
+
+      font-size: $font-size-16;
+    }
+
     li {
       border-bottom: 2px solid transparent;
       cursor: pointer;
@@ -27,20 +37,10 @@
       padding-left: 0;
       text-transform: uppercase;
 
-      &.is-active {
-        border-bottom: 2px solid $mg-color-red-900;
-      }
-
       &:hover {
         @include devicebreak(large) {
           border-bottom: 2px solid $mg-color-neutral-500;
         }
-      }
-
-      a {
-        @extend %img_none;
-
-        font-size: $font-size-16;
       }
     }
   }

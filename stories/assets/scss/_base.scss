@@ -154,7 +154,12 @@
 
 // global colors
 // color map gradient
-$colors: ('yellow': rgb(255 235 0 / 80%), 'red': rgba(230 45 45 / 78%), 'green': rgba(92 222 83 / 82%), 'blue': rgba(94 232 246 / 82%));
+$colors: (
+  'yellow': rgb(255 235 0 / 80%),
+  'red': rgba(230 45 45 / 78%),
+  'green': rgba(92 222 83 / 82%),
+  'blue': rgba(94 232 246 / 82%),
+);
 
 @each $name, $color in $colors {
   .#{$name} {
@@ -341,7 +346,12 @@ $colors: ('yellow': rgb(255 235 0 / 80%), 'red': rgba(230 45 45 / 78%), 'green':
 }
 
 // color map solid
-$colors-solid: ('yellow': $mg-color-yellow, 'red': $mg-color-red-900, 'green': $mg-color-green, 'blue':$mg-color-azure);
+$colors-solid: (
+  'yellow': $mg-color-yellow,
+  'red': $mg-color-red-900,
+  'green': $mg-color-green,
+  'blue': $mg-color-azure,
+);
 
 @each $name, $color in $colors-solid {
   .#{$name} {
@@ -385,7 +395,12 @@ $colors-solid: ('yellow': $mg-color-yellow, 'red': $mg-color-red-900, 'green': $
 }
 
 // color map light-color content card only
-$colors-light: ('yellow': $mg-color-yellow-light, 'red': $mg-color-red-600, 'green': $mg-color-green-light, 'blue': $mg-color-azure-light);
+$colors-light: (
+  'yellow': $mg-color-yellow-light,
+  'red': $mg-color-red-600,
+  'green': $mg-color-green-light,
+  'blue': $mg-color-azure-light,
+);
 
 @each $name, $color in $colors-light {
   .#{$name} {

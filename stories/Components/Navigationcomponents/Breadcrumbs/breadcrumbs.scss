@@ -105,7 +105,7 @@
       }
 
       &::after {
-        @include transform(translate(0,-63%) rotate(140deg));
+        @include transform(translate(0, -63%) rotate(140deg));
 
         left: -14px;
         right: unset;

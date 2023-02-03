@@ -1,28 +1,51 @@
 {
-  "plugins": [
-    "stylelint-scss"
-  ],
   "extends": [
     "stylelint-config-standard",
-    "stylelint-config-sass-guidelines"
+    "stylelint-config-sass-guidelines",
+    "stylelint-config-prettier"
   ],
-  "defaultSeverity": "warning",
+  "plugins": [
+    "stylelint-scss",
+    "stylelint-prettier"
+  ],
   "rules": {
-    "max-nesting-depth": 2,
-    "selector-max-compound-selectors": 3,
-    "no-duplicate-selectors": null,
-    "no-descending-specificity": null,
+    "max-nesting-depth": 3,
+    "selector-max-compound-selectors": 4,
+    "selector-class-pattern": "^[a-z]([a-z0-9-]+)?(__([a-z0-9]+-?)+)?(--([a-z0-9]+-?)+){0,2}$",
     "at-rule-no-vendor-prefix": null,
     "media-feature-name-no-vendor-prefix": null,
     "property-no-vendor-prefix": null,
     "selector-no-vendor-prefix": null,
     "value-no-vendor-prefix": null,
     "import-notation": "string",
-    "property-no-unknown": [
+    "string-quotes": "single",
+    "selector-no-qualifying-type": [
       true,
       {
-        "ignoreProperties": ["/box-*/", "/flex-*/"]
+        "ignore": ["attribute"]
       }
-    ]
+    ],
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "content",
+          "each",
+          "else",
+          "extend",
+          "forward",
+          "function",
+          "if",
+          "import",
+          "include",
+          "mixin",
+          "return",
+          "use"
+        ]
+      }
+    ],
+    "number-leading-zero": "always",
+    "number-no-trailing-zeros": true,
+    "prettier/prettier": true
   }
 }

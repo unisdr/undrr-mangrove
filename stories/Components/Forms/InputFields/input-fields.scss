@@ -89,9 +89,8 @@ textarea {
 }
 
 input[type='date'] {
-  background:
-    url(#{$img-path-Icon}/calender-black.svg) no-repeat left
-    14px bottom 12px;
+  background: url(#{$img-path-Icon}/calender-black.svg) no-repeat left 14px
+    bottom 12px;
   background-color: $mg-color-white;
   color: $mg-color-neutral-500;
   padding-left: $spacing-08;
@@ -102,7 +101,8 @@ input[type='date'] {
 }
 
 input[type='search'] {
-  background: url(#{$img-path-Icon}/search-black.svg) no-repeat left 14px bottom 12px;
+  background: url(#{$img-path-Icon}/search-black.svg) no-repeat left 14px bottom
+    12px;
   color: #a9b1b7;
   padding-left: 2.5rem;
 
@@ -148,9 +148,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
 
   input[type='date'],
   input[type='search'] {
-    background:
-      url(#{$img-path-Icon}/calender-black.svg) no-repeat
-      right 14px bottom 12px;
+    background: url(#{$img-path-Icon}/calender-black.svg) no-repeat right 14px
+      bottom 12px;
     background-color: $mg-color-white;
     padding-left: 0.635rem;
     padding-right: $spacing-08;
@@ -158,9 +157,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
   }
 
   input[type='search'] {
-    background:
-      url(#{$img-path-Icon}/search-black.svg) no-repeat
-      right 14px bottom 12px;
+    background: url(#{$img-path-Icon}/search-black.svg) no-repeat right 14px
+      bottom 12px;
   }
 
   input[type='date'] {

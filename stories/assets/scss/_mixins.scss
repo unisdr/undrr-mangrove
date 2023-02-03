@@ -212,8 +212,7 @@
   @include transform(translateY(-50%));
   @include transition(all 200ms ease-in-out);
 
-  background:
-    url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
+  background: url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
     center;
   content: '';
   float: right;
@@ -538,8 +537,7 @@
 }
 
 %animate-link {
-  background-image:
-    linear-gradient($mg-color-red-900, $mg-color-red-900),
+  background-image: linear-gradient($mg-color-red-900, $mg-color-red-900),
     linear-gradient($mg-color-red-900, $mg-color-red-900);
   background-position: 100% 100%, -30px 100%;
   background-repeat: no-repeat;
