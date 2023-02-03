@@ -113,29 +113,29 @@ $undrr-color-corporate-blue: $mg-color-blue-900;
  */
 
 // SENDAI COLORS
-$sendai-red: $sendai-red-900;
 $sendai-red-400: #d45363;
 $sendai-red-600: #cd3a4d;
 $sendai-red-800: #c72236;
 $sendai-red-900: #c10920;
+$sendai-red: $sendai-red-900; // alias
 
-$sendai-orange: $sendai-orange-900;
 $sendai-orange-400: #f19e6a;
 $sendai-orange-600: #ef9155;
 $sendai-orange-800: #ed833f;
 $sendai-orange-900: #eb752a;
+$sendai-orange: $sendai-orange-900; // alias
 
-$sendai-purple: $sendai-purple-900;
 $sendai-purple-400: #b669ab;
 $sendai-purple-600: #ab549f;
 $sendai-purple-800: #a13e93;
 $sendai-purple-900: #962987;
+$sendai-purple: $sendai-purple-900; // alias
 
-$sendai-turquoise: $sendai-turquoise-900;
 $sendai-turquoise-400: #4dc7c6;
 $sendai-turquoise-600: #33bfbe;
 $sendai-turquoise-800: #1ab7b6;
 $sendai-turquoise-900: #00afae;
+$sendai-turquoise: $sendai-turquoise-900; // alias
 
 /**
  * @tokens Font sizes
