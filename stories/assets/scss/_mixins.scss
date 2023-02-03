@@ -504,7 +504,7 @@
     &::before {
       @extend %pseudo-icon;
 
-      background-color: $mg-color-red;
+      background-color: $mg-color-red-900;
       display: none;
       height: 2px;
       right: 0;
@@ -517,8 +517,8 @@
 
       @include transform(rotate(45deg));
 
-      border-right: 2px solid $mg-color-red;
-      border-top: 2px solid $mg-color-red;
+      border-right: 2px solid $mg-color-red-900;
+      border-top: 2px solid $mg-color-red-900;
       height: $spacing-04;
       right: 0;
       top: 2px;

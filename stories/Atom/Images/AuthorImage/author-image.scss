@@ -23,8 +23,7 @@ div.author__img {
   }
 
   &:hover {
-
-    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red, 'green': $mg-color-green, 'blue':$mg-color-azure);
+    $colors: ('yellow': $mg-color-yellow, 'red': $mg-color-red-900, 'green': $mg-color-green, 'blue':$mg-color-azure);
 
     &::before {
       @include background-image(45deg, $mg-color-yellow , transparent 53%);
