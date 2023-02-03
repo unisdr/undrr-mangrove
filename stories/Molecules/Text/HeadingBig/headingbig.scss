@@ -12,7 +12,7 @@
   z-index: 5;
 
   @include devicebreak(medium) {
-    padding: $spacing-400 0 $spacing-320;
+    padding: $spacing-330 0 $spacing-320;
   }
 
   // &.inviewport {
