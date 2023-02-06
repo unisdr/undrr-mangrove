@@ -28,6 +28,7 @@ jobs:
       - name: Install and Build 🔧
         run: | # Install npm packages and build the Storybook files
           yarn install
+          yarn run scss
           yarn run build-storybook
           mv docs-build _site
       - name: Upload artifact
