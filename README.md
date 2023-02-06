@@ -28,12 +28,11 @@ yarn install
 # runs storybook locally
 yarn run storybook
 
-# build storybook
+# build storybook and sass
 yarn run build-storybook
 
 # linting on codebase
-# WARNING: the linter config will currently make non-helpful changes
-# yarn run lint
+yarn run lint
 ```
 
 ## Compiled assets
