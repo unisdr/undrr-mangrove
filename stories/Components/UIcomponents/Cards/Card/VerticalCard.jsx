@@ -20,7 +20,6 @@ export function VerticalCard({
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <>
-      <h5>VERTICAL CARD</h5>
       <article className="mg-card">
 
         {data.map((item, index) => (
@@ -31,7 +30,6 @@ export function VerticalCard({
             </div>
 
             <div className={cls('mg-card__content', `${hovercolors_variant}`)}>
-
               <div className="mg-card__meta">
                 <a href={item.link} className="mg-card__label mg-card__label--active">{item.label1}</a>
                 <a href={item.link} className="mg-card__label mg-card__label--active">{item.label2}</a>

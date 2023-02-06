@@ -21,9 +21,7 @@ export function ChildHero({
 }) {
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
-
     <>
-      <h5>HERO SUB (Child kitchen sink)</h5>
       <section className="mg-hero" style={heroStyle}>
 
         {data.map((item, index) => (

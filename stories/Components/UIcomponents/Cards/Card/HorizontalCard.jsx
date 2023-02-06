@@ -20,7 +20,6 @@ export function HorizontalCard({
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <>
-      <h5>HORIZONTAL CARD</h5>
       <article className="mg-card">
 
         {data.map((item, index) => (
