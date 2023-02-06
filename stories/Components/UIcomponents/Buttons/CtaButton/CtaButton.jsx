@@ -9,7 +9,7 @@ export function CtaButton({
   const for_primary = (For_Primary == 'No Arrow') ? 'without-arrow' : 'arrow';
   const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
   return (
-    <a {...(Type === 'Secondary' ? { className: cls('button', `button-${type}`, `${state}`) } : { className: cls('button', `button-${type}`, `button-${for_primary}`, `${state}`) })} role="button" href="#" {...props}>
+    <a {...(Type === 'Secondary' ? { className: cls('mg-button', `mg-button-${type}`, `${state}`) } : { className: cls('mg-button', `mg-button-${type}`, `mg-button-${for_primary}`, `${state}`) })} role="button" href="#" {...props}>
       {label}
     </a>
   );

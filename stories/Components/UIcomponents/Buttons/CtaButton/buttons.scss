@@ -2,7 +2,25 @@
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
 
-.button {
+
+
+  // .mg-buttons {
+  //   margin-bottom: 1em;
+  //   //Media queries
+
+  //   @media (max-width: 31.25em) {
+  //     display: flex;
+  //     flex-direction: column;
+  //   }
+
+  //   @media (max-width: 50em) {
+  //     display: flex;
+  //     flex-direction: column;
+  //   }
+  // }
+
+
+.mg-button {
   @extend %button;
 
   color: $mg-color-button;
@@ -16,7 +34,7 @@
   }
 }
 
-.button + .button {
+.mg-button + .mg-button {
   margin-left: 1rem;
 }
 
@@ -27,7 +45,7 @@ button {
   }
 }
 
-.button.button-primary {
+.mg-button-primary {
   background-color: $mg-color-button-background;
 
   &:hover {
@@ -61,7 +79,7 @@ button {
   // }
 }
 
-.button.button-secondary {
+.mg-button-secondary {
   background-color: $mg-color-blue-600;
 
   &:hover {
@@ -70,7 +88,7 @@ button {
   }
 }
 
-.button.disabled {
+.mg-button.disabled {
   background-color: $mg-color-neutral-400;
   color: $mg-color-neutral-300;
   pointer-events: none;
