@@ -3,20 +3,20 @@
 // @import '../../../../assets/scss/mixins';
 
 /* content-card start */
-$colors: (
-  'yellow': $mg-color-yellow,
-  'red': $mg-color-red-900,
-  'green': $mg-color-green,
-  'blue': $mg-color-azure,
-  'gray': $mg-color-neutral-100,
-);
-$backgroundcolors: (
-  'yellow': $mg-color-yellow-light,
-  'red': $mg-color-red-600,
-  'green': $mg-color-green-light,
-  'blue': $mg-color-azure-light,
-  'gray': $mg-color-neutral-100,
-);
+// $colors: (
+//   'yellow': $mg-color-yellow,
+//   'red': $mg-color-red-900,
+//   'green': $mg-color-green,
+//   'blue': $mg-color-azure,
+//   'gray': $mg-color-neutral-100,
+// );
+// $backgroundcolors: (
+//   'yellow': $mg-color-yellow-light,
+//   'red': $mg-color-red-600,
+//   'green': $mg-color-green-light,
+//   'blue': $mg-color-azure-light,
+//   'gray': $mg-color-neutral-100,
+// );
 
 //MG CARD using CSS GRID
 .mg-card {
@@ -26,6 +26,11 @@ $backgroundcolors: (
   // Vertical CARD
   &__vc {
     max-width: 25rem;
+
+    .mg-card__visual {
+      height: 200px;
+      overflow: hidden;
+    }
   }
 
   // Horizontal CARD
@@ -53,13 +58,14 @@ $backgroundcolors: (
   // Main Card css
   &__visual {
     align-items: flex-end;
-    background-color: $mg-color-blue-800;
+    // background-color: $mg-color-blue-800;
     display: flex;
     justify-content: flex-end;
   }
 
   &__image {
     height: 100%;
+    object-fit: cover;
     width: 100%;
   }
 
@@ -72,9 +78,9 @@ $backgroundcolors: (
   }
 
   &__label {
-    background: $mg-color-neutral-50;
+    background: $mg-color-label-background;
     border-radius: 0.3em;
-    color: $mg-color-blue-800;
+    color: $mg-color-label;
     cursor: pointer;
     display: inline-block;
     font-size: 0.85em;
@@ -82,9 +88,11 @@ $backgroundcolors: (
     padding: 0.3em 0.5em;
     text-decoration: none;
 
-    // &:hover {
-    //     background: #eef0f7;
-    // }
+    &:hover {
+      color: $mg-color-label;
+      background: $mg-color-label-background--hover;
+      text-decoration: none;
+    }
 
     // &--active {
     //     background: #d4d4d4;
@@ -96,7 +104,7 @@ $backgroundcolors: (
     background-color: $mg-color-white;
     grid-column: 1 / 3;
     grid-row: 2 / 3;
-    padding: 1.5rem;
+    padding: $spacing-04;
 
     @media (min-width: 31.25em) {
       grid-column: 2 / 4;
@@ -111,9 +119,8 @@ $backgroundcolors: (
       color: $mg-color-blue-800;
       cursor: pointer;
       display: inline-block;
-      font-size: 1.5em;
+      font-size: $font-size-26;
       font-weight: bold;
-      text-decoration: none;
 
       // &:hover {
       //     background: #2dabff;
@@ -133,42 +140,41 @@ $backgroundcolors: (
     position: absolute;
     right: 0;
     top: 0;
-    -webkit-transition-duration: 125ms;
-    transition-duration: 125ms;
-    -webkit-transition-property: -webkit-box-shadow;
-    transition-property: -webkit-box-shadow;
-    transition-property: box-shadow;
-    transition-property: box-shadow, -webkit-box-shadow;
-    -webkit-transition-timing-function: ease-in-out;
-    transition-timing-function: ease-in-out;
+    // -webkit-transition-duration: 125ms;
+    // transition-duration: 125ms;
+    // -webkit-transition-property: -webkit-box-shadow;
+    // transition-property: -webkit-box-shadow;
+    // transition-property: box-shadow;
+    // transition-property: box-shadow, -webkit-box-shadow;
+    // -webkit-transition-timing-function: ease-in-out;
+    // transition-timing-function: ease-in-out;
     z-index: 100;
   }
 
   &__summaryText {
-    line-height: 1.2em;
+    // line-height: 1.2em;
     padding-top: 1em;
   }
 
   &__text-link {
     color: $mg-color-blue-800;
-    cursor: pointer;
-    text-decoration: none;
   }
 
+  &__text-link,
   &__label,
   &__button {
     position: relative;
     z-index: 101;
   }
 
-  &__label,
-  &__text-link:hover {
-    text-decoration: underline;
-  }
+  // &__label,
+  // &__text-link:hover {
+  //   text-decoration: underline;
+  // }
 
   &__button {
     background: $mg-color-button-background;
-    color: $mg-color-white;
+    color: $mg-color-button;
     // border-radius: .5em;
     display: inline-block;
     margin-top: 0.5em;
@@ -176,7 +182,9 @@ $backgroundcolors: (
     text-decoration: none;
 
     &:hover {
-      background: $mg-color-hover-primary;
+      background: $mg-color-button-background--hover;
+      color: $mg-color-button--hover;
+      text-decoration: none;
     }
   }
 } //END of CARD

@@ -2,9 +2,10 @@
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
 
-//HERO MAIN (The Parent kitchen sink) css
-
+// Hero
 .mg-hero {
+  background-size: cover;
+  background-position: center;
   display: grid;
   grid-template-columns: 1fr;
   margin-left: calc(50% - (50vw));
@@ -12,7 +13,6 @@
   width: 99vw;
 
   //Media queries
-
   @media (max-width: 31.25em) {
     max-width: fit-content;
   }
@@ -85,7 +85,7 @@
     text-decoration: none;
 
     // &:hover {
-    //     background-color: $mg-color-hover-primary;
+    //     background-color: $mg-color-interactive-active;
     // }
 
     &.detail {
@@ -152,52 +152,52 @@
     margin-bottom: 1em;
   }
 
-  &__buttons {
-    margin-bottom: 1em;
-    //Media queries
+  // &__buttons {
+  //   margin-bottom: 1em;
+  //   //Media queries
 
-    @media (max-width: 31.25em) {
-      display: flex;
-      flex-direction: column;
-    }
+  //   @media (max-width: 31.25em) {
+  //     display: flex;
+  //     flex-direction: column;
+  //   }
 
-    @media (max-width: 50em) {
-      display: flex;
-      flex-direction: column;
-    }
-  }
+  //   @media (max-width: 50em) {
+  //     display: flex;
+  //     flex-direction: column;
+  //   }
+  // }
 
-  &__button {
-    color: $mg-color-white;
-    // border-radius: .5em;
-    display: inline-block;
-    font-size: 0.8em;
-    margin-top: 0.5em;
-    padding: 0.3em 0.5em;
-    text-decoration: none;
+  // &__button {
+  //   color: $mg-color-white;
+  //   // border-radius: .5em;
+  //   display: inline-block;
+  //   font-size: 0.8em;
+  //   margin-top: 0.5em;
+  //   padding: 0.3em 0.5em;
+  //   text-decoration: none;
 
-    &.mg-hero__button-primary {
-      background-color: $mg-color-button-background;
+  //   &.mg-hero__button-primary {
+  //     background-color: $mg-color-button-background;
 
-      &:hover {
-        background-color: $mg-color-button-background--hover;
-      }
-    }
+  //     &:hover {
+  //       background-color: $mg-color-button-background--hover;
+  //     }
+  //   }
 
-    &.mg-hero__button-secondary {
-      background-color: $mg-color-neutral-200;
+  //   &.mg-hero__button-secondary {
+  //     background-color: $mg-color-neutral-200;
 
-      &:hover {
-        background-color: $mg-color-hover-primary;
-      }
-    }
+  //     &:hover {
+  //       background-color: $mg-color-interactive-active;
+  //     }
+  //   }
 
-    &.mg-hero__button-tertiary {
-      background-color: $mg-color-neutral-50;
+  //   &.mg-hero__button-tertiary {
+  //     background-color: $mg-color-neutral-50;
 
-      &:hover {
-        background-color: $mg-color-hover-primary;
-      }
-    }
-  }
+  //     &:hover {
+  //       background-color: $mg-color-interactive-active;
+  //     }
+  //   }
+  // }
 }

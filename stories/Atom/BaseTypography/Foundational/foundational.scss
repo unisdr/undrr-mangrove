@@ -11,11 +11,11 @@ html {
 body {
   color: $mg-color-black;
   font-family: $Font-Family-Roboto;
-  font-size: 1rem;
+  font-size: $font-size-16;;
   line-height: 1.4;
 
   @include devicebreak(medium) {
-    font-size: 1.25rem;
+    font-size: $font-size-16;
   }
 }
 
@@ -188,11 +188,16 @@ hr {
 }
 
 a {
-  @extend %paragragh-font-20 !optional;
-  @extend %animate-link !optional;
+  // @extend %paragragh-font-20 !optional;
+  // @extend %animate-link !optional;
 
-  color: $mg-color-black;
+  color: $mg-color-interactive;
   text-decoration: none;
+}
+
+a:hover {
+  color: $mg-color-interactive-active;
+  text-decoration: underline;
 }
 
 // burmese lang

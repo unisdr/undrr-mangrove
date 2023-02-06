@@ -1,12 +1,10 @@
 import React, { Fragment } from 'react';
+import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 // import './hero.scss';
 // import '../../../assets/scss/_grid.scss';
-import imgPath from '../../../assets/images/hero_background.png';
+// import imgPath from '../../../assets/images/hero_background.png';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
-let heroStyle = {
-  backgroundImage: `url(${imgPath})`,
-};
 
 export const hovercolors_options = {
   yellow: '',
@@ -15,19 +13,15 @@ export const hovercolors_options = {
   green: 'green',
 };
 
-export function ParentHero({
+export function Hero({
   data, Hovercolors,
 }) {
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
-
     <>
-      <h5>HERO MAIN (The Parent kitchen sink)</h5>
-      <section className="mg-hero" style={heroStyle}>
-
-        {data.map((item, index) => (
+      {data.map((item, index) => (
+        <section className="mg-hero" style={{ backgroundImage: `url(${item.imgback})` }}>
           <div key={index} className="mg-hero__overlay">
-
             <article className="mg-hero__content">
 
               <div className="mg-hero__meta">
@@ -45,20 +39,22 @@ export function ParentHero({
               </div>
 
               <div className="mg-hero__buttons">
-                <a href={item.link} className="mg-hero__button mg-hero__button-primary">{item.primary_button}</a>
-                <a href={item.link} className="mg-hero__button mg-hero__button-secondary">{item.secondary_button}</a>
-                <a href={item.link} className="mg-hero__button mg-hero__button-tertiary">{item.tertiary_button}</a>
+                <CtaButton Type="Primary" label={item.primary_button} />
+                <CtaButton Type="Secondary" label={item.secondary_button} />
+
+                {/* <a href={item.link} className="mg-hero__button mg-hero__button-primary">{item.primary_button}</a> */}
+                {/* <a href={item.link} className="mg-hero__button mg-hero__button-secondary">{item.secondary_button}</a> */}
+                {/* <a href={item.link} className="mg-hero__button mg-hero__button-tertiary">{item.tertiary_button}</a> */}
               </div>
 
             </article>
-
           </div>
-        ))}
-      </section>
+        </section>
+      ))}
     </>
   );
 }
 
-ParentHero.defaultProps = {
+Hero.defaultProps = {
   Hovercolors: 'yellow',
 };

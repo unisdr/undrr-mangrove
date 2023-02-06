@@ -3,12 +3,12 @@ import { CtaButton } from './CtaButton';
 
 export const getCaptionForLocale = (locale) => {
   switch(locale) {
-    case 'english': const engText = {detail: 'READ MORE'}; return engText;
+    case 'english': const engText = {detail: 'Read more'}; return engText;
     case 'arabic': const arabicText = {detail: 'اقرأ أكثر'}; return arabicText;
     case 'burmese': const burmeseText = {detail: 'ပိုပြီးဖတ်ပါ'}; return burmeseText;
     case 'japanese': const japaneseText = {detail: '続きを読む'}; return japaneseText;
     default:
-      return {detail: 'READ MORE'};
+      return {detail: 'Read more'};
   }
 };
 
@@ -42,8 +42,7 @@ A button describes the call to action that will be performed when the user click
 #### When to use:
 
 - Buttons should be used as primary or secondary calls to actions
-- Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
-- Examples of buttons can be to “VIEW MORE” or “READ MORE” or “SIGN UP”
+- Ideally, a page should have one primary action. A secondary option should be used infrequently.
 - If there are multiple choices for an action item, one default button should be active and the other buttons inactive
 
 ### Formatting
@@ -58,7 +57,7 @@ There are multiple button types in our design system
 ### Content
 Button”s color and text indicate the default setting and call of action of the button.
 Primary CTA: Dark Red: Default call of action button
-                      Red: Hover overcall of action button
+                      Red: Hover over call of action button
                       Gray: Disabled call of action button
 Secondary Button: Blue-600: Default secondary button
                       Blue-400: Hover over the secondary button

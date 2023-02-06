@@ -25,7 +25,7 @@ export function VerticalCard({
         {data.map((item, index) => (
           <div key={index} className="mg-card__vc">
             <div className="mg-card__visual">
-              <img src={item.imgback} alt={item.imgback} className="mg-card__image" />
+              <img src={item.imgback} alt={item.imgalt} className="mg-card__image" />
               <a href={item.link} className="mg-card__share">{item.share}</a>
             </div>
 

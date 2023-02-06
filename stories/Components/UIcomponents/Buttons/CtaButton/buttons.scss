@@ -5,15 +5,19 @@
 .button {
   @extend %button;
 
-  color: $mg-color-white;
+  color: $mg-color-button;
   cursor: pointer;
   justify-content: center;
-  padding: $spacing-05 $spacing-06;
+  padding: $spacing-04 $spacing-05;
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px $mg-color-button-background--hover;
     outline: 0;
   }
+}
+
+.button + .button {
+  margin-left: 1rem;
 }
 
 button {
@@ -24,42 +28,44 @@ button {
 }
 
 .button.button-primary {
-  background-color: $mg-color-red-900;
+  background-color: $mg-color-button-background;
 
   &:hover {
-    background-color: $mg-color-red-900;
+    color: $mg-color-button;
+    background-color: $mg-color-button-background--hover;
   }
 
-  &.button-arrow {
-    &::after {
-      @include transition(0.2s ease);
+  // &.button-arrow {
+  //   &::after {
+  //     @include transition(0.2s ease);
 
-      background: url(#{$img-path-Iconfourback}/chevron-right-black.svg)
-        no-repeat left center;
-      content: '';
-      height: 20px;
-      margin-left: $spacing-04;
-      width: 13px;
-    }
+  //     background: url(#{$img-path-Iconfourback}/chevron-right-black.svg)
+  //       no-repeat left center;
+  //     content: '';
+  //     height: 20px;
+  //     margin-left: $spacing-04;
+  //     width: 13px;
+  //   }
 
-    &:hover::after {
-      @include translate(70%, 0);
-    }
+  //   &:hover::after {
+  //     @include translate(70%, 0);
+  //   }
 
-    &.disabled {
-      &::after {
-        background: url(#{$img-path-Iconfourback}/chevron-right-white.svg)
-          no-repeat left center;
-        content: '';
-      }
-    }
-  }
+  //   &.disabled {
+  //     &::after {
+  //       background: url(#{$img-path-Iconfourback}/chevron-right-white.svg)
+  //         no-repeat left center;
+  //       content: '';
+  //     }
+  //   }
+  // }
 }
 
 .button.button-secondary {
   background-color: $mg-color-blue-600;
 
   &:hover {
+    color: $mg-color-button;
     background-color: $mg-color-blue-400;
   }
 }
@@ -70,21 +76,21 @@ button {
   pointer-events: none;
 }
 
-[dir='rtl'] {
-  .button {
-    &.button-primary {
-      &.button-arrow {
-        &::after {
-          @include transform(rotate(180deg));
+// [dir='rtl'] {
+//   .button {
+//     &.button-primary {
+//       &.button-arrow {
+//         &::after {
+//           @include transform(rotate(180deg));
 
-          margin-left: 0;
-          margin-right: $spacing-04;
-        }
+//           margin-left: 0;
+//           margin-right: $spacing-04;
+//         }
 
-        &:hover::after {
-          @include transform(translate(-50%, 0) rotate(180deg));
-        }
-      }
-    }
-  }
-}
+//         &:hover::after {
+//           @include transform(translate(-50%, 0) rotate(180deg));
+//         }
+//       }
+//     }
+//   }
+// }

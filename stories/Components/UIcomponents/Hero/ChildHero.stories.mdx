@@ -1,6 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
 import { ChildHero } from './ChildHero';
-import img from '../../../assets/images/hero_background.png';
 
 export const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -11,9 +10,10 @@ export const getCaptionForLocale = (locale) => {
             title: "Text in xl large size",
             summaryText: "Blurb in large size",
             label: "Label or breadcrumb (default label size)",
-            primary_button: "Primary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -26,9 +26,10 @@ export const getCaptionForLocale = (locale) => {
             summaryText: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
             detail: "اقرأ أكث",
             label: "Label or breadcrumb (default label size)",
-            primary_button: "Primary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -41,9 +42,10 @@ export const getCaptionForLocale = (locale) => {
             summaryText: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
             detail: "ပိုပြီးဖတ်ပါ",
             label: "Label or breadcrumb (default label size)",
-            primary_button: "Primary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -56,9 +58,10 @@ export const getCaptionForLocale = (locale) => {
             summaryText: "投稿のタイトルはここにあり、2行です",
             detail: "続きを読む",
             label: "Label or breadcrumb (default label size)",
-            primary_button: "Primary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -70,17 +73,18 @@ export const getCaptionForLocale = (locale) => {
             title: "Text in xl large size",
             summaryText: "Blurb in large size",
             label: "Label or breadcrumb (default label size)",
-            primary_button: "Primary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
       return dummy;
-  }
+  }f
 };
 
-<Meta title="Components/Hero/Child Hero" argTypes={{
+<Meta title="Components/Hero/Hero - child" argTypes={{
   Hovercolors: {
     options: ['yellow', 'red', 'green', 'blue'],
     control: { type: 'inline-radio' },
@@ -129,7 +133,7 @@ Hover: In the hover state, when the mouse hovers over the mangrove Hero will dis
 Mangrove Hero w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
 
 <Canvas>
-<Story name="Child Hero">
+<Story name="Hero - child">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (

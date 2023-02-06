@@ -92,8 +92,8 @@ $mg-color-accent-400: #0a6969;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$mg-color-hover-primary: $mg-color-blue-500;
-$mg-color-link-blue: $mg-color-blue-800;
+$mg-color-interactive-active: $mg-color-blue-700;
+$mg-color-interactive: $mg-color-blue-900;
 
 /**
  * @tokens UNDRR Colors
@@ -227,10 +227,17 @@ $mg-breakpoint-desktop: 1440px;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$mg-color-label: $mg-color-blue-700;
-$mg-color-label--hover: $mg-color-neutral-800;
-$mg-color-button-background: $mg-color-blue-900;
-$mg-color-button-background--hover: $mg-color-white;
+// label
+$mg-color-label: $mg-color-white;
+$mg-color-label--hover: $mg-color-white;
+$mg-color-label-background: $mg-color-interactive;
+$mg-color-label-background--hover: $mg-color-interactive-active;
+
+// button
+$mg-color-button: $mg-color-white;
+$mg-color-button--hover: $mg-color-white;
+$mg-color-button-background: $mg-color-interactive;
+$mg-color-button-background--hover: $mg-color-interactive-active;
 
 /**
  * @tokens Component sizing
