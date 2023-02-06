@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 import React, { Fragment } from 'react';
 import DOMPurify from 'dompurify';
+import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 // import './card.scss';
 import '../../../../assets/scss/_grid.scss';
 
@@ -39,11 +40,8 @@ export function VerticalCard({
               <header className="mg-card__title">
                 <a href={item.link}>{item.title}</a>
               </header>
-
               <p className="mg-card__summaryText" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }} />
-
-              <a href={item.link} className="mg-card__button">{item.button}</a>
-
+              <CtaButton type="Primary" label={item.button} href={item.link} />
             </div>
 
           </div>
