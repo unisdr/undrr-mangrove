@@ -1,6 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { ParentHero } from './ParentHero';
-import img from '../../../assets/images/hero_background.png';
+import { Hero } from './Hero';
 
 export const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -12,11 +11,12 @@ export const getCaptionForLocale = (locale) => {
             summaryText: "Blurb in large size",
             detail: "Detail label: Detail",
             label: "Label in medium size",
-            primary_button: "Primary link as button",
-            secondary_button: "Secondary link as button",
-            tertiary_button: "Tertiary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            secondary_button: "Secondary action",
+            tertiary_button: "Tertiary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -29,11 +29,12 @@ export const getCaptionForLocale = (locale) => {
             summaryText: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
             detail: "اقرأ أكث",
             label: "Label in medium size",
-            primary_button: "Primary link as button",
-            secondary_button: "Secondary link as button",
-            tertiary_button: "Tertiary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            secondary_button: "Secondary action",
+            tertiary_button: "Tertiary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -46,11 +47,12 @@ export const getCaptionForLocale = (locale) => {
             summaryText: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
             detail: "ပိုပြီးဖတ်ပါ",
             label: "Label in medium size",
-            primary_button: "Primary link as button",
-            secondary_button: "Secondary link as button",
-            tertiary_button: "Tertiary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            secondary_button: "Secondary action",
+            tertiary_button: "Tertiary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -63,11 +65,12 @@ export const getCaptionForLocale = (locale) => {
             summaryText: "投稿のタイトルはここにあり、2行です",
             detail: "続きを読む",
             label: "Label in medium size",
-            primary_button: "Primary link as button",
-            secondary_button: "Secondary link as button",
-            tertiary_button: "Tertiary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            secondary_button: "Secondary action",
+            tertiary_button: "Tertiary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -80,11 +83,12 @@ export const getCaptionForLocale = (locale) => {
             summaryText: "Blurb in large size",
             detail: "Detail label: Detail",
             label: "Label in medium size",
-            primary_button: "Primary link as button",
-            secondary_button: "Secondary link as button",
-            tertiary_button: "Tertiary link as button",
-            link:"#",
-            imgback: img,
+            primary_button: "Primary action",
+            secondary_button: "Secondary action",
+            tertiary_button: "Tertiary action",
+            link:"javascript:void(0)",
+            imgalt: "A person looks on",
+            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
           }
         ]
       };
@@ -92,7 +96,7 @@ export const getCaptionForLocale = (locale) => {
   }
 };
 
-<Meta title="Components/Hero/Parent Hero" argTypes={{
+<Meta title="Components/Hero/Hero" argTypes={{
   Hovercolors: {
     options: ['yellow', 'red', 'green', 'blue'],
     control: { type: 'inline-radio' },
@@ -141,13 +145,13 @@ Hover: In the hover state, when the mouse hovers over the mangrove Hero will dis
 Mangrove Hero w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
 
 <Canvas>
-<Story name="Parent Hero">
+<Story name="Hero">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <ParentHero
+      <Hero
         data={caption.contentdata} {...args}
-      ></ParentHero>
+      ></Hero>
     );
   }}
 </Story>

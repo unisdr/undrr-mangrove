@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 // import './hero.scss';
 // import '../../../assets/scss/_grid.scss';
+import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 import imgPath from '../../../assets/images/hero_background.png';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
@@ -20,9 +21,7 @@ export function ChildHero({
 }) {
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
-
     <>
-      <h5>HERO SUB (Child kitchen sink)</h5>
       <section className="mg-hero" style={heroStyle}>
 
         {data.map((item, index) => (
@@ -41,7 +40,8 @@ export function ChildHero({
               <div className="mg-hero__summaryText">{item.summaryText}</div>
 
               <div className="mg-hero__buttons">
-                <a href={item.link} className="mg-hero__button mg-hero__button-primary">{item.primary_button}</a>
+                <CtaButton type="Primary" label={item.primary_button} />
+                {/* <a href={item.link} className="mg-hero__button mg-hero__button-primary">{item.primary_button}</a> */}
               </div>
 
             </article>

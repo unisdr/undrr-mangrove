@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 import React, { Fragment } from 'react';
 import DOMPurify from 'dompurify';
+import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 // import './card.scss';
 import '../../../../assets/scss/_grid.scss';
 
@@ -19,13 +20,12 @@ export function HorizontalCard({
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <>
-      <h5>HORIZONTAL CARD</h5>
       <article className="mg-card">
 
         {data.map((item, index) => (
           <div key={index} className="mg-card__hc">
             <div className="mg-card__visual">
-              <img src={item.imgback} alt={item.imgback} className="mg-card__image" />
+              <img src={item.imgback} alt={item.imgalt} className="mg-card__image" />
               <a href={item.link} className="mg-card__share">{item.share}</a>
             </div>
 
@@ -40,8 +40,7 @@ export function HorizontalCard({
                 <a href={item.link}>{item.title}</a>
               </header>
               <p className="mg-card__summaryText" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }} />
-              <a href={item.link} className="mg-card__button">{item.button}</a>
-
+              <CtaButton type="Primary" label={item.button} href={item.link} />
             </div>
 
           </div>
