@@ -6,21 +6,21 @@ import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
 
-export const hovercolors_options = {
-  yellow: '',
-  red: 'red',
-  blue: 'blue',
-  green: 'green',
+export const variantOptions = {
+  primary: '',
+  secondary: 'secondary',
+  tertiary: 'tertiary',
+  quaternary: 'quaternary',
 };
 
 export function Hero({
-  data, Hovercolors,
+  data, variant,
 }) {
-  let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
+  let variantActive = variantOptions[`${variant}`];
   return (
     <>
       {data.map((item, index) => (
-        <section className="mg-hero" style={{ backgroundImage: `url(${item.imgback})` }}>
+        <section className={cls('mg-hero', 'mg-hero--'+`${variantActive}`)} style={{ backgroundImage: `url(${item.imgback})` }}>
           <div key={index} className="mg-hero__overlay">
             <article className="mg-hero__content">
 
@@ -56,5 +56,5 @@ export function Hero({
 }
 
 Hero.defaultProps = {
-  Hovercolors: 'yellow',
+  variant: 'primary',
 };

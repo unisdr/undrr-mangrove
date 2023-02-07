@@ -41,12 +41,12 @@
     grid-template-columns: 1fr;
     grid-template-rows: 300px 1fr auto;
 
-    @media (min-width: 31.25em) {
+    @media (min-width: $mg-breakpoint-mobile) {
       grid-template-columns: 160px repeat(2, 1fr);
       grid-template-rows: 1fr auto;
     }
 
-    @media (min-width: 50em) {
+    @media (min-widht: $mg-breakpoint-tablet) {
       grid-template-columns: 300px repeat(2, 1fr);
     }
 
@@ -72,20 +72,20 @@
   &__share {
     cursor: pointer;
     display: inline-block;
-    padding: 0.56em;
+    padding: $spacing-03;
     position: absolute;
     z-index: 101;
   }
 
   &__label {
     background: $mg-color-label-background;
-    border-radius: 0.3em;
+    border-radius: $spacing-02;
     color: $mg-color-label;
     cursor: pointer;
     display: inline-block;
     font-size: 0.85em;
-    margin-right: 0.5em;
-    padding: 0.3em 0.5em;
+    margin-right: $spacing-03;
+    padding: $spacing-02 $spacing-03;
     text-decoration: none;
 
     &:hover {
@@ -106,7 +106,7 @@
     grid-row: 2 / 3;
     padding: $spacing-04;
 
-    @media (min-width: 31.25em) {
+    @media (min-width: $mg-breakpoint-mobile) {
       grid-column: 2 / 4;
       grid-row: 1 / 2;
     }
@@ -140,14 +140,6 @@
     position: absolute;
     right: 0;
     top: 0;
-    // -webkit-transition-duration: 125ms;
-    // transition-duration: 125ms;
-    // -webkit-transition-property: -webkit-box-shadow;
-    // transition-property: -webkit-box-shadow;
-    // transition-property: box-shadow;
-    // transition-property: box-shadow, -webkit-box-shadow;
-    // -webkit-transition-timing-function: ease-in-out;
-    // transition-timing-function: ease-in-out;
     z-index: 100;
   }
 
@@ -171,22 +163,6 @@
   // &__text-link:hover {
   //   text-decoration: underline;
   // }
-
-  &__button {
-    background: $mg-color-button-background;
-    color: $mg-color-button;
-    // border-radius: .5em;
-    display: inline-block;
-    margin-top: 0.5em;
-    padding: 0.5em 1em;
-    text-decoration: none;
-
-    &:hover {
-      background: $mg-color-button-background--hover;
-      color: $mg-color-button--hover;
-      text-decoration: none;
-    }
-  }
 } //END of CARD
 
 // [dir='rtl'] {

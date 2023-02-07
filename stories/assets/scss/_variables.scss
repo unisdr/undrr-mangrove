@@ -239,6 +239,14 @@ $mg-color-button--hover: $mg-color-white;
 $mg-color-button-background: $mg-color-interactive;
 $mg-color-button-background--hover: $mg-color-interactive-active;
 
+// hero
+$mg-color-hero: $mg-color-interactive;
+$mg-color-hero--secondary: $mg-color-orange-800;
+$mg-color-hero--tertiary: $mg-color-neutral-900;
+$mg-color-hero--quaternary: $mg-color-red-800;
+$mg-opacity-hero: 0.85;
+$mg-spacing-hero-overlay: 0;
+
 /**
  * @tokens Component sizing
  * @presenter Spacing
