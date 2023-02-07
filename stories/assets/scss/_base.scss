@@ -1,12 +1,7 @@
+// @to-do: this is a hodge-podge of code that needs to be moved
+// into various utility components or outright removed.
+
 /* base start */
-.color-white {
-  color: $mg-color-white;
-}
-
-.color-black {
-  color: $mg-color-black;
-}
-
 .show-large {
   display: none;
 
@@ -21,10 +16,6 @@
   @include devicebreak(medium) {
     display: none;
   }
-}
-
-.height-full {
-  height: 100%;
 }
 
 .overlay-grey {
@@ -152,199 +143,6 @@
   background-color: $mg-color-white;
 }
 
-// global colors
-// color map gradient
-$colors: (
-  'yellow': rgb(255 235 0 / 80%),
-  'red': rgba(230 45 45 / 78%),
-  'green': rgba(92 222 83 / 82%),
-  'blue': rgba(94 232 246 / 82%),
-);
-
-@each $name, $color in $colors {
-  .#{$name} {
-    //card-thumbnail
-    .card-thumbnail__image:hover {
-      &::before {
-        @include background-image(42deg, #{$color}, transparent 80%);
-      }
-    }
-
-    //bio-card
-    .bio-card:hover {
-      .card-thumbnail__image::before {
-        @include background-image(67.76deg, #{$color}, transparent 61.11%);
-
-        opacity: 0.75;
-      }
-    }
-
-    //author__img
-    .author__img:hover {
-      &::before {
-        @include background(45deg, #{$color}, transparent 53%);
-      }
-    }
-
-    //publication-thumbnail__image
-    .publication-thumbnail__image:hover {
-      &::after {
-        @include background-image(42deg, #{$color}, transparent 80%);
-      }
-    }
-
-    //download card
-    .download-card:hover {
-      .card-thumbnail__image::before {
-        @include background-image(42deg, #{$color}, transparent 80%);
-
-        opacity: 0.75;
-      }
-
-      .publication-thumbnail__image {
-        &::after {
-          @include background-image(42deg, #{$color}, transparent 80%);
-
-          opacity: 0.75;
-        }
-      }
-    }
-
-    //publication-card
-    .publication-card:hover {
-      .publication-thumbnail__image {
-        &::after {
-          @include background-image(42deg, #{$color}, transparent 80%);
-
-          opacity: 0.75;
-        }
-      }
-    }
-
-    //stats-panel
-    .stats-panel:hover {
-      &::after {
-        @include background-image(0deg, #{$color}, transparent 140%);
-      }
-
-      .stats-card {
-        background-color: transparent;
-      }
-    }
-
-    //wide-card
-    .wide-card__image a:hover {
-      &::before {
-        @include background-image(42deg, #{$color}, transparent 80%);
-
-        opacity: 0.75;
-      }
-    }
-
-    //feature-card
-    .feature__card-slide {
-      &::before {
-        @include background-image(45deg, #{$color}, transparent 67%);
-      }
-    }
-
-    //content-card
-    .content-card {
-      .image {
-        &::before {
-          @include background-image(42deg, #{$color}, transparent 80%);
-        }
-      }
-    }
-
-    .image-reveal-card:hover {
-      .image::before {
-        @include background-image(67.76deg, #{$color}, transparent 61.11%);
-
-        opacity: 0.75;
-      }
-    }
-  }
-}
-
-//rtl
-[dir='rtl'] {
-  @each $name, $color in $colors {
-    .#{$name} {
-      //card-thumbnail
-      .card-thumbnail__image:hover {
-        &::before {
-          @include background-image(297deg, #{$color}, transparent 61.11%);
-        }
-      }
-
-      //bio-card
-      .bio-card:hover {
-        .card-thumbnail__image::before {
-          @include background-image(297deg, #{$color}, transparent 61.11%);
-
-          opacity: 0.75;
-        }
-      }
-
-      //publication-card
-      .publication-card:hover {
-        .publication-thumbnail__image {
-          &::after {
-            @include background-image(318deg, #{$color}, transparent 70.49%);
-
-            opacity: 0.75;
-          }
-        }
-      }
-
-      //download card
-      .download-card:hover {
-        .card-thumbnail__image::before {
-          @include background-image(297deg, #{$color}, transparent 61.11%);
-
-          opacity: 0.75;
-        }
-
-        .publication-thumbnail__image {
-          &::after {
-            @include background-image(318deg, #{$color}, transparent 70.49%);
-
-            opacity: 0.75;
-          }
-        }
-      }
-
-      //publication-card
-      .publication-card:hover {
-        .publication-thumbnail__image {
-          &::after {
-            @include background-image(318deg, #{$color}, transparent 70.49%);
-
-            opacity: 0.75;
-          }
-        }
-      }
-
-      //wide-card
-      .wide-card__image a:hover {
-        &::before {
-          @include background-image(318deg, #{$color}, transparent 80%);
-
-          opacity: 0.75;
-        }
-      }
-
-      //feature-card
-      .feature__card-slide {
-        &::before {
-          @include background-image(318deg, #{$color}, transparent 67.25%);
-        }
-      }
-    }
-  }
-}
-
 // color map solid
 $colors-solid: (
   'yellow': $mg-color-yellow,
@@ -390,23 +188,6 @@ $colors-solid: (
     //feature-card
     .feature__card-slide {
       background: #{$color};
-    }
-  }
-}
-
-// color map light-color content card only
-$colors-light: (
-  'yellow': $mg-color-yellow-light,
-  'red': $mg-color-red-600,
-  'green': $mg-color-green-light,
-  'blue': $mg-color-azure-light,
-);
-
-@each $name, $color in $colors-light {
-  .#{$name} {
-    //content card - Emphasize default state color
-    .content-card.card-emphasize {
-      background-color: #{$color};
     }
   }
 }
