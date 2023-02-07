@@ -5,27 +5,23 @@ import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 import imgPath from '../../../assets/images/hero_background.png';
 
 const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
-let heroStyle = {
-  backgroundImage: `url(${imgPath})`,
-};
 
-export const hovercolors_options = {
-  yellow: '',
-  red: 'red',
-  blue: 'blue',
-  green: 'green',
+export const variantOptions = {
+  primary: '',
+  secondary: 'secondary',
+  tertiary: 'tertiary',
+  quaternary: 'quaternary',
 };
 
 export function ChildHero({
-  data, Hovercolors,
+  data, variant,
 }) {
-  let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
+  let variantActive = variantOptions[`${variant}`];
   return (
     <>
-      <section className="mg-hero" style={heroStyle}>
-
-        {data.map((item, index) => (
-          <div key={index} className="mg-hero__overlay child">
+      {data.map((item, index) => (
+        <section className={cls('mg-hero', 'mg-hero--child', 'mg-hero--'+`${variantActive}`)} style={{ backgroundImage: `url(${item.imgback})` }}>
+          <div key={index} className="mg-hero__overlay">
 
             <article className="mg-hero__content">
 
@@ -47,12 +43,12 @@ export function ChildHero({
             </article>
 
           </div>
-        ))}
-      </section>
+        </section>
+      ))}
     </>
   );
 }
 
 ChildHero.defaultProps = {
-  Hovercolors: 'yellow',
+  variant: 'primary',
 };

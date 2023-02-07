@@ -6,65 +6,45 @@
 .mg-hero {
   background-size: cover;
   background-position: center;
+  color: $mg-color-neutral-0;
   display: grid;
   grid-template-columns: 1fr;
   margin-left: calc(50% - (50vw));
   position: relative;
   width: 99vw;
 
-  //Media queries
-  @media (max-width: 31.25em) {
-    max-width: fit-content;
+  // Button overrides
+  a.mg-button-primary {
+    background-color: $mg-color-neutral-0;
   }
-
-  @media (max-width: 50em) {
-    max-width: fit-content;
+  a.mg-button-secondary {
+    background-color: rgba($mg-color-neutral-0, .9);
+  }
+  a.mg-button,
+  a.mg-button:hover,
+  a.mg-button:visited {
+    color: $mg-color-hero;
   }
 
   &__overlay {
-    background-color: $mg-color-white;
-    margin-left: 2em;
-    padding: 1.5em;
+    // todo: choices for background colors
+    background-color: rgba($mg-color-hero, $mg-opacity-hero);
+    margin: $mg-spacing-hero-overlay;
+    margin-left: $spacing-07;
+    padding: $spacing-06;
     width: max-content;
 
-    @media (max-width: 31.25em) {
-      background-color: $mg-color-neutral-600;
+    @media (max-width: $mg-breakpoint-tablet) {
       margin-left: 0;
-    }
-
-    @media (max-width: 50em) {
-      background-color: $mg-color-neutral-600;
-      margin-left: 0;
-    }
-
-    &.child {
-      margin-bottom: 1em;
-
-      .mg-hero__buttons {
-        margin-bottom: 2.8em;
-        margin-top: 0;
-      }
-
-      @media (max-width: 31.25em) {
-        background-color: $mg-color-neutral-600;
-        margin-bottom: 0;
-        margin-left: 0;
-      }
-
-      @media (max-width: 50em) {
-        background-color: $mg-color-neutral-600;
-        margin-bottom: 0;
-        margin-left: 0;
-      }
     }
   }
 
   &__content {
-    margin-top: 0.5em;
+    margin-top: $spacing-03;
   }
 
   &__meta {
-    padding-bottom: 1.3em;
+    padding-bottom: $spacing-02;
 
     &.meta-detail {
       display: flex;
@@ -73,75 +53,60 @@
   }
 
   &__label {
-    color: $mg-color-neutral-800;
-    cursor: pointer;
     display: inline-block;
     // background: rgb(230, 230, 230);
     // border-radius: .3em;
     font-size: 0.85em;
     font-weight: bold;
-    margin-right: 0.5em;
-    padding: 0.3em 0;
-    text-decoration: none;
-
-    // &:hover {
-    //     background-color: $mg-color-interactive-active;
-    // }
+    margin-right: $spacing-03;
+    padding: $spacing-02 0;
 
     &.detail {
       font-weight: normal;
     }
   }
 
+  a,
+  a:hover,
+  a:visited {
+    color: $mg-color-neutral-0;
+  }
+
   &__title {
-    margin-bottom: 1.3em;
+    color: $mg-color-neutral-0;
+    margin-bottom: $spacing-02;
+    display: inline-block;
+    font-weight: bold;
 
-    a {
-      color: $mg-color-blue-800;
-      cursor: pointer;
-      display: inline-block;
-      font-weight: bold;
-      text-decoration: none;
+    @media (max-width: $mg-breakpoint-mobile) {
+      font-size: 1.5em;
+    }
 
-      // &:hover {
-      //     background: #2dabff;
-      // }
+    @media (max-width: $mg-breakpoint-tablet) {
+      font-size: 1.7em;
+    }
 
-      &.active {
-        background: $mg-color-neutral-50;
-        font-weight: bold;
-      }
+    .text-xxl {
+      font-size: 2.5em;
 
-      @media (max-width: 31.25em) {
+      @media (max-width: $mg-breakpoint-mobile) {
         font-size: 1.5em;
       }
 
-      @media (max-width: 50em) {
+      @media (max-width: $mg-breakpoint-tablet) {
         font-size: 1.7em;
       }
+    }
 
-      &.text-xxl {
-        font-size: 2.5em;
+    .text-xl {
+      font-size: 2.4em;
 
-        @media (max-width: 31.25em) {
-          font-size: 1.5em;
-        }
-
-        @media (max-width: 50em) {
-          font-size: 1.7em;
-        }
+      @media (max-width: $mg-breakpoint-mobile) {
+        font-size: 1.4em;
       }
 
-      &.text-xl {
-        font-size: 2.4em;
-
-        @media (max-width: 31.25em) {
-          font-size: 1.4em;
-        }
-
-        @media (max-width: 50em) {
-          font-size: 1.6em;
-        }
+      @media (max-width: $mg-breakpoint-tablet) {
+        font-size: 1.6em;
       }
     }
   }
@@ -149,6 +114,31 @@
   &__summaryText {
     font-size: 1.5em;
     font-weight: 400;
-    margin-bottom: 1em;
+    margin-bottom: $spacing-03;
+  }
+}
+
+// Child variant
+.mg-hero--child .mg-hero__overlay {
+  @media (max-width: $mg-breakpoint-tablet) {
+    margin-left: 0;
+  }
+}
+
+// Stylistic variants
+$variantColours: (
+  'secondary': $mg-color-hero--secondary,
+  'tertiary': $mg-color-hero--tertiary,
+  'quaternary': $mg-color-hero--quaternary,
+);
+
+@each $name, $color in $variantColours {
+  .mg-hero--#{$name} .mg-hero__overlay {
+    background-color: rgba($color, $mg-opacity-hero);
+    a.mg-button,
+    a.mg-button:hover,
+    a.mg-button:visited {
+      color: #{$color};
+    }
   }
 }

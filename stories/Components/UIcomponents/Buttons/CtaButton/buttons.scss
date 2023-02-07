@@ -8,12 +8,12 @@
   //   margin-bottom: 1em;
   //   //Media queries
 
-  //   @media (max-width: 31.25em) {
+  //   @media (max-width: $mg-breakpoint-mobile) {
   //     display: flex;
   //     flex-direction: column;
   //   }
 
-  //   @media (max-width: 50em) {
+  //   @media (max-width: $mg-breakpoint-tablet) {
   //     display: flex;
   //     flex-direction: column;
   //   }

@@ -9,6 +9,7 @@
 $pw-color-primary: #0a6969;
 
 //PW-COLORS HOVER
+$mg-color-interactive: $pw-color-primary;
 $mg-color-interactive-active: $pw-color-primary;
 
 //PW-COMPONENT COLORS
@@ -16,5 +17,9 @@ $mg-color-label: $mg-color-neutral-0;
 $mg-color-label--hover: $mg-color-neutral-0;
 $mg-color-button-background: $pw-color-primary;
 $mg-color-button-background--hover: $sendai-orange-900;
+
+// hero
+$mg-color-hero: $mg-color-interactive;
+$mg-spacing-hero-overlay: 2rem 0;
 
 /* variables end */
