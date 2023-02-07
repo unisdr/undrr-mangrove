@@ -11,7 +11,7 @@ html {
 body {
   color: $mg-color-black;
   font-family: $Font-Family-Roboto;
-  font-size: $font-size-16;;
+  font-size: $font-size-16;
   line-height: 1.4;
 
   @include devicebreak(medium) {
@@ -295,7 +295,7 @@ a:hover {
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   ul,
   ol {
     padding-left: 0;

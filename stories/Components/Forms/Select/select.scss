@@ -4,17 +4,17 @@
 
 .select-default {
   @extend %select_default;
-
   @include x-appearance(none);
 
-  background: $mg-color-white url(#{$img-path-Icon}/chevron-down.svg) no-repeat
+  background:
+    $mg-color-white url(#{$img-path-Icon}/chevron-down.svg) no-repeat
     right 22px center;
   border-radius: 0;
   color: $mg-color-black;
   display: block;
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .select-default {
     background-position: left 22px center;
     padding: $spacing-05 $spacing-05 $spacing-05 $spacing-50;

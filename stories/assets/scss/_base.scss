@@ -31,7 +31,7 @@
   &::before {
     @extend %absolute__content;
 
-    background: rgb(0 0 0 / 20%);
+    background: rgb(0 0 0 / 0.2);
   }
 }
 
@@ -62,7 +62,7 @@
 }
 
 /* animation start */
-*[data-viewport='true'] {
+*[data-viewport="true"] {
   @extend %left-to-right;
 
   &.inviewport {
@@ -114,8 +114,8 @@
   }
 }
 
-[dir='rtl'] {
-  *[data-viewport='true'] {
+[dir="rtl"] {
+  *[data-viewport="true"] {
     @include transform(translateX(100px));
 
     &.inviewport {
@@ -155,10 +155,10 @@
 // global colors
 // color map gradient
 $colors: (
-  'yellow': rgb(255 235 0 / 80%),
-  'red': rgba(230 45 45 / 78%),
-  'green': rgba(92 222 83 / 82%),
-  'blue': rgba(94 232 246 / 82%),
+  "yellow": rgb(255 235 0 / 0.8),
+  "red": rgba(230 45 45 / 0.78),
+  "green": rgba(92 222 83 / 0.82),
+  "blue": rgba(94 232 246 / 0.82),
 );
 
 @each $name, $color in $colors {
@@ -268,7 +268,7 @@ $colors: (
 }
 
 //rtl
-[dir='rtl'] {
+[dir="rtl"] {
   @each $name, $color in $colors {
     .#{$name} {
       //card-thumbnail
@@ -347,10 +347,10 @@ $colors: (
 
 // color map solid
 $colors-solid: (
-  'yellow': $mg-color-yellow,
-  'red': $mg-color-red-900,
-  'green': $mg-color-green,
-  'blue': $mg-color-azure,
+  "yellow": $mg-color-yellow,
+  "red": $mg-color-red-900,
+  "green": $mg-color-green,
+  "blue": $mg-color-azure,
 );
 
 @each $name, $color in $colors-solid {
@@ -396,10 +396,10 @@ $colors-solid: (
 
 // color map light-color content card only
 $colors-light: (
-  'yellow': $mg-color-yellow-light,
-  'red': $mg-color-red-600,
-  'green': $mg-color-green-light,
-  'blue': $mg-color-azure-light,
+  "yellow": $mg-color-yellow-light,
+  "red": $mg-color-red-600,
+  "green": $mg-color-green-light,
+  "blue": $mg-color-azure-light,
 );
 
 @each $name, $color in $colors-light {

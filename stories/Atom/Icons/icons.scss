@@ -17,7 +17,9 @@
 }
 
 .external-link-animated {
-  box-shadow: -2px 2px 0 0 $mg-color-red-900, -4px 0 0 -2px $mg-color-red-900,
+  box-shadow:
+    -2px 2px 0 0 $mg-color-red-900,
+    -4px 0 0 -2px $mg-color-red-900,
     -3px 3px 0 -1px $mg-color-red-900;
   box-sizing: border-box;
   cursor: pointer;
@@ -29,7 +31,6 @@
 
   &::before {
     @extend %pseudo-icon;
-
     @include transform(rotate(-45deg) translate(0, 0));
     @include transition(all 0.3s);
 
@@ -42,7 +43,6 @@
 
   &::after {
     @extend %pseudo-icon;
-
     @include transition(transform 0.3s);
     @include transform(translate(0, 0));
 
@@ -84,7 +84,6 @@
 
   &::after {
     @extend %pseudo-icon;
-
     @include transform(rotate(-45deg) translate(0, 0));
     @include transition(all 0.3s);
 
@@ -98,7 +97,6 @@
 
   &::before {
     @extend %pseudo-icon;
-
     @include transform(translate(0, 0));
     @include transition(all 0.3s);
 
@@ -120,7 +118,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .chevron-right-animated {
     @include transform(translate(0) rotate(180deg));
 

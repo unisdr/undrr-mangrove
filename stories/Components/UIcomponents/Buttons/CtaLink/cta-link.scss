@@ -18,10 +18,10 @@
   &.cta--space {
     &::after {
       @extend %ctaimg;
-
       @include transition(0.2s ease);
 
-      background: url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg)
+      background:
+        url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg)
         no-repeat left center;
     }
 
@@ -33,7 +33,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .cta__link {
     align-items: flex-end;
 

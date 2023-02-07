@@ -34,13 +34,13 @@ label {
   margin-top: $spacing-03;
 }
 
-input[type='text'],
-input[type='number'],
-input[type='email'],
-input[type='password'],
-input[type='search'],
-input[type='tel'],
-input[type='date'],
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="date"],
 textarea {
   @extend %background-white;
 
@@ -67,8 +67,8 @@ textarea {
     outline: 0;
   }
 
-  input[type='date'],
-  input[type='search'] {
+  input[type="date"],
+  input[type="search"] {
     padding-left: $spacing-08;
     position: relative;
   }
@@ -88,8 +88,9 @@ textarea {
   }
 }
 
-input[type='date'] {
-  background: url(#{$img-path-Icon}/calender-black.svg) no-repeat left 14px
+input[type="date"] {
+  background:
+    url(#{$img-path-Icon}/calender-black.svg) no-repeat left 14px
     bottom 12px;
   background-color: $mg-color-white;
   color: $mg-color-neutral-500;
@@ -100,8 +101,9 @@ input[type='date'] {
   }
 }
 
-input[type='search'] {
-  background: url(#{$img-path-Icon}/search-black.svg) no-repeat left 14px bottom
+input[type="search"] {
+  background:
+    url(#{$img-path-Icon}/search-black.svg) no-repeat left 14px bottom
     12px;
   color: #a9b1b7;
   padding-left: 2.5rem;
@@ -123,32 +125,33 @@ textarea {
   resize: vertical;
 }
 
-input[type='date']::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator {
   appearance: none;
   left: 3px;
   opacity: 0;
   position: absolute;
 }
 
-[dir='rtl'] {
-  input[type='text'],
-  input[type='number'],
-  input[type='email'],
-  input[type='password'],
-  input[type='search'],
-  input[type='tel'],
-  input[type='date'],
+[dir="rtl"] {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="date"],
   textarea {
     @media (hover: none) and (pointer: coarse) {
-      input[type='date'] {
+      input[type="date"] {
         padding-right: $spacing-06;
       }
     }
   }
 
-  input[type='date'],
-  input[type='search'] {
-    background: url(#{$img-path-Icon}/calender-black.svg) no-repeat right 14px
+  input[type="date"],
+  input[type="search"] {
+    background:
+      url(#{$img-path-Icon}/calender-black.svg) no-repeat right 14px
       bottom 12px;
     background-color: $mg-color-white;
     padding-left: 0.635rem;
@@ -156,18 +159,19 @@ input[type='date']::-webkit-calendar-picker-indicator {
     text-align: right;
   }
 
-  input[type='search'] {
-    background: url(#{$img-path-Icon}/search-black.svg) no-repeat right 14px
+  input[type="search"] {
+    background:
+      url(#{$img-path-Icon}/search-black.svg) no-repeat right 14px
       bottom 12px;
   }
 
-  input[type='date'] {
+  input[type="date"] {
     &.disabled {
       background-image: url(#{$img-path-Icon}/date-disabled.svg);
     }
   }
 
-  input[type='date']::-webkit-calendar-picker-indicator {
+  input[type="date"]::-webkit-calendar-picker-indicator {
     left: inherit;
     position: absolute;
     right: 27px;
@@ -185,13 +189,13 @@ input[type='date']::-webkit-calendar-picker-indicator {
     line-height: 1.7;
   }
 
-  input[type='text'],
-  input[type='number'],
-  input[type='email'],
-  input[type='password'],
-  input[type='search'],
-  input[type='tel'],
-  input[type='date'],
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="date"],
   textarea {
     font-family: $Font-Family-Roboto;
   }

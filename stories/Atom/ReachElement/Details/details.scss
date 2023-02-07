@@ -15,9 +15,10 @@ details {
     }
 
     &::before {
-      background: url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
+      background:
+        url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
         center;
-      content: '';
+      content: "";
       display: inline-block;
       height: 14px;
       margin-right: $spacing-02;
@@ -34,9 +35,10 @@ details {
       margin-bottom: 0.5rem;
 
       &::before {
-        background: url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
+        background:
+          url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
           center;
-        content: '';
+        content: "";
         display: inline-block;
         height: 14px;
         width: 14px;
@@ -45,7 +47,7 @@ details {
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   details {
     summary::before {
       @include transform(translate(0) rotate(180deg));

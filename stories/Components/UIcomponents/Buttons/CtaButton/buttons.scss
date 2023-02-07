@@ -2,23 +2,20 @@
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
 
+// .mg-buttons {
+//   margin-bottom: 1em;
+//   //Media queries
 
+//   @media (max-width: $mg-breakpoint-mobile) {
+//     display: flex;
+//     flex-direction: column;
+//   }
 
-  // .mg-buttons {
-  //   margin-bottom: 1em;
-  //   //Media queries
-
-  //   @media (max-width: $mg-breakpoint-mobile) {
-  //     display: flex;
-  //     flex-direction: column;
-  //   }
-
-  //   @media (max-width: $mg-breakpoint-tablet) {
-  //     display: flex;
-  //     flex-direction: column;
-  //   }
-  // }
-
+//   @media (max-width: $mg-breakpoint-tablet) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+// }
 
 .mg-button {
   @extend %button;

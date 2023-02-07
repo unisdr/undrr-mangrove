@@ -143,6 +143,7 @@
   display: flex;
   font-size: $font-size-16;
   font-weight: 700;
+
   // letter-spacing: 0.03em;
   line-height: 1;
 
@@ -197,7 +198,7 @@
 }
 
 %ctaimg {
-  content: '';
+  content: "";
   height: 1.188rem;
   margin-left: $spacing-04;
   margin-top: 2px;
@@ -212,9 +213,10 @@
   @include transform(translateY(-50%));
   @include transition(all 200ms ease-in-out);
 
-  background: url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
+  background:
+    url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
     center;
-  content: '';
+  content: "";
   float: right;
   height: 13px;
   position: absolute;
@@ -224,7 +226,7 @@
 }
 
 %absolute__content {
-  content: '';
+  content: "";
   height: 100%;
   left: 0;
   position: absolute;
@@ -237,7 +239,7 @@
   @include transform(translateY(-50%));
 
   background: url(#{$img-path-Icon}/chevron-down.svg) no-repeat center center;
-  content: '';
+  content: "";
   height: 0.813rem;
   position: absolute;
   right: 1.188rem;
@@ -331,7 +333,7 @@
   visibility: visible;
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   %left-to-right {
     @include transform(translateX(100px));
   }
@@ -370,7 +372,7 @@
 
 %header {
   background-color: $mg-color-neutral-100;
-  box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+  box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
   height: 7.1875rem;
   left: 0;
   position: fixed;
@@ -390,7 +392,7 @@
 
 %external {
   align-items: center;
-  content: '';
+  content: "";
   cursor: pointer;
   height: 1.125rem;
   width: 1.25rem;
@@ -484,7 +486,7 @@
 
 %pseudo-icon {
   box-sizing: border-box;
-  content: '';
+  content: "";
   display: block;
   position: absolute;
 }
@@ -513,7 +515,6 @@
 
     &::after {
       @extend %pseudo-icon;
-
       @include transform(rotate(45deg));
 
       border-right: 2px solid $mg-color-red-900;
@@ -537,7 +538,8 @@
 }
 
 %animate-link {
-  background-image: linear-gradient($mg-color-red-900, $mg-color-red-900),
+  background-image:
+    linear-gradient($mg-color-red-900, $mg-color-red-900),
     linear-gradient($mg-color-red-900, $mg-color-red-900);
   background-position: 100% 100%, -30px 100%;
   background-repeat: no-repeat;

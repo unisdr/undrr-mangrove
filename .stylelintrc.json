@@ -1,51 +1,49 @@
 {
-  "extends": [
-    "stylelint-config-standard",
-    "stylelint-config-sass-guidelines",
-    "stylelint-config-prettier"
-  ],
-  "plugins": [
-    "stylelint-scss",
-    "stylelint-prettier"
-  ],
+  "extends": "stylelint-config-standard-scss",
   "rules": {
-    "max-nesting-depth": 3,
-    "selector-max-compound-selectors": 4,
-    "selector-class-pattern": "^[a-z]([a-z0-9-]+)?(__([a-z0-9]+-?)+)?(--([a-z0-9]+-?)+){0,2}$",
-    "at-rule-no-vendor-prefix": null,
-    "media-feature-name-no-vendor-prefix": null,
-    "property-no-vendor-prefix": null,
-    "selector-no-vendor-prefix": null,
-    "value-no-vendor-prefix": null,
+    "alpha-value-notation": "number",
+    "comment-empty-line-before": null,
+    "custom-property-pattern": "^[a-z][-_a-z0-9IE]*$",
+    "declaration-block-no-redundant-longhand-properties": null,
+    "function-linear-gradient-no-nonstandard-direction": null,
+    "function-url-quotes": null,
+    "function-whitespace-after": null,
+    "hue-degree-notation": "number",
     "import-notation": "string",
-    "string-quotes": "single",
-    "selector-no-qualifying-type": [
-      true,
-      {
-        "ignore": ["attribute"]
-      }
-    ],
-    "at-rule-no-unknown": [
-      true,
-      {
-        "ignoreAtRules": [
-          "content",
-          "each",
-          "else",
-          "extend",
-          "forward",
-          "function",
-          "if",
-          "import",
-          "include",
-          "mixin",
-          "return",
-          "use"
-        ]
-      }
-    ],
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
+    "no-unknown-animations": true,
+    "max-line-length": null,
+    "media-feature-name-no-unknown": [true, {
+      "ignoreMediaFeatureNames": [
+        "prefers-reduced-motion"
+      ]
+    }],
+    "media-feature-name-no-vendor-prefix": null,
     "number-leading-zero": "always",
-    "number-no-trailing-zeros": true,
-    "prettier/prettier": true
-  }
+    "number-max-precision": 5,
+    "property-no-unknown": null,
+    "property-no-vendor-prefix": null,
+    "rule-empty-line-before": null,
+    "selector-attribute-quotes": null,
+    "selector-class-pattern": null,
+    "selector-id-pattern": "^[a-z][-_a-z0-9]*$",
+    "selector-no-vendor-prefix": null,
+    "selector-pseudo-element-colon-notation": null,
+    "shorthand-property-no-redundant-values": null,
+    "string-quotes": "double",
+    "unit-allowed-list": ["ch", "deg", "dpcm", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "vh"],
+    "value-keyword-case": ["lower", {
+      "camelCaseSvgKeywords": true,
+      "ignoreProperties": [
+        "--font-family",
+        "font-family"
+      ]
+    }],
+    "value-no-vendor-prefix": null
+  },
+  "ignoreFiles": [
+    "docroot/themes/**/*.css",
+    "docroot/themes/custom/ev_base/sass/bootstrap/**/*.*"
+  ]
 }

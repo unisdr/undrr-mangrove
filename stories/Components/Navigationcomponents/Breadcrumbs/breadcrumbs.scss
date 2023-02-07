@@ -18,7 +18,7 @@
 
       &::after {
         color: $mg-color-red-900;
-        content: '/';
+        content: "/";
         font-weight: bold;
         position: absolute;
         right: -12px;
@@ -80,7 +80,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .breadcrumb {
     ul {
       padding: 0;

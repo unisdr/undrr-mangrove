@@ -1,8 +1,8 @@
 // image variables
-$img-path: '~/stories/assets/images';
-$img-path-Icon: '~/stories/assets/icons';
-$img-path-Iconback: '~/stories/assets/icons';
-$img-path-Iconfourback: '~/stories/assets/icons';
+$img-path: "~/stories/assets/images";
+$img-path-Icon: "~/stories/assets/icons";
+$img-path-Iconback: "~/stories/assets/icons";
+$img-path-Iconfourback: "~/stories/assets/icons";
 
 /**
  * @tokens Colors - basic
@@ -68,7 +68,6 @@ $mg-color-neutral-600: #4d4d4d;
 $mg-color-neutral-700: #333;
 $mg-color-neutral-800: #1a1a1a;
 $mg-color-neutral-900: #000;
-
 $mg-color-black: $mg-color-neutral-900; // alias of mg-color-neutral-900
 $mg-color-white: $mg-color-neutral-0; // alias of mg-color-neutral-0
 
@@ -161,7 +160,7 @@ $font-size-35: 2.188rem;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$Font-Family-Roboto: 'Roboto', sans-serif;
+$Font-Family-Roboto: "Roboto", sans-serif;
 
 /**
  * @tokens Spacing
@@ -275,6 +274,6 @@ $header-height-xlarge: 115px;
 $header-height-medium: 75px;
 
 // language selectors
-$cyrillic: ':lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)';
+$cyrillic: ":lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)";
 
 /* variables end */

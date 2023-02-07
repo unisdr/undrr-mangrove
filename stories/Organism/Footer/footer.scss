@@ -28,7 +28,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .footer-links {
     padding-right: 0;
 
@@ -92,7 +92,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .footer-lists {
     padding-right: 0;
 
@@ -121,6 +121,7 @@
     }
   }
 }
+
 // * footer condition 2 end *//
 
 // * footer icons start *//
@@ -135,7 +136,7 @@
     padding: 0;
 
     a {
-      $socials: ('facebook', 'instagram', 'linkedin', 'twitter', 'youtube');
+      $socials: ("facebook", "instagram", "linkedin", "twitter", "youtube");
 
       @extend %border-none;
       @extend %no-animation;
@@ -149,7 +150,8 @@
 
       @each $name in $socials {
         &.#{$name} {
-          background: url(#{$img-path-Iconback}/#{$name}-white.svg)
+          background:
+            url(#{$img-path-Iconback}/#{$name}-white.svg)
             no-repeat
             center
             bottom;
@@ -167,11 +169,12 @@
   &.inverted {
     li {
       a {
-        $socials: ('facebook', 'instagram', 'linkedin', 'twitter', 'youtube');
+        $socials: ("facebook", "instagram", "linkedin", "twitter", "youtube");
 
         @each $name in $socials {
           &.#{$name} {
-            background: url(#{$img-path-Iconback}/#{$name}.svg)
+            background:
+              url(#{$img-path-Iconback}/#{$name}.svg)
               no-repeat
               center
               bottom;
@@ -182,7 +185,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .footer-icons {
     padding-right: 0;
 
@@ -202,6 +205,7 @@
     // }
   }
 }
+
 // * footer icons end *//
 
 /* footer items start */
@@ -212,7 +216,7 @@
     @include devicebreak(small) {
       &::after {
         border-bottom: 2px solid $mg-color-neutral-400;
-        content: '';
+        content: "";
         position: absolute;
         width: calc(100% - 1.3rem);
       }
@@ -223,7 +227,8 @@
         color: $mg-color-black;
 
         &::before {
-          background: url(#{$img-path-Iconback}/chevron-down.svg) no-repeat
+          background:
+            url(#{$img-path-Iconback}/chevron-down.svg) no-repeat
             center center;
         }
       }
@@ -260,9 +265,10 @@
     &::before {
       @include transition(0.1s ease);
 
-      background: url(#{$img-path-Iconback}/chevron-down-white.svg) no-repeat
+      background:
+        url(#{$img-path-Iconback}/chevron-down-white.svg) no-repeat
         center center;
-      content: '';
+      content: "";
       display: block;
       float: right;
       height: 20px;
@@ -298,7 +304,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .footer-heading {
     text-align: right;
 
@@ -339,6 +345,7 @@
     }
   }
 }
+
 // * footer Logo end *//
 
 /* footer start */
@@ -465,7 +472,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .icons-search {
     text-align: right;
 

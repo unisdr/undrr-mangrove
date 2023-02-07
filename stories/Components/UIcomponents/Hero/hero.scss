@@ -18,7 +18,7 @@
     background-color: $mg-color-neutral-0;
   }
   a.mg-button-secondary {
-    background-color: rgba($mg-color-neutral-0, .9);
+    background-color: rgba($mg-color-neutral-0, 0.9);
   }
   a.mg-button,
   a.mg-button:hover,
@@ -54,6 +54,7 @@
 
   &__label {
     display: inline-block;
+
     // background: rgb(230, 230, 230);
     // border-radius: .3em;
     font-size: 0.85em;
@@ -126,13 +127,13 @@
 }
 
 // Stylistic variants
-$variantColours: (
-  'secondary': $mg-color-hero--secondary,
-  'tertiary': $mg-color-hero--tertiary,
-  'quaternary': $mg-color-hero--quaternary,
+$variant-colours: (
+  "secondary": $mg-color-hero--secondary,
+  "tertiary": $mg-color-hero--tertiary,
+  "quaternary": $mg-color-hero--quaternary,
 );
 
-@each $name, $color in $variantColours {
+@each $name, $color in $variant-colours {
   .mg-hero--#{$name} .mg-hero__overlay {
     background-color: rgba($color, $mg-opacity-hero);
     a.mg-button,

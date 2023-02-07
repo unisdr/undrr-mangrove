@@ -6,7 +6,7 @@
   align-items: center;
   background: $mg-color-neutral-200;
   border-radius: 20px;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
   display: inline-flex;
   min-height: 1.875rem;
   padding: $spacing-02 $spacing-05;
@@ -18,7 +18,7 @@
   &.chip__cross {
     &::before {
       background: url(#{$img-path-Iconfourback}/times-red.svg) no-repeat left;
-      content: '';
+      content: "";
       display: inline-flex;
       height: 22px;
       margin-left: -$spacing-02;
@@ -31,7 +31,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .chip__cross::before {
     margin-left: $spacing-03;
     margin-right: -$spacing-02;

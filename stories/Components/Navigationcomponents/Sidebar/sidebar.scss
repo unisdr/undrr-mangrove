@@ -69,7 +69,8 @@
 
       @include devicebreak(medium) {
         button::after {
-          background: url(#{$img-path-Icon}/chevron-down-white.svg) no-repeat
+          background:
+            url(#{$img-path-Icon}/chevron-down-white.svg) no-repeat
             center center;
         }
       }
@@ -200,7 +201,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .sidebar-accordion h6,
   .sidebar-accordion ul li > button {
     &::after {

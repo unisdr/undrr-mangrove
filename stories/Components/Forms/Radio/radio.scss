@@ -3,7 +3,7 @@
 // @import '../../../assets/scss/mixins';
 
 /* radio */
-input[type='radio'] {
+input[type="radio"] {
   @extend %checbox-radio-before;
 
   background-color: transparent;

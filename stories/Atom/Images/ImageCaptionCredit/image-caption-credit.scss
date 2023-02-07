@@ -82,7 +82,7 @@
 }
 
 @include devicebreak(medium) {
-  [dir='rtl'] {
+  [dir="rtl"] {
     .image-figcaption.portrait {
       .image {
         &__caption {

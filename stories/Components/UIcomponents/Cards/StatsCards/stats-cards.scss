@@ -33,8 +33,11 @@
     letter-spacing: 0.05rem;
     line-height: 1.1;
     margin-bottom: $spacing-06;
-    text-shadow: -1px -1px 0 $mg-color-black, 1px -1px 0 $mg-color-black,
-      -1px 1px 0 $mg-color-black, 1px 1px 0 $mg-color-black;
+    text-shadow:
+      -1px -1px 0 $mg-color-black,
+      1px -1px 0 $mg-color-black,
+      -1px 1px 0 $mg-color-black,
+      1px 1px 0 $mg-color-black;
 
     @supports (-webkit-text-stroke: 2px $mg-color-black) {
       text-shadow: none;
@@ -163,10 +166,10 @@
   &:hover {
     // color map
     $colors: (
-      'yellow': $mg-color-yellow,
-      'red': $mg-color-red-900,
-      'green': $mg-color-green,
-      'blue': $mg-color-azure,
+      "yellow": $mg-color-yellow,
+      "red": $mg-color-red-900,
+      "green": $mg-color-green,
+      "blue": $mg-color-azure,
     );
 
     background-color: $mg-color-yellow;

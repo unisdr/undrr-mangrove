@@ -9,14 +9,15 @@
  * https://git.un.org/undrr/web-backlog/-/issues/545
  */
 
-@import './variables';
-@import './breakpoints';
-@import './mixins';
-@import './grid';
+@import "./variables";
+@import "./breakpoints";
+@import "./mixins";
+@import "./grid";
+
 // @import './base';
 
 // We only bring in a limited set of components needed for gutenberg
 // @import './components';
-@import '../../Components/UIcomponents/Buttons/CtaButton/buttons';
-@import '../../Components/UIcomponents/Cards/Card/card';
-@import '../../Components/UIcomponents/Hero/hero';
+@import "../../Components/UIcomponents/Buttons/CtaButton/buttons";
+@import "../../Components/UIcomponents/Cards/Card/card";
+@import "../../Components/UIcomponents/Hero/hero";

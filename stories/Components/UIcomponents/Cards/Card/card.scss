@@ -46,7 +46,7 @@
       grid-template-rows: 1fr auto;
     }
 
-    @media (min-widht: $mg-breakpoint-tablet) {
+    @media (min-width: $mg-breakpoint-tablet) {
       grid-template-columns: 300px repeat(2, 1fr);
     }
 
@@ -58,6 +58,7 @@
   // Main Card css
   &__visual {
     align-items: flex-end;
+
     // background-color: $mg-color-blue-800;
     display: flex;
     justify-content: flex-end;
@@ -135,7 +136,7 @@
 
   &__title a::after {
     bottom: 0;
-    content: '';
+    content: "";
     left: 0;
     position: absolute;
     right: 0;

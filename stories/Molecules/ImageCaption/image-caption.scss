@@ -64,7 +64,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .image__caption {
     p {
       @include devicebreak(medium) {
