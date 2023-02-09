@@ -32,7 +32,7 @@
     margin: $mg-spacing-hero-overlay;
     margin-left: $spacing-07;
     padding: $spacing-06;
-    width: max-content;
+    max-width: 55rem;
 
     @media (max-width: $mg-breakpoint-tablet) {
       margin-left: 0;
@@ -70,7 +70,7 @@
   a,
   a:hover,
   a:visited {
-    color: $mg-color-neutral-0;
+    color: $mg-color-neutral-0 !important;
   }
 
   &__title {

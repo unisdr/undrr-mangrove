@@ -24,6 +24,7 @@
   cursor: pointer;
   justify-content: center;
   padding: $spacing-04 $spacing-05;
+  font-size: .8em;
 
   &:focus-visible {
     box-shadow: 0 0 4px $mg-color-button-background--hover;

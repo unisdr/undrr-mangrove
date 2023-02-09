@@ -25,7 +25,7 @@
 
   // Vertical CARD
   &__vc {
-    max-width: 25rem;
+    max-width: 30rem;
 
     .mg-card__visual {
       height: 200px;
@@ -120,7 +120,7 @@
       color: $mg-color-blue-800;
       cursor: pointer;
       display: inline-block;
-      font-size: $font-size-26;
+      font-size: 1.625em;
       font-weight: bold;
 
       // &:hover {
@@ -147,6 +147,7 @@
   &__summaryText {
     // line-height: 1.2em;
     padding-top: 1em;
+    padding-bottom: 1em;
   }
 
   &__text-link {
