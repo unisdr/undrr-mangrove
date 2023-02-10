@@ -13,6 +13,10 @@
   position: relative;
   width: 99vw;
 
+  @media (min-width: $mg-breakpoint-tablet) {
+    aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
+  }
+
   // Button overrides
   a.mg-button-primary {
     background-color: $mg-color-neutral-0;
@@ -27,12 +31,13 @@
   }
 
   &__overlay {
-    // todo: choices for background colors
+    align-items: center;
     background-color: rgba($mg-color-hero, $mg-opacity-hero);
+    display: grid;
     margin: $mg-spacing-hero-overlay;
     margin-left: $mg-spacing-150;
-    padding: $mg-spacing-100;
     max-width: $mg-width-400;
+    padding: $mg-spacing-100;
 
     @media (max-width: $mg-breakpoint-tablet) {
       margin-left: 0;
