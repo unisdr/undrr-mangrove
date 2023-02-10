@@ -204,7 +204,8 @@ $mg-width-600: 60rem;
 
 $mg-breakpoint-mobile: 480px;
 $mg-breakpoint-tablet: 1024px;
-$mg-breakpoint-desktop: 1440px;
+$mg-breakpoint-desktop: 1164px; // we'll probably go to 1440, but right now it's 1164 in prod
+// $mg-breakpoint-desktop: 1440px;
 
 /**
  * @tokens Colors - component
