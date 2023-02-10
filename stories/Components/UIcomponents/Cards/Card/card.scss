@@ -97,7 +97,7 @@
     color: $mg-color-label;
     cursor: pointer;
     display: inline-block;
-    font-size: $mg-font-size-200;
+    font-size: $mg-font-label;
     margin-right: $mg-spacing-50;
     padding: $mg-spacing-50 $mg-spacing-75 $mg-spacing-25;
     text-decoration: none;
@@ -120,14 +120,15 @@
   }
 
   &__title {
-    padding-top: $mg-spacing-75;
+    font-size: $mg-font-size-500;
+    font-weight: bold;
+    padding-bottom: $mg-spacing-75;
+    padding-top: $mg-spacing-100;
 
     a {
       color: $mg-color-blue-800;
       cursor: pointer;
       display: inline-block;
-      font-size: $mg-font-size-600;
-      font-weight: bold;
     }
 
     .active {
