@@ -3,8 +3,8 @@
 // @import '../../../assets/scss/mixins';
 
 code {
-  @extend %paragragh-font-20;
+  @extend %paragraph-font-300;
 
   background: $mg-color-neutral-200;
-  padding: 0 $spacing-02 $spacing-02;
+  padding: 0 $mg-spacing-25 $mg-spacing-25;
 }

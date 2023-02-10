@@ -6,11 +6,11 @@
   color: $mg-color-white;
   justify-content: center;
   overflow: hidden;
-  padding-bottom: $spacing-12;
-  padding-top: $spacing-12;
+  padding-bottom: $mg-spacing-500;
+  padding-top: $mg-spacing-500;
 
   h4 {
-    margin-top: $spacing-50;
+    margin-top: $mg-spacing-800;
 
     @include devicebreak(medium) {
       margin-top: 0;
@@ -20,7 +20,7 @@
   h2,
   h4 {
     @include devicebreak(small) {
-      padding: 0 $spacing-06;
+      padding: 0 $mg-spacing-100;
     }
   }
 }

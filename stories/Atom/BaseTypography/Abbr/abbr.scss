@@ -3,7 +3,7 @@
 // @import '../../../assets/scss/mixins';
 
 abbr[title] {
-  @extend %paragragh-font-20;
+  @extend %paragraph-font-300;
 
   border-bottom: 2px dashed $mg-color-red-900;
   text-decoration: none;

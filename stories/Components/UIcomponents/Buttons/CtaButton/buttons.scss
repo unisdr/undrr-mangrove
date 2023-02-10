@@ -23,8 +23,7 @@
   color: $mg-color-button;
   cursor: pointer;
   justify-content: center;
-  padding: $spacing-04 $spacing-05;
-  font-size: .8em;
+  padding: $mg-spacing-100 $mg-spacing-150;
 
   &:focus-visible {
     box-shadow: 0 0 4px $mg-color-button-background--hover;
@@ -59,7 +58,7 @@ button {
   //       no-repeat left center;
   //     content: '';
   //     height: 20px;
-  //     margin-left: $spacing-04;
+  //     margin-left: $mg-spacing-25;
   //     width: 13px;
   //   }
 
@@ -100,7 +99,7 @@ button {
 //           @include transform(rotate(180deg));
 
 //           margin-left: 0;
-//           margin-right: $spacing-04;
+//           margin-right: $mg-spacing-25;
 //         }
 
 //         &:hover::after {

@@ -12,15 +12,15 @@
 
   @include devicebreak(small) {
     max-width: 21.938rem;
-    padding: $spacing-08;
+    padding: $mg-spacing-200;
   }
 
   h3 {
     font-weight: 600;
-    margin-bottom: $spacing-08;
+    margin-bottom: $mg-spacing-200;
 
     @include devicebreak(medium) {
-      margin-bottom: $spacing-11;
+      margin-bottom: $mg-spacing-400;
     }
   }
 
@@ -28,11 +28,11 @@
     @include transition(300ms all);
 
     color: $mg-color-neutral-200;
-    font-family: $Font-Family-Roboto;
-    font-size: $spacing-11;
+    font-family: $mg-font-family;
+    font-size: $mg-spacing-400;
     letter-spacing: 0.05rem;
     line-height: 1.1;
-    margin-bottom: $spacing-06;
+    margin-bottom: $mg-spacing-100;
     text-shadow:
       -1px -1px 0 $mg-color-black,
       1px -1px 0 $mg-color-black,
@@ -47,17 +47,17 @@
     @include devicebreak(medium) {
       font-size: 6.875rem;
       line-height: 1.09;
-      margin-bottom: $spacing-07;
+      margin-bottom: $mg-spacing-150;
     }
   }
 
   h4 {
     letter-spacing: 0;
     line-height: 1.15;
-    margin-bottom: $spacing-03;
+    margin-bottom: $mg-spacing-25;
 
     @include devicebreak(medium) {
-      margin-bottom: $spacing-05;
+      margin-bottom: $mg-spacing-50;
     }
   }
 
@@ -65,20 +65,20 @@
     margin: 0;
 
     @include devicebreak(medium) {
-      font-size: $font-size-25;
+      font-size: $mg-font-size-500;
     }
   }
 
   &.x-large {
-    padding: $spacing-08;
+    padding: $mg-spacing-200;
 
     @include devicebreak(medium) {
       max-width: 42.75rem;
-      padding: $spacing-12;
+      padding: $mg-spacing-500;
     }
 
     h2 {
-      font-size: $spacing-90;
+      font-size: $mg-font-size-500;
 
       @include devicebreak(medium) {
         font-size: 7.5rem;
@@ -86,7 +86,7 @@
     }
 
     h3 {
-      font-size: $spacing-08;
+      font-size: $mg-spacing-200;
       font-weight: 700;
 
       @include devicebreak(medium) {
@@ -106,15 +106,15 @@
   &.large {
     @include devicebreak(medium) {
       max-width: 28rem;
-      padding: $spacing-12 $spacing-10;
+      padding: $mg-spacing-500 $mg-spacing-300;
     }
   }
 
   &.medium {
-    padding: $spacing-09;
+    padding: $mg-spacing-300;
 
     @include devicebreak(medium) {
-      max-width: $spacing-330;
+      max-width: $mg-width-300;
 
       h4 {
         font-weight: 600;
@@ -122,43 +122,43 @@
     }
 
     p {
-      font-size: $font-size-20;
+      font-size: $mg-font-size-400;
     }
   }
 
   &.small {
     max-width: 10.625rem;
-    padding: $spacing-06;
+    padding: $mg-spacing-100;
 
     @include devicebreak(medium) {
       max-width: 13.25rem;
-      padding: $spacing-07;
+      padding: $mg-spacing-150;
     }
 
     h2 {
-      font-size: $spacing-50;
-      height: $spacing-10;
+      font-size: $mg-font-size-500;
+      height: $mg-spacing-300;
       white-space: nowrap;
 
       @include devicebreak(medium) {
-        font-size: $spacing-70;
+        font-size: $mg-font-size-400;
       }
     }
 
     h4 {
-      font-size: $font-size-20;
+      font-size: $mg-font-size-400;
 
       @include devicebreak(medium) {
-        font-size: $font-size-25;
+        font-size: $mg-font-size-500;
       }
     }
 
     p {
-      font-size: $font-size-14;
+      font-size: $mg-font-size-200;
       word-break: normal;
 
       @include devicebreak(medium) {
-        font-size: $font-size-16;
+        font-size: $mg-font-size-300;
       }
     }
   }
@@ -189,7 +189,7 @@
 :lang(my) {
   .stats-card {
     h2 {
-      font-family: $Font-Family-Roboto;
+      font-family: $mg-font-family;
     }
   }
 }
@@ -197,7 +197,7 @@
 #{$cyrillic} {
   .stats-card {
     h2 {
-      font-family: $Font-Family-Roboto;
+      font-family: $mg-font-family;
     }
   }
 }

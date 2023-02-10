@@ -3,12 +3,12 @@
 // @import '../../../assets/scss/mixins';
 
 label {
-  @extend %paragragh-font-20;
+  @extend %paragraph-font-300;
 
   display: block;
 
   &.error {
-    @extend %paragragh-font-20;
+    @extend %paragraph-font-300;
 
     color: $mg-color-black;
     margin-top: 0;
@@ -22,16 +22,16 @@ label {
 .help {
   color: $mg-color-neutral-500;
   display: block;
-  font-size: $font-size-14;
+  font-size: $mg-font-size-200;
   margin-bottom: 0;
-  margin-top: $spacing-03;
+  margin-top: $mg-spacing-25;
 }
 
 .error {
   color: $mg-color-red-900;
-  font-size: $font-size-16;
+  font-size: $mg-font-size-300;
   margin-bottom: 0;
-  margin-top: $spacing-03;
+  margin-top: $mg-spacing-25;
 }
 
 input[type="text"],
@@ -51,10 +51,10 @@ textarea {
   border-radius: 0;
   box-sizing: border-box;
   display: block;
-  font-family: $Font-Family-Roboto;
-  font-size: $font-size-16;
+  font-family: $mg-font-family;
+  font-size: $mg-font-size-300;
   height: 46px;
-  margin-top: $spacing-03;
+  margin-top: $mg-spacing-25;
   padding: 0.625rem;
   width: 100%;
 
@@ -69,7 +69,7 @@ textarea {
 
   input[type="date"],
   input[type="search"] {
-    padding-left: $spacing-08;
+    padding-left: $mg-spacing-200;
     position: relative;
   }
 
@@ -94,7 +94,7 @@ input[type="date"] {
     bottom 12px;
   background-color: $mg-color-white;
   color: $mg-color-neutral-500;
-  padding-left: $spacing-08;
+  padding-left: $mg-spacing-200;
 
   &.disabled {
     background-image: url(#{$img-path-Icon}/date-disabled.svg);
@@ -143,7 +143,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   textarea {
     @media (hover: none) and (pointer: coarse) {
       input[type="date"] {
-        padding-right: $spacing-06;
+        padding-right: $mg-spacing-100;
       }
     }
   }
@@ -155,7 +155,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       bottom 12px;
     background-color: $mg-color-white;
     padding-left: 0.635rem;
-    padding-right: $spacing-08;
+    padding-right: $mg-spacing-200;
     text-align: right;
   }
 
@@ -197,6 +197,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   input[type="tel"],
   input[type="date"],
   textarea {
-    font-family: $Font-Family-Roboto;
+    font-family: $mg-font-family;
   }
 }

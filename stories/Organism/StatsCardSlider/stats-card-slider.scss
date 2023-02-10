@@ -26,7 +26,7 @@ $backgroundcolors: (
 
   .swiper-scrollbar {
     @include devicebreak(medium) {
-      padding-right: $spacing-44;
+      padding-right: $mg-spacing-600;
     }
   }
 
@@ -41,7 +41,7 @@ $backgroundcolors: (
     &.swiper-initialized {
       .swiper-scrollbar {
         @include devicebreak(medium) {
-          padding-left: $spacing-44;
+          padding-left: $mg-spacing-600;
         }
       }
     }

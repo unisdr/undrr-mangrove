@@ -6,7 +6,7 @@
   color: $mg-color-black;
   display: flex;
   flex-direction: column;
-  font-size: $font-size-32;
+  font-size: $mg-font-size-800;
   height: 52px;
   max-width: 18.5rem;
   position: relative;
@@ -65,9 +65,9 @@
 
       span {
         display: block;
-        font-size: $font-size-16;
+        font-size: $mg-font-size-300;
         margin: 0 -1rem;
-        padding: $spacing-05;
+        padding: $mg-spacing-50;
 
         &:hover {
           background-color: $mg-color-neutral-100;
@@ -88,7 +88,7 @@
     }
 
     ul {
-      padding: 0 $spacing-05;
+      padding: 0 $mg-spacing-50;
 
       li {
         padding-right: 0;
@@ -105,7 +105,7 @@
 
   .select-box {
     button {
-      font-family: $Font-Family-Roboto;
+      font-family: $mg-font-family;
     }
   }
 }

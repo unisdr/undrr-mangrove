@@ -4,19 +4,19 @@
 
 /* small copy start */
 .smallcopy__box {
-  margin-bottom: $spacing-02;
+  margin-bottom: $mg-spacing-25;
 
   &-locale {
-    margin-bottom: $spacing-07;
+    margin-bottom: $mg-spacing-150;
 
     strong {
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
       letter-spacing: 0.03em;
     }
   }
 
   strong {
-    margin-right: $spacing-02;
+    margin-right: $mg-spacing-25;
   }
 }
 

@@ -9,17 +9,17 @@
   @include devicebreak(medium) {
     display: flex;
     justify-content: space-between;
-    padding-bottom: $spacing-07;
+    padding-bottom: $mg-spacing-150;
   }
 
   p {
     color: $mg-color-neutral-600;
-    font-size: $font-size-14;
-    margin-bottom: $spacing-05;
+    font-size: $mg-font-size-200;
+    margin-bottom: $mg-spacing-50;
 
     @include devicebreak(medium) {
       border: 0;
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
       margin: 0;
     }
 
@@ -28,16 +28,16 @@
       display: flex;
       flex-shrink: 0;
       flex-wrap: wrap;
-      margin-bottom: $spacing-05;
-      padding-top: $spacing-05;
+      margin-bottom: $mg-spacing-50;
+      padding-top: $mg-spacing-50;
 
       @include devicebreak(medium) {
         border-left: 1px solid $mg-color-neutral-500;
         border-top: 0;
         display: block;
         margin-bottom: 0;
-        margin-left: $spacing-07;
-        padding-left: $spacing-07;
+        margin-left: $mg-spacing-150;
+        padding-left: $mg-spacing-150;
         padding-top: 0;
       }
     }
@@ -45,7 +45,7 @@
 
   .credits {
     display: flex;
-    margin-bottom: $spacing-05;
+    margin-bottom: $mg-spacing-50;
 
     @include devicebreak(medium) {
       border-top: 0;
@@ -55,7 +55,7 @@
     }
 
     strong {
-      margin-left: $spacing-02;
+      margin-left: $mg-spacing-25;
 
       @include devicebreak(medium) {
         margin-left: 0;
@@ -76,8 +76,8 @@
           border-right: 1px solid $mg-color-neutral-500;
           border-top: 0;
           display: block;
-          margin-right: $spacing-07;
-          padding-right: $spacing-07;
+          margin-right: $mg-spacing-150;
+          padding-right: $mg-spacing-150;
           padding-top: 0;
         }
       }
@@ -91,7 +91,7 @@
       }
 
       strong {
-        margin-right: $spacing-02;
+        margin-right: $mg-spacing-25;
 
         @include devicebreak(medium) {
           margin-right: 0;

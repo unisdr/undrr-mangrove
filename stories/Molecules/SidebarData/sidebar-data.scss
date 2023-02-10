@@ -10,21 +10,21 @@
     border: none;
     border-bottom: 1px solid $mg-color-neutral-500;
     display: block;
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
     font-weight: 700;
     line-height: 1.15;
     margin-bottom: 0;
-    padding: $spacing-05;
+    padding: $mg-spacing-50;
 
     @include devicebreak(medium) {
-      padding: $spacing-06;
+      padding: $mg-spacing-100;
     }
   }
 
   &.narrow {
     li > a {
       @include devicebreak(medium) {
-        padding: $spacing-05;
+        padding: $mg-spacing-50;
       }
     }
   }
@@ -34,11 +34,11 @@
   .sidebar-accordion {
     .accordion__panel {
       li > a {
-        padding-left: $spacing-06;
-        padding-right: $spacing-07;
+        padding-left: $mg-spacing-100;
+        padding-right: $mg-spacing-150;
 
         @include devicebreak(medium) {
-          padding-right: $spacing-09;
+          padding-right: $mg-spacing-300;
         }
       }
     }

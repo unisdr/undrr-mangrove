@@ -6,21 +6,21 @@
 .cta-block {
   h4 {
     font-weight: 600;
-    margin-bottom: $spacing-06;
+    margin-bottom: $mg-spacing-100;
 
     @include devicebreak(large) {
-      margin-bottom: $spacing-09;
+      margin-bottom: $mg-spacing-300;
     }
   }
 
   .cta__link {
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
     font-weight: 700;
     text-transform: uppercase;
   }
 
   p {
-    margin-bottom: $spacing-08;
+    margin-bottom: $mg-spacing-200;
   }
 }
 

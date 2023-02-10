@@ -11,7 +11,7 @@
     @include transition(0.3s ease-in-out);
 
     height: 0;
-    left: $spacing-05;
+    left: $mg-spacing-50;
     overflow: hidden;
     padding: 0;
     position: absolute;
@@ -30,7 +30,7 @@
         border-bottom: 1px solid $mg-color-neutral-400;
         box-shadow: 0 3px 4px rgb(0 0 0 / 0.1);
         display: block;
-        padding: $spacing-04 $spacing-05;
+        padding: $mg-spacing-25 $mg-spacing-50;
 
         &:hover {
           color: $mg-color-neutral-600;
@@ -63,7 +63,7 @@
       background-color: $mg-color-blue-600;
       content: "";
       height: 26px;
-      margin-right: $spacing-03;
+      margin-right: $mg-spacing-25;
       -webkit-mask: url(#{$img-path-Icon}/language.svg) no-repeat left center;
       mask: url(#{$img-path-Icon}/language.svg) no-repeat left center;
       width: 25px;
@@ -83,7 +83,7 @@
       background-color: $mg-color-blue-600;
       content: "";
       height: 10px;
-      margin-left: $spacing-03;
+      margin-left: $mg-spacing-25;
       -webkit-mask: url(#{$img-path-Icon}/arrow-blue.svg) no-repeat left center;
       mask: url(#{$img-path-Icon}/arrow-blue.svg) no-repeat left center;
       width: 15px;
@@ -140,14 +140,14 @@
     }
 
     button::before {
-      margin-left: $spacing-03;
+      margin-left: $mg-spacing-25;
       margin-right: 0;
       transform: scaleX(-1);
     }
 
     button::after {
       margin-left: 0;
-      margin-right: $spacing-03;
+      margin-right: $mg-spacing-25;
     }
   }
 }
@@ -156,7 +156,7 @@
 :lang(my) {
   .dropdown-language {
     button {
-      font-family: $Font-Family-Roboto;
+      font-family: $mg-font-family;
     }
   }
 }

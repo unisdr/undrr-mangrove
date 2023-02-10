@@ -18,14 +18,15 @@
 //   'gray': $mg-color-neutral-100,
 // );
 
-//MG CARD using CSS GRID
+// MG CARD using CSS GRID
 .mg-card {
   display: inline-block;
   position: relative;
 
   // Vertical CARD
   &__vc {
-    max-width: 30rem;
+    display: grid;
+    gap: $mg-spacing-100;
 
     .mg-card__visual {
       height: 200px;
@@ -40,6 +41,17 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 300px 1fr auto;
+    gap: $mg-spacing-50;
+
+    &__content {
+      grid-column: 1 / 3;
+      grid-row: 2 / 3;
+
+      @media (min-width: $mg-breakpoint-mobile) {
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+      }
+    }
 
     @media (min-width: $mg-breakpoint-mobile) {
       grid-template-columns: 160px repeat(2, 1fr);
@@ -73,20 +85,21 @@
   &__share {
     cursor: pointer;
     display: inline-block;
-    padding: $spacing-03;
+    padding: 0 $mg-spacing-50 $mg-spacing-25;
     position: absolute;
     z-index: 101;
   }
 
   &__label {
     background: $mg-color-label-background;
-    border-radius: $spacing-02;
+
+    // border-radius: $mg-spacing-25;
     color: $mg-color-label;
     cursor: pointer;
     display: inline-block;
-    font-size: 0.85em;
-    margin-right: $spacing-03;
-    padding: $spacing-02 $spacing-03;
+    font-size: $mg-font-size-200;
+    margin-right: $mg-spacing-50;
+    padding: $mg-spacing-50 $mg-spacing-75 $mg-spacing-25;
     text-decoration: none;
 
     &:hover {
@@ -103,29 +116,18 @@
 
   &__content {
     background-color: $mg-color-white;
-    grid-column: 1 / 3;
-    grid-row: 2 / 3;
-    padding: $spacing-04;
-
-    @media (min-width: $mg-breakpoint-mobile) {
-      grid-column: 2 / 4;
-      grid-row: 1 / 2;
-    }
+    padding: $mg-spacing-50;
   }
 
   &__title {
-    padding-top: 1.5em;
+    padding-top: $mg-spacing-75;
 
     a {
       color: $mg-color-blue-800;
       cursor: pointer;
       display: inline-block;
-      font-size: 1.625em;
+      font-size: $mg-font-size-600;
       font-weight: bold;
-
-      // &:hover {
-      //     background: #2dabff;
-      // }
     }
 
     .active {
@@ -145,9 +147,7 @@
   }
 
   &__summaryText {
-    // line-height: 1.2em;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding-bottom: $mg-spacing-50;
   }
 
   &__text-link {
@@ -156,7 +156,7 @@
 
   &__text-link,
   &__label,
-  &__button {
+  .mg-button {
     position: relative;
     z-index: 101;
   }
@@ -165,7 +165,6 @@
   // &__text-link:hover {
   //   text-decoration: underline;
   // }
-} //END of CARD
 
 // [dir='rtl'] {
 //   .content-card {

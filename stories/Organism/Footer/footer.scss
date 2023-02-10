@@ -8,7 +8,7 @@
 
   li {
     list-style: none;
-    margin-bottom: $spacing-04;
+    margin-bottom: $mg-spacing-25;
     padding: 0;
     text-align: left;
 
@@ -66,12 +66,12 @@
   }
 
   @include devicebreak(small) {
-    margin: 0 $spacing-05 $spacing-07;
+    margin: 0 $mg-spacing-50 $mg-spacing-150;
   }
 
   li {
     list-style: none;
-    margin-bottom: $spacing-04;
+    margin-bottom: $mg-spacing-25;
     padding-left: 0;
 
     @include devicebreak(medium) {
@@ -144,8 +144,8 @@
       display: block;
       font-size: 0;
       height: 20px;
-      margin-block-end: $spacing-05;
-      margin-inline-start: $spacing-07;
+      margin-block-end: $mg-spacing-50;
+      margin-inline-start: $mg-spacing-150;
       width: 20px;
 
       @each $name in $socials {
@@ -193,7 +193,7 @@
     //   padding: 0;
 
     // a {
-    //   margin-left: $spacing-07;
+    //   margin-left: $mg-spacing-150;
     //   margin-right: 0;
     // }
 
@@ -246,11 +246,11 @@
     border: 0;
     color: $mg-color-white;
     display: block;
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
     font-weight: 700;
     letter-spacing: 0.03rem;
     line-height: 1.15;
-    padding: $spacing-05;
+    padding: $mg-spacing-50;
     position: relative;
     text-align: left;
     text-transform: uppercase;
@@ -288,7 +288,7 @@
 
   &-panel {
     display: none;
-    padding: 0 $spacing-05 $spacing-03;
+    padding: 0 $mg-spacing-50 $mg-spacing-25;
 
     @include devicebreak(medium) {
       display: block;
@@ -299,7 +299,7 @@
       @extend %footerlink;
 
       display: block;
-      margin-bottom: $spacing-05;
+      margin-bottom: $mg-spacing-50;
     }
   }
 }
@@ -336,7 +336,7 @@
 
   h5 {
     color: $mg-color-white;
-    margin: 0 $spacing-05;
+    margin: 0 $mg-spacing-50;
   }
 
   &.inverted {
@@ -353,24 +353,24 @@
   background-color: $mg-color-neutral-100;
   background-color: $mg-color-blue-600;
   color: $mg-color-white;
-  padding: $spacing-09 $spacing-04 $spacing-08;
+  padding: $mg-spacing-300 $mg-spacing-25 $mg-spacing-200;
 
   @include devicebreak(medium) {
-    padding: 3.25rem 0 $spacing-09;
+    padding: 3.25rem 0 $mg-spacing-300;
   }
 
   @include devicebreak(small) {
     & .sign-up {
-      margin-top: $spacing-06;
+      margin-top: $mg-spacing-100;
     }
   }
 
   p {
-    font-size: $font-size-14;
+    font-size: $mg-font-size-200;
     margin: 0;
 
     @include devicebreak(medium) {
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
     }
   }
 
@@ -378,21 +378,21 @@
     @extend %footer-block;
 
     margin-bottom: 1.188rem;
-    padding-bottom: $spacing-09;
+    padding-bottom: $mg-spacing-300;
 
     @include devicebreak(medium) {
-      margin-bottom: $spacing-09;
+      margin-bottom: $mg-spacing-300;
     }
   }
 
   &-top {
     @extend %footer-block;
 
-    padding-bottom: $spacing-07;
+    padding-bottom: $mg-spacing-150;
 
     @include devicebreak(medium) {
-      margin-bottom: $spacing-07;
-      padding-bottom: $spacing-09;
+      margin-bottom: $mg-spacing-150;
+      padding-bottom: $mg-spacing-300;
     }
   }
 
@@ -403,37 +403,37 @@
       flex-direction: column-reverse;
 
       p {
-        margin: 0 $spacing-05 0;
+        margin: 0 $mg-spacing-50 0;
       }
     }
   }
 
   &-copyright {
-    margin: 0 $spacing-05;
+    margin: 0 $mg-spacing-50;
 
     @include devicebreak(medium) {
-      margin: $spacing-11 0 0;
+      margin: $mg-spacing-400 0 0;
     }
   }
 
   &-links {
-    margin: $spacing-07 $spacing-05;
+    margin: $mg-spacing-150 $mg-spacing-50;
 
     @include devicebreak(medium) {
-      margin: 0 0 $spacing-07 0;
+      margin: 0 0 $mg-spacing-150 0;
     }
 
     &_text {
-      margin: 0 $spacing-05 $spacing-07;
+      margin: 0 $mg-spacing-50 $mg-spacing-150;
 
       @include devicebreak(medium) {
-        margin: 0 0 $spacing-07 0;
+        margin: 0 0 $mg-spacing-150 0;
       }
     }
   }
 
   .footer-icons {
-    margin: 0 1.25rem $spacing-07;
+    margin: 0 1.25rem $mg-spacing-150;
 
     @include devicebreak(medium) {
       justify-content: flex-end;
@@ -455,11 +455,11 @@
 }
 
 .icons-search {
-  margin: $spacing-07 $spacing-05 0;
+  margin: $mg-spacing-150 $mg-spacing-50 0;
   text-align: left;
 
   @include devicebreak(medium) {
-    margin: 0 0 $spacing-07 0;
+    margin: 0 0 $mg-spacing-150 0;
     text-align: right;
   }
 
@@ -468,7 +468,7 @@
   }
 
   & .icon-globe {
-    margin-right: $spacing-05;
+    margin-right: $mg-spacing-50;
   }
 }
 
@@ -481,7 +481,7 @@
     }
 
     & .icon-globe {
-      margin-left: $spacing-05;
+      margin-left: $mg-spacing-50;
       margin-right: 0;
     }
   }

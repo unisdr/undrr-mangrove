@@ -10,9 +10,9 @@
 
   li {
     display: flex;
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
     margin-bottom: 0;
-    margin-right: $spacing-06;
+    margin-right: $mg-spacing-100;
     padding-left: 0;
     position: relative;
 
@@ -20,7 +20,7 @@
       @extend %img_none;
 
       border-bottom: 0;
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
     }
 
     span {
@@ -81,7 +81,7 @@
     }
 
     li {
-      margin-left: $spacing-06;
+      margin-left: $mg-spacing-100;
       margin-right: 0;
       padding-right: 0;
 

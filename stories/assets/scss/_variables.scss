@@ -143,15 +143,18 @@ $sendai-turquoise: $sendai-turquoise-900; // alias
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$font-size-12: 0.75rem;
-$font-size-14: 0.875rem;
-$font-size-16: 1rem;
-$font-size-20: 1.25rem;
-$font-size-24: 1.5rem;
-$font-size-25: 1.563rem;
-$font-size-26: 1.625rem;
-$font-size-32: 2rem;
-$font-size-35: 2.188rem;
+// $mg-font-size-50: 11px; // maybe in the future, if we must
+$mg-font-size-100: 1rem;
+$mg-font-size-200: 1.25rem;
+$mg-font-size-250: 1.4rem;
+$mg-font-size-300: 1.6rem; // regular body text
+$mg-font-size-400: 2rem;
+$mg-font-size-500: 2.5rem;
+$mg-font-size-600: 3rem;
+$mg-font-size-800: 3.6rem;
+$mg-font-size-900: 4rem;
+$mg-font-body: $mg-font-size-300;
+$mg-font-label: $mg-font-size-250;
 
 /**
  * @tokens Font families
@@ -160,55 +163,38 @@ $font-size-35: 2.188rem;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$Font-Family-Roboto: "Roboto", sans-serif;
+$mg-font-family: "Roboto", sans-serif;
 
 /**
  * @tokens Spacing
  * @presenter Spacing
  */
 
-// todo: reduce the number of options and use the mg-spacing-100, mg-spacing-200 naming
+// todo: reduce the number of options and use the $mg-spacing-100, $mg-spacing-500 naming
 
-$spacing-01: 0.125rem;
-$spacing-02: 0.25rem;
-$spacing-03: 0.5rem;
-$spacing-04: 0.75rem;
-$spacing-05: 1rem;
-$spacing-06: 1.5rem;
-$spacing-07: 2rem;
-$spacing-08: 2.5rem;
-$spacing-09: 3rem;
-$spacing-10: 4rem;
-$spacing-11: 5rem;
-$spacing-12: 6rem;
-$spacing-13: 10rem;
-$spacing-36: 2.25rem;
-$spacing-44: 2.75rem;
-$spacing-50: 3.125rem;
-$spacing-60: 3.75rem;
-$spacing-70: 4.375rem;
-$spacing-76: 4.75rem;
-$spacing-90: 5.625rem;
-$spacing-100: 6.25rem;
-$spacing-136: 8.5rem;
-$spacing-330: 20.625rem;
-$spacing-320: 20rem;
+$mg-spacing-0: 0;
+$mg-spacing-25: 0.25rem;
+$mg-spacing-50: 0.5rem;
+$mg-spacing-75: 0.75rem;
+$mg-spacing-100: 1rem;
+$mg-spacing-150: 1.5rem;
+$mg-spacing-200: 2rem;
+$mg-spacing-300: 3rem;
+$mg-spacing-400: 5rem;
+$mg-spacing-500: 6rem;
+$mg-spacing-600: 8rem;
+$mg-spacing-800: 10rem;
+$mg-spacing-1000: 40rem;
 
 /**
  * @tokens Widths
  * @presenter Spacing
  */
 
-// These are legacy from the UNDP systems and do not appear to be used, they may be deleted or greatly scaled back.
-
-$width-150: 9.375rem;
-$width-180: 11.25rem;
-$width-600: 37.5rem;
-$width-705: 44.0625rem;
-$width-840: 52.5rem;
-$width-900: 56.25rem;
-$width-1096: 68.5rem;
-$width-1440: 90rem;
+$mg-width-150: 15rem;
+$mg-width-300: 30rem;
+$mg-width-400: 40rem;
+$mg-width-600: 60rem;
 
 /**
  * @tokens Breakpoints

@@ -7,12 +7,12 @@
     align-items: baseline;
     display: flex;
     flex-wrap: wrap;
-    font-size: $font-size-12;
+    font-size: $mg-font-size-100;
     padding: 0;
 
     li {
       display: inline-block;
-      margin: $spacing-04 $spacing-06 $spacing-04 0;
+      margin: $mg-spacing-25 $mg-spacing-100 $mg-spacing-25 0;
       padding-left: 0;
       position: relative;
 
@@ -44,7 +44,7 @@
       a {
         background: none;
         color: $mg-color-red-900;
-        font-size: $font-size-12;
+        font-size: $mg-font-size-100;
         font-weight: 600;
         letter-spacing: 0.03em;
         text-transform: uppercase;
@@ -87,7 +87,7 @@
     }
 
     li {
-      margin: $spacing-04 0 $spacing-04 $spacing-06;
+      margin: $mg-spacing-25 0 $mg-spacing-25 $mg-spacing-100;
       padding-right: 0;
 
       a {
@@ -95,7 +95,7 @@
       }
 
       &:first-of-type {
-        margin-left: $spacing-06;
+        margin-left: $mg-spacing-100;
         margin-right: 0;
       }
 
@@ -118,6 +118,6 @@
 // burmese lang
 :lang(my) {
   .breadcrumb li:last-of-type {
-    font-size: $font-size-12;
+    font-size: $mg-font-size-100;
   }
 }

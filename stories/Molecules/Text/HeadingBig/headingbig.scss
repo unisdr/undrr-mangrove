@@ -8,11 +8,11 @@
 
   justify-content: center;
   opacity: 1;
-  padding: $width-150 0 10.938rem;
+  padding: $mg-width-150 0 10.938rem;
   z-index: 5;
 
   @include devicebreak(medium) {
-    padding: $spacing-330 0 $spacing-320;
+    padding: $mg-spacing-1000 0 $mg-spacing-1000;
   }
 
   // &.inviewport {
@@ -21,7 +21,7 @@
 
   h2 {
     color: $mg-color-white;
-    margin-bottom: $spacing-09;
+    margin-bottom: $mg-spacing-300;
 
     @include devicebreak(medium) {
       margin-bottom: 0;
@@ -34,7 +34,7 @@
 
   ul {
     color: $mg-color-white;
-    margin-top: $spacing-08;
+    margin-top: $mg-spacing-200;
   }
 }
 
