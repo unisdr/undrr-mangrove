@@ -16,13 +16,14 @@
   color: $mg-color-neutral-0;
   display: grid;
   grid-template-columns: 1fr;
-  margin-left: calc(50% - (50vw)); // to expand out of the parent container
-  padding-left: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
   position: relative;
+  margin-left: calc(50% - (50vw)); // to expand out of the parent container
+  padding-left: $mg-spacing-100;
   width: 100vw;
 
   @media (min-width: $mg-breakpoint-tablet) {
     aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
+    padding-left: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
   }
 
   // Button overrides
