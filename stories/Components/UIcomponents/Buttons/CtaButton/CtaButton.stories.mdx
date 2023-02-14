@@ -41,57 +41,26 @@ A button describes the call to action that will be performed when the user click
 
 #### When to use:
 
-- Buttons should be used as primary or secondary calls to actions
-- Ideally, a page should have one primary action. A secondary option should be used infrequently.
+- Buttons should be used as primary, secondary or tertiary calls to actions
+- Ideally, a page should have one primary action. A secondary/tertiary option should be used infrequently.
 - If there are multiple choices for an action item, one default button should be active and the other buttons inactive
 
 ### Formatting
 
 #### Default
 There are multiple button types in our design system
-1. Primary button with arrow and without arrows
-2. Secondary buttons without the arrow
-3. CTA links with and without expanding arrows
-4. Chips
+1. Primary/Secondary/tertiary buttons
+2. CTA links with and without expanding arrows
+3. Chips
 
 ### Content
-Button”s color and text indicate the default setting and call of action of the button.
-Primary CTA: Dark Red: Default call of action button
-                      Red: Hover over call of action button
-                      Gray: Disabled call of action button
-Secondary Button: Blue-600: Default secondary button
-                      Blue-400: Hover over the secondary button
-                      Gray-400: Disabled secondary button
+Buttons, Chips and CTA link colors and text indicate the default setting and call of action of the button.
 
-### Behaviors
-
-#### States
-The following size modifiers are available:
-
-Primary CTA:
-The Dark Red Primary button with an arrow is the default button displayed on the website with default breakpoint which indicates the main task to be completed.
-
-
-CSS
-
-
-The Red Primary button with an arrow is a hover over button with a default breakpoint which changes its appearance once a mouse hovers over it, even if it is not selected.
+## Behaviors
+The default colors of the buttons will depend on the theme in use such as PW, UNDRR etc.
 
 
 
-The Gray-400 Primary button is disabled with an arrow and default breakpoint which will be disabled if there is an error and the error needs to be cleared for abling it.
-
-
-Secondary Buttons:
-The Blue-600 Secondary Button is the default secondary button which is used as an alternative to the primary button. Its color is different from the Primary button as the viewers won’t get confused with the Primary button.
-
-
-
-The Blue-400 Secondary button is a hover button that changes its appearance once the mouse hovers over it.
-
-
-
-The Gray-400 Secondary button is in a disabled state and will require error corrections for enabling it to select the alternative option.
 
 <Canvas>
 <Story name="Buttons">
@@ -110,8 +79,11 @@ The Gray-400 Secondary button is in a disabled state and will require error corr
 
 #### CSS:
 
-Add the base layout style from dist/css/base-minimal.min.css
-- https://unisdr.github.io/undrr-mangrove/css/components/buttons.min.css
+Add the base layout style 
+
+- https://unisdr.github.io/undrr-mangrove/css/style-gutenberg.css
+
+
 
 Use above CSS concerning CTA Button
 

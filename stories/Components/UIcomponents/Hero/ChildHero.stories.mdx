@@ -94,43 +94,23 @@ export const getCaptionForLocale = (locale) => {
 
 # Mangrove Hero (Sub)
 
-The Mangrove Hero components are cards with information and/or image.
+The Mangrove Hero components are page sections with information image and overlay colors (primary, secondary, tertiary and quaternary).
 
 ### Overview
-The Mangrove Hero component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+The Mangrove Hero component defines a section of information with some items. It is a multi-usage component that creates sections that are usually highlighting some kind of content.
 
 #### When to use:
 
-When a card with data, CTA link and image is to be displayed.
+When a page section with data, CTA links and image is to be displayed.
 
 ### Formatting
 
 #### Default
-It consists of a title, paragraph, CTA link, and/or image with colors like green, yellow, red, blue.
+It consists of a title, paragraph, CTA links (primary, secondary and tertiary),labels, detail links, image and overlay colors (primary, secondary, tertiary and quaternary).
 
 ### Content
-There are two types of Mangrove Hero components: Mangrove Hero with Image and Mangrove Hero without Image.
+There are two types of Mangrove Hero components: Mangrove Hero Parent and Mangrove Hero Child.
 
-### Behaviors
-
-#### States
-Mangrove Hero with image:
-There are two states in mangrove Heros: Default, Hover.
-
-Default: It shows the title, paragraph, CTA link, and mangrove Hero with Image and title, paragraph, and CTA Link for mangrove Hero with Image.
-
-Hover: In the hover state, when the mouse hovers over the mangrove Hero with Image, the image is displayed. Along with Title, Image, and CTA Link. On hover, the background color is changing to one of the predefined accent colors: red, blue, yellow (default), or green.
-
-Mangrove Hero without image:
-There are two states in mangrove Heros: Default, Hover.
-
-Default: It shows the title, paragraph, CTA link, and mangrove Hero without Image and title, paragraph, and CTA Link.
-
-
-
-Hover: In the hover state, when the mouse hovers over the mangrove Hero will display the title, mangrove Hero, and CTA Link. On hover, the background color is changing to the accent color of the page.
-
-Mangrove Hero w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
 
 <Canvas>
 <Story name="Hero - child">
@@ -146,7 +126,6 @@ Mangrove Hero w/o Image can be presented with the Emphasized title (without desc
 </Canvas>
 
 ### Usage
-- Choose the Hover color and emphasize options from the control tab of canvas.
 - Grab the HTML from the HTML tab and also include the CSS files listed below.
 
 ### CSS and JS References
@@ -154,17 +133,15 @@ Mangrove Hero w/o Image can be presented with the Emphasized title (without desc
 #### CSS:
 Add the base layout style from
 
-- https://unisdr.github.io/undrr-mangrove/css/base-minimal.min.css
-- https://unisdr.github.io/undrr-mangrove/css/components/cta-link.min.css
-- https://unisdr.github.io/undrr-mangrove/css/components/content-card.min.css
-- https://unisdr.github.io/undrr-mangrove/css/components/buttons.min.css - if “View more” button is used
+- https://unisdr.github.io/undrr-mangrove/css/style-gutenberg.css
+
 
 #### JS:
 NA
 
 ### Interactions
-- Hover state applies to the image only.
-- By clicking on the CTA Link, the associated page is opened.
+
+- By clicking on the title and/or CTA Link, the associated page is opened.
 
 ### Changelog
 1.0 — Released component
