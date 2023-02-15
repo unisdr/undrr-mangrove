@@ -2,23 +2,20 @@
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
 
+// .mg-buttons {
+//   margin-bottom: 1em;
+//   //Media queries
 
+//   @media (max-width: $mg-breakpoint-mobile) {
+//     display: flex;
+//     flex-direction: column;
+//   }
 
-  // .mg-buttons {
-  //   margin-bottom: 1em;
-  //   //Media queries
-
-  //   @media (max-width: 31.25em) {
-  //     display: flex;
-  //     flex-direction: column;
-  //   }
-
-  //   @media (max-width: 50em) {
-  //     display: flex;
-  //     flex-direction: column;
-  //   }
-  // }
-
+//   @media (max-width: $mg-breakpoint-tablet) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+// }
 
 .mg-button {
   @extend %button;
@@ -26,7 +23,7 @@
   color: $mg-color-button;
   cursor: pointer;
   justify-content: center;
-  padding: $spacing-04 $spacing-05;
+  padding: $mg-spacing-100 $mg-spacing-150;
 
   &:focus-visible {
     box-shadow: 0 0 4px $mg-color-button-background--hover;
@@ -61,7 +58,7 @@ button {
   //       no-repeat left center;
   //     content: '';
   //     height: 20px;
-  //     margin-left: $spacing-04;
+  //     margin-left: $mg-spacing-25;
   //     width: 13px;
   //   }
 
@@ -102,7 +99,7 @@ button {
 //           @include transform(rotate(180deg));
 
 //           margin-left: 0;
-//           margin-right: $spacing-04;
+//           margin-right: $mg-spacing-25;
 //         }
 
 //         &:hover::after {

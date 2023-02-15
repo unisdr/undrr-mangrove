@@ -9,7 +9,7 @@ export const getCaptionForLocale = (locale) => {
           {
             contenttile: "CONTENT TAG",
             title: "Title in large size",
-            summaryText: `Climate change is a <a href="javascript:void(0)" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
             share: "Social Share Button",
@@ -71,7 +71,7 @@ This paper explores health risks from climate change in a global context, settin
           {
             contenttile: "HORIZONTAL CARD",
             title: "Title in large size",
-            summaryText: `Climate change is a <a href="javascript:void(0)" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
             share: "Social Share Button",
@@ -89,10 +89,10 @@ This paper explores health risks from climate change in a global context, settin
 };
 
 <Meta title="Components/Cards/Horizontal Card" argTypes={{
-  Hovercolors: {
-    options: ['yellow', 'red', 'green', 'blue'],
+  variant: {
+    options: ['primary', 'secondary', 'tertiary', 'quaternary'],
     control: { type: 'inline-radio' },
-    defaultValue: 'yellow'
+    defaultValue: 'primary'
   }
 }}/>
 

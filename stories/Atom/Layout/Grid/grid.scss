@@ -6,8 +6,8 @@
 .grid-name {
   color: $mg-color-black;
   font-size: 1.375rem;
-  margin-bottom: $spacing-05;
-  margin-top: $spacing-05;
+  margin-bottom: $mg-spacing-50;
+  margin-top: $mg-spacing-50;
   min-height: 28px;
 
   @include devicebreak(small) {
@@ -15,12 +15,12 @@
   }
 
   span {
-    font-size: $font-size-14;
+    font-size: $mg-font-size-200;
   }
 }
 
 .grid_description {
-  @extend %paragragh-font-14;
+  @extend %paragraph-font-100;
 
   color: $mg-color-black;
   margin-bottom: 1.25rem;
@@ -28,8 +28,8 @@
 
 .grid--layout {
   background-color: $mg-color-neutral-300;
-  height: $spacing-09;
-  margin-bottom: $spacing-03;
+  height: $mg-spacing-300;
+  margin-bottom: $mg-spacing-25;
 
   &:nth-child(odd) {
     background-color: $mg-color-neutral-200;

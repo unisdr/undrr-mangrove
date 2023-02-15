@@ -18,14 +18,15 @@
 //   'gray': $mg-color-neutral-100,
 // );
 
-//MG CARD using CSS GRID
+// MG CARD using CSS GRID
 .mg-card {
   display: inline-block;
   position: relative;
 
   // Vertical CARD
   &__vc {
-    max-width: 25rem;
+    display: grid;
+    gap: $mg-spacing-100;
 
     .mg-card__visual {
       height: 200px;
@@ -40,13 +41,24 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 300px 1fr auto;
+    gap: $mg-spacing-50;
 
-    @media (min-width: 31.25em) {
+    &__content {
+      grid-column: 1 / 3;
+      grid-row: 2 / 3;
+
+      @media (min-width: $mg-breakpoint-mobile) {
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+      }
+    }
+
+    @media (min-width: $mg-breakpoint-mobile) {
       grid-template-columns: 160px repeat(2, 1fr);
       grid-template-rows: 1fr auto;
     }
 
-    @media (min-width: 50em) {
+    @media (min-width: $mg-breakpoint-tablet) {
       grid-template-columns: 300px repeat(2, 1fr);
     }
 
@@ -58,6 +70,7 @@
   // Main Card css
   &__visual {
     align-items: flex-end;
+
     // background-color: $mg-color-blue-800;
     display: flex;
     justify-content: flex-end;
@@ -72,20 +85,21 @@
   &__share {
     cursor: pointer;
     display: inline-block;
-    padding: 0.56em;
+    padding: 0 $mg-spacing-50 $mg-spacing-25;
     position: absolute;
     z-index: 101;
   }
 
   &__label {
     background: $mg-color-label-background;
-    border-radius: 0.3em;
+
+    // border-radius: $mg-spacing-25;
     color: $mg-color-label;
     cursor: pointer;
     display: inline-block;
-    font-size: 0.85em;
-    margin-right: 0.5em;
-    padding: 0.3em 0.5em;
+    font-size: $mg-font-label;
+    margin-right: $mg-spacing-50;
+    padding: $mg-spacing-50 $mg-spacing-75 $mg-spacing-25;
     text-decoration: none;
 
     &:hover {
@@ -102,29 +116,19 @@
 
   &__content {
     background-color: $mg-color-white;
-    grid-column: 1 / 3;
-    grid-row: 2 / 3;
-    padding: $spacing-04;
-
-    @media (min-width: 31.25em) {
-      grid-column: 2 / 4;
-      grid-row: 1 / 2;
-    }
+    padding: $mg-spacing-50;
   }
 
   &__title {
-    padding-top: 1.5em;
+    font-size: $mg-font-size-500;
+    font-weight: bold;
+    padding-bottom: $mg-spacing-75;
+    padding-top: $mg-spacing-100;
 
     a {
       color: $mg-color-blue-800;
       cursor: pointer;
       display: inline-block;
-      font-size: $font-size-26;
-      font-weight: bold;
-
-      // &:hover {
-      //     background: #2dabff;
-      // }
     }
 
     .active {
@@ -135,25 +139,16 @@
 
   &__title a::after {
     bottom: 0;
-    content: '';
+    content: "";
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
-    // -webkit-transition-duration: 125ms;
-    // transition-duration: 125ms;
-    // -webkit-transition-property: -webkit-box-shadow;
-    // transition-property: -webkit-box-shadow;
-    // transition-property: box-shadow;
-    // transition-property: box-shadow, -webkit-box-shadow;
-    // -webkit-transition-timing-function: ease-in-out;
-    // transition-timing-function: ease-in-out;
     z-index: 100;
   }
 
   &__summaryText {
-    // line-height: 1.2em;
-    padding-top: 1em;
+    padding-bottom: $mg-spacing-50;
   }
 
   &__text-link {
@@ -162,7 +157,7 @@
 
   &__text-link,
   &__label,
-  &__button {
+  .mg-button {
     position: relative;
     z-index: 101;
   }
@@ -171,22 +166,6 @@
   // &__text-link:hover {
   //   text-decoration: underline;
   // }
-
-  &__button {
-    background: $mg-color-button-background;
-    color: $mg-color-button;
-    // border-radius: .5em;
-    display: inline-block;
-    margin-top: 0.5em;
-    padding: 0.5em 1em;
-    text-decoration: none;
-
-    &:hover {
-      background: $mg-color-button-background--hover;
-      color: $mg-color-button--hover;
-      text-decoration: none;
-    }
-  }
 } //END of CARD
 
 // [dir='rtl'] {

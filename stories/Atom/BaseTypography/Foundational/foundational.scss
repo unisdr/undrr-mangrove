@@ -10,17 +10,17 @@ html {
 
 body {
   color: $mg-color-black;
-  font-family: $Font-Family-Roboto;
-  font-size: $font-size-16;;
+  font-family: $mg-font-family;
+  font-size: $mg-font-size-300;
   line-height: 1.4;
 
   @include devicebreak(medium) {
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
   }
 }
 
 button {
-  font-family: $Font-Family-Roboto;
+  font-family: $mg-font-family;
 }
 
 h1,
@@ -31,16 +31,16 @@ h5,
 h6,
 caption {
   margin: 0;
-  margin-bottom: $spacing-04;
+  margin-bottom: $mg-spacing-25;
   padding: 0;
 
   @include devicebreak(medium) {
-    margin-bottom: $font-size-16;
+    margin-bottom: $mg-font-size-300;
   }
 }
 
 h1 {
-  font-family: $Font-Family-Roboto;
+  font-family: $mg-font-family;
   font-size: 2.938rem;
   letter-spacing: 0.06rem;
   line-height: 1.08;
@@ -121,12 +121,12 @@ ol {
   }
 
   li {
-    margin-bottom: $spacing-05;
+    margin-bottom: $mg-spacing-50;
     padding-left: 0.875rem;
 
     @include devicebreak(medium) {
-      margin-bottom: $spacing-06;
-      padding-left: $spacing-04;
+      margin-bottom: $mg-spacing-100;
+      padding-left: $mg-spacing-25;
     }
   }
 }
@@ -156,16 +156,16 @@ dl {
 }
 
 dt {
-  margin-bottom: $spacing-03;
+  margin-bottom: $mg-spacing-25;
 }
 
 dd {
-  margin-bottom: $spacing-05;
-  margin-inline-start: $spacing-08;
+  margin-bottom: $mg-spacing-50;
+  margin-inline-start: $mg-spacing-200;
 
   @include devicebreak(medium) {
-    margin-bottom: $spacing-06;
-    margin-inline-start: $spacing-09;
+    margin-bottom: $mg-spacing-100;
+    margin-inline-start: $mg-spacing-300;
   }
 }
 
@@ -188,7 +188,7 @@ hr {
 }
 
 a {
-  // @extend %paragragh-font-20 !optional;
+  // @extend %paragraph-font-300 !optional;
   // @extend %animate-link !optional;
 
   color: $mg-color-interactive;
@@ -203,7 +203,7 @@ a:hover {
 // burmese lang
 :lang(my) {
   body {
-    font-family: $Font-Family-Roboto;
+    font-family: $mg-font-family;
     line-height: 1.7;
   }
 
@@ -217,7 +217,7 @@ a:hover {
   }
 
   h1 {
-    font-family: $Font-Family-Roboto;
+    font-family: $mg-font-family;
     font-size: 2.625rem;
 
     @include devicebreak(medium) {
@@ -250,7 +250,7 @@ a:hover {
   }
 
   h5 {
-    font-size: $font-size-20;
+    font-size: $mg-font-size-400;
 
     @include devicebreak(medium) {
       font-size: 1.375rem;
@@ -258,11 +258,11 @@ a:hover {
   }
 
   p {
-    font-size: $font-size-14;
+    font-size: $mg-font-size-200;
     line-height: 1.7;
 
     @include devicebreak(medium) {
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
     }
   }
 
@@ -286,16 +286,16 @@ a:hover {
     h5,
     h6,
     p {
-      font-family: $Font-Family-Roboto;
+      font-family: $mg-font-family;
     }
 
     .sbdocs-h1 {
-      font-size: $spacing-07;
+      font-size: $mg-spacing-150;
     }
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   ul,
   ol {
     padding-left: 0;
@@ -310,7 +310,7 @@ a:hover {
       padding-right: 0.875rem;
 
       @include devicebreak(medium) {
-        padding-right: $spacing-04;
+        padding-right: $mg-spacing-25;
       }
     }
   }
@@ -319,7 +319,7 @@ a:hover {
 /* Cyrillic scripts */
 #{$cyrillic} {
   h1 {
-    font-family: $Font-Family-Roboto;
+    font-family: $mg-font-family;
   }
 }
 

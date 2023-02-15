@@ -3,68 +3,57 @@
 // @import '../../../assets/scss/mixins';
 
 // Hero
+// This is a test container we can use for now to ensure the hero "locks" to the grid
+// .test-container {
+//   max-width: $mg-breakpoint-desktop;
+//   background-color: red;
+//   height: 100px;
+//   margin: 0 auto;
+// }
 .mg-hero {
   background-size: cover;
   background-position: center;
+  color: $mg-color-neutral-0;
   display: grid;
   grid-template-columns: 1fr;
-  margin-left: calc(50% - (50vw));
   position: relative;
-  width: 99vw;
+  margin-left: calc(50% - (50vw)); // to expand out of the parent container
+  padding-left: $mg-spacing-100;
+  width: 100vw;
 
-  //Media queries
-  @media (max-width: 31.25em) {
-    max-width: fit-content;
+  @media (min-width: $mg-breakpoint-tablet) {
+    aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
+    padding-left: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
   }
 
-  @media (max-width: 50em) {
-    max-width: fit-content;
+  // Button overrides
+  a.mg-button-primary {
+    background-color: $mg-color-neutral-0;
+  }
+  a.mg-button-secondary {
+    background-color: rgba($mg-color-neutral-0, 0.9);
+  }
+  a.mg-button,
+  a.mg-button:hover,
+  a.mg-button:visited {
+    color: $mg-color-hero;
   }
 
   &__overlay {
-    background-color: $mg-color-white;
-    margin-left: 2em;
-    padding: 1.5em;
-    width: max-content;
-
-    @media (max-width: 31.25em) {
-      background-color: $mg-color-neutral-600;
-      margin-left: 0;
-    }
-
-    @media (max-width: 50em) {
-      background-color: $mg-color-neutral-600;
-      margin-left: 0;
-    }
-
-    &.child {
-      margin-bottom: 1em;
-
-      .mg-hero__buttons {
-        margin-bottom: 2.8em;
-        margin-top: 0;
-      }
-
-      @media (max-width: 31.25em) {
-        background-color: $mg-color-neutral-600;
-        margin-bottom: 0;
-        margin-left: 0;
-      }
-
-      @media (max-width: 50em) {
-        background-color: $mg-color-neutral-600;
-        margin-bottom: 0;
-        margin-left: 0;
-      }
-    }
+    align-items: center;
+    background-color: rgba($mg-color-hero, $mg-opacity-hero);
+    display: grid;
+    margin: $mg-spacing-hero-overlay;
+    max-width: $mg-width-400;
+    padding: $mg-spacing-200;
   }
 
   &__content {
-    margin-top: 0.5em;
+    margin-top: $mg-spacing-25;
   }
 
   &__meta {
-    padding-bottom: 1.3em;
+    padding-bottom: $mg-spacing-25;
 
     &.meta-detail {
       display: flex;
@@ -73,82 +62,82 @@
   }
 
   &__label {
-    color: $mg-color-neutral-800;
-    cursor: pointer;
     display: inline-block;
+
     // background: rgb(230, 230, 230);
     // border-radius: .3em;
-    font-size: 0.85em;
+    font-size: $mg-font-label;
     font-weight: bold;
-    margin-right: 0.5em;
-    padding: 0.3em 0;
-    text-decoration: none;
-
-    // &:hover {
-    //     background-color: $mg-color-interactive-active;
-    // }
+    margin-right: $mg-spacing-25;
+    padding: $mg-spacing-25 0;
 
     &.detail {
       font-weight: normal;
     }
   }
 
+  a,
+  a:hover,
+  a:visited {
+    color: $mg-color-neutral-0;
+  }
+
   &__title {
-    margin-bottom: 1.3em;
+    color: $mg-color-neutral-0;
+    margin-bottom: $mg-spacing-25;
+    display: inline-block;
+    font-weight: bold;
+    font-size: $mg-font-size-600;
 
-    a {
-      color: $mg-color-blue-800;
-      cursor: pointer;
-      display: inline-block;
-      font-weight: bold;
-      text-decoration: none;
+    .text-xxl {
+      font-size: $mg-font-size-800;
 
-      // &:hover {
-      //     background: #2dabff;
-      // }
-
-      &.active {
-        background: $mg-color-neutral-50;
-        font-weight: bold;
+      @media (max-width: $mg-breakpoint-mobile) {
+        font-size: $mg-font-size-600;
       }
+    }
 
-      @media (max-width: 31.25em) {
-        font-size: 1.5em;
-      }
+    .text-xl {
+      font-size: $mg-font-size-600;
 
-      @media (max-width: 50em) {
-        font-size: 1.7em;
-      }
-
-      &.text-xxl {
-        font-size: 2.5em;
-
-        @media (max-width: 31.25em) {
-          font-size: 1.5em;
-        }
-
-        @media (max-width: 50em) {
-          font-size: 1.7em;
-        }
-      }
-
-      &.text-xl {
-        font-size: 2.4em;
-
-        @media (max-width: 31.25em) {
-          font-size: 1.4em;
-        }
-
-        @media (max-width: 50em) {
-          font-size: 1.6em;
-        }
+      @media (max-width: $mg-breakpoint-mobile) {
+        font-size: $mg-font-size-600;
       }
     }
   }
 
   &__summaryText {
-    font-size: 1.5em;
-    font-weight: 400;
-    margin-bottom: 1em;
+    font-size: $mg-font-size-400;
+    margin-bottom: $mg-spacing-25;
+  }
+}
+
+.mg-hero__buttons {
+  padding-top: $mg-spacing-75;
+  padding-bottom: $mg-spacing-50;
+}
+
+// Child variant
+.mg-hero--child .mg-hero__overlay {
+  @media (max-width: $mg-breakpoint-tablet) {
+    margin-left: 0;
+  }
+}
+
+// Stylistic variants
+$variant-colours: (
+  "secondary": $mg-color-hero--secondary,
+  "tertiary": $mg-color-hero--tertiary,
+  "quaternary": $mg-color-hero--quaternary,
+);
+
+@each $name, $color in $variant-colours {
+  .mg-hero--#{$name} .mg-hero__overlay {
+    background-color: rgba($color, $mg-opacity-hero);
+    a.mg-button,
+    a.mg-button:hover,
+    a.mg-button:visited {
+      color: #{$color};
+    }
   }
 }

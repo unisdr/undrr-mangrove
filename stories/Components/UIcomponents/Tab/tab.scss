@@ -11,7 +11,7 @@
     padding-left: 0;
 
     @include devicebreak(medium) {
-      padding-left: $spacing-09;
+      padding-left: $mg-spacing-300;
     }
 
     .is-active {
@@ -21,7 +21,7 @@
     a {
       @extend %img_none;
 
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
     }
 
     li {
@@ -31,9 +31,9 @@
       font-weight: 700;
       letter-spacing: 0.03em;
       margin-bottom: -0.125rem;
-      margin-right: $spacing-06;
+      margin-right: $mg-spacing-100;
       margin-top: 0.75rem;
-      padding-bottom: $spacing-03;
+      padding-bottom: $mg-spacing-25;
       padding-left: 0;
       text-transform: uppercase;
 
@@ -56,7 +56,7 @@
       }
 
       p {
-        margin-top: $spacing-05;
+        margin-top: $mg-spacing-50;
 
         @include devicebreak(medium) {
           margin-top: 2.5rem;
@@ -66,17 +66,17 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .tabs {
     > ul {
       padding-right: 0;
 
       @include devicebreak(medium) {
-        padding-right: $spacing-09;
+        padding-right: $mg-spacing-300;
       }
 
       li {
-        margin-left: $spacing-06;
+        margin-left: $mg-spacing-100;
         margin-right: 0;
         padding-right: 0;
       }

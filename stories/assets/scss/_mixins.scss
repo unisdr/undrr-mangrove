@@ -10,7 +10,7 @@
   appearance: $value;
 }
 
-//animation
+// animation
 @mixin animation($animation) {
   -webkit-animation: $animation;
   -moz-animation: $animation;
@@ -19,7 +19,7 @@
   animation: $animation;
 }
 
-//keyframe
+// keyframe
 @mixin keyframes($keyframes...) {
   -webkit-keyframes: $keyframes;
   -moz-keyframes: $keyframes;
@@ -28,7 +28,7 @@
   keyframes: $keyframes;
 }
 
-//transition
+// transition
 @mixin transition($transitions...) {
   -webkit-transition: $transitions;
   -moz-transition: $transitions;
@@ -37,7 +37,7 @@
   transition: $transitions;
 }
 
-//transform
+// transform
 @mixin transform($transforms) {
   -webkit-transform: $transforms;
   -moz-transform: $transforms;
@@ -66,7 +66,7 @@
   @include transform(skew(#{$x}deg, #{$y}deg));
 }
 
-//gradient color
+// Gradient color
 @mixin gradient($direction, $list) {
   background: -webkit-linear-gradient($direction, $list);
   background: -moz-linear-gradient($direction, $list);
@@ -76,38 +76,38 @@
 
 /* mixing  end */
 
-/* placehoder start */
-%paragragh-font-14 {
-  font-size: $font-size-12;
+/* placeholder start */
+%paragraph-font-100 {
+  font-size: $mg-font-size-100;
 
   @include devicebreak(medium) {
-    font-size: $font-size-14;
+    font-size: $mg-font-size-200;
   }
 }
 
-%paragragh-font-16 {
-  font-size: $font-size-14;
+%paragraph-font-200 {
+  font-size: $mg-font-size-200;
   line-height: 1.4;
 
   @include devicebreak(medium) {
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
   }
 }
 
-%paragragh-font-20 {
-  font-size: $font-size-16;
+%paragraph-font-300 {
+  font-size: $mg-font-size-300;
 
   @include devicebreak(medium) {
-    font-size: $font-size-20;
+    font-size: $mg-font-size-400;
   }
 }
 
-%paragragh-font-24 {
-  font-size: $font-size-20;
+%paragraph-font-400 {
+  font-size: $mg-font-size-400;
   line-height: 1.1;
 
   @include devicebreak(medium) {
-    font-size: $font-size-24;
+    font-size: $mg-font-size-500;
   }
 }
 
@@ -132,7 +132,7 @@
   align-items: center;
   border-bottom: 1px solid $mg-color-white;
   justify-content: space-between;
-  margin-bottom: $spacing-07;
+  margin-bottom: $mg-spacing-150;
 }
 
 %button {
@@ -141,8 +141,9 @@
   border: none;
   cursor: pointer;
   display: flex;
-  font-size: $font-size-16;
-  font-weight: 700;
+  font-size: $mg-font-button;
+  font-weight: 600;
+
   // letter-spacing: 0.03em;
   line-height: 1;
 
@@ -157,11 +158,11 @@
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  padding: $spacing-05;
+  padding: $mg-spacing-50;
   position: relative;
 
   @include devicebreak(medium) {
-    padding: $spacing-06;
+    padding: $mg-spacing-100;
   }
 }
 
@@ -197,9 +198,9 @@
 }
 
 %ctaimg {
-  content: '';
+  content: "";
   height: 1.188rem;
-  margin-left: $spacing-04;
+  margin-left: $mg-spacing-25;
   margin-top: 2px;
   width: 0.813rem;
 
@@ -212,9 +213,10 @@
   @include transform(translateY(-50%));
   @include transition(all 200ms ease-in-out);
 
-  background: url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
+  background:
+    url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
     center;
-  content: '';
+  content: "";
   float: right;
   height: 13px;
   position: absolute;
@@ -224,7 +226,7 @@
 }
 
 %absolute__content {
-  content: '';
+  content: "";
   height: 100%;
   left: 0;
   position: absolute;
@@ -237,7 +239,7 @@
   @include transform(translateY(-50%));
 
   background: url(#{$img-path-Icon}/chevron-down.svg) no-repeat center center;
-  content: '';
+  content: "";
   height: 0.813rem;
   position: absolute;
   right: 1.188rem;
@@ -247,7 +249,7 @@
 
 %language_switcher {
   border: none;
-  font-size: $font-size-14;
+  font-size: $mg-font-size-200;
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -267,11 +269,11 @@
   border: 2px solid $mg-color-black;
   color: $mg-color-black;
   cursor: pointer;
-  font-size: $font-size-16;
+  font-size: $mg-font-size-300;
   font-weight: 600;
   line-height: 1.125rem;
   margin: 0;
-  padding: $spacing-05 $spacing-50 $spacing-05 $spacing-05;
+  padding: $mg-spacing-50 $mg-spacing-800 $mg-spacing-50 $mg-spacing-50;
   position: relative;
   text-transform: uppercase;
   width: 100%;
@@ -284,7 +286,7 @@
   box-sizing: border-box;
   display: none;
   min-height: 100px;
-  padding: 0 $spacing-05;
+  padding: 0 $mg-spacing-50;
   width: 100%;
 
   &:focus {
@@ -295,7 +297,7 @@
 
 %select_rtl {
   padding-left: 3.125rem;
-  padding-right: $spacing-05;
+  padding-right: $mg-spacing-50;
   text-align: right;
 }
 
@@ -331,7 +333,7 @@
   visibility: visible;
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   %left-to-right {
     @include transform(translateX(100px));
   }
@@ -356,7 +358,7 @@
 
 %header {
   background-color: $mg-color-neutral-100;
-  box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+  box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
   height: 7.1875rem;
   left: 0;
   position: fixed;
@@ -376,7 +378,7 @@
 
 %external {
   align-items: center;
-  content: '';
+  content: "";
   cursor: pointer;
   height: 1.125rem;
   width: 1.25rem;
@@ -386,7 +388,7 @@
   @extend %img_none;
 
   color: $mg-color-white;
-  font-size: $font-size-16;
+  font-size: $mg-font-size-300;
   line-height: 1.4;
 
   &:hover {
@@ -411,33 +413,33 @@
 
 //burmese lang
 :lang(my) {
-  %paragragh-font-16 {
-    font-size: $font-size-12;
+  %paragraph-font-200 {
+    font-size: $mg-font-size-100;
     line-height: 1.7;
 
     @include devicebreak(medium) {
-      font-size: $font-size-14;
+      font-size: $mg-font-size-200;
     }
   }
 
-  %paragragh-font-20 {
-    font-size: $font-size-14;
+  %paragraph-font-300 {
+    font-size: $mg-font-size-200;
 
     @include devicebreak(medium) {
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
     }
   }
 
-  %paragragh-font-24 {
-    font-size: $font-size-20;
+  %paragraph-font-400 {
+    font-size: $mg-font-size-400;
     line-height: 1.1;
 
     @include devicebreak(medium) {
-      font-size: $font-size-24;
+      font-size: $mg-font-size-500;
     }
   }
   %button {
-    font-size: $font-size-14;
+    font-size: $mg-font-size-200;
   }
 }
 
@@ -470,7 +472,7 @@
 
 %pseudo-icon {
   box-sizing: border-box;
-  content: '';
+  content: "";
   display: block;
   position: absolute;
 }
@@ -481,7 +483,7 @@
 
     box-sizing: border-box;
     display: block;
-    height: $spacing-05;
+    height: $mg-spacing-50;
     left: 1.25rem;
     position: relative;
     width: 0;
@@ -499,21 +501,20 @@
 
     &::after {
       @extend %pseudo-icon;
-
       @include transform(rotate(45deg));
 
       border-right: 2px solid $mg-color-red-900;
       border-top: 2px solid $mg-color-red-900;
-      height: $spacing-04;
+      height: $mg-spacing-25;
       right: 0;
       top: 2px;
-      width: $spacing-04;
+      width: $mg-spacing-25;
     }
   }
 
   &:hover {
     i {
-      width: $spacing-11;
+      width: $mg-spacing-400;
 
       &::before {
         display: unset;
@@ -523,7 +524,8 @@
 }
 
 %animate-link {
-  background-image: linear-gradient($mg-color-red-900, $mg-color-red-900),
+  background-image:
+    linear-gradient($mg-color-red-900, $mg-color-red-900),
     linear-gradient($mg-color-red-900, $mg-color-red-900);
   background-position: 100% 100%, -30px 100%;
   background-repeat: no-repeat;
@@ -534,4 +536,4 @@
   }
 }
 
-/* placehoder end */
+/* placeholder end */

@@ -5,7 +5,7 @@
 // * menu item row start *//
 .menu li {
   a {
-    @extend %paragragh-font-14;
+    @extend %paragraph-font-100;
     @extend %img_none;
 
     border: none;
@@ -20,8 +20,9 @@
 
     &.selected {
       border-bottom: 2px solid $mg-color-red-900;
-      padding-bottom: $spacing-02;
+      padding-bottom: $mg-spacing-25;
     }
   }
 }
+
 // * menu item row end *//

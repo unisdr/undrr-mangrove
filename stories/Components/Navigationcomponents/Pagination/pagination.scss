@@ -10,9 +10,9 @@
 
   li {
     display: flex;
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
     margin-bottom: 0;
-    margin-right: $spacing-06;
+    margin-right: $mg-spacing-100;
     padding-left: 0;
     position: relative;
 
@@ -20,7 +20,7 @@
       @extend %img_none;
 
       border-bottom: 0;
-      font-size: $font-size-16;
+      font-size: $mg-font-size-300;
     }
 
     span {
@@ -41,9 +41,10 @@
         width: 45px;
 
         &::before {
-          background: url(#{$img-path-Icon}/chevron-left-circle.svg) no-repeat
+          background:
+            url(#{$img-path-Icon}/chevron-left-circle.svg) no-repeat
             center center;
-          content: ' ';
+          content: " ";
           display: block;
           height: 45px;
           width: 45px;
@@ -64,7 +65,8 @@
 
       a {
         &::before {
-          background: url(#{$img-path-Icon}/chevron-right-circle.svg) no-repeat
+          background:
+            url(#{$img-path-Icon}/chevron-right-circle.svg) no-repeat
             center center;
         }
       }
@@ -72,14 +74,14 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .pagination {
     ul {
       padding-right: 0;
     }
 
     li {
-      margin-left: $spacing-06;
+      margin-left: $mg-spacing-100;
       margin-right: 0;
       padding-right: 0;
 

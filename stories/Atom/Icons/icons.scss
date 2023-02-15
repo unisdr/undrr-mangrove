@@ -17,19 +17,20 @@
 }
 
 .external-link-animated {
-  box-shadow: -2px 2px 0 0 $mg-color-red-900, -4px 0 0 -2px $mg-color-red-900,
+  box-shadow:
+    -2px 2px 0 0 $mg-color-red-900,
+    -4px 0 0 -2px $mg-color-red-900,
     -3px 3px 0 -1px $mg-color-red-900;
   box-sizing: border-box;
   cursor: pointer;
   display: inline-block;
-  height: $spacing-04;
+  height: $mg-spacing-25;
   margin-left: -2px;
   position: relative;
-  width: $spacing-04;
+  width: $mg-spacing-25;
 
   &::before {
     @extend %pseudo-icon;
-
     @include transform(rotate(-45deg) translate(0, 0));
     @include transition(all 0.3s);
 
@@ -42,16 +43,15 @@
 
   &::after {
     @extend %pseudo-icon;
-
     @include transition(transform 0.3s);
     @include transform(translate(0, 0));
 
     border-right: 2px solid $mg-color-red-900;
     border-top: 2px solid $mg-color-red-900;
-    height: $spacing-03;
+    height: $mg-spacing-25;
     right: 0;
     top: 0;
-    width: $spacing-03;
+    width: $mg-spacing-25;
   }
 
   &:hover {
@@ -84,7 +84,6 @@
 
   &::after {
     @extend %pseudo-icon;
-
     @include transform(rotate(-45deg) translate(0, 0));
     @include transition(all 0.3s);
 
@@ -98,7 +97,6 @@
 
   &::before {
     @extend %pseudo-icon;
-
     @include transform(translate(0, 0));
     @include transition(all 0.3s);
 
@@ -120,7 +118,7 @@
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   .chevron-right-animated {
     @include transform(translate(0) rotate(180deg));
 
@@ -162,8 +160,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 $spacing-05 $spacing-07;
-  padding: $spacing-05 $spacing-03;
+  margin: 0 $mg-spacing-50 $mg-spacing-150;
+  padding: $mg-spacing-50 $mg-spacing-25;
   text-align: center;
   width: calc(100% - 2rem);
 

@@ -10,12 +10,12 @@
 
   label {
     cursor: pointer;
-    font-size: $font-size-16;
+    font-size: $mg-font-size-300;
     padding: 0 7px;
   }
 }
 
-input[type='checkbox'] {
+input[type="checkbox"] {
   @extend %checbox-radio-before;
 
   border-radius: 0;

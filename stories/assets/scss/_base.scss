@@ -1,6 +1,11 @@
 // @to-do: this is a hodge-podge of code that needs to be moved
 // into various utility components or outright removed.
 
+// CSS font size reset
+html {
+  font-size: 10px; // same as UNDRR drupal base themes
+}
+
 /* base start */
 .show-large {
   display: none;
@@ -22,7 +27,7 @@
   &::before {
     @extend %absolute__content;
 
-    background: rgb(0 0 0 / 20%);
+    background: rgb(0 0 0 / 0.2);
   }
 }
 
@@ -53,7 +58,7 @@
 }
 
 /* animation start */
-*[data-viewport='true'] {
+*[data-viewport="true"] {
   @extend %left-to-right;
 
   &.inviewport {
@@ -105,8 +110,8 @@
   }
 }
 
-[dir='rtl'] {
-  *[data-viewport='true'] {
+[dir="rtl"] {
+  *[data-viewport="true"] {
     @include transform(translateX(100px));
 
     &.inviewport {
@@ -145,10 +150,10 @@
 
 // color map solid
 $colors-solid: (
-  'yellow': $mg-color-yellow,
-  'red': $mg-color-red-900,
-  'green': $mg-color-green,
-  'blue': $mg-color-azure,
+  "yellow": $mg-color-yellow,
+  "red": $mg-color-red-900,
+  "green": $mg-color-green,
+  "blue": $mg-color-azure,
 );
 
 @each $name, $color in $colors-solid {

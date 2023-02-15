@@ -11,10 +11,10 @@
     justify-content: center;
 
     .image__caption {
-      margin: $spacing-05 $spacing-06 0;
+      margin: $mg-spacing-50 $mg-spacing-100 0;
 
       @include devicebreak(medium) {
-        margin: $spacing-07 0 0;
+        margin: $mg-spacing-150 0 0;
         width: 58.33333%;
       }
     }
@@ -42,20 +42,20 @@
 
     .image__caption {
       display: block;
-      margin: 0 0 0 $spacing-06;
+      margin: 0 0 0 $mg-spacing-100;
       padding-bottom: 0;
       width: 25%;
 
       p {
-        font-size: $font-size-14;
+        font-size: $mg-font-size-200;
         line-height: 1.4;
-        margin-bottom: $spacing-05;
+        margin-bottom: $mg-spacing-50;
         padding: 0;
 
         + .credits {
           border-top: 1px solid $mg-color-neutral-500;
           margin-left: 0;
-          padding: $spacing-05 0 0 0;
+          padding: $mg-spacing-50 0 0 0;
         }
       }
     }
@@ -64,11 +64,11 @@
   .credits {
     border-left: 0;
     border-right: 0;
-    margin-bottom: $spacing-05;
+    margin-bottom: $mg-spacing-50;
   }
 
   .author__caption {
-    font-size: $font-size-14;
+    font-size: $mg-font-size-200;
     line-height: 1.5;
   }
 }
@@ -82,18 +82,18 @@
 }
 
 @include devicebreak(medium) {
-  [dir='rtl'] {
+  [dir="rtl"] {
     .image-figcaption.portrait {
       .image {
         &__caption {
-          margin: 0 $spacing-06 0 0;
+          margin: 0 $mg-spacing-100 0 0;
         }
       }
 
       .credits {
         border-right: 0;
         margin-right: 0;
-        padding: $spacing-05 0;
+        padding: $mg-spacing-50 0;
         padding-right: 0;
       }
     }

@@ -5,7 +5,7 @@
 /* details tag start */
 details {
   summary {
-    @extend %paragragh-font-20;
+    @extend %paragraph-font-300;
 
     list-style-type: none;
     outline: 0;
@@ -15,18 +15,19 @@ details {
     }
 
     &::before {
-      background: url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
+      background:
+        url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
         center;
-      content: '';
+      content: "";
       display: inline-block;
       height: 14px;
-      margin-right: $spacing-02;
+      margin-right: $mg-spacing-25;
       width: 14px;
     }
   }
 
   p {
-    @extend %paragragh-font-16;
+    @extend %paragraph-font-200;
   }
 
   &[open] {
@@ -34,9 +35,10 @@ details {
       margin-bottom: 0.5rem;
 
       &::before {
-        background: url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
+        background:
+          url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
           center;
-        content: '';
+        content: "";
         display: inline-block;
         height: 14px;
         width: 14px;
@@ -45,12 +47,12 @@ details {
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   details {
     summary::before {
       @include transform(translate(0) rotate(180deg));
 
-      margin-left: $spacing-02;
+      margin-left: $mg-spacing-25;
       margin-right: 0;
     }
 

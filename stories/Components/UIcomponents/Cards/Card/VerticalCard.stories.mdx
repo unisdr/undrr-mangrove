@@ -9,7 +9,7 @@ export const getCaptionForLocale = (locale) => {
           {
             contenttile: "CONTENT TAG",
             title: "Title in large size",
-            summaryText: `Climate change is a <a href="javascript:void(0)" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
             share: "Social Share Button",
             label1: "Label 1",
@@ -69,8 +69,8 @@ by vulnerable populations and communities.This paper explores health risks from 
         contentdata: [
           {
             contenttile: "VERTICAL CARD",
-            title: "Title in large size",
-            summaryText: `Climate change is a <a href="javascript:void(0)" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            title: "Title in large size with up to two lines of text",
+            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
             share: "Social Share Button",
@@ -88,10 +88,10 @@ This paper explores health risks from climate change in a global context, settin
 };
 
 <Meta title="Components/Cards/Vertical Card" argTypes={{
-  Hovercolors: {
-    options: ['yellow', 'red', 'green', 'blue'],
+  variant: {
+    options: ['primary', 'secondary', 'tertiary', 'quaternary'],
     control: { type: 'inline-radio' },
-    defaultValue: 'yellow'
+    defaultValue: 'primary'
   }
 }}/>
 
@@ -127,11 +127,8 @@ Hover: In the hover state, when the mouse hovers over the mangrove Vertical Card
 Mangrove Vertical Card without image:
 There are two states in mangrove Vertical Cards: Default, Hover.
 
-Default: It shows the title, paragraph, CTA link, and mangrove Vertical Card without Image and title, paragraph, and CTA Link.
-
-
-
-Hover: In the hover state, when the mouse hovers over the mangrove Vertical Card will display the title, mangrove Vertical Card, and CTA Link. On hover, the background color is changing to the accent color of the page.
+- Default: It shows the title, paragraph, CTA link, and mangrove Vertical Card without Image and title, paragraph, and CTA Link.
+- Hover: In the hover state, when the mouse hovers over the mangrove Vertical Card will display the title, mangrove Vertical Card, and CTA Link. On hover, the background color is changing to the accent color of the page.
 
 Mangrove Vertical Card w/o Image can be presented with the Emphasized title (without description). In this content, the card will display the title and CTA link. On hover, the background color will be changed to the accent of the page.
 
@@ -140,9 +137,11 @@ Mangrove Vertical Card w/o Image can be presented with the Emphasized title (wit
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <VerticalCard
-        data={caption.contentdata} {...args}
-      ></VerticalCard>
+      <div style={{maxWidth: "300px"}}>
+        <VerticalCard
+          data={caption.contentdata} {...args}
+        ></VerticalCard>
+      </div>
     );
   }}
 </Story>
