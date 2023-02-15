@@ -356,20 +356,6 @@
   opacity: 1;
 }
 
-%expand_to_size {
-  @include transition(max-width 0.5s ease);
-
-  margin: 0 auto;
-  max-width: 100%;
-}
-
-%expand_search {
-  border: 0;
-  border-bottom: 1px solid $mg-color-black;
-  border-radius: 0;
-  cursor: pointer;
-}
-
 %header {
   background-color: $mg-color-neutral-100;
   box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);

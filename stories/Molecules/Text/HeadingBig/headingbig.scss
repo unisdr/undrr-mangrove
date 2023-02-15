@@ -38,27 +38,4 @@
   }
 }
 
-.color-blue {
-  @include transition(background-color 0.5s ease);
-
-  background-color: $mg-color-ebony-clay;
-}
-
-.change-background {
-  opacity: 1;
-}
-
-:root {
-  --light: $mg-color-white;
-  --blue: #{$mg-color-ebony-clay};
-}
-
-body {
-  background: var(--light);
-}
-
-.color-blue {
-  color: $mg-color-white;
-}
-
 /* heading-big cta end */
