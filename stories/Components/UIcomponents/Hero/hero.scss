@@ -49,7 +49,10 @@
   }
 
   &__content {
+    display: grid;
+    line-height: 1.15;
     margin-top: $mg-spacing-25;
+    row-gap: 1rem;
   }
 
   &__meta {
