@@ -1,73 +1,70 @@
-// @import '../../../assets/scss/variables';
-// @import '../../../assets/scss/breakpoints';
-// @import '../../../assets/scss/mixins';
+//Refactoring to suit our needs and integration with the Gutenberg Tabs
+.mg-tabs {
 
-/* Tab start */
-.tabs {
-  > ul {
-    background-color: $mg-color-white;
-    border-bottom: 2px solid $mg-color-neutral-300;
-    list-style: none;
-    padding-left: 0;
-
-    @include devicebreak(medium) {
-      padding-left: $mg-spacing-300;
-    }
-
-    .is-active {
-      border-bottom: 2px solid $mg-color-red-900;
-    }
-
-    a {
-      @extend %img_none;
-
-      font-size: $mg-font-size-300;
-    }
-
-    li {
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      display: inline-block;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      margin-bottom: -0.125rem;
-      margin-right: $mg-spacing-100;
-      margin-top: 0.75rem;
-      padding-bottom: $mg-spacing-25;
-      padding-left: 0;
-      text-transform: uppercase;
-
-      &:hover {
-        @include devicebreak(large) {
-          border-bottom: 2px solid $mg-color-neutral-500;
-        }
-      }
-    }
+  .mg-tabs__list {
+    background: $mg-color-blue-50;
+    width: 100%;
+    margin: 0;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 0;
+    position: relative;
+  
+  }
+  
+  .mg-tabs__item {
+    display: inline-block;
+    position: relative;
+    -ms-flex-preferred-size: max-content;
+    flex-basis: max-content;
+  }
+  
+  .mg-tabs__link {
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-400;
+    font-weight: 600;
+    color: $mg-color-neutral-700;
+    text-transform: uppercase;
+    line-height: 1.421;
+    margin: 0;
+    border-bottom-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 4px;
+    display: block;
+    outline: 0;
+    padding: 8px 16px;
+    position: relative;
+    text-decoration: none;
+  }
+  .mg-tabs__link:hover, .mg-tabs__link:focus {
+    border-bottom-color: $mg-color-neutral-400;
+    color: $mg-color-neutral-900;
+    z-index: 1150;
+  }
+  
+  .mg-tabs__link.is-active {
+    color: $mg-color-white;
+    background-color: $mg-color-interactive;
+    text-shadow: none;
+    border-bottom: 2px solid $mg-color-interactive-active;
   }
 
-  .tabs-content {
-    background-color: $mg-color-white;
-
-    .tabs-panel {
-      display: none;
-
-      &.is-active {
-        display: inherit;
-      }
-
-      p {
-        margin-top: $mg-spacing-50;
-
-        @include devicebreak(medium) {
-          margin-top: 2.5rem;
-        }
-      }
-    }
+  .mg-tabs__link.is-active:hover, .mg-tabs__link.is-active:focus {
+    color: $mg-color-interactive-active;
   }
+  
+  .mg-tabs__section {
+    padding: $mg-spacing-75 $mg-spacing-150;
+  }
+
 }
 
+
 [dir="rtl"] {
-  .tabs {
+  .mg-tabs {
     > ul {
       padding-right: 0;
 

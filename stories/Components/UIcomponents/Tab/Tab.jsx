@@ -1,25 +1,25 @@
 import React, { useEffect } from 'react';
-import { tabs } from '../../../assets/js/tabs';
-// import './tab.scss';
-import { BodyColumnTwo } from '../../../Molecules/Text/BodyColumn/BodyColumn';
+import { mgTabs } from '../../../assets/js/tabs';
+
+//import { BodyColumnTwo } from '../../../Molecules/Text/BodyColumn/BodyColumn';
 
 export function Tab({ tabdata }) {
   useEffect(() => {
-    tabs();
+    mgTabs;
   }, []);
   return (
-    <div className="tabs" data-viewport="true">
-      <ul data-deep-link="true" data-tabs id="tablist_1" role="tablist">
-        {tabdata.map((item, index) => (
-          <li key={index} className={index == 0 ? 'tabs-title is-active' : 'tabs-title'}>
-            <a href={`#${item.text_id}`} aria-selected="true">{item.text}</a>
+    <div className="mg-tabs">
+      <ul className="mg-tabs__list" data-mg-js-tabs>
+        {tabdata.map((tab, index) => (
+          <li key={index} className="mg-tabs__item">
+            <a className="mg-tabs__link" href={`#mg-tabs__section-${tab.text_id}`} id={`mg-tabs__section-${tab.text_id}`}>{tab.text}</a>
           </li>
         ))}
       </ul>
 
-      <div className="tabs-content" data-tabs-content="tablist_1">
-        {tabdata.map((item, index) => (
-          <div key={index} id={item.text_id} className={index == 0 ? 'tabs-panel is-active' : 'tabs-panel'}><BodyColumnTwo descriptionText={item.data} /></div>
+      <div className="mg-tabs-content" data-mg-js-tabs-content>
+        {tabdata.map((tab, index) => (
+          <section key={index} id={`mg-tabs__section-${tab.text_id}`} className="mg-tabs__section">{tab.data}</section>
         ))}
       </div>
     </div>
