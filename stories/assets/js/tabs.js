@@ -4,9 +4,9 @@
  * Finds all tabs on a page and activates them
  * @param {object} [scope] - the html scope to process, optional, defaults to `document`
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
- * @example vfTabs(document.querySelectorAll('.mg-component__container')[0]);
+ * @example mgTabs(document.querySelectorAll('.mg-component__container')[0]);
  */
-function mgTabs(scope, activateDeepLinkOnLoad) {
+export function mgTabs(scope, activateDeepLinkOnLoad) {
   /* eslint-disable no-redeclare */
   var scope = scope || document;
   var activateDeepLinkOnLoad = activateDeepLinkOnLoad || true;
@@ -14,8 +14,17 @@ function mgTabs(scope, activateDeepLinkOnLoad) {
   // Get relevant elements and collections
   const tabsList = scope.querySelectorAll("[data-mg-js-tabs]");
   const panelsList = scope.querySelectorAll("[data-mg-js-tabs-content]");
+
   const panels = scope.querySelectorAll("[data-mg-js-tabs-content] [id^=\"mg-tabs__section\"]");
   const tabs = scope.querySelectorAll("[data-mg-js-tabs] .mg-tabs__link");
+
+  console.log("debug: All panels");
+  console.log("Tab list: " , tabsList);
+  console.log("Panel List: ", panelsList);
+  console.log("Panels: ", panels);
+  console.log("Tabs: ", tabs);
+  console.log("End Debug: All panels");
+
   if (!tabsList || !panels || !tabs) {
     // exit: either tabs or tabbed content not found
     return;
@@ -146,6 +155,4 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
   });
 }
 
-//   export { mgTabs };
-mgTabs();
 

@@ -155,7 +155,7 @@ export const getCaptionForLocaleBlockquote = (locale) => {
     case "english":
       const engText = {
         detail:
-          "“Blockquote lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices.”",
+          "“UNDRR oversees the implementation of the Sendai Framework for Disaster Risk Reduction 2015-2030”",
         citeText: "-Firstname Lastname",
       };
       return engText;
@@ -183,7 +183,7 @@ export const getCaptionForLocaleBlockquote = (locale) => {
     default:
       return {
         detail:
-          "“Blockquote lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices.”",
+          "“UNDRR oversees the implementation of the Sendai Framework for Disaster Risk Reduction 2015-2030”",
         citeText: "-Firstname Lastname",
       };
   }
@@ -350,12 +350,12 @@ The details tag creates a disclosure widget in which information is visible only
 
 export const getLocaleForDetails = (locale) => {
   switch(locale) {
-    case 'english': const engText = {summary: 'Epcot Center', details: 'Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international pavilions, award-winning fireworks and seasonal special events.'}; return engText;
-    case 'arabic': const arabicText = {summary: 'مركز Epcot', details: 'pcot هي حديقة ترفيهية في Walt Disney World Resort تضم معالم جذب مثيرة وأجنحة دولية وألعاب نارية حائزة على جوائز ومناسبات موسمية خاصة.'}; return arabicText;
-    case 'burmese': const burmeseText = {summary: 'Epcot စင်တာ', details: 'pcot သည်စိတ်လှုပ်ရှားဖွယ်ဆွဲဆောင်မှုများ၊ နိုင်ငံတကာမဏ္ionsပ်များ၊ ဆုရမီးရှူးမီးပန်းများနှင့်ရာသီအလိုက်အထူးအစီအစဉ်များပါ ၀ င်သော Walt Disney World Resort တွင်အဓိကပန်းခြံဖြစ်သည်။'}; return burmeseText;
-    case 'japanese': const japaneseText = {summary: 'エプコットセンター', details: 'pcotは、エキサイティングなアトラクション、国際的なパビリオン、受賞歴のある花火、季節の特別イベントを備えたウォルトディズニーワールドリゾートのテーマパークです。'}; return japaneseText;
+    case 'english': const engText = {summary: 'The Sendai Framework', details: 'The Sendai Framework'}; return engText;
+    case 'arabic': const arabicText = {summary: 'مركز The Sendai Framework', details: ': هي حديقة ترفيهية في is the global roadmap for reducing human and economic loss تضم معالم جذب مثيرة وأجنحة دولية وألعاب نارية حائزة على جوائز ومناسبات موسمية خاصة.'}; return arabicText;
+    case 'burmese': const burmeseText = {summary: 'The Sendai Framework စင်တာ', details: ': သည်စိတ်လှုပ်ရှားဖွယ်ဆွဲဆောင်မှုများ၊ နိုင်ငံတကာမဏ္ionsပ်များ၊ ဆုရမီးရှူးမီးပန်းများနှင့်ရာသီအလိုက်အထူးအစီအစဉ်များပါ ၀ င်သော Walt Disney World Resort တွင်အဓိကပန်းခြံဖြစ်သည်။'}; return burmeseText;
+    case 'japanese': const japaneseText = {summary: 'エプコットセンター', details: ':は、エキサイティングなアトラクション、国際的なパビリオン、受賞歴のある花火、季節の特別イベントを備えたウォルトディズニーワールドリゾートのテーマパークです。'}; return japaneseText;
     default:
-      return {summary: 'Epcot Center', details: 'Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international pavilions, award-winning fireworks and seasonal special events.'};
+      return {summary: 'The Sendai Framework', details: 'is the global roadmap for reducing human and economic loss as a direct result of disasters.'};
   }
 };
 
@@ -376,12 +376,12 @@ The <code>figcaption</code> tag is used to caption the image. The <code>figcapti
 
 export const getLocaleForFigcaption = (locale) => {
   switch(locale) {
-    case 'english': const engText = {details: 'Dummy text refers to the bits of content that are used to fill a website mock-up. This text helps web designers better envision how the website will look as a finished product. '}; return engText;
+    case 'english': const engText = {details: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. '}; return engText;
     case 'arabic': const arabicText = {details: 'يشير النص الوهمي إلى أجزاء المحتوى المستخدمة لملء نموذج موقع الويب. يساعد هذا النص مصممي الويب على تصور أفضل لكيفية ظهور موقع الويب كمنتج نهائي.'}; return arabicText;
     case 'burmese': const burmeseText = {details: 'Dummy စာသားသည် ၀ က်ဘ်ဆိုက်၏လှောင်ပြောင်မှုကိုဖြည့်ရန်အသုံးပြုသောအကြောင်းအရာအနည်းငယ်ကိုရည်ညွှန်းသည်။ ဤစာသားသည် ၀ က်ဘ်ဒီဇိုင်နာများအနေဖြင့် ၀ က်ဘ်ဆိုက်သည်အချောထည်ထုတ်ကုန်တစ်ခုအဖြစ်မည်သို့ပုံဖော်ရန်စိတ်ကူးကောင်းမြင်နိုင်စေသည်။'}; return burmeseText;
     case 'japanese': const japaneseText = {details: 'ダミーテキストとは、Webサイトのモックアップを埋めるために使用されるコンテンツの一部を指します。このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。'}; return japaneseText;
     default:
-      return {details: 'Dummy text refers to the bits of content that are used to fill a website mock-up. This text helps web designers better envision how the website will look as a finished product. '};
+      return {details: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. '};
   }
 };
 
@@ -426,31 +426,31 @@ export const getCaptionForLocaleHr = (locale) => {
     case "english":
       const engText = {
         detail:
-          "Large paragraph lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices. Quisque eget placerat odio, vel viverra ipsum. Sed pharetra varius dignissim. Cras varius luctus est sit amet sollicitudin. Donec eget dui eget nulla luctus ultrices. Sed eu turpis quam. Nulla facilisi.",
+          "UNDRR (formerly UNISDR) is the United Nations focal point for disaster risk reduction. UNDRR oversees the implementation of the Sendai Framework for Disaster Risk Reduction 2015-2030, supporting countries in its implementation, monitoring and sharing what works in reducing existing risk and preventing the creation of new risk.",
       };
       return engText;
     case "arabic":
       const arabicText = {
         detail:
-          "فقرة كبيرة lorem ipsum dolor sit amet، consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices. Quisque eget placerat odio، vel viverra ipsum. Sed pharetra varius gentissim. Cras varius luctus est sit amet sollicitudin. Donec eget dui eget nulla luctus ultrices. Sed eu Turpis quam. نولا فاسيليسي.-",
+          "فقرة كبيرة  UNDRR convenes partners and coordinates activities to create safer, more resilient communities. نولا فاسيليسي.-",
       };
       return arabicText;
     case "burmese":
       const burmeseText = {
         detail:
-          "ကြီးမားသောစာပိုဒ် lorem ipsum dolor sit amet, consectetur adipiscing elit ။ Pellentesque porttitor mauris quis pulvinar ultrices Quisque eget placerat odio, vel viverra ipsum ။ Sed pharetra varius dignissim ဖြစ်သည်။ Cras varius luctus est amet sollicitudin ထိုင်သည်။ Donec eget dui eget nulla luctus ultrices ။ Sed eu turpis quam ။ Nulla facilisi",
+          "ကြီးမားသောစာပိုဒ်  UNDRR convenes partners and coordinates activities to create safer, more resilient communities. ဖြစ်သည်။  UNDRR convenes partners and coordinates activities to create safer, more resilient communities. ထိုင်သည်။  UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
       };
       return burmeseText;
     case "japanese":
       const japaneseText = {
         detail:
-          "大きな段落はインターネット自体の苦痛です。 Pellentesque porttitor mauris quis pulvinarultrices。誰もが本物、または漫画自体を嫌う必要があります。しかし、矢筒は資産です。悲しみは大変なことです。住宅の必要性が痛みを必要としないまで。しかし、どれほど素晴らしくて醜い。複雑なことは何もありません。",
+          "大きな段落はインターネット自体の苦痛です。  UNDRR convenes partners and coordinates activities to create safer, more resilient communities.。誰もが本物、または漫画自体を嫌う必要があります。しかし、矢筒は資産です。悲しみは大変なことです。住宅の必要性が痛みを必要としないまで。しかし、どれほど素晴らしくて醜い。複雑なことは何もありません。",
       };
       return japaneseText;
     default:
       return {
         detail:
-          "Large paragraph lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices. Quisque eget placerat odio, vel viverra ipsum. Sed pharetra varius dignissim. Cras varius luctus est sit amet sollicitudin. Donec eget dui eget nulla luctus ultrices. Sed eu turpis quam. Nulla facilisi.",
+          "UNDRR (formerly UNISDR) is the United Nations focal point for disaster risk reduction. UNDRR oversees the implementation of the Sendai Framework for Disaster Risk Reduction 2015-2030, supporting countries in its implementation, monitoring and sharing what works in reducing existing risk and preventing the creation of new risk.",
       };
   }
 };
@@ -477,7 +477,7 @@ Typographic scale when using hr in text component:
 export const getCaptionForLocaleMark = (locale) => {
   switch (locale) {
     case "english":
-      const engText = { detail: "Eos nulla molestiae" };
+      const engText = { detail: "The Sendai Framework" };
       return engText;
     case "arabic":
       const arabicText = { detail: "لا إزعاج" };
@@ -489,7 +489,7 @@ export const getCaptionForLocaleMark = (locale) => {
       const japaneseText = { detail: "不快感なし" };
       return japaneseText;
     default:
-      return { detail: "Eos nulla molestiae" };
+      return { detail: "The Sendai Framework" };
   }
 };
 
@@ -506,7 +506,7 @@ Typographic scale when using mark in text component:
       docs: {
         source: {
           code: `
-          <p><mark>Eos nulla molestiae</mark></p>
+          <p><mark>UN Office for Disaster Risk Reduction</mark></p>
         `,
         },
       },
@@ -547,13 +547,13 @@ export const getCaptionForLocaleParagraph = (locale) => {
     case "english":
       const engText = {
         detail:
-          "Large paragraph lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices. Quisque eget placerat odio, vel viverra ipsum. Sed pharetra varius dignissim. Cras varius luctus est sit amet sollicitudin. Donec eget dui eget nulla luctus ultrices. Sed eu turpis quam. Nulla facilisi.",
+          "UNDRR (formerly UNISDR) is the United Nations focal point for disaster risk reduction. UNDRR oversees the implementation of the Sendai Framework for Disaster Risk Reduction 2015-2030, supporting countries in its implementation, monitoring and sharing what works in reducing existing risk and preventing the creation of new risk.",
       };
       return engText;
     case "arabic":
       const arabicText = {
         detail:
-          "فقرة كبيرة lorem ipsum dolor sit amet، consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices. Quisque eget placerat odio، vel viverra ipsum. Sed pharetra varius gentissim. Cras varius luctus est sit amet sollicitudin. Donec eget dui eget nulla luctus ultrices. Sed eu Turpis quam. نولا فاسيليسي.-",
+          "فقرة كبيرة UN Office for Disaster Risk Reduction نولا فاسيليسي.-",
       };
       return arabicText;
     case "burmese":
@@ -571,7 +571,7 @@ export const getCaptionForLocaleParagraph = (locale) => {
     default:
       return {
         detail:
-          "Large paragraph lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque porttitor mauris quis pulvinar ultrices. Quisque eget placerat odio, vel viverra ipsum. Sed pharetra varius dignissim. Cras varius luctus est sit amet sollicitudin. Donec eget dui eget nulla luctus ultrices. Sed eu turpis quam. Nulla facilisi.",
+          "UNDRR (formerly UNISDR) is the United Nations focal point for disaster risk reduction. UNDRR oversees the implementation of the Sendai Framework for Disaster Risk Reduction 2015-2030, supporting countries in its implementation, monitoring and sharing what works in reducing existing risk and preventing the creation of new risk.",
       };
   }
 };
@@ -600,7 +600,7 @@ export const getCaptionForLocaleQuotation = (locale) => {
     case "english":
       const engText = {
         detail:
-          "Scientists are considering whether the Earth has entered an entirely new geological epoch: the Anthropocene, or the age of humans.",
+          "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
       };
       return engText;
     case "arabic":
@@ -624,7 +624,7 @@ export const getCaptionForLocaleQuotation = (locale) => {
     default:
       return {
         detail:
-          "Scientists are considering whether the Earth has entered an entirely new geological epoch: the Anthropocene, or the age of humans.",
+          "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
       };
   }
 };
@@ -651,16 +651,16 @@ Typographic scale when using quotation in text component:
 export const getCaptionForLocaleSmall = (locale) => {
   switch (locale) {
     case "english":
-      const engText = { detail: "Et occaecati eos nulla molestiae repellat." };
+      const engText = { detail: "UN Office for Disaster Risk Reduction." };
       return engText;
     case "arabic":
       const arabicText = {
-        detail: "Et Occaecati eos nulla molestiae repellat.",
+        detail: "UN Office for Disaster Risk Reduction.",
       };
       return arabicText;
     case "burmese":
       const burmeseText = {
-        detail: "Et occaecati eos nulla molestiae repellat ဖြစ်သည်။",
+        detail: "UN Office for Disaster Risk Reduction ဖြစ်သည်။",
       };
       return burmeseText;
     case "japanese":
@@ -669,7 +669,7 @@ export const getCaptionForLocaleSmall = (locale) => {
       };
       return japaneseText;
     default:
-      return { detail: "Et occaecati eos nulla molestiae repellat." };
+      return { detail: "UN Office for Disaster Risk Reduction." };
   }
 };
 
@@ -695,19 +695,19 @@ export const getCaptionForLocaleList = (locale) => {
       const engText = {
         data: [
           {
-            label: "United Nations Development Programme",
+            label: "Nations Office for Disaster Risk Reduction",
             text:
-              "The United Nations Development Programme is the global development network of the United Nations. It promotes technical and investment cooperation among nations and advocates for change and connects countries to knowledge, experience and resources to help people build a better life for themselves.",
+              "UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
           },
           {
-            label: "United Nations Development Programme",
+            label: "Nations Office for Disaster Risk Reduction",
             text:
-              "The United Nations Development Programme is the global development network of the United Nations. It promotes technical and investment cooperation among nations and advocates for change and connects countries to knowledge, experience and resources to help people build a better life for themselves.",
+              "UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
           },
           {
-            label: "United Nations Development Programme",
+            label: "Nations Office for Disaster Risk Reduction",
             text:
-              "The United Nations Development Programme is the global development network of the United Nations. It promotes technical and investment cooperation among nations and advocates for change and connects countries to knowledge, experience and resources to help people build a better life for themselves.",
+              "UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
           },
         ],
       };
@@ -779,19 +779,19 @@ export const getCaptionForLocaleList = (locale) => {
       const dummy = {
         data: [
           {
-            label: "United Nations Development Programme",
+            label: "Nations Office for Disaster Risk Reduction",
             text:
-              "The United Nations Development Programme is the global development network of the United Nations. It promotes technical and investment cooperation among nations and advocates for change and connects countries to knowledge, experience and resources to help people build a better life for themselves.",
+              "UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
           },
           {
-            label: "United Nations Development Programme",
+            label: "Nations Office for Disaster Risk Reduction",
             text:
-              "The United Nations Development Programme is the global development network of the United Nations. It promotes technical and investment cooperation among nations and advocates for change and connects countries to knowledge, experience and resources to help people build a better life for themselves.",
+              "UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
           },
           {
-            label: "United Nations Development Programme",
+            label: "Nations Office for Disaster Risk Reduction",
             text:
-              "The United Nations Development Programme is the global development network of the United Nations. It promotes technical and investment cooperation among nations and advocates for change and connects countries to knowledge, experience and resources to help people build a better life for themselves.",
+              "UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
           },
         ],
       };
