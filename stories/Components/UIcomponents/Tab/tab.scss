@@ -32,10 +32,10 @@
     margin: 0;
     border-bottom-color: transparent;
     border-bottom-style: solid;
-    border-bottom-width: 4px;
+    border-bottom-width: 0.4rem;
     display: block;
     outline: 0;
-    padding: 8px 16px;
+    padding: $mg-spacing-75 $mg-spacing-150;
     position: relative;
     text-decoration: none;
   }
@@ -49,7 +49,7 @@
     color: $mg-color-white;
     background-color: $mg-color-interactive;
     text-shadow: none;
-    border-bottom: 2px solid $mg-color-interactive-active;
+    border-bottom: $mg-spacing-25 solid $mg-color-interactive-active;
   }
 
   .mg-tabs__link.is-active:hover, .mg-tabs__link.is-active:focus {

@@ -5,21 +5,23 @@ import { mgTabs } from '../../../assets/js/tabs';
 
 export function Tab({ tabdata }) {
   useEffect(() => {
-    mgTabs;
+    mgTabs();
   }, []);
   return (
     <div className="mg-tabs">
       <ul className="mg-tabs__list" data-mg-js-tabs>
         {tabdata.map((tab, index) => (
           <li key={index} className="mg-tabs__item">
-            <a className="mg-tabs__link" href={`#mg-tabs__section-${tab.text_id}`} id={`mg-tabs__section-${tab.text_id}`}>{tab.text}</a>
+            <a className="mg-tabs__link" href={`#mg-tabs__section-${tab.text_id}`}>{tab.text}</a>
           </li>
         ))}
       </ul>
 
       <div className="mg-tabs-content" data-mg-js-tabs-content>
         {tabdata.map((tab, index) => (
-          <section key={index} id={`mg-tabs__section-${tab.text_id}`} className="mg-tabs__section">{tab.data}</section>
+          <section className="mg-tabs__section" key={index}  id={`mg-tabs__section-${tab.text_id}`}>
+              {tab.data}
+          </section>  
         ))}
       </div>
     </div>
