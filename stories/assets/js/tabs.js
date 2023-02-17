@@ -18,12 +18,12 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
   const panels = scope.querySelectorAll("[data-mg-js-tabs-content] [id^=\"mg-tabs__section\"]");
   const tabs = scope.querySelectorAll("[data-mg-js-tabs] .mg-tabs__link");
 
-  console.log("debug: All panels");
-  console.log("Tab list: " , tabsList);
-  console.log("Panel List: ", panelsList);
-  console.log("Panels: ", panels);
-  console.log("Tabs: ", tabs);
-  console.log("End Debug: All panels");
+  // console.log("debug: All panels");
+  // console.log("Tab list: " , tabsList);
+  // console.log("Panel List: ", panelsList);
+  // console.log("Panels: ", panels);
+  // console.log("Tabs: ", tabs);
+  // console.log("End Debug: All panels");
 
   if (!tabsList || !panels || !tabs) {
     // exit: either tabs or tabbed content not found
