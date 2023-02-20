@@ -121,7 +121,7 @@ const getLangCode=(Story,context)=>{
   }, delay);
 
   // Set window object for iframe.
-  window.UNDP.langCode = (window.UNDP) ? activeLang : window.UNDP= { langCode : activeLang };
+  window.UNDRR.langCode = (window.UNDRR) ? activeLang : window.UNDRR= { langCode : activeLang };
 
   // Language Array to map language alpha code.
   const langArr = {
@@ -182,10 +182,10 @@ const setDirection = (Story, options) => {
     input.addEventListener('change', checkRTL(input), false);
   }
   // Set window object for iframe.
-  if (typeof window.UNDP === 'undefined') {
-    window.UNDP = {};
+  if (typeof window.UNDRR === 'undefined') {
+    window.UNDRR = {};
   }
-  window.UNDP.dir = direction;
+  window.UNDRR.dir = direction;
 
   return (
     <Story {...options} />

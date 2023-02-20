@@ -1,6 +1,6 @@
-const UNDP = window.UNDP || {};
+const UNDRR = window.UNDRR || {};
 
-UNDP.keyCode = {
+UNDRR.keyCode = {
   TAB: 9,
   RETURN: 13,
   ESC: 27,
@@ -11,7 +11,7 @@ UNDP.keyCode = {
   DOWN: 40,
 };
 
-UNDP.breakpoints = {
+UNDRR.breakpoints = {
   TINY: 320,
   SMALL: 767,
   MEDIUM: 768,
@@ -21,6 +21,6 @@ UNDP.breakpoints = {
   TABLET: 834,
 };
 
-window.UNDP = window.UNDP || UNDP;
+window.UNDRR = window.UNDRR || UNDRR;
 
 export const desktopView = window.innerWidth > 1439;

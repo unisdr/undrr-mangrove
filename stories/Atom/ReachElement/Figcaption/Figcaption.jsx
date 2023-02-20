@@ -1,5 +1,5 @@
 import React from 'react';
-import Img from '../../../assets/images/figcaption.jpg';
+import Img from '../../../assets/images/figcaption.png';
 // import './figcaption.scss';
 
 export const Figcaption = ({ details }) => {
