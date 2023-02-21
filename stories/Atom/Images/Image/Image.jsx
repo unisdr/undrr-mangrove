@@ -9,7 +9,7 @@ export const Image = ({ className, Type }) => {
     srclg: mongoliaGoat,
     srcmd: mongoliaGoatmd,
     srcsm: mongoliaGoatsm,
-    alt: 'Undp Image',
+    alt: 'UNDRR Image',
   };
   return (
     <>
