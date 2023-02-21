@@ -1,12 +1,6 @@
-// @to-do: this is a hodge-podge of code that needs to be moved
-// into various utility components or outright removed.
-
 // CSS font size reset
-html {
-  font-size: 10px; // same as UNDRR drupal base themes
-}
-
 /* base start */
+
 .show-large {
   display: none;
 
@@ -174,26 +168,7 @@ $colors-solid: (
     .blockquote {
       background-color: #{$color};
     }
-
-    //content crad
-    .content-card.card:hover {
-      background-color: #{$color};
-
-      .cta--space::after {
-        filter: invert(0) brightness(0);
-      }
-    }
-
-    //content card - Emphasize
-    .content-card.card-color:hover,
-    .content-card.card-emphasize:hover {
-      background-color: #{$color};
-    }
-
-    //feature-card
-    .feature__card-slide {
-      background: #{$color};
-    }
+  
   }
 }
 

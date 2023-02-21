@@ -5,6 +5,7 @@
 /* typography start */
 
 html {
+  font-size: 10px;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -30,9 +31,9 @@ h4,
 h5,
 h6,
 caption {
-  margin: 0;
+  margin: $mg-spacing-0;
   margin-bottom: $mg-spacing-25;
-  padding: 0;
+  padding: $mg-spacing-0;
 
   @include devicebreak(medium) {
     margin-bottom: $mg-font-size-300;
@@ -41,7 +42,7 @@ caption {
 
 h1 {
   font-family: $mg-font-family;
-  font-size: 2.938rem;
+  font-size: $mg-font-size-600;
   letter-spacing: 0.06rem;
   line-height: 1.08;
   text-transform: uppercase;
@@ -90,7 +91,7 @@ h4 {
 }
 
 h5 {
-  font-size: 1.25rem;
+  font-size: $mg-font-size-200;
   font-weight: 400;
   line-height: 1.15;
 
@@ -100,7 +101,7 @@ h5 {
 }
 
 h6 {
-  font-size: 1rem;
+  font-size: $mg-font-size-100;
   font-weight: 700;
   letter-spacing: 0.03rem;
   line-height: 1.15;
@@ -121,11 +122,11 @@ ol {
   }
 
   li {
-    margin-bottom: $mg-spacing-50;
-    padding-left: 0.875rem;
+    margin-bottom: $mg-spacing-0;
+    padding-left: $mg-spacing-0;
 
     @include devicebreak(medium) {
-      margin-bottom: $mg-spacing-100;
+      margin-bottom: $mg-spacing-0;
       padding-left: $mg-spacing-25;
     }
   }
@@ -148,7 +149,7 @@ ol {
 dl {
   font-size: 0.875rem;
   line-height: 1.37;
-  margin: 0;
+  margin: $mg-spacing-0;
 
   @include devicebreak(medium) {
     font-size: 1.25rem;
