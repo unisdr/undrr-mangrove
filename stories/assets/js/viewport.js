@@ -1,4 +1,4 @@
-/* Function to chech if element is in viewport or not */
+/* Function to check if element is in viewport or not */
 
 jQuery.fn.isInViewport = function () {
   const $elementTop = jQuery(this).offset().top;
