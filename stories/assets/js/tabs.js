@@ -81,7 +81,7 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
 
   // Add the tabsList role to the first <ul> in the .tabbed container
   Array.prototype.forEach.call(tabsList, (tabsListset) => {
-    tabsListset.setAttribute("role", "tabsList");
+    tabsListset.setAttribute("role", "tablist");
     // Initially activate the first tab
     let firstTab = tabsListset.querySelectorAll(".mg-tabs__link")[0];
     firstTab.removeAttribute("tabindex");
@@ -137,14 +137,14 @@ const mgTabsSwitch = (newTab, panels) => {
 };
 
 function mgTabsDeepLinkOnLoad(tabs, panels) {
-  // 1. See if there is a `#vf-tabs__section--88888`
+  // 1. See if there is a `#mg-tabs__section--88888`
   if(window.location.hash) {
     var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
   } else {
     // No hash found
     return false;
   }
-  console.log("vfTabs: will activate tab", hash);
+  console.log("mgTabs: will activate tab", hash);
 
   // 2. loop through all tabs, if a match then activate
   Array.prototype.forEach.call(tabs, (tab) => {
