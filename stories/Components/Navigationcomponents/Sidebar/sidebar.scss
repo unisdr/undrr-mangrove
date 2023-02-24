@@ -77,7 +77,7 @@
 
       & > a {
         @include devicebreak(medium) {
-          background-color: $mg-color-blue-600;
+          background-color: $mg-color-blue-900;
           color: $mg-color-white;
         }
       }
