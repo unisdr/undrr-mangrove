@@ -12,12 +12,12 @@
 @import "./variables";
 @import "./breakpoints";
 @import "./mixins";
-//@import "./grid";
 
 // @import './base';
 
 // We only bring in a limited set of components needed for gutenberg
 // @import './components';
+@import "../../Atom/Layout/Grid/grid";
 @import "../../Components/UIcomponents/Buttons/CtaButton/buttons";
 @import "../../Components/UIcomponents/Cards/Card/card";
 @import "../../Components/UIcomponents/Hero/hero";

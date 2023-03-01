@@ -37,7 +37,7 @@
 
 button {
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px $mg-color-button-background;
     outline: 0;
   }
 }

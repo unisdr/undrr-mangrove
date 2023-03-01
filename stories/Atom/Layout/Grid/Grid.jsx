@@ -1,5 +1,5 @@
 import React from 'react';
-import './grid.scss';
+// import './grid.scss';
 
 
 export function Grid() {
@@ -59,7 +59,7 @@ export function Grid() {
         </div>
 
       </div>
-      
+
       <div className="mg-grid mg-grid__col-3">
       </div>
 

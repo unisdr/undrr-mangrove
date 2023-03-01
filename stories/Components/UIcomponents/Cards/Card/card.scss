@@ -36,7 +36,6 @@
 
   // Horizontal CARD
   &__hc {
-    background: $mg-color-white;
     color: $mg-color-neutral-800;
     display: grid;
     grid-template-columns: 1fr;
@@ -66,8 +65,6 @@
   // Main Card css
   &__visual {
     align-items: flex-end;
-
-    // background-color: $mg-color-blue-800;
     display: flex;
     justify-content: flex-end;
   }
@@ -110,10 +107,8 @@
     // }
   }
 
-  &__content {
-    background-color: $mg-color-white;
-    padding: $mg-spacing-50;
-  }
+  // &__content {
+  // }
 
   &__title {
     font-size: $mg-font-size-500;
