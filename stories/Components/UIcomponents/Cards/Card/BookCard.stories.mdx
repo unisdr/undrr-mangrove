@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { VerticalCard } from './VerticalCard';
+import { BookCard } from './BookCard';
 
 export const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -9,15 +9,9 @@ export const getCaptionForLocale = (locale) => {
           {
             contenttile: "CONTENT TAG",
             title: "Title in large size",
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: "Social Share Button",
-            label1: "Label 1",
-            label2: "Label 2",
-            button: "Primary action",
             link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgalt: "A publication cover",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -28,10 +22,9 @@ by vulnerable populations and communities.This paper explores health risks from 
           {
             contenttile: "علامة المحتوى",
             title: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
-            button: "اقرأ أكث",
             link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgalt: "A publication cover",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -42,10 +35,9 @@ by vulnerable populations and communities.This paper explores health risks from 
           {
             contenttile: "အကြောင်းအရာ TAG",
             title: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
-            button: "ပိုပြီးဖတ်ပါ",
             link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgalt: "A publication cover",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -58,8 +50,8 @@ by vulnerable populations and communities.This paper explores health risks from 
             title: "投稿のタイトルはここにあり、2行です",
             button: "続きを読む",
             link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgalt: "A publication cover",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -68,18 +60,11 @@ by vulnerable populations and communities.This paper explores health risks from 
       const dummy = {
         contentdata: [
           {
-            contenttile: "VERTICAL CARD",
-            title: "Title in large size with up to two lines of text",
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-by vulnerable populations and communities.
-This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: "Social Share Button",
-            label1: "Label 1",
-            label2: "Label 2",
-            button: "Primary action",
+            contenttile: "BOOK CARD",
+            title: "Book title in normal header size with up to three lines of text",
             link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgalt: "A publication cover",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -87,7 +72,7 @@ This paper explores health risks from climate change in a global context, settin
   }
 };
 
-<Meta title="Components/Cards/Vertical Card" argTypes={{
+<Meta title="Components/Cards/Book Card" argTypes={{
   variant: {
     options: ['primary', 'secondary', 'tertiary', 'quaternary'],
     control: { type: 'inline-radio' },
@@ -95,36 +80,37 @@ This paper explores health risks from climate change in a global context, settin
   }
 }}/>
 
-# MANGROVE CARD (VERTICAL)
+# MANGROVE CARD (Book)
 
-The Mangrove Vertical Card components are cards with information and/or image.
+The Mangrove Book Card components are cards with information and/or image.
 
 ### Overview
-The Mangrove Vertical Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+The Mangrove Book Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
 
 #### When to use:
 
-When a card with data, CTA links and image is to be displayed.
+This is particularly suited for publications and brochures.
+
+It is designed to have more on a row, perhaps 5 or 6 on desktop.
 
 ### Formatting
 
 #### Default
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels, social share link and/or image.
 
-It's image in 16x9 in aspect ratio.
+The Book Card variant is more simplistic in content, with a smaller font size and no summary text or labels.
 
-### Content
-There are two types of Mangrove Vertical Card components: Mangrove Vertical Card with Image and Mangrove Vertical Card without Image.
+It's images is 3x4 in aspect ratio.
+
 
 <Canvas>
-<Story name="Vertical Card">
+<Story name="Book Card">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <div style={{maxWidth: "300px"}}>
-        <VerticalCard
+      <div style={{maxWidth: "200px"}}>
+        <BookCard
           data={caption.contentdata} {...args}
-        ></VerticalCard>
+        ></BookCard>
       </div>
     );
   }}

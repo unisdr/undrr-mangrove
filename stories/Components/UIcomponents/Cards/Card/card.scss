@@ -26,10 +26,10 @@
   // Vertical CARD
   &__vc {
     display: grid;
-    gap: $mg-spacing-100;
+    gap: $mg-spacing-50;
 
     .mg-card__visual {
-      height: 200px;
+      aspect-ratio: 16/9;
       overflow: hidden;
     }
   }
@@ -159,7 +159,24 @@
   // &__text-link:hover {
   //   text-decoration: underline;
   // }
-} //END of CARD
+}
+
+// Book Card variant
+.mg-card__book {
+  .mg-card__visual {
+    aspect-ratio: 3/4;
+    border: 1px solid rgba($mg-color-neutral-600, 0.2);
+  }
+  .mg-card__title {
+    font-size: $mg-font-size-300;
+    padding-top: $mg-spacing-25;
+  }
+  .mg-card__visual {
+    aspect-ratio: 3/4;
+  }
+}
+
+// END of CARD
 
 // [dir='rtl'] {
 //   .content-card {
