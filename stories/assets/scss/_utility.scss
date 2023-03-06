@@ -1,6 +1,5 @@
 // CSS font size reset
 /* base start */
-
 .show-large {
   display: none;
 
@@ -17,39 +16,6 @@
   }
 }
 
-.overlay-grey {
-  &::before {
-    @extend %absolute__content;
-
-    background: rgb(0 0 0 / 0.2);
-  }
-}
-
-.custom-scrollbar,
-%custom-scrollbar {
-  overflow-x: auto;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    height: 5px;
-    width: 5px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: $mg-color-black;
-    background-clip: padding-box;
-    border: 2px solid $mg-color-white;
-  }
-
-  &::-webkit-scrollbar-corner {
-    display: none;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $mg-color-black;
-  }
-}
 
 /* animation start */
 *[data-viewport="true"] {
@@ -118,30 +84,6 @@
   overflow: hidden;
 }
 
-.background-yellow {
-  background-color: $mg-color-yellow-light;
-}
-
-.background-red {
-  background-color: $mg-color-red-600;
-}
-
-.background-green {
-  background-color: $mg-color-green-light;
-}
-
-.background-blue {
-  background-color: $mg-color-blue-100;
-}
-
-.background-gray {
-  background-color: $mg-color-neutral-100;
-}
-
-.background-white {
-  background-color: $mg-color-white;
-}
-
 // color map solid
 $colors-solid: (
   "yellow": $mg-color-yellow,
@@ -170,6 +112,18 @@ $colors-solid: (
     }
   
   }
+}
+
+// Show for screen readers only
+.mg-u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 /* base end */
