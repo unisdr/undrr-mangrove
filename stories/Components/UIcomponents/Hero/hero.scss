@@ -141,3 +141,9 @@ $variant-colours: (
     }
   }
 }
+  padding-right: $mg-spacing-100;
+
+  @media (min-width: $mg-breakpoint-tablet) {
+    padding-right: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
+  }
+}
