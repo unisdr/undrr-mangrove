@@ -141,6 +141,10 @@ $variant-colours: (
     }
   }
 }
+
+// RTL tweaks
+[dir="rtl"] .mg-hero {
+  margin-right: calc(50% - (50vw)); // to expand out of the parent container
   padding-right: $mg-spacing-100;
 
   @media (min-width: $mg-breakpoint-tablet) {
