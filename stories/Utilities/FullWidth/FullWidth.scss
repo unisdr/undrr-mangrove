@@ -1,0 +1,19 @@
+.mg-container-full-width {
+  position: relative;
+}
+
+.mg-container-full-width:before {
+  background-color: inherit;
+  background-image: inherit;
+  background-position: inherit;
+  background-repeat: inherit;
+  background-size: cover;
+  content: "";
+  grid-column: 1/-1;
+  height: 100%;
+  margin-left: calc(50% - 50vw);
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  z-index: -1;
+}

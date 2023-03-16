@@ -37,7 +37,8 @@ yarn run lint
 
 ## Compiled assets
 
-_Guidance to come._
+We do not yet make the compiled assets available directly; see:
+https://gitlab.com/undrr/web-backlog/-/issues/545
 
 ## Credit
 
