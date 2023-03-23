@@ -118,7 +118,7 @@
     padding-top: $mg-spacing-100;
 
     a {
-      color: $mg-color-blue-800;
+      color: $mg-color-text;
       cursor: pointer;
       display: inline-block;
     }
@@ -144,7 +144,7 @@
   }
 
   &__text-link {
-    color: $mg-color-blue-800;
+    color: $mg-color-interactive;
     text-decoration: underline;
   }
 

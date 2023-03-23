@@ -214,6 +214,9 @@ $mg-breakpoint-desktop: 1164px; // we'll probably go to 1440, but right now it's
  * https://github.com/UX-and-I/storybook-design-token
  */
 
+// text
+$mg-color-text: $mg-color-neutral-900;
+
 // label
 $mg-color-label: $mg-color-white;
 $mg-color-label--hover: $mg-color-white;
@@ -225,6 +228,7 @@ $mg-color-button: $mg-color-white;
 $mg-color-button--hover: $mg-color-white;
 $mg-color-button-background: $mg-color-interactive;
 $mg-color-button-background--hover: $mg-color-interactive-active;
+$mg-color-button-radius: $mg-spacing-0;
 
 // hero
 $mg-color-hero: $mg-color-interactive;

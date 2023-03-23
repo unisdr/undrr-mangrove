@@ -11,12 +11,15 @@ $pw-color-primary: #0a6969;
 // PW-COLORS HOVER
 $mg-color-interactive: $pw-color-primary;
 $mg-color-interactive-active: $pw-color-primary;
+$mg-color-label-background: $mg-color-interactive;
+$mg-color-label-background--hover: $sendai-orange-900;
 
-// PW-COMPONENT COLORS
+// PW-COMPONENTS
 $mg-color-label: $mg-color-neutral-0;
 $mg-color-label--hover: $mg-color-neutral-0;
 $mg-color-button-background: $pw-color-primary;
 $mg-color-button-background--hover: $sendai-orange-900;
+$mg-color-button-radius: $mg-spacing-50;
 
 // Hero
 $mg-color-hero: $mg-color-interactive;
