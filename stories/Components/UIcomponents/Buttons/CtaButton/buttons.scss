@@ -20,7 +20,7 @@
 .mg-button {
   @extend %button;
 
-  border-radius: $mg-color-button-radius;
+  border-radius: $mg-radius-button;
   color: $mg-color-button;
   cursor: pointer;
   justify-content: center;
