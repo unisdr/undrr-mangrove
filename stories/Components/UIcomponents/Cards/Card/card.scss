@@ -157,10 +157,10 @@
     z-index: 101;
   }
 
-  // &__label,
-  // &__text-link:hover {
-  //   text-decoration: underline;
-  // }
+  .mg-card__summary a:hover,
+  &__text-link:hover {
+    text-decoration: underline;
+  }
 }
 
 // Book Card variant
