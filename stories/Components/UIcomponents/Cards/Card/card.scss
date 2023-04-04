@@ -143,11 +143,13 @@
     padding-bottom: $mg-spacing-50;
   }
 
+  .mg-card__summary a,
   &__text-link {
     color: $mg-color-interactive;
     text-decoration: underline;
   }
 
+  .mg-card__summary a,
   &__text-link,
   &__label,
   .mg-button {

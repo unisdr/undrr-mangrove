@@ -39,7 +39,7 @@ export function HorizontalCard({
               <header className="mg-card__title">
                 <a href={item.link}>{item.title}</a>
               </header>
-              <p className="mg-card__summaryText" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }} />
+              <p className="mg-card__summary" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }} />
               <CtaButton type="Primary" label={item.button} href={item.link} />
             </div>
 
