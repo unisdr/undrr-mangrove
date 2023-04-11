@@ -140,22 +140,22 @@ $sendai-turquoise: $sendai-turquoise-900; // alias
  * @tokens Spacing
  * @presenter Spacing
  */
- $mg-spacing-0: 0;
- $mg-spacing-25: 0.25rem;
- $mg-spacing-50: 0.5rem;
- $mg-spacing-75: 0.75rem;
- $mg-spacing-100: 1rem;
- $mg-spacing-150: 1.5rem;
- $mg-spacing-175: 1.8rem;
- $mg-spacing-200: 2rem;
- $mg-spacing-250: 2.4rem;
- $mg-spacing-300: 3rem;
- $mg-spacing-350: 3rem;
- $mg-spacing-400: 5rem;
- $mg-spacing-500: 6rem;
- $mg-spacing-600: 8rem;
- $mg-spacing-800: 10rem;
- $mg-spacing-1000: 40rem;
+$mg-spacing-0: 0;
+$mg-spacing-25: 0.25rem;
+$mg-spacing-50: 0.5rem;
+$mg-spacing-75: 0.75rem;
+$mg-spacing-100: 1rem;
+$mg-spacing-150: 1.5rem;
+$mg-spacing-175: 1.8rem;
+$mg-spacing-200: 2rem;
+$mg-spacing-250: 2.4rem;
+$mg-spacing-300: 3rem;
+$mg-spacing-350: 3rem;
+$mg-spacing-400: 5rem;
+$mg-spacing-500: 6rem;
+$mg-spacing-600: 8rem;
+$mg-spacing-800: 10rem;
+$mg-spacing-1000: 40rem;
 
 /**
  * @tokens Font sizes
@@ -181,43 +181,34 @@ $mg-font-button: $mg-font-size-300;
 
 $mg-font-line-height-500: 1.25em;
 
-%mg-typography-extra-small {
-  font-size: $mg-font-size-300;
+@mixin mg-typography($size) {
+  @if ($size == "extra-small") {
+    font-size: $mg-font-size-300;
+  } @else if ($size == "small") {
+    font-size: $mg-font-size-400;
+  } @else if ($size == "medium") {
+    font-size: $mg-font-size-500;
+    padding-top: $mg-spacing-250;
+    padding-bottom: $mg-spacing-150;
+  } @else if ($size == "large") {
+    font-size: $mg-font-size-600;
+    padding-top: $mg-spacing-250;
+    padding-bottom: $mg-spacing-150;
+  } @else if ($size == "xlarge") {
+    font-size: $mg-font-size-900;
+    padding-top: $mg-spacing-300;
+    padding-bottom: $mg-spacing-175;
+  } @else if ($size == "huge") {
+    font-size: $mg-font-size-1000;
+    padding-top: $mg-spacing-350;
+    padding-bottom: $mg-spacing-250;
+  } @else if ($size == "xhuge") {
+    font-size: $mg-font-size-1100;
+    padding-top: $mg-spacing-400;
+    padding-bottom: $mg-spacing-350;
+  }
 }
 
-%mg-typography-small {
-  font-size: $mg-font-size-400;
-}
-
-%mg-typography-medium {
-  font-size: $mg-font-size-500;
-  padding-top: $mg-spacing-250;
-  padding-bottom: $mg-spacing-150;
-}
-
-%mg-typography-large {
-  font-size: $mg-font-size-600;
-  padding-top: $mg-spacing-250;
-  padding-bottom: $mg-spacing-150;
-}
-
-%mg-typography-xlarge {
-  font-size: $mg-font-size-900;
-  padding-top: $mg-spacing-300;
-  padding-bottom: $mg-spacing-175;
-}
-
-%mg-typography-huge {
-  font-size: $mg-font-size-1000;
-  padding-top: $mg-spacing-350;
-  padding-bottom: $mg-spacing-250;
-}
-
-%mg-typography-xhuge {
-  font-size: $mg-font-size-1100;
-  padding-top: $mg-spacing-400;
-  padding-bottom: $mg-spacing-350;
-}
 /**
  * @tokens Font families
  * @presenter FontFamily
@@ -226,8 +217,6 @@ $mg-font-line-height-500: 1.25em;
  */
 
 $mg-font-family: "Roboto", sans-serif;
-
-
 
 /**
  * @tokens Widths

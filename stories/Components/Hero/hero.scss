@@ -98,16 +98,16 @@
     }
 
     .text-xl {
-      font-size: $mg-font-size-600;
+      @include mg-typography("large");
 
       @media (max-width: $mg-breakpoint-mobile) {
-        font-size: $mg-font-size-600;
+        @include mg-typography("medium");
       }
     }
   }
 
   &__summaryText {
-    font-size: $mg-font-size-400;
+    @include mg-typography("small");
     margin-bottom: $mg-spacing-25;
   }
 }
