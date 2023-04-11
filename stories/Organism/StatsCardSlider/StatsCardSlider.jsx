@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 // import './stats-card-slider.scss';
 import { swiper } from '../../assets/js/swiper';
-import { StatsCards } from '../../Components/UIcomponents/Cards/StatsCards/StatsCards';
+import { StatsCards } from '../../Components/Cards/StatsCards/StatsCards';
 
 // RTL Fix for Storybook.
 let rtl = document.dir || undefined;

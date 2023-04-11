@@ -13,7 +13,7 @@ body {
   color: $mg-color-black;
   font-family: $mg-font-family;
   font-size: $mg-font-size-300;
-  line-height: 1.4;
+  line-height: $mg-font-line-height-500;
 
   @include devicebreak(medium) {
     font-size: $mg-font-size-300;

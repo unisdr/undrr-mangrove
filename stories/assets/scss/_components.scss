@@ -38,28 +38,23 @@
 @import "../../Components/Forms/InputFields/input-fields";
 @import "../../Components/Forms/Radio/radio";
 @import "../../Components/Forms/Select/select";
-@import "../../Components/Navigationcomponents/Breadcrumbs/breadcrumbs";
-@import "../../Components/Navigationcomponents/Pagination/pagination";
-@import "../../Components/Navigationcomponents/Sidebar/sidebar";
-@import "../../Components/UIcomponents/Accordion/accordion";
-@import "../../Components/UIcomponents/Buttons/Chips/chips";
-@import "../../Components/UIcomponents/Buttons/CtaButton/buttons";
-@import "../../Components/UIcomponents/Buttons/CtaLink/cta-link";
-@import "../../Components/UIcomponents/Cards/Card/card";
-@import "../../Components/UIcomponents/Cards/StatsCards/stats-cards";
-@import "../../Components/UIcomponents/Hero/hero";
-@import "../../Components/UIcomponents/LanguageSwitcher/language-switcher";
-@import "../../Components/UIcomponents/Tab/tab";
+@import "../../Components/Breadcrumbs/breadcrumbs";
+@import "../../Components/Pagination/pagination";
+@import "../../Components/Sidebar/sidebar";
+@import "../../Components/Accordion/accordion";
+@import "../../Components/Buttons/Chips/chips";
+@import "../../Components/Buttons/CtaButton/buttons";
+@import "../../Components/Buttons/CtaLink/cta-link";
+@import "../../Components/Cards/Card/card";
+@import "../../Components/Cards/StatsCards/stats-cards";
+@import "../../Components/Hero/hero";
+@import "../../Components/LanguageSwitcher/language-switcher";
+@import "../../Components/Tab/tab";
+@import "../../Components/BlockquoteComponent/blockquotecomp";
 
 // Molecules
 @import "../../Molecules/ImageCaption/image-caption";
 @import "../../Molecules/SidebarData/sidebar-data";
-@import "../../Molecules/Text/CtaBlock/cta-block";
-@import "../../Molecules/Text/BlockquoteComponent/blockquotecomp";
-@import "../../Molecules/Text/HeadingBig/headingbig";
-@import "../../Molecules/Text/Page/page";
-@import "../../Molecules/Text/SmallCopy/smallcopy";
-@import "../../Molecules/Text/Tertiary/tertiary";
 
 // Organism
 
