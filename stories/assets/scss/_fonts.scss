@@ -1,48 +1,7 @@
 /* Roboto */
-@font-face {
-  font-display: swap;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 400;
-  src: url("../fonts/Roboto-Regular.ttf") format("ttf");
-}
+$FontPath: "../fonts/roboto/fonts";
+@import "../fonts/roboto/roboto.scss";
 
-@font-face {
-  font-display: swap;
-  font-family: Roboto;
-  font-style: italic;
-  font-weight: 400;
-  src: url("../fonts/Roboto-Italic.ttf") format("ttf");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 600;
-  src: url("../fonts/Roboto-Medium.ttf") format("ttf");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: Roboto;
-  font-style: italic;
-  font-weight: 600;
-  src: url("../fonts/Roboto-MediumItalic.ttf") format("ttf");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/Roboto-Bold.ttf") format("ttf");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: Roboto;
-  font-style: italic;
-  font-weight: 700;
-  src: url("../fonts/Roboto-BoldItalic.ttf") format("ttf");
-}
+/* Roboto Condensed */
+$FontPath: "../fonts/roboto-condensed/fonts";
+@import "../fonts/roboto-condensed/roboto-condensed.scss";

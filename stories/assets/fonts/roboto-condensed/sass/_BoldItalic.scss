@@ -1,0 +1,9 @@
+/* BEGIN Bold Italic */
+@font-face {
+	font-family: "Roboto Condensed";
+	@include fontdef($FontPath, $FontVersion, "BoldItalic");
+	font-weight: 700;
+	font-style: italic;
+	font-display: fallback;
+}
+/* END Bold Italic */

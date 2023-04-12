@@ -45,7 +45,6 @@ h1 {
   font-size: $mg-font-size-600;
   letter-spacing: 0.06rem;
   line-height: 1.08;
-  text-transform: uppercase;
 
   @include devicebreak(medium) {
     font-size: 5.125rem;
@@ -105,7 +104,6 @@ h6 {
   font-weight: 700;
   letter-spacing: 0.03rem;
   line-height: 1.15;
-  text-transform: uppercase;
 }
 
 p {

@@ -1,0 +1,9 @@
+/* BEGIN Italic */
+@font-face {
+	font-family: "Roboto Condensed";
+	@include fontdef($FontPath, $FontVersion, "Italic");
+	font-weight: 400;
+	font-style: italic;
+	font-display: fallback;
+}
+/* END Italic */

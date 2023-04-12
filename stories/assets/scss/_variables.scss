@@ -181,6 +181,8 @@ $mg-font-button: $mg-font-size-300;
 
 $mg-font-line-height-500: 1.25em;
 
+// This is not really a "varaible" but kept here for now
+// until we more fully rationalise our design decisions
 @mixin mg-typography($size) {
   @if ($size == "extra-small") {
     font-size: $mg-font-size-300;

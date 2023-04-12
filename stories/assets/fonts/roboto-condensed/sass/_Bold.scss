@@ -1,0 +1,9 @@
+/* BEGIN Bold */
+@font-face {
+	font-family: "Roboto Condensed";
+	@include fontdef($FontPath, $FontVersion, "Bold");
+	font-weight: 700;
+	font-style: normal;
+	font-display: fallback;
+}
+/* END Bold */
