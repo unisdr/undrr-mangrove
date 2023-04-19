@@ -68,10 +68,10 @@ $mg-color-neutral-600: #4d4d4d;
 $mg-color-neutral-700: #333;
 $mg-color-neutral-800: #1a1a1a;
 $mg-color-neutral-900: #000;
-$mg-color-black: $mg-color-neutral-900; // alias of mg-color-neutral-900
-$mg-color-white: $mg-color-neutral-0; // alias of mg-color-neutral-0
+$mg-color-black: $mg-color-neutral-800;
+$mg-color-white: $mg-color-neutral-0;
 
-/**
+/** 
  * @tokens Colors - accent
  * @presenter Color
  *
@@ -169,7 +169,7 @@ $mg-font-size-200: 1.25rem;
 $mg-font-size-250: 1.4rem;
 $mg-font-size-300: 1.6rem; // regular body text
 $mg-font-size-400: 1.8rem;
-$mg-font-size-500: 2.4rem;
+$mg-font-size-500: 2.3rem;
 $mg-font-size-600: 3.2rem;
 $mg-font-size-800: 3.6rem;
 $mg-font-size-900: 4rem;
@@ -248,7 +248,7 @@ $mg-breakpoint-desktop: 1164px; // we'll probably go to 1440, but right now it's
  */
 
 // text
-$mg-color-text: $mg-color-neutral-900;
+$mg-color-text: $mg-color-neutral-800;
 
 // label
 $mg-color-label: $mg-color-white;
