@@ -16,7 +16,6 @@
   }
 }
 
-
 /* animation start */
 *[data-viewport="true"] {
   @extend %left-to-right;
@@ -110,7 +109,6 @@ $colors-solid: (
     .blockquote {
       background-color: #{$color};
     }
-  
   }
 }
 
@@ -124,6 +122,17 @@ $colors-solid: (
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+// Comma between child elements
+// https://gitlab.com/undrr/web-backlog/-/issues/864
+.mg-u-comma-between {
+  > *::after {
+    content: ", ";
+  }
+  > *:last-child::after {
+    content: "";
+  }
 }
 
 /* base end */
