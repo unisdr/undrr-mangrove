@@ -20,23 +20,20 @@ export function BookCard({
   let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
   return (
     <>
-      <article className="mg-card">
-
-        {data.map((item, index) => (
-          <div key={index} className="mg-card__vc mg-card__book">
-            <div className="mg-card__visual">
-              <img src={item.imgback} alt={item.imgalt} className="mg-card__image" />
-            </div>
-
-            <div className={cls('mg-card__content', `${hovercolors_variant}`)}>
-              <header className="mg-card__title">
-                <a href={item.link}>{item.title}</a>
-              </header>
-            </div>
-
+      {data.map((item, index) => (
+        <article key={index} className="mg-card mg-card__vc mg-card__book">
+          <div className="mg-card__visual">
+            <img src={item.imgback} alt={item.imgalt} className="mg-card__image" />
           </div>
-        ))}
-      </article>
+
+          <div className={cls('mg-card__content', `${hovercolors_variant}`)}>
+            <header className="mg-card__title">
+              <a href={item.link}>{item.title}</a>
+            </header>
+          </div>
+
+        </article>
+      ))}
     </>
   );
 }

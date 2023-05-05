@@ -139,27 +139,28 @@
     z-index: 100;
   }
 
-  &__summary {
-    padding-bottom: $mg-spacing-50;
-  }
+}
 
-  .mg-card__summary a,
-  &__text-link {
-    color: $mg-color-interactive;
-  }
+.mg-card__summary {
+  padding-bottom: $mg-spacing-50;
+}
 
-  .mg-card__summary a,
-  &__text-link,
-  &__label,
-  .mg-button {
-    position: relative;
-    z-index: 101;
-  }
+.mg-card__summary a,
+.mg-card__text-link {
+  color: $mg-color-interactive;
+}
 
-  .mg-card__summary a:hover,
-  &__text-link:hover {
-    text-decoration: underline;
-  }
+.mg-card__summary a,
+.mg-card__text-link,
+.mg-card__label,
+.mg-card .mg-button {
+  position: relative;
+  z-index: 101;
+}
+
+.mg-card__summary a:hover,
+.mg-card__text-link:hover {
+  text-decoration: underline;
 }
 
 // Book Card variant
