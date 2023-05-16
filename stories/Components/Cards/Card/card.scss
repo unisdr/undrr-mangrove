@@ -139,7 +139,6 @@
     top: 0;
     z-index: 100;
   }
-
 }
 
 .mg-card__summary {
@@ -166,6 +165,8 @@
 
 // Book Card variant
 .mg-card__book {
+  max-width: 200px;
+
   .mg-card__visual {
     aspect-ratio: 3/4;
     border: 1px solid rgba($mg-color-neutral-600, 0.2);
@@ -173,6 +174,12 @@
   .mg-card__title {
     font-size: $mg-font-size-300;
     padding-top: $mg-spacing-25;
+  }
+}
+
+@media (min-width: $mg-breakpoint-desktop) {
+  .mg-card__book {
+    max-width: 400px;
   }
 }
 
