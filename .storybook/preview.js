@@ -8,6 +8,8 @@ import renderToHTML from './renderToHTML'
 // https://github.com/etchteam/storybook-addon-css-variables-theme#readme
 import themeDefault from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss'
 import themePreventionWeb from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss'
+import themeIrp from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-irp.scss'
+import themeMcr from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-mcr.scss'
 
 // import the decorator from the CSS Variables Theme addon
 import cssVariablesTheme from '@etchteam/storybook-addon-css-variables-theme'
@@ -56,6 +58,8 @@ export const parameters = {
     files: {
       'Default UNDRR Theme': themeDefault,
       'PreventionWeb Theme': themePreventionWeb,
+      'IRP Theme': themeIrp,
+      'MCR2030 Theme': themeMcr,
     },
     defaultTheme: 'Default UNDRR Theme'
   },

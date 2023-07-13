@@ -1,6 +1,6 @@
 //Refactoring to suit our needs and integration with the Gutenberg Tabs
 .mg-tabs__list {
-  background: $mg-color-blue-50;
+  background: $mg-color-tabbar-background;
   width: 100%;
   margin: 0;
   display: -webkit-inline-box;
@@ -22,10 +22,11 @@
 
 .mg-tabs__link {
   border: none;
+  border-radius: $mg-radius-tab;
+  color: $mg-color-neutral-700;
   font-family: $mg-font-family;
   font-size: $mg-font-size-400;
   font-weight: 600;
-  color: $mg-color-neutral-700;
   line-height: 1.421;
   margin: 0;
   display: block;
@@ -44,14 +45,14 @@
 
 .mg-tabs__link.is-active {
   color: $mg-color-white;
-  background-color: $mg-color-interactive;
+  background-color: $mg-color-tab-background;
   text-shadow: none;
-  border-bottom: $mg-spacing-25 solid $mg-color-interactive-active;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-background;
 }
 
 .mg-tabs__link.is-active:hover,
 .mg-tabs__link.is-active:focus {
-  background: $mg-color-interactive-active;
+  background: $mg-color-tab-background--hover;
   border-bottom: $mg-spacing-25 solid $mg-color-white;
   color: $mg-color-white;
 }

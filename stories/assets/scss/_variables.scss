@@ -255,6 +255,7 @@ $mg-color-label: $mg-color-white;
 $mg-color-label--hover: $mg-color-white;
 $mg-color-label-background: $mg-color-interactive;
 $mg-color-label-background--hover: $mg-color-interactive-active;
+$mg-radius-label: $mg-spacing-0;
 
 // button
 $mg-color-button: $mg-color-white;
@@ -270,6 +271,13 @@ $mg-color-hero--tertiary: $mg-color-neutral-900;
 $mg-color-hero--quaternary: $mg-color-red-800;
 $mg-opacity-hero: 0.85;
 $mg-spacing-hero-overlay: 0;
+
+// tabs
+$mg-color-tabbar-background: $mg-color-blue-50;
+$mg-color-tab-background: $mg-color-interactive;
+$mg-color-tab-background--active: $mg-color-interactive;
+$mg-color-tab-background--hover: $mg-color-interactive;
+$mg-radius-tab: $mg-spacing-0;
 
 /**
  * @tokens Component sizing

@@ -1,23 +1,24 @@
 /**
- * @tokens PW Colors
+ * @tokens IRP Colors
  * @presenter Color
  *
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-// PW Specific colors
-$pw-color-primary: #0a6969;
+// IRP Specific colors
+$irp-color-primary: #0f78bf;
 
-// PW-COLORS HOVER
-$mg-color-interactive: $pw-color-primary;
-$mg-color-interactive-active: $pw-color-primary;
+// IRP-COLORS HOVER
+$mg-color-interactive: $irp-color-primary;
+$mg-color-interactive-active: $irp-color-primary;
 $mg-color-label-background: $mg-color-interactive;
 $mg-color-label-background--hover: $sendai-orange-900;
 
-// PW-COMPONENTS
+// COMPONENTS
 $mg-color-label: $mg-color-neutral-0;
 $mg-color-label--hover: $mg-color-neutral-0;
-$mg-color-button-background: $pw-color-primary;
+$mg-radius-label: $mg-spacing-50;
+$mg-color-button-background: $irp-color-primary;
 $mg-color-button-background--hover: $sendai-orange-900;
 $mg-radius-button: $mg-spacing-50;
 
