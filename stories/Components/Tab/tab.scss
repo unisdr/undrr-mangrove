@@ -1,4 +1,9 @@
-//Refactoring to suit our needs and integration with the Gutenberg Tabs
+// testing
+// .mg-tabs {
+//   background: red;
+//   padding: 20px;
+// }
+
 .mg-tabs__list {
   background: $mg-color-tabbar-background;
   width: 100%;
@@ -53,13 +58,16 @@
 
 .mg-tabs__link.is-active:hover,
 .mg-tabs__link.is-active:focus {
-  background: $mg-color-tab-background--hover;
+  background: $mg-color-tab-background;
   border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
   color: $mg-color-text-tab-active;
 }
 
 .mg-tabs__section {
   padding: $mg-spacing-200 0;
+  background-color: $mg-color-tab-section-background;
+  padding: $mg-padding-tab-section;
+  border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
 }
 
 [dir="rtl"] {

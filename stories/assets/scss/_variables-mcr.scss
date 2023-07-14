@@ -40,6 +40,8 @@ $mg-spacing-hero-overlay: 2rem 0;
 
 // Tabs
 $mg-color-tabbar-background: none;
+// testing
+// $mg-color-tabbar-background: $mcr-color-purple-200;
 $mg-color-tab-background: $mg-color-neutral-0;
 $mg-color-tab-border: $mcr-color-purple-200;
 $mg-color-tab-background--hover: none;
@@ -47,5 +49,7 @@ $mg-radius-tab: $mg-spacing-150 $mg-spacing-150 0 0;
 $mg-padding-tab: $mg-spacing-200 $mg-spacing-300;
 $mg-color-text-tab: $mg-color-neutral-200;
 $mg-color-text-tab-active: $mg-color-neutral-700;
+$mg-padding-tab-section: $mg-spacing-200;
+$mg-radius-tab-section: $mg-spacing-200;
 
 /* variables end */
