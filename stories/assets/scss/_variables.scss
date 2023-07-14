@@ -177,7 +177,6 @@ $mg-font-size-1000: 4.8rem;
 $mg-font-size-1100: 6.4rem;
 $mg-font-body: $mg-font-size-300;
 $mg-font-label: $mg-font-size-200;
-$mg-font-button: $mg-font-size-300;
 
 $mg-font-line-height-500: 1.25em;
 
@@ -263,6 +262,11 @@ $mg-color-button--hover: $mg-color-white;
 $mg-color-button-background: $mg-color-interactive;
 $mg-color-button-background--hover: $mg-color-interactive-active;
 $mg-radius-button: $mg-spacing-0;
+$mg-border-width-button: 1px;
+$mg-color-text-button: $mg-color-white;
+$mg-border-color-button: $mg-color-text-button;
+$mg-padding-button: $mg-spacing-100 $mg-spacing-150;
+$mg-font-size-button: $mg-font-size-250;
 
 // hero
 $mg-color-hero: $mg-color-interactive;

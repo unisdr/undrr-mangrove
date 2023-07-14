@@ -135,23 +135,6 @@
   margin-bottom: $mg-spacing-150;
 }
 
-%button {
-  align-items: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  font-size: $mg-font-button;
-  font-weight: 600;
-
-  // letter-spacing: 0.03em;
-  line-height: 1;
-
-  @include devicebreak(medium) {
-    display: inline-flex;
-  }
-}
-
 %sidebar {
   align-items: center;
   cursor: pointer;

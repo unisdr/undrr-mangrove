@@ -18,13 +18,25 @@
 // }
 
 .mg-button {
-  @extend %button;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  font-size: $mg-font-size-button;
+  font-weight: 600;
 
+  line-height: 1;
+
+  @include devicebreak(medium) {
+    display: inline-flex;
+  }
   border-radius: $mg-radius-button;
   color: $mg-color-button;
   cursor: pointer;
   justify-content: center;
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: $mg-padding-button;
+  border: $mg-border-width-button solid $mg-border-color-button;
 
   &:focus-visible {
     box-shadow: 0 0 4px $mg-color-button-background--hover;
