@@ -4,17 +4,17 @@ import { Tab } from './Tab';
 export const getCaptionForLocale = (locale) => {
   switch(locale) {
     case 'english': const engText = { tabdata: [{
-      text: 'Tab 1',
+      text: 'Tab title 1',
       text_id: 'tab-1',
       data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
     },
     {
-      text: 'Tab 2',
+      text: 'Tab title 2',
       text_id: 'tab-2',
        data: 'The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.'
     },
     {
-      text: 'Tab 3',
+      text: 'Tab title 3',
       text_id: 'tab-3',
       data: 'Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.'
     }]
@@ -69,19 +69,19 @@ export const getCaptionForLocale = (locale) => {
     }; return japaneseText.tabdata;
     default:
       const dummy =  { tabdata: [{
-      text: 'tab 1',
+      text: 'Tab title 1',
       text_id: 'tab-1',
-      data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.'
+      data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
     },
     {
-      text: 'tab 2',
+      text: 'Tab title 2',
       text_id: 'tab-2',
-      data: 'This text helps web designers better envision how the website will look as a finished product. It is important to understand that dummy text has no meaning whatsoever. Its sole purpose is to fill out blank spaces with “word-like” content, without making any copyright infringements.'
+       data: 'The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.'
     },
     {
-      text: 'tab 3',
+      text: 'Tab title 3',
       text_id: 'tab-3',
-      data: 'It is important to understand that dummy text has no meaning whatsoever. Its sole purpose is to fill out blank spaces with “word-like” content, without making any copyright infringements.'
+      data: 'Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.'
     }]
     };
     return dummy.tabdata;

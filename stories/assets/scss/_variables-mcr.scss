@@ -29,7 +29,7 @@ $mg-color-label--hover: $mg-color-neutral-0;
 $mg-radius-label: $mg-spacing-100;
 $mg-color-button-background: $mcr-color-primary;
 $mg-color-button-background--hover: $mcr-color-purple-800;
-$mg-radius-button: $mg-spacing-100;
+$mg-radius-button: $mg-spacing-300;
 $mg-border-width-button: 2px;
 $mg-padding-button: $mg-spacing-150 $mg-spacing-300;
 $mg-font-size-button: $mg-font-size-400;
@@ -40,10 +40,12 @@ $mg-spacing-hero-overlay: 2rem 0;
 
 // Tabs
 $mg-color-tabbar-background: none;
-$mg-color-tab-background: $mg-color-interactive;
-$mg-color-tab-background--active: $mg-color-interactive;
-$mg-color-tab-background--hover: $mg-color-interactive;
-$mg-radius-tab: $mg-spacing-100 $mg-spacing-100 0 0;
-
+$mg-color-tab-background: $mg-color-neutral-0;
+$mg-color-tab-border: $mcr-color-purple-200;
+$mg-color-tab-background--hover: none;
+$mg-radius-tab: $mg-spacing-150 $mg-spacing-150 0 0;
+$mg-padding-tab: $mg-spacing-200 $mg-spacing-300;
+$mg-color-text-tab: $mg-color-neutral-200;
+$mg-color-text-tab-active: $mg-color-neutral-700;
 
 /* variables end */

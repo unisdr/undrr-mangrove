@@ -23,7 +23,7 @@
 .mg-tabs__link {
   border: none;
   border-radius: $mg-radius-tab;
-  color: $mg-color-neutral-700;
+  color: $mg-color-text-tab;
   font-family: $mg-font-family;
   font-size: $mg-font-size-400;
   font-weight: 600;
@@ -31,20 +31,21 @@
   margin: 0;
   display: block;
   outline: 0;
-  padding: $mg-spacing-75 $mg-spacing-150;
+  padding: $mg-padding-tab;
   position: relative;
   text-decoration: none;
 }
 .mg-tabs__link:hover,
 .mg-tabs__link:focus {
-  border-bottom: $mg-spacing-25 solid $mg-color-neutral-400;
-  color: $mg-color-text;
+  background: $mg-color-tab-background--hover;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+  color: $mg-color-text-tab-active;
   z-index: 1150;
   text-decoration: none;
 }
 
 .mg-tabs__link.is-active {
-  color: $mg-color-white;
+  color: $mg-color-text-tab-active;
   background-color: $mg-color-tab-background;
   text-shadow: none;
   border-bottom: $mg-spacing-25 solid $mg-color-tab-background;
@@ -53,8 +54,8 @@
 .mg-tabs__link.is-active:hover,
 .mg-tabs__link.is-active:focus {
   background: $mg-color-tab-background--hover;
-  border-bottom: $mg-spacing-25 solid $mg-color-white;
-  color: $mg-color-white;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+  color: $mg-color-text-tab-active;
 }
 
 .mg-tabs__section {
