@@ -64,8 +64,8 @@
 }
 
 .mg-tabs__section {
-  padding: $mg-spacing-200 0;
   background-color: $mg-color-tab-section-background;
+  box-shadow: $mg-box-shadow-tab-section;
   padding: $mg-padding-tab-section;
   border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
 }
