@@ -250,10 +250,8 @@ $mg-breakpoint-desktop: 1164px; // we'll probably go to 1440, but right now it's
 $mg-color-text: $mg-color-neutral-800;
 
 // label
-$mg-color-label: $mg-color-white;
-$mg-color-label--hover: $mg-color-white;
-$mg-color-label-background: $mg-color-interactive;
-$mg-color-label-background--hover: $mg-color-interactive-active;
+$mg-color-label: $mg-color-interactive;
+$mg-color-label--hover: $mg-color-interactive;
 $mg-radius-label: $mg-spacing-0;
 
 // button

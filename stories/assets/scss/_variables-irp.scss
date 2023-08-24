@@ -11,12 +11,10 @@ $irp-color-primary: #0f78bf;
 // IRP-COLORS HOVER
 $mg-color-interactive: $irp-color-primary;
 $mg-color-interactive-active: $irp-color-primary;
-$mg-color-label-background: $mg-color-interactive;
-$mg-color-label-background--hover: $sendai-orange-900;
 
 // COMPONENTS
-$mg-color-label: $mg-color-neutral-0;
-$mg-color-label--hover: $mg-color-neutral-0;
+$mg-color-label: $mg-color-interactive;
+$mg-color-label--hover: $mg-color-interactive;
 $mg-radius-label: $mg-spacing-50;
 $mg-color-button-background: $irp-color-primary;
 $mg-color-button-background--hover: $sendai-orange-900;

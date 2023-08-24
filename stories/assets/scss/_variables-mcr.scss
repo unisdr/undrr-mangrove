@@ -20,12 +20,10 @@ $mcr-color-primary: $mcr-color-purple;
 // MCR-COLORS HOVER
 $mg-color-interactive: $mcr-color-primary;
 $mg-color-interactive-active: $mcr-color-primary;
-$mg-color-label-background: $mg-color-interactive;
-$mg-color-label-background--hover: $mcr-color-orange;
 
 // COMPONENTS
-$mg-color-label: $mg-color-neutral-0;
-$mg-color-label--hover: $mg-color-neutral-0;
+$mg-color-label: $mg-color-interactive;
+$mg-color-label--hover: $mg-color-interactive;
 $mg-radius-label: $mg-spacing-100;
 $mg-color-button-background: $mcr-color-primary;
 $mg-color-button-background--hover: $mcr-color-purple-800;

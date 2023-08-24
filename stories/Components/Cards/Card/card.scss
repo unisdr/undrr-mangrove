@@ -85,22 +85,14 @@
   }
 
   &__label {
-    background: $mg-color-label-background;
-
-    // border-radius: $mg-spacing-25;
-    border-radius: $mg-radius-label;
     color: $mg-color-label;
     cursor: pointer;
     display: inline-block;
     font-size: $mg-font-label;
     margin-right: $mg-spacing-50;
-    padding: $mg-spacing-50 $mg-spacing-75 $mg-spacing-25;
-    text-decoration: none;
 
     &:hover {
       color: $mg-color-label;
-      background: $mg-color-label-background--hover;
-      text-decoration: none;
     }
 
     // &--active {
