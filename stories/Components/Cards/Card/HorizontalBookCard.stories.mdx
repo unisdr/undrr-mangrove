@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { HorizontalCard } from './HorizontalCard';
+import { HorizontalBookCard } from './HorizontalBookCard';
 
 export const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -18,7 +18,7 @@ This paper explores health risks from climate change in a global context, settin
             button: "Primary action",
             link:"javascript:void(0)",
             imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -32,7 +32,7 @@ This paper explores health risks from climate change in a global context, settin
             button: "اقرأ أكث",
             link:"javascript:void(0)",
             imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -46,7 +46,7 @@ This paper explores health risks from climate change in a global context, settin
             button: "ပိုပြီးဖတ်ပါ",
             link:"javascript:void(0)",
             imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -60,7 +60,7 @@ This paper explores health risks from climate change in a global context, settin
             button: "続きを読む",
             link:"javascript:void(0)",
             imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -80,7 +80,7 @@ This paper explores health risks from climate change in a global context, settin
             button: "Primary action",
             link:"javascript:void(0)",
             imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
           }
         ]
       };
@@ -88,7 +88,7 @@ This paper explores health risks from climate change in a global context, settin
   }
 };
 
-<Meta title="Components/Cards/Horizontal Card" argTypes={{
+<Meta title="Components/Cards/Horizontal Book Card" argTypes={{
   variant: {
     options: ['primary', 'secondary', 'tertiary', 'quaternary'],
     control: { type: 'inline-radio' },
@@ -96,12 +96,13 @@ This paper explores health risks from climate change in a global context, settin
   }
 }}/>
 
-# MANGROVE CARD (Horizontal)
+# MANGROVE CARD (Horizontal Book)
 
-The Mangrove Horzontal Card components are cards with information and/or image.
+The Mangrove Horizontal Book Card components are cards with information and/or image. This is ideally suited for publications. The component leverage the Horizontal Card CSS.
 
 ### Overview
-The Mangrove Horzontal Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+
+The Mangrove Horizontal Book Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
 
 #### When to use:
 
@@ -113,16 +114,15 @@ When a card with data, CTA links and image is to be displayed.
 It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels, social share link and/or image.
 
 ### Content
-There are two types of Mangrove Horzontal Card components: Mangrove Horzontal Card with Image and Mangrove Horzontal Card without Image.
 
 <Canvas>
-<Story name="Horizontal Card">
+<Story name="Horizontal Book Card">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <HorizontalCard
+      <HorizontalBookCard
         data={caption.contentdata} {...args}
-      ></HorizontalCard>
+      ></HorizontalBookCard>
     );
   }}
 </Story>

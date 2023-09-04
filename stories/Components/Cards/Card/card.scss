@@ -63,6 +63,23 @@
     }
   }
 
+  &__hc.mg-card-book__hc {
+    grid-template-rows: 200px 1fr auto;
+
+    .mg-card__visual {
+      border: 1px solid rgba($mg-color-neutral-600, 0.2);
+    }
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      grid-template-columns: 160px repeat(2, 1fr);
+      grid-template-rows: 1fr auto;
+    }
+
+    // @media (min-width: $mg-breakpoint-tablet) {
+    //   grid-template-columns: 330px 1fr;
+    // }
+  }
+
   // Main Card css
   &__visual {
     align-items: flex-end;
