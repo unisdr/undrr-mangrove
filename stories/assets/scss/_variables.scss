@@ -278,6 +278,8 @@ $mg-spacing-hero-overlay: 0;
 $mg-color-tabbar-background: $mg-color-blue-50;
 $mg-color-tab-background: $mg-color-interactive;
 $mg-color-tab-border: $mg-color-neutral-700;
+$mg-color-tab-border--hover: $mg-color-neutral-700;
+$mg-color-tab-border--active: $mg-color-tab-background; 
 $mg-color-tab-background--hover: $mg-color-interactive;
 $mg-radius-tab: $mg-spacing-0;
 $mg-padding-tab: $mg-spacing-75 $mg-spacing-150;
@@ -287,6 +289,7 @@ $mg-color-tab-section-background: $mg-color-neutral-0;
 $mg-padding-tab-section: $mg-spacing-100 $mg-spacing-0;
 $mg-radius-tab-section: $mg-spacing-0;
 $mg-box-shadow-tab-section: none;
+$mg-tabs-border-bottom: false;
 
 /**
  * @tokens Component sizing

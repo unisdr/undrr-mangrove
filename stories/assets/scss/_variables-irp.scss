@@ -7,6 +7,7 @@
 
 // IRP Specific colors
 $irp-color-primary: #0f78bf;
+$irp-color-green: rgb(140, 198, 63);
 
 // IRP-COLORS HOVER
 $mg-color-interactive: $irp-color-primary;
@@ -26,9 +27,14 @@ $mg-spacing-hero-overlay: 2rem 0;
 
 // Tabs
 $mg-color-tabbar-background: none;
-$mg-color-tab-background: $mg-color-interactive;
-$mg-color-tab-border: $mg-color-interactive;
-$mg-color-tab-background--hover: $mg-color-interactive;
-$mg-radius-tab: $mg-spacing-50 $mg-spacing-50 0 0;
+$mg-color-text-tab: $mg-color-neutral-500;
+$mg-color-text-tab-active: $mg-color-neutral-700;
+$mg-color-tab-background: $mg-color-white;
+$mg-color-tab-background--hover: $mg-color-white;
+$mg-radius-tab: $mg-spacing-0 $mg-spacing-0 0 0;
+$mg-color-tab-border: $mg-color-neutral-300;
+$mg-color-tab-border--hover: $irp-color-green;
+$mg-color-tab-border--active: $mg-color-tab-border--hover; 
+$mg-tabs-border-bottom: true;
 
 /* variables end */

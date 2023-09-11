@@ -15,6 +15,17 @@
   flex-wrap: wrap;
   padding: 0;
   position: relative;
+  @if ($mg-tabs-border-bottom) {
+    &:after {
+      content: " ";
+      width: 100%;
+      height: 1px;
+      top: -$mg-spacing-25;
+      position: relative;
+      z-index: -1;
+      border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+    }
+  }
 }
 
 .mg-tabs__item {
@@ -43,7 +54,7 @@
 .mg-tabs__link:hover,
 .mg-tabs__link:focus {
   background: $mg-color-tab-background--hover;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
   color: $mg-color-text-tab-active;
   z-index: 1150;
   text-decoration: none;
@@ -53,13 +64,13 @@
   color: $mg-color-text-tab-active;
   background-color: $mg-color-tab-background;
   text-shadow: none;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-background;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--active;
 }
 
 .mg-tabs__link.is-active:hover,
 .mg-tabs__link.is-active:focus {
   background: $mg-color-tab-background;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
   color: $mg-color-text-tab-active;
 }
 
