@@ -1,0 +1,72 @@
+// @import "../../../assets/scss/_breakpoints";
+// @import "../../../assets/scss/_variables";
+
+// main wrapper
+.mg-share-buttons-wrapper {
+  padding: $mg-spacing-50;
+  max-width: 250px;
+  background-color: rgba($mg-color-button-background, 0.3);
+  display: flex;
+  flex-direction: column;
+
+  // label SHARE THIS
+  .mainLabel {
+    font-family: $mg-font-family;
+    font-weight: 500;
+    font-size: $mg-font-size-500;
+  }
+
+  // all divs inside wrapper, so this is Main Label and Icons
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .mg-share-button {
+      width: 4rem;
+      height: 4rem;
+      margin: 1rem;
+      border-radius: $mg-radius-button;
+      background-color: $mg-color-button-background;
+      color: $mg-color-button;
+      padding: 10px;
+      border: $mg-border-width-button solid $mg-border-color-button;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+
+  .copyIcon {
+    width: 25px;
+    height: 25px;
+    min-width: fit-content;
+    min-height: fit-content;
+  }
+
+  .copyLink {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border: $mg-border-width-button solid $mg-border-color-button;
+    border-radius: $mg-radius-button;
+    background-color: $mg-color-neutral-50;
+    color: $mg-color-button;
+    font-family: $mg-font-family;
+    &:hover {
+      background-color: $mg-color-neutral-100;
+    }
+    .copyText {
+      color: $mg-color-neutral-600;
+      font-size: $mg-font-size-250;
+      overflow: hidden;
+      scrollbar-width: 0;
+      height: 17px;
+      flex: auto;
+      align-items: start;
+    }
+  }
+}

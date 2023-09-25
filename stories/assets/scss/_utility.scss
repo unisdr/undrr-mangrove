@@ -93,19 +93,19 @@ $colors-solid: (
 
 @each $name, $color in $colors-solid {
   .#{$name} {
-    //statscard
+    // statscard
     .stats-card {
       &:hover {
         background-color: #{$color};
       }
     }
 
-    //progress-bar
+    // progress-bar
     .progress-bar {
       background: #{$color};
     }
 
-    //.blockquote
+    // .blockquote
     .blockquote {
       background-color: #{$color};
     }

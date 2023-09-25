@@ -15,7 +15,8 @@
   flex-wrap: wrap;
   padding: 0;
   position: relative;
-  @if ($mg-tabs-border-bottom) {
+
+  @if $mg-tabs-border-bottom {
     &:after {
       content: " ";
       width: 100%;

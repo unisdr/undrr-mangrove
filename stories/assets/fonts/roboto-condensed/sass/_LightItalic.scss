@@ -1,9 +1,11 @@
 /* BEGIN Light Italic */
 @font-face {
-	font-family: "Roboto Condensed";
-	@include fontdef($FontPath, $FontVersion, "LightItalic");
-	font-weight: 300;
-	font-style: italic;
-	font-display: fallback;
+  font-family: "Roboto Condensed";
+
+  @include fontdef($font-path, $font-version, "LightItalic");
+
+  font-weight: 300;
+  font-style: italic;
+  font-display: fallback;
 }
 /* END Light Italic */
