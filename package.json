@@ -125,7 +125,8 @@
     "@undp:registry": "https://npm.pkg.github.com"
   },
   "engine": {
-    "node": ">=16.0.0"
+    "node": ">=16.0.0",
+    "yarn": ">=3.2.0"
   },
   "repository": {
     "type": "git",
