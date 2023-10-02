@@ -11,7 +11,7 @@ $img-path-Iconfourback: "~/stories/assets/icons";
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-//MG-COLORS BLUE SHADES (#004f91)
+// MG-COLORS BLUE SHADES (#004f91)
 // $mg-color-blue-0: #fff;
 $mg-color-blue-50: #e6edf4;
 $mg-color-blue-100: #ccdce9;
@@ -24,7 +24,7 @@ $mg-color-blue-700: #3372a7;
 $mg-color-blue-800: #1a619c;
 $mg-color-blue-900: #004f91;
 
-//MG-COLORS ORANGE SHADES (#eb752a)
+// MG-COLORS ORANGE SHADES (#eb752a)
 // $mg-color-orange-0: #fff;
 $mg-color-orange-50: #fdf1ea;
 $mg-color-orange-100: #fbe3d4;
@@ -37,7 +37,7 @@ $mg-color-orange-700: #ef9155;
 $mg-color-orange-800: #ed833f;
 $mg-color-orange-900: #eb752a;
 
-//MG-COLORS RED SHADES (#c10920)
+// MG-COLORS RED SHADES (#c10920)
 // $mg-color-red-0: #fff;
 $mg-color-red-50: #f9e6e9;
 $mg-color-red-100: #f3ced2;
@@ -71,7 +71,7 @@ $mg-color-neutral-900: #000;
 $mg-color-black: $mg-color-neutral-800;
 $mg-color-white: $mg-color-neutral-0;
 
-/** 
+/**
  * @tokens Colors - accent
  * @presenter Color
  *
@@ -177,33 +177,32 @@ $mg-font-size-1000: 4.8rem;
 $mg-font-size-1100: 6.4rem;
 $mg-font-body: $mg-font-size-300;
 $mg-font-label: $mg-font-size-200;
-
 $mg-font-line-height-500: 1.25em;
 
 // This is not really a "varaible" but kept here for now
 // until we more fully rationalise our design decisions
 @mixin mg-typography($size) {
-  @if ($size == "extra-small") {
+  @if $size == "extra-small" {
     font-size: $mg-font-size-300;
-  } @else if ($size == "small") {
+  } @else if $size == "small" {
     font-size: $mg-font-size-400;
-  } @else if ($size == "medium") {
+  } @else if $size == "medium" {
     font-size: $mg-font-size-500;
     padding-top: $mg-spacing-250;
     padding-bottom: $mg-spacing-150;
-  } @else if ($size == "large") {
+  } @else if $size == "large" {
     font-size: $mg-font-size-600;
     padding-top: $mg-spacing-250;
     padding-bottom: $mg-spacing-150;
-  } @else if ($size == "xlarge") {
+  } @else if $size == "xlarge" {
     font-size: $mg-font-size-900;
     padding-top: $mg-spacing-300;
     padding-bottom: $mg-spacing-175;
-  } @else if ($size == "huge") {
+  } @else if $size == "huge" {
     font-size: $mg-font-size-1000;
     padding-top: $mg-spacing-350;
     padding-bottom: $mg-spacing-250;
-  } @else if ($size == "xhuge") {
+  } @else if $size == "xhuge" {
     font-size: $mg-font-size-1100;
     padding-top: $mg-spacing-400;
     padding-bottom: $mg-spacing-350;
@@ -279,7 +278,7 @@ $mg-color-tabbar-background: $mg-color-blue-50;
 $mg-color-tab-background: $mg-color-interactive;
 $mg-color-tab-border: $mg-color-neutral-700;
 $mg-color-tab-border--hover: $mg-color-neutral-700;
-$mg-color-tab-border--active: $mg-color-tab-background; 
+$mg-color-tab-border--active: $mg-color-tab-background;
 $mg-color-tab-background--hover: $mg-color-interactive;
 $mg-radius-tab: $mg-spacing-0;
 $mg-padding-tab: $mg-spacing-75 $mg-spacing-150;

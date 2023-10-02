@@ -1,0 +1,6 @@
+{
+    "Mail": "mailto:?subject=[SHARING_TEXT_SUBJECT]&body=[SHARING_TEXT_BODY]",
+    "Facebook": "https://facebook.com/sharer/sharer.php?u=[SHARING_TEXT_BODY]",
+    "LinkedIn": "https://www.linkedin.com/sharing/share-offsite/?url=[SHARING_TEXT_BODY]",
+    "Twitter": "https://twitter.com/intent/tweet?text=[SHARING_TEXT_BODY]"
+}
