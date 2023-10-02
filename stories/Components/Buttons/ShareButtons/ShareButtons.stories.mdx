@@ -4,7 +4,7 @@ import { ShareButtons } from './ShareButtons';
 export const getCaptionForLocale = (locale) => {
   switch(locale) {
     case 'english': const engText = {
-        mainLabel: 'SHARE THIS',
+        mainLabel: 'Share this',
         onCopy: 'Copied',
       }; return engText;
     case 'arabic': const arabicText = {
@@ -20,7 +20,7 @@ export const getCaptionForLocale = (locale) => {
       onCopy: 'コピーされました'}; return japaneseText;
     default:
       return {
-        mainLabel: 'SHARE THIS',
+        mainLabel: 'Share this',
         onCopy: 'Copied',};
   }
 };
