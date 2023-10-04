@@ -10,11 +10,10 @@
 $mcr-color-purple: #591a61;
 $mcr-color-purple-800: #6e2677;
 $mcr-color-purple-200: #ded0d7;
-$mcr-color-green: rgb(10, 105, 105);
-$mcr-color-green-800: rgb(0, 138, 138);
-$mcr-color-green-200: #E2F1F3;
+$mcr-color-green: rgb(10 105 105);
+$mcr-color-green-800: rgb(0 138 138);
+$mcr-color-green-200: #e2f1f3;
 $mcr-color-orange: $sendai-orange-900;
-
 $mcr-color-primary: $mcr-color-purple;
 
 // MCR-COLORS HOVER
@@ -38,12 +37,13 @@ $mg-spacing-hero-overlay: 2rem 0;
 
 // Tabs
 $mg-color-tabbar-background: none;
+
 // testing
 // $mg-color-tabbar-background: $mcr-color-purple-200;
 $mg-color-tab-background: $mg-color-neutral-0;
 $mg-color-tab-border: $mcr-color-purple-200;
 $mg-color-tab-border--hover: $mcr-color-purple-200;
-$mg-color-tab-border--active: $mg-color-tab-background; 
+$mg-color-tab-border--active: $mg-color-tab-background;
 $mg-color-tab-background--hover: $mg-color-neutral-200;
 $mg-radius-tab: $mg-spacing-150 $mg-spacing-150 0 0;
 $mg-padding-tab: $mg-spacing-200 $mg-spacing-300;
@@ -51,6 +51,6 @@ $mg-color-text-tab: $mg-color-neutral-200;
 $mg-color-text-tab-active: $mg-color-neutral-700;
 $mg-padding-tab-section: $mg-spacing-500;
 $mg-radius-tab-section: $mg-spacing-200;
-$mg-box-shadow-tab-section: rgba(0, 0, 0, 0.24) 0px 6px 5px 0px;
+$mg-box-shadow-tab-section: rgb(0 0 0 / 0.24) 0 6px 5px 0;
 
 /* variables end */

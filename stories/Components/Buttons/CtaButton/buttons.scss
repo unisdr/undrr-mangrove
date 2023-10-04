@@ -20,17 +20,15 @@
 .mg-button {
   align-items: center;
   background: transparent;
-  border: none;
-  cursor: pointer;
   display: flex;
   font-size: $mg-font-size-button;
   font-weight: 600;
-
   line-height: 1;
 
   @include devicebreak(medium) {
     display: inline-flex;
   }
+
   border-radius: $mg-radius-button;
   color: $mg-color-button;
   cursor: pointer;

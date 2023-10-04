@@ -7,7 +7,7 @@
 
 // IRP Specific colors
 $irp-color-primary: #0f78bf;
-$irp-color-green: rgb(140, 198, 63);
+$irp-color-green: rgb(140 198 63);
 
 // IRP-COLORS HOVER
 $mg-color-interactive: $irp-color-primary;
@@ -34,7 +34,7 @@ $mg-color-tab-background--hover: $mg-color-white;
 $mg-radius-tab: $mg-spacing-0 $mg-spacing-0 0 0;
 $mg-color-tab-border: $mg-color-neutral-300;
 $mg-color-tab-border--hover: $irp-color-green;
-$mg-color-tab-border--active: $mg-color-tab-border--hover; 
+$mg-color-tab-border--active: $mg-color-tab-border--hover;
 $mg-tabs-border-bottom: true;
 
 /* variables end */

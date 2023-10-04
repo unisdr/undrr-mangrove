@@ -1,7 +1,9 @@
 /* Roboto */
-$FontPath: "../fonts/roboto/fonts";
-@import "../fonts/roboto/roboto.scss";
+$font-path: "../fonts/roboto/fonts";
+
+@import "../fonts/roboto/roboto";
 
 /* Roboto Condensed */
-$FontPath: "../fonts/roboto-condensed/fonts";
-@import "../fonts/roboto-condensed/roboto-condensed.scss";
+$font-path: "../fonts/roboto-condensed/fonts";
+
+@import "../fonts/roboto-condensed/roboto-condensed";

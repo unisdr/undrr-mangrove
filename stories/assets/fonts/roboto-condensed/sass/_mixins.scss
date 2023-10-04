@@ -1,4 +1,5 @@
-@mixin fontdef($FontPath, $FontVersion, $FontType: "Regular") {
-	src: url("#{$FontPath}/#{$FontType}/RobotoCondensed-#{$FontType}.woff2?v=#{$FontVersion}") format("woff2"),
-		url("#{$FontPath}/#{$FontType}/RobotoCondensed-#{$FontType}.woff?v=#{$FontVersion}") format("woff");
+@mixin fontdef($font-path, $font-version, $FontType: "Regular") {
+  src:
+    url("#{$font-path}/#{$FontType}/RobotoCondensed-#{$FontType}.woff2?v=#{$font-version}") format("woff2"),
+    url("#{$font-path}/#{$FontType}/RobotoCondensed-#{$FontType}.woff?v=#{$font-version}") format("woff");
 }

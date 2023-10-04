@@ -1,14 +1,19 @@
 /* BEGIN Bold Italic */
 @font-face {
-	font-family: Roboto;
-	@include fontdef-woff($FontPath, $FontName, $FontVersion, "BoldItalic");
-	font-weight: 700;
-	font-style: italic;
+  font-family: Roboto;
+
+  @include fontdef-woff($font-path, $FontName, $font-version, "BoldItalic");
+
+  font-weight: 700;
+  font-style: italic;
 }
+
 @font-face {
-	font-family: Roboto;
-	@include fontdef-woff($FontPath, $FontName, $FontVersion, "BoldItalic");
-	font-weight: bold;
-	font-style: italic;
+  font-family: Roboto;
+
+  @include fontdef-woff($font-path, $FontName, $font-version, "BoldItalic");
+
+  font-weight: bold;
+  font-style: italic;
 }
 /* END Bold Italic */

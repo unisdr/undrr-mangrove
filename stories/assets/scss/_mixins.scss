@@ -1,4 +1,4 @@
-//background image gradient
+// background image gradient
 @mixin background-image($deg, $colorname, $opacity) {
   background: linear-gradient($deg, $colorname, $opacity);
 }
@@ -394,7 +394,7 @@
   padding: 0;
 }
 
-//burmese lang
+// burmese lang
 :lang(my) {
   %paragraph-font-200 {
     font-size: $mg-font-size-100;
@@ -515,7 +515,7 @@
   background-size: 100% 2px, 0 1px;
 
   &:hover {
-    @include animation(lineLoop-animation 2s linear infinite);
+    @include animation(line-loop-animation 2s linear infinite);
   }
 }
 
