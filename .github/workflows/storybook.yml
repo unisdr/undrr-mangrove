@@ -25,6 +25,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
+      # Set Yarn version to v3
+      - name: Set Yarn Version
+        run: yarn set version berry
       - name: Install and Build 🔧
         run: | # Install npm packages and build the Storybook files
           yarn install
