@@ -2389,6 +2389,7 @@ __metadata:
     mini-css-extract-plugin: ^2.7.0
     patch-package: ^6.4.7
     path: ^0.12.7
+    postcss: ^8.4.31
     postcss-cli: ^10.0.0
     postcss-loader: ^7.0.1
     prettier: ^2.8.0
@@ -18586,7 +18587,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.2.14, postcss@npm:^8.3.11, postcss@npm:^8.4.17, postcss@npm:^8.4.19, postcss@npm:^8.4.21":
+"postcss@npm:^8.2.14, postcss@npm:^8.3.11, postcss@npm:^8.4.17, postcss@npm:^8.4.19, postcss@npm:^8.4.21, postcss@npm:^8.4.31":
   version: 8.4.31
   resolution: "postcss@npm:8.4.31"
   dependencies:
