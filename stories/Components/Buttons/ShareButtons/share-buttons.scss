@@ -19,7 +19,6 @@
     display: flex;
     justify-content: start;
   }
-  
 
   // all divs inside wrapper, so this is Main Label and Icons
   .share-buttons {
@@ -46,8 +45,6 @@
       }
     }
   }
-
-
 }
 
 .copy-button-wrapper {
@@ -72,7 +69,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    img{
+    img {
       width: 18px;
     }
   }
@@ -95,7 +92,7 @@
     justify-content: center;
     align-items: center;
     background-color: rgba($mg-color-button-background, 0.5);
-    img{
+    img {
       width: 18px;
     }
     .stackIcon {
@@ -106,10 +103,9 @@
       justify-content: center;
       align-items: center;
       background-color: rgba($mg-color-button-background, 0.5);
-      img{
+      img {
         width: 18px;
       }
     }
   }
-
 }
