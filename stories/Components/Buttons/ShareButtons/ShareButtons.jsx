@@ -21,13 +21,13 @@ const defaults = {
 *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
 
 */
-export function ShareButtons({
+const ShareButtons = ({
   labels,
   SharingSubject,
   SharingTextBody,
   // CustomUrl,
   ...props
-}) {
+}) => {
 
 
   /**
@@ -150,4 +150,6 @@ function CopyButton({ copiedLabel, sharedLink,  className }) {
       </div>
     </button>)
 }
+
+export default ShareButtons;
 

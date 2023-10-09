@@ -1,5 +1,6 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { ShareButtons } from './ShareButtons';
+//import { Meta, ArgTypes, Controls, Story, Canvas } from '@storybook/blocks';
+import ShareButtons from './ShareButtons';
 
 export const getCaptionForLocale = (locale) => {
   switch(locale) {
@@ -76,6 +77,10 @@ The default Behaviors are:
 
 <Canvas>
   <Story name="ShareButtons">
+   {(args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <ShareButtons labels={caption}/>;
+  }}
   </Story>
 </Canvas>
 
