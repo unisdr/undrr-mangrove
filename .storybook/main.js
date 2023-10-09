@@ -1,29 +1,13 @@
 const path = require("path");
 
 module.exports = {
-  core: {
-    builder: "webpack5"
-  },
   staticDirs: ['../stories/assets'],
   stories: ["../stories/**/*.stories.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: [
-    { name: 'storybook-design-token', options: {
-      preserveCSSVars: true ,
-      // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
-    } },
-    "@storybook/addon-links",
-    "@storybook/addon-actions",
-    "@storybook/addon-docs",
-    "@storybook/addon-essentials",
-    "@whitespace/storybook-addon-html",
-    "storybook-addon-rtl",
-    "@storybook/addon-a11y",
-    "@etchteam/storybook-addon-css-variables-theme",
-  ],
-  features: {
-    storyStoreV7: true,
-    babelModeV7: true,
-  },
+  addons: [{ name: 'storybook-design-token', options: {
+    preserveCSSVars: true ,
+    // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
+  } }, "@storybook/addon-links", "@storybook/addon-actions", "@storybook/addon-docs", "@storybook/addon-essentials", "@whitespace/storybook-addon-html", "storybook-addon-rtl", "@storybook/addon-a11y", "@etchteam/storybook-addon-css-variables-theme"],
+
   webpackFinal: async config => {
     // remove hash from the static file names
     // find the existing rule and override the name property
@@ -44,5 +28,13 @@ module.exports = {
     });
     return config;
   },
-  framework: "@storybook/react"
+
+  framework: {
+    name: "@storybook/react-webpack5",
+    options: {}
+  },
+
+  docs: {
+    autodocs: true
+  }
 };

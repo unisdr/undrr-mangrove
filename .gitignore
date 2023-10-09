@@ -9,6 +9,7 @@ yarn-error.log
 .DS_Store
 .scannerwork
 .vscode/
+.yarn/cache/
 
 # Ignore npm's package lock, we use yarn
 package-lock.json

@@ -40,7 +40,9 @@
         "font-family"
       ]
     }],
-    "value-no-vendor-prefix": null
+    "value-no-vendor-prefix": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/percent-placeholder-pattern": null
   },
   "ignoreFiles": [
     "docroot/themes/**/*.css",
