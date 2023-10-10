@@ -2,109 +2,117 @@
 // @import "../../../assets/scss/_variables";
 
 // main wrapper
-.mg-share-buttons-wrapper {
-  max-width: 250px;
-  background-color: rgba($mg-color-button-background, 0.2);
-  display: flex;
-  flex-direction: column;
+section {
+  &.mg-share-wrapper {
 
-  // label SHARE THIS
-  .mainLabel {
-    padding: $mg-spacing-100;
-    padding-bottom: 0;
-    font-family: $mg-font-family;
-    color: $mg-color-text;
-    font-weight: 600;
-    font-size: $mg-font-size-300;
-    display: flex;
-    justify-content: start;
-  }
 
-  // all divs inside wrapper, so this is Main Label and Icons
-  .share-buttons {
+    max-width: 250px;
+    background-color: rgba($mg-color-button-background, 0.2);
     display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    padding-bottom: $mg-spacing-100;
-    .mg-share-button {
-      width: 4rem;
-      height: 4rem;
-      margin: 1rem;
-      border-radius: $mg-radius-button;
-      background-color: rgba($mg-color-button-background, 0.5);
-      color: $mg-color-button;
-      padding: 10px;
-      border: none;
+    flex-direction: column;
+
+    // Main Label
+    header {
+      padding: $mg-spacing-100;
+      padding-bottom: 0;
+      margin: 0;
+      font-family: $mg-font-family;
+      color: $mg-color-text;
+      font-weight: 600;
+      font-size: $mg-font-size-300;
       display: flex;
-      justify-content: center;
+      justify-content: start;
+    }
+
+    // Share Buttons
+    .mg-share-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
       align-items: center;
-      cursor: pointer;
-      &:hover {
-        background-color: rgba($mg-color-button-background--hover, 0.8);
+      padding-bottom: $mg-spacing-100;
+
+      button {
+        width: 4rem;
+        height: 4rem;
+        margin: 1rem;
+        border-radius: $mg-radius-button;
+        background-color: rgba($mg-color-button-background, 0.5);
+        color: $mg-color-button;
+        padding: 10px;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        border: $mg-border-width-button solid $mg-border-color-button;
+
+        &:hover {
+          background-color: rgba($mg-color-button-background--hover, 0.8);
+        }
+
+        &:focus-visible {
+          box-shadow: 0 0 4px $mg-color-button-background--hover;
+          outline: 0;
+        }
       }
     }
-  }
-}
 
-.copy-button-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  border: 0 solid $mg-border-color-button;
-  color: $mg-color-button;
-  font-family: $mg-font-family;
-  padding: $mg-spacing-100;
-  background-color: rgba($mg-color-neutral-0, 0.75);
-  &:hover .copyText {
-    text-decoration: underline;
-  }
-
-  .paperclipIcon {
-    flex-shrink: 0;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      width: 18px;
-    }
-  }
-  .copyText {
-    color: $mg-color-neutral-600;
-    font-size: $mg-font-size-250;
-    overflow: hidden;
-    scrollbar-width: 0;
-    height: 17px;
-    flex: auto;
-    align-items: start;
-    margin-right: 1em;
-    margin-left: 1em;
-  }
-  .stackIcon {
-    flex-shrink: 0;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba($mg-color-button-background, 0.5);
-    img {
-      width: 18px;
-    }
-    .stackIcon {
-      flex-shrink: 0;
-      width: 25px;
-      height: 25px;
+    // Copy Link
+    button {
       display: flex;
-      justify-content: center;
+      flex-direction: row;
+      justify-content: space-between;
       align-items: center;
-      background-color: rgba($mg-color-button-background, 0.5);
-      img {
-        width: 18px;
+      cursor: pointer;
+      border: 0 solid $mg-border-color-button;
+      color: $mg-color-button;
+      font-family: $mg-font-family;
+      padding: $mg-spacing-100;
+      background-color: rgba($mg-color-neutral-0, 0.75);
+
+      &:hover .mg-copy-text {
+        text-decoration: underline;
+      }
+
+      .mg-paper-clip-icon {
+        flex-shrink: 0;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 18px;
+        }
+      }
+
+      .mg-copy-text {
+        color: $mg-color-neutral-600;
+        font-size: $mg-font-size-250;
+        overflow: hidden;
+        scrollbar-width: 0;
+        height: 17px;
+        flex: auto;
+        align-items: start;
+        margin-right: 1em;
+        margin-left: 1em;
+      }
+
+      .mg-stack-icon {
+        flex-shrink: 0;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba($mg-color-button-background, 0.5);
+
+        img {
+          width: 18px;
+        }
       }
     }
   }
