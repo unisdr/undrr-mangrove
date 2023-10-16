@@ -1,85 +1,80 @@
 /* src/components/Snackbar.css */
 .mg-snackbar-wrapper {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    display: flex;
-    justify-content: center;
-    transform: translate(-50%, -300%);
-    transition: transform 0.3s ease-in-out;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  transform: translate(-50%, -300%);
+  transition: transform 0.3s ease-in-out;
 
-    &__open {
-        transform: translate(-50%, 0%);
-    }
+  &__open {
+    transform: translate(-50%, 0%);
+  }
 }
 
 .mg-snackbar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  color: #333;
+  border-radius: 4px;
+  padding: 10px 20px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
+  fill: black;
+
+  // severity
+  &__error {
+    background-color: #d53939;
+    fill: white;
+  }
+
+  &__warning {
+    background-color: #faf6d9;
+  }
+
+  &__info {
+    background-color: #dde8f0;
+  }
+
+  &__success {
+    background-color: #dff106;
+  }
+
+  &__content {
     display: flex;
     align-items: center;
-    background-color: white;
-    color: #333333;
-    border-radius: 4px;
-    padding: 10px 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    fill: black;
+    justify-content: space-between;
+    width: 100%;
 
-    // severity
-    &__error {
-        background-color: #d53939;
-        fill: white;
+    .mg-snackbar-message {
+      margin-right: 10px;
+      color: black;
+
+      // severity
+      &__error {
+        color: white;
+      }
     }
 
-    &__warning {
-        background-color: #faf6d9;
+    .snackbar-close {
+      background: none;
+      border: none;
+      color: black;
+      font-size: 20px;
+      cursor: pointer;
+
+      // severity
+      &.error {
+        color: white;
+      }
     }
-
-    &__info {
-        background-color: #dde8f0;
-    }
-
-    &__success {
-
-        background-color: #dff106;
-    }
-
-    &__content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-
-        .mg-snackbar-message {
-            margin-right: 10px;
-            color: black;
-
-            // severity
-            &__error {
-                color: white;
-            }
-        }
-
-        .snackbar-close {
-            background: none;
-            border: none;
-            color: black;
-            font-size: 20px;
-            cursor: pointer;
-
-            // severity
-            &.error {
-                color: white;
-            }
-
-        }
-
-    }
-
+  }
 }
 
 .mg-severityIcon {
-    margin-right: 10px;
-    font-size: 20px;
-    width: 25px;
-    height: 25px;
-
+  margin-right: 10px;
+  font-size: 20px;
+  width: 25px;
+  height: 25px;
 }
