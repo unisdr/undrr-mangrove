@@ -4,8 +4,6 @@
 // main wrapper
 section {
   &.mg-share-wrapper {
-
-
     max-width: 250px;
     background-color: rgba($mg-color-button-background, 0.2);
     display: flex;
@@ -40,12 +38,10 @@ section {
         background-color: rgba($mg-color-button-background, 0.5);
         color: $mg-color-button;
         padding: 10px;
-        border: none;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
-
         border: $mg-border-width-button solid $mg-border-color-button;
 
         &:hover {
