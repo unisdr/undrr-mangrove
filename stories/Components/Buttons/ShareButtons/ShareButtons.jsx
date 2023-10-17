@@ -76,20 +76,22 @@ const ShareButtons = ({
   };
 
   return (
-    <section data-vf-google-analytics-region="share-this" className="mg-share-wrapper"  {...props}>
-      <header>{labels.mainLabel}</header>
-      <div className='mg-share-buttons'>
+    <section data-vf-google-analytics-region="share-this" className="mg-share"  {...props}>
+      <header class="mg-share__header">{labels.mainLabel}</header>
+      <div className='mg-share__buttons'>
         <button
           data-vf-analytics-label="Social share: Facebook"
           onClick={() => handleClick("Facebook")}
           aria-label='Share on Facebook'
-          title='Share on Facebook' >
+          title='Share on Facebook'
+          className='mg-share__button' >
           <img src={FacebookIconWhite} alt="Facebook SVG Image" />
         </button>
         <button
           data-vf-analytics-label="Social share: Twitter"
           onClick={() => handleClick("Twitter")}
           aria-label='Share on Twitter'
+          className='mg-share__button'
           title='Share on Twitter' >
           <img src={TwitterIconWhite} alt="Twitter SVG Image" />
 
@@ -98,6 +100,7 @@ const ShareButtons = ({
           data-vf-analytics-label="Social share: LinkedIn"
           onClick={() => handleClick("LinkedIn")}
           aria-label='Share on LinkedIn'
+          className='mg-share__button'
           title='Share on LinkedIn'  >
           <img src={LinkedInIconWhite} alt="LinkedIn SVG Image" />
 
@@ -106,12 +109,13 @@ const ShareButtons = ({
           data-vf-analytics-label="Social share: Mail"
           onClick={() => handleClick("Mail")}
           aria-label='Share via Email'
+          className='mg-share__button'
           title='Share via Email'  >
           <img src={MailIconWhite} alt="Mail SVG Image" />
         </button>
       </div>
 
-      <CopyButton className='' copiedLabel={labels.onCopy} sharedLink={sharedLink} />
+      <CopyButton className='mg-share__copy-button' copiedLabel={labels.onCopy} sharedLink={sharedLink} />
     </section>
   );
 }
@@ -145,11 +149,11 @@ function CopyButton({ copiedLabel, sharedLink, className }) {
 
   return (
     <button data-vf-analytics-label="Quick link copy" aria-label='Copy to Clipboard' title='Copy to Clipboard' className={className} onClick={() => handleCopyLink()}>
-      <div className='mg-paper-clip-icon'>
+      <div className='mg-share__clip-icon'>
         <img src={LinkIcon} alt="Link Icon" />
       </div>
-      <div className='mg-copy-text'>{coppied ? copiedLabel : visibleLink}</div>
-      <div className='mg-stack-icon'>
+      <div className='mg-share__copy-text'>{coppied ? copiedLabel : visibleLink}</div>
+      <div className='mg-share__stack-icon'>
 
         {
           coppied ?
