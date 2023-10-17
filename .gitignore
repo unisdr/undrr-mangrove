@@ -10,6 +10,7 @@ yarn-error.log
 .scannerwork
 .vscode/
 .yarn/cache/
+coverage/
 
 # Ignore npm's package lock, we use yarn
 package-lock.json

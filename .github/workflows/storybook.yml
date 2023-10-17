@@ -36,6 +36,16 @@ jobs:
         run: |
           yarn run build-storybook
           mv docs-build _site
+      - name: Run tests with Jest 🧪
+        run: |
+          yarn test
+      - name: Cache Jest cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules/.cache/jest"
+          key: jest-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            jest-${{ runner.os }}-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
   # Deployment job
