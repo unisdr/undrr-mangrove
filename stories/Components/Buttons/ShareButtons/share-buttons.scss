@@ -1,53 +1,58 @@
 // @import "../../../assets/scss/_breakpoints";
 // @import "../../../assets/scss/_variables";
 
-// main wrapper
-.mg-share-buttons-wrapper {
+.mg-share {
   max-width: 250px;
   background-color: rgba($mg-color-button-background, 0.2);
   display: flex;
   flex-direction: column;
+}
 
-  // label SHARE THIS
-  .mainLabel {
-    padding: $mg-spacing-100;
-    padding-bottom: 0;
-    font-family: $mg-font-family;
-    color: $mg-color-text;
-    font-weight: 600;
-    font-size: $mg-font-size-300;
-    display: flex;
-    justify-content: start;
+.mg-share__header {
+  padding: $mg-spacing-100;
+  padding-bottom: 0;
+  margin: 0;
+  font-family: $mg-font-family;
+  color: $mg-color-text;
+  font-weight: 600;
+  font-size: $mg-font-size-300;
+  display: flex;
+  justify-content: start;
+}
+
+.mg-share__buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  padding-bottom: $mg-spacing-100;
+}
+
+.mg-share__button {
+  width: 4rem;
+  height: 4rem;
+  margin: 1rem;
+  border-radius: $mg-radius-button;
+  background-color: rgba($mg-color-button-background, 0.5);
+  color: $mg-color-button;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: $mg-border-width-button solid $mg-border-color-button;
+
+  &:hover {
+    background-color: rgba($mg-color-button-background--hover, 0.8);
   }
 
-  // all divs inside wrapper, so this is Main Label and Icons
-  .share-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    padding-bottom: $mg-spacing-100;
-    .mg-share-button {
-      width: 4rem;
-      height: 4rem;
-      margin: 1rem;
-      border-radius: $mg-radius-button;
-      background-color: rgba($mg-color-button-background, 0.5);
-      color: $mg-color-button;
-      padding: 10px;
-      border: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      &:hover {
-        background-color: rgba($mg-color-button-background--hover, 0.8);
-      }
-    }
+  &:focus-visible {
+    box-shadow: 0 0 4px $mg-color-button-background--hover;
+    outline: 0;
   }
 }
 
-.copy-button-wrapper {
+.mg-share__copy-button {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -58,54 +63,47 @@
   font-family: $mg-font-family;
   padding: $mg-spacing-100;
   background-color: rgba($mg-color-neutral-0, 0.75);
-  &:hover .copyText {
+
+  &:hover .mg-share__copy-text {
     text-decoration: underline;
   }
+}
 
-  .paperclipIcon {
-    flex-shrink: 0;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      width: 18px;
-    }
+.mg-share__clip-icon {
+  flex-shrink: 0;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 18px;
   }
-  .copyText {
-    color: $mg-color-neutral-600;
-    font-size: $mg-font-size-250;
-    overflow: hidden;
-    scrollbar-width: 0;
-    height: 17px;
-    flex: auto;
-    align-items: start;
-    margin-right: 1em;
-    margin-left: 1em;
-  }
-  .stackIcon {
-    flex-shrink: 0;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba($mg-color-button-background, 0.5);
-    img {
-      width: 18px;
-    }
-    .stackIcon {
-      flex-shrink: 0;
-      width: 25px;
-      height: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba($mg-color-button-background, 0.5);
-      img {
-        width: 18px;
-      }
-    }
+}
+
+.mg-share__copy-text {
+  color: $mg-color-neutral-600;
+  font-size: $mg-font-size-250;
+  overflow: hidden;
+  scrollbar-width: 0;
+  height: 17px;
+  flex: auto;
+  align-items: start;
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
+.mg-share__stack-icon {
+  flex-shrink: 0;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba($mg-color-button-background, 0.5);
+
+  img {
+    width: 18px;
   }
 }
