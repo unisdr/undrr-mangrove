@@ -124,7 +124,7 @@ const ShareButtons = ({
 *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
 *  @param {string} sharedLink - the link that will be coppied
 */
-function CopyButton({ copiedLabel, sharedLink, className }) {
+export function CopyButton({ copiedLabel, sharedLink,  className }) {
   const [coppied, setCoppied] = React.useState(false);
   const [ visibleLink, setVisibleLink ] = React.useState(sharedLink);
 
