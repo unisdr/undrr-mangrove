@@ -35,6 +35,32 @@ yarn run build-storybook
 yarn run lint
 ```
 
+## Testing
+
+When adding new components, we rely on Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
+
+### Creating Tests
+
+To create tests for your component library, you can create files in the `stories/__tests__` folder. Jest will automatically discover and run any files in this folder that end in `.test.js`.
+
+Each test file should contain one or more test cases. A test case is a function that takes two arguments: a test description and a callback function. The callback function is where you will write your test code.
+
+The test code should assert that the component behaves as expected. You can use the Jest assertion library to do this. The Jest assertion library provides a variety of functions for asserting different types of values.
+
+### Running Tests
+
+To run your tests, you can use the following command:
+
+```bash
+yarn test
+```
+
+To run test coverage report, you can use:
+
+```bash
+yarn test:coverage
+```
+
 ## Compiled assets
 
 We do not yet make the compiled assets available directly; see:
