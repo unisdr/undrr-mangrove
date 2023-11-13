@@ -43,9 +43,6 @@ export const parameters = {
   viewport: {
     viewports: INITIAL_VIEWPORTS,
   },
-  docs: {
-    transformSource: (src, storyContext) => renderToHTML(storyContext.storyFn),
-  },
   options: {
     storySort: {
       method: 'alphabetical',
