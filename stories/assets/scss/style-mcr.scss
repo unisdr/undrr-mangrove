@@ -1,7 +1,3 @@
-@import "./variables";
-@import "./variables-mcr";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
-@import "./foundational";
-@import "./components";
+@import "./core/variables";
+@import "./themes/variables-mcr";
+@import "./style";
