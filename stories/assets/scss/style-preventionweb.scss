@@ -1,7 +1,3 @@
-@import "./variables";
-@import "./variables-preventionweb";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
-@import "./foundational";
-@import "./components";
+@import "./core/variables";
+@import "./themes/variables-preventionweb";
+@import "./style"

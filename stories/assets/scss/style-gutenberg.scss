@@ -9,10 +9,10 @@
  * https://git.un.org/undrr/web-backlog/-/issues/545
  */
 
-@import "./variables";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
+@import "./core/variables";
+@import "./core/breakpoints";
+@import "./core/mixins";
+@import "./core/utility";
 
 // @import './base';
 
