@@ -1,0 +1,114 @@
+@import '../../assets/scss/variables';
+
+.mg-mega-topbar {
+  width: 100%;
+  background: $mg-color-blue-900;
+  display: flex;
+  align-items: flex-start;
+}
+
+.mg-mega-topbar__item {
+  padding: $mg-spacing-100 $mg-spacing-150;
+  color: $mg-color-white;
+  &:hover {
+    background: $mg-color-blue-800;
+  }
+}
+
+.mg-mega__button {
+  display: inline-block;
+  background-color: $mg-color-white;
+  padding: $mg-spacing-100 $mg-spacing-300;
+  border-radius: $mg-spacing-300;
+  border: 1px solid $mg-color-blue-900;
+  text-decoration: none !important;
+  color: $mg-color-blue-900 !important;
+}
+
+.mg-mega-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: start;
+  background-color: $mg-color-blue-100;
+  border-radius: 0 0 $mg-spacing-100 $mg-spacing-100;
+  box-shadow: -1px 5px 10px -1px rgba(0,0,0,0.25);
+  height: 35rem;
+  overflow: hidden;
+
+  &__left {
+    flex-basis: 33%;
+    height: 100%;
+    background-color: $mg-color-blue-100;
+  }
+  &__banner {
+    padding: $mg-spacing-300;
+    h1 {
+      font-size: $mg-font-size-500;
+      font-weight: lighter;
+      line-height: 1;
+      margin: 0;
+      padding: 0;
+    }
+    p {
+      margin: 0
+    }
+  }
+}
+
+.mg-mega-content__section-list {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.mg-mega-content__section-list-item {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  .mg-mega-content__section-list-link {
+    text-decoration: none;
+    color: $mg-color-black;
+    font-weight: bold;
+    display: block;
+    padding: $mg-spacing-50 0;
+    cursor: pointer;
+    &--active {
+      padding: $mg-spacing-50 $mg-spacing-300;
+      margin-left: -$mg-spacing-300 ;
+      margin-right: -$mg-spacing-300 ;
+      background-color: $mg-color-white;
+    }
+  }
+}
+
+.mg-mega-content__right {
+  flex: 1;
+  height: 100%;
+  background-color: $mg-color-white;
+  display: flex;
+  ul {
+    flex: 1;
+    margin: $mg-spacing-150;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-items: start;
+    gap: 0;
+    li {
+      padding: 0;
+      margin: 0;
+      a {
+        display: block;
+        padding: $mg-spacing-50;
+        text-decoration: none;
+        overflow: hidden;
+        white-space: wrap;
+        text-overflow: clip;
+        color: black;
+        font-weight: light;
+      }
+    }
+  }
+}
