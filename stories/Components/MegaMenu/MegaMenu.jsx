@@ -1,44 +1,11 @@
 import { useState, useEffect } from "react";
 import "./megamenu.scss"
 
-export function MegaMenu({ delay = 300 }) {
+export function MegaMenu({ sections, delay = 300 }) {
   let timeoutId = null;
 
   const [section, setSection] = useState(null);
   const [itemIndex, setItemIndex] = useState(0);
-
-  const sections = [
-    {
-      title: 'Section 1',
-      bannerHeading: 'Analytics by country',
-      bannerDescription: 'Gaze upon statistics in wonder...',
-      items: [
-        {
-          title: 'Item 1',
-          subItems: Array(30).fill({ title: 'Sub-item 1', url: '#'})
-        },
-        {
-          title: 'Item 2',
-          subItems: Array(20).fill({ title: 'Sub-item 2', url: '#'})
-        }
-      ]
-    },
-  {
-      title: 'Section 2',
-      bannerHeading: 'Analytics by region',
-      bannerDescription: 'Gaze upon statistics in wonder...',
-      items: [
-        {
-          title: 'Item 1',
-          subItems: Array(20).fill({ title: 'Sub-item 1', url: '#'})
-        },
-        {
-          title: 'Item 2',
-          subItems: Array(15).fill({ title: 'Sub-item 2', url: '#'})
-        }
-      ]
-    }
-  ]
 
 const handleMouseLeave = () => {
     clearTimeout(timeoutId);
