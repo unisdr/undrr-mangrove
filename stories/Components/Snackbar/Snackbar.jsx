@@ -52,18 +52,15 @@ const Snackbar = ({
 
   return (
     <div className={`mg-snackbar-wrapper ${opened ? "mg-snackbar-wrapper__open" : ""}`}>
-      <div className={`mg-snackbar ${severity} }`}>
+      <div className={`mg-snackbar mg-snackbar__${severity}`}>
         <div className="mg-snackbar__content">
           {severity && (
-            <div className={`mg-severityIcon ${severity}`}>{icon}</div>
+            <div className={`mg-snackbar__icon`}>{icon}</div>
           )}
-          <span className={`mg-snackbar-message  ${severity}`}>{message}</span>
-          <button
-            className={`mg-snackbar__close  ${severity}`}
+          <span className={`mg-snackbar__message`}>{message}</span>
+            <button className="mg-button mg-button-primary"
             onClick={() => onClose()}
-          >
-            &times;
-          </button>
+            >Close</button>
         </div>
       </div>
     </div>
@@ -84,7 +81,7 @@ export const ShowOffSnackbar = () => {
       {
         <Snackbar
           opnnedMiliseconds={5000}
-          severity=""
+          severity="error"
           opened={SnackbarOpen}
           message={"This is a snackbar message"}
           onClose={() => {

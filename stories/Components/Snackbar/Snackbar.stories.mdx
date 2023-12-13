@@ -15,9 +15,6 @@ export const getCaptionForLocale = (locale) => {
   }
 };
 
-
- 
-
 <Meta title="Components/Snackbar"
   argTypes={{
     message: {
@@ -25,9 +22,9 @@ export const getCaptionForLocale = (locale) => {
       defaultValue: 'Message ...'
       },
     severity: {
-      options: ["Active", "Disabled"],
+      options: ["error", "info", "success"],
       control: { type: "inline-radio" },
-      defaultValue: 'Active'
+      defaultValue: 'error'
       },
       onClose: {
       options: ["Arrow", "No Arrow"],

@@ -1,7 +1,8 @@
-/* src/components/Snackbar.css */
+@import "../../assets/scss/variables";
+
 .mg-snackbar-wrapper {
   position: fixed;
-  top: 20px;
+  top: 0;
   left: 50%;
   display: flex;
   justify-content: center;
@@ -17,7 +18,7 @@
   display: flex;
   align-items: center;
   background-color: white;
-  color: #333;
+  color: $mg-color-black;
   border-radius: 4px;
   padding: 10px 20px;
   box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
@@ -47,32 +48,13 @@
     justify-content: space-between;
     width: 100%;
 
-    .mg-snackbar-message {
-      margin-right: 10px;
-      color: black;
-
-      // severity
-      &__error {
-        color: white;
-      }
-    }
-
-    .snackbar-close {
-      background: none;
-      border: none;
-      color: black;
-      font-size: 20px;
-      cursor: pointer;
-
-      // severity
-      &.error {
-        color: white;
-      }
+    &__message {
+      margin-right: 20px;
     }
   }
 }
 
-.mg-severityIcon {
+.mg-snackbar__icon {
   margin-right: 10px;
   font-size: 20px;
   width: 25px;
