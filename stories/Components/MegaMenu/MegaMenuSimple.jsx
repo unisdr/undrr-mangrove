@@ -35,13 +35,13 @@ export function MegaMenuSimple({ sections, delay = 300 }) {
       {/* Topbar */}
       <div className="mg-mega-topbar">
         {sections.map((item, index) => (
-          <div
+          <a
             key={index}
             className="mg-mega-topbar__item"
             onMouseEnter={() => handleMouseEnter(item)}
           >
             {item.title}
-          </div>
+          </a>
         ))}
       </div>
       {/* Content */}
