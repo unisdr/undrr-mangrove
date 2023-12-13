@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { CtaButton } from "../Buttons/CtaButton/CtaButton";
-import "./megamenu.scss";
+//import "./megamenu.scss";
 import { RecursiveListMenu } from "./RecursiveMegaMenuItem/RecursiveMegaMenuItem";
 
 export function MegaMenuSimple({ delay = 300 }) {
@@ -88,7 +88,7 @@ export function MegaMenuSimple({ delay = 300 }) {
   }, []);
 
   return (
-    <div className="mg-mega-wrapper" onMouseLeave={handleMouseLeave}>
+    <nav className="mg-mega-wrapper" onMouseLeave={handleMouseLeave}>
       {/* Topbar */}
       <div className="mg-mega-topbar">
         {sections.map((item, index) => (
@@ -103,19 +103,19 @@ export function MegaMenuSimple({ delay = 300 }) {
       </div>
       {/* Content */}
       {section && (
-        <div className="mg-mega-content">
-          <div className="mg-mega-content__left">
-            <div className="mg-mega-content__banner">
-              <h1>{section.bannerHeading}</h1>
+        <article className="mg-mega-content">
+          <aside className="mg-mega-content__left">
+            <section className="mg-mega-content__banner">
+              <header>{section.bannerHeading}</header>
               <p>{section.bannerDescription}</p>
               <CtaButton label="Learn more" className="button" />
-            </div>
-          </div>
-          <div className="mg-mega-content__right">
+            </section>
+          </aside>
+          <section className="mg-mega-content__right">
             <RecursiveListMenu items={section.items} />
-          </div>
-        </div>
+          </section>
+        </article>
       )}
-    </div>
+    </nav>
   );
 }

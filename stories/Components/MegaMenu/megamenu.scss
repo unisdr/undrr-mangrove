@@ -2,16 +2,17 @@
 
 .mg-mega-topbar {
   width: 100%;
-  background: $mg-color-blue-900;
+  background: $mg-color-interactive;
   display: flex;
   align-items: flex-start;
 }
 
 .mg-mega-topbar__item {
-  padding: $mg-spacing-100 $mg-spacing-150;
-  color: $mg-color-white;
+  padding: $mg-padding-button;
+  color: $mg-color-button;
+  cursor: pointer;
   &:hover {
-    background: $mg-color-blue-800;
+    background: $mg-color-interactive-active;
   }
 }
 
@@ -19,8 +20,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: start;
-  background-color: $mg-color-blue-100;
-  border-radius: 0 0 $mg-spacing-100 $mg-spacing-100;
+  background-color: $mg-color-interactive;
+  border-radius: $mg-radius-tab;
   box-shadow: -1px 5px 10px -1px rgba(0 0 0 / 0.25);
   height: 35rem;
   overflow: hidden;
@@ -28,19 +29,20 @@
   &__left {
     flex-basis: 33%;
     height: 100%;
-    background-color: $mg-color-blue-100;
+    background-color: $mg-color-interactive;
   }
   &__banner {
     padding: $mg-spacing-300;
-    h1 {
+    color: $mg-color-button;
+    header {
       font-size: $mg-font-size-500;
-      font-weight: lighter;
       line-height: 1;
       margin: 0;
       padding: 0;
     }
     p {
       margin: 0;
+      color: $mg-color-button;
     }
   }
 }
@@ -66,7 +68,7 @@
       padding: $mg-spacing-50 $mg-spacing-300;
       margin-left: -$mg-spacing-300;
       margin-right: -$mg-spacing-300;
-      background-color: $mg-color-white;
+      background-color: $mg-color-button;
     }
   }
 }

@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./megamenu.scss"
 
-export function MegaMenu() {
+export function MegaMenu({ delay = 300 }) {
+  let timeoutId = null;
+
+  const [section, setSection] = useState(null);
+  const [itemIndex, setItemIndex] = useState(0);
+
   const sections = [
     {
       title: 'Section 1',
@@ -35,13 +40,33 @@ export function MegaMenu() {
     }
   ]
 
-  const [section, setSection] = useState(null);
-  const [itemIndex, setItemIndex] = useState(0);
+const handleMouseLeave = () => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      setSection(null);
+    }, delay);
+  };
+
+  const handleMouseEnter = (item) => {
+    clearTimeout(timeoutId);
+    setSection(item);
+  };
+
+
+  useEffect(() => {
+    // Clean up the timeout when the component unmounts
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+
 
   return (
     <nav 
       className="mg-mega-wrapper"
-      onMouseLeave={() => setSection(null)}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Topbar */}
       <div className="mg-mega-topbar">
@@ -50,7 +75,7 @@ export function MegaMenu() {
             <div 
               key={index}
               className="mg-mega-topbar__item"
-              onMouseEnter={() => setSection(item)}
+              onMouseEnter={() => handleMouseEnter(item)}
             > 
               { item.title }
             </div>
