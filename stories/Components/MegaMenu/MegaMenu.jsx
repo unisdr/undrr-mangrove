@@ -18,15 +18,30 @@ export function MegaMenu() {
         }
       ]
     },
+  {
+      title: 'Section 2',
+      bannerHeading: 'Analytics by region',
+      bannerDescription: 'Gaze upon statistics in wonder...',
+      items: [
+        {
+          title: 'Item 1',
+          subItems: Array(20).fill({ title: 'Sub-item 1', url: '#'})
+        },
+        {
+          title: 'Item 2',
+          subItems: Array(15).fill({ title: 'Sub-item 2', url: '#'})
+        }
+      ]
+    }
   ]
 
   const [section, setSection] = useState(null);
   const [itemIndex, setItemIndex] = useState(0);
 
   return (
-    <div 
+    <nav 
       className="mg-mega-wrapper"
-      // onMouseLeave={() => setsection(null)}
+      onMouseLeave={() => setSection(null)}
     >
       {/* Topbar */}
       <div className="mg-mega-topbar">
@@ -45,12 +60,12 @@ export function MegaMenu() {
       {/* Content */}
       {
         section !== null && (
-          <div className="mg-mega-content">
-            <div className="mg-mega-content__left">
-              <div className="mg-mega-content__banner">
-                <h1>{section.bannerHeading}</h1>
+          <article className="mg-mega-content">
+            <aside className="mg-mega-content__left">
+              <section className="mg-mega-content__banner">
+                <header>{section.bannerHeading}</header>
                 <p>{section.bannerDescription}</p>
-              </div>
+              </section>
               <ul className="mg-mega-content__section-list">
                 {
                   section.items.map((item, index) => (
@@ -69,8 +84,8 @@ export function MegaMenu() {
                   ))
                 }
               </ul>
-            </div>
-            <div className="mg-mega-content__right">
+            </aside>
+            <section className="mg-mega-content__right">
               <ul>
                 {
                   section.items[itemIndex].subItems.map((item, index) => (
@@ -80,10 +95,10 @@ export function MegaMenu() {
                   ))
                 }
               </ul>
-            </div>
-          </div>
+            </section>
+          </article>
         )
       }
-    </div>
+    </nav>
   )
 }

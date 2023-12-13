@@ -1,91 +1,109 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CtaButton } from "../Buttons/CtaButton/CtaButton";
-import "./megamenu.scss"
+import "./megamenu.scss";
 import { RecursiveListMenu } from "./RecursiveMegaMenuItem/RecursiveMegaMenuItem";
 
-export function MegaMenuSimple() {
+export function MegaMenuSimple({ delay = 300 }) {
+  let timeoutId = null;
+  
+  const [section, setSection] = useState(null);
+
   const sections = [
     {
-      title: 'Highlights',
-      bannerHeading: 'Highlights',
-      bannerDescription: 'Gaze upon statistics in wonder...',
+      title: "Highlights",
+      bannerHeading: "Highlights",
+      bannerDescription: "Gaze upon statistics in wonder...",
       items: [
         {
-          title: 'Item 1',
-          url: '#',
+          title: "Item 1",
+          url: "#",
           items: [
             {
-              title: 'Sub-item 1',
-              url: '#'
+              title: "Sub-item 1",
+              url: "#",
             },
             {
-              title: 'Sub-item 2',
-              url: '#',
+              title: "Sub-item 2",
+              url: "#",
               items: [
                 {
-                  title: 'Sub-item 3',
-                  url: '#'
+                  title: "Sub-item 3",
+                  url: "#",
                 },
                 {
-                  title: 'Sub-item 4',
-                  url: '#'
-                },  
-              ]
+                  title: "Sub-item 4",
+                  url: "#",
+                },
+              ],
             },
-          ]
+          ],
         },
         {
-          title: 'Item 1',
-          url: '#',
+          title: "Item 1",
+          url: "#",
           items: [
             {
-              title: 'Sub-item 1',
-              url: '#'
+              title: "Sub-item 1",
+              url: "#",
             },
             {
-              title: 'Sub-item 2',
-              url: '#',
+              title: "Sub-item 2",
+              url: "#",
               items: [
                 {
-                  title: 'Sub-item 3',
-                  url: '#'
+                  title: "Sub-item 3",
+                  url: "#",
                 },
                 {
-                  title: 'Sub-item 4',
-                  url: '#'
-                },  
-              ]
+                  title: "Sub-item 4",
+                  url: "#",
+                },
+              ],
             },
-          ]
+          ],
         },
-      ]
+      ],
     },
-  ]
+  ];
 
-  const [section, setSection] = useState(null)
+  const handleMouseLeave = () => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      setSection(null);
+    }, delay);
+  };
+
+  const handleMouseEnter = (item) => {
+    clearTimeout(timeoutId);
+    setSection(item);
+  };
+
+
+  useEffect(() => {
+    // Clean up the timeout when the component unmounts
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   return (
-    <div 
-      className="mg-mega-wrapper"
-    >
+    <div className="mg-mega-wrapper" onMouseLeave={handleMouseLeave}>
       {/* Topbar */}
       <div className="mg-mega-topbar">
-        {
-          sections.map((item, index) => (
-            <div 
-              key={index}
-              className="mg-mega-topbar__item"
-              onMouseEnter={() => setSection(item)}
-            > 
-              { item.title }
-            </div>
-          ))
-        }
+        {sections.map((item, index) => (
+          <div
+            key={index}
+            className="mg-mega-topbar__item"
+            onMouseEnter={() => handleMouseEnter(item)}
+          >
+            {item.title}
+          </div>
+        ))}
       </div>
       {/* Content */}
-      {
-        section && (
-          <div className="mg-mega-content">
+      {section && (
+        <div className="mg-mega-content">
           <div className="mg-mega-content__left">
             <div className="mg-mega-content__banner">
               <h1>{section.bannerHeading}</h1>
@@ -97,8 +115,7 @@ export function MegaMenuSimple() {
             <RecursiveListMenu items={section.items} />
           </div>
         </div>
-        )
-      }
+      )}
     </div>
-  )
+  );
 }
