@@ -51,19 +51,27 @@ const Snackbar = ({
   }
 
   return (
-    <div className={`mg-snackbar-wrapper ${opened ? "mg-snackbar-wrapper__open" : ""}`}>
+    <aside
+      className={`mg-snackbar-wrapper ${
+        opened ? "mg-snackbar-wrapper__open" : ""
+      }`}
+      aria-live="assertive"
+      aria-atomic="true"
+    >
       <div className={`mg-snackbar mg-snackbar__${severity}`}>
         <div className="mg-snackbar__content">
           {severity && (
-            <div className={`mg-snackbar__icon`}>{icon}</div>
+            <span className={`mg-snackbar__icon`} aria-hidden="true">
+              {icon}
+            </span>
           )}
           <span className={`mg-snackbar__message`}>{message}</span>
-            <button className="mg-button"
-            onClick={() => onClose()}
-            >Close</button>
+          <button className="mg-button" onClick={() => onClose()}>
+            Close
+          </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 
