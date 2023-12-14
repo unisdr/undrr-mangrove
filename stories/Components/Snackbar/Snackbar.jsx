@@ -75,7 +75,11 @@ const Snackbar = ({
   );
 };
 
-export const ShowOffSnackbar = () => {
+export const ShowOffSnackbar = ({
+  severity,
+  message,
+  openedMiliseconds,
+}) => {
   const [SnackbarOpen, setSnackbarOpen] = React.useState(false);
   return (
     <div>
@@ -88,10 +92,10 @@ export const ShowOffSnackbar = () => {
       </button>
       {
         <Snackbar
-          opnnedMiliseconds={5000}
-          severity="info"
+          opnnedMiliseconds={openedMiliseconds}
+          severity={severity}
           opened={SnackbarOpen}
-          message={"This is a snackbar message"}
+          message={message}
           onClose={() => {
             setSnackbarOpen(false);
           }}

@@ -26,11 +26,10 @@ export const getCaptionForLocale = (locale) => {
       control: { type: "inline-radio" },
       defaultValue: 'error'
       },
-      onClose: {
-      options: ["Arrow", "No Arrow"],
-      control: { type: "inline-radio" },
-      defaultValue: 'Arrow'
-      },
+    openedMiliseconds: {
+      control: { type: "text" },
+      defaultValue: '5000'
+    }
   }}/>
 
 ## How to use the snackbar component:
@@ -42,8 +41,7 @@ export const getCaptionForLocale = (locale) => {
 <Story name="Snackbar">
   {(args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <ShowOffSnackbar/>;
- 
+    return <ShowOffSnackbar {...args} />;
   }}
 </Story>
 </Canvas>
