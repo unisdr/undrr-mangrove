@@ -17,29 +17,28 @@
 .mg-snackbar {
   display: flex;
   align-items: center;
-  background-color: white;
-  color: $mg-color-black;
+  background-color: $mg-color-white;
+  color: $mg-color-white;
   border-radius: 4px;
-  padding: 10px 20px;
+  padding: $mg-padding-button;
   box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
-  fill: black;
+  fill: $mg-color-white;
 
   // severity
   &__error {
-    background-color: #d53939;
-    fill: white;
+    background-color: $mg-color-red-900;
   }
 
   &__warning {
-    background-color: #faf6d9;
+    background-color: $mg-color-accent-100;
   }
 
   &__info {
-    background-color: #dde8f0;
+    background-color: $mg-color-interactive;
   }
 
   &__success {
-    background-color: #dff106;
+    background-color: $mg-color-interactive;
   }
 
   &__content {
@@ -48,15 +47,13 @@
     justify-content: space-between;
     width: 100%;
 
-    &__message {
-      margin-right: 20px;
-    }
+  }
+  &__message {
+    margin-right: $mg-spacing-200;
   }
 }
 
 .mg-snackbar__icon {
-  margin-right: 10px;
-  font-size: 20px;
   width: 25px;
   height: 25px;
 }

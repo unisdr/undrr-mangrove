@@ -58,7 +58,7 @@ const Snackbar = ({
             <div className={`mg-snackbar__icon`}>{icon}</div>
           )}
           <span className={`mg-snackbar__message`}>{message}</span>
-            <button className="mg-button mg-button-primary"
+            <button className="mg-button"
             onClick={() => onClose()}
             >Close</button>
         </div>
@@ -81,7 +81,7 @@ export const ShowOffSnackbar = () => {
       {
         <Snackbar
           opnnedMiliseconds={5000}
-          severity="error"
+          severity="info"
           opened={SnackbarOpen}
           message={"This is a snackbar message"}
           onClose={() => {
