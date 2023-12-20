@@ -1,5 +1,9 @@
 @import "../../assets/scss/variables";
 
+.mg-mega-wrapper {
+  position: relative;
+}
+
 .mg-mega-topbar {
   width: 100%;
   background: $mg-color-interactive;

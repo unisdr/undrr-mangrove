@@ -1,0 +1,14 @@
+@import '../../../assets/scss/variables';
+
+.mg-icon-button {
+  padding: $mg-spacing-100;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: $mg-color-blue-500;
+  }
+}
