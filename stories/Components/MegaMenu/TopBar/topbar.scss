@@ -1,4 +1,4 @@
-@import '../../../assets/scss/variables';
+@import "../../../assets/scss/variables";
 
 .mg-mega-sidebar-section {
   ol {
@@ -18,7 +18,7 @@
         text-decoration: none;
       }
       &:hover {
-        background: $mg-color-blue-700;  
+        background: $mg-color-blue-700;
       }
     }
   }
@@ -42,9 +42,9 @@
   overflow: scroll;
   height: 100vh;
   background-color: $mg-color-blue-900;
-  -webkit-box-shadow: -5px 0px 8px -4px rgba(0,0,0,0.25);
-  -moz-box-shadow: -5px 0px 8px -4px rgba(0,0,0,0.25);
-  box-shadow: -5px 0px 8px -4px rgba(0,0,0,0.25);
+  -webkit-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
+  -moz-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
+  box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   top: 0;
   right: 0;
 }
