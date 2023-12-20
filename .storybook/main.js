@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = {
   staticDirs: ['../stories/assets'],
   stories: ["../stories/**/*.stories.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
+  //stories: ["../stories/**/CategoriesMenu2.stories.mdx"],
   addons: [{ name: 'storybook-design-token', options: {
     preserveCSSVars: true ,
     // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
@@ -30,11 +31,14 @@ module.exports = {
   },
 
   framework: {
-    name: "@storybook/react-webpack5",
+    name: "@storybook/preact-webpack5",
     options: {}
   },
 
   docs: {
-    autodocs: true
+    autodocs: false,
+    story: {
+      inline: false,
+    },
   }
 };
