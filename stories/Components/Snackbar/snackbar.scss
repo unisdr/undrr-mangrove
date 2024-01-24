@@ -1,0 +1,59 @@
+@import "../../assets/scss/variables";
+
+.mg-snackbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  transform: translate(-50%, -300%);
+  transition: transform 0.3s ease-in-out;
+
+  &__open {
+    transform: translate(-50%, 0%);
+  }
+}
+
+.mg-snackbar {
+  display: flex;
+  align-items: center;
+  background-color: $mg-color-white;
+  color: $mg-color-white;
+  border-radius: $mg-radius-tab;
+  padding: $mg-padding-button;
+  box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
+  fill: $mg-color-white;
+
+  // severity
+  &__error {
+    background-color: $mg-color-red-900;
+  }
+
+  &__warning {
+    background-color: $mg-color-accent-100;
+  }
+
+  &__info {
+    background-color: $mg-color-interactive;
+  }
+
+  &__success {
+    background-color: $mg-color-interactive;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__message {
+    margin-right: $mg-spacing-200;
+  }
+}
+
+.mg-snackbar__icon {
+  width: 25px;
+  height: 25px;
+}
