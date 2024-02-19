@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { h } from "preact";
+import { useState, useEffect } from "preact/hooks";
 // import './share-buttons.scss';
 import FacebookIconWhite from './FacebookIconWhite.svg';
 import TwitterIconWhite from './TwitterIconWhite.svg';
@@ -8,6 +9,7 @@ import CopyIcon from './CopyIcon.svg';
 import CheckIcon from './CheckIcon.svg';
 import LinkIcon from './LinkIcon.svg';
 import LinkUrls from "./links.json"
+
 const defaults = {
   defaultSharingTextBody: "Check out this link: ",
   defaultSharingTextSubject: "Sharing Link",
@@ -125,8 +127,8 @@ const ShareButtons = ({
 *  @param {string} sharedLink - the link that will be coppied
 */
 export function CopyButton({ copiedLabel, sharedLink,  className }) {
-  const [coppied, setCoppied] = React.useState(false);
-  const [ visibleLink, setVisibleLink ] = React.useState(sharedLink);
+  const [coppied, setCoppied] = useState(false);
+  const [ visibleLink, setVisibleLink ] = useState(sharedLink);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sharedLink);

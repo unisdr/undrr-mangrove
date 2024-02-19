@@ -1,5 +1,5 @@
+import { h } from "preact";
 import { Icons } from "../../../Atom/Icons/Icons";
-import "./topbar.scss"
 
 export function TopBarIconButton({ onClick, icon }) {
   return (

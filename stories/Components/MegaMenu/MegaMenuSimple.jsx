@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { h } from "preact";
+import { useState, useEffect } from "preact/hooks";
 import { CtaButton } from "../Buttons/CtaButton/CtaButton";
-import "./megamenu.scss";
 import { RecursiveListMenu } from "./RecursiveMegaMenuItem/RecursiveMegaMenuItem";
 
-export function MegaMenuSimple({ sections, delay = 300 }) {
+const MegaMenuSimple = ({ sections, delay = 300 }) => {
   let timeoutId = null;
   
   const [section, setSection] = useState(null);
@@ -62,3 +62,5 @@ export function MegaMenuSimple({ sections, delay = 300 }) {
     </nav>
   );
 }
+
+export default MegaMenuSimple;

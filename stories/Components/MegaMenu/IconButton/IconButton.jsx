@@ -1,5 +1,4 @@
 import { Icons } from "../../../Atom/Icons/Icons";
-import "./IconButton.scss"
 
 export function IconButton({ onClick, icon }) {
   return (

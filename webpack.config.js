@@ -45,14 +45,18 @@ module.exports = [
     },
   },
   {
-    entry: "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx", // Replace with your file's path
+    entry: {
+      ShareButtons: "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
+      MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
+      MegaMenuSimple: "./stories/Components/MegaMenu/MegaMenuSimple.jsx",
+    },
     externals: {
       preact: "preact",
       "preact/hooks": "preact/hooks",
     },
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: "bundle.js",
+      filename: "[name].js",
       library: {
         type: "module",
       },

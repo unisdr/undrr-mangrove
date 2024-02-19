@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import "./megamenu.scss";
-import { IconButton } from "./IconButton/IconButton";
+import { h } from "preact";
+import { useState, useEffect } from "preact/hooks";
+//import "./megamenu.scss";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
 import { useBreakpoint } from "./TopBar/hook";
 
-export function MegaMenu({ sections, delay = 300 }) {
+const MegaMenu =  ({ sections, delay = 300 }) => {
   let timeoutId = null;
 
   const [section, setSection] = useState(null);
@@ -91,3 +91,5 @@ export function MegaMenu({ sections, delay = 300 }) {
     </nav>
   );
 }
+
+export default MegaMenu;
