@@ -1,4 +1,4 @@
-import "./RecursiveMegaMenuItem.scss";
+import { h } from "preact";
 
 function RecursiveListItem({ title, url, items }) {
   return (
