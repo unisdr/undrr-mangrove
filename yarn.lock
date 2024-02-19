@@ -2344,6 +2344,7 @@ __metadata:
     "@storybook/preact-webpack5": "npm:^7.5.3"
     "@storybook/react": "npm:^7.4.5"
     "@storybook/react-webpack5": "npm:^7.4.5"
+    "@testing-library/preact": "npm:^3.2.3"
     "@testing-library/react": "npm:^12.1.5"
     "@types/dompurify": "npm:^2.4.0"
     "@whitespace/storybook-addon-html": "npm:^5.1.6"
@@ -4418,7 +4419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^8.0.0":
+"@testing-library/dom@npm:^8.0.0, @testing-library/dom@npm:^8.11.1":
   version: 8.20.1
   resolution: "@testing-library/dom@npm:8.20.1"
   dependencies:
@@ -4431,6 +4432,17 @@ __metadata:
     lz-string: "npm:^1.5.0"
     pretty-format: "npm:^27.0.2"
   checksum: 10/6c7a92fcc89931ef62a9a92dacec09b3e5ee5c3aba2171aa8de6c7504927b7c9364d73d2ed87b72447d6783108c1c92c207d16f788de64c69bc97059d7105e3c
+  languageName: node
+  linkType: hard
+
+"@testing-library/preact@npm:^3.2.3":
+  version: 3.2.3
+  resolution: "@testing-library/preact@npm:3.2.3"
+  dependencies:
+    "@testing-library/dom": "npm:^8.11.1"
+  peerDependencies:
+    preact: ">=10 || ^10.0.0-alpha.0 || ^10.0.0-beta.0"
+  checksum: 10/8c714a1aeb15497779ac927f015329aee5b1b89da9edebe155a3ec25ce58557917691ca89c4872f4a894995077ade3cadd57254c160cb7e51909b3099029ec2d
   languageName: node
   linkType: hard
 
