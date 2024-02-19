@@ -46,7 +46,8 @@ module.exports = [
   },
   {
     entry: {
-      ShareButtons: "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
+      ShareButtons:
+        "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
       MegaMenuSimple: "./stories/Components/MegaMenu/MegaMenuSimple.jsx",
     },
@@ -72,6 +73,10 @@ module.exports = [
           use: {
             loader: "babel-loader",
           },
+        },
+        {
+          test: /\.scss$/,
+          use: ["style-loader", "css-loader", "sass-loader"],
         },
         {
           test: /\.(png|jpe?g|gif|svg)$/,
