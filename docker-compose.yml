@@ -8,4 +8,4 @@ services:
     volumes:
       # `application` should be the same as `WORKSPACE_DIR` in `Dockerfile`
       - .:/data/storybook
-    
+    command: ["tail", "-f", "/dev/null"]

@@ -29,4 +29,4 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 # Run Storybook local dev server
-CMD ["yarn", "run", "storybook"]
+# CMD ["yarn", "run", "storybook"]

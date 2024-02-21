@@ -48,6 +48,12 @@ cd undrr-mangrove.git
 # start the application, runs storybook locally via port 6006
 docker-compose up -d
 
+# install project dependencies
+docker exec -it undrr-mangrove_client_1 bash -c "yarn install"
+
+# runs storybook locally
+docker exec -it undrr-mangrove_client_1 bash -c "yarn run storybook"
+
 # build storybook and sass
 docker exec -it undrr-mangrove_client_1 bash -c "yarn build-storybook"
 
