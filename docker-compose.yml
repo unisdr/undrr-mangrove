@@ -1,0 +1,11 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 6006:6006
+    volumes:
+      # `application` should be the same as `WORKSPACE_DIR` in `Dockerfile`
+      - .:/data/storybook
+    

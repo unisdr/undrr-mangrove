@@ -35,6 +35,27 @@ yarn run build-storybook
 yarn run lint
 ```
 
+## Development via Docker
+
+Run the following commands to create/update the code.
+
+```bash
+# checkout the codebase
+git clone git@github.com:unisdr/undrr-mangrove.git
+
+cd undrr-mangrove.git
+
+# start the application, runs storybook locally via port 6006
+docker-compose up -d
+
+# build storybook and sass
+docker exec -it undrr-mangrove_client_1 bash -c "yarn build-storybook"
+
+# linting on codebase
+docker exec -it undrr-mangrove_client_1 bash -c "yarn run lint"
+```
+
+
 ## Testing
 
 When adding new components, we rely on Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
