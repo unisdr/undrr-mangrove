@@ -49,6 +49,10 @@ cd undrr-mangrove.git
 docker-compose up -d
 
 # install project dependencies
+#
+# syntax: docker exec -it [CONTAINER NAME] bash -c "yarn install"
+#
+# Note: The container name may be different depending on the operating system, try "undrr-mangrove_client-1" if below doesn't work otherwise check the container name using docker ps --format "{{.Names}}". 
 docker exec -it undrr-mangrove_client_1 bash -c "yarn install"
 
 # runs storybook locally
