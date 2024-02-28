@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
-import './share-buttons.scss';
+// import './share-buttons.scss';
 import FacebookIconWhite from './FacebookIconWhite.svg';
 import TwitterIconWhite from './TwitterIconWhite.svg';
 import LinkedInIconWhite from './LinkedInIconWhite.svg';
