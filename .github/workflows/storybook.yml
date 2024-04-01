@@ -38,7 +38,7 @@ jobs:
       - name: Build bundle
         run: |
          yarn run build
-         mv dist _site
+         cp dist _site -r
       - name: Run tests with Jest 🧪
         run: |
           yarn test
