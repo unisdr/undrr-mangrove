@@ -12,6 +12,7 @@ yarn-error.log
 .vscode/
 .yarn/cache/
 coverage/
+/.yarn
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
