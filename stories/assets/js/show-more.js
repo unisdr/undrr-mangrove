@@ -15,6 +15,12 @@ export function mgShowMore() {
       let mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
       mgShowMoreTarget.classList.toggle("mg-show-more--collapsed");
 
+      // Allow items to be shown by clicking anywhere on the collapsed item
+      // https://gitlab.com/undrr/web-backlog/-/issues/1612
+      mgShowMoreTarget.addEventListener("click", () => {
+        item.click();
+      });
+
       // Which label to show?
       item.textContent = mgShowMoreTarget.classList.contains(
         "mg-show-more--collapsed"
@@ -29,7 +35,6 @@ export function mgShowMore() {
       }
 
     });
-
 
     item.click();
   });

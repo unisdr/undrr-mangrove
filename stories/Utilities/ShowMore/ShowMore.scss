@@ -14,6 +14,7 @@
 }
 .mg-show-more--collapsed:before {
   content: "";
+  cursor: s-resize;
   display: block;
   position: absolute;
   background-image: linear-gradient(to bottom, rgb(255 255 255 / 0), rgb(255 255 255 / 1));
