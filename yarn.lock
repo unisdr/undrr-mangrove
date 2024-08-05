@@ -2388,7 +2388,7 @@ __metadata:
     postcss: "npm:^8.4.31"
     postcss-cli: "npm:^10.0.0"
     postcss-loader: "npm:^7.0.1"
-    preact: "npm:^10.19.1"
+    preact: "npm:10.22.0"
     preact-render-to-string: "npm:5.2.6"
     prettier: "npm:^2.8.0"
     prettier-eslint: "npm:^15.0.1"
@@ -16741,10 +16741,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:^10.19.1":
-  version: 10.19.5
-  resolution: "preact@npm:10.19.5"
-  checksum: 10/9c4c716361d7793f6c8ae475db7bbed7ef4affd4ac8eaf6ff9afd8d1218a0ae55918635b5d8842a3c8eecd22728e24f0af681c710d0ada6d81424dd991665cde
+"preact@npm:10.22.0":
+  version: 10.22.0
+  resolution: "preact@npm:10.22.0"
+  checksum: 10/0f3092916a538fa47d205d603bb5c513f9368a59bcbf881b457641ea6b88470b6a07960da8727db1287c232cb0f3a6292963917fa5cf09864be5eb50bf2a294e
   languageName: node
   linkType: hard
 
