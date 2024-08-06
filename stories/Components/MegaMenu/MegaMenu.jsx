@@ -1,59 +1,62 @@
-import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useRef } from "preact/hooks";
 import "./megamenu.scss";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
 import { useBreakpoint } from "./TopBar/hook";
 
-const MegaMenu =  ({ sections, delay = 300 }) => {
-  let timeoutId = null;
-
+const MegaMenu = ({ sections, delay = 300 }) => {
   const [section, setSection] = useState(null);
   const [itemIndex, setItemIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
   const breakpoint = useBreakpoint();
 
-  const handleMouseLeave = () => {
-    clearTimeout(timeoutId);
+  // Use ref for timeoutId to prevent re-renders
+  const timeoutRef = useRef(null);
 
-    timeoutId = setTimeout(() => {
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
+  const handleMouseLeave = () => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
       setSection(null);
     }, delay);
   };
 
   const handleMouseEnter = (item) => {
-    clearTimeout(timeoutId);
+    clearTimeout(timeoutRef.current);
     setSection(item);
   };
 
   useEffect(() => {
-    // Clean up the timeout when the component unmounts
     if (breakpoint !== "mobile") {
       setShowSidebar(false);
     }
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
   }, [breakpoint]);
 
   return (
-    <nav className="mg-mega-wrapper" onMouseLeave={handleMouseLeave}>
+    <nav
+      className="mg-mega-wrapper"
+      onMouseLeave={handleMouseLeave}
+      aria-label="Main Navigation"
+    >
       <TopBar
         sections={sections}
-        onItemHover={(section) => setSection(section)}
-        toggleShowSidebar={() => setShowSidebar(!showSidebar)}
+        onItemHover={setSection}
+        toggleShowSidebar={() => setShowSidebar((prev) => !prev)}
         showSidebar={showSidebar}
       />
 
-      {section !== null && (
-        <article className="mg-mega-content">
+      {section && (
+        <article className="mg-mega-content" aria-live="polite">
           <aside className="mg-mega-content__left">
             <section className="mg-mega-content__banner">
               <header>{section.bannerHeading}</header>
               <p>{section.bannerDescription}</p>
             </section>
-            <ul className="mg-mega-content__section-list">
+            <ul className="mg-mega-content__section-list" role="list">
               {section.items.map((item, index) => (
                 <li
                   key={index}
@@ -67,6 +70,7 @@ const MegaMenu =  ({ sections, delay = 300 }) => {
                         : ""
                     }`}
                     href={item.url}
+                    aria-current={itemIndex === index ? "page" : undefined}
                   >
                     {item.title}
                   </a>
@@ -75,10 +79,10 @@ const MegaMenu =  ({ sections, delay = 300 }) => {
             </ul>
           </aside>
           <section className="mg-mega-content__right">
-            <ul>
-              {section.items[itemIndex].subItems.map((item, index) => (
-                <li key={index}>
-                  <a href={item.url}>{item.title}</a>
+            <ul role="list">
+              {section.items[itemIndex].subItems.map((subItem, subIndex) => (
+                <li key={subIndex}>
+                  <a href={subItem.url}>{subItem.title}</a>
                 </li>
               ))}
             </ul>
@@ -90,6 +94,6 @@ const MegaMenu =  ({ sections, delay = 300 }) => {
       )}
     </nav>
   );
-}
+};
 
 export default MegaMenu;
