@@ -12,7 +12,6 @@ export default function Histogram({
 }) {
   const svgRef = useRef();
 
-  // State to keep track of which datasets are visible
   const [visibleSeries, setVisibleSeries] = useState(
     dataSeries.map(() => true)
   );
@@ -24,41 +23,37 @@ export default function Histogram({
       .attr("height", height)
       .attr("role", "img")
       .attr("aria-label", title)
-      .style("background-color", "#fff") // Set background color to white
+      .style("background-color", "#fff")
       .style("overflow", "visible")
       .attr("dir", direction);
 
     svg.select("title").text(`Histogram titled: ${title}`);
 
-    // Set the margins
     const margin = { top: 30, right: 150, bottom: 50, left: 40 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    // Create a group element to contain the histogram, applying margins
     const chart = svg
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Flatten the data to calculate overall x-axis domain
     const allData = dataSeries.flatMap((series, index) =>
       visibleSeries[index] ? series.data : []
     );
 
-    // Determine the overall x-axis domain
     const xScale = d3
       .scaleLinear()
-      .domain([d3.min(allData), d3.max(allData)]) // Input data range
-      .range([0, innerWidth]); // Output pixel range
+      .domain([d3.min(allData), d3.max(allData)])
+      .range([0, innerWidth]);
 
-    // Create the y-axis scale
-    const yScale = d3.scaleLinear().range([innerHeight, 0]); // Output pixel range
+    const yScale = d3.scaleLinear().range([innerHeight, 0]);
 
-    // Create bins for each data series using the histogram layout
+    // add bins for each data series using the histogram layout
     const histogram = d3
       .histogram()
       .domain(xScale.domain())
-      .thresholds(xScale.ticks(bins)); // Create bins with specified number of thresholds
+      // add bins with specified number of thresholds
+      .thresholds(xScale.ticks(bins));
 
     const allBins = dataSeries.map((series, index) =>
       visibleSeries[index] ? histogram(series.data) : []
@@ -77,7 +72,7 @@ export default function Histogram({
     // Draw the y-axis
     chart.append("g").call(d3.axisLeft(yScale).ticks(5));
 
-    // Add grid lines
+    // grid lines
     chart
       .append("g")
       .attr("class", "grid")
@@ -108,12 +103,12 @@ export default function Histogram({
         .data(seriesBins)
         .join("rect")
         .attr("class", `bar-series-${seriesIndex}`)
-        .attr("x", (d) => xScale(d.x0)) // Start at the lower bound of each bin
+        .attr("x", (d) => xScale(d.x0))
         .attr("y", (d) => yScale(d.length))
-        .attr("width", (d) => xScale(d.x1) - xScale(d.x0) - 1) // Width based on bin size
+        .attr("width", (d) => xScale(d.x1) - xScale(d.x0) - 1)
         .attr("height", (d) => innerHeight - yScale(d.length))
-        .attr("fill", series.color || "#69b3a2") // Default color if not provided
-        .attr("fill-opacity", 0.6) // Adjust opacity for overlapping
+        .attr("fill", series.color || "#69b3a2")
+        .attr("fill-opacity", 0.6)
         .on("mouseover", function (event, d) {
           d3.select(this).attr(
             "fill",
@@ -125,7 +120,6 @@ export default function Histogram({
         });
     });
 
-    // Tooltip for histogram
     const tooltip = d3
       .select("body")
       .append("div")

@@ -5,12 +5,12 @@ export default function BarChart({
   data,
   width,
   height,
-  color = "#4065A3", // Updated default color to match the image
+  color = "#4065A3",
   locale = "en",
   direction = "ltr",
   title = "Bar Chart",
-  axisColor = "#000000", // Default axis color set to black
-  tickColor = "#A0A0A0", // Default tick color set to gray
+  axisColor = "#000000",
+  tickColor = "#A0A0A0",
 }) {
   const svgRef = useRef();
 
@@ -20,10 +20,10 @@ export default function BarChart({
       .attr("width", width)
       .attr("height", height)
       .attr("role", "img")
-      .attr("aria-label", title) // Use the graph title as the ARIA label
+      .attr("aria-label", title)
       .style("background-color", "#fff")
       .style("overflow", "visible")
-      .attr("dir", direction); // Add direction attribute for LTR/RTL
+      .attr("dir", direction);
 
     svg.select("title").text(`Bar chart titled: ${title}`); // Append title for screen readers
 
@@ -32,28 +32,24 @@ export default function BarChart({
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    // Create a group element to contain the bars, applying margins
     const chart = svg
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Create scales
     const xScale = d3
       .scaleBand()
       .domain(data.map((_, index) => index))
       .range([0, innerWidth])
-      .padding(0.1); // Adjust padding to make bars closer
+      .padding(0.1); // bring the bars closer by adjusting the padding
 
     const yScale = d3
       .scaleLinear()
       .domain([0, d3.max(data)])
       .range([innerHeight, 0]);
 
-    // Create axes generators
     const xAxis = d3.axisBottom(xScale).ticks(data.length);
     const yAxis = d3.axisLeft(yScale).ticks(5);
 
-    // Clear existing contents
     svg.selectAll(".bar").remove();
     svg.selectAll(".bar-label").remove();
     svg.selectAll(".x-axis").remove();
@@ -62,23 +58,22 @@ export default function BarChart({
     svg.selectAll(".grid-horizontal").remove();
     svg.selectAll(".grid-vertical").remove();
 
-    // Append new axes elements
     chart
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${innerHeight})`)
       .call(xAxis)
-      .selectAll("line, path") // Select all lines and paths (ticks and axis line)
-      .attr("stroke", tickColor); // Change the stroke color to gray
+      .selectAll("line, path")
+      .attr("stroke", tickColor);
 
     chart
       .append("g")
       .attr("class", "y-axis")
       .call(yAxis)
-      .selectAll("line, path") // Select all lines and paths (ticks and axis line)
-      .attr("stroke", tickColor); // Change the stroke color to gray
+      .selectAll("line, path")
+      .attr("stroke", tickColor);
 
-    // Add horizontal grid lines
+    // horizontal grid lines
     chart
       .append("g")
       .attr("class", "grid-horizontal")
@@ -87,7 +82,7 @@ export default function BarChart({
       .attr("stroke", "#e0e0e0")
       .attr("stroke-dasharray", "2,2");
 
-    // Add vertical grid lines
+    // vertical grid lines
     chart
       .append("g")
       .attr("class", "grid-vertical")
@@ -103,7 +98,7 @@ export default function BarChart({
       .attr("stroke", "#e0e0e0")
       .attr("stroke-dasharray", "2,2");
 
-    // Create a tooltip element
+    // add a tooltip
     const tooltip = d3
       .select("body")
       .append("div")
@@ -114,9 +109,8 @@ export default function BarChart({
       .style("border", "1px solid #ccc")
       .style("border-radius", "4px")
       .style("box-shadow", "0 0 10px rgba(0, 0, 0, 0.1)")
-      .style("opacity", 0); // Initially invisible
+      .style("opacity", 0);
 
-    // Bind data and create bars
     chart
       .selectAll(".bar")
       .data(data)
@@ -134,7 +128,6 @@ export default function BarChart({
         (_, index) => `Bar ${index + 1} with value ${data[index]}`
       )
       .on("mouseover", function (event, value) {
-        // Show tooltip
         tooltip
           .style("opacity", 1)
           .html(`Value: ${value}`)
@@ -143,28 +136,26 @@ export default function BarChart({
         d3.select(this).attr("fill", d3.color(color).brighter(0.5));
       })
       .on("mousemove", function (event) {
-        // Update tooltip position
         tooltip
           .style("left", `${event.pageX + 5}px`)
           .style("top", `${event.pageY - 28}px`);
       })
       .on("mouseout", function () {
-        // Hide tooltip
         tooltip.style("opacity", 0);
         d3.select(this).attr("fill", color);
       });
 
-    // Add labels directly on top of bars
+    // put labels directly on top of bars, maybe put labels within the datasets?
     chart
       .selectAll(".bar-label")
       .data(data)
       .join("text")
       .attr("class", "bar-label")
       .attr("x", (_, index) => xScale(index) + xScale.bandwidth() / 2)
-      .attr("y", (value) => yScale(value) - 5) // Position label above bar
+      .attr("y", (value) => yScale(value) - 5)
       .attr("text-anchor", "middle")
       .style("font-size", "12px")
-      .style("fill", "black") // Label color
+      .style("fill", "black")
       .text((value) => value);
   }, [
     data,
