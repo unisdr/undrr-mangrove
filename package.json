@@ -114,6 +114,7 @@
   "dependencies": {
     "@mdx-js/loader": "^2.3.0",
     "@types/dompurify": "^2.4.0",
+    "d3": "^7.9.0",
     "dompurify": "^2.4.3",
     "file-loader": "^6.2.0",
     "fitty": "^2.3.6",
