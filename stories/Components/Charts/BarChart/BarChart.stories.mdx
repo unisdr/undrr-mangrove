@@ -1,0 +1,177 @@
+{/* src/Chart.stories.mdx */}
+
+import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
+import BarChart from './BarChart';
+
+<Meta title="Components/Charts/BarChart" component={BarChart} />
+
+# BarChart
+
+The `BarChart` component renders a bar chart using D3 and React. It's designed to display data visually in a simple and effective way, making it easier to compare values across different categories.
+
+Bar charts are particularly useful for comparing quantities corresponding to different groups or categories. The height of each bar is proportional to the values they represent.
+
+## Props
+
+- **`data`**: `number[]` - An array of numbers representing the data points to be displayed in the chart. *(required)*
+- **`width`**: `number` - The width of the chart in pixels. *(required)*
+- **`height`**: `number` - The height of the chart in pixels. *(required)*
+- **`color`**: `string` - The fill color for the bars.
+- **`locale`**: `string` - The locale for the chart, e.g., `"en"` or `"ar"`.
+- **`direction`**: `string` - The text direction, `"ltr"` or `"rtl"`.
+- **`title`**: `string` - The title of the chart.
+- **`axisColor`**: `string` - The color of the axis lines.
+- **`tickColor`**: `string` - The color of the tick lines.
+
+## Usage
+
+To use the `BarChart` component, import it into your React application and provide it with the required props.
+
+### Default BarChart
+
+Below is a simple bar chart using a default dataset.
+
+<Canvas>
+  <Story name="Default BarChart">
+    {() => (
+      <BarChart
+        data={[0, 0, 0, 0, 28, 46, 84, 94, 104, 125, 131, 131, 131, 131, 131, 131]} // Adjusted data
+        width={800}
+        height={300}
+        color="#4065A3"
+        axisColor="#000000"
+        tickColor="#A0A0A0"
+        title="Voluntary Commitments in Numbers"
+      />
+    )}
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import BarChart from './BarChart';
+
+const Example = () => (
+  <BarChart
+    data={[0, 0, 0, 0, 28, 46, 84, 94, 104, 125, 131, 131, 131, 131, 131, 131]} // Adjusted data
+    width={800}
+    height={300}
+    color="#4065A3"
+    axisColor="#000000"
+    tickColor="#A0A0A0"
+    title="Voluntary Commitments in Numbers"
+  />
+);
+
+export default Example;
+`}
+/>
+
+### Custom RTL BarChart
+
+This example demonstrates how to customize the bar chart with RTL text direction and Arabic data labels.
+
+<Canvas>
+  <Story name="Custom RTL BarChart">
+    {() => (
+      <BarChart
+        data={[0, 0, 0, 80, 128, 556, 644, 669, 694, 694, 694, 694, 694, 694, 694, 694]}
+        width={800}
+        height={300}
+        color="#4065A3"
+        axisColor="#000000"
+        tickColor="#A0A0A0"
+        locale="ar"
+        direction="rtl"
+        title="المساهمات التطوعية بالأرقام"
+      />
+    )}
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import BarChart from './BarChart';
+
+const RTLExample = () => (
+  <BarChart
+    data={[0, 0, 0, 80, 128, 556, 644, 669, 694, 694, 694, 694, 694, 694, 694, 694]}
+    width={800}
+    height={300}
+    color="#4065A3"
+    axisColor="#000000"
+    tickColor="#A0A0A0"
+    locale="ar"
+    direction="rtl"
+    title="المساهمات التطوعية بالأرقام"
+  />
+);
+
+export default RTLExample;
+`}
+/>
+
+### Total Count of Deliverables
+
+This example shows the total count of deliverables over time.
+
+<Canvas>
+  <Story name="Total Count of Deliverables">
+    {() => (
+      <BarChart
+        data={[0, 0, 0, 109, 168, 440, 576, 611, 657, 657, 657, 657, 657, 657, 657, 657]} // Adjusted data
+        width={800}
+        height={300}
+        color="#4065A3"
+        axisColor="#000000"
+        tickColor="#A0A0A0"
+        title="Total Count of Deliverables"
+      />
+    )}
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import BarChart from './BarChart';
+
+const DeliverablesExample = () => (
+  <BarChart
+    data={[0, 0, 0, 109, 168, 440, 576, 611, 657, 657, 657, 657, 657, 657, 657, 657]} // Adjusted data
+    width={800}
+    height={300}
+    color="#4065A3"
+    axisColor="#000000"
+    tickColor="#A0A0A0"
+    title="Total Count of Deliverables"
+  />
+);
+
+export default DeliverablesExample;
+`}
+/>
+
+### Content
+
+The `BarChart` component uses SVG to render bars, where each bar's height corresponds to its value in the dataset. Bars are evenly spaced along the x-axis, and the y-axis height is scaled according to the data.
+
+### Accessibility
+
+**ARIA Roles**: The component should include appropriate ARIA roles and labels to describe its purpose and content for screen readers.
+
+**Keyboard Navigation**: Ensure keyboard focus can be moved to the chart to enhance accessibility.
+
+### Interactions
+
+**Hover Effects**: Implement hover effects to highlight bars and provide more detailed information if applicable.
+
+### Changelog
+
+1.0 — Initial release of the component
+
