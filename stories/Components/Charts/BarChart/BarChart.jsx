@@ -5,12 +5,12 @@ export default function BarChart({
   data,
   width,
   height,
-  color = "#4065A3",
+  color = "#4065A3", // Updated default color to match the image
   locale = "en",
   direction = "ltr",
   title = "Bar Chart",
-  axisColor = "#ccc",
-  tickColor = "#A0A0A0",
+  axisColor = "#000000", // Default axis color set to black
+  tickColor = "#A0A0A0", // Default tick color set to gray
 }) {
   const svgRef = useRef();
 
@@ -28,7 +28,7 @@ export default function BarChart({
     svg.select("title").text(`Bar chart titled: ${title}`); // Append title for screen readers
 
     // Set the margins
-    const margin = { top: 60, right: 30, bottom: 50, left: 40 };
+    const margin = { top: 40, right: 30, bottom: 50, left: 40 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -42,7 +42,7 @@ export default function BarChart({
       .scaleBand()
       .domain(data.map((_, index) => index))
       .range([0, innerWidth])
-      .padding(0.5);
+      .padding(0.1); // Adjust padding to make bars closer
 
     const yScale = d3
       .scaleLinear()
@@ -59,7 +59,8 @@ export default function BarChart({
     svg.selectAll(".x-axis").remove();
     svg.selectAll(".y-axis").remove();
     svg.selectAll(".tooltip").remove();
-    svg.selectAll(".grid").remove();
+    svg.selectAll(".grid-horizontal").remove();
+    svg.selectAll(".grid-vertical").remove();
 
     // Append new axes elements
     chart
@@ -77,11 +78,27 @@ export default function BarChart({
       .selectAll("line, path") // Select all lines and paths (ticks and axis line)
       .attr("stroke", tickColor); // Change the stroke color to gray
 
-    // Add grid lines
+    // Add horizontal grid lines
     chart
       .append("g")
-      .attr("class", "grid")
+      .attr("class", "grid-horizontal")
       .call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth).tickFormat(""))
+      .selectAll(".tick line")
+      .attr("stroke", "#e0e0e0")
+      .attr("stroke-dasharray", "2,2");
+
+    // Add vertical grid lines
+    chart
+      .append("g")
+      .attr("class", "grid-vertical")
+      .call(
+        d3
+          .axisBottom(xScale)
+          .ticks(data.length)
+          .tickSize(-innerHeight)
+          .tickFormat("")
+      )
+      .attr("transform", `translate(0, ${innerHeight})`)
       .selectAll(".tick line")
       .attr("stroke", "#e0e0e0")
       .attr("stroke-dasharray", "2,2");
