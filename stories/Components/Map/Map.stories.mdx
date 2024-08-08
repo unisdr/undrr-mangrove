@@ -1,0 +1,115 @@
+import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
+import MapComponent from './Map';
+
+<Meta title="Components/Maps/Map" component={MapComponent} />
+
+# MapComponent
+
+The `MapComponent` visualizes geographical data using Leaflet. It displays circles representing data points on a map using the UN's ClearMap service.
+
+## Props
+
+- **`data`**: `Array<{ label: string, value: number, coords: [number, number], description: string }>` - An array of objects representing the data points. *(required)*
+- **`center`**: `[number, number]` - The initial center of the map. *(default: [20, 0])*
+- **`zoom`**: `number` - The initial zoom level of the map. *(default: 2)*
+
+## Usage
+
+To use the `MapComponent`, import it into your React application and provide it with the required props.
+
+### Default Map
+
+This example uses a default dataset to render the map.
+
+<Canvas>
+  <Story name="Default Map">
+    <MapComponent
+      data={[
+        { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
+        { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
+        { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
+        { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
+        { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
+      ]}
+    />
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import MapComponent from './MapComponent';
+
+const Example = () => (
+  <MapComponent
+    data={[
+      { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
+      { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
+      { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
+      { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
+      { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
+    ]}
+  />
+);
+
+export default Example;
+`}
+/>
+
+### Custom Center and Zoom Map
+
+This example customizes the center and zoom level of the map.
+
+<Canvas>
+  <Story name="Custom Center and Zoom Map">
+    <MapComponent
+      data={[
+        { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
+        { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
+        { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
+        { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
+        { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
+      ]}
+      center={[34.0479, 100.6197]}
+      zoom={4}
+    />
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import MapComponent from './MapComponent';
+
+const CustomMapExample = () => (
+  <MapComponent
+    data={[
+      { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
+      { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
+      { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
+      { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
+      { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
+    ]}
+    center={[34.0479, 100.6197]}
+    zoom={4}
+  />
+);
+
+export default CustomMapExample;
+`}
+/>
+
+### Content
+
+The `MapComponent` uses Leaflet to render a map with circles representing data points. Each circle's size is proportional to its value and displays a detailed tooltip when clicked.
+
+### Accessibility
+
+**ARIA Roles**: The component should include appropriate ARIA roles and labels to describe its purpose and content for screen readers.
+
+### Changelog
+
+1.0 — Initial release of the component
+
