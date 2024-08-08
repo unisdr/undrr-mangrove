@@ -5,7 +5,7 @@ import MapComponent from './Map';
 
 # MapComponent
 
-The `MapComponent` visualizes geographical data using Leaflet. It displays circles representing data points on a map using the UN's ClearMap service.
+The `MapComponent` visualizes geographical data using Leaflet. It displays markers representing data points on a map using the UN's ClearMap service.
 
 ## Props
 
@@ -103,11 +103,17 @@ export default CustomMapExample;
 
 ### Content
 
-The `MapComponent` uses Leaflet to render a map with circles representing data points. Each circle's size is proportional to its value and displays a detailed tooltip when clicked.
+The `MapComponent` uses Leaflet to render markers representing data points. Each marker displays a tooltip with detailed information about the data point when clicked.
 
 ### Accessibility
 
 **ARIA Roles**: The component should include appropriate ARIA roles and labels to describe its purpose and content for screen readers.
+
+**Keyboard Navigation**: Ensure keyboard focus can be moved to the map to enhance accessibility.
+
+### Interactions
+
+**Click Effects**: Clicking on a marker displays a tooltip with detailed information about the data point.
 
 ### Changelog
 

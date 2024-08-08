@@ -6,9 +6,9 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import * as esri from "esri-leaflet";
-import "./map.scss";
+import styles from "./map.module.scss";
 
-// Fix leaflet's default icon issues with webpack
+// fix leaflet's default icon issues with webpack
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -19,10 +19,23 @@ L.Icon.Default.mergeOptions({
 const MapComponent = ({ data, center = [20, 0], zoom = 2 }) => {
   const [selectedEntry, setSelectedEntry] = useState(null);
 
+  // calculate the max value for scaling
+  const maxValue = Math.max(...data.map((entry) => entry.value));
+
+  // calculate icon size based on value, starting from a minimum size
+  const calculateIconSize = (value) => {
+    const minSize = 38;
+    const maxSize = 100;
+    return minSize + (value / maxValue) * (maxSize - minSize);
+  };
+
   const createLabelIcon = (label, value) => {
+    const size = calculateIconSize(value);
     return L.divIcon({
-      className: "mg-custom-label-icon",
-      html: `<div class="mg-label-container"><div class="mg-label-text">${label}</div><div class="mg-label-value">${value}</div></div>`,
+      className: styles["mg-custom-label-icon"],
+      html: `<div class="${styles["mg-label-container"]}"><div class="${styles["mg-label-text"]}">${label}</div><div class="${styles["mg-label-value"]}">${value}</div></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
     });
   };
 
