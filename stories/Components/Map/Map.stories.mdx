@@ -1,21 +1,21 @@
 import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
-import MapComponent from './Map';
+import Map from './Map';
 
-<Meta title="Components/Maps/Map" component={MapComponent} />
+<Meta title="Components/Maps/MapComponent" component={Map} />
 
-# MapComponent
+# Map
 
-The `MapComponent` visualizes geographical data using Leaflet. It displays markers representing data points on a map using the UN's ClearMap service.
+The `Map` visualizes geographical data using Leaflet. It displays markers representing data points on a map using the UN's ClearMap service.
 
 ## Props
 
 - **`data`**: `Array<{ label: string, value: number, coords: [number, number], description: string }>` - An array of objects representing the data points. *(required)*
 - **`center`**: `[number, number]` - The initial center of the map. *(default: [20, 0])*
-- **`zoom`**: `number` - The initial zoom level of the map. *(default: 2)*
+- **`zoom`**: `number` - The initial zoom level of the map. *(default: 4)*
 
 ## Usage
 
-To use the `MapComponent`, import it into your React application and provide it with the required props.
+To use the `Map`, import it into your React application and provide it with the required props.
 
 ### Default Map
 
@@ -23,7 +23,7 @@ This example uses a default dataset to render the map.
 
 <Canvas>
   <Story name="Default Map">
-    <MapComponent
+    <Map
       data={[
         { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
         { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
@@ -39,10 +39,10 @@ This example uses a default dataset to render the map.
   language="jsx"
   code={`
 import React from 'react';
-import MapComponent from './MapComponent';
+import Map from './Map';
 
 const Example = () => (
-  <MapComponent
+  <Map
     data={[
       { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
       { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
@@ -63,9 +63,9 @@ This example customizes the center and zoom level of the map.
 
 <Canvas>
   <Story name="Custom Center and Zoom Map">
-    <MapComponent
+    <Map
       data={[
-        { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
+        { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'For the indus basic, the countries that share this major water catchment have co-designed future water resource pathways, applying a scenario-based policy tool to develop and co-define a joint vision about existing challenges and possible pathways for the basin.<br> <strong>GAR Section: 4.5</strong>' },
         { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
         { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
         { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
@@ -81,10 +81,10 @@ This example customizes the center and zoom level of the map.
   language="jsx"
   code={`
 import React from 'react';
-import MapComponent from './MapComponent';
+import Map from './Map';
 
 const CustomMapExample = () => (
-  <MapComponent
+  <Map
     data={[
       { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
       { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
@@ -101,9 +101,68 @@ export default CustomMapExample;
 `}
 />
 
+### GeoJSON Map with Clustering
+
+This example demonstrates how to use GeoJSON data with clustering.
+
+<Canvas>
+  <Story name="GeoJSON Map with Clustering">
+    <Map
+      data={[
+      { label: 'Point 1', value: 50, coords: [35.6895, 139.6917], description: 'Description for Point 1 (Tokyo, Japan)' },
+      { label: 'Point 2', value: 30, coords: [51.5074, -0.1278], description: 'Description for Point 2 (London, UK)' },
+      { label: 'Point 3', value: 70, coords: [40.7128, -74.006], description: 'Description for Point 3 (New York, USA)' },
+      { label: 'Point 4', value: 90, coords: [34.0522, -118.2437], description: 'Description for Point 4 (Los Angeles, USA)' },
+      { label: 'Point 5', value: 20, coords: [55.7558, 37.6173], description: 'Description for Point 5 (Moscow, Russia)' },
+      { label: 'Point 6', value: 45, coords: [48.8566, 2.3522], description: 'Description for Point 6 (Paris, France)' },
+      { label: 'Point 7', value: 25, coords: [39.9042, 116.4074], description: 'Description for Point 7 (Beijing, China)' },
+      { label: 'Point 8', value: 60, coords: [35.6762, 139.6503], description: 'Description for Point 8 (Tokyo, Japan)' },
+      { label: 'Point 9', value: 55, coords: [52.5200, 13.4050], description: 'Description for Point 9 (Berlin, Germany)' },
+      { label: 'Point 10', value: 35, coords: [34.6937, 135.5023], description: 'Description for Point 10 (Osaka, Japan)' },
+      { label: 'Point 11', value: 80, coords: [1.3521, 103.8198], description: 'Description for Point 11 (Singapore)' },
+      { label: 'Point 12', value: 40, coords: [37.7749, -122.4194], description: 'Description for Point 12 (San Francisco, USA)' },
+      { label: 'Point 13', value: 65, coords: [-33.8688, 151.2093], description: 'Description for Point 13 (Sydney, Australia)' },
+      { label: 'Point 14', value: 25, coords: [-23.5505, -46.6333], description: 'Description for Point 14 (São Paulo, Brazil)' },
+      { label: 'Point 15', value: 75, coords: [19.0760, 72.8777], description: 'Description for Point 15 (Mumbai, India)' },
+      { label: 'Point 16', value: 90, coords: [31.2304, 121.4737], description: 'Description for Point 16 (Shanghai, China)' },
+      { label: 'Point 17', value: 40, coords: [41.9028, 12.4964], description: 'Description for Point 17 (Rome, Italy)' },
+      { label: 'Point 18', value: 50, coords: [-34.6037, -58.3816], description: 'Description for Point 18 (Buenos Aires, Argentina)' },
+      { label: 'Point 19', value: 35, coords: [45.4654, 9.1859], description: 'Description for Point 19 (Milan, Italy)' },
+      { label: 'Point 20', value: 70, coords: [37.5665, 126.9780], description: 'Description for Point 20 (Seoul, South Korea)' },
+    ]}
+      center={[20, 0]}
+      zoom={2}
+    />
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import Map from './Map';
+
+const GeoJSONMapExample = () => (
+  <Map
+    data={[
+      { label: 'Point 1', value: 50, coords: [35.6895, 139.6917], description: 'Description for Point 1' },
+      { label: 'Point 2', value: 30, coords: [51.5074, -0.1278], description: 'Description for Point 2' },
+      { label: 'Point 3', value: 70, coords: [40.7128, -74.006], description: 'Description for Point 3' },
+      { label: 'Point 4', value: 90, coords: [34.0522, -118.2437], description: 'Description for Point 4' },
+      { label: 'Point 5', value: 20, coords: [55.7558, 37.6173], description: 'Description for Point 5' },
+    ]}
+    center={[20, 0]}
+    zoom={2}
+  />
+);
+
+export default GeoJSONMapExample;
+`}
+/>
+
 ### Content
 
-The `MapComponent` uses Leaflet to render markers representing data points. Each marker displays a tooltip with detailed information about the data point when clicked.
+The `Map` uses Leaflet and `react-leaflet-markercluster` to render markers representing data points. Each marker displays a tooltip with detailed information about the data point when clicked.
 
 ### Accessibility
 
