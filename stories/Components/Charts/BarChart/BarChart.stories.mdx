@@ -13,15 +13,16 @@ Bar charts are particularly useful for comparing quantities corresponding to dif
 
 ## Props
 
-- **`data`**: `number[]` - An array of numbers representing the data points to be displayed in the chart. *(required)*
+- **`data`**: `Array<{ language: string, value: number, color: string }>` - An array of objects representing the data points. *(required)*
 - **`width`**: `number` - The width of the chart in pixels. *(required)*
 - **`height`**: `number` - The height of the chart in pixels. *(required)*
-- **`color`**: `string` - The fill color for the bars.
-- **`locale`**: `string` - The locale for the chart, e.g., `"en"` or `"ar"`.
-- **`direction`**: `string` - The text direction, `"ltr"` or `"rtl"`.
+- **`color`**: `string` - The default fill color for the bars.
+- **`labelColor`**: `string` - The color for the bar labels. *(default: `#FFFFFF`)*
 - **`title`**: `string` - The title of the chart.
 - **`axisColor`**: `string` - The color of the axis lines.
 - **`tickColor`**: `string` - The color of the tick lines.
+- **`ariaLabel`**: `string` - ARIA label for accessibility. *(default: "Bar chart showing data")*
+- **`ariaDescription`**: `string` - A description of the chart content for screen readers.
 
 ## Usage
 
@@ -35,13 +36,27 @@ Below is a simple bar chart using a default dataset.
   <Story name="Default BarChart">
     {() => (
       <BarChart
-        data={[0, 0, 0, 0, 28, 46, 84, 94, 104, 125, 131, 131, 131, 131, 131, 131]} // Adjusted data
-        width={800}
-        height={300}
-        color="#4065A3"
-        axisColor="#000000"
-        tickColor="#A0A0A0"
-        title="Voluntary Commitments in Numbers"
+        data={[
+          { language: 'Rust', value: 78.9, color: '#000000' },
+          { language: 'Kotlin', value: 75.1, color: '#00a2ee' },
+          { language: 'Python', value: 68.0, color: '#fbcb39' },
+          { language: 'TypeScript', value: 67.0, color: '#007bc8' },
+          { language: 'Go', value: 65.6, color: '#65cedb' },
+          { language: 'Swift', value: 65.1, color: '#ff6e52' },
+          { language: 'JavaScript', value: 61.9, color: '#f9de3f' },
+          { language: 'C#', value: 60.4, color: '#5d2f8e' },
+          { language: 'F#', value: 59.6, color: '#008fc9' },
+          { language: 'Clojure', value: 59.6, color: '#507dca' }
+        ]}
+        width={1000}
+        height={600}
+        labelColor="#9FAAAE"
+        axisColor="#FFFFFF"
+        tickColor="#9FAAAE"
+        title="Most Loved Programming Languages in 2024"
+        ariaLabel="Bar chart showing the most loved programming languages in
+      2024"
+        ariaDescription="This chart displays the percentage of developers who expressed love for specific programming languages in 2024, with Rust being the most loved."
       />
     )}
   </Story>
@@ -55,13 +70,26 @@ import BarChart from './BarChart';
 
 const Example = () => (
   <BarChart
-    data={[0, 0, 0, 0, 28, 46, 84, 94, 104, 125, 131, 131, 131, 131, 131, 131]} // Adjusted data
-    width={800}
-    height={300}
-    color="#4065A3"
-    axisColor="#000000"
-    tickColor="#A0A0A0"
-    title="Voluntary Commitments in Numbers"
+    data={[
+      { language: 'Rust', value: 78.9, color: '#000000' },
+      { language: 'Kotlin', value: 75.1, color: '#00a2ee' },
+      { language: 'Python', value: 68.0, color: '#fbcb39' },
+      { language: 'TypeScript', value: 67.0, color: '#007bc8' },
+      { language: 'Go', value: 65.6, color: '#65cedb' },
+      { language: 'Swift', value: 65.1, color: '#ff6e52' },
+      { language: 'JavaScript', value: 61.9, color: '#f9de3f' },
+      { language: 'C#', value: 60.4, color: '#5d2f8e' },
+      { language: 'F#', value: 59.6, color: '#008fc9' },
+      { language: 'Clojure', value: 59.6, color: '#507dca' }
+    ]}
+    width={1000}
+    height={600}
+    labelColor="#FFFFFF"
+    axisColor="#FFFFFF"
+    tickColor="#9FAAAE"
+    title="Most Loved Programming Languages in 2024"
+    ariaLabel="Bar chart showing the most loved programming languages in 2024"
+    ariaDescription="This chart displays the percentage of developers who expressed love for specific programming languages in 2024, with Rust being the most loved."
   />
 );
 
@@ -77,15 +105,22 @@ This example demonstrates how to customize the bar chart with RTL text direction
   <Story name="Custom RTL BarChart">
     {() => (
       <BarChart
-        data={[0, 0, 0, 80, 128, 556, 644, 669, 680, 681, 682, 684, 784, 685, 676, 680]}
-        width={800}
-        height={300}
+        data={[
+          { language: 'يناير', value: 78.9, color: '#000000' },
+          { language: 'فبراير', value: 75.1, color: '#00a2ee' },
+          { language: 'مارس', value: 68.0, color: '#fbcb39' },
+          { language: 'أبريل', value: 67.0, color: '#007bc8' },
+          { language: 'مايو', value: 65.6, color: '#65cedb' },
+          { language: 'يونيو', value: 65.1, color: '#ff6e52' },
+          { language: 'يوليو', value: 61.9, color: '#f9de3f' }
+        ]}
+        width={1000}
+        height={600}
         color="#4065A3"
         axisColor="#000000"
         tickColor="#A0A0A0"
-        locale="ar"
-        direction="rtl"
-        title="المساهمات التطوعية بالأرقام"
+      title="Most Loved Programming Languages in 2024"
+        ariaLabel="شريط الرسم البياني يوضح المساهمات التطوعية بالأرقام"
       />
     )}
   </Story>
@@ -99,15 +134,22 @@ import BarChart from './BarChart';
 
 const RTLExample = () => (
   <BarChart
-    data={[0, 0, 0, 80, 128, 556, 644, 669, 694, 694, 694, 694, 694, 694, 694, 694]}
-    width={800}
-    height={300}
+    data={[
+      { language: 'يناير', value: 78.9, color: '#000000' },
+      { language: 'فبراير', value: 75.1, color: '#00a2ee' },
+      { language: 'مارس', value: 68.0, color: '#fbcb39' },
+      { language: 'أبريل', value: 67.0, color: '#007bc8' },
+      { language: 'مايو', value: 65.6, color: '#65cedb' },
+      { language: 'يونيو', value: 65.1, color: '#ff6e52' },
+      { language: 'يوليو', value: 61.9, color: '#f9de3f' }
+    ]}
+    width={1000}
+    height={600}
     color="#4065A3"
     axisColor="#000000"
     tickColor="#A0A0A0"
-    locale="ar"
-    direction="rtl"
     title="المساهمات التطوعية بالأرقام"
+    ariaLabel="شريط الرسم البياني يوضح المساهمات التطوعية بالأرقام"
   />
 );
 
@@ -123,12 +165,24 @@ This example shows the total count of deliverables over time.
   <Story name="Total Count of Deliverables">
     {() => (
       <BarChart
-        data={[0, 0, 0, 109, 168, 440, 576, 611, 657, 657, 657, 657, 657, 657, 657, 657]} // Adjusted data
-        width={800}
-        height={300}
-        color="#4065A3"
-        axisColor="#000000"
-        tickColor="#A0A0A0"
+        data={[
+          { language: 'January', value: 20, color: '#4065A3' },
+          { language: 'February', value: 50, color: '#4065A3' },
+          { language: 'March', value: 80, color: '#4065A3' },
+          { language: 'April', value: 10, color: '#4065A3' },
+          { language: 'May', value: 50, color: '#4065A3' },
+          { language: 'June', value: 20, color: '#4065A3' },
+          { language: 'July', value: 40, color: '#4065A3' },
+          { language: 'August', value: 80, color: '#4065A3' },
+          { language: 'September', value: 32, color: '#4065A3' },
+          { language: 'October', value: 36, color: '#4065A3' },
+          { language: 'November', value: 40, color: '#4065A3' },
+          { language: 'December', value: 44, color: '#4065A3' }
+        ]}
+        width={1000}
+        height={400}
+        axisColor="#fff"
+        tickColor="#9FAAAE"
         title="Total Count of Deliverables"
       />
     )}
@@ -143,12 +197,24 @@ import BarChart from './BarChart';
 
 const DeliverablesExample = () => (
   <BarChart
-    data={[0, 0, 0, 109, 168, 440, 576, 611, 657, 657, 657, 657, 657, 657, 657, 657]} // Adjusted data
-    width={800}
-    height={300}
-    color="#4065A3"
-    axisColor="#000000"
-    tickColor="#A0A0A0"
+    data={[
+      { language: 'January', value: 20, color: '#4065A3' },
+      { language: 'February', value: 50, color: '#4065A3' },
+      { language: 'March', value: 80, color: '#4065A3' },
+      { language: 'April', value: 10, color: '#4065A3' },
+      { language: 'May', value: 50, color: '#4065A3' },
+      { language: 'June', value: 20, color: '#4065A3' },
+      { language: 'July', value: 40, color: '#4065A3' },
+      { language: 'August', value: 80, color: '#4065A3' },
+      { language: 'September', value: 32, color: '#4065A3' },
+      { language: 'October', value: 36, color: '#4065A3' },
+      { language: 'November', value: 40, color: '#4065A3' },
+      { language: 'December', value: 44, color: '#4065A3' }
+    ]}
+    width={1000}
+    height={600}
+    axisColor="#fff"
+    tickColor="#9FAAAE"
     title="Total Count of Deliverables"
   />
 );

@@ -5,12 +5,13 @@ export default function BarChart({
   data,
   width,
   height,
-  color = "#4065A3",
-  locale = "en",
-  direction = "ltr",
+  labelColor = "#6B7280",
+  backgroundColor = "#FFFFFF",
+  axisColor = "#9CA3AF",
+  tickColor = "#D1D5DB",
   title = "Bar Chart",
-  axisColor = "#000000",
-  tickColor = "#A0A0A0",
+  ariaLabel = "Bar chart showing data",
+  ariaDescription = "",
 }) {
   const svgRef = useRef();
 
@@ -20,12 +21,12 @@ export default function BarChart({
       .attr("width", width)
       .attr("height", height)
       .attr("role", "img")
-      .attr("aria-label", title)
-      .style("background-color", "#fff")
-      .style("overflow", "visible")
-      .attr("dir", direction);
+      .attr("aria-label", ariaLabel)
+      .attr("aria-describedby", ariaDescription)
+      .style("background-color", backgroundColor)
+      .style("overflow", "visible");
 
-    svg.select("title").text(`Bar chart titled: ${title}`); // Append title for screen readers
+    svg.select("title").text(`Bar chart titled: ${title}`);
 
     // Set the margins
     const margin = { top: 40, right: 30, bottom: 50, left: 40 };
@@ -38,16 +39,13 @@ export default function BarChart({
 
     const xScale = d3
       .scaleBand()
-      .domain(data.map((_, index) => index))
+      .domain(data.map((d) => d.language))
       .range([0, innerWidth])
-      .padding(0.1); // bring the bars closer by adjusting the padding
+      .padding(0.2);
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(data)])
-      .range([innerHeight, 0]);
+    const yScale = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0]);
 
-    const xAxis = d3.axisBottom(xScale).ticks(data.length);
+    const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale).ticks(5);
 
     svg.selectAll(".bar").remove();
@@ -79,24 +77,18 @@ export default function BarChart({
       .attr("class", "grid-horizontal")
       .call(d3.axisLeft(yScale).ticks(5).tickSize(-innerWidth).tickFormat(""))
       .selectAll(".tick line")
-      .attr("stroke", "#e0e0e0")
-      .attr("stroke-dasharray", "2,2");
+      .attr("stroke", "#D1D5DB")
+      .attr("stroke-dasharray", "3,3");
 
     // vertical grid lines
     chart
       .append("g")
       .attr("class", "grid-vertical")
-      .call(
-        d3
-          .axisBottom(xScale)
-          .ticks(data.length)
-          .tickSize(-innerHeight)
-          .tickFormat("")
-      )
+      .call(d3.axisBottom(xScale).tickSize(-innerHeight).tickFormat(""))
       .attr("transform", `translate(0, ${innerHeight})`)
       .selectAll(".tick line")
-      .attr("stroke", "#e0e0e0")
-      .attr("stroke-dasharray", "2,2");
+      .attr("stroke", "#D1D5DB")
+      .attr("stroke-dasharray", "3,3");
 
     // add a tooltip
     const tooltip = d3
@@ -111,71 +103,137 @@ export default function BarChart({
       .style("box-shadow", "0 0 10px rgba(0, 0, 0, 0.1)")
       .style("opacity", 0);
 
-    chart
-      .selectAll(".bar")
-      .data(data)
-      .join("rect")
+    const barGroups = chart.selectAll().data(data).enter().append("g");
+
+    barGroups
+      .append("rect")
       .attr("class", "bar")
-      .attr("x", (_, index) => xScale(index))
-      .attr("y", yScale)
+      .attr("x", (g) => xScale(g.language))
+      .attr("y", (g) => yScale(g.value))
+      .attr("height", (g) => innerHeight - yScale(g.value))
       .attr("width", xScale.bandwidth())
-      .attr("height", (value) => innerHeight - yScale(value))
-      .attr("fill", color)
+      .attr("fill", (g) => g.color)
       .attr("tabindex", 0)
       .attr("role", "listitem")
-      .attr(
-        "aria-label",
-        (_, index) => `Bar ${index + 1} with value ${data[index]}`
-      )
-      .on("mouseover", function (event, value) {
-        tooltip
-          .style("opacity", 1)
-          .html(`Value: ${value}`)
-          .style("left", `${event.pageX + 5}px`)
-          .style("top", `${event.pageY - 28}px`);
-        d3.select(this).attr("fill", d3.color(color).brighter(0.5));
+      .attr("aria-label", (g) => `Bar for ${g.language} with value ${g.value}`)
+      .on("mouseenter", function (event, actual) {
+        d3.selectAll(".value").attr("opacity", 0);
+
+        d3.select(this)
+          .transition()
+          .duration(300)
+          .attr("opacity", 0.6)
+          .attr("x", (a) => xScale(a.language) - 5)
+          .attr("width", xScale.bandwidth() + 10);
+
+        const y = yScale(actual.value);
+
+        chart
+          .append("line")
+          .attr("id", "limit")
+          .attr("x1", 0)
+          .attr("y1", y)
+          .attr("x2", innerWidth)
+          .attr("y2", y)
+          .attr("stroke", "#FED966")
+          .attr("stroke-width", 3)
+          .attr("stroke-dasharray", "3 6");
+
+        barGroups
+          .append("text")
+          .attr("class", "divergence")
+          .attr("x", (a) => xScale(a.language) + xScale.bandwidth() / 2)
+          .attr("y", (a) => yScale(a.value) + 30)
+          .attr("fill", "white")
+          .attr("text-anchor", "middle")
+          .text((a, idx) => {
+            const divergence = (a.value - actual.value).toFixed(1);
+
+            let text = "";
+            if (divergence > 0) text += "+";
+            text += `${divergence}%`;
+
+            return idx !== g.language ? text : "";
+          });
       })
-      .on("mousemove", function (event) {
-        tooltip
-          .style("left", `${event.pageX + 5}px`)
-          .style("top", `${event.pageY - 28}px`);
-      })
-      .on("mouseout", function () {
-        tooltip.style("opacity", 0);
-        d3.select(this).attr("fill", color);
+      .on("mouseleave", function () {
+        d3.selectAll(".value").attr("opacity", 1);
+
+        d3.select(this)
+          .transition()
+          .duration(300)
+          .attr("opacity", 1)
+          .attr("x", (a) => xScale(a.language))
+          .attr("width", xScale.bandwidth());
+
+        chart.selectAll("#limit").remove();
+        chart.selectAll(".divergence").remove();
       });
 
-    // put labels directly on top of bars, maybe put labels within the datasets?
-    chart
-      .selectAll(".bar-label")
-      .data(data)
-      .join("text")
-      .attr("class", "bar-label")
-      .attr("x", (_, index) => xScale(index) + xScale.bandwidth() / 2)
-      .attr("y", (value) => yScale(value) - 5)
+    barGroups
+      .append("text")
+      .attr("class", "value")
+      .attr("x", (a) => xScale(a.language) + xScale.bandwidth() / 2)
+      .attr("y", (a) => yScale(a.value) - 5)
       .attr("text-anchor", "middle")
-      .style("font-size", "12px")
-      .style("fill", "black")
-      .text((value) => value);
+      .style("fill", labelColor)
+      .text((a) => `${a.value}%`);
+
+    svg
+      .append("text")
+      .attr("class", "label")
+      .attr("x", -(innerHeight / 2) - margin.left)
+      .attr("y", margin.left / 2.4)
+      .attr("transform", "rotate(-90)")
+      .attr("text-anchor", "middle")
+      .style("fill", labelColor)
+      .text("Love meter (%)");
+
+    svg
+      .append("text")
+      .attr("class", "label")
+      .attr("x", innerWidth / 2 + margin.left)
+      .attr("y", innerHeight + margin.bottom * 1.7)
+      .attr("text-anchor", "middle")
+      .style("fill", labelColor)
+      .text("Languages");
+
+    svg
+      .append("text")
+      .attr("class", "title")
+      .attr("x", innerWidth / 2 + margin.left)
+      .attr("y", 40)
+      .attr("text-anchor", "middle")
+      .style("fill", labelColor)
+      .style("font-size", "22px")
+      .style("font-weight", "600")
+      .text(title);
+
+    svg
+      .append("text")
+      .attr("class", "source")
+      .attr("x", innerWidth - margin.right / 2)
+      .attr("y", innerHeight + margin.bottom * 1.7)
+      .attr("text-anchor", "start")
+      .style("fill", labelColor)
+      .style("font-size", "10px")
+      .text("Source: Stack Overflow, 2018");
   }, [
     data,
     width,
     height,
-    color,
-    locale,
-    direction,
-    title,
+    labelColor,
+    backgroundColor,
     axisColor,
     tickColor,
+    title,
+    ariaLabel,
+    ariaDescription,
   ]);
 
   return (
     <div>
-      <h3>{title}</h3> {/* Render the graph title */}
-      <svg ref={svgRef}>
-        <g className="x-axis" />
-        <g className="y-axis" />
-      </svg>
+      <svg ref={svgRef}></svg>
     </div>
   );
 }
