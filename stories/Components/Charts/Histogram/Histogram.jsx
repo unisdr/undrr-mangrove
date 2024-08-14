@@ -63,16 +63,13 @@ export default function Histogram({
     );
     yScale.domain([0, maxBinCount]);
 
-    // Draw the x-axis
     chart
       .append("g")
       .attr("transform", `translate(0, ${innerHeight})`)
       .call(d3.axisBottom(xScale));
 
-    // Draw the y-axis
     chart.append("g").call(d3.axisLeft(yScale).ticks(5));
 
-    // grid lines
     chart
       .append("g")
       .attr("class", "grid")
@@ -92,9 +89,8 @@ export default function Histogram({
       .attr("stroke", "#e0e0e0")
       .attr("stroke-dasharray", "2,2");
 
-    // Draw the bars for each data series
     dataSeries.forEach((series, seriesIndex) => {
-      if (!visibleSeries[seriesIndex]) return; // Skip rendering if not visible
+      if (!visibleSeries[seriesIndex]) return;
 
       const seriesBins = histogram(series.data);
 
@@ -194,7 +190,7 @@ export default function Histogram({
 
   return (
     <div>
-      <h3>{title}</h3> {/* Render the graph title */}
+      <h3>{title}</h3>
       <svg ref={svgRef}></svg>
     </div>
   );
