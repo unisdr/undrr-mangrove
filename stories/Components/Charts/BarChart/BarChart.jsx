@@ -1,9 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "preact/hooks";
 import * as d3 from "d3";
 
 // Main BarChart component
 export default function BarChart({
-  apiEndpoint, // API endpoint to fetch data from
   data = [], // Array of data objects with 'label' and 'value' properties
   width = 600, // Default width of the SVG element
   height = 400, // Default height of the SVG element
@@ -19,33 +18,22 @@ export default function BarChart({
   ariaLabel = "Bar chart showing data", // ARIA label for accessibility
   ariaDescription = "", // ARIA description for accessibility
 }) {
-  // State to store fetched data
   const [chartData, setChartData] = useState(data);
   const svgRef = useRef();
 
-  // Fetch data from API if apiEndpoint is provided
   useEffect(() => {
-    if (apiEndpoint) {
-      fetch(apiEndpoint)
-        .then((response) => response.json())
-        .then((data) => mapData(data))
-        .catch((error) => console.error("Error fetching data:", error));
-    } else {
-      setChartData(data);
-    }
-  }, [apiEndpoint, data]);
+    mapData();
+  }, [data]);
 
-  // Function to map data to the required format
-  // Modify this function based on the API
-  const mapData = (data) => {
+  const mapData = () => {
     const mappedData = data.map((item) => ({
-      label: item.name,
-      value: item.count,
+      ...item,
+      label: item.label, // Correct the property names
+      value: item.value,
     }));
     setChartData(mappedData);
   };
 
-  // Effect hook to render the chart when dependencies change
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear existing content
