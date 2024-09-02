@@ -1,11 +1,12 @@
 import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
-import Map from './Map';
+import MapComponent from './MapComponent';
+import { transformDataForMap } from './map-helpers';
 
-<Meta title="Components/Maps/MapComponent" component={Map} />
+<Meta title="Components/Maps/MapComponent" component={MapComponent} />
 
-# Map
+# MapComponent
 
-The `Map` visualizes geographical data using Leaflet. It displays markers representing data points on a map using the UN's ClearMap service.
+The `MapComponent` visualizes geographical data using Leaflet. It displays markers representing data points on a map using the UN's ClearMap service.
 
 ## Props
 
@@ -15,23 +16,356 @@ The `Map` visualizes geographical data using Leaflet. It displays markers repres
 
 ## Usage
 
-To use the `Map`, import it into your React application and provide it with the required props.
+To use the `MapComponent`, import it into your React application and provide it with the required props.
 
-### Default Map
+### Map with Transformed API Data
 
-This example uses a default dataset to render the map.
+This example uses the transformed data from the API to render the map.
 
 <Canvas>
-  <Story name="Default Map">
-    <Map
-      data={[
-        { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
-        { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
-        { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
-        { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
-        { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
-      ]}
-    />
+  <Story name="Map with Transformed API Data">
+    {() => {
+    const rawData = {
+      "results": [
+        {
+          "node_id": "88205",
+          "title": "Provide a tool to enhance the resilience of existing deteriorated bridges in the high risk zones for natural hazards using Global Analytics for Bridge Management",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-09 11:56:28",
+          "created_on": "2023-10-17 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/provide-tool-enhance-resilience-existing-deteriorated-bridges-high-risk-zones-natural",
+          "duration_start": "2023-10-01",
+          "duration_end": "2025-10-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88192",
+          "title": "Queensland Betterment Fund, investing to create stronger, more resilient Queensland communities",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-08-09 11:55:28",
+          "created_on": "2022-11-14 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/queensland-betterment-fund-investing-create-stronger-more-resilient-queensland",
+          "duration_start": "2013-06-01",
+          "duration_end": "2025-06-30",
+          "field_status": "Completed",
+          "country_iso_code": "AUS",
+          "country_name": "Australia",
+          "undrr_region": "Asia and Pacific, Suva",
+          "country_id": "85"
+        },
+        {
+          "node_id": "78192",
+          "title": "Queensland Betterment Fund, investing to create stronger, more resilient Queensland communities",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-08-09 11:55:28",
+          "created_on": "2022-11-14 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/queensland-betterment-fund-investing-create-stronger-more-resilient-queensland",
+          "duration_start": "2013-06-01",
+          "duration_end": "2025-06-30",
+          "field_status": "Completed",
+          "country_iso_code": "AUS",
+          "country_name": "Australia",
+          "undrr_region": "Asia and Pacific, Suva",
+          "country_id": "85"
+        },
+        {
+          "node_id": "88169",
+          "title": "DARAJA: Developing Risk Awareness Through Joint Action",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-09 11:53:54",
+          "created_on": "2021-07-27 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/daraja-developing-risk-awareness-through-joint-action",
+          "duration_start": "2018-01-01",
+          "duration_end": "2025-12-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88135",
+          "title": "Nature Protects People Project",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-09 11:52:03",
+          "created_on": "2021-02-12 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/nature-protects-people-project",
+          "duration_start": "2019-10-01",
+          "duration_end": "2022-10-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88132",
+          "title": "Smart Community Infrastructures: Disaster Risk Reduction (ISO/TC268/SC1/WG6)",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-08 11:51:54",
+          "created_on": "2020-12-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/smart-community-infrastructures-disaster-risk-reduction-iso/tc268/sc1/wg6",
+          "duration_start": "2020-08-01",
+          "duration_end": "2025-12-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88216",
+          "title": "Risk Reduction Awareness Program in the Municipality of Amadora",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-07-05 11:57:16",
+          "created_on": "2024-02-12 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/risk-reduction-awareness-program-municipality-amadora",
+          "duration_start": "2013-01-01",
+          "duration_end": "2026-02-28",
+          "field_status": "Active",
+          "country_iso_code": "PRT",
+          "country_name": "Portugal",
+          "undrr_region": "Europe",
+          "country_id": "237"
+        },
+        {
+          "node_id": "88174",
+          "title": "Avoidable Deaths Network (ADN)",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-07-04 11:54:12",
+          "created_on": "2021-11-23 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/avoidable-deaths-network-adn",
+          "duration_start": "2019-03-01",
+          "duration_end": "2030-12-31",
+          "field_status": "Completed",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88099",
+          "title": "International Wildfire Preparedness Mechanism (IWPM)",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-06-06 11:50:39",
+          "created_on": "2019-02-22 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/international-wildfire-preparedness-mechanism-iwpm",
+          "duration_start": "2014-07-01",
+          "duration_end": "2030-12-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88201",
+          "title": "World Tsunami Museum Conference",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-04-24 11:56:10",
+          "created_on": "2023-03-24 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/world-tsunami-museum-conference",
+          "duration_start": "2017-08-01",
+          "duration_end": "2030-12-31",
+          "field_status": "Completed",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        }
+      ],
+      "pager": {
+        "count": 129,
+        "pages": 13,
+        "items_per_page": 10,
+        "current_page": 0,
+        "next_page": 1
+      }
+    }
+    const data = transformDataForMap(rawData.results);
+
+      return (
+        <MapComponent
+          data={data}
+          center={[20, 0]}
+          zoom={2}
+        />
+      );
+    }}
   </Story>
 </Canvas>
 
@@ -39,124 +373,354 @@ This example uses a default dataset to render the map.
   language="jsx"
   code={`
 import React from 'react';
-import Map from './Map';
+import MapComponent from './Map';
+import { transformDataForMap } from './map-helpers';
 
-const Example = () => (
-  <Map
-    data={[
-      { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
-      { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
-      { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
-      { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
-      { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
-    ]}
-  />
-);
+const MapWithAPIDataExample = () => {
+    const rawData = {
+      "results": [
+        {
+          "node_id": "88205",
+          "title": "Provide a tool to enhance the resilience of existing deteriorated bridges in the high risk zones for natural hazards using Global Analytics for Bridge Management",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-09 11:56:28",
+          "created_on": "2023-10-17 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/provide-tool-enhance-resilience-existing-deteriorated-bridges-high-risk-zones-natural",
+          "duration_start": "2023-10-01",
+          "duration_end": "2025-10-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88192",
+          "title": "Queensland Betterment Fund, investing to create stronger, more resilient Queensland communities",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-08-09 11:55:28",
+          "created_on": "2022-11-14 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/queensland-betterment-fund-investing-create-stronger-more-resilient-queensland",
+          "duration_start": "2013-06-01",
+          "duration_end": "2025-06-30",
+          "field_status": "Completed",
+          "country_iso_code": "AUS",
+          "country_name": "Australia",
+          "undrr_region": "Asia and Pacific, Suva",
+          "country_id": "85"
+        },
+        {
+          "node_id": "78192",
+          "title": "Queensland Betterment Fund, investing to create stronger, more resilient Queensland communities",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-08-09 11:55:28",
+          "created_on": "2022-11-14 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/queensland-betterment-fund-investing-create-stronger-more-resilient-queensland",
+          "duration_start": "2013-06-01",
+          "duration_end": "2025-06-30",
+          "field_status": "Completed",
+          "country_iso_code": "AUS",
+          "country_name": "Australia",
+          "undrr_region": "Asia and Pacific, Suva",
+          "country_id": "85"
+        },
+        {
+          "node_id": "88169",
+          "title": "DARAJA: Developing Risk Awareness Through Joint Action",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-09 11:53:54",
+          "created_on": "2021-07-27 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/daraja-developing-risk-awareness-through-joint-action",
+          "duration_start": "2018-01-01",
+          "duration_end": "2025-12-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88135",
+          "title": "Nature Protects People Project",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-09 11:52:03",
+          "created_on": "2021-02-12 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/nature-protects-people-project",
+          "duration_start": "2019-10-01",
+          "duration_end": "2022-10-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88132",
+          "title": "Smart Community Infrastructures: Disaster Risk Reduction (ISO/TC268/SC1/WG6)",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-08-08 11:51:54",
+          "created_on": "2020-12-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/smart-community-infrastructures-disaster-risk-reduction-iso/tc268/sc1/wg6",
+          "duration_start": "2020-08-01",
+          "duration_end": "2025-12-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88216",
+          "title": "Risk Reduction Awareness Program in the Municipality of Amadora",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-07-05 11:57:16",
+          "created_on": "2024-02-12 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/risk-reduction-awareness-program-municipality-amadora",
+          "duration_start": "2013-01-01",
+          "duration_end": "2026-02-28",
+          "field_status": "Active",
+          "country_iso_code": "PRT",
+          "country_name": "Portugal",
+          "undrr_region": "Europe",
+          "country_id": "237"
+        },
+        {
+          "node_id": "88174",
+          "title": "Avoidable Deaths Network (ADN)",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-07-04 11:54:12",
+          "created_on": "2021-11-23 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/avoidable-deaths-network-adn",
+          "duration_start": "2019-03-01",
+          "duration_end": "2030-12-31",
+          "field_status": "Completed",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88099",
+          "title": "International Wildfire Preparedness Mechanism (IWPM)",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-06-06 11:50:39",
+          "created_on": "2019-02-22 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/international-wildfire-preparedness-mechanism-iwpm",
+          "duration_start": "2014-07-01",
+          "duration_end": "2030-12-31",
+          "field_status": "Active",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88145",
+          "title": "Sendai Symposium for Disaster Risk Reduction and the Future",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "NATIONAL_OR_LOCAL",
+          "updated_on": "2024-04-26 11:52:32",
+          "created_on": "2021-03-25 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/sendai-symposium-disaster-risk-reduction-and-future",
+          "duration_start": "2016-03-01",
+          "duration_end": "2030-03-31",
+          "field_status": "Active",
+          "country_iso_code": "JPN",
+          "country_name": "Japan",
+          "undrr_region": "Asia and Pacific",
+          "country_id": "172"
+        },
+        {
+          "node_id": "88201",
+          "title": "World Tsunami Museum Conference",
+          "language": "English",
+          "promotion": "",
+          "syndication_taxonomy": [],
+          "field_geographic_scope": "GLOBAL",
+          "updated_on": "2024-04-24 11:56:10",
+          "created_on": "2023-03-24 00:00:00",
+          "domain_source": "",
+          "domain_access": "",
+          "content_url": "https://sendaicommitments-staging.undrr.org/commitment/world-tsunami-museum-conference",
+          "duration_start": "2017-08-01",
+          "duration_end": "2030-12-31",
+          "field_status": "Completed",
+          "country_iso_code": null,
+          "country_name": null,
+          "undrr_region": "",
+          "country_id": ""
+        }
+      ],
+      "pager": {
+        "count": 129,
+        "pages": 13,
+        "items_per_page": 10,
+        "current_page": 0,
+        "next_page": 1
+      }
+    }
 
-export default Example;
-`}
-/>
+  const data = transformDataForMap(rawData.results);
 
-### Custom Center and Zoom Map
-
-This example customizes the center and zoom level of the map.
-
-<Canvas>
-  <Story name="Custom Center and Zoom Map">
-    <Map
-      data={[
-        { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'For the indus basic, the countries that share this major water catchment have co-designed future water resource pathways, applying a scenario-based policy tool to develop and co-define a joint vision about existing challenges and possible pathways for the basin.<br> <strong>GAR Section: 4.5</strong>' },
-        { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
-        { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
-        { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
-        { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
-      ]}
-      center={[34.0479, 100.6197]}
-      zoom={4}
-    />
-  </Story>
-</Canvas>
-
-<Source
-  language="jsx"
-  code={`
-import React from 'react';
-import Map from './Map';
-
-const CustomMapExample = () => (
-  <Map
-    data={[
-      { label: 'Asia', value: 68, coords: [34.0479, 100.6197], description: 'Description for Asia' },
-      { label: 'Africa', value: 16, coords: [1.6508, 10.2679], description: 'Description for Africa' },
-      { label: 'Americas', value: 15, coords: [10.4515, -61.391], description: 'Description for Americas' },
-      { label: 'Europe', value: 9, coords: [54.526, 15.2551], description: 'Description for Europe' },
-      { label: 'Oceania', value: 13, coords: [-25.2744, 133.7751], description: 'Description for Oceania' },
-    ]}
-    center={[34.0479, 100.6197]}
-    zoom={4}
-  />
-);
-
-export default CustomMapExample;
-`}
-/>
-
-### GeoJSON Map with Clustering
-
-This example demonstrates how to use GeoJSON data with clustering.
-
-<Canvas>
-  <Story name="GeoJSON Map with Clustering">
-    <Map
-      data={[
-      { label: 'Point 1', value: 50, coords: [35.6895, 139.6917], description: 'Description for Point 1 (Tokyo, Japan)' },
-      { label: 'Point 2', value: 30, coords: [51.5074, -0.1278], description: 'Description for Point 2 (London, UK)' },
-      { label: 'Point 3', value: 70, coords: [40.7128, -74.006], description: 'Description for Point 3 (New York, USA)' },
-      { label: 'Point 4', value: 90, coords: [34.0522, -118.2437], description: 'Description for Point 4 (Los Angeles, USA)' },
-      { label: 'Point 5', value: 20, coords: [55.7558, 37.6173], description: 'Description for Point 5 (Moscow, Russia)' },
-      { label: 'Point 6', value: 45, coords: [48.8566, 2.3522], description: 'Description for Point 6 (Paris, France)' },
-      { label: 'Point 7', value: 25, coords: [39.9042, 116.4074], description: 'Description for Point 7 (Beijing, China)' },
-      { label: 'Point 8', value: 60, coords: [35.6762, 139.6503], description: 'Description for Point 8 (Tokyo, Japan)' },
-      { label: 'Point 9', value: 55, coords: [52.5200, 13.4050], description: 'Description for Point 9 (Berlin, Germany)' },
-      { label: 'Point 10', value: 35, coords: [34.6937, 135.5023], description: 'Description for Point 10 (Osaka, Japan)' },
-      { label: 'Point 11', value: 80, coords: [1.3521, 103.8198], description: 'Description for Point 11 (Singapore)' },
-      { label: 'Point 12', value: 40, coords: [37.7749, -122.4194], description: 'Description for Point 12 (San Francisco, USA)' },
-      { label: 'Point 13', value: 65, coords: [-33.8688, 151.2093], description: 'Description for Point 13 (Sydney, Australia)' },
-      { label: 'Point 14', value: 25, coords: [-23.5505, -46.6333], description: 'Description for Point 14 (São Paulo, Brazil)' },
-      { label: 'Point 15', value: 75, coords: [19.0760, 72.8777], description: 'Description for Point 15 (Mumbai, India)' },
-      { label: 'Point 16', value: 90, coords: [31.2304, 121.4737], description: 'Description for Point 16 (Shanghai, China)' },
-      { label: 'Point 17', value: 40, coords: [41.9028, 12.4964], description: 'Description for Point 17 (Rome, Italy)' },
-      { label: 'Point 18', value: 50, coords: [-34.6037, -58.3816], description: 'Description for Point 18 (Buenos Aires, Argentina)' },
-      { label: 'Point 19', value: 35, coords: [45.4654, 9.1859], description: 'Description for Point 19 (Milan, Italy)' },
-      { label: 'Point 20', value: 70, coords: [37.5665, 126.9780], description: 'Description for Point 20 (Seoul, South Korea)' },
-    ]}
+  return (
+    <MapComponent
+      data={data}
       center={[20, 0]}
       zoom={2}
     />
-  </Story>
-</Canvas>
+  );
+};
 
-<Source
-  language="jsx"
-  code={`
-import React from 'react';
-import Map from './Map';
-
-const GeoJSONMapExample = () => (
-  <Map
-    data={[
-      { label: 'Point 1', value: 50, coords: [35.6895, 139.6917], description: 'Description for Point 1' },
-      { label: 'Point 2', value: 30, coords: [51.5074, -0.1278], description: 'Description for Point 2' },
-      { label: 'Point 3', value: 70, coords: [40.7128, -74.006], description: 'Description for Point 3' },
-      { label: 'Point 4', value: 90, coords: [34.0522, -118.2437], description: 'Description for Point 4' },
-      { label: 'Point 5', value: 20, coords: [55.7558, 37.6173], description: 'Description for Point 5' },
-    ]}
-    center={[20, 0]}
-    zoom={2}
-  />
-);
-
-export default GeoJSONMapExample;
+export default MapWithAPIDataExample;
 `}
 />
 
