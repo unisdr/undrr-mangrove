@@ -50,6 +50,8 @@ module.exports = [
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
       MegaMenuSimple: "./stories/Components/MegaMenu/MegaMenuSimple.jsx",
+      BarGraph: "./stories/Components/Charts/BarChart/BarChart.jsx",
+      MapComponent: "./stories/Components/Map/MapComponent.jsx",
     },
     externals: {
       preact: "preact",
@@ -75,7 +77,7 @@ module.exports = [
           },
         },
         {
-          test: /\.scss$/,
+          test: /\.(css|scss)$/,
           use: ["style-loader", "css-loader", "sass-loader"],
         },
         {
