@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
@@ -7,7 +8,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import DOMPurify from "dompurify";
-import styles from "./map.module.scss";
+import styles from "./map.module.css";
 import { transformDataForMap } from "./map-helpers";
 
 export const transformData = (results) => {
