@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "preact/hooks";
-import "./megamenu.scss";
+import { h } from "preact";
+import { useState, useEffect } from "preact/hooks";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
 import { useBreakpoint } from "./TopBar/hook";

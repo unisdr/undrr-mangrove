@@ -1,6 +1,5 @@
 import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
-import MapComponent from './MapComponent';
-import { transformDataForMap } from './map-helpers';
+import MapComponent, { transformData } from './MapComponent';
 
 <Meta title="Components/Maps/MapComponent" component={MapComponent} />
 
@@ -356,7 +355,7 @@ This example uses the transformed data from the API to render the map.
         "next_page": 1
       }
     }
-    const data = transformDataForMap(rawData.results);
+    const data = transformData(rawData.results);
 
       return (
         <MapComponent
@@ -373,8 +372,7 @@ This example uses the transformed data from the API to render the map.
   language="jsx"
   code={`
 import React from 'react';
-import MapComponent from './Map';
-import { transformDataForMap } from './map-helpers';
+import MapComponent, { transformData } from './MapComponent';
 
 const MapWithAPIDataExample = () => {
     const rawData = {
@@ -709,7 +707,7 @@ const MapWithAPIDataExample = () => {
       }
     }
 
-  const data = transformDataForMap(rawData.results);
+  const data = transformData(rawData.results);
 
   return (
     <MapComponent

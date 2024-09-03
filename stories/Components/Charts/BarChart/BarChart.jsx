@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { useRef, useEffect, useState } from "preact/hooks";
 import * as d3 from "d3";
 

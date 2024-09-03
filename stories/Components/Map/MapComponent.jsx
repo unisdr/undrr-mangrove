@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
@@ -11,6 +10,10 @@ import DOMPurify from "dompurify";
 import styles from "./map.module.scss";
 import { transformDataForMap } from "./map-helpers";
 
+export const transformData = (results) => {
+  return transformDataForMap(results);
+};
+
 // Configure default Leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -19,25 +22,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export default function MapComponent({
-  apiEndpoint,
-  center = [20, 0],
-  zoom = 2,
-}) {
-  const [data, setData] = useState([]);
-
-  // Fetch data from API
-  useEffect(() => {
-    if (apiEndpoint) {
-      fetch(apiEndpoint)
-        .then((response) => response.json())
-        .then((fetchedData) => setData(transformDataForMap(fetchedData)))
-        .catch((error) => console.error("Error fetching map data:", error));
-    } else {
-      console.error("API endpoint is required");
-    }
-  }, [apiEndpoint]);
-
+export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
   const commitmentLink =
     "https://sendaicommitments-staging.undrr.org/commitment?term_node_tid_depth";
