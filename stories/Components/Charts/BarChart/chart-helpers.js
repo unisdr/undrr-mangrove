@@ -21,6 +21,9 @@ export const transformDataForBarChart = (results) => {
   const endYear = Math.max(
     ...results.map((result) => new Date(result.created_on).getFullYear())
   );
+
+  console.log("END_YEAR", endYear);
+
   const years = Array.from(
     { length: endYear - startYear + 1 },
     (_, i) => startYear + i

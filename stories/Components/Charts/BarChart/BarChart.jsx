@@ -1,6 +1,10 @@
 import { h } from "preact";
 import { useRef, useEffect, useState } from "preact/hooks";
 import * as d3 from "d3";
+import {
+  transformDataForCommitmentsPerYear,
+  transformDataForOrganizationsPerCommitment,
+} from "./chart-helpers";
 
 // Main BarChart component
 export default function BarChart({
@@ -18,21 +22,21 @@ export default function BarChart({
   dataSource = "Data Source", // Default data source label
   ariaLabel = "Bar chart showing data", // ARIA label for accessibility
   ariaDescription = "", // ARIA description for accessibility
+  type = "COMMITMENTS", // Type of data to display
 }) {
   const [chartData, setChartData] = useState(data);
   const svgRef = useRef();
 
   useEffect(() => {
     mapData();
-  }, [data]);
+  }, [data, type]);
 
   const mapData = () => {
-    const mappedData = data.map((item) => ({
-      ...item,
-      label: item.label, // Correct the property names
-      value: item.value,
-    }));
-    setChartData(mappedData);
+    if (type === "COMMITMENTS") {
+      setChartData(transformDataForCommitmentsPerYear(data));
+    } else {
+      setChartData(transformDataForOrganizationsPerCommitment(data));
+    }
   };
 
   useEffect(() => {
