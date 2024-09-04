@@ -53,7 +53,7 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
       // Convert data to JSON
       const data = await response.json();
 
-      console.log("DATA", data.results);
+      //console.log("DATA", data.results);
 
       // Set state with fetched data
       setResponse((prevState) => ({
