@@ -32,9 +32,9 @@ This is the default usage of the `Fetcher` component.
 <Canvas>
   <Story name="Default">
     {() => {
-      const renderData = ({ loading, data }) => (
+      const renderData = ({ isLoading, data }) => (
         <div>
-          {loading && <p>Loading data...</p>}
+          {isLoading && <p>Loading data...</p>}
           <pre>{JSON.stringify(data, null, 4)}</pre>
         </div>
       );
@@ -42,7 +42,7 @@ This is the default usage of the `Fetcher` component.
       return (
         <Fetcher
           api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-          queryParams={{ items_per_page: 1000}}
+          queryParams={{ items_per_page: 10}}
           render={renderData}
           loadingLabel="Loading data"
         />
@@ -57,9 +57,9 @@ This is the default usage of the `Fetcher` component.
 import Fetcher from './Fetcher';
 
 const Default = () => {
-  const renderData = ({ loading, data }) => (
+  const renderData = ({ isLoading, data }) => (
     <div>
-      {loading && <p>Loading data...</p>}
+      {isLoading && <p>Loading data...</p>}
       <pre>{JSON.stringify(data, null, 4)}</pre>
     </div>
   );
@@ -67,7 +67,7 @@ const Default = () => {
   return (
     <Fetcher
       api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-      queryParams={{ items_per_page: 1000}}
+      queryParams={{ items_per_page: 10}}
       loadingLabel="Loading data"
       render={renderData}
     />
@@ -85,9 +85,9 @@ An example of the `Fetcher` component with a search term parameter.
 <Canvas>
   <Story name="With Search Term">
     {() => {
-      const renderData = ({ loading, data }) => (
+      const renderData = ({ isLoading, data }) => (
         <div>
-          {loading && <p>Searching...</p>}
+          {isLoading && <p>Searching...</p>}
           <pre>{JSON.stringify(data, null, 4)}</pre>
         </div>
       );
@@ -95,7 +95,7 @@ An example of the `Fetcher` component with a search term parameter.
       return (
         <Fetcher
           api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-          queryParams={{ items_per_page: 1000}}
+          queryParams={{ items_per_page: 10}}
           render={renderData}
           loadingLabel="Searching"
         />
@@ -110,9 +110,9 @@ An example of the `Fetcher` component with a search term parameter.
 import Fetcher from './Fetcher';
 
 const WithSearchTerm = () => {
-  const renderData = ({ loading, data }) => (
+  const renderData = ({ isLoading, data }) => (
     <div>
-      {loading && <p>Searching...</p>}
+      {isLoading  && <p>Searching...</p>}
       <pre>{JSON.stringify(data, null, 4)}</pre>
     </div>
   );
@@ -120,7 +120,7 @@ const WithSearchTerm = () => {
   return (
     <Fetcher
       api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-      queryParams={{ items_per_page: 1000}}
+      queryParams={{ items_per_page: 10}}
       loadingLabel="Searching"
       render={renderData}
     />

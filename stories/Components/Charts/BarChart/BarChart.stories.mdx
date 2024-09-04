@@ -41,9 +41,9 @@ Below is an example of the `BarChart` component wrapped inside the `Fetcher` com
       <Fetcher
         api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
         queryParams={{items_per_page:1000}}
-        render={({ loading, data }) => (
+        render={({ isLoading, data }) => (
           <>
-            {loading ? (
+            {isLoading ? (
               <span>Loading data...</span>
             ) : (
               <BarChart
@@ -78,9 +78,9 @@ const BarChartWithOrganisation = () => (
   <Fetcher
     api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
     queryParams={{items_per_page:1000}}
-    render={({ loading, data }) => (
+    render={({ isLoading, data }) => (
       <>
-        {loading ? (
+        {isLoading ? (
           <span>Loading data...</span>
         ) : (
           <BarChart
@@ -118,9 +118,9 @@ Below is an example of the `BarChart` component wrapped inside the `Fetcher` com
       <Fetcher
         api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
         queryParams={{items_per_page:1000}}
-        render={({ loading, data }) => (
+        render={({ isLoading, data }) => (
           <>
-            {loading ? (
+            {isLoading ? (
               <span>Loading data...</span>
             ) : (
               <BarChart
@@ -156,9 +156,9 @@ const BarChartWithFetcher = () => (
   <Fetcher
     api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
     queryParams={{items_per_page:1000}}
-    render={({ loading, data }) => (
+    render={({ isLoading, data }) => (
       <>
-        {loading ? (
+        {isLoading ? (
           <span>Loading data...</span>
         ) : (
           <BarChart
@@ -193,4 +193,3 @@ Ensure that the `render` function used within `Fetcher` is accessible and handle
 ### Changelog
 
 1.0 — Initial release of the component
-
