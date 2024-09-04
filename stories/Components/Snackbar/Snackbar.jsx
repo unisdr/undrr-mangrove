@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./snackbar.scss";
 import { ErrorIcon, WarningIcon, InfoIcon, SuccessIcon } from "./SnackbarIcons";
 
 /**
