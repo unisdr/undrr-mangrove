@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
 const RESPONSE_PARAMS = {
-  loading: false,
+  isLoading: false,
   data: [] || {},
 };
 
@@ -30,10 +30,10 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
   }, [api, JSON.stringify(queryParams)]);
 
   const fetchData = async () => {
-    // Set state to loading
+    // Set state to isLoading
     setResponse((prevState) => ({
       ...prevState,
-      loading: true,
+      isLoading: true,
     }));
 
     const queryString = generateQueryParams(queryParams);
@@ -58,14 +58,14 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
       // Set state with fetched data
       setResponse((prevState) => ({
         ...prevState,
-        loading: false,
+        isLoading: false,
         data: data.results,
       }));
     } catch (error) {
       console.error("Fetch error: ", error);
       setResponse((prevState) => ({
         ...prevState,
-        loading: false,
+        isLoading: false,
         data: [],
       }));
     }
