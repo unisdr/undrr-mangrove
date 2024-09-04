@@ -13,8 +13,8 @@ export default function BarChart({
   height = 400, // Default height of the SVG element
   labelColor = "#6B7280", // Default color for labels
   backgroundColor = "#FFFFFF", // Default background color for the SVG
-  axisColor = "#9CA3AF", // Default color for the axis lines
-  tickColor = "#D1D5DB", // Default color for the tick marks
+  axisColor = "#6B7280", // Default color for the axis lines
+  tickColor = "#6B7280", // Default color for the tick marks
   color = "#4065A3", // Default color for the bars
   title = "Bar Chart", // Default title of the chart
   xAxisLabel = "X-Axis", // Default label for the x-axis
