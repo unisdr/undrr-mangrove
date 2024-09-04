@@ -50,8 +50,9 @@ module.exports = [
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
       MegaMenuSimple: "./stories/Components/MegaMenu/MegaMenuSimple.jsx",
-      BarGraph: "./stories/Components/Charts/BarChart/BarChart.jsx",
+      BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
       MapComponent: "./stories/Components/Map/MapComponent.jsx",
+      Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
     },
     externals: {
       preact: "preact",
