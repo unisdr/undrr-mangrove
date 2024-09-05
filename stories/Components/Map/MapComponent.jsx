@@ -79,8 +79,30 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
         // Log the continent being processed
         // console.log(`Rendering markers for continent: ${continentName} (${continentCode})`);
         // console.log(data.filter(entry => entry.continent === continentCode));
+
+        // https://github.com/YUzhva/react-leaflet-markercluster?tab=readme-ov-file
+        const createClusterCustomIcon = function (cluster) {
+          return L.divIcon({
+            key: continentCode,
+            // html: `<span>${cluster.getChildCount()}</span>`,
+            className: `${styles["mg-custom-label-icon"]}`,
+            html: `
+            <div class="${styles["mg-label-container"]}">
+              <div class="${styles["mg-label-text"]}">${continentName}</div>
+              <div class="${styles["mg-label-value"]}">${continentName}</div>
+            </div>`,
+      
+            // className: `mg-marker-cluster-custom mg-custom-label-icon mg-marker-cluster-${continentCode}`,
+            iconSize: L.point(80, 80, true),
+          });
+        }
+
         return (
-          <MarkerClusterGroup key={continentCode}>
+          // All marker cluster options can be passed as props
+          // https://github.com/Leaflet/Leaflet.markercluster#all-options 
+          <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon}
+          key={continentCode} showCoverageOnHover={false} maxClusterRadius="300"
+          >
             {data
               .filter(entry => entry.continent === continentCode)
               .map((entry, index) => (
