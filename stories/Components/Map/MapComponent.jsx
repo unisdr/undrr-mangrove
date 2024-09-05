@@ -51,7 +51,16 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
   const handleMarkerClick = (countryId) => {
     window.open(`${commitmentLink}=${countryId}`, "_blank");
   };
-
+  const continents = {
+    "Global": "Global",
+    "Africa": "Africa",
+    "Europe": "Europe",
+    "Asia": "Asia",
+    "North America": "North America",
+    "South America": "South America",
+    "Oceania": "Oceania",
+    "Antarctica": "Antarctica",
+  };
   return (
     <MapContainer
       center={center}
@@ -64,36 +73,48 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
         attribution='&copy; <a href="https://www.arcgis.com/home/item.html?id=7d88506b6af64b02ba3c08dbf66d014b">ArcGIS</a> contributors'
         url="https://geoservices.un.org/arcgis/rest/services/ClearMap_WebTopo/MapServer/tile/{z}/{y}/{x}"
       />
-      <MarkerClusterGroup>
-        {data.map((entry, index) => (
-          <Marker
-            key={index}
-            position={entry.coords}
-            icon={createLabelIcon(entry.label, entry.value)}
-          >
-            <Popup>
-              <div
-                style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(entry.description),
-                }}
-              />
-              {entry.country_id && (
-                <a
-                  style={{
-                    fontSize: "2em",
-                    paddingLeft: "5px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleMarkerClick(entry.country_id)}
+  
+      {/* Loop through continents and render MarkerClusterGroup for each */}
+      {Object.entries(continents).map(([continentCode, continentName]) => {
+        // Log the continent being processed
+        // console.log(`Rendering markers for continent: ${continentName} (${continentCode})`);
+        // console.log(data.filter(entry => entry.continent === continentCode));
+        return (
+          <MarkerClusterGroup key={continentCode}>
+            {data
+              .filter(entry => entry.continent === continentCode)
+              .map((entry, index) => (
+                <Marker
+                  key={`${continentCode}-${index}`}
+                  position={entry.coords}
+                  icon={createLabelIcon(entry.label, entry.value)}
                 >
-                  More Info
-                </a>
-              )}
-            </Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
+                  <Popup>
+                    <div
+                      style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(entry.description),
+                      }}
+                    />
+                    {entry.country_id && (
+                      <a
+                        style={{
+                          fontSize: "2em",
+                          paddingLeft: "5px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleMarkerClick(entry.country_id)}
+                      >
+                        More Info
+                      </a>
+                    )}
+                  </Popup>
+                </Marker>
+              ))}
+          </MarkerClusterGroup>
+        );
+      })}
     </MapContainer>
   );
+  
 }
