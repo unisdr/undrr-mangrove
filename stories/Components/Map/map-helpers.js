@@ -30,15 +30,13 @@ export const transformDataForMap = (results) => {
           ...entry,
           label: entry.country_name,
           description: entry.title,
-          coords: getCountryCoords(entry.country_iso_code, entry.country_name),
-          continent: getContinent(entry.country_iso_code, entry.country_name),
+          coords: getCountryCoords(entry.country_iso_code),
+          continent: getContinent(entry.country_iso_code),
           value: 1,
         });
 
   
       }
-      if (entry.continent == "Global")
-        console.log(entry)
       return acc;
     }, [])
     .filter((c) => c.coords !== null);
