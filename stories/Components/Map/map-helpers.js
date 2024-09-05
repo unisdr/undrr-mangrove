@@ -1,4 +1,4 @@
-import { getLatLong } from "./lookup";
+import { getContinent, getCountryIsoName } from "./lookup";
 /**
  * Transform function to calculate the number of commitments per year.
  * @param {Array} rawData - The raw dataset containing commitments.
@@ -17,13 +17,15 @@ export const transformDataForMap = (results) => {
           ...entry,
           label: entry.country_name,
           description: entry.title,
-          coords: getLatLong(entry.country_iso_code),
+          coords: getCountryIsoName(entry.country_iso_code),
+          continent: getContinent(entry.country_iso_code),
           value: 1,
         });
       }
       return acc;
     }, [])
     .filter((c) => c.coords !== null);
+    // console.log(data);
 
   return data;
 };
