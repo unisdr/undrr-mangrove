@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
+export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom = 5, minZoom = 1 }) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
   const commitmentLink =
     "https://sendaicommitments-staging.undrr.org/commitment?term_node_tid_depth";
@@ -56,6 +56,8 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
     <MapContainer
       center={center}
       zoom={zoom}
+      maxZoom={maxZoom}
+      minZoom={minZoom}
       style={{ height: "600px", width: "100%" }}
     >
       <TileLayer
