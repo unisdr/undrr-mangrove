@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
@@ -22,6 +22,13 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
+
+// Component to remove attribution prefix
+function RemoveAttributionPrefix() {
+  const map = useMap();
+  map.attributionControl.setPrefix("");
+  return null;
+}
 
 export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
@@ -58,8 +65,9 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
       zoom={zoom}
       style={{ height: "600px", width: "100%" }}
     >
+      <RemoveAttributionPrefix />
       <TileLayer
-        attribution='&copy; <a href="https://www.arcgis.com/home/item.html?id=7d88506b6af64b02ba3c08dbf66d014b">ArcGIS</a> contributors'
+        attribution='Base map produced by <a href="https://www.un.org/geospatial/">United Nations Geospatial</a> | <a href="https://leafletjs.com/">Leaflet</a> | Powered by <a href="https://www.esri.com/">Esri</a>'
         url="https://geoservices.un.org/arcgis/rest/services/ClearMap_WebTopo/MapServer/tile/{z}/{y}/{x}"
       />
       <MarkerClusterGroup>
