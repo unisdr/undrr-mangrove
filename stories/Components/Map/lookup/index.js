@@ -1,25 +1,19 @@
 import data from "./data.json";
 
-export const getCountryIsoName = (countryIsoCode) => {
+const findCountryByIsoCode = (countryIsoCode) => {
   if (!countryIsoCode) return null;
 
-  const country = data.find(
+  return data.find(
     (c) => c.iso_alpha_3 === countryIsoCode.toUpperCase()
   );
+};
 
-  // If no country match, fallback to lat/lon
-  return country ? [country.latitude, country.longitude] : null;
+export const getCountryCoords = (countryIsoCode) => {
+  const match = findCountryByIsoCode(countryIsoCode);
+  return match ? [match.latitude, match.longitude] : null;
 };
 
 export const getContinent = (countryIsoCode) => {
-  if (!countryIsoCode) return null;
-
-  const match = data.find(
-    (c) => c.iso_alpha_3 === countryIsoCode.toUpperCase()
-  );
-  
-  // Check if match is found and return the continent code, otherwise return null
-  const continent = match ? match.continent : null;
-  
-  return continent;
+  const match = findCountryByIsoCode(countryIsoCode);
+  return match ? match.continent : null;
 };

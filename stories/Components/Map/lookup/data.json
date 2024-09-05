@@ -1,5 +1,61 @@
 [
   {
+    "latitude": -30,
+    "longitude": 75,
+    "continent": "Global",
+    "name": "Global",
+    "iso_alpha_3": "GLOBAL"
+  },
+  {
+    "latitude": -5.665695,
+    "longitude": 30.529562,
+    "continent": "Africa",
+    "name": "Africa",
+    "iso_alpha_3": "AFRICA"
+  },
+  {
+    "latitude": -82.8628,
+    "longitude": 135.0000,
+    "continent": "Antarctica",
+    "name": "Antarctica",
+    "iso_alpha_3": "ANTARTICA"
+  },
+  {
+    "latitude": 35.861660,
+    "longitude": 120.195397,
+    "continent": "Asia",
+    "name": "Asia",
+    "iso_alpha_3": "ASIA"
+  },
+  {
+    "latitude": 53.165691,
+    "longitude": 10.451526,
+    "continent": "Europe",
+    "name": "Europe",
+    "iso_alpha_3": "EUROPE"
+  },
+  {
+    "latitude": 37.090240,
+    "longitude": -95.712891,
+    "continent": "North America",
+    "name": "North America",
+    "iso_alpha_3": "NORTH AMERICA"
+  },
+  {
+    "latitude": -25.274398,
+    "longitude": 143.775136,
+    "continent": "Oceania",
+    "name": "Oceania",
+    "iso_alpha_3": "OCEANIA"
+  },
+  {
+    "latitude": -14.235004,
+    "longitude": -51.92528,
+    "continent": "South America",
+    "name": "South America",
+    "iso_alpha_3": "SOUTH AMERICA"
+  },
+  {
     "country": "AD",
     "latitude": 42.546245,
     "longitude": 1.601554,
@@ -1746,7 +1802,7 @@
   {
     "country": "TO",
     "latitude": -21.178986,
-    "longitude": -175.198242,
+    "longitude": 185.198242,
     "continent": "Oceania",
     "name": "Tonga",
     "iso_alpha_3": "TON"
