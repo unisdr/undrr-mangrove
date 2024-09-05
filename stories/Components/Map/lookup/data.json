@@ -1,7 +1,7 @@
 [
   {
-    "latitude": -0,
-    "longitude": 0,
+    "latitude": -30,
+    "longitude": 75,
     "continent": "Global",
     "name": "Global",
     "iso_alpha_3": "GLOBAL"
@@ -39,7 +39,7 @@
     "longitude": -95.712891,
     "continent": "North America",
     "name": "North America",
-    "iso_alpha_3": "NORTHAMERICA"
+    "iso_alpha_3": "NORTH AMERICA"
   },
   {
     "latitude": -25.274398,
@@ -53,7 +53,7 @@
     "longitude": -51.92528,
     "continent": "South America",
     "name": "South America",
-    "iso_alpha_3": "SOUTHAMERICA"
+    "iso_alpha_3": "SOUTH AMERICA"
   },
   {
     "country": "AD",

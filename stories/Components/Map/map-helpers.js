@@ -10,15 +10,17 @@ export const transformDataForMap = (results) => {
       // console.log("acc.country_iso_code",entry.country_iso_code);
       // here we work around some geographic exception
       // null = global
-      // false + country name = continent
       if (entry.country_iso_code == null) {
-        console.log("NULL");
         entry.country_name = "Global";
-        entry.continent = "Global";
-        entry.coords = [0,0];
-        // entry.latitude = 0;
-        // entry.longitude = 0;
+        entry.title = "Global";
+        entry.country_id = "ALL";
         entry.country_iso_code = "GLOBAL";
+      }
+      // false + country name = continent
+      if (entry.country_iso_code === false) {
+        entry.title = entry.country_name;
+        entry.country_iso_code = entry.country_name.toUpperCase();
+        entry.country_name = entry.country_name + " regional commitments";
       }
       const existingEntry = acc.find(
         (item) => item.country_iso_code === entry.country_iso_code
@@ -34,12 +36,9 @@ export const transformDataForMap = (results) => {
           continent: getContinent(entry.country_iso_code),
           value: 1,
         });
-
-  
       }
       return acc;
     }, [])
     .filter((c) => c.coords !== null);
-
   return data;
 };
