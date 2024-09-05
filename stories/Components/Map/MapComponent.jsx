@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-// Component to remove attribution prefix
+// Component to remove attribution prefix, this removes the Ukrainian map
 function RemoveAttributionPrefix() {
   const map = useMap();
   map.attributionControl.setPrefix("");
