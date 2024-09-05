@@ -7,8 +7,8 @@
     "iso_alpha_3": "GLOBAL"
   },
   {
-    "latitude": -18.665695,
-    "longitude": 35.529562,
+    "latitude": -5.665695,
+    "longitude": 30.529562,
     "continent": "Africa",
     "name": "Africa",
     "iso_alpha_3": "AFRICA"
@@ -22,13 +22,13 @@
   },
   {
     "latitude": 35.861660,
-    "longitude": 104.195397,
+    "longitude": 120.195397,
     "continent": "Asia",
     "name": "Asia",
     "iso_alpha_3": "ASIA"
   },
   {
-    "latitude": 51.165691,
+    "latitude": 53.165691,
     "longitude": 10.451526,
     "continent": "Europe",
     "name": "Europe",
@@ -43,7 +43,7 @@
   },
   {
     "latitude": -25.274398,
-    "longitude": 133.775136,
+    "longitude": 143.775136,
     "continent": "Oceania",
     "name": "Oceania",
     "iso_alpha_3": "OCEANIA"
@@ -1802,7 +1802,7 @@
   {
     "country": "TO",
     "latitude": -21.178986,
-    "longitude": -175.198242,
+    "longitude": 185.198242,
     "continent": "Oceania",
     "name": "Tonga",
     "iso_alpha_3": "TON"

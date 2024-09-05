@@ -18,9 +18,9 @@ export const transformDataForMap = (results) => {
       }
       // false + country name = continent
       if (entry.country_iso_code === false) {
-        entry.title = entry.country_name;
+        entry.title = entry.country_name + " regional commitments";
         entry.country_iso_code = entry.country_name.toUpperCase();
-        entry.country_name = entry.country_name + " regional commitments";
+        entry.country_name = entry.country_name;
       }
       const existingEntry = acc.find(
         (item) => item.country_iso_code === entry.country_iso_code

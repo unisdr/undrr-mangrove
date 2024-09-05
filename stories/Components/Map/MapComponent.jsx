@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom = 5, minZoom = 1 }) {
+export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom = 5, minZoom = 2 }) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
   const commitmentLink =
     "/commitments?term_node_tid_depth";
@@ -67,76 +67,77 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
       zoom={zoom}
       maxZoom={maxZoom}
       minZoom={minZoom}
-      style={{ height: "600px", width: "100%" }}
+      style={{ height: "500px", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.arcgis.com/home/item.html?id=7d88506b6af64b02ba3c08dbf66d014b">ArcGIS</a> contributors'
         url="https://geoservices.un.org/arcgis/rest/services/ClearMap_WebTopo/MapServer/tile/{z}/{y}/{x}"
       />
-  
+
       {/* Loop through continents and render MarkerClusterGroup for each */}
       {Object.entries(continents).map(([continentCode, continentName]) => {
-        // Log the continent being processed
-        // console.log(`Rendering markers for continent: ${continentName} (${continentCode})`);
-        // console.log(data.filter(entry => entry.continent === continentCode));
 
-        // https://github.com/YUzhva/react-leaflet-markercluster?tab=readme-ov-file
+        // Filter the data for the current continent
+        const filteredData = data.filter(entry => entry.continent === continentCode);
+
+        // Calculate the sum of entry.value for the current continent
+        const totalValue = filteredData.reduce((sum, entry) => sum + entry.value, 0);
+
         const createClusterCustomIcon = function (cluster) {
           return L.divIcon({
             key: continentCode,
-            // html: `<span>${cluster.getChildCount()}</span>`,
             className: `${styles["mg-custom-label-icon"]}`,
             html: `
-            <div class="${styles["mg-label-container"]}">
-              <div class="${styles["mg-label-text"]}">${continentName}</div>
-              <div class="${styles["mg-label-value"]}">${continentName}</div>
-            </div>`,
-      
-            // className: `mg-marker-cluster-custom mg-custom-label-icon mg-marker-cluster-${continentCode}`,
+        <div class="${styles["mg-label-container"]}">
+          <div class="${styles["mg-label-text"]}">${continentName}</div>
+          <div class="${styles["mg-label-value"]}">${totalValue}</div>
+        </div>`,
             iconSize: L.point(80, 80, true),
           });
-        }
+        };
 
         return (
           // All marker cluster options can be passed as props
-          // https://github.com/Leaflet/Leaflet.markercluster#all-options 
-          <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon}
-          key={continentCode} showCoverageOnHover={false} maxClusterRadius="300"
+          <MarkerClusterGroup
+            iconCreateFunction={createClusterCustomIcon}
+            key={continentCode}
+            disableClusteringAtZoom="3"
+            zoomToBoundsOnClick={true}
+            spiderfyOnMaxZoom={false}
+            showCoverageOnHover={false}
+            maxClusterRadius="300"
           >
-            {data
-              .filter(entry => entry.continent === continentCode)
-              .map((entry, index) => (
-                <Marker
-                  key={`${continentCode}-${index}`}
-                  position={entry.coords}
-                  icon={createLabelIcon(entry.label, entry.value)}
-                >
-                  <Popup>
-                    <div
-                      style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(entry.description),
+            {filteredData.map((entry, index) => (
+              <Marker
+                key={`${continentCode}-${index}`}
+                position={entry.coords}
+                icon={createLabelIcon(entry.label, entry.value)}
+              >
+                <Popup>
+                  <div
+                    style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(entry.description),
+                    }}
+                  />
+                  {entry.country_id && (
+                    <a
+                      style={{
+                        fontSize: "2em",
+                        paddingLeft: "5px",
+                        cursor: "pointer",
                       }}
-                    />
-                    {entry.country_id && (
-                      <a
-                        style={{
-                          fontSize: "2em",
-                          paddingLeft: "5px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => handleMarkerClick(entry.country_id)}
-                      >
-                        More Info
-                      </a>
-                    )}
-                  </Popup>
-                </Marker>
-              ))}
+                      onClick={() => handleMarkerClick(entry.country_id)}
+                    >
+                      More Info
+                    </a>
+                  )}
+                </Popup>
+              </Marker>
+            ))}
           </MarkerClusterGroup>
         );
       })}
     </MapContainer>
   );
-  
 }
