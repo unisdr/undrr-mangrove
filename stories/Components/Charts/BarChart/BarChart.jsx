@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { useRef, useEffect, useState } from "preact/hooks";
+import React from "react";
+import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import {
   transformDataForCommitmentsPerYear,

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect } from "react";
 import { Breakpoints } from './constants';
-
 
 // Function to determine the current breakpoint
 const getBreakpoint = (width) => {

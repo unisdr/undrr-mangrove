@@ -1,4 +1,4 @@
-import { h } from "preact";
+import React from "react";
 
 function RecursiveListItem({ title, url, items }) {
   return (

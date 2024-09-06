@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { useState, useEffect, useRef } from "preact/hooks";
+import React from "react";
+import { useState, useEffect, useRef } from "react";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
 import { useBreakpoint } from "./TopBar/hook";
