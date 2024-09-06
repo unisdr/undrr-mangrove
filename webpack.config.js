@@ -56,7 +56,8 @@ module.exports = [
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
     },
     externals: {
-      // If want externals, leave them here.
+      react: 'react',
+      'react-dom': 'react-dom'
     },
     output: {
       path: path.resolve(__dirname, "dist"),

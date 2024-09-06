@@ -2375,7 +2375,7 @@ __metadata:
     prettier: "npm:^2.8.0"
     prettier-eslint: "npm:^15.0.1"
     prettier-stylelint: "npm:^0.4.2"
-    react: "npm:^17.0.2"
+    react: "npm:17.0.2"
     react-dom: "npm:17.0.2"
     react-leaflet: "npm:3.2.1"
     react-leaflet-markercluster: "npm:^3.0.0-rc1"
@@ -18025,7 +18025,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.2":
+"react@npm:17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
