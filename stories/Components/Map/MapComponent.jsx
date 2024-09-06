@@ -1,4 +1,4 @@
-import { h } from "preact";
+import React from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
@@ -8,7 +8,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import DOMPurify from "dompurify";
-import styles from "./map.module.css";
+import './map.css';
 import { transformDataForMap } from "./map-helpers";
 
 export const transformData = (results) => {
@@ -49,11 +49,11 @@ export default function MapComponent({
   const createLabelIcon = (label, value) => {
     const size = calculateIconSize(value);
     return L.divIcon({
-      className: `${styles["mg-custom-label-icon"]}`,
+      className: 'mg-custom-label-icon', 
       html: `
-      <div class="${styles["mg-label-container"]}">
-        <div class="${styles["mg-label-text"]}">${label}</div>
-        <div class="${styles["mg-label-value"]}">${value}</div>
+      <div class="mg-label-container">
+        <div class="mg-label-text">${label}</div>
+        <div class="mg-label-value">${value}</div>
       </div>`,
       iconSize: [size, size],
       iconAnchor: [size / 2, size / 2],
@@ -102,22 +102,20 @@ export default function MapComponent({
 
         const createClusterCustomIcon = function (cluster) {
           return L.divIcon({
-            key: continentCode,
-            className: `${styles["mg-custom-label-icon"]}`,
+            className: 'mg-custom-label-icon', 
             html: `
-        <div class="${styles["mg-label-container"]}">
-          <div class="${styles["mg-label-text"]}">${continentName}</div>
-          <div class="${styles["mg-label-value"]}">${totalValue}</div>
-        </div>`,
+            <div class="mg-label-container">
+              <div class="mg-label-text">${continentName}</div>
+              <div class="mg-label-value">${totalValue}</div>
+            </div>`,
             iconSize: L.point(80, 80, true),
           });
         };
 
         return (
-          // All marker cluster options can be passed as props
           <MarkerClusterGroup
             iconCreateFunction={createClusterCustomIcon}
-            key={continentCode}
+            key={continentCode}  // Key prop for React rendering, not inside function
             disableClusteringAtZoom="3"
             zoomToBoundsOnClick={true}
             spiderfyOnMaxZoom={false}
@@ -126,7 +124,7 @@ export default function MapComponent({
           >
             {filteredData.map((entry, index) => (
               <Marker
-                key={`${continentCode}-${index}`}
+                key={`${continentCode}-${index}`}  // Correct use of key here
                 position={entry.coords}
                 icon={createLabelIcon(entry.label, entry.value)}
               >
@@ -159,6 +157,7 @@ export default function MapComponent({
           </MarkerClusterGroup>
         );
       })}
+
     </MapContainer>
   );
 }

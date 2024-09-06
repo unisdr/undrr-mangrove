@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { useRef, useEffect } from "preact/hooks";
+import React from "react";
+import { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
 export default function ConnectedScatterplot({
