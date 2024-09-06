@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
@@ -23,10 +23,17 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
+// Component to remove attribution prefix, this removes the flag
+function RemoveAttributionPrefix() {
+  const map = useMap();
+  map.attributionControl.setPrefix("");
+  return null;
+}
+
+export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom = 5, minZoom = 2 }) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
   const commitmentLink =
-    "https://sendaicommitments-staging.undrr.org/commitment?term_node_tid_depth";
+    "/commitments?term_node_tid_depth";
 
   const calculateIconSize = (value) => {
     const minSize = 38;
@@ -51,47 +58,94 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2 }) {
   const handleMarkerClick = (countryId) => {
     window.open(`${commitmentLink}=${countryId}`, "_blank");
   };
-
+  const continents = {
+    "Global": "Global",
+    "Africa": "Africa",
+    "Europe": "Europe",
+    "Asia": "Asia",
+    "North America": "North America",
+    "South America": "South America",
+    "Oceania": "Oceania",
+    "Antarctica": "Antarctica",
+  };
   return (
     <MapContainer
       center={center}
       zoom={zoom}
-      style={{ height: "600px", width: "100%" }}
+      maxZoom={maxZoom}
+      minZoom={minZoom}
+      style={{ height: "500px", width: "100%" }}
     >
+      <RemoveAttributionPrefix />
       <TileLayer
-        attribution='&copy; <a href="https://www.arcgis.com/home/item.html?id=7d88506b6af64b02ba3c08dbf66d014b">ArcGIS</a> contributors'
+        attribution='Base map produced by <a href="https://www.un.org/geospatial/">United Nations Geospatial</a> | <a href="https://leafletjs.com/">Leaflet</a> | Powered by <a href="https://www.esri.com/">Esri</a>'
         url="https://geoservices.un.org/arcgis/rest/services/ClearMap_WebTopo/MapServer/tile/{z}/{y}/{x}"
       />
-      <MarkerClusterGroup>
-        {data.map((entry, index) => (
-          <Marker
-            key={index}
-            position={entry.coords}
-            icon={createLabelIcon(entry.label, entry.value)}
+
+      {/* Loop through continents and render MarkerClusterGroup for each */}
+      {Object.entries(continents).map(([continentCode, continentName]) => {
+
+        // Filter the data for the current continent
+        const filteredData = data.filter(entry => entry.continent === continentCode);
+
+        // Calculate the sum of entry.value for the current continent
+        const totalValue = filteredData.reduce((sum, entry) => sum + entry.value, 0);
+
+        const createClusterCustomIcon = function (cluster) {
+          return L.divIcon({
+            key: continentCode,
+            className: `${styles["mg-custom-label-icon"]}`,
+            html: `
+        <div class="${styles["mg-label-container"]}">
+          <div class="${styles["mg-label-text"]}">${continentName}</div>
+          <div class="${styles["mg-label-value"]}">${totalValue}</div>
+        </div>`,
+            iconSize: L.point(80, 80, true),
+          });
+        };
+
+        return (
+          // All marker cluster options can be passed as props
+          <MarkerClusterGroup
+            iconCreateFunction={createClusterCustomIcon}
+            key={continentCode}
+            disableClusteringAtZoom="3"
+            zoomToBoundsOnClick={true}
+            spiderfyOnMaxZoom={false}
+            showCoverageOnHover={false}
+            maxClusterRadius="300"
           >
-            <Popup>
-              <div
-                style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(entry.description),
-                }}
-              />
-              {entry.country_id && (
-                <a
-                  style={{
-                    fontSize: "2em",
-                    paddingLeft: "5px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleMarkerClick(entry.country_id)}
-                >
-                  More Info
-                </a>
-              )}
-            </Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
+            {filteredData.map((entry, index) => (
+              <Marker
+                key={`${continentCode}-${index}`}
+                position={entry.coords}
+                icon={createLabelIcon(entry.label, entry.value)}
+              >
+                <Popup>
+                  <div
+                    style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(entry.description),
+                    }}
+                  />
+                  {entry.country_id && (
+                    <a
+                      style={{
+                        fontSize: "2em",
+                        paddingLeft: "5px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleMarkerClick(entry.country_id)}
+                    >
+                      More Info
+                    </a>
+                  )}
+                </Popup>
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
+        );
+      })}
     </MapContainer>
   );
 }

@@ -39,7 +39,7 @@ Below is an example of the `BarChart` component wrapped inside the `Fetcher` com
   <Story name="BarChart with Fetcher">
     {() => (
       <Fetcher
-        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
         queryParams={{items_per_page:1000}}
         render={({ isLoading, data }) => (
           <>
@@ -76,7 +76,7 @@ import Fetcher from '../../Fetcher/Fetcher';
 
 const BarChartWithOrganisation = () => (
   <Fetcher
-    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
     queryParams={{items_per_page:1000}}
     render={({ isLoading, data }) => (
       <>
@@ -116,7 +116,7 @@ Below is an example of the `BarChart` component wrapped inside the `Fetcher` com
   <Story name="BarChart for Organisations">
     {() => (
       <Fetcher
-        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
         queryParams={{items_per_page:1000}}
         render={({ isLoading, data }) => (
           <>
@@ -154,7 +154,7 @@ import Fetcher from '../../Fetcher/Fetcher';
 
 const BarChartWithFetcher = () => (
   <Fetcher
-    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
     queryParams={{items_per_page:1000}}
     render={({ isLoading, data }) => (
       <>

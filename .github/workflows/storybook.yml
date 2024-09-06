@@ -54,3 +54,17 @@ jobs:
         with:
           name: output
           path: ./dist
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+  # Deployment job
+  deploy:
+    if: github.ref == 'refs/heads/main' # only deploy if branch is master
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
