@@ -15,13 +15,13 @@
   },
   {
     "latitude": -82.8628,
-    "longitude": 135.0000,
+    "longitude": 135.0,
     "continent": "Antarctica",
     "name": "Antarctica",
     "iso_alpha_3": "ANTARTICA"
   },
   {
-    "latitude": 35.861660,
+    "latitude": 35.86166,
     "longitude": 120.195397,
     "continent": "Asia",
     "name": "Asia",
@@ -35,7 +35,7 @@
     "iso_alpha_3": "EUROPE"
   },
   {
-    "latitude": 37.090240,
+    "latitude": 37.09024,
     "longitude": -95.712891,
     "continent": "North America",
     "name": "North America",
@@ -1802,7 +1802,7 @@
   {
     "country": "TO",
     "latitude": -21.178986,
-    "longitude": 185.198242,
+    "longitude": -175.198242,
     "continent": "Oceania",
     "name": "Tonga",
     "iso_alpha_3": "TON"

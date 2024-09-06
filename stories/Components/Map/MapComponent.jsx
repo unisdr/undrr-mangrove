@@ -30,10 +30,15 @@ function RemoveAttributionPrefix() {
   return null;
 }
 
-export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom = 5, minZoom = 2 }) {
+export default function MapComponent({
+  data,
+  center = [20, 0],
+  zoom = 2,
+  maxZoom = 5,
+  minZoom = 2,
+}) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
-  const commitmentLink =
-    "/commitments?term_node_tid_depth";
+  const commitmentLink = "/commitments?term_node_tid_depth";
 
   const calculateIconSize = (value) => {
     const minSize = 38;
@@ -59,14 +64,14 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
     window.open(`${commitmentLink}=${countryId}`, "_blank");
   };
   const continents = {
-    "Global": "Global",
-    "Africa": "Africa",
-    "Europe": "Europe",
-    "Asia": "Asia",
+    Global: "Global",
+    Africa: "Africa",
+    Europe: "Europe",
+    Asia: "Asia",
     "North America": "North America",
     "South America": "South America",
-    "Oceania": "Oceania",
-    "Antarctica": "Antarctica",
+    Oceania: "Oceania",
+    Antarctica: "Antarctica",
   };
   return (
     <MapContainer
@@ -84,12 +89,16 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
 
       {/* Loop through continents and render MarkerClusterGroup for each */}
       {Object.entries(continents).map(([continentCode, continentName]) => {
-
         // Filter the data for the current continent
-        const filteredData = data.filter(entry => entry.continent === continentCode);
+        const filteredData = data.filter(
+          (entry) => entry.continent === continentCode
+        );
 
         // Calculate the sum of entry.value for the current continent
-        const totalValue = filteredData.reduce((sum, entry) => sum + entry.value, 0);
+        const totalValue = filteredData.reduce(
+          (sum, entry) => sum + entry.value,
+          0
+        );
 
         const createClusterCustomIcon = function (cluster) {
           return L.divIcon({
@@ -123,7 +132,11 @@ export default function MapComponent({ data, center = [20, 0], zoom = 2, maxZoom
               >
                 <Popup>
                   <div
-                    style={{ padding: "5px", lineHeight: "1.6em", fontSize: "2em" }}
+                    style={{
+                      padding: "5px",
+                      lineHeight: "1.6em",
+                      fontSize: "2em",
+                    }}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(entry.description),
                     }}

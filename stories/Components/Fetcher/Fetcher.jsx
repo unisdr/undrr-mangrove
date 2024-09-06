@@ -10,7 +10,11 @@ export const generateQueryParams = (params) => {
   const urlSearchParams = new URLSearchParams();
 
   for (const key in params) {
-    if (params.hasOwnProperty(key)) {
+    if (
+      params.hasOwnProperty(key) &&
+      params[key] !== undefined &&
+      params[key] !== null
+    ) {
       urlSearchParams.append(key, params[key]);
     }
   }
@@ -37,7 +41,7 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
     }));
 
     const queryString = generateQueryParams(queryParams);
-    const API = `${api}?${queryString}`;
+    const API = queryString ? `${api}?${queryString}` : api;
 
     try {
       // Create the request options with the Authorization header
@@ -52,8 +56,6 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
 
       // Convert data to JSON
       const data = await response.json();
-
-      //console.log("DATA", data.results);
 
       // Set state with fetched data
       setResponse((prevState) => ({
