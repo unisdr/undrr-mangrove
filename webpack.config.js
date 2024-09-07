@@ -6,7 +6,7 @@ const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const CopyPlugin = require("copy-webpack-plugin");
 const webpackEntry = require("./webpack.entries");
 
-const packMode = "development";
+const packMode = "production";
 
 /*
  * Webpack build for scss and js
@@ -45,7 +45,7 @@ module.exports = [
     },
   },
   {
-    mode: 'development',
+    // mode: 'development',
     entry: {
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
