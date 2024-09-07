@@ -45,7 +45,7 @@ module.exports = [
     },
   },
   {
-    // mode: 'development',
+    mode: packMode,
     entry: {
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
