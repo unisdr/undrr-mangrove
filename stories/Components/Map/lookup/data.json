@@ -14,6 +14,13 @@
     "iso_alpha_3": "AFRICA"
   },
   {
+    "latitude": 10.2,
+    "longitude": -90.5,
+    "continent": "Americas",
+    "name": "Americas",
+    "iso_alpha_3": "AMERICAS"
+  },
+  {
     "latitude": -82.8628,
     "longitude": 135.0,
     "continent": "Antarctica",
@@ -1802,7 +1809,7 @@
   {
     "country": "TO",
     "latitude": -21.178986,
-    "longitude": -175.198242,
+    "longitude": 180,
     "continent": "Oceania",
     "name": "Tonga",
     "iso_alpha_3": "TON"

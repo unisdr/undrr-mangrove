@@ -13,5 +13,11 @@ export const getCountryCoords = (countryIsoCode) => {
 
 export const getContinent = (countryIsoCode) => {
   const match = findCountryByIsoCode(countryIsoCode);
+  // For UNDRR north and south america are grouped
+  if (match) {
+    if ((match.continent.toUpperCase() === "NORTH AMERICA" )|| (match.continent.toUpperCase() === "SOUTH AMERICA")) {
+      match.continent = "Americas";
+    }
+  }
   return match ? match.continent : null;
 };

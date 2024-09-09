@@ -50,9 +50,9 @@ export default function MapComponent({
     const size = calculateIconSize(value);
     return L.divIcon({
       className: 'mg-custom-label-icon', 
+      // <div class="mg-label-text">${label}</div>
       html: `
       <div class="mg-label-container">
-        <div class="mg-label-text">${label}</div>
         <div class="mg-label-value">${value}</div>
       </div>`,
       iconSize: [size, size],
@@ -68,6 +68,7 @@ export default function MapComponent({
     Africa: "Africa",
     Europe: "Europe",
     Asia: "Asia",
+    Americas: "Americas",
     "North America": "North America",
     "South America": "South America",
     Oceania: "Oceania",
@@ -91,7 +92,9 @@ export default function MapComponent({
       {Object.entries(continents).map(([continentCode, continentName]) => {
         // Filter the data for the current continent
         const filteredData = data.filter(
-          (entry) => entry.continent === continentCode
+          function(entry) {
+            return entry.continent === continentCode
+          }
         );
 
         // Calculate the sum of entry.value for the current continent
@@ -136,7 +139,7 @@ export default function MapComponent({
                       fontSize: "2em",
                     }}
                     dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(entry.description),
+                      __html: DOMPurify.sanitize(entry.label),
                     }}
                   />
                   {entry.country_id && (

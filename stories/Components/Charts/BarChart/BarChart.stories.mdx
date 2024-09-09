@@ -18,7 +18,7 @@ Bar charts are particularly useful for comparing quantities corresponding to dif
 - **`color`**: `string` - The default fill color for the bars.
 - **`labelColor`**: `string` - The color for the bar labels. *(default: `#FFFFFF`)*
 - **`title`**: `string` - The title of the chart.
-- **`type`**: `string` - The type of the chart (COMMITMENTS | ORGANISATIONS).
+- **`type`**: `string` - The type of the chart (`COMMITMENTS` | `ORGANISATIONS` | `DELIVERABLES`).
 - **`axisColor`**: `string` - The color of the axis lines.
 - **`tickColor`**: `string` - The color of the tick lines.
 - **`xAxisLabel`**: `string` - The label for the x-axis. *(optional)*
@@ -54,6 +54,7 @@ Below is an example of the `BarChart` component wrapped inside the `Fetcher` com
                 axisColor="#9CA3AF"
                 tickColor="#9FAAAE"
                 title="Commitments by Year"
+                type="COMMITMENTS"
                 xAxisLabel="Year"
                 yAxisLabel="Number of Commitments"
                 dataSource="Data from fetched API"
@@ -92,6 +93,7 @@ const BarChartWithOrganisation = () => (
             axisColor="#9CA3AF"
             tickColor="#9FAAAE"
             title="Commitments by Year"
+            type="COMMITMENTS"
             xAxisLabel="Year"
             yAxisLabel="Number of Commitments"
             dataSource="Data from fetched API"

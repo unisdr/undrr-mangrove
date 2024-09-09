@@ -14,7 +14,6 @@ export const transformDataForBarChart = (results, options = {}) => {
 
   let valueExtractor;
 
-  console.log(`graphType`,graphType)
   if (graphType === "COMMITMENTS") {
     valueExtractor = function(result) {
       return 1;
