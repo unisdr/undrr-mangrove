@@ -2,8 +2,7 @@ import React from "react";
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import {
-  transformDataForCommitmentsPerYear,
-  transformDataForOrganizationsPerCommitment,
+  transformDataForBarChart
 } from "./chart-helpers";
 
 // Main BarChart component
@@ -32,11 +31,10 @@ export default function BarChart({
   }, [data, type]);
 
   const mapData = () => {
-    if (type === "COMMITMENTS") {
-      setChartData(transformDataForCommitmentsPerYear(data));
-    } else {
-      setChartData(transformDataForOrganizationsPerCommitment(data));
-    }
+    setChartData(transformDataForBarChart(data, {
+      "graphType": type,
+      "defaultColor": color
+    }));
   };
 
   useEffect(() => {
