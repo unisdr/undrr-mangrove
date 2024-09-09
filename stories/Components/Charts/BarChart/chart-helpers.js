@@ -18,16 +18,21 @@ export const transformDataForBarChart = (results) => {
 
   // Convert the yearCounts object into an array of objects suitable for the bar chart
   const startYear = 2015;
-  const endYear = Math.max(
-    ...results.map((result) => new Date(result.created_on).getFullYear())
-  );
+  const endYear = 2030;
+  // If we ever need to make the end dynamic
+  // const endYear = Math.max(
+  //   ...results.map((result) => new Date(result.created_on).getFullYear())
+  // );
 
-  console.log("END_YEAR", endYear);
+  // console.log("END_YEAR", endYear);
 
   const years = Array.from(
     { length: endYear - startYear + 1 },
     (_, i) => startYear + i
   );
+
+  // Clear the original array
+  results.length = 0;
 
   return years.map((year) => ({
     // Set the label to the year as a string
@@ -53,13 +58,19 @@ export const transformDataForCommitmentsPerYear = (results) => {
   }, yearCounts);
 
   const startYear = 2015;
-  const endYear = Math.max(
-    ...results.map((result) => new Date(result.created_on).getFullYear())
-  );
+  const endYear = 2030;
+  // If we ever need to make the end dynamic
+  // const endYear = Math.max(
+  //   ...results.map((result) => new Date(result.created_on).getFullYear())
+  // );
   const years = Array.from(
     { length: endYear - startYear + 1 },
     (_, i) => startYear + i
   );
+
+  
+  // Clear the original array
+  results.length = 0;
 
   return years.map((year) => ({
     label: year.toString(),
@@ -85,13 +96,19 @@ export const transformDataForOrganizationsPerCommitment = (results) => {
   }, yearOrganizationCounts);
 
   const startYear = 2015;
-  const endYear = Math.max(
-    ...results.map((result) => new Date(result.created_on).getFullYear())
-  );
+  const endYear = 2030;
+  // If we ever need to make the end dynamic
+  // const endYear = Math.max(
+  //   ...results.map((result) => new Date(result.created_on).getFullYear())
+  // );
   const years = Array.from(
     { length: endYear - startYear + 1 },
     (_, i) => startYear + i
   );
+
+  
+  // Clear the original array
+  results.length = 0;
 
   return years.map((year) => ({
     label: year.toString(),
