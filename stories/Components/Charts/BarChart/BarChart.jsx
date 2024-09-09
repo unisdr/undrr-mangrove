@@ -22,6 +22,7 @@ export default function BarChart({
   ariaLabel = "Bar chart showing data", // ARIA label for accessibility
   ariaDescription = "", // ARIA description for accessibility
   type = "COMMITMENTS", // Type of data to display
+  margin = { top: 40, right: 30, bottom: 70, left: 70 }, // Default margins
 }) {
   const [chartData, setChartData] = useState(data);
   const svgRef = useRef();
@@ -50,7 +51,6 @@ export default function BarChart({
       .style("background-color", backgroundColor)
       .style("overflow", "visible");
 
-    const margin = { top: 40, right: 30, bottom: 70, left: 70 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -77,12 +77,14 @@ export default function BarChart({
       .selectAll("line, path")
       .attr("stroke", tickColor);
 
-    chart
-      .append("g")
-      .attr("class", "y-axis")
-      .call(d3.axisLeft(yScale).ticks(5))
-      .selectAll("line, path")
-      .attr("stroke", tickColor);
+    if (tickColor != "none") {
+      chart
+        .append("g")
+        .attr("class", "y-axis")
+        .call(d3.axisLeft(yScale).ticks(5))
+        .selectAll("line, path")
+        .attr("stroke", tickColor);
+    }
 
     const barGroups = chart
       .selectAll()
@@ -110,51 +112,60 @@ export default function BarChart({
       .attr("y", (a) => yScale(a.value) - 5)
       .attr("text-anchor", "middle")
       .style("fill", labelColor)
-      .text((a) => `${a.value}`);
+      .text((a) => a.value !== 0 ? `${a.value}` : '');
 
-    chart
-      .append("text")
-      .attr("class", "label")
-      .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + margin.bottom - 10)
-      .attr("text-anchor", "middle")
-      .style("fill", labelColor)
-      .text(xAxisLabel);
+    if (xAxisLabel) {
+      chart
+        .append("text")
+        .attr("class", "label")
+        .attr("x", innerWidth / 2)
+        .attr("y", innerHeight + margin.bottom - 10)
+        .attr("text-anchor", "middle")
+        .style("fill", labelColor)
+        .text(xAxisLabel);
+    }
 
-    chart
-      .append("text")
-      .attr("class", "label")
-      .attr("x", -innerHeight / 2)
-      .attr("y", -margin.left / 2.4)
-      .attr("transform", "rotate(-90)")
-      .attr("text-anchor", "middle")
-      .style("fill", labelColor)
-      .text(yAxisLabel);
+    if (yAxisLabel) {
+      chart
+        .append("text")
+        .attr("class", "label")
+        .attr("x", -innerHeight / 2)
+        .attr("y", -margin.left / 2.4)
+        .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "middle")
+        .style("fill", labelColor)
+        .text(yAxisLabel);
+    }
 
-    svg
-      .append("text")
-      .attr("class", "title")
-      .attr("x", innerWidth / 2 + margin.left)
-      .attr("y", 5)
-      .attr("text-anchor", "middle")
-      .style("fill", labelColor)
-      .style("font-size", "22px")
-      .style("font-weight", "600")
-      .text(title);
+    if (title) {
+      svg
+        .append("text")
+        .attr("class", "title")
+        .attr("x", innerWidth / 2 + margin.left)
+        .attr("y", 5)
+        .attr("text-anchor", "middle")
+        .style("fill", labelColor)
+        .style("font-size", "22px")
+        .style("font-weight", "600")
+        .text(title);
+    }
 
-    chart
-      .append("text")
-      .attr("class", "source")
-      .attr("x", innerWidth)
-      .attr("y", innerHeight + margin.bottom - 5)
-      .attr("text-anchor", "end")
-      .style("fill", labelColor)
-      .style("font-size", "10px")
-      .text(dataSource);
+    if (dataSource) {
+      chart
+        .append("text")
+        .attr("class", "source")
+        .attr("x", innerWidth)
+        .attr("y", innerHeight + margin.bottom - 5)
+        .attr("text-anchor", "end")
+        .style("fill", labelColor)
+        .style("font-size", "10px")
+        .text(dataSource);
+    }
   }, [
     chartData,
     width,
     height,
+    margin,
     labelColor,
     backgroundColor,
     axisColor,

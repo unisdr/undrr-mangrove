@@ -15,6 +15,7 @@ Bar charts are particularly useful for comparing quantities corresponding to dif
 - **`data`**: `Array<{ label: string, value: number, color: string }>` - An array of objects representing the data points. *(required)*
 - **`width`**: `number` - The width of the chart in pixels. *(required)*
 - **`height`**: `number` - The height of the chart in pixels. *(required)*
+- **`margin`**: `Object<{ top: number, right: number, bottom: number, left: number }>` - An object representing the chart margins. (default: `{ top: 40, right: 30, bottom: 70, left: 70 }`)
 - **`color`**: `string` - The default fill color for the bars.
 - **`labelColor`**: `string` - The color for the bar labels. *(default: `#FFFFFF`)*
 - **`title`**: `string` - The title of the chart.
@@ -50,14 +51,15 @@ Below is an example of the `BarChart` component wrapped inside the `Fetcher` com
                 data={data}
                 width={1000}
                 height={300}
+                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                 labelColor="#9CA3AF"
                 axisColor="#9CA3AF"
-                tickColor="#9FAAAE"
-                title="Commitments by Year"
+                tickColor="none"
+                title=""
                 type="COMMITMENTS"
-                xAxisLabel="Year"
-                yAxisLabel="Number of Commitments"
-                dataSource="Data from fetched API"
+                xAxisLabel=""
+                yAxisLabel=""
+                dataSource=""
                 ariaLabel="Bar chart showing the number of commitments by year"
                 ariaDescription="This chart displays the number of commitments made each year based on fetched API data."
               />
@@ -89,14 +91,15 @@ const BarChartWithOrganisation = () => (
             data={data}
             width={1000}
             height={300}
+            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
             labelColor="#9CA3AF"
             axisColor="#9CA3AF"
             tickColor="#9FAAAE"
-            title="Commitments by Year"
+            title=""
             type="COMMITMENTS"
-            xAxisLabel="Year"
-            yAxisLabel="Number of Commitments"
-            dataSource="Data from fetched API"
+            xAxisLabel=""
+            yAxisLabel=""
+            dataSource=""
             ariaLabel="Bar chart showing the number of commitments by year"
             ariaDescription="This chart displays the number of commitments made each year based on fetched API data."
           />
