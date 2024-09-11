@@ -45,6 +45,7 @@ module.exports = [
     },
   },
   {
+    mode: packMode,
     entry: {
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
@@ -55,8 +56,8 @@ module.exports = [
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
     },
     externals: {
-      preact: "preact",
-      "preact/hooks": "preact/hooks",
+      react: 'react',
+      'react-dom': 'react-dom'
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -75,6 +76,9 @@ module.exports = [
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
+            options: {
+              presets: [["@babel/preset-react", { runtime: "automatic" }]], // Ensure React is supported
+            },
           },
         },
         {

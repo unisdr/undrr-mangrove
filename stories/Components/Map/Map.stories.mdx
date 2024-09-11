@@ -26,11 +26,12 @@ This example uses the transformed data from the API to render the map.
   <Story name="MapComponent with Fetcher">
     {() => (
       <Fetcher
-        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
+        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+        queryParams={{items_per_page:1000}}
         render={({ isLoading, data }) => (
           <>
             {isLoading ? (
-              <span>Loading data...</span>
+              <span>Loading map.</span>
             ) : (
               <MapComponent
                 data={transformData(data)}
@@ -54,14 +55,17 @@ import Fetcher from '../../Fetcher/Fetcher';
 
 const MapComponentWithFetcher = () => (
   <Fetcher
-    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
+    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+    queryParams={{items_per_page:1000}}
     render={({ isLoading, data }) => (
       <>
         {isLoading ? (
-          <span>Loading data...</span>
+          <span>Loading data.</span>
         ) : (
           <MapComponent
             data={transformData(data)}
+            width={1000}
+            center={[20,30]}
           />
         )}
       </>

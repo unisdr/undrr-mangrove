@@ -144,7 +144,7 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
     // No hash found
     return false;
   }
-  console.log("mgTabs: will activate tab", hash);
+  // console.log("mgTabs: will activate tab", hash);
 
   // 2. loop through all tabs, if a match then activate
   Array.prototype.forEach.call(tabs, (tab) => {

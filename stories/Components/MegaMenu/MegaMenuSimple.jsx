@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import React from "react";
+import { useState, useEffect } from "react";
 import { CtaButton } from "../Buttons/CtaButton/CtaButton";
 import { RecursiveListMenu } from "./RecursiveMegaMenuItem/RecursiveMegaMenuItem";
 

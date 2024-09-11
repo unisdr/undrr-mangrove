@@ -14,6 +14,10 @@ These components offer consistency, documentation and portability to speed quali
 
 If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us in the issue queue.
 
+### Assorted technical notes
+
+- Preact vs React: after initially planning to use Preact, we've stayed with react-dom for using the components in other systems. This ensures the Storybook and Other System runtime remain similar experiences, and avoid issues with React-only components (e.g. react-leaflet)
+
 ## Development
 
 Run the following commands to create/update the code.
@@ -34,6 +38,10 @@ yarn run build-storybook
 # linting on codebase
 yarn run lint
 ```
+
+### To debug Webpack bundles
+
+In `webpack.config.js`: `const packMode = "development";`
 
 ## Development via Docker
 

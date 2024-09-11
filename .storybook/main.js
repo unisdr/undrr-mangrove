@@ -31,7 +31,7 @@ module.exports = {
   },
 
   framework: {
-    name: "@storybook/preact-webpack5",
+    name: "@storybook/react-webpack5",
     options: {}
   },
 

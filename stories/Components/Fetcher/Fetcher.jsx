@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import React from "react";
+import { useState, useEffect } from "react";
 
 const RESPONSE_PARAMS = {
   isLoading: false,
