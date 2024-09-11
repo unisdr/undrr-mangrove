@@ -2,18 +2,16 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
-// const RemovePlugin = require('remove-files-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const webpackEntry = require("./webpack.entries");
 
-const packMode = "production";
+// Dynamically set the mode based on the environment variable
+const packMode =
+  process.env.NODE_ENV === "development" ? "development" : "production";
 
-/*
- * Webpack build for scss and js
- */
 module.exports = [
   {
-    mode: packMode,
+    mode: packMode, // Set mode dynamically
     entry: webpackEntry("js"),
     output: {
       path: path.resolve(__dirname, "docs"),
@@ -43,9 +41,20 @@ module.exports = [
         },
       ],
     },
+    optimization: {
+      minimize: packMode === "production", // Minimize only in production mode
+      minimizer: [new CssMinimizerPlugin()], // Minimize only in production mode
+    },
+    plugins: [
+      new MiniCssExtractPlugin(),
+      new FixStyleOnlyEntriesPlugin(),
+      new CopyPlugin({
+        patterns: [{ from: "src/assets", to: "assets" }],
+      }),
+    ],
   },
   {
-    mode: packMode,
+    mode: packMode, // Set mode dynamically
     entry: {
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
@@ -56,8 +65,8 @@ module.exports = [
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
     },
     externals: {
-      react: 'react',
-      'react-dom': 'react-dom'
+      react: "react",
+      "react-dom": "react-dom",
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -77,7 +86,7 @@ module.exports = [
           use: {
             loader: "babel-loader",
             options: {
-              presets: [["@babel/preset-react", { runtime: "automatic" }]], // Ensure React is supported
+              presets: [["@babel/preset-react", { runtime: "automatic" }]],
             },
           },
         },

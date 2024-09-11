@@ -4,10 +4,10 @@
   "description": "Design System for UNDRR",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --progress",
-    "dev": "yarn run storybook",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "yarn run scss && storybook build -o docs-build --loglevel verbose",
+    "build": "NODE_ENV=production webpack --progress",
+    "dev": "NODE_ENV=development yarn run storybook",
+    "storybook": "NODE_ENV=development storybook dev -p 6006",
+    "build-storybook": "NODE_ENV=production yarn run scss && storybook build -o docs-build --loglevel verbose",
     "scss": "sass ./stories/assets/scss:./stories/assets/css",
     "scss-watch": "sass --watch ./stories/assets/scss:./stories/assets/css",
     "lint": "yarn run lint:css && yarn run lint:js",
@@ -133,7 +133,7 @@
   },
   "resolutions": {
     "@storybook/react/webpack": "^5",
-    "react-element-to-jsx-string": "15.0.0"
+    "react-element-to-jsx-string": "14.3.2"
   },
   "publishConfig": {
     "@undp:registry": "https://npm.pkg.github.com"
