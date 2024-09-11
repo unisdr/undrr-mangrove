@@ -44,8 +44,6 @@ A well-established and consistently presented identity is a very valuable asset.
 
 <Anchor storyId="foundation-logos--undrr-logo-blue"></Anchor>
 
-<Anchor storyId="foundation-logos--undrr-logo-blue"></Anchor>
-
 ### Blue logo
 
 [Download](images/undrr-logo-blue.svg)
@@ -57,7 +55,7 @@ This is the default logo and is used primarily in the header of every page as we
     name="UNDRR logo - blue"
     parameters={{ backgrounds: { default: "white" } }}
   >
-    return <Logo src={logo} alt={"UNDRR logo"}></Logo>;
+    <Logo src={logo} alt={"UNDRR logo"} />
   </Story>
 </Canvas>
 
@@ -80,9 +78,7 @@ Used when the logo is placed on a dark background.
       },
     }}
   >
-    return (
-      <Logo src={logoWhite} alt={"UNDRR logo"}></Logo>
-    );
+    <Logo src={logoWhite} alt={"UNDRR logo"} />
   </Story>
 </Canvas>
 
@@ -100,11 +96,9 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
       },
     }}
   >
-    return (
     <div style={{ maxWidth: "200px" }}>
-      <Logo src={logoSquare} alt={"UNDRR logo"}></Logo>
+      <Logo src={logoSquare} alt={"UNDRR logo"} />
     </div>
-    );
   </Story>
 </Canvas>
 
@@ -118,11 +112,9 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
       },
     }}
   >
-    return (
     <div style={{ maxWidth: "200px" }}>
-      <Logo src={logoSquareWhite} alt={"UNDRR logo"}></Logo>
+      <Logo src={logoSquareWhite} alt={"UNDRR logo"} />
     </div>
-    );
   </Story>
 </Canvas>
 
@@ -133,3 +125,4 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
 ### Changelog
 
 1.0 — Released component
+
