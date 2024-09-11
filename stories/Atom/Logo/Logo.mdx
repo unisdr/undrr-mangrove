@@ -1,0 +1,77 @@
+import { Meta, Story, Canvas, Anchor } from "@storybook/blocks";
+import { Logo } from "./Logo";
+import * as LogoStories from './Logo.stories';
+
+import logo from "../../assets/images/undrr-logo-blue.svg";
+import logoWhite from "../../assets/images/undrr-logo-white.svg";
+import logoSquare from "../../assets/images/undrr-logo-square-blue.svg";
+import logoSquareWhite from "../../assets/images/undrr-logo-square-white.svg";
+
+<Meta of={LogoStories} />
+
+# UNDRR logos
+
+The UNDRR logo is a keystone element of the identity and is used to represent the entire organization.
+
+### Overview
+
+The UNDRR logo is the keystone element of the identity program and should be used to represent the entire organization.
+
+When to use:
+
+* To promote business.
+* To create an identity for the organization.
+
+### Formatting
+
+#### Default
+
+Within the design system, the logo is used in the header and footer components. The logo is available in blue or white.
+
+### Content
+
+A well-established and consistently presented identity is a very valuable asset. To protect and strengthen the trademark status of the logo, the approved versions must not be altered, modified, changed, or added to in any way.
+
+<Anchor storyId="foundation-logos--undrr-logo-blue" />
+
+### Blue logo
+
+[Download](images/undrr-logo-blue.svg)
+
+This is the default logo and is used primarily in the header of every page as well as country sites.
+
+<Canvas>
+  <Story of={LogoStories.UndrrLogoBlue} />
+</Canvas>
+
+<Anchor storyId="foundation-logos--undrr-logo-white" />
+
+### White logo
+
+[Download](images/undrr-logo-white.svg)
+
+Used when the logo is placed on a dark background.
+
+<Canvas>
+  <Story of={LogoStories.UndrrLogoWhite} />
+</Canvas>
+
+### Square variants
+
+The horizontal variant is preferred, but not always suitable. Therefore a "square" variation is available.
+
+<Canvas>
+  <Story of={LogoStories.UndrrLogoSquareBlue} />
+</Canvas>
+
+<Canvas>
+  <Story of={LogoStories.UndrrLogoSquareWhite} />
+</Canvas>
+
+#### Interactions
+
+* By clicking on the logo, the website is *always* redirected to the UNDRR.org homepage.
+
+### Changelog
+
+1.0 — Released component

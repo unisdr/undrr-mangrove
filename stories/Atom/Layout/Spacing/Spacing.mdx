@@ -1,0 +1,28 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { DesignTokenDocBlock } from 'storybook-design-token';
+
+<Meta
+  title="Design decisions/Spacing"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Spacing
+
+The Spacing units create visual rhythm and balance.
+
+### When to use:
+
+* To create spacing before, after, or in-between texts.
+
+### States
+
+<DesignTokenDocBlock categoryName="Spacing" maxHeight={600} viewType="card" />
+
+### Usage
+
+Use of standard spaces are already applied on different components, if you want to change the space, that can be done in **stories/assets/scss/\_varaibles.scss**.

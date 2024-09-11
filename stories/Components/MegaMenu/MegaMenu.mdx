@@ -1,0 +1,104 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import MegaMenu from './MegaMenu';
+import MegaMenuSimple from './MegaMenuSimple';
+
+export const sectionsSimple = () => ([
+    {
+      title: "Highlights",
+      bannerHeading: "Highlights",
+      bannerDescription: "Gaze upon statistics in wonder...",
+      items: [
+        {
+          title: "Item 1",
+          url: "#",
+          items: [
+            {
+              title: "Sub-item 1",
+              url: "#",
+            },
+            {
+              title: "Sub-item 2",
+              url: "#",
+              items: [
+                {
+                  title: "Sub-item 3",
+                  url: "#",
+                },
+                {
+                  title: "Sub-item 4",
+                  url: "#",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          title: "Item 1",
+          url: "#",
+          items: [
+            {
+              title: "Sub-item 1",
+              url: "#",
+            },
+            {
+              title: "Sub-item 2",
+              url: "#",
+              items: [
+                {
+                  title: "Sub-item 3",
+                  url: "#",
+                },
+                {
+                  title: "Sub-item 4",
+                  url: "#",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ])
+
+export const sections = () => ([
+    {
+      title: 'Section 1',
+      bannerHeading: 'Analytics by country',
+      bannerDescription: 'Gaze upon statistics in wonder...',
+      items: [
+        {
+          title: 'Item 1',
+          subItems: Array(30).fill({ title: 'Sub-item 1', url: '#'})
+        },
+        {
+          title: 'Item 2',
+          subItems: Array(20).fill({ title: 'Sub-item 2', url: '#'})
+        }
+      ]
+    },
+  {
+      title: 'Section 2',
+      bannerHeading: 'Analytics by region',
+      bannerDescription: 'Gaze upon statistics in wonder...',
+      items: [
+        {
+          title: 'Item 1',
+          subItems: Array(20).fill({ title: 'Sub-item 1', url: '#'})
+        },
+        {
+          title: 'Item 2',
+          subItems: Array(15).fill({ title: 'Sub-item 2', url: '#'})
+        }
+      ]
+    }
+  ])
+
+<Meta title="Components/MegaMenu/MegaMenu" argTypes={{}} />
+
+# Mega Menu v1
+
+<MegaMenuSimple delay={600} sections={sectionsSimple()} />
+
+# Mega Menu v2
+
+<MegaMenu delay={600} sections={sections()} />
