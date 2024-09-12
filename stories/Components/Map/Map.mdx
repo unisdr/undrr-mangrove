@@ -1,0 +1,94 @@
+import { Meta, Story, Canvas, Source } from '@storybook/blocks';
+import MapComponent, { transformData } from './MapComponent';
+import Fetcher from "../Fetcher/Fetcher";
+import * as MapStories from './Map.stories';
+import { Loader} from "../../Utilities/Loader/Loader";
+
+<Meta of={MapStories} />
+
+# MapComponent
+
+The `MapComponent` visualizes geographical data using Leaflet. It displays markers representing data points on a map using the UN's ClearMap service.
+
+## Props
+
+* **`data`**: `Array<{ label: string, value: number, coords: [number, number], description: string }>` - An array of objects representing the data points. *(required)*
+* **`center`**: `[number, number]` - The initial center of the map. *(default: \[20, 0])*
+* **`zoom`**: `number` - The initial zoom level of the map. *(default: 4)*
+
+## Usage
+
+To use the `MapComponent`, import it into your React application and provide it with the required props.
+
+### Map with Transformed API Data
+
+This example uses the transformed data from the API to render the map.
+
+<Canvas>
+  <Story name="MapComponent with Fetcher">
+    {() => (
+      <Fetcher
+        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+        render={({ isLoading, data }) => (
+          <>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <MapComponent
+                data={transformData(data)}
+                width={1000}
+                center={[20,30]}
+              />
+            )}
+          </>
+        )}
+      />
+    )}
+  </Story>
+</Canvas>
+
+<Source
+  language="jsx"
+  code={`
+import React from 'react';
+import MapComponent from './MapComponent';
+import Fetcher from '../../Fetcher/Fetcher';
+
+const MapComponentWithFetcher = () => (
+  <Fetcher
+    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+    render={({ isLoading, data }) => (
+      <>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <MapComponent
+            data={transformData(data)}
+          />
+        )}
+      </>
+    )}
+  />
+);
+
+export default MapComponentWithFetcher;
+`}
+/>
+
+### Content
+
+The `Map` uses Leaflet and `react-leaflet-markercluster` to render markers representing data points. Each marker displays a tooltip with detailed information about the data point when clicked.
+
+### Accessibility
+
+**ARIA Roles**: The component should include appropriate ARIA roles and labels to describe its purpose and content for screen readers.
+
+**Keyboard Navigation**: Ensure keyboard focus can be moved to the map to enhance accessibility.
+
+### Interactions
+
+**Click Effects**: Clicking on a marker displays a tooltip with detailed information about the data point.
+
+### Changelog
+
+1.0 — Initial release of the component

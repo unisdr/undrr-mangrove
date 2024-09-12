@@ -8,74 +8,70 @@ This project is under active development and at the moment provides no useful re
 
 ## Purpose
 
-This project stops short of being a full design system and instead focus on providing usable components that are informed by the UNDRR brand guidelines and project styles.
+This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles.
 
-These components offer consistency, documentation and portability to speed quality development with the expected look and feel. These will also help reduce entropy, critical in ensuring websites remain accessible.
+These components offer consistency, documentation, and portability to speed up quality development with the expected look and feel. They also help reduce entropy, which is critical to ensuring websites remain accessible.
 
-If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us in the issue queue.
+If there is a Component or Pattern that you need, or you have any other feedback, question, or comment, please contact us in the issue queue.
 
 ### Assorted technical notes
 
-- Preact vs React: after initially planning to use Preact, we've stayed with react-dom for using the components in other systems. This ensures the Storybook and Other System runtime remain similar experiences, and avoid issues with React-only components (e.g. react-leaflet)
+- **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
 
 ## Development
 
-Run the following commands to create/update the code.
+You can use the provided `Makefile` to simplify running commands inside Docker containers. Run the following commands to create/update the codebase:
+
+### Makefile Commands:
 
 ```bash
-# checkout the codebase
-git clone
+# Start the application, runs Storybook locally via port 6006
+make up
 
-# install project dependencies
-yarn install
+# Install project dependencies
+make install
 
-# runs storybook locally
-yarn run storybook
+# Run Storybook locally
+make run
 
-# build storybook and sass
-yarn run build-storybook
+# Build Storybook and SASS
+make build-storybook
 
-# linting on codebase
-yarn run lint
+# Lint the codebase
+make lint
+
+# Build for release (default mode is production, you can override it with --mode=development)
+make build
 ```
 
-### To debug Webpack bundles
+If you prefer running Docker commands manually, the following commands are available
 
-In `webpack.config.js`: `const packMode = "development";`
-
-## Development via Docker
-
-Run the following commands to create/update the code.
+### Manual Docker Commands:
 
 ```bash
-# checkout the codebase
+# Checkout the codebase
 git clone git@github.com:unisdr/undrr-mangrove.git
 
 cd undrr-mangrove
 
-# start the application, runs storybook locally via port 6006
+# Start the application, runs Storybook locally via port 6006
 docker-compose up -d
 
-# install project dependencies
-#
-# syntax: docker exec -it [CONTAINER NAME] bash -c "yarn install"
-#
-# Note: The container name may be different depending on the operating system, try "undrr-mangrove_client-1" if below doesn't work otherwise check the container name using docker ps --format "{{.Names}}". 
-docker exec -it undrr-mangrove_client_1 bash -c "yarn install"
+# Install project dependencies
+docker exec -it undrr-mangrove-client-1 bash -c "yarn install"
 
-# runs storybook locally
-docker exec -it undrr-mangrove_client_1 bash -c "yarn run storybook"
+# Run Storybook locally
+docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook --ci"
 
-# build storybook and sass
-docker exec -it undrr-mangrove_client_1 bash -c "yarn build-storybook"
+# Build Storybook and SASS
+docker exec -it undrr-mangrove-client-1 bash -c "yarn run build-storybook"
 
-# linting on codebase
-docker exec -it undrr-mangrove_client_1 bash -c "yarn run lint"
+# Lint the codebase
+docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
 
-# build release, default mode is production [development or production] e.g. yarn run build --mode=development
-docker exec -it undrr-mangrove_client_1 bash -c "yarn run build"
+# Build for release (default mode is production)
+docker exec -it undrr-mangrove-client-1 bash -c "yarn run build"
 ```
-
 
 ## Testing
 
@@ -115,4 +111,3 @@ The base configuration and bootstrapping of this [Storybook](https://storybook.j
 ## LICENSE
 
 Components and code are MIT licenced. The UNDRR look and feel is proprietary.
-

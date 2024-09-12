@@ -1,0 +1,36 @@
+import { Meta, Story, Canvas } from "@storybook/blocks";
+import { Icons } from './Icons';
+import data from './Icons.json';
+import * as IconsStories from './Icons.stories';
+
+<Meta of={IconsStories} />
+
+# Icons
+
+The Icon components can grab attention and draw users into a piece of content. They can help users quickly understand the context in which they are placed.
+
+### When to use:
+
+* When content is dense and complex to help comprehend the users the available actions
+* When space needs to be saved instead of using words or long phrases.
+
+<Canvas>
+  <Story of={IconsStories.Icons} />
+</Canvas>
+
+### Usage
+
+* For svg icons download it from dist/images and use it on your webpage.
+* For CSS based icons eg: .chevron-right-animated, .external-link-animated and .download-animated use these classes in **span** element.
+
+#### CSS and JS References
+
+#### CSS:
+
+Add the base layout style from
+
+* https://unisdr.github.io/undrr-mangrove/css/foundation.min.css
+
+#### JS:
+
+NA

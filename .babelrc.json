@@ -1,7 +1,12 @@
 {
   "sourceType": "unambiguous",
   "presets": [
-    ["@babel/preset-react", { "pragma": "h" }],
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
+    ],
     [
       "@babel/preset-env",
       {
