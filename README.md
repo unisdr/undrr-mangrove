@@ -44,7 +44,7 @@ make lint
 make build
 ```
 
-If you prefer running Docker commands manually, the following commands are available:
+If you prefer running Docker commands manually, the following commands are available
 
 ### Manual Docker Commands:
 
@@ -61,7 +61,7 @@ docker-compose up -d
 docker exec -it undrr-mangrove-client-1 bash -c "yarn install"
 
 # Run Storybook locally
-docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook"
+docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook --ci"
 
 # Build Storybook and SASS
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run build-storybook"
