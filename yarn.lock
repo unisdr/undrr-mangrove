@@ -7420,7 +7420,7 @@ find-yarn-workspace-root@^2.0.0:
   dependencies:
     micromatch "^4.0.2"
 
-fitty@^2.3.6:
+fitty@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/fitty/-/fitty-2.4.2.tgz#7e75f8325e901f866dffcdb56c310682e15cf2eb"
   integrity sha512-GNhWgImK4+wEkgEZjBkQMyu5NLSmmryg/CaRP7zYby+TWzCrUou6BHL+iqbjKzJRXMyzuJkH+LBB1+lh4oO77g==
