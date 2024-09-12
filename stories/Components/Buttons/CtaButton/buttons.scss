@@ -24,11 +24,6 @@
   font-size: $mg-font-size-button;
   font-weight: 600;
   line-height: 1;
-
-  @include devicebreak(medium) {
-    display: inline-flex;
-  }
-
   border-radius: $mg-radius-button;
   color: $mg-color-button;
   cursor: pointer;
@@ -39,6 +34,10 @@
   &:focus-visible {
     box-shadow: 0 0 4px $mg-color-button-background--hover;
     outline: 0;
+  }
+
+  @include devicebreak(medium) {
+    display: inline-flex;
   }
 }
 
