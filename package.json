@@ -11,9 +11,9 @@
     "scss": "sass ./stories/assets/scss:./stories/assets/css",
     "scss-watch": "sass --watch ./stories/assets/scss:./stories/assets/css",
     "lint": "yarn run lint:css && yarn run lint:js",
-    "lint:css": "stylelint ./stories/*/.scss --fix",
     "lint:js": "eslint --ignore-pattern '**/Table.jsx' ./stories --fix",
-    "lint:check": "stylelint ./stories/*/.scss && eslint --ignore-pattern '**/Table.jsx' ./stories --quiet",
+    "lint:css": "stylelint './stories/**/*.scss' --fix",
+    "lint:check": "stylelint './stories/**/*.scss' && eslint --ignore-pattern '**/Table.jsx' ./stories --quiet",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage --"

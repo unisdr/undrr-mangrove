@@ -19,4 +19,4 @@ build-storybook:
 
 lint:
 	@docker ps | grep undrr-mangrove-client-1 > /dev/null && \
-	docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
+    docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint:check"
