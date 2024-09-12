@@ -88,10 +88,6 @@ export default {
   },
 };
 
-const Template = (args) => (
-  <BarChartProcessor {...args} />
-);
-
 // We don't do the fetching as part of this story, as that is subjective to the use environment
 // const Template = (args) => (
 //   <Fetcher
@@ -102,31 +98,32 @@ const Template = (args) => (
 //   />
 // );
 
-export const Default = Template.bind({});
-Default.args = {
-  data: [
-    {
-      color: "#4065A3",
-      label: "2029",
-      value: 5
-    },
-    {
-      color: "#4065A3",
-      label: "2021",
-      value: 3
-    }
-  ],
-  width: 600,
-  height: 400,
-  labelColor: "#6B7280",
-  backgroundColor: "#FFFFFF",
-  title: "Barchart default example",
-  color: "#4065A3",
-  xAxisLabel: "X-Axis",
-  yAxisLabel: "Y-Axis",
-  dataSource: "UNDRR",
-  type: "COMMITMENTS",
-  apiData: false,
+export const Default = {
+  args: {
+    data: [
+      {
+        color: "#4065A3",
+        label: "2029",
+        value: 5,
+      },
+      {
+        color: "#4065A3",
+        label: "2021",
+        value: 3,
+      },
+    ],
+    width: 600,
+    height: 400,
+    labelColor: "#6B7280",
+    backgroundColor: "#FFFFFF",
+    title: "Barchart default example",
+    color: "#4065A3",
+    xAxisLabel: "X-Axis",
+    yAxisLabel: "Y-Axis",
+    dataSource: "UNDRR",
+    type: "COMMITMENTS",
+    apiData: false,
+  },
 };
 
 export const Organizations = {
@@ -135,13 +132,13 @@ export const Organizations = {
       {
         color: "#4065A3",
         label: "2029",
-        value: 10
+        value: 10,
       },
       {
         color: "#4065A3",
         label: "2021",
-        value: 12
-      }
+        value: 12,
+      },
     ],
     width: 1000,
     height: 400,
@@ -154,32 +151,33 @@ export const Organizations = {
     dataSource: "UNDRR",
     type: "ORGANIZATIONS",
     apiData: false,
-  }
+  },
 };
 
-export const Deliverables = Template.bind({});
-Deliverables.args = {
-  data: [
-    {
-      color: "#4065A3",
-      label: "2029",
-      value: 10
-    },
-    {
-      color: "#4065A3",
-      label: "2021",
-      value: 12
-    }
-  ],
-  width: 600,
-  height: 400,
-  labelColor: "#6B7280",
-  backgroundColor: "#FFFFFF",
-  title: "Deliverables Bar Chart",
-  color: "#4065A3",
-  xAxisLabel: "Years",
-  yAxisLabel: "Number of Deliverables",
-  dataSource: "UNDRR",
-  type: "DELIVERABLES",
-  apiData: false,
+export const Deliverables = {
+  args: {
+    data: [
+      {
+        color: "#4065A3",
+        label: "2029",
+        value: 10,
+      },
+      {
+        color: "#4065A3",
+        label: "2021",
+        value: 12,
+      },
+    ],
+    width: 600,
+    height: 400,
+    labelColor: "#6B7280",
+    backgroundColor: "#FFFFFF",
+    title: "Deliverables Bar Chart",
+    color: "#4065A3",
+    xAxisLabel: "Years",
+    yAxisLabel: "Number of Deliverables",
+    dataSource: "UNDRR",
+    type: "DELIVERABLES",
+    apiData: false,
+  },
 };
