@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { transformDataForBarChart } from "./chart-helpers";
 
 // Main BarChart component
-export default function BarChart({
+export default function BarChartProcessor({
   data = [], // Array of data objects with 'label' and 'value' properties
   width = 600, // Default width of the SVG element
   height = 400, // Default height of the SVG element
@@ -13,13 +13,14 @@ export default function BarChart({
   axisColor = "#6B7280", // Default color for the axis lines
   tickColor = "#6B7280", // Default color for the tick marks
   color = "#4065A3", // Default color for the bars
-  title = "Bar Chart", // Default title of the chart
-  xAxisLabel = "X-Axis", // Default label for the x-axis
-  yAxisLabel = "Y-Axis", // Default label for the y-axis
-  dataSource = "Data Source", // Default data source label
+  title = "", // Default title of the chart
+  xAxisLabel = "", // Default label for the x-axis
+  yAxisLabel = "", // Default label for the y-axis
+  dataSource = "", // Default data source label
   ariaLabel = "Bar chart showing data", // ARIA label for accessibility
   ariaDescription = "", // ARIA description for accessibility
-  type = "COMMITMENTS", // Type of data to display
+  apiData = "false", // Default
+  type = "", // Type of data to display
   margin = { top: 40, right: 30, bottom: 70, left: 70 }, // Default margins
 }) {
   const [chartData, setChartData] = useState(data);
@@ -34,7 +35,8 @@ export default function BarChart({
       transformDataForBarChart(data, {
         graphType: type,
         defaultColor: color,
-      }),
+        apiData: apiData,
+      }),      
     );
   };
 

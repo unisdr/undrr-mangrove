@@ -1,11 +1,8 @@
-import BarChart from "./BarChart";
-import Fetcher from "../../Fetcher/Fetcher";
-import { Loader } from "../../../Utilities/Loader/Loader";
+import BarChartProcessor from "./BarChart";
 
 export default {
   title: "Components/Charts/BarChart",
-  component: BarChart,
-  tags: ["autodocs"],
+  component: BarChartProcessor,
   argTypes: {
     data: {
       control: { type: "array" },
@@ -68,7 +65,7 @@ export default {
     },
     type: {
       control: { type: "select" },
-      options: ["COMMITMENTS", "ORGANISATIONS", "DELIVERABLES"],
+      options: ["COMMITMENTS", "ORGANIZATIONS", "DELIVERABLES"],
       description:
         "The type of data to display. Options are either COMMITMENTS or ORGANIZATIONS.",
       defaultValue: "COMMITMENTS",
@@ -83,51 +80,97 @@ export default {
       description: "ARIA description for accessibility",
       defaultValue: "ARIA description for accessibility",
     },
+    apiData: {
+      control: { type: "boolean" },
+      description: "If data is coming from an API (Drupal) it will be refined.",
+      defaultValue: false,
+    },
   },
 };
 
 const Template = (args) => (
-  <Fetcher
-    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
-    render={({ isLoading, data }) => (
-      <>{isLoading ? <Loader /> : <BarChart {...args} data={data} />}</>
-    )}
-  />
+  <BarChartProcessor {...args} />
 );
+
+// We don't do the fetching as part of this story, as that is subjective to the use environment
+// const Template = (args) => (
+//   <Fetcher
+//     api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
+//     render={({ isLoading, data }) => (
+//       <>{isLoading ? <Loader /> : <BarChartProcessor {...args} data={data} />}</>
+//     )}
+//   />
+// );
 
 export const Default = Template.bind({});
 Default.args = {
-  data: [],
+  data: [
+    {
+      color: "#4065A3",
+      label: "2029",
+      value: 5
+    },
+    {
+      color: "#4065A3",
+      label: "2021",
+      value: 3
+    }
+  ],
   width: 600,
   height: 400,
   labelColor: "#6B7280",
   backgroundColor: "#FFFFFF",
-  title: "Bar Chart",
+  title: "Barchart default example",
   color: "#4065A3",
   xAxisLabel: "X-Axis",
   yAxisLabel: "Y-Axis",
   dataSource: "UNDRR",
   type: "COMMITMENTS",
+  apiData: false,
 };
 
-export const Organizations = Template.bind({});
-Organizations.args = {
-  data: [],
-  width: 600,
-  height: 400,
-  labelColor: "#6B7280",
-  backgroundColor: "#FFFFFF",
-  title: "Organizations Bar Chart",
-  color: "#4065A3",
-  xAxisLabel: "Years",
-  yAxisLabel: "Number of Organizations",
-  dataSource: "UNDRR",
-  type: "ORGANISATIONS",
+export const Organizations = {
+  args: {
+    data: [
+      {
+        color: "#4065A3",
+        label: "2029",
+        value: 10
+      },
+      {
+        color: "#4065A3",
+        label: "2021",
+        value: 12
+      }
+    ],
+    width: 1000,
+    height: 400,
+    labelColor: "#6B7280",
+    backgroundColor: "#FFFFFF",
+    title: "Organizations Bar Chart",
+    color: "#4065A3",
+    xAxisLabel: "Years",
+    yAxisLabel: "Number of Organizations",
+    dataSource: "UNDRR",
+    type: "ORGANIZATIONS",
+    apiData: false,
+  }
 };
 
 export const Deliverables = Template.bind({});
 Deliverables.args = {
-  data: [],
+  data: [
+    {
+      color: "#4065A3",
+      label: "2029",
+      value: 10
+    },
+    {
+      color: "#4065A3",
+      label: "2021",
+      value: 12
+    }
+  ],
   width: 600,
   height: 400,
   labelColor: "#6B7280",
@@ -138,4 +181,5 @@ Deliverables.args = {
   yAxisLabel: "Number of Deliverables",
   dataSource: "UNDRR",
   type: "DELIVERABLES",
+  apiData: false,
 };
