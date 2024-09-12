@@ -1,121 +1,141 @@
 import BarChart from "./BarChart";
 import Fetcher from "../../Fetcher/Fetcher";
+import { Loader } from "../../../Utilities/Loader/Loader";
 
 export default {
   title: "Components/Charts/BarChart",
   component: BarChart,
+  tags: ["autodocs"],
+  argTypes: {
+    data: {
+      control: { type: "array" },
+      description: "Data to be displayed in the bar chart",
+    },
+    width: {
+      control: { type: "number" },
+      description: "Width of the bar chart in pixels",
+      defaultValue: 600,
+    },
+    height: {
+      control: { type: "number" },
+      description: "Height of the bar chart in pixels",
+      defaultValue: 400,
+    },
+    labelColor: {
+      control: { type: "color" },
+      description: "Color of the labels",
+      defaultValue: "#6B7280",
+    },
+    backgroundColor: {
+      control: { type: "color" },
+      description: "Background color of the chart",
+      defaultValue: "#FFFFFF",
+    },
+    title: {
+      control: { type: "text" },
+      description: "Title of the bar chart",
+      defaultValue: "Bar Chart",
+    },
+    color: {
+      control: { type: "color" },
+      description: "Default color of the bars",
+      defaultValue: "#4065A3",
+    },
+    axisColor: {
+      control: { type: "color" },
+      description: "Default color for the axis lines",
+      defaultValue: "#6B7280",
+    },
+    tickColor: {
+      control: { type: "color" },
+      description: "Default color for the tick marks",
+      defaultValue: "#6B7280",
+    },
+    xAxisLabel: {
+      control: { type: "text" },
+      description: "The label for the x-axis",
+      defaultValue: "X-Axis",
+    },
+    yAxisLabel: {
+      control: { type: "text" },
+      description: "The label for the y-axis",
+      defaultValue: "Y-Axis",
+    },
+    dataSource: {
+      control: { type: "text" },
+      description: "The label for the data source",
+      defaultValue: "UNDRR",
+    },
+    type: {
+      control: { type: "select" },
+      options: ["COMMITMENTS", "ORGANISATIONS", "DELIVERABLES"],
+      description:
+        "The type of data to display. Options are either COMMITMENTS or ORGANIZATIONS.",
+      defaultValue: "COMMITMENTS",
+    },
+    ariaLabel: {
+      control: { type: "text" },
+      description: "ARIA label for accessibility",
+      defaultValue: "Bar chart showing data",
+    },
+    ariaDescription: {
+      control: { type: "text" },
+      description: "ARIA description for accessibility",
+      defaultValue: "ARIA description for accessibility",
+    },
+  },
 };
 
-export const BarChartWithFetcher = {
-  render: () => (
-    <Fetcher
-      api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-      queryParams={{
-        items_per_page: 1000,
-      }}
-      render={({ isLoading, data }) => (
-        <>
-          {isLoading ? (
-            <span>Loading data.</span>
-          ) : (
-            <BarChart
-              data={data}
-              width={1000}
-              height={300}
-              margin={{
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-              }}
-              labelColor="#9CA3AF"
-              axisColor="#9CA3AF"
-              tickColor="none"
-              title=""
-              type="COMMITMENTS"
-              xAxisLabel=""
-              yAxisLabel=""
-              dataSource=""
-              ariaLabel="Bar chart showing the number of commitments by year"
-              ariaDescription="This chart displays the number of commitments made each year based on fetched API data."
-            />
-          )}
-        </>
-      )}
-    />
-  ),
+const Template = (args) => (
+  <Fetcher
+    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
+    render={({ isLoading, data }) => (
+      <>{isLoading ? <Loader /> : <BarChart {...args} data={data} />}</>
+    )}
+  />
+);
 
-  name: "BarChart with Fetcher",
+export const Default = Template.bind({});
+Default.args = {
+  data: [],
+  width: 600,
+  height: 400,
+  labelColor: "#6B7280",
+  backgroundColor: "#FFFFFF",
+  title: "Bar Chart",
+  color: "#4065A3",
+  xAxisLabel: "X-Axis",
+  yAxisLabel: "Y-Axis",
+  dataSource: "UNDRR",
+  type: "COMMITMENTS",
 };
 
-export const BarChartForOrganisations = {
-  render: () => (
-    <Fetcher
-      api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-      queryParams={{
-        items_per_page: 1000,
-      }}
-      render={({ isLoading, data }) => (
-        <>
-          {isLoading ? (
-            <span>Loading data.</span>
-          ) : (
-            <BarChart
-              data={data}
-              width={1000}
-              height={300}
-              labelColor="#9CA3AF"
-              axisColor="#9CA3AF"
-              tickColor="#9FAAAE"
-              title="Orgnisations by year"
-              type="ORGANISATIONS"
-              xAxisLabel="Year"
-              yAxisLabel="Number of organizations"
-              dataSource="Data from fetched API"
-              ariaLabel="Bar chart showing the number of commiting organisations by year"
-              ariaDescription="This chart displays the number of commiting organisations based on fetched API data."
-            />
-          )}
-        </>
-      )}
-    />
-  ),
-
-  name: "BarChart for Organisations",
+export const Organizations = Template.bind({});
+Organizations.args = {
+  data: [],
+  width: 600,
+  height: 400,
+  labelColor: "#6B7280",
+  backgroundColor: "#FFFFFF",
+  title: "Organizations Bar Chart",
+  color: "#4065A3",
+  xAxisLabel: "Years",
+  yAxisLabel: "Number of Organizations",
+  dataSource: "UNDRR",
+  type: "ORGANISATIONS",
 };
 
-export const BarChartForDeliverables = {
-  render: () => (
-    <Fetcher
-      api="https://sfvc-migration.undrr.org/api/v2/content/commitment-deliverables-metrics"
-      queryParams={{
-        items_per_page: 1000,
-      }}
-      render={({ isLoading, data }) => (
-        <>
-          {isLoading ? (
-            <span>Loading data.</span>
-          ) : (
-            <BarChart
-              data={data}
-              width={1000}
-              height={300}
-              labelColor="#9CA3AF"
-              axisColor="#9CA3AF"
-              tickColor="#9FAAAE"
-              title="Deliverables by year"
-              type="DELIVERABLES"
-              xAxisLabel="Year"
-              yAxisLabel="Number of deliverables"
-              dataSource="Data from fetched API"
-              ariaLabel="Bar chart showing the number of deliverables by year"
-              ariaDescription="This chart displays the number of deliverables based on fetched API data."
-            />
-          )}
-        </>
-      )}
-    />
-  ),
-
-  name: "BarChart for Deliverables",
+export const Deliverables = Template.bind({});
+Deliverables.args = {
+  data: [],
+  width: 600,
+  height: 400,
+  labelColor: "#6B7280",
+  backgroundColor: "#FFFFFF",
+  title: "Deliverables Bar Chart",
+  color: "#4065A3",
+  xAxisLabel: "Years",
+  yAxisLabel: "Number of Deliverables",
+  dataSource: "UNDRR",
+  type: "DELIVERABLES",
 };

@@ -1,9 +1,7 @@
 import React from "react";
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
-import {
-  transformDataForBarChart
-} from "./chart-helpers";
+import { transformDataForBarChart } from "./chart-helpers";
 
 // Main BarChart component
 export default function BarChart({
@@ -32,10 +30,12 @@ export default function BarChart({
   }, [data, type]);
 
   const mapData = () => {
-    setChartData(transformDataForBarChart(data, {
-      "graphType": type,
-      "defaultColor": color
-    }));
+    setChartData(
+      transformDataForBarChart(data, {
+        graphType: type,
+        defaultColor: color,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function BarChart({
       .attr("y", (a) => yScale(a.value) - 5)
       .attr("text-anchor", "middle")
       .style("fill", labelColor)
-      .text((a) => a.value !== 0 ? `${a.value}` : '');
+      .text((a) => (a.value !== 0 ? `${a.value}` : ""));
 
     if (xAxisLabel) {
       chart
