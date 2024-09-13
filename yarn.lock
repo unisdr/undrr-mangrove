@@ -2396,7 +2396,7 @@ __metadata:
     prettier-stylelint: "npm:0.4.2"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
-    react-leaflet: "npm:3.2.5"
+    react-leaflet: "npm:4.2.1"
     react-leaflet-markercluster: "npm:3.0.0-rc1"
     react-syntax-highlighter: "npm:15.5.0"
     remove-files-webpack-plugin: "npm:1.5.0"
@@ -3312,6 +3312,17 @@ __metadata:
     react: ^17.0.1
     react-dom: ^17.0.1
   checksum: 10/5545d54ec182d84c847698049fe23640746c4faa940e45fe6e319d48291a0b0f36fe67f0216559e971892385ef3936aa5cd8bc0721639fc9c7ed88af55ba27ce
+  languageName: node
+  linkType: hard
+
+"@react-leaflet/core@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@react-leaflet/core@npm:2.1.0"
+  peerDependencies:
+    leaflet: ^1.9.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10/12ce28b85cf6712a1a7b7c49466b941fc619bc7b1535308bc5711a35f7e89eb16298babfd62f6b3a92e64abf94dcf517b2bc460f59fcf20599821bc6ab3b3048
   languageName: node
   linkType: hard
 
@@ -17543,7 +17554,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-leaflet@npm:3.2.5, react-leaflet@npm:^3.0.0":
+"react-leaflet@npm:4.2.1":
+  version: 4.2.1
+  resolution: "react-leaflet@npm:4.2.1"
+  dependencies:
+    "@react-leaflet/core": "npm:^2.1.0"
+  peerDependencies:
+    leaflet: ^1.9.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10/01cee12dc32e86d0153c989894fdba1c5c50fa41ad8d712352fa616f7b0dd32844aa17bb06c66f7569133675e2946c669090b4c496610cce3fa37c22254ca89f
+  languageName: node
+  linkType: hard
+
+"react-leaflet@npm:^3.0.0":
   version: 3.2.5
   resolution: "react-leaflet@npm:3.2.5"
   dependencies:
