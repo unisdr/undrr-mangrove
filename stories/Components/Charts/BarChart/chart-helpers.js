@@ -7,30 +7,37 @@
  * @returns {Array} - Transformed data array for bar chart visualization.
  */
 export const transformDataForBarChart = (results, options = {}) => {
-  const { startYear = 2015, endYear = 2030, defaultColor = "#007bc8", cumulative = false, graphType = "COMMITMENTS" } = options;
+  const { startYear = 2015, endYear = 2030, defaultColor = "#007bc8", cumulative = false, graphType = "COMMITMENTS", apiData = false } = options;
+  // console.log("apiData",apiData)
+
+  if (apiData != "true") {
+    // it's an already prepared data set
+    return results;
+  }
+  // console.log("results",results)
 
   const yearCounts = {};
   const seenNodeIds = new Set(); // Track unique node_id's
 
   let valueExtractor;
 
-  if (graphType === "COMMITMENTS") {
-    valueExtractor = function(result) {
-      return 1;
-    };
-  } else if (graphType === "ORGANISATIONS") {
-    valueExtractor = function(result) {
-      return result.organizations.length;
-    };
-  } else if (graphType === "DELIVERABLES") {
-    valueExtractor = function(result) {
-      return 1;
-    };
-  } else {
-    console.error("Invalid graphType passed to mg-bar-chart");
-    return false;
-  }
-  
+    if (graphType === "COMMITMENTS") {
+      valueExtractor = function (result) {
+        return 1;
+      };
+    } else if (graphType === "ORGANIZATIONS") {
+      valueExtractor = function (result) {
+        return result.organizations.length;
+      };
+    } else if (graphType === "DELIVERABLES") {
+      valueExtractor = function (result) {
+        return 1;
+      };
+    } else {
+      console.error("Invalid graphType passed to mg-bar-chart", graphType);
+      return false;
+    }
+
   // Iterate over each result and calculate values using the valueExtractor function
   results.forEach((result) => {
     if (!seenNodeIds.has(result.node_id) || graphType === "DELIVERABLES") {
@@ -39,7 +46,7 @@ export const transformDataForBarChart = (results, options = {}) => {
       yearCounts[year] = (yearCounts[year] || 0) + valueExtractor(result);  // Correctly call valueExtractor here
     }
   });
-  
+
   const years = Array.from(
     { length: endYear - startYear + 1 },
     (_, i) => startYear + i
@@ -67,6 +74,7 @@ export const transformDataForBarChart = (results, options = {}) => {
       color: defaultColor,
     };
   });
+  // console.log("calcultated",calcultated)
 
   return calcultated;
 };

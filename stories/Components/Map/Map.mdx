@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas, Source } from '@storybook/blocks';
-import MapComponent from './MapComponent';
+import MapComponent, { transformData } from './MapComponent';
 import Fetcher from "../Fetcher/Fetcher";
 import * as MapStories from './Map.stories';
 import { Loader} from "../../Utilities/Loader/Loader";
@@ -63,7 +63,7 @@ const MapComponentWithFetcher = () => (
           <Loader />
         ) : (
           <MapComponent
-            data={data}
+            data={transformData(data)}
           />
         )}
       </>

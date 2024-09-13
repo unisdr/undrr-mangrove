@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas, Source } from '@storybook/blocks';
-import BarChart from './BarChart';
+import BarChartProcessor from './BarChart';
 import Fetcher from "../../Fetcher/Fetcher";
 import * as BarChartStories from './BarChart.stories';
 import { Loader } from "../../../Utilities/Loader/Loader";
@@ -81,41 +81,34 @@ export default BarChartWithFetcher;
 
 ### BarChart for Deliverables
 
-<Canvas>
-  <Story name="BarChart for Deliverables">
-    {() => (
-      <Fetcher
-        api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-        render={({ isLoading, data }) => (
-          <>
-            {isLoading ? <Loader /> : <BarChart data={data} type="DELIVERABLES" />}
-          </>
-        )}
-      />
-    )}
-  </Story>
-</Canvas>
-
-<Source
-  language="jsx"
-  code={`
-import React from 'react';
-import BarChart from './BarChart';
-import Fetcher from '../../Fetcher/Fetcher';
-
-const BarChartWithFetcher = () => (
-  <Fetcher
-    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-    render={({ isLoading, data }) => (
-      <>
-        {isLoading ? <Loader /> : <BarChart data={data} type="DELIVERABLES" />}
-      </>
-    )}
-  />
-);
-
-export default BarChartWithFetcher;
-`}
+<Fetcher
+  api="https://sfvc-migration.undrr.org/api/v2/content/commitment-deliverables-metrics"
+  queryParams={{items_per_page:1000}}
+  render={({ isLoading, data }) => (
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <BarChartProcessor
+          data={data}
+          width={1000}
+          height={300}
+          margin={{ top: 10, right: 0, bottom: 10, left: 0 }}
+          labelColor="#9CA3AF"
+          axisColor="#9CA3AF"
+          tickColor="none"
+          title=""
+          type="DELIVERABLES"
+          xAxisLabel=""
+          yAxisLabel=""
+          dataSource=""
+          ariaLabel="Bar chart showing the number of deliverables by year"
+          ariaDescription="This chart displays the number of deliverables made each year based on fetched API data."
+          apiData="true" 
+        />
+      )}
+    </>
+  )}
 />
 
 ### Accessibility

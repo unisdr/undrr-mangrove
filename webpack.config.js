@@ -5,7 +5,6 @@ const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const CopyPlugin = require("copy-webpack-plugin");
 const webpackEntry = require("./webpack.entries");
 
-// Dynamically set the mode based on the environment variable
 const packMode =
   process.env.NODE_ENV === "development" ? "development" : "production";
 
@@ -22,6 +21,7 @@ module.exports = [
       jquery: "jQuery",
       Swiper: "Swiper",
       gsap: "gsap",
+      fitty: "fitty",
     },
     module: {
       rules: [
@@ -47,9 +47,9 @@ module.exports = [
     },
     plugins: [
       new MiniCssExtractPlugin(),
-      new FixStyleOnlyEntriesPlugin(),
+      //new FixStyleOnlyEntriesPlugin(),
       new CopyPlugin({
-        patterns: [{ from: "src/assets", to: "assets" }],
+        patterns: [{ from: "stories/assets", to: "assets" }],
       }),
     ],
   },

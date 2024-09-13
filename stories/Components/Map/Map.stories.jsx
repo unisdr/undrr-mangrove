@@ -49,11 +49,14 @@ const Template = (args) => (
   />
 );
 
-export const Default = Template.bind({});
-Default.args = {
-  data: [],
-  center: [20, 0],
-  zoom: 2,
-  maxZoom: 5,
-  minZoom: 2,
+export const Default = {
+  render: Template,
+
+  args: {
+    data: [],
+    center: [20, 0],
+    zoom: 2,
+    maxZoom: 5,
+    minZoom: 2,
+  },
 };

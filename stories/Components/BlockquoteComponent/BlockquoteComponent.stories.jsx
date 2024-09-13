@@ -57,6 +57,9 @@ export default {
 };
 
 export const DefaultCallout = {
+  args: {
+    Colors: "default",
+  },
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
@@ -67,6 +70,5 @@ export const DefaultCallout = {
       ></BlockquoteComponent>
     );
   },
-
   name: "Callout",
 };
