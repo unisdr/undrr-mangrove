@@ -2388,7 +2388,6 @@ __metadata:
     mini-css-extract-plugin: "npm:2.9.1"
     patch-package: "npm:6.5.1"
     path: "npm:0.12.7"
-    postcss: "npm:8.4.45"
     postcss-cli: "npm:10.1.0"
     postcss-loader: "npm:7.3.4"
     prettier: "npm:3.3.3"
@@ -16982,17 +16981,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:8.4.45, postcss@npm:^8.2.14, postcss@npm:^8.3.11, postcss@npm:^8.4.17, postcss@npm:^8.4.33, postcss@npm:^8.4.41":
-  version: 8.4.45
-  resolution: "postcss@npm:8.4.45"
-  dependencies:
-    nanoid: "npm:^3.3.7"
-    picocolors: "npm:^1.0.1"
-    source-map-js: "npm:^1.2.0"
-  checksum: 10/7eaf7346d04929ee979548ece5e34d253eae6f175346e298b2c4621ad6f4ee00adfe7abe72688640e910c0361ae50537c5dda3e35fd1066491282c342b3ee5c8
-  languageName: node
-  linkType: hard
-
 "postcss@npm:^5.2.16":
   version: 5.2.18
   resolution: "postcss@npm:5.2.18"
@@ -17013,6 +17001,17 @@ __metadata:
     source-map: "npm:^0.6.1"
     supports-color: "npm:^5.4.0"
   checksum: 10/218e21b4f42b2147b03c1a8898271629c9fd5b53a08c6e3e1f0f7808bdcaf21a51f0e2040ab32ce92a083f37d07b205f581b2923d6bb6cdcf80cf275ba2b7225
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.2.14, postcss@npm:^8.3.11, postcss@npm:^8.4.17, postcss@npm:^8.4.33, postcss@npm:^8.4.41":
+  version: 8.4.45
+  resolution: "postcss@npm:8.4.45"
+  dependencies:
+    nanoid: "npm:^3.3.7"
+    picocolors: "npm:^1.0.1"
+    source-map-js: "npm:^1.2.0"
+  checksum: 10/7eaf7346d04929ee979548ece5e34d253eae6f175346e298b2c4621ad6f4ee00adfe7abe72688640e910c0361ae50537c5dda3e35fd1066491282c342b3ee5c8
   languageName: node
   linkType: hard
 
