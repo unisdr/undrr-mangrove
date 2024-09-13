@@ -35,7 +35,7 @@ This example uses the transformed data from the API to render the map.
               <Loader />
             ) : (
               <MapComponent
-                data={data}
+                data={transformData(data)}
                 width={1000}
                 center={[20,30]}
               />

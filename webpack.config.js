@@ -10,7 +10,7 @@ const packMode =
 
 module.exports = [
   {
-    mode: packMode, // Set mode dynamically
+    mode: packMode,
     entry: webpackEntry("js"),
     output: {
       path: path.resolve(__dirname, "docs"),
