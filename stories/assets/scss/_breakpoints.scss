@@ -1,27 +1,27 @@
 @mixin devicebreak($point) {
   @if $point == small {
     /* small design */
-    @media (max-width: 47.9375em) {
+    @media (width <= 47.9375em) {
       @content;
     }
   } @else if $point == mediumonlytab {
     /* medium design tab */
-    @media (max-width: 89.9375em) {
+    @media (width <= 89.9375em) {
       @content;
     }
   } @else if $point == medium {
     /* medium design */
-    @media (min-width: 48em) {
+    @media (width >= 48em) {
       @content;
     }
   } @else if $point == large {
     /* medium design */
-    @media (min-width: 64em) {
+    @media (width >= 64em) {
       @content;
     }
   } @else if $point == xlarge {
     /* large design */
-    @media (min-width: 90em) {
+    @media (width >= 90em) {
       @content;
     }
   }
