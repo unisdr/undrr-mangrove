@@ -1135,9 +1135,9 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@chromatic-com/storybook@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@chromatic-com/storybook/-/storybook-2.0.1.tgz#469239ea3cf4014f2080eafd37789fc0724fb7ad"
-  integrity sha512-BWedsjGOMXsWIWqDmdV9VV1lx2GSauBISu0a2ZbwL2BPN4yrBypsOOuQ8hKvtEfFlYetGmTafi1N5W1oR1CW3A==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@chromatic-com/storybook/-/storybook-2.0.2.tgz#3e20de5a328165b66c4587dbed0843c6039400ce"
+  integrity sha512-7bPIliISedeIpnVKbzktysFYW5n56bN91kxuOj1XXKixmjbUHRUMvcXd4K2liN6MiR5ZqJtmtcPsZ6CebbGlEA==
   dependencies:
     chromatic "^11.4.0"
     filesize "^10.0.12"
@@ -5049,9 +5049,9 @@ chownr@^2.0.0:
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
 
 chromatic@^11.4.0:
-  version "11.9.0"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-11.9.0.tgz#9404af956516048eb7decdfcbaec37cbec8652ab"
-  integrity sha512-TuI3/1jUp0UrPK+saGych0KrPh+/BjlmBFfMkcfUc29pLUJHTVVoj48o8fYc+S4YDQi3t4p3dyHOmdsuaPj21Q==
+  version "11.10.1"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-11.10.1.tgz#933922920feddb9904ad9a36fdb9f904212111a6"
+  integrity sha512-lvVL9J1uCcQnIHYH03XNXftmLp4cKer2TfYnQ5iBrJqqtzI43SwBjIMkJ7y3s1Y62ZG2Z+p+1FBHOq4SF19EhA==
 
 chrome-trace-event@^1.0.2:
   version "1.0.4"
@@ -6813,9 +6813,9 @@ eslint-plugin-react-hooks@^4.6.0:
   integrity sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ==
 
 eslint-plugin-react@^7.31.11:
-  version "7.35.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.35.2.tgz#d32500d3ec268656d5071918bfec78cfd8b070ed"
-  integrity sha512-Rbj2R9zwP2GYNcIak4xoAMV57hrBh3hTaR0k7hVjwCQgryE/pw5px4b13EYjduOI0hfXyZhwBxaGpOTbWSGzKQ==
+  version "7.36.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.36.1.tgz#f1dabbb11f3d4ebe8b0cf4e54aff4aee81144ee5"
+  integrity sha512-/qwbqNXZoq+VP30s1d4Nc1C5GTxjJQjk4Jzs4Wq2qzxFM7dSmuG2UkIjg2USMLh3A/aVcUNrK7v0J5U1XEGGwA==
   dependencies:
     array-includes "^3.1.8"
     array.prototype.findlast "^1.2.5"
