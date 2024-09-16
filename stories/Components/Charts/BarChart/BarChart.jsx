@@ -36,7 +36,7 @@ export default function BarChartProcessor({
         graphType: type,
         defaultColor: color,
         apiData: apiData,
-      }),      
+      }),
     );
   };
 

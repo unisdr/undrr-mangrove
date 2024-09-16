@@ -7,7 +7,14 @@
  * @returns {Array} - Transformed data array for bar chart visualization.
  */
 export const transformDataForBarChart = (results, options = {}) => {
-  const { startYear = 2015, endYear = 2030, defaultColor = "#007bc8", cumulative = false, graphType = "COMMITMENTS", apiData = false } = options;
+  const {
+    startYear = 2015,
+    endYear = 2030,
+    defaultColor = "#007bc8",
+    cumulative = false,
+    graphType = "COMMITMENTS",
+    apiData = false,
+  } = options;
   // console.log("apiData",apiData)
 
   if (apiData != "true") {
@@ -21,35 +28,35 @@ export const transformDataForBarChart = (results, options = {}) => {
 
   let valueExtractor;
 
-    if (graphType === "COMMITMENTS") {
-      valueExtractor = function (result) {
-        return 1;
-      };
-    } else if (graphType === "ORGANIZATIONS") {
-      valueExtractor = function (result) {
-        return result.organizations.length;
-      };
-    } else if (graphType === "DELIVERABLES") {
-      valueExtractor = function (result) {
-        return 1;
-      };
-    } else {
-      console.error("Invalid graphType passed to mg-bar-chart", graphType);
-      return false;
-    }
+  if (graphType === "COMMITMENTS") {
+    valueExtractor = function (result) {
+      return 1;
+    };
+  } else if (graphType === "ORGANIZATIONS") {
+    valueExtractor = function (result) {
+      return result.organizations.length;
+    };
+  } else if (graphType === "DELIVERABLES") {
+    valueExtractor = function (result) {
+      return 1;
+    };
+  } else {
+    console.error("Invalid graphType passed to mg-bar-chart", graphType);
+    return false;
+  }
 
   // Iterate over each result and calculate values using the valueExtractor function
   results.forEach((result) => {
     if (!seenNodeIds.has(result.node_id) || graphType === "DELIVERABLES") {
       seenNodeIds.add(result.node_id); // Mark node_id as seen
       const year = new Date(result.created_on).getFullYear();
-      yearCounts[year] = (yearCounts[year] || 0) + valueExtractor(result);  // Correctly call valueExtractor here
+      yearCounts[year] = (yearCounts[year] || 0) + valueExtractor(result); // Correctly call valueExtractor here
     }
   });
 
   const years = Array.from(
     { length: endYear - startYear + 1 },
-    (_, i) => startYear + i
+    (_, i) => startYear + i,
   );
 
   // Clear the original array
