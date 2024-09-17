@@ -6,6 +6,10 @@
  * @param {Object} options - Additional configuration options (e.g., startYear, endYear, color, cumulative).
  * @returns {Array} - Transformed data array for bar chart visualization.
  */
+// Global Sets to track unique IDs across the entire runtime
+const uniqueGlobalIds = new Set();
+const uniqueDeliverableIds = new Set();
+
 export const transformDataForBarChart = (results, options = {}) => {
   const {
     startYear = 2015,
@@ -15,16 +19,14 @@ export const transformDataForBarChart = (results, options = {}) => {
     graphType = "COMMITMENTS",
     apiData = false,
   } = options;
-  // console.log("apiData",apiData)
 
   if (apiData != "true") {
-    // it's an already prepared data set
+    // It's an already prepared data set
     return results;
   }
-  // console.log("results",results)
 
   const yearCounts = {};
-  const seenNodeIds = new Set(); // Track unique node_id's
+  const seenNodeIds = new Set(); // Track unique node_id's for this run
 
   let valueExtractor;
 
@@ -34,11 +36,34 @@ export const transformDataForBarChart = (results, options = {}) => {
     };
   } else if (graphType === "ORGANIZATIONS") {
     valueExtractor = function (result) {
-      return result.organizations.length;
+      let newCount = 0;
+
+      // Process organizations
+      result.organizations.forEach(id => {
+        if (!uniqueGlobalIds.has(id)) {
+          uniqueGlobalIds.add(id);
+          newCount += 1; // Count this ID as it's unique
+        }
+      });
+
+      // Process partners (assuming partners is a comma-separated string)
+      result.partners.split(', ').forEach(id => {
+        if (!uniqueGlobalIds.has(id)) {
+          uniqueGlobalIds.add(id);
+          newCount += 1; // Count this ID as it's unique
+        }
+      });
+
+      return newCount; // Return the count of new unique IDs
     };
   } else if (graphType === "DELIVERABLES") {
     valueExtractor = function (result) {
-      return 1;
+      // Only count if deliverable_id is unique across the entire runtime
+      if (!uniqueDeliverableIds.has(result.deliverable_id)) {
+        uniqueDeliverableIds.add(result.deliverable_id);
+        return 1; // Count this deliverable_id as it's unique
+      }
+      return 0; // Don't count if it's already been seen
     };
   } else {
     console.error("Invalid graphType passed to mg-bar-chart", graphType);
@@ -65,7 +90,7 @@ export const transformDataForBarChart = (results, options = {}) => {
   // If cumulative, build the cumulative count
   let cumulativeValue = 0;
 
-  const calcultated = years.map((year) => {
+  const calculated = years.map((year) => {
     const currentValue = yearCounts[year] || 0;
     if (cumulative) {
       cumulativeValue += currentValue;
@@ -81,7 +106,6 @@ export const transformDataForBarChart = (results, options = {}) => {
       color: defaultColor,
     };
   });
-  // console.log("calcultated",calcultated)
 
-  return calcultated;
+  return calculated;
 };

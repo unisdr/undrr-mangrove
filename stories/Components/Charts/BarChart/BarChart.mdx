@@ -22,6 +22,7 @@ The `BarChart` component visualizes categorical data using D3.js. It displays ba
 - **`labelColor`**: `string` - The color for the bar labels. *(default: `#FFFFFF`)*
 - **`title`**: `string` - The title of the chart.
 - **`type`**: `string` - The type of the chart (`COMMITMENTS` | `ORGANIZATIONS` | `DELIVERABLES`).
+- **`backgroundColor`**: `string` - The color of the background.
 - **`axisColor`**: `string` - The color of the axis lines.
 - **`tickColor`**: `string` - The color of the tick lines.
 - **`startYear`**: `string` - The start year. *(optional)*
@@ -56,6 +57,7 @@ This page shows "bring it all together examples of fetching the data and renderi
           endYear={2030}
           cumulative={true}
           margin={{ top: 10, right: 0, bottom: 10, left: 0 }}
+          backgroundColor="#EEE"
           labelColor="#9CA3AF"
           axisColor="#9CA3AF"
           tickColor="none"
