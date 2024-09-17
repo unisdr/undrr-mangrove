@@ -13,6 +13,8 @@ The `BarChart` component visualizes categorical data using D3.js. It displays ba
 ## Props
 
 - **`data`**: `Array<{ label: string, value: number, color: string }>` - An array of objects representing the data points. *(required)*
+- **`apiData`**: `boolean` - Set to true if pulling data from the Drupal API. *(default: false) *
+- **`cumulative`**: `boolean` - Set to true if a cumulative chart. *(default: false) *
 - **`width`**: `number` - The width of the chart in pixels. *(required)*
 - **`height`**: `number` - The height of the chart in pixels. *(required)*
 - **`margin`**: `Object<{ top: number, right: number, bottom: number, left: number }>` - An object representing the chart margins. (default: `{ top: 40, right: 30, bottom: 70, left: 70 }`)
@@ -22,12 +24,13 @@ The `BarChart` component visualizes categorical data using D3.js. It displays ba
 - **`type`**: `string` - The type of the chart (`COMMITMENTS` | `ORGANIZATIONS` | `DELIVERABLES`).
 - **`axisColor`**: `string` - The color of the axis lines.
 - **`tickColor`**: `string` - The color of the tick lines.
+- **`startYear`**: `string` - The start year. *(optional)*
+- **`endYear`**: `string` - The end year. *(optional)*
 - **`xAxisLabel`**: `string` - The label for the x-axis. *(optional)*
 - **`yAxisLabel`**: `string` - The label for the y-axis. *(optional)*
 - **`dataSource`**: `string` - The data source description. *(optional)*
 - **`ariaLabel`**: `string` - ARIA label for accessibility. *(default: "Bar chart showing data")*
 - **`ariaDescription`**: `string` - A description of the chart content for screen readers.
-- **`apiData`**: `boolean` - Set to true if pulling data from the Drupal API. *(default: false) *
 
 ## Usage
 
@@ -49,6 +52,9 @@ This page shows "bring it all together examples of fetching the data and renderi
           data={data}
           width={1000}
           height={300}
+          startYear={2017}
+          endYear={2030}
+          cumulative={true}
           margin={{ top: 10, right: 0, bottom: 10, left: 0 }}
           labelColor="#9CA3AF"
           axisColor="#9CA3AF"
