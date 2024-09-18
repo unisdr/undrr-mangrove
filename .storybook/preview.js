@@ -12,9 +12,6 @@ import cssVariablesTheme from "@etchteam/storybook-addon-css-variables-theme";
 // include fonts globally
 import "../stories/assets/scss/_fonts.scss";
 
-// initialise RTL
-// initializeRTL();
-
 // Configure Storybook
 export const parameters = {
   actions: {
@@ -22,7 +19,7 @@ export const parameters = {
       onClick: { action: "clicked" },
       onChange: { action: "changed" },
     },
-  }, // explicitly define actions
+  },
   controls: {
     matchers: {
       color: /(background|color)$/i,
@@ -83,6 +80,20 @@ export const globalTypes = {
       ],
     },
   },
+  theme: {
+    name: "Theme",
+    description: "Global theme for components",
+    defaultValue: "Default UNDRR Theme",
+    toolbar: {
+      icon: "circlehollow",
+      items: [
+        { value: "Default UNDRR Theme", title: "Default UNDRR Theme" },
+        { value: "PreventionWeb Theme", title: "PreventionWeb Theme" },
+        { value: "IRP Theme", title: "IRP Theme" },
+        { value: "MCR2030 Theme", title: "MCR2030 Theme" },
+      ],
+    },
+  },
 };
 
 // Function to get current language code
@@ -95,9 +106,8 @@ const getLangCode = (Story, context) => {
     window.dispatchEvent(evt);
   }, delay);
 
-  window.UNDRR.langCode = window.UNDRR
-    ? activeLang
-    : (window.UNDRR = { langCode: activeLang });
+  window.UNDRR = window.UNDRR || {};
+  window.UNDRR.langCode = activeLang;
 
   const langArr = {
     english: "en",
@@ -134,7 +144,7 @@ const sbFrameReset = (Story, context) => {
   return <Story {...context} />;
 };
 
-const setDirection = (Story, options) => {
+const setDirection = (Story, context) => {
   let direction = "ltr";
   const input = parent.document.querySelector('[aria-controls="rtl-status"]');
 
@@ -148,19 +158,26 @@ const setDirection = (Story, options) => {
     input.addEventListener("change", checkRTL(input), false);
   }
 
-  if (typeof window.UNDRR === "undefined") {
-    window.UNDRR = {};
-  }
+  window.UNDRR = window.UNDRR || {};
   window.UNDRR.dir = direction;
 
-  return <Story {...options} />;
+  return <Story {...context} />;
+};
+
+const themeDecorator = (Story, context) => {
+  // The theme is now controlled by the global type
+  const selectedTheme = context.globals.theme;
+
+  return <Story {...context} />;
 };
 
 // Apply decorators
 export const decorators = [
+  cssVariablesTheme,
   getLangCode,
   sbFrameReset,
   setDirection,
-  cssVariablesTheme,
+  themeDecorator,
 ];
+
 export const tags = ["autodocs"];
