@@ -3,12 +3,12 @@ import { Hero } from "./Hero";
 const getCaptionForLocale = (locale) => {
   switch (locale) {
     case "english":
-      const engText = {
+      return {
         contentdata: [
           {
             title: "Text in xxl large size",
             summaryText:
-              "Some introductry and summary text t hat can often occupy multiple lines.",
+              "Some introductory and summary text that can often occupy multiple lines.",
             detail: "Detail label: Detail",
             label: "Label in medium size",
             primary_button: "Primary action",
@@ -21,14 +21,13 @@ const getCaptionForLocale = (locale) => {
           },
         ],
       };
-      return engText;
     case "arabic":
-      const arabicText = {
+      return {
         contentdata: [
           {
             title: "علامة المحتوى",
             summaryText: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
-            detail: "اقرأ أكث",
+            detail: "اقرأ أكثر",
             label: "Label in medium size",
             primary_button: "Primary action",
             secondary_button: "Secondary action",
@@ -40,14 +39,12 @@ const getCaptionForLocale = (locale) => {
           },
         ],
       };
-      return arabicText;
     case "burmese":
-      const burmeseText = {
+      return {
         contentdata: [
           {
             title: "အကြောင်းအရာ TAG",
-            summaryText:
-              "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
+            summaryText: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
             detail: "ပိုပြီးဖတ်ပါ",
             label: "Label in medium size",
             primary_button: "Primary action",
@@ -60,9 +57,8 @@ const getCaptionForLocale = (locale) => {
           },
         ],
       };
-      return burmeseText;
     case "japanese":
-      const japaneseText = {
+      return {
         contentdata: [
           {
             title: "コンテンツタグ",
@@ -79,14 +75,13 @@ const getCaptionForLocale = (locale) => {
           },
         ],
       };
-      return japaneseText;
     default:
-      const dummy = {
+      return {
         contentdata: [
           {
             title: "Text in xxl large size",
             summaryText:
-              "Some introductry and summary text t hat can often occupy multiple lines.",
+              "Some introductory and summary text that can often occupy multiple lines.",
             detail: "Detail label: Detail",
             label: "Label in medium size",
             primary_button: "Primary action",
@@ -99,31 +94,31 @@ const getCaptionForLocale = (locale) => {
           },
         ],
       };
-      return dummy;
   }
 };
 
 export default {
   title: "Components/Hero/Hero",
-
+  component: Hero,
+  tags: ["autodocs"],
   argTypes: {
     variant: {
       options: ["primary", "secondary", "tertiary", "quaternary"],
-
-      control: {
-        type: "inline-radio",
-      },
-
+      control: { type: "inline-radio" },
+      description: "Variant of the Hero component",
       defaultValue: "primary",
     },
   },
 };
 
-export const DefaultHero = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocale(locale);
-    return <Hero data={caption.contentdata} {...args}></Hero>;
-  },
+const Template = (args, { globals: { locale } }) => {
+  const caption = getCaptionForLocale(locale);
+  return <Hero data={caption.contentdata} {...args} />;
+};
 
-  name: "Hero",
+export const Default = {
+  render: Template,
+  args: {
+    variant: "primary",
+  },
 };

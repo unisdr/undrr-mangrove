@@ -1,17 +1,17 @@
 import { Heading } from "./../Typography/Heading/Heading";
-import { Abbreviation } from "./Abbr/Abbr";
+import { Abbreviation as AbbrComponent } from "./Abbr/Abbr";
 import { Blockquote } from "./Blockquote/Blockquote";
-import { Cite } from "./Cite/Cite";
-import { Code } from "./Code/Code";
-import { Hr } from "./Hr/Hr";
-import { Mark } from "./Mark/Mark";
-import { P } from "./Paragraph/Paragraph";
-import { Quotation } from "./Quotation/Quotation";
-import { Small } from "./Small/Small";
-import { List } from "./../Typography/Lists/Lists";
-import { Descriptionlist } from "./../Typography/Lists/Descriptionlist";
-import { DetailsTag } from "../ReachElement/Details/Details";
-import { Figcaption } from "../ReachElement/Figcaption/Figcaption";
+import { Cite as CiteComponent } from "./Cite/Cite";
+import { Code as CodeComponent } from "./Code/Code";
+import { Hr as HrComponent } from "./Hr/Hr";
+import { Mark as MarkComponent } from "./Mark/Mark";
+import { P as PComponent } from "./Paragraph/Paragraph";
+import { Quotation as QuotationComponent } from "./Quotation/Quotation";
+import { Small as SmallComponent } from "./Small/Small";
+import { List as ListComponent } from "./../Typography/Lists/Lists";
+import { Descriptionlist as DescriptionListComponent } from "./../Typography/Lists/Descriptionlist";
+import { DetailsTag as DetailsComponent } from "../ReachElement/Details/Details";
+import { Figcaption as FigcaptionComponent } from "../ReachElement/Figcaption/Figcaption";
 
 const getCaptionForLocaleHeading = (locale) => {
   switch (locale) {
@@ -536,192 +536,77 @@ const getCaptionForLocaleList = (locale) => {
   }
 };
 
+const Template =
+  (Component, getLocaleCaption) =>
+  (args, { globals: { locale } }) => {
+    const caption = getLocaleCaption(locale);
+    return <Component {...caption} {...args} />;
+  };
+
 export default {
   title: "Components/Typography",
-
   parameters: {
     viewMode: "docs",
-
     previewTabs: {
-      canvas: {
-        hidden: true,
-      },
+      canvas: { hidden: true },
     },
   },
 };
 
-export const DefaultAbbreviation = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleAbbr(locale);
-    return <Abbreviation type="1" label={caption.detail1}></Abbreviation>;
-  },
+export const TypographyHeading = Template(Heading, getCaptionForLocaleHeading);
+export const TypographyAbbreviation = Template(
+  AbbrComponent,
+  getCaptionForLocaleAbbr,
+);
 
-  name: "Abbreviation",
-};
+export const TypographyBlockquote = Template(
+  Blockquote,
+  getCaptionForLocaleBlockquote,
+);
 
-export const DefaultBlockquote = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleBlockquote(locale);
-    return (
-      <Blockquote
-        text={caption.detail}
-        citeText={caption.citeText}
-      ></Blockquote>
-    );
-  },
+export const TypographyCite = Template(CiteComponent, getCaptionForLocaleCite);
+export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
+export const TypographyHr = Template(HrComponent, getCaptionForLocaleHr);
+export const TypographyMark = Template(MarkComponent, getCaptionForLocaleMark);
 
-  name: "Blockquote",
-};
+export const TypographyParagraph = Template(
+  PComponent,
+  getCaptionForLocaleParagraph,
+);
 
-export const DefaultCite = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleCite(locale);
-    return (
-      <p>
-        <Cite label={caption.detail}></Cite>
-      </p>
-    );
-  },
+export const TypographyQuotation = Template(
+  QuotationComponent,
+  getCaptionForLocaleQuotation,
+);
 
-  name: "Cite",
-};
+export const TypographySmall = Template(
+  SmallComponent,
+  getCaptionForLocaleSmall,
+);
 
-export const DefaultCode = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleCode(locale);
+export const TypographyDescriptionList = Template(
+  DescriptionListComponent,
+  getCaptionForLocaleList,
+);
 
-    return (
-      <p>
-        {caption.detail1} <Code label={caption.detail2}></Code>{" "}
-        {caption.detail3} <Code label={caption.detail4}></Code>{" "}
-        {caption.detail5}
-      </p>
-    );
-  },
+export const TypographyDetails = Template(
+  DetailsComponent,
+  getLocaleForDetails,
+);
 
-  name: "Code",
-};
+export const TypographyFigcaption = Template(
+  FigcaptionComponent,
+  getLocaleForFigcaption,
+);
 
-export const DefaultDescriptionList = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleList(locale);
-    return <Descriptionlist data={caption}></Descriptionlist>;
-  },
+export const TypographyOrderedList = Template(
+  ListComponent,
+  getCaptionForLocaleList,
+  "ol",
+);
 
-  name: "Description list",
-};
-
-export const DefaultDetails = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getLocaleForDetails(locale);
-    return (
-      <DetailsTag
-        summary={caption.summary}
-        details={caption.details}
-      ></DetailsTag>
-    );
-  },
-
-  name: "Details",
-};
-
-export const DefaultFigcaption = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getLocaleForFigcaption(locale);
-    return <Figcaption details={caption.details}></Figcaption>;
-  },
-
-  name: "Figcaption",
-};
-
-export const DefaultHeadings = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleHeading(locale);
-
-    return (
-      <>
-        <Heading type="1" label={caption.detail1}></Heading>
-        <Heading type="2" label={caption.detail2}></Heading>
-        <Heading type="3" label={caption.detail3}></Heading>
-        <Heading type="4" label={caption.detail4}></Heading>
-        <Heading type="5" label={caption.detail5}></Heading>
-        <Heading type="6" label={caption.detail6}></Heading>
-      </>
-    );
-  },
-
-  name: "Headings",
-};
-
-export const DefaultHr = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleHr(locale);
-    return <Hr detailsText={caption.detail}></Hr>;
-  },
-
-  name: "Hr",
-};
-
-export const DefaultMark = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleMark(locale);
-    return <Mark label={caption.detail}></Mark>;
-  },
-
-  name: "Mark",
-
-  parameters: {
-    docs: {
-      source: {
-        code: `
-          <p><mark>UN Office for Disaster Risk Reduction</mark></p>
-        `,
-      },
-    },
-  },
-};
-
-export const DefaultOrderedList = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleList(locale);
-    return <List data={caption} type="ol"></List>;
-  },
-
-  name: "Ordered list",
-};
-
-export const DefaultP = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleParagraph(locale);
-    return <P label={caption.detail}></P>;
-  },
-
-  name: "P",
-};
-
-export const DefaultQuotation = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleQuotation(locale);
-    return <Quotation label={caption.detail}></Quotation>;
-  },
-
-  name: "Quotation",
-};
-
-export const DefaultSmall = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleSmall(locale);
-    return <Small label={caption.detail}></Small>;
-  },
-
-  name: "Small",
-};
-
-export const DefaultUnorderedList = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocaleList(locale);
-    return <List data={caption} type="ul"></List>;
-  },
-
-  name: "Unordered list",
-};
+export const TypographyUnorderedList = Template(
+  ListComponent,
+  getCaptionForLocaleList,
+  "ul",
+);
