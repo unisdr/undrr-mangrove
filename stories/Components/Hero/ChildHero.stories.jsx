@@ -11,7 +11,7 @@ const getCaptionForLocale = (locale) => {
               "Some introductry and summary text t hat can often occupy multiple lines.",
             label: "Label or breadcrumb (default label size)",
             primary_button: "Primary action",
-            link: "javascript:void(0)",
+            link: "#",
             imgalt: "A person looks on",
             imgback:
               "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
@@ -28,7 +28,7 @@ const getCaptionForLocale = (locale) => {
             detail: "اقرأ أكث",
             label: "Label or breadcrumb (default label size)",
             primary_button: "Primary action",
-            link: "javascript:void(0)",
+            link: "#",
             imgalt: "A person looks on",
             imgback:
               "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
@@ -46,7 +46,7 @@ const getCaptionForLocale = (locale) => {
             detail: "ပိုပြီးဖတ်ပါ",
             label: "Label or breadcrumb (default label size)",
             primary_button: "Primary action",
-            link: "javascript:void(0)",
+            link: "#",
             imgalt: "A person looks on",
             imgback:
               "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
@@ -63,7 +63,7 @@ const getCaptionForLocale = (locale) => {
             detail: "続きを読む",
             label: "Label or breadcrumb (default label size)",
             primary_button: "Primary action",
-            link: "javascript:void(0)",
+            link: "#",
             imgalt: "A person looks on",
             imgback:
               "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
@@ -80,7 +80,7 @@ const getCaptionForLocale = (locale) => {
               "Some introductry and summary text t hat can often occupy multiple lines.",
             label: "Label or breadcrumb (default label size)",
             primary_button: "Primary action",
-            link: "javascript:void(0)",
+            link: "#",
             imgalt: "A person looks on",
             imgback:
               "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",

@@ -109,7 +109,7 @@ export default {
   },
 };
 
-export const DefautlSidebar = {
+export const DefaultSidebar = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
 

@@ -1,6 +1,6 @@
 import fitty from "fitty";
 
-const fitText = (selector) => {
+export const fitText = (selector) => {
   let items =
     typeof selector === "string"
       ? document.querySelectorAll(selector)
