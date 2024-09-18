@@ -1,4 +1,4 @@
-import { Heading } from "./../Typography/Heading/Heading";
+import { Heading as HeadingComponent } from "./../Typography/Heading/Heading";
 import { Abbreviation as AbbrComponent } from "./Abbr/Abbr";
 import { Blockquote } from "./Blockquote/Blockquote";
 import { Cite as CiteComponent } from "./Cite/Cite";
@@ -553,7 +553,11 @@ export default {
   },
 };
 
-export const TypographyHeading = Template(Heading, getCaptionForLocaleHeading);
+export const TypographyHeading = Template(
+  HeadingComponent,
+  getCaptionForLocaleHeading,
+);
+
 export const TypographyAbbreviation = Template(
   AbbrComponent,
   getCaptionForLocaleAbbr,
