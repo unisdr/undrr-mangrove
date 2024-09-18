@@ -8,6 +8,11 @@ export default {
       control: { type: "array" },
       description: "Data to be displayed in the bar chart",
     },
+    cumulative: {
+      control: { type: "boolean" },
+      description: "If the chart total is cumulative",
+      defaultValue: false,
+    },
     width: {
       control: { type: "number" },
       description: "Width of the bar chart in pixels",
@@ -37,6 +42,16 @@ export default {
       control: { type: "color" },
       description: "Default color of the bars",
       defaultValue: "#4065A3",
+    },
+    startYear: {
+      control: { type: "number" },
+      description: "Start year of the bar chart",
+      defaultValue: 2015,
+    },
+    endYear: {
+      control: { type: "number" },
+      description: "End year of the bar chart",
+      defaultValue: 2030,
     },
     axisColor: {
       control: { type: "color" },

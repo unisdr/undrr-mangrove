@@ -6,6 +6,9 @@ import { transformDataForBarChart } from "./chart-helpers";
 // Main BarChart component
 export default function BarChartProcessor({
   data = [], // Array of data objects with 'label' and 'value' properties
+  cumulative = "false",
+  startYear = 2015,
+  endYear = 2030,
   width = 600, // Default width of the SVG element
   height = 400, // Default height of the SVG element
   labelColor = "#6B7280", // Default color for labels
@@ -36,7 +39,10 @@ export default function BarChartProcessor({
         graphType: type,
         defaultColor: color,
         apiData: apiData,
-      }),      
+        startYear,
+        endYear,
+        cumulative,
+      }),
     );
   };
 
