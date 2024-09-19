@@ -1738,11 +1738,6 @@
   resolved "https://registry.yarnpkg.com/@react-leaflet/core/-/core-1.1.1.tgz#827fd05bb542cf874116176d8ef48d5b12163f81"
   integrity sha512-7PGLWa9MZ5x/cWy8EH2VzI4T8q5WpuHbixzCDXqixP/WyqwIrg5NDUPgYuFnB4IEIZF+6nA265mYzswFo/h1Pw==
 
-"@react-leaflet/core@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@react-leaflet/core/-/core-2.1.0.tgz#383acd31259d7c9ae8fb1b02d5e18fe613c2a13d"
-  integrity sha512-Qk7Pfu8BSarKGqILj4x7bCSZ1pjuAPZ+qmRwH5S7mDS91VSbVVsJSrW4qA+GPrro8t69gFYVMWb1Zc4yFmPiVg==
-
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
@@ -2948,14 +2943,14 @@
     react "^18.3.0"
 
 "@wordpress/browserslist-config@^6.7.0":
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/browserslist-config/-/browserslist-config-6.7.0.tgz#98c0f5beed88ccc697d0ca4ba44b9c78afaba990"
-  integrity sha512-4iMAK3HJEMRm16E2GLXKbQLO085FvFvVwTU2lhzXHLhewjBfjWL3TnqQ9KdOcPmPZ0AK//hULte6PG2VhTWl6w==
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/browserslist-config/-/browserslist-config-6.8.0.tgz#f00fe6dccec1503be541af2cfe16a1b747535468"
+  integrity sha512-sfn6s9ZePEtQdMwmkrENPDM63QlE3GRX0z5s0ane6mlDGn7ThfKjZVG1TUAf8oTeQ/nCfki29AIjE1VkZQnLlg==
 
 "@wordpress/warning@^3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-3.7.0.tgz#b9d8b55a013042f96da4f85d3ef68d7e579b960e"
-  integrity sha512-wGbQfPlf8YV6gGhcGPYWUhHORct4xaBQSaDTJrwzlgHYyrrJUVXXgZxaM4+Aa23zQoA13nvFQHvfssOkwdh65g==
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-3.8.0.tgz#3171006e1402a847ebb31575432f54053026cf91"
+  integrity sha512-d8osKgKA7LgVGTo29+7qjoxLM84bIBeayCjwRsr2bhK9Naum0O341+JRmtlwc6u/zbbuxZEkoyhxG9ZvKjaezA==
 
 "@xmldom/xmldom@^0.8.2":
   version "0.8.10"
@@ -4328,9 +4323,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000805, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30001646:
-  version "1.0.30001660"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001660.tgz#31218de3463fabb44d0b7607b652e56edf2e2355"
-  integrity sha512-GacvNTTuATm26qC74pt+ad1fW15mlQ/zuTzzY1ZoIzECTP8HURDfF43kNxPgf7H1jmelCBQTTbBNxdSXOA7Bqg==
+  version "1.0.30001662"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001662.tgz#3574b22dfec54a3f3b6787331da1040fe8e763ec"
+  integrity sha512-sgMUVwLmGseH8ZIrm1d51UbrhqMCH3jvS7gF/M6byuHOnKyLOBL7W8yz5V02OHwgLGA36o/AFhWzzh4uc5aqTA==
 
 capture-stack-trace@^1.0.0:
   version "1.0.2"
@@ -12139,14 +12134,7 @@ react-leaflet-markercluster@3.0.0-rc1:
     leaflet.markercluster "^1.4.1"
     react-leaflet "^3.0.0"
 
-react-leaflet@4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-4.2.1.tgz#c300e9eccaf15cb40757552e181200aa10b94780"
-  integrity sha512-p9chkvhcKrWn/H/1FFeVSqLdReGwn2qmiobOQGO3BifX+/vV/39qhY8dGqbdcPh1e6jxh/QHriLXr7a4eLFK4Q==
-  dependencies:
-    "@react-leaflet/core" "^2.1.0"
-
-react-leaflet@^3.0.0:
+react-leaflet@3.2.5, react-leaflet@^3.0.0:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-3.2.5.tgz#bec0bfab9dd8c2b030ea630f7a0687a60322ca7d"
   integrity sha512-Z3KZ+4SijsRbbrt2I1a3ZDY6+V6Pm91eYTdxTN18G6IOkFRsJo1BuSPLFnyFrlF3WDjQFPEcTPkEgD1VEeAoBg==
@@ -13507,10 +13495,23 @@ stylelint-prettier@5.0.2:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-stylelint-scss@6.6.0, stylelint-scss@^6.4.0:
+stylelint-scss@6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/stylelint-scss/-/stylelint-scss-6.6.0.tgz#065626b152466df0167d09ee45b85f7ca4076f15"
   integrity sha512-aK2Rdt41Jt9Gv/ClMN5BYhP7xR3IEoRMDKpJkIDI9frZQ6KkxeLishusxs2JtEGZdJWXvPoBOhswNxj3gx8L/g==
+  dependencies:
+    css-tree "2.3.1"
+    is-plain-object "5.0.0"
+    known-css-properties "^0.34.0"
+    postcss-media-query-parser "^0.2.3"
+    postcss-resolve-nested-selector "^0.1.6"
+    postcss-selector-parser "^6.1.2"
+    postcss-value-parser "^4.2.0"
+
+stylelint-scss@^6.4.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/stylelint-scss/-/stylelint-scss-6.7.0.tgz#df9c2bcd20c555c5670914f23bb983c94bfbb0e3"
+  integrity sha512-RFIa2A+pVWS5wjNT+whtK7wsbZEWazyqesCuSaPbPlZ8lh2TujwVJSnCYJijg6ChZzwI8pZPRZS1L6A9aCbXDg==
   dependencies:
     css-tree "2.3.1"
     is-plain-object "5.0.0"
