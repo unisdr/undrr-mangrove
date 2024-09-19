@@ -39,7 +39,7 @@ export const transformDataForBarChart = (results, options = {}) => {
       let newCount = 0;
 
       // Process organizations
-      result.organizations.forEach(id => {
+      result.organizations.forEach((id) => {
         if (!uniqueGlobalIds.has(id)) {
           uniqueGlobalIds.add(id);
           newCount += 1; // Count this ID as it's unique
@@ -47,7 +47,7 @@ export const transformDataForBarChart = (results, options = {}) => {
       });
 
       // Process partners (assuming partners is a comma-separated string)
-      result.partners.split(', ').forEach(id => {
+      result.partners.split(", ").forEach((id) => {
         if (!uniqueGlobalIds.has(id)) {
           uniqueGlobalIds.add(id);
           newCount += 1; // Count this ID as it's unique
