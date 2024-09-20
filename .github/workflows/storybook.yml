@@ -28,7 +28,7 @@ jobs:
       - name: Set Yarn Version
         run: yarn set version berry
       - name: Install Dependencies
-        run: yarn install --refresh-lockfile # To allow compatibility with dependency updaters
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
       - name: Lint with ESLint and stylelint
         run: yarn run lint:check
       - name: Build Storybook
