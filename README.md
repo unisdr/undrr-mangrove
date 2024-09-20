@@ -41,9 +41,33 @@ yarn docker-build-storybook
 yarn docker-lint
 ```
 
-If you prefer running Docker commands manually, the following commands are available:
+### Makefile Commands:
+
+You can use the provided `Makefile` to simplify running commands inside Docker containers. Run the following commands to create/update the codebase:
+
+```bash
+# Start the application, runs Storybook locally via port 6006
+make up
+
+# Install project dependencies
+make install
+
+# Run Storybook locally
+make run
+
+# Build Storybook and SASS
+make build-storybook
+
+# Lint the codebase
+make lint
+
+# Build for release (default mode is production, you can override it with --mode=development)
+make build
+```
 
 ### Manual Docker Commands:
+
+If you prefer running Docker commands manually, the following commands are available:
 
 ```bash
 # Clone the codebase
