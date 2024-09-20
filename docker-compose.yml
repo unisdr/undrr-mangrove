@@ -1,7 +1,8 @@
-version: '3.3'
+version: "3.3"
 
 services:
   client:
+    container_name: undrr-mangrove-client-1
     build:
       context: .
       dockerfile: Dockerfile
