@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 6006:6006
+    image: undrr-mangrove-client
     volumes:
       # `application` should be the same as `WORKSPACE_DIR` in `Dockerfile`
       - .:/data/storybook
