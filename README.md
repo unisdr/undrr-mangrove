@@ -20,36 +20,33 @@ If there is a Component or Pattern that you need, or you have any other feedback
 
 ## Development
 
-You can use the provided `Makefile` to simplify running commands inside Docker containers. Run the following commands to create/update the codebase:
+You can use the provided npm scripts to simplify running commands inside Docker containers. These scripts are defined in the `package.json` file and can be run using `yarn`.
 
-### Makefile Commands:
+### NPM Scripts:
 
 ```bash
-# Start the application, runs Storybook locally via port 6006
-make up
+# Start the application: brings up Docker containers, installs dependencies, and runs Storybook locally on port 6006
+yarn docker-run
 
-# Install project dependencies
-make install
+# Install project dependencies inside the Docker container
+yarn docker-install
 
-# Run Storybook locally
-make run
+# Build the project for release inside the Docker container
+yarn docker-build
 
-# Build Storybook and SASS
-make build-storybook
+# Build Storybook and SASS inside the Docker container
+yarn docker-build-storybook
 
-# Lint the codebase
-make lint
-
-# Build for release (default mode is production, you can override it with --mode=development)
-make build
+# Lint the codebase inside the Docker container
+yarn docker-lint
 ```
 
-If you prefer running Docker commands manually, the following commands are available
+If you prefer running Docker commands manually, the following commands are available:
 
 ### Manual Docker Commands:
 
 ```bash
-# Checkout the codebase
+# Clone the codebase
 git clone git@github.com:unisdr/undrr-mangrove.git
 
 cd undrr-mangrove
@@ -63,19 +60,19 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn install"
 # Run Storybook locally
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook --ci"
 
+# Build the project for release (default mode is production)
+docker exec -it undrr-mangrove-client-1 bash -c "yarn run build"
+
 # Build Storybook and SASS
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run build-storybook"
 
 # Lint the codebase
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
-
-# Build for release (default mode is production)
-docker exec -it undrr-mangrove-client-1 bash -c "yarn run build"
 ```
 
 ## Testing
 
-When adding new components, we rely on Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
+When adding new components, we rely on the Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
 
 ### Creating Tests
 
@@ -93,7 +90,7 @@ To run your tests, you can use the following command:
 yarn test
 ```
 
-To run test coverage report, you can use:
+To run the test coverage report, you can use:
 
 ```bash
 yarn test:coverage
@@ -106,8 +103,8 @@ https://gitlab.com/undrr/web-backlog/-/issues/545
 
 ## Credit
 
-The base configuration and bootstrapping of this [Storybook](https://storybook.js.org/)-powered library was done based off the [UNDP Design System](https://github.com/undp/design-system), which is MIT licenced, but done with their kind blessing.
+The base configuration and bootstrapping of this [Storybook](https://storybook.js.org/)-powered library was done based off the [UNDP Design System](https://github.com/undp/design-system), which is MIT licensed, but done with their kind blessing.
 
 ## LICENSE
 
-Components and code are MIT licenced. The UNDRR look and feel is proprietary.
+Components and code are MIT licensed. The UNDRR look and feel is proprietary.
