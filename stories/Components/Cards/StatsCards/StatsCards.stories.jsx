@@ -72,7 +72,7 @@ export default {
   },
 };
 
-export const StatsCard = {
+export const DefaultStatsCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
 
