@@ -39,7 +39,7 @@
     "@babel/preset-env": "7.25.4",
     "@babel/preset-react": "7.24.7",
     "@babel/preset-typescript": "7.24.7",
-    "@chromatic-com/storybook": "2.0.1",
+    "@chromatic-com/storybook": "2.0.2",
     "@etchteam/storybook-addon-css-variables-theme": "^3.0.0",
     "@storybook/addon-a11y": "8.3.0",
     "@storybook/addon-actions": "8.3.0",
