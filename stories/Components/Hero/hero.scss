@@ -10,6 +10,7 @@
 //   height: 100px;
 //   margin: 0 auto;
 // }
+
 .mg-hero {
   background-size: cover;
   background-position: center;
@@ -23,7 +24,9 @@
 
   @media (min-width: $mg-breakpoint-tablet) {
     aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
-    padding-left: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
+    padding-left: calc(
+      50vw - calc($mg-breakpoint-desktop / 2)
+    ); // to keep the overlay fixed
   }
 
   // Button overrides
@@ -75,19 +78,23 @@
     }
   }
 
+  // Link styles (anchor)
   a,
   a:hover,
   a:visited {
     color: $mg-color-neutral-0;
   }
 
+  // Title styles (for both <h1> and <a>)
   &__title {
     color: $mg-color-neutral-0;
     margin-bottom: $mg-spacing-25;
     display: inline-block;
     font-weight: bold;
+    line-height: 1;
     font-size: $mg-font-size-600;
 
+    // General text styles for larger text
     .text-xxl {
       font-size: $mg-font-size-800;
 
@@ -103,11 +110,45 @@
         @include mg-typography("medium");
       }
     }
+
+    // Specific styles for the <h1> element (when there's no link)
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: $mg-color-neutral-0;
+      font-weight: bold;
+      font-size: $mg-font-size-600;
+      margin: 0; // Remove margin on <h1> when there's no link
+
+      // Match the text-xxl and text-xl styling
+      &.text-xxl {
+        font-size: $mg-font-size-800;
+
+        @media (max-width: $mg-breakpoint-mobile) {
+          font-size: $mg-font-size-600;
+        }
+      }
+
+      &.text-xl {
+        @include mg-typography("large");
+
+        @media (max-width: $mg-breakpoint-mobile) {
+          @include mg-typography("medium");
+        }
+      }
+    }
+
+    // Specific rule for <h1> without an <a>
+    h1:not(:has(a)) {
+      margin: 0; // Remove margin on h1 when there's no anchor tag
+    }
   }
 
   &__summaryText {
     @include mg-typography("small");
-
     margin-bottom: $mg-spacing-25;
   }
 }
@@ -148,6 +189,8 @@ $variant-colours: (
   padding-right: $mg-spacing-100;
 
   @media (min-width: $mg-breakpoint-tablet) {
-    padding-right: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
+    padding-right: calc(
+      50vw - calc($mg-breakpoint-desktop / 2)
+    ); // to keep the overlay fixed
   }
 }
