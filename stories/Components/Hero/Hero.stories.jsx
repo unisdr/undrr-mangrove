@@ -5,14 +5,13 @@ const getCaptionForLocale = (locale) => {
     english: {
       contentdata: [
         {
-          title: "Text in xxl large size",
+          title: "Text in xxl large size<br>&nbsp;Extra large",
           summaryText:
-            "Some introductory and summary text that can often occupy multiple lines.",
+            "Some introductory and summary text that can often occupy multiple lines.<br>&nbsp;This text is after a line break.",
           detail: "Detail label: Detail",
           label: "Label in medium size",
           primary_button: "Primary action",
           secondary_button: "Secondary action",
-          tertiary_button: "Tertiary action",
           link: "/#",
           imgalt: "A person looks on",
           imgback:
@@ -29,8 +28,7 @@ const getCaptionForLocale = (locale) => {
           label: "Label in medium size",
           primary_button: "Primary action",
           secondary_button: "Secondary action",
-          tertiary_button: "Tertiary action",
-          link: "/#",
+          link: null,
           imgalt: "A person looks on",
           imgback:
             "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
@@ -46,7 +44,6 @@ const getCaptionForLocale = (locale) => {
           label: "Label in medium size",
           primary_button: "Primary action",
           secondary_button: "Secondary action",
-          tertiary_button: "Tertiary action",
           link: "/#",
           imgalt: "A person looks on",
           imgback:
@@ -63,7 +60,6 @@ const getCaptionForLocale = (locale) => {
           label: "Label in medium size",
           primary_button: "Primary action",
           secondary_button: "Secondary action",
-          tertiary_button: "Tertiary action",
           link: "/#",
           imgalt: "A person looks on",
           imgback:
@@ -81,7 +77,6 @@ const getCaptionForLocale = (locale) => {
           label: "Label in medium size",
           primary_button: "Primary action",
           secondary_button: "Secondary action",
-          tertiary_button: "Tertiary action",
           link: "/#",
           imgalt: "A person looks on",
           imgback:
@@ -105,6 +100,22 @@ export default {
       description: "Variant of the Hero component",
       defaultValue: "primary",
     },
+    link: {
+      control: { type: "text" },
+      description: "Link for the title (if empty, renders h1 instead of a)",
+      defaultValue: "",
+    },
+    title: {
+      control: { type: "text" },
+      description: "Title of the Hero (supports HTML like <br> and &nbsp;)",
+      defaultValue: "Default title",
+    },
+    summaryText: {
+      control: { type: "text" },
+      description:
+        "Summary text of the Hero (supports HTML like <br> and &nbsp;)",
+      defaultValue: "Default summary text",
+    },
   },
 };
 
@@ -117,5 +128,48 @@ export const Default = {
   render: Template,
   args: {
     variant: "primary",
+    title: "Title",
+    summaryText: "summary",
+  },
+};
+
+export const NoLink = {
+  render: Template,
+  args: {
+    data: [
+      {
+        title: "Title without a link<br>&nbsp;and a line break",
+        summaryText:
+          "This summary supports HTML.<br>&nbsp;Here is some extra text with a line break.",
+        label: "Label in medium size",
+        detail: "Detail label: Detail",
+        primary_button: "Primary action",
+        secondary_button: "Secondary action",
+        link: null,
+        imgback:
+          "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+      },
+    ],
+    variant: "secondary",
+  },
+};
+
+export const WithHtmlInTitle = {
+  render: Template,
+  args: {
+    data: [
+      {
+        title: "Custom title<br>&nbsp;with line breaks and spaces",
+        summaryText: "This is custom summary text.<br>&nbsp;Another line.",
+        label: "Custom Label",
+        detail: "Custom Detail",
+        primary_button: "Custom primary",
+        secondary_button: "Custom secondary",
+        link: "/#",
+        imgback:
+          "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+      },
+    ],
+    variant: "tertiary",
   },
 };
