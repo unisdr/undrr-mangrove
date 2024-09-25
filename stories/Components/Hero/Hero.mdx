@@ -2,149 +2,62 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import { Hero } from './Hero';
 import * as HeroStories from './Hero.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch (locale) {
-    case "english":
-      const engText = {
-        contentdata: [
-          {
-            title: "Text in xxl large size",
-            summaryText: "Some introductry and summary text t hat can often occupy multiple lines.",
-            detail: "Detail label: Detail",
-            label: "Label in medium size",
-            primary_button: "Primary action",
-            secondary_button: "Secondary action",
-            tertiary_button: "Tertiary action",
-            link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-          }
-        ]
-      };
-      return engText;
-    case "arabic":
-      const arabicText = {
-        contentdata: [
-          {
-            title: "علامة المحتوى",
-            summaryText: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
-            detail: "اقرأ أكث",
-            label: "Label in medium size",
-            primary_button: "Primary action",
-            secondary_button: "Secondary action",
-            tertiary_button: "Tertiary action",
-            link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-          }
-        ]
-      };
-      return arabicText;
-    case "burmese":
-      const burmeseText = {
-        contentdata: [
-          {
-            title: "အကြောင်းအရာ TAG",
-            summaryText: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
-            detail: "ပိုပြီးဖတ်ပါ",
-            label: "Label in medium size",
-            primary_button: "Primary action",
-            secondary_button: "Secondary action",
-            tertiary_button: "Tertiary action",
-            link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-          }
-        ]
-      };
-      return burmeseText;
-    case "japanese":
-      const japaneseText = {
-        contentdata: [
-          {
-            title: "コンテンツタグ",
-            summaryText: "投稿のタイトルはここにあり、2行です",
-            detail: "続きを読む",
-            label: "Label in medium size",
-            primary_button: "Primary action",
-            secondary_button: "Secondary action",
-            tertiary_button: "Tertiary action",
-            link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-          }
-        ]
-      };
-      return japaneseText;
-    default:
-      const dummy = {
-        contentdata: [
-          {
-            title: "Text in xxl large size",
-            summaryText: "Some introductry and summary text t hat can often occupy multiple lines.",
-            detail: "Detail label: Detail",
-            label: "Label in medium size",
-            primary_button: "Primary action",
-            secondary_button: "Secondary action",
-            tertiary_button: "Tertiary action",
-            link:"javascript:void(0)",
-            imgalt: "A person looks on",
-            imgback: "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-          }
-        ]
-      };
-      return dummy;
-  }
-};
-
 <Meta of={HeroStories} />
 
 # MANGROVE HERO (Main)
 
-The Mangrove Hero components are page sections with information image and overlay colors primary, secondary, tertiary and quaternary.
+The Mangrove Hero components are page sections with images and overlay colors for primary, secondary, tertiary, and quaternary variants.
 
-### Overview
+## Overview
 
-The Mangrove Hero component defines a section of information with some items. It is a multi-usage component that creates sections that are usually highlighting some kind of content.
+The Mangrove Hero component defines a section with an image, some text, and optional CTA buttons. It is highly customizable and can be styled in four different variants: primary, secondary, tertiary, and quaternary.
 
-#### When to use:
+### When to use:
 
-When a page section with data, CTA links and image is to be displayed.
+Use this component when you want to display a prominent section with an image background, title, text, and optional action buttons.
 
-### Formatting
+## Example
 
-#### Default
+This story shows the default Hero component with a link in the title.
 
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary),labels, detail links, image and overlay colors (primary, secondary, tertiary and quaternary).
+<Story of={HeroStories.Default} />
 
-### Content
+## Interactions
 
-There are two types of Mangrove Hero components: Mangrove Hero Parent and Mangrove Hero Child.
+- Clicking on the title (if it has a link) or CTA buttons triggers the associated action (navigating to the link or executing a JavaScript function).
 
-<Canvas>
-  <Story of={HeroStories.Default} />
-</Canvas>
+## Changelog
 
-### Usage
+### Version 1.2 — Latest Update
 
-* Grab the HTML from the HTML tab and also include the CSS files listed below.
+#### 1. Conditional Rendering of Headline
 
-### CSS and JS References
+- If the `link` is present in the `data`, the title will be rendered as an `<a>` (anchor) tag.
+- If no `link` is provided, the title will be rendered as an appropriate header tag (e.g., `<h1>`).
 
-#### CSS:
+If the content has no link:
+```jsx
+<h1 class="text-xxl">Title without a link</h1>
+```
+If the content has a valid link:
+```jsx
+<a href="/#" class="text-xxl">Title with a link</a>
+```
 
-Add the base layout style from
+#### 2. Support for HTML in Title and Summary Fields
 
-* https://unisdr.github.io/undrr-mangrove/css/style-gutenberg.css
+The `title` and `summaryText` fields now support the inclusion of HTML elements such as `<br>` (line breaks) and `&nbsp;` (non-breaking spaces) to allow more control over the formatting of the text.
 
-#### JS:
+```jsx
+<span dangerouslySetInnerHTML={{ __html: "This is a title with a<br>&nbsp;line break" }} />
+```
 
-NA
+### Version 1.1
 
-### Interactions
+- **Locale-based content with `getCaptionForLocale`**: The `Hero` component can now switch between different locales to display localized content.
+- **Conditional headline rendering**: The headline now dynamically chooses between an anchor tag (`<a>`) and a header tag (`<h1>`) based on the presence of a `link`.
+- **HTML support in text fields**: The `title` and `summaryText` fields now support raw HTML like `<br>` and `&nbsp;` for enhanced formatting control.
 
-* By clicking on the title and/or CTA Link, the associated page is opened.
+### Version 1.0 — Initial Release
 
-### Changelog
-
-1.0 — Released component
+- Introduced the Mangrove Hero component with customizable background images, text, and CTA buttons.
