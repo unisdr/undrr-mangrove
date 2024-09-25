@@ -142,6 +142,7 @@
 
   &__summaryText {
     @include mg-typography("small");
+
     margin-bottom: $mg-spacing-25;
   }
 }
