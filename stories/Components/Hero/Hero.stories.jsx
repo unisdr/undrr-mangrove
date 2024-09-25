@@ -137,7 +137,7 @@ export const WithHtmlInTitle = Template.bind({});
 WithHtmlInTitle.args = {
   data: [
     {
-      title: "Custom title<br>&nbsp;with line breaks and spaces",
+      title: "Custom title<br>with&nbsp;line breaks and spaces",
       summaryText: "This is custom summary text.<br>&nbsp;Another line.",
       label: "Custom Label",
       detail: "Custom Detail",
