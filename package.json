@@ -98,7 +98,7 @@
     "patch-package": "6.5.1",
     "path": "0.12.7",
     "postcss-cli": "10.1.0",
-    "postcss-loader": "7.3.4",
+    "postcss-loader": "8.1.1",
     "prettier": "3.3.3",
     "prettier-eslint": "16.3.0",
     "prettier-stylelint": "0.4.2",
