@@ -1,0 +1,103 @@
+// testing
+// .mg-tabs {
+//   background: red;
+//   padding: 20px;
+// }
+
+.mg-tabs__list {
+  background: $mg-color-tabbar-background;
+  width: 100%;
+  margin: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0;
+  position: relative;
+
+  @if $mg-tabs-border-bottom {
+    &:after {
+      content: " ";
+      width: 100%;
+      height: 1px;
+      top: -$mg-spacing-25;
+      position: relative;
+      z-index: -1;
+      border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+    }
+  }
+}
+
+.mg-tabs__item {
+  display: inline-block;
+  position: relative;
+  -ms-flex-preferred-size: max-content;
+  flex-basis: max-content;
+  padding: 0;
+}
+
+.mg-tabs__link {
+  border: none;
+  border-radius: $mg-radius-tab;
+  color: $mg-color-text-tab;
+  font-family: $mg-font-family;
+  font-size: $mg-font-size-400;
+  font-weight: 600;
+  line-height: 1.421;
+  margin: 0;
+  display: block;
+  outline: 0;
+  padding: $mg-padding-tab;
+  position: relative;
+  text-decoration: none;
+}
+.mg-tabs__link:hover,
+.mg-tabs__link:focus {
+  background: $mg-color-tab-background--hover;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
+  color: $mg-color-text-tab-active;
+  z-index: 1150;
+  text-decoration: none;
+}
+
+.mg-tabs__link.is-active {
+  color: $mg-color-text-tab-active;
+  background-color: $mg-color-tab-background;
+  text-shadow: none;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--active;
+}
+
+.mg-tabs__link.is-active:hover,
+.mg-tabs__link.is-active:focus {
+  background: $mg-color-tab-background;
+  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
+  color: $mg-color-text-tab-active;
+}
+
+.mg-tabs__section {
+  background-color: $mg-color-tab-section-background;
+  box-shadow: $mg-box-shadow-tab-section;
+  padding: $mg-padding-tab-section;
+  border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
+}
+
+[dir="rtl"] {
+  .mg-tabs {
+    > ul {
+      padding-right: 0;
+
+      @include devicebreak(medium) {
+        padding-right: $mg-spacing-300;
+      }
+
+      li {
+        margin-left: $mg-spacing-100;
+        margin-right: 0;
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+/* Tab end */
