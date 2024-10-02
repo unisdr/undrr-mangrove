@@ -1,0 +1,52 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import Header from './Header';
+import * as HeaderStories from './Header.stories';
+
+<Meta of={HeaderStories} />
+
+# Header Component
+
+The **Header** component is a simple navigation wrapper that includes a website title and a **MegaMenu** component. This allows users to easily navigate through the site using structured sections, items, and sub-items.
+
+## Overview
+
+The Header includes the following key elements:
+
+- **Title**: A static website title that is displayed at the top of the header.
+- **MegaMenu**: A dropdown navigation menu that allows users to access sections, items, and sub-items.
+
+### When to Use:
+
+- Use this component when you need a responsive and structured navigation header for your website.
+- It’s especially useful for websites with categorized content or eCommerce sites with multiple product categories.
+
+## Props
+
+### 1. `title` (String)
+- **Type**: String
+- **Description**: The website title displayed in the header.
+
+### 2. `sections` (Array)
+- **Type**: Array of objects
+- **Description**: This prop contains the data for the **MegaMenu** sections, each of which includes a list of items and sub-items.
+
+#### Example Structure:
+
+```js
+[
+  {
+    bannerHeading: "Section 1",
+    bannerDescription: "Description for section 1",
+    items: [
+      {
+        title: "Item 1",
+        url: "/item1",
+        subItems: [
+          { title: "Sub Item 1.1", url: "/subitem1-1" },
+          { title: "Sub Item 1.2", url: "/subitem1-2" },
+        ],
+      },
+    ],
+  },
+]
+
