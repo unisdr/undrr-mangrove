@@ -1,49 +1,91 @@
-// import { Header } from "./Header";
+import React from "react";
+import Header from "./Header";
 
-// export default {
-//   title: "Components/Header",
-// };
+// Mock Data for Menu Sections
+const sections = [
+  {
+    bannerHeading: "Section 1",
+    bannerDescription: "Description for section 1",
+    items: [
+      {
+        title: "Item 1",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 1.1", url: "#" },
+          { title: "Sub Item 1.2", url: "#" },
+        ],
+      },
+      {
+        title: "Item 2",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 2.1", url: "#" },
+          { title: "Sub Item 2.2", url: "#" },
+        ],
+      },
+    ],
+  },
+  {
+    bannerHeading: "Section 2",
+    bannerDescription: "Description for section 2",
+    items: [
+      {
+        title: "Item 3",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 3.1", url: "#" },
+          { title: "Sub Item 3.2", url: "#" },
+        ],
+      },
+      {
+        title: "Item 4",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 4.1", url: "#" },
+          { title: "Sub Item 4.2", url: "#" },
+        ],
+      },
+    ],
+  },
+];
 
-// export const DefaultHeader = {
-//   render: () => {
-//     return <Header></Header>;
-//   },
-
-//   name: "Header",
-// };
-
-import React from 'react';
-import Header from './Header.jsx';
-
-// This default export determines where your story goes in the story list
 export default {
-  /* 👇 The title prop is optional.
-  * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
-  * to learn how to generate automatic titles
-  */
-  title: 'Components/Header',
+  title: "Components/Header",
   component: Header,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
-    title: { control: 'text' },
+    title: {
+      control: {
+        type: "text",
+      },
+      description: "Title text displayed in the header",
+      defaultValue: "Website Title",
+    },
+    sections: {
+      control: "object",
+      description: "The sections and items to be displayed in the MegaMenu",
+    },
   },
 };
 
-// This is a Storybook template function that returns a component story
 const Template = (args) => <Header {...args} />;
 
-// Each story then reuses that template
+// Default Story (with mocked data)
 export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
-  title: 'Header Component',
-  children: <p>This is an example boilerplate component. Need to make a new component? Clone this and replace this content with your own.</p>,
+  title: "Website Title",
+  sections,
 };
 
-// You can add more stories here, each representing a different state or variant of your component
-// For example:
-// export const Secondary = Template.bind({});
-// Secondary.args = {
-//   ...Default.args,
-//   variant: 'secondary',
-// };
+// Story with Custom Title
+export const CustomTitle = Template.bind({});
+CustomTitle.args = {
+  title: "Custom Website Title",
+  sections,
+};
+
+// Story with Single Section
+export const SingleSection = Template.bind({});
+SingleSection.args = {
+  title: "Single Section Site",
+  sections: [sections[0]],
+};
