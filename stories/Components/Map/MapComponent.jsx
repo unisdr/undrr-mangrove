@@ -48,13 +48,16 @@ export default function MapComponent({
 
   const createLabelIcon = (label, value) => {
     const size = calculateIconSize(value);
+    // We only show "Global" as a label, as otherwsie this marker is shown over a country
+    const isGlobal = label.toLowerCase() === 'global';
+    
     return L.divIcon({
-      className: 'mg-custom-label-icon', 
-      // <div class="mg-label-text">${label}</div>
+      className: 'mg-custom-label-icon',
       html: `
-      <div class="mg-label-container">
-        <div class="mg-label-value">${value}</div>
-      </div>`,
+        <div class="mg-label-container">
+          ${isGlobal ? `<div class="mg-label-text">${label}</div>` : ''}
+          <div class="mg-label-value">${value}</div>
+        </div>`,
       iconSize: [size, size],
       iconAnchor: [size / 2, size / 2],
     });

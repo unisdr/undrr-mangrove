@@ -22,13 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
       - name: Set Yarn Version
         run: yarn set version berry
       - name: Install Dependencies
-        run: yarn install --refresh-lockfile # To allow compatibility with dependency updaters
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
       - name: Lint with ESLint and stylelint
         run: yarn run lint:check
       - name: Build Storybook
@@ -55,7 +55,7 @@ jobs:
           name: output
           path: ./dist
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
   # Deployment job
   deploy:
     if: github.ref == 'refs/heads/main' # only deploy if branch is master
@@ -67,4 +67,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
