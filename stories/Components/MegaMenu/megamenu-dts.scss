@@ -1,0 +1,13 @@
+.mg-mega-topbar {
+  background: transparent;
+  justify-content: flex-end;
+
+  &__item {
+    color: blue;
+
+    &:hover {
+      background: red;
+      color: white;
+    }
+  }
+}

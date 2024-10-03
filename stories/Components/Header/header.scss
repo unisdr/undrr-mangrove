@@ -1,4 +1,8 @@
-.mg-dts-header {
+.mg-dldt-header {
   display: flex;
   justify-content: space-between;
+
+  &__menu {
+    flex-grow: 1;
+  }
 }

@@ -1,0 +1,56 @@
+/**
+ * @tokens DTS Colors
+ * @presenter Color
+ *
+ * https://github.com/UX-and-I/storybook-design-token
+ */
+
+// UNDRR Blue - Corporate Blue
+$dts-undrr-blue-100: #DDE8F0;
+$dts-undrr-blue-200: #9ABBD6;
+$dts-undrr-blue-300: #6093BD;
+$dts-undrr-blue-400: #106CB8;
+$dts-undrr-blue-500: #004f91;
+$dts-undrr-blue-600: #003561;
+$dts-undrr-blue-brand: $dts-undrr-blue-500;
+
+// UNDRR Teal - Secondary shades
+$dts-undrr-teal-100: #B5D2D2;
+$dts-undrr-teal-200: #78BCBC;
+$dts-undrr-teal-300: #00AFAE;
+$dts-undrr-teal-400: #007B7A;
+$dts-undrr-teal-brand: $dts-undrr-teal-300;
+
+// Coal - Neutral shades
+$dts-coal-100: #F2F2F2;
+$dts-coal-200: #E3E3E3;
+$dts-coal-300: #CCCCCC;
+$dts-coal-400: #979797;
+$dts-coal-500: #4A4A4A;
+$dts-coal-600: #181823;
+$dts-coal-700: #13131C;
+$dts-neutral: $dts-coal-600;
+
+// Target A
+$dts-grey-100: #E6E6E6;
+$dts-grey-200: #BEBEBE;
+$dts-grey-300: #999999;
+$dts-grey-400: #5A5A5A;
+$dts-grey-500: #333333;
+$dts-grey-600: #000000;
+$dts-target-a: $dts-grey-600;
+$dts-black: $dts-grey-600;
+// unused?
+$dts-grey-700: #008C8B;
+$dts-grey-800: #004646;
+$dts-grey-900: #006968;
+$dts-grey-1000: #002323;
+
+// Target B - Human Direct Effects
+$dts-grey-100: #E6E6E6;
+$dts-grey-200: #BEBEBE;
+$dts-grey-300: #999999;
+$dts-grey-400: #5A5A5A;
+$dts-grey-500: #333333;
+$dts-grey-600: #000000;
+$dts-target-a: $dts-grey-600;

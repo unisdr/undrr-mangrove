@@ -1,14 +1,16 @@
 import MegaMenu from "../MegaMenu/MegaMenu";
 
-const Header = ({ title, sections }) => {
+const Header = ({ sections }) => {
   return (
     <header>
-      <div>Global header</div>
-      <div className='mg-'>
-        <div>
-          {/* <img src='static/media/stories/assets/images/farmland-lg.jpg' alt='DLDT logo mark'></img> */}
+      <div className='mg-undrr-header'>Global header TBD</div>
+      <div className='mg-dldt-header'>
+        <div className='mg-dldt-header__logo'>
+          <img src='images/dldt-logo-mark.svg' alt='DLDT logo mark'></img>
         </div>
-        <MegaMenu sections={sections} />
+        <div className='mg-dldt-header__menu'>
+          <MegaMenu sections={sections} />
+        </div>
       </div>
     </header>
   );

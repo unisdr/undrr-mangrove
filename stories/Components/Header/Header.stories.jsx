@@ -77,15 +77,15 @@ Default.args = {
 };
 
 // Story with Custom Title
-export const CustomTitle = Template.bind({});
-CustomTitle.args = {
-  title: "Custom Website Title",
-  sections,
-};
+// export const CustomTitle = Template.bind({});
+// CustomTitle.args = {
+//   title: "Custom Website Title",
+//   sections,
+// };
 
 // Story with Single Section
-export const SingleSection = Template.bind({});
-SingleSection.args = {
-  title: "Single Section Site",
-  sections: [sections[0]],
-};
+// export const SingleSection = Template.bind({});
+// SingleSection.args = {
+//   title: "Single Section Site",
+//   sections: [sections[0]],
+// };
