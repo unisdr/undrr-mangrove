@@ -201,19 +201,4 @@
   .mg-grid__row--span-all {
     grid-row: 1 / -1;
   }
-
-  .mg-grid__content {
-    background-color: $mg-color-interactive;
-    padding: $mg-spacing-50;
-
-    .mg-grid__heading {
-      font-size: $mg-font-size-400;
-      color: $mg-color-white;
-    }
-
-    .mg-grid__text {
-      font-size: $mg-font-body;
-      color: $mg-color-white;
-    }
-  }
 }

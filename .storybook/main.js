@@ -1,4 +1,5 @@
 const path = require("path");
+import remarkGfm from 'remark-gfm';
 
 module.exports = {
   staticDirs: ["../stories/assets"],
@@ -6,6 +7,17 @@ module.exports = {
 
   //stories: ["../stories/**/CategoriesMenu2.stories.mdx"],
   addons: [
+    // https://storybook.js.org/docs/writing-docs/mdx#markdown-tables-arent-rendering-correctly
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
     {
       name: "storybook-design-token",
       options: {
@@ -16,7 +28,6 @@ module.exports = {
     "@storybook/addon-viewport",
     "@storybook/addon-links",
     "@storybook/addon-actions",
-    "@storybook/addon-docs",
     "@storybook/addon-essentials",
     "@whitespace/storybook-addon-html",
     "storybook-addon-rtl",

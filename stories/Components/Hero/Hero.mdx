@@ -16,25 +16,25 @@ The Mangrove Hero component defines a section with an image, some text, and opti
 
 Use this component when you want to display a prominent section with an image background, title, text, and optional action buttons.
 
-## Example Stories
-
-### 1. Default
+## Example
 
 This story shows the default Hero component with a link in the title.
 
-<Canvas>
-  <Story of={HeroStories.Default} />
-</Canvas>
+<Story of={HeroStories.Default} />
 
+## Interactions
 
-## New Features
+- Clicking on the title (if it has a link) or CTA buttons triggers the associated action (navigating to the link or executing a JavaScript function).
 
-### 1. Conditional Rendering of Headline
+## Changelog
+
+### Version 1.2 — Latest Update
+
+#### 1. Conditional Rendering of Headline
 
 - If the `link` is present in the `data`, the title will be rendered as an `<a>` (anchor) tag.
 - If no `link` is provided, the title will be rendered as an appropriate header tag (e.g., `<h1>`).
 
-#### Example
 If the content has no link:
 ```jsx
 <h1 class="text-xxl">Title without a link</h1>
@@ -44,31 +44,15 @@ If the content has a valid link:
 <a href="/#" class="text-xxl">Title with a link</a>
 ```
 
-### 2. Support for HTML in Title and Summary Fields
+#### 2. Support for HTML in Title and Summary Fields
 
 The `title` and `summaryText` fields now support the inclusion of HTML elements such as `<br>` (line breaks) and `&nbsp;` (non-breaking spaces) to allow more control over the formatting of the text.
 
-#### Example
 ```jsx
 <span dangerouslySetInnerHTML={{ __html: "This is a title with a<br>&nbsp;line break" }} />
 ```
 
-## CSS and JS References
-
-### CSS:
-Include the following styles for layout and design:
-- [Mangrove CSS](https://unisdr.github.io/undrr-mangrove/css/style-gutenberg.css)
-
-### JS:
-No additional JavaScript is required.
-
-## Interactions
-
-- Clicking on the title (if it has a link) or CTA buttons triggers the associated action (navigating to the link or executing a JavaScript function).
-
-## Changelog
-
-### Version 1.1 — Latest Update
+### Version 1.1
 
 - **Locale-based content with `getCaptionForLocale`**: The `Hero` component can now switch between different locales to display localized content.
 - **Conditional headline rendering**: The headline now dynamically chooses between an anchor tag (`<a>`) and a header tag (`<h1>`) based on the presence of a `link`.
