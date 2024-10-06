@@ -12,7 +12,7 @@ import { Meta, Story } from '@storybook/blocks';
 
 # How to use this?
 
-### Steps to integrate
+## Steps to integrate
 
 * Include the base styling Sass/CSS file in your project (e.g. `style-prevenetionweb.scss`).
 * Browse the component which you want to integrate.
@@ -21,7 +21,20 @@ import { Meta, Story } from '@storybook/blocks';
 * Check out the CSS and JS reference section in the document.
 * Use the CSS and JS on your project as suggested.
 
-### Development
+## Framework Agnostic Design System
+
+Our design system is designed to be framework agnostic, meaning it can work seamlessly with nearly any existing system. This approach offers maximum flexibility and ease of integration across various projects and technologies.
+
+Key features of our framework-agnostic approach:
+
+* No firm external dependencies: Our design system does not rely on specific frameworks like Bootstrap or libraries like jQuery. This ensures that you can use it without conflicts or unnecessary bloat in your existing projects.
+* Namespaced code: All JavaScript and CSS code is namespaced with `mg` to prevent conflicts with your existing codebase. This isolation ensures that our design system components won't interfere with your current styles or scripts.
+* Easy integration: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
+* Consistent look and feel: Despite being framework-agnostic, our design system maintains a consistent look and feel across different implementations by focusing on repetable HTML structures that can be cosmetically themed.
+
+This approach allows you to leverage the power of our design system while maintaining the freedom to use your preferred tools and technologies.
+
+## Development
 
 If you want to develop this Design System, follow these steps and you will be ready for further development.
 
@@ -61,11 +74,11 @@ yarn run lint
 yarn run build
 ```
 
-### Dependencies
+## External dependencies
 
-* jQuery (https://jquery.com/)
+* None
 
-### Assets (CSS/JS/Icons) Path
+## Assets (CSS/JS/Icons) Path
 
 * All the Icons can be found in the ***dist/images*** directory.
 * CSS directory at: ***dist/css***.

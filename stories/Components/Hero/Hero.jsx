@@ -13,6 +13,7 @@ export const variantOptions = {
 
 export function Hero({ data, variant }) {
   let variantActive = variantOptions[`${variant}`];
+
   return (
     <>
       {data.map((item, index) => (
@@ -25,12 +26,9 @@ export function Hero({ data, variant }) {
             <article className="mg-hero__content">
               <div className="mg-hero__meta">
                 {item.label && (
-                  <a href={item.link || "#"} className="mg-hero__label">
-                    {item.label}
-                  </a>
+                  <span className="mg-hero__label">{item.label}</span>
                 )}
               </div>
-
               <header className="mg-hero__title">
                 {item.link ? (
                   <a href={item.link} className="text-xxl">
@@ -42,22 +40,21 @@ export function Hero({ data, variant }) {
                   </h1>
                 )}
               </header>
-
               <div className="mg-hero__summaryText">
                 <span dangerouslySetInnerHTML={{ __html: item.summaryText }} />
               </div>
-
               <div className="mg-hero__meta meta-detail">
                 {item.detail && (
-                  <a href={item.link || "#"} className="mg-hero__label detail">
-                    {item.detail}
-                  </a>
+                  <span className="mg-hero__label detail">{item.detail}</span>
                 )}
               </div>
-
               <div className="mg-hero__buttons">
-                <CtaButton Type="Primary" label={item.primary_button} />
-                <CtaButton Type="Secondary" label={item.secondary_button} />
+                {item.primary_button && (
+                  <CtaButton Type="Primary" label={item.primary_button} />
+                )}
+                {item.secondary_button && (
+                  <CtaButton Type="Secondary" label={item.secondary_button} />
+                )}
               </div>
             </article>
           </div>
@@ -67,6 +64,6 @@ export function Hero({ data, variant }) {
   );
 }
 
-Hero.defaultParameters = {
+Hero.defaultProps = {
   variant: "primary",
 };
