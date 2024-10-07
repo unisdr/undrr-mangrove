@@ -2133,6 +2133,25 @@
     util "^0.12.5"
     ws "^8.2.3"
 
+"@storybook/core@8.3.5":
+  version "8.3.5"
+  resolved "https://registry.yarnpkg.com/@storybook/core/-/core-8.3.5.tgz#d77c93bb67c2df12e3bf84ae7def4693891b225d"
+  integrity sha512-GOGfTvdioNa/n+Huwg4u/dsyYyBcM+gEcdxi3B7i5x4yJ3I912KoVshumQAOF2myKSRdI8h8aGWdx7nnjd0+5Q==
+  dependencies:
+    "@storybook/csf" "^0.1.11"
+    "@types/express" "^4.17.21"
+    better-opn "^3.0.2"
+    browser-assert "^1.2.1"
+    esbuild "^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0"
+    esbuild-register "^3.5.0"
+    express "^4.19.2"
+    jsdoc-type-pratt-parser "^4.0.0"
+    process "^0.11.10"
+    recast "^0.23.5"
+    semver "^7.6.2"
+    util "^0.12.5"
+    ws "^8.2.3"
+
 "@storybook/csf-plugin@8.3.4":
   version "8.3.4"
   resolved "https://registry.yarnpkg.com/@storybook/csf-plugin/-/csf-plugin-8.3.4.tgz#e9294c5f67245486d2b257a8a6105d72e079ce00"
@@ -13150,6 +13169,13 @@ storybook@8.3.4:
   integrity sha512-nzvuK5TsEgJwcWGLGgafabBOxKn37lfJVv7ZoUVPgJIjk2mNRyJDFwYRJzUZaD37eiR/c/lQ6MoaeqlGwiXoxw==
   dependencies:
     "@storybook/core" "8.3.4"
+
+storybook@8.3.5:
+  version "8.3.5"
+  resolved "https://registry.yarnpkg.com/storybook/-/storybook-8.3.5.tgz#aef0542c08e245b7ac22742c1e1633a125063b8e"
+  integrity sha512-hYQVtP2l+3kO8oKDn4fjXXQYxgTRsj/LaV6lUMJH0zt+OhVmDXKJLxmdUP4ieTm0T8wEbSYosFavgPcQZlxRfw==
+  dependencies:
+    "@storybook/core" "8.3.5"
 
 string-length@^4.0.1:
   version "4.0.2"
