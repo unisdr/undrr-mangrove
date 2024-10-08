@@ -24,7 +24,7 @@ export default {
 
   argTypes: {
     Type: {
-      options: ["Primary", "Secondary"],
+      options: ["Primary", "Secondary, Outline, Ghost"],
 
       control: {
         type: "inline-radio",
@@ -58,7 +58,7 @@ export default {
 export const DefaultButtons = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <CtaButton label={caption.detail} {...args}></CtaButton>;
+    return <CtaButton label={caption.detail} State="Disabled" Type="Ghost" {...args}></CtaButton>;
   },
 
   name: "Buttons",

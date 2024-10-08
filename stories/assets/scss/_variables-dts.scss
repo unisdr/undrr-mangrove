@@ -1,5 +1,5 @@
 /*
- * Colors
+ * DTS Colors - BEGIN
  */
 
 // UNDRR Blue - Corporate Blue
@@ -133,3 +133,28 @@ $dts-stone-800: #193E3E;
 $dts-stone-900: #10292A;
 $dts-stone-1000: #081515;
 $dts-maps: $dts-stone-600;
+
+// Buttons
+$dts-sky-blue: #4096FF;
+
+/*
+ * DTS Colors - END
+ */
+
+/*
+ * DTS overwrites - BEGIN
+ */
+
+// font-family
+$mg-font-family: "Roboto", "Noto Sans SC", "Noto Sans Arabic", sans-serif;
+
+// button
+$mg-padding-button: 1.2rem 1.6rem;
+$mg-gap-button: .8rem;
+$mg-color-button-background: $dts-undrr-blue-brand;
+$mg-color-button-background--hover: $dts-cerulean-400;
+$mg-radius-button: .6rem;
+$mg-color-button-background--hover: $dts-sky-blue;
+/*
+ * DTS overwrites - END
+ */

@@ -4,65 +4,150 @@
 
 //  Page title
 .dts-heading-1 {
-  font-size: 1.875rem;
-  line-height: 1.2;
+  font-size: 2.4rem;
+  line-height: 1.33;
   font-weight: 700;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3.2rem;
+
+  @include devicebreak(large) {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 4rem;
+  }
+}
+
+[dir="rtl"] {
+  .dts-heading-1 {}
 }
 
 //  Section header
 .dts-heading-2 {
-  font-size: 1.313rem;
-  line-height: 1.14;
+  font-size: 2rem;
+  line-height: 1.2;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 2.4rem;
+
+  @include devicebreak(large) {
+    font-size: 2.1rem;
+    line-height: 1.14;
+    margin-bottom: 3.2rem;
+  }
 }
 
 //  Subsection header
 .dts-heading-3 {
-  font-size: 1.25rem;
-  line-height: 1.5;
+  font-size: 1.8rem;
+  line-height: 1.33;
   font-weight: 500;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.6rem;
+
+  @include devicebreak(large) {
+    font-size: 2rem;
+    line-height: 1.5;
+    margin-bottom: 2.4rem;
+  }
 }
 
 //  Events title
 .dts-heading-4 {
-  font-size: 1.125rem;
-  line-height: 1.55;
+  font-size: 1.6rem;
+  line-height: 1.375;
   font-weight: 500;
-  margin-bottom: 1rem;
+  margin-bottom: 1.6rem;
+
+  @include devicebreak(large) {
+    font-size: 1.8rem;
+    line-height: 1.55;
+  }
 }
 
 //  Tab label
 .dts-heading-5 {
-  font-size: 1rem;
-  line-height: 1.75;
+  font-size: 1.4rem;
+  line-height: 1.285;
   font-weight: 700;
-  margin-bottom: .75rem;
+  margin-bottom: 1.2rem;
+
+  @include devicebreak(large) {
+    font-size: 1.6rem;
+    line-height: 1.75;
+  }
 }
 
 /*
  * Body
  */
 
-//  Tab label (duplicate?)
+//  Tab label (duplicate of below?)
 .dts-tab-label {
-  font-size: 1rem;
-  line-height: 2.375;
+  font-size: 1.1rem;
+  line-height: 2;
+  font-weight: 700;
+
+  @include devicebreak(large) {
+    font-size: 1.6rem;
+    line-height: 2.375;
+  }
+}
+
+//  Body text (default)
+.dts-body-text {
+  font-size: 1.6rem;
+  line-height: 1.375;
+  font-weight: 400;
+
+  @include devicebreak(large) {
+    line-height: 1.5;
+  }
+}
+
+//  Body label (duplicate of above?)
+.dts-body-label {
+  font-size: 1.6rem;
+  line-height: 1.5;
   font-weight: 700;
 }
 
-//  Body text
-.dts-body-text {
-  font-size: 1rem;
+//  Body text small
+.dts-body-text-small {
+  font-size: 1.4rem;
+  line-height: 1.43;
+  font-weight: 400;
+
+  @include devicebreak(large) {
+    line-height: 1.57;
+  }
+}
+
+//  Body label small
+.dts-body-label-small {
+  font-size: 1.4rem;
+  line-height: 1.57;
+  font-weight: 700;
+}
+
+//  Body text smaller
+.dts-body-text-smaller {
+  font-size: 1.2rem;
   line-height: 1.5;
   font-weight: 400;
 }
 
-//  Body label
-.dts-body-label {
-  font-size: 1rem;
-  line-height: 1.5;
-  font-weight: 700;
+//  Body text extra small (data visualization)
+.dts-body-text-extra-small {
+  font-size: .7rem;
+  line-height: 1.17;
+  font-weight: 400;
+}
+
+//  Body text large (welcome message)
+.dts-body-text-large {
+  font-size: 1.8rem;
+  line-height: 1.44;
+  font-weight: 400;
+
+  @include devicebreak(large) {
+    font-size: 2.6rem;
+    line-height: 1.54;
+  }
 }

@@ -1,9 +1,73 @@
 /* Roboto */
 $font-path: "../fonts/roboto/fonts";
-
 @import "../fonts/roboto/roboto";
 
 /* Roboto Condensed */
 $font-path: "../fonts/roboto-condensed/fonts";
-
 @import "../fonts/roboto-condensed/roboto-condensed";
+
+/* noto-sans-sc-regular - chinese-simplified */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/noto-sans-sc/noto-sans-sc-v37-chinese-simplified-regular.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* noto-sans-sc-500 - chinese-simplified */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/noto-sans-sc/noto-sans-sc-v37-chinese-simplified-500.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* noto-sans-sc-700 - chinese-simplified */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/noto-sans-sc/noto-sans-sc-v37-chinese-simplified-700.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* noto-sans-arabic-regular - arabic */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/noto-sans-arabic/noto-sans-arabic-v18-arabic-regular.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* noto-sans-arabic-500 - arabic */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/noto-sans-arabic/noto-sans-arabic-v18-arabic-500.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* noto-sans-arabic-700 - arabic */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Noto Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/noto-sans-arabic/noto-sans-arabic-v18-arabic-700.woff2') format('woff2');
+  /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}

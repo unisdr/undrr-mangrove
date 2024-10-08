@@ -1,10 +1,10 @@
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
 // Theme switcher options
-import themeDefault from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss";
-import themePreventionWeb from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss";
-import themeIrp from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-irp.scss";
-import themeMcr from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-mcr.scss";
+// import themeDefault from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss";
+// import themePreventionWeb from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss";
+// import themeIrp from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-irp.scss";
+// import themeMcr from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-mcr.scss";
 import themeDts from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-dts.scss";
 
 // import the decorator from the CSS Variables Theme addon
@@ -56,10 +56,10 @@ export const parameters = {
   },
   cssVariables: {
     files: {
-      "Default UNDRR Theme": themeDefault,
-      "PreventionWeb Theme": themePreventionWeb,
-      "IRP Theme": themeIrp,
-      "MCR2030 Theme": themeMcr,
+      // "Default UNDRR Theme": themeDefault,
+      // "PreventionWeb Theme": themePreventionWeb,
+      // "IRP Theme": themeIrp,
+      // "MCR2030 Theme": themeMcr,
       "DTS Theme": themeDts,
     },
     defaultTheme: "DTS Theme",

@@ -2,10 +2,9 @@ import React from 'react';
 // import './mark.scss';
 
 export const Mark = ({ label }) => (
-  <p>
     <mark>
-      {label}
+      {/* {label} */}
+      My highlight text
     </mark>
-  </p>
 );
 
