@@ -18,6 +18,7 @@
 
 // We only bring in a limited set of components needed for gutenberg
 // @import './components';
+@import "../../Atom/Layout/Container/container";
 @import "../../Atom/Layout/Grid/grid";
 @import "../../Components/Buttons/CtaButton/buttons";
 @import "../../Components/Cards/Card/card";
