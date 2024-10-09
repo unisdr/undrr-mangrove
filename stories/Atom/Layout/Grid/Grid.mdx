@@ -1,10 +1,15 @@
 import { Canvas, Meta, Story, Source} from '@storybook/blocks';
 import { Grid } from './Grid';
+import * as GridStories from './Grid.stories';
 
 <Meta
+  of={GridStories}
   title="Design decisions/Grid layout"
   parameters={{
-    viewMode: 'docs',
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
   }}
 />
 
@@ -12,7 +17,9 @@ import { Grid } from './Grid';
 
 This grid system is based on CSS Grid. The grid comes in two main layouts: auto layout and specified columns layout such as col-2.
 
-<Grid />
+<Canvas>
+  <Story of={Grid} />
+</Canvas>
 
 ### Usage
 
@@ -38,7 +45,7 @@ Use the grid to create a layout of your choice based on the design you want to a
 
 Add the base layout style from
 
-* https://unisdr.github.io/undrr-mangrove/css/style.css
+* https://unisdr.github.io/undrr-mangrove/css/grid.min.css
 
 ### Changelog
 
