@@ -95,12 +95,6 @@
   background-color: $mg-color-neutral-400;
   color: $dts-coal-300;
   pointer-events: none;
-
-  &.mg-button-arrow.disabled {
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-grey.svg) no-repeat left center;
-    }
-  }
 }
 
 .mg-button.mg-button-outline {
@@ -131,12 +125,14 @@
   }
 
   &.disabled {
-    color: $dts-coal-400;
-    border-color: $dts-coal-400;
+    color: $dts-coal-300;
+    border-color: $dts-coal-300;
+  }
+}
 
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-grey.svg) no-repeat left center;
-    }
+.mg-button.mg-button-arrow.disabled {
+  &::after {
+    background: url(#{$img-path-Iconfourback}/tick-grey.svg) no-repeat left center;
   }
 }
 

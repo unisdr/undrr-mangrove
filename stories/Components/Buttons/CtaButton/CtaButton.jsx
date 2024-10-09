@@ -11,6 +11,8 @@ export function CtaButton({
     type = 'outline';
   } else if (Type == 'Ghost') {
     type = 'ghost';
+  } else if (Type == 'Primary') {
+    type = 'primary';
   } else {
     type = 'primary';
   }
