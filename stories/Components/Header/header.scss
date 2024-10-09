@@ -1,6 +1,15 @@
 .mg-dldt-header {
   display: flex;
   justify-content: space-between;
+  height: 108px;
+
+  @include devicebreak(large) {
+    height: 85px;
+  }
+
+  &__logo img {
+    height: 100%;
+  }
 
   &__menu {
     flex-grow: 1;

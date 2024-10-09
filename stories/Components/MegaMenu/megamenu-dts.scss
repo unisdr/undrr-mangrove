@@ -1,13 +1,23 @@
+.mg-mega-wrapper {
+  font-family: $dts-menu-font-family;
+}
+
 .mg-mega-topbar {
   background: transparent;
   justify-content: flex-end;
 
   &__item {
-    color: blue;
+    font-size: $mg-font-size-400;
+    font-weight: 700;
+    color: $dts-coal-700;
+    text-transform: uppercase;
+    border-bottom: 2px solid transparent;
+    padding: 2rem;
 
     &:hover {
-      background: red;
-      color: white;
+      color: $dts-undrr-blue-brand;
+      background: transparent;
+      border-color: $dts-undrr-blue-brand;
     }
   }
 }

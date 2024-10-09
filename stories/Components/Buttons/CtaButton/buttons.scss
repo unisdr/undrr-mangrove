@@ -1,139 +1,104 @@
+// @import '../../../../assets/scss/variables';
+// @import '../../../../assets/scss/breakpoints';
+// @import '../../../../assets/scss/mixins';
+
+// .mg-buttons {
+//   margin-bottom: 1em;
+//   //Media queries
+
+//   @media (max-width: $mg-breakpoint-mobile) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+
+//   @media (max-width: $mg-breakpoint-tablet) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+// }
+
 .mg-button {
+  align-items: center;
   background: transparent;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: $mg-gap-button;
   font-size: $mg-font-size-button;
-  font-weight: 500;
-  line-height: 1.14;
+  font-weight: 600;
+  line-height: 1;
   border-radius: $mg-radius-button;
   color: $mg-color-button;
   cursor: pointer;
+  justify-content: center;
   padding: $mg-padding-button;
   border: $mg-border-width-button solid $mg-border-color-button;
+
+  &:focus-visible {
+    box-shadow: 0 0 4px $mg-color-button-background--hover;
+    outline: 0;
+  }
 
   @include devicebreak(medium) {
     display: inline-flex;
   }
+}
 
+.mg-button+.mg-button {
+  margin-left: 1rem;
+}
+
+button {
   &:focus-visible {
+    box-shadow: 0 0 4px $mg-color-button-background;
     outline: 0;
   }
 }
 
-.mg-button.mg-button-arrow {
-  &::after {
-    @include transition(0.2s ease);
-
-    background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
-    content: '';
-    height: 16px;
-    width: 16px;
-  }
-}
-
-.mg-button.mg-button-primary {
+.mg-button-primary {
   background-color: $mg-color-button-background;
 
   &:hover {
+    color: $mg-color-button;
     background-color: $mg-color-button-background--hover;
   }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 2px $mg-color-button-background--hover;
-  }
+  // &.button-arrow {
+  //   &::after {
+  //     @include transition(0.2s ease);
+
+  //     background: url(#{$img-path-Iconfourback}/chevron-right-black.svg)
+  //       no-repeat left center;
+  //     content: '';
+  //     height: 20px;
+  //     margin-left: $mg-spacing-25;
+  //     width: 13px;
+  //   }
+
+  //   &:hover::after {
+  //     @include translate(70%, 0);
+  //   }
+
+  //   &.disabled {
+  //     &::after {
+  //       background: url(#{$img-path-Iconfourback}/chevron-right-white.svg)
+  //         no-repeat left center;
+  //       content: '';
+  //     }
+  //   }
+  // }
 }
 
-.mg-button.mg-button-secondary {
-  background-color: $dts-undrr-teal-brand;
+.mg-button-secondary {
+  background-color: $mg-color-blue-600;
 
   &:hover {
-    background-color: $dts-iris-200;
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 0 2px $dts-iris-200;
-  }
-}
-
-.mg-button.mg-button-ghost {
-  background-color: $mg-color-white;
-  color: $dts-cerulean-300;
-
-  &.mg-button-arrow {
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-ghost-blue.svg) no-repeat left center;
-    }
-  }
-
-  &:hover {
-    background-color: $dts-cerulean-300;
-    color: $mg-color-white;
-  }
-
-  &.mg-button-arrow:hover {
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
-    }
-  }
-
-  &:focus-visible {
-    background-color: $dts-cerulean-300;
-    color: $mg-color-white;
-    box-shadow: 0 0 0 2px $dts-cerulean-100;
-  }
-
-  &.mg-button-arrow:focus-visible {
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
-    }
+    color: $mg-color-button;
+    background-color: $mg-color-blue-400;
   }
 }
 
 .mg-button.disabled {
   background-color: $mg-color-neutral-400;
-  color: $dts-coal-300;
+  color: $mg-color-neutral-300;
   pointer-events: none;
-}
-
-.mg-button.mg-button-outline {
-  background-color: $mg-color-white;
-  border-color: $mg-color-button-background;
-  color: $mg-color-button-background;
-
-  &.mg-button-arrow {
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-blue.svg) no-repeat left center;
-    }
-  }
-
-  &:hover {
-    border-color: $mg-color-button-background--hover;
-    color: $mg-color-button-background--hover;
-  }
-
-  &.mg-button-arrow:hover {
-    &::after {
-      background: url(#{$img-path-Iconfourback}/tick-sky-blue.svg) no-repeat left center;
-    }
-  }
-
-  &:focus-visible {
-    border-color: transparent;
-    box-shadow: 0 0 0 2px #91CAFF66;
-  }
-
-  &.disabled {
-    color: $dts-coal-300;
-    border-color: $dts-coal-300;
-  }
-}
-
-.mg-button.mg-button-arrow.disabled {
-  &::after {
-    background: url(#{$img-path-Iconfourback}/tick-grey.svg) no-repeat left center;
-  }
 }
 
 // [dir='rtl'] {

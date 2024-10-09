@@ -8,24 +8,15 @@
   margin: 0 auto;
   max-width: 100%;
 
-  @include devicebreak(medium) {
-    padding: 1.5rem;
+  @media (min-width: $mg-breakpoint-mobile) {
+    max-width: $mg-breakpoint-mobile;
   }
 
-  @include devicebreak(xlarge) {
-    padding: 2rem;
+  @media (min-width: $mg-breakpoint-tablet) {
+    max-width: $mg-breakpoint-tablet;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop) {
     max-width: $mg-breakpoint-desktop;
   }
-
-  // @media (min-width: $mg-breakpoint-mobile) {
-  //   max-width: $mg-breakpoint-mobile;
-  // }
-
-  // @media (min-width: $mg-breakpoint-tablet) {
-  //   max-width: $mg-breakpoint-tablet;
-  // }
-
-  // @media (min-width: $mg-breakpoint-desktop) {
-  //   max-width: $mg-breakpoint-desktop;
-  // }
 }

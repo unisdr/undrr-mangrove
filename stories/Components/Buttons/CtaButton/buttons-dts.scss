@@ -1,0 +1,156 @@
+.mg-button {
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $mg-gap-button;
+  font-size: $mg-font-size-button;
+  font-weight: 500;
+  line-height: 1.14;
+  border-radius: $mg-radius-button;
+  color: $mg-color-button;
+  cursor: pointer;
+  padding: $mg-padding-button;
+  border: $mg-border-width-button solid $mg-border-color-button;
+
+  @include devicebreak(medium) {
+    display: inline-flex;
+  }
+
+  &:focus-visible {
+    outline: 0;
+  }
+}
+
+.mg-button.mg-button-arrow {
+  &::after {
+    @include transition(0.2s ease);
+
+    background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
+    content: '';
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.mg-button.mg-button-primary {
+  background-color: $mg-color-button-background;
+
+  &:hover {
+    background-color: $mg-color-button-background--hover;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px $mg-color-button-background--hover;
+  }
+}
+
+.mg-button.mg-button-secondary {
+  background-color: $dts-undrr-teal-brand;
+
+  &:hover {
+    background-color: $dts-iris-200;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px $dts-iris-200;
+  }
+}
+
+.mg-button.mg-button-ghost {
+  background-color: $mg-color-white;
+  color: $dts-cerulean-300;
+
+  &.mg-button-arrow {
+    &::after {
+      background: url(#{$img-path-Iconfourback}/tick-ghost-blue.svg) no-repeat left center;
+    }
+  }
+
+  &:hover {
+    background-color: $dts-cerulean-300;
+    color: $mg-color-white;
+  }
+
+  &.mg-button-arrow:hover {
+    &::after {
+      background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
+    }
+  }
+
+  &:focus-visible {
+    background-color: $dts-cerulean-300;
+    color: $mg-color-white;
+    box-shadow: 0 0 0 2px $dts-cerulean-100;
+  }
+
+  &.mg-button-arrow:focus-visible {
+    &::after {
+      background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
+    }
+  }
+}
+
+.mg-button.disabled {
+  background-color: $mg-color-neutral-400;
+  color: $dts-coal-300;
+  pointer-events: none;
+}
+
+.mg-button.mg-button-outline {
+  background-color: $mg-color-white;
+  border-color: $mg-color-button-background;
+  color: $mg-color-button-background;
+
+  &.mg-button-arrow {
+    &::after {
+      background: url(#{$img-path-Iconfourback}/tick-blue.svg) no-repeat left center;
+    }
+  }
+
+  &:hover {
+    border-color: $mg-color-button-background--hover;
+    color: $mg-color-button-background--hover;
+  }
+
+  &.mg-button-arrow:hover {
+    &::after {
+      background: url(#{$img-path-Iconfourback}/tick-sky-blue.svg) no-repeat left center;
+    }
+  }
+
+  &:focus-visible {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #91CAFF66;
+  }
+
+  &.disabled {
+    color: $dts-coal-300;
+    border-color: $dts-coal-300;
+  }
+}
+
+.mg-button.mg-button-arrow.disabled {
+  &::after {
+    background: url(#{$img-path-Iconfourback}/tick-grey.svg) no-repeat left center;
+  }
+}
+
+// [dir='rtl'] {
+//   .button {
+//     &.button-primary {
+//       &.button-arrow {
+//         &::after {
+//           @include transform(rotate(180deg));
+
+//           margin-left: 0;
+//           margin-right: $mg-spacing-25;
+//         }
+
+//         &:hover::after {
+//           @include transform(translate(-50%, 0) rotate(180deg));
+//         }
+//       }
+//     }
+//   }
+// }

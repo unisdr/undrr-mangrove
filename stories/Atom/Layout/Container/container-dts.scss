@@ -1,0 +1,15 @@
+.mg-container {
+  padding: 1rem;
+  margin: 0 auto;
+  max-width: 100%;
+
+  @include devicebreak(medium) {
+    padding: 1.5rem;
+  }
+
+  @include devicebreak(xlarge) {
+    padding: 2rem;
+    max-width: $mg-breakpoint-desktop;
+  }
+
+}

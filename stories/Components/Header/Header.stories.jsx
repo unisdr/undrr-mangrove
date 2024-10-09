@@ -4,8 +4,9 @@ import Header from "./Header";
 // Mock Data for Menu Sections
 const sections = [
   {
-    bannerHeading: "Section 1",
-    bannerDescription: "Description for section 1",
+    title: 'Data',
+    bannerHeading: 'Analytics by country',
+    bannerDescription: 'Gaze upon statistics in wonder...',
     items: [
       {
         title: "Item 1",
@@ -26,8 +27,9 @@ const sections = [
     ],
   },
   {
-    bannerHeading: "Section 2",
-    bannerDescription: "Description for section 2",
+    title: 'Analysis',
+    bannerHeading: 'Analytics by region',
+    bannerDescription: 'Gaze upon statistics in wonder...',
     items: [
       {
         title: "Item 3",

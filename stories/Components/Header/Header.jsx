@@ -1,17 +1,20 @@
 import MegaMenu from "../MegaMenu/MegaMenu";
+import { Container } from "../../Atom/Layout/Container/Container";
 
 const Header = ({ sections }) => {
   return (
     <header>
       <div className='mg-undrr-header'>Global header TBD</div>
-      <div className='mg-dldt-header'>
-        <div className='mg-dldt-header__logo'>
-          <img src='images/dldt-logo-mark.svg' alt='DLDT logo mark'></img>
+      <Container>
+        <div className='mg-dldt-header'>
+          <div className='mg-dldt-header__logo'>
+            <img src='images/dldt-logo-mark.svg' alt='DLDT logo mark'></img>
+          </div>
+          <div className='mg-dldt-header__menu'>
+            <MegaMenu sections={sections} />
+          </div>
         </div>
-        <div className='mg-dldt-header__menu'>
-          <MegaMenu sections={sections} />
-        </div>
-      </div>
+      </Container>
     </header>
   );
 };
