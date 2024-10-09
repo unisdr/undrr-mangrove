@@ -1,27 +1,27 @@
 @mixin devicebreak($point) {
   @if $point == small {
-    /* small design */
-    @media (width <= 47.9375em) {
+    /* small design - up to 769px */
+    @media (width < $mg-breakpoint-tablet-vertical) {
       @content;
     }
   } @else if $point == mediumonlytab {
-    /* medium design tab */
-    @media (width <= 89.9375em) {
+    /* medium design tab - up to 1439px */
+    @media (width < $mg-breakpoint-desktop) {
       @content;
     }
   } @else if $point == medium {
-    /* medium design */
-    @media (width >= 48em) {
+    /* medium design - 768px up */
+    @media (width >= $mg-breakpoint-tablet-vertical) {
       @content;
     }
   } @else if $point == large {
-    /* medium design */
-    @media (width >= 64em) {
+    /* large design - 1024px up */
+    @media (width >= $mg-breakpoint-tablet) {
       @content;
     }
   } @else if $point == xlarge {
-    /* large design */
-    @media (width >= 90em) {
+    /* xlarge design - 1440px up */
+    @media (width >= $mg-breakpoint-desktop) {
       @content;
     }
   }

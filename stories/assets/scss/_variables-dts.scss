@@ -138,12 +138,16 @@ $dts-maps: $dts-stone-600;
 $dts-sky-blue: #4096FF;
 
 /*
- * DTS Colors - END
+ * 
  */
 
 /*
- * DTS overwrites - BEGIN
+ * DTS mg variables overwrite - BEGIN
  */
+
+// Breakpoints
+$mg-breakpoint-tablet-vertical: 768px;
+$mg-breakpoint-desktop: 1440px;
 
 // font-family
 $mg-font-family: "Roboto", "Noto Sans SC", "Noto Sans Arabic", sans-serif;
@@ -156,5 +160,14 @@ $mg-color-button-background--hover: $dts-cerulean-400;
 $mg-radius-button: .6rem;
 $mg-color-button-background--hover: $dts-sky-blue;
 /*
- * DTS overwrites - END
+ * 
  */
+
+/*
+ * DTS new variables - BEGIN
+ */
+//  general container
+ /*
+ * 
+ */
+ 

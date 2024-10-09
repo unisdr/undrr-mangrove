@@ -1,61 +1,52 @@
 import React from 'react';
-// import './grid.scss';
-
 
 export function Grid() {
   return (
     <>
-      <h1>VARIANTS</h1>
-      <hr />
-
-      <h2>1: Auto Layout (mg-grid)</h2>
+      <h2>Auto Layout (mg-grid)</h2>
 
       <div className="mg-grid">
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div>
+          <h3>UNDRR</h3>
+          <p>UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
         </div>
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div>
+          <h3>UNDRR</h3>
+          <p>UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
         </div>
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div>
+          <h3>UNDRR</h3>
+          <p>UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
         </div>
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div>
+          <h3>UNDRR</h3>
+          <p>UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
         </div>
 
       </div>
 
-      <h2>2: Specified Columns Layout - (example - a two-column grid: mg-grid__col-2)</h2>
+      <h2>Specified columns layout</h2>
+      <p>example with a two-column grid: mg-grid__col-2</p>
 
       <div className="mg-grid mg-grid__col-2">
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div>
+          <h3>UNDRR</h3>
+          <p>UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
         </div>
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div>
+          <h3>UNDRR</h3>
+          <p>UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
         </div>
 
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
-        </div>
-
-        <div className="mg-grid__content">
-          <h3 className="mg-grid__heading">UNDRR</h3>
-          <p className="mg-grid__text">UNDRR convenes partners and coordinates activities to create safer, more resilient communities.</p>
+        <div className=" mg-grid__col--span-2">
+          <h3>mg-grid__col--span-2</h3>
+          <p>I use .mg-grid__col--span-2 to span 2 cols!</p>
         </div>
 
       </div>
@@ -64,6 +55,5 @@ export function Grid() {
       </div>
 
     </>
-
   );
 }

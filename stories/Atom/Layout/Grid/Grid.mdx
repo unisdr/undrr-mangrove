@@ -1,7 +1,9 @@
 import { Canvas, Meta, Story, Source} from '@storybook/blocks';
 import { Grid } from './Grid';
+import * as GridStories from './Grid.stories';
 
 <Meta
+  of={GridStories}
   title="Design decisions/Grid layout"
   parameters={{
     viewMode: "docs",
@@ -16,7 +18,7 @@ import { Grid } from './Grid';
 This grid system is based on CSS Grid. The grid comes in two main layouts: auto layout and specified columns layout such as col-2.
 
 <Canvas>
-  <Grid />
+  <Story of={Grid} />
 </Canvas>
 
 ### Usage
