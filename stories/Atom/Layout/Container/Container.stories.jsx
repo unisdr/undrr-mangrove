@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from './Container';
 
 export default {
-  title: 'Atom/Layout/Container',
+  title: 'Design decisions/Container',
   component: Container,
 };
 
