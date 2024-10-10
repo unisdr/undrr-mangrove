@@ -49,6 +49,52 @@ const sections = [
       },
     ],
   },
+  {
+    title: 'About',
+    bannerHeading: 'About',
+    bannerDescription: 'Gaze upon statistics in wonder...',
+    items: [
+      {
+        title: "Item 3",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 3.1", url: "#" },
+          { title: "Sub Item 3.2", url: "#" },
+        ],
+      },
+      {
+        title: "Item 4",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 4.1", url: "#" },
+          { title: "Sub Item 4.2", url: "#" },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Settings',
+    bannerHeading: 'Settings',
+    bannerDescription: 'Gaze upon statistics in wonder...',
+    items: [
+      {
+        title: "Item 3",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 3.1", url: "#" },
+          { title: "Sub Item 3.2", url: "#" },
+        ],
+      },
+      {
+        title: "Item 4",
+        url: "#",
+        subItems: [
+          { title: "Sub Item 4.1", url: "#" },
+          { title: "Sub Item 4.2", url: "#" },
+        ],
+      },
+    ],
+  },
 ];
 
 export default {

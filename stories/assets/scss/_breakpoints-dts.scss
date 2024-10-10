@@ -1,6 +1,6 @@
 @mixin devicebreak($point) {
   @if $point == small {
-    /* small design - up to 769px */
+    /* small design - up to 767px */
     @media (width < $mg-breakpoint-tablet-vertical) {
       @content;
     }

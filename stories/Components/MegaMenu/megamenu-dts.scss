@@ -7,17 +7,25 @@
   justify-content: flex-end;
 
   &__item {
+    display: flex;
+    gap: .5rem;
     font-size: $mg-font-size-400;
     font-weight: 700;
+    line-height: 1;
     color: $dts-coal-700;
     text-transform: uppercase;
     border-bottom: 2px solid transparent;
-    padding: 2rem;
+    padding: 3.2rem;
 
     &:hover {
       color: $dts-undrr-blue-brand;
       background: transparent;
       border-color: $dts-undrr-blue-brand;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
     }
   }
 }
