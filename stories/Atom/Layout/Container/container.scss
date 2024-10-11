@@ -2,6 +2,7 @@
 // $mg-breakpoint-mobile: 480px;
 // $mg-breakpoint-tablet: 768px;
 // $mg-breakpoint-desktop: 1024px;
+// $mg-breakpoint-desktop: 1440px;
 
 .mg-container {
   padding: 1rem;
@@ -19,4 +20,8 @@
   @media (min-width: $mg-breakpoint-desktop) {
     max-width: $mg-breakpoint-desktop;
   }
+
+  @media (min-width: $mg-breakpoint-desktop-wide) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }  
 }
