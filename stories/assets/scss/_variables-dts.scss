@@ -147,6 +147,7 @@ $dts-sky-blue: #4096FF;
 
 // Breakpoints
 $mg-breakpoint-tablet-vertical: 768px;
+$mg-breakpoint-laptop: 1200px;
 $mg-breakpoint-desktop: 1440px;
 
 // font-family
@@ -160,6 +161,9 @@ $mg-color-button-background: $dts-undrr-blue-brand;
 $mg-color-button-background--hover: $dts-cerulean-400;
 $mg-radius-button: .6rem;
 $mg-color-button-background--hover: $dts-sky-blue;
+
+// tabs
+$mg-radius-tab: $mg-spacing-50;
 /*
  * 
  */
@@ -168,7 +172,6 @@ $mg-color-button-background--hover: $dts-sky-blue;
  * DTS new variables - BEGIN
  */
 //  general container
- /*
+/*
  * 
  */
- 

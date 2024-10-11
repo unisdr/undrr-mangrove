@@ -7,7 +7,7 @@
     padding: 1.5rem;
   }
 
-  @include devicebreak(xlarge) {
+  @include devicebreak(large) {
     padding: 2rem;
     max-width: $mg-breakpoint-desktop;
   }

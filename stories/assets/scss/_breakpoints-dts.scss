@@ -4,19 +4,14 @@
     @media (width < $mg-breakpoint-tablet-vertical) {
       @content;
     }
-  } @else if $point == mediumonlytab {
-    /* medium design tab - up to 1439px */
-    @media (width < $mg-breakpoint-desktop) {
-      @content;
-    }
   } @else if $point == medium {
     /* medium design - 768px up */
     @media (width >= $mg-breakpoint-tablet-vertical) {
       @content;
     }
   } @else if $point == large {
-    /* large design - 1024px up */
-    @media (width >= $mg-breakpoint-tablet) {
+    /* large design - 1200px up */
+    @media (width >= $mg-breakpoint-laptop) {
       @content;
     }
   } @else if $point == xlarge {
