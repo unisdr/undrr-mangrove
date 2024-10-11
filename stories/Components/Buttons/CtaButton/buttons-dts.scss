@@ -28,8 +28,8 @@
 
     background: url(#{$img-path-Iconfourback}/tick-white.svg) no-repeat left center;
     content: '';
-    height: 16px;
-    width: 16px;
+    height: $dts-spacing-16;
+    width: $dts-spacing-16;
   }
 }
 
@@ -135,22 +135,3 @@
     background: url(#{$img-path-Iconfourback}/tick-grey.svg) no-repeat left center;
   }
 }
-
-// [dir='rtl'] {
-//   .button {
-//     &.button-primary {
-//       &.button-arrow {
-//         &::after {
-//           @include transform(rotate(180deg));
-
-//           margin-left: 0;
-//           margin-right: $mg-spacing-25;
-//         }
-
-//         &:hover::after {
-//           @include transform(translate(-50%, 0) rotate(180deg));
-//         }
-//       }
-//     }
-//   }
-// }

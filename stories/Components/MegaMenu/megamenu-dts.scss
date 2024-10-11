@@ -1,21 +1,18 @@
-.mg-mega-wrapper {
-  font-family: $dts-menu-font-family;
-}
-
 .mg-mega-topbar {
   background: transparent;
   justify-content: flex-end;
+  font-family: $dts-menu-font-family;
 
   &__item {
     display: flex;
-    gap: .5rem;
+    gap: $dts-spacing-4;
     font-size: $mg-font-size-400;
     font-weight: 700;
     line-height: 1;
     color: $dts-coal-700;
     text-transform: uppercase;
     border-bottom: 2px solid transparent;
-    padding: 3.2rem;
+    padding: $dts-spacing-32;
 
     &:hover {
       color: $dts-undrr-blue-brand;
@@ -24,7 +21,7 @@
     }
 
     svg {
-      width: 16px;
+      width: $dts-spacing-16;
       height: 18px;
     }
   }
@@ -37,7 +34,34 @@
   &__left {
     background-color: $mg-color-white;
   }
+
   &__banner {
+    padding: $dts-spacing-16 $dts-spacing-12;
+    margin-bottom: $dts-spacing-32;
     color: $dts-neutral;
+
+    header {
+      font-size: 1.8rem;
+      line-height: 1.3;
+      font-weight: 500;
+    }
+
+    p {
+      display: none;
+    }
+  }
+}
+
+.mg-mega-content__section-list-item {
+  .mg-mega-content__section-list-link {
+    margin: 0;
+    padding: $dts-spacing-8;
+    border-left: 4px solid transparent;
+    font-weight: 400;
+
+    &--active {
+      background-color: $dts-cerulean-100;
+      border-left: 4px solid $dts-undrr-blue-brand;
+    }
   }
 }

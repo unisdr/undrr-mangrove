@@ -21,7 +21,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   const handleMouseLeave = () => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
-      setSection(null);
+      // setSection(null);
     }, delay);
   };
 

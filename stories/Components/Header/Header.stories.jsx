@@ -5,15 +5,15 @@ import Header from "./Header";
 const sections = [
   {
     title: 'Data',
-    bannerHeading: 'Analytics by country',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    bannerHeading: 'Data management',
+    bannerDescription: '',
     items: [
       {
-        title: "Item 1",
+        title: "Records",
         url: "#",
         subItems: [
-          { title: "Sub Item 1.1", url: "#" },
-          { title: "Sub Item 1.2", url: "#" },
+          { title: "View all records", url: "#" },
+          { title: "Add record", url: "#" },
         ],
       },
       {
@@ -29,7 +29,7 @@ const sections = [
   {
     title: 'Analysis',
     bannerHeading: 'Analytics by region',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    bannerDescription: '',
     items: [
       {
         title: "Item 3",
@@ -52,7 +52,7 @@ const sections = [
   {
     title: 'About',
     bannerHeading: 'About',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    bannerDescription: '',
     items: [
       {
         title: "Item 3",
@@ -75,7 +75,7 @@ const sections = [
   {
     title: 'Settings',
     bannerHeading: 'Settings',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    bannerDescription: '',
     items: [
       {
         title: "Item 3",
