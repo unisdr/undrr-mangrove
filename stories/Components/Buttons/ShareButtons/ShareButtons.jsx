@@ -1,14 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-// import './share-buttons.scss';
-import FacebookIconWhite from './FacebookIconWhite.svg';
-import TwitterIconWhite from './XIconWhite.svg';
-import LinkedInIconWhite from './LinkedInIconWhite.svg';
-import MailIconWhite from './MailIconWhite.svg';
-import CopyIcon from './CopyIcon.svg';
-import CheckIcon from './CheckIcon.svg';
-import LinkIcon from './LinkIcon.svg';
-import WebShareIcon from './WebShareIcon.svg'; // Import the new Web Share icon
 import LinkUrls from "./links.json"
 
 const defaults = {
@@ -78,7 +69,7 @@ const ShareButtons = ({
             aria-label='Share using your device'
             title='Share using your device'
             className='mg-share__button'>
-            <img src={WebShareIcon} alt="Web Share Icon" />
+            <span class="mg-icon fa-share" aria-hidden="true"></span>
           </button>
         )}
         <button
@@ -87,7 +78,7 @@ const ShareButtons = ({
           aria-label='Share on LinkedIn'
           className='mg-share__button'
           title='Share on LinkedIn'  >
-          <img src={LinkedInIconWhite} alt="LinkedIn SVG Image" />
+          <span class="mg-icon fa-linkedin" aria-hidden="true"></span>
         </button>
         <button
           data-vf-analytics-label="Social share: Facebook"
@@ -95,7 +86,7 @@ const ShareButtons = ({
           aria-label='Share on Facebook'
           title='Share on Facebook'
           className='mg-share__button' >
-          <img src={FacebookIconWhite} alt="Facebook SVG Image" />
+          <span class="mg-icon fa-facebook" aria-hidden="true"></span>
         </button>
         <button
           data-vf-analytics-label="Social share: X"
@@ -103,7 +94,7 @@ const ShareButtons = ({
           aria-label='Share on X'
           className='mg-share__button'
           title='Share on X' >
-          <img src={TwitterIconWhite} alt="X SVG Image" />
+          <span class="mg-icon fa-x-social" aria-hidden="true"></span>
         </button>
         <button
           data-vf-analytics-label="Social share: Mail"
@@ -111,7 +102,7 @@ const ShareButtons = ({
           aria-label='Share via Email'
           className='mg-share__button'
           title='Share via Email'  >
-          <img src={MailIconWhite} alt="Mail SVG Image" />
+          <span class="mg-icon fa-envelope" aria-hidden="true"></span>
         </button>
       </div>
 
@@ -150,15 +141,11 @@ export function CopyButton({ copiedLabel, sharedLink,  className }) {
   return (
     <button data-vf-analytics-label="Quick link copy" aria-label='Copy to Clipboard' title='Copy to Clipboard' className={className} onClick={() => handleCopyLink()}>
       <div className='mg-share__clip-icon'>
-        <img src={LinkIcon} alt="Link Icon" />
+        <span class="mg-icon fa-link" aria-hidden="true"></span>
       </div>
       <div className='mg-share__copy-text'>{coppied ? copiedLabel : visibleLink}</div>
       <div className='mg-share__stack-icon'>
-        {
-          coppied ?
-            <img src={CheckIcon} alt="check Icon" /> :
-            <img src={CopyIcon} alt="copy Icon" />
-        }
+        <span class="mg-icon fa-clone" alt="Copy icon"></span>
       </div>
     </button>)
 }

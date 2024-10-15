@@ -6,9 +6,9 @@
   @extend %select_default;
   @include x-appearance(none);
 
-  background:
-    $mg-color-white url(#{$img-path-Icon}/chevron-down.svg) no-repeat
-    right 22px center;
+  // background:
+  //   $mg-color-white url(#{$img-path-Icon}/chevron-down.svg) no-repeat
+  //   right 22px center;
   border-radius: 0;
   color: $mg-color-black;
   display: block;

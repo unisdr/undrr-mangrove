@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Icons } from "../../../Atom/Icons/Icons";
-import chevronLeftIcon from "../../../assets/icons/chevron-left.svg"
+import chevronLeftIcon from "../../../assets/icons/chevron-left-circle.svg"
 
 function SidebarSection ({ section, display, onClick }) {
   const [itemIndex, setItemIndex] = useState(null);

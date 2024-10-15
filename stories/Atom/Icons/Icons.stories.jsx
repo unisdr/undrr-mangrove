@@ -1,4 +1,4 @@
-import { Icons } from "./Icons";
+// import { Icons } from "./Icons";
 import data from "./Icons.json";
 
 export default {
@@ -18,23 +18,18 @@ const Template = (args) => (
   <div className="icons-container">
     {args.icons.map((item, index) => {
       let content;
-      if (item.type === "img") {
-        content = <img src={`icons/${item.name}.svg`} alt={item.label} />;
-      } else {
-        // For animated or other special icons, additional class names can be conditionally added
-        let classNames =
-          item.name + (item.name.includes("animated") ? " animated" : "");
-        content = (
-          <span className={classNames}>
-            <i></i>
-          </span>
-        ); // Assuming that icons use <i> for CSS-based icons
-      }
+      // content = <span class="`fa-${item.name}`" alt={item.label} />;
+      let classNames =
+        "mg-icon fa-" + item.name 
+        // + (item.name.includes("animated") ? " animated" : "");
+      content = (
+        <span className={classNames}></span>
+      ); // Assuming that icons use <i> for CSS-based icons
       return (
-        <div key={index}>
+        <p key={index}>
           {content}
-          <p>{item.label}</p>
-        </div>
+            &nbsp;<span>{item.label} <code>{classNames}</code></span>
+        </p>
       );
     })}
   </div>
@@ -51,10 +46,7 @@ export const DefaultIcons = {
       source: {
         code: data.icons
           .map((item) => {
-            if (item.type === "img") {
-              return `<img src="icons/${item.name}.svg" alt="${item.label}" />\n`;
-            }
-            return `<span class="${item.name}${item.name.includes("animated") ? " animated" : ""}"><i></i></span>\n`;
+            return `<span class="mg-icon fa-${item.name}${item.name.includes("animated") ? " animated" : ""}"></span>\n`;
           })
           .join(""),
       },

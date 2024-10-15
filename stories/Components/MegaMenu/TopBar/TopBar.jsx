@@ -2,8 +2,8 @@ import React from "react";
 import { TopBarItem } from "./TopBarItem";
 import { TopBarIconButton } from "./TopBarIconButton.jsx";
 import { useBreakpoint } from "./hook.js";
-import hamburger from "../../../assets/icons/hamburger.svg"
-import close from "../../../assets/icons/times.svg"
+import hamburger from "../../../assets/icons/arrow-right.svg"
+import close from "../../../assets/icons/arrow-right.svg"
 
 export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }) {
 

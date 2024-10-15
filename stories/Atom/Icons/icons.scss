@@ -2,172 +2,173 @@
 // @import '../../assets/scss/breakpoints';
 // @import '../../assets/scss/mixins';
 
-/* icon start */
+// A basic Fontawesome shim for our custom UNDRR font face.
+//
+// This allows us to:
+// 1. not load a massive FA library
+// 2. be flexible for any cusotmisation we need
+// 3. move forward with our migration to Mangrove without breaking legacy compatiablity
+//
+// More at: https://gitlab.com/undrr/web-backlog/-/issues/927
+//
+// Most of the font references are pulled from
+// https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
 
-.icon--bar {
-  cursor: pointer;
+$FontPath: "../../assets/fonts/mangrove-icon-set/font";
+@font-face {
+  font-family: "FontAwesome";
+  font-weight: normal;
+  src:
+    url("#{$FontPath}/mangrove-icon-set.ttf") format("ttf"),
+    url("#{$FontPath}/mangrove-icon-set.woff2") format("woff2");
 }
 
-.chevron-right-animated {
-  @extend %chevron-right-expanded;
-
-  display: inline-block;
-  max-width: 6rem;
-  width: 100%;
+.mg-icon,
+.fa-before:before,
+.fab,
+.fas,
+.fa {
+  font-family: "FontAwesome";
+  font-style: normal;
 }
 
-.external-link-animated {
-  box-shadow:
-    -2px 2px 0 0 $mg-color-red-900,
-    -4px 0 0 -2px $mg-color-red-900,
-    -3px 3px 0 -1px $mg-color-red-900;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-block;
-  height: $mg-spacing-25;
-  margin-left: -2px;
-  position: relative;
-  width: $mg-spacing-25;
-
-  &::before {
-    @extend %pseudo-icon;
-    @include transform(rotate(-45deg) translate(0, 0));
-    @include transition(all 0.3s);
-
-    background: $mg-color-red-900;
-    height: 2px;
-    right: 0;
-    top: 3.5px;
-    width: 0.625rem;
-  }
-
-  &::after {
-    @extend %pseudo-icon;
-    @include transition(transform 0.3s);
-    @include transform(translate(0, 0));
-
-    border-right: 2px solid $mg-color-red-900;
-    border-top: 2px solid $mg-color-red-900;
-    height: $mg-spacing-25;
-    right: 0;
-    top: 0;
-    width: $mg-spacing-25;
-  }
-
-  &:hover {
-    &::after {
-      @include transform(translate(5px, -5px));
-    }
-
-    &::before {
-      @include transform(rotate(-45deg) translate(7px, 0));
-    }
-  }
+.fa-before:before {
+  padding-right: 0.5em;
 }
 
-.download-animated {
-  align-items: flex-end;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: flex;
-  height: 12px;
-  position: relative;
+// .fa-lg {
+//   font-size: 1.33333333em;
+//   line-height: 0.75em;
+//   vertical-align: -15%;
+// }
 
-  i {
-    border: 2px solid $mg-color-red-900;
-    border-top: 0;
-    box-sizing: content-box;
-    display: block;
-    height: 6px;
-    width: 1.125rem;
-  }
-
-  &::after {
-    @extend %pseudo-icon;
-    @include transform(rotate(-45deg) translate(0, 0));
-    @include transition(all 0.3s);
-
-    border-bottom: 2px solid $mg-color-red-900;
-    border-left: 2px solid $mg-color-red-900;
-    bottom: 6px;
-    height: 8px;
-    left: 7px;
-    width: 8px;
-  }
-
-  &::before {
-    @extend %pseudo-icon;
-    @include transform(translate(0, 0));
-    @include transition(all 0.3s);
-
-    background: $mg-color-red-900;
-    bottom: 7px;
-    height: 10px;
-    left: 10px;
-    width: 2px;
-  }
-
-  &:hover {
-    &::after {
-      @include transform(rotate(-45deg) translate(7px, -7px));
-    }
-
-    &::before {
-      @include transform(translate(0, -10px));
-    }
-  }
+.fa-2x {
+  font-size: 2em;
 }
 
-[dir="rtl"] {
-  .chevron-right-animated {
-    @include transform(translate(0) rotate(180deg));
-
-    &:hover {
-      @include transform(translate(-10px) rotate(180deg));
-    }
-  }
-
-  .external-link-animated {
-    @include transform(rotate(270deg));
-
-    &:hover {
-      @include transform(rotate(270deg));
-    }
-  }
+.fa-rss:before {
+  content: "\f09e";
 }
 
-.icons-container {
-  display: flex;
-  flex-wrap: wrap;
-
-  > div > div {
-    margin: 0 auto;
-  }
-
-  p {
-    font-size: 14px;
-    margin-top: 10px;
-  }
+.fa-file-alt:before {
+  content: "\f15c";
 }
 
-// For doc styling only
-#story--foundation-icons--icons > .icons-container > div {
-  align-items: center;
-  background: $mg-color-neutral-300;
-  border: 1px solid $mg-color-neutral-400;
-  box-shadow: 2px 2px 4px $mg-color-neutral-300;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 0 $mg-spacing-50 $mg-spacing-150;
-  padding: $mg-spacing-50 $mg-spacing-25;
-  text-align: center;
-  width: calc(100% - 2rem);
-
-  @include devicebreak(medium) {
-    width: calc(25% - 2rem);
-  }
+.fa-facebook:before {
+  content: "\f230";
 }
 
-/* icon end */
+.fa-x-social:before,
+.fa-twitter:before {
+  content: "\f099";
+}
+
+.fa-linkedin:before {
+  content: "\f0e1";
+}
+
+.fa-flickr:before {
+  content: "\f16e";
+}
+
+.fa-youtube:before {
+  content: "\f16a";
+}
+
+.fa-search:before {
+  content: "\e808";
+}
+
+.fa-envelope:before,
+.fa-envelope-o:before {
+  content: "\e806";
+}
+
+.fa-newspaper:before {
+  content: "\f1ea";
+}
+
+.fa-chart-bar:before {
+  content: "\e80B";
+}
+
+.fa-file:before {
+  content: "\f15b";
+}
+
+.fa-graduation-cap:before {
+  content: "\f19D";
+}
+
+.fa-calendar-alt:before {
+  content: "\f133";
+}
+
+.fa-building:before {
+  content: "\f0F7";
+}
+
+.fa-pen-nib:before {
+  content: "\f0f6";
+}
+
+.fa-business-time:before {
+  content: "\e809";
+}
+
+.fa-code-branch:before {
+  content: "\f126";
+}
+
+.fa-life-ring:before {
+  content: "\f1cd";
+}
+
+.fa-lightbulb:before {
+  content: "\f0eb";
+}
+
+.fa-cubes:before {
+  content: "\f1b3";
+}
+
+.fa-bar-chart:before {
+  content: "\e80B";
+}
+
+.fa-sort-alpha-down::before,
+.fa-tags:before {
+  content: "\e800";
+}
+
+.fa-landmark:before {
+  content: "\f19c";
+}
+
+.fa-power-off:before {
+  content: "\f090";
+}
+
+.fa-user:before {
+  content: "\e805";
+}
+
+.fa-times:before {
+  content: "\f00d";
+}
+
+.fa-link:before {
+  content: "\e802";
+}
+
+.fa-clone:before {
+  content: "\f24d";
+}
+
+.fa-globe:before {
+  content: "\f0ac";
+}
+
+.fa-share:before {
+  content: "\f1e0";
+}
