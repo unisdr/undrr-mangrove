@@ -11,7 +11,7 @@ import themeDts from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loa
 import cssVariablesTheme from "@etchteam/storybook-addon-css-variables-theme";
 
 // include fonts globally
-import "../stories/assets/scss/_fonts.scss";
+import "../stories/assets/scss/_fonts-dts.scss";
 
 // Configure Storybook
 export const parameters = {

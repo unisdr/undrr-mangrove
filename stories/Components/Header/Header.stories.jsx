@@ -12,39 +12,223 @@ const sections = [
         title: "Records",
         url: "#",
         subItems: [
-          { title: "View all records", url: "#" },
-          { title: "Add record", url: "#" },
+          {
+            title: "Records",
+            url: "#",
+            subsubItems: [
+              {
+                title: "View all records",
+                url: "#",
+              },
+              {
+                title: "Add record",
+                url: "#",
+              },
+              {
+                title: "Import record",
+                url: "#",
+              },
+              {
+                title: "View imported records",
+                url: "#",
+              },
+              {
+                title: "[Instance-name] created records",
+                url: "#",
+              },
+              {
+                title: "Records for hydro-met events",
+                url: "#",
+              },
+            ],
+          },
+          {
+            title: "Manage records",
+            url: "#",
+            subsubItems: [
+              {
+                title: "Edit record",
+                url: "#",
+              },
+              {
+                title: "Import records",
+                url: "#",
+              },
+              {
+                title: "Validate record",
+                url: "#",
+              },
+              {
+                title: "Publish record",
+                url: "#",
+              },
+            ],
+          },
+          {
+            title: "Understanding Records",
+            url: "#",
+            subsubItems: [
+              {
+                title: "What are records?",
+                url: "#",
+              },
+              {
+                title: "About the DLDT methodology",
+                url: "#",
+              },
+            ],
+          },
+          {
+            title: "Help and how-to",
+            url: "#",
+            subsubItems: [
+              {
+                title: "Adding and editing records help",
+                url: "#",
+              },
+              {
+                title: "How to import records",
+                url: "#",
+              },
+            ],
+          },
         ],
       },
       {
-        title: "Item 2",
+        title: "Events",
         url: "#",
         subItems: [
-          { title: "Sub Item 2.1", url: "#" },
-          { title: "Sub Item 2.2", url: "#" },
+          {
+            title: "View all events",
+            url: "#",
+            subsubItems: [
+              {
+                title: "Add event",
+                url: "#",
+              },
+              {
+                title: "Import event",
+                url: "#",
+              },
+              {
+                title: "Hydrological events",
+                url: "#",
+              },
+              {
+                title: "Meteorological events",
+                url: "#",
+              },
+              {
+                title: "Hydro-met events (combined list)",
+                url: "#",
+              },
+              {
+                title: "Climatological events",
+                url: "#",
+              },
+              {
+                title: "Biological events",
+                url: "#",
+              },
+              {
+                title: "Extraterrestrial events",
+                url: "#",
+              },
+              {
+                title: "Geophysical events",
+                url: "#",
+              },
+            ],
+          },
+          {
+            title: "Understanding events",
+            url: "#",
+            subsubItems: [
+              {
+                title: "What are events?",
+                url: "#",
+              },
+              {
+                title: "What are hazards?",
+                url: "#",
+              },
+              {
+                title: "Hydro-met events and WMO-CHE ID numbers",
+                url: "#",
+              },
+            ],
+          },
+          {
+            title: "Help and how-to",
+            url: "#",
+            subsubItems: [
+              {
+                title: "Adding and editing events help",
+                url: "#",
+              },
+              {
+                title: "Preventing duplicate events",
+                url: "#",
+              },
+              {
+                title: "How to import events",
+                url: "#",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Exports",
+        url: "#",
+        subItems: [
+          {
+            title: "Exports",
+            url: "#",
+            subsubItems: [
+              {
+                title: "Create export",
+                url: "#",
+              },
+            ],
+          },
+          {
+            title: "Help and how-to",
+            url: "#",
+            subsubItems: [
+              {
+                title: "Adding and editing baseline data",
+                url: "#",
+              },
+              {
+                title: "How to import baseline data",
+                url: "#",
+              },
+            ],
+          },
         ],
       },
     ],
   },
   {
     title: 'Analysis',
-    bannerHeading: 'Analytics by region',
+    bannerHeading: 'Analysis',
     bannerDescription: '',
     items: [
       {
-        title: "Item 3",
+        title: "Impact by hazard type",
         url: "#",
         subItems: [
-          { title: "Sub Item 3.1", url: "#" },
-          { title: "Sub Item 3.2", url: "#" },
-        ],
-      },
-      {
-        title: "Item 4",
-        url: "#",
-        subItems: [
-          { title: "Sub Item 4.1", url: "#" },
-          { title: "Sub Item 4.2", url: "#" },
+          {
+            title: "Hazards",
+            url: "#",
+            subsubItems: [
+              {
+                title: "View all hazards",
+                url: "#",
+              },
+            ],
+          },
         ],
       },
     ],
@@ -55,19 +239,19 @@ const sections = [
     bannerDescription: '',
     items: [
       {
-        title: "Item 3",
+        title: "General",
         url: "#",
         subItems: [
-          { title: "Sub Item 3.1", url: "#" },
-          { title: "Sub Item 3.2", url: "#" },
-        ],
-      },
-      {
-        title: "Item 4",
-        url: "#",
-        subItems: [
-          { title: "Sub Item 4.1", url: "#" },
-          { title: "Sub Item 4.2", url: "#" },
+          {
+            title: "General",
+            url: "#",
+            subsubItems: [
+              {
+                title: "General about",
+                url: "#",
+              },
+            ],
+          },
         ],
       },
     ],
@@ -78,19 +262,19 @@ const sections = [
     bannerDescription: '',
     items: [
       {
-        title: "Item 3",
+        title: "Access management",
         url: "#",
         subItems: [
-          { title: "Sub Item 3.1", url: "#" },
-          { title: "Sub Item 3.2", url: "#" },
-        ],
-      },
-      {
-        title: "Item 4",
-        url: "#",
-        subItems: [
-          { title: "Sub Item 4.1", url: "#" },
-          { title: "Sub Item 4.2", url: "#" },
+          {
+            title: "Users",
+            url: "#",
+            subsubItems: [
+              {
+                title: "View all users",
+                url: "#",
+              },
+            ],
+          },
         ],
       },
     ],

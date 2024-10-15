@@ -165,9 +165,11 @@ $dts-spacing-96: 9.6rem;
  */
 
 // Breakpoints
-$mg-breakpoint-tablet-vertical: 768px;
-$mg-breakpoint-laptop: 1200px;
-$mg-breakpoint-desktop: 1440px;
+$mg-breakpoint-mobile: 480px;
+$mg-breakpoint-tablet: 768px;
+$mg-breakpoint-laptop: 1024px;
+$mg-breakpoint-desktop: 1164px;
+$mg-breakpoint-desktop-wide: 1440px;
 
 // font-family
 $mg-font-family: "Roboto", "Noto Sans SC", "Noto Sans Arabic", sans-serif;

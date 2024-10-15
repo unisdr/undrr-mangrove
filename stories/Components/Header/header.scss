@@ -3,12 +3,31 @@
   justify-content: space-between;
   height: 108px;
 
-  @include devicebreak(large) {
-    height: 85px;
+  @include devicebreak(small) {
+    height: 86px;
   }
 
-  &__logo img {
-    height: 100%;
+  &__logo {
+    position: relative;
+    max-height: 86px;
+    padding: 11px 0;
+
+    @include devicebreak(small) {
+      padding: 0;
+    }
+
+    img {
+      height: 100%;
+    }
+
+    &-text {
+      display: none;
+
+      @include devicebreak(large) {
+        position: absolute;
+        display: inline;
+      }
+    }
   }
 
   &__menu {

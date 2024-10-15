@@ -12,4 +12,8 @@
     max-width: $mg-breakpoint-desktop;
   }
 
+  @include devicebreak(xlarge) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }
+
 }
