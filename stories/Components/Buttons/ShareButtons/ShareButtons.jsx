@@ -2,18 +2,20 @@ import React from "react";
 import { useState, useEffect } from "react";
 // import './share-buttons.scss';
 import FacebookIconWhite from './FacebookIconWhite.svg';
-import TwitterIconWhite from './TwitterIconWhite.svg';
+import TwitterIconWhite from './XIconWhite.svg';
 import LinkedInIconWhite from './LinkedInIconWhite.svg';
 import MailIconWhite from './MailIconWhite.svg';
 import CopyIcon from './CopyIcon.svg';
 import CheckIcon from './CheckIcon.svg';
 import LinkIcon from './LinkIcon.svg';
+import WebShareIcon from './WebShareIcon.svg'; // Import the new Web Share icon
 import LinkUrls from "./links.json"
 
 const defaults = {
   defaultSharingTextBody: "Check out this link: ",
   defaultSharingTextSubject: "Sharing Link",
 }
+
 /**
 *  ShareButtons is a Component that renders buttons to share on platforms like twitter, facebook, linkedin and others
 *  @param {Object} labels - should contain language specific values like:
@@ -21,7 +23,6 @@ const defaults = {
 *                           onCopy: "Copied"
 *  @param {string} SharingSubject - subject of the Email that will be prefilled to the user
 *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
-
 */
 const ShareButtons = ({
   labels,
@@ -30,24 +31,7 @@ const ShareButtons = ({
   // CustomUrl,
   ...props
 }) => {
-  /**
-   * for now it is getting the local url and not the Custom link
-   * TODO: getting the link that is shared- if not provided, get location href
-   *  let SharedLink = CustomLink
-   *  if ( CutomLink === '' || CutomLink === undefined || CutomLink === null) {
-   *    SharedLink = window.location.href;
-   *  }
-   *  else {
-   *    SharedLink = CutomLink;
-   *  }
-   * return SharedLink;
-   *
- **/
 
-  /**
-   * Function to get the link to share. It checks for a <link rel="shortlink" href="{url here}" /> in the document.
-   * If found, it uses that URL; otherwise, it falls back to the full page URL.
-   */
   const getLinkToShare = () => {
     const shortlinkElement = document.querySelector('link[rel="shortlink"]');
     return shortlinkElement ? shortlinkElement.href : window.location.href;
@@ -55,11 +39,6 @@ const ShareButtons = ({
 
   const sharedLink = getLinkToShare();
 
-  /**
-   * Function that returns Encoded URL with the prefilled Values from the links.json
-   *  @param {string} Platform - Platform that will determine the link url from links Json
-   * @returns string executeLink - example: https://twitter.com/intent/tweet?text=Look%20at%20this%3A%20http%3A%2F%2Flocalhost%3A6006%2Fiframe.html%3FviewMode%3Dstory%26id%3Dcomponents-buttons-sharebuttons--share-buttons%26args%3D
- **/
   const getShareableLinkForPlatform = (Platform) => {
     let baseLink = LinkUrls[Platform];
     const subject = encodeURIComponent(SharingSubject ?? defaults.defaultSharingTextSubject);
@@ -69,21 +48,39 @@ const ShareButtons = ({
   }
 
   const handleClick = (Platform) => {
-    var executableLink = getShareableLinkForPlatform(Platform)
-
-    //  Mail opens the link with a different method
-    if (Platform === "Mail") {
-      window.location.href = executableLink; // Opens the default email client
-      return
+    if (Platform === "WebShare" && navigator.share) {
+      // Use the Web Share API
+      navigator.share({
+        title: SharingSubject ?? defaults.defaultSharingTextSubject,
+        text: SharingTextBody ?? defaults.defaultSharingTextBody,
+        url: sharedLink,
+      }).catch((error) => console.error('Error sharing', error));
     } else {
-      window.open(executableLink, '_blank', 'width=600,height=400');
+      // Fallback to the existing behavior
+      var executableLink = getShareableLinkForPlatform(Platform);
+
+      if (Platform === "Mail") {
+        window.location.href = executableLink; // Opens the default email client
+      } else {
+        window.open(executableLink, '_blank', 'width=600,height=300');
+      }
     }
   };
 
   return (
     <section data-vf-google-analytics-region="share-this" className="mg-share"  {...props}>
-      <header class="mg-share__header">{labels.mainLabel}</header>
+      <header className="mg-share__header">{labels.mainLabel}</header>
       <div className='mg-share__buttons'>
+        {navigator.share && (
+          <button
+            data-vf-analytics-label="Social share: Web Share API"
+            onClick={() => handleClick("WebShare")}
+            aria-label='Share using your device'
+            title='Share using your device'
+            className='mg-share__button'>
+            <img src={WebShareIcon} alt="Web Share Icon" />
+          </button>
+        )}
         <button
           data-vf-analytics-label="Social share: LinkedIn"
           onClick={() => handleClick("LinkedIn")}
@@ -128,9 +125,9 @@ const ShareButtons = ({
 *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
 *  @param {string} sharedLink - the link that will be coppied
 */
-export function CopyButton({ copiedLabel, sharedLink, className }) {
+export function CopyButton({ copiedLabel, sharedLink,  className }) {
   const [coppied, setCoppied] = useState(false);
-  const [visibleLink, setVisibleLink] = useState(sharedLink);
+  const [ visibleLink, setVisibleLink ] = useState(sharedLink);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sharedLink);
