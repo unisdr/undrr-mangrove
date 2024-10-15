@@ -30,7 +30,6 @@ const ShareButtons = ({
   // CustomUrl,
   ...props
 }) => {
-
   /**
    * for now it is getting the local url and not the Custom link
    * TODO: getting the link that is shared- if not provided, get location href
@@ -44,12 +43,17 @@ const ShareButtons = ({
    * return SharedLink;
    *
  **/
+
+  /**
+   * Function to get the link to share. It checks for a <link rel="shortlink" href="{url here}" /> in the document.
+   * If found, it uses that URL; otherwise, it falls back to the full page URL.
+   */
   const getLinkToShare = () => {
-    return window.location.href;
+    const shortlinkElement = document.querySelector('link[rel="shortlink"]');
+    return shortlinkElement ? shortlinkElement.href : window.location.href;
   }
 
-
-  const sharedLink = getLinkToShare()
+  const sharedLink = getLinkToShare();
 
   /**
    * Function that returns Encoded URL with the prefilled Values from the links.json
@@ -67,20 +71,27 @@ const ShareButtons = ({
   const handleClick = (Platform) => {
     var executableLink = getShareableLinkForPlatform(Platform)
 
-    //  mail have different way to open the link
+    //  Mail opens the link with a different method
     if (Platform === "Mail") {
       window.location.href = executableLink; // Opens the default email client
       return
     } else {
-      window.open(executableLink, '_blank', 'width=600,height=300');
+      window.open(executableLink, '_blank', 'width=600,height=400');
     }
-
   };
 
   return (
     <section data-vf-google-analytics-region="share-this" className="mg-share"  {...props}>
       <header class="mg-share__header">{labels.mainLabel}</header>
       <div className='mg-share__buttons'>
+        <button
+          data-vf-analytics-label="Social share: LinkedIn"
+          onClick={() => handleClick("LinkedIn")}
+          aria-label='Share on LinkedIn'
+          className='mg-share__button'
+          title='Share on LinkedIn'  >
+          <img src={LinkedInIconWhite} alt="LinkedIn SVG Image" />
+        </button>
         <button
           data-vf-analytics-label="Social share: Facebook"
           onClick={() => handleClick("Facebook")}
@@ -90,22 +101,12 @@ const ShareButtons = ({
           <img src={FacebookIconWhite} alt="Facebook SVG Image" />
         </button>
         <button
-          data-vf-analytics-label="Social share: Twitter"
+          data-vf-analytics-label="Social share: X"
           onClick={() => handleClick("Twitter")}
-          aria-label='Share on Twitter'
+          aria-label='Share on X'
           className='mg-share__button'
-          title='Share on Twitter' >
-          <img src={TwitterIconWhite} alt="Twitter SVG Image" />
-
-        </button>
-        <button
-          data-vf-analytics-label="Social share: LinkedIn"
-          onClick={() => handleClick("LinkedIn")}
-          aria-label='Share on LinkedIn'
-          className='mg-share__button'
-          title='Share on LinkedIn'  >
-          <img src={LinkedInIconWhite} alt="LinkedIn SVG Image" />
-
+          title='Share on X' >
+          <img src={TwitterIconWhite} alt="X SVG Image" />
         </button>
         <button
           data-vf-analytics-label="Social share: Mail"
@@ -121,14 +122,15 @@ const ShareButtons = ({
     </section>
   );
 }
+
 /**
 *  CopyButton
 *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
 *  @param {string} sharedLink - the link that will be coppied
 */
-export function CopyButton({ copiedLabel, sharedLink,  className }) {
+export function CopyButton({ copiedLabel, sharedLink, className }) {
   const [coppied, setCoppied] = useState(false);
-  const [ visibleLink, setVisibleLink ] = useState(sharedLink);
+  const [visibleLink, setVisibleLink] = useState(sharedLink);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sharedLink);
@@ -140,14 +142,13 @@ export function CopyButton({ copiedLabel, sharedLink,  className }) {
     let newVisibleLink = sharedLink;
     //replace https only if it is in the beginning of the URL
     if (sharedLink.startsWith("https://")) {
-        //replace replaces only first occurence
+      //replace replaces only first occurence
       newVisibleLink = sharedLink.replace("https://", "");
-    }else if (sharedLink.startsWith("http://")) {
+    } else if (sharedLink.startsWith("http://")) {
       newVisibleLink = sharedLink.replace("http://", "");
     }
     setVisibleLink(newVisibleLink);
   }, [sharedLink])
-
 
   return (
     <button data-vf-analytics-label="Quick link copy" aria-label='Copy to Clipboard' title='Copy to Clipboard' className={className} onClick={() => handleCopyLink()}>
@@ -156,16 +157,13 @@ export function CopyButton({ copiedLabel, sharedLink,  className }) {
       </div>
       <div className='mg-share__copy-text'>{coppied ? copiedLabel : visibleLink}</div>
       <div className='mg-share__stack-icon'>
-
         {
           coppied ?
             <img src={CheckIcon} alt="check Icon" /> :
             <img src={CopyIcon} alt="copy Icon" />
         }
-
       </div>
     </button>)
 }
-
 
 export default ShareButtons;
