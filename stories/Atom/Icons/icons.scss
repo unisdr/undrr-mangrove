@@ -14,13 +14,12 @@
 // Most of the font references are pulled from
 // https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
 
-$FontPath: "../../assets/fonts/mangrove-icon-set/font";
 @font-face {
   font-family: "FontAwesome";
   font-weight: normal;
   src:
-    url("#{$FontPath}/mangrove-icon-set.ttf") format("ttf"),
-    url("#{$FontPath}/mangrove-icon-set.woff2") format("woff2");
+    url("#{$mgIconFontPath}/mangrove-icon-set.ttf") format("ttf"),
+    url("#{$mgIconFontPath}/mangrove-icon-set.woff2") format("woff2");
 }
 
 .mg-icon,
