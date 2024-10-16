@@ -32,5 +32,12 @@
 
   &__menu {
     flex-grow: 1;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+    @include devicebreak(small) {
+      display: block;
+    }
   }
 }

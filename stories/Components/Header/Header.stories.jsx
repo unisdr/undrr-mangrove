@@ -13,7 +13,7 @@ const sections = [
         url: "#",
         subItems: [
           {
-            title: "Records",
+            title: "View records",
             url: "#",
             subsubItems: [
               {

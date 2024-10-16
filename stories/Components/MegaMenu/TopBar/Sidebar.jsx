@@ -5,14 +5,23 @@ import chevronLeftIcon from "../../../assets/icons/chevron-left.svg"
 
 function SidebarSection ({ section, display, onClick }) {
   const [itemIndex, setItemIndex] = useState(null);
+  const [subItemIndex, setSubItemIndex] = useState(null);
 
   const onItemToggle = (index) => {
     if (index === itemIndex) {
-      setItemIndex(null);
-      return
+        setItemIndex(null);
+        return;
     }
     setItemIndex(index);
-  }
+  };
+
+  const onsubItemToggle = (index) => {
+      if (index === subItemIndex) {
+          setSubItemIndex(null);
+          return;
+      }
+      setSubItemIndex(index);
+  };
 
   return (
     <div className="mg-mega-sidebar-section">
@@ -29,7 +38,7 @@ function SidebarSection ({ section, display, onClick }) {
                   <div
                     onClick={() => onItemToggle(index)} className="mg-mega-sidebar-section__item"
                   >
-                    <span>{section.title}</span>
+                    <span>{item.title}</span>
                     <Icons src={chevronLeftIcon} />
                   </div>
                   {
@@ -38,7 +47,26 @@ function SidebarSection ({ section, display, onClick }) {
                         {
                           item.subItems.map((subItem, index) => (
                             <li key={index}>
-                              <a href={subItem.url}>{subItem.title}</a>
+
+                              <div
+                                onClick={() => onsubItemToggle(index)} className="mg-mega-sidebar-section__item"
+                              >
+                                <span>{subItem.title}</span>
+                                <Icons src={chevronLeftIcon} />
+                              </div>
+                              {
+                                index === subItemIndex && (
+                                  <ol>
+                                    {
+                                      subItem.subsubItems.map((subsubItem, index) => (
+                                        <li key={index}>
+                                          <a href={subsubItem.url}>{subsubItem.title}</a>
+                                        </li>
+                                      ))
+                                    }
+                                  </ol>
+                                )
+                              }
                             </li>
                           ))
                         }
@@ -67,14 +95,12 @@ export function Sidebar({ sections }) {
   }
 
   return (
-    <div className="sidebar">
-      <div>
-        {
-          sections.map((section, index) => (
-            <SidebarSection section={section} key={index} display={sectionIndex === index} onClick={() => onSectionToggle(index)}/>
-          ))
-        }
-      </div>
+    <div className="mg-mega-content__sidebar">
+      {
+        sections.map((section, index) => (
+          <SidebarSection section={section} key={index} display={sectionIndex === index} onClick={() => onSectionToggle(index)}/>
+        ))
+      }
     </div>
   )
 } 

@@ -3,6 +3,19 @@
   justify-content: flex-end;
   font-family: $dts-menu-font-family;
 
+  &__icon-button {
+    display: flex;
+
+    @include devicebreak(small) {
+      display: none;
+    }
+
+    &:hover {
+      background-color: $mg-color-white;
+      color: inherit;
+    }
+  }
+
   &__item {
     display: flex;
     gap: $dts-spacing-4;
@@ -59,6 +72,13 @@
       display: none;
     }
   }
+
+  &__sidebar {
+    position: absolute;
+    width: 75vw;
+    top: 100%;
+    right: 0;
+  }
 }
 
 .mg-mega-content__left {
@@ -107,5 +127,23 @@
     font-size: 1.6rem;
     font-weight: 700;
     margin-bottom: $dts-spacing-16;
+  }
+}
+
+.mg-mega-sidebar-section {
+  &__item {
+    color: inherit;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  ol ol li a {
+    color: inherit;
+  }
+
+  ol ol li:hover {
+    background: transparent;
   }
 }
