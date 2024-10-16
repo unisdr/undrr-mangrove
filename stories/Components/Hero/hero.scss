@@ -28,6 +28,12 @@
     ); // to keep the overlay fixed
   }
 
+  @media (min-width: $mg-breakpoint-desktop-wide) {
+    padding-left: calc(
+      50vw - calc($mg-breakpoint-desktop-wide / 2)
+    ); // to keep the overlay fixed
+  }
+
   // Button overrides
   a.mg-button-primary {
     background-color: $mg-color-neutral-0;
@@ -186,6 +192,12 @@ $variant-colours: (
   @media (min-width: $mg-breakpoint-tablet) {
     padding-right: calc(
       50vw - calc($mg-breakpoint-desktop / 2)
+    ); // to keep the overlay fixed
+  }
+
+  @media (min-width: $mg-breakpoint-desktop-wide) {
+    padding-right: calc(
+      50vw - calc($mg-breakpoint-desktop-wide / 2)
     ); // to keep the overlay fixed
   }
 }

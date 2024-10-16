@@ -1,0 +1,47 @@
+import { Canvas, Meta, Story, Source} from '@storybook/blocks';
+import { Container } from './Container';
+import * as ContainerStories from './Container.stories';
+
+<Meta
+  of={ContainerStories}
+  title="Design decisions/Container"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Container
+
+Use the `Container` component (`.mg-container`) to establish a basic page width that is responsive.
+
+<Canvas>
+  <Story name="Default">
+    <Container>
+      <h1>Responsive Container</h1>
+      <p>This container adjusts its width based on the screen size.</p>
+    </Container>
+  </Story>
+</Canvas>
+
+## Breakpoints
+
+The component uses the following SASS breakpoints:
+
+- **Mobile**: `$mg-breakpoint-mobile`
+- **Tablet**: `$mg-breakpoint-tablet`
+- **Desktop**: `$mg-breakpoint-desktop`
+- **Desktop wide**: `$mg-breakpoint-desktop`
+
+For more information about breakpoints, see the [Breakpoints story](?path=/docs/design-decisions-breakpoint--docs).
+
+## Example
+
+```jsx
+<Container>
+  <h1>Responsive Container</h1>
+  <p>This container adjusts its width based on the screen size.</p>
+</Container>
+```

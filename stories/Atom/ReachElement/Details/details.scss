@@ -15,9 +15,9 @@ details {
     }
 
     &::before {
-      background:
-        url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
-        center;
+      // background:
+      //   url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
+      //   center;
       content: "";
       display: inline-block;
       height: 14px;
@@ -35,9 +35,9 @@ details {
       margin-bottom: 0.5rem;
 
       &::before {
-        background:
-          url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
-          center;
+        // background:
+        //   url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
+        //   center;
         content: "";
         display: inline-block;
         height: 14px;

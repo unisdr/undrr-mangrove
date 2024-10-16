@@ -1,139 +1,128 @@
 {
   "icons": [
     {
-      "name": "hamburger",
-      "label": "Hamburger",
-      "type": "img"
+      "name": "file-alt",
+      "label": "File, Document, Alt"
     },
     {
-      "name": "times",
-      "label": "Times",
-      "type": "img"
+      "name": "facebook",
+      "label": "Facebook, Social Media"
     },
     {
-      "name": "times-circle",
-      "label": "Times circle",
-      "type": "img"
+      "name": "x-social",
+      "label": "Twitter, X, Social Media"
+    },
+    {
+      "name": "linkedin",
+      "label": "LinkedIn, Social Media"
+    },
+    {
+      "name": "flickr",
+      "label": "Flickr, Photo Sharing"
+    },
+    {
+      "name": "youtube",
+      "label": "YouTube, Video, Media"
     },
     {
       "name": "search",
-      "label": "Search",
-      "type": "img"
+      "label": "Search, Magnify, Find"
     },
     {
-      "name": "language",
-      "label": "Language",
-      "type": "img"
+      "name": "envelope",
+      "label": "Envelope, Email, Message"
+    },
+    {
+      "name": "newspaper",
+      "label": "Newspaper, News, Article"
+    },
+    {
+      "name": "chart-bar",
+      "label": "Chart, Bar, Graph, Statistics"
+    },
+    {
+      "name": "file",
+      "label": "File, Document"
+    },
+    {
+      "name": "graduation-cap",
+      "label": "Graduation, Cap, Education"
+    },
+    {
+      "name": "calendar-alt",
+      "label": "Calendar, Date, Schedule"
+    },
+    {
+      "name": "building",
+      "label": "Building, Office, Structure"
+    },
+    {
+      "name": "pen-nib",
+      "label": "Pen, Nib, Write, Edit"
+    },
+    {
+      "name": "business-time",
+      "label": "Business, Time, Work"
+    },
+    {
+      "name": "code-branch",
+      "label": "Code, Branch, Version Control"
+    },
+    {
+      "name": "life-ring",
+      "label": "Life Ring, Support, Help"
+    },
+    {
+      "name": "lightbulb",
+      "label": "Lightbulb, Idea, Inspiration"
+    },
+    {
+      "name": "cubes",
+      "label": "Cubes, Blocks, 3D"
+    },
+    {
+      "name": "bar-chart",
+      "label": "Bar Chart, Graph, Statistics"
+    },
+    {
+      "name": "sort-alpha-down",
+      "label": "Sort, Alphabetical, Order"
+    },
+    {
+      "name": "tags",
+      "label": "Tags, Labels, Categories"
+    },
+    {
+      "name": "landmark",
+      "label": "Landmark, Building, Monument"
+    },
+    {
+      "name": "power-off",
+      "label": "Power Off, Shutdown, Exit"
+    },
+    {
+      "name": "user",
+      "label": "User, Person, Account"
+    },
+    {
+      "name": "times",
+      "label": "Times, Close, Cancel"
+    },
+    {
+      "name": "link",
+      "label": "Link, URL, Connection"
+    },
+    {
+      "name": "clone",
+      "label": "Clone, Copy, Duplicate, Clipboard"
     },
     {
       "name": "globe",
-      "label": "Globe",
-      "type": "img"
+      "label": "Globe, World, Earth"
     },
     {
-      "name": "calendar",
-      "label": "Calendar",
-      "type": "img"
-    },
-    {
-      "name": "play-circle",
-      "label": "Play circle",
-      "type": "img"
-    },
-    {
-      "name": "chevron-up-circle",
-      "label": "Chevron up circle",
-      "type": "img"
-    },
-    {
-      "name": "chevron-down-circle",
-      "label": "Chevron down circle",
-      "type": "img"
-    },
-    {
-      "name": "chevron-left-circle",
-      "label": "Chevron left circle",
-      "type": "img"
-    },
-    {
-      "name": "chevron-right-circle",
-      "label": "Chevron right circle",
-      "type": "img"
-    },
-    {
-      "name": "chevron-down",
-      "label": "Chevron down",
-      "type": "img"
-    },
-    {
-      "name": "chevron-up",
-      "label": "Chevron up",
-      "type": "img"
-    },
-    {
-      "name": "chevron-left",
-      "label": "Chevron left",
-      "type": "img"
-    },
-    {
-      "name": "chevron-right",
-      "label": "Chevron right",
-      "type": "img"
-    },
-    {
-      "name": "chevron-small-left",
-      "label": "Chevron small left",
-      "type": "img"
-    },
-    {
-      "name": "chevron-small-right",
-      "label": "Chevron small right",
-      "type": "img"
-    },
-    {
-      "name": "chevron-small-up",
-      "label": "Chevron small up",
-      "type": "img"
-    },
-    {
-      "name": "chevron-small-down",
-      "label": "Chevron small down",
-      "type": "img"
-    },
-    {
-      "name": "arrow-right",
-      "label": "Arrow right",
-      "type": "img"
-    },
-    {
-      "name": "arrow-right-white",
-      "label": "Arrow right white",
-      "type": "img"
-    },
-    {
-      "name": "arrow-left",
-      "label": "Arrow left",
-      "type": "img"
-    },
-    {
-      "name": "arrow-left-white",
-      "label": "Arrow left white",
-      "type": "img"
-    },
-    {
-      "name": "chevron-right-animated",
-      "label": "Chevron right animated",
-      "type": "span"
-    },
-    {
-      "name": "external-link-animated",
-      "label": "External link animated",
-      "type": "span"
-    },
-    {
-      "name": "download-animated",
-      "label": "Download animated",
-      "type": "span"
+      "name": "share",
+      "label": "Share, social media"
     }
   ]
 }

@@ -17,7 +17,7 @@
 
   &.chip__cross {
     &::before {
-      background: url(#{$img-path-Iconfourback}/times-red.svg) no-repeat left;
+      // background: url(#{$img-path-Iconfourback}/times-red.svg) no-repeat left;
       content: "";
       display: inline-flex;
       height: 22px;

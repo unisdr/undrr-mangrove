@@ -47,7 +47,7 @@ Use this widget when you want to share a link to a social media page.
 #### default
 
 default format is a list of share buttons for social media.
-default text body is: "Check out this link: " + automaticaly appending the link at the end
+default text body is: "Check out this link: " + automatically appending the link at the end
 default subject is: "Sharing Link"
 
 #### Custom
@@ -55,14 +55,18 @@ default subject is: "Sharing Link"
 1. Format of the body of the message before the link
 2. Subject of the Message(only for Email)
 
+### Shortlink is favored
+
+The component will favor using a shortlink if a `<link rel="shortlink" href="{url here}" />` is present in the document. If no shortlink is available, it will default to using the full page URL.
+
 ## Behaviors
 
 The default Behaviors are:
 
 1. Clicking on the button opens a new tab with the link to the social media page.
+   * LinkedIn
    * Facebook
    * Twitter
-   * LinkedIn
    * Email
 2. Clicking on the copy button copies the link to the clipboard.
 
@@ -94,4 +98,10 @@ NA
 
 ### Changelog
 
-1.0 — Released component
+- 1.1 
+    - Add shortlink support
+    - Updates icon order
+    - Updates Twitter for X icon
+    - Add support for device webshare
+    - Tidy visual apperance
+- 1.0 — Released component

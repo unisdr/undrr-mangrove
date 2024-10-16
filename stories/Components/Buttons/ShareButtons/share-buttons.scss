@@ -3,15 +3,12 @@
 
 .mg-share {
   max-width: 400px;
-  background-color: rgba($mg-color-button-background, 0.2);
   display: flex;
   flex-direction: column;
+  gap: $mg-spacing-100;
 }
 
 .mg-share__header {
-  padding: $mg-spacing-100;
-  padding-bottom: 0;
-  margin: 0;
   font-family: $mg-font-family;
   color: $mg-color-text;
   font-weight: 600;
@@ -22,20 +19,19 @@
 
 .mg-share__buttons {
   display: flex;
+  gap: $mg-spacing-50;
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  padding-bottom: $mg-spacing-100;
 }
 
 .mg-share__button {
   width: 4rem;
   height: 4rem;
-  margin: 1rem;
+  padding: $mg-spacing-100;
   border-radius: $mg-radius-button;
-  background-color: rgba($mg-color-button-background, 0.5);
+  background-color: $mg-color-button-background;
   color: $mg-color-button;
-  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,7 +58,7 @@
   color: $mg-color-button;
   font-family: $mg-font-family;
   padding: $mg-spacing-100;
-  background-color: rgba($mg-color-neutral-0, 0.75);
+  background-color: rgba($mg-color-button-background, 1);
 
   &:hover .mg-share__copy-text {
     text-decoration: underline;
@@ -83,7 +79,7 @@
 }
 
 .mg-share__copy-text {
-  color: $mg-color-neutral-600;
+  color: $mg-color-button;
   font-size: $mg-font-size-100;
   overflow: hidden;
   scrollbar-width: 0;

@@ -1,3 +1,6 @@
+// font file variables
+$mgIconFontPath: "../../assets/fonts/mangrove-icon-set/font";
+
 // image variables
 $img-path: "~/stories/assets/images";
 $img-path-Icon: "~/stories/assets/icons";
@@ -235,8 +238,8 @@ $mg-width-600: 60rem;
 
 $mg-breakpoint-mobile: 480px;
 $mg-breakpoint-tablet: 1024px;
-$mg-breakpoint-desktop: 1164px; // we'll probably go to 1440, but right now it's 1164 in prod
-// $mg-breakpoint-desktop: 1440px;
+$mg-breakpoint-desktop: 1164px; // see the docs: this is our main target but we also have a "wide" breakpoint as a secondary use case
+$mg-breakpoint-desktop-wide: 1440px; 
 
 /**
  * @tokens Colors - component

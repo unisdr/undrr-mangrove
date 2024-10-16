@@ -7,30 +7,30 @@ import * as IconsStories from './Icons.stories';
 
 # Icons
 
-The Icon components can grab attention and draw users into a piece of content. They can help users quickly understand the context in which they are placed.
+The Icon components grab attention and draw users into content, helping them quickly understand the context in which they are placed. 
 
-### When to use:
+Our legacy sites used the **FontAwesome** library, which is why we've maintained use the `.fa-` prefixes. 
 
-* When content is dense and complex to help comprehend the users the available actions
-* When space needs to be saved instead of using words or long phrases.
+## When to use:
+
+- **Dense and Complex Content**: Use icons to help users comprehend available actions in complex interfaces.
+- **Space Saving**: Replace words or long phrases with icons to save space without losing meaning.
+- **Avoid Visual Clutter**: Use icons sparingly to prevent overwhelming the user with too many visual elements.
 
 <Canvas>
   <Story of={IconsStories.DefaultIcons} />
 </Canvas>
 
-### Usage
+## Usage
 
-* For svg icons download it from dist/images and use it on your webpage.
-* For CSS based icons eg: .chevron-right-animated, .external-link-animated and .download-animated use these classes in **span** element.
+- **CSS-Based Icons**: For icons like `.fa.fa-rss`, apply these classes to a `<span>` element.
+  
+  ```html
+  <span class="mg-icon fa-rss"></span>
+  <span class="mg-icon fa-2x fa-rss"></span>
+  ```
 
-#### CSS and JS References
+## Technical notes
 
-#### CSS:
-
-Add the base layout style from
-
-* https://unisdr.github.io/undrr-mangrove/css/foundation.min.css
-
-#### JS:
-
-NA
+- The font image files are located in the `\stories\assets\fonts\mangrove-icon-set` directory. Consult the accomponying README.md for information on updating.
+- We use font icons because they provide a reliable way to integrate across our diverse ecosystem.

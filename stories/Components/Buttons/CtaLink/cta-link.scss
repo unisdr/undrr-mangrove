@@ -20,9 +20,9 @@
       @extend %ctaimg;
       @include transition(0.2s ease);
 
-      background:
-        url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg)
-        no-repeat left center;
+      // background:
+      //   url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg)
+      //   no-repeat left center;
     }
 
     &:hover {

@@ -20,7 +20,7 @@ input[type="checkbox"] {
 
   border-radius: 0;
 
-  &:checked {
-    background: url(#{$img-path-Icon}/icon-check.svg) 1px 0 no-repeat;
-  }
+  // &:checked {
+  //   background: url(#{$img-path-Icon}/icon-check.svg) 1px 0 no-repeat;
+  // }
 }
