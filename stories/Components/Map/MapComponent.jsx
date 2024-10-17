@@ -8,7 +8,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import DOMPurify from "dompurify";
-import './map.css';
+import "./map.css";
 import { transformDataForMap } from "./map-helpers";
 
 export const transformData = (results) => {
@@ -39,6 +39,7 @@ export default function MapComponent({
 }) {
   const maxValue = Math.max(...data.map((entry) => entry.value));
   const commitmentLink = "/commitments?term_node_tid_depth";
+  const globalLink = "/commitments?field_geographic_scope_value=GLOBAL";
 
   const calculateIconSize = (value) => {
     const minSize = 38;
@@ -49,13 +50,13 @@ export default function MapComponent({
   const createLabelIcon = (label, value) => {
     const size = calculateIconSize(value);
     // We only show "Global" as a label, as otherwsie this marker is shown over a country
-    const isGlobal = label.toLowerCase() === 'global';
-    
+    const isGlobal = label.toLowerCase() === "global";
+
     return L.divIcon({
-      className: 'mg-custom-label-icon',
+      className: "mg-custom-label-icon",
       html: `
         <div class="mg-label-container">
-          ${isGlobal ? `<div class="mg-label-text">${label}</div>` : ''}
+          ${isGlobal ? `<div class="mg-label-text">${label}</div>` : ""}
           <div class="mg-label-value">${value}</div>
         </div>`,
       iconSize: [size, size],
@@ -64,8 +65,15 @@ export default function MapComponent({
   };
 
   const handleMarkerClick = (countryId) => {
-    window.open(`${commitmentLink}=${countryId}`, "_blank");
+    console.log("markerClicked", countryId);
+
+    if (countryId === "ALL") {
+      window.open(`${globalLink}`, "_blank");
+    } else {
+      window.open(`${commitmentLink}=${countryId}`, "_blank");
+    }
   };
+
   const continents = {
     Global: "Global",
     Africa: "Africa",
@@ -94,21 +102,19 @@ export default function MapComponent({
       {/* Loop through continents and render MarkerClusterGroup for each */}
       {Object.entries(continents).map(([continentCode, continentName]) => {
         // Filter the data for the current continent
-        const filteredData = data.filter(
-          function(entry) {
-            return entry.continent === continentCode
-          }
-        );
+        const filteredData = data.filter(function (entry) {
+          return entry.continent === continentCode;
+        });
 
         // Calculate the sum of entry.value for the current continent
         const totalValue = filteredData.reduce(
           (sum, entry) => sum + entry.value,
-          0
+          0,
         );
 
         const createClusterCustomIcon = function (cluster) {
           return L.divIcon({
-            className: 'mg-custom-label-icon', 
+            className: "mg-custom-label-icon",
             html: `
             <div class="mg-label-container">
               <div class="mg-label-text">${continentName}</div>
@@ -121,7 +127,7 @@ export default function MapComponent({
         return (
           <MarkerClusterGroup
             iconCreateFunction={createClusterCustomIcon}
-            key={continentCode}  // Key prop for React rendering, not inside function
+            key={continentCode} // Key prop for React rendering, not inside function
             disableClusteringAtZoom="3"
             zoomToBoundsOnClick={true}
             spiderfyOnMaxZoom={false}
@@ -130,7 +136,7 @@ export default function MapComponent({
           >
             {filteredData.map((entry, index) => (
               <Marker
-                key={`${continentCode}-${index}`}  // Correct use of key here
+                key={`${continentCode}-${index}`} // Correct use of key here
                 position={entry.coords}
                 icon={createLabelIcon(entry.label, entry.value)}
               >
@@ -163,7 +169,6 @@ export default function MapComponent({
           </MarkerClusterGroup>
         );
       })}
-
     </MapContainer>
   );
 }
