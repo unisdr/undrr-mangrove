@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { mgTableOfContents } from "./js/toc";
+import { mgTableOfContents } from "./js/TableOfContentsVanillaJs";
 
 export default function TableOfContents({ tocData, showNumbers = false }) {
   const ListComponent = showNumbers ? "ol" : "ul";
@@ -9,21 +9,22 @@ export default function TableOfContents({ tocData, showNumbers = false }) {
 
   useEffect(() => {
     if (contentRef.current && tocRef.current) {
-      mgTableOfContents(contentRef.current, ".mg-table-of-contents");
+      mgTableOfContents(contentRef.current, tocRef.current);
     }
   }, []);
 
   return (
-    <section className="mg-table-of-contents">
-      <h2>On this page</h2>
-      <ListComponent>
-        {tocData.map((item, index) => (
-          <li key={index}>
-            <a href={`#${item.id}`}>{item.text}</a>
-          </li>
-        ))}
-      </ListComponent>
-    </section>
+    <div ref={contentRef}>
+      <section className="mg-table-of-contents" ref={tocRef}>
+        <ListComponent>
+          {tocData.map((item, index) => (
+            <li key={index}>
+             <a href={`#${item.id}`}>{item.text}</a>
+            </li>
+          ))}
+        </ListComponent>
+      </section>
+    </div>
   );
 }
 
