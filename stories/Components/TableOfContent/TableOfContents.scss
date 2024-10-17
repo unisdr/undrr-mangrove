@@ -8,13 +8,22 @@
     margin-bottom: 10px;
   }
 
-  ul {
-    list-style-type: none;
+  ul,
+  ol {
     padding-left: 0;
+    list-style-position: inside;
 
     li {
       margin-bottom: 5px;
     }
+  }
+
+  ul {
+    list-style-type: square;
+  }
+
+  ol.numbered {
+    list-style-type: decimal;
   }
 
   a {

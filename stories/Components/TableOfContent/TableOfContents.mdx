@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/blocks';
-import  TableOfContents  from './TableOfContents';
+import TableOfContents from './TableOfContents';
 import * as TableOfContentsStories from './TableOfContents.stories';
 
 <Meta of={TableOfContentsStories} />
@@ -20,7 +20,14 @@ Use the TableOfContents component for long-form content, documentation, or any p
 
 #### Default
 
-It consists of a title "On this page" followed by a list of links to the page sections.
+It consists of a title "On this page" followed by a list of links to the page sections. The list can be either numbered or unnumbered, depending on the `showNumbers` prop.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| tocData | Array | [] | An array of objects, each representing a section with `id` and `text` properties |
+| showNumbers | Boolean | false | If true, renders the list as an ordered list (numbered) |
 
 ### Content
 
@@ -36,7 +43,7 @@ There are two states: Default and Hover.
 2. Hover: The appearance changes when the mouse hovers over a link.
 
 <Canvas>
-  <Story of={TableOfContentsStories.TableOfContentsStory} />
+  <Story of={TableOfContentsStories.Default} />
 </Canvas>
 
 ### Usage:
@@ -53,13 +60,12 @@ To use the TableOfContents component in your React application:
    const tocData = [
      { id: "section-1", text: "Section 1 Title" },
      { id: "section-2", text: "Section 2 Title" },
-     { id: "section-3", text: "Section 3 Title" },
    ];
    ```
 
 3. Use the component in your JSX:
    ```jsx
-   <TableOfContents tocData={tocData} />
+   <TableOfContents tocData={tocData} showNumbers={false} />
    ```
 
 ### CSS References
@@ -77,9 +83,8 @@ Add the following CSS to style your TableOfContents component:
     margin-bottom: 10px;
   }
 
-  ul {
-    list-style-type: none;
-    padding-left: 0;
+  ul, ol {
+    padding-left: 20px;
 
     li {
       margin-bottom: 5px;
@@ -108,4 +113,5 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 
 ### Changelog
 
+1.1 — Added `showNumbers` prop to support numbered lists
 1.0 — Released component

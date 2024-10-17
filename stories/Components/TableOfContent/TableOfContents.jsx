@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { mgTableOfContents } from "./js/toc";
 import "./TableOfContents.scss";
 
-export default function TableOfContents({ tocData }) {
+export default function TableOfContents({ tocData, showNumbers = false }) {
+  const ListComponent = showNumbers ? "ol" : "ul";
+
   const contentRef = useRef(null);
   const tocRef = useRef(null);
 
@@ -15,17 +17,18 @@ export default function TableOfContents({ tocData }) {
   return (
     <section className="mg-table-of-contents">
       <h2>On this page</h2>
-      <ul>
+      <ListComponent>
         {tocData.map((item, index) => (
           <li key={index}>
             <a href={`#${item.id}`}>{item.text}</a>
           </li>
         ))}
-      </ul>
+      </ListComponent>
     </section>
   );
 }
 
 TableOfContents.defaultParameters = {
   tocData: [],
+  showNumbers: false,
 };

@@ -74,13 +74,23 @@ const getCaptionForLocale = (locale) => {
 
 export default {
   title: "Components/TableOfContents",
+  component: TableOfContents,
+  argTypes: {
+    showNumbers: { control: "boolean" },
+  },
 };
 
-export const TableOfContentsStory = {
-  render: (args, { globals: { locale } }) => {
-    const tocData = getCaptionForLocale(locale);
-    return <TableOfContents tocData={tocData} />;
-  },
+const Template = (args, { globals: { locale } }) => {
+  const tocData = getCaptionForLocale(locale);
+  return <TableOfContents {...args} tocData={tocData} />;
+};
 
-  name: "TableOfContents",
+export const Default = Template.bind({});
+Default.args = {
+  showNumbers: false,
+};
+
+export const Numbered = Template.bind({});
+Numbered.args = {
+  showNumbers: true,
 };
