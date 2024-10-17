@@ -1,4 +1,6 @@
+import React, { useEffect } from 'react';
 import TableOfContents from "./TableOfContents";
+import { mgTableOfContents } from './js/TableOfContentsVanillaJs';
 
 const getCaptionForLocale = (locale) => {
   switch (locale) {
@@ -73,7 +75,7 @@ const getCaptionForLocale = (locale) => {
 };
 
 export default {
-  title: "Components/TableOfContents",
+  title: "Components/Table of Contents",
   component: TableOfContents,
   argTypes: {
     showNumbers: { control: "boolean" },
@@ -85,12 +87,43 @@ const Template = (args, { globals: { locale } }) => {
   return <TableOfContents {...args} tocData={tocData} />;
 };
 
-export const Default = Template.bind({});
-Default.args = {
+export const List = Template.bind({});
+List.args = {
   showNumbers: false,
 };
 
 export const Numbered = Template.bind({});
 Numbered.args = {
   showNumbers: true,
+};
+
+// New story that scrapes content from the page
+export const ScrapedContent = () => {
+  useEffect(() => {
+    // Assuming mgTableOfContents is a function that scrapes the content
+    const contentElement = document.querySelector('.mg-content');
+    const tocElement = document.querySelector('.mg-table-of-contents');
+    if (contentElement && tocElement) {
+      mgTableOfContents(contentElement, tocElement);
+    }
+  }, []);
+
+  return (
+    <article className="mg-content">
+      <h1 id="section-1">Welcome to the example</h1>
+      <p>The above header is excluded as it is the H1</p>
+      <section className="mg-table-of-contents">
+      </section>
+      <h2 id="section-2">Section 2</h2>
+      <p>Content for section 2...</p>
+      <h2 id="section-3">Section 3</h2>
+      <p>Content for section 3...</p>
+      <h2 id="section-4" class="mg-table-of-contents--exclude">Section 4</h2>
+      <p>excluded with .mg-table-of-contents--exclude</p>        
+      <h3 id="section-5">Sub-section 5</h3>
+      <p>Skipped as it is a h3</p>
+      <h2 id="section-6">Section 6</h2>
+      <p>Content for section 6...</p>
+    </article>
+  );
 };

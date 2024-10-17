@@ -4,7 +4,7 @@ import * as TableOfContentsStories from './TableOfContents.stories';
 
 <Meta of={TableOfContentsStories} />
 
-# TableOfContents
+# Table of Contents
 
 The TableOfContents component is used to provide an overview of the content structure and allow quick navigation to different sections of a page.
 
@@ -43,10 +43,12 @@ There are two states: Default and Hover.
 2. Hover: The appearance changes when the mouse hovers over a link.
 
 <Canvas>
-  <Story of={TableOfContentsStories.Default} />
+  <Story of={TableOfContentsStories.List} />
 </Canvas>
 
 ### Usage:
+
+#### React applications
 
 To use the TableOfContents component in your React application:
 
@@ -68,39 +70,52 @@ To use the TableOfContents component in your React application:
    <TableOfContents tocData={tocData} showNumbers={false} />
    ```
 
-### CSS References
+#### DOM Scraping
 
-Add the following CSS to style your TableOfContents component:
+It is possible to populate the Table of Contents by scraping a section. 
 
-```scss
-.mg-table-of-contents {
-  background-color: #f8f9fa;
-  padding: 20px;
-  margin-bottom: 20px;
+1. Import `stories\Components\TableOfContent\js\TableOfContentsVanillaJs.js`
 
-  h2 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
+2. Add your HTML
 
-  ul, ol {
-    padding-left: 20px;
+  ```
+  <article className="mg-content">
+    <h1 id="section-1">Welcome to the example</h1>
+    <p>The above header is excluded as it is the H1</p>
+    <section className="mg-table-of-contents">
+    </section>
+    <h2 id="section-2">Section 2</h2>
+    <p>Content for section 2...</p>
+    <h2 id="section-3">Section 3</h2>
+    <p>Content for section 3...</p>
+    <h2 id="section-4" class="mg-table-of-contents--exclude">Section 4</h2>
+    <p>excluded with .mg-table-of-contents--exclude</p>        
+    <h3 id="section-5">Sub-section 5</h3>
+    <p>Skipped as it is a h3</p>
+    <h2 id="section-6">Section 6</h2>
+    <p>Content for section 6...</p>
+  </article>
+  ```
 
-    li {
-      margin-bottom: 5px;
+  3. Invoke the JS
+  ```
+  useEffect(() => {
+    // Assuming mgTableOfContents is a function that scrapes the content
+    const contentElement = document.querySelector('.mg-content');
+    const tocElement = document.querySelector('.mg-table-of-contents');
+    if (contentElement && tocElement) {
+      mgTableOfContents(contentElement, tocElement);
     }
-  }
+  }, []);
+  ```
 
-  a {
-    color: #0066cc;
-    text-decoration: none;
+Notes:
 
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-```
+- See the Scraped Content story for an example.
+- This only selects h2 headings.
+    - In the future we may support nested levels, but this is not currently implemented.
+- Exclude headings by adding a class of `.mg-table-of-contents--exclude`.
+- Ensure you have the CSS styles mentioned in the CSS References section applied to your page.
 
 ### Interactions
 
@@ -113,5 +128,5 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 
 ### Changelog
 
-1.1 — Added `showNumbers` prop to support numbered lists
-1.0 — Released component
+- 1.1 — Added `showNumbers` prop to support numbered lists
+- 1.0 — Released component
