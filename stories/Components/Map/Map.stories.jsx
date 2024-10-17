@@ -36,7 +36,7 @@ export default {
 
 const Template = (args) => (
   <Fetcher
-    api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics?items_per_page=1000"
+    api="https://sendaicommitments.undrr.org/api/v2/content/commitments-metrics"
     render={({ isLoading, data }) => (
       <>
         {isLoading ? (

@@ -7,10 +7,10 @@
  * @example mgTabs(document.querySelectorAll('.mg-component__container')[0]);
  */
 export function mgTabs(scope, activateDeepLinkOnLoad) {
-  /* eslint-disable no-redeclare */
+   
   var scope = scope || document;
   var activateDeepLinkOnLoad = activateDeepLinkOnLoad || true;
-  /* eslint-enable no-redeclare */
+   
   // Get relevant elements and collections
   const tabsList = scope.querySelectorAll("[data-mg-js-tabs]");
   const panelsList = scope.querySelectorAll("[data-mg-js-tabs-content]");
