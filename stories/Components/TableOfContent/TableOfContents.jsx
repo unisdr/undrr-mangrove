@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { mgTableOfContents } from "./js/toc";
-import "./TableOfContents.scss";
 
 export default function TableOfContents({ tocData, showNumbers = false }) {
   const ListComponent = showNumbers ? "ol" : "ul";
