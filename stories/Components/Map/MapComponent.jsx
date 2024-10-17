@@ -65,8 +65,6 @@ export default function MapComponent({
   };
 
   const handleMarkerClick = (countryId) => {
-    console.log("markerClicked", countryId);
-
     if (countryId === "ALL") {
       window.open(`${globalLink}`, "_blank");
     } else {
