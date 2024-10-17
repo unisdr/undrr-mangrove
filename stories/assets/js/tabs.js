@@ -88,9 +88,11 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
     firstTab.setAttribute("aria-selected", "true");
     firstTab.classList.add("is-active");
   });
+
+  // Initially reveal the first tab panel
   Array.prototype.forEach.call(panelsList, (panel) => {
-    // Initially reveal the first tab panel
-    let firstPanel = panel.querySelectorAll(".mg-tabs__section")[0];
+    let parentTabSet = panel.closest(".mg-tabs__list");
+    let firstPanel = parentTabSet.querySelectorAll(".mg-tabs__section")[0];
     firstPanel.hidden = false;
   });
 

@@ -13,6 +13,7 @@ yarn-error.log
 .yarn/cache/
 coverage/
 /.yarn
+.cache
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
