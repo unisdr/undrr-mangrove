@@ -1,0 +1,111 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import  TableOfContents  from './TableOfContents';
+import * as TableOfContentsStories from './TableOfContents.stories';
+
+<Meta of={TableOfContentsStories} />
+
+# TableOfContents
+
+The TableOfContents component is used to provide an overview of the content structure and allow quick navigation to different sections of a page.
+
+### Overview
+
+The TableOfContents component displays a list of links to the main sections of a page. It helps users understand the structure of the content and quickly navigate to the section they're interested in.
+
+#### When to use:
+
+Use the TableOfContents component for long-form content, documentation, or any page with multiple distinct sections that users might want to jump between.
+
+### Formatting
+
+#### Default
+
+It consists of a title "On this page" followed by a list of links to the page sections.
+
+### Content
+
+The TableOfContents component accepts an array of objects, each representing a section of the page. Each object should have an `id` (corresponding to the section's HTML id) and a `text` (the display text for the link).
+
+### Behaviors
+
+#### States
+
+There are two states: Default and Hover.
+
+1. Default: The normal display of the table of contents.
+2. Hover: The appearance changes when the mouse hovers over a link.
+
+<Canvas>
+  <Story of={TableOfContentsStories.TableOfContentsStory} />
+</Canvas>
+
+### Usage:
+
+To use the TableOfContents component in your React application:
+
+1. Import the component:
+   ```jsx
+   import TableOfContents from './path/to/TableOfContents';
+   ```
+
+2. Prepare your table of contents data:
+   ```jsx
+   const tocData = [
+     { id: "section-1", text: "Section 1 Title" },
+     { id: "section-2", text: "Section 2 Title" },
+     { id: "section-3", text: "Section 3 Title" },
+   ];
+   ```
+
+3. Use the component in your JSX:
+   ```jsx
+   <TableOfContents tocData={tocData} />
+   ```
+
+### CSS References
+
+Add the following CSS to style your TableOfContents component:
+
+```scss
+.mg-table-of-contents {
+  background-color: #f8f9fa;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+
+    li {
+      margin-bottom: 5px;
+    }
+  }
+
+  a {
+    color: #0066cc;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+```
+
+### Interactions
+
+* Hover state appears when the mouse is over a link.
+* Clicking a link scrolls the page to the corresponding section.
+
+### Accessibility
+
+Ensure that the sections referenced in the TableOfContents have proper heading tags (h1, h2, etc.) and unique id attributes for keyboard navigation and screen reader compatibility.
+
+### Changelog
+
+1.0 — Released component
