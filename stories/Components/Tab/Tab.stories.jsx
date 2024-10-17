@@ -1,3 +1,5 @@
+// stories\Components\Tab\Tab.stories.jsx
+
 import { Tab } from "./Tab";
 
 const getCaptionForLocale = (locale) => {
@@ -117,8 +119,15 @@ export default {
 export const Tabs = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption}></Tab>;
+    return <Tab tabdata={caption} />;
   },
-
   name: "Tabs",
+};
+
+export const StackedTabs = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Tab tabdata={caption} variant="stacked" />;
+  },
+  name: "Stacked Tabs",
 };
