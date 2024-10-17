@@ -1,4 +1,4 @@
-.mg-mega-topbar {
+.dts-mega-wrapper .mg-mega-topbar {
   background: transparent;
   justify-content: flex-end;
   font-family: $dts-menu-font-family;
@@ -18,6 +18,7 @@
 
   &__item {
     display: flex;
+    align-items: center;
     gap: $dts-spacing-4;
     font-size: 1.8rem;
     font-weight: 700;
@@ -34,13 +35,13 @@
     }
 
     svg {
-      width: $dts-spacing-16;
-      height: 18px;
+      width: $dts-spacing-24;
+      height: $dts-spacing-24;
     }
   }
 }
 
-.mg-mega-content {
+.dts-mega-wrapper .mg-mega-content {
   display: grid;
   gap: $dts-spacing-40;
   grid-template-columns: 1fr;
@@ -81,12 +82,12 @@
   }
 }
 
-.mg-mega-content__left {
+.dts-mega-wrapper .mg-mega-content__left {
   flex-basis: 20%;
   padding-right: $dts-spacing-24;
 }
 
-.mg-mega-content__section-list-item {
+.dts-mega-wrapper .mg-mega-content__section-list-item {
   .mg-mega-content__section-list-link {
     margin: 0;
     padding: $dts-spacing-8 $dts-spacing-8 $dts-spacing-8 2rem;
@@ -100,7 +101,7 @@
   }
 }
 
-.mg-mega-content__right {
+.dts-mega-wrapper .mg-mega-content__right {
 
   ul {
     margin: 0;
@@ -130,7 +131,7 @@
   }
 }
 
-.mg-mega-sidebar-section {
+.dts-mega-wrapper .mg-mega-sidebar-section {
   &__item {
     color: inherit;
 

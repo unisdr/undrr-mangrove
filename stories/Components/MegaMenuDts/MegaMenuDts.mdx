@@ -1,0 +1,41 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import MegaMenuDts from './MegaMenuDts';
+
+export const sections = () => ([
+    {
+      title: 'Section 1',
+      bannerHeading: 'Analytics by country',
+      bannerDescription: 'Gaze upon statistics in wonder...',
+      items: [
+        {
+          title: 'Item 1',
+          subItems: Array(30).fill({ title: 'Sub-item 1', url: '#'})
+        },
+        {
+          title: 'Item 2',
+          subItems: Array(20).fill({ title: 'Sub-item 2', url: '#'})
+        }
+      ]
+    },
+  {
+      title: 'Section 2',
+      bannerHeading: 'Analytics by region',
+      bannerDescription: 'Gaze upon statistics in wonder...',
+      items: [
+        {
+          title: 'Item 1',
+          subItems: Array(20).fill({ title: 'Sub-item 1', url: '#'})
+        },
+        {
+          title: 'Item 2',
+          subItems: Array(15).fill({ title: 'Sub-item 2', url: '#'})
+        }
+      ]
+    }
+  ])
+
+<Meta title="Components/MegaMenuDts/MegaMenuDts" argTypes={{}} />
+
+# Mega Menu DTS
+
+<MegaMenuDts delay={600} sections={sections()} />

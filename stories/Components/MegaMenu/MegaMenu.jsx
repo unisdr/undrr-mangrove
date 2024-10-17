@@ -31,7 +31,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   };
 
   useEffect(() => {
-    if ((breakpoint !== "mobilelandscape") && (breakpoint !== "mobile")) {
+    if (breakpoint !== "mobile") {
       setShowSidebar(false);
     }
   }, [breakpoint]);
@@ -51,52 +51,42 @@ const MegaMenu = ({ sections, delay = 300 }) => {
 
       {section && (
         <article className="mg-mega-content" aria-live="polite">
-          <div className="mg-mega-content__banner">
-            <header>{section.bannerHeading}</header>
-            <p>{section.bannerDescription}</p>
-          </div>
-          <div className="mg-mega-content__navigation">
-            <aside className="mg-mega-content__left">
-              <ul className="mg-mega-content__section-list" role="list">
-                {section.items.map((item, index) => (
-                  <li
-                    key={index}
-                    className="mg-mega-content__section-list-item"
-                    onMouseEnter={() => setItemIndex(index)}
-                  >
-                    <a
-                      className={`mg-mega-content__section-list-link ${
-                        itemIndex === index
-                          ? "mg-mega-content__section-list-link--active"
-                          : ""
-                      }`}
-                      href={item.url}
-                      aria-current={itemIndex === index ? "page" : undefined}
-                    >
-                      {item.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-            <section className="mg-mega-content__right">
-              <ul className="mg-mega-content__subsection-list">
-                {section.items[itemIndex].subItems.map((subItem, subIndex) => (
-                  <li key={subIndex}>
-                    <div className="mg-mega-content__subsection-list-title">{subItem.title}</div>
-                    {/* <a href={subItem.url} className="">{subItem.title}</a> */}
-                    <ul className="mg-mega-content__subsubsection-list">
-                      {section.items[itemIndex].subItems[subIndex].subsubItems.map((subsubItem, subsubIndex) => (
-                        <li key={subsubIndex}>
-                          <a href={subsubItem.url}>{subsubItem.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
+          <aside className="mg-mega-content__left">
+            <section className="mg-mega-content__banner">
+              <header>{section.bannerHeading}</header>
+              <p>{section.bannerDescription}</p>
             </section>
-          </div>
+            <ul className="mg-mega-content__section-list" role="list">
+              {section.items.map((item, index) => (
+                <li
+                  key={index}
+                  className="mg-mega-content__section-list-item"
+                  onMouseEnter={() => setItemIndex(index)}
+                >
+                  <a
+                    className={`mg-mega-content__section-list-link ${
+                      itemIndex === index
+                        ? "mg-mega-content__section-list-link--active"
+                        : ""
+                    }`}
+                    href={item.url}
+                    aria-current={itemIndex === index ? "page" : undefined}
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+          <section className="mg-mega-content__right">
+            <ul role="list">
+              {section.items[itemIndex].subItems.map((subItem, subIndex) => (
+                <li key={subIndex}>
+                  <a href={subItem.url}>{subItem.title}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
         </article>
       )}
       {showSidebar && (

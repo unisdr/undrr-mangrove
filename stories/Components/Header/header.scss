@@ -1,4 +1,4 @@
-.mg-dldt-header {
+.dts-header {
   display: flex;
   justify-content: space-between;
   height: 108px;
@@ -30,7 +30,7 @@
     }
   }
 
-  &__menu {
+  &__main-menu {
     flex-grow: 1;
     display: flex;
     justify-content: end;

@@ -7,6 +7,8 @@ const sections = [
     title: 'Data',
     bannerHeading: 'Data management',
     bannerDescription: '',
+    class: '',
+    icon: 'icons/information_outline.svg#information',
     items: [
       {
         title: "Records",
@@ -214,6 +216,8 @@ const sections = [
     title: 'Analysis',
     bannerHeading: 'Analysis',
     bannerDescription: '',
+    class: '',
+    icon: 'icons/eye-show-password.svg#eye-show',
     items: [
       {
         title: "Impact by hazard type",
@@ -237,6 +241,8 @@ const sections = [
     title: 'About',
     bannerHeading: 'About',
     bannerDescription: '',
+    class: '',
+    icon: 'icons/help-outline.svg#help-outline',
     items: [
       {
         title: "General",
@@ -260,6 +266,8 @@ const sections = [
     title: 'Settings',
     bannerHeading: 'Settings',
     bannerDescription: '',
+    class: '',
+    icon: 'icons/settings.svg#settings',
     items: [
       {
         title: "Access management",
@@ -271,6 +279,47 @@ const sections = [
             subsubItems: [
               {
                 title: "View all users",
+                url: "#",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Log in',
+    bannerHeading: '',
+    bannerDescription: '',
+    class: 'dts-header__login-menu',
+    icon: 'icons/user-profile.svg#user',
+    items: [
+      {
+        title: "My account",
+        url: "#",
+        subItems: [
+          {
+            title: "",
+            url: "#",
+            subsubItems: [
+              {
+                title: "",
+                url: "#",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Log out",
+        url: "#",
+        subItems: [
+          {
+            title: "",
+            url: "#",
+            subsubItems: [
+              {
+                title: "",
                 url: "#",
               },
             ],

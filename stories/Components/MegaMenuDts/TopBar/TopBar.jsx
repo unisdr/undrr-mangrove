@@ -1,9 +1,9 @@
 import React from "react";
-import { TopBarItem } from "./TopBarItem";
+import { TopBarItem } from "./TopBarItem.jsx";
 import { TopBarIconButton } from "./TopBarIconButton.jsx";
 import { useBreakpoint } from "./hook.js";
-import hamburger from "../../../assets/icons/arrow-right.svg"
-import close from "../../../assets/icons/arrow-right.svg"
+import hamburger from "../../../assets/icons/hamburger.svg"
+import close from "../../../assets/icons/times.svg"
 
 export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }) {
 
@@ -16,7 +16,7 @@ export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }
   return (
     <div className="mg-mega-topbar">
       {
-        breakpoint === 'mobile' ? (
+        ((breakpoint === 'mobile') || (breakpoint === 'mobilelandscape')) ? (
           <TopBarIconButton icon={showSidebar ? close : hamburger} onClick={() => toggleShowSidebar()}/>
         ) : (
           sections.map((item, index) => (
@@ -24,6 +24,8 @@ export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }
               key={index}
               title={item.title}
               onMouseEnter={() => onMouseEnter(item)}
+              classes={item.class}
+              iconSrc={item.icon}
             /> 
           ))
         )
