@@ -25,6 +25,8 @@
     line-height: 1;
     color: $dts-coal-700;
     text-transform: uppercase;
+    border: none;
+    background: inherit;
     border-bottom: 2px solid transparent;
     padding: $dts-spacing-32;
 
@@ -146,5 +148,37 @@
 
   ol ol li:hover {
     background: transparent;
+  }
+}
+
+// User menu
+.dts-mega-wrapper .mg-mega-content.dts-user-menu {
+  position: absolute;
+  right: 0;
+  padding: $dts-spacing-24 $dts-spacing-12;
+
+  .mg-mega-content__banner {
+    display: none;
+  }
+
+  .mg-mega-content__left {
+    padding: 0;
+    flex-basis: auto;
+  }
+
+  .mg-mega-content__right {
+    display: none;
+  }
+
+  .mg-mega-content__section-list-item {
+    .mg-mega-content__section-list-link {
+      padding: $dts-spacing-8;
+      border-left: none;
+
+      &--active {
+        background-color: transparent;
+        border-left: none;
+      }
+    }
   }
 }

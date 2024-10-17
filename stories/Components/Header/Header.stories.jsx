@@ -7,7 +7,7 @@ const sections = [
     title: 'Data',
     bannerHeading: 'Data management',
     bannerDescription: '',
-    class: '',
+    classes: '',
     icon: 'icons/information_outline.svg#information',
     items: [
       {
@@ -216,7 +216,7 @@ const sections = [
     title: 'Analysis',
     bannerHeading: 'Analysis',
     bannerDescription: '',
-    class: '',
+    classes: '',
     icon: 'icons/eye-show-password.svg#eye-show',
     items: [
       {
@@ -241,7 +241,7 @@ const sections = [
     title: 'About',
     bannerHeading: 'About',
     bannerDescription: '',
-    class: '',
+    classes: '',
     icon: 'icons/help-outline.svg#help-outline',
     items: [
       {
@@ -266,7 +266,7 @@ const sections = [
     title: 'Settings',
     bannerHeading: 'Settings',
     bannerDescription: '',
-    class: '',
+    classes: '',
     icon: 'icons/settings.svg#settings',
     items: [
       {
@@ -291,7 +291,14 @@ const sections = [
     title: 'Log in',
     bannerHeading: '',
     bannerDescription: '',
-    class: 'dts-header__login-menu',
+    classes: '',
+    icon: 'icons/user-profile.svg#user',
+  },
+  {
+    title: '',
+    bannerHeading: '',
+    bannerDescription: '',
+    classes: 'dts-user-menu',
     icon: 'icons/user-profile.svg#user',
     items: [
       {

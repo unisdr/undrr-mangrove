@@ -24,7 +24,6 @@ export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }
               key={index}
               title={item.title}
               onMouseEnter={() => onMouseEnter(item)}
-              classes={item.class}
               iconSrc={item.icon}
             /> 
           ))

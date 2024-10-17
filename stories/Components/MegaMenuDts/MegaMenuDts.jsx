@@ -49,9 +49,8 @@ const MegaMenu = ({ sections, delay = 300 }) => {
               toggleShowSidebar={() => setShowSidebar((prev) => !prev)}
               showSidebar={showSidebar}
           />
-
-          {section && (
-              <article className="mg-mega-content" aria-live="polite">
+          {section && section.items !== undefined && (
+              <article className={`mg-mega-content ${section.classes}`} aria-live="polite">
                   <div className="mg-mega-content__banner">
                       <header>{section.bannerHeading}</header>
                       <p>{section.bannerDescription}</p>
