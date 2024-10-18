@@ -22,7 +22,11 @@ const MegaMenu = ({ sections, delay = 300 }) => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
 // RP commented to keep megamenu open
-      // setSection(null);
+        setSection(null);
+        const topBarItems = document.getElementsByClassName("mg-mega-topbar__item");
+        for (let i = 0; i < topBarItems.length; i++) {
+            topBarItems[i].classList.remove("mg-mega-topbar__item--current");
+        }
     }, delay);
   };
 
@@ -80,7 +84,12 @@ const MegaMenu = ({ sections, delay = 300 }) => {
                                                   : undefined
                                           }
                                       >
-                                          {item.title}
+                                        {item.icon && (
+                                        <svg aria-hidden="true" focusable="false" role="img">
+                                            <use href={item.icon} />
+                                        </svg>
+                                        )}
+                                        {item.title}
                                       </a>
                                   </li>
                               ))}

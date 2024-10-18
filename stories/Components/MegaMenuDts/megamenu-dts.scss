@@ -1,3 +1,4 @@
+// Main navigation desktop
 .dts-mega-wrapper .mg-mega-topbar {
   background: transparent;
   justify-content: flex-end;
@@ -5,6 +6,11 @@
 
   &__icon-button {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 34px;
+    height: 34px;
 
     @include devicebreak(small) {
       display: none;
@@ -30,11 +36,18 @@
     border-bottom: 2px solid transparent;
     padding: $dts-spacing-32;
 
-    &:hover {
+    // used instead of hover to keep it highlighted while hovering on its megamenu
+    &--current {
       color: $dts-undrr-blue-brand;
       background: transparent;
       border-color: $dts-undrr-blue-brand;
     }
+
+    // &:hover {
+    //   color: $dts-undrr-blue-brand;
+    //   background: transparent;
+    //   border-color: $dts-undrr-blue-brand;
+    // }
 
     svg {
       width: $dts-spacing-24;
@@ -78,9 +91,10 @@
 
   &__sidebar {
     position: absolute;
-    width: 75vw;
-    top: 100%;
-    right: 0;
+    width: 100vw;
+    top: 71px;
+    right: -$dts-spacing-16;
+    background: $mg-color-white;
   }
 }
 
@@ -133,29 +147,11 @@
   }
 }
 
-.dts-mega-wrapper .mg-mega-sidebar-section {
-  &__item {
-    color: inherit;
-
-    &:hover {
-      background: transparent;
-    }
-  }
-
-  ol ol li a {
-    color: inherit;
-  }
-
-  ol ol li:hover {
-    background: transparent;
-  }
-}
-
-// User menu
+// User menu desktop
 .dts-mega-wrapper .mg-mega-content.dts-user-menu {
   position: absolute;
   right: 0;
-  padding: $dts-spacing-24 $dts-spacing-12;
+  padding: $dts-spacing-24;
 
   .mg-mega-content__banner {
     display: none;
@@ -174,11 +170,123 @@
     .mg-mega-content__section-list-link {
       padding: $dts-spacing-8;
       border-left: none;
+      display: flex;
+      align-items: center;
+      gap: $dts-spacing-12;
+      line-height: normal;
+
+      &:hover {
+        font-weight: 700;
+      }
 
       &--active {
         background-color: transparent;
         border-left: none;
       }
+
+      svg {
+        width: $dts-spacing-24;
+        height: $dts-spacing-24;
+      }
+    }
+  }
+}
+
+// Main navigation mobile
+.dts-mega-wrapper .mg-mega-sidebar-section {
+  &__item {
+    color: inherit;
+    font-weight: 500;
+    font-size: 2rem;
+    gap: $dts-spacing-8;
+    line-height: normal;
+
+    &:hover {
+      background: transparent;
+    }
+
+    svg {
+      width: $dts-spacing-24;
+      height: $dts-spacing-24;
+
+      &:last-of-type {
+        transform: scale(.8);
+      }
+    }
+
+    span {
+      flex: 1;
+    }
+  }
+
+  ol {
+    padding: 0 0 0 $dts-spacing-16;
+  }
+
+  ol ol li {
+    padding: 0;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  ol ol li a {
+    color: inherit;
+  }
+
+  ol ol ol li {
+    display: flex;
+    margin: 0 $dts-spacing-24 0 $dts-spacing-8;
+
+    &:first-of-type {
+      border-top: 1px solid;
+      padding-top: $dts-spacing-8;
+    }
+
+    &:last-of-type {
+      margin-bottom: $dts-spacing-4;
+    }
+  }
+
+  ol ol ol {
+    margin-left: $dts-spacing-16;
+
+    li a {
+      padding: $dts-spacing-4 0;
+    }
+  }
+
+  >ol .mg-mega-sidebar-section__item {
+    font-size: 1.8rem;
+    margin-left: $dts-spacing-16;
+    font-weight: 400;
+
+    svg:last-of-type {
+      transform: scale(.6);
+    }
+  }
+
+  >ol ol .mg-mega-sidebar-section__item {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+}
+
+// User menu mobile
+.dts-mega-wrapper .mg-mega-sidebar-section.dts-user-menu {
+  ol .mg-mega-sidebar-section__item {
+    svg {
+      display: none;
+    }
+  }
+}
+
+// Login button mobile
+.dts-mega-wrapper .mg-mega-sidebar-section.dts-log-in {
+  .mg-mega-sidebar-section__item {
+    svg:last-of-type {
+      display: none;
     }
   }
 }

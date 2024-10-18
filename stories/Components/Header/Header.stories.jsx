@@ -13,6 +13,7 @@ const sections = [
       {
         title: "Records",
         url: "#",
+        icon: '',
         subItems: [
           {
             title: "View records",
@@ -99,6 +100,7 @@ const sections = [
       {
         title: "Events",
         url: "#",
+        icon: '',
         subItems: [
           {
             title: "View all events",
@@ -183,6 +185,7 @@ const sections = [
       {
         title: "Exports",
         url: "#",
+        icon: '',
         subItems: [
           {
             title: "Exports",
@@ -222,6 +225,7 @@ const sections = [
       {
         title: "Impact by hazard type",
         url: "#",
+        icon: '',
         subItems: [
           {
             title: "Hazards",
@@ -247,6 +251,7 @@ const sections = [
       {
         title: "General",
         url: "#",
+        icon: '',
         subItems: [
           {
             title: "General",
@@ -272,6 +277,7 @@ const sections = [
       {
         title: "Access management",
         url: "#",
+        icon: '',
         subItems: [
           {
             title: "Users",
@@ -291,7 +297,7 @@ const sections = [
     title: 'Log in',
     bannerHeading: '',
     bannerDescription: '',
-    classes: '',
+    classes: 'dts-log-in',
     icon: 'icons/user-profile.svg#user',
   },
   {
@@ -304,6 +310,7 @@ const sections = [
       {
         title: "My account",
         url: "#",
+        icon: 'icons/user-profile.svg#user',
         subItems: [
           {
             title: "",
@@ -320,6 +327,7 @@ const sections = [
       {
         title: "Log out",
         url: "#",
+        icon: 'icons/logout.svg#logout',
         subItems: [
           {
             title: "",

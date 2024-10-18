@@ -4,7 +4,7 @@ import { Container } from "../../Atom/Layout/Container/Container";
 const Header = ({ sections }) => {
   return (
     <header>
-      <div className='mg-undrr-header'>Global header TBD</div>
+      {/* <div className='mg-undrr-header'>Global header TBD</div> */}
       <Container>
         <div className='dts-header'>
           <div className='dts-header__logo'>

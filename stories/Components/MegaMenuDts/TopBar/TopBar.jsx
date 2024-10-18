@@ -7,7 +7,13 @@ import close from "../../../assets/icons/times.svg"
 
 export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }) {
 
-  const onMouseEnter = (item) => {
+  const topBarItems = document.getElementsByClassName("mg-mega-topbar__item");
+
+  const onMouseEnter = (item, index) => {
+    for (let i = 0; i < topBarItems.length; i++) {
+      topBarItems[i].classList.remove("mg-mega-topbar__item--current");
+    }
+    topBarItems[index].classList.add("mg-mega-topbar__item--current");
     onItemHover(item);
   }
 
@@ -23,7 +29,7 @@ export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }
             <TopBarItem
               key={index}
               title={item.title}
-              onMouseEnter={() => onMouseEnter(item)}
+              onMouseEnter={() => onMouseEnter(item, index)}
               iconSrc={item.icon}
             /> 
           ))

@@ -7,6 +7,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  // overwrite storybook padding
+  padding: 0 !important;
   font-family: $mg-font-family;
   @extend .dts-body-text;
   color: $dts-neutral;
