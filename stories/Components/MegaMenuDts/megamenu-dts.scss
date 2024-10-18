@@ -211,6 +211,14 @@
 
       &:last-of-type {
         transform: scale(.8);
+        transition: all .1s ease-out;
+      }
+    }
+
+    &:has(+ ol) {
+
+      svg:last-of-type {
+        transform: scale(.8) rotate(180deg);
       }
     }
 
@@ -264,6 +272,13 @@
 
     svg:last-of-type {
       transform: scale(.6);
+    }
+
+    &:has(+ ol) {
+
+      svg:last-of-type {
+        transform: scale(.6) rotate(180deg);
+      }
     }
   }
 
