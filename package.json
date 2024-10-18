@@ -20,6 +20,7 @@
     "docker-up": "docker compose up -d",
     "docker-install": "docker exec -it undrr-mangrove-client-1 bash -c \"yarn install\"",
     "docker-run": "yarn docker-up && yarn docker-install && docker exec -it undrr-mangrove-client-1 bash -c \"yarn run storybook --ci\"",
+    "docker-storybook": "NODE_ENV=development storybook dev -p 6006",
     "docker-build": "docker exec -it undrr-mangrove-client-1 bash -c \"yarn run build\"",
     "docker-build-storybook": "docker exec -it undrr-mangrove-client-1 bash -c \"yarn run build-storybook\"",
     "docker-lint": "docker exec -it undrr-mangrove-client-1 bash -c \"yarn run lint:check\"",

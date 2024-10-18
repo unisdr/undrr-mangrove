@@ -18,7 +18,7 @@ const getCaptionForLocale = (locale) => {
             data: "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
           },
           {
-            text: "Tab title 3",
+            text: "Tab title 3 i am a bit longer and go on and on",
             text_id: "tab-3",
             data: "Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.",
           },
@@ -102,7 +102,7 @@ const getCaptionForLocale = (locale) => {
             data: "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
           },
           {
-            text: "Tab title 3",
+            text: "Tab title 3 i am a bit longer and on and on",
             text_id: "tab-3",
             data: "Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.",
           },
