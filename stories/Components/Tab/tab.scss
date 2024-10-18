@@ -1,9 +1,3 @@
-// testing
-// .mg-tabs {
-//   background: red;
-//   padding: 20px;
-// }
-
 .mg-tabs__list {
   background: $mg-color-tabbar-background;
   width: 100%;
@@ -54,18 +48,14 @@
 // With the introdcution of stacked and horizontal tabs we changed
 // the html structure so that the content is grouped under the li.
 // We scopped the css changes to ensure backwards compatibility.
-.mg-tabs--stacked {
-
-  // .mg-tabs--horizontal {
+.mg-tabs--stacked,
+  .mg-tabs--horizontal {
   .mg-tabs-content {
-
-    // display: none;
-    .mg-tabs__section {
-      padding: $mg-spacing-150;
-    }
+    padding-left: 0; // unset the li style padding
+    display: grid;
   }
 
-  .mg-tabs__link.is-active+.mg-tabs-content {
+  .mg-tabs__link.is-active + .mg-tabs-content {
     display: block;
   }
 }
@@ -77,40 +67,58 @@
       "tabs"
       "section";
     grid-template-columns: 1fr;
-    /* Single column layout */
     grid-template-rows: auto 1fr;
-    /* Adjust row heights as needed */
-    gap: $mg-spacing-150;
-    /* Adjust the gap as needed */
     position: relative;
-
+  }
+  .mg-tabs__section {
+    padding: $mg-spacing-150;
   }
 }
 
 .mg-tabs--horizontal {
+  @media (min-width: $mg-breakpoint-mobile) {
+    .mg-tabs__list {
+      display: grid;
+      min-width: 800px;
+      grid-template-areas:
+        "a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a"
+        "b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b";
+    }
 
-  .mg-tabs__list {
-    display: grid;
-    // grid-template-rows: auto 1fr;
-    grid-template-columns: minmax(100px, 300px);
-    // grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    // width: 100%;
-    // height: 100%;
+    .mg-tabs__item {
+      grid-row: 1;
+      display: flex;
+    }
+
+    .mg-tabs__link {
+      width: max-content; // force the tab title to be one line and not squisshed by min-content
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .mg-tabs-content {
+      width: 100%;
+      height: 100%;
+      grid-row: 2;
+      grid-column: 1 / -1;
+      grid-area: b;
+
+      list-style-type: none;
+    }
   }
-
-  .mg-tabs__item {
-    grid-row: 1;
-    display: flex;
+  // for smaller screens it mimics stacked tabs
+  @media (max-width: $mg-breakpoint-mobile) {
+    .mg-tabs--horizontal {
+      .mg-tabs-content {
+        padding-left: 0; // unset the li style padding
+        display: grid;
+      }
+    
+      .mg-tabs__link.is-active + .mg-tabs-content {
+        display: block;
+      }
+    }
   }
-
-  .mg-tabs-content {
-    width: 100%;
-    height: 100%;
-    grid-row: 2;
-    grid-column: auto / span 30;
-    list-style-type: none;
-  }
-
   // edge case with css grid and not selecting even though not visible
   .mg-tabs-content:has([hidden]) {
     display: none;
@@ -165,7 +173,7 @@
 
 [dir="rtl"] {
   .mg-tabs {
-    >ul {
+    > ul {
       padding-right: 0;
 
       @include devicebreak(medium) {
