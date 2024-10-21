@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { mgTabs } from '../../assets/js/tabs';
 
 export function Tab({ tabdata, variant }) {
+  console.log(tabdata);
   useEffect(() => {
     mgTabs();
   }, []);
