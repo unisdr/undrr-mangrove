@@ -115,7 +115,7 @@
     "style-loader": "4.0.0",
     "stylelint": "16.10.0",
     "stylelint-config-recommended-scss": "14.1.0",
-    "stylelint-scss": "6.8.0",
+    "stylelint-scss": "6.8.1",
     "svg-spritemap-webpack-plugin": "4.6.0",
     "svgo": "3.3.2",
     "svgo-loader": "4.0.0",
