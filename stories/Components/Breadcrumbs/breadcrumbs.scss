@@ -1,3 +1,6 @@
+@use "../../assets/scss/mixins";
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -7,17 +10,17 @@
     align-items: baseline;
     display: flex;
     flex-wrap: wrap;
-    font-size: $mg-font-size-100;
+    font-size: variables.$mg-font-size-100;
     padding: 0;
 
     li {
       display: inline-block;
-      margin: $mg-spacing-25 $mg-spacing-100 $mg-spacing-25 0;
+      margin: variables.$mg-spacing-25 variables.$mg-spacing-100 variables.$mg-spacing-25 0;
       padding-left: 0;
       position: relative;
 
       &::after {
-        color: $mg-color-red-900;
+        color: variables.$mg-color-red-900;
         content: "/";
         font-weight: bold;
         position: absolute;
@@ -42,15 +45,15 @@
 
       a {
         background: none;
-        color: $mg-color-red-900;
-        font-size: $mg-font-size-100;
+        color: variables.$mg-color-red-900;
+        font-size: variables.$mg-font-size-100;
         font-weight: 600;
         letter-spacing: 0.03em;
         text-transform: uppercase;
         transition: opacity 0.2s ease;
 
         &:hover {
-          color: $mg-color-red-900;
+          color: variables.$mg-color-red-900;
         }
       }
     }
@@ -59,14 +62,14 @@
   &.white {
     li {
       &::after {
-        color: $mg-color-white;
+        color: variables.$mg-color-white;
       }
 
       a {
-        color: $mg-color-white;
+        color: variables.$mg-color-white;
 
         &:hover {
-          color: $mg-color-white;
+          color: variables.$mg-color-white;
           opacity: 0.7;
         }
       }
@@ -74,7 +77,7 @@
 
     &:last-of-type,
     li:last-of-type {
-      color: $mg-color-white;
+      color: variables.$mg-color-white;
     }
   }
 }
@@ -86,7 +89,7 @@
     }
 
     li {
-      margin: $mg-spacing-25 0 $mg-spacing-25 $mg-spacing-100;
+      margin: variables.$mg-spacing-25 0 variables.$mg-spacing-25 variables.$mg-spacing-100;
       padding-right: 0;
 
       a {
@@ -94,7 +97,7 @@
       }
 
       &:first-of-type {
-        margin-left: $mg-spacing-100;
+        margin-left: variables.$mg-spacing-100;
         margin-right: 0;
       }
 
@@ -104,7 +107,7 @@
       }
 
       &::after {
-        @include transform(translate(0, -63%) rotate(140deg));
+        @include mixins.transform(translate(0, -63%) rotate(140deg));
 
         left: -14px;
         right: unset;
@@ -117,6 +120,6 @@
 // burmese lang
 :lang(my) {
   .breadcrumb li:last-of-type {
-    font-size: $mg-font-size-100;
+    font-size: variables.$mg-font-size-100;
   }
 }

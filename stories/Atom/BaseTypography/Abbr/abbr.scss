@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -5,6 +7,6 @@
 abbr[title] {
   @extend %paragraph-font-300;
 
-  border-bottom: 2px dashed $mg-color-red-900;
+  border-bottom: 2px dashed variables.$mg-color-red-900;
   text-decoration: none;
 }

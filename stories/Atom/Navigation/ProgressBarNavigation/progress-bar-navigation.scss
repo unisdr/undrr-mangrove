@@ -1,28 +1,32 @@
+@use "../../../assets/scss/breakpoints";
+@use "../../../assets/scss/mixins";
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
 
 // * progress navigation start *//
 .progress-container {
-  background: $mg-color-neutral-300;
+  background: variables.$mg-color-neutral-300;
   height: 0.75rem;
   width: 100%;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     height: 1rem;
   }
 
   &.small {
     height: 0.625rem;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       height: 0.75rem;
     }
 
     .progress-bar {
       height: 0.625rem;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         height: 0.75rem;
       }
     }
@@ -30,31 +34,31 @@
 
   &.yellow {
     .progress-bar {
-      background: $mg-color-yellow;
+      background: variables.$mg-color-yellow;
     }
   }
 
   &.red {
     .progress-bar {
-      background: $mg-color-red-900;
+      background: variables.$mg-color-red-900;
     }
   }
 
   &.green {
     .progress-bar {
-      background: $mg-color-green;
+      background: variables.$mg-color-green;
     }
   }
 
   &.blue {
     .progress-bar {
-      background: $mg-color-azure;
+      background: variables.$mg-color-azure;
     }
   }
 }
 
 .progress-bar {
-  @include transition(width 0.2s linear);
+  @include mixins.transition(width 0.2s linear);
 
   height: 0.75rem;
   min-width: 1%;
@@ -62,7 +66,7 @@
   width: 34%;
   z-index: 1;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     height: 1rem;
   }
 }

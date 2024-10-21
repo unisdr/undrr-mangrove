@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import "../../../assets/scss/breakpoints";
 // @import "../../../assets/scss/variables";
 
@@ -5,21 +7,21 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-100;
+  gap: variables.$mg-spacing-100;
 }
 
 .mg-share__header {
-  font-family: $mg-font-family;
-  color: $mg-color-text;
+  font-family: variables.$mg-font-family;
+  color: variables.$mg-color-text;
   font-weight: 600;
-  font-size: $mg-font-size-300;
+  font-size: variables.$mg-font-size-300;
   display: flex;
   justify-content: start;
 }
 
 .mg-share__buttons {
   display: flex;
-  gap: $mg-spacing-50;
+  gap: variables.$mg-spacing-50;
   flex-direction: row;
   justify-content: left;
   align-items: center;
@@ -28,22 +30,22 @@
 .mg-share__button {
   width: 4rem;
   height: 4rem;
-  padding: $mg-spacing-100;
-  border-radius: $mg-radius-button;
-  background-color: $mg-color-button-background;
-  color: $mg-color-button;
+  padding: variables.$mg-spacing-100;
+  border-radius: variables.$mg-radius-button;
+  background-color: variables.$mg-color-button-background;
+  color: variables.$mg-color-button;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border: $mg-border-width-button solid $mg-border-color-button;
+  border: variables.$mg-border-width-button solid variables.$mg-border-color-button;
 
   &:hover {
-    background-color: rgba($mg-color-button-background--hover, 0.8);
+    background-color: rgba(variables.$mg-color-button-background--hover, 0.8);
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background--hover;
+    box-shadow: 0 0 4px variables.$mg-color-button-background--hover;
     outline: 0;
   }
 }
@@ -54,11 +56,11 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  border: 0 solid $mg-border-color-button;
-  color: $mg-color-button;
-  font-family: $mg-font-family;
-  padding: $mg-spacing-100;
-  background-color: rgba($mg-color-button-background, 1);
+  border: 0 solid variables.$mg-border-color-button;
+  color: variables.$mg-color-button;
+  font-family: variables.$mg-font-family;
+  padding: variables.$mg-spacing-100;
+  background-color: rgba(variables.$mg-color-button-background, 1);
 
   &:hover .mg-share__copy-text {
     text-decoration: underline;
@@ -79,8 +81,8 @@
 }
 
 .mg-share__copy-text {
-  color: $mg-color-button;
-  font-size: $mg-font-size-100;
+  color: variables.$mg-color-button;
+  font-size: variables.$mg-font-size-100;
   overflow: hidden;
   scrollbar-width: 0;
   height: 17px;
@@ -97,7 +99,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba($mg-color-button-background, 0.5);
+  background-color: rgba(variables.$mg-color-button-background, 0.5);
 
   img {
     width: 18px;

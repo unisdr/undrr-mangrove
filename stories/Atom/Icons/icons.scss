@@ -1,3 +1,5 @@
+@use "../../assets/scss/variables";
+
 // @import '../../assets/scss/variables';
 // @import '../../assets/scss/breakpoints';
 // @import '../../assets/scss/mixins';
@@ -15,8 +17,8 @@
   font-family: FontAwesome;
   font-weight: normal;
   src:
-    url("#{$mgIconFontPath}/mangrove-icon-set.ttf") format("ttf"),
-    url("#{$mgIconFontPath}/mangrove-icon-set.woff2") format("woff2");
+    url("#{variables.$mgIconFontPath}/mangrove-icon-set.ttf") format("ttf"),
+    url("#{variables.$mgIconFontPath}/mangrove-icon-set.woff2") format("woff2");
 }
 
 .mg-icon,

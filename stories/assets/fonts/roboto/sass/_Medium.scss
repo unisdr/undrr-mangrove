@@ -1,8 +1,11 @@
+@use "mixins";
+@use "variables";
+
 /* BEGIN Medium */
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "Medium");
+  @include mixins.fontdef-woff(variables.$font-path, variables.$FontName, variables.$font-version, "Medium");
 
   font-weight: 500;
   font-style: normal;

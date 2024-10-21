@@ -1,8 +1,11 @@
+@use "mixins";
+@use "variables";
+
 /* BEGIN Bold */
 @font-face {
   font-family: "Roboto Condensed";
 
-  @include fontdef($font-path, $font-version, "Bold");
+  @include mixins.fontdef(variables.$font-path, variables.$font-version, "Bold");
 
   font-weight: 700;
   font-style: normal;

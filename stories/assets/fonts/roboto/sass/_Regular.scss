@@ -1,8 +1,11 @@
+@use "mixins";
+@use "variables";
+
 /* BEGIN Regular */
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "Regular");
+  @include mixins.fontdef-woff(variables.$font-path, variables.$FontName, variables.$font-version, "Regular");
 
   font-weight: 400;
   font-style: normal;
@@ -11,7 +14,7 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "Regular");
+  @include mixins.fontdef-woff(variables.$font-path, variables.$FontName, variables.$font-version, "Regular");
 
   font-weight: normal;
   font-style: normal;

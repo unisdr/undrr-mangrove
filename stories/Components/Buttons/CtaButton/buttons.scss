@@ -1,3 +1,6 @@
+@use "../../../assets/scss/breakpoints";
+@use "../../../assets/scss/variables";
+
 // @import '../../../../assets/scss/variables';
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
@@ -21,22 +24,22 @@
   align-items: center;
   background: transparent;
   display: flex;
-  font-size: $mg-font-size-button;
+  font-size: variables.$mg-font-size-button;
   font-weight: 600;
   line-height: 1;
-  border-radius: $mg-radius-button;
-  color: $mg-color-button;
+  border-radius: variables.$mg-radius-button;
+  color: variables.$mg-color-button;
   cursor: pointer;
   justify-content: center;
-  padding: $mg-padding-button;
-  border: $mg-border-width-button solid $mg-border-color-button;
+  padding: variables.$mg-padding-button;
+  border: variables.$mg-border-width-button solid variables.$mg-border-color-button;
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background--hover;
+    box-shadow: 0 0 4px variables.$mg-color-button-background--hover;
     outline: 0;
   }
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     display: inline-flex;
   }
 }
@@ -47,17 +50,17 @@
 
 button {
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background;
+    box-shadow: 0 0 4px variables.$mg-color-button-background;
     outline: 0;
   }
 }
 
 .mg-button-primary {
-  background-color: $mg-color-button-background;
+  background-color: variables.$mg-color-button-background;
 
   &:hover {
-    color: $mg-color-button;
-    background-color: $mg-color-button-background--hover;
+    color: variables.$mg-color-button;
+    background-color: variables.$mg-color-button-background--hover;
   }
 
   // &.button-arrow {
@@ -87,17 +90,17 @@ button {
 }
 
 .mg-button-secondary {
-  background-color: $mg-color-blue-600;
+  background-color: variables.$mg-color-blue-600;
 
   &:hover {
-    color: $mg-color-button;
-    background-color: $mg-color-blue-400;
+    color: variables.$mg-color-button;
+    background-color: variables.$mg-color-blue-400;
   }
 }
 
 .mg-button.disabled {
-  background-color: $mg-color-neutral-400;
-  color: $mg-color-neutral-300;
+  background-color: variables.$mg-color-neutral-400;
+  color: variables.$mg-color-neutral-300;
   pointer-events: none;
 }
 

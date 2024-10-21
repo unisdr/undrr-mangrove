@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -10,28 +12,28 @@ label {
   &.error {
     @extend %paragraph-font-300;
 
-    color: $mg-color-black;
+    color: variables.$mg-color-black;
     margin-top: 0;
   }
 
   &.disabled {
-    color: $mg-color-neutral-400;
+    color: variables.$mg-color-neutral-400;
   }
 }
 
 .help {
-  color: $mg-color-neutral-500;
+  color: variables.$mg-color-neutral-500;
   display: block;
-  font-size: $mg-font-size-200;
+  font-size: variables.$mg-font-size-200;
   margin-bottom: 0;
-  margin-top: $mg-spacing-25;
+  margin-top: variables.$mg-spacing-25;
 }
 
 .error {
-  color: $mg-color-red-900;
-  font-size: $mg-font-size-300;
+  color: variables.$mg-color-red-900;
+  font-size: variables.$mg-font-size-300;
   margin-bottom: 0;
-  margin-top: $mg-spacing-25;
+  margin-top: variables.$mg-spacing-25;
 }
 
 input[type="text"],
@@ -47,44 +49,44 @@ textarea {
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  border: 2px solid $mg-color-black;
+  border: 2px solid variables.$mg-color-black;
   border-radius: 0;
   box-sizing: border-box;
   display: block;
-  font-family: $mg-font-family;
-  font-size: $mg-font-size-300;
+  font-family: variables.$mg-font-family;
+  font-size: variables.$mg-font-size-300;
   height: 46px;
-  margin-top: $mg-spacing-25;
+  margin-top: variables.$mg-spacing-25;
   padding: 0.625rem;
   width: 100%;
 
   &::placeholder {
-    color: $mg-color-neutral-500;
+    color: variables.$mg-color-neutral-500;
   }
 
   &:focus {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px variables.$mg-color-blue-800;
     outline: 0;
   }
 
   input[type="date"],
   input[type="search"] {
-    padding-left: $mg-spacing-200;
+    padding-left: variables.$mg-spacing-200;
     position: relative;
   }
 
   &.disabled {
-    background-color: $mg-color-white;
-    border: 2px solid $mg-color-neutral-400;
-    color: $mg-color-neutral-400;
+    background-color: variables.$mg-color-white;
+    border: 2px solid variables.$mg-color-neutral-400;
+    color: variables.$mg-color-neutral-400;
 
     &::placeholder {
-      color: $mg-color-neutral-400;
+      color: variables.$mg-color-neutral-400;
     }
   }
 
   &.error {
-    border: 2px solid $mg-color-red-900;
+    border: 2px solid variables.$mg-color-red-900;
   }
 }
 
@@ -92,9 +94,9 @@ input[type="date"] {
   // background:
   //   url(#{$img-path-Icon}/calender-black.svg) no-repeat left 14px
   //   bottom 12px;
-  background-color: $mg-color-white;
-  color: $mg-color-neutral-500;
-  padding-left: $mg-spacing-200;
+  background-color: variables.$mg-color-white;
+  color: variables.$mg-color-neutral-500;
+  padding-left: variables.$mg-spacing-200;
 
   // &.disabled {
   //   background-image: url(#{$img-path-Icon}/date-disabled.svg);
@@ -115,7 +117,7 @@ input[type="search"] {
 
 .help {
   &.disabled {
-    color: $mg-color-neutral-400;
+    color: variables.$mg-color-neutral-400;
   }
 }
 
@@ -143,7 +145,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   textarea {
     @media (hover: none) and (pointer: coarse) {
       input[type="date"] {
-        padding-right: $mg-spacing-100;
+        padding-right: variables.$mg-spacing-100;
       }
     }
   }
@@ -197,6 +199,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   input[type="tel"],
   input[type="date"],
   textarea {
-    font-family: $mg-font-family;
+    font-family: variables.$mg-font-family;
   }
 }

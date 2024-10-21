@@ -1,3 +1,5 @@
+@use "../../assets/scss/variables";
+
 // @import "../../assets/scss/variables";
 
 .mg-mega-wrapper {
@@ -6,18 +8,18 @@
 
 .mg-mega-topbar {
   width: 100%;
-  background: $mg-color-interactive;
+  background: variables.$mg-color-interactive;
   display: flex;
   align-items: flex-start;
 }
 
 .mg-mega-topbar__item {
-  padding: $mg-padding-button;
-  color: $mg-color-button;
+  padding: variables.$mg-padding-button;
+  color: variables.$mg-color-button;
   cursor: pointer;
   &:hover {
-    background: $mg-color-interactive-active;
-    color: $mg-color-button;
+    background: variables.$mg-color-interactive-active;
+    color: variables.$mg-color-button;
   }
 }
 
@@ -25,8 +27,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: start;
-  background-color: $mg-color-interactive;
-  border-radius: $mg-radius-tab;
+  background-color: variables.$mg-color-interactive;
+  border-radius: variables.$mg-radius-tab;
   box-shadow: -1px 5px 10px -1px rgba(0 0 0 / 0.25);
   height: 35rem;
   overflow: hidden;
@@ -34,20 +36,20 @@
   &__left {
     flex-basis: 33%;
     height: 100%;
-    background-color: $mg-color-interactive;
+    background-color: variables.$mg-color-interactive;
   }
   &__banner {
-    padding: $mg-spacing-300;
-    color: $mg-color-button;
+    padding: variables.$mg-spacing-300;
+    color: variables.$mg-color-button;
     header {
-      font-size: $mg-font-size-500;
+      font-size: variables.$mg-font-size-500;
       line-height: 1;
       margin: 0;
       padding: 0;
     }
     p {
       margin: 0;
-      color: $mg-color-button;
+      color: variables.$mg-color-button;
     }
   }
 }
@@ -64,16 +66,16 @@
   margin: 0;
   .mg-mega-content__section-list-link {
     text-decoration: none;
-    color: $mg-color-black;
+    color: variables.$mg-color-black;
     font-weight: bold;
     display: block;
-    padding: $mg-spacing-50 0;
+    padding: variables.$mg-spacing-50 0;
     cursor: pointer;
     &--active {
-      padding: $mg-spacing-50 $mg-spacing-300;
-      margin-left: -$mg-spacing-300;
-      margin-right: -$mg-spacing-300;
-      background-color: $mg-color-button;
+      padding: variables.$mg-spacing-50 variables.$mg-spacing-300;
+      margin-left: -(variables.$mg-spacing-300);
+      margin-right: -(variables.$mg-spacing-300);
+      background-color: variables.$mg-color-button;
     }
   }
 }
@@ -81,11 +83,11 @@
 .mg-mega-content__right {
   flex: 1;
   height: 100%;
-  background-color: $mg-color-white;
+  background-color: variables.$mg-color-white;
   display: flex;
   ul {
     flex: 1;
-    margin: $mg-spacing-150;
+    margin: variables.$mg-spacing-150;
     padding: 0;
     list-style: none;
     display: flex;
@@ -98,7 +100,7 @@
       margin: 0;
       a {
         display: block;
-        padding: $mg-spacing-50;
+        padding: variables.$mg-spacing-50;
         text-decoration: none;
         overflow: hidden;
         white-space: wrap;
@@ -116,7 +118,7 @@
   margin: 0;
   a {
     text-decoration: none;
-    color: $mg-color-black;
+    color: variables.$mg-color-black;
   }
   &__children {
     list-style: none;
@@ -124,7 +126,7 @@
 }
 
 .mg-icon-button {
-  padding: $mg-spacing-100;
+  padding: variables.$mg-spacing-100;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -132,7 +134,7 @@
   align-items: center;
   justify-content: center;
   &:hover {
-    background-color: $mg-color-blue-500;
+    background-color: variables.$mg-color-blue-500;
   }
 }
 
@@ -145,16 +147,16 @@
     }
     ol li {
       list-style: none;
-      padding-top: $mg-spacing-50;
-      padding-bottom: $mg-spacing-50;
-      padding-left: $mg-spacing-350;
+      padding-top: variables.$mg-spacing-50;
+      padding-bottom: variables.$mg-spacing-50;
+      padding-left: variables.$mg-spacing-350;
       margin: 0;
       a {
-        color: $mg-color-white;
+        color: variables.$mg-color-white;
         text-decoration: none;
       }
       &:hover {
-        background: $mg-color-blue-700;
+        background: variables.$mg-color-blue-700;
       }
     }
   }
@@ -166,9 +168,9 @@
   justify-content: space-between;
   color: white;
   cursor: pointer;
-  padding: $mg-spacing-100 $mg-spacing-250;
+  padding: variables.$mg-spacing-100 variables.$mg-spacing-250;
   &:hover {
-    background: $mg-color-blue-700;
+    background: variables.$mg-color-blue-700;
   }
 }
 
@@ -177,7 +179,7 @@
   position: absolute;
   overflow: scroll;
   height: 100vh;
-  background-color: $mg-color-blue-900;
+  background-color: variables.$mg-color-blue-900;
   -webkit-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   -moz-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
@@ -189,31 +191,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $mg-spacing-150 $mg-spacing-350;
-  color: $mg-color-white;
+  padding: variables.$mg-spacing-150 variables.$mg-spacing-350;
+  color: variables.$mg-color-white;
   cursor: pointer;
   &:hover {
-    background: $mg-color-blue-400;
+    background: variables.$mg-color-blue-400;
   }
 }
 
 .mg-mega-topbar {
   width: 100%;
-  background: $mg-color-blue-900;
+  background: variables.$mg-color-blue-900;
   display: flex;
   align-items: flex-start;
 }
 
 .mg-mega-topbar__item {
-  padding: $mg-spacing-100 $mg-spacing-150;
-  color: $mg-color-white;
+  padding: variables.$mg-spacing-100 variables.$mg-spacing-150;
+  color: variables.$mg-color-white;
   &:hover {
-    background: $mg-color-blue-800;
+    background: variables.$mg-color-blue-800;
   }
 }
 
 .mg-mega-topbar__icon-button {
-  padding: $mg-spacing-100;
+  padding: variables.$mg-spacing-100;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -221,11 +223,11 @@
   align-items: center;
   justify-content: center;
   &:hover {
-    background: $mg-color-blue-800;
+    background: variables.$mg-color-blue-800;
   }
 }
 
-@media screen and (max-width: $mg-breakpoint-mobile) {
+@media screen and (max-width: variables.$mg-breakpoint-mobile) {
   .mg-mega-topbar__icon-button {
     display: flex;
   }

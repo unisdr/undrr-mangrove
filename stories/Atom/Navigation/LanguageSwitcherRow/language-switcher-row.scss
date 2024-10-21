@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/mixins';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/variables';
@@ -10,7 +12,7 @@
   display: inline-block;
   line-height: 0.9;
   min-width: 100px;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: variables.$mg-spacing-25 variables.$mg-spacing-50;
 }
 
 // * language row end *//

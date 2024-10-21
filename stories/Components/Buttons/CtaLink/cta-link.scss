@@ -1,3 +1,6 @@
+@use "../../../assets/scss/mixins";
+@use "../../../assets/scss/variables";
+
 // @import '../../../../assets/scss/variables';
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
@@ -6,19 +9,19 @@
   @extend %button;
   @extend %img_none;
 
-  color: $mg-color-black;
+  color: variables.$mg-color-black;
 
   &.cta--arrow {
     @extend %chevron-right-expanded;
 
     padding-left: 0;
-    padding-right: $mg-spacing-100;
+    padding-right: variables.$mg-spacing-100;
   }
 
   &.cta--space {
     &::after {
       @extend %ctaimg;
-      @include transition(0.2s ease);
+      @include mixins.transition(0.2s ease);
 
       // background:
       //   url(#{$img-path-Iconfourback}/arrow-left-expand-defaut.svg)
@@ -27,7 +30,7 @@
 
     &:hover {
       &::after {
-        @include translate(70%, 0);
+        @include mixins.translate(70%, 0);
       }
     }
   }
@@ -39,23 +42,23 @@
 
     &.cta--space {
       &::after {
-        @include transform(rotate(180deg));
+        @include mixins.transform(rotate(180deg));
 
         margin-left: 0;
-        margin-right: $mg-spacing-25;
+        margin-right: variables.$mg-spacing-25;
       }
 
       &:hover::after {
-        @include transform(translate(-50%, 0) rotate(180deg));
+        @include mixins.transform(translate(-50%, 0) rotate(180deg));
       }
     }
 
     &.cta--arrow {
-      padding-left: $mg-spacing-100;
+      padding-left: variables.$mg-spacing-100;
       padding-right: 0;
 
       i {
-        @include transform(translate(0) rotate(180deg));
+        @include mixins.transform(translate(0) rotate(180deg));
 
         left: 0;
         right: 1.25rem;

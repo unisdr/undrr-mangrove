@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/mixins';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/variables';
@@ -7,13 +9,13 @@
   @extend %border-none;
   @extend %img_none;
 
-  color: $mg-color-red-900;
-  font-size: $mg-font-size-100;
+  color: variables.$mg-color-red-900;
+  font-size: variables.$mg-font-size-100;
   font-weight: 600;
   text-transform: uppercase;
 
   &:hover {
-    color: $mg-color-red-900;
+    color: variables.$mg-color-red-900;
   }
 }
 

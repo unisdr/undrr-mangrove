@@ -1,3 +1,7 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/mixins";
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -10,7 +14,7 @@
   position: relative;
 
   li {
-    border-bottom: 1px solid $mg-color-neutral-500;
+    border-bottom: 1px solid variables.$mg-color-neutral-500;
     cursor: pointer;
     list-style: none;
     margin-bottom: 0;
@@ -21,32 +25,32 @@
     button {
       @extend %button;
 
-      font-size: $mg-font-size-500;
+      font-size: variables.$mg-font-size-500;
       font-weight: 400;
       letter-spacing: 0;
       line-height: 1.15;
       margin: 0 auto;
-      padding: $mg-spacing-50 0 $mg-spacing-100;
+      padding: variables.$mg-spacing-50 0 variables.$mg-spacing-100;
       text-align: left;
       width: 100%;
 
       &::before {
-        @include transition(all 0.3s ease);
+        @include mixins.transition(all 0.3s ease);
 
         // background: url(#{$img-path-Icon}/chevron-down.svg) no-repeat center center;
         border-top-color: #f3f3f3;
         content: "";
         height: 1.25rem;
-        margin-left: $mg-spacing-100;
+        margin-left: variables.$mg-spacing-100;
         position: absolute;
         right: 0;
-        top: $mg-spacing-100;
+        top: variables.$mg-spacing-100;
         width: 1.25rem;
       }
 
       &.accordion--active {
         &::before {
-          @include transform(rotateZ(-180deg));
+          @include mixins.transform(rotateZ(-180deg));
         }
       }
     }
@@ -75,7 +79,7 @@
           padding-right: 0;
 
           &::before {
-            @include transform(rotateZ(180deg));
+            @include mixins.transform(rotateZ(180deg));
           }
         }
       }
@@ -86,23 +90,23 @@
 .accordion__panel {
   display: none;
   height: auto;
-  padding: $mg-spacing-150;
+  padding: variables.$mg-spacing-150;
 
-  @include devicebreak(medium) {
-    padding: $mg-spacing-200;
+  @include breakpoints.devicebreak(medium) {
+    padding: variables.$mg-spacing-200;
   }
 }
 
 [data-accordion="mobile"] {
   .desktop {
     &-visible {
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         display: block !important;
       }
     }
 
     &-event-none {
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         pointer-events: none;
       }
     }
@@ -114,7 +118,7 @@
   .accordion {
     li {
       button {
-        font-family: $mg-font-family;
+        font-family: variables.$mg-font-family;
       }
     }
   }

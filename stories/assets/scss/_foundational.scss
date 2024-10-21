@@ -1,3 +1,6 @@
+@use "breakpoints";
+@use "variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -10,18 +13,18 @@ html {
 }
 
 body {
-  color: $mg-color-black;
-  font-family: $mg-font-family;
-  font-size: $mg-font-size-300;
-  line-height: $mg-font-line-height-500;
+  color: variables.$mg-color-black;
+  font-family: variables.$mg-font-family;
+  font-size: variables.$mg-font-size-300;
+  line-height: variables.$mg-font-line-height-500;
 
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-300;
+  @include breakpoints.devicebreak(medium) {
+    font-size: variables.$mg-font-size-300;
   }
 }
 
 button {
-  font-family: $mg-font-family;
+  font-family: variables.$mg-font-family;
 }
 
 h1,
@@ -31,26 +34,26 @@ h4,
 h5,
 h6,
 caption {
-  margin: $mg-spacing-0;
-  margin-bottom: $mg-spacing-25;
-  padding: $mg-spacing-0;
+  margin: variables.$mg-spacing-0;
+  margin-bottom: variables.$mg-spacing-25;
+  padding: variables.$mg-spacing-0;
 
-  @include devicebreak(medium) {
-    margin-bottom: $mg-font-size-300;
+  @include breakpoints.devicebreak(medium) {
+    margin-bottom: variables.$mg-font-size-300;
   }
 }
 
 h1 {
-  font-family: $mg-font-family;
-  font-size: $mg-font-size-600;
+  font-family: variables.$mg-font-family;
+  font-size: variables.$mg-font-size-600;
   letter-spacing: 0.06rem;
   line-height: 1.08;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 5.125rem;
   }
 
-  @include devicebreak(large) {
+  @include breakpoints.devicebreak(large) {
     font-size: 6.25rem;
   }
 }
@@ -60,11 +63,11 @@ h2 {
   font-weight: 700;
   line-height: 1.1;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 2.813rem;
   }
 
-  @include devicebreak(large) {
+  @include breakpoints.devicebreak(large) {
     font-size: 3.438rem;
   }
 }
@@ -74,7 +77,7 @@ h3 {
   font-weight: 600;
   line-height: 1.15;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 2.188rem;
   }
 }
@@ -84,23 +87,23 @@ h4 {
   font-weight: 400;
   line-height: 1.15;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 2.188rem;
   }
 }
 
 h5 {
-  font-size: $mg-font-size-200;
+  font-size: variables.$mg-font-size-200;
   font-weight: 400;
   line-height: 1.15;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 1.563rem;
   }
 }
 
 h6 {
-  font-size: $mg-font-size-100;
+  font-size: variables.$mg-font-size-100;
   font-weight: 700;
   letter-spacing: 0.03rem;
   line-height: 1.15;
@@ -115,17 +118,17 @@ ol {
   margin: 0;
   padding-left: 1.125rem;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     padding-left: 1.313rem;
   }
 
   li {
-    margin-bottom: $mg-spacing-0;
-    padding-left: $mg-spacing-0;
+    margin-bottom: variables.$mg-spacing-0;
+    padding-left: variables.$mg-spacing-0;
 
-    @include devicebreak(medium) {
-      margin-bottom: $mg-spacing-0;
-      padding-left: $mg-spacing-25;
+    @include breakpoints.devicebreak(medium) {
+      margin-bottom: variables.$mg-spacing-0;
+      padding-left: variables.$mg-spacing-25;
     }
   }
 }
@@ -133,7 +136,7 @@ ol {
 ul li::marker {
   font-size: 1.125rem;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 1.313rem;
   }
 }
@@ -147,30 +150,30 @@ ol {
 dl {
   font-size: 0.875rem;
   line-height: 1.37;
-  margin: $mg-spacing-0;
+  margin: variables.$mg-spacing-0;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     font-size: 1.25rem;
   }
 }
 
 dt {
-  margin-bottom: $mg-spacing-25;
+  margin-bottom: variables.$mg-spacing-25;
 }
 
 dd {
-  margin-bottom: $mg-spacing-50;
-  margin-inline-start: $mg-spacing-200;
+  margin-bottom: variables.$mg-spacing-50;
+  margin-inline-start: variables.$mg-spacing-200;
 
-  @include devicebreak(medium) {
-    margin-bottom: $mg-spacing-100;
-    margin-inline-start: $mg-spacing-300;
+  @include breakpoints.devicebreak(medium) {
+    margin-bottom: variables.$mg-spacing-100;
+    margin-inline-start: variables.$mg-spacing-300;
   }
 }
 
 hr {
   // border-width: 2px;
-  border: 1px solid $mg-color-black;
+  border: 1px solid variables.$mg-color-black;
 }
 
 // link animation
@@ -190,19 +193,19 @@ a {
   // @extend %paragraph-font-300 !optional;
   // @extend %animate-link !optional;
 
-  color: $mg-color-interactive;
+  color: variables.$mg-color-interactive;
   text-decoration: none;
 }
 
 a:hover {
-  color: $mg-color-interactive-active;
+  color: variables.$mg-color-interactive-active;
   text-decoration: underline;
 }
 
 // burmese lang
 :lang(my) {
   body {
-    font-family: $mg-font-family;
+    font-family: variables.$mg-font-family;
     line-height: 1.7;
   }
 
@@ -216,14 +219,14 @@ a:hover {
   }
 
   h1 {
-    font-family: $mg-font-family;
+    font-family: variables.$mg-font-family;
     font-size: 2.625rem;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       font-size: 3.875rem;
     }
 
-    @include devicebreak(large) {
+    @include breakpoints.devicebreak(large) {
       font-size: 5rem;
     }
   }
@@ -231,11 +234,11 @@ a:hover {
   h2 {
     font-size: 2rem;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       font-size: 2.188rem;
     }
 
-    @include devicebreak(large) {
+    @include breakpoints.devicebreak(large) {
       font-size: 2.813rem;
     }
   }
@@ -243,25 +246,25 @@ a:hover {
   h4 {
     font-size: 1.3rem;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       font-size: 1.8rem;
     }
   }
 
   h5 {
-    font-size: $mg-font-size-400;
+    font-size: variables.$mg-font-size-400;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       font-size: 1.375rem;
     }
   }
 
   p {
-    font-size: $mg-font-size-200;
+    font-size: variables.$mg-font-size-200;
     line-height: 1.7;
 
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-300;
+    @include breakpoints.devicebreak(medium) {
+      font-size: variables.$mg-font-size-300;
     }
   }
 
@@ -271,7 +274,7 @@ a:hover {
     font-size: 0.875rem;
     line-height: 1.9;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       font-size: 1.125rem;
     }
   }
@@ -285,11 +288,11 @@ a:hover {
     h5,
     h6,
     p {
-      font-family: $mg-font-family;
+      font-family: variables.$mg-font-family;
     }
 
     .sbdocs-h1 {
-      font-size: $mg-spacing-150;
+      font-size: variables.$mg-spacing-150;
     }
   }
 }
@@ -300,7 +303,7 @@ a:hover {
     padding-left: 0;
     padding-right: 1.125rem;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       padding-right: 1.313rem;
     }
 
@@ -308,17 +311,17 @@ a:hover {
       padding-left: 0;
       padding-right: 0.875rem;
 
-      @include devicebreak(medium) {
-        padding-right: $mg-spacing-25;
+      @include breakpoints.devicebreak(medium) {
+        padding-right: variables.$mg-spacing-25;
       }
     }
   }
 }
 
 /* Cyrillic scripts */
-#{$cyrillic} {
+#{variables.$cyrillic} {
   h1 {
-    font-family: $mg-font-family;
+    font-family: variables.$mg-font-family;
   }
 }
 

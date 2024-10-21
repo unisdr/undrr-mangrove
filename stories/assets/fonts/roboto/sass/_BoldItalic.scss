@@ -1,8 +1,11 @@
+@use "mixins";
+@use "variables";
+
 /* BEGIN Bold Italic */
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "BoldItalic");
+  @include mixins.fontdef-woff(variables.$font-path, variables.$FontName, variables.$font-version, "BoldItalic");
 
   font-weight: 700;
   font-style: italic;
@@ -11,7 +14,7 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "BoldItalic");
+  @include mixins.fontdef-woff(variables.$font-path, variables.$FontName, variables.$font-version, "BoldItalic");
 
   font-weight: bold;
   font-style: italic;

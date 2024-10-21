@@ -1,3 +1,5 @@
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -13,57 +15,57 @@
 .mg-hero {
   background-size: cover;
   background-position: center;
-  color: $mg-color-neutral-0;
+  color: variables.$mg-color-neutral-0;
   display: grid;
   grid-template-columns: 1fr;
   position: relative;
   margin-left: calc(50% - (50vw)); // to expand out of the parent container
-  padding-left: $mg-spacing-100;
+  padding-left: variables.$mg-spacing-100;
   width: 100vw;
 
-  @media (min-width: $mg-breakpoint-tablet) {
+  @media (min-width: variables.$mg-breakpoint-tablet) {
     aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
     padding-left: calc(
-      50vw - calc($mg-breakpoint-desktop / 2)
+      50vw - calc(variables.$mg-breakpoint-desktop / 2)
     ); // to keep the overlay fixed
   }
 
-  @media (min-width: $mg-breakpoint-desktop-wide) {
+  @media (min-width: variables.$mg-breakpoint-desktop-wide) {
     padding-left: calc(
-      50vw - calc($mg-breakpoint-desktop-wide / 2)
+      50vw - calc(variables.$mg-breakpoint-desktop-wide / 2)
     ); // to keep the overlay fixed
   }
 
   // Button overrides
   a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
+    background-color: variables.$mg-color-neutral-0;
   }
   a.mg-button-secondary {
-    background-color: rgba($mg-color-neutral-0, 0.9);
+    background-color: rgba(variables.$mg-color-neutral-0, 0.9);
   }
   a.mg-button,
   a.mg-button:hover,
   a.mg-button:visited {
-    color: $mg-color-hero;
+    color: variables.$mg-color-hero;
   }
 
   &__overlay {
     align-items: center;
-    background-color: rgba($mg-color-hero, $mg-opacity-hero);
+    background-color: rgba(variables.$mg-color-hero, variables.$mg-opacity-hero);
     display: grid;
-    margin: $mg-spacing-hero-overlay;
-    max-width: $mg-width-400;
-    padding: $mg-spacing-200;
+    margin: variables.$mg-spacing-hero-overlay;
+    max-width: variables.$mg-width-400;
+    padding: variables.$mg-spacing-200;
   }
 
   &__content {
     display: grid;
-    margin-top: $mg-spacing-25;
+    margin-top: variables.$mg-spacing-25;
     row-gap: 1rem;
   }
 
   &__meta {
-    padding-bottom: $mg-spacing-25;
+    padding-bottom: variables.$mg-spacing-25;
 
     &.meta-detail {
       display: flex;
@@ -73,10 +75,10 @@
 
   &__label {
     display: inline-block;
-    font-size: $mg-font-label;
+    font-size: variables.$mg-font-label;
     font-weight: bold;
-    margin-right: $mg-spacing-25;
-    padding: $mg-spacing-25 0;
+    margin-right: variables.$mg-spacing-25;
+    padding: variables.$mg-spacing-25 0;
 
     &.detail {
       font-weight: normal;
@@ -87,32 +89,32 @@
   a,
   a:hover,
   a:visited {
-    color: $mg-color-neutral-0;
+    color: variables.$mg-color-neutral-0;
   }
 
   // Title styles (for both <h1> and <a>)
   &__title {
-    color: $mg-color-neutral-0;
-    margin-bottom: $mg-spacing-25;
+    color: variables.$mg-color-neutral-0;
+    margin-bottom: variables.$mg-spacing-25;
     display: inline-block;
     line-height: 1;
     font-weight: bold;
-    font-size: $mg-font-size-600;
+    font-size: variables.$mg-font-size-600;
 
     // General text styles for larger text
     .text-xxl {
-      font-size: $mg-font-size-800;
+      font-size: variables.$mg-font-size-800;
 
-      @media (max-width: $mg-breakpoint-mobile) {
-        font-size: $mg-font-size-600;
+      @media (max-width: variables.$mg-breakpoint-mobile) {
+        font-size: variables.$mg-font-size-600;
       }
     }
 
     .text-xl {
-      @include mg-typography("large");
+      @include variables.mg-typography("large");
 
-      @media (max-width: $mg-breakpoint-mobile) {
-        @include mg-typography("medium");
+      @media (max-width: variables.$mg-breakpoint-mobile) {
+        @include variables.mg-typography("medium");
       }
     }
 
@@ -123,59 +125,59 @@
     h4,
     h5,
     h6 {
-      color: $mg-color-neutral-0;
+      color: variables.$mg-color-neutral-0;
       font-weight: bold;
-      font-size: $mg-font-size-600;
+      font-size: variables.$mg-font-size-600;
 
       // Match the text-xxl and text-xl styling
       &.text-xxl {
-        font-size: $mg-font-size-800;
+        font-size: variables.$mg-font-size-800;
 
-        @media (max-width: $mg-breakpoint-mobile) {
-          font-size: $mg-font-size-600;
+        @media (max-width: variables.$mg-breakpoint-mobile) {
+          font-size: variables.$mg-font-size-600;
         }
       }
 
       &.text-xl {
-        @include mg-typography("large");
+        @include variables.mg-typography("large");
 
-        @media (max-width: $mg-breakpoint-mobile) {
-          @include mg-typography("medium");
+        @media (max-width: variables.$mg-breakpoint-mobile) {
+          @include variables.mg-typography("medium");
         }
       }
     }
   }
 
   &__summaryText {
-    @include mg-typography("small");
+    @include variables.mg-typography("small");
 
-    margin-bottom: $mg-spacing-25;
+    margin-bottom: variables.$mg-spacing-25;
   }
 }
 
 .mg-hero__buttons {
-  padding-top: $mg-spacing-75;
+  padding-top: variables.$mg-spacing-75;
   display: flex;
-  padding-bottom: $mg-spacing-50;
+  padding-bottom: variables.$mg-spacing-50;
 }
 
 // Child variant
 .mg-hero--child .mg-hero__overlay {
-  @media (max-width: $mg-breakpoint-tablet) {
+  @media (max-width: variables.$mg-breakpoint-tablet) {
     margin-left: 0;
   }
 }
 
 // Stylistic variants
 $variant-colours: (
-  "secondary": $mg-color-hero--secondary,
-  "tertiary": $mg-color-hero--tertiary,
-  "quaternary": $mg-color-hero--quaternary,
+  "secondary": variables.$mg-color-hero--secondary,
+  "tertiary": variables.$mg-color-hero--tertiary,
+  "quaternary": variables.$mg-color-hero--quaternary,
 );
 
 @each $name, $color in $variant-colours {
   .mg-hero--#{$name} .mg-hero__overlay {
-    background-color: rgba($color, $mg-opacity-hero);
+    background-color: rgba($color, variables.$mg-opacity-hero);
     a.mg-button,
     a.mg-button:hover,
     a.mg-button:visited {
@@ -187,17 +189,17 @@ $variant-colours: (
 // RTL tweaks
 [dir="rtl"] .mg-hero {
   margin-right: calc(50% - (50vw)); // to expand out of the parent container
-  padding-right: $mg-spacing-100;
+  padding-right: variables.$mg-spacing-100;
 
-  @media (min-width: $mg-breakpoint-tablet) {
+  @media (min-width: variables.$mg-breakpoint-tablet) {
     padding-right: calc(
-      50vw - calc($mg-breakpoint-desktop / 2)
+      50vw - calc(variables.$mg-breakpoint-desktop / 2)
     ); // to keep the overlay fixed
   }
 
-  @media (min-width: $mg-breakpoint-desktop-wide) {
+  @media (min-width: variables.$mg-breakpoint-desktop-wide) {
     padding-right: calc(
-      50vw - calc($mg-breakpoint-desktop-wide / 2)
+      50vw - calc(variables.$mg-breakpoint-desktop-wide / 2)
     ); // to keep the overlay fixed
   }
 }

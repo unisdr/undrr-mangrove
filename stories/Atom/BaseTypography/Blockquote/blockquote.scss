@@ -1,15 +1,18 @@
+@use "../../../assets/scss/breakpoints";
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
 
 blockquote {
-  font-size: $mg-font-size-600;
+  font-size: variables.$mg-font-size-600;
   font-weight: 600;
   line-height: 1.16;
   margin: 0;
 
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-900;
+  @include breakpoints.devicebreak(medium) {
+    font-size: variables.$mg-font-size-900;
     line-height: 1.15;
   }
 }

@@ -1,43 +1,46 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/variables";
+
 // @import '../../assets/scss/variables';
 // @import '../../assets/scss/breakpoints';
 // @import '../../assets/scss/mixins';
 
 /* image caption start */
 .image__caption {
-  border-bottom: 2px solid $mg-color-black;
+  border-bottom: 2px solid variables.$mg-color-black;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     display: flex;
     justify-content: space-between;
-    padding-bottom: $mg-spacing-150;
+    padding-bottom: variables.$mg-spacing-150;
   }
 
   p {
-    color: $mg-color-neutral-600;
-    font-size: $mg-font-size-200;
-    margin-bottom: $mg-spacing-50;
+    color: variables.$mg-color-neutral-600;
+    font-size: variables.$mg-font-size-200;
+    margin-bottom: variables.$mg-spacing-50;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       border: 0;
-      font-size: $mg-font-size-300;
+      font-size: variables.$mg-font-size-300;
       margin: 0;
     }
 
     + .credits {
-      border-top: 1px solid $mg-color-neutral-500;
+      border-top: 1px solid variables.$mg-color-neutral-500;
       display: flex;
       flex-shrink: 0;
       flex-wrap: wrap;
-      margin-bottom: $mg-spacing-50;
-      padding-top: $mg-spacing-50;
+      margin-bottom: variables.$mg-spacing-50;
+      padding-top: variables.$mg-spacing-50;
 
-      @include devicebreak(medium) {
-        border-left: 1px solid $mg-color-neutral-500;
+      @include breakpoints.devicebreak(medium) {
+        border-left: 1px solid variables.$mg-color-neutral-500;
         border-top: 0;
         display: block;
         margin-bottom: 0;
-        margin-left: $mg-spacing-150;
-        padding-left: $mg-spacing-150;
+        margin-left: variables.$mg-spacing-150;
+        padding-left: variables.$mg-spacing-150;
         padding-top: 0;
       }
     }
@@ -45,9 +48,9 @@
 
   .credits {
     display: flex;
-    margin-bottom: $mg-spacing-50;
+    margin-bottom: variables.$mg-spacing-50;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       border-top: 0;
       display: block;
       margin-bottom: 0;
@@ -55,9 +58,9 @@
     }
 
     strong {
-      margin-left: $mg-spacing-25;
+      margin-left: variables.$mg-spacing-25;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         margin-left: 0;
       }
     }
@@ -67,33 +70,33 @@
 [dir="rtl"] {
   .image__caption {
     p {
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         padding-right: 0;
       }
 
       + .credits {
-        @include devicebreak(medium) {
-          border-right: 1px solid $mg-color-neutral-500;
+        @include breakpoints.devicebreak(medium) {
+          border-right: 1px solid variables.$mg-color-neutral-500;
           border-top: 0;
           display: block;
-          margin-right: $mg-spacing-150;
-          padding-right: $mg-spacing-150;
+          margin-right: variables.$mg-spacing-150;
+          padding-right: variables.$mg-spacing-150;
           padding-top: 0;
         }
       }
     }
 
     .credits {
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         border-left: none;
         margin-left: 0;
         padding-left: 0;
       }
 
       strong {
-        margin-right: $mg-spacing-25;
+        margin-right: variables.$mg-spacing-25;
 
-        @include devicebreak(medium) {
+        @include breakpoints.devicebreak(medium) {
           margin-right: 0;
         }
       }

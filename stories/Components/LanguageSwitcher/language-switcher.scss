@@ -1,3 +1,7 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/mixins";
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -8,10 +12,10 @@
   position: relative;
 
   ul {
-    @include transition(0.3s ease-in-out);
+    @include mixins.transition(0.3s ease-in-out);
 
     height: 0;
-    left: $mg-spacing-50;
+    left: variables.$mg-spacing-50;
     overflow: hidden;
     padding: 0;
     position: absolute;
@@ -26,14 +30,14 @@
       a {
         @extend %language_switcher;
 
-        background: $mg-color-neutral-200;
-        border-bottom: 1px solid $mg-color-neutral-400;
+        background: variables.$mg-color-neutral-200;
+        border-bottom: 1px solid variables.$mg-color-neutral-400;
         box-shadow: 0 3px 4px rgb(0 0 0 / 0.1);
         display: block;
-        padding: $mg-spacing-25 $mg-spacing-50;
+        padding: variables.$mg-spacing-25 variables.$mg-spacing-50;
 
         &:hover {
-          color: $mg-color-neutral-600;
+          color: variables.$mg-color-neutral-600;
         }
       }
     }
@@ -41,7 +45,7 @@
 
   &.active {
     button::after {
-      @include transform(rotateZ(180deg));
+      @include mixins.transform(rotateZ(180deg));
     }
 
     ul {
@@ -53,23 +57,23 @@
     @extend %language_switcher;
 
     align-items: center;
-    background-color: $mg-color-neutral-0;
-    color: $mg-color-text;
+    background-color: variables.$mg-color-neutral-0;
+    color: variables.$mg-color-text;
     cursor: pointer;
     display: flex;
     padding: 0;
 
     &::before {
-      background-color: $mg-color-blue-600;
+      background-color: variables.$mg-color-blue-600;
       content: "";
       height: 26px;
-      margin-right: $mg-spacing-25;
+      margin-right: variables.$mg-spacing-25;
 
       // -webkit-mask: url(#{$img-path-Icon}/language.svg) no-repeat left center;
       // mask: url(#{$img-path-Icon}/language.svg) no-repeat left center;
       width: 25px;
 
-      @include devicebreak(small) {
+      @include breakpoints.devicebreak(small) {
         background:
           // transparent url(#{$img-path-Icon}/language.svg) no-repeat
           left center;
@@ -79,18 +83,18 @@
     }
 
     &::after {
-      @include transition(0.2s ease-in-out);
+      @include mixins.transition(0.2s ease-in-out);
 
-      background-color: $mg-color-blue-600;
+      background-color: variables.$mg-color-blue-600;
       content: "";
       height: 10px;
-      margin-left: $mg-spacing-25;
+      margin-left: variables.$mg-spacing-25;
 
       // -webkit-mask: url(#{$img-path-Icon}/arrow-blue.svg) no-repeat left center;
       // mask: url(#{$img-path-Icon}/arrow-blue.svg) no-repeat left center;
       width: 15px;
 
-      @include devicebreak(small) {
+      @include breakpoints.devicebreak(small) {
         background:
           // transparent url(#{$img-path-Icon}/arrow-blue.svg) no-repeat
           left center;
@@ -100,19 +104,19 @@
     }
 
     &:hover {
-      color: $mg-color-blue-400;
+      color: variables.$mg-color-blue-400;
 
       &::before {
-        background-color: $mg-color-blue-400;
+        background-color: variables.$mg-color-blue-400;
       }
 
       &::after {
-        background-color: $mg-color-blue-400;
+        background-color: variables.$mg-color-blue-400;
       }
     }
 
     &.white {
-      color: $mg-color-white;
+      color: variables.$mg-color-white;
 
       // &::before {
       //   background:
@@ -142,14 +146,14 @@
     }
 
     button::before {
-      margin-left: $mg-spacing-25;
+      margin-left: variables.$mg-spacing-25;
       margin-right: 0;
       transform: scaleX(-1);
     }
 
     button::after {
       margin-left: 0;
-      margin-right: $mg-spacing-25;
+      margin-right: variables.$mg-spacing-25;
     }
   }
 }
@@ -158,7 +162,7 @@
 :lang(my) {
   .dropdown-language {
     button {
-      font-family: $mg-font-family;
+      font-family: variables.$mg-font-family;
     }
   }
 }

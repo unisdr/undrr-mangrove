@@ -1,3 +1,6 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/variables";
+
 // @import '../../assets/scss/variables';
 // @import '../../assets/scss/breakpoints';
 // @import '../../assets/scss/mixins';
@@ -8,14 +11,14 @@ table {
   border-spacing: 0;
   width: 100%;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     width: auto;
   }
 
   &.small {
     th,
     td {
-      font-size: $mg-font-size-300;
+      font-size: variables.$mg-font-size-300;
       -webkit-text-size-adjust: 100%;
     }
   }
@@ -25,7 +28,7 @@ table {
       @extend %border-none;
 
       &:nth-child(even) {
-        background-color: $mg-color-neutral-200;
+        background-color: variables.$mg-color-neutral-200;
       }
     }
   }
@@ -35,7 +38,7 @@ table {
 
     th,
     td {
-      border: 1px solid $mg-color-neutral-400;
+      border: 1px solid variables.$mg-color-neutral-400;
     }
   }
 
@@ -44,7 +47,7 @@ table {
     td {
       display: block;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         display: table-cell;
       }
     }
@@ -53,7 +56,7 @@ table {
       tr {
         display: none;
 
-        @include devicebreak(medium) {
+        @include breakpoints.devicebreak(medium) {
           display: table-row;
         }
       }
@@ -61,14 +64,14 @@ table {
 
     &.border {
       tr {
-        border: 1px solid $mg-color-neutral-400;
+        border: 1px solid variables.$mg-color-neutral-400;
 
         th,
         td {
           @extend %border-none;
 
-          @include devicebreak(medium) {
-            border: 1px solid $mg-color-neutral-400;
+          @include breakpoints.devicebreak(medium) {
+            border: 1px solid variables.$mg-color-neutral-400;
           }
         }
       }
@@ -78,20 +81,20 @@ table {
 
 th,
 td {
-  font-size: $mg-font-size-400;
+  font-size: variables.$mg-font-size-400;
   line-height: 1.4;
-  padding: $mg-spacing-25;
+  padding: variables.$mg-spacing-25;
   vertical-align: top;
 
-  @include devicebreak(medium) {
-    padding: $mg-spacing-25 $mg-spacing-200 $mg-spacing-25 $mg-spacing-25;
+  @include breakpoints.devicebreak(medium) {
+    padding: variables.$mg-spacing-25 variables.$mg-spacing-200 variables.$mg-spacing-25 variables.$mg-spacing-25;
   }
 }
 
 thead {
   tr {
     th {
-      background-color: $mg-color-neutral-300;
+      background-color: variables.$mg-color-neutral-300;
       font-weight: 600;
       text-align: left;
     }
@@ -124,8 +127,8 @@ tbody {
   td {
     text-align: right;
 
-    @include devicebreak(medium) {
-      padding: $mg-spacing-25 $mg-spacing-25 $mg-spacing-25 $mg-spacing-200;
+    @include breakpoints.devicebreak(medium) {
+      padding: variables.$mg-spacing-25 variables.$mg-spacing-25 variables.$mg-spacing-25 variables.$mg-spacing-200;
     }
   }
 }

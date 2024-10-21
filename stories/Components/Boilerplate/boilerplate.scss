@@ -1,12 +1,14 @@
+@use "../../assets/scss/variables";
+
 // Boilerplate component styles
 // We use the 'mg-' prefix for our CSS classes to namespace them
 // Sass variables are handled by the import from _components.scss
 
 .mg-boilerplate {
   // Add your base styles here
-  padding: $mg-spacing-100;
-  border: 1px solid $mg-color-red-900;
-  border-radius: $mg-radius-button;
+  padding: variables.$mg-spacing-100;
+  border: 1px solid variables.$mg-color-red-900;
+  border-radius: variables.$mg-radius-button;
 
   &__title {
     font-size: 1.5rem;
@@ -19,10 +21,10 @@
 
   // Add any additional nested styles or modifiers here
   &--primary {
-    background-color: $mg-color-blue-200;
+    background-color: variables.$mg-color-blue-200;
   }
 
   &--secondary {
-    background-color: $mg-color-blue-100;
+    background-color: variables.$mg-color-blue-100;
   }
 }

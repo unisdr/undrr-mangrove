@@ -1,3 +1,7 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/mixins";
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -11,10 +15,10 @@
 
   &.show-small {
     h6 {
-      border-bottom: 2px solid $mg-color-black;
+      border-bottom: 2px solid variables.$mg-color-black;
 
       &::after {
-        @include transform(translateY(-50%) rotateZ(-180deg));
+        @include mixins.transform(translateY(-50%) rotateZ(-180deg));
       }
     }
 
@@ -30,24 +34,24 @@
     margin-bottom: 0;
     padding-left: 0;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       a {
         &:hover {
-          background-color: $mg-color-neutral-300;
+          background-color: variables.$mg-color-neutral-300;
         }
       }
     }
   }
 
   h6 {
-    background-color: $mg-color-neutral-300;
+    background-color: variables.$mg-color-neutral-300;
     cursor: pointer;
     display: block;
     margin-bottom: 0;
-    padding: $mg-spacing-50;
+    padding: variables.$mg-spacing-50;
     position: relative;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       display: none;
     }
 
@@ -60,14 +64,14 @@
     display: none;
     padding: 0;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       display: block;
     }
 
     & > .active {
       border-bottom: none;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         button::after {
           // background:
           //   url(#{$img-path-Icon}/chevron-down-white.svg) no-repeat
@@ -76,28 +80,28 @@
       }
 
       & > a {
-        @include devicebreak(medium) {
-          background-color: $mg-color-blue-900;
-          color: $mg-color-white;
+        @include breakpoints.devicebreak(medium) {
+          background-color: variables.$mg-color-blue-900;
+          color: variables.$mg-color-white;
         }
       }
 
       & > button::after {
-        @include transform(rotateZ(-180deg));
+        @include mixins.transform(rotateZ(-180deg));
 
         top: 1.125rem;
 
-        @include devicebreak(medium) {
-          top: $mg-spacing-100;
+        @include breakpoints.devicebreak(medium) {
+          top: variables.$mg-spacing-100;
         }
       }
     }
 
     & > li {
-      background-color: $mg-color-neutral-300;
+      background-color: variables.$mg-color-neutral-300;
       position: relative;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         background-color: transparent;
         padding: 0;
       }
@@ -111,7 +115,7 @@
         margin-top: -2.188rem;
         width: 1.25rem;
 
-        @include devicebreak(medium) {
+        @include breakpoints.devicebreak(medium) {
           margin-top: -2.688rem;
           top: 2.063rem;
         }
@@ -119,9 +123,9 @@
         &::after {
           @extend %sidebar-chevron;
 
-          top: $mg-spacing-100;
+          top: variables.$mg-spacing-100;
 
-          @include devicebreak(medium) {
+          @include breakpoints.devicebreak(medium) {
             top: 2.063rem;
           }
         }
@@ -139,23 +143,23 @@
 
           border: none;
           display: block;
-          font-size: $mg-font-size-200;
+          font-size: variables.$mg-font-size-200;
           font-weight: 400;
-          padding: $mg-spacing-50 $mg-spacing-100 $mg-spacing-50 $mg-spacing-150;
+          padding: variables.$mg-spacing-50 variables.$mg-spacing-100 variables.$mg-spacing-50 variables.$mg-spacing-150;
 
-          @include devicebreak(medium) {
-            font-size: $mg-font-size-300;
-            padding-left: $mg-spacing-300;
+          @include breakpoints.devicebreak(medium) {
+            font-size: variables.$mg-font-size-300;
+            padding-left: variables.$mg-spacing-300;
           }
         }
 
         &:first-of-type a {
           background-color: transparent;
-          color: $mg-color-black;
+          color: variables.$mg-color-black;
 
-          @include devicebreak(medium) {
+          @include breakpoints.devicebreak(medium) {
             &:hover {
-              background-color: $mg-color-neutral-300;
+              background-color: variables.$mg-color-neutral-300;
             }
           }
         }
@@ -171,29 +175,29 @@
     ul.accordion__panel {
       li {
         a {
-          @include devicebreak(medium) {
+          @include breakpoints.devicebreak(medium) {
             font-size: 0.875rem;
-            padding-left: $mg-spacing-150;
+            padding-left: variables.$mg-spacing-150;
           }
         }
 
         &:last-of-type a {
-          @include devicebreak(medium) {
-            margin-bottom: $mg-spacing-200;
+          @include breakpoints.devicebreak(medium) {
+            margin-bottom: variables.$mg-spacing-200;
           }
         }
       }
     }
 
     ul > li button::after {
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         top: 1.625rem;
       }
     }
 
     li.active {
       button::after {
-        @include devicebreak(medium) {
+        @include breakpoints.devicebreak(medium) {
           top: 1.125rem;
         }
       }
@@ -218,7 +222,7 @@
 
     button {
       float: left;
-      margin-left: $mg-spacing-100;
+      margin-left: variables.$mg-spacing-100;
       margin-right: 0;
     }
 
@@ -226,9 +230,9 @@
       ul.accordion__panel {
         li {
           a {
-            @include devicebreak(medium) {
-              padding-left: $mg-spacing-100;
-              padding-right: $mg-spacing-150;
+            @include breakpoints.devicebreak(medium) {
+              padding-left: variables.$mg-spacing-100;
+              padding-right: variables.$mg-spacing-150;
             }
           }
         }

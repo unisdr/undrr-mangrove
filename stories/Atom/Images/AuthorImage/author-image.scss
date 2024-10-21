@@ -1,3 +1,6 @@
+@use "../../../assets/scss/mixins";
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -5,7 +8,7 @@
 /* author image */
 
 .author__img {
-  border-radius: $author-image-radius;
+  border-radius: variables.$author-image-radius;
   height: 80px;
   min-width: 80px;
   overflow: hidden;
@@ -14,30 +17,30 @@
 
   &::before {
     @extend %absolute__content;
-    @include transition(all 0.6s);
+    @include mixins.transition(all 0.6s);
 
-    border-radius: $author-image-radius;
+    border-radius: variables.$author-image-radius;
     opacity: 0;
     overflow: hidden;
   }
 
   &:hover {
     $colors: (
-      "yellow": $mg-color-yellow,
-      "red": $mg-color-red-900,
-      "green": $mg-color-green,
-      "blue": $mg-color-azure,
+      "yellow": variables.$mg-color-yellow,
+      "red": variables.$mg-color-red-900,
+      "green": variables.$mg-color-green,
+      "blue": variables.$mg-color-azure,
     );
 
     &::before {
-      @include background-image(45deg, $mg-color-yellow, transparent 53%);
+      @include mixins.background-image(45deg, variables.$mg-color-yellow, transparent 53%);
 
       opacity: 0.75;
     }
 
     @each $name, $color in $colors {
       &.#{$name}::before {
-        @include background-image(45deg, $mg-color-yellow, transparent 53%);
+        @include mixins.background-image(45deg, variables.$mg-color-yellow, transparent 53%);
       }
     }
   }
@@ -55,7 +58,7 @@
 [dir="rtl"] {
   .author__img {
     &::before {
-      @include transform(scaleX(-1));
+      @include mixins.transform(scaleX(-1));
     }
   }
 }

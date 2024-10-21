@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -5,6 +7,6 @@
 code {
   @extend %paragraph-font-300;
 
-  background: $mg-color-neutral-200;
-  padding: 0 $mg-spacing-25 $mg-spacing-25;
+  background: variables.$mg-color-neutral-200;
+  padding: 0 variables.$mg-spacing-25 variables.$mg-spacing-25;
 }

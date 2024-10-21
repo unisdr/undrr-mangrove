@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 /* Our custom css grid based on : https://stable.visual-framework.dev/components/vf-grid/ */
 
 // @import "../../../assets/scss/variables";
@@ -9,11 +11,11 @@
 
 .mg-grid > * {
   flex: 1;
-  margin: $mg-spacing-0 $mg-spacing-0 1rem 1.2292%;
+  margin: variables.$mg-spacing-0 variables.$mg-spacing-0 1rem 1.2292%;
 }
 
 .mg-grid > *:first-child {
-  margin-left: $mg-spacing-0;
+  margin-left: variables.$mg-spacing-0;
 }
 
 [class*="mg-grid__"] {
@@ -24,54 +26,54 @@
 // Unfortunately IE11 (which this flexbox grid is for) does not support calc inside of flex
 // So we've hard coded the percentage values. All other modern browsers get to use grid.
 .mg-grid__col-2 > * {
-  flex: $mg-spacing-0 $mg-spacing-0 49.38538%;
+  flex: variables.$mg-spacing-0 variables.$mg-spacing-0 49.38538%;
   max-width: 49.38538%;
 
   &:nth-of-type(3n) {
-    margin-left: $mg-spacing-0;
+    margin-left: variables.$mg-spacing-0;
   }
 }
 
 .mg-grid__col-3 > * {
-  flex: $mg-spacing-0 $mg-spacing-0 32.51384%;
+  flex: variables.$mg-spacing-0 variables.$mg-spacing-0 32.51384%;
   max-width: 32.51384%;
 
   &:nth-of-type(4n) {
-    margin-left: $mg-spacing-0;
+    margin-left: variables.$mg-spacing-0;
   }
 }
 
 .mg-grid__col-4 > * {
   // 0.9219246
-  flex: $mg-spacing-0 $mg-spacing-0 24.078%;
+  flex: variables.$mg-spacing-0 variables.$mg-spacing-0 24.078%;
   max-width: 24.078%;
 
   &:nth-of-type(5n) {
-    margin-left: $mg-spacing-0;
+    margin-left: variables.$mg-spacing-0;
   }
 }
 
 .mg-grid__col-5 > * {
   // 0.98338624
-  flex: $mg-spacing-0 $mg-spacing-0 19.01661%;
+  flex: variables.$mg-spacing-0 variables.$mg-spacing-0 19.01661%;
   max-width: 19.01661%;
 
   &:nth-of-type(6n) {
-    margin-left: $mg-spacing-0;
+    margin-left: variables.$mg-spacing-0;
   }
 }
 
 .mg-grid__col-6 > * {
   // 1.024360667
-  flex: $mg-spacing-0 $mg-spacing-0 15.6423%;
+  flex: variables.$mg-spacing-0 variables.$mg-spacing-0 15.6423%;
   max-width: 15.6423%;
 
   &:nth-of-type(7n) {
-    margin-left: $mg-spacing-0;
+    margin-left: variables.$mg-spacing-0;
   }
 }
 
-@media (max-width: $mg-breakpoint-tablet) {
+@media (max-width: variables.$mg-breakpoint-tablet) {
   .mg-grid {
     flex-wrap: wrap;
   }
@@ -86,25 +88,25 @@
   .mg-grid {
     display: grid;
     grid-column: main;
-    column-gap: $mg-spacing-200;
-    row-gap: $mg-spacing-200;
+    column-gap: variables.$mg-spacing-200;
+    row-gap: variables.$mg-spacing-200;
   }
 
-  @media (min-width: $mg-breakpoint-tablet) {
+  @media (min-width: variables.$mg-breakpoint-tablet) {
     .mg-grid {
       grid-auto-flow: column;
     }
   }
 
   // This is needed when the mg-grid is nested inside an embl-grid, like the news home page.
-  @media (max-width: $mg-breakpoint-tablet) {
+  @media (max-width: variables.$mg-breakpoint-tablet) {
     .embl-grid .mg-grid {
       grid-column: 1 / -1;
     }
   }
 
   .mg-grid > * {
-    margin: $mg-spacing-0;
+    margin: variables.$mg-spacing-0;
     max-width: unset;
   }
 
@@ -116,7 +118,7 @@
     grid-template-columns: repeat(1, 1fr);
   }
 
-  @media (min-width: $mg-breakpoint-tablet) {
+  @media (min-width: variables.$mg-breakpoint-tablet) {
     .mg-grid__col-2 {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -138,7 +140,7 @@
     }
   }
 
-  @media (min-width: $mg-breakpoint-desktop) {
+  @media (min-width: variables.$mg-breakpoint-desktop) {
     .mg-grid__col-4 {
       grid-template-columns: repeat(4, 1fr);
     }

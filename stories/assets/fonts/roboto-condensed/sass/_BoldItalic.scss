@@ -1,8 +1,11 @@
+@use "mixins";
+@use "variables";
+
 /* BEGIN Bold Italic */
 @font-face {
   font-family: "Roboto Condensed";
 
-  @include fontdef($font-path, $font-version, "BoldItalic");
+  @include mixins.fontdef(variables.$font-path, variables.$font-version, "BoldItalic");
 
   font-weight: 700;
   font-style: italic;

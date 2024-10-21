@@ -1,23 +1,26 @@
+@use "../../../assets/scss/mixins";
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
 
 .select-default {
   @extend %select_default;
-  @include x-appearance(none);
+  @include mixins.x-appearance(none);
 
   // background:
   //   $mg-color-white url(#{$img-path-Icon}/chevron-down.svg) no-repeat
   //   right 22px center;
   border-radius: 0;
-  color: $mg-color-black;
+  color: variables.$mg-color-black;
   display: block;
 }
 
 [dir="rtl"] {
   .select-default {
     background-position: left 22px center;
-    padding: $mg-spacing-50 $mg-spacing-50 $mg-spacing-50 $mg-spacing-800;
+    padding: variables.$mg-spacing-50 variables.$mg-spacing-50 variables.$mg-spacing-50 variables.$mg-spacing-800;
     text-align: right;
   }
 }

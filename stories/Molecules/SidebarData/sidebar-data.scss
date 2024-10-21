@@ -1,3 +1,6 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/variables";
+
 // @import '../../assets/scss/breakpoints';
 // @import '../../assets/scss/variables';
 // @import '../../assets/scss/mixins';
@@ -8,23 +11,23 @@
     @extend %img_none;
 
     border: none;
-    border-bottom: 1px solid $mg-color-neutral-500;
+    border-bottom: 1px solid variables.$mg-color-neutral-500;
     display: block;
-    font-size: $mg-font-size-300;
+    font-size: variables.$mg-font-size-300;
     font-weight: 700;
     line-height: 1.15;
     margin-bottom: 0;
-    padding: $mg-spacing-50;
+    padding: variables.$mg-spacing-50;
 
-    @include devicebreak(medium) {
-      padding: $mg-spacing-100;
+    @include breakpoints.devicebreak(medium) {
+      padding: variables.$mg-spacing-100;
     }
   }
 
   &.narrow {
     li > a {
-      @include devicebreak(medium) {
-        padding: $mg-spacing-50;
+      @include breakpoints.devicebreak(medium) {
+        padding: variables.$mg-spacing-50;
       }
     }
   }
@@ -34,11 +37,11 @@
   .sidebar-accordion {
     .accordion__panel {
       li > a {
-        padding-left: $mg-spacing-100;
-        padding-right: $mg-spacing-150;
+        padding-left: variables.$mg-spacing-100;
+        padding-right: variables.$mg-spacing-150;
 
-        @include devicebreak(medium) {
-          padding-right: $mg-spacing-300;
+        @include breakpoints.devicebreak(medium) {
+          padding-right: variables.$mg-spacing-300;
         }
       }
     }

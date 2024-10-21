@@ -1,3 +1,6 @@
+@use "../../assets/scss/mixins";
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -10,9 +13,9 @@
 
   li {
     display: flex;
-    font-size: $mg-font-size-300;
+    font-size: variables.$mg-font-size-300;
     margin-bottom: 0;
-    margin-right: $mg-spacing-100;
+    margin-right: variables.$mg-spacing-100;
     padding-left: 0;
     position: relative;
 
@@ -20,7 +23,7 @@
       @extend %img_none;
 
       border-bottom: 0;
-      font-size: $mg-font-size-300;
+      font-size: variables.$mg-font-size-300;
     }
 
     span {
@@ -81,14 +84,14 @@
     }
 
     li {
-      margin-left: $mg-spacing-100;
+      margin-left: variables.$mg-spacing-100;
       margin-right: 0;
       padding-right: 0;
 
       &:first-of-type {
         a {
           &::before {
-            @include transform(rotateZ(180deg));
+            @include mixins.transform(rotateZ(180deg));
           }
         }
       }
@@ -98,7 +101,7 @@
 
         a {
           &::before {
-            @include transform(rotateZ(180deg));
+            @include mixins.transform(rotateZ(180deg));
           }
         }
       }

@@ -1,3 +1,6 @@
+@use "../../../assets/scss/mixins";
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -21,7 +24,7 @@ details {
       content: "";
       display: inline-block;
       height: 14px;
-      margin-right: $mg-spacing-25;
+      margin-right: variables.$mg-spacing-25;
       width: 14px;
     }
   }
@@ -50,15 +53,15 @@ details {
 [dir="rtl"] {
   details {
     summary::before {
-      @include transform(translate(0) rotate(180deg));
+      @include mixins.transform(translate(0) rotate(180deg));
 
-      margin-left: $mg-spacing-25;
+      margin-left: variables.$mg-spacing-25;
       margin-right: 0;
     }
 
     &[open] {
       summary::before {
-        @include transform(translate(0) rotate(0deg));
+        @include mixins.transform(translate(0) rotate(0deg));
       }
     }
   }

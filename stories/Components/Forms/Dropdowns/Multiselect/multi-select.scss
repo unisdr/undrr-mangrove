@@ -1,3 +1,6 @@
+@use "../../../../assets/scss/mixins";
+@use "../../../../assets/scss/variables";
+
 // @import '../../../../assets/scss/variables';
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
@@ -12,14 +15,14 @@
       border-bottom: 0;
 
       &::after {
-        @include transform(translateY(-50%) rotate(-180deg));
+        @include mixins.transform(translateY(-50%) rotate(-180deg));
 
         top: 50%;
       }
     }
 
     ul {
-      background-color: $mg-color-white;
+      background-color: variables.$mg-color-white;
       border-top: 0;
       display: block;
 
@@ -31,7 +34,7 @@
         border: 0;
         display: none;
         overflow: hidden;
-        padding: 0 0 0 $mg-spacing-200;
+        padding: 0 0 0 variables.$mg-spacing-200;
       }
 
       li {
@@ -43,7 +46,7 @@
   > button {
     @extend %select_default;
 
-    background: $mg-color-white;
+    background: variables.$mg-color-white;
     display: flex;
     max-width: 100%;
     text-align: left;
@@ -70,7 +73,7 @@
 
       .form-check {
         &:hover {
-          background-color: $mg-color-neutral-100;
+          background-color: variables.$mg-color-neutral-100;
         }
       }
     }
@@ -81,33 +84,33 @@
       &.open {
         ul {
           border: 0;
-          border-top: solid 1px $mg-color-neutral-400;
+          border-top: solid 1px variables.$mg-color-neutral-400;
           display: block;
           overflow: visible;
-          padding: 0 0 0 $mg-spacing-200;
+          padding: 0 0 0 variables.$mg-spacing-200;
         }
 
         button::after {
-          @include transform(translateY(-50%) rotate(-180deg));
+          @include mixins.transform(translateY(-50%) rotate(-180deg));
 
           top: 50%;
         }
       }
 
       button {
-        background: $mg-color-white;
+        background: variables.$mg-color-white;
         border: 0;
         cursor: pointer;
         display: block;
-        font-size: $mg-font-size-300;
+        font-size: variables.$mg-font-size-300;
         margin: 0 -1rem;
-        padding: $mg-spacing-50;
+        padding: variables.$mg-spacing-50;
         position: relative;
         text-align: left;
         width: calc(100% + 2rem);
 
         &:hover {
-          background-color: $mg-color-neutral-100;
+          background-color: variables.$mg-color-neutral-100;
         }
 
         &::after {
@@ -123,7 +126,7 @@
       list-style: none;
 
       > li {
-        border-top: 1px solid $mg-color-neutral-400;
+        border-top: 1px solid variables.$mg-color-neutral-400;
         margin-bottom: 0;
 
         &:first-of-type {
@@ -131,7 +134,7 @@
         }
 
         > .checkbox-wrapper:hover {
-          background-color: $mg-color-neutral-100;
+          background-color: variables.$mg-color-neutral-100;
         }
       }
     }
@@ -149,16 +152,16 @@
   ul .form-check {
     justify-content: space-between;
     margin: 0 -1rem;
-    padding: 0 $mg-spacing-50;
+    padding: 0 variables.$mg-spacing-50;
 
     label {
-      padding: $mg-spacing-50 0;
+      padding: variables.$mg-spacing-50 0;
       width: 100%;
     }
 
     input {
       position: absolute;
-      right: $mg-spacing-50;
+      right: variables.$mg-spacing-50;
     }
   }
 }
@@ -168,7 +171,7 @@
   .multi-select {
     ul li,
     button {
-      font-family: $mg-font-family;
+      font-family: variables.$mg-font-family;
     }
   }
 }
@@ -189,14 +192,14 @@
     }
 
     ul {
-      padding: 0 $mg-spacing-50;
+      padding: 0 variables.$mg-spacing-50;
 
       li {
         padding-right: 0;
       }
 
       .form-check input {
-        left: $mg-spacing-50;
+        left: variables.$mg-spacing-50;
         right: inherit;
       }
     }
@@ -206,7 +209,7 @@
         text-align: right;
 
         &::after {
-          left: $mg-spacing-50;
+          left: variables.$mg-spacing-50;
           right: inherit;
         }
       }
@@ -215,14 +218,14 @@
     &.open {
       .radio {
         span {
-          left: $mg-spacing-50;
+          left: variables.$mg-spacing-50;
           right: inherit;
         }
       }
 
       ul {
         ul {
-          padding: 0 $mg-spacing-200 0 0;
+          padding: 0 variables.$mg-spacing-200 0 0;
         }
       }
     }

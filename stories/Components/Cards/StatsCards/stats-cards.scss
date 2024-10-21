@@ -1,93 +1,97 @@
+@use "../../../assets/scss/breakpoints";
+@use "../../../assets/scss/mixins";
+@use "../../../assets/scss/variables";
+
 // @import '../../../../assets/scss/variables';
 // @import '../../../../assets/scss/breakpoints';
 // @import '../../../../assets/scss/mixins';
 
 /* statscard start */
 .stats-card {
-  @include transition(300ms all);
+  @include mixins.transition(300ms all);
 
-  background-color: $mg-color-neutral-200;
+  background-color: variables.$mg-color-neutral-200;
   box-sizing: border-box;
   overflow-wrap: break-word;
 
-  @include devicebreak(small) {
+  @include breakpoints.devicebreak(small) {
     max-width: 21.938rem;
-    padding: $mg-spacing-200;
+    padding: variables.$mg-spacing-200;
   }
 
   h3 {
     font-weight: 600;
-    margin-bottom: $mg-spacing-200;
+    margin-bottom: variables.$mg-spacing-200;
 
-    @include devicebreak(medium) {
-      margin-bottom: $mg-spacing-400;
+    @include breakpoints.devicebreak(medium) {
+      margin-bottom: variables.$mg-spacing-400;
     }
   }
 
   h2 {
-    @include transition(300ms all);
+    @include mixins.transition(300ms all);
 
-    color: $mg-color-neutral-200;
-    font-family: $mg-font-family;
-    font-size: $mg-spacing-400;
+    color: variables.$mg-color-neutral-200;
+    font-family: variables.$mg-font-family;
+    font-size: variables.$mg-spacing-400;
     letter-spacing: 0.05rem;
-    margin-bottom: $mg-spacing-100;
+    margin-bottom: variables.$mg-spacing-100;
     text-shadow:
-      -1px -1px 0 $mg-color-black,
-      1px -1px 0 $mg-color-black,
-      -1px 1px 0 $mg-color-black,
-      1px 1px 0 $mg-color-black;
+      -1px -1px 0 variables.$mg-color-black,
+      1px -1px 0 variables.$mg-color-black,
+      -1px 1px 0 variables.$mg-color-black,
+      1px 1px 0 variables.$mg-color-black;
 
-    @supports (-webkit-text-stroke: 2px $mg-color-black) {
+    @supports (-webkit-text-stroke: 2px variables.$mg-color-black) {
       text-shadow: none;
-      -webkit-text-stroke: 2px $mg-color-black;
+      -webkit-text-stroke: 2px variables.$mg-color-black;
     }
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       font-size: 6.875rem;
       line-height: 1.09;
-      margin-bottom: $mg-spacing-150;
+      margin-bottom: variables.$mg-spacing-150;
     }
   }
 
   h4 {
     letter-spacing: 0;
-    margin-bottom: $mg-spacing-25;
+    margin-bottom: variables.$mg-spacing-25;
 
-    @include devicebreak(medium) {
-      margin-bottom: $mg-spacing-50;
+    @include breakpoints.devicebreak(medium) {
+      margin-bottom: variables.$mg-spacing-50;
     }
   }
 
   p {
     margin: 0;
 
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-500;
+    @include breakpoints.devicebreak(medium) {
+      font-size: variables.$mg-font-size-500;
     }
   }
 
   &.x-large {
-    padding: $mg-spacing-200;
+    padding: variables.$mg-spacing-200;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       max-width: 42.75rem;
-      padding: $mg-spacing-500;
+      padding: variables.$mg-spacing-500;
     }
 
     h2 {
-      font-size: $mg-font-size-500;
+      font-size: variables.$mg-font-size-500;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         font-size: 7.5rem;
       }
     }
 
     h3 {
-      font-size: $mg-spacing-200;
+      font-size: variables.$mg-spacing-200;
       font-weight: 700;
 
-      @include devicebreak(medium) {
+      @include breakpoints.devicebreak(medium) {
         font-size: 3.438rem;
       }
     }
@@ -95,24 +99,24 @@
     h4 {
       font-weight: 600;
 
-      @include devicebreak(small) {
+      @include breakpoints.devicebreak(small) {
         font-size: 1.875rem;
       }
     }
   }
 
   &.large {
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       max-width: 28rem;
-      padding: $mg-spacing-500 $mg-spacing-300;
+      padding: variables.$mg-spacing-500 variables.$mg-spacing-300;
     }
   }
 
   &.medium {
-    padding: $mg-spacing-300;
+    padding: variables.$mg-spacing-300;
 
-    @include devicebreak(medium) {
-      max-width: $mg-width-300;
+    @include breakpoints.devicebreak(medium) {
+      max-width: variables.$mg-width-300;
 
       h4 {
         font-weight: 600;
@@ -120,43 +124,43 @@
     }
 
     p {
-      font-size: $mg-font-size-400;
+      font-size: variables.$mg-font-size-400;
     }
   }
 
   &.small {
     max-width: 10.625rem;
-    padding: $mg-spacing-100;
+    padding: variables.$mg-spacing-100;
 
-    @include devicebreak(medium) {
+    @include breakpoints.devicebreak(medium) {
       max-width: 13.25rem;
-      padding: $mg-spacing-150;
+      padding: variables.$mg-spacing-150;
     }
 
     h2 {
-      font-size: $mg-font-size-500;
-      height: $mg-spacing-300;
+      font-size: variables.$mg-font-size-500;
+      height: variables.$mg-spacing-300;
       white-space: nowrap;
 
-      @include devicebreak(medium) {
-        font-size: $mg-font-size-400;
+      @include breakpoints.devicebreak(medium) {
+        font-size: variables.$mg-font-size-400;
       }
     }
 
     h4 {
-      font-size: $mg-font-size-400;
+      font-size: variables.$mg-font-size-400;
 
-      @include devicebreak(medium) {
-        font-size: $mg-font-size-500;
+      @include breakpoints.devicebreak(medium) {
+        font-size: variables.$mg-font-size-500;
       }
     }
 
     p {
-      font-size: $mg-font-size-200;
+      font-size: variables.$mg-font-size-200;
       word-break: normal;
 
-      @include devicebreak(medium) {
-        font-size: $mg-font-size-300;
+      @include breakpoints.devicebreak(medium) {
+        font-size: variables.$mg-font-size-300;
       }
     }
   }
@@ -164,16 +168,16 @@
   &:hover {
     // color map
     $colors: (
-      "yellow": $mg-color-yellow,
-      "red": $mg-color-red-900,
-      "green": $mg-color-green,
-      "blue": $mg-color-azure,
+      "yellow": variables.$mg-color-yellow,
+      "red": variables.$mg-color-red-900,
+      "green": variables.$mg-color-green,
+      "blue": variables.$mg-color-azure,
     );
 
-    background-color: $mg-color-yellow;
+    background-color: variables.$mg-color-yellow;
 
     h2 {
-      color: $mg-color-black;
+      color: variables.$mg-color-black;
     }
 
     @each $name, $color in $colors {
@@ -187,15 +191,15 @@
 :lang(my) {
   .stats-card {
     h2 {
-      font-family: $mg-font-family;
+      font-family: variables.$mg-font-family;
     }
   }
 }
 
-#{$cyrillic} {
+#{variables.$cyrillic} {
   .stats-card {
     h2 {
-      font-family: $mg-font-family;
+      font-family: variables.$mg-font-family;
     }
   }
 }

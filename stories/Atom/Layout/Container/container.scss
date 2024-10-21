@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // Define your breakpoints if not already defined
 // $mg-breakpoint-mobile: 480px;
 // $mg-breakpoint-tablet: 768px;
@@ -9,25 +11,25 @@
   margin: 0 auto;
   max-width: 100%;
 
-  @media (min-width: $mg-breakpoint-mobile) {
-    max-width: $mg-breakpoint-mobile;
+  @media (min-width: variables.$mg-breakpoint-mobile) {
+    max-width: variables.$mg-breakpoint-mobile;
   }
 
-  @media (min-width: $mg-breakpoint-tablet) {
-    max-width: $mg-breakpoint-tablet;
+  @media (min-width: variables.$mg-breakpoint-tablet) {
+    max-width: variables.$mg-breakpoint-tablet;
   }
 
-  @media (min-width: $mg-breakpoint-desktop) {
-    max-width: $mg-breakpoint-desktop;
+  @media (min-width: variables.$mg-breakpoint-desktop) {
+    max-width: variables.$mg-breakpoint-desktop;
   }
 
-  @media (min-width: $mg-breakpoint-desktop-wide) {
-    max-width: $mg-breakpoint-desktop-wide;
+  @media (min-width: variables.$mg-breakpoint-desktop-wide) {
+    max-width: variables.$mg-breakpoint-desktop-wide;
   }
 }
 
 .mg-container--spacer {
-  --mg-container-spacer: #{$mg-container-spacer};
+  --mg-container-spacer: #{variables.$mg-container-spacer};
 
   // exclude spacing for cetrain combinations of elements
   > .mg-u-sr-only:first-child ~ .mg-hero,

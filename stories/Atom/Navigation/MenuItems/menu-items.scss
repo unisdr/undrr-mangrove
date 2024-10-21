@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/mixins';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/variables';
@@ -13,13 +15,13 @@
     letter-spacing: 0.03em;
 
     &:hover {
-      color: $mg-color-neutral-600;
+      color: variables.$mg-color-neutral-600;
       cursor: pointer;
     }
 
     &.selected {
-      border-bottom: 2px solid $mg-color-red-900;
-      padding-bottom: $mg-spacing-25;
+      border-bottom: 2px solid variables.$mg-color-red-900;
+      padding-bottom: variables.$mg-spacing-25;
     }
   }
 }

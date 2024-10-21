@@ -1,9 +1,13 @@
+@use "breakpoints";
+@use "mixins";
+@use "variables";
+
 // CSS font size reset
 /* base start */
 .show-large {
   display: none;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     display: block;
   }
 }
@@ -11,7 +15,7 @@
 .show-small {
   display: block;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     display: none;
   }
 }
@@ -49,7 +53,7 @@
   @extend %scale-up;
 
   &.inviewport {
-    @include transform(scale(1));
+    @include mixins.transform(scale(1));
   }
 }
 
@@ -64,14 +68,14 @@
 .expand-to-size {
   max-width: calc(100% - 1rem);
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     max-width: calc(100% - 3rem);
   }
 }
 
 [dir="rtl"] {
   *[data-viewport="true"] {
-    @include transform(translateX(100px));
+    @include mixins.transform(translateX(100px));
 
     &.inviewport {
       @extend %inviewport_left_right;
@@ -85,10 +89,10 @@
 
 // color map solid
 $colors-solid: (
-  "yellow": $mg-color-yellow,
-  "red": $mg-color-red-900,
-  "green": $mg-color-green,
-  "blue": $mg-color-azure,
+  "yellow": variables.$mg-color-yellow,
+  "red": variables.$mg-color-red-900,
+  "green": variables.$mg-color-green,
+  "blue": variables.$mg-color-azure,
 );
 
 @each $name, $color in $colors-solid {

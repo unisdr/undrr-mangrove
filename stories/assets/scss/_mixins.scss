@@ -1,3 +1,6 @@
+@use "breakpoints";
+@use "variables";
+
 // background image gradient
 @mixin background-image($deg, $colorname, $opacity) {
   background: linear-gradient($deg, $colorname, $opacity);
@@ -78,41 +81,41 @@
 
 /* placeholder start */
 %paragraph-font-100 {
-  font-size: $mg-font-size-100;
+  font-size: variables.$mg-font-size-100;
 
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-200;
+  @include breakpoints.devicebreak(medium) {
+    font-size: variables.$mg-font-size-200;
   }
 }
 
 %paragraph-font-200 {
-  font-size: $mg-font-size-200;
+  font-size: variables.$mg-font-size-200;
   line-height: 1.4;
 
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-300;
+  @include breakpoints.devicebreak(medium) {
+    font-size: variables.$mg-font-size-300;
   }
 }
 
 %paragraph-font-300 {
-  font-size: $mg-font-size-300;
+  font-size: variables.$mg-font-size-300;
 
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-400;
+  @include breakpoints.devicebreak(medium) {
+    font-size: variables.$mg-font-size-400;
   }
 }
 
 %paragraph-font-400 {
-  font-size: $mg-font-size-400;
+  font-size: variables.$mg-font-size-400;
   line-height: 1.1;
 
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-500;
+  @include breakpoints.devicebreak(medium) {
+    font-size: variables.$mg-font-size-500;
   }
 }
 
 %border-bottom {
-  border-bottom: 1px solid $mg-color-neutral-400;
+  border-bottom: 1px solid variables.$mg-color-neutral-400;
 }
 
 %img-cover {
@@ -130,9 +133,9 @@
 
 %footer-block {
   align-items: center;
-  border-bottom: 1px solid $mg-color-white;
+  border-bottom: 1px solid variables.$mg-color-white;
   justify-content: space-between;
-  margin-bottom: $mg-spacing-150;
+  margin-bottom: variables.$mg-spacing-150;
 }
 
 %sidebar {
@@ -141,41 +144,41 @@
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  padding: $mg-spacing-50;
+  padding: variables.$mg-spacing-50;
   position: relative;
 
-  @include devicebreak(medium) {
-    padding: $mg-spacing-100;
+  @include breakpoints.devicebreak(medium) {
+    padding: variables.$mg-spacing-100;
   }
 }
 
 %sidebar-selected {
-  background-color: $mg-color-blue-600;
+  background-color: variables.$mg-color-blue-600;
 
   h6 {
-    color: $mg-color-white;
+    color: variables.$mg-color-white;
   }
 
   &:hover {
-    background-color: $mg-color-blue-600;
+    background-color: variables.$mg-color-blue-600;
   }
 }
 
 %checbox-radio-before {
   -webkit-appearance: none;
   appearance: none;
-  border: 2px solid $mg-color-red-900;
+  border: 2px solid variables.$mg-color-red-900;
   cursor: pointer;
   height: 16px;
   margin: 0;
   width: 16px;
 
   &:hover {
-    border-color: $sendai-purple-400;
+    border-color: variables.$sendai-purple-400;
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px variables.$mg-color-blue-800;
     outline: 0;
   }
 }
@@ -183,11 +186,11 @@
 %ctaimg {
   content: "";
   height: 1.188rem;
-  margin-left: $mg-spacing-25;
+  margin-left: variables.$mg-spacing-25;
   margin-top: 2px;
   width: 0.813rem;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     margin-top: 0;
   }
 }
@@ -232,7 +235,7 @@
 
 %language_switcher {
   border: none;
-  font-size: $mg-font-size-200;
+  font-size: variables.$mg-font-size-200;
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -249,38 +252,38 @@
 }
 
 %select_default {
-  border: 2px solid $mg-color-black;
-  color: $mg-color-black;
+  border: 2px solid variables.$mg-color-black;
+  color: variables.$mg-color-black;
   cursor: pointer;
-  font-size: $mg-font-size-300;
+  font-size: variables.$mg-font-size-300;
   font-weight: 600;
   line-height: 1.125rem;
   margin: 0;
-  padding: $mg-spacing-50 $mg-spacing-800 $mg-spacing-50 $mg-spacing-50;
+  padding: variables.$mg-spacing-50 variables.$mg-spacing-800 variables.$mg-spacing-50 variables.$mg-spacing-50;
   position: relative;
   text-transform: uppercase;
   width: 100%;
 }
 
 %select_option {
-  border: 2px solid $mg-color-black;
+  border: 2px solid variables.$mg-color-black;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: none;
   min-height: 100px;
-  padding: 0 $mg-spacing-50;
+  padding: 0 variables.$mg-spacing-50;
   width: 100%;
 
   &:focus {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px variables.$mg-color-blue-800;
     outline: 0;
   }
 }
 
 %select_rtl {
   padding-left: 3.125rem;
-  padding-right: $mg-spacing-50;
+  padding-right: variables.$mg-spacing-50;
   text-align: right;
 }
 
@@ -340,7 +343,7 @@
 }
 
 %header {
-  background-color: $mg-color-neutral-100;
+  background-color: variables.$mg-color-neutral-100;
   box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
   height: 7.1875rem;
   left: 0;
@@ -370,25 +373,25 @@
 %footerlink {
   @extend %img_none;
 
-  color: $mg-color-white;
-  font-size: $mg-font-size-300;
+  color: variables.$mg-color-white;
+  font-size: variables.$mg-font-size-300;
   line-height: 1.4;
 
   &:hover {
-    color: $mg-color-blue-100;
+    color: variables.$mg-color-blue-100;
   }
 }
 
 %footerlinkinvert {
-  color: $mg-color-black;
+  color: variables.$mg-color-black;
 
   &:hover {
-    color: $mg-color-neutral-600;
+    color: variables.$mg-color-neutral-600;
   }
 }
 
 %selectoption {
-  border-top: 1px solid $mg-color-neutral-400;
+  border-top: 1px solid variables.$mg-color-neutral-400;
   cursor: pointer;
   margin-bottom: 0;
   padding: 0;
@@ -397,32 +400,32 @@
 // burmese lang
 :lang(my) {
   %paragraph-font-200 {
-    font-size: $mg-font-size-100;
+    font-size: variables.$mg-font-size-100;
     line-height: 1.7;
 
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-200;
+    @include breakpoints.devicebreak(medium) {
+      font-size: variables.$mg-font-size-200;
     }
   }
 
   %paragraph-font-300 {
-    font-size: $mg-font-size-200;
+    font-size: variables.$mg-font-size-200;
 
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-300;
+    @include breakpoints.devicebreak(medium) {
+      font-size: variables.$mg-font-size-300;
     }
   }
 
   %paragraph-font-400 {
-    font-size: $mg-font-size-400;
+    font-size: variables.$mg-font-size-400;
     line-height: 1.1;
 
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-500;
+    @include breakpoints.devicebreak(medium) {
+      font-size: variables.$mg-font-size-500;
     }
   }
   %button {
-    font-size: $mg-font-size-200;
+    font-size: variables.$mg-font-size-200;
   }
 }
 
@@ -431,20 +434,20 @@
 
   width: 40px;
 
-  @include devicebreak(xlarge) {
-    height: ($header-height-xlarge + 7px);
+  @include breakpoints.devicebreak(xlarge) {
+    height: (variables.$header-height-xlarge + 7px);
     width: 60px;
 
     &.scrolled {
-      height: $header-height-xlarge;
+      height: variables.$header-height-xlarge;
     }
   }
 
-  @include devicebreak(mediumonlytab) {
-    height: ($header-height-medium + 7px);
+  @include breakpoints.devicebreak(mediumonlytab) {
+    height: (variables.$header-height-medium + 7px);
 
     &.scrolled {
-      height: $header-height-medium;
+      height: variables.$header-height-medium;
     }
   }
 }
@@ -466,7 +469,7 @@
 
     box-sizing: border-box;
     display: block;
-    height: $mg-spacing-50;
+    height: variables.$mg-spacing-50;
     left: 1.25rem;
     position: relative;
     width: 0;
@@ -474,7 +477,7 @@
     &::before {
       @extend %pseudo-icon;
 
-      background-color: $mg-color-red-900;
+      background-color: variables.$mg-color-red-900;
       display: none;
       height: 2px;
       right: 0;
@@ -486,18 +489,18 @@
       @extend %pseudo-icon;
       @include transform(rotate(45deg));
 
-      border-right: 2px solid $mg-color-red-900;
-      border-top: 2px solid $mg-color-red-900;
-      height: $mg-spacing-25;
+      border-right: 2px solid variables.$mg-color-red-900;
+      border-top: 2px solid variables.$mg-color-red-900;
+      height: variables.$mg-spacing-25;
       right: 0;
       top: 2px;
-      width: $mg-spacing-25;
+      width: variables.$mg-spacing-25;
     }
   }
 
   &:hover {
     i {
-      width: $mg-spacing-400;
+      width: variables.$mg-spacing-400;
 
       &::before {
         display: unset;
@@ -508,8 +511,8 @@
 
 %animate-link {
   background-image:
-    linear-gradient($mg-color-red-900, $mg-color-red-900),
-    linear-gradient($mg-color-red-900, $mg-color-red-900);
+    linear-gradient(variables.$mg-color-red-900, variables.$mg-color-red-900),
+    linear-gradient(variables.$mg-color-red-900, variables.$mg-color-red-900);
   background-position: 100% 100%, -30px 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px, 0 1px;

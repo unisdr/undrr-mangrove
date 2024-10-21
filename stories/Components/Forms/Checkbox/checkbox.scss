@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -10,7 +12,7 @@
 
   label {
     cursor: pointer;
-    font-size: $mg-font-size-300;
+    font-size: variables.$mg-font-size-300;
     padding: 0 7px;
   }
 }

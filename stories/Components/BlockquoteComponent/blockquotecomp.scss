@@ -1,3 +1,6 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/variables";
+
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/mixins';
@@ -5,30 +8,30 @@
 /* blockquote cta start */
 .blockquote {
   background-color: none;
-  padding: $mg-spacing-150 $mg-spacing-100;
+  padding: variables.$mg-spacing-150 variables.$mg-spacing-100;
 
-  @include devicebreak(medium) {
-    padding: 5.313rem $mg-spacing-500;
+  @include breakpoints.devicebreak(medium) {
+    padding: 5.313rem variables.$mg-spacing-500;
   }
 
   &.gray {
-    background-color: $mg-color-neutral-200;
+    background-color: variables.$mg-color-neutral-200;
   }
 
   &.yellow {
-    background-color: $mg-color-yellow;
+    background-color: variables.$mg-color-yellow;
   }
 
   &.red {
-    background-color: $mg-color-red-900;
+    background-color: variables.$mg-color-red-900;
   }
 
   &.green {
-    background-color: $mg-color-green;
+    background-color: variables.$mg-color-green;
   }
 
   &.blue {
-    background-color: $mg-color-azure;
+    background-color: variables.$mg-color-azure;
   }
 }
 

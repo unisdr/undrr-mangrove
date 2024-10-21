@@ -1,3 +1,5 @@
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/mixins';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/variables';
@@ -8,7 +10,7 @@
   @extend %sidebar;
 
   &:hover {
-    background-color: $mg-color-neutral-200;
+    background-color: variables.$mg-color-neutral-200;
   }
 
   &.open {

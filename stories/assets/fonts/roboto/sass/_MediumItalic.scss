@@ -1,8 +1,11 @@
+@use "mixins";
+@use "variables";
+
 /* BEGIN Medium Italic */
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "MediumItalic");
+  @include mixins.fontdef-woff(variables.$font-path, variables.$FontName, variables.$font-version, "MediumItalic");
 
   font-weight: 500;
   font-style: italic;

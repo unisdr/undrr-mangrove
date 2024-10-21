@@ -1,5 +1,8 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/variables";
+
 .mg-tabs__list {
-  background: $mg-color-tabbar-background;
+  background: variables.$mg-color-tabbar-background;
   width: 100%;
   margin: 0;
   display: -webkit-inline-box;
@@ -10,15 +13,15 @@
   padding: 0;
   position: relative;
 
-  @if $mg-tabs-border-bottom {
+  @if variables.$mg-tabs-border-bottom {
     &:after {
       content: " ";
       width: 100%;
       height: 1px;
-      top: -$mg-spacing-25;
+      top: -(variables.$mg-spacing-25);
       position: relative;
       z-index: -1;
-      border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+      border-bottom: variables.$mg-spacing-25 solid variables.$mg-color-tab-border;
     }
   }
 }
@@ -41,7 +44,7 @@
 
   .mg-tabs__item {
     width: 100%; // Make each tab take full width
-    margin-bottom: $mg-spacing-25; // Add spacing between tabs
+    margin-bottom: variables.$mg-spacing-25; // Add spacing between tabs
   }
 }
 
@@ -71,12 +74,12 @@
     position: relative;
   }
   .mg-tabs__section {
-    padding: $mg-spacing-150;
+    padding: variables.$mg-spacing-150;
   }
 }
 
 .mg-tabs--horizontal {
-  @media (min-width: $mg-breakpoint-mobile) {
+  @media (min-width: variables.$mg-breakpoint-mobile) {
     .mg-tabs__list {
       display: grid;
       min-width: 800px;
@@ -107,7 +110,7 @@
   }
 
   // for smaller screens it mimics stacked tabs
-  @media (max-width: $mg-breakpoint-mobile) {
+  @media (max-width: variables.$mg-breakpoint-mobile) {
     .mg-tabs--horizontal {
       .mg-tabs-content {
         padding-left: 0; // unset the li style padding
@@ -128,48 +131,48 @@
 
 .mg-tabs__link {
   border: none;
-  border-radius: $mg-radius-tab;
-  color: $mg-color-text-tab;
-  font-family: $mg-font-family;
-  font-size: $mg-font-size-400;
+  border-radius: variables.$mg-radius-tab;
+  color: variables.$mg-color-text-tab;
+  font-family: variables.$mg-font-family;
+  font-size: variables.$mg-font-size-400;
   font-weight: 600;
   line-height: 1.421;
   margin: 0;
   display: block;
   outline: 0;
-  padding: $mg-padding-tab;
+  padding: variables.$mg-padding-tab;
   position: relative;
   text-decoration: none;
 }
 
 .mg-tabs__link:hover,
 .mg-tabs__link:focus {
-  background: $mg-color-tab-background--hover;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
-  color: $mg-color-text-tab-active;
+  background: variables.$mg-color-tab-background--hover;
+  border-bottom: variables.$mg-spacing-25 solid variables.$mg-color-tab-border--hover;
+  color: variables.$mg-color-text-tab-active;
   z-index: 1150;
   text-decoration: none;
 }
 
 .mg-tabs__link.is-active {
-  color: $mg-color-text-tab-active;
-  background-color: $mg-color-tab-background;
+  color: variables.$mg-color-text-tab-active;
+  background-color: variables.$mg-color-tab-background;
   text-shadow: none;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--active;
+  border-bottom: variables.$mg-spacing-25 solid variables.$mg-color-tab-border--active;
 }
 
 .mg-tabs__link.is-active:hover,
 .mg-tabs__link.is-active:focus {
-  background: $mg-color-tab-background;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
-  color: $mg-color-text-tab-active;
+  background: variables.$mg-color-tab-background;
+  border-bottom: variables.$mg-spacing-25 solid variables.$mg-color-tab-border--hover;
+  color: variables.$mg-color-text-tab-active;
 }
 
 .mg-tabs__section {
-  background-color: $mg-color-tab-section-background;
-  box-shadow: $mg-box-shadow-tab-section;
-  padding: $mg-padding-tab-section;
-  border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
+  background-color: variables.$mg-color-tab-section-background;
+  box-shadow: variables.$mg-box-shadow-tab-section;
+  padding: variables.$mg-padding-tab-section;
+  border-radius: 0 0 variables.$mg-radius-tab-section variables.$mg-radius-tab-section;
 }
 
 [dir="rtl"] {
@@ -177,12 +180,12 @@
     > ul {
       padding-right: 0;
 
-      @include devicebreak(medium) {
-        padding-right: $mg-spacing-300;
+      @include breakpoints.devicebreak(medium) {
+        padding-right: variables.$mg-spacing-300;
       }
 
       li {
-        margin-left: $mg-spacing-100;
+        margin-left: variables.$mg-spacing-100;
         margin-right: 0;
         padding-right: 0;
       }

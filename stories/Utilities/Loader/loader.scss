@@ -1,3 +1,7 @@
+@use "../../assets/scss/breakpoints";
+@use "../../assets/scss/mixins";
+@use "../../assets/scss/variables";
+
 // @import '../../assets/scss/variables';
 // @import '../../assets/scss/breakpoints';
 // @import '../../assets/scss/mixins';
@@ -16,17 +20,17 @@
 }
 
 .loader {
-  @include animation(loader-animation 2s linear infinite);
+  @include mixins.animation(loader-animation 2s linear infinite);
 
-  border: 8px solid $mg-color-blue-600;
+  border: 8px solid variables.$mg-color-blue-600;
   border-radius: 50%;
-  border-top: 8px solid $mg-color-neutral-300;
+  border-top: 8px solid variables.$mg-color-neutral-300;
   height: 40px;
   width: 40px;
 
-  @include devicebreak(medium) {
-    border: 14px solid $mg-color-blue-600;
-    border-top: 14px solid $mg-color-neutral-300;
+  @include breakpoints.devicebreak(medium) {
+    border: 14px solid variables.$mg-color-blue-600;
+    border-top: 14px solid variables.$mg-color-neutral-300;
     height: 96px;
     width: 96px;
   }

@@ -1,3 +1,6 @@
+@use "../../../assets/scss/breakpoints";
+@use "../../../assets/scss/variables";
+
 // @import '../../../assets/scss/variables';
 // @import '../../../assets/scss/breakpoints';
 // @import '../../../assets/scss/mixins';
@@ -11,10 +14,10 @@
     justify-content: center;
 
     .image__caption {
-      margin: $mg-spacing-50 $mg-spacing-100 0;
+      margin: variables.$mg-spacing-50 variables.$mg-spacing-100 0;
 
-      @include devicebreak(medium) {
-        margin: $mg-spacing-150 0 0;
+      @include breakpoints.devicebreak(medium) {
+        margin: variables.$mg-spacing-150 0 0;
         width: 58.33333%;
       }
     }
@@ -22,7 +25,7 @@
 }
 
 .image-figcaption.medium {
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     margin: 0 auto;
     width: 58.3333%;
 
@@ -35,27 +38,27 @@
 .image-figcaption.portrait {
   align-items: flex-end;
 
-  @include devicebreak(medium) {
+  @include breakpoints.devicebreak(medium) {
     .image-figcaption__cart {
       width: 33.33333%;
     }
 
     .image__caption {
       display: block;
-      margin: 0 0 0 $mg-spacing-100;
+      margin: 0 0 0 variables.$mg-spacing-100;
       padding-bottom: 0;
       width: 25%;
 
       p {
-        font-size: $mg-font-size-200;
+        font-size: variables.$mg-font-size-200;
         line-height: 1.4;
-        margin-bottom: $mg-spacing-50;
+        margin-bottom: variables.$mg-spacing-50;
         padding: 0;
 
         + .credits {
-          border-top: 1px solid $mg-color-neutral-500;
+          border-top: 1px solid variables.$mg-color-neutral-500;
           margin-left: 0;
-          padding: $mg-spacing-50 0 0 0;
+          padding: variables.$mg-spacing-50 0 0 0;
         }
       }
     }
@@ -64,11 +67,11 @@
   .credits {
     border-left: 0;
     border-right: 0;
-    margin-bottom: $mg-spacing-50;
+    margin-bottom: variables.$mg-spacing-50;
   }
 
   .author__caption {
-    font-size: $mg-font-size-200;
+    font-size: variables.$mg-font-size-200;
     line-height: 1.5;
   }
 }
@@ -81,19 +84,19 @@
   }
 }
 
-@include devicebreak(medium) {
+@include breakpoints.devicebreak(medium) {
   [dir="rtl"] {
     .image-figcaption.portrait {
       .image {
         &__caption {
-          margin: 0 $mg-spacing-100 0 0;
+          margin: 0 variables.$mg-spacing-100 0 0;
         }
       }
 
       .credits {
         border-right: 0;
         margin-right: 0;
-        padding: $mg-spacing-50 0;
+        padding: variables.$mg-spacing-50 0;
         padding-right: 0;
       }
     }
