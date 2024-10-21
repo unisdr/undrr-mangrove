@@ -36,7 +36,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   };
 
   useEffect(() => {
-    if ((breakpoint !== "mobilelandscape") && (breakpoint !== "mobile")) {
+    if ((breakpoint !== "tablet") && (breakpoint !== "mobilelandscape") && (breakpoint !== "mobile")) {
       setShowSidebar(false);
     }
   }, [breakpoint]);
