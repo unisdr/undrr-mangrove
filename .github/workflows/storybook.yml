@@ -33,8 +33,8 @@ jobs:
         run: yarn run lint:check
       - name: Build Storybook
         run: |
-          yarn run build-storybook
-          mv docs-build _site
+          yarn run build
+          mv docs-build-temp _site
       - name: Build bundle
         run: |
          yarn run build
