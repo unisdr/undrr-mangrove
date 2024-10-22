@@ -5,6 +5,7 @@ yarn-error.log
 /storybook-static
 /docs
 /docs-build
+/docs-build-temp
 /stories/assets/css/style*.css
 /stories/assets/css/style*.css.map
 .DS_Store

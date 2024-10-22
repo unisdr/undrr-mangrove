@@ -34,9 +34,6 @@ yarn docker-install
 # Build the project for release inside the Docker container
 yarn docker-build
 
-# Build Storybook and SASS inside the Docker container
-yarn docker-build-storybook
-
 # Lint the codebase inside the Docker container
 yarn docker-lint
 ```
@@ -54,9 +51,6 @@ make install
 
 # Run Storybook locally
 make run
-
-# Build Storybook and SASS
-make build-storybook
 
 # Lint the codebase
 make lint
@@ -86,9 +80,6 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook --ci"
 
 # Build the project for release (default mode is production)
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run build"
-
-# Build Storybook and SASS
-docker exec -it undrr-mangrove-client-1 bash -c "yarn run build-storybook"
 
 # Lint the codebase
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
@@ -124,6 +115,14 @@ yarn test:coverage
 
 We do not yet make the compiled assets available directly; see:
 https://gitlab.com/undrr/web-backlog/-/issues/545
+
+Provisional assets are available in the `dist` directory:
+
+- `dist/components`: the compiled Storybook components
+    - example: `dist/components/ShareButtons.js`
+- `dist/assets`: the compiled static assets ... jpg, css, web fonts, etc.
+    - example: `dist/assets/css/style-preventionweb.css`
+    - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
 
 ## Credit
 

@@ -13,7 +13,7 @@ module.exports = [
     mode: packMode,
     entry: webpackEntry("js"),
     output: {
-      path: path.resolve(__dirname, "docs"),
+      path: path.resolve(__dirname, "dist"),
       filename: "[name].min.js",
       libraryTarget: "umd",
     },
@@ -69,7 +69,7 @@ module.exports = [
       "react-dom": "react-dom",
     },
     output: {
-      path: path.resolve(__dirname, "dist"),
+      path: path.resolve(__dirname, "dist/components"),
       filename: "[name].js",
       library: {
         type: "module",
