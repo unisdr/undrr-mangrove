@@ -1,1 +1,89 @@
-// empty
+.mg-undrr-footer {
+  background: url(../images/world-map.png) no-repeat center 97% rgba(0, 79, 145, 0.8);
+  background-position-x: center;
+  background-position-y: 97%;
+  background-size: auto;
+  background-size: 260px;
+
+  @include devicebreak(large) {
+    background-position: 96% 40px;
+    background-size: 330px;
+  }
+
+  &__container {
+    display: grid;
+    grid-gap: 2em;
+    padding-top: $dts-spacing-40;
+    padding-bottom: $dts-spacing-20;
+    color: #ffffff;
+
+    @include devicebreak(medium) {
+      grid-gap: 1em;
+      grid-template-areas:
+        "a b c d";
+      grid-template-columns: repeat(auto-fit, minmax(50px, 2fr));
+    }
+
+    h3 {
+      font-weight: 500;
+      font-size: 1.6rem;
+      line-height: 18px;
+      margin: 0 0 $dts-spacing-12;
+    }
+
+    .btn {
+      min-width: 100px;
+      color: #ffffff;
+      background-color: #004f91;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      touch-action: manipulation;
+      padding: $dts-spacing-8 $dts-spacing-12;
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 28px;
+      text-decoration: none;
+      border: 1px solid rgba(221, 232, 240, 0.8);
+      white-space: break-spaces;
+      font-family: "Roboto Condensed", sans-serif;
+
+      &:hover {
+        color: #ffffff;
+        border: 1px solid #9abbd6;
+        background-color: #9abbd6;
+      }
+    }
+  }
+
+  &__social-media-links {
+    display: inline-flex;
+    gap: $dts-spacing-16;
+    margin-bottom: $dts-spacing-12;
+    padding: 0;
+
+    li {
+      display: inline-block;
+
+      a {
+        color: #ffffff;
+        text-decoration: none;
+        text-underline-offset: 5px;
+      }
+    }
+  }
+
+  .menu {
+    display: grid;
+    row-gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1.4rem;
+    }
+  }
+}

@@ -4,9 +4,6 @@ html {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
   // overwrite storybook padding
   padding: 0 !important;
   font-family: $mg-font-family;
@@ -25,4 +22,15 @@ a:hover {
 
 button {
   font-family: $mg-font-family;
+}
+
+.dts-page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+
+.dts-main-container {
+  flex: 1;
 }
