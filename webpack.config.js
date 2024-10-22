@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
 const webpackEntry = require("./webpack.entries");
 
 const packMode =
@@ -43,7 +44,18 @@ module.exports = [
     },
     optimization: {
       minimize: packMode === "production", // Minimize only in production mode
-      minimizer: [new CssMinimizerPlugin()], // Minimize only in production mode
+          minimizer: [
+            new CssMinimizerPlugin({
+              minimizerOptions: {
+                preset: [
+                  'default',
+                  {
+                    discardComments: false,
+                  },
+                ],
+              },
+            }),
+          ],
     },
     plugins: [
       new MiniCssExtractPlugin(),
@@ -75,6 +87,15 @@ module.exports = [
         type: "module",
       },
     },
+    plugins: [
+      new webpack.BannerPlugin({
+        banner: `This is a UNDRR Mangrove component: https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
+Compiled on: ${new Date().toISOString()}`,
+        raw: false,
+        entryOnly: false,
+        stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
+      }),
+    ],
     experiments: {
       outputModule: true,
     },
@@ -111,4 +132,4 @@ module.exports = [
       extensions: [".jsx", ".js", ".svg"],
     },
   },
-];
+];      
