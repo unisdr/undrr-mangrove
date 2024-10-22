@@ -38,7 +38,12 @@ jobs:
       - name: Build bundle
         run: |
          yarn run build
-         cp dist _site -r
+         cp dist/* _site/dist/js -r  
+         cp _site/css _site/dist -r
+         cp _site/images _site/dist -r
+         cp _site/icons _site/dist -r
+         cp _site/fonts _site/dist -r
+         cp _site/js _site/dist -r
       - name: Run tests with Jest 🧪
         run: |
           yarn test
