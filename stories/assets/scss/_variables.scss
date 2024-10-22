@@ -1,11 +1,6 @@
-// Define a timestamp using Sass interpolation
-$timestamp: "#{year()}-#{month()}-#{day()} #{hour()}:#{minute()}:#{second()}";
-
 /**
  * This is from the UNDRR Mangrove component library
  * https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
- *
- * Compilation timestamp: #{$timestamp}
  *
  *     _   _ _   _ ____  ____  ____    __  __                                     
  *    | | | | \ | |  _ \|  _ \|  _ \  |  \/  | __ _ _ __   __ _ _ __ _____   _____ 
