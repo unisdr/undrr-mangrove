@@ -376,7 +376,8 @@ const Header = ({ sections }) => {
         <div className='dts-header'>
           <div className='dts-header__logo'>
             <img src='images/dldt-logo-mark.svg' alt='DLDT logo mark'></img>
-            <img src='images/dldt-logo-text.svg' alt='DLDT logo text' className='dts-header__logo-text'></img>
+            {/* <img src='images/dldt-logo-text.svg' alt='DLDT logo text' className='dts-header__logo-text'></img> */}
+            <div className='dts-header__logo-text'>Disaster Losses<br/>and Damage Tracking</div>
           </div>
           <div className='dts-header__main-menu'>
             <MegaMenuDts sections={sections} />

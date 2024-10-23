@@ -21,7 +21,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   const handleMouseLeave = () => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
-// RP commented to keep megamenu open
+// RP comment next line to keep megamenu open
         setSection(null);
         const topBarItems = document.getElementsByClassName("mg-mega-topbar__item");
         for (let i = 0; i < topBarItems.length; i++) {

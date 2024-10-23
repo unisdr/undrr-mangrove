@@ -35,6 +35,7 @@
     background: inherit;
     border-bottom: 2px solid transparent;
     padding: $dts-spacing-32;
+    white-space: nowrap;
 
     // used instead of hover to keep it highlighted while hovering on its megamenu
     &--current {
@@ -42,12 +43,6 @@
       background: transparent;
       border-color: $dts-undrr-blue-brand;
     }
-
-    // &:hover {
-    //   color: $dts-undrr-blue-brand;
-    //   background: transparent;
-    //   border-color: $dts-undrr-blue-brand;
-    // }
 
     svg {
       width: $dts-spacing-24;
@@ -57,6 +52,9 @@
 }
 
 .dts-mega-wrapper .mg-mega-content {
+  position: absolute;
+  right: 0;
+  z-index: 100;
   display: grid;
   gap: $dts-spacing-40;
   grid-template-columns: 1fr;
