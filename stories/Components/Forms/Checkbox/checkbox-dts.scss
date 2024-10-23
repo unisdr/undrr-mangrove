@@ -1,0 +1,20 @@
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: 2px solid $dts-undrr-blue-brand;
+  cursor: pointer;
+  width: $dts-spacing-24;
+  height: $dts-spacing-24;
+  margin: 0;
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: 0px 1px 8px 0px rgba(0, 79, 145, 0.41);
+    outline: none;
+  }
+
+  &:checked {
+    background: $dts-undrr-blue-brand url(#{$img-path-Icon}/tick-white.svg) 1px 2px no-repeat;
+  }
+}
