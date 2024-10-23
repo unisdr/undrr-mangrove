@@ -7,7 +7,7 @@ export default {
   * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
   * to learn how to generate automatic titles
   */
-  title: 'Components/Boilerplate',
+  title: 'Example/Boilerplate component',
   component: Boilerplate,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {

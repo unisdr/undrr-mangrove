@@ -106,7 +106,7 @@ const PageTemplateExample = () => {
 
 // Define the default export for the story
 export default {
-  title: 'Page Template Example',
+  title: 'Example/Page Template Example',
   component: PageTemplateExample,
 };
 
