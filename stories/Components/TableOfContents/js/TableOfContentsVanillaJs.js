@@ -4,7 +4,7 @@
  * @param {HTMLElement} tocElement - The TOC container element, be sure to pass the dom element and not the query selector.
  * @param {boolean} showNumbers - Whether to use ordered list (true) or unordered list (false).
  */
-// stories\Components\TableOfContent\js\TableOfContentsVanillaJs.js
+// stories\Components\TableOfContents\js\TableOfContentsVanillaJs.js
 export function mgTableOfContents(contentElement, tocElement, showNumbers = false) {
   if (!contentElement || !tocElement) {
     console.error("Content element or TOC element is not provided.");
