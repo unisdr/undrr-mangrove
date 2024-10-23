@@ -8,8 +8,7 @@ export default {
     component: TypeScriptExampleComponent,
 } as ComponentMeta<typeof TypeScriptExampleComponent>
 
-const Template: ComponentStory<typeof TypeScriptExampleComponent> = (args) => <TypeScriptExampleComponent {...args} />;
-
+const Template: ComponentStory<typeof TypeScriptExampleComponent> = (args: React.ComponentProps<typeof TypeScriptExampleComponent>) => <TypeScriptExampleComponent {...args} />;
 export const Submit = Template.bind({});
 Submit.args = {
   label: 'Button',

@@ -2,12 +2,10 @@ import React from 'react'
 import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 
 type ButtonProps = {
-  label: string,
-  type: string,
-  width: number
+  label: string;
+  type: string;
+  width: number;
 }
-
-
 function TypeScriptExampleComponent({label, type, width}: ButtonProps) {
   return (
     <>

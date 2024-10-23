@@ -11,8 +11,8 @@
 	],
 	"parserOptions": {
 		"ecmaFeatures": {
-				"jsx": true,
-				"mdx": true
+			"jsx": true,
+			"mdx": true
 		},
 		"ecmaVersion": 12,
 		"sourceType": "module"
@@ -21,7 +21,10 @@
 		"react",
 		"spellcheck"
 	],
-	"ignorePatterns": ["glideslider.js","stories/assets/js/lib/*.js"],
+	"ignorePatterns": [
+		"glideslider.js",
+		"stories/assets/js/lib/*.js"
+	],
 	"rules": {
 		"import/prefer-default-export": "off",
 		"react/prop-types": "off",
@@ -37,7 +40,11 @@
 		"jsx-a11y/role-supports-aria-props": "off",
 		"no-param-reassign": "off",
 		"react/jsx-first-prop-new-line": "off",
-		"no-restricted-globals": ["error", "event", "fdescribe"],
+		"no-restricted-globals": [
+			"error",
+			"event",
+			"fdescribe"
+		],
 		"no-undef": "off",
 		"no-var": "off",
 		"no-plusplus": "off",
@@ -47,31 +54,56 @@
 		"class-methods-use-this": "off",
 		"block-scoped-var": "off",
 		"max-len": "off",
-		"react/no-array-index-key": [0],
+		"react/no-array-index-key": [
+			0
+		],
 		"eqeqeq": "off",
-		"enforceForClassFields": [0],
+		"enforceForClassFields": [
+			0
+		],
 		"react/button-has-type": "off",
 		"no-empty-pattern": "off",
-		"no-sequences":"off",
+		"no-sequences": "off",
 		"react/style-prop-object": "off",
 		"vars-on-top": "off",
 		"no-redeclare": "off",
 		"mdx/no-unused-expressions": "off",
 		"prefer-const": "off",
 		"jsx-a11y/anchor-has-content": "off",
-		"import/no-unresolved": [0],
-		"react/no-unescaped-entities": [0],
-		"react-a11y-role-has-required-aria-props": [0],
-		"@typescript-eslint/no-empty-interface": [0],
+		"import/no-unresolved": [
+			0
+		],
+		"react/no-unescaped-entities": [
+			0
+		],
+		"react-a11y-role-has-required-aria-props": [
+			0
+		],
+		"@typescript-eslint/no-empty-interface": [
+			0
+		],
 		"import/no-extraneous-dependencie": "off",
-    "react/jsx-props-no-spreading": "off",
+		"react/jsx-props-no-spreading": "off",
 		"import/no-extraneous-dependencies": "off",
 		"no-console": "off",
-		"no-return-assign": ["warn", "always"],
-		"func-names": ["warn", "never"],
-		"no-underscore-dangle": [0],
+		"no-return-assign": [
+			"warn",
+			"always"
+		],
+		"func-names": [
+			"warn",
+			"never"
+		],
+		"no-underscore-dangle": [
+			0
+		],
 		"no-use-before-define": "off",
-		"react/jsx-no-duplicate-props": [1, { "ignoreCase": false }],
+		"react/jsx-no-duplicate-props": [
+			1,
+			{
+				"ignoreCase": false
+			}
+		],
 		"linebreak-style": "off"
 	},
 	"settings": {
@@ -79,7 +111,33 @@
 	},
 	"overrides": [
 		{
-      "files": ["*.stories.@(ts|tsx|js|jsx|mdx|mjs|cjs)"]
-    }
+			"files": [
+				"*.stories.@(js|jsx|mdx|mjs|cjs)"
+			]
+		},
+		{
+			"files": [
+				"*.ts",
+				"*.tsx"
+			],
+			"parser": "@typescript-eslint/parser",
+			"plugins": [
+				"@typescript-eslint"
+			],
+			"extends": [
+				"plugin:@typescript-eslint/recommended"
+			],
+			"rules": {
+				"@typescript-eslint/explicit-function-return-type": "off",
+				"@typescript-eslint/explicit-module-boundary-types": "off",
+				"@typescript-eslint/no-explicit-any": "off",
+				"@typescript-eslint/no-unused-vars": [
+					"warn"
+				],
+				"@typescript-eslint/no-use-before-define": [
+					"error"
+				]
+			}
+		}
 	]
 }

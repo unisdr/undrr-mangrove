@@ -5,6 +5,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -99,6 +101,27 @@ export default [{
 
         "linebreak-style": "off",
     },
-}, {
-    files: ["**/*.stories.@(ts|tsx|js|jsx|mdx|mjs|cjs)"],
+    files: ["**/*.stories.@(js|jsx|mdx|mjs|cjs)"],
+},
+{
+    files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+        parser: tsParser,
+        parserOptions: {
+            ecmaFeatures: {
+                jsx: true
+            },
+            ecmaVersion: 12,
+            sourceType: "module",
+            project: "./tsconfig.json"
+        }
+    },
+    plugins: {
+        "@typescript-eslint": tseslint
+    },
+    rules: {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "warn"
+    }
 }];
