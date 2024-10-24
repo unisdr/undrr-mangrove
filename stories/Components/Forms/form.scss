@@ -1,6 +1,24 @@
 .dts-form-field {
-  display: flex;
+  display: grid;
   gap: $dts-spacing-8;
-  align-items: center;
-  cursor: pointer;
+
+  label {
+    display: flex;
+    gap: $dts-spacing-8;
+    align-items: center;
+    cursor: pointer;
+
+    &[aria-invalid="true"] input {
+      background-color: rgba(255, 77, 79, 0.12);
+    }
+  }
+
+  &:has([disabled]) {
+    color: $dts-coal-500;
+    cursor: not-allowed;
+  }
+
+  &__error-msg {
+    color: $mg-color-red-900;
+  }
 }
