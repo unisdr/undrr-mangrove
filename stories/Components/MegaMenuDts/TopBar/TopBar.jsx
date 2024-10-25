@@ -22,7 +22,7 @@ export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections }
   return (
     <div className="mg-mega-topbar">
       {
-        ((breakpoint === 'mobile') || (breakpoint === 'mobilelandscape') || (breakpoint === 'tablet')) ? (
+        ((breakpoint === 'mobile') || (breakpoint === 'mobilelandscape') || (breakpoint === 'tablet') || (breakpoint === 'laptop')) ? (
           <TopBarIconButton icon={showSidebar ? close : hamburger} onClick={() => toggleShowSidebar()}/>
         ) : (
           sections.map((item, index) => (

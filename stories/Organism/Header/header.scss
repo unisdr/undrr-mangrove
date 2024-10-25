@@ -58,7 +58,7 @@
   gap: $dts-spacing-16;
   height: 108px;
 
-  @include devicebreak(medium) {
+  @include devicebreak(large) {
     height: 86px;
   }
 
@@ -69,7 +69,7 @@
     max-height: 86px;
     padding: 11px 0;
 
-    @include devicebreak(medium) {
+    @include devicebreak(large) {
       padding: 0;
     }
 
@@ -78,7 +78,6 @@
     }
 
     &-text {
-      // display: none;
       font-family: $dts-menu-font-family;
       font-size: 2rem;
       line-height: 1.2;
@@ -88,11 +87,7 @@
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
 
-      @include devicebreak(medium) {
-        display: -webkit-box;
-      }
-
-      @include devicebreak(large) {
+      @include devicebreak(small) {
         font-size: 2.8rem;
       }
     }
@@ -104,7 +99,7 @@
     justify-content: end;
     align-items: center;
 
-    @include devicebreak(medium) {
+    @include devicebreak(large) {
       display: block;
     }
   }
