@@ -31,7 +31,7 @@ The project uses the following branching strategy:
 - `main` is the primary branch and all commits to it are automatically deployed to the GitHub Pages website
 - Development work should be done on feature branches
 - Pull requests should be opened against `main` and should reference either:
-    - An internal GitLab issue (git.un.org)
+    - An internal GitLab issue
     - A public GitHub issue
 
 For production use:
