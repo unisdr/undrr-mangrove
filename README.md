@@ -17,10 +17,36 @@ If there is a Component or Pattern that you need, or you have any other feedback
 ### Assorted technical notes
 
 - **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
+- **TypeScript Support**: While the default implementation uses JSX and JavaScript, TypeScript is fully supported. You can view examples of TypeScript components in the [TypeScript Example Component](https://unisdr.github.io/undrr-mangrove/?path=/docs/example-typescript-component--docs) (code location: `stories/Components/TypeScriptExampleComponent`)
+
 
 ## Development
 
 You can use the provided npm scripts to simplify running commands inside Docker containers. These scripts are defined in the `package.json` file and can be run using `yarn`.
+
+### Making commits
+
+The project uses the following branching strategy:
+
+- `main` is the primary branch and all commits to it are automatically deployed to the GitHub Pages website
+- Development work should be done on feature branches
+- Pull requests should be opened against `main` and should reference either:
+    - An internal GitLab issue (git.un.org)
+    - A public GitHub issue
+
+For production use:
+
+- Stable releases will be created as tagged releases
+    - Note: tagged releases are not yet available as we are still in an alpha phase
+- The `dev` branch is not used
+
+When creating a new feature or fix:
+
+1. Create a new branch from `main`
+2. Make your changes
+3. Open a pull request against `main`
+4. Reference the relevant issue from Github or the private UNDRR GitLab
+5. Once approved, the changes will be merged and automatically deployed
 
 ### NPM Scripts:
 
