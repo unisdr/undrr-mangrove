@@ -102,7 +102,7 @@ export const ScrapedContent = () => {
   useEffect(() => {
     // Assuming mgTableOfContents is a function that scrapes the content
     const contentElement = document.querySelector('.mg-content');
-    const tocElement = document.querySelector('.mg-table-of-contents');
+    const tocElement = document.querySelector('[data-mg-table-of-contents]');
     if (contentElement && tocElement) {
       mgTableOfContents(contentElement, tocElement);
     }
@@ -112,7 +112,7 @@ export const ScrapedContent = () => {
     <article className="mg-content">
       <h1 id="section-1">Welcome to the example</h1>
       <p>The above header is excluded as it is the H1</p>
-      <section className="mg-table-of-contents">
+      <section data-mg-table-of-contents className="mg-table-of-contents">
       </section>
       <h2 id="section-2">Section 2</h2>
       <p>Content for section 2...</p>
