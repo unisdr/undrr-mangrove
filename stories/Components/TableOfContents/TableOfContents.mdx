@@ -102,7 +102,7 @@ It is possible to populate the Table of Contents by scraping a section.
   useEffect(() => {
     // Assuming mgTableOfContents is a function that scrapes the content
     const contentElement = document.querySelector('.mg-content');
-    const tocElement = document.querySelector('.mg-table-of-contents');
+    const tocElement = document.querySelector('[data-mg-table-of-contents]');
     if (contentElement && tocElement) {
       mgTableOfContents(contentElement, tocElement);
     }
