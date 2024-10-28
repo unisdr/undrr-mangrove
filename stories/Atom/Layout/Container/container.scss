@@ -26,6 +26,21 @@
   }
 }
 
+// A slim variant that does not allow for the wide breakpoint
+.mg-container--slim {
+  @media (min-width: $mg-breakpoint-mobile) {
+    max-width: $mg-breakpoint-mobile;
+  }
+
+  @media (min-width: $mg-breakpoint-tablet) {
+    max-width: $mg-breakpoint-tablet;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    max-width: $mg-breakpoint-desktop;
+  }
+}
+
 .mg-container--spacer {
   --mg-container-spacer: #{$mg-container-spacer};
 

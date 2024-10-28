@@ -7,7 +7,7 @@ export default {
 };
 
 export const Default = () => (
-  <Container>
+  <Container className="mg-container--spacer">
     <h1>Responsive Container</h1>
     <p>This container adjusts its width based on the screen size.</p>
     <p>The `Container` component can be used in conjunction with column layouts, such as the `mg-grid` system. Here's an example of how to integrate `Container` with `mg-grid`:</p>
