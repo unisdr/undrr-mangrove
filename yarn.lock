@@ -2862,16 +2862,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chromatic-com/storybook@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@chromatic-com/storybook@npm:2.0.2"
+"@chromatic-com/storybook@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@chromatic-com/storybook@npm:3.1.0"
   dependencies:
-    chromatic: "npm:^11.4.0"
+    "@storybook/channels": "npm:^8.3.0"
+    "@storybook/telemetry": "npm:^8.3.0"
+    "@storybook/types": "npm:^8.3.0"
+    chromatic: "npm:^11.15.0"
     filesize: "npm:^10.0.12"
     jsonfile: "npm:^6.1.0"
     react-confetti: "npm:^6.1.0"
     strip-ansi: "npm:^7.1.0"
-  checksum: 10/acd23f87072aaec2a4db174ec19b2479d9a0a4390f10ca804198f6453dce0c35055861bc19a4905fee97f8fd87e43b6c51fda7ce3e30bb355a2729af85f53440
+  peerDependencies:
+    storybook: ^8.3.0
+  checksum: 10/fd2041c76029c1ff17377fb5e65edbafc045f675c84dfa4e19bb0dae0b0fc5df57ab99ee1d05b8f8dcb6c74bbaf58b3db1edc8855f66781f93f3dc099999f054
   languageName: node
   linkType: hard
 
@@ -4275,6 +4280,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/channels@npm:^8.3.0":
+  version: 8.3.6
+  resolution: "@storybook/channels@npm:8.3.6"
+  peerDependencies:
+    storybook: ^8.3.6
+  checksum: 10/edd97c042d5ac6f604efd9a4bbf4a2dce1948cc38412ef0f23f07e401e6d01bdd5312f7b11f56edf603afffe140a50fb288d5b69f9926bc38a8c15cf8f5a61b6
+  languageName: node
+  linkType: hard
+
 "@storybook/cli@npm:8.3.6":
   version: 8.3.6
   resolution: "@storybook/cli@npm:8.3.6"
@@ -4554,6 +4568,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/telemetry@npm:^8.3.0":
+  version: 8.3.6
+  resolution: "@storybook/telemetry@npm:8.3.6"
+  peerDependencies:
+    storybook: ^8.3.6
+  checksum: 10/26876685d5bc9e10c969af3ae7e7938a18ea653bd0a8caf0ff88159ea1f0bb2748f0f1399042a50f2d91dd3dc5ab9e2edac9fb5334bd45836dae35a54a3cff85
+  languageName: node
+  linkType: hard
+
 "@storybook/test@npm:^8.0.6":
   version: 8.3.5
   resolution: "@storybook/test@npm:8.3.5"
@@ -4579,6 +4602,15 @@ __metadata:
   peerDependencies:
     storybook: ^8.3.6
   checksum: 10/7b40b35069225d37f71f43e35174717ba6ec8d273eef671a2d37d9745a300c5b3887fa145aee6fdbe4759b2140ddf25e8cbd569074ae1c7d44b0ccc99c1a3451
+  languageName: node
+  linkType: hard
+
+"@storybook/types@npm:^8.3.0":
+  version: 8.3.6
+  resolution: "@storybook/types@npm:8.3.6"
+  peerDependencies:
+    storybook: ^8.3.6
+  checksum: 10/7122388d848cf1d8b7d95c81b8a601d82a455d764f7a625372f344dc0402bbd398db22e1c6cedd66ca3987d61b0f8204ff757e0ff5fc2a77745094dc7b882a2a
   languageName: node
   linkType: hard
 
@@ -5389,7 +5421,7 @@ __metadata:
     "@babel/preset-env": "npm:7.26.0"
     "@babel/preset-react": "npm:7.25.9"
     "@babel/preset-typescript": "npm:7.26.0"
-    "@chromatic-com/storybook": "npm:2.0.2"
+    "@chromatic-com/storybook": "npm:3.1.0"
     "@eslint/eslintrc": "npm:3.1.0"
     "@eslint/js": "npm:9.13.0"
     "@etchteam/storybook-addon-css-variables-theme": "npm:3.0.0"
@@ -7759,9 +7791,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromatic@npm:^11.4.0":
-  version: 11.12.5
-  resolution: "chromatic@npm:11.12.5"
+"chromatic@npm:^11.15.0":
+  version: 11.16.1
+  resolution: "chromatic@npm:11.16.1"
   peerDependencies:
     "@chromatic-com/cypress": ^0.*.* || ^1.0.0
     "@chromatic-com/playwright": ^0.*.* || ^1.0.0
@@ -7774,7 +7806,7 @@ __metadata:
     chroma: dist/bin.js
     chromatic: dist/bin.js
     chromatic-cli: dist/bin.js
-  checksum: 10/1b67b8f1c3813871453910a3d90b1dfe20da9ecd0fc71bb5186b132d72fc3a11a6e74f14abd1b51e1ebbd99bd7089e1615ba7be8529be5dde7897b9778c48ae7
+  checksum: 10/80d4d5db4de56566a1e9bf492a5599c47afc8594f7c74e55d030e05efa875bb000cea1872f566c8ac8c540c2f75db8c8278322edada134db4db0b1a75ca0a21e
   languageName: node
   linkType: hard
 
@@ -20655,11 +20687,11 @@ __metadata:
 
 "typescript@patch:typescript@npm%3A^5.2.2#optional!builtin<compat/typescript>":
   version: 5.6.3
-  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=5adc0c"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/00504c01ee42d470c23495426af07512e25e6546bce7e24572e72a9ca2e6b2e9bea63de4286c3cfea644874da1467dcfca23f4f98f7caf20f8b03c0213bb6837
+  checksum: 10/dc4bec403cd33a204b655b1152a096a08e7bad2c931cb59ef8ff26b6f2aa541bf98f09fc157958a60c921b1983a8dde9a85b692f9de60fa8f574fd131e3ae4dd
   languageName: node
   linkType: hard
 
