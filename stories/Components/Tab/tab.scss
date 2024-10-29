@@ -32,24 +32,11 @@
   padding: 0;
 }
 
-// Stacked variant
-.mg-tabs--stacked {
-  .mg-tabs__list {
-    display: flex;
-    flex-direction: column; // Stack tabs vertically
-  }
-
-  .mg-tabs__item {
-    width: 100%; // Make each tab take full width
-    margin-bottom: $mg-spacing-25; // Add spacing between tabs
-  }
-}
-
 // With the introdcution of stacked and horizontal tabs we changed
 // the html structure so that the content is grouped under the li.
 // We scopped the css changes to ensure backwards compatibility.
 .mg-tabs--stacked,
-  .mg-tabs--horizontal {
+.mg-tabs--horizontal {
   .mg-tabs-content {
     padding-left: 0; // unset the li style padding
     display: grid;
@@ -60,22 +47,33 @@
   }
 }
 
-.mg-tabs--stacked {
+// Shared styles for stacked tabs
+@mixin stacked-tabs {
   .mg-tabs__list {
-    display: grid;
-    grid-template-areas:
-      "tabs"
-      "section";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    position: relative;
+    display: flex;
+    flex-direction: column; // Stack tabs vertically
   }
+
+  .mg-tabs__item {
+    width: 100%; // Make each tab take full width
+    margin-bottom: $mg-spacing-25; // Add spacing between tabs
+  }
+
   .mg-tabs__section {
     padding: $mg-spacing-150;
   }
 }
 
+.mg-tabs--stacked { 
+  @include stacked-tabs;
+}
+
 .mg-tabs--horizontal {
+  // for smaller screens we mimic stacked tabs
+  @media (max-width: $mg-breakpoint-mobile) {
+    @include stacked-tabs;
+  }
+
   @media (min-width: $mg-breakpoint-mobile) {
     .mg-tabs__list {
       display: grid;
@@ -92,7 +90,7 @@
 
     .mg-tabs__link {
       width: max-content; // force the tab title to be one line and not squisshed by min-content
-      display: flex;
+      text-align: center;
       flex-grow: 1;
     }
 
@@ -103,20 +101,6 @@
       grid-column: 1 / -1;
       grid-area: b;
       list-style-type: none;
-    }
-  }
-
-  // for smaller screens it mimics stacked tabs
-  @media (max-width: $mg-breakpoint-mobile) {
-    .mg-tabs--horizontal {
-      .mg-tabs-content {
-        padding-left: 0; // unset the li style padding
-        display: grid;
-      }
-    
-      .mg-tabs__link.is-active + .mg-tabs-content {
-        display: block;
-      }
     }
   }
 
