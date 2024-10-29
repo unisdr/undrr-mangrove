@@ -7,15 +7,16 @@
  * @example mgTabs(document.querySelectorAll('.mg-component__container')[0]);
  */
 export function mgTabs(scope, activateDeepLinkOnLoad) {
-   
   var scope = scope || document;
   var activateDeepLinkOnLoad = activateDeepLinkOnLoad || true;
-   
+
   // Get relevant elements and collections
   const tabsList = scope.querySelectorAll("[data-mg-js-tabs]");
   const panelsList = scope.querySelectorAll("[data-mg-js-tabs-content]");
 
-  const panels = scope.querySelectorAll("[data-mg-js-tabs-content] [id^=\"mg-tabs__section\"]");
+  const panels = scope.querySelectorAll(
+    '[data-mg-js-tabs-content] [id^="mg-tabs__section"]',
+  );
   const tabs = scope.querySelectorAll("[data-mg-js-tabs] .mg-tabs__link");
 
   // console.log("debug: All panels");
@@ -49,13 +50,13 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
     tab.classList.remove("is-active");
 
     // Handle clicking of tabs for mouse users
-    tab.addEventListener("click", e => {
+    tab.addEventListener("click", (e) => {
       e.preventDefault();
       mgTabsSwitch(e.currentTarget, panels);
     });
 
     // Handle keydown events for keyboard users
-    tab.addEventListener("keydown", e => {
+    tab.addEventListener("keydown", (e) => {
       // Get the index of the current tab in the tabs node list
       let index = Array.prototype.indexOf.call(tabs, e.currentTarget);
       // Work out which key the user is pressing and
@@ -91,7 +92,7 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
 
   // Initially reveal the first tab panel
   Array.prototype.forEach.call(panelsList, (panel) => {
-    let parentTabSet = panel.closest(".mg-tabs__list");
+    let parentTabSet = panel.closest(".mg-tabs");
     let firstPanel = parentTabSet.querySelectorAll(".mg-tabs__section")[0];
     firstPanel.hidden = false;
   });
@@ -114,14 +115,14 @@ const mgTabsSwitch = (newTab, panels) => {
 
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
-      if (panel.id === oldTab.id){
+      if (panel.id === oldTab.id) {
         panel.hidden = true;
         break;
       }
     }
   }
 
-  newTab.focus({preventScroll:true});
+  newTab.focus({ preventScroll: true });
   // Make the active tab focusable by the user (Tab key)
   newTab.removeAttribute("tabindex");
   // Set the selected state
@@ -131,7 +132,7 @@ const mgTabsSwitch = (newTab, panels) => {
   // tab panel to show
   for (let item = 0; item < panels.length; item++) {
     const panel = panels[item];
-    if (panel.id === newTab.id){
+    if (panel.id === newTab.id) {
       panel.hidden = false;
       break;
     }
@@ -140,7 +141,7 @@ const mgTabsSwitch = (newTab, panels) => {
 
 function mgTabsDeepLinkOnLoad(tabs, panels) {
   // 1. See if there is a `#mg-tabs__section--88888`
-  if(window.location.hash) {
+  if (window.location.hash) {
     var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
   } else {
     // No hash found
@@ -156,5 +157,3 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
     }
   });
 }
-
-

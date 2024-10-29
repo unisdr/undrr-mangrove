@@ -121,7 +121,7 @@
   }
 
   // edge case with css grid and not selecting even though not visible
-  .mg-tabs-content:has([hidden]) {
+  .mg-tabs-content[hidden] {
     display: none;
   }
 }
