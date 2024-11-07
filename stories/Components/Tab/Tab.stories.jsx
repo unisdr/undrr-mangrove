@@ -121,7 +121,6 @@ export const Tabs = {
     const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} />;
   },
-  name: "Tabs",
 };
 
 export const StackedTabs = {
@@ -129,5 +128,4 @@ export const StackedTabs = {
     const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} variant="stacked" />;
   },
-  name: "Stacked Tabs",
 };

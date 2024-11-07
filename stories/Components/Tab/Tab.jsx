@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { mgTabs } from '../../assets/js/tabs';
 
 export function Tab({ tabdata, variant }) {
-  console.log(tabdata);
   useEffect(() => {
     mgTabs();
   }, []);
   return (
     <div className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}>
-      <ul className="mg-tabs__list" data-mg-js-tabs>
+      <ul className="mg-tabs__list" data-mg-js-tabs data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}>
         {tabdata.map((tab, index) => (
           <>
             <li key={index} className="mg-tabs__item">

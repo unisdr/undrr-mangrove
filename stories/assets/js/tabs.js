@@ -15,7 +15,7 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
   const panelsList = scope.querySelectorAll("[data-mg-js-tabs-content]");
 
   const panels = scope.querySelectorAll(
-    '[data-mg-js-tabs-content] [id^="mg-tabs__section"]',
+    '[id^="mg-tabs__section"]',
   );
   const tabs = scope.querySelectorAll("[data-mg-js-tabs] .mg-tabs__link");
 
@@ -66,7 +66,7 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
         e.preventDefault();
         // If the down key is pressed, move focus to the open panel,
         // otherwise switch to the adjacent tab
-        dir === "down" ? panels[i].focus({preventScroll:true}) : tabs[dir] ? mgTabsSwitch(tabs[dir], panels) : void 0;
+        dir === "down" ? panels[i].focus({ preventScroll: true }) : tabs[dir] ? mgTabsSwitch(tabs[dir], panels) : void 0;
       }
     });
   });
@@ -83,18 +83,24 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
   // Add the tabsList role to the first <ul> in the .tabbed container
   Array.prototype.forEach.call(tabsList, (tabsListset) => {
     tabsListset.setAttribute("role", "tablist");
-    // Initially activate the first tab
-    let firstTab = tabsListset.querySelectorAll(".mg-tabs__link")[0];
-    firstTab.removeAttribute("tabindex");
-    firstTab.setAttribute("aria-selected", "true");
-    firstTab.classList.add("is-active");
+    // Do not show the first tab if the parent tabset is stacked or screen is narrow
+    if (tabsListset.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600) {
+      // Initially activate the first tab
+      let firstTab = tabsListset.querySelectorAll(".mg-tabs__link")[0];
+      firstTab.removeAttribute("tabindex");
+      firstTab.setAttribute("aria-selected", "true");
+      firstTab.classList.add("is-active");
+    }
   });
 
   // Initially reveal the first tab panel
   Array.prototype.forEach.call(panelsList, (panel) => {
     let parentTabSet = panel.closest(".mg-tabs");
-    let firstPanel = parentTabSet.querySelectorAll(".mg-tabs__section")[0];
-    firstPanel.hidden = false;
+    // Do not show the first tab if the parent tabset is stacked or screen is narrow
+    if (!parentTabSet.querySelector('[data-mg-js-tabs-variant="stacked"]') && window.innerWidth >= 600) {
+      let firstPanel = parentTabSet.querySelectorAll(".mg-tabs__section")[0];
+      firstPanel.hidden = false;
+    }
   });
 
   // activate any deeplinks to a specific tab
@@ -108,16 +114,30 @@ const mgTabsSwitch = (newTab, panels) => {
   // get the parent ul of the clicked tab
   let parentTabSet = newTab.closest(".mg-tabs__list");
   let oldTab = parentTabSet.querySelector("[aria-selected]");
+
+  if (parentTabSet.dataset.mgJsTabsVariant == "stacked" || window.innerWidth <= 600) {
+    for (let item = 0; item < panels.length; item++) {
+      const panel = panels[item];
+      if (panel.id === newTab.id) {
+        panel.hidden = !panel.hidden;
+        break;
+      }
+    }
+  }
+  
   if (oldTab) {
     oldTab.removeAttribute("aria-selected");
     oldTab.setAttribute("tabindex", "-1");
     oldTab.classList.remove("is-active");
 
-    for (let item = 0; item < panels.length; item++) {
-      const panel = panels[item];
-      if (panel.id === oldTab.id) {
-        panel.hidden = true;
-        break;
+    if (parentTabSet.dataset.mgJsTabsVariant != "stacked" || window.innerWidth >= 600) {
+      // normal horizontal tabs
+      for (let item = 0; item < panels.length; item++) {
+        const panel = panels[item];
+        if (panel.id === oldTab.id) {
+          panel.hidden = true;
+          break;
+        }
       }
     }
   }
@@ -128,13 +148,14 @@ const mgTabsSwitch = (newTab, panels) => {
   // Set the selected state
   newTab.setAttribute("aria-selected", "true");
   newTab.classList.add("is-active");
-  // Get the indices of the new tab to find the correct
-  // tab panel to show
-  for (let item = 0; item < panels.length; item++) {
-    const panel = panels[item];
-    if (panel.id === newTab.id) {
-      panel.hidden = false;
-      break;
+  // Get the indices of the new tab to find the correct tab panel to show
+  if (parentTabSet.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600) {
+    for (let item = 0; item < panels.length; item++) {
+      const panel = panels[item];
+      if (panel.id === newTab.id) {
+        panel.hidden = false;
+        break;
+      }
     }
   }
 };
