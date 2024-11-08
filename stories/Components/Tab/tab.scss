@@ -154,6 +154,7 @@
   box-shadow: $mg-box-shadow-tab-section;
   padding: $mg-padding-tab-section;
   border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
+
   // ensure tab content is available to interaction
   // https://gitlab.com/undrr/web-backlog/-/issues/1929
   position: relative;
