@@ -11,13 +11,12 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
   var activateDeepLinkOnLoad = activateDeepLinkOnLoad || true;
 
   // Get relevant elements and collections
-  const tabsList = scope.querySelectorAll("[data-mg-js-tabs]");
-  const panelsList = scope.querySelectorAll("[data-mg-js-tabs-content]");
+  const tabsList = scope.querySelectorAll("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
 
   const panels = scope.querySelectorAll(
     '[id^="mg-tabs__section"]',
   );
-  const tabs = scope.querySelectorAll("[data-mg-js-tabs] .mg-tabs__link");
+  const tabs = scope.querySelectorAll(".mg-tabs__link");
 
   // console.log("debug: All panels");
   // console.log("Tab list: " , tabsList);
@@ -83,23 +82,20 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
   // Add the tabsList role to the first <ul> in the .tabbed container
   Array.prototype.forEach.call(tabsList, (tabsListset) => {
     tabsListset.setAttribute("role", "tablist");
-    // Do not show the first tab if the parent tabset is stacked or screen is narrow
+    // Show the first tab (if the parent tabset is not stacked and screen is not narrow)
     if (tabsListset.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600) {
       // Initially activate the first tab
       let firstTab = tabsListset.querySelectorAll(".mg-tabs__link")[0];
       firstTab.removeAttribute("tabindex");
       firstTab.setAttribute("aria-selected", "true");
       firstTab.classList.add("is-active");
-    }
-  });
 
-  // Initially reveal the first tab panel
-  Array.prototype.forEach.call(panelsList, (panel) => {
-    let parentTabSet = panel.closest(".mg-tabs");
-    // Do not show the first tab if the parent tabset is stacked or screen is narrow
-    if (!parentTabSet.querySelector('[data-mg-js-tabs-variant="stacked"]') && window.innerWidth >= 600) {
-      let firstPanel = parentTabSet.querySelectorAll(".mg-tabs__section")[0];
-      firstPanel.hidden = false;
+      // Initially reveal the first tab panel
+      const panelsList = tabsListset.querySelectorAll("[data-mg-js-tabs-content]");
+      Array.prototype.forEach.call(panelsList, (panel) => {
+        let firstPanel = tabsListset.querySelectorAll(".mg-tabs__section")[0];
+        firstPanel.hidden = false;
+      });
     }
   });
 
@@ -112,12 +108,12 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
 // The tab switching function
 const mgTabsSwitch = (newTab, panels) => {
   // get the parent ul of the clicked tab
-  let parentTabSet = newTab.closest(".mg-tabs__list");
-  let oldTab = parentTabSet.querySelector("[aria-selected]");
-  const behaveAsHorizontalTabs = parentTabSet.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600
+  let parentTabContainer = newTab.closest("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
+  let oldTab = parentTabContainer.querySelector("[aria-selected]");
+  const behaveAsHorizontalTabs = parentTabContainer.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600
 
   // if it is marked as stacked or small screen (this is not an inverse of behaveAsHorizontalTabs)
-  if (parentTabSet.dataset.mgJsTabsVariant == "stacked" || window.innerWidth <= 600) {
+  if (parentTabContainer.dataset.mgJsTabsVariant == "stacked" || window.innerWidth <= 600) {
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
       if (panel.id === newTab.id) {
