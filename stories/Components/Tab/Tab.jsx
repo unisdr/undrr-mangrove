@@ -6,8 +6,8 @@ export function Tab({ tabdata, variant }) {
     mgTabs();
   }, []);
   return (
-    <div className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}>
-      <ul className="mg-tabs__list" data-mg-js-tabs data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}>
+    <article className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`} data-mg-js-tabs data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}>
+      <ul className="mg-tabs__list">
         {tabdata.map((tab, index) => (
           <>
             <li key={index} className="mg-tabs__item">
@@ -21,6 +21,6 @@ export function Tab({ tabdata, variant }) {
           </>
         ))}
       </ul>
-    </div>
+    </article>
   );
 }
