@@ -15,7 +15,7 @@ export function Tab({ tabdata, variant }) {
             </li>
             <li className="mg-tabs-content" data-mg-js-tabs-content>
               <section className="mg-tabs__section" id={`mg-tabs__section-${tab.text_id}`}>
-                {tab.data}
+                {tab.data ? <div dangerouslySetInnerHTML={{ __html: tab.data }} /> : null}
               </section>
             </li>
           </>

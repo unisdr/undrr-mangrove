@@ -94,12 +94,12 @@ const getCaptionForLocale = (locale) => {
           {
             text: "Tab title 1",
             text_id: "tab-1",
-            data: "As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
+            data: "<a href='#'>As the UN Office for Disaster Risk Reduction</a>, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
           },
           {
             text: "Tab title 2",
             text_id: "tab-2",
-            data: "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
+            data: "The Sendai Framework is the <a href='#'>global roadmap</a> for reducing human and economic loss as a direct result of disasters.",
           },
           {
             text: "Tab title 3 i am a bit longer and on and on",

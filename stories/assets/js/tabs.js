@@ -124,7 +124,7 @@ const mgTabsSwitch = (newTab, panels) => {
         panel.hidden = !panel.hidden;
       }
     }
-  }
+  } 
   
   if (oldTab) {
     oldTab.removeAttribute("aria-selected");

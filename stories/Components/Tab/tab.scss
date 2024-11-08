@@ -40,6 +40,7 @@
   .mg-tabs-content {
     padding-left: 0; // unset the li style padding
     display: grid;
+    list-style-type: none;
   }
 
   .mg-tabs__link.is-active + .mg-tabs-content {
@@ -100,7 +101,6 @@
       grid-row: 2;
       grid-column: 1 / -1;
       grid-area: b;
-      list-style-type: none;
     }
   }
 
@@ -154,6 +154,9 @@
   box-shadow: $mg-box-shadow-tab-section;
   padding: $mg-padding-tab-section;
   border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
+  // ensure tab content is available to interaction
+  // https://gitlab.com/undrr/web-backlog/-/issues/1929
+  position: relative;
 }
 
 [dir="rtl"] {
