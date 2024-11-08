@@ -1,0 +1,57 @@
+import { Meta, Story, Canvas } from "@storybook/blocks";
+import { Utility } from "./UtilityCss";
+import * as UtilityStories from './UtilityCss.stories';
+
+<Meta of={UtilityStories} />
+
+# Utility classes
+
+A collection of utility classes for common styling and layout needs.
+
+## Screen reader only (.mg-u-sr-only)
+
+This utility class hides content visually while keeping it accessible to screen readers.
+
+```html
+<span class="mg-u-sr-only">Screen reader only text</span>
+```
+
+## Text wrapping utilities
+
+### Balanced text wrap (.mg-u-text-wrap-balanced)
+
+Creates balanced line breaks for more aesthetically pleasing text layout.
+
+```html
+<div class="mg-u-text-wrap-balanced">Your text content here</div>
+```
+
+### Pretty text wrap (.mg-u-text-wrap-pretty)
+
+Optimizes text wrapping for improved readability.
+
+```html
+<div class="mg-u-text-wrap-pretty">Your text content here</div>
+```
+
+### Comma separator (.mg-u-comma-between)
+
+Automatically adds commas between child elements, useful for lists.
+
+```html
+<div class="mg-u-comma-between">
+  <span>Item 1</span>
+  <span>Item 2</span>
+  <span>Item 3</span>
+</div>
+```
+
+## Example
+
+<Canvas>
+  <Story of={UtilityStories.DefaultUtility} />
+</Canvas>
+
+## Sass
+
+Sass/CSS is located at `stories/assets/scss/_utility.scss`

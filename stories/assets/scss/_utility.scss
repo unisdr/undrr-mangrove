@@ -124,6 +124,16 @@ $colors-solid: (
   border: 0;
 }
 
+// Blanaced lines
+// https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap
+.mg-u-text-wrap-balanced {
+  text-wrap: balance;
+}
+
+.mg-u-text-wrap-pretty {
+  text-wrap: pretty;
+}
+
 // Comma between child elements
 // https://gitlab.com/undrr/web-backlog/-/issues/864
 .mg-u-comma-between {

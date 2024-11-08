@@ -45,6 +45,7 @@ h1 {
   font-size: $mg-font-size-600;
   letter-spacing: 0.06rem;
   line-height: 1.08;
+  text-wrap: balance;
 
   @include devicebreak(medium) {
     font-size: 5.125rem;
