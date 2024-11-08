@@ -114,13 +114,14 @@ const mgTabsSwitch = (newTab, panels) => {
   // get the parent ul of the clicked tab
   let parentTabSet = newTab.closest(".mg-tabs__list");
   let oldTab = parentTabSet.querySelector("[aria-selected]");
+  const behaveAsHorizontalTabs = parentTabSet.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600
 
+  // if it is marked as stacked or small screen (this is not an inverse of behaveAsHorizontalTabs)
   if (parentTabSet.dataset.mgJsTabsVariant == "stacked" || window.innerWidth <= 600) {
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
       if (panel.id === newTab.id) {
         panel.hidden = !panel.hidden;
-        break;
       }
     }
   }
@@ -130,13 +131,12 @@ const mgTabsSwitch = (newTab, panels) => {
     oldTab.setAttribute("tabindex", "-1");
     oldTab.classList.remove("is-active");
 
-    if (parentTabSet.dataset.mgJsTabsVariant != "stacked" || window.innerWidth >= 600) {
+    if (behaveAsHorizontalTabs) {
       // normal horizontal tabs
       for (let item = 0; item < panels.length; item++) {
         const panel = panels[item];
         if (panel.id === oldTab.id) {
           panel.hidden = true;
-          break;
         }
       }
     }
@@ -149,7 +149,7 @@ const mgTabsSwitch = (newTab, panels) => {
   newTab.setAttribute("aria-selected", "true");
   newTab.classList.add("is-active");
   // Get the indices of the new tab to find the correct tab panel to show
-  if (parentTabSet.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600) {
+  if (behaveAsHorizontalTabs) {
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
       if (panel.id === newTab.id) {
