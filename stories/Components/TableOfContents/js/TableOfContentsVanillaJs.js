@@ -22,9 +22,10 @@ export function mgTableOfContents(contentElement, tocElement, showNumbers = fals
   tocHeader.textContent = tocElement.getAttribute('data-mg-table-of-contents-title') || "On this page";
   tocHeader.id = "on-this-page";
   tocHeader.classList.add("mg-on-this-page-header");
-  if (tocHeader.textContent != "hidden") {
-    tocElement.prepend(tocHeader);
+  if (tocHeader.textContent == "hidden") {
+    tocHeader.classList.add("mg-u-sr-only");
   }
+  tocElement.prepend(tocHeader);
 
   const tocList = document.createElement(ListComponent);
   tocElement.appendChild(tocList);
@@ -35,6 +36,7 @@ export function mgTableOfContents(contentElement, tocElement, showNumbers = fals
   headings.forEach((heading) => {
     if (heading.id === "on-this-page") return;
     if (heading.classList.contains("mg-table-of-contents--exclude")) return;
+    if (heading.classList.contains("mg-u-sr-only")) return;
 
     if (!heading.id) {
       heading.id = heading.textContent

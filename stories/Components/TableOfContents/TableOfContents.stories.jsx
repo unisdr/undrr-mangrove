@@ -112,8 +112,10 @@ export const ScrapedContent = () => {
     <article className="mg-content">
       <h1 id="section-1">Welcome to the example</h1>
       <p>The above header is excluded as it is the H1</p>
-      <section data-mg-table-of-contents data-mg-table-of-contents-title="Title name can be optionally passed" className="mg-table-of-contents">
+      <h2 class="mg-table-of-contents--exclude">Table of content auto-header is hidden</h2>
+      <section data-mg-table-of-contents data-mg-table-of-contents-title="hidden" className="mg-table-of-contents">
       </section>
+      <hr></hr>
       <h2 id="section-2">Section 2</h2>
       <p>Content for section 2...</p>
       <h2 id="section-3">Section 3</h2>
