@@ -19,10 +19,12 @@ export function mgTableOfContents(contentElement, tocElement, showNumbers = fals
 
   const ListComponent = showNumbers ? "ol" : "ul";
   const tocHeader = document.createElement("h2");
-  tocHeader.textContent = "On this page";
+  tocHeader.textContent = tocElement.getAttribute('data-mg-table-of-contents-title') || "On this page";
   tocHeader.id = "on-this-page";
   tocHeader.classList.add("mg-on-this-page-header");
-  tocElement.prepend(tocHeader);
+  if (tocHeader.textContent != "hidden") {
+    tocElement.prepend(tocHeader);
+  }
 
   const tocList = document.createElement(ListComponent);
   tocElement.appendChild(tocList);

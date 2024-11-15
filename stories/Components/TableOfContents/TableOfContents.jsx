@@ -15,7 +15,7 @@ export default function TableOfContents({ tocData, showNumbers = false }) {
 
   return (
     <div ref={contentRef}>
-      <section data-mg-table-of-contents className="mg-table-of-contents" ref={tocRef}>
+      <section data-mg-table-of-contents data-mg-table-of-contents-title="Title name can be optionally passed" className="mg-table-of-contents" ref={tocRef}>
         <ListComponent>
           {tocData.map((item, index) => (
             <li key={index}>
