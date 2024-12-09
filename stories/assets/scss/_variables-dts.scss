@@ -1,0 +1,199 @@
+/*
+ * DTS Colors - BEGIN
+ */
+// UNDRR Blue - Corporate Blue
+$dts-cerulean-100: #DDE8F0;
+$dts-cerulean-200: #9ABBD6;
+$dts-cerulean-300: #6093BD;
+$dts-cerulean-400: #106CB8;
+$dts-cerulean-500: #004f91;
+$dts-cerulean-600: #003561;
+$dts-undrr-blue-brand: $dts-cerulean-500;
+
+// UNDRR Teal - Secondary shades
+$dts-iris-100: #B5D2D2;
+$dts-iris-200: #78BCBC;
+$dts-iris-300: #00AFAE;
+$dts-iris-400: #007B7A;
+$dts-undrr-teal-brand: $dts-iris-300;
+
+// Coal - Neutral shades
+$dts-coal-100: #F2F2F2;
+$dts-coal-200: #E3E3E3;
+$dts-coal-300: #CCCCCC;
+$dts-coal-400: #979797;
+$dts-coal-500: #4A4A4A;
+$dts-coal-600: #181823;
+$dts-coal-700: #13131C;
+$dts-neutral: $dts-coal-600;
+
+// Target A
+$dts-grey-100: #E6E6E6;
+$dts-grey-200: #BEBEBE;
+$dts-grey-300: #999999;
+$dts-grey-400: #5A5A5A;
+$dts-grey-500: #333333;
+$dts-grey-600: #000000;
+$dts-target-a: $dts-grey-600;
+$dts-black: $dts-grey-600;
+// wrong colors?
+$dts-grey-700: #008C8B;
+$dts-grey-800: #004646;
+$dts-grey-900: #006968;
+$dts-grey-1000: #002323;
+
+// Target B - Human Direct Effects
+$dts-violet-100: #F5ECF3;
+$dts-violet-200: #E5CEE1;
+$dts-violet-300: #D6B3D0;
+$dts-violet-400: #BD84B3;
+$dts-violet-500: #AD66A1;
+$dts-violet-600: #984089;
+$dts-violet-700: #7A336E;
+$dts-violet-800: #5E1B53;
+$dts-violet-900: #3D1A37;
+$dts-violet-1000: #1E0D1B;
+$dts-target-b: $dts-violet-600;
+
+// Target C - Loss
+$dts-tango-100: #FBF2EB;
+$dts-tango-200: #F5DDCC;
+$dts-tango-300: #EFC9AF;
+$dts-tango-400: #E6A87F;
+$dts-tango-500: #E09360;
+$dts-tango-600: #D87838;
+$dts-tango-700: #9D5423;
+$dts-tango-800: #824822;
+$dts-tango-900: #563016;
+$dts-tango-1000: #2B180B;
+$dts-target-c: $dts-tango-600;
+
+// Target D - Damage
+$dts-teal-100: #E6F2F2;
+$dts-teal-200: #CEE6E6;
+$dts-teal-300: #7FBEBE;
+$dts-teal-400: #68B2B2;
+$dts-teal-500: #359999;
+$dts-teal-600: #037F7F;
+$dts-teal-700: #026666;
+$dts-teal-800: #004D4D;
+$dts-teal-900: #013333;
+$dts-teal-1000: #011919;
+$dts-target-d: $dts-teal-600;
+
+// Target E
+$dts-killarney-100: #EDF2EE;
+$dts-killarney-200: #D1E0D4;
+$dts-killarney-300: #B6CDBA;
+$dts-killarney-400: #91B397;
+$dts-killarney-500: #6D9A75;
+$dts-killarney-600: #488152;
+$dts-killarney-700: #345F3B;
+$dts-killarney-800: #2B4D31;
+$dts-killarney-900: #1D3421;
+$dts-killarney-1000: #0E1A10;
+$dts-target-e: $dts-killarney-600;
+
+// Target F
+$dts-slate-100: #F0EEFB;
+$dts-slate-200: #D9D3F5;
+$dts-slate-300: #B4A9EB;
+$dts-slate-400: #A598E7;
+$dts-slate-500: #8775DF;
+$dts-slate-600: #6953D7;
+$dts-slate-700: #5442AC;
+$dts-slate-800: #402E99;
+$dts-slate-900: #2A2156;
+$dts-slate-1000: #15112B;
+$dts-target-f: $dts-slate-600;
+
+// Target G
+$dts-stiletto-100: #F3EBEC;
+$dts-stiletto-200: #E0CDCF;
+$dts-stiletto-300: #CDAFB3;
+$dts-stiletto-400: #B5868C;
+$dts-stiletto-500: #9C5E66;
+$dts-stiletto-600: #833640;
+$dts-stiletto-700: #601F28;
+$dts-stiletto-800: #4F2026;
+$dts-stiletto-900: #34161A;
+$dts-stiletto-1000: #1A0B0D;
+$dts-target-g: $dts-stiletto-600;
+
+// Maps
+$dts-stone-100: #F8FCFD;
+$dts-stone-200: #D4E1E1;
+$dts-stone-300: #B9D1D2;
+$dts-stone-400: #7FA4A4;
+$dts-stone-500: #548586;
+$dts-stone-600: #296768;
+$dts-stone-700: #215253;
+$dts-stone-800: #193E3E;
+$dts-stone-900: #10292A;
+$dts-stone-1000: #081515;
+$dts-maps: $dts-stone-600;
+
+// Buttons
+$dts-sky-blue: #4096FF;
+/*
+ * 
+ */
+
+/*
+ * DTS Spacing - BEGIN
+ */
+$dts-spacing-2: .2rem;
+$dts-spacing-4: 0.4rem;
+$dts-spacing-8: 0.8rem;
+$dts-spacing-12: 1.2rem;
+$dts-spacing-16: 1.6rem;
+$dts-spacing-20: 2rem;
+$dts-spacing-24: 2.4rem;
+$dts-spacing-32: 3.2rem;
+$dts-spacing-40: 4rem;
+$dts-spacing-48: 4.8rem;
+$dts-spacing-64: 6.4rem;
+$dts-spacing-72: 7.2rem;
+$dts-spacing-80: 8rem;
+$dts-spacing-88: 8.8rem;
+$dts-spacing-96: 9.6rem;
+/*
+ * 
+ */
+
+ /*
+ * DTS mg variables overwrite - BEGIN
+ */
+
+// Breakpoints
+$mg-breakpoint-mobile: 480px;
+$mg-breakpoint-tablet: 768px;
+$mg-breakpoint-laptop: 1024px;
+$mg-breakpoint-desktop: 1164px;
+$mg-breakpoint-desktop-wide: 1440px;
+
+// font-family
+$mg-font-family: "Roboto", "Noto Sans SC", "Noto Sans Arabic", sans-serif;
+$dts-menu-font-family: "Roboto Condensed", "Noto Sans SC", "Noto Sans Arabic", sans-serif;
+
+// button
+$mg-padding-button: $dts-spacing-12 $dts-spacing-16;
+$mg-gap-button: $dts-spacing-8;
+$mg-color-button-background: $dts-undrr-blue-brand;
+$mg-color-button-background--hover: $dts-cerulean-400;
+$mg-radius-button: $dts-spacing-8;
+$mg-color-button-background--hover: $dts-sky-blue;
+
+// tabs
+$mg-radius-tab: $dts-spacing-4;
+/*
+ * 
+ */
+
+/*
+ * DTS new variables - BEGIN
+ */
+//  general container
+/*
+ * 
+ */

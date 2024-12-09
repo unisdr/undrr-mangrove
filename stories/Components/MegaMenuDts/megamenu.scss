@@ -1,0 +1,234 @@
+// @import "../../assets/scss/variables";
+
+.mg-mega-wrapper {
+  position: relative;
+}
+
+.mg-mega-topbar {
+  width: 100%;
+  background: $mg-color-interactive;
+  display: flex;
+  align-items: flex-start;
+}
+
+.mg-mega-topbar__item {
+  padding: $mg-padding-button;
+  color: $mg-color-button;
+  cursor: pointer;
+  &:hover {
+    background: $mg-color-interactive-active;
+    color: $mg-color-button;
+  }
+}
+
+.mg-mega-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: start;
+  background-color: $mg-color-interactive;
+  border-radius: $mg-radius-tab;
+  box-shadow: -1px 5px 10px -1px rgba(0 0 0 / 0.25);
+  height: 35rem;
+  overflow: hidden;
+  font-size: 1.4rem;
+  line-height: 1.3;
+
+  &__left {
+    flex-basis: 33%;
+    height: 100%;
+    background-color: $mg-color-interactive;
+  }
+  &__banner {
+    padding: $mg-spacing-300;
+    color: $mg-color-button;
+    header {
+      font-size: $mg-font-size-500;
+      line-height: 1;
+      margin: 0;
+      padding: 0;
+    }
+    p {
+      margin: 0;
+      color: $mg-color-button;
+    }
+  }
+}
+
+.mg-mega-content__section-list {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.mg-mega-content__section-list-item {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  .mg-mega-content__section-list-link {
+    text-decoration: none;
+    color: $mg-color-black;
+    font-weight: bold;
+    display: block;
+    padding: $mg-spacing-50 0;
+    cursor: pointer;
+    &--active {
+      padding: $mg-spacing-50 $mg-spacing-300;
+      margin-left: -$mg-spacing-300;
+      margin-right: -$mg-spacing-300;
+      background-color: $mg-color-button;
+    }
+  }
+}
+
+.mg-mega-content__right {
+  flex: 1;
+  height: 100%;
+  background-color: $mg-color-white;
+  display: flex;
+  ul {
+    flex: 1;
+    margin: $mg-spacing-150;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-items: start;
+    gap: 0;
+    li {
+      padding: 0;
+      margin: 0;
+      a {
+        display: block;
+        padding: $mg-spacing-50;
+        text-decoration: none;
+        overflow: hidden;
+        white-space: wrap;
+        text-overflow: clip;
+        color: black;
+        font-weight: light;
+      }
+    }
+  }
+}
+
+.mg-recursive-menu-item {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  a {
+    text-decoration: none;
+    color: $mg-color-black;
+  }
+  &__children {
+    list-style: none;
+  }
+}
+
+.mg-icon-button {
+  padding: $mg-spacing-100;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: $mg-color-blue-500;
+  }
+}
+
+.mg-mega-sidebar-section {
+  ol {
+    list-style: none;
+    margin: 0;
+    li {
+      margin: 0;
+    }
+    ol li {
+      list-style: none;
+      padding-top: $mg-spacing-50;
+      padding-bottom: $mg-spacing-50;
+      padding-left: $mg-spacing-350;
+      margin: 0;
+      a {
+        color: $mg-color-white;
+        text-decoration: none;
+      }
+      &:hover {
+        background: $mg-color-blue-700;
+      }
+    }
+  }
+}
+
+.mg-mega-sidebar-section__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  cursor: pointer;
+  padding: $mg-spacing-100 $mg-spacing-250;
+  &:hover {
+    background: $mg-color-blue-700;
+  }
+}
+
+.mg-mega-sidebar {
+  width: 300px;
+  position: absolute;
+  overflow: scroll;
+  height: 100vh;
+  background-color: $mg-color-blue-900;
+  -webkit-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
+  -moz-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
+  box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
+  top: 0;
+  right: 0;
+}
+
+.mg-mega-sidebar__section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $mg-spacing-150 $mg-spacing-350;
+  color: $mg-color-white;
+  cursor: pointer;
+  &:hover {
+    background: $mg-color-blue-400;
+  }
+}
+
+.mg-mega-topbar {
+  width: 100%;
+  background: $mg-color-blue-900;
+  display: flex;
+  align-items: flex-start;
+}
+
+.mg-mega-topbar__item {
+  padding: $mg-spacing-100 $mg-spacing-150;
+  color: $mg-color-white;
+  &:hover {
+    background: $mg-color-blue-800;
+  }
+}
+
+.mg-mega-topbar__icon-button {
+  padding: $mg-spacing-100;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background: $mg-color-blue-800;
+  }
+}
+
+@media screen and (max-width: $mg-breakpoint-mobile) {
+  .mg-mega-topbar__icon-button {
+    display: flex;
+  }
+}

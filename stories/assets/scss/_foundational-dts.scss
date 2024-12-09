@@ -1,0 +1,36 @@
+html {
+  font-size: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  // overwrite storybook padding
+  padding: 0 !important;
+  font-family: $mg-font-family;
+  @extend .dts-body-text;
+  color: $dts-neutral;
+}
+
+a {
+  color: $dts-undrr-teal-brand;
+  text-decoration: none;
+}
+
+a:hover {
+  font-weight: 700;
+}
+
+button {
+  font-family: $mg-font-family;
+}
+
+.dts-page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+
+.dts-main-container {
+  flex: 1;
+}
