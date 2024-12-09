@@ -23,7 +23,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
 // RP comment next line to keep megamenu open
-        // setSection(null);
+        setSection(null);
         const topBarItems = document.getElementsByClassName("mg-mega-topbar__item");
         for (let i = 0; i < topBarItems.length; i++) {
             topBarItems[i].classList.remove("mg-mega-topbar__item--current");

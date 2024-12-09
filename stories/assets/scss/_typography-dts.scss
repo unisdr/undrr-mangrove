@@ -114,7 +114,8 @@
 }
 
 //  Body text (default)
-.dts-body-text {
+.dts-body-text,
+%dts-body-text {
   font-size: 1.6rem;
   line-height: 1.375;
   font-weight: 400;
