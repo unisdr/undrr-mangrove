@@ -137,7 +137,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-leaflet": "3.2.5",
-    "react-leaflet-markercluster": "3.0.0-rc1",
+    "react-leaflet-markercluster": "4.2.1",
     "stylelint-config-standard-scss": "13.1.0",
     "stylelint-prettier": "5.0.2",
     "swiper": "11.1.14"
