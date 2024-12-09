@@ -3925,7 +3925,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-leaflet/core@npm:^1.0.2, @react-leaflet/core@npm:^1.1.1":
+"@react-leaflet/core@npm:^1.1.1":
   version: 1.1.1
   resolution: "@react-leaflet/core@npm:1.1.1"
   peerDependencies:
@@ -3933,6 +3933,17 @@ __metadata:
     react: ^17.0.1
     react-dom: ^17.0.1
   checksum: 10/5545d54ec182d84c847698049fe23640746c4faa940e45fe6e319d48291a0b0f36fe67f0216559e971892385ef3936aa5cd8bc0721639fc9c7ed88af55ba27ce
+  languageName: node
+  linkType: hard
+
+"@react-leaflet/core@npm:^2.0.0, @react-leaflet/core@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@react-leaflet/core@npm:2.1.0"
+  peerDependencies:
+    leaflet: ^1.9.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10/12ce28b85cf6712a1a7b7c49466b941fc619bc7b1535308bc5711a35f7e89eb16298babfd62f6b3a92e64abf94dcf517b2bc460f59fcf20599821bc6ab3b3048
   languageName: node
   linkType: hard
 
@@ -5461,7 +5472,7 @@ __metadata:
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-leaflet: "npm:3.2.5"
-    react-leaflet-markercluster: "npm:3.0.0-rc1"
+    react-leaflet-markercluster: "npm:4.2.1"
     react-syntax-highlighter: "npm:15.6.1"
     remove-files-webpack-plugin: "npm:1.5.0"
     resolve-url-loader: "npm:5.0.0"
@@ -14060,7 +14071,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet.markercluster@npm:^1.4.1":
+"leaflet.markercluster@npm:^1.5.3":
   version: 1.5.3
   resolution: "leaflet.markercluster@npm:1.5.3"
   peerDependencies:
@@ -14069,7 +14080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet@npm:1.9.4, leaflet@npm:^1.6.0":
+"leaflet@npm:1.9.4, leaflet@npm:^1.8.0":
   version: 1.9.4
   resolution: "leaflet@npm:1.9.4"
   checksum: 10/7b6a74d503980961a85bdabebf9d1162c26db0e88195800ceea311682b653d621718f2ada3c9aab903a735af9862c9ae278ba550d4429acbd954d43449cd0d77
@@ -17927,23 +17938,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-leaflet-markercluster@npm:3.0.0-rc1":
-  version: 3.0.0-rc1
-  resolution: "react-leaflet-markercluster@npm:3.0.0-rc1"
+"react-leaflet-markercluster@npm:4.2.1":
+  version: 4.2.1
+  resolution: "react-leaflet-markercluster@npm:4.2.1"
   dependencies:
-    "@react-leaflet/core": "npm:^1.0.2"
-    leaflet: "npm:^1.6.0"
-    leaflet.markercluster: "npm:^1.4.1"
-    react-leaflet: "npm:^3.0.0"
+    "@react-leaflet/core": "npm:^2.0.0"
+    leaflet: "npm:^1.8.0"
+    leaflet.markercluster: "npm:^1.5.3"
+    react-leaflet: "npm:^4.0.0"
   peerDependencies:
-    leaflet: ^1.6.0
-    leaflet.markercluster: ^1.4.1
-    react-leaflet: ^3.0.0
-  checksum: 10/cc42d4b380f128e81873e4ad6a7160c9a6efb2953af32e65580463e4fcfa038b6977587bc691e65bfafa7249c921b75b411ad8fdbf5beb0cca20ac48042f7bae
+    leaflet: ^1.8.0
+    leaflet.markercluster: ^1.5.3
+    react-leaflet: ^4.0.0
+  checksum: 10/528a72f905c7f37c9d4f47d52ae3416dd98e404ccffc2c90e3b12b0766f03ffe9862bbebd555643325dd15ed828f4111912ae6038a14f4c72d133cd475ff45d7
   languageName: node
   linkType: hard
 
-"react-leaflet@npm:3.2.5, react-leaflet@npm:^3.0.0":
+"react-leaflet@npm:3.2.5":
   version: 3.2.5
   resolution: "react-leaflet@npm:3.2.5"
   dependencies:
@@ -17953,6 +17964,19 @@ __metadata:
     react: ^17.0.1
     react-dom: ^17.0.1
   checksum: 10/a5695833f5a5286d1406b22f4b260de8163577cdbf97fa121860c9124933121bf8b482ebe4be47c949aaf37c04cf9875a6eddb33c130fa3431e8ac9ecf0421b7
+  languageName: node
+  linkType: hard
+
+"react-leaflet@npm:^4.0.0":
+  version: 4.2.1
+  resolution: "react-leaflet@npm:4.2.1"
+  dependencies:
+    "@react-leaflet/core": "npm:^2.1.0"
+  peerDependencies:
+    leaflet: ^1.9.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10/01cee12dc32e86d0153c989894fdba1c5c50fa41ad8d712352fa616f7b0dd32844aa17bb06c66f7569133675e2946c669090b4c496610cce3fa37c22254ca89f
   languageName: node
   linkType: hard
 
@@ -20655,11 +20679,11 @@ __metadata:
 
 "typescript@patch:typescript@npm%3A^5.2.2#optional!builtin<compat/typescript>":
   version: 5.6.3
-  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=5adc0c"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/00504c01ee42d470c23495426af07512e25e6546bce7e24572e72a9ca2e6b2e9bea63de4286c3cfea644874da1467dcfca23f4f98f7caf20f8b03c0213bb6837
+  checksum: 10/dc4bec403cd33a204b655b1152a096a08e7bad2c931cb59ef8ff26b6f2aa541bf98f09fc157958a60c921b1983a8dde9a85b692f9de60fa8f574fd131e3ae4dd
   languageName: node
   linkType: hard
 
