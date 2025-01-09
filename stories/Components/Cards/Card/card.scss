@@ -43,7 +43,7 @@
     grid-template-rows: 300px 1fr auto;
     gap: $mg-spacing-100;
 
-    &__content {
+    .mg-card__content {
       grid-column: 1 / 3;
       grid-row: 2 / 3;
 
