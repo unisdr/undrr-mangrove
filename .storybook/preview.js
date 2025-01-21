@@ -5,7 +5,6 @@ import themeDefault from "!!style-loader?injectType=lazyStyleTag!css-loader!sass
 import themePreventionWeb from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss";
 import themeIrp from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-irp.scss";
 import themeMcr from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-mcr.scss";
-import themeDts from "!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-dts.scss";
 
 // import the decorator from the CSS Variables Theme addon
 import cssVariablesTheme from "@etchteam/storybook-addon-css-variables-theme";
@@ -60,7 +59,6 @@ export const parameters = {
       "PreventionWeb Theme": themePreventionWeb,
       "IRP Theme": themeIrp,
       "MCR2030 Theme": themeMcr,
-      "DTS Theme": themeDts,
     },
     defaultTheme: "Default UNDRR Theme",
   },
@@ -93,7 +91,6 @@ export const globalTypes = {
         { value: "PreventionWeb Theme", title: "PreventionWeb Theme" },
         { value: "IRP Theme", title: "IRP Theme" },
         { value: "MCR2030 Theme", title: "MCR2030 Theme" },
-        { value: "DTS Theme", title: "DTS Theme" },
       ],
     },
   },
