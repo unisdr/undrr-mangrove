@@ -2,7 +2,7 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
-import "react-leaflet-markercluster/dist/styles.min.css";
+import "react-leaflet-markercluster/styles";
 import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
