@@ -1,5 +1,4 @@
-import { CtaButton } from "./../Buttons/CtaButton/CtaButton";
-
+// import { CtaButton } from "./../Buttons/CtaButton/CtaButton";
 import { ShowOffSnackbar } from "./Snackbar.jsx";
 
 const getCaptionForLocale = (locale) => {

@@ -15,7 +15,7 @@
 .mg-snackbar {
   display: flex;
   align-items: center;
-  background-color: $mg-color-white;
+  background-color: $mg-color-interactive;
   color: $mg-color-white;
   border-radius: $mg-radius-tab;
   padding: $mg-padding-button;
@@ -43,6 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: $mg-spacing-100;
     width: 100%;
   }
 

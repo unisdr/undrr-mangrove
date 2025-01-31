@@ -75,14 +75,15 @@ const Snackbar = ({
 };
 
 export const ShowOffSnackbar = ({
-  severity,
-  message,
+  severity = "info",
+  message = "Showing off an example of the snackbar",
   openedMiliseconds,
 }) => {
   const [SnackbarOpen, setSnackbarOpen] = React.useState(false);
   return (
     <div>
       <button
+        className="mg-button mg-button-primary"
         onClick={() => {
           setSnackbarOpen(!SnackbarOpen);
         }}
