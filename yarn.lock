@@ -2247,17 +2247,17 @@
     webpack-hot-middleware "^2.25.1"
     webpack-virtual-modules "^0.6.0"
 
-"@storybook/cli@8.5.2":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-8.5.2.tgz#caf48c1421adbce45258d1aff96db243e48da436"
-  integrity sha512-/T5GOi19krAXh8B4DTqjoOEqN/2ODzVdWsVipcCleYKm5q2gcHL8DKDlAOHepj4AP6VTtLf5VzRgW8JGA3cVBg==
+"@storybook/cli@8.5.3":
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-8.5.3.tgz#772ccef527d41b3bec9cf083196d1edff2ab7782"
+  integrity sha512-gIHG/s4XwnBuGmXC8NygXkPVRgyYC03dZSS2OXQRQ5Tsy74j8VCbPugncmV6b7L5JNN7MUcPydn0kupfatVlcw==
   dependencies:
     "@babel/core" "^7.24.4"
     "@babel/types" "^7.24.0"
-    "@storybook/codemod" "8.5.2"
+    "@storybook/codemod" "8.5.3"
     "@types/semver" "^7.3.4"
     commander "^12.1.0"
-    create-storybook "8.5.2"
+    create-storybook "8.5.3"
     cross-spawn "^7.0.3"
     envinfo "^7.7.3"
     fd-package-json "^1.2.0"
@@ -2269,19 +2269,19 @@
     leven "^3.1.0"
     prompts "^2.4.0"
     semver "^7.3.7"
-    storybook "8.5.2"
+    storybook "8.5.3"
     tiny-invariant "^1.3.1"
     ts-dedent "^2.0.0"
 
-"@storybook/codemod@8.5.2":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@storybook/codemod/-/codemod-8.5.2.tgz#07ab210eb127cb998ea80c0a033621d0a16d24df"
-  integrity sha512-UkQFwSp0pRXSN2DwMqz1UnqBj6S4eU9CnYy6P5okqYOLYd/X7xDDeIormL2uV8oN5J0CfIbqBAFkCE/Nf6PVHQ==
+"@storybook/codemod@8.5.3":
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/@storybook/codemod/-/codemod-8.5.3.tgz#0e56a98b8ce38a53f579427a1bd72daecf0e19df"
+  integrity sha512-KgTuWq3JDPaT7JbWVl3xWnkJOAMAbw9+7L3X5IEoI9MQWt5cRxDq4Tw5CtWbL1IS+LKzde5fVnvRPzL34YLgow==
   dependencies:
     "@babel/core" "^7.24.4"
     "@babel/preset-env" "^7.24.4"
     "@babel/types" "^7.24.0"
-    "@storybook/core" "8.5.2"
+    "@storybook/core" "8.5.3"
     "@storybook/csf" "0.1.12"
     "@types/cross-spawn" "^6.0.2"
     cross-spawn "^7.0.3"
@@ -2308,6 +2308,23 @@
   version "8.5.2"
   resolved "https://registry.yarnpkg.com/@storybook/core/-/core-8.5.2.tgz#c51c84a37f6d5ca7f7b74114f196e6e1c602cce2"
   integrity sha512-rCOpXZo2XbdKVnZiv8oC9FId/gLkStpKGGL7hhdg/RyjcyUyTfhsvaf7LXKZH2A0n/UpwFxhF3idRfhgc1XiSg==
+  dependencies:
+    "@storybook/csf" "0.1.12"
+    better-opn "^3.0.2"
+    browser-assert "^1.2.1"
+    esbuild "^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0"
+    esbuild-register "^3.5.0"
+    jsdoc-type-pratt-parser "^4.0.0"
+    process "^0.11.10"
+    recast "^0.23.5"
+    semver "^7.6.2"
+    util "^0.12.5"
+    ws "^8.2.3"
+
+"@storybook/core@8.5.3":
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/@storybook/core/-/core-8.5.3.tgz#a353472e5069d127af7ada97f9db601c3d3cd1b5"
+  integrity sha512-ZLlr2pltbj/hmC54lggJTnh09FCAJR62lIdiXNwa+V+/eJz0CfD8tfGmZGKPSmaQeZBpMwAOeRM97k2oLPF+0w==
   dependencies:
     "@storybook/csf" "0.1.12"
     better-opn "^3.0.2"
@@ -5001,10 +5018,10 @@ create-jest@^29.7.0:
     jest-util "^29.7.0"
     prompts "^2.0.1"
 
-create-storybook@8.5.2:
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/create-storybook/-/create-storybook-8.5.2.tgz#a617b9e5a5b3858005e833b401bc00b8c4b88610"
-  integrity sha512-T00gsOl7MUac1J7C9heig+Idbj5/rWZdugyZhjSDv6tA7B9nQRGOn7txKBK51SSg+phL4b1HPe/KJm1//oKyrA==
+create-storybook@8.5.3:
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/create-storybook/-/create-storybook-8.5.3.tgz#e0270131433e003d9bc817db4de8fea6b47421a1"
+  integrity sha512-EcyOcadk4PC8UxghSnQfIQ4DexA8+8fSliZGf13HR7s9wv68uaCXifrgBSB+3fFzOOlbFrEplYcmqVzb5VOg9g==
   dependencies:
     "@types/semver" "^7.3.4"
     commander "^12.1.0"
@@ -5015,7 +5032,7 @@ create-storybook@8.5.2:
     prettier "^3.1.1"
     prompts "^2.4.0"
     semver "^7.3.7"
-    storybook "8.5.2"
+    storybook "8.5.3"
     tiny-invariant "^1.3.1"
     ts-dedent "^2.0.0"
 
@@ -13071,6 +13088,13 @@ storybook@8.5.2:
   dependencies:
     "@storybook/core" "8.5.2"
 
+storybook@8.5.3:
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/storybook/-/storybook-8.5.3.tgz#9758f0da8a9ee4f6a600370f64833fa5d3079c96"
+  integrity sha512-2WtNBZ45u1AhviRU+U+ld588tH8gDa702dNSq5C8UBaE9PlOsazGsyp90dw1s9YRvi+ejrjKAupQAU0GwwUiVg==
+  dependencies:
+    "@storybook/core" "8.5.3"
+
 string-length@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/string-length/-/string-length-4.0.2.tgz#a8a8dc7bd5c1a82b9b3c8b87e125f66871b6e57a"
@@ -13079,8 +13103,7 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
-  name string-width-cjs
+"string-width-cjs@npm:string-width@^4.2.0":
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -13096,6 +13119,15 @@ string-width@^2.0.0, string-width@^2.1.0, string-width@^2.1.1:
   dependencies:
     is-fullwidth-code-point "^2.0.0"
     strip-ansi "^4.0.0"
+
+string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
 
 string-width@^5.0.1, string-width@^5.1.2:
   version "5.1.2"
@@ -13208,7 +13240,7 @@ stringify-entities@^4.0.0:
     character-entities-html4 "^2.0.0"
     character-entities-legacy "^3.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -13228,6 +13260,13 @@ strip-ansi@^4.0.0:
   integrity sha512-4XaJ2zQdCzROZDivEVIDPkcQn8LMFSa8kj8Gxb/Lnwzv9A8VctNZ+lfivC/sV3ivW8ElJTERXZoPBRrZKkNKow==
   dependencies:
     ansi-regex "^3.0.0"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1, strip-ansi@^7.1.0:
   version "7.1.0"
@@ -14724,8 +14763,16 @@ word-wrap@^1.2.5:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.5.tgz#d2c45c6dd4fbce621a66f136cbe328afd0410b34"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
-  name wrap-ansi-cjs
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
+wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
