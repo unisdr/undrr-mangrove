@@ -50,6 +50,7 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
 
     // Handle clicking of tabs for mouse users
     tab.addEventListener("click", (e) => {
+      window.location.hash = tabId;
       e.preventDefault();
       mgTabsSwitch(e.currentTarget, panels);
     });
