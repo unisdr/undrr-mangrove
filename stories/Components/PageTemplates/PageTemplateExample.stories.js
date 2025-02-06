@@ -60,11 +60,11 @@ const sampleMegaMenuSections = [
     items: [
       {
         title: 'Item 1',
-        subItems: Array(30).fill({ title: 'Sub-item 1', url: '#' })
+        items: Array(30).fill({ title: 'Sub-item 1', url: '#' })
       },
       {
         title: 'Item 2',
-        subItems: Array(20).fill({ title: 'Sub-item 2', url: '#' })
+        items: Array(20).fill({ title: 'Sub-item 2', url: '#' })
       }
     ]
   },
@@ -75,11 +75,11 @@ const sampleMegaMenuSections = [
     items: [
       {
         title: 'Item 1',
-        subItems: Array(20).fill({ title: 'Sub-item 1', url: '#' })
+        items: Array(20).fill({ title: 'Sub-item 1', url: '#' })
       },
       {
         title: 'Item 2',
-        subItems: Array(15).fill({ title: 'Sub-item 2', url: '#' })
+        items: Array(15).fill({ title: 'Sub-item 2', url: '#' })
       }
     ]
   }

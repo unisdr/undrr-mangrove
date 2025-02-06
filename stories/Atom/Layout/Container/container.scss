@@ -49,6 +49,7 @@
   > .mg-hero:first-child,
   > .has-background + .mg-hero,
   > .mg-hero + .has-background,
+  > .mg-mega-wrapper + .mg-hero,
   > .has-background + .has-background {
     --mg-container-spacer: 0;
   }

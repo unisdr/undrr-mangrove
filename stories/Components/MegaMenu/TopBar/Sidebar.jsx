@@ -36,7 +36,7 @@ function SidebarSection ({ section, display, onClick }) {
                     index === itemIndex && (
                       <ol>
                         {
-                          item.subItems.map((subItem, index) => (
+                          item.items.map((subItem, index) => (
                             <li key={index}>
                               <a href={subItem.url}>{subItem.title}</a>
                             </li>

@@ -1,104 +1,55 @@
 import { Meta, Story, Canvas } from '@storybook/blocks';
-import MegaMenu from './MegaMenu';
-import MegaMenuSimple from './MegaMenuSimple';
+import * as MegaMenuStories from './MegaMenu.stories';
 
-export const sectionsSimple = () => ([
-    {
-      title: "Highlights",
-      bannerHeading: "Highlights",
-      bannerDescription: "Gaze upon statistics in wonder...",
-      items: [
-        {
-          title: "Item 1",
-          url: "#",
-          items: [
-            {
-              title: "Sub-item 1",
-              url: "#",
-            },
-            {
-              title: "Sub-item 2",
-              url: "#",
-              items: [
-                {
-                  title: "Sub-item 3",
-                  url: "#",
-                },
-                {
-                  title: "Sub-item 4",
-                  url: "#",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          title: "Item 1",
-          url: "#",
-          items: [
-            {
-              title: "Sub-item 1",
-              url: "#",
-            },
-            {
-              title: "Sub-item 2",
-              url: "#",
-              items: [
-                {
-                  title: "Sub-item 3",
-                  url: "#",
-                },
-                {
-                  title: "Sub-item 4",
-                  url: "#",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ])
+# Mega Menu 
 
-export const sections = () => ([
-    {
-      title: 'Section 1',
-      bannerHeading: 'Analytics by country',
-      bannerDescription: 'Gaze upon statistics in wonder...',
-      items: [
-        {
-          title: 'Item 1',
-          subItems: Array(30).fill({ title: 'Sub-item 1', url: '#'})
-        },
-        {
-          title: 'Item 2',
-          subItems: Array(20).fill({ title: 'Sub-item 2', url: '#'})
-        }
-      ]
-    },
-  {
-      title: 'Section 2',
-      bannerHeading: 'Analytics by region',
-      bannerDescription: 'Gaze upon statistics in wonder...',
-      items: [
-        {
-          title: 'Item 1',
-          subItems: Array(20).fill({ title: 'Sub-item 1', url: '#'})
-        },
-        {
-          title: 'Item 2',
-          subItems: Array(15).fill({ title: 'Sub-item 2', url: '#'})
-        }
-      ]
-    }
-  ])
+The Mega Menu component provides a navigation menu with multiple levels and sections.
 
-<Meta title="Components/MegaMenu/MegaMenu" argTypes={{}} />
 
-# Mega Menu v1
+> **Note:** This component is currently in beta and subject to breaking changes in future releases.
 
-<MegaMenuSimple delay={600} sections={sectionsSimple()} />
 
-# Mega Menu v2
+<Meta of={MegaMenuStories} />
 
-<MegaMenu delay={600} sections={sections()} />
+## Default
+
+A basic mega menu implementation with default settings.
+
+<Canvas>
+  <Story of={MegaMenuStories.Default} />
+</Canvas>
+
+## With Custom Delay
+
+A mega menu with customized hover delay timing.
+
+<Canvas>
+  <Story of={MegaMenuStories.WithCustomDelay} />
+</Canvas>
+
+## Usage
+
+```
+import { MegaMenu } from '@components';
+
+const MyComponent = () => (
+  <MegaMenu items={menuItems} />
+);
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| items | array | [] | Array of menu items to display |
+| delay | number | 300 | Delay in milliseconds before showing/hiding submenus |
+| className | string | '' | Additional CSS class names |
+
+
+### Changelog
+
+- 0.2
+   - Added support for more diverse menu data structrues
+   - Assorted theme level integration
+- 0.1
+  - Initial release

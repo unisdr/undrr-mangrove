@@ -1,8 +1,12 @@
 import React from "react";
-export function TopBarItem ({ title, onMouseEnter }) {
+export function TopBarItem ({ title, onMouseEnter, activeItem }) {
+  let isActive = title === activeItem;
   return (
-    <div className="mg-mega-topbar__item" onMouseEnter={onMouseEnter}>
+    <span 
+      className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`} 
+      onMouseEnter={onMouseEnter}
+    >
       {title}
-    </div>
+    </span>
   )
 }

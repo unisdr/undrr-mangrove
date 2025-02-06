@@ -1,23 +1,34 @@
 <!-- CSS to override doc page -->
 <style type="text/css">
-  .sbdocs .sbdocs-a, .sbdocs a[aria-hidden="true"] {
+  .sbdocs .sbdocs-content {
+    max-width: unset;
+    width: unset;
+  }
+
+  .sbdocs .sbdocs-a,
+  .sbdocs a[aria-hidden="true"] {
     background: none;
   }
+
   .sbdocs .sbdocs-h2:first-of-type {
     margin: 20px 0;
     padding-bottom: 10px;
   }
+
   .sbdocs .sbdocs-code {
-    background:  #F7F7F7;
+    background: #F7F7F7;
     background: transparent;
   }
+
   .sbdocs div[class*="css-"] {
     margin: 0;
   }
-  .sbdocs:not(.sbdocs-preview) > h4 {
+
+  .sbdocs:not(.sbdocs-preview)>h4 {
     font-weight: bold;
     color: gray;
   }
+
   .sbdocs .sbdocs-th,
   .sbdocs .sbdocs-td,
   .sbdocs .sbdocs-p,
