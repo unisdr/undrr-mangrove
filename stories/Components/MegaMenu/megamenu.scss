@@ -33,6 +33,7 @@
   border-radius: $mg-radius-tab;
   box-shadow: -1px 5px 10px -1px rgba(0 0 0 / 0.25);
   height: 35rem;
+
   // overflow: hidden;
 
   // float magic
@@ -64,7 +65,7 @@
 }
 
 .mg-mega-content__left {
-  box-shadow: inset 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
   
   .mg-mega-content__section-list-link:not(.mg-mega-content__section-list-link--active) {
     color: $mg-color-button;
@@ -92,7 +93,7 @@
 }
 
 .mg-mega-content__right {
-  box-shadow: inset 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
   flex: 1;
   height: 100%;
   background-color: $mg-color-white;
@@ -106,6 +107,7 @@
     flex-wrap: wrap;
     justify-items: start;
     gap: 0;
+
     // nested menus
     ul {
       padding: 0 0 0 $mg-spacing-150;
