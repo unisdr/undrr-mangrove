@@ -71,7 +71,6 @@ module.exports = [
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
-      MegaMenuSimple: "./stories/Components/MegaMenu/MegaMenuSimple.jsx",
       BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
       MapComponent: "./stories/Components/Map/MapComponent.jsx",
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
