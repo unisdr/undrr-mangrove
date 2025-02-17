@@ -142,7 +142,7 @@
     "react-leaflet-markercluster": "5.0.0-rc.0",
     "stylelint-config-standard-scss": "14.0.0",
     "stylelint-prettier": "5.0.3",
-    "swiper": "11.2.2"
+    "swiper": "11.2.4"
   },
   "resolutions": {
     "@storybook/react/webpack": "5"
