@@ -3356,10 +3356,10 @@
   resolved "https://registry.yarnpkg.com/@whitespace/storybook-addon-html/-/storybook-addon-html-6.1.1.tgz#aa7f8cacdf1c42f2536f06195bf18438f895ceb7"
   integrity sha512-sq/9c6s4PXugl//Q5iFwKoHF3tBDTEfJQubb62HWspF+CqBrDLHVEh7VYoEjubm5LjihxdFV3+mjj8Ck6bnoHQ==
 
-"@wordpress/babel-preset-default@8.17.0":
-  version "8.17.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/babel-preset-default/-/babel-preset-default-8.17.0.tgz#924f90d165b111ca0a29ec0979de7e2a376ef50d"
-  integrity sha512-+ivwvBI92u6abFf0DlwHem8fH5HujKy5e8a0cwDBOJivEzIJLPKYSYLlnLZL9I0QIstB+KdcJBARuWuR0l58Sw==
+"@wordpress/babel-preset-default@8.18.0":
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/babel-preset-default/-/babel-preset-default-8.18.0.tgz#4c767c7a9db55d376724fd95bf3d6b6206580e91"
+  integrity sha512-vx/UVMMqFhVDoLqymH8jmUC/YGq4p5oo2pgp9aqlYWBz/TO4H9LxMxWNGtcpZCagFBR85BeZD/467fO6UOO7Lw==
   dependencies:
     "@babel/core" "7.25.7"
     "@babel/plugin-transform-react-jsx" "7.25.7"
@@ -3367,21 +3367,21 @@
     "@babel/preset-env" "7.25.7"
     "@babel/preset-typescript" "7.25.7"
     "@babel/runtime" "7.25.7"
-    "@wordpress/browserslist-config" "^6.17.0"
-    "@wordpress/warning" "^3.17.0"
+    "@wordpress/browserslist-config" "^6.18.0"
+    "@wordpress/warning" "^3.18.0"
     browserslist "^4.21.10"
     core-js "^3.31.0"
     react "^18.3.0"
 
-"@wordpress/browserslist-config@^6.17.0":
-  version "6.17.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/browserslist-config/-/browserslist-config-6.17.0.tgz#b1f8f019d5c411b3f66311bf7cef20e8d84efdac"
-  integrity sha512-cjMclWLwfam5O03gOHWjD8veeLVnfmC93V9LX1aPt/ZT9aE0cmEZUxBa3VzkDM7NvuZFj7SjSvJr+vuar9Np1A==
+"@wordpress/browserslist-config@^6.18.0":
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/browserslist-config/-/browserslist-config-6.18.0.tgz#15b485f7dd1536d8d3b7b2a1fad8b68af4b9f04f"
+  integrity sha512-GhB3p+qrR2xFITPEMi9/w2KoLhz0uzA+sMwtREr4G5UZ37dmgN3XJN55NYe2ZduT6uZnaCVYskOmXGvmx/EEyw==
 
-"@wordpress/warning@^3.17.0":
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-3.17.0.tgz#71367436f4785a1cafb7b22e4f592b78633d6762"
-  integrity sha512-dmEjDbYtfPD8rMRtSrLxoW3g8CLKl+vK5pdXvDvG0lBoRjqwtRPP4cgNBOC8cq8gXRCwh5NDDtM2C8MTjGjVsQ==
+"@wordpress/warning@^3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-3.18.0.tgz#00b4e01b0b734223413be56ee8bf1e5746cd14d7"
+  integrity sha512-Y58A1D38PJbQzFZXokL+4rACzs5Vp5cZMZc/9J+QOYStJdy/xEDQttbhte2P7kq0yF3EUZDC0QnG8RsIV09WSQ==
 
 "@xmldom/xmldom@^0.8.2":
   version "0.8.10"
