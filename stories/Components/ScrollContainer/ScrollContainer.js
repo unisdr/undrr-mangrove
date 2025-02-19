@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './scroll-container.scss';
 
@@ -16,6 +16,13 @@ const ScrollContainer = ({
   const contentRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
+  
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [dragDistance, setDragDistance] = useState(0);
+  const [dragStartTime, setDragStartTime] = useState(null);
 
   const checkArrowVisibility = () => {
     if (!containerRef.current || !showArrows) return;
@@ -25,7 +32,7 @@ const ScrollContainer = ({
     setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
   };
 
-  const scroll = (direction) => {
+  const scroll = useCallback((direction) => {
     if (!containerRef.current) return;
 
     const scrollAmount = stepSize || containerRef.current.clientWidth;
@@ -35,23 +42,91 @@ const ScrollContainer = ({
       left: newScrollLeft,
       behavior: 'smooth'
     });
+  }, [stepSize]);
+
+  const handleDragStart = (e) => {
+    if (!containerRef.current) return;
+
+    setIsDragging(true);
+    setStartX(e.type.includes('mouse') ? e.pageX : e.touches[0].pageX);
+    setDragDistance(0);
+    setDragStartTime(Date.now());
+
+    if (e.type.includes('mouse')) {
+      e.preventDefault();
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging || !containerRef.current) return;
+
+    // Get final direction and trigger step
+    const direction = dragDistance > 0 ? 'left' : 'right';
+    scroll(direction);
+
+    setIsDragging(false);
+    setDragDistance(0);
+  };
+
+  const handleDragMove = (e) => {
+    if (!isDragging || !containerRef.current) return;
+
+    const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const distance = startX - currentX;
+
+    // Only trigger if it's a real drag (both time and distance thresholds)
+    const dragDuration = Date.now() - dragStartTime;
+    if (Math.abs(distance) > 20 && dragDuration > 100) { // Must drag at least 20px and for 100ms
+      setDragDistance(distance);
+      scroll(distance > 0 ? 'right' : 'left');
+      setIsDragging(false);
+      setDragStartTime(null);
+    }
+
+    if (e.type.includes('mouse')) {
+      e.preventDefault();
+    }
   };
 
   useEffect(() => {
     checkArrowVisibility();
     const container = containerRef.current;
     if (container) {
+      // Scroll event listeners
       container.addEventListener('scroll', checkArrowVisibility);
       window.addEventListener('resize', checkArrowVisibility);
+
+      // Mouse drag event listeners
+      container.addEventListener('mousedown', handleDragStart);
+      window.addEventListener('mousemove', handleDragMove);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('mouseleave', handleDragEnd);
+
+      // Touch event listeners
+      container.addEventListener('touchstart', handleDragStart, { passive: true });
+      container.addEventListener('touchmove', handleDragMove, { passive: true });
+      container.addEventListener('touchend', handleDragEnd);
     }
 
     return () => {
       if (container) {
+        // Remove scroll event listeners
         container.removeEventListener('scroll', checkArrowVisibility);
         window.removeEventListener('resize', checkArrowVisibility);
+
+        // Remove mouse drag event listeners
+        container.removeEventListener('mousedown', handleDragStart);
+        window.removeEventListener('mousemove', handleDragMove);
+        window.removeEventListener('mouseup', handleDragEnd);
+        window.removeEventListener('mouseleave', handleDragEnd);
+
+        // Remove touch event listeners
+        container.removeEventListener('touchstart', handleDragStart);
+        container.removeEventListener('touchmove', handleDragMove);
+        container.removeEventListener('touchend', handleDragEnd);
       }
     };
-  }, [showArrows]);
+  }, [showArrows, handleDragStart, handleDragMove, handleDragEnd]);
   const containerStyle = {
     '--scroll-height': height,
     '--scroll-min-width': minWidth,

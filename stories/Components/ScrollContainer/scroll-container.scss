@@ -52,6 +52,13 @@
   max-width: 100%; // Ensures it doesn't overflow parent width
   white-space: nowrap;
   position: relative;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  
+  &:active {
+    cursor: grabbing;
+  }
   
   // Custom scrollbar styling
   &::-webkit-scrollbar {
