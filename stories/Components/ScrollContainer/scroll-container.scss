@@ -1,3 +1,7 @@
+@import '../../assets/scss/variables';
+@import '../../assets/scss/breakpoints';
+@import '../../assets/scss/mixins';
+
 .scroll-container-wrapper {
   position: relative;
   display: flex;
@@ -10,34 +14,34 @@
     top: -40px; // Position above the container
     right: 0;
     display: flex;
-    gap: 8px;
+    gap: $mg-spacing-50;
     z-index: 1;
 
     .scroll-arrow {
-      width: 32px;
-      height: 32px;
+      width: $mg-spacing-300;
+      height: $mg-spacing-300;
       border: none;
       border-radius: 4px;
-      background: #333;
-      color: white;
-      font-size: 18px;
+      background: $mg-color-neutral-700;
+      color: $mg-color-white;
+      font-size: $mg-font-size-300;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.2s, opacity 0.2s;
+      @include transition(background-color 0.2s, opacity 0.2s);
 
       &:hover {
-        background: #555;
+        background: $mg-color-neutral-600;
       }
 
       &:focus {
         outline: none;
-        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+        box-shadow: 0 0 0 2px $mg-color-white, 0 0 0 4px $mg-color-neutral-700;
       }
 
       &:disabled {
-        background: #ccc;
+        background: $mg-color-neutral-300;
         cursor: not-allowed;
       }
     }
@@ -49,7 +53,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   width: 100%;
-  max-width: 100%; // Ensures it doesn't overflow parent width
+  max-width: 100%;
   white-space: nowrap;
   position: relative;
   cursor: grab;
@@ -62,27 +66,27 @@
   
   // Custom scrollbar styling
   &::-webkit-scrollbar {
-    height: 8px;
+    height: $mg-spacing-50;
   }
   
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: $mg-color-neutral-100;
     border-radius: 4px;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: $mg-color-neutral-500;
     border-radius: 4px;
     
     &:hover {
-      background: #555;
+      background: $mg-color-neutral-600;
     }
   }
   
   //TODO: Review - do we need it
   // Firefox scrollbar styling
   scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+  scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
   
   &.custom-height {
     height: var(--scroll-height, auto);
