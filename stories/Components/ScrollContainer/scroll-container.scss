@@ -10,7 +10,8 @@
 
   &__nav {
     position: absolute;
-    //TODO: Review this and ensure it works across all containers
+
+    // TODO: Review this and ensure it works across all containers
     top: -40px; // Position above the container
     right: 0;
     display: flex;
@@ -29,6 +30,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+
       @include transition(background-color 0.2s, opacity 0.2s);
 
       &:hover {
@@ -82,7 +84,7 @@
       }
     }
     
-    //TODO: Review - do we need it
+    // TODO: Review - do we need it
     // Firefox scrollbar styling
     scrollbar-width: thin;
     scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
