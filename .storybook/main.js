@@ -1,7 +1,7 @@
-const path = require("path");
+import path from 'path';
 import remarkGfm from 'remark-gfm';
 
-module.exports = {
+export default {
   staticDirs: ["../stories/assets"],
   stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
 
@@ -53,7 +53,7 @@ module.exports = {
       test: /\.scss$/,
       exclude: /node_modules/,
       use: ["style-loader", "css-loader", "sass-loader"],
-      include: path.resolve(__dirname, "../"),
+      include: path.resolve(path.dirname(new URL(import.meta.url).pathname), "../"),
     });
     return config;
   },
