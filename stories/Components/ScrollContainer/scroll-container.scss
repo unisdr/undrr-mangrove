@@ -2,13 +2,13 @@
 @import '../../assets/scss/breakpoints';
 @import '../../assets/scss/mixins';
 
-.mg-scroll-container-wrapper {
+.mg-scroll {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
 
-  .scroll-arrows {
+  &__nav {
     position: absolute;
     //TODO: Review this and ensure it works across all containers
     top: -40px; // Position above the container
@@ -17,7 +17,7 @@
     gap: $mg-spacing-50;
     z-index: 1;
 
-    .scroll-arrow {
+    &-button {
       width: $mg-spacing-300;
       height: $mg-spacing-300;
       border: none;
@@ -46,61 +46,61 @@
       }
     }
   }
-}
 
-.mg-scroll-container {
-  display: block; 
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
-  max-width: 100%;
-  white-space: nowrap;
-  position: relative;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  
-  &:active {
-    cursor: grabbing;
-  }
-  
-  // Custom scrollbar styling
-  &::-webkit-scrollbar {
-    height: $mg-spacing-50;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: $mg-color-neutral-100;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: $mg-color-neutral-500;
-    border-radius: 4px;
+  &__container {
+    display: block; 
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    position: relative;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
     
-    &:hover {
-      background: $mg-color-neutral-600;
+    &:active {
+      cursor: grabbing;
+    }
+    
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      height: $mg-spacing-50;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: $mg-color-neutral-100;
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $mg-color-neutral-500;
+      border-radius: 4px;
+      
+      &:hover {
+        background: $mg-color-neutral-600;
+      }
+    }
+    
+    //TODO: Review - do we need it
+    // Firefox scrollbar styling
+    scrollbar-width: thin;
+    scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
+    
+    &--custom-height {
+      height: var(--scroll-height, auto);
+    }
+    
+    &--custom-width {
+      min-width: var(--scroll-min-width, auto);
+    }
+    
+    &--custom-padding {
+      padding: var(--scroll-padding, 0);
     }
   }
-  
-  //TODO: Review - do we need it
-  // Firefox scrollbar styling
-  scrollbar-width: thin;
-  scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
-  
-  &.custom-height {
-    height: var(--scroll-height, auto);
-  }
-  
-  &.custom-min-width {
-    min-width: var(--scroll-min-width, auto);
-  }
-  
-  &.custom-padding {
-    padding: var(--scroll-padding, 0);
-  }
-  
-  > .scroll-content {
+
+  &__content {
     display: inline-flex;
     align-items: center;
     min-width: min-content;

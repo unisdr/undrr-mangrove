@@ -134,19 +134,19 @@ const ScrollContainer = ({
   };
 
   const containerClasses = [
-    'mg-scroll-container',
-    height && 'custom-height',
-    minWidth && 'custom-min-width',
-    padding && 'custom-padding',
+    'mg-scroll__container',
+    height && 'mg-scroll__container--custom-height',
+    minWidth && 'mg-scroll__container--custom-width',
+    padding && 'mg-scroll__container--custom-padding',
     className
   ].filter(Boolean).join(' ');
 
   return (
-    <div className="mg-scroll-container-wrapper">
+    <div className="mg-scroll">
       {showArrows && (
-        <div className="scroll-arrows">
+        <div className="mg-scroll__nav">
           <button 
-            className="scroll-arrow"
+            className="mg-scroll__nav-button"
             onClick={() => scroll('left')}
             disabled={!showLeftArrow}
             aria-label="Scroll left"
@@ -154,7 +154,7 @@ const ScrollContainer = ({
             ←
           </button>
           <button 
-            className="scroll-arrow"
+            className="mg-scroll__nav-button"
             onClick={() => scroll('right')}
             disabled={!showRightArrow}
             aria-label="Scroll right"
@@ -170,7 +170,7 @@ const ScrollContainer = ({
         onScroll={checkArrowVisibility}
         {...props}
       >
-        <div ref={contentRef} className="scroll-content">
+        <div ref={contentRef} className="mg-scroll__content">
           {children}
         </div>
       </div>
