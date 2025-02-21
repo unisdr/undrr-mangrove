@@ -2,7 +2,7 @@
 @import '../../assets/scss/breakpoints';
 @import '../../assets/scss/mixins';
 
-.scroll-container-wrapper {
+.mg-scroll-container-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -48,7 +48,7 @@
   }
 }
 
-.scroll-container {
+.mg-scroll-container {
   display: block; 
   overflow-x: auto;
   overflow-y: hidden;

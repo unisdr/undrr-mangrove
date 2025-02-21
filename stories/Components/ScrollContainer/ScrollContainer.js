@@ -134,7 +134,7 @@ const ScrollContainer = ({
   };
 
   const containerClasses = [
-    'scroll-container',
+    'mg-scroll-container',
     height && 'custom-height',
     minWidth && 'custom-min-width',
     padding && 'custom-padding',
@@ -142,7 +142,7 @@ const ScrollContainer = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div className="scroll-container-wrapper">
+    <div className="mg-scroll-container-wrapper">
       {showArrows && (
         <div className="scroll-arrows">
           <button 
