@@ -8,6 +8,10 @@
   align-items: center;
   width: 100%;
 
+  &:has(.mg-scroll__nav) {
+    margin-top: 40px;
+  }
+
   &__nav {
     position: absolute;
 
@@ -50,62 +54,62 @@
   }
 
   &__container {
-    display: block; 
+    display: block;
     overflow-x: auto;
     overflow-y: hidden;
     width: 100%;
     max-width: 100%;
-    white-space: nowrap;
     position: relative;
     cursor: grab;
     user-select: none;
     -webkit-user-select: none;
-    
+
     &:active {
       cursor: grabbing;
     }
-    
+
     // Custom scrollbar styling
     &::-webkit-scrollbar {
       height: $mg-spacing-50;
     }
-    
+
     &::-webkit-scrollbar-track {
       background: $mg-color-neutral-100;
       border-radius: 4px;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: $mg-color-neutral-500;
       border-radius: 4px;
-      
+
       &:hover {
         background: $mg-color-neutral-600;
       }
     }
-    
+
     // TODO: Review - do we need it
     // Firefox scrollbar styling
     scrollbar-width: thin;
     scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
-    
+
     &--custom-height {
       height: var(--scroll-height, auto);
     }
-    
+
     &--custom-width {
       min-width: var(--scroll-min-width, auto);
     }
-    
+
     &--custom-padding {
       padding: var(--scroll-padding, 0);
     }
   }
 
   &__content {
-    display: inline-flex;
-    align-items: center;
-    min-width: min-content;
-    max-width: none;
+    align-items: start;
+
+    > * {
+      width: var(--scroll-item-width, 300px);
+    }
   }
 }

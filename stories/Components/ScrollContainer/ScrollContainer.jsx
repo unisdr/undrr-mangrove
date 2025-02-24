@@ -5,10 +5,12 @@ const ScrollContainer = ({
   children,
   height,
   minWidth,
+  itemWidth,
   padding,
   className,
   showArrows,
   stepSize,
+  columns,
   ...props
 }) => {
   const containerRef = useRef(null);
@@ -129,7 +131,8 @@ const ScrollContainer = ({
   const containerStyle = {
     '--scroll-height': height,
     '--scroll-min-width': minWidth,
-    '--scroll-padding': padding
+    '--scroll-padding': padding,
+    '--scroll-item-width': itemWidth,
   };
 
   const containerClasses = [
@@ -137,6 +140,7 @@ const ScrollContainer = ({
     height && 'mg-scroll__container--custom-height',
     minWidth && 'mg-scroll__container--custom-width',
     padding && 'mg-scroll__container--custom-padding',
+    itemWidth && 'mg-scroll__container--custom-item-width',
     className
   ].filter(Boolean).join(' ');
 
@@ -169,7 +173,9 @@ const ScrollContainer = ({
         onScroll={checkArrowVisibility}
         {...props}
       >
-        <div ref={contentRef} className="mg-scroll__content">
+        <div ref={contentRef}
+          className={`mg-scroll__content mg-grid`}
+        >
           {children}
         </div>
       </div>
@@ -181,15 +187,16 @@ ScrollContainer.propTypes = {
   children: PropTypes.node.isRequired,
   height: PropTypes.string,
   minWidth: PropTypes.string,
+  itemWidth: PropTypes.string, 
   padding: PropTypes.string,
   className: PropTypes.string,
   showArrows: PropTypes.bool,
   stepSize: PropTypes.number,
 };
-
 ScrollContainer.defaultProps = {
   height: 'auto',
   minWidth: 'auto',
+  itemWidth: 'auto',
   padding: '0',
   className: '',
   showArrows: false,
