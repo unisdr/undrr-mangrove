@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import './scroll-container.scss';
 
 const ScrollContainer = ({
   children,
