@@ -14,7 +14,6 @@ export default {
 
 const Template = (args) => (
   <ScrollContainer {...args}>
-    {/* className='mg-grid mg-grid--cols-3' */}
     {/* Example content to demonstrate horizontal scrolling */}
     {Array(5).fill().map((_, i) => (
       <>

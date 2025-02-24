@@ -10,7 +10,6 @@ const ScrollContainer = ({
   className,
   showArrows,
   stepSize,
-  columns,
   ...props
 }) => {
   const containerRef = useRef(null);
