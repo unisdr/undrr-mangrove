@@ -1,7 +1,12 @@
-const path = require("path");
+import path from 'path';
+import { fileURLToPath } from 'url';
 import remarkGfm from 'remark-gfm';
 
-module.exports = {
+// Get the directory path for the current module in ES modules
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = path.dirname(currentFilePath);
+
+export default {
   staticDirs: ["../stories/assets"],
   stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
 
@@ -53,7 +58,7 @@ module.exports = {
       test: /\.scss$/,
       exclude: /node_modules/,
       use: ["style-loader", "css-loader", "sass-loader"],
-      include: path.resolve(__dirname, "../"),
+      include: path.resolve(currentDirPath, "../"),
     });
     return config;
   },
