@@ -14,6 +14,8 @@ The `QuoteHighlight` component is used to display important quotes with attribut
 - Optional attribution with name and title
 - Optional portrait image that displays inline with attribution
 - Optional side image for the image variant
+- Three alignment options: full, left, and right
+- RTL (Right-to-Left) language support
 - Responsive design that adapts to different screen sizes
 
 ## Usage
@@ -27,8 +29,9 @@ import { QuoteHighlight } from '@undrr/mangrove';
   attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
   imageSrc="/assets/author.png"
   imageAlt="Mami Mizutori portrait"
-  variant="image"
+  variant="line"
   backgroundColor="light-blue"
+  alignment="full"
 />
 ```
 
@@ -74,6 +77,58 @@ This variant displays a larger image to the side of the quote content.
   <Story of={QuoteHighlightStories.WithoutAttribution} />
 </Canvas>
 
+## Alignment Options
+
+The QuoteHighlight component supports three alignment options:
+
+- `full`: Takes up the full width of its container (default)
+- `left`: Aligns to the left, allowing content to flow around the right side
+- `right`: Aligns to the right, allowing content to flow around the left side
+
+### Left Aligned Quote
+
+<Canvas>
+  <Story of={QuoteHighlightStories.LeftAlignedQuote} />
+</Canvas>
+
+### Left Aligned Quote with Portrait
+
+<Canvas>
+  <Story of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait} />
+</Canvas>
+
+### Right Aligned Quote
+
+<Canvas>
+  <Story of={QuoteHighlightStories.RightAlignedQuote} />
+</Canvas>
+
+### Right Aligned Quote with Portrait
+
+<Canvas>
+  <Story of={QuoteHighlightStories.RightAlignedQuoteWithPortrait} />
+</Canvas>
+
+## RTL Support
+
+The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When used in an RTL context:
+
+- Left-aligned quotes will appear on the right side of the content
+- Right-aligned quotes will appear on the left side of the content
+- The component's internal layout will automatically adjust for RTL reading direction
+
+### RTL Example with Left Alignment (appears on right)
+
+<Canvas>
+  <Story of={QuoteHighlightStories.RTLLeftAlignedQuote} />
+</Canvas>
+
+### RTL Example with Right Alignment (appears on left)
+
+<Canvas>
+  <Story of={QuoteHighlightStories.RTLRightAlignedQuote} />
+</Canvas>
+
 ## Design Guidelines
 
 - Use the QuoteHighlight component to emphasize important quotes from key stakeholders.
@@ -83,3 +138,7 @@ This variant displays a larger image to the side of the quote content.
 - Always provide attribution when available to give proper credit to the source.
 - Use the portrait image feature to add a personal touch to the quote.
 - Ensure images are high quality and properly cropped to fit the designated space.
+- Use alignment options to create more dynamic layouts:
+  - Full width for standalone, prominent quotes
+  - Left or right alignment to integrate quotes within text content
+- For RTL languages, the component will automatically mirror its layout.

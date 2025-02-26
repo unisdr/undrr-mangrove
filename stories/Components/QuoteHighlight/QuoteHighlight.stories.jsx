@@ -18,12 +18,34 @@ export default {
       control: { type: 'radio' },
       options: ['line', 'image'],
     },
+    alignment: {
+      control: { type: 'radio' },
+      options: ['full', 'left', 'right'],
+    },
   },
 };
 
 const Template = (args) => (
   <div style={{ maxWidth: '800px', margin: '2rem auto' }}>
     <QuoteHighlight {...args} />
+  </div>
+);
+
+// For alignment examples, we need to show surrounding content
+const AlignmentTemplate = (args) => (
+  <div style={{ maxWidth: '800px', margin: '2rem auto' }}>
+    <QuoteHighlight {...args} />
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, 
+      nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies, 
+      nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies,
+      nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.
+    </p>
+    <p>
+      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. 
+      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. 
+      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.
+    </p>
   </div>
 );
 
@@ -35,6 +57,7 @@ LineVariant.args = {
   attributionTitle: "Special Representative of the UN Secretary-General for Disaster Risk Reduction and head of UNDRR",
   variant: "line",
   backgroundColor: "light-blue",
+  alignment: "full",
 };
 
 export const LineVariantBlue = Template.bind({});
@@ -63,19 +86,76 @@ LineVariantWithImage.args = {
   ...LineVariant.args,
   imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
   imageAlt: "Mami Mizutori portrait",
+  variant: "image",
 };
 
-export const LineVariantWithImageBlue = Template.bind({});
-LineVariantWithImageBlue.args = {
-  ...LineVariantWithImage.args,
-  backgroundColor: "blue",
+// Left alignment examples
+export const LeftAlignedQuote = AlignmentTemplate.bind({});
+LeftAlignedQuote.args = {
+  ...LineVariant.args,
+  alignment: "left",
+  quote: "One doesn't have to look hard to find examples of how disasters are becoming worse.",
 };
 
-export const LineVariantWithImageWhite = Template.bind({});
-LineVariantWithImageWhite.args = {
-  ...LineVariantWithImage.args,
-  backgroundColor: "white",
+export const LeftAlignedQuoteWithPortrait = AlignmentTemplate.bind({});
+LeftAlignedQuoteWithPortrait.args = {
+  ...LeftAlignedQuote.args,
+  imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+  imageAlt: "Mami Mizutori portrait",
 };
+
+// Right alignment examples
+export const RightAlignedQuote = AlignmentTemplate.bind({});
+RightAlignedQuote.args = {
+  ...LineVariant.args,
+  alignment: "right",
+  quote: "One doesn't have to look hard to find examples of how disasters are becoming worse.",
+};
+
+export const RightAlignedQuoteWithPortrait = AlignmentTemplate.bind({});
+RightAlignedQuoteWithPortrait.args = {
+  ...RightAlignedQuote.args,
+  imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+  imageAlt: "Mami Mizutori portrait",
+};
+
+// RTL example with left alignment (will appear on right in RTL)
+export const RTLLeftAlignedQuote = () => (
+  <div style={{ maxWidth: '800px', margin: '2rem auto', direction: 'rtl' }}>
+    <QuoteHighlight 
+      quote="One doesn't have to look hard to find examples of how disasters are becoming worse."
+      attribution="Mami Mizutori"
+      attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
+      variant="line"
+      backgroundColor="light-blue"
+      alignment="left"
+    />
+    <p>
+      هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
+      إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص.
+    </p>
+  </div>
+);
+RTLLeftAlignedQuote.storyName = 'RTL Left Aligned (appears on right)';
+
+// RTL example with right alignment (will appear on left in RTL)
+export const RTLRightAlignedQuote = () => (
+  <div style={{ maxWidth: '800px', margin: '2rem auto', direction: 'rtl' }}>
+    <QuoteHighlight 
+      quote="One doesn't have to look hard to find examples of how disasters are becoming worse."
+      attribution="Mami Mizutori"
+      attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
+      variant="line"
+      backgroundColor="light-blue"
+      alignment="right"
+    />
+    <p>
+      هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
+      إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص.
+    </p>
+  </div>
+);
+RTLRightAlignedQuote.storyName = 'RTL Right Aligned (appears on left)';
 
 // Image variant examples
 export const ImageVariant = Template.bind({});
@@ -87,6 +167,7 @@ ImageVariant.args = {
   imageAlt: "Mami Mizutori portrait",
   variant: "image",
   backgroundColor: "light-blue",
+  alignment: "full",
 };
 
 export const ImageVariantBlue = Template.bind({});
@@ -101,41 +182,11 @@ ImageVariantWhite.args = {
   backgroundColor: "white",
 };
 
-// Image variant without image (fallback to line style)
-export const ImageVariantWithoutImage = Template.bind({});
-ImageVariantWithoutImage.args = {
-  quote: "Alongside the devastating loss of loved ones, communities across the country are now struggling to build back better in the wake of large economic losses and damage to the environment and critical infrastructure.",
-  attribution: "António Guterres",
-  attributionTitle: "UN Secretary-General",
-  variant: "image", // This will fall back to looking like line variant since no image is provided
-  backgroundColor: "light-blue",
-};
-
-export const ImageVariantWithoutImageBlue = Template.bind({});
-ImageVariantWithoutImageBlue.args = {
-  ...ImageVariantWithoutImage.args,
-  backgroundColor: "blue",
-};
-
-export const ImageVariantWithoutImageWhite = Template.bind({});
-ImageVariantWithoutImageWhite.args = {
-  ...ImageVariantWithoutImage.args,
-  backgroundColor: "white",
-};
-
-// Without attribution examples
+// Without attribution
 export const WithoutAttribution = Template.bind({});
 WithoutAttribution.args = {
-  quote: "Disasters don't have to turn into catastrophes. We can prevent and reduce risk by taking action today for a safer tomorrow.",
+  quote: "One doesn't have to look hard to find examples of how disasters are becoming worse.",
   variant: "line",
-  backgroundColor: "white",
-};
-
-export const WithoutAttributionWithImage = Template.bind({});
-WithoutAttributionWithImage.args = {
-  quote: "Disasters don't have to turn into catastrophes. We can prevent and reduce risk by taking action today for a safer tomorrow.",
-  imageSrc: "https://www.undrr.org/sites/default/files/styles/width_780/public/2020-01/Mami%20Mizutori%20-%20for%20web.jpg",
-  imageAlt: "UNDRR representative",
-  variant: "image",
   backgroundColor: "light-blue",
+  alignment: "full",
 };
