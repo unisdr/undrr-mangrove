@@ -6,7 +6,7 @@ import './quote-highlight.scss';
  * QuoteHighlight Component
  * 
  * A component that displays a highlighted quote with an optional image, attribution, and title.
- * Two variants are available: with a separator line or with an image.
+ * Multiple variants are available: with a separator line or with an image, and with different alignments.
  */
 const QuoteHighlight = ({
   quote,
@@ -16,6 +16,7 @@ const QuoteHighlight = ({
   imageAlt,
   backgroundColor = 'light-blue',
   variant = 'line',
+  alignment = 'full',
   className = '',
   ...props
 }) => {
@@ -24,7 +25,7 @@ const QuoteHighlight = ({
   
   return (
     <div 
-      className={`${baseClass} ${baseClass}--${backgroundColor} ${baseClass}--${variant} ${hasImage ? `${baseClass}--has-image` : ''} ${className}`}
+      className={`${baseClass} ${baseClass}--${backgroundColor} ${baseClass}--${variant} ${baseClass}--${alignment} ${hasImage ? `${baseClass}--has-image` : ''} ${className}`}
       {...props}
     >
       <div className={`${baseClass}__content`}>
@@ -83,6 +84,8 @@ QuoteHighlight.propTypes = {
   backgroundColor: PropTypes.oneOf(['light-blue', 'blue', 'white']),
   /** Component variant: 'line' (with separator line) or 'image' (with image) */
   variant: PropTypes.oneOf(['line', 'image']),
+  /** Component alignment: 'full' (full width), 'left' (float left), 'right' (float right) */
+  alignment: PropTypes.oneOf(['full', 'left', 'right']),
   /** Additional CSS class names */
   className: PropTypes.string,
 };
