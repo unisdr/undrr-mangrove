@@ -7,7 +7,7 @@
   flex-direction: column;
   border-radius: $mg-spacing-50;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
   
   // Alignment variants
   &--full {
