@@ -13212,10 +13212,10 @@ storybook-addon-rtl@1.0.1:
   dependencies:
     "@storybook/test" "^8.0.6"
 
-storybook-design-token@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/storybook-design-token/-/storybook-design-token-3.1.0.tgz#35f0005959ef1e24ef10613841469ee9e188bbe3"
-  integrity sha512-S4NKx1VGmo1QUj+XSnGzNSoendrOFdavNTb7pBIBmFvzl+SJKUMbTS1RFfiMCCC+BDD7v1CyonAreSYtAqGX8Q==
+storybook-design-token@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/storybook-design-token/-/storybook-design-token-3.2.0.tgz#58599006ee2016dc85c4d5bf6349785cc0783886"
+  integrity sha512-yIuMJKwT8Zx3QQG5TqGJ+9RsOlKLfttx58BuplIKNVK+mqXMSZuGxi7EcAeEVNuFjK0raGEAlBMZxjDA5TtZRw==
   dependencies:
     glob "^9.3.0"
     jsdom "^21.1.1"
