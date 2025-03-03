@@ -29,10 +29,30 @@ const sampleTabData = [
     text: "Tab title 2",
     text_id: "tab-2",
     data: "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
+    is_default: "true",
   },
   {
     text: "Tab title 3 i am a bit longer and on and on",
     text_id: "tab-3",
+    data: "Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.",
+  },
+];
+
+const sampleTabDataStacked = [
+  {
+    text: "Stacked title 1",
+    text_id: "tab-1-stacked",
+    data: "As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
+  },
+  {
+    text: "Tab title 2",
+    text_id: "tab-2-stacked",
+    data: "The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.",
+    is_default: "true",
+  },
+  {
+    text: "Tab title 3 i am a bit longer and on and on",
+    text_id: "tab-3-stacked",
     data: "Midterm Review of the Sendai Framework - Register your interest for consultations on the Political Declaration.",
   },
 ];
@@ -99,6 +119,7 @@ const PageTemplateExample = () => {
         <VerticalCard data={sampleCardContent} />
         <VerticalCard data={sampleCardContent} />
       </section>
+      <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
       <Footer />
     </div>
   );

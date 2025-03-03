@@ -63,6 +63,37 @@
   .mg-tabs__section {
     padding: $mg-spacing-150;
   }
+
+  .mg-tabs__link {
+    position: relative;
+    padding-right: 4rem; // space for the chevron to theright
+
+    &:hover,
+    &:focus {
+      border: none;
+    }
+
+    &:before {
+      position: absolute;
+      right: $mg-spacing-150;
+      top: 50%;
+      border-style: solid;
+      border-width: 0.2em 0.2em 0 0;
+      content: '';
+      height: 0.45em;
+      transform: rotate(-45deg);
+      vertical-align: top;
+      width: 0.45em;
+      transition: transform 0;
+      
+    }
+
+    &.mg-tabs__stacked--open:before {
+      top: 30%;
+      transform: rotate(135deg);
+      transition: transform 1s ease;
+    }
+  }
 }
 
 .mg-tabs--stacked { 
