@@ -59,7 +59,7 @@
     "@storybook/addon-mdx-gfm": "8.5.7",
     "@storybook/addon-webpack5-compiler-babel": "3.0.5",
     "@storybook/blocks": "8.5.7",
-    "@storybook/cli": "8.5.7",
+    "@storybook/cli": "8.6.3",
     "@storybook/react": "8.5.7",
     "@storybook/react-webpack5": "8.5.7",
     "@testing-library/react": "16.2.0",
