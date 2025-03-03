@@ -1,17 +1,33 @@
 // mg-tabs
 
 /**
+ * Initialize tabs on a page
+ * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
+ * @example mgTabs();
+ */
+export function mgTabs(scope, activateDeepLinkOnLoad = true) {
+  const tabContainers = scope || document.querySelectorAll('[data-mg-js-tabs]');
+  tabContainers.forEach(container => {
+    mgTabsRuntime(container, activateDeepLinkOnLoad);
+  });
+}
+
+/**
  * Finds all tabs on a page and activates them
  * @param {object} [scope] - the html scope to process, optional, defaults to `document`
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs(document.querySelectorAll('.mg-component__container')[0]);
  */
-export function mgTabs(scope, activateDeepLinkOnLoad) {
+export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   var scope = scope || document;
   var activateDeepLinkOnLoad = activateDeepLinkOnLoad || true;
 
   // Get relevant elements and collections
-  const tabsList = scope.querySelectorAll("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
+  if (scope.hasAttribute('data-mg-js-tabs')) {
+    var tabsList = scope;
+  } else {
+    var tabsList = scope.querySelectorAll("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
+  }
 
   const panels = scope.querySelectorAll(
     '[id^="mg-tabs__section"]',
@@ -34,6 +50,12 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
     return;
   }
 
+  // Check if tabs have already been initialized
+  if (tabsList.hasAttribute('data-mg-tabs-initialized')) {
+    return;
+  }
+  tabsList.setAttribute('data-mg-tabs-initialized', 'true');
+
   // Add semantics are remove user focusability for each tab
   Array.prototype.forEach.call(tabs, (tab, i) => {
     const tabId = tab.href.split("#")[1]; // calculate an ID based off the tab href (todo: add support for a data-vf-js-tab-id, and if set use that)
@@ -50,8 +72,7 @@ export function mgTabs(scope, activateDeepLinkOnLoad) {
 
     // Handle clicking of tabs for mouse users
     tab.addEventListener("click", (e) => {
-      window.location.hash = tabId;
-      e.preventDefault();
+      e.preventDefault();    
       mgTabsSwitch(e.currentTarget, panels);
     });
 
@@ -121,8 +142,8 @@ const mgTabsSwitch = (newTab, panels) => {
         panel.hidden = !panel.hidden;
       }
     }
-  } 
-  
+  }
+
   if (oldTab) {
     oldTab.removeAttribute("aria-selected");
     oldTab.setAttribute("tabindex", "-1");
@@ -145,7 +166,7 @@ const mgTabsSwitch = (newTab, panels) => {
   // Set the selected state
   newTab.setAttribute("aria-selected", "true");
   newTab.classList.add("is-active");
-  // Get the indices of the new tab to find the correct tab panel to show
+  newTab.classList.toggle("mg-tabs__stacked--open"); // we always track the user's open state, even if not stacked as we may switch to mobile view  // Get the indices of the new tab to find the correct tab panel to show
   if (behaveAsHorizontalTabs) {
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
@@ -158,20 +179,30 @@ const mgTabsSwitch = (newTab, panels) => {
 };
 
 function mgTabsDeepLinkOnLoad(tabs, panels) {
-  // 1. See if there is a `#mg-tabs__section--88888`
-  if (window.location.hash) {
-    var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-  } else {
-    // No hash found
-    return false;
-  }
-  // console.log("mgTabs: will activate tab", hash);
+  var mgTabAnchorFound = false;
 
-  // 2. loop through all tabs, if a match then activate
-  Array.prototype.forEach.call(tabs, (tab) => {
-    let tabId = tab.getAttribute("data-tabs__item");
-    if (tabId == hash) {
-      mgTabsSwitch(tab, panels);
-    }
-  });
+  if (window.location.hash) {
+    // 1. See if there is a `#mg-tabs__section--88888`
+    var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
+
+    // 2. loop through all tabs, if a match then activate
+    Array.prototype.forEach.call(tabs, (tab) => {
+      let tabId = tab.getAttribute("data-tabs__item");
+      if (tabId == hash) {
+        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+        mgTabsSwitch(tab, panels);
+        mgTabAnchorFound = true;
+        return true;
+      }
+    });
+  }
+
+  if (!mgTabAnchorFound) {
+    // No hash found - look for default tab
+    Array.from(tabs).forEach(tab => {
+      if (tab.getAttribute('data-mg-js-tabs-default') === 'true') {
+        mgTabsSwitch(tab, panels);
+      }
+    });
+  }
 }
