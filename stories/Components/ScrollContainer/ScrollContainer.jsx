@@ -20,6 +20,8 @@ const ScrollContainer = ({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startScrollLeft, setStartScrollLeft] = useState(0);
+  const [hasDragged, setHasDragged] = useState(false);
+  const dragThreshold = 5; // Minimum pixels to consider as a drag
 
   const checkArrowVisibility = useCallback(() => {
     if (!containerRef.current || !showArrows) return;
@@ -45,6 +47,7 @@ const ScrollContainer = ({
     if (!containerRef.current) return;
     
     setIsDragging(true);
+    setHasDragged(false);
     setStartX(e.type.includes('mouse') ? e.pageX : e.touches[0].pageX);
     setStartScrollLeft(containerRef.current.scrollLeft);
     
@@ -58,14 +61,28 @@ const ScrollContainer = ({
 
     e.preventDefault();
     const x = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const distance = Math.abs(startX - x);
+    
+    // Set hasDragged if we exceed the threshold
+    if (distance > dragThreshold) {
+      setHasDragged(true);
+    }
+    
     const walk = (startX - x) * 1.5; // Multiply by 1.5 for faster scrolling
     containerRef.current.scrollLeft = startScrollLeft + walk;
     checkArrowVisibility();
-  }, [isDragging, startX, startScrollLeft, checkArrowVisibility]);
+  }, [isDragging, startX, startScrollLeft, checkArrowVisibility, dragThreshold]);
 
   const handleDragEnd = useCallback((e) => {
     setIsDragging(false);
   }, []);
+
+  const handleClick = useCallback((e) => {
+    if (hasDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, [hasDragged]);
 
   useEffect(() => {
     checkArrowVisibility();
@@ -75,16 +92,16 @@ const ScrollContainer = ({
       container.addEventListener('scroll', checkArrowVisibility);
       window.addEventListener('resize', checkArrowVisibility);
 
-      // Mouse drag event listeners
       container.addEventListener('mousedown', handleDragStart);
       window.addEventListener('mousemove', handleDragMove);
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('mouseleave', handleDragEnd);
 
-      // Touch event listeners - set passive to false for touchmove to allow preventDefault
       container.addEventListener('touchstart', handleDragStart, { passive: true });
       container.addEventListener('touchmove', handleDragMove, { passive: false });
       container.addEventListener('touchend', handleDragEnd);
+      
+      container.addEventListener('click', handleClick, { capture: true });
     }
 
     return () => {
@@ -103,9 +120,12 @@ const ScrollContainer = ({
         container.removeEventListener('touchstart', handleDragStart);
         container.removeEventListener('touchmove', handleDragMove);
         container.removeEventListener('touchend', handleDragEnd);
+        
+        // Remove click handler
+        container.removeEventListener('click', handleClick, { capture: true });
       }
     };
-  }, [checkArrowVisibility, handleDragStart, handleDragMove, handleDragEnd]);
+  }, [checkArrowVisibility, handleDragStart, handleDragMove, handleDragEnd, handleClick]);
   const containerStyle = {
     '--scroll-height': height,
     '--scroll-min-width': minWidth,
