@@ -17,25 +17,22 @@ const ScrollContainer = ({
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   
-  // Drag state
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [dragDistance, setDragDistance] = useState(0);
-  const [dragStartTime, setDragStartTime] = useState(null);
+  const [startScrollLeft, setStartScrollLeft] = useState(0);
 
-  const checkArrowVisibility = () => {
+  const checkArrowVisibility = useCallback(() => {
     if (!containerRef.current || !showArrows) return;
     
     const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
     setShowLeftArrow(scrollLeft > 0);
     setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
-  };
+  }, [showArrows]);
 
   const scroll = useCallback((direction) => {
     if (!containerRef.current) return;
 
-    const scrollAmount = stepSize || containerRef.current.clientWidth;
+    const scrollAmount = stepSize || containerRef.current.clientWidth / 2;
     const newScrollLeft = containerRef.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
     
     containerRef.current.scrollTo({
@@ -44,49 +41,31 @@ const ScrollContainer = ({
     });
   }, [stepSize]);
 
-  const handleDragStart = (e) => {
+  const handleDragStart = useCallback((e) => {
     if (!containerRef.current) return;
-
+    
     setIsDragging(true);
     setStartX(e.type.includes('mouse') ? e.pageX : e.touches[0].pageX);
-    setDragDistance(0);
-    setDragStartTime(Date.now());
-
+    setStartScrollLeft(containerRef.current.scrollLeft);
+    
     if (e.type.includes('mouse')) {
       e.preventDefault();
     }
-  };
+  }, []);
 
-  const handleDragEnd = () => {
+  const handleDragMove = useCallback((e) => {
     if (!isDragging || !containerRef.current) return;
 
-    // Get final direction and trigger step
-    const direction = dragDistance > 0 ? 'left' : 'right';
-    scroll(direction);
+    e.preventDefault();
+    const x = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const walk = (startX - x) * 1.5; // Multiply by 1.5 for faster scrolling
+    containerRef.current.scrollLeft = startScrollLeft + walk;
+    checkArrowVisibility();
+  }, [isDragging, startX, startScrollLeft, checkArrowVisibility]);
 
+  const handleDragEnd = useCallback((e) => {
     setIsDragging(false);
-    setDragDistance(0);
-  };
-
-  const handleDragMove = (e) => {
-    if (!isDragging || !containerRef.current) return;
-
-    const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-    const distance = startX - currentX;
-
-    // Only trigger if it's a real drag (both time and distance thresholds)
-    const dragDuration = Date.now() - dragStartTime;
-    if (Math.abs(distance) > 20 && dragDuration > 100) { // Must drag at least 20px and for 100ms
-      setDragDistance(distance);
-      scroll(distance > 0 ? 'right' : 'left');
-      setIsDragging(false);
-      setDragStartTime(null);
-    }
-
-    if (e.type.includes('mouse')) {
-      e.preventDefault();
-    }
-  };
+  }, []);
 
   useEffect(() => {
     checkArrowVisibility();
@@ -102,9 +81,9 @@ const ScrollContainer = ({
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('mouseleave', handleDragEnd);
 
-      // Touch event listeners
+      // Touch event listeners - set passive to false for touchmove to allow preventDefault
       container.addEventListener('touchstart', handleDragStart, { passive: true });
-      container.addEventListener('touchmove', handleDragMove, { passive: true });
+      container.addEventListener('touchmove', handleDragMove, { passive: false });
       container.addEventListener('touchend', handleDragEnd);
     }
 
@@ -126,7 +105,7 @@ const ScrollContainer = ({
         container.removeEventListener('touchend', handleDragEnd);
       }
     };
-  }, [showArrows, handleDragStart, handleDragMove, handleDragEnd]);
+  }, [checkArrowVisibility, handleDragStart, handleDragMove, handleDragEnd]);
   const containerStyle = {
     '--scroll-height': height,
     '--scroll-min-width': minWidth,
