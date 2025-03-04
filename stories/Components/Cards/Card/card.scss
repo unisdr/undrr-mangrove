@@ -79,6 +79,7 @@
 
     &:has(.mg-card__visual) {
       grid-template-rows: 200px 1fr auto;
+      
       @media (min-width: $mg-breakpoint-mobile) {
         grid-template-columns: 160px 1fr;
         grid-template-rows: 1fr auto;
