@@ -122,3 +122,21 @@ export const DefaultHorizontalBookCard = {
 
   name: "Horizontal Book Card",
 };
+
+
+export const HorizontalBookCardNoImageVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const noImageData = caption.contentdata.map(item => ({
+      ...item,
+      imgback: null,
+      imgalt: null,
+    }));
+
+    return (
+      <HorizontalBookCard data={noImageData} {...args}></HorizontalBookCard>
+    );
+  },
+
+  name: "Horizontal Book Card Without Image",
+};
