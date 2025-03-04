@@ -125,3 +125,27 @@ export const DefaultVerticalCard = {
 
   name: "Vertical Card",
 };
+
+export const NoImageVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const noImageData = caption.contentdata.map(item => ({
+      ...item,
+      imgback: null,
+      imgalt: null,
+      share: null,
+    }));
+
+    return (
+      <div
+        style={{
+          maxWidth: "300px",
+        }}
+      >
+        <VerticalCard data={noImageData} {...args}></VerticalCard>
+      </div>
+    );
+  },
+
+  name: "Vertical Card Without Image",
+};
