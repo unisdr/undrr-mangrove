@@ -35,6 +35,8 @@ jobs:
         run: |
           yarn run build
           mv docs-build-temp _site
+          mkdir _site/components
+          cp dist/components _site/components -r
       - name: Build bundle
         run: |
          yarn run build
