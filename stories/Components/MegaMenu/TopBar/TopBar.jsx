@@ -6,8 +6,6 @@ import hamburger from "../../../assets/icons/arrow-right.svg"
 import close from "../../../assets/icons/arrow-right.svg"
 
 export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections, activeItem }) {
-
-
   const onMouseEnter = (item) => {
     onItemHover(item);
   }
@@ -24,6 +22,9 @@ export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections, 
             <TopBarItem
               key={index}
               title={item.title}
+              bannerDescription={item.bannerDescription}
+              link={item.bannerButton}
+              children={item.items}
               onMouseEnter={() => onItemHover(item)}
               activeItem={activeItem}
             />))

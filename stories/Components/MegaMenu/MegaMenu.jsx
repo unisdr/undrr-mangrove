@@ -69,81 +69,88 @@ const MegaMenu = ({ sections, delay = 300 }) => {
         activeItem={activeItem}
       />
 
-      {section && (
+      {section && section.items && (
         <article className="mg-mega-content | mg-container-full-width" aria-live="polite">
-          <aside className="mg-mega-content__left">
-            <section className="mg-mega-content__banner">
-              <header>{section.bannerHeading}</header>
-              {section.bannerDescription.includes('<') ? (
-                <div dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
-              ) : (
-                <p>{section.bannerDescription}</p>
-              )}
-              {section.bannerButton && (
-                <a href={section.bannerButton.url} className="mg-button mg-button-primary">
-                  {section.bannerButton.label}
-                </a>
-              )}
-            </section>
-            {section.items.length > 0 && section.items[0].items && section.items[0].items.length > 0 ? (
-              <ul className="mg-mega-content__section-list" role="list">
-                {section.items.map((item, index) => (
-                  <li
-                    key={index}
-                    className="mg-mega-content__section-list-item"
-                    onMouseEnter={() => setItemIndex(index)}
-                  >
-                    <a
-                      className={`mg-mega-content__section-list-link ${itemIndex === index
-                        ? "mg-mega-content__section-list-link--active"
-                        : ""
-                        }`}
-                      href={item.url}
-                      aria-current={itemIndex === index ? "page" : undefined}
+          {/* Only show the left area if there are child items and heading */}
+          {section.bannerHeading && section.bannerDescription && section.items && (
+            <aside className="mg-mega-content__left">
+              <section className="mg-mega-content__banner">
+                <header>{section.bannerHeading}</header>
+                {(
+                  section.bannerDescription.includes('<') ? (
+                    <div dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
+                  ) : (
+                    <p>{section.bannerDescription}</p>
+                  )
+                )}
+                {section.bannerButton?.label && (
+                  <a href={section.bannerButton.url} className="mg-button mg-button-primary">
+                    {section.bannerButton.label}
+                  </a>
+                )}
+              </section>
+              {section.items.length > 0 && section.items[0].items && section.items[0].items.length > 0 ? (
+                <ul className="mg-mega-content__section-list" role="list">
+                  {section.items.map((item, index) => (
+                    <li
+                      key={index}
+                      className="mg-mega-content__section-list-item"
+                      onMouseEnter={() => setItemIndex(index)}
                     >
-                      {item.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </aside>
-          <section className="mg-mega-content__right">
-            {section.items.length > 0 && section.items[0].items && section.items[0].items.length > 0 ? (
+                      <a
+                        className={`mg-mega-content__section-list-link ${itemIndex === index
+                          ? "mg-mega-content__section-list-link--active"
+                          : ""
+                          }`}
+                        href={item.url}
+                        aria-current={itemIndex === index ? "page" : undefined}
+                      >
+                        {item.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </aside>
+          )}
+          {section.items && (
+            <section className="mg-mega-content__right">
               <ul role="list">
-                {section.items[itemIndex].items.map((subItem, subIndex) => (
-                  <li key={subIndex}>
-                    <a href={subItem.url}>{subItem.title}</a>
-                    {subItem.items && (
-                      <ul role="list">
-                        {subItem.items.map((nestedItem, nestedIndex) => (
-                          <li key={nestedIndex}>
-                            <a href={nestedItem.url}>{nestedItem.title}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
+                {section.items[itemIndex]?.items ? (
+                  section.items[itemIndex].items.map((subItem, subIndex) => (
+                    <li key={subIndex}>
+                      <a href={subItem.url}>{subItem.title}</a>
+                      {subItem.items && (
+                        <ul role="list">
+                          {subItem.items.map((nestedItem, nestedIndex) => (
+                            <li key={nestedIndex}>
+                              <a href={nestedItem.url}>{nestedItem.title}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))
+                ) : (
+                  section.items.map((item, index) => (
+                    <li key={index}>
+                      <a href={item.url}>{item.title}</a>
+                    </li>
+                  ))
+                )}
               </ul>
-            ) : (
-              <ul role="list">
-                {section.items.map((item, index) => (
-                  <li key={index}>
-                    <a href={item.url}>{item.title}</a>
-                  </li>
-                ))}
-              </ul>
-            )
-            }
-          </section>
+            </section>
+          )}
+          {/*  If there are no child items just show the banner description in a call to action style */}
         </article>)}
+      {section && !section.items && section.bannerDescription && (
+        <article className="mg-mega-content | mg-container-full-width" aria-live="polite" dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
+      )}
       {showSidebar && (
         <Sidebar sections={sections} onClose={() => setShowSidebar(false)} />
       )}
     </nav>
   );
 };
-
 
 export default MegaMenu;
