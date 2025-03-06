@@ -12,7 +12,7 @@
     {
       title: "Knowledge Hub",
       bannerHeading: "Knowledge Hub",
-      bannerDescription: "Access resources and insights on disaster risk reduction",
+      bannerDescription: "<p>Access resources and <strong>insights</strong> on <a href='/knowledge-hub'>disaster risk reduction</a>.</p>",
       items: [
         {
           title: "Publications",

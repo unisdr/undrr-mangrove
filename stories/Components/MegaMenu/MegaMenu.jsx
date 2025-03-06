@@ -74,7 +74,11 @@ const MegaMenu = ({ sections, delay = 300 }) => {
           <aside className="mg-mega-content__left">
             <section className="mg-mega-content__banner">
               <header>{section.bannerHeading}</header>
-              <p>{section.bannerDescription}</p>
+              {section.bannerDescription.includes('<') ? (
+                <div dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
+              ) : (
+                <p>{section.bannerDescription}</p>
+              )}
               {section.bannerButton && (
                 <a href={section.bannerButton.url} className="mg-button mg-button-primary">
                   {section.bannerButton.label}
