@@ -1,13 +1,12 @@
 // mg-tabs
-
 /**
  * Initialize tabs on a page
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
  */
 export function mgTabs(scope, activateDeepLinkOnLoad = true) {
-  const tabContainers = scope || document.querySelectorAll('[data-mg-js-tabs]');
-  tabContainers.forEach(container => {
+  const tabContainers = scope || document.querySelectorAll("[data-mg-js-tabs]");
+  tabContainers.forEach((container) => {
     mgTabsRuntime(container, activateDeepLinkOnLoad);
   });
 }
@@ -23,16 +22,25 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   var activateDeepLinkOnLoad = activateDeepLinkOnLoad || true;
 
   // Get relevant elements and collections
-  if (scope.hasAttribute('data-mg-js-tabs')) {
+  if (scope.hasAttribute("data-mg-js-tabs")) {
     var tabsList = scope;
   } else {
-    var tabsList = scope.querySelectorAll("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
+    var tabsList =
+      scope.querySelectorAll("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
   }
-
-  const panels = scope.querySelectorAll(
-    '[id^="mg-tabs__section"]',
-  );
   const tabs = scope.querySelectorAll(".mg-tabs__link");
+  const panels = scope.querySelectorAll('[id^="mg-tabs__section"]');
+  // v1 compatibility
+  // If panels is empty, try finding them in data-mg-js-tabs-content
+  if (!panels.length) {
+    const tabContent = scope
+      .closest(".mg-tabs")
+      .querySelector("[data-mg-js-tabs-content]");
+    console.log(tabsList, tabContent);
+    if (tabContent) {
+      panels = tabContent.querySelectorAll('[id^="mg-tabs__section"]');
+    }
+  }
 
   // console.log("debug: All panels");
   // console.log("Tab list: " , tabsList);
@@ -51,11 +59,11 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   }
 
   // Check if tabs have already been initialized
-  if (tabsList.hasAttribute('data-mg-tabs-initialized')) {
+  if (tabsList.hasAttribute("data-mg-tabs-initialized")) {
     return;
   }
-  tabsList.setAttribute('data-mg-tabs-initialized', 'true');
-
+  tabsList.setAttribute("data-mg-tabs-initialized", "true");
+  
   // Add semantics are remove user focusability for each tab
   Array.prototype.forEach.call(tabs, (tab, i) => {
     const tabId = tab.href.split("#")[1]; // calculate an ID based off the tab href (todo: add support for a data-vf-js-tab-id, and if set use that)
@@ -72,7 +80,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
 
     // Handle clicking of tabs for mouse users
     tab.addEventListener("click", (e) => {
-      e.preventDefault();    
+      e.preventDefault();
       mgTabsSwitch(e.currentTarget, panels);
     });
 
@@ -82,12 +90,23 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       let index = Array.prototype.indexOf.call(tabs, e.currentTarget);
       // Work out which key the user is pressing and
       // Calculate the new tab's index where appropriate
-      let dir = e.which === 37 ? index - 1 : e.which === 39 ? index + 1 : e.which === 40 ? "down" : null;
+      let dir =
+        e.which === 37
+          ? index - 1
+          : e.which === 39
+            ? index + 1
+            : e.which === 40
+              ? "down"
+              : null;
       if (dir !== null) {
         e.preventDefault();
         // If the down key is pressed, move focus to the open panel,
         // otherwise switch to the adjacent tab
-        dir === "down" ? panels[i].focus({ preventScroll: true }) : tabs[dir] ? mgTabsSwitch(tabs[dir], panels) : void 0;
+        dir === "down"
+          ? panels[i].focus({ preventScroll: true })
+          : tabs[dir]
+            ? mgTabsSwitch(tabs[dir], panels)
+            : void 0;
       }
     });
   });
@@ -105,7 +124,10 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   Array.prototype.forEach.call(tabsList, (tabsListset) => {
     tabsListset.setAttribute("role", "tablist");
     // Show the first tab (if the parent tabset is not stacked and screen is not narrow)
-    if (tabsListset.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600) {
+    if (
+      tabsListset.dataset.mgJsTabsVariant != "stacked" &&
+      window.innerWidth >= 600
+    ) {
       // Initially activate the first tab
       let firstTab = tabsListset.querySelectorAll(".mg-tabs__link")[0];
       firstTab.removeAttribute("tabindex");
@@ -113,7 +135,9 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       firstTab.classList.add("is-active");
 
       // Initially reveal the first tab panel
-      const panelsList = tabsListset.querySelectorAll("[data-mg-js-tabs-content]");
+      const panelsList = tabsListset.querySelectorAll(
+        "[data-mg-js-tabs-content]",
+      );
       Array.prototype.forEach.call(panelsList, (panel) => {
         let firstPanel = tabsListset.querySelectorAll(".mg-tabs__section")[0];
         firstPanel.hidden = false;
@@ -121,7 +145,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     }
   });
 
-  // activate any deeplinks to a specific tab
+  // Activate any deep links to a specific tab
   if (activateDeepLinkOnLoad) {
     mgTabsDeepLinkOnLoad(tabs, panels);
   }
@@ -130,12 +154,18 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
 // The tab switching function
 const mgTabsSwitch = (newTab, panels) => {
   // get the parent ul of the clicked tab
-  let parentTabContainer = newTab.closest("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
+  let parentTabContainer =
+    newTab.closest("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
   let oldTab = parentTabContainer.querySelector("[aria-selected]");
-  const behaveAsHorizontalTabs = parentTabContainer.dataset.mgJsTabsVariant != "stacked" && window.innerWidth >= 600
+  const behaveAsHorizontalTabs =
+    parentTabContainer.dataset.mgJsTabsVariant != "stacked" &&
+    window.innerWidth >= 600;
 
   // if it is marked as stacked or small screen (this is not an inverse of behaveAsHorizontalTabs)
-  if (parentTabContainer.dataset.mgJsTabsVariant == "stacked" || window.innerWidth <= 600) {
+  if (
+    parentTabContainer.dataset.mgJsTabsVariant == "stacked" ||
+    window.innerWidth <= 600
+  ) {
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
       if (panel.id === newTab.id) {
@@ -189,7 +219,7 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
     Array.prototype.forEach.call(tabs, (tab) => {
       let tabId = tab.getAttribute("data-tabs__item");
       if (tabId == hash) {
-        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
         mgTabsSwitch(tab, panels);
         mgTabAnchorFound = true;
         return true;
@@ -199,8 +229,8 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
 
   if (!mgTabAnchorFound) {
     // No hash found - look for default tab
-    Array.from(tabs).forEach(tab => {
-      if (tab.getAttribute('data-mg-js-tabs-default') === 'true') {
+    Array.from(tabs).forEach((tab) => {
+      if (tab.getAttribute("data-mg-js-tabs-default") === "true") {
         mgTabsSwitch(tab, panels);
       }
     });

@@ -12,7 +12,7 @@ export function Tab({ tabdata, variant }) {
   useEffect(() => {
     mgTabs();
   }, []);
-  return (
+  return tabdata ? (
     <article className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`} data-mg-js-tabs data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}>
       <ul className="mg-tabs__list">
         {tabdata.map((tab, index) => (
@@ -29,6 +29,5 @@ export function Tab({ tabdata, variant }) {
         ))}
       </ul>
     </article>
-  );
-}
+  ) : "No tab data passed";}
 
