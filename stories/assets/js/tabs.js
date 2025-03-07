@@ -36,7 +36,6 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     const tabContent = scope
       .closest(".mg-tabs")
       .querySelector("[data-mg-js-tabs-content]");
-    console.log(tabsList, tabContent);
     if (tabContent) {
       panels = tabContent.querySelectorAll('[id^="mg-tabs__section"]');
     }
@@ -202,7 +201,6 @@ const mgTabsSwitch = (newTab, panels) => {
       const panel = panels[item];
       if (panel.id === newTab.id) {
         panel.hidden = false;
-        console.log('Shown panel:', panel, panel.id);
         break;
       }
     }
