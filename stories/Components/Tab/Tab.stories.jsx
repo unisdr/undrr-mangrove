@@ -1,6 +1,5 @@
 // stories\Components\Tab\Tab.stories.jsx
 import { Tab } from "./Tab";
-
 const getCaptionForLocale = (locale) => {
   switch (locale) {
     case "english":
@@ -122,7 +121,15 @@ export default {
 
 export const Tabs = {
   render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocale(locale);
+    let caption = getCaptionForLocale(locale);
+    caption = caption.map(tab => ({ ...tab, is_default: "false" }));
+    return <Tab tabdata={caption} />;
+  },
+};
+
+export const TabsWithDefault = {
+  render: (args, { globals: { locale } }) => {
+    let caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} />;
   },
 };
@@ -131,5 +138,61 @@ export const StackedTabs = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} variant="stacked" />;
+  },
+};
+
+/**
+ * @deprecated This is a legacy example included only to ensure backwards compatibility with v1 tabs.
+ * Do not use this implementation for new features. Use the standard Tab component instead.
+ */
+export const Version1Tabs = {
+  render: () => {
+    return (
+      <>
+        <div className="mg-tabs">
+          <ul className="mg-tabs__list | mg-container-full-width" data-mg-js-tabs>
+            <li className="mg-tabs__item" role="presentation">
+              <a
+                className="mg-tabs__link"
+                href="#mg-tabs__section-indicators"
+              >Indicators</a>
+            </li>
+            <li className="mg-tabs__item" role="presentation">
+              <a
+                className="mg-tabs__link"
+                href="#mg-tabs__section-snapshot"
+              >Snapshot of SFM</a>
+            </li>
+          </ul>
+          <div className="mg-tabs-content" data-mg-js-tabs-content>
+            <section
+              className="mg-tabs__section"
+              id="mg-tabs__section-indicators"
+            >
+              <h2>Indicators</h2>
+              <p>
+                Global target A: Substantially reduce global disaster mortality by 2030,
+                aiming to lower average per 100,000 global mortality between 2020-2030
+                compared with 2005-2015.
+              </p>
+            </section>
+            <section
+              className="mg-tabs__section"
+              id="mg-tabs__section-snapshot"
+            >
+              <h2>Snapshot of SFM</h2>
+              <p>
+                The Sendai Framework Monitor (SFM) provides a comprehensive overview of
+                global progress in disaster risk reduction. It tracks implementation of
+                the Sendai Framework through custom indicators, national reports, and
+                regional assessments to help identify trends and areas needing attention.
+              </p>
+            </section>
+          </div>
+        </div>
+        {/* We include a stub of the real React tabs so we hook the JS */}
+        <Tab />
+      </>
+    );
   },
 };
