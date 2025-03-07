@@ -229,10 +229,17 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
 
   if (!mgTabAnchorFound) {
     // No hash found - look for default tab
+    let defaultTabFound = false;
     Array.from(tabs).forEach((tab) => {
       if (tab.getAttribute("data-mg-js-tabs-default") === "true") {
         mgTabsSwitch(tab, panels);
+        defaultTabFound = true;
       }
     });
+    
+    // If no default tab is found, activate the first tab
+    if (!defaultTabFound && tabs.length > 0) {
+      mgTabsSwitch(tabs[0], panels);
+    }
   }
 }

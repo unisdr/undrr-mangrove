@@ -98,7 +98,7 @@ export const globalTypes = {
 
 // Function to get current language code
 const getLangCode = (Story, context) => {
-  let activeLang = context.globals.locale;
+  let activeLang = context.initialGlobals.locale;
 
   let delay = 10;
   setTimeout(function () {
@@ -166,7 +166,7 @@ const setDirection = (Story, context) => {
 
 const themeDecorator = (Story, context) => {
   // The theme is now controlled by the global type
-  const selectedTheme = context.globals.theme;
+  const selectedTheme = context.initialGlobals.theme;
 
   return <Story {...context} />;
 };
