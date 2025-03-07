@@ -26,14 +26,14 @@ $mg-color-hero: $mg-color-interactive;
 $mg-spacing-hero-overlay: 2rem 0;
 
 // Tabs
-$mg-color-tabbar-background: none;
+$mg-color-tabbar-background: rgba($irp-color-green, 0.1);
 $mg-color-text-tab: $mg-color-neutral-500;
 $mg-color-text-tab-active: $mg-color-neutral-700;
-$mg-color-tab-background: $mg-color-white;
-$mg-color-tab-background--hover: $mg-color-white;
+$mg-color-tab-background: rgba($irp-color-green, 0.3);
+$mg-color-tab-background--hover: $irp-color-green;
 $mg-radius-tab: $mg-spacing-0 $mg-spacing-0 0 0;
 $mg-color-tab-border: $mg-color-neutral-300;
-$mg-color-tab-border--hover: $irp-color-green;
+$mg-color-tab-border--hover: rgba($irp-color-green, 0.1);
 $mg-color-tab-border--active: $mg-color-tab-border--hover;
 $mg-tabs-border-bottom: true;
 

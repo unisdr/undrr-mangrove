@@ -161,7 +161,7 @@
 .mg-tabs__link:focus {
   background: $mg-color-tab-background--hover;
   border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
-  color: $mg-color-text-tab-active;
+  color: $mg-color-text-tab--hover;
   z-index: 1150;
   text-decoration: none;
 }

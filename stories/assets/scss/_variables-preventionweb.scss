@@ -24,12 +24,16 @@ $mg-color-hero: $mg-color-interactive;
 $mg-spacing-hero-overlay: 2rem 0;
 
 // Tabs
-$mg-color-tabbar-background: none;
-$mg-color-tab-background: $mg-color-interactive;
+$mg-color-tabbar-background: rgba($pw-color-primary, 0.1);
+$mg-color-tab-background: rgba($mg-color-interactive, 0.1);
 $mg-color-tab-border: $mg-color-interactive;
 $mg-color-tab-border--hover: $mg-color-interactive;
 $mg-color-tab-border--active: $mg-color-tab-background;
-$mg-color-tab-background--hover: $mg-color-interactive;
+$mg-color-tab-background--hover: rgba($mg-color-interactive, 0.2);
 $mg-radius-tab: $mg-spacing-50 $mg-spacing-50 0 0;
+$mg-tabs-border-bottom: true;
+$mg-color-text-tab: $mg-color-neutral-700;
+$mg-color-text-tab--hover: $mg-color-neutral-700;
+$mg-color-text-tab-active: $mg-color-neutral-900;
 
 /* variables end */
