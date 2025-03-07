@@ -29,7 +29,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       scope.querySelectorAll("[data-mg-js-tabs]") || newTab.closest(".mg-tabs"); // compatibility with v1 tabs
   }
   const tabs = scope.querySelectorAll(".mg-tabs__link");
-  const panels = scope.querySelectorAll('[id^="mg-tabs__section"]');
+  var panels = scope.querySelectorAll('[id^="mg-tabs__section"]');
   // v1 compatibility
   // If panels is empty, try finding them in data-mg-js-tabs-content
   if (!panels.length) {
@@ -202,11 +202,11 @@ const mgTabsSwitch = (newTab, panels) => {
       const panel = panels[item];
       if (panel.id === newTab.id) {
         panel.hidden = false;
+        console.log('Shown panel:', panel, panel.id);
         break;
       }
     }
-  }
-};
+  }};
 
 function mgTabsDeepLinkOnLoad(tabs, panels) {
   var mgTabAnchorFound = false;

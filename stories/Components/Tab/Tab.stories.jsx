@@ -155,14 +155,12 @@ export const Version1Tabs = {
               <a
                 className="mg-tabs__link"
                 href="#mg-tabs__section-indicators"
-                id="mg-tabs__section-indicators"
               >Indicators</a>
             </li>
             <li className="mg-tabs__item" role="presentation">
               <a
                 className="mg-tabs__link"
                 href="#mg-tabs__section-snapshot"
-                id="mg-tabs__section-snapshot"
               >Snapshot of SFM</a>
             </li>
           </ul>
@@ -183,7 +181,12 @@ export const Version1Tabs = {
               id="mg-tabs__section-snapshot"
             >
               <h2>Snapshot of SFM</h2>
-              <p>The Sendai Framework Monitor (SFM) provides a comprehensive overview of global progress in disaster risk reduction. It tracks implementation of the Sendai Framework through custom indicators, national reports, and regional assessments to help identify trends and areas needing attention.</p>
+              <p>
+                The Sendai Framework Monitor (SFM) provides a comprehensive overview of
+                global progress in disaster risk reduction. It tracks implementation of
+                the Sendai Framework through custom indicators, national reports, and
+                regional assessments to help identify trends and areas needing attention.
+              </p>
             </section>
           </div>
         </div>
