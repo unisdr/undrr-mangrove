@@ -141,39 +141,38 @@ export const StackedTabs = {
   },
 };
 
-export const version1Tabs = {
+/**
+ * @deprecated This is a legacy example included only to ensure backwards compatibility with v1 tabs.
+ * Do not use this implementation for new features. Use the standard Tab component instead.
+ */
+export const Version1Tabs = {
   render: () => {
     return (
       <>
         <div className="mg-tabs">
-          <ul
-            className="mg-tabs__list | mg-container-full-width"
-            data-mg-js-tabs="true"
-          >
+          <ul className="mg-tabs__list | mg-container-full-width" data-mg-js-tabs>
             <li className="mg-tabs__item" role="presentation">
               <a
                 className="mg-tabs__link"
                 href="#mg-tabs__section-indicators"
                 id="mg-tabs__section-indicators"
-                data-tabs__item="mg-tabs__section-indicators"
               >Indicators</a>
             </li>
             <li className="mg-tabs__item" role="presentation">
               <a
                 className="mg-tabs__link"
-                href="#mg-tabs__section-SNAPSHOT"
-                id="mg-tabs__section-SNAPSHOT"
-                data-tabs__item="mg-tabs__section-SNAPSHOT"
+                href="#mg-tabs__section-snapshot"
+                id="mg-tabs__section-snapshot"
               >Snapshot of SFM</a>
             </li>
           </ul>
-          <div className="mg-tabs-content" data-mg-js-tabs-content="true">
+          <div className="mg-tabs-content" data-mg-js-tabs-content>
             <section
               className="mg-tabs__section"
               id="mg-tabs__section-indicators"
             >
               <h2>Indicators</h2>
-              <p className="wp-block-heading">
+              <p>
                 Global target A: Substantially reduce global disaster mortality by 2030,
                 aiming to lower average per 100,000 global mortality between 2020-2030
                 compared with 2005-2015.
@@ -181,14 +180,14 @@ export const version1Tabs = {
             </section>
             <section
               className="mg-tabs__section"
-              id="mg-tabs__section-SNAPSHOT"
+              id="mg-tabs__section-snapshot"
             >
               <h2>Snapshot of SFM</h2>
-              <p>Test content</p>
+              <p>The Sendai Framework Monitor (SFM) provides a comprehensive overview of global progress in disaster risk reduction. It tracks implementation of the Sendai Framework through custom indicators, national reports, and regional assessments to help identify trends and areas needing attention.</p>
             </section>
           </div>
         </div>
-        {/* We generate a stub V2 of the tabs so we hook the JS */}
+        {/* We include a stub of the real React tabs so we hook the JS */}
         <Tab />
       </>
     );
