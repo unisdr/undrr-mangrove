@@ -16,8 +16,8 @@ export function Tab({ tabdata, variant }) {
     <article className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`} data-mg-js-tabs data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}>
       <ul className="mg-tabs__list">
         {tabdata.map((tab, index) => (
-          <>
-            <li key={index} className="mg-tabs__item">
+          <React.Fragment key={`tab-group-${index}`}>
+            <li className="mg-tabs__item">
               <a className="mg-tabs__link" href={`#mg-tabs__section-${tab.text_id}`} data-mg-js-tabs-default={tab.is_default}>{tab.text}</a>
             </li>
             <li className="mg-tabs-content" data-mg-js-tabs-content>
@@ -25,9 +25,10 @@ export function Tab({ tabdata, variant }) {
                 {tab.data ? <div dangerouslySetInnerHTML={{ __html: tab.data }} /> : null}
               </section>
             </li>
-          </>
+          </React.Fragment>
         ))}
       </ul>
     </article>
-  ) : "No tab data passed";}
+  ) : <div dangerouslySetInnerHTML={{ __html: "<!-- mgTabs: No tab data passed -->" }} />;
+}
 
