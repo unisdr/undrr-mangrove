@@ -11799,7 +11799,7 @@ postcss-value-parser@^4.1.0, postcss-value-parser@^4.2.0:
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@8.5.3:
+postcss@8.5.3, postcss@^8.2.14, postcss@^8.3.11, postcss@^8.4.33, postcss@^8.4.38, postcss@^8.5.1:
   version "8.5.3"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.3.tgz#1463b6f1c7fb16fe258736cba29a2de35237eafb"
   integrity sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==
@@ -11826,15 +11826,6 @@ postcss@^6.0.14, postcss@^6.0.17, postcss@^6.0.23, postcss@^6.0.6, postcss@^6.0.
     chalk "^2.4.1"
     source-map "^0.6.1"
     supports-color "^5.4.0"
-
-postcss@^8.2.14, postcss@^8.3.11, postcss@^8.4.33, postcss@^8.4.38, postcss@^8.5.1:
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.2.tgz#e7b99cb9d2ec3e8dd424002e7c16517cb2b846bd"
-  integrity sha512-MjOadfU3Ys9KYoX0AdkBlFEF1Vx37uCCeN4ZHnmwm9FfpbsGWMZeBLMmmpY+6Ocqod7mkdZ0DT31OlbsFrLlkA==
-  dependencies:
-    nanoid "^3.3.8"
-    picocolors "^1.1.1"
-    source-map-js "^1.2.1"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
@@ -11896,7 +11887,7 @@ prettier-stylelint@0.4.2:
     tempy "^0.2.1"
     update-notifier "^2.2.0"
 
-prettier@3.5.3:
+prettier@3.5.3, prettier@^3.0.1, prettier@^3.1.1:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.5.3.tgz#4fc2ce0d657e7a02e602549f053b239cb7dfe1b5"
   integrity sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==
@@ -11910,11 +11901,6 @@ prettier@^2.8.5:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
-
-prettier@^3.0.1, prettier@^3.1.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.5.1.tgz#22fac9d0b18c0b92055ac8fb619ac1c7bef02fb7"
-  integrity sha512-hPpFQvHwL3Qv5AdRvBFMhnKo4tYxp0ReXiPn2bxkiohEX6mBeBwEpBSQTkD458RaaDKQMYSp4hX4UtfUTA5wDw==
 
 pretty-error@^4.0.0:
   version "4.0.0"
@@ -13212,10 +13198,10 @@ storybook-addon-rtl@1.0.1:
   dependencies:
     "@storybook/test" "^8.0.6"
 
-storybook-design-token@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/storybook-design-token/-/storybook-design-token-3.1.0.tgz#35f0005959ef1e24ef10613841469ee9e188bbe3"
-  integrity sha512-S4NKx1VGmo1QUj+XSnGzNSoendrOFdavNTb7pBIBmFvzl+SJKUMbTS1RFfiMCCC+BDD7v1CyonAreSYtAqGX8Q==
+storybook-design-token@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/storybook-design-token/-/storybook-design-token-3.2.0.tgz#58599006ee2016dc85c4d5bf6349785cc0783886"
+  integrity sha512-yIuMJKwT8Zx3QQG5TqGJ+9RsOlKLfttx58BuplIKNVK+mqXMSZuGxi7EcAeEVNuFjK0raGEAlBMZxjDA5TtZRw==
   dependencies:
     glob "^9.3.0"
     jsdom "^21.1.1"
