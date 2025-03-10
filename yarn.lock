@@ -2502,6 +2502,23 @@
     util "^0.12.5"
     ws "^8.2.3"
 
+"@storybook/core@8.6.4":
+  version "8.6.4"
+  resolved "https://registry.yarnpkg.com/@storybook/core/-/core-8.6.4.tgz#7cfb5dae8e2ce22eaab8c6c04ef63d7c20686692"
+  integrity sha512-glDbjEBi3wokw1T+KQtl93irHO9N0LCwgylWfWVXYDdQjUJ7pGRQGnw73gPX7Ds9tg3myXFC83GjmY94UYSMbA==
+  dependencies:
+    "@storybook/theming" "8.6.4"
+    better-opn "^3.0.2"
+    browser-assert "^1.2.1"
+    esbuild "^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0"
+    esbuild-register "^3.5.0"
+    jsdoc-type-pratt-parser "^4.0.0"
+    process "^0.11.10"
+    recast "^0.23.5"
+    semver "^7.6.2"
+    util "^0.12.5"
+    ws "^8.2.3"
+
 "@storybook/csf-plugin@8.6.3":
   version "8.6.3"
   resolved "https://registry.yarnpkg.com/@storybook/csf-plugin/-/csf-plugin-8.6.3.tgz#3cbaca9562627df9e1aee22138ac606b92e57070"
@@ -2646,6 +2663,11 @@
   version "8.6.3"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-8.6.3.tgz#f35fd55aa1c50e1b768fd71ac5b93547d2ba05ba"
   integrity sha512-sDcWnnko73KOCIc9stQyec9KvTmGOuMswqeKtWh0ha/wsgYB6G2/2j1xOheFmWKPitOsbwgvqtjCP7bRE68uIA==
+
+"@storybook/theming@8.6.4":
+  version "8.6.4"
+  resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-8.6.4.tgz#d16f65320ad6e35db6cd3455b4d36cae58a87d2f"
+  integrity sha512-g9Ns4uenC9oAWETaJ/tEKEIPMdS+CqjNWZz5Wbw1bLNhXwADZgKrVqawzZi64+bYYtQ+i8VCTjPoFa6s2eHiDQ==
 
 "@stroncium/procfs@^1.2.1":
   version "1.2.1"
@@ -13234,6 +13256,13 @@ storybook@8.6.3:
   integrity sha512-Vbmd8/FXp6X0AOMak6arcg3WdkHj+2AYJTNHbCPVHsCEbnREyRZIG+Eq5/Ffmy6byiz+4OAX5HwsHGSMR6Xmow==
   dependencies:
     "@storybook/core" "8.6.3"
+
+storybook@8.6.4:
+  version "8.6.4"
+  resolved "https://registry.yarnpkg.com/storybook/-/storybook-8.6.4.tgz#cd33fa1082ef22d4784428ace4a3863ccdb30ec2"
+  integrity sha512-XXh1Acvf1r3BQX0BDLQw6yhZ7yUGvYxIcKOBuMdetnX7iXtczipJTfw0uyFwk0ltkKEE9PpJvivYmARF3u64VQ==
+  dependencies:
+    "@storybook/core" "8.6.4"
 
 string-length@^4.0.1:
   version "4.0.2"
