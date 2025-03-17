@@ -16,6 +16,7 @@ const ScrollContainer = ({
   const contentRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -23,20 +24,30 @@ const ScrollContainer = ({
   const [hasDragged, setHasDragged] = useState(false);
   const dragThreshold = 5; // Minimum pixels to consider as a drag
 
+  // Check if we're on a mobile device
+  const checkMobileStatus = useCallback(() => {
+    // Only check for actual touch devices, not just small viewports
+    // This allows mouse drag to work on desktop browsers at small sizes
+    const isMobileDevice = 'ontouchstart' in window && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    setIsMobile(isMobileDevice);
+  }, []);
+
   const checkArrowVisibility = useCallback(() => {
-    if (!containerRef.current || !showArrows) return;
+    if (!containerRef.current || !showArrows || isMobile) return;
     
     const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
     setShowLeftArrow(scrollLeft > 0);
     setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
-  }, [showArrows]);
+  }, [showArrows, isMobile]);
 
   const scroll = useCallback((direction) => {
     if (!containerRef.current) return;
 
+    // Calculate scroll amount based on container width or step size
     const scrollAmount = stepSize || containerRef.current.clientWidth / 2;
     const newScrollLeft = containerRef.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
     
+    // Use smooth scrolling for better user experience
     containerRef.current.scrollTo({
       left: newScrollLeft,
       behavior: 'smooth'
@@ -46,36 +57,50 @@ const ScrollContainer = ({
   const handleDragStart = useCallback((e) => {
     if (!containerRef.current) return;
     
-    setIsDragging(true);
-    setHasDragged(false);
-    setStartX(e.type.includes('mouse') ? e.pageX : e.touches[0].pageX);
-    setStartScrollLeft(containerRef.current.scrollLeft);
-    
+    // Only handle mouse events for desktop, regardless of viewport size
+    // This allows drag to work on desktop browsers at small viewport sizes
     if (e.type.includes('mouse')) {
+      // On mobile devices, don't interfere with native scrolling
+      if (isMobile) return;
+      
+      setIsDragging(true);
+      setHasDragged(false);
+      setStartX(e.pageX);
+      setStartScrollLeft(containerRef.current.scrollLeft);
       e.preventDefault();
     }
-  }, []);
+  }, [isMobile]);
 
   const handleDragMove = useCallback((e) => {
     if (!isDragging || !containerRef.current) return;
 
-    e.preventDefault();
-    const x = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-    const distance = Math.abs(startX - x);
-    
-    // Set hasDragged if we exceed the threshold
-    if (distance > dragThreshold) {
-      setHasDragged(true);
+    // Only handle mouse events for desktop drag behavior
+    if (e.type.includes('mouse')) {
+      // On mobile devices, don't interfere with native scrolling
+      if (isMobile) return;
+      
+      e.preventDefault();
+      
+      const x = e.pageX;
+      const distance = Math.abs(startX - x);
+      
+      // Set hasDragged if we exceed the threshold
+      if (distance > dragThreshold) {
+        setHasDragged(true);
+      }
+      
+      const walk = (startX - x);
+      containerRef.current.scrollLeft = startScrollLeft + walk;
+      checkArrowVisibility();
     }
-    
-    const walk = (startX - x) * 1.5; // Multiply by 1.5 for faster scrolling
-    containerRef.current.scrollLeft = startScrollLeft + walk;
-    checkArrowVisibility();
-  }, [isDragging, startX, startScrollLeft, checkArrowVisibility, dragThreshold]);
+  }, [isDragging, startX, startScrollLeft, checkArrowVisibility, dragThreshold, isMobile]);
 
   const handleDragEnd = useCallback((e) => {
-    setIsDragging(false);
-  }, []);
+    // Only handle if we're in dragging state (desktop only)
+    if (isDragging) {
+      setIsDragging(false);
+    }
+  }, [isDragging]);
 
   const handleClick = useCallback((e) => {
     if (hasDragged) {
@@ -85,22 +110,27 @@ const ScrollContainer = ({
   }, [hasDragged]);
 
   useEffect(() => {
+    // Initial check for mobile status
+    checkMobileStatus();
     checkArrowVisibility();
+    
     const container = containerRef.current;
     if (container) {
       // Scroll event listeners
       container.addEventListener('scroll', checkArrowVisibility);
-      window.addEventListener('resize', checkArrowVisibility);
+      window.addEventListener('resize', () => {
+        checkMobileStatus();
+        checkArrowVisibility();
+      });
 
+      // Only add mouse event listeners (for desktop drag behavior)
+      // Touch events will use native scrolling
       container.addEventListener('mousedown', handleDragStart);
       window.addEventListener('mousemove', handleDragMove);
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('mouseleave', handleDragEnd);
-
-      container.addEventListener('touchstart', handleDragStart, { passive: true });
-      container.addEventListener('touchmove', handleDragMove, { passive: false });
-      container.addEventListener('touchend', handleDragEnd);
       
+      // Add click handler to prevent click after drag
       container.addEventListener('click', handleClick, { capture: true });
     }
 
@@ -115,17 +145,12 @@ const ScrollContainer = ({
         window.removeEventListener('mousemove', handleDragMove);
         window.removeEventListener('mouseup', handleDragEnd);
         window.removeEventListener('mouseleave', handleDragEnd);
-
-        // Remove touch event listeners
-        container.removeEventListener('touchstart', handleDragStart);
-        container.removeEventListener('touchmove', handleDragMove);
-        container.removeEventListener('touchend', handleDragEnd);
         
         // Remove click handler
         container.removeEventListener('click', handleClick, { capture: true });
       }
     };
-  }, [checkArrowVisibility, handleDragStart, handleDragMove, handleDragEnd, handleClick]);
+  }, [checkArrowVisibility, handleDragStart, handleDragMove, handleDragEnd, handleClick, checkMobileStatus]);
   const containerStyle = {
     '--scroll-height': height,
     '--scroll-min-width': minWidth,
@@ -139,12 +164,13 @@ const ScrollContainer = ({
     minWidth && 'mg-scroll__container--custom-width',
     padding && 'mg-scroll__container--custom-padding',
     itemWidth && 'mg-scroll__container--custom-item-width',
+    isMobile && 'mg-scroll__container--mobile',
     className
   ].filter(Boolean).join(' ');
 
   return (
-    <div className="mg-scroll">
-      {showArrows && (
+    <div className={`mg-scroll ${isMobile ? 'mg-scroll--mobile' : ''}`}>
+      {showArrows && !isMobile && (
         <div className="mg-scroll__nav">
           <button 
             className="mg-scroll__nav-button"
@@ -172,9 +198,13 @@ const ScrollContainer = ({
         {...props}
       >
         <div ref={contentRef}
-          className={`mg-scroll__content mg-grid`}
+          className={`mg-scroll__content ${isMobile ? '' : 'mg-grid'}`}
         >
-          {children}
+          {React.Children.map(children, (child) => (
+            <div className="mg-scroll__item-wrapper">
+              {child}
+            </div>
+          ))}
         </div>
       </div>
     </div>

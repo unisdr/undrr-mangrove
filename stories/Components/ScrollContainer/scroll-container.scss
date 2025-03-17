@@ -7,6 +7,14 @@
   display: flex;
   align-items: center;
   width: 100%;
+  max-height: inherit;
+  
+  @include devicebreak(small) {
+    width: 100%;
+    height: auto;
+    max-height: inherit;
+    -webkit-overflow-scrolling: touch;
+  }
 
   &:has(.mg-scroll__nav) {
     margin-top: 40px;
@@ -59,13 +67,25 @@
     overflow-y: auto;
     width: 100%;
     max-width: 100%;
+    max-height: inherit;
     position: relative;
     cursor: grab;
-    user-select: none;
-    -webkit-user-select: none;
+    -webkit-overflow-scrolling: touch;
+    
+    @include devicebreak(small) {
+      height: auto;
+    }
 
     &:active {
       cursor: grabbing;
+    }
+    
+    .mg-scroll--mobile & {
+      cursor: default;
+      
+      &:active {
+        cursor: default;
+      }
     }
 
     // Custom scrollbar styling
@@ -103,13 +123,48 @@
     &--custom-padding {
       padding: var(--scroll-padding, 0);
     }
+    
+    &--mobile {
+      // Mobile-specific styles
+      height: auto !important;
+      max-height: none !important;
+      
+      .mg-scroll__content {
+        display: inline-flex;
+        width: auto;
+        height: auto;
+      }
+    }
   }
 
   &__content {
-    align-items: start;
-
-    > * {
-      width: var(--scroll-item-width, 300px);
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: nowrap;
+    height: auto;
+    
+    @include devicebreak(small) {
+      gap: $mg-spacing-100;
+      height: auto;
+      min-height: auto;
+    }
+  }
+  
+  &__item-wrapper {
+    width: var(--scroll-item-width, 300px);
+    flex-shrink: 0;
+    margin-right: $mg-spacing-100;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    
+    @include devicebreak(small) {
+      display: inline-block;
+      vertical-align: top;
+    }
+    
+    &:last-child {
+      margin-right: 0;
     }
   }
 }
