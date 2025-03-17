@@ -1,0 +1,15 @@
+{
+    "name": "undrr/mangrove",
+    "description": "The UNDRR Mangrove component library",
+    "type": "front-end-component-library",
+    "extra": {
+      "installer-name": "undrr-mangrove"
+    },
+      "license": "MIT",
+    "authors": [
+        {
+            "name": "UNDRR"
+        }
+    ],
+    "require": {}
+}
