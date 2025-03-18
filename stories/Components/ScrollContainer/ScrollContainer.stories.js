@@ -1,5 +1,6 @@
 import React from 'react';
-import ScrollContainer from './ScrollContainer';
+import ScrollContainer from './ScrollContainer.jsx';
+import './scroll-container.scss';
 
 export default {
   title: 'Components/ScrollContainer',
@@ -16,9 +17,9 @@ const Template = (args) => (
   <div style={{ maxWidth: '800px', margin: '0 auto' }}>
     <ScrollContainer {...args}>
       {/* Example content to demonstrate horizontal scrolling */}
-      {Array(5).fill().map((_, i) => (
+      {Array(8).fill().map((_, i) => (
       <>
-          <article className="mg-card mg-card__vc">
+          <article className="mg-card mg-card__vc" style={{ minWidth: '350px', marginRight: '20px', padding: '20px', boxSizing: 'border-box', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
             <div className="mg-card__visual">
               <img
                 alt="A person looks on"
@@ -50,14 +51,6 @@ const Template = (args) => (
               </a>
             </div>
           </article>
-        <article className="mg-card mg-card__vc mg-card__book" style={{width: 200 + 'px'}}>
-          <div className="mg-card__visual">
-            <img alt="A publication cover" className="mg-card__image" src="https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg" />
-          </div>
-          <div className="mg-card__content undefined">
-            <header className="mg-card__title"><a href="#{i+1}">Book title in normal header size with up to three lines of text {i+1}</a></header>
-        </div>
-        </article>
       </>
       ))}
     </ScrollContainer>
@@ -83,10 +76,14 @@ WithMinWidth.args = {
 export const WithArrows = Template.bind({});
 WithArrows.args = {
   showArrows: true,
+  minWidth: '1200px', // Force overflow to ensure arrows are active
+  padding: '1rem',
 };
 
 export const WithCustomStepSize = Template.bind({});
 WithCustomStepSize.args = {
   showArrows: true,
   stepSize: 200, // Will scroll by 200px instead of container width
+  minWidth: '1200px', // Force overflow to ensure arrows are active
+  padding: '1rem',
 };

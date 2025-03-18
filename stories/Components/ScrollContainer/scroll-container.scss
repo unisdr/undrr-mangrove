@@ -24,7 +24,7 @@
     position: absolute;
 
     // TODO: Review this and ensure it works across all containers
-    top: -40px; // Position above the container
+    top: -40px;
     right: 0;
     display: flex;
     gap: $mg-spacing-50;
@@ -153,7 +153,7 @@
   &__item-wrapper {
     width: var(--scroll-item-width, 300px);
     flex-shrink: 0;
-    margin-right: $mg-spacing-100;
+    margin-right: $mg-spacing-300;
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
