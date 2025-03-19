@@ -17,7 +17,7 @@ const ScrollContainer = ({
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startScrollLeft, setStartScrollLeft] = useState(0);
@@ -34,7 +34,7 @@ const ScrollContainer = ({
 
   const checkArrowVisibility = useCallback(() => {
     if (!containerRef.current || !showArrows || isMobile) return;
-    
+
     const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
     setShowLeftArrow(scrollLeft > 0);
     setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
@@ -46,7 +46,7 @@ const ScrollContainer = ({
     // Calculate scroll amount based on container width or step size
     const scrollAmount = stepSize || containerRef.current.clientWidth / 2;
     const newScrollLeft = containerRef.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
-    
+
     // Use smooth scrolling for better user experience
     containerRef.current.scrollTo({
       left: newScrollLeft,
@@ -56,13 +56,13 @@ const ScrollContainer = ({
 
   const handleDragStart = useCallback((e) => {
     if (!containerRef.current) return;
-    
+
     // Only handle mouse events for desktop, regardless of viewport size
     // This allows drag to work on desktop browsers at small viewport sizes
     if (e.type.includes('mouse')) {
       // On mobile devices, don't interfere with native scrolling
       if (isMobile) return;
-      
+
       setIsDragging(true);
       setHasDragged(false);
       setStartX(e.pageX);
@@ -78,17 +78,17 @@ const ScrollContainer = ({
     if (e.type.includes('mouse')) {
       // On mobile devices, don't interfere with native scrolling
       if (isMobile) return;
-      
+
       e.preventDefault();
-      
+
       const x = e.pageX;
       const distance = Math.abs(startX - x);
-      
+
       // Set hasDragged if we exceed the threshold
       if (distance > dragThreshold) {
         setHasDragged(true);
       }
-      
+
       const walk = (startX - x);
       containerRef.current.scrollLeft = startScrollLeft + walk;
       checkArrowVisibility();
@@ -113,7 +113,7 @@ const ScrollContainer = ({
     // Initial check for mobile status
     checkMobileStatus();
     checkArrowVisibility();
-    
+
     const container = containerRef.current;
     if (container) {
       // Scroll event listeners
@@ -129,7 +129,7 @@ const ScrollContainer = ({
       window.addEventListener('mousemove', handleDragMove);
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('mouseleave', handleDragEnd);
-      
+
       // Add click handler to prevent click after drag
       container.addEventListener('click', handleClick, { capture: true });
     }
@@ -145,7 +145,7 @@ const ScrollContainer = ({
         window.removeEventListener('mousemove', handleDragMove);
         window.removeEventListener('mouseup', handleDragEnd);
         window.removeEventListener('mouseleave', handleDragEnd);
-        
+
         // Remove click handler
         container.removeEventListener('click', handleClick, { capture: true });
       }
@@ -169,10 +169,11 @@ const ScrollContainer = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div className={`mg-scroll ${isMobile ? 'mg-scroll--mobile' : ''}`}>
+    // data-mg-scroll-container is not used directly in storybook, however it is useful documentation for other integrations, such as Gutenberg
+    <section className={`mg-scroll${isMobile ? ' mg-scroll--mobile' : ''}`} data-mg-scroll-container>
       {showArrows && !isMobile && (
-        <div className="mg-scroll__nav">
-          <button 
+        <nav className="mg-scroll__nav">
+          <button
             className="mg-scroll__nav-button"
             onClick={() => scroll('left')}
             disabled={!showLeftArrow}
@@ -180,7 +181,7 @@ const ScrollContainer = ({
           >
             ←
           </button>
-          <button 
+          <button
             className="mg-scroll__nav-button"
             onClick={() => scroll('right')}
             disabled={!showRightArrow}
@@ -188,7 +189,7 @@ const ScrollContainer = ({
           >
             →
           </button>
-        </div>
+        </nav>
       )}
       <div
         ref={containerRef}
@@ -207,7 +208,7 @@ const ScrollContainer = ({
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -215,7 +216,7 @@ ScrollContainer.propTypes = {
   children: PropTypes.node.isRequired,
   height: PropTypes.string,
   minWidth: PropTypes.string,
-  itemWidth: PropTypes.string, 
+  itemWidth: PropTypes.string,
   padding: PropTypes.string,
   className: PropTypes.string,
   showArrows: PropTypes.bool,
