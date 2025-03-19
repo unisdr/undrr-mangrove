@@ -1,6 +1,5 @@
 import React from 'react';
 import ScrollContainer from './ScrollContainer.jsx';
-import './scroll-container.scss';
 
 export default {
   title: 'Components/ScrollContainer',
