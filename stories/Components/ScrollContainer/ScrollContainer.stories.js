@@ -14,7 +14,7 @@ export default {
 };
 
 const Template = (args) => (
-  <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+  <section style={{ maxWidth: '800px', margin: '0 auto' }}>
     <ScrollContainer {...args}>
       {/* Example content to demonstrate horizontal scrolling */}
       {Array(8).fill().map((_, i) => (
@@ -54,7 +54,7 @@ const Template = (args) => (
       </>
       ))}
     </ScrollContainer>
-  </div>
+  </section>
 );
 
 export const Default = Template.bind({});

@@ -71,6 +71,7 @@ module.exports = [
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
+      ScrollContainer: "./stories/Components/ScrollContainer/ScrollContainer.jsx",
       BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
       MapComponent: "./stories/Components/Map/MapComponent.jsx",
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
@@ -131,4 +132,4 @@ Compiled on: ${new Date().toISOString()}`,
       extensions: [".jsx", ".js", ".svg"],
     },
   },
-];      
+];
