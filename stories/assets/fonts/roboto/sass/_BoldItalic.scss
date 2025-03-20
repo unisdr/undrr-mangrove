@@ -2,7 +2,7 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "BoldItalic");
+  @include fontdef-woff($font-path-roboto, $FontName, $font-version, "BoldItalic");
 
   font-weight: 700;
   font-style: italic;
@@ -11,7 +11,7 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "BoldItalic");
+  @include fontdef-woff($font-path-roboto, $FontName, $font-version, "BoldItalic");
 
   font-weight: bold;
   font-style: italic;

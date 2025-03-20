@@ -2,7 +2,7 @@
 @font-face {
   font-family: "Roboto Condensed";
 
-  @include fontdef($font-path, $font-version, "BoldItalic");
+  @include fontdef($font-path-roboto-condensed, $font-version, "BoldItalic");
 
   font-weight: 700;
   font-style: italic;

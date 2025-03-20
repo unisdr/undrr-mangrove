@@ -1,10 +1,7 @@
 /* Roboto */
-// Not practical to bubble this up as an overridable path as the roboto-condensed uses the same namespace.
-$font-path: "../fonts/roboto/fonts";
-
+$font-path-roboto: "../fonts/roboto/fonts" !default;
 @import "../fonts/roboto/roboto";
 
 /* Roboto Condensed */
-$font-path: "../fonts/roboto-condensed/fonts";
-
+$font-path-roboto-condensed: "../fonts/roboto-condensed/fonts" !default;
 @import "../fonts/roboto-condensed/roboto-condensed";
