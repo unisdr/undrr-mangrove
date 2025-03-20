@@ -1,10 +1,12 @@
 import path from 'path';
+
 import { fileURLToPath } from 'url';
 import remarkGfm from 'remark-gfm';
 
 // Get the directory path for the current module in ES modules
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirPath = path.dirname(currentFilePath);
+
 
 export default {
   staticDirs: ["../stories/assets"],
