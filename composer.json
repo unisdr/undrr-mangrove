@@ -1,7 +1,7 @@
 {
   "name": "undrr/mangrove",
   "description": "The UNDRR Mangrove component library",
-  "type": "front-end-component-library",
+  "type": "drupal-library",
   "extra": {
     "installer-name": "undrr-mangrove"
   },
