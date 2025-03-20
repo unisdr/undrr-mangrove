@@ -1,6 +1,5 @@
 import React from 'react';
 import ScrollContainer from './ScrollContainer.jsx';
-import './scroll-container.scss';
 
 export default {
   title: 'Components/ScrollContainer',
@@ -14,7 +13,7 @@ export default {
 };
 
 const Template = (args) => (
-  <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+  <section style={{ maxWidth: '800px', margin: '0 auto' }}>
     <ScrollContainer {...args}>
       {/* Example content to demonstrate horizontal scrolling */}
       {Array(8).fill().map((_, i) => (
@@ -26,7 +25,7 @@ const Template = (args) => (
                 className="mg-card__image"
                 src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" />
             </div>
-            <div className="mg-card__content undefined">
+            <div className="mg-card__content">
               <header className="mg-card__title">
                 <a
                   href="#{i+1}"
@@ -54,7 +53,7 @@ const Template = (args) => (
       </>
       ))}
     </ScrollContainer>
-  </div>
+  </section>
 );
 
 export const Default = Template.bind({});
