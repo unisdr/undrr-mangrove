@@ -2,7 +2,7 @@
 @font-face {
   font-family: "Roboto Condensed";
 
-  @include fontdef($font-path, $font-version, "Light");
+  @include fontdef($font-path-roboto-condensed, $font-version, "Light");
 
   font-weight: 300;
   font-style: normal;

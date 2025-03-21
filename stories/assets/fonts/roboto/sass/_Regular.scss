@@ -2,7 +2,7 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "Regular");
+  @include fontdef-woff($font-path-roboto, $FontName, $font-version, "Regular");
 
   font-weight: 400;
   font-style: normal;
@@ -11,7 +11,7 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path, $FontName, $font-version, "Regular");
+  @include fontdef-woff($font-path-roboto, $FontName, $font-version, "Regular");
 
   font-weight: normal;
   font-style: normal;
