@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './quote-highlight.scss';
 
 /**
  * QuoteHighlight Component
- * 
+ *
  * A component that displays a highlighted quote with an optional image, attribution, and title.
  * Multiple variants are available: with a separator line or with an image, and with different alignments.
  */
@@ -22,9 +21,9 @@ const QuoteHighlight = ({
 }) => {
   const baseClass = 'mg-quote-highlight';
   const hasImage = !!imageSrc;
-  
+
   return (
-    <div 
+    <div
       className={`${baseClass} ${baseClass}--${backgroundColor} ${baseClass}--${variant} ${baseClass}--${alignment} ${hasImage ? `${baseClass}--has-image` : ''} ${className}`}
       {...props}
     >
@@ -32,17 +31,17 @@ const QuoteHighlight = ({
         <blockquote className={`${baseClass}__quote`}>
           <p>{quote}</p>
         </blockquote>
-        
+
         {variant === 'line' && <div className={`${baseClass}__separator`}></div>}
-        
+
         {(attribution || attributionTitle || hasImage) && (
           <div className={`${baseClass}__attribution`}>
             <div className={`${baseClass}__attribution-wrapper`}>
               {hasImage && (
                 <div className={`${baseClass}__portrait-container`}>
-                  <img 
-                    src={imageSrc} 
-                    alt={imageAlt || `${attribution || 'Quote'} image`} 
+                  <img
+                    src={imageSrc}
+                    alt={imageAlt || `${attribution || 'Quote'} image`}
                     className={`${baseClass}__portrait`}
                   />
                 </div>
@@ -55,12 +54,12 @@ const QuoteHighlight = ({
           </div>
         )}
       </div>
-      
+
       {variant === 'image' && hasImage && (
         <div className={`${baseClass}__image-container`}>
-          <img 
-            src={imageSrc} 
-            alt={imageAlt || `${attribution || 'Quote'} image`} 
+          <img
+            src={imageSrc}
+            alt={imageAlt || `${attribution || 'Quote'} image`}
             className={`${baseClass}__image`}
           />
         </div>

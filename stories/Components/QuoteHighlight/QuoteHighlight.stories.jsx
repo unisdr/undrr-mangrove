@@ -10,7 +10,7 @@ export default {
     attributionTitle: { control: 'text' },
     imageSrc: { control: 'text' },
     imageAlt: { control: 'text' },
-    backgroundColor: { 
+    backgroundColor: {
       control: { type: 'select' },
       options: ['light-blue', 'blue', 'white'],
     },
@@ -36,14 +36,14 @@ const AlignmentTemplate = (args) => (
   <div style={{ maxWidth: '800px', margin: '2rem auto' }}>
     <QuoteHighlight {...args} />
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, 
-      nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies, 
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies,
+      nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies,
       nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies,
       nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.
     </p>
     <p>
-      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. 
-      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. 
+      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.
+      Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.
       Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.
     </p>
   </div>
@@ -76,7 +76,7 @@ LineVariantWhite.args = {
 export const LineVariantWithPortrait = Template.bind({});
 LineVariantWithPortrait.args = {
   ...LineVariant.args,
-  imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+  imageSrc: "https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg",
   imageAlt: "Mami Mizutori portrait",
 };
 
@@ -84,7 +84,7 @@ LineVariantWithPortrait.args = {
 export const LineVariantWithImage = Template.bind({});
 LineVariantWithImage.args = {
   ...LineVariant.args,
-  imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+  imageSrc: "https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg",
   imageAlt: "Mami Mizutori portrait",
   variant: "image",
 };
@@ -100,7 +100,7 @@ LeftAlignedQuote.args = {
 export const LeftAlignedQuoteWithPortrait = AlignmentTemplate.bind({});
 LeftAlignedQuoteWithPortrait.args = {
   ...LeftAlignedQuote.args,
-  imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+  imageSrc: "https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg",
   imageAlt: "Mami Mizutori portrait",
 };
 
@@ -115,14 +115,14 @@ RightAlignedQuote.args = {
 export const RightAlignedQuoteWithPortrait = AlignmentTemplate.bind({});
 RightAlignedQuoteWithPortrait.args = {
   ...RightAlignedQuote.args,
-  imageSrc: "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+  imageSrc: "https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg",
   imageAlt: "Mami Mizutori portrait",
 };
 
 // RTL example with left alignment (will appear on right in RTL)
 export const RTLLeftAlignedQuote = () => (
   <div style={{ maxWidth: '800px', margin: '2rem auto', direction: 'rtl' }}>
-    <QuoteHighlight 
+    <QuoteHighlight
       quote="One doesn't have to look hard to find examples of how disasters are becoming worse."
       attribution="Mami Mizutori"
       attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
@@ -141,7 +141,7 @@ RTLLeftAlignedQuote.storyName = 'RTL Left Aligned (appears on right)';
 // RTL example with right alignment (will appear on left in RTL)
 export const RTLRightAlignedQuote = () => (
   <div style={{ maxWidth: '800px', margin: '2rem auto', direction: 'rtl' }}>
-    <QuoteHighlight 
+    <QuoteHighlight
       quote="One doesn't have to look hard to find examples of how disasters are becoming worse."
       attribution="Mami Mizutori"
       attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
@@ -163,7 +163,7 @@ ImageVariant.args = {
   quote: "One doesn't have to look hard to find examples of how disasters are becoming worse. The sad fact is that many of these disasters are preventable because they are caused by human decisions.",
   attribution: "Mami Mizutori",
   attributionTitle: "Special Representative of the UN Secretary-General for Disaster Risk Reduction and head of UNDRR",
-  imageSrc: "/assets/author.png",
+  imageSrc: "https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg",
   imageAlt: "Mami Mizutori portrait",
   variant: "image",
   backgroundColor: "light-blue",
