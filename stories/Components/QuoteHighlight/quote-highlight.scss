@@ -5,6 +5,13 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
 
+  :link {
+    text-decoration: underline;
+  }
+  :hover {
+    text-decoration: none;
+  }
+
   // Alignment variants
   &--full {
     width: 100%;
@@ -189,7 +196,7 @@
   }
 
   // Color variants
-  &--light-blue {
+  &--light {
     background-color: rgba($mg-color-interactive, 0.1);
 
     .mg-quote-highlight__quote {
@@ -205,13 +212,13 @@
     }
   }
 
-  &--blue {
+  &--dark {
     background-color: rgba($mg-color-interactive, 0.7);
     color: $mg-color-white;
 
     .mg-quote-highlight__quote {
       &::before {
-        color: rgba($mg-color-interactive, 0.3);
+        color: rgba($mg-color-white, 0.8);
       }
     }
 
@@ -220,7 +227,7 @@
     }
   }
 
-  &--white {
+  &--bright {
     background-color: $mg-color-white;
     border: 1px solid $mg-color-neutral-200;
 

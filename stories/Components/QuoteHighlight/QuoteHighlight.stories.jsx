@@ -12,7 +12,7 @@ export default {
     imageAlt: { control: 'text' },
     backgroundColor: {
       control: { type: 'select' },
-      options: ['light-blue', 'blue', 'white'],
+      options: ['light', 'dark', 'bright'],
     },
     variant: {
       control: { type: 'radio' },
@@ -56,20 +56,20 @@ LineVariant.args = {
   attribution: "Mami Mizutori",
   attributionTitle: "Special Representative of the UN Secretary-General for Disaster Risk Reduction and head of UNDRR",
   variant: "line",
-  backgroundColor: "light-blue",
+  backgroundColor: "light",
   alignment: "full",
 };
 
-export const LineVariantBlue = Template.bind({});
-LineVariantBlue.args = {
+export const LineVariantDark = Template.bind({});
+LineVariantDark.args = {
   ...LineVariant.args,
-  backgroundColor: "blue",
+  backgroundColor: "dark",
 };
 
-export const LineVariantWhite = Template.bind({});
-LineVariantWhite.args = {
+export const LineVariantBright = Template.bind({});
+LineVariantBright.args = {
   ...LineVariant.args,
-  backgroundColor: "white",
+  backgroundColor: "bright",
 };
 
 // Line variant with portrait image
@@ -94,7 +94,7 @@ export const LeftAlignedQuote = AlignmentTemplate.bind({});
 LeftAlignedQuote.args = {
   ...LineVariant.args,
   alignment: "left",
-  quote: "One doesn't have to look hard to find examples of how disasters are becoming worse.",
+  quote: "One doesn't have to look <a href='#'>hard</a> to find examples of how disasters are becoming worse.",
 };
 
 export const LeftAlignedQuoteWithPortrait = AlignmentTemplate.bind({});
@@ -127,7 +127,7 @@ export const RTLLeftAlignedQuote = () => (
       attribution="Mami Mizutori"
       attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
       variant="line"
-      backgroundColor="light-blue"
+      backgroundColor="light"
       alignment="left"
     />
     <p>
@@ -146,7 +146,7 @@ export const RTLRightAlignedQuote = () => (
       attribution="Mami Mizutori"
       attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
       variant="line"
-      backgroundColor="light-blue"
+      backgroundColor="light"
       alignment="right"
     />
     <p>
@@ -166,20 +166,20 @@ ImageVariant.args = {
   imageSrc: "https://www.undrr.org/sites/default/files/styles/por/public/2020-12/2019-01-10_SRSG-Mami-Mizutori-HD_003.jpg",
   imageAlt: "Mami Mizutori portrait",
   variant: "image",
-  backgroundColor: "light-blue",
+  backgroundColor: "light",
   alignment: "full",
 };
 
-export const ImageVariantBlue = Template.bind({});
-ImageVariantBlue.args = {
+export const ImageVariantDark = Template.bind({});
+ImageVariantDark.args = {
   ...ImageVariant.args,
-  backgroundColor: "blue",
+  backgroundColor: "dark",
 };
 
-export const ImageVariantWhite = Template.bind({});
-ImageVariantWhite.args = {
+export const ImageVariantBright = Template.bind({});
+ImageVariantBright.args = {
   ...ImageVariant.args,
-  backgroundColor: "white",
+  backgroundColor: "bright",
 };
 
 // Without attribution
@@ -187,6 +187,6 @@ export const WithoutAttribution = Template.bind({});
 WithoutAttribution.args = {
   quote: "One doesn't have to look hard to find examples of how disasters are becoming worse.",
   variant: "line",
-  backgroundColor: "light-blue",
+  backgroundColor: "light",
   alignment: "full",
 };

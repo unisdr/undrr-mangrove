@@ -10,7 +10,7 @@ The `QuoteHighlight` component is used to display important quotes with attribut
 ## Features
 
 - Two layout variants: line (with separator line) or image (with side image)
-- Three background color options: light-blue, blue, and white
+- Three background color options: light, dark, and bright
 - Optional attribution with name and title
 - Optional portrait image that displays inline with attribution
 - Optional side image for the image variant
@@ -30,7 +30,7 @@ import { QuoteHighlight } from '@undrr/mangrove';
   imageSrc="/assets/author.png"
   imageAlt="Mami Mizutori portrait"
   variant="line"
-  backgroundColor="light-blue"
+  backgroundColor="light"
   alignment="full"
 />
 ```
@@ -39,43 +39,31 @@ import { QuoteHighlight } from '@undrr/mangrove';
 
 ### Line Variant (Default)
 
-<Canvas>
-  <Story of={QuoteHighlightStories.LineVariant} />
-</Canvas>
+<Story of={QuoteHighlightStories.LineVariant} />
 
 ### Line Variant with Portrait Image
 
 This variant shows the portrait image inline with the attribution.
 
-<Canvas>
-  <Story of={QuoteHighlightStories.LineVariantWithPortrait} />
-</Canvas>
+<Story of={QuoteHighlightStories.LineVariantWithPortrait} />
 
 ### Image Variant
 
 This variant displays a larger image to the side of the quote content.
 
-<Canvas>
-  <Story of={QuoteHighlightStories.ImageVariant} />
-</Canvas>
+<Story of={QuoteHighlightStories.ImageVariant} />
 
-### Blue Background
+### Dark Background
 
-<Canvas>
-  <Story of={QuoteHighlightStories.LineVariantBlue} />
-</Canvas>
+<Story of={QuoteHighlightStories.LineVariantDark} />
 
-### White Background
+### Bright Background
 
-<Canvas>
-  <Story of={QuoteHighlightStories.LineVariantWhite} />
-</Canvas>
+<Story of={QuoteHighlightStories.LineVariantBright} />
 
 ### Without Attribution
 
-<Canvas>
-  <Story of={QuoteHighlightStories.WithoutAttribution} />
-</Canvas>
+<Story of={QuoteHighlightStories.WithoutAttribution} />
 
 ## Alignment Options
 
@@ -87,27 +75,32 @@ The QuoteHighlight component supports three alignment options:
 
 ### Left Aligned Quote
 
-<Canvas>
-  <Story of={QuoteHighlightStories.LeftAlignedQuote} />
-</Canvas>
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.LeftAlignedQuote} />
+</div>
+
 
 ### Left Aligned Quote with Portrait
 
-<Canvas>
-  <Story of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait} />
-</Canvas>
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait} />
+</div>
 
 ### Right Aligned Quote
 
-<Canvas>
-  <Story of={QuoteHighlightStories.RightAlignedQuote} />
-</Canvas>
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RightAlignedQuote} />
+</div>
 
 ### Right Aligned Quote with Portrait
 
-<Canvas>
-  <Story of={QuoteHighlightStories.RightAlignedQuoteWithPortrait} />
-</Canvas>
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RightAlignedQuoteWithPortrait} />
+</div>
 
 ## RTL Support
 
@@ -119,15 +112,17 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 
 ### RTL Example with Left Alignment (appears on right)
 
-<Canvas>
-  <Story of={QuoteHighlightStories.RTLLeftAlignedQuote} />
-</Canvas>
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RTLLeftAlignedQuote} />
+</div>
 
 ### RTL Example with Right Alignment (appears on left)
 
-<Canvas>
-  <Story of={QuoteHighlightStories.RTLRightAlignedQuote} />
-</Canvas>
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RTLRightAlignedQuote} />
+</div>
 
 ## Design Guidelines
 

@@ -13,7 +13,7 @@ const QuoteHighlight = ({
   attributionTitle,
   imageSrc,
   imageAlt,
-  backgroundColor = 'light-blue',
+  backgroundColor = 'light',
   variant = 'line',
   alignment = 'full',
   className = '',
@@ -23,13 +23,17 @@ const QuoteHighlight = ({
   const hasImage = !!imageSrc;
 
   return (
-    <div
+    <section
       className={`${baseClass} ${baseClass}--${backgroundColor} ${baseClass}--${variant} ${baseClass}--${alignment} ${hasImage ? `${baseClass}--has-image` : ''} ${className}`}
       {...props}
     >
       <div className={`${baseClass}__content`}>
         <blockquote className={`${baseClass}__quote`}>
-          <p>{quote}</p>
+          {typeof quote === 'string' && !quote.includes('<') ? (
+            <p>{quote}</p>
+          ) : (
+            <span dangerouslySetInnerHTML={{ __html: quote }} />
+          )}
         </blockquote>
 
         {variant === 'line' && <div className={`${baseClass}__separator`}></div>}
@@ -46,10 +50,12 @@ const QuoteHighlight = ({
                   />
                 </div>
               )}
-              <div className={`${baseClass}__attribution-text`}>
-                {attribution && <p className={`${baseClass}__attribution-name`}>{attribution}</p>}
-                {attributionTitle && <p className={`${baseClass}__attribution-title`}>{attributionTitle}</p>}
-              </div>
+              {(attribution || attributionTitle) && (
+                <div className={`${baseClass}__attribution-text`}>
+                  {attribution && <p className={`${baseClass}__attribution-name`} dangerouslySetInnerHTML={{ __html: attribution }} />}
+                  {attributionTitle && <p className={`${baseClass}__attribution-title`} dangerouslySetInnerHTML={{ __html: attributionTitle }} />}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -64,7 +70,7 @@ const QuoteHighlight = ({
           />
         </div>
       )}
-    </div>
+    </section>
   );
 };
 
@@ -80,7 +86,7 @@ QuoteHighlight.propTypes = {
   /** Alt text for the image */
   imageAlt: PropTypes.string,
   /** Background color variant */
-  backgroundColor: PropTypes.oneOf(['light-blue', 'blue', 'white']),
+  backgroundColor: PropTypes.oneOf(['light', 'dark', 'bright']),
   /** Component variant: 'line' (with separator line) or 'image' (with image) */
   variant: PropTypes.oneOf(['line', 'image']),
   /** Component alignment: 'full' (full width), 'left' (float left), 'right' (float right) */
