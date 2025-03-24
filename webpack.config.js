@@ -73,7 +73,7 @@ module.exports = [
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
       BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
       MapComponent: "./stories/Components/Map/MapComponent.jsx",
-      QuoteHighlgith: "./stories/Components/QuoteHighlight/QuoteHighlight.jsx",
+      QuoteHighlight: "./stories/Components/QuoteHighlight/QuoteHighlight.jsx",
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
     },
     externals: {
