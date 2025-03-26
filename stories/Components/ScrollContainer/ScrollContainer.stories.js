@@ -59,11 +59,10 @@ const Template = (args) => (
 export const Default = Template.bind({});
 
 
-export const TallContent = Template.bind({});
-TallContent.args = {
-  height: '700px',
+export const CustomHeight = Template.bind({});
+CustomHeight.args = {
+  height: '100px',
   padding: '1rem',
-  itemWidth: '150px',
 };
 
 export const WithMinWidth = Template.bind({});
