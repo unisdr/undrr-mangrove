@@ -71,6 +71,7 @@ module.exports = [
       ShareButtons:
         "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
+      ScrollContainer: "./stories/Components/ScrollContainer/ScrollContainer.jsx",
       BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
       MapComponent: "./stories/Components/Map/MapComponent.jsx",
       QuoteHighlight: "./stories/Components/QuoteHighlight/QuoteHighlight.jsx",

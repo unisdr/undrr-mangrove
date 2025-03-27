@@ -1,0 +1,149 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import * as ScrollContainerStories from './ScrollContainer.stories';
+import ScrollContainer from './ScrollContainer.jsx';
+
+# Scroll Container
+
+The Scroll Container component provides a responsive horizontal scrolling container for content that exceeds the available width.
+
+<Meta of={ScrollContainerStories} />
+
+## Default
+
+A basic scroll container implementation with default settings.
+
+<Canvas>
+  <Story of={ScrollContainerStories.Default} />
+</Canvas>
+
+## With Custom Height
+
+A scroll container with a custom height setting.
+
+<Story of={ScrollContainerStories.CustomHeight} />
+
+## With Minimum Width
+
+A scroll container with a minimum width setting.
+
+<Story of={ScrollContainerStories.WithMinWidth} />
+
+## With Navigation Arrows
+
+A scroll container with navigation arrows for easier scrolling. The arrows appear at the top of the container when content overflows horizontally and the `showArrows` prop is set to `true`. The arrows will only be visible when there is content to scroll to in that direction.
+
+<div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
+  <ScrollContainer showArrows={true} minWidth="1200px" padding="1rem">
+    {Array(5).fill().map((_, i) => (
+      <article key={i} className="mg-card mg-card__vc" style={{ minWidth: '350px', marginRight: '20px', padding: '20px', boxSizing: 'border-box' }}>
+        <div className="mg-card__visual">
+          <img alt="Example image" className="mg-card__image" src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" />
+        </div>
+        <div className="mg-card__content">
+          <header className="mg-card__title">
+            <a href={`#${i+1}`}>Title in large size with up to two lines of text {i + 1}</a>
+          </header>
+          <p className="mg-card__summary">Example content for card {i + 1}</p>
+        </div>
+      </article>
+    ))}
+  </ScrollContainer>
+</div>
+
+> **Note:** Arrows only appear when content overflows horizontally and will be hidden on mobile devices.
+
+## With Custom Step Size
+
+A scroll container with custom step size for navigation arrows. By default, clicking an arrow scrolls by half the container width, but you can customize this with the `stepSize` prop (in pixels).
+
+<div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
+  <ScrollContainer showArrows={true} stepSize={200}>
+    {Array(5).fill().map((_, i) => (
+      <article key={i} className="mg-card mg-card__vc" style={{ minWidth: '350px'}}>
+        <div className="mg-card__visual">
+          <img alt="Example image" className="mg-card__image" src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" />
+        </div>
+        <div className="mg-card__content">
+          <header className="mg-card__title">
+            <a href={`#${i+1}`}>Title in large size with up to two lines of text {i + 1}</a>
+          </header>
+          <p className="mg-card__summary">Example content for card {i + 1}</p>
+        </div>
+      </article>
+    ))}
+  </ScrollContainer>
+</div>
+
+> **Note:** In this example, clicking an arrow will scroll by 200 pixels instead of the default container width.
+
+## With single child
+
+This demonstrates a use case of where a single div may wrap all the child content, providing its own grid functionality.
+
+<div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
+  <ScrollContainer showArrows={true}>
+    <section className="mg-grid">
+      {Array(5).fill().map((_, i) => (
+        <article key={i} className="mg-card mg-card__vc" style={{ minWidth: '350px'}}>
+          <div className="mg-card__visual">
+            <img alt="Example image" className="mg-card__image" src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" />
+          </div>
+          <div className="mg-card__content">
+            <header className="mg-card__title">
+              <a href={`#${i+1}`}>Title in large size with up to two lines of text {i + 1}</a>
+            </header>
+            <p className="mg-card__summary">Example content for card {i + 1}</p>
+          </div>
+        </article>
+      ))}
+    </section>
+  </ScrollContainer>
+</div>
+
+## Usage
+
+```jsx
+import { ScrollContainer } from '@components';
+
+const MyComponent = () => (
+  <ScrollContainer height="500px" showArrows={true}>
+    {/* Your scrollable content here */}
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+  </ScrollContainer>
+);
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| children | node | Required | Content to be displayed inside the scroll container |
+| height | string | 'auto' | Custom height for the container |
+| minWidth | string | 'auto' | Minimum width for the container |
+| itemWidth | string | 'auto' | Width for individual items within the container |
+| padding | string | '0' | Padding inside the container |
+| className | string | '' | Additional CSS class names |
+| showArrows | boolean | false | Whether to show navigation arrows |
+| stepSize | number | null | Custom step size for arrow navigation (in pixels) |
+
+## Behaviors
+
+1. **Desktop**:
+   - Click and drag to scroll horizontally
+   - Optional navigation arrows for controlled scrolling
+   - Mouse wheel scrolling works as expected
+
+2. **Mobile**:
+   - Native touch scrolling behavior
+   - Navigation arrows are hidden on mobile devices
+   - Optimized for touch interactions
+
+### Changelog
+
+- 1.0
+  - Initial release
+  - Added support for responsive design
+  - Added mouse drag scrolling
+  - Added optional navigation arrows
