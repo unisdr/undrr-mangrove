@@ -73,6 +73,7 @@ module.exports = [
       MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
       BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
       MapComponent: "./stories/Components/Map/MapComponent.jsx",
+      QuoteHighlight: "./stories/Components/QuoteHighlight/QuoteHighlight.jsx",
       Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
     },
     externals: {
@@ -131,4 +132,4 @@ Compiled on: ${new Date().toISOString()}`,
       extensions: [".jsx", ".js", ".svg"],
     },
   },
-];      
+];
