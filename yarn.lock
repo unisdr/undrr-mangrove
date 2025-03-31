@@ -1274,15 +1274,7 @@
     debug "^4.3.1"
     globals "^11.1.0"
 
-"@babel/types@^7.0.0", "@babel/types@^7.0.0-beta.49", "@babel/types@^7.18.9", "@babel/types@^7.20.7", "@babel/types@^7.24.0", "@babel/types@^7.25.7", "@babel/types@^7.25.9", "@babel/types@^7.26.10", "@babel/types@^7.26.9", "@babel/types@^7.3.3", "@babel/types@^7.4.4":
-  version "7.26.10"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.26.10.tgz#396382f6335bd4feb65741eacfc808218f859259"
-  integrity sha512-emqcG3vHrpxUKTrxcblR36dcrcoRDvKmnL/dCL6ZsHaShW80qxCAcNhzQZrpeM765VzEos+xOi4s+r4IXzTwdQ==
-  dependencies:
-    "@babel/helper-string-parser" "^7.25.9"
-    "@babel/helper-validator-identifier" "^7.25.9"
-
-"@babel/types@^7.27.0":
+"@babel/types@^7.0.0", "@babel/types@^7.0.0-beta.49", "@babel/types@^7.18.9", "@babel/types@^7.20.7", "@babel/types@^7.24.0", "@babel/types@^7.25.7", "@babel/types@^7.25.9", "@babel/types@^7.26.10", "@babel/types@^7.26.9", "@babel/types@^7.27.0", "@babel/types@^7.3.3", "@babel/types@^7.4.4":
   version "7.27.0"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.27.0.tgz#ef9acb6b06c3173f6632d993ecb6d4ae470b4559"
   integrity sha512-H45s8fVLYjbhFH62dIJ3WtmJ6RSPt/3DRO0ZcT2SUiYiQyz3BLVb9ADEnLl91m74aQPS3AzzeajZHYOalWe3bg==
@@ -2347,17 +2339,17 @@
     webpack-hot-middleware "^2.25.1"
     webpack-virtual-modules "^0.6.0"
 
-"@storybook/cli@8.6.9":
-  version "8.6.9"
-  resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-8.6.9.tgz#26170f676567efd1d4dc4e3f294288df4ba53bc7"
-  integrity sha512-6F2ozOvZ7TFtKf3uHzo3xQNNlbdf0X5ltZVO3x1Qkb2HFUNK2Cd1/410fd7hGmiFyyTVwJhbCLLMGkL3CeMUiw==
+"@storybook/cli@8.6.11":
+  version "8.6.11"
+  resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-8.6.11.tgz#cd373daeabe2d209037bd16a38ca3b5e7eb4e957"
+  integrity sha512-Yitqj4TsuexiLwe9zPqUkUjuskjy7vdBAYoeO/cy939UFuD8tXt+asPtRqTOQKT5WlUG+yVAwsMV9ayiie07EQ==
   dependencies:
     "@babel/core" "^7.24.4"
     "@babel/types" "^7.24.0"
-    "@storybook/codemod" "8.6.9"
+    "@storybook/codemod" "8.6.11"
     "@types/semver" "^7.3.4"
     commander "^12.1.0"
-    create-storybook "8.6.9"
+    create-storybook "8.6.11"
     cross-spawn "^7.0.3"
     envinfo "^7.7.3"
     fd-package-json "^1.2.0"
@@ -2370,19 +2362,19 @@
     p-limit "^6.2.0"
     prompts "^2.4.0"
     semver "^7.3.7"
-    storybook "8.6.9"
+    storybook "8.6.11"
     tiny-invariant "^1.3.1"
     ts-dedent "^2.0.0"
 
-"@storybook/codemod@8.6.9":
-  version "8.6.9"
-  resolved "https://registry.yarnpkg.com/@storybook/codemod/-/codemod-8.6.9.tgz#fcdb8372267e107dd343c2e3e45f42913ec816d2"
-  integrity sha512-2EqMGx3ZXyGqxoEK1lfWjxaogiT19F3UzO1jZecWDJqsBt6AG1kWAz7HRqU+Nr7KsHIeDyrCWqOZabQfN2TFHg==
+"@storybook/codemod@8.6.11":
+  version "8.6.11"
+  resolved "https://registry.yarnpkg.com/@storybook/codemod/-/codemod-8.6.11.tgz#b1d2326ac7708781844af97a22ce3d984085e75c"
+  integrity sha512-+3Yg9cMFXotfEAFinTRga46QgMexWWcT305Yp7FHM0tv9gkGOs4suwgLFhlYRvzFi0Z43uijj5omrGkeWR439w==
   dependencies:
     "@babel/core" "^7.24.4"
     "@babel/preset-env" "^7.24.4"
     "@babel/types" "^7.24.0"
-    "@storybook/core" "8.6.9"
+    "@storybook/core" "8.6.11"
     "@types/cross-spawn" "^6.0.2"
     cross-spawn "^7.0.3"
     es-toolkit "^1.22.0"
@@ -2403,6 +2395,23 @@
   integrity sha512-x3zmB0wpdVxdRsPIo6FYAmb+A6+YhtHbDXCDrcU7RS0/GhgLUl/KCeiBafqYMNxxQWsxNj6sN3lCP09vYqbSGw==
   dependencies:
     ts-dedent "^2.0.0"
+
+"@storybook/core@8.6.11":
+  version "8.6.11"
+  resolved "https://registry.yarnpkg.com/@storybook/core/-/core-8.6.11.tgz#5e70a374cc2e1dcb92ac78ab5dee48b654a2ed75"
+  integrity sha512-fhzLQ9HpljbLpkHykafmcjIERHI5j6SZhylFCDwEWkETuZtRbyCs3mmULutcEOzKhxRgNtiIRoRmZPdQcPtHNg==
+  dependencies:
+    "@storybook/theming" "8.6.11"
+    better-opn "^3.0.2"
+    browser-assert "^1.2.1"
+    esbuild "^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0"
+    esbuild-register "^3.5.0"
+    jsdoc-type-pratt-parser "^4.0.0"
+    process "^0.11.10"
+    recast "^0.23.5"
+    semver "^7.6.2"
+    util "^0.12.5"
+    ws "^8.2.3"
 
 "@storybook/core@8.6.9":
   version "8.6.9"
@@ -2552,6 +2561,11 @@
     "@testing-library/user-event" "14.5.2"
     "@vitest/expect" "2.0.5"
     "@vitest/spy" "2.0.5"
+
+"@storybook/theming@8.6.11":
+  version "8.6.11"
+  resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-8.6.11.tgz#c44043311e193e6c5330843f32ec1777692fbe20"
+  integrity sha512-G7IK5P9gzofUjfYhMo9Pdgbqcr22eoKFLD808Q8RxJopDoypdZKg4tes2iD+6YnrtnHS0nEoP/soMmfFYl9FIw==
 
 "@storybook/theming@8.6.9":
   version "8.6.9"
@@ -5127,10 +5141,10 @@ create-jest@^29.7.0:
     jest-util "^29.7.0"
     prompts "^2.0.1"
 
-create-storybook@8.6.9:
-  version "8.6.9"
-  resolved "https://registry.yarnpkg.com/create-storybook/-/create-storybook-8.6.9.tgz#6e871d08fab1d99ec393202f119dd5d4d9824ce1"
-  integrity sha512-O/t8dvJY1UVOsUXLjnpq/ILW78/xUQs0hI0JAgraCcoAprz6/SFn2NkGeIkgW6TL7AlLxFPVB5j1Xf4V9K+Abw==
+create-storybook@8.6.11:
+  version "8.6.11"
+  resolved "https://registry.yarnpkg.com/create-storybook/-/create-storybook-8.6.11.tgz#7ec2f1764087550b599530b590c5a9b6abe859d6"
+  integrity sha512-jhObFLUlbFBDoi+qI5XQ+lJYGDxJjwwvVdfj7pPBjTS+uAz/WrPgBXJjP40it2OGEoveQtSoyLDBcJIbpghLmA==
   dependencies:
     recast "^0.23.5"
     semver "^7.6.2"
@@ -13088,6 +13102,13 @@ storybook-design-token@3.2.0:
     react-storage-hooks "^4.0.1"
     react-use-clipboard "^1.0.9"
     react-virtual "^2.10.4"
+
+storybook@8.6.11:
+  version "8.6.11"
+  resolved "https://registry.yarnpkg.com/storybook/-/storybook-8.6.11.tgz#3cde1c3430a0578bf63985cca865816ff82a4aa9"
+  integrity sha512-B2wxpmq1QYS4JV7RQu1mOHD7akfoGbuoUSkx2D2GZgv/zXAHZmDpSFcTvvBBm8FAtzChI9HhITSJ0YS0ePfnJQ==
+  dependencies:
+    "@storybook/core" "8.6.11"
 
 storybook@8.6.9:
   version "8.6.9"
