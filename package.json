@@ -115,7 +115,7 @@
     "storybook-addon-rtl": "1.0.1",
     "storybook-design-token": "3.2.0",
     "style-loader": "4.0.0",
-    "stylelint": "16.16.0",
+    "stylelint": "16.17.0",
     "stylelint-config-recommended-scss": "14.1.0",
     "stylelint-scss": "6.11.1",
     "svg-spritemap-webpack-plugin": "4.7.0",
