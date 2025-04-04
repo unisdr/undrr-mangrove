@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/cyber-guard-org/undrr-mangrove/compare/v1.0.0...v1.0.1) (2025-04-04)
+
+
+### Bug Fixes
+
+* **ci:** another error ([6245f94](https://github.com/cyber-guard-org/undrr-mangrove/commit/6245f94bf0a7c20fba8c87d220f85aeffcf75a93))
+* **ci:** another error ([7f1c4bc](https://github.com/cyber-guard-org/undrr-mangrove/commit/7f1c4bca4209b26f90907f2a4aecf9976ce0628e))
+
 # 1.0.0 (2025-04-04)
 
 
