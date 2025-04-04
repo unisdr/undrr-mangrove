@@ -1,6 +1,7 @@
 module.exports = {
     branches: [
-      'main',
+      // workaround for not having main release branch
+      'dummy',
       {name: 'main', prerelease: 'alpha'}
     ],
     plugins: [
