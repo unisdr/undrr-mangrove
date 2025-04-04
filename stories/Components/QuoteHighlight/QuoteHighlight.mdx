@@ -1,0 +1,139 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import * as QuoteHighlightStories from './QuoteHighlight.stories';
+
+<Meta of={QuoteHighlightStories} />
+
+# Quote Highlight
+
+The `QuoteHighlight` component is used to display important quotes with attribution and optional images.
+
+## Features
+
+- Two layout variants: line (with separator line) or image (with side image)
+- Three background color options: light, dark, and bright
+- Optional attribution with name and title
+- Optional portrait image that displays inline with attribution
+- Optional side image for the image variant
+- Three alignment options: full, left, and right
+- RTL (Right-to-Left) language support
+- Responsive design that adapts to different screen sizes
+
+## Usage
+
+```jsx
+import { QuoteHighlight } from '@undrr/mangrove';
+
+<QuoteHighlight
+  quote="One doesn't have to look hard to find examples of how disasters are becoming worse."
+  attribution="Mami Mizutori"
+  attributionTitle="Special Representative of the UN Secretary-General for Disaster Risk Reduction"
+  imageSrc="/assets/author.png"
+  imageAlt="Mami Mizutori portrait"
+  variant="line"
+  backgroundColor="light"
+  alignment="full"
+/>
+```
+
+## Examples
+
+### Line Variant (Default)
+
+<Story of={QuoteHighlightStories.LineVariant} />
+
+### Line Variant with Portrait Image
+
+This variant shows the portrait image inline with the attribution.
+
+<Story of={QuoteHighlightStories.LineVariantWithPortrait} />
+
+### Image Variant
+
+This variant displays a larger image to the side of the quote content.
+
+<Story of={QuoteHighlightStories.ImageVariant} />
+
+### Dark Background
+
+<Story of={QuoteHighlightStories.LineVariantDark} />
+
+### Bright Background
+
+<Story of={QuoteHighlightStories.LineVariantBright} />
+
+### Without Attribution
+
+<Story of={QuoteHighlightStories.WithoutAttribution} />
+
+## Alignment Options
+
+The QuoteHighlight component supports three alignment options:
+
+- `full`: Takes up the full width of its container (default)
+- `left`: Aligns to the left, allowing content to flow around the right side
+- `right`: Aligns to the right, allowing content to flow around the left side
+
+### Left Aligned Quote
+
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.LeftAlignedQuote} />
+</div>
+
+
+### Left Aligned Quote with Portrait
+
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait} />
+</div>
+
+### Right Aligned Quote
+
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RightAlignedQuote} />
+</div>
+
+### Right Aligned Quote with Portrait
+
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RightAlignedQuoteWithPortrait} />
+</div>
+
+## RTL Support
+
+The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When used in an RTL context:
+
+- Left-aligned quotes will appear on the right side of the content
+- Right-aligned quotes will appear on the left side of the content
+- The component's internal layout will automatically adjust for RTL reading direction
+
+### RTL Example with Left Alignment (appears on right)
+
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RTLLeftAlignedQuote} />
+</div>
+
+### RTL Example with Right Alignment (appears on left)
+
+<div style={{ display: 'grid' }}>
+{/* Grid container used to fix layout issues in demo page */}
+<Story of={QuoteHighlightStories.RTLRightAlignedQuote} />
+</div>
+
+## Design Guidelines
+
+- Use the QuoteHighlight component to emphasize important quotes from key stakeholders.
+- The line variant is more subtle and can be used within text content.
+- The image variant is more prominent and works well as a standalone element.
+- Choose background colors that complement the surrounding content.
+- Always provide attribution when available to give proper credit to the source.
+- Use the portrait image feature to add a personal touch to the quote.
+- Ensure images are high quality and properly cropped to fit the designated space.
+- Use alignment options to create more dynamic layouts:
+  - Full width for standalone, prominent quotes
+  - Left or right alignment to integrate quotes within text content
+- For RTL languages, the component will automatically mirror its layout.
