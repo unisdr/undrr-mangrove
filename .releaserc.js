@@ -2,7 +2,7 @@ module.exports = {
     branches: [
       // workaround for not having main release branch
       'dummy',
-      {name: 'main', prerelease: 'alpha'}
+      { name: 'main', prerelease: 'alpha' },
     ],
     plugins: [
       '@semantic-release/commit-analyzer',
@@ -14,5 +14,4 @@ module.exports = {
       }],
       '@semantic-release/github'
     ],
-    tagFormat: 'v${version}'
   };
