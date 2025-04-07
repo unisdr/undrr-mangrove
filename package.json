@@ -131,7 +131,7 @@
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
     "d3": "7.9.0",
-    "dompurify": "3.2.4",
+    "dompurify": "3.2.5",
     "esri-leaflet": "3.1.0",
     "file-loader": "6.2.0",
     "fitty": "2.4.2",
