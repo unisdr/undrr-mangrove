@@ -1,0 +1,296 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta
+  title="Getting started/Component Structure"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Component Structure and Standards
+
+This guide explains the structure and standards used across the Mangrove component library to help you understand and work with existing components.
+
+## Component Architecture
+
+The Mangrove library is organized using a loosely atomic design approach, with components categorized by their function and complexity.
+
+### Directory Structure
+
+```
+stories/
+├── Components/           # All reusable components
+│   ├── Accordion/        # Component category
+│   ├── Buttons/          # Component category
+│   │   ├── CtaButton/    # Individual component
+│   │   │   ├── CtaButton.jsx
+│   │   │   ├── CtaButton.mdx
+│   │   │   ├── CtaButton.stories.jsx
+│   │   │   └── buttons.scss
+│   │   └── ...
+│   └── ...
+├── Documentation/        # Documentation files
+├── assets/               # Shared assets
+│   ├── scss/             # Global SCSS files
+│   │   ├── variables.scss
+│   │   ├── mixins.scss
+│   │   └── ...
+│   ├── fonts/
+│   └── images/
+└── __tests__/            # Test files
+```
+
+The jest test files can be created at different levels in the project structure depending on the scope of the tests.
+
+## Component File Structure
+
+Each component in the library consists of 3-4 files:
+
+1. **ComponentName.jsx** - The React component implementation
+2. **ComponentName.mdx** - Documentation for the component
+3. **ComponentName.stories.jsx** - Storybook stories showcasing the component
+4. **component-name.scss** - Component-specific styles (when needed)
+
+### Component Implementation (.jsx)
+
+The React component file (.jsx) follows these conventions:
+
+- Functional components with React hooks
+- Props destructuring with appropriate defaults
+- Accessibility attributes where needed
+- Semantic HTML elements
+- CSS class prefixing with `mg-`
+
+Example structure:
+
+```jsx
+import React from 'react';
+// Import component-specific styles if needed
+// import './component-name.scss';
+
+export function ComponentName({
+  prop1,
+  prop2 = 'default',
+  variant = 'primary',
+  ...props
+}) {
+  // Component logic here
+  
+  // Create class names based on props
+  const classNames = [
+    'mg-component-name',
+    variant && `mg-component-name--${variant}`
+  ].filter(Boolean).join(' ');
+
+  return (
+    <div className={classNames} {...props}>
+      {/* Component content */}
+    </div>
+  );
+}
+```
+
+### Styling Approach
+
+Mangrove uses SCSS for styling with these conventions:
+
+1. **Global Variables and Mixins**
+   - Located in `stories/assets/scss/`
+   - Contains color palette, typography, spacing, and breakpoints
+   - Uses variables prefixed with `$mg-` (e.g., `$mg-color-button-background`)
+
+2. **CSS Naming Methodology**
+   - Block: `mg-button`
+   - Element: `mg-button__icon`
+   - Modifier: `mg-button--primary`
+   - All component classes use the `mg-` prefix
+
+3. **Responsive Design**
+   - Mobile-first approach
+   - Uses breakpoint mixins:
+   ```scss
+   @include devicebreak(medium) {
+     // Tablet styles
+   }
+   
+   @include devicebreak(large) {
+     // Desktop styles
+   }
+   ```
+
+4. **Theme Support**
+   - Components adapt to different themes (UNDRR, PreventionWeb)
+   - Uses theme variables for colors and styling
+
+### Component API Standards
+
+### Props Naming Conventions
+
+- Use camelCase for prop names
+- Boolean props should be phrased affirmatively (`isActive` instead of `isNotActive`)
+- Event handler props should start with `on` followed by the event name (`onClick`, `onHover`)
+
+### Common Props Pattern
+
+Most components should support these common props:
+
+```jsx
+{
+  // Appearance
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary']),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  
+  // State
+  isDisabled: PropTypes.bool,
+  isActive: PropTypes.bool,
+  
+  // Content
+  children: PropTypes.node,
+  
+  // Event handlers
+  onClick: PropTypes.func,
+  
+  // Custom styling
+  className: PropTypes.string,
+  style: PropTypes.object,
+  
+  // Accessibility
+  ariaLabel: PropTypes.string,
+  
+  // Additional props spread to root element
+  ...props
+}
+```
+
+### Component Documentation Structure
+
+Each component's MDX file follows this structure:
+
+1. **Overview** - What the component is and its purpose
+2. **When to use** - Usage guidance with bullet points
+3. **Formatting** - Default and variant appearances
+4. **Content** - Guidelines for content
+5. **Behaviors** - States and interactions
+6. **CSS and JS References** - Required files with URLs to include
+7. **Interactions** - Detailed interaction states
+8. **Changelog** - Version history
+
+## Accessibility Standards
+
+All components must meet WCAG 2.1 Level AA standards:
+
+1. **Keyboard Navigation**
+   - All interactive elements must be keyboard accessible
+   - Focus states must be clearly visible
+
+2. **Screen Reader Support**
+   - Use semantic HTML elements
+   - Include appropriate ARIA attributes
+   - Provide alternative text for images
+
+3. **Color Contrast**
+   - Text must have a contrast ratio of at least 4.5:1
+   - UI components must have a contrast ratio of at least 3:1
+
+4. **Responsive Design**
+   - Components must be usable at 200% zoom
+   - Content must be accessible on mobile devices
+
+## Internationalization Support
+
+Components should support multiple languages and reading directions:
+
+1. **Text Direction**
+   - Support both LTR and RTL text directions
+   - Use CSS logical properties where possible (e.g., `margin-inline-start` instead of `margin-left`)
+
+2. **Text Content**
+   - Text should come from props, not hardcoded
+   - Support for various character sets and languages
+
+Example of RTL support in SCSS:
+
+```scss
+.mg-component {
+  margin-inline-start: 1rem; // Works in both LTR and RTL
+
+  [dir="rtl"] & {
+    // RTL-specific styles if needed
+  }
+}
+```
+
+## State Management
+
+Components use these approaches for state management:
+
+1. **Local Component State**
+   - Use React's `useState` and `useEffect` hooks for component-specific state
+
+2. **Controlled vs. Uncontrolled Components**
+   - Support both controlled (state managed by parent) and uncontrolled (internal state) modes
+
+Example:
+
+```jsx
+// Controlled example
+<InputComponent value={value} onChange={handleChange} />
+
+// Uncontrolled example with default value
+<InputComponent defaultValue="Default" />
+```
+
+## Performance Considerations
+
+1. **Memoization**
+   - Use `React.memo` for components that render often but with the same props
+   - Use `useCallback` for event handlers passed as props
+
+2. **Code Splitting**
+   - Large components should be split into smaller, focused components
+
+3. **Conditional Rendering**
+   - Use conditional rendering for complex components to avoid unnecessary DOM elements
+
+## Component Testing
+
+All components should have associated tests verifying:
+
+1. **Rendering**
+   - Component renders without errors
+   - Component displays correct content
+
+2. **Props**
+   - Component responds correctly to different props
+   - Default props work as expected
+
+3. **Events**
+   - User interactions trigger correct handlers
+   - State changes occur as expected
+
+4. **Accessibility**
+   - Component meets accessibility requirements
+   - ARIA attributes are correctly applied
+
+## Troubleshooting Components
+
+When working with existing components, you might encounter these common issues:
+
+1. **Styling Conflicts**
+   - Check for CSS specificity issues
+   - Verify component class names follow the `mg-` prefix convention
+
+2. **Prop Propagation**
+   - Ensure props are correctly passed to child components
+   - Check that event handlers are properly bound
+
+3. **Rendering Issues**
+   - Verify that conditional rendering logic is correct
+   - Check for missing keys in lists
+
+4. **Performance Problems**
+   - Look for unnecessary re-renders
+   - Check for missing memoization
