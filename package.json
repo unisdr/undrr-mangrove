@@ -64,7 +64,7 @@
     "@storybook/cli": "8.6.12",
     "@storybook/react": "8.6.12",
     "@storybook/react-webpack5": "8.6.12",
-    "@testing-library/react": "16.2.0",
+    "@testing-library/react": "16.3.0",
     "@whitespace/storybook-addon-html": "6.1.1",
     "@wordpress/babel-preset-default": "8.21.0",
     "alter-css-url-loader": "1.1.3",
