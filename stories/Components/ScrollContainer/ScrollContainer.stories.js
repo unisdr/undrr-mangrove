@@ -34,9 +34,8 @@ const Template = (args) => (
                 </a>
               </header>
               <p className="mg-card__summary">
-                Climate change is a
-                <a className="mg-card__text-link" href="https://www.undrr.org">global health emergency</a>
-                , with impacts felt most acutely by vulnerable populations and
+                Climate change is a <a className="mg-card__text-link" href="https://www.undrr.org">global health emergency</a>,
+                with impacts felt most acutely by vulnerable populations and
                 communities. This paper explores health risks from climate change in a
                 global context, setting out key risks actions
               </p>

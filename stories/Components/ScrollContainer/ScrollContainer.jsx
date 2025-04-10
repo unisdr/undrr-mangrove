@@ -22,7 +22,7 @@ const ScrollContainer = ({
   const [startX, setStartX] = useState(0);
   const [startScrollLeft, setStartScrollLeft] = useState(0);
   const [hasDragged, setHasDragged] = useState(false);
-  const dragThreshold = 5; // Minimum pixels to consider as a drag
+  const dragThreshold = 10; // Minimum pixels to consider as a drag
 
   // Check if we're on a mobile device
   const checkMobileStatus = useCallback(() => {
@@ -40,6 +40,7 @@ const ScrollContainer = ({
     setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
   }, [showArrows, isMobile]);
 
+  // Scroll buttons
   const scroll = useCallback((direction) => {
     if (!containerRef.current) return;
 
@@ -79,26 +80,36 @@ const ScrollContainer = ({
       // On mobile devices, don't interfere with native scrolling
       if (isMobile) return;
 
-      e.preventDefault();
-
       const x = e.pageX;
       const distance = Math.abs(startX - x);
 
       // Set hasDragged if we exceed the threshold
       if (distance > dragThreshold) {
+        e.preventDefault();
         setHasDragged(true);
+        const walk = (startX - x);
+        containerRef.current.scrollLeft = startScrollLeft + walk;
       }
 
-      const walk = (startX - x);
-      containerRef.current.scrollLeft = startScrollLeft + walk;
       checkArrowVisibility();
     }
   }, [isDragging, startX, startScrollLeft, checkArrowVisibility, dragThreshold, isMobile]);
 
   const handleDragEnd = useCallback((e) => {
     // Only handle if we're in dragging state (desktop only)
+
     if (isDragging) {
       setIsDragging(false);
+    }
+
+    // If the user hasn't scrolled, open the link
+    const x = e.pageX;
+    const distance = Math.abs(startX - x);
+    if (distance < 2) {
+      if (e.target.href) {
+        console.log('opening',e.target.href);
+        window.parent.location.href = e.target.href;
+      }
     }
   }, [isDragging]);
 
