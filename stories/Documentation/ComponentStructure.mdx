@@ -35,6 +35,7 @@ stories/
 ├── Documentation/        # Documentation files
 ├── assets/               # Shared assets
 │   ├── scss/             # Global SCSS files
+│   │   ├── _components.scss # Contains sass imports for all components
 │   │   ├── variables.scss
 │   │   ├── mixins.scss
 │   │   └── ...
@@ -69,7 +70,7 @@ Example structure:
 ```jsx
 import React from 'react';
 // Import component-specific styles if needed
-// import './component-name.scss';
+// This should be done centrally in the /assets/scss/_components.scss file
 
 export function ComponentName({
   prop1,

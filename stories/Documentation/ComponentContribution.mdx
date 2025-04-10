@@ -164,6 +164,136 @@ All components must include comprehensive JSDoc comments to document their purpo
    }
    ```
 
+### TypeScript Components
+
+Mangrove supports TypeScript for component development. Using TypeScript provides several benefits, including improved type safety, better IDE support, and enhanced documentation.
+
+1. **TypeScript Component Structure**
+   
+   TypeScript components use the `.tsx` extension and follow the same general structure as JavaScript components:
+   
+   ```
+   stories/Components/[ComponentCategory]/[ComponentName]/
+   ├── ComponentName.tsx           # TypeScript component implementation
+   ├── ComponentName.mdx           # Documentation
+   ├── ComponentName.stories.tsx   # TypeScript Storybook stories
+   └── component-name.scss         # Component-specific styles (optional)
+   ```
+
+2. **Declaring Props Types**
+   
+   Define component props using TypeScript interfaces or type aliases:
+   
+   ```tsx
+   // Using type alias
+   type ButtonProps = {
+     label: string;
+     type: string;
+     width: number;
+     onClick?: () => void; // Optional prop
+   };
+   
+   // Component with typed props
+   function TypedButton({ label, type, width, onClick }: ButtonProps) {
+     return (
+       <button 
+         className={`mg-button mg-button--${type}`} 
+         style={{ width: `${width}px` }}
+         onClick={onClick}
+       >
+         {label}
+       </button>
+     );
+   }
+   ```
+
+3. **TypeScript Stories**
+   
+   When writing stories for TypeScript components, use the appropriate TypeScript types from Storybook:
+   
+   ```tsx
+   import React from "react";
+   import TypedButton from "./TypedButton";
+   import { ComponentMeta, ComponentStory } from "@storybook/react";
+   
+   export default {
+     title: "Components/Buttons/TypedButton",
+     component: TypedButton,
+   } as ComponentMeta<typeof TypedButton>;
+   
+   // Create a typed template
+   const Template: ComponentStory<typeof TypedButton> = (args: React.ComponentProps<typeof TypedButton>) => (
+     <TypedButton {...args} />
+   );
+   
+   // Create stories with typed args
+   export const Primary = Template.bind({});
+   Primary.args = {
+     label: 'Submit',
+     type: 'primary',
+     width: 120,
+   };
+   ```
+
+4. **Best Practices for TypeScript Components**
+   
+   - Use explicit return types for components (`React.FC` is discouraged)
+   ```tsx
+   // Preferred approach with explicit return type
+   function Button(props: ButtonProps): JSX.Element {
+     // Implementation
+   }
+   ```
+   
+   - Leverage TypeScript's union types for component variants
+   ```tsx
+   type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
+   
+   type ButtonProps = {
+     variant: ButtonVariant;
+     // Other props
+   };
+   ```
+   
+   - Use type inference where appropriate but be explicit where it improves readability
+   - Prefer interfaces for public APIs and type aliases for props and other internal types
+   - Include proper JSDoc comments even with TypeScript types (they provide additional context)
+
+5. **Example TypeScript Component**
+   
+   The Mangrove library includes a TypeScript example component in `stories/Components/TypeScriptExampleComponent` that demonstrates these principles:
+   
+   ```tsx
+   // TypeScriptExampleComponent.tsx
+   import React from 'react';
+   import { CtaButton } from '../Buttons/CtaButton/CtaButton';
+   
+   type ButtonProps = {
+     label: string;
+     type: string;
+     width: number;
+   }
+   
+   function TypeScriptExampleComponent({label, type, width}: ButtonProps) {
+     return (
+       <>
+         <CtaButton 
+           label={label} 
+           Type={type} 
+           State="Default" 
+           For_Primary="Text" 
+           variant="contained" 
+           style={{width: `${width}px`}}
+         >
+           {label}
+         </CtaButton>
+       </>
+     );
+   }
+   
+   export default TypeScriptExampleComponent;
+   ```
+
 ### Styling Guidelines
 
 1. **Use SCSS for component styles**
