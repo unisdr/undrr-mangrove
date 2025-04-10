@@ -151,6 +151,7 @@ const ScrollContainer = ({
       }
     };
   }, [checkArrowVisibility, handleDragStart, handleDragMove, handleDragEnd, handleClick, checkMobileStatus]);
+
   const containerStyle = {
     '--scroll-height': height,
     '--scroll-min-width': minWidth,
@@ -209,10 +210,10 @@ const ScrollContainer = ({
           {/* In some environments (like Gutenberg), it is a set of individual html blobs */}
           {Array.isArray(children) && !React.isValidElement(children[0])
             ? children.map((child, index) => {
-                console.log("HTML blob");
-                console.log("Child type:", typeof child);
-                console.log("Is valid element:", React.isValidElement(child));
-                console.log("Child value:", child);
+                // console.log("HTML blob");
+                // console.log("Child type:", typeof child);
+                // console.log("Is valid element:", React.isValidElement(child));
+                // console.log("Child value:", child);
                 return (
                   <div key={index} className="mg-scroll__item-wrapper">
                     <div dangerouslySetInnerHTML={{ __html: String(child) }} />
@@ -220,10 +221,10 @@ const ScrollContainer = ({
                 );
               })
             : React.Children.map(children, (child) => {
-                console.log("Real react");
-                console.log("Child type:", typeof child);
-                console.log("Is valid element:", React.isValidElement(child));
-                console.log("Child value:", child);
+                // console.log("Real react");
+                // console.log("Child type:", typeof child);
+                // console.log("Is valid element:", React.isValidElement(child));
+                // console.log("Child value:", child);
                 return <div className="mg-scroll__item-wrapper">{child}</div>;
               })}
         </div>

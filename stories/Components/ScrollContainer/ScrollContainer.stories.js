@@ -28,14 +28,14 @@ const Template = (args) => (
             <div className="mg-card__content">
               <header className="mg-card__title">
                 <a
-                  href="#{i+1}"
+                  href="https://www.undrr.org"
                 >
                   Title in large size with up to two lines of text {i + 1}
                 </a>
               </header>
               <p className="mg-card__summary">
                 Climate change is a
-                <a className="mg-card__text-link" href="#{i+1}">global health emergency</a>
+                <a className="mg-card__text-link" href="https://www.undrr.org">global health emergency</a>
                 , with impacts felt most acutely by vulnerable populations and
                 communities. This paper explores health risks from climate change in a
                 global context, setting out key risks actions
@@ -43,7 +43,7 @@ const Template = (args) => (
               <a
                 className="mg-button mg-button-primary mg-button-arrow"
                 role="button"
-                href="#{i+1}"
+                href="https://www.undrr.org"
                 type="Primary"
               >
                 Primary action
