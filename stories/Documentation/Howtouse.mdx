@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 
 <Meta
   title="Getting started/How to use our design system?"
@@ -10,87 +10,134 @@ import { Meta, Story } from '@storybook/blocks';
   }}
 />
 
-# How to use this?
+# How to Use Mangrove
 
-## Steps to integrate
+This guide explains how to use the UNDRR Mangrove component library in your projects.
 
-* Include the base styling Sass/CSS file in your project (e.g. `style-prevenetionweb.scss`).
-* Browse the component which you want to integrate.
-* Check out the documentation page of the component.
-* Copy the HTML of the component in your project.
-* Check out the CSS and JS reference section in the document.
-* Use the CSS and JS on your project as suggested.
+## Integration Methods
+
+There are two main ways to use Mangrove components:
+
+### 1. Direct HTML/CSS/JS Integration
+
+* Include the base styling CSS file in your project 
+* Browse the component catalog and select what you need
+* Check the component's documentation page
+* Copy the HTML structure from the component's code tab
+* Add the referenced CSS and JS files to your project as specified in the documentation
+
+### 2. React Component Integration
+
+TBD
 
 ## Framework Agnostic Design System
 
-Our design system is designed to be framework agnostic, meaning it can work seamlessly with nearly any existing system. This approach offers maximum flexibility and ease of integration across various projects and technologies.
+Mangrove is designed to be framework agnostic, meaning it can work seamlessly with nearly any existing system. This approach offers maximum flexibility and ease of integration across various projects and technologies.
 
 Key features of our framework-agnostic approach:
 
-* No firm external dependencies: Our design system does not rely on specific frameworks like Bootstrap or libraries like jQuery. This ensures that you can use it without conflicts or unnecessary bloat in your existing projects.
-* Namespaced code: All JavaScript and CSS code is namespaced with `mg` to prevent conflicts with your existing codebase. This isolation ensures that our design system components won't interfere with your current styles or scripts.
-* Easy integration: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
-* Consistent look and feel: Despite being framework-agnostic, our design system maintains a consistent look and feel across different implementations by focusing on repetable HTML structures that can be cosmetically themed.
+* **Minimal dependencies**: Our design system avoids reliance on specific frameworks or libraries to prevent conflicts with your existing projects.
+* **Namespaced code**: All JavaScript and CSS code is namespaced with `mg-` to prevent conflicts with your existing codebase.
+* **Easy integration**: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
+* **Consistent design**: The design system maintains a consistent look and feel across different implementations by focusing on repeatable HTML structures.
 
-This approach allows you to leverage the power of our design system while maintaining the freedom to use your preferred tools and technologies.
+## CSS File References
 
-## Development
+Include the appropriate CSS file based on your project needs:
 
-If you want to develop this Design System, follow these steps and you will be ready for further development.
+```html
+<!-- Base styling -->
+<link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-gutenberg.css">
 
-1. Checkout the codebase
-
-```bash
-git clone
+<!-- Theme-specific styling (choose one) -->
+<link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-preventionweb.css">
+<!-- or -->
+<link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-undrr.css">
 ```
 
-2. Install project dependencies
+## Development Setup
+
+If you want to contribute to the Mangrove component library, follow these steps to set up your development environment:
+
+1. Clone the repository
+```bash
+git clone https://github.com/unisdr/undrr-mangrove.git
+cd undrr-mangrove
+```
+
+2. Use Docker for development (recommended)
+```bash
+# Start the application, runs Storybook locally on port 6006
+yarn docker-run
+```
+
+Alternatively, if you prefer not to use Docker:
 
 ```bash
+# Install dependencies
 yarn install
-```
 
-3. Runs storybook locally
-
-```bash
+# Run Storybook locally
 yarn run storybook
 ```
 
-4. Build storybook
-
+3. Building the project
 ```bash
-yarn run build-storybook
-```
+# Using Docker
+yarn docker-build
 
-5. Linting on codebase
-
-```bash
-yarn run lint
-```
-
-6. Run this command whenever compiling CSS and JS
-
-```bash
+# Without Docker
 yarn run build
 ```
 
-## External dependencies
+4. Testing
+```bash
+# Run tests
+yarn test
 
-* None
+# Run with coverage report
+yarn test:coverage
+```
 
-## Assets (CSS/JS/Icons) Path
+5. Linting
+```bash
+# Run linting
+yarn run lint
+```
 
-* All the Icons can be found in the ***dist/images*** directory.
-* CSS directory at: ***dist/css***.
-* JS directory at: ***dist/js***.
-* HTML can be copied from the canvas tab from the component page.
+## Assets Location
 
-### Credits
+* **Components**: Available in the `dist/components` directory
+* **CSS files**: Available in the `dist/assets/css` directory
+* **Icons and images**: Available in the `dist/assets/images` directory
+* **Web fonts**: Available in the `dist/assets/fonts` directory
 
-The design system is based on:
+## Component HTML Structure
 
-* [Storybook](https://storybook.js.org/)
+Each component has a consistent HTML structure that should be maintained:
 
-### LICENSE
+1. Each component uses the `mg-` prefix in its class names
+2. Semantic HTML elements are used where appropriate
+3. ARIA attributes are included for accessibility
 
-This codebase has MIT license.
+Example component structure:
+
+```html
+<div class="mg-component">
+  <div class="mg-component__element">
+    <!-- Component content -->
+  </div>
+</div>
+```
+
+## Credits
+
+The Mangrove component library is built with:
+
+* [Storybook](https://storybook.js.org/) - For component documentation and development
+* [React](https://reactjs.org/) - For component implementation
+* [SCSS](https://sass-lang.com/) - For component styling
+
+## License
+
+Components and code are Apache-2.0 licensed. The UNDRR look and feel is proprietary.

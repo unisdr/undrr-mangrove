@@ -1,0 +1,594 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta
+  title="Getting started/Component Contribution Guide"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Component Contribution Guide
+
+This guide explains how to contribute new components to the Mangrove library and outlines the standards and best practices to follow.
+
+## Component Development Workflow
+
+### 1. Planning Phase
+
+Before starting development:
+
+- Check if a similar component already exists to avoid duplication
+- Define the component's purpose, functionality, and variants
+- Identify the props/parameters the component will accept
+- Consider accessibility requirements from the beginning
+- Plan responsive behaviors for different screen sizes
+
+### 2. Component Structure
+
+All components in Mangrove follow a consistent file structure:
+
+```
+stories/Components/[ComponentCategory]/[ComponentName]/
+├── ComponentName.jsx      # React component implementation
+├── ComponentName.mdx      # Documentation
+├── ComponentName.stories.jsx  # Storybook stories
+└── component-name.scss    # Component-specific styles (optional)
+```
+
+#### Component Categories
+
+Place your component in the appropriate category folder:
+- `Accordion` - Collapsible content panels
+- `Buttons` - Interactive elements that trigger actions
+- `Cards` - Container components that group related content
+- `Forms` - Input components and form-related elements
+- `Hero` - Hero banner components
+- `Map` - Map-related components
+- `MegaMenu` - Navigation menu components
+- `Tab` - Tab components for organizing content
+- `Charts` - Data visualization components
+
+If none of the existing categories fit, discuss with the team before creating a new category.
+
+## Code Standards and Conventions
+
+### React Component Guidelines
+
+1. **Use functional components with hooks**
+   ```jsx
+   import React from 'react';
+   
+   export function MyComponent({ prop1, prop2, ...props }) {
+     // Implementation
+     return (
+       <div className="mg-my-component" {...props}>
+         {/* Component content */}
+       </div>
+     );
+   }
+   ```
+
+2. **Props destructuring and defaults**
+   - Use destructuring for props
+   - Provide default values where appropriate
+   - Include prop spread (`...props`) to allow passing HTML attributes to the root element
+
+3. **Class naming conventions**
+   - All component CSS classes should start with `mg-` prefix
+   - Use kebab-case for class names (e.g., `mg-button-primary`)
+   - Use BEM methodology for structuring CSS classes
+
+4. **Semantic HTML**
+   - Use the most semantically appropriate HTML elements
+   - Choose elements based on their meaning, not their default styling
+   - Follow these guidelines for common elements:
+     - `<section>`: For thematic grouping of content with a heading
+     - `<article>`: For self-contained, independently distributable content
+     - `<nav>`: For navigation menus and links
+     - `<aside>`: For content tangentially related to the main content
+     - `<header>`, `<footer>`: For introductory/concluding content of sections
+     - `<main>`: For the primary content of the document (only one per page)
+     - `<figure>` and `<figcaption>`: For images, diagrams with captions
+     - Use `<div>` only when no semantic element is appropriate
+   - Always include appropriate ARIA attributes when needed
+   - Use heading levels (`<h1>` through `<h6>`) in a logical, hierarchical order
+   - Ensure interactive elements are keyboard accessible (use `<button>` for clickable elements, not styled `<div>`s)
+
+### JSDoc Documentation Guidelines
+
+All components must include comprehensive JSDoc comments to document their purpose, props, and usage. This improves code maintainability and enables better IDE autocompletion and type checking.
+
+1. **Component Documentation**
+   - Add a JSDoc comment block at the top of each component file
+   - Include a description of the component's purpose and functionality
+   - Document all props with proper types and descriptions
+   - Example:
+   ```jsx
+   /**
+    * Button component that follows the Mangrove design system guidelines
+    * @param {Object} props - Component props
+    * @param {string} props.variant - Button variant ('primary', 'secondary', 'tertiary', 'danger')
+    * @param {string} [props.size='md'] - Button size ('sm', 'md', 'lg')
+    * @param {boolean} [props.isFullWidth=false] - Whether the button should take full width
+    * @param {boolean} [props.isDisabled=false] - Whether the button is disabled
+    * @param {Function} [props.onClick] - Click handler function
+    * @param {React.ReactNode} props.children - Button content
+    * @returns {JSX.Element} Rendered Button component
+    */
+   export function Button({ variant, size = 'md', isFullWidth = false, isDisabled = false, onClick, children, ...props }) {
+     // Implementation
+   }
+   ```
+
+2. **Function Documentation**
+   - Document helper functions and hooks with JSDoc comments
+   - Specify parameter types, return types, and descriptions
+   - Example:
+   ```jsx
+   /**
+    * Formats a date according to the specified format
+    * @param {Date} date - The date to format
+    * @param {string} [format='MM/DD/YYYY'] - The format string
+    * @returns {string} The formatted date string
+    */
+   function formatDate(date, format = 'MM/DD/YYYY') {
+     // Implementation
+   }
+   ```
+
+3. **Complex Props Documentation**
+   - For components with complex nested props, document the structure clearly
+   - Use array and object notation to indicate nested properties
+   - Example:
+   ```jsx
+   /**
+    * MegaMenu component that displays a navigation menu with sections and items
+    * @param {Object[]} sections - Array of section objects containing menu structure
+    * @param {string} sections[].bannerHeading - Heading text for the section banner
+    * @param {string} sections[].bannerDescription - Description text for the section banner
+    * @param {Object} sections[].bannerButton - Optional button object for the banner
+    * @param {string} sections[].bannerButton.label - Label text for the banner button
+    * @param {string} sections[].bannerButton.url - URL for the banner button
+    * @param {Object[]} sections[].items - Array of menu items for the section
+    * @param {string} sections[].items[].title - Title of the menu item
+    * @param {string} sections[].items[].url - URL for the menu item
+    * @param {Object[]} sections[].items[].items - Optional nested items
+    * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
+    * @returns {JSX.Element} Rendered MegaMenu component
+    */
+   export function MegaMenu({ sections, delay = 300 }) {
+     // Implementation
+   }
+   ```
+
+### TypeScript Components
+
+Mangrove supports TypeScript for component development. Using TypeScript provides several benefits, including improved type safety, better IDE support, and enhanced documentation.
+
+1. **TypeScript Component Structure**
+   
+   TypeScript components use the `.tsx` extension and follow the same general structure as JavaScript components:
+   
+   ```
+   stories/Components/[ComponentCategory]/[ComponentName]/
+   ├── ComponentName.tsx           # TypeScript component implementation
+   ├── ComponentName.mdx           # Documentation
+   ├── ComponentName.stories.tsx   # TypeScript Storybook stories
+   └── component-name.scss         # Component-specific styles (optional)
+   ```
+
+2. **Declaring Props Types**
+   
+   Define component props using TypeScript interfaces or type aliases:
+   
+   ```tsx
+   // Using type alias
+   type ButtonProps = {
+     label: string;
+     type: string;
+     width: number;
+     onClick?: () => void; // Optional prop
+   };
+   
+   // Component with typed props
+   function TypedButton({ label, type, width, onClick }: ButtonProps) {
+     return (
+       <button 
+         className={`mg-button mg-button--${type}`} 
+         style={{ width: `${width}px` }}
+         onClick={onClick}
+       >
+         {label}
+       </button>
+     );
+   }
+   ```
+
+3. **TypeScript Stories**
+   
+   When writing stories for TypeScript components, use the appropriate TypeScript types from Storybook:
+   
+   ```tsx
+   import React from "react";
+   import TypedButton from "./TypedButton";
+   import { ComponentMeta, ComponentStory } from "@storybook/react";
+   
+   export default {
+     title: "Components/Buttons/TypedButton",
+     component: TypedButton,
+   } as ComponentMeta<typeof TypedButton>;
+   
+   // Create a typed template
+   const Template: ComponentStory<typeof TypedButton> = (args: React.ComponentProps<typeof TypedButton>) => (
+     <TypedButton {...args} />
+   );
+   
+   // Create stories with typed args
+   export const Primary = Template.bind({});
+   Primary.args = {
+     label: 'Submit',
+     type: 'primary',
+     width: 120,
+   };
+   ```
+
+4. **Best Practices for TypeScript Components**
+   
+   - Use explicit return types for components (`React.FC` is discouraged)
+   ```tsx
+   // Preferred approach with explicit return type
+   function Button(props: ButtonProps): JSX.Element {
+     // Implementation
+   }
+   ```
+   
+   - Leverage TypeScript's union types for component variants
+   ```tsx
+   type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
+   
+   type ButtonProps = {
+     variant: ButtonVariant;
+     // Other props
+   };
+   ```
+   
+   - Use type inference where appropriate but be explicit where it improves readability
+   - Prefer interfaces for public APIs and type aliases for props and other internal types
+   - Include proper JSDoc comments even with TypeScript types (they provide additional context)
+
+5. **Example TypeScript Component**
+   
+   The Mangrove library includes a TypeScript example component in `stories/Components/TypeScriptExampleComponent` that demonstrates these principles:
+   
+   ```tsx
+   // TypeScriptExampleComponent.tsx
+   import React from 'react';
+   import { CtaButton } from '../Buttons/CtaButton/CtaButton';
+   
+   type ButtonProps = {
+     label: string;
+     type: string;
+     width: number;
+   }
+   
+   function TypeScriptExampleComponent({label, type, width}: ButtonProps) {
+     return (
+       <>
+         <CtaButton 
+           label={label} 
+           Type={type} 
+           State="Default" 
+           For_Primary="Text" 
+           variant="contained" 
+           style={{width: `${width}px`}}
+         >
+           {label}
+         </CtaButton>
+       </>
+     );
+   }
+   
+   export default TypeScriptExampleComponent;
+   ```
+
+### Styling Guidelines
+
+1. **Use SCSS for component styles**
+   - Each component may have its own SCSS file
+   - Import shared variables and mixins from the global styles
+
+2. **Follow the BEM (Block, Element, Modifier) methodology**
+   - **Block**: The main component (e.g., `.mg-card`)
+   - **Element**: A part of the block (e.g., `.mg-card__title`, `.mg-card__content`)
+   - **Modifier**: A variation of a block or element (e.g., `.mg-card--featured`, `.mg-card__title--large`)
+   - Use double underscores (`__`) to separate block from elements
+   - Use double hyphens (`--`) to separate block/element from modifiers
+   - Example structure:
+     ```scss
+     .mg-card {
+       // Block styles
+       
+       &__title {
+         // Element styles
+         
+         &--large {
+           // Modifier styles
+         }
+       }
+       
+       &--featured {
+         // Block modifier styles
+       }
+     }
+     ```
+   - Avoid deep nesting of elements (max 2-3 levels)
+   - Keep selectors as flat as possible for better performance
+   - Don't use element tags in selectors (e.g., use `.mg-card__title` not `h2.mg-card__title`)
+
+3. **Follow the existing design tokens**
+   - Use variables for colors, spacing, typography, etc.
+   - Retrieve design tokens from `stories/assets/scss/variables`
+   - Never use hardcoded values for colors, fonts, or spacing
+   - Example:
+     ```scss
+     .mg-button {
+       background-color: $mg-color-primary; // Good
+       padding: $mg-spacing-md $mg-spacing-lg; // Good
+       // NOT background-color: #0066cc; // Bad - hardcoded value
+     }
+     ```
+
+4. **Responsive design**
+   - All components must be responsive
+   - Use the breakpoint mixins provided in the project
+   - Design mobile-first, then add styles for larger screens
+   - Example:
+     ```scss
+     .mg-component {
+       // Mobile styles (default)
+       
+       @include mg-media-breakpoint-up(md) {
+         // Tablet styles
+       }
+       
+       @include mg-media-breakpoint-up(lg) {
+         // Desktop styles
+       }
+     }
+     ```
+
+5. **Accessibility**
+   - Ensure sufficient color contrast (WCAG AA minimum)
+   - Support keyboard navigation and screen readers
+   - Test with accessibility tools
+   - Use appropriate focus states for interactive elements
+
+## Documentation Requirements
+
+Each component must have comprehensive documentation in an MDX file that includes:
+
+1. **Overview** - Brief description of what the component is
+2. **When to use** - Guidance on when this component should be used
+3. **Formatting** - Default and variant appearances
+4. **Content** - Guidelines for content within the component
+5. **Behaviors** - How the component responds to interaction
+6. **CSS and JS References** - Required files to include
+7. **Interactions** - Details on hover, focus, and other states
+8. **Changelog** - Version history of the component
+
+Example structure:
+
+```mdx
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { MyComponent } from './MyComponent';
+import * as MyComponentStories from './MyComponent.stories';
+
+<Meta of={MyComponentStories} />
+
+# Component Name
+
+Brief description of the component.
+
+### Overview
+
+Detailed description of what the component is and its purpose.
+
+#### When to use:
+
+* Use case 1
+* Use case 2
+* Use case 3
+
+### Formatting
+
+#### Default
+
+Description of the default appearance.
+
+<Canvas>
+  <Story of={MyComponentStories.Default} />
+</Canvas>
+
+#### Variants
+
+Description of component variants.
+
+<Canvas>
+  <Story of={MyComponentStories.Variant} />
+</Canvas>
+
+### Content
+
+Guidelines for content within the component.
+
+## Behaviors
+
+Description of component states and interactions.
+
+### Usage
+
+Instructions for implementing the component.
+
+### CSS and JS References
+
+#### CSS:
+* Required CSS files
+
+#### JS:
+* Required JS files or dependencies
+
+### Interactions
+
+Description of hover, focus, and other states.
+
+### Changelog
+
+1.0 — Released component
+```
+
+## Creating Storybook Stories
+
+Stories demonstrate the component's usage and variants:
+
+1. **Basic structure**
+   ```jsx
+   export default {
+     title: 'Components/Category/ComponentName',
+     component: MyComponent,
+     argTypes: {
+       // Define control types for component props
+       variant: {
+         options: ['primary', 'secondary'],
+         control: { type: 'radio' }
+       }
+     }
+   };
+   
+   export const Default = {
+     render: (args) => <MyComponent {...args} />,
+     args: {
+       // Default prop values
+       variant: 'primary'
+     }
+   };
+   ```
+
+2. **Include multiple variants**
+   - Create separate story exports for each significant variant
+   - Show edge cases and different states
+
+3. **Internationalization**
+   - Support both LTR and RTL text directions
+   - Include examples with different languages when relevant
+
+## Testing Requirements
+
+Components should be thoroughly tested to ensure stability and reliability.
+
+### Unit Tests
+
+1. **Create test files**
+   - Tests should be placed in a `__tests__` folder within your component directory or at the appropriate level in the project structure
+   - Follow the naming pattern: `ComponentName.test.jsx`
+
+2. **Required tests**
+   - Rendering test (component renders without errors)
+   - Props test (component correctly responds to different props)
+   - Event tests (click handlers and other events work correctly)
+   - Accessibility tests (component meets accessibility requirements)
+
+Example test pattern:
+
+```jsx
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MyComponent } from '../Components/Category/MyComponent/MyComponent';
+
+describe('MyComponent', () => {
+  it('renders without crashing', () => {
+    render(<MyComponent />);
+    // Assert component renders correctly
+  });
+
+  it('responds to props correctly', () => {
+    render(<MyComponent variant="secondary" />);
+    // Assert component renders with secondary variant
+  });
+
+  it('handles events correctly', () => {
+    const handleClick = jest.fn();
+    render(<MyComponent onClick={handleClick} />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+### Running Tests
+
+Use the following commands to run tests:
+
+```bash
+# Run all tests
+yarn test
+
+# Run tests with coverage report
+yarn test:coverage
+
+# Run tests in watch mode during development
+yarn test:watch
+```
+
+## Pull Request Process
+
+1. **Create a feature branch**
+   - Branch from `main` (the primary branch)
+   - Use a descriptive name relevant to your changes
+
+2. **Make your changes**
+   - Implement the component following the guidelines above
+   - Add comprehensive documentation
+   - Write tests for the component
+
+3. **Submit a pull request**
+   - Open a pull request against `main`
+   - Reference any related issues (from GitHub or the private UNDRR GitLab)
+   - Ensure your code passes all linting and tests
+
+4. **Address review feedback**
+   - Make requested changes
+   - Respond to comments
+   - Update documentation as needed
+
+5. **Merge to main**
+   - Once approved, the changes will be merged to `main` 
+   - The changes will be automatically deployed to the GitHub Pages site
+
+## Troubleshooting Common Issues
+
+### Component Styling Issues
+
+- Check that your SCSS files are properly imported
+- Verify CSS class names follow the naming conventions
+- Inspect elements using browser developer tools to identify CSS conflicts
+
+### Storybook Display Problems
+
+- Ensure your component export is correctly set up
+- Check that your stories file properly imports the component
+- Verify the Meta and Canvas tags in your MDX file are correctly formatted
+
+### Testing Failures
+
+- Check that all dependencies are correctly installed
+- Ensure test files are in the correct location
+- Verify that components are correctly imported in test files
+
+### Build Errors
+
+- Make sure all required dependencies are installed
+- Check for syntax errors in your JSX/JavaScript
+- Verify that your SCSS is valid and properly formatted
