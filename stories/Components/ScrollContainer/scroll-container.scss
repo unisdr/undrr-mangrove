@@ -8,7 +8,7 @@
   align-items: center;
   width: 100%;
   max-height: inherit;
-  
+
   @include devicebreak(small) {
     width: 100%;
     height: auto;
@@ -71,7 +71,7 @@
     position: relative;
     cursor: grab;
     -webkit-overflow-scrolling: touch;
-    
+
     @include devicebreak(small) {
       height: auto;
     }
@@ -79,10 +79,10 @@
     &:active {
       cursor: grabbing;
     }
-    
+
     .mg-scroll--mobile & {
       cursor: default;
-      
+
       &:active {
         cursor: default;
       }
@@ -123,12 +123,12 @@
     &--custom-padding {
       padding: var(--scroll-padding, 0);
     }
-    
+
     &--mobile {
       // Mobile-specific styles
       height: auto !important;
       max-height: none !important;
-      
+
       .mg-scroll__content {
         display: inline-flex;
         width: auto;
@@ -142,27 +142,28 @@
     display: flex;
     flex-wrap: nowrap;
     height: auto;
-    
+
     @include devicebreak(small) {
       gap: $mg-spacing-100;
       height: auto;
       min-height: auto;
     }
   }
-  
+
   &__item-wrapper {
     width: var(--scroll-item-width, 300px);
+    min-width: var(--scroll-item-width, 300px);
     flex-shrink: 0;
     margin-right: $mg-spacing-300;
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    
+
     @include devicebreak(small) {
       display: inline-block;
       vertical-align: top;
     }
-    
+
     &:last-child {
       margin-right: 0;
     }
