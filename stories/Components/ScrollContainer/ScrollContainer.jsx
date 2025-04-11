@@ -105,11 +105,8 @@ const ScrollContainer = ({
     // If the user hasn't scrolled, open the link
     const x = e.pageX;
     const distance = Math.abs(startX - x);
-    if (distance < 2) {
-      if (e.target.href) {
-        console.log('opening',e.target.href);
-        window.parent.location.href = e.target.href;
-      }
+    if (distance < 2 && e.target.href) {
+      window.parent.location.href = e.target.href;
     }
   }, [isDragging]);
 
