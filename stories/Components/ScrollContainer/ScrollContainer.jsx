@@ -1,6 +1,5 @@
 import React, {
   useRef,
-  useReducer,
   useEffect,
   useCallback,
   useMemo,
@@ -8,26 +7,7 @@ import React, {
 import PropTypes from "prop-types";
 
 // Separate arrow buttons component
-const ArrowButtons = React.memo(({ onScroll, showLeft, showRight }) => {
-  const leftButtonRef = useRef(null);
-  const rightButtonRef = useRef(null);
-
-  // Update button classes without causing re-renders
-  useEffect(() => {
-    if (leftButtonRef.current) {
-      leftButtonRef.current.classList.toggle(
-        "mg-scroll__nav-button--disabled",
-        !showLeft,
-      );
-    }
-    if (rightButtonRef.current) {
-      rightButtonRef.current.classList.toggle(
-        "mg-scroll__nav-button--disabled",
-        !showRight,
-      );
-    }
-  }, [showLeft, showRight]);
-
+const ArrowButtons = React.memo(({ onScroll, leftButtonRef, rightButtonRef }) => {
   return (
     <nav className="mg-scroll__nav">
       <button
@@ -52,8 +32,8 @@ const ArrowButtons = React.memo(({ onScroll, showLeft, showRight }) => {
 
 ArrowButtons.propTypes = {
   onScroll: PropTypes.func.isRequired,
-  showLeft: PropTypes.bool.isRequired,
-  showRight: PropTypes.bool.isRequired,
+  leftButtonRef: PropTypes.object.isRequired,
+  rightButtonRef: PropTypes.object.isRequired,
 };
 
 // Scroll container component
@@ -70,7 +50,8 @@ const ScrollContainer = ({
 }) => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
-  const arrowVisibilityRef = useRef({ showLeft: false, showRight: false });
+  const leftButtonRef = useRef(null);
+  const rightButtonRef = useRef(null);
   const isMobileRef = useRef(false);
   const dragStateRef = useRef({
     isDragging: false,
@@ -116,21 +97,14 @@ const ScrollContainer = ({
     const newShowLeft = scrollLeft > 0;
     const newShowRight = scrollLeft + clientWidth < scrollWidth;
 
-    if (
-      newShowLeft !== arrowVisibilityRef.current.showLeft ||
-      newShowRight !== arrowVisibilityRef.current.showRight
-    ) {
-      arrowVisibilityRef.current = {
-        showLeft: newShowLeft,
-        showRight: newShowRight,
-      };
-      // Force a re-render only when arrow visibility changes
-      forceUpdate();
+    // Update button classes directly without React state
+    if (leftButtonRef.current) {
+      leftButtonRef.current.disabled = !newShowLeft;
+    }
+    if (rightButtonRef.current) {
+      rightButtonRef.current.disabled = !newShowRight;
     }
   }, [showArrows]);
-
-  // Force update function for arrow visibility changes
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleDragStart = useCallback((e) => {
     if (
@@ -286,8 +260,8 @@ const ScrollContainer = ({
       {showArrows && !isMobileRef.current && (
         <ArrowButtons
           onScroll={scroll}
-          showLeft={arrowVisibilityRef.current.showLeft}
-          showRight={arrowVisibilityRef.current.showRight}
+          leftButtonRef={leftButtonRef}
+          rightButtonRef={rightButtonRef}
         />
       )}
       <div
