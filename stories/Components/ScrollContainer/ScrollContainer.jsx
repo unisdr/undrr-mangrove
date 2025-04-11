@@ -1,5 +1,11 @@
-import React, { useRef, useReducer, useEffect, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, {
+  useRef,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import PropTypes from "prop-types";
 
 // Separate arrow buttons component
 const ArrowButtons = React.memo(({ onScroll, showLeft, showRight }) => {
@@ -9,10 +15,16 @@ const ArrowButtons = React.memo(({ onScroll, showLeft, showRight }) => {
   // Update button classes without causing re-renders
   useEffect(() => {
     if (leftButtonRef.current) {
-      leftButtonRef.current.classList.toggle('mg-scroll__nav-button--disabled', !showLeft);
+      leftButtonRef.current.classList.toggle(
+        "mg-scroll__nav-button--disabled",
+        !showLeft,
+      );
     }
     if (rightButtonRef.current) {
-      rightButtonRef.current.classList.toggle('mg-scroll__nav-button--disabled', !showRight);
+      rightButtonRef.current.classList.toggle(
+        "mg-scroll__nav-button--disabled",
+        !showRight,
+      );
     }
   }, [showLeft, showRight]);
 
@@ -21,7 +33,7 @@ const ArrowButtons = React.memo(({ onScroll, showLeft, showRight }) => {
       <button
         ref={leftButtonRef}
         className="mg-scroll__nav-button"
-        onClick={() => onScroll('left')}
+        onClick={() => onScroll("left")}
         aria-label="Scroll left"
       >
         ←
@@ -29,7 +41,7 @@ const ArrowButtons = React.memo(({ onScroll, showLeft, showRight }) => {
       <button
         ref={rightButtonRef}
         className="mg-scroll__nav-button"
-        onClick={() => onScroll('right')}
+        onClick={() => onScroll("right")}
         aria-label="Scroll right"
       >
         →
@@ -64,32 +76,37 @@ const ScrollContainer = ({
     isDragging: false,
     hasDragged: false,
     startX: 0,
-    startScrollLeft: 0
+    startScrollLeft: 0,
   });
 
   const dragThreshold = 10; // Minimum pixels to consider as a drag
 
   // Check if we're on a mobile device
   const checkMobileStatus = useCallback(() => {
-    isMobileRef.current = 'ontouchstart' in window && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    isMobileRef.current =
+      "ontouchstart" in window &&
+      /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   }, []);
 
-  const checkArrowVisibility = useCallback(() => {
-    if (!containerRef.current || !showArrows || isMobile) return;
-  // Scroll buttons
-  const scroll = useCallback((direction) => {
-    if (!containerRef.current) return;
+  // Memoize scroll function
+  const scroll = useCallback(
+    (direction) => {
+      if (!containerRef.current) return;
 
-    // Calculate scroll amount based on container width or step size
-    const scrollAmount = stepSize || containerRef.current.clientWidth / 2;
-    const newScrollLeft = containerRef.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
+      // Calculate scroll amount based on container width or step size
+      const scrollAmount = stepSize || containerRef.current.clientWidth / 2;
+      const newScrollLeft =
+        containerRef.current.scrollLeft +
+        (direction === "right" ? scrollAmount : -scrollAmount);
 
-    // Use smooth scrolling for better user experience
-    containerRef.current.scrollTo({
-      left: newScrollLeft,
-      behavior: 'smooth'
-    });
-  }, [stepSize]);
+      // Use smooth scrolling for better user experience
+      containerRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: "smooth",
+      });
+    },
+    [stepSize],
+  );
 
   // Update arrow visibility without causing re-renders
   const updateArrowVisibility = useCallback(() => {
@@ -99,50 +116,68 @@ const ScrollContainer = ({
     const newShowLeft = scrollLeft > 0;
     const newShowRight = scrollLeft + clientWidth < scrollWidth;
 
-    if (newShowLeft !== arrowVisibilityRef.current.showLeft ||
-        newShowRight !== arrowVisibilityRef.current.showRight) {
-      arrowVisibilityRef.current = { showLeft: newShowLeft, showRight: newShowRight };
+    if (
+      newShowLeft !== arrowVisibilityRef.current.showLeft ||
+      newShowRight !== arrowVisibilityRef.current.showRight
+    ) {
+      arrowVisibilityRef.current = {
+        showLeft: newShowLeft,
+        showRight: newShowRight,
+      };
       // Force a re-render only when arrow visibility changes
       forceUpdate();
     }
   }, [showArrows]);
 
   // Force update function for arrow visibility changes
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleDragStart = useCallback((e) => {
-    if (!containerRef.current || e.type.includes('mouse') && isMobileRef.current) return;
+    if (
+      !containerRef.current ||
+      (e.type.includes("mouse") && isMobileRef.current)
+    )
+      return;
 
     // Only handle mouse events for desktop, regardless of viewport size
     // This allows drag to work on desktop browsers at small viewport sizes
-    if (e.type.includes('mouse')) {
+    if (e.type.includes("mouse")) {
       dragStateRef.current = {
         ...dragStateRef.current,
         isDragging: true,
         hasDragged: false,
         startX: e.pageX,
-        startScrollLeft: containerRef.current.scrollLeft
+        startScrollLeft: containerRef.current.scrollLeft,
       };
       e.preventDefault();
     }
   }, []);
 
-  const handleDragMove = useCallback((e) => {
-    if (!dragStateRef.current.isDragging || !containerRef.current || e.type.includes('mouse') && isMobileRef.current) return;
+  const handleDragMove = useCallback(
+    (e) => {
+      if (
+        !dragStateRef.current.isDragging ||
+        !containerRef.current ||
+        (e.type.includes("mouse") && isMobileRef.current)
+      )
+        return;
 
-    if (e.type.includes('mouse')) {
-      const x = e.pageX;
-      const distance = Math.abs(dragStateRef.current.startX - x);
+      if (e.type.includes("mouse")) {
+        const x = e.pageX;
+        const distance = Math.abs(dragStateRef.current.startX - x);
 
-      if (distance > dragThreshold) {
-        e.preventDefault();
-        dragStateRef.current.hasDragged = true;
-        const walk = (dragStateRef.current.startX - x);
-        containerRef.current.scrollLeft = dragStateRef.current.startScrollLeft + walk;
-        updateArrowVisibility();
+        if (distance > dragThreshold) {
+          e.preventDefault();
+          dragStateRef.current.hasDragged = true;
+          const walk = dragStateRef.current.startX - x;
+          containerRef.current.scrollLeft =
+            dragStateRef.current.startScrollLeft + walk;
+          updateArrowVisibility();
+        }
       }
-    }
-  }, [updateArrowVisibility]);
+    },
+    [updateArrowVisibility],
+  );
 
   const handleDragEnd = useCallback((e) => {
     if (dragStateRef.current.isDragging) {
@@ -164,23 +199,32 @@ const ScrollContainer = ({
   }, []);
 
   // Memoize container styles
-  const containerStyle = useMemo(() => ({
-    '--scroll-height': height,
-    '--scroll-min-width': minWidth,
-    '--scroll-padding': padding,
-    '--scroll-item-width': itemWidth,
-  }), [height, minWidth, padding, itemWidth]);
+  const containerStyle = useMemo(
+    () => ({
+      "--scroll-height": height,
+      "--scroll-min-width": minWidth,
+      "--scroll-padding": padding,
+      "--scroll-item-width": itemWidth,
+    }),
+    [height, minWidth, padding, itemWidth],
+  );
 
   // Memoize container classes
-  const containerClasses = useMemo(() => [
-    'mg-scroll__container',
-    height && 'mg-scroll__container--custom-height',
-    minWidth && 'mg-scroll__container--custom-width',
-    padding && 'mg-scroll__container--custom-padding',
-    itemWidth && 'mg-scroll__container--custom-item-width',
-    isMobileRef.current && 'mg-scroll__container--mobile',
-    className
-  ].filter(Boolean).join(' '), [height, minWidth, padding, itemWidth, className]);
+  const containerClasses = useMemo(
+    () =>
+      [
+        "mg-scroll__container",
+        height && "mg-scroll__container--custom-height",
+        minWidth && "mg-scroll__container--custom-width",
+        padding && "mg-scroll__container--custom-padding",
+        itemWidth && "mg-scroll__container--custom-item-width",
+        isMobileRef.current && "mg-scroll__container--mobile",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" "),
+    [height, minWidth, padding, itemWidth, className],
+  );
 
   useEffect(() => {
     // Initial check for mobile status
@@ -189,42 +233,56 @@ const ScrollContainer = ({
 
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('scroll', updateArrowVisibility, { passive: true });
-      window.addEventListener('resize', updateArrowVisibility, { passive: true });
+      container.addEventListener("scroll", updateArrowVisibility, {
+        passive: true,
+      });
+      window.addEventListener("resize", updateArrowVisibility, {
+        passive: true,
+      });
 
       if (!isMobileRef.current) {
-        container.addEventListener('mousedown', handleDragStart);
-        window.addEventListener('mousemove', handleDragMove);
-        window.addEventListener('mouseup', handleDragEnd);
-        window.addEventListener('mouseleave', handleDragEnd);
+        container.addEventListener("mousedown", handleDragStart);
+        window.addEventListener("mousemove", handleDragMove);
+        window.addEventListener("mouseup", handleDragEnd);
+        window.addEventListener("mouseleave", handleDragEnd);
       }
 
-      container.addEventListener('click', handleClick, { capture: true });
+      container.addEventListener("click", handleClick, { capture: true });
     }
 
     return () => {
       if (container) {
         // Remove scroll event listeners
-        container.removeEventListener('scroll', updateArrowVisibility);
-        window.removeEventListener('resize', updateArrowVisibility);
+        container.removeEventListener("scroll", updateArrowVisibility);
+        window.removeEventListener("resize", updateArrowVisibility);
 
         // Remove mouse drag event listeners
         if (!isMobileRef.current) {
-          container.removeEventListener('mousedown', handleDragStart);
-          window.removeEventListener('mousemove', handleDragMove);
-          window.removeEventListener('mouseup', handleDragEnd);
-          window.removeEventListener('mouseleave', handleDragEnd);
+          container.removeEventListener("mousedown", handleDragStart);
+          window.removeEventListener("mousemove", handleDragMove);
+          window.removeEventListener("mouseup", handleDragEnd);
+          window.removeEventListener("mouseleave", handleDragEnd);
         }
 
         // Remove click handler
-        container.removeEventListener('click', handleClick, { capture: true });
+        container.removeEventListener("click", handleClick, { capture: true });
       }
     };
-  }, [checkMobileStatus, updateArrowVisibility, handleDragStart, handleDragMove, handleDragEnd, handleClick]);
+  }, [
+    checkMobileStatus,
+    updateArrowVisibility,
+    handleDragStart,
+    handleDragMove,
+    handleDragEnd,
+    handleClick,
+  ]);
 
   return (
     // data-mg-scroll-container is not used directly in storybook, however it is useful documentation for other integrations, such as Gutenberg
-    <section className={`mg-scroll${isMobileRef.current ? ' mg-scroll--mobile' : ''}`} data-mg-scroll-container>
+    <section
+      className={`mg-scroll${isMobileRef.current ? " mg-scroll--mobile" : ""}`}
+      data-mg-scroll-container
+    >
       {showArrows && !isMobileRef.current && (
         <ArrowButtons
           onScroll={scroll}
@@ -283,11 +341,11 @@ ScrollContainer.propTypes = {
   stepSize: PropTypes.number,
 };
 ScrollContainer.defaultProps = {
-  height: 'auto',
-  minWidth: 'auto',
-  itemWidth: 'auto',
-  padding: '0',
-  className: '',
+  height: "auto",
+  minWidth: "auto",
+  itemWidth: "auto",
+  padding: "0",
+  className: "",
   showArrows: false,
   stepSize: null,
 };
