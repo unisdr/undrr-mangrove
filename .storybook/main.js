@@ -62,7 +62,9 @@ export default {
       use: ["style-loader", "css-loader", "sass-loader"],
       include: path.resolve(currentDirPath, "../"),
     });
-    
+
+    // Silience import warnings
+    // https://gitlab.com/undrr/web-backlog/-/issues/2094
     if (!config.ignoreWarnings) {
       config.ignoreWarnings = [];
     }
