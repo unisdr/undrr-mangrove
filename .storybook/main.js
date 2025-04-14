@@ -62,6 +62,23 @@ export default {
       use: ["style-loader", "css-loader", "sass-loader"],
       include: path.resolve(currentDirPath, "../"),
     });
+    
+    if (!config.ignoreWarnings) {
+      config.ignoreWarnings = [];
+    }
+    
+    config.ignoreWarnings.push({
+      message: /Sass @import rules are deprecated/,
+    });
+    
+    config.ignoreWarnings.push({
+      message: /mixed-decls/,
+    });
+    
+    config.ignoreWarnings.push({
+      message: /repetitive deprecation warnings omitted/,
+    });
+    
     return config;
   },
 
