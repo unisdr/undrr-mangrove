@@ -3247,10 +3247,10 @@
   resolved "https://registry.yarnpkg.com/@whitespace/storybook-addon-html/-/storybook-addon-html-6.1.1.tgz#aa7f8cacdf1c42f2536f06195bf18438f895ceb7"
   integrity sha512-sq/9c6s4PXugl//Q5iFwKoHF3tBDTEfJQubb62HWspF+CqBrDLHVEh7VYoEjubm5LjihxdFV3+mjj8Ck6bnoHQ==
 
-"@wordpress/babel-preset-default@8.21.0":
-  version "8.21.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/babel-preset-default/-/babel-preset-default-8.21.0.tgz#c7087a521854363f163f2f800cf92f3d3d14901f"
-  integrity sha512-NlYlnjtG/y68/SnRREv3UhDY/2tWH6qYTHcCXQHAQ7mVFFcpRshioBx2y1GF1JRVAprHWXC8KiTBrssPGr8/JA==
+"@wordpress/babel-preset-default@8.22.0":
+  version "8.22.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/babel-preset-default/-/babel-preset-default-8.22.0.tgz#111cf2c0f4771534a409b0d820d7e2b3e6a2e485"
+  integrity sha512-iBPcAtfT6Qo745RBtiKyy6OwKB6qlLusLGE/+2W160oX4oaPlbrJbf37tb3LaYMR/+ncEakiio3eNUlR9wQE9A==
   dependencies:
     "@babel/core" "7.25.7"
     "@babel/plugin-transform-react-jsx" "7.25.7"
@@ -3258,21 +3258,21 @@
     "@babel/preset-env" "7.25.7"
     "@babel/preset-typescript" "7.25.7"
     "@babel/runtime" "7.25.7"
-    "@wordpress/browserslist-config" "^6.21.0"
-    "@wordpress/warning" "^3.21.0"
+    "@wordpress/browserslist-config" "^6.22.0"
+    "@wordpress/warning" "^3.22.0"
     browserslist "^4.21.10"
     core-js "^3.31.0"
     react "^18.3.0"
 
-"@wordpress/browserslist-config@^6.21.0":
-  version "6.21.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/browserslist-config/-/browserslist-config-6.21.0.tgz#d5f21797f0edd14b7351dc2f191bf331e1d00b9a"
-  integrity sha512-8NTmCQMtL852d5+scnuayiHeIDzlWnNCrupJiyyIyAUZpk05E8PLOswQvvTpsiCgwKAKXlRTLuNGKkAXAX1nPA==
+"@wordpress/browserslist-config@^6.22.0":
+  version "6.22.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/browserslist-config/-/browserslist-config-6.22.0.tgz#a46e4d41a885497689c3f742eb2d6bb2ac271aea"
+  integrity sha512-IrvIkmBSO/DsTQCSWqeds95JN31nl138RvspB93Y5+f9gF5RuZ281HhRas5HbSgPa/SMHRXz6uT4wzNamP2Piw==
 
-"@wordpress/warning@^3.21.0":
-  version "3.21.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-3.21.0.tgz#3b05a555e320bd853682689d72327ad587347164"
-  integrity sha512-KkVhXK9s5Ftly2Z0BJfQR7m3Z4WB+8/+w0Tj86Cztz3NJk3iFF51Tes5zAD8GhDJ4SelwGW5ghALV51coTjrWA==
+"@wordpress/warning@^3.22.0":
+  version "3.22.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-3.22.0.tgz#ae896b9d8a29b382ce5e6f429197576e3f05a96d"
+  integrity sha512-GvL9XdnRyDfFbwtZ6X0hoRDlQr6G5kHLWhq5gnE6uJ9xqiuPR9CQgM24a8LE3Oje1ipdWvPA7Cyr6tv4y8TuMQ==
 
 "@xmldom/xmldom@^0.8.2":
   version "0.8.10"
@@ -14608,34 +14608,7 @@ webpack-virtual-modules@^0.6.0, webpack-virtual-modules@^0.6.2:
   resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.6.2.tgz#057faa9065c8acf48f24cb57ac0e77739ab9a7e8"
   integrity sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==
 
-webpack@5, webpack@^5, webpack@^5.0.0:
-  version "5.99.5"
-  dependencies:
-    "@types/eslint-scope" "^3.7.7"
-    "@types/estree" "^1.0.6"
-    "@webassemblyjs/ast" "^1.14.1"
-    "@webassemblyjs/wasm-edit" "^1.14.1"
-    "@webassemblyjs/wasm-parser" "^1.14.1"
-    acorn "^8.14.0"
-    browserslist "^4.24.0"
-    chrome-trace-event "^1.0.2"
-    enhanced-resolve "^5.17.1"
-    es-module-lexer "^1.2.1"
-    eslint-scope "5.1.1"
-    events "^3.2.0"
-    glob-to-regexp "^0.4.1"
-    graceful-fs "^4.2.11"
-    json-parse-even-better-errors "^2.3.1"
-    loader-runner "^4.2.0"
-    mime-types "^2.1.27"
-    neo-async "^2.6.2"
-    schema-utils "^4.3.0"
-    tapable "^2.1.1"
-    terser-webpack-plugin "^5.3.11"
-    watchpack "^2.4.1"
-    webpack-sources "^3.2.3"
-
-webpack@5.99.5:
+webpack@5, webpack@5.99.5, webpack@^5, webpack@^5.0.0:
   version "5.99.5"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.99.5.tgz#86e3b3a5a03377ea5da271c929934003f5ac5dd8"
   integrity sha512-q+vHBa6H9qwBLUlHL4Y7L0L1/LlyBKZtS9FHNCQmtayxjI5RKC9yD8gpvLeqGv5lCQp1Re04yi0MF40pf30Pvg==
