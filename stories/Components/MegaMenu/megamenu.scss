@@ -4,6 +4,17 @@
   position: relative;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .mg-mega-topbar {
   width: 100%;
   background: $mg-color-interactive;
@@ -22,6 +33,7 @@
   color: $mg-color-button;
   font-weight: bold;
   cursor: pointer;
+  list-style: none;
 
   &:hover,
   &--active {
@@ -49,6 +61,11 @@
   z-index: 1;
   width: 100%;
 
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    flex-direction: column;
+    height: auto;
+  }
+
   &.mg-container-full-width {
     position: absolute;
   }
@@ -57,6 +74,7 @@
     flex-basis: 33%;
     height: 100%;
     background-color: $mg-color-interactive;
+
   }
   &__banner {
     padding: $mg-spacing-150;
@@ -74,6 +92,13 @@
         text-decoration: none;
       }
     }
+  }
+}
+
+.mg-mega-content, .mg-mega-content__left, .mg-mega-content__right {
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 1px;
+    outline-offset: 1px;
   }
 }
 
@@ -120,6 +145,11 @@
   height: 100%;
   background-color: $mg-color-white;
   display: flex;
+
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    width: 100%;
+  }
+
   ul {
     flex: 1;
     padding: $mg-spacing-150;
@@ -184,6 +214,7 @@
 }
 
 .mg-mega-sidebar-section {
+  list-style: none;
   ol {
     list-style: none;
     margin: 0;
@@ -214,8 +245,20 @@
   color: white;
   cursor: pointer;
   padding: $mg-spacing-100 $mg-spacing-250;
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    background: $mg-color-blue-900;
+    width: 100%;
+    border: none;
+    border-top: 1px solid $mg-color-white;
+  }
+
   &:hover {
-    background: $mg-color-blue-700;
+    background: $mg-color-blue-500;
+  }
+
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 2px;
+    outline-offset: -1px;
   }
 }
 
@@ -230,6 +273,12 @@
   box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   top: 0;
   right: 0;
+}
+
+.sidebar__list {
+  background: $mg-color-white;
+  display: flex;
+  flex-direction: column;
 }
 
 .mg-mega-sidebar__section {

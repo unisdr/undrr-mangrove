@@ -1,14 +1,51 @@
 import React from "react";
-export function TopBarItem ({ title, onMouseEnter, activeItem, link, children, bannerDescription }) {
+export function TopBarItem ({ 
+  title, 
+  onMouseEnter, 
+  activeItem, 
+  link, 
+  children, 
+  bannerDescription, 
+  handleFocusSection,
+  onKeyDown,
+  hasSubmenu
+}) {
   let isActive = title === activeItem;
+  
   return (
-    <span 
-      className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`} 
+    <li
+      className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
       onMouseEnter={children || bannerDescription ? onMouseEnter : undefined}
+      onFocus={onMouseEnter}
+      role="none"
     >
-      {/* Render link if no children and link URL exists, otherwise just show title */}
-      {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
-      {link && link.url ? <a href={link.url}>{title}</a> : title}
-    </span>
+      {link && link.url ? (
+        <a 
+          href={link.url}
+          role="menuitem"
+          onKeyDown={onKeyDown}
+        >
+          {title}
+        </a>
+      ) : (
+        <span 
+          tabIndex={0} 
+          role="menuitem"
+          aria-haspopup={hasSubmenu}
+          aria-expanded={isActive && hasSubmenu}
+          onKeyDown={(e) => {
+            if (handleFocusSection && (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              handleFocusSection(e);
+            }
+            if (onKeyDown) {
+              onKeyDown(e);
+            }
+          }}
+        >
+          {title}
+        </span>
+      )}
+    </li>
   )
 }

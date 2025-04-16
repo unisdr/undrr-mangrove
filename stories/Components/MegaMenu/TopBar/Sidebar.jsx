@@ -3,55 +3,24 @@ import { useState } from "react";
 import { Icons } from "../../../Atom/Icons/Icons";
 import chevronLeftIcon from "../../../assets/icons/chevron-left-circle.svg"
 
-function SidebarSection ({ section, display, onClick }) {
-  const [itemIndex, setItemIndex] = useState(null);
+import SectionItems from "../SectionItems/SectionItems"
 
-  const onItemToggle = (index) => {
-    if (index === itemIndex) {
-      setItemIndex(null);
-      return
-    }
-    setItemIndex(index);
-  }
+function SidebarSection ({ section, display, onClick }) {
 
   return (
-    <div className="mg-mega-sidebar-section">
-      <div className="mg-mega-sidebar-section__item" onClick={(val) => onClick(val)}>
+    <li className="mg-mega-sidebar-section">
+      <button className="mg-mega-sidebar-section__item" onClick={(val) => onClick(val)} aria-pressed={display}>
         <span>{section.title}</span>
         <Icons src={chevronLeftIcon} />
-      </div>
+      </button>
       {
-        display && (
-          <ol>
-            {
-              section.items.map((item, index) => (
-                <li key={index}>
-                  <div
-                    onClick={() => onItemToggle(index)} className="mg-mega-sidebar-section__item"
-                  >
-                    <span>{section.title}</span>
-                    <Icons src={chevronLeftIcon} />
-                  </div>
-                  {
-                    index === itemIndex && (
-                      <ol>
-                        {
-                          item.items.map((subItem, index) => (
-                            <li key={index}>
-                              <a href={subItem.url}>{subItem.title}</a>
-                            </li>
-                          ))
-                        }
-                      </ol>
-                    )
-                  }
-                </li>
-              ))
-            }
-          </ol>
-        )
+        display && (section && section.items) && <SectionItems section={section} />
       }
-    </div>
+      { display && ( section && !section.items && section.bannerDescription && (
+          <article className="mg-mega-content | mg-container-full-width" aria-live="polite" dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
+        ))
+      }
+    </li>
   )
 }
 
@@ -68,13 +37,13 @@ export function Sidebar({ sections }) {
 
   return (
     <div className="sidebar">
-      <div>
+      <ul className="sidebar__list">
         {
           sections.map((section, index) => (
             <SidebarSection section={section} key={index} display={sectionIndex === index} onClick={() => onSectionToggle(index)}/>
           ))
         }
-      </div>
+      </ul>
     </div>
   )
-} 
+}
