@@ -245,6 +245,7 @@
   color: white;
   cursor: pointer;
   padding: $mg-spacing-100 $mg-spacing-250;
+
   @media screen and (max-width: $mg-breakpoint-mobile) {
     background: $mg-color-blue-900;
     width: 100%;
