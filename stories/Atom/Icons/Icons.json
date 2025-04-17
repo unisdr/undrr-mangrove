@@ -123,6 +123,22 @@
     {
       "name": "share",
       "label": "Share, social media"
+    },
+    {
+      "name": "left",
+      "label": "Left arrow"
+    },
+    {
+      "name": "right",
+      "label": "Right arrow"
+    },
+    {
+      "name": "angle-circled-right",
+      "label": "Circle right arrow"
+    },
+    {
+      "name": "angle-circled-left",
+      "label": "Circle left arrow"
     }
   ]
 }
