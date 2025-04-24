@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .mg-snackbar-wrapper {
   position: fixed;
   top: 0;
@@ -6,9 +8,17 @@
   justify-content: center;
   transform: translate(-50%, -300%);
   transition: transform 0.3s ease-in-out;
+  z-index: 9999; // Ensure snackbar appears above other elements
+  width: calc(100% - 32px); // Ensure it works on small screens
+  max-width: 600px; // Limit width on large screens
 
   &__open {
     transform: translate(-50%, 0%);
+  }
+  
+  @media (max-width: $mg-breakpoint-mobile) {
+    width: calc(100% - 16px); // Smaller margin on mobile
+    top: 8px; // Small space from top
   }
 }
 
@@ -21,22 +31,33 @@
   padding: $mg-padding-button;
   box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
   fill: $mg-color-white;
-
-  // severity
+  width: 100%;
+  
+  // Ensure appropriate color contrast for accessibility
   &__error {
     background-color: $mg-color-red-900;
+    color: $mg-color-white; // Ensure text is readable
+  }
+
+  // severity - use colors with sufficient contrast ratio
+  &__error {
+    background-color: $mg-color-red-900;
+    color: $mg-color-white;
   }
 
   &__warning {
-    background-color: $mg-color-accent-100;
+    background-color: color.adjust(#e09d04, $lightness: -10%); // Dark amber color for warning state
+    color: $mg-color-white; // Use white text to be consistent with other severity types
   }
 
   &__info {
     background-color: $mg-color-interactive;
+    color: $mg-color-white;
   }
 
   &__success {
-    background-color: $mg-color-interactive;
+    background-color: color.adjust($mg-color-interactive, $lightness: -5%); // Slightly darker for better distinction
+    color: $mg-color-white;
   }
 
   &__content {
@@ -45,14 +66,81 @@
     justify-content: space-between;
     gap: $mg-spacing-100;
     width: 100%;
+    
+    @media (max-width: $mg-breakpoint-mobile) {
+      flex-wrap: wrap; // Allow wrapping on small screens
+      flex-direction: column;
+      align-items: flex-start;
+      
+      // On mobile, make the close button span the full width
+      .mg-button {
+        margin-top: $mg-spacing-100;
+        width: 100%; 
+        min-height: 44px; // Ensure touchable area is large enough
+      }
+    }
   }
 
   &__message {
     margin-right: $mg-spacing-200;
+    flex: 1; // Allow message to take up available space
+    word-break: break-word; // Prevent overflow of long words
+  }
+  
+  // Make button larger on touch devices for better usability
+  .mg-button {
+    min-width: 88px; 
+    min-height: 36px;
+    padding: $mg-spacing-50 $mg-spacing-150;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    &:active {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    &:focus-visible {
+      outline: 2px solid $mg-color-white;
+      outline-offset: 2px;
+    }
+    
+    @media (max-width: $mg-breakpoint-mobile) {
+      min-height: 44px; // Larger touch target on mobile
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 
 .mg-snackbar__icon {
   width: 25px;
   height: 25px;
+  flex-shrink: 0; // Prevent icon from shrinking on small screens
+  
+  svg {
+    fill: currentColor; // Ensure icons match the text color for better visibility
+  }
+}
+
+// Screen reader only class
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
