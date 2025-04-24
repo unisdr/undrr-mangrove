@@ -45,9 +45,24 @@ export default function Section({ section, index, sectionListRef, itemListRef })
       // Focus on first element on right side in content area
       // only if aside element exists
       if (e.key === 'ArrowRight') {
-        contentRef.current?.focus();
-        const firstContentElement = focusableElements.filter((item) => (item === contentRef.current));
-        firstContentElement[0] && setFocusIndex(focusableElements.indexOf(firstContentElement[0]));
+        const rightSection = contentRef.current;
+        
+        const firstLink = rightSection?.querySelector('ul > li > a');
+        
+        if (firstLink) {
+          rightSection.setAttribute('tabindex', '-1');
+          
+          firstLink.focus();
+          
+          const firstLinkIndex = focusableElements.findIndex(el => el === firstLink);
+          if (firstLinkIndex !== -1) {
+            setFocusIndex(firstLinkIndex);
+          }
+        } else {
+          contentRef.current?.focus();
+          const firstContentElement = focusableElements.filter((item) => (item === contentRef.current));
+          firstContentElement[0] && setFocusIndex(focusableElements.indexOf(firstContentElement[0]));
+        }
       }
     }
   }
@@ -57,8 +72,9 @@ export default function Section({ section, index, sectionListRef, itemListRef })
     const tabableElements = sectionListRef?.current?.[index]?.querySelectorAll(
       'audio, button, a, canvas, details, iframe, input, select, summary, textarea, video, [tabindex]'
     );
+    
     setFocusableElements(Array.from(tabableElements || []))
-  }, [sectionListRef])
+  }, [sectionListRef, index, itemIndex])
 
 
   useEffect(() => {
