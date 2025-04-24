@@ -1,6 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Icons } from "../../../Atom/Icons/Icons";
-import chevronLeftIcon from "../../../assets/icons/chevron-left-circle.svg"
 
 import Section from "../Section/Section"
 
@@ -24,7 +22,7 @@ function SidebarItem({ section, sectionListRef, sectionIndex, handleSectionToggl
         role="menuitem"
       >
         <span>{section.title}</span>
-        <Icons src={chevronLeftIcon} aria-hidden="true" />
+        <span className="mg-icon fa-angle-circled-left" aria-hidden="true"></span>
       </button>
       {
         display && (section && section.items) && (

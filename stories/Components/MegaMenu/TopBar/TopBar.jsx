@@ -2,8 +2,6 @@ import React, { useRef, useState } from "react";
 import { TopBarItem } from "./TopBarItem";
 import { TopBarIconButton } from "./TopBarIconButton.jsx";
 import { useBreakpoint } from "./hook.js";
-import hamburger from "../../../assets/icons/arrow-right.svg"
-import close from "../../../assets/icons/arrow-right.svg"
 
 export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sections, activeItem, sectionListRef, itemListRef }) {
 
@@ -32,7 +30,7 @@ export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sectio
     <ul className="mg-mega-topbar | mg-container-full-width" role="menubar" aria-label="Main navigation menu">
       {
         breakpoint === 'mobile' ? (
-          <TopBarIconButton icon={showSidebar ? close : hamburger} onClick={() => toggleShowSidebar()} />
+          <TopBarIconButton isOpen={showSidebar} onClick={() => toggleShowSidebar()} />
         ) : (
           sections.map((section, index) => (
             <>
