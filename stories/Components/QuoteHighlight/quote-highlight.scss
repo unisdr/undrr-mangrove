@@ -90,11 +90,13 @@
   &__quote {
     margin: 0;
     position: relative;
-    padding-left: $mg-spacing-400;
+    padding: 0 0 0 $mg-spacing-400;
+    font-weight: 600;
     font-size: $mg-font-size-400;
     font-style: italic;
     line-height: 1.5;
     margin-bottom: $mg-spacing-300;
+    text-wrap: balance;
 
     &::before {
       content: "\201C";
