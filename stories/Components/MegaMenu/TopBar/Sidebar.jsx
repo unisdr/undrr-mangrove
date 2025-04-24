@@ -12,15 +12,19 @@ function SidebarItem({ section, sectionListRef, sectionIndex, handleSectionToggl
     <li
       className="mg-mega-sidebar-section"
       onKeyDown={handleOnKeyDown}
+      role="none"
     >
       <button
         className="mg-mega-sidebar-section__item"
         onClick={() => handleSectionToggle(index)}
         aria-pressed={display}
+        aria-expanded={display}
+        aria-haspopup={section && section.items ? "true" : undefined}
         ref={ref}
+        role="menuitem"
       >
         <span>{section.title}</span>
-        <Icons src={chevronLeftIcon} />
+        <Icons src={chevronLeftIcon} aria-hidden="true" />
       </button>
       {
         display && (section && section.items) && (
@@ -48,6 +52,10 @@ export function Sidebar({ sections, itemListRef, sectionListRef }) {
   }
 
   const handleFocusByArrows = (e, index) => {
+    // Prevent default scrolling behavior with arrow keys
+    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+    }
 
     const itemRef = itemListRef?.current
 
@@ -64,8 +72,8 @@ export function Sidebar({ sections, itemListRef, sectionListRef }) {
   }
 
   return (
-    <div className="sidebar">
-      <ul className="sidebar__list">
+    <div className="sidebar" role="dialog" aria-label="Mobile navigation menu">
+      <ul className="sidebar__list" role="menu" aria-label="Navigation options">
         {
           sections.map((section, index) => (
             <SidebarItem

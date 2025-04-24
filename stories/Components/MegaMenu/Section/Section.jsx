@@ -73,15 +73,16 @@ export default function Section({ section, index, sectionListRef, itemListRef })
       {section && section.items && (
         <article
           className="mg-mega-content | mg-container-full-width"
-          aria-description="Menu section"
+          aria-label="Menu section"
           aria-live="polite"
           tabIndex={0}
           ref={(element => sectionListRef.current[index] = element)}
           onKeyDown={handleArrowFocus}
+          role="region"
         >
           {/* Only show the left area if there are child items and heading */}
           {section.bannerHeading && section.bannerDescription && section.items && (
-            <aside className="mg-mega-content__left" aria-description="Side section" ref={asideRef} tabIndex={0}>
+            <aside className="mg-mega-content__left" aria-label="Category navigation" ref={asideRef} tabIndex={0} role="navigation">
               <section className="mg-mega-content__banner">
                 <header>{section.bannerHeading}</header>
                 {(
@@ -98,12 +99,13 @@ export default function Section({ section, index, sectionListRef, itemListRef })
                 )}
               </section>
               {section.items.length > 0 && section.items[0].items && section.items[0].items.length > 0 ? (
-                <ul className="mg-mega-content__section-list" role="list">
+                <ul className="mg-mega-content__section-list" role="menu" aria-label="Categories">
                   {section.items.map((item, index) => (
                     <li
                       key={index}
                       className="mg-mega-content__section-list-item"
                       onMouseEnter={() => setItemIndex(index)}
+                      role="none"
                     >
                       <a
                         className={`mg-mega-content__section-list-link ${itemIndex === index
@@ -113,6 +115,8 @@ export default function Section({ section, index, sectionListRef, itemListRef })
                         href={item.url}
                         aria-current={itemIndex === index ? "page" : undefined}
                         onFocus={() => setItemIndex(index)}
+                        role="menuitem"
+                        aria-haspopup={item.items && item.items.length > 0 ? "true" : undefined}
                       >
                         {item.title}
                       </a>
@@ -123,17 +127,17 @@ export default function Section({ section, index, sectionListRef, itemListRef })
             </aside>
           )}
           {section.items && (
-            <section className="mg-mega-content__right" aria-description="Content section" ref={contentRef} tabIndex={0}>
-              <ul role="list">
+            <section className="mg-mega-content__right" aria-label="Submenu content" ref={contentRef} tabIndex={0} role="navigation">
+              <ul role="menu" aria-label="Submenu items">
                 {section.items[itemIndex]?.items ? (
                   section.items[itemIndex].items.map((subItem, subIndex) => (
-                    <li key={subIndex}>
-                      <a href={subItem.url}>{subItem.title}</a>
+                    <li key={subIndex} role="none">
+                      <a href={subItem.url} role="menuitem" aria-haspopup={subItem.items ? "true" : undefined}>{subItem.title}</a>
                       {subItem.items && (
-                        <ul role="list">
+                        <ul role="menu" aria-label={`${subItem.title} submenu`}>
                           {subItem.items.map((nestedItem, nestedIndex) => (
-                            <li key={nestedIndex}>
-                              <a href={nestedItem.url}>{nestedItem.title}</a>
+                            <li key={nestedIndex} role="none">
+                              <a href={nestedItem.url} role="menuitem">{nestedItem.title}</a>
                             </li>
                           ))}
                         </ul>
@@ -142,8 +146,8 @@ export default function Section({ section, index, sectionListRef, itemListRef })
                   ))
                 ) : (
                   section.items.map((item, index) => (
-                    <li key={index}>
-                      <a href={item.url}>{item.title}</a>
+                    <li key={index} role="none">
+                      <a href={item.url} role="menuitem">{item.title}</a>
                     </li>
                   ))
                 )}
@@ -158,7 +162,7 @@ export default function Section({ section, index, sectionListRef, itemListRef })
         <article
           className="mg-mega-content | mg-container-full-width"
           aria-live="polite"
-          aria-description="Submenu item"
+          aria-label="Submenu item"
           tabIndex={0}
           ref={(element => sectionListRef.current[index] = element)}
           dangerouslySetInnerHTML={{ __html: section.bannerDescription }}

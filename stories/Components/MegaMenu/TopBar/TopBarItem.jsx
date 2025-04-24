@@ -23,6 +23,7 @@ export function TopBarItem({
       onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
       onFocus={onMouseEnter}
       onKeyDown={handleOnKeyDown}
+      role="none"
     >
       {/* Render link if no children and link URL exists, otherwise just show title */}
       {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
@@ -31,6 +32,9 @@ export function TopBarItem({
           className="mg-mega-topbar__item-link"
           href={link.url}
           ref={ref}
+          role="menuitem"
+          aria-haspopup={section && section.items ? "true" : undefined}
+          aria-expanded={isActive ? "true" : undefined}
         >
           {title}
         </a>
@@ -38,6 +42,9 @@ export function TopBarItem({
         <button
           className="mg-mega-topbar__item-link"
           ref={ref}
+          role="menuitem"
+          aria-haspopup={section && section.items ? "true" : undefined}
+          aria-expanded={isActive ? "true" : undefined}
         >
           {title}
         </button>

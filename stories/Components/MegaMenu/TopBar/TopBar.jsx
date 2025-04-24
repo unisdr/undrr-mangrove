@@ -29,7 +29,7 @@ export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sectio
   };
 
   return (
-    <ul className="mg-mega-topbar | mg-container-full-width">
+    <ul className="mg-mega-topbar | mg-container-full-width" role="menubar" aria-label="Main navigation menu">
       {
         breakpoint === 'mobile' ? (
           <TopBarIconButton icon={showSidebar ? close : hamburger} onClick={() => toggleShowSidebar()} />
