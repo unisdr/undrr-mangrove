@@ -13,8 +13,7 @@
  * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
  * @returns {JSX.Element} Rendered MegaMenu component
  */
-import React from "react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
 import { useBreakpoint } from "./TopBar/hook";
