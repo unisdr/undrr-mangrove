@@ -33,8 +33,7 @@ export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sectio
           <TopBarIconButton isOpen={showSidebar} onClick={() => toggleShowSidebar()} />
         ) : (
           sections.map((section, index) => (
-            <>
-              <TopBarItem
+            <TopBarItem
                 key={index}
                 index={index}
                 ref={element => itemListRef.current[index] = element}
@@ -51,7 +50,6 @@ export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sectio
                 sectionListRef={sectionListRef}
                 itemListRef={itemListRef}
               />
-            </>
           ))
         )
       }
