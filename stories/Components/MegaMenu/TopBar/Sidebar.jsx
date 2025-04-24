@@ -71,7 +71,7 @@ export function Sidebar({ sections, itemListRef, sectionListRef }) {
 
   return (
     <div className="sidebar" role="dialog" aria-label="Mobile navigation menu">
-      <ul className="sidebar__list" role="menu" aria-label="Navigation options">
+      <ul className="mg-mega-sidebar__list" role="menu" aria-label="Navigation options">
         {
           sections.map((section, index) => (
             <SidebarItem
