@@ -17,19 +17,18 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
-import SectionItems from "./SectionItems/SectionItems";
 import { useBreakpoint } from "./TopBar/hook";
 
 const MegaMenu = ({ sections, delay = 300 }) => {
-  const [section, setSection] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const breakpoint = useBreakpoint();
 
+  const itemListRef = useRef([]);
+  const sectionListRef = useRef([])
+
   // Use ref for timeoutId to prevent re-renders
   const timeoutRef = useRef(null);
-  const topBarRef = useRef(null);
-  const contentRef = useRef(null);
 
   // Clear timeout on unmount
   useEffect(() => {
@@ -37,38 +36,20 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   }, []);
 
   const handleMouseLeave = () => {
-    clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
-      setSection(null);
+      setActiveItem(null);
     }, delay);
   };
 
-  const handleFocusSection = (e) => {
-    if(e.key === 'ArrowDown'){
-      contentRef?.current.focus();
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    // ESC key closes the menu
-    if (e.key === 'Escape' && section) {
-      setSection(null);
-      // Return focus to the menu item that opened the submenu
-      if (topBarRef?.current) {
-        const focusableItems = topBarRef.current.querySelectorAll('li a, li span[tabIndex="0"]');
-        const activeIndex = Array.from(focusableItems).findIndex(item => 
-          item.textContent === activeItem
-        );
-        if (activeIndex >= 0 && focusableItems[activeIndex]) {
-          focusableItems[activeIndex].focus();
-        }
-      }
-    }
-  };
-
-  const handleMouseEnter = (item) => {
+  const handleItemHover = (item) => {
     clearTimeout(timeoutRef.current);
-    setSection(item);
+    setActiveItem(item);
+  }
+
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      setActiveItem(null)
+    }
   };
 
   useEffect(() => {
@@ -77,56 +58,29 @@ const MegaMenu = ({ sections, delay = 300 }) => {
     }
   }, [breakpoint]);
 
-  // Add event listener for Escape key
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [section, activeItem]);
-
   return (
     <nav
       className="mg-mega-wrapper"
       onMouseLeave={handleMouseLeave}
+      onKeyDown={handleEscape}
       aria-label="Main Navigation"
     >
       <TopBar
         sections={sections}
-        onItemHover={(item) => {
-          handleMouseEnter(item);
-          setActiveItem(item.title);
-        }}
+        handleItemHover={handleItemHover}
         toggleShowSidebar={() => setShowSidebar((prev) => !prev)}
         showSidebar={showSidebar}
         activeItem={activeItem}
-        handleFocusSection={handleFocusSection}
-        ref={topBarRef}
+        itemListRef={itemListRef}
+        sectionListRef={sectionListRef}
       />
 
-      {section && section.items && (
-        <SectionItems 
-          section={section} 
-          topBarRef={topBarRef} 
-          ref={contentRef} 
-          activeItem={activeItem}
-          setSection={setSection} 
-        />
-      )}
-
-      {section && !section.items && section.bannerDescription && (
-        <article
-          className="mg-mega-content | mg-container-full-width"
-          aria-live="polite"
-          aria-labelledby={`menu-description-${section.title}`}
-          ref={contentRef}
-          tabIndex={0}
-        >
-          <div id={`menu-description-${section.title}`} dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
-        </article>
-      )}
       {showSidebar && (
-        <Sidebar sections={sections} onClose={() => setShowSidebar(false)} />
+        <Sidebar
+          sections={sections}
+          itemListRef={itemListRef}
+          sectionListRef={sectionListRef}
+        />
       )}
     </nav>
   );

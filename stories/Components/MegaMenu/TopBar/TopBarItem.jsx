@@ -1,51 +1,55 @@
 import React from "react";
-export function TopBarItem ({ 
-  title, 
-  onMouseEnter, 
-  activeItem, 
-  link, 
-  children, 
-  bannerDescription, 
-  handleFocusSection,
-  onKeyDown,
-  hasSubmenu
+import Section from "../Section/Section.jsx";
+
+export function TopBarItem({
+  title,
+  onMouseEnter,
+  activeItem,
+  link,
+  bannerDescription,
+  handleOnKeyDown,
+  ref,
+  section,
+  sectionListRef,
+  itemListRef,
+  index,
 }) {
-  let isActive = title === activeItem;
-  
+
+  let isActive = index === activeItem;
+
   return (
     <li
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
-      onMouseEnter={children || bannerDescription ? onMouseEnter : undefined}
+      onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
       onFocus={onMouseEnter}
-      role="none"
+      onKeyDown={handleOnKeyDown}
     >
-      {link && link.url ? (
-        <a 
+      {/* Render link if no children and link URL exists, otherwise just show title */}
+      {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
+      {link && link.url ?
+        <a
+          className="mg-mega-topbar__item-link"
           href={link.url}
-          role="menuitem"
-          onKeyDown={onKeyDown}
+          ref={ref}
         >
           {title}
         </a>
-      ) : (
-        <span 
-          tabIndex={0} 
-          role="menuitem"
-          aria-haspopup={hasSubmenu}
-          aria-expanded={isActive && hasSubmenu}
-          onKeyDown={(e) => {
-            if (handleFocusSection && (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ')) {
-              e.preventDefault();
-              handleFocusSection(e);
-            }
-            if (onKeyDown) {
-              onKeyDown(e);
-            }
-          }}
+        :
+        <button
+          className="mg-mega-topbar__item-link"
+          ref={ref}
         >
           {title}
-        </span>
-      )}
+        </button>
+      }
+
+      <Section
+        section={section}
+        index={index}
+        sectionListRef={sectionListRef}
+        itemListRef={itemListRef}
+      />
+
     </li>
   )
 }

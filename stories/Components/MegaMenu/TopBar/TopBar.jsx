@@ -1,81 +1,63 @@
-import React, { forwardRef } from "react";
+import React, { useRef, useState } from "react";
 import { TopBarItem } from "./TopBarItem";
 import { TopBarIconButton } from "./TopBarIconButton.jsx";
 import { useBreakpoint } from "./hook.js";
 import hamburger from "../../../assets/icons/arrow-right.svg"
 import close from "../../../assets/icons/arrow-right.svg"
 
-export const TopBar = forwardRef(({ onItemHover, toggleShowSidebar, showSidebar, sections, activeItem, handleFocusSection }, ref) => {
+export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sections, activeItem, sectionListRef, itemListRef }) {
+
   const breakpoint = useBreakpoint();
 
-  const handleKeyDown = (e, index) => {
-    const items = Array.from(ref.current.querySelectorAll('li'));
-    const focusableItems = items.filter(item => !item.classList.contains('hidden'));
-    const currentIndex = focusableItems.indexOf(items[index]);
+  const handleFocusByArrows = (e, index) => {
+    // Prevent default browser scrolling for arrow keys
+    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+    }
 
-    // Handle keyboard navigation
-    switch(e.key) {
-      case 'ArrowRight':
-        e.preventDefault();
-        if (currentIndex < focusableItems.length - 1) {
-          const nextItem = focusableItems[currentIndex + 1].querySelector('a, span[tabIndex="0"]');
-          if (nextItem) nextItem.focus();
-        }
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        if (currentIndex > 0) {
-          const prevItem = focusableItems[currentIndex - 1].querySelector('a, span[tabIndex="0"]');
-          if (prevItem) prevItem.focus();
-        }
-        break;
-      case 'Home':
-        e.preventDefault();
-        const firstItem = focusableItems[0].querySelector('a, span[tabIndex="0"]');
-        if (firstItem) firstItem.focus();
-        break;
-      case 'End':
-        e.preventDefault();
-        const lastItem = focusableItems[focusableItems.length - 1].querySelector('a, span[tabIndex="0"]');
-        if (lastItem) lastItem.focus();
-        break;
-      case 'ArrowDown':
-        if (handleFocusSection) {
-          handleFocusSection(e);
-        }
-        break;
-      default:
-        break;
+    const itemRef = itemListRef?.current;
+
+    if ((e.key === 'ArrowLeft') && index >= 1) {
+      itemRef[index - 1].focus();
+    }
+    if ((e.key === 'ArrowRight') && index < itemRef?.length - 1) {
+      itemRef[index + 1].focus();
+    }
+    if (e.key === 'ArrowDown') {
+      sectionListRef?.current?.[index].focus();
     }
   };
 
   return (
-    <ul className="mg-mega-topbar | mg-container-full-width" ref={ref} role="menubar" aria-label="Main menu">
+    <ul className="mg-mega-topbar | mg-container-full-width">
       {
         breakpoint === 'mobile' ? (
-          <TopBarIconButton 
-            icon={showSidebar ? close : hamburger} 
-            onClick={() => toggleShowSidebar()} 
-            aria-label={showSidebar ? "Close menu" : "Open menu"}
-            aria-expanded={showSidebar}
-          />
+          <TopBarIconButton icon={showSidebar ? close : hamburger} onClick={() => toggleShowSidebar()} />
         ) : (
-          sections.map((item, index) => (
-            <TopBarItem
-              key={index}
-              index={index}
-              title={item.title}
-              bannerDescription={item.bannerDescription}
-              link={item.bannerButton}
-              children={item.items}
-              onMouseEnter={() => onItemHover(item)}
-              activeItem={activeItem}
-              handleFocusSection={handleFocusSection}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              hasSubmenu={!!(item.items || item.bannerDescription)}
-            />))
+          sections.map((section, index) => (
+            <>
+              <TopBarItem
+                key={index}
+                index={index}
+                ref={element => itemListRef.current[index] = element}
+                title={section.title}
+                bannerDescription={section.bannerDescription}
+                link={section.bannerButton}
+                children={section.sections}
+                onMouseEnter={() => handleItemHover(index)}
+                activeItem={activeItem}
+                section={section}
+                handleOnKeyDown={(e) => {
+                  handleFocusByArrows(e, index);
+                }}
+                sectionListRef={sectionListRef}
+                itemListRef={itemListRef}
+              />
+            </>
+          ))
         )
       }
+
     </ul>
   )
-});
+}

@@ -4,27 +4,18 @@
   position: relative;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
 .mg-mega-topbar {
   width: 100%;
   background: $mg-color-interactive;
   display: flex;
   align-items: flex-start;
   z-index: 1;
-  a,
-  a:hover {
-    color: $mg-color-button;
-  }
+  padding: 0;
+  // remove or not? might be a bug
+  // a,
+  // a:hover {
+  //   color: $mg-color-button;
+  // }
 }
 
 .mg-mega-topbar__item {
@@ -35,19 +26,41 @@
   cursor: pointer;
   list-style: none;
 
-  &:hover,
+  p {
+    font-weight: normal;
+  }
+
   &--active {
     color: $mg-color-interactive-active;
     background: rgba($mg-color-button, 0.8);
-    a {
+    a, .mg-mega-topbar__item-link {
       color: $mg-color-interactive;
       text-decoration: none;
+    }
+
+    a.mg-button-primary {
+      color: $mg-color-white;
+      text-decoration: none;
+    }
+
+    .mg-mega-content {
+      display: flex;
     }
   }
 }
 
+.mg-mega-topbar__item-link {
+  font-size: $mg-font-size-300;
+  color: $mg-color-button;
+  background: none;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  list-style: none;
+}
+
 .mg-mega-content {
-  display: flex;
+  display: none;
   align-items: flex-start;
   justify-content: start;
   background: rgba($mg-color-button, 0.8);
@@ -55,6 +68,8 @@
   box-shadow: -1px 5px 10px -1px rgba(0 0 0 / 0.25);
   height: 35rem;
   overflow: hidden;
+  top: 40px;
+  left: 0;
 
   // float magic
   position: absolute;
@@ -62,12 +77,18 @@
   width: 100%;
 
   @media screen and (max-width: $mg-breakpoint-mobile) {
+    display: flex;
     flex-direction: column;
     height: auto;
+    position: relative;
+    top: 1px;
   }
 
   &.mg-container-full-width {
     position: absolute;
+    @media screen and (max-width: $mg-breakpoint-mobile) {
+      position: relative;
+    }
   }
 
   &__left {
@@ -95,7 +116,7 @@
   }
 }
 
-.mg-mega-content, .mg-mega-content__left, .mg-mega-content__right {
+.mg-mega-content, .mg-mega-content__left, .mg-mega-content__right, .mg-mega-topbar__item-link {
   &:focus-visible {
     outline: -webkit-focus-ring-color auto 1px;
     outline-offset: 1px;
@@ -175,7 +196,7 @@
         white-space: wrap;
         text-overflow: clip;
         color: $mg-color-black;
-        font-weight: light;
+        font-weight: normal;
         &:hover {
           color: $mg-color-black;
         }
@@ -245,7 +266,6 @@
   color: white;
   cursor: pointer;
   padding: $mg-spacing-100 $mg-spacing-250;
-
   @media screen and (max-width: $mg-breakpoint-mobile) {
     background: $mg-color-blue-900;
     width: 100%;

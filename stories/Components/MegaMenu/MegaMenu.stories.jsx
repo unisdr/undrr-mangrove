@@ -249,7 +249,7 @@ const sections = [
   {
     title: "Directory",
     bannerButton: {
-      url: "/news-and-events"
+      url: "/directory"
     },
     items: [
       {
