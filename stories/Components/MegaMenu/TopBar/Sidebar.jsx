@@ -1,64 +1,47 @@
-import React from "react";
-import { useState } from "react";
-import { Icons } from "../../../Atom/Icons/Icons";
-import chevronLeftIcon from "../../../assets/icons/chevron-left-circle.svg"
+import React, { useRef, useState, useEffect } from "react";
 
-function SidebarSection ({ section, display, onClick }) {
-  const [itemIndex, setItemIndex] = useState(null);
+import Section from "../Section/Section"
 
-  const onItemToggle = (index) => {
-    if (index === itemIndex) {
-      setItemIndex(null);
-      return
-    }
-    setItemIndex(index);
-  }
+function SidebarItem({ section, sectionListRef, sectionIndex, handleSectionToggle, index, itemListRef, ref, handleOnKeyDown }) {
+  const display = sectionIndex === index
+
 
   return (
-    <div className="mg-mega-sidebar-section">
-      <div className="mg-mega-sidebar-section__item" onClick={(val) => onClick(val)}>
+    <li
+      className="mg-mega-sidebar-section"
+      onKeyDown={handleOnKeyDown}
+      role="none"
+    >
+      <button
+        className="mg-mega-sidebar-section__item"
+        onClick={() => handleSectionToggle(index)}
+        aria-pressed={display}
+        aria-expanded={display}
+        aria-haspopup={section && section.items ? "true" : undefined}
+        ref={ref}
+        role="menuitem"
+      >
         <span>{section.title}</span>
-        <Icons src={chevronLeftIcon} />
-      </div>
+        <span className="mg-icon fa-angle-circled-left" aria-hidden="true"></span>
+      </button>
       {
-        display && (
-          <ol>
-            {
-              section.items.map((item, index) => (
-                <li key={index}>
-                  <div
-                    onClick={() => onItemToggle(index)} className="mg-mega-sidebar-section__item"
-                  >
-                    <span>{section.title}</span>
-                    <Icons src={chevronLeftIcon} />
-                  </div>
-                  {
-                    index === itemIndex && (
-                      <ol>
-                        {
-                          item.items.map((subItem, index) => (
-                            <li key={index}>
-                              <a href={subItem.url}>{subItem.title}</a>
-                            </li>
-                          ))
-                        }
-                      </ol>
-                    )
-                  }
-                </li>
-              ))
-            }
-          </ol>
+        display && (section && section.items) && (
+          <Section
+            section={section}
+            index={index}
+            sectionListRef={sectionListRef}
+            itemListRef={itemListRef}
+          />
         )
       }
-    </div>
+    </li>
   )
 }
 
-export function Sidebar({ sections }) {
+export function Sidebar({ sections, itemListRef, sectionListRef }) {
   const [sectionIndex, setSectionIndex] = useState(null);
 
-  const onSectionToggle = (index) => {
+  const handleSectionToggle = (index) => {
     if (index === sectionIndex) {
       setSectionIndex(null);
       return
@@ -66,15 +49,45 @@ export function Sidebar({ sections }) {
     setSectionIndex(index);
   }
 
+  const handleFocusByArrows = (e, index) => {
+    // Prevent default scrolling behavior with arrow keys
+    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+    }
+
+    const itemRef = itemListRef?.current
+
+    if ((e.key === 'ArrowDown') && index < itemRef?.length - 1) {
+      if (Number.isInteger(sectionIndex)) {
+        sectionListRef.current?.[index].focus();
+      } else {
+        itemRef[index + 1].focus();
+      }
+    }
+    if ((e.key === 'ArrowUp') && index >= 1) {
+      itemRef[index - 1].focus();
+    }
+  }
+
   return (
-    <div className="sidebar">
-      <div>
+    <div className="sidebar" role="dialog" aria-label="Mobile navigation menu">
+      <ul className="mg-mega-sidebar__list" role="menu" aria-label="Navigation options">
         {
           sections.map((section, index) => (
-            <SidebarSection section={section} key={index} display={sectionIndex === index} onClick={() => onSectionToggle(index)}/>
+            <SidebarItem
+              key={index}
+              index={index}
+              section={section}
+              ref={element => itemListRef.current[index] = element}
+              sectionIndex={sectionIndex}
+              handleSectionToggle={handleSectionToggle}
+              sectionListRef={sectionListRef}
+              itemListRef={itemListRef}
+              handleOnKeyDown={(e) => handleFocusByArrows(e, index)}
+            />
           ))
         }
-      </div>
+      </ul>
     </div>
   )
-} 
+}

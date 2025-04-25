@@ -13,18 +13,18 @@
  * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
  * @returns {JSX.Element} Rendered MegaMenu component
  */
-import React from "react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { TopBar } from "./TopBar/TopBar";
 import { Sidebar } from "./TopBar/Sidebar";
 import { useBreakpoint } from "./TopBar/hook";
 
 const MegaMenu = ({ sections, delay = 300 }) => {
-  const [section, setSection] = useState(null);
-  const [itemIndex, setItemIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const breakpoint = useBreakpoint();
+
+  const itemListRef = useRef([]);
+  const sectionListRef = useRef([])
 
   // Use ref for timeoutId to prevent re-renders
   const timeoutRef = useRef(null);
@@ -35,15 +35,20 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   }, []);
 
   const handleMouseLeave = () => {
-    clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
-      setSection(null);
+      setActiveItem(null);
     }, delay);
   };
 
-  const handleMouseEnter = (item) => {
+  const handleItemHover = (item) => {
     clearTimeout(timeoutRef.current);
-    setSection(item);
+    setActiveItem(item);
+  }
+
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      setActiveItem(null)
+    }
   };
 
   useEffect(() => {
@@ -56,98 +61,25 @@ const MegaMenu = ({ sections, delay = 300 }) => {
     <nav
       className="mg-mega-wrapper"
       onMouseLeave={handleMouseLeave}
+      onKeyDown={handleEscape}
       aria-label="Main Navigation"
     >
       <TopBar
         sections={sections}
-        onItemHover={(item) => {
-          handleMouseEnter(item);
-          setActiveItem(item.title);
-        }}
+        handleItemHover={handleItemHover}
         toggleShowSidebar={() => setShowSidebar((prev) => !prev)}
         showSidebar={showSidebar}
         activeItem={activeItem}
+        itemListRef={itemListRef}
+        sectionListRef={sectionListRef}
       />
 
-      {section && section.items && (
-        <article className="mg-mega-content | mg-container-full-width" aria-live="polite">
-          {/* Only show the left area if there are child items and heading */}
-          {section.bannerHeading && section.bannerDescription && section.items && (
-            <aside className="mg-mega-content__left">
-              <section className="mg-mega-content__banner">
-                <header>{section.bannerHeading}</header>
-                {(
-                  section.bannerDescription.includes('<') ? (
-                    <div dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
-                  ) : (
-                    <p>{section.bannerDescription}</p>
-                  )
-                )}
-                {section.bannerButton?.label && (
-                  <a href={section.bannerButton.url} className="mg-button mg-button-primary">
-                    {section.bannerButton.label}
-                  </a>
-                )}
-              </section>
-              {section.items.length > 0 && section.items[0].items && section.items[0].items.length > 0 ? (
-                <ul className="mg-mega-content__section-list" role="list">
-                  {section.items.map((item, index) => (
-                    <li
-                      key={index}
-                      className="mg-mega-content__section-list-item"
-                      onMouseEnter={() => setItemIndex(index)}
-                    >
-                      <a
-                        className={`mg-mega-content__section-list-link ${itemIndex === index
-                          ? "mg-mega-content__section-list-link--active"
-                          : ""
-                          }`}
-                        href={item.url}
-                        aria-current={itemIndex === index ? "page" : undefined}
-                      >
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </aside>
-          )}
-          {section.items && (
-            <section className="mg-mega-content__right">
-              <ul role="list">
-                {section.items[itemIndex]?.items ? (
-                  section.items[itemIndex].items.map((subItem, subIndex) => (
-                    <li key={subIndex}>
-                      <a href={subItem.url}>{subItem.title}</a>
-                      {subItem.items && (
-                        <ul role="list">
-                          {subItem.items.map((nestedItem, nestedIndex) => (
-                            <li key={nestedIndex}>
-                              <a href={nestedItem.url}>{nestedItem.title}</a>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))
-                ) : (
-                  section.items.map((item, index) => (
-                    <li key={index}>
-                      <a href={item.url}>{item.title}</a>
-                    </li>
-                  ))
-                )}
-              </ul>
-            </section>
-          )}
-          {/*  If there are no child items just show the banner description in a call to action style */}
-        </article>)}
-      {section && !section.items && section.bannerDescription && (
-        <article className="mg-mega-content | mg-container-full-width" aria-live="polite" dangerouslySetInnerHTML={{ __html: section.bannerDescription }} />
-      )}
       {showSidebar && (
-        <Sidebar sections={sections} onClose={() => setShowSidebar(false)} />
+        <Sidebar
+          sections={sections}
+          itemListRef={itemListRef}
+          sectionListRef={sectionListRef}
+        />
       )}
     </nav>
   );

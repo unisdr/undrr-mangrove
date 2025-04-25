@@ -1,35 +1,59 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { TopBarItem } from "./TopBarItem";
 import { TopBarIconButton } from "./TopBarIconButton.jsx";
 import { useBreakpoint } from "./hook.js";
-import hamburger from "../../../assets/icons/arrow-right.svg"
-import close from "../../../assets/icons/arrow-right.svg"
 
-export function TopBar({ onItemHover, toggleShowSidebar, showSidebar, sections, activeItem }) {
-  const onMouseEnter = (item) => {
-    onItemHover(item);
-  }
+export function TopBar({ handleItemHover, toggleShowSidebar, showSidebar, sections, activeItem, sectionListRef, itemListRef }) {
 
   const breakpoint = useBreakpoint();
 
+  const handleFocusByArrows = (e, index) => {
+    // Prevent default browser scrolling for arrow keys
+    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+    }
+
+    const itemRef = itemListRef?.current;
+
+    if ((e.key === 'ArrowLeft') && index >= 1) {
+      itemRef[index - 1].focus();
+    }
+    if ((e.key === 'ArrowRight') && index < itemRef?.length - 1) {
+      itemRef[index + 1].focus();
+    }
+    if (e.key === 'ArrowDown') {
+      sectionListRef?.current?.[index].focus();
+    }
+  };
+
   return (
-    <div className="mg-mega-topbar | mg-container-full-width">
+    <ul className="mg-mega-topbar | mg-container-full-width" role="menubar" aria-label="Main navigation menu">
       {
         breakpoint === 'mobile' ? (
-          <TopBarIconButton icon={showSidebar ? close : hamburger} onClick={() => toggleShowSidebar()} />
+          <TopBarIconButton isOpen={showSidebar} onClick={() => toggleShowSidebar()} />
         ) : (
-          sections.map((item, index) => (
+          sections.map((section, index) => (
             <TopBarItem
-              key={index}
-              title={item.title}
-              bannerDescription={item.bannerDescription}
-              link={item.bannerButton}
-              children={item.items}
-              onMouseEnter={() => onItemHover(item)}
-              activeItem={activeItem}
-            />))
+                key={index}
+                index={index}
+                ref={element => itemListRef.current[index] = element}
+                title={section.title}
+                bannerDescription={section.bannerDescription}
+                link={section.bannerButton}
+                children={section.sections}
+                onMouseEnter={() => handleItemHover(index)}
+                activeItem={activeItem}
+                section={section}
+                handleOnKeyDown={(e) => {
+                  handleFocusByArrows(e, index);
+                }}
+                sectionListRef={sectionListRef}
+                itemListRef={itemListRef}
+              />
+          ))
         )
       }
-    </div>
+
+    </ul>
   )
 }
