@@ -16,6 +16,7 @@ export function TopBarItem({
 }) {
 
   let isActive = index === activeItem;
+  console.log(`TopBarItem ${index}: Received activeItem=${activeItem}, isActive=${isActive}`); // Log props and state
 
   return (
     <li
@@ -50,6 +51,8 @@ export function TopBarItem({
         </button>
       }
 
+      {/* Log section data before rendering */}
+      {console.log(`TopBarItem ${index}: Rendering Section. IsActive=${isActive}. Section data:`, section)} 
       <Section
         section={section}
         index={index}

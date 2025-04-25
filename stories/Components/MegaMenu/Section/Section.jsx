@@ -12,6 +12,18 @@ export default function Section({ section, index, sectionListRef, itemListRef })
   const asideRef = useRef(null)
   const contentRef = useRef(null)
 
+  // Log the section prop whenever it changes
+  useEffect(() => {
+    console.log(`Section ${index} mounted or section prop updated:`, section);
+  }, [section, index]); // Add section and index to dependency array
+
+  // Log the itemIndex state after it updates
+  useEffect(() => {
+    console.log(`Section ${index}: Submenu itemIndex changed to:`, itemIndex);
+    // Optional: Log the actual item data if needed
+    // console.log(`Section ${index}: Displaying submenu for:`, section?.items?.[itemIndex]?.title);
+  }, [itemIndex, index, section]);
+
   const handleArrowFocus = (e) => {
     // Prevent default browser scrolling behavior for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -120,7 +132,10 @@ export default function Section({ section, index, sectionListRef, itemListRef })
                     <li
                       key={index}
                       className="mg-mega-content__section-list-item"
-                      onMouseEnter={() => setItemIndex(index)}
+                      onMouseEnter={() => {
+                        console.log(`Section ${index}: Triggered by Mouse Hover - Setting itemIndex to ${index}`);
+                        setItemIndex(index)
+                      }}
                       role="none"
                     >
                       <a
@@ -130,7 +145,10 @@ export default function Section({ section, index, sectionListRef, itemListRef })
                           }`}
                         href={item.url}
                         aria-current={itemIndex === index ? "page" : undefined}
-                        onFocus={() => setItemIndex(index)}
+                        onFocus={() => {
+                          console.log(`Section ${index}: Triggered by Keyboard Focus - Setting itemIndex to ${index}`);
+                          setItemIndex(index)
+                        }}
                         role="menuitem"
                         aria-haspopup={item.items && item.items.length > 0 ? "true" : undefined}
                       >

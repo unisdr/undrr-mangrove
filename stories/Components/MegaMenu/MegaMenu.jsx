@@ -20,7 +20,7 @@ import { useBreakpoint } from "./TopBar/hook";
 
 const MegaMenu = ({ sections, delay = 300 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState(false);
   const breakpoint = useBreakpoint();
 
   const itemListRef = useRef([]);
@@ -29,6 +29,11 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   // Use ref for timeoutId to prevent re-renders
   const timeoutRef = useRef(null);
 
+  // Log activeItem state changes
+  useEffect(() => {
+    console.log("MegaMenu: activeItem state changed to:", activeItem);
+  }, [activeItem]);
+
   // Clear timeout on unmount
   useEffect(() => {
     return () => clearTimeout(timeoutRef.current);
@@ -36,17 +41,20 @@ const MegaMenu = ({ sections, delay = 300 }) => {
 
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
+      console.log("MegaMenu: MouseLeave Timeout - Hiding section by setting activeItem to null");
       setActiveItem(null);
     }, delay);
   };
 
   const handleItemHover = (item) => {
     clearTimeout(timeoutRef.current);
+    console.log(`MegaMenu: Item Hover detected on index ${item} - Showing section`);
     setActiveItem(item);
   }
 
   const handleEscape = (e) => {
     if (e.key === 'Escape') {
+      console.log("MegaMenu: Escape key pressed - Hiding section by setting activeItem to null");
       setActiveItem(null)
     }
   };
