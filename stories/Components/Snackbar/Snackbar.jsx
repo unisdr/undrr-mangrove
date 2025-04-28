@@ -94,7 +94,7 @@ const Snackbar = ({
             </span>
           )}
           <span className={`mg-snackbar__message`}>
-            <span className="sr-only">{getAriaLabel()}</span>
+            <span className="mg-u-sr-only">{getAriaLabel()}</span>
             {message}
           </span>
           <button 
@@ -158,7 +158,7 @@ export const SnackbarPreview = ({ severity, message }) => {
               </span>
             )}
             <span className={`mg-snackbar__message`}>
-              <span className="sr-only">{`${severity} notification: `}</span>
+              <span className="mg-u-sr-only">{`${severity} notification: `}</span>
               {message}
             </span>
             <button 
