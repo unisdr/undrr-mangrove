@@ -23,6 +23,4 @@ jobs:
             chore
             revert
           requireScope: false
-          subjectPattern: ^[A-Z].+$
-          subjectPatternError: Subject must start with a capital letter
-          wip: true # Allow WIP pull requests
+          wip: true
