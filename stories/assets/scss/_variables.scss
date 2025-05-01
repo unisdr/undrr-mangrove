@@ -231,6 +231,9 @@ $mg-font-line-height-500: 1.25em;
  */
 
 $mg-font-family: "Roboto", sans-serif;
+$mg-font-family-condensed: "Roboto Condensed", sans-serif;
+// $mg-font-family-icons: "mangrove-icon-set";
+// Not yet activated as we are using the FontAwesome namespace
 
 /**
  * @tokens Widths
@@ -250,7 +253,7 @@ $mg-width-600: 60rem;
 $mg-breakpoint-mobile: 480px;
 $mg-breakpoint-tablet: 1024px;
 $mg-breakpoint-desktop: 1164px; // see the docs: this is our main target but we also have a "wide" breakpoint as a secondary use case
-$mg-breakpoint-desktop-wide: 1440px; 
+$mg-breakpoint-desktop-wide: 1440px;
 
 /**
  * @tokens Colors - component

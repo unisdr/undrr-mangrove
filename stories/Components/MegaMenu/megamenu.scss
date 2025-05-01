@@ -2,14 +2,15 @@
 
 .mg-mega-wrapper {
   position: relative;
+  box-shadow: 0 2px 3px 0 rgba(51, 51, 51, 0.31);
 }
 
 .mg-mega-topbar {
   width: 100%;
-  background: $mg-color-interactive;
+  background: $mg-color-white;
   display: flex;
   align-items: flex-start;
-  z-index: 1;
+  z-index: 10;
   padding: 0;
 
   // remove or not? might be a bug
@@ -22,8 +23,8 @@
 .mg-mega-topbar {
   &__item {
     font-size: $mg-font-size-300;
-    padding: $mg-padding-button;
-    color: $mg-color-button;
+    padding: $mg-spacing-150 $mg-spacing-200;
+    color: $mg-color-interactive;
     font-weight: bold;
     cursor: pointer;
     list-style: none;
@@ -33,10 +34,11 @@
     }
 
     &--active {
-      color: $mg-color-interactive-active;
-      background: rgba($mg-color-button, 0.8);
-      
-      a, .mg-mega-topbar__item-link {
+      color: $mg-color-interactive;
+      background: rgba($mg-color-interactive, 0.2);
+
+      a,
+      .mg-mega-topbar__item-link {
         color: $mg-color-interactive;
         text-decoration: none;
       }
@@ -53,8 +55,9 @@
   }
 
   &__item-link {
-    font-size: $mg-font-size-300;
-    color: $mg-color-button;
+    font-size: $mg-font-size-400;
+    font-family: $mg-font-family-condensed;
+    color: $mg-color-interactive;
     background: none;
     border: none;
     font-weight: bold;
@@ -72,7 +75,7 @@
   box-shadow: -1px 5px 10px -1px rgba(0 0 0 / 0.25);
   height: 35rem;
   overflow: hidden;
-  top: 40px;
+  top: 4.8rem;
   left: 0;
 
   // float magic
@@ -100,10 +103,9 @@
     flex-basis: 33%;
     height: 100%;
     background-color: $mg-color-interactive;
-
   }
   &__banner {
-    padding: $mg-spacing-150;
+    padding: $mg-spacing-250;
     color: $mg-color-button;
     header {
       font-size: $mg-font-size-500;
@@ -121,7 +123,10 @@
   }
 }
 
-.mg-mega-content, .mg-mega-content__left, .mg-mega-content__right, .mg-mega-topbar__item-link {
+.mg-mega-content,
+.mg-mega-content__left,
+.mg-mega-content__right,
+.mg-mega-topbar__item-link {
   &:focus-visible {
     outline: -webkit-focus-ring-color auto 1px;
     outline-offset: 1px;
@@ -137,7 +142,9 @@
       color: $mg-color-button;
     }
 
-    .mg-mega-content__section-list-link:not(.mg-mega-content__section-list-link--active) {
+    .mg-mega-content__section-list-link:not(
+        .mg-mega-content__section-list-link--active
+      ) {
       color: $mg-color-button;
     }
     .mg-mega-content__section-list-link:hover,
@@ -145,25 +152,25 @@
       color: $mg-color-interactive-active;
     }
   }
-  
+
   &__section-list {
-    padding-left: $mg-spacing-150;
+    padding-left: $mg-spacing-200;
   }
 
   &__section-list-item {
     list-style: none;
     padding: 0;
     margin: 0;
-    
+
     .mg-mega-content__section-list-link {
       text-decoration: none;
       font-weight: bold;
       display: block;
       padding: $mg-spacing-50 0;
-      
+
       &--active {
-        padding: $mg-spacing-50 $mg-spacing-150;
-        margin-left: -$mg-spacing-150;
+        padding: $mg-spacing-50 $mg-spacing-200;
+        margin-left: -$mg-spacing-200;
         background-color: $mg-color-button;
       }
     }
@@ -197,11 +204,11 @@
         padding: 0 0 0 $mg-spacing-150;
         opacity: 0.8;
       }
-      
+
       li {
         padding: 0;
         margin: 0;
-        
+
         a {
           display: block;
           padding: $mg-spacing-50;
@@ -210,9 +217,10 @@
           text-overflow: clip;
           color: $mg-color-black;
           font-weight: normal;
-          
+
           &:hover {
             color: $mg-color-black;
+            text-decoration: underline;
           }
         }
       }
@@ -224,16 +232,16 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  
+
   a {
     text-decoration: none;
     color: $mg-color-black;
-    
+
     &:hover {
       color: $mg-color-black;
     }
   }
-  
+
   &__children {
     list-style: none;
   }
@@ -247,7 +255,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &:hover {
     background-color: $mg-color-blue-500;
   }
@@ -255,27 +263,27 @@
 
 .mg-mega-sidebar-section {
   list-style: none;
-  
+
   ol {
     list-style: none;
     margin: 0;
-    
+
     li {
       margin: 0;
     }
-    
+
     ol li {
       list-style: none;
       padding-top: $mg-spacing-50;
       padding-bottom: $mg-spacing-50;
       padding-left: $mg-spacing-350;
       margin: 0;
-      
+
       a {
         color: $mg-color-white;
         text-decoration: none;
       }
-      
+
       &:hover {
         background: $mg-color-blue-700;
       }
@@ -339,7 +347,7 @@
     padding: $mg-spacing-150 $mg-spacing-350;
     color: $mg-color-white;
     cursor: pointer;
-    
+
     &:hover {
       background: $mg-color-blue-400;
     }
@@ -348,7 +356,7 @@
 
 .mg-mega-topbar {
   &__icon-button {
-    color: $mg-color-white;
+    color: $mg-color-interactive-active;
     padding: $mg-spacing-100;
     background-color: transparent;
     border: none;
@@ -356,7 +364,7 @@
     display: none;
     align-items: center;
     justify-content: center;
-    
+
     &:hover {
       background: $mg-color-blue-800;
     }
@@ -364,9 +372,7 @@
 }
 
 @media screen and (max-width: $mg-breakpoint-mobile) {
-  .mg-mega-topbar {
-    &__icon-button {
-      display: flex;
-    }
+  .mg-mega-topbar__icon-button {
+    display: flex;
   }
 }
