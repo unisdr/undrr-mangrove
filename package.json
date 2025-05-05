@@ -124,7 +124,7 @@
     "svg-spritemap-webpack-plugin": "4.7.0",
     "svgo": "3.3.2",
     "svgo-loader": "4.0.0",
-    "webpack": "5.99.6",
+    "webpack": "5.99.7",
     "webpack-cli": "6.0.1",
     "webpack-fix-style-only-entries": "0.6.1"
   },
