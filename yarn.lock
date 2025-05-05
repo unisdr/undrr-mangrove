@@ -3188,14 +3188,6 @@
     "@storybook/global" "^5.0.0"
     "@vitest/utils" "^2.1.1"
 
-"@storybook/instrumenter@8.6.4":
-  version "8.6.4"
-  resolved "https://registry.yarnpkg.com/@storybook/instrumenter/-/instrumenter-8.6.4.tgz#1e72cd26b2cc4b672913f79cbc4d43150a0995f9"
-  integrity sha512-8OtIWLhayTUdqJEeXiPm6l3LTdSkWgQzzV2l2HIe4Adedeot+Rkwu6XHmyRDpnb0+Ish6zmMDqtJBxC2PQsy6Q==
-  dependencies:
-    "@storybook/global" "^5.0.0"
-    "@vitest/utils" "^2.1.1"
-
 "@storybook/manager-api@8.6.12":
   version "8.6.12"
   resolved "https://registry.yarnpkg.com/@storybook/manager-api/-/manager-api-8.6.12.tgz#a9169a3fb8de97ba406ed83314112d5c47d035ad"
@@ -3269,19 +3261,6 @@
   dependencies:
     "@storybook/global" "^5.0.0"
     "@storybook/instrumenter" "8.6.12"
-    "@testing-library/dom" "10.4.0"
-    "@testing-library/jest-dom" "6.5.0"
-    "@testing-library/user-event" "14.5.2"
-    "@vitest/expect" "2.0.5"
-    "@vitest/spy" "2.0.5"
-
-"@storybook/test@^8.0.6":
-  version "8.6.4"
-  resolved "https://registry.yarnpkg.com/@storybook/test/-/test-8.6.4.tgz#d082d5a810d87205261ca21091267f819a4cb7d5"
-  integrity sha512-JPjfbaMMuCBT47pg3/MDD9vYFF5OGPAOWEB9nJWJ9IjYAb2Nd8OYJQIDoYJQNT+aLkTVLtvzGnVNwdxpouAJcQ==
-  dependencies:
-    "@storybook/global" "^5.0.0"
-    "@storybook/instrumenter" "8.6.4"
     "@testing-library/dom" "10.4.0"
     "@testing-library/jest-dom" "6.5.0"
     "@testing-library/user-event" "14.5.2"
@@ -13818,12 +13797,10 @@ state-toggle@^1.0.0:
   resolved "https://registry.yarnpkg.com/state-toggle/-/state-toggle-1.0.3.tgz#e123b16a88e143139b09c6852221bc9815917dfe"
   integrity sha512-d/5Z4/2iiCnHw6Xzghyhb+GcmF89bxwgXG60wjIiZaxnymbyOmI8Hk4VqHXiVVp6u2ysaskFfXg3ekCj4WNftQ==
 
-storybook-addon-rtl@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/storybook-addon-rtl/-/storybook-addon-rtl-1.0.1.tgz#6781ebf4c939a94ed367f8646590f16a07417f5a"
-  integrity sha512-Yl9Oi7zpLICHaoQdpIiTfZWNDyGJv3gC+mqAfhFyDybJDol7E6FWqIZImlTrLpr8Mth7mffReAlih+JZNasc+Q==
-  dependencies:
-    "@storybook/test" "^8.0.6"
+storybook-addon-rtl@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/storybook-addon-rtl/-/storybook-addon-rtl-1.1.0.tgz#d06f61189a9c1e49afdea2fdab8307ac94396345"
+  integrity sha512-L8JljF1M+30rcSuM4JjeIi4ZRmg9WZi/1u4T/5/EQvpDKCMOAq7uHeOKj4YS1InC4Zksnz3DrggXmO3mISXKcQ==
 
 storybook-design-token@3.2.0:
   version "3.2.0"
