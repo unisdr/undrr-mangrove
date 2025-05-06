@@ -10,3 +10,7 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
