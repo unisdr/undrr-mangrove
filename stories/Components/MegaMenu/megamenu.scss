@@ -3,6 +3,8 @@
 .mg-mega-wrapper {
   position: relative;
   box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
+  margin-bottom: -55px;
+  z-index: 2;
 }
 
 .mg-mega-topbar {
@@ -321,7 +323,7 @@
 .mg-mega-sidebar {
   width: 300px;
   position: absolute;
-  overflow: scroll;
+  overflow: auto;
   height: 100vh;
   background-color: $mg-color-blue-900;
   -webkit-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
@@ -329,6 +331,11 @@
   box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   top: 0;
   right: 0;
+  z-index: 10;
+  
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    width: 100%;
+  }
 }
 
 .mg-mega-sidebar {
@@ -336,6 +343,9 @@
     background: $mg-color-white;
     display: flex;
     flex-direction: column;
+    width: calc(100% - 3.5rem);
+    position: absolute;
+    right: 0;
   }
 }
 
@@ -356,9 +366,15 @@
 
 .mg-mega-topbar {
   &__icon-button {
+    right: 0;
+    position: absolute;
+    background: white;
     color: $mg-color-interactive-active;
+    font-size: 2rem;
+    width: 3.5rem;
+    transition-property: right;
+    transition-duration: .4s;
     padding: $mg-spacing-100;
-    background-color: transparent;
     border: none;
     cursor: pointer;
     display: none;
@@ -367,6 +383,13 @@
 
     &:hover {
       background: $mg-color-blue-800;
+      color: white;
+    }
+    
+    &:has(.fa-angle-circled-left) {
+      right: calc(100% - 3.5rem);
+      background: black;
+      transform: rotate(180deg);
     }
   }
 }
@@ -374,5 +397,10 @@
 @media screen and (max-width: $mg-breakpoint-mobile) {
   .mg-mega-topbar__icon-button {
     display: flex;
+    z-index: 11;
+  }
+  
+  .mg-mega-topbar {
+    position: relative;
   }
 }
