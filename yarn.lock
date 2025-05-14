@@ -4475,10 +4475,10 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-3.0.1.tgz#bd8b1f824d57e30faa19eb78e4c0951056f72f00"
   integrity sha512-sbgw03xQaCLiT6gcY/6u3qBDn01CWw/nbaXl3gTdTFuJJ75Gffv3E3DBpgvY2fkkrdS1fpjaXNOmJlnbtKauKg==
 
-"@whitespace/storybook-addon-html@6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@whitespace/storybook-addon-html/-/storybook-addon-html-6.1.1.tgz#aa7f8cacdf1c42f2536f06195bf18438f895ceb7"
-  integrity sha512-sq/9c6s4PXugl//Q5iFwKoHF3tBDTEfJQubb62HWspF+CqBrDLHVEh7VYoEjubm5LjihxdFV3+mjj8Ck6bnoHQ==
+"@whitespace/storybook-addon-html@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@whitespace/storybook-addon-html/-/storybook-addon-html-7.0.0.tgz#dc043f0fab428040e1939b641e16e3b2f7f1de68"
+  integrity sha512-GCpy1Xch7v3UZ/TmKUFnF0lFEt6qct/zqO/64LfoEOwr3zV5YDdidHBURSNp5qK8Q68wPLs/nVhbAzAEvudR8w==
 
 "@wordpress/babel-preset-default@8.22.0":
   version "8.22.0"
