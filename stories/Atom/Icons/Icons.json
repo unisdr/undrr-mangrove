@@ -139,6 +139,10 @@
     {
       "name": "angle-circled-left",
       "label": "Circle left arrow"
+    },
+    {
+      "name": "menu",
+      "label": "Menu, Hamburger"
     }
   ]
 }
