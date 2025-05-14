@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/unisdr/undrr-mangrove/compare/v1.0.0...v1.1.0) (2025-05-14)
+
+
+### Features
+
+* **component:** Icon and mobile MM ([#378](https://github.com/unisdr/undrr-mangrove/issues/378)) ([6bda393](https://github.com/unisdr/undrr-mangrove/commit/6bda3934d7fd49d4f044fc0acbf90e8ba2018e9a))
+
 # 1.0.0 (2025-05-07)
 
 
