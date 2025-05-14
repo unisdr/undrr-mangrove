@@ -14374,10 +14374,10 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha512-s/46sYeylUfHNjI+sA/78FAHlmIuKqI9wNnzEOGehAlUUYeObv5C2mOinXBjyUyWmJ2SfcS2/ydApH4hTF4WXQ==
 
-prettier-eslint@16.4.1:
-  version "16.4.1"
-  resolved "https://registry.yarnpkg.com/prettier-eslint/-/prettier-eslint-16.4.1.tgz#eaee9cdd55537af04d925853b32d46a0087c1e13"
-  integrity sha512-qf8Grhq68kg0tyhXVik2aOx72W8Jxre2ABXgV1pC3OCb3jOo40UZuvk3f/I3/ZA7Qw6qydZX4b7ySSCSgv4/8A==
+prettier-eslint@16.4.2:
+  version "16.4.2"
+  resolved "https://registry.yarnpkg.com/prettier-eslint/-/prettier-eslint-16.4.2.tgz#d84bff76e0ce4a6ffccacacb2474f7635ca8ac35"
+  integrity sha512-vtJAQEkaN8fW5QKl08t7A5KCjlZuDUNeIlr9hgolMS5s3+uzbfRHDwaRnzrdqnY2YpHDmeDS/8zY0MKQHXJtaA==
   dependencies:
     "@typescript-eslint/parser" "^6.21.0"
     common-tags "^1.8.2"
@@ -14389,6 +14389,7 @@ prettier-eslint@16.4.1:
     prettier "^3.5.3"
     pretty-format "^29.7.0"
     require-relative "^0.8.7"
+    tslib "^2.8.1"
     vue-eslint-parser "^9.4.3"
 
 prettier-linter-helpers@^1.0.0:
