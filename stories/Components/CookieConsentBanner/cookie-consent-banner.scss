@@ -1,0 +1,78 @@
+// This file contains additional styles for customizing the cookie consent banner
+// Most styles are already provided by the vanilla-cookieconsent package
+
+// Import variables - direct reference to avoid path issues
+//@import '../../assets/scss/_variables';
+
+// Custom overrides for UNDRR styling
+.cc_div {
+  --cc-bg: #{$mg-color-neutral-0};
+  --cc-text: #{$mg-color-text};
+  --cc-btn-primary-bg: #{$mg-color-interactive};
+  --cc-btn-primary-text: #{$mg-color-neutral-0};
+  --cc-btn-primary-hover-bg: #{$mg-color-interactive-active};
+  --cc-btn-secondary-bg: #{$mg-color-neutral-50};
+  --cc-btn-secondary-text: #{$mg-color-text};
+  --cc-btn-secondary-hover-bg: #{$mg-color-neutral-100};
+  --cc-toggle-bg-off: #{$mg-color-neutral-400};
+  --cc-toggle-bg-on: #{$mg-color-interactive};
+  --cc-toggle-bg-readonly: #{$mg-color-neutral-200};
+  --cc-toggle-knob-bg: #{$mg-color-neutral-0};
+  --cc-toggle-knob-icon-color: #{$mg-color-neutral-0};
+  --cc-cookie-category-block-bg: #{$mg-color-blue-50};
+  --cc-cookie-category-block-bg-hover: #{$mg-color-blue-100};
+  --cc-section-border: #{$mg-color-neutral-50};
+  --cc-cookie-table-border: #{$mg-color-neutral-100};
+  --cc-overlay-bg: rgba(4, 6, 8, 0.85);
+  --cc-webkit-scrollbar-bg: #{$mg-color-neutral-200};
+  --cc-webkit-scrollbar-bg-hover: #{$mg-color-interactive};
+  --cc-font-family: #{$mg-font-family};
+  
+  // Border radius
+  --cc-btn-border-radius: #{$mg-radius-button};
+  --cc-block-text-font-size: #{$mg-font-size-100};
+
+  a {
+    color: $mg-color-interactive;
+    text-decoration: underline;
+    
+    &:hover {
+      color: $mg-color-interactive-active;
+    }
+  }
+
+  // Customize the bottom banner
+  #cm.bar {
+    border-top: 1px solid $mg-color-neutral-100;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+
+    .c-bn {
+      font-weight: 500;
+    }
+  }
+
+  // Customize the preferences modal
+  #s-cnt {
+    .b-bn {
+      font-weight: 500;
+    }
+
+    .pm__badge {
+      padding: $mg-spacing-25 $mg-spacing-50;
+      background: $mg-color-interactive;
+      color: $mg-color-neutral-0;
+      font-size: $mg-font-label;
+      border-radius: $mg-radius-label;
+      margin-left: $mg-spacing-50;
+    }
+  }
+
+  // Customize the toggle switch
+  .c-tgl {
+    &:checked {
+      + .c-tgl-btn {
+        background-color: var(--cc-toggle-bg-on);
+      }
+    }
+  }
+}

@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
 import * as CookieConsent from 'vanilla-cookieconsent';
+// Make the imported module available globally for storybook reset and other direct calls if needed
+if (typeof window !== 'undefined') {
+  window.CookieConsent = CookieConsent;
+}
 
 const defaultConfig = {
   guiOptions: {
