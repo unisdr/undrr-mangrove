@@ -1,77 +1,80 @@
-// This file contains additional styles for customizing the cookie consent banner
-// Most styles are already provided by the vanilla-cookieconsent package
+// @import '../../assets/scss/_variables';
 
-// Import variables - direct reference to avoid path issues
-//@import '../../assets/scss/_variables';
-
-// Custom overrides for UNDRR styling
-.cc_div {
-  --cc-bg: #{$mg-color-neutral-0};
-  --cc-text: #{$mg-color-text};
+#cc-main {
+  // CSS Variables used by vanilla-cookieconsent
+  --cc-bg: #fff;
+  --cc-primary-color: #{$mg-color-text};
+  --cc-secondary-color: #{$mg-color-neutral-600};
   --cc-btn-primary-bg: #{$mg-color-interactive};
-  --cc-btn-primary-text: #{$mg-color-neutral-0};
+  --cc-btn-primary-color: #fff;
+  --cc-btn-primary-border-color: #{$mg-color-interactive};
   --cc-btn-primary-hover-bg: #{$mg-color-interactive-active};
+  --cc-btn-primary-hover-color: #fff;
   --cc-btn-secondary-bg: #{$mg-color-neutral-50};
-  --cc-btn-secondary-text: #{$mg-color-text};
+  --cc-btn-secondary-color: #{$mg-color-text};
+  --cc-btn-secondary-border-color: #{$mg-color-neutral-100};
   --cc-btn-secondary-hover-bg: #{$mg-color-neutral-100};
-  --cc-toggle-bg-off: #{$mg-color-neutral-400};
-  --cc-toggle-bg-on: #{$mg-color-interactive};
-  --cc-toggle-bg-readonly: #{$mg-color-neutral-200};
-  --cc-toggle-knob-bg: #{$mg-color-neutral-0};
-  --cc-toggle-knob-icon-color: #{$mg-color-neutral-0};
+  --cc-btn-secondary-hover-color: #{$mg-color-text};
+  --cc-toggle-on-bg: #{$mg-color-interactive};
+  --cc-toggle-off-bg: #{$mg-color-neutral-400};
+  --cc-toggle-readonly-bg: #{$mg-color-neutral-200};
+  --cc-toggle-on-knob-bg: #fff;
+  --cc-toggle-off-knob-bg: #fff;
+  --cc-toggle-readonly-knob-bg: #fff;
   --cc-cookie-category-block-bg: #{$mg-color-blue-50};
-  --cc-cookie-category-block-bg-hover: #{$mg-color-blue-100};
+  --cc-cookie-category-block-hover-bg: #{$mg-color-blue-100};
   --cc-section-border: #{$mg-color-neutral-50};
   --cc-cookie-table-border: #{$mg-color-neutral-100};
-  --cc-overlay-bg: rgba(4, 6, 8, 0.85);
+  --cc-separator-border-color: #{$mg-color-neutral-100};
+  --cc-overlay-bg: rgb(4 6 8 / 0.85);
   --cc-webkit-scrollbar-bg: #{$mg-color-neutral-200};
-  --cc-webkit-scrollbar-bg-hover: #{$mg-color-interactive};
+  --cc-webkit-scrollbar-hover-bg: #{$mg-color-interactive};
   --cc-font-family: #{$mg-font-family};
+  --cc-modal-border-radius: 0;
+  --cc-btn-border-radius: 0;
+  --cc-pm-toggle-border-radius: 4em;
   
-  // Border radius
-  --cc-btn-border-radius: #{$mg-radius-button};
-  --cc-block-text-font-size: #{$mg-font-size-100};
-
-  a {
-    color: $mg-color-interactive;
+  // Custom link styles
+  .cc__link, a {
+    color: #{$mg-color-interactive};
     text-decoration: underline;
     
     &:hover {
-      color: $mg-color-interactive-active;
+      color: #{$mg-color-interactive-active};
     }
   }
 
-  // Customize the bottom banner
+  // Bottom bar consent modal customization
   #cm.bar {
-    border-top: 1px solid $mg-color-neutral-100;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #{$mg-color-neutral-100};
+    box-shadow: 0 -2px 10px rgb(0 0 0 / 0.1);
 
     .c-bn {
       font-weight: 500;
     }
   }
 
-  // Customize the preferences modal
+  // Preferences modal customization
   #s-cnt {
     .b-bn {
       font-weight: 500;
     }
 
     .pm__badge {
-      padding: $mg-spacing-25 $mg-spacing-50;
-      background: $mg-color-interactive;
-      color: $mg-color-neutral-0;
-      font-size: $mg-font-label;
-      border-radius: $mg-radius-label;
-      margin-left: $mg-spacing-50;
+      padding: #{$mg-spacing-25} #{$mg-spacing-50};
+      background: #{$mg-color-interactive};
+      color: #fff;
+      font-size: 0.8rem;
+      border-radius: 2px;
+      margin-left: #{$mg-spacing-50};
     }
   }
 
-  // Customize the toggle switch
+  // Toggle switches
   .c-tgl {
     &:checked {
       + .c-tgl-btn {
-        background-color: var(--cc-toggle-bg-on);
+        background-color: var(--cc-toggle-on-bg);
       }
     }
   }
