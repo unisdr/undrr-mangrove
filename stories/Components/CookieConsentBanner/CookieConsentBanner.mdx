@@ -1,0 +1,235 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs';
+import CookieConsentBanner from './CookieConsentBanner';
+
+<Meta title="Components/CookieConsentBanner/Documentation" component={CookieConsentBanner} />
+
+# Cookie Consent Banner
+
+The Cookie Consent Banner component provides a configurable cookie consent solution for UNDRR websites, built on top of the [vanilla-cookieconsent](https://github.com/orestbida/cookieconsent) library.
+
+## Features
+
+- Fully customizable consent modal and preferences modal
+- Responsive design that works on mobile and desktop
+- Configurable categories for different types of cookies
+- Internationalization support
+- Accessibility-friendly implementation
+
+## Installation
+
+The component relies on the `vanilla-cookieconsent` package which is already included as a dependency in the project:
+
+```bash
+# The dependency is already installed, but if needed:
+yarn add vanilla-cookieconsent
+```
+
+## Basic Usage
+
+To use the CookieConsentBanner in your application, simply import and add the component to your layout:
+
+```jsx
+import React from 'react';
+import CookieConsentBanner from './CookieConsentBanner';
+
+const App = () => {
+  return (
+    <div>
+      {/* Your application content */}
+      <CookieConsentBanner />
+    </div>
+  );
+};
+
+export default App;
+```
+
+The component doesn't render any visible elements itself - it initializes the cookie consent banner which will appear at the bottom of the page on first visit.
+
+## Configuration
+
+The CookieConsentBanner accepts a `config` prop that allows complete customization of the banner:
+
+```jsx
+import React from 'react';
+import CookieConsentBanner from './CookieConsentBanner';
+
+const myCustomConfig = {
+  // Custom configuration options
+};
+
+const App = () => {
+  return (
+    <div>
+      {/* Your application content */}
+      <CookieConsentBanner config={myCustomConfig} />
+    </div>
+  );
+};
+```
+
+If no config is provided, the component will use the default UNDRR configuration.
+
+### Default Configuration
+
+The default configuration includes:
+
+- A bottom bar layout for the consent modal
+- Left-positioned box layout for the preferences modal
+- Three cookie categories: necessary (read-only), functionality, and analytics
+- English language with UNDRR-specific text content
+- Links to Privacy Policy and Terms & Conditions
+
+## Advanced Usage
+
+### Resetting Cookie Consent
+
+You can programmatically reset the user's cookie consent status:
+
+```jsx
+import React from 'react';
+
+const ResetButton = () => {
+  const handleResetConsent = () => {
+    if (window.CookieConsent) {
+      // Reset and show the consent modal again
+      window.CookieConsent.reset(true);
+      window.CookieConsent.showConsentModal();
+    }
+  };
+
+  return (
+    <button onClick={handleResetConsent}>
+      Reset Cookie Consent
+    </button>
+  );
+};
+```
+
+### Custom Categories
+
+You can customize the cookie categories in your configuration:
+
+```jsx
+const customConfig = {
+  categories: {
+    necessary: {
+      readOnly: true // This cannot be disabled by the user
+    },
+    analytics: {},
+    marketing: {},
+    personalization: {}
+  },
+  // Add corresponding sections in the language settings
+}
+```
+
+### Multiple Languages
+
+The component supports multiple languages:
+
+```jsx
+const customConfig = {
+  language: {
+    default: "en",
+    autoDetect: "browser",
+    translations: {
+      en: {
+        // English translations
+      },
+      fr: {
+        // French translations
+      },
+      es: {
+        // Spanish translations
+      }
+    }
+  }
+}
+```
+
+## API Reference
+
+### Props
+
+The CookieConsentBanner component accepts the following props:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| config | Object | defaultConfig | Configuration object for the cookie consent banner |
+
+### Configuration Object Structure
+
+The configuration object follows the structure defined by the vanilla-cookieconsent library:
+
+```js
+{
+  guiOptions: {
+    consentModal: {
+      layout: String,      // 'box', 'cloud', 'bar'
+      position: String,    // 'bottom', 'middle', 'top'
+      equalWeightButtons: Boolean,
+      flipButtons: Boolean
+    },
+    preferencesModal: {
+      layout: String,
+      position: String,
+      equalWeightButtons: Boolean,
+      flipButtons: Boolean
+    }
+  },
+  categories: {
+    necessary: {
+      readOnly: Boolean    // Usually true for necessary cookies
+    },
+    // Add more categories as needed
+  },
+  language: {
+    default: String,        // Default language code
+    autoDetect: String,     // 'browser' to detect from browser
+    translations: {
+      // Language translations
+    }
+  }
+}
+```
+
+## Events and Callbacks
+
+The vanilla-cookieconsent library provides various callbacks that can be included in your configuration:
+
+```jsx
+const customConfig = {
+  // Other configuration options...
+  
+  onFirstConsent: () => {
+    // Called the first time user gives consent
+    console.log('User consented for the first time!');
+  },
+  
+  onConsent: ({ cookie }) => {
+    // Called every time user gives consent
+    console.log('Consent given:', cookie);
+  },
+  
+  onChange: ({ changedCategories, changedServices }) => {
+    // Called when user changes preferences
+    console.log('Changed categories:', changedCategories);
+  }
+};
+```
+
+## Accessibility
+
+The cookie consent banner is built with accessibility in mind, including:
+
+- Proper ARIA attributes
+- Keyboard navigation support
+- Focus management
+- Screen reader friendly content
+
+## References
+
+- [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent)
+- [UNDRR Privacy Policy](https://www.undrr.org/undrr-privacy-policy)
+- [UNDRR Terms and Conditions](https://www.undrr.org/terms-and-conditions-use-undrrorg)
