@@ -151,7 +151,7 @@
     "react-dom": "19.1.0",
     "react-leaflet": "5.0.0",
     "react-leaflet-markercluster": "5.0.0-rc.0",
-    "swiper": "11.2.6"
+    "swiper": "11.2.8"
   },
   "resolutions": {
     "@storybook/react/webpack": "5"
