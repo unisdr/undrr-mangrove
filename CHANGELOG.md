@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/unisdr/undrr-mangrove/compare/v1.1.2...v1.1.3) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve git commands failure in dist branch workflow ([e81f0cc](https://github.com/unisdr/undrr-mangrove/commit/e81f0cca575a3779f51ce700e2af990ea8008cd7))
+
 ## [1.1.2](https://github.com/unisdr/undrr-mangrove/compare/v1.1.1...v1.1.2) (2025-06-04)
 
 
