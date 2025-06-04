@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/unisdr/undrr-mangrove/compare/v1.1.1...v1.1.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* whitespace in build ([c6d5c3a](https://github.com/unisdr/undrr-mangrove/commit/c6d5c3a019b42197efbe7fb1dcea2d86bc5304bd))
+
 ## [1.1.1](https://github.com/unisdr/undrr-mangrove/compare/v1.1.0...v1.1.1) (2025-06-04)
 
 
