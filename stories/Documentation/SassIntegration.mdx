@@ -40,7 +40,7 @@ Take full control of Mangrove styling by integrating Sass files directly into yo
 
 ```bash
 # Install as a dependency
-npm install @unisdr/undrr-mangrove
+yarn install @unisdr/undrr-mangrove
 
 # Or with yarn
 yarn add @unisdr/undrr-mangrove
@@ -581,8 +581,8 @@ $mg-font-size-button: $mg-font-size-250;  // Larger button text
     "sass": "sass src/sass/main.scss:dist/css/style.css --watch",
     "sass:build": "sass src/sass/main.scss:dist/css/style.css --style=compressed",
     "sass:dev": "sass src/sass/main.scss:dist/css/style.css --watch --source-map",
-    "build": "npm run sass:build && npm run js:build",
-    "dev": "concurrently \"npm run sass:dev\" \"npm run js:dev\""
+    "build": "yarn run sass:build && yarn run js:build",
+    "dev": "concurrently \"yarn run sass:dev\" \"yarn run js:dev\""
   }
 }
 ```
