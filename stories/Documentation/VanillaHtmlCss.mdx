@@ -64,9 +64,170 @@ Browse the component library, click the "HTML" tab, and copy the markup:
 Here's a full page using only Mangrove CSS classes:
 
 ```html
+<!DOCTYPE html>
+<html lang="en">
 
-tocome
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mangrove Page Template Example</title>
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style.css">
+</head>
 
+<body>
+  <div class="page-template-example mg-container mg-container--spacer">
+
+    <!-- Global Header -->
+    <header id="header" class="mg-page-header mg-page-header--default">
+      <div class="mg-page-header__decoration">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="mg-page-header__toolbar-wrapper" data-vf-google-analytics-region="undrr-black-bar">
+        <div class="mg-page-header__container mg-container">
+          <div class="mg-page-header__region mg-page-header__region--toolbar">
+            <section id="block-undrrlogo" class="mg-page-header__block mg-page-header__block--logo">
+              <a href="/">
+                <img alt="UNDRR Logo" width="324" height="47" title="UNDRR Logo" class="mg-page-header__logo-img" src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg" />
+              </a>
+            </section>
+            <a alt="Log in or register" title="Log in or register" href="/user">
+              <i class="fa fa-user"></i>
+              <span class="mg-page-header__label">My account</span>
+              <span class="mg-page-header__label-mobile">Login</span>
+            </a>
+            <section class="mg-page-header__block mg-page-header__block--language">
+              <form class="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form" id="lang_dropdown_form_lang-dropdown-form" action="/" method="post" accept-charset="UTF-8" novalidate="">
+                <div class="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
+                  <label for="edit-lang-dropdown-select" class="mg-u-sr-only">
+                    Select your language
+                  </label>
+                  <div class="mg-page-header__select-wrapper">
+                    <select style="width: 165px;" class="mg-page-header__select lang-dropdown-select-element form-select form-control" data-lang-dropdown-id="lang-dropdown-form" id="edit-lang-dropdown-select" name="lang_dropdown_select">
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="ar">Arabic</option>
+                    </select>
+                  </div>
+                </div>
+                <noscript></noscript>
+              </form>
+            </section>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Menu -->
+    <nav class="mg-mega-wrapper" aria-label="Main Navigation">
+      <ul class="mg-mega-topbar | mg-container-full-width" role="menubar" aria-label="Main navigation menu">
+        <li class="mg-mega-topbar__item" role="none">
+          <a class="mg-mega-topbar__item-link" href="/about" role="menuitem" aria-haspopup="true">
+            About Us
+          </a>
+        </li>
+        <li class="mg-mega-topbar__item" role="none">
+          <a class="mg-mega-topbar__item-link" href="/news-and-events" role="menuitem" aria-haspopup="true">
+            News &amp; Events
+          </a>
+        </li>
+        <li class="mg-mega-topbar__item" role="none">
+          <a class="mg-mega-topbar__item-link" href="/directory" role="menuitem" aria-haspopup="true">
+            Directory
+          </a>
+        </li>
+        <li class="mg-mega-topbar__item" role="none">
+          <a class="mg-mega-topbar__item-link" href="/search" role="menuitem">
+            Search
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="mg-hero mg-hero--" style='background-image: url("https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg");'>
+      <div class="mg-hero__overlay">
+        <article class="mg-hero__content">
+          <div class="mg-hero__meta">
+            <span class="mg-hero__label">Label in medium size</span>
+          </div>
+          <header class="mg-hero__title">
+            <a href="/#" class="text-xxl"><span>Text in xxl large size</span></a>
+          </header>
+          <div class="mg-hero__summaryText">
+            <span>
+              Some introductory and summary text that can often occupy multiple
+              lines.
+            </span>
+          </div>
+          <div class="mg-hero__meta meta-detail">
+            <span class="mg-hero__label detail">Detail label: Detail</span>
+          </div>
+          <div class="mg-hero__buttons">
+            <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="#">
+              Primary action
+            </a>
+            <a class="mg-button mg-button-secondary" role="button" href="#">
+              Secondary action
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+    <!-- Tab Section -->
+
+    <article class="mg-tabs mg-tabs--horizontal" data-mg-js-tabs="true" data-mg-js-tabs-variant="horizontal" data-mg-tabs-initialized="true">
+      <ul class="mg-tabs__list">
+        <li class="mg-tabs__item" role="presentation">
+          <a class="mg-tabs__link is-active mg-tabs__stacked--open" href="#mg-tabs__section-tab-1" data-mg-js-tabs-default="false" role="tab" id="mg-tabs__section-tab-1" data-tabs__item="mg-tabs__section-tab-1" aria-selected="true">
+            Tab title 1
+          </a>
+        </li>
+        <li class="mg-tabs-content" data-mg-js-tabs-content="true">
+          <section class="mg-tabs__section" id="mg-tabs__section-tab-1" role="tabpanel" tabindex="-1" aria-labelledby="mg-tabs__section-tab-1">
+            <div>
+              <a href="#">As the UN Office for Disaster Risk Reduction</a>
+              , UNDRR convenes partners and coordinates activities to create safer,
+              more resilient communities.
+            </div>
+          </section>
+        </li>
+        <li class="mg-tabs__item" role="presentation">
+          <a class="mg-tabs__link" href="#mg-tabs__section-tab-2" data-mg-js-tabs-default="false" role="tab" id="mg-tabs__section-tab-2" data-tabs__item="mg-tabs__section-tab-2" tabindex="-1">
+            Tab title 2
+          </a>
+        </li>
+        <li class="mg-tabs-content" data-mg-js-tabs-content="true">
+          <section class="mg-tabs__section" id="mg-tabs__section-tab-2" role="tabpanel" tabindex="-1" aria-labelledby="mg-tabs__section-tab-2" hidden="">
+            <div>
+              The Sendai Framework is the
+              <a href="#">global roadmap</a>
+              for reducing human and economic loss as a direct result of disasters.
+            </div>
+          </section>
+        </li>
+        <li class="mg-tabs__item" role="presentation">
+          <a class="mg-tabs__link" href="#mg-tabs__section-tab-3" data-mg-js-tabs-default="false" role="tab" id="mg-tabs__section-tab-3" data-tabs__item="mg-tabs__section-tab-3" tabindex="-1">
+            Tab title 3 i am a bit longer and on and on
+          </a>
+        </li>
+        <li class="mg-tabs-content" data-mg-js-tabs-content="true">
+          <section class="mg-tabs__section" id="mg-tabs__section-tab-3" role="tabpanel" tabindex="-1" aria-labelledby="mg-tabs__section-tab-3" hidden="">
+            <div>
+              Midterm Review of the Sendai Framework - Register your interest for
+              consultations on the Political Declaration.
+            </div>
+          </section>
+        </li>
+      </ul>
+    </article>
+    <!-- Footer -->
+    Footer to come.
+  </div>
+</body>
+
+</html>
 ```
 
 ## Available CSS files
