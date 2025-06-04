@@ -1,5 +1,3 @@
-// @import "../../assets/scss/variables";
-
 .mg-mega-wrapper {
   position: relative;
   box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
@@ -332,7 +330,7 @@
   top: 0;
   right: 0;
   z-index: 10;
-  
+
   @media screen and (max-width: $mg-breakpoint-mobile) {
     width: 100%;
   }
@@ -385,7 +383,7 @@
       background: $mg-color-blue-800;
       color: white;
     }
-    
+
     &:has(.fa-angle-circled-left) {
       right: calc(100% - 3.5rem);
       background: black;
@@ -399,7 +397,7 @@
     display: flex;
     z-index: 11;
   }
-  
+
   .mg-mega-topbar {
     position: relative;
   }
