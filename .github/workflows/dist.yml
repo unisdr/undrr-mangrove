@@ -31,11 +31,26 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin dist || true
-          git checkout --orphan dist
-          git reset --hard
-          git rm -rf .
-          cp -r dist/* .
+
+          # Create a temporary directory for the dist branch
+          mkdir -p /tmp/dist-branch
+          cp -r dist/* /tmp/dist-branch/
+
+          # Check if dist branch exists
+          if git ls-remote --heads origin dist | grep -q dist; then
+            git fetch origin dist
+            git checkout dist
+          else
+            git checkout --orphan dist
+          fi
+
+          # Remove all files from the working directory
+          rm -rf .* * 2>/dev/null || true
+
+          # Copy dist files
+          cp -r /tmp/dist-branch/* .
+
+          # Add and commit
           git add .
           git commit -m "Deploy dist from ${{ github.sha }}"
           git push --force origin dist

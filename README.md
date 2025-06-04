@@ -197,10 +197,10 @@ The workflow ensures that the `dist` branch always reflects the latest stable bu
 
 Support for release tagged content.
 
-## Credit
-
-The base configuration and bootstrapping of this [Storybook](https://storybook.js.org/)-powered library was done based off the [UNDP Design System](https://github.com/undp/design-system), which is MIT licensed, but done with their kind blessing.
-
 ## LICENSE
 
 Components and code are Apache 2.0 licensed. The UNDRR look and feel is proprietary.
+
+## Credit
+
+The base configuration and bootstrapping of this [Storybook](https://storybook.js.org/)-powered library was done based off the [UNDP Design System](https://github.com/undp/design-system), which is MIT licensed, but done with their kind blessing.
