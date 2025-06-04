@@ -188,7 +188,7 @@ The primary use case for this feature is static sites with no build process.
 Example CDN URL:
 
 ```
-https://assets.undrr.org/static/mangrove/css/style.css
+https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
 ```
 
 The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
