@@ -2,7 +2,7 @@ import { Meta, Source } from '@storybook/blocks';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
-  title="Getting started/Sass Integration"
+  title="Getting started/Sass integration"
   parameters={{
     viewMode: "docs",
     previewTabs: {
@@ -11,7 +11,7 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
   }}
 />
 
-# Sass Integration Guide
+# Sass integration guide
 
 Take full control of Mangrove styling by integrating Sass files directly into your build process. Perfect for custom themes and design system extensions.
 
@@ -30,7 +30,7 @@ Take full control of Mangrove styling by integrating Sass files directly into yo
   showNumbers={false}
 />
 
-## Quick Setup
+## Quick setup
 
 ### 1. Install Mangrove
 
@@ -148,7 +148,7 @@ gulp.task('sass', function() {
 });
 ```
 
-## Available Sass Files
+## Available Sass files
 
 ### Core Foundation
 ```scss
@@ -188,7 +188,7 @@ gulp.task('sass', function() {
 @import "~@unisdr/undrr-mangrove/stories/Components/MegaMenu/mega-menu";
 ```
 
-## Customization Examples
+## Customization examples
 
 ### 1. Custom Color Palette
 
@@ -323,7 +323,7 @@ $mg-border-color-button: $mg-color-interactive;
 $author-image-radius: 50%;  // Circular images
 ```
 
-## Building Custom Components
+## Building custom components
 
 ### Component Structure
 
@@ -484,7 +484,7 @@ Leverage existing Mangrove mixins for consistency:
 }
 ```
 
-## Theme Creation
+## Theme creation
 
 Create a complete custom theme by extending Mangrove:
 
@@ -571,7 +571,7 @@ $mg-font-size-button: $mg-font-size-250;  // Larger button text
 }
 ```
 
-## Build Scripts
+## Build scripts
 
 ### Package.json Scripts
 
@@ -601,7 +601,7 @@ module.exports = {
 }
 ```
 
-## Best Practices
+## Best practices
 
 ### 1. Import Order
 Always import in this order to ensure proper cascading:
@@ -656,7 +656,7 @@ $mg-button-primary-bg: #custom-color;
 @import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
 ```
 
-## Next Steps
+## Next steps
 
 - **Explore Variables**: Check `/stories/assets/scss/_variables.scss` for all customizable options
 - **Study Components**: Look at existing component Sass files for patterns

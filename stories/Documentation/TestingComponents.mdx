@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/blocks';
 
 <Meta
-  title="Getting started/Testing Components"
+  title="Getting started/Testing components"
   parameters={{
     viewMode: "docs",
     previewTabs: {
@@ -10,22 +10,22 @@ import { Meta } from '@storybook/blocks';
   }}
 />
 
-# Testing Components
+# Testing components
 
 This guide outlines the recommended testing approach for the Mangrove component library to ensure high-quality, reliable components.
 
-## Current Testing Status
+## Current testing status
 
 The Mangrove component library is currently in the process of implementing a standardized testing approach. While the project has Jest configured as indicated in the package.json, comprehensive test coverage is still being developed. This document provides guidelines for how components should be tested moving forward.
 
-## Testing Philosophy
+## Testing philosophy
 
 Testing is an integral part of the component development process in the Mangrove library. We aim to follow these principles:
 
 1. **Comprehensive coverage** - Test functionality, appearance, and accessibility
 2. **Maintainable tests** - Keep tests simple, focused, and maintainable
 
-## Testing Tools
+## Testing tools
 
 The Mangrove library uses the following testing tools:
 
@@ -33,7 +33,7 @@ The Mangrove library uses the following testing tools:
 2. **React Testing Library** - DOM testing utilities for React components
 3. **Storybook** - Visual testing through stories
 
-## Recommended Test Directory Structure
+## Recommended test directory structure
 
 Tests should be organized in a logical structure that mirrors the component organization:
 
@@ -58,7 +58,7 @@ stories/
 │   │   │   └── ComponentName.test.jsx
 ```
 
-## Types of Tests
+## Types of tests
 
 ### 1. Unit Tests
 
@@ -159,7 +159,7 @@ describe('CtaButton snapshots', () => {
 });
 ```
 
-## Writing Effective Tests
+## Writing effective tests
 
 ### Best Practices
 
@@ -219,7 +219,7 @@ it('shows content when expanded', () => {
 });
 ```
 
-## Running Tests
+## Running tests
 
 Use these npm scripts to run tests (as defined in package.json):
 
@@ -237,7 +237,7 @@ yarn test:coverage
 yarn docker-test
 ```
 
-## Implementing Tests in the Codebase
+## Implementing tests in the codebase
 
 Since the Mangrove library is still developing its testing approach, here are recommendations for integrating tests:
 
@@ -246,7 +246,7 @@ Since the Mangrove library is still developing its testing approach, here are re
 3. **Build test infrastructure** - Set up a consistent approach for all component tests
 4. **Document test patterns** - Create examples of good tests for developers to follow
 
-## Storybook as a Testing Tool
+## Storybook as a testing tool
 
 Until comprehensive unit tests are implemented, Storybook stories serve as an important form of visual testing:
 
@@ -254,7 +254,7 @@ Until comprehensive unit tests are implemented, Storybook stories serve as an im
 2. **Use controls** - Leverage Storybook controls to allow manual testing of different props
 3. **Document accessibility** - Include information about accessibility in component documentation
 
-## Continuous Integration
+## Continuous integration
 
 Tests are automatically run in the CI/CD pipeline:
 
@@ -262,13 +262,13 @@ Tests are automatically run in the CI/CD pipeline:
 2. Coverage reports are generated and tracked
 3. Test failures block pull request merges
 
-## Resources for Learning
+## Resources for learning
 
 - [Jest Documentation](https://jestjs.io/docs/getting-started)
 - [React Testing Library Documentation](https://testing-library.com/docs/react-testing-library/intro/)
 - [Testing Accessibility](https://www.w3.org/WAI/test-evaluate/)
 
-## Fixing Common Test Issues
+## Fixing common test issues
 
 ### 1. Asynchronous Operations
 
@@ -322,7 +322,7 @@ it('applies the correct class based on variant', () => {
 });
 ```
 
-## Test Coverage
+## Test coverage
 
 Aim for high test coverage (at least 80%) to ensure component reliability:
 
