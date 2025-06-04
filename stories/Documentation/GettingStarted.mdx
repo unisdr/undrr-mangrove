@@ -1,4 +1,5 @@
 import { Meta, Source } from '@storybook/blocks';
+import { linkTo } from '@storybook/addon-links';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
@@ -74,7 +75,7 @@ Choose the approach that best fits your project:
 - Copy HTML structures from component docs
 - Zero JavaScript required for most components
 
-[→ See Vanilla HTML/CSS Guide](/?path=/docs/getting-started-vanilla-html-css--docs)
+<a href="javascript:void(0)" onClick={linkTo('getting-started-vanilla-html-css', 'docs')}>→ See Vanilla HTML/CSS Guide</a>
 
 ### 🎨 Approach 2: Sass integration
 **Best for**: Custom themes, design system extensions
@@ -83,7 +84,7 @@ Choose the approach that best fits your project:
 - Customize variables and mixins
 - Build your own theme variants
 
-[→ See Sass Integration Guide](/?path=/docs/getting-started-sass-integration--docs)
+<a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>→ See Sass Integration Guide</a>
 
 ### ⚛️ Approach 3: React components (full power)
 **Best for**: React applications, dynamic interfaces
@@ -93,7 +94,7 @@ Choose the approach that best fits your project:
 - Props-based customization
 - Built-in state management
 
-[→ See React Integration Guide](/?path=/docs/getting-started-react-integration--docs)
+<a href="javascript:void(0)" onClick={linkTo('getting-started-react-integration', 'docs')}>→ See React Integration Guide</a>
 
 ## Architecture overview
 
@@ -117,11 +118,6 @@ Mangrove follows a loose [atomic design](https://atomicdesign.bradfrost.com/) me
 ├── Header navigation
 ├── Footer sections
 └── Content blocks
-
-🌐 Organisms (Page Sections)
-├── Site header
-├── Page footer
-└── Content layouts
 ```
 
 ## Key principles

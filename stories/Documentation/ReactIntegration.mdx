@@ -1,4 +1,5 @@
 import { Meta, Source } from '@storybook/blocks';
+import { linkTo } from '@storybook/addon-links';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
@@ -70,9 +71,11 @@ import {
 
 **Option A: Import CSS in your main file**
 ```jsx
-// src/index.js or src/App.js
-import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
-import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+// Import the base styles
+import '@unisdr/undrr-mangrove/css/style.css';
+
+// Or import a specific theme
+import '@unisdr/undrr-mangrove/css/style-preventionweb.css';
 ```
 
 **Option B: Import in CSS file**
@@ -825,7 +828,7 @@ export const Default = {
 
 - **Explore Components**: Browse the component library for more React examples
 - **TypeScript Setup**: Configure your project with TypeScript for better development experience
-- **Custom Themes**: Create your own theme using [Sass Integration](/?path=/docs/getting-started-sass-integration--docs)
+- **Custom Themes**: <a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>Create your own theme using Sass Integration</a>
 - **Performance**: Implement code splitting and lazy loading for better performance
 
-Need help? Check out [Best Practices](/?path=/docs/getting-started-best-practices--docs) or [Real-world Examples](/?path=/docs/getting-started-examples--docs)!
+Need help? Check out <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')}>Best Practices</a> or <a href="javascript:void(0)" onClick={linkTo('getting-started-examples', 'docs')}>Real-world Examples</a>!

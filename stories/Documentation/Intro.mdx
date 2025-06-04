@@ -30,13 +30,13 @@ If there is a Component or Pattern that you need, or you have any other feedback
 **🎯 <a href="javascript:void(0)" onClick={linkTo('getting-started-vanilla-html-and-css', 'docs')}>Vanilla HTML/CSS Guide</a>**
 For static sites, legacy projects, or when you want minimal dependencies. Just add CSS files and copy HTML structures.
 
-**🎨 <a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')} >Sass Integration Guide</a>**
+**🎨 <a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>Sass Integration Guide</a>**
 Take control of styling with custom themes, variable overrides, and build process integration.
 
-**⚛️ <a href="javascript:void(0)" onClick={linkTo('getting-started-react-integration', 'docs')} >React Integration Guide</a>**
+**⚛️ <a href="javascript:void(0)" onClick={linkTo('getting-started-react-integration', 'docs')}>React Integration Guide</a>**
 Full React components with TypeScript integrations, props-based customization, and modern development patterns.
 
-**📋 <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')} >Best Practices</a>**
+**📋 <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')}>Best Practices</a>**
 Performance optimization, accessibility guidelines, and development best practices.
 
 ---
@@ -83,32 +83,8 @@ npm install @unisdr/undrr-mangrove
 
 ## Need help?
 
-- 📖 **Start here**: <a href="javascript:void(0)" onClick={linkTo('getting-started-intro-getting-started-guide', 'docs')} >Getting Started Guide</a>
+- 📖 **Start here**: <a href="javascript:void(0)" onClick={linkTo('getting-started-intro-getting-started-guide', 'docs')}>Getting Started Guide</a>
 - 🧱 **Browse Components**: Explore the component library in the sidebar
 - 💬 **Questions**: Contact the UNDRR development team
 - 🐛 **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
 - 📈 **Updates**: Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
-```
-
-The key changes I made:
-
-1. **Added import**: `import { linkTo } from '@storybook/addon-links';`
-
-2. **Converted story titles to IDs**: Storybook converts titles like "Getting started/React Integration" to story IDs like "getting-started-react-integration"
-
-3. **Replaced hardcoded URLs with linkTo buttons**: Each link now uses `linkTo(storyId, 'docs')` with proper styling to maintain the appearance
-
-4. **Added inline styles**: To make the buttons look like links while maintaining the original formatting
-
-The story ID format follows Storybook's convention:
-- Spaces become hyphens
-- Slashes become hyphens
-- Everything is lowercase
-- Special characters are removed
-
-This approach is much more robust because:
-- ✅ No hardcoded paths that can break
-- ✅ Type-safe story references
-- ✅ Automatic updates if stories are renamed
-- ✅ Works consistently across Storybook versions
-- ✅ Better development experience
