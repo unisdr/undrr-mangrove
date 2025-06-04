@@ -5,7 +5,7 @@ import MegaMenu from '../MegaMenu/MegaMenu';
 import { Hero } from '../Hero/Hero';
 import { Tab } from '../Tab/Tab';
 import { VerticalCard } from '../Cards/Card/VerticalCard';
-import { Footer } from '../../Organism/Footer/Footer';
+import { Footer } from '../Footer/Footer';
 
 const sampleHeroData = [{
   title: "Custom title<br>with&nbsp;line breaks and spaces",

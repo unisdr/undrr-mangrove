@@ -1,0 +1,117 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { PageHeader } from './PageHeader';
+import * as PageHeaderStories from './PageHeader.stories';
+
+<Meta of={PageHeaderStories} />
+
+# Page Header
+
+The PageHeader component provides a distinctive header decoration for pages, featuring a colorful horizontal stripe that serves as visual branding.
+
+### Overview
+
+The PageHeader component displays a decorative header element with four colored sections that reflect the UNDRR brand colors. It provides a consistent visual identifier at the top of pages.
+
+#### When to use:
+
+* Use at the top of main pages to establish brand presence
+* Use to provide visual consistency across the website
+* Use as a decorative element to separate header content from main content
+
+### Formatting
+
+#### Default
+
+The PageHeader component renders as an HTML `<header>` element with an id of "header" and contains a decoration element with four colored divs representing different brand colors.
+
+<Canvas>
+  <Story of={PageHeaderStories.Default} />
+</Canvas>
+
+#### With Custom Class
+
+The component supports additional CSS classes for custom styling.
+
+<Canvas>
+  <Story of={PageHeaderStories.WithCustomClass} />
+</Canvas>
+
+### Content
+
+The PageHeader component is purely decorative and does not contain any textual content. The visual content consists of four colored stripes:
+
+* First stripe: Red (#c1092d)
+* Second stripe: Purple (#962987)
+* Third stripe: Orange (#eb752a)
+* Fourth stripe: Teal (#00afae)
+
+### Behaviors
+
+#### States
+
+The PageHeader component has a single static state - it does not change based on user interaction.
+
+### Usage
+
+#### React applications
+
+To use the PageHeader component in your React application:
+
+1. Import the component:
+   ```jsx
+   import { PageHeader } from './path/to/PageHeader';
+   ```
+
+2. Use the component:
+   ```jsx
+   <PageHeader />
+   ```
+
+3. With custom styling:
+   ```jsx
+   <PageHeader className="my-custom-header" />
+   ```
+
+#### Vanilla HTML/CSS
+
+For non-React applications, use this HTML structure:
+
+```html
+<header id="header" class="mg-page-header">
+  <div class="mg-page-header__decoration">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</header>
+```
+
+### CSS and JS References
+
+#### CSS:
+Required CSS files for the component styling:
+* Component-specific styles: `page-header.scss`
+
+#### JS:
+* No JavaScript dependencies required
+
+### Accessibility
+
+The PageHeader component follows accessibility best practices:
+
+* Uses semantic `<header>` element
+* Includes proper id attribute for potential navigation references
+* Does not interfere with screen readers as it's purely decorative
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| variant | String | 'default' | Component variant (currently only 'default' available) |
+| className | String | undefined | Additional CSS classes to apply |
+| ...args | Object | {} | Additional props passed to the header element |
+
+### Changelog
+
+1.0 — Released component 

@@ -1,0 +1,33 @@
+.mg-page-header {
+  // Base styles for page header
+  
+  &__decoration {
+    display: flex;
+    align-items: stretch;
+    align-content: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+    div {
+      width: 25%;
+      height: 7px;
+      display: inline-block;
+      
+      &:nth-child(1) {
+        background: #c1092d;
+      }
+      
+      &:nth-child(2) {
+        background: #962987;
+      }
+      
+      &:nth-child(3) {
+        background: #eb752a;
+      }
+      
+      &:nth-child(4) {
+        background: #00afae;
+      }
+    }
+  }
+} 
