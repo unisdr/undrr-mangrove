@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/unisdr/undrr-mangrove/compare/v1.1.3...v1.1.4) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve git branch/directory ambiguity in dist workflow ([b832be6](https://github.com/unisdr/undrr-mangrove/commit/b832be6410a20050904a0d9491b558c9d33d395a))
+
 ## [1.1.3](https://github.com/unisdr/undrr-mangrove/compare/v1.1.2...v1.1.3) (2025-06-04)
 
 
