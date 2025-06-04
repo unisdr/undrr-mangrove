@@ -2,13 +2,13 @@
   // Base styles for page header
 
   &__toolbar-wrapper {
-    background: #333333
+    background: #333
       url(//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png)
       no-repeat center center;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.3);
     z-index: 22;
 
-    @media (min-width: 1164px) {
+    @media (width >= 1164px) {
       .mg-page-header__container {
         padding: 0;
       }
@@ -20,7 +20,7 @@
     margin: 0 auto;
     padding: 0 1rem;
 
-    @media (min-width: 1164px) {
+    @media (width >= 1164px) {
       padding: 0;
     }
   }
@@ -88,12 +88,12 @@
     border-radius: 0;
     font-size: 1.65rem;
     background-color: transparent;
-    color: #ffffff;
+    color: #fff;
     direction: rtl;
     line-height: 2rem;
 
     option {
-      color: #333333;
+      color: #333;
     }
   }
 
@@ -144,6 +144,7 @@
 // Label for mobile
 .mg-page-header__label-mobile {
   display: none;
+
   @media (max-width: $mg-breakpoint-tablet) {
     display: unset;
   }
