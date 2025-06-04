@@ -48,7 +48,7 @@ export function PageHeader({
         className="mg-page-header__toolbar-wrapper"
         data-vf-google-analytics-region="undrr-black-bar"
       >
-        <div className="mg-page-header__container">
+        <div className="mg-page-header__container mg-container">
           <div className="mg-page-header__region mg-page-header__region--toolbar">
             {/* UNDRR Logo Section */}
             <section
