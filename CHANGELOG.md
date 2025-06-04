@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/unisdr/undrr-mangrove/compare/v1.1.0...v1.1.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* remove redundant build step ([04eda0c](https://github.com/unisdr/undrr-mangrove/commit/04eda0c59c8523259736f747d58877f896ea57e5))
+
 # [1.1.0](https://github.com/unisdr/undrr-mangrove/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 
