@@ -39,13 +39,13 @@ The project uses the following branching strategy:
 - `main` is the primary branch and all commits to it are automatically deployed to the GitHub Pages website
 - Development work should be done on feature branches
 - Pull requests should be opened against `main` and should reference either:
-    - An internal GitLab issue
-    - A public GitHub issue
+  - An internal GitLab issue
+  - A public GitHub issue
 
 For production use:
 
 - Stable releases will be created as tagged releases
-    - Note: tagged releases are not yet available as we are still in an alpha phase
+  - Note: tagged releases are not yet available as we are still in an alpha phase
 - The `dev` branch is not used
 
 When creating a new feature or fix:
@@ -56,7 +56,7 @@ When creating a new feature or fix:
 4. Reference the relevant issue from Github or the private UNDRR GitLab
 5. Once approved, the changes will be merged and automatically deployed
 
-### NPM Scripts:
+### NPM Scripts
 
 ```bash
 # Start the application: brings up Docker containers, installs dependencies, and runs Storybook locally on port 6006
@@ -78,7 +78,7 @@ yarn watch
 yarn docker-lint
 ```
 
-### Makefile Commands:
+### Makefile Commands
 
 You can use the provided `Makefile` to simplify running commands inside Docker containers. Run the following commands to create/update the codebase:
 
@@ -102,7 +102,7 @@ make watch
 make build
 ```
 
-### Manual Docker Commands:
+### Manual Docker Commands
 
 If you prefer running Docker commands manually, the following commands are available:
 
@@ -160,20 +160,47 @@ yarn test:coverage
 ## Compiled assets
 
 We do not yet make the compiled assets available directly; see:
-https://gitlab.com/undrr/web-backlog/-/issues/545
+<https://gitlab.com/undrr/web-backlog/-/issues/545>
 
 Provisional assets are available in the `dist` directory:
 
 - `dist/components`: the compiled Storybook components
-    - example: `dist/components/ShareButtons.js`
+  - example: `dist/components/ShareButtons.js`
 - `dist/assets`: the compiled static assets ... jpg, css, web fonts, etc.
-    - example: `dist/assets/css/style-preventionweb.css`
-    - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
+  - example: `dist/assets/css/style-preventionweb.css`
+  - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
+
+## CDN Distribution
+
+For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/), this project automatically maintains a `dist` branch that contains only the latest compiled build artifacts. This branch is automatically updated on every push to `main` via GitHub Actions.
+
+The primary use case for this feature is static sites with no build process.
+
+### The `dist` Branch
+
+- **Purpose**: Clean distribution branch for CDN/static hosting services
+- **Content**: Contains only the compiled assets from the `dist` directory
+- **History**: No git history is retained - each deployment creates a fresh orphan commit
+- **Updates**: Automatically updated when changes are pushed to `main`
+
+### Using the `dist` Branch
+
+Example CDN URL:
+
+```
+https://assets.undrr.org/static/mangrove/css/style.css
+```
+
+The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
+
+### Future dist features
+
+Support for release tagged content.
+
+## LICENSE
+
+Components and code are Apache 2.0 licensed. The UNDRR look and feel is proprietary.
 
 ## Credit
 
 The base configuration and bootstrapping of this [Storybook](https://storybook.js.org/)-powered library was done based off the [UNDP Design System](https://github.com/undp/design-system), which is MIT licensed, but done with their kind blessing.
-
-## LICENSE
-
-Components and code are MIT licensed. The UNDRR look and feel is proprietary.

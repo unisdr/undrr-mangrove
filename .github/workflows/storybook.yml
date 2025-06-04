@@ -35,7 +35,7 @@ jobs:
         run: |
           yarn run build
           mv docs-build-temp _site
-         cp dist _site -r
+          cp dist _site -r
       - name: Run tests with Jest 🧪
         run: |
           yarn test
