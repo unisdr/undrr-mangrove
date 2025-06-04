@@ -1,0 +1,41 @@
+name: Build and Push dist to dist branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-push-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set Yarn Version
+        run: yarn set version berry
+
+      - name: Install dependencies
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile
+
+      - name: Build project
+        run: yarn run build
+
+      - name: Push dist to dist branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin dist || true
+          git checkout --orphan dist
+          git reset --hard
+          git rm -rf .
+          cp -r dist/* .
+          git add .
+          git commit -m "Deploy dist from ${{ github.sha }}"
+          git push --force origin dist
