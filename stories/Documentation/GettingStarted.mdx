@@ -22,8 +22,10 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
     { id: "architecture-overview", text: "Architecture Overview" },
     { id: "key-principles", text: "Key Principles" },
     { id: "common-use-cases", text: "Common Use Cases" },
+    { id: "development-setup", text: "Development Setup" },
+    { id: "assets-location", text: "Assets Location" },
     { id: "next-steps", text: "Next Steps" },
-    { id: "need-help", text: "Need Help?" }
+    { id: "need-help", text: "Need Help?" },
   ]}
   showNumbers={false}
 />
@@ -48,6 +50,7 @@ The fastest way to get started:
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- Base styling -->
   <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style.css">
   <!-- or choose a site specific theme -->
   <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-mcr.css">
@@ -72,7 +75,10 @@ Choose the approach that best fits your project:
 **Best for**: Static sites, existing projects, quick prototypes
 
 - Include CSS files via CDN
+- Browse the component catalog and select what you need
+- Check the component's documentation page
 - Copy HTML structures from component docs
+- Add the referenced CSS and JS files to your project as specified in the documentation
 - Zero JavaScript required for most components
 
 <a href="javascript:void(0)" onClick={linkTo('getting-started-vanilla-html-css', 'docs')}>→ See Vanilla HTML/CSS Guide</a>
@@ -123,10 +129,18 @@ Mangrove follows a loose [atomic design](https://atomicdesign.bradfrost.com/) me
 ## Key principles
 
 ### Framework agnostic
+Mangrove is designed to be framework agnostic, meaning it can work seamlessly with nearly any existing system. This approach offers maximum flexibility and ease of integration across various projects and technologies.
+
 Works with any technology stack - React, Vue, Angular, plain HTML, WordPress, Drupal, etc.
 
+Key features of our framework-agnostic approach:
+
+* **Minimal dependencies**: Our design system avoids reliance on specific frameworks or libraries to prevent conflicts with your existing projects.
+* **Easy integration**: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
+* **Consistent design**: The design system maintains a consistent look and feel across different implementations by focusing on repeatable HTML structures.
+
 ### CSS namespace
-All styles use the `mg-` prefix to prevent conflicts:
+All styles use the `mg-` prefix to prevent conflicts with your existing codebase:
 ```css
 .mg-button { /* Mangrove button */ }
 .mg-card { /* Mangrove card */ }
@@ -134,11 +148,26 @@ All styles use the `mg-` prefix to prevent conflicts:
 ```
 
 ### Semantic HTML
-Components use proper HTML elements for accessibility:
+Components use proper HTML elements for accessibility and maintain a consistent structure:
+
+1. Each component uses the `mg-` prefix in its class names
+2. Semantic HTML elements are used where appropriate
+3. ARIA attributes are included for accessibility
+
 ```html
 <button class="mg-cta-button">Button</button>
 <nav class="mg-breadcrumb">Navigation</nav>
 <main class="mg-content">Main content</main>
+```
+
+Example component structure:
+
+```html
+<div class="mg-component">
+  <div class="mg-component__element">
+    <!-- Component content -->
+  </div>
+</div>
 ```
 
 ### Progressive enhancement
@@ -187,6 +216,65 @@ function Dashboard() {
 </form>
 ```
 
+## Development setup
+
+If you want to contribute to the Mangrove component library, follow these steps to set up your development environment:
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/unisdr/undrr-mangrove.git
+cd undrr-mangrove
+```
+
+2. **Use Docker for development (recommended)**
+```bash
+# Start the application, runs Storybook locally on port 6006
+yarn docker-run
+```
+
+Alternatively, if you prefer not to use Docker:
+
+```bash
+# Install dependencies
+yarn install
+
+# Run Storybook locally
+yarn run storybook
+```
+
+3. **Building the project**
+```bash
+# Using Docker
+yarn docker-build
+
+# Without Docker
+yarn run build
+```
+
+4. **Testing**
+```bash
+# Run tests
+yarn test
+
+# Run with coverage report
+yarn test:coverage
+```
+
+5. **Linting**
+```bash
+# Run linting
+yarn run lint
+```
+
+## Assets location
+
+When working with Mangrove assets, you'll find them organized in the following structure:
+
+* **Components**: Available in the `dist/components` directory
+* **CSS files**: Available in the `dist/assets/css` directory
+* **Icons and images**: Available in the `dist/assets/images` directory
+* **Web fonts**: Available in the `dist/assets/fonts` directory
+
 ## Next steps
 
 1. **Choose your integration approach** from the guides above
@@ -201,7 +289,3 @@ function Dashboard() {
 - 🐛 **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
 - 💬 **Questions**: Contact the UNDRR development team
 - 🔄 **Updates**: Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
-
----
-
-**Ready to build?** Start with one of the integration guides above! 🚀
