@@ -1,3 +1,24 @@
+## [1.1.5](https://github.com/unisdr/undrr-mangrove/compare/v1.1.4...v1.1.5) (2025-06-04)
+
+
+### Bug Fixes
+
+* reset working directory before dist branch checkout ([8cb6d3d](https://github.com/unisdr/undrr-mangrove/commit/8cb6d3d345186d80fe897f79669faec2f8390545))
+
+## [1.1.4](https://github.com/unisdr/undrr-mangrove/compare/v1.1.3...v1.1.4) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve git branch/directory ambiguity in dist workflow ([b832be6](https://github.com/unisdr/undrr-mangrove/commit/b832be6410a20050904a0d9491b558c9d33d395a))
+
+## [1.1.3](https://github.com/unisdr/undrr-mangrove/compare/v1.1.2...v1.1.3) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve git commands failure in dist branch workflow ([e81f0cc](https://github.com/unisdr/undrr-mangrove/commit/e81f0cca575a3779f51ce700e2af990ea8008cd7))
+
 ## [1.1.2](https://github.com/unisdr/undrr-mangrove/compare/v1.1.1...v1.1.2) (2025-06-04)
 
 

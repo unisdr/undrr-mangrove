@@ -36,16 +36,20 @@ jobs:
           mkdir -p /tmp/dist-branch
           cp -r dist/* /tmp/dist-branch/
 
-          # Check if dist branch exists
+          # Reset any local changes to avoid conflicts
+          git reset --hard HEAD
+          git clean -fd
+
+          # Check if dist branch exists and switch to it
           if git ls-remote --heads origin dist | grep -q dist; then
             git fetch origin dist
-            git checkout dist
+            git checkout -B dist origin/dist
           else
             git checkout --orphan dist
           fi
 
           # Remove all files from the working directory
-          rm -rf .* * 2>/dev/null || true
+          find . -maxdepth 1 -not -name '.git' -not -name '.' -exec rm -rf {} + 2>/dev/null || true
 
           # Copy dist files
           cp -r /tmp/dist-branch/* .
