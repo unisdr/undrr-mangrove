@@ -1,0 +1,211 @@
+import { Meta, Source } from '@storybook/blocks';
+import TableOfContents from '../Components/TableOfContents/TableOfContents';
+
+<Meta
+  title="Getting started/Intro/Getting started guide"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Getting started with Mangrove
+
+<TableOfContents
+  tocData={[
+    { id: "what-is-mangrove", text: "What is Mangrove?" },
+    { id: "quick-start", text: "Quick Start (30 seconds)" },
+    { id: "integration-approaches", text: "Integration Approaches" },
+    { id: "architecture-overview", text: "Architecture Overview" },
+    { id: "key-principles", text: "Key Principles" },
+    { id: "common-use-cases", text: "Common Use Cases" },
+    { id: "next-steps", text: "Next Steps" },
+    { id: "need-help", text: "Need Help?" }
+  ]}
+  showNumbers={false}
+/>
+
+Welcome to UNDRR Mangrove - the component library that brings consistency, accessibility, and speed to UNDRR web development.
+
+## What is Mangrove?
+
+Mangrove is UNDRR's component library that provides:
+- ✅ **Pre-built, tested components** ready for production
+- ✅ **Consistent design** across all UNDRR projects
+- ✅ **Accessibility built-in** with WCAG 2.1 AA compliance
+- ✅ **Framework flexibility** - works with any tech stack
+- ✅ **Copy-paste ready** code snippets
+- ✅ **Comprehensive documentation** with live examples
+
+## Quick start (30 seconds)
+
+The fastest way to get started:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style.css">
+  <!-- or choose a site specific theme -->
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-mcr.css">
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-irp.css">
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-preventionweb.css">
+</head>
+<body>
+  <!-- 2. Use any component -->
+  <button class="mg-cta-button mg-cta-button--primary">
+    <span class="mg-cta-button__text">Get Started</span>
+    <span class="mg-cta-button__icon" aria-hidden="true">→</span>
+  </button>
+</body>
+</html>
+```
+
+## Integration approaches
+
+Choose the approach that best fits your project:
+
+### 🎯 Approach 1: Vanilla HTML/CSS (Simplest)
+**Best for**: Static sites, existing projects, quick prototypes
+
+- Include CSS files via CDN
+- Copy HTML structures from component docs
+- Zero JavaScript required for most components
+
+[→ See Vanilla HTML/CSS Guide](/?path=/docs/getting-started-vanilla-html-css--docs)
+
+### 🎨 Approach 2: Sass Integration
+**Best for**: Custom themes, design system extensions
+
+- Import Sass files into your build process
+- Customize variables and mixins
+- Build your own theme variants
+
+[→ See Sass Integration Guide](/?path=/docs/getting-started-sass-integration--docs)
+
+### ⚛️ Approach 3: React Components (Full Power)
+**Best for**: React applications, dynamic interfaces
+
+- Import React components directly
+- Full TypeScript support
+- Props-based customization
+- Built-in state management
+
+[→ See React Integration Guide](/?path=/docs/getting-started-react-integration--docs)
+
+## Architecture overview
+
+Mangrove follows a loose [atomic design](https://atomicdesign.bradfrost.com/) methodology:
+
+```
+🔬 Atoms (Building Blocks)
+├── Typography (headings, paragraphs, links)
+├── Colors (brand palette, semantic colors)
+├── Icons (consistent iconography)
+└── Layout (grid, spacing, containers)
+
+🧩 Components (Functional Units)
+├── Buttons (CTAs, chips, share buttons)
+├── Forms (inputs, selects, checkboxes)
+├── Cards (content cards, stats cards)
+├── Navigation (breadcrumbs, menus)
+└── Charts (bar charts, scatter plots)
+
+🏗️ Molecules (Component Groups)
+├── Header navigation
+├── Footer sections
+└── Content blocks
+
+🌐 Organisms (Page Sections)
+├── Site header
+├── Page footer
+└── Content layouts
+```
+
+## Key principles
+
+### Framework Agnostic
+Works with any technology stack - React, Vue, Angular, plain HTML, WordPress, Drupal, etc.
+
+### CSS Namespace
+All styles use the `mg-` prefix to prevent conflicts:
+```css
+.mg-button { /* Mangrove button */ }
+.mg-card { /* Mangrove card */ }
+.mg-form__input { /* Mangrove form input */ }
+```
+
+### Semantic HTML
+Components use proper HTML elements for accessibility:
+```html
+<button class="mg-cta-button">Button</button>
+<nav class="mg-breadcrumb">Navigation</nav>
+<main class="mg-content">Main content</main>
+```
+
+### Progressive Enhancement
+Components work without JavaScript, enhanced with JS where beneficial.
+
+## Common use cases
+
+### 📄 Marketing Pages
+```html
+<!-- Hero section with CTA -->
+<section class="mg-hero">
+  <div class="mg-container">
+    <h1 class="mg-heading mg-heading--1">Building Resilient Communities</h1>
+    <p class="mg-paragraph mg-paragraph--large">Disaster risk reduction starts here.</p>
+    <button class="mg-cta-button mg-cta-button--primary">
+      <span class="mg-cta-button__text">Learn More</span>
+    </button>
+  </div>
+</section>
+```
+
+### 📊 Data Dashboards
+```jsx
+import { BarChart, StatsCards } from '@unisdr/undrr-mangrove';
+
+function Dashboard() {
+  return (
+    <div className="mg-grid">
+      <StatsCards data={statsData} />
+      <BarChart data={chartData} />
+    </div>
+  );
+}
+```
+
+### 📝 Forms & Applications
+```html
+<form class="mg-form">
+  <div class="mg-form__group">
+    <label class="mg-form__label" for="email">Email Address</label>
+    <input class="mg-form__input" type="email" id="email" required>
+  </div>
+  <button class="mg-cta-button mg-cta-button--primary" type="submit">
+    Submit Application
+  </button>
+</form>
+```
+
+## Next steps
+
+1. **Choose your integration approach** from the guides above
+2. **Browse the component library** to see what's available
+3. **Check out [Real-world Examples](/?path=/docs/getting-started-examples--docs)** for complete page layouts
+4. **Read [Best Practices](/?path=/docs/getting-started-best-practices--docs)** for optimal implementation
+5. **Join the community** - report issues, request features, contribute
+
+## Need help?
+
+- 📖 **Documentation**: Browse components in the sidebar
+- 🐛 **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
+- 💬 **Questions**: Contact the UNDRR development team
+- 🔄 **Updates**: Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
+
+---
+
+**Ready to build?** Start with one of the integration guides above! 🚀

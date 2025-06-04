@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/blocks';
 
 <Meta
-  title="Getting started/Accessibility"
+  title="Getting started/Best practices/Accessibility"
   parameters={{
     viewMode: "docs",
     previewTabs: {
@@ -18,3 +18,121 @@ All patterns are perceivable, operable, and understandable to users, even when u
 
 Please find additional information about accessibility in the links below:
 Visit W3C WCAG for more detail https://www.w3.org/TR/WCAG21/
+
+
+### 1. Semantic HTML
+
+**✅ Use proper HTML elements**
+```html
+<!-- Good: Semantic button -->
+<button class="mg-cta-button mg-cta-button--primary">
+  <span class="mg-cta-button__text">Submit Report</span>
+</button>
+
+<!-- Good: Semantic navigation -->
+<nav class="mg-breadcrumb" aria-label="Breadcrumb">
+  <ol class="mg-breadcrumb__list">
+    <li><a href="/">Home</a></li>
+    <li><a href="/reports">Reports</a></li>
+    <li aria-current="page">Current Report</li>
+  </ol>
+</nav>
+```
+
+**❌ Avoid div-based interactive elements**
+```html
+<!-- Avoid: Non-semantic clickable div -->
+<div class="mg-cta-button" onclick="handleClick()">Submit</div>
+```
+
+### 2. ARIA Labels and Descriptions
+
+**Form Fields**
+```jsx
+<InputFields
+  type="email"
+  element="input"
+  labelText="Email Address"
+  helpText="We'll never share your email with anyone"
+  errorText="Please enter a valid email address"
+  id="email"
+  aria-describedby="email-help email-error"
+  required
+/>
+```
+
+**Interactive Elements**
+```jsx
+<CtaButton
+  label="Download"
+  Type="Primary"
+  aria-label="Download the Global Assessment Report PDF (2.3MB)"
+  onClick={handleDownload}
+/>
+```
+
+**Loading States**
+```jsx
+<div aria-live="polite" aria-busy={isLoading}>
+  {isLoading ? 'Loading reports...' : `Found ${reports.length} reports`}
+</div>
+```
+
+### 3. Keyboard Navigation
+
+**Focus Management**
+```jsx
+function Modal({ isOpen, onClose, children }) {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      modalRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  return (
+    <div
+      className="mg-modal"
+      role="dialog"
+      aria-modal="true"
+      ref={modalRef}
+      tabIndex={-1}
+    >
+      {children}
+    </div>
+  );
+}
+```
+
+**Skip Links**
+```html
+<a href="#main-content" class="mg-skip-link">Skip to main content</a>
+<nav class="mg-navigation">...</nav>
+<main id="main-content" class="mg-main">...</main>
+```
+
+### 4. Color and Contrast
+
+**Sufficient Contrast**
+```scss
+// Ensure WCAG AA compliance (4.5:1 for normal text)
+$mg-text-color: #212529;        // High contrast on white
+$mg-text-muted: #6c757d;        // 4.5:1 contrast ratio
+$mg-link-color: #0066cc;        // Accessible blue
+$mg-error-color: #dc3545;       // High contrast red
+```
+
+**Don't rely solely on color**
+```jsx
+// Good: Color + icon + text
+<div className="mg-alert mg-alert--error">
+  <span className="mg-icon mg-icon--error" aria-hidden="true">⚠️</span>
+  <span className="mg-alert__text">Error: Please check your input</span>
+</div>
+
+// Avoid: Color only
+<div className="mg-alert mg-alert--error">
+  Please check your input
+</div>
+```

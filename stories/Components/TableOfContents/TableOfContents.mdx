@@ -72,7 +72,7 @@ To use the TableOfContents component in your React application:
 
 #### DOM Scraping
 
-It is possible to populate the Table of Contents by scraping a section. 
+It is possible to populate the Table of Contents by scraping a section.
 
 1. Import `stories\Components\TableOfContents\js\TableOfContentsVanillaJs.js`
 
@@ -89,7 +89,7 @@ It is possible to populate the Table of Contents by scraping a section.
     <h2 id="section-3">Section 3</h2>
     <p>Content for section 3...</p>
     <h2 id="section-4" class="mg-table-of-contents--exclude">Section 4</h2>
-    <p>excluded with .mg-table-of-contents--exclude</p>        
+    <p>excluded with .mg-table-of-contents--exclude</p>
     <h3 id="section-5">Sub-section 5</h3>
     <p>Skipped as it is a h3</p>
     <h2 id="section-6">Section 6</h2>
@@ -128,6 +128,7 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 
 ### Changelog
 
+- 1.3: Support the passing of the name of the title for React usage.
 - 1.2:
     - Add ability to pass title (`data-mg-table-of-contents-title="Title name can be optionally passed"`, can be hidden by passing `hidden`)
     - Remove excesive CSS, this can instead be added at the page level

@@ -1,0 +1,339 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta
+  title="Getting started/Vanilla HTML and CSS"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Vanilla HTML/CSS Integration
+
+The simplest way to use Mangrove - perfect for static sites, legacy projects, or when you want minimal dependencies.
+
+## To do
+
+- [ ] Add in guidance on using react precompiled components
+
+## Quick setup
+
+### 1. Include CSS files
+
+Add these `<link>` tags to your HTML `<head>`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My UNDRR Site</title>
+
+  <!-- UNDRR Theme (Choose one) -->
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style.css">
+
+  <!-- Alternative: Prevention Web Theme -->
+  <!-- <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-preventionweb.css"> -->
+</head>
+<body>
+  <!-- Your content here -->
+</body>
+</html>
+```
+
+### 2. Copy HTML Structures
+
+Browse the component library, click the "HTML" tab, and copy the markup:
+
+```html
+<!-- Example: Primary Button -->
+<a class="mg-button mg-button-primary" role="button" href="#">
+  Download Report
+</a>
+```
+
+## Complete Page Example
+
+Here's a full page using only Mangrove CSS classes:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mangrove Page Template Example</title>
+  <link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style.css">
+</head>
+<body>
+  <div class="page-template-example mg-container mg-container--spacer">
+
+    <!-- Placeholder for Global Header -->
+    <section>
+      The Global header is yet to be implemented in Storybook. Refer to UNDRR.org.
+    </section>
+
+    <!-- Placeholder for MegaMenu -->
+    <nav class="mg-mega-menu">
+      <!-- Example MegaMenu structure -->
+      <div class="mg-mega-menu__section">
+        <h2 class="mg-mega-menu__title">Section 1</h2>
+        <div class="mg-mega-menu__banner">
+          <div class="mg-mega-menu__banner-heading">Analytics by country</div>
+          <div class="mg-mega-menu__banner-description">Gaze upon statistics in wonder...</div>
+        </div>
+        <ul class="mg-mega-menu__items">
+          <li class="mg-mega-menu__item">Item 1</li>
+          <li class="mg-mega-menu__item">Item 2</li>
+        </ul>
+      </div>
+      <div class="mg-mega-menu__section">
+        <h2 class="mg-mega-menu__title">Section 2</h2>
+        <div class="mg-mega-menu__banner">
+          <div class="mg-mega-menu__banner-heading">Analytics by region</div>
+          <div class="mg-mega-menu__banner-description">Gaze upon statistics in wonder...</div>
+        </div>
+        <ul class="mg-mega-menu__items">
+          <li class="mg-mega-menu__item">Item 1</li>
+          <li class="mg-mega-menu__item">Item 2</li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="mg-hero mg-hero--primary">
+      <div class="mg-hero__content">
+        <h1 class="mg-heading mg-heading--1 mg-hero__title">
+          Custom title<br>with&nbsp;line breaks and spaces
+        </h1>
+        <p class="mg-paragraph mg-paragraph--large mg-hero__subtitle">
+          This is custom summary text.<br>&nbsp;Another line.
+        </p>
+        <div class="mg-hero__actions">
+          <a href="/#" class="mg-cta-button mg-cta-button--primary">
+            <span class="mg-cta-button__text">Custom primary</span>
+          </a>
+          <a href="/#" class="mg-cta-button mg-cta-button--secondary">
+            <span class="mg-cta-button__text">Custom secondary</span>
+          </a>
+        </div>
+        <div class="mg-hero__image">
+          <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="Hero background" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab Section -->
+    <section class="mg-tabs">
+      <ul class="mg-tabs__list">
+        <li class="mg-tabs__tab mg-tabs__tab--active" id="tab-1">Tab title 1</li>
+        <li class="mg-tabs__tab" id="tab-2">Tab title 2</li>
+        <li class="mg-tabs__tab" id="tab-3">Tab title 3 i am a bit longer and on and on</li>
+      </ul>
+      <div class="mg-tabs__panel" id="tab-1-panel">
+        As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.
+      </div>
+      <!-- Add other tab panels as needed -->
+    </section>
+
+    <!-- Cards Section -->
+    <section class="mg-grid mg-grid__col-3">
+      <article class="mg-card mg-card--vertical">
+        <div class="mg-card__image">
+          <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="A person looks on" class="mg-card__img">
+        </div>
+        <div class="mg-card__content">
+          <span class="mg-label mg-label--primary">CONTENT TAG</span>
+          <header class="mg-heading mg-heading--3 mg-card__title"><a href="javascript:void(0)">Title in large size</a></header>
+          <p class="mg-paragraph mg-card__excerpt">
+            Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populations and communities. This paper explores health risks from climate change in a global context, setting out key risks actions
+          </p>
+          <div class="mg-card__actions">
+            <a href="javascript:void(0)" class="mg-cta-button mg-cta-button--primary">
+              <span class="mg-cta-button__text">Primary action</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      <!-- Repeat the card two more times for the 3-column layout -->
+      <article class="mg-card mg-card--vertical">
+        <div class="mg-card__image">
+          <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="A person looks on" class="mg-card__img">
+        </div>
+        <div class="mg-card__content">
+          <span class="mg-label mg-label--primary">CONTENT TAG</span>
+          <header class="mg-heading mg-heading--3 mg-card__title"><a href="javascript:void(0)">Title in large size</a></header>
+          <p class="mg-paragraph mg-card__excerpt">
+            Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populations and communities. This paper explores health risks from climate change in a global context, setting out key risks actions
+          </p>
+          <div class="mg-card__actions">
+            <a href="javascript:void(0)" class="mg-cta-button mg-cta-button--primary">
+              <span class="mg-cta-button__text">Primary action</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      <article class="mg-card mg-card--vertical">
+        <div class="mg-card__image">
+          <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="A person looks on" class="mg-card__img">
+        </div>
+        <div class="mg-card__content">
+          <span class="mg-label mg-label--primary">CONTENT TAG</span>
+          <header class="mg-heading mg-heading--3 mg-card__title"><a href="javascript:void(0)">Title in large size</a></header>
+          <p class="mg-paragraph mg-card__excerpt">
+            Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely by vulnerable populations and communities. This paper explores health risks from climate change in a global context, setting out key risks actions
+          </p>
+          <div class="mg-card__actions">
+            <a href="javascript:void(0)" class="mg-cta-button mg-cta-button--primary">
+              <span class="mg-cta-button__text">Primary action</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mg-footer">
+      <div class="mg-container">
+        <div class="mg-footer__bottom">
+          <p class="mg-paragraph mg-footer__copyright">
+            © 2024 United Nations Office for Disaster Risk Reduction. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
+```
+
+## Available CSS Files
+
+Choose the right CSS files for your project:
+
+### Theme Variants (Choose One)
+
+**UNDRR Official Theme**
+```html
+<link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style.css">
+```
+
+**Prevention Web Theme**
+```html
+<link rel="stylesheet" href="https://unisdr.github.io/undrr-mangrove/css/style-preventionweb.css">
+```
+
+## Component Categories
+
+### Layout & Structure
+- `mg-container` - Content containers with max-width
+- `mg-grid` - Flexible grid system
+- `mg-section` - Page sections with spacing
+
+### Typography
+- `mg-heading` - Styled headings (h1-h6)
+- `mg-paragraph` - Body text with proper spacing
+- `mg-link` - Styled links and text links
+
+### Buttons & Actions
+- `mg-cta-button` - Primary and secondary call-to-action buttons
+- `mg-chip` - Small interactive chips
+- `mg-share-buttons` - Social sharing buttons
+
+### Forms
+- `mg-form` - Form container and styling
+- `mg-form__input` - Text inputs
+- `mg-form__textarea` - Multi-line text areas
+- `mg-form__select` - Dropdown selects
+
+### Content Components
+- `mg-card` - Content cards (vertical/horizontal)
+- `mg-stats-card` - Statistics display cards
+- `mg-label` - Content category labels
+
+### Navigation
+- `mg-breadcrumb` - Breadcrumb navigation
+- `mg-menu` - Primary navigation menus
+- `mg-pagination` - Page navigation
+
+## Best Practices
+
+### 1. Semantic HTML First
+Always use the correct HTML element:
+```html
+<!-- Good -->
+<button class="mg-cta-button">Submit</button>
+<nav class="mg-breadcrumb">...</nav>
+
+<!-- Avoid -->
+<div class="mg-cta-button">Submit</div>
+<div class="mg-breadcrumb">...</div>
+```
+
+### 2. Accessibility Attributes
+Include proper ARIA labels and attributes:
+```html
+<button class="mg-cta-button" aria-label="Download PDF report">
+  <span class="mg-cta-button__text">Download</span>
+  <span class="mg-cta-button__icon" aria-hidden="true">↓</span>
+</button>
+```
+
+### 3. Responsive Design
+Use responsive utility classes:
+```html
+<div class="mg-grid mg-grid--1-col mg-grid--md-2-cols mg-grid--lg-3-cols">
+  <!-- Content automatically adapts to screen size -->
+</div>
+```
+
+### 4. Loading Performance
+Load CSS efficiently:
+```html
+<!-- Preload critical CSS -->
+<link rel="preload" href="path/to/style-gutenberg.css" as="style">
+<link rel="stylesheet" href="path/to/style-gutenberg.css">
+
+<!-- Async load theme CSS -->
+<link rel="stylesheet" href="path/to/style-undrr.css" media="print" onload="this.media='all'">
+```
+
+## JavaScript Enhancement (Optional)
+
+Some components work better with JavaScript. Include these for enhanced functionality:
+
+```html
+<!-- Optional: Mangrove JavaScript for enhanced components -->
+<script src="https://unisdr.github.io/undrr-mangrove/js/mangrove.min.js"></script>
+
+<!-- Initialize enhanced components -->
+<script>
+  // Auto-initialize all Mangrove components
+  Mangrove.init();
+
+  // Or initialize specific components
+  Mangrove.Accordion.init();
+  Mangrove.Dropdown.init();
+</script>
+```
+
+## Browser Support
+
+Mangrove CSS works in:
+- ✅ Chrome 70+
+- ✅ Firefox 63+
+- ✅ Safari 12+
+- ✅ Edge 79+
+- ✅ Internet Explorer 11 (with polyfills)
+
+## Next Steps
+
+- **Browse Components**: Explore the component library in the sidebar
+- **Copy HTML**: Use the HTML tab in each component story
+- **Customize**: Override CSS variables for theming
+- **Upgrade**: Consider [React Integration](/?path=/docs/getting-started-react-integration--docs) for dynamic applications
+
+Need help? Check out [Best Practices](/?path=/docs/getting-started-best-practices--docs) or [Real-world Examples](/?path=/docs/getting-started-examples--docs)!
