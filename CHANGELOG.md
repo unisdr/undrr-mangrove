@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/unisdr/undrr-mangrove/compare/v1.1.4...v1.1.5) (2025-06-04)
+
+
+### Bug Fixes
+
+* reset working directory before dist branch checkout ([8cb6d3d](https://github.com/unisdr/undrr-mangrove/commit/8cb6d3d345186d80fe897f79669faec2f8390545))
+
 ## [1.1.4](https://github.com/unisdr/undrr-mangrove/compare/v1.1.3...v1.1.4) (2025-06-04)
 
 
