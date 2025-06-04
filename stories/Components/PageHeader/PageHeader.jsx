@@ -1,5 +1,4 @@
 import React from "react";
-import "./page-header.scss";
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(" ") : null;
