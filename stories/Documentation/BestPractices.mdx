@@ -15,22 +15,22 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <TableOfContents
   tocData={[
-    { id: "performance-best-practices", text: "Performance Best Practices" },
-    { id: "accessibility-best-practices", text: "Accessibility Best Practices" },
-    { id: "architecture-best-practices", text: "Architecture Best Practices" },
-    { id: "development-best-practices", text: "Development Best Practices" },
-    { id: "styling-best-practices", text: "Styling Best Practices" },
-    { id: "progressive-enhancement", text: "Progressive Enhancement" },
-    { id: "related-resources", text: "Related Resources" }
+    { id: "performance-best-practices", text: "Performance best practices" },
+    { id: "accessibility-best-practices", text: "Accessibility best practices" },
+    { id: "architecture-best-practices", text: "Architecture best practices" },
+    { id: "development-best-practices", text: "Development best practices" },
+    { id: "styling-best-practices", text: "Styling best practices" },
+    { id: "progressive-enhancement", text: "Progressive enhancement" },
+    { id: "related-resources", text: "Related resources" }
   ]}
   showNumbers={false}
 />
 
 Follow these guidelines to get the most out of Mangrove while building maintainable, accessible, and performant applications.
 
-## 🏗️ Architecture Best Practices
+## 🏗️ Architecture best practices
 
-### 1. Component Organization
+### 1. Component organization
 
 **File Structure**
 ```
@@ -87,7 +87,7 @@ const Button = ({
 export default Button;
 ```
 
-### 2. State Management
+### 2. State management
 
 **Local State with useState**
 ```jsx
@@ -152,7 +152,7 @@ export const useTheme = () => {
 };
 ```
 
-### 3. Error Handling
+### 3. Error handling
 
 **Error Boundaries**
 ```jsx
@@ -213,7 +213,7 @@ function ReportCard({ report }) {
 }
 ```
 
-## 🎨 Styling Best Practices
+## 🎨 Styling best practices
 
 ### 1. CSS Custom Properties
 
@@ -258,11 +258,11 @@ function ReportCard({ report }) {
 }
 ```
 
-## 📱 Progressive Enhancement
+## 📱 Progressive enhancement
 
-### 1. JavaScript Enhancement
+### 1. JavaScript enhancement
 
-**Base Functionality Without JS**
+**Base functionality without JS**
 ```html
 <!-- Works without JavaScript -->
 <form action="/submit-contact" method="POST" class="mg-form">
@@ -307,9 +307,9 @@ function ContactForm() {
 }
 ```
 
-### 2. Graceful Fallbacks
+### 2. Graceful fallbacks
 
-**Image Fallbacks**
+**Image fallbacks**
 ```jsx
 <VerticalCard
   data={[{
@@ -321,7 +321,7 @@ function ContactForm() {
 />
 ```
 
-**Font Fallbacks**
+**Font fallbacks**
 ```css
 .mg-heading {
   font-family:

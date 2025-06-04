@@ -26,33 +26,33 @@ It's particularly useful for conveying status information without interrupting t
 - **Screen Reader Support**: Enhanced for screen reader users with appropriate ARIA attributes
 - **Responsive Design**: Works well on both desktop and mobile devices
 
-## Visual Examples
+## Visual examples
 
-### Error Notification
+### Error notification
 <SnackbarPreview 
   severity="error" 
   message="An error occurred while processing your request" 
 />
 
-### Warning Notification
+### Warning notification
 <SnackbarPreview 
   severity="warning" 
   message="Your session will expire in 5 minutes" 
 />
 
-### Information Notification
+### Information notification
 <SnackbarPreview 
   severity="info" 
   message="New updates are available for your application" 
 />
 
-### Success Notification
+### Success notification
 <SnackbarPreview 
   severity="success" 
   message="Your changes have been saved successfully" 
 />
 
-## Interactive Example
+## Interactive example
 
 The example below shows an interactive Snackbar that you can show and hide with the button:
 
@@ -60,9 +60,9 @@ The example below shows an interactive Snackbar that you can show and hide with 
   <Story of={SnackbarStories.Snackbar} />
 </Canvas>
 
-## How to Use
+## How to use
 
-### Basic Implementation
+### Basic implementation
 
 ```jsx
 import React, { useState } from 'react';
@@ -93,7 +93,7 @@ function MyComponent() {
 }
 ```
 
-### Component Props
+### Component props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -103,7 +103,7 @@ function MyComponent() {
 | onClose | function | - | Callback function executed when the snackbar is closed (via button click or timeout) |
 | openedMiliseconds | number | - | Duration in milliseconds before the snackbar automatically closes. If not provided, the snackbar will remain open until manually closed |
 
-## Accessibility Considerations
+## Accessibility considerations
 
 The Snackbar component follows accessibility best practices:
 
@@ -114,7 +114,7 @@ The Snackbar component follows accessibility best practices:
 - Maintains sufficient color contrast for readability
 - Auto-focuses the close button when opened for easy dismissal
 
-## Mobile Considerations
+## Mobile considerations
 
 The component is designed to be fully responsive:
 

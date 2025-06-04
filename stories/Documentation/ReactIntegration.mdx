@@ -11,27 +11,27 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
   }}
 />
 
-# React Integration Guide
+# React integration guide
 
 <TableOfContents
   tocData={[
-    { id: "quick-setup", text: "Quick Setup" },
-    { id: "complete-react-app-example", text: "Complete React App Example" },
-    { id: "typescript-integration", text: "TypeScript Integration" },
-    { id: "component-api-reference", text: "Component API Reference" },
-    { id: "hooks-utilities", text: "Hooks & Utilities" },
-    { id: "integration-with-frameworks", text: "Integration with Popular Frameworks" },
-    { id: "custom-component-creation", text: "Custom Component Creation" },
-    { id: "performance-optimization", text: "Performance Optimization" },
+    { id: "quick-setup", text: "Quick setup" },
+    { id: "complete-react-app-example", text: "Complete React app example" },
+    { id: "typescript-integration", text: "TypeScript integration" },
+    { id: "component-api-reference", text: "Component API reference" },
+    { id: "hooks-utilities", text: "Hooks and utilities" },
+    { id: "integration-with-frameworks", text: "Integration with popular frameworks" },
+    { id: "custom-component-creation", text: "Custom component creation" },
+    { id: "performance-optimization", text: "Performance optimization" },
     { id: "testing", text: "Testing" },
-    { id: "next-steps", text: "Next Steps" }
+    { id: "next-steps", text: "Next steps" }
   ]}
   showNumbers={false}
 />
 
 Get the full power of Mangrove with React components - perfect for dynamic applications with TypeScript support and props-based customization.
 
-## Quick Setup
+## Quick setup
 
 ### 1. Install Mangrove
 
@@ -48,7 +48,7 @@ yarn add @unisdr/undrr-mangrove
 npm install react react-dom
 ```
 
-### 2. Import Components
+### 2. Import components
 
 ```jsx
 // Individual component imports (recommended)
@@ -66,7 +66,7 @@ import {
 } from '@unisdr/undrr-mangrove';
 ```
 
-### 3. Include Styles
+### 3. Include styles
 
 **Option A: Import CSS in your main file**
 ```jsx
@@ -84,7 +84,7 @@ import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
 
 **Option C: Sass integration** (see [Sass Integration Guide](/?path=/docs/getting-started-sass-integration--docs))
 
-## Complete React App Example
+## Complete React app example
 
 Here's a full React application using Mangrove components:
 
@@ -238,7 +238,7 @@ function App() {
       {/* Content Cards */}
       <section className="mg-section">
         <div className="mg-container">
-          <h2 className="mg-heading mg-heading--2">Latest Reports & Resources</h2>
+          <h2 className="mg-heading mg-heading--2">Latest Reports and Resources</h2>
 
           <div className="mg-grid mg-grid--2-cols">
             {cardData.map((card, index) => (
@@ -338,7 +338,7 @@ function App() {
 export default App;
 ```
 
-## TypeScript Integration
+## TypeScript integration
 
 Mangrove can be integrated with TypeScript:
 
@@ -419,7 +419,7 @@ const App: React.FC = () => {
     <div className="mg-app">
       <section className="mg-section">
         <div className="mg-container">
-          <h1 className="mg-heading mg-heading--1">TypeScript Integration</h1>
+          <h1 className="mg-heading mg-heading--1">TypeScript integration</h1>
 
           <StatsCards data={statsData} />
 
@@ -448,9 +448,9 @@ const App: React.FC = () => {
 export default App;
 ```
 
-## Component API Reference
+## Component API reference
 
-### CtaButton Component
+### CtaButton component
 
 ```jsx
 <CtaButton
@@ -466,7 +466,7 @@ export default App;
 />
 ```
 
-### VerticalCard Component
+### VerticalCard component
 
 ```jsx
 <VerticalCard
@@ -487,7 +487,7 @@ export default App;
 />
 ```
 
-### InputFields Component
+### InputFields component
 
 ```jsx
 <InputFields
@@ -507,7 +507,7 @@ export default App;
 />
 ```
 
-### StatsCards Component
+### StatsCards component
 
 ```jsx
 <StatsCards
@@ -528,7 +528,7 @@ export default App;
 />
 ```
 
-### Breadcrumbs Component
+### Breadcrumbs component
 
 ```jsx
 <Breadcrumbs
@@ -542,9 +542,9 @@ export default App;
 />
 ```
 
-## Hooks & Utilities
+## Hooks and utilities
 
-### useMangroveTheme Hook
+### useMangroveTheme hook
 
 ```jsx
 import { useMangroveTheme } from '@unisdr/undrr-mangrove/hooks';
@@ -565,7 +565,7 @@ function MyComponent() {
 }
 ```
 
-### useMangroveBreakpoint Hook
+### useMangroveBreakpoint hook
 
 ```jsx
 import { useMangroveBreakpoint } from '@unisdr/undrr-mangrove/hooks';
@@ -584,9 +584,9 @@ function ResponsiveComponent() {
 }
 ```
 
-## Integration with Popular Frameworks
+## Integration with popular frameworks
 
-### Next.js Integration
+### Next.js integration
 
 ```jsx
 // pages/_app.js
@@ -614,7 +614,7 @@ export default function Home() {
 }
 ```
 
-### Create React App Integration
+### Create React App integration
 
 ```jsx
 // src/index.js
@@ -630,7 +630,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
 ```
 
-### Vite Integration
+### Vite integration
 
 ```jsx
 // src/main.jsx
@@ -649,7 +649,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 ```
 
-## Custom Component Creation
+## Custom component creation
 
 Build your own components using Mangrove as a foundation:
 
@@ -706,9 +706,9 @@ const CustomNewsCard = ({
 export default CustomNewsCard;
 ```
 
-## Performance Optimization
+## Performance optimization
 
-### Tree Shaking
+### Tree shaking
 
 Import only the components you need:
 
@@ -721,7 +721,7 @@ import { VerticalCard } from '@unisdr/undrr-mangrove/components/VerticalCard';
 import * as Mangrove from '@unisdr/undrr-mangrove';
 ```
 
-### Dynamic Imports
+### Dynamic imports
 
 Load components only when needed:
 
@@ -747,7 +747,7 @@ function Dashboard() {
 }
 ```
 
-### CSS Optimization
+### CSS optimization
 
 ```jsx
 // Option 1: Import only the CSS you need
@@ -766,7 +766,7 @@ const StyledButton = styled(CtaButton)`
 
 ## Testing
 
-### Unit Testing with Jest
+### Unit testing with Jest
 
 ```jsx
 // __tests__/App.test.jsx
@@ -793,7 +793,7 @@ test('renders CTA button with correct text', () => {
 });
 ```
 
-### Storybook Integration
+### Storybook integration
 
 ```jsx
 // stories/CustomComponent.stories.jsx
@@ -821,7 +821,7 @@ export const Default = {
 };
 ```
 
-## Next Steps
+## Next steps
 
 - **Explore Components**: Browse the component library for more React examples
 - **TypeScript Setup**: Configure your project with TypeScript for better development experience
