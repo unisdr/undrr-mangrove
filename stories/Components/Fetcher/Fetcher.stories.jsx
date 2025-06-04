@@ -40,8 +40,6 @@ export const Default = {
       />
     );
   },
-
-  name: "Default",
 };
 
 export const WithSearchTerm = {
@@ -64,8 +62,6 @@ export const WithSearchTerm = {
       />
     );
   },
-
-  name: "With Search Term",
 };
 
 export const WithoutQueryParams = {
@@ -85,6 +81,4 @@ export const WithoutQueryParams = {
       />
     );
   },
-
-  name: "Without Query Params",
 };

@@ -41,7 +41,6 @@ export const Snackbar = {
   render: (args) => {
     return <ShowOffSnackbar {...args} />;
   },
-  name: "Snackbar",
 };
 
 // Additional examples for the documentation
