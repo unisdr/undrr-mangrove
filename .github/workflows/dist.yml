@@ -36,6 +36,10 @@ jobs:
           mkdir -p /tmp/dist-branch
           cp -r dist/* /tmp/dist-branch/
 
+          # Reset any local changes to avoid conflicts
+          git reset --hard HEAD
+          git clean -fd
+
           # Check if dist branch exists and switch to it
           if git ls-remote --heads origin dist | grep -q dist; then
             git fetch origin dist
