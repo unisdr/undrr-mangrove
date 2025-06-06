@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { mgTableOfContents } from "./js/TableOfContentsVanillaJs";
 
-export default function TableOfContents({ tocData, showNumbers = false }) {
+export default function TableOfContents({ tocData, showNumbers = false, title = "On this page" }) {
   const ListComponent = showNumbers ? "ol" : "ul";
 
   const contentRef = useRef(null);
@@ -15,11 +15,11 @@ export default function TableOfContents({ tocData, showNumbers = false }) {
 
   return (
     <div ref={contentRef}>
-      <section data-mg-table-of-contents data-mg-table-of-contents-title="Title name can be optionally passed" className="mg-table-of-contents" ref={tocRef}>
+      <section className="mg-table-of-contents" data-mg-table-of-contents data-mg-table-of-contents-title={title} ref={tocRef}>
         <ListComponent>
           {tocData.map((item, index) => (
             <li key={index}>
-             <a href={`#${item.id}`}>{item.text}</a>
+              <a href={`#${item.id}`}>{item.text}</a>
             </li>
           ))}
         </ListComponent>
@@ -31,4 +31,5 @@ export default function TableOfContents({ tocData, showNumbers = false }) {
 TableOfContents.defaultParameters = {
   tocData: [],
   showNumbers: false,
+  title: "On this page",
 };

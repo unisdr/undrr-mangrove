@@ -121,8 +121,6 @@ export const Date = {
       ></Inputcomponent>
     );
   },
-
-  name: "Date",
 };
 
 export const Number = {
@@ -142,8 +140,6 @@ export const Number = {
       ></Inputcomponent>
     );
   },
-
-  name: "Number",
 };
 
 export const Password = {
@@ -164,8 +160,6 @@ export const Password = {
       ></Inputcomponent>
     );
   },
-
-  name: "Password",
 };
 
 export const Telephone = {
@@ -185,8 +179,6 @@ export const Telephone = {
       ></Inputcomponent>
     );
   },
-
-  name: "Telephone",
 };
 
 export const Text = {
@@ -205,6 +197,4 @@ export const Text = {
       ></Inputcomponent>
     );
   },
-
-  name: "Text",
 };

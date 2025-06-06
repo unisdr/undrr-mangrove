@@ -2,7 +2,7 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import * as ScrollContainerStories from './ScrollContainer.stories';
 import ScrollContainer from './ScrollContainer.jsx';
 
-# Scroll Container
+# Scroll container
 
 The Scroll Container component provides a responsive horizontal scrolling container for content that exceeds the available width.
 
@@ -16,19 +16,19 @@ A basic scroll container implementation with default settings.
   <Story of={ScrollContainerStories.Default} />
 </Canvas>
 
-## With Custom Height
+## With custom height
 
 A scroll container with a custom height setting.
 
 <Story of={ScrollContainerStories.CustomHeight} />
 
-## With Minimum Width
+## With minimum width
 
 A scroll container with a minimum width setting.
 
 <Story of={ScrollContainerStories.WithMinWidth} />
 
-## With Navigation Arrows
+## With navigation arrows
 
 A scroll container with navigation arrows for easier scrolling. The arrows appear at the top of the container when content overflows horizontally and the `showArrows` prop is set to `true`. The arrows will only be visible when there is content to scroll to in that direction.
 
@@ -52,7 +52,7 @@ A scroll container with navigation arrows for easier scrolling. The arrows appea
 
 > **Note:** Arrows only appear when content overflows horizontally and will be hidden on mobile devices.
 
-## With Custom Step Size
+## With custom step size
 
 A scroll container with custom step size for navigation arrows. By default, clicking an arrow scrolls by half the container width, but you can customize this with the `stepSize` prop (in pixels).
 

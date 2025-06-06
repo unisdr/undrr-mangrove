@@ -1,0 +1,143 @@
+.mg-page-header {
+  // Base styles for page header
+
+  &__toolbar-wrapper {
+    background: #333
+      url(//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png)
+      no-repeat center center;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.3);
+    z-index: 22;
+
+    @media (width >= 1164px) {
+      .mg-page-header__container {
+        padding: 0;
+      }
+    }
+  }
+
+  &__region--toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    a {
+      color: #fff;
+    }
+
+    .fa {
+      vertical-align: middle;
+    }
+
+    > :first-child {
+      flex-grow: 1;
+    }
+  }
+
+  &__block--logo {
+    flex-grow: 1;
+    padding: 0.5rem 0 0.5rem 0.1rem;
+  }
+
+  &__logo-img {
+    @media (max-width: $mg-breakpoint-tablet) {
+      object-fit: cover;
+      width: 175px;
+      height: 48px;
+      object-position: 0% 50%;
+    }
+
+    @media (max-width: $mg-breakpoint-desktop-wide) {
+      padding-left: 1rem;
+    }
+  }
+
+  &__select-wrapper {
+    height: auto;
+    margin: 0;
+    background: transparent;
+    min-width: auto;
+
+    &:before {
+      height: 30px;
+      width: 30px;
+      line-height: 30px;
+      background: none !important;
+      border: none;
+    }
+
+    &:hover:before,
+    &:focus:before {
+      background-color: transparent;
+    }
+  }
+
+  &__select {
+    width: auto !important;
+    min-width: auto;
+    height: 30px;
+    padding-right: 30px;
+    border: none;
+    border-radius: 0;
+    font-size: 1.65rem;
+    background-color: transparent;
+    color: #fff;
+    direction: rtl;
+    line-height: 2rem;
+
+    option {
+      color: #333;
+    }
+  }
+
+  // Original decoration stripe styles
+  &__decoration {
+    display: flex;
+    align-items: stretch;
+    align-content: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    div {
+      width: 25%;
+      height: 7px;
+      display: inline-block;
+
+      &:nth-child(1) {
+        background: $sendai-red-900;
+      }
+
+      &:nth-child(2) {
+        background: $sendai-purple-900;
+      }
+
+      &:nth-child(3) {
+        background: $sendai-orange-900;
+      }
+
+      &:nth-child(4) {
+        background: $sendai-turquoise-900;
+      }
+    }
+  }
+}
+
+.mg-page-header__label {
+  display: inline-block;
+  font-size: $mg-font-label;
+  font-weight: bold;
+  margin-right: $mg-spacing-25;
+  padding: $mg-spacing-25 0;
+
+  @media (max-width: $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+// Label for mobile
+.mg-page-header__label-mobile {
+  display: none;
+
+  @media (max-width: $mg-breakpoint-tablet) {
+    display: unset;
+  }
+}

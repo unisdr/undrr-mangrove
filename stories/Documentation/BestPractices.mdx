@@ -1,0 +1,334 @@
+import { Meta, Source } from '@storybook/blocks';
+import TableOfContents from '../Components/TableOfContents/TableOfContents';
+
+<Meta
+  title="Getting started/Best practices"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# Best practices
+
+<TableOfContents
+  tocData={[
+    { id: "performance-best-practices", text: "Performance best practices" },
+    { id: "accessibility-best-practices", text: "Accessibility best practices" },
+    { id: "architecture-best-practices", text: "Architecture best practices" },
+    { id: "development-best-practices", text: "Development best practices" },
+    { id: "styling-best-practices", text: "Styling best practices" },
+    { id: "progressive-enhancement", text: "Progressive enhancement" },
+    { id: "related-resources", text: "Related resources" }
+  ]}
+  showNumbers={false}
+/>
+
+Follow these guidelines to get the most out of Mangrove while building maintainable, accessible, and performant applications.
+
+## 🏗️ Architecture best practices
+
+### 1. Component organization
+
+**File Structure**
+```
+src/
+├── components/
+│   ├── ui/                    # Mangrove wrapper components
+│   │   ├── Button/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Button.test.jsx
+│   │   │   └── Button.stories.jsx
+│   │   └── Card/
+│   │       ├── Card.jsx
+│   │       └── Card.test.jsx
+│   ├── features/              # Domain-specific components
+│   │   ├── ReportCard/
+│   │   ├── ContactForm/
+│   │   └── StatsOverview/
+│   └── layouts/               # Page layouts
+│       ├── Header/
+│       ├── Footer/
+│       └── MainLayout/
+├── hooks/                     # Custom hooks
+├── utils/                     # Utility functions
+└── styles/                    # Global styles
+    ├── base/                  # Base styles
+    ├── components/            # Component overrides
+    └── themes/                # Theme variants
+```
+
+**Wrapper Components**
+```jsx
+// components/ui/Button/Button.jsx
+import React from 'react';
+import { CtaButton } from '@unisdr/undrr-mangrove';
+
+const Button = ({
+  children,
+  variant = 'primary',
+  size = 'medium',
+  loading = false,
+  ...props
+}) => {
+  return (
+    <CtaButton
+      label={children}
+      Type={variant === 'primary' ? 'Primary' : 'Secondary'}
+      State={loading ? 'Disabled' : 'Active'}
+      For_Primary={variant === 'primary' ? 'Arrow' : 'No Arrow'}
+      {...props}
+    />
+  );
+};
+
+export default Button;
+```
+
+### 2. State management
+
+**Local State with useState**
+```jsx
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = useCallback((field) => (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: e.target.value
+    }));
+
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
+  }, [errors]);
+
+  // ... rest of component
+}
+```
+
+**Global State with Context**
+```jsx
+// contexts/ThemeContext.jsx
+const ThemeContext = createContext();
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  }, []);
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
+  }
+  return context;
+};
+```
+
+### 3. Error handling
+
+**Error Boundaries**
+```jsx
+class MangroveErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Mangrove component error:', error, errorInfo);
+    // Log to error reporting service
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="mg-alert mg-alert--error">
+          <h3 className="mg-heading mg-heading--4">Something went wrong</h3>
+          <p className="mg-paragraph">
+            We're sorry, but there was an error loading this component.
+          </p>
+          <CtaButton
+            label="Reload Page"
+            Type="Secondary"
+            onClick={() => window.location.reload()}
+          />
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+**Graceful Degradation**
+```jsx
+function ReportCard({ report }) {
+  const [imageError, setImageError] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <VerticalCard
+      data={[{
+        ...report,
+        imgback: imageError ? '/images/fallback-report.jpg' : report.image,
+        onImageError: () => setImageError(true),
+        onImageLoad: () => setLoading(false)
+      }]}
+      variant="primary"
+    />
+  );
+}
+```
+
+## 🎨 Styling best practices
+
+### 1. CSS Custom Properties
+
+**Theme Variables**
+```css
+:root {
+  /* Mangrove overrides */
+  --mg-primary-color: #0066cc;
+  --mg-secondary-color: #28a745;
+  --mg-font-family-base: 'Inter', 'Roboto', sans-serif;
+
+  /* Custom variables */
+  --org-brand-blue: #003366;
+  --org-brand-green: #228b22;
+  --org-shadow-subtle: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --mg-primary-color: #4d9fff;
+  --mg-background-color: #1a1a1a;
+  --mg-text-color: #ffffff;
+}
+```
+
+**Component-Specific Variables**
+```scss
+.mg-custom-card {
+  // Use Mangrove variables
+  padding: var(--mg-spacing-4);
+  border-radius: var(--mg-border-radius);
+  box-shadow: var(--mg-shadow-sm);
+
+  // Define component-specific variables
+  --card-hover-transform: translateY(-2px);
+  --card-transition-duration: 0.2s;
+
+  transition: transform var(--card-transition-duration) ease;
+
+  &:hover {
+    transform: var(--card-hover-transform);
+  }
+}
+```
+
+## 📱 Progressive enhancement
+
+### 1. JavaScript enhancement
+
+**Base functionality without JS**
+```html
+<!-- Works without JavaScript -->
+<form action="/submit-contact" method="POST" class="mg-form">
+  <input type="text" name="name" class="mg-form__input" required>
+  <textarea name="message" class="mg-form__textarea" required></textarea>
+  <button type="submit" class="mg-cta-button mg-cta-button--primary">
+    Send Message
+  </button>
+</form>
+```
+
+**Enhanced with JavaScript**
+```jsx
+function ContactForm() {
+  const [isEnhanced, setIsEnhanced] = useState(false);
+
+  useEffect(() => {
+    // Enable enhanced features after hydration
+    setIsEnhanced(true);
+  }, []);
+
+  return (
+    <form onSubmit={isEnhanced ? handleEnhancedSubmit : undefined}>
+      <InputFields
+        type="text"
+        name="name"
+        labelText="Name"
+        required
+      />
+      {isEnhanced && (
+        <div className="mg-form__validation">
+          Real-time validation enabled
+        </div>
+      )}
+      <CtaButton
+        label={isEnhanced ? 'Send Message' : 'Send Message (Enhanced)'}
+        Type="Primary"
+        type="submit"
+      />
+    </form>
+  );
+}
+```
+
+### 2. Graceful fallbacks
+
+**Image fallbacks**
+```jsx
+<VerticalCard
+  data={[{
+    title: "Report Title",
+    imgback: "report-image.webp",
+    imgFallback: "report-image.jpg",
+    onImageError: handleImageError
+  }]}
+/>
+```
+
+**Font fallbacks**
+```css
+.mg-heading {
+  font-family:
+    'Inter',           /* Custom font */
+    'Roboto',          /* Mangrove fallback */
+    -apple-system,     /* System font */
+    BlinkMacSystemFont,
+    sans-serif;        /* Generic fallback */
+}
+```

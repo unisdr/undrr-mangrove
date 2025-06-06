@@ -3,7 +3,7 @@ import * as QuoteHighlightStories from './QuoteHighlight.stories';
 
 <Meta of={QuoteHighlightStories} />
 
-# Quote Highlight
+# Quote highlight
 
 The `QuoteHighlight` component is used to display important quotes with attribution and optional images.
 
@@ -37,35 +37,35 @@ import { QuoteHighlight } from '@undrr/mangrove';
 
 ## Examples
 
-### Line Variant (Default)
+### Line variant (default)
 
 <Story of={QuoteHighlightStories.LineVariant} />
 
-### Line Variant with Portrait Image
+### Line variant with portrait image
 
 This variant shows the portrait image inline with the attribution.
 
 <Story of={QuoteHighlightStories.LineVariantWithPortrait} />
 
-### Image Variant
+### Image variant
 
 This variant displays a larger image to the side of the quote content.
 
 <Story of={QuoteHighlightStories.ImageVariant} />
 
-### Dark Background
+### Dark background
 
 <Story of={QuoteHighlightStories.LineVariantDark} />
 
-### Bright Background
+### Bright background
 
 <Story of={QuoteHighlightStories.LineVariantBright} />
 
-### Without Attribution
+### Without attribution
 
 <Story of={QuoteHighlightStories.WithoutAttribution} />
 
-## Alignment Options
+## Alignment options
 
 The QuoteHighlight component supports three alignment options:
 
@@ -73,7 +73,7 @@ The QuoteHighlight component supports three alignment options:
 - `left`: Aligns to the left, allowing content to flow around the right side
 - `right`: Aligns to the right, allowing content to flow around the left side
 
-### Left Aligned Quote
+### Left aligned quote
 
 <div style={{ display: 'grid' }}>
 {/* Grid container used to fix layout issues in demo page */}
@@ -81,28 +81,28 @@ The QuoteHighlight component supports three alignment options:
 </div>
 
 
-### Left Aligned Quote with Portrait
+### Left aligned quote with portrait
 
 <div style={{ display: 'grid' }}>
 {/* Grid container used to fix layout issues in demo page */}
 <Story of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait} />
 </div>
 
-### Right Aligned Quote
+### Right aligned quote
 
 <div style={{ display: 'grid' }}>
 {/* Grid container used to fix layout issues in demo page */}
 <Story of={QuoteHighlightStories.RightAlignedQuote} />
 </div>
 
-### Right Aligned Quote with Portrait
+### Right aligned quote with portrait
 
 <div style={{ display: 'grid' }}>
 {/* Grid container used to fix layout issues in demo page */}
 <Story of={QuoteHighlightStories.RightAlignedQuoteWithPortrait} />
 </div>
 
-## RTL Support
+## RTL support
 
 The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When used in an RTL context:
 
@@ -110,21 +110,21 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 - Right-aligned quotes will appear on the left side of the content
 - The component's internal layout will automatically adjust for RTL reading direction
 
-### RTL Example with Left Alignment (appears on right)
+### RTL example with left alignment (appears on right)
 
 <div style={{ display: 'grid' }}>
 {/* Grid container used to fix layout issues in demo page */}
 <Story of={QuoteHighlightStories.RTLLeftAlignedQuote} />
 </div>
 
-### RTL Example with Right Alignment (appears on left)
+### RTL example with right alignment (appears on left)
 
 <div style={{ display: 'grid' }}>
 {/* Grid container used to fix layout issues in demo page */}
 <Story of={QuoteHighlightStories.RTLRightAlignedQuote} />
 </div>
 
-## Design Guidelines
+## Design guidelines
 
 - Use the QuoteHighlight component to emphasize important quotes from key stakeholders.
 - The line variant is more subtle and can be used within text content.

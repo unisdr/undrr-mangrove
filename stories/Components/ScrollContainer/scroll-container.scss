@@ -1,7 +1,3 @@
-@import '../../assets/scss/variables';
-@import '../../assets/scss/breakpoints';
-@import '../../assets/scss/mixins';
-
 .mg-scroll {
   position: relative;
   display: flex;
@@ -72,6 +68,11 @@
     cursor: grab;
     -webkit-overflow-scrolling: touch;
 
+    // TODO: Review - do we need it
+    // Firefox scrollbar styling
+    scrollbar-width: thin;
+    scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
+
     @include devicebreak(small) {
       height: auto;
     }
@@ -106,11 +107,6 @@
         background: $mg-color-neutral-600;
       }
     }
-
-    // TODO: Review - do we need it
-    // Firefox scrollbar styling
-    scrollbar-width: thin;
-    scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
 
     &--custom-height {
       height: var(--scroll-height, auto);
