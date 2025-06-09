@@ -1,1 +1,171 @@
-// empty
+/* Footer Component Styles */
+.mangrove-footer {
+  width: 100%;
+  margin-top: auto; // Push footer to bottom when used in flex layouts
+
+  /* Complementary footer content (site-specific) */
+  &__complementary {
+    background-color: var(--color-undrr-sendai-turquoise, #006eb5);
+    color: var(--color-white, #fff);
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+
+      @media (width >= 768px) {
+        padding: 3rem 2rem;
+      }
+    }
+
+    .about-footer--links {
+      margin: 1rem 0;
+
+      a {
+        color: var(--color-white, #fff);
+        text-decoration: underline;
+        margin-right: 1rem;
+
+        &:hover {
+          text-decoration: none;
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .lead {
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+
+      a {
+        color: var(--color-white, #fff);
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  /* UNDRR Syndicated footer content */
+  &__syndicated {
+    background-color: var(--color-footer-bg, #f8f9fa);
+    border-top: 1px solid var(--color-border, #dee2e6);
+
+    /* Style the syndicated content container */
+    [class*="pw-widget-"] {
+      min-height: 200px;
+      padding: 1rem;
+
+      /* Loading state styling */
+      &:not(:empty):before {
+        content: "";
+        display: none;
+      }
+
+      /* Default loading state */
+      &:empty:before {
+        content: "Loading UNDRR footer content...";
+        display: block;
+        text-align: center;
+        padding: 2rem;
+        color: var(--color-text-muted, #6c757d);
+        font-style: italic;
+      }
+    }
+
+    /* Override syndicated styles when necessary */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  }
+
+  /* Minimal variant */
+  &--minimal {
+    .mangrove-footer__complementary {
+      .container {
+        padding: 1rem;
+
+        @media (width >= 768px) {
+          padding: 1.5rem;
+        }
+      }
+    }
+
+    .mangrove-footer__syndicated {
+      [class*="pw-widget-"] {
+        min-height: 150px;
+        padding: 0.5rem;
+      }
+    }
+  }
+
+  /* Ensure proper spacing between sections */
+  .mangrove-footer__complementary + .mangrove-footer__syndicated {
+    border-top: none;
+  }
+}
+
+/* Utility classes for complementary content */
+.custom-footer-content,
+.local-footer-only,
+.custom-site-footer {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+
+    @media (width >= 768px) {
+      padding: 3rem 2rem;
+    }
+  }
+
+  h3 {
+    margin: 0 0 1rem 0;
+    color: var(--color-white, #fff);
+  }
+
+  p {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+}
+
+/* Responsive adjustments */
+@media (width <= 767px) {
+  .mangrove-footer {
+    &__complementary {
+      .about-footer--links {
+        a {
+          display: inline-block;
+          margin: 0.25rem 0.5rem 0.25rem 0;
+        }
+      }
+    }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mangrove-footer {
+    &__complementary {
+      border-bottom: 2px solid var(--color-white, #fff);
+    }
+
+    &__syndicated {
+      border-top-width: 2px;
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  .mangrove-footer {
+    &__syndicated {
+      /* Hide syndicated content in print */
+      display: none;
+    }
+  }
+}

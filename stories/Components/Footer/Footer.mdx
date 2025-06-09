@@ -1,28 +1,138 @@
-import { Meta, Story, Canvas } from "@storybook/blocks";
-import { Footer } from "./Footer";
-import logo from "../../assets/images/undrr-logo-blue.svg";
-import logowhite from '../../assets/images/undrr-logo-white.svg';
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+import * as FooterStories from "./Footer.stories.jsx";
 
 <Meta
+  of={FooterStories}
   title="Components/Footer"
-  argTypes={{
-    variant: {
-      options: ["default", "simple"],
-      control: { type: "inline-radio" },
-      defaultValue: "default",
-    },
-    color: {
-      options: ["default", "inverted"],
-      control: { type: "inline-radio" },
-      defaultValue: "default",
-    },
-  }}
 />
 
 # Footer
 
-> **⚠️ DEPRECATED:** This component was part of the initial import from the UNDP implementation and is likely to be either heavily modified or deleted. It is not part of the current UNDRR distribution.
+The Footer component combines site-specific content with UNDRR's global syndicated footer, giving you the flexibility to add complementary information while maintaining consistent UNDRR branding across all network sites.
 
-A footer has a list of information about the website at the bottom of the page.
+## Overview
 
-* to be determined.
+This component solves the challenge of providing both local site information and consistent UNDRR network content in your footer. You can add your own complementary content (like social links, organization descriptions, or site-specific information) above the automatically-loaded UNDRR global footer.
+
+### When to use:
+
+- **Network sites** that need consistent UNDRR footer content
+- **Organization pages** wanting to add their own footer information
+- **Landing pages** requiring both local and global footer elements
+- **Any site** that wants to participate in the UNDRR footer syndication network
+
+## Examples
+
+### Default footer with syndication
+
+The simplest implementation loads only the UNDRR syndicated content:
+
+<Canvas>
+  <Story of={FooterStories.Default} />
+</Canvas>
+
+### Footer with complementary content
+
+This shows how sites can add their own content above the syndicated footer:
+
+<Canvas>
+  <Story of={FooterStories.WithComplementaryContent} />
+</Canvas>
+
+## Features
+
+### UNDRR syndication integration
+
+The footer automatically loads content from the UNDRR syndication system using the PreventionWeb widget:
+
+```jsx
+<Footer
+  enableSyndication={true}
+  syndicationConfig={{
+    contenttype: 'landingpage',
+    pageid: '83835',
+    includemetatags: false,
+    includecss: false,
+    suffixID: 'footer',
+    activedomain: 'www.undrr.org'
+  }}
+/>
+```
+
+### Complementary content support
+
+Add your own footer content using either the `complementaryContent` prop or `children`:
+
+```jsx
+<Footer>
+  <div className="custom-footer-content">
+    <section className="about-footer">
+      <article className="container">
+        <p>Your organization's footer content here</p>
+      </article>
+    </section>
+  </div>
+</Footer>
+```
+
+### Configuration options
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | string | `"default"` | Visual variant (`"default"` or `"minimal"`) |
+| `enableSyndication` | boolean | `true` | Enable/disable UNDRR syndicated content |
+| `syndicationConfig` | object | See below | Configuration for the syndication widget |
+| `complementaryContent` | ReactNode | `null` | Site-specific content to display above syndicated footer |
+| `children` | ReactNode | `null` | Alternative way to pass complementary content |
+
+#### Default syndication configuration:
+
+```javascript
+{
+  contenttype: 'landingpage',
+  pageid: '83835',
+  includemetatags: false,
+  includecss: false,
+  suffixID: 'footer',
+  activedomain: 'www.undrr.org'
+}
+```
+
+## Interactions
+
+- **Syndicated content** loads automatically after component mounts
+- **Links in complementary content** work as standard anchor tags
+- **Error handling** displays fallback message if syndication fails
+- **Loading states** provide visual feedback during content loading
+
+## Implementation notes
+
+### Site integration
+
+When implementing in your site, consider this structure:
+
+```jsx
+// Typical site footer implementation
+<Footer
+  complementaryContent={
+    <section className="site-footer">
+      <div className="container">
+        {/* Your site's social links */}
+        <p className="social-links">
+          <a href="https://facebook.com/yourorg">Facebook</a>
+          <a href="https://twitter.com/yourorg">Twitter</a>
+        </p>
+
+        {/* Your organization description */}
+        <p className="org-description">
+          Your organization works on [mission statement].
+        </p>
+      </div>
+    </section>
+  }
+/>
+```
+
+## Changelog
+
+### Version 1.0: Initial UNDRR-based release
