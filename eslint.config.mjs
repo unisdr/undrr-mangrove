@@ -27,7 +27,6 @@ export default [{
     languageOptions: {
         globals: {
             ...globals.browser,
-            ...globals.jquery,
         },
 
         ecmaVersion: 12,

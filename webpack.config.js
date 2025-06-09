@@ -19,7 +19,6 @@ module.exports = [
       libraryTarget: "umd",
     },
     externals: {
-      jquery: "jQuery",
       Swiper: "Swiper",
       gsap: "gsap",
       fitty: "fitty",

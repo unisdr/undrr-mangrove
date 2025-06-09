@@ -24,6 +24,8 @@ export const getCaptionForLocale = (locale) => {
 
 # Accordion
 
+> **⚠️ DEPRECATED:** This component was part of the initial import from the UNDP implementation and is likely to be either heavily modified or deleted. It is not part of the current UNDRR distribution.
+
 (NOTE: This is yet to be adapated to the UNDRR system and styles. This will likely be removed in favor of the stacked tabs variant.)
 
 ## An accordion is a vertically stacked list of titles that reveal or hide additional content when selected.
@@ -58,14 +60,7 @@ Add following CSS in your project
 
 #### JS
 
-[Use this JS file in your project ](https://assets.undrr.org/testing/static/mangrove/latest/assets/js/accordion.js)
-and then use following code:
-
-```
-$(document).ready(function(){
-  accordion();
-});
-```
+The Accordion component now uses React state management and does not require external JavaScript files. All functionality is built into the React component.
 
 ### Content
 

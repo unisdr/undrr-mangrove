@@ -1,23 +1,44 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import './stats-card-slider.scss';
-import { swiper } from '../../assets/js/swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Scrollbar } from 'swiper/modules';
 import { StatsCards } from '../../Components/Cards/StatsCards/StatsCards';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/scrollbar';
+
+/**
+ * @deprecated This component was part of the initial import from the UNDP implementation 
+ * and is likely to be either heavily modified or deleted. It is not part of the current 
+ * UNDRR distribution.
+ */
 
 // RTL Fix for Storybook.
 let rtl = document.dir || undefined;
 if (window.location.href.indexOf('direction=rtl') > -1) {
   rtl = 'rtl';
 }
+
 export function Statscardslider({ data }) {
-  useEffect(() => {
-    swiper('.stats-slider');
-  }, []);
   return (
-    <div className="stats-slider" data-swiper-slides-view-mobile="1" data-swiper-slides-view-tablet="2" data-swiper-slides-view-desktop="4" data-swiper-offset="50" dir={rtl}>
-      <div className="swiper-scrollbar" />
-      <div className="swiper-wrapper">
+    <div className="stats-slider" dir={rtl}>
+      <Swiper
+        modules={[Scrollbar]}
+        spaceBetween={50}
+        slidesPerView={1}
+        scrollbar={{ draggable: true }}
+        breakpoints={{
+          768: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: 4,
+          },
+        }}
+      >
         {data.map((item, index) => (
-          <div className="swiper-slide" key={index}>
+          <SwiperSlide key={index}>
             <StatsCards
               number={item.numbername}
               percent={item.percentname}
@@ -25,9 +46,9 @@ export function Statscardslider({ data }) {
               Size="Small"
               Hovercolors="yellow"
             />
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 }
