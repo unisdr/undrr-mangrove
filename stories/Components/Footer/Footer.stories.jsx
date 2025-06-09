@@ -39,7 +39,7 @@ Default.args = {
   variant: "default",
   enableSyndication: true,
   syndicationConfig: {
-    suffixID: "custom-footer-default",
+    suffixID: "footer-default",
   },
 };
 Default.parameters = {
@@ -56,7 +56,7 @@ WithComplementaryContent.args = {
   variant: "default",
   enableSyndication: true,
   syndicationConfig: {
-    suffixID: "custom-footer-complementary",
+    suffixID: "footer-complementary",
   },
   complementaryContent: (
     <div className="custom-footer-content">
@@ -109,6 +109,9 @@ export const NoSyndication = Template.bind({});
 NoSyndication.args = {
   variant: "default",
   enableSyndication: false,
+  syndicationConfig: {
+    suffixID: "footer-no-syndication",
+  },
   children: (
     <div className="local-footer-only">
       <div className="container">
@@ -136,7 +139,7 @@ CustomSyndicationConfig.args = {
     pageid: "83835",
     includemetatags: false,
     includecss: false,
-    suffixID: "custom-footer",
+    suffixID: "footer-custom-config",
     activedomain: "www.undrr.org",
   },
   complementaryContent: (
