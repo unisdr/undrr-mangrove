@@ -9670,7 +9670,7 @@ ignore@^6.0.0:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-6.0.2.tgz#77cccb72a55796af1b6d2f9eb14fa326d24f4283"
   integrity sha512-InwqeHHN2XpumIkMvpl/DCJVrAHgCsG5+cn1XlnLWGwtZBm8QJfSusItfrwx81CTp5agNZqpKU2J/ccC5nGT4A==
 
-ignore@^7.0.0:
+ignore@^7.0.0, ignore@^7.0.4:
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.5.tgz#4cb5f6cd7d4c7ab0365738c7aea888baa6d7efd9"
   integrity sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==
@@ -9679,11 +9679,6 @@ ignore@^7.0.3:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.4.tgz#a12c70d0f2607c5bf508fb65a40c75f037d7a078"
   integrity sha512-gJzzk+PQNznz8ysRrC0aOkBNVRBDtE1n53IqyqEf3PXrYwomFs5q4pGMizBMJF+ykh03insJ27hB8gSrD2Hn8A==
-
-ignore@^7.0.4:
-  version "7.0.5"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.5.tgz#4cb5f6cd7d4c7ab0365738c7aea888baa6d7efd9"
-  integrity sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==
 
 immutable@^5.0.2:
   version "5.0.3"
@@ -15878,10 +15873,10 @@ state-toggle@^1.0.0:
   resolved "https://registry.yarnpkg.com/state-toggle/-/state-toggle-1.0.3.tgz#e123b16a88e143139b09c6852221bc9815917dfe"
   integrity sha512-d/5Z4/2iiCnHw6Xzghyhb+GcmF89bxwgXG60wjIiZaxnymbyOmI8Hk4VqHXiVVp6u2ysaskFfXg3ekCj4WNftQ==
 
-storybook-addon-rtl@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/storybook-addon-rtl/-/storybook-addon-rtl-1.1.0.tgz#d06f61189a9c1e49afdea2fdab8307ac94396345"
-  integrity sha512-L8JljF1M+30rcSuM4JjeIi4ZRmg9WZi/1u4T/5/EQvpDKCMOAq7uHeOKj4YS1InC4Zksnz3DrggXmO3mISXKcQ==
+storybook-addon-rtl@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/storybook-addon-rtl/-/storybook-addon-rtl-2.0.0.tgz#ffba7949f9e078ed4b751ef4be9724b5192f48d4"
+  integrity sha512-GscYeuF+EBZj+zguII5n5OCS7RoqwvIWGhLt20Iqp7/y6l4mcZ1HQuYMsXt1gO82bLlHpge4V76SrGaHoLY5Fw==
 
 storybook-design-token@3.2.0:
   version "3.2.0"
