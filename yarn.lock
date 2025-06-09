@@ -3496,6 +3496,11 @@
     polished "^4.2.2"
     uuid "^9.0.0"
 
+"@storybook/addon-actions@9.0.6":
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-9.0.6.tgz#4af0c9ef82a058476b9b084d791ce835c20bba12"
+  integrity sha512-LV03ii5fVp5nfoAN4cMH2VyH5KRs6rIbaK1ojpOS+OcAzxL3gs95StBHWklPgKKz+QS6k2S4tzo6HZaWBYq8Ew==
+
 "@storybook/addon-backgrounds@8.6.14":
   version "8.6.14"
   resolved "https://registry.yarnpkg.com/@storybook/addon-backgrounds/-/addon-backgrounds-8.6.14.tgz#3840ce28339c3c16d001f751fd5f3125c0643ed7"
@@ -9670,7 +9675,7 @@ ignore@^6.0.0:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-6.0.2.tgz#77cccb72a55796af1b6d2f9eb14fa326d24f4283"
   integrity sha512-InwqeHHN2XpumIkMvpl/DCJVrAHgCsG5+cn1XlnLWGwtZBm8QJfSusItfrwx81CTp5agNZqpKU2J/ccC5nGT4A==
 
-ignore@^7.0.0:
+ignore@^7.0.0, ignore@^7.0.4:
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.5.tgz#4cb5f6cd7d4c7ab0365738c7aea888baa6d7efd9"
   integrity sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==
@@ -9679,11 +9684,6 @@ ignore@^7.0.3:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.4.tgz#a12c70d0f2607c5bf508fb65a40c75f037d7a078"
   integrity sha512-gJzzk+PQNznz8ysRrC0aOkBNVRBDtE1n53IqyqEf3PXrYwomFs5q4pGMizBMJF+ykh03insJ27hB8gSrD2Hn8A==
-
-ignore@^7.0.4:
-  version "7.0.5"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.5.tgz#4cb5f6cd7d4c7ab0365738c7aea888baa6d7efd9"
-  integrity sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==
 
 immutable@^5.0.2:
   version "5.0.3"
