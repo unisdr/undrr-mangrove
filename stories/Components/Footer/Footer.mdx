@@ -43,7 +43,7 @@ This shows how sites can add their own content above the syndicated footer:
 
 ### UNDRR syndication integration
 
-The footer automatically loads content from the UNDRR syndication system using the PreventionWeb widget:
+The footer automatically loads content from the UNDRR syndication system using the PreventionWeb widget. The component injects the necessary JavaScript directly into the page:
 
 ```jsx
 <Footer
@@ -106,6 +106,28 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 - **Loading states** provide visual feedback during content loading
 
 ## Implementation notes
+
+The component uses a simplified JavaScript approach that directly injects the required scripts:
+
+```html
+<!-- Widget loader script -->
+<script
+  type="text/javascript"
+  src="https://publish.preventionweb.net/widget.js?rand=3d797b"
+<!-- Widget initialization -->
+<script>
+  new PW_Widget.initialize({
+    contenttype: "landingpage",
+    pageid: "83835",
+    includemetatags: false,
+    includecss: false,
+    suffixID: "footer",
+    activedomain: "www.undrr.org",
+  });
+</script>
+```
+
+This approach automatically handles CSS loading when `includecss` is set to `true`, eliminating the need for manual stylesheet management.
 
 ### Site integration
 

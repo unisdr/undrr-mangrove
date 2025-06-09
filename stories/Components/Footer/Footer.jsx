@@ -29,11 +29,13 @@ export function Footer({
   ...args
 }) {
   const syndicationRef = useRef(null);
-  const scriptLoadedRef = useRef(false);
+  const scriptsLoadedRef = useRef(false);
 
   useEffect(() => {
-    if (!enableSyndication || scriptLoadedRef.current) return;
+    if (!enableSyndication || scriptsLoadedRef.current) return;
 
+    // todo: make this loading optional and only run once
+    // Load UNDRR common theme stylesheets (temporary until https://gitlab.com/undrr/web-backlog/-/issues/2233 is fixed)
     // Load required stylesheets for syndicated content (temporary measure)
     const loadStylesheet = (href, id) => {
       if (
@@ -48,7 +50,6 @@ export function Footer({
       }
     };
 
-    // Load UNDRR common theme stylesheets (temporary until https://gitlab.com/undrr/web-backlog/-/issues/2233 is fixed)
     const cacheBuster = new Date().getTime();
     loadStylesheet(
       `https://www.preventionweb.net/modules/contrib/gutenberg/js/vendor/gutenberg/block-library/style.css?cacheBuster=${cacheBuster}`,
@@ -81,25 +82,68 @@ export function Footer({
       "undrr-common-footer",
     );
 
-    // Load the PW Widget script if not already loaded
-    const existingScript = document.querySelector(
+    // Check if widget script is already loaded
+    const existingWidgetScript = document.querySelector(
       'script[src*="preventionweb.net/widget.js"]',
     );
 
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://publish.preventionweb.net/widget.js?rand=${Math.random().toString(36).substring(7)}`;
-      script.onload = () => {
-        initializeSyndication();
+    if (!existingWidgetScript) {
+      // Create and inject the widget script
+      const widgetScript = document.createElement("script");
+      widgetScript.type = "text/javascript";
+      widgetScript.src =
+        "https://publish.preventionweb.net/widget.js?rand=3d797b";
+
+      // Create initialization script
+      const initScript = document.createElement("script");
+      initScript.type = "text/javascript";
+      initScript.innerHTML = `
+        new PW_Widget.initialize({
+          contenttype: "${syndicationConfig.contenttype}",
+          pageid: "${syndicationConfig.pageid}",
+          includemetatags: ${syndicationConfig.includemetatags},
+          includecss: ${syndicationConfig.includecss},
+          suffixID: "${syndicationConfig.suffixID}",
+          activedomain: "${syndicationConfig.activedomain}"
+        });
+      `;
+
+      // Add widget script first
+      document.head.appendChild(widgetScript);
+
+      // Add initialization script after widget script loads
+      widgetScript.onload = () => {
+        document.head.appendChild(initScript);
       };
-      document.head.appendChild(script);
+
+      // Handle script loading errors
+      widgetScript.onerror = () => {
+        console.warn("Failed to load UNDRR syndication widget");
+        if (syndicationRef.current) {
+          syndicationRef.current.innerHTML =
+            "<p>Unable to load syndicated footer content.</p>";
+        }
+      };
     } else {
-      // Script already exists, initialize directly
-      initializeSyndication();
+      // Widget script already exists, just initialize
+      const initScript = document.createElement("script");
+      initScript.type = "text/javascript";
+      initScript.innerHTML = `
+        if (window.PW_Widget) {
+          new PW_Widget.initialize({
+            contenttype: "${syndicationConfig.contenttype}",
+            pageid: "${syndicationConfig.pageid}",
+            includemetatags: ${syndicationConfig.includemetatags},
+            includecss: ${syndicationConfig.includecss},
+            suffixID: "${syndicationConfig.suffixID}",
+            activedomain: "${syndicationConfig.activedomain}"
+          });
+        }
+      `;
+      document.head.appendChild(initScript);
     }
 
-    scriptLoadedRef.current = true;
+    scriptsLoadedRef.current = true;
 
     return () => {
       // Cleanup if component unmounts
@@ -108,23 +152,6 @@ export function Footer({
       }
     };
   }, [enableSyndication, syndicationConfig]);
-
-  const initializeSyndication = () => {
-    if (window.PW_Widget && syndicationRef.current) {
-      try {
-        new window.PW_Widget.initialize({
-          ...syndicationConfig,
-          suffixID: `${syndicationConfig.suffixID}-${Math.random().toString(36).substring(7)}`,
-        });
-      } catch (error) {
-        console.warn("Failed to initialize UNDRR syndication:", error);
-        if (syndicationRef.current) {
-          syndicationRef.current.innerHTML =
-            "<p>Unable to load syndicated footer content.</p>";
-        }
-      }
-    }
-  };
 
   const footerClasses = cls(
     "mangrove-footer",
