@@ -14,14 +14,7 @@ const cls = (...classes) =>
 export function Footer({
   variant = "default",
   enableSyndication = true,
-  syndicationConfig = {
-    contenttype: "landingpage",
-    pageid: "83835",
-    includemetatags: false,
-    includecss: false,
-    suffixID: "footer",
-    activedomain: "www.undrr.org",
-  },
+  syndicationConfig = {},
   complementaryContent = null,
   children,
   className,
@@ -29,6 +22,22 @@ export function Footer({
 }) {
   const syndicationRef = useRef(null);
   const scriptsLoadedRef = useRef(false);
+
+  // Default syndication configuration
+  const defaultSyndicationConfig = {
+    contenttype: "landingpage",
+    pageid: "83835",
+    includemetatags: false,
+    includecss: false,
+    suffixID: "footer",
+    activedomain: "www.undrr.org",
+  };
+
+  // Merge user config with defaults
+  const mergedSyndicationConfig = {
+    ...defaultSyndicationConfig,
+    ...syndicationConfig,
+  };
 
   useEffect(() => {
     if (!enableSyndication || scriptsLoadedRef.current) return;
@@ -98,12 +107,12 @@ export function Footer({
       initScript.type = "text/javascript";
       initScript.innerHTML = `
         new PW_Widget.initialize({
-          contenttype: "${syndicationConfig.contenttype}",
-          pageid: "${syndicationConfig.pageid}",
-          includemetatags: ${syndicationConfig.includemetatags},
-          includecss: ${syndicationConfig.includecss},
-          suffixID: "${syndicationConfig.suffixID}",
-          activedomain: "${syndicationConfig.activedomain}"
+          contenttype: "${mergedSyndicationConfig.contenttype}",
+          pageid: "${mergedSyndicationConfig.pageid}",
+          includemetatags: ${mergedSyndicationConfig.includemetatags},
+          includecss: ${mergedSyndicationConfig.includecss},
+          suffixID: "${mergedSyndicationConfig.suffixID}",
+          activedomain: "${mergedSyndicationConfig.activedomain}"
         });
       `;
 
@@ -127,18 +136,18 @@ export function Footer({
       // Widget script already exists, just initialize
       const initScript = document.createElement("script");
       initScript.type = "text/javascript";
-      initScript.innerHTML = `
-        if (window.PW_Widget) {
-          new PW_Widget.initialize({
-            contenttype: "${syndicationConfig.contenttype}",
-            pageid: "${syndicationConfig.pageid}",
-            includemetatags: ${syndicationConfig.includemetatags},
-            includecss: ${syndicationConfig.includecss},
-            suffixID: "${syndicationConfig.suffixID}",
-            activedomain: "${syndicationConfig.activedomain}"
-          });
-        }
-      `;
+             initScript.innerHTML = `
+         if (window.PW_Widget) {
+           new PW_Widget.initialize({
+             contenttype: "${mergedSyndicationConfig.contenttype}",
+             pageid: "${mergedSyndicationConfig.pageid}",
+             includemetatags: ${mergedSyndicationConfig.includemetatags},
+             includecss: ${mergedSyndicationConfig.includecss},
+             suffixID: "${mergedSyndicationConfig.suffixID}",
+             activedomain: "${mergedSyndicationConfig.activedomain}"
+           });
+         }
+       `;
       document.head.appendChild(initScript);
     }
 
@@ -150,7 +159,7 @@ export function Footer({
         syndicationRef.current.innerHTML = "";
       }
     };
-  }, [enableSyndication, syndicationConfig]);
+      }, [enableSyndication, mergedSyndicationConfig]);
 
   const footerClasses = cls(
     "mangrove-footer",
@@ -171,7 +180,7 @@ export function Footer({
       {enableSyndication && (
         <section className="mangrove-footer__syndicated">
           <div
-            className={`pw-widget-${syndicationConfig.suffixID}`}
+            className={`pw-widget-${mergedSyndicationConfig.suffixID}`}
             ref={syndicationRef}
           >
             Loading UNDRR footer content...

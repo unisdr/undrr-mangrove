@@ -81,7 +81,7 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 |------|------|---------|-------------|
 | `variant` | string | `"default"` | Visual variant (`"default"` or `"minimal"`) |
 | `enableSyndication` | boolean | `true` | Enable/disable UNDRR syndicated content |
-| `syndicationConfig` | object | See below | Configuration for the syndication widget |
+| `syndicationConfig` | object | See below | Configuration for the syndication widget (partial configs are merged with defaults) |
 | `complementaryContent` | ReactNode | `null` | Site-specific content to display above syndicated footer |
 | `children` | ReactNode | `null` | Alternative way to pass complementary content |
 
@@ -124,7 +124,7 @@ The component uses a simplified JavaScript approach that directly injects the re
     contenttype: "landingpage",
     pageid: "83835",
     includemetatags: false,
-    includecss: false,
+    includecss: true,
     suffixID: "footer",
     activedomain: "www.undrr.org",
   });
@@ -132,6 +132,28 @@ The component uses a simplified JavaScript approach that directly injects the re
 ```
 
 This approach automatically handles CSS loading when `includecss` is set to `true`, eliminating the need for manual stylesheet management.
+
+#### Partial configuration support
+
+You can provide only the syndication options you want to override. The component automatically merges your partial configuration with the defaults:
+
+```jsx
+// Only override the suffixID, keep all other defaults
+<Footer
+  syndicationConfig={{
+    suffixID: 'my-custom-footer'
+  }}
+/>
+
+// Override multiple options
+<Footer
+  syndicationConfig={{
+    pageid: '12345',
+    suffixID: 'special-footer',
+    includecss: true
+  }}
+/>
+```
 
 ### Site integration
 
