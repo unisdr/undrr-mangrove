@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import "./footer.scss";
 
 /**
  * Footer component with UNDRR Syndication support
