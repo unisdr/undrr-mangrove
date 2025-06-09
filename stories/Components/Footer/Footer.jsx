@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 
 /**
  * Footer component with UNDRR Syndication support
@@ -21,7 +21,6 @@ export function Footer({
   ...args
 }) {
   const syndicationRef = useRef(null);
-  const scriptsLoadedRef = useRef(false);
 
   // Default syndication configuration
   const defaultSyndicationConfig = {
@@ -33,14 +32,16 @@ export function Footer({
     activedomain: "www.undrr.org",
   };
 
-  // Merge user config with defaults
-  const mergedSyndicationConfig = {
+  // Merge user config with defaults (memoized to prevent unnecessary re-renders)
+  const mergedSyndicationConfig = useMemo(() => ({
     ...defaultSyndicationConfig,
     ...syndicationConfig,
-  };
+  }), [syndicationConfig]);
 
   useEffect(() => {
-    if (!enableSyndication || scriptsLoadedRef.current) return;
+    if (!enableSyndication) return;
+
+
 
     // todo: make this loading optional and only run once
     // Load UNDRR common theme stylesheets (temporary until https://gitlab.com/undrr/web-backlog/-/issues/2233 is fixed)
@@ -90,38 +91,44 @@ export function Footer({
       "undrr-common-footer",
     );
 
-    // Check if widget script is already loaded
+    // Check if widget script is already loaded globally
     const existingWidgetScript = document.querySelector(
       'script[src*="preventionweb.net/widget.js"]',
     );
 
+    // Always initialize the widget for this specific component instance
+    const initializeWidget = () => {
+      const initScript = document.createElement("script");
+      initScript.type = "text/javascript";
+      console.log("mergedSyndicationConfig", mergedSyndicationConfig.suffixID);
+      initScript.innerHTML = `
+        if (window.PW_Widget) {
+          new PW_Widget.initialize({
+            contenttype: "${mergedSyndicationConfig.contenttype}",
+            pageid: "${mergedSyndicationConfig.pageid}",
+            includemetatags: ${mergedSyndicationConfig.includemetatags},
+            includecss: ${mergedSyndicationConfig.includecss},
+            suffixID: "${mergedSyndicationConfig.suffixID}",
+            activedomain: "${mergedSyndicationConfig.activedomain}"
+          });
+        }
+      `;
+      document.head.appendChild(initScript);
+    };
+
     if (!existingWidgetScript) {
-      // Create and inject the widget script
+      // Create and inject the widget script (only once globally)
       const widgetScript = document.createElement("script");
       widgetScript.type = "text/javascript";
       widgetScript.src =
         "https://publish.preventionweb.net/widget.js?rand=3d797b";
 
-      // Create initialization script
-      const initScript = document.createElement("script");
-      initScript.type = "text/javascript";
-      initScript.innerHTML = `
-        new PW_Widget.initialize({
-          contenttype: "${mergedSyndicationConfig.contenttype}",
-          pageid: "${mergedSyndicationConfig.pageid}",
-          includemetatags: ${mergedSyndicationConfig.includemetatags},
-          includecss: ${mergedSyndicationConfig.includecss},
-          suffixID: "${mergedSyndicationConfig.suffixID}",
-          activedomain: "${mergedSyndicationConfig.activedomain}"
-        });
-      `;
-
       // Add widget script first
       document.head.appendChild(widgetScript);
 
-      // Add initialization script after widget script loads
+      // Initialize this specific widget instance after script loads
       widgetScript.onload = () => {
-        document.head.appendChild(initScript);
+        initializeWidget();
       };
 
       // Handle script loading errors
@@ -133,25 +140,9 @@ export function Footer({
         }
       };
     } else {
-      // Widget script already exists, just initialize
-      const initScript = document.createElement("script");
-      initScript.type = "text/javascript";
-             initScript.innerHTML = `
-         if (window.PW_Widget) {
-           new PW_Widget.initialize({
-             contenttype: "${mergedSyndicationConfig.contenttype}",
-             pageid: "${mergedSyndicationConfig.pageid}",
-             includemetatags: ${mergedSyndicationConfig.includemetatags},
-             includecss: ${mergedSyndicationConfig.includecss},
-             suffixID: "${mergedSyndicationConfig.suffixID}",
-             activedomain: "${mergedSyndicationConfig.activedomain}"
-           });
-         }
-       `;
-      document.head.appendChild(initScript);
+      // Widget script already exists, initialize immediately
+      initializeWidget();
     }
-
-    scriptsLoadedRef.current = true;
 
     return () => {
       // Cleanup if component unmounts
