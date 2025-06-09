@@ -1,39 +1,73 @@
-import React, { useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // import './custom-select.scss';
 // import '../../../../assets/scss/_typography.scss';
-import { select } from '../../../../assets/js/select';
+
+/**
+ * @deprecated This component was part of the initial import from the UNDP implementation 
+ * and is likely to be either heavily modified or deleted. It is not part of the current 
+ * UNDRR distribution.
+ */
 
 function CustomSelect({ text }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('All');
+  const selectRef = useRef(null);
+
+  const options = [
+    { value: 'default', label: 'All' },
+    { value: 'pasto', label: 'Pasto' },
+    { value: 'dari', label: 'Dari' },
+    { value: 'en', label: 'English' },
+    { value: 'albanian', label: 'Albanian' },
+    { value: 'arabic', label: 'Arabic' },
+    { value: 'portuguese', label: 'Portuguese' },
+  ];
+
+  const toggleSelect = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const selectOption = (option) => {
+    setSelectedValue(option.label);
+    setIsExpanded(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (selectRef.current && !selectRef.current.contains(event.target)) {
+      setIsExpanded(false);
+    }
+  };
+
   useEffect(() => {
-    select();
+    document.addEventListener('mouseup', handleClickOutside);
+    return () => {
+      document.removeEventListener('mouseup', handleClickOutside);
+    };
   }, []);
+
   return (
-    <div className="select-box" data-select="">
-      <button type="button" aria-haspopup="listbox" aria-label="Select" data-select-open="">
-        {text}
+    <div ref={selectRef} className={`select-box ${isExpanded ? 'expanded' : ''}`} data-select="">
+      <button 
+        type="button" 
+        aria-haspopup="listbox" 
+        aria-label="Select" 
+        aria-expanded={isExpanded}
+        onClick={toggleSelect}
+      >
+        {selectedValue || text}
       </button>
-      <ul role="listbox" data-select-options="">
-        <li role="option" tabIndex="0" data-value="default">
-          <span>All</span>
-        </li>
-        <li role="option" tabIndex="0" data-value="pasto">
-          <span>Pasto</span>
-        </li>
-        <li role="option" tabIndex="0" data-value="dari">
-          <span>Dari</span>
-        </li>
-        <li role="option" tabIndex="0" data-value="en">
-          <span>English</span>
-        </li>
-        <li role="option" tabIndex="0" data-value="albanian">
-          <span>Albanian</span>
-        </li>
-        <li role="option" tabIndex="0" data-value="arabic">
-          <span>Arabic</span>
-        </li>
-        <li role="option" tabIndex="0" data-value="portuguese">
-          <span>Portuguese</span>
-        </li>
+      <ul role="listbox" className={isExpanded ? 'active' : ''}>
+        {options.map((option) => (
+          <li 
+            key={option.value}
+            role="option" 
+            tabIndex="0" 
+            data-value={option.value}
+            onClick={() => selectOption(option)}
+          >
+            <span>{option.label}</span>
+          </li>
+        ))}
       </ul>
     </div>
   );
