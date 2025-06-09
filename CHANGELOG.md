@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/unisdr/undrr-mangrove/compare/v1.1.5...v1.2.0) (2025-06-09)
+
+
+### Features
+
+* remove all jQuery-dependent legacy components ([#416](https://github.com/unisdr/undrr-mangrove/issues/416)) ([492d29b](https://github.com/unisdr/undrr-mangrove/commit/492d29b3ab66dd7741128b402897025745fee7a9))
+
 ## [1.1.5](https://github.com/unisdr/undrr-mangrove/compare/v1.1.4...v1.1.5) (2025-06-04)
 
 
