@@ -41,8 +41,6 @@ export function Footer({
   useEffect(() => {
     if (!enableSyndication) return;
 
-
-
     // todo: make this loading optional and only run once
     // Load UNDRR common theme stylesheets (temporary until https://gitlab.com/undrr/web-backlog/-/issues/2233 is fixed)
     // Load required stylesheets for syndicated content (temporary measure)
@@ -67,7 +65,8 @@ export function Footer({
 
     // Load UNDRR Mangrove styles
     loadStylesheet(
-      "https://www.preventionweb.net/themes/custom/pw/css/mangrove/mangrove.css",
+      "https://www.preventionweb.net/themes/custom/undrr/css/mangrove/mangrove.css",
+      // "https://www.preventionweb.net/themes/custom/pw/css/mangrove/mangrove.css",
       "undrr-mangrove-styles",
     );
 
@@ -76,10 +75,10 @@ export function Footer({
       "undrr-common-base",
     );
 
-    loadStylesheet(
-      `https://www.preventionweb.net/themes/custom/undrr_common/css/layout.css?cacheBuster=${cacheBuster}`,
-      "undrr-common-layout",
-    );
+    // loadStylesheet(
+    //   `https://www.preventionweb.net/themes/custom/undrr_common/css/layout.css?cacheBuster=${cacheBuster}`,
+    //   "undrr-common-layout",
+    // );
 
     loadStylesheet(
       `https://www.preventionweb.net/themes/custom/undrr_common/css/components/colors.css?cacheBuster=${cacheBuster}`,

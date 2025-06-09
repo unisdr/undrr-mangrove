@@ -82,7 +82,7 @@ WithComplementaryContent.args = {
               </a>
             </p>
             <p className="lead pb-0 pt-20">
-              <a href="/about-irp" style={{ textDecoration: "none" }}>
+              <a href="https://recovery.preventionweb.net/about-irp" style={{ textDecoration: "none" }}>
                 The International Recovery Platform (IRP) is a global
                 partnership working to strengthen knowledge, and share
                 experiences and lessons on building back better in recovery,
