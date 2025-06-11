@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/blocks';
 
 <Meta
-  title="Getting started/Component Contribution Guide"
+  title="Getting started/Component contribution guide"
   parameters={{
     viewMode: "docs",
     previewTabs: {
@@ -10,13 +10,13 @@ import { Meta } from '@storybook/blocks';
   }}
 />
 
-# Component Contribution Guide
+# Component contribution guide
 
 This guide explains how to contribute new components to the Mangrove library and outlines the standards and best practices to follow.
 
-## Component Development Workflow
+## Component development workflow
 
-### 1. Planning Phase
+### 1. Planning phase
 
 Before starting development:
 
@@ -26,7 +26,7 @@ Before starting development:
 - Consider accessibility requirements from the beginning
 - Plan responsive behaviors for different screen sizes
 
-### 2. Component Structure
+### 2. Component structure
 
 All components in Mangrove follow a consistent file structure:
 
@@ -38,7 +38,7 @@ stories/Components/[ComponentCategory]/[ComponentName]/
 └── component-name.scss    # Component-specific styles (optional)
 ```
 
-#### Component Categories
+#### Component categories
 
 Place your component in the appropriate category folder:
 - `Accordion` - Collapsible content panels
@@ -53,9 +53,9 @@ Place your component in the appropriate category folder:
 
 If none of the existing categories fit, discuss with the team before creating a new category.
 
-## Code Standards and Conventions
+## Code standards and conventions
 
-### React Component Guidelines
+### React component guidelines
 
 1. **Use functional components with hooks**
    ```jsx
@@ -97,7 +97,7 @@ If none of the existing categories fit, discuss with the team before creating a 
    - Use heading levels (`<h1>` through `<h6>`) in a logical, hierarchical order
    - Ensure interactive elements are keyboard accessible (use `<button>` for clickable elements, not styled `<div>`s)
 
-### JSDoc Documentation Guidelines
+### JSDoc documentation guidelines
 
 All components must include comprehensive JSDoc comments to document their purpose, props, and usage. This improves code maintainability and enables better IDE autocompletion and type checking.
 
@@ -164,7 +164,7 @@ All components must include comprehensive JSDoc comments to document their purpo
    }
    ```
 
-### TypeScript Components
+### TypeScript components
 
 Mangrove supports TypeScript for component development. Using TypeScript provides several benefits, including improved type safety, better IDE support, and enhanced documentation.
 
@@ -294,7 +294,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    export default TypeScriptExampleComponent;
    ```
 
-### Styling Guidelines
+### Styling guidelines
 
 1. **Use SCSS for component styles**
    - Each component may have its own SCSS file
@@ -366,7 +366,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Test with accessibility tools
    - Use appropriate focus states for interactive elements
 
-## Documentation Requirements
+## Documentation requirements
 
 Each component must have comprehensive documentation in an MDX file that includes:
 
@@ -378,6 +378,52 @@ Each component must have comprehensive documentation in an MDX file that include
 6. **CSS and JS References** - Required files to include
 7. **Interactions** - Details on hover, focus, and other states
 8. **Changelog** - Version history of the component
+
+### Title capitalization rules
+
+All titles and headings in the Mangrove documentation follow **sentence case capitalization**:
+
+- **Capitalize only the first word** of titles and headings
+- **Capitalize proper nouns** (names, places, technologies, brands)
+- **Use lowercase for all other words**
+
+This rule applies to:
+- Main page headlines (H1)
+- Section headings (H2, H3, H4, etc.)
+- Meta title attributes in MDX files
+- Navigation titles in Storybook
+
+**Examples:**
+
+✅ **Correct:**
+- `# Getting started with mangrove`
+- `## Component structure and standards`
+- `### CSS and JS references`
+- `title="Getting started/React integration"`
+- `# TypeScript demo component`
+
+❌ **Incorrect:**
+- `# Getting Started With Mangrove`
+- `## Component Structure And Standards`
+- `### CSS And JS References`
+- `title="Getting Started/React Integration"`
+- `# TypeScript Demo Component`
+
+**Exceptions for proper nouns:**
+
+✅ **Keep these capitalized:**
+- Technology names: React, TypeScript, JavaScript, HTML, CSS, Sass, SCSS
+- Framework/library names: Storybook, Jest, UNDRR, Mangrove
+- Acronyms: API, URL, RTL, LTR, WCAG, MDX
+- Brand names: GitHub, GitLab, Google Analytics
+
+**Example with proper nouns:**
+- `# React integration guide` ✅
+- `## Working with non-TypeScript code` ✅
+- `### CSS and JS references` ✅
+- `# UNDRR logos` ✅
+
+This approach ensures consistency across all documentation and provides a clean, readable hierarchy that matches modern documentation standards.
 
 Example structure:
 
@@ -449,7 +495,7 @@ Description of hover, focus, and other states.
 1.0 — Released component
 ```
 
-## Creating Storybook Stories
+## Creating Storybook stories
 
 Stories demonstrate the component's usage and variants:
 
@@ -484,11 +530,11 @@ Stories demonstrate the component's usage and variants:
    - Support both LTR and RTL text directions
    - Include examples with different languages when relevant
 
-## Testing Requirements
+## Testing requirements
 
 Components should be thoroughly tested to ensure stability and reliability.
 
-### Unit Tests
+### Unit tests
 
 1. **Create test files**
    - Tests should be placed in a `__tests__` folder within your component directory or at the appropriate level in the project structure
@@ -527,7 +573,7 @@ describe('MyComponent', () => {
 });
 ```
 
-### Running Tests
+### Running tests
 
 Use the following commands to run tests:
 
@@ -542,7 +588,7 @@ yarn test:coverage
 yarn test:watch
 ```
 
-## Pull Request Process
+## Pull request process
 
 1. **Create a feature branch**
    - Branch from `main` (the primary branch)
@@ -567,27 +613,27 @@ yarn test:watch
    - Once approved, the changes will be merged to `main` 
    - The changes will be automatically deployed to the GitHub Pages site
 
-## Troubleshooting Common Issues
+## Troubleshooting common issues
 
-### Component Styling Issues
+### Component styling issues
 
 - Check that your SCSS files are properly imported
 - Verify CSS class names follow the naming conventions
 - Inspect elements using browser developer tools to identify CSS conflicts
 
-### Storybook Display Problems
+### Storybook display problems
 
 - Ensure your component export is correctly set up
 - Check that your stories file properly imports the component
 - Verify the Meta and Canvas tags in your MDX file are correctly formatted
 
-### Testing Failures
+### Testing failures
 
 - Check that all dependencies are correctly installed
 - Ensure test files are in the correct location
 - Verify that components are correctly imported in test files
 
-### Build Errors
+### Build errors
 
 - Make sure all required dependencies are installed
 - Check for syntax errors in your JSX/JavaScript

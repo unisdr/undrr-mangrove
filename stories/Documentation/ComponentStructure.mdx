@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/blocks';
 
 <Meta
-  title="Getting started/Component Structure"
+  title="Getting started/Component structure"
   parameters={{
     viewMode: "docs",
     previewTabs: {
@@ -10,15 +10,15 @@ import { Meta } from '@storybook/blocks';
   }}
 />
 
-# Component Structure and Standards
+# Component structure and standards
 
 This guide explains the structure and standards used across the Mangrove component library to help you understand and work with existing components.
 
-## Component Architecture
+## Component architecture
 
 The Mangrove library is organized using a loosely atomic design approach, with components categorized by their function and complexity.
 
-### Directory Structure
+### Directory structure
 
 ```
 stories/
@@ -46,7 +46,7 @@ stories/
 
 The jest test files can be created at different levels in the project structure depending on the scope of the tests.
 
-## Component File Structure
+## Component file structure
 
 Each component in the library consists of 3-4 files:
 
@@ -55,7 +55,7 @@ Each component in the library consists of 3-4 files:
 3. **ComponentName.stories.jsx** - Storybook stories showcasing the component
 4. **component-name.scss** - Component-specific styles (when needed)
 
-### Component Implementation (.jsx)
+### Component implementation (.jsx)
 
 The React component file (.jsx) follows these conventions:
 
@@ -79,7 +79,7 @@ export function ComponentName({
   ...props
 }) {
   // Component logic here
-  
+
   // Create class names based on props
   const classNames = [
     'mg-component-name',
@@ -94,47 +94,47 @@ export function ComponentName({
 }
 ```
 
-### Styling Approach
+### Styling approach
 
 Mangrove uses SCSS for styling with these conventions:
 
-1. **Global Variables and Mixins**
+1. **Global variables and mixins**
    - Located in `stories/assets/scss/`
    - Contains color palette, typography, spacing, and breakpoints
    - Uses variables prefixed with `$mg-` (e.g., `$mg-color-button-background`)
 
-2. **CSS Naming Methodology**
+2. **CSS naming methodology**
    - Block: `mg-button`
    - Element: `mg-button__icon`
    - Modifier: `mg-button--primary`
    - All component classes use the `mg-` prefix
 
-3. **Responsive Design**
+3. **Responsive design**
    - Mobile-first approach
    - Uses breakpoint mixins:
    ```scss
    @include devicebreak(medium) {
      // Tablet styles
    }
-   
+
    @include devicebreak(large) {
      // Desktop styles
    }
    ```
 
-4. **Theme Support**
+4. **Theme support**
    - Components adapt to different themes (UNDRR, PreventionWeb)
    - Uses theme variables for colors and styling
 
-### Component API Standards
+### Component API standards
 
-### Props Naming Conventions
+### Props naming conventions
 
 - Use camelCase for prop names
 - Boolean props should be phrased affirmatively (`isActive` instead of `isNotActive`)
 - Event handler props should start with `on` followed by the event name (`onClick`, `onHover`)
 
-### Common Props Pattern
+### Common props pattern
 
 Most components should support these common props:
 
@@ -143,30 +143,30 @@ Most components should support these common props:
   // Appearance
   variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary']),
   size: PropTypes.oneOf(['small', 'medium', 'large']),
-  
+
   // State
   isDisabled: PropTypes.bool,
   isActive: PropTypes.bool,
-  
+
   // Content
   children: PropTypes.node,
-  
+
   // Event handlers
   onClick: PropTypes.func,
-  
+
   // Custom styling
   className: PropTypes.string,
   style: PropTypes.object,
-  
+
   // Accessibility
   ariaLabel: PropTypes.string,
-  
+
   // Additional props spread to root element
   ...props
 }
 ```
 
-### Component Documentation Structure
+### Component documentation structure
 
 Each component's MDX file follows this structure:
 
@@ -179,7 +179,7 @@ Each component's MDX file follows this structure:
 7. **Interactions** - Detailed interaction states
 8. **Changelog** - Version history
 
-## Accessibility Standards
+## Accessibility standards
 
 All components must meet WCAG 2.1 Level AA standards:
 
@@ -200,15 +200,15 @@ All components must meet WCAG 2.1 Level AA standards:
    - Components must be usable at 200% zoom
    - Content must be accessible on mobile devices
 
-## Internationalization Support
+## Internationalization support
 
 Components should support multiple languages and reading directions:
 
-1. **Text Direction**
+1. **Text direction**
    - Support both LTR and RTL text directions
    - Use CSS logical properties where possible (e.g., `margin-inline-start` instead of `margin-left`)
 
-2. **Text Content**
+2. **Text content**
    - Text should come from props, not hardcoded
    - Support for various character sets and languages
 
@@ -224,13 +224,14 @@ Example of RTL support in SCSS:
 }
 ```
 
-## State Management
+## State management
 
 Components use these approaches for state management:
 
-1. **Local Component State**
+1. **Local component state**
    - Use React's `useState` and `useEffect` hooks for component-specific state
 
+2. **Controlled vs. uncontrolled components**
 2. **Controlled vs. Uncontrolled Components**
    - Support both controlled (state managed by parent) and uncontrolled (internal state) modes
 
@@ -244,19 +245,19 @@ Example:
 <InputComponent defaultValue="Default" />
 ```
 
-## Performance Considerations
+## Performance considerations
 
 1. **Memoization**
    - Use `React.memo` for components that render often but with the same props
    - Use `useCallback` for event handlers passed as props
 
-2. **Code Splitting**
+2. **Code splitting**
    - Large components should be split into smaller, focused components
 
-3. **Conditional Rendering**
+3. **Conditional rendering**
    - Use conditional rendering for complex components to avoid unnecessary DOM elements
 
-## Component Testing
+## Component testing
 
 All components should have associated tests verifying:
 
@@ -276,22 +277,22 @@ All components should have associated tests verifying:
    - Component meets accessibility requirements
    - ARIA attributes are correctly applied
 
-## Troubleshooting Components
+## Troubleshooting components
 
 When working with existing components, you might encounter these common issues:
 
-1. **Styling Conflicts**
+1. **Styling conflicts**
    - Check for CSS specificity issues
    - Verify component class names follow the `mg-` prefix convention
 
-2. **Prop Propagation**
+2. **Prop propagation**
    - Ensure props are correctly passed to child components
    - Check that event handlers are properly bound
 
-3. **Rendering Issues**
+3. **Rendering issues**
    - Verify that conditional rendering logic is correct
    - Check for missing keys in lists
 
-4. **Performance Problems**
+4. **Performance problems**
    - Look for unnecessary re-renders
    - Check for missing memoization

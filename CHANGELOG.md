@@ -1,3 +1,52 @@
+## [1.2.1](https://github.com/unisdr/undrr-mangrove/compare/v1.2.0...v1.2.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* mega menu obscured ([#420](https://github.com/unisdr/undrr-mangrove/issues/420)) ([df4a1d6](https://github.com/unisdr/undrr-mangrove/commit/df4a1d69b8fbfac7e44ea0d7c1effb5f73976f28))
+
+# [1.2.0](https://github.com/unisdr/undrr-mangrove/compare/v1.1.5...v1.2.0) (2025-06-09)
+
+
+### Features
+
+* remove all jQuery-dependent legacy components ([#416](https://github.com/unisdr/undrr-mangrove/issues/416)) ([492d29b](https://github.com/unisdr/undrr-mangrove/commit/492d29b3ab66dd7741128b402897025745fee7a9))
+
+## [1.1.5](https://github.com/unisdr/undrr-mangrove/compare/v1.1.4...v1.1.5) (2025-06-04)
+
+
+### Bug Fixes
+
+* reset working directory before dist branch checkout ([8cb6d3d](https://github.com/unisdr/undrr-mangrove/commit/8cb6d3d345186d80fe897f79669faec2f8390545))
+
+## [1.1.4](https://github.com/unisdr/undrr-mangrove/compare/v1.1.3...v1.1.4) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve git branch/directory ambiguity in dist workflow ([b832be6](https://github.com/unisdr/undrr-mangrove/commit/b832be6410a20050904a0d9491b558c9d33d395a))
+
+## [1.1.3](https://github.com/unisdr/undrr-mangrove/compare/v1.1.2...v1.1.3) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve git commands failure in dist branch workflow ([e81f0cc](https://github.com/unisdr/undrr-mangrove/commit/e81f0cca575a3779f51ce700e2af990ea8008cd7))
+
+## [1.1.2](https://github.com/unisdr/undrr-mangrove/compare/v1.1.1...v1.1.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* whitespace in build ([c6d5c3a](https://github.com/unisdr/undrr-mangrove/commit/c6d5c3a019b42197efbe7fb1dcea2d86bc5304bd))
+
+## [1.1.1](https://github.com/unisdr/undrr-mangrove/compare/v1.1.0...v1.1.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* remove redundant build step ([04eda0c](https://github.com/unisdr/undrr-mangrove/commit/04eda0c59c8523259736f747d58877f896ea57e5))
+
 # [1.1.0](https://github.com/unisdr/undrr-mangrove/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 

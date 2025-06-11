@@ -29,6 +29,4 @@ export const Select = {
     const caption = getCaptionForLocale(locale);
     return <CustomSelect text={caption}></CustomSelect>;
   },
-
-  name: "Select",
 };

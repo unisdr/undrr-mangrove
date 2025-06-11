@@ -20,8 +20,6 @@ export const DefaultHistogram = {
       title="Default Histogram"
     />
   ),
-
-  name: "Default Histogram",
 };
 
 export const MultipleSeriesHistogram = {
@@ -45,8 +43,6 @@ export const MultipleSeriesHistogram = {
       title="Multiple Series Histogram"
     />
   ),
-
-  name: "Multiple Series Histogram",
 };
 
 export const MirroredHistogram = {
@@ -71,8 +67,6 @@ export const MirroredHistogram = {
       title="Mirrored Histogram"
     />
   ),
-
-  name: "Mirrored Histogram",
 };
 
 export const OverlappingHistogram = {
@@ -110,6 +104,4 @@ export const OverlappingHistogram = {
       title="Overlapping Histogram"
     />
   ),
-
-  name: "Overlapping Histogram",
 };

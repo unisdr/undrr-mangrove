@@ -1,0 +1,834 @@
+import { Meta, Source } from '@storybook/blocks';
+import { linkTo } from '@storybook/addon-links';
+import TableOfContents from '../Components/TableOfContents/TableOfContents';
+
+<Meta
+  title="Getting started/React integration"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true }
+    }
+  }}
+/>
+
+# React integration guide
+
+<TableOfContents
+  tocData={[
+    { id: "quick-setup", text: "Quick setup" },
+    { id: "complete-react-app-example", text: "Complete React app example" },
+    { id: "typescript-integration", text: "TypeScript integration" },
+    { id: "component-api-reference", text: "Component API reference" },
+    { id: "hooks-utilities", text: "Hooks and utilities" },
+    { id: "integration-with-frameworks", text: "Integration with popular frameworks" },
+    { id: "custom-component-creation", text: "Custom component creation" },
+    { id: "performance-optimization", text: "Performance optimization" },
+    { id: "testing", text: "Testing" },
+    { id: "next-steps", text: "Next steps" }
+  ]}
+  showNumbers={false}
+/>
+
+Get the full power of Mangrove with React components - perfect for dynamic applications with TypeScript support and props-based customization.
+
+## Quick setup
+
+### 1. Install Mangrove
+
+(This is not yet available but to come. Status: June 2025)
+
+```bash
+# Install via npm
+yarn install @unisdr/undrr-mangrove
+
+# Or via yarn
+yarn add @unisdr/undrr-mangrove
+
+# Peer dependencies (if not already installed)
+yarn install react react-dom
+```
+
+### 2. Import components
+
+```jsx
+// Individual component imports (recommended)
+import { CtaButton } from '@unisdr/undrr-mangrove/components/CtaButton';
+import { VerticalCard } from '@unisdr/undrr-mangrove/components/VerticalCard';
+import { InputFields } from '@unisdr/undrr-mangrove/components/InputFields';
+
+// Or import multiple components
+import {
+  CtaButton,
+  VerticalCard,
+  InputFields,
+  Breadcrumbs,
+  StatsCards
+} from '@unisdr/undrr-mangrove';
+```
+
+### 3. Include styles
+
+**Option A: Import CSS in your main file**
+```jsx
+// Import the base styles
+import '@unisdr/undrr-mangrove/css/style.css';
+
+// Or import a specific theme
+import '@unisdr/undrr-mangrove/css/style-preventionweb.css';
+```
+
+**Option B: Import in CSS file**
+```css
+/* src/styles/main.css */
+@import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
+@import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+```
+
+**Option C: Sass integration** (see [Sass Integration Guide](/?path=/docs/getting-started-sass-integration--docs))
+
+## Complete React app example
+
+Here's a full React application using Mangrove components:
+
+```jsx
+// App.jsx
+import React, { useState } from 'react';
+import {
+  CtaButton,
+  VerticalCard,
+  InputFields,
+  Breadcrumbs,
+  StatsCards,
+  Accordion,
+  Pagination
+} from '@unisdr/undrr-mangrove';
+
+// Import styles
+import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+
+function App() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  // Sample data
+  const breadcrumbData = [
+    { label: 'Home', link: '/' },
+    { label: 'Resources', link: '/resources' },
+    { label: 'Reports', link: '/resources/reports' },
+    { label: 'Current Report', link: '#', active: true }
+  ];
+
+  const statsData = [
+    {
+      number: '195',
+      label: 'UN Member States',
+      description: 'Working together on disaster risk reduction'
+    },
+    {
+      number: '2.3B',
+      label: 'People Reached',
+      description: 'Through capacity building programs'
+    },
+    {
+      number: '158',
+      label: 'Countries Supported',
+      description: 'With technical assistance and funding'
+    }
+  ];
+
+  const cardData = [
+    {
+      contenttile: 'REPORT',
+      title: 'Global Assessment Report on Disaster Risk Reduction 2024',
+      summaryText: 'This comprehensive report examines global progress in reducing disaster risk and building resilience across communities worldwide.',
+      button: 'Read Report',
+      link: '/reports/gar-2024',
+      imgalt: 'Global Assessment Report Cover',
+      imgback: 'https://via.placeholder.com/300x200?text=GAR+2024'
+    },
+    {
+      contenttile: 'TOOLKIT',
+      title: 'Community Resilience Planning Toolkit',
+      summaryText: 'Practical tools and guidelines for local governments and communities to develop effective disaster risk reduction strategies.',
+      button: 'Download Toolkit',
+      link: '/toolkits/resilience-planning',
+      imgalt: 'Toolkit Cover',
+      imgback: 'https://via.placeholder.com/300x200?text=Toolkit'
+    }
+  ];
+
+  const accordionData = [
+    {
+      id: 1,
+      title: 'What is disaster risk reduction?',
+      content: 'Disaster risk reduction (DRR) is the practice of reducing disaster risks through
+      systematic efforts to analyze and manage the causal factors of disasters.'
+    },
+    {
+      id: 2,
+      title: 'How can communities prepare for disasters?',
+      content: 'Communities can prepare through early warning systems, emergency planning, infrastructure improvements, and education programs.'
+    },
+    {
+      id: 3,
+      title: 'What role does climate change play?',
+      content: 'Climate change increases the frequency and intensity of many disasters, making adaptation and mitigation strategies crucial.'
+    }
+  ];
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    // Handle form submission
+    alert('Thank you for your message! We will get back to you soon.');
+    setFormData({ name: '', email: '', message: '' });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  return (
+    <div className="mg-app">
+      {/* Header Section */}
+      <header className="mg-section">
+        <div className="mg-container">
+          <Breadcrumbs data={breadcrumbData} />
+
+          <div className="mg-hero__content">
+            <h1 className="mg-heading mg-heading--1">
+              Building Resilient Communities Together
+            </h1>
+            <p className="mg-paragraph mg-paragraph--large">
+              Reducing disaster risk through science, policy, and partnerships for sustainable development.
+            </p>
+
+            <div className="mg-hero__actions">
+              <CtaButton
+                label="Explore Our Work"
+                Type="Primary"
+                For_Primary="Arrow"
+                onClick={() => console.log('Explore clicked')}
+              />
+              <CtaButton
+                label="Latest Reports"
+                Type="Secondary"
+                onClick={() => console.log('Reports clicked')}
+              />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Stats Section */}
+      <section className="mg-section mg-section--gray">
+        <div className="mg-container">
+          <h2 className="mg-heading mg-heading--2 mg-text-center">Global Impact</h2>
+          <StatsCards data={statsData} />
+        </div>
+      </section>
+
+      {/* Content Cards */}
+      <section className="mg-section">
+        <div className="mg-container">
+          <h2 className="mg-heading mg-heading--2">Latest Reports and Resources</h2>
+
+          <div className="mg-grid mg-grid--2-cols">
+            {cardData.map((card, index) => (
+              <VerticalCard
+                key={index}
+                data={[card]}
+                variant="primary"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="mg-section mg-section--light">
+        <div className="mg-container">
+          <h2 className="mg-heading mg-heading--2">Frequently Asked Questions</h2>
+          <Accordion data={accordionData} />
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section className="mg-section mg-section--primary">
+        <div className="mg-container">
+          <div className="mg-grid mg-grid--2-cols mg-grid--gap-large">
+            <div className="mg-content">
+              <h2 className="mg-heading mg-heading--2 mg-text-white">Get Involved</h2>
+              <p className="mg-paragraph mg-paragraph--large mg-text-white">
+                Join the global effort to build more resilient communities. Contact us to learn about partnership opportunities.
+              </p>
+            </div>
+
+            <form onSubmit={handleFormSubmit} className="mg-form mg-form--white">
+              <InputFields
+                type="text"
+                element="input"
+                placeholder="Enter your full name"
+                labelText="Full Name"
+                id="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                State="Active"
+                required
+              />
+
+              <InputFields
+                type="email"
+                element="input"
+                placeholder="Enter your email address"
+                labelText="Email Address"
+                id="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                State="Active"
+                required
+              />
+
+              <InputFields
+                type="text"
+                element="textarea"
+                placeholder="Tell us about your interest in disaster risk reduction..."
+                labelText="Message"
+                id="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                State="Active"
+                rows={4}
+                required
+              />
+
+              <CtaButton
+                label="Send Message"
+                Type="Secondary"
+                For_Primary="Arrow"
+                type="submit"
+                style={{ width: '100%' }}
+              />
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Pagination Example */}
+      <section className="mg-section">
+        <div className="mg-container">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={10}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## TypeScript integration
+
+Mangrove can be integrated with TypeScript:
+
+```tsx
+// App.tsx
+import React, { useState, FormEvent, ChangeEvent } from 'react';
+import {
+  CtaButton,
+  VerticalCard,
+  InputFields,
+  StatsCards,
+  CtaButtonProps,
+  VerticalCardProps,
+  StatsCardsProps
+} from '@unisdr/undrr-mangrove';
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+interface CardData {
+  contenttile: string;
+  title: string;
+  summaryText: string;
+  button: string;
+  link: string;
+  imgalt: string;
+  imgback: string;
+}
+
+const App: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const statsData: StatsCardsProps['data'] = [
+    {
+      number: '195',
+      label: 'UN Member States',
+      description: 'Working together on disaster risk reduction'
+    }
+  ];
+
+  const cardData: CardData[] = [
+    {
+      contenttile: 'REPORT',
+      title: 'Global Assessment Report',
+      summaryText: 'Comprehensive disaster risk analysis...',
+      button: 'Read Report',
+      link: '/reports/gar-2024',
+      imgalt: 'Report Cover',
+      imgback: 'https://via.placeholder.com/300x200'
+    }
+  ];
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleButtonClick = (): void => {
+    console.log('Button clicked');
+  };
+
+  return (
+    <div className="mg-app">
+      <section className="mg-section">
+        <div className="mg-container">
+          <h1 className="mg-heading mg-heading--1">TypeScript integration</h1>
+
+          <StatsCards data={statsData} />
+
+          <div className="mg-grid mg-grid--2-cols">
+            {cardData.map((card, index) => (
+              <VerticalCard
+                key={index}
+                data={[card]}
+                variant="primary"
+              />
+            ))}
+          </div>
+
+          <CtaButton
+            label="Get Started"
+            Type="Primary"
+            For_Primary="Arrow"
+            onClick={handleButtonClick}
+          />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Component API reference
+
+### CtaButton component
+
+```jsx
+<CtaButton
+  label="Button Text"           // Required: Button text
+  Type="Primary"               // "Primary" | "Secondary"
+  State="Active"               // "Active" | "Disabled"
+  For_Primary="Arrow"          // "Arrow" | "No Arrow" (for primary buttons)
+  onClick={handleClick}        // Click event handler
+  className="custom-class"     // Additional CSS classes
+  style={{ margin: '10px' }}  // Inline styles
+  disabled={false}             // Boolean to disable button
+  type="button"                // "button" | "submit" | "reset"
+/>
+```
+
+### VerticalCard component
+
+```jsx
+<VerticalCard
+  data={[{
+    contenttile: "CATEGORY",
+    title: "Card Title",
+    summaryText: "Card description text...",
+    button: "Read More",
+    link: "/article/link",
+    imgalt: "Image description",
+    imgback: "path/to/image.jpg",
+    share: "Social Share Button",  // Optional
+    label1: "Label 1",             // Optional
+    label2: "Label 2"              // Optional
+  }]}
+  variant="primary"              // "primary" | "secondary" | "tertiary" | "quaternary"
+  className="custom-card"        // Additional CSS classes
+/>
+```
+
+### InputFields component
+
+```jsx
+<InputFields
+  type="text"                    // Input type: "text" | "email" | "password" | "tel" | etc.
+  element="input"                // "input" | "textarea"
+  placeholder="Enter text..."    // Placeholder text
+  labelText="Field Label"        // Label text
+  errorText="Error message"      // Error message text
+  helpText="Help text"           // Help/hint text
+  State="Active"                 // "Active" | "Focus" | "Error" | "Disabled"
+  id="field-id"                  // Unique ID for the field
+  value={fieldValue}             // Controlled value
+  onChange={handleChange}        // Change event handler
+  required={true}                // Required field
+  disabled={false}               // Disabled state
+  rows={4}                       // For textarea element
+/>
+```
+
+### StatsCards component
+
+```jsx
+<StatsCards
+  data={[
+    {
+      number: "195",
+      label: "Member States",
+      description: "Working together globally"
+    },
+    {
+      number: "2.3B",
+      label: "People Reached",
+      description: "Through our programs"
+    }
+  ]}
+  variant="default"              // Optional variant
+  className="custom-stats"       // Additional CSS classes
+/>
+```
+
+### Breadcrumbs component
+
+```jsx
+<Breadcrumbs
+  data={[
+    { label: 'Home', link: '/' },
+    { label: 'Reports', link: '/reports' },
+    { label: 'Current Page', link: '#', active: true }
+  ]}
+  separator="/"                  // Custom separator
+  className="custom-breadcrumb"  // Additional CSS classes
+/>
+```
+
+## Hooks and utilities
+
+### useMangroveTheme hook
+
+```jsx
+import { useMangroveTheme } from '@unisdr/undrr-mangrove/hooks';
+
+function MyComponent() {
+  const { theme, setTheme, toggleTheme } = useMangroveTheme();
+
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+      <CtaButton
+        label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        onClick={toggleTheme}
+        Type="Secondary"
+      />
+    </div>
+  );
+}
+```
+
+### useMangroveBreakpoint hook
+
+```jsx
+import { useMangroveBreakpoint } from '@unisdr/undrr-mangrove/hooks';
+
+function ResponsiveComponent() {
+  const { isMobile, isTablet, isDesktop, breakpoint } = useMangroveBreakpoint();
+
+  return (
+    <div>
+      {isMobile && <p>Mobile view</p>}
+      {isTablet && <p>Tablet view</p>}
+      {isDesktop && <p>Desktop view</p>}
+      <p>Current breakpoint: {breakpoint}</p>
+    </div>
+  );
+}
+```
+
+## Integration with popular frameworks
+
+### Next.js integration
+
+```jsx
+// pages/_app.js
+import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />;
+}
+
+export default MyApp;
+```
+
+```jsx
+// pages/index.js
+import { CtaButton, VerticalCard } from '@unisdr/undrr-mangrove';
+
+export default function Home() {
+  return (
+    <div className="mg-container">
+      <h1 className="mg-heading mg-heading--1">Welcome to UNDRR</h1>
+      <CtaButton label="Get Started" Type="Primary" />
+    </div>
+  );
+}
+```
+
+### Create React App integration
+
+```jsx
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+// Import Mangrove styles
+import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+```
+
+### Vite integration
+
+```jsx
+// src/main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+
+// Import Mangrove styles
+import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+## Custom component creation
+
+Build your own components using Mangrove as a foundation:
+
+```jsx
+// components/CustomNewsCard.jsx
+import React from 'react';
+import { CtaButton } from '@unisdr/undrr-mangrove';
+import './CustomNewsCard.scss';
+
+const CustomNewsCard = ({
+  title,
+  excerpt,
+  category,
+  date,
+  author,
+  image,
+  link,
+  featured = false
+}) => {
+  return (
+    <article className={`mg-news-card ${featured ? 'mg-news-card--featured' : ''}`}>
+      {image && (
+        <div className="mg-news-card__image">
+          <img src={image} alt={title} className="mg-news-card__img" />
+        </div>
+      )}
+
+      <div className="mg-news-card__content">
+        <div className="mg-news-card__meta">
+          <span className="mg-label mg-label--primary">{category}</span>
+          <time className="mg-news-card__date">{date}</time>
+        </div>
+
+        <h3 className="mg-heading mg-heading--3 mg-news-card__title">
+          <a href={link}>{title}</a>
+        </h3>
+
+        <p className="mg-paragraph mg-news-card__excerpt">{excerpt}</p>
+
+        <div className="mg-news-card__footer">
+          <span className="mg-news-card__author">By {author}</span>
+          <CtaButton
+            label="Read More"
+            Type="Secondary"
+            For_Primary="Arrow"
+            onClick={() => window.location.href = link}
+          />
+        </div>
+      </div>
+    </article>
+  );
+};
+
+export default CustomNewsCard;
+```
+
+## Performance optimization
+
+### Tree shaking
+
+Import only the components you need:
+
+```jsx
+// ✅ Good - Only imports what you need
+import { CtaButton } from '@unisdr/undrr-mangrove/components/CtaButton';
+import { VerticalCard } from '@unisdr/undrr-mangrove/components/VerticalCard';
+
+// ❌ Avoid - Imports entire library
+import * as Mangrove from '@unisdr/undrr-mangrove';
+```
+
+### Dynamic imports
+
+Load components only when needed:
+
+```jsx
+import React, { lazy, Suspense } from 'react';
+
+// Lazy load heavy components
+const Charts = lazy(() => import('@unisdr/undrr-mangrove/components/Charts'));
+const MapComponent = lazy(() => import('@unisdr/undrr-mangrove/components/Map'));
+
+function Dashboard() {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading charts...</div>}>
+        <Charts data={chartData} />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading map...</div>}>
+        <MapComponent markers={mapData} />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+### CSS optimization
+
+```jsx
+// Option 1: Import only the CSS you need
+import '@unisdr/undrr-mangrove/dist/css/components/buttons.css';
+import '@unisdr/undrr-mangrove/dist/css/components/cards.css';
+
+// Option 2: Use CSS-in-JS with styled-components
+import styled from 'styled-components';
+import { CtaButton } from '@unisdr/undrr-mangrove';
+
+const StyledButton = styled(CtaButton)`
+  margin: 20px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+```
+
+## Testing
+
+### Unit testing with Jest
+
+```jsx
+// __tests__/App.test.jsx
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { CtaButton } from '@unisdr/undrr-mangrove';
+
+test('renders CTA button with correct text', () => {
+  const handleClick = jest.fn();
+
+  render(
+    <CtaButton
+      label="Test Button"
+      Type="Primary"
+      onClick={handleClick}
+    />
+  );
+
+  const button = screen.getByRole('button', { name: /test button/i });
+  expect(button).toBeInTheDocument();
+
+  fireEvent.click(button);
+  expect(handleClick).toHaveBeenCalledTimes(1);
+});
+```
+
+### Storybook integration
+
+```jsx
+// stories/CustomComponent.stories.jsx
+import { CustomNewsCard } from '../components/CustomNewsCard';
+
+export default {
+  title: 'Custom/NewsCard',
+  component: CustomNewsCard,
+  argTypes: {
+    featured: { control: 'boolean' },
+    category: { control: 'text' }
+  }
+};
+
+export const Default = {
+  args: {
+    title: 'Climate Resilience in Small Island States',
+    excerpt: 'New research shows innovative approaches...',
+    category: 'Research',
+    date: '2024-03-15',
+    author: 'Dr. Jane Smith',
+    link: '/articles/climate-resilience',
+    featured: false
+  }
+};
+```
+
+## Next steps
+
+- **Explore Components**: Browse the component library for more React examples
+- **TypeScript Setup**: Configure your project with TypeScript for better development experience
+- **Custom Themes**: <a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>Create your own theme using Sass Integration</a>
+- **Performance**: Implement code splitting and lazy loading for better performance
+
+Need help? Check out <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')}>Best Practices</a> or <a href="javascript:void(0)" onClick={linkTo('getting-started-examples', 'docs')}>Real-world Examples</a>!

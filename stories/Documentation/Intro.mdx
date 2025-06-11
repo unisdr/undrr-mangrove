@@ -1,4 +1,5 @@
 import { Meta, Source } from '@storybook/blocks';
+import { linkTo } from '@storybook/addon-links';
 
 <Meta
   title="Getting started/Intro"
@@ -12,19 +13,7 @@ import { Meta, Source } from '@storybook/blocks';
 
 # Welcome
 
-The purpose of this project is to act as a test to see if it is a suitable base for UNDRR's needs.
-
-By unifying design elements into reusable components, development is simplified, accelerated and more reliable. Serving the interests of the organisation and users.
-
-## 🚨 Pre-alpha warning 🚨
-
-This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
-
-## 🏗️ Work in Progress
-
-Please note that this design system is currently a work in progress. We are in the process of fully evolving it from the UNDP design system. As such, some components and features may be subject to change or refinement. 
-
-## Purpose
+By unifying design elements into reusable components, development is simplified, accelerated and more reliable. Serving the interests of the organization and users. This project is under active development. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
 This project stops short of being a full design system and instead focus on providing usable components that are informed by the UNDRR brand guidelines and project styles.
 
@@ -32,20 +21,40 @@ These components offer consistency, documentation and portability to speed quali
 
 If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us in the issue queue.
 
+---
+
+## Getting started
+
+👉 **<a href="javascript:void(0)" onClick={linkTo('getting-started-intro-getting-started-guide', 'docs')}>Start with the Getting Started Guide</a>** for a complete overview and quick setup.
+
+**🎯 <a href="javascript:void(0)" onClick={linkTo('getting-started-vanilla-html-and-css', 'docs')}>Vanilla HTML/CSS Guide</a>**
+For static sites, legacy projects, or when you want minimal dependencies. Just add CSS files and copy HTML structures.
+
+**🎨 <a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>Sass Integration Guide</a>**
+Take control of styling with custom themes, variable overrides, and build process integration.
+
+**⚛️ <a href="javascript:void(0)" onClick={linkTo('getting-started-react-integration', 'docs')}>React Integration Guide</a>**
+Full React components with TypeScript integrations, props-based customization, and modern development patterns.
+
+**📋 <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')}>Best Practices</a>**
+Performance optimization, accessibility guidelines, and development best practices.
+
+---
+
 ## Process
 
-The Guide is a living document created to meet the needs of UNDRR's front-end developers and designers. If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us.
+If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us.
 
-Components can be created and are also subject to updates and removal. These changes are documented -- if you'd like to request a new component, get in touch \[contact form to come].
+Components can be created and are also subject to updates and removal. These changes are documented -- if you'd like to request a new component, [get in touch](https://github.com/unisdr/undrr-mangrove).
 
 ## Structure
 
 Mangrove uses a loose [atomic design](https://atomicdesign.bradfrost.com/chapter-2/) approach, but major concepts are split as follows:
 
-* Getting started: high level information on what Mangrove is, and what you should and shouldn't do
-* Design decisions: colours, spacing, typography and so on.
-* Components: the bread and butter of cards, buttons and so on.
-* Templates (to come): high-level organisms that show a whole section layout or page
+* **Getting started**: High level information on what Mangrove is, and comprehensive onboarding guides for different use cases
+* **Design decisions**: Colours, spacing, typography and foundational design elements
+* **Components**: The bread and butter of cards, buttons, forms, and interactive elements
+* **Templates** (to come): High-level organisms that show a whole section layout or page
 
 ## Codebase
 
@@ -53,4 +62,43 @@ Code is available [on GitHub](https://github.com/unisdr/undrr-mangrove) and thro
 
 Developers are encouraged to consume the project through the remotely available CSS to help ensure "up-to-date-ness".
 
-* URLs to come
+### Quick start URLs
+
+**CSS Files (for HTML/CSS approach):**
+```html
+<!-- Theme styles (choose one) -->
+<!-- UNDRR global style -->
+<link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css">
+<!-- or -->
+<link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css">
+```
+
+**npm Package (for React/build process integration):**
+
+(This is not yet available but to come. Status: June 2025)
+
+```bash
+yarn install @unisdr/undrr-mangrove
+```
+
+## Need help?
+
+- 📖 **Start here**: <a href="javascript:void(0)" onClick={linkTo('getting-started-intro-getting-started-guide', 'docs')}>Getting Started Guide</a>
+- 🧱 **Browse Components**: Explore the component library in the sidebar
+- 💬 **Questions**: Contact the UNDRR development team
+- 🐛 **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
+- 📈 **Updates**: Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
+
+## Credits & License
+
+### Credits
+
+The Mangrove component library is built with:
+
+* [Storybook](https://storybook.js.org/) - For component documentation and development
+* [React](https://reactjs.org/) - For component implementation
+* [SCSS](https://sass-lang.com/) - For component styling
+
+### License
+
+Components and code are Apache-2.0 licensed. The UNDRR look and feel is proprietary.
