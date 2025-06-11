@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/unisdr/undrr-mangrove/compare/v1.2.0...v1.2.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* mega menu obscured ([#420](https://github.com/unisdr/undrr-mangrove/issues/420)) ([df4a1d6](https://github.com/unisdr/undrr-mangrove/commit/df4a1d69b8fbfac7e44ea0d7c1effb5f73976f28))
+
 # [1.2.0](https://github.com/unisdr/undrr-mangrove/compare/v1.1.5...v1.2.0) (2025-06-09)
 
 
