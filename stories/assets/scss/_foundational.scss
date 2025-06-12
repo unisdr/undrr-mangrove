@@ -1,5 +1,12 @@
 /* typography start */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
 html {
   font-size: 10px;
   -webkit-tap-highlight-color: transparent;
@@ -165,35 +172,28 @@ dd {
   }
 }
 
+header {
+  text-wrap: balance;
+}
+
 hr {
   // border-width: 2px;
   border: 1px solid $mg-color-black;
 }
 
-// link animation
-@keyframes line-loop-animation {
-  0% {
-    background-position: 100% 100%, -30px 100%;
-    background-size: 100% 2px, 0 2px;
-  }
-
-  100% {
-    background-position: calc(100% + 30px) 100%, 0 100%;
-    background-size: 0 2px, 100% 2px;
-  }
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 a {
-  // @extend %paragraph-font-300 !optional;
-  // @extend %animate-link !optional;
-
   color: $mg-color-interactive;
   text-decoration: none;
-}
 
-a:hover {
-  color: $mg-color-interactive-active;
-  text-decoration: underline;
+  &:hover {
+    color: $mg-color-interactive-active;
+    text-decoration: underline;
+  }
 }
 
 // burmese lang
@@ -294,6 +294,7 @@ a:hover {
 [dir="rtl"] {
   ul,
   ol {
+    direction: rtl;
     padding-left: 0;
     padding-right: 1.125rem;
 
@@ -309,6 +310,17 @@ a:hover {
         padding-right: $mg-spacing-25;
       }
     }
+  }
+
+  // 900 weight Roboto does not work well with Arabic
+  // https://gitlab.com/undrr/web-backlog/-/issues/1711
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
   }
 }
 
