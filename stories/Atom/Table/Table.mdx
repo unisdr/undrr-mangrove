@@ -17,11 +17,11 @@ export const getCaptionForLocale = (locale) => {
 
 # Table
 
-Tables are used to represent data sets that are easy to understand and access.
+When you need to present large datasets in a way that's actually readable (and doesn't make users want to throw their laptop out the window), tables are your best friend.  All tables require the `.mg-table` class as the foundation.
 
-### Overview
+### When to use tables
 
-Tables are used for large volumes of data that can be accessed easily and understandable by the user. These tables are created using various modifiers like default, striped, bordered, small, stacked, scroll.
+- **Large datasets:** When you have substantial amounts of structured data
 - **Comparative data:** Perfect for side-by-side comparisons
 - **Scannable information:** Users need to quickly find specific data points
 - **Reports and analytics:** Financial data, metrics, or any tabular reporting
@@ -81,6 +81,7 @@ You can combine styling and responsive modifiers—here's a bordered table that 
 <Story of={TableStories.BorderedStackedTable} />
 
 ## Implementation notes
+
 Here's what's happening under the hood: The table component automatically applies CSS classes based on your props, building combinations like `mg-table mg-table--small mg-table--striped mg-table--stacked` for complex layouts.
 
 **Pro tip:** Striped tables work especially well for financial data or any content where users need to track across multiple columns—the alternating colors act like visual guidelines.
