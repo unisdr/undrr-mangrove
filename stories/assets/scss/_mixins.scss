@@ -506,17 +506,4 @@
   }
 }
 
-%animate-link {
-  background-image:
-    linear-gradient($mg-color-red-900, $mg-color-red-900),
-    linear-gradient($mg-color-red-900, $mg-color-red-900);
-  background-position: 100% 100%, -30px 100%;
-  background-repeat: no-repeat;
-  background-size: 100% 2px, 0 1px;
-
-  &:hover {
-    @include animation(line-loop-animation 2s linear infinite);
-  }
-}
-
 /* placeholder end */
