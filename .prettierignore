@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+yarn.lock
+package-lock.json
+
+# Build outputs
+dist/
+docs-build-temp/
+storybook-static/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Vendor libraries
+stories/assets/js/lib/
+
+# Auto-generated files
+glideslider.js
+
+# Temporary files
+.cache/
+.nyc_output/
+
+# Documentation builds
+docs/
+
+# Coverage reports
+coverage/
+
+# Editor files
+.DS_Store 

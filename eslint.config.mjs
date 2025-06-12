@@ -1,5 +1,7 @@
 import react from "eslint-plugin-react";
 import spellcheck from "eslint-plugin-spellcheck";
+import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,10 +20,11 @@ const compat = new FlatCompat({
 
 export default [{
     ignores: ["**/glideslider.js", "stories/assets/js/lib/*.js"],
-}, ...compat.extends("plugin:storybook/recommended", "plugin:mdx/recommended"), {
+}, ...compat.extends("plugin:storybook/recommended", "plugin:mdx/recommended"), prettierConfig, {
     plugins: {
         react,
         spellcheck,
+        prettier,
     },
 
     languageOptions: {
@@ -99,6 +102,7 @@ export default [{
         }],
 
         "linebreak-style": "off",
+        "prettier/prettier": "error",
     },
     files: ["**/*.stories.@(js|jsx|mdx|mjs|cjs)"],
 },
@@ -116,11 +120,13 @@ export default [{
         }
     },
     plugins: {
-        "@typescript-eslint": tseslint
+        "@typescript-eslint": tseslint,
+        prettier
     },
     rules: {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": "warn"
+        "@typescript-eslint/no-unused-vars": "warn",
+        "prettier/prettier": "error"
     }
 }];
