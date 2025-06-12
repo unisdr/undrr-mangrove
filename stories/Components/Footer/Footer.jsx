@@ -151,31 +151,21 @@ export function Footer({
     };
       }, [enableSyndication, mergedSyndicationConfig]);
 
-  const footerClasses = cls(
-    "mangrove-footer",
-    variant && `mangrove-footer--${variant}`,
-    className,
-  );
-
   return (
-    <footer className={footerClasses} {...args}>
+    <footer {...args}>
       {/* Site-specific complementary footer content */}
       {(complementaryContent || children) && (
-        <section className="mangrove-footer__complementary">
-          {complementaryContent || children}
-        </section>
+        <>{complementaryContent || children}</>
       )}
 
       {/* UNDRR Syndicated footer content */}
       {enableSyndication && (
-        <section className="mangrove-footer__syndicated">
-          <div
-            className={`pw-widget-${mergedSyndicationConfig.suffixID}`}
-            ref={syndicationRef}
-          >
-            Loading UNDRR footer content...
-          </div>
-        </section>
+        <div
+          className={`pw-widget-${mergedSyndicationConfig.suffixID}`}
+          ref={syndicationRef}
+        >
+          Loading UNDRR footer content...
+        </div>
       )}
     </footer>
   );
