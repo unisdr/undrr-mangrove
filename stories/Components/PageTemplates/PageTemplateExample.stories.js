@@ -1,23 +1,26 @@
-import React from 'react';
+import React from "react";
 
 // Import your components
-import MegaMenu from '../MegaMenu/MegaMenu';
-import { Hero } from '../Hero/Hero';
-import { Tab } from '../Tab/Tab';
-import { VerticalCard } from '../Cards/Card/VerticalCard';
-import { Footer } from '../Footer/Footer';
+import MegaMenu from "../MegaMenu/MegaMenu";
+import { Hero } from "../Hero/Hero";
+import { Tab } from "../Tab/Tab";
+import { VerticalCard } from "../Cards/Card/VerticalCard";
+import { Footer } from "../Footer/Footer";
+import { PageHeader } from "../PageHeader/PageHeader";
 
-const sampleHeroData = [{
-  title: "Custom title<br>with&nbsp;line breaks and spaces",
-  summaryText: "This is custom summary text.<br>&nbsp;Another line.",
-  label: "Custom Label",
-  detail: "Custom Detail",
-  primary_button: "Custom primary",
-  secondary_button: "Custom secondary",
-  link: "/#",
-  imgback:
-    "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-}];
+const sampleHeroData = [
+  {
+    title: "Custom title<br>with&nbsp;line breaks and spaces",
+    summaryText: "This is custom summary text.<br>&nbsp;Another line.",
+    label: "Custom Label",
+    detail: "Custom Detail",
+    primary_button: "Custom primary",
+    secondary_button: "Custom secondary",
+    link: "/#",
+    imgback:
+      "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+  },
+];
 
 const sampleTabData = [
   {
@@ -57,79 +60,86 @@ const sampleTabDataStacked = [
   },
 ];
 
-const sampleCardContent = [{
-  contenttile: "CONTENT TAG",
-  title: "Title in large size",
-  summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+const sampleCardContent = [
+  {
+    contenttile: "CONTENT TAG",
+    title: "Title in large size",
+    summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
   by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-  label1: "Label 1",
-  label2: "Label 2",
-  button: "Primary action",
-  link: "javascript:void(0)",
-  imgalt: "A person looks on",
-  imgback:
-    "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
-},
+    label1: "Label 1",
+    label2: "Label 2",
+    button: "Primary action",
+    link: "javascript:void(0)",
+    imgalt: "A person looks on",
+    imgback:
+      "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+  },
 ];
 
 const sampleMegaMenuSections = [
   {
-    title: 'Section 1',
-    bannerHeading: 'Analytics by country',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    title: "Section 1",
+    bannerHeading: "Analytics by country",
+    bannerDescription: "Gaze upon statistics in wonder...",
     items: [
       {
-        title: 'Item 1',
-        items: Array(30).fill({ title: 'Sub-item 1', url: '#' })
+        title: "Item 1",
+        items: Array(30).fill({ title: "Sub-item 1", url: "#" }),
       },
       {
-        title: 'Item 2',
-        items: Array(20).fill({ title: 'Sub-item 2', url: '#' })
-      }
-    ]
+        title: "Item 2",
+        items: Array(20).fill({ title: "Sub-item 2", url: "#" }),
+      },
+    ],
   },
   {
-    title: 'Section 2',
-    bannerHeading: 'Analytics by region',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    title: "Section 2",
+    bannerHeading: "Analytics by region",
+    bannerDescription: "Gaze upon statistics in wonder...",
     items: [
       {
-        title: 'Item 1',
-        items: Array(20).fill({ title: 'Sub-item 1', url: '#' })
+        title: "Item 1",
+        items: Array(20).fill({ title: "Sub-item 1", url: "#" }),
       },
       {
-        title: 'Item 2',
-        items: Array(15).fill({ title: 'Sub-item 2', url: '#' })
-      }
-    ]
-  }
+        title: "Item 2",
+        items: Array(15).fill({ title: "Sub-item 2", url: "#" }),
+      },
+    ],
+  },
 ];
 
 // Define the Page Template Example component
 const PageTemplateExample = () => {
   return (
-    <div className="page-template-example | mg-container mg-container--spacer">
-      <section>The Global header is yet to be implemented in Storybook. Refer to UNDRR.org.</section>
-      <section>The MegaMenu is in a pre-final state and will change.</section>
-      <MegaMenu delay={600} sections={sampleMegaMenuSections} />
-      <Hero data={sampleHeroData} variant="primary" />
-      <Tab tabdata={sampleTabData} />
-      <section className='mg-grid mg-grid__col-3'>
-        <VerticalCard data={sampleCardContent} />
-        <VerticalCard data={sampleCardContent} />
-        <VerticalCard data={sampleCardContent} />
-      </section>
-      <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
-      <Footer />
-    </div>
+    <section className="page-template-example">
+      <PageHeader />
+      <div className="mg-container mg-container--spacer">
+        <MegaMenu delay={600} sections={sampleMegaMenuSections} />
+        <Hero data={sampleHeroData} variant="primary" />
+        <Tab tabdata={sampleTabData} />
+        <section className="mg-grid mg-grid__col-3">
+          <VerticalCard data={sampleCardContent} />
+          <VerticalCard data={sampleCardContent} />
+          <VerticalCard data={sampleCardContent} />
+        </section>
+        <Tab tabdata={sampleTabDataStacked} variant={"stacked"} />
+        <Footer />
+      </div>
+    </section>
   );
 };
 
 // Define the default export for the story
 export default {
-  title: 'Example/Page Template Example',
+  title: "Example/Page Template Example",
   component: PageTemplateExample,
 };
 
 // Define the story
-export const Default = () => <PageTemplateExample />;
+export const Default = {
+  render: () => <PageTemplateExample />,
+  parameters: {
+    layout: 'fullscreen',
+  },
+};

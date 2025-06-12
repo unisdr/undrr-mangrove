@@ -5,7 +5,8 @@
 // $mg-breakpoint-desktop: 1440px;
 
 .mg-container {
-  padding: 1rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
   margin: 0 auto;
   max-width: 100%;
 
@@ -44,11 +45,12 @@
 .mg-container--spacer {
   --mg-container-spacer: #{$mg-container-spacer};
 
-  // exclude spacing for cetrain combinations of elements
+  // exclude spacing for certain combinations of elements
   > .mg-u-sr-only:first-child ~ .mg-hero,
   > .mg-hero:first-child,
   > .has-background + .mg-hero,
   > .mg-hero + .has-background,
+  > .mg-mega-wrapper,
   > .mg-mega-wrapper + .mg-hero,
   > .has-background + .has-background {
     --mg-container-spacer: 0;

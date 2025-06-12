@@ -69,9 +69,9 @@ export function PageHeader({
 
             {/* User icon */}
             <a alt="Log in or register" title="Log in or register" href="/user">
-              <i class="fa fa-user"></i>{" "}
-              <span class="mg-page-header__label">My account</span>
-              <span class="mg-page-header__label-mobile">Login</span>
+              <i className="fa fa-user"></i>{" "}
+              <span className="mg-page-header__label">My account</span>
+              <span className="mg-page-header__label-mobile">Login</span>
             </a>
 
             {/* Language Dropdown Section */}
@@ -99,12 +99,12 @@ export function PageHeader({
                       data-lang-dropdown-id="lang-dropdown-form"
                       id="edit-lang-dropdown-select"
                       name="lang_dropdown_select"
+                      defaultValue={languages.find(lang => lang.selected)?.value || languages[0]?.value}
                     >
                       {languages.map((lang, index) => (
                         <option
                           key={index}
                           value={lang.value}
-                          selected={lang.selected ? "selected" : undefined}
                         >
                           {lang.label}
                         </option>
