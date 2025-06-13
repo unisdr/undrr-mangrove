@@ -1,16 +1,15 @@
 import React from 'react';
-// import './breadcrumbs.scss';
 
 export function Breadcrumbcomponent({ data, Color, ...args }) {
   const lastIndex = data.length - 1;
 
-  let color = '';
+  let colorClass = '';
   if (Color == 'White') {
-    color = 'white';
+    colorClass = 'mg-breadcrumb--white';
   }
 
   return (
-    <nav aria-label="breadcrumbs" data-viewport="true" className={['breadcrumb', `${color}`].join(' ')}>
+    <nav aria-label="breadcrumbs" className={['mg-breadcrumb', `${colorClass}`].join(' ').trim()}>
       <ul>
         {data.map((item, i) => {
           if (i === lastIndex) {

@@ -1,89 +1,85 @@
+.mg-breadcrumb {
+  font-family: $mg-font-family-condensed;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: $mg-font-size-300;
+  padding: 0;
 
-.breadcrumb {
-  ul {
-    align-items: baseline;
-    display: flex;
-    flex-wrap: wrap;
-    font-size: $mg-font-size-100;
+  li {
+    display: inline-block;
+    margin: 0;
     padding: 0;
+    position: relative;
 
-    li {
-      display: inline-block;
-      margin: $mg-spacing-25 $mg-spacing-100 $mg-spacing-25 0;
-      padding-left: 0;
-      position: relative;
+    &:first-of-type {
+      margin-left: 0;
+    }
 
-      &::after {
-        color: $mg-color-red-900;
-        content: "/";
-        font-weight: bold;
-        position: absolute;
-        right: -12px;
-        top: 0;
-      }
+    &:last-of-type {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-right: 0;
+      max-width: calc(100vw - 2rem);
+    }
 
-      &:first-of-type {
-        margin-left: 0;
-      }
+    a {
+      background: none;
+      color: $mg-color-text;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s ease;
 
-      &:last-of-type {
-        font-weight: 600;
-        letter-spacing: 0.03em;
-        margin-right: 0;
-        max-width: calc(100vw - 2rem);
-
-        &::after {
-          display: none;
-        }
-      }
-
-      a {
-        background: none;
-        color: $mg-color-red-900;
-        font-size: $mg-font-size-100;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        transition: opacity 0.2s ease;
-
-        &:hover {
-          color: $mg-color-red-900;
-        }
+      &:hover {
+        color: $mg-color-text;
       }
     }
   }
 
-  &.white {
-    li {
-      &::after {
-        color: $mg-color-white;
-      }
+  li + li:before {
+    font-family: $mg-font-family-icons;
+    color: $mg-color-text;
+    content: "\f105";
+    padding: 0 12px 0 14px;
+    vertical-align: top;
+  }
 
-      a {
-        color: $mg-color-white;
+  li + li:has(a:empty):before {
+    display: none;
+  }
+}
 
-        &:hover {
-          color: $mg-color-white;
-          opacity: 0.7;
-        }
-      }
-    }
-
-    &:last-of-type,
-    li:last-of-type {
+.mg-breadcrumb.mg-breadcrumb--white {
+  li {
+    color: $mg-color-white;
+    a {
       color: $mg-color-white;
+
+      &:hover {
+        color: $mg-color-white;
+        opacity: 0.7;
+      }
     }
+  }
+
+  &:last-of-type,
+  li:last-of-type {
+    color: $mg-color-white;
+  }
+
+  li + li:before {
+    color: $mg-color-white;
   }
 }
 
 [dir="rtl"] {
-  .breadcrumb {
-    ul {
-      padding: 0;
-    }
+  .mg-breadcrumb {
+    padding: 0;
 
     li {
-      margin: $mg-spacing-25 0 $mg-spacing-25 $mg-spacing-100;
+      margin: 0;
       padding-right: 0;
 
       a {
@@ -91,7 +87,7 @@
       }
 
       &:first-of-type {
-        margin-left: $mg-spacing-100;
+        margin-left: 0;
         margin-right: 0;
       }
 
@@ -99,21 +95,19 @@
         margin-left: 0;
         margin-right: 0;
       }
+    }
 
-      &::after {
-        @include transform(translate(0, -63%) rotate(140deg));
+    li + li:before {
+      @include transform(rotate(180deg));
 
-        left: -14px;
-        right: unset;
-        top: 63%;
-      }
+      padding: 0 14px 0 12px;
     }
   }
 }
 
 // burmese lang
-:lang(my) {
-  .breadcrumb li:last-of-type {
-    font-size: $mg-font-size-100;
-  }
-}
+// :lang(my) {
+//   .mg-breadcrumb li:last-of-type {
+//     font-size: $mg-font-size-100;
+//   }
+// }

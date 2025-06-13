@@ -138,3 +138,24 @@ export const DefaultBreadcrumbs = {
     },
   },
 };
+
+export const WhiteBreadcrumbs = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Breadcrumbcomponent data={caption} Color="White" {...args}></Breadcrumbcomponent>;
+  },
+
+  name: "White breadcrumbs",
+
+  parameters: {
+    backgrounds: {
+      default: "dark",
+      values: [
+        {
+          name: "dark",
+          value: "#1a1a1a",
+        },
+      ],
+    },
+  },
+};

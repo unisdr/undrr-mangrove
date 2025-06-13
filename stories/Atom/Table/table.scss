@@ -1,22 +1,24 @@
 /* table tag start */
-table {
+.mg-table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
+  word-break: auto-phrase; // https://gitlab.com/undrr/web-backlog/-/issues/2053
+  text-wrap: balance;
 
   @include devicebreak(medium) {
     width: auto;
   }
 
-  &.small {
+  &.mg-table--small {
     th,
     td {
-      font-size: $mg-font-size-300;
+      font-size: $mg-font-size-250;
       -webkit-text-size-adjust: 100%;
     }
   }
 
-  &.striped {
+  &.mg-table--striped {
     tr {
       @extend %border-none;
 
@@ -26,16 +28,19 @@ table {
     }
   }
 
-  &.border {
+  &.mg-table--border {
     border-collapse: collapse;
 
     th,
     td {
       border: 1px solid $mg-color-neutral-400;
-    }
+      border-collapse: collapse;
+      box-sizing: border-box;
+      min-width: 50px;
+      }
   }
 
-  &.stacked {
+  &.mg-table--stacked {
     th,
     td {
       display: block;
@@ -55,7 +60,7 @@ table {
       }
     }
 
-    &.border {
+    &.mg-table--border {
       tr {
         border: 1px solid $mg-color-neutral-400;
 
@@ -72,9 +77,9 @@ table {
   }
 }
 
-th,
-td {
-  font-size: $mg-font-size-400;
+.mg-table th,
+.mg-table td {
+  font-size: $mg-font-size-300;
   line-height: 1.4;
   padding: $mg-spacing-25;
   vertical-align: top;
@@ -84,24 +89,20 @@ td {
   }
 }
 
-thead {
-  tr {
-    th {
-      background-color: $mg-color-neutral-300;
-      font-weight: 600;
-      text-align: left;
-    }
-  }
+.mg-table thead tr th {
+  // background-color: $mg-color-neutral-300;
+  font-weight: 600;
+  text-align: center;
 }
 
-tbody {
-  tr {
-    @extend %border-bottom;
-  }
+.mg-table tbody tr {
+  @extend %border-bottom;
 }
 
-.scroll {
+.mg-table--scroll {
   overflow-x: auto;
+  width: max-content;
+  min-width: 100%;
 
   thead {
     th {
@@ -116,8 +117,8 @@ tbody {
 }
 
 [dir="rtl"] {
-  th,
-  td {
+  .mg-table th,
+  .mg-table td {
     text-align: right;
 
     @include devicebreak(medium) {
@@ -127,11 +128,11 @@ tbody {
 }
 
 // burmese lang
-:lang(my) {
-  th,
-  td {
-    line-height: 1.7;
-  }
-}
+// :lang(my) {
+//   th,
+//   td {
+//     line-height: 1.7;
+//   }
+// }
 
 /* table tag end */

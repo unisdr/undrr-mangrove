@@ -95,5 +95,133 @@ export const DefaultTable = {
     );
   },
 
-  name: "Table",
+  name: "Default table",
+};
+
+export const StripedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        variant="striped"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Striped table",
+};
+
+export const BorderedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        variant="border"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Bordered table",
+};
+
+export const SmallTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        size="small"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Small table",
+};
+
+export const SmallStripedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        size="small"
+        variant="striped"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Small striped table",
+};
+
+export const StackedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        responsive="stacked"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Stacked table (mobile-first)",
+};
+
+export const ScrollableTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        responsive="scroll"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Scrollable table",
+};
+
+export const BorderedStackedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        variant="border"
+        responsive="stacked"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: "Bordered stacked table",
 };
