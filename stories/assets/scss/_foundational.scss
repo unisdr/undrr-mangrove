@@ -49,6 +49,7 @@ h1 {
   letter-spacing: 0.06rem;
   line-height: 1.08;
   text-wrap: balance;
+  font-weight: 700;
 
   @include devicebreak(medium) {
     font-size: 5.125rem;
@@ -80,8 +81,8 @@ h3 {
 }
 
 h4 {
-  font-size: 1.563rem;
-  font-weight: 400;
+  font-size: $mg-font-size-200;
+  font-weight: 600;
   line-height: 1.15;
 
   @include devicebreak(medium) {
@@ -91,7 +92,7 @@ h4 {
 
 h5 {
   font-size: $mg-font-size-200;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.15;
 
   @include devicebreak(medium) {
