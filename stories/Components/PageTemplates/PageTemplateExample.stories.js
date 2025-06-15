@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
 
 // Import your components
-import MegaMenu from '../MegaMenu/MegaMenu';
-import { Hero } from '../Hero/Hero';
-import { Tab } from '../Tab/Tab';
-import { VerticalCard } from '../Cards/Card/VerticalCard';
-import { Footer } from '../Footer/Footer';
+import MegaMenu from "../MegaMenu/MegaMenu";
+import { Hero } from "../Hero/Hero";
+import { Tab } from "../Tab/Tab";
+import { VerticalCard } from "../Cards/Card/VerticalCard";
+import { Footer } from "../Footer/Footer";
+import { PageHeader } from "../PageHeader/PageHeader";
 
 const sampleHeroData = [
   {
@@ -77,9 +78,9 @@ const sampleCardContent = [
 
 const sampleMegaMenuSections = [
   {
-    title: 'Section 1',
-    bannerHeading: 'Analytics by country',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    title: "Section 1",
+    bannerHeading: "Analytics by country",
+    bannerDescription: "Gaze upon statistics in wonder...",
     items: [
       {
         title: 'Item 1',
@@ -92,9 +93,9 @@ const sampleMegaMenuSections = [
     ],
   },
   {
-    title: 'Section 2',
-    bannerHeading: 'Analytics by region',
-    bannerDescription: 'Gaze upon statistics in wonder...',
+    title: "Section 2",
+    bannerHeading: "Analytics by region",
+    bannerDescription: "Gaze upon statistics in wonder...",
     items: [
       {
         title: 'Item 1',
@@ -133,9 +134,14 @@ const PageTemplateExample = () => {
 
 // Define the default export for the story
 export default {
-  title: 'Example/Page Template Example',
+  title: "Example/Page Template Example",
   component: PageTemplateExample,
 };
 
 // Define the story
-export const Default = () => <PageTemplateExample />;
+export const Default = {
+  render: () => <PageTemplateExample />,
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
