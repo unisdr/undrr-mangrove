@@ -32,7 +32,6 @@ export default {
       },
     },
     '@storybook/addon-links',
-    '@storybook/addon-actions',
     '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
