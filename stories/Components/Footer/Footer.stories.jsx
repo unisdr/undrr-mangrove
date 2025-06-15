@@ -1,62 +1,62 @@
-import React from "react";
-import { Footer } from "./Footer";
+import React from 'react';
+import { Footer } from './Footer';
 
 export default {
-  title: "Components/Footer",
+  title: 'Components/Footer',
   component: Footer,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     variant: {
-      options: ["default", "minimal"],
-      control: { type: "inline-radio" },
-      description: "Visual variant of the Footer component",
-      defaultValue: "default",
+      options: ['default', 'minimal'],
+      control: { type: 'inline-radio' },
+      description: 'Visual variant of the Footer component',
+      defaultValue: 'default',
     },
     enableSyndication: {
-      control: { type: "boolean" },
-      description: "Enable/disable UNDRR syndicated footer content",
+      control: { type: 'boolean' },
+      description: 'Enable/disable UNDRR syndicated footer content',
       defaultValue: true,
     },
     syndicationConfig: {
-      control: { type: "object" },
-      description: "Configuration object for UNDRR syndication widget",
+      control: { type: 'object' },
+      description: 'Configuration object for UNDRR syndication widget',
     },
   },
   parameters: {
     docs: {
       description: {
         component:
-          "Footer component with UNDRR Syndication support that allows sites to add complementary content above the global syndicated footer.",
+          'Footer component with UNDRR Syndication support that allows sites to add complementary content above the global syndicated footer.',
       },
     },
   },
 };
 
-const Template = (args) => <Footer {...args} />;
+const Template = args => <Footer {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  variant: "default",
+  variant: 'default',
   enableSyndication: true,
   syndicationConfig: {
-    suffixID: "footer-default",
+    suffixID: 'footer-default',
   },
 };
 Default.parameters = {
   docs: {
     description: {
       story:
-        "Default Footer with UNDRR syndicated content only. The syndicated content is loaded dynamically from the UNDRR system.",
+        'Default Footer with UNDRR syndicated content only. The syndicated content is loaded dynamically from the UNDRR system.',
     },
   },
 };
 
 export const WithComplementaryContent = Template.bind({});
 WithComplementaryContent.args = {
-  variant: "default",
+  variant: 'default',
   enableSyndication: true,
   syndicationConfig: {
-    suffixID: "footer-complementary",
+    suffixID: 'footer-complementary',
   },
   complementaryContent: (
     <div className="custom-footer-content">
@@ -66,23 +66,26 @@ WithComplementaryContent.args = {
             <p className="about-footer--links pt-20">
               <a href="https://www.facebook.com/recoveryplatform.org">
                 Facebook
-              </a>{" "}
+              </a>{' '}
               &nbsp;
               <a href="https://www.twitter.com/irp_secretariat">X</a> &nbsp;
               <a href="https://www.youtube.com/user/IRPsecretariat">
                 YouTube
-              </a>{" "}
+              </a>{' '}
               &nbsp;
               <a href="https://www.flickr.com/photos/138349363@N04/albums">
                 Flickr
-              </a>{" "}
+              </a>{' '}
               &nbsp;
               <a href="https://recovery.preventionweb.net/contactus">
                 Contact us
               </a>
             </p>
             <p className="lead pb-0 pt-20">
-              <a href="https://recovery.preventionweb.net/about-irp" style={{ textDecoration: "none" }}>
+              <a
+                href="https://recovery.preventionweb.net/about-irp"
+                style={{ textDecoration: 'none' }}
+              >
                 The International Recovery Platform (IRP) is a global
                 partnership working to strengthen knowledge, and share
                 experiences and lessons on building back better in recovery,
@@ -100,17 +103,17 @@ WithComplementaryContent.parameters = {
   docs: {
     description: {
       story:
-        "Footer with site-specific complementary content above the UNDRR syndicated footer. This demonstrates how sites can add their own footer sections while still including the global UNDRR footer.",
+        'Footer with site-specific complementary content above the UNDRR syndicated footer. This demonstrates how sites can add their own footer sections while still including the global UNDRR footer.',
     },
   },
 };
 
 export const NoSyndication = Template.bind({});
 NoSyndication.args = {
-  variant: "default",
+  variant: 'default',
   enableSyndication: false,
   syndicationConfig: {
-    suffixID: "footer-no-syndication",
+    suffixID: 'footer-no-syndication',
   },
   children: (
     <div className="local-footer-only">
@@ -125,22 +128,22 @@ NoSyndication.parameters = {
   docs: {
     description: {
       story:
-        "Footer with syndication disabled, showing only local content. This is useful for testing or special cases where the UNDRR global footer is not desired.",
+        'Footer with syndication disabled, showing only local content. This is useful for testing or special cases where the UNDRR global footer is not desired.',
     },
   },
 };
 
 export const CustomSyndicationConfig = Template.bind({});
 CustomSyndicationConfig.args = {
-  variant: "default",
+  variant: 'default',
   enableSyndication: true,
   syndicationConfig: {
-    contenttype: "landingpage",
-    pageid: "83835",
+    contenttype: 'landingpage',
+    pageid: '83835',
     includemetatags: false,
     includecss: false,
-    suffixID: "footer-custom-config",
-    activedomain: "www.undrr.org",
+    suffixID: 'footer-custom-config',
+    activedomain: 'www.undrr.org',
   },
   complementaryContent: (
     <div className="custom-site-footer">
@@ -158,7 +161,7 @@ CustomSyndicationConfig.parameters = {
   docs: {
     description: {
       story:
-        "Footer with custom syndication configuration. This shows how to override the default syndication settings for specific pages or sites.",
+        'Footer with custom syndication configuration. This shows how to override the default syndication settings for specific pages or sites.',
     },
   },
 };
