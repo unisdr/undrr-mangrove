@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+      statuses: write
     steps:
       - name: Validate PR Title
         uses: amannn/action-semantic-pull-request@v5
