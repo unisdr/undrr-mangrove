@@ -1,12 +1,29 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import * as PageTemplateExampleStories from './PageTemplateExample.stories.js';
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+import * as PageTemplateExampleStories from "./PageTemplateExample.stories.js";
 
-<Meta of={PageTemplateExampleStories} title="Components/Page template example" />
+<Meta
+  of={PageTemplateExampleStories}
+  title="Components/Page template example"
+/>
 
 # Page template example
 
-This is the `PageTemplateExample` component, which demonstrates how severla components can be pulled together on a single page. This is currently in a proof-of-concept phase and will be expanded, along with addtional variants (news article, event page, landing page and so on).
+This is the `PageTemplateExample` component, which demonstrates how several components can be pulled together on a single page. This is currently in a proof-of-concept phase and will be expanded, along with additional variants (news article, event page, landing page and so on).
 
-Last updated on: October 2024.
+The current template includes:
 
-<Story of={PageTemplateExampleStories.Default} />
+- **PageHeader**: Complete UNDRR branding with logo, language switcher, and colored decoration stripe
+- **MegaMenu**: Navigation menu with multiple sections and banner content
+- **Hero**: Primary hero section with customizable content
+- **Tab**: Tabbed content sections (both default and stacked variants)
+- **VerticalCard**: Grid of content cards
+- **Footer**: Complete footer component
+
+<Canvas>
+  <Story of={PageTemplateExampleStories.Default} />
+</Canvas>
+
+### Changelog
+
+- **June 2025** — Integrated PageHeader component to replace placeholder section, providing complete UNDRR branding and navigation functionality
+- **October 2024** — Initial page template example created with Hero, Tab, VerticalCard, and Footer components
