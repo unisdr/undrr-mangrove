@@ -1,21 +1,21 @@
-import Fetcher from "./Fetcher";
+import Fetcher from './Fetcher';
 
 export default {
-  title: "Components/Fetcher",
+  title: 'Components/Fetcher',
   component: Fetcher,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
 
   argTypes: {
     api: {
-      control: "text",
+      control: 'text',
     },
 
     searchTerm: {
-      control: "text",
+      control: 'text',
     },
 
     loadingLabel: {
-      control: "text",
+      control: 'text',
     },
   },
 };

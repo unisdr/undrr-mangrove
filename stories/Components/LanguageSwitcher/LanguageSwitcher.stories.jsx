@@ -1,108 +1,108 @@
-import { Languageswitcher } from "./LanguageSwitcher";
+import { Languageswitcher } from './LanguageSwitcher';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
         languagedata: [
           {
-            descriptionText: "Français",
-            lang: "fr",
+            descriptionText: 'Français',
+            lang: 'fr',
           },
           {
-            descriptionText: "Español",
-            lang: "es",
+            descriptionText: 'Español',
+            lang: 'es',
           },
         ],
-        headerText: "English",
+        headerText: 'English',
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
         languagedata: [
           {
-            descriptionText: "فرنسي",
-            lang: "fr",
+            descriptionText: 'فرنسي',
+            lang: 'fr',
           },
           {
-            descriptionText: "الاسبانية",
-            lang: "es",
+            descriptionText: 'الاسبانية',
+            lang: 'es',
           },
         ],
-        headerText: "إنجليزي",
+        headerText: 'إنجليزي',
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
         languagedata: [
           {
-            descriptionText: "ပြင်သစ်",
-            lang: "fr",
+            descriptionText: 'ပြင်သစ်',
+            lang: 'fr',
           },
           {
-            descriptionText: "ငပိ",
-            lang: "es",
+            descriptionText: 'ငပိ',
+            lang: 'es',
           },
         ],
-        headerText: "အင်္ဂလိပ်စာ",
+        headerText: 'အင်္ဂလိပ်စာ',
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
         languagedata: [
           {
-            descriptionText: "フランス語",
-            lang: "fr",
+            descriptionText: 'フランス語',
+            lang: 'fr',
           },
           {
-            descriptionText: "スペイン語",
-            lang: "es",
+            descriptionText: 'スペイン語',
+            lang: 'es',
           },
         ],
-        headerText: "英語",
+        headerText: '英語',
       };
       return japaneseText;
     default:
       const dummy = {
         languagedata: [
           {
-            descriptionText: "Français",
-            lang: "fr",
+            descriptionText: 'Français',
+            lang: 'fr',
           },
           {
-            descriptionText: "Español",
-            lang: "es",
+            descriptionText: 'Español',
+            lang: 'es',
           },
         ],
-        headerText: "English",
+        headerText: 'English',
       };
       return dummy;
   }
 };
 
 export default {
-  title: "Components/Language switcher",
+  title: 'Components/Language switcher',
 
   argTypes: {
     variant: {
-      options: ["blue", "white"],
+      options: ['blue', 'white'],
 
       control: {
-        type: "radio",
+        type: 'radio',
       },
 
-      defaultValue: "blue",
+      defaultValue: 'blue',
     },
   },
 
   parameters: {
     backgrounds: {
-      default: "white",
+      default: 'white',
 
       values: [
         {
-          name: "gray",
-          value: "#D4D6D8",
+          name: 'gray',
+          value: '#D4D6D8',
         },
       ],
     },
@@ -121,16 +121,16 @@ export const LanguageSwitcher = {
     );
   },
 
-  name: "Language switcher",
+  name: 'Language switcher',
 
   parameters: {
     backgrounds: {
-      default: "gray",
+      default: 'gray',
     },
 
     docs: {
       inlineStories: false,
-      iframeHeight: "100%",
+      iframeHeight: '100%',
     },
   },
 };
