@@ -6,7 +6,7 @@ export default {
   component: Grid,
 };
 
-const Template = (args) => <Grid {...args} />;
+const Template = args => <Grid {...args} />;
 
 export const DefaultGrid = Template.bind({});
 DefaultGrid.args = {};

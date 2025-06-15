@@ -1,73 +1,73 @@
-import { StatsCards } from "./StatsCards";
+import { StatsCards } from './StatsCards';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
-        titlename: "Lorem ipsum",
-        percentname: "Percent",
-        numbername: "35",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        titlename: 'Lorem ipsum',
+        percentname: 'Percent',
+        numbername: '35',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
-        titlename: "عنوان مستقل",
-        percentname: "نسبه مئويه",
-        numbername: "35",
-        text: "الألم بحد ذاته هو الحب ، الزبون الرئيسي",
+        titlename: 'عنوان مستقل',
+        percentname: 'نسبه مئويه',
+        numbername: '35',
+        text: 'الألم بحد ذاته هو الحب ، الزبون الرئيسي',
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
-        titlename: "လွတ်လပ်သောခေါင်းစဉ်",
-        percentname: "ရာခိုင်နှုန်း",
-        numbername: "35",
-        text: "နာကျင်မှုကိုယ်တိုင်ကအချစ်ကိုအဓိကဖောက်သည်ချသည်",
+        titlename: 'လွတ်လပ်သောခေါင်းစဉ်',
+        percentname: 'ရာခိုင်နှုန်း',
+        numbername: '35',
+        text: 'နာကျင်မှုကိုယ်တိုင်ကအချစ်ကိုအဓိကဖောက်သည်ချသည်',
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
-        titlename: "独立したタイトル",
-        percentname: "パーセント",
-        numbername: "35",
-        text: "痛み自体は愛、主な顧客です",
+        titlename: '独立したタイトル',
+        percentname: 'パーセント',
+        numbername: '35',
+        text: '痛み自体は愛、主な顧客です',
       };
       return japaneseText;
     default:
       return {
-        titlename: "Lorem Title",
+        titlename: 'Lorem Title',
         percentname:
-          "Percents, with very long subheader, spanning several lines",
-        numbername: "35",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          'Percents, with very long subheader, spanning several lines',
+        numbername: '35',
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       };
   }
 };
 
 export default {
-  title: "Components/Cards/Stats card",
+  title: 'Components/Cards/Stats card',
   component: StatsCards,
 
   argTypes: {
     Size: {
-      options: ["Small", "Medium", "Large", "Extra large"],
+      options: ['Small', 'Medium', 'Large', 'Extra large'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Medium",
+      defaultValue: 'Medium',
     },
 
     Accent: {
-      options: ["yellow", "red", "green", "blue"],
+      options: ['yellow', 'red', 'green', 'blue'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "yellow",
+      defaultValue: 'yellow',
     },
   },
 };
@@ -87,5 +87,5 @@ export const DefaultStatsCard = {
     );
   },
 
-  name: "Stats card",
+  name: 'Stats card',
 };

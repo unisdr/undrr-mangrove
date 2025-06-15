@@ -1,11 +1,11 @@
-import { Utility } from "./UtilityCss";
+import { Utility } from './UtilityCss';
 
 export default {
-  title: "Components/Utility CSS",
+  title: 'Components/Utility CSS',
   component: Utility,
 };
 
 export const DefaultUtility = {
   render: () => <Utility />,
-  name: "Utility",
+  name: 'Utility',
 };
