@@ -1,4 +1,4 @@
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 // Theme switcher options
 import themeDefault from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss';
