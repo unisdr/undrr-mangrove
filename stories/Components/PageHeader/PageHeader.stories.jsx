@@ -7,17 +7,17 @@ export default {
   argTypes: {
     variant: {
       options: ['default', 'decoration-only'],
-      control: { type: 'radio' }
+      control: { type: 'radio' },
     },
     logoUrl: { control: 'text' },
     logoAlt: { control: 'text' },
     logoTitle: { control: 'text' },
     homeUrl: { control: 'text' },
-    languages: { control: 'object' }
+    languages: { control: 'object' },
   },
 };
 
-const Template = (args) => <PageHeader {...args} />;
+const Template = args => <PageHeader {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -36,12 +36,12 @@ WithCustomLanguages.args = {
     { value: 'ch', label: 'Cheese speak', selected: true },
     { value: 'es', label: 'Español' },
     { value: 'fr', label: 'Français' },
-    { value: 'ar', label: 'العربية' }
-  ]
+    { value: 'ar', label: 'العربية' },
+  ],
 };
 
 export const WithCustomClass = Template.bind({});
 WithCustomClass.args = {
   variant: 'default',
   className: 'custom-header-class',
-}; 
+};

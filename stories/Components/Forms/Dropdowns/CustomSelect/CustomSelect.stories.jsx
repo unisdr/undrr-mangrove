@@ -1,26 +1,26 @@
-import CustomSelect from "./CustomSelect";
+import CustomSelect from './CustomSelect';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = "Select Language";
+    case 'english':
+      const engText = 'Select Language';
       return engText;
-    case "arabic":
-      const arabicText = "اختار اللغة";
+    case 'arabic':
+      const arabicText = 'اختار اللغة';
       return arabicText;
-    case "burmese":
-      const burmeseText = "ဘာသာစကားကို ရွေးပါ။";
+    case 'burmese':
+      const burmeseText = 'ဘာသာစကားကို ရွေးပါ။';
       return burmeseText;
-    case "japanese":
-      const japaneseText = "言語を選択する";
+    case 'japanese':
+      const japaneseText = '言語を選択する';
       return japaneseText;
     default:
-      return "Category";
+      return 'Category';
   }
 };
 
 export default {
-  title: "Components/Forms/Dropdown/Select",
+  title: 'Components/Forms/Dropdown/Select',
   component: CustomSelect,
 };
 

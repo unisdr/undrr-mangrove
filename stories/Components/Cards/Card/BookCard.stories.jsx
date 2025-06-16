@@ -1,61 +1,61 @@
-import { BookCard } from "./BookCard";
+import { BookCard } from './BookCard';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
         contentdata: [
           {
-            contenttile: "CONTENT TAG",
-            title: "Title in large size",
-            link: "javascript:void(0)",
-            imgalt: "A publication cover",
+            contenttile: 'CONTENT TAG',
+            title: 'Title in large size',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
             imgback:
-              "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },
         ],
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
         contentdata: [
           {
-            contenttile: "علامة المحتوى",
-            title: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
-            link: "javascript:void(0)",
-            imgalt: "A publication cover",
+            contenttile: 'علامة المحتوى',
+            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
             imgback:
-              "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },
         ],
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
         contentdata: [
           {
-            contenttile: "အကြောင်းအရာ TAG",
+            contenttile: 'အကြောင်းအရာ TAG',
             title:
-              "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
-            link: "javascript:void(0)",
-            imgalt: "A publication cover",
+              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
             imgback:
-              "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },
         ],
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
         contentdata: [
           {
-            contenttile: "コンテンツタグ",
-            title: "投稿のタイトルはここにあり、2行です",
-            button: "続きを読む",
-            link: "javascript:void(0)",
-            imgalt: "A publication cover",
+            contenttile: 'コンテンツタグ',
+            title: '投稿のタイトルはここにあり、2行です',
+            button: '続きを読む',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
             imgback:
-              "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },
         ],
       };
@@ -64,13 +64,13 @@ const getCaptionForLocale = (locale) => {
       const dummy = {
         contentdata: [
           {
-            contenttile: "BOOK CARD",
+            contenttile: 'BOOK CARD',
             title:
-              "Book title in normal header size with up to three lines of text",
-            link: "javascript:void(0)",
-            imgalt: "A publication cover",
+              'Book title in normal header size with up to three lines of text',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
             imgback:
-              "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },
         ],
       };
@@ -79,17 +79,17 @@ const getCaptionForLocale = (locale) => {
 };
 
 export default {
-  title: "Components/Cards/Book Card",
+  title: 'Components/Cards/Book Card',
 
   argTypes: {
     variant: {
-      options: ["primary", "secondary", "tertiary", "quaternary"],
+      options: ['primary', 'secondary', 'tertiary', 'quaternary'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "primary",
+      defaultValue: 'primary',
     },
   },
 };
@@ -101,7 +101,7 @@ export const DefaultBookCard = {
     return (
       <div
         style={{
-          maxWidth: "200px",
+          maxWidth: '200px',
         }}
       >
         <BookCard data={caption.contentdata} {...args}></BookCard>
@@ -109,5 +109,5 @@ export const DefaultBookCard = {
     );
   },
 
-  name: "Book Card",
+  name: 'Book Card',
 };

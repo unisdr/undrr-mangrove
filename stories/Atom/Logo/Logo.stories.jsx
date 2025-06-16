@@ -1,25 +1,25 @@
-import { Logo } from "./Logo";
+import { Logo } from './Logo';
 
-import logo from "../../assets/images/undrr-logo-blue.svg";
-import logoWhite from "../../assets/images/undrr-logo-white.svg";
-import logoSquare from "../../assets/images/undrr-logo-square-blue.svg";
-import logoSquareWhite from "../../assets/images/undrr-logo-square-white.svg";
+import logo from '../../assets/images/undrr-logo-blue.svg';
+import logoWhite from '../../assets/images/undrr-logo-white.svg';
+import logoSquare from '../../assets/images/undrr-logo-square-blue.svg';
+import logoSquareWhite from '../../assets/images/undrr-logo-square-white.svg';
 
 export default {
-  title: "Components/Logos",
+  title: 'Components/Logos',
 
   parameters: {
     backgrounds: {
-      default: "white",
+      default: 'white',
 
       values: [
         {
-          name: "white",
-          value: "#fff",
+          name: 'white',
+          value: '#fff',
         },
         {
-          name: "dark",
-          value: "#004f91",
+          name: 'dark',
+          value: '#004f91',
         },
       ],
     },
@@ -27,28 +27,28 @@ export default {
 };
 
 export const DefaultUndrrLogoBlue = {
-  render: () => <Logo src={logo} alt={"UNDRR logo"} />,
-  name: "UNDRR logo - blue",
+  render: () => <Logo src={logo} alt={'UNDRR logo'} />,
+  name: 'UNDRR logo - blue',
 
   parameters: {
     backgrounds: {
-      default: "white",
+      default: 'white',
     },
   },
 };
 
 export const DefaultUndrrLogoWhite = {
-  render: () => <Logo src={logoWhite} alt={"UNDRR logo"} />,
-  name: "UNDRR logo - white",
+  render: () => <Logo src={logoWhite} alt={'UNDRR logo'} />,
+  name: 'UNDRR logo - white',
 
   parameters: {
     backgrounds: {
-      default: "dark",
+      default: 'dark',
     },
 
     docs: {
       inlineStories: false,
-      iframeHeight: "200px",
+      iframeHeight: '200px',
     },
   },
 };
@@ -57,18 +57,18 @@ export const DefaultUndrrLogoSquareBlue = {
   render: () => (
     <div
       style={{
-        maxWidth: "200px",
+        maxWidth: '200px',
       }}
     >
-      <Logo src={logoSquare} alt={"UNDRR logo"} />
+      <Logo src={logoSquare} alt={'UNDRR logo'} />
     </div>
   ),
 
-  name: "UNDRR logo square - blue",
+  name: 'UNDRR logo square - blue',
 
   parameters: {
     backgrounds: {
-      default: "white",
+      default: 'white',
     },
 
     docs: {
@@ -81,18 +81,18 @@ export const DefaultUndrrLogoSquareWhite = {
   render: () => (
     <div
       style={{
-        maxWidth: "200px",
+        maxWidth: '200px',
       }}
     >
-      <Logo src={logoSquareWhite} alt={"UNDRR logo"} />
+      <Logo src={logoSquareWhite} alt={'UNDRR logo'} />
     </div>
   ),
 
-  name: "UNDRR logo square - white",
+  name: 'UNDRR logo square - white',
 
   parameters: {
     backgrounds: {
-      default: "dark",
+      default: 'dark',
     },
 
     docs: {

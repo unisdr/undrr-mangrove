@@ -1,11 +1,11 @@
-import { Normalize } from "./Normalize";
+import { Normalize } from './Normalize';
 
 export default {
-  title: "Components/Normalize",
+  title: 'Components/Normalize',
   component: Normalize,
 };
 
 export const DefaultNormalize = {
   render: () => <Normalize />,
-  name: "Normalize",
+  name: 'Normalize',
 };

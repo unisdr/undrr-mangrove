@@ -1,46 +1,46 @@
-import { Ctalink } from "./CtaLink";
+import { Ctalink } from './CtaLink';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { detail1: "READ MORE" };
+    case 'english':
+      const engText = { detail1: 'READ MORE' };
       return engText;
-    case "arabic":
-      const arabicText = { detail1: "اقرأ أكثر" };
+    case 'arabic':
+      const arabicText = { detail1: 'اقرأ أكثر' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { detail1: "ပိုပြီးဖတ်ပါ" };
+    case 'burmese':
+      const burmeseText = { detail1: 'ပိုပြီးဖတ်ပါ' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { detail1: "続きを読む" };
+    case 'japanese':
+      const japaneseText = { detail1: '続きを読む' };
       return japaneseText;
     default:
-      return { detail1: "READ MORE" };
+      return { detail1: 'READ MORE' };
   }
 };
 
 export default {
-  title: "Components/Buttons/CTA link",
+  title: 'Components/Buttons/CTA link',
 
   argTypes: {
     Type: {
-      options: ["Expanding Arrow", "Space"],
+      options: ['Expanding Arrow', 'Space'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Expanding Arrow",
+      defaultValue: 'Expanding Arrow',
     },
 
     Tag: {
-      options: ["Hyperlink", "Inline"],
+      options: ['Hyperlink', 'Inline'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Hyperlink",
+      defaultValue: 'Hyperlink',
     },
   },
 };
@@ -49,10 +49,10 @@ export const DefaultCtaLink = {
   // replace key
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    args["button_option"] = args["Tag"];
-    delete args["Tag"];
+    args['button_option'] = args['Tag'];
+    delete args['Tag'];
     return <Ctalink label={caption.detail1} {...args}></Ctalink>;
   },
 
-  name: "CTA link",
+  name: 'CTA link',
 };

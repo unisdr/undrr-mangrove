@@ -1,40 +1,40 @@
-import { ProgressBarNavigation } from "./ProgressBarNavigation";
+import { ProgressBarNavigation } from './ProgressBarNavigation';
 
 export default {
-  title: "Components/Navigation/Progress bar",
+  title: 'Components/Navigation/Progress bar',
 
   argTypes: {
     Type: {
-      options: ["Large", "Small"],
+      options: ['Large', 'Small'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Large",
+      defaultValue: 'Large',
     },
 
     Colors: {
-      options: ["yellow", "red", "green", "blue"],
+      options: ['yellow', 'red', 'green', 'blue'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "yellow",
+      defaultValue: 'yellow',
     },
   },
 };
 
 export const DefaultProgressBar = {
-  render: (args) => {
+  render: args => {
     return <ProgressBarNavigation {...args}></ProgressBarNavigation>;
   },
 
-  name: "Progress bar",
+  name: 'Progress bar',
 
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
 
     docs: {
       inlineStories: false,

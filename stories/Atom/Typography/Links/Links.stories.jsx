@@ -1,26 +1,26 @@
-import { Link } from "./Links";
+import { Link } from './Links';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { detail: "Default link" };
+    case 'english':
+      const engText = { detail: 'Default link' };
       return engText;
-    case "arabic":
-      const arabicText = { detail: "الارتباط الافتراضي" };
+    case 'arabic':
+      const arabicText = { detail: 'الارتباط الافتراضي' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { detail: "မူရင်းလင့်ခ်" };
+    case 'burmese':
+      const burmeseText = { detail: 'မူရင်းလင့်ခ်' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { detail: "デフォルトのリンク" };
+    case 'japanese':
+      const japaneseText = { detail: 'デフォルトのリンク' };
       return japaneseText;
     default:
-      return { detail: "Default link" };
+      return { detail: 'Default link' };
   }
 };
 
 export default {
-  title: "Components/Typography/Links",
+  title: 'Components/Typography/Links',
 };
 
 export const DefaultLinks = {
@@ -34,5 +34,5 @@ export const DefaultLinks = {
     );
   },
 
-  name: "Links",
+  name: 'Links',
 };

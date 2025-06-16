@@ -1,36 +1,36 @@
-import { Chips } from "./Chips";
+import { Chips } from './Chips';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { detail: "Label" };
+    case 'english':
+      const engText = { detail: 'Label' };
       return engText;
-    case "arabic":
-      const arabicText = { detail: "ملصق" };
+    case 'arabic':
+      const arabicText = { detail: 'ملصق' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { detail: "တံဆိပ်" };
+    case 'burmese':
+      const burmeseText = { detail: 'တံဆိပ်' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { detail: "ラベル" };
+    case 'japanese':
+      const japaneseText = { detail: 'ラベル' };
       return japaneseText;
     default:
-      return { detail: "Label" };
+      return { detail: 'Label' };
   }
 };
 
 export default {
-  title: "Components/Buttons/Chips",
+  title: 'Components/Buttons/Chips',
 
   argTypes: {
     Type: {
-      options: ["Without X", "With X"],
+      options: ['Without X', 'With X'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Without X",
+      defaultValue: 'Without X',
     },
   },
 };
@@ -41,5 +41,5 @@ export const DefaultChips = {
     return <Chips label={caption.detail} {...args}></Chips>;
   },
 
-  name: "Chips",
+  name: 'Chips',
 };
