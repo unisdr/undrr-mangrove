@@ -31,10 +31,7 @@ export default {
         // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
       },
     },
-    '@storybook/addon-viewport',
     '@storybook/addon-links',
-    '@storybook/addon-actions',
-    '@storybook/addon-essentials',
     '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
