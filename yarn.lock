@@ -2087,12 +2087,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@etchteam/storybook-addon-css-variables-theme@github:etchteam/storybook-addon-css-variables-theme#ec865f9f25372304134e7a5b5025c0008e1322f1":
+"@etchteam/storybook-addon-css-variables-theme@github:etchteam/storybook-addon-css-variables-theme#f4c01dc15fd42818a94e16e335cd1f3bce36eee2":
   version: 3.0.0
-  resolution: "@etchteam/storybook-addon-css-variables-theme@https://github.com/etchteam/storybook-addon-css-variables-theme.git#commit=ec865f9f25372304134e7a5b5025c0008e1322f1"
-  peerDependencies:
-    storybook: ^9.0.0
-  checksum: 10/65d60fada8eb123a8e24eea44333802f915873de6935e371640d28524ba8842585fb86a523c56324cd51f54f6453cf853a74527ab28c7da60ef615a16ab838fd
+  resolution: "@etchteam/storybook-addon-css-variables-theme@https://github.com/etchteam/storybook-addon-css-variables-theme.git#commit=f4c01dc15fd42818a94e16e335cd1f3bce36eee2"
+  checksum: 10/5fbaa3eff593431c851a6b84bde83fee57e5df70f7a9db753df493fc78f477d232989723fa0f684286c8fa60bfde4fd0ad6e7e3f943f3404043eefe84417cda7
   languageName: node
   linkType: hard
 
@@ -4564,7 +4562,7 @@ __metadata:
     "@chromatic-com/storybook": "npm:4.0.0"
     "@eslint/eslintrc": "npm:3.3.1"
     "@eslint/js": "npm:9.28.0"
-    "@etchteam/storybook-addon-css-variables-theme": "github:etchteam/storybook-addon-css-variables-theme#ec865f9f25372304134e7a5b5025c0008e1322f1"
+    "@etchteam/storybook-addon-css-variables-theme": "github:etchteam/storybook-addon-css-variables-theme#f4c01dc15fd42818a94e16e335cd1f3bce36eee2"
     "@mdx-js/loader": "npm:3.1.0"
     "@semantic-release/changelog": "npm:^6.0.3"
     "@semantic-release/git": "npm:^10.0.1"
