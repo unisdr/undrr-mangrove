@@ -94,7 +94,7 @@ export const DefaultTable = {
       ></TableTag>
     );
   },
-  name: "Default table",
+  name: 'Default table',
 };
 
 export const StripedTable = {
@@ -112,7 +112,7 @@ export const StripedTable = {
     );
   },
 
-  name: "Striped table",
+  name: 'Striped table',
 };
 
 export const BorderedTable = {
@@ -130,7 +130,7 @@ export const BorderedTable = {
     );
   },
 
-  name: "Bordered table",
+  name: 'Bordered table',
 };
 
 export const SmallTable = {
@@ -148,7 +148,7 @@ export const SmallTable = {
     );
   },
 
-  name: "Small table",
+  name: 'Small table',
 };
 
 export const SmallStripedTable = {
@@ -167,7 +167,7 @@ export const SmallStripedTable = {
     );
   },
 
-  name: "Small striped table",
+  name: 'Small striped table',
 };
 
 export const StackedTable = {
@@ -185,7 +185,7 @@ export const StackedTable = {
     );
   },
 
-  name: "Stacked table (mobile-first)",
+  name: 'Stacked table (mobile-first)',
 };
 
 export const ScrollableTable = {
@@ -203,7 +203,7 @@ export const ScrollableTable = {
     );
   },
 
-  name: "Scrollable table",
+  name: 'Scrollable table',
 };
 
 export const BorderedStackedTable = {
@@ -222,5 +222,5 @@ export const BorderedStackedTable = {
     );
   },
 
-  name: "Bordered stacked table",
+  name: 'Bordered stacked table',
 };
