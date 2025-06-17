@@ -1,83 +1,83 @@
-import { Images } from "./ImageCaptionCredit";
-import sample_imagelg from "../../../assets/images/sample_image-lg.jpg";
-import sample_imagemd from "../../../assets/images/sample_image-md.jpg";
-import sample_imagesm from "../../../assets/images/sample_image-sm.jpg";
+import { Images } from './ImageCaptionCredit';
+import sample_imagelg from '../../../assets/images/sample_image-lg.jpg';
+import sample_imagemd from '../../../assets/images/sample_image-md.jpg';
+import sample_imagesm from '../../../assets/images/sample_image-sm.jpg';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
-        label: ["UNDRR/Ghana", <br />, <strong>Alex Mensah Tenkorang</strong>],
+        label: ['UNDRR/Ghana', <br />, <strong>Alex Mensah Tenkorang</strong>],
         paragraph:
-          "This is a sample text to go along with the imagery of the story",
+          'This is a sample text to go along with the imagery of the story',
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
         label: [
-          "برنامج الأمم المتحدة الإنمائي / أنغولا",
+          'برنامج الأمم المتحدة الإنمائي / أنغولا',
           <br />,
           <strong>جيروم بيل</strong>,
         ],
         paragraph:
-          "الألم بحد ذاته يسبب الكثير من الألم ، لكن التركيز الأساسي ينصب على العميل. Morbi lorem tortor، fermentum eu lorem at، venenatis malesuada laughter.",
+          'الألم بحد ذاته يسبب الكثير من الألم ، لكن التركيز الأساسي ينصب على العميل. Morbi lorem tortor، fermentum eu lorem at، venenatis malesuada laughter.',
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
-        label: ["UNDRR/အန်ဂိုလာ", <br />, <strong>ဂျရုမ်း ဘဲလ်</strong>],
+        label: ['UNDRR/အန်ဂိုလာ', <br />, <strong>ဂျရုမ်း ဘဲလ်</strong>],
         paragraph:
-          "နာကျင်မှုကိုယ်တိုင်က နာကျင်ပေမယ့် အဓိက အာရုံစိုက်တာက ဖောက်သည်အပေါ်ပါ။ Morbi lorem tortor, fermentum eu lorem at, venenatis malesuada ရယ်မောခြင်း။",
+          'နာကျင်မှုကိုယ်တိုင်က နာကျင်ပေမယ့် အဓိက အာရုံစိုက်တာက ဖောက်သည်အပေါ်ပါ။ Morbi lorem tortor, fermentum eu lorem at, venenatis malesuada ရယ်မောခြင်း။',
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
-        label: ["UNDRR /アンゴラ", <br />, <strong>ジェロームベル</strong>],
+        label: ['UNDRR /アンゴラ', <br />, <strong>ジェロームベル</strong>],
         paragraph:
-          "痛み自体は多くの痛みですが、主な焦点は顧客にあります。 Morbi lorem tortor、fermentum eu lorem at、venenatismalesuadaの笑い声。",
+          '痛み自体は多くの痛みですが、主な焦点は顧客にあります。 Morbi lorem tortor、fermentum eu lorem at、venenatismalesuadaの笑い声。',
       };
       return japaneseText;
     default:
       return {
-        label: ["UNDRR/Ghana", <br />, <strong>Alex Mensah Tenkorang</strong>],
+        label: ['UNDRR/Ghana', <br />, <strong>Alex Mensah Tenkorang</strong>],
         paragraph:
-          "This is a sample text to go along with the imagery of the story",
+          'This is a sample text to go along with the imagery of the story',
       };
   }
 };
 
 export default {
-  title: "Components/Images/Image with credit + caption",
+  title: 'Components/Images/Image with credit + caption',
 
   argTypes: {
     size: {
-      options: ["wide", "medium", "portrait"],
+      options: ['wide', 'medium', 'portrait'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "wide",
+      defaultValue: 'wide',
     },
 
     caption: {
-      options: ["true", "false"],
+      options: ['true', 'false'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "true",
+      defaultValue: 'true',
     },
 
     credit: {
-      options: ["true", "false"],
+      options: ['true', 'false'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "true",
+      defaultValue: 'true',
     },
   },
 };
@@ -99,7 +99,7 @@ export const DefaultImageWithCreditCaption = {
     );
   },
 
-  name: "Image with credit + caption",
+  name: 'Image with credit + caption',
 
   parameters: {
     docs: {

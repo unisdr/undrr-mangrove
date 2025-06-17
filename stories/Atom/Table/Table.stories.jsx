@@ -1,82 +1,82 @@
-import { TableTag } from "./Table";
+import { TableTag } from './Table';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
-        headertext: "Table header",
-        tdtext: "Content Goes Here",
+        headertext: 'Table header',
+        tdtext: 'Content Goes Here',
         details:
-          "In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate",
+          'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate',
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
-        headertext: "رأس الجدول",
-        tdtext: "المحتوى يذهب هنا",
+        headertext: 'رأس الجدول',
+        tdtext: 'المحتوى يذهب هنا',
         details:
-          "في النشر والتصميم الجرافيكي ، الدمية هي عنصر نائب يستخدم عادة للتوضيح",
+          'في النشر والتصميم الجرافيكي ، الدمية هي عنصر نائب يستخدم عادة للتوضيح',
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
-        headertext: "ဇယားခေါင်းစီး",
-        tdtext: "အကြောင်းအရာကဒီမှာ",
+        headertext: 'ဇယားခေါင်းစီး',
+        tdtext: 'အကြောင်းအရာကဒီမှာ',
         details:
-          "ထုတ်ဝေခြင်းနှင့် ဂရပ်ဖစ်ဒီဇိုင်းများတွင်၊  သည် သရုပ်ပြရန်အတွက် အသုံးများသော နေရာယူထားသော စာသားဖြစ်သည်။",
+          'ထုတ်ဝေခြင်းနှင့် ဂရပ်ဖစ်ဒီဇိုင်းများတွင်၊  သည် သရုပ်ပြရန်အတွက် အသုံးများသော နေရာယူထားသော စာသားဖြစ်သည်။',
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
-        headertext: "テーブルヘッダー",
-        tdtext: "コンテンツはここにあります",
+        headertext: 'テーブルヘッダー',
+        tdtext: 'コンテンツはここにあります',
         details:
-          "出版やグラフィックデザインでは、ダミーはデモンストレーションに一般的に使用されるプレースホルダーテキストです",
+          '出版やグラフィックデザインでは、ダミーはデモンストレーションに一般的に使用されるプレースホルダーテキストです',
       };
       return japaneseText;
     default:
       return {
-        headertext: "Table header",
-        tdtext: "Content Goes Here",
+        headertext: 'Table header',
+        tdtext: 'Content Goes Here',
         details:
-          "In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate",
+          'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate',
       };
   }
 };
 
 export default {
-  title: "Components/Table",
+  title: 'Components/Table',
   component: TableTag,
 
   argTypes: {
     size: {
-      options: ["large", "small"],
+      options: ['large', 'small'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "large",
+      defaultValue: 'large',
     },
 
     variant: {
-      options: ["default", "striped", "border"],
+      options: ['default', 'striped', 'border'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "default",
+      defaultValue: 'default',
     },
 
     responsive: {
-      options: ["stacked", "auto", "scroll"],
+      options: ['stacked', 'auto', 'scroll'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "auto",
+      defaultValue: 'auto',
     },
   },
 };
@@ -94,6 +94,133 @@ export const DefaultTable = {
       ></TableTag>
     );
   },
+  name: 'Default table',
+};
 
-  name: "Table",
+export const StripedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        variant="striped"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Striped table',
+};
+
+export const BorderedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        variant="border"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Bordered table',
+};
+
+export const SmallTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        size="small"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Small table',
+};
+
+export const SmallStripedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        size="small"
+        variant="striped"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Small striped table',
+};
+
+export const StackedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        responsive="stacked"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Stacked table (mobile-first)',
+};
+
+export const ScrollableTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        responsive="scroll"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Scrollable table',
+};
+
+export const BorderedStackedTable = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <TableTag
+        text={caption.headertext}
+        tdtext={caption.tdtext}
+        details={caption.details}
+        variant="border"
+        responsive="stacked"
+        {...args}
+      ></TableTag>
+    );
+  },
+
+  name: 'Bordered stacked table',
 };

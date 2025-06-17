@@ -1,18 +1,18 @@
-import { Authorimg } from "./AuthorImages";
-import user from "../../../assets/images/author.png";
+import { Authorimg } from './AuthorImages';
+import user from '../../../assets/images/author.png';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {};
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {};
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {};
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {};
       return japaneseText;
     default:
@@ -21,27 +21,27 @@ const getCaptionForLocale = (locale) => {
 };
 
 export default {
-  title: "Components/Images/Author image",
+  title: 'Components/Images/Author image',
 
   argTypes: {
     variant: {
-      options: ["Large", "Small"],
+      options: ['Large', 'Small'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Small",
+      defaultValue: 'Small',
     },
 
     hovercolor: {
-      options: ["yellow", "red", "green", "blue"],
+      options: ['yellow', 'red', 'green', 'blue'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "yellow",
+      defaultValue: 'yellow',
     },
   },
 };
@@ -52,5 +52,5 @@ export const DefaultAuthorImage = {
     return <Authorimg image={user} alt="Headshot of XYZ" {...args}></Authorimg>;
   },
 
-  name: "Author image",
+  name: 'Author image',
 };

@@ -1,7 +1,7 @@
-import ConnectedScatterplot from "./ConnectedScatterplot";
+import ConnectedScatterplot from './ConnectedScatterplot';
 
 export default {
-  title: "Components/Charts/ConnectedScatterplot",
+  title: 'Components/Charts/ConnectedScatterplot',
   component: ConnectedScatterplot,
 };
 
@@ -51,7 +51,7 @@ export const DefaultConnectedScatterplot = {
     />
   ),
 
-  name: "Default ConnectedScatterplot",
+  name: 'Default ConnectedScatterplot',
 };
 
 export const CustomRtlConnectedScatterplot = {
@@ -101,7 +101,7 @@ export const CustomRtlConnectedScatterplot = {
     />
   ),
 
-  name: "Custom RTL ConnectedScatterplot",
+  name: 'Custom RTL ConnectedScatterplot',
 };
 
 export const CustomConnectedScatterplot = {
@@ -146,5 +146,5 @@ export const CustomConnectedScatterplot = {
     />
   ),
 
-  name: "Custom ConnectedScatterplot",
+  name: 'Custom ConnectedScatterplot',
 };

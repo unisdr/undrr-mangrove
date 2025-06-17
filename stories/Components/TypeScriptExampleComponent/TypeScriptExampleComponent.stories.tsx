@@ -1,13 +1,15 @@
-import React from "react";
-import TypeScriptExampleComponent from "./TypeScriptExampleComponent"
-import { ComponentMeta, ComponentStory} from "@storybook/react-webpack5"
+import React from 'react';
+import TypeScriptExampleComponent from './TypeScriptExampleComponent';
+import { ComponentMeta, ComponentStory } from '@storybook/react-webpack5';
 
 export default {
-  title: "Example/TypeScript Component",
+  title: 'Example/TypeScript Component',
   component: TypeScriptExampleComponent,
-} as ComponentMeta<typeof TypeScriptExampleComponent>
+} as ComponentMeta<typeof TypeScriptExampleComponent>;
 
-const Template: ComponentStory<typeof TypeScriptExampleComponent> = (args: React.ComponentProps<typeof TypeScriptExampleComponent>) => <TypeScriptExampleComponent {...args} />;
+const Template: ComponentStory<typeof TypeScriptExampleComponent> = (
+  args: React.ComponentProps<typeof TypeScriptExampleComponent>
+) => <TypeScriptExampleComponent {...args} />;
 export const Submit = Template.bind({});
 Submit.args = {
   label: 'Button',

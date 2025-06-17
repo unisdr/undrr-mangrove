@@ -1,47 +1,47 @@
-import MultiSelect from "./MultiSelect";
+import MultiSelect from './MultiSelect';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = "Category";
+    case 'english':
+      const engText = 'Category';
       return engText;
-    case "arabic":
-      const arabicText = "فئة";
+    case 'arabic':
+      const arabicText = 'فئة';
       return arabicText;
-    case "burmese":
-      const burmeseText = "အမျိုးအစား";
+    case 'burmese':
+      const burmeseText = 'အမျိုးအစား';
       return burmeseText;
-    case "japanese":
-      const japaneseText = "カテゴリー";
+    case 'japanese':
+      const japaneseText = 'カテゴリー';
       return japaneseText;
     default:
-      return "Category";
+      return 'Category';
   }
 };
 
 export default {
-  title: "Components/Forms/Dropdown/MultiSelect",
+  title: 'Components/Forms/Dropdown/MultiSelect',
   component: MultiSelect,
 
   argTypes: {
     Height: {
-      options: ["Fix height", "Auto height"],
+      options: ['Fix height', 'Auto height'],
 
       control: {
-        type: "radio",
+        type: 'radio',
       },
 
-      defaultValue: "Auto height",
+      defaultValue: 'Auto height',
     },
 
     variant: {
-      options: ["Radio", "Checkbox"],
+      options: ['Radio', 'Checkbox'],
 
       control: {
-        type: "radio",
+        type: 'radio',
       },
 
-      defaultValue: "Checkbox",
+      defaultValue: 'Checkbox',
     },
   },
 };
@@ -59,5 +59,5 @@ export const DefaultMultiSelect = {
     );
   },
 
-  name: "MultiSelect",
+  name: 'MultiSelect',
 };

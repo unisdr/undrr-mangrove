@@ -1,40 +1,40 @@
-import MapComponent, { transformData } from "./MapComponent";
-import Fetcher from "../Fetcher/Fetcher";
-import { Loader } from "../../Utilities/Loader/Loader";
+import MapComponent, { transformData } from './MapComponent';
+import Fetcher from '../Fetcher/Fetcher';
+import { Loader } from '../../Utilities/Loader/Loader';
 
 export default {
-  title: "Components/Maps/MapComponent",
+  title: 'Components/Maps/MapComponent',
   component: MapComponent,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     data: {
-      control: { type: "object" },
-      description: "Data to be displayed on the map",
+      control: { type: 'object' },
+      description: 'Data to be displayed on the map',
     },
     center: {
-      control: { type: "array" },
-      description: "Initial center of the map (latitude, longitude)",
+      control: { type: 'array' },
+      description: 'Initial center of the map (latitude, longitude)',
       defaultValue: [20, 0],
     },
     zoom: {
-      control: { type: "number" },
-      description: "Initial zoom level of the map",
+      control: { type: 'number' },
+      description: 'Initial zoom level of the map',
       defaultValue: 2,
     },
     maxZoom: {
-      control: { type: "number" },
-      description: "Maximum zoom level of the map",
+      control: { type: 'number' },
+      description: 'Maximum zoom level of the map',
       defaultValue: 5,
     },
     minZoom: {
-      control: { type: "number" },
-      description: "Minimum zoom level of the map",
+      control: { type: 'number' },
+      description: 'Minimum zoom level of the map',
       defaultValue: 2,
     },
   },
 };
 
-const Template = (args) => (
+const Template = args => (
   <Fetcher
     api="https://sendaicommitments.undrr.org/api/v2/content/commitments-metrics"
     render={({ isLoading, data }) => (

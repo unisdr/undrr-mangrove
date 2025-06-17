@@ -1,26 +1,26 @@
-import { Radio } from "./Radio";
+import { Radio } from './Radio';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { label: "Category" };
+    case 'english':
+      const engText = { label: 'Category' };
       return engText;
-    case "arabic":
-      const arabicText = { label: "فئة" };
+    case 'arabic':
+      const arabicText = { label: 'فئة' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { label: "အမျိုးအစား" };
+    case 'burmese':
+      const burmeseText = { label: 'အမျိုးအစား' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { label: "カテゴリー" };
+    case 'japanese':
+      const japaneseText = { label: 'カテゴリー' };
       return japaneseText;
     default:
-      return { label: "Category" };
+      return { label: 'Category' };
   }
 };
 
 export default {
-  title: "Components/Forms/Radio",
+  title: 'Components/Forms/Radio',
 };
 
 export const DefaultRadio = {
@@ -29,5 +29,5 @@ export const DefaultRadio = {
     return <Radio label={caption.label} id="undrr" name="undrr"></Radio>;
   },
 
-  name: "Radio",
+  name: 'Radio',
 };

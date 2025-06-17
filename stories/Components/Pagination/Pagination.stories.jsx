@@ -1,26 +1,26 @@
-import { Pagination } from "./Pagination";
+import { Pagination } from './Pagination';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { text: "Page", text2: "of" };
+    case 'english':
+      const engText = { text: 'Page', text2: 'of' };
       return engText;
-    case "arabic":
-      const arabicText = { text: "صفحة", text2: "من" };
+    case 'arabic':
+      const arabicText = { text: 'صفحة', text2: 'من' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { text: "စာမျက်နှာ", text2: "၏" };
+    case 'burmese':
+      const burmeseText = { text: 'စာမျက်နှာ', text2: '၏' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { text: "ページ", text2: "の" };
+    case 'japanese':
+      const japaneseText = { text: 'ページ', text2: 'の' };
       return japaneseText;
     default:
-      return { text: "Page", text2: "of" };
+      return { text: 'Page', text2: 'of' };
   }
 };
 
 export default {
-  title: "Components/Navigation/Pagination",
+  title: 'Components/Navigation/Pagination',
 };
 
 export const DefaultPagination = {
@@ -29,5 +29,5 @@ export const DefaultPagination = {
     return <Pagination text={caption.text} text2={caption.text2}></Pagination>;
   },
 
-  name: "Pagination",
+  name: 'Pagination',
 };

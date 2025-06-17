@@ -1,75 +1,75 @@
-import { Breadcrumbcomponent } from "./Breadcrumbs";
+import { Breadcrumbcomponent } from './Breadcrumbs';
 
-const getCaptionForLocale = (locale) => {
+const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
         data: [
           {
-            text: "Home",
+            text: 'Home',
           },
           {
-            text: "Second-level",
+            text: 'Second-level',
           },
           {
-            text: "Third-level",
+            text: 'Third-level',
           },
           {
-            text: "Page title",
+            text: 'Page title',
           },
         ],
       };
       return engText.data;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
         data: [
           {
-            text: "الصفحة الرئيسية",
+            text: 'الصفحة الرئيسية',
           },
           {
-            text: "المستوى الثاني",
+            text: 'المستوى الثاني',
           },
           {
-            text: "المستوى الثالث",
+            text: 'المستوى الثالث',
           },
           {
-            text: "عنوان الصفحة",
+            text: 'عنوان الصفحة',
           },
         ],
       };
       return arabicText.data;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
         data: [
           {
-            text: "အိမ်",
+            text: 'အိမ်',
           },
           {
-            text: "ဒုတိယအဆင့်",
+            text: 'ဒုတိယအဆင့်',
           },
           {
-            text: "တတိယအဆင့်",
+            text: 'တတိယအဆင့်',
           },
           {
-            text: "စာမျက်နှာခေါင်းစဉ်",
+            text: 'စာမျက်နှာခေါင်းစဉ်',
           },
         ],
       };
       return burmeseText.data;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
         data: [
           {
-            text: "家",
+            text: '家',
           },
           {
-            text: "セカンドレベル",
+            text: 'セカンドレベル',
           },
           {
-            text: "第3レベル",
+            text: '第3レベル',
           },
           {
-            text: "ページタイトル",
+            text: 'ページタイトル',
           },
         ],
       };
@@ -78,16 +78,16 @@ const getCaptionForLocale = (locale) => {
       const dummy = {
         data: [
           {
-            text: "Home",
+            text: 'Home',
           },
           {
-            text: "Second-level",
+            text: 'Second-level',
           },
           {
-            text: "Third-level",
+            text: 'Third-level',
           },
           {
-            text: "Page title",
+            text: 'Page title',
           },
         ],
       };
@@ -96,28 +96,28 @@ const getCaptionForLocale = (locale) => {
 };
 
 export default {
-  title: "Components/Navigation/Breadcrumbs",
+  title: 'Components/Navigation/Breadcrumbs',
 
   argTypes: {
     Color: {
-      options: ["Black", "White"],
+      options: ['Black', 'White'],
 
       control: {
-        type: "inline-radio",
+        type: 'inline-radio',
       },
 
-      defaultValue: "Black",
+      defaultValue: 'Black',
     },
   },
 
   parameters: {
     backgrounds: {
-      default: "white",
+      default: 'white',
 
       values: [
         {
-          name: "gray",
-          value: "#D4D6D8",
+          name: 'gray',
+          value: '#D4D6D8',
         },
       ],
     },
@@ -130,11 +130,38 @@ export const DefaultBreadcrumbs = {
     return <Breadcrumbcomponent data={caption} {...args}></Breadcrumbcomponent>;
   },
 
-  name: "Breadcrumbs",
+  name: 'Breadcrumbs',
 
   parameters: {
     backgrounds: {
-      default: "gray",
+      default: 'gray',
+    },
+  },
+};
+
+export const WhiteBreadcrumbs = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Breadcrumbcomponent
+        data={caption}
+        Color="White"
+        {...args}
+      ></Breadcrumbcomponent>
+    );
+  },
+
+  name: 'White breadcrumbs',
+
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+      values: [
+        {
+          name: 'dark',
+          value: '#1a1a1a',
+        },
+      ],
     },
   },
 };

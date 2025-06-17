@@ -17,59 +17,101 @@ export const getCaptionForLocale = (locale) => {
 
 # Table
 
-Tables are used to represent data sets that are easy to understand and access.
+When you need to present large datasets in a way that's actually readable (and doesn't make users want to throw their laptop out the window), tables are your best friend.  All tables require the `.mg-table` class as the foundation.
 
-### Overview
+### When to use tables
 
-Tables are used for large volumes of data that can be accessed easily and understandable by the user. These tables are created using various modifiers like default, striped, bordered, small, stacked, scroll.
+- **Large datasets:** When you have substantial amounts of structured data
+- **Comparative data:** Perfect for side-by-side comparisons
+- **Scannable information:** Users need to quickly find specific data points
+- **Reports and analytics:** Financial data, metrics, or any tabular reporting
 
-#### When to use:
+## Styling variants
 
-These tables are used when there is huge data. When there is a huge volume of data to handle. Using this the data can be accessed easily.
+### Default table
 
-### Formatting
+Your basic table setup—clean, simple, and gets the job done.
 
-#### Default
+<Story of={TableStories.DefaultTable} />
 
-The table is large in size, variant default and responsive is auto
+### Striped table
 
-### Behaviors
+Alternating row colors make it easier to scan across columns, especially with wide datasets. This applies the `.mg-table--striped` class.
 
-#### States
+<Story of={TableStories.StripedTable} />
 
-The tables are created using various modifiers:
+### Bordered table
 
-**Default**: In this, there are 2 different states:
+Clear cell boundaries for when you need extra visual definition. Uses the `.mg-table--border` class.
 
-Large: In this state, the table size will be large, the variant is the default, and has auto responsive.
-Small: In the state, the table size is small, the variant is the default, and has auto responsive.
+<Story of={TableStories.BorderedTable} />
 
-**Selected**: In this, it has 2 different types of modifiers:
+## Size options
 
-Striped: The table size can be larger, or small, the variant is striped and the responsiveness of the table is either stacked, auto or scroll.
+### Small table
 
-Stripped with stacked table view: In this, the table has stripped rows with stacked views.
+Compact tables for dense information or smaller spaces. Applies `.mg-table--small` for reduced font size and padding.
 
-Stripped with scrolled table view: In this, the table has a stripped style of view with scrollable content.
+<Story of={TableStories.SmallTable} />
 
-The table size can be large or small, the variant is the border. The responsiveness of the table is either stacked, auto or scroll.
+### Small striped table
 
-* Border with stacked table view: This table has a border and will be stacked.
-* Border with scroll table view:  In this, the table has a border and will be scrollable.
+Combining size and styling variants—perfect for detailed data in tight spaces.
 
-<Canvas>
-  <Story of={TableStories.DefaultTable} />
-</Canvas>
+<Story of={TableStories.SmallStripedTable} />
 
-### Usage
+## Responsive behaviors
 
-* Select the size control as either Large or Small, variant as Default, Stripped or Border and responsive control as Stacked, Auto or Scroll from the control tab of canvas.
-* Copy the HTML from the HTML tab
+### Stacked table (mobile-first)
 
-### Interactions
+On smaller screens, this converts to a card-like layout using `.mg-table--stacked`. Resize your browser to see the magic happen.
 
-No interactions are needed with the progress bar.
+<Story of={TableStories.StackedTable} />
 
-### Changelog
+### Scrollable table
 
-1.0 — Released component
+For wide tables that need horizontal scrolling. The `.mg-table--scroll` class provides smooth horizontal navigation directly on the table element.
+
+<Story of={TableStories.ScrollableTable} />
+
+### Bordered stacked table
+
+You can combine styling and responsive modifiers—here's a bordered table that stacks on mobile.
+
+<Story of={TableStories.BorderedStackedTable} />
+
+## Implementation notes
+
+Here's what's happening under the hood: The table component automatically applies CSS classes based on your props, building combinations like `mg-table mg-table--small mg-table--striped mg-table--stacked` for complex layouts.
+
+**Pro tip:** Striped tables work especially well for financial data or any content where users need to track across multiple columns—the alternating colors act like visual guidelines.
+
+### CSS class structure
+
+- **Base:** `mg-table` (required on all tables)
+- **Size:** `mg-table--small` (large is default)
+- **Styling:** `mg-table--striped`, `mg-table--border`
+- **Responsive:** `mg-table--stacked`, `mg-table--scroll`
+
+### Setup steps
+
+1. **Choose your size:** Select Large or Small from the size control
+2. **Pick a variant:** Default, Striped, or Bordered from the variant control
+3. **Set responsiveness:** Choose Stacked, Auto, or Scroll from the responsive control
+4. **Copy the code:** Grab the HTML from the HTML tab and you're good to go
+
+## Usage guidelines
+
+The table component handles all the responsive heavy lifting for you, so you can focus on your content rather than wrestling with CSS breakpoints. Mix and match variants to create exactly the table experience your users need.
+
+### Accessibility considerations
+
+- Tables include proper semantic structure with `thead` and `tbody`
+- Scrollable tables are keyboard navigable with `tabIndex="0"`
+- RTL (right-to-left) language support is built-in
+
+## Changelog
+
+**2.0** — **Breaking change:** All `table` elements must now include the `.mg-table` class for proper styling and functionality.
+
+**1.0** — Released component
