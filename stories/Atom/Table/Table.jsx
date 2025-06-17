@@ -1,12 +1,4 @@
 import React from 'react';
-// import './table.scss';
-
-const TableScroll = ({ tableType, children }) => (tableType == 'scroll' ?
-	<div className="scroll" tabIndex="0">
-		{children}
-	</div>
-	: children
-);
 
 export const variant_options = {
 	default: "",
@@ -31,44 +23,17 @@ export const TableTag = ({ text, tdtext, details, variant, size, responsive, ...
 	let table_type = variant_options[`${variant}`];
 	let table_size = variant_options1[`${size}`];
 	let table_responsive = variant_options2[`${responsive}`];
+
+	// Build the complete CSS class string
+	const tableClasses = [
+		'mg-table',
+		table_size && `mg-table--${table_size}`,
+		table_type && `mg-table--${table_type}`,
+		table_responsive && responsive !== 'auto' && `mg-table--${table_responsive}`
+	].filter(Boolean).join(' ');
+
 	return (
-		<TableScroll tableType={responsive}>
-      {variant === 'default' && size === 'large' && responsive === 'auto'
-      ? (
-        <table>
-          	<thead>
-					<tr>
-						<th>{text}</th>
-						<th>{text}</th>
-						<th>{text}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{tdtext}</td>
-						<td>{tdtext}</td>
-						<td>{details}</td>
-					</tr>
-					<tr>
-						<td>{tdtext}</td>
-						<td>{tdtext}</td>
-						<td>{details}</td>
-					</tr>
-					<tr>
-						<td>{tdtext}</td>
-						<td>{tdtext}</td>
-						<td>{details}</td>
-					</tr>
-					<tr>
-						<td>{tdtext}</td>
-						<td>{tdtext}</td>
-						<td>{details}</td>
-					</tr>
-				</tbody>
-      </table>
-      )
-      : (
-			<table className={cls(`${table_type}`, `${table_size}`, `${table_responsive}`)}>
+		<table className={tableClasses} tabIndex={responsive === 'scroll' ? "0" : undefined}>
 				<thead>
 					<tr>
 						<th>{text}</th>
@@ -98,9 +63,7 @@ export const TableTag = ({ text, tdtext, details, variant, size, responsive, ...
 						<td>{details}</td>
 					</tr>
 				</tbody>
-      </table>
-      )}
-		</TableScroll>
+		</table>
 	);
 };
 

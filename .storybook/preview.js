@@ -54,6 +54,7 @@ export const parameters = {
     storySort: {
       method: 'alphabetical',
       order: [
+        'Introduction',
         'Getting started',
         ['Intro', 'How to use our design system?', 'Browser support'],
         'Design decisions',
