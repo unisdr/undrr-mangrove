@@ -4797,7 +4797,7 @@ __metadata:
     eslint-config-prettier: "npm:10.1.5"
     eslint-plugin-import: "npm:2.31.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
-    eslint-plugin-mdx: "npm:3.4.2"
+    eslint-plugin-mdx: "npm:3.5.0"
     eslint-plugin-prettier: "npm:^5.4.1"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
@@ -9562,7 +9562,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-mdx@npm:^3.4.2":
+"eslint-mdx@npm:^3.5.0":
   version: 3.5.0
   resolution: "eslint-mdx@npm:3.5.0"
   dependencies:
@@ -9655,24 +9655,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-mdx@npm:3.4.2":
-  version: 3.4.2
-  resolution: "eslint-plugin-mdx@npm:3.4.2"
+"eslint-plugin-mdx@npm:3.5.0":
+  version: 3.5.0
+  resolution: "eslint-plugin-mdx@npm:3.5.0"
   dependencies:
-    eslint-mdx: "npm:^3.4.2"
+    eslint-mdx: "npm:^3.5.0"
     mdast-util-from-markdown: "npm:^2.0.2"
     mdast-util-mdx: "npm:^3.0.0"
     micromark-extension-mdxjs: "npm:^3.0.0"
     remark-mdx: "npm:^3.1.0"
     remark-parse: "npm:^11.0.0"
     remark-stringify: "npm:^11.0.0"
-    synckit: "npm:^0.11.4"
-    tslib: "npm:^2.8.1"
+    synckit: "npm:^0.11.8"
     unified: "npm:^11.0.5"
     vfile: "npm:^6.0.3"
   peerDependencies:
     eslint: ">=8.0.0"
-  checksum: 10/d0a22ff9d2f272e3de8890952dfe48526279103c954344ed56a711d4b4e20f7a62da5b5a05e0abfb44d33f4deebd1808557775bf2fd4742345a506f63964d8ec
+  checksum: 10/25509eae8e3a2d21689b1808a4afa99b02402b0492470c915d13cc781d12705680ce1765f424d882e8d77fa4de9b6d4b5a5e1077bd3f0799cb6384263f2fd66f
   languageName: node
   linkType: hard
 
@@ -20528,7 +20527,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:^0.11.4, synckit@npm:^0.11.7, synckit@npm:^0.11.8":
+"synckit@npm:^0.11.7, synckit@npm:^0.11.8":
   version: 0.11.8
   resolution: "synckit@npm:0.11.8"
   dependencies:
