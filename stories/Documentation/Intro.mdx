@@ -2,24 +2,41 @@ import { Meta, Source } from '@storybook/blocks';
 import { linkTo } from '@storybook/addon-links';
 
 <Meta
-  title="Getting started/Intro"
+  title="Introduction"
   parameters={{
     viewMode: "docs",
     previewTabs: {
       canvas: { hidden: true }
-    }
+    },
+    order: 1
   }}
 />
 
-# Welcome
+# Welcome to Mangrove
 
-By unifying design elements into reusable components, development is simplified, accelerated and more reliable. Serving the interests of the organization and users. This project is under active development. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
+The Mangrove Component Library marks a quiet revolution in how UNDRR approaches its digital presence.
 
-This project stops short of being a full design system and instead focus on providing usable components that are informed by the UNDRR brand guidelines and project styles.
+For years, each UNDRR web property -- PreventionWeb and UNDRR.org to SFM, IRP, and so on -- operated in isolation. They maintained their own UI elements, coded navigation menus differently, and handled accessibility fixes in their own way. When something needed fixing like a screen reader incompatibility or a JavaScript bug in the header, it often had to be fixed not once, but ten times. Multiply that by every update, redesign, or new feature, and the cost of fragmentation became clear.
 
-These components offer consistency, documentation and portability to speed quality development with the expected look and feel. These will also help reduce entropy, critical in ensuring websites remain accessible.
+Mangrove offers a better way. By centralizing a shared design system, UNDRR is moving from siloed, repetitive development toward a more strategic, collaborative model. Instead of forking components across platforms, we're investing in a single, reusable library—built to scale, accessible by default, and ready to serve content consistently across platforms.
 
-If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us in the issue queue.
+This isn't just a technical upgrade. It's a shift in mindset. It means our users get a familiar, accessible experience no matter where they land. It means content created in one system can flow seamlessly into another. And it means our limited development capacity can focus on what matters: delivering new features, meeting user needs, and responding quickly when things break.
+
+## Key benefits
+
+* ✅ **Standardization reduces duplication**: Fixes and improvements are applied once, not across multiple systems
+* ✅ **Better user experience**: A unified interface improves navigation, familiarity, and trust
+* ✅ **Accessibility by default**: Centralized components make compliance easier and more consistent
+* ✅ **Faster, focused development**: Developers spend less time reinventing and more time innovating
+* ✅ **Cross-site content sharing**: Consistent design enables syndication of news, publications, and more
+
+This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles. These components offer consistency, documentation and portability to speed quality development with the expected look and feel, while helping reduce entropy—critical in ensuring websites remain accessible.
+
+Mangrove is how we future-proof our platform. It's how we scale with integrity, accessibility, and resilience. And it's one of the most practical investments we can make in the long-term strength of UNDRR's web ecosystem.
+
+
+
+
 
 ---
 
@@ -39,13 +56,11 @@ Full React components with TypeScript integrations, props-based customization, a
 **📋 <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')}>Best Practices</a>**
 Performance optimization, accessibility guidelines, and development best practices.
 
----
-
 ## Process
 
-If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us.
-
-Components can be created and are also subject to updates and removal. These changes are documented -- if you'd like to request a new component, [get in touch](https://github.com/unisdr/undrr-mangrove).
+- If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us.
+- Components can be created and are also subject to updates and removal. These changes are documented -- if you'd like to request a new component, [get in touch](https://github.com/unisdr/undrr-mangrove).
+- [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
 ## Structure
 
