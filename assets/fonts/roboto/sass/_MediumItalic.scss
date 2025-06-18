@@ -2,7 +2,12 @@
 @font-face {
   font-family: Roboto;
 
-  @include fontdef-woff($font-path-roboto, $FontName, $font-version, "MediumItalic");
+  @include fontdef-woff(
+    $font-path-roboto,
+    $FontName,
+    $font-version,
+    "MediumItalic"
+  );
 
   font-weight: 500;
   font-style: italic;

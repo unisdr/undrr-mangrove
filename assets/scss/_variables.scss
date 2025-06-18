@@ -192,6 +192,7 @@ $mg-font-size-1100: 6.4rem;
 $mg-font-body: $mg-font-size-300;
 $mg-font-label: $mg-font-size-200;
 $mg-font-line-height-500: 1.25em;
+$mg-font-line-height-700: 1.5em;
 
 // This is not really a "varaible" but kept here for now
 // until we more fully rationalise our design decisions
@@ -232,6 +233,7 @@ $mg-font-line-height-500: 1.25em;
 
 $mg-font-family: "Roboto", sans-serif;
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
+$mg-font-family-icons: "fontawesome";
 
 // $mg-font-family-icons: "mangrove-icon-set";
 // Not yet activated as we are using the FontAwesome namespace
