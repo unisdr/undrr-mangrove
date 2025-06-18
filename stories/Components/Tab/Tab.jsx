@@ -13,22 +13,42 @@ export function Tab({ tabdata, variant }) {
     mgTabs();
   }, []);
   return tabdata ? (
-    <article className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`} data-mg-js-tabs data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}>
+    <article
+      className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}
+      data-mg-js-tabs
+      data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}
+    >
       <ul className="mg-tabs__list">
         {tabdata.map((tab, index) => (
           <React.Fragment key={`tab-group-${index}`}>
             <li className="mg-tabs__item">
-              <a className="mg-tabs__link" href={`#mg-tabs__section-${tab.text_id}`} data-mg-js-tabs-default={tab.is_default}>{tab.text}</a>
+              <a
+                className="mg-tabs__link"
+                href={`#mg-tabs__section-${tab.text_id}`}
+                data-mg-js-tabs-default={tab.is_default}
+              >
+                {tab.text}
+              </a>
             </li>
             <li className="mg-tabs-content" data-mg-js-tabs-content>
-              <section className="mg-tabs__section" id={`mg-tabs__section-${tab.text_id}`}>
-                {tab.data ? <div dangerouslySetInnerHTML={{ __html: tab.data }} /> : null}
+              <section
+                className="mg-tabs__section"
+                id={`mg-tabs__section-${tab.text_id}`}
+              >
+                {tab.data ? (
+                  <div dangerouslySetInnerHTML={{ __html: tab.data }} />
+                ) : null}
               </section>
             </li>
           </React.Fragment>
         ))}
       </ul>
     </article>
-  ) : <div dangerouslySetInnerHTML={{ __html: "<!-- mgTabs: No tab data passed -->" }} />;
+  ) : (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: '<!-- mgTabs: No tab data passed -->',
+      }}
+    />
+  );
 }
-

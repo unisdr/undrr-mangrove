@@ -3,10 +3,10 @@ import { Meta } from '@storybook/blocks';
 <Meta
   title="Getting started/Component contribution guide"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -41,6 +41,7 @@ stories/Components/[ComponentCategory]/[ComponentName]/
 #### Component categories
 
 Place your component in the appropriate category folder:
+
 - `Accordion` - Collapsible content panels
 - `Buttons` - Interactive elements that trigger actions
 - `Cards` - Container components that group related content
@@ -58,9 +59,10 @@ If none of the existing categories fit, discuss with the team before creating a 
 ### React component guidelines
 
 1. **Use functional components with hooks**
+
    ```jsx
    import React from 'react';
-   
+
    export function MyComponent({ prop1, prop2, ...props }) {
      // Implementation
      return (
@@ -72,11 +74,13 @@ If none of the existing categories fit, discuss with the team before creating a 
    ```
 
 2. **Props destructuring and defaults**
+
    - Use destructuring for props
    - Provide default values where appropriate
    - Include prop spread (`...props`) to allow passing HTML attributes to the root element
 
 3. **Class naming conventions**
+
    - All component CSS classes should start with `mg-` prefix
    - Use kebab-case for class names (e.g., `mg-button-primary`)
    - Use BEM methodology for structuring CSS classes
@@ -102,10 +106,12 @@ If none of the existing categories fit, discuss with the team before creating a 
 All components must include comprehensive JSDoc comments to document their purpose, props, and usage. This improves code maintainability and enables better IDE autocompletion and type checking.
 
 1. **Component Documentation**
+
    - Add a JSDoc comment block at the top of each component file
    - Include a description of the component's purpose and functionality
    - Document all props with proper types and descriptions
    - Example:
+
    ```jsx
    /**
     * Button component that follows the Mangrove design system guidelines
@@ -118,15 +124,25 @@ All components must include comprehensive JSDoc comments to document their purpo
     * @param {React.ReactNode} props.children - Button content
     * @returns {JSX.Element} Rendered Button component
     */
-   export function Button({ variant, size = 'md', isFullWidth = false, isDisabled = false, onClick, children, ...props }) {
+   export function Button({
+     variant,
+     size = 'md',
+     isFullWidth = false,
+     isDisabled = false,
+     onClick,
+     children,
+     ...props
+   }) {
      // Implementation
    }
    ```
 
 2. **Function Documentation**
+
    - Document helper functions and hooks with JSDoc comments
    - Specify parameter types, return types, and descriptions
    - Example:
+
    ```jsx
    /**
     * Formats a date according to the specified format
@@ -169,9 +185,9 @@ All components must include comprehensive JSDoc comments to document their purpo
 Mangrove supports TypeScript for component development. Using TypeScript provides several benefits, including improved type safety, better IDE support, and enhanced documentation.
 
 1. **TypeScript Component Structure**
-   
+
    TypeScript components use the `.tsx` extension and follow the same general structure as JavaScript components:
-   
+
    ```
    stories/Components/[ComponentCategory]/[ComponentName]/
    ├── ComponentName.tsx           # TypeScript component implementation
@@ -181,9 +197,9 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    ```
 
 2. **Declaring Props Types**
-   
+
    Define component props using TypeScript interfaces or type aliases:
-   
+
    ```tsx
    // Using type alias
    type ButtonProps = {
@@ -192,12 +208,12 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
      width: number;
      onClick?: () => void; // Optional prop
    };
-   
+
    // Component with typed props
    function TypedButton({ label, type, width, onClick }: ButtonProps) {
      return (
-       <button 
-         className={`mg-button mg-button--${type}`} 
+       <button
+         className={`mg-button mg-button--${type}`}
          style={{ width: `${width}px` }}
          onClick={onClick}
        >
@@ -208,24 +224,24 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    ```
 
 3. **TypeScript Stories**
-   
+
    When writing stories for TypeScript components, use the appropriate TypeScript types from Storybook:
-   
+
    ```tsx
-   import React from "react";
-   import TypedButton from "./TypedButton";
-   import { ComponentMeta, ComponentStory } from "@storybook/react";
-   
+   import React from 'react';
+   import TypedButton from './TypedButton';
+   import { ComponentMeta, ComponentStory } from '@storybook/react';
+
    export default {
-     title: "Components/Buttons/TypedButton",
+     title: 'Components/Buttons/TypedButton',
      component: TypedButton,
    } as ComponentMeta<typeof TypedButton>;
-   
+
    // Create a typed template
-   const Template: ComponentStory<typeof TypedButton> = (args: React.ComponentProps<typeof TypedButton>) => (
-     <TypedButton {...args} />
-   );
-   
+   const Template: ComponentStory<typeof TypedButton> = (
+     args: React.ComponentProps<typeof TypedButton>
+   ) => <TypedButton {...args} />;
+
    // Create stories with typed args
    export const Primary = Template.bind({});
    Primary.args = {
@@ -236,71 +252,75 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    ```
 
 4. **Best Practices for TypeScript Components**
-   
+
    - Use explicit return types for components (`React.FC` is discouraged)
+
    ```tsx
    // Preferred approach with explicit return type
    function Button(props: ButtonProps): JSX.Element {
      // Implementation
    }
    ```
-   
+
    - Leverage TypeScript's union types for component variants
+
    ```tsx
    type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
-   
+
    type ButtonProps = {
      variant: ButtonVariant;
      // Other props
    };
    ```
-   
+
    - Use type inference where appropriate but be explicit where it improves readability
    - Prefer interfaces for public APIs and type aliases for props and other internal types
    - Include proper JSDoc comments even with TypeScript types (they provide additional context)
 
 5. **Example TypeScript Component**
-   
+
    The Mangrove library includes a TypeScript example component in `stories/Components/TypeScriptExampleComponent` that demonstrates these principles:
-   
+
    ```tsx
    // TypeScriptExampleComponent.tsx
    import React from 'react';
    import { CtaButton } from '../Buttons/CtaButton/CtaButton';
-   
+
    type ButtonProps = {
      label: string;
      type: string;
      width: number;
-   }
-   
-   function TypeScriptExampleComponent({label, type, width}: ButtonProps) {
+   };
+
+   function TypeScriptExampleComponent({ label, type, width }: ButtonProps) {
      return (
        <>
-         <CtaButton 
-           label={label} 
-           Type={type} 
-           State="Default" 
-           For_Primary="Text" 
-           variant="contained" 
-           style={{width: `${width}px`}}
+         <CtaButton
+           label={label}
+           Type={type}
+           State="Default"
+           For_Primary="Text"
+           variant="contained"
+           style={{ width: `${width}px` }}
          >
            {label}
          </CtaButton>
        </>
      );
    }
-   
+
    export default TypeScriptExampleComponent;
    ```
 
 ### Styling guidelines
 
 1. **Use SCSS for component styles**
+
    - Each component may have its own SCSS file
    - Import shared variables and mixins from the global styles
 
 2. **Follow the BEM (Block, Element, Modifier) methodology**
+
    - **Block**: The main component (e.g., `.mg-card`)
    - **Element**: A part of the block (e.g., `.mg-card__title`, `.mg-card__content`)
    - **Modifier**: A variation of a block or element (e.g., `.mg-card--featured`, `.mg-card__title--large`)
@@ -310,15 +330,15 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
      ```scss
      .mg-card {
        // Block styles
-       
+
        &__title {
          // Element styles
-         
+
          &--large {
            // Modifier styles
          }
        }
-       
+
        &--featured {
          // Block modifier styles
        }
@@ -329,6 +349,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Don't use element tags in selectors (e.g., use `.mg-card__title` not `h2.mg-card__title`)
 
 3. **Follow the existing design tokens**
+
    - Use variables for colors, spacing, typography, etc.
    - Retrieve design tokens from `stories/assets/scss/variables`
    - Never use hardcoded values for colors, fonts, or spacing
@@ -342,6 +363,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
      ```
 
 4. **Responsive design**
+
    - All components must be responsive
    - Use the breakpoint mixins provided in the project
    - Design mobile-first, then add styles for larger screens
@@ -349,11 +371,11 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
      ```scss
      .mg-component {
        // Mobile styles (default)
-       
+
        @include mg-media-breakpoint-up(md) {
          // Tablet styles
        }
-       
+
        @include mg-media-breakpoint-up(lg) {
          // Desktop styles
        }
@@ -388,6 +410,7 @@ All titles and headings in the Mangrove documentation follow **sentence case cap
 - **Use lowercase for all other words**
 
 This rule applies to:
+
 - Main page headlines (H1)
 - Section headings (H2, H3, H4, etc.)
 - Meta title attributes in MDX files
@@ -396,6 +419,7 @@ This rule applies to:
 **Examples:**
 
 ✅ **Correct:**
+
 - `# Getting started with mangrove`
 - `## Component structure and standards`
 - `### CSS and JS references`
@@ -403,6 +427,7 @@ This rule applies to:
 - `# TypeScript demo component`
 
 ❌ **Incorrect:**
+
 - `# Getting Started With Mangrove`
 - `## Component Structure And Standards`
 - `### CSS And JS References`
@@ -412,12 +437,14 @@ This rule applies to:
 **Exceptions for proper nouns:**
 
 ✅ **Keep these capitalized:**
+
 - Technology names: React, TypeScript, JavaScript, HTML, CSS, Sass, SCSS
 - Framework/library names: Storybook, Jest, UNDRR, Mangrove
 - Acronyms: API, URL, RTL, LTR, WCAG, MDX
 - Brand names: GitHub, GitLab, Google Analytics
 
 **Example with proper nouns:**
+
 - `# React integration guide` ✅
 - `## Working with non-TypeScript code` ✅
 - `### CSS and JS references` ✅
@@ -444,9 +471,9 @@ Detailed description of what the component is and its purpose.
 
 #### When to use:
 
-* Use case 1
-* Use case 2
-* Use case 3
+- Use case 1
+- Use case 2
+- Use case 3
 
 ### Formatting
 
@@ -481,10 +508,12 @@ Instructions for implementing the component.
 ### CSS and JS References
 
 #### CSS:
-* Required CSS files
+
+- Required CSS files
 
 #### JS:
-* Required JS files or dependencies
+
+- Required JS files or dependencies
 
 ### Interactions
 
@@ -500,6 +529,7 @@ Description of hover, focus, and other states.
 Stories demonstrate the component's usage and variants:
 
 1. **Basic structure**
+
    ```jsx
    export default {
      title: 'Components/Category/ComponentName',
@@ -508,21 +538,22 @@ Stories demonstrate the component's usage and variants:
        // Define control types for component props
        variant: {
          options: ['primary', 'secondary'],
-         control: { type: 'radio' }
-       }
-     }
+         control: { type: 'radio' },
+       },
+     },
    };
-   
+
    export const Default = {
-     render: (args) => <MyComponent {...args} />,
+     render: args => <MyComponent {...args} />,
      args: {
        // Default prop values
-       variant: 'primary'
-     }
+       variant: 'primary',
+     },
    };
    ```
 
 2. **Include multiple variants**
+
    - Create separate story exports for each significant variant
    - Show edge cases and different states
 
@@ -537,6 +568,7 @@ Components should be thoroughly tested to ensure stability and reliability.
 ### Unit tests
 
 1. **Create test files**
+
    - Tests should be placed in a `__tests__` folder within your component directory or at the appropriate level in the project structure
    - Follow the naming pattern: `ComponentName.test.jsx`
 
@@ -591,26 +623,30 @@ yarn test:watch
 ## Pull request process
 
 1. **Create a feature branch**
+
    - Branch from `main` (the primary branch)
    - Use a descriptive name relevant to your changes
 
 2. **Make your changes**
+
    - Implement the component following the guidelines above
    - Add comprehensive documentation
    - Write tests for the component
 
 3. **Submit a pull request**
+
    - Open a pull request against `main`
    - Reference any related issues (from GitHub or the private UNDRR GitLab)
    - Ensure your code passes all linting and tests
 
 4. **Address review feedback**
+
    - Make requested changes
    - Respond to comments
    - Update documentation as needed
 
 5. **Merge to main**
-   - Once approved, the changes will be merged to `main` 
+   - Once approved, the changes will be merged to `main`
    - The changes will be automatically deployed to the GitHub Pages site
 
 ## Troubleshooting common issues

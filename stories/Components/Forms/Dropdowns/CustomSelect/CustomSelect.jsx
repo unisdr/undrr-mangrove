@@ -3,8 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 // import '../../../../assets/scss/_typography.scss';
 
 /**
- * @deprecated This component was part of the initial import from the UNDP implementation 
- * and is likely to be either heavily modified or deleted. It is not part of the current 
+ * @deprecated This component was part of the initial import from the UNDP implementation
+ * and is likely to be either heavily modified or deleted. It is not part of the current
  * UNDRR distribution.
  */
 
@@ -27,12 +27,12 @@ function CustomSelect({ text }) {
     setIsExpanded(!isExpanded);
   };
 
-  const selectOption = (option) => {
+  const selectOption = option => {
     setSelectedValue(option.label);
     setIsExpanded(false);
   };
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = event => {
     if (selectRef.current && !selectRef.current.contains(event.target)) {
       setIsExpanded(false);
     }
@@ -46,22 +46,26 @@ function CustomSelect({ text }) {
   }, []);
 
   return (
-    <div ref={selectRef} className={`select-box ${isExpanded ? 'expanded' : ''}`} data-select="">
-      <button 
-        type="button" 
-        aria-haspopup="listbox" 
-        aria-label="Select" 
+    <div
+      ref={selectRef}
+      className={`select-box ${isExpanded ? 'expanded' : ''}`}
+      data-select=""
+    >
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-label="Select"
         aria-expanded={isExpanded}
         onClick={toggleSelect}
       >
         {selectedValue || text}
       </button>
       <ul role="listbox" className={isExpanded ? 'active' : ''}>
-        {options.map((option) => (
-          <li 
+        {options.map(option => (
+          <li
             key={option.value}
-            role="option" 
-            tabIndex="0" 
+            role="option"
+            tabIndex="0"
             data-value={option.value}
             onClick={() => selectOption(option)}
           >

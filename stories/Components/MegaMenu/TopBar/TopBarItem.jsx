@@ -1,5 +1,5 @@
-import React from "react";
-import Section from "../Section/Section.jsx";
+import React from 'react';
+import Section from '../Section/Section.jsx';
 
 export function TopBarItem({
   title,
@@ -14,7 +14,6 @@ export function TopBarItem({
   itemListRef,
   index,
 }) {
-
   let isActive = index === activeItem;
 
   return (
@@ -27,28 +26,28 @@ export function TopBarItem({
     >
       {/* Render link if no children and link URL exists, otherwise just show title */}
       {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
-      {link && link.url ?
+      {link && link.url ? (
         <a
           className="mg-mega-topbar__item-link"
           href={link.url}
           ref={ref}
           role="menuitem"
-          aria-haspopup={section && section.items ? "true" : undefined}
-          aria-expanded={isActive ? "true" : undefined}
+          aria-haspopup={section && section.items ? 'true' : undefined}
+          aria-expanded={isActive ? 'true' : undefined}
         >
           {title}
         </a>
-        :
+      ) : (
         <button
           className="mg-mega-topbar__item-link"
           ref={ref}
           role="menuitem"
-          aria-haspopup={section && section.items ? "true" : undefined}
-          aria-expanded={isActive ? "true" : undefined}
+          aria-haspopup={section && section.items ? 'true' : undefined}
+          aria-expanded={isActive ? 'true' : undefined}
         >
           {title}
         </button>
-      }
+      )}
 
       <Section
         section={section}
@@ -56,7 +55,6 @@ export function TopBarItem({
         sectionListRef={sectionListRef}
         itemListRef={itemListRef}
       />
-
     </li>
-  )
+  );
 }

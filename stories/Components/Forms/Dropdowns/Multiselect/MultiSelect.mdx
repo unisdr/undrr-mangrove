@@ -1,23 +1,23 @@
-import { Meta, Story, Canvas } from "@storybook/blocks";
-import MultiSelect from "./MultiSelect";
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import MultiSelect from './MultiSelect';
 import * as MultiSelectStories from './MultiSelect.stories';
 
-export const getCaptionForLocale = (locale) => {
+export const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = "Category";
+    case 'english':
+      const engText = 'Category';
       return engText;
-    case "arabic":
-      const arabicText = "فئة";
+    case 'arabic':
+      const arabicText = 'فئة';
       return arabicText;
-    case "burmese":
-      const burmeseText = "အမျိုးအစား";
+    case 'burmese':
+      const burmeseText = 'အမျိုးအစား';
       return burmeseText;
-    case "japanese":
-      const japaneseText = "カテゴリー";
+    case 'japanese':
+      const japaneseText = 'カテゴリー';
       return japaneseText;
     default:
-      return "Category";
+      return 'Category';
   }
 };
 
@@ -35,7 +35,7 @@ The multiselect component allows users to choose multiple options from a list. I
 
 When to use:
 
-* When multiselect options are to be grouped under a single title.
+- When multiselect options are to be grouped under a single title.
 
 Formatting
 
@@ -53,20 +53,20 @@ The direction of the arrow indicates if multiple options are selected. The downw
 
 #### States
 
-A multi-select box in an open state can adjust its height to the content (default behavior) or use preset max height by applying a .fix-height  class to the unordered list container.
+A multi-select box in an open state can adjust its height to the content (default behavior) or use preset max height by applying a .fix-height class to the unordered list container.
 
 #### Closed:
 
 #### Open:
 
-* The sidebar component with a red colored box and empty space in the default state indicates that the option is not selected.
-* The sidebar component with a red colored box and empty space in the hover state indicates that the option is not selected and it changes appearance once the mouse hovers over it.
-* The sidebar component with a red colored box and red tick in the default state indicate that the option is selected.
-* The sidebar component with a red colored box and red tick in the hover state indicate that the option is selected and it changes appearance once the mouse hovers over it.
-* The sidebar component with the download icon in the default state indicates that the option can be downloaded.
-* The sidebar component with the download icon in the hover state indicates that the option can be downloaded and it changes appearance once the mouse hovers over it.
-* The sidebar component with an external link icon in the default state indicates that the option contains an external link related to the search.
-* The sidebar component with external link icon in hover state indicates that the options contains an external link related to the search and it changes appearance once the mouse hovers over it.
+- The sidebar component with a red colored box and empty space in the default state indicates that the option is not selected.
+- The sidebar component with a red colored box and empty space in the hover state indicates that the option is not selected and it changes appearance once the mouse hovers over it.
+- The sidebar component with a red colored box and red tick in the default state indicate that the option is selected.
+- The sidebar component with a red colored box and red tick in the hover state indicate that the option is selected and it changes appearance once the mouse hovers over it.
+- The sidebar component with the download icon in the default state indicates that the option can be downloaded.
+- The sidebar component with the download icon in the hover state indicates that the option can be downloaded and it changes appearance once the mouse hovers over it.
+- The sidebar component with an external link icon in the default state indicates that the option contains an external link related to the search.
+- The sidebar component with external link icon in hover state indicates that the options contains an external link related to the search and it changes appearance once the mouse hovers over it.
 
 <Canvas>
   <Story of={MultiSelectStories.DefaultMultiSelect} />
@@ -80,8 +80,8 @@ A multi-select box in an open state can adjust its height to the content (defaul
 
 ### Interactions
 
-* By clicking on the arrow, the drop-down box can be opened or closed.
-* By clicking on the option/options, those can be selected.
+- By clicking on the arrow, the drop-down box can be opened or closed.
+- By clicking on the option/options, those can be selected.
 
 ### Changelog
 

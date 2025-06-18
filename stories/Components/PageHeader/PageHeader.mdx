@@ -11,6 +11,7 @@ The PageHeader component provides a comprehensive header with UNDRR branding, na
 ### Overview
 
 The PageHeader component displays a complete header structure that includes:
+
 - A dark toolbar section with UNDRR logo and language switcher
 - Google Analytics integration with proper data attributes
 - Responsive design that adapts to different screen sizes
@@ -19,11 +20,11 @@ The PageHeader component displays a complete header structure that includes:
 
 #### When to use:
 
-* Use at the top of all UNDRR website pages to establish brand presence
-* Use to provide consistent navigation and language switching functionality
-* Use to maintain visual consistency across the UNDRR digital ecosystem
-* Use when you need Google Analytics tracking on header interactions
-* Use the decoration-only variant when you only need the brand stripe without navigation
+- Use at the top of all UNDRR website pages to establish brand presence
+- Use to provide consistent navigation and language switching functionality
+- Use to maintain visual consistency across the UNDRR digital ecosystem
+- Use when you need Google Analytics tracking on header interactions
+- Use the decoration-only variant when you only need the brand stripe without navigation
 
 ### Formatting
 
@@ -58,16 +59,19 @@ The component supports additional CSS classes for custom styling.
 The PageHeader component includes several content areas:
 
 **UNDRR Logo Section:**
+
 - Displays the official UNDRR horizontal logo
 - Logo is linked to the homepage (configurable)
 - Responsive design with mobile-optimized sizing
 
 **Language Switcher:**
+
 - Dropdown with available languages (English, Spanish, Arabic by default)
 - Maintains Drupal form structure for backend integration
 - Includes all necessary data attributes for form processing
 
 **Visual Decoration:**
+
 - Four colored stripes representing UNDRR brand colors:
   - Red: `$sendai-red-900` (#c10920)
   - Purple: `$sendai-purple-900` (#962987)
@@ -88,6 +92,7 @@ The PageHeader component maintains static display with interactive elements:
 #### Google Analytics Integration
 
 The component includes proper data attributes for Google Analytics tracking:
+
 - `data-vf-google-analytics-region="undrr-black-bar"` on the toolbar wrapper
 - Preserves all original Drupal data attributes for form processing
 
@@ -98,16 +103,19 @@ The component includes proper data attributes for Google Analytics tracking:
 To use the PageHeader component in your React application:
 
 1. Import the component:
+
    ```jsx
    import { PageHeader } from './path/to/PageHeader';
    ```
 
 2. Basic usage:
+
    ```jsx
    <PageHeader />
    ```
 
 3. Decoration only usage:
+
    ```jsx
    <PageHeader variant="decoration-only" />
    ```
@@ -121,7 +129,7 @@ To use the PageHeader component in your React application:
      languages={[
        { value: 'en', label: 'English', selected: true },
        { value: 'es', label: 'Español' },
-       { value: 'fr', label: 'Français' }
+       { value: 'fr', label: 'Français' },
      ]}
    />
    ```
@@ -131,34 +139,59 @@ To use the PageHeader component in your React application:
 For non-React applications, use these HTML structures:
 
 **Full Header:**
+
 ```html
 <header id="header" class="mg-page-header">
-    <!-- Decoration stripe -->
-    <div class="mg-page-header__decoration">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <div class="mg-page-header__toolbar-wrapper" data-vf-google-analytics-region="undrr-black-bar">
+  <!-- Decoration stripe -->
+  <div class="mg-page-header__decoration">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div
+    class="mg-page-header__toolbar-wrapper"
+    data-vf-google-analytics-region="undrr-black-bar"
+  >
     <div class="mg-page-header__container | mg-container">
       <div class="mg-page-header__region mg-page-header__region--toolbar">
-
         <!-- UNDRR Logo Section -->
-        <section id="block-undrrlogo" class="mg-page-header__block mg-page-header__block--logo ">
+        <section
+          id="block-undrrlogo"
+          class="mg-page-header__block mg-page-header__block--logo "
+        >
           <a href="/">
-            <img alt="UNDRR Logo" src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg"
-                 width="324" height="47" title="UNDRR Logo" class="mg-page-header__logo-img">
+            <img
+              alt="UNDRR Logo"
+              src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg"
+              width="324"
+              height="47"
+              title="UNDRR Logo"
+              class="mg-page-header__logo-img"
+            />
           </a>
         </section>
 
         <!-- Language Dropdown Section -->
-        <section id="block-languagedropdownswitcher" class="mg-page-header__block mg-page-header__block--language ">
-          <form class="mg-page-header__lang-form lang-dropdown-form" action="/" method="post">
+        <section
+          id="block-languagedropdownswitcher"
+          class="mg-page-header__block mg-page-header__block--language "
+        >
+          <form
+            class="mg-page-header__lang-form lang-dropdown-form"
+            action="/"
+            method="post"
+          >
             <div class="mg-page-header__form-item">
-              <label for="edit-lang-dropdown-select" class="mg-u-sr-only">Select your language</label>
+              <label for="edit-lang-dropdown-select" class="mg-u-sr-only">
+                Select your language
+              </label>
               <div class="mg-page-header__select-wrapper">
-                <select style="width:165px" class="mg-page-header__select" id="edit-lang-dropdown-select">
+                <select
+                  style="width:165px"
+                  class="mg-page-header__select"
+                  id="edit-lang-dropdown-select"
+                >
                   <option value="en" selected>English</option>
                   <option value="es">Spanish</option>
                   <option value="ar">Arabic</option>
@@ -167,7 +200,6 @@ For non-React applications, use these HTML structures:
             </div>
           </form>
         </section>
-
       </div>
     </div>
   </div>
@@ -175,6 +207,7 @@ For non-React applications, use these HTML structures:
 ```
 
 **Decoration Only:**
+
 ```html
 <div class="mg-page-header__decoration">
   <div></div>
@@ -187,53 +220,59 @@ For non-React applications, use these HTML structures:
 ### CSS and JS references
 
 #### CSS:
+
 Required CSS files for the component styling:
-* Component-specific styles: `page-header.scss`
-* Includes responsive breakpoints and mobile optimizations
-* Background image reference: `//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png`
-* Uses Sendai Framework color variables from `_variables.scss`
+
+- Component-specific styles: `page-header.scss`
+- Includes responsive breakpoints and mobile optimizations
+- Background image reference: `//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png`
+- Uses Sendai Framework color variables from `_variables.scss`
 
 #### JS:
-* No JavaScript dependencies required for basic functionality
-* Language switcher form can be enhanced with JavaScript for dynamic behavior
+
+- No JavaScript dependencies required for basic functionality
+- Language switcher form can be enhanced with JavaScript for dynamic behavior
 
 ### Accessibility
 
 The PageHeader component follows accessibility best practices:
 
-* Uses semantic `<header>` element for proper document structure (default variant)
-* Uses `<div>` element for decoration-only variant as it's purely decorative
-* Includes proper `<section>` elements for each functional area
-* Language switcher has proper form labeling with `sr-only` class for screen readers
-* Logo image includes proper alt text and title attributes
-* Maintains keyboard navigation for all interactive elements
-* Color contrast meets WCAG AA standards
+- Uses semantic `<header>` element for proper document structure (default variant)
+- Uses `<div>` element for decoration-only variant as it's purely decorative
+- Includes proper `<section>` elements for each functional area
+- Language switcher has proper form labeling with `sr-only` class for screen readers
+- Logo image includes proper alt text and title attributes
+- Maintains keyboard navigation for all interactive elements
+- Color contrast meets WCAG AA standards
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| variant | String | 'default' | Component variant ('default' for full header, 'decoration-only' for stripe only) |
-| className | String | undefined | Additional CSS classes to apply |
-| logoUrl | String | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant) |
-| logoAlt | String | 'UNDRR Logo' | Alt text for the logo image (ignored in decoration-only variant) |
-| logoTitle | String | 'UNDRR Logo' | Title attribute for the logo image (ignored in decoration-only variant) |
-| homeUrl | String | '/' | URL for the logo link (ignored in decoration-only variant) |
-| languages | Array | [English, Spanish, Arabic] | Array of language objects (ignored in decoration-only variant) |
-| ...args | Object | {} | Additional props passed to the root element |
+| Prop      | Type   | Default                                                                 | Description                                                                      |
+| --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| variant   | String | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
+| className | String | undefined                                                               | Additional CSS classes to apply                                                  |
+| logoUrl   | String | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
+| logoAlt   | String | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
+| logoTitle | String | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
+| homeUrl   | String | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
+| languages | Array  | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
+| ...args   | Object | {}                                                                      | Additional props passed to the root element                                      |
 
 ### Integration Notes
 
 **Drupal Integration:**
+
 - Maintains all original Drupal class names and data attributes
 - Form structure preserves backend processing capabilities
 - Hidden form fields included for proper form submission
 
 **Google Analytics:**
+
 - Includes `data-vf-google-analytics-region="undrr-black-bar"` for tracking
 - Preserves all data attributes required for analytics integration
 
 **Decoration-Only Variant:**
+
 - Renders as a simple `<div>` element with decoration styling
 - Lightweight option for brand consistency without navigation
 - Useful for footers, section dividers, or other decorative contexts

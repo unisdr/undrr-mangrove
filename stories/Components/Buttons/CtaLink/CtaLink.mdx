@@ -2,14 +2,22 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import { Ctalink } from './CtaLink';
 import * as CtaLinkStories from './CtaLink.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = {detail1: 'READ MORE'}; return engText;
-    case 'arabic': const arabicText = {detail1: 'اقرأ أكثر'}; return arabicText;
-    case 'burmese': const burmeseText = {detail1: 'ပိုပြီးဖတ်ပါ'}; return burmeseText;
-    case 'japanese': const japaneseText = {detail1: '続きを読む'}; return japaneseText;
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = { detail1: 'READ MORE' };
+      return engText;
+    case 'arabic':
+      const arabicText = { detail1: 'اقرأ أكثر' };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = { detail1: 'ပိုပြီးဖတ်ပါ' };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = { detail1: '続きを読む' };
+      return japaneseText;
     default:
-    return {detail1: 'READ MORE'};
+      return { detail1: 'READ MORE' };
   }
 };
 
@@ -25,10 +33,10 @@ A button describes the call to action that will be performed when the user click
 
 #### When to use:
 
-* Buttons should be used as primary or secondary calls to actions
-* Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
-* Examples of buttons can be to "VIEW MORE" or "READ MORE" or "SIGN UP"
-* If there are multiple choices for an action item, one default button should be active and the other buttons inactive
+- Buttons should be used as primary or secondary calls to actions
+- Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
+- Examples of buttons can be to "VIEW MORE" or "READ MORE" or "SIGN UP"
+- If there are multiple choices for an action item, one default button should be active and the other buttons inactive
 
 ### Formatting
 
@@ -62,11 +70,11 @@ The CTA link with the arrow expand is in a hover state. When the mouse hovers ov
 
 ### Usage
 
-* Copy the HTML from the HTML Tab of canvas for either Chips, CTA Button, and CTA Link from the controls.
+- Copy the HTML from the HTML Tab of canvas for either Chips, CTA Button, and CTA Link from the controls.
 
 ### Interactions
 
-* The hover state is applied to the entire button.
+- The hover state is applied to the entire button.
 
 ### Changelog
 

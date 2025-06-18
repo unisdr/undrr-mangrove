@@ -1,32 +1,32 @@
-import React from "react";
+import React from 'react';
 
 const cls = (...classes) =>
-  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(" ") : null;
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function PageHeader({
-  variant = "default",
+  variant = 'default',
   className,
-  logoUrl = "https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg",
-  logoAlt = "UNDRR Logo",
-  logoTitle = "UNDRR Logo",
-  homeUrl = "/",
+  logoUrl = 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+  logoAlt = 'UNDRR Logo',
+  logoTitle = 'UNDRR Logo',
+  homeUrl = '/',
   languages = [
-    { value: "en", label: "English", selected: true },
-    { value: "es", label: "Spanish" },
-    { value: "ar", label: "Arabic" },
+    { value: 'en', label: 'English', selected: true },
+    { value: 'es', label: 'Spanish' },
+    { value: 'ar', label: 'Arabic' },
   ],
   ...args
 }) {
   const headerClasses = cls(
-    "mg-page-header",
+    'mg-page-header',
     variant && `mg-page-header--${variant}`,
-    className,
+    className
   );
 
   // If decoration-only variant, render only the decoration stripe
-  if (variant === "decoration-only") {
+  if (variant === 'decoration-only') {
     return (
-      <div className={cls("mg-page-header__decoration", className)} {...args}>
+      <div className={cls('mg-page-header__decoration', className)} {...args}>
         <div></div>
         <div></div>
         <div></div>
@@ -69,7 +69,7 @@ export function PageHeader({
 
             {/* User icon */}
             <a alt="Log in or register" title="Log in or register" href="/user">
-              <i className="fa fa-user"></i>{" "}
+              <i className="fa fa-user"></i>{' '}
               <span className="mg-page-header__label">My account</span>
               <span className="mg-page-header__label-mobile">Login</span>
             </a>
@@ -94,18 +94,18 @@ export function PageHeader({
 
                   <div className="mg-page-header__select-wrapper">
                     <select
-                      style={{ width: "165px" }}
+                      style={{ width: '165px' }}
                       className="mg-page-header__select lang-dropdown-select-element form-select form-control"
                       data-lang-dropdown-id="lang-dropdown-form"
                       id="edit-lang-dropdown-select"
                       name="lang_dropdown_select"
-                      defaultValue={languages.find(lang => lang.selected)?.value || languages[0]?.value}
+                      defaultValue={
+                        languages.find(lang => lang.selected)?.value ||
+                        languages[0]?.value
+                      }
                     >
                       {languages.map((lang, index) => (
-                        <option
-                          key={index}
-                          value={lang.value}
-                        >
+                        <option key={index} value={lang.value}>
                           {lang.label}
                         </option>
                       ))}
@@ -136,5 +136,5 @@ export function PageHeader({
 }
 
 PageHeader.defaultProps = {
-  variant: "default",
+  variant: 'default',
 };

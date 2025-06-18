@@ -7,16 +7,18 @@ if (typeof window !== 'undefined') {
   window.CookieConsent = CookieConsent;
 }
 
-
 const CookieConsentBanner = ({ config: customConfig = {} }) => {
   useEffect(() => {
     if (CookieConsent && typeof CookieConsent.run === 'function') {
-      const finalConfig = (customConfig && Object.keys(customConfig).length > 0) ? customConfig : defaultConfig;
+      const finalConfig =
+        customConfig && Object.keys(customConfig).length > 0
+          ? customConfig
+          : defaultConfig;
       CookieConsent.run(finalConfig);
-
-                
     } else {
-      console.error('CookieConsent module not loaded correctly or run method not available.');
+      console.error(
+        'CookieConsent module not loaded correctly or run method not available.'
+      );
     }
   }, [customConfig]);
 

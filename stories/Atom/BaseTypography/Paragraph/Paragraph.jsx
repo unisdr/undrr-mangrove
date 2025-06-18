@@ -3,6 +3,6 @@ import React from 'react';
 
 export const P = ({ label, className, tabIndex }) => (
   <p className={className} tabIndex={tabIndex}>
-    { label }
+    {label}
   </p>
 );

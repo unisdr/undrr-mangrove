@@ -1,12 +1,12 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React from 'react';
+import { useState, useEffect } from 'react';
 
 const RESPONSE_PARAMS = {
   isLoading: false,
   data: [] || {},
 };
 
-export const generateQueryParams = (params) => {
+export const generateQueryParams = params => {
   const urlSearchParams = new URLSearchParams();
 
   for (const key in params) {
@@ -27,7 +27,7 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
 
   useEffect(() => {
     // Call the function
-    fetchData().catch((err) => console.error(err));
+    fetchData().catch(err => console.error(err));
 
     // Cleanup function to cancel any future setResponse
     return () => setResponse(RESPONSE_PARAMS);
@@ -35,7 +35,7 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
 
   const fetchData = async () => {
     // Set state to isLoading
-    setResponse((prevState) => ({
+    setResponse(prevState => ({
       ...prevState,
       isLoading: true,
     }));
@@ -46,26 +46,26 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
     try {
       // Create the request options with the Authorization header
       const response = await fetch(API, {
-        method: "GET",
+        method: 'GET',
       });
 
       // Check if response is ok
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       // Convert data to JSON
       const data = await response.json();
 
       // Set state with fetched data
-      setResponse((prevState) => ({
+      setResponse(prevState => ({
         ...prevState,
         isLoading: false,
         data: data.results,
       }));
     } catch (error) {
-      console.error("Fetch error: ", error);
-      setResponse((prevState) => ({
+      console.error('Fetch error: ', error);
+      setResponse(prevState => ({
         ...prevState,
         isLoading: false,
         data: [],

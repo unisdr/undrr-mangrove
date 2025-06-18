@@ -3,27 +3,37 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import ShareButtons from './ShareButtons';
 import * as ShareButtonsStories from './ShareButtons.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = {
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = {
         mainLabel: 'Share this',
         onCopy: 'Copied',
-      }; return engText;
-    case 'arabic': const arabicText = {
-      mainLabel: 'شارك هذا',
-      onCopy: 'تم النسخ'
-    }; return arabicText;
-    case 'burmese': const burmeseText = {
-      mainLabel: 'မြန်မာ',
-      onCopy: 'ကူးယူသည်။'
-    }; return burmeseText;
-    case 'japanese': const japaneseText = {
-      mainLabel: 'ビルマ語',
-      onCopy: 'コピーされました'}; return japaneseText;
+      };
+      return engText;
+    case 'arabic':
+      const arabicText = {
+        mainLabel: 'شارك هذا',
+        onCopy: 'تم النسخ',
+      };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = {
+        mainLabel: 'မြန်မာ',
+        onCopy: 'ကူးယူသည်။',
+      };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = {
+        mainLabel: 'ビルマ語',
+        onCopy: 'コピーされました',
+      };
+      return japaneseText;
     default:
       return {
         mainLabel: 'Share this',
-        onCopy: 'Copied',};
+        onCopy: 'Copied',
+      };
   }
 };
 
@@ -60,10 +70,10 @@ The component will favor using a shortlink if a `<link rel="shortlink" href="{ur
 The default Behaviors are:
 
 1. Clicking on the button opens a new tab with the link to the social media page.
-   * LinkedIn
-   * Facebook
-   * Twitter
-   * Email
+   - LinkedIn
+   - Facebook
+   - Twitter
+   - Email
 2. Clicking on the copy button copies the link to the clipboard.
 
 <Canvas>
@@ -76,14 +86,14 @@ Drop in and configure. custom message if needed
 
 ### Interactions
 
-* The hover state is applied for each button when the mouse hovers over it.
+- The hover state is applied for each button when the mouse hovers over it.
 
 ### Changelog
 
-- 1.1 
-    - Add shortlink support
-    - Updates icon order
-    - Updates Twitter for X icon
-    - Add support for device webshare
-    - Tidy visual apperance
+- 1.1
+  - Add shortlink support
+  - Updates icon order
+  - Updates Twitter for X icon
+  - Add support for device webshare
+  - Tidy visual apperance
 - 1.0 — Released component

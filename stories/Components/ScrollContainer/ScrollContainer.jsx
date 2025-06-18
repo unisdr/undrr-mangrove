@@ -1,34 +1,31 @@
-import React, {
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-} from "react";
-import PropTypes from "prop-types";
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 // Separate arrow buttons component
-const ArrowButtons = React.memo(({ onScroll, leftButtonRef, rightButtonRef }) => {
-  return (
-    <nav className="mg-scroll__nav">
-      <button
-        ref={leftButtonRef}
-        className="mg-scroll__nav-button"
-        onClick={() => onScroll("left")}
-        aria-label="Scroll left"
-      >
-        ←
-      </button>
-      <button
-        ref={rightButtonRef}
-        className="mg-scroll__nav-button"
-        onClick={() => onScroll("right")}
-        aria-label="Scroll right"
-      >
-        →
-      </button>
-    </nav>
-  );
-});
+const ArrowButtons = React.memo(
+  ({ onScroll, leftButtonRef, rightButtonRef }) => {
+    return (
+      <nav className="mg-scroll__nav">
+        <button
+          ref={leftButtonRef}
+          className="mg-scroll__nav-button"
+          onClick={() => onScroll('left')}
+          aria-label="Scroll left"
+        >
+          ←
+        </button>
+        <button
+          ref={rightButtonRef}
+          className="mg-scroll__nav-button"
+          onClick={() => onScroll('right')}
+          aria-label="Scroll right"
+        >
+          →
+        </button>
+      </nav>
+    );
+  }
+);
 
 ArrowButtons.propTypes = {
   onScroll: PropTypes.func.isRequired,
@@ -65,28 +62,28 @@ const ScrollContainer = ({
   // Check if we're on a mobile device
   const checkMobileStatus = useCallback(() => {
     isMobileRef.current =
-      "ontouchstart" in window &&
+      'ontouchstart' in window &&
       /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   }, []);
 
   // Memoize scroll function
   const scroll = useCallback(
-    (direction) => {
+    direction => {
       if (!containerRef.current) return;
 
       // Calculate scroll amount based on container width or step size
       const scrollAmount = stepSize || containerRef.current.clientWidth / 2;
       const newScrollLeft =
         containerRef.current.scrollLeft +
-        (direction === "right" ? scrollAmount : -scrollAmount);
+        (direction === 'right' ? scrollAmount : -scrollAmount);
 
       // Use smooth scrolling for better user experience
       containerRef.current.scrollTo({
         left: newScrollLeft,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     },
-    [stepSize],
+    [stepSize]
   );
 
   // Update arrow visibility without causing re-renders
@@ -106,16 +103,16 @@ const ScrollContainer = ({
     }
   }, [showArrows]);
 
-  const handleDragStart = useCallback((e) => {
+  const handleDragStart = useCallback(e => {
     if (
       !containerRef.current ||
-      (e.type.includes("mouse") && isMobileRef.current)
+      (e.type.includes('mouse') && isMobileRef.current)
     )
       return;
 
     // Only handle mouse events for desktop, regardless of viewport size
     // This allows drag to work on desktop browsers at small viewport sizes
-    if (e.type.includes("mouse")) {
+    if (e.type.includes('mouse')) {
       dragStateRef.current = {
         ...dragStateRef.current,
         isDragging: true,
@@ -128,15 +125,15 @@ const ScrollContainer = ({
   }, []);
 
   const handleDragMove = useCallback(
-    (e) => {
+    e => {
       if (
         !dragStateRef.current.isDragging ||
         !containerRef.current ||
-        (e.type.includes("mouse") && isMobileRef.current)
+        (e.type.includes('mouse') && isMobileRef.current)
       )
         return;
 
-      if (e.type.includes("mouse")) {
+      if (e.type.includes('mouse')) {
         const x = e.pageX;
         const distance = Math.abs(dragStateRef.current.startX - x);
 
@@ -150,10 +147,10 @@ const ScrollContainer = ({
         }
       }
     },
-    [updateArrowVisibility],
+    [updateArrowVisibility]
   );
 
-  const handleDragEnd = useCallback((e) => {
+  const handleDragEnd = useCallback(e => {
     if (dragStateRef.current.isDragging) {
       dragStateRef.current.isDragging = false;
     }
@@ -165,7 +162,7 @@ const ScrollContainer = ({
     }
   }, []);
 
-  const handleClick = useCallback((e) => {
+  const handleClick = useCallback(e => {
     if (dragStateRef.current.hasDragged) {
       e.preventDefault();
       e.stopPropagation();
@@ -175,29 +172,29 @@ const ScrollContainer = ({
   // Memoize container styles
   const containerStyle = useMemo(
     () => ({
-      "--scroll-height": height,
-      "--scroll-min-width": minWidth,
-      "--scroll-padding": padding,
-      "--scroll-item-width": itemWidth,
+      '--scroll-height': height,
+      '--scroll-min-width': minWidth,
+      '--scroll-padding': padding,
+      '--scroll-item-width': itemWidth,
     }),
-    [height, minWidth, padding, itemWidth],
+    [height, minWidth, padding, itemWidth]
   );
 
   // Memoize container classes
   const containerClasses = useMemo(
     () =>
       [
-        "mg-scroll__container",
-        height && "mg-scroll__container--custom-height",
-        minWidth && "mg-scroll__container--custom-width",
-        padding && "mg-scroll__container--custom-padding",
-        itemWidth && "mg-scroll__container--custom-item-width",
-        isMobileRef.current && "mg-scroll__container--mobile",
+        'mg-scroll__container',
+        height && 'mg-scroll__container--custom-height',
+        minWidth && 'mg-scroll__container--custom-width',
+        padding && 'mg-scroll__container--custom-padding',
+        itemWidth && 'mg-scroll__container--custom-item-width',
+        isMobileRef.current && 'mg-scroll__container--mobile',
         className,
       ]
         .filter(Boolean)
-        .join(" "),
-    [height, minWidth, padding, itemWidth, className],
+        .join(' '),
+    [height, minWidth, padding, itemWidth, className]
   );
 
   useEffect(() => {
@@ -207,39 +204,39 @@ const ScrollContainer = ({
 
     const container = containerRef.current;
     if (container) {
-      container.addEventListener("scroll", updateArrowVisibility, {
+      container.addEventListener('scroll', updateArrowVisibility, {
         passive: true,
       });
-      window.addEventListener("resize", updateArrowVisibility, {
+      window.addEventListener('resize', updateArrowVisibility, {
         passive: true,
       });
 
       if (!isMobileRef.current) {
-        container.addEventListener("mousedown", handleDragStart);
-        window.addEventListener("mousemove", handleDragMove);
-        window.addEventListener("mouseup", handleDragEnd);
-        window.addEventListener("mouseleave", handleDragEnd);
+        container.addEventListener('mousedown', handleDragStart);
+        window.addEventListener('mousemove', handleDragMove);
+        window.addEventListener('mouseup', handleDragEnd);
+        window.addEventListener('mouseleave', handleDragEnd);
       }
 
-      container.addEventListener("click", handleClick, { capture: true });
+      container.addEventListener('click', handleClick, { capture: true });
     }
 
     return () => {
       if (container) {
         // Remove scroll event listeners
-        container.removeEventListener("scroll", updateArrowVisibility);
-        window.removeEventListener("resize", updateArrowVisibility);
+        container.removeEventListener('scroll', updateArrowVisibility);
+        window.removeEventListener('resize', updateArrowVisibility);
 
         // Remove mouse drag event listeners
         if (!isMobileRef.current) {
-          container.removeEventListener("mousedown", handleDragStart);
-          window.removeEventListener("mousemove", handleDragMove);
-          window.removeEventListener("mouseup", handleDragEnd);
-          window.removeEventListener("mouseleave", handleDragEnd);
+          container.removeEventListener('mousedown', handleDragStart);
+          window.removeEventListener('mousemove', handleDragMove);
+          window.removeEventListener('mouseup', handleDragEnd);
+          window.removeEventListener('mouseleave', handleDragEnd);
         }
 
         // Remove click handler
-        container.removeEventListener("click", handleClick, { capture: true });
+        container.removeEventListener('click', handleClick, { capture: true });
       }
     };
   }, [
@@ -254,7 +251,7 @@ const ScrollContainer = ({
   return (
     // data-mg-scroll-container is not used directly in storybook, however it is useful documentation for other integrations, such as Gutenberg
     <section
-      className={`mg-scroll${isMobileRef.current ? " mg-scroll--mobile" : ""}`}
+      className={`mg-scroll${isMobileRef.current ? ' mg-scroll--mobile' : ''}`}
       data-mg-scroll-container
     >
       {showArrows && !isMobileRef.current && (
@@ -272,7 +269,7 @@ const ScrollContainer = ({
       >
         <div
           ref={contentRef}
-          className={`mg-scroll__content${isMobileRef.current ? "" : " mg-grid"}`}
+          className={`mg-scroll__content${isMobileRef.current ? '' : ' mg-grid'}`}
         >
           {/* {React.Children.map(children, (child) => (
             <div className="mg-scroll__item-wrapper">{child}</div>
@@ -291,7 +288,7 @@ const ScrollContainer = ({
                   </div>
                 );
               })
-            : React.Children.map(children, (child) => {
+            : React.Children.map(children, child => {
                 // console.log("Real react");
                 // console.log("Child type:", typeof child);
                 // console.log("Is valid element:", React.isValidElement(child));
@@ -315,11 +312,11 @@ ScrollContainer.propTypes = {
   stepSize: PropTypes.number,
 };
 ScrollContainer.defaultProps = {
-  height: "auto",
-  minWidth: "auto",
-  itemWidth: "auto",
-  padding: "0",
-  className: "",
+  height: 'auto',
+  minWidth: 'auto',
+  itemWidth: 'auto',
+  padding: '0',
+  className: '',
   showArrows: false,
   stepSize: null,
 };

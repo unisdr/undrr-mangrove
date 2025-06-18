@@ -1,14 +1,14 @@
-import React from "react";
-import { CtaButton } from "../Buttons/CtaButton/CtaButton";
+import React from 'react';
+import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 
 const cls = (...classes) =>
-  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(" ") : null;
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export const variantOptions = {
-  primary: "",
-  secondary: "secondary",
-  tertiary: "tertiary",
-  quaternary: "quaternary",
+  primary: '',
+  secondary: 'secondary',
+  tertiary: 'tertiary',
+  quaternary: 'quaternary',
 };
 
 export function Hero({ data, variant }) {
@@ -19,7 +19,7 @@ export function Hero({ data, variant }) {
       {data.map((item, index) => (
         <section
           key={index}
-          className={cls("mg-hero", "mg-hero--" + `${variantActive}`)}
+          className={cls('mg-hero', 'mg-hero--' + `${variantActive}`)}
           style={{ backgroundImage: `url(${item.imgback})` }}
         >
           <div className="mg-hero__overlay">
@@ -65,5 +65,5 @@ export function Hero({ data, variant }) {
 }
 
 Hero.defaultProps = {
-  variant: "primary",
+  variant: 'primary',
 };

@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.tag }}
-          
+
       - name: Setup Node.js for npm registry
         if: ${{ inputs.registry == 'npm' }}
         uses: actions/setup-node@v4
@@ -36,7 +36,7 @@ jobs:
           node-version: '22'
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
-          
+
       - name: Setup Node.js for GitHub registry
         if: ${{ inputs.registry == 'github' }}
         uses: actions/setup-node@v4
@@ -45,10 +45,10 @@ jobs:
           cache: 'yarn'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@unisdr'
-          
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-        
+
       - name: Build
         run: yarn build
 
@@ -60,7 +60,7 @@ jobs:
           cp package.json npm-package/
           cp README.md npm-package/
           cp LICENSE npm-package/ || echo "No LICENSE file found"
-          
+
           # Create a custom package.json for publishing
           node -e '
             const pkg = require("./package.json");
@@ -88,14 +88,14 @@ jobs:
             
             require("fs").writeFileSync("npm-package/package.json", JSON.stringify(newPkg, null, 2));
           '
-          
+
       - name: Publish to npm registry
         if: ${{ inputs.registry == 'npm' }}
         working-directory: npm-package
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          
+
       - name: Publish to GitHub Packages
         if: ${{ inputs.registry == 'github' }}
         working-directory: npm-package

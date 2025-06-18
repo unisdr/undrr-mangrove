@@ -2,11 +2,11 @@ name: Drupal implementation sync ticket
 
 # Controls when the workflow will run
 on:
-  release: 
+  release:
     types: [released]
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch: 
+  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,12 +34,12 @@ jobs:
           # The work item type name - e.g. User Story
           type: User Story
           # Title of the work item
-          title: Integrate Design System release ${{ github.event.release.name }} 
+          title: Integrate Design System release ${{ github.event.release.name }}
           # Value to put into the System.Description field
           description: |
             ${{ github.event.release.html_url }}
-            ${{ github.event.release.body }} 
+            ${{ github.event.release.body }}
           # Area Path for the work item e.g. "MyProject\MyArea"
           areaPath: "Acquia\\UNDP"
           # Iteration Path for the work item e.g. "MyProject\Iteration 1"
-          iterationPath: "Acquia"
+          iterationPath: 'Acquia'

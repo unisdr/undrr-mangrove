@@ -33,12 +33,13 @@
   --cc-modal-border-radius: 0;
   --cc-btn-border-radius: 0;
   --cc-pm-toggle-border-radius: 4em;
-  
+
   // Custom link styles
-  .cc__link, a {
+  .cc__link,
+  a {
     color: #{$mg-color-interactive};
     text-decoration: underline;
-    
+
     &:hover {
       color: #{$mg-color-interactive-active};
     }

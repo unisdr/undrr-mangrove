@@ -14,9 +14,7 @@ const Boilerplate = ({ title, children, variant }) => {
       {/* The title prop is rendered inside an h2 element */}
       <h2 className="mg-boilerplate__title">{title}</h2>
       {/* The children prop allows for nested content to be passed to this component */}
-      <div className="mg-boilerplate__content">
-        {children}
-      </div>
+      <div className="mg-boilerplate__content">{children}</div>
     </div>
   );
 };

@@ -1,23 +1,23 @@
-import { Meta, Story, Canvas } from "@storybook/blocks";
-import { Checkbox } from "./Checkbox";
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { Checkbox } from './Checkbox';
 import * as CheckboxStories from './Checkbox.stories';
 
-export const getCaptionForLocale = (locale) => {
+export const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { label: "Category", value: "category" };
+    case 'english':
+      const engText = { label: 'Category', value: 'category' };
       return engText;
-    case "arabic":
-      const arabicText = { label: "فئة", value: "فئة" };
+    case 'arabic':
+      const arabicText = { label: 'فئة', value: 'فئة' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { label: "အမျိုးအစား", value: "အမျိုးအစား" };
+    case 'burmese':
+      const burmeseText = { label: 'အမျိုးအစား', value: 'အမျိုးအစား' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { label: "カテゴリー", value: "カテゴリー" };
+    case 'japanese':
+      const japaneseText = { label: 'カテゴリー', value: 'カテゴリー' };
       return japaneseText;
     default:
-      return { label: "Category" };
+      return { label: 'Category' };
   }
 };
 
@@ -33,7 +33,7 @@ A checkbox is a type of indicator which allows the user to choose single or mult
 
 #### When to use:
 
-* When the user needs to select or deselect multiple options.
+- When the user needs to select or deselect multiple options.
 
 ### Formatting
 
@@ -75,8 +75,8 @@ The Light Red colored checkbox with white space indicates the hover state which 
 
 #### Interactions
 
-* The hover state is applied to the entire button.
-* The checked state is applied to the entire button.
+- The hover state is applied to the entire button.
+- The checked state is applied to the entire button.
 
 #### Changelog
 

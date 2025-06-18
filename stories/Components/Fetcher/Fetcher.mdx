@@ -10,10 +10,10 @@ The `Fetcher` component is a flexible data-fetching utility for React applicatio
 
 ## Props
 
-* **`api`**: `string` - The URL of the API endpoint. *(required)*
-* **`render`**: `function` - A function to render the UI based on the fetched data. *(required)*
-* **`queryParams`**: `object` - Additional query parameters to send with the API request. *(optional)*
-* **`loadingLabel`**: `string` - A label to display while loading. *(optional)*
+- **`api`**: `string` - The URL of the API endpoint. _(required)_
+- **`render`**: `function` - A function to render the UI based on the fetched data. _(required)_
+- **`queryParams`**: `object` - Additional query parameters to send with the API request. _(optional)_
+- **`loadingLabel`**: `string` - A label to display while loading. _(optional)_
 
 ## Stories
 
@@ -31,21 +31,21 @@ This is the default usage of the `Fetcher` component.
 import Fetcher from './Fetcher';
 
 const Default = () => {
-  const renderData = ({ isLoading, data }) => (
-    <div>
-      {isLoading && <p>Loading data...</p>}
-      <pre>{JSON.stringify(data, null, 4)}</pre>
-    </div>
-  );
+const renderData = ({ isLoading, data }) => (
+<div>
+{isLoading && <p>Loading data...</p>}
+<pre>{JSON.stringify(data, null, 4)}</pre>
+</div>
+);
 
-  return (
-    <Fetcher
-      api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-      queryParams={{ items_per_page: 1000}}
-      loadingLabel="Loading data"
-      render={renderData}
-    />
-  );
+return (
+<Fetcher
+api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+queryParams={{ items_per_page: 1000}}
+loadingLabel="Loading data"
+render={renderData}
+/>
+);
 };
 
 export default Default;
@@ -66,21 +66,21 @@ An example of the `Fetcher` component with a search term parameter.
 import Fetcher from './Fetcher';
 
 const WithSearchTerm = () => {
-  const renderData = ({ isLoading, data }) => (
-    <div>
-      {isLoading  && <p>Searching...</p>}
-      <pre>{JSON.stringify(data, null, 4)}</pre>
-    </div>
-  );
+const renderData = ({ isLoading, data }) => (
+<div>
+{isLoading && <p>Searching...</p>}
+<pre>{JSON.stringify(data, null, 4)}</pre>
+</div>
+);
 
-  return (
-    <Fetcher
-      api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-      queryParams={{ items_per_page: 1000}}
-      loadingLabel="Searching"
-      render={renderData}
-    />
-  );
+return (
+<Fetcher
+api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
+queryParams={{ items_per_page: 1000}}
+loadingLabel="Searching"
+render={renderData}
+/>
+);
 };
 
 export default WithSearchTerm;
@@ -101,20 +101,20 @@ This example shows how to use the `Fetcher` component without passing any query 
 import Fetcher from './Fetcher';
 
 const WithoutQueryParams = () => {
-  const renderData = ({ isLoading, data }) => (
-    <div>
-      {isLoading && <p>Loading data...</p>}
-      <pre>{JSON.stringify(data, null, 4)}</pre>
-    </div>
-  );
+const renderData = ({ isLoading, data }) => (
+<div>
+{isLoading && <p>Loading data...</p>}
+<pre>{JSON.stringify(data, null, 4)}</pre>
+</div>
+);
 
-  return (
-    <Fetcher
+return (
+<Fetcher
       api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
       loadingLabel="Loading data"
       render={renderData}
     />
-  );
+);
 };
 
 export default WithoutQueryParams;

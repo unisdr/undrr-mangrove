@@ -13,7 +13,8 @@ export const hover_color_options = {
   blue: 'blue',
 };
 
-const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
+const cls = (...classes) =>
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function Authorimg({ image, alt, ...args }) {
   let size_variant = size_options[`${args.variant}`];

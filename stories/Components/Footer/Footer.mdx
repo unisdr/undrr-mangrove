@@ -1,15 +1,11 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs";
-import * as FooterStories from "./Footer.stories.jsx";
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import * as FooterStories from './Footer.stories.jsx';
 
-<Meta
-  of={FooterStories}
-  title="Components/Footer"
-/>
+<Meta of={FooterStories} title="Components/Footer" />
 
 # Footer
 
 > **Note:** This is a beta integration that will evolve as Mangrove, Drupal, and the Syndication feature mature and become more tightly integrated. The current implementation provides basic functionality but may change significantly as the ecosystem develops.
-
 
 The Footer component is primarily a wrapper for the UNDRR Syndication feature's JavaScript embed code, combining site-specific content with UNDRR's global syndicated footer. This gives you the flexibility to add complementary information while maintaining consistent UNDRR branding across all network sites.
 
@@ -29,8 +25,6 @@ This component solves the challenge of providing both local site information and
 ### Default footer with syndication
 
 The simplest implementation loads only the UNDRR syndicated content:
-
-
 
 <Story of={FooterStories.Default} />
 
@@ -55,7 +49,7 @@ The footer automatically loads content from the UNDRR syndication system using t
     includemetatags: false,
     includecss: false,
     suffixID: 'footer',
-    activedomain: 'www.undrr.org'
+    activedomain: 'www.undrr.org',
   }}
 />
 ```
@@ -78,13 +72,13 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 
 ### Configuration options
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | string | `"default"` | Visual variant (`"default"` or `"minimal"`) |
-| `enableSyndication` | boolean | `true` | Enable/disable UNDRR syndicated content |
-| `syndicationConfig` | object | See below | Configuration for the syndication widget (partial configs are merged with defaults) |
-| `complementaryContent` | ReactNode | `null` | Site-specific content to display above syndicated footer |
-| `children` | ReactNode | `null` | Alternative way to pass complementary content |
+| Prop                   | Type      | Default     | Description                                                                         |
+| ---------------------- | --------- | ----------- | ----------------------------------------------------------------------------------- |
+| `variant`              | string    | `"default"` | Visual variant (`"default"` or `"minimal"`)                                         |
+| `enableSyndication`    | boolean   | `true`      | Enable/disable UNDRR syndicated content                                             |
+| `syndicationConfig`    | object    | See below   | Configuration for the syndication widget (partial configs are merged with defaults) |
+| `complementaryContent` | ReactNode | `null`      | Site-specific content to display above syndicated footer                            |
+| `children`             | ReactNode | `null`      | Alternative way to pass complementary content                                       |
 
 #### Default syndication configuration:
 
@@ -122,12 +116,12 @@ The component uses a simplified JavaScript approach that directly injects the re
 <!-- Widget initialization -->
 <script>
   new PW_Widget.initialize({
-    contenttype: "landingpage",
-    pageid: "83835",
+    contenttype: 'landingpage',
+    pageid: '83835',
     includemetatags: false,
     includecss: true,
-    suffixID: "footer",
-    activedomain: "www.undrr.org",
+    suffixID: 'footer',
+    activedomain: 'www.undrr.org',
   });
 </script>
 ```

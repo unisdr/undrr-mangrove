@@ -5,10 +5,10 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <Meta
   title="Getting started/Vanilla HTML and CSS"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -29,20 +29,23 @@ Add these `<link>` tags to your HTML `<head>`:
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My UNDRR Site</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My UNDRR Site</title>
 
-  <!-- UNDRR Theme (Choose one) -->
-  <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css">
+    <!-- UNDRR Theme (Choose one) -->
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css"
+    />
 
-  <!-- Alternative: Prevention Web Theme -->
-  <!-- <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"> -->
-</head>
-<body>
-  <!-- Your content here -->
-</body>
+    <!-- Alternative: Prevention Web Theme -->
+    <!-- <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"> -->
+  </head>
+  <body>
+    <!-- Your content here -->
+  </body>
 </html>
 ```
 
@@ -68,44 +71,58 @@ Choose the right CSS files for your project:
 ### Theme variants (choose one)
 
 **UNDRR Official Theme**
+
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css">
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css"
+/>
 ```
 
 **Prevention Web Theme**
+
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css">
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"
+/>
 ```
 
 ## Component categories
 
 ### Layout and structure
+
 - `mg-container` - Content containers with max-width
 - `mg-grid` - Flexible grid system
 - `mg-section` - Page sections with spacing
 
 ### Typography
+
 - `mg-heading` - Styled headings (h1-h6)
 - `mg-paragraph` - Body text with proper spacing
 - `mg-link` - Styled links and text links
 
 ### Buttons and actions
+
 - `mg-cta-button` - Primary and secondary call-to-action buttons
 - `mg-chip` - Small interactive chips
 - `mg-share-buttons` - Social sharing buttons
 
 ### Forms
+
 - `mg-form` - Form container and styling
 - `mg-form__input` - Text inputs
 - `mg-form__textarea` - Multi-line text areas
 - `mg-form__select` - Dropdown selects
 
 ### Content components
+
 - `mg-card` - Content cards (vertical/horizontal)
 - `mg-stats-card` - Statistics display cards
 - `mg-label` - Content category labels
 
 ### Navigation
+
 - `mg-breadcrumb` - Breadcrumb navigation
 - `mg-menu` - Primary navigation menus
 - `mg-pagination` - Page navigation
@@ -113,7 +130,9 @@ Choose the right CSS files for your project:
 ## Best practices
 
 ### 1. Semantic HTML first
+
 Always use the correct HTML element:
+
 ```html
 <!-- Good -->
 <button class="mg-cta-button">Submit</button>
@@ -125,7 +144,9 @@ Always use the correct HTML element:
 ```
 
 ### 2. Accessibility attributes
+
 Include proper ARIA labels and attributes:
+
 ```html
 <button class="mg-cta-button" aria-label="Download PDF report">
   <span class="mg-cta-button__text">Download</span>
@@ -134,7 +155,9 @@ Include proper ARIA labels and attributes:
 ```
 
 ### 3. Responsive design
+
 Use responsive utility classes:
+
 ```html
 <div class="mg-grid mg-grid--1-col mg-grid--md-2-cols mg-grid--lg-3-cols">
   <!-- Content automatically adapts to screen size -->
@@ -151,13 +174,13 @@ Some components work better with JavaScript. Include these for enhanced function
   import {
     mgTabs,
     mgTabsRuntime,
-  } from "https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js";
+  } from 'https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js';
 
-  console.log("done");
+  console.log('done');
   // Initialize tabs on page load
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener('DOMContentLoaded', () => {
     mgTabs();
-    console.log("tabb");
+    console.log('tabb');
   });
 </script>
 ```

@@ -3,10 +3,10 @@ import { Meta } from '@storybook/blocks';
 <Meta
   title="Getting started/Component structure"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -83,8 +83,10 @@ export function ComponentName({
   // Create class names based on props
   const classNames = [
     'mg-component-name',
-    variant && `mg-component-name--${variant}`
-  ].filter(Boolean).join(' ');
+    variant && `mg-component-name--${variant}`,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classNames} {...props}>
@@ -99,19 +101,23 @@ export function ComponentName({
 Mangrove uses SCSS for styling with these conventions:
 
 1. **Global variables and mixins**
+
    - Located in `stories/assets/scss/`
    - Contains color palette, typography, spacing, and breakpoints
    - Uses variables prefixed with `$mg-` (e.g., `$mg-color-button-background`)
 
 2. **CSS naming methodology**
+
    - Block: `mg-button`
    - Element: `mg-button__icon`
    - Modifier: `mg-button--primary`
    - All component classes use the `mg-` prefix
 
 3. **Responsive design**
+
    - Mobile-first approach
    - Uses breakpoint mixins:
+
    ```scss
    @include devicebreak(medium) {
      // Tablet styles
@@ -184,15 +190,18 @@ Each component's MDX file follows this structure:
 All components must meet WCAG 2.1 Level AA standards:
 
 1. **Keyboard Navigation**
+
    - All interactive elements must be keyboard accessible
    - Focus states must be clearly visible
 
 2. **Screen Reader Support**
+
    - Use semantic HTML elements
    - Include appropriate ARIA attributes
    - Provide alternative text for images
 
 3. **Color Contrast**
+
    - Text must have a contrast ratio of at least 4.5:1
    - UI components must have a contrast ratio of at least 3:1
 
@@ -205,6 +214,7 @@ All components must meet WCAG 2.1 Level AA standards:
 Components should support multiple languages and reading directions:
 
 1. **Text direction**
+
    - Support both LTR and RTL text directions
    - Use CSS logical properties where possible (e.g., `margin-inline-start` instead of `margin-left`)
 
@@ -218,7 +228,7 @@ Example of RTL support in SCSS:
 .mg-component {
   margin-inline-start: 1rem; // Works in both LTR and RTL
 
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     // RTL-specific styles if needed
   }
 }
@@ -229,10 +239,11 @@ Example of RTL support in SCSS:
 Components use these approaches for state management:
 
 1. **Local component state**
+
    - Use React's `useState` and `useEffect` hooks for component-specific state
 
 2. **Controlled vs. uncontrolled components**
-2. **Controlled vs. Uncontrolled Components**
+3. **Controlled vs. Uncontrolled Components**
    - Support both controlled (state managed by parent) and uncontrolled (internal state) modes
 
 Example:
@@ -248,10 +259,12 @@ Example:
 ## Performance considerations
 
 1. **Memoization**
+
    - Use `React.memo` for components that render often but with the same props
    - Use `useCallback` for event handlers passed as props
 
 2. **Code splitting**
+
    - Large components should be split into smaller, focused components
 
 3. **Conditional rendering**
@@ -262,14 +275,17 @@ Example:
 All components should have associated tests verifying:
 
 1. **Rendering**
+
    - Component renders without errors
    - Component displays correct content
 
 2. **Props**
+
    - Component responds correctly to different props
    - Default props work as expected
 
 3. **Events**
+
    - User interactions trigger correct handlers
    - State changes occur as expected
 
@@ -282,14 +298,17 @@ All components should have associated tests verifying:
 When working with existing components, you might encounter these common issues:
 
 1. **Styling conflicts**
+
    - Check for CSS specificity issues
    - Verify component class names follow the `mg-` prefix convention
 
 2. **Prop propagation**
+
    - Ensure props are correctly passed to child components
    - Check that event handlers are properly bound
 
 3. **Rendering issues**
+
    - Verify that conditional rendering logic is correct
    - Check for missing keys in lists
 

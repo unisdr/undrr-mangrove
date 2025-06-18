@@ -9,18 +9,25 @@ export function Breadcrumbcomponent({ data, Color, ...args }) {
   }
 
   return (
-    <nav aria-label="breadcrumbs" className={['mg-breadcrumb', `${colorClass}`].join(' ').trim()}>
+    <nav
+      aria-label="breadcrumbs"
+      className={['mg-breadcrumb', `${colorClass}`].join(' ').trim()}
+    >
       <ul>
         {data.map((item, i) => {
           if (i === lastIndex) {
             return (
-              <li key={i} aria-current={item.text}>{item.text}</li>
+              <li key={i} aria-current={item.text}>
+                {item.text}
+              </li>
             );
           }
 
           return (
             <li key={i}>
-              <a href="#" aria-label={item.text}>{item.text}</a>
+              <a href="#" aria-label={item.text}>
+                {item.text}
+              </a>
             </li>
           );
         })}

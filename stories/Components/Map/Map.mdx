@@ -1,8 +1,8 @@
 import { Meta, Story, Canvas, Source } from '@storybook/blocks';
 import MapComponent, { transformData } from './MapComponent';
-import Fetcher from "../Fetcher/Fetcher";
+import Fetcher from '../Fetcher/Fetcher';
 import * as MapStories from './Map.stories';
-import { Loader} from "../../Utilities/Loader/Loader";
+import { Loader } from '../../Utilities/Loader/Loader';
 
 <Meta of={MapStories} />
 
@@ -12,9 +12,9 @@ The `MapComponent` visualizes geographical data using Leaflet. It displays marke
 
 ## Props
 
-* **`data`**: `Array<{ label: string, value: number, coords: [number, number], description: string }>` - An array of objects representing the data points. *(required)*
-* **`center`**: `[number, number]` - The initial center of the map. *(default: \[20, 0])*
-* **`zoom`**: `number` - The initial zoom level of the map. *(default: 4)*
+- **`data`**: `Array<{ label: string, value: number, coords: [number, number], description: string }>` - An array of objects representing the data points. _(required)_
+- **`center`**: `[number, number]` - The initial center of the map. _(default: \[20, 0])_
+- **`zoom`**: `number` - The initial zoom level of the map. _(default: 4)_
 
 ## Usage
 
@@ -37,7 +37,7 @@ This example uses the transformed data from the API to render the map.
               <MapComponent
                 data={transformData(data)}
                 width={1000}
-                center={[20,30]}
+                center={[20, 30]}
               />
             )}
           </>
@@ -55,20 +55,13 @@ import MapComponent from './MapComponent';
 import Fetcher from '../../Fetcher/Fetcher';
 
 const MapComponentWithFetcher = () => (
-  <Fetcher
-    api="https://sendaicommitments.undrr.org/api/v2/content/commitments-metrics"
-    render={({ isLoading, data }) => (
-      <>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <MapComponent
-            data={transformData(data)}
-          />
-        )}
-      </>
-    )}
-  />
+
+<Fetcher
+  api="https://sendaicommitments.undrr.org/api/v2/content/commitments-metrics"
+  render={({ isLoading, data }) => (
+    <>{isLoading ? <Loader /> : <MapComponent data={transformData(data)} />}</>
+  )}
+/>
 );
 
 export default MapComponentWithFetcher;

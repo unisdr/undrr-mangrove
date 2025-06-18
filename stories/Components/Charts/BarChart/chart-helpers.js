@@ -14,13 +14,13 @@ export const transformDataForBarChart = (results, options = {}) => {
   const {
     startYear = 2015,
     endYear = 2030,
-    defaultColor = "#007bc8",
+    defaultColor = '#007bc8',
     cumulative = false,
-    graphType = "COMMITMENTS",
+    graphType = 'COMMITMENTS',
     apiData = false,
   } = options;
 
-  if (apiData != "true") {
+  if (apiData != 'true') {
     // It's an already prepared data set
     return results;
   }
@@ -30,11 +30,11 @@ export const transformDataForBarChart = (results, options = {}) => {
 
   let valueExtractor;
 
-  if (graphType === "COMMITMENTS") {
+  if (graphType === 'COMMITMENTS') {
     valueExtractor = function (result) {
       return 1;
     };
-  } else if (graphType === "ORGANIZATIONS") {
+  } else if (graphType === 'ORGANIZATIONS') {
     valueExtractor = function (result) {
       let newCount = 0;
 
@@ -56,7 +56,7 @@ export const transformDataForBarChart = (results, options = {}) => {
 
       return newCount; // Return the count of new unique IDs
     };
-  } else if (graphType === "DELIVERABLES") {
+  } else if (graphType === 'DELIVERABLES') {
     valueExtractor = function (result) {
       // Only count if deliverable_id is unique across the entire runtime
       if (!uniqueDeliverableIds.has(result.deliverable_id)) {
@@ -66,13 +66,13 @@ export const transformDataForBarChart = (results, options = {}) => {
       return 0; // Don't count if it's already been seen
     };
   } else {
-    console.error("Invalid graphType passed to mg-bar-chart", graphType);
+    console.error('Invalid graphType passed to mg-bar-chart', graphType);
     return false;
   }
 
   // Iterate over each result and calculate values using the valueExtractor function
-  results.forEach((result) => {
-    if (!seenNodeIds.has(result.node_id) || graphType === "DELIVERABLES") {
+  results.forEach(result => {
+    if (!seenNodeIds.has(result.node_id) || graphType === 'DELIVERABLES') {
       seenNodeIds.add(result.node_id); // Mark node_id as seen
       const year = new Date(result.created_on).getFullYear();
       yearCounts[year] = (yearCounts[year] || 0) + valueExtractor(result); // Correctly call valueExtractor here
@@ -81,7 +81,7 @@ export const transformDataForBarChart = (results, options = {}) => {
 
   const years = Array.from(
     { length: endYear - startYear + 1 },
-    (_, i) => startYear + i,
+    (_, i) => startYear + i
   );
 
   // Clear the original array
@@ -90,7 +90,7 @@ export const transformDataForBarChart = (results, options = {}) => {
   // If cumulative, build the cumulative count
   let cumulativeValue = 0;
 
-  const calculated = years.map((year) => {
+  const calculated = years.map(year => {
     const currentValue = yearCounts[year] || 0;
     if (cumulative) {
       cumulativeValue += currentValue;

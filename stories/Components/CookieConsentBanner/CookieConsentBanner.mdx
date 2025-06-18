@@ -1,7 +1,10 @@
 import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs';
 import CookieConsentBanner from './CookieConsentBanner';
 
-<Meta title="Components/CookieConsentBanner/Documentation" component={CookieConsentBanner} />
+<Meta
+  title="Components/CookieConsentBanner/Documentation"
+  component={CookieConsentBanner}
+/>
 
 # Cookie Consent Banner
 
@@ -98,11 +101,7 @@ const ResetButton = () => {
     }
   };
 
-  return (
-    <button onClick={handleResetConsent}>
-      Reset Cookie Consent
-    </button>
-  );
+  return <button onClick={handleResetConsent}>Reset Cookie Consent</button>;
 };
 ```
 
@@ -114,14 +113,14 @@ You can customize the cookie categories in your configuration:
 const customConfig = {
   categories: {
     necessary: {
-      readOnly: true // This cannot be disabled by the user
+      readOnly: true, // This cannot be disabled by the user
     },
     analytics: {},
     marketing: {},
-    personalization: {}
+    personalization: {},
   },
   // Add corresponding sections in the language settings
-}
+};
 ```
 
 ### Multiple Languages
@@ -131,8 +130,8 @@ The component supports multiple languages:
 ```jsx
 const customConfig = {
   language: {
-    default: "en",
-    autoDetect: "browser",
+    default: 'en',
+    autoDetect: 'browser',
     translations: {
       en: {
         // English translations
@@ -142,10 +141,10 @@ const customConfig = {
       },
       es: {
         // Spanish translations
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};
 ```
 
 ## API Reference
@@ -154,8 +153,8 @@ const customConfig = {
 
 The CookieConsentBanner component accepts the following props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop   | Type   | Default       | Description                                        |
+| ------ | ------ | ------------- | -------------------------------------------------- |
 | config | Object | defaultConfig | Configuration object for the cookie consent banner |
 
 ### Configuration Object Structure
@@ -201,21 +200,21 @@ The vanilla-cookieconsent library provides various callbacks that can be include
 ```jsx
 const customConfig = {
   // Other configuration options...
-  
+
   onFirstConsent: () => {
     // Called the first time user gives consent
     console.log('User consented for the first time!');
   },
-  
+
   onConsent: ({ cookie }) => {
     // Called every time user gives consent
     console.log('Consent given:', cookie);
   },
-  
+
   onChange: ({ changedCategories, changedServices }) => {
     // Called when user changes preferences
     console.log('Changed categories:', changedCategories);
-  }
+  },
 };
 ```
 

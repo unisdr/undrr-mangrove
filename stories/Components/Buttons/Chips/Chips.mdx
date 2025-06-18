@@ -2,14 +2,22 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import { Chips } from './Chips';
 import * as ChipsStories from './Chips.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = {detail: 'Label'}; return engText;
-    case 'arabic': const arabicText = {detail: 'ملصق'}; return arabicText;
-    case 'burmese': const burmeseText = {detail: 'တံဆိပ်'}; return burmeseText;
-    case 'japanese': const japaneseText = {detail: 'ラベル'}; return japaneseText;
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = { detail: 'Label' };
+      return engText;
+    case 'arabic':
+      const arabicText = { detail: 'ملصق' };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = { detail: 'တံဆိပ်' };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = { detail: 'ラベル' };
+      return japaneseText;
     default:
-      return {detail: 'Label'};
+      return { detail: 'Label' };
   }
 };
 
@@ -25,10 +33,10 @@ A button describes the call to action that will be performed when the user click
 
 #### When to use:
 
-* Buttons should be used as primary or secondary calls to actions
-* Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
-* Examples of buttons can be to "VIEW MORE" or "READ MORE" or "SIGN UP"
-* If there are multiple choices for an action item, one default button should be active and the other buttons inactive
+- Buttons should be used as primary or secondary calls to actions
+- Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
+- Examples of buttons can be to "VIEW MORE" or "READ MORE" or "SIGN UP"
+- If there are multiple choices for an action item, one default button should be active and the other buttons inactive
 
 ### Formatting
 
@@ -63,11 +71,11 @@ Chip with hover state and close icon. Changes appearance once the mouse moves ov
 
 ### Usage
 
-* Copy the HTML from the HTML Tab of canvas for either Chips, CTA Button, and CTA Link from the controls.
+- Copy the HTML from the HTML Tab of canvas for either Chips, CTA Button, and CTA Link from the controls.
 
 ### Interactions
 
-* The hover state is applied to the entire button.
+- The hover state is applied to the entire button.
 
 ### Changelog
 

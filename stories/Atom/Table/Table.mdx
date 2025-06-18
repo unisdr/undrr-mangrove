@@ -1,15 +1,48 @@
 import { Meta, Story, Canvas } from '@storybook/blocks';
-import { TableTag } from './Table'
+import { TableTag } from './Table';
 import * as TableStories from './Table.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = {headertext: 'Table header', tdtext: 'Content Goes Here', details: 'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate'}; return engText;
-    case 'arabic': const arabicText = {headertext: 'رأس الجدول', tdtext: 'المحتوى يذهب هنا', details: 'في النشر والتصميم الجرافيكي ، الدمية هي عنصر نائب يستخدم عادة للتوضيح'}; return arabicText;
-    case 'burmese': const burmeseText = {headertext: 'ဇယားခေါင်းစီး', tdtext: 'အကြောင်းအရာကဒီမှာ', details: 'ထုတ်ဝေခြင်းနှင့် ဂရပ်ဖစ်ဒီဇိုင်းများတွင်၊  သည် သရုပ်ပြရန်အတွက် အသုံးများသော နေရာယူထားသော စာသားဖြစ်သည်။'}; return burmeseText;
-    case 'japanese': const japaneseText = {headertext: 'テーブルヘッダー', tdtext: 'コンテンツはここにあります', details: '出版やグラフィックデザインでは、ダミーはデモンストレーションに一般的に使用されるプレースホルダーテキストです'}; return japaneseText;
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = {
+        headertext: 'Table header',
+        tdtext: 'Content Goes Here',
+        details:
+          'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate',
+      };
+      return engText;
+    case 'arabic':
+      const arabicText = {
+        headertext: 'رأس الجدول',
+        tdtext: 'المحتوى يذهب هنا',
+        details:
+          'في النشر والتصميم الجرافيكي ، الدمية هي عنصر نائب يستخدم عادة للتوضيح',
+      };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = {
+        headertext: 'ဇယားခေါင်းစီး',
+        tdtext: 'အကြောင်းအရာကဒီမှာ',
+        details:
+          'ထုတ်ဝေခြင်းနှင့် ဂရပ်ဖစ်ဒီဇိုင်းများတွင်၊  သည် သရုပ်ပြရန်အတွက် အသုံးများသော နေရာယူထားသော စာသားဖြစ်သည်။',
+      };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = {
+        headertext: 'テーブルヘッダー',
+        tdtext: 'コンテンツはここにあります',
+        details:
+          '出版やグラフィックデザインでは、ダミーはデモンストレーションに一般的に使用されるプレースホルダーテキストです',
+      };
+      return japaneseText;
     default:
-      return {headertext: 'Table header', tdtext: 'Content Goes Here', details: 'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate' };
+      return {
+        headertext: 'Table header',
+        tdtext: 'Content Goes Here',
+        details:
+          'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate',
+      };
   }
 };
 
@@ -17,7 +50,7 @@ export const getCaptionForLocale = (locale) => {
 
 # Table
 
-When you need to present large datasets in a way that's actually readable (and doesn't make users want to throw their laptop out the window), tables are your best friend.  All tables require the `.mg-table` class as the foundation.
+When you need to present large datasets in a way that's actually readable (and doesn't make users want to throw their laptop out the window), tables are your best friend. All tables require the `.mg-table` class as the foundation.
 
 ### When to use tables
 

@@ -5,10 +5,10 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <Meta
   title="Getting started/React integration"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -16,16 +16,19 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <TableOfContents
   tocData={[
-    { id: "quick-setup", text: "Quick setup" },
-    { id: "complete-react-app-example", text: "Complete React app example" },
-    { id: "typescript-integration", text: "TypeScript integration" },
-    { id: "component-api-reference", text: "Component API reference" },
-    { id: "hooks-utilities", text: "Hooks and utilities" },
-    { id: "integration-with-frameworks", text: "Integration with popular frameworks" },
-    { id: "custom-component-creation", text: "Custom component creation" },
-    { id: "performance-optimization", text: "Performance optimization" },
-    { id: "testing", text: "Testing" },
-    { id: "next-steps", text: "Next steps" }
+    { id: 'quick-setup', text: 'Quick setup' },
+    { id: 'complete-react-app-example', text: 'Complete React app example' },
+    { id: 'typescript-integration', text: 'TypeScript integration' },
+    { id: 'component-api-reference', text: 'Component API reference' },
+    { id: 'hooks-utilities', text: 'Hooks and utilities' },
+    {
+      id: 'integration-with-frameworks',
+      text: 'Integration with popular frameworks',
+    },
+    { id: 'custom-component-creation', text: 'Custom component creation' },
+    { id: 'performance-optimization', text: 'Performance optimization' },
+    { id: 'testing', text: 'Testing' },
+    { id: 'next-steps', text: 'Next steps' },
   ]}
   showNumbers={false}
 />
@@ -63,13 +66,14 @@ import {
   VerticalCard,
   InputFields,
   Breadcrumbs,
-  StatsCards
+  StatsCards,
 } from '@unisdr/undrr-mangrove';
 ```
 
 ### 3. Include styles
 
 **Option A: Import CSS in your main file**
+
 ```jsx
 // Import the base styles
 import '@unisdr/undrr-mangrove/css/style.css';
@@ -79,6 +83,7 @@ import '@unisdr/undrr-mangrove/css/style-preventionweb.css';
 ```
 
 **Option B: Import in CSS file**
+
 ```css
 /* src/styles/main.css */
 @import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
@@ -355,7 +360,7 @@ import {
   StatsCards,
   CtaButtonProps,
   VerticalCardProps,
-  StatsCardsProps
+  StatsCardsProps,
 } from '@unisdr/undrr-mangrove';
 
 interface FormData {
@@ -378,15 +383,15 @@ const App: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
-    message: ''
+    message: '',
   });
 
   const statsData: StatsCardsProps['data'] = [
     {
       number: '195',
       label: 'UN Member States',
-      description: 'Working together on disaster risk reduction'
-    }
+      description: 'Working together on disaster risk reduction',
+    },
   ];
 
   const cardData: CardData[] = [
@@ -397,8 +402,8 @@ const App: React.FC = () => {
       button: 'Read Report',
       link: '/reports/gar-2024',
       imgalt: 'Report Cover',
-      imgback: 'https://via.placeholder.com/300x200'
-    }
+      imgback: 'https://via.placeholder.com/300x200',
+    },
   ];
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
@@ -406,11 +411,13 @@ const App: React.FC = () => {
     console.log('Form submitted:', formData);
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -428,11 +435,7 @@ const App: React.FC = () => {
 
           <div className="mg-grid mg-grid--2-cols">
             {cardData.map((card, index) => (
-              <VerticalCard
-                key={index}
-                data={[card]}
-                variant="primary"
-              />
+              <VerticalCard key={index} data={[card]} variant="primary" />
             ))}
           </div>
 
@@ -457,15 +460,15 @@ export default App;
 
 ```jsx
 <CtaButton
-  label="Button Text"           // Required: Button text
-  Type="Primary"               // "Primary" | "Secondary"
-  State="Active"               // "Active" | "Disabled"
-  For_Primary="Arrow"          // "Arrow" | "No Arrow" (for primary buttons)
-  onClick={handleClick}        // Click event handler
-  className="custom-class"     // Additional CSS classes
-  style={{ margin: '10px' }}  // Inline styles
-  disabled={false}             // Boolean to disable button
-  type="button"                // "button" | "submit" | "reset"
+  label="Button Text" // Required: Button text
+  Type="Primary" // "Primary" | "Secondary"
+  State="Active" // "Active" | "Disabled"
+  For_Primary="Arrow" // "Arrow" | "No Arrow" (for primary buttons)
+  onClick={handleClick} // Click event handler
+  className="custom-class" // Additional CSS classes
+  style={{ margin: '10px' }} // Inline styles
+  disabled={false} // Boolean to disable button
+  type="button" // "button" | "submit" | "reset"
 />
 ```
 
@@ -473,20 +476,22 @@ export default App;
 
 ```jsx
 <VerticalCard
-  data={[{
-    contenttile: "CATEGORY",
-    title: "Card Title",
-    summaryText: "Card description text...",
-    button: "Read More",
-    link: "/article/link",
-    imgalt: "Image description",
-    imgback: "path/to/image.jpg",
-    share: "Social Share Button",  // Optional
-    label1: "Label 1",             // Optional
-    label2: "Label 2"              // Optional
-  }]}
-  variant="primary"              // "primary" | "secondary" | "tertiary" | "quaternary"
-  className="custom-card"        // Additional CSS classes
+  data={[
+    {
+      contenttile: 'CATEGORY',
+      title: 'Card Title',
+      summaryText: 'Card description text...',
+      button: 'Read More',
+      link: '/article/link',
+      imgalt: 'Image description',
+      imgback: 'path/to/image.jpg',
+      share: 'Social Share Button', // Optional
+      label1: 'Label 1', // Optional
+      label2: 'Label 2', // Optional
+    },
+  ]}
+  variant="primary" // "primary" | "secondary" | "tertiary" | "quaternary"
+  className="custom-card" // Additional CSS classes
 />
 ```
 
@@ -494,19 +499,19 @@ export default App;
 
 ```jsx
 <InputFields
-  type="text"                    // Input type: "text" | "email" | "password" | "tel" | etc.
-  element="input"                // "input" | "textarea"
-  placeholder="Enter text..."    // Placeholder text
-  labelText="Field Label"        // Label text
-  errorText="Error message"      // Error message text
-  helpText="Help text"           // Help/hint text
-  State="Active"                 // "Active" | "Focus" | "Error" | "Disabled"
-  id="field-id"                  // Unique ID for the field
-  value={fieldValue}             // Controlled value
-  onChange={handleChange}        // Change event handler
-  required={true}                // Required field
-  disabled={false}               // Disabled state
-  rows={4}                       // For textarea element
+  type="text" // Input type: "text" | "email" | "password" | "tel" | etc.
+  element="input" // "input" | "textarea"
+  placeholder="Enter text..." // Placeholder text
+  labelText="Field Label" // Label text
+  errorText="Error message" // Error message text
+  helpText="Help text" // Help/hint text
+  State="Active" // "Active" | "Focus" | "Error" | "Disabled"
+  id="field-id" // Unique ID for the field
+  value={fieldValue} // Controlled value
+  onChange={handleChange} // Change event handler
+  required={true} // Required field
+  disabled={false} // Disabled state
+  rows={4} // For textarea element
 />
 ```
 
@@ -516,18 +521,18 @@ export default App;
 <StatsCards
   data={[
     {
-      number: "195",
-      label: "Member States",
-      description: "Working together globally"
+      number: '195',
+      label: 'Member States',
+      description: 'Working together globally',
     },
     {
-      number: "2.3B",
-      label: "People Reached",
-      description: "Through our programs"
-    }
+      number: '2.3B',
+      label: 'People Reached',
+      description: 'Through our programs',
+    },
   ]}
-  variant="default"              // Optional variant
-  className="custom-stats"       // Additional CSS classes
+  variant="default" // Optional variant
+  className="custom-stats" // Additional CSS classes
 />
 ```
 
@@ -538,10 +543,10 @@ export default App;
   data={[
     { label: 'Home', link: '/' },
     { label: 'Reports', link: '/reports' },
-    { label: 'Current Page', link: '#', active: true }
+    { label: 'Current Page', link: '#', active: true },
   ]}
-  separator="/"                  // Custom separator
-  className="custom-breadcrumb"  // Additional CSS classes
+  separator="/" // Custom separator
+  className="custom-breadcrumb" // Additional CSS classes
 />
 ```
 
@@ -670,10 +675,12 @@ const CustomNewsCard = ({
   author,
   image,
   link,
-  featured = false
+  featured = false,
 }) => {
   return (
-    <article className={`mg-news-card ${featured ? 'mg-news-card--featured' : ''}`}>
+    <article
+      className={`mg-news-card ${featured ? 'mg-news-card--featured' : ''}`}
+    >
       {image && (
         <div className="mg-news-card__image">
           <img src={image} alt={title} className="mg-news-card__img" />
@@ -698,7 +705,7 @@ const CustomNewsCard = ({
             label="Read More"
             Type="Secondary"
             For_Primary="Arrow"
-            onClick={() => window.location.href = link}
+            onClick={() => (window.location.href = link)}
           />
         </div>
       </div>
@@ -733,7 +740,9 @@ import React, { lazy, Suspense } from 'react';
 
 // Lazy load heavy components
 const Charts = lazy(() => import('@unisdr/undrr-mangrove/components/Charts'));
-const MapComponent = lazy(() => import('@unisdr/undrr-mangrove/components/Map'));
+const MapComponent = lazy(
+  () => import('@unisdr/undrr-mangrove/components/Map')
+);
 
 function Dashboard() {
   return (
@@ -781,11 +790,7 @@ test('renders CTA button with correct text', () => {
   const handleClick = jest.fn();
 
   render(
-    <CtaButton
-      label="Test Button"
-      Type="Primary"
-      onClick={handleClick}
-    />
+    <CtaButton label="Test Button" Type="Primary" onClick={handleClick} />
   );
 
   const button = screen.getByRole('button', { name: /test button/i });
@@ -807,8 +812,8 @@ export default {
   component: CustomNewsCard,
   argTypes: {
     featured: { control: 'boolean' },
-    category: { control: 'text' }
-  }
+    category: { control: 'text' },
+  },
 };
 
 export const Default = {
@@ -819,8 +824,8 @@ export const Default = {
     date: '2024-03-15',
     author: 'Dr. Jane Smith',
     link: '/articles/climate-resilience',
-    featured: false
-  }
+    featured: false,
+  },
 };
 ```
 

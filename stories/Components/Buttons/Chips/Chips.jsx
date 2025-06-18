@@ -3,7 +3,11 @@ import React from 'react';
 
 export function Chips({ label, Type }) {
   return (
-    <a className={['chip', `${(Type == 'With X' ? ' chip__cross' : '')}`].join('')} href="#" role="button">
+    <a
+      className={['chip', `${Type == 'With X' ? ' chip__cross' : ''}`].join('')}
+      href="#"
+      role="button"
+    >
       {label}
     </a>
   );

@@ -1,8 +1,8 @@
 import { Meta, Story, Canvas, Source } from '@storybook/blocks';
 import BarChartProcessor from './BarChart';
-import Fetcher from "../../Fetcher/Fetcher";
+import Fetcher from '../../Fetcher/Fetcher';
 import * as BarChartStories from './BarChart.stories';
-import { Loader } from "../../../Utilities/Loader/Loader";
+import { Loader } from '../../../Utilities/Loader/Loader';
 
 <Meta of={BarChartStories} />
 
@@ -12,25 +12,25 @@ The `BarChart` component visualizes categorical data using D3.js. It displays ba
 
 ## Props
 
-- **`data`**: `Array<{ label: string, value: number, color: string }>` - An array of objects representing the data points. *(required)*
-- **`apiData`**: `boolean` - Set to true if pulling data from the Drupal API. *(default: false) *
-- **`cumulative`**: `boolean` - Set to true if a cumulative chart. *(default: false) *
-- **`width`**: `number` - The width of the chart in pixels. *(required)*
-- **`height`**: `number` - The height of the chart in pixels. *(required)*
+- **`data`**: `Array<{ label: string, value: number, color: string }>` - An array of objects representing the data points. _(required)_
+- **`apiData`**: `boolean` - Set to true if pulling data from the Drupal API. _(default: false) _
+- **`cumulative`**: `boolean` - Set to true if a cumulative chart. _(default: false) _
+- **`width`**: `number` - The width of the chart in pixels. _(required)_
+- **`height`**: `number` - The height of the chart in pixels. _(required)_
 - **`margin`**: `Object<{ top: number, right: number, bottom: number, left: number }>` - An object representing the chart margins. (default: `{ top: 40, right: 30, bottom: 70, left: 70 }`)
 - **`color`**: `string` - The default fill color for the bars.
-- **`labelColor`**: `string` - The color for the bar labels. *(default: `#FFFFFF`)*
+- **`labelColor`**: `string` - The color for the bar labels. _(default: `#FFFFFF`)_
 - **`title`**: `string` - The title of the chart.
 - **`type`**: `string` - The type of the chart (`COMMITMENTS` | `ORGANIZATIONS` | `DELIVERABLES`).
 - **`backgroundColor`**: `string` - The color of the background.
 - **`axisColor`**: `string` - The color of the axis lines.
 - **`tickColor`**: `string` - The color of the tick lines.
-- **`startYear`**: `string` - The start year. *(optional)*
-- **`endYear`**: `string` - The end year. *(optional)*
-- **`xAxisLabel`**: `string` - The label for the x-axis. *(optional)*
-- **`yAxisLabel`**: `string` - The label for the y-axis. *(optional)*
-- **`dataSource`**: `string` - The data source description. *(optional)*
-- **`ariaLabel`**: `string` - ARIA label for accessibility. *(default: "Bar chart showing data")*
+- **`startYear`**: `string` - The start year. _(optional)_
+- **`endYear`**: `string` - The end year. _(optional)_
+- **`xAxisLabel`**: `string` - The label for the x-axis. _(optional)_
+- **`yAxisLabel`**: `string` - The label for the y-axis. _(optional)_
+- **`dataSource`**: `string` - The data source description. _(optional)_
+- **`ariaLabel`**: `string` - ARIA label for accessibility. _(default: "Bar chart showing data")_
 - **`ariaDescription`**: `string` - A description of the chart content for screen readers.
 
 ## Usage
@@ -43,7 +43,7 @@ This page shows "bring it all together examples of fetching the data and renderi
 
 <Fetcher
   api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-  queryParams={{items_per_page:1000}}
+  queryParams={{ items_per_page: 1000 }}
   render={({ isLoading, data }) => (
     <>
       {isLoading ? (
@@ -79,7 +79,7 @@ This page shows "bring it all together examples of fetching the data and renderi
 
 <Fetcher
   api="https://sfvc-migration.undrr.org/api/v2/content/commitments-metrics"
-  queryParams={{items_per_page:1000}}
+  queryParams={{ items_per_page: 1000 }}
   render={({ isLoading, data }) => (
     <>
       {isLoading ? (
@@ -111,7 +111,7 @@ This page shows "bring it all together examples of fetching the data and renderi
 
 <Fetcher
   api="https://sfvc-migration.undrr.org/api/v2/content/commitment-deliverables-metrics"
-  queryParams={{items_per_page:1000}}
+  queryParams={{ items_per_page: 1000 }}
   render={({ isLoading, data }) => (
     <>
       {isLoading ? (
@@ -146,4 +146,3 @@ Ensure keyboard navigation and ARIA roles are properly implemented for enhanced 
 ### Changelog
 
 1.0 — Initial release of the component
-

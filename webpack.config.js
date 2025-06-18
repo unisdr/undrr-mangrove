@@ -1,27 +1,27 @@
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
-const CopyPlugin = require("copy-webpack-plugin");
-const webpack = require("webpack");
-const webpackEntry = require("./webpack.entries");
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+const webpackEntry = require('./webpack.entries');
 
 const packMode =
-  process.env.NODE_ENV === "development" ? "development" : "production";
+  process.env.NODE_ENV === 'development' ? 'development' : 'production';
 
 module.exports = [
   {
     mode: packMode,
-    entry: webpackEntry("js"),
+    entry: webpackEntry('js'),
     output: {
-      path: path.resolve(__dirname, "dist"),
-      filename: "[name].min.js",
-      libraryTarget: "umd",
+      path: path.resolve(__dirname, 'dist'),
+      filename: '[name].min.js',
+      libraryTarget: 'umd',
     },
     externals: {
-      Swiper: "Swiper",
-      gsap: "gsap",
-      fitty: "fitty",
+      Swiper: 'Swiper',
+      gsap: 'gsap',
+      fitty: 'fitty',
     },
     module: {
       rules: [
@@ -29,38 +29,38 @@ module.exports = [
           test: /\.js$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              presets: [["@babel/preset-env"]],
+              presets: [['@babel/preset-env']],
             },
           },
         },
         {
           test: /\.(svg|png|jpg)$/,
-          type: "asset",
+          type: 'asset',
         },
       ],
     },
     optimization: {
-      minimize: packMode === "production", // Minimize only in production mode
-          minimizer: [
-            new CssMinimizerPlugin({
-              minimizerOptions: {
-                preset: [
-                  'default',
-                  {
-                    discardComments: false,
-                  },
-                ],
+      minimize: packMode === 'production', // Minimize only in production mode
+      minimizer: [
+        new CssMinimizerPlugin({
+          minimizerOptions: {
+            preset: [
+              'default',
+              {
+                discardComments: false,
               },
-            }),
-          ],
+            ],
+          },
+        }),
+      ],
     },
     plugins: [
       new MiniCssExtractPlugin(),
       //new FixStyleOnlyEntriesPlugin(),
       new CopyPlugin({
-        patterns: [{ from: "stories/assets", to: "assets" }],
+        patterns: [{ from: 'stories/assets', to: 'assets' }],
       }),
     ],
   },
@@ -68,23 +68,24 @@ module.exports = [
     mode: packMode, // Set mode dynamically
     entry: {
       ShareButtons:
-        "./stories/Components/Buttons/ShareButtons/ShareButtons.jsx",
-      MegaMenu: "./stories/Components/MegaMenu/MegaMenu.jsx",
-      ScrollContainer: "./stories/Components/ScrollContainer/ScrollContainer.jsx",
-      BarChart: "./stories/Components/Charts/BarChart/BarChart.jsx",
-      MapComponent: "./stories/Components/Map/MapComponent.jsx",
-      QuoteHighlight: "./stories/Components/QuoteHighlight/QuoteHighlight.jsx",
-      Fetcher: "./stories/Components/Fetcher/Fetcher.jsx",
+        './stories/Components/Buttons/ShareButtons/ShareButtons.jsx',
+      MegaMenu: './stories/Components/MegaMenu/MegaMenu.jsx',
+      ScrollContainer:
+        './stories/Components/ScrollContainer/ScrollContainer.jsx',
+      BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
+      MapComponent: './stories/Components/Map/MapComponent.jsx',
+      QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
+      Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
     },
     externals: {
-      react: "react",
-      "react-dom": "react-dom",
+      react: 'react',
+      'react-dom': 'react-dom',
     },
     output: {
-      path: path.resolve(__dirname, "dist/components"),
-      filename: "[name].js",
+      path: path.resolve(__dirname, 'dist/components'),
+      filename: '[name].js',
       library: {
-        type: "module",
+        type: 'module',
       },
     },
     plugins: [
@@ -105,23 +106,23 @@ Compiled on: ${new Date().toISOString()}`,
           test: /\.jsx?$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              presets: [["@babel/preset-react", { runtime: "automatic" }]],
+              presets: [['@babel/preset-react', { runtime: 'automatic' }]],
             },
           },
         },
         {
           test: /\.(css|scss|sass)$/,
-          use: ["style-loader", "css-loader", "sass-loader"],
+          use: ['style-loader', 'css-loader', 'sass-loader'],
         },
         {
           test: /\.(png|jpe?g|gif|svg)$/,
           use: [
             {
-              loader: "file-loader",
+              loader: 'file-loader',
               options: {
-                outputPath: "assets/",
+                outputPath: 'assets/',
               },
             },
           ],
@@ -129,7 +130,7 @@ Compiled on: ${new Date().toISOString()}`,
       ],
     },
     resolve: {
-      extensions: [".jsx", ".js", ".svg"],
+      extensions: ['.jsx', '.js', '.svg'],
     },
   },
 ];

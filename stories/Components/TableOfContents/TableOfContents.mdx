@@ -24,10 +24,10 @@ It consists of a title "On this page" followed by a list of links to the page se
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| tocData | Array | [] | An array of objects, each representing a section with `id` and `text` properties |
-| showNumbers | Boolean | false | If true, renders the list as an ordered list (numbered) |
+| Prop        | Type    | Default | Description                                                                      |
+| ----------- | ------- | ------- | -------------------------------------------------------------------------------- |
+| tocData     | Array   | []      | An array of objects, each representing a section with `id` and `text` properties |
+| showNumbers | Boolean | false   | If true, renders the list as an ordered list (numbered)                          |
 
 ### Content
 
@@ -53,15 +53,17 @@ There are two states: Default and Hover.
 To use the TableOfContents component in your React application:
 
 1. Import the component:
+
    ```jsx
    import TableOfContents from './path/to/TableOfContents';
    ```
 
 2. Prepare your table of contents data:
+
    ```jsx
    const tocData = [
-     { id: "section-1", text: "Section 1 Title" },
-     { id: "section-2", text: "Section 2 Title" },
+     { id: 'section-1', text: 'Section 1 Title' },
+     { id: 'section-2', text: 'Section 2 Title' },
    ];
    ```
 
@@ -78,49 +80,50 @@ It is possible to populate the Table of Contents by scraping a section.
 
 2. Add your HTML
 
-  ```
-  <article className="mg-content">
-    <h1 id="section-1">Welcome to the example</h1>
-    <p>The above header is excluded as it is the H1</p>
-    <section data-mg-table-of-contents data-mg-table-of-contents-title="Title name can be optionally passed" className="mg-table-of-contents">
-    </section>
-    <h2 id="section-2">Section 2</h2>
-    <p>Content for section 2...</p>
-    <h2 id="section-3">Section 3</h2>
-    <p>Content for section 3...</p>
-    <h2 id="section-4" class="mg-table-of-contents--exclude">Section 4</h2>
-    <p>excluded with .mg-table-of-contents--exclude</p>
-    <h3 id="section-5">Sub-section 5</h3>
-    <p>Skipped as it is a h3</p>
-    <h2 id="section-6">Section 6</h2>
-    <p>Content for section 6...</p>
-  </article>
-  ```
+```
+<article className="mg-content">
+  <h1 id="section-1">Welcome to the example</h1>
+  <p>The above header is excluded as it is the H1</p>
+  <section data-mg-table-of-contents data-mg-table-of-contents-title="Title name can be optionally passed" className="mg-table-of-contents">
+  </section>
+  <h2 id="section-2">Section 2</h2>
+  <p>Content for section 2...</p>
+  <h2 id="section-3">Section 3</h2>
+  <p>Content for section 3...</p>
+  <h2 id="section-4" class="mg-table-of-contents--exclude">Section 4</h2>
+  <p>excluded with .mg-table-of-contents--exclude</p>
+  <h3 id="section-5">Sub-section 5</h3>
+  <p>Skipped as it is a h3</p>
+  <h2 id="section-6">Section 6</h2>
+  <p>Content for section 6...</p>
+</article>
+```
 
-  3. Invoke the JS
-  ```
-  useEffect(() => {
-    // Assuming mgTableOfContents is a function that scrapes the content
-    const contentElement = document.querySelector('.mg-content');
-    const tocElement = document.querySelector('[data-mg-table-of-contents]');
-    if (contentElement && tocElement) {
-      mgTableOfContents(contentElement, tocElement);
-    }
-  }, []);
-  ```
+3. Invoke the JS
+
+```
+useEffect(() => {
+  // Assuming mgTableOfContents is a function that scrapes the content
+  const contentElement = document.querySelector('.mg-content');
+  const tocElement = document.querySelector('[data-mg-table-of-contents]');
+  if (contentElement && tocElement) {
+    mgTableOfContents(contentElement, tocElement);
+  }
+}, []);
+```
 
 Notes:
 
 - See the Scraped Content story for an example.
 - This only selects h2 headings.
-    - In the future we may support nested levels, but this is not currently implemented.
+  - In the future we may support nested levels, but this is not currently implemented.
 - Exclude headings by adding a class of `.mg-table-of-contents--exclude`.
 - Ensure you have the CSS styles mentioned in the CSS References section applied to your page.
 
 ### Interactions
 
-* Hover state appears when the mouse is over a link.
-* Clicking a link scrolls the page to the corresponding section.
+- Hover state appears when the mouse is over a link.
+- Clicking a link scrolls the page to the corresponding section.
 
 ### Accessibility
 
@@ -131,8 +134,8 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 - 1.4: Fix anchor links to work properly in Storybook/React environments (prevent full page navigation, use smooth scrolling).
 - 1.3: Support the passing of the name of the title for React usage.
 - 1.2:
-    - Add ability to pass title (`data-mg-table-of-contents-title="Title name can be optionally passed"`, can be hidden by passing `hidden`)
-    - Remove excessive CSS, this can instead be added at the page level
-    - Do not show .mg-u-sr-only headers in the table of contents
+  - Add ability to pass title (`data-mg-table-of-contents-title="Title name can be optionally passed"`, can be hidden by passing `hidden`)
+  - Remove excessive CSS, this can instead be added at the page level
+  - Do not show .mg-u-sr-only headers in the table of contents
 - 1.1 — Add `showNumbers` prop to support numbered lists
 - 1.0 — Initial version

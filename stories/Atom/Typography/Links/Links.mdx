@@ -2,14 +2,22 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import { Link } from './Links';
 import * as LinksStories from './Links.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = {detail: 'Default link'}; return engText;
-    case 'arabic': const arabicText = {detail: 'الارتباط الافتراضي'}; return arabicText;
-    case 'burmese': const burmeseText = {detail: 'မူရင်းလင့်ခ်'}; return burmeseText;
-    case 'japanese': const japaneseText = {detail: 'デフォルトのリンク'}; return japaneseText;
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = { detail: 'Default link' };
+      return engText;
+    case 'arabic':
+      const arabicText = { detail: 'الارتباط الافتراضي' };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = { detail: 'မူရင်းလင့်ခ်' };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = { detail: 'デフォルトのリンク' };
+      return japaneseText;
     default:
-      return {detail: 'Default link'};
+      return { detail: 'Default link' };
   }
 };
 
@@ -47,7 +55,7 @@ Desktop and Laptop: The font size of the Link is biggest in Desktop and Laptop.
 
 ### Usage
 
-* Copy the HTML from Canvas page
+- Copy the HTML from Canvas page
 
 ### Interactions
 

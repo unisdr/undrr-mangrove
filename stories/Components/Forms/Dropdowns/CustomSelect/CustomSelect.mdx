@@ -2,13 +2,22 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import CustomSelect from './CustomSelect';
 import * as CustomSelectStories from './CustomSelect.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = 'Select Language'; return engText;
-    case 'arabic': const arabicText = 'اختار اللغة'; return arabicText;
-    case 'burmese': const burmeseText = 'ဘာသာစကားကို ရွေးပါ။'; return burmeseText;
-    case 'japanese': const japaneseText = '言語を選択する'; return japaneseText;
-    default: return 'Category';
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = 'Select Language';
+      return engText;
+    case 'arabic':
+      const arabicText = 'اختار اللغة';
+      return arabicText;
+    case 'burmese':
+      const burmeseText = 'ဘာသာစကားကို ရွေးပါ။';
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = '言語を選択する';
+      return japaneseText;
+    default:
+      return 'Category';
   }
 };
 
@@ -26,7 +35,7 @@ The custom select dropdown element allows users to choose a single option from a
 
 ### When to use:
 
-* When single or custom options are to be grouped under a single title.
+- When single or custom options are to be grouped under a single title.
 
 ### Formatting
 
@@ -47,10 +56,10 @@ The direction of the arrow indicates if one option is selected. The downward arr
 The Dropdown boxes are either opened or closed.
 The Custom dropdown boxes either have auto or fixed height.
 
-* Closed and Auto Height:
-* Closed and Fixed Height:
-* Open and Auto Height:
-* Open and Fixed Height:
+- Closed and Auto Height:
+- Closed and Fixed Height:
+- Open and Auto Height:
+- Open and Fixed Height:
 
 <Canvas>
   <Story of={CustomSelectStories.Select} />
@@ -64,8 +73,8 @@ If you need a fixed height dropdown then apply Height to the "ul" tag of dropdow
 
 ### Interactions
 
-* By clicking on the arrow, the custom select dropdown box can be opened or closed.
-* By clicking on the option/options, those can be selected.
+- By clicking on the arrow, the custom select dropdown box can be opened or closed.
+- By clicking on the option/options, those can be selected.
 
 ### Changelog
 

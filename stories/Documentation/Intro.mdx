@@ -4,11 +4,11 @@ import { linkTo } from '@storybook/addon-links';
 <Meta
   title="Introduction"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
+      canvas: { hidden: true },
     },
-    order: 1
+    order: 1,
   }}
 />
 
@@ -24,19 +24,15 @@ This isn't just a technical upgrade. It's a shift in mindset. It means our users
 
 ## Key benefits
 
-* ✅ **Standardization reduces duplication**: Fixes and improvements are applied once, not across multiple systems
-* ✅ **Better user experience**: A unified interface improves navigation, familiarity, and trust
-* ✅ **Accessibility by default**: Centralized components make compliance easier and more consistent
-* ✅ **Faster, focused development**: Developers spend less time reinventing and more time innovating
-* ✅ **Cross-site content sharing**: Consistent design enables syndication of news, publications, and more
+- ✅ **Standardization reduces duplication**: Fixes and improvements are applied once, not across multiple systems
+- ✅ **Better user experience**: A unified interface improves navigation, familiarity, and trust
+- ✅ **Accessibility by default**: Centralized components make compliance easier and more consistent
+- ✅ **Faster, focused development**: Developers spend less time reinventing and more time innovating
+- ✅ **Cross-site content sharing**: Consistent design enables syndication of news, publications, and more
 
 This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles. These components offer consistency, documentation and portability to speed quality development with the expected look and feel, while helping reduce entropy—critical in ensuring websites remain accessible.
 
 Mangrove is how we future-proof our platform. It's how we scale with integrity, accessibility, and resilience. And it's one of the most practical investments we can make in the long-term strength of UNDRR's web ecosystem.
-
-
-
-
 
 ---
 
@@ -66,10 +62,10 @@ Performance optimization, accessibility guidelines, and development best practic
 
 Mangrove uses a loose [atomic design](https://atomicdesign.bradfrost.com/chapter-2/) approach, but major concepts are split as follows:
 
-* **Getting started**: High level information on what Mangrove is, and comprehensive onboarding guides for different use cases
-* **Design decisions**: Colours, spacing, typography and foundational design elements
-* **Components**: The bread and butter of cards, buttons, forms, and interactive elements
-* **Templates** (to come): High-level organisms that show a whole section layout or page
+- **Getting started**: High level information on what Mangrove is, and comprehensive onboarding guides for different use cases
+- **Design decisions**: Colours, spacing, typography and foundational design elements
+- **Components**: The bread and butter of cards, buttons, forms, and interactive elements
+- **Templates** (to come): High-level organisms that show a whole section layout or page
 
 ## Codebase
 
@@ -80,12 +76,19 @@ Developers are encouraged to consume the project through the remotely available 
 ### Quick start URLs
 
 **CSS Files (for HTML/CSS approach):**
+
 ```html
 <!-- Theme styles (choose one) -->
 <!-- UNDRR global style -->
-<link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css">
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css"
+/>
 <!-- or -->
-<link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css">
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"
+/>
 ```
 
 **npm Package (for React/build process integration):**
@@ -110,9 +113,9 @@ yarn install @unisdr/undrr-mangrove
 
 The Mangrove component library is built with:
 
-* [Storybook](https://storybook.js.org/) - For component documentation and development
-* [React](https://reactjs.org/) - For component implementation
-* [SCSS](https://sass-lang.com/) - For component styling
+- [Storybook](https://storybook.js.org/) - For component documentation and development
+- [React](https://reactjs.org/) - For component implementation
+- [SCSS](https://sass-lang.com/) - For component styling
 
 ### License
 

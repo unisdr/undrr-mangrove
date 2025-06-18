@@ -36,7 +36,9 @@ const QuoteHighlight = ({
           )}
         </blockquote>
 
-        {variant === 'line' && <div className={`${baseClass}__separator`}></div>}
+        {variant === 'line' && (
+          <div className={`${baseClass}__separator`}></div>
+        )}
 
         {(attribution || attributionTitle || hasImage) && (
           <div className={`${baseClass}__attribution`}>
@@ -52,8 +54,18 @@ const QuoteHighlight = ({
               )}
               {(attribution || attributionTitle) && (
                 <div className={`${baseClass}__attribution-text`}>
-                  {attribution && <p className={`${baseClass}__attribution-name`} dangerouslySetInnerHTML={{ __html: attribution }} />}
-                  {attributionTitle && <p className={`${baseClass}__attribution-title`} dangerouslySetInnerHTML={{ __html: attributionTitle }} />}
+                  {attribution && (
+                    <p
+                      className={`${baseClass}__attribution-name`}
+                      dangerouslySetInnerHTML={{ __html: attribution }}
+                    />
+                  )}
+                  {attributionTitle && (
+                    <p
+                      className={`${baseClass}__attribution-title`}
+                      dangerouslySetInnerHTML={{ __html: attributionTitle }}
+                    />
+                  )}
                 </div>
               )}
             </div>

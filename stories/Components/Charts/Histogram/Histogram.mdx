@@ -14,13 +14,13 @@ The `Histogram` component visualizes the distribution of numerical data by divid
 
 ## Props
 
-* **`dataSeries`**: `Array<{ seriesLabel: string, data: number[], color: string }>` - An array of objects, each containing a label, a dataset, and a color. *(required)*
-* **`width`**: `number` - The width of the chart in pixels. *(required)*
-* **`height`**: `number` - The height of the chart in pixels. *(required)*
-* **`bins`**: `number` - The number of bins to divide the data into. *(default: 30)*
-* **`locale`**: `string` - The locale for the chart, e.g., `"en"` or `"ar"`. *(default: `"en"`)*
-* **`direction`**: `string` - The text direction, `"ltr"` or `"rtl"`. *(default: `"ltr"`)*
-* **`title`**: `string` - The title of the chart. *(optional)*
+- **`dataSeries`**: `Array<{ seriesLabel: string, data: number[], color: string }>` - An array of objects, each containing a label, a dataset, and a color. _(required)_
+- **`width`**: `number` - The width of the chart in pixels. _(required)_
+- **`height`**: `number` - The height of the chart in pixels. _(required)_
+- **`bins`**: `number` - The number of bins to divide the data into. _(default: 30)_
+- **`locale`**: `string` - The locale for the chart, e.g., `"en"` or `"ar"`. _(default: `"en"`)_
+- **`direction`**: `string` - The text direction, `"ltr"` or `"rtl"`. _(default: `"ltr"`)_
+- **`title`**: `string` - The title of the chart. _(optional)_
 
 ## Usage
 
@@ -41,18 +41,19 @@ import React from 'react';
 import Histogram from './Histogram';
 
 const DefaultHistogram = () => (
-  <Histogram
-    dataSeries={[
-      { 
-        seriesLabel: "Sample Data", 
-        data: [10, 20, 20, 30, 30, 30, 40, 50, 60, 70, 80, 90, 100, 100, 110],
-        color: "#69b3a2"
-      }
-    ]}
-    width={500}
-    height={300}
-    title="Default Histogram"
-  />
+
+<Histogram
+  dataSeries={[
+    {
+      seriesLabel: 'Sample Data',
+      data: [10, 20, 20, 30, 30, 30, 40, 50, 60, 70, 80, 90, 100, 100, 110],
+      color: '#69b3a2',
+    },
+  ]}
+  width={500}
+  height={300}
+  title="Default Histogram"
+/>
 );
 
 export default DefaultHistogram;
@@ -74,24 +75,25 @@ import React from 'react';
 import Histogram from './Histogram';
 
 const MultipleSeriesHistogram = () => (
-  <Histogram
-    dataSeries={[
-      { 
-        seriesLabel: "Dataset 1", 
-        data: [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125],
-        color: "#69b3a2"
-      },
-      { 
-        seriesLabel: "Dataset 2", 
-        data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130],
-        color: "#ff6347"
-      }
-    ]}
-    width={600}
-    height={400}
-    bins={10}
-    title="Multiple Series Histogram"
-  />
+
+<Histogram
+  dataSeries={[
+    {
+      seriesLabel: 'Dataset 1',
+      data: [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125],
+      color: '#69b3a2',
+    },
+    {
+      seriesLabel: 'Dataset 2',
+      data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130],
+      color: '#ff6347',
+    },
+  ]}
+  width={600}
+  height={400}
+  bins={10}
+  title="Multiple Series Histogram"
+/>
 );
 
 export default MultipleSeriesHistogram;
@@ -113,25 +115,26 @@ import React from 'react';
 import Histogram from './Histogram';
 
 const MirroredHistogram = () => (
-  <Histogram
-    dataSeries={[
-      { 
-        seriesLabel: "Group A", 
-        data: [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125],
-        color: "#69b3a2"
-      },
-      { 
-        seriesLabel: "Group B", 
-        data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130],
-        color: "#ff6347"
-      }
-    ]}
-    width={600}
-    height={400}
-    bins={10}
-    mirrored={true}
-    title="Mirrored Histogram"
-  />
+
+<Histogram
+  dataSeries={[
+    {
+      seriesLabel: 'Group A',
+      data: [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125],
+      color: '#69b3a2',
+    },
+    {
+      seriesLabel: 'Group B',
+      data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130],
+      color: '#ff6347',
+    },
+  ]}
+  width={600}
+  height={400}
+  bins={10}
+  mirrored={true}
+  title="Mirrored Histogram"
+/>
 );
 
 export default MirroredHistogram;
@@ -153,24 +156,25 @@ import React from 'react';
 import Histogram from './Histogram';
 
 const OverlappingHistogram = () => (
-  <Histogram
-    dataSeries={[
-      { 
-        seriesLabel: "Variable 1", 
-        data: Array.from({ length: 1000 }, () => Math.random() * 2 - 1),
-        color: "#69b3a2"
-      },
-      { 
-        seriesLabel: "Variable 2", 
-        data: Array.from({ length: 1000 }, () => Math.random() * 2 + 3),
-        color: "#404080"
-      }
-    ]}
-    width={800}
-    height={400}
-    bins={30}
-    title="Overlapping Histogram"
-  />
+
+<Histogram
+  dataSeries={[
+    {
+      seriesLabel: 'Variable 1',
+      data: Array.from({ length: 1000 }, () => Math.random() * 2 - 1),
+      color: '#69b3a2',
+    },
+    {
+      seriesLabel: 'Variable 2',
+      data: Array.from({ length: 1000 }, () => Math.random() * 2 + 3),
+      color: '#404080',
+    },
+  ]}
+  width={800}
+  height={400}
+  bins={30}
+  title="Overlapping Histogram"
+/>
 );
 
 export default OverlappingHistogram;

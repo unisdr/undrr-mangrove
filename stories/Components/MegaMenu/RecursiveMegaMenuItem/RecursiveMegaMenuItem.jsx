@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 function RecursiveListItem({ title, url, items }) {
   return (
@@ -13,7 +13,7 @@ function RecursiveListItem({ title, url, items }) {
       )}
     </li>
   );
-};
+}
 
 export function RecursiveListMenu({ items }) {
   return (

@@ -1,13 +1,13 @@
-import { Meta, Story, Source} from '@storybook/blocks';
+import { Meta, Story, Source } from '@storybook/blocks';
 import { DesignTokenDocBlock } from 'storybook-design-token';
 
 <Meta
   title="Design decisions/Breakpoint"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -19,7 +19,8 @@ Sizes at which the content of the website adapts itself to device width.
 
 Based on user analytics Mangrove takes a relatively conservative approach to widths. While there is value in offering designs that cater to larger screen sizes (1440px), the **1200px resolution** remains the key target. Testing and development efforts should prioritize this width to accommodate the largest possible portion of the user base without overextending resources.
 
-1. **Desktop Users**: 
+1. **Desktop Users**:
+
    - **75% of users** are on desktop devices.
    - A small percentage of users access the site from tablets.
 
@@ -29,8 +30,12 @@ Based on user analytics Mangrove takes a relatively conservative approach to wid
    - **80% of users** can handle **1280px width**.
    - **55% of users** will see content at **1440px width**.
 
-Data is [last updated in February 2023](https://gitlab.com/undrr/web-backlog/-/issues/667). 
+Data is [last updated in February 2023](https://gitlab.com/undrr/web-backlog/-/issues/667).
 
 ## List of breakpoints
 
-<DesignTokenDocBlock categoryName="Breakpoints" maxHeight={600} viewType="table" />
+<DesignTokenDocBlock
+  categoryName="Breakpoints"
+  maxHeight={600}
+  viewType="table"
+/>

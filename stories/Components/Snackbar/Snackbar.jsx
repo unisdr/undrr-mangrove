@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { ErrorIcon, WarningIcon, InfoIcon, SuccessIcon } from "./SnackbarIcons";
+import React, { useEffect, useRef } from 'react';
+import { ErrorIcon, WarningIcon, InfoIcon, SuccessIcon } from './SnackbarIcons';
 
 /**
  * snackbar component, should be used with react state to control the opened prop and the onClose callback
@@ -20,7 +20,7 @@ const Snackbar = ({
 }) => {
   let icon;
   const closeButtonRef = useRef(null);
-  
+
   // close the snackbar after the openedMiliseconds if it is set
   useEffect(() => {
     if (opened && openedMiliseconds) {
@@ -34,38 +34,38 @@ const Snackbar = ({
       };
     }
   }, [opened, openedMiliseconds, onClose]);
-  
+
   // Add keyboard support - close on escape key
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = event => {
       if (opened && event.key === 'Escape') {
         onClose();
       }
     };
-    
+
     document.addEventListener('keydown', handleKeyDown);
-    
+
     // Focus the close button when snackbar opens
     if (opened && closeButtonRef.current) {
       closeButtonRef.current.focus();
     }
-    
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [opened, onClose]);
-  
+
   switch (severity) {
-    case "error":
+    case 'error':
       icon = <ErrorIcon />;
       break;
-    case "warning":
+    case 'warning':
       icon = <WarningIcon />;
       break;
-    case "info":
+    case 'info':
       icon = <InfoIcon />;
       break;
-    case "success":
+    case 'success':
       icon = <SuccessIcon />;
       break;
     default:
@@ -74,14 +74,14 @@ const Snackbar = ({
 
   // Prepare screen reader announcement
   const getAriaLabel = () => {
-    if (!severity) return "";
+    if (!severity) return '';
     return `${severity} notification: `;
   };
 
   return (
     <aside
       className={`mg-snackbar-wrapper ${
-        opened ? "mg-snackbar-wrapper__open" : ""
+        opened ? 'mg-snackbar-wrapper__open' : ''
       }`}
       aria-live="assertive"
       aria-atomic="true"
@@ -97,9 +97,9 @@ const Snackbar = ({
             <span className="mg-u-sr-only">{getAriaLabel()}</span>
             {message}
           </span>
-          <button 
+          <button
             ref={closeButtonRef}
-            className="mg-button" 
+            className="mg-button"
             onClick={() => onClose()}
             aria-label="Close notification"
           >
@@ -112,8 +112,8 @@ const Snackbar = ({
 };
 
 export const ShowOffSnackbar = ({
-  severity = "info",
-  message = "Showing off an example of the snackbar",
+  severity = 'info',
+  message = 'Showing off an example of the snackbar',
   openedMiliseconds,
 }) => {
   const [SnackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -146,25 +146,31 @@ export const ShowOffSnackbar = ({
 export const SnackbarPreview = ({ severity, message }) => {
   return (
     <div style={{ position: 'relative', height: '80px', marginBottom: '20px' }}>
-      <div className="mg-snackbar-wrapper mg-snackbar-wrapper__open" style={{ position: 'relative', transform: 'none', left: '0', width: '100%', maxWidth: '100%' }}>
+      <div
+        className="mg-snackbar-wrapper mg-snackbar-wrapper__open"
+        style={{
+          position: 'relative',
+          transform: 'none',
+          left: '0',
+          width: '100%',
+          maxWidth: '100%',
+        }}
+      >
         <div className={`mg-snackbar mg-snackbar__${severity}`} role="alert">
           <div className="mg-snackbar__content">
             {severity && (
               <span className={`mg-snackbar__icon`} aria-hidden="true">
-                {severity === "error" && <ErrorIcon />}
-                {severity === "warning" && <WarningIcon />}
-                {severity === "info" && <InfoIcon />}
-                {severity === "success" && <SuccessIcon />}
+                {severity === 'error' && <ErrorIcon />}
+                {severity === 'warning' && <WarningIcon />}
+                {severity === 'info' && <InfoIcon />}
+                {severity === 'success' && <SuccessIcon />}
               </span>
             )}
             <span className={`mg-snackbar__message`}>
               <span className="mg-u-sr-only">{`${severity} notification: `}</span>
               {message}
             </span>
-            <button 
-              className="mg-button" 
-              aria-label="Close notification"
-            >
+            <button className="mg-button" aria-label="Close notification">
               Close
             </button>
           </div>

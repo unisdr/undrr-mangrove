@@ -1,82 +1,82 @@
-import { Meta, Story, Canvas} from "@storybook/blocks";
-import { Languageswitcher } from "./LanguageSwitcher";
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { Languageswitcher } from './LanguageSwitcher';
 import * as LanguageSwitcherStories from './LanguageSwitcher.stories';
 
-export const getCaptionForLocale = (locale) => {
+export const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
         languagedata: [
           {
-            descriptionText: "Français",
-            lang: "fr",
+            descriptionText: 'Français',
+            lang: 'fr',
           },
           {
-            descriptionText: "Español",
-            lang: "es",
+            descriptionText: 'Español',
+            lang: 'es',
           },
         ],
-        headerText: "English",
+        headerText: 'English',
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
         languagedata: [
           {
-            descriptionText: "فرنسي",
-            lang: "fr",
+            descriptionText: 'فرنسي',
+            lang: 'fr',
           },
           {
-            descriptionText: "الاسبانية",
-            lang: "es",
+            descriptionText: 'الاسبانية',
+            lang: 'es',
           },
         ],
-        headerText: "إنجليزي",
+        headerText: 'إنجليزي',
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
         languagedata: [
           {
-            descriptionText: "ပြင်သစ်",
-            lang: "fr",
+            descriptionText: 'ပြင်သစ်',
+            lang: 'fr',
           },
           {
-            descriptionText: "ငပိ",
-            lang: "es",
+            descriptionText: 'ငပိ',
+            lang: 'es',
           },
         ],
-        headerText: "အင်္ဂလိပ်စာ",
+        headerText: 'အင်္ဂလိပ်စာ',
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
         languagedata: [
           {
-            descriptionText: "フランス語",
-            lang: "fr",
+            descriptionText: 'フランス語',
+            lang: 'fr',
           },
           {
-            descriptionText: "スペイン語",
-            lang: "es",
+            descriptionText: 'スペイン語',
+            lang: 'es',
           },
         ],
-        headerText: "英語",
+        headerText: '英語',
       };
       return japaneseText;
     default:
       const dummy = {
         languagedata: [
           {
-            descriptionText: "Français",
-            lang: "fr",
+            descriptionText: 'Français',
+            lang: 'fr',
           },
           {
-            descriptionText: "Español",
-            lang: "es",
+            descriptionText: 'Español',
+            lang: 'es',
           },
         ],
-        headerText: "English",
+        headerText: 'English',
       };
       return dummy;
   }
@@ -125,20 +125,20 @@ There are two states: Default and Open.
 
 ### Usage:
 
-* Choose the color variant either Blue or White from the control tab of canvas.
-* Copy HTML from the HTML tab and also include css and js files listed below.
-* Initialize the Language Switcher by calling langSwitch() function.
+- Choose the color variant either Blue or White from the control tab of canvas.
+- Copy HTML from the HTML tab and also include css and js files listed below.
+- Initialize the Language Switcher by calling langSwitch() function.
 
 ### CSS and JS references
 
 #### JS:
 
-* https://assets.undrr.org/testing/static/mangrove/latest/assets/js/lang-switcher.js
+- https://assets.undrr.org/testing/static/mangrove/latest/assets/js/lang-switcher.js
 
 ### Interactions
 
-* By clicking on the drop-down menu, language can be selected.
-* After selecting the language, the language of the entire page is changed.
+- By clicking on the drop-down menu, language can be selected.
+- After selecting the language, the language of the entire page is changed.
 
 ### Changelog
 

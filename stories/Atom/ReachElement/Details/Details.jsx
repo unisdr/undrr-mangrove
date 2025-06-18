@@ -3,9 +3,7 @@ import React from 'react';
 
 export const DetailsTag = ({ summary, details }) => (
   <details>
-    <summary>
-      {summary}
-    </summary>
+    <summary>{summary}</summary>
     <p>{details}</p>
   </details>
 );

@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story, Source} from '@storybook/blocks';
+import { Canvas, Meta, Story, Source } from '@storybook/blocks';
 import { Grid } from './Grid';
 import * as GridStories from './Grid.stories';
 
@@ -6,10 +6,10 @@ import * as GridStories from './Grid.stories';
   of={GridStories}
   title="Design decisions/Grid layout"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -25,27 +25,25 @@ This grid system is based on CSS Grid. The grid comes in two main layouts: auto 
 
 Use the grid to create a layout of your choice based on the design you want to achieve.
 
-* copy the HTML of the variant you want and add the CSS file below to get started.
+- copy the HTML of the variant you want and add the CSS file below to get started.
 
 #### HTML for AUTO LAYOUT VARIANT:
 
 ```html
-<div class="mg-grid">
-</div>
+<div class="mg-grid"></div>
 ```
 
-#### HTML for  SPECIFIED COLUMN(S) LAYOUT VARIANT:
+#### HTML for SPECIFIED COLUMN(S) LAYOUT VARIANT:
 
 ```html
-<div class="mg-grid mg-grid__col-3">
-</div>
+<div class="mg-grid mg-grid__col-3"></div>
 ```
 
 #### CSS:
 
 Add the base layout style from
 
-* https://assets.undrr.org/testing/static/mangrove/latest/assets/css/grid.min.css
+- https://assets.undrr.org/testing/static/mangrove/latest/assets/css/grid.min.css
 
 ### Changelog
 

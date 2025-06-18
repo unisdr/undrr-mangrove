@@ -5,10 +5,10 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <Meta
   title="Getting started/A getting started guide"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -16,16 +16,16 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <TableOfContents
   tocData={[
-    { id: "what-is-mangrove", text: "What is Mangrove?" },
-    { id: "quick-start", text: "Quick Start (30 seconds)" },
-    { id: "integration-approaches", text: "Integration Approaches" },
-    { id: "architecture-overview", text: "Architecture Overview" },
-    { id: "key-principles", text: "Key Principles" },
-    { id: "common-use-cases", text: "Common Use Cases" },
-    { id: "development-setup", text: "Development Setup" },
-    { id: "assets-location", text: "Assets Location" },
-    { id: "next-steps", text: "Next Steps" },
-    { id: "need-help", text: "Need Help?" },
+    { id: 'what-is-mangrove', text: 'What is Mangrove?' },
+    { id: 'quick-start', text: 'Quick Start (30 seconds)' },
+    { id: 'integration-approaches', text: 'Integration Approaches' },
+    { id: 'architecture-overview', text: 'Architecture Overview' },
+    { id: 'key-principles', text: 'Key Principles' },
+    { id: 'common-use-cases', text: 'Common Use Cases' },
+    { id: 'development-setup', text: 'Development Setup' },
+    { id: 'assets-location', text: 'Assets Location' },
+    { id: 'next-steps', text: 'Next Steps' },
+    { id: 'need-help', text: 'Need Help?' },
   ]}
   showNumbers={false}
 />
@@ -35,6 +35,7 @@ Welcome to UNDRR Mangrove - the component library that brings consistency, acces
 ## What is mangrove?
 
 Mangrove is UNDRR's component library that provides:
+
 - ✅ **Pre-built, tested components** ready for production
 - ✅ **Consistent design** across all UNDRR projects
 - ✅ **Accessibility built-in** with WCAG 2.1 AA compliance
@@ -49,21 +50,33 @@ The fastest way to get started:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <!-- Base styling -->
-  <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css">
-  <!-- or choose a site specific theme -->
-  <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-mcr.css">
-  <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-irp.css">
-  <link rel="stylesheet" href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css">
-</head>
-<body>
-  <!-- 2. Use any component -->
-  <button class="mg-cta-button mg-cta-button--primary">
-    <span class="mg-cta-button__text">Get Started</span>
-    <span class="mg-cta-button__icon" aria-hidden="true">→</span>
-  </button>
-</body>
+  <head>
+    <!-- Base styling -->
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css"
+    />
+    <!-- or choose a site specific theme -->
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-mcr.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-irp.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"
+    />
+  </head>
+  <body>
+    <!-- 2. Use any component -->
+    <button class="mg-cta-button mg-cta-button--primary">
+      <span class="mg-cta-button__text">Get Started</span>
+      <span class="mg-cta-button__icon" aria-hidden="true">→</span>
+    </button>
+  </body>
 </html>
 ```
 
@@ -72,6 +85,7 @@ The fastest way to get started:
 Choose the approach that best fits your project:
 
 ### 🎯 Approach 1: Vanilla HTML/CSS (simplest)
+
 **Best for**: Static sites, existing projects, quick prototypes
 
 - Include CSS files via CDN
@@ -81,18 +95,30 @@ Choose the approach that best fits your project:
 - Add the referenced CSS and JS files to your project as specified in the documentation
 - No JavaScript required for most components
 
-<a href="javascript:void(0)" onClick={linkTo('getting-started-vanilla-html-css', 'docs')}>→ See Vanilla HTML/CSS Guide</a>
+<a
+  href="javascript:void(0)"
+  onClick={linkTo('getting-started-vanilla-html-css', 'docs')}
+>
+  → See Vanilla HTML/CSS Guide
+</a>
 
 ### 🎨 Approach 2: Sass integration
+
 **Best for**: Custom themes, design system extensions
 
 - Import Sass files into your build process
 - Customize variables and mixins
 - Build your own theme variants
 
-<a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>→ See Sass Integration Guide</a>
+<a
+  href="javascript:void(0)"
+  onClick={linkTo('getting-started-sass-integration', 'docs')}
+>
+  → See Sass Integration Guide
+</a>
 
 ### ⚛️ Approach 3: React components (full power)
+
 **Best for**: React applications, dynamic interfaces
 
 - Import React components directly
@@ -100,7 +126,12 @@ Choose the approach that best fits your project:
 - Props-based customization
 - Built-in state management
 
-<a href="javascript:void(0)" onClick={linkTo('getting-started-react-integration', 'docs')}>→ See React Integration Guide</a>
+<a
+  href="javascript:void(0)"
+  onClick={linkTo('getting-started-react-integration', 'docs')}
+>
+  → See React Integration Guide
+</a>
 
 ## Architecture overview
 
@@ -129,25 +160,35 @@ Mangrove follows a loose [atomic design](https://atomicdesign.bradfrost.com/) me
 ## Key principles
 
 ### Framework agnostic
+
 Mangrove is designed to be framework agnostic, meaning it can work seamlessly with nearly any existing system. This approach offers maximum flexibility and ease of integration across various projects and technologies.
 
 Works with any technology stack - React, Vue, Angular, plain HTML, WordPress, Drupal, etc.
 
 Key features of our framework-agnostic approach:
 
-* **Minimal dependencies**: Our design system avoids reliance on specific frameworks or libraries to prevent conflicts with your existing projects.
-* **Easy integration**: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
-* **Consistent design**: The design system maintains a consistent look and feel across different implementations by focusing on repeatable HTML structures.
+- **Minimal dependencies**: Our design system avoids reliance on specific frameworks or libraries to prevent conflicts with your existing projects.
+- **Easy integration**: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
+- **Consistent design**: The design system maintains a consistent look and feel across different implementations by focusing on repeatable HTML structures.
 
 ### CSS namespace
+
 All styles use the `mg-` prefix to prevent conflicts with your existing codebase:
+
 ```css
-.mg-button { /* Mangrove button */ }
-.mg-card { /* Mangrove card */ }
-.mg-form__input { /* Mangrove form input */ }
+.mg-button {
+  /* Mangrove button */
+}
+.mg-card {
+  /* Mangrove card */
+}
+.mg-form__input {
+  /* Mangrove form input */
+}
 ```
 
 ### Semantic HTML
+
 Components use proper HTML elements for accessibility and maintain a consistent structure:
 
 1. Each component uses the `mg-` prefix in its class names
@@ -171,17 +212,21 @@ Example component structure:
 ```
 
 ### Progressive enhancement
+
 Components work without JavaScript, enhanced with JS where beneficial.
 
 ## Common use cases
 
 ### 📄 Marketing pages
+
 ```html
 <!-- Hero section with CTA -->
 <section class="mg-hero">
   <div class="mg-container">
     <h1 class="mg-heading mg-heading--1">Building Resilient Communities</h1>
-    <p class="mg-paragraph mg-paragraph--large">Disaster risk reduction starts here.</p>
+    <p class="mg-paragraph mg-paragraph--large">
+      Disaster risk reduction starts here.
+    </p>
     <button class="mg-cta-button mg-cta-button--primary">
       <span class="mg-cta-button__text">Learn More</span>
     </button>
@@ -190,6 +235,7 @@ Components work without JavaScript, enhanced with JS where beneficial.
 ```
 
 ### 📊 Data dashboards
+
 ```jsx
 import { BarChart, StatsCards } from '@unisdr/undrr-mangrove';
 
@@ -204,11 +250,12 @@ function Dashboard() {
 ```
 
 ### 📝 Forms and applications
+
 ```html
 <form class="mg-form">
   <div class="mg-form__group">
     <label class="mg-form__label" for="email">Email Address</label>
-    <input class="mg-form__input" type="email" id="email" required>
+    <input class="mg-form__input" type="email" id="email" required />
   </div>
   <button class="mg-cta-button mg-cta-button--primary" type="submit">
     Submit Application
@@ -221,12 +268,14 @@ function Dashboard() {
 If you want to contribute to the Mangrove component library, follow these steps to set up your development environment:
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/unisdr/undrr-mangrove.git
 cd undrr-mangrove
 ```
 
 2. **Use Docker for development (recommended)**
+
 ```bash
 # Start the application, runs Storybook locally on port 6006
 yarn docker-run
@@ -243,6 +292,7 @@ yarn run storybook
 ```
 
 3. **Building the project**
+
 ```bash
 # Using Docker
 yarn docker-build
@@ -252,6 +302,7 @@ yarn run build
 ```
 
 4. **Testing**
+
 ```bash
 # Run tests
 yarn test
@@ -261,6 +312,7 @@ yarn test:coverage
 ```
 
 5. **Linting**
+
 ```bash
 # Run linting
 yarn run lint
@@ -270,10 +322,10 @@ yarn run lint
 
 When working with Mangrove assets, you'll find them organized in the following structure:
 
-* **Components**: Available in the `dist/components` directory
-* **CSS files**: Available in the `dist/assets/css` directory
-* **Icons and images**: Available in the `dist/assets/images` directory
-* **Web fonts**: Available in the `dist/assets/fonts` directory
+- **Components**: Available in the `dist/components` directory
+- **CSS files**: Available in the `dist/assets/css` directory
+- **Icons and images**: Available in the `dist/assets/images` directory
+- **Web fonts**: Available in the `dist/assets/fonts` directory
 
 ## Next steps
 

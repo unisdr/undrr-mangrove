@@ -2,72 +2,79 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import { BookCard } from './BookCard';
 import * as BookCardStories from './BookCard.stories';
 
-export const getCaptionForLocale = (locale) => {
+export const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {
         contentdata: [
           {
-            contenttile: "CONTENT TAG",
-            title: "Title in large size",
-            link:"javascript:void(0)",
-            imgalt: "A publication cover",
-            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
-          }
-        ]
+            contenttile: 'CONTENT TAG',
+            title: 'Title in large size',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+          },
+        ],
       };
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {
         contentdata: [
           {
-            contenttile: "علامة المحتوى",
-            title: " عنوان المشاركة يظهر هنا ويتكون من سطرين",
-            link:"javascript:void(0)",
-            imgalt: "A publication cover",
-            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
-          }
-        ]
+            contenttile: 'علامة المحتوى',
+            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+          },
+        ],
       };
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {
         contentdata: [
           {
-            contenttile: "အကြောင်းအရာ TAG",
-            title: "ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ",
-            link:"javascript:void(0)",
-            imgalt: "A publication cover",
-            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
-          }
-        ]
+            contenttile: 'အကြောင်းအရာ TAG',
+            title:
+              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+          },
+        ],
       };
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {
         contentdata: [
           {
-            contenttile: "コンテンツタグ",
-            title: "投稿のタイトルはここにあり、2行です",
-            button: "続きを読む",
-            link:"javascript:void(0)",
-            imgalt: "A publication cover",
-            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
-          }
-        ]
+            contenttile: 'コンテンツタグ',
+            title: '投稿のタイトルはここにあり、2行です',
+            button: '続きを読む',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+          },
+        ],
       };
       return japaneseText;
     default:
       const dummy = {
         contentdata: [
           {
-            contenttile: "BOOK CARD",
-            title: "Book title in normal header size with up to three lines of text",
-            link:"javascript:void(0)",
-            imgalt: "A publication cover",
-            imgback: "https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg",
-          }
-        ]
+            contenttile: 'BOOK CARD',
+            title:
+              'Book title in normal header size with up to three lines of text',
+            link: 'javascript:void(0)',
+            imgalt: 'A publication cover',
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+          },
+        ],
       };
       return dummy;
   }
@@ -97,12 +104,12 @@ It's images have a 3x4 in aspect ratio.
 
 ### Usage
 
-* Grab the HTML from the HTML tab.
+- Grab the HTML from the HTML tab.
 
 ### Interactions
 
-* Hover state applies to the image only.
-* By clicking on the CTA Link, the associated page is opened.
+- Hover state applies to the image only.
+- By clicking on the CTA Link, the associated page is opened.
 
 ### Changelog
 

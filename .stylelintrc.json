@@ -12,11 +12,12 @@
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
-    "media-feature-name-no-unknown": [true, {
-      "ignoreMediaFeatureNames": [
-        "prefers-reduced-motion"
-      ]
-    }],
+    "media-feature-name-no-unknown": [
+      true,
+      {
+        "ignoreMediaFeatureNames": ["prefers-reduced-motion"]
+      }
+    ],
     "media-feature-name-no-vendor-prefix": null,
     "number-max-precision": 5,
     "property-no-unknown": null,
@@ -28,19 +29,31 @@
     "selector-no-vendor-prefix": null,
     "selector-pseudo-element-colon-notation": null,
     "shorthand-property-no-redundant-values": null,
-    "unit-allowed-list": ["ch", "deg", "dpcm", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "vh"],
-    "value-keyword-case": ["lower", {
-      "camelCaseSvgKeywords": true,
-      "ignoreProperties": [
-        "--font-family",
-        "font-family"
-      ]
-    }],
+    "unit-allowed-list": [
+      "ch",
+      "deg",
+      "dpcm",
+      "em",
+      "ex",
+      "fr",
+      "ms",
+      "rem",
+      "%",
+      "s",
+      "px",
+      "vw",
+      "vh"
+    ],
+    "value-keyword-case": [
+      "lower",
+      {
+        "camelCaseSvgKeywords": true,
+        "ignoreProperties": ["--font-family", "font-family"]
+      }
+    ],
     "value-no-vendor-prefix": null,
     "scss/dollar-variable-pattern": null,
     "scss/percent-placeholder-pattern": null
   },
-  "ignoreFiles": [
-    "stories/assets/fonts/**/*.*"
-  ]
+  "ignoreFiles": ["stories/assets/fonts/**/*.*"]
 }

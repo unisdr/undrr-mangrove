@@ -1,17 +1,17 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react';
 // import './hero.scss';
 // import '../../../assets/scss/_grid.scss';
-import { CtaButton } from "../Buttons/CtaButton/CtaButton";
+import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 // import imgPath from '../../../assets/images/hero_background.png';
 
 const cls = (...classes) =>
-  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(" ") : null;
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export const variantOptions = {
-  primary: "",
-  secondary: "secondary",
-  tertiary: "tertiary",
-  quaternary: "quaternary",
+  primary: '',
+  secondary: 'secondary',
+  tertiary: 'tertiary',
+  quaternary: 'quaternary',
 };
 
 export function ChildHero({ data, variant }) {
@@ -22,9 +22,9 @@ export function ChildHero({ data, variant }) {
         <section
           key={index}
           className={cls(
-            "mg-hero",
-            "mg-hero--child",
-            "mg-hero--" + `${variantActive}`,
+            'mg-hero',
+            'mg-hero--child',
+            'mg-hero--' + `${variantActive}`
           )}
           style={{ backgroundImage: `url(${item.imgback})` }}
         >
@@ -57,5 +57,5 @@ export function ChildHero({ data, variant }) {
 }
 
 ChildHero.defaultParameters = {
-  variant: "primary",
+  variant: 'primary',
 };

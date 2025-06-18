@@ -9,8 +9,8 @@ import 'swiper/css';
 import 'swiper/css/scrollbar';
 
 /**
- * @deprecated This component was part of the initial import from the UNDP implementation 
- * and is likely to be either heavily modified or deleted. It is not part of the current 
+ * @deprecated This component was part of the initial import from the UNDP implementation
+ * and is likely to be either heavily modified or deleted. It is not part of the current
  * UNDRR distribution.
  */
 

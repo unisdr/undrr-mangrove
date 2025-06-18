@@ -1,17 +1,17 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-markercluster";
-import "leaflet/dist/leaflet.css";
-import "react-leaflet-markercluster/styles";
-import L from "leaflet";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import DOMPurify from "dompurify";
-import "./map.css";
-import { transformDataForMap } from "./map-helpers";
+import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
+import 'leaflet/dist/leaflet.css';
+import 'react-leaflet-markercluster/styles';
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import DOMPurify from 'dompurify';
+import './map.css';
+import { transformDataForMap } from './map-helpers';
 
-export const transformData = (results) => {
+export const transformData = results => {
   return transformDataForMap(results);
 };
 
@@ -26,7 +26,7 @@ L.Icon.Default.mergeOptions({
 // Component to remove attribution prefix, this removes the flag
 function RemoveAttributionPrefix() {
   const map = useMap();
-  map.attributionControl.setPrefix("");
+  map.attributionControl.setPrefix('');
   return null;
 }
 
@@ -37,11 +37,11 @@ export default function MapComponent({
   maxZoom = 5,
   minZoom = 2,
 }) {
-  const maxValue = Math.max(...data.map((entry) => entry.value));
-  const commitmentLink = "/commitments?term_node_tid_depth";
-  const globalLink = "/commitments?field_geographic_scope_value=GLOBAL";
+  const maxValue = Math.max(...data.map(entry => entry.value));
+  const commitmentLink = '/commitments?term_node_tid_depth';
+  const globalLink = '/commitments?field_geographic_scope_value=GLOBAL';
 
-  const calculateIconSize = (value) => {
+  const calculateIconSize = value => {
     const minSize = 38;
     const maxSize = 100;
     return minSize + (value / maxValue) * (maxSize - minSize);
@@ -50,13 +50,13 @@ export default function MapComponent({
   const createLabelIcon = (label, value) => {
     const size = calculateIconSize(value);
     // We only show "Global" as a label, as otherwsie this marker is shown over a country
-    const isGlobal = label.toLowerCase() === "global";
+    const isGlobal = label.toLowerCase() === 'global';
 
     return L.divIcon({
-      className: "mg-custom-label-icon",
+      className: 'mg-custom-label-icon',
       html: `
         <div class="mg-label-container">
-          ${isGlobal ? `<div class="mg-label-text">${label}</div>` : ""}
+          ${isGlobal ? `<div class="mg-label-text">${label}</div>` : ''}
           <div class="mg-label-value">${value}</div>
         </div>`,
       iconSize: [size, size],
@@ -64,24 +64,24 @@ export default function MapComponent({
     });
   };
 
-  const handleMarkerClick = (countryId) => {
-    if (countryId === "ALL") {
-      window.open(`${globalLink}`, "_blank");
+  const handleMarkerClick = countryId => {
+    if (countryId === 'ALL') {
+      window.open(`${globalLink}`, '_blank');
     } else {
-      window.open(`${commitmentLink}=${countryId}`, "_blank");
+      window.open(`${commitmentLink}=${countryId}`, '_blank');
     }
   };
 
   const continents = {
-    Global: "Global",
-    Africa: "Africa",
-    Europe: "Europe",
-    Asia: "Asia",
-    Americas: "Americas",
-    "North America": "North America",
-    "South America": "South America",
-    Oceania: "Oceania",
-    Antarctica: "Antarctica",
+    Global: 'Global',
+    Africa: 'Africa',
+    Europe: 'Europe',
+    Asia: 'Asia',
+    Americas: 'Americas',
+    'North America': 'North America',
+    'South America': 'South America',
+    Oceania: 'Oceania',
+    Antarctica: 'Antarctica',
   };
   return (
     <MapContainer
@@ -89,7 +89,7 @@ export default function MapComponent({
       zoom={zoom}
       maxZoom={maxZoom}
       minZoom={minZoom}
-      style={{ height: "500px", width: "100%" }}
+      style={{ height: '500px', width: '100%' }}
     >
       <RemoveAttributionPrefix />
       <TileLayer
@@ -107,12 +107,12 @@ export default function MapComponent({
         // Calculate the sum of entry.value for the current continent
         const totalValue = filteredData.reduce(
           (sum, entry) => sum + entry.value,
-          0,
+          0
         );
 
         const createClusterCustomIcon = function (cluster) {
           return L.divIcon({
-            className: "mg-custom-label-icon",
+            className: 'mg-custom-label-icon',
             html: `
             <div class="mg-label-container">
               <div class="mg-label-text">${continentName}</div>
@@ -141,9 +141,9 @@ export default function MapComponent({
                 <Popup>
                   <div
                     style={{
-                      padding: "5px",
-                      lineHeight: "1.6em",
-                      fontSize: "2em",
+                      padding: '5px',
+                      lineHeight: '1.6em',
+                      fontSize: '2em',
                     }}
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(entry.label),
@@ -152,9 +152,9 @@ export default function MapComponent({
                   {entry.country_id && (
                     <a
                       style={{
-                        fontSize: "2em",
-                        paddingLeft: "5px",
-                        cursor: "pointer",
+                        fontSize: '2em',
+                        paddingLeft: '5px',
+                        cursor: 'pointer',
                       }}
                       onClick={() => handleMarkerClick(entry.country_id)}
                     >

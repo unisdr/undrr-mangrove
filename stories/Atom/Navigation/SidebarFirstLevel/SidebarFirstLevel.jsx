@@ -7,12 +7,20 @@ export const variant_options = {
   selected: 'selected',
 };
 
-const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
+const cls = (...classes) =>
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export const SidebarFirstLevel = ({
-  mode, active, text, variant, ...props
+  mode,
+  active,
+  text,
+  variant,
+  ...props
 }) => (
-  <div className={cls('sidebar_item', variant_options[`${variant}`])} {...props}>
+  <div
+    className={cls('sidebar_item', variant_options[`${variant}`])}
+    {...props}
+  >
     <Heading type="6" label={text} />
   </div>
 );

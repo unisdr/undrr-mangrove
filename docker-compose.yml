@@ -1,4 +1,4 @@
-version: "3.3"
+version: '3.3'
 
 services:
   client:
@@ -12,4 +12,4 @@ services:
     volumes:
       # `application` should be the same as `WORKSPACE_DIR` in `Dockerfile`
       - .:/data/storybook
-    command: ["tail", "-f", "/dev/null"]
+    command: ['tail', '-f', '/dev/null']

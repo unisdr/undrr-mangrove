@@ -4,8 +4,14 @@ on:
     branches:
       - main
   push:
-    paths: ["stories/**", "src/components/**", ".github/workflows/storybook.yml", "package.json", "webpack.entries.js"] # Trigger the action only when files change in the folders defined here
-    branches: ["main"]
+    paths: [
+        'stories/**',
+        'src/components/**',
+        '.github/workflows/storybook.yml',
+        'package.json',
+        'webpack.entries.js',
+      ] # Trigger the action only when files change in the folders defined here
+    branches: ['main']
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 permissions:
@@ -14,7 +20,7 @@ permissions:
   id-token: write
 # Allow one concurrent deployment
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 jobs:
   build:
@@ -46,7 +52,7 @@ jobs:
       - name: Cache Jest cache
         uses: actions/cache@v4
         with:
-          path: "**/node_modules/.cache/jest"
+          path: '**/node_modules/.cache/jest'
           key: jest-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             jest-${{ runner.os }}-

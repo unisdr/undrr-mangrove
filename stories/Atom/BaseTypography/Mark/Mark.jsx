@@ -3,9 +3,6 @@ import React from 'react';
 
 export const Mark = ({ label }) => (
   <p>
-    <mark>
-      {label}
-    </mark>
+    <mark>{label}</mark>
   </p>
 );
-

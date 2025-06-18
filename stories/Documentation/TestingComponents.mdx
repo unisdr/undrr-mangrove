@@ -3,10 +3,10 @@ import { Meta } from '@storybook/blocks';
 <Meta
   title="Getting started/Testing components"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -86,7 +86,7 @@ describe('CtaButton', () => {
     fireEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
-  
+
   it('applies disabled class when disabled', () => {
     render(<CtaButton label="Disabled" State="Disabled" />);
     expect(screen.getByRole('button')).toHaveClass('disabled');
@@ -112,10 +112,10 @@ describe('Form with TextInput', () => {
         <button type="submit">Submit</button>
       </Form>
     );
-    
+
     const input = screen.getByLabelText('Username');
     fireEvent.change(input, { target: { value: 'testuser' } });
-    
+
     expect(input).toHaveValue('testuser');
   });
 });
@@ -164,14 +164,17 @@ describe('CtaButton snapshots', () => {
 ### Best Practices
 
 1. **Test behavior, not implementation**
+
    - Focus on what the component does, not how it does it
    - Avoid testing implementation details that could change
 
 2. **Use meaningful assertions**
+
    - Make assertions clear and specific
    - Test the most important aspects of the component
 
 3. **Setup and teardown**
+
    - Use `beforeEach` and `afterEach` for common setup/teardown
    - Keep tests isolated and independent
 
@@ -209,10 +212,10 @@ it('updates value when changed', () => {
 it('shows content when expanded', () => {
   render(<Accordion title="Accordion" isExpanded={false} />);
   const button = screen.getByRole('button');
-  
+
   // Initially content is not visible
   expect(screen.queryByTestId('content')).not.toBeInTheDocument();
-  
+
   // After clicking, content should be visible
   fireEvent.click(button);
   expect(screen.getByTestId('content')).toBeInTheDocument();
@@ -277,12 +280,12 @@ Use `async/await` or `waitFor` for asynchronous operations:
 ```jsx
 it('loads data asynchronously', async () => {
   render(<AsyncComponent />);
-  
+
   // Wait for loading state to finish
   await waitFor(() => {
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
-  
+
   // Now check that data is loaded
   expect(screen.getByText('Data loaded')).toBeInTheDocument();
 });
@@ -298,12 +301,12 @@ it('renders modal in portal', () => {
   const portalRoot = document.createElement('div');
   portalRoot.setAttribute('id', 'portal-root');
   document.body.appendChild(portalRoot);
-  
+
   render(<Modal isOpen={true}>Modal content</Modal>);
-  
+
   // Check content is in the portal
   expect(portalRoot).toHaveTextContent('Modal content');
-  
+
   // Clean up
   document.body.removeChild(portalRoot);
 });
@@ -316,7 +319,7 @@ Focus on functionality, not styling details:
 ```jsx
 it('applies the correct class based on variant', () => {
   render(<StyledButton variant="primary" />);
-  
+
   // Check the class is applied, not the actual styles
   expect(screen.getByRole('button')).toHaveClass('mg-button-primary');
 });
@@ -335,3 +338,4 @@ Use the coverage report to identify untested code:
 
 ```bash
 yarn test:coverage
+```

@@ -11,7 +11,7 @@ They appear temporarily at the top of the screen and automatically disappear aft
 
 ## Overview
 
-The Snackbar component is designed for displaying short, non-blocking notifications to users. 
+The Snackbar component is designed for displaying short, non-blocking notifications to users.
 It's particularly useful for conveying status information without interrupting the user's workflow.
 
 <Primary />
@@ -29,27 +29,31 @@ It's particularly useful for conveying status information without interrupting t
 ## Visual examples
 
 ### Error notification
-<SnackbarPreview 
-  severity="error" 
-  message="An error occurred while processing your request" 
+
+<SnackbarPreview
+  severity="error"
+  message="An error occurred while processing your request"
 />
 
 ### Warning notification
-<SnackbarPreview 
-  severity="warning" 
-  message="Your session will expire in 5 minutes" 
+
+<SnackbarPreview
+  severity="warning"
+  message="Your session will expire in 5 minutes"
 />
 
 ### Information notification
-<SnackbarPreview 
-  severity="info" 
-  message="New updates are available for your application" 
+
+<SnackbarPreview
+  severity="info"
+  message="New updates are available for your application"
 />
 
 ### Success notification
-<SnackbarPreview 
-  severity="success" 
-  message="Your changes have been saved successfully" 
+
+<SnackbarPreview
+  severity="success"
+  message="Your changes have been saved successfully"
 />
 
 ## Interactive example
@@ -70,17 +74,15 @@ import Snackbar from './path/to/Snackbar';
 
 function MyComponent() {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const handleClose = () => {
     setIsOpen(false);
   };
-  
+
   return (
     <div>
-      <button onClick={() => setIsOpen(true)}>
-        Show Notification
-      </button>
-      
+      <button onClick={() => setIsOpen(true)}>Show Notification</button>
+
       <Snackbar
         severity="info"
         opened={isOpen}
@@ -95,13 +97,13 @@ function MyComponent() {
 
 ### Component props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| severity | string | - | Determines the appearance and icon of the snackbar. Options: 'error', 'warning', 'info', 'success' |
-| opened | boolean | false | Controls whether the snackbar is visible |
-| message | string | - | The text content to display in the snackbar |
-| onClose | function | - | Callback function executed when the snackbar is closed (via button click or timeout) |
-| openedMiliseconds | number | - | Duration in milliseconds before the snackbar automatically closes. If not provided, the snackbar will remain open until manually closed |
+| Prop              | Type     | Default | Description                                                                                                                             |
+| ----------------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| severity          | string   | -       | Determines the appearance and icon of the snackbar. Options: 'error', 'warning', 'info', 'success'                                      |
+| opened            | boolean  | false   | Controls whether the snackbar is visible                                                                                                |
+| message           | string   | -       | The text content to display in the snackbar                                                                                             |
+| onClose           | function | -       | Callback function executed when the snackbar is closed (via button click or timeout)                                                    |
+| openedMiliseconds | number   | -       | Duration in milliseconds before the snackbar automatically closes. If not provided, the snackbar will remain open until manually closed |
 
 ## Accessibility considerations
 
@@ -128,24 +130,21 @@ The component is designed to be fully responsive:
 ### Version 1.1 (Current)
 
 - **Accessibility Improvements**:
-  - Added screen reader announcements for severity levels 
+  - Added screen reader announcements for severity levels
   - Improved ARIA attributes (`role="alert"`, `aria-live="assertive"`)
   - Added focus management that auto-focuses the close button when opened
   - Added keyboard support to close with Escape key
   - Added focus styles for better keyboard navigation
-  
 - **Mobile Enhancements**:
   - Improved responsive design for small screens
   - Increased touch target size to 44px minimum height
   - Added responsive layout that adapts button placement on mobile
   - Improved button styling for better touch interactions
-  
 - **Visual Updates**:
   - Updated all severity colors for better contrast
   - Made warning style consistent with other severity types (dark background, white text)
   - Added consistent button styles with hover and active states
   - Improved icon visibility and consistency
-  
 - **Code Improvements**:
   - Added proper Sass module imports (`@use "sass:color"`)
   - Updated deprecated color functions to use `color.adjust()`

@@ -17,7 +17,11 @@
   cursor: s-resize;
   display: block;
   position: absolute;
-  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0), rgb(255 255 255 / 1));
+  background-image: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0),
+    rgb(255 255 255 / 1)
+  );
   height: 200px;
   width: 100%;
   z-index: 1;

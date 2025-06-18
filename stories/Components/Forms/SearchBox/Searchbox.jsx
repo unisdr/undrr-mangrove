@@ -1,7 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 
 export function Searchbox({
-  type, element, placeholder, labelText, errorText, helpText, State,
+  type,
+  element,
+  placeholder,
+  labelText,
+  errorText,
+  helpText,
+  State,
 }) {
   const InputTag = `${element}`;
   let state;
@@ -17,7 +23,7 @@ export function Searchbox({
   }, [state]);
   return (
     <div className={['input-group', `${state}`].join(' ')}>
-      {labelText && <label htmlFor={[`${type}`]}>{ labelText }</label>}
+      {labelText && <label htmlFor={[`${type}`]}>{labelText}</label>}
       <InputTag
         ref={inputElement}
         type={type}
@@ -26,8 +32,8 @@ export function Searchbox({
         name={type}
         id={type}
       />
-      {helpText && <p className="help">{ helpText }</p>}
-      {(State == 'Error') && <p className="error">{ errorText }</p>}
+      {helpText && <p className="help">{helpText}</p>}
+      {State == 'Error' && <p className="error">{errorText}</p>}
     </div>
   );
 }

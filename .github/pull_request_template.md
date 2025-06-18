@@ -1,5 +1,7 @@
 ## PR Type
+
 What kind of change does this PR introduce?
+
 ```
 [ ] Bugfix
 [ ] Feature
@@ -11,10 +13,13 @@ What kind of change does this PR introduce?
 [ ] Tests
 [ ] Other
 ```
+
 ## What's this PR addressing?
+
 -
 
 ## Link to ticket
 
 ## Resources
+
 N/A

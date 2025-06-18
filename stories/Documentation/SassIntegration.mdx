@@ -4,10 +4,10 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <Meta
   title="Getting started/Sass integration"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -18,14 +18,14 @@ Take full control of Mangrove styling by integrating Sass files directly into yo
 <TableOfContents
   title="On this page"
   tocData={[
-    { id: "quick-setup", text: "Quick Setup" },
-    { id: "available-sass-files", text: "Available Sass Files" },
-    { id: "customization-examples", text: "Customization Examples" },
-    { id: "building-custom-components", text: "Building Custom Components" },
-    { id: "theme-creation", text: "Theme Creation" },
-    { id: "build-scripts", text: "Build Scripts" },
-    { id: "best-practices", text: "Best Practices" },
-    { id: "next-steps", text: "Next Steps" }
+    { id: 'quick-setup', text: 'Quick Setup' },
+    { id: 'available-sass-files', text: 'Available Sass Files' },
+    { id: 'customization-examples', text: 'Customization Examples' },
+    { id: 'building-custom-components', text: 'Building Custom Components' },
+    { id: 'theme-creation', text: 'Theme Creation' },
+    { id: 'build-scripts', text: 'Build Scripts' },
+    { id: 'best-practices', text: 'Best Practices' },
+    { id: 'next-steps', text: 'Next Steps' },
   ]}
   showNumbers={false}
 />
@@ -47,6 +47,7 @@ yarn add @unisdr/undrr-mangrove
 ```
 
 **Via Git Submodule** (For direct access)
+
 ```bash
 # Add as a submodule
 git submodule add https://github.com/unisdr/undrr-mangrove.git src/sass/mangrove
@@ -61,31 +62,32 @@ Create your main Sass file (`src/sass/main.scss`):
 
 ```scss
 // 1. Import Mangrove variables first (for customization)
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/variables";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/variables';
 
 // 2. Override variables here (optional)
 $mg-primary-color: #0066cc;
 $mg-secondary-color: #ff6b35;
-$mg-font-family-base: "Roboto", Arial, sans-serif;
+$mg-font-family-base: 'Roboto', Arial, sans-serif;
 
 // 3. Import Mangrove core styles
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/mixins";
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/base";
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/layout";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/mixins';
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/base';
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/layout';
 
 // 4. Import component styles you need
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
-@import "~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card";
-@import "~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields";
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card';
+@import '~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
 
 // 5. Add your custom styles
-@import "custom/components";
-@import "custom/layouts";
+@import 'custom/components';
+@import 'custom/layouts';
 ```
 
 ### 3. Configure Your Build Tool
 
 **Webpack Configuration**
+
 ```javascript
 // webpack.config.js
 const path = require('path');
@@ -104,46 +106,51 @@ module.exports = {
               sassOptions: {
                 includePaths: [
                   path.resolve(__dirname, 'node_modules'),
-                  path.resolve(__dirname, 'src/sass')
-                ]
-              }
-            }
-          }
-        ]
-      }
-    ]
-  }
+                  path.resolve(__dirname, 'src/sass'),
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
 ```
 
 **Vite Configuration**
+
 ```javascript
 // vite.config.js
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
         additionalData: `@import "@unisdr/undrr-mangrove/stories/assets/scss/variables";`,
-        includePaths: ['node_modules']
-      }
-    }
-  }
-})
+        includePaths: ['node_modules'],
+      },
+    },
+  },
+});
 ```
 
 **Gulp Task**
+
 ```javascript
 // gulpfile.js
 const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 
-gulp.task('sass', function() {
-  return gulp.src('src/sass/**/*.scss')
-    .pipe(sass({
-      includePaths: ['node_modules']
-    }).on('error', sass.logError))
+gulp.task('sass', function () {
+  return gulp
+    .src('src/sass/**/*.scss')
+    .pipe(
+      sass({
+        includePaths: ['node_modules'],
+      }).on('error', sass.logError)
+    )
     .pipe(gulp.dest('dist/css'));
 });
 ```
@@ -151,41 +158,43 @@ gulp.task('sass', function() {
 ## Available Sass files
 
 ### Core Foundation
+
 ```scss
 // Essential variables and mixins
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/variables";
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/mixins";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/variables';
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/mixins';
 
 // Base styles and typography
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/base";
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/_typography";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/base';
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/_typography';
 
 // Layout systems
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/layout";
-@import "~@unisdr/undrr-mangrove/stories/Atom/Layout/Grid/grid";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/layout';
+@import '~@unisdr/undrr-mangrove/stories/Atom/Layout/Grid/grid';
 ```
 
 ### Component Categories
+
 ```scss
 // Buttons
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/Chips/chips";
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/ShareButtons/share-buttons";
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/Chips/chips';
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/ShareButtons/share-buttons';
 
 // Forms
-@import "~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields";
-@import "~@unisdr/undrr-mangrove/stories/Components/Forms/Select/select";
-@import "~@unisdr/undrr-mangrove/stories/Components/Forms/Checkbox/checkbox";
+@import '~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@unisdr/undrr-mangrove/stories/Components/Forms/Select/select';
+@import '~@unisdr/undrr-mangrove/stories/Components/Forms/Checkbox/checkbox';
 
 // Content Components
-@import "~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card";
-@import "~@unisdr/undrr-mangrove/stories/Components/Cards/StatsCards/stats-cards";
-@import "~@unisdr/undrr-mangrove/stories/Components/Accordion/accordion";
+@import '~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card';
+@import '~@unisdr/undrr-mangrove/stories/Components/Cards/StatsCards/stats-cards';
+@import '~@unisdr/undrr-mangrove/stories/Components/Accordion/accordion';
 
 // Navigation
-@import "~@unisdr/undrr-mangrove/stories/Components/Breadcrumbs/breadcrumbs";
-@import "~@unisdr/undrr-mangrove/stories/Components/Pagination/pagination";
-@import "~@unisdr/undrr-mangrove/stories/Components/MegaMenu/mega-menu";
+@import '~@unisdr/undrr-mangrove/stories/Components/Breadcrumbs/breadcrumbs';
+@import '~@unisdr/undrr-mangrove/stories/Components/Pagination/pagination';
+@import '~@unisdr/undrr-mangrove/stories/Components/MegaMenu/mega-menu';
 ```
 
 ## Customization examples
@@ -197,13 +206,13 @@ gulp.task('sass', function() {
 // Use actual Mangrove color variables
 
 // Primary brand colors (override blue shades)
-$mg-color-blue-900: #003366;  // Custom primary blue
-$mg-color-blue-800: #1a519c;  // Slightly lighter
-$mg-color-blue-700: #3372a7;  // Active state
+$mg-color-blue-900: #003366; // Custom primary blue
+$mg-color-blue-800: #1a519c; // Slightly lighter
+$mg-color-blue-700: #3372a7; // Active state
 
 // Secondary colors (override orange shades)
-$mg-color-orange-900: #ff8c42;  // Custom orange
-$mg-color-orange-800: #ff6b35;  // Hover state
+$mg-color-orange-900: #ff8c42; // Custom orange
+$mg-color-orange-800: #ff6b35; // Hover state
 
 // Interactive colors
 $mg-color-interactive: $mg-color-blue-900;
@@ -211,7 +220,7 @@ $mg-color-interactive-active: $mg-color-blue-700;
 
 // Text and neutral colors
 $mg-color-text: $mg-color-neutral-800;
-$mg-color-neutral-400: #808080;  // Custom gray
+$mg-color-neutral-400: #808080; // Custom gray
 
 // Component-specific color overrides
 $mg-color-button-background: $mg-color-interactive;
@@ -231,15 +240,15 @@ $mg-font-family: 'Inter', 'Roboto', Arial, sans-serif;
 $mg-font-family-condensed: 'Inter', 'Roboto Condensed', Arial, sans-serif;
 
 // Override font sizes (Mangrove uses rem units)
-$mg-font-size-100: 0.875rem;  // 14px - small text
-$mg-font-size-200: 1rem;      // 16px - body text
-$mg-font-size-300: 1.125rem;  // 18px - large body
-$mg-font-size-400: 1.25rem;   // 20px - small heading
-$mg-font-size-500: 1.5rem;    // 24px - medium heading
-$mg-font-size-600: 2rem;      // 32px - large heading
-$mg-font-size-800: 2.5rem;    // 40px - extra large
-$mg-font-size-900: 3rem;      // 48px - huge
-$mg-font-size-1000: 3.5rem;   // 56px - massive
+$mg-font-size-100: 0.875rem; // 14px - small text
+$mg-font-size-200: 1rem; // 16px - body text
+$mg-font-size-300: 1.125rem; // 18px - large body
+$mg-font-size-400: 1.25rem; // 20px - small heading
+$mg-font-size-500: 1.5rem; // 24px - medium heading
+$mg-font-size-600: 2rem; // 32px - large heading
+$mg-font-size-800: 2.5rem; // 40px - extra large
+$mg-font-size-900: 3rem; // 48px - huge
+$mg-font-size-1000: 3.5rem; // 56px - massive
 
 // Override body and label sizes
 $mg-font-body: $mg-font-size-300;
@@ -255,28 +264,28 @@ $mg-font-size-button: $mg-font-size-200;
 ```scss
 // Override Mangrove spacing variables
 $mg-spacing-0: 0;
-$mg-spacing-25: 0.125rem;  // 2px
-$mg-spacing-50: 0.25rem;   // 4px
-$mg-spacing-75: 0.5rem;    // 8px
-$mg-spacing-100: 0.75rem;  // 12px
-$mg-spacing-150: 1rem;     // 16px - base spacing
-$mg-spacing-175: 1.25rem;  // 20px
-$mg-spacing-200: 1.5rem;   // 24px
-$mg-spacing-250: 2rem;     // 32px
-$mg-spacing-300: 2.5rem;   // 40px
-$mg-spacing-350: 3rem;     // 48px
-$mg-spacing-400: 4rem;     // 64px
-$mg-spacing-500: 5rem;     // 80px
-$mg-spacing-600: 6rem;     // 96px
-$mg-spacing-800: 8rem;     // 128px
-$mg-spacing-1000: 10rem;   // 160px
+$mg-spacing-25: 0.125rem; // 2px
+$mg-spacing-50: 0.25rem; // 4px
+$mg-spacing-75: 0.5rem; // 8px
+$mg-spacing-100: 0.75rem; // 12px
+$mg-spacing-150: 1rem; // 16px - base spacing
+$mg-spacing-175: 1.25rem; // 20px
+$mg-spacing-200: 1.5rem; // 24px
+$mg-spacing-250: 2rem; // 32px
+$mg-spacing-300: 2.5rem; // 40px
+$mg-spacing-350: 3rem; // 48px
+$mg-spacing-400: 4rem; // 64px
+$mg-spacing-500: 5rem; // 80px
+$mg-spacing-600: 6rem; // 96px
+$mg-spacing-800: 8rem; // 128px
+$mg-spacing-1000: 10rem; // 160px
 
 // Container and layout overrides
-$mg-container-spacer: $mg-spacing-200;  // Container padding
+$mg-container-spacer: $mg-spacing-200; // Container padding
 
 // Button styling
 $mg-padding-button: $mg-spacing-100 $mg-spacing-200;
-$mg-radius-button: $mg-spacing-50;  // Rounded corners
+$mg-radius-button: $mg-spacing-50; // Rounded corners
 $mg-border-width-button: 2px;
 
 // Component borders and radii
@@ -284,10 +293,10 @@ $mg-radius-label: $mg-spacing-25;
 $mg-radius-tab: $mg-spacing-50;
 
 // Breakpoints (Mangrove uses px values)
-$mg-breakpoint-mobile: 576px;    // Small devices
-$mg-breakpoint-tablet: 768px;    // Medium devices
-$mg-breakpoint-desktop: 992px;   // Large devices
-$mg-breakpoint-desktop-wide: 1200px;  // Extra large devices
+$mg-breakpoint-mobile: 576px; // Small devices
+$mg-breakpoint-tablet: 768px; // Medium devices
+$mg-breakpoint-desktop: 992px; // Large devices
+$mg-breakpoint-desktop-wide: 1200px; // Extra large devices
 ```
 
 ### 4. Component-Specific Overrides
@@ -320,7 +329,7 @@ $mg-color-text-button: $mg-color-white;
 $mg-border-color-button: $mg-color-interactive;
 
 // Author image radius (for profile pictures)
-$author-image-radius: 50%;  // Circular images
+$author-image-radius: 50%; // Circular images
 ```
 
 ## Building custom components
@@ -393,14 +402,14 @@ Follow Mangrove's BEM-inspired naming convention:
 
   &__date {
     &::before {
-      content: "📅 ";
+      content: '📅 ';
       margin-right: var(--mg-spacing-1);
     }
   }
 
   &__author {
     &::before {
-      content: "✍️ ";
+      content: '✍️ ';
       margin-right: var(--mg-spacing-1);
     }
   }
@@ -493,20 +502,20 @@ Create a complete custom theme by extending Mangrove:
 
 // 1. Define brand colors using Mangrove's color system
 // Override the blue color scale for your primary brand
-$mg-color-blue-900: #1a5f7a;  // Primary brand color
-$mg-color-blue-800: #2d6f8a;  // Slightly lighter
-$mg-color-blue-700: #40809a;  // Active states
-$mg-color-blue-600: #5390aa;  // Hover states
-$mg-color-blue-500: #66a0ba;  // Light accents
+$mg-color-blue-900: #1a5f7a; // Primary brand color
+$mg-color-blue-800: #2d6f8a; // Slightly lighter
+$mg-color-blue-700: #40809a; // Active states
+$mg-color-blue-600: #5390aa; // Hover states
+$mg-color-blue-500: #66a0ba; // Light accents
 
 // Override orange scale for secondary colors
-$mg-color-orange-900: #57a773;  // Secondary brand color
-$mg-color-orange-800: #6ab783;  // Lighter secondary
-$mg-color-orange-700: #7dc793;  // Secondary accents
+$mg-color-orange-900: #57a773; // Secondary brand color
+$mg-color-orange-800: #6ab783; // Lighter secondary
+$mg-color-orange-700: #7dc793; // Secondary accents
 
 // Custom accent colors (using red scale)
-$mg-color-red-900: #f4a261;   // Accent color
-$mg-color-red-800: #f5b071;   // Light accent
+$mg-color-red-900: #f4a261; // Accent color
+$mg-color-red-800: #f5b071; // Light accent
 
 // 2. Update interactive colors to use your brand
 $mg-color-interactive: $mg-color-blue-900;
@@ -521,25 +530,26 @@ $mg-color-hero--tertiary: $mg-color-neutral-700;
 $mg-color-label: $mg-color-interactive;
 
 // 4. Custom spacing for brand identity
-$mg-spacing-150: 1.2rem;      // Slightly tighter spacing
-$mg-spacing-200: 1.8rem;      // Custom section spacing
-$mg-radius-button: $mg-spacing-75;  // More rounded buttons
-$mg-radius-label: $mg-spacing-50;   // Rounded labels
+$mg-spacing-150: 1.2rem; // Slightly tighter spacing
+$mg-spacing-200: 1.8rem; // Custom section spacing
+$mg-radius-button: $mg-spacing-75; // More rounded buttons
+$mg-radius-label: $mg-spacing-50; // Rounded labels
 
 // 5. Typography adjustments
 $mg-font-family: 'Your-Brand-Font', 'Roboto', sans-serif;
-$mg-font-size-button: $mg-font-size-250;  // Larger button text
+$mg-font-size-button: $mg-font-size-250; // Larger button text
 
 // 6. Create custom component variants
 .mg-hero--branded {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     #{$mg-color-blue-900} 0%,
     #{$mg-color-orange-900} 100%
   );
 
   .mg-hero__title {
     color: $mg-color-white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -563,7 +573,7 @@ $mg-font-size-button: $mg-font-size-250;  // Larger button text
 }
 
 // 7. Dark mode support using Mangrove variables
-[data-theme="dark"] {
+[data-theme='dark'] {
   --mg-color-bg: #{$mg-color-neutral-800};
   --mg-color-text: #{$mg-color-neutral-0};
   --mg-color-border: #{$mg-color-neutral-400};
@@ -598,39 +608,41 @@ module.exports = {
       preset: 'default',
     }),
   ],
-}
+};
 ```
 
 ## Best practices
 
 ### 1. Import Order
+
 Always import in this order to ensure proper cascading:
 
 ```scss
 // 1. External dependencies
-@import "normalize.css";
+@import 'normalize.css';
 
 // 2. Mangrove variables (for overriding)
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/variables";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/variables';
 
 // 3. Your variable overrides
-@import "variables/colors";
-@import "variables/typography";
-@import "variables/spacing";
+@import 'variables/colors';
+@import 'variables/typography';
+@import 'variables/spacing';
 
 // 4. Mangrove mixins and base
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/mixins";
-@import "~@unisdr/undrr-mangrove/stories/assets/scss/base";
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/mixins';
+@import '~@unisdr/undrr-mangrove/stories/assets/scss/base';
 
 // 5. Mangrove components (only what you need)
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 
 // 6. Your custom components
-@import "components/news-card";
-@import "components/hero-banner";
+@import 'components/news-card';
+@import 'components/hero-banner';
 ```
 
 ### 2. Selective Imports
+
 Only import components you actually use:
 
 ```scss
@@ -638,22 +650,23 @@ Only import components you actually use:
 // @import "~@unisdr/undrr-mangrove/stories/**/*";
 
 // Import selectively
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
-@import "~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card";
-@import "~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields";
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card';
+@import '~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
 ```
 
 ### 3. Variable Overrides
+
 Override variables before importing components:
 
 ```scss
 // ❌ Wrong - too late to override
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 $mg-button-primary-bg: #custom-color;
 
 // ✅ Correct - override before import
 $mg-button-primary-bg: #custom-color;
-@import "~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button";
+@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 ```
 
 ## Next steps

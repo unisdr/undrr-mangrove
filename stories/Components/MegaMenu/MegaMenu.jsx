@@ -13,10 +13,10 @@
  * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
  * @returns {JSX.Element} Rendered MegaMenu component
  */
-import React, { useState, useEffect, useRef } from "react";
-import { TopBar } from "./TopBar/TopBar";
-import { Sidebar } from "./TopBar/Sidebar";
-import { useBreakpoint } from "./TopBar/hook";
+import React, { useState, useEffect, useRef } from 'react';
+import { TopBar } from './TopBar/TopBar';
+import { Sidebar } from './TopBar/Sidebar';
+import { useBreakpoint } from './TopBar/hook';
 
 const MegaMenu = ({ sections, delay = 300 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -24,7 +24,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
   const breakpoint = useBreakpoint();
 
   const itemListRef = useRef([]);
-  const sectionListRef = useRef([])
+  const sectionListRef = useRef([]);
 
   // Use ref for timeoutId to prevent re-renders
   const timeoutRef = useRef(null);
@@ -40,19 +40,19 @@ const MegaMenu = ({ sections, delay = 300 }) => {
     }, delay);
   };
 
-  const handleItemHover = (item) => {
+  const handleItemHover = item => {
     clearTimeout(timeoutRef.current);
     setActiveItem(item);
-  }
+  };
 
-  const handleEscape = (e) => {
+  const handleEscape = e => {
     if (e.key === 'Escape') {
-      setActiveItem(null)
+      setActiveItem(null);
     }
   };
 
   useEffect(() => {
-    if (breakpoint !== "mobile") {
+    if (breakpoint !== 'mobile') {
       setShowSidebar(false);
     }
   }, [breakpoint]);
@@ -67,7 +67,7 @@ const MegaMenu = ({ sections, delay = 300 }) => {
       <TopBar
         sections={sections}
         handleItemHover={handleItemHover}
-        toggleShowSidebar={() => setShowSidebar((prev) => !prev)}
+        toggleShowSidebar={() => setShowSidebar(prev => !prev)}
         showSidebar={showSidebar}
         activeItem={activeItem}
         itemListRef={itemListRef}

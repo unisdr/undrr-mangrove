@@ -2,14 +2,22 @@ import { Meta, Story, Canvas } from '@storybook/blocks';
 import { Pagination } from './Pagination';
 import * as PaginationStories from './Pagination.stories';
 
-export const getCaptionForLocale = (locale) => {
-  switch(locale) {
-    case 'english': const engText = {text: 'Page', text2: 'of'}; return engText;
-    case 'arabic': const arabicText = {text: 'صفحة', text2: 'من'}; return arabicText;
-    case 'burmese': const burmeseText = {text: 'စာမျက်နှာ', text2: '၏'}; return burmeseText;
-    case 'japanese': const japaneseText = {text: 'ページ', text2: 'の'}; return japaneseText;
+export const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = { text: 'Page', text2: 'of' };
+      return engText;
+    case 'arabic':
+      const arabicText = { text: 'صفحة', text2: 'من' };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = { text: 'စာမျက်နှာ', text2: '၏' };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = { text: 'ページ', text2: 'の' };
+      return japaneseText;
     default:
-      return {text: 'Page', text2: 'of'};
+      return { text: 'Page', text2: 'of' };
   }
 };
 
@@ -25,7 +33,7 @@ The Pagination component allows users to make large amounts of content easy to f
 
 When to use:
 
-* When web content needs to be divided into pages.
+- When web content needs to be divided into pages.
 
 Formatting
 

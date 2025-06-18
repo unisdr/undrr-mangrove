@@ -1,10 +1,10 @@
-import { getContinent, getCountryCoords } from "./lookup";
+import { getContinent, getCountryCoords } from './lookup';
 /**
  * Transform function to calculate the number of commitments per year.
  * @param {Array} rawData - The raw dataset containing commitments.
  * @returns {Array} - Transformed data array for bar chart visualization.
  */
-export const transformDataForMap = (results) => {
+export const transformDataForMap = results => {
   const seenNodeIds = new Set(); // Track unique node_ids
 
   const data = results
@@ -17,28 +17,28 @@ export const transformDataForMap = (results) => {
       // Mark node_id as processed
       seenNodeIds.add(entry.node_id);
 
-      if (entry.continent == "North America") {
-        entry.continent = "Americas";
+      if (entry.continent == 'North America') {
+        entry.continent = 'Americas';
       }
 
       // Handle geographic exceptions
       if (entry.country_iso_code == null) {
-        entry.country_name = "Global";
-        entry.title = "Global";
-        entry.country_id = "ALL";
-        entry.country_iso_code = "GLOBAL";
+        entry.country_name = 'Global';
+        entry.title = 'Global';
+        entry.country_id = 'ALL';
+        entry.country_iso_code = 'GLOBAL';
       }
 
       if (entry.country_iso_code === false) {
-        entry.title = entry.country_name + " regional commitments";
+        entry.title = entry.country_name + ' regional commitments';
         entry.country_iso_code = entry.country_name.toUpperCase();
         entry.country_name = entry.country_name;
       }
 
       const existingEntry = acc.find(
-        (item) => item.country_iso_code === entry.country_iso_code
+        item => item.country_iso_code === entry.country_iso_code
       );
-      
+
       if (existingEntry) {
         existingEntry.value += 1;
       } else {
@@ -54,7 +54,7 @@ export const transformDataForMap = (results) => {
 
       return acc;
     }, [])
-    .filter((c) => c.coords !== null);
-    
+    .filter(c => c.coords !== null);
+
   return data;
 };

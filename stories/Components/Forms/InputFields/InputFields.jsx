@@ -2,10 +2,18 @@ import React, { useEffect, useRef } from 'react';
 // import './input-fields.scss';
 // import '../../../assets/scss/_typography.scss';
 
-const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
+const cls = (...classes) =>
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function Inputcomponent({
-  type, element, placeholder, labelText, errorText, helpText, State, id,
+  type,
+  element,
+  placeholder,
+  labelText,
+  errorText,
+  helpText,
+  State,
+  id,
 }) {
   const InputTag = `${element}`;
   let state;
@@ -21,9 +29,16 @@ export function Inputcomponent({
   }, [state]);
   return (
     <>
-      {labelText && <label className={cls((`${state}` == 'disabled') ? `${state}` : '')} htmlFor={[`${type}`]}>{ labelText }</label>}
+      {labelText && (
+        <label
+          className={cls(`${state}` == 'disabled' ? `${state}` : '')}
+          htmlFor={[`${type}`]}
+        >
+          {labelText}
+        </label>
+      )}
       <InputTag
-        className={cls((`${state}` !== 'focus') ? `${state}` : '')}
+        className={cls(`${state}` !== 'focus' ? `${state}` : '')}
         ref={inputElement}
         type={type}
         disabled={State == 'Disabled'}
@@ -32,8 +47,8 @@ export function Inputcomponent({
         id={id}
         {...(labelText ? '' : { 'aria-label': placeholder })}
       />
-      {helpText && <p className="help">{ helpText }</p>}
-      {(State == 'Error') && <p className="error">{ errorText }</p>}
+      {helpText && <p className="help">{helpText}</p>}
+      {State == 'Error' && <p className="error">{errorText}</p>}
     </>
   );
 }

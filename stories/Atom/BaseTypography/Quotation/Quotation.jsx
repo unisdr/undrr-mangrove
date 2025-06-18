@@ -3,9 +3,6 @@ import React from 'react';
 
 export const Quotation = ({ label }) => (
   <p>
-    <q>
-      {label}
-    </q>
+    <q>{label}</q>
   </p>
 );
-

@@ -4,10 +4,10 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <Meta
   title="Getting started/Best practices"
   parameters={{
-    viewMode: "docs",
+    viewMode: 'docs',
     previewTabs: {
-      canvas: { hidden: true }
-    }
+      canvas: { hidden: true },
+    },
   }}
 />
 
@@ -15,13 +15,16 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <TableOfContents
   tocData={[
-    { id: "performance-best-practices", text: "Performance best practices" },
-    { id: "accessibility-best-practices", text: "Accessibility best practices" },
-    { id: "architecture-best-practices", text: "Architecture best practices" },
-    { id: "development-best-practices", text: "Development best practices" },
-    { id: "styling-best-practices", text: "Styling best practices" },
-    { id: "progressive-enhancement", text: "Progressive enhancement" },
-    { id: "related-resources", text: "Related resources" }
+    { id: 'performance-best-practices', text: 'Performance best practices' },
+    {
+      id: 'accessibility-best-practices',
+      text: 'Accessibility best practices',
+    },
+    { id: 'architecture-best-practices', text: 'Architecture best practices' },
+    { id: 'development-best-practices', text: 'Development best practices' },
+    { id: 'styling-best-practices', text: 'Styling best practices' },
+    { id: 'progressive-enhancement', text: 'Progressive enhancement' },
+    { id: 'related-resources', text: 'Related resources' },
   ]}
   showNumbers={false}
 />
@@ -33,6 +36,7 @@ Follow these guidelines to get the most out of Mangrove while building maintaina
 ### 1. Component organization
 
 **File Structure**
+
 ```
 src/
 ├── components/
@@ -61,6 +65,7 @@ src/
 ```
 
 **Wrapper Components**
+
 ```jsx
 // components/ui/Button/Button.jsx
 import React from 'react';
@@ -90,37 +95,42 @@ export default Button;
 ### 2. State management
 
 **Local State with useState**
+
 ```jsx
 function ContactForm() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = useCallback((field) => (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({
+  const handleInputChange = useCallback(
+    field => e => {
+      setFormData(prev => ({
         ...prev,
-        [field]: ''
+        [field]: e.target.value,
       }));
-    }
-  }, [errors]);
+
+      // Clear error when user starts typing
+      if (errors[field]) {
+        setErrors(prev => ({
+          ...prev,
+          [field]: '',
+        }));
+      }
+    },
+    [errors]
+  );
 
   // ... rest of component
 }
 ```
 
 **Global State with Context**
+
 ```jsx
 // contexts/ThemeContext.jsx
 const ThemeContext = createContext();
@@ -129,7 +139,7 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('light');
 
   const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   useEffect(() => {
@@ -155,6 +165,7 @@ export const useTheme = () => {
 ### 3. Error handling
 
 **Error Boundaries**
+
 ```jsx
 class MangroveErrorBoundary extends Component {
   constructor(props) {
@@ -194,6 +205,7 @@ class MangroveErrorBoundary extends Component {
 ```
 
 **Graceful Degradation**
+
 ```jsx
 function ReportCard({ report }) {
   const [imageError, setImageError] = useState(false);
@@ -201,12 +213,14 @@ function ReportCard({ report }) {
 
   return (
     <VerticalCard
-      data={[{
-        ...report,
-        imgback: imageError ? '/images/fallback-report.jpg' : report.image,
-        onImageError: () => setImageError(true),
-        onImageLoad: () => setLoading(false)
-      }]}
+      data={[
+        {
+          ...report,
+          imgback: imageError ? '/images/fallback-report.jpg' : report.image,
+          onImageError: () => setImageError(true),
+          onImageLoad: () => setLoading(false),
+        },
+      ]}
       variant="primary"
     />
   );
@@ -218,6 +232,7 @@ function ReportCard({ report }) {
 ### 1. CSS Custom Properties
 
 **Theme Variables**
+
 ```css
 :root {
   /* Mangrove overrides */
@@ -228,10 +243,10 @@ function ReportCard({ report }) {
   /* Custom variables */
   --org-brand-blue: #003366;
   --org-brand-green: #228b22;
-  --org-shadow-subtle: 0 2px 4px rgba(0,0,0,0.1);
+  --org-shadow-subtle: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --mg-primary-color: #4d9fff;
   --mg-background-color: #1a1a1a;
   --mg-text-color: #ffffff;
@@ -239,6 +254,7 @@ function ReportCard({ report }) {
 ```
 
 **Component-Specific Variables**
+
 ```scss
 .mg-custom-card {
   // Use Mangrove variables
@@ -263,10 +279,11 @@ function ReportCard({ report }) {
 ### 1. JavaScript enhancement
 
 **Base functionality without JS**
+
 ```html
 <!-- Works without JavaScript -->
 <form action="/submit-contact" method="POST" class="mg-form">
-  <input type="text" name="name" class="mg-form__input" required>
+  <input type="text" name="name" class="mg-form__input" required />
   <textarea name="message" class="mg-form__textarea" required></textarea>
   <button type="submit" class="mg-cta-button mg-cta-button--primary">
     Send Message
@@ -275,6 +292,7 @@ function ReportCard({ report }) {
 ```
 
 **Enhanced with JavaScript**
+
 ```jsx
 function ContactForm() {
   const [isEnhanced, setIsEnhanced] = useState(false);
@@ -286,16 +304,9 @@ function ContactForm() {
 
   return (
     <form onSubmit={isEnhanced ? handleEnhancedSubmit : undefined}>
-      <InputFields
-        type="text"
-        name="name"
-        labelText="Name"
-        required
-      />
+      <InputFields type="text" name="name" labelText="Name" required />
       {isEnhanced && (
-        <div className="mg-form__validation">
-          Real-time validation enabled
-        </div>
+        <div className="mg-form__validation">Real-time validation enabled</div>
       )}
       <CtaButton
         label={isEnhanced ? 'Send Message' : 'Send Message (Enhanced)'}
@@ -310,25 +321,29 @@ function ContactForm() {
 ### 2. Graceful fallbacks
 
 **Image fallbacks**
+
 ```jsx
 <VerticalCard
-  data={[{
-    title: "Report Title",
-    imgback: "report-image.webp",
-    imgFallback: "report-image.jpg",
-    onImageError: handleImageError
-  }]}
+  data={[
+    {
+      title: 'Report Title',
+      imgback: 'report-image.webp',
+      imgFallback: 'report-image.jpg',
+      onImageError: handleImageError,
+    },
+  ]}
 />
 ```
 
 **Font fallbacks**
+
 ```css
 .mg-heading {
   font-family:
-    'Inter',           /* Custom font */
-    'Roboto',          /* Mangrove fallback */
-    -apple-system,     /* System font */
-    BlinkMacSystemFont,
-    sans-serif;        /* Generic fallback */
+    'Inter',
+    /* Custom font */ 'Roboto',
+    /* Mangrove fallback */ -apple-system,
+    /* System font */ BlinkMacSystemFont,
+    sans-serif; /* Generic fallback */
 }
 ```

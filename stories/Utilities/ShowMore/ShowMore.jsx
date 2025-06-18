@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { mgShowMore } from "../../assets/js/show-more";
+import React, { useEffect } from 'react';
+import { mgShowMore } from '../../assets/js/show-more';
 
 export function ShowMore({ data }) {
   useEffect(() => {
@@ -7,7 +7,7 @@ export function ShowMore({ data }) {
   }, []);
   return (
     <React.Fragment>
-      {" "}
+      {' '}
       {data.map((item, index) => (
         <React.Fragment>
           <div class={item.collapsable_wrapper_class}>

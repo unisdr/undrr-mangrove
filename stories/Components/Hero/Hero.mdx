@@ -36,12 +36,17 @@ This story shows the default Hero component with a link in the title.
 - If no `link` is provided, the title will be rendered as an appropriate header tag (e.g., `<h1>`).
 
 If the content has no link:
+
 ```jsx
 <h1 class="text-xxl">Title without a link</h1>
 ```
+
 If the content has a valid link:
+
 ```jsx
-<a href="/#" class="text-xxl">Title with a link</a>
+<a href="/#" class="text-xxl">
+  Title with a link
+</a>
 ```
 
 #### 2. Support for HTML in title and summary fields
@@ -49,7 +54,11 @@ If the content has a valid link:
 The `title` and `summaryText` fields now support the inclusion of HTML elements such as `<br>` (line breaks) and `&nbsp;` (non-breaking spaces) to allow more control over the formatting of the text.
 
 ```jsx
-<span dangerouslySetInnerHTML={{ __html: "This is a title with a<br>&nbsp;line break" }} />
+<span
+  dangerouslySetInnerHTML={{
+    __html: 'This is a title with a<br>&nbsp;line break',
+  }}
+/>
 ```
 
 ### Version 1.1

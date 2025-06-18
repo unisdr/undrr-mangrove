@@ -79,13 +79,12 @@
       top: 50%;
       border-style: solid;
       border-width: 0.2em 0.2em 0 0;
-      content: '';
+      content: "";
       height: 0.45em;
       transform: rotate(-45deg);
       vertical-align: top;
       width: 0.45em;
       transition: transform 0;
-      
     }
 
     &.mg-tabs__stacked--open:before {
@@ -96,7 +95,7 @@
   }
 }
 
-.mg-tabs--stacked { 
+.mg-tabs--stacked {
   @include stacked-tabs;
 }
 

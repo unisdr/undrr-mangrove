@@ -3,18 +3,18 @@ import { Authorimg } from './AuthorImages';
 import user from '../../../assets/images/author.png';
 import * as AuthorImagesStories from './AuthorImages.stories';
 
-export const getCaptionForLocale = (locale) => {
+export const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
+    case 'english':
       const engText = {};
       return engText;
-    case "arabic":
+    case 'arabic':
       const arabicText = {};
       return arabicText;
-    case "burmese":
+    case 'burmese':
       const burmeseText = {};
       return burmeseText;
-    case "japanese":
+    case 'japanese':
       const japaneseText = {};
       return japaneseText;
     default:
@@ -34,7 +34,7 @@ The Author Image component displays the author's image but does not contain any 
 
 #### When to use:
 
-* When the image of the author is to be displayed.
+- When the image of the author is to be displayed.
 
 ### Formatting
 
@@ -48,8 +48,8 @@ It's circular shaped with an image inside it.
 
 There are two states in the Author Image component: Small and Large.
 
-* Small
-* Large
+- Small
+- Large
 
 <Canvas>
   <Story of={AuthorImagesStories.DefaultAuthorImage} />

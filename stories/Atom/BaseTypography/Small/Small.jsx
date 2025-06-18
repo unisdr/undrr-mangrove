@@ -3,9 +3,6 @@ import React from 'react';
 
 export const Small = ({ label }) => (
   <p>
-    <small>
-      {label}
-    </small>
+    <small>{label}</small>
   </p>
 );
-

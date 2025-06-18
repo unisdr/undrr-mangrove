@@ -5,14 +5,17 @@ export const variant_options = {
   inverted: 'inverted',
 };
 
-const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
+const cls = (...classes) =>
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function FooterConditions({ style, footerdata, ...args }) {
   let screen_variant = variant_options[`${args.variant}`];
   return (
     <ul className={cls('footer-links', `${screen_variant}`)}>
       {footerdata.map((item, index) => (
-        <li key={index}><a href="#">{item.menu}</a></li>
+        <li key={index}>
+          <a href="#">{item.menu}</a>
+        </li>
       ))}
     </ul>
   );

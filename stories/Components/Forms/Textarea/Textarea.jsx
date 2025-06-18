@@ -1,9 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 
-const cls = (...classes) => ((classes.filter(Boolean).length > 0) ? classes.filter(Boolean).join(' ') : null);
+const cls = (...classes) =>
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function Textarea({
-  type, rows, cols, placeholder, labelText, errorText, minlength, helpText, State,
+  type,
+  rows,
+  cols,
+  placeholder,
+  labelText,
+  errorText,
+  minlength,
+  helpText,
+  State,
 }) {
   let state;
   const states = ['Focus', 'Error', 'Disabled'];
@@ -18,10 +27,26 @@ export function Textarea({
   }, [state]);
   return (
     <>
-      {labelText && <label className={cls((`${state}` == 'disabled') ? `${state}` : '')} htmlFor={[`${type}`]}>{ labelText }</label>}
-      <textarea className={cls((`${state}` !== 'focus') ? `${state}` : '')} ref={inputElement} type={type} placeholder={placeholder} minLength={minlength} cols={cols} rows={rows} id={type} />
-      {helpText && <p className="help">{ helpText }</p>}
-      {(State == 'Error') && <p className="error">{ errorText }</p>}
+      {labelText && (
+        <label
+          className={cls(`${state}` == 'disabled' ? `${state}` : '')}
+          htmlFor={[`${type}`]}
+        >
+          {labelText}
+        </label>
+      )}
+      <textarea
+        className={cls(`${state}` !== 'focus' ? `${state}` : '')}
+        ref={inputElement}
+        type={type}
+        placeholder={placeholder}
+        minLength={minlength}
+        cols={cols}
+        rows={rows}
+        id={type}
+      />
+      {helpText && <p className="help">{helpText}</p>}
+      {State == 'Error' && <p className="error">{errorText}</p>}
     </>
   );
 }

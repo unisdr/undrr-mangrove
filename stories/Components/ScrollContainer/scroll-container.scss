@@ -47,7 +47,9 @@
 
       &:focus {
         outline: none;
-        box-shadow: 0 0 0 2px $mg-color-white, 0 0 0 4px $mg-color-neutral-700;
+        box-shadow:
+          0 0 0 2px $mg-color-white,
+          0 0 0 4px $mg-color-neutral-700;
       }
 
       &:disabled {

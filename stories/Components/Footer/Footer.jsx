@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useMemo } from 'react';
 
 /**
  * Footer component with UNDRR Syndication support
@@ -9,10 +9,10 @@ import React, { useEffect, useRef, useMemo } from "react";
  */
 
 const cls = (...classes) =>
-  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(" ") : null;
+  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function Footer({
-  variant = "default",
+  variant = 'default',
   enableSyndication = true,
   syndicationConfig = {},
   complementaryContent = null,
@@ -24,19 +24,22 @@ export function Footer({
 
   // Default syndication configuration
   const defaultSyndicationConfig = {
-    contenttype: "landingpage",
-    pageid: "83835",
+    contenttype: 'landingpage',
+    pageid: '83835',
     includemetatags: false,
     includecss: false,
-    suffixID: "footer",
-    activedomain: "www.undrr.org",
+    suffixID: 'footer',
+    activedomain: 'www.undrr.org',
   };
 
   // Merge user config with defaults (memoized to prevent unnecessary re-renders)
-  const mergedSyndicationConfig = useMemo(() => ({
-    ...defaultSyndicationConfig,
-    ...syndicationConfig,
-  }), [syndicationConfig]);
+  const mergedSyndicationConfig = useMemo(
+    () => ({
+      ...defaultSyndicationConfig,
+      ...syndicationConfig,
+    }),
+    [syndicationConfig]
+  );
 
   useEffect(() => {
     if (!enableSyndication) return;
@@ -49,8 +52,8 @@ export function Footer({
         !document.querySelector(`link[href*="${href}"]`) &&
         !document.getElementById(id)
       ) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
         link.href = href;
         link.id = id;
         document.head.appendChild(link);
@@ -60,19 +63,19 @@ export function Footer({
     const cacheBuster = new Date().getTime();
     loadStylesheet(
       `https://www.preventionweb.net/modules/contrib/gutenberg/js/vendor/gutenberg/block-library/style.css?cacheBuster=${cacheBuster}`,
-      "pw-gutenberg-styles",
+      'pw-gutenberg-styles'
     );
 
     // Load UNDRR Mangrove styles
     loadStylesheet(
-      "https://www.preventionweb.net/themes/custom/undrr/css/mangrove/mangrove.css",
+      'https://www.preventionweb.net/themes/custom/undrr/css/mangrove/mangrove.css',
       // "https://www.preventionweb.net/themes/custom/pw/css/mangrove/mangrove.css",
-      "undrr-mangrove-styles",
+      'undrr-mangrove-styles'
     );
 
     loadStylesheet(
       `https://www.preventionweb.net/themes/custom/undrr_common/css/base.css?cacheBuster=${cacheBuster}`,
-      "undrr-common-base",
+      'undrr-common-base'
     );
 
     // loadStylesheet(
@@ -82,24 +85,24 @@ export function Footer({
 
     loadStylesheet(
       `https://www.preventionweb.net/themes/custom/undrr_common/css/components/colors.css?cacheBuster=${cacheBuster}`,
-      "undrr-common-colors",
+      'undrr-common-colors'
     );
 
     loadStylesheet(
       `https://www.preventionweb.net/themes/custom/undrr_common/css/components/footer.css?cacheBuster=${cacheBuster}`,
-      "undrr-common-footer",
+      'undrr-common-footer'
     );
 
     // Check if widget script is already loaded globally
     const existingWidgetScript = document.querySelector(
-      'script[src*="preventionweb.net/widget.js"]',
+      'script[src*="preventionweb.net/widget.js"]'
     );
 
     // Always initialize the widget for this specific component instance
     const initializeWidget = () => {
-      const initScript = document.createElement("script");
-      initScript.type = "text/javascript";
-      console.log("mergedSyndicationConfig", mergedSyndicationConfig.suffixID);
+      const initScript = document.createElement('script');
+      initScript.type = 'text/javascript';
+      console.log('mergedSyndicationConfig', mergedSyndicationConfig.suffixID);
       initScript.innerHTML = `
         if (window.PW_Widget) {
           new PW_Widget.initialize({
@@ -117,10 +120,10 @@ export function Footer({
 
     if (!existingWidgetScript) {
       // Create and inject the widget script (only once globally)
-      const widgetScript = document.createElement("script");
-      widgetScript.type = "text/javascript";
+      const widgetScript = document.createElement('script');
+      widgetScript.type = 'text/javascript';
       widgetScript.src =
-        "https://publish.preventionweb.net/widget.js?rand=3d797b";
+        'https://publish.preventionweb.net/widget.js?rand=3d797b';
 
       // Add widget script first
       document.head.appendChild(widgetScript);
@@ -132,10 +135,10 @@ export function Footer({
 
       // Handle script loading errors
       widgetScript.onerror = () => {
-        console.warn("Failed to load UNDRR syndication widget");
+        console.warn('Failed to load UNDRR syndication widget');
         if (syndicationRef.current) {
           syndicationRef.current.innerHTML =
-            "<p>Unable to load syndicated footer content.</p>";
+            '<p>Unable to load syndicated footer content.</p>';
         }
       };
     } else {
@@ -146,10 +149,10 @@ export function Footer({
     return () => {
       // Cleanup if component unmounts
       if (syndicationRef.current) {
-        syndicationRef.current.innerHTML = "";
+        syndicationRef.current.innerHTML = '';
       }
     };
-      }, [enableSyndication, mergedSyndicationConfig]);
+  }, [enableSyndication, mergedSyndicationConfig]);
 
   return (
     <footer {...args}>
@@ -172,6 +175,6 @@ export function Footer({
 }
 
 Footer.defaultProps = {
-  variant: "default",
+  variant: 'default',
   enableSyndication: true,
 };

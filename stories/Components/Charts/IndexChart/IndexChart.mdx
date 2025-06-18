@@ -12,21 +12,21 @@ The `IndexChart` component visualizes data as a line graph with points represent
 
 ## Props
 
-* **`data`**: `Array<{ date: Date, value: number }>` - An array of objects representing the data points. Each object should have `date` and `value` properties. *(required)*
-* **`width`**: `number` - The width of the chart in pixels. *(required)*
-* **`height`**: `number` - The height of the chart in pixels. *(required)*
-* **`lineColor`**: `string` - The color of the line connecting the points. *(default: `#4065A3`)*
-* **`labelColor`**: `string` - The color for the axis labels and text. *(default: `#6B7280`)*
-* **`backgroundColor`**: `string` - The background color of the chart. *(default: `#FFFFFF`)*
-* **`axisColor`**: `string` - The color of the axis lines. *(default: `#9CA3AF`)*
-* **`tickColor`**: `string` - The color of the tick lines. *(default: `#D1D5DB`)*
-* **`title`**: `string` - The title of the chart.
-* **`xAxisLabel`**: `string` - The label for the x-axis.
-* **`yAxisLabel`**: `string` - The label for the y-axis.
-* **`locale`**: `string` - The locale for the chart, e.g., `"en"` or `"ar"`.
-* **`direction`**: `string` - The text direction, `"ltr"` or `"rtl"`.
-* **`ariaLabel`**: `string` - ARIA label for accessibility. *(default: "Index chart showing data over time")*
-* **`ariaDescription`**: `string` - A description of the chart content for screen readers.
+- **`data`**: `Array<{ date: Date, value: number }>` - An array of objects representing the data points. Each object should have `date` and `value` properties. _(required)_
+- **`width`**: `number` - The width of the chart in pixels. _(required)_
+- **`height`**: `number` - The height of the chart in pixels. _(required)_
+- **`lineColor`**: `string` - The color of the line connecting the points. _(default: `#4065A3`)_
+- **`labelColor`**: `string` - The color for the axis labels and text. _(default: `#6B7280`)_
+- **`backgroundColor`**: `string` - The background color of the chart. _(default: `#FFFFFF`)_
+- **`axisColor`**: `string` - The color of the axis lines. _(default: `#9CA3AF`)_
+- **`tickColor`**: `string` - The color of the tick lines. _(default: `#D1D5DB`)_
+- **`title`**: `string` - The title of the chart.
+- **`xAxisLabel`**: `string` - The label for the x-axis.
+- **`yAxisLabel`**: `string` - The label for the y-axis.
+- **`locale`**: `string` - The locale for the chart, e.g., `"en"` or `"ar"`.
+- **`direction`**: `string` - The text direction, `"ltr"` or `"rtl"`.
+- **`ariaLabel`**: `string` - ARIA label for accessibility. _(default: "Index chart showing data over time")_
+- **`ariaDescription`**: `string` - A description of the chart content for screen readers.
 
 ## Usage
 
@@ -46,27 +46,28 @@ Below is a simple index chart using a default dataset.
 import IndexChart from './IndexChart';
 
 const Example = () => (
-  <IndexChart
-    data={[
-      { date: new Date('2024-01-01'), value: 10 },
-      { date: new Date('2024-02-01'), value: 15 },
-      { date: new Date('2024-03-01'), value: 20 },
-      { date: new Date('2024-04-01'), value: 25 },
-      { date: new Date('2024-05-01'), value: 30 },
-      { date: new Date('2024-06-01'), value: 35 },
-    ]}
-    width={1000}
-    height={600}
-    lineColor="#4065A3"
-    labelColor="#6B7280"
-    axisColor="#9CA3AF"
-    tickColor="#D1D5DB"
-    title="Sample Index Chart"
-    xAxisLabel="Date"
-    yAxisLabel="Value"
-    ariaLabel="Index chart showing data over time"
-    ariaDescription="This chart displays an index chart that shows data values over time."
-  />
+
+<IndexChart
+  data={[
+    { date: new Date('2024-01-01'), value: 10 },
+    { date: new Date('2024-02-01'), value: 15 },
+    { date: new Date('2024-03-01'), value: 20 },
+    { date: new Date('2024-04-01'), value: 25 },
+    { date: new Date('2024-05-01'), value: 30 },
+    { date: new Date('2024-06-01'), value: 35 },
+  ]}
+  width={1000}
+  height={600}
+  lineColor="#4065A3"
+  labelColor="#6B7280"
+  axisColor="#9CA3AF"
+  tickColor="#D1D5DB"
+  title="Sample Index Chart"
+  xAxisLabel="Date"
+  yAxisLabel="Value"
+  ariaLabel="Index chart showing data over time"
+  ariaDescription="This chart displays an index chart that shows data values over time."
+/>
 );
 
 export default Example;
@@ -87,28 +88,29 @@ This example demonstrates how to customize the index chart with RTL text directi
 import IndexChart from './IndexChart';
 
 const RTLExample = () => (
-  <IndexChart
-    data={[
-      { date: new Date('2024-01-01'), value: 10 },
-      { date: new Date('2024-02-01'), value: 15 },
-      { date: new Date('2024-03-01'), value: 20 },
-      { date: new Date('2024-04-01'), value: 25 },
-      { date: new Date('2024-05-01'), value: 30 },
-      { date: new Date('2024-06-01'), value: 35 },
-    ]}
-    width={1000}
-    height={600}
-    lineColor="#4065A3"
-    labelColor="#6B7280"
-    axisColor="#9CA3AF"
-    tickColor="#D1D5DB"
-    title="مخطط المؤشر"
-    xAxisLabel="التاريخ"
-    yAxisLabel="القيمة"
-    locale="ar"
-    direction="rtl"
-    ariaLabel="مخطط المؤشر الذي يظهر البيانات على مدى الزمن"
-  />
+
+<IndexChart
+  data={[
+    { date: new Date('2024-01-01'), value: 10 },
+    { date: new Date('2024-02-01'), value: 15 },
+    { date: new Date('2024-03-01'), value: 20 },
+    { date: new Date('2024-04-01'), value: 25 },
+    { date: new Date('2024-05-01'), value: 30 },
+    { date: new Date('2024-06-01'), value: 35 },
+  ]}
+  width={1000}
+  height={600}
+  lineColor="#4065A3"
+  labelColor="#6B7280"
+  axisColor="#9CA3AF"
+  tickColor="#D1D5DB"
+  title="مخطط المؤشر"
+  xAxisLabel="التاريخ"
+  yAxisLabel="القيمة"
+  locale="ar"
+  direction="rtl"
+  ariaLabel="مخطط المؤشر الذي يظهر البيانات على مدى الزمن"
+/>
 );
 
 export default RTLExample;
@@ -129,27 +131,28 @@ This example shows an index chart with specific date and value data.
 import IndexChart from './IndexChart';
 
 const CustomExample = () => (
-  <IndexChart
-    data={[
-      { date: new Date('2024-01-01'), value: 5 },
-      { date: new Date('2024-02-01'), value: 15 },
-      { date: new Date('2024-03-01'), value: 25 },
-      { date: new Date('2024-04-01'), value: 35 },
-      { date: new Date('2024-05-01'), value: 45 },
-      { date: new Date('2024-06-01'), value: 55 },
-    ]}
-    width={1000}
-    height={600}
-    lineColor="#007bc8"
-    labelColor="#6B7280"
-    axisColor="#9CA3AF"
-    tickColor="#D1D5DB"
-    title="Custom Index Chart"
-    xAxisLabel="Custom Date"
-    yAxisLabel="Custom Value"
-    ariaLabel="Index chart showing custom data over time"
-    ariaDescription="This chart displays an index chart with custom data values over time."
-  />
+
+<IndexChart
+  data={[
+    { date: new Date('2024-01-01'), value: 5 },
+    { date: new Date('2024-02-01'), value: 15 },
+    { date: new Date('2024-03-01'), value: 25 },
+    { date: new Date('2024-04-01'), value: 35 },
+    { date: new Date('2024-05-01'), value: 45 },
+    { date: new Date('2024-06-01'), value: 55 },
+  ]}
+  width={1000}
+  height={600}
+  lineColor="#007bc8"
+  labelColor="#6B7280"
+  axisColor="#9CA3AF"
+  tickColor="#D1D5DB"
+  title="Custom Index Chart"
+  xAxisLabel="Custom Date"
+  yAxisLabel="Custom Value"
+  ariaLabel="Index chart showing custom data over time"
+  ariaDescription="This chart displays an index chart with custom data values over time."
+/>
 );
 
 export default CustomExample;

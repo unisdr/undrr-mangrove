@@ -1,23 +1,23 @@
-import { Meta, Story, Canvas } from "@storybook/blocks";
-import { Radio } from "./Radio";
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { Radio } from './Radio';
 import * as RadioStories from './Radio.stories';
 
-export const getCaptionForLocale = (locale) => {
+export const getCaptionForLocale = locale => {
   switch (locale) {
-    case "english":
-      const engText = { label: "Category" };
+    case 'english':
+      const engText = { label: 'Category' };
       return engText;
-    case "arabic":
-      const arabicText = { label: "فئة" };
+    case 'arabic':
+      const arabicText = { label: 'فئة' };
       return arabicText;
-    case "burmese":
-      const burmeseText = { label: "အမျိုးအစား" };
+    case 'burmese':
+      const burmeseText = { label: 'အမျိုးအစား' };
       return burmeseText;
-    case "japanese":
-      const japaneseText = { label: "カテゴリー" };
+    case 'japanese':
+      const japaneseText = { label: 'カテゴリー' };
       return japaneseText;
     default:
-      return { label: "Category" };
+      return { label: 'Category' };
   }
 };
 
@@ -33,7 +33,7 @@ A radio button is a type of indicator that informs the user to choose a single o
 
 When to use:
 
-* When the user needs to select a single option.
+- When the user needs to select a single option.
 
 ### Formatting
 
@@ -72,8 +72,8 @@ The following behavior modifiers are available:
 
 ### Interactions
 
-* The hover state is applied to the entire button.
-* The active state is applied to the entire button.
+- The hover state is applied to the entire button.
+- The active state is applied to the entire button.
 
 ### Changelog
 
