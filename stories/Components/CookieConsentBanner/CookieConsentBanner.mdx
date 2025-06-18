@@ -1,14 +1,15 @@
-import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs';
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs/blocks';
 import CookieConsentBanner from './CookieConsentBanner';
+import * as CookieConsentBannerStories from './CookieConsentBanner.stories';
 
 <Meta
   title="Components/CookieConsentBanner/Documentation"
-  component={CookieConsentBanner}
+  of={CookieConsentBannerStories}
 />
 
 # Cookie Consent Banner
 
-The Cookie Consent Banner component provides a configurable cookie consent solution for UNDRR websites, built on top of the [vanilla-cookieconsent](https://github.com/orestbida/cookieconsent) library.
+The Cookie Consent Banner component provides a configurable cookie consent solution for UNDRR websites, loading the official UNDRR cookie consent implementation directly from the UNDRR CDN.
 
 ## Features
 
@@ -17,15 +18,36 @@ The Cookie Consent Banner component provides a configurable cookie consent solut
 - Configurable categories for different types of cookies
 - Internationalization support
 - Accessibility-friendly implementation
+- **CDN-based loading**: Automatically loads the latest UNDRR cookie banner from the official CDN
+- **Zero dependencies**: No npm packages required - everything loads dynamically
+
+## CDN Resources
+
+The component loads resources directly from the official UNDRR CDN at `https://assets.undrr.org/static/cookie-banner/v1/`:
+
+- **CSS**: `cookieconsent.css` - Styling for the cookie banner
+- **JavaScript**: `cookieconsent.umd.js` - Core cookie consent library
+- **Configuration**: `cookieconsent-undrr.js` - UNDRR-specific configuration and defaults
+
+### Quick include non-React sites
+
+If you're working on a plain HTML site (no React), you don't need this React wrapper. Simply include the following tags and the banner will initialise automatically:
+
+```html
+<!-- UNDRR Cookie Banner Implementation -->
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css"
+/>
+<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js"></script>
+<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js"></script>
+```
+
+For a complete implementation example, see the [UNDRR Cookie Banner documentation](https://assets.undrr.org/static/cookie-banner/v1/example.html).
 
 ## Installation
 
-The component relies on the `vanilla-cookieconsent` package which is already included as a dependency in the project:
-
-```bash
-# The dependency is already installed, but if needed:
-yarn add vanilla-cookieconsent
-```
+No additional dependencies are required! The component dynamically loads all necessary resources from the UNDRR CDN when it initializes.
 
 ## Basic Usage
 
@@ -47,7 +69,7 @@ const App = () => {
 export default App;
 ```
 
-The component doesn't render any visible elements itself - it initializes the cookie consent banner which will appear at the bottom of the page on first visit.
+The component doesn't render any visible elements itself - it dynamically loads the UNDRR cookie consent resources and initializes the banner which will appear at the bottom of the page on first visit.
 
 ## Configuration
 
@@ -59,6 +81,7 @@ import CookieConsentBanner from './CookieConsentBanner';
 
 const myCustomConfig = {
   // Custom configuration options
+  // This will override the default UNDRR configuration
 };
 
 const App = () => {
@@ -71,17 +94,20 @@ const App = () => {
 };
 ```
 
-If no config is provided, the component will use the default UNDRR configuration.
+If no config is provided, the component will use the official UNDRR configuration loaded from the CDN. This ensures your implementation stays up-to-date with UNDRR standards and policies.
 
-### Default Configuration
+### Default UNDRR Configuration
 
-The default configuration includes:
+The official UNDRR configuration loaded from the CDN includes:
 
-- A bottom bar layout for the consent modal
-- Left-positioned box layout for the preferences modal
-- Three cookie categories: necessary (read-only), functionality, and analytics
-- English language with UNDRR-specific text content
-- Links to Privacy Policy and Terms & Conditions
+- **Layout**: Bottom bar for consent modal, left-positioned box for preferences modal
+- **Categories**: Necessary (read-only), functionality, and analytics cookies
+- **Content**: UNDRR-specific text content and branding
+- **Languages**: Support for multiple languages with automatic browser detection
+- **Legal Links**: Official UNDRR Privacy Policy and Terms & Conditions
+- **Compliance**: Configured to meet UNDRR's privacy and legal requirements
+
+The CDN configuration is maintained by the UNDRR team and automatically includes updates to policies, translations, and compliance requirements.
 
 ## Advanced Usage
 
@@ -123,6 +149,17 @@ const customConfig = {
 };
 ```
 
+### CDN Implementation Details
+
+The component uses dynamic loading to fetch resources from the UNDRR CDN:
+
+1. **CSS Loading**: The cookie banner styles are loaded first to prevent visual flashing
+2. **Library Loading**: The core cookie consent library is loaded asynchronously
+3. **Configuration Loading**: The UNDRR-specific configuration is loaded last
+4. **Initialization**: Once all resources are available, the banner is initialized
+
+All CDN requests include a cache buster parameter (`?cacheBuster=YYYYMMDDHHMM`) to ensure fresh resources are always loaded.
+
 ### Multiple Languages
 
 The component supports multiple languages:
@@ -153,9 +190,11 @@ const customConfig = {
 
 The CookieConsentBanner component accepts the following props:
 
-| Prop   | Type   | Default       | Description                                        |
-| ------ | ------ | ------------- | -------------------------------------------------- |
-| config | Object | defaultConfig | Configuration object for the cookie consent banner |
+| Prop          | Type    | Default       | Description                                               |
+| ------------- | ------- | ------------- | --------------------------------------------------------- |
+| config        | Object  | defaultConfig | Configuration object for the cookie consent banner        |
+| debug         | Boolean | false         | Enable verbose console logging for troubleshooting        |
+| forceFallback | Boolean | false         | Skip CDN loading and use the local fallback configuration |
 
 ### Configuration Object Structure
 
@@ -229,6 +268,11 @@ The cookie consent banner is built with accessibility in mind, including:
 
 ## References
 
-- [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent)
+- [UNDRR Cookie Banner CDN](https://assets.undrr.org/static/cookie-banner/v1/example.html) - Official implementation example
 - [UNDRR Privacy Policy](https://www.undrr.org/undrr-privacy-policy)
 - [UNDRR Terms and Conditions](https://www.undrr.org/terms-and-conditions-use-undrrorg)
+- [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent) - Underlying library reference
+
+## Changelog
+
+- 1.0 - Initial release

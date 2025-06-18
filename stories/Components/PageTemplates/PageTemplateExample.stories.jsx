@@ -7,6 +7,7 @@ import { Tab } from '../Tab/Tab';
 import { VerticalCard } from '../Cards/Card/VerticalCard';
 import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';
+import CookieConsentBanner from '../CookieConsentBanner/CookieConsentBanner';
 
 const sampleHeroData = [
   {
@@ -112,23 +113,22 @@ const sampleMegaMenuSections = [
 // Define the Page Template Example component
 const PageTemplateExample = () => {
   return (
-    <div className="page-template-example | mg-container mg-container--spacer">
-      <section>
-        The Global header is yet to be implemented in Storybook. Refer to
-        UNDRR.org.
-      </section>
-      <section>The MegaMenu is in a pre-final state and will change.</section>
-      <MegaMenu delay={600} sections={sampleMegaMenuSections} />
-      <Hero data={sampleHeroData} variant="primary" />
-      <Tab tabdata={sampleTabData} />
-      <section className="mg-grid mg-grid__col-3">
-        <VerticalCard data={sampleCardContent} />
-        <VerticalCard data={sampleCardContent} />
-        <VerticalCard data={sampleCardContent} />
-      </section>
-      <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
-      <Footer />
-    </div>
+    <>
+      <PageHeader />
+      <div className="page-template-example | mg-container mg-container--spacer">
+        <CookieConsentBanner />
+        <MegaMenu delay={600} sections={sampleMegaMenuSections} />
+        <Hero data={sampleHeroData} variant="primary" />
+        <Tab tabdata={sampleTabData} />
+        <section className="mg-grid mg-grid__col-3">
+          <VerticalCard data={sampleCardContent} />
+          <VerticalCard data={sampleCardContent} />
+          <VerticalCard data={sampleCardContent} />
+        </section>
+        <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
+        <Footer />
+      </div>
+    </>
   );
 };
 

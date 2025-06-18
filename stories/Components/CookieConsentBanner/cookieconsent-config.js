@@ -32,7 +32,7 @@ const defaultConfig = {
       en: {
         consentModal: {
           title:
-            'UNDRR uses cookies to ensure you get the best experience on our website.',
+            'FALLBACK UNDRR uses cookies to ensure you get the best experience on our website.',
           description: '',
           closeIconLabel: '',
           acceptAllBtn: 'Accept all',
