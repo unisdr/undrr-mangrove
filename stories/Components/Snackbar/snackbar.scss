@@ -50,6 +50,7 @@
       #e09d04,
       $lightness: -10%
     ); // Dark amber color for warning state
+
     color: $mg-color-white; // Use white text to be consistent with other severity types
   }
 
@@ -63,6 +64,7 @@
       $mg-color-interactive,
       $lightness: -5%
     ); // Slightly darker for better distinction
+
     color: $mg-color-white;
   }
 
