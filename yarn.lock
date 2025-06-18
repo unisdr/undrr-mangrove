@@ -4849,6 +4849,7 @@ __metadata:
     svgo-loader: "npm:4.0.0"
     swiper: "npm:11.2.8"
     typescript: "npm:^5.4.5"
+    vanilla-cookieconsent: "npm:^3.1.0"
     webpack: "npm:5.99.9"
     webpack-cli: "npm:6.0.1"
     webpack-fix-style-only-entries: "npm:0.6.1"
@@ -21727,6 +21728,13 @@ __metadata:
   version: 6.0.1
   resolution: "validate-npm-package-name@npm:6.0.1"
   checksum: 10/754448c4337977981a886a26986fcb2088e1253277037de3be0f483eefbab535c5ad9316ef47ed33ab4cb3a43d8daaf1b3748eeebca642e1eccd614287e26a1f
+  languageName: node
+  linkType: hard
+
+"vanilla-cookieconsent@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "vanilla-cookieconsent@npm:3.1.0"
+  checksum: 10/053e887cde87cb1e583288d2c3d8b56acf9c97293e5c9ff5c35d0f43b68c8e20441a321469126e92ac78fbb8410fe245cd2f879d4c376b7b2a66ffca00dee41c
   languageName: node
   linkType: hard
 
