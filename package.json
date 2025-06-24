@@ -57,7 +57,7 @@
     "@babel/preset-env": "7.27.2",
     "@babel/preset-react": "7.27.1",
     "@babel/preset-typescript": "7.27.1",
-    "@chromatic-com/storybook": "4.0.0",
+    "@chromatic-com/storybook": "4.0.1",
     "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.29.0",
     "@etchteam/storybook-addon-css-variables-theme": "github:etchteam/storybook-addon-css-variables-theme#ec865f9f25372304134e7a5b5025c0008e1322f1",
