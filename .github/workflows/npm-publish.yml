@@ -36,6 +36,7 @@ jobs:
           node-version: '22'
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
+          scope: '@undrr'
 
       - name: Setup Node.js for GitHub registry
         if: ${{ inputs.registry == 'github' }}
@@ -44,7 +45,6 @@ jobs:
           node-version: '22'
           cache: 'yarn'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@undrr'
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
