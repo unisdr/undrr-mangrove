@@ -92,7 +92,9 @@ jobs:
       - name: Publish to npm registry
         if: ${{ inputs.registry == 'npm' }}
         working-directory: npm-package
-        run: npm publish
+        run: |
+          npm pkg set name="@undrr/undrr-mangrove"
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
