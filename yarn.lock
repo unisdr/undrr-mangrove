@@ -4847,7 +4847,7 @@ __metadata:
     svg-spritemap-webpack-plugin: "npm:4.7.0"
     svgo: "npm:3.3.2"
     svgo-loader: "npm:4.0.0"
-    swiper: "npm:11.2.8"
+    swiper: "npm:11.2.10"
     typescript: "npm:^5.4.5"
     vanilla-cookieconsent: "npm:^3.1.0"
     webpack: "npm:5.99.9"
@@ -20508,10 +20508,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:11.2.8":
-  version: 11.2.8
-  resolution: "swiper@npm:11.2.8"
-  checksum: 10/28a3c7273c656017d46b4b987cbec36b574cf439a98cac8d2c8a9baeab6e3a8ed1ea627cdc1144d1856713589f8cfc6f9b291c7c06351aa2d0201370f1a68239
+"swiper@npm:11.2.10":
+  version: 11.2.10
+  resolution: "swiper@npm:11.2.10"
+  checksum: 10/c3dde83e65d6ab686ad6e08b5e473f1043fa9f9f5b8d8825a8b5397c85025f71575acbcc23f2700fdf795cee9dd71256b8b65325dd0324f2fb3ca27651e59981
   languageName: node
   linkType: hard
 
