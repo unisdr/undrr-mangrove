@@ -1,5 +1,5 @@
 import { Meta, Source } from '@storybook/blocks';
-import { linkTo } from '@storybook/addon-links';
+import LinkTo from '@storybook/addon-links/react';
 
 <Meta
   title="Introduction"
@@ -38,18 +38,18 @@ Mangrove is how we future-proof our platform. It's how we scale with integrity, 
 
 ## Getting started
 
-👉 **<a href="javascript:void(0)" onClick={linkTo('getting-started-intro-getting-started-guide', 'docs')}>Start with the Getting Started Guide</a>** for a complete overview and quick setup.
+👉 **<LinkTo kind="getting-started-a-getting-started-guide" story="docs">Start with the Getting Started Guide</LinkTo>** for a complete overview and quick setup.
 
-**🎯 <a href="javascript:void(0)" onClick={linkTo('getting-started-vanilla-html-and-css', 'docs')}>Vanilla HTML/CSS Guide</a>**
+**🎯 <LinkTo kind="getting-started-vanilla-html-and-css" story="docs">Vanilla HTML/CSS Guide</LinkTo>**
 For static sites, legacy projects, or when you want minimal dependencies. Just add CSS files and copy HTML structures.
 
-**🎨 <a href="javascript:void(0)" onClick={linkTo('getting-started-sass-integration', 'docs')}>Sass Integration Guide</a>**
+**🎨 <LinkTo kind="getting-started-sass-integration" story="docs">Sass Integration Guide</LinkTo>**
 Take control of styling with custom themes, variable overrides, and build process integration.
 
-**⚛️ <a href="javascript:void(0)" onClick={linkTo('getting-started-react-integration', 'docs')}>React Integration Guide</a>**
+**⚛️ <LinkTo kind="getting-started-react-integration" story="docs">React Integration Guide</LinkTo>**
 Full React components with TypeScript integrations, props-based customization, and modern development patterns.
 
-**📋 <a href="javascript:void(0)" onClick={linkTo('getting-started-best-practices', 'docs')}>Best Practices</a>**
+**📋 <LinkTo kind="getting-started-best-practices" story="docs">Best Practices</LinkTo>**
 Performance optimization, accessibility guidelines, and development best practices.
 
 ## Process
@@ -101,7 +101,7 @@ yarn install @unisdr/undrr-mangrove
 
 ## Need help?
 
-- 📖 **Start here**: <a href="javascript:void(0)" onClick={linkTo('getting-started-intro-getting-started-guide', 'docs')}>Getting Started Guide</a>
+- 📖 **Start here**: <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting Started Guide</LinkTo>
 - 🧱 **Browse Components**: Explore the component library in the sidebar
 - 💬 **Questions**: Contact the UNDRR development team
 - 🐛 **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
