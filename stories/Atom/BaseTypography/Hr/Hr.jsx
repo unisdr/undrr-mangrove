@@ -2,11 +2,11 @@ import React from 'react';
 import { P } from '../Paragraph/Paragraph';
 // import '../../../assets/scss/_typography.scss';
 
-export const Hr = ({ detailsText }) => (
+export const Hr = ({ detail }) => (
   <>
-    <P label={detailsText} />
+    <P detail={detail} />
     <hr />
-    <P label={detailsText} />
+    <P detail={detail} />
     <hr />
   </>
 );

@@ -1,8 +1,8 @@
 import React from 'react';
 // import './quotation.scss';
 
-export const Quotation = ({ label }) => (
+export const Quotation = ({ detail }) => (
   <p>
-    <q>{label}</q>
+    <q>{detail}</q>
   </p>
 );

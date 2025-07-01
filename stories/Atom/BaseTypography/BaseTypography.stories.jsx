@@ -1,4 +1,4 @@
-import { Heading as HeadingComponent } from './../Typography/Heading/Heading';
+import { Heading as HeadingComponent } from '../Typography/Heading/Heading';
 import { Abbreviation as AbbrComponent } from './Abbr/Abbr';
 import { Blockquote } from './Blockquote/Blockquote';
 import { Cite as CiteComponent } from './Cite/Cite';
@@ -543,6 +543,20 @@ const Template =
     return <Component {...caption} {...args} />;
   };
 
+const ListTemplate =
+  (Component, getLocaleCaption, listType) =>
+  (args, { globals: { locale } }) => {
+    const caption = getLocaleCaption(locale);
+    return <Component data={caption} type={listType} {...args} />;
+  };
+
+const DescriptionListTemplate =
+  (Component, getLocaleCaption) =>
+  (args, { globals: { locale } }) => {
+    const caption = getLocaleCaption(locale);
+    return <Component data={caption} {...args} />;
+  };
+
 export default {
   title: 'Components/Typography',
   parameters: {
@@ -588,7 +602,7 @@ export const TypographySmall = Template(
   getCaptionForLocaleSmall
 );
 
-export const TypographyDescriptionList = Template(
+export const TypographyDescriptionList = DescriptionListTemplate(
   DescriptionListComponent,
   getCaptionForLocaleList
 );
@@ -603,13 +617,13 @@ export const TypographyFigcaption = Template(
   getLocaleForFigcaption
 );
 
-export const TypographyOrderedList = Template(
+export const TypographyOrderedList = ListTemplate(
   ListComponent,
   getCaptionForLocaleList,
   'ol'
 );
 
-export const TypographyUnorderedList = Template(
+export const TypographyUnorderedList = ListTemplate(
   ListComponent,
   getCaptionForLocaleList,
   'ul'

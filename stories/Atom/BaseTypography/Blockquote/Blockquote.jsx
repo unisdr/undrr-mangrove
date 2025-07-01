@@ -1,10 +1,10 @@
 import React from 'react';
 // import './blockquote.scss';
 
-export const Blockquote = ({ text, citeText }) => (
+export const Blockquote = ({ detail, citeText }) => (
   <>
     <blockquote>
-      {text}
+      {detail}
       <cite>{citeText}</cite>
     </blockquote>
   </>

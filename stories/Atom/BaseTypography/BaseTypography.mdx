@@ -130,7 +130,10 @@ Abbreviation component defines an abbreviation or an acronym, like "HTML", "CSS"
 
 Typographic scale when using abbreviation in text component:
 
-<Canvas of={BaseTypographyStories.TypographyAbbreviation} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyAbbreviation}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--blockquote" />
 
@@ -181,7 +184,10 @@ The Blockquote component specifies a section that is quoted from another source.
 
 Typographic scale when using blockquote in text component:
 
-<Canvas of={BaseTypographyStories.TypographyBlockquote} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyBlockquote}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--cite" />
 
@@ -212,7 +218,10 @@ The Cite component defines the title of a creative work (e.g. a book, a poem, a 
 
 Typographic scale when using cite in text component:
 
-<Canvas of={BaseTypographyStories.TypographyCite} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyCite}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--code" />
 
@@ -278,17 +287,10 @@ The code component is used to define a piece of computer code. The content insid
 
 Typographic scale when using code in text component:
 
-<Canvas of={BaseTypographyStories.TypographyCode} meta={BaseTypographyStories} />
-
-<Anchor storyId="foundation-typography-basetypography--description-list" />
-
-### Description List
-
-A description list is a list of terms, with a description of each term.
-
-The <code>dl</code> tag defines the description list, the <code>dt</code> tag defines the term (name), and the <code>dd</code> tag describes each term.
-
-<Canvas of={BaseTypographyStories.TypographyDescriptionList} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyCode}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--details" />
 
@@ -334,7 +336,10 @@ export const getLocaleForDetails = locale => {
   }
 };
 
-<Canvas of={BaseTypographyStories.TypographyDetails} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyDetails}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--figcaption" />
 
@@ -376,7 +381,10 @@ export const getLocaleForFigcaption = locale => {
   }
 };
 
-<Canvas of={BaseTypographyStories.TypographyFigcaption} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyFigcaption}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--headings" />
 
@@ -386,7 +394,10 @@ We can use the <code>h1/h2/h3/h4/h5/h6 tags</code> in any component to display t
 
 Typographic scale when using headings in text component:
 
-<Canvas of={BaseTypographyStories.TypographyHeading} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyHeading}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--hr" />
 
@@ -463,7 +474,10 @@ The Mark component define the marked text. It is used to highlight the part of t
 
 Typographic scale when using mark in text component:
 
-<Canvas of={BaseTypographyStories.TypographyMark} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyMark}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--ordered-list" />
 
@@ -475,7 +489,38 @@ Start an ordered list with the <code>o1</code> tag.
 
 Add a <code>li</code> tag for each list item
 
-<Canvas of={BaseTypographyStories.TypographyOrderedList} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyOrderedList}
+  meta={BaseTypographyStories}
+/>
+
+<Anchor storyId="foundation-typography-basetypography--unordered-list" />
+
+### Unordered List
+
+An unordered list is used if there is no hierarchy required. Unordered lists start with a bullet.
+
+Start an unordered list with the <code>u1</code> tag.
+
+Add a <code>li</code> tag for each list item
+
+<Canvas
+  of={BaseTypographyStories.TypographyUnorderedList}
+  meta={BaseTypographyStories}
+/>
+
+<Anchor storyId="foundation-typography-basetypography--description-list" />
+
+### Description List
+
+A description list is a list of terms, with a description of each term.
+
+The <code>dl</code> tag defines the description list, the <code>dt</code> tag defines the term (name), and the <code>dd</code> tag describes each term.
+
+<Canvas
+  of={BaseTypographyStories.TypographyDescriptionList}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--p" />
 
@@ -521,7 +566,10 @@ The Paragraph component defines a paragraph.
 
 Typographic scale when using paragraph in text component:
 
-<Canvas of={BaseTypographyStories.TypographyParagraph} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyParagraph}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--quotation" />
 
@@ -567,7 +615,10 @@ The Quotation component defines a short quotation.
 
 Typographic scale when using quotation in text component:
 
-<Canvas of={BaseTypographyStories.TypographyQuotation} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographyQuotation}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--small" />
 
@@ -604,7 +655,10 @@ The Small component defines smaller text (like copyright and other side-comments
 
 Typographic scale when using small in text component:
 
-<Canvas of={BaseTypographyStories.TypographySmall} meta={BaseTypographyStories} />
+<Canvas
+  of={BaseTypographyStories.TypographySmall}
+  meta={BaseTypographyStories}
+/>
 
 export const getCaptionForLocaleList = locale => {
   switch (locale) {
@@ -700,15 +754,3 @@ export const getCaptionForLocaleList = locale => {
       return dummy.data;
   }
 };
-
-<Anchor storyId="foundation-typography-basetypography--unordered-list" />
-
-### Unordered List
-
-An unordered list is used if there is no hierarchy required. Unordered lists start with a bullet.
-
-Start an unordered list with the <code>u1</code> tag.
-
-Add a <code>li</code> tag for each list item
-
-<Canvas of={BaseTypographyStories.TypographyUnorderedList} meta={BaseTypographyStories} />
