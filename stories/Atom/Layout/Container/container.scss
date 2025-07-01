@@ -64,3 +64,9 @@
     margin-top: var(--mg-container-spacer);
   }
 }
+
+// A variant with padding at top and bottom
+.mg-container--padded {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
