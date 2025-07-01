@@ -36,9 +36,7 @@ To use the `IndexChart` component, import it into your react application and pro
 
 Below is a simple index chart using a default dataset.
 
-<Canvas>
-  <Story of={IndexChartStories.DefaultIndexChart} />
-</Canvas>
+<Canvas of={IndexChartStories.DefaultIndexChart} meta={IndexChartStories} />
 
 <Source
   language="jsx"
@@ -78,9 +76,7 @@ export default Example;
 
 This example demonstrates how to customize the index chart with RTL text direction and Arabic data labels.
 
-<Canvas>
-  <Story of={IndexChartStories.CustomRtlIndexChart} />
-</Canvas>
+<Canvas of={IndexChartStories.CustomRtlIndexChart} meta={IndexChartStories} />
 
 <Source
   language="jsx"
@@ -121,9 +117,7 @@ export default RTLExample;
 
 This example shows an index chart with specific date and value data.
 
-<Canvas>
-  <Story of={IndexChartStories.CustomIndexChart} />
-</Canvas>
+<Canvas of={IndexChartStories.CustomIndexChart} meta={IndexChartStories} />
 
 <Source
   language="jsx"

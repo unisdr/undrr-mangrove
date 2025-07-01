@@ -130,9 +130,7 @@ Abbreviation component defines an abbreviation or an acronym, like "HTML", "CSS"
 
 Typographic scale when using abbreviation in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyAbbreviation} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyAbbreviation} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--blockquote" />
 
@@ -183,9 +181,7 @@ The Blockquote component specifies a section that is quoted from another source.
 
 Typographic scale when using blockquote in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyBlockquote} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyBlockquote} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--cite" />
 
@@ -216,9 +212,7 @@ The Cite component defines the title of a creative work (e.g. a book, a poem, a 
 
 Typographic scale when using cite in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyCite} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyCite} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--code" />
 
@@ -284,9 +278,7 @@ The code component is used to define a piece of computer code. The content insid
 
 Typographic scale when using code in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyCode} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyCode} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--description-list" />
 
@@ -296,9 +288,7 @@ A description list is a list of terms, with a description of each term.
 
 The <code>dl</code> tag defines the description list, the <code>dt</code> tag defines the term (name), and the <code>dd</code> tag describes each term.
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyDescriptionList} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyDescriptionList} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--details" />
 
@@ -344,9 +334,7 @@ export const getLocaleForDetails = locale => {
   }
 };
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyDetails} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyDetails} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--figcaption" />
 
@@ -388,9 +376,7 @@ export const getLocaleForFigcaption = locale => {
   }
 };
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyFigcaption} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyFigcaption} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--headings" />
 
@@ -400,9 +386,7 @@ We can use the <code>h1/h2/h3/h4/h5/h6 tags</code> in any component to display t
 
 Typographic scale when using headings in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyHeading} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyHeading} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--hr" />
 
@@ -448,9 +432,7 @@ The Hr component defines a thematic break in an HTML page (e.g. a shift of topic
 
 Typographic scale when using hr in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyHr} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyHr} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--mark" />
 
@@ -481,9 +463,7 @@ The Mark component define the marked text. It is used to highlight the part of t
 
 Typographic scale when using mark in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyMark} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyMark} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--ordered-list" />
 
@@ -495,9 +475,7 @@ Start an ordered list with the <code>o1</code> tag.
 
 Add a <code>li</code> tag for each list item
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyOrderedList} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyOrderedList} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--p" />
 
@@ -543,9 +521,7 @@ The Paragraph component defines a paragraph.
 
 Typographic scale when using paragraph in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyParagraph} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyParagraph} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--quotation" />
 
@@ -591,9 +567,7 @@ The Quotation component defines a short quotation.
 
 Typographic scale when using quotation in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyQuotation} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyQuotation} meta={BaseTypographyStories} />
 
 <Anchor storyId="foundation-typography-basetypography--small" />
 
@@ -630,9 +604,7 @@ The Small component defines smaller text (like copyright and other side-comments
 
 Typographic scale when using small in text component:
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographySmall} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographySmall} meta={BaseTypographyStories} />
 
 export const getCaptionForLocaleList = locale => {
   switch (locale) {
@@ -739,6 +711,4 @@ Start an unordered list with the <code>u1</code> tag.
 
 Add a <code>li</code> tag for each list item
 
-<Canvas>
-  <Story of={BaseTypographyStories.TypographyUnorderedList} />
-</Canvas>
+<Canvas of={BaseTypographyStories.TypographyUnorderedList} meta={BaseTypographyStories} />

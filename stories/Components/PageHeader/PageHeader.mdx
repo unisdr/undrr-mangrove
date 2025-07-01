@@ -32,27 +32,25 @@ The PageHeader component displays a complete header structure that includes:
 
 The PageHeader component renders as a comprehensive header with the UNDRR logo (sourced from [https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg](https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg)), language switcher, and colored decoration stripe.
 
-<Canvas>
-  <Story of={PageHeaderStories.Default} />
-</Canvas>
+<Canvas of={PageHeaderStories.Default} meta={PageHeaderStories} />
 
 #### Decoration Only
 
 The component can render only the colored decoration stripe when you need just the visual branding element without the full header functionality.
 
-<Story of={PageHeaderStories.DecorationOnly} />
+<Canvas of={PageHeaderStories.DecorationOnly} meta={PageHeaderStories} />
 
 #### With Custom Languages
 
 The language switcher can be configured with different language options.
 
-<Story of={PageHeaderStories.WithCustomLanguages} />
+<Canvas of={PageHeaderStories.WithCustomLanguages} meta={PageHeaderStories} />
 
 #### With Custom Class
 
 The component supports additional CSS classes for custom styling.
 
-<Story of={PageHeaderStories.WithCustomClass} />
+<Canvas of={PageHeaderStories.WithCustomClass} meta={PageHeaderStories} />
 
 ### Content
 
