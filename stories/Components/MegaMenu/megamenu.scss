@@ -22,14 +22,22 @@
 .mg-mega-topbar {
   &__item {
     font-size: $mg-font-size-300;
-    padding: $mg-spacing-150 $mg-spacing-200;
     color: $mg-color-interactive;
     font-weight: bold;
-    cursor: pointer;
     list-style: none;
+    padding: 0;
+    margin: 0;
 
     p {
       font-weight: normal;
+    }
+
+    > a,
+    > button {
+      padding: $mg-spacing-150 $mg-spacing-200;
+      display: block;
+      cursor: pointer;
+      line-height: 1.75rem; // normalization
     }
 
     &--active {
@@ -192,21 +200,28 @@
       flex: 1;
       padding: $mg-spacing-150;
       list-style: none;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-items: start;
-      gap: 0;
+      column-count: auto;
+      column-width: 300px;
+      column-gap: $mg-spacing-200;
+      column-fill: balance;
 
       // nested menus
       ul {
         padding: 0 0 0 $mg-spacing-150;
         opacity: 0.8;
+        break-inside: avoid;
+        page-break-inside: avoid;
       }
 
       li {
         padding: 0;
         margin: 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+
+        li a {
+          font-weight: normal; // do not bold sub-submenu items
+        }
 
         a {
           display: block;
@@ -215,7 +230,7 @@
           white-space: wrap;
           text-overflow: clip;
           color: $mg-color-black;
-          font-weight: normal;
+          font-weight: bold;
 
           &:hover {
             color: $mg-color-black;
