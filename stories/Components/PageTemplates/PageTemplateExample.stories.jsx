@@ -115,9 +115,9 @@ const PageTemplateExample = () => {
   return (
     <>
       <PageHeader />
+      <CookieConsentBanner />
+      <MegaMenu delay={600} sections={sampleMegaMenuSections} />
       <div className="page-template-example | mg-container mg-container--spacer">
-        <CookieConsentBanner />
-        <MegaMenu delay={600} sections={sampleMegaMenuSections} />
         <Hero data={sampleHeroData} variant="primary" />
         <Tab tabdata={sampleTabData} />
         <section className="mg-grid mg-grid__col-3">
@@ -126,7 +126,7 @@ const PageTemplateExample = () => {
           <VerticalCard data={sampleCardContent} />
         </section>
         <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </>
   );

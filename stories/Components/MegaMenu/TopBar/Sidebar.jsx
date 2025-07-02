@@ -13,6 +13,7 @@ function SidebarItem({
   handleOnKeyDown,
 }) {
   const display = sectionIndex === index;
+  const hasChildren = section?.items && section.items.length > 0;
 
   return (
     <li
@@ -20,22 +21,34 @@ function SidebarItem({
       onKeyDown={handleOnKeyDown}
       role="none"
     >
-      <button
-        className="mg-mega-sidebar-section__item"
-        onClick={() => handleSectionToggle(index)}
-        aria-pressed={display}
-        aria-expanded={display}
-        aria-haspopup={section && section.items ? 'true' : undefined}
-        ref={ref}
-        role="menuitem"
-      >
-        <span>{section.title}</span>
-        <span
-          className="mg-icon fa-angle-circled-left"
-          aria-hidden="true"
-        ></span>
-      </button>
-      {display && section && section.items && (
+      {hasChildren ? (
+        <button
+          className="mg-mega-sidebar-section__item"
+          onClick={() => handleSectionToggle(index)}
+          aria-pressed={display}
+          aria-expanded={display}
+          aria-haspopup="true"
+          ref={ref}
+          role="menuitem"
+        >
+          <span>{section.title}</span>
+          <span
+            className="mg-icon fa-angle-circled-left"
+            aria-hidden="true"
+          ></span>
+        </button>
+      ) : (
+        <a
+          className="mg-mega-sidebar-section__item"
+          href={section.url || section.bannerButton?.url || '#'}
+          ref={ref}
+          role="menuitem"
+        >
+          <span>{section.title}</span>
+        </a>
+      )}
+
+      {hasChildren && display && (
         <Section
           section={section}
           index={index}
@@ -47,7 +60,7 @@ function SidebarItem({
   );
 }
 
-export function Sidebar({ sections, itemListRef, sectionListRef }) {
+export function Sidebar({ sections, itemListRef, sectionListRef, open }) {
   const [sectionIndex, setSectionIndex] = useState(null);
 
   const handleSectionToggle = index => {
@@ -79,7 +92,11 @@ export function Sidebar({ sections, itemListRef, sectionListRef }) {
   };
 
   return (
-    <div className="sidebar" role="dialog" aria-label="Mobile navigation menu">
+    <div
+      className={`mg-mega-mobile-sidebar ${open ? 'mg-mega-mobile-sidebar--open' : ''}`}
+      role="dialog"
+      aria-label="Mobile navigation menu"
+    >
       <ul
         className="mg-mega-sidebar__list"
         role="menu"

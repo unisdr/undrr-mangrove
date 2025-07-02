@@ -12,14 +12,6 @@
   z-index: 10;
   padding: 0;
 
-  // remove or not? might be a bug
-  // a,
-  // a:hover {
-  //   color: $mg-color-button;
-  // }
-}
-
-.mg-mega-topbar {
   &__item {
     font-size: $mg-font-size-300;
     color: $mg-color-interactive;
@@ -107,9 +99,13 @@
   }
 
   &__left {
-    flex-basis: 33%;
     height: 100%;
     background-color: $mg-color-interactive;
+    width: 100vw; // mobile
+
+    @media screen and (min-width: $mg-breakpoint-mobile) {
+      flex-basis: 33%;
+    }
   }
   &__banner {
     padding: $mg-spacing-250;
@@ -140,102 +136,104 @@
   }
 }
 
-.mg-mega-content {
-  &__left {
-    box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
+.mg-mega-content__left {
+  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
 
-    a,
-    a:hover {
-      color: $mg-color-button;
-    }
+  a,
+  a:hover {
+    color: $mg-color-button;
+  }
 
-    .mg-mega-content__section-list-link:not(
-        .mg-mega-content__section-list-link--active
-      ) {
-      color: $mg-color-button;
-    }
-    .mg-mega-content__section-list-link:hover,
-    .mg-mega-content__section-list-link {
-      color: $mg-color-interactive-active;
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    .mg-mega-content__section-list {
+      display: none;
     }
   }
 
-  &__section-list {
-    padding-left: $mg-spacing-200;
+  .mg-mega-content__section-list-link:not(
+    .mg-mega-content__section-list-link--active
+  ) {
+    color: $mg-color-button;
   }
+  .mg-mega-content__section-list-link:hover,
+  .mg-mega-content__section-list-link {
+    color: $mg-color-interactive-active;
+  }
+}
 
-  &__section-list-item {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.mg-mega-content__section-list {
+  padding-left: $mg-spacing-200;
+}
 
-    .mg-mega-content__section-list-link {
-      text-decoration: none;
-      font-weight: bold;
-      display: block;
-      padding: $mg-spacing-50 0;
+.mg-mega-content__section-list-item {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 
-      &--active {
-        padding: $mg-spacing-50 $mg-spacing-200;
-        margin-left: -$mg-spacing-200;
-        background-color: $mg-color-button;
-      }
+  .mg-mega-content__section-list-link {
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    padding: $mg-spacing-50 0;
+
+    &--active {
+      padding: $mg-spacing-50 $mg-spacing-200;
+      margin-left: -$mg-spacing-200;
+      background-color: $mg-color-button;
     }
   }
 }
 
-.mg-mega-content {
-  &__right {
-    box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
-    flex: 1;
-    height: 100%;
-    background-color: $mg-color-white;
-    display: flex;
+.mg-mega-content__right {
+  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
+  flex: 1;
+  height: 100%;
+  background-color: $mg-color-white;
+  display: flex;
 
-    @media screen and (max-width: $mg-breakpoint-mobile) {
-      width: 100%;
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    width: 100%;
+  }
+
+  ul {
+    flex: 1;
+    padding: $mg-spacing-150;
+    list-style: none;
+    column-count: auto;
+    column-width: 300px;
+    column-gap: $mg-spacing-200;
+    column-fill: balance;
+
+    // nested menus
+    ul {
+      padding: 0 0 0 $mg-spacing-150;
+      opacity: 0.8;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
 
-    ul {
-      flex: 1;
-      padding: $mg-spacing-150;
-      list-style: none;
-      column-count: auto;
-      column-width: 300px;
-      column-gap: $mg-spacing-200;
-      column-fill: balance;
+    li {
+      padding: 0;
+      margin: 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
 
-      // nested menus
-      ul {
-        padding: 0 0 0 $mg-spacing-150;
-        opacity: 0.8;
-        break-inside: avoid;
-        page-break-inside: avoid;
+      li a {
+        font-weight: normal; // do not bold sub-submenu items
       }
 
-      li {
-        padding: 0;
-        margin: 0;
-        break-inside: avoid;
-        page-break-inside: avoid;
+      a {
+        display: block;
+        padding: $mg-spacing-50;
+        overflow: hidden;
+        white-space: wrap;
+        text-overflow: clip;
+        color: $mg-color-black;
+        font-weight: bold;
 
-        li a {
-          font-weight: normal; // do not bold sub-submenu items
-        }
-
-        a {
-          display: block;
-          padding: $mg-spacing-50;
-          overflow: hidden;
-          white-space: wrap;
-          text-overflow: clip;
+        &:hover {
           color: $mg-color-black;
-          font-weight: bold;
-
-          &:hover {
-            color: $mg-color-black;
-            text-decoration: underline;
-          }
+          text-decoration: underline;
         }
       }
     }
@@ -271,7 +269,7 @@
   justify-content: center;
 
   &:hover {
-    background-color: $mg-color-blue-500;
+    background-color: $mg-color-interactive-active;
   }
 }
 
@@ -299,36 +297,48 @@
       }
 
       &:hover {
-        background: $mg-color-blue-700;
+        background: $mg-color-interactive-active;
       }
     }
   }
 }
 
-.mg-mega-sidebar-section {
-  &__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.mg-mega-sidebar-section__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $mg-color-white;
+  cursor: pointer;
+  padding: $mg-spacing-100 $mg-spacing-250;
+
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    background: $mg-color-interactive;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid $mg-color-white;
+  }
+
+  &:hover {
+    background: $mg-color-interactive-active;
     color: $mg-color-white;
-    cursor: pointer;
-    padding: $mg-spacing-100 $mg-spacing-250;
+  }
 
-    @media screen and (max-width: $mg-breakpoint-mobile) {
-      background: $mg-color-blue-900;
-      width: 100%;
-      border: none;
-      border-top: 1px solid $mg-color-white;
-    }
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 2px;
+    outline-offset: -1px;
+  }
 
-    &:hover {
-      background: $mg-color-blue-500;
+  // Rotate arrow icon when section is expanded
+  &[aria-expanded="true"] {
+    .fa-angle-circled-left {
+      transform: rotate(-90deg);
+      transition: transform 0.3s ease-in-out;
     }
+  }
 
-    &:focus-visible {
-      outline: -webkit-focus-ring-color auto 2px;
-      outline-offset: -1px;
-    }
+  // Ensure smooth transition for icon default state
+  .fa-angle-circled-left {
+    transition: transform 0.3s ease-in-out;
   }
 }
 
@@ -337,7 +347,7 @@
   position: absolute;
   overflow: auto;
   height: 100vh;
-  background-color: $mg-color-blue-900;
+  background-color: $mg-color-interactive-active;
   -webkit-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   -moz-box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
   box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
@@ -347,72 +357,116 @@
 
   @media screen and (max-width: $mg-breakpoint-mobile) {
     width: 100%;
-  }
-}
+    height: auto;
+    max-height: 80vh;
+    top: -100%;
+    right: auto;
+    left: 0;
+    transition: top 0.4s ease-in-out;
+    -webkit-box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
+    -moz-box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
+    box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
 
-.mg-mega-sidebar {
-  &__list {
-    background: $mg-color-white;
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 3.5rem);
-    position: absolute;
-    right: 0;
-  }
-}
-
-.mg-mega-sidebar {
-  &__section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $mg-spacing-150 $mg-spacing-350;
-    color: $mg-color-white;
-    cursor: pointer;
-
-    &:hover {
-      background: $mg-color-blue-400;
+    &.mg-sidebar-open {
+      top: 0;
     }
   }
 }
 
-.mg-mega-topbar {
-  &__icon-button {
-    right: 0;
-    position: absolute;
-    background: white;
-    color: $mg-color-interactive-active;
-    font-size: 2rem;
-    width: 3.5rem;
-    transition-property: right;
-    transition-duration: 0.4s;
-    padding: $mg-spacing-100;
-    border: none;
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    justify-content: center;
+.mg-mega-sidebar__list {
+  background: $mg-color-white;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  width: 100%;
+  position: relative;
+  right: auto;
+}
 
-    &:hover {
-      background: $mg-color-blue-800;
-      color: white;
-    }
+.mg-mega-sidebar__section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $mg-spacing-150 $mg-spacing-350;
+  color: $mg-color-white;
+  cursor: pointer;
 
-    &:has(.fa-angle-circled-left) {
-      right: calc(100% - 3.5rem);
-      background: black;
-      transform: rotate(180deg);
-    }
+  &:hover {
+    background: $mg-color-interactive-active;
   }
 }
 
 @media screen and (max-width: $mg-breakpoint-mobile) {
-  .mg-mega-topbar__icon-button {
+  .mg-mega-topbar-mobile__icon-button {
+    right: 0;
+    position: absolute;
+    background: white;
+    color: $mg-color-interactive;
+    font-size: 2rem;
+    width: 100vw;
+    padding: $mg-spacing-100;
+    border: none;
+    cursor: pointer;
+    align-items: start;
+    justify-content: start;
+    transition: all 0.4s ease-in-out;
+    z-index: 14;
     display: flex;
-    z-index: 11;
-  }
 
-  .mg-mega-topbar {
-    position: relative;
+    &:hover {
+      background: $mg-color-interactive-active;
+      color: white;
+    }
+
+    .mg-mega-topbar {
+      position: relative;
+    }
+
+    &:has(.fa-angle-circled-left) {
+      background: $mg-color-white;
+      color: $mg-color-interactive-active;
+      justify-content: end;
+      box-shadow: 0 0 4px rgb(0 0 0 / 0.2);
+    }
+  }
+}
+
+// Mobile sidebar (slides down/up from the top)
+.mg-mega-mobile-sidebar {
+  display: none; // hidden by default for desktop
+
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    display: block;
+    overflow: auto;
+    background-color: $mg-color-interactive;
+    max-height: 80vh;
+    transform: translateY(-100vh);
+    transition: transform 0.4s ease-in-out;
+    box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
+
+    &.mg-mega-mobile-sidebar--open {
+      transform: translateY(4rem);
+    }
+  }
+}
+
+// Overlay backdrop (only shown when sidebar open)
+.mg-mega-mobile-sidebar-overlay {
+  display: none;
+
+  @media screen and (max-width: $mg-breakpoint-mobile) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.4);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 9; // just below sidebar which has 10
   }
 }
