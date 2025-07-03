@@ -119,7 +119,7 @@ const PageTemplateExample = () => {
       <MegaMenu delay={600} sections={sampleMegaMenuSections} />
       <div className="page-template-example | mg-container mg-container--spacer">
         <Hero data={sampleHeroData} variant="primary" />
-        <div className="mg-container-full-width mg-container--padded" style={{ backgroundColor: '#f5f5f5' }}>
+        <div className="mg-container-full-width mg-container--padded mg-u-background-color--neutral-25">
           <section className="mg-grid mg-grid__col-3">
             <VerticalCard data={sampleCardContent} />
             <VerticalCard data={sampleCardContent} />
