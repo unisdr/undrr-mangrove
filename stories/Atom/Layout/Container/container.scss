@@ -50,6 +50,7 @@
   > .mg-hero:first-child,
   > .has-background + .mg-hero,
   > .mg-hero + .has-background,
+  > .mg-hero + .mg-container-full-width,
   > .mg-mega-wrapper,
   > .mg-mega-wrapper + .mg-hero,
   > .has-background + .has-background {
@@ -67,6 +68,6 @@
 
 // A variant with padding at top and bottom
 .mg-container--padded {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: $mg-spacing-200;
+  padding-bottom: $mg-spacing-200;
 }

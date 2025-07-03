@@ -34,8 +34,7 @@ h4,
 h5,
 h6,
 caption {
-  margin: $mg-spacing-0;
-  margin-bottom: $mg-spacing-25;
+  margin: $mg-spacing-100 $mg-spacing-0 $mg-spacing-25;
   padding: $mg-spacing-0;
 
   @include devicebreak(medium) {
