@@ -3,12 +3,12 @@
  * This is from the UNDRR Mangrove component library
  * https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
  *
- *     _   _ _   _ ____  ____  ____    __  __                                     
- *    | | | | \ | |  _ \|  _ \|  _ \  |  \/  | __ _ _ __   __ _ _ __ _____   _____ 
+ *     _   _ _   _ ____  ____  ____    __  __
+ *    | | | | \ | |  _ \|  _ \|  _ \  |  \/  | __ _ _ __   __ _ _ __ _____   _____
  *    | | | |  \| | | | | |_) | |_) | | |\/| |/ _` | '_ \ / _` | '__/ _ \ \ / / _ \
  *    | |_| | |\  | |_| |  _ <|  _ <  | |  | | (_| | | | | (_| | | | (_) \ V /  __/
  *     \___/|_| \_|____/|_| \_\_| \_\ |_|  |_|\__,_|_| |_|\__, |_|  \___/ \_/ \___|
- *                                                        |___/                    
+ *                                                        |___/
  */
 /**
  * @tokens Colors - basic
@@ -142,13 +142,7 @@
 
 /* Color utilities end */
 /* typography start */*,:after,:before{box-sizing:border-box;overflow-wrap:break-word}html{font-size:10px;-webkit-tap-highlight-color:transparent}body{color:#1a1a1a;font-size:1.6rem;line-height:1.5em}body,button{font-family:Roboto,sans-serif}caption,h1,h2,h3,h4,h5,h6{margin:1rem 0 .25rem;padding:0
-  /* medium design */}@media (width >= 48em){caption,h1,h2,h3,h4,h5,h6{margin-bottom:1.6rem}}h1{font-family:Roboto,sans-serif;font-size:3.2rem;font-weight:700;letter-spacing:.06rem;line-height:1.08;text-wrap:balance
-  /* medium design */
-  /* medium design */}@media (width >= 48em){h1{font-size:5.125rem}}@media (width >= 64em){h1{font-size:6.25rem}}h2{font-size:2.5rem;font-weight:700;line-height:1.1
-  /* medium design */}@media (width >= 48em){h2{font-size:2.6rem}}h3{font-size:1.875rem;font-weight:600;line-height:1.15
-  /* medium design */}@media (width >= 48em){h3{font-size:2.188rem}}h4{font-size:1.25rem;font-weight:600;line-height:1.15
-  /* medium design */}@media (width >= 48em){h4{font-size:2.188rem}}h5{font-size:1.25rem;font-weight:600;line-height:1.15
-  /* medium design */}@media (width >= 48em){h5{font-size:1.563rem}}h6{font-size:1rem;font-weight:700;letter-spacing:.03rem;line-height:1.15}p{margin-top:0}ol,ul{margin:0;padding-left:1.125rem
+  /* medium design */}@media (width >= 48em){caption,h1,h2,h3,h4,h5,h6{margin-bottom:1.6rem}}h1{font-family:Roboto,sans-serif;font-size:3.2rem;letter-spacing:.06rem;line-height:1.08;text-wrap:balance}h1,h2{font-weight:700}h2{font-size:2.3rem;line-height:1.1}h3{font-size:1.8rem}h3,h4,h5{font-weight:600;line-height:1.15}h4,h5{font-size:1.6rem}h6{font-size:1.25rem;font-weight:700;letter-spacing:.03rem;line-height:1.15}p{margin-top:0}ol,ul{margin:0;padding-left:1.125rem
   /* medium design */}@media (width >= 48em){ol,ul{padding-left:1.313rem}}ol li,ul li{margin-bottom:0;padding-left:0
   /* medium design */}@media (width >= 48em){ol li,ul li{margin-bottom:0;padding-left:.25rem}}ul li::marker{font-size:1.125rem
   /* medium design */}@media (width >= 48em){ul li::marker{font-size:1.313rem}}ol li{margin-bottom:1.063rem}dl{font-size:.875rem;line-height:1.37;margin:0
