@@ -49,58 +49,29 @@ h1 {
   line-height: 1.08;
   text-wrap: balance;
   font-weight: 700;
-
-  @include devicebreak(medium) {
-    font-size: 5.125rem;
-  }
-
-  @include devicebreak(large) {
-    font-size: 6.25rem;
-  }
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: $mg-font-size-500;
   font-weight: 700;
   line-height: 1.1;
-
-  @include devicebreak(medium) {
-    font-size: 2.6rem;
-  }
 }
 
 h3 {
-  font-size: 1.875rem;
+  font-size: $mg-font-size-400;
   font-weight: 600;
   line-height: 1.15;
-
-  @include devicebreak(medium) {
-    font-size: 2.188rem;
-  }
 }
 
-h4 {
-  font-size: $mg-font-size-200;
-  font-weight: 600;
-  line-height: 1.15;
-
-  @include devicebreak(medium) {
-    font-size: 2.188rem;
-  }
-}
-
+h4,
 h5 {
-  font-size: $mg-font-size-200;
+  font-size: $mg-font-size-300;
   font-weight: 600;
   line-height: 1.15;
-
-  @include devicebreak(medium) {
-    font-size: 1.563rem;
-  }
 }
 
 h6 {
-  font-size: $mg-font-size-100;
+  font-size: $mg-font-size-200;
   font-weight: 700;
   letter-spacing: 0.03rem;
   line-height: 1.15;
