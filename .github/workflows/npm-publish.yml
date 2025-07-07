@@ -52,11 +52,23 @@ jobs:
       - name: Build
         run: yarn build
 
-      # Prepare package for publishing - only include dist files
+      # Prepare package for publishing - include dist files and SCSS sources
       - name: Prepare package files
         run: |
           mkdir -p npm-package/dist
           cp -r dist/* npm-package/dist/
+          
+          # Copy SCSS source files
+          mkdir -p npm-package/scss
+          cp -r stories/assets/scss/* npm-package/scss/
+          
+          # Copy component SCSS files maintaining structure
+          mkdir -p npm-package/stories
+          find stories -name "*.scss" -type f | while read file; do
+            mkdir -p "npm-package/$(dirname "$file")"
+            cp "$file" "npm-package/$file"
+          done
+          
           cp package.json npm-package/
           cp README.md npm-package/
           cp LICENSE npm-package/ || echo "No LICENSE file found"
@@ -71,7 +83,7 @@ jobs:
               version: pkg.version,
               description: pkg.description,
               main: "dist/index.js",
-              files: ["dist/**/*"],
+              files: ["dist/**/*", "scss/**/*", "stories/**/*.scss"],
               repository: pkg.repository,
               keywords: pkg.keywords,
               author: pkg.author,
