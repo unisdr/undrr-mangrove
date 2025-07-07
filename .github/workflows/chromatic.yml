@@ -3,26 +3,48 @@ name: 'Chromatic Visual Testing'
 on:
   push:
     branches: [main, develop]
+    paths:
+      - 'stories/**'
+      - '.storybook/**'
+      - 'package.json'
+      - '*.config.js'
+      - '.github/workflows/chromatic.yml'
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'stories/**'
+      - '.storybook/**'
+      - 'package.json'
+      - '*.config.js'
+      - '.github/workflows/chromatic.yml'
+
+# Prevent multiple concurrent runs
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: true
     
 jobs:
   chromatic-deployment:
     runs-on: ubuntu-latest
+    # Skip if commit message contains [skip chromatic]
+    if: ${{ !contains(github.event.head_commit.message, '[skip chromatic]') }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Required for Chromatic to track changes correctly
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'yarn'
           
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
+      - name: Build Storybook
+        run: yarn build-storybook
 
       - name: Publish to Chromatic
         uses: chromaui/action@v1
@@ -33,3 +55,6 @@ jobs:
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto accept changes on main branch
           onlyChanged: true # Only snapshot stories that have changed
           traceChanged: true # Use Git to determine which files changed
+          buildScriptName: build-storybook # Explicitly specify build script
+          storybookBuildDir: storybook-static # Specify build output directory
+          skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') }}
