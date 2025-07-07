@@ -47,7 +47,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build Storybook
-        run: yarn build-storybook
+        run: yarn build storybook
 
       - name: Publish to Chromatic
         uses: chromaui/action@v1
@@ -58,6 +58,6 @@ jobs:
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto accept changes on main branch
           onlyChanged: true # Only snapshot stories that have changed
           traceChanged: true # Use Git to determine which files changed
-          buildScriptName: build-storybook # Explicitly specify build script
+          buildScriptName: 'build storybook' # Explicitly specify build script
           storybookBuildDir: storybook-static # Specify build output directory
           skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') }}
