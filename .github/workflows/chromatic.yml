@@ -1,0 +1,35 @@
+name: 'Chromatic Visual Testing'
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Required for Chromatic to track changes correctly
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: 'yarn'
+          
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          exitZeroOnChanges: true # Pass the build even if there are visual changes
+          autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto accept changes on main branch
+          onlyChanged: true # Only snapshot stories that have changed
+          traceChanged: true # Use Git to determine which files changed
