@@ -1,0 +1,77 @@
+name: 'Chromatic Visual Testing'
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'stories/**'
+      - '.storybook/**'
+      - 'package.json'
+      - '*.config.js'
+      - '.github/workflows/chromatic.yml'
+  pull_request:
+    types: opened
+    branches: [main, develop]
+    paths:
+      - 'stories/**'
+      - '.storybook/**'
+      - 'package.json'
+      - '*.config.js'
+      - '.github/workflows/chromatic.yml'
+
+permissions:
+  pull-requests: write
+
+# Prevent multiple concurrent runs
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: true
+    
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    # Skip if commit message contains [skip chromatic]
+    if: ${{ !contains(github.event.head_commit.message, '[skip chromatic]') }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for Chromatic to track changes correctly
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+        
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build Storybook
+        run: yarn build
+
+      - name: Publish to Chromatic
+        id: chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          exitZeroOnChanges: true # Pass the build even if there are visual changes
+          autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto accept changes on main branch
+          onlyChanged: true # Only snapshot stories that have changed
+          traceChanged: true # Use Git to determine which files changed
+          buildScriptName: 'build' # Explicitly specify build script
+          storybookBuildDir: docs-build-temp # Specify build output directory
+          skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') }}
+
+      - name: Publish Storybook Link in the comments
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: dannyhw/storybook-chromatic-link-comment@v0.10
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          review-url: ${{ steps.chromatic.outputs.url }}
+          build-url: ${{ steps.chromatic.outputs.buildUrl }}
+          storybook-url: ${{ steps.chromatic.outputs.storybookUrl }}

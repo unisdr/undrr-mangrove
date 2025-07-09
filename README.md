@@ -135,6 +135,47 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
 
 When adding new components, we rely on the Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
 
+### Visual Testing with Chromatic
+
+This project uses [Chromatic](https://www.chromatic.com/) for visual regression testing. Chromatic automatically captures screenshots of your stories and compares them against previous versions to detect visual changes.
+
+#### When Chromatic Runs
+
+The Chromatic workflow executes automatically:
+- On pushes to `main` or `develop` branches
+- On pull requests targeting `main` or `develop`
+- Only when relevant files change:
+  - Stories (`stories/**`)
+  - Storybook configuration (`.storybook/**`)
+  - Package configuration (`package.json`, `*.config.js`)
+  - The workflow file itself
+
+#### Viewing Test Results
+
+1. **Pull Request Comments**: Chromatic automatically adds a comment to PRs with:
+   - Link to the visual review
+   - Summary of changes detected
+   - Build status
+
+2. **GitHub Actions**: Check the "Chromatic Visual Testing" workflow run for:
+   - Build logs
+   - Direct link to Chromatic build
+
+3. **Chromatic Dashboard**: Visit the build link to:
+   - Review visual changes side-by-side
+   - Accept or reject changes
+   - Leave comments for reviewers
+   - View component history
+
+#### Skipping Chromatic
+
+To skip Chromatic for a specific commit, include `[skip chromatic]` in your commit message:
+```bash
+git commit -m "chore: update dependencies [skip chromatic]"
+```
+
+**Note**: Visual changes on the `main` branch are automatically accepted as the new baseline.
+
 ### Creating Tests
 
 To create tests for your component library, you can create files in the `stories/__tests__` folder. Jest will automatically discover and run any files in this folder that end in `.test.js`.
