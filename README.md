@@ -1,5 +1,6 @@
 [![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/semver-release.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![GitHub Release](https://img.shields.io/github/v/release/unisdr/undrr-mangrove)](https://github.com/unisdr/undrr-mangrove/releases)
+[![npm version](https://img.shields.io/npm/v/@undrr/undrr-mangrove.svg)](https://www.npmjs.com/package/@undrr/undrr-mangrove)
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://unisdr.github.io/undrr-mangrove/)
 [![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
 
@@ -10,6 +11,36 @@
 ## 🚨 Pre-alpha warning 🚨
 
 This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
+
+## Quick Start
+
+### Installation
+
+Install the library via npm or yarn:
+
+```bash
+# NPM
+npm install @undrr/undrr-mangrove
+
+# Yarn
+yarn add @undrr/undrr-mangrove
+```
+
+### Basic Usage
+
+```jsx
+import { Button, Card } from '@undrr/undrr-mangrove';
+import '@undrr/undrr-mangrove/dist/assets/css/style.css';
+
+function App() {
+  return (
+    <Card>
+      <h2>Welcome to UNDRR</h2>
+      <Button variant="primary">Get Started</Button>
+    </Card>
+  );
+}
+```
 
 ## Purpose
 
@@ -211,44 +242,24 @@ Provisional assets are available in the `dist` directory:
   - example: `dist/assets/css/style-preventionweb.css`
   - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
 
-## Release Process
+## Developer Resources
 
-This project uses automated semantic versioning and can publish to both npm and GitHub Package Registry.
+For contributing to this library:
 
-### Automatic Releases (Semantic Versioning)
+- 📖 [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
+- 🧪 [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
+- 🚀 [Release Process](./docs/RELEASES.md) - Versioning and publishing
 
-The project uses [semantic-release](https://semantic-release.gitbook.io/) to automatically determine version numbers based on commit messages:
+## Package Contents
 
-1. **Commits to `main` branch** trigger the automatic release process
-2. Version numbers are determined by commit message prefixes:
-   - `fix:` → Patch release (0.0.X)
-   - `feat:` → Minor release (0.X.0)
-   - `BREAKING CHANGE:` in commit body → Major release (X.0.0)
-3. The release process automatically:
-   - Creates a git tag
-   - Updates CHANGELOG.md
-   - Creates a GitHub release
-   - Updates package.json version
-
-### Publishing to npm/GitHub Registry
-
-After a release is created, you can publish it to npm or GitHub Package Registry:
-
-1. Go to Actions → "Publish to NPM Registry"
-2. Click "Run workflow"
-3. Enter the git tag (e.g., `v1.2.3`)
-4. Select registry: `npm` or `github`
-5. The workflow will:
-   - Build the project
-   - Package distribution files and SCSS sources
-   - Publish to the selected registry
-
-### Package Contents
-
-Published packages include:
-- `/dist/**/*` - Compiled JavaScript and CSS files
-- `/scss/**/*` - Source SCSS files from stories/assets/scss
-- `/stories/**/*.scss` - Component-specific SCSS files
+```
+@undrr/undrr-mangrove/
+├── dist/              # Compiled components and assets
+│   ├── components/    # React components
+│   └── assets/        # CSS, fonts, images
+├── scss/              # Source SCSS files
+└── stories/           # Component source and stories
+```
 
 ## CDN Distribution
 
