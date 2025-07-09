@@ -54,6 +54,7 @@ jobs:
         run: yarn build
 
       - name: Publish to Chromatic
+        id: chromatic
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
@@ -67,6 +68,7 @@ jobs:
           skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') }}
 
       - name: Publish Storybook Link in the comments
+        if: ${{ github.event_name == 'pull_request' }}
         uses: dannyhw/storybook-chromatic-link-comment@v0.10
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
