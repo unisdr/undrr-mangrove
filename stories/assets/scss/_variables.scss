@@ -2,12 +2,12 @@
  * This is from the UNDRR Mangrove component library
  * https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
  *
- *     _   _ _   _ ____  ____  ____    __  __                                     
- *    | | | | \ | |  _ \|  _ \|  _ \  |  \/  | __ _ _ __   __ _ _ __ _____   _____ 
+ *     _   _ _   _ ____  ____  ____    __  __
+ *    | | | | \ | |  _ \|  _ \|  _ \  |  \/  | __ _ _ __   __ _ _ __ _____   _____
  *    | | | |  \| | | | | |_) | |_) | | |\/| |/ _` | '_ \ / _` | '__/ _ \ \ / / _ \
  *    | |_| | |\  | |_| |  _ <|  _ <  | |  | | (_| | | | | (_| | | | (_) \ V /  __/
  *     \___/|_| \_|____/|_| \_\_| \_\ |_|  |_|\__,_|_| |_|\__, |_|  \___/ \_/ \___|
- *                                                        |___/                    
+ *                                                        |___/
  */
 // font file variables
 $mgIconFontPath: "../../assets/fonts/mangrove-icon-set/font";
@@ -72,6 +72,7 @@ $mg-color-red-900: #c10920;
  */
 
 $mg-color-neutral-0: #fff;
+$mg-color-neutral-25: #f2f2f2;
 $mg-color-neutral-50: #e6e6e6;
 $mg-color-neutral-100: #ccc;
 $mg-color-neutral-200: #b3b3b3;
@@ -179,6 +180,7 @@ $mg-spacing-1000: 40rem;
  */
 
 $mg-font-size-100: 1rem;
+$mg-font-size-150: 1.125rem;
 $mg-font-size-200: 1.25rem;
 $mg-font-size-250: 1.4rem;
 $mg-font-size-300: 1.6rem; // regular body text

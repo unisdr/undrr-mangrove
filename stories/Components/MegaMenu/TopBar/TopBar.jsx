@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { TopBarItem } from './TopBarItem';
-import { TopBarIconButton } from './TopBarIconButton.jsx';
+import { TopBarMobileIconButton } from './TopBarMobileIconButton.jsx';
 import { useBreakpoint } from './hook.js';
 
 export function TopBar({
@@ -35,12 +35,12 @@ export function TopBar({
 
   return (
     <ul
-      className="mg-mega-topbar | mg-container-full-width"
+      className="mg-mega-topbar | mg-container mg-container-full-width"
       role="menubar"
       aria-label="Main navigation menu"
     >
       {breakpoint === 'mobile' ? (
-        <TopBarIconButton
+        <TopBarMobileIconButton
           isOpen={showSidebar}
           onClick={() => toggleShowSidebar()}
         />

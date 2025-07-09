@@ -1,5 +1,5 @@
 import { Meta, Source } from '@storybook/blocks';
-import { linkTo } from '@storybook/addon-links';
+import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
@@ -95,12 +95,9 @@ Choose the approach that best fits your project:
 - Add the referenced CSS and JS files to your project as specified in the documentation
 - No JavaScript required for most components
 
-<a
-  href="javascript:void(0)"
-  onClick={linkTo('getting-started-vanilla-html-css', 'docs')}
->
+<LinkTo kind="getting-started-vanilla-html-and-css" story="docs">
   → See Vanilla HTML/CSS Guide
-</a>
+</LinkTo>
 
 ### 🎨 Approach 2: Sass integration
 
@@ -110,12 +107,9 @@ Choose the approach that best fits your project:
 - Customize variables and mixins
 - Build your own theme variants
 
-<a
-  href="javascript:void(0)"
-  onClick={linkTo('getting-started-sass-integration', 'docs')}
->
+<LinkTo kind="getting-started-sass-integration" story="docs">
   → See Sass Integration Guide
-</a>
+</LinkTo>
 
 ### ⚛️ Approach 3: React components (full power)
 
@@ -126,12 +120,9 @@ Choose the approach that best fits your project:
 - Props-based customization
 - Built-in state management
 
-<a
-  href="javascript:void(0)"
-  onClick={linkTo('getting-started-react-integration', 'docs')}
->
+<LinkTo kind="getting-started-react-integration" story="docs">
   → See React Integration Guide
-</a>
+</LinkTo>
 
 ## Architecture overview
 
@@ -331,8 +322,8 @@ When working with Mangrove assets, you'll find them organized in the following s
 
 1. **Choose your integration approach** from the guides above
 2. **Browse the component library** to see what's available
-3. **Check out [Real-world Examples](/?path=/docs/getting-started-examples--docs)** for complete page layouts
-4. **Read [Best Practices](/?path=/docs/getting-started-best-practices--docs)** for optimal implementation
+3. **Check out <LinkTo kind="getting-started-examples" story="docs">Real-world Examples</LinkTo>** for complete page layouts
+4. **Read <LinkTo kind="getting-started-best-practices" story="docs">Best Practices</LinkTo>** for optimal implementation
 5. **Join the community** - report issues, request features, contribute
 
 ## Need help?

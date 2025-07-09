@@ -21,9 +21,7 @@ The `Fetcher` component is a flexible data-fetching utility for React applicatio
 
 This is the default usage of the `Fetcher` component.
 
-<Canvas>
-  <Story of={FetcherStories.Default} />
-</Canvas>
+<Canvas of={FetcherStories.Default} meta={FetcherStories} />
 
 <Source
   language="jsx"
@@ -57,9 +55,7 @@ export default Default;
 
 An example of the `Fetcher` component with a search term parameter.
 
-<Canvas>
-  <Story of={FetcherStories.WithSearchTerm} />
-</Canvas>
+<Canvas of={FetcherStories.WithSearchTerm} meta={FetcherStories} />
 
 <Source
   language="jsx"
@@ -93,9 +89,7 @@ export default WithSearchTerm;
 
 This example shows how to use the `Fetcher` component without passing any query parameters.
 
-<Canvas>
-  <Story of={FetcherStories.WithoutQueryParams} />
-</Canvas>
+<Canvas of={FetcherStories.WithoutQueryParams} meta={FetcherStories} />
 
 <Source
   language="jsx"

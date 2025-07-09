@@ -18,16 +18,16 @@ import * as ContainerStories from './Container.stories';
 Use the `Container` component (`.mg-container`) to establish a basic page width that is responsive.
 
 - `.mg-container--slim` variant that limits width to desktop breakpoint without expanding to wide breakpoint
-- `.mg-container--spacer` can be used to apply automatic "smart" spacing between direct child elements.
+- `.mg-container--spacer` can be used to apply automatic "smart" spacing between direct child elements
+- `.mg-container--padded` adds vertical padding (top and bottom) to the container
 
-<Canvas>
-  <Story name="Default">
-    <Container className="mg-container--spacer">
-      <h1>Responsive Container</h1>
-      <p>This container adjusts its width based on the screen size.</p>
-    </Container>
-  </Story>
-</Canvas>
+### Default
+
+<Canvas of={ContainerStories.Default} meta={ContainerStories} />
+
+### Padded
+
+<Canvas of={ContainerStories.PaddedVariant} meta={ContainerStories} />
 
 ## Breakpoints
 
@@ -56,6 +56,7 @@ For more information about breakpoints, see the [Breakpoints story](?path=/docs/
 
 ## Changelog
 
+- 1.4 - Adds `.mg-container--padded` variant with vertical padding (1rem top and bottom)
 - 1.3 - Refines padding on `.mg-container` to not set top/bottom padding.
 - 1.2 - Adds `.mg-container--slim` variant that limits width to desktop breakpoint without expanding to wide breakpoint
 - 1.1 - Adds `.mg-container--spacer` (`--mg-container-spacer`) for between element spacing.

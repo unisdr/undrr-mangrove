@@ -13,15 +13,13 @@ The Mega Menu component provides a navigation menu with multiple levels and sect
 
 A basic mega menu implementation with default settings.
 
-<Story of={MegaMenuStories.Default} />
+<Canvas of={MegaMenuStories.Default} meta={MegaMenuStories} />
 
 ## With custom delay
 
 A mega menu with customized hover delay timing.
 
-<Canvas>
-  <Story of={MegaMenuStories.WithCustomDelay} />
-</Canvas>
+<Canvas of={MegaMenuStories.WithCustomDelay} meta={MegaMenuStories} />
 
 ## Usage
 
@@ -43,6 +41,18 @@ const MyComponent = () => (
 
 ### Changelog
 
+- 0.5
+  - Mobile sidebar now slides down from the top instead of in from the right
+  - Added backdrop overlay that closes the menu when users tap outside the sidebar
+  - Third-level submenu links are always visible on mobile for quicker navigation
+  - Replaced generic `.sidebar` selectors with `mg-` prefixed class names for consistency
+  - Updated mobile toggle button (`mg-mega-topbar-mobile__icon-button`) styling and visibility while open
+  - Tweaked colours and hover states to match interactive palette
+- 0.4
+  - Auto-balance column heights in mega menu content areas
+  - Keep sub-items grouped together to prevent splitting across columns
+  - Updated font weights for better visual hierarchy (bold main items, normal sub-items)
+  - Improved layout efficiency with CSS column properties
 - 0.3
   - Enhanced mobile menu accessibility and UX
   - Improved positioning and styling of mobile menu elements

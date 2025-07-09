@@ -183,39 +183,97 @@ export default function Section({
               role="navigation"
             >
               <ul role="menu" aria-label="Submenu items">
-                {section.items[itemIndex]?.items
-                  ? section.items[itemIndex].items.map((subItem, subIndex) => (
-                      <li key={subIndex} role="none">
+                {breakpoint === 'mobile'
+                  ? section.items.map((item, index) => (
+                      <li key={index} role="none">
                         <a
-                          href={subItem.url}
+                          href={item.url}
                           role="menuitem"
-                          aria-haspopup={subItem.items ? 'true' : undefined}
+                          aria-haspopup={item.items ? 'true' : undefined}
                         >
-                          {subItem.title}
+                          {item.title}
                         </a>
-                        {subItem.items && (
+                        {item.items && item.items.length > 0 && (
                           <ul
                             role="menu"
-                            aria-label={`${subItem.title} submenu`}
+                            aria-label={`${item.title} submenu`}
                           >
-                            {subItem.items.map((nestedItem, nestedIndex) => (
-                              <li key={nestedIndex} role="none">
-                                <a href={nestedItem.url} role="menuitem">
-                                  {nestedItem.title}
+                            {item.items.map((subItem, subIndex) => (
+                              <li key={subIndex} role="none">
+                                <a
+                                  href={subItem.url}
+                                  role="menuitem"
+                                  aria-haspopup={subItem.items ? 'true' : undefined}
+                                >
+                                  {subItem.title}
                                 </a>
+                                {/* Render third level if exists */}
+                                {subItem.items && (
+                                  <ul
+                                    role="menu"
+                                    aria-label={`${subItem.title} nested submenu`}
+                                  >
+                                    {subItem.items.map(
+                                      (nestedItem, nestedIndex) => (
+                                        <li key={nestedIndex} role="none">
+                                          <a
+                                            href={nestedItem.url}
+                                            role="menuitem"
+                                          >
+                                            {nestedItem.title}
+                                          </a>
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                )}
                               </li>
                             ))}
                           </ul>
                         )}
                       </li>
                     ))
-                  : section.items.map((item, index) => (
-                      <li key={index} role="none">
-                        <a href={item.url} role="menuitem">
-                          {item.title}
-                        </a>
-                      </li>
-                    ))}
+                  : // Desktop / tablet – maintain existing behaviour
+                    section.items[itemIndex]?.items
+                    ? section.items[itemIndex].items.map(
+                        (subItem, subIndex) => (
+                          <li key={subIndex} role="none">
+                            <a
+                              href={subItem.url}
+                              role="menuitem"
+                              aria-haspopup={subItem.items ? 'true' : undefined}
+                            >
+                              {subItem.title}
+                            </a>
+                            {subItem.items && (
+                              <ul
+                                role="menu"
+                                aria-label={`${subItem.title} submenu`}
+                              >
+                                {subItem.items.map(
+                                  (nestedItem, nestedIndex) => (
+                                    <li key={nestedIndex} role="none">
+                                      <a
+                                        href={nestedItem.url}
+                                        role="menuitem"
+                                      >
+                                        {nestedItem.title}
+                                      </a>
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            )}
+                          </li>
+                        )
+                      )
+                    : section.items.map((item, index) => (
+                        <li key={index} role="none">
+                          <a href={item.url} role="menuitem">
+                            {item.title}
+                          </a>
+                        </li>
+                      ))}
               </ul>
             </section>
           )}

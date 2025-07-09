@@ -8,22 +8,34 @@ export default {
 
 export const Default = () => (
   <Container className="mg-container--spacer">
-    <h1>Responsive Container</h1>
-    <p>This container adjusts its width based on the screen size.</p>
+    <h2>Default Container</h2>
     <p>
-      The `Container` component can be used in conjunction with column layouts,
-      such as the `mg-grid` system. Here's an example of how to integrate
-      `Container` with `mg-grid`:
+      This container has NO vertical padding - content goes right to the edges.
     </p>
     <div className="mg-grid">
-      <div className="mg-col-4">
+      <div>
         <h2>Column 1</h2>
         <p>Content for the first column</p>
       </div>
-      <div className="mg-col-4">
+      <div>
         <h2>Column 2</h2>
         <p>Content for the second column</p>
       </div>
     </div>
   </Container>
+);
+
+export const PaddedVariant = () => (
+  <div style={{ border: '1px dashed black', backgroundColor: '#e0f7fa' }}>
+    <Container className="mg-container--padded">
+      <div style={{ border: '1px dashed black', backgroundColor: '#fff' }}>
+        <h2>Padded Container</h2>
+        <p>
+          The `.mg-container--padded` variant is useful when you need padding
+          above and below your container, without having to manually add padding
+          to individual elements.
+        </p>
+      </div>
+    </Container>
+  </div>
 );

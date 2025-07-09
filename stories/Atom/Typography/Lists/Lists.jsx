@@ -5,7 +5,9 @@ export const List = ({ data, type }) => {
   return (
     <ListTag>
       {data.map((item, index) => (
-        <li key={index}>{item.text}</li>
+        <li key={index}>
+          <strong>{item.label}</strong>: {item.text}
+        </li>
       ))}
     </ListTag>
   );

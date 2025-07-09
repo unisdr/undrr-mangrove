@@ -50,7 +50,7 @@ export function Sidebar({ headerText, label, data, size, Height }) {
       className={cls(
         'sidebar-accordion',
         `${height}`,
-        showSmall ? 'show-small' : ''
+        showSmall ? 'mg-u-responsive--show-small' : ''
       )}
     >
       <div className="grid-x">

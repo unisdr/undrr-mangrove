@@ -1,8 +1,8 @@
 import React from 'react';
 // import './mark.scss';
 
-export const Mark = ({ label }) => (
+export const Mark = ({ detail }) => (
   <p>
-    <mark>{label}</mark>
+    <mark>{detail}</mark>
   </p>
 );

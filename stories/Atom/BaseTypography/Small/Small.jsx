@@ -1,8 +1,8 @@
 import React from 'react';
 // import './small.scss';
 
-export const Small = ({ label }) => (
+export const Small = ({ detail }) => (
   <p>
-    <small>{label}</small>
+    <small>{detail}</small>
   </p>
 );

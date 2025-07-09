@@ -74,13 +74,22 @@ const MegaMenu = ({ sections, delay = 300 }) => {
         sectionListRef={sectionListRef}
       />
 
+      {/* Backdrop overlay – closes sidebar on click */}
       {showSidebar && (
-        <Sidebar
-          sections={sections}
-          itemListRef={itemListRef}
-          sectionListRef={sectionListRef}
+        <button
+          className="mg-mega-mobile-sidebar-overlay"
+          aria-label="Close mobile navigation"
+          onClick={() => setShowSidebar(false)}
         />
       )}
+
+      {/* Sidebar is always mounted for smooth open/close transitions */}
+      <Sidebar
+        open={showSidebar}
+        sections={sections}
+        itemListRef={itemListRef}
+        sectionListRef={sectionListRef}
+      />
     </nav>
   );
 };

@@ -115,18 +115,51 @@ const PageTemplateExample = () => {
   return (
     <>
       <PageHeader />
+      <CookieConsentBanner />
+      <MegaMenu delay={600} sections={sampleMegaMenuSections} />
       <div className="page-template-example | mg-container mg-container--spacer">
-        <CookieConsentBanner />
-        <MegaMenu delay={600} sections={sampleMegaMenuSections} />
         <Hero data={sampleHeroData} variant="primary" />
-        <Tab tabdata={sampleTabData} />
-        <section className="mg-grid mg-grid__col-3">
-          <VerticalCard data={sampleCardContent} />
-          <VerticalCard data={sampleCardContent} />
-          <VerticalCard data={sampleCardContent} />
+        <div className="mg-container-full-width mg-container--padded mg-u-background-color--neutral-25">
+          <section className="mg-grid mg-grid__col-3">
+            <VerticalCard data={sampleCardContent} />
+            <VerticalCard data={sampleCardContent} />
+            <VerticalCard data={sampleCardContent} />
+          </section>
+        </div>
+        <section className="content-section">
+          <h2>Understanding the importance of data</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+            lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
+            malesuada.
+          </p>
+          <hr />
+          <h3>Key benefits of data analysis</h3>
+          <ul>
+            <li>Improved decision-making</li>
+            <li>Increased efficiency</li>
+            <li>Enhanced customer insights</li>
+          </ul>
+          <h4>Further reading</h4>
+          <p>
+            For more information, visit our{' '}
+            <a href="https://example.com">detailed guide on data analysis</a>.
+          </p>
+          <h3>Challenges in data management</h3>
+          <p>
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat.
+          </p>
+          <ol>
+            <li>Data privacy concerns</li>
+            <li>Integration of diverse data sources</li>
+            <li>Ensuring data quality</li>
+          </ol>
         </section>
+        <Tab tabdata={sampleTabData} />
         <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </>
   );
