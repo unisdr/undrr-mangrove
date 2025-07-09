@@ -117,7 +117,7 @@ CustomConfigDemo.storyName = 'Custom Config';
 
 export const CustomCDNDemo = args => {
   const customCDNUrl = 'https://example.com/custom-cookie-banner';
-  
+
   return (
     <div>
       <p>
