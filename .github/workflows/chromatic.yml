@@ -10,6 +10,7 @@ on:
       - '*.config.js'
       - '.github/workflows/chromatic.yml'
   pull_request:
+    types: opened
     branches: [main, develop]
     paths:
       - 'stories/**'
@@ -17,6 +18,9 @@ on:
       - 'package.json'
       - '*.config.js'
       - '.github/workflows/chromatic.yml'
+
+permissions:
+  pull-requests: write
 
 # Prevent multiple concurrent runs
 concurrency:
@@ -61,3 +65,11 @@ jobs:
           buildScriptName: 'build' # Explicitly specify build script
           storybookBuildDir: docs-build-temp # Specify build output directory
           skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') }}
+
+      - name: Publish Storybook Link in the comments
+        uses: dannyhw/storybook-chromatic-link-comment@v0.10
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          review-url: ${{ steps.chromatic.outputs.url }}
+          build-url: ${{ steps.chromatic.outputs.buildUrl }}
+            storybook-url: ${{ steps.chromatic.outputs.storybookUrl }}
