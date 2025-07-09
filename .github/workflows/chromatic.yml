@@ -72,4 +72,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           review-url: ${{ steps.chromatic.outputs.url }}
           build-url: ${{ steps.chromatic.outputs.buildUrl }}
-            storybook-url: ${{ steps.chromatic.outputs.storybookUrl }}
+          storybook-url: ${{ steps.chromatic.outputs.storybookUrl }}
