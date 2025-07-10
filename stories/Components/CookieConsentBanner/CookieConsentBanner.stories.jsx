@@ -7,7 +7,8 @@ export default {
   argTypes: {
     config: {
       control: 'object',
-      description: 'Custom configuration to override the default CDN configuration',
+      description:
+        'Custom configuration to override the default CDN configuration',
     },
     debug: {
       control: 'boolean',
@@ -15,7 +16,8 @@ export default {
     },
     forceFallback: {
       control: 'boolean',
-      description: 'Force the component to use local fallback configuration instead of CDN',
+      description:
+        'Force the component to use local fallback configuration instead of CDN',
     },
     cdnBaseUrl: {
       control: 'text',
@@ -121,15 +123,17 @@ export const CustomCDNDemo = args => {
   return (
     <div>
       <p>
-        This story demonstrates how to use a custom CDN URL for loading cookie banner resources.
+        This story demonstrates how to use a custom CDN URL for loading cookie
+        banner resources.
       </p>
       <p>
         <strong>Custom CDN URL:</strong> <code>{customCDNUrl}</code>
       </p>
       <p>
         <small>
-          Note: This example uses a non-existent CDN URL for demonstration purposes.
-          The component will fall back to local configuration when the CDN fails.
+          Note: This example uses a non-existent CDN URL for demonstration
+          purposes. The component will fall back to local configuration when the
+          CDN fails.
         </small>
       </p>
       <CookieConsentBanner {...args} cdnBaseUrl={customCDNUrl} debug />
