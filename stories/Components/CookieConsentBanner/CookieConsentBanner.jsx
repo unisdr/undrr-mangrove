@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-// CDN URLs for UNDRR Cookie Banner
-const UNDRR_CDN_BASE = 'https://assets.undrr.org/static/cookie-banner/v1';
+// Default CDN URL for UNDRR Cookie Banner
+const DEFAULT_CDN_BASE = 'https://assets.undrr.org/static/cookie-banner/v1';
 
 /**
  * Generates a cache buster string in YYYYMMDDHHMM format
@@ -16,11 +16,6 @@ const generateCacheBuster = () => {
   const minute = String(now.getMinutes()).padStart(2, '0');
   return `${year}${month}${day}${hour}${minute}`;
 };
-
-const CACHE_BUSTER = generateCacheBuster();
-const COOKIECONSENT_CSS_URL = `${UNDRR_CDN_BASE}/cookieconsent.css?cacheBuster=${CACHE_BUSTER}`;
-const COOKIECONSENT_JS_URL = `${UNDRR_CDN_BASE}/cookieconsent.umd.js?cacheBuster=${CACHE_BUSTER}`;
-const COOKIECONSENT_CONFIG_URL = `${UNDRR_CDN_BASE}/cookieconsent-undrr.js?cacheBuster=${CACHE_BUSTER}`;
 
 /**
  * Dynamically loads a CSS file
@@ -84,13 +79,30 @@ const loadScript = src => {
   });
 };
 
+/**
+ * Cookie Consent Banner Component
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.config - Custom configuration to override the default CDN configuration
+ * @param {boolean} props.debug - Enable debug logging for troubleshooting
+ * @param {boolean} props.forceFallback - Force the component to use local fallback configuration instead of CDN
+ * @param {string} props.cdnBaseUrl - Base URL for the CDN resources (defaults to UNDRR CDN)
+ * @returns {null} - This component does not render anything itself
+ */
 const CookieConsentBanner = ({
   config: customConfig = null,
   debug = false,
   forceFallback = false,
+  cdnBaseUrl = DEFAULT_CDN_BASE,
 }) => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // Generate URLs with the provided or default CDN base URL
+    const CACHE_BUSTER = generateCacheBuster();
+    const COOKIECONSENT_CSS_URL = `${cdnBaseUrl}/cookieconsent.css?cacheBuster=${CACHE_BUSTER}`;
+    const COOKIECONSENT_JS_URL = `${cdnBaseUrl}/cookieconsent.umd.js?cacheBuster=${CACHE_BUSTER}`;
+    const COOKIECONSENT_CONFIG_URL = `${cdnBaseUrl}/cookieconsent-undrr.js?cacheBuster=${CACHE_BUSTER}`;
 
     // Debug toggle: Suppress logs unless debug prop is true
     const originalLog = console.log;
@@ -371,7 +383,7 @@ const CookieConsentBanner = ({
       // Remove any banner elements left in DOM (id starts with cc-)
       document.querySelectorAll('[id^="cc-"]').forEach(el => el.remove());
     };
-  }, [customConfig, debug, forceFallback]);
+  }, [customConfig, debug, forceFallback, cdnBaseUrl]);
 
   return null; // This component does not render anything itself
 };
