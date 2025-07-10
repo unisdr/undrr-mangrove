@@ -3,7 +3,6 @@
 yarn-error.log
 /vendor
 /storybook-static
-/docs
 /docs-build
 /docs-build-temp
 /stories/assets/css/style*.css
