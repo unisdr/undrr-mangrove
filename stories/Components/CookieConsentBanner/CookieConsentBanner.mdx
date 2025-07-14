@@ -29,6 +29,19 @@ The component loads resources directly from the official UNDRR CDN at `https://a
 - **JavaScript**: `cookieconsent.umd.js` - Core cookie consent library
 - **Configuration**: `cookieconsent-undrr.js` - UNDRR-specific configuration and defaults
 
+### Custom CDN URL
+
+You can specify a custom CDN base URL using the `cdnBaseUrl` prop:
+
+```jsx
+<CookieConsentBanner cdnBaseUrl="https://my-custom-cdn.com/cookie-banner" />
+```
+
+This is useful for:
+- Using a staging or development CDN
+- Hosting the cookie banner resources on your own CDN
+- Testing with different versions of the banner
+
 ### Quick include non-React sites
 
 If you're working on a plain HTML site (no React), you don't need this React wrapper. Simply include the following tags and the banner will initialise automatically:
@@ -71,6 +84,31 @@ export default App;
 
 The component doesn't render any visible elements itself - it dynamically loads the UNDRR cookie consent resources and initializes the banner which will appear at the bottom of the page on first visit.
 
+### Using a Custom CDN
+
+If you need to use a different CDN or host the resources yourself, you can specify a custom base URL:
+
+```jsx
+import React from 'react';
+import CookieConsentBanner from './CookieConsentBanner';
+
+const App = () => {
+  return (
+    <div>
+      {/* Your application content */}
+      <CookieConsentBanner cdnBaseUrl="https://your-cdn.com/cookie-banner" />
+    </div>
+  );
+};
+
+export default App;
+```
+
+The component will then load resources from:
+- `https://your-cdn.com/cookie-banner/cookieconsent.css`
+- `https://your-cdn.com/cookie-banner/cookieconsent.umd.js`
+- `https://your-cdn.com/cookie-banner/cookieconsent-undrr.js`
+
 ## Configuration
 
 The CookieConsentBanner accepts a `config` prop that allows complete customization of the banner:
@@ -95,6 +133,23 @@ const App = () => {
 ```
 
 If no config is provided, the component will use the official UNDRR configuration loaded from the CDN. This ensures your implementation stays up-to-date with UNDRR standards and policies.
+
+### Combining Props
+
+You can combine the `cdnBaseUrl` prop with other configuration options:
+
+```jsx
+<CookieConsentBanner 
+  cdnBaseUrl="https://staging-cdn.example.com/cookie-banner"
+  config={customConfig}
+  debug={true}
+/>
+```
+
+This allows you to:
+- Use a staging CDN for testing
+- Apply custom configuration over the CDN defaults
+- Enable debug logging to troubleshoot issues
 
 ### Default UNDRR Configuration
 
@@ -195,6 +250,7 @@ The CookieConsentBanner component accepts the following props:
 | config        | Object  | defaultConfig | Configuration object for the cookie consent banner        |
 | debug         | Boolean | false         | Enable verbose console logging for troubleshooting        |
 | forceFallback | Boolean | false         | Skip CDN loading and use the local fallback configuration |
+| cdnBaseUrl    | String  | 'https://assets.undrr.org/static/cookie-banner/v1' | Base URL for CDN resources |
 
 ### Configuration Object Structure
 

@@ -211,6 +211,45 @@ Provisional assets are available in the `dist` directory:
   - example: `dist/assets/css/style-preventionweb.css`
   - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
 
+## Release Process
+
+This project uses automated semantic versioning and can publish to both npm and GitHub Package Registry.
+
+### Automatic Releases (Semantic Versioning)
+
+The project uses [semantic-release](https://semantic-release.gitbook.io/) to automatically determine version numbers based on commit messages:
+
+1. **Commits to `main` branch** trigger the automatic release process
+2. Version numbers are determined by commit message prefixes:
+   - `fix:` → Patch release (0.0.X)
+   - `feat:` → Minor release (0.X.0)
+   - `BREAKING CHANGE:` in commit body → Major release (X.0.0)
+3. The release process automatically:
+   - Creates a git tag
+   - Updates CHANGELOG.md
+   - Creates a GitHub release
+   - Updates package.json version
+
+### Publishing to npm/GitHub Registry
+
+After a release is created, you can publish it to npm or GitHub Package Registry:
+
+1. Go to Actions → "Publish to NPM Registry"
+2. Click "Run workflow"
+3. Enter the git tag (e.g., `v1.2.3`)
+4. Select registry: `npm` or `github`
+5. The workflow will:
+   - Build the project
+   - Package distribution files and SCSS sources
+   - Publish to the selected registry
+
+### Package Contents
+
+Published packages include:
+- `/dist/**/*` - Compiled JavaScript and CSS files
+- `/scss/**/*` - Source SCSS files from stories/assets/scss
+- `/stories/**/*.scss` - Component-specific SCSS files
+
 ## CDN Distribution
 
 For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/), this project automatically maintains a `dist` branch that contains only the latest compiled build artifacts. This branch is automatically updated on every push to `main` via GitHub Actions.

@@ -4,6 +4,27 @@ import CookieConsentBanner from './CookieConsentBanner';
 export default {
   title: 'Components/CookieConsentBanner',
   component: CookieConsentBanner,
+  argTypes: {
+    config: {
+      control: 'object',
+      description:
+        'Custom configuration to override the default CDN configuration',
+    },
+    debug: {
+      control: 'boolean',
+      description: 'Enable debug logging for troubleshooting',
+    },
+    forceFallback: {
+      control: 'boolean',
+      description:
+        'Force the component to use local fallback configuration instead of CDN',
+    },
+    cdnBaseUrl: {
+      control: 'text',
+      description: 'Base URL for the CDN resources (defaults to UNDRR CDN)',
+      defaultValue: 'https://assets.undrr.org/static/cookie-banner/v1',
+    },
+  },
 };
 
 const Template = args => <CookieConsentBanner {...args} />;
@@ -95,3 +116,28 @@ export const CustomConfigDemo = args => {
   );
 };
 CustomConfigDemo.storyName = 'Custom Config';
+
+export const CustomCDNDemo = args => {
+  const customCDNUrl = 'https://example.com/custom-cookie-banner';
+
+  return (
+    <div>
+      <p>
+        This story demonstrates how to use a custom CDN URL for loading cookie
+        banner resources.
+      </p>
+      <p>
+        <strong>Custom CDN URL:</strong> <code>{customCDNUrl}</code>
+      </p>
+      <p>
+        <small>
+          Note: This example uses a non-existent CDN URL for demonstration
+          purposes. The component will fall back to local configuration when the
+          CDN fails.
+        </small>
+      </p>
+      <CookieConsentBanner {...args} cdnBaseUrl={customCDNUrl} debug />
+    </div>
+  );
+};
+CustomCDNDemo.storyName = 'Custom CDN URL';
