@@ -2,6 +2,8 @@
 
 This guide covers the development setup and workflow for contributing to the UNDRR Mangrove component library.
 
+For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs).
+
 ## Prerequisites
 
 - Node.js 22 (use nvm or similar to manage versions)
