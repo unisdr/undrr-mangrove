@@ -12,10 +12,7 @@
 
 This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
-
-## Developer Resources
-
-### Getting Started Guide
+## Getting Started Guide
 
 [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)
 
