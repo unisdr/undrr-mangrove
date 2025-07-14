@@ -5023,7 +5023,7 @@ __metadata:
     eslint-config-prettier: "npm:10.1.5"
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
-    eslint-plugin-mdx: "npm:3.6.0"
+    eslint-plugin-mdx: "npm:3.6.2"
     eslint-plugin-prettier: "npm:^5.4.1"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
@@ -9802,9 +9802,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-mdx@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "eslint-mdx@npm:3.6.0"
+"eslint-mdx@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "eslint-mdx@npm:3.6.2"
   dependencies:
     acorn: "npm:^8.15.0"
     acorn-jsx: "npm:^5.3.2"
@@ -9825,7 +9825,7 @@ __metadata:
   peerDependenciesMeta:
     remark-lint-file-extension:
       optional: true
-  checksum: 10/1ed5018843f0479f3b21e92b8507e0412713fd30f8a050eb77ffd8c26d6682f7fcaee608c801ffd571fbf5c90869eb5cfca70c2031f633d8d1ee6825f9634f62
+  checksum: 10/955f52a0aaac527204803f63cadba659b75dbc6c7d9c7407922c7f6c70c191db7442703afc53238c9dc9f1d06adfadac2d6353cf0a99872b564fccb690c251c8
   languageName: node
   linkType: hard
 
@@ -9895,11 +9895,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-mdx@npm:3.6.0":
-  version: 3.6.0
-  resolution: "eslint-plugin-mdx@npm:3.6.0"
+"eslint-plugin-mdx@npm:3.6.2":
+  version: 3.6.2
+  resolution: "eslint-plugin-mdx@npm:3.6.2"
   dependencies:
-    eslint-mdx: "npm:^3.6.0"
+    eslint-mdx: "npm:^3.6.2"
     mdast-util-from-markdown: "npm:^2.0.2"
     mdast-util-mdx: "npm:^3.0.0"
     micromark-extension-mdxjs: "npm:^3.0.0"
@@ -9911,7 +9911,7 @@ __metadata:
     vfile: "npm:^6.0.3"
   peerDependencies:
     eslint: ">=8.0.0"
-  checksum: 10/593ae6aea37ea44a2083c8ce8dd30ea241d200def8617b5af3a3f6b95f1135c701267aec2c4be293d5e4642eefa3c1919da31e01669a25cc5bc1f3cc0075d78f
+  checksum: 10/fc75fdec9d2f9c624dd5eca42f7da95807478b0df676cb133a8553d9362a03983f666ae6ab382e0d2d0bdb7bdcd11b28b4210811c284698a94f7aa23589a2c39
   languageName: node
   linkType: hard
 
