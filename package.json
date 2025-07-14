@@ -1,5 +1,5 @@
 {
-  "name": "@unisdr/undrr-mangrove",
+  "name": "@undrr/undrr-mangrove",
   "version": "1.2.1",
   "description": "Mangrove design System for UNDRR",
   "main": "index.js",

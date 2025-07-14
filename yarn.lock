@@ -4958,9 +4958,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@unisdr/undrr-mangrove@workspace:.":
+"@undrr/undrr-mangrove@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@unisdr/undrr-mangrove@workspace:."
+  resolution: "@undrr/undrr-mangrove@workspace:."
   dependencies:
     "@babel/cli": "npm:7.28.0"
     "@babel/core": "npm:7.28.0"
