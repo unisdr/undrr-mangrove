@@ -36,14 +36,12 @@ Take full control of Mangrove styling by integrating Sass files directly into yo
 
 **Via npm/yarn**
 
-(This is not yet available but to come. Status: June 2025)
-
 ```bash
 # Install as a dependency
-yarn install @unisdr/undrr-mangrove
+yarn install @undrr/undrr-mangrove
 
 # Or with yarn
-yarn add @unisdr/undrr-mangrove
+yarn add @undrr/undrr-mangrove
 ```
 
 **Via Git Submodule** (For direct access)
@@ -62,7 +60,7 @@ Create your main Sass file (`src/sass/main.scss`):
 
 ```scss
 // 1. Import Mangrove variables first (for customization)
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/variables';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/variables';
 
 // 2. Override variables here (optional)
 $mg-primary-color: #0066cc;
@@ -70,14 +68,14 @@ $mg-secondary-color: #ff6b35;
 $mg-font-family-base: 'Roboto', Arial, sans-serif;
 
 // 3. Import Mangrove core styles
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/mixins';
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/base';
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/layout';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/mixins';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/base';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/layout';
 
 // 4. Import component styles you need
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-@import '~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
 
 // 5. Add your custom styles
 @import 'custom/components';
@@ -128,7 +126,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@unisdr/undrr-mangrove/stories/assets/scss/variables";`,
+        additionalData: `@import "@undrr/undrr-mangrove/stories/assets/scss/variables";`,
         includePaths: ['node_modules'],
       },
     },
@@ -161,40 +159,40 @@ gulp.task('sass', function () {
 
 ```scss
 // Essential variables and mixins
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/variables';
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/mixins';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/variables';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/mixins';
 
 // Base styles and typography
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/base';
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/_typography';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/base';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/_typography';
 
 // Layout systems
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/layout';
-@import '~@unisdr/undrr-mangrove/stories/Atom/Layout/Grid/grid';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/layout';
+@import '~@undrr/undrr-mangrove/stories/Atom/Layout/Grid/grid';
 ```
 
 ### Component Categories
 
 ```scss
 // Buttons
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/Chips/chips';
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/ShareButtons/share-buttons';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/Chips/chips';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/ShareButtons/share-buttons';
 
 // Forms
-@import '~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
-@import '~@unisdr/undrr-mangrove/stories/Components/Forms/Select/select';
-@import '~@unisdr/undrr-mangrove/stories/Components/Forms/Checkbox/checkbox';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/Select/select';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/Checkbox/checkbox';
 
 // Content Components
-@import '~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@unisdr/undrr-mangrove/stories/Components/Cards/StatsCards/stats-cards';
-@import '~@unisdr/undrr-mangrove/stories/Components/Accordion/accordion';
+@import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
+@import '~@undrr/undrr-mangrove/stories/Components/Cards/StatsCards/stats-cards';
+@import '~@undrr/undrr-mangrove/stories/Components/Accordion/accordion';
 
 // Navigation
-@import '~@unisdr/undrr-mangrove/stories/Components/Breadcrumbs/breadcrumbs';
-@import '~@unisdr/undrr-mangrove/stories/Components/Pagination/pagination';
-@import '~@unisdr/undrr-mangrove/stories/Components/MegaMenu/mega-menu';
+@import '~@undrr/undrr-mangrove/stories/Components/Breadcrumbs/breadcrumbs';
+@import '~@undrr/undrr-mangrove/stories/Components/Pagination/pagination';
+@import '~@undrr/undrr-mangrove/stories/Components/MegaMenu/mega-menu';
 ```
 
 ## Customization examples
@@ -622,7 +620,7 @@ Always import in this order to ensure proper cascading:
 @import 'normalize.css';
 
 // 2. Mangrove variables (for overriding)
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/variables';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/variables';
 
 // 3. Your variable overrides
 @import 'variables/colors';
@@ -630,11 +628,11 @@ Always import in this order to ensure proper cascading:
 @import 'variables/spacing';
 
 // 4. Mangrove mixins and base
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/mixins';
-@import '~@unisdr/undrr-mangrove/stories/assets/scss/base';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/mixins';
+@import '~@undrr/undrr-mangrove/stories/assets/scss/base';
 
 // 5. Mangrove components (only what you need)
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 
 // 6. Your custom components
 @import 'components/news-card';
@@ -647,12 +645,12 @@ Only import components you actually use:
 
 ```scss
 // Instead of importing everything
-// @import "~@unisdr/undrr-mangrove/stories/**/*";
+// @import "~@undrr/undrr-mangrove/stories/**/*";
 
 // Import selectively
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-@import '~@unisdr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@unisdr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
 ```
 
 ### 3. Variable Overrides
@@ -661,12 +659,12 @@ Override variables before importing components:
 
 ```scss
 // ❌ Wrong - too late to override
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 $mg-button-primary-bg: #custom-color;
 
 // ✅ Correct - override before import
 $mg-button-primary-bg: #custom-color;
-@import '~@unisdr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 ```
 
 ## Next steps
