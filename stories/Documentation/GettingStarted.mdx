@@ -120,6 +120,34 @@ Choose the approach that best fits your project:
 - Props-based customization
 - Built-in state management
 
+### Installation via yarn or npm
+
+Install the library via npm or yarn:
+
+```bash
+# NPM
+npm install @undrr/undrr-mangrove
+
+# Yarn
+yarn add @undrr/undrr-mangrove
+```
+
+### Basic node usage
+
+```jsx
+import { Button, Card } from '@undrr/undrr-mangrove';
+import '@undrr/undrr-mangrove/dist/assets/css/style.css';
+
+function App() {
+  return (
+    <Card>
+      <h2>Welcome to UNDRR</h2>
+      <Button variant="primary">Get Started</Button>
+    </Card>
+  );
+}
+```
+
 <LinkTo kind="getting-started-react-integration" story="docs">
   → See React Integration Guide
 </LinkTo>
@@ -228,7 +256,7 @@ Components work without JavaScript, enhanced with JS where beneficial.
 ### 📊 Data dashboards
 
 ```jsx
-import { BarChart, StatsCards } from '@unisdr/undrr-mangrove';
+import { BarChart, StatsCards } from '@undrr/undrr-mangrove';
 
 function Dashboard() {
   return (
@@ -256,7 +284,7 @@ function Dashboard() {
 
 ## Development setup
 
-If you want to contribute to the Mangrove component library, follow these steps to set up your development environment:
+The steps below cover the basics for getting your development environment running. For more in-depth details on our development process, including our branching strategy, testing with Chromatic, and using Makefile commands, check out the [project `README.md` on GitHub](https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file#development).
 
 1. **Clone the repository**
 

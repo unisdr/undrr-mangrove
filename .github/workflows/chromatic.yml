@@ -69,7 +69,7 @@ jobs:
 
       - name: Publish Storybook Link in the comments
         if: ${{ github.event_name == 'pull_request' }}
-        uses: dannyhw/storybook-chromatic-link-comment@v0.10
+        uses: dannyhw/storybook-chromatic-link-comment@v0.11
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           review-url: ${{ steps.chromatic.outputs.url }}

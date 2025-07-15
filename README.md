@@ -12,18 +12,11 @@
 
 This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
-
-## Developer Resources
-
-### Getting Started Guide
-
-[Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)
-
-## Quick Start
+## Getting started
 
 ### Installation
 
-Install the library via npm or yarn:
+Install Mangrove as an npm or yarn dependency (https://www.npmjs.com/package/@undrr/undrr-mangrove):
 
 ```bash
 # NPM
@@ -33,21 +26,14 @@ npm install @undrr/undrr-mangrove
 yarn add @undrr/undrr-mangrove
 ```
 
-### Basic Usage
+The package includes:
 
-```jsx
-import { Button, Card } from '@undrr/undrr-mangrove';
-import '@undrr/undrr-mangrove/dist/assets/css/style.css';
+- **Compiled React components** for dynamic applications
+- **CSS files** for styling (base and theme variants)
+- **JavaScript files** for interactive functionality
+- **Sass source files** for custom theming
 
-function App() {
-  return (
-    <Card>
-      <h2>Welcome to UNDRR</h2>
-      <Button variant="primary">Get Started</Button>
-    </Card>
-  );
-}
-```
+**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
 
 ## Purpose
 
@@ -180,6 +166,7 @@ This project uses [Chromatic](https://www.chromatic.com/) for visual regression 
 #### When Chromatic Runs
 
 The Chromatic workflow executes automatically:
+
 - On pushes to `main` or `develop` branches
 - On pull requests targeting `main` or `develop`
 - Only when relevant files change:
@@ -208,6 +195,7 @@ The Chromatic workflow executes automatically:
 #### Skipping Chromatic
 
 To skip Chromatic for a specific commit, include `[skip chromatic]` in your commit message:
+
 ```bash
 git commit -m "chore: update dependencies [skip chromatic]"
 ```
@@ -254,6 +242,7 @@ Provisional assets are available in the `dist` directory:
 For contributing to this library:
 
 - 📖 [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
+- 📚 [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) – Interactive component documentation and usage examples
 - 🧪 [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
 - 🚀 [Release Process](./docs/RELEASES.md) - Versioning and publishing
 

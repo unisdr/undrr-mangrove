@@ -39,14 +39,12 @@ Get the full power of Mangrove with React components - perfect for dynamic appli
 
 ### 1. Install Mangrove
 
-(This is not yet available but to come. Status: June 2025)
-
 ```bash
 # Install via npm
-yarn install @unisdr/undrr-mangrove
+yarn install @undrr/undrr-mangrove
 
 # Or via yarn
-yarn add @unisdr/undrr-mangrove
+yarn add @undrr/undrr-mangrove
 
 # Peer dependencies (if not already installed)
 yarn install react react-dom
@@ -56,9 +54,9 @@ yarn install react react-dom
 
 ```jsx
 // Individual component imports (recommended)
-import { CtaButton } from '@unisdr/undrr-mangrove/components/CtaButton';
-import { VerticalCard } from '@unisdr/undrr-mangrove/components/VerticalCard';
-import { InputFields } from '@unisdr/undrr-mangrove/components/InputFields';
+import { CtaButton } from '@undrr/undrr-mangrove/components/CtaButton';
+import { VerticalCard } from '@undrr/undrr-mangrove/components/VerticalCard';
+import { InputFields } from '@undrr/undrr-mangrove/components/InputFields';
 
 // Or import multiple components
 import {
@@ -67,7 +65,7 @@ import {
   InputFields,
   Breadcrumbs,
   StatsCards,
-} from '@unisdr/undrr-mangrove';
+} from '@undrr/undrr-mangrove';
 ```
 
 ### 3. Include styles
@@ -76,18 +74,18 @@ import {
 
 ```jsx
 // Import the base styles
-import '@unisdr/undrr-mangrove/css/style.css';
+import '@undrr/undrr-mangrove/css/style.css';
 
 // Or import a specific theme
-import '@unisdr/undrr-mangrove/css/style-preventionweb.css';
+import '@undrr/undrr-mangrove/css/style-preventionweb.css';
 ```
 
 **Option B: Import in CSS file**
 
 ```css
 /* src/styles/main.css */
-@import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
-@import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+@import '@undrr/undrr-mangrove/dist/css/style-gutenberg.css';
+@import '@undrr/undrr-mangrove/dist/css/style-undrr.css';
 ```
 
 **Option C: Sass integration** (see <LinkTo kind="getting-started-sass-integration" story="docs">Sass Integration Guide</LinkTo>)
@@ -107,11 +105,11 @@ import {
   StatsCards,
   Accordion,
   Pagination
-} from '@unisdr/undrr-mangrove';
+} from '@undrr/undrr-mangrove';
 
 // Import styles
-import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
-import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+import '@undrr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@undrr/undrr-mangrove/dist/css/style-undrr.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -361,7 +359,7 @@ import {
   CtaButtonProps,
   VerticalCardProps,
   StatsCardsProps,
-} from '@unisdr/undrr-mangrove';
+} from '@undrr/undrr-mangrove';
 
 interface FormData {
   name: string;
@@ -555,7 +553,7 @@ export default App;
 ### useMangroveTheme hook
 
 ```jsx
-import { useMangroveTheme } from '@unisdr/undrr-mangrove/hooks';
+import { useMangroveTheme } from '@undrr/undrr-mangrove/hooks';
 
 function MyComponent() {
   const { theme, setTheme, toggleTheme } = useMangroveTheme();
@@ -576,7 +574,7 @@ function MyComponent() {
 ### useMangroveBreakpoint hook
 
 ```jsx
-import { useMangroveBreakpoint } from '@unisdr/undrr-mangrove/hooks';
+import { useMangroveBreakpoint } from '@undrr/undrr-mangrove/hooks';
 
 function ResponsiveComponent() {
   const { isMobile, isTablet, isDesktop, breakpoint } = useMangroveBreakpoint();
@@ -598,8 +596,8 @@ function ResponsiveComponent() {
 
 ```jsx
 // pages/_app.js
-import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
-import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+import '@undrr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@undrr/undrr-mangrove/dist/css/style-undrr.css';
 
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
@@ -610,7 +608,7 @@ export default MyApp;
 
 ```jsx
 // pages/index.js
-import { CtaButton, VerticalCard } from '@unisdr/undrr-mangrove';
+import { CtaButton, VerticalCard } from '@undrr/undrr-mangrove';
 
 export default function Home() {
   return (
@@ -631,8 +629,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 // Import Mangrove styles
-import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
-import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+import '@undrr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@undrr/undrr-mangrove/dist/css/style-undrr.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
@@ -647,8 +645,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 
 // Import Mangrove styles
-import '@unisdr/undrr-mangrove/dist/css/style-gutenberg.css';
-import '@unisdr/undrr-mangrove/dist/css/style-undrr.css';
+import '@undrr/undrr-mangrove/dist/css/style-gutenberg.css';
+import '@undrr/undrr-mangrove/dist/css/style-undrr.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -664,7 +662,7 @@ Build your own components using Mangrove as a foundation:
 ```jsx
 // components/CustomNewsCard.jsx
 import React from 'react';
-import { CtaButton } from '@unisdr/undrr-mangrove';
+import { CtaButton } from '@undrr/undrr-mangrove';
 import './CustomNewsCard.scss';
 
 const CustomNewsCard = ({
@@ -724,11 +722,11 @@ Import only the components you need:
 
 ```jsx
 // ✅ Good - Only imports what you need
-import { CtaButton } from '@unisdr/undrr-mangrove/components/CtaButton';
-import { VerticalCard } from '@unisdr/undrr-mangrove/components/VerticalCard';
+import { CtaButton } from '@undrr/undrr-mangrove/components/CtaButton';
+import { VerticalCard } from '@undrr/undrr-mangrove/components/VerticalCard';
 
 // ❌ Avoid - Imports entire library
-import * as Mangrove from '@unisdr/undrr-mangrove';
+import * as Mangrove from '@undrr/undrr-mangrove';
 ```
 
 ### Dynamic imports
@@ -739,9 +737,9 @@ Load components only when needed:
 import React, { lazy, Suspense } from 'react';
 
 // Lazy load heavy components
-const Charts = lazy(() => import('@unisdr/undrr-mangrove/components/Charts'));
+const Charts = lazy(() => import('@undrr/undrr-mangrove/components/Charts'));
 const MapComponent = lazy(
-  () => import('@unisdr/undrr-mangrove/components/Map')
+  () => import('@undrr/undrr-mangrove/components/Map')
 );
 
 function Dashboard() {
@@ -763,12 +761,12 @@ function Dashboard() {
 
 ```jsx
 // Option 1: Import only the CSS you need
-import '@unisdr/undrr-mangrove/dist/css/components/buttons.css';
-import '@unisdr/undrr-mangrove/dist/css/components/cards.css';
+import '@undrr/undrr-mangrove/dist/css/components/buttons.css';
+import '@undrr/undrr-mangrove/dist/css/components/cards.css';
 
 // Option 2: Use CSS-in-JS with styled-components
 import styled from 'styled-components';
-import { CtaButton } from '@unisdr/undrr-mangrove';
+import { CtaButton } from '@undrr/undrr-mangrove';
 
 const StyledButton = styled(CtaButton)`
   margin: 20px 0;
@@ -784,7 +782,7 @@ const StyledButton = styled(CtaButton)`
 // __tests__/App.test.jsx
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CtaButton } from '@unisdr/undrr-mangrove';
+import { CtaButton } from '@undrr/undrr-mangrove';
 
 test('renders CTA button with correct text', () => {
   const handleClick = jest.fn();
