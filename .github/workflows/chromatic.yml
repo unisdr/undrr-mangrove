@@ -30,8 +30,8 @@ concurrency:
 jobs:
   chromatic-deployment:
     runs-on: ubuntu-latest
-    # Skip if commit message contains [skip chromatic]
-    if: ${{ !contains(github.event.head_commit.message, '[skip chromatic]') }}
+    # Skip if commit message or PR title contains [skip chromatic], or if it's a dependabot PR
+    if: ${{ !contains(github.event.head_commit.message, '[skip chromatic]') && !contains(github.event.pull_request.title, '[skip chromatic]') && github.actor != 'dependabot[bot]' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -65,7 +65,7 @@ jobs:
           traceChanged: true # Use Git to determine which files changed
           buildScriptName: 'build' # Explicitly specify build script
           storybookBuildDir: docs-build-temp # Specify build output directory
-          skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') }}
+          skip: ${{ contains(github.event.head_commit.message, '[skip chromatic]') || contains(github.event.pull_request.title, '[skip chromatic]') || github.actor == 'dependabot[bot]' }}
 
       - name: Publish Storybook Link in the comments
         if: ${{ github.event_name == 'pull_request' }}

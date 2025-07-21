@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", ":semanticCommitTypeAll(chore)"],
-  "schedule": ["every monday"]
+  "schedule": ["every monday"],
+  "commitMessageSuffix": "[skip chromatic]",
 }
