@@ -4943,13 +4943,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ungap/structured-clone@npm:^1.0.0, @ungap/structured-clone@npm:^1.2.0, @ungap/structured-clone@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@ungap/structured-clone@npm:1.3.0"
-  checksum: 10/80d6910946f2b1552a2406650051c91bbd1f24a6bf854354203d84fe2714b3e8ce4618f49cc3410494173a1c1e8e9777372fe68dce74bd45faf0a7a1a6ccf448
-  languageName: node
-  linkType: hard
-
 "@undrr/undrr-mangrove@workspace:.":
   version: 0.0.0-use.local
   resolution: "@undrr/undrr-mangrove@workspace:."
@@ -5073,6 +5066,13 @@ __metadata:
     webpack-fix-style-only-entries: "npm:0.6.1"
   languageName: unknown
   linkType: soft
+
+"@ungap/structured-clone@npm:^1.0.0, @ungap/structured-clone@npm:^1.2.0, @ungap/structured-clone@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@ungap/structured-clone@npm:1.3.0"
+  checksum: 10/80d6910946f2b1552a2406650051c91bbd1f24a6bf854354203d84fe2714b3e8ce4618f49cc3410494173a1c1e8e9777372fe68dce74bd45faf0a7a1a6ccf448
+  languageName: node
+  linkType: hard
 
 "@unrs/resolver-binding-android-arm-eabi@npm:1.9.0":
   version: 1.9.0
@@ -9941,8 +9941,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-prettier@npm:^5.4.1":
-  version: 5.5.1
-  resolution: "eslint-plugin-prettier@npm:5.5.1"
+  version: 5.5.3
+  resolution: "eslint-plugin-prettier@npm:5.5.3"
   dependencies:
     prettier-linter-helpers: "npm:^1.0.0"
     synckit: "npm:^0.11.7"
@@ -9956,7 +9956,7 @@ __metadata:
       optional: true
     eslint-config-prettier:
       optional: true
-  checksum: 10/4d750c70d97d6ef50776bc0a27eeececaac64792fb50713213c69231ed475aa9822a3d177870300fee537d3e24d0dc8eed1528929cab2d20f6e7ec37484648a3
+  checksum: 10/0cdb838997440284145ed1e3cfa1502adffa0e92f893c4100cf2af32dff85fa8f1e86c1547c5462ad8126ee89906a9cb6180b87c4f1ad6000e4b04542938eb3c
   languageName: node
   linkType: hard
 
