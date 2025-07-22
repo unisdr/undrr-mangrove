@@ -59,6 +59,9 @@ jobs:
           # Copy dist files
           cp -r /tmp/dist-branch/* .
 
+          # Remove unwanted asset directories
+          rm -rf assets/images assets/icons
+
           # Add and commit
           git add .
           git commit -m "Deploy dist from ${{ github.sha }}"
