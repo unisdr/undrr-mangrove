@@ -13,8 +13,8 @@ on:
         type: choice
         options:
           - 'npm'
-          - 'github'
-        default: 'github'
+          # - 'github'
+        default: 'npm'
 
 jobs:
   publish:
@@ -45,6 +45,9 @@ jobs:
           node-version: '22'
           cache: 'yarn'
           registry-url: 'https://npm.pkg.github.com'
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
         run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
