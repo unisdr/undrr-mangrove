@@ -243,11 +243,10 @@ For contributing to this library:
 
 ```
 @undrr/undrr-mangrove/
-├── dist/              # Compiled components and assets
-│   ├── components/    # React components
-│   └── assets/        # CSS, fonts, images
-├── scss/              # Source SCSS files
-└── stories/           # Component source and stories
+├── components/        # React components
+├── css/               # Compiled CSS files
+├── js/                # Compiled JavaScript files
+└── scss/              # Component stories (SCSS only)
 ```
 
 ## CDN Distribution
@@ -262,7 +261,7 @@ https://assets.undrr.org/static/mangrove/README.md
 https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/static/mangrove/latest/assets/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.2.4/dist/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.5/css/style.css
 ```
 
 ### Bleeding edge test repo
@@ -270,7 +269,7 @@ https://assets.undrr.org/static/mangrove/1.2.4/dist/assets/css/style.css
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
-https://assets.undrr.org/testing/static/mangrove/1.2.4/dist/assets/css/style.css
+https://assets.undrr.org/testing/static/mangrove/1.2.5/css/style.css
 ... etc
 ```
 

@@ -50,7 +50,9 @@ BREAKING CHANGE: All color tokens have been renamed from --color-* to --mg-color
 
 Published packages include:
 
-- `/dist/**/*` - Compiled JavaScript and CSS files
+- `/components/**/*` - Compiled React components
+- `/css/**/*` - Compiled CSS files
+- `/js/**/*` - Compiled JavaScript files
 - `/scss/**/*` - Source SCSS files from stories/assets/scss
 - `/stories/**/*.scss` - Component-specific SCSS files
 

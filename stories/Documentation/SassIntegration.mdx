@@ -60,7 +60,7 @@ Create your main Sass file (`src/sass/main.scss`):
 
 ```scss
 // 1. Import Mangrove variables first (for customization)
-@import '~@undrr/undrr-mangrove/stories/assets/scss/variables';
+@import '~@undrr/undrr-mangrove/scss/variables';
 
 // 2. Override variables here (optional)
 $mg-primary-color: #0066cc;
@@ -68,9 +68,9 @@ $mg-secondary-color: #ff6b35;
 $mg-font-family-base: 'Roboto', Arial, sans-serif;
 
 // 3. Import Mangrove core styles
-@import '~@undrr/undrr-mangrove/stories/assets/scss/mixins';
-@import '~@undrr/undrr-mangrove/stories/assets/scss/base';
-@import '~@undrr/undrr-mangrove/stories/assets/scss/layout';
+@import '~@undrr/undrr-mangrove/scss/mixins';
+@import '~@undrr/undrr-mangrove/scss/base';
+@import '~@undrr/undrr-mangrove/scss/layout';
 
 // 4. Import component styles you need
 @import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
@@ -126,7 +126,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@undrr/undrr-mangrove/stories/assets/scss/variables";`,
+        additionalData: `@import "@undrr/undrr-mangrove/scss/variables";`,
         includePaths: ['node_modules'],
       },
     },
@@ -159,15 +159,15 @@ gulp.task('sass', function () {
 
 ```scss
 // Essential variables and mixins
-@import '~@undrr/undrr-mangrove/stories/assets/scss/variables';
-@import '~@undrr/undrr-mangrove/stories/assets/scss/mixins';
+@import '~@undrr/undrr-mangrove/scss/variables';
+@import '~@undrr/undrr-mangrove/scss/mixins';
 
 // Base styles and typography
-@import '~@undrr/undrr-mangrove/stories/assets/scss/base';
-@import '~@undrr/undrr-mangrove/stories/assets/scss/_typography';
+@import '~@undrr/undrr-mangrove/scss/base';
+@import '~@undrr/undrr-mangrove/scss/_typography';
 
 // Layout systems
-@import '~@undrr/undrr-mangrove/stories/assets/scss/layout';
+@import '~@undrr/undrr-mangrove/scss/layout';
 @import '~@undrr/undrr-mangrove/stories/Atom/Layout/Grid/grid';
 ```
 
@@ -620,7 +620,7 @@ Always import in this order to ensure proper cascading:
 @import 'normalize.css';
 
 // 2. Mangrove variables (for overriding)
-@import '~@undrr/undrr-mangrove/stories/assets/scss/variables';
+@import '~@undrr/undrr-mangrove/scss/variables';
 
 // 3. Your variable overrides
 @import 'variables/colors';
@@ -628,8 +628,8 @@ Always import in this order to ensure proper cascading:
 @import 'variables/spacing';
 
 // 4. Mangrove mixins and base
-@import '~@undrr/undrr-mangrove/stories/assets/scss/mixins';
-@import '~@undrr/undrr-mangrove/stories/assets/scss/base';
+@import '~@undrr/undrr-mangrove/scss/mixins';
+@import '~@undrr/undrr-mangrove/scss/base';
 
 // 5. Mangrove components (only what you need)
 @import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
@@ -669,7 +669,7 @@ $mg-button-primary-bg: #custom-color;
 
 ## Next steps
 
-- **Explore Variables**: Check `/stories/assets/scss/_variables.scss` for all customizable options
+- **Explore Variables**: Check `/scss/_variables.scss` for all customizable options
 - **Study Components**: Look at existing component Sass files for patterns
 - **Build Tools**: Set up your preferred build process with Sass compilation
 - **Custom Theme**: Create your organization's unique theme extension
