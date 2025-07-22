@@ -5,13 +5,21 @@
 
 # Mangrove: the UNDRR component library
 
+This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles.
+
+These components offer consistency, documentation, and portability to speed up quality development with the expected look and feel. They also help reduce entropy, which is critical to ensuring websites remain accessible.
+
+If there is a Component or Pattern that you need, or you have any other feedback, question, or comment, please contact us in the issue queue.
+
 [View the component library](https://unisdr.github.io/undrr-mangrove/)
 
 ## Getting started
 
+**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
+
 ### Installation
 
-Install Mangrove as an npm or yarn dependency (https://www.npmjs.com/package/@undrr/undrr-mangrove):
+Install Mangrove as an npm or yarn dependency (<https://www.npmjs.com/package/@undrr/undrr-mangrove>):
 
 ```bash
 # NPM
@@ -28,30 +36,20 @@ The package includes:
 - **JavaScript files** for interactive functionality
 - **Sass source files** for custom theming
 
-**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
-
-## Purpose
-
-This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles.
-
-These components offer consistency, documentation, and portability to speed up quality development with the expected look and feel. They also help reduce entropy, which is critical to ensuring websites remain accessible.
-
-If there is a Component or Pattern that you need, or you have any other feedback, question, or comment, please contact us in the issue queue.
-
 ### Assorted technical notes
 
 - **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
 - **TypeScript Support**: While the default implementation uses JSX and JavaScript, TypeScript is fully supported. You can view examples of TypeScript components in the [TypeScript Example Component](https://unisdr.github.io/undrr-mangrove/?path=/docs/example-typescript-component--docs) (code location: `stories/Components/TypeScriptExampleComponent`)
 
-## Development
+## Developing Mangrove
 
 You can use the provided npm scripts to simplify running commands inside Docker containers. These scripts are defined in the `package.json` file and can be run using `yarn`.
 
 **For detailed development setup and workflow instructions, see the [Development Guide](./docs/DEVELOPMENT.md).**
 
-### Using Windows
+### Developing on Windows
 
-You may encounter sporatic issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
+You may encounter some issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
 
 ### Making commits
 
@@ -68,8 +66,6 @@ For production use:
 - Stable releases will be created as tagged releases
   - Note: tagged releases are not yet available as we are still in an alpha phase
 - The `dev` branch is not used
-
-**For detailed release procedures and versioning information, see the [Release Process Guide](./docs/RELEASES.md).**
 
 When creating a new feature or fix:
 
@@ -153,6 +149,10 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn run build"
 # Lint the codebase
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
 ```
+
+## Creating releases
+
+**For detailed release procedures and versioning information, see the [Release Process Guide](./docs/RELEASES.md).**
 
 ## Testing
 
@@ -260,33 +260,25 @@ For contributing to this library:
 
 ## CDN Distribution
 
-For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/), this project automatically maintains a `dist` branch that contains only the latest compiled build artifacts. This branch is automatically updated on every push to `main` via GitHub Actions.
+For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/). The primary use case for this feature is static sites with no build process.
 
-The primary use case for this feature is static sites with no build process.
-
-### The `dist` Branch
-
-- **Purpose**: Clean distribution branch for CDN/static hosting services
-- **Content**: Contains only the compiled assets from the `dist` directory
-- **History**: No git history is retained - each deployment creates a fresh orphan commit
-- **Updates**: Automatically updated when changes are pushed to `main`
-
-### Using the `dist` Branch
-
-Example CDN URL:
+### Production CDN
 
 ```
-https://assets.undrr.org/testing/static/mangrove/README.md
+https://assets.undrr.org/static/sitemap.html
+https://assets.undrr.org/static/mangrove/README.md
+https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
+https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/latest/assets/js/tabs.js
+```
+
+### Bleeding edge test repo
+
+```
+https://assets.undrr.org/testing/static/sitemap.html
 https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
-https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
-https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js
+... etc
 ```
-
-The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
-
-### Future dist features
-
-Support for release tagged content.
 
 ## LICENSE
 
