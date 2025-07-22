@@ -7,10 +7,6 @@
 
 [View the component library](https://unisdr.github.io/undrr-mangrove/)
 
-## 🚨 Pre-alpha warning 🚨
-
-This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
-
 ## Getting started
 
 ### Installation
@@ -51,6 +47,8 @@ If there is a Component or Pattern that you need, or you have any other feedback
 
 You can use the provided npm scripts to simplify running commands inside Docker containers. These scripts are defined in the `package.json` file and can be run using `yarn`.
 
+**For detailed development setup and workflow instructions, see the [Development Guide](./docs/DEVELOPMENT.md).**
+
 ### Using Windows
 
 You may encounter sporatic issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
@@ -70,6 +68,8 @@ For production use:
 - Stable releases will be created as tagged releases
   - Note: tagged releases are not yet available as we are still in an alpha phase
 - The `dev` branch is not used
+
+**For detailed release procedures and versioning information, see the [Release Process Guide](./docs/RELEASES.md).**
 
 When creating a new feature or fix:
 
@@ -157,6 +157,8 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
 ## Testing
 
 When adding new components, we rely on the Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
+
+**For comprehensive testing guidelines and procedures, see the [Testing Guide](./docs/TESTING.md).**
 
 ### Visual Testing with Chromatic
 

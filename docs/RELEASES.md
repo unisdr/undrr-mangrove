@@ -8,18 +8,24 @@ Publishing to npm happens automatically when you push a version tag:
 
 ### Automatic Publishing (Recommended)
 
-When you push a version tag, the package is automatically published to npm:
+1. Before tagging, make sure to update the version number in `package.json` to match the new release:
+2. Add a tag and release notes at <https://github.com/unisdr/undrr-mangrove/releases>
 
-```bash
-git tag v1.2.3
-git push origin v1.2.3
-```
-
-The workflow will automatically:
+The [workflow](https://github.com/unisdr/undrr-mangrove/blob/main/.github/workflows/npm-publish.yml) will automatically:
 
 - Build the project
 - Package distribution files and SCSS sources
 - Publish to npm registry
+
+### Manual Publishing
+
+You can also manually trigger publishing:
+
+1. Go to Actions → "Publish to NPM Registry"
+    - <https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml>
+2. Click "Run workflow"
+3. Optionally enter a specific git tag (leave empty to use the latest tag)
+4. The workflow will build and publish the specified version
 
 ## Versioning guide
 
@@ -39,15 +45,6 @@ git commit -m "feat!: rename color tokens
 
 BREAKING CHANGE: All color tokens have been renamed from --color-* to --mg-color-*"
 ```
-
-### Manual Publishing
-
-You can also manually trigger publishing:
-
-1. Go to Actions → "Publish to NPM Registry"
-2. Click "Run workflow"
-3. Optionally enter a specific git tag (leave empty to use the latest tag)
-4. The workflow will build and publish the specified version
 
 ### Package Contents
 
