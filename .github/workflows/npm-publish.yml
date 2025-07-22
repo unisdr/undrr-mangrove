@@ -47,7 +47,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
 
       - name: Build
         run: yarn build
@@ -57,18 +57,18 @@ jobs:
         run: |
           mkdir -p npm-package/dist
           cp -r dist/* npm-package/dist/
-          
+
           # Copy SCSS source files
           mkdir -p npm-package/scss
           cp -r stories/assets/scss/* npm-package/scss/
-          
+
           # Copy component SCSS files maintaining structure
           mkdir -p npm-package/stories
           find stories -name "*.scss" -type f | while read file; do
             mkdir -p "npm-package/$(dirname "$file")"
             cp "$file" "npm-package/$file"
           done
-          
+
           cp package.json npm-package/
           cp README.md npm-package/
           cp LICENSE npm-package/ || echo "No LICENSE file found"
@@ -89,7 +89,7 @@ jobs:
               author: pkg.author,
               license: pkg.license
             };
-            
+
             // Add registry-specific config
             if (registry === "github") {
               newPkg.publishConfig = {
@@ -97,7 +97,7 @@ jobs:
                 access: "public"
               };
             }
-            
+
             require("fs").writeFileSync("npm-package/package.json", JSON.stringify(newPkg, null, 2));
           '
 
