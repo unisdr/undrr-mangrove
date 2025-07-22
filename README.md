@@ -1,6 +1,6 @@
-[![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/semver-release.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![npm version](https://img.shields.io/npm/v/@undrr/undrr-mangrove.svg)](https://www.npmjs.com/package/@undrr/undrr-mangrove)
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://unisdr.github.io/undrr-mangrove/)
+[![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/semver-release.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
 
 # Mangrove: the UNDRR component library
@@ -35,21 +35,13 @@ The package includes:
 - **CSS files** for styling (base and theme variants)
 - **JavaScript files** for interactive functionality
 - **Sass source files** for custom theming
-
-### Assorted technical notes
-
-- **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
-- **TypeScript Support**: While the default implementation uses JSX and JavaScript, TypeScript is fully supported. You can view examples of TypeScript components in the [TypeScript Example Component](https://unisdr.github.io/undrr-mangrove/?path=/docs/example-typescript-component--docs) (code location: `stories/Components/TypeScriptExampleComponent`)
+- Explore the contents: <https://www.npmjs.com/package/@undrr/undrr-mangrove?activeTab=code>
 
 ## Developing Mangrove
 
 You can use the provided npm scripts to simplify running commands inside Docker containers. These scripts are defined in the `package.json` file and can be run using `yarn`.
 
 **For detailed development setup and workflow instructions, see the [Development Guide](./docs/DEVELOPMENT.md).**
-
-### Developing on Windows
-
-You may encounter some issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
 
 ### Making commits
 
@@ -265,20 +257,28 @@ For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitla
 ### Production CDN
 
 ```
-https://assets.undrr.org/static/sitemap.html
+https://assets.undrr.org/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/static/mangrove/README.md
 https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/static/mangrove/latest/assets/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.2.4/dist/assets/css/style.css
 ```
 
 ### Bleeding edge test repo
 
 ```
-https://assets.undrr.org/testing/static/sitemap.html
+https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
+https://assets.undrr.org/testing/static/mangrove/1.2.4/dist/assets/css/style.css
 ... etc
 ```
+
+## Assorted technical notes
+
+- **Developing on Windows**: You may encounter some issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
+- **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
+- **TypeScript support**: While the default implementation uses JSX and JavaScript, TypeScript is fully supported. You can view examples of TypeScript components in the [TypeScript Example Component](https://unisdr.github.io/undrr-mangrove/?path=/docs/example-typescript-component--docs) (code location: `stories/Components/TypeScriptExampleComponent`)
 
 ## LICENSE
 
