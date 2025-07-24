@@ -1,0 +1,365 @@
+import { Meta } from '@storybook/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import TableOfContents from '../Components/TableOfContents/TableOfContents';
+
+<Meta
+  title="Getting started/Mangrove: the UNDRR standard"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Mangrove: the UNDRR standard
+
+Mangrove is the universal system for all UNDRR web properties.
+
+<TableOfContents
+  tocData={[
+    { id: 'why-mangrove-is-the-default', text: 'Why Mangrove is the default' },
+    { id: 'what-using-mangrove-means', text: 'What using Mangrove means' },
+    { id: 'the-case-for-consistency', text: 'The case for consistency' },
+    { id: 'working-within-the-system', text: 'Working within the system' },
+    {
+      id: 'when-exceptions-are-considered',
+      text: 'When exceptions are considered',
+    },
+    { id: 'improving-mangrove-instead', text: 'Improving Mangrove instead' },
+    { id: 'implementation-flexibility', text: 'Implementation flexibility' },
+    {
+      id: 'governance-and-decision-making',
+      text: 'Governance and decision making',
+    },
+  ]}
+  showNumbers={false}
+/>
+
+## Why Mangrove is the default
+
+UNDRR experienced firsthand how design fragmentation led to inefficiencies and rising maintenance costs. Previously, each platform, from PreventionWeb to the Sendai Framework Monitor—maintained its own UI system, multiplying effort across accessibility, rebranding, and onboarding tasks.
+
+**Operational challenges included:**
+
+- 🔍 Duplicated bug fixes across platforms
+- 🎨 Inconsistent design updates
+- 👥 Repetitive onboarding workflows
+- ♿ Fragmented accessibility compliance
+- 🚀 Slowed feature development due to redundant problem-solving
+
+Mangrove eliminates these inefficiencies by serving as a single source of truth for the UNDRR digital experience. The result is:
+
+- **Consistent branding** that strengthens recognition
+- **Unified user experiences** across properties
+- **Improved developer productivity** with reusable components
+- **Built-in accessibility compliance**
+- **Streamlined maintenance** with centralized updates
+
+## What using Mangrove means
+
+Adopting Mangrove doesn't restrict creativity or flexibility—it aligns projects with tested, scalable standards that benefit both users and developers.
+
+Mangrove targets a practical sweet spot for most common use cases—covering foundational aspects of layout, spacing, color, and interaction patterns. However, we recognize that some use cases will exist outside of Mangrove’s current scope. For example, bespoke data visualizations, multi-step user registration flows, or deeply specialized dashboards may require custom design and engineering.
+
+In these cases, custom implementations are acceptable—but to the extent possible, they should align with Mangrove’s design principles and contribute improvements or generalizable patterns back to the system.
+
+### Core requirements
+
+**Semantic HTML structure**
+Follow consistent HTML patterns, regardless of build toolchain:
+
+```html
+<!-- Button -->
+<button class="mg-cta-button mg-cta-button--primary">
+  <span class="mg-cta-button__text">Download Report</span>
+  <span class="mg-cta-button__icon" aria-hidden="true">📄</span>
+</button>
+
+<!-- Card -->
+<article class="mg-card mg-card--vertical">
+  <div class="mg-card__image">
+    <img src="report-cover.jpg" alt="Global Assessment Report 2023 cover" />
+  </div>
+  <div class="mg-card__content">
+    <h3 class="mg-card__title">Global Assessment Report 2023</h3>
+    <p class="mg-card__description">
+      Latest findings on disaster risk reduction...
+    </p>
+  </div>
+</article>
+```
+
+**CSS class naming**
+Use BEM methodology:
+
+```scss
+// Extend existing
+.mg-cta-button--report-download {
+  border-left: 4px solid $mg-color-accent;
+}
+
+// Create new
+.myproject-announcement-banner {
+  &__content {
+  }
+  &--urgent {
+  }
+}
+```
+
+**Sass integration**
+Use design tokens to ensure visual consistency:
+
+```scss
+// Preferred
+.myproject-announcement-banner {
+  color: $mg-color-text-primary;
+  padding: $mg-spacing-md;
+  font-family: $mg-font-family-base;
+  border-radius: $mg-border-radius-sm;
+}
+
+// Avoid
+.banner {
+  color: #333;
+  padding: 16px;
+  font-family: 'Arial';
+  border-radius: 4px;
+}
+```
+
+## The case for consistency
+
+### Branding benefits
+
+Mangrove ensures:
+
+- **Visual harmony** across properties
+- **Predictable interaction models**
+- **Reinforced brand identity** through typography and color
+- **Consistent logo placement and usage**
+- **Fewer decisions and less reinvention**, teams spend less time debating patterns and more time building value
+
+### User journey advantages
+
+For users navigating multiple UNDRR properties:
+
+- Navigation remains intuitive
+- Search and discovery follow consistent logic
+- Forms and interactions behave predictably
+- Mobile responsiveness is reliable and uniform
+
+### Developer experience improvements
+
+**Faster onboarding**
+New engineers apply shared Mangrove knowledge across projects:
+
+```jsx
+import { CtaButton, VerticalCard } from '@undrr/undrr-mangrove';
+
+function ReportCard({ report }) {
+  return (
+    <VerticalCard
+      title={report.title}
+      description={report.summary}
+      image={report.coverImage}
+      footer={
+        <CtaButton variant="primary" onClick={() => downloadReport(report.id)}>
+          Download PDF
+        </CtaButton>
+      }
+    />
+  );
+}
+```
+
+**Centralized fixes and optimizations**
+Updates in one place benefit all projects.
+
+### Accessibility compliance
+
+Mangrove meets WCAG 2.1 AA:
+
+- Screen reader compatibility
+- Keyboard navigation
+- Color contrast adherence
+- Predictable focus handling
+- Standardized alt text patterns
+
+## Working within the system
+
+### Customization approaches
+
+**Theme support**
+
+```html
+<!-- Global -->
+<link rel="stylesheet" href=".../style.css" />
+<!-- PreventionWeb -->
+<link rel="stylesheet" href=".../style-preventionweb.css" />
+```
+
+**Component extension**
+
+```scss
+.mg-mega-menu__user-section {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-sm;
+
+  .mg-button--user-profile {
+    background: transparent;
+    border: 1px solid $mg-color-border-light;
+
+    &:hover {
+      background: $mg-color-background-light;
+    }
+  }
+}
+```
+
+**Content adaptation**
+
+```jsx
+function EmergencyStatsCard({ data, isUrgent }) {
+  return (
+    <StatsCards
+      data={data}
+      className={isUrgent ? 'mg-stats-card--emergency' : ''}
+      variant={isUrgent ? 'urgent' : 'default'}
+    />
+  );
+}
+```
+
+## When exceptions are considered
+
+Exceptions require strong justification. Instead of avoiding mangrove, the needs should be incorporated into Mangrove.
+
+Common scenarios include:
+
+### Technical constraints
+
+- Legacy systems incompatible with Mangrove
+- Proven performance issues
+- Conflicting dependencies
+
+### UX requirements
+
+- Specialized interfaces
+- Domain-specific workflows
+- Advanced accessibility needs
+
+### Business drivers
+
+- Critical launch deadlines
+- Budget limitations (with remediation plan)
+- Third-party UI mandates
+
+### Exception process
+
+1. Document the constraint
+2. Explore Mangrove-compatible options
+3. Propose a transition plan
+4. Request approval
+5. Track and report progress
+
+## Improving Mangrove instead
+
+Extend Mangrove before working around it.
+
+### Component requests
+
+```jsx
+<MegaMenu
+  sections={menuSections}
+  userSection={{
+    avatar: user.avatar,
+    name: user.name,
+    menuItems: [
+      { label: 'Profile', url: '/profile' },
+      { label: 'Settings', url: '/settings' },
+      { label: 'Logout', onClick: handleLogout },
+    ],
+  }}
+/>
+```
+
+### Chart extensions
+
+```jsx
+<RiskAssessmentChart
+  data={riskData}
+  threatLevels={['Low', 'Medium', 'High', 'Critical']}
+  colorScheme="risk-based"
+  showEvacuationZones
+/>
+```
+
+### Contribution workflow
+
+1. Identify need
+2. Design according to Mangrove standards
+3. Submit with use cases
+4. Co-develop with the team
+5. Contribute back
+
+## Implementation flexibility
+
+Mangrove supports diverse tech stacks:
+
+### HTML/CSS
+
+```html
+<link rel="stylesheet" href=".../style.css" />
+```
+
+### React
+
+```jsx
+import { CtaButton, Hero } from '@undrr/undrr-mangrove';
+```
+
+### Sass
+
+```scss
+@import '~@undrr/undrr-mangrove/scss/variables';
+```
+
+### Traditional templates (e.g. PHP, Drupal)
+
+```php
+<article class="mg-card">
+  ...
+</article>
+```
+
+## Governance and decision making
+
+### Maintained by UNDRR
+
+- Component development
+- Documentation
+- Breaking changes
+- Performance and accessibility
+- Community input
+
+### Submit feedback
+
+- [GitHub issues](https://github.com/unisdr/undrr-mangrove/issues) for bugs and requests
+- Join working groups or contact directly for urgent needs
+
+---
+
+## The bottom line
+
+Mangrove is more than a common system, it's our commitment to accessible, consistent digital experiences for disaster risk reduction worldwide.
+
+**Use it, extend it, improve it ... just don’t reinvent it.**
+
+**Next steps:**
+
+- **<LinkTo kind="getting-started-a-getting-started-guide" story="docs">Review the Getting Started Guide</LinkTo>**
+- **<LinkTo kind="getting-started-component-contribution-guide" story="docs">See the Component Contribution Guide</LinkTo>**
+- **Contact the UNDRR web team** for project-specific guidance
