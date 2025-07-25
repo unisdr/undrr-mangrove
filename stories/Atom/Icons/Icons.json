@@ -125,6 +125,10 @@
       "label": "Share, social media"
     },
     {
+      "name": "qrcode",
+      "label": "QR Code, Quick Response, Barcode"
+    },
+    {
       "name": "left",
       "label": "Left arrow"
     },

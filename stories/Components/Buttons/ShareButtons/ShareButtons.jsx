@@ -1,5 +1,6 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import QRCodeStyling from 'qr-code-styling';
 import LinkUrls from './links.json';
 
 const defaults = {
@@ -44,7 +45,9 @@ const ShareButtons = ({
   };
 
   const handleClick = Platform => {
-    if (Platform === 'WebShare' && navigator.share) {
+    if (Platform === 'QRCode') {
+      generateAndCopyQRCode();
+    } else if (Platform === 'WebShare' && navigator.share) {
       // Use the Web Share API
       navigator
         .share({
@@ -65,6 +68,52 @@ const ShareButtons = ({
     }
   };
 
+  const generateAndCopyQRCode = async () => {
+    try {
+      // Build URL with UTM parameters, properly handling existing query params
+      const url = new URL(sharedLink);
+      url.searchParams.set('utm_source', 'qr');
+      url.searchParams.set('utm_medium', 'web');
+      url.searchParams.set('utm_campaign', 'share_box');
+      const qrCodeUrl = url.toString();
+      
+      console.log('Generating QR code for URL:', qrCodeUrl);
+      
+      const qrCode = new QRCodeStyling({
+        width: 256,
+        height: 256,
+        type: 'png',
+        data: qrCodeUrl,
+        dotsOptions: {
+          color: '#000000',
+          type: 'rounded'
+        },
+        backgroundOptions: {
+          color: '#FFFFFF',
+        },
+        imageOptions: {
+          crossOrigin: 'anonymous',
+          margin: 10
+        }
+      });
+
+      const blob = await qrCode.getRawData('png');
+      
+      if (!blob) {
+        throw new Error('Failed to generate QR code blob');
+      }
+      
+      const item = new ClipboardItem({ 'image/png': blob });
+      await navigator.clipboard.write([item]);
+      
+      console.log('QR code copied to clipboard successfully');
+      // TODO: Add visual feedback here similar to CopyButton
+    } catch (error) {
+      console.error('Error generating or copying QR code:', error);
+      alert('Failed to copy QR code to clipboard. Please check browser permissions.');
+    }
+  };
+
   return (
     <section
       data-vf-google-analytics-region="share-this"
@@ -81,7 +130,7 @@ const ShareButtons = ({
             title="Share using your device"
             className="mg-share__button"
           >
-            <span class="mg-icon fa-share" aria-hidden="true"></span>
+            <span className="mg-icon fa-share" aria-hidden="true"></span>
           </button>
         )}
         <button
@@ -91,7 +140,7 @@ const ShareButtons = ({
           className="mg-share__button"
           title="Share on LinkedIn"
         >
-          <span class="mg-icon fa-linkedin" aria-hidden="true"></span>
+          <span className="mg-icon fa-linkedin" aria-hidden="true"></span>
         </button>
         <button
           data-vf-analytics-label="Social share: Facebook"
@@ -100,7 +149,7 @@ const ShareButtons = ({
           title="Share on Facebook"
           className="mg-share__button"
         >
-          <span class="mg-icon fa-facebook" aria-hidden="true"></span>
+          <span className="mg-icon fa-facebook" aria-hidden="true"></span>
         </button>
         <button
           data-vf-analytics-label="Social share: X"
@@ -109,7 +158,7 @@ const ShareButtons = ({
           className="mg-share__button"
           title="Share on X"
         >
-          <span class="mg-icon fa-x-social" aria-hidden="true"></span>
+          <span className="mg-icon fa-x-social" aria-hidden="true"></span>
         </button>
         <button
           data-vf-analytics-label="Social share: Mail"
@@ -118,7 +167,16 @@ const ShareButtons = ({
           className="mg-share__button"
           title="Share via Email"
         >
-          <span class="mg-icon fa-envelope" aria-hidden="true"></span>
+          <span className="mg-icon fa-envelope" aria-hidden="true"></span>
+        </button>
+        <button
+          data-vf-analytics-label="Social share: QR Code"
+          onClick={() => handleClick('QRCode')}
+          aria-label="Copy QR Code"
+          className="mg-share__button"
+          title="Copy QR Code"
+        >
+          <span className="mg-icon fa-qrcode" aria-hidden="true"></span>
         </button>
       </div>
 
@@ -167,13 +225,13 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
       onClick={() => handleCopyLink()}
     >
       <div className="mg-share__clip-icon">
-        <span class="mg-icon fa-link" aria-hidden="true"></span>
+        <span className="mg-icon fa-link" aria-hidden="true"></span>
       </div>
       <div className="mg-share__copy-text">
         {coppied ? copiedLabel : visibleLink}
       </div>
       <div className="mg-share__stack-icon">
-        <span class="mg-icon fa-clone" alt="Copy icon"></span>
+        <span className="mg-icon fa-clone" alt="Copy icon"></span>
       </div>
     </button>
   );
