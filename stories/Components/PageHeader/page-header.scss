@@ -40,10 +40,9 @@
 
   &__logo-img {
     @media (max-width: $mg-breakpoint-tablet) {
-      object-fit: cover;
+      object-fit: contain;
       width: 175px;
       height: 48px;
-      object-position: 0% 50%;
     }
 
     @media (max-width: $mg-breakpoint-desktop-wide) {
