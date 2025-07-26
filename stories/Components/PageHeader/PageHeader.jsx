@@ -71,7 +71,7 @@ export function PageHeader({
             <a alt="Log in or register" title="Log in or register" href="/user">
               <i className="fa fa-user"></i>{' '}
               <span className="mg-page-header__label">My account</span>
-              <span className="mg-page-header__label-mobile">Login</span>
+              {/* <span className="mg-page-header__label-mobile">Login</span> */}
             </a>
 
             {/* Language Dropdown Section */}
