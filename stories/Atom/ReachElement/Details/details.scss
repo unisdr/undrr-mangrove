@@ -1,43 +1,53 @@
 /* details tag start */
 details {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
   summary {
     @extend %paragraph-font-300;
 
     list-style-type: none;
     outline: 0;
+    padding: 1rem 1rem 1rem 2.5rem;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out;
 
     &::-webkit-details-marker {
       display: none;
     }
 
     &::before {
-      // background:
-      //   url(#{$img-path-Icon}/chevron-small-right.svg) no-repeat left
-      //   center;
       content: "";
-      display: inline-block;
-      height: 14px;
-      margin-right: $mg-spacing-25;
-      width: 14px;
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid $mg-color-interactive;
+      transition: transform 0.2s ease-in-out;
     }
   }
 
   p {
     @extend %paragraph-font-200;
+    padding: 1rem;
+    margin: 0;
+    line-height: 1.6;
   }
 
   &[open] {
     summary {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0;
 
       &::before {
-        // background:
-        //   url(#{$img-path-Icon}/chevron-small-down.svg) no-repeat left
-        //   center;
-        content: "";
-        display: inline-block;
-        height: 14px;
-        width: 14px;
+        transform: translateY(-50%) rotate(180deg);
       }
     }
   }
@@ -45,16 +55,19 @@ details {
 
 [dir="rtl"] {
   details {
-    summary::before {
-      @include transform(translate(0) rotate(180deg));
+    summary {
+      padding: 1rem 2.5rem 1rem 1rem;
+    }
 
-      margin-left: $mg-spacing-25;
-      margin-right: 0;
+    summary::before {
+      left: auto;
+      right: 1rem;
+      transform: translateY(-50%) rotate(180deg);
     }
 
     &[open] {
       summary::before {
-        @include transform(translate(0) rotate(0deg));
+        transform: translateY(-50%) rotate(0deg);
       }
     }
   }

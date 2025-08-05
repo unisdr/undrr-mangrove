@@ -17,7 +17,7 @@ const getCaptionForLocaleHeading = locale => {
   switch (locale) {
     case 'english':
       const engText = {
-        detail1: 'HEADLINE 1',
+        detail1: 'Headline 1',
         detail2: 'Headline 2',
         detail3: 'Headline 3',
         detail4: 'Headline 4',
@@ -57,7 +57,7 @@ const getCaptionForLocaleHeading = locale => {
       return japaneseText;
     default:
       return {
-        detail1: 'HEADLINE 1',
+        detail1: 'Headline 1',
         detail2: 'Headline 2',
         detail3: 'Headline 3',
         detail4: 'Headline 4',
