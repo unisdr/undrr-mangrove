@@ -56,20 +56,20 @@ The fastest way to get started:
     <!-- Base styling -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css"
     />
     <!-- or choose a site specific theme -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-mcr.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style-mcr.css"
     />
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-irp.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style-irp.css"
     />
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style-preventionweb.css"
     />
   </head>
   <body>
@@ -132,6 +132,50 @@ npm install @undrr/undrr-mangrove
 
 # Yarn
 yarn add @undrr/undrr-mangrove
+```
+
+### Checking and updating to the latest version
+
+To check the current latest version available on npm:
+
+```bash
+npm view @undrr/undrr-mangrove version
+# or
+npm info @undrr/undrr-mangrove version
+```
+
+To install the latest version:
+
+```bash
+npm install @undrr/undrr-mangrove@latest
+```
+
+To update all dependencies to their latest semver-compatible versions:
+
+```bash
+npm outdated
+npm update
+```
+
+### Production CDN
+
+All assets are now served from versioned endpoints for stability:
+
+```
+https://assets.undrr.org/static/sitemap.html#mangrove-1-2-9
+https://assets.undrr.org/static/mangrove/README.md
+https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.9/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/js/tabs.js
+```
+
+#### Bleeding edge test repo
+
+```
+https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
+https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
+https://assets.undrr.org/testing/static/mangrove/1.2.5/css/style.css
+... etc
 ```
 
 ### Basic node usage
