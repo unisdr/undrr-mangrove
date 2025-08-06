@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import QRCodeStyling from 'qr-code-styling';
+import QRCode from 'qrcode';
 import LinkUrls from './links.json';
 
 const defaults = {
@@ -297,32 +297,16 @@ const ShareButtons = ({
 
       // console.log('Generating QR code for URL:', qrCodeUrl);
 
-      const qrCode = new QRCodeStyling({
+      // Generate QR code as data URL
+      const dataUrl = await QRCode.toDataURL(qrCodeUrl, {
         width: 1024,
-        height: 1024,
-        type: 'png',
-        data: qrCodeUrl,
-        dotsOptions: {
-          color: '#000000',
-          // type: 'rounded',
-        },
-        backgroundOptions: {
-          color: '#FFFFFF',
-        },
-        imageOptions: {
-          crossOrigin: 'anonymous',
-          margin: 10,
-        },
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
       });
 
-      const blob = await qrCode.getRawData('png');
-
-      if (!blob) {
-        throw new Error('Failed to generate QR code blob');
-      }
-
-      // Convert blob to data URL for display in modal
-      const dataUrl = URL.createObjectURL(blob);
       setQrCodeDataUrl(dataUrl);
       setQrModalOpen(true);
 
