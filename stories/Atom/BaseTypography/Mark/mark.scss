@@ -1,11 +1,9 @@
 mark {
-  @extend %paragraph-font-300;
-
   background: $mg-color-yellow-light;
   font-size: $mg-font-size-200;
   padding: $mg-spacing-25;
 
   @include devicebreak(medium) {
-    font-size: $mg-font-size-400;
+    font-size: $mg-font-size-300;
   }
 }

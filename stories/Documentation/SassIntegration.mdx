@@ -368,7 +368,7 @@ Follow Mangrove's BEM-inspired naming convention:
 
   &__category {
     @include mg-label-base;
-    background: var(--mg-color-primary);
+    background: var(--mg-color-interactive);
     color: white;
     margin-bottom: var(--mg-spacing-2);
   }
@@ -382,7 +382,7 @@ Follow Mangrove's BEM-inspired naming convention:
       text-decoration: none;
 
       &:hover {
-        color: var(--mg-color-primary);
+        color: var(--mg-color-interactive);
       }
     }
   }
@@ -417,10 +417,10 @@ Follow Mangrove's BEM-inspired naming convention:
 
   // Variants
   &--featured {
-    border-top: 4px solid var(--mg-color-primary);
+    border-top: 4px solid var(--mg-color-interactive);
 
     .mg-news-card__title {
-      color: var(--mg-color-primary);
+      color: var(--mg-color-interactive);
     }
   }
 
@@ -472,8 +472,8 @@ Leverage existing Mangrove mixins for consistency:
 
   &:focus {
     outline: none;
-    border-color: var(--mg-color-primary);
-    box-shadow: 0 0 0 2px rgba(var(--mg-color-primary-rgb), 0.2);
+    border-color: var(--mg-color-interactive);
+    box-shadow: 0 0 0 2px rgba(var(--mg-color-interactive-rgb), 0.2);
   }
 }
 

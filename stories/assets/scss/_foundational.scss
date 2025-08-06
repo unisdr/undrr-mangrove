@@ -1,5 +1,4 @@
 /* typography start */
-
 *,
 *::before,
 *::after {
@@ -17,10 +16,6 @@ body {
   font-family: $mg-font-family;
   font-size: $mg-font-size-300;
   line-height: $mg-font-line-height-700;
-
-  // @include devicebreak(medium) {
-  //   font-size: $mg-font-size-300;
-  // }
 }
 
 button {
@@ -36,10 +31,6 @@ h6,
 caption {
   margin: $mg-spacing-100 $mg-spacing-0 $mg-spacing-25;
   padding: $mg-spacing-0;
-
-  @include devicebreak(medium) {
-    margin-bottom: $mg-font-size-300;
-  }
 }
 
 h1 {
@@ -101,28 +92,13 @@ ol {
   }
 }
 
-ul li::marker {
-  font-size: 1.125rem;
-
-  @include devicebreak(medium) {
-    font-size: 1.313rem;
-  }
-}
-
-ol {
-  li {
-    margin-bottom: 1.063rem;
-  }
+ol li {
+  margin-bottom: 1.063rem;
 }
 
 dl {
-  font-size: 0.875rem;
   line-height: 1.37;
   margin: $mg-spacing-0;
-
-  @include devicebreak(medium) {
-    font-size: 1.25rem;
-  }
 }
 
 dt {
@@ -144,8 +120,7 @@ header {
 }
 
 hr {
-  // border-width: 2px;
-  border: 1px solid $mg-color-black;
+  border: 1px solid $mg-color-neutral-200;
 }
 
 img {
@@ -162,101 +137,6 @@ a {
     text-decoration: underline;
   }
 }
-
-// burmese lang
-// :lang(my) {
-//   body {
-//     font-family: $mg-font-family;
-//     line-height: 1.7;
-//   }
-
-//   h1,
-//   h2,
-//   h3,
-//   h4,
-//   h5,
-//   h6 {
-//     line-height: 1.7;
-//   }
-
-//   h1 {
-//     font-family: $mg-font-family;
-//     font-size: 2.625rem;
-
-//     @include devicebreak(medium) {
-//       font-size: 3.875rem;
-//     }
-
-//     @include devicebreak(large) {
-//       font-size: 5rem;
-//     }
-//   }
-
-//   h2 {
-//     font-size: 2rem;
-
-//     @include devicebreak(medium) {
-//       font-size: 2.188rem;
-//     }
-
-//     @include devicebreak(large) {
-//       font-size: 2.813rem;
-//     }
-//   }
-
-//   h4 {
-//     font-size: 1.3rem;
-
-//     @include devicebreak(medium) {
-//       font-size: 1.8rem;
-//     }
-//   }
-
-//   h5 {
-//     font-size: $mg-font-size-400;
-
-//     @include devicebreak(medium) {
-//       font-size: 1.375rem;
-//     }
-//   }
-
-//   p {
-//     font-size: $mg-font-size-200;
-//     line-height: 1.7;
-
-//     @include devicebreak(medium) {
-//       font-size: $mg-font-size-300;
-//     }
-//   }
-
-//   ul li,
-//   ol li,
-//   dl {
-//     font-size: 0.875rem;
-//     line-height: 1.9;
-
-//     @include devicebreak(medium) {
-//       font-size: 1.125rem;
-//     }
-//   }
-
-//   .sbdocs {
-//     .sbdocs-content,
-//     h1,
-//     h2,
-//     h3,
-//     h4,
-//     h5,
-//     h6,
-//     p {
-//       font-family: $mg-font-family;
-//     }
-
-//     .sbdocs-h1 {
-//       font-size: $mg-spacing-150;
-//     }
-//   }
-// }
 
 [dir="rtl"] {
   ul,
