@@ -4,7 +4,7 @@
   "description": "Mangrove design System for UNDRR",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --loglevel verbose && webpack --progress",
+    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --loglevel verbose --stats-json && webpack --progress",
     "dev": "NODE_ENV=development yarn run storybook",
     "storybook": "NODE_ENV=development storybook dev -p 6006",
     "update-cdn-version": "node scripts/update-cdn-version.js",
@@ -154,6 +154,7 @@
     "gsap": "3.13.0",
     "leaflet": "1.9.4",
     "postcss": "8.5.6",
+    "qr-code-styling": "^1.9.2",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-leaflet": "5.0.0",

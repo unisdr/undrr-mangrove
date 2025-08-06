@@ -286,7 +286,9 @@
         "path": "M871.3 0H1040.9L670.3 423.6 1106.3 1000H764.9L497.5 650.4 191.6 1000H21.8L418.2 546.9 0 0H350L591.7 319.5 871.3 0ZM811.7 898.5H905.7L299 96.2H198.1L811.7 898.5Z",
         "width": 1106
       },
-      "search": ["xiconwhite"]
+      "search": [
+        "xiconwhite"
+      ]
     },
     {
       "uid": "4aad6bb50b02c18508aae9cbe14e784e",
@@ -328,6 +330,12 @@
       "uid": "8933c2579166c2ee56ae40dc6a0b4dc6",
       "css": "angle-circled-left",
       "code": 61751,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "fd45bb961d08f9f2092f0df3fba29fe9",
+      "css": "qrcode",
+      "code": 59545,
       "src": "fontawesome"
     }
   ]

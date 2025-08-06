@@ -23,6 +23,7 @@
 }
 
 .mg-share__button {
+  font-size: $mg-font-size-400;
   width: 4rem;
   height: 4rem;
   padding: $mg-spacing-100;
@@ -34,6 +35,12 @@
   align-items: center;
   cursor: pointer;
   border: $mg-border-width-button solid $mg-border-color-button;
+
+  // Improve icon rendering quality
+  .mg-icon {
+    font-weight: 100;
+    -webkit-text-stroke: 0.25px $mg-color-button-background;
+  }
 
   &:hover {
     background-color: rgba($mg-color-button-background--hover, 0.8);

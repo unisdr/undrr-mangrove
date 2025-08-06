@@ -24,6 +24,16 @@
   font-style: normal;
 }
 
+.mg-icon {
+  // Improve font rendering quality
+  font-smooth: never;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0); // Force hardware acceleration
+  backface-visibility: hidden; // Prevent blur during transforms
+}
+
 .fa-before:before {
   padding-right: 0.5em;
 }
@@ -163,6 +173,10 @@
 
 .fa-share:before {
   content: "\f1e0";
+}
+
+.fa-qrcode:before {
+  content: "\e899";
 }
 
 .fa-left:before {

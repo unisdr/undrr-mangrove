@@ -223,6 +223,95 @@ const getCaptionForLocaleCode = locale => {
   }
 };
 
+const getCaptionForLocaleCodeBlock = locale => {
+  switch (locale) {
+    case 'english':
+      const engText = {
+        blockCode: `// React component example
+import React from 'react';
+
+const MyComponent = ({ title, children }) => {
+  return (
+    <div className="my-component">
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+};
+
+export default MyComponent;`,
+      };
+      return engText;
+    case 'arabic':
+      const arabicText = {
+        blockCode: `// مثال مكون React
+import React from 'react';
+
+const MyComponent = ({ title, children }) => {
+  return (
+    <div className="my-component">
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+};
+
+export default MyComponent;`,
+      };
+      return arabicText;
+    case 'burmese':
+      const burmeseText = {
+        blockCode: `// React component ဥပမာ
+import React from 'react';
+
+const MyComponent = ({ title, children }) => {
+  return (
+    <div className="my-component">
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+};
+
+export default MyComponent;`,
+      };
+      return burmeseText;
+    case 'japanese':
+      const japaneseText = {
+        blockCode: `// Reactコンポーネントの例
+import React from 'react';
+
+const MyComponent = ({ title, children }) => {
+  return (
+    <div className="my-component">
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+};
+
+export default MyComponent;`,
+      };
+      return japaneseText;
+    default:
+      return {
+        blockCode: `// React component example
+import React from 'react';
+
+const MyComponent = ({ title, children }) => {
+  return (
+    <div className="my-component">
+      <h2>{title}</h2>
+      {children}
+    </div>
+  );
+};
+
+export default MyComponent;`,
+      };
+  }
+};
+
 const getLocaleForDetails = locale => {
   switch (locale) {
     case 'english':
@@ -586,6 +675,10 @@ export const TypographySmall = Template(
   getCaptionForLocaleSmall
 );
 export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
+export const TypographyCodeBlock = Template(
+  CodeComponent,
+  getCaptionForLocaleCodeBlock
+);
 export const TypographyAbbreviation = Template(
   AbbrComponent,
   getCaptionForLocaleAbbr
