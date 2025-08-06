@@ -255,16 +255,20 @@ For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitla
 
 ### Production CDN
 
+All assets are now served from versioned endpoints for stability:
+
 ```
-https://assets.undrr.org/static/sitemap.html#mangrove-1-2-4
+https://assets.undrr.org/static/sitemap.html#mangrove-1-2-9
 https://assets.undrr.org/static/mangrove/README.md
 https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/static/mangrove/latest/assets/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.2.5/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.9/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/js/tabs.js
 ```
 
-### Bleeding edge test repo
+#### Bleeding edge test repo
 
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
@@ -272,6 +276,31 @@ https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/testing/static/mangrove/1.2.5/css/style.css
 ... etc
 ```
+
+### Checking and updating to the latest version
+
+To check the current latest version available on npm:
+
+```bash
+npm view @undrr/undrr-mangrove version
+# or
+npm info @undrr/undrr-mangrove version
+```
+
+To install the latest version:
+
+```bash
+npm install @undrr/undrr-mangrove@latest
+```
+
+To update all dependencies to their latest semver-compatible versions:
+
+```bash
+npm outdated
+npm update
+```
+
+**Note**: We no longer provide bleeding-edge or "latest" endpoints. All CDN assets are now served from stable, versioned releases to ensure consistency and reliability.
 
 ## Assorted technical notes
 
