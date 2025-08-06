@@ -20,7 +20,7 @@ export const getCaptionForLocaleHeading = locale => {
   switch (locale) {
     case 'english':
       const engText = {
-        detail1: 'HEADLINE 1',
+        detail1: 'Headline 1',
         detail2: 'Headline 2',
         detail3: 'Headline 3',
         detail4: 'Headline 4',
@@ -60,7 +60,7 @@ export const getCaptionForLocaleHeading = locale => {
       return japaneseText;
     default:
       return {
-        detail1: 'HEADLINE 1',
+        detail1: 'Headline 1',
         detail2: 'Headline 2',
         detail3: 'Headline 3',
         detail4: 'Headline 4',
@@ -490,7 +490,7 @@ Start an ordered list with the <code>o1</code> tag.
 Add a <code>li</code> tag for each list item
 
 <Canvas
-  of={BaseTypographyStories.TypographyOrderedList}
+  of={BaseTypographyStories.TypographyListOrdered}
   meta={BaseTypographyStories}
 />
 
@@ -505,7 +505,7 @@ Start an unordered list with the <code>u1</code> tag.
 Add a <code>li</code> tag for each list item
 
 <Canvas
-  of={BaseTypographyStories.TypographyUnorderedList}
+  of={BaseTypographyStories.TypographyListUnordered}
   meta={BaseTypographyStories}
 />
 
@@ -518,7 +518,7 @@ A description list is a list of terms, with a description of each term.
 The <code>dl</code> tag defines the description list, the <code>dt</code> tag defines the term (name), and the <code>dd</code> tag describes each term.
 
 <Canvas
-  of={BaseTypographyStories.TypographyDescriptionList}
+  of={BaseTypographyStories.TypographyListDescription}
   meta={BaseTypographyStories}
 />
 

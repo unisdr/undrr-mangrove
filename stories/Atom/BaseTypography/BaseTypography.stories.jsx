@@ -17,7 +17,7 @@ const getCaptionForLocaleHeading = locale => {
   switch (locale) {
     case 'english':
       const engText = {
-        detail1: 'HEADLINE 1',
+        detail1: 'Headline 1',
         detail2: 'Headline 2',
         detail3: 'Headline 3',
         detail4: 'Headline 4',
@@ -57,7 +57,7 @@ const getCaptionForLocaleHeading = locale => {
       return japaneseText;
     default:
       return {
-        detail1: 'HEADLINE 1',
+        detail1: 'Headline 1',
         detail2: 'Headline 2',
         detail3: 'Headline 3',
         detail4: 'Headline 4',
@@ -567,64 +567,66 @@ export default {
   },
 };
 
+// Document structure - Headings
 export const TypographyHeading = Template(
   HeadingComponent,
   getCaptionForLocaleHeading
 );
 
-export const TypographyAbbreviation = Template(
-  AbbrComponent,
-  getCaptionForLocaleAbbr
-);
-
-export const TypographyBlockquote = Template(
-  Blockquote,
-  getCaptionForLocaleBlockquote
-);
-
-export const TypographyCite = Template(CiteComponent, getCaptionForLocaleCite);
-export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
-export const TypographyHr = Template(HrComponent, getCaptionForLocaleHr);
-export const TypographyMark = Template(MarkComponent, getCaptionForLocaleMark);
-
+// Basic text content
 export const TypographyParagraph = Template(
   PComponent,
   getCaptionForLocaleParagraph
 );
 
-export const TypographyQuotation = Template(
-  QuotationComponent,
-  getCaptionForLocaleQuotation
-);
-
+// Text formatting and emphasis
+export const TypographyMark = Template(MarkComponent, getCaptionForLocaleMark);
 export const TypographySmall = Template(
   SmallComponent,
   getCaptionForLocaleSmall
 );
+export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
+export const TypographyAbbreviation = Template(
+  AbbrComponent,
+  getCaptionForLocaleAbbr
+);
 
-export const TypographyDescriptionList = DescriptionListTemplate(
+// Quotations and citations
+export const TypographyBlockquote = Template(
+  Blockquote,
+  getCaptionForLocaleBlockquote
+);
+export const TypographyQuotation = Template(
+  QuotationComponent,
+  getCaptionForLocaleQuotation
+);
+export const TypographyCite = Template(CiteComponent, getCaptionForLocaleCite);
+
+// Lists
+export const TypographyListOrdered = ListTemplate(
+  ListComponent,
+  getCaptionForLocaleList,
+  'ol'
+);
+export const TypographyListUnordered = ListTemplate(
+  ListComponent,
+  getCaptionForLocaleList,
+  'ul'
+);
+export const TypographyListDescription = DescriptionListTemplate(
   DescriptionListComponent,
   getCaptionForLocaleList
 );
 
+// Interactive and structural elements
 export const TypographyDetails = Template(
   DetailsComponent,
   getLocaleForDetails
 );
-
 export const TypographyFigcaption = Template(
   FigcaptionComponent,
   getLocaleForFigcaption
 );
 
-export const TypographyOrderedList = ListTemplate(
-  ListComponent,
-  getCaptionForLocaleList,
-  'ol'
-);
-
-export const TypographyUnorderedList = ListTemplate(
-  ListComponent,
-  getCaptionForLocaleList,
-  'ul'
-);
+// Separators
+export const TypographyHr = Template(HrComponent, getCaptionForLocaleHr);

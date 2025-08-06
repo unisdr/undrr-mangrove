@@ -4,24 +4,34 @@ This guide explains the release process for the UNDRR Mangrove component library
 
 ## Overview
 
-This project uses automated semantic versioning and can publish to both npm and GitHub Package Registry.
+Publishing to npm happens automatically when you push a version tag:
 
-## Automatic Releases (Semantic Versioning)
+### Automatic Publishing (Recommended)
 
-The project uses [semantic-release](https://semantic-release.gitbook.io/) to automatically determine version numbers based on commit messages:
+1. Before tagging, make sure to update the version number in `package.json` to match the new release:
+2. Add a tag and release notes at <https://github.com/unisdr/undrr-mangrove/releases>
 
-1. **Commits to `main` branch** trigger the automatic release process
-2. Version numbers are determined by commit message prefixes:
-   - `fix:` → Patch release (0.0.X)
-   - `feat:` → Minor release (0.X.0)
-   - `BREAKING CHANGE:` in commit body → Major release (X.0.0)
-3. The release process automatically:
-   - Creates a git tag
-   - Updates CHANGELOG.md
-   - Creates a GitHub release
-   - Updates package.json version
+The [workflow](https://github.com/unisdr/undrr-mangrove/blob/main/.github/workflows/npm-publish.yml) will automatically:
 
-### Commit Message Examples
+- Build the project
+- Package distribution files and SCSS sources
+- Publish to npm registry
+
+### Manual Publishing
+
+You can also manually trigger publishing:
+
+1. Go to Actions → "Publish to NPM Registry"
+    - <https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml>
+2. Click "Run workflow"
+3. Optionally enter a specific git tag (leave empty to use the latest tag)
+4. The workflow will build and publish the specified version
+
+## Versioning guide
+
+The project uses [semantic-release](https://semantic-release.gitbook.io/):
+
+## Commit Message Examples
 
 ```bash
 # Patch release (bug fix)
@@ -36,23 +46,13 @@ git commit -m "feat!: rename color tokens
 BREAKING CHANGE: All color tokens have been renamed from --color-* to --mg-color-*"
 ```
 
-## Publishing to npm/GitHub Registry
-
-After a release is created, you can publish it to npm or GitHub Package Registry:
-
-1. Go to Actions → "Publish to NPM Registry"
-2. Click "Run workflow"
-3. Enter the git tag (e.g., `v1.2.3`)
-4. Select registry: `npm` or `github`
-5. The workflow will:
-   - Build the project
-   - Package distribution files and SCSS sources
-   - Publish to the selected registry
-
 ### Package Contents
 
 Published packages include:
-- `/dist/**/*` - Compiled JavaScript and CSS files
+
+- `/components/**/*` - Compiled React components
+- `/css/**/*` - Compiled CSS files
+- `/js/**/*` - Compiled JavaScript files
 - `/scss/**/*` - Source SCSS files from stories/assets/scss
 - `/stories/**/*.scss` - Component-specific SCSS files
 
@@ -78,6 +78,9 @@ https://assets.undrr.org/testing/static/mangrove/README.md
 https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.9/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/js/tabs.js
 ```
 
 The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
@@ -96,9 +99,10 @@ Support for release tagged content.
 2. **After release is created:**
    - Check GitHub releases page
    - Verify CHANGELOG.md was updated
-   - Publish to registry if needed
+   - Push the new tag to trigger automatic npm publishing: `git push origin <tag-name>`
 
 3. **Troubleshooting:**
    - No release? Check commit message format
    - Wrong version? Ensure correct commit type
-   - Publishing failed? Check registry tokens in GitHub secrets
+   - Publishing failed? Check npm token in GitHub secrets
+   - Package not published? Verify the tag was pushed to trigger the workflow

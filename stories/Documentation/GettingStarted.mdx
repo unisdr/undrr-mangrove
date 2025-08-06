@@ -32,6 +32,8 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 Welcome to UNDRR Mangrove - the component library that brings consistency, accessibility, and speed to UNDRR web development.
 
+Before diving into implementation, it's important to understand that **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove is the UNDRR standard</LinkTo>** for all web properties. This guide will help you get started quickly, but understanding the broader context and governance around Mangrove ensures you're building in alignment with UNDRR's digital strategy.
+
 ## What is mangrove?
 
 Mangrove is UNDRR's component library that provides:
@@ -54,20 +56,20 @@ The fastest way to get started:
     <!-- Base styling -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css"
     />
     <!-- or choose a site specific theme -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-mcr.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style-mcr.css"
     />
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-irp.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style-irp.css"
     />
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style-preventionweb.css"
+      href="https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style-preventionweb.css"
     />
   </head>
   <body>
@@ -130,6 +132,50 @@ npm install @undrr/undrr-mangrove
 
 # Yarn
 yarn add @undrr/undrr-mangrove
+```
+
+### Checking and updating to the latest version
+
+To check the current latest version available on npm:
+
+```bash
+npm view @undrr/undrr-mangrove version
+# or
+npm info @undrr/undrr-mangrove version
+```
+
+To install the latest version:
+
+```bash
+npm install @undrr/undrr-mangrove@latest
+```
+
+To update all dependencies to their latest semver-compatible versions:
+
+```bash
+npm outdated
+npm update
+```
+
+### Production CDN
+
+All assets are now served from versioned endpoints for stability:
+
+```
+https://assets.undrr.org/static/sitemap.html#mangrove-1-2-9
+https://assets.undrr.org/static/mangrove/README.md
+https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.9/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/js/tabs.js
+```
+
+#### Bleeding edge test repo
+
+```
+https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
+https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
+https://assets.undrr.org/testing/static/mangrove/1.2.5/css/style.css
+... etc
 ```
 
 ### Basic node usage
@@ -341,10 +387,10 @@ yarn run lint
 
 When working with Mangrove assets, you'll find them organized in the following structure:
 
-- **Components**: Available in the `dist/components` directory
-- **CSS files**: Available in the `dist/assets/css` directory
-- **Icons and images**: Available in the `dist/assets/images` directory
-- **Web fonts**: Available in the `dist/assets/fonts` directory
+- **Components**: Available in the `components` directory
+- **CSS files**: Available in the `css` directory
+- **Vanilla JavaScript files**: Available in the `js` directory
+- **Source SCSS files**: Available in the `scss` directory
 
 ## Next steps
 

@@ -1,20 +1,16 @@
 name: Publish to NPM Registry
 
 on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags (v1.0.0, v2.1.3, etc.)
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Git tag to publish (e.g., v1.0.0)'
-        required: true
+        description: 'Git tag to publish (e.g., v1.2.1, leave empty for latest tag)'
+        required: false
         type: string
-      registry:
-        description: 'NPM registry to publish to'
-        required: true
-        type: choice
-        options:
-          - 'npm'
-          - 'github'
-        default: 'github'
+        default: ''
 
 jobs:
   publish:
@@ -24,30 +20,46 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }}
+          fetch-depth: 0  # Fetch all history for tags
 
-      - name: Setup Node.js for npm registry
-        if: ${{ inputs.registry == 'npm' }}
+      - name: Determine tag to use
+        id: determine-tag
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # Triggered by tag push - use the pushed tag
+            echo "Using pushed tag: ${{ github.ref_name }}"
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          elif [ -n "${{ inputs.tag }}" ]; then
+            # Manual trigger with specific tag
+            echo "Using provided tag: ${{ inputs.tag }}"
+            echo "tag=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            # Manual trigger without tag - use latest
+            latest_tag=$(git describe --tags --abbrev=0)
+            echo "Using latest tag: $latest_tag"
+            echo "tag=$latest_tag" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.determine-tag.outputs.tag }}
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
           scope: '@undrr'
 
-      - name: Setup Node.js for GitHub registry
-        if: ${{ inputs.registry == 'github' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'yarn'
-          registry-url: 'https://npm.pkg.github.com'
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
 
       - name: Build
         run: yarn build
@@ -57,18 +69,31 @@ jobs:
         run: |
           mkdir -p npm-package/dist
           cp -r dist/* npm-package/dist/
-          
-          # Copy SCSS source files
-          mkdir -p npm-package/scss
-          cp -r stories/assets/scss/* npm-package/scss/
-          
+
+          # Copy assets to top-level directories
+          if [ -d "dist/assets/js" ]; then
+            mkdir -p npm-package/js
+            cp -r dist/assets/js/* npm-package/js/
+          fi
+
+          if [ -d "dist/assets/css" ]; then
+            mkdir -p npm-package/css
+            cp -r dist/assets/css/* npm-package/css/
+          fi
+
+          # Copy components to top-level directory
+          if [ -d "dist/components" ]; then
+            mkdir -p npm-package/components
+            cp -r dist/components/* npm-package/components/
+          fi
+
           # Copy component SCSS files maintaining structure
-          mkdir -p npm-package/stories
+          mkdir -p npm-package/scss
           find stories -name "*.scss" -type f | while read file; do
-            mkdir -p "npm-package/$(dirname "$file")"
-            cp "$file" "npm-package/$file"
+            mkdir -p "npm-package/scss/$(dirname "$file" | sed 's|^stories/||')"
+            cp "$file" "npm-package/scss/$(echo "$file" | sed 's|^stories/||')"
           done
-          
+
           cp package.json npm-package/
           cp README.md npm-package/
           cp LICENSE npm-package/ || echo "No LICENSE file found"
@@ -76,43 +101,26 @@ jobs:
           # Create a custom package.json for publishing
           node -e '
             const pkg = require("./package.json");
-            const registry = "${{ inputs.registry }}";
             // Keep only essential fields
             const newPkg = {
               name: pkg.name,
               version: pkg.version,
               description: pkg.description,
               main: "dist/index.js",
-              files: ["dist/**/*", "scss/**/*", "stories/**/*.scss"],
+              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss"],
               repository: pkg.repository,
               keywords: pkg.keywords,
               author: pkg.author,
               license: pkg.license
             };
-            
-            // Add registry-specific config
-            if (registry === "github") {
-              newPkg.publishConfig = {
-                registry: "https://npm.pkg.github.com",
-                access: "public"
-              };
-            }
-            
+
             require("fs").writeFileSync("npm-package/package.json", JSON.stringify(newPkg, null, 2));
           '
 
-      - name: Publish to npm registry
-        if: ${{ inputs.registry == 'npm' }}
+      - name: Publish to npm
         working-directory: npm-package
         run: |
           npm pkg set name="@undrr/undrr-mangrove"
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish to GitHub Packages
-        if: ${{ inputs.registry == 'github' }}
-        working-directory: npm-package
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

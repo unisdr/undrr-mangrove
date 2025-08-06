@@ -1,22 +1,25 @@
-[![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/semver-release.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
-[![GitHub Release](https://img.shields.io/github/v/release/unisdr/undrr-mangrove)](https://github.com/unisdr/undrr-mangrove/releases)
 [![npm version](https://img.shields.io/npm/v/@undrr/undrr-mangrove.svg)](https://www.npmjs.com/package/@undrr/undrr-mangrove)
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://unisdr.github.io/undrr-mangrove/)
+[![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/semver-release.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
 
 # Mangrove: the UNDRR component library
 
+This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles.
+
+These components offer consistency, documentation, and portability to speed up quality development with the expected look and feel. They also help reduce entropy, which is critical to ensuring websites remain accessible.
+
+If there is a Component or Pattern that you need, or you have any other feedback, question, or comment, please contact us in the issue queue.
+
 [View the component library](https://unisdr.github.io/undrr-mangrove/)
-
-## 🚨 Pre-alpha warning 🚨
-
-This project is under active development and at the moment provides no useful resources. [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
 ## Getting started
 
+**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
+
 ### Installation
 
-Install Mangrove as an npm or yarn dependency (https://www.npmjs.com/package/@undrr/undrr-mangrove):
+Install Mangrove as an npm or yarn dependency (<https://www.npmjs.com/package/@undrr/undrr-mangrove>):
 
 ```bash
 # NPM
@@ -32,29 +35,13 @@ The package includes:
 - **CSS files** for styling (base and theme variants)
 - **JavaScript files** for interactive functionality
 - **Sass source files** for custom theming
+- Explore the contents: <https://www.npmjs.com/package/@undrr/undrr-mangrove?activeTab=code>
 
-**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
-
-## Purpose
-
-This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles.
-
-These components offer consistency, documentation, and portability to speed up quality development with the expected look and feel. They also help reduce entropy, which is critical to ensuring websites remain accessible.
-
-If there is a Component or Pattern that you need, or you have any other feedback, question, or comment, please contact us in the issue queue.
-
-### Assorted technical notes
-
-- **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
-- **TypeScript Support**: While the default implementation uses JSX and JavaScript, TypeScript is fully supported. You can view examples of TypeScript components in the [TypeScript Example Component](https://unisdr.github.io/undrr-mangrove/?path=/docs/example-typescript-component--docs) (code location: `stories/Components/TypeScriptExampleComponent`)
-
-## Development
+## Developing Mangrove
 
 You can use the provided npm scripts to simplify running commands inside Docker containers. These scripts are defined in the `package.json` file and can be run using `yarn`.
 
-### Using Windows
-
-You may encounter sporatic issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
+**For detailed development setup and workflow instructions, see the [Development Guide](./docs/DEVELOPMENT.md).**
 
 ### Making commits
 
@@ -155,9 +142,15 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn run build"
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run lint"
 ```
 
+## Creating releases
+
+**For detailed release procedures and versioning information, see the [Release Process Guide](./docs/RELEASES.md).**
+
 ## Testing
 
 When adding new components, we rely on the Jest library to test the library. Jest is a JavaScript testing framework that is easy to use and provides a variety of features for testing React components.
+
+**For comprehensive testing guidelines and procedures, see the [Testing Guide](./docs/TESTING.md).**
 
 ### Visual Testing with Chromatic
 
@@ -250,42 +243,70 @@ For contributing to this library:
 
 ```
 @undrr/undrr-mangrove/
-├── dist/              # Compiled components and assets
-│   ├── components/    # React components
-│   └── assets/        # CSS, fonts, images
-├── scss/              # Source SCSS files
-└── stories/           # Component source and stories
+├── components/        # React components
+├── css/               # Compiled CSS files
+├── js/                # Compiled JavaScript files
+└── scss/              # Component stories (SCSS only)
 ```
 
 ## CDN Distribution
 
-For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/), this project automatically maintains a `dist` branch that contains only the latest compiled build artifacts. This branch is automatically updated on every push to `main` via GitHub Actions.
+For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/). The primary use case for this feature is static sites with no build process.
 
-The primary use case for this feature is static sites with no build process.
+### Production CDN
 
-### The `dist` Branch
-
-- **Purpose**: Clean distribution branch for CDN/static hosting services
-- **Content**: Contains only the compiled assets from the `dist` directory
-- **History**: No git history is retained - each deployment creates a fresh orphan commit
-- **Updates**: Automatically updated when changes are pushed to `main`
-
-### Using the `dist` Branch
-
-Example CDN URL:
+All assets are now served from versioned endpoints for stability:
 
 ```
-https://assets.undrr.org/testing/static/mangrove/README.md
+https://assets.undrr.org/static/sitemap.html#mangrove-1-2-9
+https://assets.undrr.org/static/mangrove/README.md
+https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
+https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/latest/assets/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.9/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.9/assets/js/tabs.js
+```
+
+#### Bleeding edge test repo
+
+```
+https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
-https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
-https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js
+https://assets.undrr.org/testing/static/mangrove/1.2.5/css/style.css
+... etc
 ```
 
-The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
+### Checking and updating to the latest version
 
-### Future dist features
+To check the current latest version available on npm:
 
-Support for release tagged content.
+```bash
+npm view @undrr/undrr-mangrove version
+# or
+npm info @undrr/undrr-mangrove version
+```
+
+To install the latest version:
+
+```bash
+npm install @undrr/undrr-mangrove@latest
+```
+
+To update all dependencies to their latest semver-compatible versions:
+
+```bash
+npm outdated
+npm update
+```
+
+**Note**: We no longer provide bleeding-edge or "latest" endpoints. All CDN assets are now served from stable, versioned releases to ensure consistency and reliability.
+
+## Assorted technical notes
+
+- **Developing on Windows**: You may encounter some issues when developing directly on Windows (Jest does not seem to run), we suggest you use the Docker container and commands (e.g. `yarn run docker-up`)
+- **Preact vs React**: After initially planning to use Preact, we've stayed with `react-dom` for using the components in other systems. This ensures that the Storybook and other system runtimes remain similar, avoiding issues with React-only components (e.g. `react-leaflet`).
+- **TypeScript support**: While the default implementation uses JSX and JavaScript, TypeScript is fully supported. You can view examples of TypeScript components in the [TypeScript Example Component](https://unisdr.github.io/undrr-mangrove/?path=/docs/example-typescript-component--docs) (code location: `stories/Components/TypeScriptExampleComponent`)
 
 ## LICENSE
 

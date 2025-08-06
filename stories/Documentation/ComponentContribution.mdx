@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/blocks';
+import LinkTo from '@storybook/addon-links/react';
 
 <Meta
   title="Getting started/Component contribution guide"
@@ -14,6 +15,8 @@ import { Meta } from '@storybook/blocks';
 
 This guide explains how to contribute new components to the Mangrove library and outlines the standards and best practices to follow.
 
+Before contributing, please review **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove: the UNDRR standard</LinkTo>** to understand the broader context of why Mangrove is the default choice for UNDRR web properties and how contributions fit into this ecosystem.
+
 Further information on detailed setup, workflow, and contribution docs in the [development section of our GitHub README](https://github.com/unisdr/undrr-mangrove/?tab=readme-ov-file#development).
 
 ## Component development workflow
@@ -27,6 +30,7 @@ Before starting development:
 - Identify the props/parameters the component will accept
 - Consider accessibility requirements from the beginning
 - Plan responsive behaviors for different screen sizes
+- Ensure your component aligns with **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove standards</LinkTo>** for consistency and governance
 
 ### 2. Component structure
 
@@ -360,7 +364,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Example:
      ```scss
      .mg-button {
-       background-color: $mg-color-primary; // Good
+       background-color: $mg-color-interactive; // Good
        padding: $mg-spacing-md $mg-spacing-lg; // Good
        // NOT background-color: #0066cc; // Bad - hardcoded value
      }
