@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import QRCodeStyling from 'qr-code-styling';
+import QRCode from 'qrcode';
 import LinkUrls from './links.json';
 
 const defaults = {
@@ -18,8 +18,10 @@ const QRCodeModal = ({
   onCopy,
   onDownload,
   sharedLink,
+  copiedLabel = 'Image copied',
 }) => {
   const modalRef = useRef(null);
+  const [qrCodeCopied, setQrCodeCopied] = useState(false);
 
   useEffect(() => {
     const handleEscape = e => {
@@ -46,6 +48,28 @@ const QRCodeModal = ({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
+
+  // Reset copy state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setQrCodeCopied(false);
+    }
+  }, [isOpen]);
+
+  const handleCopy = async () => {
+    try {
+      await onCopy();
+      setQrCodeCopied(true);
+
+      // Auto-dismiss feedback after 2 seconds
+      setTimeout(() => {
+        setQrCodeCopied(false);
+      }, 2000);
+    } catch (error) {
+      // Error handling is done in the parent component
+      console.error('Copy failed:', error);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -145,6 +169,21 @@ const QRCodeModal = ({
           )}
         </div>
 
+        {/* Accessibility announcement for copy feedback */}
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          style={{
+            position: 'absolute',
+            left: '-10000px',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden',
+          }}
+        >
+          {qrCodeCopied ? `${copiedLabel}` : ''}
+        </div>
+
         <div
           style={{
             marginTop: '16px',
@@ -152,19 +191,31 @@ const QRCodeModal = ({
             display: 'flex',
             gap: '8px',
             flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
           }}
         >
-          <button onClick={onCopy} className="mg-button mg-button-primary">
-            Copy image
-          </button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleCopy}
+              className="mg-button mg-button-primary"
+              disabled={qrCodeCopied}
+            >
+              {qrCodeCopied ? copiedLabel : 'Copy image'}
+            </button>
+            <button
+              onClick={onDownload}
+              className="mg-button mg-button-secondary"
+            >
+              Download image
+            </button>
+          </div>
           <button
-            onClick={onDownload}
+            onClick={onClose}
             className="mg-button mg-button-secondary"
+            style={{ marginLeft: 'auto' }}
           >
-            Download image
-          </button>
-          <button onClick={onClose} className="mg-button mg-button-secondary">
-            Close
+            Close message
           </button>
         </div>
       </div>
@@ -246,32 +297,16 @@ const ShareButtons = ({
 
       // console.log('Generating QR code for URL:', qrCodeUrl);
 
-      const qrCode = new QRCodeStyling({
+      // Generate QR code as data URL
+      const dataUrl = await QRCode.toDataURL(qrCodeUrl, {
         width: 1024,
-        height: 1024,
-        type: 'png',
-        data: qrCodeUrl,
-        dotsOptions: {
-          color: '#000000',
-          // type: 'rounded',
-        },
-        backgroundOptions: {
-          color: '#FFFFFF',
-        },
-        imageOptions: {
-          crossOrigin: 'anonymous',
-          margin: 10,
-        },
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
       });
 
-      const blob = await qrCode.getRawData('png');
-
-      if (!blob) {
-        throw new Error('Failed to generate QR code blob');
-      }
-
-      // Convert blob to data URL for display in modal
-      const dataUrl = URL.createObjectURL(blob);
       setQrCodeDataUrl(dataUrl);
       setQrModalOpen(true);
 
@@ -293,7 +328,7 @@ const ShareButtons = ({
         await navigator.clipboard.write([item]);
 
         // console.log('QR code copied to clipboard successfully');
-        // TODO: Add visual feedback here similar to CopyButton
+        // Visual feedback is now handled in the QRCodeModal component
       }
     } catch (error) {
       console.error('Error copying QR code to clipboard:', error);
@@ -448,6 +483,7 @@ const ShareButtons = ({
         onCopy={copyQRCodeToClipboard}
         onDownload={downloadQRCode}
         sharedLink={sharedLink}
+        copiedLabel={labels.onCopy}
       />
     </>
   );
@@ -456,7 +492,7 @@ const ShareButtons = ({
 /**
  *  CopyButton
  *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
- *  @param {string} sharedLink - the link that will be coppied
+ *  @param {string} sharedLink - the link that will be copied
  */
 export function CopyButton({ copiedLabel, sharedLink, className }) {
   const [coppied, setCoppied] = useState(false);
