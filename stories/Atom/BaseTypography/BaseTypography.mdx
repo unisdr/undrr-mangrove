@@ -78,7 +78,7 @@ Basic elements which the design system has some styling listed here, you can use
 
 <Anchor storyId="foundation-typography-basetypography--abbreviation" />
 
-### Abbreviation
+## Abbreviation
 
 export const getCaptionForLocaleAbbr = locale => {
   switch (locale) {
@@ -137,7 +137,7 @@ Typographic scale when using abbreviation in text component:
 
 <Anchor storyId="foundation-typography-basetypography--blockquote" />
 
-### Blockquote
+## Blockquote
 
 export const getCaptionForLocaleBlockquote = locale => {
   switch (locale) {
@@ -191,7 +191,7 @@ Typographic scale when using blockquote in text component:
 
 <Anchor storyId="foundation-typography-basetypography--cite" />
 
-### Cite
+## Cite
 
 export const getCaptionForLocaleCite = locale => {
   switch (locale) {
@@ -225,7 +225,7 @@ Typographic scale when using cite in text component:
 
 <Anchor storyId="foundation-typography-basetypography--code" />
 
-### Code
+## Code
 
 export const getCaptionForLocaleCode = locale => {
   switch (locale) {
@@ -284,6 +284,7 @@ export const getCaptionForLocaleCode = locale => {
 The code component is used to define a piece of computer code. The content inside is displayed in the browser's default monospace font.
 
 - We can use the <code>code</code> in any component to render the text found within the <code>code tag</code> in monospace font.
+- We can use the <code>blockCode</code> prop to render multi-line code blocks with the <code>mg-code--block</code> class.
 
 Typographic scale when using code in text component:
 
@@ -292,9 +293,16 @@ Typographic scale when using code in text component:
   meta={BaseTypographyStories}
 />
 
+### Code block example
+
+<Canvas
+  of={BaseTypographyStories.TypographyCodeBlock}
+  meta={BaseTypographyStories}
+/>
+
 <Anchor storyId="foundation-typography-basetypography--details" />
 
-### Details
+## Details
 
 The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the summary element.
 
@@ -343,7 +351,7 @@ export const getLocaleForDetails = locale => {
 
 <Anchor storyId="foundation-typography-basetypography--figcaption" />
 
-### Figcaption
+## Figcaption
 
 The <code>figcaption</code> tag is used to caption the image. The <code>figcaption</code> tag is used with the <code>figure</code> tag.
 
@@ -388,7 +396,7 @@ export const getLocaleForFigcaption = locale => {
 
 <Anchor storyId="foundation-typography-basetypography--headings" />
 
-### Headings
+## Headings
 
 We can use the <code>h1/h2/h3/h4/h5/h6 tags</code> in any component to display the headings. h1 for most important heading to h6 for least important heading.
 
@@ -401,7 +409,7 @@ Typographic scale when using headings in text component:
 
 <Anchor storyId="foundation-typography-basetypography--hr" />
 
-### HR
+## HR
 
 export const getCaptionForLocaleHr = locale => {
   switch (locale) {
@@ -447,7 +455,7 @@ Typographic scale when using hr in text component:
 
 <Anchor storyId="foundation-typography-basetypography--mark" />
 
-### Mark
+## Mark
 
 export const getCaptionForLocaleMark = locale => {
   switch (locale) {
@@ -481,7 +489,7 @@ Typographic scale when using mark in text component:
 
 <Anchor storyId="foundation-typography-basetypography--ordered-list" />
 
-### Ordered List
+## Ordered List
 
 An ordered list is used if there is a relation/hierarchy between list items. Ordered list items begin with a number generally.
 
@@ -496,7 +504,7 @@ Add a <code>li</code> tag for each list item
 
 <Anchor storyId="foundation-typography-basetypography--unordered-list" />
 
-### Unordered List
+## Unordered List
 
 An unordered list is used if there is no hierarchy required. Unordered lists start with a bullet.
 
@@ -511,7 +519,7 @@ Add a <code>li</code> tag for each list item
 
 <Anchor storyId="foundation-typography-basetypography--description-list" />
 
-### Description List
+## Description List
 
 A description list is a list of terms, with a description of each term.
 
@@ -524,7 +532,7 @@ The <code>dl</code> tag defines the description list, the <code>dt</code> tag de
 
 <Anchor storyId="foundation-typography-basetypography--p" />
 
-### Paragraph
+## Paragraph
 
 export const getCaptionForLocaleParagraph = locale => {
   switch (locale) {
@@ -573,7 +581,7 @@ Typographic scale when using paragraph in text component:
 
 <Anchor storyId="foundation-typography-basetypography--quotation" />
 
-### Quotation
+## Quotation
 
 export const getCaptionForLocaleQuotation = locale => {
   switch (locale) {
@@ -622,7 +630,7 @@ Typographic scale when using quotation in text component:
 
 <Anchor storyId="foundation-typography-basetypography--small" />
 
-### Small
+## Small
 
 export const getCaptionForLocaleSmall = locale => {
   switch (locale) {

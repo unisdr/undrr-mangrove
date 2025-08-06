@@ -110,15 +110,15 @@ const filesToUpdate = [
 // Update each file
 filesToUpdate.forEach(fileConfig => {
   const filePath = fileConfig.path;
-  
+
   if (!fs.existsSync(filePath)) {
     console.warn(`Warning: File ${filePath} not found, skipping...`);
     return;
   }
-  
+
   let content = fs.readFileSync(filePath, 'utf8');
   let updated = false;
-  
+
   fileConfig.patterns.forEach(pattern => {
     const newContent = content.replace(pattern.from, pattern.to);
     if (newContent !== content) {
@@ -126,7 +126,7 @@ filesToUpdate.forEach(fileConfig => {
       updated = true;
     }
   });
-  
+
   if (updated) {
     fs.writeFileSync(filePath, content, 'utf8');
     console.log(`✅ Updated ${filePath}`);
@@ -139,4 +139,4 @@ console.log(`\n🎉 CDN links updated to version ${version}!`);
 console.log(`\nNote: The following files were updated to use tagged releases:`);
 console.log(`- All documentation files now point to https://assets.undrr.org/static/mangrove/${version}/`);
 console.log(`- Removed references to 'latest' and 'testing' endpoints`);
-console.log(`- Users should now use stable, versioned assets instead of bleeding-edge ones`); 
+console.log(`- Users should now use stable, versioned assets instead of bleeding-edge ones`);

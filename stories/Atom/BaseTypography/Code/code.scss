@@ -1,5 +1,6 @@
+.mg-code,
 code {
-  background: $mg-color-neutral-100;
+  background: $mg-color-neutral-50;
   padding: $mg-spacing-25 $mg-spacing-50;
   border-radius: $mg-spacing-25;
   border: 1px solid $mg-color-neutral-200;
@@ -7,4 +8,10 @@ code {
   font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
   font-size: 0.875em;
   line-height: 1.4;
+  word-break: break-all;
+}
+
+.mg-code--block {
+  display: block;
+  padding: $mg-spacing-100 $mg-spacing-150;
 }

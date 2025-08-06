@@ -46,7 +46,7 @@ A Widget with share buttons for social media
 ### Overview
 
 This widget contains share buttons for social media that are clickable and each one of them opens a new tab with the link to the social media page.
-Also, there is an option to just copy the link to the clipboard.
+Also, there is an option to just copy the link to the clipboard, and generate a QR code for easy sharing.
 
 ### Formatting
 
@@ -74,7 +74,13 @@ The default Behaviors are:
    - Facebook
    - Twitter
    - Email
+   - QR Code (opens a modal with the QR code image)
 2. Clicking on the copy button copies the link to the clipboard.
+3. Clicking on the QR code button opens a modal displaying:
+   - The QR code image
+   - The URL with UTM tracking parameters
+   - Guidance text explaining how to use the QR code
+   - Options to copy the image or close the modal
 
 <Canvas of={ShareButtonsStories.DefaultShareButtons} meta={ShareButtonsStories} />
 
@@ -88,6 +94,12 @@ Drop in and configure. custom message if needed
 
 ### Changelog
 
+- 1.2
+  - Add QR code sharing functionality
+  - QR code modal with responsive design
+  - UTM tracking parameters for QR code links
+  - Copy QR code image to clipboard feature
+  - Improved accessibility with keyboard navigation
 - 1.1
   - Add shortlink support
   - Updates icon order
