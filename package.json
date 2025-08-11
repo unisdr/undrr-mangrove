@@ -61,7 +61,7 @@
     "@chromatic-com/storybook": "4.1.0",
     "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.33.0",
-    "@etchteam/storybook-addon-css-variables-theme": "github:etchteam/storybook-addon-css-variables-theme#ec865f9f25372304134e7a5b5025c0008e1322f1",
+    "@etchteam/storybook-addon-css-variables-theme": "github:etchteam/storybook-addon-css-variables-theme#594f90f82ffb26b1be386c45f9c30e5684d8b610",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@storybook/addon-a11y": "9.1.1",
