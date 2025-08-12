@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bad gateway</title>
+    <title>502: Bad gateway</title>
     <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.10/assets/css/style.css" />
     <script>
       function retry() { window.location.reload(); }
@@ -17,20 +17,17 @@
         <div></div>
         <div></div>
       </div>
-      <div class="undrr-logo" aria-hidden="true"></div>
-      <div class="mg-error-page__container">
-        <div class="undrr-error--inner-content">
-          <h1>Error 502</h1>
-          <h2 class="mg-error-page__title">Bad gateway</h2>
-          <p class="mg-error-page__description">
-            There was a temporary problem connecting to the service. Try again in a moment.
-          </p>
-          <div class="mg-error-page__actions">
-            There was a temporary problem. Please
-            <a href="#" onclick="retry();return false;">try again</a>, or go back to the
-            <a href="/">home page</a>.
-          </div>
+      <div class="mg-error-page__container mg-container--spacer">
+        <h1>Error 502</h1>
+        <h2>Bad gateway</h2>
+        <p>There was a temporary problem connecting to the service. Try again in a moment.</p>
+        <div class="mg-error-page__actions">
+          <button type="button" class="mg-button mg-button-primary" onclick="retry();return false;">Try again</button>
+          <a class="mg-button mg-button-secondary" href="/">Go to home</a>
         </div>
+        <hr />
+        <small>This website is operated by</small>
+        <a href="https://www.undrr.org/"><div class="undrr-logo" aria-hidden="true"></div></a>
       </div>
     </main>
     <script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

@@ -258,7 +258,7 @@ For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitla
 All assets are now served from versioned endpoints for stability:
 
 ```
-https://assets.undrr.org/static/sitemap.html#mangrove-1-2-9
+https://assets.undrr.org/static/sitemap.html#mangrove-1-2-10
 https://assets.undrr.org/static/mangrove/README.md
 https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js

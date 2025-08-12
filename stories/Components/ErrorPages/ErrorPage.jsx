@@ -1,92 +1,5 @@
 import React from 'react';
-
-const DEFAULT_COPY = {
-  401: {
-    title: 'You are not signed in',
-    description:
-      'This page requires you to be signed in. If you think you should have access, sign in and try again.',
-    primary: { label: 'Go to home', href: '/' },
-    secondary: {
-      label: 'Contact support',
-      href: 'https://www.undrr.org/contact-us',
-    },
-  },
-  403: {
-    title: 'You do not have permission to view this page',
-    description:
-      'Your account does not have access to this content.',
-    primary: { label: 'Go to home', href: '/' },
-    secondary: {
-      label: 'Contact support',
-      href: 'https://www.undrr.org/contact-us',
-    },
-  },
-  404: {
-    title: 'We cannot find that page',
-    description:
-      'The page may have moved or no longer exists. Check the URL or use search to find what you need.',
-    primary: { label: 'Go to home', href: '/' },
-    secondary: { label: 'Browse directory', href: 'https://www.undrr.org/undrr-directory' },
-  },
-  429: {
-    title: 'Too many requests',
-    description:
-      'You have made too many requests in a short time. Wait a moment and try again.',
-    primary: {
-      label: 'Try again',
-      href: '',
-      action: () => window.location.reload(),
-    },
-    secondary: { label: 'Go to home', href: '/' },
-  },
-  500: {
-    title: 'Something went wrong on our side',
-    description:
-      'We could not complete your request. Try again in a few minutes. If the problem continues, contact us.',
-    primary: {
-      label: 'Try again',
-      href: '',
-      action: () => window.location.reload(),
-    },
-    secondary: {
-      label: 'Contact support',
-      href: 'https://www.undrr.org/contact-us',
-    },
-  },
-  502: {
-    title: 'Bad gateway',
-    description:
-      'There was a temporary problem connecting to the service. Try again in a moment.',
-    primary: {
-      label: 'Try again',
-      href: '',
-      action: () => window.location.reload(),
-    },
-    secondary: { label: 'Go to home', href: '/' },
-  },
-  503: {
-    title: 'Service unavailable',
-    description:
-      'The site is temporarily unavailable due to maintenance or high load. Please try again later.',
-    primary: {
-      label: 'Try again',
-      href: '',
-      action: () => window.location.reload(),
-    },
-    secondary: { label: 'Status page', href: '/status' },
-  },
-  504: {
-    title: 'Gateway timeout',
-    description:
-      'The service took too long to respond. Refresh the page or try again later.',
-    primary: {
-      label: 'Try again',
-      href: '',
-      action: () => window.location.reload(),
-    },
-    secondary: { label: 'Go to home', href: '/' },
-  },
-};
+import { DEFAULT_COPY } from './ErrorPagesContent.js';
 
 function renderAction(action) {
   if (!action) return null;
@@ -136,6 +49,8 @@ export function ErrorPage({
   const resolvedDescription = description || defaults.description;
   const resolvedPrimary = primaryAction || defaults.primary;
   const resolvedSecondary = secondaryAction || defaults.secondary;
+  const resolvedActionsHtml = actionsHtml ?? defaults.actionsHtml;
+  const resolvedDetails = details ?? defaults.details;
 
   return (
     <main className="mg-error-page" {...props}>
@@ -158,11 +73,15 @@ export function ErrorPage({
 
           <h1>{`Error ${code}`}</h1>
           <h2>{resolvedTitle}</h2>
-          <p>{resolvedDescription}</p>
-          {(actionsHtml || actionsContent) && (
+          {typeof resolvedDescription === 'string' ? (
+            <p dangerouslySetInnerHTML={{ __html: resolvedDescription }} />
+          ) : (
+            <p>{resolvedDescription}</p>
+          )}
+          {(resolvedActionsHtml || actionsContent) && (
             <div className="mg-error-page__actions">
-              {actionsHtml && (
-                <div dangerouslySetInnerHTML={{ __html: actionsHtml }} />
+              {resolvedActionsHtml && (
+                <div dangerouslySetInnerHTML={{ __html: resolvedActionsHtml }} />
               )}
               {actionsContent}
             </div>
@@ -181,8 +100,8 @@ export function ErrorPage({
             </div>
           )}
 
-          {details && (
-            <pre role="note" aria-label="error details"><code className="mg-code--block">{details}</code></pre>
+          {resolvedDetails && (
+            <pre role="note" aria-label="error details"><code className="mg-code--block">{resolvedDetails}</code></pre>
           )}
 
           {showSearch && (
