@@ -1,0 +1,121 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta
+  title="Getting started/Writing guidelines"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+# Writing guidelines
+
+Mangrove follows a set of writing principles to keep UI copy, documentation, and developer messages clear, consistent, and inclusive. This page summarizes the core standards. For details, see the repository files [`WRITING.md`](https://github.com/unisdr/undrr-mangrove/tree/main/docs) and [`WRITING-SHORT.md`](https://github.com/unisdr/undrr-mangrove/tree/main/docs).
+
+## Principles
+
+1. Improve the user experience — simplify flows, clarify actions, and reduce friction.
+2. Tell the truth — avoid false urgency; state limits clearly; admit uncertainty when needed.
+3. Include everybody — use inclusive language; avoid idioms and culturally specific metaphors.
+4. Say the right thing at the right time — front‑load the most important information.
+5. Serve a functional purpose — every word should guide, explain, or prevent errors.
+6. Sometimes, no writing is best — remove unnecessary words when design alone works.
+7. Stay consistent — use a shared vocabulary and keep terms consistent across contexts.
+8. Be good writing — prefer active voice and plain language; read copy aloud for clarity.
+
+## Practical standards
+
+- Use sentence case for headings and titles, with proper nouns and acronyms capitalized (for example, UNDRR, API, UX).
+- Use descriptive link text (for example, “Read the API reference” instead of “Click here”).
+- Error messages: state what happened, why (if known), and what to do next.
+- Empty states: explain what’s missing, why it matters, and how to add content.
+- Success messages: confirm the result and suggest next steps.
+- Confirmation dialogs: put the consequence in the title and make the primary action the safest choice.
+
+## Detailed guidelines
+
+### Improve the user experience
+
+- Make actions obvious with specific verbs (for example, “Save changes,” “Upload file”).
+- Break complex tasks into smaller, scannable steps.
+- Prefer short, front‑loaded sentences.
+- Example: “We couldn’t save your changes. Try again in a few minutes.”
+
+### Tell the truth
+
+- Be direct about limits, states, and uncertainties.
+- Avoid false urgency and vague phrasing.
+- Example: “This file is too large to upload (max 10 MB).”
+
+### Include everybody
+
+- Use inclusive, respectful language; avoid idioms and culturally specific metaphors.
+- Provide meaningful alt text and descriptive links.
+- Prefer people‑first or identity‑first language according to community preference.
+
+### Say the right thing at the right time
+
+- Put the most important information first.
+- Add help where users need it, not in a separate page.
+- Make the next action obvious.
+
+### Serve a functional purpose
+
+- Remove filler. Every word should guide, explain, or prevent errors.
+- Replace welcome banners with actionable guidance.
+
+### Sometimes, no writing is best
+
+- Use design and affordances when they’re clearer than words.
+- Omit redundant labels and empty greetings.
+
+### Stay consistent
+
+- Use shared terminology and patterns across UI, docs, and messages.
+- Keep tone and labels consistent across components.
+
+### Be good writing
+
+- Prefer active voice and plain language.
+- Read copy aloud to test rhythm and clarity.
+
+## Language mechanics and patterns
+
+- Use second person (“you”) and speak directly to the user.
+- Keep sentences and paragraphs short for scannability.
+- Structure pages with meaningful headings and bulleted lists.
+- Use descriptive link text; avoid “click here.”
+- Use sentence case for UI and headings; capitalize proper nouns and acronyms.
+- Contractions are fine when they improve clarity and tone.
+- Write dates unambiguously (for example, “10 October 2025”).
+
+## Error message patterns
+
+- Include three parts when useful: what happened, why (if it helps), and what to do next.
+- Place validation messages near the related field and preserve input.
+- Use actionable buttons and links (for example, “Try again,” “Upload a smaller file”).
+- Keep the tone calm and helpful; avoid blame and raw error codes.
+
+## UN guidance
+
+- Gender‑inclusive English: use gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Make gender visible only when relevant. Prefer neutral constructions (plural antecedents, the relative pronoun “who,” or rephrasing to omit gendered pronouns). See the [UN gender‑inclusive language guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml).
+- Disability‑inclusive communications: avoid euphemisms and ableist terms; respect person‑first and identity‑first preferences. Include persons with disabilities across topics and highlight agency and solutions. Provide alt text, captions, and transcripts; write accessible documents (semantic headings, descriptive links, adequate contrast, tagged PDFs); avoid flashing content. In interactions, speak directly, ask before helping, and provide reasonable accommodation. Reference: [UN disability‑inclusive communications guidelines (PDF)](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf).
+
+## Localization and internationalization
+
+- Avoid idioms, jokes, and region‑specific metaphors.
+- Leave space for text expansion; do not concatenate strings.
+- Use unambiguous formats for numbers, dates, and times; write month names to avoid numeric ambiguity.
+
+## References
+
+- GOV.UK content design — writing for services: https://www.gov.uk/guidance/content-design/writing-for-gov-uk
+- Nielsen Norman Group — error message guidelines: https://www.nngroup.com/articles/error-message-guidelines/
+- Microsoft writing style guide — inclusive communication: https://learn.microsoft.com/style-guide/inclusive-communication/
+- Material Design — writing guidelines: https://m2.material.io/design/communication/writing.html
+- PlainLanguage.gov — guidelines: https://www.plainlanguage.gov/guidelines/
+- Mailchimp content style guide: https://styleguide.mailchimp.com/
+- United Nations — gender‑inclusive language (English): https://www.un.org/en/gender-inclusive-language/guidelines.shtml
+- United Nations — publications guidance (PDF): https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf
+
+
