@@ -1,13 +1,5 @@
+import React from 'react';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
-
-// Theme switcher options
-import themeDefault from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style.scss';
-import themePreventionWeb from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-preventionweb.scss';
-import themeIrp from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-irp.scss';
-import themeMcr from '!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../stories/assets/scss/style-mcr.scss';
-
-// import the decorator from the CSS Variables Theme addon
-import cssVariablesTheme from '@etchteam/storybook-addon-css-variables-theme';
 
 // include fonts globally
 import '../stories/assets/scss/_fonts.scss';
@@ -64,15 +56,6 @@ export const parameters = {
       includeName: true,
     },
   },
-  cssVariables: {
-    files: {
-      'Default UNDRR Theme': themeDefault,
-      'PreventionWeb Theme': themePreventionWeb,
-      'IRP Theme': themeIrp,
-      'MCR2030 Theme': themeMcr,
-    },
-    defaultTheme: 'Default UNDRR Theme',
-  },
 };
 
 /* Implementing locale for language switcher */
@@ -96,13 +79,15 @@ export const globalTypes = {
     description: 'Global theme for components',
     defaultValue: 'Default UNDRR Theme',
     toolbar: {
-      icon: 'circlehollow',
+      icon: 'paintbrush',
       items: [
         { value: 'Default UNDRR Theme', title: 'Default UNDRR Theme' },
         { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
         { value: 'IRP Theme', title: 'IRP Theme' },
         { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
       ],
+      showName: true,
+      dynamicTitle: true,
     },
   },
 };
@@ -176,15 +161,41 @@ const setDirection = (Story, context) => {
 };
 
 const themeDecorator = (Story, context) => {
-  // The theme is now controlled by the global type
-  const selectedTheme = context.initialGlobals.theme;
+  const selectedTheme = context.globals.theme;
+
+  // Create a theme system that dynamically loads CSS
+  React.useEffect(() => {
+    // Remove any existing theme link tags
+    const existingLinks = document.querySelectorAll('link[data-theme]');
+    existingLinks.forEach(link => link.remove());
+
+    // Create new link tag for selected theme
+    if (selectedTheme) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.setAttribute('data-theme', 'true');
+
+      // Map theme names to CSS file paths
+      // With staticDirs: ['../stories/assets'], files are served at root level
+      const themeCSSMap = {
+        'Default UNDRR Theme': '/css/style.css',
+        'PreventionWeb Theme': '/css/style-preventionweb.css',
+        'IRP Theme': '/css/style-irp.css',
+        'MCR2030 Theme': '/css/style-mcr.css',
+      };
+
+      if (themeCSSMap[selectedTheme]) {
+        link.href = themeCSSMap[selectedTheme];
+        document.head.appendChild(link);
+      }
+    }
+  }, [selectedTheme]);
 
   return <Story {...context} />;
 };
 
 // Apply decorators
 export const decorators = [
-  cssVariablesTheme,
   getLangCode,
   sbFrameReset,
   setDirection,
