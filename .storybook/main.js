@@ -1,4 +1,5 @@
 import path from 'path';
+import webpack from 'webpack';
 
 import { fileURLToPath } from 'url';
 import remarkGfm from 'remark-gfm';
@@ -35,7 +36,6 @@ export default {
     '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
-    '@etchteam/storybook-addon-css-variables-theme',
     '@storybook/addon-webpack5-compiler-babel',
     '@chromatic-com/storybook',
   ],
@@ -59,7 +59,37 @@ export default {
       include: path.resolve(currentDirPath, '../'),
     });
 
-    // Silience import warnings
+    // Add polyfills for Node.js core modules (Webpack 5 compatibility)
+    if (!config.resolve) {
+      config.resolve = {};
+    }
+    if (!config.resolve.fallback) {
+      config.resolve.fallback = {};
+    }
+
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      "tty": false,
+      "fs": false,
+      "path": false,
+      "os": false,
+      "process": false,
+      "buffer": false,
+      "util": false,
+      "stream": false,
+      "crypto": false,
+    };
+
+    // Provide process global for browser compatibility
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {},
+        'process.version': '"v20.0.0"',
+        'process.platform': '"browser"',
+      })
+    );
+
+    // Silence import warnings
     // https://gitlab.com/undrr/web-backlog/-/issues/2094
     if (!config.ignoreWarnings) {
       config.ignoreWarnings = [];
