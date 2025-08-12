@@ -81,6 +81,11 @@ jobs:
             cp -r dist/assets/css/* npm-package/css/
           fi
 
+          if [ -d "dist/assets/error-pages" ]; then
+            mkdir -p npm-package/error-pages
+            cp -r dist/assets/error-pages/* npm-package/error-pages/
+          fi
+
           # Copy components to top-level directory
           if [ -d "dist/components" ]; then
             mkdir -p npm-package/components
@@ -107,7 +112,7 @@ jobs:
               version: pkg.version,
               description: pkg.description,
               main: "dist/index.js",
-              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss"],
+              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "error-pages/**/*"],
               repository: pkg.repository,
               keywords: pkg.keywords,
               author: pkg.author,

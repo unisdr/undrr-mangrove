@@ -2,26 +2,26 @@ export const DEFAULT_COPY = {
   401: {
     title: 'You are not signed in',
     description:
-      'This page requires you to be signed in. If you think you should have access, sign in and try again.',
+      'You need to sign in to view this page. If you think you should have access, sign in and try again.',
   },
   403: {
     title: 'You do not have permission to view this page',
-    description: 'Your account does not have access to this content.',
+    description: 'You don\'t have permission to view this page. If you need access, contact the website team.',
   },
   404: {
-    title: 'We cannot find the page you are looking for',
+    title: 'We can\'t find the page you\'re looking for',
     description:
-      'If you entered a web address, check it is correct. If you followed a link, it may be incorrect. <br /> You can also <a href="/">view the homepage</a>, browse the <a href="https://www.undrr.org/undrr-directory">UNDRR directory</a>, or try searching:',
+      'If you typed the web address, check that it\'s correct. If you followed a link, it may be out of date. <br /> Go to the <a href="/">homepage</a>, browse the <a href="https://www.undrr.org/undrr-directory">UNDRR directory</a>, or search:',
   },
   429: {
     title: 'Too many requests',
     description:
-      'You have made too many requests in a short time. Wait a moment and try again.',
+      'You made too many requests in a short time. Wait a moment, then try again.',
   },
   500: {
     title: 'Something went wrong on our side',
     description:
-      'We could not complete your request. Try again in a few minutes. If the problem continues, contact us.',
+      'We couldn\'t complete your request. Try again in a few minutes. If the problem continues, contact us.',
     details:
       'Error code: 500 Service Unavailable\nRequest ID: abc123-example\nError URL: https://example.org/varnish-error/503',
   },
@@ -31,7 +31,7 @@ export const DEFAULT_COPY = {
       'There was a temporary problem connecting to the service. Try again in a moment.',
   },
   503: {
-    title: 'We are temporarily unavailable',
+    title: 'Service temporarily unavailable',
     description:
       'The site is temporarily unavailable due to maintenance or high load. Please try again later.',
     actionsHtml:
