@@ -12,6 +12,64 @@ console.log(`Updating CDN links to use version ${version}...`);
 // Files to update with their patterns
 const filesToUpdate = [
   {
+    path: 'stories/Components/ErrorPages/ErrorPage.mdx',
+    patterns: [
+      {
+        from: /https:\/\/assets\.undrr\.org\/testing\/static\/mangrove\/latest\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      },
+      {
+        from: /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      },
+    ]
+  },
+  {
+    path: 'stories/Components/ErrorPages/static/404.html',
+    patterns: [
+      {
+        from: /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      }
+    ]
+  },
+  {
+    path: 'stories/Components/ErrorPages/static/403.html',
+    patterns: [
+      {
+        from: /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      }
+    ]
+  },
+  {
+    path: 'stories/Components/ErrorPages/static/429.html',
+    patterns: [
+      {
+        from: /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      }
+    ]
+  },
+  {
+    path: 'stories/Components/ErrorPages/static/503.html',
+    patterns: [
+      {
+        from: /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      }
+    ]
+  },
+  {
+    path: 'stories/Components/ErrorPages/static/502.html',
+    patterns: [
+      {
+        from: /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        to: `https://assets.undrr.org/static/mangrove/${version}/`
+      }
+    ]
+  },
+  {
     path: 'README.md',
     patterns: [
       {

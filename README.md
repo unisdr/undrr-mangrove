@@ -263,9 +263,9 @@ https://assets.undrr.org/static/mangrove/README.md
 https://assets.undrr.org/static/mangrove/latest/assets/css/style.css
 https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/static/mangrove/latest/assets/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.2.9/assets/css/style.css
-https://assets.undrr.org/static/mangrove/1.2.9/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.2.9/assets/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.2.10/assets/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.10/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.10/assets/js/tabs.js
 ```
 
 #### Bleeding edge test repo

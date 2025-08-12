@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Too many requests</title>
+    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.10/assets/css/style.css" />
+    <script>
+      function retry() { window.location.reload(); }
+    </script>
+  </head>
+  <body>
+    <main class="mg-error-page">
+      <div class="mg-page-header__decoration" aria-hidden="true">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="undrr-logo" aria-hidden="true"></div>
+      <div class="mg-error-page__container">
+        <div class="undrr-error--inner-content">
+          <h1>Error 429</h1>
+          <h2 class="mg-error-page__title">Too many requests</h2>
+          <p class="mg-error-page__description">
+            You have made too many requests in a short time. Wait a moment and try again.
+          </p>
+          <div class="mg-error-page__actions">
+            Wait a moment and <a href="#" onclick="retry();return false;">try again</a>,
+            or return to the <a href="/">home page</a>.
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+  </body>
+</html>

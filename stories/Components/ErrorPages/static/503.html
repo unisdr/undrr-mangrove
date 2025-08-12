@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Service unavailable</title>
+    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.10/assets/css/style.css" />
+    <script>
+      function retry() { window.location.reload(); }
+    </script>
+  </head>
+  <body>
+    <main class="mg-error-page">
+      <div class="mg-page-header__decoration" aria-hidden="true">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="undrr-logo" aria-hidden="true"></div>
+      <div class="mg-error-page__container">
+        <div class="undrr-error--inner-content">
+          <h1>Error 503</h1>
+          <h2 class="mg-error-page__title">Service unavailable</h2>
+          <p class="mg-error-page__description">
+            The site is temporarily unavailable due to maintenance or high load. Please try again later.
+          </p>
+          <div class="mg-error-page__actions">
+            Please <a href="#" onclick="retry();return false;">try again</a> in a moment, or check our
+            <a href="/status">status page</a>.
+          </div>
+          <div class="mg-error-page__details" role="note" aria-label="error details">
+            <pre><code>Error code: 503 Service Unavailable
+Error URL: https://undrr.ddev.site/varnish-error/503</code></pre>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+  </body>
+  </html>
+
+
