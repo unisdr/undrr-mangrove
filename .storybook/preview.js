@@ -77,11 +77,11 @@ export const globalTypes = {
   theme: {
     name: 'Theme',
     description: 'Global theme for components',
-    defaultValue: 'Default UNDRR Theme',
+    defaultValue: 'Global UNDRR Theme',
     toolbar: {
       icon: 'paintbrush',
       items: [
-        { value: 'Default UNDRR Theme', title: 'Default UNDRR Theme' },
+        { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
         { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
         { value: 'IRP Theme', title: 'IRP Theme' },
         { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
@@ -178,10 +178,10 @@ const themeDecorator = (Story, context) => {
       // Map theme names to CSS file paths
       // With staticDirs: ['../stories/assets'], files are served at root level
       const themeCSSMap = {
-        'Default UNDRR Theme': '/css/style.css',
-        'PreventionWeb Theme': '/css/style-preventionweb.css',
-        'IRP Theme': '/css/style-irp.css',
-        'MCR2030 Theme': '/css/style-mcr.css',
+        'Global UNDRR Theme': './css/style.css',
+        'PreventionWeb Theme': './css/style-preventionweb.css',
+        'IRP Theme': './css/style-irp.css',
+        'MCR2030 Theme': './css/style-mcr.css',
       };
 
       if (themeCSSMap[selectedTheme]) {
