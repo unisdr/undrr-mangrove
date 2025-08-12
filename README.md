@@ -273,7 +273,7 @@ https://assets.undrr.org/static/mangrove/1.2.11/assets/js/tabs.js
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
-https://assets.undrr.org/testing/static/mangrove/1.2.5/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.11/css/style.css
 ... etc
 ```
 
