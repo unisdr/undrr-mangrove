@@ -65,7 +65,6 @@ textarea {
 
   input[type="date"],
   input[type="search"] {
-    padding-left: $mg-spacing-200;
     position: relative;
   }
 
@@ -90,24 +89,8 @@ input[type="date"] {
   //   bottom 12px;
   background-color: $mg-color-white;
   color: $mg-color-neutral-500;
-  padding-left: $mg-spacing-200;
-
-  // &.disabled {
-  //   background-image: url(#{$img-path-Icon}/date-disabled.svg);
-  // }
 }
 
-input[type="search"] {
-  // background:
-  //   url(#{$img-path-Icon}/search-black.svg) no-repeat left 14px bottom
-  //   12px;
-  color: #a9b1b7;
-  padding-left: 2.5rem;
-
-  // &.disabled {
-  //   background-image: url(#{$img-path-Icon}/search-gray.svg);
-  // }
-}
 
 .help {
   &.disabled {

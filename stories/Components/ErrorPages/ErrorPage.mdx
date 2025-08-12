@@ -1,0 +1,77 @@
+import { Meta, Canvas } from '@storybook/blocks';
+import * as Stories from './ErrorPage.stories.jsx';
+
+<Meta of={Stories} title="Components/Error pages" />
+
+# Standard error pages
+
+Consistent error pages improve clarity and reduce friction when things go wrong. Use the `ErrorPage` component to display common HTTP error states with clear guidance and next steps.
+
+The error pages and guidance shown here are recommendations. When implementing in your own platform or application, adapt the links (such as "Go to home", "Contact support", or "Status page") to match your actual URLs and support channels.
+
+For static error pages (e.g., for CDN or upstream error handling), it is important to:
+
+- **Include analytics code** (such as Google Analytics enhancements) to track error events and user behavior.
+- **Include critical messaging JavaScript** (such as UNDRR messaging) to ensure users receive important updates or alerts, even on error pages.
+
+See the static HTML examples for reference on including these scripts.
+
+## When to use
+
+- Show a user‑friendly page for common error codes (404, 403, 429, 500, 502, 503, 504)
+- Provide calm, actionable messages that explain what happened and what to do next
+- Keep headings in sentence case and preserve proper nouns, following our writing guidelines
+
+## Formatting
+
+### 404 not found
+
+<Canvas of={Stories.NotFound404} />
+
+### 403 forbidden
+
+<Canvas of={Stories.Forbidden403} />
+
+### 429 too many requests
+
+<Canvas of={Stories.TooManyRequests429} />
+
+### 503 service unavailable
+
+<Canvas of={Stories.ServiceUnavailable503} />
+
+### 500 internal server error
+
+<Canvas of={Stories.InternalServerError500} />
+
+## Content
+
+- Keep the title short and specific to the state
+- Explain the situation briefly; avoid blame and technical jargon
+- Offer 1–2 clear actions: try again, go home, contact support, or search
+
+## CSS and JS references
+
+- CSS: included in the global component bundle via `stories/assets/scss/_components.scss`
+- JS: not required. Optional actions use simple links or reloads
+
+## CDN links
+
+Use these static HTML pages directly from the CDN when integrating with CDNs or upstream error handlers:
+
+```text
+https://assets.undrr.org/static/mangrove/1.2.10/assets/error-pages/403.html
+https://assets.undrr.org/static/mangrove/1.2.10/assets/error-pages/404.html
+https://assets.undrr.org/static/mangrove/1.2.10/assets/error-pages/429.html
+https://assets.undrr.org/static/mangrove/1.2.10/assets/error-pages/502.html
+https://assets.undrr.org/static/mangrove/1.2.10/assets/error-pages/503.html
+```
+
+## Interactions
+
+- Primary action uses the solid button style; secondary action uses the outlined style
+- Optional search field helps users recover from 404 states
+
+## Changelog
+
+- 1.0.0 — Added standard error pages component and examples

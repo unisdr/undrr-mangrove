@@ -60,7 +60,10 @@ module.exports = [
       new MiniCssExtractPlugin(),
       //new FixStyleOnlyEntriesPlugin(),
       new CopyPlugin({
-        patterns: [{ from: 'stories/assets', to: 'assets' }],
+        patterns: [
+          { from: 'stories/assets', to: 'assets' },
+          { from: 'stories/Components/ErrorPages/static', to: 'assets/error-pages' },
+        ],
       }),
     ],
   },
