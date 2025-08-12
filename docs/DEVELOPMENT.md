@@ -4,6 +4,15 @@ This guide covers the development setup and workflow for contributing to the UND
 
 For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs).
 
+## Related guides
+
+- **Project readme**: see the top-level [README](../README.md) for an overview, install, and common tasks
+- **Contributing guide**: how to propose changes and follow our workflow — [CONTRIBUTING.md](../CONTRIBUTING.md)
+- **Release process**: versioning, tagging, and publishing — [docs/RELEASES.md](./RELEASES.md)
+- **Testing guide**: unit, visual, and accessibility testing — [docs/TESTING.md](./TESTING.md)
+- **Writing guidelines**: UX writing standards — [docs/WRITING.md](./WRITING.md)
+- **Writing quick reference**: concise checklist for AI tools and reviews — [docs/WRITING-SHORT.md](./WRITING-SHORT.md)
+
 ## Prerequisites
 
 - Node.js 22 (use nvm or similar to manage versions)
@@ -57,6 +66,7 @@ make run
 ### Creating Features
 
 1. Create a branch from `main`
+
    ```bash
    git checkout -b feat/your-feature-name
    ```
@@ -64,6 +74,7 @@ make run
 2. Make your changes following the coding standards
 
 3. Test your changes
+
    ```bash
    yarn test
    yarn lint
@@ -136,7 +147,8 @@ make build            # Build for release
 ### File Structure
 
 Components follow this structure:
-```
+
+```text
 stories/
   └── Components/
       └── ComponentName/

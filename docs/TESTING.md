@@ -40,7 +40,7 @@ describe('Button', () => {
   it('handles click events', () => {
     const handleClick = jest.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     fireEvent.click(screen.getByText('Click me'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -103,9 +103,9 @@ it('applies custom className', () => {
 it('toggles expanded state', () => {
   render(<Accordion title="Test" />);
   const button = screen.getByRole('button');
-  
+
   expect(screen.queryByText('Content')).not.toBeInTheDocument();
-  
+
   fireEvent.click(button);
   expect(screen.getByText('Content')).toBeInTheDocument();
 });
@@ -116,9 +116,9 @@ it('toggles expanded state', () => {
 ```javascript
 it('loads data on mount', async () => {
   render(<DataComponent />);
-  
+
   expect(screen.getByText('Loading...')).toBeInTheDocument();
-  
+
   await waitFor(() => {
     expect(screen.getByText('Data loaded')).toBeInTheDocument();
   });
@@ -299,7 +299,7 @@ it('renders efficiently', () => {
   const renderTime = measureRender(() => {
     render(<LargeList items={manyItems} />);
   });
-  
+
   expect(renderTime).toBeLessThan(100); // ms
 });
 ```
