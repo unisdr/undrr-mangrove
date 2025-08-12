@@ -11,10 +11,12 @@ The error pages and guidance shown here are recommendations. When implementing i
 
 For static error pages (e.g., for CDN or upstream error handling), it is important to:
 
-- **Include analytics code** (such as Google Analytics enhancements) to track error events and user behavior.
-- **Include critical messaging JavaScript** (such as UNDRR messaging) to ensure users receive important updates or alerts, even on error pages.
+- **Include UNDRR analytics code** to track error events and user behavior:
+    `<script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
+- **Include UNDRR critical messaging JavaScript** to ensure users receive important updates or alerts, even on error pages.
+    `<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>`
 
-See the static HTML examples for reference on including these scripts.
+See the [static HTML examples](https://github.com/unisdr/undrr-mangrove/tree/main/stories/Components/ErrorPages/static) for reference on including these scripts.
 
 ## When to use
 

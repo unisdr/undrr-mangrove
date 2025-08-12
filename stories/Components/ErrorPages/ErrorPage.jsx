@@ -133,6 +133,8 @@ export function ErrorPage({
             <div className="undrr-logo" aria-hidden="true" />
           </a>
         </div>
+        <script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
     </main>
   );
 }
