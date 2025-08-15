@@ -132,10 +132,8 @@ const QRCodeModal = ({
           </button>
         </div>
         <p>
-          This QR code contains the link below. You can copy the image add it
-          your printed or display materials.
+          This QR code contains the link below. You can copy the image or add it to your printed or display materials.
         </p>
-
         <div
           style={{
             flex: 1,
