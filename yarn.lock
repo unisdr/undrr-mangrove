@@ -4733,7 +4733,7 @@ __metadata:
     swiper: "npm:11.2.10"
     typescript: "npm:^5.4.5"
     vanilla-cookieconsent: "npm:^3.1.0"
-    webpack: "npm:5.101.1"
+    webpack: "npm:5.101.2"
     webpack-cli: "npm:6.0.1"
     webpack-fix-style-only-entries: "npm:0.6.1"
   languageName: unknown
@@ -22131,7 +22131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5, webpack@npm:5.101.1, webpack@npm:^5, webpack@npm:^5.0.0":
+"webpack@npm:5, webpack@npm:^5, webpack@npm:^5.0.0":
   version: 5.101.1
   resolution: "webpack@npm:5.101.1"
   dependencies:
@@ -22166,6 +22166,44 @@ __metadata:
   bin:
     webpack: bin/webpack.js
   checksum: 10/2cbb76683a959bf7f1c11a593e45bb6a2522254eff78e58106da155d6b08da49a3aca584d57948b473a7a55178adcbd728e98cd572ab535d72694b327896a595
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5.101.2":
+  version: 5.101.2
+  resolution: "webpack@npm:5.101.2"
+  dependencies:
+    "@types/eslint-scope": "npm:^3.7.7"
+    "@types/estree": "npm:^1.0.8"
+    "@types/json-schema": "npm:^7.0.15"
+    "@webassemblyjs/ast": "npm:^1.14.1"
+    "@webassemblyjs/wasm-edit": "npm:^1.14.1"
+    "@webassemblyjs/wasm-parser": "npm:^1.14.1"
+    acorn: "npm:^8.15.0"
+    acorn-import-phases: "npm:^1.0.3"
+    browserslist: "npm:^4.24.0"
+    chrome-trace-event: "npm:^1.0.2"
+    enhanced-resolve: "npm:^5.17.3"
+    es-module-lexer: "npm:^1.2.1"
+    eslint-scope: "npm:5.1.1"
+    events: "npm:^3.2.0"
+    glob-to-regexp: "npm:^0.4.1"
+    graceful-fs: "npm:^4.2.11"
+    json-parse-even-better-errors: "npm:^2.3.1"
+    loader-runner: "npm:^4.2.0"
+    mime-types: "npm:^2.1.27"
+    neo-async: "npm:^2.6.2"
+    schema-utils: "npm:^4.3.2"
+    tapable: "npm:^2.1.1"
+    terser-webpack-plugin: "npm:^5.3.11"
+    watchpack: "npm:^2.4.1"
+    webpack-sources: "npm:^3.3.3"
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 10/d042ceb6e43c6de5be9ed39ea011b3fb28eed3f526974f10d6d3c324cbbaa01994167bd0fda394216d9929168489614fb8234dfeac6a363fc28e1b4ae6142747
   languageName: node
   linkType: hard
 
