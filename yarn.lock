@@ -4820,7 +4820,7 @@ __metadata:
     babel-plugin-react-transform: "npm:3.0.0"
     babel-preset-env: "npm:1.7.0"
     copy-webpack-plugin: "npm:13.0.1"
-    core-js: "npm:3.45.0"
+    core-js: "npm:3.45.1"
     css-loader: "npm:7.1.2"
     css-minimizer-webpack-plugin: "npm:7.0.2"
     d3: "npm:7.9.0"
@@ -7906,10 +7906,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:3.45.0, core-js@npm:^3.31.0":
-  version: 3.45.0
-  resolution: "core-js@npm:3.45.0"
-  checksum: 10/162cd63b4d4cb2fed7a8635e69b760f4247e5d39ea99348e0b66af8e8899395a34de1b93504eb8db2adf4c47a0756475545c3da9c24875c7c33396fa8dc061c1
+"core-js@npm:3.45.1":
+  version: 3.45.1
+  resolution: "core-js@npm:3.45.1"
+  checksum: 10/b9dca79b1af8bb4f0d4af0752ea98d694fe157abaf55513fd4084df32dfd4398f0fc57898b32cdb643c1cecb87b9231c2a2ce535797c80ae328eac6d6078ee61
   languageName: node
   linkType: hard
 
@@ -7917,6 +7917,13 @@ __metadata:
   version: 2.6.12
   resolution: "core-js@npm:2.6.12"
   checksum: 10/7c624eb00a59c74c769d5d80f751f3bf1fc6201205b6562f27286ad5e00bbca1483f2f7eb0c2854b86f526ef5c7dc958b45f2ff536f8a31b8e9cb1a13a96efca
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.31.0":
+  version: 3.45.0
+  resolution: "core-js@npm:3.45.0"
+  checksum: 10/162cd63b4d4cb2fed7a8635e69b760f4247e5d39ea99348e0b66af8e8899395a34de1b93504eb8db2adf4c47a0756475545c3da9c24875c7c33396fa8dc061c1
   languageName: node
   linkType: hard
 
