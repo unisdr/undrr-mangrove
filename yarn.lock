@@ -4948,7 +4948,7 @@ __metadata:
     react-dom: "npm:19.1.1"
     react-leaflet: "npm:5.0.0"
     react-leaflet-markercluster: "npm:5.0.0-rc.0"
-    react-syntax-highlighter: "npm:15.6.3"
+    react-syntax-highlighter: "npm:15.6.6"
     remark-gfm: "npm:^4.0.1"
     remove-files-webpack-plugin: "npm:1.5.0"
     resolve-url-loader: "npm:5.0.0"
@@ -18432,9 +18432,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-syntax-highlighter@npm:15.6.3":
-  version: 15.6.3
-  resolution: "react-syntax-highlighter@npm:15.6.3"
+"react-syntax-highlighter@npm:15.6.6":
+  version: 15.6.6
+  resolution: "react-syntax-highlighter@npm:15.6.6"
   dependencies:
     "@babel/runtime": "npm:^7.3.1"
     highlight.js: "npm:^10.4.1"
@@ -18444,7 +18444,7 @@ __metadata:
     refractor: "npm:^3.6.0"
   peerDependencies:
     react: ">= 0.14.0"
-  checksum: 10/0e2afaa47afb2e60106b17d0f166cbc77383cb4be616928c2ac8f8307ce5e0f88ae396c4e8d1ecafebb2e5d506b1457d65131cae48dcf9de383952c31bb323a3
+  checksum: 10/8b7e60bc7df7218248e17dfc3c44b8f45cd9e363a763477753d5c39242910ff822180db59098e1cc74d0d2ced54ed1ca79a32d67e1afa0c8227ca918a7e0c692
   languageName: node
   linkType: hard
 
