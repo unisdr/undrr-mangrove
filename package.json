@@ -140,7 +140,7 @@
     "svgo": "4.0.0",
     "svgo-loader": "4.0.0",
     "typescript": "^5.4.5",
-    "webpack": "5.101.2",
+    "webpack": "5.101.3",
     "webpack-cli": "6.0.1",
     "webpack-fix-style-only-entries": "0.6.1"
   },
