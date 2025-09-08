@@ -4964,7 +4964,7 @@ __metadata:
     stylelint-config-standard-scss: "npm:15.0.1"
     stylelint-prettier: "npm:5.0.3"
     stylelint-scss: "npm:6.12.1"
-    svg-spritemap-webpack-plugin: "npm:5.0.0"
+    svg-spritemap-webpack-plugin: "npm:5.0.1"
     svgo: "npm:4.0.0"
     svgo-loader: "npm:4.0.0"
     swiper: "npm:11.2.10"
@@ -20768,9 +20768,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svg-spritemap-webpack-plugin@npm:5.0.0":
-  version: 5.0.0
-  resolution: "svg-spritemap-webpack-plugin@npm:5.0.0"
+"svg-spritemap-webpack-plugin@npm:5.0.1":
+  version: 5.0.1
+  resolution: "svg-spritemap-webpack-plugin@npm:5.0.1"
   dependencies:
     "@xmldom/xmldom": "npm:^0.9.8"
     glob: "npm:^11.0.3"
@@ -20781,7 +20781,7 @@ __metadata:
     svg-element-attributes: "npm:^2.1.0"
     webpack-merge: "npm:^6.0.1"
     webpack-sources: "npm:^3.3.3"
-    zod: "npm:^4.0.10"
+    zod: "npm:^4.1.5"
   peerDependencies:
     svg4everybody: ^2.1.9
     svgo: ^4.0.0
@@ -20790,7 +20790,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10/f93018c943487c5e6cfaf268a219ed8d33b5d24379476759be492d2ced633546a45ac8603b3ac0a7d96d08878b603d1282d4e8f027d826dd630b22ad6d569ef9
+  checksum: 10/920658f4693eab1b642d3dac4e80e596f9c572957af0f8e67d927a840d715aa35bcb7e7b3f3db5bf1de436f03b1969bf09950525688066124dd189b339ef6d27
   languageName: node
   linkType: hard
 
@@ -22953,10 +22953,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^4.0.10":
-  version: 4.0.17
-  resolution: "zod@npm:4.0.17"
-  checksum: 10/bfdb7f1a7a3dd17e83c6720f9f763d522d4914962c81844fe408512e55df11378c6032d48dea4ec6ca6a260bdd9e92c59ec75bd40cb49f4c12115366744f2def
+"zod@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "zod@npm:4.1.5"
+  checksum: 10/2ac6bef2d6647de6e673b6fa07ee392b71eb6fd6ccb2be8899d8d853084dd8b3992d4d2cf267eba6f8495a35803e2ec254509194fd0849ed0a822dea7ae4a765
   languageName: node
   linkType: hard
 
