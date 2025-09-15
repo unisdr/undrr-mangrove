@@ -148,6 +148,27 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   if (activateDeepLinkOnLoad) {
     mgTabsDeepLinkOnLoad(tabs, panels);
   }
+
+  // When using anchor links after load, activate the corresponding tab
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash
+      ? window.location.hash.substring(1)
+      : null;
+    if (!hash) return;
+
+    // Only act if this tabset contains the target panel id to avoid
+    // unintentionally changing other tabsets on the page
+    let targetPanelFound = false;
+    Array.prototype.forEach.call(panels, panel => {
+      if (panel.id === hash) {
+        targetPanelFound = true;
+      }
+    });
+
+    if (targetPanelFound) {
+      mgTabsDeepLinkOnLoad(tabs, panels);
+    }
+  });
 }
 
 // The tab switching function
