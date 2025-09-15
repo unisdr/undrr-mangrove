@@ -155,7 +155,6 @@
     margin-right: $mg-spacing-300;
     white-space: normal;
     overflow-wrap: break-word;
-    overflow-wrap: break-word;
 
     @include devicebreak(small) {
       display: inline-block;
