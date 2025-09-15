@@ -154,7 +154,6 @@
     flex-shrink: 0;
     margin-right: $mg-spacing-300;
     white-space: normal;
-    word-wrap: break-word;
     overflow-wrap: break-word;
 
     @include devicebreak(small) {
