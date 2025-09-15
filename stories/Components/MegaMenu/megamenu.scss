@@ -216,10 +216,6 @@
       margin: 0;
       break-inside: avoid;
 
-      li a {
-        font-weight: normal; // do not bold sub-submenu items
-      }
-
       a {
         display: block;
         padding: $mg-spacing-50;

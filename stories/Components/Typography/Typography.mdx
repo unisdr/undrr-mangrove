@@ -1,0 +1,18 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import * as TypographyStories from './Typography.stories';
+
+<Meta
+  title="Components/Typography/Typography integration example"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Typography integration
+
+This page demonstrates common typography elements together, to validate spacing, especially list indentation. Tracked in [`web-backlog#2444`](https://gitlab.com/undrr/web-backlog/-/issues/2444).
+
+<Canvas of={TypographyStories.Default} />

@@ -11,6 +11,7 @@ code {
   word-break: break-all;
 }
 
+pre > code,
 .mg-code--block {
   display: block;
   padding: $mg-spacing-100 $mg-spacing-150;
