@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Import your components
 import MegaMenu from '../MegaMenu/MegaMenu';
@@ -8,6 +8,7 @@ import { VerticalCard } from '../Cards/Card/VerticalCard';
 import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';
 import CookieConsentBanner from '../CookieConsentBanner/CookieConsentBanner';
+import { mgTableOfContents } from '../TableOfContents/js/TableOfContentsVanillaJs';
 
 const sampleHeroData = [
   {
@@ -112,6 +113,13 @@ const sampleMegaMenuSections = [
 
 // Define the Page Template Example component
 const PageTemplateExample = () => {
+  useEffect(() => {
+    const contentElement = document.querySelector('.page-template-example');
+    const tocElement = document.querySelector('[data-mg-table-of-contents]');
+    if (contentElement && tocElement) {
+      mgTableOfContents(contentElement, tocElement);
+    }
+  }, []);
   return (
     <>
       <PageHeader />
@@ -127,25 +135,39 @@ const PageTemplateExample = () => {
           </section>
         </div>
         <section className="content-section">
-          <h2>Understanding the importance of data</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
-            malesuada.
-          </p>
+          <section className="mg-grid mg-grid__col-3">
+            <div className="mg-grid__col--span-2">
+              <h2>Understanding the importance of data</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+                lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
+                malesuada.{' '}
+                <a href="#mg-tabs__section-tab-3">Deep link to a tab</a>
+              </p>
+              <h3 id="section-benefits">Key benefits of data analysis</h3>
+              <ul>
+                <li>Improved decision-making</li>
+                <li>Increased efficiency</li>
+                <li>Enhanced customer insights</li>
+              </ul>
+            </div>
+            <aside>
+              <section
+                data-mg-table-of-contents
+                data-mg-table-of-contents-title="On this page"
+                className="mg-table-of-contents"
+              ></section>
+            </aside>
+          </section>
           <hr />
-          <h3>Key benefits of data analysis</h3>
-          <ul>
-            <li>Improved decision-making</li>
-            <li>Increased efficiency</li>
-            <li>Enhanced customer insights</li>
-          </ul>
           <h4>Further reading</h4>
           <p>
             For more information, visit our{' '}
             <a href="https://example.com">detailed guide on data analysis</a>.
           </p>
-          <h3>Challenges in data management</h3>
+          <h3 id="challenges-in-data-management">
+            Challenges in data management
+          </h3>
           <p>
             Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -159,6 +181,9 @@ const PageTemplateExample = () => {
         </section>
         <Tab tabdata={sampleTabData} />
         <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
+        <h2>Sample header</h2>
+        <p>Sample paragraph</p>
+        {/* Footer temporarily disabled as we'll need to import some drupal base styles to make this work */}
         {/* <Footer /> */}
       </div>
     </>
