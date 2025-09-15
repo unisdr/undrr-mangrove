@@ -74,26 +74,14 @@ p {
 
 ul,
 ol {
-  margin: 0;
-  padding-left: 1.125rem;
-  list-style-position: inside;
-
-  @include devicebreak(medium) {
-    padding-left: 1.313rem;
-  }
+  margin: 0 0 $mg-spacing-100;
+  padding-left: $mg-spacing-200;
+  list-style-position: outside;
 
   li {
     margin-bottom: $mg-spacing-0;
     padding-left: $mg-spacing-0;
-
-    @include devicebreak(medium) {
-      margin-bottom: $mg-spacing-0;
-    }
   }
-}
-
-ol li {
-  margin-bottom: 1.063rem;
 }
 
 dl {
