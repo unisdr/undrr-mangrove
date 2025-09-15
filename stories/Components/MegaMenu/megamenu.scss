@@ -209,14 +209,14 @@
       padding: 0 0 0 $mg-spacing-150;
       opacity: 0.8;
       break-inside: avoid;
-      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     li {
       padding: 0;
       margin: 0;
       break-inside: avoid;
-      page-break-inside: avoid;
+      break-inside: avoid;
 
       li a {
         font-weight: normal; // do not bold sub-submenu items
