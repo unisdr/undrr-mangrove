@@ -29,7 +29,7 @@ h4,
 h5,
 h6,
 caption {
-  margin: $mg-spacing-100 $mg-spacing-0 $mg-spacing-25;
+  margin: $mg-spacing-100 $mg-spacing-0;
   padding: $mg-spacing-0;
 }
 
@@ -76,6 +76,7 @@ ul,
 ol {
   margin: 0;
   padding-left: 1.125rem;
+  list-style-position: inside;
 
   @include devicebreak(medium) {
     padding-left: 1.313rem;
@@ -87,7 +88,6 @@ ol {
 
     @include devicebreak(medium) {
       margin-bottom: $mg-spacing-0;
-      padding-left: $mg-spacing-25;
     }
   }
 }
@@ -154,7 +154,9 @@ a {
       padding-right: 0.875rem;
 
       @include devicebreak(medium) {
-        padding-right: $mg-spacing-25;
+        // Keep RTL list item text aligned with bullets at medium
+        // https://gitlab.com/undrr/web-backlog/-/issues/2444
+        padding-right: 0.875rem;
       }
     }
   }
