@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --loglevel verbose --stats-json && webpack --progress",
-    "dev": "NODE_ENV=development yarn run storybook",
+    "dev": "NODE_ENV=development yarn run scss-watch & yarn run storybook",
     "storybook": "NODE_ENV=development storybook dev -p 6006",
     "update-cdn-version": "node scripts/update-cdn-version.js",
     "scss": "sass ./stories/assets/scss:./stories/assets/css --silence-deprecation import",

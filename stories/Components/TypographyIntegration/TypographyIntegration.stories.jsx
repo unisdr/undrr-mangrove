@@ -38,21 +38,28 @@ const TypographyIntegrationExample = () => {
 
       <h2>Unordered list</h2>
 
-      <div>
-        <ul>
-          <li>
-            Bullet item one with a little text to wrap and check hanging indent.
-          </li>
-          <li>Bullet item two</li>
-          <li>
-            Bullet item three with nested list
-            <ul>
-              <li>Nested item a</li>
-              <li>Nested item b</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <section className="mg-grid mg-grid__col-3">
+        <div>
+          <p>Preceding paragraph</p>
+          <ul>
+            <li>
+              Bullet item one with a little text to wrap and check hanging
+              indent one with a little text to wrap and check hanging indent one
+              with a little text to wrap and check hanging indent one with a
+              little text to wrap and check hanging indent.
+            </li>
+            <li>Bullet item two</li>
+            <li>
+              Bullet item three with nested list
+              <ul>
+                <li>Nested item a</li>
+                <li>Nested item b</li>
+              </ul>
+            </li>
+          </ul>
+          <p>Trailing paragraph</p>
+        </div>
+      </section>
 
       <h2>Abbreviation</h2>
 
@@ -147,21 +154,31 @@ const count = text.length;
         </dd>
       </dl>
 
+      <p>Trailing paragraph</p>
+
       <h2>Ordered list</h2>
 
-      <div>
-        <ol>
-          <li>First item with enough text to wrap to the next line</li>
-          <li>Second item</li>
-          <li>
-            Third item with nested
-            <ol>
-              <li>Nested 1</li>
-              <li>Nested 2</li>
-            </ol>
-          </li>
-        </ol>
-      </div>
+      <section className="mg-grid mg-grid__col-3">
+        <div>
+          <p>Preceding paragraph</p>
+          <ol>
+            <li>
+              First item with enough text to wrap to the next line with enough
+              text to wrap to the next line with enough text to wrap to the next
+              line with enough text to wrap to the next line
+            </li>
+            <li>Second item</li>
+            <li>
+              Third item with nested
+              <ol>
+                <li>Nested 1</li>
+                <li>Nested 2</li>
+              </ol>
+            </li>
+          </ol>
+          <p>Trailing paragraph</p>
+        </div>
+      </section>
 
       <h2>RTL list check</h2>
 
