@@ -5003,7 +5003,7 @@ __metadata:
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-spellcheck: "npm:0.0.20"
-    eslint-plugin-storybook: "npm:9.1.6"
+    eslint-plugin-storybook: "npm:9.1.7"
     esri-leaflet: "npm:3.1.0"
     extract-loader: "npm:5.1.0"
     file-loader: "npm:6.2.0"
@@ -10067,15 +10067,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-storybook@npm:9.1.6":
-  version: 9.1.6
-  resolution: "eslint-plugin-storybook@npm:9.1.6"
+"eslint-plugin-storybook@npm:9.1.7":
+  version: 9.1.7
+  resolution: "eslint-plugin-storybook@npm:9.1.7"
   dependencies:
     "@typescript-eslint/utils": "npm:^8.8.1"
   peerDependencies:
     eslint: ">=8"
-    storybook: ^9.1.6
-  checksum: 10/3f095fc29dc83be4acdc1319174074510725818af27344ec3d50ab6efd70426ad43fe602df58f275d45afba2c73fdfe682b29171f41495c392dbca2249b51501
+    storybook: ^9.1.7
+  checksum: 10/9e8d82bf504bc40cac67ce62dd9213cb672240a1c4184a702eb7c027290cd3604239fd3663a1c985b2569f4e9cab1cd1cf57dcb7d3b3dba119d8d42dfb509925
   languageName: node
   linkType: hard
 
