@@ -2345,6 +2345,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/js@npm:9.36.0":
+  version: 9.36.0
+  resolution: "@eslint/js@npm:9.36.0"
+  checksum: 10/a0542f529f87b9ad69ef85c47b0c070b763591a61773b131a9d1d53934a587f0708c05a1a8f48a6805486004a4922c91d696c1e4835ff61f8750ffbded2f0c30
+  languageName: node
+  linkType: hard
+
 "@eslint/object-schema@npm:^2.1.6":
   version: 2.1.6
   resolution: "@eslint/object-schema@npm:2.1.6"
@@ -4993,7 +5000,7 @@ __metadata:
     css-minimizer-webpack-plugin: "npm:7.0.2"
     d3: "npm:7.9.0"
     dompurify: "npm:3.2.6"
-    eslint: "npm:9.35.0"
+    eslint: "npm:9.36.0"
     eslint-config-airbnb: "npm:19.0.4"
     eslint-config-prettier: "npm:10.1.8"
     eslint-plugin-import: "npm:2.32.0"
@@ -10123,9 +10130,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:9.35.0":
-  version: 9.35.0
-  resolution: "eslint@npm:9.35.0"
+"eslint@npm:9.36.0":
+  version: 9.36.0
+  resolution: "eslint@npm:9.36.0"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.8.0"
     "@eslint-community/regexpp": "npm:^4.12.1"
@@ -10133,7 +10140,7 @@ __metadata:
     "@eslint/config-helpers": "npm:^0.3.1"
     "@eslint/core": "npm:^0.15.2"
     "@eslint/eslintrc": "npm:^3.3.1"
-    "@eslint/js": "npm:9.35.0"
+    "@eslint/js": "npm:9.36.0"
     "@eslint/plugin-kit": "npm:^0.3.5"
     "@humanfs/node": "npm:^0.16.6"
     "@humanwhocodes/module-importer": "npm:^1.0.1"
@@ -10169,7 +10176,7 @@ __metadata:
       optional: true
   bin:
     eslint: bin/eslint.js
-  checksum: 10/238155639343d53bac639319ba92895083cbd15826081ac51204b29d64fbb52cebf0d355f11f57f146d2b15c4f2e1d85e3df0b0ac7ec0e2ef5e759c99dcab75e
+  checksum: 10/6e512a82e680e6cdc554e97c7e232b83171f24a52fb46f89c2df74bcb80fe59b6e0a989485c9fe7e9ca81556b1953dd8604ace4ed37f651eded9a37816c06b7c
   languageName: node
   linkType: hard
 
