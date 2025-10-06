@@ -3885,13 +3885,13 @@ __metadata:
   linkType: hard
 
 "@storybook/addon-themes@npm:^9.1.6":
-  version: 9.1.6
-  resolution: "@storybook/addon-themes@npm:9.1.6"
+  version: 9.1.10
+  resolution: "@storybook/addon-themes@npm:9.1.10"
   dependencies:
     ts-dedent: "npm:^2.0.0"
   peerDependencies:
-    storybook: ^9.1.6
-  checksum: 10/fc3a8d6e1b8498cb07313a58a9026aa1fdeb8bb3b5d5b831c9306d419b765adb0cb10782d69805f67a18f87c5969f1177975cda217868b9d9c31509161a8c539
+    storybook: ^9.1.10
+  checksum: 10/5dcc8a81ffd294570c95cd2b7d91b26439ea310554cc1d74ea4efbe9d976302588da7d405c801fbfe2933f967430149ba0bf1b6cec394abb00ca1d7d77bb56f1
   languageName: node
   linkType: hard
 
