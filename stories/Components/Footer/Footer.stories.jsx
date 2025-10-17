@@ -59,44 +59,31 @@ WithComplementaryContent.args = {
     suffixID: 'footer-complementary',
   },
   complementaryContent: (
-    <div className="custom-footer-content">
-      <section className="about-footer | has-undrr-sendai-turquoise-background-color has-text-color has-background mg-container-full-width">
-        <article className="container | wp-block-columns has-white-color">
-          <section className="wp-block-column">
-            <p className="about-footer--links pt-20">
-              <a href="https://www.facebook.com/recoveryplatform.org">
-                Facebook
-              </a>{' '}
-              &nbsp;
-              <a href="https://www.twitter.com/irp_secretariat">X</a> &nbsp;
-              <a href="https://www.youtube.com/user/IRPsecretariat">
-                YouTube
-              </a>{' '}
-              &nbsp;
-              <a href="https://www.flickr.com/photos/138349363@N04/albums">
-                Flickr
-              </a>{' '}
-              &nbsp;
-              <a href="https://recovery.preventionweb.net/contactus">
-                Contact us
-              </a>
-            </p>
-            <p className="lead pb-0 pt-20">
-              <a
-                href="https://recovery.preventionweb.net/about-irp"
-                style={{ textDecoration: 'none' }}
-              >
-                The International Recovery Platform (IRP) is a global
-                partnership working to strengthen knowledge, and share
-                experiences and lessons on building back better in recovery,
-                rehabilitation, and reconstruction
-              </a>
-              .
-            </p>
-          </section>
-        </article>
-      </section>
-    </div>
+    <section className="mg-footer--about-footer | has-undrr-sendai-turquoise-background-color has-background mg-container-full-width">
+      <article className="mg-container">
+        <p className="mg-footer--about-footer--links">
+          <a href="https://www.facebook.com/recoveryplatform.org">Facebook</a>{' '}
+          <a href="https://www.twitter.com/irp_secretariat">X</a>
+          <a href="https://www.youtube.com/user/IRPsecretariat">YouTube</a>{' '}
+          <a href="https://www.flickr.com/photos/138349363@N04/albums">
+            Flickr
+          </a>{' '}
+          <a href="https://recovery.preventionweb.net/contactus">Contact us</a>
+        </p>
+        <p className="mg-footer--about-footer--description">
+          <a
+            href="https://recovery.preventionweb.net/about-irp"
+            style={{ textDecoration: 'none' }}
+          >
+            The International Recovery Platform (IRP) is a global partnership
+            working to strengthen knowledge, and share experiences and lessons
+            on building back better in recovery, rehabilitation, and
+            reconstruction
+          </a>
+          .
+        </p>
+      </article>
+    </section>
   ),
 };
 WithComplementaryContent.parameters = {
@@ -116,11 +103,9 @@ NoSyndication.args = {
     suffixID: 'footer-no-syndication',
   },
   children: (
-    <div className="local-footer-only">
-      <div className="container">
-        <p>This is a local footer without UNDRR syndication.</p>
-        <p>Useful for testing or sites that don't want the global footer.</p>
-      </div>
+    <div className="mg-container">
+      <p>This is a local footer without UNDRR syndication.</p>
+      <p>Useful for testing or sites that don't want the global footer.</p>
     </div>
   ),
 };
@@ -141,19 +126,17 @@ CustomSyndicationConfig.args = {
     contenttype: 'landingpage',
     pageid: '83835',
     includemetatags: false,
-    includecss: false,
+    includecss: true,
     suffixID: 'footer-custom-config',
     activedomain: 'www.undrr.org',
   },
   complementaryContent: (
-    <div className="custom-site-footer">
-      <div className="container">
-        <h3>Custom Site Footer</h3>
-        <p>
-          This demonstrates a custom syndication configuration with
-          site-specific content.
-        </p>
-      </div>
+    <div className="mg-container">
+      <h3>Custom Site Footer</h3>
+      <p>
+        This demonstrates a custom syndication configuration with site-specific
+        content.
+      </p>
     </div>
   ),
 };

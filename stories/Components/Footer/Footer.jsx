@@ -27,7 +27,7 @@ export function Footer({
     contenttype: 'landingpage',
     pageid: '83835',
     includemetatags: false,
-    includecss: false,
+    includecss: true,
     suffixID: 'footer',
     activedomain: 'www.undrr.org',
   };
@@ -43,55 +43,6 @@ export function Footer({
 
   useEffect(() => {
     if (!enableSyndication) return;
-
-    // todo: make this loading optional and only run once
-    // Load UNDRR common theme stylesheets (temporary until https://gitlab.com/undrr/web-backlog/-/issues/2233 is fixed)
-    // Load required stylesheets for syndicated content (temporary measure)
-    const loadStylesheet = (href, id) => {
-      if (
-        !document.querySelector(`link[href*="${href}"]`) &&
-        !document.getElementById(id)
-      ) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = href;
-        link.id = id;
-        document.head.appendChild(link);
-      }
-    };
-
-    const cacheBuster = new Date().getTime();
-    loadStylesheet(
-      `https://www.preventionweb.net/modules/contrib/gutenberg/js/vendor/gutenberg/block-library/style.css?cacheBuster=${cacheBuster}`,
-      'pw-gutenberg-styles'
-    );
-
-    // Load UNDRR Mangrove styles
-    loadStylesheet(
-      'https://www.preventionweb.net/themes/custom/undrr/css/mangrove/mangrove.css',
-      // "https://www.preventionweb.net/themes/custom/pw/css/mangrove/mangrove.css",
-      'undrr-mangrove-styles'
-    );
-
-    loadStylesheet(
-      `https://www.preventionweb.net/themes/custom/undrr_common/css/base.css?cacheBuster=${cacheBuster}`,
-      'undrr-common-base'
-    );
-
-    // loadStylesheet(
-    //   `https://www.preventionweb.net/themes/custom/undrr_common/css/layout.css?cacheBuster=${cacheBuster}`,
-    //   "undrr-common-layout",
-    // );
-
-    loadStylesheet(
-      `https://www.preventionweb.net/themes/custom/undrr_common/css/components/colors.css?cacheBuster=${cacheBuster}`,
-      'undrr-common-colors'
-    );
-
-    loadStylesheet(
-      `https://www.preventionweb.net/themes/custom/undrr_common/css/components/footer.css?cacheBuster=${cacheBuster}`,
-      'undrr-common-footer'
-    );
 
     // Check if widget script is already loaded globally
     const existingWidgetScript = document.querySelector(
@@ -155,7 +106,7 @@ export function Footer({
   }, [enableSyndication, mergedSyndicationConfig]);
 
   return (
-    <footer {...args}>
+    <footer className={cls('mg-footer', className)} {...args}>
       {/* Site-specific complementary footer content */}
       {(complementaryContent || children) && (
         <>{complementaryContent || children}</>

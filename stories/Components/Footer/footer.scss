@@ -1,0 +1,27 @@
+.mg-footer,
+.page-node-type-landing_page_gutenberg .field--name-body > * {
+  // reset the spacer for the landing page body of the footer
+  --mg-gutenberg-spacer: 0;
+}
+
+.mg-footer--about-footer {
+  text-wrap: balance;
+  color: $mg-color-white;
+  padding-bottom: $mg-spacing-200;
+  padding-top: $mg-spacing-200;
+
+  a,
+  a:hover {
+    color: $mg-color-white;
+  }
+}
+
+.mg-footer--about-footer--links {
+  font-size: $mg-font-size-500;
+  display: inline-flex;
+  gap: 0.75rem 2rem;
+}
+
+.mg-footer--about-footer--description {
+  font-size: $mg-font-size-400;
+}

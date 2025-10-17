@@ -61,7 +61,7 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 ```jsx
 <Footer>
   <div className="custom-footer-content">
-    <section className="about-footer">
+    <section className="mg-footer--about-footer">
       <article className="container">
         <p>Your organization's footer content here</p>
       </article>
@@ -177,6 +177,14 @@ When implementing in your site, consider this structure:
 ```
 
 ## Changelog
+
+### Version 1.0.0-beta.1: Footer class and SCSS updates
+
+- Added `mg-footer` root class to `Footer` component
+- Introduced `.mg-footer--about-footer` modifier (replaces `about-footer`)
+- Added `footer.scss` and imported into `_components.scss`
+- Reset `--mg-gutenberg-spacer: 0` for Gutenberg landing page body within footer context
+- Updated stories and MDX to use new modifier class
 
 ### Version 1.0.0-alpha.1: Initial UNDRR-based release
 
