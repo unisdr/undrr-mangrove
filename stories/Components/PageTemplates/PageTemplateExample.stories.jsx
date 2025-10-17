@@ -183,8 +183,7 @@ const PageTemplateExample = () => {
         <Tab tabdata={sampleTabDataStacked} variant={'stacked'} />
         <h2>Sample header</h2>
         <p>Sample paragraph</p>
-        {/* Footer temporarily disabled as we'll need to import some drupal base styles to make this work */}
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </>
   );

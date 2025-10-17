@@ -1,5 +1,6 @@
 import { Meta, Story, Canvas } from '@storybook/blocks';
 import * as PageTemplateExampleStories from './PageTemplateExample.stories.jsx';
+import LinkTo from '@storybook/addon-links/react';
 
 <Meta
   of={PageTemplateExampleStories}
@@ -19,10 +20,16 @@ The current template includes:
 - **VerticalCard**: Grid of content cards
 - **Footer**: Complete footer component
 
+### Analytics
+
+For GA4 setup and UNDRR domain configuration, see
+<LinkTo kind="getting-started-analytics-enhancements" story="docs"> Analytics enhancements</LinkTo>.
+
 <Canvas of={PageTemplateExampleStories.Default} meta={PageTemplateExampleStories} />
 
 ### Changelog
 
+- **October 2025** - Enable footer
 - **September 2025** - Enhances example with table of contents
 - **June 2025** — Integrated PageHeader component to replace placeholder section, providing complete UNDRR branding and navigation functionality
 - **October 2024** — Initial page template example created with Hero, Tab, VerticalCard, and Footer components
