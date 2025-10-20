@@ -29,6 +29,7 @@ $mg-color-tab-background: rgba($mg-color-interactive, 0.1);
 $mg-color-tab-border: $mg-color-interactive;
 $mg-color-tab-border--hover: $mg-color-interactive;
 $mg-color-tab-border--active: $mg-color-tab-background;
+$mg-color-tab-background--inactive: $mg-color-tabbar-background;
 $mg-color-tab-background--hover: rgba($mg-color-interactive, 0.2);
 $mg-radius-tab: $mg-spacing-50 $mg-spacing-50 0 0;
 $mg-tabs-border-bottom: true;
