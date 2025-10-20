@@ -16,8 +16,9 @@
       width: 100%;
       height: 1px;
       top: -$mg-spacing-25;
+      margin-bottom: -$mg-spacing-25;
       position: relative;
-      z-index: -1;
+      z-index: 1;
       border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
     }
   }
@@ -25,16 +26,14 @@
 
 .mg-tabs__item {
   display: inline-block;
-
-  // position: relative;
   -ms-flex-preferred-size: max-content;
   flex-basis: max-content;
   padding: 0;
 }
 
-// With the introdcution of stacked and horizontal tabs we changed
+// With the introduction of stacked and horizontal tabs we changed
 // the html structure so that the content is grouped under the li.
-// We scopped the css changes to ensure backwards compatibility.
+// We scoped the css changes to ensure backwards compatibility.
 .mg-tabs--stacked,
 .mg-tabs--horizontal {
   .mg-tabs-content {
@@ -143,6 +142,7 @@
 .mg-tabs__link {
   border: none;
   border-radius: $mg-radius-tab;
+  background: $mg-color-tab-background--inactive;
   color: $mg-color-text-tab;
   font-family: $mg-font-family;
   font-size: $mg-font-size-400;
