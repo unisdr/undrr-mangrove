@@ -62,7 +62,7 @@ jobs:
           name: output
           path: ./dist
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
   # Deployment job
   deploy:
     if: github.ref == 'refs/heads/main' # only deploy if branch is master
