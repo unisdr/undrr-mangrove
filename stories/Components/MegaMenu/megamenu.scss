@@ -528,13 +528,7 @@
   // Mobile-first: Display by default
   position: absolute;
   inset-inline-end: 0; // RTL-friendly
-  background: rgb(
-    0
-    0
-    0 /
-    0
-  ); // we let the menu items show through to advertise the contents
-
+  background: rgb(0 0 0 / 0); // we let the menu items show through to advertise the contents
   color: $mg-color-interactive;
   font-size: 2rem;
   width: 100vw;
