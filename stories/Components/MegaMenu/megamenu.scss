@@ -1,12 +1,12 @@
 .mg-mega-wrapper {
   position: relative;
+  background: $mg-color-white;
   box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
   z-index: 10;
 }
 
 .mg-mega-topbar {
   width: 100%;
-  background: $mg-color-white;
   display: flex;
   align-items: flex-start;
   z-index: 10;
@@ -14,12 +14,23 @@
   max-width: $mg-breakpoint-desktop; // mg-mega-toolbar does not play well with mg-container
   margin: 0 auto;
 
+  // these are note "mobile first" as they seem to cause a glitch with firefox and .mg-container-full-width
+  @media screen and (max-width: $mg-breakpoint-tablet) {
+    padding-left: 4rem; // space for the icon button
+    overflow-x: hidden; // primarily for mobile
+  }
+
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
-    display: none;
+    pointer-events: none; // on mobile we only advertise the buttons, but not clickable
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       display: block;
+      pointer-events: unset;
+    }
+
+    .mg-mega-content {
+      display: none;
     }
 
     font-size: $mg-font-size-300;
@@ -35,35 +46,40 @@
 
     > a,
     > button {
-      padding: $mg-spacing-150 $mg-spacing-200;
+      padding: $mg-spacing-150;
       display: block;
       cursor: pointer;
       line-height: 1.75rem; // normalization
+      width: max-content; // overflow menu style on mobile
+
+      @media screen and (min-width: $mg-breakpoint-tablet) {
+        width: unset;
+      }
     }
 
-    &--active {
-      // color: $mg-color-interactive;
-      background: rgba($mg-color-interactive, 0.2);
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      &--active {
+        background: rgba($mg-color-interactive, 0.2);
 
-      a,
-      .mg-mega-topbar__item-link {
-        color: $mg-color-interactive;
-        text-decoration: none;
-      }
+        a,
+        .mg-mega-topbar__item-link {
+          color: $mg-color-interactive;
+          text-decoration: none;
+        }
 
-      a.mg-button-primary {
-        color: $mg-color-white;
-        text-decoration: none;
-      }
+        a.mg-button-primary {
+          color: $mg-color-white;
+          text-decoration: none;
+        }
 
-      .mg-mega-content {
-        display: flex;
+        .mg-mega-content {
+          display: flex;
+        }
       }
     }
   }
 
   &__item-link {
-    font-size: $mg-font-size-400;
     font-family: $mg-font-family-condensed;
     color: $mg-color-interactive;
     background: none;
@@ -71,6 +87,13 @@
     font-weight: bold;
     cursor: pointer;
     list-style: none;
+  }
+
+  // Desktop: Make the top level button links larger
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    &__item-link {
+      font-size: $mg-font-size-400;
+    }
   }
 }
 
@@ -99,15 +122,15 @@
     overflow: hidden;
     top: 4.8rem;
     position: absolute;
+  }
 
-    &.mg-container-full-width {
-      position: absolute;
-    }
+  &.mg-container-full-width {
+    position: absolute;
   }
 
   &__left {
     height: 100%;
-    width: 100vw; // mobile
+    width: 100%; // mobile-first
     background-color: rgba($mg-color-button, 0.8);
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
@@ -182,7 +205,10 @@
     padding: $mg-spacing-150 $mg-spacing-250;
     margin-inline: -$mg-spacing-200; // extend hit area to both edges
     font-weight: 600;
-    transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      transform 150ms ease;
 
     &:hover,
     &:focus-visible {
@@ -192,14 +218,18 @@
 
     // RTL-friendly chevron indicator
     &::after {
-      content: '›';
+      content: "›";
       display: inline-block;
       position: absolute;
       font-size: 3rem;
       inset-inline-end: auto;
       padding-inline-start: $mg-spacing-150;
       margin-inline-end: $mg-spacing-150;
-      transition: transform 150ms ease, inset-inline-start 200ms cubic-bezier(0.4, 0, 0.2, 1), inset-inline-end 200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease;
+      transition:
+        transform 150ms ease,
+        inset-inline-start 200ms cubic-bezier(0.4, 0, 0.2, 1),
+        inset-inline-end 200ms cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 150ms ease;
       opacity: 0.55;
     }
 
@@ -219,20 +249,28 @@
 }
 
 // RTL: Flip chevron direction
-[dir="rtl"] .mg-mega-content__section-list-item .mg-mega-content__section-list-link::after {
-  content: '‹';
+[dir="rtl"]
+  .mg-mega-content__section-list-item
+  .mg-mega-content__section-list-link::after {
+  content: "‹";
 }
 
 /* Brief pulse to draw attention when active becomes visible */
 @keyframes mg-mega-tab-pulse {
   0% {
-    box-shadow: inset 4px 0 0 0 $mg-color-button, 0 0 0 0 rgba($mg-color-interactive, 0);
+    box-shadow:
+      inset 4px 0 0 0 $mg-color-button,
+      0 0 0 0 rgba($mg-color-interactive, 0);
   }
   60% {
-    box-shadow: inset 4px 0 0 0 $mg-color-button, 0 0 0 8px rgba($mg-color-interactive, 0.12);
+    box-shadow:
+      inset 4px 0 0 0 $mg-color-button,
+      0 0 0 8px rgba($mg-color-interactive, 0.12);
   }
   100% {
-    box-shadow: inset 4px 0 0 0 $mg-color-button, 0 0 0 0 rgba($mg-color-interactive, 0);
+    box-shadow:
+      inset 4px 0 0 0 $mg-color-button,
+      0 0 0 0 rgba($mg-color-interactive, 0);
   }
 }
 
@@ -331,25 +369,6 @@
   }
 }
 
-.mg-recursive-menu-item {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  a {
-    text-decoration: none;
-    color: $mg-color-black;
-
-    &:hover {
-      color: $mg-color-black;
-    }
-  }
-
-  &__children {
-    list-style: none;
-  }
-}
-
 .mg-icon-button {
   padding: $mg-spacing-100;
   background-color: transparent;
@@ -438,7 +457,9 @@
 }
 
 // RTL: Flip rotation direction
-[dir="rtl"] .mg-mega-sidebar-section__item[aria-expanded="true"] .fa-angle-circled-left {
+[dir="rtl"]
+  .mg-mega-sidebar-section__item[aria-expanded="true"]
+  .fa-angle-circled-left {
   transform: rotate(90deg);
 }
 
@@ -484,6 +505,7 @@
   display: flex;
   flex-direction: column;
   padding: 0;
+  margin-bottom: 0;
   width: 100%;
   position: relative;
   inset-inline-end: auto; // RTL-friendly
@@ -506,16 +528,22 @@
   // Mobile-first: Display by default
   position: absolute;
   inset-inline-end: 0; // RTL-friendly
-  background: white;
+  background: rgb(
+    0
+    0
+    0 /
+    0
+  ); // we let the menu items show through to advertise the contents
+
   color: $mg-color-interactive;
   font-size: 2rem;
   width: 100vw;
+  height: 100%;
   padding: $mg-spacing-100;
   border: none;
   cursor: pointer;
   align-items: start;
   justify-content: start;
-  transition: all 0.4s ease-in-out;
   z-index: 14;
   display: flex;
 
@@ -525,8 +553,8 @@
   }
 
   &:hover {
-    background: $mg-color-interactive-active;
-    color: white;
+    // background: $mg-color-interactive-active;
+    color: rgba($mg-color-interactive, 0.9);
   }
 
   .mg-mega-topbar {
@@ -534,9 +562,8 @@
   }
 
   &:has(.fa-angle-circled-left) {
-    background: $mg-color-white;
+    background: rgb(255 255 255 / 0.8);
     color: $mg-color-interactive-active;
-    justify-content: end;
     box-shadow: 0 0 4px rgb(0 0 0 / 0.2);
   }
 }
@@ -558,7 +585,7 @@
   box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
 
   &.mg-mega-mobile-sidebar--open {
-    transform: translateY(4rem);
+    transform: translateY(calc(5rem - 2px)); // mystery math?
   }
 
   // Desktop: Hide completely

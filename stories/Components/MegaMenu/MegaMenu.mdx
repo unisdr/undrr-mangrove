@@ -49,16 +49,11 @@ const MyComponent = () => (
 
 - 0.7
   - **Major refactor**: Converted to mobile-first, CSS-driven responsive architecture
-  - Replaced custom JavaScript breakpoint detection with native CSS media queries for improved performance
-  - Eliminated all window resize event listeners (zero JavaScript resize handlers)
-  - Added comprehensive RTL (Right-to-Left) support using CSS logical properties
-  - Mobile and desktop menu structures now both render; CSS controls visibility
-  - Tablet devices (480px-1024px) now display hamburger menu instead of cramped desktop layout
-  - Removed dead code: `useBreakpoint` hook, `IconButton`, and `RecursiveMegaMenuItem` components
-  - Updated breakpoint handling: `$mg-breakpoint-mobile` (480px) and `$mg-breakpoint-tablet` (1024px)
+  - Eliminated window resize event listeners (zero JavaScript resize handlers)
   - Chevron indicators, borders, and sidebar positions automatically flip for RTL languages
-  - Improved separation of concerns: CSS handles presentation, JavaScript handles behavior only
+  - Improve RTL support using CSS logical properties
   - Added RTL story variant to demonstrate right-to-left language support
+  - Add content hinting for mega menu on mobile
 - 0.6
   - UX improvements to better indicate the presence of submenus
   - Aesthetic updates to align with UNDRR branding direction, with less prominent use of the blue
