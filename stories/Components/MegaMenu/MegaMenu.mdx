@@ -21,6 +21,12 @@ A mega menu with customized hover delay timing.
 
 <Canvas of={MegaMenuStories.WithCustomDelay} meta={MegaMenuStories} />
 
+## RTL (Right-to-Left)
+
+The mega menu fully supports RTL languages with automatic layout mirroring.
+
+<Canvas of={MegaMenuStories.RTL} meta={MegaMenuStories} />
+
 ## Usage
 
 ```
@@ -41,6 +47,18 @@ const MyComponent = () => (
 
 ### Changelog
 
+- 0.7
+  - **Major refactor**: Converted to mobile-first, CSS-driven responsive architecture
+  - Replaced custom JavaScript breakpoint detection with native CSS media queries for improved performance
+  - Eliminated all window resize event listeners (zero JavaScript resize handlers)
+  - Added comprehensive RTL (Right-to-Left) support using CSS logical properties
+  - Mobile and desktop menu structures now both render; CSS controls visibility
+  - Tablet devices (480px-1024px) now display hamburger menu instead of cramped desktop layout
+  - Removed dead code: `useBreakpoint` hook, `IconButton`, and `RecursiveMegaMenuItem` components
+  - Updated breakpoint handling: `$mg-breakpoint-mobile` (480px) and `$mg-breakpoint-tablet` (1024px)
+  - Chevron indicators, borders, and sidebar positions automatically flip for RTL languages
+  - Improved separation of concerns: CSS handles presentation, JavaScript handles behavior only
+  - Added RTL story variant to demonstrate right-to-left language support
 - 0.6
   - UX improvements to better indicate the presence of submenus
   - Aesthetic updates to align with UNDRR branding direction, with less prominent use of the blue

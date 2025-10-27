@@ -16,12 +16,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
-import { useBreakpoint } from './TopBar/hook';
 
 const MegaMenu = ({ sections, delay = 300 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
-  const breakpoint = useBreakpoint();
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
@@ -50,12 +48,6 @@ const MegaMenu = ({ sections, delay = 300 }) => {
       setActiveItem(null);
     }
   };
-
-  useEffect(() => {
-    if (breakpoint !== 'mobile') {
-      setShowSidebar(false);
-    }
-  }, [breakpoint]);
 
   return (
     <nav

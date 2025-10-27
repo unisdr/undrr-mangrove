@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useBreakpoint } from '../TopBar/hook';
 
 export default function Section({
   section,
@@ -7,8 +6,8 @@ export default function Section({
   sectionListRef,
   itemListRef,
 }) {
-  const breakpoint = useBreakpoint();
-
+  // Note: We render both mobile and desktop content structures.
+  // CSS media queries control which version is visible.
   const [itemIndex, setItemIndex] = useState(0);
   const [focusIndex, setFocusIndex] = useState(0);
   const [focusableElements, setFocusableElements] = useState([]);
@@ -27,7 +26,7 @@ export default function Section({
       if (focusIndex < focusableElements?.length - 1) {
         setFocusIndex(prevIndex => prevIndex + 1);
       } else {
-        breakpoint !== 'mobile' && setFocusIndex(0);
+        setFocusIndex(0);
         itemListRef.current?.[index + 1]?.focus();
       }
     }
@@ -182,9 +181,13 @@ export default function Section({
               tabIndex={0}
               role="navigation"
             >
-              <ul role="menu" aria-label="Submenu items">
-                {breakpoint === 'mobile'
-                  ? section.items.map((item, index) => (
+              {/* Mobile version - shows all nested items */}
+              <ul
+                role="menu"
+                aria-label="Submenu items"
+                className="mg-mega-content__menu--mobile"
+              >
+                {section.items.map((item, index) => (
                       <li key={index} role="none">
                         <a
                           href={item.url}
@@ -232,10 +235,17 @@ export default function Section({
                           </ul>
                         )}
                       </li>
-                    ))
-                  : // Desktop / tablet – maintain existing behaviour
-                    section.items[itemIndex]?.items
-                    ? section.items[itemIndex].items.map(
+                    ))}
+              </ul>
+
+              {/* Desktop version - shows items based on hover state */}
+              <ul
+                role="menu"
+                aria-label="Submenu items"
+                className="mg-mega-content__menu--desktop"
+              >
+                {section.items[itemIndex]?.items
+                  ? section.items[itemIndex].items.map(
                         (subItem, subIndex) => (
                           <li key={subIndex} role="none">
                             <a
@@ -267,13 +277,13 @@ export default function Section({
                           </li>
                         )
                       )
-                    : section.items.map((item, index) => (
-                        <li key={index} role="none">
-                          <a href={item.url} role="menuitem">
-                            {item.title}
-                          </a>
-                        </li>
-                      ))}
+                  : section.items.map((item, index) => (
+                      <li key={index} role="none">
+                        <a href={item.url} role="menuitem">
+                          {item.title}
+                        </a>
+                      </li>
+                    ))}
               </ul>
             </section>
           )}
