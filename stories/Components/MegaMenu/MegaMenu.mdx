@@ -39,11 +39,12 @@ const MyComponent = () => (
 
 ## Props
 
-| Prop      | Type   | Default | Description                                          |
-| --------- | ------ | ------- | ---------------------------------------------------- |
-| items     | array  | []      | Array of menu items to display                       |
-| delay     | number | 300     | Delay in milliseconds before showing/hiding submenus |
-| className | string | ''      | Additional CSS class names                           |
+| Prop       | Type   | Default | Description                                                           |
+| ---------- | ------ | ------- | --------------------------------------------------------------------- |
+| items      | array  | []      | Array of menu items to display                                        |
+| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave              |
+| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens) |
+| className  | string | ''      | Additional CSS class names                                            |
 
 ### Changelog
 
@@ -54,6 +55,8 @@ const MyComponent = () => (
   - Improve RTL support using CSS logical properties
   - Added RTL story variant to demonstrate right-to-left language support
   - Add content hinting for mega menu on mobile
+  - Added `hoverDelay` prop (default 180ms) to prevent accidental menu opens when mousing past
+  - Clicking outside the menu now closes the dropdown (improved UX)
 - 0.6
   - UX improvements to better indicate the presence of submenus
   - Aesthetic updates to align with UNDRR branding direction, with less prominent use of the blue
