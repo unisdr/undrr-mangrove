@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { TopBarItem } from './TopBarItem';
 import { TopBarMobileIconButton } from './TopBarMobileIconButton.jsx';
-import { useBreakpoint } from './hook.js';
 
 export function TopBar({
   handleItemHover,
@@ -12,8 +11,6 @@ export function TopBar({
   sectionListRef,
   itemListRef,
 }) {
-  const breakpoint = useBreakpoint();
-
   const handleFocusByArrows = (e, index) => {
     // Prevent default browser scrolling for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -35,36 +32,36 @@ export function TopBar({
 
   return (
     <ul
-      className="mg-mega-topbar | mg-container mg-container-full-width"
+      className="mg-mega-topbar | mg-container-full-width"
       role="menubar"
       aria-label="Main navigation menu"
     >
-      {breakpoint === 'mobile' ? (
-        <TopBarMobileIconButton
-          isOpen={showSidebar}
-          onClick={() => toggleShowSidebar()}
+      {/* Mobile/Tablet hamburger button - hidden on desktop via CSS */}
+      <TopBarMobileIconButton
+        isOpen={showSidebar}
+        onClick={() => toggleShowSidebar()}
+      />
+
+      {/* Desktop menu items - hidden on mobile/tablet via CSS */}
+      {sections.map((section, index) => (
+        <TopBarItem
+          key={index}
+          index={index}
+          ref={element => (itemListRef.current[index] = element)}
+          title={section.title}
+          bannerDescription={section.bannerDescription}
+          link={section.bannerButton}
+          children={section.sections}
+          onMouseEnter={() => handleItemHover(index)}
+          activeItem={activeItem}
+          section={section}
+          handleOnKeyDown={e => {
+            handleFocusByArrows(e, index);
+          }}
+          sectionListRef={sectionListRef}
+          itemListRef={itemListRef}
         />
-      ) : (
-        sections.map((section, index) => (
-          <TopBarItem
-            key={index}
-            index={index}
-            ref={element => (itemListRef.current[index] = element)}
-            title={section.title}
-            bannerDescription={section.bannerDescription}
-            link={section.bannerButton}
-            children={section.sections}
-            onMouseEnter={() => handleItemHover(index)}
-            activeItem={activeItem}
-            section={section}
-            handleOnKeyDown={e => {
-              handleFocusByArrows(e, index);
-            }}
-            sectionListRef={sectionListRef}
-            itemListRef={itemListRef}
-          />
-        ))
-      )}
+      ))}
     </ul>
   );
 }

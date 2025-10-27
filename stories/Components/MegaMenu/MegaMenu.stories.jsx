@@ -318,3 +318,23 @@ export const WithCustomDelay = {
     sections: sections,
   },
 };
+
+export const RTL = {
+  render: args => (
+    <div dir="rtl">
+      <MegaMenu {...args} />
+    </div>
+  ),
+  args: {
+    delay: 5000,
+    sections: sections,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'MegaMenu with RTL (Right-to-Left) support. The menu layout, chevrons, borders, and sidebar positions are automatically flipped for RTL languages.',
+      },
+    },
+  },
+};

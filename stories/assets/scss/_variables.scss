@@ -10,6 +10,7 @@
  *                                                        |___/
  */
 // font file variables
+// Path adjusted for Storybook staticDirs (serves assets/ at root, not /assets/)
 $mgIconFontPath: "../fonts/mangrove-icon-set/font";
 
 // image variables
@@ -256,7 +257,7 @@ $mg-width-600: 60rem;
  */
 
 $mg-breakpoint-mobile: 480px;
-$mg-breakpoint-tablet: 1024px;
+$mg-breakpoint-tablet: 900px;
 $mg-breakpoint-desktop: 1164px; // see the docs: this is our main target but we also have a "wide" breakpoint as a secondary use case
 $mg-breakpoint-desktop-wide: 1440px;
 
