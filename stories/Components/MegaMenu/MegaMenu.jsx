@@ -11,36 +11,53 @@
  * @param {string} sections[].items[].url - URL for the menu item
  * @param {Object[]} sections[].items[].items - Optional nested items
  * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
+ * @param {number} [hoverDelay=80] - Delay in milliseconds before opening menu on hover (prevents accidental opens)
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef } from 'react';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
 
-const MegaMenu = ({ sections, delay = 300 }) => {
+const MegaMenu = ({ sections, delay = 300, hoverDelay = 180 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
 
-  // Use ref for timeoutId to prevent re-renders
-  const timeoutRef = useRef(null);
+  // Refs for timeout management
+  const closeTimeoutRef = useRef(null);
+  const openTimeoutRef = useRef(null);
 
-  // Clear timeout on unmount
+  // Clear all timeouts on unmount
   useEffect(() => {
-    return () => clearTimeout(timeoutRef.current);
+    return () => {
+      clearTimeout(closeTimeoutRef.current);
+      clearTimeout(openTimeoutRef.current);
+    };
   }, []);
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
+    // Clear any pending open timeout
+    clearTimeout(openTimeoutRef.current);
+
+    // Set timeout to close the menu
+    closeTimeoutRef.current = setTimeout(() => {
       setActiveItem(null);
     }, delay);
   };
 
   const handleItemHover = item => {
-    clearTimeout(timeoutRef.current);
-    setActiveItem(item);
+    // Clear any pending close timeout
+    clearTimeout(closeTimeoutRef.current);
+
+    // Clear any pending open timeout
+    clearTimeout(openTimeoutRef.current);
+
+    // Set timeout before opening (prevents accidental opens)
+    openTimeoutRef.current = setTimeout(() => {
+      setActiveItem(item);
+    }, hoverDelay);
   };
 
   const handleEscape = e => {
@@ -48,6 +65,25 @@ const MegaMenu = ({ sections, delay = 300 }) => {
       setActiveItem(null);
     }
   };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Check if click is outside the mega menu wrapper
+      const megaWrapper = document.querySelector('.mg-mega-wrapper');
+      if (megaWrapper && !megaWrapper.contains(e.target)) {
+        setActiveItem(null);
+      }
+    };
+
+    // Only add listener when menu is open
+    if (activeItem !== null) {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+        document.removeEventListener('click', handleClickOutside);
+      };
+    }
+  }, [activeItem]);
 
   return (
     <nav
