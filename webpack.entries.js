@@ -1,5 +1,5 @@
-const path = require('path');
-const glob = require('glob');
+import path from 'path';
+import { globSync } from 'glob';
 
 const cssPathPrefix = 'css';
 
@@ -7,7 +7,7 @@ const cssPathPrefix = 'css';
  * Get entry points for webpack
  * CSS and JS separately
  */
-module.exports = (type = 'css') => {
+export default (type = 'css') => {
   let files = {};
   let suggestFiles = '/**/*.scss';
   let ignoreFiles = [
@@ -23,8 +23,7 @@ module.exports = (type = 'css') => {
     suggestFiles = '/stories/assets/**/*.js';
   }
 
-  glob
-    .globSync(`./stories${suggestFiles}`, {
+  globSync(`./stories${suggestFiles}`, {
       ignore: ignoreFiles,
       nodir: true,
     })
