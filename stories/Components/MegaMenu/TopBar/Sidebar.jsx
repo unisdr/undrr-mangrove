@@ -63,6 +63,13 @@ function SidebarItem({
 export function Sidebar({ sections, itemListRef, sectionListRef, open }) {
   const [sectionIndex, setSectionIndex] = useState(null);
 
+  // Reset expanded sections when sidebar closes
+  useEffect(() => {
+    if (!open) {
+      setSectionIndex(null);
+    }
+  }, [open]);
+
   const handleSectionToggle = index => {
     if (index === sectionIndex) {
       setSectionIndex(null);

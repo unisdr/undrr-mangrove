@@ -341,7 +341,7 @@
     // nested menus - RTL-friendly
     ul {
       padding-block: 0;
-      padding-inline: 0 $mg-spacing-150;
+      padding-inline: $mg-spacing-150;
       opacity: 0.8;
       break-inside: avoid;
     }
@@ -574,6 +574,7 @@
   overflow: auto;
   background-color: $mg-color-interactive;
   max-height: 80vh;
+  height: 80vh;
   transform: translateY(-100vh);
   transition: transform 0.4s ease-in-out;
   box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
