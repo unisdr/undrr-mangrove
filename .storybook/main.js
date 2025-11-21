@@ -25,15 +25,17 @@ export default {
         },
       },
     },
-    {
-      name: 'storybook-design-token',
-      options: {
-        preserveCSSVars: true,
-        // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
-      },
-    },
+    // Temporarily disabled - incompatible with Storybook 10
+    // {
+    //   name: 'storybook-design-token',
+    //   options: {
+    //     preserveCSSVars: true,
+    //     // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
+    //   },
+    // },
     '@storybook/addon-links',
-    '@whitespace/storybook-addon-html',
+    // Temporarily disabled - incompatible with Storybook 10
+    // '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
     '@storybook/addon-webpack5-compiler-babel',

@@ -1,1 +1,1 @@
-module.exports = ['@storybook/addon-docs/preact/preset'];
+export default ['@storybook/addon-docs/preact/preset'];
