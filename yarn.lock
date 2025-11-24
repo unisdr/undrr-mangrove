@@ -3924,7 +3924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/icons@npm:^1.4.0":
+"@storybook/icons@npm:^1.4.0, @storybook/icons@npm:^1.6.0":
   version: 1.6.0
   resolution: "@storybook/icons@npm:1.6.0"
   peerDependencies:
@@ -4975,7 +4975,7 @@ __metadata:
     sass: "npm:1.94.0"
     sass-loader: "npm:16.0.6"
     semantic-release: "npm:^25.0.0"
-    storybook: "npm:9.1.16"
+    storybook: "npm:10.0.8"
     storybook-addon-rtl: "npm:2.0.1"
     storybook-design-token: "npm:^4.1.0"
     style-loader: "npm:4.0.0"
@@ -20203,6 +20203,32 @@ __metadata:
     react-dom:
       optional: true
   checksum: 10/0548b47ed697bacb73f81f72e1f050d33c9e6b1f438beea86336c4720395242acd67a1db5069bd98e7879aa60e6f3a8a9555c634efa10d76a14fbcaedf34c90b
+  languageName: node
+  linkType: hard
+
+"storybook@npm:10.0.8":
+  version: 10.0.8
+  resolution: "storybook@npm:10.0.8"
+  dependencies:
+    "@storybook/global": "npm:^5.0.0"
+    "@storybook/icons": "npm:^1.6.0"
+    "@testing-library/jest-dom": "npm:^6.6.3"
+    "@testing-library/user-event": "npm:^14.6.1"
+    "@vitest/expect": "npm:3.2.4"
+    "@vitest/mocker": "npm:3.2.4"
+    "@vitest/spy": "npm:3.2.4"
+    esbuild: "npm:^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0"
+    recast: "npm:^0.23.5"
+    semver: "npm:^7.6.2"
+    ws: "npm:^8.18.0"
+  peerDependencies:
+    prettier: ^2 || ^3
+  peerDependenciesMeta:
+    prettier:
+      optional: true
+  bin:
+    storybook: ./dist/bin/dispatcher.js
+  checksum: 10/a30b54248d69d7406f78e1871e075092ed9ae366d1c7cec56dc10b31b72a5196ef9e751453c9a7546797228c4fe0f01893c6fa541d24cf51037124d4f0e1566e
   languageName: node
   linkType: hard
 
