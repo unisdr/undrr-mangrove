@@ -67,17 +67,13 @@
           <button type="button" class="mg-button mg-button-primary" onclick="location.reload()">Try again</button>
           <a class="mg-button mg-button-secondary" href="/">Go to home</a>
         </div>
-        <p>
-          If you think this is in error or need help,
-          <a href="https://www.undrr.org/contact-us">please contact us</a>
-          and provide the details below.
-        </p>
-        <!-- Cloudflare tokens - replace with your platform's variables if not using Cloudflare -->
-        <p class="mg-code" role="note" aria-label="Request details">
-          Error code: 500 | Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
-        </p>
-        <!-- Cloudflare 5xx error box - provides additional server error details -->
+        <!-- Cloudflare 5xx error box - provides error details, Ray ID, IP, etc. -->
         ::CLOUDFLARE_ERROR_500S_BOX::
+        <p>
+          If the problem persists,
+          <a href="https://www.undrr.org/contact-us">please contact us</a>
+          with the error details above.
+        </p>
         <hr />
         <small>This website is operated by</small>
         <a href="https://www.undrr.org/"><div class="undrr-logo" aria-hidden="true"></div></a>
@@ -96,9 +92,6 @@
         // Load analytics
         load('script',{src:'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js',crossorigin:'anonymous'});
         load('script',{src:'https://messaging.undrr.org/src/undrr-messaging.js',defer:''});
-        // Add URL to error details
-        var details=document.querySelector('[aria-label="Request details"]');
-        if(details)details.textContent=details.textContent+' | URL: '+window.location.href;
       })();
     </script>
   </body>
