@@ -68,6 +68,8 @@ The static HTML templates in this component are designed for use with [Cloudflar
 
 - **Deferred asset loading** via JavaScript to bypass Cloudflare's asset bundling limits
 - **Cloudflare error tokens** that display request details for debugging and support
+- **Client-side URL capture** since Cloudflare doesn't provide a URL token
+- **Analytics meta tags** (`vf:page-type`) for tracking error page views
 
 ### Available Cloudflare tokens
 
@@ -90,6 +92,10 @@ Each static template includes a `vf:page-type` meta tag for analytics tracking:
 ```html
 <meta name="vf:page-type" content="category;404" />
 ```
+
+### Client-side URL capture
+
+Since Cloudflare doesn't provide a URL token, each template includes JavaScript that appends the current URL to the error details at runtime.
 
 ### Adapting for other platforms
 
@@ -119,6 +125,25 @@ See the [static HTML examples](https://github.com/unisdr/undrr-mangrove/tree/mai
 
 Use these static HTML pages directly from the CDN when integrating with CDNs or upstream error handlers:
 
+### Cloudflare custom error page types
+
+| Cloudflare Setting | Template | Required Token | Description |
+|-------------------|----------|----------------|-------------|
+| 500 class errors | `5xx.html` | `::CLOUDFLARE_ERROR_500S_BOX::` | Covers all 5xx server errors with one page |
+| IP/Country challenge | `challenge.html` | `::CAPTCHA_BOX::` | Interactive challenge for visitors based on IP or country |
+| Managed challenge / I'm Under Attack Mode | `managed-challenge.html` | `::IM_UNDER_ATTACK_BOX::` | JS challenge, returns 403 status |
+| 1000 class errors | — | `::CLOUDFLARE_ERROR_1000S_BOX::` | Cloudflare-specific errors (use 5xx.html or create custom) |
+
+### CDN links for Cloudflare
+
+**Cloudflare-specific templates:**
+```text
+https://assets.undrr.org/static/mangrove/latest/assets/error-pages/5xx.html
+https://assets.undrr.org/static/mangrove/latest/assets/error-pages/challenge.html
+https://assets.undrr.org/static/mangrove/latest/assets/error-pages/managed-challenge.html
+```
+
+**Individual error pages** (for platforms that support per-code configuration):
 ```text
 https://assets.undrr.org/static/mangrove/latest/assets/error-pages/401.html
 https://assets.undrr.org/static/mangrove/latest/assets/error-pages/403.html
@@ -144,6 +169,6 @@ https://assets.undrr.org/static/mangrove/latest/assets/error-pages/504.html
 
 ## Changelog
 
-- 1.2.0 — Added 401, 500, 504 static templates; added URL via client-side JS; added `vf:page-type` meta tags for analytics ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))
+- 1.2.0 — Added 401, 500, 504, 5xx, challenge, managed-challenge static templates; added URL via client-side JS; added `vf:page-type` meta tags for analytics ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))
 - 1.1.0 — Added Cloudflare integration with error tokens and deferred asset loading ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))
 - 1.0.0 — Added standard error pages component and examples
