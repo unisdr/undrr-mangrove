@@ -17,21 +17,21 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <TableOfContents
   tocData={[
     { id: 'what-is-mangrove', text: 'What is Mangrove?' },
-    { id: 'quick-start', text: 'Quick Start (30 seconds)' },
+    { id: 'quick-start', text: 'Quick Start' },
     { id: 'integration-approaches', text: 'Integration Approaches' },
     { id: 'architecture-overview', text: 'Architecture Overview' },
     { id: 'key-principles', text: 'Key Principles' },
     { id: 'common-use-cases', text: 'Common Use Cases' },
     { id: 'development-setup', text: 'Development Setup' },
     { id: 'assets-location', text: 'Assets Location' },
-    { id: 'analytics-enhancements', text: 'Analytics enhancements' },
+    { id: 'analytics-and-messaging', text: 'Analytics and messaging' },
     { id: 'next-steps', text: 'Next Steps' },
     { id: 'need-help', text: 'Need Help?' },
   ]}
   showNumbers={false}
 />
 
-Welcome to UNDRR Mangrove - the component library that brings consistency, accessibility, and speed to UNDRR web development.
+Welcome to UNDRR Mangrove — a component library to bring consistency, accessibility, and speed to UNDRR web development.
 
 Before diving into implementation, it's important to understand that **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove is the UNDRR standard</LinkTo>** for all web properties. This guide will help you get started quickly, but understanding the broader context and governance around Mangrove ensures you're building in alignment with UNDRR's digital strategy.
 
@@ -46,7 +46,7 @@ Mangrove is UNDRR's component library that provides:
 - ✅ **Copy-paste ready** code snippets
 - ✅ **Comprehensive documentation** with live examples
 
-## Quick start (30 seconds)
+## Quick start
 
 The fastest way to get started:
 
@@ -54,34 +54,58 @@ The fastest way to get started:
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Base styling -->
+    <!-- Base styling (choose one theme) -->
     <link
       rel="stylesheet"
       href="https://assets.undrr.org/static/mangrove/1.2.12/css/style.css"
     />
-    <!-- or choose a site specific theme -->
-    <link
-      rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.2.12/css/style-mcr.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.2.12/css/style-irp.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.2.12/css/style-preventionweb.css"
-    />
+    <!-- Alternative themes:
+    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.12/css/style-mcr.css" />
+    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.12/css/style-irp.css" />
+    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.12/css/style-preventionweb.css" />
+    -->
   </head>
   <body>
-    <!-- 2. Use any component -->
+    <!-- Use a component -->
     <button class="mg-cta-button mg-cta-button--primary">
       <span class="mg-cta-button__text">Get Started</span>
       <span class="mg-cta-button__icon" aria-hidden="true">→</span>
     </button>
+
+    <!-- Widget loader script -->
+    <script
+      type="text/javascript"
+      src="https://publish.preventionweb.net/widget.js?rand=3d797b"
+    ></script>
+
+    <!-- Widget initialization -->
+    <script>
+      new PW_Widget.initialize({
+        contenttype: 'landingpage',
+        pageid: '83835',
+        includemetatags: false,
+        includecss: true,
+        suffixID: 'footer',
+        activedomain: 'www.undrr.org',
+      });
+    </script>
+
+    <!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
+    <script
+      src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+      defer
+    ></script>
+
+    <!-- UNDRR Critical Messaging - emergency broadcasts -->
+    <script
+      src="https://messaging.undrr.org/src/undrr-messaging.js"
+      defer
+    ></script>
   </body>
 </html>
 ```
+
+This widget dynamically loads the UNDRR footer from PreventionWeb, ensuring consistency across all UNDRR properties.
 
 ## Integration approaches
 
@@ -393,18 +417,30 @@ When working with Mangrove assets, you'll find them organized in the following s
 - **Vanilla JavaScript files**: Available in the `js` directory
 - **Source SCSS files**: Available in the `scss` directory
 
-## Analytics enhancements
+## Analytics and messaging
 
-For GA4 helpers and UNDRR domain configuration, see the dedicated entry:
+All UNDRR pages should include these two scripts:
+
+```html
+<!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
+<script
+  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  defer
+></script>
+
+<!-- UNDRR Critical Messaging - emergency broadcasts -->
+<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+```
+
+For full documentation, see:
 
 <LinkTo kind="getting-started-analytics-enhancements" story="docs">
-  → Analytics enhancements (CDN and script)
+  → Analytics enhancements
 </LinkTo>
 
-Or open the CDN resources directly:
-
-- [Analytics CDN index](https://assets.undrr.org/static/analytics/v1.0.0/index.html)
-- [google_analytics_enhancements.js](https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js)
+<LinkTo kind="getting-started-critical-messaging" story="docs">
+  → Critical messaging
+</LinkTo>
 
 ## Next steps
 

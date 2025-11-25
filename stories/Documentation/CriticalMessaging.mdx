@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta
+  title="Getting started/Critical messaging"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Critical messaging
+
+UNDRR provides a failsafe messaging system that broadcasts urgent messages across all UNDRR properties, even when the main CMS is down.
+
+## Quick start
+
+Add this script to your HTML page, typically before the closing `</body>` tag:
+
+```html
+<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+```
+
+The script automatically checks for active messages and displays them on matching pages.
+
+## Optional: message container
+
+For better control over message placement, add this div where you want messages to appear:
+
+```html
+<div class="mg-critical-messaging"></div>
+```
+
+If this div is not found, messages will be injected at the top of `<body>`.
+
+## Features
+
+- **Failsafe operation** — Works even if Drupal is down (hosted on GitHub Pages)
+- **Location targeting** — Show messages only on specific URLs/domains
+- **Severity levels** — Info (blue) and warning (yellow) message types
+- **Time scheduling** — Messages with start/end times
+- **User dismissal** — Messages can be closed (persists for session)
+- **Zero network overhead** — Messages are embedded in the script itself
+
+## Resources
+
+- [Messaging system documentation](https://messaging.undrr.org/) — Full implementation guide and editor how-to
+- [GitHub repository](https://github.com/unisdr/undrr-messaging) — Source code (private repository)
+- [Status page](https://status.undrr.org/) — UNDRR system status
+
+## Debug mode
+
+Add `#enableMessagingDebug=true` to any URL to enable debug mode:
+
+```text
+https://www.undrr.org/#enableMessagingDebug=true
+```
+
+Debug mode provides detailed console logging and development utilities.
+
+## See also
+
+- [Analytics enhancements](/?path=/docs/getting-started-analytics-enhancements--docs) — GA4 tracking for UNDRR pages

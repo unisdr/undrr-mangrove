@@ -131,7 +131,7 @@ Use these static HTML pages directly from the CDN when integrating with CDNs or 
 |-------------------|----------|----------------|-------------|
 | 500 class errors | `5xx.html` | `::CLOUDFLARE_ERROR_500S_BOX::` | Covers all 5xx server errors with one page |
 | IP/Country challenge | `challenge.html` | `::CAPTCHA_BOX::` | Interactive challenge for visitors based on IP or country |
-| Managed challenge / I'm Under Attack Mode | `managed-challenge.html` | `::IM_UNDER_ATTACK_BOX::` | JS challenge, returns 403 status |
+| Managed challenge / I'm Under Attack Mode | `managed-challenge.html` | `::CAPTCHA_BOX::` | Managed challenge, returns 403 status |
 | 1000 class errors | — | `::CLOUDFLARE_ERROR_1000S_BOX::` | Cloudflare-specific errors (use 5xx.html or create custom) |
 
 ### CDN links for Cloudflare

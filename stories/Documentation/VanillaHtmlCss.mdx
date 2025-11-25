@@ -46,6 +46,24 @@ Add these `<link>` tags to your HTML `<head>`:
   </head>
   <body>
     <!-- Your content here -->
+
+    <!-- Widget loader script -->
+    <script
+      type="text/javascript"
+      src="https://publish.preventionweb.net/widget.js?rand=3d797b"
+    ></script>
+
+    <!-- Widget initialization -->
+    <script>
+      new PW_Widget.initialize({
+        contenttype: 'landingpage',
+        pageid: '83835',
+        includemetatags: false,
+        includecss: true,
+        suffixID: 'footer',
+        activedomain: 'www.undrr.org',
+      });
+    </script>
   </body>
 </html>
 ```
@@ -185,6 +203,35 @@ Some components work better with JavaScript. Include these for enhanced function
   });
 </script>
 ```
+
+## Analytics
+
+Include UNDRR analytics to track user behavior across your pages:
+
+```html
+<script
+  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  defer
+></script>
+```
+
+See [Analytics enhancements](/?path=/docs/getting-started-analytics-enhancements--docs) for full documentation.
+
+## Critical messaging
+
+Include the UNDRR critical messaging system to receive emergency broadcasts:
+
+```html
+<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+```
+
+Optionally add a container for message placement:
+
+```html
+<div class="mg-critical-messaging"></div>
+```
+
+See [Critical messaging](/?path=/docs/getting-started-critical-messaging--docs) for full documentation.
 
 ## Next steps
 

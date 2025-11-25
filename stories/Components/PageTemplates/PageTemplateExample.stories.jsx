@@ -1,5 +1,27 @@
 import React, { useEffect } from 'react';
 
+/**
+ * UNDRR Required Scripts
+ *
+ * All UNDRR production pages should include these scripts before </body>:
+ *
+ * <!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
+ * <script
+ *   src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+ *   defer
+ * ></script>
+ *
+ * <!-- UNDRR Critical Messaging - emergency broadcasts -->
+ * <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+ *
+ * Optional: Add a container for message placement:
+ * <div class="mg-critical-messaging"></div>
+ *
+ * See documentation:
+ * - Analytics: /?path=/docs/getting-started-analytics-enhancements--docs
+ * - Messaging: /?path=/docs/getting-started-critical-messaging--docs
+ */
+
 // Import your components
 import MegaMenu from '../MegaMenu/MegaMenu';
 import { Hero } from '../Hero/Hero';
@@ -114,15 +136,41 @@ const sampleMegaMenuSections = [
 // Define the Page Template Example component
 const PageTemplateExample = () => {
   useEffect(() => {
+    // Initialize table of contents
     const contentElement = document.querySelector('.page-template-example');
     const tocElement = document.querySelector('[data-mg-table-of-contents]');
     if (contentElement && tocElement) {
       mgTableOfContents(contentElement, tocElement);
     }
+
+    // Load UNDRR Analytics script
+    const analyticsScript = document.createElement('script');
+    analyticsScript.src =
+      'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js';
+    analyticsScript.defer = true;
+    document.body.appendChild(analyticsScript);
+
+    // Load UNDRR Critical Messaging script
+    const messagingScript = document.createElement('script');
+    messagingScript.src = 'https://messaging.undrr.org/src/undrr-messaging.js';
+    messagingScript.defer = true;
+    document.body.appendChild(messagingScript);
+
+    // Cleanup on unmount
+    return () => {
+      if (analyticsScript.parentNode) {
+        analyticsScript.parentNode.removeChild(analyticsScript);
+      }
+      if (messagingScript.parentNode) {
+        messagingScript.parentNode.removeChild(messagingScript);
+      }
+    };
   }, []);
   return (
     <>
       <PageHeader />
+      {/* Critical messaging container - messages will appear here */}
+      <div className="mg-critical-messaging"></div>
       <CookieConsentBanner />
       <MegaMenu delay={600} sections={sampleMegaMenuSections} />
       <div className="page-template-example | mg-container mg-container--spacer">
