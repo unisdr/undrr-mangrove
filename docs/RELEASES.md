@@ -75,12 +75,12 @@ Example CDN URLs:
 
 ```
 https://assets.undrr.org/testing/static/mangrove/README.md
-https://assets.undrr.org/testing/static/mangrove/latest/assets/css/style.css
+https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.2.11/assets/css/style.css
-https://assets.undrr.org/static/mangrove/1.2.11/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.2.11/assets/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.2.12/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.12/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.12/js/tabs.js
 ```
 
 The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
@@ -88,6 +88,18 @@ The workflow ensures that the `dist` branch always reflects the latest stable bu
 ### Future dist features
 
 Support for release tagged content.
+
+## Updating CDN links in documentation
+
+To prepare each release, update the version number in `package.json` and the run `yarn update-cdn-version` to update documentation files to point to the new versioned CDN URLs.
+
+This script:
+
+1. Reads the current version from `package.json`
+2. Updates all CDN links in documentation files from `latest` or `testing` to the current version
+3. Converts URLs like `https://assets.undrr.org/static/mangrove/latest/` to `https://assets.undrr.org/static/mangrove/{version}/`
+
+Files updated include README.md, Storybook documentation (MDX files), and component documentation.
 
 ## Quick Release Checklist
 
@@ -100,6 +112,8 @@ Support for release tagged content.
    - Check GitHub releases page
    - Verify CHANGELOG.md was updated
    - Push the new tag to trigger automatic npm publishing: `git push origin <tag-name>`
+   - Update CDN links in documentation: `yarn update-cdn-version`
+   - Commit the updated documentation files
 
 3. **Troubleshooting:**
    - No release? Check commit message format
