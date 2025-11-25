@@ -3,8 +3,53 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>404: Page not found</title>
-    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.2.12/css/style.css" />
+    <!--
+      CLOUDFLARE CUSTOM ERROR PAGE
+      Part of UNDRR Mangrove component library
+      Issue: https://gitlab.com/undrr/web-backlog/-/issues/2556
+
+      This template uses Cloudflare error tokens that are replaced at runtime.
+      See: https://developers.cloudflare.com/rules/custom-errors/reference/error-tokens/
+
+      Available tokens used in this template:
+      - ::RAY_ID:: - Unique request identifier for support tickets
+      - ::CLIENT_IP:: - Visitor's IP address
+      - ::GEO:: - Visitor's country/region
+
+      To customize for other systems, replace the Cloudflare tokens with your
+      platform's equivalent variables or static text.
+    -->
+    <style>
+      /* Critical inline styles for immediate render */
+      *,*::before,*::after{box-sizing:border-box}
+      html{font-size:10px}
+      body{font-family:system-ui,-apple-system,sans-serif;font-size:1.6rem;line-height:1.5;margin:0;color:#1a1a1a}
+      h1,h2{margin:1rem 0;font-weight:700}
+      h1{font-size:1.4rem;color:#004f91;margin:0}
+      h2{font-size:2.3rem;margin-top:.5rem}
+      a{color:#004f91;text-decoration:none}
+      a:hover{text-decoration:underline}
+      hr{border:1px solid #b3b3b3}
+      small{display:block;margin-bottom:.5rem}
+      .mg-error-page{min-height:100vh;background:#004f91;padding-bottom:2rem}
+      .mg-page-header__decoration{display:flex}
+      .mg-page-header__decoration div{width:25%;height:7px}
+      .mg-page-header__decoration div:nth-child(1){background:#c10920}
+      .mg-page-header__decoration div:nth-child(2){background:#962987}
+      .mg-page-header__decoration div:nth-child(3){background:#eb752a}
+      .mg-page-header__decoration div:nth-child(4){background:#00afae}
+      .mg-error-page__container{background:#fff;padding:2rem 1.5rem 1rem;max-width:900px;margin:2rem auto}
+      .mg-error-page__search{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem}
+      .mg-error-page__search input{border:1px solid #ccc;padding:.5rem;font-size:1.6rem;max-width:300px}
+      .mg-error-page__details{background:#f5f5f5;padding:1rem;font-size:1.2rem;margin:1rem 0;border-left:3px solid #004f91}
+      .mg-error-page__details dt{font-weight:600;display:inline}
+      .mg-error-page__details dd{display:inline;margin:0 1rem 0 .25rem}
+      .mg-button{display:inline-flex;align-items:center;justify-content:center;padding:1rem 1.5rem;font-size:1.4rem;font-weight:600;color:#fff;background:#004f91;border:1px solid #fff;cursor:pointer;text-decoration:none}
+      .mg-button:hover{background:#3372a7;color:#fff;text-decoration:none}
+      .mg-u-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(0);border:0}
+    </style>
   </head>
   <body>
     <main class="mg-error-page">
@@ -14,26 +59,51 @@
         <div></div>
         <div></div>
       </div>
-      <div class="mg-error-page__container mg-container--spacer">
+      <div class="mg-error-page__container">
         <h1>Error 404</h1>
-        <h2>We cannot find the page you are looking for</h2>
+        <h2>We can't find the page you're looking for</h2>
         <p>
-          If you entered a web address, check it is correct. If you followed a link, it may be incorrect.
+          If you typed the web address, check that it's correct. If you followed a link, it may be out of date.
           <br />
           You can also <a href="/">view the homepage</a>, browse the
           <a href="https://www.undrr.org/undrr-directory">UNDRR directory</a>, or try searching:
         </p>
-        <form class="mg-error-page__search" action="/search" role="search">
+        <form class="mg-error-page__search" action="/search" method="get" role="search">
           <label class="mg-u-sr-only" for="error-search">Search</label>
           <input id="error-search" name="q" type="search" placeholder="Search" />
-          <button type="submit" class="mg-button mg-button-primary">Search</button>
+          <button type="submit" class="mg-button">Search</button>
         </form>
+        <p>
+          If you think this is in error or need help,
+          <a href="https://www.undrr.org/contact-us">please contact us</a>
+          and provide the details below.
+        </p>
+        <!-- Cloudflare tokens - replace with your platform's variables if not using Cloudflare -->
+        <p class="mg-code" role="note" aria-label="Request details">
+          Error code: 404 | Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
+        </p>
         <hr />
         <small>This website is operated by</small>
         <a href="https://www.undrr.org/"><div class="undrr-logo" aria-hidden="true"></div></a>
       </div>
     </main>
-    <script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+    <script>
+      (function(){
+        // Deferred resource loader - bypasses Cloudflare's static asset inlining
+        function load(tag,attrs){
+          var el=document.createElement(tag);
+          for(var k in attrs)el.setAttribute(k,attrs[k]);
+          document.head.appendChild(el);
+        }
+        // Load full CSS from CDN (includes fonts)
+        load('link',{rel:'stylesheet',href:'https://assets.undrr.org/static/mangrove/1.2.12/css/style.css'});
+        // Load analytics
+        load('script',{src:'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js',crossorigin:'anonymous'});
+        load('script',{src:'https://messaging.undrr.org/src/undrr-messaging.js',defer:''});
+        // Add URL to error details
+        var details=document.querySelector('[aria-label="Request details"]');
+        if(details)details.textContent=details.textContent+' | URL: '+window.location.href;
+      })();
+    </script>
   </body>
 </html>

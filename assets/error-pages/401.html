@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>429: Too many requests</title>
+    <title>401: You are not signed in</title>
     <!--
       CLOUDFLARE CUSTOM ERROR PAGE
       Part of UNDRR Mangrove component library
@@ -42,9 +42,6 @@
       .mg-page-header__decoration div:nth-child(4){background:#00afae}
       .mg-error-page__container{background:#fff;padding:2rem 1.5rem 1rem;max-width:900px;margin:2rem auto}
       .mg-error-page__actions{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0}
-      .mg-error-page__details{background:#f5f5f5;padding:1rem;font-size:1.2rem;margin:1rem 0;border-left:3px solid #004f91}
-      .mg-error-page__details dt{font-weight:600;display:inline}
-      .mg-error-page__details dd{display:inline;margin:0 1rem 0 .25rem}
       .mg-button{display:inline-flex;align-items:center;justify-content:center;padding:1rem 1.5rem;font-size:1.4rem;font-weight:600;color:#fff;background:#004f91;border:1px solid #fff;cursor:pointer;text-decoration:none}
       .mg-button:hover{background:#3372a7;color:#fff;text-decoration:none}
       .mg-button-secondary{background:#4d84b2}
@@ -61,11 +58,11 @@
         <div></div>
       </div>
       <div class="mg-error-page__container">
-        <h1>Error 429</h1>
-        <h2>Too many requests</h2>
-        <p>You made too many requests in a short time. Wait a moment, then try again.</p>
+        <h1>Error 401</h1>
+        <h2>You are not signed in</h2>
+        <p>You need to sign in to view this page. If you think you should have access, sign in and try again.</p>
         <div class="mg-error-page__actions">
-          <button type="button" class="mg-button" onclick="location.reload()">Try again</button>
+          <a class="mg-button" href="/user/login">Sign in</a>
           <a class="mg-button mg-button-secondary" href="/">Go to home</a>
         </div>
         <p>
@@ -75,7 +72,7 @@
         </p>
         <!-- Cloudflare tokens - replace with your platform's variables if not using Cloudflare -->
         <p class="mg-code" role="note" aria-label="Request details">
-          Error code: 429 | Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
+          Error code: 401 | Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
         </p>
         <hr />
         <small>This website is operated by</small>
