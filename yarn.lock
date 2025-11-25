@@ -4916,7 +4916,7 @@ __metadata:
     semantic-release: "npm:^25.0.2"
     storybook: "npm:10.0.8"
     storybook-addon-rtl: "npm:^3.0.1"
-    storybook-design-token: "npm:^4.1.0"
+    storybook-design-token: "github:khawkins98/storybook-design-token#build"
     style-loader: "npm:4.0.0"
     stylelint: "npm:16.26.0"
     stylelint-config-recommended-scss: "npm:16.0.2"
@@ -19927,9 +19927,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"storybook-design-token@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "storybook-design-token@npm:4.1.0"
+"storybook-design-token@github:khawkins98/storybook-design-token#build":
+  version: 5.0.0
+  resolution: "storybook-design-token@https://github.com/khawkins98/storybook-design-token.git#commit=bd013d393efb1ffe6da65d18d475393077c39d8b"
   dependencies:
     "@storybook/icons": "npm:^1.4.0"
     "@tanstack/react-virtual": "npm:^3.13.9"
@@ -19944,13 +19944,13 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    storybook: ^9.0.0
+    storybook: ^10.0.0
   peerDependenciesMeta:
     react:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/0548b47ed697bacb73f81f72e1f050d33c9e6b1f438beea86336c4720395242acd67a1db5069bd98e7879aa60e6f3a8a9555c634efa10d76a14fbcaedf34c90b
+  checksum: 10/8f24abd23e1d7338ca09f70acaa486728644955553d52157b3ab2f0c76eae3c25af389dd12e08c81b1dec4d7a7677692055e7bac8cf95570913de321bcf1feb4
   languageName: node
   linkType: hard
 

@@ -25,14 +25,13 @@ export default {
         },
       },
     },
-    // Temporarily disabled - incompatible with Storybook 10
-    // {
-    //   name: 'storybook-design-token',
-    //   options: {
-    //     preserveCSSVars: true,
-    //     // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
-    //   },
-    // },
+    {
+      name: 'storybook-design-token',
+      options: {
+        preserveCSSVars: true,
+        // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
+      },
+    },
     '@storybook/addon-links',
     // Temporarily disabled - incompatible with Storybook 10
     // '@whitespace/storybook-addon-html',

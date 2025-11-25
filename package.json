@@ -127,7 +127,7 @@
     "semantic-release": "^25.0.2",
     "storybook": "10.0.8",
     "storybook-addon-rtl": "^3.0.1",
-    "storybook-design-token": "^4.1.0",
+    "storybook-design-token": "github:khawkins98/storybook-design-token#build",
     "style-loader": "4.0.0",
     "stylelint": "16.26.0",
     "stylelint-config-recommended-scss": "16.0.2",
