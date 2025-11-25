@@ -33,8 +33,7 @@ export default {
       },
     },
     '@storybook/addon-links',
-    // Temporarily disabled - incompatible with Storybook 10
-    // '@whitespace/storybook-addon-html',
+    '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
     '@storybook/addon-webpack5-compiler-babel',
