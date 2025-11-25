@@ -14,22 +14,32 @@ export default {
       options: Object.keys(DEFAULT_COPY).map(Number),
     },
     showSearch: { control: 'boolean' },
+    showRequestDetails: { control: 'boolean' },
   },
 };
 
 const Template = args => <ErrorPage {...args} />;
 
 export const NotFound404 = Template.bind({});
-NotFound404.args = { code: 404, showSearch: true };
+NotFound404.args = { code: 404, showSearch: true, showRequestDetails: true };
 
 export const Forbidden403 = Template.bind({});
-Forbidden403.args = { code: 403 };
+Forbidden403.args = { code: 403, showRequestDetails: true };
 
 export const TooManyRequests429 = Template.bind({});
-TooManyRequests429.args = { code: 429 };
+TooManyRequests429.args = { code: 429, showRequestDetails: true };
+
+export const BadGateway502 = Template.bind({});
+BadGateway502.args = { code: 502, showRequestDetails: true };
 
 export const ServiceUnavailable503 = Template.bind({});
-ServiceUnavailable503.args = { code: 503 };
+ServiceUnavailable503.args = { code: 503, showRequestDetails: true };
 
 export const InternalServerError500 = Template.bind({});
-InternalServerError500.args = { code: 500 };
+InternalServerError500.args = { code: 500, showRequestDetails: true };
+
+export const GatewayTimeout504 = Template.bind({});
+GatewayTimeout504.args = { code: 504, showRequestDetails: true };
+
+export const Unauthorized401 = Template.bind({});
+Unauthorized401.args = { code: 401, showRequestDetails: true };
