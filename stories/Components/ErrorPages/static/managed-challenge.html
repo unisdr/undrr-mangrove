@@ -23,7 +23,7 @@
       - ::RAY_ID:: - Unique request identifier for support tickets
       - ::CLIENT_IP:: - Visitor's IP address
       - ::GEO:: - Visitor's country/region
-      - ::IM_UNDER_ATTACK_BOX:: - Non-Interactive Challenge / JS Challenge (REQUIRED)
+      - ::CAPTCHA_BOX:: - Managed Challenge (REQUIRED)
 
       To customize for other systems, replace the Cloudflare tokens with your
       platform's equivalent variables or static text.
@@ -65,8 +65,8 @@
         <h1>Security check</h1>
         <h2>Checking your browser</h2>
         <p>Please wait while we verify your connection. This usually takes just a moment.</p>
-        <!-- Cloudflare I'm Under Attack box - REQUIRED for managed challenge pages -->
-        ::IM_UNDER_ATTACK_BOX::
+        <!-- Cloudflare CAPTCHA box - REQUIRED for managed challenge pages -->
+        ::CAPTCHA_BOX::
         <p>
           If you think this is in error or need help,
           <a href="https://www.undrr.org/contact-us">please contact us</a>
