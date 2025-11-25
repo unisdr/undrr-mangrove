@@ -83,6 +83,14 @@ The static HTML templates in this component are designed for use with [Cloudflar
 
 See [Cloudflare error tokens documentation](https://developers.cloudflare.com/rules/custom-errors/reference/error-tokens/) for full details.
 
+### Analytics meta tag
+
+Each static template includes a `vf:page-type` meta tag for analytics tracking:
+
+```html
+<meta name="vf:page-type" content="category;404" />
+```
+
 ### Adapting for other platforms
 
 The static HTML templates include comments explaining which parts are Cloudflare-specific. To adapt for other platforms (Varnish, nginx, AWS CloudFront, etc.):
@@ -136,5 +144,6 @@ https://assets.undrr.org/static/mangrove/latest/assets/error-pages/504.html
 
 ## Changelog
 
+- 1.2.0 — Added 401, 500, 504 static templates; added URL via client-side JS; added `vf:page-type` meta tags for analytics ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))
 - 1.1.0 — Added Cloudflare integration with error tokens and deferred asset loading ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))
 - 1.0.0 — Added standard error pages component and examples

@@ -84,7 +84,6 @@ export const CLOUDFLARE_TOKENS = {
  * These simulate what Cloudflare tokens would display in production
  */
 export const EXAMPLE_REQUEST_DETAILS = {
-  errorCode: '404',
   rayId: '8a1b2c3d4e5f6789-IAD',
   clientIp: '203.0.113.42',
   geo: 'United States',
