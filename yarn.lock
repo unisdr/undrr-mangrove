@@ -4892,7 +4892,6 @@ __metadata:
     extract-loader: "npm:5.1.0"
     file-loader: "npm:6.2.0"
     fitty: "npm:2.4.2"
-    glob: "npm:11.1.0"
     globals: "npm:16.5.0"
     gsap: "npm:3.13.0"
     html-entities: "npm:2.6.0"
@@ -4920,7 +4919,7 @@ __metadata:
     remark-gfm: "npm:^4.0.1"
     remove-files-webpack-plugin: "npm:1.5.0"
     resolve-url-loader: "npm:5.0.0"
-    sass: "npm:1.94.2"
+    sass: "npm:1.94.0"
     sass-loader: "npm:16.0.6"
     semantic-release: "npm:^25.0.2"
     storybook: "npm:10.0.8"
@@ -6893,11 +6892,11 @@ __metadata:
   linkType: hard
 
 "baseline-browser-mapping@npm:^2.8.25":
-  version: 2.8.29
-  resolution: "baseline-browser-mapping@npm:2.8.29"
+  version: 2.8.28
+  resolution: "baseline-browser-mapping@npm:2.8.28"
   bin:
     baseline-browser-mapping: dist/cli.js
-  checksum: 10/122c5841268dee007afe191cab1038118d3f513e784e36e8f69535a7924f650eb085f90ed5be97e1096619f903cc7c419c689594c767f3b2d8c4462c4e3a899d
+  checksum: 10/f54abab4d61b2105c628581ae89220924ed83bcf43dbc621672e4c2498af527a054aa38f9e14dd73a11550290e6bcef6f60eaccd1f1de4f557b941b43162a5e4
   languageName: node
   linkType: hard
 
@@ -7260,9 +7259,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001754":
-  version: 1.0.30001756
-  resolution: "caniuse-lite@npm:1.0.30001756"
-  checksum: 10/1aa412f539bf2f3b9120caa6a3552579914cc9de7bc075212d1196e625dc6243317005a45c6aa7675610e5e23d47418564b7b3e7700244005bd665b01625b0ae
+  version: 1.0.30001755
+  resolution: "caniuse-lite@npm:1.0.30001755"
+  checksum: 10/67f3b87bfd8f4da6fd69df185f54ab5409171f62185a52c916e1eb2f70f853aa374b0ce75d1742cc0215ca61e4bd1da8aa5557081bb2b6bb7220bf03a19b3b6e
   languageName: node
   linkType: hard
 
@@ -9259,9 +9258,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.249":
-  version: 1.5.258
-  resolution: "electron-to-chromium@npm:1.5.258"
-  checksum: 10/dc8328a601b77d89c61441a67633378598272d3f1530eca4f0ee0c27edf740a7fc5ca581663a79257355be4d501c9d9fbc7043ba7b403f4e7b076b9364cd2db7
+  version: 1.5.254
+  resolution: "electron-to-chromium@npm:1.5.254"
+  checksum: 10/f8d598b77b696bb66c922f63d5b98b2ab311844c944d5ee4d48945bb0e47c38cd10c42d846603c72fa169fd4ef92d6dd903415a30455439dff020d61c514fa84
   languageName: node
   linkType: hard
 
@@ -11273,22 +11272,6 @@ __metadata:
   version: 0.4.1
   resolution: "glob-to-regexp@npm:0.4.1"
   checksum: 10/9009529195a955c40d7b9690794aeff5ba665cc38f1519e111c58bb54366fd0c106bde80acf97ba4e533208eb53422c83b136611a54c5fefb1edd8dc267cb62e
-  languageName: node
-  linkType: hard
-
-"glob@npm:11.1.0":
-  version: 11.1.0
-  resolution: "glob@npm:11.1.0"
-  dependencies:
-    foreground-child: "npm:^3.3.1"
-    jackspeak: "npm:^4.1.1"
-    minimatch: "npm:^10.1.1"
-    minipass: "npm:^7.1.2"
-    package-json-from-dist: "npm:^1.0.0"
-    path-scurry: "npm:^2.0.0"
-  bin:
-    glob: dist/esm/bin.mjs
-  checksum: 10/da4501819633daff8822c007bb3f93d5c4d2cbc7b15a8e886660f4497dd251a1fb4f53a85fba1e760b31704eff7164aeb2c7a82db10f9f2c362d12c02fe52cf3
   languageName: node
   linkType: hard
 
@@ -15601,15 +15584,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^10.1.1":
-  version: 10.1.1
-  resolution: "minimatch@npm:10.1.1"
-  dependencies:
-    "@isaacs/brace-expansion": "npm:^5.0.0"
-  checksum: 10/110f38921ea527022e90f7a5f43721838ac740d0a0c26881c03b57c261354fb9a0430e40b2c56dfcea2ef3c773768f27210d1106f1f2be19cde3eea93f26f45e
-  languageName: node
-  linkType: hard
-
 "minimatch@npm:^3.0.2, minimatch@npm:^3.0.4, minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
@@ -19315,9 +19289,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.94.2":
-  version: 1.94.2
-  resolution: "sass@npm:1.94.2"
+"sass@npm:1.94.0":
+  version: 1.94.0
+  resolution: "sass@npm:1.94.0"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -19328,7 +19302,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10/e60c214ea93677740c9ddfad55c77fd433255bbfdd9faba137acf1215bed5ba6ad9d83efea81feb87a89283931d01f0435227e3fff37c65c263e0ee05f885328
+  checksum: 10/625b4d56758544f30a7f955fbc6590366ffb285042a68c09512b2890f23720c2c28d86cf9773a000d8bde2191d9decc8873f3529e7d91d8ba5f0ef204fd243db
   languageName: node
   linkType: hard
 
