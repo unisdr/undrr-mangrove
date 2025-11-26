@@ -14,9 +14,28 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 UNDRR provides Google Analytics 4 enhancements and domain configuration via a shared, versioned CDN bundle.
 
-This entry links to the canonical resources; consult those pages for implementation details.
+## Quick start
 
-- [Analytics docs](https://assets.undrr.org/static/analytics/v1.0.0/index.html)
-- [google_analytics_enhancements.js](https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js)
+Add this script to your HTML page, typically before the closing `</body>` tag:
 
-Tip: The script auto-detects GA4 and configures property IDs for UNDRR domains.
+```html
+<script
+  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  defer
+></script>
+```
+
+The script auto-detects GA4 and configures property IDs for UNDRR domains.
+
+## Working example
+
+[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A complete page template with analytics regions.
+
+## Resources
+
+- [Analytics documentation](https://assets.undrr.org/static/analytics/v1.0.0/index.html) — Full implementation guide
+- [google_analytics_enhancements.js](https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js) — Source file
+
+## See also
+
+- [Critical messaging](/?path=/docs/getting-started-critical-messaging--docs) — Emergency broadcast system for UNDRR pages

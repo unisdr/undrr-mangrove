@@ -4,12 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="vf:page-type" content="category;429" />
-    <title>429: Too many requests</title>
+    <meta name="vf:page-type" content="category;managed-challenge" />
+    <title>Security check</title>
     <!--
-      CLOUDFLARE CUSTOM ERROR PAGE
+      CLOUDFLARE CUSTOM ERROR PAGE - MANAGED CHALLENGE / I'M UNDER ATTACK MODE
       Part of UNDRR Mangrove component library
       Issue: https://gitlab.com/undrr/web-backlog/-/issues/2556
+
+      This template is designed for Cloudflare's "Managed challenge" setting,
+      which presents different types of challenges depending on the nature of
+      the request and your security settings. Returns a 403 status code.
+      Also used for "I'm Under Attack Mode" (JS Challenge).
 
       This template uses Cloudflare error tokens that are replaced at runtime.
       See: https://developers.cloudflare.com/rules/custom-errors/reference/error-tokens/
@@ -18,6 +23,7 @@
       - ::RAY_ID:: - Unique request identifier for support tickets
       - ::CLIENT_IP:: - Visitor's IP address
       - ::GEO:: - Visitor's country/region
+      - ::CAPTCHA_BOX:: - Managed Challenge (REQUIRED)
 
       To customize for other systems, replace the Cloudflare tokens with your
       platform's equivalent variables or static text.
@@ -42,14 +48,8 @@
       .mg-page-header__decoration div:nth-child(3){background:#eb752a}
       .mg-page-header__decoration div:nth-child(4){background:#00afae}
       .mg-error-page__container{background:#fff;padding:2rem 1.5rem 1rem;max-width:900px;margin:2rem auto}
-      .mg-error-page__actions{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0}
-      .mg-error-page__details{background:#f5f5f5;padding:1rem;font-size:1.2rem;margin:1rem 0;border-left:3px solid #004f91}
-      .mg-error-page__details dt{font-weight:600;display:inline}
-      .mg-error-page__details dd{display:inline;margin:0 1rem 0 .25rem}
       .mg-button{display:inline-flex;align-items:center;justify-content:center;padding:1rem 1.5rem;font-size:1.4rem;font-weight:600;color:#fff;background:#004f91;border:1px solid #fff;cursor:pointer;text-decoration:none}
       .mg-button:hover{background:#3372a7;color:#fff;text-decoration:none}
-      .mg-button-secondary{background:#4d84b2}
-      .mg-button-secondary:hover{background:#80a7c8}
       .mg-u-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(0);border:0}
     </style>
   </head>
@@ -62,13 +62,11 @@
         <div></div>
       </div>
       <div class="mg-error-page__container">
-        <h1>Error 429</h1>
-        <h2>Too many requests</h2>
-        <p>You made too many requests in a short time. Wait a moment, then try again.</p>
-        <div class="mg-error-page__actions">
-          <button type="button" class="mg-button mg-button-primary" onclick="location.reload()">Try again</button>
-          <a class="mg-button mg-button-secondary" href="/">Go to home</a>
-        </div>
+        <h1>Security check</h1>
+        <h2>Checking your browser</h2>
+        <p>Please wait while we verify your connection. This usually takes just a moment.</p>
+        <!-- Cloudflare CAPTCHA box - REQUIRED for managed challenge pages -->
+        ::CAPTCHA_BOX::
         <p>
           If you think this is in error or need help,
           <a href="https://www.undrr.org/contact-us">please contact us</a>
@@ -76,7 +74,7 @@
         </p>
         <!-- Cloudflare tokens - replace with your platform's variables if not using Cloudflare -->
         <p class="mg-code" role="note" aria-label="Request details">
-          Error code: 429 | Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
+          Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
         </p>
         <hr />
         <small>This website is operated by</small>

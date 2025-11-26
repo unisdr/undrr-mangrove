@@ -17,11 +17,20 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 The simplest way to use Mangrove - perfect for static sites, legacy projects, or when you want minimal dependencies.
 
-## To do
+<TableOfContents
+  tocData={[
+    { id: 'quick-start', text: 'Quick start' },
+    { id: 'css-themes', text: 'CSS themes' },
+    { id: 'component-reference', text: 'Component reference' },
+    { id: 'javascript', text: 'JavaScript' },
+    { id: 'undrr-integration', text: 'UNDRR integration' },
+    { id: 'best-practices', text: 'Best practices' },
+    { id: 'next-steps', text: 'Next steps' },
+  ]}
+  showNumbers={false}
+/>
 
-- [ ] Add in guidance on using react precompiled components
-
-## Quick setup
+## Quick start
 
 ### 1. Include CSS files
 
@@ -46,6 +55,24 @@ Add these `<link>` tags to your HTML `<head>`:
   </head>
   <body>
     <!-- Your content here -->
+
+    <!-- Widget loader script -->
+    <script
+      type="text/javascript"
+      src="https://publish.preventionweb.net/widget.js?rand=3d797b"
+    ></script>
+
+    <!-- Widget initialization -->
+    <script>
+      new PW_Widget.initialize({
+        contenttype: 'landingpage',
+        pageid: '83835',
+        includemetatags: false,
+        includecss: true,
+        suffixID: 'footer',
+        activedomain: 'www.undrr.org',
+      });
+    </script>
   </body>
 </html>
 ```
@@ -61,15 +88,13 @@ Browse the component library, click the "HTML" tab, and copy the markup:
 </a>
 ```
 
-## Complete Page Example
+### Complete page example
 
-[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe)
+[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A working template with header, navigation, hero, tabs, footer, analytics, and messaging.
 
-## Available CSS files
+## CSS themes
 
-Choose the right CSS files for your project:
-
-### Theme variants (choose one)
+Choose the theme that matches your UNDRR property:
 
 **UNDRR Official Theme**
 
@@ -89,7 +114,9 @@ Choose the right CSS files for your project:
 />
 ```
 
-## Component categories
+## Component reference
+
+Quick reference for common CSS classes. See individual component docs for full details.
 
 ### Layout and structure
 
@@ -165,31 +192,154 @@ Use responsive utility classes:
 </div>
 ```
 
-## JavaScript enhancement (optional)
+## JavaScript
 
-Some components work better with JavaScript. Include these for enhanced functionality:
+Most Mangrove components work without JavaScript. For enhanced interactivity, you have two options.
+
+### Vanilla JS modules
+
+Some components (like Tabs) have lightweight JavaScript modules:
 
 ```html
 <script type="module">
-  // Import the tabs module
-  import {
-    mgTabs,
-    mgTabsRuntime,
-  } from 'https://assets.undrr.org/static/mangrove/1.2.12/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.2.12/js/tabs.js';
 
-  console.log('done');
-  // Initialize tabs on page load
   document.addEventListener('DOMContentLoaded', () => {
     mgTabs();
-    console.log('tabb');
   });
 </script>
 ```
+
+### Precompiled React components
+
+For complex interactive components (MegaMenu, charts, maps), use precompiled React bundles without a build process.
+
+**Available components:**
+
+| Component | CDN Path | Use case |
+|-----------|----------|----------|
+| MegaMenu | `/components/MegaMenu.js` | Full navigation with dropdowns |
+| ShareButtons | `/components/ShareButtons.js` | Social sharing |
+| BarChart | `/components/BarChart.js` | Data visualization |
+| MapComponent | `/components/MapComponent.js` | Interactive maps |
+| ScrollContainer | `/components/ScrollContainer.js` | Horizontal scrolling |
+
+React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
+
+```html
+<head>
+  <!-- Import map for React 19 (must be before any module scripts) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.2.0",
+        "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
+        "react-dom": "https://esm.sh/react-dom@19.2.0",
+        "react-dom/": "https://esm.sh/react-dom@19.2.0/"
+      }
+    }
+  </script>
+  <!--
+    Note: react/jsx-runtime is only needed if components use the automatic JSX
+    runtime. Many components don't require it. Import maps only trigger network
+    requests when code actually imports from that path, so unused entries are harmless.
+  -->
+</head>
+<body>
+  <!-- Mount point -->
+  <nav data-mg-mega-menu></nav>
+
+  <script type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    // Load component from CDN
+    const MegaMenuModule = await import(
+      'https://assets.undrr.org/static/mangrove/1.2.12/components/MegaMenu.js'
+    );
+
+    // Unwrap ESM/CJS interop - bundle may be double-wrapped as { default: { default: Component } }
+    let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
+    if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
+      MegaMenu = MegaMenu.default;
+    }
+
+    // Render the component
+    const container = document.querySelector('[data-mg-mega-menu]');
+    if (container) {
+      const root = createRoot(container);
+      root.render(
+        React.createElement(MegaMenu, {
+          delay: 2000,
+          sections: [
+            {
+              title: 'About',
+              bannerHeading: 'About Us',
+              bannerDescription: 'Learn more about our organization.',
+              items: [
+                { title: 'Our Mission', url: '/about/mission' },
+                { title: 'Our Team', url: '/about/team' }
+              ]
+            },
+            {
+              title: 'Search',
+              bannerButton: { url: '/search' }
+            }
+          ]
+        })
+      );
+    }
+  </script>
+</body>
+```
+
+**Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.2.0?dev`).
+
+For most use cases, the vanilla HTML markup (shown in component docs) is simpler. Use precompiled components only when you need:
+- Complex interactive behavior (MegaMenu dropdowns, chart interactions)
+- Dynamic data loading
+- State management
+
+[See complete working example on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — includes React MegaMenu, header, hero, tabs, footer, analytics, and messaging.
+
+## UNDRR integration
+
+All UNDRR pages should include analytics and messaging scripts.
+
+### Analytics
+
+Track user behavior with GA4 enhancements:
+
+```html
+<script
+  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  defer
+></script>
+```
+
+See [Analytics enhancements](/?path=/docs/getting-started-analytics-enhancements--docs) for full documentation.
+
+### Critical messaging
+
+Receive emergency broadcasts across all UNDRR properties:
+
+```html
+<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+```
+
+Optionally add a container for message placement:
+
+```html
+<div class="mg-critical-messaging"></div>
+```
+
+See [Critical messaging](/?path=/docs/getting-started-critical-messaging--docs) for full documentation.
 
 ## Next steps
 
 - **Browse Components**: Explore the component library in the sidebar
 - **Copy HTML**: Use the HTML tab in each component story
+- **CDN URLs**: See the [CDN reference](/?path=/docs/getting-started-cdn-reference--docs) for all available assets
 - **Customize**: Override CSS variables for theming
 - **Upgrade**: Consider [React Integration](/?path=/docs/getting-started-react-integration--docs) for dynamic applications
 

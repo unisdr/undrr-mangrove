@@ -1,5 +1,5 @@
 import React from 'react';
-import { DEFAULT_COPY } from './ErrorPagesContent.js';
+import { DEFAULT_COPY, EXAMPLE_REQUEST_DETAILS } from './ErrorPagesContent.js';
 
 function renderAction(action) {
   if (!action) return null;
@@ -26,6 +26,10 @@ function renderAction(action) {
  * - Uses sentence case headings and calm, actionable guidance per writing standards
  * - Provides sensible default copy for common error codes
  * - Allows override of title, description, and actions
+ * - Supports showing request details (Ray ID, IP, location) for debugging
+ *
+ * For Cloudflare integration, static HTML templates are available in the
+ * static/ directory with Cloudflare tokens pre-configured.
  */
 export function ErrorPage({
   code = 404,
@@ -38,9 +42,9 @@ export function ErrorPage({
   contactUrl = 'https://www.undrr.org/contact-us',
   showBrandHeader = true,
   showButtons = false,
-  actionsHtml,
+  showRequestDetails = false,
+  requestDetails = EXAMPLE_REQUEST_DETAILS,
   actionsContent,
-  details,
   ...props
 }) {
   const defaults = DEFAULT_COPY[code] || DEFAULT_COPY[404];
@@ -49,9 +53,6 @@ export function ErrorPage({
   const resolvedDescription = description || defaults.description;
   const resolvedPrimary = primaryAction || defaults.primary;
   const resolvedSecondary = secondaryAction || defaults.secondary;
-  const resolvedActionsHtml = actionsHtml ?? defaults.actionsHtml;
-  const resolvedDetails = details ?? defaults.details;
-
   return (
     <main className="mg-error-page" {...props}>
       {showBrandHeader && (
@@ -78,11 +79,8 @@ export function ErrorPage({
           ) : (
             <p>{resolvedDescription}</p>
           )}
-          {(resolvedActionsHtml || actionsContent) && (
+          {actionsContent && (
             <div className="mg-error-page__actions">
-              {resolvedActionsHtml && (
-                <div dangerouslySetInnerHTML={{ __html: resolvedActionsHtml }} />
-              )}
               {actionsContent}
             </div>
           )}
@@ -98,10 +96,6 @@ export function ErrorPage({
                 </a>
               )}
             </div>
-          )}
-
-          {resolvedDetails && (
-            <pre role="note" aria-label="error details"><code className="mg-code--block">{resolvedDetails}</code></pre>
           )}
 
           {showSearch && (
@@ -124,17 +118,22 @@ export function ErrorPage({
               </button>
             </form>
           )}
+
           <p>
-            If you think this is in error or need help, <a href={contactUrl}>please contact us</a> and provide a link to the page.
+            If you think this is in error or need help, <a href={contactUrl}>please contact us</a> and provide the details below.
           </p>
+
+          {showRequestDetails && requestDetails && (
+            <p className="mg-code" role="note" aria-label="Request details">
+              Error code: {code} | Ray ID: {requestDetails.rayId} | Your IP: {requestDetails.clientIp} | Location: {requestDetails.geo}
+            </p>
+          )}
           <hr />
           <small>This website is operated by</small>
           <a href="https://www.undrr.org/">
             <div className="undrr-logo" aria-hidden="true" />
           </a>
         </div>
-        <script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
     </main>
   );
 }

@@ -20,10 +20,24 @@ The current template includes:
 - **VerticalCard**: Grid of content cards
 - **Footer**: Complete footer component
 
-### Analytics
+### Analytics and messaging
 
-For GA4 setup and UNDRR domain configuration, see
-<LinkTo kind="getting-started-analytics-enhancements" story="docs"> Analytics enhancements</LinkTo>.
+Include these scripts on all UNDRR pages:
+
+```html
+<!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
+<script
+  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  defer
+></script>
+
+<!-- UNDRR Critical Messaging - emergency broadcasts -->
+<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
+```
+
+For full documentation, see:
+- <LinkTo kind="getting-started-analytics-enhancements" story="docs">Analytics enhancements</LinkTo>
+- <LinkTo kind="getting-started-critical-messaging" story="docs">Critical messaging</LinkTo>
 
 <Canvas of={PageTemplateExampleStories.Default} meta={PageTemplateExampleStories} />
 
