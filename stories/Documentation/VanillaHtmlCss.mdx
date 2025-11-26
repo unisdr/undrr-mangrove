@@ -224,11 +224,7 @@ For complex interactive components (MegaMenu, charts, maps), use precompiled Rea
 | MapComponent | `/components/MapComponent.js` | Interactive maps |
 | ScrollContainer | `/components/ScrollContainer.js` | Horizontal scrolling |
 
-**Important:** React components require **same-origin hosting**. Import maps only apply to modules loaded from your domain, not cross-origin CDNs. For external demos (CodePen, etc.), use vanilla HTML components instead.
-
-**Same-origin deployment (Drupal, self-hosted):**
-
-React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/):
+React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
 
 ```html
 <head>
@@ -236,44 +232,70 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
   <script type="importmap">
     {
       "imports": {
-        "react": "https://esm.sh/react@19.0.0",
-        "react-dom": "https://esm.sh/react-dom@19.0.0",
-        "react-dom/": "https://esm.sh/react-dom@19.0.0/"
+        "react": "https://esm.sh/react@19.2.0",
+        "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
+        "react-dom": "https://esm.sh/react-dom@19.2.0",
+        "react-dom/": "https://esm.sh/react-dom@19.2.0/"
       }
     }
   </script>
 </head>
 <body>
   <!-- Mount point -->
-  <div id="mega-menu-root"></div>
+  <nav data-mg-mega-menu></nav>
 
-  <!-- Component must be served from same origin -->
   <script type="module">
     import React from 'react';
     import { createRoot } from 'react-dom/client';
 
-    // Load component from same-origin path (copy from dist/components/)
-    const MegaMenuModule = await import('/js/mangrove/MegaMenu.js');
-    const MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
-
-    const root = createRoot(document.getElementById('mega-menu-root'));
-    root.render(
-      React.createElement(MegaMenu, {
-        sections: [
-          { title: 'About', items: [{ title: 'Our Work', url: '/about' }] }
-        ]
-      })
+    // Load component from CDN
+    const MegaMenuModule = await import(
+      'https://assets.undrr.org/static/mangrove/1.2.12/components/MegaMenu.js'
     );
+
+    // Unwrap ESM/CJS interop - bundle may be double-wrapped as { default: { default: Component } }
+    let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
+    if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
+      MegaMenu = MegaMenu.default;
+    }
+
+    // Render the component
+    const container = document.querySelector('[data-mg-mega-menu]');
+    if (container) {
+      const root = createRoot(container);
+      root.render(
+        React.createElement(MegaMenu, {
+          delay: 2000,
+          sections: [
+            {
+              title: 'About',
+              bannerHeading: 'About Us',
+              bannerDescription: 'Learn more about our organization.',
+              items: [
+                { title: 'Our Mission', url: '/about/mission' },
+                { title: 'Our Team', url: '/about/team' }
+              ]
+            },
+            {
+              title: 'Search',
+              bannerButton: { url: '/search' }
+            }
+          ]
+        })
+      );
+    }
   </script>
 </body>
 ```
+
+**Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.2.0?dev`).
 
 For most use cases, the vanilla HTML markup (shown in component docs) is simpler. Use precompiled components only when you need:
 - Complex interactive behavior (MegaMenu dropdowns, chart interactions)
 - Dynamic data loading
 - State management
 
-[See vanilla HTML example on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe)
+[See complete working example on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — includes React MegaMenu, header, hero, tabs, footer, analytics, and messaging.
 
 ## UNDRR integration
 

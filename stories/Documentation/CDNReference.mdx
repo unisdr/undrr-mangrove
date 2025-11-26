@@ -69,9 +69,10 @@ React 19 dropped UMD builds. Use [import maps](https://developer.mozilla.org/en-
 <script type="importmap">
   {
     "imports": {
-      "react": "https://esm.sh/react@19.0.0",
-      "react-dom": "https://esm.sh/react-dom@19.0.0",
-      "react-dom/": "https://esm.sh/react-dom@19.0.0/"
+      "react": "https://esm.sh/react@19.2.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.2.0",
+      "react-dom/": "https://esm.sh/react-dom@19.2.0/"
     }
   }
 </script>
@@ -83,9 +84,17 @@ Then import the Mangrove component as an ES module:
 <script type="module">
   import React from 'react';
   import { createRoot } from 'react-dom/client';
-  const { default: MegaMenu } = await import(
+
+  // Load component from CDN
+  const MegaMenuModule = await import(
     'https://assets.undrr.org/static/mangrove/1.2.12/components/MegaMenu.js'
   );
+
+  // Unwrap ESM/CJS interop - bundle may be double-wrapped
+  let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
+  if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
+    MegaMenu = MegaMenu.default;
+  }
 </script>
 ```
 
