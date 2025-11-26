@@ -66,6 +66,7 @@ Precompiled React components for use without a build process.
 React 19 dropped UMD builds. Use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/):
 
 ```html
+<!-- Note: react/jsx-runtime only needed if components use automatic JSX runtime. Unused entries don't trigger requests. -->
 <script type="importmap">
   {
     "imports": {

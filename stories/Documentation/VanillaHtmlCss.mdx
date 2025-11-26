@@ -239,6 +239,11 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
       }
     }
   </script>
+  <!--
+    Note: react/jsx-runtime is only needed if components use the automatic JSX
+    runtime. Many components don't require it. Import maps only trigger network
+    requests when code actually imports from that path, so unused entries are harmless.
+  -->
 </head>
 <body>
   <!-- Mount point -->
