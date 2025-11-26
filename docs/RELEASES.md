@@ -78,9 +78,9 @@ https://assets.undrr.org/testing/static/mangrove/README.md
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.2.12/css/style.css
-https://assets.undrr.org/static/mangrove/1.2.12/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.2.12/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.2.13/css/style.css
+https://assets.undrr.org/static/mangrove/1.2.13/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.2.13/js/tabs.js
 ```
 
 The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
