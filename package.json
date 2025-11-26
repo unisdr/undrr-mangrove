@@ -1,6 +1,6 @@
 {
   "name": "@undrr/undrr-mangrove",
-  "version": "1.2.13",
+  "version": "1.2.14",
   "description": "Mangrove design System for UNDRR",
   "main": "index.js",
   "scripts": {
