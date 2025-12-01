@@ -34,7 +34,7 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip chromatic]') && !contains(github.event.pull_request.title, '[skip chromatic]') && github.actor != 'dependabot[bot]' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Required for Chromatic to track changes correctly
 
