@@ -51,7 +51,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
           scope: '@undrr'
 
@@ -86,6 +86,11 @@ jobs:
             cp -r dist/assets/error-pages/* npm-package/error-pages/
           fi
 
+          if [ -d "dist/fonts" ]; then
+            mkdir -p npm-package/fonts
+            cp -r dist/fonts/* npm-package/fonts/
+          fi
+
           # Copy components to top-level directory
           if [ -d "dist/components" ]; then
             mkdir -p npm-package/components
@@ -112,7 +117,7 @@ jobs:
               version: pkg.version,
               description: pkg.description,
               main: "dist/index.js",
-              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "error-pages/**/*"],
+              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "error-pages/**/*", "fonts/**/*"],
               repository: pkg.repository,
               keywords: pkg.keywords,
               author: pkg.author,

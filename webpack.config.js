@@ -67,6 +67,7 @@ export default [
         patterns: [
           { from: 'stories/assets', to: 'assets' },
           { from: 'stories/Components/ErrorPages/static', to: 'assets/error-pages' },
+          { from: 'stories/assets/fonts/mangrove-icon-set', to: 'fonts/mangrove-icon-set' },
         ],
       }),
     ],
