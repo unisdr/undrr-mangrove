@@ -115,6 +115,10 @@ export default {
     options: {},
   },
 
+  features: {
+    experimentalComponentsManifest: true,
+  },
+
   docs: {
     story: {
       inline: false,
@@ -122,6 +126,8 @@ export default {
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript',
+    // Use react-docgen for faster builds (handles basic TS types)
+    // Switch to 'react-docgen-typescript' if props tables are missing or incomplete for TS components
+    reactDocgen: 'react-docgen',
   },
 };

@@ -3763,13 +3763,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-actions@npm:9.0.8":
-  version: 9.0.8
-  resolution: "@storybook/addon-actions@npm:9.0.8"
-  checksum: 10/3c5ad1ea7cfe80064aa55ff332c6f2849269520a84ce28b0ca36263ac45710ed9a0983d6f244d562425bc8d8d33400715f61f10303b5fd5e6a6b8183066deb0d
-  languageName: node
-  linkType: hard
-
 "@storybook/addon-docs@npm:^10.1.4":
   version: 10.1.4
   resolution: "@storybook/addon-docs@npm:10.1.4"
@@ -3820,25 +3813,6 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     babel-loader: "npm:^10.0.0"
   checksum: 10/abe15a1cd3eedc84f51c37d330be3af86bde812fbb5b87061a0355c7e62d54992ae971a50eb6d53104aeecd052370cd02cbb47aef90d6af6f53de3facb8e0a13
-  languageName: node
-  linkType: hard
-
-"@storybook/blocks@npm:9.0.0-alpha.17":
-  version: 9.0.0-alpha.17
-  resolution: "@storybook/blocks@npm:9.0.0-alpha.17"
-  dependencies:
-    "@storybook/icons": "npm:^1.4.0"
-    ts-dedent: "npm:^2.0.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    storybook: ^9.0.0-alpha.17
-  peerDependenciesMeta:
-    react:
-      optional: true
-    react-dom:
-      optional: true
-  checksum: 10/71d3a7f6769708968aeedf97e6901d2770324c4e51bc0e593fd8bf7d5fc3f308617c031e6c2d90426442cd088d3fecf1e288ddd2977f77ae2d3398548a9c16e2
   languageName: node
   linkType: hard
 
@@ -4900,12 +4874,10 @@ __metadata:
     "@semantic-release/changelog": "npm:^6.0.3"
     "@semantic-release/git": "npm:^10.0.1"
     "@storybook/addon-a11y": "npm:10.1.4"
-    "@storybook/addon-actions": "npm:9.0.8"
     "@storybook/addon-docs": "npm:^10.1.4"
     "@storybook/addon-links": "npm:10.1.4"
     "@storybook/addon-themes": "npm:^10.1.4"
     "@storybook/addon-webpack5-compiler-babel": "npm:4.0.0"
-    "@storybook/blocks": "npm:9.0.0-alpha.17"
     "@storybook/cli": "npm:10.1.4"
     "@storybook/react": "npm:10.1.4"
     "@storybook/react-webpack5": "npm:10.1.4"
