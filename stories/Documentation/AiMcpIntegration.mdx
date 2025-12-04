@@ -1,0 +1,174 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Getting started/AI and MCP integration"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# AI and MCP integration
+
+Mangrove is designed to work well with AI coding agents like Claude, Cursor, and GitHub Copilot. This guide explains how to help AI tools understand and use Mangrove components effectively.
+
+## For all users: reference the documentation
+
+The simplest and most effective approach is to point your AI to the live Storybook documentation.
+
+### Point to the documentation URL
+
+```
+Use the Mangrove component library documented at:
+https://unisdr.github.io/undrr-mangrove/
+
+Create a card component following the patterns shown there.
+```
+
+AI tools can fetch and read the documentation pages to understand component structure, props, and usage patterns.
+
+### Reference specific component pages
+
+For more accurate results, point the AI to specific component documentation:
+
+```
+Look at the CtaButton component in Mangrove:
+https://unisdr.github.io/undrr-mangrove/?path=/docs/components-buttons-ctabutton--docs
+
+Create a similar button with the "secondary" variant.
+```
+
+### Use the component manifest
+
+This Storybook generates a component manifest with structured metadata about all components. AI tools that support fetching URLs can reference it directly:
+
+```
+Fetch the component library metadata from:
+https://unisdr.github.io/undrr-mangrove/index.json
+
+Use these components to build the requested UI.
+```
+
+The manifest includes component names, descriptions, props, and story variants.
+
+## Best practices for AI-assisted development
+
+### Be specific about Mangrove
+
+When prompting AI tools, mention Mangrove explicitly and include key conventions:
+
+```
+# Good prompt
+Using the Mangrove component library (mg- prefix classes),
+create a hero section with a primary CTA button.
+
+# Less effective prompt
+Create a hero section with a button.
+```
+
+### Provide context about conventions
+
+Include these key facts in your prompts:
+
+- **CSS prefix**: All classes use the `mg-` prefix (e.g., `mg-button`, `mg-card`)
+- **BEM naming**: Classes follow BEM conventions (e.g., `mg-card__title`, `mg-button--primary`)
+- **Semantic HTML**: Components use proper HTML elements for accessibility
+- **Documentation URL**: `https://unisdr.github.io/undrr-mangrove/`
+
+### Validate the output
+
+AI-generated code should be validated against:
+
+1. **Class naming**: All classes should use the `mg-` prefix
+2. **HTML structure**: Match the documented component structure
+3. **Accessibility**: Include proper ARIA attributes
+4. **Responsiveness**: Follow Mangrove's responsive patterns
+
+## Connecting AI coding tools
+
+### Claude Code / Claude
+
+Reference the documentation URL in your conversation:
+
+```
+I'm working with the UNDRR Mangrove component library.
+Documentation: https://unisdr.github.io/undrr-mangrove/
+
+Help me create a page layout using the MegaMenu, Hero, and Footer components.
+```
+
+### Cursor
+
+Add to your `.cursor/rules` or project instructions:
+
+```
+Use the Mangrove component library for all UI components.
+Documentation: https://unisdr.github.io/undrr-mangrove/
+CSS prefix: mg-
+```
+
+### GitHub Copilot
+
+Include a comment at the top of your file:
+
+```jsx
+// Using UNDRR Mangrove components
+// Docs: https://unisdr.github.io/undrr-mangrove/
+// All classes use mg- prefix
+```
+
+---
+
+## For advanced users: local MCP server
+
+If you're developing Mangrove components locally, you can enable the full MCP (Model Context Protocol) experience. This provides a live connection between your AI agent and the running Storybook dev server.
+
+> **Note**: This section is for contributors working on the Mangrove library itself, not for consumers using the components.
+
+### What MCP provides
+
+When running locally with the MCP addon, AI agents can:
+
+- Query component information programmatically via API
+- Get direct URLs to specific stories for visual verification
+- Access real-time component documentation as you develop
+- Validate generated components against interaction and accessibility tests
+
+### Setting up MCP for local development
+
+1. **Install the MCP addon**:
+   ```bash
+   yarn add -D @storybook/addon-mcp
+   ```
+
+2. **Add to your Storybook config** (`.storybook/main.js`):
+   ```javascript
+   addons: [
+     // ... other addons
+     '@storybook/addon-mcp',
+   ],
+   ```
+
+3. **Start Storybook**:
+   ```bash
+   yarn dev
+   ```
+
+4. **Configure your AI tool** to connect to `http://localhost:6006/mcp`
+
+   For Claude Code:
+   ```bash
+   claude mcp add storybook-mcp --transport http http://localhost:6006/mcp --scope project
+   ```
+
+See the [Storybook MCP documentation](https://storybook.js.org/blog/storybook-mcp-sneak-peek/) for detailed setup instructions for other AI tools.
+
+## Further reading
+
+- [Storybook MCP announcement](https://storybook.js.org/blog/storybook-mcp-sneak-peek/)
+- [Model Context Protocol](https://modelcontextprotocol.io/)
+- <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo>
+- <LinkTo kind="getting-started-react-integration" story="docs">React integration</LinkTo>
