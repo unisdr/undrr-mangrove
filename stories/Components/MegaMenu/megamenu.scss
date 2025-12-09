@@ -326,6 +326,7 @@
 
     .mg-mega-content__menu--desktop {
       display: block;
+
       // Blue flash background that fades out (retriggered via React key)
       animation: mg-mega-right-flash 400ms ease-out;
 
