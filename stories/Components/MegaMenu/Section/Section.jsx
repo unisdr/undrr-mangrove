@@ -239,7 +239,9 @@ export default function Section({
               </ul>
 
               {/* Desktop version - shows items based on hover state */}
+              {/* Key forces remount on tab change, retriggering CSS animations */}
               <ul
+                key={`desktop-menu-${itemIndex}`}
                 role="menu"
                 aria-label="Submenu items"
                 className="mg-mega-content__menu--desktop"
