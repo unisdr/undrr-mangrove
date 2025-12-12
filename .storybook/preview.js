@@ -4,94 +4,6 @@ import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 // include fonts globally
 import '../stories/assets/scss/_fonts.scss';
 
-// Configure Storybook
-export const parameters = {
-  actions: {
-    argTypes: {
-      onClick: { action: 'clicked' },
-      onChange: { action: 'changed' },
-    },
-  },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
-  designToken: {
-    defaultTab: 'Colors',
-    disable: true,
-  },
-  html: {
-    prettier: {
-      tabWidth: 2,
-      useTabs: false,
-      removeComments: true,
-      htmlWhitespaceSensitivity: 'css',
-      printWidth: 80,
-      semi: true,
-      singleQuote: true,
-      trailingComma: 'es5',
-    },
-  },
-  docs: {
-    source: {
-      format: 'dedent',
-    },
-  },
-  viewport: {
-    viewports: INITIAL_VIEWPORTS,
-  },
-  options: {
-    storySort: {
-      method: 'alphabetical',
-      order: [
-        'Introduction',
-        'Getting started',
-        ['Intro', 'How to use our design system?', 'Browser support'],
-        'Design decisions',
-        'Components',
-        'Utilities',
-      ],
-      includeName: true,
-    },
-  },
-};
-
-/* Implementing locale for language switcher */
-export const globalTypes = {
-  locale: {
-    name: 'Locale',
-    description: 'locale',
-    defaultValue: 'en',
-    toolbar: {
-      icon: 'globe',
-      items: [
-        { value: 'english', title: 'English' },
-        { value: 'arabic', title: 'Arabic' },
-        { value: 'burmese', title: 'Burmese' },
-        { value: 'japanese', title: 'Japanese' },
-      ],
-    },
-  },
-  theme: {
-    name: 'Theme',
-    description: 'Global theme for components',
-    defaultValue: 'Global UNDRR Theme',
-    toolbar: {
-      icon: 'paintbrush',
-      items: [
-        { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
-        { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
-        { value: 'IRP Theme', title: 'IRP Theme' },
-        { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
-      ],
-      showName: true,
-      dynamicTitle: true,
-    },
-  },
-};
-
 // Function to get current language code
 const getLangCode = (Story, context) => {
   let activeLang = context.initialGlobals.locale;
@@ -194,12 +106,97 @@ const themeDecorator = (Story, context) => {
   return <Story {...context} />;
 };
 
-// Apply decorators
-export const decorators = [
-  getLangCode,
-  sbFrameReset,
-  setDirection,
-  themeDecorator,
-];
+/** @type { import('storybook').Preview } */
+const preview = {
+  parameters: {
+    actions: {
+      argTypes: {
+        onClick: { action: 'clicked' },
+        onChange: { action: 'changed' },
+      },
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/,
+      },
+    },
+    designToken: {
+      defaultTab: 'Colors',
+      disable: true,
+    },
+    html: {
+      prettier: {
+        tabWidth: 2,
+        useTabs: false,
+        removeComments: true,
+        htmlWhitespaceSensitivity: 'css',
+        printWidth: 80,
+        semi: true,
+        singleQuote: true,
+        trailingComma: 'es5',
+      },
+    },
+    docs: {
+      source: {
+        format: 'dedent',
+      },
+    },
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+    },
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: [
+          'Introduction',
+          'Getting started',
+          ['Intro', 'How to use our design system?', 'Browser support'],
+          'Design decisions',
+          'Components',
+          'Utilities',
+        ],
+        includeName: true,
+      },
+    },
+  },
 
-export const tags = ['autodocs'];
+  globalTypes: {
+    locale: {
+      name: 'Locale',
+      description: 'locale',
+      defaultValue: 'en',
+      toolbar: {
+        icon: 'globe',
+        items: [
+          { value: 'english', title: 'English' },
+          { value: 'arabic', title: 'Arabic' },
+          { value: 'burmese', title: 'Burmese' },
+          { value: 'japanese', title: 'Japanese' },
+        ],
+      },
+    },
+    theme: {
+      name: 'Theme',
+      description: 'Global theme for components',
+      defaultValue: 'Global UNDRR Theme',
+      toolbar: {
+        icon: 'paintbrush',
+        items: [
+          { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
+          { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
+          { value: 'IRP Theme', title: 'IRP Theme' },
+          { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
+        ],
+        showName: true,
+        dynamicTitle: true,
+      },
+    },
+  },
+
+  decorators: [getLangCode, sbFrameReset, setDirection, themeDecorator],
+
+  tags: ['autodocs'],
+};
+
+export default preview;
