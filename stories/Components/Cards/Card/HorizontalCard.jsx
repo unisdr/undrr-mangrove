@@ -27,9 +27,6 @@ export function HorizontalCard({ data, Hovercolors }) {
               alt={item.imgalt}
               className="mg-card__image"
             />
-            <a href={item.link} className="mg-card__share">
-              {item.share}
-            </a>
           </div>
 
           <div className={cls('mg-card__content', `${hovercolors_variant}`)}>

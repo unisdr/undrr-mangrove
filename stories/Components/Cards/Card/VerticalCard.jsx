@@ -26,11 +26,6 @@ export function VerticalCard({ data, Hovercolors }) {
                 alt={item.imgalt}
                 className="mg-card__image"
               />
-              {item.link && item.share && (
-                <a href={item.link} className="mg-card__share">
-                  {item.share}
-                </a>
-              )}
             </div>
           )}
 

@@ -26,7 +26,6 @@ export function HorizontalBookCard({ data, Hovercolors }) {
                 alt={item.imgalt}
                 className="mg-card__image"
               />
-              {/* <a href={item.link} className="mg-card__share">{item.share}</a> */}
             </div>
           )}
 
