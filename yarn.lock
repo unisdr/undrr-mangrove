@@ -4962,7 +4962,7 @@ __metadata:
     fitty: "npm:2.4.2"
     glob: "npm:13.0.0"
     globals: "npm:16.5.0"
-    gsap: "npm:3.13.0"
+    gsap: "npm:3.14.2"
     html-entities: "npm:2.6.0"
     jest: "npm:30.2.0"
     jest-environment-jsdom: "npm:30.2.0"
@@ -11688,10 +11688,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gsap@npm:3.13.0":
-  version: 3.13.0
-  resolution: "gsap@npm:3.13.0"
-  checksum: 10/1908d51cbdf8f0bec8a69919af352d743a06529639a89f750f1c02e9a165d3ea816f867569df222ee7bfc14e23e268ebeb51dc5df0687fa7918ddd5d3b3efaec
+"gsap@npm:3.14.2":
+  version: 3.14.2
+  resolution: "gsap@npm:3.14.2"
+  checksum: 10/6c6473b6f4d7bf07667fc5a0fb75556e7b55f7a12a028da22050f64d530ef8b4fa68499b040bdc559a21b15fa5cce04b55c0381059a3023ef4b6c540734c8139
   languageName: node
   linkType: hard
 
