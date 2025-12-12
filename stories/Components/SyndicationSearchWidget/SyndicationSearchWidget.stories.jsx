@@ -273,7 +273,10 @@ export const WithBothCustomOptions = {
             { label: '2024', query: 'published_at:[2024-01-01 TO 2024-12-31]' },
             { label: '2023', query: 'published_at:[2023-01-01 TO 2023-12-31]' },
             { label: '2022', query: 'published_at:[2022-01-01 TO 2022-12-31]' },
-            { label: '2021 and earlier', query: 'published_at:[* TO 2021-12-31]' },
+            {
+              label: '2021 and earlier',
+              query: 'published_at:[* TO 2021-12-31]',
+            },
           ],
         },
         {
@@ -341,10 +344,13 @@ const mockResults = {
           type: 'publication',
           field_domain_access: 'www_undrr_org',
           published_at: '2024-06-15T10:00:00Z',
-          teaser: 'This publication explores the intersection of climate change adaptation and disaster risk reduction strategies.',
+          teaser:
+            'This publication explores the intersection of climate change adaptation and disaster risk reduction strategies.',
         },
         highlight: {
-          body: ['...the <em>climate change</em> impacts on disaster risk are significant...'],
+          body: [
+            '...the <em>climate change</em> impacts on disaster risk are significant...',
+          ],
         },
       },
       {
@@ -356,7 +362,8 @@ const mockResults = {
           type: 'news',
           field_domain_access: 'www_preventionweb_net',
           published_at: '2024-05-20T14:30:00Z',
-          teaser: 'Annual progress report on the implementation of the Sendai Framework for Disaster Risk Reduction.',
+          teaser:
+            'Annual progress report on the implementation of the Sendai Framework for Disaster Risk Reduction.',
         },
       },
     ],
@@ -378,9 +385,12 @@ const mockResults = {
 export const StaticDisplay = {
   render: () => (
     <div className="mg-search-widget">
-      <p style={{ padding: '1rem', background: '#f0f0f0', borderRadius: '4px' }}>
-        <strong>Note:</strong> This is a static display for documentation purposes.
-        In production, the widget connects to the /search-endpoint API.
+      <p
+        style={{ padding: '1rem', background: '#f0f0f0', borderRadius: '4px' }}
+      >
+        <strong>Note:</strong> This is a static display for documentation
+        purposes. In production, the widget connects to the /search-endpoint
+        API.
       </p>
 
       <div style={{ marginTop: '1rem' }}>
@@ -422,12 +432,13 @@ export const StaticDisplay = {
         <h3 style={{ marginTop: '2rem' }}>Search Results</h3>
         <div className="mg-search__results">
           <p className="mg-search__results-count">
-            Showing <strong>2</strong> of <strong>1,234</strong> results for <strong>"climate change"</strong>
+            Showing <strong>2</strong> of <strong>1,234</strong> results for{' '}
+            <strong>"climate change"</strong>
             <span className="mg-search__results-time"> (42ms)</span>
           </p>
 
           <div className="mg-search__results-list">
-            {mockResults.hits.hits.map((hit) => (
+            {mockResults.hits.hits.map(hit => (
               <article key={hit._id} className="mg-search__result">
                 <div className="mg-search__result-content">
                   <div className="mg-search__result-text">
@@ -435,12 +446,18 @@ export const StaticDisplay = {
                       <a href="#">{hit._source.title}</a>
                     </h4>
                     <div className="mg-search__result-meta">
-                      <span className="mg-search__result-type">{hit._source.type}</span>
+                      <span className="mg-search__result-type">
+                        {hit._source.type}
+                      </span>
                       <span className="mg-search__result-date">
-                        {new Date(hit._source.published_at).toLocaleDateString()}
+                        {new Date(
+                          hit._source.published_at
+                        ).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="mg-search__result-snippet">{hit._source.teaser}</p>
+                    <p className="mg-search__result-snippet">
+                      {hit._source.teaser}
+                    </p>
                   </div>
                 </div>
               </article>
