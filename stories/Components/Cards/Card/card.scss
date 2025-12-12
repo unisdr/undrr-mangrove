@@ -69,12 +69,20 @@
 
   &__hc.mg-card-book__hc {
     .mg-card__visual {
+      align-self: flex-start;
       border: 1px solid rgba($mg-color-neutral-600, 0.2);
+      max-width: 200px;
       overflow: hidden;
+
+      @media (min-width: $mg-breakpoint-mobile) {
+        max-width: unset;
+      }
+
     }
 
     &:has(.mg-card__visual) {
-      grid-template-rows: 200px 1fr auto;
+      grid-template-rows: unset;
+      gap: $mg-spacing-100 0;
 
       @media (min-width: $mg-breakpoint-mobile) {
         grid-template-columns: 160px 1fr;
@@ -96,14 +104,6 @@
     align-self: center;
   }
 
-  &__share {
-    cursor: pointer;
-    display: inline-block;
-    padding: 0 $mg-spacing-50 $mg-spacing-25;
-    position: absolute;
-    z-index: 101;
-  }
-
   &__label {
     color: $mg-color-label;
     cursor: pointer;
@@ -114,15 +114,7 @@
     &:hover {
       color: $mg-color-label;
     }
-
-    // &--active {
-    //     background: #d4d4d4;
-    //     font-weight: bold;
-    // }
   }
-
-  // &__content {
-  // }
 
   &__title {
     font-size: $mg-font-size-500;
