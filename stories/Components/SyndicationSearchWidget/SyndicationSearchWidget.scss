@@ -31,7 +31,7 @@ $search-error-border: $mg-color-red-400;
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }
@@ -227,7 +227,7 @@ $search-error-border: $mg-color-red-400;
   width: 280px;
   flex-shrink: 0;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     display: none; // TODO: Mobile drawer in Phase 2
   }
 }
@@ -328,7 +328,7 @@ $search-error-border: $mg-color-red-400;
     object-fit: cover;
   }
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     display: none;
   }
 }
@@ -824,7 +824,7 @@ $search-error-border: $mg-color-red-400;
 // Mobile Responsive Styles
 // ========================================
 
-@media (max-width: 800px) {
+@media (width <= 800px) {
   .mg-search__sidebar {
     display: block;
     width: 100%;
@@ -843,7 +843,7 @@ $search-error-border: $mg-color-red-400;
   }
 }
 
-@media (min-width: 801px) {
+@media (width >= 801px) {
   .mg-search__facets-toggle {
     display: none;
   }
