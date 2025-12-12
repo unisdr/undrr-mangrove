@@ -80,6 +80,7 @@ module.exports = [
       MapComponent: './stories/Components/Map/MapComponent.jsx',
       QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
+      SyndicationSearchWidget: './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
     },
     externals: {
       react: 'react',
