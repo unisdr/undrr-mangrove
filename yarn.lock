@@ -3694,20 +3694,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-docs@npm:^9.1.16":
-  version: 9.1.16
-  resolution: "@storybook/addon-docs@npm:9.1.16"
+"@storybook/addon-docs@npm:^10.1.8":
+  version: 10.1.8
+  resolution: "@storybook/addon-docs@npm:10.1.8"
   dependencies:
     "@mdx-js/react": "npm:^3.0.0"
-    "@storybook/csf-plugin": "npm:9.1.16"
-    "@storybook/icons": "npm:^1.4.0"
-    "@storybook/react-dom-shim": "npm:9.1.16"
+    "@storybook/csf-plugin": "npm:10.1.8"
+    "@storybook/icons": "npm:^2.0.0"
+    "@storybook/react-dom-shim": "npm:10.1.8"
     react: "npm:^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
     react-dom: "npm:^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
     ts-dedent: "npm:^2.0.0"
   peerDependencies:
-    storybook: ^9.1.16
-  checksum: 10/02081dd9c9e6273e8030b7ab24470d1d29513870245aaf2741cd97eea1350918db354fb78484f192c191942d75f834e81176717e59aefc28572c88909979e8a9
+    storybook: ^10.1.8
+  checksum: 10/1548b35a5d6ecf7dbebb257a6d19e930b756d5aa38ef5711fb252eadd4bd0acecfa4b1ae3687e7971ee32b334e84d81b06f22e9c5557ac6ef0eff412263b381e
   languageName: node
   linkType: hard
 
@@ -3839,14 +3839,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/csf-plugin@npm:9.1.16":
-  version: 9.1.16
-  resolution: "@storybook/csf-plugin@npm:9.1.16"
+"@storybook/csf-plugin@npm:10.1.8":
+  version: 10.1.8
+  resolution: "@storybook/csf-plugin@npm:10.1.8"
   dependencies:
-    unplugin: "npm:^1.3.1"
+    unplugin: "npm:^2.3.5"
   peerDependencies:
-    storybook: ^9.1.16
-  checksum: 10/81612bfa904673d5a28094dce40cc0890091f6e3a82bdcedc34dd43c103d7f20d838c81744f87e65a9efb7b98779b4d89ecc95a14a5b550efe2aeff53de0c6ea
+    esbuild: "*"
+    rollup: "*"
+    storybook: ^10.1.8
+    vite: "*"
+    webpack: "*"
+  peerDependenciesMeta:
+    esbuild:
+      optional: true
+    rollup:
+      optional: true
+    vite:
+      optional: true
+    webpack:
+      optional: true
+  checksum: 10/731d35ce9258cf93bbd90cf64bb98b7b6f0ea5e50f8255ab70102448c8aca2261410bd17a42caca080e7e90a8dda97b1b98ca4a04a48bba9309f862d30e504c8
   languageName: node
   linkType: hard
 
@@ -3864,6 +3877,16 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
   checksum: 10/f9036ca3b0d2904778eb4e202305f2780b549434380f9760f0bc704fe3ee19d7332f9560a66435ebb2156346cee9a863e40fa5e4b27790bf993b0c1180a3146d
+  languageName: node
+  linkType: hard
+
+"@storybook/icons@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@storybook/icons@npm:2.0.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/04ffa285f4defc611def51f82492688bc49f6f4e8ce4e7ba5c99a1c1410b7e8820b5da65c33610a497df2409de7b48fae399052c5cacab6a4a4a9b48a36ebfd5
   languageName: node
   linkType: hard
 
@@ -3918,6 +3941,17 @@ __metadata:
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     storybook: ^10.1.4
   checksum: 10/81014bf59ce8a572b96509d1830d084c850c3ed3a16cd6e9296c1c1e7111990f7c37f87ab280034fa4163b05f8bfb6305d6efe4cd397943665b8e26c129caf4d
+  languageName: node
+  linkType: hard
+
+"@storybook/react-dom-shim@npm:10.1.8":
+  version: 10.1.8
+  resolution: "@storybook/react-dom-shim@npm:10.1.8"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    storybook: ^10.1.8
+  checksum: 10/fb6d05f411cce87e4ac210bd1a048b98a4ac04ecb2af847c8c2482d71786d1508b76fc94df66de055497c375e9fad1357507dffafdf385aa095af512e26e0776
   languageName: node
   linkType: hard
 
@@ -4747,7 +4781,7 @@ __metadata:
     "@semantic-release/git": "npm:^10.0.1"
     "@storybook/addon-a11y": "npm:9.1.16"
     "@storybook/addon-actions": "npm:9.0.8"
-    "@storybook/addon-docs": "npm:^9.1.16"
+    "@storybook/addon-docs": "npm:^10.1.8"
     "@storybook/addon-links": "npm:9.1.16"
     "@storybook/addon-themes": "npm:^9.1.16"
     "@storybook/addon-webpack5-compiler-babel": "npm:3.0.6"
@@ -5359,7 +5393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.0.0, acorn@npm:^8.1.0, acorn@npm:^8.11.0, acorn@npm:^8.14.0, acorn@npm:^8.15.0, acorn@npm:^8.8.2, acorn@npm:^8.9.0":
+"acorn@npm:^8.0.0, acorn@npm:^8.1.0, acorn@npm:^8.11.0, acorn@npm:^8.15.0, acorn@npm:^8.8.2, acorn@npm:^8.9.0":
   version: 8.15.0
   resolution: "acorn@npm:8.15.0"
   bin:
@@ -21758,13 +21792,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unplugin@npm:^1.3.1":
-  version: 1.16.1
-  resolution: "unplugin@npm:1.16.1"
+"unplugin@npm:^2.3.5":
+  version: 2.3.11
+  resolution: "unplugin@npm:2.3.11"
   dependencies:
-    acorn: "npm:^8.14.0"
+    "@jridgewell/remapping": "npm:^2.3.5"
+    acorn: "npm:^8.15.0"
+    picomatch: "npm:^4.0.3"
     webpack-virtual-modules: "npm:^0.6.2"
-  checksum: 10/4b46d7d2a63d334a45111ba57a266b3f8993ef12a72b77d7b31ffc455e8a9bef9c0e37ea463eb409dbf7ccec0b9868aeb845dd42c690d9288e4b8ac2d90fbefd
+  checksum: 10/7b4adbfaac8894e8491c452c0b67c612b57e103761e842d9013ebea89a4ae92a78df4ec0aa30e5e3eaaefd47dd287973d5a662271624b7346a15d9236d257f9d
   languageName: node
   linkType: hard
 
