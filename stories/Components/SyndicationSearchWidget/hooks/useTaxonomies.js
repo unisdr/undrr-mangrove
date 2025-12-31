@@ -18,13 +18,8 @@ import {
   CONTENT_TYPE_MAP,
   NEWS_TYPE_MAP,
   LANGUAGE_MAP,
+  TAXONOMY_API_URL,
 } from '../utils/constants';
-
-/**
- * Default taxonomy API endpoint.
- * Fetches news_type, prevention_web_regions, hazard, and theme vocabularies.
- */
-const TAXONOMY_API_URL = '/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
 
 /**
  * Hook for fetching and caching taxonomy data.

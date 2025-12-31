@@ -60,7 +60,7 @@ const defaultConfig = {
   debounceDelay: 300,
   minSearchLength: 3,
   defaultQuery: '',
-  defaultSort: 'newest',
+  defaultSort: 'relevance',
   showSearchBox: true,
   showResultsCount: true,
   showSearchTimer: true,
@@ -467,4 +467,135 @@ export const StaticDisplay = {
       </div>
     </div>
   ),
+};
+
+/**
+ * Test cases for search query syntax.
+ *
+ * This story documents various Elasticsearch query_string syntax features
+ * that users can leverage for advanced searches. Use these queries to verify
+ * search behavior after making changes to the query builder.
+ */
+export const QueryTestCases = {
+  args: {
+    config: {
+      ...defaultConfig,
+      showSearchMetrics: true,
+      resultsPerPage: 10,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+## Search query test cases
+
+Use these queries to test search functionality. Copy and paste into the search box.
+
+### Basic queries
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`climate change\` | Simple multi-word | Matches docs with both words (AND), stop words removed, fuzziness added |
+| \`disaster risk reduction\` | Common phrase | Stop words "the", "of" etc. removed for consistent matching |
+| \`The Draft Articles on the Protection\` | With stop words | Same results as "Draft Articles Protection" |
+
+### Exact phrase matching
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`"climate change"\` | Exact phrase | Matches exact phrase, no fuzziness, no stop word removal |
+| \`"Draft Articles"\` | Exact phrase | Finds documents with "Draft Articles" as consecutive words |
+| \`"disaster risk reduction"\` | Exact phrase | Stricter matching than without quotes |
+
+### Wildcards and fuzzy
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`ris?\` | Single char wildcard | Matches "risk", "rise", etc. |
+| \`red*\` | Multi-char wildcard | Matches "reduction", "reduce", "red", etc. |
+| \`evnt~1\` | Fuzzy (edit distance 1) | Matches "event" (typo tolerance) |
+| \`earthquke~2\` | Fuzzy (edit distance 2) | Matches "earthquake" |
+
+### Boolean operators
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`flood AND drought\` | AND operator | Both terms required |
+| \`flood OR drought\` | OR operator | Either term matches |
+| \`flood NOT tsunami\` | NOT operator | Excludes tsunami results |
+| \`-"Red Cross"\` | Exclude phrase | Excludes exact phrase |
+| \`(UNDRR AND "New York")\` | Grouped | Parentheses for grouping |
+
+### Field-specific searches
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`title:sendai\` | Search title only | Matches "sendai" in title field |
+| \`_language:en\` | Language filter | English content only |
+| \`type:landing\` | Content type | Landing pages only |
+| \`type:(news OR publication)\` | Multiple types | News or publications |
+
+### Date ranges
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`published_at:[2023-01-01 TO 2023-12-31]\` | Date range | Content from 2023 |
+| \`published_at:[2020-01-01 TO *]\` | Open range | Content from 2020 onwards |
+| \`published_at:[* TO 2022-12-31]\` | Open range | Content before 2023 |
+
+### Boosting
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`history^1.1 review\` | Term boosting | "history" weighted 1.1x higher |
+| \`title:sendai^2 body:sendai\` | Field boosting | Title matches weighted 2x |
+
+### Complex combined query
+
+\`\`\`
+history^1.1 review disaster ris? red* -"Red Cross" evnt~1 ("UNDRR" AND New Yrk~1) _language:en type:landing published_at:[2023-01-01 TO 2023-10-31]
+\`\`\`
+
+This query demonstrates:
+- \`history^1.1\` - boosted term
+- \`review disaster\` - simple terms
+- \`ris?\` - single character wildcard
+- \`red*\` - multi-character wildcard
+- \`-"Red Cross"\` - excluded phrase
+- \`evnt~1\` - fuzzy search for "event"
+- \`("UNDRR" AND New Yrk~1)\` - grouped boolean with fuzzy
+- \`_language:en\` - field filter
+- \`type:landing\` - content type filter
+- \`published_at:[2023-01-01 TO 2023-10-31]\` - date range
+
+### Edge cases to verify
+
+| Query | Description | Expected behavior |
+|-------|-------------|-------------------|
+| \`a\` | Too short | Should not trigger search (min 3 chars) |
+| \`ab\` | Too short | Should not trigger search |
+| \`abc\` | Minimum length | Should trigger search |
+| \`   spaces   \` | Extra whitespace | Should trim and search "spaces" |
+| \`:\` | Special char only | Should handle gracefully |
+| \`""\` | Empty quotes | Should handle gracefully |
+| \`"""\` | Unbalanced quotes | Should handle gracefully |
+
+### Query sanitization (auto-fixed)
+
+These malformed queries are automatically sanitized to prevent Elasticsearch errors:
+
+| Query | Problem | Auto-corrected to |
+|-------|---------|-------------------|
+| \`"local\` | Unclosed quote | \`local\` |
+| \`local OR \` | Trailing operator | \`local\` |
+| \`AND climate\` | Leading operator | \`climate\` |
+| \`flood OR\` | Trailing OR | \`flood\` |
+| \`AND\` | Standalone operator | (empty - no search) |
+| \`climate-\` | Trailing special char | \`climate\` |
+| \`"test\` | Unclosed quote | \`test\` |
+        `,
+      },
+    },
+  },
 };

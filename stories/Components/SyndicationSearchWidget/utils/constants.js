@@ -95,9 +95,10 @@ export const FACET_FIELDS = [
 
 /**
  * Default taxonomy API endpoint.
+ * Always points to PreventionWeb as the canonical source for taxonomy terms.
  * @type {string}
  */
-export const TAXONOMY_API_URL = '/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
+export const TAXONOMY_API_URL = 'https://www.preventionweb.net/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
 
 /**
  * Search scoring configuration.
@@ -109,13 +110,36 @@ export const SCORING_CONFIG = {
     landing: 5.0,
     terminology: 1.5,
   },
-  // Field weights for query_string
+  // Field weights for query_string (main search)
   fieldWeights: {
-    title: 6.0,
-    body: 1.0,
+    title: 9.0,
     teaser: 1.2,
-    saa_field_attachment: 1.0,
+    body: 1.0,
+    saa_field_attachment: 0.1,
   },
+  // Phrase boosting for exact and near-exact phrase matches
+  // These boost documents where search terms appear together in order
+  // - match: partial word matching
+  // - exactPhrase: slop 0, words must be in exact order
+  // - nearPhrase: slop 2, allows minor variations (missing articles, word swaps)
+  phraseBoosts: {
+    teaser: { match: 1, exactPhrase: 5, nearPhrase: 3 },
+    title: { match: 2, exactPhrase: 15, nearPhrase: 10 },
+    body: { exactPhrase: 10, nearPhrase: 8 },
+    saa_field_attachment: { exactPhrase: 1, nearPhrase: 0.5 },
+  },
+  // Slop value for near-phrase matching (allows N word transpositions/gaps)
+  nearPhraseSlop: 2,
+  // Stop words to remove from queries for better phrase matching
+  // These common words are stripped to improve exact phrase matching
+  // e.g., "Draft Articles on the Protection" → "Draft Articles Protection"
+  stopWords: [
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+    'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'been', 'be',
+    'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should',
+    'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these',
+    'those', 'it', 'its',
+  ],
   // Interestingness thresholds (field_interestingness)
   interestingness: {
     demoted: { max: 10, weight: 0.1 },
@@ -165,7 +189,7 @@ export const DEFAULT_CONFIG = {
 
   // Default search query and sort
   defaultQuery: '',
-  defaultSort: 'newest',
+  defaultSort: 'relevance',
 
   // UI element visibility
   showSearchBox: true,

@@ -70,7 +70,15 @@ export function ResultItem({ hit, showMetrics = false }) {
     return (
       <article className="mg-search__result mg-search__result--error">
         {showMetrics && (
-          <span className="mg-search__result-score">Score: {hit._score}</span>
+          <span className="mg-search__result-metrics">
+            <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+            {source.field_meta_interestingness?.[0] !== undefined && (
+              <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+            )}
+            {source.field_meta_longevity?.[0] !== undefined && (
+              <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+            )}
+          </span>
         )}
         <p className="mg-search__result-error">
           Content item {nid || 'unknown'} has no assigned domain and cannot be shown.{' '}
@@ -104,25 +112,17 @@ export function ResultItem({ hit, showMetrics = false }) {
     return (
       <article className="mg-search__result" data-result-type={type}>
         {showMetrics && (
-          <span className="mg-search__result-score">Score: {hit._score}</span>
+          <span className="mg-search__result-metrics">
+            <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+            {source.field_meta_interestingness?.[0] !== undefined && (
+              <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+            )}
+            {source.field_meta_longevity?.[0] !== undefined && (
+              <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+            )}
+          </span>
         )}
         <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
-        {showMetrics && (
-          <details className="mg-search__result-metrics">
-            <summary>Scoring Details</summary>
-            <pre>
-              {JSON.stringify(
-                {
-                  score: hit._score,
-                  interestingness: source.field_meta_interestingness,
-                  longevity: source.field_meta_longevity,
-                },
-                null,
-                2
-              )}
-            </pre>
-          </details>
-        )}
       </article>
     );
   }
@@ -169,7 +169,15 @@ export function ResultItem({ hit, showMetrics = false }) {
   return (
     <article className="mg-search__result" data-result-type={type}>
       {showMetrics && (
-        <span className="mg-search__result-score">Score: {hit._score}</span>
+        <span className="mg-search__result-metrics">
+          <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+          {source.field_meta_interestingness?.[0] !== undefined && (
+            <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+          )}
+          {source.field_meta_longevity?.[0] !== undefined && (
+            <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+          )}
+        </span>
       )}
       <div className="mg-search__result-content">
         <div className="mg-search__result-text">
@@ -205,24 +213,6 @@ export function ResultItem({ hit, showMetrics = false }) {
               className="mg-search__result-snippet"
               dangerouslySetInnerHTML={{ __html: highlightedBody }}
             />
-          )}
-
-          {/* Debug: Scoring metrics */}
-          {showMetrics && (
-            <details className="mg-search__result-metrics">
-              <summary>Scoring Details</summary>
-              <pre>
-                {JSON.stringify(
-                  {
-                    score: hit._score,
-                    interestingness: source.field_meta_interestingness,
-                    longevity: source.field_meta_longevity,
-                  },
-                  null,
-                  2
-                )}
-              </pre>
-            </details>
           )}
         </div>
       </div>

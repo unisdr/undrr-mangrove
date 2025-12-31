@@ -44,13 +44,13 @@ export function buildQuery({ query, facets, customFacets, sortBy }, config) {
  */
 function buildSort(sortBy) {
   switch (sortBy) {
-    case 'relevance':
-      return [{ _score: { order: 'desc' } }];
+    case 'newest':
+      return [{ published_at: { order: 'desc' } }];
     case 'oldest':
       return [{ published_at: { order: 'asc' } }];
-    case 'newest':
+    case 'relevance':
     default:
-      return [{ published_at: { order: 'desc' } }];
+      return [{ _score: { order: 'desc' } }];
   }
 }
 
@@ -65,7 +65,7 @@ function buildMainQuery(searchQuery, facets, customFacets, scoring, config) {
         bool: {
           must: buildMustClause(searchQuery, scoring, config),
           filter: buildFilterClauses(facets, customFacets, config),
-          should: buildShouldClauses(facets),
+          should: buildShouldClauses(searchQuery, facets, scoring),
           minimum_should_match: hasYearFilter(facets) ? 1 : 0,
         },
       },
@@ -79,13 +79,18 @@ function buildMainQuery(searchQuery, facets, customFacets, scoring, config) {
 /**
  * Build the must clause for the query.
  * Includes queryAppend (hidden terms added to all searches).
+ * Removes stop words from the query for more consistent results.
  * @private
  */
 function buildMustClause(searchQuery, scoring, config) {
   const queryAppend = config.queryAppend || '';
+  const stopWords = scoring.stopWords || [];
+
+  // Sanitize query to prevent Elasticsearch errors (unclosed quotes, trailing operators)
+  const sanitizedQuery = sanitizeQuery(searchQuery || '');
 
   // Combine user query with appended terms
-  let combinedQuery = searchQuery || '';
+  let combinedQuery = sanitizedQuery;
   if (queryAppend) {
     combinedQuery = combinedQuery
       ? `${combinedQuery} ${queryAppend}`
@@ -105,9 +110,14 @@ function buildMustClause(searchQuery, scoring, config) {
     };
   }
 
+  // Remove stop words for more consistent matching
+  // e.g., "The Draft Articles on the Protection" and "Draft Articles on Protection"
+  // will both search for the same core terms
+  const cleanedQuery = removeStopWords(combinedQuery, stopWords);
+
   return {
     query_string: {
-      query: addFuzziness(combinedQuery),
+      query: addFuzziness(cleanedQuery),
       fields: Object.entries(fieldWeights).map(
         ([field, weight]) => `${field}^${weight}`
       ),
@@ -118,14 +128,87 @@ function buildMustClause(searchQuery, scoring, config) {
 }
 
 /**
+ * Sanitize a query string to prevent Elasticsearch errors.
+ * Handles common issues like unclosed quotes and trailing operators.
+ *
+ * @param {string} query - Raw query string
+ * @returns {string} Sanitized query string
+ */
+function sanitizeQuery(query) {
+  if (!query) return query;
+
+  let sanitized = query.trim();
+
+  // Balance unclosed quotes by removing the lone quote or closing it
+  const quoteCount = (sanitized.match(/"/g) || []).length;
+  if (quoteCount % 2 !== 0) {
+    // Odd number of quotes - remove the last one to prevent syntax error
+    const lastQuoteIndex = sanitized.lastIndexOf('"');
+    sanitized =
+      sanitized.slice(0, lastQuoteIndex) + sanitized.slice(lastQuoteIndex + 1);
+  }
+
+  // Remove trailing boolean operators (AND, OR, NOT) that would cause errors
+  sanitized = sanitized.replace(/\s+(AND|OR|NOT)\s*$/i, '');
+
+  // Remove leading boolean operators
+  sanitized = sanitized.replace(/^\s*(AND|OR|NOT)\s+/i, '');
+
+  // Remove standalone boolean operators
+  if (/^(AND|OR|NOT)$/i.test(sanitized.trim())) {
+    return '';
+  }
+
+  // Remove trailing special characters that cause issues
+  sanitized = sanitized.replace(/[\-\+]+$/, '');
+
+  return sanitized.trim();
+}
+
+/**
+ * Remove common stop words from query for better phrase matching.
+ * e.g., Draft Articles on the Protection → Draft Articles Protection
+ *
+ * IMPORTANT: If the query contains quotes (explicit phrase search),
+ * stop words are NOT removed to preserve user intent.
+ * e.g., "The Draft Articles" stays as "The Draft Articles"
+ *
+ * @param {string} query - Search query
+ * @param {Array<string>} stopWords - List of stop words to remove
+ * @returns {string} Query with stop words removed (unless quoted)
+ */
+function removeStopWords(query, stopWords = []) {
+  if (!stopWords || stopWords.length === 0 || !query) {
+    return query;
+  }
+
+  // If query contains quotes, user wants exact phrase - don't remove stop words
+  if (query.includes('"')) {
+    return query;
+  }
+
+  const words = query.split(/\s+/);
+  const filtered = words.filter(
+    word => !stopWords.includes(word.toLowerCase())
+  );
+  // Return original if all words were stop words
+  return filtered.length > 0 ? filtered.join(' ') : query;
+}
+
+/**
  * Add fuzziness to search query for typo tolerance.
  * @param {string} query - Search query
  * @param {number} fuzzinessLevel - Fuzziness level (default: 1)
  * @returns {string} Query with fuzziness
  */
 function addFuzziness(query, fuzzinessLevel = 1) {
-  // Don't add fuzziness to queries with special characters
-  const specialCharacters = /[:~^\\\\/\\+\\-\\!\\(\\)\\{\\}\\[\\]\\^\\\"\\~\\*\\?\\:\\\\\\&\\|\\<\\>\\=\\@]/;
+  // Don't add fuzziness to quoted phrases (user wants exact match)
+  if (query.includes('"')) {
+    return query;
+  }
+
+  // Don't add fuzziness to queries with other special characters
+  const specialCharacters = /[:~^/+\-!(){}[\]~*?:\\&|<>=@]/;
   if (specialCharacters.test(query)) {
     return query;
   }
@@ -248,11 +331,95 @@ function hasYearFilter(facets) {
 }
 
 /**
- * Build should clauses (primarily for year filtering).
+ * Strip quotes from a query string.
+ * @param {string} query - Query that may contain quotes
+ * @returns {string} Query with quotes removed
+ */
+function stripQuotes(query) {
+  return query ? query.replace(/"/g, '') : query;
+}
+
+/**
+ * Build should clauses for phrase boosting and year filtering.
+ * Phrase boosting improves relevance when search terms appear together in order.
+ * Uses three tiers of matching (all with stop words removed):
+ * - match: partial word matching
+ * - exactPhrase: slop 0, words must be in exact order
+ * - nearPhrase: slop 2, allows minor word order variations
+ *
+ * Stop words are removed from ALL phrase matching to ensure consistent results.
+ * e.g., "Draft Articles on the Protection" and "Draft Articles Protection"
+ * will produce identical search scores.
  * @private
  */
-function buildShouldClauses(facets) {
+function buildShouldClauses(searchQuery, facets, scoring) {
   const should = [];
+
+  // Add phrase boosting when there's a search query
+  if (searchQuery && searchQuery.trim().length > 0) {
+    const phraseBoosts = scoring.phraseBoosts || {};
+    const nearPhraseSlop = scoring.nearPhraseSlop ?? 2;
+    const stopWords = scoring.stopWords || [];
+
+    // Sanitize, strip quotes, then remove stop words
+    const sanitizedQuery = sanitizeQuery(searchQuery);
+    const unquotedQuery = stripQuotes(sanitizedQuery);
+    const cleanedQuery = removeStopWords(unquotedQuery, stopWords);
+
+    // Skip if query is empty after sanitization
+    if (!cleanedQuery || cleanedQuery.trim().length === 0) {
+      return should;
+    }
+
+    // Helper to add phrase boost clauses for a field
+    const addPhraseBoosts = (field, config) => {
+      if (!config) return;
+
+      // Partial match (cleaned query)
+      if (config.match) {
+        should.push({
+          match: {
+            [field]: {
+              query: cleanedQuery,
+              boost: config.match,
+            },
+          },
+        });
+      }
+
+      // Exact phrase (slop: 0, cleaned query)
+      if (config.exactPhrase) {
+        should.push({
+          match_phrase: {
+            [field]: {
+              query: cleanedQuery,
+              slop: 0,
+              boost: config.exactPhrase,
+            },
+          },
+        });
+      }
+
+      // Near-exact phrase (slop: 2, cleaned query)
+      if (config.nearPhrase) {
+        should.push({
+          match_phrase: {
+            [field]: {
+              query: cleanedQuery,
+              slop: nearPhraseSlop,
+              boost: config.nearPhrase,
+            },
+          },
+        });
+      }
+    };
+
+    // Add phrase boosts for each configured field
+    addPhraseBoosts('teaser', phraseBoosts.teaser);
+    addPhraseBoosts('title', phraseBoosts.title);
+    addPhraseBoosts('body', phraseBoosts.body);
+    addPhraseBoosts('saa_field_attachment', phraseBoosts.saa_field_attachment);
+  }
 
   // Year filtering uses script because published_at is a date
   if (hasYearFilter(facets)) {

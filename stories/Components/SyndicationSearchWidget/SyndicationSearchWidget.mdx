@@ -123,7 +123,7 @@ The component is loaded automatically on pages containing a container with `data
   data-search-endpoint="https://www.undrr.org/search-endpoint"
   data-results-per-page="50"
   data-default-query=""
-  data-default-sort="newest"
+  data-default-sort="relevance"
   data-show-facets="true"
   data-default-filters='[{"key":"_language","value":"en"}]'
 >
@@ -142,7 +142,7 @@ The component is loaded automatically on pages containing a container with `data
 | `debounceDelay` | number | 300 | Milliseconds to wait before executing search |
 | `minSearchLength` | number | 3 | Minimum characters required to trigger search |
 | `defaultQuery` | string | `''` | Initial search query |
-| `defaultSort` | string | `'newest'` | Initial sort order (`newest`, `oldest`, `relevance`) |
+| `defaultSort` | string | `'relevance'` | Initial sort order (`relevance`, `newest`, `oldest`) |
 | `defaultFilters` | array | `[]` | Default facet filters (array of `{key, value}`) |
 | `showSearchBox` | boolean | `true` | Show the search input |
 | `showResultsCount` | boolean | `true` | Show "Showing X of Y results" |

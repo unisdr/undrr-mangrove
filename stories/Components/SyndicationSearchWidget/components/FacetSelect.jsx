@@ -139,7 +139,7 @@ export function FacetSelect({
             value={option.value}
             data-count={option.count}
           >
-            {option.label} ({option.count})
+            {option.label} ({option.count.toLocaleString()})
           </option>
         ))}
       </select>

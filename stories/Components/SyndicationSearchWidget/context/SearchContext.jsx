@@ -25,8 +25,8 @@ const initialState = {
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
 
-  // Sort order: 'newest', 'oldest', 'relevance'
-  sortBy: 'newest',
+  // Sort order: 'relevance', 'newest', 'oldest'
+  sortBy: 'relevance',
 
   // Pagination (future use)
   page: 1,
@@ -219,7 +219,7 @@ function searchReducer(state, action) {
       };
 
     case ActionTypes.INITIALIZE: {
-      const { defaultFilters = [], defaultQuery = '', defaultSort = 'newest' } = action.payload;
+      const { defaultFilters = [], defaultQuery = '', defaultSort = 'relevance' } = action.payload;
 
       // Convert defaultFilters array to facets object
       const facets = {};
