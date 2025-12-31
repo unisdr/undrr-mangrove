@@ -10,7 +10,6 @@ const getCaptionForLocale = locale => {
             title: 'Title in large size',
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: 'Social Share Button',
             label1: 'Label 1',
             label2: 'Label 2',
             button: 'Primary action',
@@ -77,7 +76,6 @@ by vulnerable populations and communities.This paper explores health risks from 
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: 'Social Share Button',
             label1: 'Label 1',
             label2: 'Label 2',
             button: 'Primary action',
@@ -133,7 +131,6 @@ export const NoImageVerticalCard = {
       ...item,
       imgback: null,
       imgalt: null,
-      share: null,
     }));
 
     return (
