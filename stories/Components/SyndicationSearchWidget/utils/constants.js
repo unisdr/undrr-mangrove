@@ -79,6 +79,25 @@ export const LANGUAGES = [
 ];
 
 /**
+ * Facets that always use OR logic (no toggle shown).
+ * These are facets where AND doesn't make semantic sense:
+ * - Content can't be in multiple languages simultaneously
+ * - Single website/domain selection
+ * @type {Array<string>}
+ */
+export const ALWAYS_OR_FACETS = [
+  '_language',
+  'field_domain_access',
+  'year', // A document can only have one publication year
+];
+
+/**
+ * Number of options before showing search input in facet dropdowns.
+ * @type {number}
+ */
+export const FACET_SEARCH_THRESHOLD = 8;
+
+/**
  * Facet field definitions.
  * @type {Array<{key: string, label: string, vocabulary?: string, type: string}>}
  */
@@ -86,7 +105,7 @@ export const FACET_FIELDS = [
   { key: 'field_domain_access', label: 'Website', vocabulary: 'field_domain_access', type: 'select-single' },
   { key: 'type', label: 'Type', vocabulary: 'type', type: 'select-multiple' },
   { key: 'field_news_type', label: 'News type', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'year', label: 'Year', type: 'select-single' },
+  { key: 'year', label: 'Year', type: 'select-multiple' },
   { key: 'field_country_region', label: 'Country and region', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_hazard', label: 'Hazard', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_theme', label: 'Theme', vocabulary: 'terms', type: 'select-multiple' },

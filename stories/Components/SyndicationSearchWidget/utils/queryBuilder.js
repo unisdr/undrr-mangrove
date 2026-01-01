@@ -13,28 +13,47 @@ import { SCORING_CONFIG, HIGHLIGHT_CONFIG, FACET_FIELDS } from './constants';
 /**
  * Build a complete Elasticsearch query from state and config.
  *
+ * Uses post_filter pattern for disjunctive faceting:
+ * - Facet filters are applied via post_filter (after aggregations)
+ * - This allows each facet dropdown to show ALL available options
+ * - Non-facet filters (status, customFilters) remain in the main query
+ *
  * @param {Object} params - Query parameters
  * @param {string} params.query - Search query string
  * @param {Object} params.facets - Active facet filters { [key]: [values] }
+ * @param {Object} params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' }
  * @param {Object} params.customFacets - Custom facet selections { [facetId]: [indices] }
  * @param {string} params.sortBy - Sort order: 'newest', 'oldest', 'relevance'
  * @param {Object} config - Widget configuration
  * @returns {Object} Elasticsearch query body
  */
-export function buildQuery({ query, facets, customFacets, sortBy }, config) {
+export function buildQuery({ query, facets, facetOperators, customFacets, sortBy }, config) {
   const scoring = config.scoring || SCORING_CONFIG;
   const highlight = config.highlight || HIGHLIGHT_CONFIG;
   const resultsPerPage = config.resultsPerPage || 50;
   const facetCountToShow = config.facetCountToShow || 500;
   const facetFields = config.facetFields || FACET_FIELDS;
 
-  return {
+  // Build the main query (excludes facet filters for disjunctive faceting)
+  const mainQuery = buildMainQuery(query, scoring, config);
+
+  // Build post_filter with all facet filters (applied after aggregations)
+  const postFilter = buildPostFilter(facets, facetOperators, customFacets, config);
+
+  const result = {
     size: resultsPerPage,
     sort: buildSort(sortBy),
-    query: buildMainQuery(query, facets, customFacets, scoring, config),
+    query: mainQuery,
     highlight: buildHighlight(highlight),
     aggs: buildAggregations(facetFields, facetCountToShow),
   };
+
+  // Only add post_filter if there are active facet filters
+  if (postFilter) {
+    result.post_filter = postFilter;
+  }
+
+  return result;
 }
 
 /**
@@ -56,22 +75,162 @@ function buildSort(sortBy) {
 
 /**
  * Build the main query structure with function_score.
+ * Excludes facet filters (those go in post_filter for disjunctive faceting).
  * @private
  */
-function buildMainQuery(searchQuery, facets, customFacets, scoring, config) {
+function buildMainQuery(searchQuery, scoring, config) {
+  const boolQuery = {
+    must: buildMustClause(searchQuery, scoring, config),
+    filter: buildBaseFilters(config),
+  };
+
+  // Add phrase boosting for relevance
+  const should = buildPhraseBoosting(searchQuery, scoring);
+  if (should.length > 0) {
+    boolQuery.should = should;
+  }
+
   return {
     function_score: {
-      query: {
-        bool: {
-          must: buildMustClause(searchQuery, scoring, config),
-          filter: buildFilterClauses(facets, customFacets, config),
-          should: buildShouldClauses(searchQuery, facets, scoring),
-          minimum_should_match: hasYearFilter(facets) ? 1 : 0,
-        },
-      },
+      query: { bool: boolQuery },
       functions: buildScoringFunctions(scoring),
       score_mode: 'multiply',
       boost_mode: 'multiply',
+    },
+  };
+}
+
+/**
+ * Build base filters that are NOT facet filters.
+ * These stay in the main query (not moved to post_filter).
+ * @private
+ */
+function buildBaseFilters(config) {
+  const filters = [];
+
+  // Always filter by published status
+  filters.push({
+    term: { status: 'true' },
+  });
+
+  // Add custom filters from config (e.g., ["type:news", "year:[2020 TO 2024]"])
+  const customFilterStrings = config.customFilters || [];
+  for (const filterString of customFilterStrings) {
+    if (filterString && filterString.trim()) {
+      filters.push({
+        query_string: {
+          query: filterString.trim(),
+        },
+      });
+    }
+  }
+
+  return filters;
+}
+
+/**
+ * Build post_filter containing all facet filters.
+ * Applied after aggregations for disjunctive faceting.
+ * @private
+ */
+function buildPostFilter(facets, facetOperators, customFacets, config) {
+  const filters = [];
+
+  // Add custom facet filters (editor-defined dropdowns)
+  const customFacetFilters = buildCustomFacetFilters(customFacets, config);
+  filters.push(...customFacetFilters);
+
+  // Get custom facet IDs to skip them in regular facet processing
+  const customFacetConfigs = config.customFacets || [];
+  const customFacetIds = new Set(customFacetConfigs.map(f => f.id));
+
+  // Add standard facet filters
+  for (const [key, values] of Object.entries(facets)) {
+    if (!values || values.length === 0) continue;
+    if (customFacetIds.has(key)) continue; // Custom facets handled separately
+
+    const operator = facetOperators[key] || 'OR';
+
+    // Year uses script filter because published_at is a date
+    if (key === 'year') {
+      const years = values.map(y => parseInt(y, 10));
+      if (operator === 'AND' && years.length > 1) {
+        // AND for year is semantically impossible (one doc can't have multiple years)
+        // but we include it for completeness - will return no results
+        filters.push({
+          bool: {
+            must: years.map(y => ({
+              script: {
+                script: {
+                  source: `
+                    if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
+                      return doc['published_at'].value.getYear() == params.year;
+                    }
+                    return false;
+                  `,
+                  lang: 'painless',
+                  params: { year: y },
+                },
+              },
+            })),
+          },
+        });
+      } else {
+        // OR: match any of the selected years
+        filters.push({
+          script: {
+            script: {
+              source: `
+                if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
+                  int docYear = doc['published_at'].value.getYear();
+                  for (int y : params.years) {
+                    if (docYear == y) return true;
+                  }
+                }
+                return false;
+              `,
+              lang: 'painless',
+              params: { years },
+            },
+          },
+        });
+      }
+      continue;
+    }
+
+    // Standard facet filters
+    if (values.length === 1) {
+      // Single value - always use term query
+      filters.push({
+        term: { [key]: values[0] },
+      });
+    } else if (operator === 'AND') {
+      // AND: must match ALL selected values
+      filters.push({
+        bool: {
+          must: values.map(v => ({ term: { [key]: v } })),
+        },
+      });
+    } else {
+      // OR: match ANY selected value (default behavior)
+      filters.push({
+        terms: { [key]: values },
+      });
+    }
+  }
+
+  // Return null if no filters, otherwise wrap in bool.must
+  if (filters.length === 0) {
+    return null;
+  }
+
+  if (filters.length === 1) {
+    return filters[0];
+  }
+
+  return {
+    bool: {
+      must: filters,
     },
   };
 }
@@ -218,57 +377,89 @@ function addFuzziness(query, fuzzinessLevel = 1) {
 }
 
 /**
- * Build filter clauses from facet state and custom filters.
+ * Build phrase boosting clauses for relevance.
+ * Improves relevance when search terms appear together in order.
+ * Uses three tiers of matching (all with stop words removed):
+ * - match: partial word matching
+ * - exactPhrase: slop 0, words must be in exact order
+ * - nearPhrase: slop 2, allows minor word order variations
+ *
+ * @param {string} searchQuery - The search query
+ * @param {Object} scoring - Scoring configuration
+ * @returns {Array} Array of should clauses for phrase boosting
  * @private
  */
-function buildFilterClauses(facets, customFacets, config) {
-  const filters = [];
+function buildPhraseBoosting(searchQuery, scoring) {
+  const should = [];
 
-  // Always filter by published status
-  filters.push({
-    term: { status: 'true' },
-  });
+  if (!searchQuery || searchQuery.trim().length === 0) {
+    return should;
+  }
 
-  // Add custom filters from config (e.g., ["type:news", "year:[2020 TO 2024]"])
-  const customFilterStrings = config.customFilters || [];
-  for (const filterString of customFilterStrings) {
-    if (filterString && filterString.trim()) {
-      filters.push({
-        query_string: {
-          query: filterString.trim(),
+  const phraseBoosts = scoring.phraseBoosts || {};
+  const nearPhraseSlop = scoring.nearPhraseSlop ?? 2;
+  const stopWords = scoring.stopWords || [];
+
+  // Sanitize, strip quotes, then remove stop words
+  const sanitizedQuery = sanitizeQuery(searchQuery);
+  const unquotedQuery = stripQuotes(sanitizedQuery);
+  const cleanedQuery = removeStopWords(unquotedQuery, stopWords);
+
+  // Skip if query is empty after sanitization
+  if (!cleanedQuery || cleanedQuery.trim().length === 0) {
+    return should;
+  }
+
+  // Helper to add phrase boost clauses for a field
+  const addPhraseBoosts = (field, config) => {
+    if (!config) return;
+
+    // Partial match (cleaned query)
+    if (config.match) {
+      should.push({
+        match: {
+          [field]: {
+            query: cleanedQuery,
+            boost: config.match,
+          },
         },
       });
     }
-  }
 
-  // Add custom facet filters (editor-defined dropdowns)
-  const customFacetFilters = buildCustomFacetFilters(customFacets, config);
-  filters.push(...customFacetFilters);
-
-  // Get custom facet IDs to skip them in regular facet processing
-  const customFacetConfigs = config.customFacets || [];
-  const customFacetIds = new Set(customFacetConfigs.map(f => f.id));
-
-  // Add standard facet filters
-  for (const [key, values] of Object.entries(facets)) {
-    if (!values || values.length === 0) continue;
-    if (key === 'year') continue; // Year handled in should clause
-    if (customFacetIds.has(key)) continue; // Custom facets handled separately
-
-    // For single-value facets, use term query
-    if (values.length === 1) {
-      filters.push({
-        term: { [key]: values[0] },
-      });
-    } else {
-      // For multi-value facets, use terms query (OR)
-      filters.push({
-        terms: { [key]: values },
+    // Exact phrase (slop: 0, cleaned query)
+    if (config.exactPhrase) {
+      should.push({
+        match_phrase: {
+          [field]: {
+            query: cleanedQuery,
+            slop: 0,
+            boost: config.exactPhrase,
+          },
+        },
       });
     }
-  }
 
-  return filters;
+    // Near-exact phrase (slop: 2, cleaned query)
+    if (config.nearPhrase) {
+      should.push({
+        match_phrase: {
+          [field]: {
+            query: cleanedQuery,
+            slop: nearPhraseSlop,
+            boost: config.nearPhrase,
+          },
+        },
+      });
+    }
+  };
+
+  // Add phrase boosts for each configured field
+  addPhraseBoosts('teaser', phraseBoosts.teaser);
+  addPhraseBoosts('title', phraseBoosts.title);
+  addPhraseBoosts('body', phraseBoosts.body);
+  addPhraseBoosts('saa_field_attachment', phraseBoosts.saa_field_attachment);
+
+  return should;
 }
 
 /**
@@ -323,124 +514,12 @@ function buildCustomFacetFilters(customFacets, config) {
 }
 
 /**
- * Check if year filter is present.
- * @private
- */
-function hasYearFilter(facets) {
-  return facets.year && facets.year.length > 0;
-}
-
-/**
  * Strip quotes from a query string.
  * @param {string} query - Query that may contain quotes
  * @returns {string} Query with quotes removed
  */
 function stripQuotes(query) {
   return query ? query.replace(/"/g, '') : query;
-}
-
-/**
- * Build should clauses for phrase boosting and year filtering.
- * Phrase boosting improves relevance when search terms appear together in order.
- * Uses three tiers of matching (all with stop words removed):
- * - match: partial word matching
- * - exactPhrase: slop 0, words must be in exact order
- * - nearPhrase: slop 2, allows minor word order variations
- *
- * Stop words are removed from ALL phrase matching to ensure consistent results.
- * e.g., "Draft Articles on the Protection" and "Draft Articles Protection"
- * will produce identical search scores.
- * @private
- */
-function buildShouldClauses(searchQuery, facets, scoring) {
-  const should = [];
-
-  // Add phrase boosting when there's a search query
-  if (searchQuery && searchQuery.trim().length > 0) {
-    const phraseBoosts = scoring.phraseBoosts || {};
-    const nearPhraseSlop = scoring.nearPhraseSlop ?? 2;
-    const stopWords = scoring.stopWords || [];
-
-    // Sanitize, strip quotes, then remove stop words
-    const sanitizedQuery = sanitizeQuery(searchQuery);
-    const unquotedQuery = stripQuotes(sanitizedQuery);
-    const cleanedQuery = removeStopWords(unquotedQuery, stopWords);
-
-    // Skip if query is empty after sanitization
-    if (!cleanedQuery || cleanedQuery.trim().length === 0) {
-      return should;
-    }
-
-    // Helper to add phrase boost clauses for a field
-    const addPhraseBoosts = (field, config) => {
-      if (!config) return;
-
-      // Partial match (cleaned query)
-      if (config.match) {
-        should.push({
-          match: {
-            [field]: {
-              query: cleanedQuery,
-              boost: config.match,
-            },
-          },
-        });
-      }
-
-      // Exact phrase (slop: 0, cleaned query)
-      if (config.exactPhrase) {
-        should.push({
-          match_phrase: {
-            [field]: {
-              query: cleanedQuery,
-              slop: 0,
-              boost: config.exactPhrase,
-            },
-          },
-        });
-      }
-
-      // Near-exact phrase (slop: 2, cleaned query)
-      if (config.nearPhrase) {
-        should.push({
-          match_phrase: {
-            [field]: {
-              query: cleanedQuery,
-              slop: nearPhraseSlop,
-              boost: config.nearPhrase,
-            },
-          },
-        });
-      }
-    };
-
-    // Add phrase boosts for each configured field
-    addPhraseBoosts('teaser', phraseBoosts.teaser);
-    addPhraseBoosts('title', phraseBoosts.title);
-    addPhraseBoosts('body', phraseBoosts.body);
-    addPhraseBoosts('saa_field_attachment', phraseBoosts.saa_field_attachment);
-  }
-
-  // Year filtering uses script because published_at is a date
-  if (hasYearFilter(facets)) {
-    const year = parseInt(facets.year[0], 10);
-    should.push({
-      script: {
-        script: {
-          source: `
-            if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-              return doc['published_at'].value.getYear() == params.year;
-            }
-            return false;
-          `,
-          lang: 'painless',
-          params: { year },
-        },
-      },
-    });
-  }
-
-  return should;
 }
 
 /**
@@ -600,6 +679,8 @@ function buildHighlight(highlight) {
 
 /**
  * Build aggregations for facets.
+ * Uses simple aggregations scoped to the main query.
+ * Selected values are preserved in dropdowns via the UI component.
  * @private
  */
 function buildAggregations(facetFields, facetCount) {
@@ -633,6 +714,35 @@ function buildAggregations(facetFields, facetCount) {
   };
 
   return aggs;
+}
+
+/**
+ * Extract buckets from aggregation response.
+ * Handles both old format (aggs.field.buckets) and new global+filter format
+ * (aggs.field.filtered.values.buckets).
+ *
+ * @param {Object} aggregations - Elasticsearch aggregations response
+ * @param {string} fieldKey - The field key to extract buckets for
+ * @returns {Array} Array of bucket objects with key and doc_count
+ */
+export function getAggregationBuckets(aggregations, fieldKey) {
+  if (!aggregations || !aggregations[fieldKey]) {
+    return [];
+  }
+
+  const agg = aggregations[fieldKey];
+
+  // New format: global + filter structure
+  if (agg.filtered?.values?.buckets) {
+    return agg.filtered.values.buckets;
+  }
+
+  // Old format: direct buckets
+  if (agg.buckets) {
+    return agg.buckets;
+  }
+
+  return [];
 }
 
 export default buildQuery;

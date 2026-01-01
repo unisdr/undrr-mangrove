@@ -226,9 +226,8 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-chip {
   display: inline-flex;
   align-items: center;
-  gap: $mg-spacing-25;
+  gap: $mg-spacing-50;
   padding: $mg-spacing-25 $mg-spacing-50;
-  font-size: $mg-font-size-100;
   color: $search-text;
   background: #fff;
   border: 1px solid $search-border;
@@ -248,14 +247,11 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__filter-chip-remove {
-  font-size: $mg-font-size-100;
-  line-height: 1;
-  color: $search-text-muted;
+  font-weight: 900;
 }
 
 .mg-search__clear-all {
   padding: $mg-spacing-25 $mg-spacing-75;
-  font-size: $mg-font-size-100;
   color: $search-primary;
   background: none;
   border: 1px solid $search-primary;
@@ -304,7 +300,6 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__results-count {
-  font-size: $mg-font-size-200;
   color: $search-text-muted;
   margin: 0;
 
@@ -856,29 +851,210 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 // ========================================
-// Chosen.js Dropdown Styling
+// Custom Select Dropdown (replaces Chosen.js)
 // ========================================
+// Lightweight, self-contained dropdown that works in any environment.
+// No external dependencies required.
 
-.mg-search__facet .chosen-container {
-  width: 100% !important;
+.mg-select {
+  position: relative;
+  width: 100%;
   margin-top: $mg-spacing-50;
+}
 
-  .chosen-single,
-  .chosen-choices {
-    background: #fff;
-    border: 1px solid $search-border;
+.mg-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 44px; // Touch-friendly
+  padding: $mg-spacing-50 $mg-spacing-75;
+  font-size: $mg-font-size-200;
+  color: $search-text;
+  text-align: left;
+  background: #fff;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: $search-primary;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $search-primary;
+    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+  }
+
+  .mg-select--open & {
+    border-color: $search-primary;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.mg-select__trigger-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mg-select__trigger-icon {
+  flex-shrink: 0;
+  margin-left: $mg-spacing-50;
+  color: $search-text-muted;
+  transition: transform 0.2s ease;
+
+  .mg-select--open & {
+    transform: rotate(180deg);
+  }
+}
+
+.mg-select__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998; // High z-index since it's portaled to body
+  background: transparent;
+  cursor: default;
+}
+
+.mg-select__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 9999; // Above backdrop
+  background: #fff;
+  border: 1px solid $search-primary;
+  border-top: none;
+  border-radius: 0 0 $search-radius $search-radius;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  animation: mg-select-fade-in 0.15s ease-out;
+}
+
+@keyframes mg-select-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mg-select__search {
+  padding: $mg-spacing-50;
+  border-bottom: 1px solid $search-border-light;
+}
+
+.mg-select__search-input {
+  width: 100%;
+  padding: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+
+  &:focus {
+    outline: none;
+    border-color: $search-primary;
+  }
+
+  &::placeholder {
+    color: $search-text-muted;
+  }
+}
+
+.mg-select__list {
+  list-style: none;
+  margin: 0;
+  padding: $mg-spacing-25 0;
+  max-height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mg-select__option {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+  padding: $mg-spacing-50 $mg-spacing-75;
+  min-height: 40px; // Touch-friendly
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+
+  &:hover,
+  &--highlighted {
+    background-color: $search-chip-bg;
+  }
+
+  &--selected {
+    background-color: rgba($search-primary, 0.08);
+
+    .mg-select__option-label {
+      font-weight: 600;
+      color: $search-primary;
+    }
+  }
+
+  &--selected#{&}--highlighted {
+    background-color: rgba($search-primary, 0.12);
+  }
+}
+
+.mg-select__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid $search-border;
+  color: $search-primary;
+
+  &--checkbox {
     border-radius: $search-radius;
-    padding: $mg-spacing-50;
-    font-size: $mg-font-size-200;
   }
 
-  .chosen-drop {
-    border-radius: 0 0 $search-radius $search-radius;
+  &--radio {
+    border-radius: 50%;
   }
 
-  .chosen-results li.highlighted {
+  .mg-select__option--selected & {
+    border-color: $search-primary;
     background-color: $search-primary;
+    color: #fff;
   }
+}
+
+.mg-select__indicator-dot {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.mg-select__option-label {
+  flex: 1;
+  font-size: $mg-font-size-200;
+  color: $search-text;
+  line-height: 1.4;
+}
+
+.mg-select__option-count {
+  flex-shrink: 0;
+  font-size: $mg-font-size-100;
+  color: $search-text-muted;
+}
+
+.mg-select__empty {
+  padding: $mg-spacing-100;
+  text-align: center;
+  color: $search-text-muted;
+  font-size: $mg-font-size-200;
 }
 
 // ========================================
@@ -1147,4 +1323,91 @@ $search-input-padding-x: $mg-spacing-250;
 
 [data-mg-search-debug="true"] .mg-search-debug {
   display: block;
+}
+
+// ========================================
+// Facet Operator Toggle (AND/OR)
+// ========================================
+
+.mg-search__facet-operator {
+  display: flex;
+  flex-direction: column;
+  gap: $mg-spacing-50;
+  margin-top: $mg-spacing-75;
+  font-size: $mg-font-size-200;
+}
+
+.mg-search__facet-operator-row {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+}
+
+.mg-search__facet-operator-label {
+  color: $search-text-muted;
+  font-weight: 500;
+}
+
+.mg-search__facet-operator-hint {
+  margin: 0;
+  color: $search-text-muted;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.mg-search__facet-operator-toggle {
+  display: inline-flex;
+  gap: $mg-spacing-25;
+}
+
+.mg-search__facet-operator-option {
+  display: flex;
+  align-items: center;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  font-weight: 400;
+  font-size: $mg-font-size-200;
+  user-select: none;
+  color: $search-text-muted;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+
+  // Hide the actual radio input
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover:not(&--active) {
+    color: $search-text;
+  }
+
+  &--active {
+    color: $search-primary;
+    font-weight: 500;
+    border-bottom-color: $search-primary;
+  }
+
+  // Focus visible for keyboard navigation
+  &:focus-within {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+    border-radius: $search-radius;
+  }
+}
+
+// ========================================
+// Active Filter Chip Connector (AND grouping)
+// ========================================
+
+.mg-search__filter-chip-connector {
+  display: inline-flex;
+  align-items: center;
+  margin-right: $mg-spacing-25;
+  color: $search-text-muted;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

@@ -117,6 +117,22 @@ export function SearchResults({
       data-vf-google-analytics-region="undrr-search-results"
       style={{ opacity: isStale ? 0.7 : 1, transition: 'opacity 0.2s' }}
     >
+      {/* Screen reader announcement for results updates */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="mg-u-sr-only"
+      >
+        {!isLoading && totalResults !== null && (
+          <>
+            {totalResults === 0
+              ? `No results found${query ? ` for "${query}"` : ''}`
+              : `${totalResults.toLocaleString()} result${totalResults !== 1 ? 's' : ''} found${query ? ` for "${query}"` : ''}`}
+          </>
+        )}
+      </div>
+
       {/* Results header */}
       <div className="mg-search__results-header">
         {showResultsCount && (

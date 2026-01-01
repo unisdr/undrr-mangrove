@@ -136,6 +136,7 @@ function SyndicationSearchWidgetInner() {
         <main
           className={`mg-search__main ${isStale || isPending ? 'mg-search__main--stale' : ''}`}
           data-vf-google-analytics-region="undrr-search-results"
+          aria-busy={isLoading || isPending}
         >
           <Suspense fallback={<SearchResultsSkeleton />}>
             <SearchResults

@@ -26,7 +26,7 @@ export function ActiveFilters() {
   const dispatch = useSearchDispatch();
   const labelId = useId();
 
-  const { facets, customFacets: customFacetSelections } = state;
+  const { facets, facetOperators, customFacets: customFacetSelections } = state;
   const {
     showActiveFilters,
     visibleFilters,
@@ -56,8 +56,12 @@ export function ActiveFilters() {
         continue;
       }
 
+      // Get operator for this facet (OR is default)
+      const operator = facetOperators[key] || 'OR';
+
       // Add chip for each value
-      for (const value of values) {
+      for (let i = 0; i < values.length; i++) {
+        const value = values[i];
         const label = getLabelForValue(key, value, fieldConfig.vocabulary);
         result.push({
           key,
@@ -65,6 +69,11 @@ export function ActiveFilters() {
           label,
           fieldLabel: fieldConfig.label,
           isCustomFacet: false,
+          operator,
+          // Track position within the facet group for AND connectors
+          isFirstInGroup: i === 0,
+          isLastInGroup: i === values.length - 1,
+          groupSize: values.length,
         });
       }
     }
@@ -94,7 +103,7 @@ export function ActiveFilters() {
     }
 
     return result;
-  }, [facets, customFacetSelections, facetFields, visibleFilters, defaultFilters, customFacetConfigs]);
+  }, [facets, facetOperators, customFacetSelections, facetFields, visibleFilters, defaultFilters, customFacetConfigs]);
 
   // Handle chip removal
   const handleRemove = useCallback((chip) => {
@@ -132,6 +141,17 @@ export function ActiveFilters() {
       >
         {chips.map((chip, index) => (
           <li key={`${chip.key}-${chip.value}-${index}`} role="listitem">
+            {/* Show "and" connector between AND-grouped chips (not before first) */}
+            {chip.operator === 'AND' &&
+              chip.groupSize > 1 &&
+              !chip.isFirstInGroup && (
+                <span
+                  className="mg-search__filter-chip-connector"
+                  aria-hidden="true"
+                >
+                  and
+                </span>
+              )}
             <button
               type="button"
               className="mg-search__filter-chip"

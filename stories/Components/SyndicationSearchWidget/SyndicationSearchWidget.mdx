@@ -20,6 +20,8 @@ Built with React 19, it leverages concurrent rendering features for optimal user
 - **Active filters**: Displays removable chips for selected filters
 - **Accessibility**: Full ARIA support, keyboard navigation, screen reader announcements
 - **Theming**: Uses Mangrove design tokens for consistent styling
+- **Mobile-first**: Left-slide filter drawer on mobile, inline sidebar on desktop
+- **Zero external dependencies**: Custom select dropdowns with Chosen-like functionality (searchable, multi-select) without requiring Chosen.js or any other library
 
 ## Default
 
@@ -174,11 +176,40 @@ SyndicationSearchWidget
 │   ├── ActiveFilters (filter chips)
 │   ├── SearchResults (with Suspense)
 │   │   └── ResultItem (×n)
-│   └── FacetsSidebar
-│       ├── SortOptions (relevance/newest/oldest)
-│       ├── FacetSelect (×n, from Elasticsearch aggregations)
-│       └── CustomFacetSelect (×n, editor-defined)
+│   ├── FacetsSidebar (desktop)
+│   │   ├── SortOptions (relevance/newest/oldest)
+│   │   ├── FacetSelect (×n, from Elasticsearch aggregations)
+│   │   │   └── SelectDropdown (custom Chosen-like component)
+│   │   └── CustomFacetSelect (×n, editor-defined)
+│   └── MobileFilterDrawer (mobile, <800px)
+│       └── FacetsSidebar (reused)
 ```
+
+### Custom Select Dropdown
+
+The facet dropdowns use a **lightweight custom `SelectDropdown` component** instead of Chosen.js. This provides Chosen-like functionality without external dependencies:
+
+| Feature | Description |
+|---------|-------------|
+| **Searchable** | Filter input shown when options > 8 |
+| **Multi-select** | Checkbox indicators, multiple selections |
+| **Single-select** | Radio indicators, one selection |
+| **Keyboard navigation** | Arrow keys, Enter, Escape |
+| **Touch-friendly** | 44px trigger height, 40px option height |
+| **Accessible** | ARIA listbox pattern, screen reader support |
+
+This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
+
+### Mobile Filter Drawer
+
+On screens ≤800px, the sidebar is replaced with a left-slide drawer:
+
+- **Amazon-style slide-in** from the left edge
+- **Click backdrop to close** (right side)
+- **Sticky header and footer** with "View results" button
+- **Focus trapping** for accessibility
+
+UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Accessibility
 
@@ -188,6 +219,17 @@ SyndicationSearchWidget
 - Focus management on filter removal
 
 ## Changelog
+
+### 1.0.0-alpha.2
+- **Mobile filter drawer**: Left-slide drawer replaces hidden sidebar on mobile
+- **Custom SelectDropdown**: Replaced Chosen.js dependency with lightweight custom component
+  - Searchable filter input (shown when >8 options)
+  - Multi-select with checkboxes, single-select with radio buttons
+  - Keyboard navigation (arrows, Enter, Escape)
+  - Touch-friendly sizing (44px/40px targets)
+- **Loading state improvements**: Progress bar, button spinner, stale result overlay
+- **Compact filter button**: Inline with results count on mobile (vs full-width)
+- UX patterns from [Pencil & Paper mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters)
 
 ### 1.0.0-alpha.1
 - React 19 implementation replacing vanilla JS version

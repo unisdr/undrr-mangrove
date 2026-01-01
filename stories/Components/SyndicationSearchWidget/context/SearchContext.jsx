@@ -22,6 +22,9 @@ const initialState = {
   // Active facet filters: { [key]: [values] }
   facets: {},
 
+  // Operator per facet: 'OR' (default) or 'AND'
+  facetOperators: {},
+
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
 
@@ -62,6 +65,7 @@ export const ActionTypes = {
   SET_FACET: 'SET_FACET',
   REMOVE_FACET: 'REMOVE_FACET',
   CLEAR_FACETS: 'CLEAR_FACETS',
+  SET_FACET_OPERATOR: 'SET_FACET_OPERATOR',
   SET_CUSTOM_FACET: 'SET_CUSTOM_FACET',
   REMOVE_CUSTOM_FACET: 'REMOVE_CUSTOM_FACET',
   SET_SORT: 'SET_SORT',
@@ -117,9 +121,11 @@ function searchReducer(state, action) {
       // If no value specified, remove entire facet
       if (value === undefined) {
         const { [key]: removed, ...remainingFacets } = state.facets;
+        const { [key]: removedOp, ...remainingOperators } = state.facetOperators;
         return {
           ...state,
           facets: remainingFacets,
+          facetOperators: remainingOperators,
           page: 1,
         };
       }
@@ -130,9 +136,11 @@ function searchReducer(state, action) {
 
       if (newValues.length === 0) {
         const { [key]: removed, ...remainingFacets } = state.facets;
+        const { [key]: removedOp, ...remainingOperators } = state.facetOperators;
         return {
           ...state,
           facets: remainingFacets,
+          facetOperators: remainingOperators,
           page: 1,
         };
       }
@@ -151,9 +159,22 @@ function searchReducer(state, action) {
       return {
         ...state,
         facets: {},
+        facetOperators: {},
         customFacets: {},
         page: 1,
       };
+
+    case ActionTypes.SET_FACET_OPERATOR: {
+      const { key, operator } = action.payload;
+      return {
+        ...state,
+        facetOperators: {
+          ...state.facetOperators,
+          [key]: operator,
+        },
+        page: 1,
+      };
+    }
 
     case ActionTypes.SET_CUSTOM_FACET: {
       const { facetId, value } = action.payload;
@@ -367,6 +388,11 @@ export const actions = {
 
   clearFacets: () => ({
     type: ActionTypes.CLEAR_FACETS,
+  }),
+
+  setFacetOperator: (key, operator) => ({
+    type: ActionTypes.SET_FACET_OPERATOR,
+    payload: { key, operator },
   }),
 
   setCustomFacet: (facetId, value) => ({
