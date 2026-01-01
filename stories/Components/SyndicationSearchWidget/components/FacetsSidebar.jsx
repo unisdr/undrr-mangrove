@@ -13,7 +13,12 @@
 import React, { useMemo } from 'react';
 import { useSearchState, useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
-import { FACET_FIELDS, isFilterVisible } from '../utils/constants';
+import {
+  FACET_FIELDS,
+  CONTENT_SUBTYPES,
+  createSubtypeValue,
+  isFilterVisible,
+} from '../utils/constants';
 import SortOptions from './SortOptions';
 import FacetSelect from './FacetSelect';
 import CustomFacetSelect from './CustomFacetSelect';
@@ -36,23 +41,55 @@ export function FacetsSidebar({ widgetId = 'search' }) {
   const fields = facetFields || FACET_FIELDS;
 
   /**
-   * Merge type and news_type buckets for combined display.
-   * News type options are marked with data-news-type for proper state routing.
+   * Merge content types with their subtypes for hierarchical display.
+   * Parent types keep their original keys (e.g., "news").
+   * Subtypes get namespaced keys (e.g., "field_news_type:751").
+   *
+   * Returns buckets organized as: parent types with their subtypes grouped after them.
    */
   const getMergedTypeBuckets = useMemo(() => {
     if (!aggregations) return [];
 
     const typeBuckets = aggregations.type?.buckets || [];
-    const newsTypeBuckets = aggregations.field_news_type?.buckets || [];
 
-    // Combine and sort by count
-    const merged = [
-      ...typeBuckets.map(b => ({ ...b, isNewsType: false })),
-      ...newsTypeBuckets.map(b => ({ ...b, isNewsType: true })),
-    ];
+    // Build result with parent types and their subtypes interleaved
+    const result = [];
 
-    return merged.sort((a, b) => b.doc_count - a.doc_count);
+    // Process each parent type bucket
+    for (const parentBucket of typeBuckets) {
+      // Add the parent type
+      result.push({
+        ...parentBucket,
+        isSubtype: false,
+        parentType: null,
+      });
+
+      // Check if this parent type has subtypes configured
+      const subtypeConfig = CONTENT_SUBTYPES[parentBucket.key];
+      if (subtypeConfig) {
+        // Get subtype buckets from aggregations
+        const subtypeBuckets = aggregations[subtypeConfig.field]?.buckets || [];
+
+        // Add subtypes with namespaced keys, sorted by count
+        const sortedSubtypes = [...subtypeBuckets].sort((a, b) => b.doc_count - a.doc_count);
+        for (const subtypeBucket of sortedSubtypes) {
+          result.push({
+            key: createSubtypeValue(subtypeConfig.field, subtypeBucket.key),
+            doc_count: subtypeBucket.doc_count,
+            isSubtype: true,
+            parentType: parentBucket.key,
+          });
+        }
+      }
+    }
+
+    return result;
   }, [aggregations]);
+
+  // Build set of subtype field names to skip (they're merged into type)
+  const subtypeFields = useMemo(() => {
+    return new Set(Object.values(CONTENT_SUBTYPES).map(config => config.field));
+  }, []);
 
   /**
    * Render standard facets.
@@ -64,8 +101,8 @@ export function FacetsSidebar({ widgetId = 'search' }) {
         if (!isFilterVisible(field.key, visibleFilters)) {
           return false;
         }
-        // Skip news_type - it's merged into type
-        if (field.key === 'field_news_type') {
+        // Skip subtype fields - they're merged into type dropdown
+        if (subtypeFields.has(field.key)) {
           return false;
         }
         return true;
@@ -98,7 +135,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
           />
         );
       });
-  }, [fields, aggregations, visibleFilters, allowedTypes, getMergedTypeBuckets, getLabel, widgetId]);
+  }, [fields, aggregations, visibleFilters, allowedTypes, subtypeFields, getMergedTypeBuckets, getLabel, widgetId]);
 
   /**
    * Render custom facets (editor-defined dropdowns).

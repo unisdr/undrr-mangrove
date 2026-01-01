@@ -679,11 +679,11 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 // Custom facet styling
-.mg-search__facet--custom {
-  background: $search-chip-bg;
-  padding: $mg-spacing-100;
-  border-radius: $search-radius;
-}
+// .mg-search__facet--custom {
+//   background: $search-chip-bg;
+//   padding: $mg-spacing-100;
+//   border-radius: $search-radius;
+// }
 
 // ========================================
 // Result teaser HTML overrides
@@ -1048,6 +1048,22 @@ $search-input-padding-x: $mg-spacing-250;
   flex-shrink: 0;
   font-size: $mg-font-size-100;
   color: $search-text-muted;
+}
+
+// Subtype options (indented children under parent content types)
+.mg-select__option--subtype {
+  padding-left: $mg-spacing-150;
+
+  .mg-select__option-label {
+    font-size: $mg-font-size-100;
+
+    // Add visual connector
+    &::before {
+      content: "└";
+      margin-right: $mg-spacing-25;
+      color: $search-text-muted;
+    }
+  }
 }
 
 .mg-select__empty {

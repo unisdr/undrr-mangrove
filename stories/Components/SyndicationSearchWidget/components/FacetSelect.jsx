@@ -14,7 +14,13 @@
 import React, { useMemo, useCallback } from 'react';
 import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
 import { SelectDropdown } from './SelectDropdown';
-import { ALWAYS_OR_FACETS, FACET_SEARCH_THRESHOLD } from '../utils/constants';
+import {
+  ALWAYS_OR_FACETS,
+  FACET_SEARCH_THRESHOLD,
+  parseTypeValue,
+  isSubtypeValue,
+  getContentType,
+} from '../utils/constants';
 
 /**
  * FacetSelect component.
@@ -63,42 +69,74 @@ export function FacetSelect({
   /**
    * Filter and map buckets to options with labels.
    * Ensures selected values are always visible even if not in aggregation results.
+   *
+   * For the type facet, options may include subtypes with namespaced keys
+   * (e.g., "field_news_type:751") that are rendered indented under their parent.
    */
   const options = useMemo(() => {
+    const isTypeFacet = key === 'type';
+
     // Build options from buckets
     const bucketOptions = buckets
       .filter((bucket) => {
         // Filter by allowed types if configured
-        if ((key === 'type' || key === 'field_news_type') && allowedTypes) {
+        if (isTypeFacet && allowedTypes) {
+          const bucketKey = String(bucket.key);
+          // For subtypes, check if parent type is allowed
+          if (bucket.isSubtype && bucket.parentType) {
+            if (Array.isArray(allowedTypes)) {
+              return allowedTypes.includes(bucket.parentType);
+            }
+            if (typeof allowedTypes === 'object' && allowedTypes.types) {
+              return allowedTypes.types.includes(bucket.parentType);
+            }
+          }
+          // For parent types, check if type is allowed
           if (Array.isArray(allowedTypes)) {
-            if (key === 'type') {
-              return allowedTypes.includes(String(bucket.key));
-            }
-            // For news types, allow if 'news' is in allowed types
-            if (key === 'field_news_type') {
-              return allowedTypes.includes('news');
-            }
-          } else if (typeof allowedTypes === 'object') {
-            if (key === 'type' && allowedTypes.types) {
-              return allowedTypes.types.includes(String(bucket.key));
-            }
-            if (key === 'field_news_type' && allowedTypes.newsTypes) {
-              return allowedTypes.newsTypes.includes(String(bucket.key));
-            }
+            return allowedTypes.includes(bucketKey);
+          }
+          if (typeof allowedTypes === 'object' && allowedTypes.types) {
+            return allowedTypes.types.includes(bucketKey);
           }
         }
         return true;
       })
       .map((bucket) => {
-        const optionLabel = getLabel(key, bucket.key, vocabulary);
+        const bucketKey = String(bucket.key);
+        const isSelected = selectedValues.includes(bucketKey);
+
+        // For type facet, use parseTypeValue for unified label resolution
+        let optionLabel;
+        let isSubtype = false;
+        let parentType = bucket.parentType || null;
+        if (isTypeFacet) {
+          const parsed = parseTypeValue(bucketKey);
+          optionLabel = parsed.label;
+          isSubtype = parsed.isSubtype;
+          parentType = parsed.parentType || parentType;
+
+          // When subtype is selected, prefix with parent type for context
+          // e.g., "Research briefs" → "News: Research briefs"
+          if (isSubtype && isSelected && parentType) {
+            const parentInfo = getContentType(parentType);
+            if (parentInfo) {
+              optionLabel = `${parentInfo.name}: ${optionLabel}`;
+            }
+          }
+        } else {
+          optionLabel = getLabel(key, bucket.key, vocabulary);
+        }
+
         // Skip if label indicates disabled
         if (optionLabel === 'DISABLED') return null;
 
         return {
-          value: String(bucket.key),
+          value: bucketKey,
           label: optionLabel,
           count: bucket.doc_count,
-          isSelected: selectedValues.includes(String(bucket.key)),
+          isSelected,
+          isSubtype: isSubtype || bucket.isSubtype || false,
+          parentType,
         };
       })
       .filter(Boolean);
@@ -109,19 +147,57 @@ export function FacetSelect({
     // Add selected values that aren't in buckets (so users can deselect them)
     const missingSelectedOptions = selectedValues
       .filter((v) => !bucketValues.has(v))
-      .map((value) => ({
-        value,
-        label: getLabel(key, value, vocabulary),
-        count: 0, // Not in current results
-        isSelected: true,
-      }));
+      .map((value) => {
+        // For type facet, use parseTypeValue
+        let optionLabel;
+        let isSubtype = false;
+        let parentType = null;
+        if (isTypeFacet) {
+          const parsed = parseTypeValue(value);
+          optionLabel = parsed.label;
+          isSubtype = parsed.isSubtype;
+          parentType = parsed.parentType;
 
-    // Combine and sort: selected first, then by count
-    return [...bucketOptions, ...missingSelectedOptions].sort((a, b) => {
-      // Selected items float to top
+          // When subtype is selected, prefix with parent type for context
+          if (isSubtype && parentType) {
+            const parentInfo = getContentType(parentType);
+            if (parentInfo) {
+              optionLabel = `${parentInfo.name}: ${optionLabel}`;
+            }
+          }
+        } else {
+          optionLabel = getLabel(key, value, vocabulary);
+        }
+
+        return {
+          value,
+          label: optionLabel,
+          count: 0, // Not in current results
+          isSelected: true,
+          isSubtype,
+          parentType,
+        };
+      });
+
+    // Combine options
+    const allOptions = [...bucketOptions, ...missingSelectedOptions];
+
+    // For type facet, preserve hierarchical order (parent-child grouping)
+    // Only float selected items to top, don't re-sort by count
+    if (isTypeFacet) {
+      return allOptions.sort((a, b) => {
+        // Selected items float to top
+        if (a.isSelected && !b.isSelected) return -1;
+        if (!a.isSelected && b.isSelected) return 1;
+        // Keep original hierarchical order for same selection state
+        return 0;
+      });
+    }
+
+    // For other facets, sort selected first, then by count
+    return allOptions.sort((a, b) => {
       if (a.isSelected && !b.isSelected) return -1;
       if (!a.isSelected && b.isSelected) return 1;
-      // Then sort by count
       return b.count - a.count;
     });
   }, [buckets, key, vocabulary, getLabel, allowedTypes, selectedValues]);

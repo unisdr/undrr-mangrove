@@ -7,13 +7,14 @@
 
 import React, { useCallback, useMemo, useId } from 'react';
 import { useSearchState, useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
+import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
-  getContentType,
-  getNewsType,
   getDomain,
   getLanguage,
+  getContentType,
   FACET_FIELDS,
   isFilterVisible,
+  parseTypeValue,
 } from '../utils/constants';
 
 /**
@@ -25,6 +26,7 @@ export function ActiveFilters() {
   const config = useSearchConfig();
   const dispatch = useSearchDispatch();
   const labelId = useId();
+  const { getLabel: getTaxonomyLabel } = useTaxonomies();
 
   const { facets, facetOperators, customFacets: customFacetSelections } = state;
   const {
@@ -62,7 +64,7 @@ export function ActiveFilters() {
       // Add chip for each value
       for (let i = 0; i < values.length; i++) {
         const value = values[i];
-        const label = getLabelForValue(key, value, fieldConfig.vocabulary);
+        const label = getLabelForValue(key, value, fieldConfig.vocabulary, getTaxonomyLabel);
         result.push({
           key,
           value,
@@ -103,7 +105,7 @@ export function ActiveFilters() {
     }
 
     return result;
-  }, [facets, facetOperators, customFacetSelections, facetFields, visibleFilters, defaultFilters, customFacetConfigs]);
+  }, [facets, facetOperators, customFacetSelections, facetFields, visibleFilters, defaultFilters, customFacetConfigs, getTaxonomyLabel]);
 
   // Handle chip removal
   const handleRemove = useCallback((chip) => {
@@ -191,9 +193,10 @@ export function ActiveFilters() {
  * @param {string} key - Facet key
  * @param {string} value - Facet value
  * @param {string} vocabulary - Vocabulary type
+ * @param {Function} getTaxonomyLabel - Function to look up taxonomy term labels
  * @returns {string} Human-readable label
  */
-function getLabelForValue(key, value, vocabulary) {
+function getLabelForValue(key, value, vocabulary, getTaxonomyLabel) {
   // Year is just the numeric value
   if (key === 'year') {
     return String(value);
@@ -206,19 +209,26 @@ function getLabelForValue(key, value, vocabulary) {
       return domain?.name || value;
     }
     case 'type': {
-      const contentType = getContentType(value);
-      if (contentType) return contentType.name;
-      // Check news types as fallback (merged into type dropdown)
-      const newsType = getNewsType(value);
-      return newsType?.name || value;
+      // Use parseTypeValue to handle both content types and namespaced subtypes
+      const parsed = parseTypeValue(value);
+      // For subtypes, prefix with parent type name for context
+      if (parsed.isSubtype && parsed.parentType) {
+        const parentInfo = getContentType(parsed.parentType);
+        if (parentInfo) {
+          return `${parentInfo.name}: ${parsed.label}`;
+        }
+      }
+      return parsed.label;
     }
     case 'languages': {
       const language = getLanguage(value);
       return language?.name || value;
     }
     default:
-      // For taxonomy terms, we'd need to look up from API data
-      // For now, return the raw value
+      // For taxonomy terms (hazards, themes, countries), use taxonomy lookup
+      if (getTaxonomyLabel) {
+        return getTaxonomyLabel(key, value, vocabulary);
+      }
       return value;
   }
 }

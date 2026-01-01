@@ -7,9 +7,53 @@ import React from 'react';
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 // SCSS is loaded via the Mangrove rollup (stories/assets/scss/_components.scss)
 
+/**
+ * Decorator that renders the story description inline above the component.
+ * Extracts markdown from parameters.docs.description.story and renders it.
+ */
+const withInlineDescription = (Story, context) => {
+  const description = context.parameters?.docs?.description?.story;
+
+  if (!description) {
+    return <Story />;
+  }
+
+  return (
+    <div>
+      <div
+        style={{
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          background: '#f8f9fa',
+          borderRadius: '4px',
+          borderLeft: '4px solid #0969da',
+          lineHeight: '1.6',
+        }}
+      >
+        <div
+          style={{
+            fontWeight: '600',
+            marginBottom: '0.5rem',
+            color: '#0969da',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+          }}
+        >
+          About this example
+        </div>
+        <div style={{ whiteSpace: 'pre-wrap' }}>
+          {description.trim().split('```')[0].trim()}
+        </div>
+      </div>
+      <Story />
+    </div>
+  );
+};
+
 export default {
   title: 'Components/SyndicationSearchWidget',
   component: SyndicationSearchWidget,
+  decorators: [withInlineDescription],
   parameters: {
     layout: 'padded',
     docs: {
@@ -77,28 +121,80 @@ export const Default = {
   args: {
     config: defaultConfig,
   },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+The default configuration includes all features enabled:
+- Search box with debounced input
+- Facets sidebar (Type, Year, Country, Hazard, Theme, Language)
+- Active filter chips
+- Results count with timing
+
+This is the standard setup for most UNDRR search pages.
+        `,
+      },
+    },
+  },
 };
 
 /**
- * With pre-filled query.
+ * Pre-filled search query on load.
  */
-export const WithQuery = {
+export const DefaultQuery = {
   args: {
     config: {
       ...defaultConfig,
       defaultQuery: 'climate change',
     },
   },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Use \`defaultQuery\` to pre-fill the search box on page load.
+
+\`\`\`js
+config: {
+  defaultQuery: 'climate change',
+}
+\`\`\`
+
+Useful for:
+- Landing pages with a topic focus
+- Deep-linking to search results
+- Pre-filtered search experiences
+        `,
+      },
+    },
+  },
 };
 
 /**
- * Without facets sidebar.
+ * Facets sidebar hidden.
  */
-export const WithoutFacets = {
+export const HiddenFacets = {
   args: {
     config: {
       ...defaultConfig,
       showFacets: false,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Hides the facets sidebar for a simpler search experience.
+
+\`\`\`js
+config: {
+  showFacets: false,
+}
+\`\`\`
+
+The search still works with all filters via URL hash — users just can't see or modify them through the UI.
+        `,
+      },
     },
   },
 };
@@ -116,16 +212,61 @@ export const Minimal = {
       showSearchTimer: false,
     },
   },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+A stripped-down search widget with only the essentials:
+
+\`\`\`js
+config: {
+  showFacets: false,
+  showActiveFilters: false,
+  showResultsCount: false,
+  showSearchTimer: false,
+}
+\`\`\`
+
+Useful for:
+- Embedded search in compact spaces
+- Simple keyword search without filtering
+- Header/navbar search boxes
+        `,
+      },
+    },
+  },
 };
 
 /**
- * With search metrics enabled (debug mode).
+ * Debug metrics enabled (shows score, interestingness, longevity).
  */
-export const WithMetrics = {
+export const DebugMetrics = {
   args: {
     config: {
       ...defaultConfig,
       showSearchMetrics: true,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Enables debug metrics on each search result:
+
+\`\`\`js
+config: {
+  showSearchMetrics: true,
+}
+\`\`\`
+
+Shows for each result:
+- **Score** — Elasticsearch relevance score
+- **Int** — Interestingness value (editorial weight)
+- **Long** — Longevity value (content freshness decay)
+
+Useful for debugging search ranking and understanding why certain results appear higher.
+        `,
+      },
     },
   },
 };
@@ -143,7 +284,7 @@ export const WithMetrics = {
  * - Filter by taxonomy: `field_themes:123`
  * - Combine multiple: `type:news AND field_themes:456`
  */
-export const WithCustomFilters = {
+export const CustomFilters = {
   args: {
     config: {
       ...defaultConfig,
@@ -191,7 +332,7 @@ Useful for creating topic-specific search widgets on landing pages.
  * }
  * ```
  */
-export const WithCustomFacets = {
+export const CustomFacets = {
   args: {
     config: {
       ...defaultConfig,
@@ -202,11 +343,11 @@ export const WithCustomFacets = {
           weight: 10,
           multiSelect: false,
           options: [
-            { label: 'Africa', query: 'field_regions:1' },
-            { label: 'Americas', query: 'field_regions:2' },
-            { label: 'Asia', query: 'field_regions:3' },
-            { label: 'Europe', query: 'field_regions:4' },
-            { label: 'Oceania', query: 'field_regions:5' },
+            { label: 'Africa', query: 'field_country_region:69' },
+            { label: 'Americas', query: 'field_country_region:70' },
+            { label: 'Asia-Pacific', query: 'field_country_region:71' },
+            { label: 'Europe', query: 'field_country_region:72' },
+            { label: 'Arab States', query: 'field_country_region:73' },
           ],
         },
         {
@@ -215,11 +356,11 @@ export const WithCustomFacets = {
           weight: 20,
           multiSelect: true,
           options: [
-            { label: 'Earthquake', query: 'field_hazards:101' },
-            { label: 'Flood', query: 'field_hazards:102' },
-            { label: 'Drought', query: 'field_hazards:103' },
-            { label: 'Cyclone', query: 'field_hazards:104' },
-            { label: 'Wildfire', query: 'field_hazards:105' },
+            { label: 'Flood', query: 'field_hazard:347' },
+            { label: 'Drought', query: 'field_hazard:344' },
+            { label: 'Earthquake', query: 'field_hazard:345' },
+            { label: 'Cyclone/Hurricane', query: 'field_hazard:343' },
+            { label: 'Wildfire', query: 'field_hazard:346' },
           ],
         },
       ],
@@ -239,10 +380,15 @@ Each facet has:
 - \`options\` - Array of {label, query} pairs
 
 In this example:
-- **Region** - Single-select dropdown for geographic filtering
-- **Hazard Type** - Multi-select for filtering by hazard
+- **Region** - Single-select dropdown for geographic filtering (uses \`field_country_region\`)
+- **Hazard Type** - Multi-select for filtering by hazard (uses \`field_hazard\`)
 
-Custom facets appear in the sidebar alongside standard facets (type, language, etc.).
+**Important:** Use exact Elasticsearch field names. Check \`FACET_FIELDS\` in constants.js for correct field names:
+- \`field_hazard\` (not \`field_hazards\`)
+- \`field_theme\` (not \`field_themes\`)
+- \`field_country_region\` (not \`field_regions\`)
+
+Term IDs can be found via the taxonomy API or by inspecting aggregation responses.
         `,
       },
     },
@@ -256,12 +402,21 @@ Custom facets appear in the sidebar alongside standard facets (type, language, e
  * - customFilters provide invisible constraints
  * - customFacets provide user-selectable refinements
  */
-export const WithBothCustomOptions = {
+export const CustomFiltersAndFacets = {
   args: {
     config: {
       ...defaultConfig,
-      // Hidden constraint: only publications
-      customFilters: ['type:publication'],
+      // Hidden constraints: only publications from PreventionWeb
+      customFilters: [
+        'type:publication',
+        'field_domain_access:www_preventionweb_net',
+      ],
+      // Hide redundant filters
+      visibleFilters: {
+        type: false,
+        year: false,
+        field_domain_access: false,
+      },
       // User-selectable facets
       customFacets: [
         {
@@ -298,14 +453,28 @@ export const WithBothCustomOptions = {
     docs: {
       description: {
         story: `
-This example combines **customFilters** and **customFacets** for a publications-only search:
+This example combines **customFilters**, **visibleFilters**, and **customFacets** for a publications-only search:
 
-**Hidden constraint (customFilters):**
+**Hidden constraints (customFilters):**
 - \`type:publication\` - Only publications appear in results
+- \`field_domain_access:www_preventionweb_net\` - Only PreventionWeb content
+
+**Hidden filters (visibleFilters):**
+- \`type: false\` - Hides the Type dropdown (already constrained)
+- \`year: false\` - Hides the Year dropdown (replaced by custom facet)
+- \`field_domain_access: false\` - Hides the Website dropdown (already constrained)
 
 **User options (customFacets):**
 - **Publication Year** - Filter by year range
 - **Document Type** - Filter by publication category
+
+\`\`\`js
+visibleFilters: {
+  type: false,           // Hide Type filter
+  field_hazard: false,   // Hide Hazard filter
+  // Any facet key can be hidden
+}
+\`\`\`
 
 This pattern is useful for creating specialized search experiences on topic landing pages.
         `,
@@ -315,15 +484,60 @@ This pattern is useful for creating specialized search experiences on topic land
 };
 
 /**
- * Restricted content types.
+ * Allowed content types (restricts Type dropdown).
  */
-export const RestrictedTypes = {
+export const AllowedTypes = {
   args: {
     config: {
       ...defaultConfig,
       allowedTypes: {
         types: ['news', 'publication', 'event'],
         newsTypes: ['751', '752'], // Update, Press release
+      },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Restricts which content types appear in the **Type** dropdown filter.
+
+\`\`\`js
+config: {
+  allowedTypes: {
+    types: ['news', 'publication', 'event'],  // Only these 3 types
+    newsTypes: ['751', '752'],                // Only Update & Press release subtypes
+  },
+}
+\`\`\`
+
+**Available content types:**
+| ID | Name |
+|----|------|
+| \`news\` | News |
+| \`event\` | Event |
+| \`publication\` | Publication |
+| \`landing\` | Landing pages |
+| \`vacancy\` | Vacancy |
+| \`resource\` | Resources and training |
+| \`collections\` | Collection guide |
+| \`blog\` | DRR Voices |
+| \`terminology\` | Term |
+| \`organization\` | Organization |
+| \`national_platform\` | National Platform |
+
+**News subtypes (newsTypes):**
+| ID | Name |
+|----|------|
+| \`751\` | Update |
+| \`752\` | Press release |
+| \`1\` | Statements and messages |
+| \`754\` | Feature |
+| \`797\` | Community announcement |
+| \`756\` | Op Ed |
+
+Use this when embedding search on topic-specific pages (e.g., a news section that shouldn't show events).
+        `,
       },
     },
   },
@@ -380,9 +594,23 @@ const mockResults = {
 };
 
 /**
- * Static display for documentation (no API calls).
+ * Static mockup for CSS testing (no API calls).
  */
-export const StaticDisplay = {
+export const StaticMockup = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+A static mockup showing the widget's visual components without making API calls.
+
+Use this story to:
+- Review the UI without network dependencies
+- Test CSS styling changes
+- Document component structure
+        `,
+      },
+    },
+  },
   render: () => (
     <div className="mg-search-widget">
       <p
@@ -470,13 +698,13 @@ export const StaticDisplay = {
 };
 
 /**
- * Test cases for search query syntax.
+ * Query syntax reference and test cases.
  *
  * This story documents various Elasticsearch query_string syntax features
  * that users can leverage for advanced searches. Use these queries to verify
  * search behavior after making changes to the query builder.
  */
-export const QueryTestCases = {
+export const QuerySyntax = {
   args: {
     config: {
       ...defaultConfig,

@@ -19,6 +19,7 @@ import {
   NEWS_TYPE_MAP,
   LANGUAGE_MAP,
   TAXONOMY_API_URL,
+  parseTypeValue,
 } from '../utils/constants';
 
 /**
@@ -119,8 +120,9 @@ export function useTaxonomies() {
     }
 
     if (vocabulary === 'type' || fieldKey === 'type') {
-      const type = CONTENT_TYPE_MAP.get(valueStr);
-      return type ? type.name : valueStr;
+      // Use parseTypeValue to handle both content types and namespaced subtypes
+      const parsed = parseTypeValue(valueStr);
+      return parsed.label;
     }
 
     if (vocabulary === 'languages' || fieldKey === '_language') {

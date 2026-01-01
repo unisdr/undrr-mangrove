@@ -8,7 +8,12 @@
  * @module SearchWidget/utils/queryBuilder
  */
 
-import { SCORING_CONFIG, HIGHLIGHT_CONFIG, FACET_FIELDS } from './constants';
+import {
+  SCORING_CONFIG,
+  HIGHLIGHT_CONFIG,
+  FACET_FIELDS,
+  parseTypeValue,
+} from './constants';
 
 /**
  * Build a complete Elasticsearch query from state and config.
@@ -192,6 +197,44 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
               lang: 'painless',
               params: { years },
             },
+          },
+        });
+      }
+      continue;
+    }
+
+    // Type facet: values may include subtypes with namespaced keys
+    // e.g., "news" (content type) or "field_news_type:751" (subtype)
+    // We need to split and route to correct ES fields
+    if (key === 'type') {
+      // Group values by their target ES field
+      const fieldGroups = {};
+      for (const value of values) {
+        const parsed = parseTypeValue(value);
+        if (!fieldGroups[parsed.field]) {
+          fieldGroups[parsed.field] = [];
+        }
+        fieldGroups[parsed.field].push(parsed.value);
+      }
+
+      // Build filters for each field group
+      const typeFilters = [];
+      for (const [field, fieldValues] of Object.entries(fieldGroups)) {
+        if (fieldValues.length === 1) {
+          typeFilters.push({ term: { [field]: fieldValues[0] } });
+        } else {
+          typeFilters.push({ terms: { [field]: fieldValues } });
+        }
+      }
+
+      // Combine with OR (any selected type matches)
+      if (typeFilters.length === 1) {
+        filters.push(typeFilters[0]);
+      } else if (typeFilters.length > 1) {
+        filters.push({
+          bool: {
+            should: typeFilters,
+            minimum_should_match: 1,
           },
         });
       }

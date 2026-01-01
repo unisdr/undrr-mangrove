@@ -29,17 +29,17 @@ A basic search widget with default configuration.
 
 <Canvas of={SyndicationSearchWidgetStories.Default} meta={SyndicationSearchWidgetStories} />
 
-## With Pre-filled Query
+## Default Query
 
-A search widget initialized with a search query.
+A search widget initialized with a pre-filled search query.
 
-<Canvas of={SyndicationSearchWidgetStories.WithQuery} meta={SyndicationSearchWidgetStories} />
+<Canvas of={SyndicationSearchWidgetStories.DefaultQuery} meta={SyndicationSearchWidgetStories} />
 
-## Without Facets Sidebar
+## Hidden Facets
 
-A minimal search widget without the facets sidebar.
+A search widget with the facets sidebar hidden.
 
-<Canvas of={SyndicationSearchWidgetStories.WithoutFacets} meta={SyndicationSearchWidgetStories} />
+<Canvas of={SyndicationSearchWidgetStories.HiddenFacets} meta={SyndicationSearchWidgetStories} />
 
 ## Minimal Configuration
 
@@ -47,18 +47,26 @@ Search-only mode without result counts, timers, or filters.
 
 <Canvas of={SyndicationSearchWidgetStories.Minimal} meta={SyndicationSearchWidgetStories} />
 
-## With Debug Metrics
+## Debug Metrics
 
-Shows search performance metrics for debugging.
+Shows search performance metrics (score, interestingness, longevity) for debugging.
 
-<Canvas of={SyndicationSearchWidgetStories.WithMetrics} meta={SyndicationSearchWidgetStories} />
+<Canvas of={SyndicationSearchWidgetStories.DebugMetrics} meta={SyndicationSearchWidgetStories} />
 
 ## Custom Filters
 
 `customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
 Users cannot see or remove these filters - they constrain the search scope.
 
-<Canvas of={SyndicationSearchWidgetStories.WithCustomFilters} meta={SyndicationSearchWidgetStories} />
+**This example uses:**
+```js
+customFilters: [
+  'type:(news OR publication)',      // Only news and publications
+  'published_at:[2023-01-01 TO *]',  // Content from 2023 onwards
+]
+```
+
+<Canvas of={SyndicationSearchWidgetStories.CustomFilters} meta={SyndicationSearchWidgetStories} />
 
 **Common filter patterns:**
 - `type:news` - Restrict to content type
@@ -72,7 +80,33 @@ Users cannot see or remove these filters - they constrain the search scope.
 `customFacets` create user-selectable dropdown filters in the sidebar.
 Each facet maps labels to Elasticsearch queries.
 
-<Canvas of={SyndicationSearchWidgetStories.WithCustomFacets} meta={SyndicationSearchWidgetStories} />
+**This example uses:**
+```js
+customFacets: [
+  {
+    id: 'region',
+    title: 'Region',
+    multiSelect: false,
+    options: [
+      { label: 'Africa', query: 'field_regions:1' },
+      { label: 'Americas', query: 'field_regions:2' },
+      // ...
+    ],
+  },
+  {
+    id: 'hazard_type',
+    title: 'Hazard Type',
+    multiSelect: true,  // Multiple selections allowed
+    options: [
+      { label: 'Earthquake', query: 'field_hazards:101' },
+      { label: 'Flood', query: 'field_hazards:102' },
+      // ...
+    ],
+  },
+]
+```
+
+<Canvas of={SyndicationSearchWidgetStories.CustomFacets} meta={SyndicationSearchWidgetStories} />
 
 **Structure:**
 ```json
@@ -95,11 +129,76 @@ Each facet maps labels to Elasticsearch queries.
 | `multiSelect` | boolean | Allow multiple selections |
 | `options` | array | Array of `{label, query}` pairs |
 
-## Combined Custom Filters & Facets
+## Custom Filters And Facets
 
 Use both together: `customFilters` for hidden constraints, `customFacets` for user choices.
 
-<Canvas of={SyndicationSearchWidgetStories.WithBothCustomOptions} meta={SyndicationSearchWidgetStories} />
+**This example uses:**
+```js
+// Hidden constraint - users only see publications
+customFilters: ['type:publication'],
+
+// User-selectable options within publications
+customFacets: [
+  {
+    id: 'publication_year',
+    title: 'Publication Year',
+    options: [
+      { label: '2024', query: 'published_at:[2024-01-01 TO 2024-12-31]' },
+      { label: '2023', query: 'published_at:[2023-01-01 TO 2023-12-31]' },
+      // ...
+    ],
+  },
+  {
+    id: 'document_type',
+    title: 'Document Type',
+    options: [
+      { label: 'Policy Brief', query: 'field_publication_type:601' },
+      { label: 'Technical Report', query: 'field_publication_type:602' },
+      // ...
+    ],
+  },
+]
+```
+
+<Canvas of={SyndicationSearchWidgetStories.CustomFiltersAndFacets} meta={SyndicationSearchWidgetStories} />
+
+## Allowed Types
+
+Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content—it limits the filter UI options.
+
+**This example uses:**
+```js
+allowedTypes: {
+  types: ['news', 'publication', 'event'],  // Only these in Type dropdown
+  newsTypes: ['751', '752'],                // Only Update & Press release subtypes
+}
+```
+
+<Canvas of={SyndicationSearchWidgetStories.AllowedTypes} meta={SyndicationSearchWidgetStories} />
+
+**Available type IDs:** `news`, `event`, `publication`, `landing`, `vacancy`, `resource`, `collections`, `blog`, `terminology`, `organization`, `national_platform`
+
+**News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Community announcement), `756` (Op Ed)
+
+## Query Syntax
+
+Reference for Elasticsearch query_string syntax. Use this story to test search queries.
+
+<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
+
+See the story's Docs tab for a comprehensive syntax reference including:
+- Basic queries and phrase matching
+- Wildcards and fuzzy search
+- Boolean operators (AND, OR, NOT)
+- Field-specific searches
+- Date ranges and boosting
+
+## Static Mockup
+
+A static HTML mockup for CSS testing without API calls.
+
+<Canvas of={SyndicationSearchWidgetStories.StaticMockup} meta={SyndicationSearchWidgetStories} />
 
 ## Usage
 

@@ -319,7 +319,9 @@ export function SelectDropdown({
                   id={getOptionId(index)}
                   className={`mg-select__option ${
                     isSelected(option.value) ? 'mg-select__option--selected' : ''
-                  } ${index === highlightedIndex ? 'mg-select__option--highlighted' : ''}`}
+                  } ${index === highlightedIndex ? 'mg-select__option--highlighted' : ''} ${
+                    option.isSubtype && !isSelected(option.value) ? 'mg-select__option--subtype' : ''
+                  }`}
                   role="option"
                   aria-selected={isSelected(option.value)}
                   onClick={() => handleOptionClick(option.value)}
