@@ -11,6 +11,7 @@
 // @import "../../assets/scss/variables";
 
 // Component-specific variables (using Mangrove tokens)
+// Colors
 $search-primary: $mg-color-interactive;
 $search-primary-dark: $mg-color-interactive-active;
 $search-chip-bg: $mg-color-blue-50;
@@ -24,6 +25,10 @@ $search-error-bg: $mg-color-red-50;
 $search-error-border: $mg-color-red-400;
 $search-debug-bg: $mg-color-yellow-light;
 $search-debug-text: $mg-color-yellow-dark;
+
+// Spacing & sizing (component needs rounded corners, base theme has 0)
+$search-radius: $mg-spacing-25;
+$search-input-padding-x: $mg-spacing-250;
 
 // Screen reader only utility
 .mg-u-sr-only {
@@ -42,6 +47,41 @@ $search-debug-text: $mg-color-yellow-dark;
 .mg-search-widget {
   font-family: inherit;
   line-height: 1.5;
+  position: relative;
+}
+
+// ========================================
+// Loading Progress Bar
+// ========================================
+
+.mg-search__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: $search-border-light;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.mg-search__progress-bar {
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, $search-primary, $search-primary-dark);
+  animation: mg-search-progress 1.2s ease-in-out infinite;
+}
+
+@keyframes mg-search-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(200%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 // Search form
@@ -58,9 +98,9 @@ $search-debug-text: $mg-color-yellow-dark;
 
 .mg-search__input {
   width: 100%;
-  padding: $mg-spacing-75 calc($mg-spacing-100 * 2.5) $mg-spacing-75 $mg-spacing-100;
+  padding: $mg-spacing-75 $search-input-padding-x $mg-spacing-75 $mg-spacing-100;
   border: 1px solid $search-border;
-  border-radius: 4px;
+  border-radius: $search-radius;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:focus {
@@ -76,7 +116,7 @@ $search-debug-text: $mg-color-yellow-dark;
 
 .mg-search__clear {
   position: absolute;
-  right: calc($mg-spacing-100 * 2.5);
+  right: $search-input-padding-x;
   top: 50%;
   transform: translateY(-50%);
   padding: $mg-spacing-25 $mg-spacing-50;
@@ -121,7 +161,7 @@ $search-debug-text: $mg-color-yellow-dark;
   color: #fff;
   background-color: $search-primary;
   border: none;
-  border-radius: 4px;
+  border-radius: $search-radius;
   cursor: pointer;
   transition: background-color 0.2s;
 
@@ -140,6 +180,22 @@ $search-debug-text: $mg-color-yellow-dark;
   align-items: center;
 }
 
+// Submit button loading state
+.mg-search__submit--loading {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+.mg-search__submit-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: mg-search-spin 0.7s linear infinite;
+}
+
 // Active filters
 .mg-search__active-filters {
   display: flex;
@@ -149,7 +205,7 @@ $search-debug-text: $mg-color-yellow-dark;
   margin-bottom: $mg-spacing-100;
   padding: $mg-spacing-75;
   background: $search-chip-bg;
-  border-radius: 4px;
+  border-radius: $search-radius;
 }
 
 .mg-search__active-filters-label {
@@ -176,7 +232,7 @@ $search-debug-text: $mg-color-yellow-dark;
   color: $search-text;
   background: #fff;
   border: 1px solid $search-border;
-  border-radius: 4px;
+  border-radius: $search-radius;
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 
@@ -203,7 +259,7 @@ $search-debug-text: $mg-color-yellow-dark;
   color: $search-primary;
   background: none;
   border: 1px solid $search-primary;
-  border-radius: 4px;
+  border-radius: $search-radius;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 
@@ -268,7 +324,7 @@ $search-debug-text: $mg-color-yellow-dark;
   font-size: $mg-font-size-200;
   color: $search-text-muted;
   background: $search-chip-bg;
-  border-radius: 4px;
+  border-radius: $search-radius;
   text-align: center;
 }
 
@@ -291,7 +347,7 @@ $search-debug-text: $mg-color-yellow-dark;
   padding: $mg-spacing-100;
   background: $search-error-bg;
   border: 1px solid $search-error-border;
-  border-radius: 4px;
+  border-radius: $search-radius;
 
   p {
     margin: 0 0 $mg-spacing-50;
@@ -325,7 +381,7 @@ $search-debug-text: $mg-color-yellow-dark;
   img {
     width: 100%;
     height: auto;
-    border-radius: 4px;
+    border-radius: $search-radius;
     object-fit: cover;
   }
 
@@ -371,9 +427,9 @@ $search-debug-text: $mg-color-yellow-dark;
 }
 
 .mg-search__result-type {
-  padding: calc($mg-spacing-25 / 2) $mg-spacing-50;
+  padding: $mg-spacing-25 $mg-spacing-50;
   background: $search-chip-bg;
-  border-radius: 3px;
+  border-radius: $search-radius;
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
@@ -409,7 +465,7 @@ $search-debug-text: $mg-color-yellow-dark;
 
 .mg-search__result-metric {
   display: inline-block;
-  padding: calc($mg-spacing-25 / 2) $mg-spacing-50;
+  padding: $mg-spacing-25 $mg-spacing-50;
   font-size: $mg-font-size-200;
   background: $search-debug-bg;
   border-radius: $mg-spacing-25;
@@ -433,7 +489,7 @@ $search-debug-text: $mg-color-yellow-dark;
   background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
   background-size: 200% 100%;
   animation: mg-search-shimmer 1.5s infinite;
-  border-radius: 4px;
+  border-radius: $search-radius;
 }
 
 .mg-search__skeleton-title {
@@ -471,7 +527,7 @@ $search-debug-text: $mg-color-yellow-dark;
 .mg-search__facets-placeholder {
   padding: $mg-spacing-100;
   background: $search-chip-bg;
-  border-radius: 4px;
+  border-radius: $search-radius;
 }
 
 .mg-search__facets-notice {
@@ -554,7 +610,7 @@ $search-debug-text: $mg-color-yellow-dark;
   padding: $mg-spacing-50;
   font-size: $mg-font-size-200;
   border: 1px solid $search-border;
-  border-radius: 4px;
+  border-radius: $search-radius;
   background-color: #fff;
   cursor: pointer;
 
@@ -581,7 +637,7 @@ $search-debug-text: $mg-color-yellow-dark;
 .mg-search__facet--custom {
   background: $search-chip-bg;
   padding: $mg-spacing-100;
-  border-radius: 4px;
+  border-radius: $search-radius;
 }
 
 // ========================================
@@ -592,11 +648,11 @@ $search-debug-text: $mg-color-yellow-dark;
 .mg-search__result-site-name {
   display: inline-block;
   margin: 0 0 $mg-spacing-25;
-  padding: calc($mg-spacing-25 / 2) $mg-spacing-50;
+  padding: $mg-spacing-25 $mg-spacing-50;
   font-size: $mg-font-size-200;
   color: $search-text-muted;
   background: $search-chip-bg;
-  border-radius: 3px;
+  border-radius: $search-radius;
 }
 
 
@@ -605,7 +661,7 @@ $search-debug-text: $mg-color-yellow-dark;
   padding: $mg-spacing-100;
   background: $search-error-bg;
   border: 1px solid $search-error-border;
-  border-radius: 4px;
+  border-radius: $search-radius;
 }
 
 .mg-search__result-error {
@@ -639,8 +695,31 @@ $search-debug-text: $mg-color-yellow-dark;
 
 // Stale state - dim results while loading new data
 .mg-search__results--stale {
-  opacity: 0.6;
+  opacity: 0.5;
   pointer-events: none;
+}
+
+// Stale main area with more visible feedback
+.mg-search__main--stale {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(255 255 255 / 0.4);
+    pointer-events: none;
+    animation: mg-search-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes mg-search-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 // ========================================
@@ -661,10 +740,10 @@ $search-debug-text: $mg-color-yellow-dark;
 .mg-search__facet-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: $mg-spacing-25;
   background: none;
   border: none;
-  padding: 0.4rem 0;
+  padding: $mg-spacing-50 0;
   margin-top: $mg-spacing-50;
   font-size: $mg-font-size-200;
   color: $search-primary;
@@ -738,13 +817,13 @@ $search-debug-text: $mg-color-yellow-dark;
   .chosen-choices {
     background: #fff;
     border: 1px solid $search-border;
-    border-radius: 4px;
+    border-radius: $search-radius;
     padding: $mg-spacing-50;
     font-size: $mg-font-size-200;
   }
 
   .chosen-drop {
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 $search-radius $search-radius;
   }
 
   .chosen-results li.highlighted {
@@ -760,7 +839,7 @@ $search-debug-text: $mg-color-yellow-dark;
   display: grid;
   grid-template-columns: 1.25em 1fr auto;
   padding: $mg-spacing-50;
-  border-radius: 4px;
+  border-radius: $search-radius;
   align-items: baseline;
   gap: 0 $mg-spacing-25;
   transition: background-color 0.15s ease;
@@ -809,30 +888,223 @@ $search-debug-text: $mg-color-yellow-dark;
 }
 
 // ========================================
+// Mobile Filter Button
+// ========================================
+
+.mg-search__mobile-filter-btn {
+  display: none; // Hidden on desktop
+  align-items: center;
+  justify-content: center;
+  gap: $mg-spacing-50;
+  width: 100%;
+  padding: $mg-spacing-75 $mg-spacing-100;
+  margin-bottom: $mg-spacing-100;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: $search-primary;
+  background: #fff;
+  border: 2px solid $search-primary;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: $search-primary;
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+}
+
+.mg-search__mobile-filter-icon {
+  flex-shrink: 0;
+}
+
+.mg-search__mobile-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 $mg-spacing-25;
+  font-size: $mg-font-size-100;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border-radius: 10px;
+
+  .mg-search__mobile-filter-btn:hover & {
+    background: #fff;
+    color: $search-primary;
+  }
+}
+
+// ========================================
+// Mobile Filter Drawer (Bottom Sheet)
+// ========================================
+
+.mg-search__drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.5);
+  z-index: 1000;
+  animation: mg-search-fade-in 0.2s ease-out;
+}
+
+@keyframes mg-search-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mg-search__drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 85vh;
+  background: #fff;
+  border-radius: $mg-spacing-100 $mg-spacing-100 0 0;
+  box-shadow: 0 -4px 20px rgb(0 0 0 / 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: mg-search-slide-up 0.3s ease-out;
+  z-index: 1001;
+}
+
+@keyframes mg-search-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.mg-search__drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $mg-spacing-100 $mg-spacing-150;
+  border-bottom: 1px solid $search-border;
+  flex-shrink: 0;
+}
+
+.mg-search__drawer-title {
+  margin: 0;
+  font-size: $mg-font-size-300;
+  font-weight: 600;
+  color: $search-text;
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+}
+
+.mg-search__drawer-count {
+  font-size: $mg-font-size-100;
+  font-weight: 500;
+  color: $search-text-muted;
+  background: $search-chip-bg;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  border-radius: $search-radius;
+}
+
+.mg-search__drawer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 24px;
+  line-height: 1;
+  color: $search-text-muted;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: $search-chip-bg;
+    color: $search-text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+}
+
+.mg-search__drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $mg-spacing-150;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mg-search__drawer-footer {
+  padding: $mg-spacing-100 $mg-spacing-150;
+  border-top: 1px solid $search-border;
+  flex-shrink: 0;
+}
+
+.mg-search__drawer-apply {
+  display: block;
+  width: 100%;
+  padding: $mg-spacing-100;
+  font-size: $mg-font-size-200;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border: none;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: $search-primary-dark;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary-dark;
+    outline-offset: 2px;
+  }
+}
+
+// ========================================
 // Mobile Responsive Styles
 // ========================================
 
 @media (width <= 800px) {
+  // Show mobile filter button
+  .mg-search__mobile-filter-btn {
+    display: flex;
+  }
+
+  // Hide desktop sidebar
   .mg-search__sidebar {
-    display: block;
-    width: 100%;
-    margin-top: $mg-spacing-150;
-    border-top: 2px solid $search-border;
-    padding-top: $mg-spacing-150;
+    display: none;
   }
 
   .mg-search__content {
     flex-direction: column;
   }
-
-  // Hide facet toggle on larger screens
-  .mg-search__facets-toggle {
-    display: none;
-  }
 }
 
 @media (width >= 801px) {
-  .mg-search__facets-toggle {
+  // Hide mobile elements on desktop
+  .mg-search__mobile-filter-btn {
+    display: none;
+  }
+
+  .mg-search__drawer-backdrop {
     display: none;
   }
 }

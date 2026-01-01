@@ -18,7 +18,7 @@
  * @module SyndicationSearchWidget
  */
 
-import React, { useState, useEffect, useDeferredValue, Suspense, useId } from 'react';
+import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback } from 'react';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
@@ -26,6 +26,7 @@ import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 import ActiveFilters from './components/ActiveFilters';
 import FacetsSidebar from './components/FacetsSidebar';
+import MobileFilterDrawer from './components/MobileFilterDrawer';
 
 /**
  * SyndicationSearchWidget component.
@@ -64,6 +65,12 @@ function SyndicationSearchWidgetInner() {
   // Local state for immediate input feedback
   const [inputValue, setInputValue] = useState(config.defaultQuery || '');
 
+  // Mobile filter drawer state
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
   // Defer the query value for search execution
   // This keeps the input responsive while search runs in background
   const deferredQuery = useDeferredValue(inputValue);
@@ -93,12 +100,22 @@ function SyndicationSearchWidgetInner() {
   const { showFacets, showActiveFilters, showSearchMetrics } = config;
   const { isLoading } = state;
 
+  // Count active filters for mobile button badge
+  const activeFilterCount = countActiveFilters(state);
+
   return (
     <div
-      className="mg-search-widget"
+      className={`mg-search-widget ${isLoading || isPending ? 'mg-search-widget--loading' : ''}`}
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}
     >
+      {/* Loading progress bar */}
+      {(isLoading || isPending || isStale) && (
+        <div className="mg-search__progress" aria-hidden="true">
+          <div className="mg-search__progress-bar" />
+        </div>
+      )}
+
       {/* Search form */}
       {config.showSearchBox !== false && (
         <SearchForm
@@ -110,6 +127,39 @@ function SyndicationSearchWidgetInner() {
         />
       )}
 
+      {/* Mobile filter button - only shows on small screens via CSS */}
+      {showFacets && (
+        <button
+          type="button"
+          className="mg-search__mobile-filter-btn"
+          onClick={openDrawer}
+          aria-expanded={isDrawerOpen}
+          aria-controls={`${widgetId}-drawer`}
+        >
+          <svg
+            className="mg-search__mobile-filter-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+          </svg>
+          <span>Filters</span>
+          {activeFilterCount > 0 && (
+            <span className="mg-search__mobile-filter-badge" aria-label={`${activeFilterCount} active filters`}>
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
+      )}
+
       {/* Active filter chips */}
       {showActiveFilters && <ActiveFilters widgetId={widgetId} />}
 
@@ -117,7 +167,7 @@ function SyndicationSearchWidgetInner() {
       <div className="mg-search__content">
         {/* Results area */}
         <main
-          className="mg-search__main"
+          className={`mg-search__main ${isStale || isPending ? 'mg-search__main--stale' : ''}`}
           data-vf-google-analytics-region="undrr-search-results"
         >
           <Suspense fallback={<SearchResultsSkeleton />}>
@@ -128,7 +178,7 @@ function SyndicationSearchWidgetInner() {
           </Suspense>
         </main>
 
-        {/* Facets sidebar */}
+        {/* Facets sidebar - desktop only */}
         {showFacets && (
           <aside
             className="mg-search__sidebar"
@@ -138,6 +188,15 @@ function SyndicationSearchWidgetInner() {
           </aside>
         )}
       </div>
+
+      {/* Mobile filter drawer */}
+      {showFacets && (
+        <MobileFilterDrawer
+          isOpen={isDrawerOpen}
+          onClose={closeDrawer}
+          widgetId={widgetId}
+        />
+      )}
     </div>
   );
 }
@@ -158,6 +217,33 @@ function SearchResultsSkeleton() {
       ))}
     </div>
   );
+}
+
+/**
+ * Count total active filters (facets + custom facets).
+ * @param {Object} state - Search state
+ * @returns {number} Count of active filters
+ */
+function countActiveFilters(state) {
+  let count = 0;
+
+  if (state.facets) {
+    for (const values of Object.values(state.facets)) {
+      if (Array.isArray(values)) {
+        count += values.length;
+      }
+    }
+  }
+
+  if (state.customFacets) {
+    for (const values of Object.values(state.customFacets)) {
+      if (Array.isArray(values)) {
+        count += values.length;
+      }
+    }
+  }
+
+  return count;
 }
 
 export default SearchWidget;
