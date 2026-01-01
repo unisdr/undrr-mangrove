@@ -15,8 +15,18 @@ import ResultItem from './ResultItem';
  *
  * @param {Object} props - Component props
  * @param {boolean} props.isStale - Whether results are stale (search pending)
+ * @param {string} props.widgetId - Unique widget ID for accessibility
+ * @param {boolean} props.showMobileFilterButton - Whether to show mobile filter button
+ * @param {Function} props.onOpenFilters - Callback to open filter drawer
+ * @param {number} props.activeFilterCount - Number of active filters
  */
-export function SearchResults({ isStale = false }) {
+export function SearchResults({
+  isStale = false,
+  widgetId = '',
+  showMobileFilterButton = false,
+  onOpenFilters,
+  activeFilterCount = 0,
+}) {
   const state = useSearchState();
   const config = useSearchConfig();
 
@@ -124,6 +134,38 @@ export function SearchResults({ isStale = false }) {
               </span>
             )}
           </p>
+        )}
+
+        {/* Mobile filter button - compact, inline */}
+        {showMobileFilterButton && onOpenFilters && (
+          <button
+            type="button"
+            className="mg-search__filter-btn"
+            onClick={onOpenFilters}
+            aria-label={activeFilterCount > 0 ? `Filters, ${activeFilterCount} active` : 'Filters'}
+          >
+            <svg
+              className="mg-search__filter-btn-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="mg-search__filter-btn-badge">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
         )}
       </div>
 

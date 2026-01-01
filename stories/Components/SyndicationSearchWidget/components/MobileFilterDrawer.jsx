@@ -1,12 +1,23 @@
 /**
  * @file MobileFilterDrawer.jsx
- * @description Mobile-friendly bottom sheet drawer for filter facets.
+ * @description Mobile-friendly left-side slide-in drawer for filter facets.
  *
- * Implements a slide-up drawer pattern with:
- * - Backdrop overlay
+ * Implements a slide-in drawer pattern (Amazon-style) with:
+ * - Left-side slide-in animation
+ * - Backdrop overlay with click-to-close
  * - Focus trapping for accessibility
  * - Scroll lock on body when open
- * - Touch-friendly close gesture support
+ * - Sticky footer with "View Results" button
+ *
+ * UX patterns informed by:
+ * @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
+ *
+ * Key UX decisions:
+ * - Sidebar overlay: Maintains left-side visibility for context, feels safer
+ * - Batch filtering: Users refine filters then apply once (vs live filtering)
+ * - Sticky Apply button: Always visible, no scrolling required
+ * - Progressive disclosure: Collapsible sections avoid overwhelm
+ * - Generous touch targets: 44px minimum for finger interaction
  *
  * @module SearchWidget/components/MobileFilterDrawer
  */
@@ -17,7 +28,7 @@ import FacetsSidebar from './FacetsSidebar';
 
 /**
  * MobileFilterDrawer component.
- * A slide-up bottom sheet containing filter facets for mobile devices.
+ * A left-side slide-in drawer containing filter facets for mobile devices.
  *
  * @param {Object} props - Component props
  * @param {boolean} props.isOpen - Whether the drawer is open
@@ -36,17 +47,29 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   useEffect(() => {
     if (isOpen) {
       const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+
+      // Prevent layout shift from scrollbar removal
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+
       return () => {
         document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [isOpen]);
 
-  // Focus management
+  // Focus management - focus close button when opened
   useEffect(() => {
     if (isOpen && closeButtonRef.current) {
-      closeButtonRef.current.focus();
+      // Small delay to ensure animation has started
+      requestAnimationFrame(() => {
+        closeButtonRef.current?.focus();
+      });
     }
   }, [isOpen]);
 
@@ -64,7 +87,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Focus trap
+  // Focus trap - keep focus within drawer
   const handleKeyDown = useCallback((e) => {
     if (e.key !== 'Tab' || !drawerRef.current) return;
 
@@ -83,8 +106,9 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
     }
   }, []);
 
-  // Handle backdrop click
+  // Handle backdrop click - closes drawer
   const handleBackdropClick = useCallback((e) => {
+    // Only close if clicking the backdrop itself, not the drawer
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -98,7 +122,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
     <div
       className="mg-search__drawer-backdrop"
       onClick={handleBackdropClick}
-      aria-hidden="true"
+      role="presentation"
     >
       <div
         ref={drawerRef}
@@ -108,13 +132,13 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
         aria-labelledby={`${widgetId}-drawer-title`}
         onKeyDown={handleKeyDown}
       >
-        {/* Drawer header */}
-        <div className="mg-search__drawer-header">
+        {/* Drawer header - sticky */}
+        <header className="mg-search__drawer-header">
           <h2 id={`${widgetId}-drawer-title`} className="mg-search__drawer-title">
             Filters
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-count">
-                {activeFilterCount} active
+                {activeFilterCount}
               </span>
             )}
           </h2>
@@ -125,25 +149,44 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             onClick={onClose}
             aria-label="Close filters"
           >
-            <span aria-hidden="true">&times;</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
           </button>
-        </div>
+        </header>
 
         {/* Drawer content - scrollable area */}
         <div className="mg-search__drawer-content">
           <FacetsSidebar widgetId={widgetId} />
         </div>
 
-        {/* Drawer footer */}
-        <div className="mg-search__drawer-footer">
+        {/* Drawer footer - sticky, always visible per UX best practice */}
+        <footer className="mg-search__drawer-footer">
           <button
             type="button"
             className="mg-search__drawer-apply"
             onClick={onClose}
           >
             View results
+            {activeFilterCount > 0 && (
+              <span className="mg-search__drawer-apply-count">
+                ({activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''} applied)
+              </span>
+            )}
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   );

@@ -295,6 +295,11 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $mg-spacing-50;
   margin-bottom: $mg-spacing-100;
 }
 
@@ -310,6 +315,51 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__results-time {
   color: $search-text-muted;
+}
+
+// Compact filter button (mobile only, in results header)
+.mg-search__filter-btn {
+  display: none; // Hidden on desktop by default
+  align-items: center;
+  gap: $mg-spacing-25;
+  padding: $mg-spacing-50 $mg-spacing-75;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: $search-primary;
+  background: transparent;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: $search-chip-bg;
+    border-color: $search-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+}
+
+.mg-search__filter-btn-icon {
+  flex-shrink: 0;
+}
+
+.mg-search__filter-btn-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 $mg-spacing-25;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border-radius: 9px;
 }
 
 .mg-search__results-list {
@@ -888,63 +938,15 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 // ========================================
-// Mobile Filter Button
+// Mobile Filter Drawer (Left Slide-in)
 // ========================================
-
-.mg-search__mobile-filter-btn {
-  display: none; // Hidden on desktop
-  align-items: center;
-  justify-content: center;
-  gap: $mg-spacing-50;
-  width: 100%;
-  padding: $mg-spacing-75 $mg-spacing-100;
-  margin-bottom: $mg-spacing-100;
-  font-size: $mg-font-size-200;
-  font-weight: 500;
-  color: $search-primary;
-  background: #fff;
-  border: 2px solid $search-primary;
-  border-radius: $search-radius;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-
-  &:hover {
-    background: $search-primary;
-    color: #fff;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $search-primary;
-    outline-offset: 2px;
-  }
-}
-
-.mg-search__mobile-filter-icon {
-  flex-shrink: 0;
-}
-
-.mg-search__mobile-filter-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 $mg-spacing-25;
-  font-size: $mg-font-size-100;
-  font-weight: 600;
-  color: #fff;
-  background: $search-primary;
-  border-radius: 10px;
-
-  .mg-search__mobile-filter-btn:hover & {
-    background: #fff;
-    color: $search-primary;
-  }
-}
-
-// ========================================
-// Mobile Filter Drawer (Bottom Sheet)
-// ========================================
+// UX patterns informed by:
+// @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
+// Key decisions:
+// - Sidebar overlay: Maintains context, click outside to close
+// - Sticky header/footer: Always visible, no scrolling required
+// - 44px minimum touch targets: Finger-friendly interaction
+// - Batch filtering: Apply all filters at once (View Results button)
 
 .mg-search__drawer-backdrop {
   position: fixed;
@@ -952,6 +954,7 @@ $search-input-padding-x: $mg-spacing-250;
   background: rgb(0 0 0 / 0.5);
   z-index: 1000;
   animation: mg-search-fade-in 0.2s ease-out;
+  cursor: pointer; // Indicate clickable to close
 }
 
 @keyframes mg-search-fade-in {
@@ -965,25 +968,25 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__drawer {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
-  right: 0;
-  max-height: 85vh;
+  bottom: 0;
+  width: min(320px, 85vw); // Max 320px or 85% of viewport
   background: #fff;
-  border-radius: $mg-spacing-100 $mg-spacing-100 0 0;
-  box-shadow: 0 -4px 20px rgb(0 0 0 / 0.15);
+  box-shadow: 4px 0 20px rgb(0 0 0 / 0.15);
   display: flex;
   flex-direction: column;
-  animation: mg-search-slide-up 0.3s ease-out;
+  animation: mg-search-slide-in-left 0.3s ease-out;
   z-index: 1001;
+  cursor: default; // Reset cursor inside drawer
 }
 
-@keyframes mg-search-slide-up {
+@keyframes mg-search-slide-in-left {
   from {
-    transform: translateY(100%);
+    transform: translateX(-100%);
   }
   to {
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -994,6 +997,7 @@ $search-input-padding-x: $mg-spacing-250;
   padding: $mg-spacing-100 $mg-spacing-150;
   border-bottom: 1px solid $search-border;
   flex-shrink: 0;
+  min-height: 56px; // Consistent header height
 }
 
 .mg-search__drawer-title {
@@ -1007,29 +1011,32 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__drawer-count {
-  font-size: $mg-font-size-100;
-  font-weight: 500;
-  color: $search-text-muted;
-  background: $search-chip-bg;
-  padding: $mg-spacing-25 $mg-spacing-50;
-  border-radius: $search-radius;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 $mg-spacing-25;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border-radius: 11px;
 }
 
 .mg-search__drawer-close {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px; // Minimum touch target per UX guidelines
+  height: 44px;
   padding: 0;
-  font-size: 24px;
-  line-height: 1;
   color: $search-text-muted;
   background: none;
   border: none;
-  border-radius: 50%;
+  border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s, color 0.15s;
 
   &:hover {
     background: $search-chip-bg;
@@ -1038,27 +1045,33 @@ $search-input-padding-x: $mg-spacing-250;
 
   &:focus-visible {
     outline: 2px solid $search-primary;
-    outline-offset: 2px;
+    outline-offset: -2px;
   }
 }
 
 .mg-search__drawer-content {
   flex: 1;
   overflow-y: auto;
-  padding: $mg-spacing-150;
+  padding: $mg-spacing-100 $mg-spacing-150;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; // Prevent scroll chaining
 }
 
 .mg-search__drawer-footer {
   padding: $mg-spacing-100 $mg-spacing-150;
   border-top: 1px solid $search-border;
   flex-shrink: 0;
+  background: #fff; // Ensure footer is opaque
 }
 
 .mg-search__drawer-apply {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $mg-spacing-50;
   width: 100%;
-  padding: $mg-spacing-100;
+  min-height: 48px; // Touch-friendly height
+  padding: $mg-spacing-75 $mg-spacing-100;
   font-size: $mg-font-size-200;
   font-weight: 600;
   color: #fff;
@@ -1066,7 +1079,7 @@ $search-input-padding-x: $mg-spacing-250;
   border: none;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.15s;
 
   &:hover {
     background: $search-primary-dark;
@@ -1078,14 +1091,19 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+.mg-search__drawer-apply-count {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
 // ========================================
 // Mobile Responsive Styles
 // ========================================
 
 @media (width <= 800px) {
-  // Show mobile filter button
-  .mg-search__mobile-filter-btn {
-    display: flex;
+  // Show compact filter button in results header
+  .mg-search__filter-btn {
+    display: inline-flex;
   }
 
   // Hide desktop sidebar
@@ -1100,7 +1118,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 @media (width >= 801px) {
   // Hide mobile elements on desktop
-  .mg-search__mobile-filter-btn {
+  .mg-search__filter-btn {
     display: none;
   }
 

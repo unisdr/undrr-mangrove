@@ -127,39 +127,6 @@ function SyndicationSearchWidgetInner() {
         />
       )}
 
-      {/* Mobile filter button - only shows on small screens via CSS */}
-      {showFacets && (
-        <button
-          type="button"
-          className="mg-search__mobile-filter-btn"
-          onClick={openDrawer}
-          aria-expanded={isDrawerOpen}
-          aria-controls={`${widgetId}-drawer`}
-        >
-          <svg
-            className="mg-search__mobile-filter-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-          </svg>
-          <span>Filters</span>
-          {activeFilterCount > 0 && (
-            <span className="mg-search__mobile-filter-badge" aria-label={`${activeFilterCount} active filters`}>
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-      )}
-
       {/* Active filter chips */}
       {showActiveFilters && <ActiveFilters widgetId={widgetId} />}
 
@@ -174,6 +141,9 @@ function SyndicationSearchWidgetInner() {
             <SearchResults
               isStale={isStale || isPending}
               widgetId={widgetId}
+              showMobileFilterButton={showFacets}
+              onOpenFilters={openDrawer}
+              activeFilterCount={activeFilterCount}
             />
           </Suspense>
         </main>
