@@ -8,6 +8,7 @@
 import React from 'react';
 import { useSearchState, useSearchConfig } from '../context/SearchContext';
 import ResultItem from './ResultItem';
+import Pager from './Pager';
 
 /**
  * SearchResults component.
@@ -37,10 +38,11 @@ export function SearchResults({
     isLoading,
     error,
     query,
+    page,
     isInitialized,
   } = state;
 
-  const { showResultsCount, showSearchTimer, showSearchMetrics, minSearchLength } = config;
+  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength } = config;
 
   // Don't render anything until initialized
   if (!isInitialized) {
@@ -137,8 +139,16 @@ export function SearchResults({
       <div className="mg-search__results-header">
         {showResultsCount && (
           <p className="mg-search__results-count" role="status" aria-live="polite">
-            Showing <strong>{results?.length || 0}</strong> of{' '}
-            <strong>{totalResults?.toLocaleString() || 0}</strong> results
+            {(() => {
+              const startResult = (page - 1) * resultsPerPage + 1;
+              const endResult = Math.min(page * resultsPerPage, totalResults || 0);
+              return (
+                <>
+                  Showing <strong>{startResult.toLocaleString()}</strong>-<strong>{endResult.toLocaleString()}</strong> of{' '}
+                  <strong>{totalResults?.toLocaleString() || 0}</strong> results
+                </>
+              );
+            })()}
             {query && (
               <>
                 {' '}for <strong>"{query}"</strong>
@@ -198,13 +208,8 @@ export function SearchResults({
         ))}
       </div>
 
-      {/* More results indicator */}
-      {results?.length < totalResults && (
-        <p className="mg-search__results-more">
-          Showing {results.length} of {totalResults.toLocaleString()} results.
-          Refine your search to see more specific results.
-        </p>
-      )}
+      {/* Pager */}
+      {showPager && <Pager widgetId={widgetId} />}
     </div>
   );
 }

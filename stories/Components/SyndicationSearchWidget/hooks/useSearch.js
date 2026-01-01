@@ -33,7 +33,7 @@ export function useSearch() {
   const abortControllerRef = useRef(null);
   const [isPending, startTransition] = useTransition();
 
-  const { query, facets, facetOperators, customFacets, sortBy, isInitialized } = state;
+  const { query, facets, facetOperators, customFacets, sortBy, page, isInitialized } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
 
   /**
@@ -65,7 +65,7 @@ export function useSearch() {
 
     try {
       const queryBody = buildQuery(
-        { query, facets, facetOperators, customFacets, sortBy },
+        { query, facets, facetOperators, customFacets, sortBy, page },
         config
       );
 
@@ -97,11 +97,11 @@ export function useSearch() {
       console.error('Search error:', error);
       dispatch(actions.setError(error.message || 'Search failed'));
     }
-  }, [query, facets, facetOperators, customFacets, sortBy, searchEndpoint, minSearchLength, config, dispatch, startTransition]);
+  }, [query, facets, facetOperators, customFacets, sortBy, page, searchEndpoint, minSearchLength, config, dispatch, startTransition]);
 
   /**
    * Debounced search effect.
-   * Triggers search when query/facets/sort changes.
+   * Triggers search when query/facets/sort/page changes.
    */
   useEffect(() => {
     if (!isInitialized) return;
@@ -114,7 +114,7 @@ export function useSearch() {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [query, facets, facetOperators, customFacets, sortBy, isInitialized, debounceDelay, executeSearch]);
+  }, [query, facets, facetOperators, customFacets, sortBy, page, isInitialized, debounceDelay, executeSearch]);
 
   /**
    * Cleanup on unmount.

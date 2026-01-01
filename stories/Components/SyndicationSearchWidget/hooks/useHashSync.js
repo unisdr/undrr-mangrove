@@ -16,6 +16,7 @@ import { useSearchState, useSearchDispatch, useSearchConfig, actions } from '../
  *
  * Supports:
  * - #query=<search term> - Search query
+ * - #page=<number> - Page number (1-based)
  * - #label=<page title> - Optional page title override
  * - Legacy ?text=<query> parameter migration
  *
@@ -30,7 +31,7 @@ export function useHashSync({ enabled = true } = {}) {
   const isInitializedRef = useRef(false);
   const lastHashRef = useRef('');
 
-  const { query, isInitialized } = state;
+  const { query, page, isInitialized } = state;
   const { enableHashSync } = config;
 
   // Determine if hash sync should be active
@@ -49,20 +50,30 @@ export function useHashSync({ enabled = true } = {}) {
     if (!hash) return {};
 
     const params = new URLSearchParams(hash);
+    const pageParam = params.get('page');
     return {
       query: params.get('query'),
+      page: pageParam ? parseInt(pageParam, 10) : null,
       label: params.get('label'),
     };
   }, []);
 
   /**
-   * Update URL hash from current query.
+   * Update URL hash from current query and page.
    */
-  const updateHash = useCallback((searchQuery) => {
+  const updateHash = useCallback((searchQuery, searchPage) => {
     if (!isEnabled || typeof window === 'undefined') return;
 
-    const encodedQuery = encodeURIComponent(searchQuery || '');
-    const newHash = searchQuery ? `query=${encodedQuery}` : '';
+    const params = new URLSearchParams();
+    if (searchQuery) {
+      params.set('query', searchQuery);
+    }
+    // Only include page if > 1 (page 1 is the default)
+    if (searchPage && searchPage > 1) {
+      params.set('page', searchPage.toString());
+    }
+
+    const newHash = params.toString();
 
     // Avoid unnecessary updates
     if (newHash === lastHashRef.current) return;
@@ -108,7 +119,6 @@ export function useHashSync({ enabled = true } = {}) {
     if (hashState.query) {
       const decodedQuery = decodeURIComponent(hashState.query);
       dispatch(actions.setQuery(decodedQuery));
-      lastHashRef.current = window.location.hash.substring(1);
 
       // Update page title if specified
       if (hashState.label && typeof document !== 'undefined') {
@@ -119,17 +129,23 @@ export function useHashSync({ enabled = true } = {}) {
       }
     }
 
+    // Restore page from hash
+    if (hashState.page && hashState.page > 1) {
+      dispatch(actions.setPage(hashState.page));
+    }
+
+    lastHashRef.current = window.location.hash.substring(1);
     isInitializedRef.current = true;
   }, [isEnabled, dispatch, parseHash]);
 
   /**
-   * Update hash when query changes.
+   * Update hash when query or page changes.
    */
   useEffect(() => {
     if (!isEnabled || !isInitialized) return;
 
-    updateHash(query);
-  }, [isEnabled, isInitialized, query, updateHash]);
+    updateHash(query, page);
+  }, [isEnabled, isInitialized, query, page, updateHash]);
 
   /**
    * Handle browser back/forward navigation.
@@ -152,11 +168,17 @@ export function useHashSync({ enabled = true } = {}) {
           dispatch(actions.setQuery(decodedQuery));
         }
       }
+
+      // Restore page from hash (default to 1 if not specified)
+      const newPage = hashState.page || 1;
+      if (newPage !== page) {
+        dispatch(actions.setPage(newPage));
+      }
     };
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [isEnabled, query, dispatch, parseHash]);
+  }, [isEnabled, query, page, dispatch, parseHash]);
 
   return {
     isEnabled,

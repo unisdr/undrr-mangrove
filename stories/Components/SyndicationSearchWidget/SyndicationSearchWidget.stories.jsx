@@ -111,6 +111,7 @@ const defaultConfig = {
   showFacets: true,
   showActiveFilters: true,
   showSearchMetrics: false,
+  showPager: true,
   defaultFilters: [{ key: '_language', value: 'en' }],
 };
 
@@ -210,6 +211,7 @@ export const Minimal = {
       showActiveFilters: false,
       showResultsCount: false,
       showSearchTimer: false,
+      showPager: false,
     },
   },
   parameters: {
@@ -224,6 +226,7 @@ config: {
   showActiveFilters: false,
   showResultsCount: false,
   showSearchTimer: false,
+  showPager: false,
 }
 \`\`\`
 
@@ -231,6 +234,40 @@ Useful for:
 - Embedded search in compact spaces
 - Simple keyword search without filtering
 - Header/navbar search boxes
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * With pager disabled.
+ */
+export const NoPager = {
+  args: {
+    config: {
+      ...defaultConfig,
+      showPager: false,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Disables the pager at the bottom of search results:
+
+\`\`\`js
+config: {
+  showPager: false,
+}
+\`\`\`
+
+When the pager is disabled, only the first page of results is shown. Users cannot navigate to additional pages.
+
+Useful for:
+- Preview widgets showing top results
+- Compact search experiences
+- When you want users to refine their search instead of paginating
         `,
       },
     },

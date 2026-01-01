@@ -331,6 +331,7 @@ export const DEFAULT_CONFIG = {
   showFacets: true,
   showActiveFilters: true,
   showSearchMetrics: false,
+  showPager: true,
 
   // Default filter state
   defaultFilters: [{ key: '_language', value: 'en' }],

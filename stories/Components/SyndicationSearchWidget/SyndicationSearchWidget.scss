@@ -1427,3 +1427,114 @@ $search-input-padding-x: $mg-spacing-250;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+// ========================================
+// Pager
+// ========================================
+
+.mg-pager {
+  margin-top: $mg-spacing-200;
+  padding-top: $mg-spacing-150;
+  border-top: 1px solid $search-border-light;
+}
+
+.mg-pager__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $mg-spacing-25;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mg-pager__item {
+  margin: 0;
+  padding: 0;
+
+  &--ellipsis {
+    display: flex;
+    align-items: center;
+    padding: 0 $mg-spacing-25;
+  }
+}
+
+.mg-pager__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: $search-text;
+  background: #fff;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover:not(:disabled, .mg-pager__link--disabled) {
+    background: $search-chip-bg;
+    border-color: $search-primary;
+    color: $search-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+
+  &--current {
+    color: #fff;
+    background: $search-primary;
+    border-color: $search-primary;
+    cursor: default;
+
+    &:hover {
+      background: $search-primary;
+      color: #fff;
+    }
+  }
+
+  &--disabled,
+  &:disabled {
+    color: $search-text-muted;
+    background: $search-border-light;
+    border-color: $search-border-light;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &--prev,
+  &--next {
+    gap: $mg-spacing-25;
+    padding: $mg-spacing-50 $mg-spacing-75;
+  }
+}
+
+.mg-pager__icon {
+  flex-shrink: 0;
+}
+
+.mg-pager__text {
+  // Show text on larger screens, hide on mobile
+  @media (width <= 480px) {
+    display: none;
+  }
+}
+
+.mg-pager__ellipsis {
+  color: $search-text-muted;
+  font-size: $mg-font-size-200;
+}
+
+// RTL support
+[dir="rtl"] {
+  .mg-pager__link--prev .mg-pager__icon,
+  .mg-pager__link--next .mg-pager__icon {
+    transform: scaleX(-1);
+  }
+}

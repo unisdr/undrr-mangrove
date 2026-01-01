@@ -29,15 +29,19 @@ import {
  * @param {Object} params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' }
  * @param {Object} params.customFacets - Custom facet selections { [facetId]: [indices] }
  * @param {string} params.sortBy - Sort order: 'newest', 'oldest', 'relevance'
+ * @param {number} params.page - Current page number (1-based)
  * @param {Object} config - Widget configuration
  * @returns {Object} Elasticsearch query body
  */
-export function buildQuery({ query, facets, facetOperators, customFacets, sortBy }, config) {
+export function buildQuery({ query, facets, facetOperators, customFacets, sortBy, page = 1 }, config) {
   const scoring = config.scoring || SCORING_CONFIG;
   const highlight = config.highlight || HIGHLIGHT_CONFIG;
   const resultsPerPage = config.resultsPerPage || 50;
   const facetCountToShow = config.facetCountToShow || 500;
   const facetFields = config.facetFields || FACET_FIELDS;
+
+  // Calculate the 'from' offset for pagination (0-based)
+  const from = (page - 1) * resultsPerPage;
 
   // Build the main query (excludes facet filters for disjunctive faceting)
   const mainQuery = buildMainQuery(query, scoring, config);
@@ -46,6 +50,7 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
   const postFilter = buildPostFilter(facets, facetOperators, customFacets, config);
 
   const result = {
+    from,
     size: resultsPerPage,
     sort: buildSort(sortBy),
     query: mainQuery,

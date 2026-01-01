@@ -34,6 +34,7 @@ export { FacetsSidebar } from './components/FacetsSidebar';
 export { FacetSelect } from './components/FacetSelect';
 export { CustomFacetSelect } from './components/CustomFacetSelect';
 export { SortOptions } from './components/SortOptions';
+export { Pager } from './components/Pager';
 
 // Utilities
 export { buildQuery } from './utils/queryBuilder';
