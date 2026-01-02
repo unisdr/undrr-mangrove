@@ -69,7 +69,6 @@
     "@storybook/addon-links": "10.1.11",
     "@storybook/addon-themes": "^10.1.11",
     "@storybook/addon-webpack5-compiler-babel": "4.0.0",
-    "@storybook/blocks": "9.0.0-alpha.17",
     "@storybook/cli": "10.1.11",
     "@storybook/react": "10.1.11",
     "@storybook/react-webpack5": "10.1.11",

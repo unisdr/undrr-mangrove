@@ -3740,25 +3740,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/blocks@npm:9.0.0-alpha.17":
-  version: 9.0.0-alpha.17
-  resolution: "@storybook/blocks@npm:9.0.0-alpha.17"
-  dependencies:
-    "@storybook/icons": "npm:^1.4.0"
-    ts-dedent: "npm:^2.0.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    storybook: ^9.0.0-alpha.17
-  peerDependenciesMeta:
-    react:
-      optional: true
-    react-dom:
-      optional: true
-  checksum: 10/71d3a7f6769708968aeedf97e6901d2770324c4e51bc0e593fd8bf7d5fc3f308617c031e6c2d90426442cd088d3fecf1e288ddd2977f77ae2d3398548a9c16e2
-  languageName: node
-  linkType: hard
-
 "@storybook/builder-webpack5@npm:10.1.11":
   version: 10.1.11
   resolution: "@storybook/builder-webpack5@npm:10.1.11"
@@ -4737,7 +4718,6 @@ __metadata:
     "@storybook/addon-links": "npm:10.1.11"
     "@storybook/addon-themes": "npm:^10.1.11"
     "@storybook/addon-webpack5-compiler-babel": "npm:4.0.0"
-    "@storybook/blocks": "npm:9.0.0-alpha.17"
     "@storybook/cli": "npm:10.1.11"
     "@storybook/react": "npm:10.1.11"
     "@storybook/react-webpack5": "npm:10.1.11"
@@ -19718,33 +19698,6 @@ __metadata:
   bin:
     storybook: ./dist/bin/dispatcher.js
   checksum: 10/1a5ac3d1c26b524aa92a44b1c513d3421a42c8ff4deca56c0698a8410a3e067cc6ecc3b57d2c10c79811dc488762de1f8b24230c1d4a198598eda20b7d376ede
-  languageName: node
-  linkType: hard
-
-"storybook@npm:9.1.17":
-  version: 9.1.17
-  resolution: "storybook@npm:9.1.17"
-  dependencies:
-    "@storybook/global": "npm:^5.0.0"
-    "@testing-library/jest-dom": "npm:^6.6.3"
-    "@testing-library/user-event": "npm:^14.6.1"
-    "@vitest/expect": "npm:3.2.4"
-    "@vitest/mocker": "npm:3.2.4"
-    "@vitest/spy": "npm:3.2.4"
-    better-opn: "npm:^3.0.2"
-    esbuild: "npm:^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0"
-    esbuild-register: "npm:^3.5.0"
-    recast: "npm:^0.23.5"
-    semver: "npm:^7.6.2"
-    ws: "npm:^8.18.0"
-  peerDependencies:
-    prettier: ^2 || ^3
-  peerDependenciesMeta:
-    prettier:
-      optional: true
-  bin:
-    storybook: ./bin/index.cjs
-  checksum: 10/fa7d56a7cf0c6849c8130f5b7b3fcbd6615216fce94dc4ff363a5622f7091f74dac7fe3e983cecc90b3cee922f8ca30b9997b5bb936c644971cb8d20262bc038
   languageName: node
   linkType: hard
 
