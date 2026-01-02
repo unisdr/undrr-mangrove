@@ -1,6 +1,6 @@
 import React from 'react';
 import TypeScriptExampleComponent from './TypeScriptExampleComponent';
-import { ComponentMeta, ComponentStory } from '@storybook/react-webpack5';
+import { ComponentMeta, ComponentStory } from 'storybook/react-webpack5';
 
 export default {
   title: 'Example/TypeScript Component',

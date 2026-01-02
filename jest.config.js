@@ -47,4 +47,4 @@ const config = {
   transformIgnorePatterns: ['node_modules/(?!core-js)'],
 };
 
-module.exports = config;
+export default config;

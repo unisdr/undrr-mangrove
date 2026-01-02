@@ -1,4 +1,4 @@
-import { Meta, Source } from '@storybook/blocks';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
@@ -25,6 +25,7 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
     { id: 'development-setup', text: 'Development Setup' },
     { id: 'assets-location', text: 'Assets Location' },
     { id: 'analytics-and-messaging', text: 'Analytics and messaging' },
+    { id: 'ai-assisted-development', text: 'AI-assisted development' },
     { id: 'next-steps', text: 'Next Steps' },
     { id: 'need-help', text: 'Need Help?' },
   ]}
@@ -446,6 +447,23 @@ For full documentation, see:
 
 <LinkTo kind="getting-started-critical-messaging" story="docs">
   → Critical messaging
+</LinkTo>
+
+## AI-assisted development
+
+Mangrove supports the Model Context Protocol (MCP), enabling AI coding tools like Claude, Cursor, and GitHub Copilot to understand and use components from this library.
+
+Point your AI to the live documentation:
+
+```
+Use the Mangrove component library documented at:
+https://unisdr.github.io/undrr-mangrove/
+
+All CSS classes use the mg- prefix.
+```
+
+<LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">
+  → See the full AI and MCP Integration Guide
 </LinkTo>
 
 ## Next steps

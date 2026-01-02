@@ -1,4 +1,4 @@
-//import { Meta, ArgTypes, Controls, Story, Canvas } from '@storybook/blocks';
+//import { Meta, ArgTypes, Controls, Story, Canvas } from '@storybook/addon-docs/blocks';
 import ShareButtons from './ShareButtons';
 
 const getCaptionForLocale = locale => {
