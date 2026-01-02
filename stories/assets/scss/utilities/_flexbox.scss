@@ -1,0 +1,435 @@
+// =============================================================================
+// FLEXBOX UTILITIES
+// =============================================================================
+// Flexbox container and item utilities.
+// Naming convention: .mg-u-{property}--{value}
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// FLEX DIRECTION
+// -----------------------------------------------------------------------------
+
+.mg-u-flex-direction--row {
+  flex-direction: row;
+}
+
+.mg-u-flex-direction--row-reverse {
+  flex-direction: row-reverse;
+}
+
+.mg-u-flex-direction--column {
+  flex-direction: column;
+}
+
+.mg-u-flex-direction--column-reverse {
+  flex-direction: column-reverse;
+}
+
+// Responsive flex direction
+.mg-u-flex-direction--row--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    flex-direction: row;
+  }
+}
+
+.mg-u-flex-direction--column--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    flex-direction: column;
+  }
+}
+
+.mg-u-flex-direction--row--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    flex-direction: row;
+  }
+}
+
+.mg-u-flex-direction--column--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    flex-direction: column;
+  }
+}
+
+.mg-u-flex-direction--row--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    flex-direction: row;
+  }
+}
+
+.mg-u-flex-direction--column--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    flex-direction: column;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// FLEX WRAP
+// -----------------------------------------------------------------------------
+
+.mg-u-flex-wrap--wrap {
+  flex-wrap: wrap;
+}
+
+.mg-u-flex-wrap--nowrap {
+  flex-wrap: nowrap;
+}
+
+.mg-u-flex-wrap--wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+// Responsive flex wrap
+.mg-u-flex-wrap--wrap--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    flex-wrap: wrap;
+  }
+}
+
+.mg-u-flex-wrap--nowrap--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    flex-wrap: nowrap;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// JUSTIFY CONTENT
+// -----------------------------------------------------------------------------
+
+.mg-u-justify-content--start {
+  justify-content: flex-start;
+}
+
+.mg-u-justify-content--end {
+  justify-content: flex-end;
+}
+
+.mg-u-justify-content--center {
+  justify-content: center;
+}
+
+.mg-u-justify-content--between {
+  justify-content: space-between;
+}
+
+.mg-u-justify-content--around {
+  justify-content: space-around;
+}
+
+.mg-u-justify-content--evenly {
+  justify-content: space-evenly;
+}
+
+// Responsive justify content
+.mg-u-justify-content--start--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    justify-content: flex-start;
+  }
+}
+
+.mg-u-justify-content--center--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    justify-content: center;
+  }
+}
+
+.mg-u-justify-content--between--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    justify-content: space-between;
+  }
+}
+
+.mg-u-justify-content--center--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    justify-content: center;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ALIGN ITEMS
+// -----------------------------------------------------------------------------
+
+.mg-u-align-items--start {
+  align-items: flex-start;
+}
+
+.mg-u-align-items--end {
+  align-items: flex-end;
+}
+
+.mg-u-align-items--center {
+  align-items: center;
+}
+
+.mg-u-align-items--baseline {
+  align-items: baseline;
+}
+
+.mg-u-align-items--stretch {
+  align-items: stretch;
+}
+
+// Responsive align items
+.mg-u-align-items--start--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    align-items: flex-start;
+  }
+}
+
+.mg-u-align-items--center--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    align-items: center;
+  }
+}
+
+.mg-u-align-items--center--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    align-items: center;
+  }
+}
+
+.mg-u-align-items--start--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    align-items: flex-start;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ALIGN CONTENT
+// -----------------------------------------------------------------------------
+
+.mg-u-align-content--start {
+  align-content: flex-start;
+}
+
+.mg-u-align-content--end {
+  align-content: flex-end;
+}
+
+.mg-u-align-content--center {
+  align-content: center;
+}
+
+.mg-u-align-content--between {
+  align-content: space-between;
+}
+
+.mg-u-align-content--around {
+  align-content: space-around;
+}
+
+.mg-u-align-content--stretch {
+  align-content: stretch;
+}
+
+// -----------------------------------------------------------------------------
+// ALIGN SELF
+// -----------------------------------------------------------------------------
+
+.mg-u-align-self--auto {
+  align-self: auto;
+}
+
+.mg-u-align-self--start {
+  align-self: flex-start;
+}
+
+.mg-u-align-self--end {
+  align-self: flex-end;
+}
+
+.mg-u-align-self--center {
+  align-self: center;
+}
+
+.mg-u-align-self--baseline {
+  align-self: baseline;
+}
+
+.mg-u-align-self--stretch {
+  align-self: stretch;
+}
+
+// -----------------------------------------------------------------------------
+// GAP (using spacing tokens)
+// -----------------------------------------------------------------------------
+
+$mg-gap-scale: (
+  "0": $mg-spacing-0,
+  "25": $mg-spacing-25,
+  "50": $mg-spacing-50,
+  "75": $mg-spacing-75,
+  "100": $mg-spacing-100,
+  "150": $mg-spacing-150,
+  "200": $mg-spacing-200,
+  "250": $mg-spacing-250,
+  "300": $mg-spacing-300,
+  "400": $mg-spacing-400,
+  "500": $mg-spacing-500,
+);
+
+// Gap (both row and column)
+@each $key, $value in $mg-gap-scale {
+  .mg-u-gap-#{$key} {
+    gap: $value;
+  }
+}
+
+// Row gap
+@each $key, $value in $mg-gap-scale {
+  .mg-u-row-gap-#{$key} {
+    row-gap: $value;
+  }
+}
+
+// Column gap
+@each $key, $value in $mg-gap-scale {
+  .mg-u-column-gap-#{$key} {
+    column-gap: $value;
+  }
+}
+
+// Responsive gap
+@each $key, $value in $mg-gap-scale {
+  .mg-u-gap-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      gap: $value;
+    }
+  }
+
+  .mg-u-gap-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      gap: $value;
+    }
+  }
+
+  .mg-u-gap-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      gap: $value;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// FLEX ITEM UTILITIES
+// -----------------------------------------------------------------------------
+
+// Flex shorthand
+.mg-u-flex--1 {
+  flex: 1 1 0%;
+}
+
+.mg-u-flex--auto {
+  flex: 1 1 auto;
+}
+
+.mg-u-flex--initial {
+  flex: 0 1 auto;
+}
+
+.mg-u-flex--none {
+  flex: none;
+}
+
+// Flex grow
+.mg-u-flex-grow--0 {
+  flex-grow: 0;
+}
+
+.mg-u-flex-grow--1 {
+  flex-grow: 1;
+}
+
+// Flex shrink
+.mg-u-flex-shrink--0 {
+  flex-shrink: 0;
+}
+
+.mg-u-flex-shrink--1 {
+  flex-shrink: 1;
+}
+
+// Flex basis
+.mg-u-flex-basis--0 {
+  flex-basis: 0%;
+}
+
+.mg-u-flex-basis--auto {
+  flex-basis: auto;
+}
+
+.mg-u-flex-basis--full {
+  flex-basis: 100%;
+}
+
+.mg-u-flex-basis--half {
+  flex-basis: 50%;
+}
+
+.mg-u-flex-basis--third {
+  flex-basis: 33.33333%;
+}
+
+.mg-u-flex-basis--quarter {
+  flex-basis: 25%;
+}
+
+// -----------------------------------------------------------------------------
+// ORDER
+// -----------------------------------------------------------------------------
+
+.mg-u-order--first {
+  order: -9999;
+}
+
+.mg-u-order--last {
+  order: 9999;
+}
+
+.mg-u-order--none {
+  order: 0;
+}
+
+.mg-u-order--1 {
+  order: 1;
+}
+
+.mg-u-order--2 {
+  order: 2;
+}
+
+.mg-u-order--3 {
+  order: 3;
+}
+
+.mg-u-order--4 {
+  order: 4;
+}
+
+.mg-u-order--5 {
+  order: 5;
+}
+
+// Responsive order
+.mg-u-order--first--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    order: -9999;
+  }
+}
+
+.mg-u-order--last--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    order: 9999;
+  }
+}
+
+.mg-u-order--first--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    order: -9999;
+  }
+}
+
+.mg-u-order--last--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    order: 9999;
+  }
+}

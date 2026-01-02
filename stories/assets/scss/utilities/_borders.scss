@@ -1,0 +1,467 @@
+// =============================================================================
+// BORDER UTILITIES
+// =============================================================================
+// Border width, style, color, and radius utilities.
+// Naming convention: .mg-u-{property}--{value}
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// BORDER (shorthand)
+// -----------------------------------------------------------------------------
+
+.mg-u-border {
+  border: 1px solid $mg-color-neutral-300;
+}
+
+.mg-u-border--none {
+  border: 0;
+}
+
+.mg-u-border-top {
+  border-top: 1px solid $mg-color-neutral-300;
+}
+
+.mg-u-border-right {
+  border-right: 1px solid $mg-color-neutral-300;
+}
+
+.mg-u-border-bottom {
+  border-bottom: 1px solid $mg-color-neutral-300;
+}
+
+.mg-u-border-left {
+  border-left: 1px solid $mg-color-neutral-300;
+}
+
+.mg-u-border-x {
+  border-left: 1px solid $mg-color-neutral-300;
+  border-right: 1px solid $mg-color-neutral-300;
+}
+
+.mg-u-border-y {
+  border-top: 1px solid $mg-color-neutral-300;
+  border-bottom: 1px solid $mg-color-neutral-300;
+}
+
+// Remove specific borders
+.mg-u-border-top--none {
+  border-top: 0;
+}
+
+.mg-u-border-right--none {
+  border-right: 0;
+}
+
+.mg-u-border-bottom--none {
+  border-bottom: 0;
+}
+
+.mg-u-border-left--none {
+  border-left: 0;
+}
+
+// -----------------------------------------------------------------------------
+// BORDER WIDTH
+// -----------------------------------------------------------------------------
+
+.mg-u-border-width--0 {
+  border-width: 0;
+}
+
+.mg-u-border-width--1 {
+  border-width: 1px;
+}
+
+.mg-u-border-width--2 {
+  border-width: 2px;
+}
+
+.mg-u-border-width--4 {
+  border-width: 4px;
+}
+
+.mg-u-border-width--8 {
+  border-width: 8px;
+}
+
+// Directional border width
+.mg-u-border-top-width--0 {
+  border-top-width: 0;
+}
+
+.mg-u-border-top-width--1 {
+  border-top-width: 1px;
+}
+
+.mg-u-border-top-width--2 {
+  border-top-width: 2px;
+}
+
+.mg-u-border-top-width--4 {
+  border-top-width: 4px;
+}
+
+.mg-u-border-bottom-width--0 {
+  border-bottom-width: 0;
+}
+
+.mg-u-border-bottom-width--1 {
+  border-bottom-width: 1px;
+}
+
+.mg-u-border-bottom-width--2 {
+  border-bottom-width: 2px;
+}
+
+.mg-u-border-bottom-width--4 {
+  border-bottom-width: 4px;
+}
+
+.mg-u-border-left-width--0 {
+  border-left-width: 0;
+}
+
+.mg-u-border-left-width--1 {
+  border-left-width: 1px;
+}
+
+.mg-u-border-left-width--2 {
+  border-left-width: 2px;
+}
+
+.mg-u-border-left-width--4 {
+  border-left-width: 4px;
+}
+
+.mg-u-border-right-width--0 {
+  border-right-width: 0;
+}
+
+.mg-u-border-right-width--1 {
+  border-right-width: 1px;
+}
+
+.mg-u-border-right-width--2 {
+  border-right-width: 2px;
+}
+
+.mg-u-border-right-width--4 {
+  border-right-width: 4px;
+}
+
+// -----------------------------------------------------------------------------
+// BORDER STYLE
+// -----------------------------------------------------------------------------
+
+.mg-u-border-style--solid {
+  border-style: solid;
+}
+
+.mg-u-border-style--dashed {
+  border-style: dashed;
+}
+
+.mg-u-border-style--dotted {
+  border-style: dotted;
+}
+
+.mg-u-border-style--double {
+  border-style: double;
+}
+
+.mg-u-border-style--none {
+  border-style: none;
+}
+
+// -----------------------------------------------------------------------------
+// BORDER COLOR
+// -----------------------------------------------------------------------------
+
+// Neutral shades
+.mg-u-border-color--neutral-0 {
+  border-color: $mg-color-neutral-0;
+}
+
+.mg-u-border-color--neutral-50 {
+  border-color: $mg-color-neutral-50;
+}
+
+.mg-u-border-color--neutral-100 {
+  border-color: $mg-color-neutral-100;
+}
+
+.mg-u-border-color--neutral-200 {
+  border-color: $mg-color-neutral-200;
+}
+
+.mg-u-border-color--neutral-300 {
+  border-color: $mg-color-neutral-300;
+}
+
+.mg-u-border-color--neutral-400 {
+  border-color: $mg-color-neutral-400;
+}
+
+.mg-u-border-color--neutral-500 {
+  border-color: $mg-color-neutral-500;
+}
+
+.mg-u-border-color--neutral-600 {
+  border-color: $mg-color-neutral-600;
+}
+
+.mg-u-border-color--neutral-700 {
+  border-color: $mg-color-neutral-700;
+}
+
+.mg-u-border-color--neutral-800 {
+  border-color: $mg-color-neutral-800;
+}
+
+.mg-u-border-color--neutral-900 {
+  border-color: $mg-color-neutral-900;
+}
+
+// Blue shades
+.mg-u-border-color--blue-50 {
+  border-color: $mg-color-blue-50;
+}
+
+.mg-u-border-color--blue-100 {
+  border-color: $mg-color-blue-100;
+}
+
+.mg-u-border-color--blue-200 {
+  border-color: $mg-color-blue-200;
+}
+
+.mg-u-border-color--blue-300 {
+  border-color: $mg-color-blue-300;
+}
+
+.mg-u-border-color--blue-400 {
+  border-color: $mg-color-blue-400;
+}
+
+.mg-u-border-color--blue-500 {
+  border-color: $mg-color-blue-500;
+}
+
+.mg-u-border-color--blue-600 {
+  border-color: $mg-color-blue-600;
+}
+
+.mg-u-border-color--blue-700 {
+  border-color: $mg-color-blue-700;
+}
+
+.mg-u-border-color--blue-800 {
+  border-color: $mg-color-blue-800;
+}
+
+.mg-u-border-color--blue-900 {
+  border-color: $mg-color-blue-900;
+}
+
+// Orange shades
+.mg-u-border-color--orange-500 {
+  border-color: $mg-color-orange-500;
+}
+
+.mg-u-border-color--orange-900 {
+  border-color: $mg-color-orange-900;
+}
+
+// Red shades
+.mg-u-border-color--red-500 {
+  border-color: $mg-color-red-500;
+}
+
+.mg-u-border-color--red-900 {
+  border-color: $mg-color-red-900;
+}
+
+// Sendai colors
+.mg-u-border-color--sendai-red {
+  border-color: $sendai-red;
+}
+
+.mg-u-border-color--sendai-orange {
+  border-color: $sendai-orange;
+}
+
+.mg-u-border-color--sendai-purple {
+  border-color: $sendai-purple;
+}
+
+.mg-u-border-color--sendai-turquoise {
+  border-color: $sendai-turquoise;
+}
+
+// Transparent
+.mg-u-border-color--transparent {
+  border-color: transparent;
+}
+
+// Inherit/current
+.mg-u-border-color--inherit {
+  border-color: inherit;
+}
+
+.mg-u-border-color--current {
+  border-color: currentColor;
+}
+
+// -----------------------------------------------------------------------------
+// BORDER RADIUS
+// -----------------------------------------------------------------------------
+
+.mg-u-border-radius--none {
+  border-radius: 0;
+}
+
+.mg-u-border-radius--sm {
+  border-radius: 2px;
+}
+
+.mg-u-border-radius {
+  border-radius: 4px;
+}
+
+.mg-u-border-radius--md {
+  border-radius: 6px;
+}
+
+.mg-u-border-radius--lg {
+  border-radius: 8px;
+}
+
+.mg-u-border-radius--xl {
+  border-radius: 12px;
+}
+
+.mg-u-border-radius--2xl {
+  border-radius: 16px;
+}
+
+.mg-u-border-radius--3xl {
+  border-radius: 24px;
+}
+
+.mg-u-border-radius--full {
+  border-radius: 9999px;
+}
+
+// Directional border radius
+.mg-u-border-radius-top--none {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.mg-u-border-radius-top {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.mg-u-border-radius-top--lg {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.mg-u-border-radius-bottom--none {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.mg-u-border-radius-bottom {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.mg-u-border-radius-bottom--lg {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.mg-u-border-radius-left--none {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.mg-u-border-radius-left {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.mg-u-border-radius-left--lg {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.mg-u-border-radius-right--none {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.mg-u-border-radius-right {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.mg-u-border-radius-right--lg {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+// -----------------------------------------------------------------------------
+// OUTLINE
+// -----------------------------------------------------------------------------
+
+.mg-u-outline--none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.mg-u-outline {
+  outline-style: solid;
+}
+
+.mg-u-outline--dashed {
+  outline-style: dashed;
+}
+
+.mg-u-outline--dotted {
+  outline-style: dotted;
+}
+
+.mg-u-outline-width--0 {
+  outline-width: 0;
+}
+
+.mg-u-outline-width--1 {
+  outline-width: 1px;
+}
+
+.mg-u-outline-width--2 {
+  outline-width: 2px;
+}
+
+.mg-u-outline-width--4 {
+  outline-width: 4px;
+}
+
+.mg-u-outline-offset--0 {
+  outline-offset: 0;
+}
+
+.mg-u-outline-offset--1 {
+  outline-offset: 1px;
+}
+
+.mg-u-outline-offset--2 {
+  outline-offset: 2px;
+}
+
+.mg-u-outline-offset--4 {
+  outline-offset: 4px;
+}

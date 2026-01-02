@@ -726,17 +726,17 @@ If you need a utility that doesn't exist in Mangrove, either:
 
 ### 1.11 Deliverables
 
-- [ ] Create `stories/assets/scss/utilities/` directory structure
-- [ ] Implement `_spacing.scss` with margin/padding utilities
-- [ ] Implement `_display.scss` with display utilities
-- [ ] Implement `_flexbox.scss` with flex utilities
-- [ ] Implement `_typography.scss` with text utilities
-- [ ] Implement `_borders.scss` with border utilities
-- [ ] Implement `_shadows.scss` with shadow utilities
-- [ ] Implement `_position.scss` with position utilities
-- [ ] Implement `_sizing.scss` with width/height utilities
-- [ ] Create `_index.scss` barrel file
-- [ ] Update `style.scss` to import utilities
+- [x] Create `stories/assets/scss/utilities/` directory structure
+- [x] Implement `_spacing.scss` with margin/padding utilities
+- [x] Implement `_display.scss` with display utilities
+- [x] Implement `_flexbox.scss` with flex utilities
+- [x] Implement `_typography.scss` with text utilities
+- [x] Implement `_borders.scss` with border utilities
+- [x] Implement `_shadows.scss` with shadow utilities
+- [x] Implement `_position.scss` with position utilities
+- [x] Implement `_sizing.scss` with width/height utilities
+- [x] Create `_index.scss` barrel file
+- [x] Update `style.scss` to import utilities
 - [ ] Create Storybook documentation for each category
 - [ ] Add unit tests for utility class generation
 - [ ] Release as minor version (e.g., 1.x.0)
@@ -1791,3 +1791,4 @@ Some Mangrove classes are already used in Drupal config:
 | 1.0 | 2026-01-02 | Claude Code | Initial draft |
 | 1.1 | 2026-01-02 | Claude Code | Added Appendix C with complete class audit |
 | 1.2 | 2026-01-02 | Claude Code | Added Phase 0 (prerequisite cleanup); marked 22 undefined classes as "do not migrate" with explicit removal instructions |
+| 1.3 | 2026-01-02 | Claude Code | **Phase 1 implementation started**: Created utilities directory with spacing, display, flexbox, typography, borders, shadows, position, and sizing utilities |

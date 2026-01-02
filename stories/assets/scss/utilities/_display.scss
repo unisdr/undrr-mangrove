@@ -1,0 +1,313 @@
+// =============================================================================
+// DISPLAY UTILITIES
+// =============================================================================
+// Display and visibility utilities.
+// Naming convention: .mg-u-display--{value}
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// BASE DISPLAY UTILITIES
+// -----------------------------------------------------------------------------
+
+.mg-u-display--none {
+  display: none;
+}
+
+.mg-u-display--block {
+  display: block;
+}
+
+.mg-u-display--inline {
+  display: inline;
+}
+
+.mg-u-display--inline-block {
+  display: inline-block;
+}
+
+.mg-u-display--flex {
+  display: flex;
+}
+
+.mg-u-display--inline-flex {
+  display: inline-flex;
+}
+
+.mg-u-display--grid {
+  display: grid;
+}
+
+.mg-u-display--inline-grid {
+  display: inline-grid;
+}
+
+.mg-u-display--table {
+  display: table;
+}
+
+.mg-u-display--table-row {
+  display: table-row;
+}
+
+.mg-u-display--table-cell {
+  display: table-cell;
+}
+
+.mg-u-display--contents {
+  display: contents;
+}
+
+.mg-u-display--flow-root {
+  display: flow-root;
+}
+
+// -----------------------------------------------------------------------------
+// VISIBILITY UTILITIES
+// -----------------------------------------------------------------------------
+
+.mg-u-visibility--visible {
+  visibility: visible;
+}
+
+.mg-u-visibility--hidden {
+  visibility: hidden;
+}
+
+.mg-u-visibility--collapse {
+  visibility: collapse;
+}
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE DISPLAY UTILITIES
+// -----------------------------------------------------------------------------
+// Pattern: .mg-u-display--{value}--{breakpoint}
+// Breakpoints: sm (mobile), md (tablet), lg (desktop), xl (wide desktop)
+// -----------------------------------------------------------------------------
+
+// Display none at breakpoints
+.mg-u-display--none--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: none;
+  }
+}
+
+.mg-u-display--none--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.mg-u-display--none--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: none;
+  }
+}
+
+.mg-u-display--none--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: none;
+  }
+}
+
+// Display block at breakpoints
+.mg-u-display--block--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: block;
+  }
+}
+
+.mg-u-display--block--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: block;
+  }
+}
+
+.mg-u-display--block--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: block;
+  }
+}
+
+.mg-u-display--block--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: block;
+  }
+}
+
+// Display inline at breakpoints
+.mg-u-display--inline--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: inline;
+  }
+}
+
+.mg-u-display--inline--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: inline;
+  }
+}
+
+.mg-u-display--inline--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: inline;
+  }
+}
+
+.mg-u-display--inline--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: inline;
+  }
+}
+
+// Display inline-block at breakpoints
+.mg-u-display--inline-block--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: inline-block;
+  }
+}
+
+.mg-u-display--inline-block--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: inline-block;
+  }
+}
+
+.mg-u-display--inline-block--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: inline-block;
+  }
+}
+
+.mg-u-display--inline-block--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: inline-block;
+  }
+}
+
+// Display flex at breakpoints
+.mg-u-display--flex--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: flex;
+  }
+}
+
+.mg-u-display--flex--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: flex;
+  }
+}
+
+.mg-u-display--flex--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: flex;
+  }
+}
+
+.mg-u-display--flex--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: flex;
+  }
+}
+
+// Display inline-flex at breakpoints
+.mg-u-display--inline-flex--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: inline-flex;
+  }
+}
+
+.mg-u-display--inline-flex--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: inline-flex;
+  }
+}
+
+.mg-u-display--inline-flex--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: inline-flex;
+  }
+}
+
+.mg-u-display--inline-flex--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: inline-flex;
+  }
+}
+
+// Display grid at breakpoints
+.mg-u-display--grid--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: grid;
+  }
+}
+
+.mg-u-display--grid--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: grid;
+  }
+}
+
+.mg-u-display--grid--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: grid;
+  }
+}
+
+.mg-u-display--grid--xl {
+  @media (width >= $mg-breakpoint-desktop-wide) {
+    display: grid;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// MOBILE-FIRST SHOW/HIDE HELPERS
+// -----------------------------------------------------------------------------
+// Semantic helpers for common responsive patterns
+
+// Hidden on mobile, visible on tablet+
+.mg-u-hidden--mobile {
+  @media (width <= $mg-breakpoint-mobile) {
+    display: none;
+  }
+}
+
+// Hidden on tablet+, visible on mobile
+.mg-u-hidden--tablet-up {
+  @media (width >= $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+// Hidden on desktop+
+.mg-u-hidden--desktop-up {
+  @media (width >= $mg-breakpoint-desktop) {
+    display: none;
+  }
+}
+
+// Only visible on mobile
+.mg-u-visible--mobile-only {
+  display: none;
+
+  @media (width <= $mg-breakpoint-mobile) {
+    display: block;
+  }
+}
+
+// Only visible on tablet (between mobile and desktop)
+.mg-u-visible--tablet-only {
+  display: none;
+
+  @media (width >= $mg-breakpoint-tablet) and (width < $mg-breakpoint-desktop) {
+    display: block;
+  }
+}
+
+// Only visible on desktop+
+.mg-u-visible--desktop-only {
+  display: none;
+
+  @media (width >= $mg-breakpoint-desktop) {
+    display: block;
+  }
+}
