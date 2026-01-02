@@ -1,0 +1,344 @@
+import { Meta, Story, Canvas, Source } from '@storybook/blocks';
+import * as SyndicationSearchWidgetStories from './SyndicationSearchWidget.stories';
+
+<Meta of={SyndicationSearchWidgetStories} />
+
+# UNDRR Syndication Search Widget
+
+The **UNDRR Syndication Search Widget** is a full-featured search interface tightly coupled with the UNDRR web platform. It integrates with Elasticsearch via the UNDRR `/search-endpoint` proxy and is designed specifically to query content from UNDRR domains (undrr.org, preventionweb.net, and related sites).
+
+Built with React 19, it leverages concurrent rendering features for optimal user experience.
+
+> **Platform Dependency:** This component requires access to the UNDRR Elasticsearch backend via `/search-endpoint`. It includes hardcoded domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
+
+> **Future:** A standalone, configurable search component without platform dependencies may be developed separately for broader use cases.
+
+## Features
+
+- **Responsive input**: Uses `useDeferredValue` to keep the input responsive while searching
+- **Non-blocking updates**: Uses `useTransition` for smooth result updates
+- **Active filters**: Displays removable chips for selected filters
+- **Accessibility**: Full ARIA support, keyboard navigation, screen reader announcements
+- **Theming**: Uses Mangrove design tokens for consistent styling
+- **Mobile-first**: Left-slide filter drawer on mobile, inline sidebar on desktop
+- **Zero external dependencies**: Custom select dropdowns with Chosen-like functionality (searchable, multi-select) without requiring Chosen.js or any other library
+
+## Default
+
+A basic search widget with default configuration.
+
+<Canvas of={SyndicationSearchWidgetStories.Default} meta={SyndicationSearchWidgetStories} />
+
+## Default Query
+
+A search widget initialized with a pre-filled search query.
+
+<Canvas of={SyndicationSearchWidgetStories.DefaultQuery} meta={SyndicationSearchWidgetStories} />
+
+## Hidden Facets
+
+A search widget with the facets sidebar hidden.
+
+<Canvas of={SyndicationSearchWidgetStories.HiddenFacets} meta={SyndicationSearchWidgetStories} />
+
+## Minimal Configuration
+
+Search-only mode without result counts, timers, or filters.
+
+<Canvas of={SyndicationSearchWidgetStories.Minimal} meta={SyndicationSearchWidgetStories} />
+
+## Debug Metrics
+
+Shows search performance metrics (score, interestingness, longevity) for debugging.
+
+<Canvas of={SyndicationSearchWidgetStories.DebugMetrics} meta={SyndicationSearchWidgetStories} />
+
+## Custom Filters
+
+`customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
+Users cannot see or remove these filters - they constrain the search scope.
+
+**This example uses:**
+```js
+customFilters: [
+  'type:(news OR publication)',      // Only news and publications
+  'published_at:[2023-01-01 TO *]',  // Content from 2023 onwards
+]
+```
+
+<Canvas of={SyndicationSearchWidgetStories.CustomFilters} meta={SyndicationSearchWidgetStories} />
+
+**Common filter patterns:**
+- `type:news` - Restrict to content type
+- `type:(news OR publication)` - Multiple types (OR)
+- `published_at:[2023-01-01 TO *]` - Date range
+- `field_domain_access:www_preventionweb_net` - Domain filter
+- `field_themes:123` - Taxonomy filter
+
+## Custom Facets
+
+`customFacets` create user-selectable dropdown filters in the sidebar.
+Each facet maps labels to Elasticsearch queries.
+
+**This example uses:**
+```js
+customFacets: [
+  {
+    id: 'region',
+    title: 'Region',
+    multiSelect: false,
+    options: [
+      { label: 'Africa', query: 'field_regions:1' },
+      { label: 'Americas', query: 'field_regions:2' },
+      // ...
+    ],
+  },
+  {
+    id: 'hazard_type',
+    title: 'Hazard Type',
+    multiSelect: true,  // Multiple selections allowed
+    options: [
+      { label: 'Earthquake', query: 'field_hazards:101' },
+      { label: 'Flood', query: 'field_hazards:102' },
+      // ...
+    ],
+  },
+]
+```
+
+<Canvas of={SyndicationSearchWidgetStories.CustomFacets} meta={SyndicationSearchWidgetStories} />
+
+**Structure:**
+```json
+{
+  "id": "unique_id",
+  "title": "Display Title",
+  "weight": 10,
+  "multiSelect": false,
+  "options": [
+    { "label": "Option Label", "query": "field_name:value" }
+  ]
+}
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | string | Unique identifier for the facet |
+| `title` | string | Label shown in the sidebar |
+| `weight` | number | Sort order (lower = higher) |
+| `multiSelect` | boolean | Allow multiple selections |
+| `options` | array | Array of `{label, query}` pairs |
+
+## Custom Filters And Facets
+
+Use both together: `customFilters` for hidden constraints, `customFacets` for user choices.
+
+**This example uses:**
+```js
+// Hidden constraint - users only see publications
+customFilters: ['type:publication'],
+
+// User-selectable options within publications
+customFacets: [
+  {
+    id: 'publication_year',
+    title: 'Publication Year',
+    options: [
+      { label: '2024', query: 'published_at:[2024-01-01 TO 2024-12-31]' },
+      { label: '2023', query: 'published_at:[2023-01-01 TO 2023-12-31]' },
+      // ...
+    ],
+  },
+  {
+    id: 'document_type',
+    title: 'Document Type',
+    options: [
+      { label: 'Policy Brief', query: 'field_publication_type:601' },
+      { label: 'Technical Report', query: 'field_publication_type:602' },
+      // ...
+    ],
+  },
+]
+```
+
+<Canvas of={SyndicationSearchWidgetStories.CustomFiltersAndFacets} meta={SyndicationSearchWidgetStories} />
+
+## Allowed Types
+
+Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content—it limits the filter UI options.
+
+**This example uses:**
+```js
+allowedTypes: {
+  types: ['news', 'publication', 'event'],  // Only these in Type dropdown
+  newsTypes: ['751', '752'],                // Only Update & Press release subtypes
+}
+```
+
+<Canvas of={SyndicationSearchWidgetStories.AllowedTypes} meta={SyndicationSearchWidgetStories} />
+
+**Available type IDs:** `news`, `event`, `publication`, `landing`, `vacancy`, `resource`, `collections`, `blog`, `terminology`, `organization`, `national_platform`
+
+**News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Community announcement), `756` (Op Ed)
+
+## Query Syntax
+
+Reference for Elasticsearch query_string syntax. Use this story to test search queries.
+
+<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
+
+See the story's Docs tab for a comprehensive syntax reference including:
+- Basic queries and phrase matching
+- Wildcards and fuzzy search
+- Boolean operators (AND, OR, NOT)
+- Field-specific searches
+- Date ranges and boosting
+
+## Static Mockup
+
+A static HTML mockup for CSS testing without API calls.
+
+<Canvas of={SyndicationSearchWidgetStories.StaticMockup} meta={SyndicationSearchWidgetStories} />
+
+## Usage
+
+```jsx
+import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget';
+
+<SyndicationSearchWidget
+  config={{
+    searchEndpoint: 'https://www.undrr.org/search-endpoint',
+    resultsPerPage: 5,
+    defaultFilters: [{ key: '_language', value: 'en' }],
+  }}
+/>
+```
+
+### Integration with Drupal
+
+The component is loaded automatically on pages containing a container with `data-undrr-search-widget`:
+
+```html
+<div
+  data-undrr-search-widget
+  data-search-endpoint="https://www.undrr.org/search-endpoint"
+  data-results-per-page="50"
+  data-default-query=""
+  data-default-sort="relevance"
+  data-show-facets="true"
+  data-default-filters='[{"key":"_language","value":"en"}]'
+>
+  <!-- React SearchWidget mounts here -->
+</div>
+```
+
+## Props
+
+### Config Object
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `searchEndpoint` | string | `/search-endpoint` | API endpoint for Elasticsearch queries |
+| `resultsPerPage` | number | 50 | Number of results to display per page |
+| `debounceDelay` | number | 300 | Milliseconds to wait before executing search |
+| `minSearchLength` | number | 3 | Minimum characters required to trigger search |
+| `defaultQuery` | string | `''` | Initial search query |
+| `defaultSort` | string | `'relevance'` | Initial sort order (`relevance`, `newest`, `oldest`) |
+| `defaultFilters` | array | `[]` | Default facet filters (array of `{key, value}`) |
+| `showSearchBox` | boolean | `true` | Show the search input |
+| `showResultsCount` | boolean | `true` | Show "Showing X of Y results" |
+| `showSearchTimer` | boolean | `true` | Show search execution time |
+| `showFacets` | boolean | `true` | Show the facets sidebar |
+| `showActiveFilters` | boolean | `true` | Show active filter chips |
+| `showSearchMetrics` | boolean | `false` | Show debug metrics (score, etc.) |
+| `enableHashSync` | string/boolean | `'auto'` | Sync search state to URL hash |
+| `visibleFilters` | object | `null` | Control which filters are visible |
+| `allowedTypes` | object | `null` | Restrict content types shown |
+| `customFilters` | array | `[]` | Additional Elasticsearch filters |
+| `customFacets` | array | `[]` | Custom facet definitions |
+
+## Architecture
+
+The component uses React 19's concurrent features:
+
+- **`useDeferredValue`**: Keeps the search input responsive while results load in the background
+- **`useTransition`**: Marks filter changes as non-urgent, preventing UI blocking
+- **`Suspense`**: Provides loading skeletons during data fetching
+- **Context + useReducer**: Manages search state without external dependencies
+
+### Component Structure
+
+```
+SyndicationSearchWidget
+├── SearchProvider (context)
+│   ├── SearchForm (input + button)
+│   ├── ActiveFilters (filter chips)
+│   ├── SearchResults (with Suspense)
+│   │   └── ResultItem (×n)
+│   ├── FacetsSidebar (desktop)
+│   │   ├── SortOptions (relevance/newest/oldest)
+│   │   ├── FacetSelect (×n, from Elasticsearch aggregations)
+│   │   │   └── SelectDropdown (custom Chosen-like component)
+│   │   └── CustomFacetSelect (×n, editor-defined)
+│   └── MobileFilterDrawer (mobile, <800px)
+│       └── FacetsSidebar (reused)
+```
+
+### Custom Select Dropdown
+
+The facet dropdowns use a **lightweight custom `SelectDropdown` component** instead of Chosen.js. This provides Chosen-like functionality without external dependencies:
+
+| Feature | Description |
+|---------|-------------|
+| **Searchable** | Filter input shown when options > 8 |
+| **Multi-select** | Checkbox indicators, multiple selections |
+| **Single-select** | Radio indicators, one selection |
+| **Keyboard navigation** | Arrow keys, Enter, Escape |
+| **Touch-friendly** | 44px trigger height, 40px option height |
+| **Accessible** | ARIA listbox pattern, screen reader support |
+
+This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
+
+### Mobile Filter Drawer
+
+On screens ≤800px, the sidebar is replaced with a left-slide drawer:
+
+- **Amazon-style slide-in** from the left edge
+- **Click backdrop to close** (right side)
+- **Sticky header and footer** with "View results" button
+- **Focus trapping** for accessibility
+
+UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
+
+## Accessibility
+
+- All interactive elements have proper ARIA labels
+- Keyboard navigation with Tab, Enter, and Escape
+- Screen reader announcements for result counts and filter changes
+- Focus management on filter removal
+
+## Changelog
+
+### 1.0.0-alpha.2
+- **Mobile filter drawer**: Left-slide drawer replaces hidden sidebar on mobile
+- **Custom SelectDropdown**: Replaced Chosen.js dependency with lightweight custom component
+  - Searchable filter input (shown when >8 options)
+  - Multi-select with checkboxes, single-select with radio buttons
+  - Keyboard navigation (arrows, Enter, Escape)
+  - Touch-friendly sizing (44px/40px targets)
+- **Loading state improvements**: Progress bar, button spinner, stale result overlay
+- **Compact filter button**: Inline with results count on mobile (vs full-width)
+- UX patterns from [Pencil & Paper mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters)
+
+### 1.0.0-alpha.1
+- React 19 implementation replacing vanilla JS version
+- Faceted filtering sidebar with sort options
+- URL hash synchronization (`#query=...`)
+- Pre-rendered teaser HTML support from Elasticsearch
+- Taxonomy fetching for human-readable facet labels
+- Custom facet support (editor-defined dropdowns)
+- Google Analytics integration via `data-vf-google-analytics-region` attributes
+- Core search with `useDeferredValue`
+- Results display with skeleton loading
+- Active filter chips with removal
+- Basic SCSS styling with Mangrove tokens

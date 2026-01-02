@@ -21,6 +21,11 @@ function CustomSelect({ text }) {
     { value: 'albanian', label: 'Albanian' },
     { value: 'arabic', label: 'Arabic' },
     { value: 'portuguese', label: 'Portuguese' },
+    { value: 'french', label: 'French' },
+    { value: 'und', label: 'Undetermined' },
+    { value: 'zxx', label: 'No linguistic content' },
+    { value: 'de', label: 'German' },
+    { value: 'russian', label: 'Russian' },
   ];
 
   const toggleSelect = () => {
