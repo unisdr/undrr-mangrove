@@ -13,7 +13,6 @@ export const getCaptionForLocale = locale => {
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: 'Social Share Button',
             label1: 'Label 1',
             label2: 'Label 2',
             button: 'Primary action',
@@ -80,7 +79,6 @@ This paper explores health risks from climate change in a global context, settin
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: 'Social Share Button',
             label1: 'Label 1',
             label2: 'Label 2',
             button: 'Primary action',
@@ -99,11 +97,11 @@ This paper explores health risks from climate change in a global context, settin
 
 # Mangrove card (horizontal)
 
-The Mangrove Horzontal Card components are cards with information and/or image.
+The Mangrove Horizontal Card components are cards with information and/or image.
 
 ### Overview
 
-The Mangrove Horzontal Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+The Mangrove Horizontal Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
 
 #### When to use:
 
@@ -113,11 +111,11 @@ When a card with data, CTA links and image is to be displayed.
 
 #### Default
 
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels, social share link and/or image.
+It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels and/or image.
 
 ### Content
 
-There are two types of Mangrove Horzontal Card components: Mangrove Horzontal Card with Image and Mangrove Horzontal Card without Image.
+There are two types of Mangrove Horizontal Card components: Mangrove Horizontal Card with image and Mangrove Horizontal Card without image.
 
 <Canvas of={HorizontalCardStories.DefaultHorizontalCard} meta={HorizontalCardStories} />
 
@@ -132,4 +130,5 @@ There are two types of Mangrove Horzontal Card components: Mangrove Horzontal Ca
 
 ### Changelog
 
-1.0 — Released component
+- 1.0.1: Removed unfinished/unused card “share” support (`item.share` / `mg-card__share`) from card components and documentation.
+- 1.0 — Released component

@@ -1,8 +1,12 @@
 import React from 'react';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
-// include fonts globally
-import '../stories/assets/scss/_fonts.scss';
+// Import theme SCSS files as lazy-loaded modules (via lazyStyleTag in main.js)
+// These provide .use() and .unuse() methods to toggle styles on/off
+import themeUNDRR from '../stories/assets/scss/style.scss';
+import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss';
+import themeIRP from '../stories/assets/scss/style-irp.scss';
+import themeMCR from '../stories/assets/scss/style-mcr.scss';
 
 // Function to get current language code
 const getLangCode = (Story, context) => {
@@ -72,36 +76,41 @@ const setDirection = (Story, context) => {
   return <Story {...context} />;
 };
 
+const themeStyles = {
+  'Global UNDRR Theme': themeUNDRR,
+  'PreventionWeb Theme': themePreventionWeb,
+  'IRP Theme': themeIRP,
+  'MCR2030 Theme': themeMCR,
+};
+
+// Track currently active theme
+let activeThemeStyle = null;
+
 const themeDecorator = (Story, context) => {
   const selectedTheme = context.globals.theme;
 
-  // Create a theme system that dynamically loads CSS
   React.useEffect(() => {
-    // Remove any existing theme link tags
-    const existingLinks = document.querySelectorAll('link[data-theme]');
-    existingLinks.forEach(link => link.remove());
+    // Unload previous theme
+    if (activeThemeStyle) {
+      activeThemeStyle.unuse();
+    }
 
-    // Create new link tag for selected theme
-    if (selectedTheme) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.setAttribute('data-theme', 'true');
-
-      // Map theme names to CSS file paths
-      // With staticDirs: ['../stories/assets'], files are served at root level
-      const themeCSSMap = {
-        'Global UNDRR Theme': './css/style.css',
-        'PreventionWeb Theme': './css/style-preventionweb.css',
-        'IRP Theme': './css/style-irp.css',
-        'MCR2030 Theme': './css/style-mcr.css',
-      };
-
-      if (themeCSSMap[selectedTheme]) {
-        link.href = themeCSSMap[selectedTheme];
-        document.head.appendChild(link);
-      }
+    // Load selected theme
+    const newThemeStyle = themeStyles[selectedTheme];
+    if (newThemeStyle) {
+      newThemeStyle.use();
+      activeThemeStyle = newThemeStyle;
     }
   }, [selectedTheme]);
+
+  // Load default theme on initial render
+  React.useEffect(() => {
+    const defaultTheme = themeStyles['Global UNDRR Theme'];
+    if (defaultTheme && !activeThemeStyle) {
+      defaultTheme.use();
+      activeThemeStyle = defaultTheme;
+    }
+  }, []);
 
   return <Story {...context} />;
 };

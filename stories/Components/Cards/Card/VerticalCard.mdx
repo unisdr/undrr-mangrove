@@ -12,7 +12,6 @@ export const getCaptionForLocale = locale => {
             title: 'Title in large size',
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: 'Social Share Button',
             label1: 'Label 1',
             label2: 'Label 2',
             button: 'Primary action',
@@ -79,7 +78,6 @@ by vulnerable populations and communities.This paper explores health risks from 
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            share: 'Social Share Button',
             label1: 'Label 1',
             label2: 'Label 2',
             button: 'Primary action',
@@ -112,7 +110,7 @@ When a card with data, CTA links and image is to be displayed.
 
 #### Default
 
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels, social share link and/or image.
+It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels and/or image.
 
 It's image in 16x9 in aspect ratio.
 
@@ -133,5 +131,6 @@ There are two types of Mangrove Vertical Card components: Mangrove Vertical Card
 
 ### Changelog
 
-1.1 — Handle case when image is not available
-1.0 — Released component
+- 1.1.1: Removed unfinished/unused card “share” support (`item.share` / `mg-card__share`) from card components and documentation.
+- 1.1 — Handle case when image is not available
+- 1.0 — Released component

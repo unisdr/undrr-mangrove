@@ -326,6 +326,20 @@
 
     .mg-mega-content__menu--desktop {
       display: block;
+
+      // Blue flash background that fades out (retriggered via React key)
+      animation: mg-mega-right-flash 400ms ease-out;
+
+      // Staggered slide-in for menu items
+      li {
+        animation: mg-mega-item-slide-in 250ms ease-out both;
+
+        @for $i from 1 through 12 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{($i - 1) * 30}ms;
+          }
+        }
+      }
     }
   }
 
@@ -366,6 +380,32 @@
         }
       }
     }
+  }
+}
+
+/* Subtle blue gradient flash that fades to transparent on right content area */
+@keyframes mg-mega-right-flash {
+  0% {
+    background: linear-gradient(
+      to bottom,
+      rgba($mg-color-interactive, 0.06) 0%,
+      transparent 100%
+    );
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* Menu items slide in from the left */
+@keyframes mg-mega-item-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
