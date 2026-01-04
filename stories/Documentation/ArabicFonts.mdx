@@ -1,0 +1,112 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Getting started/Arabic fonts integration" />
+
+# Arabic fonts integration
+
+The Mangrove component library now supports Arabic typography with dedicated fonts optimized for Arabic script.
+
+## Font Usage
+
+When content is marked with the `lang="ar"` attribute, the library automatically switches to Arabic-optimized fonts:
+
+### Headings
+- **Font**: Noto Kufi Arabic
+- **Usage**: All heading elements (h1-h6)
+- **Applies to**: Elements within `lang="ar"` context
+
+### Body Text
+- **Font**: Dubai
+- **Usage**: Body text, paragraphs, lists, tables, links, buttons
+- **Applies to**: Elements within `lang="ar"` context
+
+## Implementation
+
+To use Arabic fonts in your content, simply add the `lang="ar"` attribute to the parent element:
+
+```html
+<div lang="ar">
+  <h1>عنوان رئيسي</h1>
+  <p>هذا نص تجريبي باللغة العربية. سيتم تطبيق خط Dubai تلقائيًا على نص الجسم.</p>
+  <h2>عنوان فرعي</h2>
+  <p>المزيد من النص باللغة العربية.</p>
+</div>
+```
+
+## Example
+
+<div lang="ar" style={{ padding: '2rem', border: '1px solid #ccc', marginTop: '2rem' }}>
+  <h1>مرحبا بكم في مانغروف</h1>
+  <p>
+    مانغروف هي مكتبة مكونات للأمم المتحدة. توفر مكونات React قابلة لإعادة الاستخدام
+    مع تصميم متسق مستنير من إرشادات العلامة التجارية UNDRR.
+  </p>
+  <h2>الخصائص الرئيسية</h2>
+  <ul>
+    <li>مكونات قابلة لإعادة الاستخدام</li>
+    <li>تصميم متسق</li>
+    <li>دعم متعدد اللغات</li>
+    <li>خطوط محسنة للغة العربية</li>
+  </ul>
+  <h3>خطوط متخصصة</h3>
+  <p>
+    <strong>العناوين:</strong> يتم استخدام خط Noto Kufi Arabic لجميع العناوين (h1-h6).
+  </p>
+  <p>
+    <strong>نص الجسم:</strong> يتم استخدام خط Dubai لنص الجسم والفقرات والقوائم.
+  </p>
+</div>
+
+## Font Sources
+
+The fonts are loaded from the UNDRR CDN:
+
+- **Noto Kufi Arabic**: `https://assets.undrr.org/static/fonts/noto-kufi-arabic/v1.0.0/Regular/NotoKufiArabic-Regular.ttf`
+- **Dubai**: `https://assets.undrr.org/static/fonts/dubai/v1.0.0/Regular/Dubai-Regular.otf`
+
+## Technical Details
+
+### Font Variables
+
+The following SCSS variables are available:
+
+```scss
+$mg-font-family-arabic-headings: "Noto Kufi Arabic", sans-serif;
+$mg-font-family-arabic-body: "Dubai", sans-serif;
+```
+
+### Language Selector
+
+The library uses the `:lang(ar)` CSS selector to automatically apply Arabic fonts when content is marked with `lang="ar"`.
+
+### Supported Elements
+
+Arabic fonts are automatically applied to:
+
+**Headings (Noto Kufi Arabic):**
+- h1, h2, h3, h4, h5, h6
+
+**Body Text (Dubai):**
+- body, p, li, td, th, a, span, div, button
+
+## Browser Support
+
+These fonts are supported in all modern browsers that support:
+- TrueType fonts (.ttf)
+- OpenType fonts (.otf)
+- CSS `:lang()` selector
+
+## Migration from Roboto
+
+Previously, Arabic content used the default Roboto font, which lacks proper Arabic character support. The new fonts provide:
+
+- ✅ Proper Arabic glyph rendering
+- ✅ Correct letter connections
+- ✅ Improved readability for Arabic readers
+- ✅ Cultural appropriateness
+
+## Notes
+
+- The fonts load automatically when needed - no additional configuration required
+- Font files are hosted on the UNDRR CDN for reliability and performance
+- Right-to-left (RTL) text direction should be handled separately via `dir="rtl"` attribute

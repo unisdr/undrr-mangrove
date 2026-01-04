@@ -1,4 +1,4 @@
-FROM node:bookworm
+FROM node:20-bookworm
 
 # Prevent the container from asking for user input during installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -9,10 +9,7 @@ RUN apt-get update && apt-get upgrade -y
 # Install necessary tools and software-properties-common
 RUN apt-get install -y wget software-properties-common curl joe iputils-ping git
 
-# Set yarn to stable version
-RUN corepack disable
-RUN npm install -g yarn --force
-RUN yarn set version stable
+# Enable corepack for Yarn 4 support
 RUN corepack enable
 RUN yarn -v
 

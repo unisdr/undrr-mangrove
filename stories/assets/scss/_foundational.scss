@@ -168,4 +168,30 @@ a {
   }
 }
 
+/* Arabic fonts */
+#{$arabic} {
+  /* Headings use Noto Kufi Arabic */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: $mg-font-family-arabic-headings;
+  }
+
+  /* Body text uses Dubai */
+  body,
+  p,
+  li,
+  td,
+  th,
+  a,
+  span,
+  div,
+  button {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
+
 /* typography end */

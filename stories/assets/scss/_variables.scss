@@ -238,6 +238,10 @@ $mg-font-family: "Roboto", sans-serif;
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
 $mg-font-family-icons: "fontawesome";
 
+// Arabic fonts
+$mg-font-family-arabic-headings: "Noto Kufi Arabic", sans-serif;
+$mg-font-family-arabic-body: "Dubai", sans-serif;
+
 // $mg-font-family-icons: "mangrove-icon-set";
 // Not yet activated as we are using the FontAwesome namespace
 
@@ -347,5 +351,6 @@ $header-height-medium: 75px;
 
 // language selectors
 $cyrillic: ":lang(bg),:lang(be),:lang(kk),:lang(ky),:lang(mk),:lang(mn),:lang(ru),:lang(sr),:lang(uk)";
+$arabic: ":lang(ar)";
 
 /* variables end */
