@@ -1,0 +1,321 @@
+/* Photo Gallery Component */
+.mg-gallery {
+  position: relative;
+  display: grid;
+  gap: $mg-spacing-200;
+  width: 100%;
+
+  // Mobile: stack vertically (main → description → thumbnails)
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'main'
+    'description'
+    'thumbnails';
+
+  @include devicebreak(medium) {
+    // Desktop: thumbnails left, main + description right
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'thumbnails main'
+      'thumbnails description';
+  }
+
+  // Variant: thumbnails at bottom
+  &--thumbnails-bottom {
+    @include devicebreak(medium) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        'main'
+        'description'
+        'thumbnails';
+    }
+  }
+
+  // Main image container
+  &__main {
+    grid-area: main;
+    position: relative;
+    background-color: $mg-color-white;
+    border-radius: $mg-spacing-50;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+    overflow: hidden;
+  }
+
+  &__image-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: $mg-color-neutral-50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  // Description area
+  &__description {
+    grid-area: description;
+    padding: $mg-spacing-150 0;
+
+    @include devicebreak(medium) {
+      padding: $mg-spacing-150;
+    }
+  }
+
+  &__title {
+    font-size: $mg-font-size-400;
+    font-weight: bold;
+    margin-bottom: $mg-spacing-50;
+    color: $mg-color-text;
+  }
+
+  &__caption {
+    font-size: $mg-font-size-300;
+    color: $mg-color-neutral-800;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  // Thumbnails container
+  &__thumbnails {
+    grid-area: thumbnails;
+    display: flex;
+    gap: $mg-spacing-100;
+    padding: $mg-spacing-100 0;
+
+    // Mobile: horizontal scroll
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    @include devicebreak(medium) {
+      // Desktop: vertical scroll
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 600px;
+    }
+
+    // Bottom variant: always horizontal
+    .mg-gallery--thumbnails-bottom & {
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    // Custom scrollbar styling
+    scrollbar-width: thin;
+    scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
+
+    &::-webkit-scrollbar {
+      width: $mg-spacing-50;
+      height: $mg-spacing-50;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $mg-color-neutral-100;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $mg-color-neutral-500;
+      border-radius: 4px;
+
+      &:hover {
+        background: $mg-color-neutral-600;
+      }
+    }
+  }
+
+  // Individual thumbnail button
+  &__thumbnail {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    background: $mg-color-neutral-100;
+    padding: 0;
+    @include transition(all 0.2s ease);
+
+    @include devicebreak(medium) {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+
+    .mg-gallery--thumbnails-bottom & {
+      width: 80px;
+      height: 80px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    &:hover {
+      border-color: $mg-color-interactive;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $mg-color-interactive;
+    }
+
+    &--active {
+      border-color: $mg-color-interactive;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // Navigation arrows (following ScrollContainer pattern)
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $mg-spacing-300;
+    height: $mg-spacing-300;
+    border: none;
+    border-radius: 4px;
+    background: $mg-color-neutral-700;
+    color: $mg-color-white;
+    font-size: $mg-font-size-400;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include transition(background-color 0.2s, opacity 0.2s);
+
+    &:hover {
+      background: $mg-color-neutral-600;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow:
+        0 0 0 2px $mg-color-white,
+        0 0 0 4px $mg-color-neutral-700;
+    }
+
+    &:disabled {
+      background: $mg-color-neutral-300;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &--prev {
+      left: $mg-spacing-100;
+    }
+
+    &--next {
+      right: $mg-spacing-100;
+    }
+
+    // Hide arrows on very small screens to avoid overlap
+    @include devicebreak(small) {
+      width: $mg-spacing-250;
+      height: $mg-spacing-250;
+      font-size: $mg-font-size-300;
+
+      &--prev {
+        left: $mg-spacing-50;
+      }
+
+      &--next {
+        right: $mg-spacing-50;
+      }
+    }
+  }
+
+  // Corner arrow controls (bottom right position)
+  &__arrow-controls {
+    position: absolute;
+    bottom: $mg-spacing-100;
+    right: $mg-spacing-100;
+    display: flex;
+    gap: $mg-spacing-100;
+    z-index: 2;
+  }
+
+  &__arrow-button {
+    width: $mg-spacing-400;
+    height: $mg-spacing-400;
+    border: none;
+    border-radius: 4px;
+    background: $mg-color-neutral-700;
+    color: $mg-color-white;
+    font-size: $mg-font-size-500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include transition(background-color 0.2s, opacity 0.2s);
+
+    &:hover {
+      background: $mg-color-neutral-600;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow:
+        0 0 0 2px $mg-color-white,
+        0 0 0 4px $mg-color-neutral-700;
+    }
+
+    &:disabled {
+      background: $mg-color-neutral-300;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  // RTL support
+  [dir='rtl'] & {
+    &__thumbnails {
+      @include devicebreak(medium) {
+        order: 1;
+      }
+    }
+
+    &__arrow--prev {
+      left: auto;
+      right: $mg-spacing-100;
+
+      @include devicebreak(small) {
+        right: $mg-spacing-50;
+      }
+    }
+
+    &__arrow--next {
+      right: auto;
+      left: $mg-spacing-100;
+
+      @include devicebreak(small) {
+        left: $mg-spacing-50;
+      }
+    }
+
+    &__arrow-controls {
+      right: auto;
+      left: $mg-spacing-100;
+    }
+  }
+}
