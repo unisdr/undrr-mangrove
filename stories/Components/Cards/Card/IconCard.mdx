@@ -1,0 +1,214 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as IconCardStories from './IconCard.stories';
+
+<Meta of={IconCardStories} />
+
+# Icon card
+
+Icon Card is a versatile card variant designed to highlight content with visual icons or images. It features a clean, flexible layout with an icon/image at the top, content in the middle, and a call-to-action at the bottom.
+
+## When to use
+
+- **Feature highlights**: Showcase product features or service offerings with icons
+- **Navigation cards**: Create visual navigation with icons and descriptions
+- **Step-by-step guides**: Display process steps with numbered icons
+- **Category cards**: Organize content by category with representative icons
+- **Service cards**: Present services or offerings in a grid layout
+- **RTL/LTR support**: Content requiring right-to-left or centered alignment
+
+## When not to use
+
+- **Image-heavy content**: Use VerticalCard or HorizontalCard for large images
+- **Data visualization**: Use StatsCards for numeric data
+- **Long-form content**: Consider standard cards for extensive text
+
+## Component features
+
+### Layout options
+
+- **Stacked layout**: Force vertical/column layout at all breakpoints (recommended for grid layouts)
+- **Responsive**: Automatically adjusts from horizontal to vertical on larger screens
+- **Flexible height**: Cards auto-adjust height based on content
+
+### Alignment variants
+
+- **Left** (default): Standard LTR alignment
+- **Center**: Centered content for symmetrical layouts
+- **Right**: RTL support for languages like Arabic, Hebrew
+
+### Content options
+
+- **Icon or Image**: Use SVG icons (inline or external) or image files
+- **Title**: Required heading text (can be linked)
+- **Description**: Optional body text (HTML supported)
+- **Label/Badge**: Optional badge/category label
+- **CTA options**:
+  - Button (Primary or Secondary)
+  - Text link
+  - Title-only link (entire card clickable)
+
+## Usage
+
+### Basic usage with icon
+
+<Canvas of={IconCardStories.LeftAlignedWithLink} />
+
+### Centered alignment
+
+<Canvas of={IconCardStories.CenteredWithButton} />
+
+### RTL support (Right alignment)
+
+<Canvas of={IconCardStories.RightAlignedRTL} />
+
+### With labels/badges
+
+<Canvas of={IconCardStories.WithLabels} />
+
+### Grid layout example
+
+<Canvas of={IconCardStories.GridLayout} />
+
+## Props
+
+### IconCard
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | Array | Required | Array of card data objects |
+| `alignment` | String | `'left'` | Content alignment: `'left'`, `'center'`, or `'right'` |
+| `stackedLayout` | Boolean | `false` | Force vertical layout at all breakpoints |
+
+### Data object properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `icon` | String | Optional | Inline SVG markup for icon (alternative to `image`) |
+| `image` | String | Optional | Image URL (alternative to `icon`) |
+| `iconSize` | Number | `72` | Width/height of icon or image in pixels |
+| `imageAlt` | String | Optional | Alt text for image |
+| `label` | String | Optional | Badge or category label text |
+| `title` | String | Required | Card heading text |
+| `description` | String | Optional | Card body text (HTML supported) |
+| `link` | String | Optional | URL for card link |
+| `linkText` | String | Optional | Text for text link CTA |
+| `button` | String | Optional | Button label text |
+| `buttonType` | String | `'Primary'` | Button style: `'Primary'` or `'Secondary'` |
+
+## Code examples
+
+### With inline SVG icon
+
+```jsx
+<IconCard
+  alignment="left"
+  stackedLayout={true}
+  data={[
+    {
+      icon: '<svg>...</svg>',
+      title: 'Components',
+      description: 'Browse all USWDS components.',
+      linkText: 'Browse components →',
+      link: '/components',
+    },
+  ]}
+/>
+```
+
+### With image
+
+```jsx
+<IconCard
+  alignment="center"
+  stackedLayout={true}
+  data={[
+    {
+      image: '/icons/feature.svg',
+      iconSize: 64,
+      imageAlt: 'Feature icon',
+      title: 'Features',
+      description: 'Explore our features.',
+      button: 'Learn More',
+      link: '/features',
+    },
+  ]}
+/>
+```
+
+### In a grid layout
+
+```jsx
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gap: '2rem'
+}}>
+  <IconCard
+    alignment="center"
+    stackedLayout={true}
+    data={[{ /* card data */ }]}
+  />
+  <IconCard
+    alignment="center"
+    stackedLayout={true}
+    data={[{ /* card data */ }]}
+  />
+  <IconCard
+    alignment="center"
+    stackedLayout={true}
+    data={[{ /* card data */ }]}
+  />
+</div>
+```
+
+### RTL (Arabic) example
+
+```jsx
+<div lang="ar" dir="rtl">
+  <IconCard
+    alignment="right"
+    stackedLayout={true}
+    data={[
+      {
+        icon: '<svg>...</svg>',
+        title: 'المكونات',
+        description: 'تصفح جميع مكونات USWDS.',
+        linkText: '← تصفح المكونات',
+        link: '/components',
+      },
+    ]}
+  />
+</div>
+```
+
+## Accessibility
+
+- Icons are decorative and use `aria-hidden="true"`
+- Images require `imageAlt` for screen readers
+- Titles can be linked for entire card click areas
+- Buttons and links maintain proper focus order
+- Color contrast meets WCAG AA standards
+
+## Best practices
+
+### Do
+
+- Use clear, concise titles (3-5 words)
+- Keep descriptions brief (1-2 sentences)
+- Provide alt text for images
+- Use consistent icon sizes in grids
+- Choose appropriate alignment for your content language
+
+### Don't
+
+- Mix icons and images in the same grid
+- Use overly complex icons
+- Write lengthy descriptions (use regular cards instead)
+- Forget to test RTL layouts for Arabic/Hebrew content
+
+## Related components
+
+- **VerticalCard**: For image-focused content
+- **HorizontalCard**: For content-heavy cards
+- **StatsCards**: For numerical data display
+- **BookCard**: For publication listings

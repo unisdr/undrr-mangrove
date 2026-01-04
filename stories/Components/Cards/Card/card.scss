@@ -190,6 +190,163 @@
 
 // END of CARD
 
+// Icon Card variant
+.mg-card__icon {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: $mg-spacing-100;
+
+  // Stacked layout (always vertical)
+  &--stacked {
+    flex-direction: column;
+
+    @media (min-width: $mg-breakpoint-tablet) {
+      flex-direction: column;
+    }
+  }
+
+  // Default: Switch to column layout on larger screens
+  @media (min-width: $mg-breakpoint-tablet) {
+    flex-direction: column;
+  }
+
+  // Icon/Image container
+  .mg-card__icon-visual {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mg-card__icon-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .mg-card__icon-icon {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $mg-color-text;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // Card body content
+  .mg-card__icon-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mg-card__title {
+    padding-top: 0;
+
+    h3 {
+      margin: 0;
+      font-size: $mg-font-size-500;
+      font-weight: bold;
+      line-height: $mg-font-line-height-500;
+
+      a {
+        color: $mg-color-text;
+        cursor: pointer;
+        display: inline-block;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .mg-card__cta {
+    margin-top: auto;
+    padding-top: $mg-spacing-100;
+  }
+
+  .mg-card__link {
+    margin-top: auto;
+    padding-top: $mg-spacing-75;
+    margin-bottom: 0;
+
+    a {
+      color: $mg-color-interactive;
+      text-decoration: none;
+      position: relative;
+      z-index: 101;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Alignment variants
+  &--left {
+    text-align: left;
+
+    .mg-card__icon-visual {
+      align-self: flex-start;
+    }
+  }
+
+  &--center {
+    align-items: center;
+    text-align: center;
+
+    .mg-card__icon-visual {
+      align-self: center;
+    }
+
+    .mg-card__icon-body {
+      align-items: center;
+    }
+
+    .mg-card__meta,
+    .mg-card__title,
+    .mg-card__summary,
+    .mg-card__cta,
+    .mg-card__link {
+      text-align: center;
+    }
+  }
+
+  &--right {
+    align-items: flex-end;
+    text-align: right;
+
+    .mg-card__icon-visual {
+      align-self: flex-end;
+    }
+
+    .mg-card__icon-body {
+      align-items: flex-end;
+    }
+
+    .mg-card__meta,
+    .mg-card__title,
+    .mg-card__summary,
+    .mg-card__cta,
+    .mg-card__link {
+      text-align: right;
+    }
+  }
+}
+
 // [dir='rtl'] {
 //   .content-card {
 //     .image {
