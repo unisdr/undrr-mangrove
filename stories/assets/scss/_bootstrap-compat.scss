@@ -7,7 +7,6 @@
 // This file provides backward compatibility for Bootstrap 3.3.7 grid classes.
 // It uses modern CSS Grid to replicate Bootstrap's 12-column grid system.
 // This allows gradual migration away from Bootstrap without breaking layouts.
-//
 // Usage: Import this file to enable Bootstrap grid classes in your project.
 // Remove this file once all templates have been migrated to Mangrove grid.
 // =============================================================================
@@ -111,7 +110,7 @@
 // Small (sm) - Tablet portrait and up
 // -----------------------------------------------------------------------------
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   @for $i from 1 through 12 {
     .col-sm-#{$i} {
       flex: 0 0 math.percentage(math.div($i, 12));
@@ -247,13 +246,13 @@
 }
 
 .hidden-xs {
-  @media (max-width: 767px) {
+  @media (width <= 767px) {
     display: none !important;
   }
 }
 
 .hidden-sm {
-  @media (min-width: 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
+  @media (width >= 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
     display: none !important;
   }
 }
@@ -273,7 +272,7 @@
 .visible-xs {
   display: none !important;
 
-  @media (max-width: 767px) {
+  @media (width <= 767px) {
     display: block !important;
   }
 }
@@ -281,7 +280,7 @@
 .visible-sm {
   display: none !important;
 
-  @media (min-width: 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
+  @media (width >= 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
     display: block !important;
   }
 }
@@ -487,7 +486,7 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }
