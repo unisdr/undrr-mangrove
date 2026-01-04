@@ -30,7 +30,7 @@ export function IconCard({ data, alignment = 'left', stackedLayout = false }) {
     <>
       {data.map((item, index) => (
         <article
-          key={index}
+          key={item.id || item.title || `icon-card-${index}`}
           className={cls(
             'mg-card',
             'mg-card__icon',
