@@ -161,15 +161,8 @@ a {
   }
 }
 
-/* Cyrillic scripts */
-#{$cyrillic} {
-  h1 {
-    font-family: $mg-font-family;
-  }
-}
-
 /* Arabic fonts */
-#{$arabic} {
+:lang(ar) {
   /* Headings use Noto Kufi Arabic */
   h1,
   h2,

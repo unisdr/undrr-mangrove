@@ -162,12 +162,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 }
 
-// burmese lang
-:lang(my) {
-  .error {
-    line-height: 1.7;
-  }
-
+// Arabic
+:lang(ar) {
   input[type="text"],
   input[type="number"],
   input[type="email"],
@@ -176,6 +172,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   input[type="tel"],
   input[type="date"],
   textarea {
-    font-family: $mg-font-family;
+    font-family: $mg-font-family-arabic-body;
   }
 }
