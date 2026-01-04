@@ -30,138 +30,23 @@
 }
 
 // -----------------------------------------------------------------------------
-// INSET (all sides)
+// BASIC POSITIONING
 // -----------------------------------------------------------------------------
 
-.mg-u-inset-0 {
-  inset: 0;
+.mg-u-top-0 {
+  top: 0;
 }
 
-.mg-u-inset-auto {
-  inset: auto;
+.mg-u-right-0 {
+  right: 0;
 }
 
-// Individual side insets using spacing tokens
-$mg-inset-scale: (
-  "0": 0,
-  "25": $mg-spacing-25,
-  "50": $mg-spacing-50,
-  "100": $mg-spacing-100,
-  "150": $mg-spacing-150,
-  "200": $mg-spacing-200,
-  "300": $mg-spacing-300,
-  "400": $mg-spacing-400,
-  "auto": auto,
-);
-
-// Top
-@each $key, $value in $mg-inset-scale {
-  .mg-u-top-#{$key} {
-    top: $value;
-  }
+.mg-u-bottom-0 {
+  bottom: 0;
 }
 
-// Right
-@each $key, $value in $mg-inset-scale {
-  .mg-u-right-#{$key} {
-    right: $value;
-  }
-}
-
-// Bottom
-@each $key, $value in $mg-inset-scale {
-  .mg-u-bottom-#{$key} {
-    bottom: $value;
-  }
-}
-
-// Left
-@each $key, $value in $mg-inset-scale {
-  .mg-u-left-#{$key} {
-    left: $value;
-  }
-}
-
-// Inset X (left and right)
-@each $key, $value in $mg-inset-scale {
-  .mg-u-inset-x-#{$key} {
-    left: $value;
-    right: $value;
-  }
-}
-
-// Inset Y (top and bottom)
-@each $key, $value in $mg-inset-scale {
-  .mg-u-inset-y-#{$key} {
-    top: $value;
-    bottom: $value;
-  }
-}
-
-// Percentage-based positioning
-.mg-u-top--full {
-  top: 100%;
-}
-
-.mg-u-right--full {
-  right: 100%;
-}
-
-.mg-u-bottom--full {
-  bottom: 100%;
-}
-
-.mg-u-left--full {
-  left: 100%;
-}
-
-.mg-u-top--half {
-  top: 50%;
-}
-
-.mg-u-right--half {
-  right: 50%;
-}
-
-.mg-u-bottom--half {
-  bottom: 50%;
-}
-
-.mg-u-left--half {
-  left: 50%;
-}
-
-// Negative positioning
-.mg-u-top--negative-100 {
-  top: -$mg-spacing-100;
-}
-
-.mg-u-top--negative-200 {
-  top: -$mg-spacing-200;
-}
-
-.mg-u-right--negative-100 {
-  right: -$mg-spacing-100;
-}
-
-.mg-u-right--negative-200 {
-  right: -$mg-spacing-200;
-}
-
-.mg-u-bottom--negative-100 {
-  bottom: -$mg-spacing-100;
-}
-
-.mg-u-bottom--negative-200 {
-  bottom: -$mg-spacing-200;
-}
-
-.mg-u-left--negative-100 {
-  left: -$mg-spacing-100;
-}
-
-.mg-u-left--negative-200 {
-  left: -$mg-spacing-200;
+.mg-u-left-0 {
+  left: 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -196,14 +81,6 @@ $mg-inset-scale: (
   z-index: 50;
 }
 
-.mg-u-z-index--100 {
-  z-index: 100;
-}
-
-.mg-u-z-index--200 {
-  z-index: 200;
-}
-
 // Semantic z-index values
 .mg-u-z-index--dropdown {
   z-index: 1000;
@@ -225,17 +102,8 @@ $mg-inset-scale: (
   z-index: 1050;
 }
 
-.mg-u-z-index--popover {
-  z-index: 1060;
-}
-
 .mg-u-z-index--tooltip {
   z-index: 1070;
-}
-
-// Negative z-index
-.mg-u-z-index--negative {
-  z-index: -1;
 }
 
 // -----------------------------------------------------------------------------
@@ -255,20 +123,8 @@ $mg-inset-scale: (
 }
 
 // Clear float
-.mg-u-clear--left {
-  clear: left;
-}
-
-.mg-u-clear--right {
-  clear: right;
-}
-
 .mg-u-clear--both {
   clear: both;
-}
-
-.mg-u-clear--none {
-  clear: none;
 }
 
 // Clearfix
@@ -276,18 +132,6 @@ $mg-inset-scale: (
   content: "";
   display: table;
   clear: both;
-}
-
-// -----------------------------------------------------------------------------
-// ISOLATION
-// -----------------------------------------------------------------------------
-
-.mg-u-isolate {
-  isolation: isolate;
-}
-
-.mg-u-isolation--auto {
-  isolation: auto;
 }
 
 // -----------------------------------------------------------------------------
@@ -306,29 +150,9 @@ $mg-inset-scale: (
   object-fit: fill;
 }
 
-.mg-u-object-fit--none {
-  object-fit: none;
-}
-
-.mg-u-object-fit--scale-down {
-  object-fit: scale-down;
-}
-
 // Object position
 .mg-u-object-position--top {
   object-position: top;
-}
-
-.mg-u-object-position--bottom {
-  object-position: bottom;
-}
-
-.mg-u-object-position--left {
-  object-position: left;
-}
-
-.mg-u-object-position--right {
-  object-position: right;
 }
 
 .mg-u-object-position--center {
@@ -351,15 +175,6 @@ $mg-inset-scale: (
   overflow: visible;
 }
 
-.mg-u-overflow--scroll {
-  overflow: scroll;
-}
-
-.mg-u-overflow--clip {
-  overflow: clip;
-}
-
-// Overflow X
 .mg-u-overflow-x--auto {
   overflow-x: auto;
 }
@@ -368,67 +183,10 @@ $mg-inset-scale: (
   overflow-x: hidden;
 }
 
-.mg-u-overflow-x--visible {
-  overflow-x: visible;
-}
-
-.mg-u-overflow-x--scroll {
-  overflow-x: scroll;
-}
-
-// Overflow Y
 .mg-u-overflow-y--auto {
   overflow-y: auto;
 }
 
 .mg-u-overflow-y--hidden {
   overflow-y: hidden;
-}
-
-.mg-u-overflow-y--visible {
-  overflow-y: visible;
-}
-
-.mg-u-overflow-y--scroll {
-  overflow-y: scroll;
-}
-
-// -----------------------------------------------------------------------------
-// OVERSCROLL BEHAVIOR
-// -----------------------------------------------------------------------------
-
-.mg-u-overscroll--auto {
-  overscroll-behavior: auto;
-}
-
-.mg-u-overscroll--contain {
-  overscroll-behavior: contain;
-}
-
-.mg-u-overscroll--none {
-  overscroll-behavior: none;
-}
-
-.mg-u-overscroll-x--auto {
-  overscroll-behavior-x: auto;
-}
-
-.mg-u-overscroll-x--contain {
-  overscroll-behavior-x: contain;
-}
-
-.mg-u-overscroll-x--none {
-  overscroll-behavior-x: none;
-}
-
-.mg-u-overscroll-y--auto {
-  overscroll-behavior-y: auto;
-}
-
-.mg-u-overscroll-y--contain {
-  overscroll-behavior-y: contain;
-}
-
-.mg-u-overscroll-y--none {
-  overscroll-behavior-y: none;
 }

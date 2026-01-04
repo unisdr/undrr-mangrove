@@ -147,9 +147,13 @@ const preview = {
       },
     },
     docs: {
-      source: {
-        format: 'dedent',
+      canvas: {
+        // 'none' = button not rendered, 'hidden' = collapsed by default, 'shown' = expanded
+        // This controls <Canvas> blocks in MDX files
+        sourceState: 'shown',
       },
+      // Enable code panel for CSF 3 stories in autodocs (replacement for Storysource addon)
+      codePanel: true,
     },
     viewport: {
       viewports: INITIAL_VIEWPORTS,

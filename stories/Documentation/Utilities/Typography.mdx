@@ -1,0 +1,245 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Components/Utility CSS/Typography"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Typography utilities
+
+Control font size, weight, alignment, and text styling with typography utilities.
+
+## Font size
+
+Font sizes use Mangrove's typography tokens. With a 10px base, sizes scale proportionally:
+
+| Class | Token | Value | Approx. pixels |
+|-------|-------|-------|----------------|
+| `.mg-u-font-size-100` | `$mg-font-size-100` | 1rem | 10px |
+| `.mg-u-font-size-150` | `$mg-font-size-150` | 1.125rem | 11px |
+| `.mg-u-font-size-200` | `$mg-font-size-200` | 1.25rem | 12.5px |
+| `.mg-u-font-size-250` | `$mg-font-size-250` | 1.4rem | 14px |
+| `.mg-u-font-size-300` | `$mg-font-size-300` | 1.6rem | 16px (body) |
+| `.mg-u-font-size-400` | `$mg-font-size-400` | 1.8rem | 18px |
+| `.mg-u-font-size-500` | `$mg-font-size-500` | 2.3rem | 23px |
+| `.mg-u-font-size-600` | `$mg-font-size-600` | 3.2rem | 32px |
+| `.mg-u-font-size-800` | `$mg-font-size-800` | 3.6rem | 36px |
+| `.mg-u-font-size-900` | `$mg-font-size-900` | 4rem | 40px |
+| `.mg-u-font-size-1000` | `$mg-font-size-1000` | 4.8rem | 48px |
+| `.mg-u-font-size-1100` | `$mg-font-size-1100` | 6.4rem | 64px |
+
+```html
+<p class="mg-u-font-size-300">Body text (16px)</p>
+<h2 class="mg-u-font-size-600">Heading (32px)</h2>
+<span class="mg-u-font-size-200">Small text (12.5px)</span>
+```
+
+### Responsive font sizes
+
+```html
+<!-- Larger font on desktop -->
+<h1 class="mg-u-font-size-500 mg-u-font-size-600--lg">
+  Responsive heading
+</h1>
+```
+
+## Font weight
+
+```html
+<p class="mg-u-font-weight--normal">Normal (400)</p>
+<p class="mg-u-font-weight--semibold">Semibold (600)</p>
+<p class="mg-u-font-weight--bold">Bold (700)</p>
+```
+
+## Font family
+
+```html
+<p class="mg-u-font-family--base">Roboto (default)</p>
+<p class="mg-u-font-family--condensed">Roboto Condensed</p>
+```
+
+## Font style
+
+```html
+<p class="mg-u-font-style--normal">Normal text</p>
+<p class="mg-u-font-style--italic">Italic text</p>
+```
+
+## Text alignment
+
+```html
+<p class="mg-u-text-align--left">Left aligned</p>
+<p class="mg-u-text-align--center">Center aligned</p>
+<p class="mg-u-text-align--right">Right aligned</p>
+```
+
+### Responsive alignment
+
+```html
+<!-- Center on mobile, left on tablet+ -->
+<p class="mg-u-text-align--center--sm mg-u-text-align--left--md">
+  Responsive alignment
+</p>
+```
+
+## Line height
+
+```html
+<p class="mg-u-line-height--none">Line height: 1</p>
+<p class="mg-u-line-height--tight">Line height: 1.25</p>
+<p class="mg-u-line-height--normal">Line height: 1.5</p>
+<p class="mg-u-line-height--relaxed">Line height: 1.75</p>
+<p class="mg-u-line-height--loose">Line height: 2</p>
+```
+
+## Text transform
+
+```html
+<p class="mg-u-text-transform--uppercase">UPPERCASE TEXT</p>
+<p class="mg-u-text-transform--lowercase">lowercase text</p>
+<p class="mg-u-text-transform--capitalize">Capitalize Each Word</p>
+<p class="mg-u-text-transform--none">Normal text</p>
+```
+
+## White space
+
+```html
+<p class="mg-u-white-space--normal">Normal white space handling</p>
+<p class="mg-u-white-space--nowrap">No wrapping allowed</p>
+<p class="mg-u-white-space--pre">Preserves    whitespace</p>
+<p class="mg-u-white-space--pre-line">Preserves newlines</p>
+<p class="mg-u-white-space--pre-wrap">Preserves whitespace, wraps</p>
+<p class="mg-u-white-space--break-spaces">Preserves spaces, breaks anywhere</p>
+```
+
+## Text truncation
+
+### Single line truncation
+
+```html
+<p class="mg-u-truncate" style="width: 200px;">
+  This long text will be truncated with an ellipsis...
+</p>
+```
+
+### Multi-line truncation (line clamp)
+
+```html
+<p class="mg-u-line-clamp--1">Clamp to 1 line</p>
+<p class="mg-u-line-clamp--2">Clamp to 2 lines</p>
+<p class="mg-u-line-clamp--3">Clamp to 3 lines</p>
+<p class="mg-u-line-clamp--4">Clamp to 4 lines</p>
+<p class="mg-u-line-clamp--5">Clamp to 5 lines</p>
+```
+
+### Text overflow
+
+```html
+<p class="mg-u-text-overflow--ellipsis">Ellipsis on overflow</p>
+<p class="mg-u-text-overflow--clip">Clip on overflow</p>
+```
+
+## Word break and overflow wrap
+
+```html
+<p class="mg-u-word-break--normal">Normal word breaking</p>
+<p class="mg-u-word-break--break-all">Break anywhere</p>
+<p class="mg-u-word-break--keep-all">Don't break CJK text</p>
+
+<p class="mg-u-overflow-wrap--normal">Normal overflow wrap</p>
+<p class="mg-u-overflow-wrap--break-word">Break long words</p>
+<p class="mg-u-overflow-wrap--anywhere">Break anywhere if needed</p>
+```
+
+## Letter spacing
+
+```html
+<p class="mg-u-letter-spacing--tighter">Tighter (-0.05em)</p>
+<p class="mg-u-letter-spacing--tight">Tight (-0.025em)</p>
+<p class="mg-u-letter-spacing--normal">Normal (0)</p>
+<p class="mg-u-letter-spacing--wide">Wide (0.025em)</p>
+<p class="mg-u-letter-spacing--wider">Wider (0.05em)</p>
+<p class="mg-u-letter-spacing--widest">Widest (0.1em)</p>
+```
+
+## Vertical align
+
+```html
+<span class="mg-u-vertical-align--baseline">Baseline</span>
+<span class="mg-u-vertical-align--top">Top</span>
+<span class="mg-u-vertical-align--middle">Middle</span>
+<span class="mg-u-vertical-align--bottom">Bottom</span>
+<span class="mg-u-vertical-align--text-top">Text top</span>
+<span class="mg-u-vertical-align--text-bottom">Text bottom</span>
+<span class="mg-u-vertical-align--sub">Subscript</span>
+<span class="mg-u-vertical-align--super">Superscript</span>
+```
+
+## Common patterns
+
+### Article typography
+
+```html
+<article>
+  <h1 class="mg-u-font-size-800 mg-u-font-weight--bold mg-u-line-height--tight">
+    Article title
+  </h1>
+  <p class="mg-u-font-size-400 mg-u-color--neutral-600 mg-u-margin-bottom-300">
+    Article subtitle or description
+  </p>
+  <div class="mg-u-font-size-300 mg-u-line-height--relaxed">
+    <p>Article content...</p>
+  </div>
+</article>
+```
+
+### Truncated card title
+
+```html
+<h3 class="mg-u-font-size-400 mg-u-font-weight--semibold mg-u-line-clamp--2">
+  This is a long card title that will be truncated after two lines
+</h3>
+```
+
+### Responsive hero text
+
+```html
+<h1 class="mg-u-font-size-500 mg-u-font-size-600--lg mg-u-text-align--center">
+  Hero headline
+</h1>
+```
+
+## Complete class reference
+
+### Font size
+
+| Class | CSS output |
+|-------|------------|
+| `.mg-u-font-size-100` | `font-size: 1rem` |
+| `.mg-u-font-size-200` | `font-size: 1.25rem` |
+| `.mg-u-font-size-300` | `font-size: 1.6rem` |
+| `.mg-u-font-size-400` | `font-size: 1.8rem` |
+| `.mg-u-font-size-500` | `font-size: 2.3rem` |
+| `.mg-u-font-size-600` | `font-size: 3.2rem` |
+| `.mg-u-font-size-800` | `font-size: 3.6rem` |
+| `.mg-u-font-size-900` | `font-size: 4rem` |
+| `.mg-u-font-size-1000` | `font-size: 4.8rem` |
+| `.mg-u-font-size-1100` | `font-size: 6.4rem` |
+
+### Font weight
+
+| Class | CSS output |
+|-------|------------|
+| `.mg-u-font-weight--normal` | `font-weight: 400` |
+| `.mg-u-font-weight--semibold` | `font-weight: 600` |
+| `.mg-u-font-weight--bold` | `font-weight: 700` |
+
+## Source file
+
+`stories/assets/scss/utilities/_typography.scss`

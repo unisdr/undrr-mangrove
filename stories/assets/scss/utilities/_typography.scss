@@ -86,24 +86,8 @@
 // FONT WEIGHT
 // -----------------------------------------------------------------------------
 
-.mg-u-font-weight--thin {
-  font-weight: 100;
-}
-
-.mg-u-font-weight--extralight {
-  font-weight: 200;
-}
-
-.mg-u-font-weight--light {
-  font-weight: 300;
-}
-
 .mg-u-font-weight--normal {
   font-weight: 400;
-}
-
-.mg-u-font-weight--medium {
-  font-weight: 500;
 }
 
 .mg-u-font-weight--semibold {
@@ -112,14 +96,6 @@
 
 .mg-u-font-weight--bold {
   font-weight: 700;
-}
-
-.mg-u-font-weight--extrabold {
-  font-weight: 800;
-}
-
-.mg-u-font-weight--black {
-  font-weight: 900;
 }
 
 // -----------------------------------------------------------------------------
@@ -162,9 +138,6 @@
   text-align: right;
 }
 
-.mg-u-text-align--justify {
-  text-align: justify;
-}
 
 // Responsive text alignment
 .mg-u-text-align--left--sm {
@@ -265,25 +238,6 @@
   text-transform: none;
 }
 
-// -----------------------------------------------------------------------------
-// TEXT DECORATION
-// -----------------------------------------------------------------------------
-
-.mg-u-text-decoration--underline {
-  text-decoration: underline;
-}
-
-.mg-u-text-decoration--overline {
-  text-decoration: overline;
-}
-
-.mg-u-text-decoration--line-through {
-  text-decoration: line-through;
-}
-
-.mg-u-text-decoration--none {
-  text-decoration: none;
-}
 
 // -----------------------------------------------------------------------------
 // WHITE SPACE

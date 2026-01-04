@@ -34,76 +34,6 @@
   width: fit-content;
 }
 
-// Fractional widths
-.mg-u-width--half {
-  width: 50%;
-}
-
-.mg-u-width--third {
-  width: 33.33333%;
-}
-
-.mg-u-width--two-thirds {
-  width: 66.66667%;
-}
-
-.mg-u-width--quarter {
-  width: 25%;
-}
-
-.mg-u-width--three-quarters {
-  width: 75%;
-}
-
-.mg-u-width--fifth {
-  width: 20%;
-}
-
-.mg-u-width--two-fifths {
-  width: 40%;
-}
-
-.mg-u-width--three-fifths {
-  width: 60%;
-}
-
-.mg-u-width--four-fifths {
-  width: 80%;
-}
-
-// Fixed widths using spacing tokens
-.mg-u-width-0 {
-  width: 0;
-}
-
-.mg-u-width-100 {
-  width: $mg-spacing-100;
-}
-
-.mg-u-width-200 {
-  width: $mg-spacing-200;
-}
-
-.mg-u-width-300 {
-  width: $mg-spacing-300;
-}
-
-.mg-u-width-400 {
-  width: $mg-spacing-400;
-}
-
-.mg-u-width-500 {
-  width: $mg-spacing-500;
-}
-
-.mg-u-width-600 {
-  width: $mg-spacing-600;
-}
-
-.mg-u-width-800 {
-  width: $mg-spacing-800;
-}
-
 // Named widths
 .mg-u-width-150 {
   width: $mg-width-150;
@@ -121,19 +51,6 @@
   width: $mg-width-600;
 }
 
-// Viewport width percentages
-.mg-u-width--vw-25 {
-  width: 25vw;
-}
-
-.mg-u-width--vw-50 {
-  width: 50vw;
-}
-
-.mg-u-width--vw-75 {
-  width: 75vw;
-}
-
 // Responsive widths
 .mg-u-width--full--sm {
   @media (width <= $mg-breakpoint-mobile) {
@@ -147,45 +64,9 @@
   }
 }
 
-.mg-u-width--half--md {
-  @media (width >= $mg-breakpoint-tablet) {
-    width: 50%;
-  }
-}
-
-.mg-u-width--third--md {
-  @media (width >= $mg-breakpoint-tablet) {
-    width: 33.33333%;
-  }
-}
-
-.mg-u-width--quarter--md {
-  @media (width >= $mg-breakpoint-tablet) {
-    width: 25%;
-  }
-}
-
 .mg-u-width--full--md {
   @media (width >= $mg-breakpoint-tablet) {
     width: 100%;
-  }
-}
-
-.mg-u-width--half--lg {
-  @media (width >= $mg-breakpoint-desktop) {
-    width: 50%;
-  }
-}
-
-.mg-u-width--third--lg {
-  @media (width >= $mg-breakpoint-desktop) {
-    width: 33.33333%;
-  }
-}
-
-.mg-u-width--quarter--lg {
-  @media (width >= $mg-breakpoint-desktop) {
-    width: 25%;
   }
 }
 
@@ -337,60 +218,6 @@
   height: fit-content;
 }
 
-// Fractional heights
-.mg-u-height--half {
-  height: 50%;
-}
-
-.mg-u-height--third {
-  height: 33.33333%;
-}
-
-.mg-u-height--two-thirds {
-  height: 66.66667%;
-}
-
-.mg-u-height--quarter {
-  height: 25%;
-}
-
-.mg-u-height--three-quarters {
-  height: 75%;
-}
-
-// Fixed heights using spacing tokens
-.mg-u-height-0 {
-  height: 0;
-}
-
-.mg-u-height-100 {
-  height: $mg-spacing-100;
-}
-
-.mg-u-height-200 {
-  height: $mg-spacing-200;
-}
-
-.mg-u-height-300 {
-  height: $mg-spacing-300;
-}
-
-.mg-u-height-400 {
-  height: $mg-spacing-400;
-}
-
-.mg-u-height-500 {
-  height: $mg-spacing-500;
-}
-
-.mg-u-height-600 {
-  height: $mg-spacing-600;
-}
-
-.mg-u-height-800 {
-  height: $mg-spacing-800;
-}
-
 // -----------------------------------------------------------------------------
 // MIN HEIGHT
 // -----------------------------------------------------------------------------
@@ -476,37 +303,6 @@
 .mg-u-size--fit {
   width: fit-content;
   height: fit-content;
-}
-
-// Square sizes using spacing tokens
-.mg-u-size-100 {
-  width: $mg-spacing-100;
-  height: $mg-spacing-100;
-}
-
-.mg-u-size-200 {
-  width: $mg-spacing-200;
-  height: $mg-spacing-200;
-}
-
-.mg-u-size-300 {
-  width: $mg-spacing-300;
-  height: $mg-spacing-300;
-}
-
-.mg-u-size-400 {
-  width: $mg-spacing-400;
-  height: $mg-spacing-400;
-}
-
-.mg-u-size-500 {
-  width: $mg-spacing-500;
-  height: $mg-spacing-500;
-}
-
-.mg-u-size-600 {
-  width: $mg-spacing-600;
-  height: $mg-spacing-600;
 }
 
 // -----------------------------------------------------------------------------

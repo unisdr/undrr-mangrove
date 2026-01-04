@@ -1,0 +1,82 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Components/Utility CSS/Shadows"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Shadow utilities
+
+Add depth and elevation to elements with box shadow utilities.
+
+## Box shadows
+
+Box shadows add depth to rectangular elements:
+
+```html
+<div class="mg-u-box-shadow--none">No shadow</div>
+<div class="mg-u-box-shadow--sm">Small shadow</div>
+<div class="mg-u-box-shadow">Default shadow</div>
+<div class="mg-u-box-shadow--md">Medium shadow</div>
+<div class="mg-u-box-shadow--lg">Large shadow</div>
+<div class="mg-u-box-shadow--xl">Extra large shadow</div>
+<div class="mg-u-box-shadow--2xl">2XL shadow</div>
+```
+
+### Inner shadow
+
+```html
+<div class="mg-u-box-shadow--inner">Inset shadow</div>
+```
+
+## Common patterns
+
+### Elevated card
+
+```html
+<div class="mg-u-box-shadow mg-u-border-radius--lg mg-u-padding-200 mg-u-background-color--white">
+  <h3>Card title</h3>
+  <p>Card content with subtle elevation</p>
+</div>
+```
+
+### Floating action button
+
+```html
+<button class="mg-u-box-shadow--lg mg-u-border-radius--full mg-u-padding-200">
+  <span class="mg-u-sr-only">Add item</span>
+  +
+</button>
+```
+
+### Modal overlay
+
+```html
+<div class="mg-u-box-shadow--2xl mg-u-border-radius--xl mg-u-padding-300 mg-u-background-color--white">
+  <h2>Modal title</h2>
+  <p>Modal content with strong shadow for depth</p>
+</div>
+```
+
+## Complete class reference
+
+| Class | Description |
+|-------|-------------|
+| `.mg-u-box-shadow--none` | No shadow |
+| `.mg-u-box-shadow--sm` | Subtle shadow |
+| `.mg-u-box-shadow` | Default shadow |
+| `.mg-u-box-shadow--md` | Medium shadow |
+| `.mg-u-box-shadow--lg` | Large shadow |
+| `.mg-u-box-shadow--xl` | Extra large shadow |
+| `.mg-u-box-shadow--2xl` | 2X large shadow |
+| `.mg-u-box-shadow--inner` | Inset shadow |
+
+## Source file
+
+`stories/assets/scss/utilities/_shadows.scss`

@@ -1,0 +1,45 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Components/Utility CSS/Borders"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Border utilities
+
+Essential border utilities for page layouts.
+
+## Border
+
+```html
+<div class="mg-u-border--none">Remove border</div>
+```
+
+## Border radius
+
+```html
+<div class="mg-u-border-radius--none">Sharp corners (0)</div>
+<div class="mg-u-border-radius">Default (4px)</div>
+<div class="mg-u-border-radius--lg">Large (8px)</div>
+<div class="mg-u-border-radius--full">Pill/circle (9999px)</div>
+```
+
+## Complete class reference
+
+| Class | CSS output |
+|-------|------------|
+| `.mg-u-border--none` | `border: 0` |
+| `.mg-u-border-radius--none` | `border-radius: 0` |
+| `.mg-u-border-radius` | `border-radius: 4px` |
+| `.mg-u-border-radius--lg` | `border-radius: 8px` |
+| `.mg-u-border-radius--full` | `border-radius: 9999px` |
+
+## Source file
+
+`stories/assets/scss/utilities/_borders.scss`

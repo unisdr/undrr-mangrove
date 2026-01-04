@@ -42,16 +42,6 @@ export default {
   ],
 
   webpackFinal: async config => {
-    // remove hash from the static file names
-    // find the existing rule and override the name property
-    // config.module.rules.forEach(function(rule, index) {
-    //   if (String(rule.test).search('svg') > 0) {
-    //     if (typeof config.module.rules[index].options == 'undefined') {
-    //       config.module.rules[index].options = {};
-    //     }
-    //     config.module.rules[index].options.name = 'static/media/[name].[ext]';
-    //   }
-    // });
     // SCSS support with lazy loading for theme files (enables hot reload + theme switching)
     // Theme files use lazyStyleTag so we can toggle them on/off
     config.module.rules.push({
