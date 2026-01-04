@@ -50,38 +50,8 @@
 }
 
 // -----------------------------------------------------------------------------
-// Z-INDEX
+// Z-INDEX (semantic values)
 // -----------------------------------------------------------------------------
-
-.mg-u-z-index--auto {
-  z-index: auto;
-}
-
-.mg-u-z-index--0 {
-  z-index: 0;
-}
-
-.mg-u-z-index--10 {
-  z-index: 10;
-}
-
-.mg-u-z-index--20 {
-  z-index: 20;
-}
-
-.mg-u-z-index--30 {
-  z-index: 30;
-}
-
-.mg-u-z-index--40 {
-  z-index: 40;
-}
-
-.mg-u-z-index--50 {
-  z-index: 50;
-}
-
-// Semantic z-index values
 .mg-u-z-index--dropdown {
   z-index: 1000;
 }
