@@ -1,0 +1,434 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Utilities/Tailwind CSS/Overview" />
+
+# Tailwind CSS Utilities
+
+Mangrove now includes **Tailwind CSS** configured with exact Mangrove design tokens. You can use both standard Tailwind class names and verbose Mangrove-style names.
+
+## Dual Naming Convention
+
+Every utility is available in two formats for maximum flexibility:
+
+### Standard Tailwind (Recommended)
+```html
+<div class="mt-100 flex justify-center gap-150">
+  Content
+</div>
+```
+
+### Mangrove Verbose
+```html
+<div class="mg-u-margin-top-100 mg-u-display--flex mg-u-justify-content--center mg-u-gap-150">
+  Content
+</div>
+```
+
+**Note**: Standard Tailwind names are shorter and more familiar to most developers. Use Mangrove verbose names when you need semantic clarity or consistency with existing Mangrove utilities.
+
+---
+
+## Important: Mangrove Design Tokens
+
+Mangrove uses a **custom base font size** where **1rem = 10px** (not Tailwind's default 16px).
+
+### Spacing Scale
+Available values: `0, 25, 50, 75, 100, 150, 175, 200, 250, 300, 350, 400, 500, 600, 800, 1000`
+
+| Value | Pixels | Rem |
+|-------|--------|-----|
+| 100 | 10px | 1rem |
+| 150 | 15px | 1.5rem |
+| 200 | 20px | 2rem |
+| 250 | 24px | 2.4rem |
+| 300 | 30px | 3rem |
+
+---
+
+## Spacing Utilities
+
+### Margin
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `mt-100` | `mg-u-margin-top-100` | margin-top: 1rem (10px) |
+| `mb-150` | `mg-u-margin-bottom-150` | margin-bottom: 1.5rem (15px) |
+| `ml-200` | `mg-u-margin-left-200` | margin-left: 2rem (20px) |
+| `mr-250` | `mg-u-margin-right-250` | margin-right: 2.4rem (24px) |
+| `m-100` | `mg-u-margin-100` | margin: 1rem (10px) |
+| `mx-100` | `mg-u-margin-x-100` | margin-left/right: 1rem |
+| `my-100` | `mg-u-margin-y-100` | margin-top/bottom: 1rem |
+
+### Padding
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `pt-100` | `mg-u-padding-top-100` | padding-top: 1rem (10px) |
+| `pb-150` | `mg-u-padding-bottom-150` | padding-bottom: 1.5rem (15px) |
+| `px-200` | `mg-u-padding-x-200` | padding-left/right: 2rem (20px) |
+| `py-100` | `mg-u-padding-y-100` | padding-top/bottom: 1rem |
+| `p-100` | `mg-u-padding-100` | padding: 1rem (10px) |
+
+---
+
+## Layout Utilities
+
+### Display
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `block` | `mg-u-display--block` | display: block |
+| `flex` | `mg-u-display--flex` | display: flex |
+| `inline-flex` | `mg-u-display--inline-flex` | display: inline-flex |
+| `grid` | `mg-u-display--grid` | display: grid |
+| `inline-block` | `mg-u-display--inline-block` | display: inline-block |
+| `hidden` | `mg-u-display--none` | display: none |
+
+### Flexbox
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `flex-row` | `mg-u-flex-direction--row` | flex-direction: row |
+| `flex-col` | `mg-u-flex-direction--column` | flex-direction: column |
+| `flex-wrap` | `mg-u-flex-wrap--wrap` | flex-wrap: wrap |
+| `justify-start` | `mg-u-justify-content--start` | justify-content: flex-start |
+| `justify-center` | `mg-u-justify-content--center` | justify-content: center |
+| `justify-between` | `mg-u-justify-content--between` | justify-content: space-between |
+| `items-center` | `mg-u-align-items--center` | align-items: center |
+| `items-start` | `mg-u-align-items--start` | align-items: flex-start |
+| `items-stretch` | `mg-u-align-items--stretch` | align-items: stretch |
+
+### Gap (uses Mangrove spacing)
+
+```html
+<div class="flex gap-100">   <!-- 10px gap -->
+<div class="flex gap-150">   <!-- 15px gap -->
+<div class="flex gap-200">   <!-- 20px gap -->
+
+<!-- Mangrove verbose -->
+<div class="mg-u-display--flex mg-u-gap-100">   <!-- 10px gap -->
+```
+
+---
+
+## Typography Utilities
+
+### Font Size
+
+Font sizes use Mangrove scale (1rem = 10px):
+
+| Tailwind | Mangrove | Size | Pixels |
+|----------|----------|------|--------|
+| `text-100` | `mg-u-font-size--100` | 1rem | 10px |
+| `text-200` | `mg-u-font-size--200` | 1.25rem | 12.5px |
+| `text-300` | `mg-u-font-size--300` | 1.6rem | 16px (body) |
+| `text-400` | `mg-u-font-size--400` | 1.8rem | 18px |
+| `text-500` | `mg-u-font-size--500` | 2.3rem | 23px |
+| `text-600` | `mg-u-font-size--600` | 3.2rem | 32px |
+
+### Font Weight
+
+| Tailwind | Mangrove | Weight |
+|----------|----------|--------|
+| `font-300` | `mg-u-font-weight--300` | 300 (light) |
+| `font-400` | `mg-u-font-weight--400` | 400 (normal) |
+| `font-700` | `mg-u-font-weight--700` | 700 (bold) |
+| `font-900` | `mg-u-font-weight--900` | 900 (black) |
+
+### Text Alignment
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `text-left` | `mg-u-text-align--left` | text-align: left |
+| `text-center` | `mg-u-text-align--center` | text-align: center |
+| `text-right` | `mg-u-text-align--right` | text-align: right |
+
+### Text Transform
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `uppercase` | `mg-u-text-transform--uppercase` | text-transform: uppercase |
+| `lowercase` | `mg-u-text-transform--lowercase` | text-transform: lowercase |
+| `capitalize` | `mg-u-text-transform--capitalize` | text-transform: capitalize |
+
+---
+
+## Color Utilities
+
+Use Tailwind's standard color utilities with Mangrove color scales:
+
+### Background Colors
+
+```html
+<!-- Tailwind -->
+<div class="bg-blue-900">UNDRR Blue</div>
+<div class="bg-orange-800">UNDRR Orange</div>
+<div class="bg-neutral-50">Light neutral</div>
+
+<!-- Mix with existing Mangrove utilities -->
+<div class="mg-u-background-color--blue-900">Mangrove style</div>
+```
+
+### Text Colors
+
+```html
+<span class="text-blue-900">Blue text</span>
+<span class="text-orange-800">Orange text</span>
+<span class="text-neutral-700">Dark neutral text</span>
+```
+
+### Mangrove Color Palette
+
+- **Blue**: 50-900 (10 shades) - Primary brand color
+- **Orange**: 50-900 (10 shades)
+- **Red**: 50-900 (10 shades)
+- **Neutral**: 0, 25, 50, 100-900 (12 shades)
+- **Accent**: 100-400 (4 shades)
+- **Interactive**: `interactive`, `interactive-active`
+
+---
+
+## Borders & Shadows
+
+### Borders
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `border` | `mg-u-border` | border: 1px solid |
+| `border-2` | `mg-u-border-width--2` | border-width: 2px |
+| `border-blue-900` | *N/A* | border-color: blue-900 |
+
+### Border Radius
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `rounded-none` | `mg-u-border-radius--none` | border-radius: 0 |
+| `rounded-sm` | `mg-u-border-radius--sm` | border-radius: 0.25rem |
+| `rounded-md` | `mg-u-border-radius--md` | border-radius: 0.5rem |
+| `rounded-full` | `mg-u-border-radius--full` | border-radius: 9999px |
+
+### Box Shadows
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `shadow-none` | `mg-u-box-shadow--none` | box-shadow: none |
+| `shadow-sm` | `mg-u-box-shadow--sm` | Small shadow |
+| `shadow` | `mg-u-box-shadow` | Default shadow |
+| `shadow-lg` | `mg-u-box-shadow--lg` | Large shadow |
+
+---
+
+## Position & Sizing
+
+### Position
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `relative` | `mg-u-position--relative` | position: relative |
+| `absolute` | `mg-u-position--absolute` | position: absolute |
+| `fixed` | `mg-u-position--fixed` | position: fixed |
+| `sticky` | `mg-u-position--sticky` | position: sticky |
+
+### Z-Index
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `z-10` | `mg-u-z-index--10` | z-index: 10 |
+| `z-20` | `mg-u-z-index--20` | z-index: 20 |
+| `z-50` | `mg-u-z-index--50` | z-index: 50 |
+
+### Width & Height
+
+| Tailwind | Mangrove | Result |
+|----------|----------|--------|
+| `w-full` | `mg-u-width--full` | width: 100% |
+| `w-half` | `mg-u-width--half` | width: 50% |
+| `h-full` | `mg-u-height--full` | height: 100% |
+| `max-w-full` | `mg-u-max-width--full` | max-width: 100% |
+
+---
+
+## Responsive Utilities
+
+Tailwind uses mobile-first breakpoints. Mangrove breakpoints:
+
+- `mobile:` - 480px and up
+- `tablet:` - 900px and up
+- `desktop:` - 1164px and up
+- `desktop-wide:` - 1440px and up
+
+### Examples
+
+```html
+<!-- Responsive spacing -->
+<div class="mt-100 tablet:mt-200 desktop:mt-300">
+  Margin increases with screen size
+</div>
+
+<!-- Responsive display -->
+<div class="hidden tablet:block">
+  Hidden on mobile, visible on tablet+
+</div>
+
+<!-- Responsive colors -->
+<div class="bg-blue-50 tablet:bg-orange-50 desktop:bg-red-50">
+  Background color changes at breakpoints
+</div>
+```
+
+---
+
+## Usage in Components
+
+### React/JSX
+
+```jsx
+import './Component.scss'; // Component-specific styles
+
+export const Card = ({ title, content }) => (
+  <div className="flex flex-col gap-100 p-200 bg-neutral-50 rounded-md">
+    <h2 className="text-600 font-700 text-blue-900">{title}</h2>
+    <p className="text-300">{content}</p>
+    <button className="px-150 py-100 bg-blue-900 text-white rounded-sm">
+      Learn More
+    </button>
+  </div>
+);
+```
+
+### Mixing Tailwind with Mangrove
+
+```jsx
+// Standard Tailwind for layout
+<div className="flex justify-center gap-150">
+  {/* Existing Mangrove color utilities */}
+  <div className="mg-u-background-color--blue-900 mg-u-color--white p-100">
+    Mixed approach
+  </div>
+</div>
+```
+
+---
+
+## What Stays in SCSS
+
+Some utilities remain in `_utility.scss` because they're custom:
+
+- ✅ `.mg-u-background-color--*` - Existing color utilities
+- ✅ `.mg-u-color--*` - Existing text color utilities
+- ✅ `.mg-u-sr-only` - Screen reader only
+- ✅ `.mg-u-text-wrap-balanced` - Text wrapping
+- ✅ `.mg-u-responsive--show-large/small` - Custom responsive logic
+- ✅ Animation utilities with viewport detection
+
+---
+
+## Migration from Planned SCSS
+
+The DRUPAL_MIGRATION_PLAN called for creating custom SCSS utilities. With Tailwind:
+
+**Before (Planned SCSS)**:
+```scss
+// Would have created these files:
+// stories/assets/scss/utilities/_spacing.scss
+// stories/assets/scss/utilities/_display.scss
+// stories/assets/scss/utilities/_flexbox.scss
+```
+
+**After (Tailwind)**:
+```html
+<!-- Use Tailwind utilities instead -->
+<div class="mt-100 flex justify-center">
+  <!-- Both naming conventions work -->
+</div>
+```
+
+---
+
+## Best Practices
+
+### Do ✅
+
+- Use standard Tailwind names for brevity
+- Use Mangrove verbose names for semantic clarity
+- Combine Tailwind with existing Mangrove color utilities
+- Use responsive modifiers for mobile-first design
+- Keep component-specific styles in SCSS files
+
+### Don't ❌
+
+- Mix too many naming conventions in one component (be consistent)
+- Use template literals to build dynamic class names (breaks purging)
+- Forget that 1rem = 10px (not 16px like standard Tailwind)
+- Apply Tailwind utilities where component SCSS is more appropriate
+
+---
+
+## Complete Example
+
+```jsx
+export const ProductCard = ({ product }) => (
+  <article className="flex flex-col gap-150 p-200 bg-white rounded-md shadow-md hover:shadow-lg transition">
+    {/* Image */}
+    <div className="w-full h-200 bg-neutral-100 rounded-sm">
+      <img
+        src={product.image}
+        alt={product.title}
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    {/* Content */}
+    <div className="flex flex-col gap-100">
+      <h3 className="text-500 font-700 text-blue-900">{product.title}</h3>
+      <p className="text-300 text-neutral-700">{product.description}</p>
+    </div>
+
+    {/* Footer */}
+    <div className="flex justify-between items-center pt-100 border-t border-neutral-200">
+      <span className="text-600 font-900 text-orange-900">{product.price}</span>
+      <button className="px-150 py-100 bg-blue-900 text-white rounded-sm hover:bg-blue-800">
+        Add to Cart
+      </button>
+    </div>
+  </article>
+);
+```
+
+---
+
+## Troubleshooting
+
+### Classes not applying
+
+1. Ensure PostCSS is configured (check `postcss.config.js`)
+2. Verify Tailwind directives are imported (`_tailwind.scss`)
+3. Restart dev server after config changes
+4. Check browser console for errors
+
+### Build issues
+
+1. Ensure `tailwindcss` is installed: `yarn add -D tailwindcss`
+2. Verify all style files import `./tailwind`
+3. Check webpack/vite configs have PostCSS loader
+
+### Dynamic classes purged
+
+Use complete class names, not template literals:
+
+```jsx
+// ❌ Bad - classes may be purged
+<div className={`text-${size}`}>
+
+// ✅ Good - classes preserved
+<div className={size === '300' ? 'text-300' : 'text-400'}>
+```
+
+---
+
+## Additional Resources
+
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Mangrove Design System](/docs/design-system)
+- [Test Stories](/story/utilities-tailwind-css-testing--spacing-utilities)
+- [Component Examples](/story/components)

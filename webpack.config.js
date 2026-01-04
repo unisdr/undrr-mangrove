@@ -122,7 +122,19 @@ Compiled on: ${new Date().toISOString()}`,
         },
         {
           test: /\.(css|scss|sass)$/,
-          use: ['style-loader', 'css-loader', 'sass-loader'],
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  config: path.resolve(__dirname, './postcss.config.js'),
+                },
+              },
+            },
+            'sass-loader',
+          ],
         },
         {
           test: /\.(png|jpe?g|gif|svg)$/,
