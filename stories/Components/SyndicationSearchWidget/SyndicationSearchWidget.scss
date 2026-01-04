@@ -1,0 +1,1540 @@
+/**
+ * @file SearchWidget.scss
+ * @description Styles for the UNDRR Search Widget React component.
+ *
+ * Uses BEM naming convention with mg- prefix for Mangrove components.
+ * Designed to work with the UNDRR theme system.
+ *
+ * @see stories/assets/scss/_variables.scss for Mangrove design tokens
+ */
+
+// @import "../../assets/scss/variables";
+
+// Component-specific variables (using Mangrove tokens)
+// Colors
+$search-primary: $mg-color-interactive;
+$search-primary-dark: $mg-color-interactive-active;
+$search-chip-bg: $mg-color-blue-50;
+$search-chip-hover: $mg-color-blue-100;
+$search-text: $mg-color-text;
+$search-text-muted: $mg-color-neutral-500;
+$search-border: $mg-color-neutral-100;
+$search-border-light: $mg-color-neutral-50;
+$search-skeleton-bg: $mg-color-neutral-25;
+$search-error-bg: $mg-color-red-50;
+$search-error-border: $mg-color-red-400;
+$search-debug-bg: $mg-color-yellow-light;
+$search-debug-text: $mg-color-yellow-dark;
+
+// Spacing & sizing (component needs rounded corners, base theme has 0)
+$search-radius: $mg-spacing-25;
+$search-input-padding-x: $mg-spacing-250;
+
+// Screen reader only utility
+.mg-u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Main widget container
+.mg-search-widget {
+  font-family: inherit;
+  line-height: 1.5;
+  position: relative;
+}
+
+// ========================================
+// Loading Progress Bar
+// ========================================
+
+.mg-search__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: $search-border-light;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.mg-search__progress-bar {
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, $search-primary, $search-primary-dark);
+  animation: mg-search-progress 1.2s ease-in-out infinite;
+}
+
+@keyframes mg-search-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(200%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+// Search form
+.mg-search__form {
+  display: flex;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-100;
+}
+
+.mg-search__input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.mg-search__input {
+  width: 100%;
+  padding: $mg-spacing-75 $search-input-padding-x $mg-spacing-75 $mg-spacing-100;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: $search-primary;
+    box-shadow: 0 0 0 3px rgba($search-primary, 0.15);
+  }
+
+  &::placeholder {
+    color: $search-text-muted;
+  }
+}
+
+.mg-search__clear {
+  position: absolute;
+  right: $search-input-padding-x;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: $mg-spacing-25 $mg-spacing-50;
+  background: none;
+  border: none;
+  font-size: $mg-font-size-200;
+  color: $search-text-muted;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover {
+    color: $search-text;
+  }
+}
+
+.mg-search__loading {
+  position: absolute;
+  right: $mg-spacing-75;
+  top: 50%;
+  transform: translateY(-50%);
+  width: $mg-spacing-100;
+  height: $mg-spacing-100;
+  border: 2px solid $search-border-light;
+  border-top-color: $search-primary;
+  border-radius: 50%;
+  animation: mg-search-spin 0.8s linear infinite;
+}
+
+@keyframes mg-search-spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+.mg-search__submit {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+  padding: $mg-spacing-75 $mg-spacing-150;
+  font-size: $mg-font-size-100;
+  font-weight: 500;
+  color: #fff;
+  background-color: $search-primary;
+  border: none;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $search-primary-dark;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($search-primary, 0.3);
+  }
+}
+
+.mg-search__submit-icon {
+  display: flex;
+  align-items: center;
+}
+
+// Submit button loading state
+.mg-search__submit--loading {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+.mg-search__submit-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: mg-search-spin 0.7s linear infinite;
+}
+
+// Active filters
+.mg-search__active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-100;
+  padding: $mg-spacing-75;
+  background: $search-chip-bg;
+  border-radius: $search-radius;
+}
+
+.mg-search__active-filters-label {
+  font-weight: 500;
+  color: $search-text;
+  margin-right: $mg-spacing-25;
+}
+
+.mg-search__active-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $mg-spacing-50;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mg-search__filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  color: $search-text;
+  background: #fff;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: $search-chip-hover;
+    border-color: $search-primary;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px $search-primary;
+  }
+}
+
+.mg-search__filter-chip-remove {
+  font-weight: 900;
+}
+
+.mg-search__clear-all {
+  padding: $mg-spacing-25 $mg-spacing-75;
+  color: $search-primary;
+  background: none;
+  border: 1px solid $search-primary;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    color: #fff;
+    background: $search-primary;
+  }
+}
+
+// Content layout
+.mg-search__content {
+  display: flex;
+  gap: $mg-spacing-200;
+}
+
+.mg-search__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.mg-search__sidebar {
+  width: 280px;
+  flex-shrink: 0;
+
+  @media (width <= 768px) {
+    display: none; // TODO: Mobile drawer in Phase 2
+  }
+}
+
+// Results
+.mg-search__results {
+  transition: opacity 0.2s ease-out;
+}
+
+.mg-search__results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-100;
+}
+
+.mg-search__results-count {
+  color: $search-text-muted;
+  margin: 0;
+
+  strong {
+    color: $search-text;
+  }
+}
+
+.mg-search__results-time {
+  color: $search-text-muted;
+}
+
+// Compact filter button (mobile only, in results header)
+.mg-search__filter-btn {
+  display: none; // Hidden on desktop by default
+  align-items: center;
+  gap: $mg-spacing-25;
+  padding: $mg-spacing-50 $mg-spacing-75;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: $search-primary;
+  background: transparent;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: $search-chip-bg;
+    border-color: $search-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+}
+
+.mg-search__filter-btn-icon {
+  flex-shrink: 0;
+}
+
+.mg-search__filter-btn-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 $mg-spacing-25;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border-radius: 9px;
+}
+
+.mg-search__results-list {
+  display: flex;
+  flex-direction: column;
+  gap: $mg-spacing-150;
+}
+
+.mg-search__results-more {
+  margin-top: $mg-spacing-150;
+  padding: $mg-spacing-100;
+  font-size: $mg-font-size-200;
+  color: $search-text-muted;
+  background: $search-chip-bg;
+  border-radius: $search-radius;
+  text-align: center;
+}
+
+.mg-search__results-empty,
+.mg-search__results-placeholder {
+  padding: $mg-spacing-200;
+  text-align: center;
+  color: $search-text-muted;
+
+  p {
+    margin: 0 0 $mg-spacing-50;
+  }
+}
+
+.mg-search__results-hint {
+  font-size: $mg-font-size-200;
+}
+
+.mg-search__results-error {
+  padding: $mg-spacing-100;
+  background: $search-error-bg;
+  border: 1px solid $search-error-border;
+  border-radius: $search-radius;
+
+  p {
+    margin: 0 0 $mg-spacing-50;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Result item
+.mg-search__result {
+  padding-bottom: $mg-spacing-150;
+  border-bottom: 1px solid $search-border-light;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.mg-search__result-content {
+  display: flex;
+  gap: $mg-spacing-100;
+}
+
+.mg-search__result-image {
+  flex-shrink: 0;
+  width: 120px;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $search-radius;
+    object-fit: cover;
+  }
+
+  @media (width <= 480px) {
+    display: none;
+  }
+}
+
+.mg-search__result-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.mg-search__result-title {
+  margin: 0 0 $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  font-weight: 600;
+  line-height: 1.3;
+
+  a {
+    color: $search-primary;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    em {
+      font-style: normal;
+      background: rgba($search-primary, 0.1);
+      padding: 0 2px;
+    }
+  }
+}
+
+.mg-search__result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-50;
+  font-size: $mg-font-size-150;
+  color: $search-text-muted;
+}
+
+.mg-search__result-type {
+  padding: $mg-spacing-25 $mg-spacing-50;
+  background: $search-chip-bg;
+  border-radius: $search-radius;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.mg-search__result-domain,
+.mg-search__result-date {
+  &::before {
+    content: '•';
+    margin-right: $mg-spacing-50;
+    color: $search-border;
+  }
+}
+
+.mg-search__result-snippet {
+  margin: 0;
+  font-size: $mg-font-size-150;
+  color: $search-text;
+  line-height: 1.6;
+
+  em {
+    font-style: normal;
+    background: rgba($search-primary, 0.1);
+    padding: 0 2px;
+  }
+}
+
+.mg-search__result-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-50;
+}
+
+.mg-search__result-metric {
+  display: inline-block;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  background: $search-debug-bg;
+  border-radius: $mg-spacing-25;
+}
+
+// Loading skeleton
+.mg-search__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: $mg-spacing-150;
+}
+
+.mg-search__skeleton-item {
+  padding-bottom: $mg-spacing-150;
+  border-bottom: 1px solid $search-border-light;
+}
+
+.mg-search__skeleton-title,
+.mg-search__skeleton-meta,
+.mg-search__skeleton-text {
+  background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
+  background-size: 200% 100%;
+  animation: mg-search-shimmer 1.5s infinite;
+  border-radius: $search-radius;
+}
+
+.mg-search__skeleton-title {
+  height: $mg-spacing-150;
+  width: 70%;
+  margin-bottom: $mg-spacing-75;
+}
+
+.mg-search__skeleton-meta {
+  height: $mg-spacing-100;
+  width: 40%;
+  margin-bottom: $mg-spacing-75;
+}
+
+.mg-search__skeleton-text {
+  height: $mg-spacing-100;
+  width: 100%;
+  margin-bottom: $mg-spacing-50;
+
+  &--short {
+    width: 60%;
+  }
+}
+
+@keyframes mg-search-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Facets placeholder
+.mg-search__facets-placeholder {
+  padding: $mg-spacing-100;
+  background: $search-chip-bg;
+  border-radius: $search-radius;
+}
+
+.mg-search__facets-notice {
+  margin: 0;
+  font-size: $mg-font-size-200;
+  color: $search-text-muted;
+  text-align: center;
+}
+
+// ========================================
+// Facets Sidebar
+// ========================================
+
+.mg-search__facets {
+  display: flex;
+  flex-direction: column;
+  gap: $mg-spacing-150;
+}
+
+.mg-search__facets-loading {
+  padding: $mg-spacing-100;
+  font-size: $mg-font-size-200;
+  color: $search-text-muted;
+  text-align: center;
+}
+
+.mg-search__facet-containers {
+  display: flex;
+  flex-direction: column;
+  gap: $mg-spacing-100;
+}
+
+// Sort Options
+.mg-search__sort {
+  padding: 0;
+  margin: 0;
+  border: none;
+
+  legend {
+    font-weight: 600;
+    font-size: $mg-font-size-200;
+    margin-bottom: $mg-spacing-50;
+    color: $search-text;
+  }
+}
+
+.mg-search__sort-option {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-25;
+
+  input[type="radio"] {
+    margin: 0;
+  }
+
+  label {
+    font-size: $mg-font-size-200;
+    color: $search-text;
+    cursor: pointer;
+  }
+}
+
+// Individual Facet
+.mg-search__facet {
+  padding: 0;
+  margin: 0;
+  border: none;
+
+  legend {
+    font-weight: 600;
+    font-size: $mg-font-size-200;
+    margin-bottom: $mg-spacing-50;
+    color: $search-text;
+  }
+}
+
+.mg-search__facet-select {
+  width: 100%;
+  padding: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  background-color: #fff;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $search-primary;
+    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+  }
+
+  &[multiple] {
+    min-height: 100px;
+
+    option {
+      padding: $mg-spacing-25 $mg-spacing-50;
+
+      &:checked {
+        background-color: $search-chip-bg;
+      }
+    }
+  }
+}
+
+// Custom facet styling
+// .mg-search__facet--custom {
+//   background: $search-chip-bg;
+//   padding: $mg-spacing-100;
+//   border-radius: $search-radius;
+// }
+
+// ========================================
+// Result teaser HTML overrides
+// ========================================
+
+// Site name label in search results
+.mg-search__result-site-name {
+  display: inline-block;
+  margin: 0 0 $mg-spacing-25;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  color: $search-text-muted;
+  background: $search-chip-bg;
+  border-radius: $search-radius;
+}
+
+
+// Error result styling
+.mg-search__result--error {
+  padding: $mg-spacing-100;
+  background: $search-error-bg;
+  border: 1px solid $search-error-border;
+  border-radius: $search-radius;
+}
+
+.mg-search__result-error {
+  margin: 0;
+  color: #d32f2f;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+// ========================================
+// Result Animations
+// Sequential fade-in and slide from left for search results.
+// Animation classes applied via JS (which checks prefers-reduced-motion).
+// ========================================
+
+// Initial hidden state - applied before animation
+.mg-search__result--pending {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+// Animated state - triggers the transition
+.mg-search__result--visible {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+// Stale state - dim results while loading new data
+.mg-search__results--stale {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// Stale main area with more visible feedback
+.mg-search__main--stale {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(255 255 255 / 0.4);
+    pointer-events: none;
+    animation: mg-search-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes mg-search-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+// ========================================
+// Collapsible Filter Sections
+// ========================================
+
+// Hide overflow items by default (when fieldset doesn't have .facet-expanded)
+.mg-search__facet .mg-search__facet-overflow-item {
+  display: none;
+}
+
+// Show overflow items when expanded
+.mg-search__facet--expanded .mg-search__facet-overflow-item {
+  display: block;
+}
+
+// Toggle button for collapsible sections
+.mg-search__facet-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: $mg-spacing-25;
+  background: none;
+  border: none;
+  padding: $mg-spacing-50 0;
+  margin-top: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  color: $search-primary;
+  cursor: pointer;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+}
+
+// Toggle icon (arrow)
+.mg-search__facet-toggle-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid currentColor;
+  transition: transform 0.2s ease;
+
+  .mg-search__facet-toggle[aria-expanded="false"] & {
+    transform: rotate(-90deg);
+  }
+
+  .mg-search__facet-toggle[aria-expanded="true"] & {
+    transform: rotate(0deg);
+  }
+}
+
+// ========================================
+// Loading Spinner (full-page initial load)
+// ========================================
+
+.mg-search__loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $mg-spacing-200;
+}
+
+.mg-search__spinner {
+  border: 4px solid $search-border-light;
+  border-top: 4px solid $search-primary;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: mg-search-spin 1s linear infinite;
+}
+
+.mg-search__loader-text {
+  text-align: center;
+  color: $search-text-muted;
+  margin-top: $mg-spacing-100;
+}
+
+// ========================================
+// Custom Select Dropdown (replaces Chosen.js)
+// ========================================
+// Lightweight, self-contained dropdown that works in any environment.
+// No external dependencies required.
+
+.mg-select {
+  position: relative;
+  width: 100%;
+  margin-top: $mg-spacing-50;
+}
+
+.mg-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 44px; // Touch-friendly
+  padding: $mg-spacing-50 $mg-spacing-75;
+  font-size: $mg-font-size-200;
+  color: $search-text;
+  text-align: left;
+  background: #fff;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: $search-primary;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $search-primary;
+    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+  }
+
+  .mg-select--open & {
+    border-color: $search-primary;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.mg-select__trigger-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mg-select__trigger-icon {
+  flex-shrink: 0;
+  margin-left: $mg-spacing-50;
+  color: $search-text-muted;
+  transition: transform 0.2s ease;
+
+  .mg-select--open & {
+    transform: rotate(180deg);
+  }
+}
+
+.mg-select__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998; // High z-index since it's portaled to body
+  background: transparent;
+  cursor: default;
+}
+
+.mg-select__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 9999; // Above backdrop
+  background: #fff;
+  border: 1px solid $search-primary;
+  border-top: none;
+  border-radius: 0 0 $search-radius $search-radius;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  animation: mg-select-fade-in 0.15s ease-out;
+}
+
+@keyframes mg-select-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mg-select__search {
+  padding: $mg-spacing-50;
+  border-bottom: 1px solid $search-border-light;
+}
+
+.mg-select__search-input {
+  width: 100%;
+  padding: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+
+  &:focus {
+    outline: none;
+    border-color: $search-primary;
+  }
+
+  &::placeholder {
+    color: $search-text-muted;
+  }
+}
+
+.mg-select__list {
+  list-style: none;
+  margin: 0;
+  padding: $mg-spacing-25 0;
+  max-height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mg-select__option {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+  padding: $mg-spacing-50 $mg-spacing-75;
+  min-height: 40px; // Touch-friendly
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+
+  &:hover,
+  &--highlighted {
+    background-color: $search-chip-bg;
+  }
+
+  &--selected {
+    background-color: rgba($search-primary, 0.08);
+
+    .mg-select__option-label {
+      font-weight: 600;
+      color: $search-primary;
+    }
+  }
+
+  &--selected#{&}--highlighted {
+    background-color: rgba($search-primary, 0.12);
+  }
+}
+
+.mg-select__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid $search-border;
+  color: $search-primary;
+
+  &--checkbox {
+    border-radius: $search-radius;
+  }
+
+  &--radio {
+    border-radius: 50%;
+  }
+
+  .mg-select__option--selected & {
+    border-color: $search-primary;
+    background-color: $search-primary;
+    color: #fff;
+  }
+}
+
+.mg-select__indicator-dot {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.mg-select__option-label {
+  flex: 1;
+  font-size: $mg-font-size-200;
+  color: $search-text;
+  line-height: 1.4;
+}
+
+.mg-select__option-count {
+  flex-shrink: 0;
+  font-size: $mg-font-size-100;
+  color: $search-text-muted;
+}
+
+// Subtype options (indented children under parent content types)
+.mg-select__option--subtype {
+  padding-left: $mg-spacing-150;
+
+  .mg-select__option-label {
+    font-size: $mg-font-size-100;
+
+    // Add visual connector
+    &::before {
+      content: "└";
+      margin-right: $mg-spacing-25;
+      color: $search-text-muted;
+    }
+  }
+}
+
+.mg-select__empty {
+  padding: $mg-spacing-100;
+  text-align: center;
+  color: $search-text-muted;
+  font-size: $mg-font-size-200;
+}
+
+// ========================================
+// Enhanced Facet Option Styling
+// ========================================
+
+.mg-search__facet-option {
+  display: grid;
+  grid-template-columns: 1.25em 1fr auto;
+  padding: $mg-spacing-50;
+  border-radius: $search-radius;
+  align-items: baseline;
+  gap: 0 $mg-spacing-25;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba($search-primary, 0.05);
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+    accent-color: $search-primary;
+  }
+
+  label {
+    padding-left: $mg-spacing-25;
+    font-weight: normal;
+    text-wrap: balance;
+    cursor: pointer;
+    line-height: 1.5;
+    color: $search-text;
+
+    &:hover {
+      text-decoration: underline;
+      color: $search-primary;
+    }
+  }
+
+  // Selected/checked state
+  &:has(input:checked) {
+    background-color: rgba($search-primary, 0.08);
+
+    label {
+      font-weight: 600;
+      color: $search-primary;
+    }
+  }
+}
+
+// Count badges in facets
+.mg-search__facet-count {
+  color: $search-text-muted;
+  font-size: $mg-font-size-200;
+  white-space: nowrap;
+}
+
+// ========================================
+// Mobile Filter Drawer (Left Slide-in)
+// ========================================
+// UX patterns informed by:
+// @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
+// Key decisions:
+// - Sidebar overlay: Maintains context, click outside to close
+// - Sticky header/footer: Always visible, no scrolling required
+// - 44px minimum touch targets: Finger-friendly interaction
+// - Batch filtering: Apply all filters at once (View Results button)
+
+.mg-search__drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.5);
+  z-index: 1000;
+  animation: mg-search-fade-in 0.2s ease-out;
+  cursor: pointer; // Indicate clickable to close
+}
+
+@keyframes mg-search-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mg-search__drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(320px, 85vw); // Max 320px or 85% of viewport
+  background: #fff;
+  box-shadow: 4px 0 20px rgb(0 0 0 / 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: mg-search-slide-in-left 0.3s ease-out;
+  z-index: 1001;
+  cursor: default; // Reset cursor inside drawer
+}
+
+@keyframes mg-search-slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mg-search__drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $mg-spacing-100 $mg-spacing-150;
+  border-bottom: 1px solid $search-border;
+  flex-shrink: 0;
+  min-height: 56px; // Consistent header height
+}
+
+.mg-search__drawer-title {
+  margin: 0;
+  font-size: $mg-font-size-300;
+  font-weight: 600;
+  color: $search-text;
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+}
+
+.mg-search__drawer-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 $mg-spacing-25;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border-radius: 11px;
+}
+
+.mg-search__drawer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; // Minimum touch target per UX guidelines
+  height: 44px;
+  padding: 0;
+  color: $search-text-muted;
+  background: none;
+  border: none;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover {
+    background: $search-chip-bg;
+    color: $search-text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: -2px;
+  }
+}
+
+.mg-search__drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $mg-spacing-100 $mg-spacing-150;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; // Prevent scroll chaining
+}
+
+.mg-search__drawer-footer {
+  padding: $mg-spacing-100 $mg-spacing-150;
+  border-top: 1px solid $search-border;
+  flex-shrink: 0;
+  background: #fff; // Ensure footer is opaque
+}
+
+.mg-search__drawer-apply {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $mg-spacing-50;
+  width: 100%;
+  min-height: 48px; // Touch-friendly height
+  padding: $mg-spacing-75 $mg-spacing-100;
+  font-size: $mg-font-size-200;
+  font-weight: 600;
+  color: #fff;
+  background: $search-primary;
+  border: none;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background: $search-primary-dark;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary-dark;
+    outline-offset: 2px;
+  }
+}
+
+.mg-search__drawer-apply-count {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+// ========================================
+// Mobile Responsive Styles
+// ========================================
+
+@media (width <= 800px) {
+  // Show compact filter button in results header
+  .mg-search__filter-btn {
+    display: inline-flex;
+  }
+
+  // Hide desktop sidebar
+  .mg-search__sidebar {
+    display: none;
+  }
+
+  .mg-search__content {
+    flex-direction: column;
+  }
+}
+
+@media (width >= 801px) {
+  // Hide mobile elements on desktop
+  .mg-search__filter-btn {
+    display: none;
+  }
+
+  .mg-search__drawer-backdrop {
+    display: none;
+  }
+}
+
+// ========================================
+// Accessibility Focus States
+// ========================================
+
+.mg-search__facet-select:focus-visible,
+.mg-search__facet input:focus-visible {
+  outline: 2px solid $search-primary;
+  outline-offset: 2px;
+}
+
+// ========================================
+// Debug Mode
+// ========================================
+
+.mg-search-debug {
+  display: none;
+}
+
+[data-mg-search-debug="true"] .mg-search-debug {
+  display: block;
+}
+
+// ========================================
+// Facet Operator Toggle (AND/OR)
+// ========================================
+
+.mg-search__facet-operator {
+  display: flex;
+  flex-direction: column;
+  gap: $mg-spacing-50;
+  margin-top: $mg-spacing-75;
+  font-size: $mg-font-size-200;
+}
+
+.mg-search__facet-operator-row {
+  display: flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+}
+
+.mg-search__facet-operator-label {
+  color: $search-text-muted;
+  font-weight: 500;
+}
+
+.mg-search__facet-operator-hint {
+  margin: 0;
+  color: $search-text-muted;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.mg-search__facet-operator-toggle {
+  display: inline-flex;
+  gap: $mg-spacing-25;
+}
+
+.mg-search__facet-operator-option {
+  display: flex;
+  align-items: center;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  font-weight: 400;
+  font-size: $mg-font-size-200;
+  user-select: none;
+  color: $search-text-muted;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+
+  // Hide the actual radio input
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover:not(&--active) {
+    color: $search-text;
+  }
+
+  &--active {
+    color: $search-primary;
+    font-weight: 500;
+    border-bottom-color: $search-primary;
+  }
+
+  // Focus visible for keyboard navigation
+  &:focus-within {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+    border-radius: $search-radius;
+  }
+}
+
+// ========================================
+// Active Filter Chip Connector (AND grouping)
+// ========================================
+
+.mg-search__filter-chip-connector {
+  display: inline-flex;
+  align-items: center;
+  margin-right: $mg-spacing-25;
+  color: $search-text-muted;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// ========================================
+// Pager
+// ========================================
+
+.mg-pager {
+  margin-top: $mg-spacing-200;
+  padding-top: $mg-spacing-150;
+  border-top: 1px solid $search-border-light;
+}
+
+.mg-pager__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $mg-spacing-25;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mg-pager__item {
+  margin: 0;
+  padding: 0;
+
+  &--ellipsis {
+    display: flex;
+    align-items: center;
+    padding: 0 $mg-spacing-25;
+  }
+}
+
+.mg-pager__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: $search-text;
+  background: #fff;
+  border: 1px solid $search-border;
+  border-radius: $search-radius;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover:not(:disabled, .mg-pager__link--disabled) {
+    background: $search-chip-bg;
+    border-color: $search-primary;
+    color: $search-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $search-primary;
+    outline-offset: 2px;
+  }
+
+  &--current {
+    color: #fff;
+    background: $search-primary;
+    border-color: $search-primary;
+    cursor: default;
+
+    &:hover {
+      background: $search-primary;
+      color: #fff;
+    }
+  }
+
+  &--disabled,
+  &:disabled {
+    color: $search-text-muted;
+    background: $search-border-light;
+    border-color: $search-border-light;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &--prev,
+  &--next {
+    gap: $mg-spacing-25;
+    padding: $mg-spacing-50 $mg-spacing-75;
+  }
+}
+
+.mg-pager__icon {
+  flex-shrink: 0;
+}
+
+.mg-pager__text {
+  // Show text on larger screens, hide on mobile
+  @media (width <= 480px) {
+    display: none;
+  }
+}
+
+.mg-pager__ellipsis {
+  color: $search-text-muted;
+  font-size: $mg-font-size-200;
+}
+
+// RTL support
+[dir="rtl"] {
+  .mg-pager__link--prev .mg-pager__icon,
+  .mg-pager__link--next .mg-pager__icon {
+    transform: scaleX(-1);
+  }
+}
