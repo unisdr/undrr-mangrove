@@ -154,6 +154,9 @@ const preview = {
       },
       // Enable code panel for CSF 3 stories in autodocs (replacement for Storysource addon)
       codePanel: true,
+      source: {
+        format: 'dedent',
+      },
     },
     viewport: {
       viewports: INITIAL_VIEWPORTS,
