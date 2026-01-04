@@ -1,0 +1,289 @@
+/* Stats By Numbers Component */
+.stats-by-numbers {
+  width: 100%;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: $mg-spacing-400;
+    gap: $mg-spacing-200;
+
+    @include devicebreak(small) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $mg-spacing-300;
+    }
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  &__button {
+    flex-shrink: 0;
+  }
+
+  &__grid {
+    display: grid;
+    gap: $mg-spacing-300;
+    width: 100%;
+
+    @include devicebreak(small) {
+      grid-template-columns: 1fr;
+      gap: $mg-spacing-200;
+    }
+
+    // Layout for 1 stat
+    &--1 {
+      grid-template-columns: 1fr;
+      max-width: 48rem;
+    }
+
+    // Layout for 2 stats
+    &--2 {
+      grid-template-columns: repeat(2, 1fr);
+
+      @include devicebreak(small) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    // Layout for 3 stats
+    &--3 {
+      grid-template-columns: repeat(3, 1fr);
+
+      @include devicebreak(medium) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include devicebreak(small) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  &__footer {
+    margin-top: $mg-spacing-400;
+    text-align: center;
+  }
+
+  // Card layout - all stats in one card with wrapping
+  &__card {
+    background-color: $mg-color-white;
+    border: 1px solid $mg-color-neutral-200;
+    border-radius: $mg-spacing-50;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+    padding: $mg-spacing-400;
+
+    @include devicebreak(small) {
+      padding: $mg-spacing-300;
+    }
+  }
+
+  &__card-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $mg-spacing-400;
+    justify-content: space-between;
+
+    @include devicebreak(small) {
+      gap: $mg-spacing-300;
+    }
+
+    // Stat items in card layout don't have their own borders/shadows
+    .stat-item {
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      flex: 1 1 auto;
+      min-width: 200px;
+
+      @include devicebreak(small) {
+        min-width: 150px;
+      }
+
+      &:hover {
+        box-shadow: none;
+        transform: none;
+      }
+
+      // Add a subtle separator between items (except last in row)
+      &:not(:last-child) {
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          right: calc($mg-spacing-400 / -2);
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          background-color: $mg-color-neutral-200;
+
+          @include devicebreak(medium) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Individual Stat Item */
+.stat-item {
+  background-color: $mg-color-white;
+  border: 1px solid $mg-color-neutral-200;
+  border-radius: $mg-spacing-50;
+  padding: $mg-spacing-400;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $mg-spacing-100;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+  transition: all 300ms ease;
+
+  @include devicebreak(small) {
+    padding: $mg-spacing-300;
+  }
+
+  &:hover {
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.12);
+    transform: translateY(-2px);
+  }
+
+  &__icon {
+    font-size: $mg-font-size-600;
+    color: $mg-color-interactive;
+    margin-bottom: $mg-spacing-100;
+    line-height: 1;
+
+    i {
+      display: block;
+    }
+  }
+
+  &__top-label {
+    font-size: $mg-font-size-200;
+    font-weight: 600;
+    color: $mg-color-label;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+
+  &__value {
+    font-size: $mg-font-size-900;
+    font-weight: 700;
+    color: $mg-color-interactive;
+    line-height: 1;
+    margin: $mg-spacing-100 0;
+    word-break: break-word;
+
+    @include devicebreak(medium) {
+      font-size: $mg-font-size-800;
+    }
+
+    @include devicebreak(small) {
+      font-size: $mg-font-size-600;
+    }
+  }
+
+  &__bottom-label {
+    font-size: $mg-font-size-500;
+    font-weight: 600;
+    color: $mg-color-text;
+    line-height: 1.3;
+    margin-bottom: $mg-spacing-50;
+
+    @include devicebreak(small) {
+      font-size: $mg-font-size-400;
+    }
+  }
+
+  &__description {
+    font-size: $mg-font-size-400;
+    color: $mg-color-neutral-800;
+    line-height: 1.5;
+    margin-top: auto;
+
+    p {
+      margin: 0;
+    }
+
+    @include devicebreak(small) {
+      font-size: $mg-font-size-300;
+    }
+  }
+
+  &__link {
+    color: $mg-color-interactive;
+    text-decoration: underline;
+    transition: color 200ms ease;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &:focus {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* Variant: Compact */
+.stats-by-numbers--compact {
+  .stat-item {
+    padding: $mg-spacing-300;
+
+    @include devicebreak(small) {
+      padding: $mg-spacing-200;
+    }
+
+    &__value {
+      font-size: $mg-font-size-800;
+
+      @include devicebreak(medium) {
+        font-size: $mg-font-size-600;
+      }
+
+      @include devicebreak(small) {
+        font-size: $mg-font-size-500;
+      }
+    }
+
+    &__bottom-label {
+      font-size: $mg-font-size-400;
+
+      @include devicebreak(small) {
+        font-size: $mg-font-size-300;
+      }
+    }
+  }
+}
+
+/* Variant: Highlighted */
+.stats-by-numbers--highlighted {
+  .stat-item {
+    background-color: rgba($mg-color-interactive, 0.05);
+    border-left: 4px solid $mg-color-interactive;
+
+    &:hover {
+      background-color: rgba($mg-color-interactive, 0.08);
+    }
+  }
+}
+
+/* RTL Support */
+[dir='rtl'] {
+  .stats-by-numbers--highlighted {
+    .stat-item {
+      border-left: none;
+      border-right: 4px solid $mg-color-interactive;
+    }
+  }
+}

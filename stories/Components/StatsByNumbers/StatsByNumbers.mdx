@@ -1,0 +1,282 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+import { StatsByNumbers } from './StatsByNumbers';
+import * as StatsByNumbersStories from './StatsByNumbers.stories';
+
+<Meta of={StatsByNumbersStories} />
+
+# Stats By Numbers
+
+A flexible component for displaying statistics and key metrics in an engaging, scannable format.
+
+## Overview
+
+The Stats By Numbers component is designed to highlight important statistics, metrics, or "by the numbers" information. It supports displaying 1-3 statistics in a responsive grid layout with optional icons, dual labels, descriptions, and call-to-action links.
+
+### Key Features
+
+- **Flexible layout**: Automatically adapts for 1, 2, or 3 statistics
+- **Dual labels**: Support for both top and bottom labels on each statistic
+- **Icon support**: Optional icons to add visual interest
+- **Interactive descriptions**: Include links within stat descriptions (e.g., MCR2030 use case)
+- **Container options**: Optional title and button/CTA
+- **Multiple variants**: Default, compact, and highlighted styles
+- **Responsive**: Mobile-first design that works on all screen sizes
+- **Accessible**: Semantic HTML with proper ARIA attributes
+
+## When to Use
+
+Use Stats By Numbers when you need to:
+- Highlight key metrics or achievements
+- Display progress indicators
+- Show comparative statistics
+- Present "by the numbers" data
+- Create data-driven impact statements
+- Feature MCR2030 or other initiative statistics with actionable links
+
+## Layouts
+
+The component supports two layout modes: **Grid** (default) and **Card**.
+
+### Grid Layout (Default)
+
+Each statistic appears in its own card with individual borders and shadows.
+
+#### Single Statistic
+
+<Canvas of={StatsByNumbersStories.SingleStat} />
+
+Use a single statistic to draw attention to one key metric.
+
+#### Two Statistics
+
+<Canvas of={StatsByNumbersStories.TwoStats} />
+
+Two statistics work well for comparisons or related metrics.
+
+#### Three Statistics
+
+<Canvas of={StatsByNumbersStories.ThreeStats} />
+
+Three statistics provide a comprehensive overview without overwhelming the user.
+
+### Card Layout
+
+All statistics appear within a single card container, wrapping as needed. This layout is ideal when you want to group related stats visually.
+
+#### Card Layout - Two Stats
+
+<Canvas of={StatsByNumbersStories.CardLayoutTwo} />
+
+Two stats side-by-side in one card.
+
+#### Card Layout - Three Stats
+
+<Canvas of={StatsByNumbersStories.CardLayoutThree} />
+
+Three stats in one card with automatic wrapping.
+
+#### Card Layout - Four Stats (Wrapping)
+
+<Canvas of={StatsByNumbersStories.CardLayoutFour} />
+
+Four or more stats will wrap to multiple rows within the card.
+
+#### Card Layout - With Icons
+
+<Canvas of={StatsByNumbersStories.CardLayoutWithIcons} />
+
+Icons work beautifully in the card layout too.
+
+## Advanced Features
+
+### With Icons
+
+<Canvas of={StatsByNumbersStories.WithIcons} />
+
+Icons add visual interest and help users quickly identify stat categories.
+
+### Dual Labels
+
+<Canvas of={StatsByNumbersStories.DualLabels} />
+
+Use dual labels to provide context (top label) and meaning (bottom label) for each statistic.
+
+### With Description Links
+
+<Canvas of={StatsByNumbersStories.WithDescriptionLinks} />
+
+Include interactive links in descriptions to drive user engagement (useful for MCR2030 and similar initiatives).
+
+## Variants
+
+### Compact
+
+<Canvas of={StatsByNumbersStories.CompactVariant} />
+
+Use the compact variant when space is limited or you need to display stats in a tighter layout.
+
+### Highlighted
+
+<Canvas of={StatsByNumbersStories.HighlightedVariant} />
+
+The highlighted variant emphasizes stats with a colored border accent.
+
+### Minimal Layout
+
+<Canvas of={StatsByNumbersStories.MinimalLayout} />
+
+Remove the title and place the button at the bottom for a minimal presentation.
+
+## Complete Example
+
+<Canvas of={StatsByNumbersStories.CompleteExample} />
+
+This example shows all available features working together: icon, dual labels, description, link, title, and button.
+
+## Component Props
+
+### StatsByNumbers
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | string | - | Optional heading for the stats section |
+| `buttonLabel` | string | - | Label for the call-to-action button |
+| `buttonUrl` | string | - | URL for the call-to-action button |
+| `stats` | array | `[]` | Array of stat objects (see below) |
+| `variant` | string | `'default'` | Visual variant: `'default'`, `'compact'`, or `'highlighted'` |
+| `layout` | string | `'grid'` | Layout mode: `'grid'` (separate cards) or `'card'` (all stats in one card) |
+
+### Stat Object
+
+Each stat in the `stats` array can have the following properties:
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `value` | string/number | Yes | The main statistic value (e.g., "1,500+", "45%", "$223B") |
+| `bottomLabel` | string | Yes | Label that appears below the value |
+| `topLabel` | string | No | Optional label that appears above the value |
+| `icon` | string | No | Optional icon class (e.g., "mg-icon fa-globe", "mg-icon fa-chart-bar") |
+| `description` | string | No | Optional descriptive text |
+| `descriptionLink` | object | No | Optional link object with `text` and `url` properties |
+
+## Layout Behavior
+
+### Grid Layout
+
+The component automatically adjusts its grid layout based on the number of stats:
+
+- **1 stat**: Full width, centered, max-width constrained
+- **2 stats**: Two equal columns on desktop/tablet, stacked on mobile
+- **3 stats**: Three columns on desktop, two columns on tablet, stacked on mobile
+
+### Card Layout
+
+All stats appear in one card container with:
+- Flexbox wrapping: stats flow naturally and wrap to new rows as needed
+- Minimum width per stat: 200px (desktop), 150px (mobile)
+- Automatic spacing and subtle separators between items
+- Single shadow/border for the entire card instead of individual cards
+
+## Formatting Guidelines
+
+### Values
+
+- Use appropriate formatting for large numbers: "1,500+" instead of "1500"
+- Include units when relevant: "$223B", "45%", "86.3M"
+- Keep values concise and scannable
+
+### Labels
+
+- Bottom labels should be descriptive but brief (2-4 words)
+- Top labels work well for categorization (e.g., "Target A", "Priority 1")
+- Use sentence case for better readability
+
+### Descriptions
+
+- Keep descriptions to 1-2 sentences
+- Focus on providing context, not repeating the label
+- Use description links sparingly for high-value actions
+
+## Accessibility
+
+- All interactive elements (links, buttons) are keyboard accessible
+- Links include proper `rel` attributes for external URLs
+- Icons are marked with `aria-hidden="true"` as they're decorative
+- Semantic HTML structure with proper heading hierarchy
+
+## Responsive Design
+
+The component uses mobile-first responsive design:
+- **Mobile (< 480px)**: All stats stack vertically
+- **Tablet (480px - 900px)**: 2 stats side-by-side, 3 stats become 2 columns
+- **Desktop (> 900px)**: Full grid layout as specified
+
+## Best Practices
+
+### Do's
+
+✅ Use 1-3 stats for optimal readability
+✅ Ensure all stats are related to the same topic
+✅ Keep value formatting consistent across stats
+✅ Use icons consistently (all stats or none)
+✅ Write concise, action-oriented button labels
+
+### Don'ts
+
+❌ Don't display more than 3 stats per component
+❌ Don't mix unrelated statistics
+❌ Don't use overly technical jargon in labels
+❌ Don't include multiple links per description
+❌ Don't use icons purely for decoration
+
+## Use Cases
+
+### MCR2030 Dashboard
+Display city enrollment numbers, partner organizations, and progress metrics with links to detailed pages.
+
+### Sendai Framework Progress
+Show progress against Sendai Framework targets with dual labels for target identification.
+
+### Annual Impact Reports
+Highlight key achievements and metrics from yearly reports.
+
+### Landing Pages
+Feature headline statistics to demonstrate impact and drive engagement.
+
+## Implementation Example
+
+```jsx
+<StatsByNumbers
+  title="MCR2030 Progress"
+  buttonLabel="View dashboard"
+  buttonUrl="https://mcr2030.undrr.org"
+  stats={[
+    {
+      value: "1,500+",
+      bottomLabel: "Cities enrolled",
+      description: "Local governments committed to resilience.",
+      descriptionLink: {
+        text: "Join MCR2030",
+        url: "https://mcr2030.undrr.org"
+      }
+    },
+    {
+      value: "85%",
+      bottomLabel: "Progress rate",
+      description: "Cities making measurable progress on resilience targets."
+    }
+  ]}
+/>
+```
+
+## Changelog
+
+1.0 — Initial component release
+
+---
+
+## Related Components
+
+- **Stats Card**: Use for individual stat cards with size variations
+- **CTA Link**: Used internally for buttons
+- **Heading**: Used internally for titles
