@@ -181,7 +181,7 @@
     color: $mg-color-interactive;
     line-height: 1;
     margin: $mg-spacing-100 0;
-    word-break: break-word;
+    overflow-wrap: break-word;
 
     @include devicebreak(medium) {
       font-size: $mg-font-size-800;
