@@ -95,16 +95,24 @@ Control how content overflows its container:
 Control how replaced elements (img, video) fit their container:
 
 ```html
-<img class="mg-u-object-fit--contain" src="image.jpg" alt="">
-<img class="mg-u-object-fit--cover" src="image.jpg" alt="">
-<img class="mg-u-object-fit--fill" src="image.jpg" alt="">
+<img class="mg-u-object-fit--contain" src="image.jpg" alt="" />
+<img class="mg-u-object-fit--cover" src="image.jpg" alt="" />
+<img class="mg-u-object-fit--fill" src="image.jpg" alt="" />
 ```
 
 ### Object position
 
 ```html
-<img class="mg-u-object-fit--cover mg-u-object-position--top" src="image.jpg" alt="">
-<img class="mg-u-object-fit--cover mg-u-object-position--center" src="image.jpg" alt="">
+<img
+  class="mg-u-object-fit--cover mg-u-object-position--top"
+  src="image.jpg"
+  alt=""
+/>
+<img
+  class="mg-u-object-fit--cover mg-u-object-position--center"
+  src="image.jpg"
+  alt=""
+/>
 ```
 
 ## Common patterns
@@ -115,15 +123,21 @@ Control how replaced elements (img, video) fit their container:
 <div class="mg-u-position--relative">
   <div class="mg-u-position--absolute mg-u-top-0 mg-u-left-0">Top left</div>
   <div class="mg-u-position--absolute mg-u-top-0 mg-u-right-0">Top right</div>
-  <div class="mg-u-position--absolute mg-u-bottom-0 mg-u-left-0">Bottom left</div>
-  <div class="mg-u-position--absolute mg-u-bottom-0 mg-u-right-0">Bottom right</div>
+  <div class="mg-u-position--absolute mg-u-bottom-0 mg-u-left-0">
+    Bottom left
+  </div>
+  <div class="mg-u-position--absolute mg-u-bottom-0 mg-u-right-0">
+    Bottom right
+  </div>
 </div>
 ```
 
 ### Sticky header
 
 ```html
-<header class="mg-u-position--sticky mg-u-top-0 mg-u-z-index--sticky mg-u-background-color--white">
+<header
+  class="mg-u-position--sticky mg-u-top-0 mg-u-z-index--sticky mg-u-background-color--white"
+>
   Sticky navigation
 </header>
 ```
@@ -140,17 +154,21 @@ Control how replaced elements (img, video) fit their container:
 
 ```html
 <div class="mg-u-overflow--hidden">
-  <img class="mg-u-width--full mg-u-height--full mg-u-object-fit--cover" src="image.jpg" alt="">
+  <img
+    class="mg-u-width--full mg-u-height--full mg-u-object-fit--cover"
+    src="image.jpg"
+    alt=""
+  />
 </div>
 ```
 
 ## Drupal migration
 
-| Legacy class | Mangrove class |
-|--------------|----------------|
-| `.ps-ab` | `.mg-u-position--absolute` |
-| `.ps-rl` | `.mg-u-position--relative` |
-| `.pr` | `.mg-u-position--relative` |
+| Legacy class | Mangrove class             |
+| ------------ | -------------------------- |
+| `.ps-ab`     | `.mg-u-position--absolute` |
+| `.ps-rl`     | `.mg-u-position--relative` |
+| `.pr`        | `.mg-u-position--relative` |
 
 ## Source file
 

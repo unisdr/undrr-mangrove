@@ -32,9 +32,7 @@ Control element width, height, and aspect ratio with sizing utilities.
 
 ```html
 <!-- Full width on mobile, auto on tablet+ -->
-<div class="mg-u-width--full--sm mg-u-width--auto--md">
-  Responsive width
-</div>
+<div class="mg-u-width--full--sm mg-u-width--auto--md">Responsive width</div>
 ```
 
 ## Min/max width
@@ -152,10 +150,10 @@ Maintain consistent proportions:
 ### Full-screen hero
 
 ```html
-<section class="mg-u-min-height--screen mg-u-display--flex mg-u-align-items--center">
-  <div class="mg-u-max-width--3xl mg-u-margin-x-auto">
-    Hero content
-  </div>
+<section
+  class="mg-u-min-height--screen mg-u-display--flex mg-u-align-items--center"
+>
+  <div class="mg-u-max-width--3xl mg-u-margin-x-auto">Hero content</div>
 </section>
 ```
 
@@ -179,15 +177,19 @@ Maintain consistent proportions:
 
 ```html
 <div class="mg-u-aspect--4-3 mg-u-overflow--hidden">
-  <img class="mg-u-width--full mg-u-height--full mg-u-object-fit--cover" src="card.jpg" alt="">
+  <img
+    class="mg-u-width--full mg-u-height--full mg-u-object-fit--cover"
+    src="card.jpg"
+    alt=""
+  />
 </div>
 ```
 
 ## Drupal migration
 
-| Legacy class | Mangrove class |
-|--------------|----------------|
-| `.w-100` | `.mg-u-width--full` |
+| Legacy class | Mangrove class        |
+| ------------ | --------------------- |
+| `.w-100`     | `.mg-u-width--full`   |
 | `.w-vw--100` | `.mg-u-width--screen` |
 
 ## Source file

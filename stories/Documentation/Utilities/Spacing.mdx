@@ -23,28 +23,29 @@ Spacing utilities control margin and padding using Mangrove's spacing tokens. Ma
 ```
 
 Where:
+
 - **direction**: `top`, `right`, `bottom`, `left`, `x` (left + right), `y` (top + bottom), or omit for all sides
 - **size**: Token suffix (0, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 800)
 - **breakpoint**: `sm`, `md`, `lg`, `xl` (optional, for responsive)
 
 ## Spacing scale
 
-| Token | Class suffix | Value | Pixels |
-|-------|--------------|-------|--------|
-| `$mg-spacing-0` | `-0` | 0 | 0px |
-| `$mg-spacing-25` | `-25` | 0.25rem | 2.5px |
-| `$mg-spacing-50` | `-50` | 0.5rem | 5px |
-| `$mg-spacing-75` | `-75` | 0.75rem | 7.5px |
-| `$mg-spacing-100` | `-100` | 1rem | 10px |
-| `$mg-spacing-150` | `-150` | 1.5rem | 15px |
-| `$mg-spacing-175` | `-175` | 1.8rem | 18px |
-| `$mg-spacing-200` | `-200` | 2rem | 20px |
-| `$mg-spacing-250` | `-250` | 2.4rem | 24px |
-| `$mg-spacing-300` | `-300` | 3rem | 30px |
-| `$mg-spacing-400` | `-400` | 5rem | 50px |
-| `$mg-spacing-500` | `-500` | 6rem | 60px |
-| `$mg-spacing-600` | `-600` | 8rem | 80px |
-| `$mg-spacing-800` | `-800` | 10rem | 100px |
+| Token             | Class suffix | Value   | Pixels |
+| ----------------- | ------------ | ------- | ------ |
+| `$mg-spacing-0`   | `-0`         | 0       | 0px    |
+| `$mg-spacing-25`  | `-25`        | 0.25rem | 2.5px  |
+| `$mg-spacing-50`  | `-50`        | 0.5rem  | 5px    |
+| `$mg-spacing-75`  | `-75`        | 0.75rem | 7.5px  |
+| `$mg-spacing-100` | `-100`       | 1rem    | 10px   |
+| `$mg-spacing-150` | `-150`       | 1.5rem  | 15px   |
+| `$mg-spacing-175` | `-175`       | 1.8rem  | 18px   |
+| `$mg-spacing-200` | `-200`       | 2rem    | 20px   |
+| `$mg-spacing-250` | `-250`       | 2.4rem  | 24px   |
+| `$mg-spacing-300` | `-300`       | 3rem    | 30px   |
+| `$mg-spacing-400` | `-400`       | 5rem    | 50px   |
+| `$mg-spacing-500` | `-500`       | 6rem    | 60px   |
+| `$mg-spacing-600` | `-600`       | 8rem    | 80px   |
+| `$mg-spacing-800` | `-800`       | 10rem   | 100px  |
 
 ## Margin utilities
 
@@ -125,18 +126,20 @@ Negative margins are available for layout adjustments:
 
 Add breakpoint suffixes for responsive spacing:
 
-| Suffix | Breakpoint | Description |
-|--------|------------|-------------|
-| `--sm` | ≤480px | Mobile only |
-| `--md` | ≥900px | Tablet and up |
-| `--lg` | ≥1164px | Desktop and up |
-| `--xl` | ≥1440px | Wide desktop |
+| Suffix | Breakpoint | Description    |
+| ------ | ---------- | -------------- |
+| `--sm` | ≤480px     | Mobile only    |
+| `--md` | ≥900px     | Tablet and up  |
+| `--lg` | ≥1164px    | Desktop and up |
+| `--xl` | ≥1440px    | Wide desktop   |
 
 ### Examples
 
 ```html
 <!-- Smaller margin on mobile, larger on desktop -->
-<div class="mg-u-margin-top-100 mg-u-margin-top-300--md mg-u-margin-top-400--lg">
+<div
+  class="mg-u-margin-top-100 mg-u-margin-top-300--md mg-u-margin-top-400--lg"
+>
   Responsive margin
 </div>
 
@@ -155,48 +158,48 @@ Add breakpoint suffixes for responsive spacing:
 
 ### Margin classes
 
-| Class | CSS output |
-|-------|------------|
-| `.mg-u-margin-{size}` | `margin: {value}` |
-| `.mg-u-margin-top-{size}` | `margin-top: {value}` |
-| `.mg-u-margin-right-{size}` | `margin-right: {value}` |
-| `.mg-u-margin-bottom-{size}` | `margin-bottom: {value}` |
-| `.mg-u-margin-left-{size}` | `margin-left: {value}` |
-| `.mg-u-margin-x-{size}` | `margin-left: {value}; margin-right: {value}` |
-| `.mg-u-margin-y-{size}` | `margin-top: {value}; margin-bottom: {value}` |
-| `.mg-u-margin-auto` | `margin: auto` |
-| `.mg-u-margin-x-auto` | `margin-left: auto; margin-right: auto` |
-| `.mg-u-margin-y-auto` | `margin-top: auto; margin-bottom: auto` |
-| `.mg-u-margin-{dir}-negative-{size}` | `margin-{dir}: -{value}` |
+| Class                                | CSS output                                    |
+| ------------------------------------ | --------------------------------------------- |
+| `.mg-u-margin-{size}`                | `margin: {value}`                             |
+| `.mg-u-margin-top-{size}`            | `margin-top: {value}`                         |
+| `.mg-u-margin-right-{size}`          | `margin-right: {value}`                       |
+| `.mg-u-margin-bottom-{size}`         | `margin-bottom: {value}`                      |
+| `.mg-u-margin-left-{size}`           | `margin-left: {value}`                        |
+| `.mg-u-margin-x-{size}`              | `margin-left: {value}; margin-right: {value}` |
+| `.mg-u-margin-y-{size}`              | `margin-top: {value}; margin-bottom: {value}` |
+| `.mg-u-margin-auto`                  | `margin: auto`                                |
+| `.mg-u-margin-x-auto`                | `margin-left: auto; margin-right: auto`       |
+| `.mg-u-margin-y-auto`                | `margin-top: auto; margin-bottom: auto`       |
+| `.mg-u-margin-{dir}-negative-{size}` | `margin-{dir}: -{value}`                      |
 
 ### Padding classes
 
-| Class | CSS output |
-|-------|------------|
-| `.mg-u-padding-{size}` | `padding: {value}` |
-| `.mg-u-padding-top-{size}` | `padding-top: {value}` |
-| `.mg-u-padding-right-{size}` | `padding-right: {value}` |
-| `.mg-u-padding-bottom-{size}` | `padding-bottom: {value}` |
-| `.mg-u-padding-left-{size}` | `padding-left: {value}` |
-| `.mg-u-padding-x-{size}` | `padding-left: {value}; padding-right: {value}` |
-| `.mg-u-padding-y-{size}` | `padding-top: {value}; padding-bottom: {value}` |
+| Class                         | CSS output                                      |
+| ----------------------------- | ----------------------------------------------- |
+| `.mg-u-padding-{size}`        | `padding: {value}`                              |
+| `.mg-u-padding-top-{size}`    | `padding-top: {value}`                          |
+| `.mg-u-padding-right-{size}`  | `padding-right: {value}`                        |
+| `.mg-u-padding-bottom-{size}` | `padding-bottom: {value}`                       |
+| `.mg-u-padding-left-{size}`   | `padding-left: {value}`                         |
+| `.mg-u-padding-x-{size}`      | `padding-left: {value}; padding-right: {value}` |
+| `.mg-u-padding-y-{size}`      | `padding-top: {value}; padding-bottom: {value}` |
 
 ## Drupal migration
 
 If migrating from legacy Drupal utility classes:
 
-| Legacy class | Mangrove class |
-|--------------|----------------|
-| `.mt-10` | `.mg-u-margin-top-100` |
-| `.mt-15` | `.mg-u-margin-top-150` |
-| `.mt-20` | `.mg-u-margin-top-200` |
-| `.mt-30` | `.mg-u-margin-top-300` |
-| `.mb-10` | `.mg-u-margin-bottom-100` |
-| `.mb-20` | `.mg-u-margin-bottom-200` |
-| `.pt-10` | `.mg-u-padding-top-100` |
-| `.pt-20` | `.mg-u-padding-top-200` |
-| `.pb-10` | `.mg-u-padding-bottom-100` |
-| `.pb-20` | `.mg-u-padding-bottom-200` |
+| Legacy class | Mangrove class             |
+| ------------ | -------------------------- |
+| `.mt-10`     | `.mg-u-margin-top-100`     |
+| `.mt-15`     | `.mg-u-margin-top-150`     |
+| `.mt-20`     | `.mg-u-margin-top-200`     |
+| `.mt-30`     | `.mg-u-margin-top-300`     |
+| `.mb-10`     | `.mg-u-margin-bottom-100`  |
+| `.mb-20`     | `.mg-u-margin-bottom-200`  |
+| `.pt-10`     | `.mg-u-padding-top-100`    |
+| `.pt-20`     | `.mg-u-padding-top-200`    |
+| `.pb-10`     | `.mg-u-padding-bottom-100` |
+| `.pb-20`     | `.mg-u-padding-bottom-200` |
 
 See the <LinkTo kind="components-utility-css-drupal-migration" story="docs">complete Drupal migration guide</LinkTo> for all mappings.
 

@@ -28,7 +28,9 @@ Control the direction of flex items:
 
 ```html
 <!-- Column on mobile, row on tablet+ -->
-<div class="mg-u-display--flex mg-u-flex-direction--column mg-u-flex-direction--row--md">
+<div
+  class="mg-u-display--flex mg-u-flex-direction--column mg-u-flex-direction--row--md"
+>
   <div>Item 1</div>
   <div>Item 2</div>
 </div>
@@ -48,10 +50,14 @@ Control whether flex items wrap:
 Control alignment along the main axis:
 
 ```html
-<div class="mg-u-display--flex mg-u-justify-content--start">Start (default)</div>
+<div class="mg-u-display--flex mg-u-justify-content--start">
+  Start (default)
+</div>
 <div class="mg-u-display--flex mg-u-justify-content--end">End</div>
 <div class="mg-u-display--flex mg-u-justify-content--center">Center</div>
-<div class="mg-u-display--flex mg-u-justify-content--between">Space between</div>
+<div class="mg-u-display--flex mg-u-justify-content--between">
+  Space between
+</div>
 ```
 
 ## Align items
@@ -62,7 +68,9 @@ Control alignment along the cross axis:
 <div class="mg-u-display--flex mg-u-align-items--start">Start</div>
 <div class="mg-u-display--flex mg-u-align-items--end">End</div>
 <div class="mg-u-display--flex mg-u-align-items--center">Center</div>
-<div class="mg-u-display--flex mg-u-align-items--stretch">Stretch (default)</div>
+<div class="mg-u-display--flex mg-u-align-items--stretch">
+  Stretch (default)
+</div>
 ```
 
 ## Gap
@@ -91,7 +99,9 @@ Control spacing between flex items:
 ### Centered content
 
 ```html
-<div class="mg-u-display--flex mg-u-justify-content--center mg-u-align-items--center">
+<div
+  class="mg-u-display--flex mg-u-justify-content--center mg-u-align-items--center"
+>
   Centered both axes
 </div>
 ```
@@ -99,7 +109,9 @@ Control spacing between flex items:
 ### Space between with wrap
 
 ```html
-<div class="mg-u-display--flex mg-u-justify-content--between mg-u-flex-wrap--wrap mg-u-gap-200">
+<div
+  class="mg-u-display--flex mg-u-justify-content--between mg-u-flex-wrap--wrap mg-u-gap-200"
+>
   <div>Item 1</div>
   <div>Item 2</div>
   <div>Item 3</div>
@@ -110,7 +122,9 @@ Control spacing between flex items:
 
 ```html
 <!-- Stack on mobile, side-by-side on tablet+ -->
-<div class="mg-u-display--flex mg-u-flex-direction--column mg-u-flex-direction--row--md mg-u-gap-200">
+<div
+  class="mg-u-display--flex mg-u-flex-direction--column mg-u-flex-direction--row--md mg-u-gap-200"
+>
   <div class="mg-u-flex--1">Column 1</div>
   <div class="mg-u-flex--1">Column 2</div>
 </div>
@@ -119,7 +133,9 @@ Control spacing between flex items:
 ### Navigation bar
 
 ```html
-<nav class="mg-u-display--flex mg-u-justify-content--between mg-u-align-items--center">
+<nav
+  class="mg-u-display--flex mg-u-justify-content--between mg-u-align-items--center"
+>
   <div>Logo</div>
   <div class="mg-u-display--flex mg-u-gap-200">
     <a href="#">Link 1</a>
@@ -133,29 +149,29 @@ Control spacing between flex items:
 
 ### Container classes
 
-| Class | CSS output |
-|-------|------------|
-| `.mg-u-flex-direction--row` | `flex-direction: row` |
-| `.mg-u-flex-direction--column` | `flex-direction: column` |
-| `.mg-u-flex-direction--row--md` | `flex-direction: row` (tablet+) |
+| Class                              | CSS output                         |
+| ---------------------------------- | ---------------------------------- |
+| `.mg-u-flex-direction--row`        | `flex-direction: row`              |
+| `.mg-u-flex-direction--column`     | `flex-direction: column`           |
+| `.mg-u-flex-direction--row--md`    | `flex-direction: row` (tablet+)    |
 | `.mg-u-flex-direction--column--md` | `flex-direction: column` (tablet+) |
-| `.mg-u-flex-wrap--wrap` | `flex-wrap: wrap` |
-| `.mg-u-flex-wrap--nowrap` | `flex-wrap: nowrap` |
-| `.mg-u-justify-content--start` | `justify-content: flex-start` |
-| `.mg-u-justify-content--end` | `justify-content: flex-end` |
-| `.mg-u-justify-content--center` | `justify-content: center` |
-| `.mg-u-justify-content--between` | `justify-content: space-between` |
-| `.mg-u-align-items--start` | `align-items: flex-start` |
-| `.mg-u-align-items--end` | `align-items: flex-end` |
-| `.mg-u-align-items--center` | `align-items: center` |
-| `.mg-u-align-items--stretch` | `align-items: stretch` |
+| `.mg-u-flex-wrap--wrap`            | `flex-wrap: wrap`                  |
+| `.mg-u-flex-wrap--nowrap`          | `flex-wrap: nowrap`                |
+| `.mg-u-justify-content--start`     | `justify-content: flex-start`      |
+| `.mg-u-justify-content--end`       | `justify-content: flex-end`        |
+| `.mg-u-justify-content--center`    | `justify-content: center`          |
+| `.mg-u-justify-content--between`   | `justify-content: space-between`   |
+| `.mg-u-align-items--start`         | `align-items: flex-start`          |
+| `.mg-u-align-items--end`           | `align-items: flex-end`            |
+| `.mg-u-align-items--center`        | `align-items: center`              |
+| `.mg-u-align-items--stretch`       | `align-items: stretch`             |
 
 ### Gap classes
 
-| Class | CSS output |
-|-------|------------|
-| `.mg-u-gap-0` | `gap: 0` |
-| `.mg-u-gap-50` | `gap: 5px` |
+| Class           | CSS output  |
+| --------------- | ----------- |
+| `.mg-u-gap-0`   | `gap: 0`    |
+| `.mg-u-gap-50`  | `gap: 5px`  |
 | `.mg-u-gap-100` | `gap: 10px` |
 | `.mg-u-gap-200` | `gap: 20px` |
 | `.mg-u-gap-300` | `gap: 30px` |
@@ -163,10 +179,10 @@ Control spacing between flex items:
 
 ### Item classes
 
-| Class | CSS output |
-|-------|------------|
-| `.mg-u-flex--1` | `flex: 1 1 0%` |
-| `.mg-u-flex--none` | `flex: none` |
+| Class                  | CSS output       |
+| ---------------------- | ---------------- |
+| `.mg-u-flex--1`        | `flex: 1 1 0%`   |
+| `.mg-u-flex--none`     | `flex: none`     |
 | `.mg-u-flex-shrink--0` | `flex-shrink: 0` |
 
 ## Source file
