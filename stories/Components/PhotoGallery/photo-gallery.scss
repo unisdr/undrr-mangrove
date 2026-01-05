@@ -148,6 +148,7 @@
     cursor: pointer;
     background: $mg-color-neutral-100;
     padding: 0;
+
     @include transition(all 0.2s ease);
 
     @include devicebreak(medium) {
@@ -171,7 +172,7 @@
 
     &:hover {
       border-color: $mg-color-interactive;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
     }
 
     &:focus {
@@ -181,7 +182,7 @@
 
     &--active {
       border-color: $mg-color-interactive;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
     }
   }
 
@@ -202,6 +203,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     @include transition(background-color 0.2s, opacity 0.2s);
 
     &:hover {
@@ -267,6 +269,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     @include transition(background-color 0.2s, opacity 0.2s);
 
     &:hover {
