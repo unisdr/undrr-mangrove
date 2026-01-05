@@ -7,14 +7,16 @@ const sampleImages = [
     src: 'https://picsum.photos/800/600?random=1',
     alt: 'Landscape photo 1',
     title: 'Beautiful Mountain Landscape',
-    description: 'A stunning view of mountains during sunset with vibrant colors in the sky.',
+    description:
+      'A stunning view of mountains during sunset with vibrant colors in the sky.',
   },
   {
     id: '2',
     src: 'https://picsum.photos/600/800?random=2',
     alt: 'Portrait photo 2',
     title: 'City Architecture',
-    description: 'Modern architecture showcasing geometric patterns and clean lines.',
+    description:
+      'Modern architecture showcasing geometric patterns and clean lines.',
   },
   {
     id: '3',
@@ -73,7 +75,6 @@ export const BasicGallery = {
     showDescription: true,
     enableKeyboard: true,
   },
-  name: 'Basic Gallery',
 };
 
 // Gallery with many images (scrolling thumbnails)
@@ -111,7 +112,6 @@ export const WithoutThumbnails = {
     showDescription: true,
     enableKeyboard: true,
   },
-  name: 'Without Thumbnails',
 };
 
 // Without arrows
@@ -124,13 +124,12 @@ export const WithoutArrows = {
     showDescription: true,
     enableKeyboard: true,
   },
-  name: 'Without Arrows',
 };
 
 // Without descriptions
 export const WithoutDescriptions = {
   args: {
-    images: sampleImages.map((img) => ({
+    images: sampleImages.map(img => ({
       ...img,
       title: undefined,
       description: undefined,
@@ -141,13 +140,12 @@ export const WithoutDescriptions = {
     showDescription: false,
     enableKeyboard: true,
   },
-  name: 'Without Descriptions',
 };
 
 // Minimal configuration
 export const Minimal = {
   args: {
-    images: sampleImages.map((img) => ({
+    images: sampleImages.map(img => ({
       id: img.id,
       src: img.src,
       alt: img.alt,
@@ -202,7 +200,6 @@ export const MixedAspectRatios = {
     showDescription: true,
     enableKeyboard: true,
   },
-  name: 'Mixed Aspect Ratios',
 };
 
 // With callback
@@ -246,7 +243,6 @@ export const InfiniteLoop = {
     enableKeyboard: true,
     loop: true,
   },
-  name: 'Infinite Loop',
 };
 
 // Corner navigation buttons
