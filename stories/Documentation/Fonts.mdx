@@ -1,0 +1,150 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+
+<Meta title="Getting started/Fonts" />
+
+# Fonts
+
+## Roboto
+
+Roboto is the primary font family used throughout Mangrove for body text, UI elements, and general content.
+
+```scss
+$mg-font-family: "Roboto", sans-serif;
+```
+
+**Usage:**
+- Body text and paragraphs
+- Form inputs and buttons
+- Navigation and UI elements
+- Default for all text content
+
+### Roboto Condensed
+
+Roboto Condensed is used for specific components where space efficiency is important.
+
+```scss
+$mg-font-family-condensed: "Roboto Condensed", sans-serif;
+```
+
+**Usage:**
+- Breadcrumbs
+- Mega menu item links
+- Compact UI elements
+
+## Font sources
+
+All fonts are served from the UNDRR CDN for reliability and performance:
+
+| Font | CDN Path |
+|------|----------|
+| Roboto | `https://assets.undrr.org/static/fonts/roboto/v1.0.0/` |
+| Roboto Condensed | `https://assets.undrr.org/static/fonts/roboto-condensed/v1.0.0/` |
+
+## Performance
+
+All font declarations use `font-display: swap` to prevent invisible text during load. Text renders immediately with a fallback font, then swaps to the web font once loaded.
+
+---
+
+## Language-specific fonts
+
+Mangrove supports language-specific font overrides for scripts that require specialized typography. These fonts are applied automatically based on the `lang` attribute.
+
+### How it works
+
+When content is marked with a language attribute (e.g., `lang="ar"`), CSS `:lang()` selectors automatically apply the appropriate fonts:
+
+```html
+<div lang="ar">
+  <!-- Arabic fonts applied automatically -->
+</div>
+```
+
+### Supported languages
+
+| Language | Selector | Font override |
+|----------|----------|---------------|
+| Arabic | `:lang(ar)` | Noto Kufi Arabic (headings), Dubai (body) |
+
+---
+
+## Arabic fonts
+
+Arabic content uses dedicated fonts optimized for Arabic script, replacing Roboto which lacks proper Arabic character support.
+
+### Font usage
+
+| Purpose | Font | Weight | Variable |
+|---------|------|--------|----------|
+| Headings (h1-h6) | Noto Kufi Arabic | 700 only | `$mg-font-family-arabic-headings` |
+| Body text | Dubai | 400 | `$mg-font-family-arabic-body` |
+
+> **Note**: Noto Kufi Arabic is only available in 700 (Bold) weight, which is appropriate for headings. Dubai is used for body text at regular weight.
+
+### Implementation
+
+Add the `lang="ar"` attribute to enable Arabic fonts:
+
+```html
+<div lang="ar" dir="rtl">
+  <h1>عنوان رئيسي</h1>
+  <p>هذا نص تجريبي باللغة العربية.</p>
+</div>
+```
+
+To see Arabic fonts in action, [view the Hero component with Arabic locale](?path=/story/components-hero-hero--default&globals=locale:arabic;addonRtl:rtl).
+
+### Arabic font sources
+
+> **Note**: Fonts are temporarily served from the testing CDN during development. Before production release, update paths to use `/static/fonts/` instead of `/testing/static/fonts/`.
+
+| Font | Weight | CDN Path |
+|------|--------|----------|
+| Noto Kufi Arabic | 700 (Bold) | `https://assets.undrr.org/testing/static/fonts/noto-kufi-arabic/v1.0.0/Bold/` |
+| Dubai | 400 (Regular) | `https://assets.undrr.org/testing/static/fonts/dubai/v1.0.0/Regular/` |
+
+**Font formats**: WOFF2 and WOFF formats are served for optimal browser compatibility and compression.
+
+### RTL support
+
+Arabic fonts and RTL layout are handled separately:
+
+- **`lang="ar"`** - Triggers Arabic font styles via `:lang(ar)` selector
+- **`dir="rtl"`** - Triggers RTL layout adjustments (padding, margins, transforms)
+
+For full Arabic support, use both attributes:
+
+```html
+<div lang="ar" dir="rtl">
+  <h1>عنوان رئيسي</h1>
+  <p>نص من اليمين إلى اليسار</p>
+</div>
+```
+
+## Component development
+
+When creating components that explicitly set `font-family`, add language-specific overrides to ensure proper rendering.
+
+### Pattern for Arabic fonts
+
+```scss
+// Component styles
+.my-component {
+  font-family: $mg-font-family;
+}
+
+// Arabic font override (add at end of component file)
+:lang(ar) {
+  .my-component {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
+```
+
+---
+
+## References
+
+- [OCHA Brand Guidelines - Fonts](https://brand.unocha.org/document/281801#/fonts/fonts)
+- [Mangrove PR #677](https://github.com/unisdr/undrr-mangrove/pull/677)
+- [Web Backlog Issue #2368](https://gitlab.com/undrr/web-backlog/-/issues/2368)

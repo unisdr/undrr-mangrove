@@ -24,7 +24,6 @@
     @include transition(300ms all);
 
     color: $mg-color-neutral-200;
-    font-family: $mg-font-family;
     font-size: $mg-spacing-400;
     letter-spacing: 0.05rem;
     margin-bottom: $mg-spacing-100;
@@ -180,18 +179,11 @@
   }
 }
 
-:lang(my) {
+// Arabic
+:lang(ar) {
   .stats-card {
     h2 {
-      font-family: $mg-font-family;
-    }
-  }
-}
-
-#{$cyrillic} {
-  .stats-card {
-    h2 {
-      font-family: $mg-font-family;
+      font-family: $mg-font-family-arabic-headings;
     }
   }
 }
