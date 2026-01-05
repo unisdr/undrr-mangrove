@@ -98,10 +98,13 @@
   .options-container {
     top: 52px;
   }
+}
 
+// Arabic
+:lang(ar) {
   .select-box {
     button {
-      font-family: $mg-font-family;
+      font-family: $mg-font-family-arabic-body;
     }
   }
 }

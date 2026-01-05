@@ -208,4 +208,11 @@
   }
 }
 
+// Arabic
+:lang(ar) {
+  .mg-tabs__link {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
+
 /* Tab end */

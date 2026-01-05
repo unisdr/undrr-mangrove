@@ -161,10 +161,24 @@ a {
   }
 }
 
-/* Cyrillic scripts */
-#{$cyrillic} {
-  h1 {
-    font-family: $mg-font-family;
+/* Arabic fonts */
+:lang(ar) {
+  /* Body text uses Dubai */
+  body,
+  p {
+    font-family: $mg-font-family-arabic-body;
+  }
+
+  /* Headings use Noto Kufi Arabic */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  button,
+  th {
+    font-family: $mg-font-family-arabic-headings;
   }
 }
 
