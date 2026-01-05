@@ -1,71 +1,21 @@
 /* Stats By Numbers Component */
-.stats-by-numbers {
+.mg-stats-by-numbers {
   width: 100%;
 
-  &__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: $mg-spacing-400;
-    gap: $mg-spacing-200;
+  &__link {
+    color: $mg-color-interactive;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 200ms ease;
 
-    @include devicebreak(small) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: $mg-spacing-300;
+    &:hover {
+      text-decoration: none;
     }
 
-    h2 {
-      margin: 0;
+    &:focus {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
     }
-  }
-
-  &__button {
-    flex-shrink: 0;
-  }
-
-  &__grid {
-    display: grid;
-    gap: $mg-spacing-300;
-    width: 100%;
-
-    @include devicebreak(small) {
-      grid-template-columns: 1fr;
-      gap: $mg-spacing-200;
-    }
-
-    // Layout for 1 stat
-    &--1 {
-      grid-template-columns: 1fr;
-      max-width: 48rem;
-    }
-
-    // Layout for 2 stats
-    &--2 {
-      grid-template-columns: repeat(2, 1fr);
-
-      @include devicebreak(small) {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    // Layout for 3 stats
-    &--3 {
-      grid-template-columns: repeat(3, 1fr);
-
-      @include devicebreak(medium) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      @include devicebreak(small) {
-        grid-template-columns: 1fr;
-      }
-    }
-  }
-
-  &__footer {
-    margin-top: $mg-spacing-400;
-    text-align: center;
   }
 
   // Card layout - all stats in one card with wrapping
@@ -92,7 +42,7 @@
     }
 
     // Stat items in card layout don't have their own borders/shadows
-    .stat-item {
+    .mg-stat-item {
       background-color: transparent;
       border: none;
       box-shadow: none;
@@ -132,7 +82,7 @@
 }
 
 /* Individual Stat Item */
-.stat-item {
+.mg-stat-item {
   background-color: $mg-color-white;
   border: 1px solid $mg-color-neutral-200;
   border-radius: $mg-spacing-50;
@@ -153,6 +103,15 @@
   &:hover {
     box-shadow: 0 6px 16px rgb(0 0 0 / 0.12);
     transform: translateY(-2px);
+  }
+
+  // Respect reduced motion preferences
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
   }
 
   &__icon {
@@ -182,6 +141,7 @@
     line-height: 1;
     margin: $mg-spacing-100 0;
     overflow-wrap: break-word;
+    text-decoration: none;
 
     @include devicebreak(medium) {
       font-size: $mg-font-size-800;
@@ -189,6 +149,25 @@
 
     @include devicebreak(small) {
       font-size: $mg-font-size-600;
+    }
+  }
+
+  // Stretched link pattern - value link covers entire card
+  a#{&}__value::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  // Focus styles for linked cards
+  a#{&}__value:focus-visible {
+    outline: none;
+
+    &::after {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+      border-radius: $mg-spacing-50;
     }
   }
 
@@ -219,10 +198,13 @@
     }
   }
 
+  // Additional links sit above the stretched link
   &__link {
     color: $mg-color-interactive;
     text-decoration: underline;
     transition: color 200ms ease;
+    position: relative;
+    z-index: 2;
 
     &:hover {
       text-decoration: none;
@@ -233,11 +215,16 @@
       outline-offset: 2px;
     }
   }
+
+  // Linked variant - cursor indicates clickability
+  &--linked {
+    cursor: pointer;
+  }
 }
 
 /* Variant: Compact */
-.stats-by-numbers--compact {
-  .stat-item {
+.mg-stats-by-numbers--compact {
+  .mg-stat-item {
     padding: $mg-spacing-300;
 
     @include devicebreak(small) {
@@ -267,8 +254,8 @@
 }
 
 /* Variant: Highlighted */
-.stats-by-numbers--highlighted {
-  .stat-item {
+.mg-stats-by-numbers--highlighted {
+  .mg-stat-item {
     background-color: rgba($mg-color-interactive, 0.05);
     border-left: 4px solid $mg-color-interactive;
 
@@ -280,10 +267,18 @@
 
 /* RTL Support */
 [dir='rtl'] {
-  .stats-by-numbers--highlighted {
-    .stat-item {
+  .mg-stats-by-numbers--highlighted {
+    .mg-stat-item {
       border-left: none;
       border-right: 4px solid $mg-color-interactive;
+    }
+  }
+
+  // Flip card separator for RTL
+  .mg-stats-by-numbers__card-content {
+    .mg-stat-item:not(:last-child)::after {
+      right: auto;
+      left: calc($mg-spacing-400 / -2);
     }
   }
 }

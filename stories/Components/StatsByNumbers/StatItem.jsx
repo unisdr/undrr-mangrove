@@ -1,51 +1,106 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
+/**
+ * StatItem Component
+ *
+ * Displays an individual statistic with optional icon, labels, description,
+ * and link. Used as a child component within StatsByNumbers.
+ *
+ * When a `link` prop is provided, the entire stat item becomes clickable
+ * while still allowing additional links (like descriptionLink) to work independently.
+ */
 export function StatItem({
   icon,
   topLabel,
   value,
   bottomLabel,
   description,
-  descriptionLink
+  descriptionLink,
+  link,
+  className = '',
+  ...props
 }) {
+  const baseClass = 'mg-stat-item';
+
+  const classes = [
+    baseClass,
+    link && `${baseClass}--linked`,
+    className,
+  ].filter(Boolean).join(' ');
+
+  // Render value as link or data element
+  const valueContent = link ? (
+    <a href={link} className={`${baseClass}__value`}>
+      {value}
+    </a>
+  ) : (
+    <data className={`${baseClass}__value`} value={value}>
+      {value}
+    </data>
+  );
+
   return (
-    <div className="stat-item">
+    <article className={classes} {...props}>
       {icon && (
-        <div className="stat-item__icon" aria-hidden="true">
+        <span className={`${baseClass}__icon`} aria-hidden="true">
           <span className={icon}></span>
-        </div>
+        </span>
       )}
       {topLabel && (
-        <div className="stat-item__top-label">
+        <span className={`${baseClass}__top-label`}>
           {topLabel}
-        </div>
+        </span>
       )}
-      <div className="stat-item__value">
-        {value}
-      </div>
-      <div className="stat-item__bottom-label">
+      {valueContent}
+      <strong className={`${baseClass}__bottom-label`}>
         {bottomLabel}
-      </div>
+      </strong>
       {description && (
-        <div className="stat-item__description">
-          <p>
-            {description}
-            {descriptionLink && (
-              <>
-                {' '}
-                <a
-                  href={descriptionLink.url}
-                  className="stat-item__link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {descriptionLink.text}
-                </a>
-              </>
-            )}
-          </p>
-        </div>
+        <p className={`${baseClass}__description`}>
+          {description}
+          {descriptionLink && (
+            <>
+              {' '}
+              <a
+                href={descriptionLink.url}
+                className={`${baseClass}__link`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {descriptionLink.text}
+                <span className="mg-u-sr-only"> (opens in new tab)</span>
+              </a>
+            </>
+          )}
+        </p>
       )}
-    </div>
+    </article>
   );
 }
+
+StatItem.propTypes = {
+  /** Icon class name (e.g., "mg-icon fa-globe") */
+  icon: PropTypes.string,
+  /** Label displayed above the value (e.g., "Target A", "Priority 1") */
+  topLabel: PropTypes.string,
+  /** The main statistic value (e.g., "1,500+", "45%", "$223B") */
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  /** Label displayed below the value */
+  bottomLabel: PropTypes.string.isRequired,
+  /** Optional descriptive text providing context */
+  description: PropTypes.string,
+  /** Optional link within the description (remains clickable independently) */
+  descriptionLink: PropTypes.shape({
+    /** Link text */
+    text: PropTypes.string.isRequired,
+    /** Link URL */
+    url: PropTypes.string.isRequired,
+  }),
+  /** URL to make the entire stat item clickable */
+  link: PropTypes.string,
+  /** Additional CSS class names */
+  className: PropTypes.string,
+};
+
+export default StatItem;

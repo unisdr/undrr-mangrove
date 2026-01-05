@@ -1,389 +1,365 @@
 import { StatsByNumbers } from './StatsByNumbers';
 
+const getCaptionForLocale = locale => {
+  switch (locale) {
+    case 'arabic':
+      return {
+        default: {
+          title: 'التقدم المحرز في إطار سنداي ٢٠١٥-٢٠٢٣',
+          stats: [
+            {
+              topLabel: 'الهدف أ',
+              value: '٤٥٪',
+              bottomLabel: 'الحد من الوفيات',
+              description:
+                'انخفاض في معدلات الوفيات الناجمة عن الكوارث على مستوى العالم.',
+            },
+            {
+              topLabel: 'الهدف ب',
+              value: '٢.٣ مليون',
+              bottomLabel: 'المتضررون',
+              description: 'انخفاض في عدد المتضررين لكل ١٠٠,٠٠٠ نسمة.',
+            },
+            {
+              topLabel: 'الهدف ج',
+              value: '١٢٠ مليار$',
+              bottomLabel: 'الخسائر الاقتصادية',
+              description:
+                'انخفاض في الخسائر الاقتصادية المباشرة نسبة إلى الناتج المحلي الإجمالي.',
+            },
+          ],
+        },
+        withIcons: {
+          title: 'إحصائيات الكوارث ٢٠٢٣',
+          stats: [
+            {
+              icon: 'mg-icon fa-lightbulb',
+              value: '٣٨٧',
+              bottomLabel: 'الكوارث الطبيعية',
+              description: 'الأحداث المسجلة في جميع أنحاء العالم في عام ٢٠٢٣.',
+            },
+            {
+              icon: 'mg-icon fa-user',
+              value: '٨٦.٣ مليون',
+              bottomLabel: 'المتضررون',
+              description: 'الأفراد المتأثرون بالكوارث.',
+            },
+            {
+              icon: 'mg-icon fa-chart-bar',
+              value: '٢٢٣ مليار$',
+              bottomLabel: 'الخسائر الاقتصادية',
+              description: 'إجمالي الأضرار المقدرة عالميًا.',
+            },
+          ],
+        },
+        compact: {
+          title: 'إحصائيات سريعة',
+          stats: [
+            { value: '١٩٣', bottomLabel: 'الدول الأعضاء' },
+            { value: '+١٬٥٠٠', bottomLabel: 'المدن في MCR2030' },
+            { value: '٢٢٣ مليار$', bottomLabel: 'خسائر ٢٠٢٣' },
+          ],
+        },
+        highlighted: {
+          title: 'الإنجازات الرئيسية',
+          stats: [
+            {
+              topLabel: 'الأولوية ١',
+              value: '٨٩',
+              bottomLabel: 'دولة لديها استراتيجيات للحد من مخاطر الكوارث',
+              description: 'استراتيجيات وطنية متوافقة مع إطار سنداي.',
+            },
+            {
+              topLabel: 'الأولوية ٢',
+              value: '٤٥٪',
+              bottomLabel: 'تغطية تقييم المخاطر',
+              description:
+                'السكان المشمولون بأنظمة الإنذار المبكر متعددة الأخطار.',
+            },
+          ],
+        },
+        cardLayout: {
+          title: 'تقدم MCR2030',
+          stats: [
+            {
+              value: '+١٬٥٠٠',
+              bottomLabel: 'المدن المسجلة',
+              description: 'الحكومات المحلية الملتزمة بالمرونة.',
+            },
+            {
+              value: '٨٥٪',
+              bottomLabel: 'معدل التقدم',
+              description: 'المدن التي تحقق تقدمًا ملموسًا في أهداف المرونة.',
+            },
+            {
+              value: '١٢٠+',
+              bottomLabel: 'المنظمات الشريكة',
+              description: 'دعم التنفيذ وبناء القدرات.',
+            },
+          ],
+        },
+        linked: {
+          title: 'بطاقات إحصائية قابلة للنقر',
+          stats: [
+            {
+              icon: 'mg-icon fa-building',
+              value: '+١٬٥٠٠',
+              bottomLabel: 'المدن المسجلة',
+              description: 'انقر في أي مكان على هذه البطاقة لعرض جميع المدن.',
+              link: 'https://mcr2030.undrr.org/cities',
+            },
+            {
+              icon: 'mg-icon fa-handshake',
+              value: '١٢٠+',
+              bottomLabel: 'المنظمات الشريكة',
+              description: 'دعم التنفيذ في جميع أنحاء العالم.',
+              link: 'https://mcr2030.undrr.org/partners',
+            },
+            {
+              icon: 'mg-icon fa-map',
+              value: '٥',
+              bottomLabel: 'مراحل المرونة',
+              description: 'خارطة طريق منظمة للمدن.',
+              link: 'https://mcr2030.undrr.org/roadmap',
+            },
+          ],
+        },
+      };
+    default:
+      return {
+        default: {
+          title: 'Sendai Framework Progress 2015-2023',
+          stats: [
+            {
+              topLabel: 'Target A',
+              value: '45%',
+              bottomLabel: 'Mortality reduction',
+              description: 'Decrease in disaster mortality rates globally.',
+            },
+            {
+              topLabel: 'Target B',
+              value: '2.3M',
+              bottomLabel: 'People affected',
+              description:
+                'Reduction in number of affected people per 100,000.',
+            },
+            {
+              topLabel: 'Target C',
+              value: '$120B',
+              bottomLabel: 'Economic losses',
+              description: 'Reduction in direct economic loss relative to GDP.',
+            },
+          ],
+        },
+        withIcons: {
+          title: 'Disaster Statistics 2023',
+          stats: [
+            {
+              icon: 'mg-icon fa-lightbulb',
+              value: '387',
+              bottomLabel: 'Natural disasters',
+              description: 'Recorded events worldwide in 2023.',
+            },
+            {
+              icon: 'mg-icon fa-user',
+              value: '86.3M',
+              bottomLabel: 'People affected',
+              description: 'Individuals impacted by disasters.',
+            },
+            {
+              icon: 'mg-icon fa-chart-bar',
+              value: '$223B',
+              bottomLabel: 'Economic losses',
+              description: 'Total estimated damages globally.',
+            },
+          ],
+        },
+        compact: {
+          title: 'Quick Stats',
+          stats: [
+            { value: '193', bottomLabel: 'Member States' },
+            { value: '1,500+', bottomLabel: 'Cities in MCR2030' },
+            { value: '$223B', bottomLabel: '2023 Losses' },
+          ],
+        },
+        highlighted: {
+          title: 'Key Achievements',
+          stats: [
+            {
+              topLabel: 'Priority 1',
+              value: '89',
+              bottomLabel: 'Countries with DRR strategies',
+              description: 'National strategies aligned with Sendai Framework.',
+            },
+            {
+              topLabel: 'Priority 2',
+              value: '45%',
+              bottomLabel: 'Risk assessment coverage',
+              description:
+                'Population covered by multi-hazard early warning systems.',
+            },
+          ],
+        },
+        cardLayout: {
+          title: 'MCR2030 Progress',
+          stats: [
+            {
+              value: '1,500+',
+              bottomLabel: 'Cities enrolled',
+              description: 'Local governments committed to resilience.',
+            },
+            {
+              value: '85%',
+              bottomLabel: 'Progress rate',
+              description: 'Cities making measurable progress.',
+            },
+            {
+              value: '120+',
+              bottomLabel: 'Partner organizations',
+              description: 'Supporting implementation and capacity building.',
+            },
+          ],
+        },
+        linked: {
+          title: 'Clickable stat cards',
+          stats: [
+            {
+              icon: 'mg-icon fa-building',
+              value: '1,500+',
+              bottomLabel: 'Cities enrolled',
+              description: 'Click anywhere on this card to view all cities.',
+              link: 'https://mcr2030.undrr.org/cities',
+            },
+            {
+              icon: 'mg-icon fa-handshake',
+              value: '120+',
+              bottomLabel: 'Partner organizations',
+              description: 'Supporting implementation worldwide.',
+              link: 'https://mcr2030.undrr.org/partners',
+            },
+            {
+              icon: 'mg-icon fa-map',
+              value: '5',
+              bottomLabel: 'Resilience stages',
+              description: 'Structured roadmap for cities.',
+              link: 'https://mcr2030.undrr.org/roadmap',
+            },
+          ],
+        },
+      };
+  }
+};
+
 export default {
-  title: 'Components/Stats By Numbers',
+  title: 'Components/Stats by numbers',
   component: StatsByNumbers,
   argTypes: {
     variant: {
       options: ['default', 'compact', 'highlighted'],
-      control: {
-        type: 'inline-radio',
-      },
+      control: { type: 'inline-radio' },
       defaultValue: 'default',
     },
     layout: {
       options: ['grid', 'card'],
-      control: {
-        type: 'inline-radio',
-      },
+      control: { type: 'inline-radio' },
       defaultValue: 'grid',
     },
   },
+  decorators: [
+    (Story, context) => {
+      const isRtl = context.globals.locale === 'arabic';
+      return (
+        <div dir={isRtl ? 'rtl' : 'ltr'} lang={isRtl ? 'ar' : 'en'}>
+          <Story />
+        </div>
+      );
+    },
+  ],
 };
 
-// Single stat
-export const SingleStat = {
-  args: {
-    title: 'Global Impact',
-    buttonLabel: 'Learn more',
-    buttonUrl: '#',
-    stats: [
-      {
-        icon: 'mg-icon fa-globe',
-        topLabel: 'Countries',
-        value: '193',
-        bottomLabel: 'Member States',
-        description: 'Countries participating in disaster risk reduction efforts worldwide.',
-      },
-    ],
+// Default - shows dual labels with three stats
+export const Default = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <StatsByNumbers
+        title={caption.default.title}
+        stats={caption.default.stats}
+        {...args}
+      />
+    );
   },
-  name: 'Single Stat',
-};
-
-// Two stats
-export const TwoStats = {
-  args: {
-    title: 'MCR2030 Progress',
-    buttonLabel: 'View dashboard',
-    buttonUrl: '#',
-    stats: [
-      {
-        value: '1,500+',
-        bottomLabel: 'Cities enrolled',
-        description: 'Local governments committed to resilience.',
-        descriptionLink: {
-          text: 'Join MCR2030',
-          url: 'https://mcr2030.undrr.org',
-        },
-      },
-      {
-        value: '85%',
-        bottomLabel: 'Progress rate',
-        description: 'Cities making measurable progress on resilience targets.',
-      },
-    ],
-  },
-  name: 'Two Stats',
-};
-
-// Three stats
-export const ThreeStats = {
-  args: {
-    title: 'Sendai Framework Progress 2015-2023',
-    stats: [
-      {
-        topLabel: 'Target A',
-        value: '45%',
-        bottomLabel: 'Mortality reduction',
-        description: 'Decrease in disaster mortality rates globally.',
-      },
-      {
-        topLabel: 'Target B',
-        value: '2.3M',
-        bottomLabel: 'People affected',
-        description: 'Reduction in number of affected people per 100,000.',
-      },
-      {
-        topLabel: 'Target C',
-        value: '$120B',
-        bottomLabel: 'Economic losses',
-        description: 'Reduction in direct economic loss relative to GDP.',
-      },
-    ],
-  },
-  name: 'Three Stats',
 };
 
 // With icons
 export const WithIcons = {
-  args: {
-    title: 'Disaster Statistics 2023',
-    buttonLabel: 'Full report',
-    buttonUrl: '#',
-    stats: [
-      {
-        icon: 'mg-icon fa-lightbulb',
-        value: '387',
-        bottomLabel: 'Natural disasters',
-        description: 'Recorded events worldwide in 2023.',
-      },
-      {
-        icon: 'mg-icon fa-user',
-        value: '86.3M',
-        bottomLabel: 'People affected',
-        description: 'Individuals impacted by disasters.',
-      },
-      {
-        icon: 'mg-icon fa-chart-bar',
-        value: '$223B',
-        bottomLabel: 'Economic losses',
-        description: 'Total estimated damages globally.',
-      },
-    ],
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <StatsByNumbers
+        title={caption.withIcons.title}
+        stats={caption.withIcons.stats}
+        {...args}
+      />
+    );
   },
-  name: 'With Icons',
-};
-
-// Dual labels
-export const DualLabels = {
-  args: {
-    stats: [
-      {
-        topLabel: 'Sendai Target A',
-        value: '45%',
-        bottomLabel: 'Substantial reduction achieved',
-        description: 'Global disaster mortality substantially reduced compared to 2005-2015.',
-      },
-      {
-        topLabel: 'Sendai Target D',
-        value: '$120B',
-        bottomLabel: 'Infrastructure losses prevented',
-        description: 'Damage to critical infrastructure and disruption of basic services reduced.',
-      },
-      {
-        topLabel: 'Sendai Target G',
-        value: '89',
-        bottomLabel: 'Countries with DRR strategies',
-        description: 'National and local disaster risk reduction strategies adopted.',
-      },
-    ],
-  },
-  name: 'Dual Labels',
-};
-
-// With description links (MCR2030 use case)
-export const WithDescriptionLinks = {
-  args: {
-    title: 'Making Cities Resilient 2030',
-    buttonLabel: 'Explore MCR2030',
-    buttonUrl: 'https://mcr2030.undrr.org',
-    stats: [
-      {
-        value: '1,500+',
-        bottomLabel: 'Enrolled cities',
-        description: 'Cities committed to building urban resilience.',
-        descriptionLink: {
-          text: 'View city list',
-          url: 'https://mcr2030.undrr.org/cities',
-        },
-      },
-      {
-        value: '120+',
-        bottomLabel: 'Partner organizations',
-        description: 'Supporting implementation and capacity building.',
-        descriptionLink: {
-          text: 'Become a partner',
-          url: 'https://mcr2030.undrr.org/partners',
-        },
-      },
-      {
-        value: '5',
-        bottomLabel: 'Resilience stages',
-        description: 'Roadmap for cities to assess and improve resilience.',
-        descriptionLink: {
-          text: 'Learn about stages',
-          url: 'https://mcr2030.undrr.org/roadmap',
-        },
-      },
-    ],
-  },
-  name: 'With Description Links (MCR2030)',
 };
 
 // Compact variant
-export const CompactVariant = {
-  args: {
-    title: 'Quick Stats',
-    variant: 'compact',
-    stats: [
-      {
-        value: '193',
-        bottomLabel: 'Member States',
-      },
-      {
-        value: '1,500+',
-        bottomLabel: 'Cities in MCR2030',
-      },
-      {
-        value: '$223B',
-        bottomLabel: '2023 Losses',
-      },
-    ],
+export const Compact = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <StatsByNumbers
+        title={caption.compact.title}
+        variant="compact"
+        stats={caption.compact.stats}
+        {...args}
+      />
+    );
   },
-  name: 'Compact Variant',
 };
 
 // Highlighted variant
-export const HighlightedVariant = {
-  args: {
-    title: 'Key Achievements',
-    variant: 'highlighted',
-    stats: [
-      {
-        topLabel: 'Priority 1',
-        value: '89',
-        bottomLabel: 'Countries with DRR strategies',
-        description: 'National strategies aligned with Sendai Framework.',
-      },
-      {
-        topLabel: 'Priority 2',
-        value: '45%',
-        bottomLabel: 'Risk assessment coverage',
-        description: 'Population covered by multi-hazard early warning systems.',
-      },
-    ],
+export const Highlighted = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <StatsByNumbers
+        title={caption.highlighted.title}
+        variant="highlighted"
+        stats={caption.highlighted.stats}
+        {...args}
+      />
+    );
   },
-  name: 'Highlighted Variant',
 };
 
-// Minimal - no title, button at bottom
-export const MinimalLayout = {
-  args: {
-    buttonLabel: 'See full statistics',
-    buttonUrl: '#',
-    stats: [
-      {
-        value: '387',
-        bottomLabel: 'Natural disasters in 2023',
-      },
-      {
-        value: '86.3M',
-        bottomLabel: 'People affected',
-      },
-    ],
+// Card layout - all stats grouped in one card
+export const CardLayout = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <StatsByNumbers
+        title={caption.cardLayout.title}
+        layout="card"
+        stats={caption.cardLayout.stats}
+        {...args}
+      />
+    );
   },
-  name: 'Minimal Layout',
 };
 
-// Single stat with all features
-export const CompleteExample = {
-  args: {
-    title: 'MCR2030 Impact',
-    buttonLabel: 'Join the initiative',
-    buttonUrl: 'https://mcr2030.undrr.org',
-    stats: [
-      {
-        icon: 'mg-icon fa-building',
-        topLabel: 'Global Initiative',
-        value: '1,500+',
-        bottomLabel: 'Cities building resilience',
-        description: 'Local governments committed to the Making Cities Resilient campaign.',
-        descriptionLink: {
-          text: 'Explore participating cities',
-          url: 'https://mcr2030.undrr.org/cities',
-        },
-      },
-    ],
+// Linked stats - entire card is clickable
+export const Linked = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <StatsByNumbers
+        title={caption.linked.title}
+        stats={caption.linked.stats}
+        {...args}
+      />
+    );
   },
-  name: 'Complete Example',
-};
-
-// Card Layout - Two stats in one card
-export const CardLayoutTwo = {
-  args: {
-    title: 'MCR2030 Progress',
-    layout: 'card',
-    stats: [
-      {
-        value: '1,500+',
-        bottomLabel: 'Cities enrolled',
-        description: 'Local governments committed to resilience.',
-      },
-      {
-        value: '85%',
-        bottomLabel: 'Progress rate',
-        description: 'Cities making measurable progress.',
-      },
-    ],
-  },
-  name: 'Card Layout - Two Stats',
-};
-
-// Card Layout - Three stats in one card
-export const CardLayoutThree = {
-  args: {
-    title: 'Sendai Framework Progress',
-    layout: 'card',
-    stats: [
-      {
-        topLabel: 'Target A',
-        value: '45%',
-        bottomLabel: 'Mortality reduction',
-        description: 'Decrease in disaster mortality rates.',
-      },
-      {
-        topLabel: 'Target B',
-        value: '2.3M',
-        bottomLabel: 'People affected',
-        description: 'Reduction in affected people per 100,000.',
-      },
-      {
-        topLabel: 'Target C',
-        value: '$120B',
-        bottomLabel: 'Economic losses',
-        description: 'Reduction in direct economic loss.',
-      },
-    ],
-  },
-  name: 'Card Layout - Three Stats',
-};
-
-// Card Layout - Four stats (will wrap)
-export const CardLayoutFour = {
-  args: {
-    title: 'Global Disaster Statistics 2023',
-    buttonLabel: 'View full report',
-    buttonUrl: '#',
-    layout: 'card',
-    stats: [
-      {
-        value: '387',
-        bottomLabel: 'Natural disasters',
-      },
-      {
-        value: '86.3M',
-        bottomLabel: 'People affected',
-      },
-      {
-        value: '$223B',
-        bottomLabel: 'Economic losses',
-      },
-      {
-        value: '193',
-        bottomLabel: 'Countries impacted',
-      },
-    ],
-  },
-  name: 'Card Layout - Four Stats (Wrapping)',
-};
-
-// Card Layout with icons
-export const CardLayoutWithIcons = {
-  args: {
-    title: 'Disaster Statistics 2023',
-    buttonLabel: 'Full report',
-    buttonUrl: '#',
-    layout: 'card',
-    stats: [
-      {
-        icon: 'mg-icon fa-lightbulb',
-        value: '387',
-        bottomLabel: 'Natural disasters',
-        description: 'Recorded events worldwide.',
-      },
-      {
-        icon: 'mg-icon fa-user',
-        value: '86.3M',
-        bottomLabel: 'People affected',
-        description: 'Individuals impacted.',
-      },
-      {
-        icon: 'mg-icon fa-chart-bar',
-        value: '$223B',
-        bottomLabel: 'Economic losses',
-        description: 'Total estimated damages.',
-      },
-    ],
-  },
-  name: 'Card Layout - With Icons',
 };

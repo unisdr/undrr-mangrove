@@ -1,41 +1,50 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Heading } from '../../Atom/Typography/Heading/Heading';
-import { Ctalink } from '../Buttons/CtaLink/CtaLink';
 import { StatItem } from './StatItem';
-// import './stats-by-numbers.scss';
 
-const cls = (...classes) =>
-  classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
-
+/**
+ * StatsByNumbers Component
+ *
+ * A flexible component for displaying statistics and key metrics in an engaging,
+ * scannable format. Supports grid layout (individual cards) or card layout
+ * (grouped in a single container) with optional icons, dual labels, descriptions,
+ * and call-to-action links.
+ */
 export function StatsByNumbers({
   title,
   buttonLabel,
   buttonUrl,
   stats = [],
   variant = 'default',
-  layout = 'grid'
+  layout = 'grid',
+  className = '',
+  ...props
 }) {
+  const baseClass = 'mg-stats-by-numbers';
   const statsCount = stats.length;
-  const statsLayoutClass = layout === 'grid' ? `stats-by-numbers__grid--${statsCount}` : '';
+
+  // Use mg-grid system for grid layout
+  const gridClasses = statsCount > 0 ? `mg-grid mg-grid__col-${statsCount}` : 'mg-grid';
+
+  const classes = [
+    baseClass,
+    variant && `${baseClass}--${variant}`,
+    className,
+  ].filter(Boolean).join(' ');
 
   return (
-    <div className={cls('stats-by-numbers', variant && `stats-by-numbers--${variant}`)}>
-      {title && (
-        <div className="stats-by-numbers__header">
-          <Heading type="2" label={title} />
-          {buttonLabel && buttonUrl && (
-            <div className="stats-by-numbers__button">
-              <a href={buttonUrl} className="cta__link cta--arrow">
-                {buttonLabel} <i />
-              </a>
-            </div>
-          )}
-        </div>
+    <section className={classes} aria-label={title || 'Statistics'} {...props}>
+      {title && <Heading type="2" label={title} />}
+      {title && buttonLabel && buttonUrl && (
+        <a href={buttonUrl} className={`${baseClass}__link`}>
+          {buttonLabel}
+        </a>
       )}
 
       {layout === 'card' ? (
-        <div className="stats-by-numbers__card">
-          <div className="stats-by-numbers__card-content">
+        <div className={`${baseClass}__card`}>
+          <div className={`${baseClass}__card-content`}>
             {stats.map((stat, index) => (
               <StatItem
                 key={index}
@@ -45,12 +54,13 @@ export function StatsByNumbers({
                 bottomLabel={stat.bottomLabel}
                 description={stat.description}
                 descriptionLink={stat.descriptionLink}
+                link={stat.link}
               />
             ))}
           </div>
         </div>
       ) : (
-        <div className={cls('stats-by-numbers__grid', statsLayoutClass)}>
+        <div className={gridClasses}>
           {stats.map((stat, index) => (
             <StatItem
               key={index}
@@ -60,18 +70,58 @@ export function StatsByNumbers({
               bottomLabel={stat.bottomLabel}
               description={stat.description}
               descriptionLink={stat.descriptionLink}
+              link={stat.link}
             />
           ))}
         </div>
       )}
 
       {!title && buttonLabel && buttonUrl && (
-        <div className="stats-by-numbers__footer">
-          <a href={buttonUrl} className="cta__link cta--arrow">
-            {buttonLabel} <i />
-          </a>
-        </div>
+        <a href={buttonUrl} className={`${baseClass}__link`}>
+          {buttonLabel}
+        </a>
       )}
-    </div>
+    </section>
   );
 }
+
+StatsByNumbers.propTypes = {
+  /** Optional heading for the stats section */
+  title: PropTypes.string,
+  /** Label for the call-to-action button */
+  buttonLabel: PropTypes.string,
+  /** URL for the call-to-action button */
+  buttonUrl: PropTypes.string,
+  /** Array of stat objects to display (1-3 recommended) */
+  stats: PropTypes.arrayOf(
+    PropTypes.shape({
+      /** Icon class name (e.g., "mg-icon fa-globe") */
+      icon: PropTypes.string,
+      /** Label displayed above the value (e.g., "Target A") */
+      topLabel: PropTypes.string,
+      /** The main statistic value (e.g., "1,500+", "45%", "$223B") */
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      /** Label displayed below the value */
+      bottomLabel: PropTypes.string.isRequired,
+      /** Optional descriptive text */
+      description: PropTypes.string,
+      /** Optional link within the description (remains clickable independently) */
+      descriptionLink: PropTypes.shape({
+        /** Link text */
+        text: PropTypes.string.isRequired,
+        /** Link URL */
+        url: PropTypes.string.isRequired,
+      }),
+      /** URL to make the entire stat item clickable */
+      link: PropTypes.string,
+    })
+  ),
+  /** Visual variant: default, compact, or highlighted */
+  variant: PropTypes.oneOf(['default', 'compact', 'highlighted']),
+  /** Layout mode: grid (separate cards) or card (grouped container) */
+  layout: PropTypes.oneOf(['grid', 'card']),
+  /** Additional CSS class names */
+  className: PropTypes.string,
+};
+
+export default StatsByNumbers;
