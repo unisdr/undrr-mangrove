@@ -159,16 +159,6 @@
   }
 }
 
-// burmese lang
-:lang(my) {
-  .multi-select {
-    ul li,
-    button {
-      font-family: $mg-font-family;
-    }
-  }
-}
-
 [dir="rtl"] {
   .multi-select {
     button {
@@ -221,6 +211,16 @@
           padding: 0 $mg-spacing-200 0 0;
         }
       }
+    }
+  }
+}
+
+// Arabic
+:lang(ar) {
+  .multi-select {
+    ul li,
+    button {
+      font-family: $mg-font-family-arabic-body;
     }
   }
 }

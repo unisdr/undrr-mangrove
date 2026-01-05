@@ -1,20 +1,24 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
-const CopyPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack');
-const webpackEntry = require('./webpack.entries');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import FixStyleOnlyEntriesPlugin from 'webpack-fix-style-only-entries';
+import CopyPlugin from 'copy-webpack-plugin';
+import webpack from 'webpack';
+import webpackEntry from './webpack.entries.js';
+
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = path.dirname(currentFilePath);
 
 const packMode =
   process.env.NODE_ENV === 'development' ? 'development' : 'production';
 
-module.exports = [
+export default [
   {
     mode: packMode,
     entry: webpackEntry('js'),
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(currentDirPath, 'dist'),
       filename: '[name].min.js',
       libraryTarget: 'umd',
     },
@@ -87,7 +91,7 @@ module.exports = [
       'react-dom': 'react-dom',
     },
     output: {
-      path: path.resolve(__dirname, 'dist/components'),
+      path: path.resolve(currentDirPath, 'dist/components'),
       filename: '[name].js',
       library: {
         type: 'module',
