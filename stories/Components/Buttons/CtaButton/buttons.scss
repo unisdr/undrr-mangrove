@@ -115,3 +115,10 @@ button {
 //     }
 //   }
 // }
+
+// Arabic font override
+:lang(ar) {
+  .mg-button {
+    font-family: $mg-font-family-arabic-headings;
+  }
+}

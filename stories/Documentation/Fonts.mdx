@@ -74,10 +74,12 @@ Arabic content uses dedicated fonts optimized for Arabic script, replacing Robot
 
 ### Font usage
 
-| Purpose | Font | Variable |
-|---------|------|----------|
-| Headings (h1-h6) | Noto Kufi Arabic | `$mg-font-family-arabic-headings` |
-| Body text | Dubai | `$mg-font-family-arabic-body` |
+| Purpose | Font | Weight | Variable |
+|---------|------|--------|----------|
+| Headings (h1-h6) | Noto Kufi Arabic | 700 only | `$mg-font-family-arabic-headings` |
+| Body text | Dubai | 400 | `$mg-font-family-arabic-body` |
+
+> **Note**: Noto Kufi Arabic is only available in 700 (Bold) weight, which is appropriate for headings. Dubai is used for body text at regular weight.
 
 ### Implementation
 
@@ -96,10 +98,12 @@ To see Arabic fonts in action, [view the Hero component with Arabic locale](?pat
 
 > **Note**: Fonts are temporarily served from the testing CDN during development. Before production release, update paths to use `/static/fonts/` instead of `/testing/static/fonts/`.
 
-| Font | CDN Path |
-|------|----------|
-| Noto Kufi Arabic | `https://assets.undrr.org/testing/static/fonts/noto-kufi-arabic/v1.0.0/` |
-| Dubai | `https://assets.undrr.org/testing/static/fonts/dubai/v1.0.0/` |
+| Font | Weight | CDN Path |
+|------|--------|----------|
+| Noto Kufi Arabic | 700 (Bold) | `https://assets.undrr.org/testing/static/fonts/noto-kufi-arabic/v1.0.0/Bold/` |
+| Dubai | 400 (Regular) | `https://assets.undrr.org/testing/static/fonts/dubai/v1.0.0/Regular/` |
+
+**Font formats**: WOFF2 and WOFF formats are served for optimal browser compatibility and compression.
 
 ### RTL support
 
@@ -136,3 +140,11 @@ When creating components that explicitly set `font-family`, add language-specifi
   }
 }
 ```
+
+---
+
+## References
+
+- [OCHA Brand Guidelines - Fonts](https://brand.unocha.org/document/281801#/fonts/fonts)
+- [Mangrove PR #677](https://github.com/unisdr/undrr-mangrove/pull/677)
+- [Web Backlog Issue #2368](https://gitlab.com/undrr/web-backlog/-/issues/2368)
