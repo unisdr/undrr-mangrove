@@ -107,3 +107,11 @@
     width: 18px;
   }
 }
+
+// Arabic
+:lang(ar) {
+  .mg-share__header,
+  .mg-share__copy-button {
+    font-family: $mg-font-family-arabic-body;
+  }
+}

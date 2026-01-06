@@ -105,12 +105,12 @@
   }
 }
 
-// burmese lang
-:lang(my) {
+// Arabic
+:lang(ar) {
   .accordion {
     li {
       button {
-        font-family: $mg-font-family;
+        font-family: $mg-font-family-arabic-body;
       }
     }
   }

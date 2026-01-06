@@ -646,3 +646,10 @@
     display: none;
   }
 }
+
+// Arabic
+:lang(ar) {
+  .mg-mega-menu__item-link {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
