@@ -191,41 +191,33 @@
 // END of CARD
 
 // Icon Card variant
+// Uses shared .mg-card__visual, .mg-card__content, .mg-card__title, etc.
+// RTL is automatic via [dir="rtl"] - no manual alignment prop needed
 .mg-card__icon {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   gap: $mg-spacing-100;
 
-  // Stacked layout (always vertical)
-  &--stacked {
-    flex-direction: column;
-
-    @media (min-width: $mg-breakpoint-tablet) {
-      flex-direction: column;
-    }
-  }
-
-  // Default: Switch to column layout on larger screens
-  @media (min-width: $mg-breakpoint-tablet) {
-    flex-direction: column;
-  }
-
-  // Icon/Image container
-  .mg-card__icon-visual {
+  // Reuse shared visual container with icon-specific sizing
+  .mg-card__visual {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    aspect-ratio: auto; // Override default aspect ratio from vc/hc
+    overflow: visible;
   }
 
-  .mg-card__icon-image {
+  // Icon-specific image sizing (smaller than standard cards)
+  .mg-card__image {
     max-width: 100%;
     height: auto;
     object-fit: contain;
   }
 
-  .mg-card__icon-icon {
+  // SVG icon container
+  .mg-card__icon-svg {
     width: 72px;
     height: 72px;
     display: flex;
@@ -237,15 +229,10 @@
       width: 100%;
       height: 100%;
     }
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
 
-  // Card body content
-  .mg-card__icon-body {
+  // Reuse shared content container
+  .mg-card__content {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -262,8 +249,6 @@
 
       a {
         color: $mg-color-text;
-        cursor: pointer;
-        display: inline-block;
         text-decoration: none;
 
         &:hover {
@@ -307,79 +292,37 @@
     }
   }
 
-  // Alignment variants
-  &--left {
-    text-align: left;
-
-    .mg-card__icon-visual {
-      align-self: flex-start;
-    }
-  }
-
-  &--center {
+  // Centered variant
+  &--centered {
     align-items: center;
     text-align: center;
 
-    .mg-card__icon-visual {
-      align-self: center;
+    .mg-card__visual {
+      justify-content: center;
     }
 
-    .mg-card__icon-body {
+    .mg-card__content {
       align-items: center;
-    }
-
-    .mg-card__meta,
-    .mg-card__title,
-    .mg-card__summary,
-    .mg-card__cta,
-    .mg-card__link {
-      text-align: center;
-    }
-  }
-
-  &--right {
-    align-items: flex-end;
-    text-align: right;
-
-    .mg-card__icon-visual {
-      align-self: flex-end;
-    }
-
-    .mg-card__icon-body {
-      align-items: flex-end;
-    }
-
-    .mg-card__meta,
-    .mg-card__title,
-    .mg-card__summary,
-    .mg-card__cta,
-    .mg-card__link {
-      text-align: right;
     }
   }
 }
 
-// [dir='rtl'] {
-//   .content-card {
-//     .image {
-//       &::before {
-//         @include transform(scaleX(-1));
-//       }
-//     }
+// RTL support for Icon Card
+[dir="rtl"] {
+  .mg-card__icon {
+    // Centered stays centered in RTL
+    &--centered {
+      text-align: center;
 
-//     &:hover {
-//       .cta {
-//         &--space::after {
-//           @include transform(translate(-50%, 0) rotate(180deg));
-//         }
+      .mg-card__visual {
+        justify-content: center;
+      }
 
-//         &--arrow::after {
-//           margin-left: 0;
-//           margin-right: 0.25rem;
-//         }
-//       }
-//     }
-//   }
-// }
+      .mg-card__content {
+        align-items: center;
+      }
+    }
+  }
+}
 
 /* content-card end */

@@ -6,26 +6,30 @@ import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export const alignment_options = {
-  left: 'left',
-  center: 'center',
-  right: 'right', // for RTL
-};
-
 /**
  * IconCard Component
  *
- * A card variant with icon/image at top, content in middle, and link/button at bottom.
- * Supports alignment customization for LTR, RTL, and centered layouts.
+ * A card variant with icon/image, title, summary, and optional CTA.
+ * RTL layout is automatic via CSS [dir="rtl"] - use the Storybook locale toolbar.
  *
  * @param {Object} props
- * @param {Array} props.data - Array of card data objects
- * @param {string} props.alignment - Content alignment: 'left', 'center', or 'right' (for RTL)
- * @param {boolean} props.stackedLayout - Use stacked (column) layout at all breakpoints
+ * @param {Array} props.data - Array of card data objects (see data object properties below)
+ * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
+ *
+ * Data object properties:
+ * @property {string} icon - Inline SVG markup (alternative to imgback)
+ * @property {string} imgback - Image URL (alternative to icon, matches VerticalCard)
+ * @property {string} imgalt - Alt text for image (matches VerticalCard)
+ * @property {number} iconSize - Width/height of icon/image in pixels (default: 72)
+ * @property {string} label - Badge or category label text
+ * @property {string} title - Card heading text (required)
+ * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
+ * @property {string} link - URL for card link
+ * @property {string} linkText - Text for text link CTA
+ * @property {string} button - Button label text
+ * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
-export function IconCard({ data, alignment = 'left', stackedLayout = false }) {
-  const alignmentClass = alignment_options[alignment] || 'left';
-
+export function IconCard({ data, centered = false }) {
   return (
     <>
       {data.map((item, index) => (
@@ -34,24 +38,23 @@ export function IconCard({ data, alignment = 'left', stackedLayout = false }) {
           className={cls(
             'mg-card',
             'mg-card__icon',
-            stackedLayout && 'mg-card__icon--stacked',
-            `mg-card__icon--${alignmentClass}`
+            centered && 'mg-card__icon--centered'
           )}
         >
           {/* Icon or Image */}
-          {(item.icon || item.image) && (
-            <div className="mg-card__icon-visual">
-              {item.image ? (
+          {(item.icon || item.imgback) && (
+            <div className="mg-card__visual">
+              {item.imgback ? (
                 <img
-                  src={item.image}
-                  alt={item.imageAlt || ''}
-                  className="mg-card__icon-image"
+                  src={item.imgback}
+                  alt={item.imgalt || ''}
+                  className="mg-card__image"
                   width={item.iconSize || 72}
                   height={item.iconSize || 72}
                 />
               ) : item.icon ? (
-                <div
-                  className="mg-card__icon-icon"
+                <span
+                  className="mg-card__icon-svg"
                   aria-hidden="true"
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(item.icon),
@@ -62,7 +65,7 @@ export function IconCard({ data, alignment = 'left', stackedLayout = false }) {
           )}
 
           {/* Card Content */}
-          <div className="mg-card__icon-body">
+          <div className="mg-card__content">
             {/* Optional Label/Badge */}
             {item.label && (
               <div className="mg-card__meta">
@@ -83,12 +86,12 @@ export function IconCard({ data, alignment = 'left', stackedLayout = false }) {
               </header>
             )}
 
-            {/* Summary/Description */}
-            {item.description && (
+            {/* Summary */}
+            {item.summaryText && (
               <p
                 className="mg-card__summary"
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(item.description),
+                  __html: DOMPurify.sanitize(item.summaryText),
                 }}
               />
             )}
@@ -117,6 +120,5 @@ export function IconCard({ data, alignment = 'left', stackedLayout = false }) {
 }
 
 IconCard.defaultProps = {
-  alignment: 'left',
-  stackedLayout: false,
+  centered: false,
 };

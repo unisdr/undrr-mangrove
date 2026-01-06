@@ -5,7 +5,7 @@ import * as IconCardStories from './IconCard.stories';
 
 # Icon card
 
-Icon Card is a versatile card variant designed to highlight content with visual icons or images. It features a clean, flexible layout with an icon/image at the top, content in the middle, and a call-to-action at the bottom.
+Icon Card is a versatile card variant designed to highlight content with visual icons or images. It features a clean, vertical layout with an icon/image at the top, content in the middle, and a call-to-action at the bottom.
 
 ## When to use
 
@@ -14,7 +14,6 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 - **Step-by-step guides**: Display process steps with numbered icons
 - **Category cards**: Organize content by category with representative icons
 - **Service cards**: Present services or offerings in a grid layout
-- **RTL/LTR support**: Content requiring right-to-left or centered alignment
 
 ## When not to use
 
@@ -22,25 +21,23 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 - **Data visualization**: Use StatsCards for numeric data
 - **Long-form content**: Consider standard cards for extensive text
 
+## RTL support
+
+RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon) to see all components adapt their alignment. The `dir="rtl"` attribute is set automatically on the `<html>` element.
+
 ## Component features
 
-### Layout options
+### Layout
 
-- **Stacked layout**: Force vertical/column layout at all breakpoints (recommended for grid layouts)
-- **Responsive**: Automatically adjusts from horizontal to vertical on larger screens
+- **Vertical layout**: Icon/image at top, content below
 - **Flexible height**: Cards auto-adjust height based on content
-
-### Alignment variants
-
-- **Left** (default): Standard LTR alignment
-- **Center**: Centered content for symmetrical layouts
-- **Right**: RTL support for languages like Arabic, Hebrew
+- **Grid-friendly**: Works well in CSS Grid layouts
 
 ### Content options
 
-- **Icon or Image**: Use SVG icons (inline or external) or image files
+- **Icon or Image**: Use SVG icons (inline) or image URLs
 - **Title**: Required heading text (can be linked)
-- **Description**: Optional body text (HTML supported)
+- **Summary text**: Optional body text (HTML supported)
 - **Label/Badge**: Optional badge/category label
 - **CTA options**:
   - Button (Primary or Secondary)
@@ -49,25 +46,25 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 
 ## Usage
 
-### Basic usage with icon
+### Default (left-aligned)
 
-<Canvas of={IconCardStories.LeftAlignedWithLink} />
+<Canvas of={IconCardStories.Default} />
 
 ### Centered alignment
 
-<Canvas of={IconCardStories.CenteredWithButton} />
-
-### RTL support (Right alignment)
-
-<Canvas of={IconCardStories.RightAlignedRTL} />
+<Canvas of={IconCardStories.Centered} />
 
 ### With labels/badges
 
 <Canvas of={IconCardStories.WithLabels} />
 
-### Grid layout example
+### Grid layout
 
 <Canvas of={IconCardStories.GridLayout} />
+
+### With image
+
+<Canvas of={IconCardStories.WithImage} />
 
 ## Props
 
@@ -76,20 +73,21 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `data` | Array | Required | Array of card data objects |
-| `alignment` | String | `'left'` | Content alignment: `'left'`, `'center'`, or `'right'` |
-| `stackedLayout` | Boolean | `false` | Force vertical layout at all breakpoints |
+| `centered` | Boolean | `false` | Center-align content |
 
 ### Data object properties
 
+These properties align with VerticalCard and HorizontalCard for consistency:
+
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `icon` | String | Optional | Inline SVG markup for icon (alternative to `image`) |
-| `image` | String | Optional | Image URL (alternative to `icon`) |
+| `icon` | String | Optional | Inline SVG markup (alternative to `imgback`) |
+| `imgback` | String | Optional | Image URL (alternative to `icon`) |
+| `imgalt` | String | Optional | Alt text for image |
 | `iconSize` | Number | `72` | Width/height of icon or image in pixels |
-| `imageAlt` | String | Optional | Alt text for image |
 | `label` | String | Optional | Badge or category label text |
 | `title` | String | Required | Card heading text |
-| `description` | String | Optional | Card body text (HTML supported) |
+| `summaryText` | String | Optional | Card body text (HTML supported) |
 | `link` | String | Optional | URL for card link |
 | `linkText` | String | Optional | Text for text link CTA |
 | `button` | String | Optional | Button label text |
@@ -101,13 +99,11 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 
 ```jsx
 <IconCard
-  alignment="left"
-  stackedLayout={true}
   data={[
     {
       icon: '<svg>...</svg>',
       title: 'Components',
-      description: 'Browse all USWDS components.',
+      summaryText: 'Browse all UNDRR components.',
       linkText: 'Browse components →',
       link: '/components',
     },
@@ -119,16 +115,15 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 
 ```jsx
 <IconCard
-  alignment="center"
-  stackedLayout={true}
+  centered
   data={[
     {
-      image: '/icons/feature.svg',
+      imgback: '/icons/feature.png',
       iconSize: 64,
-      imageAlt: 'Feature icon',
+      imgalt: 'Feature icon',
       title: 'Features',
-      description: 'Explore our features.',
-      button: 'Learn More',
+      summaryText: 'Explore our features.',
+      button: 'Learn more',
       link: '/features',
     },
   ]}
@@ -143,72 +138,53 @@ Icon Card is a versatile card variant designed to highlight content with visual 
   gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
   gap: '2rem'
 }}>
-  <IconCard
-    alignment="center"
-    stackedLayout={true}
-    data={[{ /* card data */ }]}
-  />
-  <IconCard
-    alignment="center"
-    stackedLayout={true}
-    data={[{ /* card data */ }]}
-  />
-  <IconCard
-    alignment="center"
-    stackedLayout={true}
-    data={[{ /* card data */ }]}
-  />
-</div>
-```
-
-### RTL (Arabic) example
-
-```jsx
-<div lang="ar" dir="rtl">
-  <IconCard
-    alignment="right"
-    stackedLayout={true}
-    data={[
-      {
-        icon: '<svg>...</svg>',
-        title: 'المكونات',
-        description: 'تصفح جميع مكونات USWDS.',
-        linkText: '← تصفح المكونات',
-        link: '/components',
-      },
-    ]}
-  />
+  <IconCard centered data={[{ /* card data */ }]} />
+  <IconCard centered data={[{ /* card data */ }]} />
+  <IconCard centered data={[{ /* card data */ }]} />
 </div>
 ```
 
 ## Accessibility
 
 - Icons are decorative and use `aria-hidden="true"`
-- Images require `imageAlt` for screen readers
+- Images require `imgalt` for screen readers
 - Titles can be linked for entire card click areas
-- Buttons and links maintain proper focus order
+- Buttons and links have visible focus states (`:focus-visible`)
 - Color contrast meets WCAG AA standards
+- RTL layout handled automatically via CSS `[dir="rtl"]`
 
 ## Best practices
 
 ### Do
 
 - Use clear, concise titles (3-5 words)
-- Keep descriptions brief (1-2 sentences)
-- Provide alt text for images
+- Keep summaries brief (1-2 sentences)
+- Provide alt text for images via `imgalt`
 - Use consistent icon sizes in grids
-- Choose appropriate alignment for your content language
+- Test with the locale toolbar for RTL languages
 
 ### Don't
 
 - Mix icons and images in the same grid
 - Use overly complex icons
-- Write lengthy descriptions (use regular cards instead)
-- Forget to test RTL layouts for Arabic/Hebrew content
+- Write lengthy summaries (use regular cards instead)
+- Manually set alignment for RTL - it's automatic
+
+## Migration from v1
+
+If upgrading from the previous IconCard API:
+
+| Old prop | New prop | Notes |
+|----------|----------|-------|
+| `alignment` | Removed | RTL is automatic via CSS |
+| `stackedLayout` | Removed | Always vertical now |
+| `description` | `summaryText` | Aligns with VerticalCard |
+| `image` | `imgback` | Aligns with VerticalCard |
+| `imageAlt` | `imgalt` | Aligns with VerticalCard |
 
 ## Related components
 
-- **VerticalCard**: For image-focused content
-- **HorizontalCard**: For content-heavy cards
+- **VerticalCard**: For image-focused content with larger visuals
+- **HorizontalCard**: For content-heavy cards with side-by-side layout
 - **StatsCards**: For numerical data display
 - **BookCard**: For publication listings

@@ -8,32 +8,45 @@ import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss'
 import themeIRP from '../stories/assets/scss/style-irp.scss';
 import themeMCR from '../stories/assets/scss/style-mcr.scss';
 
-// Function to get current language code
+// RTL languages
+const rtlLanguages = ['arabic'];
+
+// Language code mapping
+const langArr = {
+  english: 'en',
+  arabic: 'ar',
+  burmese: 'my',
+  japanese: 'ja',
+};
+
+// Decorator to set language and text direction based on locale global
 const getLangCode = (Story, context) => {
-  let activeLang = context.globals.locale;
+  const activeLang = context.globals.locale || 'english';
 
-  let delay = 10;
-  setTimeout(function () {
-    const evt = new Event('load');
-    window.dispatchEvent(evt);
-  }, delay);
+  React.useEffect(() => {
+    const langCode = langArr[activeLang] || 'en';
+    const direction = rtlLanguages.includes(activeLang) ? 'rtl' : 'ltr';
 
-  window.UNDRR = window.UNDRR || {};
-  window.UNDRR.langCode = activeLang;
+    // Set lang on html element
+    const htmlElem = document.documentElement;
+    htmlElem.setAttribute('lang', langCode);
 
-  const langArr = {
-    english: 'en',
-    arabic: 'ar',
-    burmese: 'my',
-    japanese: 'ja',
-  };
+    // Set dir on both html and #storybook-root (where RTL addon sets it)
+    htmlElem.setAttribute('dir', direction);
+    const storybookRoot = document.getElementById('storybook-root');
+    if (storybookRoot) {
+      storybookRoot.setAttribute('dir', direction);
+    }
 
-  if (typeof langArr[activeLang] === 'undefined') {
-    activeLang = 'english';
-  }
+    window.UNDRR = window.UNDRR || {};
+    window.UNDRR.langCode = activeLang;
+    window.UNDRR.dir = direction;
 
-  const htmlElem = document.querySelector('html');
-  htmlElem.setAttribute('lang', langArr[activeLang]);
+    // Dispatch load event for components that listen for it
+    setTimeout(() => {
+      window.dispatchEvent(new Event('load'));
+    }, 10);
+  }, [activeLang]);
 
   return <Story {...context} />;
 };
@@ -56,22 +69,16 @@ const sbFrameReset = (Story, context) => {
   return <Story {...context} />;
 };
 
+// Legacy RTL addon support - allows manual RTL toggle to override locale
 const setDirection = (Story, context) => {
-  let direction = 'ltr';
-  const input = parent.document.querySelector('[aria-controls="rtl-status"]');
-
-  const checkRTL = elem => {
-    if (elem.checked) {
-      direction = 'rtl';
+  React.useEffect(() => {
+    const input = parent.document.querySelector('[aria-controls="rtl-status"]');
+    if (input?.checked) {
+      document.documentElement.setAttribute('dir', 'rtl');
+      window.UNDRR = window.UNDRR || {};
+      window.UNDRR.dir = 'rtl';
     }
-  };
-
-  if (input && input.checked) {
-    input.addEventListener('change', checkRTL(input), false);
-  }
-
-  window.UNDRR = window.UNDRR || {};
-  window.UNDRR.dir = direction;
+  }, []);
 
   return <Story {...context} />;
 };
