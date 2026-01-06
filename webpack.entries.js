@@ -13,7 +13,7 @@ export default (type = 'css') => {
   let ignoreFiles = [
     './node_modules',
     './stories/assets/**/lib/**',
-    './stories/**/_!(swiper)*.scss',
+    './stories/**/_*.scss',
     './stories/Atom/**',
     './stories/**/*.mdx',
     './stories/**/*.jsx',
