@@ -251,7 +251,7 @@ const getCaptionForLocale = locale => {
 };
 
 export default {
-  title: 'Components/Stats by numbers',
+  title: 'Components/Cards/Stats card',
   component: StatsCard,
   argTypes: {
     variant: {
