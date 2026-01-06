@@ -258,3 +258,54 @@ export const CornerNavigation = {
   },
   name: 'Corner Navigation Buttons',
 };
+
+// Mixed media (images, videos, embeds)
+const mixedMediaItems = [
+  {
+    id: '1',
+    type: 'image',
+    src: 'https://picsum.photos/800/600?random=30',
+    alt: 'Sample image',
+    title: 'Image Example',
+    description: 'A regular image in the gallery.',
+  },
+  {
+    id: '2',
+    type: 'video',
+    src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    thumbnail: 'https://picsum.photos/800/600?random=31',
+    poster: 'https://picsum.photos/800/600?random=31',
+    alt: 'Big Buck Bunny video',
+    title: 'Video Example',
+    description: 'A video with controls. Click play to watch.',
+  },
+  {
+    id: '3',
+    type: 'embed',
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    thumbnail: 'https://picsum.photos/800/600?random=32',
+    alt: 'YouTube video',
+    title: 'Embedded YouTube Video',
+    description: 'An embedded YouTube video using iframe.',
+  },
+  {
+    id: '4',
+    type: 'image',
+    src: 'https://picsum.photos/800/600?random=33',
+    alt: 'Another image',
+    title: 'Another Image',
+    description: 'Back to a regular image.',
+  },
+];
+
+export const MixedMedia = {
+  args: {
+    images: mixedMediaItems,
+    showThumbnails: true,
+    thumbnailPosition: 'left',
+    showArrows: true,
+    showDescription: true,
+    enableKeyboard: true,
+  },
+  name: 'Mixed Media (Images, Videos, Embeds)',
+};

@@ -61,6 +61,41 @@
     display: block;
   }
 
+  &__video {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  // Loading indicator
+  &__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+  }
+
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid $mg-color-neutral-300;
+    border-top-color: $mg-color-interactive;
+    border-radius: 50%;
+    animation: mg-gallery-spin 0.8s linear infinite;
+  }
+
+  @keyframes mg-gallery-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   // Description area
   &__description {
     grid-area: description;
@@ -148,6 +183,7 @@
     cursor: pointer;
     background: $mg-color-neutral-100;
     padding: 0;
+    position: relative;
 
     @include transition(all 0.2s ease);
 
@@ -184,6 +220,24 @@
       border-color: $mg-color-interactive;
       box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
     }
+  }
+
+  &__thumbnail-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 0.6);
+    color: $mg-color-white;
+    border-radius: 50%;
+    font-size: 14px;
+    pointer-events: none;
+    padding-left: 2px;
   }
 
   // Navigation arrows (following ScrollContainer pattern)

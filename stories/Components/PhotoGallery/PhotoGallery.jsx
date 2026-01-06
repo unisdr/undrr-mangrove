@@ -18,6 +18,7 @@ export function PhotoGallery({
   onImageChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [isLoading, setIsLoading] = useState(false);
   const mainImageRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
   const thumbnailRefs = useRef([]);
@@ -25,6 +26,15 @@ export function PhotoGallery({
   const touchEndX = useRef(null);
 
   const activeImage = images[activeIndex];
+
+  // Set loading state when switching to video/embed
+  useEffect(() => {
+    if (activeImage.type === 'video' || activeImage.type === 'embed') {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [activeIndex, activeImage.type]);
 
   // Handle thumbnail click
   const handleThumbnailClick = useCallback(
@@ -140,13 +150,46 @@ export function PhotoGallery({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <img
-            ref={mainImageRef}
-            src={activeImage.src}
-            alt={activeImage.alt}
-            className="mg-gallery__image"
-            aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
-          />
+          {(!activeImage.type || activeImage.type === 'image') && (
+            <img
+              ref={mainImageRef}
+              src={activeImage.src}
+              alt={activeImage.alt}
+              className="mg-gallery__image"
+              aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
+            />
+          )}
+          {activeImage.type === 'video' && (
+            <video
+              ref={mainImageRef}
+              src={activeImage.src}
+              className="mg-gallery__image mg-gallery__video"
+              controls
+              poster={activeImage.poster}
+              onLoadedData={() => setIsLoading(false)}
+              onLoadStart={() => setIsLoading(true)}
+              aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
+            >
+              <track kind="captions" />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          {activeImage.type === 'embed' && (
+            <iframe
+              ref={mainImageRef}
+              src={activeImage.embedUrl || activeImage.src}
+              className="mg-gallery__image mg-gallery__embed"
+              title={activeImage.title || activeImage.alt}
+              allowFullScreen
+              onLoad={() => setIsLoading(false)}
+              aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
+            />
+          )}
+          {isLoading && (
+            <div className="mg-gallery__loading" aria-live="polite" aria-label="Loading media">
+              <div className="mg-gallery__spinner"></div>
+            </div>
+          )}
         </div>
 
         {/* Navigation arrows */}
@@ -227,7 +270,12 @@ export function PhotoGallery({
               aria-label={`View ${image.title || image.alt}`}
               type="button"
             >
-              <img src={image.src} alt="" loading="lazy" />
+              <img src={image.thumbnail || image.src} alt="" loading="lazy" />
+              {(image.type === 'video' || image.type === 'embed') && (
+                <span className="mg-gallery__thumbnail-indicator" aria-hidden="true">
+                  ▶
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -240,10 +288,14 @@ PhotoGallery.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['image', 'video', 'embed']),
       src: PropTypes.string.isRequired,
       alt: PropTypes.string.isRequired,
       title: PropTypes.string,
       description: PropTypes.string,
+      thumbnail: PropTypes.string,
+      poster: PropTypes.string,
+      embedUrl: PropTypes.string,
     })
   ).isRequired,
   initialIndex: PropTypes.number,
