@@ -38,9 +38,19 @@
     grid-area: main;
     position: relative;
     background-color: $mg-color-white;
-    border-radius: $mg-spacing-50;
+    border-radius: $mg-spacing-50; // 0.5rem / 8px
     box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
     overflow: hidden;
+  }
+
+  // Focus style when gallery receives keyboard focus
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
   }
 
   &__image-wrapper {
@@ -82,8 +92,8 @@
   }
 
   &__spinner {
-    width: 48px;
-    height: 48px;
+    width: $mg-spacing-300; // 3rem / 48px
+    height: $mg-spacing-300;
     border: 4px solid $mg-color-neutral-300;
     border-top-color: $mg-color-interactive;
     border-radius: 50%;
@@ -108,7 +118,7 @@
 
   &__title {
     font-size: $mg-font-size-400;
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: $mg-spacing-50;
     color: $mg-color-text;
   }
@@ -159,12 +169,12 @@
 
     &::-webkit-scrollbar-track {
       background: $mg-color-neutral-100;
-      border-radius: 4px;
+      border-radius: $mg-spacing-25;
     }
 
     &::-webkit-scrollbar-thumb {
       background: $mg-color-neutral-500;
-      border-radius: 4px;
+      border-radius: $mg-spacing-25;
 
       &:hover {
         background: $mg-color-neutral-600;
@@ -175,10 +185,10 @@
   // Individual thumbnail button
   &__thumbnail {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
+    width: $mg-spacing-400; // 5rem / 80px
+    height: $mg-spacing-400;
     border: 2px solid transparent;
-    border-radius: 4px;
+    border-radius: $mg-spacing-25;
     overflow: hidden;
     cursor: pointer;
     background: $mg-color-neutral-100;
@@ -194,8 +204,8 @@
     }
 
     .mg-gallery--thumbnails-bottom & {
-      width: 80px;
-      height: 80px;
+      width: $mg-spacing-400;
+      height: $mg-spacing-400;
     }
 
     img {
@@ -213,7 +223,13 @@
 
     &:focus {
       outline: none;
+    }
+
+    &:focus-visible {
       border-color: $mg-color-interactive;
+      box-shadow:
+        0 0 0 2px $mg-color-white,
+        0 0 0 4px $mg-color-interactive;
     }
 
     &--active {
@@ -227,15 +243,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 32px;
-    height: 32px;
+    width: $mg-spacing-200; // 2rem / 32px
+    height: $mg-spacing-200;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgb(0 0 0 / 0.6);
     color: $mg-color-white;
     border-radius: 50%;
-    font-size: 14px;
+    font-size: $mg-font-size-100; // 1rem / 16px (close to 14px)
     pointer-events: none;
     padding-left: 2px;
   }
@@ -248,7 +264,7 @@
     width: $mg-spacing-300;
     height: $mg-spacing-300;
     border: none;
-    border-radius: 4px;
+    border-radius: $mg-spacing-25;
     background: $mg-color-neutral-700;
     color: $mg-color-white;
     font-size: $mg-font-size-400;
@@ -266,6 +282,9 @@
 
     &:focus {
       outline: none;
+    }
+
+    &:focus-visible {
       box-shadow:
         0 0 0 2px $mg-color-white,
         0 0 0 4px $mg-color-neutral-700;
@@ -285,7 +304,7 @@
       right: $mg-spacing-100;
     }
 
-    // Hide arrows on very small screens to avoid overlap
+    // Smaller arrows on mobile to avoid overlap with content
     @include devicebreak(small) {
       width: $mg-spacing-250;
       height: $mg-spacing-250;
@@ -312,13 +331,13 @@
   }
 
   &__arrow-button {
-    width: $mg-spacing-400;
-    height: $mg-spacing-400;
+    width: $mg-spacing-300;
+    height: $mg-spacing-300;
     border: none;
-    border-radius: 4px;
+    border-radius: $mg-spacing-25;
     background: $mg-color-neutral-700;
     color: $mg-color-white;
-    font-size: $mg-font-size-500;
+    font-size: $mg-font-size-400;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -332,6 +351,9 @@
 
     &:focus {
       outline: none;
+    }
+
+    &:focus-visible {
       box-shadow:
         0 0 0 2px $mg-color-white,
         0 0 0 4px $mg-color-neutral-700;
