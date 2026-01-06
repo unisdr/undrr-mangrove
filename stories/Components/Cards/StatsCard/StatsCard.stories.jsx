@@ -1,4 +1,4 @@
-import { StatsByNumbers } from './StatsByNumbers';
+import { StatsCard } from './StatsCard';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -252,7 +252,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Stats by numbers',
-  component: StatsByNumbers,
+  component: StatsCard,
   argTypes: {
     variant: {
       options: ['default', 'compact', 'highlighted'],
@@ -282,7 +282,7 @@ export const Default = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <StatsByNumbers
+      <StatsCard
         title={caption.default.title}
         stats={caption.default.stats}
         {...args}
@@ -296,7 +296,7 @@ export const WithIcons = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <StatsByNumbers
+      <StatsCard
         title={caption.withIcons.title}
         stats={caption.withIcons.stats}
         {...args}
@@ -310,7 +310,7 @@ export const Compact = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <StatsByNumbers
+      <StatsCard
         title={caption.compact.title}
         variant="compact"
         stats={caption.compact.stats}
@@ -325,7 +325,7 @@ export const Highlighted = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <StatsByNumbers
+      <StatsCard
         title={caption.highlighted.title}
         variant="highlighted"
         stats={caption.highlighted.stats}
@@ -340,7 +340,7 @@ export const CardLayout = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <StatsByNumbers
+      <StatsCard
         title={caption.cardLayout.title}
         layout="card"
         stats={caption.cardLayout.stats}
@@ -355,7 +355,7 @@ export const Linked = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <StatsByNumbers
+      <StatsCard
         title={caption.linked.title}
         stats={caption.linked.stats}
         {...args}

@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Heading } from '../../Atom/Typography/Heading/Heading';
-import { StatItem } from './StatItem';
+import { Heading } from '../../../Atom/Typography/Heading/Heading';
+import { StatsCardItem } from './StatsCardItem';
 
 /**
- * StatsByNumbers Component
+ * StatsCard Component
  *
- * A flexible component for displaying statistics and key metrics in an engaging,
+ * A flexible card component for displaying statistics and key metrics in an engaging,
  * scannable format. Supports grid layout (individual cards) or card layout
  * (grouped in a single container) with optional icons, dual labels, descriptions,
  * and call-to-action links.
  */
-export function StatsByNumbers({
+export function StatsCard({
   title,
   buttonLabel,
   buttonUrl,
@@ -21,7 +21,7 @@ export function StatsByNumbers({
   className = '',
   ...props
 }) {
-  const baseClass = 'mg-stats-by-numbers';
+  const baseClass = 'mg-stats-card';
   const statsCount = stats.length;
 
   // Use mg-grid system for grid layout
@@ -46,7 +46,7 @@ export function StatsByNumbers({
         <div className={`${baseClass}__card`}>
           <div className={`${baseClass}__card-content`}>
             {stats.map((stat, index) => (
-              <StatItem
+              <StatsCardItem
                 key={index}
                 icon={stat.icon}
                 topLabel={stat.topLabel}
@@ -62,7 +62,7 @@ export function StatsByNumbers({
       ) : (
         <div className={gridClasses}>
           {stats.map((stat, index) => (
-            <StatItem
+            <StatsCardItem
               key={index}
               icon={stat.icon}
               topLabel={stat.topLabel}
@@ -85,7 +85,7 @@ export function StatsByNumbers({
   );
 }
 
-StatsByNumbers.propTypes = {
+StatsCard.propTypes = {
   /** Optional heading for the stats section */
   title: PropTypes.string,
   /** Label for the call-to-action button */
@@ -124,4 +124,4 @@ StatsByNumbers.propTypes = {
   className: PropTypes.string,
 };
 
-export default StatsByNumbers;
+export default StatsCard;

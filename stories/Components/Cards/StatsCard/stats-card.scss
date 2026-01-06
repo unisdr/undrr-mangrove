@@ -1,5 +1,5 @@
 /* Stats By Numbers Component */
-.mg-stats-by-numbers {
+.mg-stats-card {
   width: 100%;
 
   &__link {
@@ -42,7 +42,7 @@
     }
 
     // Stat items in card layout don't have their own borders/shadows
-    .mg-stat-item {
+    .mg-stats-card-item {
       background-color: transparent;
       border: none;
       box-shadow: none;
@@ -82,7 +82,7 @@
 }
 
 /* Individual Stat Item */
-.mg-stat-item {
+.mg-stats-card-item {
   background-color: $mg-color-white;
   border: 1px solid $mg-color-neutral-200;
   border-radius: $mg-spacing-50;
@@ -223,8 +223,8 @@
 }
 
 /* Variant: Compact */
-.mg-stats-by-numbers--compact {
-  .mg-stat-item {
+.mg-stats-card--compact {
+  .mg-stats-card-item {
     padding: $mg-spacing-300;
 
     @include devicebreak(small) {
@@ -254,8 +254,8 @@
 }
 
 /* Variant: Highlighted */
-.mg-stats-by-numbers--highlighted {
-  .mg-stat-item {
+.mg-stats-card--highlighted {
+  .mg-stats-card-item {
     background-color: rgba($mg-color-interactive, 0.05);
     border-left: 4px solid $mg-color-interactive;
 
@@ -267,16 +267,16 @@
 
 /* RTL Support */
 [dir='rtl'] {
-  .mg-stats-by-numbers--highlighted {
-    .mg-stat-item {
+  .mg-stats-card--highlighted {
+    .mg-stats-card-item {
       border-left: none;
       border-right: 4px solid $mg-color-interactive;
     }
   }
 
   // Flip card separator for RTL
-  .mg-stats-by-numbers__card-content {
-    .mg-stat-item:not(:last-child)::after {
+  .mg-stats-card__card-content {
+    .mg-stats-card-item:not(:last-child)::after {
       right: auto;
       left: calc($mg-spacing-400 / -2);
     }

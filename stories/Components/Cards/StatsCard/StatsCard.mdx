@@ -1,16 +1,16 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { StatsByNumbers } from './StatsByNumbers';
-import * as StatsByNumbersStories from './StatsByNumbers.stories';
+import { StatsCard } from './StatsCard';
+import * as StatsCardStories from './StatsCard.stories';
 
-<Meta of={StatsByNumbersStories} />
+<Meta of={StatsCardStories} />
 
-# Stats by numbers
+# Stats card
 
 A flexible component for displaying statistics and key metrics in an engaging, scannable format.
 
 ## Overview
 
-The Stats By Numbers component highlights important statistics, metrics, or "by the numbers" information. It supports 1-3 statistics in a responsive grid layout with optional icons, dual labels, descriptions, and clickable cards.
+The Stats card component highlights important statistics, metrics, or "by the numbers" information. It supports 1-3 statistics in a responsive grid layout with optional icons, dual labels, descriptions, and clickable cards.
 
 ### Key features
 
@@ -25,13 +25,13 @@ The Stats By Numbers component highlights important statistics, metrics, or "by 
 
 ## Default
 
-<Canvas of={StatsByNumbersStories.Default} />
+<Canvas of={StatsCardStories.Default} />
 
 The default story shows three statistics with dual labels (top and bottom).
 
 ## With icons
 
-<Canvas of={StatsByNumbersStories.WithIcons} />
+<Canvas of={StatsCardStories.WithIcons} />
 
 Icons add visual interest and help users quickly identify stat categories.
 
@@ -39,31 +39,31 @@ Icons add visual interest and help users quickly identify stat categories.
 
 ### Compact
 
-<Canvas of={StatsByNumbersStories.Compact} />
+<Canvas of={StatsCardStories.Compact} />
 
 Use the compact variant when space is limited.
 
 ### Highlighted
 
-<Canvas of={StatsByNumbersStories.Highlighted} />
+<Canvas of={StatsCardStories.Highlighted} />
 
 The highlighted variant emphasizes stats with a colored border accent.
 
 ## Card layout
 
-<Canvas of={StatsByNumbersStories.CardLayout} />
+<Canvas of={StatsCardStories.CardLayout} />
 
 All statistics appear within a single card container. Use this when you want to group related stats visually.
 
 ## Linked stats
 
-<Canvas of={StatsByNumbersStories.Linked} />
+<Canvas of={StatsCardStories.Linked} />
 
 Make entire stat cards clickable by adding a `link` prop. The cursor changes to a pointer on hover to indicate interactivity.
 
 ## Component props
 
-### StatsByNumbers
+### StatsCard
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -90,7 +90,7 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
 ## Usage
 
 ```jsx
-<StatsByNumbers
+<StatsCard
   title="Sendai Framework Progress"
   stats={[
     {
@@ -112,7 +112,7 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
 ### Linked stats
 
 ```jsx
-<StatsByNumbers
+<StatsCard
   stats={[
     {
       value: "1,500+",

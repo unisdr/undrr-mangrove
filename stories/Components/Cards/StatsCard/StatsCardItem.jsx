@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * StatItem Component
+ * StatsCardItem Component
  *
  * Displays an individual statistic with optional icon, labels, description,
- * and link. Used as a child component within StatsByNumbers.
+ * and link. Used as a child component within StatsCard.
  *
  * When a `link` prop is provided, the entire stat item becomes clickable
  * while still allowing additional links (like descriptionLink) to work independently.
  */
-export function StatItem({
+export function StatsCardItem({
   icon,
   topLabel,
   value,
@@ -21,7 +21,7 @@ export function StatItem({
   className = '',
   ...props
 }) {
-  const baseClass = 'mg-stat-item';
+  const baseClass = 'mg-stats-card-item';
 
   const classes = [
     baseClass,
@@ -79,7 +79,7 @@ export function StatItem({
   );
 }
 
-StatItem.propTypes = {
+StatsCardItem.propTypes = {
   /** Icon class name (e.g., "mg-icon fa-globe") */
   icon: PropTypes.string,
   /** Label displayed above the value (e.g., "Target A", "Priority 1") */
@@ -103,4 +103,4 @@ StatItem.propTypes = {
   className: PropTypes.string,
 };
 
-export default StatItem;
+export default StatsCardItem;
