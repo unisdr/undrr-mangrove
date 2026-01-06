@@ -68,7 +68,7 @@ export default {
 // Basic gallery with 3 images
 export const BasicGallery = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,
@@ -80,7 +80,7 @@ export const BasicGallery = {
 // Gallery with many images (scrolling thumbnails)
 export const ManyImages = {
   args: {
-    images: manyImages,
+    media: manyImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,
@@ -93,7 +93,7 @@ export const ManyImages = {
 // Thumbnails at bottom
 export const ThumbnailsBottom = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: true,
     thumbnailPosition: 'bottom',
     showArrows: true,
@@ -106,7 +106,7 @@ export const ThumbnailsBottom = {
 // Without thumbnails
 export const WithoutThumbnails = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: false,
     showArrows: true,
     showDescription: true,
@@ -117,7 +117,7 @@ export const WithoutThumbnails = {
 // Without arrows
 export const WithoutArrows = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: false,
@@ -129,7 +129,7 @@ export const WithoutArrows = {
 // Without descriptions
 export const WithoutDescriptions = {
   args: {
-    images: sampleImages.map(img => ({
+    media: sampleImages.map(img => ({
       ...img,
       title: undefined,
       description: undefined,
@@ -145,7 +145,7 @@ export const WithoutDescriptions = {
 // Minimal configuration
 export const Minimal = {
   args: {
-    images: sampleImages.map(img => ({
+    media: sampleImages.map(img => ({
       id: img.id,
       src: img.src,
       alt: img.alt,
@@ -193,7 +193,7 @@ const mixedAspectImages = [
 
 export const MixedAspectRatios = {
   args: {
-    images: mixedAspectImages,
+    media: mixedAspectImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,
@@ -205,14 +205,14 @@ export const MixedAspectRatios = {
 // With callback
 export const WithCallback = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,
     showDescription: true,
     enableKeyboard: true,
-    onImageChange: (index, image) => {
-      console.log('Image changed:', index, image.title);
+    onMediaChange: (index, item) => {
+      console.log('Media changed:', index, item.title);
     },
   },
   name: 'With onChange Callback',
@@ -221,7 +221,7 @@ export const WithCallback = {
 // Starting at specific image
 export const StartAtSecondImage = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     initialIndex: 1,
     showThumbnails: true,
     thumbnailPosition: 'left',
@@ -235,7 +235,7 @@ export const StartAtSecondImage = {
 // Infinite loop
 export const InfiniteLoop = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,
@@ -248,7 +248,7 @@ export const InfiniteLoop = {
 // Corner navigation buttons
 export const CornerNavigation = {
   args: {
-    images: sampleImages,
+    media: sampleImages,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,
@@ -300,7 +300,7 @@ const mixedMediaItems = [
 
 export const MixedMedia = {
   args: {
-    images: mixedMediaItems,
+    media: mixedMediaItems,
     showThumbnails: true,
     thumbnailPosition: 'left',
     showArrows: true,

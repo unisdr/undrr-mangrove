@@ -12,7 +12,7 @@ An accessible, responsive photo gallery component with thumbnail navigation and 
 
 The Photo Gallery component displays a collection of images with thumbnail navigation on the left (desktop) or bottom (mobile). Users can navigate through images by clicking thumbnails, using navigation arrows, or with keyboard controls.
 
-### Key Features
+### Key features
 
 - **Thumbnail navigation**: Clickable thumbnails on left or bottom
 - **Keyboard navigation**: Arrow keys, Home, End support
@@ -22,59 +22,59 @@ The Photo Gallery component displays a collection of images with thumbnail navig
 - **Optional descriptions**: Display titles and captions below images
 - **Customizable**: Control visibility of thumbnails, arrows, and descriptions
 
-## Basic Usage
+## Basic usage
 
 <Canvas of={PhotoGalleryStories.BasicGallery} />
 
 The default gallery layout with thumbnails on the left, navigation arrows, and descriptions.
 
-## Thumbnail Positions
+## Thumbnail positions
 
-### Thumbnails on Left (Default)
+### Thumbnails on left (default)
 
 <Canvas of={PhotoGalleryStories.BasicGallery} />
 
 Best for desktop viewing with vertical thumbnail scrolling.
 
-### Thumbnails at Bottom
+### Thumbnails at bottom
 
 <Canvas of={PhotoGalleryStories.ThumbnailsBottom} />
 
 Alternative layout with thumbnails below the main image.
 
-## Scrolling with Many Images
+## Scrolling with many images
 
 <Canvas of={PhotoGalleryStories.ManyImages} />
 
 When there are many images, the thumbnail list becomes scrollable. Selected thumbnails automatically scroll into view.
 
-## Configuration Options
+## Configuration options
 
-### Without Thumbnails
+### Without thumbnails
 
 <Canvas of={PhotoGalleryStories.WithoutThumbnails} />
 
 Show only the main image with arrow navigation.
 
-### Without Arrows
+### Without arrows
 
 <Canvas of={PhotoGalleryStories.WithoutArrows} />
 
 Navigate only via thumbnail clicks or keyboard.
 
-### Without Descriptions
+### Without descriptions
 
 <Canvas of={PhotoGalleryStories.WithoutDescriptions} />
 
 Show images without titles or captions.
 
-### Minimal Configuration
+### Minimal configuration
 
 <Canvas of={PhotoGalleryStories.Minimal} />
 
 Simplest gallery with only essential features.
 
-## Handling Different Image Dimensions
+## Handling different image dimensions
 
 <Canvas of={PhotoGalleryStories.MixedAspectRatios} />
 
@@ -84,28 +84,34 @@ The gallery handles landscape, portrait, square, and panoramic images gracefully
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `images` | array | *required* | Array of image objects (see Image Object below) |
+| `media` | array | *required* | Array of media items (see Media item object below) |
 | `initialIndex` | number | `0` | Index of the initially displayed image |
 | `showThumbnails` | boolean | `true` | Show/hide thumbnail list |
 | `thumbnailPosition` | string | `'left'` | Position of thumbnails: `'left'` or `'bottom'` |
 | `showArrows` | boolean | `true` | Show/hide navigation arrows |
 | `showDescription` | boolean | `true` | Show/hide image titles and captions |
 | `enableKeyboard` | boolean | `true` | Enable/disable keyboard navigation |
-| `onImageChange` | function | `undefined` | Callback when image changes: `(index, image) => {}` |
+| `loop` | boolean | `false` | Enable infinite loop navigation |
+| `arrowStyle` | string | `'overlay'` | Arrow style: `'overlay'` or `'corner'` |
+| `onMediaChange` | function | `undefined` | Callback when media item changes: `(index, item) => {}` |
 
-### Image Object
+### Media item object
 
-Each image in the `images` array should have:
+Each item in the `media` array should have:
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `id` | string | Yes | Unique identifier for the image |
-| `src` | string | Yes | Image source URL |
+| `id` | string | Yes | Unique identifier for the item |
+| `type` | string | No | Media type: `'image'` (default), `'video'`, or `'embed'` |
+| `src` | string | Yes | Source URL for image or video |
 | `alt` | string | Yes | Alternative text for accessibility |
-| `title` | string | No | Image title displayed below main image |
-| `description` | string | No | Image description/caption |
+| `title` | string | No | Title displayed below main content |
+| `description` | string | No | Description/caption text |
+| `thumbnail` | string | No | Thumbnail image URL (falls back to `src` for images) |
+| `poster` | string | No | Video poster image (video type only) |
+| `embedUrl` | string | No | Embed source URL (embed type only, falls back to `src`) |
 
-## Keyboard Navigation
+## Keyboard navigation
 
 The gallery supports keyboard navigation when `enableKeyboard` is enabled:
 
@@ -127,7 +133,7 @@ The component follows WAI-ARIA best practices:
 - **Alt text**: Required for all images
 - **Screen reader support**: Announces current image and navigation options
 
-## Responsive Behavior
+## Responsive behavior
 
 **Desktop (≥ 768px):**
 - Thumbnails displayed vertically on the left
@@ -143,12 +149,12 @@ The component follows WAI-ARIA best practices:
 **Thumbnail Position Bottom:**
 - Same responsive behavior, but thumbnails always at bottom
 
-## Usage Example
+## Usage example
 
 ```jsx
 import { PhotoGallery } from './PhotoGallery';
 
-const myImages = [
+const myMedia = [
   {
     id: '1',
     src: '/images/photo1.jpg',
@@ -165,7 +171,9 @@ const myImages = [
   },
   {
     id: '3',
-    src: '/images/photo3.jpg',
+    type: 'video',
+    src: '/videos/forest.mp4',
+    poster: '/images/forest-poster.jpg',
     alt: 'Forest path',
     title: 'Forest Trail',
     description: 'Winding path through a dense forest.',
@@ -173,44 +181,44 @@ const myImages = [
 ];
 
 function MyGallery() {
-  const handleImageChange = (index, image) => {
-    console.log(`Now viewing: ${image.title}`);
+  const handleMediaChange = (index, item) => {
+    console.log(`Now viewing: ${item.title}`);
   };
 
   return (
     <PhotoGallery
-      images={myImages}
+      media={myMedia}
       initialIndex={0}
       showThumbnails={true}
       thumbnailPosition="left"
       showArrows={true}
       showDescription={true}
       enableKeyboard={true}
-      onImageChange={handleImageChange}
+      onMediaChange={handleMediaChange}
     />
   );
 }
 ```
 
-## Design Decisions
+## Design decisions
 
-### Image Container
+### Image container
 - Default 16:9 aspect ratio prevents layout shift
 - `object-fit: contain` preserves image proportions
 - Neutral background ($mg-color-neutral-50) fills empty space
 - Supports all image aspect ratios
 
-### Thumbnail Scrolling
+### Thumbnail scrolling
 - Native overflow scrolling for performance
 - Auto-scrolls selected thumbnail into view
 - Custom scrollbar styling matches design system
 
-### Navigation
+### Navigation behavior
 - Arrow buttons disable at boundaries (first/last image)
-- Keyboard navigation works globally when gallery is rendered
+- Keyboard navigation works when gallery is focused
 - Thumbnail clicking provides instant feedback
 
-## Best Practices
+## Best practices
 
 ### Do's
 ✅ Provide meaningful `alt` text for all images
@@ -227,7 +235,7 @@ function MyGallery() {
 ❌ Don't use extremely large images without optimization
 ❌ Don't mix very different image qualities
 
-## Browser Support
+## Browser support
 
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - CSS Grid for layout
@@ -241,7 +249,7 @@ function MyGallery() {
 
 ---
 
-## Related Components
+## Related components
 
 - **Image**: Basic responsive image component
 - **Scroll Container**: Horizontal scrolling container with arrows

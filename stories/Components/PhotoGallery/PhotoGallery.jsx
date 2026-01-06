@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-// import './photo-gallery.scss';
+// Styles imported via stories/assets/scss/_components.scss to maintain Sass cascade
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function PhotoGallery({
-  images,
+function PhotoGalleryComponent({
+  media,
   initialIndex = 0,
   showThumbnails = true,
   thumbnailPosition = 'left',
@@ -15,33 +15,34 @@ export function PhotoGallery({
   showDescription = true,
   enableKeyboard = true,
   loop = false,
-  onImageChange,
+  onMediaChange,
 }) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isLoading, setIsLoading] = useState(false);
+  const galleryRef = useRef(null);
   const mainImageRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
   const thumbnailRefs = useRef([]);
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
 
-  const activeImage = images[activeIndex];
+  const activeItem = media[activeIndex];
 
   // Set loading state when switching to video/embed
   useEffect(() => {
-    if (activeImage.type === 'video' || activeImage.type === 'embed') {
+    if (activeItem.type === 'video' || activeItem.type === 'embed') {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [activeIndex, activeImage.type]);
+  }, [activeIndex, activeItem.type]);
 
   // Handle thumbnail click
   const handleThumbnailClick = useCallback(
     (index) => {
       setActiveIndex(index);
-      if (onImageChange) {
-        onImageChange(index, images[index]);
+      if (onMediaChange) {
+        onMediaChange(index, media[index]);
       }
 
       // Scroll thumbnail into view
@@ -53,32 +54,32 @@ export function PhotoGallery({
         });
       }
     },
-    [images, onImageChange]
+    [media, onMediaChange]
   );
 
-  // Navigate to next image
+  // Navigate to next item
   const handleNext = useCallback(() => {
-    if (activeIndex < images.length - 1) {
+    if (activeIndex < media.length - 1) {
       handleThumbnailClick(activeIndex + 1);
     } else if (loop) {
       handleThumbnailClick(0);
     }
-  }, [activeIndex, images.length, handleThumbnailClick, loop]);
+  }, [activeIndex, media.length, handleThumbnailClick, loop]);
 
-  // Navigate to previous image
+  // Navigate to previous item
   const handlePrevious = useCallback(() => {
     if (activeIndex > 0) {
       handleThumbnailClick(activeIndex - 1);
     } else if (loop) {
-      handleThumbnailClick(images.length - 1);
+      handleThumbnailClick(media.length - 1);
     }
-  }, [activeIndex, handleThumbnailClick, loop, images.length]);
+  }, [activeIndex, handleThumbnailClick, loop, media.length]);
 
-  // Keyboard navigation
-  useEffect(() => {
-    if (!enableKeyboard) return;
+  // Keyboard navigation (scoped to gallery when focused)
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (!enableKeyboard) return;
 
-    const handleKeyDown = (e) => {
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -94,16 +95,14 @@ export function PhotoGallery({
           break;
         case 'End':
           e.preventDefault();
-          handleThumbnailClick(images.length - 1);
+          handleThumbnailClick(media.length - 1);
           break;
         default:
           break;
       }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [enableKeyboard, handleNext, handlePrevious, handleThumbnailClick, images.length]);
+    },
+    [enableKeyboard, handleNext, handlePrevious, handleThumbnailClick, media.length]
+  );
 
   // Touch/swipe handlers for mobile
   const handleTouchStart = (e) => {
@@ -141,7 +140,14 @@ export function PhotoGallery({
   );
 
   return (
-    <div className={galleryClasses} role="region" aria-label="Photo gallery">
+    <div
+      ref={galleryRef}
+      className={galleryClasses}
+      role="region"
+      aria-label="Photo gallery"
+      tabIndex={enableKeyboard ? 0 : undefined}
+      onKeyDown={handleKeyDown}
+    >
       {/* Main image display */}
       <div className="mg-gallery__main" role="group">
         <div
@@ -150,39 +156,39 @@ export function PhotoGallery({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {(!activeImage.type || activeImage.type === 'image') && (
+          {(!activeItem.type || activeItem.type === 'image') && (
             <img
               ref={mainImageRef}
-              src={activeImage.src}
-              alt={activeImage.alt}
+              src={activeItem.src}
+              alt={activeItem.alt}
               className="mg-gallery__image"
-              aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
+              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
             />
           )}
-          {activeImage.type === 'video' && (
+          {activeItem.type === 'video' && (
             <video
               ref={mainImageRef}
-              src={activeImage.src}
+              src={activeItem.src}
               className="mg-gallery__image mg-gallery__video"
               controls
-              poster={activeImage.poster}
+              poster={activeItem.poster}
               onLoadedData={() => setIsLoading(false)}
               onLoadStart={() => setIsLoading(true)}
-              aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
+              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
             >
               <track kind="captions" />
               Your browser does not support the video tag.
             </video>
           )}
-          {activeImage.type === 'embed' && (
+          {activeItem.type === 'embed' && (
             <iframe
               ref={mainImageRef}
-              src={activeImage.embedUrl || activeImage.src}
+              src={activeItem.embedUrl || activeItem.src}
               className="mg-gallery__image mg-gallery__embed"
-              title={activeImage.title || activeImage.alt}
+              title={activeItem.title || activeItem.alt}
               allowFullScreen
               onLoad={() => setIsLoading(false)}
-              aria-describedby={showDescription && activeImage.description ? 'gallery-description' : undefined}
+              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
             />
           )}
           {isLoading && (
@@ -199,7 +205,7 @@ export function PhotoGallery({
               className="mg-gallery__arrow mg-gallery__arrow--prev"
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
-              aria-label="Previous image"
+              aria-label="Previous item"
               type="button"
             >
               ‹
@@ -207,8 +213,8 @@ export function PhotoGallery({
             <button
               className="mg-gallery__arrow mg-gallery__arrow--next"
               onClick={handleNext}
-              disabled={!loop && activeIndex === images.length - 1}
-              aria-label="Next image"
+              disabled={!loop && activeIndex === media.length - 1}
+              aria-label="Next item"
               type="button"
             >
               ›
@@ -221,7 +227,7 @@ export function PhotoGallery({
               className="mg-gallery__arrow-button mg-gallery__arrow-button--prev"
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
-              aria-label="Previous image"
+              aria-label="Previous item"
               type="button"
             >
               ‹
@@ -229,8 +235,8 @@ export function PhotoGallery({
             <button
               className="mg-gallery__arrow-button mg-gallery__arrow-button--next"
               onClick={handleNext}
-              disabled={!loop && activeIndex === images.length - 1}
-              aria-label="Next image"
+              disabled={!loop && activeIndex === media.length - 1}
+              aria-label="Next item"
               type="button"
             >
               ›
@@ -240,10 +246,10 @@ export function PhotoGallery({
       </div>
 
       {/* Description area */}
-      {showDescription && (activeImage.title || activeImage.description) && (
+      {showDescription && (activeItem.title || activeItem.description) && (
         <div className="mg-gallery__description" id="gallery-description">
-          {activeImage.title && <div className="mg-gallery__title">{activeImage.title}</div>}
-          {activeImage.description && <p className="mg-gallery__caption">{activeImage.description}</p>}
+          {activeItem.title && <div className="mg-gallery__title">{activeItem.title}</div>}
+          {activeItem.description && <p className="mg-gallery__caption">{activeItem.description}</p>}
         </div>
       )}
 
@@ -255,9 +261,9 @@ export function PhotoGallery({
           role="tablist"
           aria-label="Gallery thumbnails"
         >
-          {images.map((image, index) => (
+          {media.map((item, index) => (
             <button
-              key={image.id}
+              key={item.id}
               ref={(el) => (thumbnailRefs.current[index] = el)}
               className={cls(
                 'mg-gallery__thumbnail',
@@ -267,11 +273,11 @@ export function PhotoGallery({
               role="tab"
               aria-selected={index === activeIndex}
               aria-current={index === activeIndex ? 'true' : undefined}
-              aria-label={`View ${image.title || image.alt}`}
+              aria-label={`View ${item.title || item.alt}`}
               type="button"
             >
-              <img src={image.thumbnail || image.src} alt="" loading="lazy" />
-              {(image.type === 'video' || image.type === 'embed') && (
+              <img src={item.thumbnail || item.src} alt="" loading="lazy" />
+              {(item.type === 'video' || item.type === 'embed') && (
                 <span className="mg-gallery__thumbnail-indicator" aria-hidden="true">
                   ▶
                 </span>
@@ -284,8 +290,9 @@ export function PhotoGallery({
   );
 }
 
-PhotoGallery.propTypes = {
-  images: PropTypes.arrayOf(
+PhotoGalleryComponent.propTypes = {
+  /** Array of media items (images, videos, or embeds) */
+  media: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['image', 'video', 'embed']),
@@ -298,13 +305,24 @@ PhotoGallery.propTypes = {
       embedUrl: PropTypes.string,
     })
   ).isRequired,
+  /** Index of the initially displayed item */
   initialIndex: PropTypes.number,
+  /** Show/hide thumbnail list */
   showThumbnails: PropTypes.bool,
+  /** Position of thumbnails: 'left' or 'bottom' */
   thumbnailPosition: PropTypes.oneOf(['left', 'bottom']),
+  /** Show/hide navigation arrows */
   showArrows: PropTypes.bool,
+  /** Arrow style: 'overlay' or 'corner' */
   arrowStyle: PropTypes.oneOf(['overlay', 'corner']),
+  /** Show/hide item titles and captions */
   showDescription: PropTypes.bool,
+  /** Enable/disable keyboard navigation */
   enableKeyboard: PropTypes.bool,
+  /** Enable infinite loop navigation */
   loop: PropTypes.bool,
-  onImageChange: PropTypes.func,
+  /** Callback when media item changes: (index, item) => {} */
+  onMediaChange: PropTypes.func,
 };
+
+export const PhotoGallery = React.memo(PhotoGalleryComponent);
