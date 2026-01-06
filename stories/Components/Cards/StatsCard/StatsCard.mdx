@@ -14,12 +14,11 @@ The Stats card component highlights important statistics, metrics, or "by the nu
 
 ### Key features
 
-- **Flexible layout**: Grid (individual cards) or card (grouped container)
 - **Clickable cards**: Make entire stat cards clickable with the `link` prop
 - **Dual labels**: Support for both top and bottom labels
-- **Icon support**: Optional icons to add visual interest
+- **Icon support**: Optional icons via CSS class (e.g., Font Awesome, custom icon fonts)
 - **Multiple variants**: Default, compact, and highlighted styles
-- **Responsive**: Mobile-first design
+- **Responsive**: Mobile-first grid layout
 - **Accessible**: Semantic HTML with proper ARIA attributes
 - **RTL support**: Full right-to-left language support
 
@@ -33,7 +32,7 @@ The default story shows three statistics with dual labels (top and bottom).
 
 <Canvas of={StatsCardStories.WithIcons} />
 
-Icons add visual interest and help users quickly identify stat categories.
+Icons add visual interest and help users quickly identify stat categories. The `icon` prop accepts any CSS class string which is applied to a `<span>` element, so you can use Font Awesome, custom icon fonts, or any CSS-based icon system.
 
 ## Variants
 
@@ -49,11 +48,11 @@ Use the compact variant when space is limited.
 
 The highlighted variant emphasizes stats with a colored border accent.
 
-## Card layout
+### Negative
 
-<Canvas of={StatsCardStories.CardLayout} />
+<Canvas of={StatsCardStories.Negative} />
 
-All statistics appear within a single card container. Use this when you want to group related stats visually.
+The negative variant uses white text and borders for use on dark backgrounds.
 
 ## Linked stats
 
@@ -68,11 +67,8 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `title` | string | - | Optional heading for the stats section |
-| `buttonLabel` | string | - | Label for the call-to-action link |
-| `buttonUrl` | string | - | URL for the call-to-action link |
 | `stats` | array | `[]` | Array of stat objects (see below) |
-| `variant` | string | `'default'` | Visual variant: `'default'`, `'compact'`, or `'highlighted'` |
-| `layout` | string | `'grid'` | Layout mode: `'grid'` or `'card'` |
+| `variant` | string | `'default'` | Visual variant: `'default'`, `'compact'`, `'highlighted'`, or `'negative'` |
 | `className` | string | - | Additional CSS class names |
 
 ### Stat object
@@ -80,11 +76,10 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | `value` | string/number | Yes | The main statistic value (e.g., "1,500+", "45%") |
-| `bottomLabel` | string | Yes | Label that appears below the value |
-| `topLabel` | string | No | Optional label above the value |
+| `bottomLabel` | string | No | Label that appears below the value |
+| `label` | string | No | Optional label above the value |
 | `icon` | string | No | Optional icon class (e.g., "mg-icon fa-globe") |
-| `description` | string | No | Optional descriptive text |
-| `descriptionLink` | object | No | Optional link with `text` and `url` properties |
+| `summaryText` | string | No | Optional descriptive text (supports inline HTML links) |
 | `link` | string | No | URL to make the entire stat card clickable |
 
 ## Usage
@@ -94,16 +89,16 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
   title="Sendai Framework Progress"
   stats={[
     {
-      topLabel: "Target A",
+      label: "Target A",
       value: "45%",
       bottomLabel: "Mortality reduction",
-      description: "Decrease in disaster mortality rates.",
+      summaryText: "Decrease in disaster mortality rates.",
     },
     {
-      topLabel: "Target B",
+      label: "Target B",
       value: "2.3M",
       bottomLabel: "People affected",
-      description: "Reduction in affected people per 100,000.",
+      summaryText: "Reduction in affected people per 100,000.",
     },
   ]}
 />
@@ -117,7 +112,7 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
     {
       value: "1,500+",
       bottomLabel: "Cities enrolled",
-      description: "Click to view all cities.",
+      summaryText: "Click to view all cities.",
       link: "https://mcr2030.undrr.org/cities",
     },
   ]}

@@ -1,91 +1,12 @@
-/* Stats By Numbers Component */
+/* Stats Card Component */
 .mg-stats-card {
   width: 100%;
-
-  &__link {
-    color: $mg-color-interactive;
-    text-decoration: underline;
-    font-weight: 600;
-    transition: color 200ms ease;
-
-    &:hover {
-      text-decoration: none;
-    }
-
-    &:focus {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
-    }
-  }
-
-  // Card layout - all stats in one card with wrapping
-  &__card {
-    background-color: $mg-color-white;
-    border: 1px solid $mg-color-neutral-200;
-    border-radius: $mg-spacing-50;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
-    padding: $mg-spacing-400;
-
-    @include devicebreak(small) {
-      padding: $mg-spacing-300;
-    }
-  }
-
-  &__card-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $mg-spacing-400;
-    justify-content: space-between;
-
-    @include devicebreak(small) {
-      gap: $mg-spacing-300;
-    }
-
-    // Stat items in card layout don't have their own borders/shadows
-    .mg-stats-card-item {
-      background-color: transparent;
-      border: none;
-      box-shadow: none;
-      padding: 0;
-      flex: 1 1 auto;
-      min-width: 200px;
-
-      @include devicebreak(small) {
-        min-width: 150px;
-      }
-
-      &:hover {
-        box-shadow: none;
-        transform: none;
-      }
-
-      // Add a subtle separator between items (except last in row)
-      &:not(:last-child) {
-        position: relative;
-
-        &::after {
-          content: '';
-          position: absolute;
-          right: calc($mg-spacing-400 / -2);
-          top: 0;
-          bottom: 0;
-          width: 1px;
-          background-color: $mg-color-neutral-200;
-
-          @include devicebreak(medium) {
-            display: none;
-          }
-        }
-      }
-    }
-  }
 }
 
-/* Individual Stat Item */
+/* Individual Stat Item - extends mg-card base */
 .mg-stats-card-item {
   background-color: $mg-color-white;
   border: 1px solid $mg-color-neutral-200;
-  border-radius: $mg-spacing-50;
   padding: $mg-spacing-400;
   display: flex;
   flex-direction: column;
@@ -93,25 +14,9 @@
   gap: $mg-spacing-100;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
-  transition: all 300ms ease;
 
   @include devicebreak(small) {
     padding: $mg-spacing-300;
-  }
-
-  &:hover {
-    box-shadow: 0 6px 16px rgb(0 0 0 / 0.12);
-    transform: translateY(-2px);
-  }
-
-  // Respect reduced motion preferences
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-
-    &:hover {
-      transform: none;
-    }
   }
 
   &__icon {
@@ -125,7 +30,7 @@
     }
   }
 
-  &__top-label {
+  &__label {
     font-size: $mg-font-size-200;
     font-weight: 600;
     color: $mg-color-label;
@@ -167,7 +72,6 @@
     &::after {
       outline: 2px solid $mg-color-interactive;
       outline-offset: 2px;
-      border-radius: $mg-spacing-50;
     }
   }
 
@@ -183,11 +87,10 @@
     }
   }
 
-  &__description {
+  &__summary {
     font-size: $mg-font-size-400;
     color: $mg-color-neutral-800;
     line-height: 1.5;
-    margin-top: auto;
 
     p {
       margin: 0;
@@ -196,23 +99,23 @@
     @include devicebreak(small) {
       font-size: $mg-font-size-300;
     }
-  }
 
-  // Additional links sit above the stretched link
-  &__link {
-    color: $mg-color-interactive;
-    text-decoration: underline;
-    transition: color 200ms ease;
-    position: relative;
-    z-index: 2;
+    // Inline links sit above the stretched link
+    a {
+      color: $mg-color-interactive;
+      text-decoration: underline;
+      position: relative;
+      z-index: 2;
+      transition: opacity 200ms ease;
 
-    &:hover {
-      text-decoration: none;
-    }
+      &:hover {
+        opacity: 0.7;
+      }
 
-    &:focus {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
+      &:focus {
+        outline: 2px solid $mg-color-interactive;
+        outline-offset: 2px;
+      }
     }
   }
 
@@ -265,20 +168,58 @@
   }
 }
 
+/* Variant: Negative (for dark backgrounds) */
+.mg-stats-card--negative {
+  h2 {
+    color: $mg-color-white;
+  }
+
+  .mg-stats-card-item {
+    background-color: transparent;
+    border-width: 2px;
+    border-color: rgba($mg-color-white, 0.5);
+
+    &__icon {
+      color: $mg-color-white;
+    }
+
+    &__label {
+      color: rgba($mg-color-white, 0.8);
+    }
+
+    &__value {
+      color: $mg-color-white;
+    }
+
+    &__bottom-label {
+      color: $mg-color-white;
+    }
+
+    &__summary {
+      color: rgba($mg-color-white, 0.8);
+
+      a {
+        color: $mg-color-white;
+
+        &:focus {
+          outline-color: $mg-color-white;
+        }
+      }
+    }
+  }
+
+  // Focus styles for linked cards
+  .mg-stats-card-item a.mg-stats-card-item__value:focus-visible::after {
+    outline-color: $mg-color-white;
+  }
+}
+
 /* RTL Support */
 [dir='rtl'] {
   .mg-stats-card--highlighted {
     .mg-stats-card-item {
       border-left: none;
       border-right: 4px solid $mg-color-interactive;
-    }
-  }
-
-  // Flip card separator for RTL
-  .mg-stats-card__card-content {
-    .mg-stats-card-item:not(:last-child)::after {
-      right: auto;
-      left: calc($mg-spacing-400 / -2);
     }
   }
 }

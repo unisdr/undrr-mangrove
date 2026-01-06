@@ -7,24 +7,20 @@ import { StatsCardItem } from './StatsCardItem';
  * StatsCard Component
  *
  * A flexible card component for displaying statistics and key metrics in an engaging,
- * scannable format. Supports grid layout (individual cards) or card layout
- * (grouped in a single container) with optional icons, dual labels, descriptions,
- * and call-to-action links.
+ * scannable format. Displays individual stat cards in a grid layout with optional
+ * icons, dual labels, descriptions, and call-to-action links.
  */
 export function StatsCard({
   title,
-  buttonLabel,
-  buttonUrl,
   stats = [],
   variant = 'default',
-  layout = 'grid',
   className = '',
   ...props
 }) {
   const baseClass = 'mg-stats-card';
   const statsCount = stats.length;
 
-  // Use mg-grid system for grid layout
+  // Use mg-grid system for layout
   const gridClasses = statsCount > 0 ? `mg-grid mg-grid__col-${statsCount}` : 'mg-grid';
 
   const classes = [
@@ -36,51 +32,20 @@ export function StatsCard({
   return (
     <section className={classes} aria-label={title || 'Statistics'} {...props}>
       {title && <Heading type="2" label={title} />}
-      {title && buttonLabel && buttonUrl && (
-        <a href={buttonUrl} className={`${baseClass}__link`}>
-          {buttonLabel}
-        </a>
-      )}
 
-      {layout === 'card' ? (
-        <div className={`${baseClass}__card`}>
-          <div className={`${baseClass}__card-content`}>
-            {stats.map((stat, index) => (
-              <StatsCardItem
-                key={index}
-                icon={stat.icon}
-                topLabel={stat.topLabel}
-                value={stat.value}
-                bottomLabel={stat.bottomLabel}
-                description={stat.description}
-                descriptionLink={stat.descriptionLink}
-                link={stat.link}
-              />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className={gridClasses}>
-          {stats.map((stat, index) => (
-            <StatsCardItem
-              key={index}
-              icon={stat.icon}
-              topLabel={stat.topLabel}
-              value={stat.value}
-              bottomLabel={stat.bottomLabel}
-              description={stat.description}
-              descriptionLink={stat.descriptionLink}
-              link={stat.link}
-            />
-          ))}
-        </div>
-      )}
-
-      {!title && buttonLabel && buttonUrl && (
-        <a href={buttonUrl} className={`${baseClass}__link`}>
-          {buttonLabel}
-        </a>
-      )}
+      <div className={gridClasses}>
+        {stats.map((stat, index) => (
+          <StatsCardItem
+            key={index}
+            icon={stat.icon}
+            label={stat.label}
+            value={stat.value}
+            bottomLabel={stat.bottomLabel}
+            summaryText={stat.summaryText}
+            link={stat.link}
+          />
+        ))}
+      </div>
     </section>
   );
 }
@@ -88,38 +53,25 @@ export function StatsCard({
 StatsCard.propTypes = {
   /** Optional heading for the stats section */
   title: PropTypes.string,
-  /** Label for the call-to-action button */
-  buttonLabel: PropTypes.string,
-  /** URL for the call-to-action button */
-  buttonUrl: PropTypes.string,
   /** Array of stat objects to display (1-3 recommended) */
   stats: PropTypes.arrayOf(
     PropTypes.shape({
       /** Icon class name (e.g., "mg-icon fa-globe") */
       icon: PropTypes.string,
       /** Label displayed above the value (e.g., "Target A") */
-      topLabel: PropTypes.string,
+      label: PropTypes.string,
       /** The main statistic value (e.g., "1,500+", "45%", "$223B") */
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       /** Label displayed below the value */
-      bottomLabel: PropTypes.string.isRequired,
-      /** Optional descriptive text */
-      description: PropTypes.string,
-      /** Optional link within the description (remains clickable independently) */
-      descriptionLink: PropTypes.shape({
-        /** Link text */
-        text: PropTypes.string.isRequired,
-        /** Link URL */
-        url: PropTypes.string.isRequired,
-      }),
+      bottomLabel: PropTypes.string,
+      /** Optional descriptive text (supports inline HTML links) */
+      summaryText: PropTypes.string,
       /** URL to make the entire stat item clickable */
       link: PropTypes.string,
     })
   ),
-  /** Visual variant: default, compact, or highlighted */
-  variant: PropTypes.oneOf(['default', 'compact', 'highlighted']),
-  /** Layout mode: grid (separate cards) or card (grouped container) */
-  layout: PropTypes.oneOf(['grid', 'card']),
+  /** Visual variant: default, compact, highlighted, or negative */
+  variant: PropTypes.oneOf(['default', 'compact', 'highlighted', 'negative']),
   /** Additional CSS class names */
   className: PropTypes.string,
 };

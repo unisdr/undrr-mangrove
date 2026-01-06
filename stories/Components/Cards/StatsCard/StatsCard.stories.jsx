@@ -8,23 +8,23 @@ const getCaptionForLocale = locale => {
           title: 'التقدم المحرز في إطار سنداي ٢٠١٥-٢٠٢٣',
           stats: [
             {
-              topLabel: 'الهدف أ',
+              label: 'الهدف أ',
               value: '٤٥٪',
               bottomLabel: 'الحد من الوفيات',
-              description:
+              summaryText:
                 'انخفاض في معدلات الوفيات الناجمة عن الكوارث على مستوى العالم.',
             },
             {
-              topLabel: 'الهدف ب',
+              label: 'الهدف ب',
               value: '٢.٣ مليون',
               bottomLabel: 'المتضررون',
-              description: 'انخفاض في عدد المتضررين لكل ١٠٠,٠٠٠ نسمة.',
+              summaryText: 'انخفاض في عدد المتضررين لكل ١٠٠,٠٠٠ نسمة.',
             },
             {
-              topLabel: 'الهدف ج',
+              label: 'الهدف ج',
               value: '١٢٠ مليار$',
               bottomLabel: 'الخسائر الاقتصادية',
-              description:
+              summaryText:
                 'انخفاض في الخسائر الاقتصادية المباشرة نسبة إلى الناتج المحلي الإجمالي.',
             },
           ],
@@ -36,19 +36,25 @@ const getCaptionForLocale = locale => {
               icon: 'mg-icon fa-lightbulb',
               value: '٣٨٧',
               bottomLabel: 'الكوارث الطبيعية',
-              description: 'الأحداث المسجلة في جميع أنحاء العالم في عام ٢٠٢٣.',
+              summaryText: 'الأحداث المسجلة في جميع أنحاء العالم في عام ٢٠٢٣.',
             },
             {
               icon: 'mg-icon fa-user',
               value: '٨٦.٣ مليون',
               bottomLabel: 'المتضررون',
-              description: 'الأفراد المتأثرون بالكوارث.',
+              summaryText: 'الأفراد المتأثرون بالكوارث.',
             },
             {
               icon: 'mg-icon fa-chart-bar',
               value: '٢٢٣ مليار$',
               bottomLabel: 'الخسائر الاقتصادية',
-              description: 'إجمالي الأضرار المقدرة عالميًا.',
+              summaryText: 'إجمالي الأضرار المقدرة عالميًا.',
+            },
+            {
+              icon: 'mg-icon fa-globe',
+              value: '١١٨',
+              bottomLabel: 'الدول المتضررة',
+              summaryText: 'الدول التي أبلغت عن أحداث كوارث.',
             },
           ],
         },
@@ -64,37 +70,17 @@ const getCaptionForLocale = locale => {
           title: 'الإنجازات الرئيسية',
           stats: [
             {
-              topLabel: 'الأولوية ١',
+              label: 'الأولوية ١',
               value: '٨٩',
               bottomLabel: 'دولة لديها استراتيجيات للحد من مخاطر الكوارث',
-              description: 'استراتيجيات وطنية متوافقة مع إطار سنداي.',
+              summaryText: 'استراتيجيات وطنية متوافقة مع إطار سنداي.',
             },
             {
-              topLabel: 'الأولوية ٢',
+              label: 'الأولوية ٢',
               value: '٤٥٪',
               bottomLabel: 'تغطية تقييم المخاطر',
-              description:
+              summaryText:
                 'السكان المشمولون بأنظمة الإنذار المبكر متعددة الأخطار.',
-            },
-          ],
-        },
-        cardLayout: {
-          title: 'تقدم MCR2030',
-          stats: [
-            {
-              value: '+١٬٥٠٠',
-              bottomLabel: 'المدن المسجلة',
-              description: 'الحكومات المحلية الملتزمة بالمرونة.',
-            },
-            {
-              value: '٨٥٪',
-              bottomLabel: 'معدل التقدم',
-              description: 'المدن التي تحقق تقدمًا ملموسًا في أهداف المرونة.',
-            },
-            {
-              value: '١٢٠+',
-              bottomLabel: 'المنظمات الشريكة',
-              description: 'دعم التنفيذ وبناء القدرات.',
             },
           ],
         },
@@ -105,21 +91,20 @@ const getCaptionForLocale = locale => {
               icon: 'mg-icon fa-building',
               value: '+١٬٥٠٠',
               bottomLabel: 'المدن المسجلة',
-              description: 'انقر في أي مكان على هذه البطاقة لعرض جميع المدن.',
+              summaryText: 'انقر في أي مكان على هذه البطاقة لعرض جميع المدن.',
               link: 'https://mcr2030.undrr.org/cities',
             },
             {
               icon: 'mg-icon fa-handshake',
               value: '١٢٠+',
               bottomLabel: 'المنظمات الشريكة',
-              description: 'دعم التنفيذ في جميع أنحاء العالم.',
+              summaryText: 'دعم التنفيذ في جميع أنحاء العالم.',
               link: 'https://mcr2030.undrr.org/partners',
             },
             {
               icon: 'mg-icon fa-map',
               value: '٥',
-              bottomLabel: 'مراحل المرونة',
-              description: 'خارطة طريق منظمة للمدن.',
+              summaryText: 'خارطة طريق منظمة لمراحل المرونة للمدن.',
               link: 'https://mcr2030.undrr.org/roadmap',
             },
           ],
@@ -131,23 +116,23 @@ const getCaptionForLocale = locale => {
           title: 'Sendai Framework Progress 2015-2023',
           stats: [
             {
-              topLabel: 'Target A',
+              label: 'Target A',
               value: '45%',
               bottomLabel: 'Mortality reduction',
-              description: 'Decrease in disaster mortality rates globally.',
+              summaryText: 'Decrease in disaster mortality rates globally.',
             },
             {
-              topLabel: 'Target B',
+              label: 'Target B',
               value: '2.3M',
               bottomLabel: 'People affected',
-              description:
-                'Reduction in number of affected people per 100,000.',
+              summaryText:
+                'Reduction in <a href="https://www.undrr.org/terminology/affected">number of affected people</a> per 100,000.',
             },
             {
-              topLabel: 'Target C',
+              label: 'Target C',
               value: '$120B',
               bottomLabel: 'Economic losses',
-              description: 'Reduction in direct economic loss relative to GDP.',
+              summaryText: 'Reduction in direct economic loss relative to GDP.',
             },
           ],
         },
@@ -158,19 +143,27 @@ const getCaptionForLocale = locale => {
               icon: 'mg-icon fa-lightbulb',
               value: '387',
               bottomLabel: 'Natural disasters',
-              description: 'Recorded events worldwide in 2023.',
+              summaryText: 'Recorded events worldwide in 2023.',
             },
             {
               icon: 'mg-icon fa-user',
               value: '86.3M',
               bottomLabel: 'People affected',
-              description: 'Individuals impacted by disasters.',
+              summaryText: 'Individuals impacted by disasters.',
             },
             {
               icon: 'mg-icon fa-chart-bar',
               value: '$223B',
               bottomLabel: 'Economic losses',
-              description: 'Total estimated damages globally.',
+              summaryText:
+                'Total estimated <a href="https://www.undrr.org/gar">damages globally</a>.',
+              link: 'https://www.undrr.org/gar',
+            },
+            {
+              icon: 'mg-icon fa-globe',
+              value: '118',
+              bottomLabel: 'Countries affected',
+              summaryText: 'Nations reporting disaster events.',
             },
           ],
         },
@@ -186,37 +179,17 @@ const getCaptionForLocale = locale => {
           title: 'Key Achievements',
           stats: [
             {
-              topLabel: 'Priority 1',
+              label: 'Priority 1',
               value: '89',
               bottomLabel: 'Countries with DRR strategies',
-              description: 'National strategies aligned with Sendai Framework.',
+              summaryText: 'National strategies aligned with Sendai Framework.',
             },
             {
-              topLabel: 'Priority 2',
+              label: 'Priority 2',
               value: '45%',
               bottomLabel: 'Risk assessment coverage',
-              description:
+              summaryText:
                 'Population covered by multi-hazard early warning systems.',
-            },
-          ],
-        },
-        cardLayout: {
-          title: 'MCR2030 Progress',
-          stats: [
-            {
-              value: '1,500+',
-              bottomLabel: 'Cities enrolled',
-              description: 'Local governments committed to resilience.',
-            },
-            {
-              value: '85%',
-              bottomLabel: 'Progress rate',
-              description: 'Cities making measurable progress.',
-            },
-            {
-              value: '120+',
-              bottomLabel: 'Partner organizations',
-              description: 'Supporting implementation and capacity building.',
             },
           ],
         },
@@ -227,22 +200,22 @@ const getCaptionForLocale = locale => {
               icon: 'mg-icon fa-building',
               value: '1,500+',
               bottomLabel: 'Cities enrolled',
-              description: 'Click anywhere on this card to view all cities.',
+              summaryText: 'Click anywhere on this card to view all cities.',
               link: 'https://mcr2030.undrr.org/cities',
             },
             {
               icon: 'mg-icon fa-handshake',
               value: '120+',
               bottomLabel: 'Partner organizations',
-              description: 'Supporting implementation worldwide.',
+              summaryText: 'Supporting implementation worldwide.',
               link: 'https://mcr2030.undrr.org/partners',
             },
             {
               icon: 'mg-icon fa-map',
               value: '5',
-              bottomLabel: 'Resilience stages',
-              description: 'Structured roadmap for cities.',
-              link: 'https://mcr2030.undrr.org/roadmap',
+              summaryText:
+                '<a href="https://mcr2030.undrr.org/roadmap">The roadmap</a> guides cities through resilience stages.',
+              link: 'https://mcr2030.undrr.org/roadmap-overview',
             },
           ],
         },
@@ -255,14 +228,9 @@ export default {
   component: StatsCard,
   argTypes: {
     variant: {
-      options: ['default', 'compact', 'highlighted'],
+      options: ['default', 'compact', 'highlighted', 'negative'],
       control: { type: 'inline-radio' },
       defaultValue: 'default',
-    },
-    layout: {
-      options: ['grid', 'card'],
-      control: { type: 'inline-radio' },
-      defaultValue: 'grid',
     },
   },
   decorators: [
@@ -335,19 +303,32 @@ export const Highlighted = {
   },
 };
 
-// Card layout - all stats grouped in one card
-export const CardLayout = {
+// Negative variant (for dark backgrounds)
+export const Negative = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
       <StatsCard
-        title={caption.cardLayout.title}
-        layout="card"
-        stats={caption.cardLayout.stats}
+        title={caption.withIcons.title}
+        variant="negative"
+        stats={caption.withIcons.stats}
         {...args}
       />
     );
   },
+  decorators: [
+    Story => (
+      <div
+        style={{
+          backgroundColor: '#1a1a2e',
+          padding: '2rem',
+          borderRadius: '8px',
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 // Linked stats - entire card is clickable

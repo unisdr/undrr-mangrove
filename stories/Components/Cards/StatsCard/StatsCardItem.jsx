@@ -1,5 +1,7 @@
+/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 /**
  * StatsCardItem Component
@@ -8,15 +10,14 @@ import PropTypes from 'prop-types';
  * and link. Used as a child component within StatsCard.
  *
  * When a `link` prop is provided, the entire stat item becomes clickable
- * while still allowing additional links (like descriptionLink) to work independently.
+ * while still allowing inline links in the description to work independently.
  */
 export function StatsCardItem({
   icon,
-  topLabel,
+  label,
   value,
   bottomLabel,
-  description,
-  descriptionLink,
+  summaryText,
   link,
   className = '',
   ...props
@@ -24,6 +25,7 @@ export function StatsCardItem({
   const baseClass = 'mg-stats-card-item';
 
   const classes = [
+    'mg-card',
     baseClass,
     link && `${baseClass}--linked`,
     className,
@@ -47,33 +49,24 @@ export function StatsCardItem({
           <span className={icon}></span>
         </span>
       )}
-      {topLabel && (
-        <span className={`${baseClass}__top-label`}>
-          {topLabel}
+      {label && (
+        <span className={`${baseClass}__label`}>
+          {label}
         </span>
       )}
       {valueContent}
-      <strong className={`${baseClass}__bottom-label`}>
-        {bottomLabel}
-      </strong>
-      {description && (
-        <p className={`${baseClass}__description`}>
-          {description}
-          {descriptionLink && (
-            <>
-              {' '}
-              <a
-                href={descriptionLink.url}
-                className={`${baseClass}__link`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {descriptionLink.text}
-                <span className="mg-u-sr-only"> (opens in new tab)</span>
-              </a>
-            </>
-          )}
-        </p>
+      {bottomLabel && (
+        <strong className={`${baseClass}__bottom-label`}>
+          {bottomLabel}
+        </strong>
+      )}
+      {summaryText && (
+        <p
+          className={`${baseClass}__summary`}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(summaryText),
+          }}
+        />
       )}
     </article>
   );
@@ -83,20 +76,13 @@ StatsCardItem.propTypes = {
   /** Icon class name (e.g., "mg-icon fa-globe") */
   icon: PropTypes.string,
   /** Label displayed above the value (e.g., "Target A", "Priority 1") */
-  topLabel: PropTypes.string,
+  label: PropTypes.string,
   /** The main statistic value (e.g., "1,500+", "45%", "$223B") */
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   /** Label displayed below the value */
-  bottomLabel: PropTypes.string.isRequired,
-  /** Optional descriptive text providing context */
-  description: PropTypes.string,
-  /** Optional link within the description (remains clickable independently) */
-  descriptionLink: PropTypes.shape({
-    /** Link text */
-    text: PropTypes.string.isRequired,
-    /** Link URL */
-    url: PropTypes.string.isRequired,
-  }),
+  bottomLabel: PropTypes.string,
+  /** Optional descriptive text (supports inline HTML links) */
+  summaryText: PropTypes.string,
   /** URL to make the entire stat item clickable */
   link: PropTypes.string,
   /** Additional CSS class names */
