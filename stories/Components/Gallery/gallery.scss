@@ -1,0 +1,498 @@
+/* Photo Gallery Component */
+.mg-gallery {
+  position: relative;
+  display: grid;
+  gap: $mg-spacing-200;
+  width: 100%;
+
+  // Mobile: stack vertically (main → description → thumbnails)
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "main"
+    "description"
+    "thumbnails";
+
+  @include devicebreak(medium) {
+    // Desktop: thumbnails left, main + description right
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "thumbnails main"
+      "thumbnails description";
+  }
+
+  // Variant: thumbnails at bottom
+  &--thumbnails-bottom {
+    @include devicebreak(medium) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "main"
+        "description"
+        "thumbnails";
+    }
+  }
+
+  // Main image container
+  &__main {
+    grid-area: main;
+    position: relative;
+    background-color: $mg-color-white;
+    overflow: hidden;
+  }
+
+  // Focus style when gallery receives keyboard focus
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+
+  &__image-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: $mg-color-neutral-50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  &__html {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: $mg-spacing-200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  // Loading indicator
+  &__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+  }
+
+  &__spinner {
+    width: $mg-spacing-300; // 3rem / 48px
+    height: $mg-spacing-300;
+    border: 4px solid $mg-color-neutral-300;
+    border-top-color: $mg-color-interactive;
+    border-radius: 50%;
+    animation: mg-gallery-spin 0.8s linear infinite;
+  }
+
+  @keyframes mg-gallery-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  // Description area
+  &__description {
+    grid-area: description;
+    padding: $mg-spacing-150 0;
+
+    @include devicebreak(medium) {
+      padding: $mg-spacing-150;
+    }
+  }
+
+  &__title {
+    font-size: $mg-font-size-400;
+    font-weight: 700;
+    margin-bottom: $mg-spacing-50;
+    color: $mg-color-text;
+  }
+
+  &__caption {
+    font-size: $mg-font-size-300;
+    color: $mg-color-neutral-800;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  // Thumbnails container
+  &__thumbnails {
+    grid-area: thumbnails;
+    display: flex;
+    gap: $mg-spacing-100;
+    padding: $mg-spacing-100 0;
+
+    // Mobile: horizontal scroll
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    @include devicebreak(medium) {
+      // Desktop: vertical scroll
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 600px;
+      padding-top: 0;
+    }
+
+    // Bottom variant: always horizontal
+    .mg-gallery--thumbnails-bottom & {
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    // Custom scrollbar styling
+    scrollbar-width: thin;
+    scrollbar-color: $mg-color-neutral-500 $mg-color-neutral-100;
+
+    &::-webkit-scrollbar {
+      width: $mg-spacing-50;
+      height: $mg-spacing-50;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $mg-color-neutral-100;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $mg-color-neutral-500;
+
+      &:hover {
+        background: $mg-color-neutral-600;
+      }
+    }
+  }
+
+  // Individual thumbnail button
+  &__thumbnail {
+    flex-shrink: 0;
+    width: $mg-spacing-400; // 5rem / 80px
+    height: $mg-spacing-400;
+    border: none;
+    border-left: 4px solid transparent;
+    overflow: hidden;
+    cursor: pointer;
+    background: $mg-color-neutral-100;
+    padding: 0;
+    position: relative;
+
+    @include transition(border-color 0.2s ease);
+
+    @include devicebreak(medium) {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+
+    .mg-gallery--thumbnails-bottom & {
+      width: $mg-spacing-400;
+      height: $mg-spacing-400;
+      border-left: none;
+      border-bottom: 4px solid transparent;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    &:hover {
+      border-left-color: $mg-color-neutral-400;
+
+      .mg-gallery--thumbnails-bottom & {
+        border-left-color: transparent;
+        border-bottom-color: $mg-color-neutral-400;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+
+    &--active {
+      border-left-color: $mg-color-interactive;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 1px;
+        opacity: 0.5;
+        background: $mg-color-white;
+        pointer-events: none;
+      }
+
+      .mg-gallery--thumbnails-bottom & {
+        border-left-color: transparent;
+        border-bottom-color: $mg-color-interactive;
+
+        &::after {
+          top: auto;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: auto;
+          height: 2px;
+        }
+      }
+    }
+
+    &--html {
+      background: $mg-color-neutral-200;
+    }
+  }
+
+  &__thumbnail-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: $mg-font-size-400;
+    color: $mg-color-neutral-600;
+  }
+
+  &__thumbnail-html-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $mg-color-neutral-50;
+  }
+
+  &__thumbnail-html-content {
+    // Scale based on approximate ratio: thumbnail (~80px) vs main area (~800px)
+    transform: scale(0.12);
+    transform-origin: center center;
+    width: 800px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+
+    // Ensure text and elements remain crisp at small scale
+    * {
+      pointer-events: none;
+    }
+  }
+
+  &__thumbnail-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: $mg-spacing-200; // 2rem / 32px
+    height: $mg-spacing-200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 0.6);
+    color: $mg-color-white;
+    font-size: $mg-font-size-100; // 1rem / 16px (close to 14px)
+    pointer-events: none;
+    padding-left: 2px;
+  }
+
+  // Navigation arrows
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $mg-spacing-300;
+    height: $mg-spacing-300;
+    border: none;
+    background: $mg-color-neutral-700;
+    color: $mg-color-white;
+    font-size: $mg-font-size-400;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include transition(background-color 0.2s, opacity 0.2s);
+
+    &:hover {
+      background: $mg-color-neutral-600;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      background: $mg-color-neutral-300;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &--prev {
+      left: $mg-spacing-100;
+    }
+
+    &--next {
+      right: $mg-spacing-100;
+    }
+
+    // Smaller arrows on mobile to avoid overlap with content
+    @include devicebreak(small) {
+      width: $mg-spacing-250;
+      height: $mg-spacing-250;
+      font-size: $mg-font-size-300;
+
+      &--prev {
+        left: $mg-spacing-50;
+      }
+
+      &--next {
+        right: $mg-spacing-50;
+      }
+    }
+  }
+
+  // Corner arrow controls (bottom right position)
+  &__arrow-controls {
+    position: absolute;
+    bottom: $mg-spacing-100;
+    right: $mg-spacing-100;
+    display: flex;
+    gap: $mg-spacing-100;
+    z-index: 2;
+  }
+
+  &__arrow-button {
+    width: $mg-spacing-300;
+    height: $mg-spacing-300;
+    border: none;
+    background: $mg-color-neutral-700;
+    color: $mg-color-white;
+    font-size: $mg-font-size-400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include transition(background-color 0.2s, opacity 0.2s);
+
+    &:hover {
+      background: $mg-color-neutral-600;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      background: $mg-color-neutral-300;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  // RTL support
+  [dir="rtl"] & {
+    &__thumbnails {
+      @include devicebreak(medium) {
+        order: 1;
+      }
+    }
+
+    &__thumbnail {
+      border-left: none;
+      border-right: 4px solid transparent;
+
+      &:hover {
+        border-right-color: $mg-color-neutral-400;
+      }
+
+      &--active {
+        border-right-color: $mg-color-interactive;
+
+        &::after {
+          left: auto;
+          right: 0;
+        }
+      }
+    }
+
+    &__arrow--prev {
+      left: auto;
+      right: $mg-spacing-100;
+
+      @include devicebreak(small) {
+        right: $mg-spacing-50;
+      }
+    }
+
+    &__arrow--next {
+      right: auto;
+      left: $mg-spacing-100;
+
+      @include devicebreak(small) {
+        left: $mg-spacing-50;
+      }
+    }
+
+    &__arrow-controls {
+      right: auto;
+      left: $mg-spacing-100;
+    }
+  }
+}
