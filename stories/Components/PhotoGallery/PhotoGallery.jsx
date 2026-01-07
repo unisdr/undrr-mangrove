@@ -191,6 +191,14 @@ function PhotoGalleryComponent({
               aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
             />
           )}
+          {activeItem.type === 'html' && (
+            <div
+              ref={mainImageRef}
+              className="mg-gallery__image mg-gallery__html"
+              dangerouslySetInnerHTML={{ __html: activeItem.html }}
+              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+            />
+          )}
           {isLoading && (
             <div className="mg-gallery__loading" aria-live="polite" aria-label="Loading media">
               <div className="mg-gallery__spinner"></div>
@@ -267,16 +275,30 @@ function PhotoGalleryComponent({
               ref={(el) => (thumbnailRefs.current[index] = el)}
               className={cls(
                 'mg-gallery__thumbnail',
-                index === activeIndex && 'mg-gallery__thumbnail--active'
+                index === activeIndex && 'mg-gallery__thumbnail--active',
+                item.type === 'html' && !item.thumbnail && 'mg-gallery__thumbnail--html'
               )}
               onClick={() => handleThumbnailClick(index)}
               role="tab"
               aria-selected={index === activeIndex}
               aria-current={index === activeIndex ? 'true' : undefined}
-              aria-label={`View ${item.title || item.alt}`}
+              aria-label={`View ${item.title || item.alt || 'content'}`}
               type="button"
             >
-              <img src={item.thumbnail || item.src} alt="" loading="lazy" />
+              {item.type === 'html' && !item.thumbnail && item.html ? (
+                <div className="mg-gallery__thumbnail-html-preview" aria-hidden="true">
+                  <div
+                    className="mg-gallery__thumbnail-html-content"
+                    dangerouslySetInnerHTML={{ __html: item.html }}
+                  />
+                </div>
+              ) : (item.thumbnail || item.src) ? (
+                <img src={item.thumbnail || item.src} alt="" loading="lazy" />
+              ) : (
+                <span className="mg-gallery__thumbnail-placeholder" aria-hidden="true">
+                  ◫
+                </span>
+              )}
               {(item.type === 'video' || item.type === 'embed') && (
                 <span className="mg-gallery__thumbnail-indicator" aria-hidden="true">
                   ▶
@@ -291,18 +313,20 @@ function PhotoGalleryComponent({
 }
 
 PhotoGalleryComponent.propTypes = {
-  /** Array of media items (images, videos, or embeds) */
+  /** Array of media items (images, videos, embeds, or html) */
   media: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['image', 'video', 'embed']),
-      src: PropTypes.string.isRequired,
-      alt: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['image', 'video', 'embed', 'html']),
+      src: PropTypes.string,
+      alt: PropTypes.string,
       title: PropTypes.string,
       description: PropTypes.string,
       thumbnail: PropTypes.string,
       poster: PropTypes.string,
       embedUrl: PropTypes.string,
+      /** Raw HTML content for type='html' */
+      html: PropTypes.string,
     })
   ).isRequired,
   /** Index of the initially displayed item */

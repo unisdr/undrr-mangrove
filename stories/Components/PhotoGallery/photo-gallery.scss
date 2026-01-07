@@ -82,6 +82,18 @@
     border: none;
   }
 
+  &__html {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: $mg-spacing-200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
   // Loading indicator
   &__loading {
     position: absolute;
@@ -235,6 +247,53 @@
     &--active {
       border-color: $mg-color-interactive;
       box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+    }
+
+    &--html {
+      background: $mg-color-neutral-200;
+    }
+  }
+
+  &__thumbnail-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: $mg-font-size-400;
+    color: $mg-color-neutral-600;
+  }
+
+  &__thumbnail-html-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $mg-color-neutral-50;
+  }
+
+  &__thumbnail-html-content {
+    // Scale based on approximate ratio: thumbnail (~80px) vs main area (~800px)
+    transform: scale(0.12);
+    transform-origin: center center;
+    width: 800px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+
+    // Ensure text and elements remain crisp at small scale
+    * {
+      pointer-events: none;
     }
   }
 

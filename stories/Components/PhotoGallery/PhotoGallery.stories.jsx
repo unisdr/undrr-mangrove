@@ -309,3 +309,49 @@ export const MixedMedia = {
   },
   name: 'Mixed Media (Images, Videos, Embeds)',
 };
+
+// Mixed media with HTML content
+const mixedMediaWithHtml = [
+  {
+    id: '1',
+    type: 'image',
+    src: 'https://picsum.photos/800/600?random=40',
+    alt: 'Sample image',
+    title: 'Image slide',
+    description: 'A regular image in the gallery.',
+  },
+  {
+    id: '2',
+    type: 'html',
+    html: '<h2 style="margin: 0 0 1rem;">Welcome to the Gallery</h2><p style="color: #666;">This slide contains custom HTML content.<br/>You can add any HTML here.</p>',
+    title: 'HTML Content Slide',
+    description: 'This slide displays inline HTML content.',
+  },
+  {
+    id: '3',
+    type: 'image',
+    src: 'https://picsum.photos/800/600?random=42',
+    alt: 'Another image',
+    title: 'Another image',
+    description: 'Back to a regular image.',
+  },
+  {
+    id: '4',
+    type: 'html',
+    html: '<div style="padding: 2rem;"><h3 style="color: #0077b6; margin: 0 0 1rem;">Call to Action</h3><p style="margin-bottom: 1.5rem;">Click the button below to learn more about disaster risk reduction.</p><a href="#" style="display: inline-block; padding: 0.75rem 1.5rem; background: #0077b6; color: white; text-decoration: none; border-radius: 4px;">Learn More</a></div>',
+    title: 'Call to Action Slide',
+    description: 'An HTML slide with a call to action button.',
+  },
+];
+
+export const WithHtmlContent = {
+  args: {
+    media: mixedMediaWithHtml,
+    showThumbnails: true,
+    thumbnailPosition: 'left',
+    showArrows: true,
+    showDescription: true,
+    enableKeyboard: true,
+  },
+  name: 'With HTML Content',
+};
