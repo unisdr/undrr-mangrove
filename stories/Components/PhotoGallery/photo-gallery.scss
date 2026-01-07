@@ -8,17 +8,17 @@
   // Mobile: stack vertically (main → description → thumbnails)
   grid-template-columns: 1fr;
   grid-template-areas:
-    'main'
-    'description'
-    'thumbnails';
+    "main"
+    "description"
+    "thumbnails";
 
   @include devicebreak(medium) {
     // Desktop: thumbnails left, main + description right
     grid-template-columns: 200px 1fr;
     grid-template-rows: auto auto;
     grid-template-areas:
-      'thumbnails main'
-      'thumbnails description';
+      "thumbnails main"
+      "thumbnails description";
   }
 
   // Variant: thumbnails at bottom
@@ -27,9 +27,9 @@
       grid-template-columns: 1fr;
       grid-template-rows: auto auto auto;
       grid-template-areas:
-        'main'
-        'description'
-        'thumbnails';
+        "main"
+        "description"
+        "thumbnails";
     }
   }
 
@@ -38,8 +38,6 @@
     grid-area: main;
     position: relative;
     background-color: $mg-color-white;
-    border-radius: $mg-spacing-50; // 0.5rem / 8px
-    box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
     overflow: hidden;
   }
 
@@ -161,6 +159,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       max-height: 600px;
+      padding-top: 0;
     }
 
     // Bottom variant: always horizontal
@@ -181,12 +180,10 @@
 
     &::-webkit-scrollbar-track {
       background: $mg-color-neutral-100;
-      border-radius: $mg-spacing-25;
     }
 
     &::-webkit-scrollbar-thumb {
       background: $mg-color-neutral-500;
-      border-radius: $mg-spacing-25;
 
       &:hover {
         background: $mg-color-neutral-600;
@@ -199,15 +196,15 @@
     flex-shrink: 0;
     width: $mg-spacing-400; // 5rem / 80px
     height: $mg-spacing-400;
-    border: 2px solid transparent;
-    border-radius: $mg-spacing-25;
+    border: none;
+    border-left: 4px solid transparent;
     overflow: hidden;
     cursor: pointer;
     background: $mg-color-neutral-100;
     padding: 0;
     position: relative;
 
-    @include transition(all 0.2s ease);
+    @include transition(border-color 0.2s ease);
 
     @include devicebreak(medium) {
       width: 100%;
@@ -218,6 +215,8 @@
     .mg-gallery--thumbnails-bottom & {
       width: $mg-spacing-400;
       height: $mg-spacing-400;
+      border-left: none;
+      border-bottom: 4px solid transparent;
     }
 
     img {
@@ -229,8 +228,12 @@
     }
 
     &:hover {
-      border-color: $mg-color-interactive;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+      border-left-color: $mg-color-neutral-400;
+
+      .mg-gallery--thumbnails-bottom & {
+        border-left-color: transparent;
+        border-bottom-color: $mg-color-neutral-400;
+      }
     }
 
     &:focus {
@@ -238,15 +241,38 @@
     }
 
     &:focus-visible {
-      border-color: $mg-color-interactive;
-      box-shadow:
-        0 0 0 2px $mg-color-white,
-        0 0 0 4px $mg-color-interactive;
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
     }
 
     &--active {
-      border-color: $mg-color-interactive;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+      border-left-color: $mg-color-interactive;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 1px;
+        opacity: 0.5;
+        background: $mg-color-white;
+        pointer-events: none;
+      }
+
+      .mg-gallery--thumbnails-bottom & {
+        border-left-color: transparent;
+        border-bottom-color: $mg-color-interactive;
+
+        &::after {
+          top: auto;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: auto;
+          height: 2px;
+        }
+      }
     }
 
     &--html {
@@ -309,13 +335,12 @@
     justify-content: center;
     background: rgb(0 0 0 / 0.6);
     color: $mg-color-white;
-    border-radius: 50%;
     font-size: $mg-font-size-100; // 1rem / 16px (close to 14px)
     pointer-events: none;
     padding-left: 2px;
   }
 
-  // Navigation arrows (following ScrollContainer pattern)
+  // Navigation arrows
   &__arrow {
     position: absolute;
     top: 50%;
@@ -323,7 +348,6 @@
     width: $mg-spacing-300;
     height: $mg-spacing-300;
     border: none;
-    border-radius: $mg-spacing-25;
     background: $mg-color-neutral-700;
     color: $mg-color-white;
     font-size: $mg-font-size-400;
@@ -344,9 +368,8 @@
     }
 
     &:focus-visible {
-      box-shadow:
-        0 0 0 2px $mg-color-white,
-        0 0 0 4px $mg-color-neutral-700;
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
     }
 
     &:disabled {
@@ -393,7 +416,6 @@
     width: $mg-spacing-300;
     height: $mg-spacing-300;
     border: none;
-    border-radius: $mg-spacing-25;
     background: $mg-color-neutral-700;
     color: $mg-color-white;
     font-size: $mg-font-size-400;
@@ -413,9 +435,8 @@
     }
 
     &:focus-visible {
-      box-shadow:
-        0 0 0 2px $mg-color-white,
-        0 0 0 4px $mg-color-neutral-700;
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
     }
 
     &:disabled {
@@ -426,10 +447,28 @@
   }
 
   // RTL support
-  [dir='rtl'] & {
+  [dir="rtl"] & {
     &__thumbnails {
       @include devicebreak(medium) {
         order: 1;
+      }
+    }
+
+    &__thumbnail {
+      border-left: none;
+      border-right: 4px solid transparent;
+
+      &:hover {
+        border-right-color: $mg-color-neutral-400;
+      }
+
+      &--active {
+        border-right-color: $mg-color-interactive;
+
+        &::after {
+          left: auto;
+          right: 0;
+        }
       }
     }
 
