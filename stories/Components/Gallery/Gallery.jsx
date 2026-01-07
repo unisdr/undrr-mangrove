@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-function PhotoGalleryComponent({
+function GalleryComponent({
   media,
   initialIndex = 0,
   showThumbnails = true,
@@ -144,7 +144,7 @@ function PhotoGalleryComponent({
       ref={galleryRef}
       className={galleryClasses}
       role="region"
-      aria-label="Photo gallery"
+      aria-label="Gallery"
       tabIndex={enableKeyboard ? 0 : undefined}
       onKeyDown={handleKeyDown}
     >
@@ -312,7 +312,7 @@ function PhotoGalleryComponent({
   );
 }
 
-PhotoGalleryComponent.propTypes = {
+GalleryComponent.propTypes = {
   /** Array of media items (images, videos, embeds, or html) */
   media: PropTypes.arrayOf(
     PropTypes.shape({
@@ -349,4 +349,4 @@ PhotoGalleryComponent.propTypes = {
   onMediaChange: PropTypes.func,
 };
 
-export const PhotoGallery = React.memo(PhotoGalleryComponent);
+export const Gallery = React.memo(GalleryComponent);

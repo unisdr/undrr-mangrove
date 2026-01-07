@@ -1,4 +1,4 @@
-import { PhotoGallery } from './PhotoGallery';
+import { Gallery } from './Gallery';
 
 // Sample images (using placeholder service)
 const sampleImages = [
@@ -36,8 +36,8 @@ const manyImages = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 export default {
-  title: 'Components/Photo Gallery',
-  component: PhotoGallery,
+  title: 'Components/Gallery',
+  component: Gallery,
   argTypes: {
     thumbnailPosition: {
       options: ['left', 'bottom'],

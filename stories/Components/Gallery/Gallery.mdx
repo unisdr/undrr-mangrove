@@ -1,30 +1,31 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { PhotoGallery } from './PhotoGallery';
-import * as PhotoGalleryStories from './PhotoGallery.stories';
+import { Gallery } from './Gallery';
+import * as GalleryStories from './Gallery.stories';
 
-<Meta of={PhotoGalleryStories} />
+<Meta of={GalleryStories} />
 
-# Photo Gallery
+# Gallery
 
-An accessible, responsive photo gallery component with thumbnail navigation and keyboard support.
+An accessible, responsive gallery component for images, videos, embeds, and custom HTML content.
 
 ## Overview
 
-The Photo Gallery component displays a collection of images with thumbnail navigation on the left (desktop) or bottom (mobile). Users can navigate through images by clicking thumbnails, using navigation arrows, or with keyboard controls.
+The Gallery component displays a collection of media items with thumbnail navigation on the left (desktop) or bottom (mobile). Users can navigate through items by clicking thumbnails, using navigation arrows, or with keyboard controls.
 
 ### Key features
 
+- **Multiple media types**: Images, videos, embeds (YouTube, Vimeo), and custom HTML
 - **Thumbnail navigation**: Clickable thumbnails on left or bottom
 - **Keyboard navigation**: Arrow keys, Home, End support
 - **Responsive design**: Adapts from desktop to mobile seamlessly
-- **Flexible layout**: Handles various image aspect ratios gracefully
+- **Flexible layout**: Handles various aspect ratios gracefully
 - **Accessible**: Full ARIA support and screen reader friendly
-- **Optional descriptions**: Display titles and captions below images
+- **Optional descriptions**: Display titles and captions below content
 - **Customizable**: Control visibility of thumbnails, arrows, and descriptions
 
 ## Basic usage
 
-<Canvas of={PhotoGalleryStories.BasicGallery} />
+<Canvas of={GalleryStories.BasicGallery} />
 
 The default gallery layout with thumbnails on the left, navigation arrows, and descriptions.
 
@@ -32,19 +33,19 @@ The default gallery layout with thumbnails on the left, navigation arrows, and d
 
 ### Thumbnails on left (default)
 
-<Canvas of={PhotoGalleryStories.BasicGallery} />
+<Canvas of={GalleryStories.BasicGallery} />
 
 Best for desktop viewing with vertical thumbnail scrolling.
 
 ### Thumbnails at bottom
 
-<Canvas of={PhotoGalleryStories.ThumbnailsBottom} />
+<Canvas of={GalleryStories.ThumbnailsBottom} />
 
 Alternative layout with thumbnails below the main image.
 
 ## Scrolling with many images
 
-<Canvas of={PhotoGalleryStories.ManyImages} />
+<Canvas of={GalleryStories.ManyImages} />
 
 When there are many images, the thumbnail list becomes scrollable. Selected thumbnails automatically scroll into view.
 
@@ -52,31 +53,31 @@ When there are many images, the thumbnail list becomes scrollable. Selected thum
 
 ### Without thumbnails
 
-<Canvas of={PhotoGalleryStories.WithoutThumbnails} />
+<Canvas of={GalleryStories.WithoutThumbnails} />
 
 Show only the main image with arrow navigation.
 
 ### Without arrows
 
-<Canvas of={PhotoGalleryStories.WithoutArrows} />
+<Canvas of={GalleryStories.WithoutArrows} />
 
 Navigate only via thumbnail clicks or keyboard.
 
 ### Without descriptions
 
-<Canvas of={PhotoGalleryStories.WithoutDescriptions} />
+<Canvas of={GalleryStories.WithoutDescriptions} />
 
 Show images without titles or captions.
 
 ### Minimal configuration
 
-<Canvas of={PhotoGalleryStories.Minimal} />
+<Canvas of={GalleryStories.Minimal} />
 
 Simplest gallery with only essential features.
 
 ## Handling different image dimensions
 
-<Canvas of={PhotoGalleryStories.MixedAspectRatios} />
+<Canvas of={GalleryStories.MixedAspectRatios} />
 
 The gallery handles landscape, portrait, square, and panoramic images gracefully. Images use `object-fit: contain` to preserve their aspect ratios, with a neutral background filling empty space.
 
@@ -102,14 +103,26 @@ Each item in the `media` array should have:
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | `id` | string | Yes | Unique identifier for the item |
-| `type` | string | No | Media type: `'image'` (default), `'video'`, or `'embed'` |
-| `src` | string | Yes | Source URL for image or video |
-| `alt` | string | Yes | Alternative text for accessibility |
+| `type` | string | No | Media type: `'image'` (default), `'video'`, `'embed'`, or `'html'` |
+| `src` | string | Conditional | Source URL for image or video (required for image/video types) |
+| `alt` | string | Conditional | Alternative text for accessibility (required for image/video types) |
 | `title` | string | No | Title displayed below main content |
 | `description` | string | No | Description/caption text |
 | `thumbnail` | string | No | Thumbnail image URL (falls back to `src` for images) |
 | `poster` | string | No | Video poster image (video type only) |
 | `embedUrl` | string | No | Embed source URL (embed type only, falls back to `src`) |
+| `html` | string | Conditional | Raw HTML content (required for html type) |
+
+### Security note for HTML content
+
+When using `type: 'html'`, the content is rendered using React's `dangerouslySetInnerHTML`. **You must sanitize any user-generated HTML before passing it to the gallery.** Use a library like [DOMPurify](https://github.com/cure53/DOMPurify) to prevent XSS attacks:
+
+```jsx
+import DOMPurify from 'dompurify';
+
+const sanitizedHtml = DOMPurify.sanitize(userProvidedHtml);
+const item = { id: '1', type: 'html', html: sanitizedHtml };
+```
 
 ## Keyboard navigation
 
@@ -152,7 +165,7 @@ The component follows WAI-ARIA best practices:
 ## Usage example
 
 ```jsx
-import { PhotoGallery } from './PhotoGallery';
+import { Gallery } from './Gallery';
 
 const myMedia = [
   {
@@ -164,19 +177,19 @@ const myMedia = [
   },
   {
     id: '2',
-    src: '/images/photo2.jpg',
-    alt: 'Ocean waves',
-    title: 'Ocean Waves',
-    description: 'Peaceful ocean waves on a sunny day.',
-  },
-  {
-    id: '3',
     type: 'video',
     src: '/videos/forest.mp4',
     poster: '/images/forest-poster.jpg',
     alt: 'Forest path',
     title: 'Forest Trail',
     description: 'Winding path through a dense forest.',
+  },
+  {
+    id: '3',
+    type: 'html',
+    html: '<h2>Welcome</h2><p>Custom HTML content</p>',
+    title: 'Custom Content',
+    description: 'An HTML slide with custom content.',
   },
 ];
 
@@ -186,9 +199,8 @@ function MyGallery() {
   };
 
   return (
-    <PhotoGallery
+    <Gallery
       media={myMedia}
-      initialIndex={0}
       showThumbnails={true}
       thumbnailPosition="left"
       showArrows={true}
@@ -253,6 +265,4 @@ function MyGallery() {
 
 ## Related components
 
-- **Image**: Basic responsive image component
 - **Scroll Container**: Horizontal scrolling container with arrows
-- **Quote Highlight**: Component with similar shadow/border-radius styling
