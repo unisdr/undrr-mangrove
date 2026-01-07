@@ -31,18 +31,19 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 - **Vertical layout**: Icon/image at top, content below
 - **Flexible height**: Cards auto-adjust height based on content
-- **Grid-friendly**: Works well in CSS Grid layouts
+- **Grid-friendly**: Works well in CSS Grid layouts (grid wrapper provided by consumer)
 
 ### Content options
 
-- **Icon or Image**: Use SVG icons (inline) or image URLs
-- **Title**: Required heading text (can be linked)
+- **Icon or Image**: Use icon class names or image URLs
+- **Title**: Required heading text (can be linked or visually hidden for logos)
 - **Summary text**: Optional body text (HTML supported)
 - **Label/Badge**: Optional badge/category label
 - **CTA options**:
   - Button (Primary or Secondary)
   - Text link
   - Title-only link (entire card clickable)
+  - Logo link with `srOnlyTitle` (image is clickable, title hidden but accessible)
 
 ## Usage
 
@@ -54,17 +55,17 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 <Canvas of={IconCardStories.Centered} />
 
-### With labels/badges
+### With label/badge
 
-<Canvas of={IconCardStories.WithLabels} />
+<Canvas of={IconCardStories.WithLabel} />
 
 ### Grid layout
 
 <Canvas of={IconCardStories.GridLayout} />
 
-### With image
+### With logo
 
-<Canvas of={IconCardStories.WithImage} />
+<Canvas of={IconCardStories.WithLogo} />
 
 ### Negative (for dark backgrounds)
 
@@ -89,9 +90,11 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 | `icon` | String | Optional | Icon class name (e.g., `"mg-icon fa-globe"`) |
 | `imgback` | String | Optional | Image URL (alternative to `icon`) |
 | `imgalt` | String | Optional | Alt text for image |
-| `iconSize` | Number | `72` | Width/height of icon or image in pixels |
+| `iconSize` | Number | `72` | Width/height of icon in pixels (ignored when `imageScale` is set) |
+| `imageScale` | String | - | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units. |
 | `label` | String | Optional | Badge or category label text |
-| `title` | String | Required | Card heading text |
+| `title` | String | Required | Card heading text (required for accessibility) |
+| `srOnlyTitle` | Boolean | `false` | Visually hide title but keep for screen readers (for logo cards) |
 | `summaryText` | String | Optional | Card body text (HTML supported) |
 | `link` | String | Optional | URL for card link |
 | `linkText` | String | Optional | Text for text link CTA |
@@ -124,7 +127,7 @@ These properties align with VerticalCard and HorizontalCard for consistency:
   data={[
     {
       imgback: '/icons/feature.png',
-      iconSize: 64,
+      imageScale: 'medium',
       imgalt: 'Feature icon',
       title: 'Features',
       summaryText: 'Explore our features.',
@@ -135,14 +138,33 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 />
 ```
 
-### In a grid layout
+### With logo (srOnlyTitle)
+
+For logo cards where the image is self-explanatory, use `srOnlyTitle: true` to visually hide the title while keeping it accessible for screen readers. The entire card becomes clickable via the logo.
 
 ```jsx
-<div style={{
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-  gap: '2rem'
-}}>
+<IconCard
+  centered
+  data={[
+    {
+      imgback: '/logos/partner-logo.svg',
+      imgalt: 'Partner Organization logo',
+      imageScale: 'medium',
+      title: 'Partner Organization',  // Required for accessibility
+      srOnlyTitle: true,              // Visually hidden
+      summaryText: 'Description of the partner organization.',
+      link: '/partners/org',
+    },
+  ]}
+/>
+```
+
+### In a grid layout
+
+IconCard renders individual cards. When displaying multiple cards in a grid, wrap them in your own grid container (e.g., `mg-grid` or custom CSS Grid):
+
+```jsx
+<div className="mg-grid mg-grid__col-3">
   <IconCard centered data={[{ /* card data */ }]} />
   <IconCard centered data={[{ /* card data */ }]} />
   <IconCard centered data={[{ /* card data */ }]} />
@@ -153,7 +175,8 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 
 - Icons are decorative and use `aria-hidden="true"`
 - Images require `imgalt` for screen readers
-- Titles can be linked for entire card click areas
+- Titles can be linked for entire card click areas (stretched link pattern)
+- **Logo cards**: Use `srOnlyTitle: true` to visually hide the title while keeping it accessible — the image becomes the clickable element
 - Buttons and links have visible focus states (`:focus-visible`)
 - Color contrast meets WCAG AA standards
 - RTL layout handled automatically via CSS `[dir="rtl"]`

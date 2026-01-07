@@ -22,9 +22,11 @@ const cls = (...classes) =>
  * @property {string} icon - Icon class name (e.g., "mg-icon fa-globe") - see Atom/Icons
  * @property {string} imgback - Image URL (alternative to icon, matches VerticalCard)
  * @property {string} imgalt - Alt text for image (matches VerticalCard)
- * @property {number} iconSize - Width/height of image in pixels (default: 72)
+ * @property {number} iconSize - Width/height of icon in pixels (default: 72)
+ * @property {string} imageScale - Scale for icons/images: 'small', 'medium', 'large', or 'full'
  * @property {string} label - Badge or category label text
- * @property {string} title - Card heading text (required)
+ * @property {string} title - Card heading text (required for accessibility)
+ * @property {boolean} srOnlyTitle - Visually hide title but keep for screen readers (for logo cards)
  * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
  * @property {string} link - URL for card link
  * @property {string} linkText - Text for text link CTA
@@ -44,19 +46,57 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
             variant && variant !== 'default' && `mg-card__icon--${variant}`
           )}
         >
-          {/* Icon or Image */}
+          {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
           {(item.icon || item.imgback) && (
             <div className="mg-card__visual">
-              {item.imgback ? (
+              {item.srOnlyTitle && item.link ? (
+                <a href={item.link} className="mg-card__visual-link">
+                  {item.imgback ? (
+                    <img
+                      src={item.imgback}
+                      alt={item.imgalt || ''}
+                      className={cls(
+                        'mg-card__image',
+                        item.imageScale && `mg-card__image--${item.imageScale}`
+                      )}
+                      {...(!item.imageScale && {
+                        width: item.iconSize || 72,
+                        height: item.iconSize || 72,
+                      })}
+                    />
+                  ) : item.icon ? (
+                    <span
+                      className={cls(
+                        'mg-card__icon-wrap',
+                        item.imageScale && `mg-card__icon-wrap--${item.imageScale}`
+                      )}
+                      aria-hidden="true"
+                    >
+                      <span className={item.icon} />
+                    </span>
+                  ) : null}
+                </a>
+              ) : item.imgback ? (
                 <img
                   src={item.imgback}
                   alt={item.imgalt || ''}
-                  className="mg-card__image"
-                  width={item.iconSize || 72}
-                  height={item.iconSize || 72}
+                  className={cls(
+                    'mg-card__image',
+                    item.imageScale && `mg-card__image--${item.imageScale}`
+                  )}
+                  {...(!item.imageScale && {
+                    width: item.iconSize || 72,
+                    height: item.iconSize || 72,
+                  })}
                 />
               ) : item.icon ? (
-                <span className="mg-card__icon-wrap" aria-hidden="true">
+                <span
+                  className={cls(
+                    'mg-card__icon-wrap',
+                    item.imageScale && `mg-card__icon-wrap--${item.imageScale}`
+                  )}
+                  aria-hidden="true"
+                >
                   <span className={item.icon} />
                 </span>
               ) : null}
@@ -72,11 +112,16 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
               </div>
             )}
 
-            {/* Title */}
+            {/* Title - plain text when srOnlyTitle (visual link handles click) */}
             {item.title && (
-              <header className="mg-card__title">
+              <header
+                className={cls(
+                  'mg-card__title',
+                  item.srOnlyTitle && 'mg-u-sr-only'
+                )}
+              >
                 <h3>
-                  {item.link && !item.button ? (
+                  {item.link && !item.button && !item.srOnlyTitle ? (
                     <a href={item.link}>{item.title}</a>
                   ) : (
                     item.title
@@ -130,12 +175,16 @@ IconCard.propTypes = {
       imgback: PropTypes.string,
       /** Alt text for image (matches VerticalCard) */
       imgalt: PropTypes.string,
-      /** Width/height of icon/image in pixels */
+      /** Width/height of icon in pixels (ignored when imageScale is set) */
       iconSize: PropTypes.number,
+      /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
+      imageScale: PropTypes.oneOf(['small', 'medium', 'large', 'full']),
       /** Badge or category label text */
       label: PropTypes.string,
-      /** Card heading text */
+      /** Card heading text (required for accessibility) */
       title: PropTypes.string.isRequired,
+      /** Visually hide title but keep for screen readers (for logo cards) */
+      srOnlyTitle: PropTypes.bool,
       /** Card body text, HTML supported (matches VerticalCard) */
       summaryText: PropTypes.string,
       /** URL for card link */

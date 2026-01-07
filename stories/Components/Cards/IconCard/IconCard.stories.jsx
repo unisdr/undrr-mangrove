@@ -34,14 +34,14 @@ const translations = {
       button: 'Explore',
     },
     latestFeatures: {
-      label: 'NEW',
+      label: 'New',
       title: 'Latest features',
       summaryText:
         'Check out the newest components and improvements to the library.',
       button: 'View features',
     },
     enhanced: {
-      label: 'UPDATED',
+      label: 'Updated',
       title: 'Enhanced performance',
       summaryText: 'Performance improvements and bug fixes in this release.',
       button: 'Learn more',
@@ -125,7 +125,7 @@ export default {
   },
 };
 
-// Default - Left aligned with text links (locale-aware)
+// Default - Left aligned with text link
 export const Default = {
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
@@ -135,23 +135,10 @@ export const Default = {
         data={[
           {
             icon: componentIcon,
+            imageScale: 'medium',
             title: content.components.title,
             summaryText: content.components.summaryText,
             linkText: content.components.linkText,
-            link: '#',
-          },
-          {
-            icon: settingsIcon,
-            title: content.configuration.title,
-            summaryText: content.configuration.summaryText,
-            linkText: content.configuration.linkText,
-            link: '#',
-          },
-          {
-            icon: bookIcon,
-            title: content.documentation.title,
-            summaryText: content.documentation.summaryText,
-            linkText: content.documentation.linkText,
             link: '#',
           },
         ]}
@@ -163,7 +150,7 @@ export const Default = {
   },
 };
 
-// Centered alignment with buttons (locale-aware)
+// Centered alignment with button
 export const Centered = {
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
@@ -173,18 +160,11 @@ export const Centered = {
         data={[
           {
             icon: componentIcon,
+            imageScale: 'small',
             title: content.getStarted.title,
             summaryText: content.getStarted.summaryText,
             button: content.getStarted.button,
             buttonType: 'Primary',
-            link: '#',
-          },
-          {
-            icon: settingsIcon,
-            title: content.learnMore.title,
-            summaryText: content.learnMore.summaryText,
-            button: content.learnMore.button,
-            buttonType: 'Secondary',
             link: '#',
           },
         ]}
@@ -196,8 +176,8 @@ export const Centered = {
   },
 };
 
-// With labels/badges (locale-aware)
-export const WithLabels = {
+// With label/badge
+export const WithLabel = {
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
@@ -206,18 +186,11 @@ export const WithLabels = {
         data={[
           {
             icon: componentIcon,
+            imageScale: 'medium',
             label: content.latestFeatures.label,
             title: content.latestFeatures.title,
             summaryText: content.latestFeatures.summaryText,
             button: content.latestFeatures.button,
-            link: '#',
-          },
-          {
-            icon: settingsIcon,
-            label: content.enhanced.label,
-            title: content.enhanced.title,
-            summaryText: content.enhanced.summaryText,
-            button: content.enhanced.button,
             link: '#',
           },
         ]}
@@ -229,23 +202,18 @@ export const WithLabels = {
   },
 };
 
-// Grid layout example (locale-aware)
+// Grid layout example
 export const GridLayout = {
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '2rem',
-        }}
-      >
+      <div className="mg-grid mg-grid__col-3">
         <IconCard
           centered
           data={[
             {
               icon: componentIcon,
+              imageScale: 'medium',
               title: content.components.title,
               summaryText: content.components.summaryText,
               linkText: content.components.linkText,
@@ -258,6 +226,7 @@ export const GridLayout = {
           data={[
             {
               icon: settingsIcon,
+              imageScale: 'medium',
               title: content.configuration.title,
               summaryText: content.configuration.summaryText,
               linkText: content.configuration.linkText,
@@ -270,6 +239,7 @@ export const GridLayout = {
           data={[
             {
               icon: bookIcon,
+              imageScale: 'medium',
               title: content.documentation.title,
               summaryText: content.documentation.summaryText,
               linkText: content.documentation.linkText,
@@ -287,31 +257,46 @@ export const MixedContent = {
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
-      <IconCard
-        {...args}
-        data={[
-          {
-            icon: componentIcon,
-            title: content.getStarted.title,
-            summaryText: content.getStarted.summaryText,
-            button: content.getStarted.button,
-            buttonType: 'Primary',
-            link: '#',
-          },
-          {
-            icon: settingsIcon,
-            title: content.configuration.title,
-            summaryText: content.configuration.summaryText,
-            linkText: content.configuration.linkText,
-            link: '#',
-          },
-          {
-            icon: bookIcon,
-            title: content.documentation.title,
-            summaryText: content.documentation.summaryText,
-          },
-        ]}
-      />
+      <div className="mg-grid mg-grid__col-3">
+        <IconCard
+          {...args}
+          data={[
+            {
+              icon: componentIcon,
+              imageScale: 'medium',
+              title: content.getStarted.title,
+              summaryText: content.getStarted.summaryText,
+              button: content.getStarted.button,
+              buttonType: 'Primary',
+              link: '#',
+            },
+          ]}
+        />
+        <IconCard
+          {...args}
+          data={[
+            {
+              icon: settingsIcon,
+              imageScale: 'medium',
+              title: content.configuration.title,
+              summaryText: content.configuration.summaryText,
+              linkText: content.configuration.linkText,
+              link: '#',
+            },
+          ]}
+        />
+        <IconCard
+          {...args}
+          data={[
+            {
+              icon: bookIcon,
+              imageScale: 'medium',
+              title: content.documentation.title,
+              summaryText: content.documentation.summaryText,
+            },
+          ]}
+        />
+      </div>
     );
   },
   args: {
@@ -319,16 +304,10 @@ export const MixedContent = {
   },
 };
 
-// With image instead of icon
-export const WithImage = {
+// With logo - title is sr-only for accessibility, logo serves as visual
+export const WithLogo = {
   render: args => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '2rem',
-      }}
-    >
+    <div className="mg-grid mg-grid__col-3">
       <IconCard
         {...args}
         data={[
@@ -336,11 +315,11 @@ export const WithImage = {
             imgback:
               'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
             imgalt: 'UNDRR logo',
-            iconSize: 96,
+            imageScale: 'large',
             title: 'UNDRR',
+            srOnlyTitle: true,
             summaryText:
               'The United Nations Office for Disaster Risk Reduction works to reduce disaster losses in lives and assets.',
-            linkText: 'Visit UNDRR →',
             link: '#',
           },
         ]}
@@ -351,11 +330,11 @@ export const WithImage = {
           {
             imgback: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
             imgalt: 'IRP logo',
-            iconSize: 96,
+            imageScale: 'large',
             title: 'International Recovery Platform',
+            srOnlyTitle: true,
             summaryText:
               'IRP promotes the exchange of knowledge on recovery to strengthen disaster risk reduction.',
-            linkText: 'Visit IRP →',
             link: '#',
           },
         ]}
@@ -366,11 +345,11 @@ export const WithImage = {
           {
             imgback: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
             imgalt: 'PreventionWeb logo',
-            iconSize: 96,
+            imageScale: 'large',
             title: 'PreventionWeb',
+            srOnlyTitle: true,
             summaryText:
               'PreventionWeb is the global knowledge platform for disaster risk reduction and resilience.',
-            linkText: 'Visit PreventionWeb →',
             link: '#',
           },
         ]}
@@ -393,23 +372,10 @@ export const Negative = {
         data={[
           {
             icon: componentIcon,
+            imageScale: 'medium',
             title: content.components.title,
             summaryText: content.components.summaryText,
             linkText: content.components.linkText,
-            link: '#',
-          },
-          {
-            icon: settingsIcon,
-            title: content.configuration.title,
-            summaryText: content.configuration.summaryText,
-            linkText: content.configuration.linkText,
-            link: '#',
-          },
-          {
-            icon: bookIcon,
-            title: content.documentation.title,
-            summaryText: content.documentation.summaryText,
-            linkText: content.documentation.linkText,
             link: '#',
           },
         ]}
@@ -432,4 +398,133 @@ export const Negative = {
       </div>
     ),
   ],
+};
+
+// Real-world examples with actual UNDRR images - using imageScale: 'medium' for consistency
+export const RealWorldImages = {
+  render: args => (
+    <div className="mg-grid mg-grid__col-4">
+      <IconCard
+        {...args}
+        data={[
+          {
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2021-12/Recovery%20Help%20Desk%20Icon_0.png',
+            imgalt: 'Recovery Help Desk',
+            imageScale: 'medium',
+            title: 'Recovery Help Desk',
+            summaryText:
+              'Access resources and guidance for post-disaster recovery planning.',
+            linkText: 'Get support →',
+            link: '#',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/inline-images/e_sdg_icons-15-125.png',
+            imgalt: 'SDG 15 - Life on Land',
+            imageScale: 'medium',
+            title: 'SDG 15: Life on Land',
+            summaryText:
+              'Protect, restore and promote sustainable use of terrestrial ecosystems.',
+            linkText: 'Learn more →',
+            link: '#',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-12/partnership_11921003.png',
+            imgalt: 'Partnership',
+            imageScale: 'medium',
+            title: 'Partnerships',
+            summaryText:
+              'Collaborate with organizations worldwide to strengthen resilience.',
+            linkText: 'View partners →',
+            link: '#',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-12/earth.png',
+            imgalt: 'Earth',
+            imageScale: 'medium',
+            title: 'Global Impact',
+            summaryText:
+              'Disaster risk reduction efforts spanning all continents.',
+            linkText: 'Explore →',
+            link: '#',
+          },
+        ]}
+      />
+    </div>
+  ),
+  args: {
+    centered: true,
+  },
+};
+
+// Mixed: CSS icon classes and images together - using imageScale for consistency
+export const MixedIconTypes = {
+  render: args => (
+    <div className="mg-grid mg-grid__col-3">
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon fa-globe',
+            imageScale: 'medium',
+            title: 'Global network',
+            summaryText: 'Using a CSS icon class from the Mangrove icon set.',
+            linkText: 'View network →',
+            link: '#',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            imgback:
+              'https://www.undrr.org/sites/default/files/2025-10/act_icon.svg',
+            imgalt: 'Act icon',
+            imageScale: 'medium',
+            title: 'Take action',
+            summaryText: 'Using an SVG image URL from the CMS.',
+            linkText: 'Act now →',
+            link: '#',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            imgback:
+              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-11/microphone-icon.png',
+            imgalt: 'Microphone',
+            imageScale: 'medium',
+            title: 'Media resources',
+            summaryText: 'Using a PNG image URL from the CMS.',
+            linkText: 'Press center →',
+            link: '#',
+          },
+        ]}
+      />
+    </div>
+  ),
+  args: {
+    centered: true,
+  },
 };

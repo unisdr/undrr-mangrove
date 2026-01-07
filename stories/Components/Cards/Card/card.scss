@@ -198,15 +198,47 @@
   flex-direction: column;
   align-items: flex-start;
   gap: $mg-spacing-100;
+  max-width: 300px;
+
+  @media (min-width: $mg-breakpoint-mobile) {
+    max-width: 400px;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    max-width: 500px;
+  }
 
   // Reuse shared visual container with icon-specific sizing
   .mg-card__visual {
     flex-shrink: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    aspect-ratio: auto; // Override default aspect ratio from vc/hc
     overflow: visible;
+    container-type: inline-size; // Enable container queries for icon scaling
+    aspect-ratio: 3/2; // Default aspect ratio
+
+    // Adjust aspect ratio based on icon/image scale - smaller = wider
+    &:has(.mg-card__image--small),
+    &:has(.mg-card__icon-wrap--small) {
+      aspect-ratio: 5/1;
+    }
+
+    &:has(.mg-card__image--medium),
+    &:has(.mg-card__icon-wrap--medium) {
+      aspect-ratio: 3/1;
+    }
+
+    &:has(.mg-card__image--large),
+    &:has(.mg-card__icon-wrap--large) {
+      aspect-ratio: 2/1;
+    }
+
+    &:has(.mg-card__image--full),
+    &:has(.mg-card__icon-wrap--full) {
+      aspect-ratio: 1/1;
+    }
   }
 
   // Icon-specific image sizing (smaller than standard cards)
@@ -214,18 +246,97 @@
     max-width: 100%;
     height: auto;
     object-fit: contain;
+
+    // Image scale variants - min-width ensures small images scale up
+    &--small {
+      width: 72px;
+      min-width: 72px;
+      height: auto;
+    }
+
+    &--medium {
+      width: 50%;
+      min-width: 50%;
+      height: auto;
+    }
+
+    &--large {
+      width: 75%;
+      min-width: 75%;
+      height: auto;
+    }
+
+    &--full {
+      width: 100%;
+      min-width: 100%;
+      height: auto;
+    }
   }
 
-  // Icon class container (matches StatsCard approach)
+  // Icon class container - uses container query units to scale like images
   .mg-card__icon-wrap {
-    font-size: $mg-font-size-900;
     color: $mg-color-interactive;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 
     // Support for nested icon elements (Font Awesome, etc.)
     i,
     span {
       display: block;
+      font-size: inherit;
+    }
+
+    // Icon scale variants - uses cqi (container query inline) to scale with container
+    // Font-size is ~80% of width to leave some breathing room
+    &--small .mg-icon {
+      width: 72px;
+      min-width: 72px;
+      font-size: 58px;
+    }
+
+    &--medium .mg-icon {
+      font-size: 50cqi;
+    }
+
+    &--large .mg-icon {
+      font-size: 80cqi;
+    }
+
+    &--full .mg-icon {
+      font-size: 100cqi;
+    }
+
+    .mg-icon {
+      margin: 0 auto;
+    }
+  }
+
+  // Visual link for logo cards (srOnlyTitle) - stretched link pattern
+  .mg-card__visual-link {
+    display: block;
+    transition: opacity 200ms ease;
+    width: 100%;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        outline: 2px solid $mg-color-interactive;
+        outline-offset: 2px;
+      }
     }
   }
 

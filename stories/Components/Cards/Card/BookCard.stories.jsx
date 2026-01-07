@@ -6,7 +6,7 @@ const getCaptionForLocale = locale => {
       const engText = {
         contentdata: [
           {
-            contenttile: 'CONTENT TAG',
+            contenttile: 'Content tag',
             title: 'Title in large size',
             link: 'javascript:void(0)',
             imgalt: 'A publication cover',
@@ -64,7 +64,7 @@ const getCaptionForLocale = locale => {
       const dummy = {
         contentdata: [
           {
-            contenttile: 'BOOK CARD',
+            contenttile: 'Book card',
             title:
               'Book title in normal header size with up to three lines of text',
             link: 'javascript:void(0)',

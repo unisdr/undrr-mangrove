@@ -6,7 +6,7 @@ const getCaptionForLocale = locale => {
       const engText = {
         contentdata: [
           {
-            contenttile: 'CONTENT TAG',
+            contenttile: 'Content tag',
             title: 'Title in large size',
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
@@ -74,7 +74,7 @@ by vulnerable populations and communities.This paper explores health risks from 
       const dummy = {
         contentdata: [
           {
-            contenttile: 'VERTICAL CARD',
+            contenttile: 'Vertical card',
             title: 'Title in large size with up to two lines of text',
             summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
