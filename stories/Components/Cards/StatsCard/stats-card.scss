@@ -1,0 +1,225 @@
+/* Stats Card Component */
+.mg-stats-card {
+  width: 100%;
+}
+
+/* Individual Stat Item - extends mg-card base */
+.mg-stats-card-item {
+  background-color: $mg-color-white;
+  border: 1px solid $mg-color-neutral-200;
+  padding: $mg-spacing-400;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $mg-spacing-100;
+  position: relative;
+  overflow: hidden;
+
+  @include devicebreak(small) {
+    padding: $mg-spacing-300;
+  }
+
+  &__icon {
+    font-size: $mg-font-size-600;
+    color: $mg-color-interactive;
+    margin-bottom: $mg-spacing-100;
+    line-height: 1;
+
+    i {
+      display: block;
+    }
+  }
+
+  &__label {
+    font-size: $mg-font-size-200;
+    font-weight: 600;
+    color: $mg-color-label;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+
+  &__value {
+    font-size: $mg-font-size-900;
+    font-weight: 700;
+    color: $mg-color-interactive;
+    line-height: 1;
+    margin: $mg-spacing-100 0;
+    overflow-wrap: break-word;
+    text-decoration: none;
+
+    @include devicebreak(medium) {
+      font-size: $mg-font-size-800;
+    }
+
+    @include devicebreak(small) {
+      font-size: $mg-font-size-600;
+    }
+  }
+
+  // Stretched link pattern - value link covers entire card
+  a#{&}__value::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  // Focus styles for linked cards
+  a#{&}__value:focus-visible {
+    outline: none;
+
+    &::after {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+  }
+
+  &__bottom-label {
+    font-size: $mg-font-size-500;
+    font-weight: 600;
+    color: $mg-color-text;
+    line-height: 1.3;
+    margin-bottom: $mg-spacing-50;
+
+    @include devicebreak(small) {
+      font-size: $mg-font-size-400;
+    }
+  }
+
+  &__summary {
+    font-size: $mg-font-size-400;
+    color: $mg-color-neutral-800;
+    line-height: 1.5;
+
+    p {
+      margin: 0;
+    }
+
+    @include devicebreak(small) {
+      font-size: $mg-font-size-300;
+    }
+
+    // Inline links sit above the stretched link
+    a {
+      color: $mg-color-interactive;
+      text-decoration: underline;
+      position: relative;
+      z-index: 2;
+      transition: opacity 200ms ease;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      &:focus {
+        outline: 2px solid $mg-color-interactive;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Linked variant - cursor indicates clickability
+  &--linked {
+    cursor: pointer;
+  }
+}
+
+/* Variant: Compact */
+.mg-stats-card--compact {
+  .mg-stats-card-item {
+    padding: $mg-spacing-300;
+
+    @include devicebreak(small) {
+      padding: $mg-spacing-200;
+    }
+
+    &__value {
+      font-size: $mg-font-size-800;
+
+      @include devicebreak(medium) {
+        font-size: $mg-font-size-600;
+      }
+
+      @include devicebreak(small) {
+        font-size: $mg-font-size-500;
+      }
+    }
+
+    &__bottom-label {
+      font-size: $mg-font-size-400;
+
+      @include devicebreak(small) {
+        font-size: $mg-font-size-300;
+      }
+    }
+  }
+}
+
+/* Variant: Highlighted */
+.mg-stats-card--highlighted {
+  .mg-stats-card-item {
+    background-color: rgba($mg-color-interactive, 0.05);
+    border-left: 4px solid $mg-color-interactive;
+
+    &:hover {
+      background-color: rgba($mg-color-interactive, 0.08);
+    }
+  }
+}
+
+/* Variant: Negative (for dark backgrounds) */
+.mg-stats-card--negative {
+  h2 {
+    color: $mg-color-white;
+  }
+
+  .mg-stats-card-item {
+    background-color: transparent;
+    border-width: 2px;
+    border-color: rgba($mg-color-white, 0.5);
+
+    &__icon {
+      color: $mg-color-white;
+    }
+
+    &__label {
+      color: rgba($mg-color-white, 0.8);
+    }
+
+    &__value {
+      color: $mg-color-white;
+    }
+
+    &__bottom-label {
+      color: $mg-color-white;
+    }
+
+    &__summary {
+      color: rgba($mg-color-white, 0.8);
+
+      a {
+        color: $mg-color-white;
+
+        &:focus {
+          outline-color: $mg-color-white;
+        }
+      }
+    }
+  }
+
+  // Focus styles for linked cards
+  .mg-stats-card-item a.mg-stats-card-item__value:focus-visible::after {
+    outline-color: $mg-color-white;
+  }
+}
+
+/* RTL Support */
+[dir='rtl'] {
+  .mg-stats-card--highlighted {
+    .mg-stats-card-item {
+      border-left: none;
+      border-right: 4px solid $mg-color-interactive;
+    }
+  }
+}
