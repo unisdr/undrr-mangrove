@@ -21,9 +21,9 @@ const getCaptionForLocale = locale => {
         contentdata: [
           {
             contenttile: 'علامة المحتوى',
-            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
+            title: 'عنوان بحجم كبير',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
+            imgalt: 'غلاف منشور',
             imgback:
               'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },

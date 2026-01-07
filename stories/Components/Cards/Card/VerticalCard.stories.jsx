@@ -26,10 +26,13 @@ by vulnerable populations and communities.This paper explores health risks from 
         contentdata: [
           {
             contenttile: 'علامة المحتوى',
-            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
-            button: 'اقرأ أكث',
+            title: 'عنوان بحجم كبير',
+            summaryText: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
+            label1: 'التسمية 1',
+            label2: 'التسمية 2',
+            button: 'الإجراء الأساسي',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
+            imgalt: 'شخص ينظر',
             imgback:
               'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
           },

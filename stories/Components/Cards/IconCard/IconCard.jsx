@@ -1,5 +1,6 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
+import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 
@@ -119,6 +120,36 @@ export function IconCard({ data, centered = false }) {
   );
 }
 
-IconCard.defaultProps = {
-  centered: false,
+IconCard.propTypes = {
+  /** Array of card data objects */
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      /** Unique identifier for the card */
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      /** Inline SVG markup (alternative to imgback) */
+      icon: PropTypes.string,
+      /** Image URL (alternative to icon, matches VerticalCard) */
+      imgback: PropTypes.string,
+      /** Alt text for image (matches VerticalCard) */
+      imgalt: PropTypes.string,
+      /** Width/height of icon/image in pixels */
+      iconSize: PropTypes.number,
+      /** Badge or category label text */
+      label: PropTypes.string,
+      /** Card heading text */
+      title: PropTypes.string.isRequired,
+      /** Card body text, HTML supported (matches VerticalCard) */
+      summaryText: PropTypes.string,
+      /** URL for card link */
+      link: PropTypes.string,
+      /** Text for text link CTA */
+      linkText: PropTypes.string,
+      /** Button label text */
+      button: PropTypes.string,
+      /** Button style: 'Primary' or 'Secondary' */
+      buttonType: PropTypes.oneOf(['Primary', 'Secondary']),
+    })
+  ).isRequired,
+  /** Center-align content */
+  centered: PropTypes.bool,
 };
