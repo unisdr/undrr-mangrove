@@ -66,6 +66,10 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 <Canvas of={IconCardStories.WithImage} />
 
+### Negative (for dark backgrounds)
+
+<Canvas of={IconCardStories.Negative} />
+
 ## Props
 
 ### IconCard
@@ -74,6 +78,7 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 |------|------|---------|-------------|
 | `data` | Array | Required | Array of card data objects |
 | `centered` | Boolean | `false` | Center-align content |
+| `variant` | String | `'default'` | Visual variant: `'default'` or `'negative'` |
 
 ### Data object properties
 
@@ -81,7 +86,7 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `icon` | String | Optional | Inline SVG markup (alternative to `imgback`) |
+| `icon` | String | Optional | Icon class name (e.g., `"mg-icon fa-globe"`) |
 | `imgback` | String | Optional | Image URL (alternative to `icon`) |
 | `imgalt` | String | Optional | Alt text for image |
 | `iconSize` | Number | `72` | Width/height of icon or image in pixels |
@@ -95,13 +100,13 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 
 ## Code examples
 
-### With inline SVG icon
+### With icon class (recommended)
 
 ```jsx
 <IconCard
   data={[
     {
-      icon: '<svg>...</svg>',
+      icon: 'mg-icon fa-cubes',
       title: 'Components',
       summaryText: 'Browse all UNDRR components.',
       linkText: 'Browse components →',
@@ -176,6 +181,7 @@ If upgrading from the previous IconCard API:
 
 | Old prop | New prop | Notes |
 |----------|----------|-------|
+| `icon` (SVG string) | `icon` (class name) | Now uses CSS classes like `"mg-icon fa-globe"` (matches StatsCard) |
 | `alignment` | Removed | RTL is automatic via CSS |
 | `stackedLayout` | Removed | Always vertical now |
 | `description` | `summaryText` | Aligns with VerticalCard |

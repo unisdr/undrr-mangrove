@@ -16,12 +16,13 @@ const cls = (...classes) =>
  * @param {Object} props
  * @param {Array} props.data - Array of card data objects (see data object properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
+ * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
  *
  * Data object properties:
- * @property {string} icon - Inline SVG markup (alternative to imgback)
+ * @property {string} icon - Icon class name (e.g., "mg-icon fa-globe") - see Atom/Icons
  * @property {string} imgback - Image URL (alternative to icon, matches VerticalCard)
  * @property {string} imgalt - Alt text for image (matches VerticalCard)
- * @property {number} iconSize - Width/height of icon/image in pixels (default: 72)
+ * @property {number} iconSize - Width/height of image in pixels (default: 72)
  * @property {string} label - Badge or category label text
  * @property {string} title - Card heading text (required)
  * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
@@ -30,7 +31,7 @@ const cls = (...classes) =>
  * @property {string} button - Button label text
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
-export function IconCard({ data, centered = false }) {
+export function IconCard({ data, centered = false, variant = 'default' }) {
   return (
     <>
       {data.map((item, index) => (
@@ -39,7 +40,8 @@ export function IconCard({ data, centered = false }) {
           className={cls(
             'mg-card',
             'mg-card__icon',
-            centered && 'mg-card__icon--centered'
+            centered && 'mg-card__icon--centered',
+            variant && variant !== 'default' && `mg-card__icon--${variant}`
           )}
         >
           {/* Icon or Image */}
@@ -54,13 +56,9 @@ export function IconCard({ data, centered = false }) {
                   height={item.iconSize || 72}
                 />
               ) : item.icon ? (
-                <span
-                  className="mg-card__icon-svg"
-                  aria-hidden="true"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(item.icon),
-                  }}
-                />
+                <span className="mg-card__icon-wrap" aria-hidden="true">
+                  <span className={item.icon} />
+                </span>
               ) : null}
             </div>
           )}
@@ -126,7 +124,7 @@ IconCard.propTypes = {
     PropTypes.shape({
       /** Unique identifier for the card */
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      /** Inline SVG markup (alternative to imgback) */
+      /** Icon class name (e.g., "mg-icon fa-globe") - see Atom/Icons */
       icon: PropTypes.string,
       /** Image URL (alternative to icon, matches VerticalCard) */
       imgback: PropTypes.string,
@@ -152,4 +150,6 @@ IconCard.propTypes = {
   ).isRequired,
   /** Center-align content */
   centered: PropTypes.bool,
+  /** Visual variant: default or negative (for dark backgrounds) */
+  variant: PropTypes.oneOf(['default', 'negative']),
 };

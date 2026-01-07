@@ -216,18 +216,16 @@
     object-fit: contain;
   }
 
-  // SVG icon container
-  .mg-card__icon-svg {
-    width: 72px;
-    height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $mg-color-text;
+  // Icon class container (matches StatsCard approach)
+  .mg-card__icon-wrap {
+    font-size: $mg-font-size-900;
+    color: $mg-color-interactive;
+    line-height: 1;
 
-    svg {
-      width: 100%;
-      height: 100%;
+    // Support for nested icon elements (Font Awesome, etc.)
+    i,
+    span {
+      display: block;
     }
   }
 
@@ -303,6 +301,34 @@
 
     .mg-card__content {
       align-items: center;
+    }
+  }
+
+  // Negative variant (for dark backgrounds)
+  &--negative {
+    .mg-card__icon-wrap {
+      color: $mg-color-white;
+    }
+
+    .mg-card__label {
+      color: rgba($mg-color-white, 0.8);
+    }
+
+    .mg-card__title h3,
+    .mg-card__title h3 a {
+      color: $mg-color-white;
+    }
+
+    .mg-card__summary {
+      color: rgba($mg-color-white, 0.8);
+    }
+
+    .mg-card__link a {
+      color: $mg-color-white;
+
+      &:focus-visible {
+        outline-color: $mg-color-white;
+      }
     }
   }
 }

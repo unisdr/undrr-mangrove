@@ -93,21 +93,11 @@ const translations = {
 // Helper to get translations based on locale
 const getContent = locale => translations[locale] || translations.english;
 
-// Sample SVG icons
-const componentIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="6" y="6" width="60" height="60" rx="4"/>
-  <path d="M6 22h60M22 6v60"/>
-</svg>`;
-
-const settingsIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2">
-  <circle cx="36" cy="36" r="10"/>
-  <path d="M36 6v8m0 44v8M6 36h8m44 0h8m-53-21l5.66 5.66m31.68 31.68l5.66 5.66m0-42.6l-5.66 5.66M17.66 47.34l-5.66 5.66"/>
-</svg>`;
-
-const bookIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="2">
-  <path d="M12 6h48c2.2 0 4 1.8 4 4v48c0 2.2-1.8 4-4 4H12c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z"/>
-  <path d="M36 6v60M20 24h12M20 36h12M20 48h12"/>
-</svg>`;
+// Icon class names (matches StatsCard approach)
+// See stories/Atom/Icons for available icons
+const componentIcon = 'mg-icon fa-cubes';
+const settingsIcon = 'mg-icon fa-lightbulb';
+const bookIcon = 'mg-icon fa-file-alt';
 
 export default {
   title: 'Components/Cards/Icon card',
@@ -125,6 +115,12 @@ export default {
       control: 'boolean',
       description: 'Center-align content',
       defaultValue: false,
+    },
+    variant: {
+      options: ['default', 'negative'],
+      control: { type: 'inline-radio' },
+      description: 'Visual variant',
+      defaultValue: 'default',
     },
   },
 };
@@ -384,4 +380,56 @@ export const WithImage = {
   args: {
     centered: true,
   },
+};
+
+// Negative variant (for dark backgrounds)
+export const Negative = {
+  render: (args, { globals: { locale } }) => {
+    const content = getContent(locale);
+    return (
+      <IconCard
+        {...args}
+        variant="negative"
+        data={[
+          {
+            icon: componentIcon,
+            title: content.components.title,
+            summaryText: content.components.summaryText,
+            linkText: content.components.linkText,
+            link: '#',
+          },
+          {
+            icon: settingsIcon,
+            title: content.configuration.title,
+            summaryText: content.configuration.summaryText,
+            linkText: content.configuration.linkText,
+            link: '#',
+          },
+          {
+            icon: bookIcon,
+            title: content.documentation.title,
+            summaryText: content.documentation.summaryText,
+            linkText: content.documentation.linkText,
+            link: '#',
+          },
+        ]}
+      />
+    );
+  },
+  args: {
+    centered: false,
+  },
+  decorators: [
+    Story => (
+      <div
+        style={{
+          backgroundColor: '#1a1a2e',
+          padding: '2rem',
+          borderRadius: '8px',
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 };
