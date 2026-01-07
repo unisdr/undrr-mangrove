@@ -4840,10 +4840,8 @@ __metadata:
     esri-leaflet: "npm:3.1.0"
     extract-loader: "npm:5.1.0"
     file-loader: "npm:6.2.0"
-    fitty: "npm:2.4.2"
     glob: "npm:13.0.0"
     globals: "npm:17.0.0"
-    gsap: "npm:3.14.2"
     html-entities: "npm:2.6.0"
     jest: "npm:30.2.0"
     jest-environment-jsdom: "npm:30.2.0"
@@ -4884,7 +4882,6 @@ __metadata:
     svg-spritemap-webpack-plugin: "npm:5.1.0"
     svgo: "npm:4.0.0"
     svgo-loader: "npm:4.0.0"
-    swiper: "npm:12.0.3"
     typescript: "npm:^5.9.3"
     vanilla-cookieconsent: "npm:^3.1.0"
     webpack: "npm:5.104.1"
@@ -10674,13 +10671,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fitty@npm:2.4.2":
-  version: 2.4.2
-  resolution: "fitty@npm:2.4.2"
-  checksum: 10/eb4883275c9a52a8aebf837a62fbee329672192a8c9c467e09785428570164024971952cf442edd2da8634689d0c970f5a1962fa5a02058e1f3bfdaef3505251
-  languageName: node
-  linkType: hard
-
 "flat-cache@npm:^1.2.1":
   version: 1.3.4
   resolution: "flat-cache@npm:1.3.4"
@@ -11370,13 +11360,6 @@ __metadata:
   version: 1.4.0
   resolution: "graphemer@npm:1.4.0"
   checksum: 10/6dd60dba97007b21e3a829fab3f771803cc1292977fe610e240ea72afd67e5690ac9eeaafc4a99710e78962e5936ab5a460787c2a1180f1cb0ccfac37d29f897
-  languageName: node
-  linkType: hard
-
-"gsap@npm:3.14.2":
-  version: 3.14.2
-  resolution: "gsap@npm:3.14.2"
-  checksum: 10/6c6473b6f4d7bf07667fc5a0fb75556e7b55f7a12a028da22050f64d530ef8b4fa68499b040bdc559a21b15fa5cce04b55c0381059a3023ef4b6c540734c8139
   languageName: node
   linkType: hard
 
@@ -20514,13 +20497,6 @@ __metadata:
   bin:
     svgo: ./bin/svgo
   checksum: 10/82fdea9b938884d808506104228e4d3af0050d643d5b46ff7abc903ff47a91bbf6561373394868aaf07a28f006c4057b8fbf14bbd666298abdd7cc590d4f7700
-  languageName: node
-  linkType: hard
-
-"swiper@npm:12.0.3":
-  version: 12.0.3
-  resolution: "swiper@npm:12.0.3"
-  checksum: 10/1a0f6e10e8245a27b270c31cb01c520b307efa7ccf835164dd03ee34937b844b183df07d84fe6d9a1d07f81b26bfa3f0f123e48b28b4596b8804fd4f3d61d77d
   languageName: node
   linkType: hard
 
