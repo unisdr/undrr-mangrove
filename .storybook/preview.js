@@ -10,7 +10,7 @@ import themeMCR from '../stories/assets/scss/style-mcr.scss';
 
 // Function to get current language code
 const getLangCode = (Story, context) => {
-  let activeLang = context.initialGlobals.locale;
+  let activeLang = context.globals.locale;
 
   let delay = 10;
   setTimeout(function () {

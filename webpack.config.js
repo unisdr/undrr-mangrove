@@ -22,11 +22,7 @@ export default [
       filename: '[name].min.js',
       libraryTarget: 'umd',
     },
-    externals: {
-      Swiper: 'Swiper',
-      gsap: 'gsap',
-      fitty: 'fitty',
-    },
+    externals: {},
     module: {
       rules: [
         {

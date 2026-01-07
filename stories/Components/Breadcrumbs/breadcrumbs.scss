@@ -111,3 +111,10 @@
 //     font-size: $mg-font-size-100;
 //   }
 // }
+
+// Arabic
+:lang(ar) {
+  .mg-breadcrumb {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
