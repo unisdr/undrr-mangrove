@@ -1,0 +1,495 @@
+@use "sass:color";
+@use "sass:math";
+
+// =============================================================================
+// BOOTSTRAP 3 COMPATIBILITY LAYER
+// =============================================================================
+// This file provides backward compatibility for Bootstrap 3.3.7 grid classes.
+// It uses modern CSS Grid to replicate Bootstrap's 12-column grid system.
+// This allows gradual migration away from Bootstrap without breaking layouts.
+// Usage: Import this file to enable Bootstrap grid classes in your project.
+// Remove this file once all templates have been migrated to Mangrove grid.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Container
+// -----------------------------------------------------------------------------
+
+.container {
+  width: 100%;
+  padding-right: $mg-spacing-150;
+  padding-left: $mg-spacing-150;
+  margin-right: auto;
+  margin-left: auto;
+
+  @media (min-width: $mg-breakpoint-mobile) {
+    max-width: $mg-breakpoint-mobile;
+  }
+
+  @media (min-width: $mg-breakpoint-tablet) {
+    max-width: $mg-breakpoint-tablet;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    max-width: $mg-breakpoint-desktop;
+  }
+
+  @media (min-width: $mg-breakpoint-desktop-wide) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: $mg-spacing-150;
+  padding-left: $mg-spacing-150;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// -----------------------------------------------------------------------------
+// Row (Grid Container)
+// -----------------------------------------------------------------------------
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -$mg-spacing-150;
+  margin-left: -$mg-spacing-150;
+
+  // Modern browsers: use CSS Grid for better control
+  @supports (display: grid) {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0 $mg-spacing-300;
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Columns - Base styles
+// -----------------------------------------------------------------------------
+
+// All column classes get these base styles
+[class*="col-"] {
+  position: relative;
+  width: 100%;
+  padding-right: $mg-spacing-150;
+  padding-left: $mg-spacing-150;
+
+  @supports (display: grid) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Extra Small (xs) - Mobile first, always applies
+// -----------------------------------------------------------------------------
+
+@for $i from 1 through 12 {
+  .col-xs-#{$i} {
+    flex: 0 0 math.percentage(math.div($i, 12));
+    max-width: math.percentage(math.div($i, 12));
+
+    @supports (display: grid) {
+      grid-column: span $i;
+      max-width: none;
+    }
+  }
+}
+
+.col-xs-12 {
+  @supports (display: grid) {
+    grid-column: 1 / -1;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Small (sm) - Tablet portrait and up
+// -----------------------------------------------------------------------------
+
+@media (width >= 768px) {
+  @for $i from 1 through 12 {
+    .col-sm-#{$i} {
+      flex: 0 0 math.percentage(math.div($i, 12));
+      max-width: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        grid-column: span $i;
+        max-width: none;
+      }
+    }
+  }
+
+  .col-sm-12 {
+    @supports (display: grid) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Medium (md) - Tablet landscape and up
+// Maps to Mangrove's $mg-breakpoint-tablet (900px)
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-tablet) {
+  @for $i from 1 through 12 {
+    .col-md-#{$i} {
+      flex: 0 0 math.percentage(math.div($i, 12));
+      max-width: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        grid-column: span $i;
+        max-width: none;
+      }
+    }
+  }
+
+  .col-md-12 {
+    @supports (display: grid) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Large (lg) - Desktop and up
+// Maps to Mangrove's $mg-breakpoint-desktop (1164px)
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-desktop) {
+  @for $i from 1 through 12 {
+    .col-lg-#{$i} {
+      flex: 0 0 math.percentage(math.div($i, 12));
+      max-width: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        grid-column: span $i;
+        max-width: none;
+      }
+    }
+  }
+
+  .col-lg-12 {
+    @supports (display: grid) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Standalone col-12 (without breakpoint prefix)
+// -----------------------------------------------------------------------------
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+
+  @supports (display: grid) {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Column offsets
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-tablet) {
+  @for $i from 0 through 11 {
+    .col-md-offset-#{$i} {
+      margin-left: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        margin-left: 0;
+        grid-column-start: $i + 1;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Column ordering (push/pull)
+// -----------------------------------------------------------------------------
+
+@media (min-width: $mg-breakpoint-tablet) {
+  @for $i from 1 through 12 {
+    .col-md-push-#{$i} {
+      left: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        left: auto;
+        order: $i;
+      }
+    }
+
+    .col-md-pull-#{$i} {
+      right: math.percentage(math.div($i, 12));
+
+      @supports (display: grid) {
+        right: auto;
+        order: -$i;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Visibility utilities
+// -----------------------------------------------------------------------------
+
+.hidden {
+  display: none !important;
+}
+
+.hidden-xs {
+  @media (width <= 767px) {
+    display: none !important;
+  }
+}
+
+.hidden-sm {
+  @media (width >= 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
+    display: none !important;
+  }
+}
+
+.hidden-md {
+  @media (min-width: $mg-breakpoint-tablet) and (max-width: #{$mg-breakpoint-desktop - 1px}) {
+    display: none !important;
+  }
+}
+
+.hidden-lg {
+  @media (min-width: $mg-breakpoint-desktop) {
+    display: none !important;
+  }
+}
+
+.visible-xs {
+  display: none !important;
+
+  @media (width <= 767px) {
+    display: block !important;
+  }
+}
+
+.visible-sm {
+  display: none !important;
+
+  @media (width >= 768px) and (max-width: #{$mg-breakpoint-tablet - 1px}) {
+    display: block !important;
+  }
+}
+
+.visible-md {
+  display: none !important;
+
+  @media (min-width: $mg-breakpoint-tablet) and (max-width: #{$mg-breakpoint-desktop - 1px}) {
+    display: block !important;
+  }
+}
+
+.visible-lg {
+  display: none !important;
+
+  @media (min-width: $mg-breakpoint-desktop) {
+    display: block !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Text alignment utilities
+// -----------------------------------------------------------------------------
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// -----------------------------------------------------------------------------
+// Clearfix (for flexbox fallback)
+// -----------------------------------------------------------------------------
+
+.clearfix::before,
+.clearfix::after {
+  display: table;
+  content: " ";
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+// -----------------------------------------------------------------------------
+// Button compatibility
+// -----------------------------------------------------------------------------
+
+.btn {
+  display: inline-block;
+  padding: $mg-spacing-100 $mg-spacing-200;
+  font-size: $mg-font-size-300;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 0;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.btn-default {
+  color: $mg-color-neutral-800;
+  background-color: $mg-color-white;
+  border-color: $mg-color-neutral-400;
+
+  &:hover,
+  &:focus {
+    color: $mg-color-neutral-800;
+    background-color: $mg-color-neutral-100;
+    border-color: $mg-color-neutral-500;
+  }
+}
+
+.btn-primary {
+  color: $mg-color-white;
+  background-color: $mg-color-blue-900;
+
+  &:hover,
+  &:focus {
+    color: $mg-color-white;
+    background-color: color.adjust($mg-color-blue-900, $lightness: -10%);
+  }
+}
+
+.btn-link {
+  color: $mg-color-interactive;
+  background-color: transparent;
+  border-color: transparent;
+
+  &:hover,
+  &:focus {
+    color: $mg-color-interactive-active;
+    text-decoration: underline;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Form compatibility
+// -----------------------------------------------------------------------------
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: $mg-spacing-75 $mg-spacing-100;
+  font-size: $mg-font-size-300;
+  line-height: 1.5;
+  color: $mg-color-neutral-800;
+  background-color: $mg-color-white;
+  border: 1px solid $mg-color-neutral-400;
+  border-radius: 0;
+  transition: border-color 0.15s ease-in-out;
+
+  &:focus {
+    border-color: $mg-color-blue-500;
+    outline: 0;
+  }
+
+  &:disabled {
+    background-color: $mg-color-neutral-100;
+    opacity: 1;
+  }
+}
+
+.form-group {
+  margin-bottom: $mg-spacing-150;
+}
+
+// -----------------------------------------------------------------------------
+// Table compatibility
+// -----------------------------------------------------------------------------
+
+.table {
+  width: 100%;
+  margin-bottom: $mg-spacing-200;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: $mg-spacing-100;
+    vertical-align: top;
+    border-top: 1px solid $mg-color-neutral-300;
+  }
+
+  thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid $mg-color-neutral-300;
+  }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba($mg-color-neutral-100, 0.5);
+}
+
+.table-bordered {
+  border: 1px solid $mg-color-neutral-300;
+
+  th,
+  td {
+    border: 1px solid $mg-color-neutral-300;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Pull/Float utilities
+// -----------------------------------------------------------------------------
+
+.pull-left {
+  float: left !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+// -----------------------------------------------------------------------------
+// Screen reader only (for accessibility)
+// -----------------------------------------------------------------------------
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

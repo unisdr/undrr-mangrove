@@ -1,0 +1,377 @@
+// =============================================================================
+// TYPOGRAPHY UTILITIES
+// =============================================================================
+// Font size, weight, alignment, and text styling utilities.
+// Naming convention: .mg-u-{property}--{value}
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// FONT SIZE (using Mangrove tokens)
+// -----------------------------------------------------------------------------
+
+.mg-u-font-size-100 {
+  font-size: $mg-font-size-100;
+}
+
+.mg-u-font-size-150 {
+  font-size: $mg-font-size-150;
+}
+
+.mg-u-font-size-200 {
+  font-size: $mg-font-size-200;
+}
+
+.mg-u-font-size-250 {
+  font-size: $mg-font-size-250;
+}
+
+.mg-u-font-size-300 {
+  font-size: $mg-font-size-300;
+}
+
+.mg-u-font-size-400 {
+  font-size: $mg-font-size-400;
+}
+
+.mg-u-font-size-500 {
+  font-size: $mg-font-size-500;
+}
+
+.mg-u-font-size-600 {
+  font-size: $mg-font-size-600;
+}
+
+.mg-u-font-size-800 {
+  font-size: $mg-font-size-800;
+}
+
+.mg-u-font-size-900 {
+  font-size: $mg-font-size-900;
+}
+
+.mg-u-font-size-1000 {
+  font-size: $mg-font-size-1000;
+}
+
+.mg-u-font-size-1100 {
+  font-size: $mg-font-size-1100;
+}
+
+// Responsive font sizes
+.mg-u-font-size-300--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    font-size: $mg-font-size-300;
+  }
+}
+
+.mg-u-font-size-400--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    font-size: $mg-font-size-400;
+  }
+}
+
+.mg-u-font-size-500--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    font-size: $mg-font-size-500;
+  }
+}
+
+.mg-u-font-size-600--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    font-size: $mg-font-size-600;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// FONT WEIGHT
+// -----------------------------------------------------------------------------
+
+.mg-u-font-weight--normal {
+  font-weight: 400;
+}
+
+.mg-u-font-weight--semibold {
+  font-weight: 600;
+}
+
+.mg-u-font-weight--bold {
+  font-weight: 700;
+}
+
+// -----------------------------------------------------------------------------
+// FONT FAMILY
+// -----------------------------------------------------------------------------
+
+.mg-u-font-family--base {
+  font-family: $mg-font-family;
+}
+
+.mg-u-font-family--condensed {
+  font-family: $mg-font-family-condensed;
+}
+
+// -----------------------------------------------------------------------------
+// FONT STYLE
+// -----------------------------------------------------------------------------
+
+.mg-u-font-style--normal {
+  font-style: normal;
+}
+
+.mg-u-font-style--italic {
+  font-style: italic;
+}
+
+// -----------------------------------------------------------------------------
+// TEXT ALIGNMENT
+// -----------------------------------------------------------------------------
+
+.mg-u-text-align--left {
+  text-align: left;
+}
+
+.mg-u-text-align--center {
+  text-align: center;
+}
+
+.mg-u-text-align--right {
+  text-align: right;
+}
+
+// Responsive text alignment
+.mg-u-text-align--left--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    text-align: left;
+  }
+}
+
+.mg-u-text-align--center--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    text-align: center;
+  }
+}
+
+.mg-u-text-align--right--sm {
+  @media (width <= $mg-breakpoint-mobile) {
+    text-align: right;
+  }
+}
+
+.mg-u-text-align--left--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    text-align: left;
+  }
+}
+
+.mg-u-text-align--center--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    text-align: center;
+  }
+}
+
+.mg-u-text-align--right--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    text-align: right;
+  }
+}
+
+.mg-u-text-align--left--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    text-align: left;
+  }
+}
+
+.mg-u-text-align--center--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    text-align: center;
+  }
+}
+
+.mg-u-text-align--right--lg {
+  @media (width >= $mg-breakpoint-desktop) {
+    text-align: right;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// LINE HEIGHT
+// -----------------------------------------------------------------------------
+
+.mg-u-line-height--none {
+  line-height: 1;
+}
+
+.mg-u-line-height--tight {
+  line-height: $mg-font-line-height-500;
+}
+
+.mg-u-line-height--normal {
+  line-height: $mg-font-line-height-700;
+}
+
+.mg-u-line-height--relaxed {
+  line-height: 1.75;
+}
+
+.mg-u-line-height--loose {
+  line-height: 2;
+}
+
+// -----------------------------------------------------------------------------
+// TEXT TRANSFORM
+// -----------------------------------------------------------------------------
+
+.mg-u-text-transform--uppercase {
+  text-transform: uppercase;
+}
+
+.mg-u-text-transform--lowercase {
+  text-transform: lowercase;
+}
+
+.mg-u-text-transform--capitalize {
+  text-transform: capitalize;
+}
+
+.mg-u-text-transform--none {
+  text-transform: none;
+}
+
+// -----------------------------------------------------------------------------
+// WHITE SPACE
+// -----------------------------------------------------------------------------
+
+.mg-u-white-space--normal {
+  white-space: normal;
+}
+
+.mg-u-white-space--nowrap {
+  white-space: nowrap;
+}
+
+.mg-u-white-space--pre {
+  white-space: pre;
+}
+
+.mg-u-white-space--pre-line {
+  white-space: pre-line;
+}
+
+.mg-u-white-space--pre-wrap {
+  white-space: pre-wrap;
+}
+
+.mg-u-white-space--break-spaces {
+  white-space: break-spaces;
+}
+
+// -----------------------------------------------------------------------------
+// TEXT OVERFLOW & TRUNCATION
+// -----------------------------------------------------------------------------
+
+.mg-u-text-overflow--ellipsis {
+  text-overflow: ellipsis;
+}
+
+.mg-u-text-overflow--clip {
+  text-overflow: clip;
+}
+
+// Truncate text with ellipsis (requires container width)
+.mg-u-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// -----------------------------------------------------------------------------
+// WORD BREAK & OVERFLOW WRAP
+// -----------------------------------------------------------------------------
+
+.mg-u-word-break--normal {
+  word-break: normal;
+}
+
+.mg-u-word-break--break-all {
+  word-break: break-all;
+}
+
+.mg-u-word-break--keep-all {
+  word-break: keep-all;
+}
+
+.mg-u-overflow-wrap--normal {
+  overflow-wrap: normal;
+}
+
+.mg-u-overflow-wrap--break-word {
+  overflow-wrap: break-word;
+}
+
+.mg-u-overflow-wrap--anywhere {
+  overflow-wrap: anywhere;
+}
+
+// -----------------------------------------------------------------------------
+// LETTER SPACING
+// -----------------------------------------------------------------------------
+
+.mg-u-letter-spacing--tighter {
+  letter-spacing: -0.05em;
+}
+
+.mg-u-letter-spacing--tight {
+  letter-spacing: -0.025em;
+}
+
+.mg-u-letter-spacing--normal {
+  letter-spacing: 0;
+}
+
+.mg-u-letter-spacing--wide {
+  letter-spacing: 0.025em;
+}
+
+.mg-u-letter-spacing--wider {
+  letter-spacing: 0.05em;
+}
+
+.mg-u-letter-spacing--widest {
+  letter-spacing: 0.1em;
+}
+
+// -----------------------------------------------------------------------------
+// VERTICAL ALIGN
+// -----------------------------------------------------------------------------
+
+.mg-u-vertical-align--baseline {
+  vertical-align: baseline;
+}
+
+.mg-u-vertical-align--top {
+  vertical-align: top;
+}
+
+.mg-u-vertical-align--middle {
+  vertical-align: middle;
+}
+
+.mg-u-vertical-align--bottom {
+  vertical-align: bottom;
+}
+
+.mg-u-vertical-align--text-top {
+  vertical-align: text-top;
+}
+
+.mg-u-vertical-align--text-bottom {
+  vertical-align: text-bottom;
+}
+
+.mg-u-vertical-align--sub {
+  vertical-align: sub;
+}
+
+.mg-u-vertical-align--super {
+  vertical-align: super;
+}
