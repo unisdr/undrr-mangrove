@@ -82,6 +82,7 @@ export default [
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget: './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
       IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
+      Gallery: './stories/Components/Gallery/Gallery.jsx',
     },
     externals: {
       react: 'react',
