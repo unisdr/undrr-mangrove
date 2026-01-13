@@ -16,8 +16,8 @@ const getCaptionForLocale = locale => {
             descriptionText: 'Subpage title',
           },
         ],
-        headerText: 'PAGE TITLE',
-        label: 'MENU',
+        headerText: 'Page title',
+        label: 'Menu',
       };
       return engText;
     case 'arabic':

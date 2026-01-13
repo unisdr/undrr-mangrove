@@ -31,6 +31,7 @@
     "shorthand-property-no-redundant-values": null,
     "unit-allowed-list": [
       "ch",
+      "cqi",
       "deg",
       "dpcm",
       "em",

@@ -6,7 +6,7 @@ const getCaptionForLocale = locale => {
       const engText = {
         contentdata: [
           {
-            contenttile: 'CONTENT TAG',
+            contenttile: 'Content tag',
             title: 'Title in large size',
             link: 'javascript:void(0)',
             imgalt: 'A publication cover',
@@ -21,9 +21,9 @@ const getCaptionForLocale = locale => {
         contentdata: [
           {
             contenttile: 'علامة المحتوى',
-            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
+            title: 'عنوان بحجم كبير',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
+            imgalt: 'غلاف منشور',
             imgback:
               'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
           },
@@ -64,7 +64,7 @@ const getCaptionForLocale = locale => {
       const dummy = {
         contentdata: [
           {
-            contenttile: 'BOOK CARD',
+            contenttile: 'Book card',
             title:
               'Book title in normal header size with up to three lines of text',
             link: 'javascript:void(0)',

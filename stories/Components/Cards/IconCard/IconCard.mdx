@@ -1,0 +1,219 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import * as IconCardStories from './IconCard.stories';
+
+<Meta of={IconCardStories} />
+
+# Icon card
+
+Icon Card is a versatile card variant designed to highlight content with visual icons or images. It features a clean, vertical layout with an icon/image at the top, content in the middle, and a call-to-action at the bottom.
+
+## When to use
+
+- **Feature highlights**: Showcase product features or service offerings with icons
+- **Navigation cards**: Create visual navigation with icons and descriptions
+- **Step-by-step guides**: Display process steps with numbered icons
+- **Category cards**: Organize content by category with representative icons
+- **Service cards**: Present services or offerings in a grid layout
+
+## When not to use
+
+- **Image-heavy content**: Use VerticalCard or HorizontalCard for large images
+- **Data visualization**: Use StatsCards for numeric data
+- **Long-form content**: Consider standard cards for extensive text
+
+## RTL support
+
+RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon) to see all components adapt their alignment. The `dir="rtl"` attribute is set automatically on the `<html>` element.
+
+## Component features
+
+### Layout
+
+- **Vertical layout**: Icon/image at top, content below
+- **Flexible height**: Cards auto-adjust height based on content
+- **Grid-friendly**: Works well in CSS Grid layouts (grid wrapper provided by consumer)
+
+### Content options
+
+- **Icon or Image**: Use icon class names or image URLs
+- **Title**: Required heading text (can be linked or visually hidden for logos)
+- **Summary text**: Optional body text (HTML supported)
+- **Label/Badge**: Optional badge/category label
+- **CTA options**:
+  - Button (Primary or Secondary)
+  - Text link
+  - Title-only link (entire card clickable)
+  - Logo link with `srOnlyTitle` (image is clickable, title hidden but accessible)
+
+## Usage
+
+### Default (left-aligned)
+
+<Canvas of={IconCardStories.Default} />
+
+### Centered alignment
+
+<Canvas of={IconCardStories.Centered} />
+
+### With label/badge
+
+<Canvas of={IconCardStories.WithLabel} />
+
+### Grid layout
+
+<Canvas of={IconCardStories.GridLayout} />
+
+### With logo
+
+<Canvas of={IconCardStories.WithLogo} />
+
+### Negative (for dark backgrounds)
+
+<Canvas of={IconCardStories.Negative} />
+
+## Props
+
+### IconCard
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | Array | Required | Array of card data objects |
+| `centered` | Boolean | `false` | Center-align content |
+| `variant` | String | `'default'` | Visual variant: `'default'` or `'negative'` |
+
+### Data object properties
+
+These properties align with VerticalCard and HorizontalCard for consistency:
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `icon` | String | Optional | Icon class name (e.g., `"mg-icon fa-globe"`) |
+| `imgback` | String | Optional | Image URL (alternative to `icon`) |
+| `imgalt` | String | Optional | Alt text for image |
+| `iconSize` | Number | `72` | Width/height of icon in pixels (ignored when `imageScale` is set) |
+| `imageScale` | String | - | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units. |
+| `label` | String | Optional | Badge or category label text |
+| `title` | String | Required | Card heading text (required for accessibility) |
+| `srOnlyTitle` | Boolean | `false` | Visually hide title but keep for screen readers (for logo cards) |
+| `summaryText` | String | Optional | Card body text (HTML supported) |
+| `link` | String | Optional | URL for card link |
+| `linkText` | String | Optional | Text for text link CTA |
+| `button` | String | Optional | Button label text |
+| `buttonType` | String | `'Primary'` | Button style: `'Primary'` or `'Secondary'` |
+
+## Code examples
+
+### With icon class (recommended)
+
+```jsx
+<IconCard
+  data={[
+    {
+      icon: 'mg-icon fa-cubes',
+      title: 'Components',
+      summaryText: 'Browse all UNDRR components.',
+      linkText: 'Browse components →',
+      link: '/components',
+    },
+  ]}
+/>
+```
+
+### With image
+
+```jsx
+<IconCard
+  centered
+  data={[
+    {
+      imgback: '/icons/feature.png',
+      imageScale: 'medium',
+      imgalt: 'Feature icon',
+      title: 'Features',
+      summaryText: 'Explore our features.',
+      button: 'Learn more',
+      link: '/features',
+    },
+  ]}
+/>
+```
+
+### With logo (srOnlyTitle)
+
+For logo cards where the image is self-explanatory, use `srOnlyTitle: true` to visually hide the title while keeping it accessible for screen readers. The entire card becomes clickable via the logo.
+
+```jsx
+<IconCard
+  centered
+  data={[
+    {
+      imgback: '/logos/partner-logo.svg',
+      imgalt: 'Partner Organization logo',
+      imageScale: 'medium',
+      title: 'Partner Organization',  // Required for accessibility
+      srOnlyTitle: true,              // Visually hidden
+      summaryText: 'Description of the partner organization.',
+      link: '/partners/org',
+    },
+  ]}
+/>
+```
+
+### In a grid layout
+
+IconCard renders individual cards. When displaying multiple cards in a grid, wrap them in your own grid container (e.g., `mg-grid` or custom CSS Grid):
+
+```jsx
+<div className="mg-grid mg-grid__col-3">
+  <IconCard centered data={[{ /* card data */ }]} />
+  <IconCard centered data={[{ /* card data */ }]} />
+  <IconCard centered data={[{ /* card data */ }]} />
+</div>
+```
+
+## Accessibility
+
+- Icons are decorative and use `aria-hidden="true"`
+- Images require `imgalt` for screen readers
+- Titles can be linked for entire card click areas (stretched link pattern)
+- **Logo cards**: Use `srOnlyTitle: true` to visually hide the title while keeping it accessible — the image becomes the clickable element
+- Buttons and links have visible focus states (`:focus-visible`)
+- Color contrast meets WCAG AA standards
+- RTL layout handled automatically via CSS `[dir="rtl"]`
+
+## Best practices
+
+### Do
+
+- Use clear, concise titles (3-5 words)
+- Keep summaries brief (1-2 sentences)
+- Provide alt text for images via `imgalt`
+- Use consistent icon sizes in grids
+- Test with the locale toolbar for RTL languages
+
+### Don't
+
+- Mix icons and images in the same grid
+- Use overly complex icons
+- Write lengthy summaries (use regular cards instead)
+- Manually set alignment for RTL - it's automatic
+
+## Migration from v1
+
+If upgrading from the previous IconCard API:
+
+| Old prop | New prop | Notes |
+|----------|----------|-------|
+| `icon` (SVG string) | `icon` (class name) | Now uses CSS classes like `"mg-icon fa-globe"` (matches StatsCard) |
+| `alignment` | Removed | RTL is automatic via CSS |
+| `stackedLayout` | Removed | Always vertical now |
+| `description` | `summaryText` | Aligns with VerticalCard |
+| `image` | `imgback` | Aligns with VerticalCard |
+| `imageAlt` | `imgalt` | Aligns with VerticalCard |
+
+## Related components
+
+- **VerticalCard**: For image-focused content with larger visuals
+- **HorizontalCard**: For content-heavy cards with side-by-side layout
+- **StatsCards**: For numerical data display
+- **BookCard**: For publication listings

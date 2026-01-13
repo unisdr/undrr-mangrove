@@ -23,7 +23,7 @@ const getCaptionForLocale = locale => {
       return burmeseText;
     case 'japanese':
       const japaneseText = {
-        mainLabel: 'ビルマ語',
+        mainLabel: 'これを共有',
         onCopy: 'コピーされました',
       };
       return japaneseText;
