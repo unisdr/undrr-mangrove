@@ -81,6 +81,7 @@ export default [
       QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget: './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
+      Gallery: './stories/Components/Gallery/Gallery.jsx',
     },
     externals: {
       react: 'react',
