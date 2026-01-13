@@ -120,13 +120,11 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
                   item.srOnlyTitle && 'mg-u-sr-only'
                 )}
               >
-                <h3>
-                  {item.link && !item.button && !item.srOnlyTitle ? (
-                    <a href={item.link}>{item.title}</a>
-                  ) : (
-                    item.title
-                  )}
-                </h3>
+                {item.link && !item.button && !item.srOnlyTitle ? (
+                  <a href={item.link}>{item.title}</a>
+                ) : (
+                  item.title
+                )}
               </header>
             )}
 
