@@ -1,0 +1,11 @@
+/**
+ * Tailwind CSS directives
+ * Import Tailwind's base, components, and utilities
+ *
+ * This file is imported in all theme style files (style.scss, style-preventionweb.scss, etc.)
+ * to ensure Tailwind utilities are available in all themes.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

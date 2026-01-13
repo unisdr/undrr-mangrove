@@ -60,6 +60,14 @@ export default {
       use: [
         { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
         'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              config: path.resolve(currentDirPath, '../postcss.config.js'),
+            },
+          },
+        },
         'sass-loader',
       ],
       include: path.resolve(currentDirPath, '../stories/assets/scss'),
@@ -69,7 +77,19 @@ export default {
     config.module.rules.push({
       test: /\.scss$/,
       exclude: [/node_modules/, /stories\/assets\/scss\/style(-\w+)?\.scss$/],
-      use: ['style-loader', 'css-loader', 'sass-loader'],
+      use: [
+        'style-loader',
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              config: path.resolve(currentDirPath, '../postcss.config.js'),
+            },
+          },
+        },
+        'sass-loader',
+      ],
       include: path.resolve(currentDirPath, '../'),
     });
 
