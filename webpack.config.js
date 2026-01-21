@@ -62,8 +62,14 @@ export default [
       new CopyPlugin({
         patterns: [
           { from: 'stories/assets', to: 'assets' },
-          { from: 'stories/Components/ErrorPages/static', to: 'assets/error-pages' },
-          { from: 'stories/assets/fonts/mangrove-icon-set', to: 'fonts/mangrove-icon-set' },
+          {
+            from: 'stories/Components/ErrorPages/static',
+            to: 'assets/error-pages',
+          },
+          {
+            from: 'stories/assets/fonts/mangrove-icon-set',
+            to: 'fonts/mangrove-icon-set',
+          },
         ],
       }),
     ],
@@ -80,9 +86,11 @@ export default [
       MapComponent: './stories/Components/Map/MapComponent.jsx',
       QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
-      SyndicationSearchWidget: './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
+      SyndicationSearchWidget:
+        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
       IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
       Gallery: './stories/Components/Gallery/Gallery.jsx',
+      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.jsx',
     },
     externals: {
       react: 'react',
