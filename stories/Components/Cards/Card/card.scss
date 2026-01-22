@@ -82,7 +82,7 @@
 
     &:has(.mg-card__visual) {
       grid-template-rows: unset;
-      gap: $mg-spacing-100 0;
+      gap: 0 $mg-spacing-100;
 
       @media (min-width: $mg-breakpoint-mobile) {
         grid-template-columns: 160px 1fr;
