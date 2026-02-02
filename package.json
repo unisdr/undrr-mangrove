@@ -56,7 +56,7 @@
     "@babel/plugin-transform-property-literals": "7.27.1",
     "@babel/plugin-transform-shorthand-properties": "7.27.1",
     "@babel/plugin-transform-spread": "7.28.6",
-    "@babel/preset-env": "7.28.6",
+    "@babel/preset-env": "7.29.0",
     "@babel/preset-react": "7.28.5",
     "@babel/preset-typescript": "7.28.5",
     "@chromatic-com/storybook": "5.0.0",
