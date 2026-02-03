@@ -55,7 +55,7 @@ export function Sidebar({ headerText, label, data, size, Height }) {
     >
       <div className="grid-x">
         <div className={['cell', `${size}`].join(' ')}>
-          <Heading type="6" label={label} onClick={toggleSmallMenu} />
+          <Heading type="6" onClick={toggleSmallMenu}>{label}</Heading>
           <ul style={{ display: showSmall ? 'block' : 'block' }}>
             {sidebarItems.map((item, index) => (
               <li

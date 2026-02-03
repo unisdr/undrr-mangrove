@@ -12,7 +12,7 @@ export function TextCta({ headerText, descriptionText, label }) {
       data-viewport="true"
     >
       <div className="cell medium-7 small-12 medium-offset-1 trusted-partnerships--header">
-        <Heading type="2" label={headerText} />
+        <Heading type="2">{headerText}</Heading>
         <P label={descriptionText} />
         <CtaButton label={label} />
       </div>
