@@ -11,7 +11,7 @@ export function FooterLogo({ src, headerText, style, alt, logolink }) {
       <a href={logolink}>
         <Logo src={src} alt={alt} />
       </a>
-      <Heading type="5" label={headerText} tabIndex="0" />
+      <Heading type="5" tabIndex="0">{headerText}</Heading>
     </div>
   );
 }

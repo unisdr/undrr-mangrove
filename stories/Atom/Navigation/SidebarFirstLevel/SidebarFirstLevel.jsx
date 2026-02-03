@@ -21,7 +21,7 @@ export const SidebarFirstLevel = ({
     className={cls('sidebar_item', variant_options[`${variant}`])}
     {...props}
   >
-    <Heading type="6" label={text} />
+    <Heading type="6">{text}</Heading>
   </div>
 );
 

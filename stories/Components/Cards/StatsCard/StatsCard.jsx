@@ -31,7 +31,7 @@ export function StatsCard({
 
   return (
     <section className={classes} aria-label={title || 'Statistics'} {...props}>
-      {title && <Heading type="2" label={title} />}
+      {title && <Heading type="2">{title}</Heading>}
 
       <div className={gridClasses}>
         {stats.map((stat, index) => (
