@@ -1,17 +1,12 @@
 // Mangrove Icon System
-// ====================
 // A custom icon font with mg-* namespaced classes (preferred) and fa-* legacy support.
-//
 // Usage:
-//   <span class="mg-icon mg-globe"></span>     // Preferred
-//   <span class="mg-icon fa-globe"></span>     // Legacy (still supported)
-//
+//   <span class="mg-icon mg-globe"></span>     (Preferred)
+//   <span class="mg-icon fa-globe"></span>     (Legacy, still supported)
 // Migration note: New code should use mg-* classes. fa-* classes are maintained
 // for backward compatibility but may be deprecated in future versions.
-//
 // More at: https://gitlab.com/undrr/web-backlog/-/issues/927
-// Most of the font references are pulled from
-// https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
+// Font references: https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
 
 @font-face {
   font-family: FontAwesome;

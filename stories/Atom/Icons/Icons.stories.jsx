@@ -24,14 +24,30 @@ const Template = args => (
       const faClass = `mg-icon fa-${item.name}`;
 
       return (
-        <p key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <p
+          key={index}
+          style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
+        >
           <Icon name={item.name} />
           <span>
             {item.label}{' '}
-            <code style={{ backgroundColor: '#e8f4e8', padding: '2px 6px', borderRadius: '3px' }}>
+            <code
+              style={{
+                backgroundColor: '#e8f4e8',
+                padding: '2px 6px',
+                borderRadius: '3px',
+              }}
+            >
               {mgClass}
             </code>{' '}
-            <code style={{ backgroundColor: '#f0f0f0', padding: '2px 6px', borderRadius: '3px', opacity: 0.7 }}>
+            <code
+              style={{
+                backgroundColor: '#f0f0f0',
+                padding: '2px 6px',
+                borderRadius: '3px',
+                opacity: 0.7,
+              }}
+            >
               {faClass}
             </code>
           </span>
@@ -72,15 +88,21 @@ export const SingleIcon = {
     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
       <div>
         <Icon name="globe" size="lg" />
-        <p><code>{'<Icon name="globe" size="lg" />'}</code></p>
+        <p>
+          <code>{'<Icon name="globe" size="lg" />'}</code>
+        </p>
       </div>
       <div>
         <Icon name="chart-bar" />
-        <p><code>{'<Icon name="chart-bar" />'}</code></p>
+        <p>
+          <code>{'<Icon name="chart-bar" />'}</code>
+        </p>
       </div>
       <div>
         <Icon name="fa-envelope" />
-        <p><code>{'<Icon name="fa-envelope" />'}</code> (legacy)</p>
+        <p>
+          <code>{'<Icon name="fa-envelope" />'}</code> (legacy)
+        </p>
       </div>
     </div>
   ),
