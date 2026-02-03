@@ -1,5 +1,6 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
 import { Icons } from './Icons';
+import { Icon } from './Icon';
 import data from './Icons.json';
 import * as IconsStories from './Icons.stories';
 
@@ -9,7 +10,7 @@ import * as IconsStories from './Icons.stories';
 
 The Icon components grab attention and draw users into content, helping them quickly understand the context in which they are placed.
 
-Our legacy sites used the **FontAwesome** library, which is why we've maintained use the `.fa-` prefixes.
+Icons use the **Mangrove** namespace (`mg-*`) as the preferred format. Legacy `fa-*` (FontAwesome-style) classes remain supported for backwards compatibility.
 
 ## When to use:
 
@@ -21,12 +22,42 @@ Our legacy sites used the **FontAwesome** library, which is why we've maintained
 
 ## Usage
 
-- **CSS-Based Icons**: For icons like `.fa.fa-rss`, apply these classes to a `<span>` element.
+### React Component (Recommended)
 
-  ```html
-  <span class="mg-icon fa-rss"></span>
-  <span class="mg-icon fa-2x fa-rss"></span>
-  ```
+```jsx
+import { Icon } from './Icon';
+
+// Just the icon name (recommended)
+<Icon name="globe" />
+
+// With size modifier
+<Icon name="globe" size="lg" />
+
+// Legacy fa- format (still supported)
+<Icon name="fa-globe" />
+```
+
+### CSS Classes
+
+Use `mg-icon` base class with `mg-{name}` (preferred) or `fa-{name}` (legacy):
+
+```html
+<!-- Preferred format -->
+<span class="mg-icon mg-globe"></span>
+<span class="mg-icon mg-chart-bar"></span>
+
+<!-- Legacy format (still supported) -->
+<span class="mg-icon fa-globe"></span>
+<span class="mg-icon fa-rss"></span>
+```
+
+### Size Modifiers
+
+```html
+<span class="mg-icon mg-globe mg-icon--sm"></span>  <!-- 0.875em -->
+<span class="mg-icon mg-globe mg-icon--lg"></span>  <!-- 1.5em -->
+<span class="mg-icon mg-globe mg-icon--xl"></span>  <!-- 2em -->
+```
 
 ## Technical notes
 
@@ -55,3 +86,27 @@ Added support for additional icons:
 Added support for additional icons:
 
 - `.fa-qrcode` - QR Code icon (code: e899)
+
+### v2.0
+
+**Mangrove namespace migration** - Icons now use `mg-*` namespaced classes as the preferred format, with `fa-*` classes maintained for backwards compatibility.
+
+#### New Features
+
+- **Icon React Component** (`Icon.jsx`) - Programmatic icon rendering with automatic class normalization
+  - Accepts name-only (`globe`), mg-prefixed (`mg-globe`), or legacy fa-prefixed (`fa-globe`) formats
+  - Supports size prop: `sm`, `lg`, `xl`
+- **mg-* CSS classes** - All icons now have Mangrove-namespaced selectors (e.g., `.mg-globe`, `.mg-chart-bar`)
+- **Size modifiers** - New CSS classes for icon sizing: `.mg-icon--sm`, `.mg-icon--lg`, `.mg-icon--xl`
+
+#### Migration Notes
+
+- New code should use `mg-*` classes (e.g., `mg-icon mg-globe`)
+- Existing `fa-*` classes continue to work unchanged
+- Both formats render identically via grouped SCSS selectors
+
+#### Technical Improvements
+
+- Grouped SCSS selectors for improved maintainability
+- Added font rendering optimizations to `.mg-icon` base class
+- Updated Storybook documentation with usage examples

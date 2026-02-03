@@ -1,11 +1,12 @@
-// A basic Font Awesome shim for our custom UNDRR font face.
-// This allows us to:
-// 1. not load a massive FA library
-// 2. be flexible for any cusotmisation we need
-// 3. move forward with our migration to Mangrove without breaking legacy compatibility
+// Mangrove Icon System
+// A custom icon font with mg-* namespaced classes (preferred) and fa-* legacy support.
+// Usage:
+//   <span class="mg-icon mg-globe"></span>     (Preferred)
+//   <span class="mg-icon fa-globe"></span>     (Legacy, still supported)
+// Migration note: New code should use mg-* classes. fa-* classes are maintained
+// for backward compatibility but may be deprecated in future versions.
 // More at: https://gitlab.com/undrr/web-backlog/-/issues/927
-// Most of the font references are pulled from
-// https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
+// Font references: https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
 
 @font-face {
   font-family: FontAwesome;
@@ -38,163 +39,244 @@
   padding-right: 0.5em;
 }
 
-// .fa-lg {
-//   font-size: 1.33333333em;
-//   line-height: 0.75em;
-//   vertical-align: -15%;
-// }
-
 .fa-2x {
   font-size: 2em;
 }
 
+// =============================================================================
+// Icon Definitions
+// Each icon has both mg-* (preferred) and fa-* (legacy) selectors grouped together
+// =============================================================================
+
+// RSS
+.mg-rss:before,
 .fa-rss:before {
   content: "\f09e";
 }
 
+// File/Document
+.mg-file-alt:before,
 .fa-file-alt:before {
   content: "\f15c";
 }
 
+.mg-file:before,
+.fa-file:before {
+  content: "\f15b";
+}
+
+// Social Media
+.mg-facebook:before,
 .fa-facebook:before {
   content: "\f230";
 }
 
+.mg-x-social:before,
+.mg-twitter:before,
 .fa-x-social:before,
 .fa-twitter:before {
   content: "\f099";
 }
 
+.mg-linkedin:before,
 .fa-linkedin:before {
   content: "\f0e1";
 }
 
+.mg-flickr:before,
 .fa-flickr:before {
   content: "\f16e";
 }
 
+.mg-youtube:before,
 .fa-youtube:before {
   content: "\f16a";
 }
 
+// Search
+.mg-search:before,
 .fa-search:before {
   content: "\e808";
 }
 
+// Communication
+.mg-envelope:before,
 .fa-envelope:before,
 .fa-envelope-o:before {
   content: "\e806";
 }
 
+// Media
+.mg-newspaper:before,
 .fa-newspaper:before {
   content: "\f1ea";
 }
 
-.fa-chart-bar:before {
-  content: "\e80B";
-}
-
-.fa-file:before {
-  content: "\f15b";
-}
-
-.fa-graduation-cap:before {
-  content: "\f19D";
-}
-
-.fa-calendar-alt:before {
-  content: "\f133";
-}
-
-.fa-building:before {
-  content: "\f0F7";
-}
-
-.fa-pen-nib:before {
-  content: "\f0f6";
-}
-
-.fa-business-time:before {
-  content: "\e809";
-}
-
-.fa-code-branch:before {
-  content: "\f126";
-}
-
-.fa-life-ring:before {
-  content: "\f1cd";
-}
-
-.fa-lightbulb:before {
-  content: "\f0eb";
-}
-
-.fa-cubes:before {
-  content: "\f1b3";
-}
-
+// Charts & Data
+.mg-chart-bar:before,
+.mg-bar-chart:before,
+.fa-chart-bar:before,
 .fa-bar-chart:before {
   content: "\e80B";
 }
 
-.fa-sort-alpha-down::before,
-.fa-tags:before {
-  content: "\e800";
+// Education
+.mg-graduation-cap:before,
+.fa-graduation-cap:before {
+  content: "\f19D";
 }
 
+// Calendar
+.mg-calendar:before,
+.mg-calendar-alt:before,
+.fa-calendar-alt:before {
+  content: "\f133";
+}
+
+// Buildings & Landmarks
+.mg-building:before,
+.fa-building:before {
+  content: "\f0F7";
+}
+
+.mg-landmark:before,
 .fa-landmark:before {
   content: "\f19c";
 }
 
+// Writing & Editing
+.mg-pen-nib:before,
+.fa-pen-nib:before {
+  content: "\f0f6";
+}
+
+// Business
+.mg-business-time:before,
+.fa-business-time:before {
+  content: "\e809";
+}
+
+// Development
+.mg-code-branch:before,
+.fa-code-branch:before {
+  content: "\f126";
+}
+
+// Support
+.mg-life-ring:before,
+.fa-life-ring:before {
+  content: "\f1cd";
+}
+
+// Ideas
+.mg-lightbulb:before,
+.fa-lightbulb:before {
+  content: "\f0eb";
+}
+
+// Objects
+.mg-cubes:before,
+.fa-cubes:before {
+  content: "\f1b3";
+}
+
+// Sorting & Organization
+.mg-sort-alpha-down:before,
+.mg-tags:before,
+.fa-sort-alpha-down:before,
+.fa-tags:before {
+  content: "\e800";
+}
+
+// Power
+.mg-power-off:before,
 .fa-power-off:before {
   content: "\f090";
 }
 
+// User
+.mg-user:before,
 .fa-user:before {
   content: "\e805";
 }
 
+// Actions
+.mg-times:before,
+.mg-close:before,
 .fa-times:before {
   content: "\f00d";
 }
 
+.mg-link:before,
 .fa-link:before {
   content: "\e802";
 }
 
+.mg-clone:before,
+.mg-copy:before,
 .fa-clone:before {
   content: "\f24d";
 }
 
-.fa-globe:before {
-  content: "\f0ac";
-}
-
+.mg-share:before,
 .fa-share:before {
   content: "\f1e0";
 }
 
+// Globe
+.mg-globe:before,
+.fa-globe:before {
+  content: "\f0ac";
+}
+
+// QR Code
+.mg-qrcode:before,
 .fa-qrcode:before {
   content: "\e899";
 }
 
+// Arrows
+.mg-left:before,
+.mg-arrow-left:before,
 .fa-left:before {
   content: "\f177";
 }
 
+.mg-right:before,
+.mg-arrow-right:before,
 .fa-right:before {
   content: "\f178";
 }
 
+.mg-angle-circled-right:before,
 .fa-angle-circled-right:before {
   content: "\f138";
 }
 
+.mg-angle-circled-left:before,
 .fa-angle-circled-left:before {
   content: "\f137";
 }
 
+// Menu
+.mg-menu:before,
+.mg-hamburger:before,
 .fa-menu:before {
   content: "\f0c9";
+}
+
+// =============================================================================
+// Icon Size Modifiers
+// =============================================================================
+
+.mg-icon--sm {
+  font-size: 0.875em;
+}
+
+.mg-icon--lg {
+  font-size: 1.5em;
+}
+
+.mg-icon--xl {
+  font-size: 2em;
 }
