@@ -80,12 +80,19 @@ export const WithVideo = Template.bind({});
 WithVideo.args = {
   className: 'mg-highlight-box mg-highlight-box--primary',
   children: (
-    <iframe
-      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-      title="Video example"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    />
+    <>
+      <h3>Featured video</h3>
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        title="Video example"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+      <p>
+        Videos and other embedded media work well inside highlight boxes to draw
+        attention to important content.
+      </p>
+    </>
   ),
 };
 
@@ -169,3 +176,42 @@ WithList.args = {
     </>
   ),
 };
+
+// RTL examples
+export const RTLFloatStart = () => (
+  <div style={{ direction: 'rtl' }}>
+    <div className="mg-highlight-box mg-highlight-box--float-start mg-highlight-box--secondary">
+      <h4>صندوق عائم</h4>
+      <p>يطفو هذا الصندوق إلى البداية (اليمين في RTL).</p>
+    </div>
+    <p>
+      هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص
+      من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص
+      الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
+    </p>
+    <p>
+      إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد
+      الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية.
+    </p>
+  </div>
+);
+RTLFloatStart.storyName = 'RTL float start (appears on right)';
+
+export const RTLFloatEnd = () => (
+  <div style={{ direction: 'rtl' }}>
+    <div className="mg-highlight-box mg-highlight-box--float-end mg-highlight-box--primary">
+      <h4>صندوق عائم</h4>
+      <p>يطفو هذا الصندوق إلى النهاية (اليسار في RTL).</p>
+    </div>
+    <p>
+      هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص
+      من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص
+      الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
+    </p>
+    <p>
+      إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد
+      الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية.
+    </p>
+  </div>
+);
+RTLFloatEnd.storyName = 'RTL float end (appears on left)';
