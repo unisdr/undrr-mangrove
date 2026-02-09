@@ -104,7 +104,7 @@
     "eslint-plugin-spellcheck": "0.0.20",
     "eslint-plugin-storybook": "10.2.4",
     "extract-loader": "5.1.0",
-    "glob": "13.0.0",
+    "glob": "13.0.1",
     "globals": "17.3.0",
     "html-entities": "2.6.0",
     "jest": "30.2.0",
