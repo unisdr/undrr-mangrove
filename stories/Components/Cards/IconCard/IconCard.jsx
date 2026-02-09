@@ -19,7 +19,7 @@ const cls = (...classes) =>
  * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
  *
  * Data object properties:
- * @property {string} icon - Icon class name (e.g., "mg-icon fa-globe") - see Atom/Icons
+ * @property {string} icon - Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons
  * @property {string} imgback - Image URL (alternative to icon, matches VerticalCard)
  * @property {string} imgalt - Alt text for image (matches VerticalCard)
  * @property {number} iconSize - Width/height of icon in pixels (default: 72)
@@ -167,7 +167,7 @@ IconCard.propTypes = {
     PropTypes.shape({
       /** Unique identifier for the card */
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      /** Icon class name (e.g., "mg-icon fa-globe") - see Atom/Icons */
+      /** Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons */
       icon: PropTypes.string,
       /** Image URL (alternative to icon, matches VerticalCard) */
       imgback: PropTypes.string,

@@ -95,9 +95,9 @@ const getContent = locale => translations[locale] || translations.english;
 
 // Icon class names (matches StatsCard approach)
 // See stories/Atom/Icons for available icons
-const componentIcon = 'mg-icon fa-cubes';
-const settingsIcon = 'mg-icon fa-lightbulb';
-const bookIcon = 'mg-icon fa-file-alt';
+const componentIcon = 'mg-icon mg-icon-cubes';
+const settingsIcon = 'mg-icon mg-icon-lightbulb';
+const bookIcon = 'mg-icon mg-icon-file-alt';
 
 export default {
   title: 'Components/Cards/Icon card',
@@ -483,7 +483,7 @@ export const MixedIconTypes = {
         {...args}
         data={[
           {
-            icon: 'mg-icon fa-globe',
+            icon: 'mg-icon mg-icon-globe',
             imageScale: 'medium',
             title: 'Global network',
             summaryText: 'Using a CSS icon class from the Mangrove icon set.',

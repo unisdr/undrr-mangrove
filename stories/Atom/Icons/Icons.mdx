@@ -10,7 +10,7 @@ import * as IconsStories from './Icons.stories';
 
 The Icon components grab attention and draw users into content, helping them quickly understand the context in which they are placed.
 
-Icons use the **Mangrove** namespace (`mg-*`) as the preferred format. Legacy `fa-*` (FontAwesome-style) classes remain supported for backwards compatibility.
+Icons use the **Mangrove** namespace (`mg-icon-*`) as the preferred format. Legacy `fa-*` (FontAwesome-style) classes remain supported for backwards compatibility.
 
 ## When to use:
 
@@ -39,12 +39,12 @@ import { Icon } from './Icon';
 
 ### CSS Classes
 
-Use `mg-icon` base class with `mg-{name}` (preferred) or `fa-{name}` (legacy):
+Use `mg-icon` base class with `mg-icon-{name}` (preferred) or `fa-{name}` (legacy):
 
 ```html
 <!-- Preferred format -->
-<span class="mg-icon mg-globe"></span>
-<span class="mg-icon mg-chart-bar"></span>
+<span class="mg-icon mg-icon-globe"></span>
+<span class="mg-icon mg-icon-chart-bar"></span>
 
 <!-- Legacy format (still supported) -->
 <span class="mg-icon fa-globe"></span>
@@ -54,9 +54,9 @@ Use `mg-icon` base class with `mg-{name}` (preferred) or `fa-{name}` (legacy):
 ### Size Modifiers
 
 ```html
-<span class="mg-icon mg-globe mg-icon--sm"></span>  <!-- 0.875em -->
-<span class="mg-icon mg-globe mg-icon--lg"></span>  <!-- 1.5em -->
-<span class="mg-icon mg-globe mg-icon--xl"></span>  <!-- 2em -->
+<span class="mg-icon mg-icon-globe mg-icon--sm"></span>  <!-- 0.875em -->
+<span class="mg-icon mg-icon-globe mg-icon--lg"></span>  <!-- 1.5em -->
+<span class="mg-icon mg-icon-globe mg-icon--xl"></span>  <!-- 2em -->
 ```
 
 ## Technical notes
@@ -89,19 +89,19 @@ Added support for additional icons:
 
 ### v2.0
 
-**Mangrove namespace migration** - Icons now use `mg-*` namespaced classes as the preferred format, with `fa-*` classes maintained for backwards compatibility.
+**Mangrove namespace migration** - Icons now use `mg-icon-*` namespaced classes as the preferred format, with `fa-*` classes maintained for backwards compatibility.
 
 #### New Features
 
 - **Icon React Component** (`Icon.jsx`) - Programmatic icon rendering with automatic class normalization
-  - Accepts name-only (`globe`), mg-prefixed (`mg-globe`), or legacy fa-prefixed (`fa-globe`) formats
+  - Accepts name-only (`globe`), mg-icon-prefixed (`mg-icon-globe`), or legacy fa-prefixed (`fa-globe`) formats
   - Supports size prop: `sm`, `lg`, `xl`
-- **mg-* CSS classes** - All icons now have Mangrove-namespaced selectors (e.g., `.mg-globe`, `.mg-chart-bar`)
+- **mg-icon-* CSS classes** - All icons now have Mangrove-namespaced selectors (e.g., `.mg-icon-globe`, `.mg-icon-chart-bar`)
 - **Size modifiers** - New CSS classes for icon sizing: `.mg-icon--sm`, `.mg-icon--lg`, `.mg-icon--xl`
 
 #### Migration Notes
 
-- New code should use `mg-*` classes (e.g., `mg-icon mg-globe`)
+- New code should use `mg-icon-*` classes (e.g., `mg-icon mg-icon-globe`)
 - Existing `fa-*` classes continue to work unchanged
 - Both formats render identically via grouped SCSS selectors
 

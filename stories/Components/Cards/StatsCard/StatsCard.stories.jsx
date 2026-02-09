@@ -33,25 +33,25 @@ const getCaptionForLocale = locale => {
           title: 'إحصائيات الكوارث ٢٠٢٣',
           stats: [
             {
-              icon: 'mg-icon fa-lightbulb',
+              icon: 'mg-icon mg-icon-lightbulb',
               value: '٣٨٧',
               bottomLabel: 'الكوارث الطبيعية',
               summaryText: 'الأحداث المسجلة في جميع أنحاء العالم في عام ٢٠٢٣.',
             },
             {
-              icon: 'mg-icon fa-user',
+              icon: 'mg-icon mg-icon-user',
               value: '٨٦.٣ مليون',
               bottomLabel: 'المتضررون',
               summaryText: 'الأفراد المتأثرون بالكوارث.',
             },
             {
-              icon: 'mg-icon fa-chart-bar',
+              icon: 'mg-icon mg-icon-chart-bar',
               value: '٢٢٣ مليار$',
               bottomLabel: 'الخسائر الاقتصادية',
               summaryText: 'إجمالي الأضرار المقدرة عالميًا.',
             },
             {
-              icon: 'mg-icon fa-globe',
+              icon: 'mg-icon mg-icon-globe',
               value: '١١٨',
               bottomLabel: 'الدول المتضررة',
               summaryText: 'الدول التي أبلغت عن أحداث كوارث.',
@@ -88,7 +88,7 @@ const getCaptionForLocale = locale => {
           title: 'بطاقات إحصائية قابلة للنقر',
           stats: [
             {
-              icon: 'mg-icon fa-building',
+              icon: 'mg-icon mg-icon-building',
               value: '+١٬٥٠٠',
               bottomLabel: 'المدن المسجلة',
               summaryText: 'انقر في أي مكان على هذه البطاقة لعرض جميع المدن.',
@@ -140,19 +140,19 @@ const getCaptionForLocale = locale => {
           title: 'Disaster Statistics 2023',
           stats: [
             {
-              icon: 'mg-icon fa-lightbulb',
+              icon: 'mg-icon mg-icon-lightbulb',
               value: '387',
               bottomLabel: 'Natural disasters',
               summaryText: 'Recorded events worldwide in 2023.',
             },
             {
-              icon: 'mg-icon fa-user',
+              icon: 'mg-icon mg-icon-user',
               value: '86.3M',
               bottomLabel: 'People affected',
               summaryText: 'Individuals impacted by disasters.',
             },
             {
-              icon: 'mg-icon fa-chart-bar',
+              icon: 'mg-icon mg-icon-chart-bar',
               value: '$223B',
               bottomLabel: 'Economic losses',
               summaryText:
@@ -160,7 +160,7 @@ const getCaptionForLocale = locale => {
               link: 'https://www.undrr.org/gar',
             },
             {
-              icon: 'mg-icon fa-globe',
+              icon: 'mg-icon mg-icon-globe',
               value: '118',
               bottomLabel: 'Countries affected',
               summaryText: 'Nations reporting disaster events.',
@@ -197,7 +197,7 @@ const getCaptionForLocale = locale => {
           title: 'Clickable stat cards',
           stats: [
             {
-              icon: 'mg-icon fa-building',
+              icon: 'mg-icon mg-icon-building',
               value: '1,500+',
               bottomLabel: 'Cities enrolled',
               summaryText: 'Click anywhere on this card to view all cities.',
