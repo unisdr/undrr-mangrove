@@ -4302,15 +4302,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-a11y@npm:10.2.4":
-  version: 10.2.4
-  resolution: "@storybook/addon-a11y@npm:10.2.4"
+"@storybook/addon-a11y@npm:10.2.7":
+  version: 10.2.7
+  resolution: "@storybook/addon-a11y@npm:10.2.7"
   dependencies:
     "@storybook/global": "npm:^5.0.0"
     axe-core: "npm:^4.2.0"
   peerDependencies:
-    storybook: ^10.2.4
-  checksum: 10/18b644dadd3173e27ec50db7cc49af1bd22de0445ecab8e16e9dc38236fc162874dd9871951c45c00eff91975122e93c76ffdbc9132cd94c4fc47f5ac8857e1b
+    storybook: ^10.2.7
+  checksum: 10/00f070b2ea89b482d56b944b543e44739e892b3f96119156064dd1ffaa931cb333a2df99ce26d0a289dcf3a27b327a05bf838abe47332db0837e716dca943c38
   languageName: node
   linkType: hard
 
@@ -5428,7 +5428,7 @@ __metadata:
     "@mdx-js/loader": "npm:3.1.1"
     "@semantic-release/changelog": "npm:^6.0.3"
     "@semantic-release/git": "npm:^10.0.1"
-    "@storybook/addon-a11y": "npm:10.2.4"
+    "@storybook/addon-a11y": "npm:10.2.7"
     "@storybook/addon-actions": "npm:9.0.8"
     "@storybook/addon-docs": "npm:^10.2.3"
     "@storybook/addon-links": "npm:10.2.4"
