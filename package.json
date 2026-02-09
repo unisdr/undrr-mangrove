@@ -67,7 +67,7 @@
     "@storybook/addon-a11y": "10.2.4",
     "@storybook/addon-actions": "9.0.8",
     "@storybook/addon-docs": "^10.2.3",
-    "@storybook/addon-links": "10.2.4",
+    "@storybook/addon-links": "10.2.7",
     "@storybook/addon-themes": "^10.2.3",
     "@storybook/addon-webpack5-compiler-babel": "4.0.0",
     "@storybook/cli": "10.2.4",
