@@ -20,7 +20,7 @@ const Template = args => (
   <div className="icons-container">
     {args.icons.map((item, index) => {
       // Show both the new mg- format and legacy fa- format
-      const mgClass = `mg-icon mg-${item.name}`;
+      const mgClass = `mg-icon mg-icon-${item.name}`;
       const faClass = `mg-icon fa-${item.name}`;
 
       return (
@@ -68,14 +68,14 @@ export const DefaultIcons = {
       source: {
         code: `// Preferred format (new)
 <Icon name="globe" />
-// Renders: <span class="mg-icon mg-globe" aria-hidden="true"></span>
+// Renders: <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
 
 // Legacy format (still supported)
 <Icon name="fa-globe" />
 // Renders: <span class="mg-icon fa-globe" aria-hidden="true"></span>
 
 // Direct CSS usage
-<span class="mg-icon mg-globe"></span>
+<span class="mg-icon mg-icon-globe"></span>
 <span class="mg-icon fa-globe"></span>  // legacy fallback`,
       },
     },

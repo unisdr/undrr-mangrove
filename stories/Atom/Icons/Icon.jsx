@@ -6,9 +6,10 @@ import PropTypes from 'prop-types';
  *
  * Renders a Mangrove icon using CSS classes. Supports multiple formats:
  *
- * 1. Name only: <Icon name="globe" /> → "mg-icon mg-globe"
+ * 1. Name only: <Icon name="globe" /> → "mg-icon mg-icon-globe"
  * 2. Full class string: <Icon name="mg-icon fa-globe" /> → passed through
  * 3. Legacy fa- format: <Icon name="fa-globe" /> → "mg-icon fa-globe"
+ * 4. mg-icon- prefixed: <Icon name="mg-icon-globe" /> → "mg-icon mg-icon-globe"
  *
  * The component normalizes all formats to work with Mangrove's icon system.
  *
@@ -27,18 +28,21 @@ export function Icon({ name, className = '', size, ...props }) {
 
   let iconClasses;
 
-  if (name.includes('mg-icon')) {
-    // Full class string passed - use as-is
+  if (name.includes(' ')) {
+    // Full class string passed - use as-is (e.g., "mg-icon fa-globe")
     iconClasses = name;
   } else if (name.startsWith('fa-')) {
     // Legacy FontAwesome format: fa-globe → mg-icon fa-globe
     iconClasses = `mg-icon ${name}`;
-  } else if (name.startsWith('mg-')) {
-    // New Mangrove format: mg-globe → mg-icon mg-globe
+  } else if (name.startsWith('mg-icon-')) {
+    // Already qualified: mg-icon-globe → mg-icon mg-icon-globe
     iconClasses = `mg-icon ${name}`;
+  } else if (name.startsWith('mg-')) {
+    // Backward compat: mg-globe → mg-icon mg-icon-globe
+    iconClasses = `mg-icon mg-icon-${name.slice(3)}`;
   } else {
-    // Just the name: globe → mg-icon mg-globe (with fa- fallback via CSS)
-    iconClasses = `mg-icon mg-${name}`;
+    // Just the name: globe → mg-icon mg-icon-globe
+    iconClasses = `mg-icon mg-icon-${name}`;
   }
 
   // Add size modifier if provided

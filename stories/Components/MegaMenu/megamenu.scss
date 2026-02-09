@@ -484,14 +484,14 @@
 
   // Rotate arrow icon when section is expanded
   &[aria-expanded="true"] {
-    .fa-angle-circled-left {
+    .mg-icon-angle-circled-left {
       transform: rotate(-90deg);
       transition: transform 0.3s ease-in-out;
     }
   }
 
   // Ensure smooth transition for icon default state
-  .fa-angle-circled-left {
+  .mg-icon-angle-circled-left {
     transition: transform 0.3s ease-in-out;
   }
 }
@@ -499,7 +499,7 @@
 // RTL: Flip rotation direction
 [dir="rtl"]
   .mg-mega-sidebar-section__item[aria-expanded="true"]
-  .fa-angle-circled-left {
+  .mg-icon-angle-circled-left {
   transform: rotate(90deg);
 }
 
@@ -595,7 +595,7 @@
     position: relative;
   }
 
-  &:has(.fa-angle-circled-left) {
+  &:has(.mg-icon-angle-circled-left) {
     background: rgb(255 255 255 / 0.8);
     color: $mg-color-interactive-active;
     box-shadow: 0 0 4px rgb(0 0 0 / 0.2);

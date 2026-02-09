@@ -73,7 +73,7 @@ export function StatsCardItem({
 }
 
 StatsCardItem.propTypes = {
-  /** Icon class name (e.g., "mg-icon fa-globe") */
+  /** Icon class name (e.g., "mg-icon mg-icon-globe") */
   icon: PropTypes.string,
   /** Label displayed above the value (e.g., "Target A", "Priority 1") */
   label: PropTypes.string,

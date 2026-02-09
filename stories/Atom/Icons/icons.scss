@@ -1,9 +1,9 @@
 // Mangrove Icon System
-// A custom icon font with mg-* namespaced classes (preferred) and fa-* legacy support.
+// A custom icon font with mg-icon-* namespaced classes (preferred) and fa-* legacy support.
 // Usage:
-//   <span class="mg-icon mg-globe"></span>     (Preferred)
-//   <span class="mg-icon fa-globe"></span>     (Legacy, still supported)
-// Migration note: New code should use mg-* classes. fa-* classes are maintained
+//   <span class="mg-icon mg-icon-globe"></span>     (Preferred)
+//   <span class="mg-icon fa-globe"></span>           (Legacy, still supported)
+// Migration note: New code should use mg-icon-* classes. fa-* classes are maintained
 // for backward compatibility but may be deprecated in future versions.
 // More at: https://gitlab.com/undrr/web-backlog/-/issues/927
 // Font references: https://fontawesome.com/v4/assets/font-awesome/css/font-awesome.css
@@ -45,222 +45,222 @@
 
 // =============================================================================
 // Icon Definitions
-// Each icon has both mg-* (preferred) and fa-* (legacy) selectors grouped together
+// Each icon has both mg-icon-* (preferred) and fa-* (legacy) selectors grouped together
 // =============================================================================
 
 // RSS
-.mg-rss:before,
+.mg-icon-rss:before,
 .fa-rss:before {
   content: "\f09e";
 }
 
 // File/Document
-.mg-file-alt:before,
+.mg-icon-file-alt:before,
 .fa-file-alt:before {
   content: "\f15c";
 }
 
-.mg-file:before,
+.mg-icon-file:before,
 .fa-file:before {
   content: "\f15b";
 }
 
 // Social Media
-.mg-facebook:before,
+.mg-icon-facebook:before,
 .fa-facebook:before {
   content: "\f230";
 }
 
-.mg-x-social:before,
-.mg-twitter:before,
+.mg-icon-x-social:before,
+.mg-icon-twitter:before,
 .fa-x-social:before,
 .fa-twitter:before {
   content: "\f099";
 }
 
-.mg-linkedin:before,
+.mg-icon-linkedin:before,
 .fa-linkedin:before {
   content: "\f0e1";
 }
 
-.mg-flickr:before,
+.mg-icon-flickr:before,
 .fa-flickr:before {
   content: "\f16e";
 }
 
-.mg-youtube:before,
+.mg-icon-youtube:before,
 .fa-youtube:before {
   content: "\f16a";
 }
 
 // Search
-.mg-search:before,
+.mg-icon-search:before,
 .fa-search:before {
   content: "\e808";
 }
 
 // Communication
-.mg-envelope:before,
+.mg-icon-envelope:before,
 .fa-envelope:before,
 .fa-envelope-o:before {
   content: "\e806";
 }
 
 // Media
-.mg-newspaper:before,
+.mg-icon-newspaper:before,
 .fa-newspaper:before {
   content: "\f1ea";
 }
 
 // Charts & Data
-.mg-chart-bar:before,
-.mg-bar-chart:before,
+.mg-icon-chart-bar:before,
+.mg-icon-bar-chart:before,
 .fa-chart-bar:before,
 .fa-bar-chart:before {
   content: "\e80B";
 }
 
 // Education
-.mg-graduation-cap:before,
+.mg-icon-graduation-cap:before,
 .fa-graduation-cap:before {
   content: "\f19D";
 }
 
 // Calendar
-.mg-calendar:before,
-.mg-calendar-alt:before,
+.mg-icon-calendar:before,
+.mg-icon-calendar-alt:before,
 .fa-calendar-alt:before {
   content: "\f133";
 }
 
 // Buildings & Landmarks
-.mg-building:before,
+.mg-icon-building:before,
 .fa-building:before {
   content: "\f0F7";
 }
 
-.mg-landmark:before,
+.mg-icon-landmark:before,
 .fa-landmark:before {
   content: "\f19c";
 }
 
 // Writing & Editing
-.mg-pen-nib:before,
+.mg-icon-pen-nib:before,
 .fa-pen-nib:before {
   content: "\f0f6";
 }
 
 // Business
-.mg-business-time:before,
+.mg-icon-business-time:before,
 .fa-business-time:before {
   content: "\e809";
 }
 
 // Development
-.mg-code-branch:before,
+.mg-icon-code-branch:before,
 .fa-code-branch:before {
   content: "\f126";
 }
 
 // Support
-.mg-life-ring:before,
+.mg-icon-life-ring:before,
 .fa-life-ring:before {
   content: "\f1cd";
 }
 
 // Ideas
-.mg-lightbulb:before,
+.mg-icon-lightbulb:before,
 .fa-lightbulb:before {
   content: "\f0eb";
 }
 
 // Objects
-.mg-cubes:before,
+.mg-icon-cubes:before,
 .fa-cubes:before {
   content: "\f1b3";
 }
 
 // Sorting & Organization
-.mg-sort-alpha-down:before,
-.mg-tags:before,
+.mg-icon-sort-alpha-down:before,
+.mg-icon-tags:before,
 .fa-sort-alpha-down:before,
 .fa-tags:before {
   content: "\e800";
 }
 
 // Power
-.mg-power-off:before,
+.mg-icon-power-off:before,
 .fa-power-off:before {
   content: "\f090";
 }
 
 // User
-.mg-user:before,
+.mg-icon-user:before,
 .fa-user:before {
   content: "\e805";
 }
 
 // Actions
-.mg-times:before,
-.mg-close:before,
+.mg-icon-times:before,
+.mg-icon-close:before,
 .fa-times:before {
   content: "\f00d";
 }
 
-.mg-link:before,
+.mg-icon-link:before,
 .fa-link:before {
   content: "\e802";
 }
 
-.mg-clone:before,
-.mg-copy:before,
+.mg-icon-clone:before,
+.mg-icon-copy:before,
 .fa-clone:before {
   content: "\f24d";
 }
 
-.mg-share:before,
+.mg-icon-share:before,
 .fa-share:before {
   content: "\f1e0";
 }
 
 // Globe
-.mg-globe:before,
+.mg-icon-globe:before,
 .fa-globe:before {
   content: "\f0ac";
 }
 
 // QR Code
-.mg-qrcode:before,
+.mg-icon-qrcode:before,
 .fa-qrcode:before {
   content: "\e899";
 }
 
 // Arrows
-.mg-left:before,
-.mg-arrow-left:before,
+.mg-icon-left:before,
+.mg-icon-arrow-left:before,
 .fa-left:before {
   content: "\f177";
 }
 
-.mg-right:before,
-.mg-arrow-right:before,
+.mg-icon-right:before,
+.mg-icon-arrow-right:before,
 .fa-right:before {
   content: "\f178";
 }
 
-.mg-angle-circled-right:before,
+.mg-icon-angle-circled-right:before,
 .fa-angle-circled-right:before {
   content: "\f138";
 }
 
-.mg-angle-circled-left:before,
+.mg-icon-angle-circled-left:before,
 .fa-angle-circled-left:before {
   content: "\f137";
 }
 
 // Menu
-.mg-menu:before,
-.mg-hamburger:before,
+.mg-icon-menu:before,
+.mg-icon-hamburger:before,
 .fa-menu:before {
   content: "\f0c9";
 }
