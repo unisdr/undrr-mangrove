@@ -59,7 +59,7 @@
     "@babel/preset-env": "7.29.0",
     "@babel/preset-react": "7.28.5",
     "@babel/preset-typescript": "7.28.5",
-    "@chromatic-com/storybook": "5.0.0",
+    "@chromatic-com/storybook": "5.0.1",
     "@eslint/eslintrc": "3.3.3",
     "@eslint/js": "9.39.2",
     "@semantic-release/changelog": "^6.0.3",
