@@ -48,6 +48,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Images/Image with credit + caption',
+  component: Images,
 
   argTypes: {
     size: {

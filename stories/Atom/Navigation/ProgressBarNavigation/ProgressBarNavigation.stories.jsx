@@ -2,6 +2,7 @@ import { ProgressBarNavigation } from './ProgressBarNavigation';
 
 export default {
   title: 'Components/Navigation/Progress bar',
+  component: ProgressBarNavigation,
 
   argTypes: {
     Type: {

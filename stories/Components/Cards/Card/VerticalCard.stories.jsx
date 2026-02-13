@@ -95,6 +95,7 @@ This paper explores health risks from climate change in a global context, settin
 
 export default {
   title: 'Components/Cards/Vertical Card',
+  component: VerticalCard,
 
   argTypes: {
     variant: {

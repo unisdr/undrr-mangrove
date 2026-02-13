@@ -45,6 +45,16 @@ const config = {
 
   // Allow ES modules
   transformIgnorePatterns: ['node_modules/(?!core-js)'],
+
+  // Coverage thresholds (ratchet up as coverage improves)
+  coverageThreshold: {
+    global: {
+      statements: 10,
+      branches: 10,
+      functions: 10,
+      lines: 10,
+    },
+  },
 };
 
 export default config;

@@ -84,14 +84,50 @@ If none of the existing categories fit, discuss with the team before creating a 
    - Use destructuring for props
    - Provide default values where appropriate
    - Include prop spread (`...props`) to allow passing HTML attributes to the root element
+   - **Do not use `Component.defaultProps`** — it is deprecated in React 19. Set defaults in the destructuring pattern instead:
+     ```jsx
+     export function MyComponent({ variant = 'primary', isLoading = false }) { ... }
+     ```
 
-3. **Class naming conventions**
+3. **Prop naming conventions**
+
+   Follow these conventions when naming props:
+
+   | Category | Convention | Examples |
+   |----------|-----------|---------|
+   | General props | `camelCase` | `backgroundColor`, `imageSrc`, `imageAlt` |
+   | Booleans | `is`/`has`/`show` prefix | `isLoading`, `hasError`, `showArrows` |
+   | Event handlers | `on` prefix | `onClick`, `onPageChange`, `onClose` |
+   | CSS class props | `className` | `className="custom-class"` |
+   | Children content | `children` | Standard React children prop |
+
+   Avoid generic names like `data` or `info` — use descriptive names that convey meaning (e.g., `chartData`, `userProfile`).
+
+4. **Avoid module-level mutable state**
+
+   Never use module-level variables (e.g., `Set`, `Map`, `Array`, counters) to track state across function calls. These persist between component instances and across renders, causing bugs that are difficult to diagnose. Always declare mutable tracking variables inside the function that uses them.
+
+   ```jsx
+   // Bad — accumulates across calls, leaks between instances
+   const seenIds = new Set();
+   export function processData(items) {
+     items.forEach(item => seenIds.add(item.id));
+   }
+
+   // Good — fresh state per call
+   export function processData(items) {
+     const seenIds = new Set();
+     items.forEach(item => seenIds.add(item.id));
+   }
+   ```
+
+5. **Class naming conventions**
 
    - All component CSS classes should start with `mg-` prefix
    - Use kebab-case for class names (e.g., `mg-button-primary`)
    - Use BEM methodology for structuring CSS classes
 
-4. **Semantic HTML**
+6. **Semantic HTML**
    - Use the most semantically appropriate HTML elements
    - Choose elements based on their meaning, not their default styling
    - Follow these guidelines for common elements:
@@ -533,14 +569,19 @@ Description of hover, focus, and other states.
 
 Stories demonstrate the component's usage and variants:
 
-1. **Basic structure**
+1. **Basic structure (CSF3 format)**
+
+   All stories must use **CSF3 object syntax**. Do not use the legacy `Template.bind({})` pattern.
+
+   The `component` property is **required** in the default export — it enables autodocs prop tables and type inference.
 
    ```jsx
+   import { MyComponent } from './MyComponent';
+
    export default {
      title: 'Components/Category/ComponentName',
-     component: MyComponent,
+     component: MyComponent, // Required for autodocs
      argTypes: {
-       // Define control types for component props
        variant: {
          options: ['primary', 'secondary'],
          control: { type: 'radio' },
@@ -548,12 +589,21 @@ Stories demonstrate the component's usage and variants:
      },
    };
 
+   // CSF3: use object syntax with args
    export const Default = {
-     render: args => <MyComponent {...args} />,
      args: {
-       // Default prop values
        variant: 'primary',
      },
+   };
+
+   // Use render only when you need custom JSX wrapping
+   export const WithWrapper = {
+     args: { variant: 'secondary' },
+     render: args => (
+       <div style={{ padding: '1rem' }}>
+         <MyComponent {...args} />
+       </div>
+     ),
    };
    ```
 
@@ -588,24 +638,35 @@ Example test pattern:
 ```jsx
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MyComponent } from '../Components/Category/MyComponent/MyComponent';
+import { axe } from 'jest-axe';
+import { MyComponent } from '../MyComponent';
 
 describe('MyComponent', () => {
+  const defaultProps = {
+    variant: 'primary',
+    label: 'Click me',
+  };
+
   it('renders without crashing', () => {
-    render(<MyComponent />);
-    // Assert component renders correctly
+    render(<MyComponent {...defaultProps} />);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
   });
 
   it('responds to props correctly', () => {
-    render(<MyComponent variant="secondary" />);
+    render(<MyComponent {...defaultProps} variant="secondary" />);
     // Assert component renders with secondary variant
   });
 
   it('handles events correctly', () => {
     const handleClick = jest.fn();
-    render(<MyComponent onClick={handleClick} />);
+    render(<MyComponent {...defaultProps} onClick={handleClick} />);
     fireEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('has no a11y violations', async () => {
+    const { container } = render(<MyComponent {...defaultProps} />);
+    expect(await axe(container)).toHaveNoViolations();
   });
 });
 ```

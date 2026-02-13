@@ -67,6 +67,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/ShowMore',
+  component: ShowMore,
 };
 
 export const DefaultShowMore = {

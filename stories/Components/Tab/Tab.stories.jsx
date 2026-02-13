@@ -117,6 +117,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Tabs',
+  component: Tab,
 };
 
 export const Tabs = {
@@ -129,7 +130,7 @@ export const Tabs = {
 
 export const TabsWithDefault = {
   render: (args, { globals: { locale } }) => {
-    let caption = getCaptionForLocale(locale);
+    const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} />;
   },
 };
