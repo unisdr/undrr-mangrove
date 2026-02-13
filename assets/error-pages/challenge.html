@@ -39,6 +39,10 @@
       hr{border:1px solid #b3b3b3}
       small{display:block;margin-bottom:.5rem}
       .mg-error-page{min-height:100vh;background:#004f91;padding-bottom:2rem}
+      .mg-error-page--challenge{background:#f2f2f2}
+      .mg-error-page--challenge .mg-error-page__container{text-align:center;padding:3rem 2.5rem 2rem;margin-top:4rem;max-width:540px;border-radius:8px;box-shadow:0 2px 12px rgb(0 0 0 / 8%)}
+      .mg-error-page--challenge .undrr-logo{width:100%;margin:0 0 2.5rem;background-position:center;height:35px}
+      .mg-error-page--challenge h1{font-size:2.3rem;font-weight:600;color:#1a1a1a;margin:0 0 .5rem}
       .mg-page-header__decoration{display:flex}
       .mg-page-header__decoration div{width:25%;height:7px}
       .mg-page-header__decoration div:nth-child(1){background:#c10920}
@@ -52,7 +56,7 @@
     </style>
   </head>
   <body>
-    <main class="mg-error-page">
+    <main class="mg-error-page mg-error-page--challenge">
       <div class="mg-page-header__decoration" aria-hidden="true">
         <div></div>
         <div></div>
@@ -60,23 +64,20 @@
         <div></div>
       </div>
       <div class="mg-error-page__container">
-        <h1>Security check</h1>
-        <h2>Please verify you are human</h2>
-        <p>We need to verify your request before you can access this page. Please complete the challenge below.</p>
+        <a href="https://www.undrr.org/"><div class="undrr-logo" aria-hidden="true"></div></a>
+        <h1>Please verify you are human</h1>
+        <p>This is a routine check to keep the site secure. It only takes a moment.</p>
         <!-- Cloudflare CAPTCHA box - REQUIRED for challenge pages -->
         ::CAPTCHA_BOX::
         <p>
-          If you think this is in error or need help,
-          <a href="https://www.undrr.org/contact-us">please contact us</a>
-          and provide the details below.
+          Having trouble?
+          <a href="https://www.undrr.org/contact-us">Contact us</a>
+          and include the details below.
         </p>
         <!-- Cloudflare tokens - replace with your platform's variables if not using Cloudflare -->
         <p class="mg-code" role="note" aria-label="Request details">
           Ray ID: ::RAY_ID:: | Your IP: ::CLIENT_IP:: | Location: ::GEO::
         </p>
-        <hr />
-        <small>This website is operated by</small>
-        <a href="https://www.undrr.org/"><div class="undrr-logo" aria-hidden="true"></div></a>
       </div>
     </main>
     <script>
