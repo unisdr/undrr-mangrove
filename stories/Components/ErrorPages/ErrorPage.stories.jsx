@@ -13,6 +13,15 @@ export default {
       control: { type: 'select' },
       options: Object.keys(DEFAULT_COPY).map(Number),
     },
+    variant: {
+      control: { type: 'select' },
+      options: ['error', 'challenge'],
+    },
+    challengeType: {
+      control: { type: 'select' },
+      options: ['challenge', 'managed-challenge'],
+      if: { arg: 'variant', eq: 'challenge' },
+    },
     showSearch: { control: 'boolean' },
     showRequestDetails: { control: 'boolean' },
   },
@@ -48,4 +57,18 @@ export const GatewayTimeout504 = {
 
 export const Unauthorized401 = {
   args: { code: 401, showRequestDetails: true },
+};
+
+export const InteractiveChallenge = {
+  args: {
+    variant: 'challenge',
+    challengeType: 'challenge',
+  },
+};
+
+export const ManagedChallenge = {
+  args: {
+    variant: 'challenge',
+    challengeType: 'managed-challenge',
+  },
 };

@@ -51,6 +51,27 @@ export const DEFAULT_COPY = {
 };
 
 /**
+ * Default copy for Cloudflare challenge pages
+ *
+ * Challenge pages verify visitors before granting access. They are not errors,
+ * so the tone is neutral and reassuring rather than apologetic.
+ *
+ * @see https://gitlab.com/undrr/web-backlog/-/issues/2615
+ */
+export const CHALLENGE_COPY = {
+  challenge: {
+    title: 'Security check',
+    description: 'Please verify you are human',
+    body: 'This is a routine check to keep the site secure. It only takes a moment.',
+  },
+  'managed-challenge': {
+    title: 'Security check',
+    description: 'Checking your browser',
+    body: 'This is a routine check to keep the site secure. It only takes a moment.',
+  },
+};
+
+/**
  * Cloudflare error tokens for custom error pages
  *
  * These tokens are replaced by Cloudflare at runtime when serving custom error pages.
