@@ -121,9 +121,19 @@ Compiled on: ${new Date().toISOString()}`,
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,
+          resolve: {
+            // Allow extensionless imports (e.g. '../context/SearchContext')
+            // despite package.json "type": "module".
+            fullySpecified: false,
+          },
           use: {
             loader: 'babel-loader',
             options: {
+              // Ignore project-level .babelrc.json and babel.config.js so
+              // the ESM component bundles don't get core-js polyfill
+              // require() calls injected by babel-plugin-polyfill-corejs3.
+              configFile: false,
+              babelrc: false,
               presets: [['@babel/preset-react', { runtime: 'automatic' }]],
             },
           },
