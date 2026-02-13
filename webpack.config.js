@@ -91,6 +91,7 @@ export default [
       IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
       Gallery: './stories/Components/Gallery/Gallery.jsx',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.jsx',
+      Pager: './stories/Components/Pager/Pager.jsx',
     },
     externals: {
       react: 'react',

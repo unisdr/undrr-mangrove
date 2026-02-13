@@ -1,0 +1,239 @@
+// ========================================
+// Pager — standalone pagination component
+// ========================================
+
+.mg-pager {
+  margin-top: $mg-spacing-200;
+  padding-top: $mg-spacing-150;
+  border-top: 1px solid $mg-color-neutral-50;
+}
+
+// ----------------------------------------
+// Page list
+// ----------------------------------------
+
+.mg-pager__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $mg-spacing-25;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mg-pager__item {
+  margin: 0;
+  padding: 0;
+
+  &--ellipsis {
+    display: flex;
+    align-items: center;
+    padding: 0 $mg-spacing-25;
+  }
+}
+
+.mg-pager__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: $mg-color-text;
+  background: #fff;
+  border: 1px solid $mg-color-neutral-100;
+  border-radius: $mg-spacing-25;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover:not(:disabled, .mg-pager__link--disabled) {
+    background: $mg-color-blue-50;
+    border-color: $mg-color-interactive;
+    color: $mg-color-interactive;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+
+  &--current {
+    color: #fff;
+    background: $mg-color-interactive;
+    border-color: $mg-color-interactive;
+    cursor: default;
+
+    &:hover {
+      background: $mg-color-interactive;
+      color: #fff;
+    }
+  }
+
+  &--disabled,
+  &:disabled {
+    color: $mg-color-neutral-500;
+    background: $mg-color-neutral-50;
+    border-color: $mg-color-neutral-50;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &--prev,
+  &--next {
+    gap: $mg-spacing-25;
+    padding: $mg-spacing-50 $mg-spacing-75;
+  }
+}
+
+.mg-pager__icon {
+  flex-shrink: 0;
+}
+
+.mg-pager__text {
+  @media (width <= 480px) {
+    display: none;
+  }
+}
+
+.mg-pager__ellipsis {
+  color: $mg-color-neutral-500;
+  font-size: $mg-font-size-200;
+}
+
+// ----------------------------------------
+// Bar layout (three-zone)
+// ----------------------------------------
+
+.mg-pager__bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $mg-spacing-100;
+
+  @media (width >= $mg-breakpoint-tablet) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+// ----------------------------------------
+// Range display
+// ----------------------------------------
+
+.mg-pager__range {
+  margin: 0;
+  color: $mg-color-neutral-500;
+  font-size: $mg-font-size-200;
+  white-space: nowrap;
+}
+
+// ----------------------------------------
+// Jump-to-page form
+// ----------------------------------------
+
+.mg-pager__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: $mg-spacing-50;
+  margin: 0;
+}
+
+.mg-pager__jump-label {
+  color: $mg-color-neutral-500;
+  font-size: $mg-font-size-200;
+  white-space: nowrap;
+}
+
+.mg-pager__jump-input {
+  width: 4em;
+  min-height: 40px;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  font-size: $mg-font-size-200;
+  color: $mg-color-text;
+  background: #fff;
+  border: 1px solid $mg-color-neutral-100;
+  border-radius: $mg-spacing-25;
+  text-align: center;
+
+  &:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+}
+
+.mg-pager__jump-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: $mg-spacing-25 $mg-spacing-75;
+  font-size: $mg-font-size-200;
+  font-weight: 500;
+  color: #fff;
+  background: $mg-color-interactive;
+  border: 1px solid $mg-color-interactive;
+  border-radius: $mg-spacing-25;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover:not(:disabled) {
+    background: $mg-color-interactive-active;
+    border-color: $mg-color-interactive-active;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ----------------------------------------
+// Notice (empty / overshoot)
+// ----------------------------------------
+
+.mg-pager__notice {
+  text-align: center;
+  color: $mg-color-neutral-500;
+  font-size: $mg-font-size-200;
+  padding: $mg-spacing-100 0;
+}
+
+.mg-pager__notice-action {
+  display: inline;
+  padding: 0;
+  font: inherit;
+  color: $mg-color-interactive;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: $mg-color-interactive-active;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+}
+
+// ----------------------------------------
+// RTL support
+// ----------------------------------------
+
+[dir="rtl"] {
+  .mg-pager__link--prev .mg-pager__icon,
+  .mg-pager__link--next .mg-pager__icon {
+    transform: scaleX(-1);
+  }
+}
