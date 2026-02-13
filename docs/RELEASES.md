@@ -147,17 +147,29 @@ https://assets.undrr.org/static/mangrove/1.3.0/js/tabs.js
 | `.github/workflows/chromatic.yml` | Visual regression testing |
 | `.github/workflows/pr-title-check.yml` | Validate PR titles follow Conventional Commits |
 
+### npm trusted publishing
+
+npm publishing uses [OIDC trusted publishing](https://docs.npmjs.com/trusted-publishers/) instead of long-lived access tokens. GitHub Actions authenticates directly with npm using a short-lived OIDC token — no `NPM_TOKEN` secret is needed.
+
+This is configured in two places:
+- **npmjs.com**: [package settings → Trusted Publisher](https://www.npmjs.com/package/@undrr/undrr-mangrove/access) links the `unisdr/undrr-mangrove` repo and `npm-publish.yml` workflow
+- **Workflow**: `id-token: write` permission and `--provenance` flag on `npm publish`
+
+Published packages include a [provenance attestation](https://docs.npmjs.com/generating-provenance-statements/) that cryptographically links the npm package to its source commit and build.
+
 ### Required GitHub secrets
 
 - **`GITHUB_TOKEN`** — built-in, used by workflows
-- **`NPM_TOKEN`** — npm access token for `@undrr` scope, used by npm-publish workflow
 - **`CHROMATIC_PROJECT_TOKEN`** — for visual regression testing (optional)
+
+No npm token is required — trusted publishing handles authentication via OIDC.
 
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| npm publish fails | Expired or missing `NPM_TOKEN` secret | Regenerate token at npmjs.com, update GitHub secret |
+| npm publish fails with 403/404 | Trusted publisher not configured or misconfigured | Check [package settings](https://www.npmjs.com/package/@undrr/undrr-mangrove/access) — repo, workflow filename, and environment must match |
+| npm publish fails with OIDC error | Missing `id-token: write` permission in workflow | Ensure the job has `permissions: id-token: write` |
 | npm publish fails with Corepack error | Missing `corepack enable` step in workflow | Check `npm-publish.yml` has the "Enable Corepack" step |
 | CDN not updated | `dist.yml` workflow failed | Check the workflow run; it runs on every push to `main` |
 | PR title rejected | Doesn't follow Conventional Commits format | Use `feat:`, `fix:`, `docs:`, `chore:`, etc. prefix |
