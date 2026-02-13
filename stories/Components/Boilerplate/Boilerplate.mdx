@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as BoilerplateStories from './Boilerplate.stories';
+
+<Meta of={BoilerplateStories} />
+
+# Boilerplate
+
+An example component you can clone when creating a new Mangrove component.
+
+## Usage
+
+```jsx
+import { Boilerplate } from './Boilerplate';
+
+<Boilerplate title="Hello" variant="primary">
+  <p>Body content goes here.</p>
+</Boilerplate>
+```
+
+## Examples
+
+### Default
+
+<Canvas of={BoilerplateStories.Default} />
+
+### Secondary
+
+<Canvas of={BoilerplateStories.Secondary} />
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | *required* | Heading text |
+| `children` | `ReactNode` | *required* | Body content |
+| `variant` | `'primary' \| 'secondary'` | `'primary'` | Visual variant |

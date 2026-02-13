@@ -43,7 +43,7 @@
   -moz-transform: $transforms;
   -ms-transform: $transforms;
   -o-transform: $transforms;
-  transition: $transforms;
+  transform: $transforms;
 }
 
 // Rotate

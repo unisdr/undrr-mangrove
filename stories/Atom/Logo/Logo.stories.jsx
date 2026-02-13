@@ -7,6 +7,7 @@ import logoSquareWhite from '../../assets/images/undrr-logo-square-white.svg';
 
 export default {
   title: 'Components/Logos',
+  component: Logo,
 
   parameters: {
     backgrounds: {

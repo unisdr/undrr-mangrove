@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import ScrollContainer from '../ScrollContainer';
 
 // Mock ResizeObserver
@@ -191,5 +192,10 @@ describe('ScrollContainer Component', () => {
     expect(
       screen.queryByRole('button', { name: 'Scroll right' })
     ).not.toBeInTheDocument();
+  });
+
+  it('has no a11y violations', async () => {
+    const { container } = renderScrollContainer();
+    expect(await axe(container)).toHaveNoViolations();
   });
 });

@@ -93,6 +93,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Hero/Hero - child',
+  component: ChildHero,
 
   argTypes: {
     variant: {

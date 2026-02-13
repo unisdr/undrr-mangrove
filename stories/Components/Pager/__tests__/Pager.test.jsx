@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import { Pager } from '../Pager';
 
 describe('Pager', () => {
@@ -275,5 +276,30 @@ describe('Pager', () => {
     const actionBtn = screen.getByText('Reset');
     fireEvent.click(actionBtn);
     expect(actionFn).toHaveBeenCalled();
+  });
+
+  // --------------------------------------------------
+  // Accessibility
+  // --------------------------------------------------
+
+  it('has no a11y violations', async () => {
+    const { container } = render(
+      <Pager page={3} totalPages={20} onPageChange={onPageChange} />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations in bar layout', async () => {
+    const { container } = render(
+      <Pager
+        page={3}
+        totalPages={20}
+        onPageChange={onPageChange}
+        layout="bar"
+        range={{ start: 21, end: 30 }}
+        showJumpTo
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
   });
 });

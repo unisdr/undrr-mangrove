@@ -107,8 +107,8 @@ $mg-color-accent-400: #0a6969;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$mg-color-interactive-active: $mg-color-blue-700;
-$mg-color-interactive: $mg-color-blue-900;
+$mg-color-interactive-active: $mg-color-blue-700 !default;
+$mg-color-interactive: $mg-color-blue-900 !default;
 
 /**
  * @tokens UNDRR Colors
@@ -279,48 +279,48 @@ $mg-container-spacer: $mg-spacing-150;
 $mg-color-text: $mg-color-neutral-800;
 
 // label
-$mg-color-label: $mg-color-interactive;
-$mg-color-label--hover: $mg-color-interactive;
-$mg-radius-label: $mg-spacing-0;
+$mg-color-label: $mg-color-interactive !default;
+$mg-color-label--hover: $mg-color-interactive !default;
+$mg-radius-label: $mg-spacing-0 !default;
 
 // button
-$mg-color-button: $mg-color-white;
-$mg-color-button--hover: $mg-color-white;
-$mg-color-button-background: $mg-color-interactive;
-$mg-color-button-background--hover: $mg-color-interactive-active;
-$mg-radius-button: $mg-spacing-0;
-$mg-border-width-button: 1px;
-$mg-color-text-button: $mg-color-white;
-$mg-border-color-button: $mg-color-text-button;
-$mg-padding-button: $mg-spacing-100 $mg-spacing-150;
-$mg-font-size-button: $mg-font-size-250;
+$mg-color-button: $mg-color-white !default;
+$mg-color-button--hover: $mg-color-white !default;
+$mg-color-button-background: $mg-color-interactive !default;
+$mg-color-button-background--hover: $mg-color-interactive-active !default;
+$mg-radius-button: $mg-spacing-0 !default;
+$mg-border-width-button: 1px !default;
+$mg-color-text-button: $mg-color-white !default;
+$mg-border-color-button: $mg-color-text-button !default;
+$mg-padding-button: $mg-spacing-100 $mg-spacing-150 !default;
+$mg-font-size-button: $mg-font-size-250 !default;
 
 // hero
-$mg-color-hero: $mg-color-interactive;
-$mg-color-hero--secondary: $mg-color-orange-800;
-$mg-color-hero--tertiary: $mg-color-neutral-900;
-$mg-color-hero--quaternary: $mg-color-red-800;
-$mg-opacity-hero: 0.85;
-$mg-spacing-hero-overlay: 0;
+$mg-color-hero: $mg-color-interactive !default;
+$mg-color-hero--secondary: $mg-color-orange-800 !default;
+$mg-color-hero--tertiary: $mg-color-neutral-900 !default;
+$mg-color-hero--quaternary: $mg-color-red-800 !default;
+$mg-opacity-hero: 0.85 !default;
+$mg-spacing-hero-overlay: 0 !default;
 
 // tabs
-$mg-color-tabbar-background: $mg-color-blue-50;
-$mg-color-tab-background: $mg-color-blue-200;
-$mg-color-tab-background--inactive: $mg-color-tabbar-background;
-$mg-color-tab-border: $mg-color-neutral-700;
-$mg-color-tab-border--hover: $mg-color-neutral-900;
-$mg-color-tab-border--active: $mg-color-blue-800;
-$mg-color-tab-background--hover: $mg-color-blue-800;
-$mg-radius-tab: $mg-spacing-0;
-$mg-padding-tab: $mg-spacing-75 $mg-spacing-150;
-$mg-color-text-tab: $mg-color-neutral-700;
-$mg-color-text-tab--hover: $mg-color-white;
-$mg-color-text-tab-active: $mg-color-neutral-700;
-$mg-color-tab-section-background: $mg-color-neutral-0;
-$mg-padding-tab-section: $mg-spacing-100 $mg-spacing-0;
-$mg-radius-tab-section: $mg-spacing-0;
-$mg-box-shadow-tab-section: none;
-$mg-tabs-border-bottom: true;
+$mg-color-tabbar-background: $mg-color-blue-50 !default;
+$mg-color-tab-background: $mg-color-blue-200 !default;
+$mg-color-tab-background--inactive: $mg-color-tabbar-background !default;
+$mg-color-tab-border: $mg-color-neutral-700 !default;
+$mg-color-tab-border--hover: $mg-color-neutral-900 !default;
+$mg-color-tab-border--active: $mg-color-blue-800 !default;
+$mg-color-tab-background--hover: $mg-color-blue-800 !default;
+$mg-radius-tab: $mg-spacing-0 !default;
+$mg-padding-tab: $mg-spacing-75 $mg-spacing-150 !default;
+$mg-color-text-tab: $mg-color-neutral-700 !default;
+$mg-color-text-tab--hover: $mg-color-white !default;
+$mg-color-text-tab-active: $mg-color-neutral-700 !default;
+$mg-color-tab-section-background: $mg-color-neutral-0 !default;
+$mg-padding-tab-section: $mg-spacing-100 $mg-spacing-0 !default;
+$mg-radius-tab-section: $mg-spacing-0 !default;
+$mg-box-shadow-tab-section: none !default;
+$mg-tabs-border-bottom: true !default;
 
 /**
  * @tokens Component sizing
