@@ -6,10 +6,6 @@
  * @param {Object} options - Additional configuration options (e.g., startYear, endYear, color, cumulative).
  * @returns {Array} - Transformed data array for bar chart visualization.
  */
-// Global Sets to track unique IDs across the entire runtime
-const uniqueGlobalIds = new Set();
-const uniqueDeliverableIds = new Set();
-
 export const transformDataForBarChart = (results, options = {}) => {
   const {
     startYear = 2015,
@@ -27,6 +23,8 @@ export const transformDataForBarChart = (results, options = {}) => {
 
   const yearCounts = {};
   const seenNodeIds = new Set(); // Track unique node_id's for this run
+  const uniqueGlobalIds = new Set(); // Track unique org/partner IDs per call
+  const uniqueDeliverableIds = new Set(); // Track unique deliverable IDs per call
 
   let valueExtractor;
 
