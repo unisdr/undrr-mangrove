@@ -1,122 +1,164 @@
-# Release Process Guide
+# Release process guide
 
 This guide explains the release process for the UNDRR Mangrove component library.
 
 ## Overview
 
-Publishing to npm happens automatically when you push a version tag:
+Releases use **manual versioning** with automated npm publishing. You choose the version number, update `package.json`, tag the release, and CI handles the rest.
 
-### Automatic Publishing (Recommended)
+### Why not automated semantic-release?
 
-1. Before tagging, make sure to update the version number in `package.json` to match the new release:
-2. Add a tag and release notes at <https://github.com/unisdr/undrr-mangrove/releases>
+We follow Conventional Commits for consistent, readable commit history, but we don't use semantic-release for automated version bumps. As a rapidly evolving component library, strict semver automation would produce excessive major version bumps — individual component breaking changes happen frequently during active development, but don't warrant a major library release when the change is scoped to a single component. Manual versioning gives us control over when to signal a significant release to consumers.
 
-The [workflow](https://github.com/unisdr/undrr-mangrove/blob/main/.github/workflows/npm-publish.yml) will automatically:
+## Release steps
 
-- Build the project
-- Package distribution files and SCSS sources
-- Publish to npm registry
-
-### Manual Publishing
-
-You can also manually trigger publishing:
-
-1. Go to Actions → "Publish to NPM Registry"
-    - <https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml>
-2. Click "Run workflow"
-3. Optionally enter a specific git tag (leave empty to use the latest tag)
-4. The workflow will build and publish the specified version
-
-## Versioning guide
-
-The project uses [semantic-release](https://semantic-release.gitbook.io/):
-
-## Commit Message Examples
+### 1. Prepare the release
 
 ```bash
-# Patch release (bug fix)
-git commit -m "fix: correct button alignment issue"
-
-# Minor release (new feature)
-git commit -m "feat: add dark mode toggle component"
-
-# Major release (breaking change)
-git commit -m "feat!: rename color tokens
-
-BREAKING CHANGE: All color tokens have been renamed from --color-* to --mg-color-*"
+# Make sure everything passes
+yarn test
+yarn lint
 ```
 
-### Package Contents
+### 2. Update the version
 
-Published packages include:
+Edit `version` in `package.json` to the new version number:
 
-- `/components/**/*` - Compiled React components
-- `/css/**/*` - Compiled CSS files
-- `/js/**/*` - Compiled JavaScript files
-- `/scss/**/*` - Source SCSS files from stories/assets/scss
-- `/stories/**/*.scss` - Component-specific SCSS files
+```json
+{
+  "version": "1.3.0"
+}
+```
 
-## CDN Distribution
+**Version guidance:**
+- **Patch** (1.2.14 → 1.2.15): bug fixes, dependency updates, minor style tweaks
+- **Minor** (1.2.14 → 1.3.0): new components, new features, non-breaking enhancements
+- **Major** (1.2.14 → 2.0.0): broad breaking changes across multiple components, API redesigns, major dependency upgrades (e.g., React major version)
 
-For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitlab.com/undrr/common/shared-web-assets/), this project automatically maintains a `dist` branch that contains only the latest compiled build artifacts. This branch is automatically updated on every push to `main` via GitHub Actions.
+### 3. Update CDN links in documentation
 
-The primary use case for this feature is static sites with no build process.
+```bash
+yarn update-cdn-version            # updates docs to reference new version
+yarn update-cdn-version --dry-run  # preview changes first
+```
 
-### The `dist` Branch
+This updates CDN URLs in README.md, MDX docs, and story files from the old version to the new one.
 
-- **Purpose**: Clean distribution branch for CDN/static hosting services
-- **Content**: Contains only the compiled assets from the `dist` directory
-- **History**: No git history is retained - each deployment creates a fresh orphan commit
-- **Updates**: Automatically updated when changes are pushed to `main`
+### 4. Commit, tag, and push
 
-### Using the `dist` Branch
+```bash
+git add .
+git commit -m "chore(release): v1.3.0"
+git tag v1.3.0
+git push origin main --tags
+```
+
+### 5. Monitor the publish
+
+The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml), which automatically:
+
+- Builds the project
+- Packages distribution files and SCSS sources
+- Publishes to the npm registry
+
+### 6. Create a GitHub Release
+
+Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag. Include a summary of changes — you can use the "Generate release notes" button for a starting point.
+
+### 7. Verify
+
+- [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
+- [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) has the release notes
+
+### 8. Update the Drupal theme (if needed)
+
+If component JS or CSS changed:
+
+```bash
+yarn build
+yarn watch --copy    # copies dist/components/*.js to undrr_common/js/mangrove-components/
+```
+
+If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
+
+## Manual npm publish (fallback)
+
+If automated publishing fails, you can trigger it manually:
+
+1. Go to [Actions → Publish to NPM Registry](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml)
+2. Click "Run workflow"
+3. Optionally enter a specific git tag (leave empty for latest)
+
+## Commit message conventions
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) for readable history and PR title validation, even though version bumps are manual:
+
+| Prefix | Purpose |
+|---|---|
+| `feat:` | New feature or component |
+| `fix:` | Bug fix |
+| `docs:` | Documentation only |
+| `chore:` | Maintenance, dependencies |
+| `refactor:` | Code restructuring |
+| `test:` | Test additions or changes |
+| `build:` | Build system or tooling |
+| `ci:` | CI/CD configuration |
+
+PR titles are validated by CI — see `.github/workflows/pr-title-check.yml`.
+
+## Package contents
+
+Published npm packages include:
+
+- `/components/**/*` — compiled React components (ES modules)
+- `/css/**/*` — compiled CSS files
+- `/js/**/*` — compiled vanilla JavaScript files
+- `/scss/**/*` — source SCSS files
+- `/error-pages/**/*` — static error page templates
+- `/fonts/**/*` — Mangrove icon font
+
+## CDN distribution
+
+The project maintains a `dist` branch for CDN/static hosting via the [UNDRR static assets repo](https://gitlab.com/undrr/common/shared-web-assets/). This branch is automatically updated on every push to `main` (not just releases).
+
+- **Content**: compiled assets only (no source, no git history)
+- **Use case**: static sites with no build process
 
 Example CDN URLs:
 
 ```
-https://assets.undrr.org/testing/static/mangrove/README.md
+# Latest (from dist branch, updated on every push to main)
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
-https://assets.undrr.org/testing/static/mangrove/latest/assets/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.2.14/css/style.css
-https://assets.undrr.org/static/mangrove/1.2.14/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.2.14/js/tabs.js
+
+# Versioned (from tagged releases)
+https://assets.undrr.org/static/mangrove/1.3.0/css/style.css
+https://assets.undrr.org/static/mangrove/1.3.0/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.3.0/js/tabs.js
 ```
 
-The workflow ensures that the `dist` branch always reflects the latest stable build from `main`, making it reliable for production CDN usage.
+## CI/CD configuration
 
-### Future dist features
+| File | Purpose |
+|---|---|
+| `.github/workflows/npm-publish.yml` | npm publish on tag push (`v*`) |
+| `.github/workflows/dist.yml` | Update `dist` branch on `main` push |
+| `.github/workflows/storybook.yml` | Build and deploy Storybook to GitHub Pages |
+| `.github/workflows/chromatic.yml` | Visual regression testing |
+| `.github/workflows/pr-title-check.yml` | Validate PR titles follow Conventional Commits |
 
-Support for release tagged content.
+### Required GitHub secrets
 
-## Updating CDN links in documentation
+- **`GITHUB_TOKEN`** — built-in, used by workflows
+- **`NPM_TOKEN`** — npm access token for `@undrr` scope, used by npm-publish workflow
+- **`CHROMATIC_PROJECT_TOKEN`** — for visual regression testing (optional)
 
-To prepare each release, update the version number in `package.json` and the run `yarn update-cdn-version` to update documentation files to point to the new versioned CDN URLs.
+## Troubleshooting
 
-This script:
-
-1. Reads the current version from `package.json`
-2. Updates all CDN links in documentation files from `latest` or `testing` to the current version
-3. Converts URLs like `https://assets.undrr.org/static/mangrove/latest/` to `https://assets.undrr.org/static/mangrove/{version}/`
-
-Files updated include README.md, Storybook documentation (MDX files), and component documentation.
-
-## Quick Release Checklist
-
-1. **Before committing:**
-   - Run tests: `yarn test`
-   - Run linting: `yarn lint`
-   - Use proper commit message format
-
-2. **After release is created:**
-   - Check GitHub releases page
-   - Verify CHANGELOG.md was updated
-   - Push the new tag to trigger automatic npm publishing: `git push origin <tag-name>`
-   - Update CDN links in documentation: `yarn update-cdn-version`
-   - Commit the updated documentation files
-
-3. **Troubleshooting:**
-   - No release? Check commit message format
-   - Wrong version? Ensure correct commit type
-   - Publishing failed? Check npm token in GitHub secrets
-   - Package not published? Verify the tag was pushed to trigger the workflow
+| Symptom | Cause | Fix |
+|---|---|---|
+| npm publish fails | Expired or missing `NPM_TOKEN` secret | Regenerate token at npmjs.com, update GitHub secret |
+| npm publish fails with Corepack error | Missing `corepack enable` step in workflow | Check `npm-publish.yml` has the "Enable Corepack" step |
+| CDN not updated | `dist.yml` workflow failed | Check the workflow run; it runs on every push to `main` |
+| PR title rejected | Doesn't follow Conventional Commits format | Use `feat:`, `fix:`, `docs:`, `chore:`, etc. prefix |
+| Chromatic skipped | Commit or PR title contains `[skip chromatic]` | Intentional; remove the flag to run visual tests |
