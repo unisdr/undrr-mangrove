@@ -38,4 +38,31 @@
     height: 50px;
     margin: 1rem 0;
   }
+
+  &--challenge {
+    background-color: $mg-color-neutral-25;
+
+    .mg-error-page__container {
+      text-align: center;
+      padding: 3rem 2.5rem 2rem;
+      margin-top: 4rem;
+      max-width: 540px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
+    }
+
+    .undrr-logo {
+      width: 100%;
+      margin: 0 0 2.5rem;
+      background-position: center;
+      height: 35px;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 600;
+      color: $mg-color-text;
+      margin: 0 0 0.5rem;
+    }
+  }
 }
