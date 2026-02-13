@@ -117,6 +117,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Tabs',
+  component: Tab,
 };
 
 export const Tabs = {

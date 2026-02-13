@@ -95,6 +95,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Navigation/Sidebar',
+  component: Sidebar,
 
   argTypes: {
     Height: {

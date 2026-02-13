@@ -21,6 +21,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Buttons/CTA link',
+  component: Ctalink,
 
   argTypes: {
     Type: {

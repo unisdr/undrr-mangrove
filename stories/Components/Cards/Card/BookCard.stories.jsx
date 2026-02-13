@@ -80,6 +80,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Cards/Book Card',
+  component: BookCard,
 
   argTypes: {
     variant: {

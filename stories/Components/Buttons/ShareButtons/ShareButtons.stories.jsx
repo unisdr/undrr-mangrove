@@ -37,6 +37,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Buttons/ShareButtons',
+  component: ShareButtons,
 
   argTypes: {
     SharingSubject: {

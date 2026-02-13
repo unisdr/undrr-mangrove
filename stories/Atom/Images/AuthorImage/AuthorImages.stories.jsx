@@ -22,6 +22,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Images/Author image',
+  component: Authorimg,
 
   argTypes: {
     variant: {

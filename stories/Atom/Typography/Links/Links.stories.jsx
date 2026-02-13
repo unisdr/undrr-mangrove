@@ -21,6 +21,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Typography/Links',
+  component: Link,
 };
 
 export const DefaultLinks = {

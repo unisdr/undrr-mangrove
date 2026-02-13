@@ -82,6 +82,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Language switcher',
+  component: Languageswitcher,
 
   argTypes: {
     variant: {
