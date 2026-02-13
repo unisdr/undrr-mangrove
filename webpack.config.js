@@ -91,6 +91,7 @@ export default [
       IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
       Gallery: './stories/Components/Gallery/Gallery.jsx',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.jsx',
+      Pager: './stories/Components/Pager/Pager.jsx',
     },
     externals: {
       react: 'react',
@@ -120,9 +121,19 @@ Compiled on: ${new Date().toISOString()}`,
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,
+          resolve: {
+            // Allow extensionless imports (e.g. '../context/SearchContext')
+            // despite package.json "type": "module".
+            fullySpecified: false,
+          },
           use: {
             loader: 'babel-loader',
             options: {
+              // Ignore project-level .babelrc.json and babel.config.js so
+              // the ESM component bundles don't get core-js polyfill
+              // require() calls injected by babel-plugin-polyfill-corejs3.
+              configFile: false,
+              babelrc: false,
               presets: [['@babel/preset-react', { runtime: 'automatic' }]],
             },
           },
