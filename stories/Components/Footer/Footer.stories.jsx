@@ -61,9 +61,7 @@ export const WithComplementaryContent = {
       <section className="mg-footer--about-footer | has-undrr-sendai-turquoise-background-color has-background mg-container-full-width">
         <article className="mg-container">
           <p className="mg-footer--about-footer--links">
-            <a href="https://www.facebook.com/recoveryplatform.org">
-              Facebook
-            </a>{' '}
+            <a href="https://www.facebook.com/recoveryplatform.org">Facebook</a>{' '}
             <a href="https://www.twitter.com/irp_secretariat">X</a>
             <a href="https://www.youtube.com/user/IRPsecretariat">
               YouTube

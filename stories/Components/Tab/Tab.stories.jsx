@@ -130,7 +130,7 @@ export const Tabs = {
 
 export const TabsWithDefault = {
   render: (args, { globals: { locale } }) => {
-    let caption = getCaptionForLocale(locale);
+    const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} />;
   },
 };
