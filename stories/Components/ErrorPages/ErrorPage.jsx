@@ -1,5 +1,5 @@
 import React from 'react';
-import { DEFAULT_COPY, EXAMPLE_REQUEST_DETAILS } from './ErrorPagesContent.js';
+import { DEFAULT_COPY, CHALLENGE_COPY, EXAMPLE_REQUEST_DETAILS } from './ErrorPagesContent.js';
 
 function renderAction(action) {
   if (!action) return null;
@@ -33,6 +33,8 @@ function renderAction(action) {
  */
 export function ErrorPage({
   code = 404,
+  variant = 'error',
+  challengeType = 'challenge',
   title,
   description,
   primaryAction,
@@ -47,14 +49,23 @@ export function ErrorPage({
   actionsContent,
   ...props
 }) {
-  const defaults = DEFAULT_COPY[code] || DEFAULT_COPY[404];
+  const isChallenge = variant === 'challenge';
+  const challengeDefaults = isChallenge
+    ? CHALLENGE_COPY[challengeType] || CHALLENGE_COPY.challenge
+    : null;
+  const defaults = isChallenge ? {} : (DEFAULT_COPY[code] || DEFAULT_COPY[404]);
 
-  const resolvedTitle = title || defaults.title;
-  const resolvedDescription = description || defaults.description;
+  const resolvedTitle = title || (isChallenge ? challengeDefaults.title : defaults.title);
+  const resolvedDescription = description || (isChallenge ? challengeDefaults.description : defaults.description);
   const resolvedPrimary = primaryAction || defaults.primary;
   const resolvedSecondary = secondaryAction || defaults.secondary;
+
+  const mainClass = ['mg-error-page', isChallenge && 'mg-error-page--challenge']
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <main className="mg-error-page" {...props}>
+    <main className={mainClass} {...props}>
       {showBrandHeader && (
         <>
           <div className="mg-page-header__decoration" aria-hidden="true">
@@ -66,18 +77,45 @@ export function ErrorPage({
         </>
       )}
       <div className="mg-error-page__container mg-container--spacer">
-        {!showBrandHeader && (
+        {!showBrandHeader && !isChallenge && (
           <p className="mg-error-page__code" aria-hidden="true">
             {code}
           </p>
         )}
 
-          <h1>{`Error ${code}`}</h1>
-          <h2>{resolvedTitle}</h2>
-          {typeof resolvedDescription === 'string' ? (
+          {isChallenge && (
+            <a href="https://www.undrr.org/">
+              <div className="undrr-logo" aria-hidden="true" />
+            </a>
+          )}
+          {isChallenge
+            ? <h1>{resolvedDescription}</h1>
+            : <><h1>{`Error ${code}`}</h1><h2>{resolvedTitle}</h2></>
+          }
+          {isChallenge && challengeDefaults?.body && (
+            <p>{challengeDefaults.body}</p>
+          )}
+          {!isChallenge && (typeof resolvedDescription === 'string' ? (
             <p dangerouslySetInnerHTML={{ __html: resolvedDescription }} />
           ) : (
             <p>{resolvedDescription}</p>
+          ))}
+          {isChallenge && (
+            <div
+              style={{
+                border: '2px dashed #b3b3b3',
+                borderRadius: '8px',
+                padding: '2.5rem 2rem',
+                margin: '2rem auto',
+                maxWidth: '400px',
+                textAlign: 'center',
+                color: '#666',
+              }}
+            >
+              <code>::CAPTCHA_BOX::</code>
+              <br />
+              <small>Cloudflare challenge widget appears here</small>
+            </div>
           )}
           {actionsContent && (
             <div className="mg-error-page__actions">
@@ -120,19 +158,26 @@ export function ErrorPage({
           )}
 
           <p>
-            If you think this is in error or need help, <a href={contactUrl}>please contact us</a> and provide the details below.
+            {isChallenge
+              ? <>Having trouble? <a href={contactUrl}>Contact us</a>{showRequestDetails ? ' and include the details below' : ''}.
+              </>
+              : <>If you think this is in error or need help, <a href={contactUrl}>please contact us</a> and provide the details below.</>}
           </p>
 
           {showRequestDetails && requestDetails && (
             <p className="mg-code" role="note" aria-label="Request details">
-              Error code: {code} | Ray ID: {requestDetails.rayId} | Your IP: {requestDetails.clientIp} | Location: {requestDetails.geo}
+              {!isChallenge && <>Error code: {code} | </>}Ray ID: {requestDetails.rayId} | Your IP: {requestDetails.clientIp} | Location: {requestDetails.geo}
             </p>
           )}
-          <hr />
-          <small>This website is operated by</small>
-          <a href="https://www.undrr.org/">
-            <div className="undrr-logo" aria-hidden="true" />
-          </a>
+          {!isChallenge && (
+            <>
+              <hr />
+              <small>This website is operated by</small>
+              <a href="https://www.undrr.org/">
+                <div className="undrr-logo" aria-hidden="true" />
+              </a>
+            </>
+          )}
         </div>
     </main>
   );
