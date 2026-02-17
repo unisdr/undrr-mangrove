@@ -110,7 +110,8 @@ export const CONTENT_SUBTYPES = {
       { id: '62', name: 'Training course' },
     ],
   },
-  // Organization subtypes - field_organization_type NOT YET indexed (list field, string values)
+  // Organization subtypes - field_organization_type indexed on org nodes (list field, string values)
+  // Also available as org_type_ref (traversal) on content types that reference organizations
   organization: {
     field: 'field_organization_type',
     options: [
