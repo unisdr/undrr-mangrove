@@ -11,8 +11,12 @@
   align-items: flex-start;
   z-index: 10;
   padding: 0;
-  max-width: $mg-breakpoint-desktop; // mg-mega-toolbar does not play well with mg-container
+  max-width: $mg-breakpoint-desktop;
   margin: 0 auto;
+
+  @media screen and (min-width: $mg-breakpoint-desktop-wide) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }
 
   // these are note "mobile first" as they seem to cause a glitch with firefox and .mg-container-full-width
   @media screen and (max-width: $mg-breakpoint-tablet) {
