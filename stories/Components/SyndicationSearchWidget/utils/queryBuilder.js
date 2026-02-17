@@ -394,6 +394,13 @@ function removeStopWords(query, stopWords = []) {
     return query;
   }
 
+  // If query contains special characters (field:value syntax, grouping, etc.),
+  // don't remove stop words - OR/AND/NOT may be intentional Boolean operators
+  const specialCharacters = /[:~^/+\-!(){}[\]~*?:\\&|<>=@]/;
+  if (specialCharacters.test(query)) {
+    return query;
+  }
+
   const words = query.split(/\s+/);
   const filtered = words.filter(
     word => !stopWords.includes(word.toLowerCase())
