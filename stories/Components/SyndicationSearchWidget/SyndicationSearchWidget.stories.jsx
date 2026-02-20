@@ -309,6 +309,74 @@ Useful for debugging search ranking and understanding why certain results appear
 };
 
 /**
+ * Card display mode - vertical cards in a grid.
+ */
+export const CardDisplay = {
+  args: {
+    config: {
+      ...defaultConfig,
+      displayMode: 'card',
+      gridColumns: 3,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Renders search results as vertical cards in a responsive grid.
+
+\`\`\`js
+config: {
+  displayMode: 'card',
+  gridColumns: 3,
+}
+\`\`\`
+
+Cards use \`.mg-card__vc\` BEM classes and are laid out with \`.mg-grid\`.
+Each card shows: content type badge, title, body highlight, and metadata (domain + date).
+Cards render cleanly without images.
+
+**gridColumns** controls the number of columns (2-6). The mg-grid system
+handles responsive breakpoints automatically (1 col mobile, multi-col desktop).
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Card book display mode - book cover style cards.
+ */
+export const CardBookDisplay = {
+  args: {
+    config: {
+      ...defaultConfig,
+      displayMode: 'card-book',
+      gridColumns: 4,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Renders search results as book-cover style cards in a 4-column grid.
+
+\`\`\`js
+config: {
+  displayMode: 'card-book',
+  gridColumns: 4,
+}
+\`\`\`
+
+Uses \`.mg-card__book\` BEM classes. On wider screens, the book variant uses
+a horizontal layout within each card. Useful for publication-heavy search results.
+        `,
+      },
+    },
+  },
+};
+
+/**
  * Custom Elasticsearch filters.
  *
  * `customFilters` are raw Elasticsearch query_string filters applied to all searches.

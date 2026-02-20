@@ -8,6 +8,7 @@
 import React from 'react';
 import { useSearchState, useSearchConfig } from '../context/SearchContext';
 import ResultItem from './ResultItem';
+import ResultCard from './ResultCard';
 import Pager from './Pager';
 
 /**
@@ -42,7 +43,10 @@ export function SearchResults({
     isInitialized,
   } = state;
 
-  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength } = config;
+  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, gridColumns } = config;
+
+  const isCardMode = displayMode === 'card' || displayMode === 'card-book';
+  const cardVariant = displayMode === 'card-book' ? 'book' : 'vertical';
 
   // Don't render anything until initialized
   if (!isInitialized) {
@@ -195,18 +199,32 @@ export function SearchResults({
         )}
       </div>
 
-      {/* Results list */}
-      <div
-        className="mg-search__results-list"
-        role="list"
-        aria-label="Search results"
-      >
-        {results?.map((hit, index) => (
-          <div key={hit._id || index} role="listitem">
-            <ResultItem hit={hit} showMetrics={showSearchMetrics} />
-          </div>
-        ))}
-      </div>
+      {/* Results list or grid */}
+      {isCardMode ? (
+        <div
+          className={`mg-search__results-grid mg-grid mg-grid__col-${gridColumns || 3}`}
+          role="list"
+          aria-label="Search results"
+        >
+          {results?.map((hit, index) => (
+            <div key={hit._id || index} role="listitem">
+              <ResultCard hit={hit} variant={cardVariant} showMetrics={showSearchMetrics} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          className="mg-search__results-list"
+          role="list"
+          aria-label="Search results"
+        >
+          {results?.map((hit, index) => (
+            <div key={hit._id || index} role="listitem">
+              <ResultItem hit={hit} showMetrics={showSearchMetrics} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Pager */}
       {showPager && <Pager widgetId={widgetId} />}

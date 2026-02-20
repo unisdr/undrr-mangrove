@@ -345,6 +345,11 @@ export const DEFAULT_CONFIG = {
   queryAppend: '',
   customFilters: [],
   customFacets: [],
+
+  // Display mode
+  displayMode: 'list', // 'list', 'card', 'card-book'
+  gridColumns: 3, // 2-6, only used in card modes
+
 };
 
 /**

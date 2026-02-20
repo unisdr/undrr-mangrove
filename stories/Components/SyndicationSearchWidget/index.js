@@ -29,6 +29,7 @@ export { useHashSync } from './hooks/useHashSync';
 export { SearchForm } from './components/SearchForm';
 export { SearchResults } from './components/SearchResults';
 export { ResultItem } from './components/ResultItem';
+export { ResultCard } from './components/ResultCard';
 export { ActiveFilters } from './components/ActiveFilters';
 export { FacetsSidebar } from './components/FacetsSidebar';
 export { FacetSelect } from './components/FacetSelect';
