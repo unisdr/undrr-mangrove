@@ -25,10 +25,11 @@ const createHit = (overrides = {}) => ({
 
 describe('ResultCard', () => {
   describe('field mapping', () => {
-    it('renders the title', () => {
+    it('renders the title as a link', () => {
       render(<ResultCard hit={createHit()} />);
 
-      expect(screen.getByText('Climate Change Report')).toBeInTheDocument();
+      const link = screen.getByRole('link', { name: 'Climate Change Report' });
+      expect(link).toBeInTheDocument();
     });
 
     it('renders the content type badge', () => {
@@ -40,7 +41,9 @@ describe('ResultCard', () => {
     it('renders the formatted date', () => {
       render(<ResultCard hit={createHit()} />);
 
-      expect(screen.getByText('Jun 15, 2024')).toBeInTheDocument();
+      const time = screen.getByText('Jun 15, 2024');
+      expect(time).toBeInTheDocument();
+      expect(time.closest('time')).toHaveAttribute('datetime', '2024-06-15T10:00:00Z');
     });
 
     it('renders the domain label', () => {
@@ -49,7 +52,7 @@ describe('ResultCard', () => {
       expect(screen.getByText('UNDRR.org')).toBeInTheDocument();
     });
 
-    it('renders highlighted body text', () => {
+    it('renders highlighted body with <em> preserved', () => {
       const hit = {
         ...createHit(),
         highlight: {
@@ -58,12 +61,13 @@ describe('ResultCard', () => {
       };
       render(<ResultCard hit={hit} />);
 
-      const summary = document.querySelector('.mg-card__summary');
-      expect(summary).toBeInTheDocument();
+      const summary = screen.getByText((_, el) =>
+        el.tagName === 'P' && el.textContent.includes('climate impacts'),
+      );
       expect(summary.innerHTML).toContain('<em>climate</em>');
     });
 
-    it('renders highlighted title when available', () => {
+    it('renders highlighted title with <em> preserved', () => {
       const hit = {
         ...createHit(),
         highlight: {
@@ -72,8 +76,8 @@ describe('ResultCard', () => {
       };
       render(<ResultCard hit={hit} />);
 
-      const titleLink = document.querySelector('.mg-card__title a');
-      expect(titleLink.innerHTML).toContain('<em>Climate</em>');
+      const link = screen.getByRole('link');
+      expect(link.innerHTML).toContain('<em>Climate</em>');
     });
   });
 
@@ -81,45 +85,60 @@ describe('ResultCard', () => {
     it('builds absolute URL from relative path', () => {
       render(<ResultCard hit={createHit({ url: '/node/123' })} />);
 
-      const link = document.querySelector('.mg-card__title a');
+      const link = screen.getByRole('link');
       expect(link.href).toContain('https://www.undrr.org/node/123');
     });
 
     it('preserves absolute URLs', () => {
       render(<ResultCard hit={createHit({ url: 'https://example.com/page' })} />);
 
-      const link = document.querySelector('.mg-card__title a');
+      const link = screen.getByRole('link');
       expect(link.href).toBe('https://example.com/page');
     });
 
     it('falls back to /node/{nid} when url is missing', () => {
       render(<ResultCard hit={createHit({ url: undefined })} />);
 
-      const link = document.querySelector('.mg-card__title a');
+      const link = screen.getByRole('link');
       expect(link.href).toContain('/node/123');
     });
   });
 
-  describe('variant classes', () => {
-    it('renders with mg-card__vc class for vertical variant', () => {
-      render(<ResultCard hit={createHit()} variant="vertical" />);
+  describe('card structure', () => {
+    it('uses mg-card__vc for vertical variant', () => {
+      render(<ResultCard hit={createHit()} />);
 
-      const card = document.querySelector('.mg-card__vc');
-      expect(card).toBeInTheDocument();
+      const article = screen.getByRole('article');
+      expect(article).toHaveClass('mg-card', 'mg-card__vc', 'mg-search__result-card');
     });
 
-    it('renders with mg-card__book class for book variant', () => {
+    it('uses mg-card__hc for book variant', () => {
       render(<ResultCard hit={createHit()} variant="book" />);
 
-      const card = document.querySelector('.mg-card__book');
-      expect(card).toBeInTheDocument();
+      const article = screen.getByRole('article');
+      expect(article).toHaveClass('mg-card', 'mg-card__hc', 'mg-search__result-card');
     });
 
     it('defaults to vertical variant', () => {
       render(<ResultCard hit={createHit()} />);
 
-      const card = document.querySelector('.mg-card__vc');
-      expect(card).toBeInTheDocument();
+      const article = screen.getByRole('article');
+      expect(article).toHaveClass('mg-card__vc');
+      expect(article).not.toHaveClass('mg-card__hc');
+    });
+
+    it('renders the title inside a <header> element', () => {
+      render(<ResultCard hit={createHit()} />);
+
+      const link = screen.getByRole('link', { name: 'Climate Change Report' });
+      expect(link.closest('header')).toBeInTheDocument();
+    });
+
+    it('sets data-result-type on the article', () => {
+      render(<ResultCard hit={createHit({ type: 'event' })} />);
+
+      const article = screen.getByRole('article');
+      expect(article).toHaveAttribute('data-result-type', 'event');
     });
   });
 
@@ -127,15 +146,15 @@ describe('ResultCard', () => {
     it('renders without date when published_at is missing', () => {
       render(<ResultCard hit={createHit({ published_at: undefined })} />);
 
-      const time = document.querySelector('time');
-      expect(time).not.toBeInTheDocument();
+      expect(document.querySelector('time')).not.toBeInTheDocument();
     });
 
-    it('renders without body when no highlight available', () => {
+    it('renders without summary when no highlight available', () => {
       render(<ResultCard hit={createHit()} />);
 
-      const summary = document.querySelector('.mg-card__summary');
-      expect(summary).not.toBeInTheDocument();
+      // No <p> inside the card content when there's no body highlight
+      const article = screen.getByRole('article');
+      expect(article.querySelector('p')).not.toBeInTheDocument();
     });
 
     it('renders error state when domain is missing', () => {
@@ -169,12 +188,35 @@ describe('ResultCard', () => {
     });
   });
 
-  describe('data-result-type attribute', () => {
-    it('sets data-result-type on the article element', () => {
-      render(<ResultCard hit={createHit({ type: 'event' })} />);
+  describe('DOMPurify sanitization', () => {
+    it('strips script tags from highlighted title', () => {
+      const hit = {
+        ...createHit(),
+        highlight: {
+          title: ['<em>Climate</em><script>alert("xss")</script> Report'],
+        },
+      };
+      render(<ResultCard hit={hit} />);
 
-      const card = document.querySelector('[data-result-type="event"]');
-      expect(card).toBeInTheDocument();
+      const link = screen.getByRole('link');
+      expect(link.innerHTML).toContain('<em>Climate</em>');
+      expect(link.innerHTML).not.toContain('<script>');
+    });
+
+    it('strips event handlers from highlighted body', () => {
+      const hit = {
+        ...createHit(),
+        highlight: {
+          body: ['Safe text <img src=x onerror=alert(1)> here'],
+        },
+      };
+      render(<ResultCard hit={hit} />);
+
+      const summary = screen.getByText((_, el) =>
+        el.tagName === 'P' && el.textContent.includes('Safe text'),
+      );
+      expect(summary.innerHTML).toContain('Safe text');
+      expect(summary.innerHTML).not.toContain('onerror');
     });
   });
 });

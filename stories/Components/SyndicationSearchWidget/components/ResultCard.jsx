@@ -10,6 +10,7 @@
  */
 
 import React, { useMemo } from 'react';
+import DOMPurify from 'dompurify';
 import { getContentType, getDomain, DOMAIN_MAP } from '../utils/constants';
 
 /**
@@ -74,7 +75,7 @@ export function ResultCard({ hit, variant = 'vertical', showMetrics = false }) {
   }, [url, nid, baseUrl]);
 
   // Card BEM class based on variant
-  const cardClass = variant === 'book' ? 'mg-card__book' : 'mg-card__vc';
+  const cardClass = variant === 'book' ? 'mg-card__hc' : 'mg-card__vc';
 
   // Error state - no domain
   if (!domainId) {
@@ -91,7 +92,7 @@ export function ResultCard({ hit, variant = 'vertical', showMetrics = false }) {
 
   return (
     <article
-      className={`mg-search__result-card ${cardClass}`}
+      className={`mg-card mg-search__result-card ${cardClass}`}
       data-result-type={type}
     >
       {showMetrics && <ResultCardMetrics hit={hit} source={source} />}
@@ -104,18 +105,18 @@ export function ResultCard({ hit, variant = 'vertical', showMetrics = false }) {
         )}
 
         {/* Card title */}
-        <h3 className="mg-card__title">
+        <header className="mg-card__title">
           <a
             href={fullUrl}
-            dangerouslySetInnerHTML={{ __html: highlightedTitle }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlightedTitle) }}
           />
-        </h3>
+        </header>
 
         {/* Summary text from highlight */}
         {highlightedBody && (
           <p
             className="mg-card__summary"
-            dangerouslySetInnerHTML={{ __html: highlightedBody }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlightedBody) }}
           />
         )}
 
