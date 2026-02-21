@@ -8,7 +8,6 @@
 import React from 'react';
 import { useSearchState, useSearchConfig } from '../context/SearchContext';
 import ResultItem from './ResultItem';
-import ResultCard from './ResultCard';
 import Pager from './Pager';
 
 /**
@@ -46,7 +45,6 @@ export function SearchResults({
   const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, gridColumns } = config;
 
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
-  const cardVariant = displayMode === 'card-book' ? 'book' : 'vertical';
 
   // Don't render anything until initialized
   if (!isInitialized) {
@@ -208,7 +206,7 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultCard hit={hit} variant={cardVariant} showMetrics={showSearchMetrics} />
+              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} />
             </div>
           ))}
         </div>

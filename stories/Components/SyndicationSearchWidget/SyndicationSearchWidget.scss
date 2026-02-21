@@ -732,50 +732,6 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-// Card result styling within search context
-// Inherits base card styles from card.scss via mg-card / mg-card__vc classes.
-// Only search-specific overrides here.
-.mg-search__result-card {
-  width: 100%;
-  margin-bottom: 0; // Grid gap handles spacing
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
-  overflow: hidden;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-
-  &:hover {
-    border-color: $search-primary;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
-  }
-
-  // Highlight <em> styling for ES search matches (title + summary)
-  em {
-    font-style: normal;
-    background: rgba($search-primary, 0.1);
-    padding: 0 2px;
-  }
-
-  // Truncate summary to 3 lines
-  .mg-card__summary {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  // Metrics inside card
-  .mg-search__result-metrics {
-    padding: $mg-spacing-50 $mg-spacing-100 0;
-  }
-}
-
-// Error state for card
-.mg-search__result-card.mg-search__result--error {
-  padding: $mg-spacing-100;
-  background: $search-error-bg;
-  border-color: $search-error-border;
-}
-
 // ========================================
 // Result Animations
 // Sequential fade-in and slide from left for search results.

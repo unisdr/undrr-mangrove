@@ -13,6 +13,30 @@ import React, { useMemo } from 'react';
 import { getContentType, getDomain, DOMAIN_MAP } from '../utils/constants';
 
 /**
+ * Swap card variant classes on teaser HTML for card display modes.
+ *
+ * Teaser HTML from Elasticsearch already contains mg-card markup.
+ * This strips existing variant classes and injects the correct variant
+ * for the requested display mode.
+ *
+ * @param {string} html - Teaser HTML string
+ * @param {string} displayMode - Display mode: 'list', 'card', or 'card-book'
+ * @returns {string} HTML with updated card variant classes
+ */
+export function swapCardVariant(html, displayMode) {
+  if (!html || displayMode === 'list') return html;
+  const stripped = html
+    .replace(/\bmg-card__(?:vc|hc)\b/g, '')
+    .replace(/\bmg-card-book__hc\b/g, '');
+  const variant = displayMode === 'card-book'
+    ? 'mg-card__hc mg-card-book__hc'
+    : 'mg-card__vc';
+  return stripped.replace(/class="([^"]*)"/, (_, cls) =>
+    `class="${cls.trim()} ${variant}"`
+  );
+}
+
+/**
  * Resolve relative URLs to absolute using the domain's base URL.
  *
  * @param {string} html - HTML string with potentially relative URLs
@@ -42,8 +66,9 @@ function resolveRelativeUrls(html, baseUrl) {
  * @param {Object} props - Component props
  * @param {Object} props.hit - Elasticsearch hit object
  * @param {boolean} props.showMetrics - Whether to show scoring metrics
+ * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
  */
-export function ResultItem({ hit, showMetrics = false }) {
+export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
   const source = hit._source || {};
   const highlight = hit.highlight || {};
 
@@ -98,8 +123,11 @@ export function ResultItem({ hit, showMetrics = false }) {
       ? domainInfo.url.replace('https://', '')
       : domainId;
 
-    // Resolve relative URLs in the teaser HTML
-    const resolvedTeaser = resolveRelativeUrls(teaser, baseUrl);
+    // Resolve relative URLs and swap card variant for card display modes
+    const resolvedTeaser = swapCardVariant(
+      resolveRelativeUrls(teaser, baseUrl),
+      displayMode
+    );
 
     // Inject domain label before the title field
     let finalHtml = resolvedTeaser;
