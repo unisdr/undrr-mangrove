@@ -42,7 +42,7 @@ export function SearchResults({
     isInitialized,
   } = state;
 
-  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, gridColumns } = config;
+  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode } = config;
 
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
 
@@ -200,7 +200,7 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
-          className={`mg-search__results-grid mg-grid mg-grid__col-${gridColumns || 3}`}
+          className={`mg-search__results-grid mg-grid mg-grid__col-${resultsPerPage}`}
           role="list"
           aria-label="Search results"
         >

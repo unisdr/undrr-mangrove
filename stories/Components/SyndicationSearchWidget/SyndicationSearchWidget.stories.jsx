@@ -316,7 +316,7 @@ export const CardDisplay = {
     config: {
       ...defaultConfig,
       displayMode: 'card',
-      gridColumns: 3,
+      resultsPerPage: 3,
     },
   },
   parameters: {
@@ -328,7 +328,7 @@ Renders search results as vertical cards in a responsive grid.
 \`\`\`js
 config: {
   displayMode: 'card',
-  gridColumns: 3,
+  resultsPerPage: 3,
 }
 \`\`\`
 
@@ -336,8 +336,9 @@ Cards use \`.mg-card__vc\` BEM classes and are laid out with \`.mg-grid\`.
 Each card shows: content type badge, title, body highlight, and metadata (domain + date).
 Cards render cleanly without images.
 
-**gridColumns** controls the number of columns (2-6). The mg-grid system
-handles responsive breakpoints automatically (1 col mobile, multi-col desktop).
+**resultsPerPage** controls both the number of results and grid columns.
+The mg-grid system handles responsive breakpoints automatically
+(1 col mobile, multi-col desktop).
         `,
       },
     },
@@ -352,7 +353,7 @@ export const CardBookDisplay = {
     config: {
       ...defaultConfig,
       displayMode: 'card-book',
-      gridColumns: 4,
+      resultsPerPage: 4,
     },
   },
   parameters: {
@@ -364,12 +365,13 @@ Renders search results as book-cover style cards in a 4-column grid.
 \`\`\`js
 config: {
   displayMode: 'card-book',
-  gridColumns: 4,
+  resultsPerPage: 4,
 }
 \`\`\`
 
-Uses \`.mg-card__book\` BEM classes. On wider screens, the book variant uses
-a horizontal layout within each card. Useful for publication-heavy search results.
+Uses \`.mg-card__hc mg-card-book__hc\` BEM classes. On wider screens, the book
+variant uses a horizontal layout within each card. Useful for publication-heavy
+search results.
         `,
       },
     },
