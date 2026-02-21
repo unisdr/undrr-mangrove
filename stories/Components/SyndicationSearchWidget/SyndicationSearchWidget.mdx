@@ -65,6 +65,14 @@ Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-ca
 
 <Canvas of={SyndicationSearchWidgetStories.CardBookDisplay} meta={SyndicationSearchWidgetStories} />
 
+## Hidden teaser fields
+
+Hide specific fields from pre-rendered teaser HTML using `visibleTeaserFields`. Set a field key to `false` to hide it; `null` (default) shows all fields. Uses CSS modifier classes for zero JS overhead.
+
+<Canvas of={SyndicationSearchWidgetStories.HiddenTeaserFields} meta={SyndicationSearchWidgetStories} />
+
+**Toggleable fields:** `image`, `contentType`, `publicationType`, `date`, `siteName`, `summary`, `organization`. Title is intentionally not toggleable.
+
 ## Custom filters
 
 `customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
@@ -269,6 +277,7 @@ The component is loaded automatically on pages containing a container with `data
 | `customFilters` | array | `[]` | Additional Elasticsearch filters |
 | `customFacets` | array | `[]` | Custom facet definitions |
 | `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
+| `visibleTeaserFields` | object | `null` | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
 
 ## Architecture
 
@@ -331,6 +340,15 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 - Focus management on filter removal
 
 ## Changelog
+
+### 1.1.0
+- **Card display modes**: `displayMode` config option (`'list'`, `'card'`, `'card-book'`)
+  - Grid columns sync with `resultsPerPage`
+  - Drupal image styles rewritten to match card aspect ratio (`landscape_16_9` for cards, `por` for book cards)
+  - Teaser class-swapping via `swapCardVariant()` — no separate card component
+- **Teaser field visibility**: `visibleTeaserFields` config option to hide specific teaser fields
+  - CSS-based hiding (`display: none`) — performant, accessible, no HTML parsing
+  - 7 toggleable fields: image, contentType, publicationType, date, siteName, summary, organization
 
 ### 1.0.0
 - Pager styles extracted to standalone `Components/Pager` component

@@ -378,6 +378,61 @@ Useful for publication-heavy search results.
 };
 
 /**
+ * Hidden teaser fields - toggle visibility of specific teaser fields.
+ */
+export const HiddenTeaserFields = {
+  args: {
+    config: {
+      ...defaultConfig,
+      visibleTeaserFields: {
+        image: false,
+        organization: false,
+        publicationType: false,
+      },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Use \`visibleTeaserFields\` to hide specific fields from pre-rendered teaser HTML.
+Set a field key to \`false\` to hide it; omitted or \`true\` fields remain visible.
+\`null\` (default) shows all fields.
+
+\`\`\`js
+config: {
+  visibleTeaserFields: {
+    image: false,
+    organization: false,
+    publicationType: false,
+  },
+}
+\`\`\`
+
+**Toggleable fields:**
+
+| Key | Selector | Description |
+|-----|----------|-------------|
+| \`image\` | \`.mg-card__visual\` | Card image |
+| \`contentType\` | \`.st-tag--spl\` | Content type badge |
+| \`publicationType\` | \`.field--name-field-undrr-publication-types\` | Publication subtype |
+| \`date\` | \`.field--name-published-at\` | Publication date |
+| \`siteName\` | \`.mg-search__result-site-name\` | Domain label |
+| \`summary\` | \`.mg-card__content > p\` | Body text |
+| \`organization\` | \`.field--name-field-organization\` | Organization name |
+
+Title is intentionally not toggleable.
+
+Uses CSS modifier classes (\`mg-search--hide-{field}\`) on the results container
+for zero JS overhead. \`display: none\` removes elements from both layout and
+accessibility tree.
+        `,
+      },
+    },
+  },
+};
+
+/**
  * Custom Elasticsearch filters.
  *
  * `customFilters` are raw Elasticsearch query_string filters applied to all searches.
