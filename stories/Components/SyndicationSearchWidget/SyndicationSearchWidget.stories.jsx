@@ -386,8 +386,12 @@ export const HiddenTeaserFields = {
       ...defaultConfig,
       visibleTeaserFields: {
         image: false,
-        organization: false,
+        contentType: true,
         publicationType: false,
+        date: true,
+        siteName: true,
+        summary: true,
+        organization: false,
       },
     },
   },
@@ -396,36 +400,25 @@ export const HiddenTeaserFields = {
       description: {
         story: `
 Use \`visibleTeaserFields\` to hide specific fields from pre-rendered teaser HTML.
-Set a field key to \`false\` to hide it; omitted or \`true\` fields remain visible.
-\`null\` (default) shows all fields.
+Set a field key to \`false\` to hide it, or \`true\` to keep it visible.
+\`null\` (default) shows all fields. Title is not toggleable.
+
+In this example, \`image\`, \`organization\`, and \`publicationType\` are hidden:
 
 \`\`\`js
-config: {
-  visibleTeaserFields: {
-    image: false,
-    organization: false,
-    publicationType: false,
-  },
+visibleTeaserFields: {
+  image: false,          // Card image (.mg-card__visual)
+  contentType: true,     // Content type badge (.st-tag--spl)
+  publicationType: false,// Publication subtype (.field--name-field-undrr-publication-types)
+  date: true,            // Publication date (.field--name-published-at)
+  siteName: true,        // Domain label (.mg-search__result-site-name)
+  summary: true,         // Body text (.mg-card__content > p)
+  organization: false,   // Organization name (.field--name-field-organization)
 }
 \`\`\`
 
-**Toggleable fields:**
-
-| Key | Selector | Description |
-|-----|----------|-------------|
-| \`image\` | \`.mg-card__visual\` | Card image |
-| \`contentType\` | \`.st-tag--spl\` | Content type badge |
-| \`publicationType\` | \`.field--name-field-undrr-publication-types\` | Publication subtype |
-| \`date\` | \`.field--name-published-at\` | Publication date |
-| \`siteName\` | \`.mg-search__result-site-name\` | Domain label |
-| \`summary\` | \`.mg-card__content > p\` | Body text |
-| \`organization\` | \`.field--name-field-organization\` | Organization name |
-
-Title is intentionally not toggleable.
-
-Uses CSS modifier classes (\`mg-search--hide-{field}\`) on the results container
-for zero JS overhead. \`display: none\` removes elements from both layout and
-accessibility tree.
+Non-mg-prefixed selectors come from Drupal teaser HTML indexed by Elasticsearch.
+Uses CSS modifier classes — zero JS overhead, \`display: none\` removes from layout and accessibility tree.
         `,
       },
     },
