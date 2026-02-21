@@ -13,28 +13,50 @@ import React, { useMemo } from 'react';
 import { getContentType, getDomain, DOMAIN_MAP } from '../utils/constants';
 
 /**
- * Swap card variant classes on teaser HTML for card display modes.
+ * Swap card variant classes and image styles on teaser HTML for card display modes.
  *
  * Teaser HTML from Elasticsearch already contains mg-card markup.
  * This strips existing variant classes and injects the correct variant
  * for the requested display mode.
  *
+ * Also rewrites Drupal image style paths so the image aspect ratio matches
+ * the card variant: `landscape_16_9` (16:9) for vertical cards, `por` (3:4)
+ * for book cards. The itok token is not validated for anonymous requests.
+ *
  * @param {string} html - Teaser HTML string
  * @param {string} displayMode - Display mode: 'list', 'card', or 'card-book'
- * @returns {string} HTML with updated card variant classes
+ * @returns {string} HTML with updated card variant classes and image styles
  */
 export function swapCardVariant(html, displayMode) {
   if (!html || displayMode === 'list') return html;
-  const stripped = html
+  let result = html
     .replace(/\bmg-card__(?:vc|hc)\b/g, '')
     .replace(/\bmg-card-book__hc\b/g, '')
     .replace(/\bmg-card__book\b/g, '');
   const variant = displayMode === 'card-book'
     ? 'mg-card__vc mg-card__book'
     : 'mg-card__vc';
-  return stripped.replace(/class="([^"]*)"/, (_, cls) =>
+  result = result.replace(/class="([^"]*)"/, (_, cls) =>
     `class="${cls.trim()} ${variant}"`
   );
+
+  // Rewrite Drupal image styles to match the card aspect ratio.
+  // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).
+  // Card mode needs 16:9 (landscape_16_9), book card mode needs 3:4 (por).
+  // The itok token is not validated for anonymous image style requests.
+  if (displayMode === 'card-book') {
+    result = result.replace(
+      /\/styles\/[^/]+\/public\//g,
+      '/styles/por/public/'
+    );
+  } else {
+    result = result.replace(
+      /\/styles\/[^/]+\/public\//g,
+      '/styles/landscape_16_9/public/'
+    );
+  }
+
+  return result;
 }
 
 /**
