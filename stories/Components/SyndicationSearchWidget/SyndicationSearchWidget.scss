@@ -725,7 +725,6 @@ $search-input-padding-x: $mg-spacing-250;
 // Modifier classes on the results container hide specific teaser fields
 // via the visibleTeaserFields config option.
 // Title (.field--name-node-title) is intentionally not toggleable.
-//
 // Non-mangrove selectors (.st-tag--spl, .field--name-*, etc.) originate from
 // Drupal's rendered teaser HTML. Elasticsearch indexes pre-rendered teasers
 // with these classes intact, so we target them directly here rather than
