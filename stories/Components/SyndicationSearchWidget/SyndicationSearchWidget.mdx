@@ -55,7 +55,7 @@ Shows search performance metrics (score, interestingness, longevity) for debuggi
 
 ## Card display
 
-Renders search results as vertical cards in a responsive grid. `resultsPerPage` controls both the number of results and the grid column count. Drupal image styles are automatically rewritten to `landscape_16_9` (16:9) to match the vertical card aspect ratio.
+Renders search results as vertical cards in a responsive grid. `gridColumns` controls the grid column count (2-6); if not set, it defaults to `resultsPerPage`. Drupal image styles are automatically rewritten to `landscape_16_9` (16:9) to match the vertical card aspect ratio.
 
 <Canvas of={SyndicationSearchWidgetStories.CardDisplay} meta={SyndicationSearchWidgetStories} />
 
@@ -277,6 +277,7 @@ The component is loaded automatically on pages containing a container with `data
 | `customFilters` | array | `[]` | Additional Elasticsearch filters |
 | `customFacets` | array | `[]` | Custom facet definitions |
 | `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
+| `gridColumns` | number | `null` | Grid columns for card modes (2-6). `null` = use `resultsPerPage` |
 | `visibleTeaserFields` | object | `null` | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
 
 ## Architecture
@@ -343,7 +344,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ### 1.1.0
 - **Card display modes**: `displayMode` config option (`'list'`, `'card'`, `'card-book'`)
-  - Grid columns sync with `resultsPerPage`
+  - `gridColumns` config option for independent column control (2-6); falls back to `resultsPerPage`
   - Drupal image styles rewritten to match card aspect ratio (`landscape_16_9` for cards, `por` for book cards)
   - Teaser class-swapping via `swapCardVariant()` — no separate card component
 - **Teaser field visibility**: `visibleTeaserFields` config option to hide specific teaser fields

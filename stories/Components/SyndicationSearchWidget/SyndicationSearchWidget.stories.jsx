@@ -336,9 +336,9 @@ Cards use \`.mg-card__vc\` BEM classes and are laid out with \`.mg-grid\`.
 Each card shows: content type badge, title, body highlight, and metadata (domain + date).
 Cards render cleanly without images.
 
-**resultsPerPage** controls both the number of results and grid columns.
-The mg-grid system handles responsive breakpoints automatically
-(1 col mobile, multi-col desktop).
+**gridColumns** controls the grid column count (2-6). If not set, it defaults
+to \`resultsPerPage\`. The mg-grid system handles responsive breakpoints
+automatically (1 col mobile, multi-col desktop).
         `,
       },
     },

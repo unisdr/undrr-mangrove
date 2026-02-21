@@ -43,9 +43,12 @@ export function SearchResults({
     isInitialized,
   } = state;
 
-  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, visibleTeaserFields } = config;
+  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, visibleTeaserFields, gridColumns } = config;
 
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
+  const cardGridCols = isCardMode
+    ? Math.min(Math.max(gridColumns ?? resultsPerPage, 2), 6)
+    : undefined;
   const hiddenFieldClasses = useMemo(
     () => buildHiddenFieldClasses(visibleTeaserFields),
     [visibleTeaserFields]
@@ -205,7 +208,7 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
-          className={`mg-search__results-grid mg-grid mg-grid__col-${resultsPerPage} ${hiddenFieldClasses}`.trim()}
+          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}`.trim()}
           role="list"
           aria-label="Search results"
         >

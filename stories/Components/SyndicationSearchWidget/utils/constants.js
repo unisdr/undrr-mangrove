@@ -348,6 +348,7 @@ export const DEFAULT_CONFIG = {
 
   // Display mode
   displayMode: 'list', // 'list', 'card', 'card-book'
+  gridColumns: null, // Grid columns for card modes (2-6). null = use resultsPerPage.
 
   // Teaser field visibility
   visibleTeaserFields: null, // {image: false, date: false, ...} — null = all visible
