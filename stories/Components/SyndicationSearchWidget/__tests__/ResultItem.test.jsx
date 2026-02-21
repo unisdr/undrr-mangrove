@@ -54,17 +54,19 @@ describe('swapCardVariant', () => {
     expect(result).not.toContain('mg-card-book__hc');
   });
 
-  it('swaps vc class to hc + book for card-book mode', () => {
+  it('swaps vc class to vc + book for card-book mode', () => {
     const result = swapCardVariant(TEASER_VC, 'card-book');
-    expect(result).toContain('mg-card__hc');
-    expect(result).toContain('mg-card-book__hc');
-    expect(result).not.toContain('mg-card__vc');
+    expect(result).toContain('mg-card__vc');
+    expect(result).toContain('mg-card__book');
+    expect(result).not.toContain('mg-card__hc');
   });
 
-  it('keeps card-book classes intact for card-book mode', () => {
+  it('swaps hc classes to vc + book for card-book mode', () => {
     const result = swapCardVariant(TEASER_HC, 'card-book');
-    expect(result).toContain('mg-card__hc');
-    expect(result).toContain('mg-card-book__hc');
+    expect(result).toContain('mg-card__vc');
+    expect(result).toContain('mg-card__book');
+    expect(result).not.toContain('mg-card__hc');
+    expect(result).not.toContain('mg-card-book__hc');
   });
 
   it('preserves non-variant classes', () => {
@@ -83,13 +85,14 @@ describe('ResultItem', () => {
     expect(inner.className).not.toContain('mg-card__hc');
   });
 
-  it('renders teaser HTML with book classes for card-book mode', () => {
+  it('renders teaser HTML with vertical book classes for card-book mode', () => {
     render(<ResultItem hit={createHit()} displayMode="card-book" />);
 
     const wrapper = screen.getByRole('article');
     const inner = wrapper.querySelector('[class*="mg-card"]');
-    expect(inner.className).toContain('mg-card__hc');
-    expect(inner.className).toContain('mg-card-book__hc');
+    expect(inner.className).toContain('mg-card__vc');
+    expect(inner.className).toContain('mg-card__book');
+    expect(inner.className).not.toContain('mg-card__hc');
   });
 
   it('leaves teaser HTML unchanged for list mode', () => {

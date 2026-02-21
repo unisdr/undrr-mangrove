@@ -369,9 +369,8 @@ config: {
 }
 \`\`\`
 
-Uses \`.mg-card__hc mg-card-book__hc\` BEM classes. On wider screens, the book
-variant uses a horizontal layout within each card. Useful for publication-heavy
-search results.
+Uses \`.mg-card__vc mg-card__book\` BEM classes (vertical book card).
+Useful for publication-heavy search results.
         `,
       },
     },

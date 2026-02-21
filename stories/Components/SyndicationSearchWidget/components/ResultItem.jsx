@@ -27,9 +27,10 @@ export function swapCardVariant(html, displayMode) {
   if (!html || displayMode === 'list') return html;
   const stripped = html
     .replace(/\bmg-card__(?:vc|hc)\b/g, '')
-    .replace(/\bmg-card-book__hc\b/g, '');
+    .replace(/\bmg-card-book__hc\b/g, '')
+    .replace(/\bmg-card__book\b/g, '');
   const variant = displayMode === 'card-book'
-    ? 'mg-card__hc mg-card-book__hc'
+    ? 'mg-card__vc mg-card__book'
     : 'mg-card__vc';
   return stripped.replace(/class="([^"]*)"/, (_, cls) =>
     `class="${cls.trim()} ${variant}"`

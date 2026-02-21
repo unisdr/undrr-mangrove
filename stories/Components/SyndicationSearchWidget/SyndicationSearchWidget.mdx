@@ -53,6 +53,18 @@ Shows search performance metrics (score, interestingness, longevity) for debuggi
 
 <Canvas of={SyndicationSearchWidgetStories.DebugMetrics} meta={SyndicationSearchWidgetStories} />
 
+## Card display
+
+Renders search results as vertical cards in a responsive grid. `resultsPerPage` controls both the number of results and the grid column count.
+
+<Canvas of={SyndicationSearchWidgetStories.CardDisplay} meta={SyndicationSearchWidgetStories} />
+
+## Card book display
+
+Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-card__book` classes.
+
+<Canvas of={SyndicationSearchWidgetStories.CardBookDisplay} meta={SyndicationSearchWidgetStories} />
+
 ## Custom filters
 
 `customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
@@ -256,6 +268,7 @@ The component is loaded automatically on pages containing a container with `data
 | `allowedTypes` | object | `null` | Restrict content types shown |
 | `customFilters` | array | `[]` | Additional Elasticsearch filters |
 | `customFacets` | array | `[]` | Custom facet definitions |
+| `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
 
 ## Architecture
 
