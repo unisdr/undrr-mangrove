@@ -384,12 +384,13 @@ export const HiddenTeaserFields = {
   args: {
     config: {
       ...defaultConfig,
+      defaultSort: 'newest',
       visibleTeaserFields: {
-        image: false,
-        contentType: true,
+        image: true,
+        contentType: false,
         publicationType: false,
         date: true,
-        siteName: true,
+        siteName: false,
         summary: true,
         organization: false,
       },
@@ -403,15 +404,16 @@ Use \`visibleTeaserFields\` to hide specific fields from pre-rendered teaser HTM
 Set a field key to \`false\` to hide it, or \`true\` to keep it visible.
 \`null\` (default) shows all fields. Title is not toggleable.
 
-In this example, \`image\`, \`organization\`, and \`publicationType\` are hidden:
+In this example, \`contentType\`, \`publicationType\`, \`siteName\`, and \`organization\` are hidden.
+Results are sorted by date (\`defaultSort: 'newest'\`).
 
 \`\`\`js
 visibleTeaserFields: {
-  image: false,          // Card image (.mg-card__visual)
-  contentType: true,     // Content type badge (.st-tag--spl)
+  image: true,           // Card image (.mg-card__visual)
+  contentType: false,    // Content type badge (.st-tag--spl)
   publicationType: false,// Publication subtype (.field--name-field-undrr-publication-types)
   date: true,            // Publication date (.field--name-published-at)
-  siteName: true,        // Domain label (.mg-search__result-site-name)
+  siteName: false,       // Domain label (.mg-search__result-site-name)
   summary: true,         // Body text (.mg-card__content > p)
   organization: false,   // Organization name (.field--name-field-organization)
 }
