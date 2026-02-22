@@ -78,6 +78,8 @@ export const DefaultShowMore = {
       <div
         style={{
           maxWidth: '250px',
+          backgroundColor: '#f0e6d3',
+          padding: '1rem',
         }}
       >
         <ShowMore data={caption}></ShowMore>
