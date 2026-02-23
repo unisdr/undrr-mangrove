@@ -81,9 +81,83 @@ describe('Checkbox', () => {
     ).toBeInTheDocument();
   });
 
+  // --------------------------------------------------
+  // Error state
+  // --------------------------------------------------
+
+  it('renders error text with aria-invalid and role="alert"', () => {
+    render(
+      <Checkbox
+        label="Accept terms"
+        value="terms"
+        error
+        errorText="You must accept the terms"
+      />,
+    );
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'You must accept the terms',
+    );
+  });
+
+  it('links error text via aria-describedby', () => {
+    render(
+      <Checkbox
+        label="Accept terms"
+        value="terms"
+        error
+        errorText="You must accept the terms"
+      />,
+    );
+    const checkbox = screen.getByRole('checkbox');
+    const describedBy = checkbox.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(document.getElementById(describedBy)).toHaveTextContent(
+      'You must accept the terms',
+    );
+  });
+
+  it('does not set aria-invalid when error is false', () => {
+    render(<Checkbox label="Accept terms" value="terms" />);
+    expect(screen.getByRole('checkbox')).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('does not render error text when error is false', () => {
+    render(
+      <Checkbox label="Accept terms" value="terms" errorText="Should not appear" />,
+    );
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('applies error BEM class to input', () => {
+    const { container } = render(
+      <Checkbox label="Accept terms" value="terms" error errorText="Error" />,
+    );
+    expect(
+      container.querySelector('.mg-form-check__input--error'),
+    ).toBeInTheDocument();
+  });
+
+  // --------------------------------------------------
+  // Accessibility
+  // --------------------------------------------------
+
   it('has no a11y violations', async () => {
     const { container } = render(
       <Checkbox label="Accept terms" value="terms" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations in error state', async () => {
+    const { container } = render(
+      <Checkbox
+        label="Accept terms"
+        value="terms"
+        error
+        errorText="You must accept the terms"
+      />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

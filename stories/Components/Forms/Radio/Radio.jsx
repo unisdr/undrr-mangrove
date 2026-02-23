@@ -20,6 +20,8 @@ import PropTypes from 'prop-types';
  * @param {boolean} [props.defaultChecked]     Uncontrolled default checked state
  * @param {Function} [props.onChange]           Change handler
  * @param {boolean} [props.disabled=false]      Disable the radio button
+ * @param {boolean} [props.error=false]        Whether the radio button is in an error state
+ * @param {string} [props.errorText]           Error message displayed below the radio button
  * @param {string} [props.labelPosition='after'] Label position: 'before' or 'after'
  * @param {string} [props.className]           Additional CSS class for the wrapper
  */
@@ -32,17 +34,21 @@ export function Radio({
   defaultChecked,
   onChange,
   disabled = false,
+  error = false,
+  errorText,
   labelPosition = 'after',
   className,
   ...rest
 }) {
   const autoId = useId();
   const radioId = id || autoId;
+  const errorId = error && errorText ? `${radioId}-error` : undefined;
 
   const inputClassName = [
     'mg-form-check__input',
     'mg-form-check__input--radio',
     disabled && 'mg-form-check__input--disabled',
+    error && 'mg-form-check__input--error',
   ]
     .filter(Boolean)
     .join(' ');
@@ -67,11 +73,19 @@ export function Radio({
         defaultChecked={defaultChecked}
         onChange={onChange}
         disabled={disabled}
+        aria-invalid={error || undefined}
+        aria-describedby={errorId}
         {...(!label ? { 'aria-label': value } : {})}
         {...rest}
       />
 
       {labelPosition === 'after' && labelElement}
+
+      {error && errorText && (
+        <p className="mg-form-error" id={errorId} role="alert">
+          {errorText}
+        </p>
+      )}
     </div>
   );
 }
@@ -85,6 +99,8 @@ Radio.propTypes = {
   defaultChecked: PropTypes.bool,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
+  error: PropTypes.bool,
+  errorText: PropTypes.string,
   labelPosition: PropTypes.oneOf(['before', 'after']),
   className: PropTypes.string,
 };

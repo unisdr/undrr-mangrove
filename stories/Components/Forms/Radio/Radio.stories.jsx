@@ -13,6 +13,7 @@ const getCaptionForLocale = locale => {
           { label: 'متوسط', value: 'medium' },
           { label: 'مرتفع', value: 'high' },
         ],
+        errorText: 'يرجى تحديد خيار',
       };
     case 'burmese':
       return {
@@ -23,6 +24,7 @@ const getCaptionForLocale = locale => {
           { label: 'အလယ်', value: 'medium' },
           { label: 'မြင့်', value: 'high' },
         ],
+        errorText: 'ရွေးချယ်မှုတစ်ခုကိုရွေးချယ်ပါ',
       };
     case 'japanese':
       return {
@@ -33,6 +35,7 @@ const getCaptionForLocale = locale => {
           { label: '中', value: 'medium' },
           { label: '高', value: 'high' },
         ],
+        errorText: 'オプションを選択してください',
       };
     default:
       return {
@@ -43,6 +46,7 @@ const getCaptionForLocale = locale => {
           { label: 'Medium', value: 'medium' },
           { label: 'High', value: 'high' },
         ],
+        errorText: 'Please select an option',
       };
   }
 };
@@ -98,6 +102,22 @@ export const LabelBefore = {
         value="a"
         name="demo-before"
         labelPosition="before"
+        {...args}
+      />
+    );
+  },
+};
+
+export const ErrorState = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-error"
+        error
+        errorText={caption.errorText}
         {...args}
       />
     );

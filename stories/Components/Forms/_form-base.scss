@@ -184,6 +184,14 @@
         border-color: $mg-color-neutral-400;
       }
     }
+
+    &--error {
+      border-color: $mg-color-red-900;
+
+      &:hover {
+        border-color: $mg-color-red-900;
+      }
+    }
   }
 
   // Label next to checkbox/radio

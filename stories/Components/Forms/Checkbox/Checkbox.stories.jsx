@@ -14,6 +14,7 @@ const getCaptionForLocale = locale => {
           { label: 'تغير المناخ', value: 'climate' },
           { label: 'المرونة', value: 'resilience' },
         ],
+        errorText: 'يجب عليك قبول الشروط والأحكام',
       };
     case 'burmese':
       return {
@@ -25,6 +26,7 @@ const getCaptionForLocale = locale => {
           { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
           { label: 'ခံနိုင်ရည်', value: 'resilience' },
         ],
+        errorText: 'စည်းကမ်းချက်များကိုလက်ခံရပါမည်',
       };
     case 'japanese':
       return {
@@ -36,6 +38,7 @@ const getCaptionForLocale = locale => {
           { label: '気候変動', value: 'climate' },
           { label: 'レジリエンス', value: 'resilience' },
         ],
+        errorText: '利用規約に同意する必要があります',
       };
     default:
       return {
@@ -47,6 +50,7 @@ const getCaptionForLocale = locale => {
           { label: 'Climate change', value: 'climate' },
           { label: 'Resilience', value: 'resilience' },
         ],
+        errorText: 'You must accept the terms and conditions',
       };
   }
 };
@@ -99,6 +103,21 @@ export const LabelBefore = {
         label={caption.label}
         value={caption.value}
         labelPosition="before"
+        {...args}
+      />
+    );
+  },
+};
+
+export const ErrorState = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        error
+        errorText={caption.errorText}
         {...args}
       />
     );

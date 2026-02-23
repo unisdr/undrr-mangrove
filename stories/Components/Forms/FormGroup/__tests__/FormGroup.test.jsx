@@ -67,6 +67,29 @@ describe('FormGroup', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Select at least one');
   });
 
+  it('links error text to fieldset via aria-describedby', () => {
+    render(
+      <FormGroup legend="Options" error errorText="Select at least one">
+        <input type="checkbox" aria-label="A" />
+      </FormGroup>,
+    );
+    const fieldset = screen.getByRole('group');
+    const describedBy = fieldset.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(document.getElementById(describedBy)).toHaveTextContent(
+      'Select at least one',
+    );
+  });
+
+  it('does not set aria-describedby when error is false', () => {
+    render(
+      <FormGroup legend="Options">
+        <input type="checkbox" aria-label="A" />
+      </FormGroup>,
+    );
+    expect(screen.getByRole('group')).not.toHaveAttribute('aria-describedby');
+  });
+
   it('does not show error text when error is false', () => {
     render(
       <FormGroup legend="Options" errorText="Select at least one">

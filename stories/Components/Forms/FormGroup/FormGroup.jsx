@@ -5,7 +5,7 @@
  * @module FormGroup
  */
 
-import React from 'react';
+import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 
 /**
@@ -31,6 +31,9 @@ export function FormGroup({
   className,
   ...rest
 }) {
+  const autoId = useId();
+  const errorId = error && errorText ? `${autoId}-error` : undefined;
+
   const wrapperClassName = [
     'mg-form-group',
     disabled && 'mg-form-group--disabled',
@@ -48,11 +51,16 @@ export function FormGroup({
     .join(' ');
 
   return (
-    <fieldset className={wrapperClassName} disabled={disabled} {...rest}>
+    <fieldset
+      className={wrapperClassName}
+      disabled={disabled}
+      aria-describedby={errorId}
+      {...rest}
+    >
       <legend className={legendClassName}>{legend}</legend>
       {children}
       {error && errorText && (
-        <p className="mg-form-error" role="alert">
+        <p className="mg-form-error" id={errorId} role="alert">
           {errorText}
         </p>
       )}

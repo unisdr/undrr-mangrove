@@ -90,9 +90,86 @@ describe('Radio', () => {
     expect(radios[1]).not.toBeChecked();
   });
 
+  // --------------------------------------------------
+  // Error state
+  // --------------------------------------------------
+
+  it('renders error text with aria-invalid and role="alert"', () => {
+    render(
+      <Radio
+        label="Option A"
+        value="a"
+        name="test-error"
+        error
+        errorText="Please select an option"
+      />,
+    );
+    const radio = screen.getByRole('radio');
+    expect(radio).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Please select an option',
+    );
+  });
+
+  it('links error text via aria-describedby', () => {
+    render(
+      <Radio
+        label="Option A"
+        value="a"
+        name="test-error"
+        error
+        errorText="Please select an option"
+      />,
+    );
+    const radio = screen.getByRole('radio');
+    const describedBy = radio.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(document.getElementById(describedBy)).toHaveTextContent(
+      'Please select an option',
+    );
+  });
+
+  it('does not set aria-invalid when error is false', () => {
+    render(<Radio label="Option A" value="a" name="test" />);
+    expect(screen.getByRole('radio')).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('does not render error text when error is false', () => {
+    render(
+      <Radio label="Option A" value="a" name="test" errorText="Should not appear" />,
+    );
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('applies error BEM class to input', () => {
+    const { container } = render(
+      <Radio label="Option A" value="a" name="test" error errorText="Error" />,
+    );
+    expect(
+      container.querySelector('.mg-form-check__input--error'),
+    ).toBeInTheDocument();
+  });
+
+  // --------------------------------------------------
+  // Accessibility
+  // --------------------------------------------------
+
   it('has no a11y violations', async () => {
     const { container } = render(
       <Radio label="Option A" value="a" name="test" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations in error state', async () => {
+    const { container } = render(
+      <Radio
+        label="Option A"
+        value="a"
+        name="test-error"
+        error
+        errorText="Please select an option"
+      />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
