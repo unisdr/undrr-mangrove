@@ -99,14 +99,22 @@ function DetachedShowMore() {
 
   return (
     <div style={{ maxWidth: '400px' }}>
-      <div className="detached-content" style={{ backgroundColor: '#f0e6d3', padding: '1rem', marginBottom: '1rem' }}>
+      <div
+        className="detached-content"
+        style={{
+          backgroundColor: '#f0e6d3',
+          padding: '1rem',
+          marginBottom: '1rem',
+        }}
+      >
         <p>
           As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
-          and coordinates activities to create safer, more resilient communities.
-          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
-          and coordinates activities to create safer, more resilient communities.
-          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
-          and coordinates activities to create safer, more resilient communities.
+          and coordinates activities to create safer, more resilient
+          communities. As the UN Office for Disaster Risk Reduction, UNDRR
+          convenes partners and coordinates activities to create safer, more
+          resilient communities. As the UN Office for Disaster Risk Reduction,
+          UNDRR convenes partners and coordinates activities to create safer,
+          more resilient communities.
         </p>
       </div>
       <p style={{ marginBottom: '1rem', fontStyle: 'italic' }}>
