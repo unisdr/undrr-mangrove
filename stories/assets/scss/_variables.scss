@@ -333,7 +333,16 @@ $author-image-radius: 50%;
   * @tokens-end
   */
 
-// Legacy: Required by UNDP
+// @deprecated Legacy UNDP color variables — will be removed in a future major release.
+// Migrate to Mangrove's standard color tokens ($mg-color-{hue}-{shade}):
+//   $mg-color-green       → $mg-color-green-600 or a custom semantic variable
+//   $mg-color-green-light → $mg-color-green-200
+//   $mg-color-green-dark  → $mg-color-green-800
+//   $mg-color-yellow      → $mg-color-yellow-500
+//   $mg-color-yellow-light → $mg-color-yellow-100
+//   $mg-color-yellow-dark → $mg-color-yellow-700
+//   $mg-color-azure*      → $mg-color-blue-100 / $mg-color-neutral-100
+//   $mg-color-ebony-clay  → $mg-color-neutral-700
 $mg-color-green: #008484;
 $mg-color-green-light: #90ee90;
 $mg-color-yellow: #ff0;

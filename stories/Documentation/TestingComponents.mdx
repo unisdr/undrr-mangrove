@@ -210,16 +210,15 @@ it('updates value when changed', () => {
 #### Testing Conditional Rendering
 
 ```jsx
-it('shows content when expanded', () => {
-  render(<Accordion title="Accordion" isExpanded={false} />);
-  const button = screen.getByRole('button');
+it('shows tab content when clicked', () => {
+  render(<Tab tabdata={tabdata} />);
+  const tab = screen.getByText('Tab title 2');
 
-  // Initially content is not visible
-  expect(screen.queryByTestId('content')).not.toBeInTheDocument();
+  // Click the tab
+  fireEvent.click(tab);
 
-  // After clicking, content should be visible
-  fireEvent.click(button);
-  expect(screen.getByTestId('content')).toBeInTheDocument();
+  // Tab content should be visible
+  expect(screen.getByText(/Sendai Framework/)).toBeInTheDocument();
 });
 ```
 
