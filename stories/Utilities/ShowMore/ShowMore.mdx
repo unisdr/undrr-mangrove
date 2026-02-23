@@ -1,91 +1,91 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { ShowMore } from './ShowMore';
+import { Meta, Canvas, Source } from '@storybook/addon-docs/blocks';
 import * as ShowMoreStories from './ShowMore.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        showMoreData: [
-          {
-            button_text: 'Show more button text',
-            collapsable_wrapper_class: 'show-more-wrapper-class',
-            collapsable_text:
-              'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. ',
-          },
-        ],
-      };
-      return engText.showMoreData;
-    case 'arabic':
-      const arabicText = {
-        showMoreData: [
-          {
-            button_text: 'Needs translation',
-            collapsable_wrapper_class: 'show-more-wrapper-class',
-            collapsable_text:
-              'شير النص الوهمي إلى أجزاء المحتوى المستخدمة لملء نموذج موقع الويب. يساعد هذا النص مصممي الويب على تصور أفضل لكيفية ظهور موقع الويب كمنتج نهائي. من المهم أن نفهم أن النص الوهمي ليس له معنى على الإطلاق. والغرض الوحيد منه هو ملء الفراغات بمحتوى "يشبه الكلمات" ، دون القيام بأي انتهاك لحقوق النشر.',
-          },
-        ],
-      };
-      return arabicText.showMoreData;
-    case 'burmese':
-      const burmeseText = {
-        showMoreData: [
-          {
-            button_text: 'Needs translation',
-            collapsable_wrapper_class: 'show-more-wrapper-class',
-            collapsable_text:
-              'Dummy စာသားသည် ၀ က်ဘ်ဆိုက်၏လှောင်ပြောင်မှုကိုဖြည့်ရန်အသုံးပြုသောအကြောင်းအရာအနည်းငယ်ကိုရည်ညွှန်းသည်။ ဤစာသားသည် ၀ က်ဘ်ဒီဇိုင်နာများအနေဖြင့် ၀ က်ဘ်ဆိုက်သည်အချောထည်ထုတ်ကုန်တစ်ခုအဖြစ်မည်သို့ပုံဖော်ရန်စိတ်ကူးကောင်းမြင်နိုင်စေသည်။ dummy စာသားသည်မည်သည့်အဓိပ္ပါယ်မှမရှိကြောင်းနားလည်ရန်အရေးကြီးသည်။ ၎င်း၏တစ်ခုတည်းသောရည်ရွယ်ချက်မှာမူပိုင်ခွင့်ချိုးဖောက်မှုများကိုမပြုလုပ်ဘဲ အကြောင်းအရာဖြင့်ဖြည့်ရန်ဖြစ်သည်။',
-          },
-        ],
-      };
-      return burmeseText.showMoreData;
-    case 'japanese':
-      const japaneseText = {
-        showMoreData: [
-          {
-            button_text: 'Needs translation',
-            collapsable_wrapper_class: 'show-more-wrapper-class',
-            collapsable_text:
-              'ダミーテキストとは、Webサイトのモックアップを埋めるために使用されるコンテンツの一部を指します。このテキストは、WebデザイナーがWebサイトが完成品としてどのように見えるかをよりよく想像するのに役立ちます。ダミーテキストには何の意味もないことを理解することが重要です。その唯一の目的は、著作権を侵害することなく、「単語のような」コンテンツで空白を埋めることです。',
-          },
-        ],
-      };
-      return japaneseText.showMoreData;
-    default:
-      const dummy = {
-        showMoreData: [
-          {
-            button_text: 'Show more button text',
-            collapsable_wrapper_class: 'show-more-wrapper-class',
-            collapsable_text:
-              'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. ',
-          },
-        ],
-      };
-      return dummy.showMoreData;
-  }
-};
 
 <Meta of={ShowMoreStories} />
 
-# Show More
+# Show more
 
-Partly hide some text until the user clicks a button.
+A vanilla JavaScript utility that collapses content behind a "show more" button. This is **not a React component** — it works with plain HTML and is initialized by calling the `mgShowMore()` function. The React wrapper in Storybook is only used here for demonstration purposes.
 
-<Canvas of={ShowMoreStories.DefaultShowMore} meta={ShowMoreStories} />
+## Default
 
-### Usage:
+The button is placed directly after the collapsible content.
 
-- Copy the HTML from the HTML tab (Canvas) into your html file
-- Initialize the ShowMore function in document ready or window load by calling mgShowMore() function.
+<Canvas of={ShowMoreStories.DefaultShowMore} />
 
-### CSS and JS References
+## Detached button
 
-#### JS:
+The toggle button does not need to be inside or adjacent to the content container. Use `data-mg-show-more-target` to point it at any element on the page by CSS selector.
 
-- https://assets.undrr.org/static/mangrove/1.3.1/js/show-more.js
+<Canvas of={ShowMoreStories.DetachedButton} />
+
+## How it works
+
+The `mgShowMore()` function finds all elements with `data-mg-show-more` and wires up click handlers. On click, the targeted container's `mg-show-more--collapsed` class is toggled, which controls `max-height`, `overflow`, and a CSS `mask-image` fade.
+
+### HTML structure
+
+<Source language="html" code={`
+<!-- Content to collapse -->
+<div class="my-content">
+  <p>Long content goes here...</p>
+</div>
+
+<!-- Toggle button (can be anywhere on the page) -->
+<a href="#"
+   class="mg-button mg-button-primary mg-show-more--button"
+   data-mg-show-more="true"
+   data-mg-show-more-target=".my-content"
+   data-mg-show-more-label-open="Show less"
+   data-mg-show-more-label-collapsed="Show more">
+  Show more
+</a>
+`} />
+
+### Data attributes
+
+| Attribute | Required | Description |
+|---|---|---|
+| `data-mg-show-more` | Yes | Set to `"true"` on the toggle button to register it |
+| `data-mg-show-more-target` | No | CSS selector for the content container. Defaults to `".mg-show-more--container"` |
+| `data-mg-show-more-label-collapsed` | No | Button text when content is collapsed. Defaults to "Show more" |
+| `data-mg-show-more-label-open` | No | Button text when content is expanded. Defaults to "Show less" |
+
+### JavaScript initialization
+
+<Source language="html" code={`
+<!-- Load the script -->
+<script src="https://assets.undrr.org/static/mangrove/1.3.1/js/show-more.js"></script>
+
+<!-- The script auto-initializes on DOMContentLoaded. -->
+<!-- For dynamically added content, call mgShowMore() manually: -->
+<script>
+  mgShowMore();
+</script>
+`} />
+
+### Customizing the collapse height
+
+The collapsed height is controlled by the `--mg-show-more-height` CSS custom property (default: `200px`):
+
+<Source language="css" code={`
+/* Override globally */
+:root {
+  --mg-show-more-height: 150px;
+}
+
+/* Or per instance */
+.my-content {
+  --mg-show-more-height: 300px;
+}
+`} />
+
+### JS references
+
+- **JS**: https://assets.undrr.org/static/mangrove/1.3.1/js/show-more.js
 
 ### Changelog
+
+1.1 — Replaced white gradient overlay with CSS `mask-image` for background-agnostic fade effect
 
 1.0 — Released component
