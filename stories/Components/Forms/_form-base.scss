@@ -235,6 +235,47 @@
 }
 
 // -----------------------------------------------------------------------------
+// Form error summary
+// -----------------------------------------------------------------------------
+.mg-form-error-summary {
+  border: 2px solid $mg-color-red-900;
+  margin-bottom: $mg-spacing-200;
+  padding: $mg-spacing-100;
+
+  &:focus {
+    outline: 3px solid $mg-color-blue-800;
+    outline-offset: 0;
+  }
+
+  &__title {
+    @extend %paragraph-font-300;
+
+    color: $mg-color-red-900;
+    margin-bottom: $mg-spacing-50;
+    margin-top: 0;
+  }
+
+  &__list {
+    margin: 0;
+    padding-left: $mg-spacing-100;
+
+    li {
+      margin-bottom: $mg-spacing-25;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    a {
+      color: $mg-color-red-900;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
 // Screen-reader-only utility
 // -----------------------------------------------------------------------------
 .mg-u-sr-only {
