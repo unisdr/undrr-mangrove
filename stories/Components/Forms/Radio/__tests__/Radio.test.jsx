@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { Radio } from '../Radio';
+import { FormGroup } from '../../FormGroup/FormGroup';
 
 describe('Radio', () => {
   it('renders with a label', () => {
@@ -79,11 +80,10 @@ describe('Radio', () => {
 
   it('supports mutual exclusion within a group', () => {
     render(
-      <fieldset>
-        <legend>Choose</legend>
+      <FormGroup legend="Choose">
         <Radio label="A" value="a" name="group" defaultChecked />
         <Radio label="B" value="b" name="group" />
-      </fieldset>,
+      </FormGroup>,
     );
     const radios = screen.getAllByRole('radio');
     expect(radios[0]).toBeChecked();
@@ -99,11 +99,10 @@ describe('Radio', () => {
 
   it('has no a11y violations in a group', async () => {
     const { container } = render(
-      <fieldset>
-        <legend>Priority</legend>
+      <FormGroup legend="Priority">
         <Radio label="Low" value="low" name="priority" />
         <Radio label="High" value="high" name="priority" />
-      </fieldset>,
+      </FormGroup>,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

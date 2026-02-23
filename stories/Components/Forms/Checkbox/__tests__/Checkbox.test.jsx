@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { Checkbox } from '../Checkbox';
+import { FormGroup } from '../../FormGroup/FormGroup';
 
 describe('Checkbox', () => {
   it('renders with a label', () => {
@@ -89,11 +90,10 @@ describe('Checkbox', () => {
 
   it('has no a11y violations in a group', async () => {
     const { container } = render(
-      <fieldset>
-        <legend>Interests</legend>
+      <FormGroup legend="Interests">
         <Checkbox label="Option A" value="a" name="group" />
         <Checkbox label="Option B" value="b" name="group" />
-      </fieldset>,
+      </FormGroup>,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

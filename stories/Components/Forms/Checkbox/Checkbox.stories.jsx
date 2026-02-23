@@ -1,5 +1,6 @@
 import React from 'react';
 import { Checkbox } from './Checkbox';
+import { FormGroup } from '../FormGroup/FormGroup';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -108,8 +109,7 @@ export const CheckboxGroup = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
-      <fieldset>
-        <legend>{caption.legend}</legend>
+      <FormGroup legend={caption.legend}>
         {caption.items.map(item => (
           <Checkbox
             key={item.value}
@@ -119,7 +119,7 @@ export const CheckboxGroup = {
             {...args}
           />
         ))}
-      </fieldset>
+      </FormGroup>
     );
   },
 };

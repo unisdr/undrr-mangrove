@@ -9,7 +9,7 @@ A radio button for selecting a single option from a set.
 
 ## Overview
 
-The radio component allows users to select exactly one option from a group. Radio buttons with the same `name` attribute are mutually exclusive. Wrap groups in a `<fieldset>` with a `<legend>` for accessibility.
+The radio component allows users to select exactly one option from a group. Radio buttons with the same `name` attribute are mutually exclusive. Wrap groups in a `<FormGroup>` for accessibility.
 
 ## When to use
 
@@ -47,7 +47,7 @@ The radio component allows users to select exactly one option from a group. Radi
 ## Accessibility
 
 - The label is programmatically associated with the radio button via `htmlFor`/`id`.
-- For groups, wrap radios in a `<fieldset>` with a `<legend>`.
+- For groups, wrap radios in a `<FormGroup>` (renders `<fieldset>` with `<legend>`).
 - Keyboard users can navigate between radio buttons with arrow keys.
 
 ## Changelog
