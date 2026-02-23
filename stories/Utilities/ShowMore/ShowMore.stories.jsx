@@ -1,4 +1,6 @@
+import React, { useEffect } from 'react';
 import { ShowMore } from './ShowMore';
+import { mgShowMore } from '../../assets/js/show-more';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -88,4 +90,44 @@ export const DefaultShowMore = {
   },
 
   name: 'ShowMore',
+};
+
+function DetachedShowMore() {
+  useEffect(() => {
+    mgShowMore();
+  }, []);
+
+  return (
+    <div style={{ maxWidth: '400px' }}>
+      <div className="detached-content" style={{ backgroundColor: '#f0e6d3', padding: '1rem', marginBottom: '1rem' }}>
+        <p>
+          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
+          and coordinates activities to create safer, more resilient communities.
+          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
+          and coordinates activities to create safer, more resilient communities.
+          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
+          and coordinates activities to create safer, more resilient communities.
+        </p>
+      </div>
+      <p style={{ marginBottom: '1rem', fontStyle: 'italic' }}>
+        The button below is outside the content container. It targets the
+        content using <code>data-mg-show-more-target</code>.
+      </p>
+      <a
+        href="#"
+        className="mg-button mg-button-primary mg-show-more--button"
+        data-mg-show-more="true"
+        data-mg-show-more-target=".detached-content"
+        data-mg-show-more-label-open="Show less"
+        data-mg-show-more-label-collapsed="Show more"
+      >
+        Show more
+      </a>
+    </div>
+  );
+}
+
+export const DetachedButton = {
+  render: () => <DetachedShowMore />,
+  name: 'Detached button',
 };
