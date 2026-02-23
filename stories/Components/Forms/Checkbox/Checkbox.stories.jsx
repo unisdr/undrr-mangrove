@@ -4,13 +4,49 @@ import { Checkbox } from './Checkbox';
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'arabic':
-      return { label: 'فئة', value: 'فئة' };
+      return {
+        label: 'أوافق على الشروط والأحكام',
+        value: 'terms',
+        legend: 'اختر اهتماماتك',
+        items: [
+          { label: 'الحد من مخاطر الكوارث', value: 'drr' },
+          { label: 'تغير المناخ', value: 'climate' },
+          { label: 'المرونة', value: 'resilience' },
+        ],
+      };
     case 'burmese':
-      return { label: 'အမျိုးအစား', value: 'အမျိုးအစား' };
+      return {
+        label: 'စည်းကမ်းချက်များကိုလက်ခံပါသည်',
+        value: 'terms',
+        legend: 'သင်၏စိတ်ဝင်စားမှုများကိုရွေးချယ်ပါ',
+        items: [
+          { label: 'ဘေးအန္တရာယ်လျှော့ချရေး', value: 'drr' },
+          { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
+          { label: 'ခံနိုင်ရည်', value: 'resilience' },
+        ],
+      };
     case 'japanese':
-      return { label: 'カテゴリー', value: 'カテゴリー' };
+      return {
+        label: '利用規約に同意する',
+        value: 'terms',
+        legend: '興味のある分野を選択',
+        items: [
+          { label: '防災・減災', value: 'drr' },
+          { label: '気候変動', value: 'climate' },
+          { label: 'レジリエンス', value: 'resilience' },
+        ],
+      };
     default:
-      return { label: 'Category', value: 'category' };
+      return {
+        label: 'Accept terms and conditions',
+        value: 'terms',
+        legend: 'Select your interests',
+        items: [
+          { label: 'Disaster risk reduction', value: 'drr' },
+          { label: 'Climate change', value: 'climate' },
+          { label: 'Resilience', value: 'resilience' },
+        ],
+      };
   }
 };
 
@@ -20,50 +56,70 @@ export default {
 };
 
 export const Default = {
-  args: {
-    label: 'Accept terms and conditions',
-    value: 'terms',
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Checkbox label={caption.label} value={caption.value} {...args} />;
   },
 };
 
 export const Checked = {
-  args: {
-    label: 'Accept terms and conditions',
-    value: 'terms',
-    defaultChecked: true,
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        defaultChecked
+        {...args}
+      />
+    );
   },
 };
 
 export const Disabled = {
-  args: {
-    label: 'Accept terms and conditions',
-    value: 'terms',
-    disabled: true,
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        disabled
+        {...args}
+      />
+    );
   },
 };
 
 export const LabelBefore = {
-  args: {
-    label: 'Accept terms and conditions',
-    value: 'terms',
-    labelPosition: 'before',
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        labelPosition="before"
+        {...args}
+      />
+    );
   },
 };
 
 export const CheckboxGroup = {
-  render: () => (
-    <fieldset>
-      <legend>Select your interests</legend>
-      <Checkbox label="Disaster risk reduction" value="drr" name="interests" />
-      <Checkbox label="Climate change" value="climate" name="interests" />
-      <Checkbox label="Resilience" value="resilience" name="interests" />
-    </fieldset>
-  ),
-};
-
-export const Localized = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Checkbox label={caption.label} value={caption.value} {...args} />;
+    return (
+      <fieldset>
+        <legend>{caption.legend}</legend>
+        {caption.items.map(item => (
+          <Checkbox
+            key={item.value}
+            label={item.label}
+            value={item.value}
+            name="interests"
+            {...args}
+          />
+        ))}
+      </fieldset>
+    );
   },
 };

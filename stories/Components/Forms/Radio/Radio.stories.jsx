@@ -4,13 +4,45 @@ import { Radio } from './Radio';
 const getCaptionForLocale = locale => {
   switch (locale) {
     case 'arabic':
-      return { label: 'فئة' };
+      return {
+        label: 'الخيار أ',
+        legend: 'حدد أولوية',
+        items: [
+          { label: 'منخفض', value: 'low' },
+          { label: 'متوسط', value: 'medium' },
+          { label: 'مرتفع', value: 'high' },
+        ],
+      };
     case 'burmese':
-      return { label: 'အမျိုးအစား' };
+      return {
+        label: 'ရွေးချယ်မှု A',
+        legend: 'ဦးစားပေးကိုရွေးချယ်ပါ',
+        items: [
+          { label: 'နိမ့်', value: 'low' },
+          { label: 'အလယ်', value: 'medium' },
+          { label: 'မြင့်', value: 'high' },
+        ],
+      };
     case 'japanese':
-      return { label: 'カテゴリー' };
+      return {
+        label: 'オプション A',
+        legend: '優先度を選択',
+        items: [
+          { label: '低', value: 'low' },
+          { label: '中', value: 'medium' },
+          { label: '高', value: 'high' },
+        ],
+      };
     default:
-      return { label: 'Category' };
+      return {
+        label: 'Option A',
+        legend: 'Select a priority',
+        items: [
+          { label: 'Low', value: 'low' },
+          { label: 'Medium', value: 'medium' },
+          { label: 'High', value: 'high' },
+        ],
+      };
   }
 };
 
@@ -20,61 +52,73 @@ export default {
 };
 
 export const Default = {
-  args: {
-    label: 'Option A',
-    value: 'a',
-    name: 'demo',
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Radio label={caption.label} value="a" name="demo" {...args} />;
   },
 };
 
 export const Selected = {
-  args: {
-    label: 'Option A',
-    value: 'a',
-    name: 'demo-selected',
-    defaultChecked: true,
-  },
-};
-
-export const Disabled = {
-  args: {
-    label: 'Option A',
-    value: 'a',
-    name: 'demo-disabled',
-    disabled: true,
-  },
-};
-
-export const LabelBefore = {
-  args: {
-    label: 'Option A',
-    value: 'a',
-    name: 'demo-before',
-    labelPosition: 'before',
-  },
-};
-
-export const RadioGroup = {
-  render: () => (
-    <fieldset>
-      <legend>Select a priority</legend>
-      <Radio label="Low" value="low" name="priority" />
-      <Radio label="Medium" value="medium" name="priority" />
-      <Radio label="High" value="high" name="priority" />
-    </fieldset>
-  ),
-};
-
-export const Localized = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
       <Radio
         label={caption.label}
-        value="localized"
-        name="localized"
+        value="a"
+        name="demo-selected"
+        defaultChecked
         {...args}
       />
+    );
+  },
+};
+
+export const Disabled = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-disabled"
+        disabled
+        {...args}
+      />
+    );
+  },
+};
+
+export const LabelBefore = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-before"
+        labelPosition="before"
+        {...args}
+      />
+    );
+  },
+};
+
+export const RadioGroup = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <fieldset>
+        <legend>{caption.legend}</legend>
+        {caption.items.map(item => (
+          <Radio
+            key={item.value}
+            label={item.label}
+            value={item.value}
+            name="priority"
+            {...args}
+          />
+        ))}
+      </fieldset>
     );
   },
 };

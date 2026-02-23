@@ -7,21 +7,21 @@ const getCaptionForLocale = locale => {
         label: 'تسمية النموذج',
         placeholder: 'نائب',
         helpText: '8 أحرف كحد أدنى',
-        errorText: '* خطأ: هذا الحقل مطلوب',
+        errorText: 'هذا الحقل مطلوب',
       };
     case 'burmese':
       return {
         label: 'ပုံစံတံဆိပ်',
         placeholder: 'နေရာယူသည်',
         helpText: 'အနည်းဆုံးစာလုံး ၈ လုံး',
-        errorText: '*အမှား - ဤအကွက်လိုအပ်သည်',
+        errorText: 'ဤအကွက်လိုအပ်သည်',
       };
     case 'japanese':
       return {
         label: 'フォームラベル',
         placeholder: 'プレースホルダー',
         helpText: '最小8文字',
-        errorText: '*エラー：このフィールドは必須です',
+        errorText: 'このフィールドは必須です',
       };
     default:
       return {
@@ -54,92 +54,126 @@ export default {
 };
 
 export const Default = {
-  args: {
-    label: 'Full name',
-    placeholder: 'Enter your name',
-  },
-};
-
-export const WithHelpText = {
-  args: {
-    label: 'Password',
-    type: 'password',
-    placeholder: 'Enter password',
-    helpText: '8 characters minimum',
-  },
-};
-
-export const ErrorState = {
-  args: {
-    label: 'Email address',
-    type: 'email',
-    placeholder: 'you@example.com',
-    error: true,
-    errorText: 'This field is required',
-  },
-};
-
-export const Disabled = {
-  args: {
-    label: 'Full name',
-    placeholder: 'Enter your name',
-    disabled: true,
-  },
-};
-
-export const Required = {
-  args: {
-    label: 'Full name',
-    placeholder: 'Enter your name',
-    required: true,
-  },
-};
-
-export const TypeDate = {
-  args: {
-    label: 'Date of birth',
-    type: 'date',
-  },
-  name: 'Date',
-};
-
-export const TypeNumber = {
-  args: {
-    label: 'Number of projects',
-    type: 'number',
-    placeholder: '0',
-  },
-  name: 'Number',
-};
-
-export const TypeTelephone = {
-  args: {
-    label: 'Phone number',
-    type: 'tel',
-    placeholder: '+234 000 000 0000',
-  },
-  name: 'Telephone',
-};
-
-export const TypeSearch = {
-  args: {
-    label: 'Search',
-    type: 'search',
-    placeholder: 'Enter search term',
-  },
-  name: 'Search',
-};
-
-export const Localized = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
       <TextInput
         label={caption.label}
         placeholder={caption.placeholder}
+        {...args}
+      />
+    );
+  },
+};
+
+export const WithHelpText = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        type="password"
+        placeholder={caption.placeholder}
         helpText={caption.helpText}
         {...args}
       />
     );
   },
+};
+
+export const ErrorState = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        type="email"
+        placeholder={caption.placeholder}
+        error
+        errorText={caption.errorText}
+        {...args}
+      />
+    );
+  },
+};
+
+export const Disabled = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        placeholder={caption.placeholder}
+        disabled
+        {...args}
+      />
+    );
+  },
+};
+
+export const Required = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        placeholder={caption.placeholder}
+        required
+        {...args}
+      />
+    );
+  },
+};
+
+export const TypeDate = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <TextInput label={caption.label} type="date" {...args} />;
+  },
+  name: 'Date',
+};
+
+export const TypeNumber = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        type="number"
+        placeholder="0"
+        {...args}
+      />
+    );
+  },
+  name: 'Number',
+};
+
+export const TypeTelephone = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        type="tel"
+        placeholder={caption.placeholder}
+        {...args}
+      />
+    );
+  },
+  name: 'Telephone',
+};
+
+export const TypeSearch = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <TextInput
+        label={caption.label}
+        type="search"
+        placeholder={caption.placeholder}
+        {...args}
+      />
+    );
+  },
+  name: 'Search',
 };
