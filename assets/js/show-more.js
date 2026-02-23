@@ -5,6 +5,9 @@ export function mgShowMore() {
   const mgShowMoreButtons = document.querySelectorAll('[data-mg-show-more]');
 
   mgShowMoreButtons.forEach(item => {
+    if (item.dataset.mgShowMoreInitialized) return;
+    item.dataset.mgShowMoreInitialized = 'true';
+
     item.dataset.dataVfGoogleAnalyticsLabel =
       'Show more: ' + item.dataset.mgShowMoreLabelCollapsed || `Show more`;
 
