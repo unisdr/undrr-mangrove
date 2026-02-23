@@ -1,21 +1,16 @@
+import React from 'react';
 import { Checkbox } from './Checkbox';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
-    case 'english':
-      const engText = { label: 'Category', value: 'category' };
-      return engText;
     case 'arabic':
-      const arabicText = { label: 'فئة', value: 'فئة' };
-      return arabicText;
+      return { label: 'فئة', value: 'فئة' };
     case 'burmese':
-      const burmeseText = { label: 'အမျိုးအစား', value: 'အမျိုးအစား' };
-      return burmeseText;
+      return { label: 'အမျိုးအစား', value: 'အမျိုးအစား' };
     case 'japanese':
-      const japaneseText = { label: 'カテゴリー', value: 'カテゴリー' };
-      return japaneseText;
+      return { label: 'カテゴリー', value: 'カテゴリー' };
     default:
-      return { label: 'Category' };
+      return { label: 'Category', value: 'category' };
   }
 };
 
@@ -24,17 +19,51 @@ export default {
   component: Checkbox,
 };
 
-export const DefaultCheckbox = {
+export const Default = {
+  args: {
+    label: 'Accept terms and conditions',
+    value: 'terms',
+  },
+};
+
+export const Checked = {
+  args: {
+    label: 'Accept terms and conditions',
+    value: 'terms',
+    defaultChecked: true,
+  },
+};
+
+export const Disabled = {
+  args: {
+    label: 'Accept terms and conditions',
+    value: 'terms',
+    disabled: true,
+  },
+};
+
+export const LabelBefore = {
+  args: {
+    label: 'Accept terms and conditions',
+    value: 'terms',
+    labelPosition: 'before',
+  },
+};
+
+export const CheckboxGroup = {
+  render: () => (
+    <fieldset>
+      <legend>Select your interests</legend>
+      <Checkbox label="Disaster risk reduction" value="drr" name="interests" />
+      <Checkbox label="Climate change" value="climate" name="interests" />
+      <Checkbox label="Resilience" value="resilience" name="interests" />
+    </fieldset>
+  ),
+};
+
+export const Localized = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return (
-      <Checkbox
-        label={caption.label}
-        value={caption.value}
-        id="edit-checkbox"
-      ></Checkbox>
-    );
+    return <Checkbox label={caption.label} value={caption.value} {...args} />;
   },
-
-  name: 'Checkbox',
 };

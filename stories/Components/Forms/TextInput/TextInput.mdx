@@ -1,0 +1,72 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import * as TextInputStories from './TextInput.stories';
+
+<Meta of={TextInputStories} />
+
+# Text input
+
+A single-line text field for user input.
+
+## Overview
+
+The text input component supports multiple types (text, email, password, number, telephone, search, date, URL) with consistent styling and accessibility features. Each input includes a label, optional help text, and error states.
+
+## When to use
+
+- When the user needs to enter a short, single-line value.
+- Use `type` to match the expected data format (e.g., `email`, `tel`, `date`).
+
+## States
+
+- **Default**: Ready for input.
+- **Focus**: Blue outline on keyboard focus.
+- **Disabled**: Greyed out, non-interactive.
+- **Error**: Red border with an error message below.
+
+<Canvas of={TextInputStories.Default} />
+
+<Controls of={TextInputStories.Default} />
+
+### With help text
+
+<Canvas of={TextInputStories.WithHelpText} />
+
+### Error state
+
+<Canvas of={TextInputStories.ErrorState} />
+
+### Disabled
+
+<Canvas of={TextInputStories.Disabled} />
+
+### Required
+
+<Canvas of={TextInputStories.Required} />
+
+### Date
+
+<Canvas of={TextInputStories.TypeDate} />
+
+### Number
+
+<Canvas of={TextInputStories.TypeNumber} />
+
+### Telephone
+
+<Canvas of={TextInputStories.TypeTelephone} />
+
+### Search
+
+<Canvas of={TextInputStories.TypeSearch} />
+
+## Accessibility
+
+- The label is programmatically associated with the input via `htmlFor`/`id`.
+- When `hideLabel` is true, the label is visually hidden but remains accessible to screen readers.
+- Help text and error text are linked to the input via `aria-describedby`.
+- Error state sets `aria-invalid="true"` and wraps the error message in `role="alert"`.
+- If no label is provided, `aria-label` falls back to the `placeholder` value.
+
+## Changelog
+
+2.0 — Rewritten with BEM classes, accessibility, and PropTypes (replaces InputFields)

@@ -30,8 +30,11 @@
 
 // Components
 @import "../../Components/Boilerplate/boilerplate";
+@import "../../Components/Forms/form-base";
+@import "../../Components/Forms/form-legacy";
+@import "../../Components/Forms/TextInput/text-input";
+@import "../../Components/Forms/Textarea/textarea";
 @import "../../Components/Forms/Checkbox/checkbox";
-@import "../../Components/Forms/InputFields/input-fields";
 @import "../../Components/Forms/Radio/radio";
 @import "../../Components/Forms/Select/select";
 @import "../../Components/Breadcrumbs/breadcrumbs";

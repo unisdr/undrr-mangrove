@@ -1,17 +1,92 @@
-import React from 'react';
-// import './radio.scss';
-// import '../../../assets/scss/_typography.scss';
+/**
+ * @file Radio.jsx
+ * @description Radio button input with label support and accessible states.
+ *
+ * @module Radio
+ */
 
-export function Radio({ label, id, name, label_pos }) {
+import React, { useId } from 'react';
+import PropTypes from 'prop-types';
+
+/**
+ * Radio component.
+ *
+ * @param {Object} props
+ * @param {string} [props.id]                  Custom id for the radio button
+ * @param {string} [props.name]                Name attribute (shared within a group)
+ * @param {string} [props.label]               Label text
+ * @param {string} [props.value]               Value attribute
+ * @param {boolean} [props.checked]            Controlled checked state
+ * @param {boolean} [props.defaultChecked]     Uncontrolled default checked state
+ * @param {Function} [props.onChange]           Change handler
+ * @param {boolean} [props.disabled=false]      Disable the radio button
+ * @param {string} [props.labelPosition='after'] Label position: 'before' or 'after'
+ * @param {string} [props.className]           Additional CSS class for the wrapper
+ */
+export function Radio({
+  id,
+  name,
+  label,
+  value,
+  checked,
+  defaultChecked,
+  onChange,
+  disabled = false,
+  labelPosition = 'after',
+  className,
+  ...rest
+}) {
+  const autoId = useId();
+  const radioId = id || autoId;
+
+  const inputClassName = [
+    'mg-form-check__input',
+    'mg-form-check__input--radio',
+    disabled && 'mg-form-check__input--disabled',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const labelElement = label && (
+    <label className="mg-form-check__label" htmlFor={radioId}>
+      {label}
+    </label>
+  );
+
   return (
-    <div className="form-check">
-      {label && label_pos == 'before' && <label htmlFor={id}>{label}</label>}
-      <input type="radio" id={id} value="" name={name} />
-      {label && label_pos == 'after' && <label htmlFor={id}>{label}</label>}
+    <div className={['mg-form-check', className].filter(Boolean).join(' ')}>
+      {labelPosition === 'before' && labelElement}
+
+      <input
+        className={inputClassName}
+        type="radio"
+        id={radioId}
+        name={name}
+        value={value}
+        checked={checked}
+        defaultChecked={defaultChecked}
+        onChange={onChange}
+        disabled={disabled}
+        {...(!label ? { 'aria-label': value } : {})}
+        {...rest}
+      />
+
+      {labelPosition === 'after' && labelElement}
     </div>
   );
 }
 
-Radio.defaultProps = {
-  label_pos: 'after',
+Radio.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.string,
+  checked: PropTypes.bool,
+  defaultChecked: PropTypes.bool,
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool,
+  labelPosition: PropTypes.oneOf(['before', 'after']),
+  className: PropTypes.string,
 };
+
+export default Radio;

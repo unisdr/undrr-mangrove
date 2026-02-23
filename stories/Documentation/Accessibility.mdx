@@ -51,14 +51,13 @@ Visit W3C WCAG for more detail https://www.w3.org/TR/WCAG21/
 **Form Fields**
 
 ```jsx
-<InputFields
+<TextInput
   type="email"
-  element="input"
-  labelText="Email Address"
+  label="Email address"
   helpText="We'll never share your email with anyone"
+  error
   errorText="Please enter a valid email address"
   id="email"
-  aria-describedby="email-help email-error"
   required
 />
 ```

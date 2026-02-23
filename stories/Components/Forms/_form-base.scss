@@ -1,0 +1,269 @@
+// Shared BEM-scoped form styles for Mangrove form components.
+// All form components import this partial for consistent base styling.
+
+// -----------------------------------------------------------------------------
+// Field wrapper
+// -----------------------------------------------------------------------------
+.mg-form-field {
+  display: block;
+  margin-bottom: $mg-spacing-100;
+}
+
+// -----------------------------------------------------------------------------
+// Label
+// -----------------------------------------------------------------------------
+.mg-form-label {
+  @extend %paragraph-font-300;
+
+  display: block;
+
+  &--disabled {
+    color: $mg-color-neutral-400;
+  }
+
+  &--required::after {
+    color: $mg-color-red-900;
+    content: " *";
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Text input
+// -----------------------------------------------------------------------------
+%mg-form-input-base {
+  @extend %background-white;
+
+  appearance: none;
+  border: 2px solid $mg-color-black;
+  border-radius: 0;
+  box-sizing: border-box;
+  display: block;
+  font-family: $mg-font-family;
+  font-size: $mg-font-size-300;
+  height: 46px;
+  margin-top: $mg-spacing-25;
+  padding: 0.625rem;
+  width: 100%;
+
+  &::placeholder {
+    color: $mg-color-neutral-500;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 4px $mg-color-blue-800;
+    outline: 0;
+  }
+}
+
+.mg-form-input {
+  @extend %mg-form-input-base;
+
+  &--disabled {
+    background-color: $mg-color-white;
+    border-color: $mg-color-neutral-400;
+    color: $mg-color-neutral-400;
+
+    &::placeholder {
+      color: $mg-color-neutral-400;
+    }
+  }
+
+  &--error {
+    border-color: $mg-color-red-900;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Textarea
+// -----------------------------------------------------------------------------
+.mg-form-textarea {
+  @extend %mg-form-input-base;
+
+  height: auto;
+  max-width: 100%;
+  resize: vertical;
+
+  &--disabled {
+    background-color: $mg-color-white;
+    border-color: $mg-color-neutral-400;
+    color: $mg-color-neutral-400;
+
+    &::placeholder {
+      color: $mg-color-neutral-400;
+    }
+  }
+
+  &--error {
+    border-color: $mg-color-red-900;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Select
+// -----------------------------------------------------------------------------
+.mg-form-select {
+  @extend %background-white;
+
+  appearance: none;
+  border: 2px solid $mg-color-black;
+  border-radius: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-family: $mg-font-family;
+  font-size: $mg-font-size-300;
+  height: 46px;
+  margin-top: $mg-spacing-25;
+  padding: 0.625rem;
+  padding-right: $mg-spacing-200;
+  width: 100%;
+
+  // Custom dropdown arrow
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231a1a1a' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-position: right 0.625rem center;
+  background-repeat: no-repeat;
+
+  &:focus-visible {
+    box-shadow: 0 0 4px $mg-color-blue-800;
+    outline: 0;
+  }
+
+  &--disabled {
+    background-color: $mg-color-white;
+    border-color: $mg-color-neutral-400;
+    color: $mg-color-neutral-400;
+    cursor: default;
+  }
+
+  &--error {
+    border-color: $mg-color-red-900;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Checkbox / Radio shared (check group)
+// -----------------------------------------------------------------------------
+.mg-form-check {
+  align-items: center;
+  display: flex;
+  position: relative;
+
+  // Base input (shared between checkbox and radio)
+  &__input {
+    appearance: none;
+    border: 2px solid $mg-color-red-900;
+    cursor: pointer;
+    height: 16px;
+    margin: 0;
+    width: 16px;
+
+    &:hover {
+      border-color: $sendai-purple-400;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 4px $mg-color-blue-800;
+      outline: 0;
+    }
+
+    &--checkbox {
+      border-radius: 0;
+    }
+
+    &--radio {
+      background-color: transparent;
+      border-radius: 100%;
+      box-shadow: inset 0 0 0 $mg-color-white;
+    }
+
+    &--disabled {
+      border-color: $mg-color-neutral-400;
+      cursor: default;
+
+      &:hover {
+        border-color: $mg-color-neutral-400;
+      }
+    }
+  }
+
+  // Label next to checkbox/radio
+  &__label {
+    cursor: pointer;
+    font-size: $mg-font-size-300;
+    padding: 0 7px;
+  }
+}
+
+// Checked states (must be outside BEM nesting for specificity)
+.mg-form-check__input--radio:checked {
+  background-color: $mg-color-red-900;
+  box-shadow: inset 0 0 0 3px $mg-color-white;
+}
+
+// -----------------------------------------------------------------------------
+// Help text
+// -----------------------------------------------------------------------------
+.mg-form-help {
+  color: $mg-color-neutral-500;
+  font-size: $mg-font-size-200;
+  margin-bottom: 0;
+  margin-top: $mg-spacing-25;
+}
+
+// -----------------------------------------------------------------------------
+// Error text
+// -----------------------------------------------------------------------------
+.mg-form-error {
+  color: $mg-color-red-900;
+  font-size: $mg-font-size-300;
+  margin-bottom: 0;
+  margin-top: $mg-spacing-25;
+}
+
+// -----------------------------------------------------------------------------
+// Screen-reader-only utility
+// -----------------------------------------------------------------------------
+.mg-u-sr-only {
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+// -----------------------------------------------------------------------------
+// RTL overrides
+// -----------------------------------------------------------------------------
+[dir="rtl"] {
+  .mg-form-select {
+    background-position: left 0.625rem center;
+    padding-left: $mg-spacing-200;
+    padding-right: 0.625rem;
+  }
+
+  .mg-form-input[type="date"]::-webkit-calendar-picker-indicator {
+    left: inherit;
+    position: absolute;
+    right: 27px;
+  }
+
+  .mg-form-input[type="date"]::-webkit-date-and-time-value {
+    margin-right: 0;
+    text-align: right;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Arabic font override
+// -----------------------------------------------------------------------------
+:lang(ar) {
+  .mg-form-input,
+  .mg-form-textarea,
+  .mg-form-select {
+    font-family: $mg-font-family-arabic-body;
+  }
+}

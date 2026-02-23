@@ -1,0 +1,59 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import * as SelectStories from './Select.stories';
+
+<Meta of={SelectStories} />
+
+# Select
+
+A native dropdown select for choosing from a list of options.
+
+## Overview
+
+The select component provides a native `<select>` dropdown with consistent styling, label support, and accessible error/help states. It uses the browser's native select behavior for maximum compatibility.
+
+## When to use
+
+- When the user needs to choose a single option from a predefined list.
+- For lists of 4 or more options (for fewer options, consider radio buttons).
+
+## States
+
+- **Default**: Ready for selection.
+- **Focus**: Blue outline on keyboard focus.
+- **Disabled**: Greyed out, non-interactive.
+- **Error**: Red border with an error message below.
+
+<Canvas of={SelectStories.Default} />
+
+<Controls of={SelectStories.Default} />
+
+### With help text
+
+<Canvas of={SelectStories.WithHelpText} />
+
+### Error state
+
+<Canvas of={SelectStories.ErrorState} />
+
+### Disabled
+
+<Canvas of={SelectStories.Disabled} />
+
+### Required
+
+<Canvas of={SelectStories.Required} />
+
+### With disabled option
+
+<Canvas of={SelectStories.WithDisabledOption} />
+
+## Accessibility
+
+- The label is programmatically associated with the select via `htmlFor`/`id`.
+- Help text and error text are linked via `aria-describedby`.
+- Error state sets `aria-invalid="true"` and wraps the error message in `role="alert"`.
+- Uses native `<select>` for full keyboard and screen reader support.
+
+## Changelog
+
+2.0 — Rewritten from stub with options prop, BEM classes, and accessibility
