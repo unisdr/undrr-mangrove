@@ -17,31 +17,33 @@ export default {
   },
 };
 
-const Template = args => <PageHeader {...args} />;
-
-export const Default = Template.bind({});
-Default.args = {
-  variant: 'default',
+export const Default = {
+  args: {
+    variant: 'default',
+  },
 };
 
-export const DecorationOnly = Template.bind({});
-DecorationOnly.args = {
-  variant: 'decoration-only',
+export const DecorationOnly = {
+  args: {
+    variant: 'decoration-only',
+  },
 };
 
-export const WithCustomLanguages = Template.bind({});
-WithCustomLanguages.args = {
-  variant: 'default',
-  languages: [
-    { value: 'ch', label: 'Cheese speak', selected: true },
-    { value: 'es', label: 'Español' },
-    { value: 'fr', label: 'Français' },
-    { value: 'ar', label: 'العربية' },
-  ],
+export const WithCustomLanguages = {
+  args: {
+    variant: 'default',
+    languages: [
+      { value: 'ch', label: 'Cheese speak', selected: true },
+      { value: 'es', label: 'Español' },
+      { value: 'fr', label: 'Français' },
+      { value: 'ar', label: 'العربية' },
+    ],
+  },
 };
 
-export const WithCustomClass = Template.bind({});
-WithCustomClass.args = {
-  variant: 'default',
-  className: 'custom-header-class',
+export const WithCustomClass = {
+  args: {
+    variant: 'default',
+    className: 'custom-header-class',
+  },
 };

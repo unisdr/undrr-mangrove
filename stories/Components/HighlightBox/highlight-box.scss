@@ -1,0 +1,99 @@
+// Highlight box component (RTL-safe)
+// https://gitlab.com/undrr/web-backlog/-/issues/1678
+// Variables and mixins are imported at the theme level via @use in mangrove.scss
+// Do not import them here to avoid duplication
+
+.mg-highlight-box {
+  padding-block: 1rem;
+  padding-inline: 1.5rem;
+  padding-bottom: 2rem;
+  box-shadow: inset 0 -8px 0 0 rgb(0 0 0 / 0.3);
+  display: block;
+  width: 100%;
+  border: 1px solid rgb(0 0 0 / 0.3);
+
+  // Responsive embed for iframes inside highlight-box
+  &:has(iframe) {
+    position: relative;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    height: 100%;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    max-width: 100%;
+  }
+}
+
+// Tone variants
+.mg-highlight-box--primary {
+  background: var(--button-color-background, #{$mg-color-blue-900});
+}
+
+.mg-highlight-box--secondary {
+  background: var(--tag-color-background-purple, #{$sendai-purple});
+}
+
+.mg-highlight-box--primary,
+.mg-highlight-box--secondary {
+  border: none;
+  box-shadow: inset 0 -8px 0 0 rgb(255 255 255 / 0.5);
+  color: $mg-color-white;
+
+  a,
+  a:hover,
+  a:visited {
+    color: inherit;
+  }
+}
+
+// Width / layout variants
+// .mg-highlight-box--full {
+//   // nothing special, leaving as a footnote
+// }
+
+.mg-highlight-box--centered {
+  width: 80%;
+  margin-inline: auto;
+}
+
+// Float variants default to stacked on small screens
+// and support for CKEditor's specific image float functionality
+// https://gitlab.com/undrr/web-backlog/-/issues/2520
+.align-left.custom-media,
+.align-right.custom-media,
+figure.align-right,
+figure.align-left,
+.mg-highlight-box--float-start,
+.mg-highlight-box--float-end {
+  width: 100%;
+  margin-inline: 0;
+  float: none;
+}
+
+@include devicebreak(medium) {
+  .align-left.custom-media,
+  figure.align-left,
+  .mg-highlight-box--float-start {
+    float: inline-start;
+    width: 30%;
+    margin-inline-end: 2rem;
+  }
+  .align-right.custom-media,
+  figure.align-right,
+  .mg-highlight-box--float-end {
+    float: inline-end;
+    width: 30%;
+    margin-inline-start: 2rem;
+  }
+}
+
+// An integration to ensure CKEditor's `blockquote > p.mg-highlight-box` is integrated well
+blockquote:has(.mg-highlight-box) {
+  padding: unset;
+  margin: unset;
+  border-left: none;
+}

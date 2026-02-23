@@ -5,8 +5,8 @@ import { Heading } from '../../Atom/Typography/Heading/Heading';
 export function SectionHeader({ headerText, descriptionText }) {
   return (
     <div className="header__wrapper">
-      <Heading type="2" label={headerText} />
-      <Heading type="4" label={descriptionText} />
+      <Heading type="2">{headerText}</Heading>
+      <Heading type="4">{descriptionText}</Heading>
     </div>
   );
 }

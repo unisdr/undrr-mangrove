@@ -105,7 +105,6 @@ import {
   InputFields,
   Breadcrumbs,
   StatsCards,
-  Accordion,
   Pagination
 } from '@undrr/undrr-mangrove';
 
@@ -149,7 +148,7 @@ function App() {
 
   const cardData = [
     {
-      contenttile: 'REPORT',
+      contenttile: 'Report',
       title: 'Global Assessment Report on Disaster Risk Reduction 2024',
       summaryText: 'This comprehensive report examines global progress in reducing disaster risk and building resilience across communities worldwide.',
       button: 'Read Report',
@@ -158,32 +157,13 @@ function App() {
       imgback: 'https://via.placeholder.com/300x200?text=GAR+2024'
     },
     {
-      contenttile: 'TOOLKIT',
+      contenttile: 'Toolkit',
       title: 'Community Resilience Planning Toolkit',
       summaryText: 'Practical tools and guidelines for local governments and communities to develop effective disaster risk reduction strategies.',
       button: 'Download Toolkit',
       link: '/toolkits/resilience-planning',
       imgalt: 'Toolkit Cover',
       imgback: 'https://via.placeholder.com/300x200?text=Toolkit'
-    }
-  ];
-
-  const accordionData = [
-    {
-      id: 1,
-      title: 'What is disaster risk reduction?',
-      content: 'Disaster risk reduction (DRR) is the practice of reducing disaster risks through
-      systematic efforts to analyze and manage the causal factors of disasters.'
-    },
-    {
-      id: 2,
-      title: 'How can communities prepare for disasters?',
-      content: 'Communities can prepare through early warning systems, emergency planning, infrastructure improvements, and education programs.'
-    },
-    {
-      id: 3,
-      title: 'What role does climate change play?',
-      content: 'Climate change increases the frequency and intensity of many disasters, making adaptation and mitigation strategies crucial.'
     }
   ];
 
@@ -257,14 +237,6 @@ function App() {
               />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="mg-section mg-section--light">
-        <div className="mg-container">
-          <h2 className="mg-heading mg-heading--2">Frequently Asked Questions</h2>
-          <Accordion data={accordionData} />
         </div>
       </section>
 
@@ -396,7 +368,7 @@ const App: React.FC = () => {
 
   const cardData: CardData[] = [
     {
-      contenttile: 'REPORT',
+      contenttile: 'Report',
       title: 'Global Assessment Report',
       summaryText: 'Comprehensive disaster risk analysis...',
       button: 'Read Report',
@@ -478,7 +450,7 @@ export default App;
 <VerticalCard
   data={[
     {
-      contenttile: 'CATEGORY',
+      contenttile: 'Category',
       title: 'Card Title',
       summaryText: 'Card description text...',
       button: 'Read More',

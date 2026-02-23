@@ -23,7 +23,7 @@ const getCaptionForLocale = locale => {
       return burmeseText;
     case 'japanese':
       const japaneseText = {
-        mainLabel: 'ビルマ語',
+        mainLabel: 'これを共有',
         onCopy: 'コピーされました',
       };
       return japaneseText;
@@ -37,6 +37,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Buttons/ShareButtons',
+  component: ShareButtons,
 
   argTypes: {
     SharingSubject: {

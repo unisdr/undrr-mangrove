@@ -21,6 +21,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Forms/Checkbox',
+  component: Checkbox,
 };
 
 export const DefaultCheckbox = {

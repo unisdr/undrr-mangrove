@@ -1,0 +1,164 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as HighlightBoxStories from './HighlightBox.stories';
+
+<Meta of={HighlightBoxStories} />
+
+# Highlight box
+
+A flexible container component for highlighting important content, including text, images, and video embeds. Tracked in [`web-backlog#1678`](https://gitlab.com/undrr/web-backlog/-/issues/1678).
+
+## Features
+
+- **Tone variants**: Default (light), Primary (blue), Secondary (purple)
+- **Layout variants**: Full width, Centered (80%), Float start/end (30%)
+- **Responsive**: Float variants stack on mobile
+- **RTL support**: Uses logical properties (inline-start/end, block)
+- **Video support**: Automatic 16:9 aspect ratio for iframes
+- **Nested content**: Supports any content including paragraphs, headings, images, videos
+
+## Examples
+
+### Default
+
+<Canvas of={HighlightBoxStories.Default} />
+
+### Primary tone
+
+<Canvas of={HighlightBoxStories.Primary} />
+
+### Secondary tone
+
+<Canvas of={HighlightBoxStories.Secondary} />
+
+### Centered layout
+
+<Canvas of={HighlightBoxStories.Centered} />
+
+### Combining variants
+
+<Canvas of={HighlightBoxStories.CenteredPrimary} />
+
+### With video embed
+
+<Canvas of={HighlightBoxStories.WithVideo} />
+
+### Float start
+
+<Canvas of={HighlightBoxStories.FloatStart} />
+
+### Float end
+
+<Canvas of={HighlightBoxStories.FloatEnd} />
+
+### RTL float start
+
+In RTL contexts, float-start appears on the right side of the content.
+
+<Canvas of={HighlightBoxStories.RTLFloatStart} />
+
+### RTL float end
+
+In RTL contexts, float-end appears on the left side of the content.
+
+<Canvas of={HighlightBoxStories.RTLFloatEnd} />
+
+### With image
+
+<Canvas of={HighlightBoxStories.WithImage} />
+
+### With list
+
+<Canvas of={HighlightBoxStories.WithList} />
+
+## Usage
+
+### CSS classes
+
+```html
+<!-- Default -->
+<div class="mg-highlight-box">
+  <h3>Title</h3>
+  <p>Content</p>
+</div>
+
+<!-- Primary tone -->
+<div class="mg-highlight-box mg-highlight-box--primary">
+  <p>Blue background with white text</p>
+</div>
+
+<!-- Centered layout -->
+<div class="mg-highlight-box mg-highlight-box--centered">
+  <p>80% width, horizontally centered</p>
+</div>
+
+<!-- Float start (responsive) -->
+<div class="mg-highlight-box mg-highlight-box--float-start">
+  <p>Floats left on desktop, stacks on mobile</p>
+</div>
+
+<!-- Combining variants -->
+<div class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered">
+  <p>Purple background, centered layout</p>
+</div>
+```
+
+## Variants
+
+### Tone variants
+
+| Variant | Class | Description |
+|---------|-------|-------------|
+| Default | `mg-highlight-box` | Light background with dark border and shadow |
+| Primary | `mg-highlight-box--primary` | Corporate blue background with white text |
+| Secondary | `mg-highlight-box--secondary` | Sendai purple background with white text |
+
+### Layout variants
+
+| Variant | Class | Description |
+|---------|-------|-------------|
+| Full | (default) | 100% width |
+| Centered | `mg-highlight-box--centered` | 80% width, horizontally centered |
+| Float start | `mg-highlight-box--float-start` | 30% width, floats to inline-start (left in LTR, right in RTL) |
+| Float end | `mg-highlight-box--float-end` | 30% width, floats to inline-end (right in LTR, left in RTL) |
+
+### Responsive behavior
+
+Float variants automatically stack to full width on screens below the tablet breakpoint for better readability.
+
+## Design guidelines
+
+- Use highlight boxes to draw attention to important information, quotes, or calls to action
+- The default tone works well for general information callouts
+- Use the primary tone for content related to UNDRR brand messaging
+- Use the secondary tone for Sendai Framework related content
+- Float variants work best when surrounded by body text
+- Avoid nesting highlight boxes within each other
+
+## Styling details
+
+| Property | Value |
+|----------|-------|
+| Padding | 1rem block, 1.5rem inline, 2rem bottom |
+| Border | 1px solid rgba(0, 0, 0, 0.3) for default tone |
+| Shadow | Inset bottom shadow for depth effect |
+| Video | Automatic 16:9 aspect ratio for embedded iframes |
+
+## Browser support
+
+- Modern browsers with CSS logical properties support
+- `:has()` selector for video detection (graceful degradation in older browsers)
+
+## Accessibility
+
+- Uses semantic HTML elements
+- Color contrast meets WCAG AA standards for colored variants
+- Works without JavaScript (pure CSS component)
+- Screen reader friendly with proper heading hierarchy
+
+## Migration from CKEditor
+
+Existing CKEditor content using `.mg-highlight-box` classes will continue to work. The styles are now part of the Mangrove component library for better maintainability.
+
+## Changelog
+
+- 1.0 — Initial release with tone variants (default, primary, secondary) and layout variants (full, centered, float-start, float-end)

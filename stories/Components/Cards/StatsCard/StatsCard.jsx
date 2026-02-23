@@ -31,7 +31,7 @@ export function StatsCard({
 
   return (
     <section className={classes} aria-label={title || 'Statistics'} {...props}>
-      {title && <Heading type="2" label={title} />}
+      {title && <Heading type="2">{title}</Heading>}
 
       <div className={gridClasses}>
         {stats.map((stat, index) => (
@@ -56,7 +56,7 @@ StatsCard.propTypes = {
   /** Array of stat objects to display (1-3 recommended) */
   stats: PropTypes.arrayOf(
     PropTypes.shape({
-      /** Icon class name (e.g., "mg-icon fa-globe") */
+      /** Icon class name (e.g., "mg-icon mg-icon-globe") */
       icon: PropTypes.string,
       /** Label displayed above the value (e.g., "Target A") */
       label: PropTypes.string,

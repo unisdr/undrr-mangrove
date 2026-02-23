@@ -21,6 +21,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Buttons/Chips',
+  component: Chips,
 
   argTypes: {
     Type: {

@@ -28,20 +28,20 @@ const getCaptionForLocale = locale => {
       const arabicText = {
         tabdata: [
           {
-            text: 'علامة التبويب 1',
+            text: 'عنوان التبويب 1',
             text_id: 'tab-1',
-            data: 'شير النص الوهمي إلى أجزاء المحتوى المستخدمة لملء نموذج موقع الويب. يساعد هذا النص مصممي الويب على تصور أفضل لكيفية ظهور موقع الويب كمنتج نهائي. من المهم أن نفهم أن النص الوهمي ليس له معنى على الإطلاق. والغرض الوحيد منه هو ملء الفراغات بمحتوى "يشبه الكلمات" ، دون القيام بأي انتهاك لحقوق النشر.',
+            data: 'بصفته مكتب الأمم المتحدة للحد من مخاطر الكوارث، يجمع المكتب الشركاء وينسق الأنشطة لإنشاء مجتمعات أكثر أمانًا ومرونة.',
           },
           {
-            text: 'علامة التبويب 2',
+            text: 'عنوان التبويب 2',
             text_id: 'tab-2',
-            data: 'شير النص الوهمي إلى أجزاءيفية ظهور موقع الويب كمنتج نهائي. من المهم أن نفهم أن النص الوهمي ليس له معنى على الإطلاق. والغرض الوحيد منه هو ملء الفراغات بمحتوى "يشبه الكلمات" ، دون القيام بأي انتهاك لحقوق النشر.',
+            data: 'إطار سنداي هو خارطة الطريق العالمية للحد من الخسائر البشرية والاقتصادية الناتجة مباشرة عن الكوارث.',
             is_default: 'true',
           },
           {
-            text: 'علامة التبويب 3',
+            text: 'عنوان التبويب 3 وهو أطول قليلاً',
             text_id: 'tab-3',
-            data: 'شير النص الوهمي إلى أجزاءيفية ظهور موقع الويب كمنتج نهائي. من المهم أن نفهم أن النص الوهمي ليس له معنى على ، دون القيام بأي انتهاك لحقوق النشر.',
+            data: 'المراجعة النصفية لإطار سنداي - سجل اهتمامك للمشاركة في المشاورات حول الإعلان السياسي.',
           },
         ],
       };
@@ -117,6 +117,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Tabs',
+  component: Tab,
 };
 
 export const Tabs = {
@@ -129,7 +130,7 @@ export const Tabs = {
 
 export const TabsWithDefault = {
   render: (args, { globals: { locale } }) => {
-    let caption = getCaptionForLocale(locale);
+    const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} />;
   },
 };
@@ -138,63 +139,5 @@ export const StackedTabs = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return <Tab tabdata={caption} variant="stacked" />;
-  },
-};
-
-/**
- * @deprecated This is a legacy example included only to ensure backwards compatibility with v1 tabs.
- * Do not use this implementation for new features. Use the standard Tab component instead.
- */
-export const Version1Tabs = {
-  render: () => {
-    return (
-      <>
-        <div className="mg-tabs">
-          <ul
-            className="mg-tabs__list | mg-container-full-width"
-            data-mg-js-tabs
-          >
-            <li className="mg-tabs__item" role="presentation">
-              <a className="mg-tabs__link" href="#mg-tabs__section-indicators">
-                Indicators
-              </a>
-            </li>
-            <li className="mg-tabs__item" role="presentation">
-              <a className="mg-tabs__link" href="#mg-tabs__section-snapshot">
-                Snapshot of SFM
-              </a>
-            </li>
-          </ul>
-          <div className="mg-tabs-content" data-mg-js-tabs-content>
-            <section
-              className="mg-tabs__section"
-              id="mg-tabs__section-indicators"
-            >
-              <h2>Indicators</h2>
-              <p>
-                Global target A: Substantially reduce global disaster mortality
-                by 2030, aiming to lower average per 100,000 global mortality
-                between 2020-2030 compared with 2005-2015.
-              </p>
-            </section>
-            <section
-              className="mg-tabs__section"
-              id="mg-tabs__section-snapshot"
-            >
-              <h2>Snapshot of SFM</h2>
-              <p>
-                The Sendai Framework Monitor (SFM) provides a comprehensive
-                overview of global progress in disaster risk reduction. It
-                tracks implementation of the Sendai Framework through custom
-                indicators, national reports, and regional assessments to help
-                identify trends and areas needing attention.
-              </p>
-            </section>
-          </div>
-        </div>
-        {/* We include a stub of the real React tabs so we hook the JS */}
-        <Tab />
-      </>
-    );
   },
 };

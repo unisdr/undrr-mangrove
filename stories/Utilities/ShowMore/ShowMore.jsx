@@ -9,13 +9,13 @@ export function ShowMore({ data }) {
     <React.Fragment>
       {' '}
       {data.map((item, index) => (
-        <React.Fragment>
-          <div class={item.collapsable_wrapper_class}>
+        <React.Fragment key={index}>
+          <div className={item.collapsable_wrapper_class}>
             {item.collapsable_text}
           </div>
           <a
             href="#"
-            class="mg-button mg-button-primary mg-show-more--button"
+            className="mg-button mg-button-primary mg-show-more--button"
             data-mg-show-more="true"
             data-mg-show-more-target={`.${item.collapsable_wrapper_class}`}
             data-mg-show-more-label-open="Show less themes"

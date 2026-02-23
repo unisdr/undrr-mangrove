@@ -91,6 +91,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Forms/Textarea',
+  component: Textarea,
 
   argTypes: {
     State: {

@@ -33,7 +33,7 @@ function SidebarItem({
         >
           <span>{section.title}</span>
           <span
-            className="mg-icon fa-angle-circled-left"
+            className="mg-icon mg-icon-angle-circled-left"
             aria-hidden="true"
           ></span>
         </button>

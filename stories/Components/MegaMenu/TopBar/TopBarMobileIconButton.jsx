@@ -9,7 +9,7 @@ export function TopBarMobileIconButton({ onClick, isOpen }) {
       aria-haspopup="true"
     >
       <span
-        className={`mg-icon ${isOpen ? 'fa-angle-circled-left' : 'fa-menu'}`}
+        className={`mg-icon ${isOpen ? 'mg-icon-angle-circled-left' : 'mg-icon-menu'}`}
         aria-hidden="true"
       ></span>
     </button>

@@ -21,6 +21,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Navigation/Pagination',
+  component: Pagination,
 };
 
 export const DefaultPagination = {

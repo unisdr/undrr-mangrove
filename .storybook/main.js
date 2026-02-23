@@ -33,8 +33,7 @@ export default {
       },
     },
     '@storybook/addon-links',
-    // TODO: Re-enable once https://github.com/whitespace-se/storybook-addon-html/pull/149 is merged
-    // '@whitespace/storybook-addon-html',
+    '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
     '@storybook/addon-webpack5-compiler-babel',

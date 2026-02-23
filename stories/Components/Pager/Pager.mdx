@@ -1,0 +1,190 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as PagerStories from './Pager.stories';
+
+<Meta of={PagerStories} />
+
+# Pager
+
+Pagination for multi-page content. Also usable as CSS/HTML markup for server-rendered pages like Drupal views.
+
+## Features
+
+- Sliding 5-page window with first/last page and ellipsis indicators
+- Previous / Next navigation with SVG chevron icons
+- Bar layout with result range and jump-to-page form
+- Mini-pager mode when the total number of pages is unknown
+- Empty state with optional action button
+- Loading state that disables all controls
+- RTL (right-to-left) support
+- Hides text labels on narrow viewports
+- `aria-current`, `aria-label`, and keyboard navigation
+
+## Usage
+
+### React
+
+```jsx
+import { Pager } from '@undrr/mangrove/components/Pager';
+
+function MyComponent() {
+  const [page, setPage] = React.useState(1);
+
+  return (
+    <Pager
+      page={page}
+      totalPages={20}
+      onPageChange={setPage}
+    />
+  );
+}
+```
+
+### Bar layout with range and jump-to-page
+
+```jsx
+<Pager
+  page={page}
+  totalPages={20}
+  onPageChange={setPage}
+  layout="bar"
+  range={{ start: 21, end: 30 }}
+  rangeLabel="Showing {start}–{end} of 200 results"
+  showJumpTo
+/>
+```
+
+### HTML/CSS (server-rendered)
+
+```html
+<nav class="mg-pager" aria-label="Pagination">
+  <ul class="mg-pager__list">
+    <li class="mg-pager__item mg-pager__item--prev">
+      <a class="mg-pager__link mg-pager__link--prev" href="?page=2" aria-label="Go to previous page">
+        <svg class="mg-pager__icon" ...><polyline points="15 18 9 12 15 6" /></svg>
+        <span class="mg-pager__text">Previous</span>
+      </a>
+    </li>
+    <li class="mg-pager__item">
+      <a class="mg-pager__link mg-pager__link--number" href="?page=1" aria-label="Page 1">1</a>
+    </li>
+    <li class="mg-pager__item mg-pager__item--ellipsis" aria-hidden="true">
+      <span class="mg-pager__ellipsis">&hellip;</span>
+    </li>
+    <li class="mg-pager__item">
+      <a class="mg-pager__link mg-pager__link--number mg-pager__link--current"
+         href="?page=3" aria-label="Page 3, current page" aria-current="page">3</a>
+    </li>
+    <li class="mg-pager__item mg-pager__item--ellipsis" aria-hidden="true">
+      <span class="mg-pager__ellipsis">&hellip;</span>
+    </li>
+    <li class="mg-pager__item">
+      <a class="mg-pager__link mg-pager__link--number" href="?page=20" aria-label="Page 20">20</a>
+    </li>
+    <li class="mg-pager__item mg-pager__item--next">
+      <a class="mg-pager__link mg-pager__link--next" href="?page=4" aria-label="Go to next page">
+        <span class="mg-pager__text">Next</span>
+        <svg class="mg-pager__icon" ...><polyline points="9 18 15 12 9 6" /></svg>
+      </a>
+    </li>
+  </ul>
+</nav>
+```
+
+## Examples
+
+### Default (centered)
+
+<Canvas of={PagerStories.Default} />
+
+### Bar layout
+
+Three-zone layout with result range, page list, and jump-to-page form.
+
+<Canvas of={PagerStories.BarLayout} />
+
+### Unknown total (mini-pager)
+
+When `totalPages` is `null`, the last-page link is hidden and Next is always available.
+
+<Canvas of={PagerStories.UnknownTotal} />
+
+### Empty state
+
+<Canvas of={PagerStories.EmptyState} />
+
+### Loading
+
+All interactive controls are disabled while loading.
+
+<Canvas of={PagerStories.Loading} />
+
+### RTL
+
+Chevron icons are automatically mirrored in RTL contexts.
+
+<Canvas of={PagerStories.RTL} />
+
+### Few pages
+
+When there are only a few pages, no ellipsis is shown.
+
+<Canvas of={PagerStories.FewPages} />
+
+### Many pages
+
+The sliding window and ellipsis keep the list short on high page counts.
+
+<Canvas of={PagerStories.ManyPages} />
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `page` | `number` | *required* | Current page (1-based) |
+| `totalPages` | `number \| null` | `null` | Total pages. `null` = unknown (mini-pager mode) |
+| `onPageChange` | `function` | *required* | Called with the new page number |
+| `isLoading` | `boolean` | `false` | Disables all interactive controls |
+| `layout` | `'centered' \| 'bar'` | `'centered'` | Layout mode |
+| `ariaLabel` | `string` | `'Pagination'` | Custom `aria-label` for the `<nav>` |
+| `range` | `{ start, end }` | — | Result range (bar layout only) |
+| `rangeLabel` | `string` | `'Showing {start}–{end}'` | Template for range text |
+| `showJumpTo` | `boolean` | `false` | Show jump-to-page form |
+| `jumpToLabel` | `string` | `'Go to page'` | Label for the jump input |
+| `jumpToAction` | `string` | `'Go'` | Submit button text |
+| `emptyState` | `string` | — | When set, shows a notice instead of pagination |
+| `emptyAction` | `{ label, onClick }` | — | Optional action button inside the empty notice |
+
+## CSS class reference
+
+| Class | Description |
+|-------|-------------|
+| `.mg-pager` | Root `<nav>` element |
+| `.mg-pager__list` | `<ul>` containing page items |
+| `.mg-pager__item` | `<li>` for each page entry |
+| `.mg-pager__item--ellipsis` | Ellipsis item |
+| `.mg-pager__item--prev` | Previous button item |
+| `.mg-pager__item--next` | Next button item |
+| `.mg-pager__link` | Clickable page element |
+| `.mg-pager__link--current` | Active page |
+| `.mg-pager__link--disabled` | Disabled state |
+| `.mg-pager__link--prev` | Previous button |
+| `.mg-pager__link--next` | Next button |
+| `.mg-pager__icon` | SVG chevron icon |
+| `.mg-pager__text` | "Previous"/"Next" label (hidden on mobile) |
+| `.mg-pager__ellipsis` | Ellipsis character |
+| `.mg-pager__bar` | Three-zone bar wrapper |
+| `.mg-pager__range` | Result range text |
+| `.mg-pager__jump` | Jump-to-page `<form>` |
+| `.mg-pager__jump-label` | Jump input label |
+| `.mg-pager__jump-input` | Jump number input |
+| `.mg-pager__jump-btn` | Jump submit button |
+| `.mg-pager__notice` | Empty/overshoot notice |
+| `.mg-pager__notice-action` | Action link inside notice |
+
+### Changelog
+
+- 1.0
+  - Standalone pager extracted from SyndicationSearchWidget
+  - Bar layout with range display and jump-to-page
+  - Mini-pager mode for unknown totals
+  - Empty state with optional action

@@ -7,7 +7,7 @@ import * as SyndicationSearchWidgetStories from './SyndicationSearchWidget.stori
 
 The **UNDRR Syndication Search Widget** is a full-featured search interface tightly coupled with the UNDRR web platform. It integrates with Elasticsearch via the UNDRR `/search-endpoint` proxy and is designed specifically to query content from UNDRR domains (undrr.org, preventionweb.net, and related sites).
 
-Built with React 19, it leverages concurrent rendering features for optimal user experience.
+Built with React 19 concurrent rendering (`useDeferredValue`, `useTransition`).
 
 > **Platform Dependency:** This component requires access to the UNDRR Elasticsearch backend via `/search-endpoint`. It includes hardcoded domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
 
@@ -29,31 +29,31 @@ A basic search widget with default configuration.
 
 <Canvas of={SyndicationSearchWidgetStories.Default} meta={SyndicationSearchWidgetStories} />
 
-## Default Query
+## Default query
 
 A search widget initialized with a pre-filled search query.
 
 <Canvas of={SyndicationSearchWidgetStories.DefaultQuery} meta={SyndicationSearchWidgetStories} />
 
-## Hidden Facets
+## Hidden facets
 
 A search widget with the facets sidebar hidden.
 
 <Canvas of={SyndicationSearchWidgetStories.HiddenFacets} meta={SyndicationSearchWidgetStories} />
 
-## Minimal Configuration
+## Minimal configuration
 
 Search-only mode without result counts, timers, or filters.
 
 <Canvas of={SyndicationSearchWidgetStories.Minimal} meta={SyndicationSearchWidgetStories} />
 
-## Debug Metrics
+## Debug metrics
 
 Shows search performance metrics (score, interestingness, longevity) for debugging.
 
 <Canvas of={SyndicationSearchWidgetStories.DebugMetrics} meta={SyndicationSearchWidgetStories} />
 
-## Custom Filters
+## Custom filters
 
 `customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
 Users cannot see or remove these filters - they constrain the search scope.
@@ -75,7 +75,7 @@ customFilters: [
 - `field_domain_access:www_preventionweb_net` - Domain filter
 - `field_themes:123` - Taxonomy filter
 
-## Custom Facets
+## Custom facets
 
 `customFacets` create user-selectable dropdown filters in the sidebar.
 Each facet maps labels to Elasticsearch queries.
@@ -129,7 +129,7 @@ customFacets: [
 | `multiSelect` | boolean | Allow multiple selections |
 | `options` | array | Array of `{label, query}` pairs |
 
-## Custom Filters And Facets
+## Custom filters and facets
 
 Use both together: `customFilters` for hidden constraints, `customFacets` for user choices.
 
@@ -163,7 +163,7 @@ customFacets: [
 
 <Canvas of={SyndicationSearchWidgetStories.CustomFiltersAndFacets} meta={SyndicationSearchWidgetStories} />
 
-## Allowed Types
+## Allowed types
 
 Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content—it limits the filter UI options.
 
@@ -181,7 +181,7 @@ allowedTypes: {
 
 **News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Community announcement), `756` (Op Ed)
 
-## Query Syntax
+## Query syntax
 
 Reference for Elasticsearch query_string syntax. Use this story to test search queries.
 
@@ -194,7 +194,7 @@ See the story's Docs tab for a comprehensive syntax reference including:
 - Field-specific searches
 - Date ranges and boosting
 
-## Static Mockup
+## Static mockup
 
 A static HTML mockup for CSS testing without API calls.
 
@@ -234,7 +234,7 @@ The component is loaded automatically on pages containing a container with `data
 
 ## Props
 
-### Config Object
+### Config object
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -266,7 +266,7 @@ The component uses React 19's concurrent features:
 - **`Suspense`**: Provides loading skeletons during data fetching
 - **Context + useReducer**: Manages search state without external dependencies
 
-### Component Structure
+### Component structure
 
 ```
 SyndicationSearchWidget
@@ -284,9 +284,9 @@ SyndicationSearchWidget
 │       └── FacetsSidebar (reused)
 ```
 
-### Custom Select Dropdown
+### Custom select dropdown
 
-The facet dropdowns use a **lightweight custom `SelectDropdown` component** instead of Chosen.js. This provides Chosen-like functionality without external dependencies:
+The facet dropdowns use a custom `SelectDropdown` component instead of Chosen.js, with the same core functionality and no external dependencies:
 
 | Feature | Description |
 |---------|-------------|
@@ -299,7 +299,7 @@ The facet dropdowns use a **lightweight custom `SelectDropdown` component** inst
 
 This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
 
-### Mobile Filter Drawer
+### Mobile filter drawer
 
 On screens ≤800px, the sidebar is replaced with a left-slide drawer:
 
@@ -319,9 +319,14 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+### 1.0.0
+- Pager styles extracted to standalone `Components/Pager` component
+- Internal `Pager.jsx` is now a thin wrapper around the standalone Pager
+- No API changes -- existing imports and behaviour are unchanged
+
 ### 1.0.0-alpha.2
 - **Mobile filter drawer**: Left-slide drawer replaces hidden sidebar on mobile
-- **Custom SelectDropdown**: Replaced Chosen.js dependency with lightweight custom component
+- **Custom SelectDropdown**: Replaced Chosen.js dependency with custom component
   - Searchable filter input (shown when >8 options)
   - Multi-select with checkboxes, single-select with radio buttons
   - Keyboard navigation (arrows, Enter, Escape)

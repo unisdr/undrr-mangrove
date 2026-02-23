@@ -69,7 +69,7 @@ export function PageHeader({
 
             {/* User icon */}
             <a alt="Log in or register" title="Log in or register" href="/user">
-              <i className="fa fa-user"></i>{' '}
+              <i className="mg-icon mg-icon-user"></i>{' '}
               <span className="mg-page-header__label">My account</span>
               {/* <span className="mg-page-header__label-mobile">Login</span> */}
             </a>

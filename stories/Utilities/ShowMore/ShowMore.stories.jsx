@@ -1,4 +1,6 @@
+import React, { useEffect } from 'react';
 import { ShowMore } from './ShowMore';
+import { mgShowMore } from '../../assets/js/show-more';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -18,10 +20,10 @@ const getCaptionForLocale = locale => {
       const arabicText = {
         showMoreData: [
           {
-            button_text: 'Needs translation',
+            button_text: 'عرض المزيد',
             collapsable_wrapper_class: 'show-more-wrapper-class',
             collapsable_text:
-              'شير النص الوهمي إلى أجزاء المحتوى المستخدمة لملء نموذج موقع الويب. يساعد هذا النص مصممي الويب على تصور أفضل لكيفية ظهور موقع الويب كمنتج نهائي. من المهم أن نفهم أن النص الوهمي ليس له معنى على الإطلاق. والغرض الوحيد منه هو ملء الفراغات بمحتوى "يشبه الكلمات" ، دون القيام بأي انتهاك لحقوق النشر.',
+              'بصفته مكتب الأمم المتحدة للحد من مخاطر الكوارث، يجمع المكتب الشركاء وينسق الأنشطة لإنشاء مجتمعات أكثر أمانًا ومرونة. بصفته مكتب الأمم المتحدة للحد من مخاطر الكوارث، يجمع المكتب الشركاء وينسق الأنشطة لإنشاء مجتمعات أكثر أمانًا ومرونة.',
           },
         ],
       };
@@ -67,6 +69,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/ShowMore',
+  component: ShowMore,
 };
 
 export const DefaultShowMore = {
@@ -77,6 +80,8 @@ export const DefaultShowMore = {
       <div
         style={{
           maxWidth: '250px',
+          backgroundColor: '#f0e6d3',
+          padding: '1rem',
         }}
       >
         <ShowMore data={caption}></ShowMore>
@@ -85,4 +90,52 @@ export const DefaultShowMore = {
   },
 
   name: 'ShowMore',
+};
+
+function DetachedShowMore() {
+  useEffect(() => {
+    mgShowMore();
+  }, []);
+
+  return (
+    <div style={{ maxWidth: '400px' }}>
+      <div
+        className="detached-content"
+        style={{
+          backgroundColor: '#f0e6d3',
+          padding: '1rem',
+          marginBottom: '1rem',
+        }}
+      >
+        <p>
+          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
+          and coordinates activities to create safer, more resilient
+          communities. As the UN Office for Disaster Risk Reduction, UNDRR
+          convenes partners and coordinates activities to create safer, more
+          resilient communities. As the UN Office for Disaster Risk Reduction,
+          UNDRR convenes partners and coordinates activities to create safer,
+          more resilient communities.
+        </p>
+      </div>
+      <p style={{ marginBottom: '1rem', fontStyle: 'italic' }}>
+        The button below is outside the content container. It targets the
+        content using <code>data-mg-show-more-target</code>.
+      </p>
+      <a
+        href="#"
+        className="mg-button mg-button-primary mg-show-more--button"
+        data-mg-show-more="true"
+        data-mg-show-more-target=".detached-content"
+        data-mg-show-more-label-open="Show less"
+        data-mg-show-more-label-collapsed="Show more"
+      >
+        Show more
+      </a>
+    </div>
+  );
+}
+
+export const DetachedButton = {
+  render: () => <DetachedShowMore />,
+  name: 'Detached button',
 };

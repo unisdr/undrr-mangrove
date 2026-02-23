@@ -1,6 +1,9 @@
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
+import { scaleBand, scaleLinear } from 'd3-scale';
+import { max } from 'd3-array';
+import { axisBottom, axisLeft } from 'd3-axis';
 import { transformDataForBarChart } from './chart-helpers';
 
 // Main BarChart component
@@ -47,7 +50,7 @@ export default function BarChartProcessor({
   };
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     svg.selectAll('*').remove(); // Clear existing content
 
     svg
@@ -66,22 +69,20 @@ export default function BarChartProcessor({
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    const xScale = d3
-      .scaleBand()
+    const xScale = scaleBand()
       .domain(chartData.map(d => d.label))
       .range([0, innerWidth])
       .padding(0.2);
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(chartData, d => d.value)])
+    const yScale = scaleLinear()
+      .domain([0, max(chartData, d => d.value)])
       .range([innerHeight, 0]);
 
     chart
       .append('g')
       .attr('class', 'x-axis')
       .attr('transform', `translate(0, ${innerHeight})`)
-      .call(d3.axisBottom(xScale))
+      .call(axisBottom(xScale))
       .selectAll('line, path')
       .attr('stroke', tickColor);
 
@@ -89,7 +90,7 @@ export default function BarChartProcessor({
       chart
         .append('g')
         .attr('class', 'y-axis')
-        .call(d3.axisLeft(yScale).ticks(5))
+        .call(axisLeft(yScale).ticks(5))
         .selectAll('line, path')
         .attr('stroke', tickColor);
     }

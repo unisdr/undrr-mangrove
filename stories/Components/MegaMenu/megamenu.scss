@@ -11,8 +11,12 @@
   align-items: flex-start;
   z-index: 10;
   padding: 0;
-  max-width: $mg-breakpoint-desktop; // mg-mega-toolbar does not play well with mg-container
+  max-width: $mg-breakpoint-desktop;
   margin: 0 auto;
+
+  @media screen and (min-width: $mg-breakpoint-desktop-wide) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }
 
   // these are note "mobile first" as they seem to cause a glitch with firefox and .mg-container-full-width
   @media screen and (max-width: $mg-breakpoint-tablet) {
@@ -484,14 +488,14 @@
 
   // Rotate arrow icon when section is expanded
   &[aria-expanded="true"] {
-    .fa-angle-circled-left {
+    .mg-icon-angle-circled-left {
       transform: rotate(-90deg);
       transition: transform 0.3s ease-in-out;
     }
   }
 
   // Ensure smooth transition for icon default state
-  .fa-angle-circled-left {
+  .mg-icon-angle-circled-left {
     transition: transform 0.3s ease-in-out;
   }
 }
@@ -499,7 +503,7 @@
 // RTL: Flip rotation direction
 [dir="rtl"]
   .mg-mega-sidebar-section__item[aria-expanded="true"]
-  .fa-angle-circled-left {
+  .mg-icon-angle-circled-left {
   transform: rotate(90deg);
 }
 
@@ -595,7 +599,7 @@
     position: relative;
   }
 
-  &:has(.fa-angle-circled-left) {
+  &:has(.mg-icon-angle-circled-left) {
     background: rgb(255 255 255 / 0.8);
     color: $mg-color-interactive-active;
     box-shadow: 0 0 4px rgb(0 0 0 / 0.2);

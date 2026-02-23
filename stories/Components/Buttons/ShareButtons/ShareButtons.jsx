@@ -417,7 +417,7 @@ const ShareButtons = ({
               title="Share using your device"
               className="mg-share__button"
             >
-              <span className="mg-icon fa-share" aria-hidden="true"></span>
+              <span className="mg-icon mg-icon-share" aria-hidden="true"></span>
             </button>
           )}
           <button
@@ -427,7 +427,7 @@ const ShareButtons = ({
             className="mg-share__button"
             title="Share on LinkedIn"
           >
-            <span className="mg-icon fa-linkedin" aria-hidden="true"></span>
+            <span className="mg-icon mg-icon-linkedin" aria-hidden="true"></span>
           </button>
           <button
             data-vf-analytics-label="Social share: Facebook"
@@ -436,7 +436,7 @@ const ShareButtons = ({
             title="Share on Facebook"
             className="mg-share__button"
           >
-            <span className="mg-icon fa-facebook" aria-hidden="true"></span>
+            <span className="mg-icon mg-icon-facebook" aria-hidden="true"></span>
           </button>
           <button
             data-vf-analytics-label="Social share: X"
@@ -445,7 +445,7 @@ const ShareButtons = ({
             className="mg-share__button"
             title="Share on X"
           >
-            <span className="mg-icon fa-x-social" aria-hidden="true"></span>
+            <span className="mg-icon mg-icon-x-social" aria-hidden="true"></span>
           </button>
           <button
             data-vf-analytics-label="Social share: Mail"
@@ -454,7 +454,7 @@ const ShareButtons = ({
             className="mg-share__button"
             title="Share via Email"
           >
-            <span className="mg-icon fa-envelope" aria-hidden="true"></span>
+            <span className="mg-icon mg-icon-envelope" aria-hidden="true"></span>
           </button>
           <button
             data-vf-analytics-label="Social share: QR Code"
@@ -463,7 +463,7 @@ const ShareButtons = ({
             className="mg-share__button"
             title="Generate QR Code"
           >
-            <span className="mg-icon fa-qrcode" aria-hidden="true"></span>
+            <span className="mg-icon mg-icon-qrcode" aria-hidden="true"></span>
           </button>
         </div>
 
@@ -523,13 +523,13 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
       onClick={() => handleCopyLink()}
     >
       <div className="mg-share__clip-icon">
-        <span className="mg-icon fa-link" aria-hidden="true"></span>
+        <span className="mg-icon mg-icon-link" aria-hidden="true"></span>
       </div>
       <div className="mg-share__copy-text">
         {coppied ? copiedLabel : visibleLink}
       </div>
       <div className="mg-share__stack-icon">
-        <span className="mg-icon fa-clone" alt="Copy icon"></span>
+        <span className="mg-icon mg-icon-clone" alt="Copy icon"></span>
       </div>
     </button>
   );

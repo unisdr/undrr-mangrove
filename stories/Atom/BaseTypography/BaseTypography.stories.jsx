@@ -656,9 +656,41 @@ export default {
   },
 };
 
+// Wrapper to demonstrate all heading levels in Storybook
+const HeadingDemo = ({
+  detail1,
+  detail2,
+  detail3,
+  detail4,
+  detail5,
+  detail6,
+  ...props
+}) => (
+  <div>
+    <HeadingComponent type="1" {...props}>
+      {detail1}
+    </HeadingComponent>
+    <HeadingComponent type="2" {...props}>
+      {detail2}
+    </HeadingComponent>
+    <HeadingComponent type="3" {...props}>
+      {detail3}
+    </HeadingComponent>
+    <HeadingComponent type="4" {...props}>
+      {detail4}
+    </HeadingComponent>
+    <HeadingComponent type="5" {...props}>
+      {detail5}
+    </HeadingComponent>
+    <HeadingComponent type="6" {...props}>
+      {detail6}
+    </HeadingComponent>
+  </div>
+);
+
 // Document structure - Headings
 export const TypographyHeading = Template(
-  HeadingComponent,
+  HeadingDemo,
   getCaptionForLocaleHeading
 );
 

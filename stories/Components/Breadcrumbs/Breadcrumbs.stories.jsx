@@ -97,6 +97,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Navigation/Breadcrumbs',
+  component: Breadcrumbcomponent,
 
   argTypes: {
     Color: {

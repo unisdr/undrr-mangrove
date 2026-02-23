@@ -104,49 +104,59 @@ export default {
   },
 };
 
-const Template = (args, { globals: { locale } }) => {
-  const caption = getCaptionForLocale(locale);
-  return <Hero data={caption.contentdata} {...args} />;
+export const Default = {
+  args: {
+    variant: 'primary',
+  },
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Hero data={caption.contentdata} {...args} />;
+  },
 };
 
-export const Default = Template.bind({});
-Default.args = {
-  variant: 'primary',
+export const NoLink = {
+  args: {
+    data: [
+      {
+        title: 'Title without a link<br>&nbsp;and a line break',
+        summaryText:
+          'This summary supports HTML.<br>&nbsp;Here is some extra text with a line break.',
+        label: 'Label in medium size',
+        detail: 'Detail label: Detail',
+        primary_button: 'Primary action',
+        secondary_button: 'Secondary action',
+        link: null,
+        imgback:
+          'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+      },
+    ],
+    variant: 'secondary',
+  },
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Hero data={caption.contentdata} {...args} />;
+  },
 };
 
-export const NoLink = Template.bind({});
-NoLink.args = {
-  data: [
-    {
-      title: 'Title without a link<br>&nbsp;and a line break',
-      summaryText:
-        'This summary supports HTML.<br>&nbsp;Here is some extra text with a line break.',
-      label: 'Label in medium size',
-      detail: 'Detail label: Detail',
-      primary_button: 'Primary action',
-      secondary_button: 'Secondary action',
-      link: null,
-      imgback:
-        'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-    },
-  ],
-  variant: 'secondary',
-};
-
-export const WithHtmlInTitle = Template.bind({});
-WithHtmlInTitle.args = {
-  data: [
-    {
-      title: 'Custom title<br>with&nbsp;line breaks and spaces',
-      summaryText: 'This is custom summary text.<br>&nbsp;Another line.',
-      label: 'Custom Label',
-      detail: 'Custom Detail',
-      primary_button: 'Custom primary',
-      secondary_button: 'Custom secondary',
-      link: '/#',
-      imgback:
-        'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-    },
-  ],
-  variant: 'tertiary',
+export const WithHtmlInTitle = {
+  args: {
+    data: [
+      {
+        title: 'Custom title<br>with&nbsp;line breaks and spaces',
+        summaryText: 'This is custom summary text.<br>&nbsp;Another line.',
+        label: 'Custom Label',
+        detail: 'Custom Detail',
+        primary_button: 'Custom primary',
+        secondary_button: 'Custom secondary',
+        link: '/#',
+        imgback:
+          'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+      },
+    ],
+    variant: 'tertiary',
+  },
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Hero data={caption.contentdata} {...args} />;
+  },
 };

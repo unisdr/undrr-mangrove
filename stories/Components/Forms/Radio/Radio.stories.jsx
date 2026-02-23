@@ -21,6 +21,7 @@ const getCaptionForLocale = locale => {
 
 export default {
   title: 'Components/Forms/Radio',
+  component: Radio,
 };
 
 export const DefaultRadio = {

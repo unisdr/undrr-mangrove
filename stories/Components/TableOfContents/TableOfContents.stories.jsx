@@ -82,57 +82,63 @@ export default {
   },
 };
 
-const Template = (args, { globals: { locale } }) => {
-  const tocData = getCaptionForLocale(locale);
-  return <TableOfContents {...args} tocData={tocData} />;
+export const List = {
+  args: {
+    showNumbers: false,
+  },
+  render: (args, { globals: { locale } }) => {
+    const tocData = getCaptionForLocale(locale);
+    return <TableOfContents {...args} tocData={tocData} />;
+  },
 };
 
-export const List = Template.bind({});
-List.args = {
-  showNumbers: false,
+export const Numbered = {
+  args: {
+    showNumbers: true,
+  },
+  render: (args, { globals: { locale } }) => {
+    const tocData = getCaptionForLocale(locale);
+    return <TableOfContents {...args} tocData={tocData} />;
+  },
 };
 
-export const Numbered = Template.bind({});
-Numbered.args = {
-  showNumbers: true,
-};
+// Story that scrapes content from the page
+export const ScrapedContent = {
+  render: () => {
+    useEffect(() => {
+      const contentElement = document.querySelector('.mg-content');
+      const tocElement = document.querySelector('[data-mg-table-of-contents]');
+      if (contentElement && tocElement) {
+        mgTableOfContents(contentElement, tocElement);
+      }
+    }, []);
 
-// New story that scrapes content from the page
-export const ScrapedContent = () => {
-  useEffect(() => {
-    // Assuming mgTableOfContents is a function that scrapes the content
-    const contentElement = document.querySelector('.mg-content');
-    const tocElement = document.querySelector('[data-mg-table-of-contents]');
-    if (contentElement && tocElement) {
-      mgTableOfContents(contentElement, tocElement);
-    }
-  }, []);
-
-  return (
-    <article className="mg-content">
-      <h1 id="section-1">Welcome to the example</h1>
-      <p>The above header is excluded as it is the H1</p>
-      <h2 class="mg-table-of-contents--exclude">
-        Table of content auto-header is hidden
-      </h2>
-      <section
-        data-mg-table-of-contents
-        data-mg-table-of-contents-title="hidden"
-        className="mg-table-of-contents"
-      ></section>
-      <hr></hr>
-      <h2 id="section-2">Section 2</h2>
-      <p>Content for section 2...</p>
-      <h2 id="section-3">Section 3</h2>
-      <p>Content for section 3...</p>
-      <h2 id="section-4" className="mg-table-of-contents--exclude">
-        Section 4
-      </h2>
-      <p>excluded with .mg-table-of-contents--exclude</p>
-      <h3 id="section-5">Sub-section 5</h3>
-      <p>Skipped as it is a h3</p>
-      <h2 id="section-6">Section 6</h2>
-      <p>Content for section 6...</p>
-    </article>
-  );
+    return (
+      <article className="mg-content">
+        <h1 id="section-1">Welcome to the example</h1>
+        <p>The above header is excluded as it is the H1</p>
+        <h2 class="mg-table-of-contents--exclude">
+          Table of content auto-header is hidden
+        </h2>
+        <section
+          data-mg-table-of-contents
+          data-mg-table-of-contents-title="hidden"
+          className="mg-table-of-contents"
+        ></section>
+        <hr></hr>
+        <h2 id="section-2">Section 2</h2>
+        <p>Content for section 2...</p>
+        <h2 id="section-3">Section 3</h2>
+        <p>Content for section 3...</p>
+        <h2 id="section-4" className="mg-table-of-contents--exclude">
+          Section 4
+        </h2>
+        <p>excluded with .mg-table-of-contents--exclude</p>
+        <h3 id="section-5">Sub-section 5</h3>
+        <p>Skipped as it is a h3</p>
+        <h2 id="section-6">Section 6</h2>
+        <p>Content for section 6...</p>
+      </article>
+    );
+  },
 };

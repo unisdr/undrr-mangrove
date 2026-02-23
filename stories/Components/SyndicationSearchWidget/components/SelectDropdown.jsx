@@ -134,6 +134,24 @@ export function SelectDropdown({
     setHighlightedIndex(-1);
   }, [filteredOptions.length]);
 
+  // Handle option selection (declared before handleKeyDown which references it)
+  const handleOptionClick = useCallback(
+    (optionValue) => {
+      if (multiple) {
+        const newValues = selectedValues.includes(optionValue)
+          ? selectedValues.filter((v) => v !== optionValue)
+          : [...selectedValues, optionValue];
+        onChange(newValues);
+      } else {
+        onChange(optionValue);
+        setIsOpen(false);
+        setSearchQuery('');
+        triggerRef.current?.focus();
+      }
+    },
+    [multiple, selectedValues, onChange]
+  );
+
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e) => {
@@ -196,24 +214,6 @@ export function SelectDropdown({
       }
     }
   }, [highlightedIndex]);
-
-  // Handle option selection
-  const handleOptionClick = useCallback(
-    (optionValue) => {
-      if (multiple) {
-        const newValues = selectedValues.includes(optionValue)
-          ? selectedValues.filter((v) => v !== optionValue)
-          : [...selectedValues, optionValue];
-        onChange(newValues);
-      } else {
-        onChange(optionValue);
-        setIsOpen(false);
-        setSearchQuery('');
-        triggerRef.current?.focus();
-      }
-    },
-    [multiple, selectedValues, onChange]
-  );
 
   // Handle trigger click
   const handleTriggerClick = useCallback(() => {
