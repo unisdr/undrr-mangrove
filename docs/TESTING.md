@@ -100,14 +100,12 @@ it('applies custom className', () => {
 #### Testing State Changes
 
 ```javascript
-it('toggles expanded state', () => {
-  render(<Accordion title="Test" />);
-  const button = screen.getByRole('button');
+it('shows tab content when clicked', () => {
+  render(<Tab tabdata={tabdata} />);
+  const tab = screen.getByText('Tab title 2');
 
-  expect(screen.queryByText('Content')).not.toBeInTheDocument();
-
-  fireEvent.click(button);
-  expect(screen.getByText('Content')).toBeInTheDocument();
+  fireEvent.click(tab);
+  expect(screen.getByText(/Sendai Framework/)).toBeInTheDocument();
 });
 ```
 
