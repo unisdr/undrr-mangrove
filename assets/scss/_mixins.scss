@@ -135,31 +135,6 @@
   margin-bottom: $mg-spacing-150;
 }
 
-%sidebar {
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  overflow: hidden;
-  padding: $mg-spacing-50;
-  position: relative;
-
-  @include devicebreak(medium) {
-    padding: $mg-spacing-100;
-  }
-}
-
-%sidebar-selected {
-  background-color: $mg-color-blue-600;
-
-  h6 {
-    color: $mg-color-white;
-  }
-
-  &:hover {
-    background-color: $mg-color-blue-600;
-  }
-}
 
 %checbox-radio-before {
   -webkit-appearance: none;
@@ -217,18 +192,6 @@
   width: 100%;
 }
 
-%sidebar-chevron {
-  @include transition(all 0.3s ease);
-  @include transform(translateY(-50%));
-
-  // background: url(#{$img-path-Icon}/chevron-down.svg) no-repeat center center;
-  content: "";
-  height: 0.813rem;
-  position: absolute;
-  right: 1.188rem;
-  top: 50%;
-  width: 20px;
-}
 
 %language_switcher {
   border: none;
