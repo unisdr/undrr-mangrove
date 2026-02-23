@@ -59,6 +59,12 @@ Write error messages that tell users what went wrong and how to fix it:
 - **Persistent**: The summary never auto-dismisses, giving users time to read and act on each error.
 - **WCAG compliance**: Satisfies SC 3.3.1 (Error Identification) and SC 3.3.3 (Error Suggestion).
 
+## See also
+
+- [Form validation example](?path=/docs/example-form-validation--docs) — full integration demo with error summary, inline validation, and toast errors
+
 ## Changelog
+
+1.1 — Fix: focus now only fires once on initial mount, preventing focus theft when individual errors are cleared while the user edits fields
 
 1.0 — Initial implementation with linked error list, focus management, and RTL support

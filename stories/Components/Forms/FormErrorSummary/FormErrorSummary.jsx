@@ -27,10 +27,12 @@ export function FormErrorSummary({
   ...rest
 }) {
   const containerRef = useRef(null);
+  const hasFocusedRef = useRef(false);
 
   useEffect(() => {
-    if (errors?.length > 0 && containerRef.current) {
+    if (errors?.length > 0 && containerRef.current && !hasFocusedRef.current) {
       containerRef.current.focus();
+      hasFocusedRef.current = true;
     }
   }, [errors]);
 
