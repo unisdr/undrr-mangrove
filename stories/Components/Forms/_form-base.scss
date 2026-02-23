@@ -238,9 +238,10 @@
 // Form error summary
 // -----------------------------------------------------------------------------
 .mg-form-error-summary {
-  border: 2px solid $mg-color-red-900;
+  background-color: $mg-color-red-50;
+  border-left: 4px solid $mg-color-red-900;
   margin-bottom: $mg-spacing-200;
-  padding: $mg-spacing-100;
+  padding: $mg-spacing-150;
 
   &:focus {
     outline: 3px solid $mg-color-blue-800;
@@ -251,7 +252,8 @@
     @extend %paragraph-font-300;
 
     color: $mg-color-red-900;
-    margin-bottom: $mg-spacing-50;
+    font-weight: 700;
+    margin-bottom: $mg-spacing-75;
     margin-top: 0;
   }
 
@@ -260,7 +262,7 @@
     padding-left: $mg-spacing-100;
 
     li {
-      margin-bottom: $mg-spacing-25;
+      margin-bottom: $mg-spacing-50;
 
       &:last-child {
         margin-bottom: 0;
@@ -269,7 +271,7 @@
 
     a {
       color: $mg-color-red-900;
-      font-weight: bold;
+      font-weight: 600;
       text-decoration: underline;
     }
   }
