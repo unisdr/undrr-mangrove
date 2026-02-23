@@ -300,6 +300,10 @@ $mg-color-form-check: $mg-color-interactive !default;
 $mg-color-form-check--hover: $mg-color-interactive-active !default;
 $mg-color-form-check--checked: $mg-color-interactive !default;
 
+// form inputs (text, textarea, select)
+$mg-color-form-focus: $mg-color-interactive !default;
+$mg-radius-form-input: $mg-spacing-0 !default;
+
 // hero
 $mg-color-hero: $mg-color-interactive !default;
 $mg-color-hero--secondary: $mg-color-orange-800 !default;

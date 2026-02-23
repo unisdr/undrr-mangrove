@@ -35,7 +35,7 @@
 
   appearance: none;
   border: 2px solid $mg-color-black;
-  border-radius: 0;
+  border-radius: $mg-radius-form-input;
   box-sizing: border-box;
   display: block;
   font-family: $mg-font-family;
@@ -50,7 +50,7 @@
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px $mg-color-form-focus;
     outline: 0;
   }
 }
@@ -106,7 +106,7 @@
 
   appearance: none;
   border: 2px solid $mg-color-black;
-  border-radius: 0;
+  border-radius: $mg-radius-form-input;
   box-sizing: border-box;
   cursor: pointer;
   display: block;
@@ -124,7 +124,7 @@
   background-repeat: no-repeat;
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px $mg-color-form-focus;
     outline: 0;
   }
 
@@ -162,7 +162,7 @@
     }
 
     &:focus-visible {
-      box-shadow: 0 0 4px $mg-color-blue-800;
+      box-shadow: 0 0 4px $mg-color-form-focus;
       outline: 0;
     }
 
