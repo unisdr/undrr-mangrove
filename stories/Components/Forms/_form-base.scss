@@ -13,9 +13,8 @@
 // Label
 // -----------------------------------------------------------------------------
 .mg-form-label {
-  @extend %paragraph-font-300;
-
   display: block;
+  font-size: $mg-font-size-300;
 
   &--disabled {
     color: $mg-color-neutral-400;
@@ -249,9 +248,8 @@
   }
 
   &__title {
-    @extend %paragraph-font-300;
-
     color: $mg-color-red-900;
+    font-size: $mg-font-size-300;
     font-weight: 700;
     margin-bottom: $mg-spacing-75;
     margin-top: 0;
