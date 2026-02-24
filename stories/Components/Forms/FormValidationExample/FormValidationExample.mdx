@@ -1,0 +1,113 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as FormValidationStories from './FormValidationExample.stories';
+
+<Meta of={FormValidationStories} />
+
+# Form validation
+
+How to wire up client-side form validation with Mangrove form components. Use this as a reference when building validated forms for UNDRR sites.
+
+## Live example
+
+Submit the form with empty fields to trigger validation. Use the **errorDisplay** control below to switch between block and toast error modes. Fixing a field clears its error immediately.
+
+<Canvas of={FormValidationStories.Default} />
+
+## Error display modes
+
+Use the `errorDisplay` control to compare two approaches:
+
+| Mode | Component | Behaviour |
+|------|-----------|-----------|
+| **block** (default) | `FormErrorSummary` | Persistent error list at the top of the form with anchor links to each field. Best for long forms. |
+| **toast** | `Snackbar` | Temporary toast notification summarising the error count. Inline field errors still appear. Best for short forms or non-critical feedback. |
+
+Both modes always show inline field-level errors via each component's `error` / `errorText` props.
+
+## How it works
+
+1. The user fills out a form and clicks **Submit**.
+2. If validation fails:
+   - **Block mode**: a [FormErrorSummary](?path=/docs/components-forms-formerrorsummary--docs) appears at the top listing every error. Focus moves to the summary automatically.
+   - **Toast mode**: a [Snackbar](?path=/docs/components-snackbar--docs) appears with the error count. It auto-dismisses after 6 seconds.
+3. Each error in the block summary links to the corresponding field via its `id`.
+4. Inline error messages appear on each invalid field using the `error` and `errorText` props.
+5. As the user fixes a field, its error clears on change. No re-submit needed.
+6. When all fields are valid, errors disappear and the form shows a success message.
+
+## Pattern anatomy
+
+```
+<form onSubmit={handleSubmit} noValidate>
+  <FormErrorSummary errors={fieldErrors} />
+  <TextInput id="name" error={!!errors.name} errorText={errors.name} />
+  <TextInput id="email" error={!!errors.email} errorText={errors.email} />
+  <Select id="category" error={!!errors.category} errorText={errors.category} />
+  <Textarea id="message" error={!!errors.message} errorText={errors.message} />
+  <FormGroup error={!!errors.interests} errorText={errors.interests}>
+    <Checkbox id="interests" />
+  </FormGroup>
+  <button type="submit">Submit</button>
+</form>
+```
+
+### Key points
+
+- Use `noValidate` on the `<form>` to suppress browser validation bubbles. Mangrove handles error display instead.
+- Give every field a stable `id` that matches the corresponding entry in the `errors` array passed to `FormErrorSummary`.
+- For checkbox/radio groups, set the `id` on the **first** control in the group so the error summary link focuses it.
+- Keep error messages identical between the summary and the inline field error.
+
+## Validation logic
+
+Validate on submit, clear on change:
+
+```js
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const next = validate(); // returns { fieldId: "message", ... }
+  if (Object.keys(next).length > 0) {
+    setErrors(next);
+    return;
+  }
+  // success
+};
+
+const handleChange = (field, value) => {
+  setValues(prev => ({ ...prev, [field]: value }));
+  // clear this field's error immediately
+  setErrors(prev => {
+    const { [field]: _, ...rest } = prev;
+    return rest;
+  });
+};
+```
+
+## Error message guidelines
+
+See the [FormErrorSummary docs](?path=/docs/components-forms-formerrorsummary--docs) for more on error messages. The short version:
+
+- **Be specific**: "Enter a valid email address" not "Invalid input"
+- **Front-load the action**: "Enter your full name" not "Name is required"
+- **State limits explicitly**: "Enter at least 10 characters" not "Too short"
+- **Use the same text** in both the summary and inline error
+
+## Components used
+
+| Component | Docs |
+|-----------|------|
+| FormErrorSummary | [Docs](?path=/docs/components-forms-formerrorsummary--docs) |
+| Snackbar | [Docs](?path=/docs/components-snackbar--docs) |
+| TextInput | [Docs](?path=/docs/components-forms-text-input--docs) |
+| Textarea | [Docs](?path=/docs/components-forms-textarea--docs) |
+| Select | [Docs](?path=/docs/components-forms-select--docs) |
+| FormGroup | [Docs](?path=/docs/components-forms-formgroup--docs) |
+| Checkbox | [Docs](?path=/docs/components-forms-checkbox--docs) |
+
+## Accessibility
+
+- `FormErrorSummary` takes focus on mount via `tabIndex={-1}` and uses `role="alert"` so screen readers announce it.
+- Each error link points to the field's `id`, so keyboard users can jump straight to the problem.
+- Inline errors use `role="alert"` and are wired to their field via `aria-describedby`.
+- Invalid fields get `aria-invalid="true"`.
+- Covers WCAG SC 3.3.1 (Error Identification), 3.3.3 (Error Suggestion), and 4.1.3 (Status Messages).

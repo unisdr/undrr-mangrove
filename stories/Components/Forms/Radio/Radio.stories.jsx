@@ -1,21 +1,53 @@
+import React from 'react';
 import { Radio } from './Radio';
+import { FormGroup } from '../FormGroup/FormGroup';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
-    case 'english':
-      const engText = { label: 'Category' };
-      return engText;
     case 'arabic':
-      const arabicText = { label: 'فئة' };
-      return arabicText;
+      return {
+        label: 'الخيار أ',
+        legend: 'حدد أولوية',
+        items: [
+          { label: 'منخفض', value: 'low' },
+          { label: 'متوسط', value: 'medium' },
+          { label: 'مرتفع', value: 'high' },
+        ],
+        errorText: 'يرجى تحديد خيار',
+      };
     case 'burmese':
-      const burmeseText = { label: 'အမျိုးအစား' };
-      return burmeseText;
+      return {
+        label: 'ရွေးချယ်မှု A',
+        legend: 'ဦးစားပေးကိုရွေးချယ်ပါ',
+        items: [
+          { label: 'နိမ့်', value: 'low' },
+          { label: 'အလယ်', value: 'medium' },
+          { label: 'မြင့်', value: 'high' },
+        ],
+        errorText: 'ရွေးချယ်မှုတစ်ခုကိုရွေးချယ်ပါ',
+      };
     case 'japanese':
-      const japaneseText = { label: 'カテゴリー' };
-      return japaneseText;
+      return {
+        label: 'オプション A',
+        legend: '優先度を選択',
+        items: [
+          { label: '低', value: 'low' },
+          { label: '中', value: 'medium' },
+          { label: '高', value: 'high' },
+        ],
+        errorText: 'オプションを選択してください',
+      };
     default:
-      return { label: 'Category' };
+      return {
+        label: 'Option A',
+        legend: 'Select a priority',
+        items: [
+          { label: 'Low', value: 'low' },
+          { label: 'Medium', value: 'medium' },
+          { label: 'High', value: 'high' },
+        ],
+        errorText: 'Please select an option',
+      };
   }
 };
 
@@ -24,11 +56,89 @@ export default {
   component: Radio,
 };
 
-export const DefaultRadio = {
+export const Default = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Radio label={caption.label} id="undrr" name="undrr"></Radio>;
+    return <Radio label={caption.label} value="a" name="demo" {...args} />;
   },
+};
 
-  name: 'Radio',
+export const Selected = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-selected"
+        defaultChecked
+        {...args}
+      />
+    );
+  },
+};
+
+export const Disabled = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-disabled"
+        disabled
+        {...args}
+      />
+    );
+  },
+};
+
+export const LabelBefore = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-before"
+        labelPosition="before"
+        {...args}
+      />
+    );
+  },
+};
+
+export const ErrorState = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Radio
+        label={caption.label}
+        value="a"
+        name="demo-error"
+        error
+        errorText={caption.errorText}
+        {...args}
+      />
+    );
+  },
+};
+
+export const RadioGroup = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <FormGroup legend={caption.legend}>
+        {caption.items.map(item => (
+          <Radio
+            key={item.value}
+            label={item.label}
+            value={item.value}
+            name="priority"
+            {...args}
+          />
+        ))}
+      </FormGroup>
+    );
+  },
 };

@@ -58,13 +58,13 @@ yarn install react react-dom
 // Individual component imports (recommended)
 import { CtaButton } from '@undrr/undrr-mangrove/components/CtaButton';
 import { VerticalCard } from '@undrr/undrr-mangrove/components/VerticalCard';
-import { InputFields } from '@undrr/undrr-mangrove/components/InputFields';
+import { TextInput } from '@undrr/undrr-mangrove/components/TextInput';
 
 // Or import multiple components
 import {
   CtaButton,
   VerticalCard,
-  InputFields,
+  TextInput,
   Breadcrumbs,
   StatsCards,
 } from '@undrr/undrr-mangrove';
@@ -102,7 +102,8 @@ import React, { useState } from 'react';
 import {
   CtaButton,
   VerticalCard,
-  InputFields,
+  TextInput,
+  Textarea,
   Breadcrumbs,
   StatsCards,
   Pagination
@@ -252,39 +253,32 @@ function App() {
             </div>
 
             <form onSubmit={handleFormSubmit} className="mg-form mg-form--white">
-              <InputFields
+              <TextInput
                 type="text"
-                element="input"
                 placeholder="Enter your full name"
-                labelText="Full Name"
+                label="Full name"
                 id="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                State="Active"
                 required
               />
 
-              <InputFields
+              <TextInput
                 type="email"
-                element="input"
                 placeholder="Enter your email address"
-                labelText="Email Address"
+                label="Email address"
                 id="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                State="Active"
                 required
               />
 
-              <InputFields
-                type="text"
-                element="textarea"
+              <Textarea
                 placeholder="Tell us about your interest in disaster risk reduction..."
-                labelText="Message"
+                label="Message"
                 id="message"
                 value={formData.message}
                 onChange={handleInputChange}
-                State="Active"
                 rows={4}
                 required
               />
@@ -328,7 +322,8 @@ import React, { useState, FormEvent, ChangeEvent } from 'react';
 import {
   CtaButton,
   VerticalCard,
-  InputFields,
+  TextInput,
+  Textarea,
   StatsCards,
   CtaButtonProps,
   VerticalCardProps,
@@ -466,23 +461,40 @@ export default App;
 />
 ```
 
-### InputFields component
+### TextInput component
 
 ```jsx
-<InputFields
-  type="text" // Input type: "text" | "email" | "password" | "tel" | etc.
-  element="input" // "input" | "textarea"
+<TextInput
+  type="text"       // "text" | "email" | "password" | "number" | "tel" | "search" | "date" | "url"
+  label="Field label"     // Visible label text
+  hideLabel={false}        // Visually hide label (still accessible)
   placeholder="Enter text..." // Placeholder text
-  labelText="Field Label" // Label text
-  errorText="Error message" // Error message text
-  helpText="Help text" // Help/hint text
-  State="Active" // "Active" | "Focus" | "Error" | "Disabled"
-  id="field-id" // Unique ID for the field
-  value={fieldValue} // Controlled value
-  onChange={handleChange} // Change event handler
-  required={true} // Required field
-  disabled={false} // Disabled state
-  rows={4} // For textarea element
+  helpText="Help text"    // Help text below the input
+  error={false}            // Error state
+  errorText="Error message" // Error message (shown when error is true)
+  id="field-id"            // Custom id (auto-generated if omitted)
+  value={fieldValue}       // Controlled value
+  onChange={handleChange}   // Change handler
+  required={false}         // Required field
+  disabled={false}         // Disabled state
+/>
+```
+
+### Textarea component
+
+```jsx
+<Textarea
+  label="Description"     // Visible label text
+  placeholder="Enter text..." // Placeholder text
+  rows={4}                 // Number of visible rows
+  helpText="Max 500 characters" // Help text
+  error={false}            // Error state
+  errorText="Required"    // Error message
+  id="textarea-id"        // Custom id
+  value={textValue}        // Controlled value
+  onChange={handleChange}   // Change handler
+  required={false}         // Required field
+  disabled={false}         // Disabled state
 />
 ```
 

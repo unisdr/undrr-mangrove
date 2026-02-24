@@ -136,24 +136,8 @@
 }
 
 
-%checbox-radio-before {
-  -webkit-appearance: none;
-  appearance: none;
-  border: 2px solid $mg-color-red-900;
-  cursor: pointer;
-  height: 16px;
-  margin: 0;
-  width: 16px;
-
-  &:hover {
-    border-color: $sendai-purple-400;
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-blue-800;
-    outline: 0;
-  }
-}
+// %checbox-radio-before — REMOVED (February 2026)
+// Migrated to .mg-form-check__input in _form-base.scss.
 
 %ctaimg {
   content: "";
@@ -211,19 +195,8 @@
   width: 100%;
 }
 
-%select_default {
-  border: 2px solid $mg-color-black;
-  color: $mg-color-black;
-  cursor: pointer;
-  font-size: $mg-font-size-300;
-  font-weight: 600;
-  line-height: 1.125rem;
-  margin: 0;
-  padding: $mg-spacing-50 $mg-spacing-800 $mg-spacing-50 $mg-spacing-50;
-  position: relative;
-  text-transform: uppercase;
-  width: 100%;
-}
+// %select_default — REMOVED (February 2026)
+// Migrated to .mg-form-select in _form-base.scss.
 
 %select_option {
   border: 2px solid $mg-color-black;

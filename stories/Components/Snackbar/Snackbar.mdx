@@ -123,9 +123,13 @@ The component is designed to be fully responsive:
 - Ensures buttons meet minimum size requirements (44px) for touch interactions
 - Uses appropriate spacing for mobile viewports
 
+## See also
+
+- [Form validation example](?path=/docs/example-form-validation--docs&args=errorDisplay:toast) — working form that uses Snackbar for toast errors alongside inline field errors
+
 ## Changelog
 
-### Version 1.1 (Current)
+### Version 1.1
 
 - **Accessibility Improvements**:
   - Added screen reader announcements for severity levels
@@ -148,3 +152,8 @@ The component is designed to be fully responsive:
   - Updated deprecated color functions to use `color.adjust()`
   - Fixed documentation and comments
   - Improved component structure with proper React hooks usage
+
+### Version 1.2
+
+- Fix: `onClose` is stored in a ref now, so passing an inline arrow function no longer re-fires the timer, keyboard listener, and focus effect on every render.
+- Fix: close button only takes focus when `opened` goes from `false` to `true`, not on unrelated re-renders.

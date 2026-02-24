@@ -20,40 +20,43 @@ const Snackbar = ({
 }) => {
   let icon;
   const closeButtonRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+  const prevOpenedRef = useRef(false);
+  onCloseRef.current = onClose;
 
   // close the snackbar after the openedMiliseconds if it is set
   useEffect(() => {
     if (opened && openedMiliseconds) {
       const timerId = setTimeout(() => {
-        onClose();
+        onCloseRef.current();
       }, openedMiliseconds);
 
-      // Clear the timer if the component unmounts or if opened or openedMiliseconds change before the timeout expires
       return () => {
         clearTimeout(timerId);
       };
     }
-  }, [opened, openedMiliseconds, onClose]);
+  }, [opened, openedMiliseconds]);
 
-  // Add keyboard support - close on escape key
+  // Add keyboard support and focus management
   useEffect(() => {
     const handleKeyDown = event => {
       if (opened && event.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
 
-    // Focus the close button when snackbar opens
-    if (opened && closeButtonRef.current) {
+    // Focus the close button only when transitioning to open
+    if (opened && !prevOpenedRef.current && closeButtonRef.current) {
       closeButtonRef.current.focus();
     }
+    prevOpenedRef.current = opened;
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [opened, onClose]);
+  }, [opened]);
 
   switch (severity) {
     case 'error':
