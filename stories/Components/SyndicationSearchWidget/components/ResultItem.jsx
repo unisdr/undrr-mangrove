@@ -36,9 +36,16 @@ export function swapCardVariant(html, displayMode) {
   const variant = displayMode === 'card-book'
     ? 'mg-card__vc mg-card__book'
     : 'mg-card__vc';
-  result = result.replace(/class="([^"]*)"/, (_, cls) =>
-    `class="${cls.trim()} ${variant}"`
-  );
+  const classWithCardRegex = /class="([^"]*\bmg-card\b[^"]*)"/;
+  if (classWithCardRegex.test(result)) {
+    result = result.replace(classWithCardRegex, (_, cls) =>
+      `class="${cls.trim()} ${variant}"`
+    );
+  } else {
+    result = result.replace(/class="([^"]*)"/, (_, cls) =>
+      `class="${cls.trim()} ${variant}"`
+    );
+  }
 
   // Rewrite Drupal image styles to match the card aspect ratio.
   // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).

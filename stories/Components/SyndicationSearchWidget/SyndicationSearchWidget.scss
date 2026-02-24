@@ -749,6 +749,12 @@ $search-input-padding-x: $mg-spacing-250;
   > [role="listitem"] {
     display: flex;
   }
+
+  // Remove list-style dividers in grid/card mode
+  .mg-search__result {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
 }
 
 // ========================================
