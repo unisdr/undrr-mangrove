@@ -307,7 +307,7 @@ function ContactForm() {
 
   return (
     <form onSubmit={isEnhanced ? handleEnhancedSubmit : undefined}>
-      <InputFields type="text" name="name" labelText="Name" required />
+      <TextInput type="text" name="name" label="Name" required />
       {isEnhanced && (
         <div className="mg-form__validation">Real-time validation enabled</div>
       )}

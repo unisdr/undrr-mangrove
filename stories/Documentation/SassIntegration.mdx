@@ -78,7 +78,8 @@ $mg-font-family-base: 'Roboto', Arial, sans-serif;
 // 4. Import component styles you need
 @import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 @import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/form-base';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/TextInput/text-input';
 
 // 5. Add your custom styles
 @import 'custom/components';
@@ -183,9 +184,12 @@ gulp.task('sass', function () {
 @import '~@undrr/undrr-mangrove/stories/Components/Buttons/ShareButtons/share-buttons';
 
 // Forms
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/form-base';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/TextInput/text-input';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/Textarea/textarea';
 @import '~@undrr/undrr-mangrove/stories/Components/Forms/Select/select';
 @import '~@undrr/undrr-mangrove/stories/Components/Forms/Checkbox/checkbox';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/Radio/radio';
 
 // Content Components
 @import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
@@ -654,7 +658,8 @@ Only import components you actually use:
 // Import selectively
 @import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
 @import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/InputFields/input-fields';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/form-base';
+@import '~@undrr/undrr-mangrove/stories/Components/Forms/TextInput/text-input';
 ```
 
 ### 3. Variable Overrides

@@ -1,0 +1,13 @@
+// TextInput-specific overrides (date picker styling).
+// Shared form styles live in _form-base.scss.
+
+.mg-form-input[type="date"] {
+  color: $mg-color-neutral-500;
+
+  &::-webkit-calendar-picker-indicator {
+    appearance: none;
+    left: 3px;
+    opacity: 0;
+    position: absolute;
+  }
+}

@@ -1,0 +1,70 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as FormErrorSummaryStories from './FormErrorSummary.stories';
+
+<Meta of={FormErrorSummaryStories} />
+
+# Form error summary
+
+A persistent, accessible summary of form validation errors displayed at the top of a form.
+
+## Overview
+
+When a form submission fails validation, the FormErrorSummary lists what went wrong. Each error message links to the corresponding field, so users can jump to and fix each problem in sequence.
+
+This pattern follows the [GOV.UK error summary](https://design-system.service.gov.uk/components/error-summary/) and [W3C WAI error handling](https://www.w3.org/WAI/tutorials/forms/notifications/) best practices.
+
+## When to use
+
+- **Always** display an error summary at the top of the form when submission fails validation.
+- **Pair with inline errors** — show the same error message both in the summary and next to the field.
+- Use `id` attributes on your form fields that match the `id` values in the `errors` array so links work correctly.
+
+## When not to use
+
+- **Not for async feedback** — use [Snackbar](/docs/components-snackbar--docs) for success messages, network errors, or session timeouts.
+- **Not for single-field inline validation** — use the `error`/`errorText` props on individual form components instead.
+
+## Single error
+
+<Canvas of={FormErrorSummaryStories.SingleError} />
+
+<Controls of={FormErrorSummaryStories.SingleError} />
+
+## Multiple errors
+
+<Canvas of={FormErrorSummaryStories.MultipleErrors} />
+
+## How it works
+
+1. The user submits a form with validation errors.
+2. The error summary renders at the top of the form with a list of all errors.
+3. Focus moves automatically to the summary so screen readers announce it immediately.
+4. Each error is a link — clicking it scrolls to and focuses the corresponding field.
+5. The summary persists until all errors are resolved. It never auto-dismisses.
+
+## Error message guidelines
+
+Write error messages that tell users what went wrong and how to fix it:
+
+- **Be specific**: "Enter a valid email address" not "Invalid input"
+- **Use the same text** in both the summary and the inline field error
+- **Front-load the action**: "Enter your full name" not "The name field is required"
+- **State limits explicitly**: "Enter a date after 1 January 2020" not "Date is invalid"
+
+## Accessibility
+
+- **Focus management**: The summary container receives focus on mount via `tabIndex={-1}`, so screen readers announce it immediately.
+- **Live region**: `role="alert"` announces the summary to assistive technology.
+- **Linked errors**: Each error is an anchor that navigates to the field's `id`.
+- **Persistent**: The summary never auto-dismisses. Users have time to read and act on each error.
+- **WCAG compliance**: Satisfies SC 3.3.1 (Error Identification) and SC 3.3.3 (Error Suggestion).
+
+## See also
+
+- [Form validation example](?path=/docs/example-form-validation--docs) — working form with error summary, inline errors, and toast mode
+
+## Changelog
+
+1.1 — Fix: focus now only fires once on initial mount, preventing focus theft when individual errors are cleared while the user edits fields
+
+1.0 — Initial implementation with linked error list, focus management, and RTL support
