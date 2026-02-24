@@ -1,45 +1,43 @@
 /**
- * @file Textarea.jsx
- * @description Multi-line text input with label, help text, and error states.
+ * @file TextInput.jsx
+ * @description Single-line text input with label, help text, and error states.
  *
- * @module Textarea
+ * @module TextInput
  */
 
 import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Textarea component.
+ * TextInput component.
  *
  * @param {Object} props
- * @param {string} [props.id]              Custom id for the textarea element
+ * @param {string} [props.id]              Custom id for the input element
  * @param {string} [props.name]            Name attribute
+ * @param {string} [props.type='text']     Input type: text, email, password, number, tel, search, date, url
  * @param {string} [props.label]           Visible label text
  * @param {boolean} [props.hideLabel=false] Visually hide the label (still accessible)
  * @param {string} [props.placeholder]     Placeholder text
  * @param {string} [props.value]           Controlled value
  * @param {string} [props.defaultValue]    Uncontrolled default value
  * @param {Function} [props.onChange]       Change handler
- * @param {number} [props.rows=4]          Number of visible text rows
- * @param {number} [props.cols]            Number of visible text columns
- * @param {boolean} [props.disabled=false]  Disable the textarea
+ * @param {boolean} [props.disabled=false]  Disable the input
  * @param {boolean} [props.required=false]  Mark as required
- * @param {string} [props.helpText]        Help text displayed below the textarea
- * @param {boolean} [props.error=false]    Whether the textarea is in an error state
- * @param {string} [props.errorText]       Error message displayed below the textarea
+ * @param {string} [props.helpText]        Help text displayed below the input
+ * @param {boolean} [props.error=false]    Whether the input is in an error state
+ * @param {string} [props.errorText]       Error message displayed below the input
  * @param {string} [props.className]       Additional CSS class for the wrapper
  */
-export function Textarea({
+export function TextInput({
   id,
   name,
+  type = 'text',
   label,
   hideLabel = false,
   placeholder,
   value,
   defaultValue,
   onChange,
-  rows = 4,
-  cols,
   disabled = false,
   required = false,
   helpText,
@@ -49,15 +47,15 @@ export function Textarea({
   ...rest
 }) {
   const autoId = useId();
-  const textareaId = id || autoId;
-  const helpId = helpText ? `${textareaId}-help` : undefined;
-  const errorId = error && errorText ? `${textareaId}-error` : undefined;
+  const inputId = id || autoId;
+  const helpId = helpText ? `${inputId}-help` : undefined;
+  const errorId = error && errorText ? `${inputId}-error` : undefined;
   const describedBy = [helpId, errorId].filter(Boolean).join(' ') || undefined;
 
-  const textareaClassName = [
-    'mg-form-textarea',
-    disabled && 'mg-form-textarea--disabled',
-    error && 'mg-form-textarea--error',
+  const inputClassName = [
+    'mg-form-input',
+    disabled && 'mg-form-input--disabled',
+    error && 'mg-form-input--error',
   ]
     .filter(Boolean)
     .join(' ');
@@ -74,21 +72,20 @@ export function Textarea({
   return (
     <div className={['mg-form-field', className].filter(Boolean).join(' ')}>
       {label && (
-        <label className={labelClassName} htmlFor={textareaId}>
+        <label className={labelClassName} htmlFor={inputId}>
           {label}
         </label>
       )}
 
-      <textarea
-        className={textareaClassName}
-        id={textareaId}
+      <input
+        className={inputClassName}
+        type={type}
+        id={inputId}
         name={name}
         placeholder={placeholder}
         value={value}
         defaultValue={defaultValue}
         onChange={onChange}
-        rows={rows}
-        cols={cols}
         disabled={disabled}
         required={required}
         aria-describedby={describedBy}
@@ -112,17 +109,25 @@ export function Textarea({
   );
 }
 
-Textarea.propTypes = {
+TextInput.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
+  type: PropTypes.oneOf([
+    'text',
+    'email',
+    'password',
+    'number',
+    'tel',
+    'search',
+    'date',
+    'url',
+  ]),
   label: PropTypes.string,
   hideLabel: PropTypes.bool,
   placeholder: PropTypes.string,
   value: PropTypes.string,
   defaultValue: PropTypes.string,
   onChange: PropTypes.func,
-  rows: PropTypes.number,
-  cols: PropTypes.number,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
   helpText: PropTypes.string,
@@ -131,4 +136,4 @@ Textarea.propTypes = {
   className: PropTypes.string,
 };
 
-export default Textarea;
+export default TextInput;
