@@ -123,28 +123,12 @@ The component is designed to be fully responsive:
 - Ensures buttons meet minimum size requirements (44px) for touch interactions
 - Uses appropriate spacing for mobile viewports
 
+## See also
+
+- [Form validation example](?path=/docs/example-form-validation--docs&args=errorDisplay:toast) — working form that uses Snackbar for toast errors alongside inline field errors
+
 ## Changelog
 
-### Version 1.1 (Current)
-
-- **Accessibility Improvements**:
-  - Added screen reader announcements for severity levels
-  - Improved ARIA attributes (`role="alert"`, `aria-live="assertive"`)
-  - Added focus management that auto-focuses the close button when opened
-  - Added keyboard support to close with Escape key
-  - Added focus styles for better keyboard navigation
-- **Mobile Enhancements**:
-  - Improved responsive design for small screens
-  - Increased touch target size to 44px minimum height
-  - Added responsive layout that adapts button placement on mobile
-  - Improved button styling for better touch interactions
-- **Visual Updates**:
-  - Updated all severity colors for better contrast
-  - Made warning style consistent with other severity types (dark background, white text)
-  - Added consistent button styles with hover and active states
-  - Improved icon visibility and consistency
-- **Code Improvements**:
-  - Added proper Sass module imports (`@use "sass:color"`)
-  - Updated deprecated color functions to use `color.adjust()`
-  - Fixed documentation and comments
-  - Improved component structure with proper React hooks usage
+- **1.2** — 2026-02-23: Fix: `onClose` stored in ref to prevent re-firing timer/keyboard/focus effects on re-renders; close button focus only triggers on `opened` transition
+- **1.1** — 2025-04-28: Accessibility improvements (screen reader announcements, ARIA attributes, focus management, Escape key); mobile-responsive layout; updated severity colors for contrast; modernized Sass functions
+- **1.0** — 2023-12-20: Initial release

@@ -19,6 +19,12 @@ $mg-color-button-background: $pw-color-primary;
 $mg-color-button-background--hover: $sendai-orange-900;
 $mg-radius-button: $mg-spacing-50;
 
+// Form elements
+$mg-color-form-check: $mg-color-interactive;
+$mg-color-form-check--hover: $mg-color-interactive-active;
+$mg-color-form-check--checked: $mg-color-interactive;
+$mg-color-form-focus: $mg-color-interactive;
+
 // Hero
 $mg-color-hero: $mg-color-interactive;
 $mg-spacing-hero-overlay: 2rem 0;

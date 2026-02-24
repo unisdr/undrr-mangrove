@@ -20,6 +20,12 @@ To keep copy consistent and high quality across UI, docs, and developer messages
 - Use the quick reference for AI tools and lookups: [`docs/WRITING-SHORT.md`](docs/WRITING-SHORT.md)
 - Headings and titles use sentence case, with proper nouns and acronyms capitalized.
 
+## Component changelogs
+
+Every component MDX file must include a `## Changelog` section tracking its version history. Entries use the format `- **version** — YYYY-MM-DD: description`, with newest entries first. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs#changelog-format) for the full specification and examples.
+
+When submitting a PR that modifies a component, add a new changelog entry to that component's MDX file. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
+
 ## Submitting changes
 
 1. Create a feature branch from `main`.

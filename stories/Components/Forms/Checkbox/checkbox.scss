@@ -1,22 +1,2 @@
-/* checkbox */
-.form-check {
-  align-items: center;
-  display: flex;
-  position: relative;
-
-  label {
-    cursor: pointer;
-    font-size: $mg-font-size-300;
-    padding: 0 7px;
-  }
-}
-
-input[type="checkbox"] {
-  @extend %checbox-radio-before;
-
-  border-radius: 0;
-
-  // &:checked {
-  //   background: url(#{$img-path-Icon}/icon-check.svg) 1px 0 no-repeat;
-  // }
-}
+// Checkbox-specific overrides.
+// Shared form styles live in _form-base.scss (.mg-form-check).

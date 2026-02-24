@@ -1,21 +1,57 @@
+import React from 'react';
 import { Checkbox } from './Checkbox';
+import { FormGroup } from '../FormGroup/FormGroup';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
-    case 'english':
-      const engText = { label: 'Category', value: 'category' };
-      return engText;
     case 'arabic':
-      const arabicText = { label: 'فئة', value: 'فئة' };
-      return arabicText;
+      return {
+        label: 'أوافق على الشروط والأحكام',
+        value: 'terms',
+        legend: 'اختر اهتماماتك',
+        items: [
+          { label: 'الحد من مخاطر الكوارث', value: 'drr' },
+          { label: 'تغير المناخ', value: 'climate' },
+          { label: 'المرونة', value: 'resilience' },
+        ],
+        errorText: 'يجب عليك قبول الشروط والأحكام',
+      };
     case 'burmese':
-      const burmeseText = { label: 'အမျိုးအစား', value: 'အမျိုးအစား' };
-      return burmeseText;
+      return {
+        label: 'စည်းကမ်းချက်များကိုလက်ခံပါသည်',
+        value: 'terms',
+        legend: 'သင်၏စိတ်ဝင်စားမှုများကိုရွေးချယ်ပါ',
+        items: [
+          { label: 'ဘေးအန္တရာယ်လျှော့ချရေး', value: 'drr' },
+          { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
+          { label: 'ခံနိုင်ရည်', value: 'resilience' },
+        ],
+        errorText: 'စည်းကမ်းချက်များကိုလက်ခံရပါမည်',
+      };
     case 'japanese':
-      const japaneseText = { label: 'カテゴリー', value: 'カテゴリー' };
-      return japaneseText;
+      return {
+        label: '利用規約に同意する',
+        value: 'terms',
+        legend: '興味のある分野を選択',
+        items: [
+          { label: '防災・減災', value: 'drr' },
+          { label: '気候変動', value: 'climate' },
+          { label: 'レジリエンス', value: 'resilience' },
+        ],
+        errorText: '利用規約に同意する必要があります',
+      };
     default:
-      return { label: 'Category' };
+      return {
+        label: 'Accept terms and conditions',
+        value: 'terms',
+        legend: 'Select your interests',
+        items: [
+          { label: 'Disaster risk reduction', value: 'drr' },
+          { label: 'Climate change', value: 'climate' },
+          { label: 'Resilience', value: 'resilience' },
+        ],
+        errorText: 'You must accept the terms and conditions',
+      };
   }
 };
 
@@ -24,17 +60,85 @@ export default {
   component: Checkbox,
 };
 
-export const DefaultCheckbox = {
+export const Default = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Checkbox label={caption.label} value={caption.value} {...args} />;
+  },
+};
+
+export const Checked = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return (
       <Checkbox
         label={caption.label}
         value={caption.value}
-        id="edit-checkbox"
-      ></Checkbox>
+        defaultChecked
+        {...args}
+      />
     );
   },
+};
 
-  name: 'Checkbox',
+export const Disabled = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        disabled
+        {...args}
+      />
+    );
+  },
+};
+
+export const LabelBefore = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        labelPosition="before"
+        {...args}
+      />
+    );
+  },
+};
+
+export const ErrorState = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <Checkbox
+        label={caption.label}
+        value={caption.value}
+        error
+        errorText={caption.errorText}
+        {...args}
+      />
+    );
+  },
+};
+
+export const CheckboxGroup = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <FormGroup legend={caption.legend}>
+        {caption.items.map(item => (
+          <Checkbox
+            key={item.value}
+            label={item.label}
+            value={item.value}
+            name="interests"
+            {...args}
+          />
+        ))}
+      </FormGroup>
+    );
+  },
 };

@@ -1,0 +1,24 @@
+// FormGroup — styled fieldset/legend for grouping related form controls.
+
+.mg-form-group {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+
+  &__legend {
+    @extend %paragraph-font-300;
+
+    display: block;
+    margin-bottom: $mg-spacing-50;
+    padding: 0;
+  }
+
+  &--disabled &__legend {
+    color: $mg-color-neutral-400;
+  }
+
+  &--error &__legend {
+    color: $mg-color-red-900;
+  }
+}
