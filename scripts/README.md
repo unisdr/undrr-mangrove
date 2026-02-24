@@ -29,9 +29,7 @@ yarn update-cdn-version
 - `stories/Documentation/GettingStarted.mdx`
 - `stories/Documentation/VanillaHtmlCss.mdx`
 - `stories/Documentation/Intro.mdx`
-- `stories/Components/Accordion/Accordion.mdx`
 - `stories/Components/StatsCardSlider/StatsCardSlider.mdx`
-- `stories/Components/LanguageSwitcher/LanguageSwitcher.mdx`
 - `stories/Utilities/ShowMore/ShowMore.mdx`
 - `stories/Atom/Layout/Grid/Grid.mdx`
 - `docs/RELEASES.md`
