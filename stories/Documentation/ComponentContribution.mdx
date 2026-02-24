@@ -445,6 +445,31 @@ Each component must have comprehensive documentation in an MDX file that include
 7. **Interactions** - Details on hover, focus, and other states
 8. **Changelog** - Version history of the component
 
+### Changelog format
+
+Every component MDX file must end with a `## Changelog` section (H2 level) that tracks the component's version history. Use this exact format:
+
+```markdown
+## Changelog
+
+- **2.1** — 2026-02-20: Description of the change
+- **2.0** — 2026-01-15: **Breaking:** Description of breaking change
+- **1.0** — 2025-11-01: Released component
+```
+
+**Rules:**
+
+- **Heading level**: Always `## Changelog` (H2)
+- **Entry format**: `- **version** — YYYY-MM-DD: description`
+- **Version**: Semver without `v` prefix (e.g., `1.0`, `2.1.3`, not `v1.0` or `Version 1.0`)
+- **Separator**: Em dash `—` between version and date, colon `:` after date
+- **Date**: ISO 8601 format (`YYYY-MM-DD`) for traceability
+- **Order**: Newest entries first
+- **Breaking changes**: Prefix description with `**Breaking:**`
+- **Structure**: Bullet list with bold version number (compact, scannable)
+
+**Do not** use subheadings within changelog entries, date-only entries without version numbers, bare version numbers without descriptions, or mixed separator styles.
+
 ### Title capitalization rules
 
 All titles and headings in the Mangrove documentation follow **sentence case capitalization**:
@@ -559,9 +584,9 @@ Instructions for implementing the component.
 
 Description of hover, focus, and other states.
 
-### Changelog
+## Changelog
 
-1.0 — Released component
+- **1.0** — 2025-01-15: Released component
 ```
 
 ## Creating Storybook stories
