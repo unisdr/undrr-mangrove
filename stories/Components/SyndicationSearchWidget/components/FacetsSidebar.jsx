@@ -16,6 +16,8 @@ import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   FACET_FIELDS,
   CONTENT_SUBTYPES,
+  TAXONOMY_VOCABULARIES,
+  TAXONOMY_VOCABULARY_MAP,
   createSubtypeValue,
   isFilterVisible,
 } from '../utils/constants';
@@ -41,11 +43,14 @@ export function FacetsSidebar({ widgetId = 'search' }) {
   const fields = facetFields || FACET_FIELDS;
 
   /**
-   * Merge content types with their subtypes for hierarchical display.
+   * Merge content types, subtypes, and taxonomy vocabularies for unified display.
    * Parent types keep their original keys (e.g., "news").
    * Subtypes get namespaced keys (e.g., "field_news_type:751").
+   * Vocabularies get namespaced keys (e.g., "vid:hazard").
    *
-   * Returns buckets organized as: parent types with their subtypes grouped after them.
+   * Returns buckets organized as:
+   * 1. Content types with their subtypes grouped after them
+   * 2. Taxonomy vocabularies (Countries, Hazards, Themes) appended at the end
    */
   const getMergedTypeBuckets = useMemo(() => {
     if (!aggregations) return [];
@@ -80,6 +85,23 @@ export function FacetsSidebar({ widgetId = 'search' }) {
             parentType: parentBucket.key,
           });
         }
+      }
+    }
+
+    // Append taxonomy vocabulary buckets from the vid aggregation.
+    // Only include vocabularies that are configured in TAXONOMY_VOCABULARIES
+    // (e.g., countries, hazards, themes — not internal vocabularies).
+    const vidBuckets = aggregations.vid?.buckets || [];
+    for (const vidBucket of vidBuckets) {
+      const vocab = TAXONOMY_VOCABULARY_MAP.get(vidBucket.key);
+      if (vocab) {
+        result.push({
+          key: `vid:${vidBucket.key}`,
+          doc_count: vidBucket.doc_count,
+          isSubtype: false,
+          isVocabulary: true,
+          parentType: null,
+        });
       }
     }
 

@@ -57,6 +57,19 @@ export const CONTENT_TYPES = [
 ];
 
 /**
+ * Taxonomy vocabulary configuration for term results.
+ * Maps vocabulary machine names (from ES `vid` field) to display info.
+ * Only vocabularies that should appear in search results are listed here.
+ *
+ * @type {Array<{id: string, name: string, domain: string}>}
+ */
+export const TAXONOMY_VOCABULARIES = [
+  { id: 'prevention_web_regions', name: 'Country', domain: 'www_preventionweb_net' },
+  { id: 'hazard', name: 'Hazard', domain: 'www_preventionweb_net' },
+  { id: 'theme', name: 'Theme', domain: 'www_preventionweb_net' },
+];
+
+/**
  * Content subtype configuration.
  * Maps parent content types to their subtype fields and options.
  * Subtypes appear as indented children under parent types in the Type dropdown.
@@ -245,6 +258,7 @@ export const SCORING_CONFIG = {
   // Field weights for query_string (main search)
   fieldWeights: {
     title: 9.0,
+    rendered_item: 3.0,
     teaser: 1.2,
     body: 1.0,
     saa_field_attachment: 0.1,
@@ -362,6 +376,7 @@ export const DOMAIN_MAP = new Map(DOMAINS.map(d => [d.id, d]));
 export const CONTENT_TYPE_MAP = new Map(CONTENT_TYPES.map(t => [t.id, t]));
 export const NEWS_TYPE_MAP = new Map(NEWS_TYPES.map(t => [t.id, t]));
 export const LANGUAGE_MAP = new Map(LANGUAGES.map(l => [l.id, l]));
+export const TAXONOMY_VOCABULARY_MAP = new Map(TAXONOMY_VOCABULARIES.map(v => [v.id, v]));
 
 /**
  * Build a map of all subtype options across all parent types.
@@ -422,6 +437,25 @@ export function getLanguage(langId) {
 }
 
 /**
+ * Get taxonomy vocabulary info by ID.
+ * @param {string} vid - The vocabulary machine name
+ * @returns {Object|undefined} Vocabulary info or undefined if not found
+ */
+export function getTaxonomyVocabulary(vid) {
+  return TAXONOMY_VOCABULARY_MAP.get(vid);
+}
+
+/**
+ * Check if a search result is a taxonomy term (vs a node).
+ * Taxonomy terms have `vid` (vocabulary) but no `type` (content type).
+ * @param {Object} source - Elasticsearch _source object
+ * @returns {boolean} True if the result is a taxonomy term
+ */
+export function isTaxonomyTermResult(source) {
+  return source?.vid !== undefined && source?.nid === undefined;
+}
+
+/**
  * Check if a filter should be visible based on config.
  * @param {string} key - The filter key
  * @param {Object|null} visibleFilters - The visibility configuration
@@ -473,8 +507,22 @@ export function buildHiddenFieldClasses(visibleTeaserFields) {
 export function parseTypeValue(value) {
   const valueStr = String(value);
 
-  // Check for namespaced subtype (field:id pattern)
+  // Check for namespaced subtype or vocabulary (field:id pattern)
   if (valueStr.includes(':')) {
+    // Check for taxonomy vocabulary (vid:hazard, vid:theme, etc.)
+    if (valueStr.startsWith('vid:')) {
+      const vocabId = valueStr.slice(4);
+      const vocab = TAXONOMY_VOCABULARY_MAP.get(vocabId);
+      return {
+        field: 'vid',
+        value: vocabId,
+        label: vocab?.name || vocabId,
+        isSubtype: false,
+        isVocabulary: true,
+        parentType: null,
+      };
+    }
+
     const subtype = SUBTYPE_MAP.get(valueStr);
     if (subtype) {
       return {
@@ -482,6 +530,7 @@ export function parseTypeValue(value) {
         value: subtype.id,
         label: subtype.name,
         isSubtype: true,
+        isVocabulary: false,
         parentType: subtype.parentType,
       };
     }
@@ -492,6 +541,7 @@ export function parseTypeValue(value) {
       value: id,
       label: id,
       isSubtype: true,
+      isVocabulary: false,
       parentType: SUBTYPE_FIELD_TO_PARENT.get(field) || null,
     };
   }
@@ -503,6 +553,7 @@ export function parseTypeValue(value) {
     value: valueStr,
     label: contentType?.name || valueStr,
     isSubtype: false,
+    isVocabulary: false,
     parentType: null,
   };
 }

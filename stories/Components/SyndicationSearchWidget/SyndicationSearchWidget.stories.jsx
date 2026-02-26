@@ -98,8 +98,9 @@ import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget
 };
 
 // Default configuration for stories
+// TODO: Revert to production endpoint after testing taxonomy term integration
 const defaultConfig = {
-  searchEndpoint: 'https://www.undrr.org/search-endpoint',
+  searchEndpoint: 'https://novarnish.undrr.ddev.site/search-endpoint',
   resultsPerPage: 5,
   debounceDelay: 300,
   minSearchLength: 3,

@@ -13,6 +13,7 @@ import {
   HIGHLIGHT_CONFIG,
   FACET_FIELDS,
   parseTypeValue,
+  TAXONOMY_VOCABULARY_MAP,
 } from './constants';
 
 /**
@@ -118,9 +119,18 @@ function buildMainQuery(searchQuery, scoring, config) {
 function buildBaseFilters(config) {
   const filters = [];
 
-  // Always filter by published status
+  // Filter by published status for nodes.
+  // Taxonomy terms don't have a `status` field in the index (it's node-only),
+  // so we must also allow documents where status doesn't exist — otherwise
+  // all taxonomy term results would be silently excluded.
   filters.push({
-    term: { status: 'true' },
+    bool: {
+      should: [
+        { term: { status: 'true' } },
+        { bool: { must_not: { exists: { field: 'status' } } } },
+      ],
+      minimum_should_match: 1,
+    },
   });
 
   // Add custom filters from config (e.g., ["type:news", "year:[2020 TO 2024]"])
@@ -748,6 +758,18 @@ function buildAggregations(facetFields, facetCount) {
     aggs[field.key] = {
       terms: {
         field: field.key,
+        size: facetCount,
+      },
+    };
+  }
+
+  // Vocabulary aggregation for taxonomy term results.
+  // This runs alongside the `type` aggregation (which is node-only).
+  // The `vid` field only exists on taxonomy term documents.
+  if (!aggs.vid) {
+    aggs.vid = {
+      terms: {
+        field: 'vid',
         size: facetCount,
       },
     };
