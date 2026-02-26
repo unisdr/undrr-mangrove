@@ -10,7 +10,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { getContentType, getDomain, DOMAIN_MAP } from '../utils/constants';
+import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP } from '../utils/constants';
 
 /**
  * Swap card variant classes and image styles on teaser HTML for card display modes.
@@ -86,6 +86,23 @@ function resolveRelativeUrls(html, baseUrl) {
 }
 
 /**
+ * Debug metrics overlay showing ES score, interestingness, and longevity.
+ */
+function ScoreMetrics({ hit, source }) {
+  return (
+    <span className="mg-search__result-metrics">
+      <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+      {source.field_meta_interestingness?.[0] !== undefined && (
+        <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+      )}
+      {source.field_meta_longevity?.[0] !== undefined && (
+        <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+      )}
+    </span>
+  );
+}
+
+/**
  * ResultItem component.
  * Renders a single search result with title, snippet, metadata.
  *
@@ -101,6 +118,7 @@ function resolveRelativeUrls(html, baseUrl) {
 export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
   const source = hit._source || {};
   const highlight = hit.highlight || {};
+  const isTerm = isTaxonomyTermResult(source);
 
   // Extract fields
   const {
@@ -108,33 +126,29 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
     title,
     url,
     type,
+    vid,
     field_domain_access: domainArray,
     published_at: publishedAt,
     teaser,
   } = source;
 
-  // Get domain info (field_domain_access is an array)
-  const domainId = Array.isArray(domainArray) ? domainArray[0] : domainArray;
+  // Get domain info.
+  // Taxonomy terms don't have field_domain_access — use their vocabulary's
+  // default domain (typically preventionweb.net).
+  const domainId = isTerm
+    ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
+    : (Array.isArray(domainArray) ? domainArray[0] : domainArray);
   const domainInfo = domainId ? DOMAIN_MAP.get(domainId) : null;
   const baseUrl = domainInfo?.url || 'https://www.preventionweb.net';
 
   /**
-   * If the result has no domain access, show an error.
+   * If the result has no domain access and is not a taxonomy term, show an error.
+   * Taxonomy terms are shared across domains and don't need field_domain_access.
    */
-  if (!domainId) {
+  if (!domainId && !isTerm) {
     return (
       <article className="mg-search__result mg-search__result--error">
-        {showMetrics && (
-          <span className="mg-search__result-metrics">
-            <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
-            {source.field_meta_interestingness?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
-            )}
-            {source.field_meta_longevity?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
-            )}
-          </span>
-        )}
+        {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <p className="mg-search__result-error">
           Content item {nid || 'unknown'} has no assigned domain and cannot be shown.{' '}
           <a href="https://www.undrr.org/contact-us">Report this error</a>.
@@ -159,27 +173,26 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
       displayMode
     );
 
-    // Inject domain label before the title field
+    // Inject domain label before the title field.
+    // Node teasers use "field--name-node-title"; taxonomy term teasers use
+    // "field--name-name" for the term name field. Both selectors are coupled
+    // to Drupal's teaser view template class names.
     let finalHtml = resolvedTeaser;
-    const titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
+    let titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
+    if (titleFieldIndex === -1) {
+      titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
+    }
     if (titleFieldIndex !== -1) {
       const domainLabelHtml = `<p class="mg-search__result-site-name">${domainLabel}</p>`;
       finalHtml = finalHtml.slice(0, titleFieldIndex) + domainLabelHtml + finalHtml.slice(titleFieldIndex);
     }
 
+    // Use vocabulary name as result type for terms, content type for nodes
+    const resultType = isTerm ? vid : type;
+
     return (
-      <article className="mg-search__result" data-result-type={type}>
-        {showMetrics && (
-          <span className="mg-search__result-metrics">
-            <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
-            {source.field_meta_interestingness?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
-            )}
-            {source.field_meta_longevity?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
-            )}
-          </span>
-        )}
+      <article className="mg-search__result" data-result-type={resultType}>
+        {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
       </article>
     );
@@ -209,9 +222,15 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
     }
   }, [publishedAt]);
 
-  // Get type label
-  const typeInfo = getContentType(type);
-  const typeLabel = typeInfo?.name || type;
+  // Get type label — vocabulary name for terms, content type for nodes
+  const typeLabel = useMemo(() => {
+    if (isTerm) {
+      const vocabInfo = getTaxonomyVocabulary(vid);
+      return vocabInfo?.name || vid;
+    }
+    const typeInfo = getContentType(type);
+    return typeInfo?.name || type;
+  }, [isTerm, vid, type]);
 
   // Get domain label
   const domainLabel = domainInfo?.name;
@@ -224,19 +243,11 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
     return `${baseUrl}${url}`;
   }, [url, nid, baseUrl]);
 
+  const resultType = isTerm ? vid : type;
+
   return (
-    <article className="mg-search__result" data-result-type={type}>
-      {showMetrics && (
-        <span className="mg-search__result-metrics">
-          <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
-          {source.field_meta_interestingness?.[0] !== undefined && (
-            <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
-          )}
-          {source.field_meta_longevity?.[0] !== undefined && (
-            <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
-          )}
-        </span>
-      )}
+    <article className="mg-search__result" data-result-type={resultType}>
+      {showMetrics && <ScoreMetrics hit={hit} source={source} />}
       <div className="mg-search__result-content">
         <div className="mg-search__result-text">
           {/* Title */}
@@ -255,7 +266,8 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
             {domainLabel && (
               <span className="mg-search__result-domain">{domainLabel}</span>
             )}
-            {formattedDate && (
+            {/* Taxonomy terms don't have published_at — skip date */}
+            {!isTerm && formattedDate && (
               <time
                 className="mg-search__result-date"
                 dateTime={publishedAt}

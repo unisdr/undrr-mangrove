@@ -699,6 +699,87 @@ Use this when embedding search on topic-specific pages (e.g., a news section tha
   },
 };
 
+/**
+ * Taxonomy term results - mixed node and term results.
+ */
+export const TaxonomyTermResults = {
+  args: {
+    config: {
+      ...defaultConfig,
+      defaultQuery: 'flood',
+      showSearchMetrics: true,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Demonstrates mixed search results containing both content nodes and taxonomy terms.
+
+Search for terms like "flood", "earthquake", or country names like "Japan" to see
+taxonomy term results (Hazard, Country, Theme) mixed with regular content.
+
+Taxonomy term results differ from node results:
+- **Type badge**: Shows vocabulary name (e.g., "Hazard") instead of content type
+- **No date**: Terms don't have a publication date
+- **Domain**: Defaults to preventionweb.net (terms don't have field_domain_access)
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Custom endpoint - demonstrates pointing to a different search API.
+ */
+export const CustomEndpoint = {
+  args: {
+    config: {
+      ...defaultConfig,
+      searchEndpoint: 'https://www.undrr.org/search-endpoint',
+      showSearchMetrics: true,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Override the search endpoint to point at a different Elasticsearch proxy.
+
+This is useful for:
+- **Local development**: Point to a DDEV site (e.g., \`https://novarnish.undrr.ddev.site/search-endpoint\`)
+- **Staging/QA**: Point to a staging server
+- **Cross-site search**: Query a different UNDRR site's index
+
+### React usage
+
+\`\`\`jsx
+<SyndicationSearchWidget
+  config={{
+    searchEndpoint: 'https://novarnish.undrr.ddev.site/search-endpoint',
+  }}
+/>
+\`\`\`
+
+### Drupal data attribute
+
+\`\`\`html
+<div data-undrr-search-widget
+     data-search-endpoint="https://staging.undrr.org/search-endpoint">
+</div>
+\`\`\`
+
+### Default endpoint
+
+If no \`searchEndpoint\` is provided, the widget uses \`https://www.undrr.org/search-endpoint\`
+(defined in \`DEFAULT_CONFIG\`). In Drupal, omitting the data attribute falls back to
+\`/search-endpoint\` (relative to the current domain).
+        `,
+      },
+    },
+  },
+};
+
 // Mock data for static display
 const mockResults = {
   took: 42,

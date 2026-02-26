@@ -16,9 +16,9 @@ import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   FACET_FIELDS,
   CONTENT_SUBTYPES,
-  createSubtypeValue,
   isFilterVisible,
 } from '../utils/constants';
+import { getMergedTypeBuckets } from '../utils/facetUtils';
 import SortOptions from './SortOptions';
 import FacetSelect from './FacetSelect';
 import CustomFacetSelect from './CustomFacetSelect';
@@ -40,51 +40,11 @@ export function FacetsSidebar({ widgetId = 'search' }) {
   // Use config facet fields or default
   const fields = facetFields || FACET_FIELDS;
 
-  /**
-   * Merge content types with their subtypes for hierarchical display.
-   * Parent types keep their original keys (e.g., "news").
-   * Subtypes get namespaced keys (e.g., "field_news_type:751").
-   *
-   * Returns buckets organized as: parent types with their subtypes grouped after them.
-   */
-  const getMergedTypeBuckets = useMemo(() => {
-    if (!aggregations) return [];
-
-    const typeBuckets = aggregations.type?.buckets || [];
-
-    // Build result with parent types and their subtypes interleaved
-    const result = [];
-
-    // Process each parent type bucket
-    for (const parentBucket of typeBuckets) {
-      // Add the parent type
-      result.push({
-        ...parentBucket,
-        isSubtype: false,
-        parentType: null,
-      });
-
-      // Check if this parent type has subtypes configured
-      const subtypeConfig = CONTENT_SUBTYPES[parentBucket.key];
-      if (subtypeConfig) {
-        // Get subtype buckets from aggregations
-        const subtypeBuckets = aggregations[subtypeConfig.field]?.buckets || [];
-
-        // Add subtypes with namespaced keys, sorted by count
-        const sortedSubtypes = [...subtypeBuckets].sort((a, b) => b.doc_count - a.doc_count);
-        for (const subtypeBucket of sortedSubtypes) {
-          result.push({
-            key: createSubtypeValue(subtypeConfig.field, subtypeBucket.key),
-            doc_count: subtypeBucket.doc_count,
-            isSubtype: true,
-            parentType: parentBucket.key,
-          });
-        }
-      }
-    }
-
-    return result;
-  }, [aggregations]);
+  // Merge content types, subtypes, and taxonomy vocabularies for the Type dropdown
+  const mergedTypeBuckets = useMemo(
+    () => getMergedTypeBuckets(aggregations),
+    [aggregations]
+  );
 
   // Build set of subtype field names to skip (they're merged into type)
   const subtypeFields = useMemo(() => {
@@ -114,7 +74,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
             <FacetSelect
               key={field.key}
               field={field}
-              buckets={getMergedTypeBuckets}
+              buckets={mergedTypeBuckets}
               getLabel={getLabel}
               widgetId={widgetId}
               allowedTypes={allowedTypes}
@@ -135,7 +95,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
           />
         );
       });
-  }, [fields, aggregations, visibleFilters, allowedTypes, subtypeFields, getMergedTypeBuckets, getLabel, widgetId]);
+  }, [fields, aggregations, visibleFilters, allowedTypes, subtypeFields, mergedTypeBuckets, getLabel, widgetId]);
 
   /**
    * Render custom facets (editor-defined dropdowns).

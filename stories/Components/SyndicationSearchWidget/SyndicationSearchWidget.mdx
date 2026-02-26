@@ -201,6 +201,18 @@ allowedTypes: {
 
 **News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Community announcement), `756` (Op Ed)
 
+## Taxonomy term results
+
+Demonstrates mixed search results containing both content nodes and taxonomy terms (Hazard, Country, Theme). Taxonomy terms display differently: vocabulary name as type badge, no date, defaults to preventionweb.net.
+
+<Canvas of={SyndicationSearchWidgetStories.TaxonomyTermResults} meta={SyndicationSearchWidgetStories} />
+
+## Custom endpoint
+
+Override `searchEndpoint` to point at a different Elasticsearch proxy (DDEV, staging, etc.).
+
+<Canvas of={SyndicationSearchWidgetStories.CustomEndpoint} meta={SyndicationSearchWidgetStories} />
+
 ## Query syntax
 
 Reference for Elasticsearch query_string syntax. Use this story to test search queries.
@@ -342,7 +354,9 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
-- **1.1.0**: Card display modes (`displayMode`: list/card/card-book) with `gridColumns` control; teaser field visibility (`visibleTeaserFields`) with CSS-based hiding for 7 toggleable fields; Drupal image style rewriting for card aspect ratios
+- **1.1.0** — 2026-02-26:
+  - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results — search results now include taxonomy terms (Hazard, Country, Theme) alongside content nodes; `vid:` prefix in type filter for vocabulary filtering; configurable `searchEndpoint` with CustomEndpoint story documenting override patterns
+  - ([web-backlog#2636](https://gitlab.com/undrr/web-backlog/-/issues/2636)) Card display modes (`displayMode`: list/card/card-book) with `gridColumns` control; teaser field visibility (`visibleTeaserFields`) with CSS-based hiding for 7 toggleable fields; Drupal image style rewriting for card aspect ratios
 - **1.0.0** — 2026-02-13: Pager styles extracted to standalone `Components/Pager` component; internal `Pager.jsx` is now a thin wrapper; no API changes
 - **1.0.0-alpha.2** — 2026-01-01: Mobile filter drawer; custom SelectDropdown replacing Chosen.js (searchable, keyboard navigable, touch-friendly); loading state improvements; compact mobile filter button
 - **1.0.0-alpha.1** — 2025-12-12: Initial React 19 implementation with faceted filtering, URL hash sync, Elasticsearch teaser support, taxonomy facet labels, custom facets, Google Analytics integration, skeleton loading
