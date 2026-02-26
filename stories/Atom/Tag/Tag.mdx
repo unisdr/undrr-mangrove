@@ -1,0 +1,127 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as TagStories from './Tag.stories';
+
+<Meta of={TagStories} />
+
+# Tag
+
+A compact label used to categorise content by type, country, theme, or other taxonomy. Renders as a `<span>` for display or an `<a>` for linked tags.
+
+## Usage
+
+### HTML
+
+```html
+<!-- Default -->
+<span class="mg-tag">Organization</span>
+
+<!-- Linked -->
+<a href="/taxonomy/earthquake" class="mg-tag">Earthquake</a>
+
+<!-- Variants -->
+<span class="mg-tag mg-tag--secondary">Metadata</span>
+<span class="mg-tag mg-tag--outline">Subtle</span>
+<span class="mg-tag mg-tag--accent">Featured</span>
+
+<!-- Container (auto-styles children) -->
+<div class="mg-tag-container">
+  <a href="/taxonomy/term/1">Earthquake</a>
+  <a href="/taxonomy/term/2">Climate change</a>
+</div>
+```
+
+### Theming
+
+The background color can be overridden per site theme using CSS custom properties:
+
+```css
+:root {
+  --tag-color-background: #1f69b3;
+  --tag-color-background-hover: #144a7a;
+  --tag-color-background-secondary: #666;
+  --tag-color-background-secondary-hover: #4d4d4d;
+  --tag-color-background-accent: #eb752a;
+  --tag-color-background-accent-hover: #ed833f;
+  --tag-color-background-outline-hover: #e6edf4;
+}
+```
+
+Or via SCSS variables before importing the stylesheet:
+
+```scss
+$mg-color-tag: #1f69b3;
+$mg-color-tag--hover: #144a7a;
+$mg-color-tag-secondary: #666;
+$mg-color-tag-accent: #eb752a;
+$mg-radius-tag: 4px;
+```
+
+## Examples
+
+### Default
+
+<Canvas of={TagStories.Default} />
+
+### As link
+
+Tags rendered as `<a>` elements gain a hover background transition.
+
+<Canvas of={TagStories.AsLink} />
+
+### Secondary
+
+De-emphasised tags for metadata or archival content.
+
+<Canvas of={TagStories.Secondary} />
+
+### Outline
+
+Border-only tags for a lightweight appearance.
+
+<Canvas of={TagStories.Outline} />
+
+### Accent
+
+Orange tags for featured or highlighted content.
+
+<Canvas of={TagStories.Accent} />
+
+### All variants
+
+<Canvas of={TagStories.AllVariants} />
+
+### Tag container
+
+The `.mg-tag-container` class auto-styles direct child elements (`span`, `div`, `a`, `li`) as tags without requiring individual `.mg-tag` classes. This is useful for migrating from the legacy `.st-tag--spl` pattern in Drupal, where taxonomy term views output lists of links.
+
+<Canvas of={TagStories.TagContainer} />
+
+### In context
+
+<Canvas of={TagStories.InContext} />
+
+## CSS class reference
+
+| Class | Description |
+|-------|-------------|
+| `.mg-tag` | Base tag element (`<span>` or `<a>`) |
+| `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags |
+| `.mg-tag--outline` | Border-only variant with transparent background |
+| `.mg-tag--accent` | Orange variant for featured/highlighted content |
+| `.mg-tag-container` | Wrapper that auto-styles direct children as tags |
+
+## Design tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `$mg-color-tag` | `$mg-color-interactive` (blue-900) | Default background |
+| `$mg-color-tag--hover` | `$mg-color-interactive-active` (blue-700) | Default hover background |
+| `$mg-color-tag-secondary` | `$mg-color-neutral-500` (#666) | Secondary background |
+| `$mg-color-tag-secondary--hover` | `$mg-color-neutral-600` (#4d4d4d) | Secondary hover background |
+| `$mg-color-tag-accent` | `$mg-color-orange-900` (#eb752a) | Accent background |
+| `$mg-color-tag-accent--hover` | `$mg-color-orange-800` (#ed833f) | Accent hover background |
+| `$mg-radius-tag` | `0` | Border radius |
+
+## Changelog
+
+- **1.0** — 2026-02-26: Initial release; replaces legacy `.st-tag--spl` class with Mangrove-native BEM pattern, hover state, `--secondary`/`--outline`/`--accent` variants, and `.mg-tag-container` for auto-styling children

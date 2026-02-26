@@ -10,7 +10,61 @@
  */
 
 import React, { useMemo } from 'react';
-import { getContentType, getDomain, DOMAIN_MAP } from '../utils/constants';
+import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP } from '../utils/constants';
+
+/**
+ * Swap card variant classes and image styles on teaser HTML for card display modes.
+ *
+ * Teaser HTML from Elasticsearch already contains mg-card markup.
+ * This strips existing variant classes and injects the correct variant
+ * for the requested display mode.
+ *
+ * Also rewrites Drupal image style paths so the image aspect ratio matches
+ * the card variant: `landscape_16_9` (16:9) for vertical cards, `por` (3:4)
+ * for book cards. The itok token is not validated for anonymous requests.
+ *
+ * @param {string} html - Teaser HTML string
+ * @param {string} displayMode - Display mode: 'list', 'card', or 'card-book'
+ * @returns {string} HTML with updated card variant classes and image styles
+ */
+export function swapCardVariant(html, displayMode) {
+  if (!html || displayMode === 'list') return html;
+  let result = html
+    .replace(/\bmg-card__(?:vc|hc)\b/g, '')
+    .replace(/\bmg-card-book__hc\b/g, '')
+    .replace(/\bmg-card__book\b/g, '');
+  const variant = displayMode === 'card-book'
+    ? 'mg-card__vc mg-card__book'
+    : 'mg-card__vc';
+  const classWithCardRegex = /class="([^"]*\bmg-card\b[^"]*)"/;
+  if (classWithCardRegex.test(result)) {
+    result = result.replace(classWithCardRegex, (_, cls) =>
+      `class="${cls.trim()} ${variant}"`
+    );
+  } else {
+    result = result.replace(/class="([^"]*)"/, (_, cls) =>
+      `class="${cls.trim()} ${variant}"`
+    );
+  }
+
+  // Rewrite Drupal image styles to match the card aspect ratio.
+  // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).
+  // Card mode needs 16:9 (landscape_16_9), book card mode needs 3:4 (por).
+  // The itok token is not validated for anonymous image style requests.
+  if (displayMode === 'card-book') {
+    result = result.replace(
+      /\/styles\/[^/]+\/public\//g,
+      '/styles/por/public/'
+    );
+  } else {
+    result = result.replace(
+      /\/styles\/[^/]+\/public\//g,
+      '/styles/landscape_16_9/public/'
+    );
+  }
+
+  return result;
+}
 
 /**
  * Resolve relative URLs to absolute using the domain's base URL.
@@ -32,6 +86,23 @@ function resolveRelativeUrls(html, baseUrl) {
 }
 
 /**
+ * Debug metrics overlay showing ES score, interestingness, and longevity.
+ */
+function ScoreMetrics({ hit, source }) {
+  return (
+    <span className="mg-search__result-metrics">
+      <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+      {source.field_meta_interestingness?.[0] !== undefined && (
+        <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+      )}
+      {source.field_meta_longevity?.[0] !== undefined && (
+        <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+      )}
+    </span>
+  );
+}
+
+/**
  * ResultItem component.
  * Renders a single search result with title, snippet, metadata.
  *
@@ -42,44 +113,43 @@ function resolveRelativeUrls(html, baseUrl) {
  * @param {Object} props - Component props
  * @param {Object} props.hit - Elasticsearch hit object
  * @param {boolean} props.showMetrics - Whether to show scoring metrics
+ * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
  */
-export function ResultItem({ hit, showMetrics = false }) {
+export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
   const source = hit._source || {};
   const highlight = hit.highlight || {};
+  const isTerm = isTaxonomyTermResult(source);
 
-  // Extract fields
+  // Extract fields — type may arrive as an array from Elasticsearch
   const {
     nid,
     title,
     url,
-    type,
+    type: rawType,
+    vid,
     field_domain_access: domainArray,
     published_at: publishedAt,
     teaser,
   } = source;
+  const type = Array.isArray(rawType) ? rawType[0] : rawType;
 
-  // Get domain info (field_domain_access is an array)
-  const domainId = Array.isArray(domainArray) ? domainArray[0] : domainArray;
+  // Get domain info.
+  // Taxonomy terms don't have field_domain_access — use their vocabulary's
+  // default domain (typically preventionweb.net).
+  const domainId = isTerm
+    ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
+    : (Array.isArray(domainArray) ? domainArray[0] : domainArray);
   const domainInfo = domainId ? DOMAIN_MAP.get(domainId) : null;
   const baseUrl = domainInfo?.url || 'https://www.preventionweb.net';
 
   /**
-   * If the result has no domain access, show an error.
+   * If the result has no domain access and is not a taxonomy term, show an error.
+   * Taxonomy terms are shared across domains and don't need field_domain_access.
    */
-  if (!domainId) {
+  if (!domainId && !isTerm) {
     return (
       <article className="mg-search__result mg-search__result--error">
-        {showMetrics && (
-          <span className="mg-search__result-metrics">
-            <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
-            {source.field_meta_interestingness?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
-            )}
-            {source.field_meta_longevity?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
-            )}
-          </span>
-        )}
+        {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <p className="mg-search__result-error">
           Content item {nid || 'unknown'} has no assigned domain and cannot be shown.{' '}
           <a href="https://www.undrr.org/contact-us">Report this error</a>.
@@ -98,30 +168,45 @@ export function ResultItem({ hit, showMetrics = false }) {
       ? domainInfo.url.replace('https://', '')
       : domainId;
 
-    // Resolve relative URLs in the teaser HTML
-    const resolvedTeaser = resolveRelativeUrls(teaser, baseUrl);
+    // Organizations are assigned to all domains, making the domain badge
+    // meaningless noise — suppress it and show a type tag instead.
+    const isOrganization = type === 'organization';
 
-    // Inject domain label before the title field
+    // Resolve relative URLs and swap card variant for card display modes
+    const resolvedTeaser = swapCardVariant(
+      resolveRelativeUrls(teaser, baseUrl),
+      displayMode
+    );
+
+    // Inject badges before the title field.
+    // Node teasers use "field--name-node-title"; taxonomy term teasers use
+    // "field--name-name" for the term name field. Both selectors are coupled
+    // to Drupal's teaser view template class names.
     let finalHtml = resolvedTeaser;
-    const titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
+    let titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
+    if (titleFieldIndex === -1) {
+      titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
+    }
     if (titleFieldIndex !== -1) {
-      const domainLabelHtml = `<p class="mg-search__result-site-name">${domainLabel}</p>`;
-      finalHtml = finalHtml.slice(0, titleFieldIndex) + domainLabelHtml + finalHtml.slice(titleFieldIndex);
+      let badgeHtml = '<div class="mg-search__result-badges">';
+      if (isOrganization) {
+        const typeLabel = getContentType(type)?.name || type;
+        // Title-case: capitalise the first letter of each word
+        const titleCased = typeLabel.replace(/\b\w/g, c => c.toUpperCase());
+        badgeHtml += `<span class="mg-tag">${titleCased}</span>`;
+      } else {
+        badgeHtml += `<span class="mg-search__result-site-name">${domainLabel}</span>`;
+      }
+      badgeHtml += '</div>';
+      finalHtml = finalHtml.slice(0, titleFieldIndex) + badgeHtml + finalHtml.slice(titleFieldIndex);
     }
 
+    // Use vocabulary name as result type for terms, content type for nodes
+    const resultType = isTerm ? vid : type;
+
     return (
-      <article className="mg-search__result" data-result-type={type}>
-        {showMetrics && (
-          <span className="mg-search__result-metrics">
-            <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
-            {source.field_meta_interestingness?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
-            )}
-            {source.field_meta_longevity?.[0] !== undefined && (
-              <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
-            )}
-          </span>
-        )}
+      <article className="mg-search__result" data-result-type={resultType}>
+        {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
       </article>
     );
@@ -151,9 +236,15 @@ export function ResultItem({ hit, showMetrics = false }) {
     }
   }, [publishedAt]);
 
-  // Get type label
-  const typeInfo = getContentType(type);
-  const typeLabel = typeInfo?.name || type;
+  // Get type label — vocabulary name for terms, content type for nodes
+  const typeLabel = useMemo(() => {
+    if (isTerm) {
+      const vocabInfo = getTaxonomyVocabulary(vid);
+      return vocabInfo?.name || vid;
+    }
+    const typeInfo = getContentType(type);
+    return typeInfo?.name || type;
+  }, [isTerm, vid, type]);
 
   // Get domain label
   const domainLabel = domainInfo?.name;
@@ -166,19 +257,11 @@ export function ResultItem({ hit, showMetrics = false }) {
     return `${baseUrl}${url}`;
   }, [url, nid, baseUrl]);
 
+  const resultType = isTerm ? vid : type;
+
   return (
-    <article className="mg-search__result" data-result-type={type}>
-      {showMetrics && (
-        <span className="mg-search__result-metrics">
-          <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
-          {source.field_meta_interestingness?.[0] !== undefined && (
-            <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
-          )}
-          {source.field_meta_longevity?.[0] !== undefined && (
-            <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
-          )}
-        </span>
-      )}
+    <article className="mg-search__result" data-result-type={resultType}>
+      {showMetrics && <ScoreMetrics hit={hit} source={source} />}
       <div className="mg-search__result-content">
         <div className="mg-search__result-text">
           {/* Title */}
@@ -194,10 +277,11 @@ export function ResultItem({ hit, showMetrics = false }) {
             {typeLabel && (
               <span className="mg-search__result-type">{typeLabel}</span>
             )}
-            {domainLabel && (
+            {domainLabel && type !== 'organization' && (
               <span className="mg-search__result-domain">{domainLabel}</span>
             )}
-            {formattedDate && (
+            {/* Taxonomy terms don't have published_at — skip date */}
+            {!isTerm && formattedDate && (
               <time
                 className="mg-search__result-date"
                 dateTime={publishedAt}

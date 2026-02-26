@@ -18,7 +18,6 @@ import {
   ALWAYS_OR_FACETS,
   FACET_SEARCH_THRESHOLD,
   parseTypeValue,
-  isSubtypeValue,
   getContentType,
 } from '../utils/constants';
 
@@ -82,6 +81,18 @@ export function FacetSelect({
         // Filter by allowed types if configured
         if (isTypeFacet && allowedTypes) {
           const bucketKey = String(bucket.key);
+
+          // For vocabulary entries (vid:hazard, vid:theme, etc.)
+          if (bucket.isVocabulary) {
+            if (typeof allowedTypes === 'object' && allowedTypes.vocabularies) {
+              // Extract vocabulary ID from the vid: prefix
+              const vocabId = bucketKey.startsWith('vid:') ? bucketKey.slice(4) : bucketKey;
+              return allowedTypes.vocabularies.includes(vocabId);
+            }
+            // No vocabulary restriction configured — show all
+            return true;
+          }
+
           // For subtypes, check if parent type is allowed
           if (bucket.isSubtype && bucket.parentType) {
             if (Array.isArray(allowedTypes)) {

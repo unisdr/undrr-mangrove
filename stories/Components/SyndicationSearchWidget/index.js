@@ -28,7 +28,7 @@ export { useHashSync } from './hooks/useHashSync';
 // Sub-components (for custom implementations)
 export { SearchForm } from './components/SearchForm';
 export { SearchResults } from './components/SearchResults';
-export { ResultItem } from './components/ResultItem';
+export { ResultItem, swapCardVariant } from './components/ResultItem';
 export { ActiveFilters } from './components/ActiveFilters';
 export { FacetsSidebar } from './components/FacetsSidebar';
 export { FacetSelect } from './components/FacetSelect';

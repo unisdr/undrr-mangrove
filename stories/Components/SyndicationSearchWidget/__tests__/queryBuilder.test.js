@@ -33,12 +33,21 @@ describe('queryBuilder', () => {
       expect(result.size).toBe(25);
     });
 
-    it('includes status filter in base query', () => {
+    it('includes status filter in base query that also allows taxonomy terms', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
 
-      // The status filter should be in the bool.filter array
+      // The status filter should allow published nodes OR documents without
+      // a status field (taxonomy terms don't have status in the index)
       const filters = result.query.function_score.query.bool.filter;
-      expect(filters).toContainEqual({ term: { status: 'true' } });
+      expect(filters).toContainEqual({
+        bool: {
+          should: [
+            { term: { status: 'true' } },
+            { bool: { must_not: { exists: { field: 'status' } } } },
+          ],
+          minimum_should_match: 1,
+        },
+      });
     });
   });
 
@@ -261,6 +270,20 @@ describe('queryBuilder', () => {
       });
     });
 
+    it('routes vid: prefixed type values to the vid field', () => {
+      const result = buildQuery(
+        {
+          ...defaultState,
+          facets: { type: ['news', 'vid:hazard'] },
+        },
+        DEFAULT_CONFIG
+      );
+
+      const postFilter = result.post_filter;
+      expect(postFilter.bool.should).toContainEqual({ term: { type: 'news' } });
+      expect(postFilter.bool.should).toContainEqual({ term: { vid: 'hazard' } });
+    });
+
     it('uses script filter for year facet', () => {
       const result = buildQuery(
         {
@@ -403,6 +426,12 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
 
       expect(result.aggs.type.terms.size).toBe(100);
+    });
+
+    it('includes vid aggregation for taxonomy vocabularies', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG);
+      expect(result.aggs.vid).toBeDefined();
+      expect(result.aggs.vid.terms.field).toBe('vid');
     });
   });
 

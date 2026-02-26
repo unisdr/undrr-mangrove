@@ -18,6 +18,7 @@ import {
   CONTENT_TYPE_MAP,
   NEWS_TYPE_MAP,
   LANGUAGE_MAP,
+  TAXONOMY_VOCABULARY_MAP,
   TAXONOMY_API_URL,
   parseTypeValue,
 } from '../utils/constants';
@@ -128,6 +129,12 @@ export function useTaxonomies() {
     if (vocabulary === 'languages' || fieldKey === '_language') {
       const lang = LANGUAGE_MAP.get(valueStr);
       return lang ? lang.name : valueStr;
+    }
+
+    // Check vocabulary names (for taxonomy term results)
+    if (vocabulary === 'vid' || fieldKey === 'vid') {
+      const vocab = TAXONOMY_VOCABULARY_MAP.get(valueStr);
+      return vocab ? vocab.name : valueStr;
     }
 
     // Check news types (these come from field_news_type aggregation)

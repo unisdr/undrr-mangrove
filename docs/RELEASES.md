@@ -89,6 +89,15 @@ If automated publishing fails, you can trigger it manually:
 2. Click "Run workflow"
 3. Optionally enter a specific git tag (leave empty for latest)
 
+## Component changelogs vs project releases
+
+Mangrove tracks changes at two levels:
+
+- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
+- **Project releases** (GitHub Releases): Track library-wide releases. Created during the release process above.
+
+Component changelogs and project releases serve different audiences — component changelogs help developers working with a specific component, while project releases help consumers of the npm package understand what changed between versions.
+
 ## Commit message conventions
 
 We use [Conventional Commits](https://www.conventionalcommits.org/) for readable history and PR title validation, even though version bumps are manual:
