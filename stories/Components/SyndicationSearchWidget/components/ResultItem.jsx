@@ -120,17 +120,18 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
   const highlight = hit.highlight || {};
   const isTerm = isTaxonomyTermResult(source);
 
-  // Extract fields
+  // Extract fields — type may arrive as an array from Elasticsearch
   const {
     nid,
     title,
     url,
-    type,
+    type: rawType,
     vid,
     field_domain_access: domainArray,
     published_at: publishedAt,
     teaser,
   } = source;
+  const type = Array.isArray(rawType) ? rawType[0] : rawType;
 
   // Get domain info.
   // Taxonomy terms don't have field_domain_access — use their vocabulary's
