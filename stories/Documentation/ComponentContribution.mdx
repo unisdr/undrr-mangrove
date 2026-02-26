@@ -452,21 +452,26 @@ Every component MDX file must end with a `## Changelog` section (H2 level) that 
 ```markdown
 ## Changelog
 
-- **2.1** — 2026-02-20: Description of the change
-- **2.0** — 2026-01-15: **Breaking:** Description of breaking change
-- **1.0** — 2025-11-01: Released component
+- **2.1** — 2026-02-20:
+  - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results
+  - ([web-backlog#2636](https://gitlab.com/undrr/web-backlog/-/issues/2636)) Card display modes
+- **2.0** — 2026-01-15 ([web-backlog#1234](https://gitlab.com/undrr/web-backlog/-/issues/1234)): **Breaking:** Description of breaking change
+- **1.0** — 2025-11-01 ([web-backlog#999](https://gitlab.com/undrr/web-backlog/-/issues/999)): Released component
 ```
 
 **Rules:**
 
 - **Heading level**: Always `## Changelog` (H2)
-- **Entry format**: `- **version** — YYYY-MM-DD: description`
+- **Single-issue entry**: `- **version** — YYYY-MM-DD ([web-backlog#NNN](url)): description`
+- **Multi-issue entry**: When multiple issues ship in the same version, use sub-bullets — one per issue, each citing its own tracker issue
+- **Tracker issue**: Always cite the GitLab tracker issue in parentheses using the short format `web-backlog#NNN` linked to the full URL
 - **Version**: Semver without `v` prefix (e.g., `1.0`, `2.1.3`, not `v1.0` or `Version 1.0`)
 - **Separator**: Em dash `—` between version and date, colon `:` after date
 - **Date**: ISO 8601 format (`YYYY-MM-DD`) for traceability
 - **Order**: Newest entries first
 - **Breaking changes**: Prefix description with `**Breaking:**`
 - **Structure**: Bullet list with bold version number (compact, scannable)
+- **Description**: Summarize the user-facing change, not implementation details. Use sentence case
 
 **Do not** use subheadings within changelog entries, date-only entries without version numbers, bare version numbers without descriptions, or mixed separator styles.
 
