@@ -324,9 +324,7 @@ export const HIGHLIGHT_CONFIG = {
  */
 export const DEFAULT_CONFIG = {
   // API Configuration
-  // TODO: Revert to production endpoint after testing
   searchEndpoint: 'https://www.undrr.org/search-endpoint',
-  // searchEndpoint: 'https://novarnish.preventionweb.ddev.site/search-endpoint',
   resultsPerPage: 5,
   facetCountToShow: 500,
   debounceDelay: 300, // Reduced from 750ms - React 19's useDeferredValue handles this better
@@ -567,16 +565,6 @@ export function parseTypeValue(value) {
  */
 export function createSubtypeValue(field, id) {
   return `${field}:${id}`;
-}
-
-/**
- * Check if a value represents a subtype (namespaced format).
- *
- * @param {string} value - The value to check
- * @returns {boolean} True if value is a namespaced subtype
- */
-export function isSubtypeValue(value) {
-  return String(value).includes(':');
 }
 
 /**

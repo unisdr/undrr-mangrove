@@ -18,7 +18,6 @@ import {
   ALWAYS_OR_FACETS,
   FACET_SEARCH_THRESHOLD,
   parseTypeValue,
-  isSubtypeValue,
   getContentType,
 } from '../utils/constants';
 

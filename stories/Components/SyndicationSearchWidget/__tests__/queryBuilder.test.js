@@ -270,6 +270,20 @@ describe('queryBuilder', () => {
       });
     });
 
+    it('routes vid: prefixed type values to the vid field', () => {
+      const result = buildQuery(
+        {
+          ...defaultState,
+          facets: { type: ['news', 'vid:hazard'] },
+        },
+        DEFAULT_CONFIG
+      );
+
+      const postFilter = result.post_filter;
+      expect(postFilter.bool.should).toContainEqual({ term: { type: 'news' } });
+      expect(postFilter.bool.should).toContainEqual({ term: { vid: 'hazard' } });
+    });
+
     it('uses script filter for year facet', () => {
       const result = buildQuery(
         {
@@ -412,6 +426,12 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
 
       expect(result.aggs.type.terms.size).toBe(100);
+    });
+
+    it('includes vid aggregation for taxonomy vocabularies', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG);
+      expect(result.aggs.vid).toBeDefined();
+      expect(result.aggs.vid.terms.field).toBe('vid');
     });
   });
 

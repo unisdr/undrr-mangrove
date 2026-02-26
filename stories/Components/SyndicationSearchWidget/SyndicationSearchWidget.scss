@@ -733,8 +733,15 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search--hide-image .mg-card__visual { display: none; }
 .mg-search--hide-contentType .st-tag--spl { display: none; }
 .mg-search--hide-publicationType .field--name-field-undrr-publication-types { display: none; }
-.mg-search--hide-date .field--name-published-at { display: none; }
+.mg-search--hide-date .field--name-published-at,
+.mg-search--hide-date .field--name-field-publication-date,
+.mg-search--hide-date .field--name-field-release-date,
+.mg-search--hide-date .field--name-field-event-date-range,
+.mg-search--hide-date .field--name-field-date-time,
+.mg-search--hide-date .field--name-field-closing-date,
+.mg-search--hide-date .collection-freshness { display: none; }
 .mg-search--hide-siteName .mg-search__result-site-name { display: none; }
+.mg-search--hide-summary .field--name-body,
 .mg-search--hide-summary .mg-card__content > p:not(.mg-search__result-site-name) { display: none; }
 .mg-search--hide-organization .field--name-field-organization { display: none; }
 
