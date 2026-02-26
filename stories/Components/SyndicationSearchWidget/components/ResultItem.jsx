@@ -167,13 +167,17 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
       ? domainInfo.url.replace('https://', '')
       : domainId;
 
+    // Organizations are assigned to all domains, making the domain badge
+    // meaningless noise — suppress it and show a type tag instead.
+    const isOrganization = type === 'organization';
+
     // Resolve relative URLs and swap card variant for card display modes
     const resolvedTeaser = swapCardVariant(
       resolveRelativeUrls(teaser, baseUrl),
       displayMode
     );
 
-    // Inject domain label before the title field.
+    // Inject badges before the title field.
     // Node teasers use "field--name-node-title"; taxonomy term teasers use
     // "field--name-name" for the term name field. Both selectors are coupled
     // to Drupal's teaser view template class names.
@@ -183,8 +187,17 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
       titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
     }
     if (titleFieldIndex !== -1) {
-      const domainLabelHtml = `<p class="mg-search__result-site-name">${domainLabel}</p>`;
-      finalHtml = finalHtml.slice(0, titleFieldIndex) + domainLabelHtml + finalHtml.slice(titleFieldIndex);
+      let badgeHtml = '<div class="mg-search__result-badges">';
+      if (isOrganization) {
+        const typeLabel = getContentType(type)?.name || type;
+        // Title-case: capitalise the first letter of each word
+        const titleCased = typeLabel.replace(/\b\w/g, c => c.toUpperCase());
+        badgeHtml += `<span class="mg-tag">${titleCased}</span>`;
+      } else {
+        badgeHtml += `<span class="mg-search__result-site-name">${domainLabel}</span>`;
+      }
+      badgeHtml += '</div>';
+      finalHtml = finalHtml.slice(0, titleFieldIndex) + badgeHtml + finalHtml.slice(titleFieldIndex);
     }
 
     // Use vocabulary name as result type for terms, content type for nodes
@@ -263,7 +276,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
             {typeLabel && (
               <span className="mg-search__result-type">{typeLabel}</span>
             )}
-            {domainLabel && (
+            {domainLabel && type !== 'organization' && (
               <span className="mg-search__result-domain">{domainLabel}</span>
             )}
             {/* Taxonomy terms don't have published_at — skip date */}

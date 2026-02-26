@@ -193,7 +193,7 @@ $mg-font-size-900: 4rem;
 $mg-font-size-1000: 4.8rem;
 $mg-font-size-1100: 6.4rem;
 $mg-font-body: $mg-font-size-300;
-$mg-font-label: $mg-font-size-200;
+$mg-font-tag: $mg-font-size-200;
 $mg-font-line-height-500: 1.25em;
 $mg-font-line-height-700: 1.5em;
 
@@ -278,10 +278,10 @@ $mg-container-spacer: $mg-spacing-150;
 // text
 $mg-color-text: $mg-color-neutral-800;
 
-// label
-$mg-color-label: $mg-color-interactive !default;
-$mg-color-label--hover: $mg-color-interactive !default;
-$mg-radius-label: $mg-spacing-0 !default;
+// tag
+$mg-color-tag: $mg-color-interactive !default;
+$mg-color-tag--hover: $mg-color-interactive !default;
+$mg-radius-tag: $mg-spacing-0 !default;
 
 // button
 $mg-color-button: $mg-color-white !default;

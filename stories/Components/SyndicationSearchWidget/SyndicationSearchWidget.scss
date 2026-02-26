@@ -689,10 +689,22 @@ $search-input-padding-x: $mg-spacing-250;
 // Result teaser HTML overrides
 // ========================================
 
+// Type badge and site name badges injected before the title in teaser results
+.mg-search__result-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $mg-spacing-50;
+  margin-bottom: $mg-spacing-25;
+}
+
+// Content type badge — uses the system-level .mg-tag atom.
+// No additional styles needed; the class is applied in ResultItem.jsx.
+
 // Site name label in search results
 .mg-search__result-site-name {
   display: inline-block;
-  margin: 0 0 $mg-spacing-25;
+  margin: 0;
   padding: $mg-spacing-25 $mg-spacing-50;
   font-size: $mg-font-size-200;
   color: $search-text-muted;
