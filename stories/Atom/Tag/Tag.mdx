@@ -1,0 +1,73 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as TagStories from './Tag.stories';
+
+<Meta of={TagStories} />
+
+# Tag
+
+A compact label used to categorise content by type, country, theme, or other taxonomy. Renders as a `<span>` for display or an `<a>` for linked tags.
+
+## Usage
+
+### HTML
+
+```html
+<!-- Static tag -->
+<span class="mg-tag">Organization</span>
+
+<!-- Linked tag -->
+<a href="/taxonomy/earthquake" class="mg-tag">Earthquake</a>
+```
+
+### Theming
+
+The background color can be overridden per site theme using CSS custom properties:
+
+```css
+:root {
+  --tag-color-background: #1f69b3;
+  --tag-color-background-hover: #144a7a;
+}
+```
+
+Or via SCSS variables before importing the stylesheet:
+
+```scss
+$mg-color-tag: #1f69b3;
+$mg-color-tag--hover: #144a7a;
+$mg-radius-tag: 4px;
+```
+
+## Examples
+
+### Default
+
+<Canvas of={TagStories.Default} />
+
+### As link
+
+Tags rendered as `<a>` elements gain a hover background transition.
+
+<Canvas of={TagStories.AsLink} />
+
+### In context
+
+<Canvas of={TagStories.InContext} />
+
+## CSS class reference
+
+| Class | Description |
+|-------|-------------|
+| `.mg-tag` | Base tag element (`<span>` or `<a>`) |
+
+## Design tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `$mg-color-tag` | `$mg-color-interactive` (blue-900) | Background color |
+| `$mg-color-tag--hover` | `$mg-color-interactive-active` (blue-700) | Hover background color |
+| `$mg-radius-tag` | `0` | Border radius |
+
+## Changelog
+
+- **1.0** — 2026-02-26: Initial release; replaces legacy `.st-tag--spl` class with Mangrove-native BEM pattern, hover state via `$mg-color-tag--hover` token and `--tag-color-background-hover` CSS custom property

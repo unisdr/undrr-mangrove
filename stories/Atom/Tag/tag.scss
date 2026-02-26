@@ -19,9 +19,12 @@
   background-color: var(--tag-color-background, #{$mg-color-tag});
   border-radius: $mg-radius-tag;
   text-decoration: none;
+  transition: background-color 0.2s ease;
 
   &:hover {
     color: #fff;
+    background-color: $mg-color-tag--hover;
+    background-color: var(--tag-color-background-hover, #{$mg-color-tag--hover});
     text-decoration: none;
   }
 }
