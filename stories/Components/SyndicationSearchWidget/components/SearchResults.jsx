@@ -5,8 +5,9 @@
  * @module SearchWidget/components/SearchResults
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSearchState, useSearchConfig } from '../context/SearchContext';
+import { buildHiddenFieldClasses } from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
@@ -42,7 +43,16 @@ export function SearchResults({
     isInitialized,
   } = state;
 
-  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength } = config;
+  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, visibleTeaserFields, gridColumns } = config;
+
+  const isCardMode = displayMode === 'card' || displayMode === 'card-book';
+  const cardGridCols = isCardMode
+    ? Math.min(Math.max(gridColumns ?? resultsPerPage, 2), 6)
+    : undefined;
+  const hiddenFieldClasses = useMemo(
+    () => buildHiddenFieldClasses(visibleTeaserFields),
+    [visibleTeaserFields]
+  );
 
   // Don't render anything until initialized
   if (!isInitialized) {
@@ -195,18 +205,32 @@ export function SearchResults({
         )}
       </div>
 
-      {/* Results list */}
-      <div
-        className="mg-search__results-list"
-        role="list"
-        aria-label="Search results"
-      >
-        {results?.map((hit, index) => (
-          <div key={hit._id || index} role="listitem">
-            <ResultItem hit={hit} showMetrics={showSearchMetrics} />
-          </div>
-        ))}
-      </div>
+      {/* Results list or grid */}
+      {isCardMode ? (
+        <div
+          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}`.trim()}
+          role="list"
+          aria-label="Search results"
+        >
+          {results?.map((hit, index) => (
+            <div key={hit._id || index} role="listitem">
+              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`mg-search__results-list ${hiddenFieldClasses}`.trim()}
+          role="list"
+          aria-label="Search results"
+        >
+          {results?.map((hit, index) => (
+            <div key={hit._id || index} role="listitem">
+              <ResultItem hit={hit} showMetrics={showSearchMetrics} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Pager */}
       {showPager && <Pager widgetId={widgetId} />}

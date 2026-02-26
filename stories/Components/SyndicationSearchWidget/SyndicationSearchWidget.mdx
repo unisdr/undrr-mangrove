@@ -53,6 +53,26 @@ Shows search performance metrics (score, interestingness, longevity) for debuggi
 
 <Canvas of={SyndicationSearchWidgetStories.DebugMetrics} meta={SyndicationSearchWidgetStories} />
 
+## Card display
+
+Renders search results as vertical cards in a responsive grid. `gridColumns` controls the grid column count (2-6); if not set, it defaults to `resultsPerPage`. Drupal image styles are automatically rewritten to `landscape_16_9` (16:9) to match the vertical card aspect ratio.
+
+<Canvas of={SyndicationSearchWidgetStories.CardDisplay} meta={SyndicationSearchWidgetStories} />
+
+## Card book display
+
+Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-card__book` classes. Drupal image styles are automatically rewritten to `por` (3:4 portrait) to match the book card aspect ratio.
+
+<Canvas of={SyndicationSearchWidgetStories.CardBookDisplay} meta={SyndicationSearchWidgetStories} />
+
+## Hidden teaser fields
+
+Hide specific fields from pre-rendered teaser HTML using `visibleTeaserFields`. Set a field key to `false` to hide it; `null` (default) shows all fields. Uses CSS modifier classes for zero JS overhead.
+
+<Canvas of={SyndicationSearchWidgetStories.HiddenTeaserFields} meta={SyndicationSearchWidgetStories} />
+
+**Toggleable fields:** `image`, `contentType`, `publicationType`, `date`, `siteName`, `summary`, `organization`. Title is intentionally not toggleable.
+
 ## Custom filters
 
 `customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
@@ -256,6 +276,9 @@ The component is loaded automatically on pages containing a container with `data
 | `allowedTypes` | object | `null` | Restrict content types shown |
 | `customFilters` | array | `[]` | Additional Elasticsearch filters |
 | `customFacets` | array | `[]` | Custom facet definitions |
+| `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
+| `gridColumns` | number | `null` | Grid columns for card modes (2-6). `null` = use `resultsPerPage` |
+| `visibleTeaserFields` | object | `null` | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
 
 ## Architecture
 
@@ -319,6 +342,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.1.0**: Card display modes (`displayMode`: list/card/card-book) with `gridColumns` control; teaser field visibility (`visibleTeaserFields`) with CSS-based hiding for 7 toggleable fields; Drupal image style rewriting for card aspect ratios
 - **1.0.0** — 2026-02-13: Pager styles extracted to standalone `Components/Pager` component; internal `Pager.jsx` is now a thin wrapper; no API changes
 - **1.0.0-alpha.2** — 2026-01-01: Mobile filter drawer; custom SelectDropdown replacing Chosen.js (searchable, keyboard navigable, touch-friendly); loading state improvements; compact mobile filter button
 - **1.0.0-alpha.1** — 2025-12-12: Initial React 19 implementation with faceted filtering, URL hash sync, Elasticsearch teaser support, taxonomy facet labels, custom facets, Google Analytics integration, skeleton loading

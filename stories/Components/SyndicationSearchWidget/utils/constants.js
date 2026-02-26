@@ -345,6 +345,14 @@ export const DEFAULT_CONFIG = {
   queryAppend: '',
   customFilters: [],
   customFacets: [],
+
+  // Display mode
+  displayMode: 'list', // 'list', 'card', 'card-book'
+  gridColumns: null, // Grid columns for card modes (2-6). null = use resultsPerPage.
+
+  // Teaser field visibility
+  visibleTeaserFields: null, // {image: false, date: false, ...} — null = all visible
+
 };
 
 /**
@@ -422,6 +430,30 @@ export function getLanguage(langId) {
 export function isFilterVisible(key, visibleFilters) {
   if (!visibleFilters) return true;
   return visibleFilters[key] !== false;
+}
+
+/**
+ * Build CSS modifier classes to hide teaser fields based on visibility config.
+ *
+ * The corresponding SCSS rules target both Mangrove classes (e.g., .mg-card__visual)
+ * and Drupal-originated classes (e.g., .field--name-published-at, .st-tag--spl).
+ * Drupal renders teasers as HTML with these classes, and Elasticsearch indexes the
+ * pre-rendered markup, so the classes arrive intact in search results.
+ *
+ * @param {Object|null} visibleTeaserFields - Map of field keys to booleans. null = all visible.
+ * @returns {string} Space-separated CSS class string (e.g., 'mg-search--hide-image mg-search--hide-date')
+ *
+ * @example
+ * buildHiddenFieldClasses(null) // => ''
+ * buildHiddenFieldClasses({ image: false, date: false }) // => 'mg-search--hide-image mg-search--hide-date'
+ * buildHiddenFieldClasses({ image: true }) // => ''
+ */
+export function buildHiddenFieldClasses(visibleTeaserFields) {
+  if (!visibleTeaserFields) return '';
+  return Object.entries(visibleTeaserFields)
+    .filter(([, visible]) => visible === false)
+    .map(([field]) => `mg-search--hide-${field}`)
+    .join(' ');
 }
 
 /**

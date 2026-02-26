@@ -720,6 +720,44 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 // ========================================
+// Teaser Field Visibility
+// ========================================
+// Modifier classes on the results container hide specific teaser fields
+// via the visibleTeaserFields config option.
+// Title (.field--name-node-title) is intentionally not toggleable.
+// Non-mangrove selectors (.st-tag--spl, .field--name-*, etc.) originate from
+// Drupal's rendered teaser HTML. Elasticsearch indexes pre-rendered teasers
+// with these classes intact, so we target them directly here rather than
+// re-parsing or transforming the markup at runtime.
+
+.mg-search--hide-image .mg-card__visual { display: none; }
+.mg-search--hide-contentType .st-tag--spl { display: none; }
+.mg-search--hide-publicationType .field--name-field-undrr-publication-types { display: none; }
+.mg-search--hide-date .field--name-published-at { display: none; }
+.mg-search--hide-siteName .mg-search__result-site-name { display: none; }
+.mg-search--hide-summary .mg-card__content > p:not(.mg-search__result-site-name) { display: none; }
+.mg-search--hide-organization .field--name-field-organization { display: none; }
+
+// ========================================
+// Card Display Mode (mg-grid layout)
+// ========================================
+
+.mg-search__results-grid {
+  gap: $mg-spacing-150;
+
+  // Card items within grid
+  > [role="listitem"] {
+    display: flex;
+  }
+
+  // Remove list-style dividers in grid/card mode
+  .mg-search__result {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+
+// ========================================
 // Result Animations
 // Sequential fade-in and slide from left for search results.
 // Animation classes applied via JS (which checks prefers-reduced-motion).

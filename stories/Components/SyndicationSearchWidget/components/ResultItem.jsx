@@ -13,6 +13,60 @@ import React, { useMemo } from 'react';
 import { getContentType, getDomain, DOMAIN_MAP } from '../utils/constants';
 
 /**
+ * Swap card variant classes and image styles on teaser HTML for card display modes.
+ *
+ * Teaser HTML from Elasticsearch already contains mg-card markup.
+ * This strips existing variant classes and injects the correct variant
+ * for the requested display mode.
+ *
+ * Also rewrites Drupal image style paths so the image aspect ratio matches
+ * the card variant: `landscape_16_9` (16:9) for vertical cards, `por` (3:4)
+ * for book cards. The itok token is not validated for anonymous requests.
+ *
+ * @param {string} html - Teaser HTML string
+ * @param {string} displayMode - Display mode: 'list', 'card', or 'card-book'
+ * @returns {string} HTML with updated card variant classes and image styles
+ */
+export function swapCardVariant(html, displayMode) {
+  if (!html || displayMode === 'list') return html;
+  let result = html
+    .replace(/\bmg-card__(?:vc|hc)\b/g, '')
+    .replace(/\bmg-card-book__hc\b/g, '')
+    .replace(/\bmg-card__book\b/g, '');
+  const variant = displayMode === 'card-book'
+    ? 'mg-card__vc mg-card__book'
+    : 'mg-card__vc';
+  const classWithCardRegex = /class="([^"]*\bmg-card\b[^"]*)"/;
+  if (classWithCardRegex.test(result)) {
+    result = result.replace(classWithCardRegex, (_, cls) =>
+      `class="${cls.trim()} ${variant}"`
+    );
+  } else {
+    result = result.replace(/class="([^"]*)"/, (_, cls) =>
+      `class="${cls.trim()} ${variant}"`
+    );
+  }
+
+  // Rewrite Drupal image styles to match the card aspect ratio.
+  // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).
+  // Card mode needs 16:9 (landscape_16_9), book card mode needs 3:4 (por).
+  // The itok token is not validated for anonymous image style requests.
+  if (displayMode === 'card-book') {
+    result = result.replace(
+      /\/styles\/[^/]+\/public\//g,
+      '/styles/por/public/'
+    );
+  } else {
+    result = result.replace(
+      /\/styles\/[^/]+\/public\//g,
+      '/styles/landscape_16_9/public/'
+    );
+  }
+
+  return result;
+}
+
+/**
  * Resolve relative URLs to absolute using the domain's base URL.
  *
  * @param {string} html - HTML string with potentially relative URLs
@@ -42,8 +96,9 @@ function resolveRelativeUrls(html, baseUrl) {
  * @param {Object} props - Component props
  * @param {Object} props.hit - Elasticsearch hit object
  * @param {boolean} props.showMetrics - Whether to show scoring metrics
+ * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
  */
-export function ResultItem({ hit, showMetrics = false }) {
+export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
   const source = hit._source || {};
   const highlight = hit.highlight || {};
 
@@ -98,8 +153,11 @@ export function ResultItem({ hit, showMetrics = false }) {
       ? domainInfo.url.replace('https://', '')
       : domainId;
 
-    // Resolve relative URLs in the teaser HTML
-    const resolvedTeaser = resolveRelativeUrls(teaser, baseUrl);
+    // Resolve relative URLs and swap card variant for card display modes
+    const resolvedTeaser = swapCardVariant(
+      resolveRelativeUrls(teaser, baseUrl),
+      displayMode
+    );
 
     // Inject domain label before the title field
     let finalHtml = resolvedTeaser;
