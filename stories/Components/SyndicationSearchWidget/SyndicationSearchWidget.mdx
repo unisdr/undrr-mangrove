@@ -342,40 +342,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
-### 1.1.0
-- **Card display modes**: `displayMode` config option (`'list'`, `'card'`, `'card-book'`)
-  - `gridColumns` config option for independent column control (2-6); falls back to `resultsPerPage`
-  - Drupal image styles rewritten to match card aspect ratio (`landscape_16_9` for cards, `por` for book cards)
-  - Teaser class-swapping via `swapCardVariant()` — no separate card component
-- **Teaser field visibility**: `visibleTeaserFields` config option to hide specific teaser fields
-  - CSS-based hiding (`display: none`) — performant, accessible, no HTML parsing
-  - 7 toggleable fields: image, contentType, publicationType, date, siteName, summary, organization
-
-### 1.0.0
-- Pager styles extracted to standalone `Components/Pager` component
-- Internal `Pager.jsx` is now a thin wrapper around the standalone Pager
-- No API changes -- existing imports and behaviour are unchanged
-
-### 1.0.0-alpha.2
-- **Mobile filter drawer**: Left-slide drawer replaces hidden sidebar on mobile
-- **Custom SelectDropdown**: Replaced Chosen.js dependency with custom component
-  - Searchable filter input (shown when >8 options)
-  - Multi-select with checkboxes, single-select with radio buttons
-  - Keyboard navigation (arrows, Enter, Escape)
-  - Touch-friendly sizing (44px/40px targets)
-- **Loading state improvements**: Progress bar, button spinner, stale result overlay
-- **Compact filter button**: Inline with results count on mobile (vs full-width)
-- UX patterns from [Pencil & Paper mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters)
-
-### 1.0.0-alpha.1
-- React 19 implementation replacing vanilla JS version
-- Faceted filtering sidebar with sort options
-- URL hash synchronization (`#query=...`)
-- Pre-rendered teaser HTML support from Elasticsearch
-- Taxonomy fetching for human-readable facet labels
-- Custom facet support (editor-defined dropdowns)
-- Google Analytics integration via `data-vf-google-analytics-region` attributes
-- Core search with `useDeferredValue`
-- Results display with skeleton loading
-- Active filter chips with removal
-- Basic SCSS styling with Mangrove tokens
+- **1.1.0**: Card display modes (`displayMode`: list/card/card-book) with `gridColumns` control; teaser field visibility (`visibleTeaserFields`) with CSS-based hiding for 7 toggleable fields; Drupal image style rewriting for card aspect ratios
+- **1.0.0** — 2026-02-13: Pager styles extracted to standalone `Components/Pager` component; internal `Pager.jsx` is now a thin wrapper; no API changes
+- **1.0.0-alpha.2** — 2026-01-01: Mobile filter drawer; custom SelectDropdown replacing Chosen.js (searchable, keyboard navigable, touch-friendly); loading state improvements; compact mobile filter button
+- **1.0.0-alpha.1** — 2025-12-12: Initial React 19 implementation with faceted filtering, URL hash sync, Elasticsearch teaser support, taxonomy facet labels, custom facets, Google Analytics integration, skeleton loading

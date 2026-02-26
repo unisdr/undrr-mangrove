@@ -66,47 +66,8 @@ Use `mg-icon` base class with `mg-icon-{name}` (preferred) or `fa-{name}` (legac
 
 ## Changelog
 
-### v1.1
-
-Added support for additional icons:
-
-- `.fa-left` - Left arrow icon (code: f177)
-- `.fa-right` - Right arrow icon (code: f178)
-- `.fa-angle-circled-left` - Circled left angle icon (code: f137)
-- `.fa-angle-circled-right` - Circled right angle icon (code: f138)
-
-### v1.2
-
-Added support for additional icons:
-
-- `.fa-menu` - Menu icon (code: f0c9)
-
-### v1.3
-
-Added support for additional icons:
-
-- `.fa-qrcode` - QR Code icon (code: e899)
-
-### v2.0
-
-**Mangrove namespace migration** - Icons now use `mg-icon-*` namespaced classes as the preferred format, with `fa-*` classes maintained for backwards compatibility.
-
-#### New Features
-
-- **Icon React Component** (`Icon.jsx`) - Programmatic icon rendering with automatic class normalization
-  - Accepts name-only (`globe`), mg-icon-prefixed (`mg-icon-globe`), or legacy fa-prefixed (`fa-globe`) formats
-  - Supports size prop: `sm`, `lg`, `xl`
-- **mg-icon-* CSS classes** - All icons now have Mangrove-namespaced selectors (e.g., `.mg-icon-globe`, `.mg-icon-chart-bar`)
-- **Size modifiers** - New CSS classes for icon sizing: `.mg-icon--sm`, `.mg-icon--lg`, `.mg-icon--xl`
-
-#### Migration Notes
-
-- New code should use `mg-icon-*` classes (e.g., `mg-icon mg-icon-globe`)
-- Existing `fa-*` classes continue to work unchanged
-- Both formats render identically via grouped SCSS selectors
-
-#### Technical Improvements
-
-- Grouped SCSS selectors for improved maintainability
-- Added font rendering optimizations to `.mg-icon` base class
-- Updated Storybook documentation with usage examples
+- **2.0** — 2026-02-03: **Breaking:** Icons now use `mg-icon-*` namespaced classes; added Icon React component with automatic class normalization; size modifiers (`.mg-icon--sm`, `.mg-icon--lg`, `.mg-icon--xl`); `fa-*` classes maintained for backwards compatibility
+- **1.3** — 2025-08-06: Added `.fa-qrcode` icon
+- **1.2** — 2025-05-14: Added `.fa-menu` icon
+- **1.1** — 2024-10-15: Added `.fa-left`, `.fa-right`, `.fa-angle-circled-left`, `.fa-angle-circled-right` icons
+- **1.0** — 2022-12-12: Initial icon font from UNDP fork
