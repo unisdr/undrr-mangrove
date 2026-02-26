@@ -13,8 +13,10 @@ $mg-color-interactive: $pw-color-primary;
 $mg-color-interactive-active: $pw-color-primary;
 
 // PW-COMPONENTS
-$mg-color-label: $mg-color-interactive;
-$mg-color-label--hover: $mg-color-interactive;
+$mg-color-tag: $mg-color-interactive;
+$mg-color-tag--hover: $mg-color-interactive-active;
+
+// $mg-color-tag-secondary, $mg-color-tag-accent — use defaults
 $mg-color-button-background: $pw-color-primary;
 $mg-color-button-background--hover: $sendai-orange-900;
 $mg-radius-button: $mg-spacing-50;

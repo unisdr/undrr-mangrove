@@ -1,0 +1,115 @@
+// Tag — Mangrove-native replacement for .st-tag--spl.
+// -
+// A compact tag used to categorise content (content type, country, theme, etc.).
+// Inherits its background from the --tag-color-background CSS custom property set
+// by each site theme, falling back to the $mg-color-tag token.
+// -
+// Usage:
+//   <span class="mg-tag">Organization</span>
+//   <a href="…" class="mg-tag">Nepal</a>
+//   <span class="mg-tag mg-tag--secondary">Metadata</span>
+//   <span class="mg-tag mg-tag--outline">Subtle</span>
+//   <span class="mg-tag mg-tag--accent">Featured</span>
+//   <div class="mg-tag-container"><span>Auto</span><a href="#">Styled</a></div>
+
+.mg-tag {
+  display: inline-block;
+  padding: $mg-spacing-25 $mg-spacing-50;
+  font-size: $mg-font-size-250;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+  background-color: $mg-color-tag;
+  background-color: var(--tag-color-background, #{$mg-color-tag});
+  border-radius: $mg-radius-tag;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    color: #fff;
+    background-color: $mg-color-tag--hover;
+    background-color: var(--tag-color-background-hover, #{$mg-color-tag--hover});
+    text-decoration: none;
+  }
+}
+
+// --secondary: de-emphasised/metadata tags (neutral gray)
+.mg-tag--secondary {
+  background-color: $mg-color-tag-secondary;
+  background-color: var(--tag-color-background-secondary, #{$mg-color-tag-secondary});
+
+  &:hover {
+    background-color: $mg-color-tag-secondary--hover;
+    background-color: var(--tag-color-background-secondary-hover, #{$mg-color-tag-secondary--hover});
+  }
+}
+
+// --outline: subtle border-only tag
+.mg-tag--outline {
+  color: $mg-color-tag;
+  color: var(--tag-color-background, #{$mg-color-tag});
+  background-color: transparent;
+  border: 1px solid $mg-color-tag;
+  border-color: var(--tag-color-background, #{$mg-color-tag});
+
+  &:hover {
+    color: $mg-color-tag;
+    color: var(--tag-color-background, #{$mg-color-tag});
+    background-color: $mg-color-blue-50;
+    background-color: var(--tag-color-background-outline-hover, #{$mg-color-blue-50});
+  }
+}
+
+// --accent: featured/highlighted content (orange)
+.mg-tag--accent {
+  background-color: $mg-color-tag-accent;
+  background-color: var(--tag-color-background-accent, #{$mg-color-tag-accent});
+
+  &:hover {
+    background-color: $mg-color-tag-accent--hover;
+    background-color: var(--tag-color-background-accent-hover, #{$mg-color-tag-accent--hover});
+  }
+}
+
+// Adjacent tag spacing
+.mg-tag + .mg-tag {
+  margin-left: $mg-spacing-25;
+}
+
+[dir="rtl"] .mg-tag + .mg-tag {
+  margin-left: 0;
+  margin-right: $mg-spacing-25;
+}
+
+// Tag container — auto-styles child elements as tags.
+// Useful for Drupal migration from .st-tag--spl where child markup may not
+// carry individual .mg-tag classes.
+.mg-tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $mg-spacing-25;
+
+  > span,
+  > div,
+  > a,
+  > li {
+    display: inline-block;
+    padding: $mg-spacing-25 $mg-spacing-50;
+    font-size: $mg-font-size-250;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #fff;
+    background-color: $mg-color-tag;
+    background-color: var(--tag-color-background, #{$mg-color-tag});
+    border-radius: $mg-radius-tag;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      color: #fff;
+      background-color: $mg-color-tag--hover;
+      background-color: var(--tag-color-background-hover, #{$mg-color-tag--hover});
+      text-decoration: none;
+    }
+  }
+}
