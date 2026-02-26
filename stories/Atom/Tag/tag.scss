@@ -1,9 +1,9 @@
 // Tag — Mangrove-native replacement for .st-tag--spl.
-//
+// -
 // A compact tag used to categorise content (content type, country, theme, etc.).
 // Inherits its background from the --tag-color-background CSS custom property set
 // by each site theme, falling back to the $mg-color-tag token.
-//
+// -
 // Usage:
 //   <span class="mg-tag">Organization</span>
 //   <a href="…" class="mg-tag">Nepal</a>
