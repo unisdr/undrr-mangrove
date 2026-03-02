@@ -3,63 +3,197 @@ import * as TabStories from './Tab.stories';
 
 <Meta of={TabStories} />
 
-# Tab
+# Tabs
 
-The Tabs are used to navigate through the same groups of content.
+Tabs let users switch between related groups of content without leaving the page. One panel is visible at a time.
 
-### Overview
+### When to use
 
-The Tab components are used to show the tabs to alternate between views within the same content, not to navigate to different areas. The active tab is the highlight with the red color.
+- Organizing content into sections a user can flip between (e.g. overview, details, resources).
+- The content groups are peers, and users don't need to see them side by side.
 
-#### When to use:
+Don't use tabs for site navigation. Use links or menus instead.
 
-To navigate through the same groups of content.
+### Variants
 
-### Formatting
-
-#### Default
-
-It consists of different tabs and a tab border.
-
-### Content
-
-There are two types of tabs: single tab and tab bar with wrapping.
-
-1. Single tab:
-
-2. Tab bar with wrapping:
-
-### Behaviors
-
-#### States
-
-There are three states: Default, Hover, and Selected.
-
-1. Default: It is the tab bar that is displayed when the page opens.
-
-2. Hover: It changes appearance once the mouse hovers over it.
-
-3. Selected: It is a selected state with a red horizontal line below it.
+There are two layouts. **Horizontal** is a tab bar along the top, best for 2–5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. On screens ≤600 px, horizontal tabs collapse to stacked automatically.
 
 <Canvas of={TabStories.Tabs} meta={TabStories} />
 
-### Stacked Tabs
-
-The stacked tabs variant displays the tabs vertically in an accordion-like layout.
-
-### Usage:
-
-- Copy the HTML from the HTML tab (Canvas) into your html file
-- Initialize the tab function in document ready or window load by calling tabs() function.
-- Add other resources in your html file given below
-
 ### Interactions
 
-- Hover state appears to the entire tab.
-- By clicking on the tab the particular tab opens.
+- Hovering highlights the full tab.
+- Clicking a tab opens its panel.
+- Arrow keys (left/right) move between tabs. Down arrow moves focus into the open panel.
+- URL hashes work as deep links, e.g. `#mg-tabs__section-tab-2` opens that tab on load.
+
+## Usage
+
+Tabs are vanilla JavaScript. No React, no build step, just HTML and a script import. If you're already working in React with the Mangrove source, there's also a `<Tab>` wrapper ([see below](#react-usage)).
+
+### Vanilla JS (recommended)
+
+#### 1. Include the CSS
+
+Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/getting-started-cdn-reference--docs) lists all themes).
+
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.1/css/style.css" />
+```
+
+#### 2. Include the JavaScript
+
+Import `mgTabs` from the CDN and call it once the DOM is ready:
+
+```html
+<script type="module">
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.3.1/js/tabs.js';
+  mgTabs();
+</script>
+```
+
+Module scripts are deferred by default, so the DOM is already parsed when this runs. No `DOMContentLoaded` wrapper needed.
+
+`mgTabs()` finds every `[data-mg-js-tabs]` element on the page and wires up the tab behavior.
+
+#### 3. Add the HTML markup
+
+**Horizontal tabs (default)**
+
+```html
+<article class="mg-tabs mg-tabs--horizontal"
+         data-mg-js-tabs
+         data-mg-js-tabs-variant="horizontal">
+  <ul class="mg-tabs__list">
+    <!-- Tab 1 -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-tab-1">Tab title 1</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-tab-1">
+        <p>Content for tab 1.</p>
+      </section>
+    </li>
+
+    <!-- Tab 2 (default selected) -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-tab-2"
+         data-mg-js-tabs-default="true">Tab title 2</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-tab-2">
+        <p>Content for tab 2.</p>
+      </section>
+    </li>
+
+    <!-- Tab 3 -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-tab-3">Tab title 3</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-tab-3">
+        <p>Content for tab 3.</p>
+      </section>
+    </li>
+  </ul>
+</article>
+```
+
+**Stacked tabs (accordion-style)**
+
+Change the modifier class and variant attribute:
+
+```html
+<article class="mg-tabs mg-tabs--stacked"
+         data-mg-js-tabs
+         data-mg-js-tabs-variant="stacked">
+  <ul class="mg-tabs__list">
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-item-1">Section 1</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-item-1">
+        <p>Content for section 1.</p>
+      </section>
+    </li>
+
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-item-2">Section 2</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-item-2">
+        <p>Content for section 2.</p>
+      </section>
+    </li>
+  </ul>
+</article>
+```
+
+#### API
+
+Two exported functions:
+
+| Function | Description |
+|----------|-------------|
+| `mgTabs(scope?, activateDeepLinkOnLoad?)` | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. |
+| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)` | Initializes tabs within a scope element. `scope` is an optional DOM element (a tab container or a parent that contains them); defaults to `document`. Use this for tabs injected after page load. |
+
+If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRuntime()` on the new container:
+
+```js
+const newContainer = document.querySelector('#dynamic-tabs');
+mgTabsRuntime(newContainer);
+```
+
+#### Key data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-mg-js-tabs` | `article` | Identifies a tab container |
+| `data-mg-js-tabs-variant` | `article` | `"horizontal"` or `"stacked"` |
+| `data-mg-js-tabs-content` | `li` | Wraps each tab's content section |
+| `data-mg-js-tabs-default` | `a.mg-tabs__link` | Set to `"true"` to make this tab active by default |
+
+### React usage
+
+The `<Tab>` component renders the same HTML as above and calls `mgTabs()` on mount. It's available from the Mangrove source but not published as a precompiled bundle on the CDN.
+
+```jsx
+// Requires the full Mangrove source tree (not available from the npm package alone)
+import { Tab } from 'stories/Components/Tab/Tab';
+
+const tabdata = [
+  { text: 'Overview', text_id: 'overview', data: '<p>Overview content</p>' },
+  { text: 'Details', text_id: 'details', data: '<p>Detail content</p>', is_default: 'true' },
+];
+
+<Tab tabdata={tabdata} variant="horizontal" />
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tabdata` | `Array` | — | Array of tab objects (see below) |
+| `variant` | `string` | `"horizontal"` | `"horizontal"` or `"stacked"` |
+
+Each tab object in `tabdata`:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `text` | `string` | Tab label |
+| `text_id` | `string` | Unique identifier (used in `id` and `href` attributes) |
+| `data` | `string` | HTML content for the tab panel |
+| `is_default` | `string` | Set to `"true"` to select this tab on load |
+
+### See also
+
+- [Vanilla HTML/CSS integration](/?path=/docs/getting-started-vanilla-html-and-css--docs), including a working CodePen example
+- [CDN reference](/?path=/docs/getting-started-cdn-reference--docs) for all asset URLs and versioning
 
 ## Changelog
 
+- **2.4.1** — 2026-03-02: Rewrote usage docs with vanilla JS and React examples, CDN links, HTML markup, and API reference
 - **2.4** — 2026-02-23: Removed deprecated `Version1Tabs` story
 - **2.3** — 2025-09-15: New `mgTabsRuntime()` function; multi-tab-set support; default tab selection via `data-mg-js-tabs-default`; smooth scroll deep linking; stacked open state tracking
 - **2.2** — 2025-02-05: Append URL hash on clicking a tab
