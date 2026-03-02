@@ -63,7 +63,19 @@ make run
 - Feature branches - Create from `main` for new work
 - No `dev` branch is used
 
-### Creating Features
+### Branch naming convention
+
+Branch names use a conventional prefix matching the commit type, followed by a short kebab-case description:
+
+```
+feat/short-description       — new features
+fix/short-description        — bug fixes
+chore/short-description      — maintenance, deps, CI
+docs/short-description       — documentation only
+refactor/short-description   — code restructuring
+```
+
+### Creating features
 
 1. Create a branch from `main`
 
