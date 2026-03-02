@@ -3,43 +3,21 @@ import * as TabStories from './Tab.stories';
 
 <Meta of={TabStories} />
 
-# Tab
+# Tabs
 
-The Tabs are used to navigate through the same groups of content.
+Tabs let users switch between related groups of content without leaving the page. Only one tab panel is visible at a time.
 
-### Overview
+### When to use
 
-The Tab components are used to show the tabs to alternate between views within the same content, not to navigate to different areas. The active tab is the highlight with the red color.
+- To organize related content into sections a user can switch between (e.g. overview, details, resources).
+- When the content groups are at the same level of hierarchy and users don't need to see them simultaneously.
 
-#### When to use:
+Tabs are **not** for site navigation — use links or menus for that.
 
-To navigate through the same groups of content.
+### Variants
 
-### Formatting
-
-#### Default
-
-It consists of different tabs and a tab border.
-
-### Content
-
-There are two types of tabs: single tab and tab bar with wrapping.
-
-1. Single tab:
-
-2. Tab bar with wrapping:
-
-### Behaviors
-
-#### States
-
-There are three states: Default, Hover, and Selected.
-
-1. Default: It is the tab bar that is displayed when the page opens.
-
-2. Hover: It changes appearance once the mouse hovers over it.
-
-3. Selected: It is a selected state with a red horizontal line below it.
+- **Horizontal** — standard tab bar along the top. Best when there are 2–5 tabs with short labels.
+- **Stacked** — vertical accordion-style layout. Better for longer labels, many sections, or narrow containers. On screens ≤600 px, horizontal tabs automatically collapse to stacked.
 
 <Canvas of={TabStories.Tabs} meta={TabStories} />
 
