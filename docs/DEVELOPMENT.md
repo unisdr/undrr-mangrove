@@ -129,7 +129,7 @@ Include `BREAKING CHANGE:` in the commit body for major releases.
 yarn dev
 yarn storybook
 
-# Run tests
+# Run tests (see docs/TESTING.md for detailed patterns and coverage requirements)
 yarn test                 # Run all tests
 yarn test:watch          # Watch mode
 yarn test:coverage       # Generate coverage report

@@ -2,6 +2,8 @@
 
 This guide covers testing practices for the UNDRR Mangrove component library.
 
+> For a quick overview, see [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs) in Storybook. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+
 ## Testing Strategy
 
 We use multiple testing approaches to ensure component quality:

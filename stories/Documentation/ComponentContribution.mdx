@@ -761,6 +761,21 @@ yarn test:watch
    - Once approved, the changes will be merged to `main`
    - The changes will be automatically deployed to the GitHub Pages site
 
+## Review checklist
+
+Use this checklist when reviewing component PRs:
+
+- [ ] Component follows BEM naming with `mg-` prefix
+- [ ] PropTypes defined with JSDoc descriptions
+- [ ] Accessibility: labels, ARIA attributes, keyboard navigation, jest-axe test
+- [ ] Changelog entry added to the component's MDX file
+- [ ] Stories use CSF3 format (no `Template.bind({})`)
+- [ ] No `defaultProps` (use destructured defaults instead)
+- [ ] SCSS uses variables from `_variables.scss` (no hardcoded colors/spacing)
+- [ ] Tests cover key behaviors and edge cases
+- [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, changelog)
+- [ ] Sentence case for all headings and UI text
+
 ## Deprecating components
 
 When a component is no longer needed, has been replaced, or has been merged into another component, follow this process to deprecate and eventually remove it.
