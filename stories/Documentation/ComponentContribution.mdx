@@ -744,6 +744,87 @@ yarn test:watch
    - Once approved, the changes will be merged to `main`
    - The changes will be automatically deployed to the GitHub Pages site
 
+## Deprecating components
+
+When a component is no longer needed, has been replaced, or has been merged into another component, follow this process to deprecate and eventually remove it.
+
+### When to deprecate
+
+- The component has been **replaced** by a newer component with better functionality
+- The component is **no longer needed** due to changes in design or requirements
+- The component has been **merged** into another component
+
+### How to mark a component as deprecated
+
+Apply all three of the following:
+
+1. **Console warning** — Add a runtime warning so consumers are notified during development:
+
+   ```jsx
+   export function OldComponent(props) {
+     React.useEffect(() => {
+       console.warn(
+         'OldComponent is deprecated and will be removed in the next major version. Use NewComponent instead.'
+       );
+     }, []);
+     // ...
+   }
+   ```
+
+2. **JSDoc `@deprecated` tag** — Add to the component's JSDoc block so IDEs surface the deprecation:
+
+   ```jsx
+   /**
+    * @deprecated Use NewComponent instead. Will be removed in the next major version.
+    */
+   export function OldComponent(props) { ... }
+   ```
+
+3. **Storybook badge** — Add a `deprecated` tag and a banner in the component's MDX documentation:
+
+   ```jsx
+   // ComponentName.stories.jsx
+   export default {
+     title: 'Components/Category/ComponentName',
+     tags: ['deprecated'],
+   };
+   ```
+
+   ```mdx
+   {/* ComponentName.mdx */}
+   > **Deprecated:** This component will be removed in the next major version.
+   > Use [NewComponent](?path=/docs/components-category-newcomponent--docs) instead.
+   ```
+
+### Migration path
+
+Every deprecation must include a clear migration path:
+
+- Document the replacement component or alternative approach in the MDX file
+- Link directly to the replacement component's Storybook page
+- Note any prop name changes or behavioral differences between old and new
+
+### Timeline
+
+- Deprecated components must remain available for **at least one minor release** before removal
+- Removal is a **breaking change** and requires a major version bump
+
+### Changelog entry
+
+Use the standard changelog format with a `**Deprecated:**` prefix:
+
+```markdown
+- **2.1** — 2026-03-01: **Deprecated:** Use NewComponent instead
+```
+
+### Removal
+
+When removing a deprecated component:
+
+- Use `BREAKING CHANGE:` in the commit body to trigger a major version bump
+- Remove all related files (component, stories, styles, tests, MDX)
+- Update any cross-references in other component documentation
+
 ## Troubleshooting common issues
 
 ### Component styling issues
