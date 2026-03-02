@@ -125,7 +125,7 @@ it('loads data on mount', async () => {
 
 ## Visual Testing with Chromatic
 
-Visual testing is handled automatically through our CI/CD pipeline. See [CHROMATIC_VISUAL_TESTING.md](./CHROMATIC_VISUAL_TESTING.md) for detailed information.
+Visual testing is handled automatically through our CI/CD pipeline.
 
 ### Quick Overview
 
