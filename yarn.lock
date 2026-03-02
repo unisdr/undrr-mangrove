@@ -3844,36 +3844,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/cli@npm:10.2.10":
-  version: 10.2.10
-  resolution: "@storybook/cli@npm:10.2.10"
+"@storybook/cli@npm:10.2.13":
+  version: 10.2.13
+  resolution: "@storybook/cli@npm:10.2.13"
   dependencies:
-    "@storybook/codemod": "npm:10.2.10"
+    "@storybook/codemod": "npm:10.2.13"
     "@types/semver": "npm:^7.7.1"
     commander: "npm:^14.0.2"
-    create-storybook: "npm:10.2.10"
+    create-storybook: "npm:10.2.13"
     jscodeshift: "npm:^0.15.1"
-    storybook: "npm:10.2.10"
+    storybook: "npm:10.2.13"
     ts-dedent: "npm:^2.0.0"
   bin:
     cli: ./dist/bin/index.js
-  checksum: 10/9d69570a8bac5d10af569a9d0825bff6147ebfb973ff7138996f64450e01f6b0b6ff18f425a52d8bec6c0c1c2eeb25c29df79141f1a0a1070c550231d0da8e43
+  checksum: 10/e0c6cf4c261e57097f4ab4c77ab8be12a7e72a3a13a9a7069be0a51c9e9fe8a343169f1e499689772154e7ff555d583f28f01fe304fd68cf3fb7a05590029d71
   languageName: node
   linkType: hard
 
-"@storybook/codemod@npm:10.2.10":
-  version: 10.2.10
-  resolution: "@storybook/codemod@npm:10.2.10"
+"@storybook/codemod@npm:10.2.13":
+  version: 10.2.13
+  resolution: "@storybook/codemod@npm:10.2.13"
   dependencies:
     "@types/cross-spawn": "npm:^6.0.6"
     cross-spawn: "npm:^7.0.6"
     es-toolkit: "npm:^1.43.0"
     jscodeshift: "npm:^0.15.1"
     prettier: "npm:^3.7.1"
-    storybook: "npm:10.2.10"
+    storybook: "npm:10.2.13"
     tiny-invariant: "npm:^1.3.1"
     tinyglobby: "npm:^0.2.13"
-  checksum: 10/038dcdd61cda0e32c825f4a3f76b5044baf932a20410d233a10e2ae4e39c9f1406d50cbe68340b29fc0392e467d3f57121e6807d133f43844412acfd33834842
+  checksum: 10/6600ecec5198a14a18dfd9df1e5d4b7e2c021dd322e695fa18b20048dd5a7e6cac452116baa3e27db8db751587cc9251b9bad051186e4bb1f90ac7eddf37db5d
   languageName: node
   linkType: hard
 
@@ -4806,7 +4806,7 @@ __metadata:
     "@storybook/addon-links": "npm:10.2.10"
     "@storybook/addon-themes": "npm:^10.2.7"
     "@storybook/addon-webpack5-compiler-babel": "npm:4.0.0"
-    "@storybook/cli": "npm:10.2.10"
+    "@storybook/cli": "npm:10.2.13"
     "@storybook/react": "npm:10.2.10"
     "@storybook/react-webpack5": "npm:10.2.10"
     "@testing-library/dom": "npm:^10.4.1"
@@ -7773,15 +7773,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"create-storybook@npm:10.2.10":
-  version: 10.2.10
-  resolution: "create-storybook@npm:10.2.10"
+"create-storybook@npm:10.2.13":
+  version: 10.2.13
+  resolution: "create-storybook@npm:10.2.13"
   dependencies:
     semver: "npm:^7.7.3"
-    storybook: "npm:10.2.10"
+    storybook: "npm:10.2.13"
   bin:
     create-storybook: ./dist/bin/index.js
-  checksum: 10/e3707adaba9794fba43f9161d839ba12574a8e55b3107d807d19eb14f8aa406b0cfa12650e9b173578d9f6f5a8646a7e82a2f8870c3db8edea7a9a0cc37afde7
+  checksum: 10/a10e20d651d4e61ce05e3349b04c129db1707fc8d2fe55efe8961fc8c15d514aed8d4e261879b9f337d36d9ec20b3ba341b11a1babadeaba0e08501d2c020d9d
   languageName: node
   linkType: hard
 
@@ -18510,6 +18510,33 @@ __metadata:
   bin:
     storybook: ./dist/bin/dispatcher.js
   checksum: 10/275f7b8773ee6e03ae3099204dfb7329c20d81f519b91d8da6923e223b2df8dfe951086ded9a361eabf221f7bb9dbfb2c913bf4b6012d0ae9af90c46d3327dbf
+  languageName: node
+  linkType: hard
+
+"storybook@npm:10.2.13":
+  version: 10.2.13
+  resolution: "storybook@npm:10.2.13"
+  dependencies:
+    "@storybook/global": "npm:^5.0.0"
+    "@storybook/icons": "npm:^2.0.1"
+    "@testing-library/jest-dom": "npm:^6.6.3"
+    "@testing-library/user-event": "npm:^14.6.1"
+    "@vitest/expect": "npm:3.2.4"
+    "@vitest/spy": "npm:3.2.4"
+    esbuild: "npm:^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0 || ^0.26.0 || ^0.27.0"
+    open: "npm:^10.2.0"
+    recast: "npm:^0.23.5"
+    semver: "npm:^7.7.3"
+    use-sync-external-store: "npm:^1.5.0"
+    ws: "npm:^8.18.0"
+  peerDependencies:
+    prettier: ^2 || ^3
+  peerDependenciesMeta:
+    prettier:
+      optional: true
+  bin:
+    storybook: ./dist/bin/dispatcher.js
+  checksum: 10/1e325ed686f080f61858a631d7fb5bef62ee54bf1381fdda951a0f40a30a6b4ce65480e149d1af7fd53813da8ae9e9ff4a8c30e61d607bda35d40c2f13b47015
   languageName: node
   linkType: hard
 
