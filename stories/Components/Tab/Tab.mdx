@@ -43,23 +43,184 @@ There are three states: Default, Hover, and Selected.
 
 <Canvas of={TabStories.Tabs} meta={TabStories} />
 
-### Stacked Tabs
+### Stacked tabs
 
-The stacked tabs variant displays the tabs vertically in an accordion-like layout.
-
-### Usage:
-
-- Copy the HTML from the HTML tab (Canvas) into your html file
-- Initialize the tab function in document ready or window load by calling tabs() function.
-- Add other resources in your html file given below
+The stacked tabs variant displays the tabs vertically in an accordion-like layout. On narrow screens (≤600px), horizontal tabs automatically collapse to stacked behavior.
 
 ### Interactions
 
-- Hover state appears to the entire tab.
-- By clicking on the tab the particular tab opens.
+- Hover state appears on the entire tab.
+- Clicking a tab opens the corresponding panel.
+- Keyboard navigation: left/right arrow keys switch tabs, down arrow moves focus to the open panel.
+- Deep linking: add a URL hash (e.g. `#mg-tabs__section-tab-2`) to link directly to a specific tab.
+
+## Usage
+
+The Tabs component is a **vanilla JavaScript** module — it works with plain HTML and does not require React or a build process. For React projects that use the Mangrove source, a thin `<Tab>` wrapper is also available (see [React usage](#react-usage) below).
+
+### Vanilla JS (recommended)
+
+#### 1. Include the CSS
+
+Add the Mangrove theme stylesheet for your site. See the [CDN reference](/?path=/docs/getting-started-cdn-reference--docs) for all available themes.
+
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.1/css/style.css" />
+```
+
+#### 2. Add the HTML markup
+
+**Horizontal tabs (default)**
+
+```html
+<article class="mg-tabs mg-tabs--horizontal"
+         data-mg-js-tabs
+         data-mg-js-tabs-variant="horizontal">
+  <ul class="mg-tabs__list">
+    <!-- Tab 1 -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-tab-1">Tab title 1</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-tab-1">
+        <p>Content for tab 1.</p>
+      </section>
+    </li>
+
+    <!-- Tab 2 (default selected) -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-tab-2"
+         data-mg-js-tabs-default="true">Tab title 2</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-tab-2">
+        <p>Content for tab 2.</p>
+      </section>
+    </li>
+
+    <!-- Tab 3 -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-tab-3">Tab title 3</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-tab-3">
+        <p>Content for tab 3.</p>
+      </section>
+    </li>
+  </ul>
+</article>
+```
+
+**Stacked tabs (accordion-style)**
+
+Change the modifier class and variant attribute:
+
+```html
+<article class="mg-tabs mg-tabs--stacked"
+         data-mg-js-tabs
+         data-mg-js-tabs-variant="stacked">
+  <ul class="mg-tabs__list">
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-item-1">Section 1</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-item-1">
+        <p>Content for section 1.</p>
+      </section>
+    </li>
+
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-item-2">Section 2</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-item-2">
+        <p>Content for section 2.</p>
+      </section>
+    </li>
+  </ul>
+</article>
+```
+
+#### 3. Initialize the JavaScript
+
+Import the module from the CDN and call `mgTabs()` after the DOM is ready:
+
+```html
+<script type="module">
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.3.1/js/tabs.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    mgTabs();
+  });
+</script>
+```
+
+This finds all `[data-mg-js-tabs]` containers on the page and activates them.
+
+#### API
+
+The module exports two functions:
+
+| Function | Description |
+|----------|-------------|
+| `mgTabs(scope?, activateDeepLinkOnLoad?)` | Initialize all tab containers. `scope` is an optional `NodeList` of containers; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. |
+| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)` | Initialize a single tab container. `scope` is an optional DOM element; defaults to `document`. Useful for tabs injected after page load. |
+
+**Dynamically added tabs** — If you inject tab markup after the initial page load (e.g. from an API response), use `mgTabsRuntime()` scoped to the new container:
+
+```js
+const newContainer = document.querySelector('#dynamic-tabs');
+mgTabsRuntime(newContainer);
+```
+
+#### Key data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-mg-js-tabs` | `article` | Identifies a tab container |
+| `data-mg-js-tabs-variant` | `article` | `"horizontal"` or `"stacked"` |
+| `data-mg-js-tabs-content` | `li` | Wraps each tab's content section |
+| `data-mg-js-tabs-default` | `a.mg-tabs__link` | Set to `"true"` to make this tab active by default |
+
+### React usage
+
+The React `<Tab>` component is a thin wrapper that renders the HTML structure above and calls `mgTabs()` on mount. It is available when importing from the Mangrove source but is **not** published as a precompiled React bundle on the CDN.
+
+```jsx
+import { Tab } from '@undrr/undrr-mangrove/stories/Components/Tab/Tab';
+
+const tabdata = [
+  { text: 'Overview', text_id: 'overview', data: '<p>Overview content</p>' },
+  { text: 'Details', text_id: 'details', data: '<p>Detail content</p>', is_default: 'true' },
+];
+
+<Tab tabdata={tabdata} variant="horizontal" />
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tabdata` | `Array` | — | Array of tab objects (see below) |
+| `variant` | `string` | `"horizontal"` | `"horizontal"` or `"stacked"` |
+
+Each tab object in `tabdata`:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `text` | `string` | Tab label |
+| `text_id` | `string` | Unique identifier (used in `id` and `href` attributes) |
+| `data` | `string` | HTML content for the tab panel |
+| `is_default` | `string` | Set to `"true"` to select this tab on load |
+
+### See also
+
+- [Vanilla HTML/CSS integration](/?path=/docs/getting-started-vanilla-html-and-css--docs) — full setup guide with working CodePen example
+- [CDN reference](/?path=/docs/getting-started-cdn-reference--docs) — all available CDN assets and versioning
 
 ## Changelog
 
+- **2.4.1** — 2026-03-02: Improved documentation with vanilla JS and React usage guidance, CDN links, HTML markup examples, and API reference
 - **2.4** — 2026-02-23: Removed deprecated `Version1Tabs` story
 - **2.3** — 2025-09-15: New `mgTabsRuntime()` function; multi-tab-set support; default tab selection via `data-mg-js-tabs-default`; smooth scroll deep linking; stacked open state tracking
 - **2.2** — 2025-02-05: Append URL hash on clicking a tab
