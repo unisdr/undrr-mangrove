@@ -13,6 +13,16 @@ For more detailed information, see the [Getting Started Guide](https://unisdr.gi
 - **Writing guidelines**: UX writing standards — [docs/WRITING.md](./WRITING.md)
 - **Writing quick reference**: concise checklist for AI tools and reviews — [docs/WRITING-SHORT.md](./WRITING-SHORT.md)
 
+### Storybook documentation
+
+These guides live inside Storybook and cover component standards, integration, and best practices:
+
+- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) — onboarding, installation methods, and integration options
+- [Component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) — component structure, code standards, and PR process
+- [Component structure](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-structure--docs) — architecture and organization patterns
+- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs) — testing strategies within Storybook
+- [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
+
 ## Prerequisites
 
 - Node.js 22 (use nvm or similar to manage versions)
