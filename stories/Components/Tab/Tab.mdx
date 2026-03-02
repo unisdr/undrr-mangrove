@@ -68,7 +68,23 @@ Add the Mangrove theme stylesheet for your site. See the [CDN reference](/?path=
 <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.1/css/style.css" />
 ```
 
-#### 2. Add the HTML markup
+#### 2. Include the JavaScript
+
+Import the module from the CDN and call `mgTabs()` after the DOM is ready:
+
+```html
+<script type="module">
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.3.1/js/tabs.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    mgTabs();
+  });
+</script>
+```
+
+This finds all `[data-mg-js-tabs]` containers on the page and activates them.
+
+#### 3. Add the HTML markup
 
 **Horizontal tabs (default)**
 
@@ -140,22 +156,6 @@ Change the modifier class and variant attribute:
   </ul>
 </article>
 ```
-
-#### 3. Initialize the JavaScript
-
-Import the module from the CDN and call `mgTabs()` after the DOM is ready:
-
-```html
-<script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.3.1/js/tabs.js';
-
-  document.addEventListener('DOMContentLoaded', () => {
-    mgTabs();
-  });
-</script>
-```
-
-This finds all `[data-mg-js-tabs]` containers on the page and activates them.
 
 #### API
 
