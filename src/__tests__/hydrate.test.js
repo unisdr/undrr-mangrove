@@ -178,9 +178,173 @@ describe('createHydrator', () => {
       options: { clearContainer: false },
     });
 
-    // createRoot should still be called, but container not cleared
     expect(mockCreateRoot).toHaveBeenCalledTimes(1);
-    // The container innerHTML should not have been cleared before createRoot
-    // (We can't directly test this since createRoot is mocked, but we verify the option is respected)
+  });
+});
+
+describe('hydration marker', () => {
+  it('sets data-mg-hydrated on successfully mounted containers', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    const container = document.querySelector('.target');
+    expect(container.dataset.mgHydrated).toBe('true');
+  });
+
+  it('does not set data-mg-hydrated on containers that error', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => {
+        throw new Error('fail');
+      },
+    });
+
+    const container = document.querySelector('.target');
+    expect(container.dataset.mgHydrated).toBeUndefined();
+    consoleSpy.mockRestore();
+  });
+
+  it('skips containers that are already hydrated', () => {
+    document.body.innerHTML = `
+      <div class="target" data-mg-hydrated="true"></div>
+      <div class="target"></div>
+    `;
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    // Only the second container should be mounted
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+  });
+
+  it('prevents double-mounting when createHydrator is called twice', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const config = {
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    };
+
+    createHydrator(config);
+    createHydrator(config);
+
+    // Should only mount once despite two calls
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('update(context)', () => {
+  it('hydrates new containers added after initial mount', () => {
+    document.body.innerHTML = '<div class="target" data-text="first"></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: el => ({ text: el.dataset.text }),
+    });
+
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+
+    // Simulate new DOM (e.g., AJAX, Gutenberg block added)
+    const newContainer = document.createElement('div');
+    newContainer.className = 'target';
+    newContainer.dataset.text = 'second';
+    document.body.appendChild(newContainer);
+
+    const newRoots = result.update();
+
+    // Should mount the new container but not re-mount the first
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
+    expect(newRoots).toHaveLength(1);
+    expect(result.roots).toHaveLength(2);
+  });
+
+  it('scans only within the provided context element', () => {
+    document.body.innerHTML = `
+      <div id="existing" class="target"></div>
+      <div id="ajax-wrapper">
+        <div class="target" data-text="new"></div>
+      </div>
+    `;
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: el => ({ text: el.dataset.text || 'default' }),
+    });
+
+    // Initial: both containers mounted
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
+    jest.clearAllMocks();
+
+    // Add a new container inside #ajax-wrapper
+    const ajaxWrapper = document.getElementById('ajax-wrapper');
+    const newEl = document.createElement('div');
+    newEl.className = 'target';
+    newEl.dataset.text = 'ajax-loaded';
+    ajaxWrapper.appendChild(newEl);
+
+    // Update with context scoped to #ajax-wrapper
+    const newRoots = result.update(ajaxWrapper);
+
+    // Should only mount the new one (the existing one in ajax-wrapper is already hydrated)
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+    expect(newRoots).toHaveLength(1);
+    expect(result.roots).toHaveLength(3);
+  });
+
+  it('returns empty array when no new containers found', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    jest.clearAllMocks();
+    const newRoots = result.update();
+
+    expect(mockCreateRoot).not.toHaveBeenCalled();
+    expect(newRoots).toHaveLength(0);
+  });
+
+  it('accumulates roots across multiple update calls', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    expect(result.roots).toHaveLength(1);
+
+    // Add two more containers
+    for (let i = 0; i < 2; i++) {
+      const el = document.createElement('div');
+      el.className = 'target';
+      document.body.appendChild(el);
+    }
+
+    result.update();
+    expect(result.roots).toHaveLength(3);
+
+    // unmountAll should cover all accumulated roots
+    result.unmountAll();
+    expect(mockUnmount).toHaveBeenCalledTimes(3);
   });
 });

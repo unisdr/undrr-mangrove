@@ -36,16 +36,45 @@ import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
 | `options.debugLabel` | `string` | No | Label for error messages (default: `selector`) |
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
 
-**Returns:** `{ roots: ReactRoot[], unmountAll: () => void }`
+**Returns:** `{ roots: ReactRoot[], update: Function, unmountAll: () => void }`
+
+| Return property | Type | Description |
+|----------------|------|-------------|
+| `roots` | `ReactRoot[]` | All React roots created (accumulates across `update()` calls) |
+| `update(context?)` | `(Element \| Document) => ReactRoot[]` | Scan a DOM subtree for new containers and mount them. Defaults to `document`. Returns only the newly created roots. |
+| `unmountAll()` | `() => void` | Unmount all roots created by this hydrator |
 
 **Behavior:**
 
-1. Queries all elements matching `selector`
-2. For each container, saves the current `innerHTML`
-3. Calls `fromElement(container)` to extract props
-4. Clears the container (if `clearContainer` is true)
-5. Creates a React root and renders the component with extracted props
-6. On error: logs to console, restores saved HTML, calls `onError` if provided
+1. Queries all elements matching `selector` within the context (defaults to `document`)
+2. Skips containers already marked with `data-mg-hydrated="true"`
+3. For each new container, saves the current `innerHTML`
+4. Calls `fromElement(container)` to extract props
+5. Clears the container (if `clearContainer` is true)
+6. Creates a React root and renders the component with extracted props
+7. Sets `data-mg-hydrated="true"` on the container to prevent double-mounting
+8. On error: logs to console, restores saved HTML, calls `onError` if provided
+
+### `update(context)` — re-scanning for new DOM
+
+After the initial mount, call `update(context)` to hydrate containers added dynamically (AJAX, Gutenberg blocks, BigPipe chunks, modals). Only unhydrated containers within `context` are processed:
+
+```js
+const hydrator = createHydrator({ selector, component, fromElement });
+
+// Later, when new DOM arrives:
+hydrator.update(newDomSubtree);
+```
+
+This integrates directly with Drupal's `behaviors.attach` pattern:
+
+```js
+Drupal.behaviors.mangroveScrollContainer = {
+  attach(context) {
+    hydrator.update(context);
+  },
+};
+```
 
 ### `fromElement(container)`
 
@@ -231,26 +260,51 @@ Each component has a hand-written `*-wrapper.js` in `undrr_common/js/mangrove-co
 
 **New approach (layered hydration):**
 
-Replace the wrapper with a 3-line file:
+Replace each wrapper with a small file that handles both initial load and dynamic content (AJAX, BigPipe, Views infinite scroll):
 
 ```js
 // undrr_common/js/mangrove-components/ShareButtons-wrapper.js
 import createHydrator from "./hydrate.js";
 import ShareButtons, { fromElement } from "./ShareButtons.js";
-createHydrator({ selector: "[data-mg-share-buttons]", component: ShareButtons, fromElement });
+
+const hydrator = createHydrator({
+  selector: "[data-mg-share-buttons]",
+  component: ShareButtons,
+  fromElement,
+});
+
+// Re-scan when Drupal adds new DOM (AJAX, BigPipe, modals)
+Drupal.behaviors.mangroveShareButtons = {
+  attach(context) {
+    hydrator.update(context);
+  },
+};
 ```
 
 ```js
 // undrr_common/js/mangrove-components/ScrollContainer-wrapper.js
 import createHydrator from "./hydrate.js";
 import ScrollContainer, { fromElement } from "./ScrollContainer.js";
-createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
+
+const hydrator = createHydrator({
+  selector: "[data-mg-scroll-container]",
+  component: ScrollContainer,
+  fromElement,
+});
+
+Drupal.behaviors.mangroveScrollContainer = {
+  attach(context) {
+    hydrator.update(context);
+  },
+};
 ```
+
+The `data-mg-hydrated` marker prevents double-mounting — `update(context)` only processes containers that haven't been hydrated yet, so it's safe to call on every `behaviors.attach`.
 
 **Steps to migrate a Drupal wrapper:**
 
 1. Ensure `hydrate.js` is in `undrr_common/js/mangrove-components/` (copied by `yarn watch --copy` or `yarn build`)
-2. Replace the wrapper file contents with the 3-line pattern above
+2. Replace the wrapper file contents with the pattern above
 3. No changes needed to `undrr_common.libraries.yml` — the wrapper filename stays the same
 4. No Drupal cache clear needed — JS modules are not aggregated
 
