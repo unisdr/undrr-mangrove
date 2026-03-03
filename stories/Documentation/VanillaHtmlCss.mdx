@@ -227,77 +227,28 @@ For complex interactive components (MegaMenu, charts, maps), use precompiled Rea
 React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
 
 ```html
-<head>
-  <!-- Import map for React 19 (must be before any module scripts) -->
-  <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.2.0",
-        "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
-        "react-dom": "https://esm.sh/react-dom@19.2.0",
-        "react-dom/": "https://esm.sh/react-dom@19.2.0/"
-      }
+<script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.2.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.2.0",
+      "react-dom/": "https://esm.sh/react-dom@19.2.0/"
     }
-  </script>
-  <!--
-    Note: react/jsx-runtime is only needed if components use the automatic JSX
-    runtime. Many components don't require it. Import maps only trigger network
-    requests when code actually imports from that path, so unused entries are harmless.
-  -->
-</head>
-<body>
-  <!-- Mount point -->
-  <nav data-mg-mega-menu></nav>
-
-  <script type="module">
-    import React from 'react';
-    import { createRoot } from 'react-dom/client';
-
-    // Load component from CDN
-    const MegaMenuModule = await import(
-      'https://assets.undrr.org/static/mangrove/1.3.1/components/MegaMenu.js'
-    );
-
-    // Unwrap ESM/CJS interop - bundle may be double-wrapped as { default: { default: Component } }
-    let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
-    if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
-      MegaMenu = MegaMenu.default;
-    }
-
-    // Render the component
-    const container = document.querySelector('[data-mg-mega-menu]');
-    if (container) {
-      const root = createRoot(container);
-      root.render(
-        React.createElement(MegaMenu, {
-          delay: 2000,
-          sections: [
-            {
-              title: 'About',
-              bannerHeading: 'About Us',
-              bannerDescription: 'Learn more about our organization.',
-              items: [
-                { title: 'Our Mission', url: '/about/mission' },
-                { title: 'Our Team', url: '/about/team' }
-              ]
-            },
-            {
-              title: 'Search',
-              bannerButton: { url: '/search' }
-            }
-          ]
-        })
-      );
-    }
-  </script>
-</body>
+  }
+</script>
+<!--
+  Note: react/jsx-runtime is only needed if components use the automatic JSX
+  runtime. Many components don't require it. Import maps only trigger network
+  requests when code actually imports from that path, so unused entries are harmless.
+-->
 ```
 
 **Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.2.0?dev`).
 
-### Hydration helper
+### Hydration helper (recommended)
 
-For production use, Mangrove ships a `createHydrator` helper that eliminates the boilerplate above. Components that support hydration export a `fromElement` function that extracts props from data attributes on the container element:
+Components that support hydration (ShareButtons, ScrollContainer) export a `fromElement` function that extracts props from data attributes. Combined with the `createHydrator` helper, this eliminates all manual `createRoot` boilerplate:
 
 ```html
 <script type="module">
@@ -320,6 +271,30 @@ For production use, Mangrove ships a `createHydrator` helper that eliminates the
 ```
 
 This pattern works for any component with hydration support. See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, supported components, and how to add hydration to new components.
+
+### Manual mounting (for components without hydration support)
+
+Components that don't yet export `fromElement` (MegaMenu, BarChart, MapComponent, etc.) can be mounted manually with `createRoot`:
+
+```html
+<nav data-mg-mega-menu></nav>
+
+<script type="module">
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  const MegaMenuModule = await import(
+    'https://assets.undrr.org/static/mangrove/1.3.1/components/MegaMenu.js'
+  );
+  let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
+  if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
+    MegaMenu = MegaMenu.default;
+  }
+  const container = document.querySelector('[data-mg-mega-menu]');
+  if (container) {
+    createRoot(container).render(React.createElement(MegaMenu, { /* props */ }));
+  }
+</script>
+```
 
 For most use cases, the vanilla HTML markup (shown in component docs) is simpler. Use precompiled components only when you need:
 - Complex interactive behavior (MegaMenu dropdowns, chart interactions)

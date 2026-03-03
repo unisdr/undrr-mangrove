@@ -271,30 +271,16 @@ const ScrollContainer = ({
           ref={contentRef}
           className={`mg-scroll__content${isMobileRef.current ? '' : ' mg-grid'}`}
         >
-          {/* {React.Children.map(children, (child) => (
-            <div className="mg-scroll__item-wrapper">{child}</div>
-          ))} */}
-
-          {/* In some environments (like Gutenberg), it is a set of individual html blobs */}
+          {/* In some environments (like Gutenberg), children is an array of HTML strings */}
           {Array.isArray(children) && !React.isValidElement(children[0])
-            ? children.map((child, index) => {
-                // console.log("HTML blob");
-                // console.log("Child type:", typeof child);
-                // console.log("Is valid element:", React.isValidElement(child));
-                // console.log("Child value:", child);
-                return (
+            ? children.map((child, index) => (
                   <div key={index} className="mg-scroll__item-wrapper">
                     <div dangerouslySetInnerHTML={{ __html: String(child) }} />
                   </div>
-                );
-              })
-            : React.Children.map(children, child => {
-                // console.log("Real react");
-                // console.log("Child type:", typeof child);
-                // console.log("Is valid element:", React.isValidElement(child));
-                // console.log("Child value:", child);
-                return <div className="mg-scroll__item-wrapper">{child}</div>;
-              })}
+              ))
+            : React.Children.map(children, child => (
+                <div className="mg-scroll__item-wrapper">{child}</div>
+              ))}
         </div>
       </div>
     </section>
