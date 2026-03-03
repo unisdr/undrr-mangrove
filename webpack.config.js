@@ -82,11 +82,12 @@ export default [
     mode: packMode, // Set mode dynamically
     cache: { type: 'filesystem' },
     entry: {
+      hydrate: './src/hydrate.js',
       ShareButtons:
-        './stories/Components/Buttons/ShareButtons/ShareButtons.jsx',
+        './stories/Components/Buttons/ShareButtons/ShareButtons.hydrate.js',
       MegaMenu: './stories/Components/MegaMenu/MegaMenu.jsx',
       ScrollContainer:
-        './stories/Components/ScrollContainer/ScrollContainer.jsx',
+        './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
       MapComponent: './stories/Components/Map/MapComponent.jsx',
       QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
@@ -101,6 +102,7 @@ export default [
     externals: {
       react: 'react',
       'react-dom': 'react-dom',
+      'react-dom/client': 'react-dom/client',
     },
     output: {
       path: path.resolve(currentDirPath, 'dist/components'),

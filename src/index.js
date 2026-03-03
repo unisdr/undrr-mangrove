@@ -1,5 +1,8 @@
 // Main entry point for the component library
 
+// Hydration runtime
+export { default as createHydrator } from './hydrate.js';
+
 // Component exports
 export { default as CookieConsentBanner } from '../stories/Components/CookieConsentBanner';
 export { default as ShareButtons } from '../stories/Components/Buttons/ShareButtons/ShareButtons';
