@@ -4,19 +4,287 @@ Mangrove React components are rendered into server-generated HTML containers via
 
 Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803)
 
-## Overview
+## Quick reference
 
-Each consumer (Drupal, Astro, static sites) previously maintained its own wrapper script per component. These wrappers were ~75% identical boilerplate — querying the DOM, parsing props, handling errors, calling `createRoot()`. The layered approach splits this into three concerns:
+To add hydration support to a component, you create **3 files** in Mangrove and update **1 config**:
+
+```
+ComponentName/
+├── ComponentName.jsx              # (existing) React component
+├── ComponentName.fromElement.js   # NEW — pure function: DOM element → props
+├── ComponentName.hydrate.js       # NEW — barrel re-exporting component + fromElement
+└── __tests__/
+    └── ComponentName.fromElement.test.js  # NEW — tests for prop extraction
+```
+
+```js
+// webpack.config.js — change the entry to point at the barrel
+ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
+```
+
+The consumer (Drupal, Astro, static HTML) then writes a short wrapper:
+
+```js
+import createHydrator from "./hydrate.js";
+import Component, { fromElement } from "./ComponentName.js";
+createHydrator({ selector: "[data-mg-component-name]", component: Component, fromElement });
+```
+
+---
+
+## Step-by-step walkthrough
+
+This walks through adding hydration to a hypothetical `AlertBanner` component that accepts `message`, `variant`, and `dismissible` props.
+
+### 1. Write fromElement
+
+Create `AlertBanner.fromElement.js` next to the component:
+
+```js
+export default function alertBannerFromElement(container) {
+  const { dataset } = container;
+  return {
+    message: dataset.message || '',
+    variant: dataset.variant || 'info',
+    dismissible: dataset.dismissible === 'true',
+  };
+}
+```
+
+**Rules:**
+
+- **Export a named default function.** The name should be `{componentName}FromElement` for grep-ability.
+- **Use `container.dataset`** for data attributes. The browser auto-converts `data-my-prop` to `dataset.myProp`.
+- **Provide defaults for every optional prop.** The function must return a valid props object even when every attribute is missing.
+- **Keep it pure.** No side effects, no DOM mutation, no API calls. This function is called _before_ the container is cleared.
+
+### 2. Create the barrel file
+
+Create `AlertBanner.hydrate.js`:
+
+```js
+export { default } from './AlertBanner.jsx';
+export { default as fromElement } from './AlertBanner.fromElement.js';
+```
+
+This lets the built bundle (`dist/components/AlertBanner.js`) export both the component and `fromElement` from a single import.
+
+**If the component uses a named export instead of default:**
+
+```js
+// Gallery uses `export function Gallery` not `export default`
+export { Gallery, Gallery as default } from './Gallery.jsx';
+export { default as fromElement } from './Gallery.fromElement.js';
+```
+
+### 3. Update webpack.config.js
+
+Change the component's entry point from the `.jsx` to the `.hydrate.js` barrel:
+
+```diff
+ entry: {
+-  AlertBanner: './stories/Components/AlertBanner/AlertBanner.jsx',
++  AlertBanner: './stories/Components/AlertBanner/AlertBanner.hydrate.js',
+ },
+```
+
+Existing named exports are preserved — the barrel re-exports everything the component did.
+
+### 4. Write tests
+
+Create `__tests__/AlertBanner.fromElement.test.js`:
+
+```js
+import fromElement from '../AlertBanner.fromElement';
+
+function makeContainer(attrs = {}) {
+  const el = document.createElement('div');
+  Object.entries(attrs).forEach(([key, value]) => {
+    el.setAttribute(`data-${key}`, value);
+  });
+  return el;
+}
+
+describe('alertBannerFromElement', () => {
+  it('returns defaults when no attributes are set', () => {
+    const props = fromElement(makeContainer());
+    expect(props).toEqual({
+      message: '',
+      variant: 'info',
+      dismissible: false,
+    });
+  });
+
+  it('extracts all attributes', () => {
+    const props = fromElement(makeContainer({
+      message: 'System maintenance tonight',
+      variant: 'warning',
+      dismissible: 'true',
+    }));
+    expect(props.message).toBe('System maintenance tonight');
+    expect(props.variant).toBe('warning');
+    expect(props.dismissible).toBe(true);
+  });
+
+  it('treats missing dismissible as false', () => {
+    const props = fromElement(makeContainer({ message: 'Hello' }));
+    expect(props.dismissible).toBe(false);
+  });
+});
+```
+
+Run with `yarn test __tests__/AlertBanner.fromElement.test.js`.
+
+### 5. Build and verify
+
+```bash
+yarn build
+ls dist/components/AlertBanner.js  # should exist
+```
+
+The built file should export both `default` (the component) and `fromElement`:
+
+```bash
+# Quick check — look for fromElement in the export statement
+tail -c 200 dist/components/AlertBanner.js
+# Should contain: export{... as default,... as fromElement}
+```
+
+### 6. Write the consumer wrapper
+
+In the Drupal theme (`undrr_common/js/mangrove-components/`):
+
+```js
+// AlertBanner-wrapper.js
+import createHydrator from "./hydrate.js";
+import AlertBanner, { fromElement } from "./AlertBanner.js";
+
+const hydrator = createHydrator({
+  selector: "[data-mg-alert-banner]",
+  component: AlertBanner,
+  fromElement,
+});
+
+// Re-scan when Drupal adds new DOM (AJAX, BigPipe, modals)
+Drupal.behaviors.mangroveAlertBanner = {
+  attach(context) {
+    hydrator.update(context);
+  },
+};
+```
+
+The corresponding HTML:
+
+```html
+<div data-mg-alert-banner
+  data-message="System maintenance tonight"
+  data-variant="warning"
+  data-dismissible="true">
+</div>
+```
+
+---
+
+## Common fromElement patterns
+
+### Strings with defaults
+
+```js
+title: dataset.title || 'Untitled',
+```
+
+### Booleans (default true)
+
+```js
+// Attribute absent or any value except "false" → true
+showArrows: dataset.showArrows !== 'false',
+```
+
+### Booleans (default false)
+
+```js
+// Only "true" → true, everything else → false
+dismissible: dataset.dismissible === 'true',
+```
+
+### Integers with fallback
+
+```js
+resultsPerPage: dataset.resultsPerPage ? parseInt(dataset.resultsPerPage, 10) : 50,
+```
+
+### JSON arrays
+
+```js
+try {
+  props.media = dataset.media ? JSON.parse(dataset.media) : [];
+} catch {
+  props.media = [];
+}
+```
+
+### Optional props (undefined when absent)
+
+```js
+// Only include if explicitly set — lets the component use its own default
+attribution: dataset.attribution || undefined,
+```
+
+### Content extraction from server-rendered HTML
+
+```js
+// Read innerHTML BEFORE createHydrator clears the container
+// (fromElement is called before clearing)
+const contentWrapper = container.querySelector('.mg-scroll__content');
+if (contentWrapper) {
+  props.children = Array.from(contentWrapper.children).map(child => child.outerHTML);
+}
+```
+
+---
+
+## When the consumer's HTML doesn't match
+
+The `fromElement` functions use clean attribute names (`data-media`, `data-stats`). But existing consumer HTML may use different conventions (Drupal Gutenberg blocks use `data-mg-gallery-data`, `data-mg-stats-card-data`, etc.).
+
+In this case, the consumer wrapper provides its own `fromElement` that bridges the existing HTML contract:
+
+```js
+// Gallery-wrapper.js — Drupal's attributes differ from the generic fromElement
+import createHydrator from "./hydrate.js";
+import { Gallery } from "./Gallery.js";
+
+function fromElement(container) {
+  // Drupal outputs two JSON blobs instead of individual attributes
+  const dataAttr = container.getAttribute("data-mg-gallery-data");
+  const optionsAttr = container.getAttribute("data-mg-gallery-options");
+  const media = dataAttr ? JSON.parse(dataAttr) : [];
+  const options = optionsAttr ? JSON.parse(optionsAttr) : {};
+
+  return {
+    media,
+    showThumbnails: options.showThumbnails !== false,
+    showArrows: options.showArrows !== false,
+    // ...
+  };
+}
+
+createHydrator({ selector: "[data-mg-gallery]", component: Gallery, fromElement });
+```
+
+This is the Layer 3 pattern — the consumer takes control of prop extraction while still using `createHydrator` for mount lifecycle.
+
+---
+
+## Architecture
 
 | Layer | Responsibility | Lives in |
 |-------|---------------|----------|
-| **Layer 1** — `createHydrator` | DOM querying, error handling, `createRoot` lifecycle | `src/hydrate.js` (Mangrove) |
+| **Layer 1** — `createHydrator` | DOM querying, error handling, `createRoot` lifecycle, hydration markers | `src/hydrate.js` (Mangrove) |
 | **Layer 2** — `fromElement` | Extract component props from a DOM element | Per-component `*.fromElement.js` (Mangrove) |
 | **Layer 3** — Consumer glue | Selector choice, prop overrides, site-specific logic | Consumer repo (Drupal, Astro, etc.) |
 
-## API reference
-
-### `createHydrator(config)`
+## createHydrator API
 
 Exported from `src/hydrate.js` and from the npm package as `createHydrator`.
 
@@ -25,7 +293,7 @@ import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
 // or in Drupal: import createHydrator from './hydrate.js';
 ```
 
-**Parameters:**
+**Config:**
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
@@ -36,346 +304,103 @@ import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
 | `options.debugLabel` | `string` | No | Label for error messages (default: `selector`) |
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
 
-**Returns:** `{ roots: ReactRoot[], update: Function, unmountAll: () => void }`
+**Returns:** `{ roots, update, unmountAll }`
 
-| Return property | Type | Description |
-|----------------|------|-------------|
+| Property | Type | Description |
+|----------|------|-------------|
 | `roots` | `ReactRoot[]` | All React roots created (accumulates across `update()` calls) |
-| `update(context?)` | `(Element \| Document) => ReactRoot[]` | Scan a DOM subtree for new containers and mount them. Defaults to `document`. Returns only the newly created roots. |
-| `unmountAll()` | `() => void` | Unmount all roots created by this hydrator |
+| `update(context?)` | `(Element?) => ReactRoot[]` | Scan for new containers, mount them. Scopes to `context` if provided, otherwise `document`. Returns newly created roots. |
+| `unmountAll()` | `() => void` | Unmount all roots and clear hydration markers |
 
-**Behavior:**
+**Lifecycle:**
 
-1. Queries all elements matching `selector` within the context (defaults to `document`)
-2. Skips containers already marked with `data-mg-hydrated="true"`
-3. For each new container, saves the current `innerHTML`
+1. Queries all elements matching `selector`
+2. Skips containers with `data-mg-hydrated="true"`
+3. Saves `innerHTML` (for error recovery)
 4. Calls `fromElement(container)` to extract props
 5. Clears the container (if `clearContainer` is true)
-6. Creates a React root and renders the component with extracted props
-7. Sets `data-mg-hydrated="true"` on the container to prevent double-mounting
+6. Creates a React root, renders the component
+7. Sets `data-mg-hydrated="true"` on success
 8. On error: logs to console, restores saved HTML, calls `onError` if provided
 
-### `update(context)` — re-scanning for new DOM
-
-After the initial mount, call `update(context)` to hydrate containers added dynamically (AJAX, Gutenberg blocks, BigPipe chunks, modals). Only unhydrated containers within `context` are processed:
+**Drupal integration with `update(context)`:**
 
 ```js
 const hydrator = createHydrator({ selector, component, fromElement });
 
-// Later, when new DOM arrives:
-hydrator.update(newDomSubtree);
-```
-
-This integrates directly with Drupal's `behaviors.attach` pattern:
-
-```js
-Drupal.behaviors.mangroveScrollContainer = {
+// Re-scan when Drupal injects new DOM
+Drupal.behaviors.mangroveComponent = {
   attach(context) {
     hydrator.update(context);
   },
 };
 ```
 
-### `fromElement(container)`
+---
 
-Each component exports a `fromElement` function from its `*.fromElement.js` file. This is a pure function that takes a DOM element and returns a props object.
+## Components with hydration support
 
-```js
-// stories/Components/Buttons/ShareButtons/ShareButtons.fromElement.js
-export default function shareButtonsFromElement(container) {
-  const { dataset } = container;
-  return {
-    labels: {
-      mainLabel: dataset.mainLabel || 'Share this',
-      onCopy: dataset.onCopyLabel || 'Link copied',
-    },
-    SharingSubject: dataset.sharingSubject || 'Sharing Link',
-    SharingTextBody: dataset.sharingBody || '',
-  };
-}
-```
+| Component | Tier | Selector | Key attributes |
+|-----------|------|----------|---------------|
+| ShareButtons | Simple | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
+| QuoteHighlight | Simple | `[data-mg-quote-highlight]` | `data-quote`, `data-attribution`, `data-variant`, `data-alignment` |
+| ScrollContainer | Medium | `[data-mg-scroll-container]` | `data-height`, `data-show-arrows`, `data-step-size`, `.mg-scroll__content` children |
+| Gallery | Medium | `[data-mg-gallery]` | `data-media` (JSON), `data-show-thumbnails`, `data-arrow-style` |
+| IconCard | Medium | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
+| StatsCard | Medium | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant` |
+| MegaMenu | Complex | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional) |
+| SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 
-## Before and after
+**Tier meanings:**
 
-### ShareButtons wrapper (Drupal)
+- **Simple** — all props from individual data attributes, no JSON, minimal defaults
+- **Medium** — mix of individual attributes and JSON blobs for arrays/objects
+- **Complex** — `fromElement` extracts only DOM-available props; consumer wrapper provides the rest (API data, config modifiers, etc.)
 
-**Before** (~39 lines):
-```js
-import React from "react";
-import { createRoot } from "react-dom/client";
-import ShareButtonsModule from "./ShareButtons.js";
-
-const ShareButtons = ShareButtonsModule?.default ?? ShareButtonsModule;
-
-document.querySelectorAll("[data-mg-share-buttons]").forEach((container) => {
-  try {
-    const labels = {
-      mainLabel: "Share this",
-      onCopy: "Link copied",
-    };
-    const props = {
-      labels,
-      SharingSubject: "Sharing Link",
-      SharingTextBody: "",
-    };
-    const root = createRoot(container);
-    root.render(React.createElement(ShareButtons, props));
-  } catch (error) {
-    console.error("ShareButtons hydration error:", error);
-  }
-});
-```
-
-**After** (3 lines):
-```js
-import createHydrator from "./hydrate.js";
-import ShareButtons, { fromElement } from "./ShareButtons.js";
-createHydrator({ selector: "[data-mg-share-buttons]", component: ShareButtons, fromElement });
-```
-
-### ScrollContainer wrapper (Drupal)
-
-**Before** (~190 lines): Complex wrapper with DOMParser-based HTML extraction, error recovery, debug logging, and `window.UNDRR` configuration.
-
-**After** (3 lines):
-```js
-import createHydrator from "./hydrate.js";
-import ScrollContainer, { fromElement } from "./ScrollContainer.js";
-createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
-```
-
-### With consumer-specific overrides (Layer 3)
-
-```js
-import createHydrator from "./hydrate.js";
-import ScrollContainer, { fromElement } from "./ScrollContainer.js";
-
-createHydrator({
-  selector: "[data-mg-scroll-container]",
-  component: ScrollContainer,
-  fromElement(el) {
-    const props = fromElement(el);
-    props.showArrows = true; // always show arrows on this site
-    return props;
-  },
-});
-```
-
-## Adding hydration to a new component
-
-1. **Create `ComponentName.fromElement.js`** next to the component:
-   - Export a default function that takes a DOM element and returns a props object
-   - Use `container.dataset` for data attributes
-   - Use `container.innerHTML` or `container.querySelector()` for content extraction
-   - Provide sensible defaults for all optional props
-
-2. **Create `ComponentName.hydrate.js`** barrel file:
-   ```js
-   export { default } from './ComponentName.jsx';
-   export { default as fromElement } from './ComponentName.fromElement.js';
-   ```
-
-3. **Update `webpack.config.js`** — point the component entry to the barrel:
-   ```js
-   ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
-   ```
-
-4. **Write tests** in `__tests__/ComponentName.fromElement.test.js`:
-   - Test default prop values
-   - Test extraction from data attributes
-   - Test edge cases (missing attributes, empty content)
-
-5. **Update consumer wrapper** to use `createHydrator`:
-   ```js
-   import createHydrator from "./hydrate.js";
-   import Component, { fromElement } from "./ComponentName.js";
-   createHydrator({ selector: "[data-mg-component]", component: Component, fromElement });
-   ```
-
-## Data attribute naming
-
-HTML data attributes map to `dataset` properties via standard camelCase conversion:
-
-| HTML attribute | `dataset` property |
-|---------------|-------------------|
-| `data-main-label` | `dataset.mainLabel` |
-| `data-show-arrows` | `dataset.showArrows` |
-| `data-step-size` | `dataset.stepSize` |
-| `data-sharing-subject` | `dataset.sharingSubject` |
-
-Use kebab-case in HTML, access as camelCase in JavaScript.
+---
 
 ## Integration examples
 
 ### Vanilla HTML (CDN)
 
-A standalone HTML page can use hydration with no build process. Include the React import map, then load `hydrate.js` and the component from the CDN:
-
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.1/css/style.css">
+<script type="importmap">
+  { "imports": {
+    "react": "https://esm.sh/react@19.2.0",
+    "react-dom": "https://esm.sh/react-dom@19.2.0",
+    "react-dom/": "https://esm.sh/react-dom@19.2.0/"
+  }}
+</script>
 
-  <!-- Import map for React 19 (must be before any module scripts) -->
-  <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.2.0",
-        "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
-        "react-dom": "https://esm.sh/react-dom@19.2.0",
-        "react-dom/": "https://esm.sh/react-dom@19.2.0/"
-      }
-    }
-  </script>
-</head>
-<body>
-  <!-- Server-rendered container with data attributes -->
-  <section data-mg-share-buttons
-    data-main-label="Share this"
-    data-on-copy-label="Link copied"
-    data-sharing-subject="Sharing Link">
-  </section>
+<section data-mg-share-buttons data-main-label="Share this"></section>
 
-  <!-- Hydrate in three lines -->
-  <script type="module">
-    import createHydrator from 'https://assets.undrr.org/static/mangrove/1.3.1/components/hydrate.js';
-    import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.3.1/components/ShareButtons.js';
-    createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
-  </script>
-</body>
-</html>
+<script type="module">
+  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.3.1/components/hydrate.js';
+  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.3.1/components/ShareButtons.js';
+  createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
+</script>
 ```
 
-This replaces the 30+ lines of manual `createRoot()` boilerplate shown in the [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs).
-
-### Drupal theme integration
-
-In the Drupal `undrr_common` theme, Mangrove components are loaded as ES modules via an import map injected by `mangrove-components.js`. The built component bundles and `hydrate.js` are copied to `undrr_common/js/mangrove-components/` by the watch script.
-
-**Current approach (legacy wrappers):**
-
-Each component has a hand-written `*-wrapper.js` in `undrr_common/js/mangrove-components/` that duplicates DOM querying, error handling, and `createRoot()` logic. ShareButtons-wrapper.js is ~39 lines; ScrollContainer-wrapper.js is ~190 lines.
-
-**New approach (layered hydration):**
-
-Replace each wrapper with a small file that handles both initial load and dynamic content (AJAX, BigPipe, Views infinite scroll):
+### Drupal
 
 ```js
-// undrr_common/js/mangrove-components/ShareButtons-wrapper.js
 import createHydrator from "./hydrate.js";
-import ShareButtons, { fromElement } from "./ShareButtons.js";
+import Component, { fromElement } from "./ComponentName.js";
 
 const hydrator = createHydrator({
-  selector: "[data-mg-share-buttons]",
-  component: ShareButtons,
+  selector: "[data-mg-component-name]",
+  component: Component,
   fromElement,
 });
 
-// Re-scan when Drupal adds new DOM (AJAX, BigPipe, modals)
-Drupal.behaviors.mangroveShareButtons = {
+Drupal.behaviors.mangroveComponentName = {
   attach(context) {
     hydrator.update(context);
   },
 };
-```
-
-```js
-// undrr_common/js/mangrove-components/ScrollContainer-wrapper.js
-import createHydrator from "./hydrate.js";
-import ScrollContainer, { fromElement } from "./ScrollContainer.js";
-
-const hydrator = createHydrator({
-  selector: "[data-mg-scroll-container]",
-  component: ScrollContainer,
-  fromElement,
-});
-
-Drupal.behaviors.mangroveScrollContainer = {
-  attach(context) {
-    hydrator.update(context);
-  },
-};
-```
-
-The `data-mg-hydrated` marker prevents double-mounting — `update(context)` only processes containers that haven't been hydrated yet, so it's safe to call on every `behaviors.attach`.
-
-**Steps to migrate a Drupal wrapper:**
-
-1. Ensure `hydrate.js` is in `undrr_common/js/mangrove-components/` (copied by `yarn watch --copy` or `yarn build`)
-2. Replace the wrapper file contents with the pattern above
-3. No changes needed to `undrr_common.libraries.yml` — the wrapper filename stays the same
-4. No Drupal cache clear needed — JS modules are not aggregated
-
-**Twig template side:**
-
-The Twig template renders the container with data attributes. No change needed — the `data-mg-*` selectors are the same:
-
-```twig
-{# ShareButtons — templates/field/share-buttons.html.twig #}
-<section data-mg-share-buttons
-  data-main-label="{{ 'Share this'|t }}"
-  data-on-copy-label="{{ 'Link copied'|t }}"
-  data-sharing-subject="{{ node.label }}"
-  data-sharing-body="{{ 'Check out this link: '|t }}">
-</section>
-```
-
-Labels are localized server-side via Drupal's `|t` filter and passed to the React component via data attributes — something the old hardcoded wrappers couldn't do.
-
-### Drupal Gutenberg blocks
-
-Gutenberg blocks that consume Mangrove components benefit from the same pattern. A block's `save()` function renders the container HTML with data attributes; the hydration runtime mounts the React component on the frontend.
-
-**Block save output (server-rendered HTML stored in content):**
-
-```html
-<!-- wp:undrr/scroll-container {"height":"300px","showArrows":true} -->
-<div data-mg-scroll-container
-  data-height="300px"
-  data-show-arrows="true"
-  class="wp-block-undrr-scroll-container">
-  <div class="mg-scroll__content">
-    <!-- InnerBlocks content rendered by Gutenberg -->
-  </div>
-</div>
-<!-- /wp:undrr/scroll-container -->
-```
-
-**Frontend hydration (loaded via libraries.yml):**
-
-```js
-import createHydrator from "./hydrate.js";
-import ScrollContainer, { fromElement } from "./ScrollContainer.js";
-createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
-```
-
-This means Gutenberg blocks and Twig templates share the same hydration code — no separate wrapper per integration point.
-
-**Block edit function (editor):**
-
-In the Gutenberg editor, the component is rendered directly as React (since the editor is already a React app). The `fromElement` function is not used in the editor — it's only for frontend hydration.
-
-```jsx
-// blocks/scroll-container/edit.js
-import ScrollContainer from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer';
-
-export default function Edit({ attributes, setAttributes }) {
-  return (
-    <ScrollContainer
-      height={attributes.height}
-      showArrows={attributes.showArrows}
-    >
-      <InnerBlocks />
-    </ScrollContainer>
-  );
-}
 ```
 
 ### Astro / Vite
-
-Import directly from the npm package:
 
 ```js
 import { createHydrator } from '@undrr/undrr-mangrove';
@@ -388,18 +413,7 @@ createHydrator({
 });
 ```
 
-## Components with hydration support
-
-| Component | Selector | Data attributes |
-|-----------|----------|----------------|
-| ShareButtons | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
-| ScrollContainer | `[data-mg-scroll-container]` | `data-height`, `data-min-width`, `data-item-width`, `data-padding`, `data-show-arrows`, `data-step-size` |
-| QuoteHighlight | `[data-mg-quote-highlight]` | `data-quote`, `data-attribution`, `data-attribution-title`, `data-image-src`, `data-image-alt`, `data-background-color`, `data-variant`, `data-alignment` |
-| Gallery | `[data-mg-gallery]` | `data-media` (JSON), `data-initial-index`, `data-show-thumbnails`, `data-thumbnail-position`, `data-show-arrows`, `data-arrow-style`, `data-show-description`, `data-enable-keyboard`, `data-loop` |
-| IconCard | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
-| StatsCard | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant`, `data-class-name` |
-| MegaMenu | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional — most consumers provide sections via API) |
-| SyndicationSearchWidget | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-query`, `data-default-sort`, `data-display-mode`, `data-show-*` booleans, `data-default-filters` (JSON), `data-allowed-types` (JSON) |
+---
 
 ## Related documentation
 
