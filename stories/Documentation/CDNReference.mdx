@@ -101,6 +101,8 @@ Then import the Mangrove component as an ES module:
 
 See <LinkTo kind="getting-started-vanilla-html-and-css" story="docs">Vanilla HTML/CSS guide</LinkTo> for complete usage examples.
 
+Components that support hydration (ShareButtons, ScrollContainer) also export a `fromElement` function for automatic prop extraction. The `hydrate.js` runtime (`/components/hydrate.js`) eliminates the manual `createRoot` boilerplate. See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for details.
+
 ## Analytics
 
 Base URL: `https://assets.undrr.org/static/analytics/{version}/`

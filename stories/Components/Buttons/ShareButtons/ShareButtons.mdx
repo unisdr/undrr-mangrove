@@ -92,8 +92,36 @@ Drop in and configure. custom message if needed
 
 - The hover state is applied for each button when the mouse hovers over it.
 
+## Server-rendered usage
+
+ShareButtons supports hydration from server-rendered HTML using `createHydrator` and the bundled `fromElement` function. This is how the component is integrated in Drupal and other server-rendered frameworks.
+
+The server renders a container with localized labels as data attributes:
+
+```html
+<section data-mg-share-buttons
+  data-main-label="Share this"
+  data-on-copy-label="Link copied"
+  data-sharing-subject="Sharing Link"
+  data-sharing-body="Check out this link: ">
+</section>
+```
+
+The client script mounts the React component in three lines:
+
+```js
+import createHydrator from './hydrate.js';
+import ShareButtons, { fromElement } from './ShareButtons.js';
+createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
+```
+
+`fromElement` extracts labels and sharing config from data attributes, with sensible English defaults for any missing attributes.
+
+See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
 ## Changelog
 
+- **1.4** — 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.3** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
 - **1.2** — 2025-08-06: Added QR code sharing with responsive modal, UTM tracking, copy-to-clipboard, and keyboard navigation
 - **1.1** — 2024-10-15: Added shortlink support, Web Share API, updated Twitter to X icon, revised icon order and appearance

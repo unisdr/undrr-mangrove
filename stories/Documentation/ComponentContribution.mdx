@@ -26,6 +26,7 @@ These guides on GitHub cover process and workflow:
 - [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md) — environment setup, scripts, branching, and commit conventions
 - [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md) — how to propose changes and submit PRs
 - [Testing guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/TESTING.md) — unit, visual, and accessibility testing
+- [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) — adding `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
 - [Release process](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) — versioning, tagging, and publishing
 - [Writing guidelines](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md) — UX writing standards
 
@@ -55,11 +56,18 @@ All components in Mangrove follow a consistent file structure:
 
 ```
 stories/Components/[ComponentCategory]/[ComponentName]/
-├── ComponentName.jsx      # React component implementation
-├── ComponentName.mdx      # Documentation
-├── ComponentName.stories.jsx  # Storybook stories
-└── component-name.scss    # Component-specific styles (optional)
+├── ComponentName.jsx              # React component implementation
+├── ComponentName.mdx              # Documentation
+├── ComponentName.stories.jsx      # Storybook stories
+├── component-name.scss            # Component-specific styles (optional)
+├── ComponentName.fromElement.js   # Hydration prop extraction (optional)
+├── ComponentName.hydrate.js       # Barrel re-exporting component + fromElement (optional)
+└── __tests__/
+    ├── ComponentName.test.jsx
+    └── ComponentName.fromElement.test.js  # Tests for prop extraction (optional)
 ```
+
+The `fromElement` and `hydrate` files are needed when a component is used in server-rendered contexts (Drupal, Astro). See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for when and how to add these files.
 
 #### Component categories
 
@@ -775,6 +783,7 @@ Use this checklist when reviewing component PRs:
 - [ ] Tests cover key behaviors and edge cases
 - [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, changelog)
 - [ ] Sentence case for all headings and UI text
+- [ ] If the component will be used in Drupal: `fromElement.js`, `hydrate.js` barrel, and `fromElement.test.js` are included (see [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md))
 
 ## Deprecating components
 

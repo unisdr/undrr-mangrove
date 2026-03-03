@@ -176,19 +176,146 @@ HTML data attributes map to `dataset` properties via standard camelCase conversi
 
 Use kebab-case in HTML, access as camelCase in JavaScript.
 
-## Consumer integration
+## Integration examples
 
-### Drupal (import map)
+### Vanilla HTML (CDN)
 
-Drupal uses an import map to resolve bare specifiers. The built `dist/components/hydrate.js` is copied alongside other component bundles. The import map in `mangrove-components.js` needs one addition:
+A standalone HTML page can use hydration with no build process. Include the React import map, then load `hydrate.js` and the component from the CDN:
 
-```json
-{
-  "imports": {
-    "react": "https://esm.sh/react@19",
-    "react-dom/client": "https://esm.sh/react-dom@19/client",
-    "./hydrate.js": "./hydrate.js"
-  }
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.1/css/style.css">
+
+  <!-- Import map for React 19 (must be before any module scripts) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.2.0",
+        "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
+        "react-dom": "https://esm.sh/react-dom@19.2.0",
+        "react-dom/": "https://esm.sh/react-dom@19.2.0/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Server-rendered container with data attributes -->
+  <section data-mg-share-buttons
+    data-main-label="Share this"
+    data-on-copy-label="Link copied"
+    data-sharing-subject="Sharing Link">
+  </section>
+
+  <!-- Hydrate in three lines -->
+  <script type="module">
+    import createHydrator from 'https://assets.undrr.org/static/mangrove/1.3.1/components/hydrate.js';
+    import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.3.1/components/ShareButtons.js';
+    createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
+  </script>
+</body>
+</html>
+```
+
+This replaces the 30+ lines of manual `createRoot()` boilerplate shown in the [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs).
+
+### Drupal theme integration
+
+In the Drupal `undrr_common` theme, Mangrove components are loaded as ES modules via an import map injected by `mangrove-components.js`. The built component bundles and `hydrate.js` are copied to `undrr_common/js/mangrove-components/` by the watch script.
+
+**Current approach (legacy wrappers):**
+
+Each component has a hand-written `*-wrapper.js` in `undrr_common/js/mangrove-components/` that duplicates DOM querying, error handling, and `createRoot()` logic. ShareButtons-wrapper.js is ~39 lines; ScrollContainer-wrapper.js is ~190 lines.
+
+**New approach (layered hydration):**
+
+Replace the wrapper with a 3-line file:
+
+```js
+// undrr_common/js/mangrove-components/ShareButtons-wrapper.js
+import createHydrator from "./hydrate.js";
+import ShareButtons, { fromElement } from "./ShareButtons.js";
+createHydrator({ selector: "[data-mg-share-buttons]", component: ShareButtons, fromElement });
+```
+
+```js
+// undrr_common/js/mangrove-components/ScrollContainer-wrapper.js
+import createHydrator from "./hydrate.js";
+import ScrollContainer, { fromElement } from "./ScrollContainer.js";
+createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
+```
+
+**Steps to migrate a Drupal wrapper:**
+
+1. Ensure `hydrate.js` is in `undrr_common/js/mangrove-components/` (copied by `yarn watch --copy` or `yarn build`)
+2. Replace the wrapper file contents with the 3-line pattern above
+3. No changes needed to `undrr_common.libraries.yml` — the wrapper filename stays the same
+4. No Drupal cache clear needed — JS modules are not aggregated
+
+**Twig template side:**
+
+The Twig template renders the container with data attributes. No change needed — the `data-mg-*` selectors are the same:
+
+```twig
+{# ShareButtons — templates/field/share-buttons.html.twig #}
+<section data-mg-share-buttons
+  data-main-label="{{ 'Share this'|t }}"
+  data-on-copy-label="{{ 'Link copied'|t }}"
+  data-sharing-subject="{{ node.label }}"
+  data-sharing-body="{{ 'Check out this link: '|t }}">
+</section>
+```
+
+Labels are localized server-side via Drupal's `|t` filter and passed to the React component via data attributes — something the old hardcoded wrappers couldn't do.
+
+### Drupal Gutenberg blocks
+
+Gutenberg blocks that consume Mangrove components benefit from the same pattern. A block's `save()` function renders the container HTML with data attributes; the hydration runtime mounts the React component on the frontend.
+
+**Block save output (server-rendered HTML stored in content):**
+
+```html
+<!-- wp:undrr/scroll-container {"height":"300px","showArrows":true} -->
+<div data-mg-scroll-container
+  data-height="300px"
+  data-show-arrows="true"
+  class="wp-block-undrr-scroll-container">
+  <div class="mg-scroll__content">
+    <!-- InnerBlocks content rendered by Gutenberg -->
+  </div>
+</div>
+<!-- /wp:undrr/scroll-container -->
+```
+
+**Frontend hydration (loaded via libraries.yml):**
+
+```js
+import createHydrator from "./hydrate.js";
+import ScrollContainer, { fromElement } from "./ScrollContainer.js";
+createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
+```
+
+This means Gutenberg blocks and Twig templates share the same hydration code — no separate wrapper per integration point.
+
+**Block edit function (editor):**
+
+In the Gutenberg editor, the component is rendered directly as React (since the editor is already a React app). The `fromElement` function is not used in the editor — it's only for frontend hydration.
+
+```jsx
+// blocks/scroll-container/edit.js
+import ScrollContainer from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer';
+
+export default function Edit({ attributes, setAttributes }) {
+  return (
+    <ScrollContainer
+      height={attributes.height}
+      showArrows={attributes.showArrows}
+    >
+      <InnerBlocks />
+    </ScrollContainer>
+  );
 }
 ```
 
@@ -207,3 +334,21 @@ createHydrator({
   fromElement,
 });
 ```
+
+## Components with hydration support
+
+| Component | Selector | Data attributes |
+|-----------|----------|----------------|
+| ShareButtons | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
+| ScrollContainer | `[data-mg-scroll-container]` | `data-height`, `data-min-width`, `data-item-width`, `data-padding`, `data-show-arrows`, `data-step-size` |
+
+More components will be added as the pattern is validated and migrated.
+
+## Related documentation
+
+- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) — overview of all integration approaches
+- [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs) — CDN usage with import maps
+- [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-react-integration--docs) — npm package usage
+- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-cdn-reference--docs) — all available CDN paths
+- [Component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) — how to add new components
+- [DEVELOPMENT.md](DEVELOPMENT.md) — development setup and component file structure

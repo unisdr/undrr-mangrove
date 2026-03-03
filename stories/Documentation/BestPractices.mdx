@@ -321,6 +321,8 @@ function ContactForm() {
 }
 ```
 
+For server-rendered frameworks like Drupal, the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) shows how to progressively enhance static HTML with React components using `createHydrator`. The server renders the HTML container; the client extracts props and mounts the React component — with automatic fallback to the original HTML on error.
+
 ### 2. Graceful fallbacks
 
 **Image fallbacks**

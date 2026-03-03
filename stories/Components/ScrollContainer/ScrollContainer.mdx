@@ -182,6 +182,37 @@ const MyComponent = () => (
    - Navigation arrows are hidden on mobile devices
    - Optimized for touch interactions
 
+## Server-rendered usage
+
+ScrollContainer supports hydration from server-rendered HTML using `createHydrator` and the bundled `fromElement` function. This is how the component is integrated in Drupal and other server-rendered frameworks.
+
+The server renders a container with data attributes and child content:
+
+```html
+<div data-mg-scroll-container
+  data-height="300px"
+  data-show-arrows="true"
+  data-step-size="300">
+  <div class="mg-scroll__content">
+    <div class="card">Card 1</div>
+    <div class="card">Card 2</div>
+  </div>
+</div>
+```
+
+The client script mounts the React component in three lines:
+
+```js
+import createHydrator from './hydrate.js';
+import ScrollContainer, { fromElement } from './ScrollContainer.js';
+createHydrator({ selector: '[data-mg-scroll-container]', component: ScrollContainer, fromElement });
+```
+
+`fromElement` extracts all props from data attributes and parses children from the `.mg-scroll__content` wrapper as HTML strings.
+
+See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
 ## Changelog
 
+- **1.1** — 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.0** — 2025-03-27: Initial release with responsive design, mouse drag scrolling, and optional navigation arrows
