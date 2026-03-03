@@ -248,7 +248,7 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 
 ### Hydration helper (recommended)
 
-Components that support hydration (ShareButtons, ScrollContainer) export a `fromElement` function that extracts props from data attributes. Combined with the `createHydrator` helper, this eliminates all manual `createRoot` boilerplate:
+Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight, Gallery, IconCard, StatsCard, MegaMenu, SyndicationSearchWidget) export a `fromElement` function that extracts props from data attributes. Combined with the `createHydrator` helper, this eliminates all manual `createRoot` boilerplate:
 
 ```html
 <script type="module">
@@ -274,7 +274,7 @@ This pattern works for any component with hydration support. See the [Hydration 
 
 ### Manual mounting (for components without hydration support)
 
-Components that don't yet export `fromElement` (MegaMenu, BarChart, MapComponent, etc.) can be mounted manually with `createRoot`:
+Components that don't yet export `fromElement` (BarChart, MapComponent, etc.) can be mounted manually with `createRoot`:
 
 ```html
 <nav data-mg-mega-menu></nav>

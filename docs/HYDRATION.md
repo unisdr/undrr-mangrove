@@ -379,8 +379,7 @@ Import directly from the npm package:
 
 ```js
 import { createHydrator } from '@undrr/undrr-mangrove';
-import ScrollContainer from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer';
-import { fromElement } from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer.fromElement';
+import ScrollContainer, { fromElement } from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer.hydrate';
 
 createHydrator({
   selector: '[data-mg-scroll-container]',

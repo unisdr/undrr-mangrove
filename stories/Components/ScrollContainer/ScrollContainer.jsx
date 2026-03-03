@@ -249,10 +249,8 @@ const ScrollContainer = ({
   ]);
 
   return (
-    // data-mg-scroll-container is not used directly in storybook, however it is useful documentation for other integrations, such as Gutenberg
     <section
       className={`mg-scroll${isMobileRef.current ? ' mg-scroll--mobile' : ''}`}
-      data-mg-scroll-container
     >
       {showArrows && !isMobileRef.current && (
         <ArrowButtons

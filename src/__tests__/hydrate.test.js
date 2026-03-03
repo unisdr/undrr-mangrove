@@ -144,6 +144,62 @@ describe('createHydrator', () => {
     expect(mockUnmount).toHaveBeenCalledTimes(2);
   });
 
+  it('unmountAll clears hydration markers and empties roots', () => {
+    document.body.innerHTML = `
+      <div class="target"></div>
+      <div class="target"></div>
+    `;
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    result.unmountAll();
+
+    // Markers should be cleared
+    document.querySelectorAll('.target').forEach(el => {
+      expect(el.dataset.mgHydrated).toBeUndefined();
+    });
+
+    // Roots array should be empty
+    expect(result.roots).toHaveLength(0);
+  });
+
+  it('allows re-mounting after unmountAll', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+    result.unmountAll();
+    jest.clearAllMocks();
+
+    // Re-scan should mount again since markers were cleared
+    result.update();
+    expect(mockCreateRoot).toHaveBeenCalledTimes(1);
+    expect(result.roots).toHaveLength(1);
+  });
+
+  it('unmountAll is safe to call twice', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    result.unmountAll();
+    result.unmountAll();
+    expect(mockUnmount).toHaveBeenCalledTimes(1);
+  });
+
   it('calls onError callback when fromElement throws', () => {
     document.body.innerHTML = '<div class="target"></div>';
 

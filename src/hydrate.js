@@ -26,7 +26,7 @@ export default function createHydrator({
 }) {
   const { clearContainer = true, debugLabel = selector, onError } = options;
   const Component = component?.default ?? component;
-  const roots = [];
+  const entries = []; // { root, container } pairs
 
   /**
    * Scan a DOM subtree for unhydrated containers and mount components.
@@ -48,7 +48,7 @@ export default function createHydrator({
         const root = createRoot(container);
         root.render(React.createElement(Component, props));
         container.dataset.mgHydrated = 'true';
-        roots.push(root);
+        entries.push({ root, container });
         newRoots.push(root);
       } catch (error) {
         console.error(`[${debugLabel}] Container #${index}:`, error);
@@ -64,10 +64,17 @@ export default function createHydrator({
   update();
 
   return {
-    roots,
+    /** All React roots created by this hydrator */
+    get roots() {
+      return entries.map(e => e.root);
+    },
     update,
     unmountAll() {
-      roots.forEach(r => r.unmount());
+      entries.forEach(({ root, container }) => {
+        root.unmount();
+        delete container.dataset.mgHydrated;
+      });
+      entries.length = 0;
     },
   };
 }
