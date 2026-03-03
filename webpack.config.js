@@ -85,7 +85,7 @@ export default [
       hydrate: './src/hydrate.js',
       ShareButtons:
         './stories/Components/Buttons/ShareButtons/ShareButtons.hydrate.js',
-      MegaMenu: './stories/Components/MegaMenu/MegaMenu.jsx',
+      MegaMenu: './stories/Components/MegaMenu/MegaMenu.hydrate.js',
       ScrollContainer:
         './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
@@ -94,7 +94,7 @@ export default [
         './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
-        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
+        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.hydrate.js',
       IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
       Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',

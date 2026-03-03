@@ -399,6 +399,8 @@ createHydrator({
 | Gallery | `[data-mg-gallery]` | `data-media` (JSON), `data-initial-index`, `data-show-thumbnails`, `data-thumbnail-position`, `data-show-arrows`, `data-arrow-style`, `data-show-description`, `data-enable-keyboard`, `data-loop` |
 | IconCard | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
 | StatsCard | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant`, `data-class-name` |
+| MegaMenu | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional — most consumers provide sections via API) |
+| SyndicationSearchWidget | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-query`, `data-default-sort`, `data-display-mode`, `data-show-*` booleans, `data-default-filters` (JSON), `data-allowed-types` (JSON) |
 
 ## Related documentation
 
