@@ -395,8 +395,10 @@ createHydrator({
 |-----------|----------|----------------|
 | ShareButtons | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
 | ScrollContainer | `[data-mg-scroll-container]` | `data-height`, `data-min-width`, `data-item-width`, `data-padding`, `data-show-arrows`, `data-step-size` |
-
-More components will be added as the pattern is validated and migrated.
+| QuoteHighlight | `[data-mg-quote-highlight]` | `data-quote`, `data-attribution`, `data-attribution-title`, `data-image-src`, `data-image-alt`, `data-background-color`, `data-variant`, `data-alignment` |
+| Gallery | `[data-mg-gallery]` | `data-media` (JSON), `data-initial-index`, `data-show-thumbnails`, `data-thumbnail-position`, `data-show-arrows`, `data-arrow-style`, `data-show-description`, `data-enable-keyboard`, `data-loop` |
+| IconCard | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
+| StatsCard | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant`, `data-class-name` |
 
 ## Related documentation
 

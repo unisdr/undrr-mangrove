@@ -90,13 +90,14 @@ export default [
         './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
       MapComponent: './stories/Components/Map/MapComponent.jsx',
-      QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
+      QuoteHighlight:
+        './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
         './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
-      IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
-      Gallery: './stories/Components/Gallery/Gallery.jsx',
-      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.jsx',
+      IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
+      Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
+      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.jsx',
     },
     externals: {
