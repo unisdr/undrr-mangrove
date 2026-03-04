@@ -303,6 +303,7 @@ import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
 | `options.clearContainer` | `boolean` | No | Clear innerHTML before rendering (default: `true`) |
 | `options.debugLabel` | `string` | No | Label for error messages (default: `selector`) |
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
+| `options.identifierPrefix` | `string` | No | Prefix for React `useId()` hooks (default: derived from `selector`) |
 
 **Returns:** `{ roots, update, unmountAll }`
 
@@ -319,9 +320,23 @@ import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
 3. Saves `innerHTML` (for error recovery)
 4. Calls `fromElement(container)` to extract props
 5. Clears the container (if `clearContainer` is true)
-6. Creates a React root, renders the component
+6. Creates a React root with `identifierPrefix` and error callbacks, renders the component
 7. Sets `data-mg-hydrated="true"` on success
 8. On error: logs to console, restores saved HTML, calls `onError` if provided
+
+**Error handling:**
+
+Each React root is created with three error callbacks:
+
+- **`onCaughtError`** — fires when an Error Boundary catches an error. Logs to `console.error` and calls `onError` if provided.
+- **`onUncaughtError`** — fires when an error is thrown and not caught by any Error Boundary. Logs to `console.error` and calls `onError` if provided.
+- **`onRecoverableError`** — fires when React automatically recovers from an error (e.g., hydration mismatch fallback). Logs to `console.warn`.
+
+These callbacks give you structured error reporting for runtime rendering failures, complementing the try/catch that handles errors during mount (e.g., `fromElement` throwing).
+
+**`useId()` collision prevention:**
+
+Drupal pages often render many independent React roots. Each root receives a unique `identifierPrefix` (derived from the selector and container index) so that React's `useId()` hook never produces duplicate IDs across roots. You can override this with `options.identifierPrefix` if needed.
 
 **Drupal integration with `update(context)`:**
 

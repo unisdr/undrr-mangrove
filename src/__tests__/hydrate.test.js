@@ -236,6 +236,82 @@ describe('createHydrator', () => {
 
     expect(mockCreateRoot).toHaveBeenCalledTimes(1);
   });
+
+  it('passes identifierPrefix to createRoot for each container', () => {
+    document.body.innerHTML = `
+      <div class="target"></div>
+      <div class="target"></div>
+    `;
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
+    // Each call should receive an options object with identifierPrefix
+    const firstOpts = mockCreateRoot.mock.calls[0][1];
+    const secondOpts = mockCreateRoot.mock.calls[1][1];
+    expect(firstOpts.identifierPrefix).toMatch(/-0-$/);
+    expect(secondOpts.identifierPrefix).toMatch(/-1-$/);
+  });
+
+  it('uses custom identifierPrefix from options', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+      options: { identifierPrefix: 'custom' },
+    });
+
+    const opts = mockCreateRoot.mock.calls[0][1];
+    expect(opts.identifierPrefix).toBe('custom-0-');
+  });
+
+  it('passes error callbacks to createRoot', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    const opts = mockCreateRoot.mock.calls[0][1];
+    expect(typeof opts.onCaughtError).toBe('function');
+    expect(typeof opts.onUncaughtError).toBe('function');
+    expect(typeof opts.onRecoverableError).toBe('function');
+  });
+
+  it('error callbacks invoke onError with the container', () => {
+    document.body.innerHTML = '<div class="target"></div>';
+
+    const onError = jest.fn();
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+      options: { onError },
+    });
+
+    const opts = mockCreateRoot.mock.calls[0][1];
+    const container = document.querySelector('.target');
+    const testError = new Error('render error');
+
+    opts.onCaughtError(testError, { componentStack: '' });
+    expect(onError).toHaveBeenCalledWith(testError, container);
+
+    onError.mockClear();
+    opts.onUncaughtError(testError, { componentStack: '' });
+    expect(onError).toHaveBeenCalledWith(testError, container);
+
+    consoleSpy.mockRestore();
+  });
 });
 
 describe('hydration marker', () => {

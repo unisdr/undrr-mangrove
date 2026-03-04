@@ -16,6 +16,7 @@ import { createRoot } from 'react-dom/client';
  * @param {boolean} [config.options.clearContainer=true] - Clear innerHTML before rendering
  * @param {string} [config.options.debugLabel] - Label for error messages (defaults to selector)
  * @param {Function} [config.options.onError] - (error, container) callback
+ * @param {string} [config.options.identifierPrefix] - Prefix for React useId() (defaults to selector-based slug)
  * @returns {{ roots: Array, update: Function, unmountAll: Function }}
  */
 export default function createHydrator({
@@ -24,8 +25,12 @@ export default function createHydrator({
   fromElement,
   options = {},
 }) {
-  const { clearContainer = true, debugLabel = selector, onError } = options;
+  const { clearContainer = true, debugLabel = selector, onError, identifierPrefix } = options;
   const Component = component?.default ?? component;
+
+  // Derive a stable prefix from the selector to avoid useId() collisions
+  // across multiple React roots on the same page.
+  const prefix = identifierPrefix ?? selector.replace(/[[\]\.#=>"' ]/g, '').replace(/^data-mg-?/, 'mg-');
   const entries = []; // { root, container } pairs
 
   /**
@@ -45,7 +50,20 @@ export default function createHydrator({
       try {
         const props = fromElement(container);
         if (clearContainer) container.innerHTML = '';
-        const root = createRoot(container);
+        const root = createRoot(container, {
+          identifierPrefix: `${prefix}-${index}-`,
+          onCaughtError(error, errorInfo) {
+            console.error(`[${debugLabel}] Caught error in container #${index}:`, error, errorInfo);
+            if (onError) onError(error, container);
+          },
+          onUncaughtError(error, errorInfo) {
+            console.error(`[${debugLabel}] Uncaught error in container #${index}:`, error, errorInfo);
+            if (onError) onError(error, container);
+          },
+          onRecoverableError(error) {
+            console.warn(`[${debugLabel}] Recoverable error in container #${index}:`, error);
+          },
+        });
         root.render(React.createElement(Component, props));
         container.dataset.mgHydrated = 'true';
         entries.push({ root, container });
