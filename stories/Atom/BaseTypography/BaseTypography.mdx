@@ -782,4 +782,8 @@ export const getCaptionForLocaleList = locale => {
 
 ## Changelog
 
-- **1.1** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)): Added optional `size` prop to Paragraph component for applying font-size utility classes
+- **1.1** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)):
+  - Added optional `size` prop to Paragraph component for applying font-size utility classes
+  - Fixed Paragraph `label` prop support — callers passing `label` instead of `detail` now render correctly
+  - Added whitelist validation for `size` prop values
+- **1.0** — Released component
