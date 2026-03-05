@@ -152,7 +152,7 @@
   &__title a::after {
     border-color: currentColor;
     border-style: solid;
-    border-width: 0.12em 0.12em 0 0;
+    border-width: 0.15em 0.15em 0 0;
     content: "";
     display: inline-block;
     height: 0.35em;
@@ -160,19 +160,36 @@
     position: relative;
     top: -0.1em;
     transform: rotate(45deg);
+    translate: 0 0;
     vertical-align: middle;
     width: 0.35em;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: translate 200ms ease;
+    }
   }
 
-  // Hover: thicker underline
+  // Hover: thicker underline + nudge chevron
   &:hover &__title a {
     text-decoration-thickness: 2px;
+  }
+
+  &:hover &__title a::after {
+    @media (prefers-reduced-motion: no-preference) {
+      translate: 0.15em 0;
+    }
   }
 }
 
 // RTL chevron — flip direction
 [dir="rtl"] .mg-card__title a::after {
   transform: rotate(225deg);
+}
+
+[dir="rtl"] .mg-card:hover .mg-card__title a::after {
+  @media (prefers-reduced-motion: no-preference) {
+    translate: -0.15em 0;
+  }
 }
 
 // Color variants (shared accent colours from _variables.scss)
