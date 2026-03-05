@@ -52,7 +52,14 @@ export const AllSizes = () => (
       Resize your browser to see responsive scaling at the medium breakpoint
       (48em / 768px).
     </p>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1.5rem' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.5rem',
+        marginTop: '1.5rem',
+      }}
+    >
       {sizes.map(({ className, label, description }) => (
         <div key={label}>
           <code
@@ -83,7 +90,14 @@ export const OnHeadings = () => (
       These classes can be applied to any element, including headings, to
       override the default font size.
     </p>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        marginTop: '1.5rem',
+      }}
+    >
       <h2 className="mg-u-font-size-900" style={{ margin: 0 }}>
         Heading with font-size-900
       </h2>
