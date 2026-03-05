@@ -699,6 +699,13 @@ export const TypographyParagraph = Template(
   PComponent,
   getCaptionForLocaleParagraph
 );
+TypographyParagraph.argTypes = {
+  size: {
+    control: { type: 'select' },
+    options: ['', '300', '400', '500', '600', '800', '900'],
+    description: 'Apply a font-size utility class (mg-u-font-size-*)',
+  },
+};
 
 // Text formatting and emphasis
 export const TypographyMark = Template(MarkComponent, getCaptionForLocaleMark);

@@ -180,6 +180,64 @@ const count = text.length;
         </div>
       </section>
 
+      <h2>Font size utilities</h2>
+
+      <p>
+        Utility classes for overriding font size on any element. Each class
+        scales responsively from a smaller mobile size to the target size at the
+        medium breakpoint (48em).
+      </p>
+
+      <p className="mg-u-font-size-300">
+        Font size 300 — base body size (1.6rem), no responsive scaling. UNDRR
+        oversees the implementation of the Sendai Framework for Disaster Risk
+        Reduction 2015–2030.
+      </p>
+
+      <p className="mg-u-font-size-400">
+        Font size 400 — slightly larger (1.6rem → 1.8rem). Supporting countries
+        in implementation, monitoring, and knowledge sharing.
+      </p>
+
+      <p className="mg-u-font-size-500">
+        Font size 500 — medium emphasis (1.8rem → 2.3rem). Reducing existing
+        risk and preventing the creation of new risk.
+      </p>
+
+      <p className="mg-u-font-size-600">
+        Font size 600 — large (2.3rem → 3.2rem). Building resilience.
+      </p>
+
+      <p className="mg-u-font-size-800">
+        Font size 800 — display (3.2rem → 3.6rem). Global targets.
+      </p>
+
+      <p className="mg-u-font-size-900">
+        Font size 900 — hero (3.6rem → 4rem). Sendai.
+      </p>
+
+      <h3>Applied to headings</h3>
+
+      <h2 className="mg-u-font-size-900">H2 with font-size-900</h2>
+      <h3 className="mg-u-font-size-600">H3 with font-size-600</h3>
+      <h4 className="mg-u-font-size-400">H4 with font-size-400</h4>
+
+      <h3>Mixed with other utilities</h3>
+
+      <p className="mg-u-font-size-500 mg-u-color--blue-700">
+        Font size 500 combined with blue-700 text color for callout text.
+      </p>
+
+      <div
+        className="mg-u-background-color--neutral-50"
+        style={{ padding: '1.5rem' }}
+      >
+        <p className="mg-u-font-size-600" style={{ margin: 0 }}>
+          Font size 600 on a neutral background — useful for hero sections or
+          pull quotes.
+        </p>
+      </div>
+
       <h2>RTL list check</h2>
 
       <div dir="rtl">
