@@ -4,6 +4,7 @@ import React from 'react';
 const ALLOWED_SIZES = new Set([
   '150',
   '200',
+  '250',
   '300',
   '400',
   '500',

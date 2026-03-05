@@ -24,6 +24,11 @@ const sizes = [
     description: '1.25rem (no responsive scaling)',
   },
   {
+    className: 'mg-u-font-size-250',
+    label: '250',
+    description: '1.4rem (no responsive scaling)',
+  },
+  {
     className: 'mg-u-font-size-300',
     label: '300',
     description: '1.6rem (no responsive scaling)',
