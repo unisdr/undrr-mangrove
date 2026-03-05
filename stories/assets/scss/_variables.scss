@@ -308,11 +308,16 @@ $mg-color-form-check--checked: $mg-color-interactive !default;
 $mg-color-form-focus: $mg-color-interactive !default;
 $mg-radius-form-input: $mg-spacing-0 !default;
 
-// hero
+// shared variant accent colours (used by hero, cards, and other components)
+$mg-color-secondary: $mg-color-orange-800 !default;
+$mg-color-tertiary: $mg-color-neutral-900 !default;
+$mg-color-quaternary: $mg-color-red-800 !default;
+
+// hero (aliases for backward compatibility)
 $mg-color-hero: $mg-color-interactive !default;
-$mg-color-hero--secondary: $mg-color-orange-800 !default;
-$mg-color-hero--tertiary: $mg-color-neutral-900 !default;
-$mg-color-hero--quaternary: $mg-color-red-800 !default;
+$mg-color-hero--secondary: $mg-color-secondary !default;
+$mg-color-hero--tertiary: $mg-color-tertiary !default;
+$mg-color-hero--quaternary: $mg-color-quaternary !default;
 $mg-opacity-hero: 0.85 !default;
 $mg-spacing-hero-overlay: 0 !default;
 

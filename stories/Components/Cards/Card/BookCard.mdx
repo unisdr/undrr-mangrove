@@ -1,116 +1,80 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { BookCard } from './BookCard';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as BookCardStories from './BookCard.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        contentdata: [
-          {
-            contenttile: 'Content tag',
-            title: 'Title in large size',
-            link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        contentdata: [
-          {
-            contenttile: 'علامة المحتوى',
-            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
-            link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            contenttile: 'အကြောင်းအရာ TAG',
-            title:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return burmeseText;
-    case 'japanese':
-      const japaneseText = {
-        contentdata: [
-          {
-            contenttile: 'コンテンツタグ',
-            title: '投稿のタイトルはここにあり、2行です',
-            button: '続きを読む',
-            link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return japaneseText;
-    default:
-      const dummy = {
-        contentdata: [
-          {
-            contenttile: 'Book card',
-            title:
-              'Book title in normal header size with up to three lines of text',
-            link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return dummy;
-  }
-};
 
 <Meta of={BookCardStories} />
 
-# Mangrove card (book)
+# Book card
 
-🚨 Warning this is a non-canonical conceptual component. 1 March 2023. 🚨
+A compact card variant for publications and brochures. Displays a portrait cover image (3:4 aspect ratio) with a title below. Designed to fit 5-6 across in a row on desktop.
 
-### Overview
+## When to use
 
-This is particularly suited for publications and brochures.
+- Publication and report listings
+- Library/resource pages with cover images
+- Any grid of items with portrait-oriented visuals (book covers, posters, brochures)
 
-It is designed to have more on a row, perhaps 5 or 6 on desktop.
+## Anatomy
 
-### Formatting
+- **Cover image**: 3:4 aspect ratio with a subtle border
+- **Title**: Linked heading with smaller font size than other card variants
 
-The Book Card variant is more simplistic in content, with a smaller font size and no summary text or labels.
+The card has no summary text or labels. The entire card is clickable via a stretched link on the title.
 
-It's images have a 3x4 in aspect ratio.
+<Canvas of={BookCardStories.DefaultBookCard} />
 
-<Canvas of={BookCardStories.DefaultBookCard} meta={BookCardStories} />
+## Color variants
 
-### Usage
+Use the `variant` prop to change the title accent color.
 
-- Grab the HTML from the HTML tab.
+| Variant | Class | Color |
+|---------|-------|-------|
+| `primary` (default) | — | `$mg-color-interactive` (blue) |
+| `secondary` | `mg-card--secondary` | `$mg-color-secondary` (orange) |
+| `tertiary` | `mg-card--tertiary` | `$mg-color-tertiary` (black) |
+| `quaternary` | `mg-card--quaternary` | `$mg-color-quaternary` (red) |
 
-### Interactions
+## Title link visibility
 
-- Hover state applies to the image only.
-- By clicking on the CTA Link, the associated page is opened.
+Card titles display blue color, underline, and a chevron indicator by default. Add `mg-card--plain-title` to disable these signals.
+
+**In React:**
+
+```jsx
+<BookCard data={data} className="mg-card--plain-title" />
+```
+
+**In Drupal templates or static HTML:**
+
+```html
+<article class="mg-card mg-card__vc mg-card__book mg-card--plain-title">
+  ...
+</article>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | Array | Required | Array of card data objects |
+| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `className` | String | — | Additional CSS classes on the card element |
+
+### Data object properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `title` | String | Card heading text |
+| `link` | String | URL for the title link and stretched link |
+| `imgback` | String | Cover image URL |
+| `imgalt` | String | Alt text for the cover image |
+
+## Sizing
+
+The book card is constrained to `200px` max-width by default, expanding to `400px` on desktop. When used in a grid, let the grid column width control the card size.
 
 ## Changelog
 
+- **1.1** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
 - **1.0.2** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)
 - **1.0.1** — 2025-01-09: Responsive fixes
 - **1.0** — 2023-03-01: Released component

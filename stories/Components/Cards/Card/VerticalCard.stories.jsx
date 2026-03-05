@@ -128,6 +128,28 @@ export const DefaultVerticalCard = {
   name: 'Vertical Card',
 };
 
+export const PlainTitleVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard
+          data={caption.contentdata}
+          className="mg-card--plain-title"
+          {...args}
+        ></VerticalCard>
+      </div>
+    );
+  },
+
+  name: 'Plain title (opt-out)',
+};
+
 export const NoImageVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);

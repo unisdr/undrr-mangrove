@@ -124,9 +124,11 @@
     padding-top: $mg-spacing-100;
 
     a {
-      color: $mg-color-text;
+      color: $mg-color-interactive;
       cursor: pointer;
-      display: inline-block;
+      display: inline;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .active {
@@ -135,7 +137,8 @@
     }
   }
 
-  &__title a::after {
+  // Stretched link overlay (covers entire card)
+  &__title a::before {
     bottom: 0;
     content: "";
     left: 0;
@@ -143,6 +146,58 @@
     right: 0;
     top: 0;
     z-index: 100;
+  }
+
+  // Inline chevron indicator (CSS border triangle — no Unicode dependency)
+  &__title a::after {
+    border-color: currentColor;
+    border-style: solid;
+    border-width: 0.12em 0.12em 0 0;
+    content: "";
+    display: inline-block;
+    height: 0.35em;
+    margin-inline-start: 0.25em;
+    position: relative;
+    top: -0.1em;
+    transform: rotate(45deg);
+    vertical-align: middle;
+    width: 0.35em;
+  }
+
+  // Hover: thicker underline
+  &:hover &__title a {
+    text-decoration-thickness: 2px;
+  }
+}
+
+// RTL chevron — flip direction
+[dir="rtl"] .mg-card__title a::after {
+  transform: rotate(225deg);
+}
+
+// Color variants (shared accent colours from _variables.scss)
+$card-variant-colours: (
+  "secondary": $mg-color-secondary,
+  "tertiary": $mg-color-tertiary,
+  "quaternary": $mg-color-quaternary,
+);
+
+@each $name, $color in $card-variant-colours {
+  .mg-card--#{$name} .mg-card__title a {
+    color: #{$color};
+  }
+}
+
+// Opt-out modifier: plain title (no blue, no underline, no chevron)
+// Double class selector ensures this overrides variant colors regardless of source order
+.mg-card.mg-card--plain-title {
+  .mg-card__title a {
+    color: $mg-color-text;
+    text-decoration: none;
+  }
+
+  .mg-card__title a::after {
+    content: none;
   }
 }
 
@@ -356,11 +411,12 @@
     line-height: $mg-font-line-height-500;
 
     a {
-      color: $mg-color-text;
-      text-decoration: none;
+      color: $mg-color-interactive;
+      text-decoration: underline;
+      text-underline-offset: 3px;
 
       &:hover {
-        text-decoration: underline;
+        text-decoration-thickness: 2px;
       }
 
       &:focus-visible {

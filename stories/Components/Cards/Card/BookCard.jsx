@@ -1,26 +1,18 @@
 /* eslint-disable react/no-danger */
-import React, { Fragment } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
-// import './card.scss';
-//import '../../../../assets/scss/_grid.scss';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export const hovercolors_options = {
-  yellow: '',
-  red: 'red',
-  blue: 'blue',
-  green: 'green',
-};
-
-export function BookCard({ data, Hovercolors }) {
-  let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
+export function BookCard({ data, variant = 'primary', className }) {
+  const variantClass = variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
       {data.map((item, index) => (
-        <article key={index} className="mg-card mg-card__vc mg-card__book">
+        <article key={index} className={cls('mg-card', 'mg-card__vc', 'mg-card__book', variantClass, className)}>
           <div className="mg-card__visual">
             <img
               src={item.imgback}
@@ -29,7 +21,7 @@ export function BookCard({ data, Hovercolors }) {
             />
           </div>
 
-          <div className={cls('mg-card__content', `${hovercolors_variant}`)}>
+          <div className="mg-card__content">
             <header className="mg-card__title">
               <a href={item.link}>{item.title}</a>
             </header>
@@ -40,6 +32,8 @@ export function BookCard({ data, Hovercolors }) {
   );
 }
 
-BookCard.defaultProps = {
-  Hovercolors: 'yellow',
+BookCard.propTypes = {
+  data: PropTypes.array.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
+  className: PropTypes.string,
 };
