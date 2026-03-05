@@ -17,13 +17,17 @@ import PropTypes from 'prop-types';
  *
  * @param {Object} props
  * @param {string} props.title        Heading text
+ * @param {string} [props.href]       Optional link URL for the title
  * @param {React.ReactNode} props.children  Body content
  * @param {'primary'|'secondary'} [props.variant='primary']  Visual variant
+ * @returns {JSX.Element} Rendered Boilerplate component
  */
-export function Boilerplate({ title, children, variant = 'primary' }) {
+export function Boilerplate({ title, href, children, variant = 'primary', ...props }) {
   return (
-    <div className={`mg-boilerplate mg-boilerplate--${variant}`}>
-      <h2 className="mg-boilerplate__title">{title}</h2>
+    <div className={`mg-boilerplate mg-boilerplate--${variant}`} {...props}>
+      <h2 className="mg-boilerplate__title">
+        {href ? <a href={href}>{title}</a> : title}
+      </h2>
       <div className="mg-boilerplate__content">{children}</div>
     </div>
   );
@@ -31,6 +35,7 @@ export function Boilerplate({ title, children, variant = 'primary' }) {
 
 Boilerplate.propTypes = {
   title: PropTypes.string.isRequired,
+  href: PropTypes.string,
   children: PropTypes.node.isRequired,
   variant: PropTypes.oneOf(['primary', 'secondary']),
 };

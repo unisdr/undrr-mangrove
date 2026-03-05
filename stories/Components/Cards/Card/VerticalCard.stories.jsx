@@ -97,6 +97,10 @@ export default {
   title: 'Components/Cards/Vertical Card',
   component: VerticalCard,
 
+  args: {
+    variant: 'primary',
+  },
+
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
@@ -104,8 +108,6 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'primary',
     },
   },
 };

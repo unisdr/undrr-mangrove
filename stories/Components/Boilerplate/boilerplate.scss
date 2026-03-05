@@ -11,6 +11,21 @@
   &__title {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+
+    a {
+      color: $mg-color-interactive;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+
+      &:hover {
+        text-decoration-thickness: 2px;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $mg-color-interactive;
+        outline-offset: 2px;
+      }
+    }
   }
 
   &__content {
