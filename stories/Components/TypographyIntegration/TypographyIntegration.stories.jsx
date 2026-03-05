@@ -198,6 +198,11 @@ const count = text.length;
         information.
       </p>
 
+      <p className="mg-u-font-size-250">
+        Font size 250 — intermediate (1.4rem). Bridge between small text and
+        body copy.
+      </p>
+
       <p className="mg-u-font-size-300">
         Font size 300 — base body size (1.6rem), no responsive scaling. UNDRR
         oversees the implementation of the Sendai Framework for Disaster Risk
