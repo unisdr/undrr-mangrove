@@ -517,25 +517,53 @@ export const CombinedExample = () => (
           className="mg-u-background-color--sendai-turquoise mg-u-color--white"
           style={{ padding: '1rem', textAlign: 'center', borderRadius: '4px' }}
         >
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>127</div>
+          <div className="mg-u-font-size-500" style={{ fontWeight: 'bold' }}>
+            127
+          </div>
           <div className="mg-u-text-wrap-balanced">Countries participating</div>
         </div>
         <div
           className="mg-u-background-color--sendai-orange mg-u-color--white"
           style={{ padding: '1rem', textAlign: 'center', borderRadius: '4px' }}
         >
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>45%</div>
+          <div className="mg-u-font-size-500" style={{ fontWeight: 'bold' }}>
+            45%
+          </div>
           <div className="mg-u-text-wrap-balanced">Risk reduction achieved</div>
         </div>
         <div
           className="mg-u-background-color--sendai-purple mg-u-color--white"
           style={{ padding: '1rem', textAlign: 'center', borderRadius: '4px' }}
         >
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>892</div>
+          <div className="mg-u-font-size-500" style={{ fontWeight: 'bold' }}>
+            892
+          </div>
           <div className="mg-u-text-wrap-balanced">
             Active monitoring systems
           </div>
         </div>
+      </div>
+    </div>
+
+    <div style={{ marginTop: '1rem' }}>
+      <h5>Font sizes with color and background</h5>
+      <div
+        className="mg-u-background-color--blue-800"
+        style={{ padding: '2rem', borderRadius: '4px' }}
+      >
+        <p
+          className="mg-u-font-size-600 mg-u-color--white"
+          style={{ margin: '0 0 0.5rem' }}
+        >
+          Reducing disaster risk is everyone's business
+        </p>
+        <p
+          className="mg-u-font-size-400 mg-u-color--blue-100"
+          style={{ margin: 0 }}
+        >
+          The Sendai Framework provides a roadmap for making communities safer
+          and more resilient through understanding and managing disaster risk.
+        </p>
       </div>
     </div>
   </div>
