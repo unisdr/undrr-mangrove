@@ -702,7 +702,7 @@ export const TypographyParagraph = Template(
 TypographyParagraph.argTypes = {
   size: {
     control: { type: 'select' },
-    options: ['', '300', '400', '500', '600', '800', '900'],
+    options: ['', '150', '200', '300', '400', '500', '600', '800', '900'],
     description: 'Apply a font-size utility class (mg-u-font-size-*)',
   },
 };

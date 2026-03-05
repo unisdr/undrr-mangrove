@@ -14,6 +14,16 @@ export default {
 
 const sizes = [
   {
+    className: 'mg-u-font-size-150',
+    label: '150',
+    description: '1.125rem (no responsive scaling)',
+  },
+  {
+    className: 'mg-u-font-size-200',
+    label: '200',
+    description: '1.25rem (no responsive scaling)',
+  },
+  {
     className: 'mg-u-font-size-300',
     label: '300',
     description: '1.6rem (no responsive scaling)',

@@ -572,6 +572,23 @@ The Paragraph component defines a paragraph.
 
 - We can use the <code>p tag</code> in any component to define a paragraph.
 
+### Size prop
+
+The optional `size` prop applies a responsive font-size utility class (`mg-u-font-size-{size}`). Use the controls below to preview each size.
+
+| Size | Mobile | Desktop (>=48em) |
+|------|--------|-------------------|
+| `150` | 1.125rem | 1.125rem |
+| `200` | 1.25rem | 1.25rem |
+| `300` | 1.6rem | 1.6rem |
+| `400` | 1.6rem | 1.8rem |
+| `500` | 1.8rem | 2.3rem |
+| `600` | 2.3rem | 3.2rem |
+| `800` | 3.2rem | 3.6rem |
+| `900` | 3.6rem | 4rem |
+
+When no `size` is set, the paragraph inherits its font size from the surrounding context.
+
 Typographic scale when using paragraph in text component:
 
 <Canvas

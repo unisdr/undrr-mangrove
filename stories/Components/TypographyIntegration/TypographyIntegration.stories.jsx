@@ -188,6 +188,16 @@ const count = text.length;
         medium breakpoint (48em).
       </p>
 
+      <p className="mg-u-font-size-150">
+        Font size 150 — fine print (1.125rem). Terms, conditions, and
+        supplementary notes.
+      </p>
+
+      <p className="mg-u-font-size-200">
+        Font size 200 — small text (1.25rem). Captions, metadata, and secondary
+        information.
+      </p>
+
       <p className="mg-u-font-size-300">
         Font size 300 — base body size (1.6rem), no responsive scaling. UNDRR
         oversees the implementation of the Sendai Framework for Disaster Risk
