@@ -177,9 +177,14 @@ stories/
           ├── ComponentName.jsx
           ├── ComponentName.stories.jsx
           ├── ComponentName.scss
+          ├── ComponentName.fromElement.js    # Hydration prop extraction (optional)
+          ├── ComponentName.hydrate.js        # Barrel for hydration (optional)
           └── __tests__/
-              └── ComponentName.test.jsx
+              ├── ComponentName.test.jsx
+              └── ComponentName.fromElement.test.js  # (optional)
 ```
+
+Components that are used in server-rendered contexts (Drupal, Astro) should include a `fromElement.js` for prop extraction and a `hydrate.js` barrel file. See [HYDRATION.md](HYDRATION.md) for details.
 
 ### Component Guidelines
 

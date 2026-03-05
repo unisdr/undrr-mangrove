@@ -69,9 +69,6 @@ function watchAndCopyFiles() {
   console.log(`Files will be copied to ${TARGET_PATH}`);
   console.log('Only .js files will be copied');
 
-  // Initial copy of existing files
-  // copyAllFiles();
-
   fs.watch(DIST_PATH, { recursive: true }, (eventType, filename) => {
     if (filename) {
       const sourcePath = path.join(DIST_PATH, filename);
@@ -100,46 +97,6 @@ function copyFile(source, target) {
     console.log(`Copied: ${path.basename(source)} to ${target}`);
   } catch (err) {
     console.error(`Error copying ${source}:`, err);
-  }
-}
-
-// TODO: Possibly remove
-function copyAllFiles() {
-  if (!copyEnabled) {
-    return;
-  }
-
-  try {
-    if (!fs.existsSync(DIST_PATH)) {
-      console.log(
-        'Dist directory does not exist yet. Will copy files when they are built.'
-      );
-      return;
-    }
-
-    const files = fs.readdirSync(DIST_PATH);
-
-    if (files.length === 0) {
-      console.log(
-        'No files found in dist directory. Will copy files when they are built.'
-      );
-      return;
-    }
-
-    console.log('Copying existing files from dist to target...');
-
-    files.forEach(file => {
-      const sourcePath = path.join(DIST_PATH, file);
-      const targetPath = path.join(TARGET_PATH, file);
-
-      if (fs.statSync(sourcePath).isFile()) {
-        copyFile(sourcePath, targetPath);
-      }
-    });
-
-    console.log('Initial file copy complete.');
-  } catch (err) {
-    console.error('Error during initial file copy:', err);
   }
 }
 
