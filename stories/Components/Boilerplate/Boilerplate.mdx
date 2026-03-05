@@ -5,9 +5,21 @@ import * as BoilerplateStories from './Boilerplate.stories';
 
 # Boilerplate
 
-An example component you can clone when creating a new Mangrove component.
+An example component to clone when creating a new Mangrove component. This template demonstrates the expected file structure, documentation format, prop patterns, and testing approach.
+
+## When to use
+
+Clone this directory to scaffold a new component. Replace the name, props, markup, and styles with your own, then register the component in `_components.scss`. See the [component contribution guide](?path=/docs/getting-started-component-contribution-guide--docs) for the full walkthrough.
+
+## Anatomy
+
+- **Title**: Heading text, optionally linked
+- **Content**: Arbitrary body content via `children`
+- **Variant**: Visual modifier (`primary` or `secondary`)
 
 ## Usage
+
+### React
 
 ```jsx
 import { Boilerplate } from './Boilerplate';
@@ -17,11 +29,30 @@ import { Boilerplate } from './Boilerplate';
 </Boilerplate>
 ```
 
+### HTML/CSS (Drupal templates)
+
+```html
+<div class="mg-boilerplate mg-boilerplate--primary">
+  <h2 class="mg-boilerplate__title">
+    <a href="/path">Hello</a>
+  </h2>
+  <div class="mg-boilerplate__content">
+    <p>Body content goes here.</p>
+  </div>
+</div>
+```
+
 ## Examples
 
 ### Default
 
 <Canvas of={BoilerplateStories.Default} />
+
+### With link
+
+Title renders as an `<a>` element with keyboard-visible focus styles.
+
+<Canvas of={BoilerplateStories.WithLink} />
 
 ### Secondary
 
@@ -32,5 +63,27 @@ import { Boilerplate } from './Boilerplate';
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `title` | `string` | *required* | Heading text |
+| `href` | `string` | — | Optional link URL for the title |
 | `children` | `ReactNode` | *required* | Body content |
 | `variant` | `'primary' \| 'secondary'` | `'primary'` | Visual variant |
+
+## CSS class reference
+
+| Class | Description |
+|-------|-------------|
+| `.mg-boilerplate` | Root container |
+| `.mg-boilerplate--primary` | Primary variant |
+| `.mg-boilerplate--secondary` | Secondary variant |
+| `.mg-boilerplate__title` | Heading element |
+| `.mg-boilerplate__content` | Body content area |
+
+## Accessibility
+
+- Title link has a visible `:focus-visible` outline (`2px solid $mg-color-interactive`)
+- Uses semantic `<h2>` for the title and `<div>` for content
+- No interactive traps; all controls are keyboard accessible
+
+## Changelog
+
+- **1.1** — 2026-03-05: Added optional `href` prop for linked titles with focus-visible styles. Updated docs to match component library conventions.
+- **1.0** — Initial boilerplate template

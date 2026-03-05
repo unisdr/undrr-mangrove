@@ -1,18 +1,4 @@
 /* content-card start */
-// $colors: (
-//   'yellow': $mg-color-yellow,
-//   'red': $mg-color-red-900,
-//   'green': $mg-color-green,
-//   'blue': $mg-color-azure,
-//   'gray': $mg-color-neutral-100,
-// );
-// $backgroundcolors: (
-//   'yellow': $mg-color-yellow-light,
-//   'red': $mg-color-red-600,
-//   'green': $mg-color-green-light,
-//   'blue': $mg-color-azure-light,
-//   'gray': $mg-color-neutral-100,
-// );
 
 // MG CARD using CSS GRID
 .mg-card {
@@ -124,9 +110,11 @@
     padding-top: $mg-spacing-100;
 
     a {
-      color: $mg-color-text;
+      color: $mg-color-interactive;
       cursor: pointer;
-      display: inline-block;
+      display: inline;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .active {
@@ -135,7 +123,8 @@
     }
   }
 
-  &__title a::after {
+  // Stretched link overlay (covers entire card)
+  &__title a::before {
     bottom: 0;
     content: "";
     left: 0;
@@ -143,6 +132,81 @@
     right: 0;
     top: 0;
     z-index: 100;
+  }
+
+  // Inline chevron indicator (CSS border triangle — no Unicode dependency)
+  &__title a::after {
+    border-color: currentColor;
+    border-style: solid;
+    border-width: 0.15em 0.15em 0 0;
+    content: "";
+    display: inline-block;
+    height: 0.35em;
+    margin-inline-start: 0.25em;
+    position: relative;
+    top: -0.1em;
+    transform: rotate(45deg);
+    translate: 0 0;
+    vertical-align: middle;
+    width: 0.35em;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: translate 200ms ease;
+    }
+  }
+
+  // Focus: card-level outline when title link is focused via keyboard
+  &__title a:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+
+  // Hover: thicker underline + nudge chevron
+  &:hover &__title a {
+    text-decoration-thickness: 2px;
+  }
+
+  &:hover &__title a::after {
+    @media (prefers-reduced-motion: no-preference) {
+      translate: 0.15em 0;
+    }
+  }
+}
+
+// RTL chevron — flip direction
+[dir="rtl"] .mg-card__title a::after {
+  transform: rotate(225deg);
+}
+
+[dir="rtl"] .mg-card:hover .mg-card__title a::after {
+  @media (prefers-reduced-motion: no-preference) {
+    translate: -0.15em 0;
+  }
+}
+
+// Color variants (shared accent colours from _variables.scss)
+$card-variant-colours: (
+  "secondary": $mg-color-secondary,
+  "tertiary": $mg-color-tertiary,
+  "quaternary": $mg-color-quaternary,
+);
+
+@each $name, $color in $card-variant-colours {
+  .mg-card--#{$name} .mg-card__title a {
+    color: #{$color};
+  }
+}
+
+// Opt-out modifier: plain title (no blue, no underline, no chevron)
+// Double class selector ensures this overrides variant colors regardless of source order
+.mg-card.mg-card--plain-title {
+  .mg-card__title a {
+    color: $mg-color-text;
+    text-decoration: none;
+  }
+
+  .mg-card__title a::after {
+    content: none;
   }
 }
 
@@ -356,11 +420,12 @@
     line-height: $mg-font-line-height-500;
 
     a {
-      color: $mg-color-text;
-      text-decoration: none;
+      color: $mg-color-interactive;
+      text-decoration: underline;
+      text-underline-offset: 3px;
 
       &:hover {
-        text-decoration: underline;
+        text-decoration-thickness: 2px;
       }
 
       &:focus-visible {
