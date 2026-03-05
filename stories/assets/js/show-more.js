@@ -11,18 +11,13 @@ export function mgShowMore() {
     item.dataset.dataVfGoogleAnalyticsLabel =
       'Show more: ' + item.dataset.mgShowMoreLabelCollapsed || `Show more`;
 
+    const mgShowMoreTargetClass =
+      item.dataset.mgShowMoreTarget || '.mg-show-more--container';
+    const mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
+
     item.addEventListener('click', event => {
       event.preventDefault();
-      let mgShowMoreTargetClass =
-        item.dataset.mgShowMoreTarget || '.mg-show-more--container';
-      let mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
       mgShowMoreTarget.classList.toggle('mg-show-more--collapsed');
-
-      // Allow items to be shown by clicking anywhere on the collapsed item
-      // https://gitlab.com/undrr/web-backlog/-/issues/1612
-      mgShowMoreTarget.addEventListener('click', () => {
-        item.click();
-      });
 
       // Which label to show?
       item.textContent = mgShowMoreTarget.classList.contains(
@@ -35,6 +30,14 @@ export function mgShowMore() {
         item.classList.remove('mg-show-more--button--open');
       } else {
         item.classList.add('mg-show-more--button--open');
+      }
+    });
+
+    // Allow items to be shown by clicking anywhere on the collapsed item
+    // https://gitlab.com/undrr/web-backlog/-/issues/1612
+    mgShowMoreTarget.addEventListener('click', () => {
+      if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
+        item.click();
       }
     });
 
