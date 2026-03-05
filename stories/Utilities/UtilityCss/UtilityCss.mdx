@@ -243,7 +243,31 @@ Text colors for interactive elements:
 <span class="mg-u-color--interactive-active">Interactive active text</span>
 ```
 
+## Font size utilities (.mg-u-font-size-*)
+
+Responsive font-size classes based on Mangrove design tokens. Each class sets a mobile-first base size and scales up at the medium breakpoint (48em / 768px).
+
+| Class | Mobile | Desktop (>=48em) | Line height |
+|-------|--------|-------------------|-------------|
+| `.mg-u-font-size-150` | 1.125rem | 1.125rem | 1.5em |
+| `.mg-u-font-size-200` | 1.25rem | 1.25rem | 1.5em |
+| `.mg-u-font-size-250` | 1.4rem | 1.4rem | 1.5em |
+| `.mg-u-font-size-300` | 1.6rem | 1.6rem | 1.5em |
+| `.mg-u-font-size-400` | 1.6rem | 1.8rem | 1.5em |
+| `.mg-u-font-size-500` | 1.8rem | 2.3rem | 1.25em |
+| `.mg-u-font-size-600` | 2.3rem | 3.2rem | 1.25em |
+| `.mg-u-font-size-800` | 3.2rem | 3.6rem | 1.25em |
+| `.mg-u-font-size-900` | 3.6rem | 4rem | 1.25em |
+
+Language-specific line-height overrides are included for Burmese (`:lang(my)` — 1.7) and Arabic (`:lang(ar)` — 1.4) on larger sizes.
+
+```html
+<p class="mg-u-font-size-600">Large responsive text</p>
+<h2 class="mg-u-font-size-900">Override heading size</h2>
+```
+
 ## Changelog
 
+- **1.2** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)): Added 9 font-size utility classes (5 with responsive scaling) and language-specific line-height overrides
 - **1.1** — 2025-07-03: Added interactive examples, responsive display utilities, layout utilities, comprehensive color utilities, and restructured documentation
 - **1.0** — 2024-11-08: Initial utility CSS reference and documentation
