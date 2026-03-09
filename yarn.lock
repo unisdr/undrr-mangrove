@@ -4942,7 +4942,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.56.1"
     "@typescript-eslint/parser": "npm:^8.56.1"
     "@whitespace/storybook-addon-html": "npm:9.0.0"
-    "@wordpress/babel-preset-default": "npm:8.40.0"
+    "@wordpress/babel-preset-default": "npm:8.41.0"
     alter-css-url-loader: "npm:1.1.3"
     autoprefixer: "npm:10.4.27"
     babel-jest: "npm:30.2.0"
@@ -5405,9 +5405,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wordpress/babel-preset-default@npm:8.40.0":
-  version: 8.40.0
-  resolution: "@wordpress/babel-preset-default@npm:8.40.0"
+"@wordpress/babel-preset-default@npm:8.41.0":
+  version: 8.41.0
+  resolution: "@wordpress/babel-preset-default@npm:8.41.0"
   dependencies:
     "@babel/core": "npm:7.25.7"
     "@babel/plugin-syntax-import-attributes": "npm:7.26.0"
@@ -5415,26 +5415,26 @@ __metadata:
     "@babel/plugin-transform-runtime": "npm:7.25.7"
     "@babel/preset-env": "npm:7.25.7"
     "@babel/preset-typescript": "npm:7.25.7"
-    "@wordpress/browserslist-config": "npm:^6.40.0"
-    "@wordpress/warning": "npm:^3.40.0"
+    "@wordpress/browserslist-config": "npm:^6.41.0"
+    "@wordpress/warning": "npm:^3.41.0"
     browserslist: "npm:^4.21.10"
     core-js: "npm:^3.31.0"
     react: "npm:^18.3.0"
-  checksum: 10/65adb03dd860bd512201b055ef312c912cbe2e273c98bb4a4bccafcd850ecd799e8660c58801ed68fbb61121f7d66d3bc8ed71b5eb30f07510e536243a3a482a
+  checksum: 10/c16d19a25506c6773dc79ef1f335d71416ba0011c91856594874df62774d4f1bebcc8daac84a18b608a2fe02ec8af2720a2c1eabb78b54224afc6b913bbff477
   languageName: node
   linkType: hard
 
-"@wordpress/browserslist-config@npm:^6.40.0":
-  version: 6.40.0
-  resolution: "@wordpress/browserslist-config@npm:6.40.0"
-  checksum: 10/a22efcea7dd6af655411d2753d4f3f42811f50a17b2056cdaad30068dad2933bc9e76797e79c4e83affe9ead50325392488b0245fdbbcbf4ce5dc45be53d73ce
+"@wordpress/browserslist-config@npm:^6.41.0":
+  version: 6.41.0
+  resolution: "@wordpress/browserslist-config@npm:6.41.0"
+  checksum: 10/51c04c5552a38147bd8a52e3f5c77d4f5faf8bdf2a12bdc101d260618366f1dbe8d339fbce6f44b11e0d42062b2e25f680d1ee14c0c545cfeba37937d14492b8
   languageName: node
   linkType: hard
 
-"@wordpress/warning@npm:^3.40.0":
-  version: 3.40.0
-  resolution: "@wordpress/warning@npm:3.40.0"
-  checksum: 10/31b2874661a9a5aac5c9beb2e854695ffc01bf6a0a72282ba28b0325e55165033690620d2202d5dda70ab0d50b034e7dd7224bcb81f907c6d375507dc4b54491
+"@wordpress/warning@npm:^3.41.0":
+  version: 3.41.0
+  resolution: "@wordpress/warning@npm:3.41.0"
+  checksum: 10/89ffc2ce99aa1f5faab17af6bb7fb31b8a0405c92fddbffbedb8ce8136c7394709697b6a4c0720618239190160ebeed4844f0884f63d83a3a1e7f09ddb87479e
   languageName: node
   linkType: hard
 
