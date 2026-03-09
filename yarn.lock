@@ -3754,15 +3754,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-a11y@npm:10.2.14":
-  version: 10.2.14
-  resolution: "@storybook/addon-a11y@npm:10.2.14"
+"@storybook/addon-a11y@npm:10.2.16":
+  version: 10.2.16
+  resolution: "@storybook/addon-a11y@npm:10.2.16"
   dependencies:
     "@storybook/global": "npm:^5.0.0"
     axe-core: "npm:^4.2.0"
   peerDependencies:
-    storybook: ^10.2.14
-  checksum: 10/c02e29b71b917902d98f14279e58fd56a9e76c9a0e32fd4cb8cbdaa5da3da56ed5b7d1a7f3f99a907dcd5d84875bfbfad57be34bad28cffbd5434862b241afb5
+    storybook: ^10.2.16
+  checksum: 10/a7ac6f67c22eb9fcef7dd88d3c23de5563389dca958686096e6b66d29d179f684a32c0b1a3b9bd5789d5b61a26b58c119f0baa74c4ef346d2201ad5d7cd8885a
   languageName: node
   linkType: hard
 
@@ -4893,7 +4893,7 @@ __metadata:
     "@eslint/eslintrc": "npm:3.3.4"
     "@eslint/js": "npm:9.39.3"
     "@mdx-js/loader": "npm:3.1.1"
-    "@storybook/addon-a11y": "npm:10.2.14"
+    "@storybook/addon-a11y": "npm:10.2.16"
     "@storybook/addon-actions": "npm:9.0.8"
     "@storybook/addon-docs": "npm:^10.2.14"
     "@storybook/addon-links": "npm:10.2.14"
