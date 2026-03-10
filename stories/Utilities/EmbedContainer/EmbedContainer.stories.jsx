@@ -81,11 +81,32 @@ export const AspectRatio21x9 = {
   ),
 };
 
+const aspectRatioOptions = {
+  '16:9 (default)': '',
+  '4:3': 'mg-embed-container--4x3',
+  '1:1': 'mg-embed-container--1x1',
+  '21:9 (ultrawide)': 'mg-embed-container--21x9',
+};
+
 export const GenericIframe = {
   name: 'Generic HTML iframe',
-  render: () => (
-    <div style={{ maxWidth: '640px' }}>
-      <div className="mg-embed-container">
+  argTypes: {
+    aspectRatio: {
+      control: 'select',
+      options: Object.keys(aspectRatioOptions),
+      mapping: aspectRatioOptions,
+      description: 'Aspect ratio modifier class',
+    },
+  },
+  args: {
+    aspectRatio: '',
+  },
+  render: args => {
+    const classes = ['mg-embed-container', args.aspectRatio]
+      .filter(Boolean)
+      .join(' ');
+    return (
+      <article className={classes}>
         <iframe
           src="about:blank"
           title="Generic HTML embed"
@@ -101,19 +122,13 @@ export const GenericIframe = {
             doc.write(
               `<div style="
                 font-family: system-ui, sans-serif;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                margin: 0;
-                background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
                 color: #2c6e7e;
                 text-align: center;
                 padding: 2rem;
               ">
                 <div>
-                  <h2 style="margin: 0 0 0.5rem">Embedded content</h2>
-                  <p style="margin: 0; opacity: 0.8">
+                  <h2>Embedded content</h2>
+                  <p>
                     Any HTML page, dashboard, or third-party widget
                     renders responsively inside mg-embed-container.
                   </p>
@@ -123,9 +138,9 @@ export const GenericIframe = {
             doc.close();
           }}
         />
-      </div>
-    </div>
-  ),
+      </article>
+    );
+  },
 };
 
 export const InsideHighlightBox = {
