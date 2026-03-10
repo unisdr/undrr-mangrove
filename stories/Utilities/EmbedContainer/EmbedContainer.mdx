@@ -35,13 +35,19 @@ Wrap iframes in a `.mg-embed-container` div. The aspect ratio applies only to th
 
 ### 4:3
 
+Natively 4:3 content (e.g. classic educational films, older uploads) fits this container without black bars.
+
 <Canvas of={EmbedContainerStories.AspectRatio4x3} />
 
 ### 1:1
 
+Square embeds are uncommon on YouTube but useful for Instagram-style video reposts or square infographic animations. Standard videos will show black bars above and below.
+
 <Canvas of={EmbedContainerStories.AspectRatio1x1} />
 
 ### 21:9 (ultrawide)
+
+For natively cinematic content or wide data visualizations. Standard videos will show black bars at the sides.
 
 <Canvas of={EmbedContainerStories.AspectRatio21x9} />
 

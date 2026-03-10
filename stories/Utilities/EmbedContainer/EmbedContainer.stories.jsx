@@ -30,8 +30,8 @@ export const AspectRatio4x3 = {
     <div style={{ maxWidth: '640px' }}>
       <div className="mg-embed-container mg-embed-container--4x3">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
-          title="Example video (4:3)"
+          src="https://www.youtube-nocookie.com/embed/0fKBhvDjuy0"
+          title="Powers of Ten (1977) — Eames Office (4:3)"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
@@ -44,11 +44,17 @@ export const AspectRatio4x3 = {
 export const AspectRatio1x1 = {
   name: '1:1',
   render: () => (
-    <div style={{ maxWidth: '640px' }}>
+    <div style={{ maxWidth: '480px' }}>
+      <p
+        style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#666' }}
+      >
+        Square (1:1) embeds are uncommon on YouTube. This ratio is useful for
+        Instagram-style video reposts or square infographic animations.
+      </p>
       <div className="mg-embed-container mg-embed-container--1x1">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
-          title="Example video (1:1)"
+          src="https://www.youtube-nocookie.com/embed/vJG698U2Mvo"
+          title="Selective Attention Test — Daniel Simons (shown in 1:1 container)"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
@@ -61,11 +67,17 @@ export const AspectRatio1x1 = {
 export const AspectRatio21x9 = {
   name: '21:9 (ultrawide)',
   render: () => (
-    <div style={{ maxWidth: '640px' }}>
+    <div style={{ maxWidth: '800px' }}>
+      <p
+        style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#666' }}
+      >
+        Ultrawide (21:9) is useful for cinematic content or wide data
+        visualizations. Most YouTube videos will show black bars at the sides.
+      </p>
       <div className="mg-embed-container mg-embed-container--21x9">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
-          title="Example video (21:9)"
+          src="https://www.youtube-nocookie.com/embed/0fKBhvDjuy0"
+          title="Powers of Ten (1977) — Eames Office (shown in 21:9 container)"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
