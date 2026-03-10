@@ -338,7 +338,7 @@
       li {
         animation: mg-mega-item-slide-in 250ms ease-out both;
 
-        @for $i from 1 through 12 {
+        @for $i from 1 through 25 {
           &:nth-child(#{$i}) {
             animation-delay: #{($i - 1) * 30}ms;
           }
