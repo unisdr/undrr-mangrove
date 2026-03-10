@@ -81,6 +81,53 @@ export const AspectRatio21x9 = {
   ),
 };
 
+export const GenericIframe = {
+  name: 'Generic HTML iframe',
+  render: () => (
+    <div style={{ maxWidth: '640px' }}>
+      <div className="mg-embed-container">
+        <iframe
+          src="about:blank"
+          title="Generic HTML embed"
+          loading="lazy"
+          style={{
+            background: '#f0f0f0',
+          }}
+          ref={el => {
+            if (!el) return;
+            const doc = el.contentDocument;
+            if (!doc) return;
+            doc.open();
+            doc.write(
+              `<div style="
+                font-family: system-ui, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
+                color: #2c6e7e;
+                text-align: center;
+                padding: 2rem;
+              ">
+                <div>
+                  <h2 style="margin: 0 0 0.5rem">Embedded content</h2>
+                  <p style="margin: 0; opacity: 0.8">
+                    Any HTML page, dashboard, or third-party widget
+                    renders responsively inside mg-embed-container.
+                  </p>
+                </div>
+              </div>`
+            );
+            doc.close();
+          }}
+        />
+      </div>
+    </div>
+  ),
+};
+
 export const InsideHighlightBox = {
   name: 'Inside highlight box',
   render: () => (
