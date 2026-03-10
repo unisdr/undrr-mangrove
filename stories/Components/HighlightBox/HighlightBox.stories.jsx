@@ -94,7 +94,7 @@ export const WithVideo = {
         <h3>Related video: Disaster risk reduction explained</h3>
         <div className="mg-embed-container">
           <iframe
-            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+            src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
             title="Related video: Disaster risk reduction explained"
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

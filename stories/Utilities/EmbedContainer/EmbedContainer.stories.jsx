@@ -13,8 +13,8 @@ export const Default16x9 = {
     <div style={{ maxWidth: '640px' }}>
       <div className="mg-embed-container">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
-          title="Example video (16:9)"
+          src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
+          title="UNDRR video (16:9)"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
@@ -45,16 +45,10 @@ export const AspectRatio1x1 = {
   name: '1:1',
   render: () => (
     <div style={{ maxWidth: '480px' }}>
-      <p
-        style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#666' }}
-      >
-        Square (1:1) embeds are uncommon on YouTube. This ratio is useful for
-        Instagram-style video reposts or square infographic animations.
-      </p>
       <div className="mg-embed-container mg-embed-container--1x1">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/vJG698U2Mvo"
-          title="Selective Attention Test — Daniel Simons (shown in 1:1 container)"
+          src="https://www.youtube-nocookie.com/embed/7tCU7ee1NNM"
+          title="UNDRR YouTube Short (1:1 container)"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
@@ -95,7 +89,7 @@ export const InsideHighlightBox = {
         <h3>Related video: Disaster risk reduction explained</h3>
         <div className="mg-embed-container">
           <iframe
-            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+            src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
             title="Related video: Disaster risk reduction explained"
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -118,7 +112,7 @@ export const InsideHighlightBoxPrimary = {
         <h3>Related video: Climate change and health</h3>
         <div className="mg-embed-container">
           <iframe
-            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+            src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
             title="Related video: Climate change and health"
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -143,7 +137,7 @@ export const LegacyEmbedContainer = {
       </p>
       <div className="embed-container">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+          src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
           title="Legacy embed example"
           loading="lazy"
           allowFullScreen
