@@ -87,21 +87,24 @@ export const CenteredPrimary = {
 export const WithVideo = {
   render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box mg-highlight-box--primary',
+    className:
+      'mg-highlight-box mg-highlight-box--primary mg-highlight-box--centered',
     children: (
-      <>
-        <h3>Featured video</h3>
-        <iframe
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title="Video example"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-        <p>
-          Videos and other embedded media work well inside highlight boxes to
-          draw attention to important content.
-        </p>
-      </>
+      <figure>
+        <h3>Related video: Disaster risk reduction explained</h3>
+        <div className="mg-embed-container">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+            title="Related video: Disaster risk reduction explained"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+        <figcaption className="mt-10">
+          Caption describing the related video.
+        </figcaption>
+      </figure>
     ),
   },
 };

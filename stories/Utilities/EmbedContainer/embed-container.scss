@@ -1,0 +1,60 @@
+// Responsive embed container
+// Provides aspect-ratio wrapper for iframes, videos, and other embedded media.
+// Default aspect ratio is 16:9. Use modifier classes for other ratios.
+// Usage: <div class="mg-embed-container"><iframe ...></iframe></div>
+// Also supports the legacy .embed-container class used by editors in CKEditor content.
+
+.mg-embed-container,
+.embed-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; // 16:9 fallback for older browsers
+  height: 0;
+  overflow: hidden;
+
+  @supports (aspect-ratio: 16 / 9) {
+    aspect-ratio: 16 / 9;
+    padding-bottom: 0;
+    height: auto;
+  }
+
+  iframe,
+  object,
+  embed,
+  video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+// Aspect ratio variants (mg-embed-container only)
+.mg-embed-container--4x3 {
+  padding-bottom: 75%; // 4:3 fallback
+
+  @supports (aspect-ratio: 4 / 3) {
+    aspect-ratio: 4 / 3;
+    padding-bottom: 0;
+  }
+}
+
+.mg-embed-container--1x1 {
+  padding-bottom: 100%; // 1:1 fallback
+
+  @supports (aspect-ratio: 1 / 1) {
+    aspect-ratio: 1 / 1;
+    padding-bottom: 0;
+  }
+}
+
+.mg-embed-container--21x9 {
+  padding-bottom: 42.857%; // 21:9 fallback
+
+  @supports (aspect-ratio: 21 / 9) {
+    aspect-ratio: 21 / 9;
+    padding-bottom: 0;
+  }
+}
