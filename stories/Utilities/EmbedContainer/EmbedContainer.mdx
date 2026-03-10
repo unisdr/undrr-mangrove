@@ -27,6 +27,13 @@ Wrap iframes in a `.mg-embed-container` div. The aspect ratio applies only to th
 </div>
 ```
 
+| Class | Aspect ratio | Use case |
+|-------|-------------|----------|
+| `mg-embed-container` | 16:9 | Most YouTube/Vimeo videos (default) |
+| `mg-embed-container--4x3` | 4:3 | Older video formats, some presentations |
+| `mg-embed-container--1x1` | 1:1 | Square video (Instagram-style, YouTube Shorts) |
+| `mg-embed-container--21x9` | 21:9 | Ultrawide/cinematic content |
+
 ## Aspect ratios
 
 ### 16:9 (default)
@@ -51,15 +58,6 @@ For natively cinematic content or wide data visualizations. Standard videos will
 
 <Canvas of={EmbedContainerStories.AspectRatio21x9} />
 
-## CSS classes
-
-| Class | Aspect ratio | Use case |
-|-------|-------------|----------|
-| `mg-embed-container` | 16:9 | Most YouTube/Vimeo videos |
-| `mg-embed-container--4x3` | 4:3 | Older video formats, some presentations |
-| `mg-embed-container--1x1` | 1:1 | Square video (Instagram-style) |
-| `mg-embed-container--21x9` | 21:9 | Ultrawide/cinematic content |
-
 ## Inside a highlight box
 
 The recommended pattern for embedding videos in highlight boxes:
@@ -67,7 +65,7 @@ The recommended pattern for embedding videos in highlight boxes:
 <Canvas of={EmbedContainerStories.InsideHighlightBox} />
 
 ```html
-<div class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered mb-20">
+<åside class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered mb-20">
   <figure>
     <h3>Related video: Video title here</h3>
     <div class="mg-embed-container">
@@ -81,18 +79,12 @@ The recommended pattern for embedding videos in highlight boxes:
     </div>
     <figcaption class="mt-10">Caption describing the related video.</figcaption>
   </figure>
-</div>
+</aside>
 ```
 
 Use `mg-highlight-box--primary` for UNDRR-produced content, `mg-highlight-box--secondary` for external videos.
 
 <Canvas of={EmbedContainerStories.InsideHighlightBoxPrimary} />
-
-## Legacy compatibility
-
-The `.embed-container` class (without the `mg-` prefix) is also supported. Existing editor content using inline `.embed-container` styles will continue to work, but the inline `<style>` block is no longer needed — the styles are now in the theme CSS.
-
-<Canvas of={EmbedContainerStories.LegacyEmbedContainer} />
 
 ## Iframe best practices
 

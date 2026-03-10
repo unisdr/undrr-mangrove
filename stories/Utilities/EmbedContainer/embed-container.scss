@@ -2,10 +2,8 @@
 // Provides aspect-ratio wrapper for iframes, videos, and other embedded media.
 // Default aspect ratio is 16:9. Use modifier classes for other ratios.
 // Usage: <div class="mg-embed-container"><iframe ...></iframe></div>
-// Also supports the legacy .embed-container class used by editors in CKEditor content.
 
-.mg-embed-container,
-.embed-container {
+.mg-embed-container {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; // 16:9 fallback for older browsers

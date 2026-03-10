@@ -126,23 +126,3 @@ export const InsideHighlightBoxPrimary = {
     </div>
   ),
 };
-
-export const LegacyEmbedContainer = {
-  name: 'Legacy .embed-container class',
-  render: () => (
-    <div style={{ maxWidth: '640px' }}>
-      <p>
-        Existing editor content using the <code>.embed-container</code> class
-        continues to work without changes.
-      </p>
-      <div className="embed-container">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
-          title="Legacy embed example"
-          loading="lazy"
-          allowFullScreen
-        />
-      </div>
-    </div>
-  ),
-};
