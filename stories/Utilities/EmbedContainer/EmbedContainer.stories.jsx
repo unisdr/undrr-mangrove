@@ -70,8 +70,8 @@ export const AspectRatio21x9 = {
       </p>
       <div className="mg-embed-container mg-embed-container--21x9">
         <iframe
-          src="https://www.youtube-nocookie.com/embed/0fKBhvDjuy0"
-          title="Powers of Ten (1977) — Eames Office (shown in 21:9 container)"
+          src="https://www.youtube-nocookie.com/embed/Ttl8Gg-P-Ao"
+          title="Ultrawide cinematic video (21:9)"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
