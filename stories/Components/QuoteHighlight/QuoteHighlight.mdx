@@ -137,6 +137,27 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
   - Left or right alignment to integrate quotes within text content
 - For RTL languages, the component will automatically mirror its layout.
 
+## Accessibility
+
+### Semantic HTML
+
+- The component uses a `<blockquote>` element for the quote text, giving screen readers proper quote semantics
+- The outer wrapper is a `<section>` element, providing a sectioning landmark
+- Attribution name and title are rendered as `<p>` elements within the attribution area
+
+### Image alt text
+
+- The `imageAlt` prop controls the `alt` attribute on both the portrait image (line variant) and the side image (image variant)
+- When `imageAlt` is not provided, the component generates a fallback: `"{attribution} image"`, or `"Quote image"` if no attribution is set
+- Always provide a meaningful `imageAlt` value rather than relying on the fallback, especially when the image conveys information beyond decoration
+
+### Known limitations
+
+- The `<section>` element has no `aria-label` or `aria-labelledby`, so screen readers may announce it as an unlabelled section
+- No `<figure>` / `<figcaption>` pattern is used; the quote and its attribution are not programmatically associated (e.g., via `aria-describedby` or `<footer>` within the `<blockquote>`)
+- The `<cite>` element is not used for the attribution, which would give screen readers stronger semantic context for the source of the quote
+- The fallback alt text (e.g., "Mami Mizutori image") may not be descriptive enough for images that convey meaningful content
+
 ## Server-rendered / CDN usage
 
 QuoteHighlight supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:

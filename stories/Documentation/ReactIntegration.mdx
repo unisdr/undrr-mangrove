@@ -233,28 +233,21 @@ Props: `severity` (`"error"` | `"warning"` | `"info"` | `"success"`), `opened` (
 
 If you are rendering HTML on the server (Drupal, Astro, or any other framework) and need React to take over specific DOM containers, Mangrove provides `createHydrator`. This scans the page for elements matching a CSS selector, extracts props from `data-` attributes, and mounts the component.
 
-```jsx
-import { createHydrator } from '@undrr/undrr-mangrove';
-import ShareButtons from './ShareButtons.js';
+The following example shows the **Drupal wrapper pattern**, where a small script imports a built component bundle and its `fromElement` function, then uses `createHydrator` to mount it into server-rendered HTML containers. In a typical React app, you would import from `@undrr/undrr-mangrove` instead and pass props directly (see the [usage examples](#usage-examples) above).
 
-// fromElement is a pure function that reads data attributes from the container
-function fromElement(el) {
-  return {
-    labels: {
-      mainLabel: el.dataset.mgShareLabel || 'Share',
-      onCopy: el.dataset.mgShareCopied || 'Copied',
-    },
-    SharingSubject: el.dataset.mgShareSubject,
-    SharingTextBody: el.dataset.mgShareBody,
-  };
-}
+```jsx
+// Drupal wrapper script — imports from built component bundles, not the npm package
+import createHydrator from './hydrate.js';
+import ShareButtons, { fromElement } from './ShareButtons.js';
 
 createHydrator({
-  selector: '[data-mg-share]',
+  selector: '[data-mg-share-buttons]',
   component: ShareButtons,
   fromElement,
 });
 ```
+
+The `fromElement` function exported by ShareButtons extracts props from the container's data attributes (`data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body`). Each component with hydration support ships its own `fromElement` — you do not need to write one by hand.
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, including `update()`, `unmountAll()`, and error handling options.
 

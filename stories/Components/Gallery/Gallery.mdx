@@ -277,7 +277,7 @@ Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
 
 | Attribute | Default | Description |
 |-----------|---------|-------------|
-| `data-media` | `[]` | JSON array of media item objects (required) |
+| `data-media` | `[]` | JSON array of media item objects (required). Each object with `type` of `'image'` or `'video'` (or no `type`, since `'image'` is the default) must include an `alt` property with descriptive text per WCAG 1.1.1 (Non-text Content). |
 | `data-initial-index` | `0` | Index of the initially displayed item |
 | `data-show-thumbnails` | `'true'` | Show thumbnail navigation (`'true'` or `'false'`) |
 | `data-thumbnail-position` | `'left'` | `'left'` or `'bottom'` |

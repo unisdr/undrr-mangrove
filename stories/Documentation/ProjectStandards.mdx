@@ -324,9 +324,17 @@ import { StatsCard, ShareButtons } from '@undrr/undrr-mangrove';
 
 ### Sass
 
+Import the Mangrove design tokens into your SCSS build. The path depends on your setup:
+
 ```scss
+// Within the Mangrove repo
 @import "stories/assets/scss/variables";
+
+// From an npm consumer (path depends on your bundler's resolve config)
+@import "node_modules/@undrr/undrr-mangrove/stories/assets/scss/variables";
 ```
+
+See the <LinkTo kind="getting-started-sass-integration" story="docs">Sass integration guide</LinkTo> for full setup instructions.
 
 ### Traditional templates (e.g. PHP, Drupal)
 

@@ -54,6 +54,7 @@ stories/assets/scss/
   style-preventionweb.scss     # PreventionWeb theme
   style-irp.scss               # IRP theme
   style-mcr.scss               # MCR2030 theme
+  style-gutenberg.scss         # Legacy Gutenberg editor subset
   _variables.scss              # Design tokens and component variables
   _variables-preventionweb.scss # PW variable overrides
   _variables-irp.scss          # IRP variable overrides
@@ -326,9 +327,10 @@ These mixins add vendor prefixes for CSS properties. Note that if your build pip
 | `scale` | `@include scale($scale)` | Shorthand for `transform: scale()` |
 | `skew` | `@include skew($x, $y)` | Shorthand for `transform: skew()` |
 | `animation` | `@include animation($animation)` | Prefixed `animation` |
+| `keyframes` | `@include keyframes($keyframes...)` | Prefixed `keyframes` |
 | `gradient` | `@include gradient($direction, $list)` | Prefixed `linear-gradient` background |
-| `background` | `@include background($background...)` | Prefixed `linear-gradient` background |
-| `background-image` | `@include background-image($deg, $colorname, $opacity)` | Prefixed `linear-gradient` background |
+| `background` | `@include background($background...)` | Unprefixed `linear-gradient` background |
+| `background-image` | `@include background-image($deg, $colorname, $opacity)` | Unprefixed `linear-gradient` background |
 | `x-appearance` | `@include x-appearance($value)` | Prefixed `appearance` |
 
 **Usage:**
@@ -368,9 +370,9 @@ $mg-color-interactive: $mg-color-blue-900 !default;
 $mg-radius-button: $mg-spacing-0 !default;
 ```
 
-If you assign these variables *before* `_variables.scss` is imported, your values take precedence. If you do not assign them, the defaults apply.
+Mangrove's built-in themes import `_variables.scss` first, then a theme-specific override file that reassigns selected tokens **without** `!default`. Because the override comes second, its plain assignments overwrite the earlier `!default` values. Any token the override file does not touch keeps its default.
 
-This is the pattern used by the built-in themes. For example, `style-preventionweb.scss` imports the base variables first, then a theme-specific override file:
+For example, `style-preventionweb.scss` imports the base variables first, then a theme-specific override file:
 
 ```scss
 // style-preventionweb.scss

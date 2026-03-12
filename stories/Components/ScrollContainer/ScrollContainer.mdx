@@ -182,6 +182,29 @@ const MyComponent = () => (
    - Navigation arrows are hidden on mobile devices
    - Optimized for touch interactions
 
+## Accessibility
+
+### Arrow button labels
+
+When `showArrows` is enabled, the left and right navigation buttons have `aria-label="Scroll left"` and `aria-label="Scroll right"` respectively. Buttons are automatically `disabled` when there is no content to scroll in that direction, which prevents activation and communicates state to assistive technologies.
+
+### Container semantics
+
+- The component wraps content in a `<section>` element, providing a sectioning landmark
+- The arrow buttons are grouped inside a `<nav>` element with class `mg-scroll__nav`
+
+### Keyboard support
+
+The scroll container itself does not implement custom keyboard event handlers. Users can scroll horizontally using native browser mechanisms (e.g., Shift+scroll wheel on desktop). The arrow buttons are standard `<button>` elements and are reachable via Tab and activatable with Enter or Space.
+
+### Known limitations
+
+- The `<section>` element has no `aria-label` or `aria-labelledby`, so screen readers may announce it as an unlabelled section
+- The `<nav>` wrapper around arrow buttons has no `aria-label` to describe its purpose
+- There is no `role="region"` or similar on the scrollable container itself, and no live announcements when the scroll position changes
+- On desktop, mouse drag scrolling works, but there is no equivalent keyboard-based drag interaction beyond the arrow buttons
+- Arrow buttons are hidden on mobile devices via a JavaScript mobile detection check rather than CSS, meaning they may not appear for keyboard users on small viewports
+
 ## Server-rendered / CDN usage
 
 ScrollContainer supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element with server-rendered child content:

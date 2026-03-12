@@ -80,6 +80,45 @@ Twig is the right place to resolve the prefix. The React component just renders 
 | logoWidth  | number | —       | Optional explicit width for CLS prevention                                                               |
 | logoHeight | number | —       | Optional explicit height for CLS prevention                                                              |
 
+## Accessibility
+
+### Keyboard navigation
+
+- **Arrow Left / Arrow Right**: Moves focus between top-level menu items in the menu bar
+- **Arrow Down**: From a top-level item, moves focus into the open submenu section; within the sidebar, moves focus to the next menu item (or into the expanded section)
+- **Arrow Up**: Within the sidebar, moves focus to the previous menu item
+- **Tab / Shift+Tab**: Moves focus through focusable elements within an open submenu section
+- **Escape**: Closes any open submenu panel and returns to the top-level menu bar
+- Focus on a top-level item also triggers its submenu to open (via `onFocus`)
+
+### ARIA attributes
+
+- The root `<nav>` element has `aria-label="Main Navigation"`
+- The top bar uses `role="menubar"` with `aria-label="Main navigation menu"`
+- Top-level menu items use `role="menuitem"` with `aria-haspopup="true"` when they have submenus, and `aria-expanded` to indicate open/closed state
+- Parent `<li>` elements use `role="none"` to remove implicit list semantics from the menu pattern
+- Submenu panels use `role="region"` with `aria-label="Menu section"` and `aria-live="polite"` to announce content changes
+- Nested submenu lists use `role="menu"` with descriptive `aria-label` values (e.g., "Categories", "Submenu items")
+- Nested links use `role="menuitem"` and `aria-haspopup` when they contain further sub-items
+- Category links use `aria-current="page"` to indicate the currently highlighted category
+
+### Mobile menu
+
+- The hamburger button has `aria-label="Toggle navigation menu"` and `aria-haspopup="true"`; its icon is marked `aria-hidden="true"`
+- The mobile sidebar uses `role="dialog"` with `aria-label="Mobile navigation menu"`
+- Sidebar section buttons have `aria-expanded` and `aria-pressed` to indicate open/closed state
+- The backdrop overlay is a `<button>` element with `aria-label="Close mobile navigation"`
+
+### Branded variant
+
+- When `logoSrc` is provided, the logo link has `aria-label` set to `logoAlt` (falling back to "Home")
+
+### Known limitations
+
+- Focus is not explicitly trapped within the mobile sidebar dialog; users can Tab to elements behind the overlay
+- The hamburger button does not reflect the sidebar's open state via `aria-expanded`
+- When a submenu closes (via Escape or mouse leave), focus is not programmatically returned to the triggering menu item
+
 ## Server-rendered / CDN usage
 
 MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.

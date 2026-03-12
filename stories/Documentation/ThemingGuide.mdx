@@ -45,7 +45,7 @@ The Global UNDRR theme uses the defaults defined in `_variables.scss`. The other
 
 ### The `!default` mechanism
 
-Mangrove's theming relies on the SCSS `!default` flag. When a variable is declared with `!default`, it only takes effect if that variable has not already been assigned. This lets a theme override file set its values first, and the base `_variables.scss` file fills in anything the theme did not touch.
+Mangrove's theming relies on the SCSS `!default` flag. When a variable is declared with `!default`, it only takes effect if that variable has not already been assigned. In Mangrove's theme entry points, `_variables.scss` is imported first and sets every token with `!default`. The theme override file (e.g. `_variables-preventionweb.scss`) is imported second and reassigns selected tokens **without** `!default`, so its plain assignments overwrite the defaults. Any token the override file does not touch keeps its original value from `_variables.scss`.
 
 The import order inside each theme entry point controls this:
 
@@ -61,7 +61,7 @@ The import order inside each theme entry point controls this:
 @import "./components";
 ```
 
-**Themed variant** (e.g. `style-preventionweb.scss`) — overrides first, then defaults:
+**Themed variant** (e.g. `style-preventionweb.scss`) — defaults first, then overrides:
 
 ```scss
 @import "./variables";                 // Base tokens with !default
@@ -99,6 +99,7 @@ All three non-default themes follow the same pattern: set a primary brand color,
 - Larger button text (`$mg-font-size-button: $mg-font-size-400`)
 - Elevated tab sections with box shadow and rounded corners
 - Fully rounded tag corners (`$mg-radius-tag: $mg-spacing-100`)
+- Rounded form inputs (`$mg-radius-form-input: $mg-spacing-100`)
 
 ## Design tokens reference
 
