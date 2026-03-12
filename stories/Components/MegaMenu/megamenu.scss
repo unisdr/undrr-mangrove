@@ -38,12 +38,13 @@
       position: relative;
       width: auto;
       margin-inline-start: auto;
-      background: transparent;
+      background: $mg-color-white;
       flex-shrink: 0;
+      box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
 
       &:has(.mg-icon-angle-circled-left) {
-        background: transparent;
-        box-shadow: none;
+        background: $mg-color-white;
+        box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
       }
     }
   }
@@ -712,6 +713,11 @@
   @media screen and (min-width: $mg-breakpoint-tablet) {
     display: none;
   }
+}
+
+// RTL: Flip hamburger shadow direction in branded variant
+[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button {
+  box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
 // Arabic
