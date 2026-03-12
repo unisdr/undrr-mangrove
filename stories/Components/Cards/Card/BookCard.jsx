@@ -23,7 +23,7 @@ export function BookCard({ data, variant = 'primary', className }) {
 
           <div className="mg-card__content">
             <header className="mg-card__title">
-              <a href={item.link}>{item.title}</a>
+              <a href={item.link}>{item.title?.trim()}</a>
             </header>
           </div>
         </article>

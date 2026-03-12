@@ -121,9 +121,9 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
                 )}
               >
                 {item.link && !item.button && !item.srOnlyTitle ? (
-                  <a href={item.link}>{item.title}</a>
+                  <a href={item.link}>{item.title?.trim()}</a>
                 ) : (
-                  item.title
+                  item.title?.trim()
                 )}
               </header>
             )}
