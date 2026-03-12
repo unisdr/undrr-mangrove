@@ -390,8 +390,8 @@ Drupal.behaviors.mangroveComponent = {
 <section data-mg-share-buttons data-main-label="Share this"></section>
 
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.3.1/components/hydrate.js';
-  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.3.1/components/ShareButtons.js';
+  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js';
+  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.3.3/components/ShareButtons.js';
   createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
 </script>
 ```

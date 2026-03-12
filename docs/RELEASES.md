@@ -141,9 +141,9 @@ https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/static/mangrove/1.3.2/css/style.css
-https://assets.undrr.org/static/mangrove/1.3.2/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.3.2/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
+https://assets.undrr.org/static/mangrove/1.3.3/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.3.3/js/tabs.js
 ```
 
 ## CI/CD configuration
