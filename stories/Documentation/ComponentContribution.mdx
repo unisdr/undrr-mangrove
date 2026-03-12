@@ -291,29 +291,27 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
 
 3. **TypeScript Stories**
 
-   When writing stories for TypeScript components, use the appropriate TypeScript types from Storybook:
+   When writing stories for TypeScript components, use CSF3 object syntax with Storybook's `Meta` and `StoryObj` types:
 
    ```tsx
-   import React from 'react';
+   import type { Meta, StoryObj } from '@storybook/react';
    import TypedButton from './TypedButton';
-   import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-   export default {
+   const meta: Meta<typeof TypedButton> = {
      title: 'Components/Buttons/TypedButton',
      component: TypedButton,
-   } as ComponentMeta<typeof TypedButton>;
+   };
 
-   // Create a typed template
-   const Template: ComponentStory<typeof TypedButton> = (
-     args: React.ComponentProps<typeof TypedButton>
-   ) => <TypedButton {...args} />;
+   export default meta;
+   type Story = StoryObj<typeof TypedButton>;
 
-   // Create stories with typed args
-   export const Primary = Template.bind({});
-   Primary.args = {
-     label: 'Submit',
-     type: 'primary',
-     width: 120,
+   // CSF3: use object syntax with args
+   export const Primary: Story = {
+     args: {
+       label: 'Submit',
+       type: 'primary',
+       width: 120,
+     },
    };
    ```
 
@@ -456,6 +454,106 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Support keyboard navigation and screen readers
    - Test with accessibility tools
    - Use appropriate focus states for interactive elements
+
+## RTL support
+
+UNDRR websites serve content in Arabic and other right-to-left (RTL) languages. Every component must work correctly in both LTR and RTL layouts.
+
+### How RTL is triggered
+
+The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale resets to `dir="ltr"`.
+
+This logic lives in `.storybook/preview.js` in the `getLangCode` decorator. There is also a legacy manual RTL toggle (`setDirection` decorator) that can override the locale setting.
+
+### SCSS patterns for RTL
+
+There are two approaches for handling directional layout in SCSS. Prefer logical properties for new code; fall back to `[dir="rtl"]` overrides when logical properties are not sufficient.
+
+#### 1. CSS logical properties (preferred)
+
+Use logical properties instead of physical ones. These automatically flip in RTL contexts with no extra CSS:
+
+| Physical property | Logical replacement |
+|---|---|
+| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
+| `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
+| `left` / `right` | `inset-inline-start` / `inset-inline-end` |
+| `text-align: left` | `text-align: start` |
+| `float: left` | `float: inline-start` |
+
+Shorthand forms like `margin-inline`, `padding-inline`, and `inset-inline` set both sides at once. See `megamenu.scss` for extensive use of this approach.
+
+#### 2. `[dir="rtl"]` selector overrides
+
+When logical properties cannot express the override (e.g., flipping a `transform`, changing a `background-position`, or mirroring an icon), use the `[dir="rtl"]` attribute selector:
+
+```scss
+.mg-component__arrow {
+  transform: rotate(0deg);
+}
+
+[dir="rtl"] .mg-component__arrow {
+  transform: rotate(180deg);
+}
+```
+
+Or nest with `&` when the override is scoped to the block:
+
+```scss
+.mg-component__separator {
+  border-left: 2px solid $mg-color-neutral-400;
+
+  [dir="rtl"] & {
+    border-left: none;
+    border-right: 2px solid $mg-color-neutral-400;
+  }
+}
+```
+
+The `_mixins.scss` file includes RTL-aware placeholders such as `%select_rtl` (padding/text-align flip for select inputs), `%select_rtl_after` (repositions a pseudo-element for RTL), and `%left-to-right` (entrance animation that reverses direction under `[dir="rtl"]`).
+
+#### RTL patterns in global styles
+
+- `_foundational.scss` sets `direction: rtl` on `ul` and `ol` elements inside `[dir="rtl"]`
+- `_utility.scss` reverses viewport entrance animations under `[dir="rtl"]`
+
+### Components with RTL stories
+
+These components have dedicated RTL story exports you can reference as examples:
+
+- **MegaMenu** — `RTL` story: full menu layout with flipped chevrons, borders, and sidebar
+- **Pager** — `RTL` story: pagination controls in Arabic
+- **QuoteHighlight** — `RTLLeftAlignedQuote`, `RTLRightAlignedQuote`: directional float behavior
+- **HighlightBox** — `RTLFloatStart`, `RTLFloatEnd`: logical float behavior in RTL
+- **IndexChart** — `CustomRtlIndexChart`: chart axis and label direction
+- **ScatterPlotChart** — `CustomRtlConnectedScatterplot`: RTL chart rendering
+- **StatsCard** — locale-aware story that switches direction based on toolbar selection
+
+Many other components (Breadcrumbs, Buttons, Cards, Forms, Tab, Table, Hero) include Arabic translations that respond to the locale toolbar without needing a separate RTL story export.
+
+### Checklist for RTL-compatible components
+
+When building or reviewing a component, verify each of these:
+
+- [ ] **Logical properties**: Use `margin-inline-*`, `padding-inline-*`, `inset-inline-*` instead of physical `left`/`right` equivalents
+- [ ] **Text alignment**: Use `text-align: start` / `text-align: end` instead of `left` / `right`
+- [ ] **Directional icons**: Flip arrows, chevrons, and carets under `[dir="rtl"]` (typically by reversing a `transform`)
+- [ ] **Border and separator placement**: Swap `border-left` / `border-right` under `[dir="rtl"]`, or use `border-inline-start` / `border-inline-end`
+- [ ] **Flexbox and grid**: `flex-direction: row` already reverses in RTL — verify the visual result is correct and avoid forcing `row-reverse`
+- [ ] **Absolute positioning**: Replace `left` / `right` with `inset-inline-start` / `inset-inline-end`
+- [ ] **Transforms**: Reverse `translateX` and `rotate` values under `[dir="rtl"]` where direction matters
+- [ ] **No hardcoded directional values**: Avoid inline styles with `left`, `right`, `marginLeft`, `marginRight` — these do not respond to `dir`
+
+### Testing with the locale toolbar
+
+1. Start Storybook with `yarn dev`
+2. Open your component's story
+3. Click the globe icon in the Storybook toolbar
+4. Select **Arabic** to switch to RTL mode
+5. Verify the layout mirrors correctly: text flows right-to-left, icons/chevrons point the opposite direction, spacing and borders appear on the correct side
+6. Switch back to **English** to confirm no layout artifacts remain
+
+If your component has complex RTL behavior, add a dedicated RTL story export (see the MegaMenu or QuoteHighlight stories for the pattern).
 
 ## Documentation requirements
 

@@ -381,9 +381,9 @@ Drupal.behaviors.mangroveComponent = {
 ```html
 <script type="importmap">
   { "imports": {
-    "react": "https://esm.sh/react@19.2.0",
-    "react-dom": "https://esm.sh/react-dom@19.2.0",
-    "react-dom/": "https://esm.sh/react-dom@19.2.0/"
+    "react": "https://esm.sh/react@19.2.4",
+    "react-dom": "https://esm.sh/react-dom@19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@19.2.4/"
   }}
 </script>
 

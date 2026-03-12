@@ -182,15 +182,16 @@ const MyComponent = () => (
    - Navigation arrows are hidden on mobile devices
    - Optimized for touch interactions
 
-## Server-rendered usage
+## Server-rendered / CDN usage
 
-ScrollContainer supports hydration from server-rendered HTML using `createHydrator` and the bundled `fromElement` function. This is how the component is integrated in Drupal and other server-rendered frameworks.
-
-The server renders a container with data attributes and child content:
+ScrollContainer supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element with server-rendered child content:
 
 ```html
 <div data-mg-scroll-container
   data-height="300px"
+  data-min-width="200px"
+  data-item-width="250px"
+  data-padding="16"
   data-show-arrows="true"
   data-step-size="300">
   <div class="mg-scroll__content">
@@ -200,17 +201,24 @@ The server renders a container with data attributes and child content:
 </div>
 ```
 
-The client script mounts the React component in three lines:
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-height` | `'auto'` | Container height (CSS value) |
+| `data-min-width` | `'auto'` | Minimum width (CSS value) |
+| `data-item-width` | `'auto'` | Width for individual items (CSS value) |
+| `data-padding` | `'0'` | Container padding |
+| `data-show-arrows` | `'false'` | Show navigation arrows (`'true'` or `'false'`) |
+| `data-step-size` | `null` | Scroll step in pixels for arrow navigation |
+
+Child elements are extracted from a `.mg-scroll__content` wrapper inside the container. If no wrapper is found, the container's `innerHTML` is used directly.
 
 ```js
-import createHydrator from './hydrate.js';
-import ScrollContainer, { fromElement } from './ScrollContainer.js';
-createHydrator({ selector: '[data-mg-scroll-container]', component: ScrollContainer, fromElement });
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js";
+import ScrollContainer, { fromElement } from "https://assets.undrr.org/static/mangrove/1.3.3/components/ScrollContainer.js";
+createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
 ```
 
-`fromElement` extracts all props from data attributes and parses children from the `.mg-scroll__content` wrapper as HTML strings.
-
-See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
 

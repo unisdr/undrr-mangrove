@@ -40,6 +40,7 @@ Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
 | Module | Path | Purpose |
 |--------|------|---------|
 | Tabs | `/js/tabs.js` | Tab component interactivity |
+| Show More | `/js/show-more.js` | Expand/collapse content sections |
 
 **Example:**
 ```html
@@ -51,15 +52,23 @@ Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
 
 ### React components
 
-Precompiled React components for use without a build process.
+Precompiled React components for use without a build process. The `hydrate.js` runtime handles mounting and error recovery.
 
-| Component | Path |
-|-----------|------|
-| MegaMenu | `/components/MegaMenu.js` |
+| Module | Path |
+|--------|------|
+| Hydration runtime | `/components/hydrate.js` |
 | ShareButtons | `/components/ShareButtons.js` |
+| MegaMenu | `/components/MegaMenu.js` |
+| ScrollContainer | `/components/ScrollContainer.js` |
 | BarChart | `/components/BarChart.js` |
 | MapComponent | `/components/MapComponent.js` |
-| ScrollContainer | `/components/ScrollContainer.js` |
+| QuoteHighlight | `/components/QuoteHighlight.js` |
+| Fetcher | `/components/Fetcher.js` |
+| SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` |
+| IconCard | `/components/IconCard.js` |
+| Gallery | `/components/Gallery.js` |
+| StatsCard | `/components/StatsCard.js` |
+| Pager | `/components/Pager.js` |
 
 **Example:**
 
@@ -70,10 +79,10 @@ React 19 dropped UMD builds. Use [import maps](https://developer.mozilla.org/en-
 <script type="importmap">
   {
     "imports": {
-      "react": "https://esm.sh/react@19.2.0",
-      "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
-      "react-dom": "https://esm.sh/react-dom@19.2.0",
-      "react-dom/": "https://esm.sh/react-dom@19.2.0/"
+      "react": "https://esm.sh/react@19.2.4",
+      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.2.4",
+      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
     }
   }
 </script>
@@ -178,13 +187,22 @@ https://assets.undrr.org/static/
 │       │   ├── style-mcr.css
 │       │   └── style-irp.css
 │       ├── js/
-│       │   └── tabs.js
+│       │   ├── tabs.js
+│       │   └── show-more.js
 │       └── components/
-│           ├── MegaMenu.js
+│           ├── hydrate.js
 │           ├── ShareButtons.js
+│           ├── MegaMenu.js
+│           ├── ScrollContainer.js
 │           ├── BarChart.js
 │           ├── MapComponent.js
-│           └── ScrollContainer.js
+│           ├── QuoteHighlight.js
+│           ├── Fetcher.js
+│           ├── SyndicationSearchWidget.js
+│           ├── IconCard.js
+│           ├── Gallery.js
+│           ├── StatsCard.js
+│           └── Pager.js
 ├── analytics/
 │   └── {version}/
 │       ├── google_analytics_enhancements.js

@@ -96,7 +96,7 @@ Use BEM methodology:
 ```scss
 // Extend existing
 .mg-cta-button--report-download {
-  border-left: 4px solid $mg-color-accent;
+  border-left: 4px solid $mg-color-accent-100;
 }
 
 // Create new
@@ -114,10 +114,10 @@ Use design tokens to ensure visual consistency:
 ```scss
 // Preferred
 .myproject-announcement-banner {
-  color: $mg-color-text-primary;
-  padding: $mg-spacing-md;
-  font-family: $mg-font-family-base;
-  border-radius: $mg-border-radius-sm;
+  color: $mg-color-text;
+  padding: $mg-spacing-100;
+  font-family: $mg-font-family;
+  border-radius: $mg-spacing-25;
 }
 
 // Avoid
@@ -206,14 +206,14 @@ Mangrove meets WCAG 2.1 AA:
 .mg-mega-menu__user-section {
   display: flex;
   align-items: center;
-  gap: $mg-spacing-sm;
+  gap: $mg-spacing-50;
 
   .mg-button--user-profile {
     background: transparent;
-    border: 1px solid $mg-color-border-light;
+    border: 1px solid $mg-color-neutral-100;
 
     &:hover {
-      background: $mg-color-background-light;
+      background: $mg-color-neutral-25;
     }
   }
 }

@@ -1,0 +1,381 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import TableOfContents from '../Components/TableOfContents/TableOfContents';
+
+<Meta
+  title="Getting started/Theming guide"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Theming guide
+
+Mangrove ships four built-in themes. Each theme overrides a set of SCSS variables to change colors, border radii, spacing, and component-level styling. This page explains how the system works, documents every overridable token, and walks through creating a new theme.
+
+<TableOfContents
+  title="On this page"
+  tocData={[
+    { id: 'built-in-themes', text: 'Built-in themes' },
+    { id: 'how-theming-works', text: 'How theming works' },
+    { id: 'design-tokens-reference', text: 'Design tokens reference' },
+    { id: 'creating-a-new-theme', text: 'Creating a new theme' },
+    { id: 'storybook-theme-switcher', text: 'Storybook theme switcher' },
+    { id: 'deploying-to-drupal', text: 'Deploying to Drupal' },
+    { id: 'rtl-considerations', text: 'RTL considerations' },
+  ]}
+  showNumbers={false}
+/>
+
+## Built-in themes
+
+| Theme | File | Primary color | Use case |
+|-------|------|---------------|----------|
+| **Global UNDRR** | `style.scss` | `#004f91` (blue-900) | Default theme for undrr.org and general UNDRR properties |
+| **PreventionWeb** | `style-preventionweb.scss` | `#0a6969` (teal) | preventionweb.net knowledge platform |
+| **IRP** | `style-irp.scss` | `#0f78bf` (bright blue) | International Recovery Platform |
+| **MCR2030** | `style-mcr.scss` | `#591a61` (purple) | Making Cities Resilient 2030 campaign |
+
+The Global UNDRR theme uses the defaults defined in `_variables.scss`. The other three themes each have a `_variables-{name}.scss` file that reassigns the overridable tokens before the rest of the SCSS compiles.
+
+## How theming works
+
+### The `!default` mechanism
+
+Mangrove's theming relies on the SCSS `!default` flag. When a variable is declared with `!default`, it only takes effect if that variable has not already been assigned. This lets a theme override file set its values first, and the base `_variables.scss` file fills in anything the theme did not touch.
+
+The import order inside each theme entry point controls this:
+
+**Base theme** (`style.scss`) — uses defaults only:
+
+```scss
+@import "./variables";       // All tokens declared with !default
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./utility";
+@import "./foundational";
+@import "./components";
+```
+
+**Themed variant** (e.g. `style-preventionweb.scss`) — overrides first, then defaults:
+
+```scss
+@import "./variables";                 // Base tokens with !default
+@import "./variables-preventionweb";   // Overrides (no !default — wins)
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./utility";
+@import "./foundational";
+@import "./components";
+```
+
+The key detail: `_variables.scss` declares the interactive-color and component tokens with `!default`. The theme file `_variables-preventionweb.scss` imports after `_variables.scss` and reassigns the same variable names **without** `!default`, so its values take precedence for all subsequent SCSS.
+
+### What each theme overrides
+
+All three non-default themes follow the same pattern: set a primary brand color, then reassign the interactive, button, tag, form, hero, and tab tokens to use that color.
+
+**PreventionWeb** (`_variables-preventionweb.scss`):
+- Primary: `$pw-color-primary: #0a6969`
+- Rounded buttons and tab corners (`$mg-radius-button: $mg-spacing-50`)
+- Button hover uses Sendai orange (`$sendai-orange-900`)
+- Hero overlay spacing (`$mg-spacing-hero-overlay: 2rem 0`)
+
+**IRP** (`_variables-irp.scss`):
+- Primary: `$irp-color-primary: #0f78bf`
+- Accent green: `rgb(140 198 63)` used for tab backgrounds
+- Rounded form inputs and tags (`$mg-radius-form-input: $mg-spacing-50`, `$mg-radius-tag: $mg-spacing-50`)
+
+**MCR2030** (`_variables-mcr.scss`):
+- Primary: `$mcr-color-purple: #591a61`
+- Secondary green: `rgb(10 105 105)` and orange from Sendai palette
+- Pill-shaped buttons (`$mg-radius-button: $mg-spacing-300`, `$mg-padding-button: $mg-spacing-150 $mg-spacing-300`)
+- Heavier button border (`$mg-border-width-button: 2px`)
+- Larger button text (`$mg-font-size-button: $mg-font-size-400`)
+- Elevated tab sections with box shadow and rounded corners
+- Fully rounded tag corners (`$mg-radius-tag: $mg-spacing-100`)
+
+## Design tokens reference
+
+Every variable below is declared with `!default` in `stories/assets/scss/_variables.scss` and can be overridden by a theme.
+
+### Interactive colors
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-interactive` | `$mg-color-blue-900` (`#004f91`) | Primary interactive color (links, focus rings) |
+| `$mg-color-interactive-active` | `$mg-color-blue-700` (`#3372a7`) | Active/pressed state |
+
+### Shared variant accent colors
+
+Used by hero, cards, and other components that support color variants.
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-secondary` | `$mg-color-orange-800` (`#ed833f`) | Secondary variant accent |
+| `$mg-color-tertiary` | `$mg-color-neutral-900` (`#000`) | Tertiary variant accent |
+| `$mg-color-quaternary` | `$mg-color-red-800` (`#c72236`) | Quaternary variant accent |
+
+### Tag tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-tag` | `$mg-color-interactive` | Tag text/border color |
+| `$mg-color-tag--hover` | `$mg-color-interactive-active` | Tag hover color |
+| `$mg-color-tag-secondary` | `$mg-color-neutral-500` | Secondary tag color |
+| `$mg-color-tag-secondary--hover` | `$mg-color-neutral-600` | Secondary tag hover |
+| `$mg-color-tag-accent` | `$mg-color-orange-900` | Accent tag color |
+| `$mg-color-tag-accent--hover` | `$mg-color-orange-800` | Accent tag hover |
+| `$mg-radius-tag` | `$mg-spacing-0` (0) | Tag border radius |
+
+### Button tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-button` | `$mg-color-white` | Button text color |
+| `$mg-color-button--hover` | `$mg-color-white` | Button text hover color |
+| `$mg-color-button-background` | `$mg-color-interactive` | Button background |
+| `$mg-color-button-background--hover` | `$mg-color-interactive-active` | Button hover background |
+| `$mg-radius-button` | `$mg-spacing-0` (0) | Button border radius |
+| `$mg-border-width-button` | `1px` | Button border width |
+| `$mg-color-text-button` | `$mg-color-white` | Button text (used by border color) |
+| `$mg-border-color-button` | `$mg-color-text-button` | Button border color |
+| `$mg-padding-button` | `$mg-spacing-100 $mg-spacing-150` | Button padding |
+| `$mg-font-size-button` | `$mg-font-size-250` (`1.4rem`) | Button font size |
+
+### Form tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-form-check` | `$mg-color-interactive` | Checkbox/radio color |
+| `$mg-color-form-check--hover` | `$mg-color-interactive-active` | Checkbox/radio hover |
+| `$mg-color-form-check--checked` | `$mg-color-interactive` | Checkbox/radio checked state |
+| `$mg-color-form-focus` | `$mg-color-interactive` | Input focus ring color |
+| `$mg-radius-form-input` | `$mg-spacing-0` (0) | Input border radius |
+
+### Hero tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-hero` | `$mg-color-interactive` | Hero background overlay color |
+| `$mg-color-hero--secondary` | `$mg-color-secondary` | Hero secondary variant |
+| `$mg-color-hero--tertiary` | `$mg-color-tertiary` | Hero tertiary variant |
+| `$mg-color-hero--quaternary` | `$mg-color-quaternary` | Hero quaternary variant |
+| `$mg-opacity-hero` | `0.85` | Hero overlay opacity |
+| `$mg-spacing-hero-overlay` | `0` | Hero overlay padding |
+
+### Tab tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-color-tabbar-background` | `$mg-color-blue-50` | Tab bar container background |
+| `$mg-color-tab-background` | `$mg-color-blue-200` | Active tab background |
+| `$mg-color-tab-background--inactive` | `$mg-color-tabbar-background` | Inactive tab background |
+| `$mg-color-tab-background--hover` | `$mg-color-blue-800` | Tab hover background |
+| `$mg-color-tab-border` | `$mg-color-neutral-700` | Tab border color |
+| `$mg-color-tab-border--hover` | `$mg-color-neutral-900` | Tab border hover |
+| `$mg-color-tab-border--active` | `$mg-color-blue-800` | Active tab border |
+| `$mg-radius-tab` | `$mg-spacing-0` (0) | Tab border radius |
+| `$mg-padding-tab` | `$mg-spacing-75 $mg-spacing-150` | Tab padding |
+| `$mg-color-text-tab` | `$mg-color-neutral-700` | Tab text color |
+| `$mg-color-text-tab--hover` | `$mg-color-white` | Tab text hover color |
+| `$mg-color-text-tab-active` | `$mg-color-neutral-700` | Active tab text color |
+| `$mg-color-tab-section-background` | `$mg-color-neutral-0` (white) | Tab content section background |
+| `$mg-padding-tab-section` | `$mg-spacing-100 $mg-spacing-0` | Tab content section padding |
+| `$mg-radius-tab-section` | `$mg-spacing-0` (0) | Tab content section border radius |
+| `$mg-box-shadow-tab-section` | `none` | Tab content section shadow |
+| `$mg-tabs-border-bottom` | `true` | Whether tabs have a bottom border |
+
+## Creating a new theme
+
+### Step 1: Create a variables override file
+
+Create `stories/assets/scss/_variables-mytheme.scss`. Set only the tokens you want to change. Everything else inherits from `_variables.scss`.
+
+```scss
+// _variables-mytheme.scss
+
+// Define your brand color
+$mytheme-color-primary: #2c5f2d;
+
+// Override interactive colors
+$mg-color-interactive: $mytheme-color-primary;
+$mg-color-interactive-active: $mytheme-color-primary;
+
+// Override component tokens
+$mg-color-tag: $mg-color-interactive;
+$mg-color-tag--hover: $mg-color-interactive-active;
+$mg-color-button-background: $mytheme-color-primary;
+$mg-color-button-background--hover: darken($mytheme-color-primary, 10%);
+$mg-radius-button: $mg-spacing-50;
+
+// Form elements
+$mg-color-form-check: $mg-color-interactive;
+$mg-color-form-check--hover: $mg-color-interactive-active;
+$mg-color-form-check--checked: $mg-color-interactive;
+$mg-color-form-focus: $mg-color-interactive;
+
+// Hero
+$mg-color-hero: $mg-color-interactive;
+```
+
+### Step 2: Create a style entry point
+
+Create `stories/assets/scss/style-mytheme.scss`:
+
+```scss
+@import "./variables";
+@import "./variables-mytheme";
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./utility";
+@import "./foundational";
+@import "./components";
+```
+
+The import order matters: `_variables.scss` first (sets `!default` tokens), then your override file (reassigns without `!default`), then the rest of the SCSS that consumes those variables.
+
+### Step 3: Register the theme in Storybook
+
+In `.storybook/preview.js`, add an import and register the theme:
+
+```js
+// Add import at the top with the other theme imports
+import themeMyTheme from '../stories/assets/scss/style-mytheme.scss';
+```
+
+Add the theme to the `themeStyles` map:
+
+```js
+const themeStyles = {
+  'Global UNDRR Theme': themeUNDRR,
+  'PreventionWeb Theme': themePreventionWeb,
+  'IRP Theme': themeIRP,
+  'MCR2030 Theme': themeMCR,
+  'My Theme': themeMyTheme,
+};
+```
+
+Add a toolbar entry in `globalTypes.theme.toolbar.items`:
+
+```js
+items: [
+  { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
+  { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
+  { value: 'IRP Theme', title: 'IRP Theme' },
+  { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
+  { value: 'My Theme', title: 'My Theme' },
+],
+```
+
+The theme entry file name must match the pattern `style(-\w+)?\.scss$` so Storybook's webpack config applies `lazyStyleTag` injection (see `.storybook/main.js`). This gives the imported module `.use()` and `.unuse()` methods that the theme decorator calls to swap stylesheets at runtime.
+
+### Step 4: Build the CSS
+
+```bash
+yarn scss
+```
+
+This compiles all `style*.scss` files in `stories/assets/scss/` to CSS in `stories/assets/css/`. Your new theme will produce `stories/assets/css/style-mytheme.css`.
+
+### Step 5: Test in Storybook
+
+```bash
+yarn dev
+```
+
+Use the paintbrush icon in the Storybook toolbar to switch to your theme. Every component on every page should reflect your overrides.
+
+## Storybook theme switcher
+
+The toolbar at the top of Storybook includes a paintbrush icon labeled with the current theme name. Selecting a different theme from the dropdown swaps the active stylesheet immediately.
+
+### How it works
+
+1. `.storybook/main.js` configures a webpack rule that matches `style(-\w+)?\.scss$` files in `stories/assets/scss/` and applies `style-loader` with `injectType: 'lazyStyleTag'`. This compiles each theme file into a module with `.use()` and `.unuse()` methods instead of injecting the styles immediately.
+
+2. `.storybook/preview.js` imports all four theme SCSS files. A `themeDecorator` function listens for changes to the `theme` global (set by the toolbar) and calls `.unuse()` on the previous theme, then `.use()` on the new one.
+
+3. The default theme (`Global UNDRR Theme`) is loaded on initial render. Only one theme's styles are active at any time.
+
+### Available toolbar controls
+
+| Control | Icon | Options |
+|---------|------|---------|
+| Theme | Paintbrush | Global UNDRR, PreventionWeb, IRP, MCR2030 |
+| Locale | Globe | English, Arabic, Burmese, Japanese |
+
+## Deploying to Drupal
+
+Drupal child themes each carry their own copy of the compiled Mangrove CSS. The CSS is not auto-synced; you copy it manually after building.
+
+### Build and copy workflow
+
+1. **Build CSS** from the Mangrove directory:
+
+```bash
+yarn scss
+```
+
+This outputs compiled CSS files to `stories/assets/css/`:
+- `style.css` — Global UNDRR
+- `style-preventionweb.css` — PreventionWeb
+- `style-irp.css` — IRP
+- `style-mcr.css` — MCR2030
+
+2. **Copy to each Drupal child theme**. Each UNDRR child theme has a `css/mangrove/mangrove.css` file. Copy the relevant compiled CSS to each:
+
+```bash
+# Example for the main UNDRR theme
+cp stories/assets/css/style.css \
+  /path/to/docroot/themes/custom/undrr/css/mangrove/mangrove.css
+
+# Example for PreventionWeb
+cp stories/assets/css/style-preventionweb.css \
+  /path/to/docroot/themes/custom/pw/css/mangrove/mangrove.css
+```
+
+The specific child themes that use Mangrove CSS include: undrr, pw, mcr, irp, arise, gp, sfvc. Each maps to one of the four compiled theme stylesheets.
+
+3. **Commit the CSS** in the Drupal repository. The compiled CSS files are tracked in git on the Drupal side.
+
+### JS components are separate
+
+The CSS deployment is independent of the JS component workflow. Built React components (`dist/components/*.js`) are synced via `yarn watch --copy` or `ddev mangrove-watch` and go to `undrr_common/js/mangrove-components/`. See the <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo> for details on the JS workflow.
+
+## RTL considerations
+
+### How RTL is triggered
+
+RTL layout is activated by the `dir="rtl"` attribute on the `<html>` element. In Storybook, selecting "Arabic" from the locale toolbar (globe icon) sets both `dir="rtl"` on the document and `window.UNDRR.dir = 'rtl'`. In Drupal, the CMS sets the `dir` attribute based on the page language.
+
+### Locale toolbar in Storybook
+
+The locale toolbar provides four options:
+
+| Locale | Language code | Direction |
+|--------|---------------|-----------|
+| English | `en` | LTR |
+| Arabic | `ar` | RTL |
+| Burmese | `my` | LTR |
+| Japanese | `ja` | LTR |
+
+Arabic is the only locale that triggers RTL. The decorator in `preview.js` sets `lang` and `dir` attributes on `<html>` and `#storybook-root`, and updates `window.UNDRR.langCode` and `window.UNDRR.dir`.
+
+### RTL in themes
+
+Theming and RTL are independent. All four themes support RTL. When testing a theme in RTL, select the theme from the paintbrush toolbar and the locale from the globe toolbar. Both apply simultaneously.
+
+### RTL-aware CSS patterns
+
+Mangrove uses logical properties and `[dir="rtl"]` selectors where needed. The `_mixins.scss` file includes a `%select_rtl` placeholder that adjusts padding direction. Component-level SCSS files handle their own RTL overrides where layout direction matters (e.g., chevron icons, margin directions, text alignment).
+
+### Burmese language adjustments
+
+The `_mixins.scss` file includes `:lang(my)` overrides that reduce font sizes for Burmese text, which requires more vertical space. These apply across all themes.
