@@ -60,11 +60,11 @@
   // Logo image
   &__logo-img {
     display: block;
-    max-height: 3rem;
+    height: 3rem;
     width: auto;
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
-      max-height: 3.5rem;
+      height: 3.5rem;
     }
   }
 
