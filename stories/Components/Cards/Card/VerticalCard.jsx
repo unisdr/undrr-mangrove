@@ -46,7 +46,7 @@ export function VerticalCard({ data, variant = 'primary', className }) {
             )}
 
             <header className="mg-card__title">
-              <a href={item.link}>{item.title}</a>
+              <a href={item.link}>{item.title?.trim()}</a>
             </header>
             {item.summaryText && (
               <p

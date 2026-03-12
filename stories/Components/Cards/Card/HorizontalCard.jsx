@@ -38,7 +38,7 @@ export function HorizontalCard({ data, variant = 'primary', className }) {
             </div>
 
             <header className="mg-card__title">
-              <a href={item.link}>{item.title}</a>
+              <a href={item.link}>{item.title?.trim()}</a>
             </header>
             <p
               className="mg-card__summary"
