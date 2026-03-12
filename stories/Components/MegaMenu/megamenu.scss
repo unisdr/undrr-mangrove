@@ -24,6 +24,71 @@
     overflow-x: hidden; // primarily for mobile
   }
 
+  // --- Branded variant (with inline logo) ---
+  &--branded {
+    align-items: center;
+
+    @media screen and (max-width: $mg-breakpoint-tablet) {
+      padding-left: 0; // logo replaces the left padding
+      overflow-x: hidden;
+    }
+
+    // Hamburger becomes a discrete button (not full-width overlay)
+    .mg-mega-topbar-mobile__icon-button {
+      position: relative;
+      width: auto;
+      margin-inline-start: auto;
+      background: $mg-color-white;
+      flex-shrink: 0;
+      box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
+
+      &:has(.mg-icon-angle-circled-left) {
+        background: $mg-color-white;
+        box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
+      }
+    }
+  }
+
+  // Logo link
+  &__logo {
+    flex-shrink: 1;
+    min-width: 0; // allow shrinking below intrinsic size
+    display: flex;
+    align-items: center;
+    padding: $mg-spacing-100 $mg-spacing-150;
+  }
+
+  // Logo image
+  &__logo-img {
+    display: block;
+    height: 3rem;
+    max-width: 100%;
+    width: auto;
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      height: 3.5rem;
+    }
+  }
+
+  // Inner nav list inside branded variant
+  &__nav {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    // Hide items on mobile (same as default topbar behavior)
+    @media screen and (max-width: $mg-breakpoint-tablet) {
+      // Items are there but non-interactive on mobile (hamburger opens sidebar)
+      pointer-events: none;
+      overflow: hidden;
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
     pointer-events: none; // on mobile we only advertise the buttons, but not clickable
@@ -649,6 +714,15 @@
   @media screen and (min-width: $mg-breakpoint-tablet) {
     display: none;
   }
+}
+
+// RTL: Flip hamburger shadow direction in branded variant
+[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button {
+  box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
+}
+
+[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button:has(.mg-icon-angle-circled-left) {
+  box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
 // Arabic

@@ -338,3 +338,50 @@ export const RTL = {
     },
   },
 };
+
+const brandLogos = {
+  PreventionWeb: {
+    logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+    logoAlt: 'PreventionWeb',
+  },
+  IRP: {
+    logoSrc: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+    logoAlt: 'International Recovery Platform',
+  },
+  MCR2030: {
+    logoSrc:
+      'https://mcr2030.undrr.org/sites/default/files/2020-10/MCR---Main-Logo---Color.png',
+    logoAlt: 'Making Cities Resilient 2030',
+  },
+  'Global Platform 2025': {
+    logoSrc:
+      'https://assets.undrr.org/static/logos/gp/2025/GP_2025_logo_web.svg',
+    logoAlt: 'Global Platform for Disaster Risk Reduction 2025',
+  },
+};
+
+const brandArgType = {
+  brand: {
+    control: 'select',
+    options: Object.keys(brandLogos),
+    description: 'Sub-brand logo to display',
+  },
+};
+
+export const WithLogo = {
+  render: ({ brand, ...args }) => <MegaMenu {...args} {...brandLogos[brand]} />,
+  args: {
+    delay: 5000,
+    sections: sections,
+    brand: 'PreventionWeb',
+  },
+  argTypes: brandArgType,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Logo sits inline with the nav items. Pick a different sub-brand from the **brand** control to see how each logo fits.',
+      },
+    },
+  },
+};
