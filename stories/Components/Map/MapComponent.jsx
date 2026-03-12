@@ -1,3 +1,5 @@
+// TODO: Layered hydration (.fromElement.js + .hydrate.js) not yet adopted for
+// this component. See docs/HYDRATION.md for the pattern.
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';

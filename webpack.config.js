@@ -82,25 +82,28 @@ export default [
     mode: packMode, // Set mode dynamically
     cache: { type: 'filesystem' },
     entry: {
+      hydrate: './src/hydrate.js',
       ShareButtons:
-        './stories/Components/Buttons/ShareButtons/ShareButtons.jsx',
-      MegaMenu: './stories/Components/MegaMenu/MegaMenu.jsx',
+        './stories/Components/Buttons/ShareButtons/ShareButtons.hydrate.js',
+      MegaMenu: './stories/Components/MegaMenu/MegaMenu.hydrate.js',
       ScrollContainer:
-        './stories/Components/ScrollContainer/ScrollContainer.jsx',
+        './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
       MapComponent: './stories/Components/Map/MapComponent.jsx',
-      QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
+      QuoteHighlight:
+        './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
-        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
-      IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
-      Gallery: './stories/Components/Gallery/Gallery.jsx',
-      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.jsx',
+        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.hydrate.js',
+      IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
+      Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
+      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.jsx',
     },
     externals: {
       react: 'react',
       'react-dom': 'react-dom',
+      'react-dom/client': 'react-dom/client',
     },
     output: {
       path: path.resolve(currentDirPath, 'dist/components'),

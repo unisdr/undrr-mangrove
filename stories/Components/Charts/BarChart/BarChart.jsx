@@ -1,3 +1,5 @@
+// TODO: Layered hydration (.fromElement.js + .hydrate.js) not yet adopted for
+// this component. See docs/HYDRATION.md for the pattern.
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
 import { select } from 'd3-selection';

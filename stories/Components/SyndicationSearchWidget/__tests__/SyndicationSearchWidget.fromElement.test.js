@@ -1,0 +1,96 @@
+import syndicationSearchWidgetFromElement from '../SyndicationSearchWidget.fromElement';
+
+function makeContainer(attrs = {}) {
+  const el = document.createElement('div');
+  Object.entries(attrs).forEach(([key, value]) => {
+    el.setAttribute(`data-${key}`, value);
+  });
+  return el;
+}
+
+describe('syndicationSearchWidgetFromElement', () => {
+  it('returns empty config when no data attributes are set', () => {
+    const { config } = syndicationSearchWidgetFromElement(makeContainer());
+    expect(config).toEqual({});
+  });
+
+  it('extracts simple string and number props', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({
+        'search-endpoint': 'https://example.com/search',
+        'results-per-page': '10',
+        'debounce-delay': '500',
+        'min-search-length': '2',
+        'default-query': 'climate',
+        'default-sort': 'newest',
+        'display-mode': 'card',
+        'grid-columns': '3',
+        'query-append': 'AND type:news',
+      })
+    );
+    expect(config.searchEndpoint).toBe('https://example.com/search');
+    expect(config.resultsPerPage).toBe(10);
+    expect(config.debounceDelay).toBe(500);
+    expect(config.minSearchLength).toBe(2);
+    expect(config.defaultQuery).toBe('climate');
+    expect(config.defaultSort).toBe('newest');
+    expect(config.displayMode).toBe('card');
+    expect(config.gridColumns).toBe(3);
+    expect(config.queryAppend).toBe('AND type:news');
+  });
+
+  it('extracts boolean props', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({
+        'show-search-box': 'false',
+        'show-facets': 'true',
+        'show-active-filters': 'false',
+        'show-pager': 'true',
+        'show-search-metrics': 'true',
+        'show-search-timer': 'true',
+        'enable-hash-sync': 'false',
+      })
+    );
+    expect(config.showSearchBox).toBe(false);
+    expect(config.showFacets).toBe(true);
+    expect(config.showActiveFilters).toBe(false);
+    expect(config.showPager).toBe(true);
+    expect(config.showSearchMetrics).toBe(true);
+    expect(config.showSearchTimer).toBe(true);
+    expect(config.enableHashSync).toBe(false);
+  });
+
+  it('only includes boolean props when explicitly set', () => {
+    const { config } = syndicationSearchWidgetFromElement(makeContainer());
+    expect(config).not.toHaveProperty('showSearchBox');
+    expect(config).not.toHaveProperty('showFacets');
+    expect(config).not.toHaveProperty('enableHashSync');
+  });
+
+  it('parses JSON defaultFilters', () => {
+    const filters = [{ key: '_language', value: 'fr' }];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'default-filters': JSON.stringify(filters) })
+    );
+    expect(config.defaultFilters).toEqual(filters);
+  });
+
+  it('parses JSON allowedTypes', () => {
+    const types = ['news', 'event'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'allowed-types': JSON.stringify(types) })
+    );
+    expect(config.allowedTypes).toEqual(types);
+  });
+
+  it('ignores malformed JSON gracefully', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({
+        'default-filters': 'not-json',
+        'allowed-types': '{broken',
+      })
+    );
+    expect(config).not.toHaveProperty('defaultFilters');
+    expect(config).not.toHaveProperty('allowedTypes');
+  });
+});

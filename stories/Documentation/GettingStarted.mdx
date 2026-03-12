@@ -228,6 +228,16 @@ function App() {
   → See React Integration Guide
 </LinkTo>
 
+### 🔌 Approach 4: Server-rendered hydration
+
+**Best for**: Drupal, Astro, or any server-rendered framework that needs React interactivity
+
+- Server renders HTML containers with `data-mg-*` attributes
+- The `createHydrator` runtime finds containers, extracts props, and mounts React components
+- Each component ships a `fromElement` function for prop extraction — no hand-written boilerplate per wrapper
+
+[→ See Hydration guide on GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md)
+
 ## Architecture overview
 
 Mangrove follows a loose [atomic design](https://atomicdesign.bradfrost.com/) methodology:
