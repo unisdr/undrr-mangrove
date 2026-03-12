@@ -134,7 +134,7 @@
     z-index: 100;
   }
 
-  // Inline chevron indicator (CSS border triangle — no Unicode dependency)
+  // Inline chevron indicator (CSS border triangle)
   &__title a::after {
     border-color: currentColor;
     border-style: solid;
