@@ -38,23 +38,23 @@ Mangrove is the universal system for all UNDRR web properties.
 
 ## Why Mangrove is the default
 
-UNDRR experienced firsthand how design fragmentation led to inefficiencies and rising maintenance costs. Previously, each platform, from PreventionWeb to the Sendai Framework Monitor—maintained its own UI system, multiplying effort across accessibility, rebranding, and onboarding tasks.
+UNDRR experienced firsthand how design fragmentation led to inefficiencies and rising maintenance costs. Previously, each platform (PreventionWeb, Sendai Framework Monitor, and others) maintained its own UI system, multiplying effort across accessibility, rebranding, and onboarding tasks.
 
 **Operational challenges included:**
 
-- 🔍 Duplicated bug fixes across platforms
-- 🎨 Inconsistent design updates
-- 👥 Repetitive onboarding workflows
-- ♿ Fragmented accessibility compliance
-- 🚀 Slowed feature development due to redundant problem-solving
+- Duplicated bug fixes across platforms
+- Inconsistent design updates
+- Repetitive onboarding workflows
+- Fragmented accessibility compliance
+- Slowed feature development due to redundant problem-solving
 
-Mangrove eliminates these inefficiencies by serving as a single source of truth for the UNDRR digital experience. The result is:
+Mangrove is the single source of truth for the UNDRR digital experience. This means:
 
-- **Consistent branding** that strengthens recognition
-- **Unified user experiences** across properties
-- **Improved developer productivity** with reusable components
-- **Built-in accessibility compliance**
-- **Streamlined maintenance** with centralized updates
+- Consistent branding that strengthens recognition
+- Unified user experiences across properties
+- Improved developer productivity with reusable components
+- Built-in accessibility compliance
+- Centralized updates that reach all properties at once
 
 ## What using Mangrove means
 
@@ -156,20 +156,21 @@ For users navigating multiple UNDRR properties:
 New engineers apply shared Mangrove knowledge across projects:
 
 ```jsx
-import { CtaButton, VerticalCard } from '@undrr/undrr-mangrove';
+import { StatsCard, QuoteHighlight } from '@undrr/undrr-mangrove';
 
-function ReportCard({ report }) {
+function ReportSummary({ report }) {
   return (
-    <VerticalCard
-      title={report.title}
-      description={report.summary}
-      image={report.coverImage}
-      footer={
-        <CtaButton variant="primary" onClick={() => downloadReport(report.id)}>
-          Download PDF
-        </CtaButton>
-      }
-    />
+    <>
+      <QuoteHighlight
+        quote={report.pullQuote}
+        attribution={report.author}
+        variant="line"
+      />
+      <StatsCard
+        title={report.title}
+        stats={report.keyStats}
+      />
+    </>
   );
 }
 ```
@@ -318,13 +319,13 @@ Mangrove supports diverse tech stacks:
 ### React
 
 ```jsx
-import { CtaButton, Hero } from '@undrr/undrr-mangrove';
+import { StatsCard, ShareButtons } from '@undrr/undrr-mangrove';
 ```
 
 ### Sass
 
 ```scss
-@import '~@undrr/undrr-mangrove/scss/variables';
+@import "stories/assets/scss/variables";
 ```
 
 ### Traditional templates (e.g. PHP, Drupal)
@@ -354,12 +355,10 @@ import { CtaButton, Hero } from '@undrr/undrr-mangrove';
 
 ## The bottom line
 
-Mangrove is more than a common system, it's our commitment to accessible, consistent digital experiences for disaster risk reduction worldwide.
-
-**Use it, extend it, improve it ... just don’t reinvent it.**
+Mangrove is how UNDRR ships consistent, accessible web experiences. Use it, extend it, improve it -- just don’t reinvent it.
 
 **Next steps:**
 
-- **<LinkTo kind="getting-started-a-getting-started-guide" story="docs">Review the Getting Started Guide</LinkTo>**
-- **<LinkTo kind="getting-started-component-contribution-guide" story="docs">See the Component Contribution Guide</LinkTo>**
-- **Contact the UNDRR web team** for project-specific guidance
+- <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo>
+- <LinkTo kind="getting-started-component-contribution-guide" story="docs">Component contribution guide</LinkTo>
+- Contact the UNDRR web team for project-specific guidance

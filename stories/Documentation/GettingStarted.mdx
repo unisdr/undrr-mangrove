@@ -17,35 +17,35 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <TableOfContents
   tocData={[
     { id: 'what-is-mangrove', text: 'What is Mangrove?' },
-    { id: 'quick-start', text: 'Quick Start' },
-    { id: 'integration-approaches', text: 'Integration Approaches' },
-    { id: 'architecture-overview', text: 'Architecture Overview' },
-    { id: 'key-principles', text: 'Key Principles' },
-    { id: 'common-use-cases', text: 'Common Use Cases' },
-    { id: 'development-setup', text: 'Development Setup' },
-    { id: 'assets-location', text: 'Assets Location' },
+    { id: 'quick-start', text: 'Quick start' },
+    { id: 'integration-approaches', text: 'Integration approaches' },
+    { id: 'architecture-overview', text: 'Architecture overview' },
+    { id: 'key-principles', text: 'Key principles' },
+    { id: 'common-use-cases', text: 'Common use cases' },
+    { id: 'development-setup', text: 'Development setup' },
+    { id: 'assets-location', text: 'Assets location' },
     { id: 'analytics-and-messaging', text: 'Analytics and messaging' },
     { id: 'ai-assisted-development', text: 'AI-assisted development' },
-    { id: 'next-steps', text: 'Next Steps' },
-    { id: 'need-help', text: 'Need Help?' },
+    { id: 'next-steps', text: 'Next steps' },
+    { id: 'need-help', text: 'Need help?' },
   ]}
   showNumbers={false}
 />
 
-Welcome to UNDRR Mangrove — a component library to bring consistency, accessibility, and speed to UNDRR web development.
+UNDRR Mangrove is a component library for consistent, accessible UNDRR web development.
 
-Before diving into implementation, it's important to understand that **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove is the UNDRR standard</LinkTo>** for all web properties. This guide will help you get started quickly, but understanding the broader context and governance around Mangrove ensures you're building in alignment with UNDRR's digital strategy.
+**<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove is the UNDRR standard</LinkTo>** for all web properties. Review those standards before starting a new project so your implementation aligns with the organizational approach.
 
 ## What is mangrove?
 
 Mangrove is UNDRR's component library that provides:
 
-- **Pre-built, tested components** ready for production
-- **Consistent design** across all UNDRR projects
-- **Accessibility built-in** with WCAG 2.1 AA compliance
-- **Framework flexibility** -- works with any tech stack
-- **Copy-paste ready** code snippets
-- **Comprehensive documentation** with live examples
+- Pre-built, tested components ready for production
+- Consistent design across all UNDRR projects
+- WCAG 2.1 AA accessibility compliance
+- Works with any tech stack (React, Drupal, static HTML)
+- Copy-paste ready code snippets
+- Live examples and documentation for every component
 
 ## Quick start
 
@@ -211,8 +211,8 @@ https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
 ### Basic node usage
 
 ```jsx
+// CSS: load via CDN <link> tag (see "Including styles" in the React integration guide)
 import { StatsCard, QuoteHighlight } from '@undrr/undrr-mangrove';
-import '@undrr/undrr-mangrove/dist/css/style.css';
 
 function App() {
   return (
@@ -299,15 +299,10 @@ Molecules (component groups)
 
 ### Framework agnostic
 
-Mangrove is designed to be framework agnostic, meaning it can work seamlessly with nearly any existing system. This approach offers maximum flexibility and ease of integration across various projects and technologies.
+Mangrove works with any technology stack: React, Vue, Angular, plain HTML, WordPress, Drupal, etc.
 
-Works with any technology stack - React, Vue, Angular, plain HTML, WordPress, Drupal, etc.
-
-Key features of our framework-agnostic approach:
-
-- **Minimal dependencies**: Our design system avoids reliance on specific frameworks or libraries to prevent conflicts with your existing projects.
-- **Easy integration**: You can easily incorporate our design system into your project, regardless of the framework or technology stack you're using.
-- **Consistent design**: The design system maintains a consistent look and feel across different implementations by focusing on repeatable HTML structures.
+- Minimal dependencies, so it won't conflict with your existing setup
+- Repeatable HTML structures keep the look and feel consistent across implementations
 
 ### CSS namespace
 
@@ -523,15 +518,15 @@ All CSS classes use the mg- prefix.
 
 ## Next steps
 
-1. **Choose your integration approach** from the guides above
-2. **Browse the component library** in the sidebar to see what is available
-3. **Read <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>** for guidance on accessibility, performance, and theming
-4. **Review the <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo>** if you are building a React application
-5. **Report issues or request features** on [GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
+1. Choose your integration approach from the guides above
+2. Browse the component library in the sidebar
+3. Read the <LinkTo kind="getting-started-best-practices" story="docs">best practices</LinkTo> for accessibility, performance, and theming
+4. Review the <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo> if you are building a React application
+5. [Report issues or request features](https://gitlab.com/undrr/web-backlog/-/issues) on GitLab
 
 ## Need help?
 
-- **Documentation**: Browse components in the sidebar
-- **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
-- **Questions**: Contact the UNDRR development team
-- **Updates**: Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
+- Browse components in the sidebar for documentation
+- [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
+- Contact the UNDRR development team with questions
+- Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases) for updates

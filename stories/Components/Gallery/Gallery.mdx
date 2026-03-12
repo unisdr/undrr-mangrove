@@ -14,14 +14,14 @@ The Gallery component displays a collection of media items with thumbnail naviga
 
 ### Key features
 
-- **Multiple media types**: Images, videos, embeds (YouTube, Vimeo), and custom HTML
-- **Thumbnail navigation**: Clickable thumbnails on left or bottom
-- **Keyboard navigation**: Arrow keys, Home, End support
-- **Responsive design**: Adapts from desktop to mobile seamlessly
-- **Flexible layout**: Handles various aspect ratios gracefully
-- **Accessible**: Full ARIA support and screen reader friendly
-- **Optional descriptions**: Display titles and captions below content
-- **Customizable**: Control visibility of thumbnails, arrows, and descriptions
+- Multiple media types: images, videos, embeds (YouTube, Vimeo), and custom HTML
+- Clickable thumbnails on left or bottom
+- Keyboard navigation with arrow keys, Home, End
+- Responsive layout that adapts from desktop to mobile
+- Handles mixed aspect ratios (landscape, portrait, square, panoramic)
+- Full ARIA support and screen reader friendly
+- Optional titles and captions below content
+- Configurable visibility of thumbnails, arrows, and descriptions
 
 ## Basic usage
 
@@ -232,22 +232,22 @@ function MyGallery() {
 
 ## Best practices
 
-### Do's
+### Do
 
-- ✅ Provide meaningful `alt` text for all images
-- ✅ Use descriptive titles and captions when helpful
-- ✅ Keep image file sizes optimized for web
-- ✅ Ensure images have appropriate resolution for display size
-- ✅ Test keyboard navigation
-- ✅ Verify contrast for arrow buttons on image backgrounds
+- Provide meaningful `alt` text for all images
+- Use descriptive titles and captions when helpful
+- Keep image file sizes optimized for web
+- Ensure images have appropriate resolution for display size
+- Test keyboard navigation
+- Verify contrast for arrow buttons on image backgrounds
 
-### Don'ts
+### Don't
 
-- ❌ Don't use identical `id` values for different images
-- ❌ Don't omit `alt` text
-- ❌ Don't disable keyboard navigation without good reason
-- ❌ Don't use extremely large images without optimization
-- ❌ Don't mix very different image qualities
+- Use identical `id` values for different images
+- Omit `alt` text
+- Disable keyboard navigation without good reason
+- Use extremely large images without optimization
+- Mix very different image qualities
 
 ## Browser support
 

@@ -74,7 +74,7 @@ The import order inside each theme entry point controls this:
 @import "./components";
 ```
 
-The key detail: `_variables.scss` declares the interactive-color and component tokens with `!default`. The theme file `_variables-preventionweb.scss` imports after `_variables.scss` and reassigns the same variable names **without** `!default`, so its values take precedence for all subsequent SCSS.
+`_variables.scss` declares the interactive-color and component tokens with `!default`. The theme file `_variables-preventionweb.scss` imports after `_variables.scss` and reassigns the same variable names **without** `!default`, so its values take precedence for all subsequent SCSS.
 
 ### What each theme overrides
 

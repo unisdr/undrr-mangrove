@@ -535,14 +535,14 @@ Many other components (Breadcrumbs, Buttons, Cards, Forms, Tab, Table, Hero) inc
 
 When building or reviewing a component, verify each of these:
 
-- [ ] **Logical properties**: Use `margin-inline-*`, `padding-inline-*`, `inset-inline-*` instead of physical `left`/`right` equivalents
-- [ ] **Text alignment**: Use `text-align: start` / `text-align: end` instead of `left` / `right`
-- [ ] **Directional icons**: Flip arrows, chevrons, and carets under `[dir="rtl"]` (typically by reversing a `transform`)
-- [ ] **Border and separator placement**: Swap `border-left` / `border-right` under `[dir="rtl"]`, or use `border-inline-start` / `border-inline-end`
-- [ ] **Flexbox and grid**: `flex-direction: row` already reverses in RTL — verify the visual result is correct and avoid forcing `row-reverse`
-- [ ] **Absolute positioning**: Replace `left` / `right` with `inset-inline-start` / `inset-inline-end`
-- [ ] **Transforms**: Reverse `translateX` and `rotate` values under `[dir="rtl"]` where direction matters
-- [ ] **No hardcoded directional values**: Avoid inline styles with `left`, `right`, `marginLeft`, `marginRight` — these do not respond to `dir`
+- [ ] Use `margin-inline-*`, `padding-inline-*`, `inset-inline-*` instead of physical `left`/`right` equivalents
+- [ ] Use `text-align: start` / `text-align: end` instead of `left` / `right`
+- [ ] Flip arrows, chevrons, and carets under `[dir="rtl"]` (typically by reversing a `transform`)
+- [ ] Swap `border-left` / `border-right` under `[dir="rtl"]`, or use `border-inline-start` / `border-inline-end`
+- [ ] Verify `flex-direction: row` reverses correctly in RTL; avoid forcing `row-reverse`
+- [ ] Replace positional `left` / `right` with `inset-inline-start` / `inset-inline-end`
+- [ ] Reverse `translateX` and `rotate` values under `[dir="rtl"]` where direction matters
+- [ ] Avoid inline styles with `left`, `right`, `marginLeft`, `marginRight` (these do not respond to `dir`)
 
 ### Testing with the locale toolbar
 
