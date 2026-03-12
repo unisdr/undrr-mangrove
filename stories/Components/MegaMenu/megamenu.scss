@@ -51,17 +51,18 @@
 
   // Logo link
   &__logo {
-    flex-shrink: 0;
+    flex-shrink: 1;
+    min-width: 0; // allow shrinking below intrinsic size
     display: flex;
     align-items: center;
     padding: $mg-spacing-100 $mg-spacing-150;
-    z-index: 15; // above hamburger overlay
   }
 
   // Logo image
   &__logo-img {
     display: block;
     height: 3rem;
+    max-width: 100%;
     width: auto;
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
