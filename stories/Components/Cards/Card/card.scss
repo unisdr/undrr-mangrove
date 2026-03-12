@@ -142,7 +142,7 @@
     content: "\2060"; // Word joiner: prevents caret from orphaning on its own line
     display: inline-block;
     height: 0.35em;
-    margin-inline-start: 0.25em;
+    padding-inline-start: 0.25em; // Padding (not margin) so parent underline skips the gap
     position: relative;
     top: -0.1em;
     transform: rotate(45deg);
