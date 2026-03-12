@@ -294,7 +294,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    When writing stories for TypeScript components, use CSF3 object syntax with Storybook's `Meta` and `StoryObj` types:
 
    ```tsx
-   import type { Meta, StoryObj } from '@storybook/react';
+   import type { Meta, StoryObj } from '@storybook/react-webpack5';
    import TypedButton from './TypedButton';
 
    const meta: Meta<typeof TypedButton> = {
@@ -341,7 +341,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Prefer interfaces for public APIs and type aliases for props and other internal types
    - Include proper JSDoc comments even with TypeScript types (they provide additional context)
 
-5. **Example TypeScript Component**
+5. **Example TypeScript component**
 
    The Mangrove library includes a TypeScript example component in `stories/Components/TypeScriptExampleComponent` that demonstrates these principles:
 
@@ -351,29 +351,62 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 
    type ButtonProps = {
+     /** Button label text */
      label: string;
-     type: string;
+     /** Visual style variant */
+     type: 'Primary' | 'Secondary';
+     /** Button width in pixels */
      width: number;
+     /** Optional click handler */
+     onClick?: () => void;
    };
 
-   function TypeScriptExampleComponent({ label, type, width }: ButtonProps) {
+   function TypeScriptExampleComponent({
+     label,
+     type,
+     width,
+     onClick,
+   }: ButtonProps): JSX.Element {
      return (
-       <>
-         <CtaButton
-           label={label}
-           Type={type}
-           State="Default"
-           For_Primary="Text"
-           variant="contained"
-           style={{ width: `${width}px` }}
-         >
-           {label}
-         </CtaButton>
-       </>
+       <CtaButton
+         label={label}
+         Type={type}
+         State="Default"
+         For_Primary="Text"
+         variant="contained"
+         style={{ width: `${width}px` }}
+         onClick={onClick}
+       >
+         {label}
+       </CtaButton>
      );
    }
 
    export default TypeScriptExampleComponent;
+   ```
+
+   And its CSF3 stories file:
+
+   ```tsx
+   // TypeScriptExampleComponent.stories.tsx
+   import type { Meta, StoryObj } from '@storybook/react-webpack5';
+   import TypeScriptExampleComponent from './TypeScriptExampleComponent';
+
+   const meta: Meta<typeof TypeScriptExampleComponent> = {
+     title: 'Example/TypeScript component',
+     component: TypeScriptExampleComponent,
+   };
+
+   export default meta;
+   type Story = StoryObj<typeof TypeScriptExampleComponent>;
+
+   export const Submit: Story = {
+     args: {
+       label: 'Submit',
+       type: 'Secondary',
+       width: 400,
+     },
+   };
    ```
 
 ### Styling guidelines

@@ -1,25 +1,26 @@
-import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import TypeScriptExampleComponent from './TypeScriptExampleComponent';
-import { ComponentMeta, ComponentStory } from 'storybook/react-webpack5';
 
-export default {
-  title: 'Example/TypeScript Component',
+const meta: Meta<typeof TypeScriptExampleComponent> = {
+  title: 'Example/TypeScript component',
   component: TypeScriptExampleComponent,
-} as ComponentMeta<typeof TypeScriptExampleComponent>;
-
-const Template: ComponentStory<typeof TypeScriptExampleComponent> = (
-  args: React.ComponentProps<typeof TypeScriptExampleComponent>
-) => <TypeScriptExampleComponent {...args} />;
-export const Submit = Template.bind({});
-Submit.args = {
-  label: 'Button',
-  type: 'Secondary',
-  width: 400,
 };
 
-export const Check = Template.bind({});
-Check.args = {
-  label: 'Button',
-  type: 'Secondary',
-  width: 400,
+export default meta;
+type Story = StoryObj<typeof TypeScriptExampleComponent>;
+
+export const Submit: Story = {
+  args: {
+    label: 'Submit',
+    type: 'Secondary',
+    width: 400,
+  },
+};
+
+export const Check: Story = {
+  args: {
+    label: 'Check',
+    type: 'Secondary',
+    width: 400,
+  },
 };
