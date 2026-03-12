@@ -3,9 +3,9 @@ import * as SyndicationSearchWidgetStories from './SyndicationSearchWidget.stori
 
 <Meta of={SyndicationSearchWidgetStories} />
 
-# UNDRR Syndication Search Widget
+# UNDRR syndication search widget
 
-The **UNDRR Syndication Search Widget** is a full-featured search interface tightly coupled with the UNDRR web platform. It integrates with Elasticsearch via the UNDRR `/search-endpoint` proxy and is designed specifically to query content from UNDRR domains (undrr.org, preventionweb.net, and related sites).
+The **UNDRR syndication search widget** is a full-featured search interface tightly coupled with the UNDRR web platform. It integrates with Elasticsearch via the UNDRR `/search-endpoint` proxy and is designed specifically to query content from UNDRR domains (undrr.org, preventionweb.net, and related sites).
 
 Built with React 19 concurrent rendering (`useDeferredValue`, `useTransition`).
 
@@ -15,13 +15,13 @@ Built with React 19 concurrent rendering (`useDeferredValue`, `useTransition`).
 
 ## Features
 
-- **Responsive input**: Uses `useDeferredValue` to keep the input responsive while searching
-- **Non-blocking updates**: Uses `useTransition` for smooth result updates
-- **Active filters**: Displays removable chips for selected filters
-- **Accessibility**: Full ARIA support, keyboard navigation, screen reader announcements
-- **Theming**: Uses Mangrove design tokens for consistent styling
-- **Mobile-first**: Left-slide filter drawer on mobile, inline sidebar on desktop
-- **Zero external dependencies**: Custom select dropdowns with Chosen-like functionality (searchable, multi-select) without requiring Chosen.js or any other library
+- Uses `useDeferredValue` to keep the input responsive while searching
+- Uses `useTransition` for smooth, non-blocking result updates
+- Removable filter chips for active filters
+- Full ARIA support, keyboard navigation, screen reader announcements
+- Styled with Mangrove design tokens
+- Left-slide filter drawer on mobile, inline sidebar on desktop
+- Custom select dropdowns (searchable, multi-select) with no external dependencies like Chosen.js
 
 ## Default
 
@@ -235,7 +235,7 @@ A static HTML mockup for CSS testing without API calls.
 ## Usage
 
 ```jsx
-import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget';
+import { SyndicationSearchWidget } from '@undrr/undrr-mangrove';
 
 <SyndicationSearchWidget
   config={{
@@ -351,6 +351,59 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 - Keyboard navigation with Tab, Enter, and Escape
 - Screen reader announcements for result counts and filter changes
 - Focus management on filter removal
+
+## Server-rendered / CDN usage
+
+SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: `fromElement` extracts only the attributes present on the container, and consumer wrappers can merge additional config (customFacets, customFilters, etc.) that is too complex for data attributes.
+
+```html
+<div data-mg-search-widget
+  data-search-endpoint="/search-endpoint"
+  data-results-per-page="50"
+  data-default-query=""
+  data-default-sort="relevance"
+  data-display-mode="list"
+  data-show-facets="true"
+  data-show-search-box="true"
+  data-show-results-count="true"
+  data-show-active-filters="true"
+  data-show-pager="true"
+  data-enable-hash-sync="true"
+  data-default-filters='[{"key":"_language","value":"en"}]'>
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-search-endpoint` | — | Elasticsearch proxy URL |
+| `data-results-per-page` | — | Number of results per page |
+| `data-debounce-delay` | — | Milliseconds before executing search |
+| `data-min-search-length` | — | Minimum characters to trigger search |
+| `data-default-query` | — | Initial search query |
+| `data-default-sort` | — | Initial sort order |
+| `data-display-mode` | — | `'list'`, `'card'`, or `'card-book'` |
+| `data-grid-columns` | — | Grid columns for card modes (2-6) |
+| `data-query-append` | — | Query string to append to all searches |
+| `data-show-search-box` | — | Show search input |
+| `data-show-results-count` | — | Show result count |
+| `data-show-facets` | — | Show facets sidebar |
+| `data-show-active-filters` | — | Show active filter chips |
+| `data-show-pager` | — | Show pagination |
+| `data-show-search-metrics` | — | Show debug metrics |
+| `data-show-search-timer` | — | Show search execution time |
+| `data-enable-hash-sync` | — | Sync search state to URL hash |
+| `data-default-filters` | — | JSON array of `{key, value}` filter objects |
+| `data-allowed-types` | — | JSON object restricting content type options |
+
+All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js";
+import SyndicationSearchWidget, { fromElement } from "https://assets.undrr.org/static/mangrove/1.3.3/components/SyndicationSearchWidget.js";
+createHydrator({ selector: "[data-mg-search-widget]", component: SyndicationSearchWidget, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
 

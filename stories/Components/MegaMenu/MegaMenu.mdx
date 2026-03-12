@@ -55,17 +55,17 @@ import { MegaMenu } from '@components';
 
 `logoHref` defaults to `'/'`. The component doesn't know or care about language prefixes (`/ar/`, `/fr/`, etc.) because URL structure varies between CMSs.
 
-In Drupal, have the Twig template output the language-prefixed root into a data attribute. The wrapper script reads it and passes it as `logoHref`. Example for an Arabic page:
+In Drupal, have the Twig template output the language-prefixed root into a data attribute. The wrapper reads `data-mg-mega-menu-logo-*` attributes, which override the default `SITE_LOGOS` body class lookup. Example for an Arabic page:
 
 ```html
 <div data-mg-mega-menu
-     data-mg-mega-menu-logo="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+     data-mg-mega-menu-logo-src="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
      data-mg-mega-menu-logo-alt="PreventionWeb"
      data-mg-mega-menu-logo-href="/ar/">
 </div>
 ```
 
-Twig is the right place to resolve the prefix. The React component just renders whatever href it receives.
+Twig is the right place to resolve the prefix. The React component just renders whatever href it receives. If no logo data attributes are set, the Drupal wrapper falls back to a `SITE_LOGOS` map that resolves the logo from the body class (e.g., `mg-current-domain--www-preventionweb-net`).
 
 ## Props
 
@@ -79,6 +79,78 @@ Twig is the right place to resolve the prefix. The React component just renders 
 | logoHref   | string | '/'     | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
 | logoWidth  | number | —       | Optional explicit width for CLS prevention                                                               |
 | logoHeight | number | —       | Optional explicit height for CLS prevention                                                              |
+
+## Accessibility
+
+### Keyboard navigation
+
+- **Arrow Left / Arrow Right**: Moves focus between top-level menu items in the menu bar
+- **Arrow Down**: From a top-level item, moves focus into the open submenu section; within the sidebar, moves focus to the next menu item (or into the expanded section)
+- **Arrow Up**: Within the sidebar, moves focus to the previous menu item
+- **Tab / Shift+Tab**: Moves focus through focusable elements within an open submenu section
+- **Escape**: Closes any open submenu panel and returns to the top-level menu bar
+- Focus on a top-level item also triggers its submenu to open (via `onFocus`)
+
+### ARIA attributes
+
+- The root `<nav>` element has `aria-label="Main Navigation"`
+- The top bar uses `role="menubar"` with `aria-label="Main navigation menu"`
+- Top-level menu items use `role="menuitem"` with `aria-haspopup="true"` when they have submenus, and `aria-expanded` to indicate open/closed state
+- Parent `<li>` elements use `role="none"` to remove implicit list semantics from the menu pattern
+- Submenu panels use `role="region"` with `aria-label="Menu section"` and `aria-live="polite"` to announce content changes
+- Nested submenu lists use `role="menu"` with descriptive `aria-label` values (e.g., "Categories", "Submenu items")
+- Nested links use `role="menuitem"` and `aria-haspopup` when they contain further sub-items
+- Category links use `aria-current="page"` to indicate the currently highlighted category
+
+### Mobile menu
+
+- The hamburger button has `aria-label="Toggle navigation menu"` and `aria-haspopup="true"`; its icon is marked `aria-hidden="true"`
+- The mobile sidebar uses `role="dialog"` with `aria-label="Mobile navigation menu"`
+- Sidebar section buttons have `aria-expanded` and `aria-pressed` to indicate open/closed state
+- The backdrop overlay is a `<button>` element with `aria-label="Close mobile navigation"`
+
+### Branded variant
+
+- When `logoSrc` is provided, the logo link has `aria-label` set to `logoAlt` (falling back to "Home")
+
+### Known limitations
+
+- Focus is not explicitly trapped within the mobile sidebar dialog; users can Tab to elements behind the overlay
+- The hamburger button does not reflect the sidebar's open state via `aria-expanded`
+- When a submenu closes (via Escape or mouse leave), focus is not programmatically returned to the triggering menu item
+
+## Server-rendered / CDN usage
+
+MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
+
+```html
+<div data-mg-mega-menu
+  data-delay="300"
+  data-hover-delay="180"
+  data-sections='[{"title":"About","items":[...]}]'>
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-delay` | `300` | Delay in ms before closing the menu on mouse leave |
+| `data-hover-delay` | `180` | Delay in ms before opening the menu on hover |
+| `data-sections` | — | JSON array of menu sections (optional; most consumers provide this via API) |
+| `data-logo-src` | — | Logo image URL |
+| `data-logo-alt` | `''` | Alt text for the logo image |
+| `data-logo-href` | `'/'` | Where the logo links to (e.g., `/ar/` for language-prefixed root) |
+| `data-logo-width` | — | Explicit width for CLS prevention |
+| `data-logo-height` | — | Explicit height for CLS prevention |
+
+In Drupal, the wrapper reads the prefixed form (`data-mg-mega-menu-logo-src`, `data-mg-mega-menu-logo-alt`, etc.) following the Drupal `data-mg-{component}-{prop}` convention. These override the `SITE_LOGOS` body class lookup. For CDN / vanilla HTML consumers, use the short `data-logo-*` names listed above (read by `fromElement`).
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js";
+import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/1.3.3/components/MegaMenu.js";
+createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
 

@@ -23,8 +23,10 @@ The simplest way to use Mangrove - perfect for static sites, legacy projects, or
     { id: 'css-themes', text: 'CSS themes' },
     { id: 'component-reference', text: 'Component reference' },
     { id: 'javascript', text: 'JavaScript' },
+    { id: 'complete-html-page', text: 'Complete HTML page' },
     { id: 'undrr-integration', text: 'UNDRR integration' },
     { id: 'best-practices', text: 'Best practices' },
+    { id: 'troubleshooting', text: 'Troubleshooting' },
     { id: 'next-steps', text: 'Next steps' },
   ]}
   showNumbers={false}
@@ -77,7 +79,7 @@ Add these `<link>` tags to your HTML `<head>`:
 </html>
 ```
 
-### 2. Copy HTML Structures
+### 2. Copy HTML structures
 
 Browse the component library, click the "HTML" tab, and copy the markup:
 
@@ -96,7 +98,7 @@ Browse the component library, click the "HTML" tab, and copy the markup:
 
 Choose the theme that matches your UNDRR property:
 
-**UNDRR Official Theme**
+**UNDRR (default)** — undrr.org, sendaiframework.org
 
 ```html
 <link
@@ -105,12 +107,30 @@ Choose the theme that matches your UNDRR property:
 />
 ```
 
-**Prevention Web Theme**
+**PreventionWeb** — preventionweb.net
 
 ```html
 <link
   rel="stylesheet"
   href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-preventionweb.css"
+/>
+```
+
+**MCR2030** — mcr2030.undrr.org
+
+```html
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-mcr.css"
+/>
+```
+
+**IRP** — recovery.preventionweb.net
+
+```html
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-irp.css"
 />
 ```
 
@@ -218,11 +238,18 @@ For complex interactive components (MegaMenu, charts, maps), use precompiled Rea
 
 | Component | CDN Path | Use case |
 |-----------|----------|----------|
-| MegaMenu | `/components/MegaMenu.js` | Full navigation with dropdowns |
 | ShareButtons | `/components/ShareButtons.js` | Social sharing |
+| MegaMenu | `/components/MegaMenu.js` | Full navigation with dropdowns |
+| ScrollContainer | `/components/ScrollContainer.js` | Horizontal scrolling |
 | BarChart | `/components/BarChart.js` | Data visualization |
 | MapComponent | `/components/MapComponent.js` | Interactive maps |
-| ScrollContainer | `/components/ScrollContainer.js` | Horizontal scrolling |
+| QuoteHighlight | `/components/QuoteHighlight.js` | Styled pull quotes |
+| Fetcher | `/components/Fetcher.js` | Data fetching wrapper |
+| SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` | PreventionWeb search |
+| IconCard | `/components/IconCard.js` | Icon-based info cards |
+| Gallery | `/components/Gallery.js` | Image gallery with thumbnails |
+| StatsCard | `/components/StatsCard.js` | Statistics display |
+| Pager | `/components/Pager.js` | Pagination controls |
 
 React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
 
@@ -230,10 +257,10 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 <script type="importmap">
   {
     "imports": {
-      "react": "https://esm.sh/react@19.2.0",
-      "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
-      "react-dom": "https://esm.sh/react-dom@19.2.0",
-      "react-dom/": "https://esm.sh/react-dom@19.2.0/"
+      "react": "https://esm.sh/react@19.2.4",
+      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.2.4",
+      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
     }
   </script>
   <!--
@@ -290,7 +317,7 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 </body>
 ```
 
-**Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.2.0?dev`).
+**Tip:** For debugging, use dev builds by adding `?dev` to esm.sh URLs (e.g., `https://esm.sh/react@19.2.4?dev`).
 
 ### Hydration helper (recommended)
 
@@ -349,6 +376,66 @@ For most use cases, the vanilla HTML markup (shown in component docs) is simpler
 
 [See complete working example on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — includes React MegaMenu, header, hero, tabs, footer, analytics, and messaging.
 
+## Complete HTML page
+
+A self-contained page you can save as an `.html` file and open in a browser. It loads the UNDRR theme, sets up an import map for React, and renders a ShareButtons component using the hydration helper.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mangrove component demo</title>
+
+    <!-- Mangrove CSS theme -->
+    <link
+      rel="stylesheet"
+      href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css"
+    />
+
+    <!-- Import map: provides React to Mangrove ES module bundles -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.2.4",
+          "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
+          "react-dom": "https://esm.sh/react-dom@19.2.4",
+          "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="mg-container">
+      <h1>Share this page</h1>
+
+      <!-- Mount point: the hydrator finds this element by its data attribute -->
+      <section
+        data-mg-share-buttons
+        data-main-label="Share this"
+        data-on-copy-label="Link copied"
+        data-sharing-subject="Mangrove demo page"
+      ></section>
+    </main>
+
+    <!-- Load the hydration runtime and component, then mount -->
+    <script type="module">
+      import createHydrator from 'https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js';
+      import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.3.3/components/ShareButtons.js';
+
+      createHydrator({
+        selector: '[data-mg-share-buttons]',
+        component: ShareButtons,
+        fromElement,
+      });
+    </script>
+  </body>
+</html>
+```
+
+To use a different component, swap the import path and selector. Components with hydration support (ShareButtons, MegaMenu, ScrollContainer, QuoteHighlight, Gallery, IconCard, StatsCard, SyndicationSearchWidget) all follow this same pattern. Components without hydration support (BarChart, MapComponent, Fetcher, Pager) require manual mounting with `createRoot` as shown in the [manual mounting](#manual-mounting-for-components-without-hydration-support) section above.
+
 ## UNDRR integration
 
 All UNDRR pages should include analytics and messaging scripts.
@@ -382,13 +469,55 @@ Optionally add a container for message placement:
 
 See [Critical messaging](/?path=/docs/getting-started-critical-messaging--docs) for full documentation.
 
+## Troubleshooting
+
+### Import map browser support
+
+Import maps are supported in Chrome 89+, Safari 16.4+, and Firefox 108+. For older browsers, add the [es-module-shims](https://github.com/guybedford/es-module-shims) polyfill before your import map:
+
+```html
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.1/dist/es-module-shims.js"></script>
+<script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.2.4",
+      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.2.4",
+      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+    }
+  }
+</script>
+```
+
+### CORS errors when self-hosting
+
+If you host Mangrove JS files on your own server, the browser may block cross-origin imports. Ensure your server sends the correct headers:
+
+```
+Access-Control-Allow-Origin: *
+Content-Type: application/javascript
+```
+
+When serving from `assets.undrr.org`, CORS headers are already configured.
+
+### Component renders as blank
+
+If a `data-mg-*` container stays empty after the page loads, check these items in order:
+
+1. **Import map present?** The `<script type="importmap">` block must appear before any `<script type="module">` tags. Browsers ignore import maps added after the first module script runs.
+2. **React version mismatch?** The `react` and `react-dom` versions in the import map must match. Mixing versions causes silent failures.
+3. **Correct selector?** The `selector` passed to `createHydrator` must match the `data-mg-*` attribute on the container element. Open the browser console and look for errors from the hydration runtime.
+4. **Network failures?** Open DevTools > Network tab and check that all `.js` files loaded with status 200. A 404 on the component or `hydrate.js` will prevent rendering.
+5. **Multiple import maps?** Browsers only support one `<script type="importmap">` per page. If you have multiple, only the first one applies.
+6. **Console errors?** `createHydrator` logs errors to `console.error` and restores the original container HTML on failure. Check the browser console for details.
+
 ## Next steps
 
-- **Browse Components**: Explore the component library in the sidebar
-- **Copy HTML**: Use the HTML tab in each component story
-- **CDN URLs**: See the [CDN reference](/?path=/docs/getting-started-cdn-reference--docs) for all available assets
-- **Customize**: Override CSS variables for theming
-- **Upgrade**: Consider [React Integration](/?path=/docs/getting-started-react-integration--docs) for dynamic applications
-- **Server-rendered hydration**: See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering React components into server-generated containers
+- Explore the component library in the sidebar
+- Use the HTML tab in each component story to copy markup
+- See the [CDN reference](/?path=/docs/getting-started-cdn-reference--docs) for all available assets
+- Override CSS variables for theming
+- Consider the [React integration guide](/?path=/docs/getting-started-react-integration--docs) for dynamic applications
+- See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering React components into server-generated containers
 
-Need help? Check out [Best Practices](/?path=/docs/getting-started-best-practices--docs) or [Real-world Examples](/?path=/docs/getting-started-examples--docs)!
+Need help? Check the [best practices guide](/?path=/docs/getting-started-best-practices--docs).

@@ -9,17 +9,17 @@ Icon Card is a versatile card variant designed to highlight content with visual 
 
 ## When to use
 
-- **Feature highlights**: Showcase product features or service offerings with icons
-- **Navigation cards**: Create visual navigation with icons and descriptions
-- **Step-by-step guides**: Display process steps with numbered icons
-- **Category cards**: Organize content by category with representative icons
-- **Service cards**: Present services or offerings in a grid layout
+- Feature highlights or service offerings with icons
+- Visual navigation with icons and descriptions
+- Process steps with numbered icons
+- Category cards with representative icons
+- Service or offering grids
 
 ## When not to use
 
-- **Image-heavy content**: Use VerticalCard or HorizontalCard for large images
-- **Data visualization**: Use StatsCards for numeric data
-- **Long-form content**: Consider standard cards for extensive text
+- Image-heavy content -- use VerticalCard or HorizontalCard for large images
+- Numeric data -- use StatsCards instead
+- Long-form content -- consider standard cards
 
 ## RTL support
 
@@ -29,21 +29,17 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 ### Layout
 
-- **Vertical layout**: Icon/image at top, content below
-- **Flexible height**: Cards auto-adjust height based on content
-- **Grid-friendly**: Works well in CSS Grid layouts (grid wrapper provided by consumer)
+- Vertical layout: icon/image at top, content below
+- Cards auto-adjust height based on content
+- Works well in CSS Grid layouts (grid wrapper provided by consumer)
 
 ### Content options
 
-- **Icon or Image**: Use icon class names or image URLs
-- **Title**: Required heading text (can be linked or visually hidden for logos)
-- **Summary text**: Optional body text (HTML supported)
-- **Label/Badge**: Optional badge/category label
-- **CTA options**:
-  - Button (Primary or Secondary)
-  - Text link
-  - Title-only link (entire card clickable)
-  - Logo link with `srOnlyTitle` (image is clickable, title hidden but accessible)
+- Icon class names or image URLs for the visual element
+- Required heading text (can be linked or visually hidden for logos)
+- Optional body text with HTML support
+- Optional badge/category label
+- CTA options: button (Primary or Secondary), text link, title-only link (entire card clickable), or logo link with `srOnlyTitle`
 
 ## Usage
 
@@ -210,6 +206,32 @@ If upgrading from the previous IconCard API:
 | `description` | `summaryText` | Aligns with VerticalCard |
 | `image` | `imgback` | Aligns with VerticalCard |
 | `imageAlt` | `imgalt` | Aligns with VerticalCard |
+
+## Server-rendered / CDN usage
+
+IconCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+
+```html
+<div data-mg-icon-card
+  data-items='[{"icon":"mg-icon fa-globe","title":"Components","summaryText":"Browse all components.","link":"/components"}]'
+  data-centered="false"
+  data-variant="default">
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-items` | `[]` | JSON array of card data objects (required) |
+| `data-centered` | `'false'` | Center-align content (`'true'` or `'false'`) |
+| `data-variant` | `'default'` | `'default'` or `'negative'` |
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js";
+import IconCard, { fromElement } from "https://assets.undrr.org/static/mangrove/1.3.3/components/IconCard.js";
+createHydrator({ selector: "[data-mg-icon-card]", component: IconCard, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
 

@@ -14,13 +14,13 @@ The Stats card component highlights important statistics, metrics, or "by the nu
 
 ### Key features
 
-- **Clickable cards**: Make entire stat cards clickable with the `link` prop
-- **Dual labels**: Support for both top and bottom labels
-- **Icon support**: Optional icons via CSS class (e.g., Font Awesome, custom icon fonts)
-- **Multiple variants**: Default, compact, and highlighted styles
-- **Responsive**: Mobile-first grid layout
-- **Accessible**: Semantic HTML with proper ARIA attributes
-- **RTL support**: Full right-to-left language support
+- Clickable cards via the `link` prop
+- Dual labels (top and bottom)
+- Optional icons via CSS class (e.g., Font Awesome, custom icon fonts)
+- Default, compact, highlighted, and negative variants
+- Mobile-first responsive grid layout
+- Semantic HTML with ARIA attributes
+- RTL language support
 
 ## Default
 
@@ -126,6 +126,33 @@ Make entire stat cards clickable by adding a `link` prop. The cursor changes to 
 - Icons marked with `aria-hidden="true"`
 - Focus-visible styles for keyboard navigation
 - Respects `prefers-reduced-motion`
+
+## Server-rendered / CDN usage
+
+StatsCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+
+```html
+<div data-mg-stats-card
+  data-title="Sendai Framework Progress"
+  data-stats='[{"value":"45%","label":"Target A","bottomLabel":"Mortality reduction"}]'
+  data-variant="default">
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-stats` | `[]` | JSON array of stat objects (required) |
+| `data-title` | — | Optional heading for the stats section |
+| `data-variant` | `'default'` | `'default'`, `'compact'`, `'highlighted'`, or `'negative'` |
+| `data-class-name` | `''` | Additional CSS class names |
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js";
+import StatsCard, { fromElement } from "https://assets.undrr.org/static/mangrove/1.3.3/components/StatsCard.js";
+createHydrator({ selector: "[data-mg-stats-card]", component: StatsCard, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
 

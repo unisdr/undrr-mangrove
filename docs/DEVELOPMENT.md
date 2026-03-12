@@ -141,8 +141,7 @@ yarn lint:js           # Lint JavaScript/JSX
 yarn lint:css          # Lint CSS/SCSS
 
 # Build
-yarn build             # Build for production
-yarn build-storybook   # Build Storybook static site
+yarn build             # Build for production (SCSS + Storybook + webpack)
 ```
 
 ### Docker Commands
@@ -163,6 +162,47 @@ make lint             # Lint codebase
 make watch            # Watch for changes
 make build            # Build for release
 ```
+
+## Deploying theme CSS to Drupal
+
+Built JavaScript is automatically copied to the Drupal theme by `mangrove-watch.js` (via `yarn watch --copy`). CSS is **not** auto-synced and must be copied manually after each SCSS change.
+
+### Child themes
+
+All theme directories live under `docroot/themes/custom/` in the Drupal project. The following child themes consume Mangrove CSS at `css/mangrove/mangrove.css`:
+
+| Theme directory | Site |
+|---|---|
+| `undrr` | undrr.org (global UNDRR) |
+| `pw` | preventionweb.net |
+| `mcr` | mcr2030.undrr.org |
+| `irp` | IRP |
+| `arise` | ARISE |
+| `gp` | Global Platform |
+| `sfvc` | SFVC |
+
+Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_common`) exist but do not use Mangrove CSS.
+
+### Workflow
+
+1. Compile SCSS:
+
+   ```bash
+   yarn scss
+   ```
+
+   This writes compiled CSS to `stories/assets/css/`.
+
+2. Copy the compiled CSS to each applicable child theme:
+
+   ```bash
+   cp stories/assets/css/style.css \
+     /path/to/docroot/themes/custom/<theme>/css/mangrove/mangrove.css
+   ```
+
+   Repeat for each child theme that needs the update. Theme-specific stylesheets (`style-preventionweb.scss`, `style-irp.scss`, `style-mcr.scss`) compile to their own CSS files; copy the matching file to the corresponding theme.
+
+3. Commit the updated `mangrove.css` files in the Drupal repository.
 
 ## Component Development
 
