@@ -338,3 +338,85 @@ export const RTL = {
     },
   },
 };
+
+const logoProps = {
+  logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+  logoAlt: 'PreventionWeb',
+  logoHref: 'https://www.preventionweb.net',
+};
+
+export const WithLogo = {
+  args: {
+    delay: 5000,
+    sections: sections,
+    ...logoProps,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Branded variant with an inline logo at the start of the nav strip. Use this for sub-branded sites (e.g. PreventionWeb) where the logo should appear alongside the navigation items.',
+      },
+    },
+  },
+};
+
+export const WithLogoRTL = {
+  render: args => (
+    <div dir="rtl">
+      <MegaMenu {...args} />
+    </div>
+  ),
+  args: {
+    delay: 5000,
+    sections: sections,
+    ...logoProps,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Branded variant in RTL mode. The logo appears at inline-start (right edge in RTL) with nav items flowing leftward.',
+      },
+    },
+  },
+};
+
+export const WithPageHeaderAndLogo = {
+  render: args => (
+    <div>
+      {/* Simulated PageHeader dark bar */}
+      <div
+        style={{
+          background: '#0468b1',
+          color: 'white',
+          padding: '0.5rem 1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontFamily: 'sans-serif',
+          fontSize: '0.875rem',
+        }}
+      >
+        <span style={{ fontWeight: 'bold' }}>
+          United Nations Office for Disaster Risk Reduction
+        </span>
+        <span>EN | FR | ES | AR</span>
+      </div>
+      <MegaMenu {...args} />
+    </div>
+  ),
+  args: {
+    delay: 5000,
+    sections: sections,
+    ...logoProps,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Full sub-branded layout: dark UNDRR PageHeader bar followed by a branded MegaMenu with the sub-brand logo inline. This is the intended pattern for sites like PreventionWeb — the dark bar carries the parent identity while the white nav strip carries the sub-brand.',
+      },
+    },
+  },
+};

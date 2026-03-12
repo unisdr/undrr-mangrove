@@ -24,6 +24,69 @@
     overflow-x: hidden; // primarily for mobile
   }
 
+  // --- Branded variant (with inline logo) ---
+  &--branded {
+    align-items: center;
+
+    @media screen and (max-width: $mg-breakpoint-tablet) {
+      padding-left: 0; // logo replaces the left padding
+      overflow-x: hidden;
+    }
+
+    // Hamburger becomes a discrete button (not full-width overlay)
+    .mg-mega-topbar-mobile__icon-button {
+      position: relative;
+      width: auto;
+      margin-inline-start: auto;
+      background: transparent;
+      flex-shrink: 0;
+
+      &:has(.mg-icon-angle-circled-left) {
+        background: transparent;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Logo link
+  &__logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: $mg-spacing-100 $mg-spacing-150;
+    z-index: 15; // above hamburger overlay
+  }
+
+  // Logo image
+  &__logo-img {
+    display: block;
+    max-height: 3rem;
+    width: auto;
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      max-height: 3.5rem;
+    }
+  }
+
+  // Inner nav list inside branded variant
+  &__nav {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    // Hide items on mobile (same as default topbar behavior)
+    @media screen and (max-width: $mg-breakpoint-tablet) {
+      // Items are there but non-interactive on mobile (hamburger opens sidebar)
+      pointer-events: none;
+      overflow: hidden;
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
     pointer-events: none; // on mobile we only advertise the buttons, but not clickable

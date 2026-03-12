@@ -27,27 +27,59 @@ The mega menu fully supports RTL languages with automatic layout mirroring.
 
 <Canvas of={MegaMenuStories.RTL} meta={MegaMenuStories} />
 
+## With logo (branded variant)
+
+For sub-branded sites (e.g. PreventionWeb), pass `logoSrc` to display an inline logo at the start of the nav strip. This eliminates the need for a separate logo row between the PageHeader and navigation, creating a compact two-tier header.
+
+Use this variant when the site has its own brand identity but still sits under the UNDRR umbrella (the dark PageHeader bar above carries the parent identity).
+
+<Canvas of={MegaMenuStories.WithLogo} meta={MegaMenuStories} />
+
+## With logo (RTL)
+
+The branded variant in RTL mode. The logo appears at inline-start (right edge) with nav items flowing leftward.
+
+<Canvas of={MegaMenuStories.WithLogoRTL} meta={MegaMenuStories} />
+
+## With PageHeader and logo
+
+Full sub-branded layout: dark UNDRR bar + branded MegaMenu in one compact header.
+
+<Canvas of={MegaMenuStories.WithPageHeaderAndLogo} meta={MegaMenuStories} />
+
 ## Usage
 
-```
+```jsx
 import { MegaMenu } from '@components';
 
-const MyComponent = () => (
-  <MegaMenu items={menuItems} />
-);
+// Default (no logo)
+<MegaMenu sections={menuItems} />
+
+// Branded variant (with logo)
+<MegaMenu
+  sections={menuItems}
+  logoSrc="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+  logoAlt="PreventionWeb"
+  logoHref="https://www.preventionweb.net"
+/>
 ```
 
 ## Props
 
 | Prop       | Type   | Default | Description                                                           |
 | ---------- | ------ | ------- | --------------------------------------------------------------------- |
-| items      | array  | []      | Array of menu items to display                                        |
+| sections   | array  | []      | Array of menu sections to display                                     |
 | delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave              |
 | hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens) |
-| className  | string | ''      | Additional CSS class names                                            |
+| logoSrc    | string | —       | Image URL for the logo. When provided, enables the branded variant    |
+| logoAlt    | string | ''      | Alt text for the logo image                                           |
+| logoHref   | string | '/'     | Link target for the logo (typically the sub-brand homepage)           |
+| logoWidth  | number | —       | Optional explicit width for CLS prevention                            |
+| logoHeight | number | —       | Optional explicit height for CLS prevention                           |
 
 ## Changelog
 
+- **0.8.0** — 2026-03-12: Added branded variant with optional inline logo (`logoSrc`, `logoAlt`, `logoHref`, `logoWidth`, `logoHeight`) for sub-branded sites
 - **0.7.4** — 2026-03-10: Fixed slide-in animation for menus with more than 12 child items ([#825](https://github.com/unisdr/undrr-mangrove/issues/825))
 - **0.7.3** — 2026-02-17: Topbar expands to extra-large breakpoint (1440px) on wider screens
 - **0.7.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
