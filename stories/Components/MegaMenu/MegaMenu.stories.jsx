@@ -351,9 +351,16 @@ const brandLogos = {
     logoHref: 'https://www.recoveryplatform.org',
   },
   MCR2030: {
-    logoSrc: 'https://assets.undrr.org/static/logos/mcr/mcr-logo.svg',
+    logoSrc:
+      'https://mcr2030.undrr.org/sites/default/files/2020-10/MCR---Main-Logo---Color.png',
     logoAlt: 'Making Cities Resilient 2030',
     logoHref: 'https://mcr2030.undrr.org',
+  },
+  'Global Platform 2025': {
+    logoSrc:
+      'https://assets.undrr.org/static/logos/gp/2025/GP_2025_logo_web.svg',
+    logoAlt: 'Global Platform for Disaster Risk Reduction 2025',
+    logoHref: 'https://globalplatform.undrr.org',
   },
 };
 
