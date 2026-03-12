@@ -181,7 +181,7 @@ const preview = {
     locale: {
       name: 'Locale',
       description: 'locale',
-      defaultValue: 'en',
+      defaultValue: 'english',
       toolbar: {
         icon: 'globe',
         items: [
