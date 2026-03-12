@@ -41,13 +41,6 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     }
   }
 
-  // console.log("debug: All panels");
-  // console.log("Tab list: " , tabsList);
-  // console.log("Panel List: ", panelsList);
-  // console.log("Panels: ", panels);
-  // console.log("Tabs: ", tabs);
-  // console.log("End Debug: All panels");
-
   if (!tabsList || !panels || !tabs) {
     // exit: either tabs or tabbed content not found
     return;
