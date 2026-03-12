@@ -339,30 +339,52 @@ export const RTL = {
   },
 };
 
-const logoProps = {
-  logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
-  logoAlt: 'PreventionWeb',
-  logoHref: 'https://www.preventionweb.net',
+const brandLogos = {
+  PreventionWeb: {
+    logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+    logoAlt: 'PreventionWeb',
+    logoHref: 'https://www.preventionweb.net',
+  },
+  IRP: {
+    logoSrc: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+    logoAlt: 'International Recovery Platform',
+    logoHref: 'https://www.recoveryplatform.org',
+  },
+  MCR2030: {
+    logoSrc: 'https://assets.undrr.org/static/logos/mcr/mcr-logo.svg',
+    logoAlt: 'Making Cities Resilient 2030',
+    logoHref: 'https://mcr2030.undrr.org',
+  },
+};
+
+const brandArgType = {
+  brand: {
+    control: 'select',
+    options: Object.keys(brandLogos),
+    description: 'Sub-brand logo to display',
+  },
 };
 
 export const WithLogo = {
+  render: ({ brand, ...args }) => <MegaMenu {...args} {...brandLogos[brand]} />,
   args: {
     delay: 5000,
     sections: sections,
-    ...logoProps,
+    brand: 'PreventionWeb',
   },
+  argTypes: brandArgType,
   parameters: {
     docs: {
       description: {
         story:
-          'Branded variant with an inline logo at the start of the nav strip. Use this for sub-branded sites (e.g. PreventionWeb) where the logo should appear alongside the navigation items.',
+          'Branded variant with an inline logo at the start of the nav strip. Use the **brand** control to switch between PreventionWeb, IRP, and MCR2030 logos.',
       },
     },
   },
 };
 
 export const WithPageHeaderAndLogo = {
-  render: args => (
+  render: ({ brand, ...args }) => (
     <div>
       {/* Simulated PageHeader dark bar */}
       <div
@@ -382,14 +404,15 @@ export const WithPageHeaderAndLogo = {
         </span>
         <span>EN | FR | ES | AR</span>
       </div>
-      <MegaMenu {...args} />
+      <MegaMenu {...args} {...brandLogos[brand]} />
     </div>
   ),
   args: {
     delay: 5000,
     sections: sections,
-    ...logoProps,
+    brand: 'PreventionWeb',
   },
+  argTypes: brandArgType,
   parameters: {
     docs: {
       description: {
