@@ -361,27 +361,6 @@ export const WithLogo = {
   },
 };
 
-export const WithLogoRTL = {
-  render: args => (
-    <div dir="rtl">
-      <MegaMenu {...args} />
-    </div>
-  ),
-  args: {
-    delay: 5000,
-    sections: sections,
-    ...logoProps,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Branded variant in RTL mode. The logo appears at inline-start (right edge in RTL) with nav items flowing leftward.',
-      },
-    },
-  },
-};
-
 export const WithPageHeaderAndLogo = {
   render: args => (
     <div>
