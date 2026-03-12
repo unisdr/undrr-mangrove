@@ -59,7 +59,11 @@ export function TopBar({
   if (logoSrc) {
     return (
       <div className="mg-mega-topbar mg-mega-topbar--branded | mg-container-full-width">
-        <a className="mg-mega-topbar__logo" href={logoHref}>
+        <a
+          className="mg-mega-topbar__logo"
+          href={logoHref}
+          aria-label={logoAlt || 'Home'}
+        >
           <img
             className="mg-mega-topbar__logo-img"
             src={logoSrc}

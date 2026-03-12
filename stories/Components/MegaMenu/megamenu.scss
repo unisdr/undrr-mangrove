@@ -721,6 +721,10 @@
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
+[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button:has(.mg-icon-angle-circled-left) {
+  box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
+}
+
 // Arabic
 :lang(ar) {
   .mg-mega-menu__item-link {
