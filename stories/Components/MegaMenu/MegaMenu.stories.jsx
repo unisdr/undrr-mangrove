@@ -343,24 +343,20 @@ const brandLogos = {
   PreventionWeb: {
     logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
     logoAlt: 'PreventionWeb',
-    logoHref: 'https://www.preventionweb.net',
   },
   IRP: {
     logoSrc: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
     logoAlt: 'International Recovery Platform',
-    logoHref: 'https://www.recoveryplatform.org',
   },
   MCR2030: {
     logoSrc:
       'https://mcr2030.undrr.org/sites/default/files/2020-10/MCR---Main-Logo---Color.png',
     logoAlt: 'Making Cities Resilient 2030',
-    logoHref: 'https://mcr2030.undrr.org',
   },
   'Global Platform 2025': {
     logoSrc:
       'https://assets.undrr.org/static/logos/gp/2025/GP_2025_logo_web.svg',
     logoAlt: 'Global Platform for Disaster Risk Reduction 2025',
-    logoHref: 'https://globalplatform.undrr.org',
   },
 };
 
@@ -384,47 +380,7 @@ export const WithLogo = {
     docs: {
       description: {
         story:
-          'Branded variant with an inline logo at the start of the nav strip. Use the **brand** control to switch between PreventionWeb, IRP, and MCR2030 logos.',
-      },
-    },
-  },
-};
-
-export const WithPageHeaderAndLogo = {
-  render: ({ brand, ...args }) => (
-    <div>
-      {/* Simulated PageHeader dark bar */}
-      <div
-        style={{
-          background: '#0468b1',
-          color: 'white',
-          padding: '0.5rem 1rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontFamily: 'sans-serif',
-          fontSize: '0.875rem',
-        }}
-      >
-        <span style={{ fontWeight: 'bold' }}>
-          United Nations Office for Disaster Risk Reduction
-        </span>
-        <span>EN | FR | ES | AR</span>
-      </div>
-      <MegaMenu {...args} {...brandLogos[brand]} />
-    </div>
-  ),
-  args: {
-    delay: 5000,
-    sections: sections,
-    brand: 'PreventionWeb',
-  },
-  argTypes: brandArgType,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Full sub-branded layout: dark UNDRR PageHeader bar followed by a branded MegaMenu with the sub-brand logo inline. This is the intended pattern for sites like PreventionWeb — the dark bar carries the parent identity while the white nav strip carries the sub-brand.',
+          'Logo sits inline with the nav items. Pick a different sub-brand from the **brand** control to see how each logo fits.',
       },
     },
   },
