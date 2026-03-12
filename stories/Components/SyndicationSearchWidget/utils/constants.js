@@ -467,10 +467,10 @@ export function isFilterVisible(key, visibleFilters) {
 /**
  * Build CSS modifier classes to hide teaser fields based on visibility config.
  *
- * The corresponding SCSS rules target both Mangrove classes (e.g., .mg-card__visual)
- * and Drupal-originated classes (e.g., .field--name-published-at, .st-tag--spl).
- * Drupal renders teasers as HTML with these classes, and Elasticsearch indexes the
- * pre-rendered markup, so the classes arrive intact in search results.
+ * The corresponding SCSS rules target standard mg-card__* BEM wrapper classes
+ * (e.g., .mg-card__visual, .mg-card__date, .mg-card__description).
+ * Drupal teaser templates add these classes (see web-backlog#2660), and
+ * Elasticsearch indexes the pre-rendered markup with them intact.
  *
  * @param {Object|null} visibleTeaserFields - Map of field keys to booleans. null = all visible.
  * @returns {string} Space-separated CSS class string (e.g., 'mg-search--hide-image mg-search--hide-date')

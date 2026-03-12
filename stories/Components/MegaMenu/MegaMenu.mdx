@@ -27,28 +27,63 @@ The mega menu fully supports RTL languages with automatic layout mirroring.
 
 <Canvas of={MegaMenuStories.RTL} meta={MegaMenuStories} />
 
+## With logo (branded variant)
+
+Sub-branded sites (PreventionWeb, MCR2030, Global Platform, etc.) can pass `logoSrc` to put a logo inline with the nav items. This replaces the separate logo row you'd otherwise need between the PageHeader and navigation, so the header stays two tiers instead of three.
+
+Switch between logos with the **brand** control below.
+
+<Canvas of={MegaMenuStories.WithLogo} meta={MegaMenuStories} />
+
 ## Usage
 
-```
+```jsx
 import { MegaMenu } from '@components';
 
-const MyComponent = () => (
-  <MegaMenu items={menuItems} />
-);
+// Default (no logo)
+<MegaMenu sections={menuItems} />
+
+// Branded variant (with logo)
+<MegaMenu
+  sections={menuItems}
+  logoSrc="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+  logoAlt="PreventionWeb"
+/>
 ```
+
+### Multilingual sites and language-prefixed logo links
+
+`logoHref` defaults to `'/'`. The component doesn't know or care about language prefixes (`/ar/`, `/fr/`, etc.) because URL structure varies between CMSs.
+
+In Drupal, have the Twig template output the language-prefixed root into a data attribute. The wrapper script reads it and passes it as `logoHref`. Example for an Arabic page:
+
+```html
+<div data-mg-mega-menu
+     data-mg-mega-menu-logo="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+     data-mg-mega-menu-logo-alt="PreventionWeb"
+     data-mg-mega-menu-logo-href="/ar/">
+</div>
+```
+
+Twig is the right place to resolve the prefix. The React component just renders whatever href it receives.
 
 ## Props
 
-| Prop       | Type   | Default | Description                                                           |
-| ---------- | ------ | ------- | --------------------------------------------------------------------- |
-| items      | array  | []      | Array of menu items to display                                        |
-| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave              |
-| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens) |
-| className  | string | ''      | Additional CSS class names                                            |
+| Prop       | Type   | Default | Description                                                                                              |
+| ---------- | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
+| sections   | array  | []      | Array of menu sections to display                                                                        |
+| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave                                                 |
+| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens)                                    |
+| logoSrc    | string | —       | Image URL for the logo. When provided, enables the branded variant                                       |
+| logoAlt    | string | ''      | Alt text for the logo image                                                                              |
+| logoHref   | string | '/'     | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
+| logoWidth  | number | —       | Optional explicit width for CLS prevention                                                               |
+| logoHeight | number | —       | Optional explicit height for CLS prevention                                                              |
 
 ## Changelog
 
-- **0.7.4** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
+- **1.0.0** — 2026-03-12: Branded variant with optional inline logo (`logoSrc`, `logoAlt`, `logoHref`, `logoWidth`, `logoHeight`); logo shrinks on narrow viewports; hamburger floats over logo with shadow on mobile; documented `logoHref` language prefix handling. Added hydration support with `fromElement` prop extraction and `createHydrator` integration.
+- **0.7.4** — 2026-03-10: Fixed slide-in animation for menus with more than 12 child items ([#825](https://github.com/unisdr/undrr-mangrove/issues/825))
 - **0.7.3** — 2026-02-17: Topbar expands to extra-large breakpoint (1440px) on wider screens
 - **0.7.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
 - **0.7.1** — 2025-12-09: Refined UX of opening 3rd level menu on desktop (subtle colours and animation)

@@ -13,7 +13,7 @@ A flexible container component for highlighting important content, including tex
 - **Layout variants**: Full width, Centered (80%), Float start/end (30%)
 - **Responsive**: Float variants stack on mobile
 - **RTL support**: Uses logical properties (inline-start/end, block)
-- **Video support**: Automatic 16:9 aspect ratio for iframes
+- **Video support**: Use `.mg-embed-container` wrapper for responsive iframes (see [EmbedContainer](/docs/utilities-embedcontainer--docs))
 - **Nested content**: Supports any content including paragraphs, headings, images, videos
 
 ## Examples
@@ -141,12 +141,12 @@ Float variants automatically stack to full width on screens below the tablet bre
 | Padding | 1rem block, 1.5rem inline, 2rem bottom |
 | Border | 1px solid rgba(0, 0, 0, 0.3) for default tone |
 | Shadow | Inset bottom shadow for depth effect |
-| Video | Automatic 16:9 aspect ratio for embedded iframes |
+| Video | Use `.mg-embed-container` wrapper for responsive embeds |
 
 ## Browser support
 
 - Modern browsers with CSS logical properties support
-- `:has()` selector for video detection (graceful degradation in older browsers)
+- Responsive video embeds use the `.mg-embed-container` utility (padding-bottom fallback for older browsers)
 
 ## Accessibility
 
@@ -161,4 +161,5 @@ Existing CKEditor content using `.mg-highlight-box` classes will continue to wor
 
 ## Changelog
 
+- **1.1** — 2026-03-10: Removed `.mg-highlight-box:has(iframe)` rule that broke layout on Safari/WebKit mobile. Video embeds now use the [`.mg-embed-container`](/docs/utilities-embedcontainer--docs) utility wrapper instead of applying aspect ratio to the whole container. [`web-backlog#2672`](https://gitlab.com/undrr/web-backlog/-/work_items/2672)
 - **1.0** — 2026-02-04: Initial release with tone variants (default, primary, secondary) and layout variants (full, centered, float-start, float-end)

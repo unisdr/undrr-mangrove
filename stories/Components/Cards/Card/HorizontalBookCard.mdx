@@ -1,133 +1,97 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { HorizontalBookCard } from './HorizontalBookCard';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as HorizontalBookCardStories from './HorizontalBookCard.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        contentdata: [
-          {
-            contenttile: 'Content tag',
-            title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-by vulnerable populations and communities.
-This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
-            button: 'Primary action',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        contentdata: [
-          {
-            contenttile: 'علامة المحتوى',
-            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
-            button: 'اقرأ أكث',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            contenttile: 'အကြောင်းအရာ TAG',
-            title:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            button: 'ပိုပြီးဖတ်ပါ',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return burmeseText;
-    case 'japanese':
-      const japaneseText = {
-        contentdata: [
-          {
-            contenttile: 'コンテンツタグ',
-            title: '投稿のタイトルはここにあり、2行です',
-            button: '続きを読む',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return japaneseText;
-    default:
-      const dummy = {
-        contentdata: [
-          {
-            contenttile: 'Horizontal card',
-            title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-by vulnerable populations and communities.
-This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
-            button: 'Primary action',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return dummy;
-  }
-};
 
 <Meta of={HorizontalBookCardStories} />
 
-# Mangrove card (horizontal book)
+# Horizontal book card
 
-The Mangrove Horizontal Book Card components are cards with information and/or image. This is ideally suited for publications. The component leverage the Horizontal Card CSS.
+A horizontal card variant for publications. Displays a portrait cover image on the left with title, summary, labels, and a CTA on the right. Ideal for detailed publication listings where you need both a cover image and descriptive text.
 
-### Overview
+## When to use
 
-The Mangrove Horizontal Book Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+- Publication detail listings with summaries
+- Resource pages where cover art is important alongside descriptive text
+- Search results for documents, reports, and brochures
 
-#### When to use:
+## Anatomy
 
-When a card with data, CTA links and image is to be displayed.
+- **Cover image** (optional): Portrait-oriented, constrained to 200px on mobile, natural width on desktop
+- **Labels** (optional): Content type or category tags
+- **Title**: Linked heading with blue color, underline, and chevron indicator
+- **Summary**: Body text, supports inline HTML links
+- **CTA button** (optional): Primary action button
 
-### Formatting
+The entire card is clickable via a stretched link on the title.
 
-#### Default
+<Canvas of={HorizontalBookCardStories.DefaultHorizontalBookCard} />
 
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels and/or image.
+### Without image
 
-### Content
+When no cover image is available, the content area fills the full card width.
 
-<Canvas of={HorizontalBookCardStories.DefaultHorizontalBookCard} meta={HorizontalBookCardStories} />
+<Canvas of={HorizontalBookCardStories.HorizontalBookCardNoImageVerticalCard} />
 
-### Usage
+## Color variants
 
-- Grab the HTML from the HTML tab.
+Use the `variant` prop to change the title accent color.
 
-### Interactions
+| Variant | Class | Color |
+|---------|-------|-------|
+| `primary` (default) | — | `$mg-color-interactive` (blue) |
+| `secondary` | `mg-card--secondary` | `$mg-color-secondary` (orange) |
+| `tertiary` | `mg-card--tertiary` | `$mg-color-tertiary` (black) |
+| `quaternary` | `mg-card--quaternary` | `$mg-color-quaternary` (red) |
 
-- Hover state applies to the image only.
-- By clicking on the CTA Link, the associated page is opened.
+## Title link visibility
+
+Card titles display blue color, underline, and a chevron indicator by default. Add `mg-card--plain-title` to disable these signals.
+
+**In React:**
+
+```jsx
+<HorizontalBookCard data={data} className="mg-card--plain-title" />
+```
+
+**In Drupal templates or static HTML:**
+
+```html
+<article class="mg-card mg-card__hc mg-card-book__hc mg-card--plain-title">
+  ...
+</article>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | Array | Required | Array of card data objects |
+| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `className` | String | — | Additional CSS classes on the card element |
+
+### Data object properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `title` | String | Card heading text |
+| `link` | String | URL for the title link and stretched link |
+| `imgback` | String | Cover image URL |
+| `imgalt` | String | Alt text for the cover image |
+| `summaryText` | String | Body text (HTML supported) |
+| `label1` | String | First category label |
+| `label2` | String | Second category label |
+| `button` | String | CTA button label |
+
+## Responsive behavior
+
+| Breakpoint | Layout |
+|------------|--------|
+| Mobile (< 640px) | Stacked: cover image (max 200px wide) above content |
+| Tablet (640px+) | Side-by-side: 160px cover image, content fills remaining width |
 
 ## Changelog
 
+- **1.2.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
+- **1.2** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
 - **1.1.1** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)
 - **1.1** — 2024-09-20: Handle case when image is not available
 - **1.0** — 2023-09-04: Released component

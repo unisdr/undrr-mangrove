@@ -1,5 +1,14 @@
 /**
- * MegaMenu component that displays a navigation menu with sections and items
+ * MegaMenu component. Multi-level navigation with sections and items.
+ *
+ * Pass `logoSrc` to get the branded variant: the logo sits at inline-start
+ * of the nav strip, next to the menu items. Useful for sub-branded sites
+ * like PreventionWeb or MCR2030.
+ *
+ * Language prefixes: this component does not detect `/ar/`, `/fr/`, etc.
+ * The wrapper layer (Drupal, Twig, whatever) should pass the right
+ * `logoHref`, e.g. `data-mg-mega-menu-logo-href="/ar/"` on Arabic pages.
+ *
  * @param {Object[]} sections - Array of section objects containing menu structure
  * @param {string} sections[].bannerHeading - Heading text for the section banner
  * @param {string} sections[].bannerDescription - Description text for the section banner
@@ -11,14 +20,28 @@
  * @param {string} sections[].items[].url - URL for the menu item
  * @param {Object[]} sections[].items[].items - Optional nested items
  * @param {number} [delay=300] - Delay in milliseconds before closing menu on mouse leave
- * @param {number} [hoverDelay=80] - Delay in milliseconds before opening menu on hover (prevents accidental opens)
+ * @param {number} [hoverDelay=180] - Delay in milliseconds before opening menu on hover (prevents accidental opens)
+ * @param {string} [logoSrc] - Image URL for a logo at inline-start of the nav strip (enables branded variant)
+ * @param {string} [logoAlt=''] - Alt text for the logo image
+ * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
+ * @param {number} [logoWidth] - Optional explicit width for CLS prevention
+ * @param {number} [logoHeight] - Optional explicit height for CLS prevention
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef } from 'react';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
 
-const MegaMenu = ({ sections, delay = 300, hoverDelay = 180 }) => {
+const MegaMenu = ({
+  sections,
+  delay = 300,
+  hoverDelay = 180,
+  logoSrc,
+  logoAlt = '',
+  logoHref = '/',
+  logoWidth,
+  logoHeight,
+}) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
 
@@ -100,6 +123,11 @@ const MegaMenu = ({ sections, delay = 300, hoverDelay = 180 }) => {
         activeItem={activeItem}
         itemListRef={itemListRef}
         sectionListRef={sectionListRef}
+        logoSrc={logoSrc}
+        logoAlt={logoAlt}
+        logoHref={logoHref}
+        logoWidth={logoWidth}
+        logoHeight={logoHeight}
       />
 
       {/* Backdrop overlay – closes sidebar on click */}

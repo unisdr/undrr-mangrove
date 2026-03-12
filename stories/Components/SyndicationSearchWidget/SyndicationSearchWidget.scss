@@ -736,26 +736,17 @@ $search-input-padding-x: $mg-spacing-250;
 // ========================================
 // Modifier classes on the results container hide specific teaser fields
 // via the visibleTeaserFields config option.
-// Title (.field--name-node-title) is intentionally not toggleable.
-// Non-mangrove selectors (.st-tag--spl, .field--name-*, etc.) originate from
-// Drupal's rendered teaser HTML. Elasticsearch indexes pre-rendered teasers
-// with these classes intact, so we target them directly here rather than
-// re-parsing or transforming the markup at runtime.
+// Title (.mg-card__title) is intentionally not toggleable.
+// Teaser HTML uses standard mg-card__* BEM wrapper classes added by
+// Drupal teaser templates (see web-backlog#2660).
 
 .mg-search--hide-image .mg-card__visual { display: none; }
-.mg-search--hide-contentType .st-tag--spl { display: none; }
-.mg-search--hide-publicationType .field--name-field-undrr-publication-types { display: none; }
-.mg-search--hide-date .field--name-published-at,
-.mg-search--hide-date .field--name-field-publication-date,
-.mg-search--hide-date .field--name-field-release-date,
-.mg-search--hide-date .field--name-field-event-date-range,
-.mg-search--hide-date .field--name-field-date-time,
-.mg-search--hide-date .field--name-field-closing-date,
-.mg-search--hide-date .collection-freshness { display: none; }
+.mg-search--hide-contentType .mg-card__tag { display: none; }
+.mg-search--hide-publicationType .mg-card__publication-type { display: none; }
+.mg-search--hide-date .mg-card__date { display: none; }
 .mg-search--hide-siteName .mg-search__result-site-name { display: none; }
-.mg-search--hide-summary .field--name-body,
-.mg-search--hide-summary .mg-card__content > p:not(.mg-search__result-site-name) { display: none; }
-.mg-search--hide-organization .field--name-field-organization { display: none; }
+.mg-search--hide-summary .mg-card__description { display: none; }
+.mg-search--hide-organization .mg-card__organization { display: none; }
 
 // ========================================
 // Card Display Mode (mg-grid layout)

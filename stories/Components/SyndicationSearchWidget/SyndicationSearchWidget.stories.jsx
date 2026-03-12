@@ -410,16 +410,15 @@ Results are sorted by date (\`defaultSort: 'newest'\`).
 \`\`\`js
 visibleTeaserFields: {
   image: true,           // Card image (.mg-card__visual)
-  contentType: false,    // Content type badge (.st-tag--spl)
-  publicationType: false,// Publication subtype (.field--name-field-undrr-publication-types)
-  date: true,            // Publication date (.field--name-published-at)
+  contentType: false,    // Content type badge (.mg-card__tag)
+  publicationType: false,// Publication subtype (.mg-card__publication-type)
+  date: true,            // Publication date (.mg-card__date)
   siteName: false,       // Domain label (.mg-search__result-site-name)
-  summary: true,         // Body text (.mg-card__content > p)
-  organization: false,   // Organization name (.field--name-field-organization)
+  summary: true,         // Body text (.mg-card__description)
+  organization: false,   // Organization name (.mg-card__organization)
 }
 \`\`\`
 
-Non-mg-prefixed selectors come from Drupal teaser HTML indexed by Elasticsearch.
 Uses CSS modifier classes — zero JS overhead, \`display: none\` removes from layout and accessibility tree.
         `,
       },

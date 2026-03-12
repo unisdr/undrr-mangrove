@@ -6,6 +6,7 @@ export default {
   component: Boilerplate,
   argTypes: {
     title: { control: 'text' },
+    href: { control: 'text' },
     variant: {
       control: { type: 'radio' },
       options: ['primary', 'secondary'],
@@ -22,6 +23,14 @@ export const Default = {
         replace the content with your own.
       </p>
     ),
+  },
+};
+
+export const WithLink = {
+  args: {
+    ...Default.args,
+    title: 'Linked boilerplate title',
+    href: 'javascript:void(0)',
   },
 };
 
