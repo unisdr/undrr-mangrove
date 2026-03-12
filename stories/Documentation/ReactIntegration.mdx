@@ -233,18 +233,25 @@ Props: `severity` (`"error"` | `"warning"` | `"info"` | `"success"`), `opened` (
 
 If you are rendering HTML on the server (Drupal, Astro, or any other framework) and need React to take over specific DOM containers, Mangrove provides `createHydrator`. This scans the page for elements matching a CSS selector, extracts props from `data-` attributes, and mounts the component.
 
-The following example shows the **Drupal wrapper pattern**, where a small script imports a built component bundle and its `fromElement` function, then uses `createHydrator` to mount it into server-rendered HTML containers. In a typical React app, you would import from `@undrr/undrr-mangrove` instead and pass props directly (see the [usage examples](#usage-examples) above).
+The following example shows the **Drupal wrapper pattern**, where a small script imports component bundles via import map aliases (`@mangrove/*`) that resolve to CDN URLs at runtime. The import map is injected by `mangrove-components.js` in the `undrr_common` theme. In a typical React app, you would import from `@undrr/undrr-mangrove` instead and pass props directly (see the [usage examples](#usage-examples) above).
 
 ```jsx
-// Drupal wrapper script — imports from built component bundles, not the npm package
-import createHydrator from './hydrate.js';
-import ShareButtons, { fromElement } from './ShareButtons.js';
+// Drupal wrapper script — uses @mangrove/* import map aliases (resolved by mangrove-components.js)
+import createHydrator from "@mangrove/hydrate";
+import ShareButtons, { fromElement } from "@mangrove/ShareButtons";
 
-createHydrator({
+const hydrator = createHydrator({
   selector: '[data-mg-share-buttons]',
   component: ShareButtons,
   fromElement,
 });
+
+// Re-scan when Drupal adds new DOM (AJAX, BigPipe, modals, Views infinite scroll)
+Drupal.behaviors.mangroveShareButtons = {
+  attach(context) {
+    hydrator.update(context);
+  },
+};
 ```
 
 The `fromElement` function exported by ShareButtons extracts props from the container's data attributes (`data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body`). Each component with hydration support ships its own `fromElement` — you do not need to write one by hand.

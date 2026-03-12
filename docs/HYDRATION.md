@@ -25,8 +25,9 @@ ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
 The consumer (Drupal, Astro, static HTML) then writes a short wrapper:
 
 ```js
-import createHydrator from "./hydrate.js";
-import Component, { fromElement } from "./ComponentName.js";
+// Drupal — uses @mangrove/* import map aliases (resolved by mangrove-components.js)
+import createHydrator from "@mangrove/hydrate";
+import Component, { fromElement } from "@mangrove/ComponentName";
 createHydrator({ selector: "[data-mg-component-name]", component: Component, fromElement });
 ```
 
@@ -155,9 +156,9 @@ tail -c 200 dist/components/AlertBanner.js
 In the Drupal theme (`undrr_common/js/mangrove-components/`):
 
 ```js
-// AlertBanner-wrapper.js
-import createHydrator from "./hydrate.js";
-import AlertBanner, { fromElement } from "./AlertBanner.js";
+// AlertBanner-wrapper.js — uses @mangrove/* import map aliases
+import createHydrator from "@mangrove/hydrate";
+import AlertBanner, { fromElement } from "@mangrove/AlertBanner";
 
 const hydrator = createHydrator({
   selector: "[data-mg-alert-banner]",
@@ -251,8 +252,8 @@ In this case, the consumer wrapper provides its own `fromElement` that bridges t
 
 ```js
 // Gallery-wrapper.js — Drupal's attributes differ from the generic fromElement
-import createHydrator from "./hydrate.js";
-import { Gallery } from "./Gallery.js";
+import createHydrator from "@mangrove/hydrate";
+import { Gallery } from "@mangrove/Gallery";
 
 function fromElement(container) {
   // Drupal outputs two JSON blobs instead of individual attributes
@@ -399,8 +400,9 @@ Drupal.behaviors.mangroveComponent = {
 ### Drupal
 
 ```js
-import createHydrator from "./hydrate.js";
-import Component, { fromElement } from "./ComponentName.js";
+// Uses @mangrove/* import map aliases (resolved by mangrove-components.js in undrr_common theme)
+import createHydrator from "@mangrove/hydrate";
+import Component, { fromElement } from "@mangrove/ComponentName";
 
 const hydrator = createHydrator({
   selector: "[data-mg-component-name]",

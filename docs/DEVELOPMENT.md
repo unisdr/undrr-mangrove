@@ -169,19 +169,19 @@ Built JavaScript is automatically copied to the Drupal theme by `mangrove-watch.
 
 ### Child themes
 
-Each Drupal child theme has its own copy of the compiled Mangrove CSS at `css/mangrove/mangrove.css`:
+All theme directories live under `docroot/themes/custom/` in the Drupal project. The following child themes consume Mangrove CSS at `css/mangrove/mangrove.css`:
 
 | Theme directory | Site |
 |---|---|
 | `undrr` | undrr.org (global UNDRR) |
-| `pw` (preventionweb) | preventionweb.net |
+| `pw` | preventionweb.net |
 | `mcr` | mcr2030.undrr.org |
 | `irp` | IRP |
 | `arise` | ARISE |
 | `gp` | Global Platform |
 | `sfvc` | SFVC |
 
-All theme directories live under `docroot/themes/custom/` in the Drupal project.
+Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_common`) exist but do not use Mangrove CSS.
 
 ### Workflow
 
