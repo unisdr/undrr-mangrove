@@ -476,6 +476,42 @@ export function isFilterVisible(key, visibleFilters) {
 }
 
 /**
+ * Toggleable teaser fields and the BEM selectors they control.
+ * This is the single source of truth — the SCSS rules, buildHiddenFieldClasses(),
+ * and story configs all derive from this list.
+ *
+ * Each entry maps a config key (used in `visibleTeaserFields`) to:
+ * - `label` — human-readable name for Storybook / docs
+ * - `selector` — CSS selector targeted by `mg-search--hide-{key}`
+ *
+ * Title (.mg-card__title) is intentionally not toggleable.
+ *
+ * @type {Object.<string, {label: string, selector: string}>}
+ */
+export const TEASER_FIELDS = {
+  image:           { label: 'Image',            selector: '.mg-card__visual' },
+  contentType:     { label: 'Content type',     selector: '.mg-card__tag' },
+  publicationType: { label: 'Publication type', selector: '.mg-card__publication-type' },
+  date:            { label: 'Date',             selector: '.mg-card__date' },
+  summary:         { label: 'Summary',          selector: '.mg-card__description' },
+  siteName:        { label: 'Site name',        selector: '.mg-search__result-site-name' },
+  organization:    { label: 'Organization',     selector: '.mg-card__organization' },
+};
+
+/**
+ * Build a visibleTeaserFields object with all fields set to `true`.
+ * Useful as a starting point when you want to hide only specific fields.
+ *
+ * @returns {Object.<string, boolean>}
+ * @example
+ * const fields = allTeaserFieldsVisible();
+ * // => { image: true, contentType: true, publicationType: true, date: true, summary: true, siteName: true, organization: true }
+ */
+export function allTeaserFieldsVisible() {
+  return Object.fromEntries(Object.keys(TEASER_FIELDS).map(k => [k, true]));
+}
+
+/**
  * Build CSS modifier classes to hide teaser fields based on visibility config.
  *
  * The corresponding SCSS rules target standard mg-card__* BEM wrapper classes

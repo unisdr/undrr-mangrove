@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
+import { allTeaserFieldsVisible } from './utils/constants';
 // SCSS is loaded via the Mangrove rollup (stories/assets/scss/_components.scss)
 
 /**
@@ -386,12 +387,10 @@ export const HiddenTeaserFields = {
       ...defaultConfig,
       defaultSort: 'newest',
       visibleTeaserFields: {
-        image: true,
+        ...allTeaserFieldsVisible(),
         contentType: false,
         publicationType: false,
-        date: true,
         siteName: false,
-        summary: true,
         organization: false,
       },
     },
@@ -854,10 +853,9 @@ export const FourCardSyndication = {
       defaultQuery: 'early warning systems',
       requireImage: true,
       visibleTeaserFields: {
-        image: true,
+        ...allTeaserFieldsVisible(),
         contentType: false,
         publicationType: false,
-        date: true,
         summary: false,
         siteName: false,
         organization: false,
