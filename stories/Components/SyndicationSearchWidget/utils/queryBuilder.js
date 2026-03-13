@@ -49,16 +49,28 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
   // Build the main query (excludes facet filters for disjunctive faceting)
   const mainQuery = buildMainQuery(query, scoring, config);
 
-  // Build post_filter with all facet filters (applied after aggregations)
-  const postFilter = buildPostFilter(facets, facetOperators, customFacets, config);
+  // Build post_filter with all facet filters (applied after aggregations).
+  // Skip entirely when facets are hidden — no user-driven facets will be active.
+  const postFilter = config.showFacets !== false
+    ? buildPostFilter(facets, facetOperators, customFacets, config)
+    : null;
+
+  const isCardMode = config.displayMode === 'card' || config.displayMode === 'card-book';
+  const summaryHidden = config.visibleTeaserFields?.summary === false;
 
   const result = {
     from,
     size: resultsPerPage,
     sort: buildSort(sortBy),
     query: mainQuery,
-    highlight: buildHighlight(highlight),
   };
+
+  // Skip highlights in card mode when summary is hidden — card teasers use
+  // pre-rendered HTML and don't show body text, so highlight fragments are
+  // wasted response payload.
+  if (!(isCardMode && summaryHidden)) {
+    result.highlight = buildHighlight(highlight);
+  }
 
   // Skip aggregations when facets are hidden — avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.

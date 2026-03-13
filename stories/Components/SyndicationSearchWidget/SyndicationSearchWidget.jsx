@@ -138,7 +138,7 @@ function SyndicationSearchWidgetInner() {
           data-vf-google-analytics-region="undrr-search-results"
           aria-busy={isLoading || isPending}
         >
-          <Suspense fallback={<SearchResultsSkeleton />}>
+          <Suspense fallback={<SearchResultsSkeleton displayMode={config.displayMode} count={config.resultsPerPage} gridColumns={config.gridColumns} />}>
             <SearchResults
               isStale={isStale || isPending}
               widgetId={widgetId}
@@ -174,11 +174,31 @@ function SyndicationSearchWidgetInner() {
 
 /**
  * Loading skeleton for search results.
+ * Renders a card grid skeleton for card/card-book modes, list skeleton otherwise.
  */
-function SearchResultsSkeleton() {
+function SearchResultsSkeleton({ displayMode = 'list', count = 5, gridColumns }) {
+  const isCardMode = displayMode === 'card' || displayMode === 'card-book';
+  const cols = isCardMode ? Math.min(Math.max(gridColumns ?? count, 2), 6) : undefined;
+
+  if (isCardMode) {
+    return (
+      <div className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`} aria-busy="true" aria-label="Loading results">
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className="mg-search__skeleton-card">
+            <div className="mg-search__skeleton-card-image" />
+            <div className="mg-search__skeleton-card-body">
+              <div className="mg-search__skeleton-title" />
+              <div className="mg-search__skeleton-meta" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="mg-search__skeleton" aria-busy="true" aria-label="Loading results">
-      {[1, 2, 3, 4, 5].map((i) => (
+      {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="mg-search__skeleton-item">
           <div className="mg-search__skeleton-title" />
           <div className="mg-search__skeleton-meta" />

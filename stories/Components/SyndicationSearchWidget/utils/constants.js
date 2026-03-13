@@ -609,7 +609,9 @@ export function getSubtypesForType(parentType) {
  * @returns {Object} Map of tier name → { min, max }
  */
 export function buildTierRanges(tiers) {
-  const entries = Object.entries(tiers);
+  // Sort by max to guarantee correct min/max derivation regardless of
+  // Object.entries() iteration order.
+  const entries = Object.entries(tiers).sort((a, b) => a[1].max - b[1].max);
   const ranges = {};
   let prevMax = -1;
   for (const [name, tier] of entries) {
@@ -628,7 +630,7 @@ export function buildTierRanges(tiers) {
  * @returns {string|null} query_string range expression or null
  */
 export function buildTierFilter(field, tierNames, tierRanges) {
-  if (!tierNames || tierNames.length === 0) return null;
+  if (!Array.isArray(tierNames) || tierNames.length === 0) return null;
 
   const ranges = tierNames
     .filter(name => tierRanges[name])

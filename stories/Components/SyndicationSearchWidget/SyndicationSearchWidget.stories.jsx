@@ -856,6 +856,8 @@ export const FourCardSyndication = {
       visibleTeaserFields: {
         image: true,
         contentType: false,
+        publicationType: false,
+        date: true,
         summary: false,
         siteName: false,
         organization: false,
@@ -885,6 +887,8 @@ config: {
   visibleTeaserFields: {
     image: true,
     contentType: false,
+    publicationType: false,
+    date: true,
     summary: false,
     siteName: false,
     organization: false,
@@ -894,7 +898,7 @@ config: {
 
 The key is \`defaultQuery\` — it seeds the search with a topic so the widget loads results immediately without user interaction. Combined with hidden search UI, the result is a static-looking content block that's actually live.
 
-\`requireImage: true\` adds a \`has_image:true\` filter to the Elasticsearch query, so only results with an image are returned. \`visibleTeaserFields\` hides the content type badge and teaser text for a cleaner card that's just image, title, and date.
+\`requireImage: true\` adds a \`has_image:true\` filter to the Elasticsearch query, so only results with an image are returned. \`visibleTeaserFields\` controls which card fields are visible — here the content type badge, publication type, summary text, site name, and organization are all hidden for a clean card showing just image, title, and date. Toggle any field to \`true\`/\`false\` in Storybook controls to experiment.
 
 **Typical uses:**
 - "Latest on early warning" rail on a landing page
