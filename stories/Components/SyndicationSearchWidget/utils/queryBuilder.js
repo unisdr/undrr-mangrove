@@ -58,8 +58,13 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
     sort: buildSort(sortBy),
     query: mainQuery,
     highlight: buildHighlight(highlight),
-    aggs: buildAggregations(facetFields, facetCountToShow),
   };
+
+  // Skip aggregations when facets are hidden — avoids unnecessary server work
+  // and response payload for syndication embeds that only show result cards.
+  if (config.showFacets !== false) {
+    result.aggs = buildAggregations(facetFields, facetCountToShow);
+  }
 
   // Only add post_filter if there are active facet filters
   if (postFilter) {
