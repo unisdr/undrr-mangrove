@@ -103,10 +103,13 @@ All non-default themes follow the same pattern: set a primary brand color, then 
 - Rounded form inputs (`$mg-radius-form-input: $mg-spacing-100`)
 
 **DELTA Resilience** (`_variables-delta.scss`):
-- Primary: `$delta-color-primary: #004f91` (same as Mangrove's base `$mg-color-blue-900`)
-- Hover shade: `$delta-color-primary-800: #003d70` (TODO: needs design confirmation)
+- Primary interactive: `$delta-color-primary: #004f91` (same as Mangrove's base blue, used for links and focus rings)
+- Button fill: dark neutral gray (`$mg-color-neutral-500`), not primary blue — matching Delta mockups
+- Pill-shaped CTA buttons (`$mg-radius-button: $mg-spacing-300`)
 - Red accent: `$delta-color-red: #b52a32`
-- Rounded buttons, tags, tabs, and form inputs (`$mg-radius-*: $mg-spacing-50`)
+- Accent pastels for feature card icons: coral, teal, light blue (TODO: confirm exact hex values)
+- Dark near-black for CTA banner sections (`$delta-color-dark: #181823`)
+- Rounded tags, tabs, and form inputs (`$mg-radius-*: $mg-spacing-50`)
 - Hero overlay spacing (`$mg-spacing-hero-overlay: 2rem 0`)
 - No font override needed (Mangrove already defaults to Roboto)
 
