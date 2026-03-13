@@ -1,0 +1,23 @@
+{
+  "current_workflow_id": "doc_audit",
+  "workflows": [
+    {
+      "workflow_id": "wf_default",
+      "name": "Default workflow",
+      "description": "Example workflow demonstrating collection→node→collection flow.",
+      "current_version_id": "v1"
+    },
+    {
+      "workflow_id": "doc_audit",
+      "name": "Documentation gap analysis",
+      "description": "Analyzes all project documentation for gaps in developer journeys (React, Vanilla JS, Theme customization) and accuracy of examples and references.",
+      "current_version_id": "v2"
+    },
+    {
+      "workflow_id": "delta_theme",
+      "name": "DELTA Resilience theme",
+      "description": "Analyzes DELTA Resilience brand tokens, maps them to Mangrove SCSS variables, validates accessibility, and produces theme SCSS artifacts for review.",
+      "current_version_id": "v1"
+    }
+  ]
+}

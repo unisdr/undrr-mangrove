@@ -1,0 +1,541 @@
+{
+  "workflow_id": "delta_theme",
+  "kinds": {
+    "run_input": {
+      "name": "Run input",
+      "description": "Input payload describing the DELTA Resilience brand assets, CSS references, and scope of the theme work.",
+      "item_schema": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "delta_tokens": {
+      "name": "Delta design tokens",
+      "description": "Extracted design tokens from the DELTA Resilience brand identity — colors, typography, spacing, radii, shadows.",
+      "item_schema": {
+        "type": "object",
+        "required": [
+          "token_name",
+          "value",
+          "confidence"
+        ],
+        "properties": {
+          "token_name": {
+            "type": "string",
+            "description": "Semantic token name (e.g., color-primary, radius-button)."
+          },
+          "value": {
+            "type": "string",
+            "description": "CSS value for the token."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "color",
+              "typography",
+              "spacing",
+              "radius",
+              "shadow",
+              "interactive",
+              "component"
+            ],
+            "description": "Token category."
+          },
+          "source": {
+            "type": "string",
+            "description": "Where the token was found (CSS rule, screenshot, URL)."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "inferred",
+              "placeholder"
+            ],
+            "description": "Confidence level: confirmed (directly observed), inferred (derived), placeholder (needs design input)."
+          },
+          "todo": {
+            "type": "string",
+            "description": "Notes for the Delta design team if confirmation is needed."
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "item_ref": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "item_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "item_id"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "item_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "item_id"
+              ]
+            }
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "variable_mappings": {
+      "name": "Mangrove variable mappings",
+      "description": "Mappings from Delta design tokens to Mangrove SCSS variables with rationale and confidence levels.",
+      "item_schema": {
+        "type": "object",
+        "required": [
+          "mangrove_variable",
+          "delta_value",
+          "confidence"
+        ],
+        "properties": {
+          "mangrove_variable": {
+            "type": "string",
+            "description": "The $mg-* SCSS variable name to override."
+          },
+          "delta_value": {
+            "type": "string",
+            "description": "The value to assign (may reference a Delta variable like $delta-color-primary)."
+          },
+          "default_value": {
+            "type": "string",
+            "description": "What Mangrove defaults to from _variables.scss."
+          },
+          "component_area": {
+            "type": "string",
+            "enum": [
+              "interactive",
+              "tag",
+              "button",
+              "form",
+              "hero",
+              "tab",
+              "typography",
+              "spacing"
+            ],
+            "description": "Which component area this mapping affects."
+          },
+          "change_rationale": {
+            "type": "string",
+            "description": "Why this override is needed for Delta brand consistency."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "inferred",
+              "placeholder"
+            ],
+            "description": "Confidence level."
+          },
+          "todo": {
+            "type": "string",
+            "description": "Notes for the Delta design team if confirmation is needed."
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "item_ref": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "item_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "item_id"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "item_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "item_id"
+              ]
+            }
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "a11y_findings": {
+      "name": "Accessibility findings",
+      "description": "WCAG contrast and interaction audits for all Delta theme color pairings.",
+      "item_schema": {
+        "type": "object",
+        "required": [
+          "finding_title",
+          "severity",
+          "wcag_criterion"
+        ],
+        "properties": {
+          "finding_title": {
+            "type": "string",
+            "description": "Short description of the finding."
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "fail",
+              "warning",
+              "pass"
+            ],
+            "description": "fail (does not meet AA), warning (meets AA not AAA), pass (meets AAA)."
+          },
+          "wcag_criterion": {
+            "type": "string",
+            "description": "Specific WCAG criterion (e.g., 1.4.3, 1.4.6, 1.4.11)."
+          },
+          "foreground": {
+            "type": "string",
+            "description": "Foreground color."
+          },
+          "background": {
+            "type": "string",
+            "description": "Background color."
+          },
+          "contrast_ratio": {
+            "type": "string",
+            "description": "Calculated contrast ratio (e.g., 5.76:1)."
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "How to fix failures or confirmation of passing."
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "item_ref": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "item_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "item_id"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "item_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "item_id"
+              ]
+            }
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "scss_artifacts": {
+      "name": "SCSS artifacts",
+      "description": "Generated SCSS files and Storybook config changes for the DELTA Resilience theme.",
+      "item_schema": {
+        "type": "object",
+        "required": [
+          "artifact_name",
+          "artifact_type",
+          "content"
+        ],
+        "properties": {
+          "artifact_name": {
+            "type": "string",
+            "description": "File name (e.g., _variables-delta.scss, style-delta.scss)."
+          },
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "scss_partial",
+              "scss_entry",
+              "storybook_config"
+            ],
+            "description": "Type of artifact."
+          },
+          "content": {
+            "type": "string",
+            "description": "Complete file content."
+          },
+          "line_changes": {
+            "type": "string",
+            "description": "For modifications to existing files, the exact lines to change."
+          },
+          "todos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Items needing design team input."
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "item_ref": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "item_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "item_id"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "item_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "item_id"
+              ]
+            }
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "approved_artifacts": {
+      "name": "Approved artifacts",
+      "description": "Human-reviewed and approved SCSS artifacts ready for implementation.",
+      "item_schema": {
+        "type": "object",
+        "required": [
+          "artifact_name",
+          "artifact_type",
+          "content"
+        ],
+        "properties": {
+          "artifact_name": {
+            "type": "string",
+            "description": "File name."
+          },
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "scss_partial",
+              "scss_entry",
+              "storybook_config"
+            ],
+            "description": "Type of artifact."
+          },
+          "content": {
+            "type": "string",
+            "description": "Final file content (may be edited from scss_artifacts version)."
+          },
+          "line_changes": {
+            "type": "string",
+            "description": "For modifications, the exact lines changed."
+          },
+          "implementation_notes": {
+            "type": "string",
+            "description": "Human-added notes about implementation approach."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "modified",
+              "needs_investigation"
+            ],
+            "description": "Review outcome."
+          },
+          "todos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Remaining items needing design team input."
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "item_ref": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "item_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "item_id"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "item_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "item_id"
+              ]
+            }
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ import themeUNDRR from '../stories/assets/scss/style.scss';
 import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss';
 import themeIRP from '../stories/assets/scss/style-irp.scss';
 import themeMCR from '../stories/assets/scss/style-mcr.scss';
+import themeDelta from '../stories/assets/scss/style-delta.scss';
 
 // RTL languages
 const rtlLanguages = ['arabic'];
@@ -88,6 +89,7 @@ const themeStyles = {
   'PreventionWeb Theme': themePreventionWeb,
   'IRP Theme': themeIRP,
   'MCR2030 Theme': themeMCR,
+  'DELTA Resilience Theme': themeDelta,
 };
 
 // Track currently active theme
@@ -203,6 +205,7 @@ const preview = {
           { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
           { value: 'IRP Theme', title: 'IRP Theme' },
           { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
+          { value: 'DELTA Resilience Theme', title: 'DELTA Resilience Theme' },
         ],
         showName: true,
         dynamicTitle: true,
