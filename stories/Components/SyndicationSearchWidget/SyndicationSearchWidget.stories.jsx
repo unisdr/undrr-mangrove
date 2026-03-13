@@ -829,14 +829,15 @@ Any UNDRR property can embed this to show the latest publications without buildi
 };
 
 /**
- * Four-card syndication pattern - hardwired topic query, no search UI.
+ * Syndicated cards - hardwired topic query, no search UI.
  *
  * Demonstrates embedding a fixed topic query as a content block.
- * No search box, no facets, no pager — just four cards for a specific
+ * No search box, no facets, no pager — just cards for a specific
  * subject like "early warning" or "rainfall". Use this pattern on
  * landing pages to surface relevant content without exposing search.
+ * Adjust `resultsPerPage` and `gridColumns` for different card counts.
  */
-export const FourCardSyndication = {
+export const SyndicatedCards = {
   args: {
     config: {
       ...defaultConfig,
@@ -866,7 +867,7 @@ export const FourCardSyndication = {
     docs: {
       description: {
         story: `
-The "four-card syndication" pattern: a hardwired topic query rendered as a content block with no search chrome.
+Syndicated cards: a hardwired topic query rendered as a content block with no search chrome. This example uses four cards, but adjust \`resultsPerPage\` and \`gridColumns\` for any count (2-6).
 
 \`\`\`js
 config: {

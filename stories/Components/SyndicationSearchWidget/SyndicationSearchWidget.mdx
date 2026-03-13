@@ -213,11 +213,11 @@ Override `searchEndpoint` to point at a different Elasticsearch proxy (DDEV, sta
 
 <Canvas of={SyndicationSearchWidgetStories.CustomEndpoint} meta={SyndicationSearchWidgetStories} />
 
-## Four-card syndication
+## Syndicated cards
 
-A hardwired topic query rendered as a content block with no search chrome. Uses `defaultQuery` to seed a topic, `requireImage` to ensure every card has a visual, and `visibleTeaserFields` to strip the content type badge and teaser text for a clean image + title + date card.
+A hardwired topic query rendered as a content block with no search chrome. Uses `defaultQuery` to seed a topic, `requireImage` to ensure every card has a visual, and `visibleTeaserFields` to strip the content type badge and teaser text for a clean image + title + date card. Adjust `resultsPerPage` and `gridColumns` for different card counts.
 
-<Canvas of={SyndicationSearchWidgetStories.FourCardSyndication} meta={SyndicationSearchWidgetStories} />
+<Canvas of={SyndicationSearchWidgetStories.SyndicatedCards} meta={SyndicationSearchWidgetStories} />
 
 ## Query syntax
 
