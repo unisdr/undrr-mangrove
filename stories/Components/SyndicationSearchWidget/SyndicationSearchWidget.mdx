@@ -213,6 +213,12 @@ Override `searchEndpoint` to point at a different Elasticsearch proxy (DDEV, sta
 
 <Canvas of={SyndicationSearchWidgetStories.CustomEndpoint} meta={SyndicationSearchWidgetStories} />
 
+## Syndicated cards
+
+A hardwired topic query rendered as a content block with no search chrome. Uses `defaultQuery` to seed a topic, `requireImage` to ensure every card has a visual, and `visibleTeaserFields` to strip the content type badge and teaser text for a clean image + title + date card. Adjust `resultsPerPage` and `gridColumns` for different card counts.
+
+<Canvas of={SyndicationSearchWidgetStories.SyndicatedCards} meta={SyndicationSearchWidgetStories} />
+
 ## Query syntax
 
 Reference for Elasticsearch query_string syntax. Use this story to test search queries.
@@ -291,6 +297,9 @@ The component is loaded automatically on pages containing a container with `data
 | `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
 | `gridColumns` | number | `null` | Grid columns for card modes (2-6). `null` = use `resultsPerPage` |
 | `visibleTeaserFields` | object | `null` | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
+| `requireImage` | boolean | `false` | Only return results that have an image (`has_image:true` ES filter) |
+| `interestingnessTiers` | array | `[]` | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`) |
+| `longevityTiers` | array | `[]` | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`) |
 
 ## Architecture
 
@@ -394,6 +403,9 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/u
 | `data-enable-hash-sync` | — | Sync search state to URL hash |
 | `data-default-filters` | — | JSON array of `{key, value}` filter objects |
 | `data-allowed-types` | — | JSON object restricting content type options |
+| `data-require-image` | — | Only return results with images (`true`/`false`) |
+| `data-interestingness-tiers` | — | JSON array of tier names (e.g., `'["promoted","announced"]'`) |
+| `data-longevity-tiers` | — | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
 
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
@@ -407,6 +419,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.2.1** — 2026-03-13: ([web-backlog#2660](https://gitlab.com/undrr/web-backlog/-/issues/2660)) Native `requireImage`, `interestingnessTiers`, `longevityTiers` config options (moved from Drupal wrapper); `TEASER_FIELDS` constant and `allTeaserFieldsVisible()` as single source of truth for teaser field visibility; ES query optimization (skip aggs/highlights/post_filter for syndication embeds); card-aware loading skeletons; SyndicatedCards story pattern
 - **1.2.0** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.1.0** — 2026-02-26:
   - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results — search results now include taxonomy terms (Hazard, Country, Theme) alongside content nodes; `vid:` prefix in type filter for vocabulary filtering; configurable `searchEndpoint` with CustomEndpoint story documenting override patterns

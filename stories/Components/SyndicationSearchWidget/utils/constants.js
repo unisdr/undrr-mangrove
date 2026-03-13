@@ -365,6 +365,17 @@ export const DEFAULT_CONFIG = {
   // Teaser field visibility
   visibleTeaserFields: null, // {image: false, date: false, ...} — null = all visible
 
+  // Require image — adds has_image:true filter to exclude results without images
+  requireImage: false,
+
+  // Tier filters — array of tier names to restrict results by editorial weight or freshness.
+  // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.
+  // Interestingness tiers: 'demoted', 'deferred', 'average', 'promoted', 'announced'
+  // Longevity tiers: 'today', 'days', 'week', 'month', 'year', 'longtime', 'always'
+  // e.g., interestingnessTiers: ['promoted', 'announced'] only returns high-priority content
+  interestingnessTiers: [],
+  longevityTiers: [],
+
 };
 
 /**
@@ -462,6 +473,42 @@ export function isTaxonomyTermResult(source) {
 export function isFilterVisible(key, visibleFilters) {
   if (!visibleFilters) return true;
   return visibleFilters[key] !== false;
+}
+
+/**
+ * Toggleable teaser fields and the BEM selectors they control.
+ * This is the single source of truth — the SCSS rules, buildHiddenFieldClasses(),
+ * and story configs all derive from this list.
+ *
+ * Each entry maps a config key (used in `visibleTeaserFields`) to:
+ * - `label` — human-readable name for Storybook / docs
+ * - `selector` — CSS selector targeted by `mg-search--hide-{key}`
+ *
+ * Title (.mg-card__title) is intentionally not toggleable.
+ *
+ * @type {Object.<string, {label: string, selector: string}>}
+ */
+export const TEASER_FIELDS = {
+  image:           { label: 'Image',            selector: '.mg-card__visual' },
+  contentType:     { label: 'Content type',     selector: '.mg-card__tag' },
+  publicationType: { label: 'Publication type', selector: '.mg-card__publication-type' },
+  date:            { label: 'Date',             selector: '.mg-card__date' },
+  summary:         { label: 'Summary',          selector: '.mg-card__description' },
+  siteName:        { label: 'Site name',        selector: '.mg-search__result-site-name' },
+  organization:    { label: 'Organization',     selector: '.mg-card__organization' },
+};
+
+/**
+ * Build a visibleTeaserFields object with all fields set to `true`.
+ * Useful as a starting point when you want to hide only specific fields.
+ *
+ * @returns {Object.<string, boolean>}
+ * @example
+ * const fields = allTeaserFieldsVisible();
+ * // => { image: true, contentType: true, publicationType: true, date: true, summary: true, siteName: true, organization: true }
+ */
+export function allTeaserFieldsVisible() {
+  return Object.fromEntries(Object.keys(TEASER_FIELDS).map(k => [k, true]));
 }
 
 /**
@@ -585,4 +632,49 @@ export function getParentTypeForField(field) {
  */
 export function getSubtypesForType(parentType) {
   return CONTENT_SUBTYPES[parentType] || null;
+}
+
+/**
+ * Convert scoring tier config (cumulative max values) to filter ranges (min/max).
+ *
+ * SCORING_CONFIG stores tiers as `{ tierName: { max, weight|scale } }` where each
+ * tier's min is implicitly the previous tier's max + 1. This function derives
+ * explicit `{ min, max }` ranges for use in ES query_string range filters.
+ *
+ * @param {Object} tiers - Tier config from SCORING_CONFIG (e.g., SCORING_CONFIG.interestingness)
+ * @returns {Object} Map of tier name → { min, max }
+ */
+export function buildTierRanges(tiers) {
+  // Sort by max to guarantee correct min/max derivation regardless of
+  // Object.entries() iteration order.
+  const entries = Object.entries(tiers).sort((a, b) => a[1].max - b[1].max);
+  const ranges = {};
+  let prevMax = -1;
+  for (const [name, tier] of entries) {
+    ranges[name] = { min: prevMax + 1, max: tier.max };
+    prevMax = tier.max;
+  }
+  return ranges;
+}
+
+/**
+ * Build an Elasticsearch filter for selected tier names.
+ * Returns a `range` query (single tier) or `bool.should` of `range` queries
+ * (multiple tiers) — avoids query_string parsing overhead and escaping risks.
+ *
+ * @param {string} field - ES field name (e.g., 'field_meta_interestingness')
+ * @param {Array<string>} tierNames - Selected tier keys (e.g., ['promoted', 'announced'])
+ * @param {Object} tierRanges - Tier ranges with { min, max } per key (from buildTierRanges)
+ * @returns {Object|null} ES filter clause or null
+ */
+export function buildTierFilter(field, tierNames, tierRanges) {
+  if (!Array.isArray(tierNames) || tierNames.length === 0) return null;
+
+  const rangeFilters = tierNames
+    .filter(name => tierRanges[name])
+    .map(name => ({ range: { [field]: { gte: tierRanges[name].min, lte: tierRanges[name].max } } }));
+
+  if (rangeFilters.length === 0) return null;
+  if (rangeFilters.length === 1) return rangeFilters[0];
+  return { bool: { should: rangeFilters, minimum_should_match: 1 } };
 }

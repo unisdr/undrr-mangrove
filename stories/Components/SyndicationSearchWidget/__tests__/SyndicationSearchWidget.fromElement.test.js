@@ -93,4 +93,45 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('defaultFilters');
     expect(config).not.toHaveProperty('allowedTypes');
   });
+
+  it('extracts requireImage boolean', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'require-image': 'true' })
+    );
+    expect(config.requireImage).toBe(true);
+  });
+
+  it('sets requireImage to false when data attribute is "false"', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'require-image': 'false' })
+    );
+    expect(config.requireImage).toBe(false);
+  });
+
+  it('parses interestingnessTiers JSON array', () => {
+    const tiers = ['promoted', 'announced'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'interestingness-tiers': JSON.stringify(tiers) })
+    );
+    expect(config.interestingnessTiers).toEqual(tiers);
+  });
+
+  it('parses longevityTiers JSON array', () => {
+    const tiers = ['today', 'days'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'longevity-tiers': JSON.stringify(tiers) })
+    );
+    expect(config.longevityTiers).toEqual(tiers);
+  });
+
+  it('ignores malformed tier JSON gracefully', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({
+        'interestingness-tiers': 'not-json',
+        'longevity-tiers': '[broken',
+      })
+    );
+    expect(config).not.toHaveProperty('interestingnessTiers');
+    expect(config).not.toHaveProperty('longevityTiers');
+  });
 });

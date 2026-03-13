@@ -559,6 +559,41 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+// Card skeleton — layout is controlled by mg-grid classes applied in JSX.
+// Reset the flex declarations inherited from .mg-search__skeleton so they
+// don't fight mg-grid's own flex fallback / CSS grid (@supports) path.
+.mg-search__skeleton--card {
+  flex-direction: initial;
+}
+
+.mg-search__skeleton-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: $search-radius;
+  overflow: hidden;
+  border: 1px solid $search-border-light;
+}
+
+.mg-search__skeleton-card-image {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
+  background-size: 200% 100%;
+  animation: mg-search-shimmer 1.5s infinite;
+}
+
+.mg-search__skeleton-card-body {
+  padding: $mg-spacing-100;
+
+  .mg-search__skeleton-title {
+    width: 85%;
+  }
+
+  .mg-search__skeleton-meta {
+    width: 50%;
+    margin-bottom: 0;
+  }
+}
+
 @keyframes mg-search-shimmer {
   0% {
     background-position: 200% 0;

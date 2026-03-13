@@ -42,6 +42,8 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showSearchTimer = dataset.showSearchTimer === 'true';
   if (dataset.enableHashSync !== undefined)
     config.enableHashSync = dataset.enableHashSync !== 'false';
+  if (dataset.requireImage !== undefined)
+    config.requireImage = dataset.requireImage === 'true';
 
   // JSON-encoded complex props
   if (dataset.defaultFilters) {
@@ -54,6 +56,20 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.allowedTypes) {
     try {
       config.allowedTypes = JSON.parse(dataset.allowedTypes);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.interestingnessTiers) {
+    try {
+      config.interestingnessTiers = JSON.parse(dataset.interestingnessTiers);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.longevityTiers) {
+    try {
+      config.longevityTiers = JSON.parse(dataset.longevityTiers);
     } catch {
       /* ignore malformed JSON */
     }
