@@ -158,6 +158,13 @@
     list-style: none;
   }
 
+  // Optional icon before the top-level menu label
+  &__item-icon {
+    margin-inline-end: 0.35em;
+    font-size: 0.85em;
+    vertical-align: baseline;
+  }
+
   // Desktop: Make the top level button links larger
   @media screen and (min-width: $mg-breakpoint-tablet) {
     &__item-link {

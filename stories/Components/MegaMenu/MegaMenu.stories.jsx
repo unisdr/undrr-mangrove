@@ -385,3 +385,29 @@ export const WithLogo = {
     },
   },
 };
+
+// Sections with icons on top-level items
+const sectionsWithIcons = sections.map((section, i) => ({
+  ...section,
+  icon: [
+    'mg-icon mg-icon-info-circle',
+    'mg-icon mg-icon-chart-bar',
+    'mg-icon mg-icon-globe',
+  ][i % 3],
+}));
+
+export const WithIcons = {
+  render: args => <MegaMenu {...args} />,
+  args: {
+    delay: 5000,
+    sections: sectionsWithIcons,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Top-level menu items can show an optional icon before the label via the `icon` property on each section. Icons are decorative (`aria-hidden`) and only appear on the desktop topbar.',
+      },
+    },
+  },
+};

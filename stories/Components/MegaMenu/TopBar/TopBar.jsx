@@ -41,6 +41,7 @@ export function TopBar({
       index={index}
       ref={element => (itemListRef.current[index] = element)}
       title={section.title}
+      icon={section.icon}
       bannerDescription={section.bannerDescription}
       link={section.bannerButton}
       children={section.sections}

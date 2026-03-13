@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 36" fill="none">
+  <!-- DTS icon — four colored quadrants -->
+  <rect x="0" y="0" width="17" height="17" rx="2" fill="#00857C"/>
+  <rect x="19" y="0" width="17" height="17" rx="2" fill="#7B2D8E"/>
+  <rect x="0" y="19" width="17" height="17" rx="2" fill="#004F91"/>
+  <rect x="19" y="19" width="17" height="17" rx="2" fill="#B52A32"/>
+  <!-- DTS letters -->
+  <text x="5" y="14" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="white">D</text>
+  <text x="21" y="14" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="white">T</text>
+  <text x="5" y="33" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="white">S</text>
+  <!-- DELTA Resilience wordmark -->
+  <text x="46" y="15" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#004F91" letter-spacing="1">DELTA</text>
+  <text x="46" y="32" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#004F91">Resilience</text>
+</svg>

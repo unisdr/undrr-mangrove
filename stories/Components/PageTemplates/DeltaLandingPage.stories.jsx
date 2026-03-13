@@ -1,9 +1,77 @@
 import React from 'react';
-import { PageHeader } from '../PageHeader/PageHeader';
+// import { PageHeader } from '../PageHeader/PageHeader';
+import MegaMenu from '../MegaMenu/MegaMenu';
 import { Hero } from '../Hero/Hero';
+import { SectionHeader } from '../../Molecules/SectionHeader/SectionHeader';
 import { IconCard } from '../Cards/IconCard/IconCard';
-import { VerticalCard } from '../Cards/Card/VerticalCard';
+import { SyndicationSearchWidget } from '../SyndicationSearchWidget/SyndicationSearchWidget';
 import { Footer } from '../Footer/Footer';
+import deltaLogo from '../../assets/images/delta-logo-placeholder.svg';
+
+/* ------------------------------------------------------------------ */
+/*  Data                                                               */
+/* ------------------------------------------------------------------ */
+
+const deltaSections = [
+  {
+    title: 'DATA',
+    icon: 'mg-icon mg-icon-cubes',
+    bannerHeading: 'Data management',
+    bannerDescription:
+      'Collect, manage and share disaster losses and damages data. Track hazardous events and their impacts across sectors and geographic areas.',
+    items: [
+      {
+        title: 'Events and records',
+        items: [
+          { title: 'Hazardous events', url: '#' },
+          { title: 'Disaster events', url: '#' },
+          { title: 'Disaster records', url: '#' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'ANALYSIS',
+    icon: 'mg-icon mg-icon-chart-bar',
+    bannerHeading: 'Analysis',
+    bannerDescription:
+      'Explore analytical outputs across sectors, hazards and disaster events to support evidence-based decision-making for risk reduction.',
+    items: [
+      {
+        title: 'Analysis',
+        items: [
+          { title: 'Sectors', url: '#' },
+          { title: 'Hazards', url: '#' },
+          { title: 'Disaster events', url: '#' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'ABOUT',
+    icon: 'mg-icon mg-icon-life-ring',
+    bannerHeading: 'About us',
+    bannerDescription:
+      'Learn about the DELTA Resilience system, its methodology, technical specifications and the partners behind the platform.',
+    items: [
+      {
+        title: 'General',
+        items: [
+          { title: 'About the system', url: '#' },
+          { title: 'Technical specifications', url: '#' },
+          { title: 'Partners', url: '#' },
+          { title: 'Methodologies', url: '#' },
+          { title: 'Support', url: '#' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'SIGN IN',
+    icon: 'mg-icon mg-icon-user',
+    bannerButton: { url: '#' },
+  },
+];
 
 const heroData = [
   {
@@ -97,32 +165,23 @@ const featureCards = [
   },
 ];
 
-const blogCards = [
-  {
-    contenttile: 'Blog',
-    title: "From vision to reality: making early warnings 'truly' multi-hazard",
-    imgback:
-      'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-    imgalt: 'Early warning systems',
-    link: '#',
-  },
-  {
-    contenttile: 'Blog',
-    title: "Women's financial empowerment builds climate resilience",
-    imgback:
-      'https://www.undrr.org/sites/default/files/2020-02/Ecosystems_sm.jpg',
-    imgalt: 'Climate resilience',
-    link: '#',
-  },
-  {
-    contenttile: 'Blog',
-    title: 'The Common Alerting Protocol (CAP)',
-    imgback:
-      'https://www.undrr.org/sites/default/files/2020-01/Home---PreventionWeb702702702702.jpg',
-    imgalt: 'Common Alerting Protocol',
-    link: '#',
-  },
-];
+const syndicationConfig = {
+  searchEndpoint: 'https://www.undrr.org/search-endpoint',
+  displayMode: 'card',
+  resultsPerPage: 3,
+  gridColumns: 3,
+  defaultQuery: '"DELTA Resilience"',
+  defaultSort: 'newest',
+  requireImage: true,
+  // longevityTiers: ['year', 'longtime', 'always'],
+  customFilters: ['type:news'],
+  showSearchBox: false,
+  showFacets: false,
+  showActiveFilters: false,
+  showResultsCount: false,
+  showSearchTimer: false,
+  showPager: false,
+};
 
 const ctaHeroData = [
   {
@@ -133,50 +192,36 @@ const ctaHeroData = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/*  Page component                                                     */
+/* ------------------------------------------------------------------ */
+
 const DeltaLandingPage = () => (
   <>
-    <PageHeader />
+    {/* <PageHeader /> */}
 
-    {/* DELTA sub-navigation */}
-    <nav
-      className="mg-container mg-container--spacer"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0.75rem 1.5rem',
-        borderBottom: '1px solid #e6e6e6',
-      }}
-    >
-      <strong>DELTA</strong>
-      <div style={{ display: 'flex', gap: '2rem', fontSize: '1.4rem' }}>
-        <a href="#" style={{ fontWeight: 'bold' }}>
-          HOME
-        </a>
-        <a href="#">DATA</a>
-        <a href="#">ANALYTICS</a>
-      </div>
-    </nav>
+    {/* DELTA sub-navigation — MegaMenu branded with mega menu sections */}
+    <MegaMenu
+      logoSrc={deltaLogo}
+      logoAlt="DELTA Resilience"
+      logoHref="#"
+      sections={deltaSections}
+    />
 
     {/* Hero */}
     <Hero data={heroData} variant="primary" />
 
     {/* How it works */}
     <div className="mg-container mg-container--spacer">
-      <section style={{ padding: '3rem 0' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '2rem',
-          }}
-        >
-          <h2 style={{ margin: 0 }}>How it works</h2>
-          <a href="#" className="mg-button mg-button-primary">
-            Learn More
-          </a>
-        </div>
+      <section className="mg-container--padded">
+        <SectionHeader
+          headerText="How it works"
+          action={
+            <a href="#" className="mg-button mg-button-primary">
+              Learn More
+            </a>
+          }
+        />
         <div className="mg-grid mg-grid__col-3">
           {howItWorksCards.map((card, i) => (
             <IconCard key={i} data={[card]} />
@@ -185,20 +230,15 @@ const DeltaLandingPage = () => (
       </section>
 
       {/* Key Features */}
-      <section style={{ padding: '3rem 0' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '2rem',
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Key Features</h2>
-          <a href="#" className="mg-button mg-button-primary">
-            Learn More
-          </a>
-        </div>
+      <section className="mg-container--padded">
+        <SectionHeader
+          headerText="Key Features"
+          action={
+            <a href="#" className="mg-button mg-button-primary">
+              Learn More
+            </a>
+          }
+        />
         <div className="mg-grid mg-grid__col-3">
           {featureCards.map((card, i) => (
             <IconCard key={i} data={[card]} />
@@ -206,33 +246,51 @@ const DeltaLandingPage = () => (
         </div>
       </section>
 
-      {/* More from UNDRR */}
-      <section style={{ padding: '3rem 0' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '2rem',
-          }}
-        >
-          <h2 style={{ margin: 0 }}>More from UNDRR</h2>
-          <a href="#" className="mg-button mg-button-primary">
-            Explore Research
-          </a>
-        </div>
-        <section className="mg-grid mg-grid__col-3">
-          {blogCards.map((card, i) => (
-            <VerticalCard key={i} data={[card]} />
-          ))}
-        </section>
+      {/* More from UNDRR — syndicated search cards */}
+      <section className="mg-container--padded">
+        <SectionHeader
+          headerText="More from UNDRR"
+          action={
+            <a href="#" className="mg-button mg-button-primary">
+              Explore Research
+            </a>
+          }
+        />
+        <SyndicationSearchWidget config={syndicationConfig} />
       </section>
     </div>
 
     {/* CTA Banner */}
     <Hero data={ctaHeroData} variant="tertiary" />
 
-    {/* Footer */}
+    {/* DELTA utility footer bar — above the global UNDRR footer */}
+    <footer className="mg-footer-bar">
+      <div className="mg-container">
+        <div className="mg-footer-bar__row">
+          <div className="mg-footer-bar__links">
+            <strong>DELTA</strong>
+            <a href="#">How do I use this data?</a>
+            <a href="#">Help</a>
+            <a href="#">Report a bug</a>
+            <a href="#">Suggest an improvement</a>
+            <a href="#">Submit new data</a>
+          </div>
+        </div>
+        <hr className="mg-footer-bar__divider" />
+        <div className="mg-footer-bar__row">
+          <p className="mg-footer-bar__text">
+            Tracking the costs of disasters is a vital step toward risk-informed
+            development, and investing in disaster risk reduction.
+          </p>
+          <div className="mg-footer-bar__links">
+            <a href="#">Privacy policy</a>
+            <a href="#">Terms and conditions</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    {/* UNDRR global footer */}
     <Footer />
   </>
 );
