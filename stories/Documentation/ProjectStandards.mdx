@@ -14,359 +14,194 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # Mangrove: the UNDRR standard
 
-Mangrove is the universal system for all UNDRR web properties.
+Mangrove is UNDRR's shared design system -- a common component structure for all web properties, where each property keeps its own visual identity.
+
+If you're building a UNDRR property and wondering whether you need another component library on top of your existing stack, this page explains what Mangrove handles, what it doesn't, and why it matters even if your project is an application rather than a content website. If you're new to Mangrove and just want to get started, head to the <LinkTo kind="getting-started-a-getting-started-guide" story="docs">getting started guide</LinkTo>.
 
 <TableOfContents
   tocData={[
-    { id: 'why-mangrove-is-the-default', text: 'Why Mangrove is the default' },
-    { id: 'what-using-mangrove-means', text: 'What using Mangrove means' },
-    { id: 'the-case-for-consistency', text: 'The case for consistency' },
-    { id: 'working-within-the-system', text: 'Working within the system' },
-    {
-      id: 'when-exceptions-are-considered',
-      text: 'When exceptions are considered',
-    },
-    { id: 'improving-mangrove-instead', text: 'Improving Mangrove instead' },
-    { id: 'implementation-flexibility', text: 'Implementation flexibility' },
-    {
-      id: 'governance-and-decision-making',
-      text: 'Governance and decision making',
-    },
+    { id: 'what-mangrove-covers-and-what-it-does-not', text: 'What Mangrove covers (and what it does not)' },
+    { id: 'why-it-matters-for-your-project', text: 'Why it matters for your project' },
+    { id: 'mangrove-alongside-application-frameworks', text: 'Mangrove alongside application frameworks' },
+    { id: 'adopting-mangrove', text: 'Adopting Mangrove' },
+    { id: 'shared-infrastructure', text: 'Shared infrastructure' },
+    { id: 'accessibility', text: 'Accessibility' },
+    { id: 'contributing-and-governance', text: 'Contributing and governance' },
   ]}
   showNumbers={false}
 />
 
-## Why Mangrove is the default
+## What Mangrove covers (and what it does not)
 
-UNDRR experienced firsthand how design fragmentation led to inefficiencies and rising maintenance costs. Previously, each platform (PreventionWeb, Sendai Framework Monitor, and others) maintained its own UI system, multiplying effort across accessibility, rebranding, and onboarding tasks.
+Mangrove provides shared components -- navigation, headers, footers, content cards, syndicated content blocks. Each property supplies its own design tokens for colors, spacing, typography, and border radii. Your application doesn't have to look like undrr.org -- it has to use the same component markup so that shared content, accessibility patterns, and updates work everywhere.
 
-**Operational challenges included:**
+In practice, the split looks like this. What stays the same across all themes:
 
-- Duplicated bug fixes across platforms
-- Inconsistent design updates
-- Repetitive onboarding workflows
-- Fragmented accessibility compliance
-- Slowed feature development due to redundant problem-solving
+- Architecture of shared component patterns (cards, heros)
+- Navigation patterns (mega menu layout, footer structure, logo placement)
+- Interaction patterns (hover states, transitions, focus rings)
 
-Mangrove is the single source of truth for the UNDRR digital experience. This means:
+What each property controls:
 
-- Consistent branding that strengthens recognition
-- Unified user experiences across properties
-- Improved developer productivity with reusable components
-- Built-in accessibility compliance
-- Centralized updates that reach all properties at once
+- Color palette and brand colors
+- Spacing scale and border radii
+- Button styles, tag colors, tab appearance
+- Hero overlays and accent treatments
+- Choice of application-specific UI library (data tables, forms, dashboards, etc.)
 
-## What using Mangrove means
+Mangrove doesn't try to be a general-purpose application framework. Data tables, form validation, complex dashboards, workflow state, user management -- those are outside its scope.
 
-Adopting Mangrove doesn't restrict creativity or flexibility—it aligns projects with tested, scalable standards that benefit both users and developers.
+## Why it matters for your project
 
-Mangrove targets a practical sweet spot for most common use cases—covering foundational aspects of layout, spacing, color, and interaction patterns. However, we recognize that some use cases will exist outside of Mangrove’s current scope. For example, bespoke data visualizations, multi-step user registration flows, or deeply specialized dashboards may require custom design and engineering.
+UNDRR is a small organization with a smaller web team supporting many properties. We can't afford for each website to operate as its own vertical with its own component stack. Before Mangrove, that's what we had -- PreventionWeb, MCR, IRP, and others each maintaining their own UI. Every accessibility fix, rebrand, or onboarding workflow had to happen multiple times. The same bug got fixed three times on three platforms.
 
-In these cases, custom implementations are acceptable—but to the extent possible, they should align with Mangrove’s design principles and contribute improvements or generalizable patterns back to the system.
+That's the organizational background. Here's what it means for your project.
 
-### Core requirements
+UNDRR will rebrand again. When that happens, Mangrove-based properties update a single CSS import. A property with its own branding components does that work alone. Same story when a hero layout changes -- Mangrove components get updated and tested once, but if you built your own navigation or card components, you audit each of those separately.
 
-**Semantic HTML structure**
-Follow consistent HTML patterns, regardless of build toolchain:
+There's also the content problem. UNDRR publishes news, publications, and partner listings in Drupal with `mg-` CSS class names baked in. If your property doesn't load Mangrove's CSS, that syndicated content renders as unstyled fragments. And shared services like emergency broadcasts, cookie consent, and analytics configuration only reach properties that are connected to the shared infrastructure.
 
-```html
-<!-- Button -->
-<button class="mg-cta-button mg-cta-button--primary">
-  <span class="mg-cta-button__text">Download Report</span>
-  <span class="mg-cta-button__icon" aria-hidden="true">📄</span>
-</button>
+The work from your project to support Mangrove supports every other property, and the work they do supports yours.
 
-<!-- Card -->
-<article class="mg-card mg-card--vertical">
-  <div class="mg-card__image">
-    <img src="report-cover.jpg" alt="Global Assessment Report 2023 cover" />
-  </div>
-  <div class="mg-card__content">
-    <h3 class="mg-card__title">Global Assessment Report 2023</h3>
-    <p class="mg-card__description">
-      Latest findings on disaster risk reduction...
-    </p>
-  </div>
-</article>
-```
+## Mangrove alongside application frameworks
 
-**CSS class naming**
-Use BEM methodology:
+If your team has already invested in PrimeReact or a similar library, that investment is not wasted. Mangrove is meant to sit alongside application-level libraries, not replace them.
 
-```scss
-// Extend existing
-.mg-cta-button--report-download {
-  border-left: 4px solid $mg-color-accent-100;
-}
+| Layer | Owned by | Examples |
+|-------|----------|----------|
+| **Brand and content** | Mangrove | Header, footer, mega menu, content cards, typography, color tokens, syndicated content blocks |
+| **Application UI** | Your framework | Data tables, form controls, dashboards, filters, tree views, date pickers |
 
-// Create new
-.myproject-announcement-banner {
-  &__content {
-  }
-  &--urgent {
-  }
-}
-```
-
-**Sass integration**
-Use design tokens to ensure visual consistency:
-
-```scss
-// Preferred
-.myproject-announcement-banner {
-  color: $mg-color-text;
-  padding: $mg-spacing-100;
-  font-family: $mg-font-family;
-  border-radius: $mg-spacing-25;
-}
-
-// Avoid
-.banner {
-  color: #333;
-  padding: 16px;
-  font-family: 'Arial';
-  border-radius: 4px;
-}
-```
-
-## The case for consistency
-
-### Branding benefits
-
-Mangrove ensures:
-
-- **Visual harmony** across properties
-- **Predictable interaction models**
-- **Reinforced brand identity** through typography and color
-- **Consistent logo placement and usage**
-- **Fewer decisions and less reinvention**, teams spend less time debating patterns and more time building value
-
-### User journey advantages
-
-For users navigating multiple UNDRR properties:
-
-- Navigation remains intuitive
-- Search and discovery follow consistent logic
-- Forms and interactions behave predictably
-- Mobile responsiveness is reliable and uniform
-
-### Developer experience improvements
-
-**Faster onboarding**
-New engineers apply shared Mangrove knowledge across projects:
+A page might look like this:
 
 ```jsx
-import { StatsCard, QuoteHighlight } from '@undrr/undrr-mangrove';
+// Mangrove handles the UNDRR brand shell
+import { MegaMenu } from '@undrr/undrr-mangrove';
+// Your app library handles data-heavy interfaces
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
-function ReportSummary({ report }) {
+function CountryDashboard({ navSections, riskData }) {
   return (
     <>
-      <QuoteHighlight
-        quote={report.pullQuote}
-        attribution={report.author}
-        variant="line"
-      />
-      <StatsCard
-        title={report.title}
-        stats={report.keyStats}
-      />
+      <MegaMenu sections={navSections} />
+      <main>
+        <DataTable value={riskData} paginator rows={10}>
+          <Column field="country" header="Country" />
+          <Column field="riskIndex" header="Risk index" />
+          <Column field="lastUpdated" header="Last updated" />
+        </DataTable>
+      </main>
     </>
   );
 }
 ```
 
-**Centralized fixes and optimizations**
-Updates in one place benefit all projects.
+The two don't conflict. Mangrove scopes all styles under the `mg-` BEM prefix, and its React components externalize `react` and `react-dom` so there's no runtime duplication. A common concern is that mixing libraries creates visual inconsistency, but the inconsistency Mangrove prevents is between your application and every other UNDRR property, not within it.
 
-### Accessibility compliance
+### "But my component library has a larger community"
 
-Mangrove meets WCAG 2.1 AA:
+True -- whether it's PrimeReact, Material UI, Bootstrap, or Tailwind, these libraries have broad community support for generic UI patterns. But they don't carry the content patterns UNDRR actually uses: how cards are structured, how the mega menu behaves, how syndicated content renders across sites, how the footer pulls in shared content from PreventionWeb. Those are UNDRR-specific problems, and Mangrove is where they get solved once instead of separately on every property.
 
-- Screen reader compatibility
-- Keyboard navigation
-- Color contrast adherence
-- Predictable focus handling
-- Standardized alt text patterns
+## Adopting Mangrove
 
-## Working within the system
+Not every component in every system needs to come from Mangrove. Here's how to identify what does.
 
-### Customization approaches
+**If your system displays any content from UNDRR Drupal sites** (publications, news, search results, partner listings): you need Mangrove CSS and the relevant brand components. Without them, syndicated content renders broken.
 
-**Theme support**
+**If your system is a standalone application with no shared content**: Mangrove design tokens (SCSS variables for colors, spacing, typography) give you brand consistency with zero component lock-in.
 
-```html
-<!-- Global -->
-<link rel="stylesheet" href=".../style.css" />
-<!-- PreventionWeb -->
-<link rel="stylesheet" href=".../style-preventionweb.css" />
-```
+**If your application has domain-specific UI needs** (custom data tables, specialized filters, workflow dashboards): use whatever framework handles those patterns best. Use Mangrove for the shared layer -- navigation, cards, accordions, content blocks. Both coexist by design.
 
-**Component extension**
+### Incremental adoption
 
-```scss
-.mg-mega-menu__user-section {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
+You don't have to integrate everything at once:
 
-  .mg-button--user-profile {
-    background: transparent;
-    border: 1px solid $mg-color-neutral-100;
+1. Add the Mangrove CSS (via CDN or npm)
+2. Swap in the header and footer
+3. Use Mangrove cards where you display syndicated content
+4. Adopt design tokens in your own SCSS
 
-    &:hover {
-      background: $mg-color-neutral-25;
-    }
-  }
-}
-```
+The rest of your application stays as-is.
 
-**Content adaptation**
+### Creating a theme
 
-```jsx
-function EmergencyStatsCard({ data, isUrgent }) {
-  return (
-    <StatsCards
-      data={data}
-      className={isUrgent ? 'mg-stats-card--emergency' : ''}
-      variant={isUrgent ? 'urgent' : 'default'}
-    />
-  );
-}
-```
+A Mangrove theme can be as simple as a single SCSS variable override file or as detailed as you need it to be. The existing theme files are small:
 
-## When exceptions are considered
+- PreventionWeb: 48 lines of variable overrides
+- IRP: 50 lines
+- MCR2030: 65 lines
 
-Exceptions require strong justification. Instead of avoiding mangrove, the needs should be incorporated into Mangrove.
+A new theme for your application would be similar -- your color palette, spacing preferences, and any component-level tweaks. Your application keeps its own visual identity while UNDRR content renders correctly inside it. Start with the <LinkTo kind="getting-started-theming-guide" story="docs">theming guide</LinkTo>, which walks through creating a new theme file from scratch.
 
-Common scenarios include:
+### Bundle sizes
 
-### Technical constraints
+The full CSS theme file is ~26 KB gzipped. React components are ES modules with React and ReactDOM externalized, so if your application already uses React, each component adds roughly 1-15 KB gzipped depending on complexity. Mangrove also works without React -- the CSS and HTML patterns can be used in any server-rendered template (PHP, Twig, etc.) with no JavaScript dependency.
 
-- Legacy systems incompatible with Mangrove
-- Proven performance issues
+For integration details, see the <LinkTo kind="getting-started-a-getting-started-guide" story="docs">getting started guide</LinkTo>, <LinkTo kind="getting-started-sass-integration" story="docs">Sass integration guide</LinkTo>, or <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo>.
+
+### When something doesn't fit
+
+Some real constraints may require working outside Mangrove:
+
+- Legacy systems that can't load Mangrove CSS
+- Proven performance issues with specific components
 - Conflicting dependencies
+- Specialized interfaces or domain-specific workflows
+- Critical launch deadlines (with a plan to add Mangrove support later)
 
-### UX requirements
+If you hit one of these, talk to the Mangrove team. Often there's a lighter integration path that works. If there genuinely isn't, document the constraint and plan to revisit it.
 
-- Specialized interfaces
-- Domain-specific workflows
-- Advanced accessibility needs
+## Shared infrastructure
 
-### Business drivers
+Content syndication is where alignment with Mangrove is most visible, but it's one of several shared services. These are maintained once for every connected property:
 
-- Critical launch deadlines
-- Budget limitations (with remediation plan)
-- Third-party UI mandates
-
-### Exception process
-
-1. Document the constraint
-2. Explore Mangrove-compatible options
-3. Propose a transition plan
-4. Request approval
-5. Track and report progress
-
-## Improving Mangrove instead
-
-Extend Mangrove before working around it.
-
-### Component requests
+**Syndicated search.** The SyndicationSearchWidget queries UNDRR's Elasticsearch index and can render results as cards, lists, or book covers. On a landing page, you can strip out the search box, facets, and pager entirely and just show a row of content cards -- a "latest publications" rail or a topic-specific news feed:
 
 ```jsx
-<MegaMenu
-  sections={menuSections}
-  userSection={{
-    avatar: user.avatar,
-    name: user.name,
-    menuItems: [
-      { label: 'Profile', url: '/profile' },
-      { label: 'Settings', url: '/settings' },
-      { label: 'Logout', onClick: handleLogout },
-    ],
-  }}
-/>
+<SyndicationSearchWidget config={{
+  searchEndpoint: 'https://www.undrr.org/search-endpoint',
+  displayMode: 'card',
+  resultsPerPage: 4,
+  showSearchBox: false,
+  showFacets: false,
+  showPager: false,
+  defaultSort: 'newest',
+  customFilters: ['type:publication'],
+}} />
 ```
 
-### Chart extensions
+The cards use `mg-` classes. Without Mangrove CSS, they're unstyled divs. See the <LinkTo kind="components-syndicationsearchwidget" story="four-card-syndication">four-card syndication example</LinkTo> for a live demo.
 
-```jsx
-<RiskAssessmentChart
-  data={riskData}
-  threatLevels={['Low', 'Medium', 'High', 'Critical']}
-  colorScheme="risk-based"
-  showEvacuationZones
-/>
-```
+**Footer syndication.** The Footer component pulls UNDRR's global footer content dynamically from PreventionWeb's syndication widget. Footer links, legal notices, and social media icons stay consistent across properties without each site maintaining its own copy.
 
-### Contribution workflow
+**Cookie consent.** The CookieConsentBanner loads UNDRR's cookie configuration from a shared CDN (`assets.undrr.org/static/cookie-banner/v1/`). The configuration is maintained once and every property picks it up.
 
-1. Identify need
-2. Design according to Mangrove standards
-3. Submit with use cases
-4. Co-develop with the team
-5. Contribute back
+**Critical messaging.** When UNDRR needs to broadcast an urgent message across all properties -- service outages, emergency announcements -- the critical messaging system injects a message bar via a single script tag. It's hosted on GitHub Pages (independent of Drupal) and supports location targeting and severity levels. Properties outside the shared infrastructure miss these broadcasts.
 
-## Implementation flexibility
+**Analytics.** A shared GA4 enhancement script auto-detects the current domain and configures the correct property ID and cross-domain measurement. No per-site configuration needed.
 
-Mangrove supports diverse tech stacks:
+## Accessibility
 
-### HTML/CSS
+Accessibility is mandatory for every UNDRR digital product, whether it's a content site or an application. Mangrove targets WCAG 2.1 AA. Components are tested with jest-axe for automated checks and manually verified for screen reader support, keyboard navigation, and color contrast. See the <LinkTo kind="getting-started-accessibility" story="docs">accessibility guide</LinkTo> for the testing methodology.
 
-```html
-<link rel="stylesheet" href=".../style.css" />
-```
+If you use Mangrove for the brand layer, you inherit that testing for every component you adopt. If you build your own branding components, you own compliance for each one separately.
 
-### React
+## Contributing and governance
 
-```jsx
-import { StatsCard, ShareButtons } from '@undrr/undrr-mangrove';
-```
+Mangrove is maintained by the UNDRR web team, who own component development, documentation, accessibility compliance, and breaking-change decisions. Breaking changes follow semantic versioning and are documented in release notes.
 
-### Sass
+If Mangrove doesn't have what you need, extend it. File a request as a [GitHub issue](https://github.com/unisdr/undrr-mangrove/issues) describing the use case, or build it yourself and contribute it back. When your team builds something reusable -- a country selector, a progress tracker -- contributing it upstream means it gets maintained alongside the rest of the system instead of staying siloed in one project. See the <LinkTo kind="getting-started-component-contribution-guide" story="docs">component contribution guide</LinkTo> for the full process.
 
-Import the Mangrove design tokens into your SCSS build. The path depends on your setup:
-
-```scss
-// Within the Mangrove repo
-@import "stories/assets/scss/variables";
-
-// From an npm consumer (path depends on your bundler's resolve config)
-@import "node_modules/@undrr/undrr-mangrove/stories/assets/scss/variables";
-```
-
-See the <LinkTo kind="getting-started-sass-integration" story="docs">Sass integration guide</LinkTo> for full setup instructions.
-
-### Traditional templates (e.g. PHP, Drupal)
-
-```php
-<article class="mg-card">
-  ...
-</article>
-```
-
-## Governance and decision making
-
-### Maintained by UNDRR
-
-- Component development
-- Documentation
-- Breaking changes
-- Performance and accessibility
-- Community input
-
-### Submit feedback
-
-- [GitHub issues](https://github.com/unisdr/undrr-mangrove/issues) for bugs and requests
-- Join working groups or contact directly for urgent needs
+For architectural questions or time-sensitive needs, contact the UNDRR web team directly.
 
 ---
 
-## The bottom line
-
-Mangrove is how UNDRR ships consistent, accessible web experiences. Use it, extend it, improve it -- just don’t reinvent it.
+Use Mangrove for the parts of your UI that need to be UNDRR. Use the best tool for everything else.
 
 **Next steps:**
 
-- <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo>
-- <LinkTo kind="getting-started-component-contribution-guide" story="docs">Component contribution guide</LinkTo>
-- Contact the UNDRR web team for project-specific guidance
+1. <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo> -- set up Mangrove and render your first component
+2. <LinkTo kind="getting-started-theming-guide" story="docs">Theming guide</LinkTo> -- create a theme for your property
+3. <LinkTo kind="getting-started-component-contribution-guide" story="docs">Component contribution guide</LinkTo> -- add a component back to the shared library
+4. Contact the UNDRR web team for architectural questions

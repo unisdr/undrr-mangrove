@@ -779,6 +779,244 @@ If no \`searchEndpoint\` is provided, the widget uses \`https://www.undrr.org/se
   },
 };
 
+/**
+ * Syndicated content rail - cards only, no search UI.
+ *
+ * Demonstrates embedding UNDRR content as a card grid on a landing page
+ * or external application. All search chrome is hidden; the widget just
+ * renders results as cards.
+ */
+export const SyndicatedContentCards = {
+  args: {
+    config: {
+      ...defaultConfig,
+      displayMode: 'card',
+      resultsPerPage: 4,
+      showSearchBox: false,
+      showFacets: false,
+      showActiveFilters: false,
+      showResultsCount: false,
+      showSearchTimer: false,
+      showPager: false,
+      defaultSort: 'newest',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+A content-only embed: four cards in a responsive grid, no search box, no sidebar, no pager.
+
+\`\`\`js
+config: {
+  displayMode: 'card',
+  resultsPerPage: 4,
+  showSearchBox: false,
+  showFacets: false,
+  showActiveFilters: false,
+  showResultsCount: false,
+  showSearchTimer: false,
+  showPager: false,
+  defaultSort: 'newest',
+}
+\`\`\`
+
+Use this pattern to syndicate UNDRR content into landing pages or external applications.
+Combine with \`customFilters\` to restrict by content type, topic, or domain.
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Syndicated publication books - book cover cards without search UI.
+ *
+ * Embeds recent publications as book-cover cards. Useful for a
+ * "Latest publications" rail on any UNDRR property.
+ */
+export const SyndicatedPublicationBooks = {
+  args: {
+    config: {
+      ...defaultConfig,
+      displayMode: 'card-book',
+      resultsPerPage: 4,
+      showSearchBox: false,
+      showFacets: false,
+      showActiveFilters: false,
+      showResultsCount: false,
+      showSearchTimer: false,
+      showPager: false,
+      defaultSort: 'newest',
+      customFilters: ['type:publication'],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+A "Latest publications" rail: four book-cover cards, filtered to publications only.
+
+\`\`\`js
+config: {
+  displayMode: 'card-book',
+  resultsPerPage: 4,
+  showSearchBox: false,
+  showFacets: false,
+  showActiveFilters: false,
+  showResultsCount: false,
+  showSearchTimer: false,
+  showPager: false,
+  defaultSort: 'newest',
+  customFilters: ['type:publication'],
+}
+\`\`\`
+
+Any UNDRR property can embed this to show the latest publications without building its own publication feed.
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Four-card syndication pattern - hardwired topic query, no search UI.
+ *
+ * Demonstrates embedding a fixed topic query as a content block.
+ * No search box, no facets, no pager — just four cards for a specific
+ * subject like "early warning" or "rainfall". Use this pattern on
+ * landing pages to surface relevant content without exposing search.
+ */
+export const FourCardSyndication = {
+  args: {
+    config: {
+      ...defaultConfig,
+      displayMode: 'card',
+      resultsPerPage: 4,
+      gridColumns: 4,
+      showSearchBox: false,
+      showFacets: false,
+      showActiveFilters: false,
+      showResultsCount: false,
+      showSearchTimer: false,
+      showPager: false,
+      defaultSort: 'newest',
+      defaultQuery: 'early warning systems',
+      requireImage: true,
+      visibleTeaserFields: {
+        image: true,
+        contentType: false,
+        summary: false,
+        siteName: false,
+        organization: false,
+      },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+The "four-card syndication" pattern: a hardwired topic query rendered as a content block with no search chrome.
+
+\`\`\`js
+config: {
+  displayMode: 'card',
+  resultsPerPage: 4,
+  gridColumns: 4,
+  showSearchBox: false,
+  showFacets: false,
+  showActiveFilters: false,
+  showResultsCount: false,
+  showSearchTimer: false,
+  showPager: false,
+  defaultSort: 'newest',
+  defaultQuery: 'early warning systems',
+  requireImage: true,
+  visibleTeaserFields: {
+    image: true,
+    contentType: false,
+    summary: false,
+    siteName: false,
+    organization: false,
+  },
+}
+\`\`\`
+
+The key is \`defaultQuery\` — it seeds the search with a topic so the widget loads results immediately without user interaction. Combined with hidden search UI, the result is a static-looking content block that's actually live.
+
+\`requireImage: true\` adds a \`has_image:true\` filter to the Elasticsearch query, so only results with an image are returned. \`visibleTeaserFields\` hides the content type badge and teaser text for a cleaner card that's just image, title, and date.
+
+**Typical uses:**
+- "Latest on early warning" rail on a landing page
+- "Recent publications about rainfall" in a sidebar
+- Topic spotlight sections on campaign pages
+
+Combine with \`customFilters\` to further narrow (e.g., only publications, only from a specific domain):
+
+\`\`\`js
+defaultQuery: 'rainfall',
+customFilters: ['type:publication'],
+\`\`\`
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Syndicated topic feed - news cards filtered by topic.
+ *
+ * Shows how to create a topic-specific content rail by combining
+ * card display with customFilters for content type and domain.
+ */
+export const SyndicatedTopicFeed = {
+  args: {
+    config: {
+      ...defaultConfig,
+      displayMode: 'card',
+      resultsPerPage: 3,
+      gridColumns: 3,
+      showSearchBox: false,
+      showFacets: false,
+      showActiveFilters: false,
+      showResultsCount: false,
+      showSearchTimer: false,
+      showPager: false,
+      defaultSort: 'newest',
+      customFilters: ['type:news'],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+A topic-specific news feed: three cards in a row, filtered to news content.
+
+\`\`\`js
+config: {
+  displayMode: 'card',
+  resultsPerPage: 3,
+  gridColumns: 3,
+  showSearchBox: false,
+  showFacets: false,
+  showActiveFilters: false,
+  showResultsCount: false,
+  showSearchTimer: false,
+  showPager: false,
+  defaultSort: 'newest',
+  customFilters: ['type:news'],
+}
+\`\`\`
+
+Add more \`customFilters\` entries to narrow by domain, theme, hazard, or region.
+This pattern works on any site that loads Mangrove CSS — the cards render
+with proper structure, spacing, and responsive breakpoints.
+        `,
+      },
+    },
+  },
+};
+
 // Mock data for static display
 const mockResults = {
   took: 42,

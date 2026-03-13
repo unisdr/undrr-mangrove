@@ -365,6 +365,17 @@ export const DEFAULT_CONFIG = {
   // Teaser field visibility
   visibleTeaserFields: null, // {image: false, date: false, ...} — null = all visible
 
+  // Require image — adds has_image:true filter to exclude results without images
+  requireImage: false,
+
+  // Tier filters — array of tier names to restrict results by editorial weight or freshness.
+  // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.
+  // Interestingness tiers: 'demoted', 'deferred', 'average', 'promoted', 'announced'
+  // Longevity tiers: 'today', 'days', 'week', 'month', 'year', 'longtime', 'always'
+  // e.g., interestingnessTiers: ['promoted', 'announced'] only returns high-priority content
+  interestingnessTiers: [],
+  longevityTiers: [],
+
 };
 
 /**
@@ -585,4 +596,45 @@ export function getParentTypeForField(field) {
  */
 export function getSubtypesForType(parentType) {
   return CONTENT_SUBTYPES[parentType] || null;
+}
+
+/**
+ * Convert scoring tier config (cumulative max values) to filter ranges (min/max).
+ *
+ * SCORING_CONFIG stores tiers as `{ tierName: { max, weight|scale } }` where each
+ * tier's min is implicitly the previous tier's max + 1. This function derives
+ * explicit `{ min, max }` ranges for use in ES query_string range filters.
+ *
+ * @param {Object} tiers - Tier config from SCORING_CONFIG (e.g., SCORING_CONFIG.interestingness)
+ * @returns {Object} Map of tier name → { min, max }
+ */
+export function buildTierRanges(tiers) {
+  const entries = Object.entries(tiers);
+  const ranges = {};
+  let prevMax = -1;
+  for (const [name, tier] of entries) {
+    ranges[name] = { min: prevMax + 1, max: tier.max };
+    prevMax = tier.max;
+  }
+  return ranges;
+}
+
+/**
+ * Convert selected tier names to an Elasticsearch query_string range filter.
+ *
+ * @param {string} field - ES field name (e.g., 'field_meta_interestingness')
+ * @param {Array<string>} tierNames - Selected tier keys (e.g., ['promoted', 'announced'])
+ * @param {Object} tierRanges - Tier ranges with { min, max } per key (from buildTierRanges)
+ * @returns {string|null} query_string range expression or null
+ */
+export function buildTierFilter(field, tierNames, tierRanges) {
+  if (!tierNames || tierNames.length === 0) return null;
+
+  const ranges = tierNames
+    .filter(name => tierRanges[name])
+    .map(name => `${field}:[${tierRanges[name].min} TO ${tierRanges[name].max}]`);
+
+  if (ranges.length === 0) return null;
+  if (ranges.length === 1) return ranges[0];
+  return `(${ranges.join(' OR ')})`;
 }
