@@ -475,6 +475,89 @@ export const RealWorldImages = {
   },
 };
 
+// Feature cards with colored icon backgrounds (DELTA Resilience pattern)
+export const FeatureCards = {
+  render: args => (
+    <div className="mg-grid mg-grid__col-3">
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon mg-icon-chart-bar',
+            iconColor: '#f4b8a8',
+            title: 'Analytics',
+            summaryText:
+              'From data to decisions - analysis that drives multiple DRR applications, including recovery planning and early warning.',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon mg-icon-globe',
+            iconColor: '#f4b8a8',
+            title: 'Monitoring',
+            summaryText:
+              'Continuous monitoring and tracking of hazardous events and their impacts.',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon mg-icon-file-alt',
+            iconColor: '#b5d8d8',
+            title: 'Data archiving & integration',
+            summaryText:
+              'Preserve, connect and enrich your disaster data leveraging exposure, vulnerability and other relevant baseline information.',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon mg-icon-cubes',
+            iconColor: '#b5d8d8',
+            title: 'Losses and damages overview',
+            summaryText:
+              'Analyze losses and damages data per disaster event, per hazard type, per sector, and per geography.',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon mg-icon-lightbulb',
+            iconColor: '#f4b8a8',
+            title: 'Multi-sector and multi-level disaster data sharing',
+            summaryText:
+              'A tool to support data sharing and application across sectors and levels of government.',
+          },
+        ]}
+      />
+      <IconCard
+        {...args}
+        data={[
+          {
+            icon: 'mg-icon mg-icon-cubes',
+            iconColor: '#c0d8e8',
+            title: 'Baseline',
+            summaryText:
+              'Exposure & vulnerability statistical and geospatial data enabling post-disaster change and impact analysis.',
+          },
+        ]}
+      />
+    </div>
+  ),
+  args: {
+    centered: false,
+  },
+};
+
 // Mixed: CSS icon classes and images together - using imageScale for consistency
 export const MixedIconTypes = {
   render: args => (

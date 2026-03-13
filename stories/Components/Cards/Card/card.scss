@@ -375,6 +375,23 @@ $card-variant-colours: (
     .mg-icon {
       margin: 0 auto;
     }
+
+    // Colored circular background behind icon
+    &--colored {
+      background-color: var(--mg-icon-bg);
+      border-radius: 50%;
+      aspect-ratio: 1;
+      width: 72px;
+      min-width: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .mg-icon {
+        font-size: 32px;
+        color: $mg-color-neutral-700;
+      }
+    }
   }
 
   // Visual link for logo cards (srOnlyTitle) - stretched link pattern

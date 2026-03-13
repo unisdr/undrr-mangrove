@@ -30,6 +30,7 @@ const cls = (...classes) =>
  * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
  * @property {string} link - URL for card link
  * @property {string} linkText - Text for text link CTA
+ * @property {string} iconColor - Background color for circular icon badge (CSS color, e.g., "#f4b8a8")
  * @property {string} button - Button label text
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
@@ -68,9 +69,11 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
                     <span
                       className={cls(
                         'mg-card__icon-wrap',
-                        item.imageScale && `mg-card__icon-wrap--${item.imageScale}`
+                        item.imageScale && `mg-card__icon-wrap--${item.imageScale}`,
+                        item.iconColor && 'mg-card__icon-wrap--colored'
                       )}
                       aria-hidden="true"
+                      {...(item.iconColor && { style: { '--mg-icon-bg': item.iconColor } })}
                     >
                       <span className={item.icon} />
                     </span>
@@ -93,9 +96,11 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
                 <span
                   className={cls(
                     'mg-card__icon-wrap',
-                    item.imageScale && `mg-card__icon-wrap--${item.imageScale}`
+                    item.imageScale && `mg-card__icon-wrap--${item.imageScale}`,
+                    item.iconColor && 'mg-card__icon-wrap--colored'
                   )}
                   aria-hidden="true"
+                  {...(item.iconColor && { style: { '--mg-icon-bg': item.iconColor } })}
                 >
                   <span className={item.icon} />
                 </span>
@@ -177,6 +182,8 @@ IconCard.propTypes = {
       iconSize: PropTypes.number,
       /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
       imageScale: PropTypes.oneOf(['small', 'medium', 'large', 'full']),
+      /** Background color for circular icon badge (CSS color, e.g., "#f4b8a8") */
+      iconColor: PropTypes.string,
       /** Badge or category label text */
       label: PropTypes.string,
       /** Card heading text (required for accessibility) */

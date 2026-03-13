@@ -63,6 +63,12 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 <Canvas of={IconCardStories.WithLogo} />
 
+### Feature cards with colored icons
+
+Use `iconColor` to add a circular colored background behind the icon. This pattern is used by DELTA Resilience for feature highlights.
+
+<Canvas of={IconCardStories.FeatureCards} />
+
 ### Negative (for dark backgrounds)
 
 <Canvas of={IconCardStories.Negative} />
@@ -86,6 +92,7 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 | `icon` | String | Optional | Icon class name (e.g., `"mg-icon fa-globe"`) |
 | `imgback` | String | Optional | Image URL (alternative to `icon`) |
 | `imgalt` | String | Optional | Alt text for image |
+| `iconColor` | String | - | Background color for circular icon badge (CSS color, e.g., `"#f4b8a8"`) |
 | `iconSize` | Number | `72` | Width/height of icon in pixels (ignored when `imageScale` is set) |
 | `imageScale` | String | - | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units. |
 | `label` | String | Optional | Badge or category label text |
@@ -129,6 +136,21 @@ These properties align with VerticalCard and HorizontalCard for consistency:
       summaryText: 'Explore our features.',
       button: 'Learn more',
       link: '/features',
+    },
+  ]}
+/>
+```
+
+### With colored icon background
+
+```jsx
+<IconCard
+  data={[
+    {
+      icon: 'mg-icon mg-icon-chart-bar',
+      iconColor: '#f4b8a8',
+      title: 'Analytics',
+      summaryText: 'Data analysis that drives DRR applications.',
     },
   ]}
 />
