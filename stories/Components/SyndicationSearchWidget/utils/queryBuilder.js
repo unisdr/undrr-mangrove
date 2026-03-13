@@ -166,19 +166,14 @@ function buildBaseFilters(config) {
 
   // Require image: only return results that have an image (has_image indexed field)
   if (config.requireImage) {
-    filters.push({
-      query_string: {
-        query: 'has_image:true',
-      },
-    });
+    filters.push({ term: { has_image: 'true' } });
   }
 
   // Interestingness and longevity tier filters: restrict results by editorial
   // weight or content freshness category. Tier boundaries are derived from
   // SCORING_CONFIG (which also drives relevance scoring), so the same tier
   // names work for both ranking and filtering without duplicating definitions.
-  // e.g., interestingnessTiers: ['promoted', 'announced'] →
-  //   field_meta_interestingness:[51 TO 75] OR field_meta_interestingness:[76 TO 100]
+  // buildTierFilter returns ES range queries (single or bool.should of ranges).
   const scoring = config.scoring || SCORING_CONFIG;
   const interestingnessFilter = buildTierFilter(
     'field_meta_interestingness',
@@ -186,7 +181,7 @@ function buildBaseFilters(config) {
     buildTierRanges(scoring.interestingness)
   );
   if (interestingnessFilter) {
-    filters.push({ query_string: { query: interestingnessFilter } });
+    filters.push(interestingnessFilter);
   }
 
   // Longevity tier filter: restrict by content freshness category
@@ -196,7 +191,7 @@ function buildBaseFilters(config) {
     buildTierRanges(scoring.longevity)
   );
   if (longevityFilter) {
-    filters.push({ query_string: { query: longevityFilter } });
+    filters.push(longevityFilter);
   }
 
   return filters;

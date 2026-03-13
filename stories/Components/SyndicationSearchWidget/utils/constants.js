@@ -658,21 +658,23 @@ export function buildTierRanges(tiers) {
 }
 
 /**
- * Convert selected tier names to an Elasticsearch query_string range filter.
+ * Build an Elasticsearch filter for selected tier names.
+ * Returns a `range` query (single tier) or `bool.should` of `range` queries
+ * (multiple tiers) — avoids query_string parsing overhead and escaping risks.
  *
  * @param {string} field - ES field name (e.g., 'field_meta_interestingness')
  * @param {Array<string>} tierNames - Selected tier keys (e.g., ['promoted', 'announced'])
  * @param {Object} tierRanges - Tier ranges with { min, max } per key (from buildTierRanges)
- * @returns {string|null} query_string range expression or null
+ * @returns {Object|null} ES filter clause or null
  */
 export function buildTierFilter(field, tierNames, tierRanges) {
   if (!Array.isArray(tierNames) || tierNames.length === 0) return null;
 
-  const ranges = tierNames
+  const rangeFilters = tierNames
     .filter(name => tierRanges[name])
-    .map(name => `${field}:[${tierRanges[name].min} TO ${tierRanges[name].max}]`);
+    .map(name => ({ range: { [field]: { gte: tierRanges[name].min, lte: tierRanges[name].max } } }));
 
-  if (ranges.length === 0) return null;
-  if (ranges.length === 1) return ranges[0];
-  return `(${ranges.join(' OR ')})`;
+  if (rangeFilters.length === 0) return null;
+  if (rangeFilters.length === 1) return rangeFilters[0];
+  return { bool: { should: rangeFilters, minimum_should_match: 1 } };
 }

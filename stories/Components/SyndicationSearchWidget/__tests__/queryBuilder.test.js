@@ -436,14 +436,12 @@ describe('queryBuilder', () => {
   });
 
   describe('requireImage filter', () => {
-    it('adds has_image:true filter when requireImage is true', () => {
+    it('adds term filter for has_image when requireImage is true', () => {
       const config = { ...DEFAULT_CONFIG, requireImage: true };
       const result = buildQuery(defaultState, config);
       const filters = result.query.function_score.query.bool.filter;
 
-      expect(filters).toContainEqual({
-        query_string: { query: 'has_image:true' },
-      });
+      expect(filters).toContainEqual({ term: { has_image: 'true' } });
     });
 
     it('does not add image filter when requireImage is false', () => {
@@ -451,15 +449,13 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
       const filters = result.query.function_score.query.bool.filter;
 
-      const hasImageFilter = filters.find(
-        f => f.query_string?.query === 'has_image:true'
-      );
+      const hasImageFilter = filters.find(f => f.term?.has_image);
       expect(hasImageFilter).toBeUndefined();
     });
   });
 
   describe('tier filters', () => {
-    it('adds interestingness tier filter to base query', () => {
+    it('adds interestingness range filter to base query', () => {
       const config = {
         ...DEFAULT_CONFIG,
         interestingnessTiers: ['promoted', 'announced'],
@@ -468,13 +464,13 @@ describe('queryBuilder', () => {
       const filters = result.query.function_score.query.bool.filter;
 
       const tierFilter = filters.find(
-        f => f.query_string?.query?.includes('field_meta_interestingness')
+        f => f.bool?.should?.some(s => s.range?.field_meta_interestingness)
       );
       expect(tierFilter).toBeDefined();
-      expect(tierFilter.query_string.query).toContain('TO');
+      expect(tierFilter.bool.should).toHaveLength(2);
     });
 
-    it('adds longevity tier filter to base query', () => {
+    it('adds longevity range filter to base query', () => {
       const config = {
         ...DEFAULT_CONFIG,
         longevityTiers: ['today', 'days'],
@@ -483,10 +479,24 @@ describe('queryBuilder', () => {
       const filters = result.query.function_score.query.bool.filter;
 
       const tierFilter = filters.find(
-        f => f.query_string?.query?.includes('field_meta_longevity')
+        f => f.bool?.should?.some(s => s.range?.field_meta_longevity)
       );
       expect(tierFilter).toBeDefined();
-      expect(tierFilter.query_string.query).toContain('TO');
+      expect(tierFilter.bool.should).toHaveLength(2);
+    });
+
+    it('adds single range filter (no bool wrapper) for one tier', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        interestingnessTiers: ['promoted'],
+      };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      const tierFilter = filters.find(f => f.range?.field_meta_interestingness);
+      expect(tierFilter).toBeDefined();
+      expect(tierFilter.range.field_meta_interestingness).toHaveProperty('gte');
+      expect(tierFilter.range.field_meta_interestingness).toHaveProperty('lte');
     });
 
     it('does not add tier filters when arrays are empty', () => {
@@ -500,8 +510,9 @@ describe('queryBuilder', () => {
 
       const hasTierFilter = filters.some(
         f =>
-          f.query_string?.query?.includes('field_meta_interestingness') ||
-          f.query_string?.query?.includes('field_meta_longevity')
+          f.range?.field_meta_interestingness ||
+          f.range?.field_meta_longevity ||
+          f.bool?.should?.some(s => s.range?.field_meta_interestingness || s.range?.field_meta_longevity)
       );
       expect(hasTierFilter).toBe(false);
     });
@@ -740,19 +751,27 @@ describe('buildTierFilter', () => {
     expect(buildTierFilter('field', true, ranges)).toBeNull();
   });
 
-  it('returns single range expression for one tier', () => {
+  it('returns single range query for one tier', () => {
     const result = buildTierFilter('score', ['mid'], ranges);
-    expect(result).toBe('score:[11 TO 50]');
+    expect(result).toEqual({ range: { score: { gte: 11, lte: 50 } } });
   });
 
-  it('returns OR expression for multiple tiers', () => {
+  it('returns bool.should of range queries for multiple tiers', () => {
     const result = buildTierFilter('score', ['mid', 'high'], ranges);
-    expect(result).toBe('(score:[11 TO 50] OR score:[51 TO 100])');
+    expect(result).toEqual({
+      bool: {
+        should: [
+          { range: { score: { gte: 11, lte: 50 } } },
+          { range: { score: { gte: 51, lte: 100 } } },
+        ],
+        minimum_should_match: 1,
+      },
+    });
   });
 
   it('ignores unknown tier names', () => {
     const result = buildTierFilter('score', ['mid', 'unknown'], ranges);
-    expect(result).toBe('score:[11 TO 50]');
+    expect(result).toEqual({ range: { score: { gte: 11, lte: 50 } } });
   });
 
   it('returns null when all tier names are unknown', () => {

@@ -559,10 +559,11 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-// Card skeleton — grid of rectangular placeholders with image area + title
+// Card skeleton — layout is controlled by mg-grid classes applied in JSX.
+// Reset the flex declarations inherited from .mg-search__skeleton so they
+// don't fight mg-grid's own flex fallback / CSS grid (@supports) path.
 .mg-search__skeleton--card {
-  flex-direction: row;
-  gap: $mg-spacing-150;
+  flex-direction: initial;
 }
 
 .mg-search__skeleton-card {
