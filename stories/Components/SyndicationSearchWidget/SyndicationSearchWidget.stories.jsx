@@ -780,56 +780,6 @@ If no \`searchEndpoint\` is provided, the widget uses \`https://www.undrr.org/se
 };
 
 /**
- * Syndicated content rail - cards only, no search UI.
- *
- * Demonstrates embedding UNDRR content as a card grid on a landing page
- * or external application. All search chrome is hidden; the widget just
- * renders results as cards.
- */
-export const SyndicatedContentCards = {
-  args: {
-    config: {
-      ...defaultConfig,
-      displayMode: 'card',
-      resultsPerPage: 4,
-      showSearchBox: false,
-      showFacets: false,
-      showActiveFilters: false,
-      showResultsCount: false,
-      showSearchTimer: false,
-      showPager: false,
-      defaultSort: 'newest',
-    },
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: `
-A content-only embed: four cards in a responsive grid, no search box, no sidebar, no pager.
-
-\`\`\`js
-config: {
-  displayMode: 'card',
-  resultsPerPage: 4,
-  showSearchBox: false,
-  showFacets: false,
-  showActiveFilters: false,
-  showResultsCount: false,
-  showSearchTimer: false,
-  showPager: false,
-  defaultSort: 'newest',
-}
-\`\`\`
-
-Use this pattern to syndicate UNDRR content into landing pages or external applications.
-Combine with \`customFilters\` to restrict by content type, topic, or domain.
-        `,
-      },
-    },
-  },
-};
-
-/**
  * Syndicated publication books - book cover cards without search UI.
  *
  * Embeds recent publications as book-cover cards. Useful for a
@@ -957,60 +907,6 @@ Combine with \`customFilters\` to further narrow (e.g., only publications, only 
 defaultQuery: 'rainfall',
 customFilters: ['type:publication'],
 \`\`\`
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Syndicated topic feed - news cards filtered by topic.
- *
- * Shows how to create a topic-specific content rail by combining
- * card display with customFilters for content type and domain.
- */
-export const SyndicatedTopicFeed = {
-  args: {
-    config: {
-      ...defaultConfig,
-      displayMode: 'card',
-      resultsPerPage: 3,
-      gridColumns: 3,
-      showSearchBox: false,
-      showFacets: false,
-      showActiveFilters: false,
-      showResultsCount: false,
-      showSearchTimer: false,
-      showPager: false,
-      defaultSort: 'newest',
-      customFilters: ['type:news'],
-    },
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: `
-A topic-specific news feed: three cards in a row, filtered to news content.
-
-\`\`\`js
-config: {
-  displayMode: 'card',
-  resultsPerPage: 3,
-  gridColumns: 3,
-  showSearchBox: false,
-  showFacets: false,
-  showActiveFilters: false,
-  showResultsCount: false,
-  showSearchTimer: false,
-  showPager: false,
-  defaultSort: 'newest',
-  customFilters: ['type:news'],
-}
-\`\`\`
-
-Add more \`customFilters\` entries to narrow by domain, theme, hazard, or region.
-This pattern works on any site that loads Mangrove CSS — the cards render
-with proper structure, spacing, and responsive breakpoints.
         `,
       },
     },
