@@ -693,7 +693,7 @@ export const PushUtilities = () => (
       </a>
     </div>
 
-    <h5>Push item to start</h5>
+    <h5>Keep a button at the start (left in LTR)</h5>
     <div
       className="mg-u-flex mg-u-align-items-center mg-u-gap-100"
       style={{
@@ -702,9 +702,8 @@ export const PushUtilities = () => (
         marginBottom: '1.5rem',
       }}
     >
-      <span>Right-aligned item</span>
       <a href="#" className="mg-button mg-button-primary mg-u-push-start">
-        Back
+        Back to overview
       </a>
     </div>
 
