@@ -436,6 +436,7 @@ const syndicationConfig = {
   showSearchTimer: false,
   showPager: false,
   visibleTeaserFields: {
+    contentType: false,
     date: false,
     siteName: false,
   },
@@ -443,7 +444,7 @@ const syndicationConfig = {
 
 const DeltaLandingPage = () => (
   <>
-    {/* Temporary: hide .st-tag--spl badges until fixed upstream in Drupal search */}
+    {/* Temporary: hide .st-tag--spl until fixed upstream in Drupal search */}
     <style>{'.st-tag--spl { display: none; }'}</style>
 
     <PageHeader showLogo={true} showAccount={false} showLanguage={false} />
