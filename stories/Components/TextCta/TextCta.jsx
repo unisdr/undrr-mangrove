@@ -1,4 +1,5 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 // import './textcta.scss';
 
 const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
@@ -64,7 +65,7 @@ export function TextCta({
           {text && (
             <div
               className="mg-cta__text"
-              dangerouslySetInnerHTML={{ __html: text }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
             />
           )}
 

@@ -193,7 +193,7 @@ $mg-font-size-900: 4rem;
 $mg-font-size-1000: 4.8rem;
 $mg-font-size-1100: 6.4rem;
 $mg-font-body: $mg-font-size-300;
-$mg-font-tag: $mg-font-size-250;
+$mg-font-tag: $mg-font-size-250 !default;
 $mg-font-line-height-500: 1.25em;
 $mg-font-line-height-700: 1.5em;
 

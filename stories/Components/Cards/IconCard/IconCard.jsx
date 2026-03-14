@@ -119,7 +119,12 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
                     item.iconColor && 'mg-card__icon-wrap--colored'
                   )}
                   aria-hidden="true"
-                  {...(item.iconColor && { style: { '--mg-icon-bg': item.iconColor } })}
+                  {...((item.iconColor || item.iconFgColor) && {
+                    style: {
+                      ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
+                      ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
+                    },
+                  })}
                 >
                   {item.icon && <span className={item.icon} />}
                 </span>
@@ -229,4 +234,6 @@ IconCard.propTypes = {
   centered: PropTypes.bool,
   /** Visual variant: default or negative (for dark backgrounds) */
   variant: PropTypes.oneOf(['default', 'negative']),
+  /** Where the label renders: 'content' (default, inside card body) or 'top' (above the visual) */
+  labelPosition: PropTypes.oneOf(['content', 'top']),
 };
