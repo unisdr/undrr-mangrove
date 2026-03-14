@@ -104,10 +104,10 @@ All non-default themes follow the same pattern: set a primary brand color, then 
 
 **DELTA Resilience** (`_variables-delta.scss`):
 - Primary interactive: `$delta-color-primary: #004f91` (same as Mangrove's base blue, used for links and focus rings)
-- Button fill: dark neutral gray (`$mg-color-neutral-500`), not primary blue — matching Delta mockups
-- Pill-shaped CTA buttons (`$mg-radius-button: $mg-spacing-300`)
+- Outline-style buttons: transparent background, blue border/text, 2px border, 8px radius
+- Tinted card backgrounds: `$mg-color-neutral-50` with `$mg-spacing-150` padding and rounded corners
 - Red accent: `$delta-color-red: #b52a32`
-- Accent pastels for feature card icons: coral, teal, light blue (TODO: confirm exact hex values)
+- 6 pastel accent colors for feature card icons (design-system semantics TBD)
 - Dark near-black for CTA banner sections (`$delta-color-dark: #181823`)
 - Rounded tags, tabs, and form inputs (`$mg-radius-*: $mg-spacing-50`)
 - Hero overlay spacing (`$mg-spacing-hero-overlay: 2rem 0`)
@@ -160,6 +160,14 @@ Used by hero, cards, and other components that support color variants.
 | `$mg-border-color-button` | `$mg-color-text-button` | Button border color |
 | `$mg-padding-button` | `$mg-spacing-100 $mg-spacing-150` | Button padding |
 | `$mg-font-size-button` | `$mg-font-size-250` (`1.4rem`) | Button font size |
+
+### Card tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-card-background` | `none` | Card container background (set to a color for tinted cards) |
+| `$mg-card-padding` | `0` | Card container padding |
+| `$mg-card-border-radius` | `0` | Card container border radius |
 
 ### Form tokens
 

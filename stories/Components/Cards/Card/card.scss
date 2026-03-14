@@ -5,6 +5,9 @@
   display: inline-block;
   position: relative;
   margin-bottom: $mg-spacing-100;
+  background: $mg-card-background;
+  padding: $mg-card-padding;
+  border-radius: $mg-card-border-radius;
 
   // Vertical CARD
   &__vc {

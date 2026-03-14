@@ -308,6 +308,11 @@ $mg-color-form-check--checked: $mg-color-interactive !default;
 $mg-color-form-focus: $mg-color-interactive !default;
 $mg-radius-form-input: $mg-spacing-0 !default;
 
+// card
+$mg-card-background: none !default;
+$mg-card-padding: 0 !default;
+$mg-card-border-radius: 0 !default;
+
 // shared variant accent colours (used by hero, cards, and other components)
 $mg-color-secondary: $mg-color-orange-800 !default;
 $mg-color-tertiary: $mg-color-neutral-900 !default;

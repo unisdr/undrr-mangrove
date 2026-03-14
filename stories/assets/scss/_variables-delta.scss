@@ -57,6 +57,11 @@ $mg-border-width-button: 2px;
 $mg-padding-button: $mg-spacing-100 $mg-spacing-200;
 $mg-font-size-button: $mg-font-size-250;
 
+// Cards — light tinted background with padding, rounded corners
+$mg-card-background: $mg-color-neutral-25;
+$mg-card-padding: $mg-spacing-150;
+$mg-card-border-radius: $mg-spacing-50;
+
 // Form elements
 $mg-color-form-check: $mg-color-interactive;
 $mg-color-form-check--hover: $mg-color-interactive-active;
