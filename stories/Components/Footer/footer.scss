@@ -45,10 +45,9 @@
   }
 }
 
-// Constrain footer images (Sendai/SDG logos)
-.mg-footer img {
-  max-width: 100%;
-  height: auto;
+// Footer buttons: wrap into rows instead of overflowing
+.mg-footer .mg-button+.mg-button {
+  margin-left: 0;
 }
 
 // Reset grid spans below tablet so footer columns stack
@@ -58,6 +57,11 @@
     .mg-grid__col--span-3 {
       grid-column-end: auto;
     }
+  }
+
+  // Constrain footer images (Sendai/SDG logos)
+  .mg-footer img {
+    max-width: min(300px, 76vw);
   }
 }
 
