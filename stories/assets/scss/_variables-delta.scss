@@ -10,10 +10,10 @@
  * Differentiation is primarily in border-radius, button styling,
  * and a neutral-gray primary CTA.
  *
- * Component gaps (need Mangrove component changes, not just theme variables):
- * - IconCard colored blob backgrounds: Delta feature cards show pastel circle
- *   icons (coral, teal). IconCard has no prop for icon background color.
- *   Needs either a new prop or pre-rendered SVG approach.
+ * Open design questions:
+ * - IconCard accent palette: Delta mockups show 6 pastel icon background
+ *   colors. Their design-system role (semantic, decorative, categorical) is
+ *   unknown. Currently passed as raw hex via `iconColor` prop.
  */
 
 // Delta-specific colors — brand palette
@@ -22,10 +22,17 @@ $delta-color-primary-800: #003d70; // Hover shade — TODO: confirm with Delta d
 $delta-color-red: #b52a32; // Red accent from Delta CSS
 $delta-color-dark: #181823; // Near-black for CTA banners and dark sections
 
-// Delta accent palette — pastel icon colors from "Key Features" cards
-$delta-color-accent-coral: #f4b8a8; // TODO: sample from mockup, confirm exact hex
-$delta-color-accent-teal: #b5d8d8; // TODO: sample from mockup, confirm exact hex
-$delta-color-accent-blue: #c0d8e8; // TODO: sample from mockup, confirm exact hex
+// Delta accent palette — 6 pastel icon colors from "Key Features" cards.
+// TODO: These are sampled from mockups. We need to understand these from a
+// design-system perspective — are they semantic (mapped to categories/sections),
+// decorative, or part of a formalized token set? Until clarified, they are
+// passed as raw hex values via IconCard's `iconColor` prop.
+$delta-color-accent-coral: #f4b8a8;
+$delta-color-accent-teal: #b5d8d8;
+$delta-color-accent-sky: #c0d8e8;
+$delta-color-accent-peach: #f4d0a8; // TODO: confirm exact hex
+$delta-color-accent-sage: #c8d8b5; // TODO: confirm exact hex
+$delta-color-accent-lavender: #d0c0e8; // TODO: confirm exact hex
 
 // Interactive colors — links, focus rings (stays blue)
 $mg-color-interactive: $delta-color-primary;

@@ -1,5 +1,5 @@
 import React from 'react';
-// import { PageHeader } from '../PageHeader/PageHeader';
+import { PageHeader } from '../PageHeader/PageHeader';
 import MegaMenu from '../MegaMenu/MegaMenu';
 import { Hero } from '../Hero/Hero';
 import { SectionHeader } from '../../Molecules/SectionHeader/SectionHeader';
@@ -198,7 +198,7 @@ const ctaHeroData = [
 
 const DeltaLandingPage = () => (
   <>
-    {/* <PageHeader /> */}
+    <PageHeader showLogo={true} showAccount={false} showLanguage={false} />
 
     {/* DELTA sub-navigation — MegaMenu branded with mega menu sections */}
     <MegaMenu
