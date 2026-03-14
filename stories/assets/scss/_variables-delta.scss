@@ -34,6 +34,9 @@ $delta-color-accent-peach: #f4d0a8; // TODO: confirm exact hex
 $delta-color-accent-sage: #c8d8b5; // TODO: confirm exact hex
 $delta-color-accent-lavender: #d0c0e8; // TODO: confirm exact hex
 
+// Neutral scale overrides
+$mg-color-neutral-25: rgb(250, 250, 250); // #fafafa — Delta's lightest gray
+
 // Interactive colors — links, focus rings (stays blue)
 $mg-color-interactive: $delta-color-primary;
 $mg-color-interactive-active: $delta-color-primary;
