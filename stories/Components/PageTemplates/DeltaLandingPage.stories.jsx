@@ -214,7 +214,7 @@ const DeltaLandingPage = () => (
       <Hero data={heroData} variant="primary" />
 
       {/* How it works */}
-      <section className='mg-container--padded'>
+      <section className="mg-container--padded">
         <div className="mg-u-flex mg-u-align-items-center">
           <SectionHeader headerText="How it works" />
           <a href="#" className="mg-button mg-button-primary mg-u-push-end">
@@ -249,7 +249,6 @@ const DeltaLandingPage = () => (
           </div>
         </section>
       </section>
-
 
       {/* More from UNDRR — syndicated search cards */}
       <section className="mg-container--padded">
