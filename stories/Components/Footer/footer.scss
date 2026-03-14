@@ -46,7 +46,7 @@
 }
 
 // Footer buttons: wrap into rows instead of overflowing
-.mg-footer .mg-button+.mg-button {
+.mg-footer .mg-button + .mg-button {
   margin-left: 0;
 }
 
