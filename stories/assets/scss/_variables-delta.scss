@@ -16,8 +16,8 @@
  */
 
 // Delta-specific colors — brand palette
-$delta-color-primary: rgb(19, 46, 72); // #132e48 — Delta's dark navy
-$delta-color-primary-800: rgb(12, 30, 48); // Hover shade — ~20% darker
+$delta-color-primary: rgb(19 46 72); // #132e48 — Delta's dark navy
+$delta-color-primary-800: rgb(12 30 48); // Hover shade — ~20% darker
 $delta-color-red: #b52a32; // Red accent from Delta CSS
 $delta-color-dark: #181823; // Near-black for CTA banners and dark sections
 
@@ -34,7 +34,7 @@ $delta-color-accent-sage: #c8d8b5; // TODO: confirm exact hex
 $delta-color-accent-lavender: #d0c0e8; // TODO: confirm exact hex
 
 // Neutral scale overrides
-$mg-color-neutral-25: rgb(250, 250, 250); // #fafafa — Delta's lightest gray
+$mg-color-neutral-25: rgb(250 250 250); // #fafafa — Delta's lightest gray
 
 // Interactive colors — links, focus rings (stays blue)
 $mg-color-interactive: $delta-color-primary;
