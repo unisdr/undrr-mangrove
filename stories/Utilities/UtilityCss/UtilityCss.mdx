@@ -243,6 +243,51 @@ Text colors for interactive elements:
 <span class="mg-u-color--interactive-active">Interactive active text</span>
 ```
 
+## Flex utilities
+
+Basic flexbox layout utilities for composing inline layouts.
+
+| Class | CSS | Description |
+|-------|-----|-------------|
+| `.mg-u-flex` | `display: flex` | Enables flexbox on the element |
+| `.mg-u-flex-wrap` | `flex-wrap: wrap` | Allows flex items to wrap |
+| `.mg-u-align-items-center` | `align-items: center` | Vertically centers flex items |
+| `.mg-u-gap-100` | `gap: 1rem` | Adds 1rem gap between flex items |
+
+```html
+<div class="mg-u-flex mg-u-align-items-center mg-u-gap-100">
+  <span>Item 1</span>
+  <span>Item 2</span>
+</div>
+```
+
+## Alignment push utilities
+
+RTL-safe utilities to push an element toward one side of its container using CSS logical properties (`margin-inline-start`, `margin-inline-end`). These automatically flip in RTL contexts. Pair with `.mg-u-flex` for inline layouts.
+
+| Class | CSS | Effect |
+|-------|-----|--------|
+| `.mg-u-push-end` | `margin-inline-start: auto` | Pushes element to the inline end (right in LTR, left in RTL) |
+| `.mg-u-push-start` | `margin-inline-end: auto` | Pushes element to the inline start (left in LTR, right in RTL) |
+| `.mg-u-push-center` | `margin-inline: auto` | Centers element horizontally |
+
+### Examples
+
+Push a button to the end of a flex row:
+
+```html
+<div class="mg-u-flex mg-u-align-items-center">
+  <h2>How it works</h2>
+  <a href="#" class="mg-button mg-button-primary mg-u-push-end">Learn More</a>
+</div>
+```
+
+Center a block element:
+
+```html
+<img src="logo.svg" class="mg-u-push-center" alt="Logo" />
+```
+
 ## Font size utilities (.mg-u-font-size-*)
 
 Responsive font-size classes based on Mangrove design tokens. Each class sets a mobile-first base size and scales up at the medium breakpoint (48em / 768px).
@@ -268,6 +313,7 @@ Language-specific line-height overrides are included for Burmese (`:lang(my)` �
 
 ## Changelog
 
+- **1.3** — 2026-03-14: Added flex layout utilities (`mg-u-flex`, `mg-u-flex-wrap`, `mg-u-align-items-center`, `mg-u-gap-100`) and RTL-safe alignment push utilities (`mg-u-push-end`, `mg-u-push-start`, `mg-u-push-center`) using CSS logical properties
 - **1.2** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)): Added 9 font-size utility classes (5 with responsive scaling) and language-specific line-height overrides
 - **1.1** — 2025-07-03: Added interactive examples, responsive display utilities, layout utilities, comprehensive color utilities, and restructured documentation
 - **1.0** — 2024-11-08: Initial utility CSS reference and documentation

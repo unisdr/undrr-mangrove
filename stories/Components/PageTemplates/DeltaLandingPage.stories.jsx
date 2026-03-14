@@ -214,14 +214,12 @@ const DeltaLandingPage = () => (
     {/* How it works */}
     <div className="mg-container mg-container--spacer">
       <section className="mg-container--padded">
-        <SectionHeader
-          headerText="How it works"
-          action={
-            <a href="#" className="mg-button mg-button-primary">
-              Learn More
-            </a>
-          }
-        />
+        <div className="mg-u-flex mg-u-align-items-center">
+          <SectionHeader headerText="How it works" />
+          <a href="#" className="mg-button mg-button-primary mg-u-push-end">
+            Learn More
+          </a>
+        </div>
         <div className="mg-grid mg-grid__col-3">
           {howItWorksCards.map((card, i) => (
             <IconCard key={i} data={[card]} />
@@ -231,14 +229,12 @@ const DeltaLandingPage = () => (
 
       {/* Key Features */}
       <section className="mg-container--padded">
-        <SectionHeader
-          headerText="Key Features"
-          action={
-            <a href="#" className="mg-button mg-button-primary">
-              Learn More
-            </a>
-          }
-        />
+        <div className="mg-u-flex mg-u-align-items-center">
+          <SectionHeader headerText="Key Features" />
+          <a href="#" className="mg-button mg-button-primary mg-u-push-end">
+            Learn More
+          </a>
+        </div>
         <div className="mg-grid mg-grid__col-3">
           {featureCards.map((card, i) => (
             <IconCard key={i} data={[card]} />
@@ -248,14 +244,12 @@ const DeltaLandingPage = () => (
 
       {/* More from UNDRR — syndicated search cards */}
       <section className="mg-container--padded">
-        <SectionHeader
-          headerText="More from UNDRR"
-          action={
-            <a href="#" className="mg-button mg-button-primary">
-              Explore Research
-            </a>
-          }
-        />
+        <div className="mg-u-flex mg-u-align-items-center">
+          <SectionHeader headerText="More from UNDRR" />
+          <a href="#" className="mg-button mg-button-primary mg-u-push-end">
+            Explore Research
+          </a>
+        </div>
         <SyndicationSearchWidget config={syndicationConfig} />
       </section>
     </div>

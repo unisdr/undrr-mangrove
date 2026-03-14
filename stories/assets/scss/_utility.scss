@@ -288,6 +288,23 @@ $colors-solid: (
 
 /* Color utilities end */
 
+/* Flex and alignment utilities start */
+
+// Flex container utilities
+.mg-u-flex { display: flex; }
+.mg-u-flex-wrap { flex-wrap: wrap; }
+.mg-u-align-items-center { align-items: center; }
+.mg-u-gap-100 { gap: $mg-spacing-100; }
+
+// RTL-safe push utilities using CSS logical properties.
+// Push an element toward the inline-end, inline-start, or center
+// by collapsing the opposite margin with auto.
+.mg-u-push-end { margin-inline-start: auto; }
+.mg-u-push-start { margin-inline-end: auto; }
+.mg-u-push-center { margin-inline: auto; }
+
+/* Flex and alignment utilities end */
+
 /* Font size utilities start */
 
 .mg-u-font-size-150 {
