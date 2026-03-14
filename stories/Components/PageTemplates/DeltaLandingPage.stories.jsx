@@ -92,33 +92,33 @@ const heroData = [
 const howItWorksCards = [
   {
     imgback:
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80',
-    imgalt: 'Data collection',
+      'https://dts-testing.undrr.org/assets/images/how-it-works-collect.png',
+    imgalt: 'Collect — record and link hazardous events with disaster data',
     imageScale: 'large',
     title: 'Collect',
     label: 'Data',
     summaryText:
-      'Record and link hazardous events with disaster losses and damages data. Systematically track disaster effects across sectors and geographic areas.',
+      'Record and link hazardous events with disaster losses and damages data. Systematically track disaster effects across sectors, social groups and geographic areas.',
   },
   {
     imgback:
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80',
-    imgalt: 'Data analysis',
+      'https://dts-testing.undrr.org/assets/images/how-it-works-analyze.png',
+    imgalt: 'Analyze — reveal patterns, trends and hotspots',
     imageScale: 'large',
     title: 'Analyze',
     label: 'Analysis',
     summaryText:
-      'Record and link hazardous events with disaster losses and damages data. Systematically track disaster effects across sectors and geographic areas.',
+      'Analyze links between hazardous events and losses and damages to reveal patterns, trends, and hotspots. Compare across hazards, sectors, events, and locations.',
   },
   {
     imgback:
-      'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=400&q=80',
-    imgalt: 'Insights for action',
+      'https://dts-testing.undrr.org/assets/images/how-it-works-insights-for-action.png',
+    imgalt: 'Insights for action — turn raw data into insight',
     imageScale: 'large',
     title: 'Insights for action',
     label: 'Insights for action',
     summaryText:
-      'Produce analytical outputs to support decision-making for prevention, risk reduction, and loss-and-damage actions.',
+      'Turn raw data into insight. Produce analytical outputs to support decision-making for prevention, risk reduction, preparedness, recovery, financing and adaptation.',
   },
 ];
 
