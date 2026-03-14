@@ -17,6 +17,7 @@ export { Gallery } from '../stories/Components/Gallery/Gallery';
 export { default as IconCard } from '../stories/Components/Cards/IconCard/IconCard';
 export { default as StatsCard } from '../stories/Components/Cards/StatsCard/StatsCard';
 export { default as Pager } from '../stories/Components/Pager/Pager';
+export { TextCta } from '../stories/Components/TextCta/TextCta';
 export { default as Snackbar } from '../stories/Components/Snackbar/Snackbar';
 
 // Import global styles

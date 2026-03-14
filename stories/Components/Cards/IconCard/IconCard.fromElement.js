@@ -3,6 +3,7 @@ export default function iconCardFromElement(container) {
   const props = {
     centered: dataset.centered === 'true',
     variant: dataset.variant || 'default',
+    labelPosition: dataset.labelPosition || 'content',
   };
 
   // Data array is required — parse from JSON data attribute
