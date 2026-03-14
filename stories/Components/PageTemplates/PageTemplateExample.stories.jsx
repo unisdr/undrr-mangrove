@@ -435,10 +435,17 @@ const syndicationConfig = {
   showResultsCount: false,
   showSearchTimer: false,
   showPager: false,
+  visibleTeaserFields: {
+    date: false,
+    siteName: false,
+  },
 };
 
 const DeltaLandingPage = () => (
   <>
+    {/* Temporary: hide .st-tag--spl badges until fixed upstream in Drupal search */}
+    <style>{'.st-tag--spl { display: none; }'}</style>
+
     <PageHeader showLogo={true} showAccount={false} showLanguage={false} />
 
     <MegaMenu
