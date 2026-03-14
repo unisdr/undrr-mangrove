@@ -305,7 +305,9 @@ const DeltaLandingPage = () => (
 
 export default {
   title: 'Example/DELTA landing page',
-  component: DeltaLandingPage,
+  parameters: {
+    docs: { page: null },
+  },
 };
 
 export const Default = {
