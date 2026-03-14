@@ -313,6 +313,9 @@ $mg-card-background: none !default;
 $mg-card-padding: 0 !default;
 $mg-card-border-radius: 0 !default;
 
+// CTA banner
+$mg-cta-padding: $mg-spacing-400 0 !default;
+
 // shared variant accent colours (used by hero, cards, and other components)
 $mg-color-secondary: $mg-color-orange-800 !default;
 $mg-color-tertiary: $mg-color-neutral-900 !default;

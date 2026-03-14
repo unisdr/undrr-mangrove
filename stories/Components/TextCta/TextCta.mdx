@@ -43,15 +43,23 @@ Works without body text — just a headline and buttons.
 
 <Canvas of={TextCtaStories.HeadlineOnly} />
 
+## Extra padding
+
+Use the `padding` prop to override the theme default. Combined here with `headlineSize="800"` for a larger heading.
+
+<Canvas of={TextCtaStories.ExtraPadding} />
+
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `headline` | String | - | Banner heading text |
+| `headlineSize` | String | `'600'` | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`) |
 | `text` | String | - | Body text (HTML supported via `dangerouslySetInnerHTML`) |
 | `buttons` | Array | `[]` | Array of button objects: `{ label, url, type }` |
 | `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
 | `backgroundColor` | String | - | Custom CSS background color (overrides variant) |
+| `padding` | String | - | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token |
 | `image` | String | - | Image URL displayed alongside text (triggers side-by-side layout) |
 | `imageAlt` | String | `''` | Alt text for the image |
 | `centered` | Boolean | `true` | Center-align content (auto-disabled when `image` is set) |
@@ -68,7 +76,7 @@ Works without body text — just a headline and buttons.
 ## Accessibility
 
 - Uses semantic `<section>` element
-- Heading hierarchy preserved (renders `<h2>`)
+- Headline uses a `<header>` element — consumers should wrap in an appropriate heading level if needed for document hierarchy
 - Button text provides clear action labels
 - Color contrast: white text on theme background colors meets WCAG AA
 - Focus states inherited from `.mg-button` base styles

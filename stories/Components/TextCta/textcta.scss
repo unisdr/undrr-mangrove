@@ -1,7 +1,7 @@
 /* CTA banner start */
 
 .mg-cta {
-  padding: $mg-spacing-300 0;
+  padding: $mg-cta-padding;
 
   &__inner {
     // Uses mg-container from markup for max-width
@@ -13,6 +13,7 @@
 
   &__headline {
     color: $mg-color-white;
+    font-weight: 700;
     margin-bottom: $mg-spacing-100;
   }
 

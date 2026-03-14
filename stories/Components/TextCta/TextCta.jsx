@@ -17,15 +17,19 @@ const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
  * @param {string} props.backgroundColor - Custom CSS background color (overrides variant)
  * @param {string} props.image - Optional image URL displayed alongside the text content
  * @param {string} props.imageAlt - Alt text for the image
+ * @param {string} props.headlineSize - Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}`
+ * @param {string} props.padding - Custom CSS padding (overrides theme token)
  * @param {boolean} props.centered - Center-align content (default: true; auto-disabled when image is set)
  * @param {string} props.className - Additional CSS classes
  */
 export function TextCta({
   headline,
+  headlineSize = '600',
   text,
   buttons = [],
   variant = 'primary',
   backgroundColor,
+  padding,
   image,
   imageAlt = '',
   centered = true,
@@ -42,13 +46,20 @@ export function TextCta({
         !hasImage && centered && 'mg-cta--centered',
         className
       )}
-      {...(backgroundColor && {
-        style: { '--mg-cta-bg': backgroundColor },
+      {...((backgroundColor || padding) && {
+        style: {
+          ...(backgroundColor && { '--mg-cta-bg': backgroundColor }),
+          ...(padding && { padding }),
+        },
       })}
     >
       <div className="mg-cta__inner mg-container">
         <div className="mg-cta__body">
-          {headline && <h2 className="mg-cta__headline">{headline}</h2>}
+          {headline && (
+            <header className={cls('mg-cta__headline', `mg-u-font-size-${headlineSize}`)}>
+              {headline}
+            </header>
+          )}
 
           {text && (
             <div

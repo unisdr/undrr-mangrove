@@ -251,8 +251,10 @@ const DeltaLandingPage = () => (
     {/* CTA Banner */}
     <TextCta
       headline="Learn more about the system"
+      headlineSize="800"
       buttons={ctaButtons}
-      variant="tertiary"
+      variant="primary"
+      padding="10rem 0"
     />
 
     {/* DELTA utility footer bar — above the global UNDRR footer */}

@@ -5,10 +5,9 @@
  * DELTA Resilience theme overrides for Mangrove.
  * Source: deltaresilience.org mockups + GitHub issue #776
  *
- * Note: Delta's primary blue #004f91 is identical to Mangrove's
- * $mg-color-blue-900. Mangrove already defaults to Roboto.
- * Differentiation is primarily in border-radius, button styling,
- * and a neutral-gray primary CTA.
+ * Note: Delta's primary is a dark navy (rgb 19 46 72). Mangrove
+ * already defaults to Roboto. Differentiation is primarily in
+ * border-radius, button styling, and color palette.
  *
  * Open design questions:
  * - IconCard accent palette: Delta mockups show 6 pastel icon background
@@ -17,8 +16,8 @@
  */
 
 // Delta-specific colors — brand palette
-$delta-color-primary: #004f91; // Same as $mg-color-blue-900
-$delta-color-primary-800: #003d70; // Hover shade — TODO: confirm with Delta design team
+$delta-color-primary: rgb(19, 46, 72); // #132e48 — Delta's dark navy
+$delta-color-primary-800: rgb(12, 30, 48); // Hover shade — ~20% darker
 $delta-color-red: #b52a32; // Red accent from Delta CSS
 $delta-color-dark: #181823; // Near-black for CTA banners and dark sections
 

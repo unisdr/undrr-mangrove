@@ -72,3 +72,13 @@ export const HeadlineOnly = {
     buttons: [{ label: 'Learn more', url: '#' }],
   },
 };
+
+export const ExtraPadding = {
+  args: {
+    headline: 'Learn more about the system',
+    buttons: [{ label: 'View documentation', url: '#' }],
+    variant: 'tertiary',
+    headlineSize: '800',
+    padding: '8rem 0',
+  },
+};
