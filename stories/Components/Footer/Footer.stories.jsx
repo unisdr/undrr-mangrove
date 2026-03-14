@@ -131,7 +131,7 @@ export const CustomSyndicationConfig = {
       contenttype: 'landingpage',
       pageid: '83835',
       includemetatags: false,
-      includecss: true,
+      includecss: false,
       suffixID: 'footer-custom-config',
       activedomain: 'www.undrr.org',
     },
