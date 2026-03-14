@@ -11,10 +11,6 @@
  * and a neutral-gray primary CTA.
  *
  * Component gaps (need Mangrove component changes, not just theme variables):
- * - Ghost/outlined button variant: Delta uses outlined buttons extensively
- *   (Back, Learn More, Explore Research, View Documentation). Mangrove has no
- *   outline-specific variables or BEM modifier. Needs a `.mg-button--outline`
- *   variant with its own background/border/text color variables.
  * - IconCard colored blob backgrounds: Delta feature cards show pastel circle
  *   icons (coral, teal). IconCard has no prop for icon background color.
  *   Needs either a new prop or pre-rendered SVG approach.
@@ -25,7 +21,6 @@ $delta-color-primary: #004f91; // Same as $mg-color-blue-900
 $delta-color-primary-800: #003d70; // Hover shade — TODO: confirm with Delta design team
 $delta-color-red: #b52a32; // Red accent from Delta CSS
 $delta-color-dark: #181823; // Near-black for CTA banners and dark sections
-$delta-color-button-gray: $mg-color-neutral-500; // Charcoal CTA fill from mockups
 
 // Delta accent palette — pastel icon colors from "Key Features" cards
 $delta-color-accent-coral: #f4b8a8; // TODO: sample from mockup, confirm exact hex
@@ -43,12 +38,16 @@ $mg-color-tag--hover: $mg-color-interactive-active;
 // $mg-color-tag-secondary, $mg-color-tag-accent — use defaults
 $mg-radius-tag: $mg-spacing-50;
 
-// Buttons — mockups show dark gray fill, pill-shaped radius
-$mg-color-button-background: $delta-color-button-gray;
-$mg-color-button-background--hover: $mg-color-neutral-600;
-$mg-radius-button: $mg-spacing-300; // Pill-shaped, matching mockup CTA
-$mg-border-width-button: 1px;
-$mg-padding-button: $mg-spacing-150 $mg-spacing-300;
+// Buttons — outline style, rounded corners, blue border/text on light backgrounds
+$mg-color-button: $delta-color-primary;
+$mg-color-button--hover: $delta-color-primary-800;
+$mg-color-button-background: transparent;
+$mg-color-button-background--hover: rgba($delta-color-primary, 0.06);
+$mg-color-text-button: $delta-color-primary;
+$mg-border-color-button: $delta-color-primary;
+$mg-radius-button: $mg-spacing-50;
+$mg-border-width-button: 2px;
+$mg-padding-button: $mg-spacing-100 $mg-spacing-200;
 $mg-font-size-button: $mg-font-size-250;
 
 // Form elements
