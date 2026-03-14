@@ -1,4 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import * as UtilityCssStories from './UtilityCss.stories';
 
 <Meta title="Components/Utility CSS" />
 
@@ -247,6 +248,8 @@ Text colors for interactive elements:
 
 Basic flexbox layout utilities for composing inline layouts.
 
+<Canvas of={UtilityCssStories.FlexUtilities} />
+
 | Class | CSS | Description |
 |-------|-----|-------------|
 | `.mg-u-flex` | `display: flex` | Enables flexbox on the element |
@@ -265,6 +268,8 @@ Basic flexbox layout utilities for composing inline layouts.
 
 RTL-safe utilities to push an element toward one side of its container using CSS logical properties (`margin-inline-start`, `margin-inline-end`). These automatically flip in RTL contexts. Pair with `.mg-u-flex` for inline layouts.
 
+<Canvas of={UtilityCssStories.PushUtilities} />
+
 | Class | CSS | Effect |
 |-------|-----|--------|
 | `.mg-u-push-end` | `margin-inline-start: auto` | Pushes element to the inline end (right in LTR, left in RTL) |
@@ -278,7 +283,7 @@ Push a button to the end of a flex row:
 ```html
 <div class="mg-u-flex mg-u-align-items-center">
   <h2>How it works</h2>
-  <a href="#" class="mg-button mg-button-primary mg-u-push-end">Learn More</a>
+  <a href="#" class="mg-button mg-button-primary mg-u-push-end">View all</a>
 </div>
 ```
 
