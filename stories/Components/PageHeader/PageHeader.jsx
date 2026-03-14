@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
@@ -74,8 +75,8 @@ export function PageHeader({
 
             {/* User icon */}
             {showAccount && (
-              <a alt="Log in or register" title="Log in or register" href="/user">
-                <i className="mg-icon mg-icon-user"></i>{' '}
+              <a aria-label="Log in or register" title="Log in or register" href="/user">
+                <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
                 <span className="mg-page-header__label">My account</span>
                 {/* <span className="mg-page-header__label-mobile">Login</span> */}
               </a>
@@ -144,6 +145,31 @@ export function PageHeader({
   );
 }
 
-PageHeader.defaultProps = {
-  variant: 'default',
+PageHeader.propTypes = {
+  /** Component variant ('default' for full header, 'decoration-only' for stripe only) */
+  variant: PropTypes.oneOf(['default', 'decoration-only']),
+  /** Additional CSS classes */
+  className: PropTypes.string,
+  /** URL for the UNDRR logo image */
+  logoUrl: PropTypes.string,
+  /** Alt text for the logo image */
+  logoAlt: PropTypes.string,
+  /** Title attribute for the logo image */
+  logoTitle: PropTypes.string,
+  /** URL for the logo link */
+  homeUrl: PropTypes.string,
+  /** Show or hide the UNDRR logo section */
+  showLogo: PropTypes.bool,
+  /** Show or hide the "My account" link */
+  showAccount: PropTypes.bool,
+  /** Show or hide the language switcher dropdown */
+  showLanguage: PropTypes.bool,
+  /** Array of language objects: { value, label, selected } */
+  languages: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      selected: PropTypes.bool,
+    })
+  ),
 };

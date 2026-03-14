@@ -14,7 +14,7 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # Theming guide
 
-Mangrove ships four built-in themes. Each theme overrides a set of SCSS variables to change colors, border radii, spacing, and component-level styling. This page explains how the system works, documents every overridable token, and walks through creating a new theme.
+Mangrove ships five built-in themes. Each theme overrides a set of SCSS variables to change colors, border radii, spacing, and component-level styling. This page explains how the system works, documents every overridable token, and walks through creating a new theme.
 
 <TableOfContents
   title="On this page"
@@ -38,7 +38,7 @@ Mangrove ships four built-in themes. Each theme overrides a set of SCSS variable
 | **PreventionWeb** | `style-preventionweb.scss` | `#0a6969` (teal) | preventionweb.net knowledge platform |
 | **IRP** | `style-irp.scss` | `#0f78bf` (bright blue) | International Recovery Platform |
 | **MCR2030** | `style-mcr.scss` | `#591a61` (purple) | Making Cities Resilient 2030 campaign |
-| **DELTA Resilience** | `style-delta.scss` | `#004f91` (blue-900) | deltaresilience.org standalone app |
+| **DELTA Resilience** | `style-delta.scss` | `#132e48` (dark navy) | deltaresilience.org standalone app |
 
 The Global UNDRR theme uses the defaults defined in `_variables.scss`. The other themes each have a `_variables-{name}.scss` file that reassigns the overridable tokens before the rest of the SCSS compiles.
 
@@ -103,7 +103,7 @@ All non-default themes follow the same pattern: set a primary brand color, then 
 - Rounded form inputs (`$mg-radius-form-input: $mg-spacing-100`)
 
 **DELTA Resilience** (`_variables-delta.scss`):
-- Primary interactive: `$delta-color-primary: #004f91` (same as Mangrove's base blue, used for links and focus rings)
+- Primary interactive: `$delta-color-primary: #132e48` (dark navy, used for links and focus rings)
 - Outline-style buttons: transparent background, blue border/text, 2px border, 8px radius
 - Tinted card backgrounds: `$mg-color-neutral-50` with `$mg-spacing-150` padding and rounded corners
 - Red accent: `$delta-color-red: #b52a32`
@@ -168,6 +168,7 @@ Used by hero, cards, and other components that support color variants.
 | `$mg-card-background` | `none` | Card container background (set to a color for tinted cards) |
 | `$mg-card-padding` | `0` | Card container padding |
 | `$mg-card-border-radius` | `0` | Card container border radius |
+| `$mg-card-icon-badge-radius` | `50%` | Icon badge border radius (circle by default; Delta uses `15%` for rounded rect) |
 
 ### Form tokens
 
@@ -188,7 +189,14 @@ Used by hero, cards, and other components that support color variants.
 | `$mg-color-hero--tertiary` | `$mg-color-tertiary` | Hero tertiary variant |
 | `$mg-color-hero--quaternary` | `$mg-color-quaternary` | Hero quaternary variant |
 | `$mg-opacity-hero` | `0.85` | Hero overlay opacity |
+| `$mg-color-hero-title` | `$mg-color-neutral-0` (white) | Hero title text color |
 | `$mg-spacing-hero-overlay` | `0` | Hero overlay padding |
+
+### CTA tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-cta-padding` | `$mg-spacing-400 0` | CTA banner vertical padding |
 
 ### Tab tokens
 

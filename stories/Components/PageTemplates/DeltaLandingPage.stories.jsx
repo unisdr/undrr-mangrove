@@ -218,7 +218,7 @@ const DeltaLandingPage = () => (
         <div className="mg-u-flex mg-u-align-items-center">
           <SectionHeader headerText="How it works" />
           <a href="#" className="mg-button mg-button-primary mg-u-push-end">
-            Learn More
+            How it works
           </a>
         </div>
         <div className="mg-container">
@@ -238,7 +238,7 @@ const DeltaLandingPage = () => (
         <div className="mg-u-flex mg-u-align-items-center">
           <SectionHeader headerText="Key Features" />
           <a href="#" className="mg-button mg-button-primary mg-u-push-end">
-            Learn More
+            View all features
           </a>
         </div>
         <section className="mg-container--padded">

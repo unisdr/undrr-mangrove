@@ -33,8 +33,8 @@ $delta-color-accent-peach: #f4d0a8; // TODO: confirm exact hex
 $delta-color-accent-sage: #c8d8b5; // TODO: confirm exact hex
 $delta-color-accent-lavender: #d0c0e8; // TODO: confirm exact hex
 
-// Neutral scale overrides
-$mg-color-neutral-25: rgb(250 250 250); // #fafafa — Delta's lightest gray
+// Delta card background — avoids overriding the foundational neutral scale
+$delta-color-card-bg: rgb(250 250 250); // #fafafa — Delta's lightest gray
 
 // Interactive colors — links, focus rings (stays blue)
 $mg-color-interactive: $delta-color-primary;
@@ -60,7 +60,7 @@ $mg-padding-button: $mg-spacing-100 $mg-spacing-200;
 $mg-font-size-button: $mg-font-size-250;
 
 // Cards — light tinted background with padding, rounded corners
-$mg-card-background: $mg-color-neutral-25;
+$mg-card-background: $delta-color-card-bg;
 $mg-card-padding: $mg-spacing-150;
 $mg-card-border-radius: $mg-spacing-50;
 $mg-card-icon-badge-radius: 15%;

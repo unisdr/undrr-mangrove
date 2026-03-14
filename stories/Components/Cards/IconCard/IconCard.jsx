@@ -37,6 +37,47 @@ const cls = (...classes) =>
  * @property {string} button - Button label text
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
+/** Renders the icon/image visual for a card item. */
+function renderVisual(item) {
+  if (item.imgback) {
+    return (
+      <img
+        src={item.imgback}
+        alt={item.imgalt || ''}
+        className={cls(
+          'mg-card__image',
+          item.imageScale && `mg-card__image--${item.imageScale}`
+        )}
+        {...(!item.imageScale && {
+          width: item.iconSize || 72,
+          height: item.iconSize || 72,
+        })}
+      />
+    );
+  }
+  if (item.icon || item.iconColor) {
+    return (
+      <span
+        className={cls(
+          'mg-card__icon-wrap',
+          item.imageScale && `mg-card__icon-wrap--${item.imageScale}`,
+          item.iconColor && 'mg-card__icon-wrap--colored'
+        )}
+        aria-hidden="true"
+        {...((item.iconColor || item.iconFgColor) && {
+          style: {
+            ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
+            ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
+          },
+        })}
+      >
+        {item.icon && <span className={item.icon} />}
+      </span>
+    );
+  }
+  return null;
+}
+
 export function IconCard({ data, centered = false, variant = 'default', labelPosition = 'content' }) {
   return (
     <>
@@ -66,69 +107,11 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
             <div className="mg-card__visual">
               {item.srOnlyTitle && item.link ? (
                 <a href={item.link} className="mg-card__visual-link">
-                  {item.imgback ? (
-                    <img
-                      src={item.imgback}
-                      alt={item.imgalt || ''}
-                      className={cls(
-                        'mg-card__image',
-                        item.imageScale && `mg-card__image--${item.imageScale}`
-                      )}
-                      {...(!item.imageScale && {
-                        width: item.iconSize || 72,
-                        height: item.iconSize || 72,
-                      })}
-                    />
-                  ) : (item.icon || item.iconColor) ? (
-                    <span
-                      className={cls(
-                        'mg-card__icon-wrap',
-                        item.imageScale && `mg-card__icon-wrap--${item.imageScale}`,
-                        item.iconColor && 'mg-card__icon-wrap--colored'
-                      )}
-                      aria-hidden="true"
-                      {...((item.iconColor || item.iconFgColor) && {
-                        style: {
-                          ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
-                          ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
-                        },
-                      })}
-                    >
-                      {item.icon && <span className={item.icon} />}
-                    </span>
-                  ) : null}
+                  {renderVisual(item)}
                 </a>
-              ) : item.imgback ? (
-                <img
-                  src={item.imgback}
-                  alt={item.imgalt || ''}
-                  className={cls(
-                    'mg-card__image',
-                    item.imageScale && `mg-card__image--${item.imageScale}`
-                  )}
-                  {...(!item.imageScale && {
-                    width: item.iconSize || 72,
-                    height: item.iconSize || 72,
-                  })}
-                />
-              ) : (item.icon || item.iconColor) ? (
-                <span
-                  className={cls(
-                    'mg-card__icon-wrap',
-                    item.imageScale && `mg-card__icon-wrap--${item.imageScale}`,
-                    item.iconColor && 'mg-card__icon-wrap--colored'
-                  )}
-                  aria-hidden="true"
-                  {...((item.iconColor || item.iconFgColor) && {
-                    style: {
-                      ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
-                      ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
-                    },
-                  })}
-                >
-                  {item.icon && <span className={item.icon} />}
-                </span>
-              ) : null}
+              ) : (
+                renderVisual(item)
+              )}
             </div>
           )}
 

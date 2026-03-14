@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 // import './textcta.scss';
 
@@ -98,3 +99,37 @@ export function TextCta({
     </section>
   );
 }
+
+TextCta.propTypes = {
+  /** Banner heading text */
+  headline: PropTypes.string,
+  /** Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}` */
+  headlineSize: PropTypes.string,
+  /** Body text (HTML supported, sanitized via DOMPurify) */
+  text: PropTypes.string,
+  /** Array of button objects: { label, url, type } */
+  buttons: PropTypes.arrayOf(
+    PropTypes.shape({
+      /** Button text */
+      label: PropTypes.string.isRequired,
+      /** Button link URL */
+      url: PropTypes.string,
+      /** Button style: 'Primary' or 'Secondary' */
+      type: PropTypes.oneOf(['Primary', 'Secondary']),
+    })
+  ),
+  /** Color variant: 'primary', 'secondary', 'tertiary', 'quaternary' */
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
+  /** Custom CSS background color (overrides variant) */
+  backgroundColor: PropTypes.string,
+  /** Custom CSS padding (overrides theme token) */
+  padding: PropTypes.string,
+  /** Image URL displayed alongside text (triggers side-by-side layout) */
+  image: PropTypes.string,
+  /** Alt text for the image */
+  imageAlt: PropTypes.string,
+  /** Center-align content (auto-disabled when image is set) */
+  centered: PropTypes.bool,
+  /** Additional CSS classes */
+  className: PropTypes.string,
+};
