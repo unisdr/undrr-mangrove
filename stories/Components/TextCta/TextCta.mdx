@@ -1,65 +1,79 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { TextCta } from './TextCta';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as TextCtaStories from './TextCta.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        header: 'United Nations Office for Disaster Risk Reduction',
-        description:
-          'Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.',
-        button: 'READ MORE',
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        header: 'انضم إلينا في شراكة برنامج الأمم المتحدة الإنمائية',
-        description:
-          'الشراكة هي جوهر كل ما يقوم به برنامج الأمم المتحدة الإنمائي. نحن نقدم حضورًا عالميًا تقريبًا في جميع أنحاء العالم. نحن مصممون على حشد الوسائل اللازمة لتنفيذ خطة عام 2030 من خلال شراكة عالمية متجددة من أجل التنمية المستدامة ، مع التركيز على الأشد فقرا وضعفا.',
-        button: 'انضم إلينا',
-      };
-      return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        header: 'UNDRR Partnership တွင် ကျွန်ုပ်တို့နှင့် ပူးပေါင်းပါ။',
-        description:
-          'UNDRR ၏လုပ်ဆောင်မှုအားလုံး၏ အဓိကအချက်မှာ မိတ်ဖက်ဆက်ဆံရေးဖြစ်သည်။ ကျွန်ုပ်တို့သည် ကမ္ဘာတစ်ဝှမ်းရှိ စကြဝဠာနီးပါးတည်ရှိမှုကို ပေးဆောင်ပါသည်။ အဆင်းရဲဆုံးနှင့် ထိခိုက်လွယ်ဆုံးသူများကို အာရုံစိုက်ခြင်းဖြင့် စဉ်ဆက်မပြတ်ဖွံ့ဖြိုးတိုးတက်သော ကမ္ဘာလုံးဆိုင်ရာ ပူးပေါင်းဆောင်ရွက်မှုကို ပြန်လည်အသက်သွင်းထားသော ကမ္ဘာလုံးဆိုင်ရာ ပူးပေါင်းဆောင်ရွက်မှုမှတစ်ဆင့် 2030 အစီအစဉ်ကို အကောင်အထည်ဖော်ရန် နည်းလမ်းများကို စုစည်းရန် ကျွန်ုပ်တို့ ဆုံးဖြတ်ထားပါသည်။',
-        button: 'ငါတို့နဲ့လာပူးပေါင်းပါ',
-      };
-      return burmeseText;
-    case 'japanese':
-      const japaneseText = {
-        header: 'UNDRRパートナーシップにご参加ください',
-        description:
-          'パートナーシップは、UNDRRが行うすべての中心です。私たちは世界中でほぼ普遍的な存在感を提供します。私たちは、最も貧しく最も脆弱な人々に焦点を当て、持続可能な開発のためのグローバルなパートナーシップを活性化することにより、2030アジェンダを実施するための手段を動員することを決意しています。',
-        button: '参加しませんか',
-      };
-      return japaneseText;
-    default:
-      return {
-        header: 'United Nations Office for Disaster Risk Reduction',
-        description:
-          'Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.',
-        button: 'READ MORE',
-      };
-  }
-};
 
 <Meta of={TextCtaStories} />
 
 # CTA
 
-(NOTE: This is yet to be adapated to the UNDRR system and styles.)
+A full-width call-to-action banner with heading, rich text body, and action buttons. Uses the same color variant system as Hero (primary, secondary, tertiary, quaternary) and supports custom background colors.
 
-CTA block defines a section of information data with some items - title, button/cta and description. `H2`, `P` and `Button` atoms tags are used for creating this section.
+## Default (primary)
 
-<Canvas of={TextCtaStories.DefaultTextCta} meta={TextCtaStories} />
+<Canvas of={TextCtaStories.Default} />
 
-### Usage
+## Secondary variant
 
-- Take HTML from the HTML tab in canvas
+<Canvas of={TextCtaStories.Secondary} />
+
+## Tertiary variant
+
+Used by DELTA Resilience for the "Learn more about the system" CTA.
+
+<Canvas of={TextCtaStories.Tertiary} />
+
+## Custom background color
+
+Use `backgroundColor` for any CSS color value, overriding the variant.
+
+<Canvas of={TextCtaStories.CustomColor} />
+
+## With image
+
+When `image` is provided, the layout switches to a side-by-side flex row with text on the left and image on the right. Stacks vertically on mobile. Inspired by the IRP Recovery Help Desk CTA pattern.
+
+<Canvas of={TextCtaStories.WithImage} />
+
+## Left-aligned
+
+<Canvas of={TextCtaStories.LeftAligned} />
+
+## Headline only
+
+Works without body text — just a headline and buttons.
+
+<Canvas of={TextCtaStories.HeadlineOnly} />
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `headline` | String | - | Banner heading text |
+| `text` | String | - | Body text (HTML supported via `dangerouslySetInnerHTML`) |
+| `buttons` | Array | `[]` | Array of button objects: `{ label, url, type }` |
+| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `backgroundColor` | String | - | Custom CSS background color (overrides variant) |
+| `image` | String | - | Image URL displayed alongside text (triggers side-by-side layout) |
+| `imageAlt` | String | `''` | Alt text for the image |
+| `centered` | Boolean | `true` | Center-align content (auto-disabled when `image` is set) |
+| `className` | String | - | Additional CSS classes |
+
+### Button object
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `label` | String | Required | Button text |
+| `url` | String | `'#'` | Button link URL |
+| `type` | String | `'Primary'` | Button style: `'Primary'` or `'Secondary'` |
+
+## Accessibility
+
+- Uses semantic `<section>` element
+- Heading hierarchy preserved (renders `<h2>`)
+- Button text provides clear action labels
+- Color contrast: white text on theme background colors meets WCAG AA
+- Focus states inherited from `.mg-button` base styles
 
 ## Changelog
 
-- **1.0** — 2022-12-12: Released component
+- **2.0** — 2026-03-14: Complete rewrite. Replaced Foundation grid and legacy `trusted-partnerships` classes with BEM (`mg-cta`). Added `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system. Added `backgroundColor` for custom colors. Added `buttons` array prop (multiple buttons with Primary/Secondary types). Added `text` prop with HTML support. Added `centered` prop. Content is now centered by default.
+- **1.0** — 2022-12-12: Initial release

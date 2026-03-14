@@ -5,6 +5,7 @@ import { Hero } from '../Hero/Hero';
 import { SectionHeader } from '../../Molecules/SectionHeader/SectionHeader';
 import { IconCard } from '../Cards/IconCard/IconCard';
 import { SyndicationSearchWidget } from '../SyndicationSearchWidget/SyndicationSearchWidget';
+import { TextCta } from '../TextCta/TextCta';
 import { Footer } from '../Footer/Footer';
 import deltaLogo from '../../assets/images/delta-logo-placeholder.svg';
 
@@ -183,14 +184,7 @@ const syndicationConfig = {
   showPager: false,
 };
 
-const ctaHeroData = [
-  {
-    title: 'Learn more about the system',
-    primary_button: 'View Documentation',
-    link: '#',
-    imgback: '',
-  },
-];
+const ctaButtons = [{ label: 'View Documentation', url: '#' }];
 
 /* ------------------------------------------------------------------ */
 /*  Page component                                                     */
@@ -255,7 +249,11 @@ const DeltaLandingPage = () => (
     </div>
 
     {/* CTA Banner */}
-    <Hero data={ctaHeroData} variant="tertiary" />
+    <TextCta
+      headline="Learn more about the system"
+      buttons={ctaButtons}
+      variant="tertiary"
+    />
 
     {/* DELTA utility footer bar — above the global UNDRR footer */}
     <footer className="mg-footer-bar">

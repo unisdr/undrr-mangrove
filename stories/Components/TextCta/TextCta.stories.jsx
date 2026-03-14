@@ -1,66 +1,74 @@
 import { TextCta } from './TextCta';
 
-const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        header: 'United Nations Office for Disaster Risk Reduction',
-        description:
-          'Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.',
-        button: 'READ MORE',
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        header: 'مكتب الأمم المتحدة للحد من مخاطر الكوارث',
-        description:
-          'معًا، يمكننا تحقيق الهدف العالمي الذي حدده الأمين العام للأمم المتحدة بأن يكون كل شخص على هذا الكوكب مشمولاً بنظام إنذار مبكر خلال السنوات الخمس المقبلة.',
-        button: 'اقرأ المزيد',
-      };
-      return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        header: 'UNDRR Partnership တွင် ကျွန်ုပ်တို့နှင့် ပူးပေါင်းပါ။',
-        description:
-          'UNDRR ၏လုပ်ဆောင်မှုအားလုံး၏ အဓိကအချက်မှာ မိတ်ဖက်ဆက်ဆံရေးဖြစ်သည်။ ကျွန်ုပ်တို့သည် ကမ္ဘာတစ်ဝှမ်းရှိ စကြဝဠာနီးပါးတည်ရှိမှုကို ပေးဆောင်ပါသည်။ အဆင်းရဲဆုံးနှင့် ထိခိုက်လွယ်ဆုံးသူများကို အာရုံစိုက်ခြင်းဖြင့် စဉ်ဆက်မပြတ်ဖွံ့ဖြိုးတိုးတက်သော ကမ္ဘာလုံးဆိုင်ရာ ပူးပေါင်းဆောင်ရွက်မှုကို ပြန်လည်အသက်သွင်းထားသော ကမ္ဘာလုံးဆိုင်ရာ ပူးပေါင်းဆောင်ရွက်မှုမှတစ်ဆင့် 2030 အစီအစဉ်ကို အကောင်အထည်ဖော်ရန် နည်းလမ်းများကို စုစည်းရန် ကျွန်ုပ်တို့ ဆုံးဖြတ်ထားပါသည်။',
-        button: 'ငါတို့နဲ့လာပူးပေါင်းပါ',
-      };
-      return burmeseText;
-    case 'japanese':
-      const japaneseText = {
-        header: 'UNDRRパートナーシップにご参加ください',
-        description:
-          'パートナーシップは、UNDRRが行うすべての中心です。私たちは世界中でほぼ普遍的な存在感を提供します。私たちは、最も貧しく最も脆弱な人々に焦点を当て、持続可能な開発のためのグローバルなパートナーシップを活性化することにより、2030アジェンダを実施するための手段を動員することを決意しています。',
-        button: '参加しませんか',
-      };
-      return japaneseText;
-    default:
-      return {
-        header: 'United Nations Office for Disaster Risk Reduction',
-        description:
-          'Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.',
-        button: 'READ MORE',
-      };
-  }
-};
-
 export default {
   title: 'Components/CTA',
   component: TextCta,
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
-export const DefaultTextCta = {
-  render: (args, { globals: { locale } }) => {
-    const caption = getCaptionForLocale(locale);
-
-    return (
-      <TextCta
-        headerText={caption.header}
-        descriptionText={caption.description}
-        label={caption.button}
-      ></TextCta>
-    );
+export const Default = {
+  args: {
+    headline: 'United Nations Office for Disaster Risk Reduction',
+    text: '<p>Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.</p>',
+    buttons: [{ label: 'Read more', url: '#' }],
   },
+};
 
-  name: 'Text cta',
+export const Secondary = {
+  args: {
+    headline: 'Join the global platform',
+    text: '<p>Register now for the Global Platform for Disaster Risk Reduction 2025.</p>',
+    buttons: [
+      { label: 'Register', url: '#' },
+      { label: 'Learn more', url: '#', type: 'Secondary' },
+    ],
+    variant: 'secondary',
+  },
+};
+
+export const Tertiary = {
+  args: {
+    headline: 'Learn more about the system',
+    buttons: [{ label: 'View Documentation', url: '#' }],
+    variant: 'tertiary',
+  },
+};
+
+export const CustomColor = {
+  args: {
+    headline: 'Custom branded banner',
+    text: '<p>Use <code>backgroundColor</code> for any CSS color value.</p>',
+    buttons: [{ label: 'Get started', url: '#' }],
+    backgroundColor: '#2c5f2d',
+  },
+};
+
+export const LeftAligned = {
+  args: {
+    headline: 'Left-aligned CTA',
+    text: '<p>Set <code>centered={false}</code> for left-aligned content.</p>',
+    buttons: [{ label: 'Take action', url: '#' }],
+    centered: false,
+  },
+};
+
+export const WithImage = {
+  args: {
+    headline:
+      'Recovery Help Desk: A service of the IRP, responding to requests for support with building back better in recovery from disasters.',
+    buttons: [{ label: 'Learn more about the Recovery Help Desk', url: '#' }],
+    image:
+      'https://recovery.preventionweb.net/sites/default/files/2021-12/Recovery%20Help%20Desk%20Icon%20Background%20White_1.png',
+    imageAlt: 'Recovery Help Desk',
+    backgroundColor: '#1671cc',
+  },
+};
+
+export const HeadlineOnly = {
+  args: {
+    headline: 'A simple call to action with just a headline and button',
+    buttons: [{ label: 'Learn more', url: '#' }],
+  },
 };
