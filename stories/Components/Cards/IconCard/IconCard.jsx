@@ -17,6 +17,7 @@ const cls = (...classes) =>
  * @param {Array} props.data - Array of card data objects (see data object properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
  * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
+ * @param {string} props.labelPosition - Where the label renders: 'content' (default) or 'top' (above visual)
  *
  * Data object properties:
  * @property {string} icon - Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons
@@ -34,7 +35,7 @@ const cls = (...classes) =>
  * @property {string} button - Button label text
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
-export function IconCard({ data, centered = false, variant = 'default' }) {
+export function IconCard({ data, centered = false, variant = 'default', labelPosition = 'content' }) {
   return (
     <>
       {data.map((item, index) => (
@@ -47,6 +48,13 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
             variant && variant !== 'default' && `mg-card__icon--${variant}`
           )}
         >
+          {/* Optional Label/Badge - above visual when labelPosition="top" */}
+          {item.label && labelPosition === 'top' && (
+            <div className="mg-card__meta">
+              <span className="mg-card__label">{item.label}</span>
+            </div>
+          )}
+
           {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
           {(item.icon || item.imgback) && (
             <div className="mg-card__visual">
@@ -110,8 +118,8 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
 
           {/* Card Content */}
           <div className="mg-card__content">
-            {/* Optional Label/Badge */}
-            {item.label && (
+            {/* Optional Label/Badge - default position inside content */}
+            {item.label && labelPosition !== 'top' && (
               <div className="mg-card__meta">
                 <span className="mg-card__label">{item.label}</span>
               </div>

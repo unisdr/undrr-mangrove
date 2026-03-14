@@ -222,7 +222,7 @@ const DeltaLandingPage = () => (
         </div>
         <div className="mg-grid mg-grid__col-3">
           {howItWorksCards.map((card, i) => (
-            <IconCard key={i} data={[card]} />
+            <IconCard key={i} data={[card]} labelPosition="top" />
           ))}
         </div>
       </section>
