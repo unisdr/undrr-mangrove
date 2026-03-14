@@ -193,7 +193,7 @@ $mg-font-size-900: 4rem;
 $mg-font-size-1000: 4.8rem;
 $mg-font-size-1100: 6.4rem;
 $mg-font-body: $mg-font-size-300;
-$mg-font-tag: $mg-font-size-200;
+$mg-font-tag: $mg-font-size-250;
 $mg-font-line-height-500: 1.25em;
 $mg-font-line-height-700: 1.5em;
 
@@ -312,6 +312,7 @@ $mg-radius-form-input: $mg-spacing-0 !default;
 $mg-card-background: none !default;
 $mg-card-padding: 0 !default;
 $mg-card-border-radius: 0 !default;
+$mg-card-icon-badge-radius: 50% !default;
 
 // CTA banner
 $mg-cta-padding: $mg-spacing-400 0 !default;
@@ -327,6 +328,7 @@ $mg-color-hero--secondary: $mg-color-secondary !default;
 $mg-color-hero--tertiary: $mg-color-tertiary !default;
 $mg-color-hero--quaternary: $mg-color-quaternary !default;
 $mg-opacity-hero: 0.85 !default;
+$mg-color-hero-title: $mg-color-neutral-0 !default;
 $mg-spacing-hero-overlay: 0 !default;
 
 // tabs

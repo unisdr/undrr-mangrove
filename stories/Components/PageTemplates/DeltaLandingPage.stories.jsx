@@ -76,10 +76,11 @@ const deltaSections = [
 
 const heroData = [
   {
+    label: 'DELTA Resilience',
     title:
       'Disaster & Hazardous Events, Losses and Damages Tracking & Analysis',
     summaryText:
-      'DELTA Resilience - A toolkit to collect, manage and analyze hazardous event and disaster losses and damages data to support disaster risk reduction.',
+      'A toolkit to collect, manage and analyze hazardous event and disaster losses and damages data to support disaster risk reduction.',
     primary_button: 'Log in',
     secondary_button: 'View documentation',
     link: '#',
@@ -93,7 +94,7 @@ const howItWorksCards = [
     imgback:
       'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80',
     imgalt: 'Data collection',
-    imageScale: 'medium',
+    imageScale: 'large',
     title: 'Collect',
     label: 'Data',
     summaryText:
@@ -103,7 +104,7 @@ const howItWorksCards = [
     imgback:
       'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80',
     imgalt: 'Data analysis',
-    imageScale: 'medium',
+    imageScale: 'large',
     title: 'Analyze',
     label: 'Analysis',
     summaryText:
@@ -113,7 +114,7 @@ const howItWorksCards = [
     imgback:
       'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=400&q=80',
     imgalt: 'Insights for action',
-    imageScale: 'medium',
+    imageScale: 'large',
     title: 'Insights for action',
     label: 'Insights for action',
     summaryText:
@@ -123,46 +124,52 @@ const howItWorksCards = [
 
 const featureCards = [
   {
-    icon: 'mg-icon mg-icon-chart-bar',
-    iconColor: '#f4b8a8',
+    iconColor: '#f4c8a8',
+    borderColor: '#e8963a',
+    imageScale: 'small',
     title: 'Analytics',
     summaryText:
-      'From data to decisions - analysis that drives multiple DRR applications, including recovery planning and early warning.',
+      'From data to decisions - analysis that drives multiple DRR applications including recovery planning, financing, early warning and risk-informed planning.',
   },
   {
-    icon: 'mg-icon mg-icon-globe',
-    iconColor: '#f4b8a8',
+    iconColor: '#d8b4e8',
+    borderColor: '#007a8a',
+    imageScale: 'small',
     title: 'Monitoring',
     summaryText:
-      'Continuous monitoring and tracking of hazardous events and disaster events and their impacts.',
+      'Continuous monitoring and tracking of hazardous events and disaster events and their effects across human, socio-economic and ecosystem dimensions.',
   },
   {
-    icon: 'mg-icon mg-icon-file-alt',
-    iconColor: '#c0d8e8',
-    title: 'Data archiving & integration',
+    iconColor: '#a8e0c8',
+    borderColor: '#00a89a',
+    imageScale: 'small',
+    title: 'Data management & integration',
     summaryText:
-      'Preserve, connect and enrich your disaster data leveraging exposure, vulnerability and other relevant baseline information.',
+      'Preserve, connect and enrich disaster impact data using exposure, vulnerability and baseline information.',
   },
   {
-    icon: 'mg-icon mg-icon-cubes',
-    iconColor: '#b5d8d8',
+    iconColor: '#a8d0e8',
+    borderColor: '#4d9fd8',
+    imageScale: 'small',
     title: 'Losses and damages overview',
     summaryText:
-      'Analyze losses and damages data per disaster event, per hazard type, per sector, and per geography (coming soon).',
+      'Analyze losses and damages through interactive dashboards per disaster event, hazard type, sector and geography.',
   },
   {
-    icon: 'mg-icon mg-icon-lightbulb',
-    iconColor: '#f4b8a8',
-    title: 'Multi-sector and multi-level disaster data sharing',
+    iconColor: '#e8a8a8',
+    borderColor: '#b52a32',
+    imageScale: 'small',
+    title: 'Connected disaster data',
     summaryText:
-      'A tool to support data sharing and application across sectors and levels of government.',
+      'Support data sharing and application across sectors and multiple levels of government.',
   },
   {
-    icon: 'mg-icon mg-icon-cubes',
-    iconColor: '#c0d8e8',
-    title: 'Baseline',
+    iconColor: '#c8ccd0',
+    borderColor: '#d4a020',
+    imageScale: 'small',
+    title: 'Baseline & contextual data integration',
     summaryText:
-      'Exposure & vulnerability statistical and geospatial data enabling post-disaster change and impact analysis (coming soon).',
+      'Integrate exposure, vulnerability, statistical and geospatial data enabling post-disaster change and impact analysis.',
   },
 ];
 
@@ -202,39 +209,47 @@ const DeltaLandingPage = () => (
       sections={deltaSections}
     />
 
-    {/* Hero */}
-    <Hero data={heroData} variant="primary" />
+    <section className="mg-container mg-container--spacer">
+      {/* Hero */}
+      <Hero data={heroData} variant="primary" />
 
-    {/* How it works */}
-    <div className="mg-container mg-container--spacer">
-      <section className="mg-container--padded">
+      {/* How it works */}
+      <section className='mg-container--padded'>
         <div className="mg-u-flex mg-u-align-items-center">
           <SectionHeader headerText="How it works" />
           <a href="#" className="mg-button mg-button-primary mg-u-push-end">
             Learn More
           </a>
         </div>
-        <div className="mg-grid mg-grid__col-3">
-          {howItWorksCards.map((card, i) => (
-            <IconCard key={i} data={[card]} labelPosition="top" />
-          ))}
+        <div className="mg-container">
+          <div className="mg-grid mg-grid__col-3">
+            {howItWorksCards.map((card, i) => (
+              <IconCard key={i} data={[card]} labelPosition="top" />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Key Features */}
-      <section className="mg-container--padded">
+      <section
+        className="mg-container-full-width mg-container--padded"
+        style={{ backgroundColor: '#f0f4f8' }}
+      >
         <div className="mg-u-flex mg-u-align-items-center">
           <SectionHeader headerText="Key Features" />
           <a href="#" className="mg-button mg-button-primary mg-u-push-end">
             Learn More
           </a>
         </div>
-        <div className="mg-grid mg-grid__col-3">
-          {featureCards.map((card, i) => (
-            <IconCard key={i} data={[card]} />
-          ))}
-        </div>
+        <section className="mg-container--padded">
+          <div className="mg-grid mg-grid__col-3">
+            {featureCards.map((card, i) => (
+              <IconCard key={i} data={[card]} />
+            ))}
+          </div>
+        </section>
       </section>
+
 
       {/* More from UNDRR — syndicated search cards */}
       <section className="mg-container--padded">
@@ -246,7 +261,7 @@ const DeltaLandingPage = () => (
         </div>
         <SyndicationSearchWidget config={syndicationConfig} />
       </section>
-    </div>
+    </section>
 
     {/* CTA Banner */}
     <TextCta

@@ -31,7 +31,9 @@ const cls = (...classes) =>
  * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
  * @property {string} link - URL for card link
  * @property {string} linkText - Text for text link CTA
- * @property {string} iconColor - Background color for circular icon badge (CSS color, e.g., "#f4b8a8")
+ * @property {string} iconColor - Background color for the icon badge (CSS color, e.g., "#f4b8a8")
+ * @property {string} iconFgColor - Foreground (glyph) color for the icon (CSS color). Overrides the default neutral gray.
+ * @property {string} borderColor - Border color for the card (CSS color, e.g., "#e8963a")
  * @property {string} button - Button label text
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
@@ -45,8 +47,12 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
             'mg-card',
             'mg-card__icon',
             centered && 'mg-card__icon--centered',
-            variant && variant !== 'default' && `mg-card__icon--${variant}`
+            variant && variant !== 'default' && `mg-card__icon--${variant}`,
+            item.borderColor && 'mg-card__icon--bordered'
           )}
+          {...(item.borderColor && {
+            style: { '--mg-card-border': item.borderColor },
+          })}
         >
           {/* Optional Label/Badge - above visual when labelPosition="top" */}
           {item.label && labelPosition === 'top' && (
@@ -56,7 +62,7 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
           )}
 
           {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
-          {(item.icon || item.imgback) && (
+          {(item.icon || item.imgback || item.iconColor) && (
             <div className="mg-card__visual">
               {item.srOnlyTitle && item.link ? (
                 <a href={item.link} className="mg-card__visual-link">
@@ -73,7 +79,7 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
                         height: item.iconSize || 72,
                       })}
                     />
-                  ) : item.icon ? (
+                  ) : (item.icon || item.iconColor) ? (
                     <span
                       className={cls(
                         'mg-card__icon-wrap',
@@ -81,9 +87,14 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
                         item.iconColor && 'mg-card__icon-wrap--colored'
                       )}
                       aria-hidden="true"
-                      {...(item.iconColor && { style: { '--mg-icon-bg': item.iconColor } })}
+                      {...((item.iconColor || item.iconFgColor) && {
+                        style: {
+                          ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
+                          ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
+                        },
+                      })}
                     >
-                      <span className={item.icon} />
+                      {item.icon && <span className={item.icon} />}
                     </span>
                   ) : null}
                 </a>
@@ -100,7 +111,7 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
                     height: item.iconSize || 72,
                   })}
                 />
-              ) : item.icon ? (
+              ) : (item.icon || item.iconColor) ? (
                 <span
                   className={cls(
                     'mg-card__icon-wrap',
@@ -110,7 +121,7 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
                   aria-hidden="true"
                   {...(item.iconColor && { style: { '--mg-icon-bg': item.iconColor } })}
                 >
-                  <span className={item.icon} />
+                  {item.icon && <span className={item.icon} />}
                 </span>
               ) : null}
             </div>
@@ -190,8 +201,12 @@ IconCard.propTypes = {
       iconSize: PropTypes.number,
       /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
       imageScale: PropTypes.oneOf(['small', 'medium', 'large', 'full']),
-      /** Background color for circular icon badge (CSS color, e.g., "#f4b8a8") */
+      /** Background color for the icon badge (CSS color, e.g., "#f4b8a8") */
       iconColor: PropTypes.string,
+      /** Foreground (glyph) color for the icon (CSS color). Overrides the default neutral gray. */
+      iconFgColor: PropTypes.string,
+      /** Border color for the card (CSS color, e.g., "#e8963a") */
+      borderColor: PropTypes.string,
       /** Badge or category label text */
       label: PropTypes.string,
       /** Card heading text (required for accessibility) */

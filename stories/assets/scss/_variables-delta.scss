@@ -63,6 +63,7 @@ $mg-font-size-button: $mg-font-size-250;
 $mg-card-background: $mg-color-neutral-25;
 $mg-card-padding: $mg-spacing-150;
 $mg-card-border-radius: $mg-spacing-50;
+$mg-card-icon-badge-radius: 15%;
 
 // Form elements
 $mg-color-form-check: $mg-color-interactive;
@@ -73,6 +74,8 @@ $mg-radius-form-input: $mg-spacing-50;
 
 // Hero — left-partial overlay already works via max-width: 40rem in component
 $mg-color-hero: $delta-color-primary;
+$mg-opacity-hero: 1;
+$mg-color-hero-title: oklch(0.685 0.169 237.323);
 $mg-color-hero--tertiary: $delta-color-dark; // Dark CTA banner sections
 $mg-spacing-hero-overlay: 2rem 0;
 
