@@ -133,3 +133,5 @@ TextCta.propTypes = {
   /** Additional CSS classes */
   className: PropTypes.string,
 };
+
+export default TextCta;
