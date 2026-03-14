@@ -2,6 +2,7 @@
 
 .mg-cta {
   padding: $mg-cta-padding;
+  background-color: var(--mg-cta-bg, initial);
 
   &__inner {
     // Uses mg-container from markup for max-width
@@ -107,11 +108,6 @@
 
   &--quaternary {
     background-color: $mg-color-hero--quaternary;
-  }
-
-  // Custom background color via CSS custom property
-  &[style*="--mg-cta-bg"] {
-    background-color: var(--mg-cta-bg);
   }
 
   // Button overrides for dark backgrounds (matches Hero pattern)

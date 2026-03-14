@@ -260,7 +260,7 @@ The PageHeader component follows accessibility best practices:
 | homeUrl     | String  | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
 | showLogo    | Boolean | true                                                                    | Show or hide the UNDRR logo section                                              |
 | showAccount | Boolean | true                                                                    | Show or hide the "My account" link                                               |
-| showLanguage| Boolean | true                                                                    | Show or hide the language switcher dropdown                                      |
+| showLanguage | Boolean | true                                                                    | Show or hide the language switcher dropdown                                      |
 | languages   | Array   | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
 | ...args     | Object  | {}                                                                      | Additional props passed to the root element                                      |
 
@@ -285,7 +285,7 @@ The PageHeader component follows accessibility best practices:
 
 ## Changelog
 
-- **1.3** — 2026-03-14: Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.
+- **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.
 - **1.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
 - **1.1** — 2025-10-27: Improved responsiveness of UNDRR logo
 - **1.0** — 2025-06-04: Initial release with decoration stripe, UNDRR logo, language switcher, Google Analytics integration, and decoration-only variant

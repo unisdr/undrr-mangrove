@@ -29,7 +29,7 @@ Use `backgroundColor` for any CSS color value, overriding the variant.
 
 ## With image
 
-When `image` is provided, the layout switches to a side-by-side flex row with text on the left and image on the right. Stacks vertically on mobile. Inspired by the IRP Recovery Help Desk CTA pattern.
+When `image` is provided, the layout switches to a side-by-side grid layout with text on the left and image on the right. Stacks vertically on mobile. Inspired by the IRP Recovery Help Desk CTA pattern.
 
 <Canvas of={TextCtaStories.WithImage} />
 
@@ -83,5 +83,5 @@ Use the `padding` prop to override the theme default. Combined here with `headli
 
 ## Changelog
 
-- **1.0** — 2026-03-14: First production release. Full-width banner with BEM class structure (`mg-cta`). Supports `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system, `backgroundColor` for custom colors, `buttons` array prop (multiple buttons with Primary/Secondary types), `text` prop with HTML support (sanitized via DOMPurify), optional `image` for side-by-side layout, `centered` prop, and configurable `headlineSize`/`padding`.
+- **1.0** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release. Full-width banner with BEM class structure (`mg-cta`). Supports `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system, `backgroundColor` for custom colors, `buttons` array prop (multiple buttons with Primary/Secondary types), `text` prop with HTML support (sanitized via DOMPurify), optional `image` for side-by-side layout, `centered` prop, and configurable `headlineSize`/`padding`.
 - **0.1** — 2022-12-12: Initial placeholder (never used in production)
