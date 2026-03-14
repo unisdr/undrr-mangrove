@@ -132,6 +132,11 @@ To use the PageHeader component in your React application:
    />
    ```
 
+5. Decoration bar only (no logo, account, or language — for sub-branded sites like DELTA that provide their own navigation):
+   ```jsx
+   <PageHeader showLogo={false} showAccount={false} showLanguage={false} />
+   ```
+
 #### Vanilla HTML/CSS
 
 For non-React applications, use these HTML structures:
@@ -247,14 +252,17 @@ The PageHeader component follows accessibility best practices:
 
 | Prop      | Type   | Default                                                                 | Description                                                                      |
 | --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| variant   | String | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
-| className | String | undefined                                                               | Additional CSS classes to apply                                                  |
-| logoUrl   | String | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
-| logoAlt   | String | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
-| logoTitle | String | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
-| homeUrl   | String | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
-| languages | Array  | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
-| ...args   | Object | {}                                                                      | Additional props passed to the root element                                      |
+| variant     | String  | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
+| className   | String  | undefined                                                               | Additional CSS classes to apply                                                  |
+| logoUrl     | String  | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
+| logoAlt     | String  | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
+| logoTitle   | String  | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
+| homeUrl     | String  | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
+| showLogo    | Boolean | true                                                                    | Show or hide the UNDRR logo section                                              |
+| showAccount | Boolean | true                                                                    | Show or hide the "My account" link                                               |
+| showLanguage | Boolean | true                                                                    | Show or hide the language switcher dropdown                                      |
+| languages   | Array   | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
+| ...args     | Object  | {}                                                                      | Additional props passed to the root element                                      |
 
 ### Integration Notes
 
@@ -277,6 +285,7 @@ The PageHeader component follows accessibility best practices:
 
 ## Changelog
 
+- **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.
 - **1.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
 - **1.1** — 2025-10-27: Improved responsiveness of UNDRR logo
 - **1.0** — 2025-06-04: Initial release with decoration stripe, UNDRR logo, language switcher, Google Analytics integration, and decoration-only variant

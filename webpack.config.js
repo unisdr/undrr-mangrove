@@ -99,6 +99,7 @@ export default [
       Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.jsx',
+      TextCta: './stories/Components/TextCta/TextCta.hydrate.js',
     },
     externals: {
       react: 'react',

@@ -114,8 +114,9 @@ function ScoreMetrics({ hit, source }) {
  * @param {Object} props.hit - Elasticsearch hit object
  * @param {boolean} props.showMetrics - Whether to show scoring metrics
  * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
+ * @param {Object|null} props.visibleTeaserFields - Teaser field visibility map from config
  */
-export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
+export function ResultItem({ hit, showMetrics = false, displayMode = 'list', visibleTeaserFields = null }) {
   const source = hit._source || {};
   const highlight = hit.highlight || {};
   const isTerm = isTaxonomyTermResult(source);
@@ -182,23 +183,40 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list' }) {
     // Node teasers use "field--name-node-title"; taxonomy term teasers use
     // "field--name-name" for the term name field. Both selectors are coupled
     // to Drupal's teaser view template class names.
+    //
+    // Skip badge injection entirely when both siteName and contentType are
+    // hidden via visibleTeaserFields — avoids rendering an empty wrapper div.
+    const hideSiteName = visibleTeaserFields?.siteName === false;
+    const hideContentType = visibleTeaserFields?.contentType === false;
+    const skipBadges = hideSiteName && hideContentType;
+
     let finalHtml = resolvedTeaser;
-    let titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
-    if (titleFieldIndex === -1) {
-      titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
-    }
-    if (titleFieldIndex !== -1) {
-      let badgeHtml = '<div class="mg-search__result-badges">';
-      if (isOrganization) {
-        const typeLabel = getContentType(type)?.name || type;
-        // Title-case: capitalise the first letter of each word
-        const titleCased = typeLabel.replace(/\b\w/g, c => c.toUpperCase());
-        badgeHtml += `<span class="mg-tag">${titleCased}</span>`;
-      } else {
-        badgeHtml += `<span class="mg-search__result-site-name">${domainLabel}</span>`;
+    if (!skipBadges) {
+      let titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
+      if (titleFieldIndex === -1) {
+        titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
       }
-      badgeHtml += '</div>';
-      finalHtml = finalHtml.slice(0, titleFieldIndex) + badgeHtml + finalHtml.slice(titleFieldIndex);
+      if (titleFieldIndex !== -1) {
+        // Organizations show a content type tag; everything else shows a site name.
+        // Respect visibleTeaserFields — skip the individual badge if its field is hidden,
+        // and skip the wrapper entirely if the relevant badge would be empty.
+        let badgeContent = '';
+        if (isOrganization) {
+          if (!hideContentType) {
+            const typeLabel = getContentType(type)?.name || type;
+            const titleCased = typeLabel.replace(/\b\w/g, c => c.toUpperCase());
+            badgeContent = `<span class="mg-tag">${titleCased}</span>`;
+          }
+        } else {
+          if (!hideSiteName) {
+            badgeContent = `<span class="mg-search__result-site-name">${domainLabel}</span>`;
+          }
+        }
+        if (badgeContent) {
+          const badgeHtml = `<div class="mg-search__result-badges">${badgeContent}</div>`;
+          finalHtml = finalHtml.slice(0, titleFieldIndex) + badgeHtml + finalHtml.slice(titleFieldIndex);
+        }
+      }
     }
 
     // Use vocabulary name as result type for terms, content type for nodes

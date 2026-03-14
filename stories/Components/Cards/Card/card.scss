@@ -5,6 +5,9 @@
   display: inline-block;
   position: relative;
   margin-bottom: $mg-spacing-100;
+  background: $mg-card-background;
+  padding: $mg-card-padding;
+  border-radius: $mg-card-border-radius;
 
   // Vertical CARD
   &__vc {
@@ -227,6 +230,10 @@ $card-variant-colours: (
   z-index: 101;
 }
 
+.mg-card__label {
+  font-weight: 700;
+}
+
 .mg-card__summary a:hover,
 .mg-card__text-link:hover {
   text-decoration: underline;
@@ -375,6 +382,23 @@ $card-variant-colours: (
     .mg-icon {
       margin: 0 auto;
     }
+
+    // Colored background behind icon (circle by default, rounded rect in Delta)
+    &--colored {
+      background-color: var(--mg-icon-bg);
+      border-radius: $mg-card-icon-badge-radius;
+      aspect-ratio: 1;
+      width: 72px;
+      min-width: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .mg-icon {
+        font-size: 32px;
+        color: var(--mg-icon-fg, #{$mg-color-neutral-700});
+      }
+    }
   }
 
   // Visual link for logo cards (srOnlyTitle) - stretched link pattern
@@ -462,6 +486,12 @@ $card-variant-colours: (
         border-radius: 2px;
       }
     }
+  }
+
+  // Bordered variant (colored border via CSS custom property)
+  &--bordered {
+    border: 2px solid var(--mg-card-border);
+    padding: max($mg-card-padding + 0rem, $mg-spacing-100);
   }
 
   // Centered variant

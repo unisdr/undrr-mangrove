@@ -570,3 +570,184 @@ export const CombinedExample = () => (
 );
 
 CombinedExample.storyName = 'Combined utilities example';
+
+// Flex layout utilities
+export const FlexUtilities = () => (
+  <div>
+    <h4>Flex layout utilities</h4>
+
+    <h5>Basic flex row with gap</h5>
+    <div className="mg-u-flex mg-u-gap-100" style={{ marginBottom: '2rem' }}>
+      <div
+        style={{
+          padding: '0.75rem 1.5rem',
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #90caf9',
+        }}
+      >
+        Item 1
+      </div>
+      <div
+        style={{
+          padding: '0.75rem 1.5rem',
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #90caf9',
+        }}
+      >
+        Item 2
+      </div>
+      <div
+        style={{
+          padding: '0.75rem 1.5rem',
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #90caf9',
+        }}
+      >
+        Item 3
+      </div>
+    </div>
+
+    <h5>Vertically centered items of different heights</h5>
+    <div
+      className="mg-u-flex mg-u-align-items-center mg-u-gap-100"
+      style={{ marginBottom: '2rem' }}
+    >
+      <div
+        style={{
+          padding: '0.5rem 1rem',
+          backgroundColor: '#fff3e0',
+          border: '1px solid #ffcc80',
+          fontSize: '2rem',
+        }}
+      >
+        Tall
+      </div>
+      <div
+        style={{
+          padding: '0.5rem 1rem',
+          backgroundColor: '#fff3e0',
+          border: '1px solid #ffcc80',
+        }}
+      >
+        Short
+      </div>
+      <div
+        style={{
+          padding: '0.5rem 1rem',
+          backgroundColor: '#fff3e0',
+          border: '1px solid #ffcc80',
+          fontSize: '1.5rem',
+        }}
+      >
+        Medium
+      </div>
+    </div>
+
+    <h5>Wrapping flex items</h5>
+    <div
+      className="mg-u-flex mg-u-flex-wrap mg-u-gap-100"
+      style={{ maxWidth: '400px' }}
+    >
+      {['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape'].map(
+        fruit => (
+          <span
+            key={fruit}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#e8f5e9',
+              border: '1px solid #a5d6a7',
+              borderRadius: '4px',
+            }}
+          >
+            {fruit}
+          </span>
+        )
+      )}
+    </div>
+  </div>
+);
+
+FlexUtilities.storyName = 'Flex utilities';
+
+// Push alignment utilities
+export const PushUtilities = () => (
+  <div>
+    <h4>Push alignment utilities (RTL-safe)</h4>
+    <p style={{ marginBottom: '1.5rem' }}>
+      These use CSS logical properties and automatically flip in RTL contexts.
+      Select "Arabic" from the locale toolbar to see them adapt.
+    </p>
+
+    <h5>Push button to end of row</h5>
+    <div
+      className="mg-u-flex mg-u-align-items-center"
+      style={{
+        padding: '1rem',
+        backgroundColor: '#f5f5f5',
+        marginBottom: '1.5rem',
+      }}
+    >
+      <strong style={{ fontSize: '1.25rem' }}>Section heading</strong>
+      <a href="#" className="mg-button mg-button-primary mg-u-push-end">
+        View all
+      </a>
+    </div>
+
+    <h5>Keep a button at the start (left in LTR)</h5>
+    <div
+      className="mg-u-flex mg-u-align-items-center mg-u-gap-100"
+      style={{
+        padding: '1rem',
+        backgroundColor: '#f5f5f5',
+        marginBottom: '1.5rem',
+      }}
+    >
+      <a href="#" className="mg-button mg-button-primary mg-u-push-start">
+        Back to overview
+      </a>
+    </div>
+
+    <h5>Center an element</h5>
+    <div
+      style={{
+        padding: '1rem',
+        backgroundColor: '#f5f5f5',
+        marginBottom: '1.5rem',
+      }}
+    >
+      <div
+        className="mg-u-push-center"
+        style={{
+          width: '200px',
+          padding: '1rem',
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #90caf9',
+          textAlign: 'center',
+        }}
+      >
+        Centered block
+      </div>
+    </div>
+
+    <h5>Multiple pushes in one row</h5>
+    <div
+      className="mg-u-flex mg-u-align-items-center"
+      style={{ padding: '1rem', backgroundColor: '#f5f5f5' }}
+    >
+      <span>Start</span>
+      <span
+        className="mg-u-push-end"
+        style={{
+          padding: '0.25rem 0.75rem',
+          backgroundColor: '#fff3e0',
+          border: '1px solid #ffcc80',
+          borderRadius: '4px',
+        }}
+      >
+        Pushed to end
+      </span>
+    </div>
+  </div>
+);
+
+PushUtilities.storyName = 'Push alignment utilities';

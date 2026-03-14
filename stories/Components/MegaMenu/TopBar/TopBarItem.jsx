@@ -3,6 +3,7 @@ import Section from '../Section/Section.jsx';
 
 export function TopBarItem({
   title,
+  icon,
   onMouseEnter,
   activeItem,
   link,
@@ -15,6 +16,15 @@ export function TopBarItem({
   index,
 }) {
   let isActive = index === activeItem;
+
+  const label = (
+    <>
+      {icon && (
+        <span className={`mg-mega-topbar__item-icon ${icon}`} aria-hidden="true" />
+      )}
+      {title}
+    </>
+  );
 
   return (
     <li
@@ -35,7 +45,7 @@ export function TopBarItem({
           aria-haspopup={section && section.items ? 'true' : undefined}
           aria-expanded={isActive ? 'true' : undefined}
         >
-          {title}
+          {label}
         </a>
       ) : (
         <button
@@ -45,7 +55,7 @@ export function TopBarItem({
           aria-haspopup={section && section.items ? 'true' : undefined}
           aria-expanded={isActive ? 'true' : undefined}
         >
-          {title}
+          {label}
         </button>
       )}
 
