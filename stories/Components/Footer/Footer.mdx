@@ -119,7 +119,7 @@ The component uses a simplified JavaScript approach that directly injects the re
     contenttype: 'landingpage',
     pageid: '83835',
     includemetatags: false,
-    includecss: true,
+    includecss: false,
     suffixID: 'footer',
     activedomain: 'www.undrr.org',
   });
@@ -221,6 +221,7 @@ The `mg-footer-bar` is a CSS-only utility component that renders a secondary nav
 
 ## Changelog
 
-- **1.0.0-beta.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `mg-footer-bar` utility component for sub-branded site footer navigation. Footer social links now inherit color from parent container instead of forcing white (the parent `.mg-footer--about-footer` already sets white link color). Default `includecss` changed to `false` to avoid double-loading CSS that Mangrove provides.
+- **1.0.0-beta.3** — 2026-03-16 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `mg-footer-bar` utility component for sub-branded site footer navigation. Footer social links now inherit color from parent container instead of forcing white (the parent `.mg-footer--about-footer` already sets white link color). Default `includecss` changed to `false` to avoid double-loading CSS that Mangrove provides.
+- **1.0.0-beta.2** — 2026-03-14: Mobile responsive fixes — flex-wrap on social and about-footer links, grid span reset below tablet, button stacking, image overflow constraint, link-spacer stacking for syndicated content; disabled widget injected CSS (`includecss: false`)
 - **1.0.0-beta.1** — 2025-10-17: Added `mg-footer` root class, `.mg-footer--about-footer` modifier, `footer.scss`, and Gutenberg spacer reset
 - **1.0.0-alpha.1** — 2022-12-12: Initial UNDRR-based release (proof of concept)

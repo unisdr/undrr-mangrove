@@ -21,6 +21,7 @@
 .mg-footer--about-footer--links {
   font-size: $mg-font-size-500;
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 0.75rem 2rem;
 }
 
@@ -68,6 +69,7 @@
 
 .mg-footer--social-links {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
   padding-left: 0;
 
@@ -77,5 +79,34 @@
 
   li a {
     text-underline-offset: 5px;
+  }
+}
+
+// Footer buttons: wrap into rows instead of overflowing
+.mg-footer .mg-button + .mg-button {
+  margin-inline-start: 0;
+}
+
+// Reset grid spans below tablet so footer columns stack
+@media (max-width: $mg-breakpoint-tablet) {
+  .mg-footer {
+    .mg-grid__col--span-2,
+    .mg-grid__col--span-3 {
+      grid-column-end: auto;
+    }
+  }
+
+  // Constrain footer images (Sendai/SDG logos)
+  .mg-footer img {
+    max-width: min(300px, 76vw);
+  }
+}
+
+// Link-spacer mobile stacking (syndicated widget content)
+@media (max-width: $mg-breakpoint-mobile) {
+  .mg-footer .link-spacer {
+    display: grid;
+    margin-right: 0;
+    white-space: normal;
   }
 }
