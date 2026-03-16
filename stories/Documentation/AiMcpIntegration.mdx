@@ -13,46 +13,134 @@ import LinkTo from '@storybook/addon-links/react';
 
 # AI and MCP integration
 
-Mangrove is designed to work well with AI coding agents like Claude, Cursor, and GitHub Copilot. This guide explains how to help AI tools understand and use Mangrove components effectively.
+Mangrove publishes machine-readable component metadata alongside its Storybook documentation, so AI coding agents can discover and use components accurately. This guide covers how agents find Mangrove, what data they get, and how you can help.
 
-## For all users: reference the documentation
+## How AI agents discover Mangrove
 
-The simplest and most effective approach is to point your AI to the live Storybook documentation.
+Mangrove provides a three-tier discovery system designed for how AI agents actually work. Agents that can fetch URLs will find structured data at well-known paths; agents working from the repository will find the same information in source.
 
-### Point to the documentation URL
+### Tier 1: `llms.txt` (entry point)
+
+The deployed Storybook site serves a [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) file at the site root. This follows the [llms.txt convention](https://llmstxt.org/) — a plain-text discovery file that tells AI agents what the project is, where to find documentation, and where to find the machine-readable component index.
+
+An agent fetching `https://unisdr.github.io/undrr-mangrove/llms.txt` gets:
+
+- Project description and key conventions (CSS prefix, BEM naming, themes)
+- Links to documentation, repository, and npm
+- A pointer to the component index at `ai-components/index.json`
+
+### Tier 2: component index (`ai-components/index.json`)
+
+The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) is a lightweight JSON file (~29 KB) listing all components with their names, descriptions, import statements, and documentation URLs. Each entry includes a `detailsUrl` pointing to the per-component JSON file.
+
+```json
+{
+  "id": "components-pager",
+  "name": "Pager",
+  "description": "Pager component.",
+  "import": "import { Pager } from \"@undrr/undrr-mangrove\";",
+  "docsUrl": "https://unisdr.github.io/undrr-mangrove/?path=/docs/components-pager--docs",
+  "detailsUrl": "https://unisdr.github.io/undrr-mangrove/ai-components/components-pager.json"
+}
+```
+
+This gives agents enough context to identify the right component without fetching everything.
+
+### Tier 3: per-component details (`ai-components/{id}.json`)
+
+Each component has its own JSON file with full prop definitions, types, defaults, descriptions, and code examples extracted from Storybook stories. These files are typically 1-5 KB each.
+
+An agent working on a Pager implementation would fetch `ai-components/components-pager.json` to get:
+
+- All props with types, required/optional status, and defaults
+- Code examples from every Storybook story variant
+- A link to the full Storybook documentation page
+
+### How agents should use this
+
+The intended workflow for an AI agent:
+
+1. Fetch `llms.txt` to understand the project
+2. Fetch `ai-components/index.json` to find relevant components
+3. Fetch `ai-components/{id}.json` only for the specific components it needs
+
+This keeps token usage low. An agent building a single component fetches ~30 KB of index data plus ~3 KB for the component details, rather than the full 700+ KB Storybook manifest.
+
+## Directing your AI agent to Mangrove
+
+### Point agents to the repository
+
+For agents that work with source code (Claude Code, Cursor, Copilot), the most reliable approach is to reference the GitHub repository. Agents can read source files directly:
 
 ```
-Use the Mangrove component library documented at:
-https://unisdr.github.io/undrr-mangrove/
+I'm working with the UNDRR Mangrove component library.
+Repository: https://github.com/unisdr/undrr-mangrove
 
-Create a card component following the patterns shown there.
+Help me create a page layout using the MegaMenu, Hero, and Footer components.
 ```
 
-AI tools can fetch and read the documentation pages to understand component structure, props, and usage patterns.
+The repository contains `CLAUDE.md` (for Claude Code) and `.github/copilot-instructions.md` (for GitHub Copilot) with full project context.
 
-### Reference specific component pages
+### Point agents to `llms.txt`
 
-For more accurate results, point the AI to specific component documentation:
-
-```
-Look at the CtaButton component in Mangrove:
-https://unisdr.github.io/undrr-mangrove/?path=/docs/components-buttons-ctabutton--docs
-
-Create a similar button with the "secondary" variant.
-```
-
-### Use the component manifest
-
-This Storybook generates a component manifest with structured metadata about all components. AI tools that support fetching URLs can reference it directly:
+For agents that can fetch URLs but don't have direct file access:
 
 ```
 Fetch the component library metadata from:
-https://unisdr.github.io/undrr-mangrove/index.json
+https://unisdr.github.io/undrr-mangrove/llms.txt
 
 Use these components to build the requested UI.
 ```
 
-The manifest includes component names, descriptions, props, and story variants.
+### Point agents to a specific component
+
+For the most accurate results, reference a specific component's detail file:
+
+```
+Fetch the Pager component metadata:
+https://unisdr.github.io/undrr-mangrove/ai-components/components-pager.json
+
+Create a similar paginated list using this component.
+```
+
+## Configuring AI coding tools
+
+### Claude Code
+
+Add the repository reference to your conversation, or if working in the Mangrove repo, Claude Code automatically reads `CLAUDE.md` for project context.
+
+For projects that consume Mangrove, add to your `CLAUDE.md`:
+
+```markdown
+## Component library
+
+This project uses the UNDRR Mangrove component library.
+- AI manifest: https://unisdr.github.io/undrr-mangrove/llms.txt
+- Component index: https://unisdr.github.io/undrr-mangrove/ai-components/index.json
+- CSS prefix: mg-
+- Naming: BEM (e.g., mg-card__title, mg-button--primary)
+```
+
+### Cursor
+
+Add to your `.cursor/rules` or project instructions:
+
+```
+Use the UNDRR Mangrove component library for all UI components.
+AI manifest: https://unisdr.github.io/undrr-mangrove/llms.txt
+Component index: https://unisdr.github.io/undrr-mangrove/ai-components/index.json
+CSS prefix: mg-
+```
+
+### GitHub Copilot
+
+The repository includes `.github/copilot-instructions.md` with project conventions. For consuming projects, include a comment at the top of your file:
+
+```jsx
+// Using UNDRR Mangrove components
+// Component index: https://unisdr.github.io/undrr-mangrove/ai-components/index.json
+// CSS prefix: mg-, BEM naming
+```
 
 ## Best practices for AI-assisted development
 
@@ -76,7 +164,8 @@ Include these key facts in your prompts:
 - **CSS prefix**: All classes use the `mg-` prefix (e.g., `mg-button`, `mg-card`)
 - **BEM naming**: Classes follow BEM conventions (e.g., `mg-card__title`, `mg-button--primary`)
 - **Semantic HTML**: Components use proper HTML elements for accessibility
-- **Documentation URL**: `https://unisdr.github.io/undrr-mangrove/`
+- **4 themes**: undrr (default), preventionweb, irp, mcr2030
+- **RTL support**: Arabic and other RTL languages are supported
 
 ### Validate the output
 
@@ -87,42 +176,9 @@ AI-generated code should be validated against:
 3. **Accessibility**: Include proper ARIA attributes
 4. **Responsiveness**: Follow Mangrove's responsive patterns
 
-## Connecting AI coding tools
-
-### Claude Code / Claude
-
-Reference the documentation URL in your conversation:
-
-```
-I'm working with the UNDRR Mangrove component library.
-Documentation: https://unisdr.github.io/undrr-mangrove/
-
-Help me create a page layout using the MegaMenu, Hero, and Footer components.
-```
-
-### Cursor
-
-Add to your `.cursor/rules` or project instructions:
-
-```
-Use the Mangrove component library for all UI components.
-Documentation: https://unisdr.github.io/undrr-mangrove/
-CSS prefix: mg-
-```
-
-### GitHub Copilot
-
-Include a comment at the top of your file:
-
-```jsx
-// Using UNDRR Mangrove components
-// Docs: https://unisdr.github.io/undrr-mangrove/
-// All classes use mg- prefix
-```
-
 ---
 
-## For advanced users: local MCP server
+## For contributors: local MCP server
 
 If you're developing Mangrove components locally, you can enable the full MCP (Model Context Protocol) experience. This provides a live connection between your AI agent and the running Storybook dev server.
 
@@ -166,8 +222,29 @@ When running locally with the MCP addon, AI agents can:
 
 See the [Storybook MCP documentation](https://storybook.js.org/blog/storybook-mcp-sneak-peek/) for detailed setup instructions for other AI tools.
 
+---
+
+## How the AI manifest is generated
+
+The component metadata files are generated automatically during `yarn build`. The build script (`scripts/generate-ai-manifest.js`) transforms Storybook's internal components manifest (produced by the `experimentalComponentsManifest` feature) into the tiered AI-friendly format described above.
+
+The generated files are deployed alongside the static Storybook site to GitHub Pages, so they stay in sync with the documentation and are always current with the latest published version.
+
+To regenerate manually:
+
+```bash
+node scripts/generate-ai-manifest.js
+```
+
+## Roadmap
+
+- **Storybook MCP addon**: Install `@storybook/addon-mcp` to enable live MCP queries during local development
+- **Richer component descriptions**: Improve JSDoc coverage so AI agents get better context from the manifest
+- **Vanilla HTML patterns**: Include non-React markup examples in the manifest for HTML/CSS-only consumers
+
 ## Further reading
 
+- [llms.txt specification](https://llmstxt.org/)
 - [Storybook MCP announcement](https://storybook.js.org/blog/storybook-mcp-sneak-peek/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo>
