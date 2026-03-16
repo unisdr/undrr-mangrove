@@ -12,7 +12,11 @@
  *   ai-components/utilities.json   — CSS utility class inventory
  *
  * Usage:
- *   node scripts/generate-ai-manifest.js [--build-dir=docs-build-temp]
+ *   node scripts/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
+ *
+ * Flags:
+ *   --validate   Check curated data keys against the Storybook manifest and
+ *                exit non-zero if any are unmatched. Useful in CI.
  */
 
 import fs from 'fs';
@@ -26,6 +30,7 @@ const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
 const args = process.argv.slice(2);
 const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split('=')[1];
 const buildDir = path.resolve(process.cwd(), buildDirArg || 'docs-build-temp');
+const validateOnly = args.includes('--validate');
 
 const manifestPath = path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
@@ -127,11 +132,25 @@ function docsUrl(componentId) {
 
 const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
 const unmatchedKeys = Object.keys(htmlExamples).filter(k => !manifestIds.has(k));
+const uncoveredIds = [...manifestIds].filter(id =>
+  !htmlExamples[id] && !id.startsWith('example-'),
+);
+
 if (unmatchedKeys.length > 0) {
   console.warn('Warning: html-examples keys not found in Storybook manifest:');
-  for (const k of unmatchedKeys) {
-    console.warn(`  - ${k}`);
+  for (const k of unmatchedKeys) console.warn(`  - ${k}`);
+}
+if (uncoveredIds.length > 0) {
+  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in html-examples.js:`);
+  for (const id of uncoveredIds) console.warn(`  - ${id}`);
+}
+if (validateOnly) {
+  if (unmatchedKeys.length > 0) {
+    console.error('Validation failed: html-examples keys do not match manifest.');
+    process.exit(1);
   }
+  console.log('Validation passed: all html-examples keys match manifest IDs.');
+  process.exit(0);
 }
 
 // ---------------------------------------------------------------------------
