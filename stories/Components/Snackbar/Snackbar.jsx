@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { ErrorIcon, WarningIcon, InfoIcon, SuccessIcon } from './SnackbarIcons';
 
 /**
@@ -181,6 +182,19 @@ export const SnackbarPreview = ({ severity, message }) => {
       </div>
     </div>
   );
+};
+
+Snackbar.propTypes = {
+  /** Severity level controlling icon and color: error, warning, info, or success. */
+  severity: PropTypes.oneOf(['error', 'warning', 'info', 'success']),
+  /** Whether the snackbar is currently visible. */
+  opened: PropTypes.bool.isRequired,
+  /** Text displayed in the snackbar. */
+  message: PropTypes.string.isRequired,
+  /** Callback fired when the snackbar closes (dismiss button or auto-close). */
+  onClose: PropTypes.func.isRequired,
+  /** Auto-dismiss delay in milliseconds. Omit to keep the snackbar open until dismissed. */
+  openedMiliseconds: PropTypes.number,
 };
 
 export default Snackbar;

@@ -13,6 +13,7 @@
  *   vanillaHtml     {boolean}  true if the component works as static HTML/CSS
  *   requiresReact   {boolean}  true if the component needs React to function
  *   reactNote       {string}   why React is required
+ *   description     {string}   fallback description when Storybook manifest has none
  *   examples        {Array<{name: string, html: string}>}  rendered HTML snippets
  *   cssClasses      {string[]} BEM classes the component uses
  *   vanillaHtmlEmbed {object}  embed instructions (for syndication components)
@@ -25,6 +26,7 @@ export default {
 
   'design-decisions-container': {
     vanillaHtml: true,
+    description: 'Centered responsive container with breakpoint-driven max-widths (480/900/1164/1440px). Variants for padding and vertical spacing.',
     cssClasses: [
       'mg-container',
       'mg-container--slim',
@@ -63,6 +65,7 @@ export default {
 
   'design-decisions-grid-layout': {
     vanillaHtml: true,
+    description: 'Responsive CSS grid system. 1-6 column layouts with column and row spanning. Flexbox fallback for older browsers.',
     cssClasses: [
       'mg-grid',
       'mg-grid__col-1',
@@ -121,6 +124,7 @@ export default {
 
   'components-cards-vertical-card': {
     vanillaHtml: true,
+    description: 'Card with stacked image, labels, title, summary, and optional CTA button. Four color variants.',
     cssClasses: [
       'mg-card',
       'mg-card__vc',
@@ -206,6 +210,7 @@ export default {
 
   'components-cards-horizontal-card': {
     vanillaHtml: true,
+    description: 'Side-by-side card with image left and content right. Labels, title, summary, and CTA button.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -353,6 +358,7 @@ export default {
 
   'components-cards-book-card': {
     vanillaHtml: true,
+    description: 'Minimal card for publications: cover image and title only.',
     cssClasses: [
       'mg-card',
       'mg-card__vc',
@@ -381,6 +387,7 @@ export default {
 
   'components-cards-horizontal-book-card': {
     vanillaHtml: true,
+    description: 'Horizontal card for publications: cover image left, title and summary right.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -416,6 +423,7 @@ export default {
 
   'components-cards-stats-card': {
     vanillaHtml: true,
+    description: 'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.',
     cssClasses: [
       'mg-stats-card',
       'mg-stats-card--compact',
@@ -480,6 +488,7 @@ export default {
 
   'components-buttons-buttons': {
     vanillaHtml: true,
+    description: 'Primary and secondary CTA buttons. Rendered as anchor elements with role="button". Arrow and disabled variants.',
     cssClasses: [
       'mg-button',
       'mg-button-primary',
@@ -510,6 +519,7 @@ export default {
 
   'components-buttons-chips': {
     vanillaHtml: true,
+    description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant.',
     cssClasses: ['chip', 'chip__cross'],
     examples: [
       {
@@ -525,6 +535,7 @@ export default {
 
   'components-buttons-cta-link': {
     vanillaHtml: true,
+    description: 'Inline call-to-action link with arrow or spacing icon. Can render as anchor or span.',
     cssClasses: ['cta__link', 'cta--arrow', 'cta--space'],
     examples: [
       {
@@ -548,6 +559,7 @@ export default {
 
   'atom-tag': {
     vanillaHtml: true,
+    description: 'Small label for categorization. Variants: default, secondary, outline, accent. Can be span or link.',
     cssClasses: [
       'mg-tag',
       'mg-tag--secondary',
@@ -582,6 +594,7 @@ export default {
 
   'components-typography': {
     vanillaHtml: true,
+    description: 'Base typography styles applied to standard HTML heading and body elements. No extra classes needed.',
     cssClasses: [],
     examples: [
       {
@@ -601,6 +614,7 @@ export default {
 
   'components-typography-links': {
     vanillaHtml: true,
+    description: 'Link styles applied to standard anchor elements. Underlined by default with interactive color.',
     cssClasses: [],
     examples: [
       {
@@ -617,6 +631,7 @@ export default {
 
   'components-table': {
     vanillaHtml: true,
+    description: 'Styled HTML table with size (small/large), variant (striped/bordered), and responsive (stacked/scroll) options.',
     cssClasses: [
       'mg-table',
       'mg-table--small',
@@ -677,6 +692,7 @@ export default {
 
   'components-tabs': {
     vanillaHtml: true,
+    description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity.',
     cssClasses: [
       'mg-tabs',
       'mg-tabs--stacked',
@@ -718,6 +734,7 @@ export default {
 
   'components-callout': {
     vanillaHtml: true,
+    description: 'Styled blockquote with optional color accent (yellow, red, green, blue) and citation.',
     cssClasses: ['blockquote', 'yellow', 'red', 'green', 'blue'],
     examples: [
       {
@@ -745,6 +762,7 @@ export default {
 
   'components-highlightbox': {
     vanillaHtml: true,
+    description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.',
     cssClasses: [
       'mg-highlight-box',
       'mg-highlight-box--primary',
@@ -872,6 +890,7 @@ export default {
 
   'components-hero-hero': {
     vanillaHtml: true,
+    description: 'Full-width hero banner with background image, overlay, title, summary, and CTA buttons. Four color variants.',
     cssClasses: [
       'mg-hero',
       'mg-hero--secondary',
@@ -931,6 +950,7 @@ export default {
 
   'components-hero-hero-child': {
     vanillaHtml: true,
+    description: 'Smaller hero banner for child/section pages. Single CTA button, linked label.',
     cssClasses: [
       'mg-hero',
       'mg-hero--child',
@@ -971,6 +991,7 @@ export default {
 
   'components-footer': {
     vanillaHtml: true,
+    description: 'Site footer with optional UNDRR syndication. Loads global footer content from PreventionWeb via a widget script. Works with or without React.',
     cssClasses: ['mg-footer'],
     vanillaHtmlEmbed: {
       description:
@@ -1029,6 +1050,7 @@ export default {
 
   'components-pageheader': {
     vanillaHtml: true,
+    description: 'UNDRR page header with colored decoration stripe, logo, user account link, and language selector dropdown.',
     cssClasses: [
       'mg-page-header',
       'mg-page-header--default',
@@ -1095,6 +1117,7 @@ export default {
 
   'components-navigation-breadcrumbs': {
     vanillaHtml: true,
+    description: 'Breadcrumb navigation trail. White variant available for dark backgrounds.',
     cssClasses: ['mg-breadcrumb', 'mg-breadcrumb--white'],
     examples: [
       {
@@ -1112,6 +1135,7 @@ export default {
 
   'components-navigation-pagination': {
     vanillaHtml: true,
+    description: 'Page navigation with previous/next links and page number display.',
     cssClasses: ['pagination', 'disabled'],
     examples: [
       {
@@ -1135,6 +1159,7 @@ export default {
 
   'components-forms-text-input': {
     vanillaHtml: true,
+    description: 'Text input field with label, help text, required indicator, and error state.',
     cssClasses: [
       'mg-form-field',
       'mg-form-label',
@@ -1168,6 +1193,7 @@ export default {
 
   'components-forms-select': {
     vanillaHtml: true,
+    description: 'Dropdown select field with label, placeholder, help text, and error state.',
     cssClasses: [
       'mg-form-field',
       'mg-form-label',
@@ -1195,6 +1221,7 @@ export default {
 
   'components-forms-checkbox': {
     vanillaHtml: true,
+    description: 'Styled checkbox with label. Error and disabled states available.',
     cssClasses: [
       'mg-form-check',
       'mg-form-check__input',
@@ -1217,6 +1244,7 @@ export default {
 
   'components-forms-radio': {
     vanillaHtml: true,
+    description: 'Styled radio button with label. Error and disabled states available.',
     cssClasses: [
       'mg-form-check',
       'mg-form-check__input',
@@ -1241,6 +1269,7 @@ export default {
 
   'components-forms-textarea': {
     vanillaHtml: true,
+    description: 'Multi-line text input with label, help text, and error state.',
     cssClasses: [
       'mg-form-field',
       'mg-form-label',
@@ -1264,6 +1293,7 @@ export default {
 
   'components-forms-formgroup': {
     vanillaHtml: true,
+    description: 'Fieldset wrapper for grouping related form controls with a legend. Error and disabled states.',
     cssClasses: [
       'mg-form-group',
       'mg-form-group--error',
@@ -1291,6 +1321,7 @@ export default {
 
   'components-forms-formerrorsummary': {
     vanillaHtml: true,
+    description: 'Error summary box listing all form validation errors with anchor links to each field.',
     cssClasses: [
       'mg-form-error-summary',
       'mg-form-error-summary__title',
@@ -1316,6 +1347,7 @@ export default {
 
   'components-cta': {
     vanillaHtml: true,
+    description: 'Text-based call-to-action section with heading, paragraph, and button.',
     cssClasses: [],
     examples: [
       {
@@ -1335,6 +1367,7 @@ export default {
 
   'components-images-author-image': {
     vanillaHtml: true,
+    description: 'Circular author portrait with optional hover color accent (yellow, green, red, blue) and size variant.',
     cssClasses: ['author__img'],
     examples: [
       {
@@ -1348,6 +1381,7 @@ export default {
 
   'components-images-image-with-credit-caption': {
     vanillaHtml: true,
+    description: 'Figure element with image, caption, and photo credit.',
     cssClasses: ['image-figcaption', 'image-figcaption__cart', 'scale-up'],
     examples: [
       {
@@ -1371,6 +1405,7 @@ export default {
 
   'components-logos': {
     vanillaHtml: true,
+    description: 'Logo images for UNDRR, PreventionWeb, IRP, and partner organizations.',
     cssClasses: [],
     examples: [
       {
@@ -1386,6 +1421,7 @@ export default {
 
   'components-icons': {
     vanillaHtml: true,
+    description: 'Mangrove icon font. Use span elements with mg-icon and mg-icon-{name} classes.',
     cssClasses: ['mg-icon'],
     examples: [
       {
@@ -1406,6 +1442,7 @@ export default {
 
   'utilities-embedcontainer': {
     vanillaHtml: true,
+    description: 'Responsive aspect-ratio wrapper for iframes and embeds. Default 16:9 with 4:3, 1:1, and 21:9 variants.',
     cssClasses: [
       'mg-embed-container',
       'mg-embed-container--4x3',
@@ -1430,6 +1467,7 @@ export default {
 
   'components-fullwidth': {
     vanillaHtml: true,
+    description: 'Makes content break out of its container to span the full viewport width. RTL-safe.',
     cssClasses: ['mg-container-full-width'],
     examples: [
       {
@@ -1446,6 +1484,7 @@ export default {
 
   'components-showmore': {
     vanillaHtml: true,
+    description: 'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {
@@ -1462,6 +1501,7 @@ export default {
 
   'components-loader': {
     vanillaHtml: true,
+    description: 'Animated loading spinner. 40px on mobile, 96px on desktop.',
     cssClasses: ['loader'],
     examples: [
       {
@@ -1475,6 +1515,7 @@ export default {
 
   'components-error-pages': {
     vanillaHtml: true,
+    description: 'Error page templates (404, 500, etc.) with heading, message, and return link.',
     cssClasses: [],
     examples: [
       {
@@ -1484,6 +1525,132 @@ export default {
   <p>Page not found. The page you requested could not be located.</p>
   <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/">Return to homepage</a>
 </div>`,
+      },
+    ],
+  },
+
+  // ===================================================================
+  // FULL-PAGE EXAMPLES
+  // ===================================================================
+
+  'example-page-template-example': {
+    vanillaHtml: true,
+    description: 'Complete page layout showing how to compose PageHeader, Hero, container, card grid, and Footer into a working page.',
+    examples: [
+      {
+        name: 'Full page in vanilla HTML',
+        html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNDRR - Disaster Risk Reduction</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@latest/dist/css/style.css" />
+</head>
+<body>
+  <!-- Page header -->
+  <header id="header" class="mg-page-header mg-page-header--default">
+    <div class="mg-page-header__decoration">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="mg-page-header__toolbar-wrapper">
+      <div class="mg-page-header__container mg-container">
+        <div class="mg-page-header__region mg-page-header__region--toolbar">
+          <section class="mg-page-header__block mg-page-header__block--logo">
+            <a href="/">
+              <img class="mg-page-header__logo-img" src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg" alt="UNDRR" width="324" height="47" />
+            </a>
+          </section>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero banner -->
+  <section class="mg-hero" style="background-image: url('https://picsum.photos/1600/600')">
+    <div class="mg-hero__overlay">
+      <article class="mg-hero__content">
+        <header class="mg-hero__title">
+          <h1 class="text-xxl"><span>Building resilience for a sustainable future</span></h1>
+        </header>
+        <div class="mg-hero__summaryText">
+          <span>The Sendai Framework guides global efforts to reduce disaster risk and losses.</span>
+        </div>
+        <div class="mg-hero__buttons">
+          <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/sendai-framework">Learn more</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <div class="mg-container mg-container--padded mg-container--spacer">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumbs" class="mg-breadcrumb">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Disaster risk reduction</li>
+      </ul>
+    </nav>
+
+    <!-- Card grid -->
+    <h2>Latest publications</h2>
+    <div class="mg-grid mg-grid__col-3">
+      <article class="mg-card mg-card__vc">
+        <div class="mg-card__visual">
+          <img src="https://picsum.photos/600/400?1" alt="" class="mg-card__image" />
+        </div>
+        <div class="mg-card__content">
+          <div class="mg-card__meta">
+            <a href="/topics/early-warning" class="mg-card__label mg-card__label--active">Early warning</a>
+          </div>
+          <header class="mg-card__title"><a href="/report-1">Global Assessment Report 2024</a></header>
+          <p class="mg-card__summary">The flagship report on disaster risk reduction.</p>
+        </div>
+      </article>
+      <article class="mg-card mg-card__vc">
+        <div class="mg-card__visual">
+          <img src="https://picsum.photos/600/400?2" alt="" class="mg-card__image" />
+        </div>
+        <div class="mg-card__content">
+          <header class="mg-card__title"><a href="/report-2">Sendai Framework progress report</a></header>
+          <p class="mg-card__summary">Tracking implementation across 195 countries.</p>
+        </div>
+      </article>
+      <article class="mg-card mg-card__vc">
+        <div class="mg-card__visual">
+          <img src="https://picsum.photos/600/400?3" alt="" class="mg-card__image" />
+        </div>
+        <div class="mg-card__content">
+          <header class="mg-card__title"><a href="/report-3">Making cities resilient</a></header>
+          <p class="mg-card__summary">Urban resilience strategies for local governments.</p>
+        </div>
+      </article>
+    </div>
+
+    <!-- Highlight box -->
+    <div class="mg-highlight-box mg-highlight-box--primary mg-highlight-box--centered">
+      <h3>Key statistic</h3>
+      <p>For every $1 invested in disaster risk reduction, up to $15 is saved in post-disaster recovery.</p>
+    </div>
+  </div>
+
+  <!-- Footer with syndication -->
+  <footer class="mg-footer">
+    <div class="pw-widget-footer"></div>
+  </footer>
+  <script src="https://publish.preventionweb.net/widget.js"></script>
+  <script>
+    new PW_Widget.initialize({
+      contenttype: 'landingpage',
+      pageid: '83835',
+      includecss: false,
+      suffixID: 'footer',
+      activedomain: 'www.undrr.org'
+    });
+  </script>
+</body>
+</html>`,
       },
     ],
   },

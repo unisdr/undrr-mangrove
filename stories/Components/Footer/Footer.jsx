@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 /**
- * Footer component with UNDRR Syndication support
- *
- * This component provides a standardized footer that can include:
- * 1. Site-specific complementary content (passed as children)
- * 2. Global UNDRR syndicated footer content loaded dynamically
+ * Footer with optional UNDRR syndication. Renders site-specific content
+ * (via children or complementaryContent) above a dynamically loaded global
+ * UNDRR footer fetched from PreventionWeb.
  */
 
 const cls = (...classes) =>
@@ -125,7 +124,24 @@ export function Footer({
   );
 }
 
-Footer.defaultProps = {
-  variant: 'default',
-  enableSyndication: true,
+Footer.propTypes = {
+  /** Visual variant of the footer. */
+  variant: PropTypes.string,
+  /** When true, loads the PreventionWeb syndication widget to inject global UNDRR footer content. */
+  enableSyndication: PropTypes.bool,
+  /** Override defaults for the syndication widget (contenttype, pageid, suffixID, activedomain, includecss, includemetatags). */
+  syndicationConfig: PropTypes.shape({
+    contenttype: PropTypes.string,
+    pageid: PropTypes.string,
+    includemetatags: PropTypes.bool,
+    includecss: PropTypes.bool,
+    suffixID: PropTypes.string,
+    activedomain: PropTypes.string,
+  }),
+  /** Site-specific content rendered above the syndicated footer. Alternative to children. */
+  complementaryContent: PropTypes.node,
+  /** Site-specific content rendered above the syndicated footer. Alternative to complementaryContent. */
+  children: PropTypes.node,
+  /** Additional CSS class(es) on the footer element. */
+  className: PropTypes.string,
 };

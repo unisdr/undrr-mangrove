@@ -1,8 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+/**
+ * UNDRR page header with logo, user account link, and language selector.
+ * The "decoration-only" variant renders just the colored stripe.
+ */
 export function PageHeader({
   variant = 'default',
   className,
@@ -135,6 +140,25 @@ export function PageHeader({
   );
 }
 
-PageHeader.defaultProps = {
-  variant: 'default',
+PageHeader.propTypes = {
+  /** Visual variant: "default" shows the full header, "decoration-only" shows just the colored stripe. */
+  variant: PropTypes.oneOf(['default', 'decoration-only']),
+  /** Additional CSS class(es). */
+  className: PropTypes.string,
+  /** URL for the header logo image. */
+  logoUrl: PropTypes.string,
+  /** Alt text for the logo. */
+  logoAlt: PropTypes.string,
+  /** Title attribute for the logo. */
+  logoTitle: PropTypes.string,
+  /** URL the logo links to. */
+  homeUrl: PropTypes.string,
+  /** Available languages for the language selector dropdown. */
+  languages: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      selected: PropTypes.bool,
+    })
+  ),
 };

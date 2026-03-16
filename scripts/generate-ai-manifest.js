@@ -106,8 +106,8 @@ function parseJsDocParams(jsDocTags) {
   return params;
 }
 
-/** Get the best description for a component. */
-function getDescription(component) {
+/** Get the best description for a component, with curated fallback. */
+function getDescription(component, htmlData) {
   if (component.description) return component.description;
 
   if (component.reactDocgen?.description) {
@@ -117,6 +117,9 @@ function getDescription(component) {
       .trim();
     if (desc) return desc.split('\n')[0];
   }
+
+  // Fall back to curated description from html-examples data
+  if (htmlData?.description) return htmlData.description;
 
   return '';
 }
@@ -163,9 +166,9 @@ const componentFiles = [];
 for (const [, component] of Object.entries(manifest.components)) {
   const id = component.id;
   const name = component.name || id;
-  const description = getDescription(component);
   const jsDocParams = parseJsDocParams(component.jsDocTags);
   const htmlData = htmlExamples[id];
+  const description = getDescription(component, htmlData);
 
   // --- Index entry (lightweight) ---
   const indexEntry = { id, name, description };
@@ -267,7 +270,36 @@ const index = {
     locales: ['en', 'ar', 'my', 'ja'],
     rtlSupport: true,
     semanticHtml: true,
+    breakpoints: {
+      mobile: '480px',
+      tablet: '900px',
+      desktop: '1164px',
+      wide: '1440px',
+    },
     utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
+    quickstart: {
+      css: `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css" />`,
+      cssThemes: {
+        undrr: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
+        preventionweb: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-preventionweb.css`,
+        mcr2030: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-mcr.css`,
+        irp: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-irp.css`,
+      },
+      minimalHtml: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css" />
+</head>
+<body>
+  <div class="mg-container">
+    <h1>Page title</h1>
+    <p>Content here.</p>
+  </div>
+</body>
+</html>`,
+    },
   },
   components: indexEntries,
   generatedAt: new Date().toISOString(),
@@ -380,6 +412,41 @@ The utilities.json file lists ~162 utility classes grouped by category: layout c
 fs.writeFileSync(llmsTxtPath, llmsTxt);
 
 // ---------------------------------------------------------------------------
+// Write llms.json (structured version for tools that lose markdown URLs)
+// ---------------------------------------------------------------------------
+
+const llmsJson = JSON.stringify({
+  name: 'UNDRR Mangrove',
+  description: `UI component library for UNDRR disaster risk reduction websites. ${vanillaCount} vanilla HTML components, ${reactCount} React-only.`,
+  version: pkg.version,
+  package: pkg.name,
+  license: pkg.license || 'See LICENSE file',
+  urls: {
+    storybook: DOCS_BASE,
+    repository: 'https://github.com/unisdr/undrr-mangrove',
+    npm: `https://www.npmjs.com/package/${pkg.name}`,
+    componentIndex: `${DOCS_BASE}ai-components/index.json`,
+    utilities: `${DOCS_BASE}ai-components/utilities.json`,
+    css: {
+      undrr: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
+      preventionweb: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-preventionweb.css`,
+      mcr2030: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-mcr.css`,
+      irp: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-irp.css`,
+    },
+  },
+  conventions: {
+    cssPrefix: 'mg-',
+    naming: 'BEM',
+    themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
+    locales: ['en', 'ar', 'my', 'ja'],
+    breakpoints: { mobile: '480px', tablet: '900px', desktop: '1164px', wide: '1440px' },
+  },
+  generatedAt: new Date().toISOString(),
+}, null, 2);
+
+fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
+
+// ---------------------------------------------------------------------------
 // Summary
 // ---------------------------------------------------------------------------
 
@@ -389,7 +456,7 @@ const totalDetailKB = componentFiles
 const utilitiesSizeKB = (Buffer.byteLength(utilitiesJson) / 1024).toFixed(1);
 
 console.log('AI manifest generated:');
-console.log(`  ${llmsTxtPath} (llms.txt)`);
+console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
 console.log(`  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`);
 console.log(`  ${outputDir}/*.json (${componentFiles.length} component files, ${(totalDetailKB / 1024).toFixed(1)} KB total)`);
 console.log(`  ${outputDir}/utilities.json (${utilitiesSizeKB} KB)`);

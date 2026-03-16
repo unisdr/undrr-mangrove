@@ -29,6 +29,7 @@
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
 
@@ -148,6 +149,41 @@ const MegaMenu = ({
       />
     </nav>
   );
+};
+
+MegaMenu.propTypes = {
+  /** Array of section objects containing the menu structure. */
+  sections: PropTypes.arrayOf(
+    PropTypes.shape({
+      bannerHeading: PropTypes.string,
+      bannerDescription: PropTypes.string,
+      bannerButton: PropTypes.shape({
+        label: PropTypes.string,
+        url: PropTypes.string,
+      }),
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string.isRequired,
+          url: PropTypes.string,
+          items: PropTypes.array,
+        })
+      ),
+    })
+  ).isRequired,
+  /** Delay in ms before closing menu on mouse leave. */
+  delay: PropTypes.number,
+  /** Delay in ms before opening menu on hover (prevents accidental opens). */
+  hoverDelay: PropTypes.number,
+  /** Logo image URL. Enables the branded nav variant with logo at inline-start. */
+  logoSrc: PropTypes.string,
+  /** Alt text for the logo. */
+  logoAlt: PropTypes.string,
+  /** URL the logo links to. On multilingual sites, pass the language-prefixed root. */
+  logoHref: PropTypes.string,
+  /** Explicit width for the logo (CLS prevention). */
+  logoWidth: PropTypes.number,
+  /** Explicit height for the logo (CLS prevention). */
+  logoHeight: PropTypes.number,
 };
 
 export default MegaMenu;
