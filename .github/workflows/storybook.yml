@@ -8,6 +8,7 @@ on:
         'stories/**',
         'src/components/**',
         'scripts/generate-ai-manifest.js',
+        'scripts/data/**',
         '.github/workflows/storybook.yml',
         'package.json',
         'webpack.entries.js',
@@ -45,6 +46,7 @@ jobs:
       - name: Build Storybook
         run: |
           yarn run build
+          node scripts/generate-ai-manifest.js --validate
           mv docs-build-temp _site
           cp dist _site -r
       - name: Run tests with Jest 🧪

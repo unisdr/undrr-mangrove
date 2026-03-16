@@ -20,6 +20,17 @@ yarn test
 yarn lint
 ```
 
+Review any components whose markup changed since the last release and update their HTML examples in `scripts/data/html-examples.js`. If utility classes were added or removed, update `scripts/data/css-utilities.js`. These curated files feed the AI component manifest and can drift from reality between releases.
+
+You can check for drift by running a Storybook build and then validating the manifest:
+
+```bash
+yarn storybook build -o docs-build-temp
+node scripts/generate-ai-manifest.js
+```
+
+The script warns if any keys in `html-examples.js` don't match a component ID in the Storybook manifest.
+
 ### 2. Update the version
 
 Edit `version` in `package.json` to the new version number:
