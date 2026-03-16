@@ -7,6 +7,7 @@ on:
     paths: [
         'stories/**',
         'src/components/**',
+        'scripts/generate-ai-manifest.js',
         '.github/workflows/storybook.yml',
         'package.json',
         'webpack.entries.js',

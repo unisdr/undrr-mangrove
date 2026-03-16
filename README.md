@@ -230,14 +230,24 @@ Provisional assets are available in the `dist` directory:
   - example: `dist/assets/css/style-preventionweb.css`
   - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
 
-## Developer Resources
+## AI and agent integration
+
+The build generates static JSON files with component metadata so AI coding agents can look up Mangrove components without parsing the Storybook SPA. After deploy, these are available at:
+
+- [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) -- project summary and conventions
+- [`ai-components/index.json`](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) -- all components with names, imports, and links to detail files
+- `ai-components/{id}.json` -- per-component props, types, defaults, and code examples
+
+See the [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs) for details on directing agents to Mangrove and configuring Claude Code, Cursor, or Copilot.
+
+## Developer resources
 
 For contributing to this library:
 
-- 📖 [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
-- 📚 [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) – Interactive component documentation and usage examples
-- 🧪 [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
-- 🚀 [Release Process](./docs/RELEASES.md) - Versioning and publishing
+- [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
+- [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) - Interactive component documentation and usage examples
+- [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
+- [Release Process](./docs/RELEASES.md) - Versioning and publishing
 
 ## Package Contents
 
