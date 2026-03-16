@@ -179,8 +179,8 @@ for (const [, component] of Object.entries(manifest.components)) {
 fs.mkdirSync(outputDir, { recursive: true });
 
 const index = {
-  _ai: 'UNDRR Mangrove component library index for AI coding agents. '
-    + 'Each component has a detailsUrl linking to its full props, types, and code examples.',
+  _ai: 'Component index for the UNDRR Mangrove library. '
+    + 'Each entry has a detailsUrl pointing to a JSON file with full props, types, and code examples.',
   library: {
     name: pkg.name,
     version: pkg.version,
@@ -219,45 +219,47 @@ for (const { id, content } of componentFiles) {
 
 const llmsTxt = `# UNDRR Mangrove
 
-> Mangrove is UNDRR's Storybook-powered React component library. It provides brand-consistent, accessible UI components for United Nations disaster risk reduction websites.
+> React component library for UNDRR's disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org). Built with Storybook.
 
 - Version: ${pkg.version}
 - Package: ${pkg.name}
 - License: ISC
 
-## Documentation
+## Links
 
 - Storybook: ${DOCS_BASE}
 - Repository: https://github.com/unisdr/undrr-mangrove
 - npm: https://www.npmjs.com/package/${pkg.name}
 
-## For AI agents
+## Component data for AI agents
 
-This project publishes a machine-readable component manifest at:
+The Storybook site is a single-page app, so fetching pages directly won't give you readable content. Use the JSON files below instead.
+
+Component index (all ${indexEntries.length} components, ~29 KB):
 ${DOCS_BASE}ai-components/index.json
 
-The index lists all ${indexEntries.length} components with names, descriptions, and import statements. Each entry includes a detailsUrl linking to a per-component JSON file with full props, types, defaults, and code examples.
+Each entry in the index has a detailsUrl pointing to a per-component JSON file with props, types, defaults, and code examples.
 
-### Quick reference
+### Conventions
 
 - CSS prefix: mg-
-- Naming convention: BEM (e.g., mg-card__title, mg-button--primary)
+- Naming: BEM (e.g., mg-card__title, mg-button--primary)
 - Themes: undrr, preventionweb, irp, mcr2030
 - Locales: en, ar, my, ja (RTL supported)
-- Semantic HTML and WCAG accessibility
+- Semantic HTML, WCAG accessible
 
-### Fetching component details
+### How to use
 
 1. Fetch ${DOCS_BASE}ai-components/index.json
 2. Find the component you need by name or description
-3. Fetch its detailsUrl for full props, types, and code examples
+3. Fetch its detailsUrl for props, types, and code examples
 
-### Repository layout
+### Source layout
 
-- stories/Atom/          Foundation elements (typography, images, layout)
-- stories/Molecules/     Simple combinations (SectionHeader, FooterNavigation)
-- stories/Components/    Complex components (MegaMenu, Cards, Charts, Map)
-- stories/Utilities/     CSS utilities and helpers
+- stories/Atom/          Typography, images, layout, navigation
+- stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
+- stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
+- stories/Utilities/     CSS utilities, loaders, show/more
 - stories/assets/scss/   Theme stylesheets and design tokens
 `;
 

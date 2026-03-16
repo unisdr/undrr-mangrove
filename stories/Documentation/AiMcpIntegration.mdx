@@ -13,25 +13,21 @@ import LinkTo from '@storybook/addon-links/react';
 
 # AI and MCP integration
 
-Mangrove publishes machine-readable component metadata alongside its Storybook documentation, so AI coding agents can discover and use components accurately. This guide covers how agents find Mangrove, what data they get, and how you can help.
+Mangrove publishes structured component data alongside its Storybook site so AI coding agents can look up components, props, and usage examples without trying to parse a JavaScript single-page app.
 
-## How AI agents discover Mangrove
+## How AI agents find Mangrove
 
-Mangrove provides a three-tier discovery system designed for how AI agents actually work. Agents that can fetch URLs will find structured data at well-known paths; agents working from the repository will find the same information in source.
+Storybook is a single-page app. If an agent fetches the deployed URL, it gets an empty HTML shell and a bunch of script tags. Not useful. To work around that, the build generates static JSON files at predictable paths that agents can fetch directly.
 
-### Tier 1: `llms.txt` (entry point)
+There are three layers, from broad to specific.
 
-The deployed Storybook site serves a [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) file at the site root. This follows the [llms.txt convention](https://llmstxt.org/) — a plain-text discovery file that tells AI agents what the project is, where to find documentation, and where to find the machine-readable component index.
+### `llms.txt` (entry point)
 
-An agent fetching `https://unisdr.github.io/undrr-mangrove/llms.txt` gets:
+The site root has a [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, conventions (CSS prefix, BEM naming, themes), and a link to the component index. An agent checking `https://unisdr.github.io/undrr-mangrove/llms.txt` gets oriented in one fetch.
 
-- Project description and key conventions (CSS prefix, BEM naming, themes)
-- Links to documentation, repository, and npm
-- A pointer to the component index at `ai-components/index.json`
+### Component index (`ai-components/index.json`)
 
-### Tier 2: component index (`ai-components/index.json`)
-
-The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) is a lightweight JSON file (~29 KB) listing all components with their names, descriptions, import statements, and documentation URLs. Each entry includes a `detailsUrl` pointing to the per-component JSON file.
+The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) (~29 KB) lists every component with its name, description, import statement, docs URL, and a `detailsUrl` pointing to the per-component file:
 
 ```json
 {
@@ -44,33 +40,25 @@ The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/inde
 }
 ```
 
-This gives agents enough context to identify the right component without fetching everything.
+This is enough for an agent to pick the right component without downloading everything.
 
-### Tier 3: per-component details (`ai-components/{id}.json`)
+### Per-component details (`ai-components/{id}.json`)
 
-Each component has its own JSON file with full prop definitions, types, defaults, descriptions, and code examples extracted from Storybook stories. These files are typically 1-5 KB each.
+Each component gets its own JSON file (1-5 KB) with props, types, defaults, descriptions, and code examples pulled from Storybook stories. For example, `ai-components/components-pager.json` has all 13 Pager props and 9 story snippets.
 
-An agent working on a Pager implementation would fetch `ai-components/components-pager.json` to get:
+### Expected agent workflow
 
-- All props with types, required/optional status, and defaults
-- Code examples from every Storybook story variant
-- A link to the full Storybook documentation page
+1. Fetch `llms.txt` to get oriented
+2. Fetch `ai-components/index.json` to find the right components
+3. Fetch `ai-components/{id}.json` for only the ones it needs
 
-### How agents should use this
+An agent working on a single component pulls about 33 KB total instead of the full 700+ KB Storybook manifest.
 
-The intended workflow for an AI agent:
+## Pointing your agent at Mangrove
 
-1. Fetch `llms.txt` to understand the project
-2. Fetch `ai-components/index.json` to find relevant components
-3. Fetch `ai-components/{id}.json` only for the specific components it needs
+### Give it the repo
 
-This keeps token usage low. An agent building a single component fetches ~30 KB of index data plus ~3 KB for the component details, rather than the full 700+ KB Storybook manifest.
-
-## Directing your AI agent to Mangrove
-
-### Point agents to the repository
-
-For agents that work with source code (Claude Code, Cursor, Copilot), the most reliable approach is to reference the GitHub repository. Agents can read source files directly:
+Agents that can read files (Claude Code, Cursor, Copilot) do best with the GitHub repository. The repo has `CLAUDE.md` and `.github/copilot-instructions.md` with project context baked in.
 
 ```
 I'm working with the UNDRR Mangrove component library.
@@ -79,11 +67,9 @@ Repository: https://github.com/unisdr/undrr-mangrove
 Help me create a page layout using the MegaMenu, Hero, and Footer components.
 ```
 
-The repository contains `CLAUDE.md` (for Claude Code) and `.github/copilot-instructions.md` (for GitHub Copilot) with full project context.
+### Give it `llms.txt`
 
-### Point agents to `llms.txt`
-
-For agents that can fetch URLs but don't have direct file access:
+For agents that can fetch URLs but don't have file access:
 
 ```
 Fetch the component library metadata from:
@@ -92,9 +78,9 @@ https://unisdr.github.io/undrr-mangrove/llms.txt
 Use these components to build the requested UI.
 ```
 
-### Point agents to a specific component
+### Give it a specific component
 
-For the most accurate results, reference a specific component's detail file:
+If you know which component you need, point straight at its detail file:
 
 ```
 Fetch the Pager component metadata:
@@ -103,11 +89,11 @@ https://unisdr.github.io/undrr-mangrove/ai-components/components-pager.json
 Create a similar paginated list using this component.
 ```
 
-## Configuring AI coding tools
+## Tool-specific setup
 
 ### Claude Code
 
-Add the repository reference to your conversation, or if working in the Mangrove repo, Claude Code automatically reads `CLAUDE.md` for project context.
+If you're working inside the Mangrove repo, Claude Code picks up `CLAUDE.md` automatically.
 
 For projects that consume Mangrove, add to your `CLAUDE.md`:
 
@@ -134,7 +120,7 @@ CSS prefix: mg-
 
 ### GitHub Copilot
 
-The repository includes `.github/copilot-instructions.md` with project conventions. For consuming projects, include a comment at the top of your file:
+The repo has a `.github/copilot-instructions.md`. For consuming projects, a comment at the top of your file works:
 
 ```jsx
 // Using UNDRR Mangrove components
@@ -142,11 +128,11 @@ The repository includes `.github/copilot-instructions.md` with project conventio
 // CSS prefix: mg-, BEM naming
 ```
 
-## Best practices for AI-assisted development
+## Getting better results
 
-### Be specific about Mangrove
+### Mention Mangrove by name
 
-When prompting AI tools, mention Mangrove explicitly and include key conventions:
+If you don't mention Mangrove by name, agents tend to invent their own class names:
 
 ```
 # Good prompt
@@ -157,41 +143,38 @@ create a hero section with a primary CTA button.
 Create a hero section with a button.
 ```
 
-### Provide context about conventions
+### Include conventions in your prompt
 
-Include these key facts in your prompts:
+The things agents most often get wrong: CSS class prefix, naming pattern, and theme support. Including these up front saves a round of corrections.
 
-- **CSS prefix**: All classes use the `mg-` prefix (e.g., `mg-button`, `mg-card`)
-- **BEM naming**: Classes follow BEM conventions (e.g., `mg-card__title`, `mg-button--primary`)
-- **Semantic HTML**: Components use proper HTML elements for accessibility
-- **4 themes**: undrr (default), preventionweb, irp, mcr2030
-- **RTL support**: Arabic and other RTL languages are supported
+- All CSS classes use the `mg-` prefix (e.g., `mg-button`, `mg-card`)
+- Classes follow BEM (e.g., `mg-card__title`, `mg-button--primary`)
+- Components use semantic HTML for accessibility
+- Four themes: undrr (default), preventionweb, irp, mcr2030
+- RTL is supported for Arabic and other right-to-left languages
 
-### Validate the output
+### Check what you get back
 
-AI-generated code should be validated against:
+Look for these in AI-generated output:
 
-1. **Class naming**: All classes should use the `mg-` prefix
-2. **HTML structure**: Match the documented component structure
-3. **Accessibility**: Include proper ARIA attributes
-4. **Responsiveness**: Follow Mangrove's responsive patterns
+1. Classes should start with `mg-`
+2. HTML structure should match what the docs show
+3. ARIA attributes should be present
+4. Layout should follow Mangrove's responsive patterns
 
 ---
 
 ## For contributors: local MCP server
 
-If you're developing Mangrove components locally, you can enable the full MCP (Model Context Protocol) experience. This provides a live connection between your AI agent and the running Storybook dev server.
+If you're working on Mangrove itself (not just consuming it), you can connect your AI agent directly to the running Storybook dev server using MCP (Model Context Protocol).
 
-> **Note**: This section is for contributors working on the Mangrove library itself, not for consumers using the components.
+### What this gets you
 
-### What MCP provides
+With the MCP addon running, agents can:
 
-When running locally with the MCP addon, AI agents can:
-
-- Query component information programmatically via API
-- Get direct URLs to specific stories for visual verification
-- Access real-time component documentation as you develop
-- Validate generated components against interaction and accessibility tests
+- Query component data through an API instead of parsing files
+- Get URLs to specific stories for visual checks
+- Run interaction and accessibility tests against generated components
 
 ### Setting up MCP for local development
 
@@ -224,23 +207,19 @@ See the [Storybook MCP documentation](https://storybook.js.org/blog/storybook-mc
 
 ---
 
-## How the AI manifest is generated
+## How the manifest is generated
 
-The component metadata files are generated automatically during `yarn build`. The build script (`scripts/generate-ai-manifest.js`) transforms Storybook's internal components manifest (produced by the `experimentalComponentsManifest` feature) into the tiered AI-friendly format described above.
+`yarn build` runs `scripts/generate-ai-manifest.js` after Storybook finishes building. The script reads Storybook's internal components manifest (from `experimentalComponentsManifest`) and writes the `llms.txt`, index, and per-component JSON files into the build output. They deploy to GitHub Pages alongside the rest of the site, so the manifest updates whenever the docs do.
 
-The generated files are deployed alongside the static Storybook site to GitHub Pages, so they stay in sync with the documentation and are always current with the latest published version.
-
-To regenerate manually:
+To regenerate by hand:
 
 ```bash
 node scripts/generate-ai-manifest.js
 ```
 
-## Roadmap
+## What's next
 
-- **Storybook MCP addon**: Install `@storybook/addon-mcp` to enable live MCP queries during local development
-- **Richer component descriptions**: Improve JSDoc coverage so AI agents get better context from the manifest
-- **Vanilla HTML patterns**: Include non-React markup examples in the manifest for HTML/CSS-only consumers
+We want to install `@storybook/addon-mcp` so local dev gets live MCP queries. The manifest would also benefit from better JSDoc coverage on components (many have empty descriptions right now) and non-React markup examples for people using Mangrove as plain HTML/CSS.
 
 ## Further reading
 
