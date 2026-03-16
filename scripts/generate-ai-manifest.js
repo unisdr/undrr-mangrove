@@ -21,7 +21,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import htmlExamples from './data/html-examples.js';
+import htmlExamplesRaw from './data/html-examples/index.js';
 import cssUtilities from './data/css-utilities.js';
 
 const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
@@ -45,6 +45,11 @@ if (!fs.existsSync(manifestPath)) {
 
 const pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+// Replace {{version}} tokens in curated HTML examples with actual version
+const htmlExamples = JSON.parse(
+  JSON.stringify(htmlExamplesRaw).replaceAll('{{version}}', pkg.version),
+);
 
 // ---------------------------------------------------------------------------
 // Helpers
