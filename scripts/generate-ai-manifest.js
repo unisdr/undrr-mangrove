@@ -7,7 +7,7 @@
  * files that are deployed alongside the static Storybook site:
  *
  *   llms.txt                       — plain-text discovery file for AI agents
- *   ai-components/index.json       — lightweight component index (~10-15 KB)
+ *   ai-components/index.json       — lightweight component index (~29 KB)
  *   ai-components/{id}.json        — full details per component (~1-5 KB each)
  *
  * Usage:
@@ -223,7 +223,7 @@ const llmsTxt = `# UNDRR Mangrove
 
 - Version: ${pkg.version}
 - Package: ${pkg.name}
-- License: ISC
+- License: ${pkg.license || 'See LICENSE file'}
 
 ## Links
 

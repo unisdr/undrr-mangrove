@@ -58,7 +58,7 @@ An agent working on a single component pulls about 33 KB total instead of the fu
 
 ### Give it the repo
 
-Agents that can read files (Claude Code, Cursor, Copilot) do best with the GitHub repository. The repo has `CLAUDE.md` and `.github/copilot-instructions.md` with project context baked in.
+Agents that can read files (Claude Code, Cursor, Copilot) do best with the GitHub repository directly.
 
 ```
 I'm working with the UNDRR Mangrove component library.
@@ -93,9 +93,7 @@ Create a similar paginated list using this component.
 
 ### Claude Code
 
-If you're working inside the Mangrove repo, Claude Code picks up `CLAUDE.md` automatically.
-
-For projects that consume Mangrove, add to your `CLAUDE.md`:
+Point Claude at the `llms.txt` or the repo URL. For consuming projects, add to your `CLAUDE.md`:
 
 ```markdown
 ## Component library
@@ -120,7 +118,7 @@ CSS prefix: mg-
 
 ### GitHub Copilot
 
-The repo has a `.github/copilot-instructions.md`. For consuming projects, a comment at the top of your file works:
+Add a comment at the top of your file:
 
 ```jsx
 // Using UNDRR Mangrove components
