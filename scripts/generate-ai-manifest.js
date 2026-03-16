@@ -240,6 +240,11 @@ for (const [, component] of Object.entries(manifest.components)) {
     detail.vanillaHtmlEmbed = htmlData.vanillaHtmlEmbed;
   }
 
+  // Do-not-modify flag for branding-critical components
+  if (htmlData?.doNotModify) {
+    detail.doNotModify = htmlData.doNotModify;
+  }
+
   componentFiles.push({ id, content: detail });
 }
 
@@ -285,20 +290,58 @@ const index = {
         mcr2030: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-mcr.css`,
         irp: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-irp.css`,
       },
-      minimalHtml: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css" />
-</head>
-<body>
-  <div class="mg-container">
-    <h1>Page title</h1>
-    <p>Content here.</p>
-  </div>
-</body>
-</html>`,
+    },
+    requiredAssets: {
+      _note: 'Every UNDRR-branded page should include these assets. Order matters.',
+      stylesheets: [
+        {
+          name: 'Mangrove theme CSS',
+          url: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
+          placement: 'head',
+          note: 'Choose one theme. See cssThemes in quickstart for alternatives.',
+        },
+        {
+          name: 'Cookie consent CSS',
+          url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css',
+          placement: 'head',
+          note: 'Required if using the UNDRR cookie consent banner.',
+        },
+      ],
+      scripts: [
+        {
+          name: 'UNDRR analytics (GA4)',
+          url: 'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js',
+          placement: 'before closing </body>',
+          attributes: 'defer',
+          note: 'Google Analytics 4 bootstrap and enhancements for UNDRR sites.',
+        },
+        {
+          name: 'UNDRR critical messaging',
+          url: 'https://messaging.undrr.org/src/undrr-messaging.js',
+          placement: 'before closing </body>',
+          attributes: 'defer',
+          note: 'Emergency broadcasts. Injects messages at top of body or into .mg-critical-messaging container.',
+        },
+        {
+          name: 'Cookie consent JS (UMD)',
+          url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js',
+          placement: 'before closing </body>, after analytics',
+          attributes: 'none (synchronous)',
+          note: 'Cookie consent library. Must load before the UNDRR config script.',
+        },
+        {
+          name: 'Cookie consent UNDRR config',
+          url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js',
+          placement: 'immediately after cookieconsent.umd.js',
+          attributes: 'none (synchronous)',
+          note: 'UNDRR-specific cookie consent configuration.',
+        },
+      ],
+      logos: {
+        horizontal: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+        vertical: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-vertical.svg',
+        squareBlue: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
+      },
     },
   },
   components: indexEntries,
@@ -432,6 +475,23 @@ const llmsJson = JSON.stringify({
       preventionweb: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-preventionweb.css`,
       mcr2030: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-mcr.css`,
       irp: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-irp.css`,
+    },
+  },
+  requiredAssets: {
+    _note: 'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
+    stylesheets: [
+      `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
+      'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css',
+    ],
+    scripts: [
+      { url: 'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js', defer: true },
+      { url: 'https://messaging.undrr.org/src/undrr-messaging.js', defer: true },
+      { url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js', defer: false },
+      { url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js', defer: false },
+    ],
+    logos: {
+      horizontal: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+      vertical: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-vertical.svg',
     },
   },
   conventions: {
