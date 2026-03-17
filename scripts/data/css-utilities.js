@@ -36,7 +36,7 @@ function textColorScale(prefix, name) {
 export default {
   _description:
     'CSS utility classes provided by UNDRR Mangrove. Include the Mangrove CSS bundle to use these. All classes use the mg- prefix and follow BEM conventions.',
-  cdnBaseUrl: 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{version}/dist/css/',
+  cdnBaseUrl: 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}/dist/css/',
   categories: [
     // ---------------------------------------------------------------
     // 1. Layout

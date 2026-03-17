@@ -1,6 +1,9 @@
-export default {
-  // ===================================================================
+import {
+  SYNDICATION_WIDGET_URL,
+  SYNDICATION_DEFAULT_CONFIG as cfg,
+} from '../constants.js';
 
+export default {
   'components-footer': {
     vanillaHtml: true,
     description: 'Site footer with optional UNDRR syndication. Loads global footer content from PreventionWeb via a widget script. Works with or without React.',
@@ -20,17 +23,17 @@ export default {
   </nav>
 
   <!-- UNDRR syndicated footer (content loads here) -->
-  <div class="pw-widget-footer"></div>
+  <div class="pw-widget-${cfg.suffixID}"></div>
 </footer>
 
-<script src="https://publish.preventionweb.net/widget.js"></script>
+<script src="${SYNDICATION_WIDGET_URL}"></script>
 <script>
   new PW_Widget.initialize({
-    contenttype: 'landingpage',
-    pageid: '83835',
-    includecss: false,
-    suffixID: 'footer',
-    activedomain: 'www.undrr.org'
+    contenttype: '${cfg.contenttype}',
+    pageid: '${cfg.pageid}',
+    includecss: ${cfg.includecss},
+    suffixID: '${cfg.suffixID}',
+    activedomain: '${cfg.activedomain}'
   });
 </script>`,
       configOptions: {
@@ -51,7 +54,7 @@ export default {
       <li><a href="/contact">Contact</a></li>
     </ul>
   </nav>
-  <div class="pw-widget-footer"></div>
+  <div class="pw-widget-${cfg.suffixID}"></div>
 </footer>`,
       },
     ],

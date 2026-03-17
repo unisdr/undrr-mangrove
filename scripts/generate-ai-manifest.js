@@ -23,6 +23,12 @@ import fs from 'fs';
 import path from 'path';
 import htmlExamplesRaw from './data/html-examples/index.js';
 import cssUtilities from './data/css-utilities.js';
+import {
+  THEME_CSS as THEME_CSS_RAW,
+  REQUIRED_SCRIPTS as REQUIRED_SCRIPTS_RAW,
+  REQUIRED_STYLESHEETS as REQUIRED_STYLESHEETS_RAW,
+  LOGOS as LOGOS_RAW,
+} from './data/constants.js';
 
 const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
 
@@ -46,10 +52,16 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
-// Replace {{version}} tokens in curated HTML examples with actual version
-const htmlExamples = JSON.parse(
-  JSON.stringify(htmlExamplesRaw).replaceAll('{{version}}', pkg.version),
+// Replace {{version}} tokens with actual version from package.json
+const replaceVersion = obj => JSON.parse(
+  JSON.stringify(obj).replaceAll('{{version}}', pkg.version),
 );
+const htmlExamples = replaceVersion(htmlExamplesRaw);
+const THEME_CSS = replaceVersion(THEME_CSS_RAW);
+const REQUIRED_SCRIPTS = replaceVersion(REQUIRED_SCRIPTS_RAW);
+const REQUIRED_STYLESHEETS = replaceVersion(REQUIRED_STYLESHEETS_RAW);
+const LOGOS = replaceVersion(LOGOS_RAW);
+const generatedAt = new Date().toISOString();
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -288,69 +300,18 @@ const index = {
     },
     utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
     quickstart: {
-      css: `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css" />`,
-      cssThemes: {
-        undrr: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
-        preventionweb: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-preventionweb.css`,
-        mcr2030: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-mcr.css`,
-        irp: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-irp.css`,
-      },
+      css: `<link rel="stylesheet" href="${THEME_CSS.undrr}" />`,
+      cssThemes: THEME_CSS,
     },
     requiredAssets: {
       _note: 'Every UNDRR-branded page should include these assets. Order matters.',
-      stylesheets: [
-        {
-          name: 'Mangrove theme CSS',
-          url: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
-          placement: 'head',
-          note: 'Choose one theme. See cssThemes in quickstart for alternatives.',
-        },
-        {
-          name: 'Cookie consent CSS',
-          url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css',
-          placement: 'head',
-          note: 'Required if using the UNDRR cookie consent banner.',
-        },
-      ],
-      scripts: [
-        {
-          name: 'UNDRR analytics (GA4)',
-          url: 'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js',
-          placement: 'before closing </body>',
-          attributes: 'defer',
-          note: 'Google Analytics 4 bootstrap and enhancements for UNDRR sites.',
-        },
-        {
-          name: 'UNDRR critical messaging',
-          url: 'https://messaging.undrr.org/src/undrr-messaging.js',
-          placement: 'before closing </body>',
-          attributes: 'defer',
-          note: 'Emergency broadcasts. Injects messages at top of body or into .mg-critical-messaging container.',
-        },
-        {
-          name: 'Cookie consent JS (UMD)',
-          url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js',
-          placement: 'before closing </body>, after analytics',
-          attributes: 'none (synchronous)',
-          note: 'Cookie consent library. Must load before the UNDRR config script.',
-        },
-        {
-          name: 'Cookie consent UNDRR config',
-          url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js',
-          placement: 'immediately after cookieconsent.umd.js',
-          attributes: 'none (synchronous)',
-          note: 'UNDRR-specific cookie consent configuration.',
-        },
-      ],
-      logos: {
-        horizontal: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
-        vertical: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-vertical.svg',
-        squareBlue: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
-      },
+      stylesheets: REQUIRED_STYLESHEETS,
+      scripts: REQUIRED_SCRIPTS,
+      logos: LOGOS,
     },
   },
   components: indexEntries,
-  generatedAt: new Date().toISOString(),
+  generatedAt,
 };
 
 const indexJson = JSON.stringify(index, null, 2);
@@ -371,12 +332,12 @@ for (const { id, content } of componentFiles) {
 // Write ai-components/utilities.json
 // ---------------------------------------------------------------------------
 
-const utilities = {
+const utilities = replaceVersion({
   _ai: 'CSS utility classes for the UNDRR Mangrove library. '
     + 'Include the Mangrove CSS bundle to use these classes in plain HTML.',
   ...cssUtilities,
-  generatedAt: new Date().toISOString(),
-};
+  generatedAt,
+});
 
 const utilitiesJson = JSON.stringify(utilities, null, 2);
 fs.writeFileSync(path.join(outputDir, 'utilities.json'), utilitiesJson);
@@ -414,10 +375,10 @@ ${DOCS_BASE}ai-components/utilities.json
 ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with CSS classes, no React needed. In the index, these have vanillaHtml: true. Each component's detail JSON includes a renderedHtml array with copy-pasteable HTML snippets.
 
 1. Include the Mangrove CSS bundle (pick your theme):
-   - UNDRR: https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@${pkg.version}/dist/css/style.css
-   - PreventionWeb: https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@${pkg.version}/dist/css/style-preventionweb.css
-   - MCR2030: https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@${pkg.version}/dist/css/style-mcr.css
-   - IRP: https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@${pkg.version}/dist/css/style-irp.css
+   - UNDRR: ${THEME_CSS.undrr}
+   - PreventionWeb: ${THEME_CSS.preventionweb}
+   - MCR2030: ${THEME_CSS.mcr2030}
+   - IRP: ${THEME_CSS.irp}
 
 2. Fetch the component index and find what you need
 3. Fetch the component's detailsUrl and use the renderedHtml examples
@@ -475,29 +436,13 @@ const llmsJson = JSON.stringify({
     npm: `https://www.npmjs.com/package/${pkg.name}`,
     componentIndex: `${DOCS_BASE}ai-components/index.json`,
     utilities: `${DOCS_BASE}ai-components/utilities.json`,
-    css: {
-      undrr: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
-      preventionweb: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-preventionweb.css`,
-      mcr2030: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-mcr.css`,
-      irp: `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style-irp.css`,
-    },
+    css: THEME_CSS,
   },
   requiredAssets: {
     _note: 'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
-    stylesheets: [
-      `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/css/style.css`,
-      'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css',
-    ],
-    scripts: [
-      { url: 'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js', defer: true },
-      { url: 'https://messaging.undrr.org/src/undrr-messaging.js', defer: true },
-      { url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js', defer: false },
-      { url: 'https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js', defer: false },
-    ],
-    logos: {
-      horizontal: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
-      vertical: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-vertical.svg',
-    },
+    stylesheets: REQUIRED_STYLESHEETS.map(s => s.url),
+    scripts: REQUIRED_SCRIPTS.map(s => ({ url: s.url, defer: s.attributes === 'defer' })),
+    logos: LOGOS,
   },
   conventions: {
     cssPrefix: 'mg-',
@@ -506,7 +451,7 @@ const llmsJson = JSON.stringify({
     locales: ['en', 'ar', 'my', 'ja'],
     breakpoints: { mobile: '480px', tablet: '900px', desktop: '1164px', wide: '1440px' },
   },
-  generatedAt: new Date().toISOString(),
+  generatedAt,
 }, null, 2);
 
 fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);

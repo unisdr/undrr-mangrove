@@ -27,7 +27,9 @@ export default {
       {
         name: 'Page header with logo and language selector',
         html: `<header id="header" class="mg-page-header mg-page-header--default">
-  <div class="mg-page-header__decoration"></div>
+  <div class="mg-page-header__decoration">
+    <div></div><div></div><div></div><div></div>
+  </div>
   <div class="mg-page-header__toolbar-wrapper">
     <div class="mg-page-header__container mg-container">
       <div class="mg-page-header__region mg-page-header__region--toolbar">

@@ -10,6 +10,17 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+// Default syndication config — also defined in scripts/data/constants.js
+// for the AI manifest. Keep both in sync if values change.
+const defaultSyndicationConfig = {
+  contenttype: 'landingpage',
+  pageid: '83835',
+  includemetatags: false,
+  includecss: false,
+  suffixID: 'footer',
+  activedomain: 'www.undrr.org',
+};
+
 export function Footer({
   variant = 'default',
   enableSyndication = true,
@@ -20,16 +31,6 @@ export function Footer({
   ...args
 }) {
   const syndicationRef = useRef(null);
-
-  // Default syndication configuration
-  const defaultSyndicationConfig = {
-    contenttype: 'landingpage',
-    pageid: '83835',
-    includemetatags: false,
-    includecss: false,
-    suffixID: 'footer',
-    activedomain: 'www.undrr.org',
-  };
 
   // Merge user config with defaults (memoized to prevent unnecessary re-renders)
   const mergedSyndicationConfig = useMemo(
@@ -52,7 +53,6 @@ export function Footer({
     const initializeWidget = () => {
       const initScript = document.createElement('script');
       initScript.type = 'text/javascript';
-      console.log('mergedSyndicationConfig', mergedSyndicationConfig.suffixID);
       initScript.innerHTML = `
         if (window.PW_Widget) {
           new PW_Widget.initialize({
