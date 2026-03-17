@@ -132,6 +132,7 @@ export default {
     ],
   },
 
+  // renderedHtml auto-generated from dist/components/IconCard.js
   'components-cards-icon-card': {
     vanillaHtml: true,
     description: 'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full.',
@@ -140,13 +141,20 @@ export default {
       'mg-card__icon',
       'mg-card__icon--centered',
       'mg-card__icon--negative',
+      'mg-card__icon--bordered',
       'mg-card__visual',
+      'mg-card__visual-link',
       'mg-card__image',
       'mg-card__image--small',
       'mg-card__image--medium',
       'mg-card__image--large',
       'mg-card__image--full',
       'mg-card__icon-wrap',
+      'mg-card__icon-wrap--small',
+      'mg-card__icon-wrap--medium',
+      'mg-card__icon-wrap--large',
+      'mg-card__icon-wrap--full',
+      'mg-card__icon-wrap--colored',
       'mg-card__content',
       'mg-card__meta',
       'mg-card__label',
@@ -154,92 +162,7 @@ export default {
       'mg-card__summary',
       'mg-card__cta',
       'mg-card__link',
-    ],
-    examples: [
-      {
-        name: 'Icon card with CSS icon',
-        html: `<article class="mg-card mg-card__icon">
-  <div class="mg-card__visual">
-    <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-      <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
-    </span>
-  </div>
-  <div class="mg-card__content">
-    <header class="mg-card__title">Global network</header>
-    <p class="mg-card__summary">Connect with disaster risk reduction practitioners worldwide.</p>
-    <p class="mg-card__link"><a href="/network">Learn more</a></p>
-  </div>
-</article>`,
-      },
-      {
-        name: 'Centered icon card with image and button',
-        html: `<article class="mg-card mg-card__icon mg-card__icon--centered">
-  <div class="mg-card__visual">
-    <img src="https://www.undrr.org/sites/default/files/inline-images/icon.svg" alt="Recovery" class="mg-card__image mg-card__image--medium" />
-  </div>
-  <div class="mg-card__content">
-    <header class="mg-card__title">Recovery planning</header>
-    <p class="mg-card__summary">Access resources and guidance for post-disaster recovery.</p>
-    <div class="mg-card__cta">
-      <a class="mg-button mg-button-primary mg-button-arrow" href="/recovery">Get started</a>
-    </div>
-  </div>
-</article>`,
-      },
-      {
-        name: 'Icon cards in a three-column grid',
-        html: `<div class="mg-grid mg-grid__col-3">
-  <article class="mg-card mg-card__icon mg-card__icon--centered">
-    <div class="mg-card__visual">
-      <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-chart-bar" aria-hidden="true"></span>
-      </span>
-    </div>
-    <div class="mg-card__content">
-      <header class="mg-card__title">Analytics</header>
-      <p class="mg-card__summary">Data-driven analysis for disaster risk reduction.</p>
-    </div>
-  </article>
-  <article class="mg-card mg-card__icon mg-card__icon--centered">
-    <div class="mg-card__visual">
-      <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
-      </span>
-    </div>
-    <div class="mg-card__content">
-      <header class="mg-card__title">Monitoring</header>
-      <p class="mg-card__summary">Continuous tracking of hazardous events and their impacts.</p>
-    </div>
-  </article>
-  <article class="mg-card mg-card__icon mg-card__icon--centered">
-    <div class="mg-card__visual">
-      <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-file-alt" aria-hidden="true"></span>
-      </span>
-    </div>
-    <div class="mg-card__content">
-      <header class="mg-card__title">Documentation</header>
-      <p class="mg-card__summary">Comprehensive guides and reference materials.</p>
-    </div>
-  </article>
-</div>`,
-      },
-      {
-        name: 'Negative variant (for dark backgrounds)',
-        html: `<div class="mg-u-background-color--blue-900" style="padding: 2rem;">
-  <article class="mg-card mg-card__icon mg-card__icon--negative">
-    <div class="mg-card__visual">
-      <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-lightbulb" aria-hidden="true"></span>
-      </span>
-    </div>
-    <div class="mg-card__content">
-      <header class="mg-card__title">Innovation</header>
-      <p class="mg-card__summary">New approaches to building resilient communities.</p>
-    </div>
-  </article>
-</div>`,
-      },
+      'mg-u-sr-only',
     ],
   },
 

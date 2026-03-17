@@ -176,12 +176,140 @@ if (uncoveredIds.length > 0) {
   console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data.js:`);
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
 }
+
+// ---------------------------------------------------------------------------
+// Check 1: A11y lint of curated HTML examples
+// ---------------------------------------------------------------------------
+
+const a11yRules = [
+  {
+    id: 'role-button-on-link',
+    label: 'role="button" on link element',
+    test(html) {
+      return /<a[^>]*role="button"[^>]*href=/.test(html)
+        || /<a[^>]*href=[^>]*role="button"/.test(html);
+    },
+  },
+  {
+    id: 'icon-missing-aria-hidden',
+    label: 'icon element missing aria-hidden="true"',
+    test(html) {
+      // Match <i or <span with mg-icon class (but not mg-icon-wrap)
+      const iconPattern = /<(?:i|span)\b[^>]*class="[^"]*\bmg-icon\b(?!-wrap)[^"]*"[^>]*>/g;
+      let match;
+      while ((match = iconPattern.exec(html)) !== null) {
+        if (!/aria-hidden\s*=\s*"true"/.test(match[0])) return true;
+      }
+      return false;
+    },
+  },
+  {
+    id: 'redundant-nav-role',
+    label: 'redundant role="navigation" on <nav>',
+    test(html) {
+      return /<nav[^>]*role="navigation"/.test(html);
+    },
+  },
+  {
+    id: 'section-without-name',
+    label: '<section> without accessible name',
+    test(html) {
+      const sectionPattern = /<section\b[^>]*>/g;
+      let match;
+      while ((match = sectionPattern.exec(html)) !== null) {
+        if (!/aria-label(ledby)?\s*=/.test(match[0])) return true;
+      }
+      return false;
+    },
+  },
+];
+
+const a11yViolations = [];
+
+for (const [componentId, data] of Object.entries(htmlExamples)) {
+  if (!data?.examples) continue;
+  for (const example of data.examples) {
+    if (!example.html) continue;
+    for (const rule of a11yRules) {
+      if (rule.test(example.html)) {
+        a11yViolations.push({
+          componentId,
+          exampleName: example.name || '(unnamed)',
+          rule: rule.id,
+          label: rule.label,
+        });
+      }
+    }
+  }
+}
+
+if (a11yViolations.length > 0) {
+  console.warn('A11y lint warnings in curated HTML:');
+  for (const v of a11yViolations) {
+    console.warn(`  ${v.componentId} / "${v.exampleName}": ${v.label}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Check 2: PropTypes coverage warning
+// ---------------------------------------------------------------------------
+
+const totalComponents = Object.keys(manifest.components).length;
+const withProps = Object.values(manifest.components).filter(
+  c => c.reactDocgen?.props && Object.keys(c.reactDocgen.props).length > 0,
+).length;
+const coverage = totalComponents > 0
+  ? Math.round((withProps / totalComponents) * 100)
+  : 0;
+
+console.log(
+  `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`,
+);
+
+// ---------------------------------------------------------------------------
+// Check 3: CSS class existence check
+// ---------------------------------------------------------------------------
+
+const staleCssWarnings = [];
+
+for (const [componentId, data] of Object.entries(htmlExamples)) {
+  if (!data?.cssClasses?.length || !data?.examples?.length) continue;
+
+  const allHtml = data.examples.map(e => e.html || '').join(' ');
+  const hasAnyClass = data.cssClasses.some(cls => allHtml.includes(cls));
+
+  if (!hasAnyClass) {
+    staleCssWarnings.push(componentId);
+  }
+}
+
+if (staleCssWarnings.length > 0) {
+  console.warn('CSS class existence warnings (cssClasses not found in curated HTML):');
+  for (const id of staleCssWarnings) {
+    console.warn(`  - ${id}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Validate-only exit
+// ---------------------------------------------------------------------------
+
 if (validateOnly) {
+  let failed = false;
+
   if (unmatchedKeys.length > 0) {
     console.error('Validation failed: component-data keys do not match manifest.');
+    failed = true;
+  }
+  if (a11yViolations.length > 0) {
+    console.error(`Validation failed: ${a11yViolations.length} a11y violation(s) in curated HTML.`);
+    failed = true;
+  }
+
+  if (failed) {
     process.exit(1);
   }
-  console.log('Validation passed: all component-data keys match manifest IDs.');
+  console.log('Validation passed: all checks OK.');
   process.exit(0);
 }
 

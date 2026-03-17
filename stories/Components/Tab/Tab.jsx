@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { mgTabs } from '../../assets/js/tabs';
 
 /**
@@ -8,7 +9,7 @@ import { mgTabs } from '../../assets/js/tabs';
  * @param {string} props.variant - The layout variant, either 'stacked' or 'horizontal'.
  * @returns {JSX.Element} A React component representing the tab structure.
  */
-export function Tab({ tabdata, variant }) {
+export function Tab({ tabdata, variant = 'horizontal' }) {
   useEffect(() => {
     mgTabs();
   }, []);
@@ -52,3 +53,21 @@ export function Tab({ tabdata, variant }) {
     />
   );
 }
+
+Tab.propTypes = {
+  /** Array of tab objects, each containing text, text_id, and optional HTML data. */
+  tabdata: PropTypes.arrayOf(
+    PropTypes.shape({
+      /** Display label for the tab. */
+      text: PropTypes.string.isRequired,
+      /** Unique identifier used for the tab section anchor. */
+      text_id: PropTypes.string.isRequired,
+      /** HTML content rendered inside the tab panel. */
+      data: PropTypes.string,
+      /** Whether this tab should be selected by default. */
+      is_default: PropTypes.string,
+    })
+  ).isRequired,
+  /** Layout variant controlling tab orientation. */
+  variant: PropTypes.oneOf(['stacked', 'horizontal']),
+};

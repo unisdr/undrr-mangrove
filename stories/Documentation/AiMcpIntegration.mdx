@@ -274,9 +274,9 @@ render-component-html.js → rendered-html.json (auto-rendered HTML via SSR)
 generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json
 ```
 
-`render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs (DOMPurify, `document`, `window`) fall back to curated HTML examples.
+`render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. The script mocks DOMPurify so components that use it for HTML sanitization (e.g., IconCard) can also be auto-rendered. Components needing other browser APIs (`document`, `window`) fall back to curated HTML examples.
 
-`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, logo paths, reusable HTML snippets).
+`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, logo paths, reusable HTML snippets). When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns in HTML examples, CSS class mismatches, and PropTypes coverage.
 
 See [`scripts/ai-manifest/README.md`](https://github.com/unisdr/undrr-mangrove/blob/main/scripts/ai-manifest/README.md) for the full pipeline diagram, entry schema, and maintenance guide.
 
@@ -321,7 +321,7 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 
 ## What's next
 
-- **Expand auto-rendering** — more components can be rendered from `dist/` as we mock DOMPurify for SSR, reducing curated HTML maintenance
+- **Expand auto-rendering** — IconCard is now auto-rendered via a DOMPurify mock, joining QuoteHighlight, StatsCard, Pager, MegaMenu, and SyndicationSearchWidget. Components that depend on `document` or `window` (e.g., ShareButtons) still need curated HTML
 - **MDX content in the manifest** — the Storybook manifest includes raw MDX source that we don't currently process. The Fluent UI extractor shows this can be converted to useful Markdown.
 - **HTML browse page** — a static `index.html` for debugging the manifest in a browser (idea from the Fluent UI extractor)
 - **Watch `@storybook/addon-mcp`** — as it matures past experimental, consider tighter integration

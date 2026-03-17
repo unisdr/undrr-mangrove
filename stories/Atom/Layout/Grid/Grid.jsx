@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
+/** Demonstrates the CSS grid layout system with auto and fixed column options. */
 export function Grid() {
   return (
     <>
@@ -69,3 +71,5 @@ export function Grid() {
     </>
   );
 }
+
+Grid.propTypes = {};

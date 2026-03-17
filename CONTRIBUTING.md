@@ -37,7 +37,11 @@ Most of the manifest auto-generates from Storybook and component rendering. Two 
 - **`scripts/ai-manifest/data/component-data/`** — per-component metadata (descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags) and curated HTML examples for components that can't be auto-rendered. Split into category files (cards.js, forms.js, layout.js, etc.). Update when you change a component's HTML structure, add a new component, or rename BEM classes.
 - **`scripts/ai-manifest/data/css-utilities.js`** — inventory of CSS utility classes. Update when you add, rename, or remove utility classes.
 
-The build validates that curated keys match the Storybook manifest and warns about mismatches.
+Tips for better manifest output:
+
+- **Add PropTypes to your components.** The manifest extracts prop names, types, defaults, and descriptions from PropTypes and JSDoc comments via react-docgen. Components without PropTypes appear in the manifest with no prop documentation.
+- **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs, or only DOMPurify which is mocked), add it to `RENDER_SPECS` in `render-component-html.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
+- **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, CSS class mismatches, and PropTypes coverage.
 
 ## Submitting changes
 

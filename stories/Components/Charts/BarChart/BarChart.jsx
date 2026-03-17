@@ -1,6 +1,7 @@
 // TODO: Layered hydration (.fromElement.js + .hydrate.js) not yet adopted for
 // this component. See docs/HYDRATION.md for the pattern.
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useRef, useEffect, useState } from 'react';
 import { select } from 'd3-selection';
 import { scaleBand, scaleLinear } from 'd3-scale';
@@ -8,28 +9,52 @@ import { max } from 'd3-array';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { transformDataForBarChart } from './chart-helpers';
 
-// Main BarChart component
+/**
+ * Renders a D3-powered bar chart with configurable axes, colors, and accessibility attributes.
+ *
+ * @param {Object} props
+ * @param {Array<{label: string, value: number}>} [props.data] Array of data objects with label and value properties
+ * @param {string} [props.cumulative]     Whether to accumulate values across bars ('true'/'false')
+ * @param {number} [props.startYear]      Start year for filtering time-series data
+ * @param {number} [props.endYear]        End year for filtering time-series data
+ * @param {number} [props.width]          Width of the SVG element in pixels
+ * @param {number} [props.height]         Height of the SVG element in pixels
+ * @param {string} [props.labelColor]     CSS color for axis labels and value text
+ * @param {string} [props.backgroundColor] CSS background color for the SVG
+ * @param {string} [props.axisColor]      CSS color for axis lines
+ * @param {string} [props.tickColor]      CSS color for tick marks (use 'none' to hide the y-axis)
+ * @param {string} [props.color]          CSS fill color for the bars
+ * @param {string} [props.title]          Chart title displayed above the bars
+ * @param {string} [props.xAxisLabel]     Label for the x-axis
+ * @param {string} [props.yAxisLabel]     Label for the y-axis
+ * @param {string} [props.dataSource]     Data source attribution shown below the chart
+ * @param {string} [props.ariaLabel]      Accessible label for the SVG element
+ * @param {string} [props.ariaDescription] Accessible description for the SVG element
+ * @param {string} [props.apiData]        Whether data comes from an API ('true'/'false')
+ * @param {string} [props.type]           Data type key passed to transformDataForBarChart
+ * @param {{top: number, right: number, bottom: number, left: number}} [props.margin] SVG margins
+ */
 export default function BarChartProcessor({
-  data = [], // Array of data objects with 'label' and 'value' properties
+  data = [],
   cumulative = 'false',
   startYear = 2015,
   endYear = 2030,
-  width = 600, // Default width of the SVG element
-  height = 400, // Default height of the SVG element
-  labelColor = '#6B7280', // Default color for labels
-  backgroundColor = '#FFFFFF', // Default background color for the SVG
-  axisColor = '#6B7280', // Default color for the axis lines
-  tickColor = '#6B7280', // Default color for the tick marks
-  color = '#4065A3', // Default color for the bars
-  title = '', // Default title of the chart
-  xAxisLabel = '', // Default label for the x-axis
-  yAxisLabel = '', // Default label for the y-axis
-  dataSource = '', // Default data source label
-  ariaLabel = 'Bar chart showing data', // ARIA label for accessibility
-  ariaDescription = '', // ARIA description for accessibility
-  apiData = 'false', // Default
-  type = '', // Type of data to display
-  margin = { top: 40, right: 30, bottom: 70, left: 70 }, // Default margins
+  width = 600,
+  height = 400,
+  labelColor = '#6B7280',
+  backgroundColor = '#FFFFFF',
+  axisColor = '#6B7280',
+  tickColor = '#6B7280',
+  color = '#4065A3',
+  title = '',
+  xAxisLabel = '',
+  yAxisLabel = '',
+  dataSource = '',
+  ariaLabel = 'Bar chart showing data',
+  ariaDescription = '',
+  apiData = 'false',
+  type = '',
+  margin = { top: 40, right: 30, bottom: 70, left: 70 },
 }) {
   const [chartData, setChartData] = useState(data);
   const svgRef = useRef();
@@ -195,3 +220,56 @@ export default function BarChartProcessor({
     </div>
   );
 }
+
+BarChartProcessor.propTypes = {
+  /** Array of data objects, each with a label and numeric value */
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+    })
+  ),
+  /** Whether to accumulate values across bars ('true' or 'false') */
+  cumulative: PropTypes.string,
+  /** Start year for filtering time-series data */
+  startYear: PropTypes.number,
+  /** End year for filtering time-series data */
+  endYear: PropTypes.number,
+  /** Width of the SVG element in pixels */
+  width: PropTypes.number,
+  /** Height of the SVG element in pixels */
+  height: PropTypes.number,
+  /** CSS color for axis labels and value text */
+  labelColor: PropTypes.string,
+  /** CSS background color for the SVG */
+  backgroundColor: PropTypes.string,
+  /** CSS color for axis lines */
+  axisColor: PropTypes.string,
+  /** CSS color for tick marks (use 'none' to hide the y-axis) */
+  tickColor: PropTypes.string,
+  /** CSS fill color for the bars */
+  color: PropTypes.string,
+  /** Chart title displayed above the bars */
+  title: PropTypes.string,
+  /** Label for the x-axis */
+  xAxisLabel: PropTypes.string,
+  /** Label for the y-axis */
+  yAxisLabel: PropTypes.string,
+  /** Data source attribution shown below the chart */
+  dataSource: PropTypes.string,
+  /** Accessible label for the SVG element */
+  ariaLabel: PropTypes.string,
+  /** Accessible description for the SVG element */
+  ariaDescription: PropTypes.string,
+  /** Whether data comes from an API ('true' or 'false') */
+  apiData: PropTypes.string,
+  /** Data type key passed to transformDataForBarChart */
+  type: PropTypes.string,
+  /** SVG margins around the chart area */
+  margin: PropTypes.shape({
+    top: PropTypes.number,
+    right: PropTypes.number,
+    bottom: PropTypes.number,
+    left: PropTypes.number,
+  }),
+};
