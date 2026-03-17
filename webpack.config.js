@@ -98,7 +98,7 @@ export default [
       IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
       Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
-      Pager: './stories/Components/Pager/Pager.jsx',
+      Pager: './stories/Components/Pager/Pager.hydrate.js',
     },
     externals: {
       react: 'react',

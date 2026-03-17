@@ -5,9 +5,6 @@
  * @module Pager
  */
 
-// TODO: Layered hydration (.fromElement.js + .hydrate.js) not yet adopted for
-// this component. See docs/HYDRATION.md for the pattern.
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PagerList } from './components/PagerList';

@@ -27,7 +27,7 @@ export default {
     examples: [
       {
         name: 'Default hero',
-        html: `<section class="mg-hero" style="background-image: url('https://picsum.photos/1600/600')">
+        html: `<section class="mg-hero" aria-label="Featured: Reducing disaster risk for a resilient future" style="background-image: url('https://picsum.photos/1600/600')">
   <div class="mg-hero__overlay">
     <article class="mg-hero__content">
       <div class="mg-hero__meta">
@@ -49,7 +49,7 @@ export default {
       },
       {
         name: 'Hero with linked title',
-        html: `<section class="mg-hero mg-hero--secondary" style="background-image: url('https://picsum.photos/1600/600')">
+        html: `<section class="mg-hero mg-hero--secondary" aria-label="Global Platform for Disaster Risk Reduction 2025" style="background-image: url('https://picsum.photos/1600/600')">
   <div class="mg-hero__overlay">
     <article class="mg-hero__content">
       <header class="mg-hero__title">
@@ -85,7 +85,7 @@ export default {
     examples: [
       {
         name: 'Child hero',
-        html: `<section class="mg-hero mg-hero--child" style="background-image: url('https://picsum.photos/1600/400')">
+        html: `<section class="mg-hero mg-hero--child" aria-label="Early warning systems save lives" style="background-image: url('https://picsum.photos/1600/400')">
   <div class="mg-hero__overlay">
     <article class="mg-hero__content">
       <div class="mg-hero__meta">

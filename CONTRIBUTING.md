@@ -12,7 +12,9 @@ Thank you for contributing to the UNDRR Mangrove component library.
 - See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) for environment setup, scripts, branching, and commit conventions.
 - See [`docs/TESTING.md`](docs/TESTING.md) for unit, visual, and accessibility testing.
 - See [`docs/RELEASES.md`](docs/RELEASES.md) for versioning, tagging, and publishing.
-- For a step-by-step guide to contributing new components—including structure, best practices, and review process—check out the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in our Storybook docs.
+- See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the build system, distribution channels, and Drupal integration flow.
+- See [`docs/COMPONENT-GUIDE.md`](docs/COMPONENT-GUIDE.md) for a step-by-step tutorial on building a new component.
+- For code standards and review process, check out the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in our Storybook docs.
 
 ## Writing guidelines
 

@@ -12,6 +12,8 @@ For more detailed information, see the [Getting Started Guide](https://unisdr.gi
 - **Testing guide**: unit, visual, and accessibility testing — [docs/TESTING.md](./TESTING.md)
 - **Writing guidelines**: UX writing standards — [docs/WRITING.md](./WRITING.md)
 - **Writing quick reference**: concise checklist for AI tools and reviews — [docs/WRITING-SHORT.md](./WRITING-SHORT.md)
+- **Architecture**: build system, distribution channels, and Drupal integration — [docs/ARCHITECTURE.md](./ARCHITECTURE.md)
+- **Component guide**: step-by-step tutorial for building a new component — [docs/COMPONENT-GUIDE.md](./COMPONENT-GUIDE.md)
 
 ### Storybook documentation
 

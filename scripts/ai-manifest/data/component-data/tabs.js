@@ -30,7 +30,7 @@ export default {
       <a class="mg-tabs__link" href="#mg-tabs__section-overview" data-mg-js-tabs-default="true">Overview</a>
     </li>
     <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-overview">
+      <section class="mg-tabs__section" id="mg-tabs__section-overview" aria-label="Overview">
         <p>Overview content goes here.</p>
       </section>
     </li>
@@ -38,7 +38,7 @@ export default {
       <a class="mg-tabs__link" href="#mg-tabs__section-details">Details</a>
     </li>
     <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-details">
+      <section class="mg-tabs__section" id="mg-tabs__section-details" aria-label="Details">
         <p>Detailed information goes here.</p>
       </section>
     </li>

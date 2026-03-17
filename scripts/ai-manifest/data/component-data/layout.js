@@ -28,12 +28,12 @@ export default {
       {
         name: 'Padded container with spacer',
         html: `<div class="mg-container mg-container--padded mg-container--spacer">
-  <section>
-    <h2>First section</h2>
+  <section aria-labelledby="spacer-heading-1">
+    <h2 id="spacer-heading-1">First section</h2>
     <p>The spacer modifier adds consistent vertical gaps between children.</p>
   </section>
-  <section>
-    <h2>Second section</h2>
+  <section aria-labelledby="spacer-heading-2">
+    <h2 id="spacer-heading-2">Second section</h2>
     <p>Padding adds 2rem top and bottom to the container itself.</p>
   </section>
 </div>`,
