@@ -206,74 +206,13 @@ Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_
 
 3. Commit the updated `mangrove.css` files in the Drupal repository.
 
-## Component Development
+## Component development
 
-### File Structure
+See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
 
-Components follow this structure:
+### TypeScript support
 
-```text
-stories/
-  └── Components/
-      └── ComponentName/
-          ├── ComponentName.jsx
-          ├── ComponentName.stories.jsx
-          ├── ComponentName.scss
-          ├── ComponentName.fromElement.js    # Hydration prop extraction (optional)
-          ├── ComponentName.hydrate.js        # Barrel for hydration (optional)
-          └── __tests__/
-              ├── ComponentName.test.jsx
-              └── ComponentName.fromElement.test.js  # (optional)
-```
-
-Components that are used in server-rendered contexts (Drupal, Astro) should include a `fromElement.js` for prop extraction and a `hydrate.js` barrel file. See [HYDRATION.md](HYDRATION.md) for details.
-
-### Component Guidelines
-
-- Use functional components with hooks
-- Follow BEM naming for CSS classes
-- Include JSDoc comments for props
-- Write stories for all component states
-- Add tests for component logic
-
-### TypeScript Support
-
-While JSX is the default, TypeScript is fully supported:
-
-```typescript
-// ComponentName.tsx
-interface ComponentProps {
-  title: string;
-  onClick?: () => void;
-}
-
-export const Component: React.FC<ComponentProps> = ({ title, onClick }) => {
-  // Component implementation
-};
-```
-
-## Code Style
-
-### JavaScript/JSX
-
-- Use ES6+ features
-- Prefer functional components
-- Follow existing patterns in the codebase
-- No unnecessary comments unless explaining complex logic
-
-### CSS/SCSS
-
-- Follow BEM methodology
-- Use SCSS variables for consistency
-- Organize styles hierarchically
-- Keep specificity low
-
-### Import Order
-
-1. React imports
-2. External library imports
-3. Internal component imports
-4. Style imports
+While JSX is the default, TypeScript is fully supported. Path aliases available: `@/*` → `src/*`, `@components/*` → `stories/Components/*`.
 
 ## Debugging
 

@@ -175,15 +175,7 @@ Never use module-level `Set`, `Map`, `Array`, or counters to track state across 
 
 ### React 19 defaultProps deprecation
 
-`Component.defaultProps` is deprecated in React 19. Use destructured default parameters instead:
-
-```jsx
-// Do this
-export function MyComponent({ variant = 'primary' }) { ... }
-
-// Not this
-MyComponent.defaultProps = { variant: 'primary' };
-```
+`Component.defaultProps` is deprecated in React 19. Use destructured default parameters instead. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) for the full pattern.
 
 ### SCSS variables with !default
 

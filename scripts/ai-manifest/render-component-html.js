@@ -221,6 +221,78 @@ const RENDER_SPECS = [
       },
     ],
   },
+  {
+    file: 'ScrollContainer',
+    componentId: 'components-scrollcontainer',
+    variants: [
+      {
+        name: 'Default scroll container with sample items',
+        props: {
+          children: [
+            React.createElement('div', { key: '1', style: { minWidth: '200px', padding: '1rem', background: '#f0f0f0' } }, 'Item 1'),
+            React.createElement('div', { key: '2', style: { minWidth: '200px', padding: '1rem', background: '#e0e0e0' } }, 'Item 2'),
+            React.createElement('div', { key: '3', style: { minWidth: '200px', padding: '1rem', background: '#d0d0d0' } }, 'Item 3'),
+            React.createElement('div', { key: '4', style: { minWidth: '200px', padding: '1rem', background: '#c0c0c0' } }, 'Item 4'),
+          ],
+          showArrows: true,
+        },
+      },
+    ],
+  },
+  {
+    file: 'Gallery',
+    componentId: 'components-gallery',
+    variants: [
+      {
+        name: 'Single image gallery',
+        props: {
+          media: [
+            {
+              id: 'img-1',
+              type: 'image',
+              src: 'https://www.undrr.org/sites/default/files/2024-01/drr-hero.jpg',
+              alt: 'Disaster risk reduction in action',
+              title: 'Building resilience',
+              description: 'Communities working together to reduce disaster risk.',
+            },
+          ],
+        },
+      },
+      {
+        name: 'Multi-image gallery with captions',
+        props: {
+          media: [
+            {
+              id: 'img-1',
+              type: 'image',
+              src: 'https://www.undrr.org/sites/default/files/2024-01/drr-hero.jpg',
+              alt: 'Early warning systems',
+              title: 'Early warning for all',
+              description: 'Ensuring every person on Earth is protected by early warning systems.',
+            },
+            {
+              id: 'img-2',
+              type: 'image',
+              src: 'https://www.undrr.org/sites/default/files/2024-01/sendai-framework.jpg',
+              alt: 'Sendai Framework',
+              title: 'Sendai Framework for Disaster Risk Reduction',
+              description: 'The global blueprint for reducing disaster losses.',
+            },
+            {
+              id: 'img-3',
+              type: 'image',
+              src: 'https://www.undrr.org/sites/default/files/2024-01/resilient-cities.jpg',
+              alt: 'Making cities resilient',
+              title: 'MCR2030',
+              description: 'Making cities resilient by 2030.',
+            },
+          ],
+          showThumbnails: true,
+          thumbnailPosition: 'bottom',
+        },
+      },
+    ],
+  },
 ];
 
 // -----------------------------------------------------------------------
@@ -252,7 +324,10 @@ for (const spec of RENDER_SPECS) {
     const Component = mod.default || mod[spec.file]
       || mod[Object.keys(mod).find(k => typeof mod[k] === 'function')];
 
-    if (typeof Component !== 'function') {
+    // Accept functions and React.memo objects (which are objects with $$typeof)
+    const isRenderable = typeof Component === 'function'
+      || (Component != null && typeof Component === 'object' && Component.$$typeof != null);
+    if (!isRenderable) {
       console.warn(`  skip ${spec.file}: no renderable export`);
       failed++;
       continue;
