@@ -15,6 +15,7 @@ coverage/
 /.yarn
 .cache
 CLAUDE.md
+CONTRIBUTING_ISSUES.md
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
