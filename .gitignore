@@ -14,6 +14,7 @@ yarn-error.log
 coverage/
 /.yarn
 .cache
+CLAUDE.md
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
