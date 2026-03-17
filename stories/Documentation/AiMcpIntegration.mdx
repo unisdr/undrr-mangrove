@@ -50,10 +50,9 @@ The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/inde
 
 ```json
 {
-  "id": "components-pager",
-  "name": "Pager",
-  "description": "Pager component.",
-  "import": "import { Pager } from \"@undrr/undrr-mangrove\";",
+  "id": "components-cards-vertical-card",
+  "name": "VerticalCard",
+  "description": "Card with stacked image, labels, title, summary, and optional CTA button.",
   "docsUrl": "...",
   "detailsUrl": "...",
   "vanillaHtml": true
@@ -83,7 +82,7 @@ Components with syndication support (Footer) include a `vanillaHtmlEmbed` field 
 
 ### CSS utilities (`ai-components/utilities.json`)
 
-The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) (~25 KB) lists all 161 CSS utility classes grouped by category: layout, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. Each class has a description and usage example.
+The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) (~25 KB) lists all 161 CSS utility classes grouped into 12 categories. Each class has a description and usage example.
 
 ### Page templates
 
@@ -229,7 +228,9 @@ With the MCP addon running, agents can:
 - Get URLs to specific stories for visual checks
 - Run interaction and accessibility tests against generated components
 
-### Setting up MCP for local development
+### Setting up MCP for local development (optional)
+
+The MCP addon is not included in Mangrove's default setup. To try it locally:
 
 1. **Install the MCP addon**:
    ```bash
@@ -275,7 +276,7 @@ generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilitie
 
 `render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs (DOMPurify, `document`, `window`) fall back to curated HTML examples.
 
-`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, reusable HTML snippets).
+`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, logo paths, reusable HTML snippets).
 
 See [`scripts/ai-manifest/README.md`](https://github.com/unisdr/undrr-mangrove/blob/main/scripts/ai-manifest/README.md) for the full pipeline diagram, entry schema, and maintenance guide.
 
@@ -294,7 +295,7 @@ These tools address overlapping problems. We use or recommend them alongside our
 
 ### Storybook MCP (`@storybook/addon-mcp`)
 
-The official Storybook MCP addon (experimental, v0.3.x). Exposes component metadata via MCP protocol for live queries from AI agents in IDEs. Requires a running Storybook dev server.
+The official Storybook MCP addon (early-stage, under active development). Exposes component metadata and story-writing tools via MCP protocol for live queries from AI agents in IDEs. Requires a running Storybook dev server.
 
 We recommend this for local development. It complements our static pipeline — use MCP when developing locally, use the deployed JSON files for CI and external consumers.
 

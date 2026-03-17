@@ -1,7 +1,7 @@
 # AI manifest data
 
-Curated data consumed by `scripts/generate-ai-manifest.js` to produce
-the AI-friendly component manifest deployed alongside Storybook.
+Curated data consumed by `generate-ai-manifest.js` to produce the
+AI-friendly component manifest deployed alongside Storybook.
 
 | File | Purpose |
 |------|---------|
@@ -9,5 +9,5 @@ the AI-friendly component manifest deployed alongside Storybook.
 | `css-utilities.js` | CSS utility class inventory (~161 classes) |
 | `component-data/` | Per-component metadata: descriptions, flags, CSS classes, curated HTML |
 
-See [`scripts/README.md`](../README.md) for the full pipeline diagram,
-entry schema, and maintenance instructions.
+See [`scripts/ai-manifest/README.md`](../README.md) for the full
+pipeline diagram, entry schema, and maintenance instructions.

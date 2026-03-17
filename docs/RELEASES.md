@@ -29,7 +29,7 @@ yarn storybook build -o docs-build-temp
 node scripts/ai-manifest/generate-ai-manifest.js
 ```
 
-The script warns if any keys in `component-data/` don't match a component ID in the Storybook manifest.
+The script warns if any keys in `component-data/` don't match a component ID in the Storybook manifest. See [`scripts/ai-manifest/README.md`](../scripts/ai-manifest/README.md) for the full pipeline documentation and data schema.
 
 ### 2. Update the version
 

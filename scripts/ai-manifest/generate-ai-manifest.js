@@ -16,7 +16,7 @@
  * are chained in the `yarn build` command.
  *
  * Usage:
- *   node scripts/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
+ *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
  *
  * Flags:
  *   --validate   Check curated data keys against the Storybook manifest and
