@@ -10,6 +10,8 @@
  * component SCSS files.
  */
 
+import { CDN_BASE } from './constants.js';
+
 const colorShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
 function bgClass(suffix, desc) {
@@ -37,7 +39,7 @@ function textColorScale(prefix, name) {
 export default {
   _description:
     'CSS utility classes provided by UNDRR Mangrove. Include the Mangrove CSS bundle to use these. All classes use the mg- prefix and follow BEM conventions.',
-  cdnBaseUrl: 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}/dist/css/',
+  cdnBaseUrl: `${CDN_BASE}/dist/css/`,
   categories: [
     // ---------------------------------------------------------------
     // 1. Layout

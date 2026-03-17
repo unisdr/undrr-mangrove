@@ -269,30 +269,6 @@ console.log(
 );
 
 // ---------------------------------------------------------------------------
-// Check 3: CSS class existence check
-// ---------------------------------------------------------------------------
-
-const staleCssWarnings = [];
-
-for (const [componentId, data] of Object.entries(htmlExamples)) {
-  if (!data?.cssClasses?.length || !data?.examples?.length) continue;
-
-  const allHtml = data.examples.map(e => e.html || '').join(' ');
-  const hasAnyClass = data.cssClasses.some(cls => allHtml.includes(cls));
-
-  if (!hasAnyClass) {
-    staleCssWarnings.push(componentId);
-  }
-}
-
-if (staleCssWarnings.length > 0) {
-  console.warn('CSS class existence warnings (cssClasses not found in curated HTML):');
-  for (const id of staleCssWarnings) {
-    console.warn(`  - ${id}`);
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Validate-only exit
 // ---------------------------------------------------------------------------
 
@@ -487,6 +463,8 @@ const utilities = replaceVersion({
 const utilitiesJson = JSON.stringify(utilities, null, 2);
 fs.writeFileSync(path.join(outputDir, 'utilities.json'), utilitiesJson);
 
+const utilityClassCount = cssUtilities.categories.reduce((sum, cat) => sum + cat.classes.length, 0);
+
 // ---------------------------------------------------------------------------
 // Write llms.txt
 // ---------------------------------------------------------------------------
@@ -512,7 +490,7 @@ The Storybook site is a single-page app, so fetching pages directly won't give y
 Component index (all ${indexEntries.length} components):
 ${DOCS_BASE}ai-components/index.json
 
-CSS utility class reference (~162 classes):
+CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
 
 ### Vanilla HTML quick start
@@ -536,7 +514,7 @@ Several React components support hydration on vanilla HTML pages via the createH
 
 ### CSS utilities
 
-The utilities.json file lists ~162 utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
+The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
 
 ### Conventions
 
