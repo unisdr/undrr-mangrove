@@ -55,7 +55,7 @@ export default {
       <a href="/reports/gar-2024">Global Assessment Report 2024</a>
     </header>
     <p class="mg-card__summary">The flagship report on global efforts to reduce disaster risk.</p>
-    <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/reports/gar-2024">Read the report</a>
+    <a class="mg-button mg-button-primary mg-button-arrow" href="/reports/gar-2024">Read the report</a>
   </div>
 </article>`,
       },
@@ -161,7 +161,7 @@ export default {
         html: `<article class="mg-card mg-card__icon">
   <div class="mg-card__visual">
     <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-      <span class="mg-icon mg-icon-globe"></span>
+      <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
     </span>
   </div>
   <div class="mg-card__content">
@@ -181,7 +181,7 @@ export default {
     <header class="mg-card__title">Recovery planning</header>
     <p class="mg-card__summary">Access resources and guidance for post-disaster recovery.</p>
     <div class="mg-card__cta">
-      <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/recovery">Get started</a>
+      <a class="mg-button mg-button-primary mg-button-arrow" href="/recovery">Get started</a>
     </div>
   </div>
 </article>`,
@@ -192,7 +192,7 @@ export default {
   <article class="mg-card mg-card__icon mg-card__icon--centered">
     <div class="mg-card__visual">
       <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-chart-bar"></span>
+        <span class="mg-icon mg-icon-chart-bar" aria-hidden="true"></span>
       </span>
     </div>
     <div class="mg-card__content">
@@ -203,7 +203,7 @@ export default {
   <article class="mg-card mg-card__icon mg-card__icon--centered">
     <div class="mg-card__visual">
       <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-globe"></span>
+        <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
       </span>
     </div>
     <div class="mg-card__content">
@@ -214,7 +214,7 @@ export default {
   <article class="mg-card mg-card__icon mg-card__icon--centered">
     <div class="mg-card__visual">
       <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-file-alt"></span>
+        <span class="mg-icon mg-icon-file-alt" aria-hidden="true"></span>
       </span>
     </div>
     <div class="mg-card__content">
@@ -230,7 +230,7 @@ export default {
   <article class="mg-card mg-card__icon mg-card__icon--negative">
     <div class="mg-card__visual">
       <span class="mg-card__icon-wrap mg-card__icon-wrap--medium">
-        <span class="mg-icon mg-icon-lightbulb"></span>
+        <span class="mg-icon mg-icon-lightbulb" aria-hidden="true"></span>
       </span>
     </div>
     <div class="mg-card__content">

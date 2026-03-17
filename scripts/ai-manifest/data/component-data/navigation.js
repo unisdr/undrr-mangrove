@@ -28,18 +28,18 @@ export default {
 
   'components-navigation-pagination': {
     vanillaHtml: true,
-    description: 'Page navigation with previous/next links and page number display.',
-    cssClasses: ['pagination', 'disabled'],
+    description: 'Page navigation with previous/next links and page number display. Uses legacy class names without the mg- prefix.',
+    cssClasses: ['pagination'],
     examples: [
       {
         name: 'Pagination',
-        html: `<nav class="pagination" aria-label="Pagination" role="navigation">
+        html: `<nav class="pagination" aria-label="Pagination">
   <ul>
-    <li class="disabled" aria-disabled="true"><span>Previous</span></li>
-    <li><a href="?page=1" role="button">1</a></li>
-    <li><a href="?page=2" role="button">2</a></li>
-    <li><a href="?page=3" role="button">3</a></li>
-    <li><a href="?page=2" role="button">Next</a></li>
+    <li><a aria-disabled="true" aria-label="Previous page">Previous</a></li>
+    <li><a href="?page=1" aria-current="page" aria-label="Page 1">1</a></li>
+    <li><a href="?page=2" aria-label="Page 2">2</a></li>
+    <li><a href="?page=3" aria-label="Page 3">3</a></li>
+    <li><a href="?page=2" aria-label="Next page">Next</a></li>
   </ul>
 </nav>`,
       },

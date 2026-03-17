@@ -16,7 +16,7 @@ export const variantOptions = {
  * Full-width hero banner with background image, title, summary, and call-to-action buttons.
  * Renders one section per item in the data array (typically one).
  */
-export function Hero({ data, variant }) {
+export function Hero({ data, variant = 'primary' }) {
   let variantActive = variantOptions[`${variant}`];
 
   return (

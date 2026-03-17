@@ -20,7 +20,7 @@ export default {
         html: `<div class="mg-container">
   <h2>Partner with us</h2>
   <p>Join the global effort to reduce disaster risk and build resilient communities.</p>
-  <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/partner">Become a partner</a>
+  <a class="mg-button mg-button-primary mg-button-arrow" href="/partner">Become a partner</a>
 </div>`,
       },
     ],

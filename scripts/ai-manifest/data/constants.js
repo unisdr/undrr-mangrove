@@ -110,6 +110,7 @@ export const SYNDICATION_DEFAULT_CONFIG = {
 // ---------------------------------------------------------------------------
 
 export const PAGE_HEADER_HTML = `<!-- Page header — DO NOT MODIFY this structure, it is a UNDRR branding requirement -->
+  <a class="mg-skip-link" href="#main-content">Skip to main content</a>
   <header id="header" class="mg-page-header mg-page-header--default">
     <div class="mg-page-header__decoration">
       <div></div><div></div><div></div><div></div>
@@ -117,16 +118,16 @@ export const PAGE_HEADER_HTML = `<!-- Page header — DO NOT MODIFY this structu
     <div class="mg-page-header__toolbar-wrapper">
       <div class="mg-page-header__container mg-container">
         <div class="mg-page-header__region mg-page-header__region--toolbar">
-          <section class="mg-page-header__block mg-page-header__block--logo">
+          <div class="mg-page-header__block mg-page-header__block--logo">
             <a href="/">
               <img class="mg-page-header__logo-img" src="${LOGOS.horizontal}" alt="UNDRR" width="324" height="47" />
             </a>
-          </section>
-          <a title="Log in or register" href="/user">
-            <i class="mg-icon mg-icon-user"></i>
+          </div>
+          <a title="My account" href="/user">
+            <i class="mg-icon mg-icon-user" aria-hidden="true"></i>
             <span class="mg-page-header__label">My account</span>
           </a>
-          <section class="mg-page-header__block mg-page-header__block--language">
+          <div class="mg-page-header__block mg-page-header__block--language">
             <form class="mg-page-header__lang-form" action="/" method="post">
               <div class="mg-page-header__form-item">
                 <label for="lang-select" class="mg-u-sr-only">Select your language</label>
@@ -140,7 +141,7 @@ export const PAGE_HEADER_HTML = `<!-- Page header — DO NOT MODIFY this structu
                 </div>
               </div>
             </form>
-          </section>
+          </div>
         </div>
       </div>
     </div>
@@ -163,14 +164,9 @@ export const FOOTER_HTML = `<!-- Footer — DO NOT MODIFY, UNDRR branding requir
     });
   </script>`;
 
-export const CLOSING_SCRIPTS_HTML = `<!-- === Required scripts (order matters) === -->
-
-  <!-- UNDRR analytics (GA4) -->
-  <script src="${REQUIRED_SCRIPTS[0].url}" defer></script>
-
-  <!-- UNDRR critical messaging -->
-  <script src="${REQUIRED_SCRIPTS[1].url}" defer></script>
-
-  <!-- Cookie consent (library then UNDRR config) -->
-  <script src="${REQUIRED_SCRIPTS[2].url}"></script>
-  <script src="${REQUIRED_SCRIPTS[3].url}"></script>`;
+// Generated from REQUIRED_SCRIPTS so reordering or adding entries stays in sync.
+export const CLOSING_SCRIPTS_HTML = '<!-- === Required scripts (order matters) === -->\n'
+  + REQUIRED_SCRIPTS.map(s => {
+    const deferAttr = s.attributes === 'defer' ? ' defer' : '';
+    return `\n  <!-- ${s.name} -->\n  <script src="${s.url}"${deferAttr}></script>`;
+  }).join('');

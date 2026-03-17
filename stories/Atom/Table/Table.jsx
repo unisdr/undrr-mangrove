@@ -25,9 +25,9 @@ export const TableTag = ({
   text,
   tdtext,
   details,
-  variant,
-  size,
-  responsive,
+  variant = 'default',
+  size = 'large',
+  responsive = 'auto',
   ...args
 }) => {
   let table_type = variant_options[`${variant}`];

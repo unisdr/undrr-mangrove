@@ -160,13 +160,7 @@ function docsUrl(componentId) {
 // Validate curated data
 // ---------------------------------------------------------------------------
 
-// Check for duplicate keys across component-data category files
-const allKeys = Object.keys(htmlExamples);
-const duplicateKeys = allKeys.filter((k, i) => allKeys.indexOf(k) !== i);
-if (duplicateKeys.length > 0) {
-  console.warn('Warning: duplicate keys in component-data (last definition wins):');
-  for (const k of duplicateKeys) console.warn(`  - ${k}`);
-}
+// Duplicate key detection now happens in component-data/index.js at import time.
 
 const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
 const unmatchedKeys = Object.keys(htmlExamples).filter(k => !manifestIds.has(k));

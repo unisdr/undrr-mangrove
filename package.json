@@ -10,6 +10,7 @@
   "scripts": {
     "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --loglevel debug --stats-json && webpack --progress && node scripts/ai-manifest/render-component-html.js && node scripts/ai-manifest/generate-ai-manifest.js",
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
+    "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
     "build:analyze": "ANALYZE=true NODE_ENV=production webpack --progress",
     "dev": "NODE_ENV=development yarn run scss-watch & yarn run storybook",
     "storybook": "NODE_ENV=development storybook dev -p 6006",

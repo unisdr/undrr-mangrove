@@ -26,32 +26,17 @@ export default {
   argTypes: {
     Type: {
       options: ['Primary', 'Secondary'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'Primary',
+      control: { type: 'inline-radio' },
     },
 
     State: {
-      options: ['Active', 'Disabled'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'Active',
+      options: ['Default', 'Disabled'],
+      control: { type: 'inline-radio' },
     },
 
     For_Primary: {
       options: ['Arrow', 'No Arrow'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'Arrow',
+      control: { type: 'inline-radio' },
     },
   },
 };

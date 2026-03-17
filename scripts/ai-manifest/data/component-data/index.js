@@ -43,27 +43,22 @@ import utilities from './utilities.js';
 import pageTemplates from './page-templates.js';
 import reactOnly from './react-only.js';
 
-export default {
-  ...layout,
-  ...cards,
-  ...buttons,
-  ...tags,
-  ...typography,
-  ...table,
-  ...tabs,
-  ...callout,
-  ...highlightBox,
-  ...quoteHighlight,
-  ...hero,
-  ...footer,
-  ...pageHeader,
-  ...navigation,
-  ...forms,
-  ...cta,
-  ...images,
-  ...logos,
-  ...icons,
-  ...utilities,
-  ...pageTemplates,
-  ...reactOnly,
-};
+// Merge all sources with duplicate key detection.
+// Spread syntax silently overwrites duplicates, so we check explicitly.
+const sources = [
+  layout, cards, buttons, tags, typography, table, tabs, callout,
+  highlightBox, quoteHighlight, hero, footer, pageHeader, navigation,
+  forms, cta, images, logos, icons, utilities, pageTemplates, reactOnly,
+];
+
+const merged = {};
+for (const source of sources) {
+  for (const key of Object.keys(source)) {
+    if (merged[key]) {
+      console.warn(`Warning: duplicate component-data key "${key}" — last definition wins`);
+    }
+    merged[key] = source[key];
+  }
+}
+
+export default merged;

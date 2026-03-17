@@ -228,6 +228,12 @@ for (const spec of RENDER_SPECS) {
 // Write output
 // -----------------------------------------------------------------------
 
+if (rendered === 0 && RENDER_SPECS.length > 0) {
+  console.error('Error: no components rendered successfully. Is dist/components/ populated?');
+  console.error('Run "yarn build" (webpack step) before render-component-html.js.');
+  process.exit(1);
+}
+
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, JSON.stringify(results, null, 2));
 

@@ -25,13 +25,11 @@ export default {
 
   argTypes: {
     Type: {
-      options: ['Without X', 'With X'],
+      options: ['Default', 'With X'],
 
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'Without X',
     },
   },
 };

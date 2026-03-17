@@ -56,9 +56,9 @@ export function PageHeader({
         <div className="mg-page-header__container mg-container">
           <div className="mg-page-header__region mg-page-header__region--toolbar">
             {/* UNDRR Logo Section */}
-            <section
+            <div
               id="block-undrrlogo"
-              className="mg-page-header__block mg-page-header__block--logo "
+              className="mg-page-header__block mg-page-header__block--logo"
             >
               <a href={homeUrl}>
                 <img
@@ -70,17 +70,17 @@ export function PageHeader({
                   className="mg-page-header__logo-img"
                 />
               </a>
-            </section>
+            </div>
 
             {/* User icon */}
-            <a alt="Log in or register" title="Log in or register" href="/user">
-              <i className="mg-icon mg-icon-user"></i>{' '}
+            <a title="My account" href="/user">
+              <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
               <span className="mg-page-header__label">My account</span>
               {/* <span className="mg-page-header__label-mobile">Login</span> */}
             </a>
 
             {/* Language Dropdown Section */}
-            <section className="mg-page-header__block mg-page-header__block--language ">
+            <div className="mg-page-header__block mg-page-header__block--language">
               <form
                 className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
                 id="lang_dropdown_form_lang-dropdown-form"
@@ -132,7 +132,7 @@ export function PageHeader({
                   </div>
                 </noscript>
               </form>
-            </section>
+            </div>
           </div>
         </div>
       </div>

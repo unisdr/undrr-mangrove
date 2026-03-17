@@ -91,7 +91,7 @@ export default {
         html: `<div class="mg-container mg-container--padded" style="text-align: center;">
   <h1>404</h1>
   <p>Page not found. The page you requested could not be located.</p>
-  <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/">Return to homepage</a>
+  <a class="mg-button mg-button-primary mg-button-arrow" href="/">Return to homepage</a>
 </div>`,
       },
     ],

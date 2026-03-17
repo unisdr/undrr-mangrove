@@ -40,8 +40,8 @@ export default {
         <span>The Sendai Framework guides global efforts to substantially reduce disaster risk and losses.</span>
       </div>
       <div class="mg-hero__buttons">
-        <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/sendai-framework">Learn more</a>
-        <a class="mg-button mg-button-secondary" role="button" href="/get-involved">Get involved</a>
+        <a class="mg-button mg-button-primary mg-button-arrow" href="/sendai-framework">Learn more</a>
+        <a class="mg-button mg-button-secondary" href="/get-involved">Get involved</a>
       </div>
     </article>
   </div>
@@ -59,7 +59,7 @@ export default {
         <span>28 June - 2 July 2025, Geneva, Switzerland</span>
       </div>
       <div class="mg-hero__buttons">
-        <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/register">Register now</a>
+        <a class="mg-button mg-button-primary mg-button-arrow" href="/register">Register now</a>
       </div>
     </article>
   </div>
@@ -96,7 +96,7 @@ export default {
       </header>
       <div class="mg-hero__summaryText">Multi-hazard early warning systems are one of the most effective tools for disaster risk reduction.</div>
       <div class="mg-hero__buttons">
-        <a class="mg-button mg-button-primary mg-button-arrow" role="button" href="/early-warning">Read more</a>
+        <a class="mg-button mg-button-primary mg-button-arrow" href="/early-warning">Read more</a>
       </div>
     </article>
   </div>

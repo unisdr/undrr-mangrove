@@ -27,8 +27,8 @@ export default {
         name: 'Text input with label and help text',
         html: `<div class="mg-form-field">
   <label class="mg-form-label mg-form-label--required" for="org-name">Organization name</label>
-  <input class="mg-form-input" type="text" id="org-name" name="org-name" required />
-  <p class="mg-form-help">Enter the full legal name of your organization.</p>
+  <input class="mg-form-input" type="text" id="org-name" name="org-name" aria-describedby="org-name-help" required />
+  <p class="mg-form-help" id="org-name-help">Enter the full legal name of your organization.</p>
 </div>`,
       },
       {
@@ -135,8 +135,8 @@ export default {
         name: 'Textarea',
         html: `<div class="mg-form-field">
   <label class="mg-form-label" for="message">Message</label>
-  <textarea class="mg-form-textarea" id="message" name="message" rows="5"></textarea>
-  <p class="mg-form-help">Max 500 characters.</p>
+  <textarea class="mg-form-textarea" id="message" name="message" rows="5" aria-describedby="message-help"></textarea>
+  <p class="mg-form-help" id="message-help">Max 500 characters.</p>
 </div>`,
       },
     ],

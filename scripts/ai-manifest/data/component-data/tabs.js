@@ -10,7 +10,7 @@
 export default {
   'components-tabs': {
     vanillaHtml: true,
-    description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity.',
+    description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity. The script adds ARIA roles (tablist, tab, tabpanel) and keyboard navigation at runtime — do not omit the script or tabs will be inaccessible.',
     cssClasses: [
       'mg-tabs',
       'mg-tabs--stacked',

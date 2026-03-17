@@ -45,11 +45,13 @@ ${PAGE_HEADER_HTML}
   <!-- Critical messaging container (optional, messages inject here) -->
   <div class="mg-critical-messaging"></div>
 
-  <!-- PAGE CONTENT GOES HERE -->
-  <div class="mg-container mg-container--padded mg-container--spacer">
-    <h1>Page title</h1>
-    <p>Content here.</p>
-  </div>
+  <main id="main-content">
+    <!-- PAGE CONTENT GOES HERE -->
+    <div class="mg-container mg-container--padded mg-container--spacer">
+      <h1>Page title</h1>
+      <p>Content here.</p>
+    </div>
+  </main>
 
 ${FOOTER_HTML}
 
@@ -59,7 +61,7 @@ ${CLOSING_SCRIPTS_HTML}
       },
       {
         name: 'Listing page (card grid with pagination)',
-        html: `<!-- Main content for a listing/index page -->
+        html: `<!-- Main content for a listing/index page — wrap in <main id="main-content"> within the page shell -->
 <div class="mg-container mg-container--padded mg-container--spacer">
   <nav aria-label="breadcrumbs" class="mg-breadcrumb">
     <ul>
@@ -70,10 +72,10 @@ ${CLOSING_SCRIPTS_HTML}
 
   <h1>Publications</h1>
 
-  <!-- Filter chips -->
+  <!-- Filter chips (legacy class names without mg- prefix) -->
   <div style="margin-bottom: 1rem;">
-    <a class="chip chip__cross" href="#" role="button">Earthquake</a>
-    <a class="chip chip__cross" href="#" role="button">2024</a>
+    <button class="chip chip__cross" type="button" aria-label="Remove filter: Earthquake">Earthquake</button>
+    <button class="chip chip__cross" type="button" aria-label="Remove filter: 2024">2024</button>
   </div>
 
   <!-- Card grid -->
@@ -110,22 +112,22 @@ ${CLOSING_SCRIPTS_HTML}
     </article>
   </div>
 
-  <!-- Pagination -->
-  <nav class="pagination" aria-label="Pagination" role="navigation">
+  <!-- Pagination (legacy class names without mg- prefix) -->
+  <nav class="pagination" aria-label="Pagination">
     <ul>
-      <li class="disabled" aria-disabled="true"><span>Previous</span></li>
-      <li><a href="?page=1" role="button">1</a></li>
-      <li><a href="?page=2" role="button">2</a></li>
-      <li><a href="?page=3" role="button">3</a></li>
-      <li><a href="?page=2" role="button">Next</a></li>
+      <li><a aria-disabled="true" aria-label="Previous page">Previous</a></li>
+      <li><a href="?page=1" aria-current="page" aria-label="Page 1">1</a></li>
+      <li><a href="?page=2" aria-label="Page 2">2</a></li>
+      <li><a href="?page=3" aria-label="Page 3">3</a></li>
+      <li><a href="?page=2" aria-label="Next page">Next</a></li>
     </ul>
   </nav>
 </div>`,
       },
       {
         name: 'Detail page (article with sidebar content)',
-        html: `<!-- Main content for a detail/article page -->
-<section class="mg-hero mg-hero--child" style="background-image: url('https://picsum.photos/1600/400')">
+        html: `<!-- Main content for a detail/article page — wrap in <main id="main-content"> within the page shell -->
+<section class="mg-hero mg-hero--child" role="img" aria-label="Hero background image" style="background-image: url('https://picsum.photos/1600/400')">
   <div class="mg-hero__overlay">
     <article class="mg-hero__content">
       <div class="mg-hero__meta">
@@ -154,7 +156,7 @@ ${CLOSING_SCRIPTS_HTML}
       <p>Multi-hazard early warning systems are one of the most effective tools for disaster risk reduction, with proven capacity to save lives and reduce economic losses.</p>
 
       <div class="mg-highlight-box mg-highlight-box--primary">
-        <h3>Key finding</h3>
+        <h2>Key finding</h2>
         <p>Countries with early warning systems experience eight times fewer deaths from disasters.</p>
       </div>
 
@@ -175,7 +177,7 @@ ${CLOSING_SCRIPTS_HTML}
 
     <!-- Sidebar -->
     <aside>
-      <h3>Related publications</h3>
+      <h2>Related publications</h2>
       <article class="mg-card mg-card__vc">
         <div class="mg-card__content">
           <header class="mg-card__title"><a href="/report-1">Global Assessment Report 2024</a></header>
@@ -194,7 +196,7 @@ ${CLOSING_SCRIPTS_HTML}
       },
       {
         name: 'Form page (contact form with validation)',
-        html: `<!-- Main content for a form page -->
+        html: `<!-- Main content for a form page — wrap in <main id="main-content"> within the page shell -->
 <div class="mg-container mg-container--padded mg-container--spacer">
   <nav aria-label="breadcrumbs" class="mg-breadcrumb">
     <ul>
@@ -226,8 +228,8 @@ ${CLOSING_SCRIPTS_HTML}
 
       <div class="mg-form-field">
         <label class="mg-form-label mg-form-label--required" for="email">Email address</label>
-        <input class="mg-form-input" type="email" id="email" name="email" required />
-        <p class="mg-form-help">We will only use this to respond to your inquiry.</p>
+        <input class="mg-form-input" type="email" id="email" name="email" aria-describedby="email-help" required />
+        <p class="mg-form-help" id="email-help">We will only use this to respond to your inquiry.</p>
       </div>
 
       <div class="mg-form-field">
@@ -260,8 +262,8 @@ ${CLOSING_SCRIPTS_HTML}
 
       <div class="mg-form-field">
         <label class="mg-form-label mg-form-label--required" for="message">Message</label>
-        <textarea class="mg-form-textarea" id="message" name="message" rows="6" required></textarea>
-        <p class="mg-form-help">Max 2000 characters.</p>
+        <textarea class="mg-form-textarea" id="message" name="message" rows="6" aria-describedby="message-help" required></textarea>
+        <p class="mg-form-help" id="message-help">Max 2000 characters.</p>
       </div>
 
       <div class="mg-form-check">
