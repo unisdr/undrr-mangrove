@@ -2,7 +2,7 @@
 
 This directory contains the scripts and curated data that produce AI-friendly component metadata deployed alongside Storybook. It runs automatically as part of `yarn build`.
 
-### Pipeline overview
+## Pipeline overview
 
 ```
 yarn build
@@ -28,9 +28,9 @@ yarn build
                                       docs-build-temp/ai-components/utilities.json
 ```
 
-CI (`storybook.yml`) then runs `generate-ai-manifest.js --validate` as a check and deploys `docs-build-temp/` to GitHub Pages.
+CI (`storybook.yml`) runs `yarn build` (which generates the manifest as step 5), then runs `generate-ai-manifest.js --validate` as a separate check to catch stale curated data keys. The script executes twice: once to produce output, once to validate it.
 
-### Data sources
+## Data sources
 
 Each component in the output gets its data merged from up to three sources:
 
@@ -41,6 +41,8 @@ Each component in the output gets its data merged from up to three sources:
 | **Curated data** (`scripts/ai-manifest/data/`) | Descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags, `doNotModify` warnings, vanilla HTML examples, syndication embed docs | Manual — update when component markup or CSS classes change |
 
 Auto-rendered HTML takes priority over curated HTML when both exist for the same component. Components with auto-rendered HTML get `renderedHtmlSource: "auto"` in their output JSON.
+
+A component can have both `requiresReact: true` and auto-rendered HTML. The `requiresReact` flag tells consumers the component needs React at runtime; the auto-rendered HTML shows what the server-rendered output looks like for reference or initial page load.
 
 ---
 

@@ -29,18 +29,20 @@ export default {
     <li class="mg-tabs__item">
       <a class="mg-tabs__link" href="#mg-tabs__section-overview" data-mg-js-tabs-default="true">Overview</a>
     </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-overview">
+        <p>Overview content goes here.</p>
+      </section>
+    </li>
     <li class="mg-tabs__item">
       <a class="mg-tabs__link" href="#mg-tabs__section-details">Details</a>
     </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-details">
+        <p>Detailed information goes here.</p>
+      </section>
+    </li>
   </ul>
-  <li class="mg-tabs-content" data-mg-js-tabs-content>
-    <section class="mg-tabs__section" id="mg-tabs__section-overview">
-      <p>Overview content goes here.</p>
-    </section>
-    <section class="mg-tabs__section" id="mg-tabs__section-details">
-      <p>Detailed information goes here.</p>
-    </section>
-  </li>
 </article>`,
       },
     ],

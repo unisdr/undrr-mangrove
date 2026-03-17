@@ -10,14 +10,13 @@
 export default {
   'components-table': {
     vanillaHtml: true,
-    description: 'Styled HTML table with size (small/large), variant (striped/bordered), and responsive (stacked/scroll) options.',
+    description: 'Styled HTML table with size (small), variant (striped/border), and responsive (stacked/scroll) options.',
     cssClasses: [
       'mg-table',
       'mg-table--small',
-      'mg-table--medium',
-      'mg-table--large',
       'mg-table--striped',
-      'mg-table--bordered',
+      'mg-table--border',
+      'mg-table--stacked',
       'mg-table--scroll',
     ],
     examples: [

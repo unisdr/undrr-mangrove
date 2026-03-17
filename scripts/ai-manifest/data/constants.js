@@ -122,7 +122,7 @@ export const PAGE_HEADER_HTML = `<!-- Page header — DO NOT MODIFY this structu
               <img class="mg-page-header__logo-img" src="${LOGOS.horizontal}" alt="UNDRR" width="324" height="47" />
             </a>
           </section>
-          <a alt="Log in or register" title="Log in or register" href="/user">
+          <a title="Log in or register" href="/user">
             <i class="mg-icon mg-icon-user"></i>
             <span class="mg-page-header__label">My account</span>
           </a>

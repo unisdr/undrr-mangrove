@@ -134,6 +134,7 @@ export default {
 
   'components-cards-icon-card': {
     vanillaHtml: true,
+    description: 'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full.',
     cssClasses: [
       'mg-card',
       'mg-card__icon',

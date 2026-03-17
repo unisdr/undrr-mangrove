@@ -15,13 +15,7 @@ Each agent includes:
 
 ## How to use agents
 
-In Claude Code, invoke an agent by name:
-
-```
-/agents accessibility-auditor
-```
-
-Or reference the agent when asking Claude Code to perform a task:
+In Claude Code, reference the agent when asking Claude Code to perform a task:
 
 > "Using the accessibility-auditor agent, audit the MegaMenu component across all 4 themes"
 
