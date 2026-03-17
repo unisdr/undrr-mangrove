@@ -30,23 +30,21 @@ When submitting a PR that modifies a component, add a new changelog entry to tha
 
 ## AI manifest for component discovery
 
-Mangrove publishes an AI-friendly manifest alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers and a CSS utility class inventory.
+Mangrove publishes an AI-friendly manifest alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers and a CSS utility class inventory. See [`scripts/README.md`](scripts/README.md) for the full pipeline diagram and detailed documentation.
 
-Most of the manifest auto-generates from Storybook (props, types, story code), but two parts are manually curated:
+Most of the manifest auto-generates from Storybook and component rendering. Two things need manual maintenance:
 
-- **`scripts/data/html-examples.js`** — rendered HTML snippets, CSS class lists, and `vanillaHtml`/`requiresReact` flags for each component. Update this when you change a component's HTML structure, add a new component, or rename BEM classes.
-- **`scripts/data/css-utilities.js`** — inventory of CSS utility classes. Update this when you add, rename, or remove utility classes.
+- **`scripts/data/html-examples/`** — per-component metadata (descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags) and curated HTML examples for components that can't be auto-rendered. Split into category files (cards.js, forms.js, layout.js, etc.). Update when you change a component's HTML structure, add a new component, or rename BEM classes.
+- **`scripts/data/css-utilities.js`** — inventory of CSS utility classes. Update when you add, rename, or remove utility classes.
 
-The manifest script validates that curated keys match the Storybook manifest and warns about mismatches. Run `node scripts/generate-ai-manifest.js` after a Storybook build to check.
-
-See [`scripts/README.md`](scripts/README.md) for details on the data files and maintenance expectations.
+The build validates that curated keys match the Storybook manifest and warns about mismatches.
 
 ## Submitting changes
 
 1. Create a feature branch from `main`.
 2. Write clear commits using Conventional Commits.
 3. Add or update Storybook docs if behavior or usage changes.
-4. If you changed component markup or CSS classes, update `scripts/data/html-examples.js`.
+4. If you changed component markup or CSS classes, update the relevant file in `scripts/data/html-examples/`.
 5. Run tests and linters before you open a pull request.
 6. Reference the relevant issue in your PR description.
 

@@ -12,6 +12,9 @@
  * browser APIs (DOMPurify, document, window) fall back to curated HTML
  * in scripts/data/html-examples/.
  *
+ * Output is consumed by generate-ai-manifest.js (the next step in the
+ * build pipeline). Both scripts are chained in `yarn build`.
+ *
  * Usage:
  *   node scripts/render-component-html.js [--build-dir=docs-build-temp]
  *

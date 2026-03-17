@@ -11,6 +11,10 @@
  *   ai-components/{id}.json        — full details per component
  *   ai-components/utilities.json   — CSS utility class inventory
  *
+ * Depends on render-component-html.js having run first (produces
+ * rendered-html.json with auto-rendered component HTML). Both scripts
+ * are chained in the `yarn build` command.
+ *
  * Usage:
  *   node scripts/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
  *
@@ -153,8 +157,16 @@ function docsUrl(componentId) {
 }
 
 // ---------------------------------------------------------------------------
-// Validate html-examples keys against manifest
+// Validate curated data
 // ---------------------------------------------------------------------------
+
+// Check for duplicate keys across html-examples category files
+const allKeys = Object.keys(htmlExamples);
+const duplicateKeys = allKeys.filter((k, i) => allKeys.indexOf(k) !== i);
+if (duplicateKeys.length > 0) {
+  console.warn('Warning: duplicate keys in html-examples (last definition wins):');
+  for (const k of duplicateKeys) console.warn(`  - ${k}`);
+}
 
 const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
 const unmatchedKeys = Object.keys(htmlExamples).filter(k => !manifestIds.has(k));

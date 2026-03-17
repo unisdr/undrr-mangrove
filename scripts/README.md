@@ -2,26 +2,225 @@
 
 This directory contains utility scripts for the Mangrove project.
 
-## update-cdn-version.js
+## AI manifest pipeline
 
-Automatically updates all CDN links in documentation files to use the current version from `package.json` instead of "latest" or "testing" endpoints.
+The AI manifest system produces static JSON files alongside the Storybook site so AI coding agents can discover and use Mangrove components without parsing the SPA. It runs automatically as part of `yarn build`.
+
+### Pipeline overview
+
+```
+yarn build
+│
+├─ 1. scss compile
+├─ 2. storybook build ──────────────► docs-build-temp/manifests/components.json
+│                                     (props, types, story snippets from react-docgen)
+├─ 3. webpack build ─────────────────► dist/components/*.js
+│                                     (compiled React component bundles)
+├─ 4. render-component-html.js
+│     reads dist/components/*.js
+│     renders with sample props via renderToStaticMarkup
+│     writes ──────────────────────► docs-build-temp/ai-components/rendered-html.json
+│
+└─ 5. generate-ai-manifest.js
+      reads manifests/components.json  (from step 2)
+      reads rendered-html.json         (from step 4)
+      reads scripts/data/              (curated metadata + HTML)
+      writes ──────────────────────► docs-build-temp/llms.txt
+                                      docs-build-temp/llms.json
+                                      docs-build-temp/ai-components/index.json
+                                      docs-build-temp/ai-components/{id}.json (one per component)
+                                      docs-build-temp/ai-components/utilities.json
+```
+
+CI (`storybook.yml`) then runs `generate-ai-manifest.js --validate` as a check and deploys `docs-build-temp/` to GitHub Pages.
+
+### Data sources
+
+Each component in the output gets its data merged from up to three sources:
+
+| Source | What it provides | Maintenance |
+|--------|-----------------|-------------|
+| **Storybook manifest** (`components.json`) | Props, types, defaults, JSDoc descriptions, story code snippets, import statements | Automatic — generated from PropTypes and JSDoc in your component files |
+| **Auto-rendered HTML** (`rendered-html.json`) | Formatted HTML output from `renderToStaticMarkup` | Automatic — generated from `RENDER_SPECS` in `render-component-html.js` |
+| **Curated data** (`scripts/data/`) | Descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags, `doNotModify` warnings, vanilla HTML examples, syndication embed docs | Manual — update when component markup or CSS classes change |
+
+Auto-rendered HTML takes priority over curated HTML when both exist for the same component. Components with auto-rendered HTML get `renderedHtmlSource: "auto"` in their output JSON.
+
+---
+
+## render-component-html.js
+
+Renders built React components from `dist/components/` with sample props using `renderToStaticMarkup`. Produces formatted HTML that is always in sync with the actual component output.
 
 ### Usage
 
 ```bash
-# Run the script directly
-node scripts/update-cdn-version.js
+# Run directly (needs a prior webpack build so dist/ exists)
+node scripts/render-component-html.js
 
-# Or use the npm script
-yarn update-cdn-version
+# Custom build directory
+node scripts/render-component-html.js --build-dir=docs-build-temp
 ```
 
-### What it does
+### How it works
 
-1. Reads the current version from `package.json`
-2. Updates all documentation files to replace:
-   - `https://assets.undrr.org/testing/static/mangrove/latest/` → `https://assets.undrr.org/static/mangrove/{version}/`
-   - `https://assets.undrr.org/static/mangrove/latest/` → `https://assets.undrr.org/static/mangrove/{version}/`
+The script has a `RENDER_SPECS` array where each entry defines:
+- `file` — the component filename in `dist/components/` (without `.js`)
+- `componentId` — the Storybook component ID (must match the manifest)
+- `variants` — array of `{ name, props }` objects, each rendered separately
+
+```js
+{
+  file: 'QuoteHighlight',
+  componentId: 'components-quotehighlight',
+  variants: [
+    {
+      name: 'Quote with attribution',
+      props: { quote: '...', attribution: '...', backgroundColor: 'light', variant: 'line', alignment: 'full' },
+    },
+  ],
+}
+```
+
+### When to use auto-rendering vs. curated HTML
+
+Use auto-rendering when:
+- The component has a webpack entry in `dist/components/`
+- It renders cleanly in Node.js (no browser APIs like `document`, `window`, DOMPurify)
+- The rendered HTML is representative of what a vanilla HTML consumer would write
+
+Use curated HTML when:
+- The component is CSS-only (Container, Grid, HighlightBox) — no JS to render
+- The component needs browser APIs (IconCard uses DOMPurify, ShareButtons uses `document`)
+- The example is a composition of multiple components (page templates)
+
+### Adding a new auto-rendered component
+
+1. Add an entry to `RENDER_SPECS` in `render-component-html.js`
+2. Optionally add metadata (description, cssClasses, flags) in `scripts/data/html-examples/{category}.js`
+3. Run `node scripts/render-component-html.js` to test
+4. The manifest script will prefer the auto-rendered HTML over any curated `examples`
+
+### Currently auto-rendered
+
+QuoteHighlight, StatsCard, Pager, MegaMenu, SyndicationSearchWidget
+
+---
+
+## generate-ai-manifest.js
+
+Merges Storybook metadata, auto-rendered HTML, and curated data into the final output files. Depends on `render-component-html.js` having run first (both are chained in `yarn build`).
+
+### Usage
+
+```bash
+# Run directly (needs storybook build + webpack + render-component-html first)
+node scripts/generate-ai-manifest.js
+
+# Or via npm script
+yarn generate-ai-manifest
+
+# Validate curated data keys match the Storybook manifest (used in CI)
+node scripts/generate-ai-manifest.js --validate
+
+# Custom build directory
+node scripts/generate-ai-manifest.js --build-dir=docs-build-temp
+```
+
+### Output
+
+| File | Size | What's in it |
+|------|------|--------------|
+| `llms.txt` | ~2 KB | Plain-text project summary following the [llmstxt.org](https://llmstxt.org/) convention. |
+| `llms.json` | ~2 KB | Structured JSON version with all URLs, required assets, and conventions. |
+| `ai-components/index.json` | ~36 KB | Every component with name, description, `vanillaHtml`/`requiresReact` flags, quickstart with CDN URLs, breakpoints, and required page assets. |
+| `ai-components/{id}.json` | 1-10 KB each | Props, rendered HTML, CSS classes, syndication docs, `doNotModify` warnings. |
+| `ai-components/utilities.json` | ~25 KB | All ~161 CSS utility classes grouped by 12 categories. |
+
+### The `--validate` flag
+
+Exits non-zero if any key in the curated data does not match a component ID in the Storybook manifest. Used in CI to catch stale entries after component renames or removals.
+
+---
+
+## Curated data files (`scripts/data/`)
+
+### `constants.js`
+
+Single source of truth for asset URLs, required scripts, logo paths, and reusable HTML snippets (PageHeader, Footer, closing scripts). All version-dependent URLs use `{{version}}` tokens replaced at build time.
+
+Change a URL here and it propagates to all output files. Do not hardcode asset URLs anywhere else.
+
+### `html-examples/{category}.js`
+
+Per-component metadata and curated HTML, split by category (cards, forms, layout, etc.). Each file exports a default object keyed by Storybook component ID.
+
+**Entry schema:**
+
+```js
+// Minimal entry (auto-rendered component, metadata only)
+'components-quotehighlight': {
+  vanillaHtml: true,
+  description: 'Testimonial quote with attribution and portrait.',
+  cssClasses: ['mg-quote-highlight', 'mg-quote-highlight--light', ...],
+  // renderedHtml auto-generated from dist/components/QuoteHighlight.js
+},
+
+// Full curated entry (CSS-only or browser-dependent component)
+'components-cards-vertical-card': {
+  vanillaHtml: true,
+  description: 'Card with stacked image, labels, title, summary, and CTA button.',
+  cssClasses: ['mg-card', 'mg-card__vc', ...],
+  examples: [
+    { name: 'Default vertical card', html: '<article class="mg-card mg-card__vc">...</article>' },
+  ],
+},
+
+// React-only component (no HTML examples)
+'components-charts-barchart': {
+  requiresReact: true,
+  reactNote: 'BarChart uses D3. Import via npm.',
+},
+```
+
+**Available fields:**
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `vanillaHtml` | boolean | Works as static HTML/CSS without React |
+| `requiresReact` | boolean | Needs React runtime to function |
+| `reactNote` | string | Why React is required (for React-only components) |
+| `description` | string | Fallback when the Storybook manifest has no description |
+| `doNotModify` | string | Warning that markup is a branding requirement |
+| `examples` | array | `[{ name, html }]` curated HTML snippets |
+| `cssClasses` | string[] | BEM classes the component uses |
+| `vanillaHtmlEmbed` | object | Embed instructions (Footer syndication) |
+
+`vanillaHtml` and `requiresReact` are mutually exclusive.
+
+**Adding a new component:** Find the right category file (or create one and import it in `index.js`), add the entry keyed by the component's Storybook ID (e.g., `components-cards-vertical-card`). The ID comes from the story title path — check `docs-build-temp/ai-components/` for existing IDs.
+
+### `css-utilities.js`
+
+Structured inventory of CSS utility classes. Update when you add, rename, or remove utility classes in SCSS.
+
+### `html-examples/index.js`
+
+Barrel file that imports all category files and merges them. If you create a new category file, import it here. Keys must be unique across all files — duplicates are silently overwritten by the last import.
+
+---
+
+## update-cdn-version.js
+
+Updates all CDN links in documentation files to use the current version from `package.json`.
+
+### Usage
+
+```bash
+node scripts/update-cdn-version.js
+yarn update-cdn-version
+yarn update-cdn-version --dry-run  # preview changes
+```
 
 ### Files updated
 
@@ -34,56 +233,4 @@ yarn update-cdn-version
 - `stories/Atom/Layout/Grid/Grid.mdx`
 - `docs/RELEASES.md`
 
-### When to use
-
-Run this script after each release to ensure all documentation points to the stable, versioned CDN assets instead of bleeding-edge ones.
-
-## generate-ai-manifest.js
-
-Turns Storybook's internal components manifest into static JSON files that AI agents can fetch from the deployed site. Runs automatically during `yarn build`, after `storybook build` and before `webpack`.
-
-The problem it solves: Storybook is a single-page app, so agents that fetch the deployed URL get an empty HTML shell. This script produces static files at predictable URLs instead.
-
-### Usage
-
-```bash
-# Run directly (needs a prior storybook build)
-node scripts/generate-ai-manifest.js
-
-# Or via npm script
-yarn generate-ai-manifest
-
-# Custom build directory
-node scripts/generate-ai-manifest.js --build-dir=docs-build-temp
-```
-
-### Output
-
-The script reads `docs-build-temp/manifests/components.json` (produced by Storybook's `experimentalComponentsManifest` feature, about 700 KB) and merges in curated data from `scripts/data/`, then writes:
-
-| File | Size | What's in it |
-|------|------|--------------|
-| `llms.txt` | ~2 KB | Plain-text project summary following the [llmstxt.org](https://llmstxt.org/) convention. Points agents to the index and utilities. Includes vanilla HTML and React quick-start guides. |
-| `ai-components/index.json` | ~30 KB | Every component with name, description, import statement, `vanillaHtml`/`requiresReact` flags, and a `detailsUrl` to the full file. |
-| `ai-components/{id}.json` | 1-10 KB each | Props with types, defaults, and descriptions. React code examples from Storybook stories. Rendered HTML examples for vanilla HTML consumers. CSS class inventories. Syndication embed instructions where applicable. |
-| `ai-components/utilities.json` | ~25 KB | All ~161 CSS utility classes grouped by category (layout, grid, colors, font sizes, animations, etc.) with descriptions and usage examples. |
-
-These files go into `docs-build-temp/` and deploy to GitHub Pages alongside the Storybook site.
-
-### Data sources
-
-The script combines two sources:
-
-1. **Storybook manifest** (`docs-build-temp/manifests/components.json`): Props from `PropTypes` and JSDoc `@param` tags, descriptions from JSDoc comments, code examples from story render functions, import statements from `src/index.js` exports.
-
-2. **Curated data files** (`scripts/data/`):
-   - `html-examples.js` — Rendered HTML snippets for each component, `vanillaHtml`/`requiresReact` flags, CSS class lists, and syndication embed instructions. Keyed by Storybook component ID.
-   - `css-utilities.js` — Structured inventory of CSS utility classes grouped by category.
-
-The script validates that every key in `html-examples.js` matches a component ID in the Storybook manifest and logs warnings for mismatches.
-
-### Maintaining the curated data
-
-When you change a component's HTML structure, update the corresponding entry in `scripts/data/html-examples.js`. When you add, rename, or remove utility classes, update `scripts/data/css-utilities.js`. These files are the only manual maintenance the manifest requires.
-
-Many components currently have empty descriptions. Adding JSDoc comments to those components is the easiest way to improve what the manifest gives to agents.
+Run this after each release to ensure documentation points to stable, versioned CDN assets.
