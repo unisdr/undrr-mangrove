@@ -52,6 +52,12 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
+// Auto-rendered HTML from render-component-html.js (if available)
+const renderedHtmlPath = path.join(outputDir, 'rendered-html.json');
+const renderedHtml = fs.existsSync(renderedHtmlPath)
+  ? JSON.parse(fs.readFileSync(renderedHtmlPath, 'utf8'))
+  : {};
+
 // Replace {{version}} tokens with actual version from package.json
 const replaceVersion = obj => JSON.parse(
   JSON.stringify(obj).replaceAll('{{version}}', pkg.version),
@@ -242,8 +248,11 @@ for (const [, component] of Object.entries(manifest.components)) {
     });
   }
 
-  // Rendered HTML examples (vanilla HTML)
-  if (htmlData?.examples) {
+  // Rendered HTML examples: prefer auto-rendered from dist/, fall back to curated
+  if (renderedHtml[id]) {
+    detail.renderedHtml = renderedHtml[id];
+    detail.renderedHtmlSource = 'auto';
+  } else if (htmlData?.examples) {
     detail.renderedHtml = htmlData.examples;
   }
 
@@ -471,3 +480,4 @@ console.log(`  ${outputDir}/index.json (${indexEntries.length} components, ${ind
 console.log(`  ${outputDir}/*.json (${componentFiles.length} component files, ${(totalDetailKB / 1024).toFixed(1)} KB total)`);
 console.log(`  ${outputDir}/utilities.json (${utilitiesSizeKB} KB)`);
 console.log(`  ${vanillaCount} vanilla HTML components, ${reactCount} React-only components`);
+console.log(`  ${Object.keys(renderedHtml).length} auto-rendered, ${componentFiles.filter(c => c.content.renderedHtml && !c.content.renderedHtmlSource).length} curated HTML`);

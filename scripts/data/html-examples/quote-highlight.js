@@ -1,6 +1,8 @@
+// HTML examples auto-rendered by scripts/render-component-html.js — only metadata here.
 export default {
   'components-quotehighlight': {
     vanillaHtml: true,
+    description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.',
     cssClasses: [
       'mg-quote-highlight',
       'mg-quote-highlight--light',
@@ -25,48 +27,6 @@ export default {
       'mg-quote-highlight__image-container',
       'mg-quote-highlight__image',
     ],
-    examples: [
-      {
-        name: 'Quote with line separator and attribution',
-        html: `<section class="mg-quote-highlight mg-quote-highlight--light mg-quote-highlight--line mg-quote-highlight--full">
-  <div class="mg-quote-highlight__content">
-    <blockquote class="mg-quote-highlight__quote">
-      <p>Prevention is not a cost. It is an investment in our common future.</p>
-    </blockquote>
-    <div class="mg-quote-highlight__separator"></div>
-    <div class="mg-quote-highlight__attribution">
-      <div class="mg-quote-highlight__attribution-wrapper">
-        <div class="mg-quote-highlight__attribution-text">
-          <p class="mg-quote-highlight__attribution-name">Mami Mizutori</p>
-          <p class="mg-quote-highlight__attribution-title">Special Representative of the Secretary-General for Disaster Risk Reduction</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`,
-      },
-      {
-        name: 'Quote with portrait image',
-        html: `<section class="mg-quote-highlight mg-quote-highlight--light mg-quote-highlight--line mg-quote-highlight--full mg-quote-highlight--has-image">
-  <div class="mg-quote-highlight__content">
-    <blockquote class="mg-quote-highlight__quote">
-      <p>Building resilience requires a whole-of-society approach.</p>
-    </blockquote>
-    <div class="mg-quote-highlight__separator"></div>
-    <div class="mg-quote-highlight__attribution">
-      <div class="mg-quote-highlight__attribution-wrapper">
-        <div class="mg-quote-highlight__portrait-container">
-          <img src="https://picsum.photos/100/100" alt="Speaker portrait" class="mg-quote-highlight__portrait" />
-        </div>
-        <div class="mg-quote-highlight__attribution-text">
-          <p class="mg-quote-highlight__attribution-name">Speaker name</p>
-          <p class="mg-quote-highlight__attribution-title">Role, Organization</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`,
-      },
-    ],
+    // renderedHtml auto-generated from dist/components/QuoteHighlight.js
   },
 };

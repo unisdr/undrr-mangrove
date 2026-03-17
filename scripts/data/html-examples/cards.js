@@ -298,6 +298,7 @@ export default {
     ],
   },
 
+  // renderedHtml auto-generated from dist/components/StatsCard.js
   'components-cards-stats-card': {
     vanillaHtml: true,
     description: 'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.',
@@ -313,49 +314,6 @@ export default {
       'mg-stats-card-item__value',
       'mg-stats-card-item__bottom-label',
       'mg-stats-card-item__summary',
-    ],
-    examples: [
-      {
-        name: 'Stats card with three items',
-        html: `<section class="mg-stats-card" aria-label="Disaster statistics">
-  <h2>Key figures</h2>
-  <div class="mg-grid mg-grid__col-3">
-    <article class="mg-card mg-stats-card-item">
-      <data class="mg-stats-card-item__value" value="1.23">1.23 million</data>
-      <strong class="mg-stats-card-item__bottom-label">People affected</strong>
-    </article>
-    <article class="mg-card mg-stats-card-item">
-      <data class="mg-stats-card-item__value" value="195">195</data>
-      <strong class="mg-stats-card-item__bottom-label">Countries reporting</strong>
-    </article>
-    <article class="mg-card mg-stats-card-item mg-stats-card-item--linked">
-      <a href="/data/losses" class="mg-stats-card-item__value">$2.8 trillion</a>
-      <strong class="mg-stats-card-item__bottom-label">Economic losses (2000-2024)</strong>
-    </article>
-  </div>
-</section>`,
-      },
-      {
-        name: 'Compact stats card with icons',
-        html: `<section class="mg-stats-card mg-stats-card--compact" aria-label="Quick stats">
-  <div class="mg-grid mg-grid__col-2">
-    <article class="mg-card mg-stats-card-item">
-      <span class="mg-stats-card-item__icon" aria-hidden="true">
-        <span class="mg-icon mg-icon-globe"></span>
-      </span>
-      <span class="mg-stats-card-item__label">Regions</span>
-      <data class="mg-stats-card-item__value" value="5">5</data>
-    </article>
-    <article class="mg-card mg-stats-card-item">
-      <span class="mg-stats-card-item__icon" aria-hidden="true">
-        <span class="mg-icon mg-icon-cubes"></span>
-      </span>
-      <span class="mg-stats-card-item__label">Partners</span>
-      <data class="mg-stats-card-item__value" value="142">142</data>
-    </article>
-  </div>
-</section>`,
-      },
     ],
   },
 };
