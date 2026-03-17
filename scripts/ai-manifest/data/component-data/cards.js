@@ -1,10 +1,10 @@
 /**
  * @file cards.js
- * @source manual (metadata + curated HTML)
+ * @source manual (metadata + curated HTML for DOMPurify cards) + auto-rendered (HTML for book-card)
  *
- * All content is manually maintained. Update the HTML examples
- * when the component markup changes. See scripts/ai-manifest/README.md for
- * the entry schema and available fields.
+ * Vertical card, horizontal card, and horizontal book card use DOMPurify which
+ * fails in Node — their examples are manually curated. Book card and other
+ * cards use auto-rendered HTML from dist/components/*.js.
  */
 
 export default {
@@ -178,21 +178,7 @@ export default {
       'mg-card__content',
       'mg-card__title',
     ],
-    examples: [
-      {
-        name: 'Book card',
-        html: `<article class="mg-card mg-card__vc mg-card__book">
-  <div class="mg-card__visual">
-    <img src="https://picsum.photos/300/400" alt="Global Assessment Report cover" class="mg-card__image" />
-  </div>
-  <div class="mg-card__content">
-    <header class="mg-card__title">
-      <a href="/publications/gar-2024">Global Assessment Report on Disaster Risk Reduction 2024</a>
-    </header>
-  </div>
-</article>`,
-      },
-    ],
+    // renderedHtml auto-generated from dist/components/BookCard.js
   },
 
   'components-cards-horizontal-book-card': {

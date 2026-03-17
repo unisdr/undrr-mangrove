@@ -293,6 +293,444 @@ const RENDER_SPECS = [
       },
     ],
   },
+  // --- Buttons ---
+  {
+    file: 'Chips',
+    componentId: 'components-buttons-chips',
+    variants: [
+      {
+        name: 'Default chip',
+        props: { label: 'Flood' },
+      },
+      {
+        name: 'Dismissible chip',
+        props: { label: 'Earthquake', Type: 'With X' },
+      },
+    ],
+  },
+  {
+    file: 'CtaButton',
+    componentId: 'components-buttons-buttons',
+    variants: [
+      {
+        name: 'Primary button with arrow',
+        props: { label: 'Take action', Type: 'Primary', For_Primary: 'Arrow' },
+      },
+      {
+        name: 'Secondary button',
+        props: { label: 'Learn more', Type: 'Secondary' },
+      },
+    ],
+  },
+  {
+    file: 'CtaLink',
+    componentId: 'components-buttons-cta-link',
+    variants: [
+      {
+        name: 'CTA link with arrow',
+        props: { label: 'Explore our resources' },
+      },
+    ],
+  },
+  // --- Forms ---
+  {
+    file: 'TextInput',
+    componentId: 'components-forms-text-input',
+    variants: [
+      {
+        name: 'Text input with label and help text',
+        props: {
+          label: 'Organization name',
+          type: 'text',
+          required: true,
+          placeholder: 'Enter organization name',
+          helpText: 'Enter the full legal name of your organization.',
+        },
+      },
+      {
+        name: 'Text input with error',
+        props: {
+          label: 'Email address',
+          type: 'email',
+          error: true,
+          errorText: 'Enter a valid email address',
+          defaultValue: 'invalid-email',
+        },
+      },
+    ],
+  },
+  {
+    file: 'Select',
+    componentId: 'components-forms-select',
+    variants: [
+      {
+        name: 'Select with options',
+        props: {
+          label: 'Country',
+          options: [
+            { value: 'JP', label: 'Japan' },
+            { value: 'NP', label: 'Nepal' },
+            { value: 'PH', label: 'Philippines' },
+          ],
+          placeholder: 'Select a country',
+        },
+      },
+    ],
+  },
+  {
+    file: 'Checkbox',
+    componentId: 'components-forms-checkbox',
+    variants: [
+      {
+        name: 'Checkbox with label',
+        props: { label: 'I agree to the terms and conditions', name: 'terms', value: 'agree' },
+      },
+    ],
+  },
+  {
+    file: 'Radio',
+    componentId: 'components-forms-radio',
+    variants: [
+      {
+        name: 'Radio button',
+        props: { label: 'Government', name: 'role', value: 'government' },
+      },
+    ],
+  },
+  {
+    file: 'Textarea',
+    componentId: 'components-forms-textarea',
+    variants: [
+      {
+        name: 'Textarea with label and help text',
+        props: {
+          label: 'Message',
+          name: 'message',
+          rows: 5,
+          placeholder: 'Your message here',
+          helpText: 'Max 500 characters.',
+        },
+      },
+    ],
+  },
+  {
+    file: 'FormGroup',
+    componentId: 'components-forms-formgroup',
+    variants: [
+      {
+        name: 'Form group with legend',
+        props: {
+          legend: 'What is your role?',
+          children: React.createElement('div', null,
+            React.createElement('div', { className: 'mg-radio', key: '1' },
+              React.createElement('input', { type: 'radio', id: 'r1', name: 'role', value: 'researcher' }),
+              React.createElement('label', { htmlFor: 'r1' }, 'Researcher'),
+            ),
+            React.createElement('div', { className: 'mg-radio', key: '2' },
+              React.createElement('input', { type: 'radio', id: 'r2', name: 'role', value: 'practitioner' }),
+              React.createElement('label', { htmlFor: 'r2' }, 'Practitioner'),
+            ),
+          ),
+        },
+      },
+    ],
+  },
+  {
+    file: 'FormErrorSummary',
+    componentId: 'components-forms-formerrorsummary',
+    variants: [
+      {
+        name: 'Error summary with validation messages',
+        props: {
+          title: 'There is a problem',
+          errors: [
+            { id: 'email', message: 'Enter a valid email address' },
+            { id: 'org-name', message: 'Organization name is required' },
+          ],
+        },
+      },
+    ],
+  },
+  // --- Cards ---
+  {
+    file: 'VerticalCard',
+    componentId: 'components-cards-vertical-card',
+    variants: [
+      {
+        name: 'Vertical card with image and labels',
+        props: {
+          data: [{
+            title: 'Building resilience through early warning systems',
+            link: '/news/building-resilience',
+            imgback: 'https://picsum.photos/600/400',
+            imgalt: 'Community workshop on disaster preparedness',
+            label1: 'Early warning',
+            summaryText: 'New partnerships strengthen disaster preparedness across the Asia-Pacific region.',
+          }],
+          variant: 'primary',
+        },
+      },
+    ],
+  },
+  {
+    file: 'HorizontalCard',
+    componentId: 'components-cards-horizontal-card',
+    variants: [
+      {
+        name: 'Horizontal card with image',
+        props: {
+          data: [{
+            title: 'Climate adaptation strategies for vulnerable communities',
+            link: '/news/climate-adaptation',
+            imgback: 'https://picsum.photos/400/300',
+            imgalt: 'Climate adaptation meeting',
+            label1: 'Climate',
+            label2: 'Adaptation',
+            summaryText: 'Experts gather to discuss integrated approaches to climate resilience.',
+          }],
+          variant: 'primary',
+        },
+      },
+    ],
+  },
+  {
+    file: 'BookCard',
+    componentId: 'components-cards-book-card',
+    variants: [
+      {
+        name: 'Book card with cover',
+        props: {
+          data: [{
+            title: 'Global Assessment Report on Disaster Risk Reduction 2024',
+            link: '/publications/gar-2024',
+            imgback: 'https://picsum.photos/300/400',
+            imgalt: 'GAR 2024 cover',
+          }],
+          variant: 'primary',
+        },
+      },
+    ],
+  },
+  {
+    file: 'HorizontalBookCard',
+    componentId: 'components-cards-horizontal-book-card',
+    variants: [
+      {
+        name: 'Horizontal book card',
+        props: {
+          data: [{
+            title: 'Sendai Framework Monitor Report',
+            link: '/publications/sendai-monitor',
+            imgback: 'https://picsum.photos/300/400',
+            imgalt: 'Report cover',
+            label1: 'DRR',
+            summaryText: 'Progress on implementation of the Sendai Framework.',
+          }],
+          variant: 'primary',
+        },
+      },
+    ],
+  },
+  // --- Navigation ---
+  {
+    file: 'Breadcrumbs',
+    componentId: 'components-navigation-breadcrumbs',
+    variants: [
+      {
+        name: 'Breadcrumb navigation',
+        props: {
+          data: [
+            { text: 'Home' },
+            { text: 'Publications' },
+            { text: 'Global Assessment Report 2024' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    file: 'Pagination',
+    componentId: 'components-navigation-pagination',
+    variants: [
+      {
+        name: 'Pagination controls',
+        props: { text: 'Page', text2: 'of' },
+      },
+    ],
+  },
+  // --- Content ---
+  {
+    file: 'Tab',
+    componentId: 'components-tabs',
+    variants: [
+      {
+        name: 'Horizontal tabs',
+        props: {
+          tabdata: [
+            { text: 'Overview', text_id: 'overview', is_default: 'true', data: '<p>Overview of disaster risk reduction efforts.</p>' },
+            { text: 'Details', text_id: 'details', data: '<p>Detailed implementation guidance.</p>' },
+            { text: 'Resources', text_id: 'resources', data: '<p>Additional resources and downloads.</p>' },
+          ],
+          variant: 'horizontal',
+        },
+      },
+    ],
+  },
+  {
+    file: 'Hero',
+    componentId: 'components-hero-hero',
+    variants: [
+      {
+        name: 'Hero with background image',
+        props: {
+          data: [{
+            title: 'Reducing disaster risk for a resilient future',
+            imgback: 'https://picsum.photos/1600/600',
+            summaryText: 'The Sendai Framework guides global efforts to reduce disaster risk and build resilience.',
+            label: 'Featured',
+            primary_button: 'Learn more',
+          }],
+          variant: 'primary',
+        },
+      },
+    ],
+  },
+  {
+    file: 'PageHeader',
+    componentId: 'components-pageheader',
+    variants: [
+      {
+        name: 'Page header with logo and language selector',
+        props: {
+          variant: 'default',
+          logoUrl: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+          homeUrl: '/',
+          languages: [
+            { value: 'en', label: 'English', selected: true },
+            { value: 'ar', label: 'Arabic' },
+            { value: 'fr', label: 'French' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    file: 'Footer',
+    componentId: 'components-footer',
+    variants: [
+      {
+        name: 'Footer without syndication',
+        props: { enableSyndication: false },
+      },
+    ],
+  },
+  // --- Utilities ---
+  {
+    file: 'HighlightBox',
+    componentId: 'components-highlightbox',
+    variants: [
+      {
+        name: 'Default highlight box',
+        props: {
+          children: React.createElement('div', null,
+            React.createElement('h3', null, 'Key information'),
+            React.createElement('p', null, 'Highlighted content draws attention to important information.'),
+          ),
+        },
+      },
+      {
+        name: 'Primary highlight box',
+        props: {
+          variant: 'primary',
+          children: React.createElement('div', null,
+            React.createElement('h3', null, 'Important update'),
+            React.createElement('p', null, 'This uses the corporate blue background for emphasis.'),
+          ),
+        },
+      },
+      {
+        name: 'Centered secondary highlight box',
+        props: {
+          variant: 'secondary',
+          centered: true,
+          children: React.createElement('div', null,
+            React.createElement('h3', null, 'Sendai Framework'),
+            React.createElement('p', null, 'Centered at 80% width with the Sendai purple theme.'),
+          ),
+        },
+      },
+    ],
+  },
+  {
+    file: 'EmbedContainer',
+    componentId: 'utilities-embedcontainer',
+    variants: [
+      {
+        name: '16:9 embed container (default)',
+        props: {
+          children: React.createElement('iframe', {
+            src: 'https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q',
+            title: 'UNDRR video',
+            loading: 'lazy',
+            allowFullScreen: true,
+          }),
+        },
+      },
+      {
+        name: '4:3 embed container',
+        props: {
+          aspectRatio: '4x3',
+          children: React.createElement('iframe', {
+            src: 'https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q',
+            title: 'UNDRR video (4:3)',
+            loading: 'lazy',
+            allowFullScreen: true,
+          }),
+        },
+      },
+    ],
+  },
+  {
+    file: 'FullWidth',
+    componentId: 'components-fullwidth',
+    variants: [
+      {
+        name: 'Full-width breakout section',
+        props: {
+          children: React.createElement('div', { style: { padding: '2rem', background: '#f0f4f8', textAlign: 'center' } },
+            React.createElement('h3', null, 'Full-width content'),
+            React.createElement('p', null, 'This section breaks out of its parent container to span the full viewport width.'),
+          ),
+        },
+      },
+    ],
+  },
+  {
+    file: 'Loader',
+    componentId: 'components-loader',
+    variants: [
+      {
+        name: 'Loading spinner',
+        props: { label: 'Loading content' },
+      },
+    ],
+  },
+  {
+    file: 'ShowMore',
+    componentId: 'components-showmore',
+    variants: [
+      {
+        name: 'Collapsible content with toggle',
+        props: {
+          data: [{
+            button_text: 'Show more',
+            collapsable_wrapper_class: 'mg-show-more--collapsed',
+            collapsable_text: 'Additional content that is initially hidden and revealed on toggle.',
+          }],
+        },
+      },
+    ],
+  },
 ];
 
 // -----------------------------------------------------------------------

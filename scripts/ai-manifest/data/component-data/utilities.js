@@ -1,10 +1,10 @@
 /**
  * @file utilities.js
- * @source manual (metadata + curated HTML)
+ * @source manual (metadata + curated HTML for showmore/error-pages) + auto-rendered (HTML)
  *
- * All content is manually maintained. Update the HTML examples
- * when the component markup changes. See scripts/ai-manifest/README.md for
- * the entry schema and available fields.
+ * Embed container, full-width, and loader use auto-rendered HTML from
+ * dist/components/*.js. Show more and error pages are manually curated
+ * (show more uses document, error pages have no React component).
  */
 
 export default {
@@ -17,37 +17,14 @@ export default {
       'mg-embed-container--1x1',
       'mg-embed-container--21x9',
     ],
-    examples: [
-      {
-        name: '16:9 embed container',
-        html: `<div class="mg-embed-container">
-  <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Video title" allowfullscreen></iframe>
-</div>`,
-      },
-      {
-        name: '4:3 embed container',
-        html: `<div class="mg-embed-container mg-embed-container--4x3">
-  <iframe src="https://example.org/map-embed" title="Map"></iframe>
-</div>`,
-      },
-    ],
+    // renderedHtml auto-generated from dist/components/EmbedContainer.js
   },
 
   'components-fullwidth': {
     vanillaHtml: true,
     description: 'Makes content break out of its container to span the full viewport width. RTL-safe.',
     cssClasses: ['mg-container-full-width'],
-    examples: [
-      {
-        name: 'Full-width section',
-        html: `<div class="mg-container-full-width mg-u-background-color--blue-50">
-  <div class="mg-container mg-container--padded">
-    <h2>Full-bleed background section</h2>
-    <p>The background extends to the viewport edges while content stays centered in the container.</p>
-  </div>
-</div>`,
-      },
-    ],
+    // renderedHtml auto-generated from dist/components/FullWidth.js
   },
 
   'components-showmore': {
@@ -71,14 +48,7 @@ export default {
     vanillaHtml: true,
     description: 'Animated loading spinner. 40px on mobile, 96px on desktop.',
     cssClasses: ['loader'],
-    examples: [
-      {
-        name: 'Loading spinner',
-        html: `<div class="loader" role="status" aria-label="Loading">
-  <span class="mg-u-sr-only">Loading...</span>
-</div>`,
-      },
-    ],
+    // renderedHtml auto-generated from dist/components/Loader.js
   },
 
   'components-error-pages': {

@@ -83,6 +83,7 @@ export default [
     cache: { type: 'filesystem' },
     entry: {
       hydrate: './src/hydrate.js',
+      // Drupal-integrated components (hydration + npm)
       ShareButtons:
         './stories/Components/Buttons/ShareButtons/ShareButtons.hydrate.js',
       MegaMenu: './stories/Components/MegaMenu/MegaMenu.hydrate.js',
@@ -99,6 +100,34 @@ export default [
       Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.hydrate.js',
+      // Vanilla components (bundled for AI manifest auto-rendering)
+      Chips: './stories/Components/Buttons/Chips/Chips.jsx',
+      CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.jsx',
+      CtaLink: './stories/Components/Buttons/CtaLink/CtaLink.jsx',
+      TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
+      Select: './stories/Components/Forms/Select/Select.jsx',
+      Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
+      Radio: './stories/Components/Forms/Radio/Radio.jsx',
+      Textarea: './stories/Components/Forms/Textarea/Textarea.jsx',
+      FormGroup: './stories/Components/Forms/FormGroup/FormGroup.jsx',
+      FormErrorSummary:
+        './stories/Components/Forms/FormErrorSummary/FormErrorSummary.jsx',
+      VerticalCard: './stories/Components/Cards/Card/VerticalCard.jsx',
+      HorizontalCard: './stories/Components/Cards/Card/HorizontalCard.jsx',
+      BookCard: './stories/Components/Cards/Card/BookCard.jsx',
+      HorizontalBookCard:
+        './stories/Components/Cards/Card/HorizontalBookCard.jsx',
+      Breadcrumbs: './stories/Components/Breadcrumbs/Breadcrumbs.jsx',
+      Pagination: './stories/Components/Pagination/Pagination.jsx',
+      Tab: './stories/Components/Tab/Tab.jsx',
+      Hero: './stories/Components/Hero/Hero.jsx',
+      PageHeader: './stories/Components/PageHeader/PageHeader.jsx',
+      Footer: './stories/Components/Footer/Footer.jsx',
+      HighlightBox: './stories/Components/HighlightBox/HighlightBox.jsx',
+      EmbedContainer: './stories/Utilities/EmbedContainer/EmbedContainer.jsx',
+      FullWidth: './stories/Utilities/FullWidth/FullWidth.jsx',
+      Loader: './stories/Utilities/Loader/Loader.jsx',
+      ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
     },
     externals: {
       react: 'react',
