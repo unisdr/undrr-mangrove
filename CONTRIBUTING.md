@@ -40,7 +40,7 @@ Most of the manifest auto-generates from Storybook and component rendering. Two 
 Tips for better manifest output:
 
 - **Add PropTypes to your components.** The manifest extracts prop names, types, defaults, and descriptions from PropTypes and JSDoc comments via react-docgen. Components without PropTypes appear in the manifest with no prop documentation.
-- **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs, or only DOMPurify which is mocked), add it to `RENDER_SPECS` in `render-component-html.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
+- **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs, or only DOMPurify which is mocked), add it to `RENDER_SPECS` in `scripts/ai-manifest/render-component-html.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
 - **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, CSS class mismatches, and PropTypes coverage.
 
 ## Submitting changes

@@ -7,6 +7,7 @@
  * files that are deployed alongside the static Storybook site:
  *
  *   llms.txt                       — plain-text discovery file for AI agents
+ *   llms.json                      — structured version of llms.txt for tooling
  *   ai-components/index.json       — lightweight component index
  *   ai-components/{id}.json        — full details per component
  *   ai-components/utilities.json   — CSS utility class inventory
@@ -20,7 +21,8 @@
  *
  * Flags:
  *   --validate   Check curated data keys against the Storybook manifest and
- *                exit non-zero if any are unmatched. Useful in CI.
+ *                run a11y lint on curated HTML. Exits non-zero if any
+ *                keys are unmatched or a11y violations are found. Useful in CI.
  */
 
 import fs from 'fs';
@@ -173,7 +175,7 @@ if (unmatchedKeys.length > 0) {
   for (const k of unmatchedKeys) console.warn(`  - ${k}`);
 }
 if (uncoveredIds.length > 0) {
-  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data.js:`);
+  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data/:`);
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
 }
 

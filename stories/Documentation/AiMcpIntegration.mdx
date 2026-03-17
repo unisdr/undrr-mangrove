@@ -30,7 +30,7 @@ Our pipeline fills the gaps:
 - **Rendered HTML** for vanilla consumers who use Mangrove via CDN without React. No other tool provides this.
 - **UNDRR page recipes** — required scripts (analytics, messaging, cookie consent), syndication embed instructions, branding-critical markup flagged as `doNotModify`.
 - **Static deployment** alongside GitHub Pages. No running server needed.
-- **CSS utility inventory** with all 161 utility classes grouped by category.
+- **CSS utility inventory** with all 162 utility classes grouped by category.
 
 The ecosystem tools are complementary, not competing. We recommend `@storybook/addon-mcp` for local development alongside our static pipeline for deployed documentation.
 
@@ -82,7 +82,7 @@ Components with syndication support (Footer) include a `vanillaHtmlEmbed` field 
 
 ### CSS utilities (`ai-components/utilities.json`)
 
-The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) (~25 KB) lists all 161 CSS utility classes grouped into 12 categories. Each class has a description and usage example.
+The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) (~25 KB) lists all 162 CSS utility classes grouped into 12 categories. Each class has a description and usage example.
 
 ### Page templates
 
@@ -274,7 +274,7 @@ render-component-html.js → rendered-html.json (auto-rendered HTML via SSR)
 generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json
 ```
 
-`render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. The script mocks DOMPurify so components that use it for HTML sanitization (e.g., IconCard) can also be auto-rendered. Components needing other browser APIs (`document`, `window`) fall back to curated HTML examples.
+`render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. Components that use DOMPurify for HTML sanitization (e.g., IconCard) also render successfully because the bundled DOMPurify detects the headless environment and falls back to a passthrough — no mock is needed. Components needing other browser APIs (`document`, `window`) fall back to curated HTML examples.
 
 `generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, logo paths, reusable HTML snippets). When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns in HTML examples, CSS class mismatches, and PropTypes coverage.
 
@@ -321,7 +321,7 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 
 ## What's next
 
-- **Expand auto-rendering** — IconCard is now auto-rendered via a DOMPurify mock, joining QuoteHighlight, StatsCard, Pager, MegaMenu, and SyndicationSearchWidget. Components that depend on `document` or `window` (e.g., ShareButtons) still need curated HTML
+- **Expand auto-rendering** — six components are auto-rendered today (QuoteHighlight, StatsCard, IconCard, Pager, MegaMenu, SyndicationSearchWidget). Components that depend on `document` or `window` (e.g., ShareButtons) still need curated HTML
 - **MDX content in the manifest** — the Storybook manifest includes raw MDX source that we don't currently process. The Fluent UI extractor shows this can be converted to useful Markdown.
 - **HTML browse page** — a static `index.html` for debugging the manifest in a browser (idea from the Fluent UI extractor)
 - **Watch `@storybook/addon-mcp`** — as it matures past experimental, consider tighter integration

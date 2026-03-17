@@ -84,10 +84,10 @@ The script has a `RENDER_SPECS` array where each entry defines:
 
 Use auto-rendering when:
 - The component has a webpack entry in `dist/components/`
-- It renders cleanly in Node.js (no browser APIs like `document`, `window`), or its browser dependencies can be mocked (see below)
+- It renders cleanly in Node.js (no browser APIs like `document`, `window`), or its browser dependencies degrade gracefully in a headless environment (see DOMPurify note below)
 - The rendered HTML is representative of what a vanilla HTML consumer would write
 
-The render script mocks DOMPurify for Node.js so components that use it for HTML sanitization (e.g., IconCard) can be auto-rendered. The mock passes strings through unchanged, which is safe because the sample props are controlled by `RENDER_SPECS`.
+Components that use DOMPurify for HTML sanitization (e.g., IconCard) can be auto-rendered because the bundled DOMPurify detects the missing `window` in Node.js and falls back to a passthrough (returning the input string unchanged). No mock is needed, and this is safe because the sample props are controlled by `RENDER_SPECS`.
 
 Use curated HTML when:
 - The component is CSS-only (Container, Grid, HighlightBox) — no JS to render
@@ -139,11 +139,11 @@ node scripts/ai-manifest/generate-ai-manifest.js --build-dir=docs-build-temp
 
 ### The `--validate` flag
 
-Runs four checks and exits non-zero if any fail. Used in CI to catch problems before they reach production.
+Runs four checks. The first two exit non-zero on failure; the last two are informational. Used in CI to catch problems before they reach production.
 
 1. **Stale key detection** — every key in the curated data must match a component ID in the Storybook manifest. Catches drift after renames or removals.
 2. **Accessibility lint** — scans curated HTML examples for common anti-patterns: `role="button"` on links, icon elements missing `aria-hidden`, redundant `role="navigation"` on `<nav>`, and unnamed `<section>` landmarks. Violations fail the build.
-3. **CSS class validation** — checks that `cssClasses` listed in curated data actually appear in the component's HTML examples. Catches class lists that have drifted from the markup.
+3. **CSS class validation** — checks that at least one class from `cssClasses` in curated data appears in the component's HTML examples. Warns when zero classes match, catching class lists that have completely drifted from the markup. This is informational, not a hard failure.
 4. **PropTypes coverage** — reports how many components have documented props (extracted by react-docgen from PropTypes and JSDoc). This is informational, not a hard failure.
 
 You can run validation locally via the npm script:
@@ -217,7 +217,7 @@ Structured inventory of CSS utility classes. Update when you add, rename, or rem
 
 ### `component-data/index.js`
 
-Barrel file that imports all category files and merges them. If you create a new category file, import it here. Keys must be unique across all files — duplicates are silently overwritten by the last import.
+Barrel file that imports all category files and merges them. If you create a new category file, import it here. Keys must be unique across all files — duplicates trigger a console warning and are overwritten by the last import.
 
 ---
 

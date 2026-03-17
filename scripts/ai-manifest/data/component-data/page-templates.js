@@ -2,10 +2,11 @@
  * @file page-templates.js
  * @source manual (page compositions), imports from constants.js
  *
- * Imports PageHeader, Footer, and closing scripts HTML from
- * scripts/ai-manifest/data/constants.js. Page templates compose these shared
- * snippets with page-specific content. Update constants.js if
- * branding markup changes; update this file for page layout changes.
+ * Imports PageHeader, Footer, closing scripts HTML, theme CSS URLs, and
+ * required stylesheets from scripts/ai-manifest/data/constants.js. Page
+ * templates compose these shared snippets with page-specific content.
+ * Update constants.js if branding markup changes; update this file for
+ * page layout changes.
  */
 
 import {
