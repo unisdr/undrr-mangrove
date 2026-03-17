@@ -37,7 +37,7 @@ Each component in the output gets its data merged from up to three sources:
 | Source | What it provides | Maintenance |
 |--------|-----------------|-------------|
 | **Storybook manifest** (`components.json`) | Props, types, defaults, JSDoc descriptions, story code snippets, import statements | Automatic — generated from PropTypes and JSDoc in your component files |
-| **Auto-rendered HTML** (`rendered-html.json`) | Formatted HTML output from `renderToStaticMarkup` | Automatic — generated from `RENDER_SPECS` in `render-component-html.js` |
+| **Auto-rendered HTML** (`rendered-html.json`) | Formatted HTML output from `renderToStaticMarkup` | Automatic — auto-discovered from `dist/components/`, sample props in `SAMPLE_PROPS` |
 | **Curated data** (`scripts/ai-manifest/data/`) | Descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags, `doNotModify` warnings, vanilla HTML examples, syndication embed docs | Manual — update when component markup or CSS classes change |
 
 Auto-rendered HTML takes priority over curated HTML when both exist for the same component. Components with auto-rendered HTML get `renderedHtmlSource: "auto"` in their output JSON.
@@ -62,48 +62,23 @@ node scripts/ai-manifest/render-component-html.js --build-dir=docs-build-temp
 
 ### How it works
 
-The script has a `RENDER_SPECS` array where each entry defines:
-- `file` — the component filename in `dist/components/` (without `.js`)
-- `componentId` — the Storybook component ID (must match the manifest)
-- `variants` — array of `{ name, props }` objects, each rendered separately
-
-```js
-{
-  file: 'QuoteHighlight',
-  componentId: 'components-quotehighlight',
-  variants: [
-    {
-      name: 'Quote with attribution',
-      props: { quote: '...', attribution: '...', backgroundColor: 'light', variant: 'line', alignment: 'full' },
-    },
-  ],
-}
-```
+The script auto-discovers all `.js` files in `dist/components/` and matches each to a component ID via the `COMPONENT_IDS` mapping. For each component:
+1. Import the built module from `dist/components/`
+2. Look up sample props in `SAMPLE_PROPS` (or use `{}` if none defined)
+3. Render via `renderToStaticMarkup` and format with Prettier
+4. Skip components that error (browser APIs) or produce trivial output
 
 ### When to use auto-rendering vs. curated HTML
 
-Use auto-rendering when:
-- The component has a webpack entry in `dist/components/`
-- It renders cleanly in Node.js (no browser APIs like `document`, `window`), or its browser dependencies degrade gracefully in a headless environment (see DOMPurify note below)
-- The rendered HTML is representative of what a vanilla HTML consumer would write
-
-Components that use DOMPurify for HTML sanitization (e.g., IconCard) can be auto-rendered because the bundled DOMPurify detects the missing `window` in Node.js and falls back to a passthrough (returning the input string unchanged). No mock is needed, and this is safe because the sample props are controlled by `RENDER_SPECS`.
-
-Use curated HTML when:
-- The component is CSS-only (Container, Grid, HighlightBox) — no JS to render
-- The component needs browser APIs that can't be trivially mocked (ShareButtons uses `document`)
-- The example is a composition of multiple components (page templates)
+Use auto-rendering when the component has a webpack entry and renders in Node.js without browser APIs. Use curated HTML when the component needs `document`/`window` at render time, or the example is a composition of multiple components (page templates).
 
 ### Adding a new auto-rendered component
 
-1. Add an entry to `RENDER_SPECS` in `render-component-html.js`
-2. Optionally add metadata (description, cssClasses, flags) in `scripts/ai-manifest/data/component-data/{category}.js`
-3. Run `node scripts/ai-manifest/render-component-html.js` to test
-4. The manifest script will prefer the auto-rendered HTML over any curated `examples`
-
-### Currently auto-rendered
-
-QuoteHighlight, StatsCard, Pager, MegaMenu, SyndicationSearchWidget, IconCard
+1. Add a webpack entry in `webpack.config.js` (second config block)
+2. Add a `COMPONENT_IDS` entry in `render-component-html.js` mapping the filename to the component-data ID
+3. If the component needs non-empty props, add a `SAMPLE_PROPS` entry
+4. Add metadata (description, flags) in `scripts/ai-manifest/data/component-data.js`
+5. Run `node scripts/ai-manifest/render-component-html.js` to test
 
 ---
 
@@ -158,66 +133,28 @@ yarn validate-manifest
 
 ### `constants.js`
 
-Single source of truth for asset URLs, required scripts, logo paths, and reusable HTML snippets (PageHeader, Footer, closing scripts). All version-dependent URLs use `{{version}}` tokens replaced at build time.
+Single source of truth for asset URLs, required scripts, and logo paths. All version-dependent URLs use `{{version}}` tokens replaced at build time. Change a URL here and it propagates to all output files.
 
-Change a URL here and it propagates to all output files. Do not hardcode asset URLs anywhere else.
+### `component-data.js`
 
-### `component-data/{category}.js`
-
-Per-component metadata and curated HTML, split by category (cards, forms, layout, etc.). Each file exports a default object keyed by Storybook component ID.
-
-**Entry schema:**
-
-```js
-// Minimal entry (auto-rendered component, metadata only)
-'components-quotehighlight': {
-  vanillaHtml: true,
-  description: 'Testimonial quote with attribution and portrait.',
-  cssClasses: ['mg-quote-highlight', 'mg-quote-highlight--light', ...],
-  // renderedHtml auto-generated from dist/components/QuoteHighlight.js
-},
-
-// Full curated entry (CSS-only or browser-dependent component)
-'components-cards-vertical-card': {
-  vanillaHtml: true,
-  description: 'Card with stacked image, labels, title, summary, and CTA button.',
-  cssClasses: ['mg-card', 'mg-card__vc', ...],
-  examples: [
-    { name: 'Default vertical card', html: '<article class="mg-card mg-card__vc">...</article>' },
-  ],
-},
-
-// React-only component (no HTML examples)
-'components-charts-barchart': {
-  requiresReact: true,
-  reactNote: 'BarChart uses D3. Import via npm.',
-},
-```
-
-**Available fields:**
+All component metadata in a single file, keyed by Storybook component ID. Auto-rendered components need only `description` and flags. Curated `examples` are kept for components that can't render in Node.
 
 | Field | Type | Purpose |
 |-------|------|---------|
 | `vanillaHtml` | boolean | Works as static HTML/CSS without React |
 | `requiresReact` | boolean | Needs React runtime to function |
-| `reactNote` | string | Why React is required (for React-only components) |
-| `description` | string | Fallback when the Storybook manifest has no description |
-| `doNotModify` | string | Warning that markup is a branding requirement |
-| `examples` | array | `[{ name, html }]` curated HTML snippets |
-| `cssClasses` | string[] | BEM classes the component uses |
+| `reactNote` | string | Why React is required |
+| `description` | string | Fallback when Storybook has no description |
+| `doNotModify` | string | Branding requirement warning |
+| `examples` | array | `[{ name, html }]` curated HTML (only for non-auto-rendered) |
+| `cssClasses` | string[] | BEM classes (only for curated components) |
 | `vanillaHtmlEmbed` | object | Embed instructions (Footer syndication) |
 
-`vanillaHtml` and `requiresReact` are mutually exclusive.
-
-**Adding a new component:** Find the right category file (or create one and import it in `index.js`), add the entry keyed by the component's Storybook ID (e.g., `components-cards-vertical-card`). The ID comes from the story title path — check `docs-build-temp/ai-components/` for existing IDs.
+**Adding a new component:** Add an entry keyed by the Storybook ID (e.g., `components-cards-vertical-card`). The ID comes from the story title path.
 
 ### `css-utilities.js`
 
 Structured inventory of CSS utility classes. Update when you add, rename, or remove utility classes in SCSS.
-
-### `component-data/index.js`
-
-Barrel file that imports all category files and merges them. If you create a new category file, import it here. Keys must be unique across all files — duplicates trigger a console warning and are overwritten by the last import.
 
 ---
 

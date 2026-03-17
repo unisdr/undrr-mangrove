@@ -17,7 +17,7 @@ Does the component need React?
     │
     └─ Drupal integration (rendered into server HTML via data attributes)
         → All of the above + fromElement.js + hydrate.js + webpack entry
-          + fromElement tests + AI manifest RENDER_SPECS (optional)
+          + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
 
 ## Reference component: Pager
