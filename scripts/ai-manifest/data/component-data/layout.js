@@ -1,3 +1,12 @@
+/**
+ * @file layout.js
+ * @source manual (metadata + curated HTML)
+ *
+ * All content is manually maintained. Update the HTML examples
+ * when the component markup changes. See scripts/README.md for
+ * the entry schema and available fields.
+ */
+
 export default {
   'design-decisions-container': {
     vanillaHtml: true,

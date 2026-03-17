@@ -1,5 +1,6 @@
 /**
- * constants.js
+ * @file constants.js
+ * @source manual
  *
  * Single source of truth for asset URLs, script references, and logo paths
  * used across the AI manifest data files. Update URLs here when they change.

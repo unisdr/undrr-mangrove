@@ -1,3 +1,13 @@
+/**
+ * @file react-only.js
+ * @source manual (metadata only)
+ *
+ * Contains requiresReact flags and reactNote descriptions for
+ * components that need React to function. No HTML examples.
+ * Some of these components have auto-rendered HTML provided by
+ * scripts/ai-manifest/render-component-html.js (check RENDER_SPECS there).
+ */
+
 export default {
   'components-charts-barchart': {
     requiresReact: true,

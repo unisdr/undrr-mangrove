@@ -1,3 +1,12 @@
+/**
+ * @file footer.js
+ * @source manual (metadata + curated HTML), imports from constants.js
+ *
+ * Imports syndication config from scripts/ai-manifest/data/constants.js.
+ * Update the HTML examples here if the Footer markup changes.
+ * The syndication widget URL and config are defined in constants.js.
+ */
+
 import {
   SYNDICATION_WIDGET_URL,
   SYNDICATION_DEFAULT_CONFIG as cfg,

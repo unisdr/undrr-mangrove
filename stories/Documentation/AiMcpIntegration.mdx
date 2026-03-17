@@ -275,15 +275,15 @@ generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilitie
 
 `render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs (DOMPurify, `document`, `window`) fall back to curated HTML examples.
 
-`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/data/constants.js` (asset URLs, required scripts, reusable HTML snippets).
+`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, reusable HTML snippets).
 
-See [`scripts/README.md`](https://github.com/unisdr/undrr-mangrove/blob/main/scripts/README.md) for the full pipeline diagram, entry schema, and maintenance guide.
+See [`scripts/ai-manifest/README.md`](https://github.com/unisdr/undrr-mangrove/blob/main/scripts/ai-manifest/README.md) for the full pipeline diagram, entry schema, and maintenance guide.
 
 To regenerate by hand:
 
 ```bash
-node scripts/render-component-html.js
-node scripts/generate-ai-manifest.js
+node scripts/ai-manifest/render-component-html.js
+node scripts/ai-manifest/generate-ai-manifest.js
 ```
 
 ---

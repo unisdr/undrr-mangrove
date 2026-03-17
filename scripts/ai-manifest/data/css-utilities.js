@@ -1,5 +1,6 @@
 /**
- * css-utilities.js
+ * @file css-utilities.js
+ * @source manual
  *
  * Curated inventory of CSS utility classes provided by UNDRR Mangrove.
  * Used by generate-ai-manifest.js to produce ai-components/utilities.json.

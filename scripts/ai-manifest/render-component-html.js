@@ -10,13 +10,13 @@
  * This replaces hand-written HTML examples for components that render
  * cleanly in a Node.js (non-browser) environment. Components that need
  * browser APIs (DOMPurify, document, window) fall back to curated HTML
- * in scripts/data/component-data/.
+ * in scripts/ai-manifest/data/component-data/.
  *
  * Output is consumed by generate-ai-manifest.js (the next step in the
  * build pipeline). Both scripts are chained in `yarn build`.
  *
  * Usage:
- *   node scripts/render-component-html.js [--build-dir=docs-build-temp]
+ *   node scripts/ai-manifest/render-component-html.js [--build-dir=docs-build-temp]
  *
  * Outputs:
  *   {build-dir}/ai-components/rendered-html.json

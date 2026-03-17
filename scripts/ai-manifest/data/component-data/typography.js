@@ -1,3 +1,12 @@
+/**
+ * @file typography.js
+ * @source manual (metadata + curated HTML)
+ *
+ * All content is manually maintained. Update the HTML examples
+ * when the component markup changes. See scripts/README.md for
+ * the entry schema and available fields.
+ */
+
 export default {
   'components-typography': {
     vanillaHtml: true,
