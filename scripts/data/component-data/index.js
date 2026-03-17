@@ -1,9 +1,9 @@
 /**
- * html-examples/index.js
+ * component-data/index.js
  *
- * Merges per-category HTML example files into a single object keyed by
- * Storybook component ID. Each category file exports a default object
- * with one or more component entries.
+ * Merges per-category component data files into a single object keyed
+ * by Storybook component ID. Each category file exports a default
+ * object with one or more component entries.
  *
  * To add a new component: find the right category file and add the entry
  * there. To add a new category: create a .js file, export default an

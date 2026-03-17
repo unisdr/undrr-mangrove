@@ -34,7 +34,7 @@ Mangrove publishes an AI-friendly manifest alongside Storybook so coding agents 
 
 Most of the manifest auto-generates from Storybook and component rendering. Two things need manual maintenance:
 
-- **`scripts/data/html-examples/`** — per-component metadata (descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags) and curated HTML examples for components that can't be auto-rendered. Split into category files (cards.js, forms.js, layout.js, etc.). Update when you change a component's HTML structure, add a new component, or rename BEM classes.
+- **`scripts/data/component-data/`** — per-component metadata (descriptions, CSS class lists, `vanillaHtml`/`requiresReact` flags) and curated HTML examples for components that can't be auto-rendered. Split into category files (cards.js, forms.js, layout.js, etc.). Update when you change a component's HTML structure, add a new component, or rename BEM classes.
 - **`scripts/data/css-utilities.js`** — inventory of CSS utility classes. Update when you add, rename, or remove utility classes.
 
 The build validates that curated keys match the Storybook manifest and warns about mismatches.
@@ -44,7 +44,7 @@ The build validates that curated keys match the Storybook manifest and warns abo
 1. Create a feature branch from `main`.
 2. Write clear commits using Conventional Commits.
 3. Add or update Storybook docs if behavior or usage changes.
-4. If you changed component markup or CSS classes, update the relevant file in `scripts/data/html-examples/`.
+4. If you changed component markup or CSS classes, update the relevant file in `scripts/data/component-data/`.
 5. Run tests and linters before you open a pull request.
 6. Reference the relevant issue in your PR description.
 

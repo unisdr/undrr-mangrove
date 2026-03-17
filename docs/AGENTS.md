@@ -152,3 +152,7 @@ These agents from The Agency are potentially useful but weren't included in the 
 | **Whimsy Injector** | Micro-interactions, personality | Not appropriate for UN institutional context |
 
 If needs change, these can be added later by following the process above.
+
+## Related
+
+These agent prompts are for contributors working on Mangrove itself. For how the build produces component metadata that external AI agents consume, see the [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs) (a separate system from these agent prompts).

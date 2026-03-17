@@ -25,7 +25,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import htmlExamplesRaw from './data/html-examples/index.js';
+import htmlExamplesRaw from './data/component-data/index.js';
 import cssUtilities from './data/css-utilities.js';
 import {
   THEME_CSS as THEME_CSS_RAW,
@@ -145,7 +145,7 @@ function getDescription(component, htmlData) {
     if (desc) return desc.split('\n')[0];
   }
 
-  // Fall back to curated description from html-examples data
+  // Fall back to curated description from component-data data
   if (htmlData?.description) return htmlData.description;
 
   return '';
@@ -160,11 +160,11 @@ function docsUrl(componentId) {
 // Validate curated data
 // ---------------------------------------------------------------------------
 
-// Check for duplicate keys across html-examples category files
+// Check for duplicate keys across component-data category files
 const allKeys = Object.keys(htmlExamples);
 const duplicateKeys = allKeys.filter((k, i) => allKeys.indexOf(k) !== i);
 if (duplicateKeys.length > 0) {
-  console.warn('Warning: duplicate keys in html-examples (last definition wins):');
+  console.warn('Warning: duplicate keys in component-data (last definition wins):');
   for (const k of duplicateKeys) console.warn(`  - ${k}`);
 }
 
@@ -175,19 +175,19 @@ const uncoveredIds = [...manifestIds].filter(id =>
 );
 
 if (unmatchedKeys.length > 0) {
-  console.warn('Warning: html-examples keys not found in Storybook manifest:');
+  console.warn('Warning: component-data keys not found in Storybook manifest:');
   for (const k of unmatchedKeys) console.warn(`  - ${k}`);
 }
 if (uncoveredIds.length > 0) {
-  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in html-examples.js:`);
+  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data.js:`);
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
 }
 if (validateOnly) {
   if (unmatchedKeys.length > 0) {
-    console.error('Validation failed: html-examples keys do not match manifest.');
+    console.error('Validation failed: component-data keys do not match manifest.');
     process.exit(1);
   }
-  console.log('Validation passed: all html-examples keys match manifest IDs.');
+  console.log('Validation passed: all component-data keys match manifest IDs.');
   process.exit(0);
 }
 

@@ -97,7 +97,7 @@ Use curated HTML when:
 ### Adding a new auto-rendered component
 
 1. Add an entry to `RENDER_SPECS` in `render-component-html.js`
-2. Optionally add metadata (description, cssClasses, flags) in `scripts/data/html-examples/{category}.js`
+2. Optionally add metadata (description, cssClasses, flags) in `scripts/data/component-data/{category}.js`
 3. Run `node scripts/render-component-html.js` to test
 4. The manifest script will prefer the auto-rendered HTML over any curated `examples`
 
@@ -151,7 +151,7 @@ Single source of truth for asset URLs, required scripts, logo paths, and reusabl
 
 Change a URL here and it propagates to all output files. Do not hardcode asset URLs anywhere else.
 
-### `html-examples/{category}.js`
+### `component-data/{category}.js`
 
 Per-component metadata and curated HTML, split by category (cards, forms, layout, etc.). Each file exports a default object keyed by Storybook component ID.
 
@@ -204,7 +204,7 @@ Per-component metadata and curated HTML, split by category (cards, forms, layout
 
 Structured inventory of CSS utility classes. Update when you add, rename, or remove utility classes in SCSS.
 
-### `html-examples/index.js`
+### `component-data/index.js`
 
 Barrel file that imports all category files and merges them. If you create a new category file, import it here. Keys must be unique across all files — duplicates are silently overwritten by the last import.
 
@@ -234,3 +234,11 @@ yarn update-cdn-version --dry-run  # preview changes
 - `docs/RELEASES.md`
 
 Run this after each release to ensure documentation points to stable, versioned CDN assets.
+
+---
+
+## See also
+
+- [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs) — consumer-facing docs for directing agents to Mangrove
+- [`CONTRIBUTING.md`](../CONTRIBUTING.md#ai-manifest-for-component-discovery) — contributor-facing summary of what to update
+- [`docs/RELEASES.md`](../docs/RELEASES.md) — release checklist includes manifest validation step
