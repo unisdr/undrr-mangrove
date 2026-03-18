@@ -1,6 +1,6 @@
 # Accessibility
 
-> **Single source:** This file is rendered both on [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in the [Storybook docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices-accessibility--docs). Edit this file — changes appear in both places automatically.
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices-accessibility--docs).
 
 Accessible design not only helps users with disabilities; it also provides a better user experience for everyone. All components follow the WCAG 2.1 AA standards.
 

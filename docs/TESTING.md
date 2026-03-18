@@ -1,6 +1,6 @@
 # Testing Guide
 
-> **Single source:** This file is rendered both on [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/TESTING.md) and in the [Storybook docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs). Edit this file — changes appear in both places automatically.
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/TESTING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs).
 
 This guide covers testing practices for the UNDRR Mangrove component library. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
 
