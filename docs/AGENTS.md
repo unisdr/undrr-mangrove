@@ -15,13 +15,7 @@ Each agent includes:
 
 ## How to use agents
 
-In Claude Code, invoke an agent by name:
-
-```
-/agents accessibility-auditor
-```
-
-Or reference the agent when asking Claude Code to perform a task:
+In Claude Code, reference the agent when asking Claude Code to perform a task:
 
 > "Using the accessibility-auditor agent, audit the MegaMenu component across all 4 themes"
 
@@ -152,3 +146,7 @@ These agents from The Agency are potentially useful but weren't included in the 
 | **Whimsy Injector** | Micro-interactions, personality | Not appropriate for UN institutional context |
 
 If needs change, these can be added later by following the process above.
+
+## Related
+
+These agent prompts are for contributors working on Mangrove itself. For how the build produces component metadata that external AI agents consume, see the [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs) (a separate system from these agent prompts).

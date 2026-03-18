@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
@@ -42,6 +43,63 @@ export function SyndicationSearchWidget({ config }) {
     </SearchProvider>
   );
 }
+
+SyndicationSearchWidget.propTypes = {
+  /** Widget configuration object merged with DEFAULT_CONFIG from utils/constants. */
+  config: PropTypes.shape({
+    /** Elasticsearch proxy endpoint URL. */
+    searchEndpoint: PropTypes.string,
+    /** Number of results per page. */
+    resultsPerPage: PropTypes.number,
+    /** Debounce delay in milliseconds for search input. */
+    debounceDelay: PropTypes.number,
+    /** Minimum characters before a search is triggered. */
+    minSearchLength: PropTypes.number,
+    /** Whether to synchronize search state with the URL hash. */
+    enableHashSync: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['auto'])]),
+    /** Initial search query string. */
+    defaultQuery: PropTypes.string,
+    /** Default sort order. */
+    defaultSort: PropTypes.oneOf(['relevance', 'newest', 'oldest']),
+    /** Whether to display the search input box. */
+    showSearchBox: PropTypes.bool,
+    /** Whether to display the total results count. */
+    showResultsCount: PropTypes.bool,
+    /** Whether to display the search timer. */
+    showSearchTimer: PropTypes.bool,
+    /** Whether to display the facet sidebar. */
+    showFacets: PropTypes.bool,
+    /** Whether to display active filter chips above results. */
+    showActiveFilters: PropTypes.bool,
+    /** Whether to display search performance metrics. */
+    showSearchMetrics: PropTypes.bool,
+    /** Whether to display pagination controls. */
+    showPager: PropTypes.bool,
+    /** Filters applied by default on initialization. */
+    defaultFilters: PropTypes.arrayOf(PropTypes.shape({
+      key: PropTypes.string,
+      value: PropTypes.string,
+    })),
+    /** Facet keys to show; null shows all available facets. */
+    visibleFilters: PropTypes.arrayOf(PropTypes.string),
+    /** Content type restrictions; null allows all types. */
+    allowedTypes: PropTypes.arrayOf(PropTypes.string),
+    /** Additional query string appended to every search request. */
+    queryAppend: PropTypes.string,
+    /** Custom filter definitions. */
+    customFilters: PropTypes.array,
+    /** Custom facet definitions. */
+    customFacets: PropTypes.array,
+    /** Result display mode. */
+    displayMode: PropTypes.oneOf(['list', 'card', 'card-book']),
+    /** Number of grid columns for card display modes. */
+    gridColumns: PropTypes.number,
+    /** Controls which teaser fields are visible; null shows all. */
+    visibleTeaserFields: PropTypes.object,
+    /** Whether to exclude results that have no image. */
+    requireImage: PropTypes.bool,
+  }).isRequired,
+};
 
 // Alias for backwards compatibility
 export const SearchWidget = SyndicationSearchWidget;

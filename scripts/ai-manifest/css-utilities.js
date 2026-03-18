@@ -1,5 +1,6 @@
 /**
- * css-utilities.js
+ * @file css-utilities.js
+ * @source manual
  *
  * Curated inventory of CSS utility classes provided by UNDRR Mangrove.
  * Used by generate-ai-manifest.js to produce ai-components/utilities.json.
@@ -8,6 +9,8 @@
  * classes in _utility.scss, container.scss, grid.scss, or the Utilities/
  * component SCSS files.
  */
+
+const CDN_BASE = 'https://assets.undrr.org/static/mangrove/{{version}}';
 
 const colorShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
@@ -36,7 +39,7 @@ function textColorScale(prefix, name) {
 export default {
   _description:
     'CSS utility classes provided by UNDRR Mangrove. Include the Mangrove CSS bundle to use these. All classes use the mg- prefix and follow BEM conventions.',
-  cdnBaseUrl: 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{version}/dist/css/',
+  cdnBaseUrl: `${CDN_BASE}/css/`,
   categories: [
     // ---------------------------------------------------------------
     // 1. Layout

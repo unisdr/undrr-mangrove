@@ -1,0 +1,12 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import ArchitectureGuide from '../../docs/ARCHITECTURE.md?raw';
+
+<Meta
+  title="Getting started/Architecture"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>{ArchitectureGuide}</Markdown>

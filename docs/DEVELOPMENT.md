@@ -12,6 +12,8 @@ For more detailed information, see the [Getting Started Guide](https://unisdr.gi
 - **Testing guide**: unit, visual, and accessibility testing — [docs/TESTING.md](./TESTING.md)
 - **Writing guidelines**: UX writing standards — [docs/WRITING.md](./WRITING.md)
 - **Writing quick reference**: concise checklist for AI tools and reviews — [docs/WRITING-SHORT.md](./WRITING-SHORT.md)
+- **Architecture**: build system, distribution channels, and Drupal integration — [docs/ARCHITECTURE.md](./ARCHITECTURE.md)
+- **Component guide**: step-by-step tutorial for building a new component — [docs/COMPONENT-GUIDE.md](./COMPONENT-GUIDE.md)
 
 ### Storybook documentation
 
@@ -108,7 +110,7 @@ refactor/short-description   — code restructuring
 
 ### Commit Message Convention
 
-We use conventional commits for automated versioning:
+We use conventional commits for readable history and PR title validation:
 
 - `fix:` - Bug fixes (patch release)
 - `feat:` - New features (minor release)
@@ -165,7 +167,7 @@ make build            # Build for release
 
 ## Deploying theme CSS to Drupal
 
-Built JavaScript is automatically copied to the Drupal theme by `mangrove-watch.js` (via `yarn watch --copy`). CSS is **not** auto-synced and must be copied manually after each SCSS change.
+CSS is **not** auto-synced and must be copied manually after each SCSS change. Built JavaScript (`dist/components/*.js`) is copied to the Drupal theme during the Drupal-side build process.
 
 ### Child themes
 
@@ -204,74 +206,13 @@ Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_
 
 3. Commit the updated `mangrove.css` files in the Drupal repository.
 
-## Component Development
+## Component development
 
-### File Structure
+See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
 
-Components follow this structure:
+### TypeScript support
 
-```text
-stories/
-  └── Components/
-      └── ComponentName/
-          ├── ComponentName.jsx
-          ├── ComponentName.stories.jsx
-          ├── ComponentName.scss
-          ├── ComponentName.fromElement.js    # Hydration prop extraction (optional)
-          ├── ComponentName.hydrate.js        # Barrel for hydration (optional)
-          └── __tests__/
-              ├── ComponentName.test.jsx
-              └── ComponentName.fromElement.test.js  # (optional)
-```
-
-Components that are used in server-rendered contexts (Drupal, Astro) should include a `fromElement.js` for prop extraction and a `hydrate.js` barrel file. See [HYDRATION.md](HYDRATION.md) for details.
-
-### Component Guidelines
-
-- Use functional components with hooks
-- Follow BEM naming for CSS classes
-- Include JSDoc comments for props
-- Write stories for all component states
-- Add tests for component logic
-
-### TypeScript Support
-
-While JSX is the default, TypeScript is fully supported:
-
-```typescript
-// ComponentName.tsx
-interface ComponentProps {
-  title: string;
-  onClick?: () => void;
-}
-
-export const Component: React.FC<ComponentProps> = ({ title, onClick }) => {
-  // Component implementation
-};
-```
-
-## Code Style
-
-### JavaScript/JSX
-
-- Use ES6+ features
-- Prefer functional components
-- Follow existing patterns in the codebase
-- No unnecessary comments unless explaining complex logic
-
-### CSS/SCSS
-
-- Follow BEM methodology
-- Use SCSS variables for consistency
-- Organize styles hierarchically
-- Keep specificity low
-
-### Import Order
-
-1. React imports
-2. External library imports
-3. Internal component imports
-4. Style imports
+While JSX is the default, TypeScript is fully supported. Path aliases available: `@/*` → `src/*`, `@components/*` → `stories/Components/*`.
 
 ## Debugging
 

@@ -1,5 +1,7 @@
 # Release process guide
 
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-process--docs).
+
 This guide explains the release process for the UNDRR Mangrove component library.
 
 ## Overview
@@ -20,16 +22,16 @@ yarn test
 yarn lint
 ```
 
-Review any components whose markup changed since the last release and update their HTML examples in `scripts/data/html-examples.js`. If utility classes were added or removed, update `scripts/data/css-utilities.js`. These curated files feed the AI component manifest and can drift from reality between releases.
+Review any components whose markup changed since the last release and update their HTML examples in `scripts/ai-manifest/component-data.js`. If utility classes were added or removed, update `scripts/ai-manifest/css-utilities.js`. These curated files feed the AI component manifest and can drift from reality between releases.
 
-You can check for drift by running a Storybook build and then validating the manifest:
+You can check for drift by running a full build and then validating the manifest:
 
 ```bash
-yarn storybook build -o docs-build-temp
-node scripts/generate-ai-manifest.js
+yarn build
+yarn validate-manifest
 ```
 
-The script warns if any keys in `html-examples.js` don't match a component ID in the Storybook manifest.
+The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
 ### 2. Update the version
 
@@ -87,10 +89,9 @@ If component JS or CSS changed:
 
 ```bash
 yarn build
-yarn watch --copy    # copies dist/components/*.js to undrr_common/js/mangrove-components/
 ```
 
-If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
+Copy built JS from `dist/components/` to `undrr_common/js/mangrove-components/` in the Drupal theme. If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
 
 ## Manual npm publish (fallback)
 

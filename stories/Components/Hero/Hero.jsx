@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 
 const cls = (...classes) =>
@@ -11,7 +12,11 @@ export const variantOptions = {
   quaternary: 'quaternary',
 };
 
-export function Hero({ data, variant }) {
+/**
+ * Full-width hero banner with background image, title, summary, and call-to-action buttons.
+ * Renders one section per item in the data array (typically one).
+ */
+export function Hero({ data, variant = 'primary' }) {
   let variantActive = variantOptions[`${variant}`];
 
   return (
@@ -64,6 +69,20 @@ export function Hero({ data, variant }) {
   );
 }
 
-Hero.defaultProps = {
-  variant: 'primary',
+Hero.propTypes = {
+  /** Array of hero content objects (typically one). */
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      imgback: PropTypes.string,
+      label: PropTypes.string,
+      title: PropTypes.string.isRequired,
+      link: PropTypes.string,
+      summaryText: PropTypes.string,
+      detail: PropTypes.string,
+      primary_button: PropTypes.string,
+      secondary_button: PropTypes.string,
+    })
+  ).isRequired,
+  /** Color variant: primary (default blue), secondary, tertiary, or quaternary. */
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
 };
