@@ -3,7 +3,7 @@ import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
-  title="Getting started/What Mangrove is"
+  title="Getting started/About Mangrove"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -12,11 +12,11 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
   }}
 />
 
-# What Mangrove is
+# About Mangrove
 
-Mangrove defines shared content structures for UNDRR web properties. Each property keeps its own colors, its own component treatments, its own UI framework. Properties share a visual baseline -- typography, interaction patterns, and element styling -- but control their own color identity and surface treatments. What Mangrove provides is the underlying content pattern: a card has an image, a title, a link, and summary text. A hero has a heading, a subline, and an optional call to action. A footer pulls in shared links.
+Mangrove defines shared content structures for UNDRR web properties. Each property keeps its own colors, its own component treatments, its own UI framework, and its own application-specific interfaces -- forms, data workflows, dashboards, and anything unique to that product. Properties share a visual baseline (typography, interaction patterns, element styling) but control their own color identity and surface treatments. What Mangrove provides is the underlying content pattern: a card has an image, a title, a link, and summary text. A hero has a heading, a subline, and an optional call to action. A footer pulls in shared links.
 
-If your project uses those same content structures, everything that depends on them works: syndicated content renders correctly, accessibility fixes propagate, and content updates don't break across sites. Your project won't look identical to undrr.org -- the result is a family resemblance, not a uniform look.
+If your project uses those same content structures, everything that depends on them works: syndicated content renders correctly, accessibility fixes propagate, and content updates don't break across sites. Your project won't look identical to undrr.org -- the result is shared behavior and structure, not a uniform straitjacket.
 
 <TableOfContents
   tocData={[
@@ -201,7 +201,7 @@ The cards use `mg-` classes. Without Mangrove CSS, they're unstyled divs. See th
 
 ## Accessibility
 
-Accessibility is mandatory for every UNDRR digital product, whether it's a content site or an application. Mangrove targets WCAG 2.1 AA. Components are tested with jest-axe for automated checks and manually verified for screen reader support, keyboard navigation, and color contrast. See the <LinkTo kind="getting-started-best-practices-accessibility" story="docs">accessibility guide</LinkTo> for the testing methodology.
+Accessibility is mandatory for every UNDRR digital product, whether it's a content site or an application. Mangrove targets WCAG 2.1 AA. Components are tested with jest-axe for automated checks and manually verified for screen reader support, keyboard navigation, and color contrast. See the <LinkTo kind="getting-started-accessibility" story="docs">accessibility guide</LinkTo> for the testing methodology.
 
 If you use Mangrove for the content layer, you inherit that testing for every component you adopt. If you build your own content components, you own compliance for each one separately.
 
