@@ -1,6 +1,6 @@
 # Component guide
 
-> **Also available in Storybook:** This file is rendered in the [Component guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-guide--docs) Storybook page. Edits here automatically appear there.
+> **Single source:** This file is rendered both on [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in the [Storybook docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-guide--docs). Edit this file — changes appear in both places automatically.
 
 A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in Storybook.
 
