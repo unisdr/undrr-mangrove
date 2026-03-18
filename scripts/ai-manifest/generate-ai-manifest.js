@@ -581,10 +581,22 @@ console.log(
 // per-component test files.
 // ---------------------------------------------------------------------------
 
-/** Extract all mg-* BEM classes from an HTML string. */
+/** Extract mg-* BEM classes from class="" attribute values in an HTML string. */
 function extractBemClasses(html) {
-  const matches = html.match(/\bmg-[\w-]+/g);
-  return new Set(matches || []);
+  const classAttrPattern = /class="([^"]*)"/g;
+  const classes = new Set();
+  let match;
+  while ((match = classAttrPattern.exec(html)) !== null) {
+    for (const token of match[1].split(/\s+/)) {
+      if (token.startsWith('mg-')) classes.add(token);
+    }
+  }
+  return classes;
+}
+
+/** True if the class is a BEM modifier (contains --), which is prop-dependent. */
+function isBemModifier(cls) {
+  return cls.includes('--');
 }
 
 async function checkCuratedDrift() {
@@ -628,10 +640,11 @@ async function checkCuratedDrift() {
 
       if (renderedClasses.size === 0 && curatedClasses.size === 0) continue;
 
-      // Classes in curated HTML that don't appear in rendered output
-      const staleInCurated = [...curatedClasses].filter(c => !renderedClasses.has(c));
-      // Classes in rendered output missing from curated HTML
-      const missingFromCurated = [...renderedClasses].filter(c => !curatedClasses.has(c));
+      // Compare only BEM blocks/elements (not modifiers, which are prop-dependent).
+      // Curated HTML often shows multiple variants, but auto-render only produces one,
+      // so modifier differences (mg-card--secondary etc.) are expected noise.
+      const staleInCurated = [...curatedClasses].filter(c => !isBemModifier(c) && !renderedClasses.has(c));
+      const missingFromCurated = [...renderedClasses].filter(c => !isBemModifier(c) && !curatedClasses.has(c));
 
       if (staleInCurated.length > 0 || missingFromCurated.length > 0) {
         const parts = [];
@@ -659,6 +672,14 @@ if (validateOnly) {
   }
   if (a11yViolations.length > 0) {
     console.error(`Validation failed: ${a11yViolations.length} a11y violation(s) in curated HTML.`);
+    failed = true;
+  }
+
+  // Fail if any Storybook component has no manifest entry at all
+  if (uncoveredIds.length > 0) {
+    console.error(`Validation failed: ${uncoveredIds.length} component(s) have no entry in component-data or REQUIRES_REACT.`);
+    console.error('Add an entry to scripts/ai-manifest/component-data.js or REQUIRES_REACT for each:');
+    for (const id of uncoveredIds) console.error(`  - ${id}`);
     failed = true;
   }
 

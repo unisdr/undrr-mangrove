@@ -179,7 +179,7 @@ Never use module-level `Set`, `Map`, `Array`, or counters to track state across 
 
 ### SCSS variables with !default
 
-The 29 design token variables in `_variables.scss` use `!default` flags so theme stylesheets can override them. When adding new variables, always include `!default`.
+The design token variables in `_variables.scss` use `!default` flags so theme stylesheets can override them. When adding new variables, always include `!default`.
 
 ## Related documentation
 

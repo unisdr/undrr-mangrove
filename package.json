@@ -27,7 +27,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --collectCoverage --",
     "update": "yarn upgrade-interactive --latest",
-    "watch": "npx webpack --watch --progress",
+    "watch": "webpack --watch --progress",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:stories": "prettier --write \"./stories/**/*.{js,jsx,ts,tsx,mdx}\"",

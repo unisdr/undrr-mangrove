@@ -110,7 +110,7 @@ refactor/short-description   — code restructuring
 
 ### Commit Message Convention
 
-We use conventional commits for automated versioning:
+We use conventional commits for readable history and PR title validation:
 
 - `fix:` - Bug fixes (patch release)
 - `feat:` - New features (minor release)
