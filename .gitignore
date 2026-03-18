@@ -16,6 +16,7 @@ coverage/
 .cache
 CLAUDE.md
 CONTRIBUTING_ISSUES.md
+.github/copilot-instructions.md
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
