@@ -10,8 +10,8 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-// Default syndication config — also defined in scripts/ai-manifest/data/constants.js
-// for the AI manifest. Keep both in sync if values change.
+// Default syndication config — also referenced in the AI manifest
+// (scripts/ai-manifest/component-data.js, Footer vanillaHtmlEmbed entry).
 const defaultSyndicationConfig = {
   contenttype: 'landingpage',
   pageid: '83835',

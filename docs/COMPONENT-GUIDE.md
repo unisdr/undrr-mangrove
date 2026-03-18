@@ -111,7 +111,23 @@ See the [distribution channels table](ARCHITECTURE.md#component-distribution-cha
 
 ## Step 8: AI manifest (optional)
 
-Add component metadata to `scripts/ai-manifest/component-data.js` and optionally add sample props to `SAMPLE_PROPS` in `scripts/ai-manifest/generate-ai-manifest.js` for auto-rendered HTML.
+The AI manifest provides machine-readable component metadata for coding agents. How much you need to do depends on your component:
+
+**Vanilla HTML component (auto-rendered):**
+If your component renders cleanly in Node.js (no `window`/`document` APIs):
+1. Add an entry to `scripts/ai-manifest/component-data.js` with at least `{ description: '...' }`
+2. Add a `COMPONENT_IDS` entry in `scripts/ai-manifest/generate-ai-manifest.js`
+3. Add a `buildSampleProps()` entry if the component needs props to render meaningful HTML
+4. The build will auto-generate HTML examples from your component
+
+**Vanilla HTML component (curated HTML):**
+If your component uses browser APIs or the example is a multi-component composition:
+1. Add an entry to `scripts/ai-manifest/component-data.js` with `description`, `cssClasses`, and `examples`
+
+**React-only component:**
+1. Add an entry to `REQUIRES_REACT` in `scripts/ai-manifest/component-data.js` with a note explaining why React is needed
+
+Run `yarn validate-manifest` to verify your entries.
 
 ## Step 9: Verify
 

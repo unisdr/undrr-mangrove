@@ -21,8 +21,16 @@
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
  *
- * To remove this pipeline: delete scripts/ai-manifest/, remove the build command
- * from package.json, and delete the docs-build-temp/ai-components/ output.
+ * To remove this pipeline:
+ *   1. Delete scripts/ai-manifest/
+ *   2. Remove generate-ai-manifest from package.json build/scripts
+ *   3. Remove scripts/ai-manifest/** from .github/workflows/storybook.yml paths
+ *   4. Remove validate step from the workflow's Build Storybook step
+ *   5. Remove AI manifest references from: CONTRIBUTING.md, docs/RELEASES.md,
+ *      docs/ARCHITECTURE.md, docs/COMPONENT-GUIDE.md, scripts/README.md,
+ *      .github/pull_request_template.md
+ *   6. Optionally delete stories/Documentation/AiMcpIntegration.mdx
+ *   7. Delete docs-build-temp/ai-components/ output
  */
 
 import fs from 'fs';
@@ -31,7 +39,7 @@ import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 
 // ---------------------------------------------------------------------------
-// Constants (inlined from former data/constants.js)
+// Constants
 // ---------------------------------------------------------------------------
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}';
@@ -100,6 +108,18 @@ const LOGOS = {
 // ---------------------------------------------------------------------------
 // Component rendering: ID mapping and sample props
 // ---------------------------------------------------------------------------
+
+// Maps webpack output filenames (from dist/components/) to Storybook component IDs.
+// Required for auto-rendering. The script imports dist/components/{FileName}.js,
+// renders it with props from buildSampleProps(), and stores the HTML under this ID.
+//
+// To add a new auto-rendered component:
+// 1. Add a webpack entry in webpack.config.js (second config block)
+// 2. Add a COMPONENT_IDS entry below (FileName → storybook-id)
+// 3. Add a buildSampleProps() entry if the component needs non-empty props
+// 4. Add a component-data.js entry with at least { description: '...' }
+//    (or a REQUIRES_REACT entry for React-only components)
+// 5. Run `yarn build && yarn validate-manifest` to verify
 
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
@@ -346,12 +366,12 @@ async function renderComponents() {
 
     try {
       const mod = await import(modulePath);
+      const isComponentLike = v =>
+        typeof v === 'function' || (v != null && typeof v === 'object' && v.$$typeof != null);
       const Component = mod.default || mod[fileName]
-        || mod[Object.keys(mod).find(k => typeof mod[k] === 'function')];
+        || mod[Object.keys(mod).find(k => isComponentLike(mod[k]))];
 
-      const isRenderable = typeof Component === 'function'
-        || (Component != null && typeof Component === 'object' && Component.$$typeof != null);
-      if (!isRenderable) {
+      if (!isComponentLike(Component)) {
         console.warn(`  skip ${fileName}: no renderable export`);
         failed++;
         continue;
@@ -360,11 +380,17 @@ async function renderComponents() {
       const props = SAMPLE_PROPS[fileName] || {};
       const html = renderToStaticMarkup(React.createElement(Component, props));
       if (html.length < 30) {
+        console.warn(`  skip ${fileName}: rendered HTML too short (${html.length} chars)`);
         failed++;
         continue;
       }
 
-      const formatted = await prettier.format(html, { parser: 'html', plugins: [HTMLParser], printWidth: 100 });
+      let formatted;
+      try {
+        formatted = await prettier.format(html, { parser: 'html', plugins: [HTMLParser], printWidth: 100 });
+      } catch {
+        formatted = html;
+      }
       const desc = curatedData[componentId]?.description || fileName;
       results.set(componentId, [{ name: desc, html: formatted }]);
       rendered++;
@@ -398,6 +424,15 @@ if (unmatchedKeys.length > 0) {
 if (uncoveredIds.length > 0) {
   console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data:`);
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
+}
+
+// Check COMPONENT_IDS entries that won't render due to missing data
+const orphanedIds = Object.entries(COMPONENT_IDS)
+  .filter(([, id]) => !curatedData[id] && !REQUIRES_REACT[id])
+  .map(([fileName, id]) => `${fileName} → ${id}`);
+if (orphanedIds.length > 0) {
+  console.warn('Warning: COMPONENT_IDS entries with no component-data or REQUIRES_REACT match (will be skipped):');
+  for (const entry of orphanedIds) console.warn(`  - ${entry}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -440,6 +475,54 @@ const a11yRules = [
       let match;
       while ((match = sectionPattern.exec(html)) !== null) {
         if (!/aria-label(ledby)?\s*=/.test(match[0])) return true;
+      }
+      return false;
+    },
+  },
+  {
+    id: 'img-missing-alt',
+    label: '<img> element missing alt attribute',
+    test(html) {
+      const imgPattern = /<img\b[^>]*>/g;
+      let match;
+      while ((match = imgPattern.exec(html)) !== null) {
+        if (!/\balt\s*=/.test(match[0])) return true;
+      }
+      return false;
+    },
+  },
+  {
+    id: 'th-missing-scope',
+    label: '<th> element missing scope attribute',
+    test(html) {
+      const thPattern = /<th\b[^>]*>/g;
+      let match;
+      while ((match = thPattern.exec(html)) !== null) {
+        if (!/\bscope\s*=/.test(match[0])) return true;
+      }
+      return false;
+    },
+  },
+  {
+    id: 'link-without-href',
+    label: '<a> element without href attribute (not keyboard-focusable)',
+    test(html) {
+      const aPattern = /<a\b[^>]*>/g;
+      let match;
+      while ((match = aPattern.exec(html)) !== null) {
+        if (!/\bhref\s*=/.test(match[0])) return true;
+      }
+      return false;
+    },
+  },
+  {
+    id: 'role-img-with-interactive-children',
+    label: 'role="img" on element containing interactive content (hides children from AT)',
+    test(html) {
+      const roleImgPattern = /<(\w+)\b[^>]*role="img"[^>]*>[\s\S]*?<\/\1>/g;
+      let match;
+      while ((match = roleImgPattern.exec(html)) !== null) {
+        if (/<(?:a|button|input|select|textarea)\b/.test(match[0])) return true;
       }
       return false;
     },

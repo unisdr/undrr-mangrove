@@ -1,6 +1,28 @@
 // Component data: curated metadata, HTML examples, and flags for the AI manifest.
-// Auto-rendered components only need description + flags here. Curated examples
-// are kept for components that can't render cleanly in Node.js.
+//
+// Each entry is keyed by the Storybook component ID (derived from the story title:
+// 'Components/Cards/Vertical card' → 'components-cards-vertical-card').
+//
+// Entry schema:
+//   description      (string, required)  — What the component does. Fallback when
+//                     Storybook/react-docgen has no description.
+//   cssClasses       (string[], optional) — BEM class names for the component.
+//   examples         (array, optional)    — [{ name: string, html: string }] curated HTML.
+//                     Only needed for components that can't auto-render in Node.js.
+//   doNotModify      (string, optional)   — Warning text for branding-critical components.
+//   vanillaHtmlEmbed (object, optional)   — Embed instructions for syndication widgets.
+//
+// Auto-rendered entry (minimal):
+//   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons.' },
+//
+// Curated entry (when auto-render is not possible):
+//   'components-table': {
+//     description: 'Styled HTML table with responsive options.',
+//     cssClasses: ['mg-table', 'mg-table--striped'],
+//     examples: [{ name: 'Default table', html: '<table class="mg-table">...</table>' }],
+//   },
+//
+// Components not listed in REQUIRES_REACT are treated as vanilla HTML by default.
 
 // ---------------------------------------------------------------------------
 // React-only components (everything else is vanilla HTML by default)
@@ -146,7 +168,7 @@ export default {
         name: 'Vertical card with button',
         html: `<article class="mg-card mg-card__vc">
   <div class="mg-card__visual">
-    <img src="https://picsum.photos/600/400" alt="" class="mg-card__image" />
+    <img src="https://picsum.photos/600/400" alt="Global Assessment Report 2024 cover" class="mg-card__image" />
   </div>
   <div class="mg-card__content">
     <header class="mg-card__title">
@@ -162,7 +184,7 @@ export default {
         html: `<div class="mg-grid mg-grid__col-3">
   <article class="mg-card mg-card__vc">
     <div class="mg-card__visual">
-      <img src="https://picsum.photos/600/400?1" alt="" class="mg-card__image" />
+      <img src="https://picsum.photos/600/400?1" alt="Early warning workshop" class="mg-card__image" />
     </div>
     <div class="mg-card__content">
       <header class="mg-card__title"><a href="#">Card one</a></header>
@@ -171,7 +193,7 @@ export default {
   </article>
   <article class="mg-card mg-card__vc">
     <div class="mg-card__visual">
-      <img src="https://picsum.photos/600/400?2" alt="" class="mg-card__image" />
+      <img src="https://picsum.photos/600/400?2" alt="Community resilience training" class="mg-card__image" />
     </div>
     <div class="mg-card__content">
       <header class="mg-card__title"><a href="#">Card two</a></header>
@@ -180,7 +202,7 @@ export default {
   </article>
   <article class="mg-card mg-card__vc">
     <div class="mg-card__visual">
-      <img src="https://picsum.photos/600/400?3" alt="" class="mg-card__image" />
+      <img src="https://picsum.photos/600/400?3" alt="Disaster preparedness planning" class="mg-card__image" />
     </div>
     <div class="mg-card__content">
       <header class="mg-card__title"><a href="#">Card three</a></header>
@@ -320,9 +342,9 @@ export default {
         html: `<table class="mg-table">
   <thead>
     <tr>
-      <th>Country</th>
-      <th>Hazard type</th>
-      <th>People affected</th>
+      <th scope="col">Country</th>
+      <th scope="col">Hazard type</th>
+      <th scope="col">People affected</th>
     </tr>
   </thead>
   <tbody>
@@ -344,10 +366,10 @@ export default {
         html: `<table class="mg-table mg-table--striped mg-table--scroll" tabindex="0">
   <thead>
     <tr>
-      <th>Year</th>
-      <th>Events</th>
-      <th>Deaths</th>
-      <th>Economic losses (USD)</th>
+      <th scope="col">Year</th>
+      <th scope="col">Events</th>
+      <th scope="col">Deaths</th>
+      <th scope="col">Economic losses (USD)</th>
     </tr>
   </thead>
   <tbody>
@@ -573,12 +595,12 @@ export default {
     examples: [
       {
         name: 'Show more / collapse pattern',
-        html: `<div class="mg-show-more--collapsed" data-mg-show-more style="--mg-show-more-height: 150px;">
+        html: `<div class="mg-show-more--collapsed" data-mg-show-more id="extra-content" style="--mg-show-more-height: 150px;">
   <p>This is long content that will be collapsed behind a gradient fade. Only the first 150px is visible initially.</p>
   <p>Additional content hidden until the user clicks the button.</p>
   <p>More content here...</p>
 </div>
-<button class="mg-show-more--button" data-mg-show-more-toggle>Show more</button>`,
+<button class="mg-show-more--button" data-mg-show-more-toggle aria-expanded="false" aria-controls="extra-content">Show more</button>`,
       },
     ],
   },
@@ -641,9 +663,9 @@ export default {
                 <div class="mg-page-header__select-wrapper">
                   <select id="lang-select" class="mg-page-header__select" name="lang_dropdown_select">
                     <option value="en" selected>English</option>
-                    <option value="fr">Fran\u00e7ais</option>
-                    <option value="es">Espa\u00f1ol</option>
-                    <option value="ar">\u0627\u0644\u0639\u0631\u0628\u064a\u0629</option>
+                    <option value="fr" lang="fr">Fran\u00e7ais</option>
+                    <option value="es" lang="es">Espa\u00f1ol</option>
+                    <option value="ar" lang="ar">\u0627\u0644\u0639\u0631\u0628\u064a\u0629</option>
                   </select>
                 </div>
               </div>
@@ -701,11 +723,11 @@ export default {
         name: 'Listing page (card grid with pagination)',
         html: `<!-- Main content for a listing/index page — wrap in <main id="main-content"> within the page shell -->
 <div class="mg-container mg-container--padded mg-container--spacer">
-  <nav aria-label="breadcrumbs" class="mg-breadcrumb">
-    <ul>
+  <nav aria-label="Breadcrumbs" class="mg-breadcrumb">
+    <ol>
       <li><a href="/">Home</a></li>
       <li aria-current="page">Publications</li>
-    </ul>
+    </ol>
   </nav>
 
   <h1>Publications</h1>
@@ -720,7 +742,7 @@ export default {
   <div class="mg-grid mg-grid__col-3">
     <article class="mg-card mg-card__vc">
       <div class="mg-card__visual">
-        <img src="https://picsum.photos/600/400?1" alt="" class="mg-card__image" />
+        <img src="https://picsum.photos/600/400?1" alt="Global Assessment Report 2024 cover" class="mg-card__image" />
       </div>
       <div class="mg-card__content">
         <div class="mg-card__meta">
@@ -732,7 +754,7 @@ export default {
     </article>
     <article class="mg-card mg-card__vc">
       <div class="mg-card__visual">
-        <img src="https://picsum.photos/600/400?2" alt="" class="mg-card__image" />
+        <img src="https://picsum.photos/600/400?2" alt="Sendai Framework progress report" class="mg-card__image" />
       </div>
       <div class="mg-card__content">
         <header class="mg-card__title"><a href="/report-2">Sendai Framework progress</a></header>
@@ -741,7 +763,7 @@ export default {
     </article>
     <article class="mg-card mg-card__vc">
       <div class="mg-card__visual">
-        <img src="https://picsum.photos/600/400?3" alt="" class="mg-card__image" />
+        <img src="https://picsum.photos/600/400?3" alt="Making cities resilient guide" class="mg-card__image" />
       </div>
       <div class="mg-card__content">
         <header class="mg-card__title"><a href="/report-3">Making cities resilient</a></header>
@@ -753,7 +775,7 @@ export default {
   <!-- Pagination (legacy class names without mg- prefix) -->
   <nav class="pagination" aria-label="Pagination">
     <ul>
-      <li><a aria-disabled="true" aria-label="Previous page">Previous</a></li>
+      <li><span class="pagination__disabled" aria-disabled="true">Previous</span></li>
       <li><a href="?page=1" aria-current="page" aria-label="Page 1">1</a></li>
       <li><a href="?page=2" aria-label="Page 2">2</a></li>
       <li><a href="?page=3" aria-label="Page 3">3</a></li>
@@ -765,7 +787,7 @@ export default {
       {
         name: 'Detail page (article with sidebar content)',
         html: `<!-- Main content for a detail/article page — wrap in <main id="main-content"> within the page shell -->
-<section class="mg-hero mg-hero--child" role="img" aria-label="Hero background image" style="background-image: url('https://picsum.photos/1600/400')">
+<section class="mg-hero mg-hero--child" aria-label="Early warning systems save lives" style="background-image: url('https://picsum.photos/1600/400')">
   <div class="mg-hero__overlay">
     <article class="mg-hero__content">
       <div class="mg-hero__meta">
@@ -780,12 +802,12 @@ export default {
 </section>
 
 <div class="mg-container mg-container--padded mg-container--spacer">
-  <nav aria-label="breadcrumbs" class="mg-breadcrumb">
-    <ul>
+  <nav aria-label="Breadcrumbs" class="mg-breadcrumb">
+    <ol>
       <li><a href="/">Home</a></li>
       <li><a href="/news">News</a></li>
       <li aria-current="page">Early warning systems save lives</li>
-    </ul>
+    </ol>
   </nav>
 
   <div class="mg-grid mg-grid__col-2">
@@ -836,11 +858,11 @@ export default {
         name: 'Form page (contact form with validation)',
         html: `<!-- Main content for a form page — wrap in <main id="main-content"> within the page shell -->
 <div class="mg-container mg-container--padded mg-container--spacer">
-  <nav aria-label="breadcrumbs" class="mg-breadcrumb">
-    <ul>
+  <nav aria-label="Breadcrumbs" class="mg-breadcrumb">
+    <ol>
       <li><a href="/">Home</a></li>
       <li aria-current="page">Contact us</li>
-    </ul>
+    </ol>
   </nav>
 
   <div class="mg-container--slim">
@@ -861,18 +883,18 @@ export default {
     <form action="/contact" method="post">
       <div class="mg-form-field">
         <label class="mg-form-label mg-form-label--required" for="full-name">Full name</label>
-        <input class="mg-form-input" type="text" id="full-name" name="full_name" required />
+        <input class="mg-form-input" type="text" id="full-name" name="full_name" autocomplete="name" required />
       </div>
 
       <div class="mg-form-field">
         <label class="mg-form-label mg-form-label--required" for="email">Email address</label>
-        <input class="mg-form-input" type="email" id="email" name="email" aria-describedby="email-help" required />
+        <input class="mg-form-input" type="email" id="email" name="email" autocomplete="email" aria-describedby="email-help" required />
         <p class="mg-form-help" id="email-help">We will only use this to respond to your inquiry.</p>
       </div>
 
       <div class="mg-form-field">
         <label class="mg-form-label" for="organization">Organization</label>
-        <input class="mg-form-input" type="text" id="organization" name="organization" />
+        <input class="mg-form-input" type="text" id="organization" name="organization" autocomplete="organization" />
       </div>
 
       <div class="mg-form-field">
