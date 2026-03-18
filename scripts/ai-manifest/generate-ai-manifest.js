@@ -42,15 +42,15 @@ import cssUtilities from './css-utilities.js';
 // Constants
 // ---------------------------------------------------------------------------
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}';
+const CDN_BASE = 'https://assets.undrr.org/static/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
 const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
 
 const THEME_CSS = {
-  undrr: `${CDN_BASE}/dist/css/style.css`,
-  preventionweb: `${CDN_BASE}/dist/css/style-preventionweb.css`,
-  mcr2030: `${CDN_BASE}/dist/css/style-mcr.css`,
-  irp: `${CDN_BASE}/dist/css/style-irp.css`,
+  undrr: `${CDN_BASE}/css/style.css`,
+  preventionweb: `${CDN_BASE}/css/style-preventionweb.css`,
+  mcr2030: `${CDN_BASE}/css/style-mcr.css`,
+  irp: `${CDN_BASE}/css/style-irp.css`,
 };
 
 const REQUIRED_SCRIPTS = [

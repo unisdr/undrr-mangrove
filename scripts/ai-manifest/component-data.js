@@ -633,7 +633,7 @@ export default {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Page title - UNDRR</title>
   <!-- Theme CSS (required, choose one) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}/dist/css/style.css" />
+  <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/{{version}}/css/style.css" />
   <!-- Cookie consent CSS (required if using cookie banner) -->
   <link rel="stylesheet" href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css" />
 </head>
