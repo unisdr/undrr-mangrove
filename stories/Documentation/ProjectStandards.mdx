@@ -119,6 +119,20 @@ The two don't conflict. Mangrove scopes all styles under the `mg-` BEM prefix, a
 
 PrimeReact, Material UI, Bootstrap, Tailwind -- these libraries handle generic UI patterns well. They don't carry the content patterns UNDRR uses: how cards are structured, how the mega menu behaves, how syndicated content renders across sites, how the footer pulls in shared content from PreventionWeb. Mangrove adds that UNDRR-specific content layer on top. The two solve different problems at different layers, so keeping both is the intended setup.
 
+### Why Mangrove uses semantic CSS
+
+A common question is why Mangrove uses its own BEM-namespaced CSS (`mg-card`, `mg-hero`, `mg-footer__links`) instead of a utility framework like Tailwind or the built-in card patterns from PrimeReact.
+
+The short answer: content that travels between systems can't carry its styling with it. UNDRR publishes content in Drupal that gets syndicated across PreventionWeb, MCR2030, IRP, and other properties, each with its own visual identity. If a card is built with utility classes like `bg-white rounded-xl shadow-md p-6`, those classes bake the visual decisions into the markup. Re-theming that card for a different property means inspecting every class and deciding which ones are structural (the card needs to be a flex column) and which are decorative (white background, xl border radius). There's no reliable way to separate those concerns after the fact.
+
+With semantic class names, the HTML says *what something is* (`mg-card`), and the CSS says *how it looks*, per theme. Swapping from UNDRR's visual identity to PreventionWeb's is a CSS import, not a template audit.
+
+This is the same tradeoff that other multi-brand design systems have faced. Yandex created the BEM methodology because they managed [over 100 services sharing the same corporate style](https://en.bem.info/methodology/history/) and utility-style copying wouldn't scale. The UK's GOV.UK Design System uses [`govuk-` prefixed BEM classes](https://github.com/alphagov/govuk-frontend/blob/main/docs/contributing/coding-standards/css.md) across hundreds of government services for the same reason. IBM's Carbon Design System, GitHub's Primer, and Adobe's Spectrum all use semantic token architectures so that [altering token values produces a new theme](https://carbondesignsystem.com/elements/themes/code/) without touching component markup. The W3C Design Tokens Community Group [published a stable specification](https://www.w3.org/community/design-tokens/) in 2025 specifically to standardize this pattern, with editors from Adobe, Google, Microsoft, Salesforce, Shopify, and Figma.
+
+Utility-first CSS is genuinely faster for building single-brand sites. That speed advantage is real, and it's why libraries like Tailwind are popular. The tradeoff becomes painful when you need the same components to render across multiple visual contexts, which is Mangrove's situation. Shopify recognizes this distinction explicitly: they use [Polaris (semantic tokens) for their multi-brand admin ecosystem](https://polaris.shopify.com/) but [recommend Tailwind for individual storefronts](https://shopify.engineering/) where speed matters more than portability.
+
+For further reading on this topic, see Brad Frost's [The many faces of themeable design systems](https://bradfrost.com/blog/post/the-many-faces-of-themeable-design-systems/), Martin Fowler's [Design token-based UI architecture](https://martinfowler.com/articles/design-token-based-ui-architecture.html), and the Figma blog's [The future of design systems is semantic](https://www.figma.com/blog/the-future-of-design-systems-is-semantic/).
+
 ## Adopting Mangrove
 
 Not every component in every system needs to come from Mangrove. Here's how to identify what does.
