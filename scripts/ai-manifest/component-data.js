@@ -620,6 +620,20 @@ export default {
     ],
   },
 
+  // --- CSS utilities and documentation pages ---
+  'components-font-size-utilities': {
+    description: 'Font size utility classes (mg-font-size-*) for overriding typography scale.',
+  },
+  'components-normalize': {
+    description: 'CSS normalize/reset layer applied globally before component styles.',
+  },
+  'components-typography-typography-integration-example': {
+    description: 'Integration example showing Mangrove typography classes in a page context.',
+  },
+  'components-utility-css': {
+    description: 'CSS utility class reference (spacing, visibility, text alignment, floats).',
+  },
+
   // --- Page templates ---
   'example-page-template-example': {
     description: 'Complete page templates showing how to compose Mangrove components into working UNDRR-branded pages with all required scripts and assets.',
