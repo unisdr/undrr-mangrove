@@ -1,5 +1,7 @@
 # Writing guidelines for Mangrove
 
+> **Also available in Storybook:** This file is rendered in the [Writing guidelines](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-writing-guidelines--docs) Storybook page. Edits here automatically appear there.
+
 This guide helps anyone contributing to Mangrove write interface copy, documentation, and developer messages that:
 
 - Improve user experience

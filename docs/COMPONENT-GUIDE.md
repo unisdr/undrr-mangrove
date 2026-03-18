@@ -1,5 +1,7 @@
 # Component guide
 
+> **Also available in Storybook:** This file is rendered in the [Component guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-guide--docs) Storybook page. Edits here automatically appear there.
+
 A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in Storybook.
 
 ## Decision tree: what files do I need?

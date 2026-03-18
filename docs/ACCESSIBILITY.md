@@ -1,5 +1,7 @@
 # Accessibility
 
+> **Also available in Storybook:** This file is rendered in the [Accessibility](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices-accessibility--docs) Storybook page. Edits here automatically appear there.
+
 Accessible design not only helps users with disabilities; it also provides a better user experience for everyone. All components follow the WCAG 2.1 AA standards.
 
 All patterns are perceivable, operable, and understandable to users, even when using a screen reader or other assistive technology. However, how you use these elements also affects the accessibility of a product.

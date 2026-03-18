@@ -1,5 +1,7 @@
 # Architecture
 
+> **Also available in Storybook:** This file is rendered in the [Architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-architecture--docs) Storybook page. Edits here automatically appear there.
+
 This document explains the build system, distribution channels, and integration patterns for the Mangrove component library. It is the single reference for understanding how source code becomes consumable assets.
 
 ## Two webpack build targets

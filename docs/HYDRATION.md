@@ -1,5 +1,7 @@
 # Layered hydration
 
+> **Also available in Storybook:** This file is rendered in the [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-hydration-guide--docs) Storybook page. Edits here automatically appear there.
+
 Mangrove React components are rendered into server-generated HTML containers via hydration wrappers. This document describes the layered approach that replaces hand-written per-component boilerplate with a shared runtime.
 
 Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803)
