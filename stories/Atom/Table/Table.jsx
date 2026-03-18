@@ -53,9 +53,9 @@ export const TableTag = ({
     >
       <thead>
         <tr>
-          <th>{text}</th>
-          <th>{text}</th>
-          <th>{text}</th>
+          <th scope="col">{text}</th>
+          <th scope="col">{text}</th>
+          <th scope="col">{text}</th>
         </tr>
       </thead>
       <tbody>

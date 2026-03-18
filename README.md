@@ -79,10 +79,10 @@ yarn docker-install
 # Build the project for release inside the Docker container
 yarn docker-build
 
-# Watch for component changes, rebuild them, and copy JS files to the theme (inside Docker)
+# Watch for component changes and rebuild (inside Docker)
 yarn docker-watch
 
-# Watch for component changes, rebuild them, and copy JS files to the theme (direct)
+# Watch for component changes and rebuild (direct)
 yarn watch
 
 # Lint the codebase inside the Docker container
@@ -106,7 +106,7 @@ make run
 # Lint the codebase
 make lint
 
-# Watch for component changes, rebuild them, and copy JS files to the theme
+# Watch for component changes and rebuild
 make watch
 
 # Build for release (default mode is production, you can override it with --mode=development)
@@ -132,7 +132,7 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn install"
 # Run Storybook locally
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook --ci"
 
-# Watch for component changes, rebuild them, and copy JS files to the theme
+# Watch for component changes and rebuild
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run watch"
 
 # Build the project for release (default mode is production)

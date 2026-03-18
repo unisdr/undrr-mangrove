@@ -167,7 +167,7 @@ make build            # Build for release
 
 ## Deploying theme CSS to Drupal
 
-Built JavaScript is automatically copied to the Drupal theme by `mangrove-watch.js` (via `yarn watch --copy`). CSS is **not** auto-synced and must be copied manually after each SCSS change.
+CSS is **not** auto-synced and must be copied manually after each SCSS change. Built JavaScript (`dist/components/*.js`) is copied to the Drupal theme during the Drupal-side build process.
 
 ### Child themes
 

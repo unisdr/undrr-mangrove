@@ -30,7 +30,7 @@ Our pipeline fills the gaps:
 - **Rendered HTML** for vanilla consumers who use Mangrove via CDN without React. No other tool provides this.
 - **UNDRR page recipes** — required scripts (analytics, messaging, cookie consent), syndication embed instructions, branding-critical markup flagged as `doNotModify`.
 - **Static deployment** alongside GitHub Pages. No running server needed.
-- **CSS utility inventory** with all 162 utility classes grouped by category.
+- **CSS utility inventory** with utility classes grouped by category.
 
 The ecosystem tools are complementary, not competing. We recommend `@storybook/addon-mcp` for local development alongside our static pipeline for deployed documentation.
 
@@ -316,7 +316,7 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 
 ## What's next
 
-- **Expand auto-rendering** — six components are auto-rendered today (QuoteHighlight, StatsCard, IconCard, Pager, MegaMenu, SyndicationSearchWidget). Components that depend on `document` or `window` (e.g., ShareButtons) still need curated HTML
+- **Expand auto-rendering** — most webpack-bundled components are auto-rendered from `dist/` builds. Components that depend on `document` or `window` (e.g., ShareButtons) still need curated HTML
 - **MDX content in the manifest** — the Storybook manifest includes raw MDX source that we don't currently process. The Fluent UI extractor shows this can be converted to useful Markdown.
 - **HTML browse page** — a static `index.html` for debugging the manifest in a browser (idea from the Fluent UI extractor)
 - **Watch `@storybook/addon-mcp`** — as it matures past experimental, consider tighter integration

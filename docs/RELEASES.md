@@ -87,10 +87,9 @@ If component JS or CSS changed:
 
 ```bash
 yarn build
-yarn watch --copy    # copies dist/components/*.js to undrr_common/js/mangrove-components/
 ```
 
-If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
+Copy built JS from `dist/components/` to `undrr_common/js/mangrove-components/` in the Drupal theme. If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
 
 ## Manual npm publish (fallback)
 

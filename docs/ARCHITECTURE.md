@@ -50,7 +50,7 @@ stories/assets/scss/
 ├── style-irp.scss              → IRP theme
 ├── style-mcr.scss              → MCR2030 theme
 ├── _components.scss            → Imports all component SCSS files
-├── _variables.scss             → Design tokens (29 variables with !default)
+├── _variables.scss             → Design tokens (SCSS variables with !default)
 ├── _breakpoints.scss           → Responsive breakpoint mixins
 └── _mixins.scss                → Shared SCSS mixins
 ```
@@ -97,7 +97,7 @@ To add a Drupal-integrated component: add its entry to both `webpack.config.js` 
 ```
 Mangrove source
   │
-  │  yarn build / yarn watch --copy
+  │  yarn build
   ▼
 dist/components/*.js ── copy ──▶ undrr_common/js/mangrove-components/*.js
                                   (committed to Drupal repo)

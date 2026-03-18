@@ -15,22 +15,22 @@ export function Pagination({ text, text2 }) {
     <nav className="pagination" aria-label="Pagination">
       <ul>
         <li className="disabled">
-          <a aria-disabled="true" aria-label="Previous page">
+          <span aria-disabled="true">
             Previous
-          </a>
+          </span>
         </li>
         <li>
           {text}
           <span>
             {' '}
-            <a href="#" aria-label="1">
+            <a href="#" aria-label="Page 1">
               1
             </a>
           </span>
           {text2}
           <span>
             {' '}
-            <a href="#" aria-label="123">
+            <a href="#" aria-label="Page 123">
               123
             </a>
           </span>

@@ -572,6 +572,81 @@ console.log(
 );
 
 // ---------------------------------------------------------------------------
+// Check 3: Curated HTML drift detection
+//
+// For components with curated HTML, auto-render them from dist/ and compare
+// the BEM classes (mg-*) used in each. If the curated HTML references classes
+// that don't appear in the auto-rendered output (or vice versa), flag it as
+// potential drift. This catches structural/class renames without requiring
+// per-component test files.
+// ---------------------------------------------------------------------------
+
+/** Extract all mg-* BEM classes from an HTML string. */
+function extractBemClasses(html) {
+  const matches = html.match(/\bmg-[\w-]+/g);
+  return new Set(matches || []);
+}
+
+async function checkCuratedDrift() {
+  if (!fs.existsSync(distDir)) return [];
+
+  const React = (await import('react')).default;
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const SAMPLE_PROPS = buildSampleProps(React);
+  const warnings = [];
+
+  const distFiles = fs.readdirSync(distDir)
+    .filter(f => f.endsWith('.js'))
+    .map(f => f.replace('.js', ''));
+
+  for (const fileName of distFiles) {
+    if (fileName === 'hydrate') continue;
+    const componentId = COMPONENT_IDS[fileName];
+    if (!componentId) continue;
+
+    const data = curatedData[componentId];
+    if (!data?.examples || REQUIRES_REACT[componentId]) continue;
+
+    // This component has curated HTML — try to auto-render and compare classes
+    const modulePath = path.join(distDir, `${fileName}.js`);
+    try {
+      const mod = await import(modulePath);
+      const isComponentLike = v =>
+        typeof v === 'function' || (v != null && typeof v === 'object' && v.$$typeof != null);
+      const Component = mod.default || mod[fileName]
+        || mod[Object.keys(mod).find(k => isComponentLike(mod[k]))];
+
+      if (!isComponentLike(Component)) continue;
+
+      const props = SAMPLE_PROPS[fileName] || {};
+      const rendered = renderToStaticMarkup(React.createElement(Component, props));
+      if (rendered.length < 30) continue;
+
+      const renderedClasses = extractBemClasses(rendered);
+      const curatedHtml = data.examples.map(e => e.html || '').join('\n');
+      const curatedClasses = extractBemClasses(curatedHtml);
+
+      if (renderedClasses.size === 0 && curatedClasses.size === 0) continue;
+
+      // Classes in curated HTML that don't appear in rendered output
+      const staleInCurated = [...curatedClasses].filter(c => !renderedClasses.has(c));
+      // Classes in rendered output missing from curated HTML
+      const missingFromCurated = [...renderedClasses].filter(c => !curatedClasses.has(c));
+
+      if (staleInCurated.length > 0 || missingFromCurated.length > 0) {
+        const parts = [];
+        if (staleInCurated.length > 0) parts.push(`curated has: ${staleInCurated.join(', ')}`);
+        if (missingFromCurated.length > 0) parts.push(`rendered has: ${missingFromCurated.join(', ')}`);
+        warnings.push(`  ${componentId}: ${parts.join(' | ')}`);
+      }
+    } catch {
+      // Component can't render in Node — skip silently
+    }
+  }
+  return warnings;
+}
+
+// ---------------------------------------------------------------------------
 // Validate-only exit
 // ---------------------------------------------------------------------------
 
@@ -585,6 +660,14 @@ if (validateOnly) {
   if (a11yViolations.length > 0) {
     console.error(`Validation failed: ${a11yViolations.length} a11y violation(s) in curated HTML.`);
     failed = true;
+  }
+
+  // Run drift check (warnings only — does not fail the build)
+  const driftWarnings = await checkCuratedDrift();
+  if (driftWarnings.length > 0) {
+    console.warn('Curated HTML drift detected (BEM classes differ from auto-rendered output):');
+    for (const w of driftWarnings) console.warn(w);
+    console.warn('Review component-data.js entries above — curated HTML may be stale.');
   }
 
   if (failed) {
