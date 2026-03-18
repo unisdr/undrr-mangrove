@@ -10,7 +10,7 @@ Several tools exist for connecting Storybook to LLMs. We evaluated them and foun
 
 | Tool | What it does | What it doesn't do |
 |------|-------------|-------------------|
-| [`@storybook/addon-mcp`](https://storybook.js.org/blog/storybook-mcp-sneak-peek/) | MCP server exposing component data to agents in IDEs. Live queries against a running dev server. | Generate static files. Provide rendered HTML. Work without a running Storybook. |
+| [`@storybook/mcp`](https://www.npmjs.com/package/@storybook/mcp) (Storybook 10.3+) | Built-in MCP server with component docs, story previews, and test running. Live queries against a running dev server. | Generate static files. Provide rendered HTML for vanilla consumers. Work without a running server (unless self-hosted). Include page recipes, required assets, or branding constraints. |
 | [`@fluentui/storybook-llms-extractor`](https://www.npmjs.com/package/@fluentui/storybook-llms-extractor) | Extracts Storybook metadata into llms.txt format using Playwright. Per-component text files with props and stories. | Provide rendered HTML output. Include page recipes, required scripts, or branding constraints. |
 | [Storybook component manifest](https://github.com/storybookjs/storybook/issues/32276) | Built-in JSON manifest with props, types, and story snippets. | Include rendered HTML, CSS class inventories, or integration guidance. Storybook's own research explicitly excluded visual rendering. |
 
@@ -211,7 +211,7 @@ If you're working on Mangrove itself (not just consuming it), you can connect yo
 
 ### What this gets you
 
-With the MCP addon running, agents can:
+With the Storybook MCP server running, agents can:
 
 - Query component data through an API instead of parsing files
 - Get URLs to specific stories for visual checks
@@ -219,34 +219,21 @@ With the MCP addon running, agents can:
 
 ### Setting up MCP for local development (optional)
 
-The MCP addon is not included in Mangrove's default setup. To try it locally:
+Storybook 10.3+ includes a built-in MCP server. To try it locally:
 
-1. **Install the MCP addon**:
-   ```bash
-   yarn add -D @storybook/addon-mcp
-   ```
-
-2. **Add to your Storybook config** (`.storybook/main.js`):
-   ```javascript
-   addons: [
-     // ... other addons
-     '@storybook/addon-mcp',
-   ],
-   ```
-
-3. **Start Storybook**:
+1. **Start Storybook**:
    ```bash
    yarn dev
    ```
 
-4. **Configure your AI tool** to connect to `http://localhost:6006/mcp`
+2. **Configure your AI tool** to connect to `http://localhost:6006/mcp`
 
    For Claude Code:
    ```bash
    claude mcp add storybook-mcp --transport http http://localhost:6006/mcp --scope project
    ```
 
-See the [Storybook MCP documentation](https://storybook.js.org/blog/storybook-mcp-sneak-peek/) for detailed setup instructions for other AI tools.
+See the [Storybook MCP documentation](https://storybook.js.org/docs/next/ai/mcp/overview/) for detailed setup instructions for other AI tools.
 
 ---
 
@@ -277,15 +264,22 @@ node scripts/ai-manifest/generate-ai-manifest.js
 
 These tools address overlapping problems. We use or recommend them alongside our pipeline.
 
-### Storybook MCP (`@storybook/addon-mcp`)
+### Storybook MCP (`@storybook/mcp`)
 
-The official Storybook MCP addon (early-stage, under active development). Exposes component metadata and story-writing tools via MCP protocol for live queries from AI agents in IDEs. Requires a running Storybook dev server.
+As of Storybook 10.3 (March 2025), the official [`@storybook/mcp`](https://www.npmjs.com/package/@storybook/mcp) package ships a built-in MCP server at `http://localhost:6006/mcp`. It exposes three tool groups — docs (list/get component metadata), development (story-writing guidance, preview rendering), and testing (run story tests and accessibility checks). Requires a running Storybook dev server or a self-hosted Node.js server with generated manifests.
 
-We recommend this for local development. It complements our static pipeline — use MCP when developing locally, use the deployed JSON files for CI and external consumers.
+We evaluated this for Mangrove and decided our custom pipeline is the better fit for now:
 
-- [Storybook MCP announcement](https://storybook.js.org/blog/storybook-mcp-sneak-peek/)
-- [GitHub repo](https://github.com/storybookjs/mcp)
-- [npm package](https://www.npmjs.com/package/@storybook/addon-mcp)
+- **Vanilla HTML is our primary use case.** ~50 of 65 components are consumed as plain HTML/CSS via CDN. The Storybook MCP is React-centric and has no concept of rendered HTML examples.
+- **Static deployment matters.** Our manifests are JSON files on GitHub Pages — no server to run, no infra to maintain. Any tool that can fetch a URL can use them.
+- **UNDRR-specific context.** Branding flags, required page assets, embed patterns, and theme URLs are domain knowledge the Storybook MCP doesn't cover.
+- **The story test runner is the one capability we can't replicate statically.** If we revisit this later, it would likely be to add `@storybook/mcp` alongside our pipeline for local development, not to replace it.
+
+We recommend the Storybook MCP for teams with React-only component libraries and simpler deployment needs.
+
+- [Storybook 10.3 changelog](https://github.com/storybookjs/storybook/blob/main/CHANGELOG.md#1030)
+- [npm package](https://www.npmjs.com/package/@storybook/mcp)
+- [Storybook MCP docs](https://storybook.js.org/docs/next/ai/mcp/overview/)
 
 ### Fluent UI LLMs extractor (`@fluentui/storybook-llms-extractor`)
 
@@ -308,7 +302,7 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 - **Expand auto-rendering** — most webpack-bundled components are auto-rendered from `dist/` builds. Components that depend on `document` or `window` (e.g., ShareButtons) still need curated HTML
 - **MDX content in the manifest** — the Storybook manifest includes raw MDX source that we don't currently process. The Fluent UI extractor shows this can be converted to useful Markdown.
 - **HTML browse page** — a static `index.html` for debugging the manifest in a browser (idea from the Fluent UI extractor)
-- **Watch `@storybook/addon-mcp`** — as it matures past experimental, consider tighter integration
+- **Watch `@storybook/mcp`** — Storybook 10.3 ships a built-in MCP server with story test running. If we add it, it would complement our static pipeline for local development, not replace it.
 
 ## Further reading
 
