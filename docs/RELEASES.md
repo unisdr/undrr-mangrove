@@ -20,7 +20,7 @@ yarn test
 yarn lint
 ```
 
-Review any components whose markup changed since the last release and update their HTML examples in `scripts/ai-manifest/data/component-data/`. If utility classes were added or removed, update `scripts/ai-manifest/data/css-utilities.js`. These curated files feed the AI component manifest and can drift from reality between releases.
+Review any components whose markup changed since the last release and update their HTML examples in `scripts/ai-manifest/component-data.js`. If utility classes were added or removed, update `scripts/ai-manifest/css-utilities.js`. These curated files feed the AI component manifest and can drift from reality between releases.
 
 You can check for drift by running a full build and then validating the manifest:
 
@@ -29,7 +29,7 @@ yarn build
 yarn validate-manifest
 ```
 
-The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, CSS class mismatches, and PropTypes coverage. See [`scripts/ai-manifest/README.md`](../scripts/ai-manifest/README.md) for the full pipeline documentation and data schema.
+The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
 ### 2. Update the version
 

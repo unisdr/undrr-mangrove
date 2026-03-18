@@ -1,11 +1,36 @@
-// Component data: metadata, curated HTML, and flags for the AI manifest pipeline.
-// Auto-rendered components only need description + flags. Curated examples are
-// kept for components that cannot render in Node (DOMPurify, document refs, etc.).
+// Component data: curated metadata, HTML examples, and flags for the AI manifest.
+// Auto-rendered components only need description + flags here. Curated examples
+// are kept for components that can't render cleanly in Node.js.
+
+// ---------------------------------------------------------------------------
+// React-only components (everything else is vanilla HTML by default)
+// ---------------------------------------------------------------------------
+
+export const REQUIRES_REACT = {
+  'components-charts-barchart': 'BarChart uses D3 for rendering. It requires React and the D3 library. Import via npm: import { BarChart } from "@undrr/undrr-mangrove".',
+  'components-charts-connectedscatterplot': 'ConnectedScatterPlot uses D3 for rendering. Requires React and D3. Import via npm.',
+  'components-charts-histogram': 'Histogram uses D3 for rendering. Requires React and D3. Import via npm.',
+  'components-charts-indexchart': 'IndexChart uses D3 for rendering. Requires React and D3. Import via npm.',
+  'components-maps-mapcomponent': 'MapComponent uses Leaflet for interactive maps. Requires React and Leaflet. Import via npm.',
+  'components-syndicationsearchwidget': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.',
+  'components-megamenu': 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator.',
+  'components-fetcher': 'Fetcher is a generic data-fetching wrapper component. Requires React for state management.',
+  'components-gallery': 'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
+  'components-pager': 'Pager manages pagination state. Requires React. Import via npm.',
+  'components-cookieconsentbanner': 'CookieConsentBanner manages consent state and cookie storage. Requires React.',
+  'components-snackbar': 'Snackbar manages auto-dismiss timing and state. Requires React.',
+  'components-scrollcontainer': 'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
+  'components-buttons-sharebuttons': 'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.',
+  'components-table-of-contents': 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. Requires React.',
+};
+
+// ---------------------------------------------------------------------------
+// Curated component data (descriptions, HTML examples, flags)
+// ---------------------------------------------------------------------------
 
 export default {
   // --- Layout ---
   'design-decisions-container': {
-    vanillaHtml: true,
     description: 'Centered responsive container with breakpoint-driven max-widths (480/900/1164/1440px). Variants for padding and vertical spacing.',
     cssClasses: [
       'mg-container', 'mg-container--slim', 'mg-container--padded', 'mg-container--spacer',
@@ -41,7 +66,6 @@ export default {
   },
 
   'design-decisions-grid-layout': {
-    vanillaHtml: true,
     description: 'Responsive CSS grid system. 1-6 column layouts with column and row spanning. Flexbox fallback for older browsers.',
     cssClasses: [
       'mg-grid', 'mg-grid__col-1', 'mg-grid__col-2', 'mg-grid__col-3',
@@ -88,13 +112,12 @@ export default {
   },
 
   // --- Buttons (auto-rendered) ---
-  'components-buttons-buttons': { vanillaHtml: true, description: 'Primary and secondary CTA buttons. Arrow and disabled variants.' },
-  'components-buttons-chips': { vanillaHtml: true, description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant. Uses legacy class names without the mg- prefix.' },
-  'components-buttons-cta-link': { vanillaHtml: true, description: 'Inline call-to-action link with arrow or spacing icon. Can render as anchor or span.' },
+  'components-buttons-buttons': { description: 'Primary and secondary CTA buttons. Arrow and disabled variants.' },
+  'components-buttons-chips': { description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant. Uses legacy class names without the mg- prefix.' },
+  'components-buttons-cta-link': { description: 'Inline call-to-action link with arrow or spacing icon. Can render as anchor or span.' },
 
   // --- Cards ---
   'components-cards-vertical-card': {
-    vanillaHtml: true,
     description: 'Card with stacked image, labels, title, summary, and optional CTA button. Four color variants.',
     cssClasses: [
       'mg-card', 'mg-card__vc', 'mg-card--secondary', 'mg-card--tertiary', 'mg-card--quaternary',
@@ -170,7 +193,6 @@ export default {
   },
 
   'components-cards-horizontal-card': {
-    vanillaHtml: true,
     description: 'Side-by-side card with image left and content right. Labels, title, summary, and CTA button.',
     cssClasses: [
       'mg-card', 'mg-card__hc', 'mg-card--secondary', 'mg-card__visual', 'mg-card__image',
@@ -199,11 +221,10 @@ export default {
     ],
   },
 
-  'components-cards-icon-card': { vanillaHtml: true, description: 'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full.' },
-  'components-cards-book-card': { vanillaHtml: true, description: 'Minimal card for publications: cover image and title only.' },
+  'components-cards-icon-card': { description: 'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full.' },
+  'components-cards-book-card': { description: 'Minimal card for publications: cover image and title only.' },
 
   'components-cards-horizontal-book-card': {
-    vanillaHtml: true,
     description: 'Horizontal card for publications: cover image left, title and summary right.',
     cssClasses: [
       'mg-card', 'mg-card__hc', 'mg-card-book__hc', 'mg-card__visual', 'mg-card__image',
@@ -230,11 +251,10 @@ export default {
     ],
   },
 
-  'components-cards-stats-card': { vanillaHtml: true, description: 'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.' },
+  'components-cards-stats-card': { description: 'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.' },
 
   // --- Tags ---
   'atom-tag': {
-    vanillaHtml: true,
     description: 'Small label for categorization. Variants: default, secondary, outline, accent. Can be span or link.',
     cssClasses: ['mg-tag', 'mg-tag--secondary', 'mg-tag--outline', 'mg-tag--accent', 'mg-tag-container'],
     examples: [
@@ -260,7 +280,6 @@ export default {
 
   // --- Typography ---
   'components-typography': {
-    vanillaHtml: true,
     description: 'Base typography styles applied to standard HTML heading and body elements. No extra classes needed.',
     cssClasses: [],
     examples: [
@@ -280,7 +299,6 @@ export default {
   },
 
   'components-typography-links': {
-    vanillaHtml: true,
     description: 'Link styles applied to standard anchor elements. Underlined by default with interactive color.',
     cssClasses: [],
     examples: [
@@ -294,7 +312,6 @@ export default {
 
   // --- Table ---
   'components-table': {
-    vanillaHtml: true,
     description: 'Styled HTML table with size (small), variant (striped/border), and responsive (stacked/scroll) options.',
     cssClasses: ['mg-table', 'mg-table--small', 'mg-table--striped', 'mg-table--border', 'mg-table--stacked', 'mg-table--scroll'],
     examples: [
@@ -343,11 +360,10 @@ export default {
   },
 
   // --- Tabs (auto-rendered) ---
-  'components-tabs': { vanillaHtml: true, description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity. The script adds ARIA roles (tablist, tab, tabpanel) and keyboard navigation at runtime — do not omit the script or tabs will be inaccessible.' },
+  'components-tabs': { description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity. The script adds ARIA roles (tablist, tab, tabpanel) and keyboard navigation at runtime — do not omit the script or tabs will be inaccessible.' },
 
   // --- Callout ---
   'components-callout': {
-    vanillaHtml: true,
     description: 'Styled blockquote with optional color accent (yellow, red, green, blue) and citation.',
     cssClasses: ['blockquote', 'yellow', 'red', 'green', 'blue'],
     examples: [
@@ -371,16 +387,15 @@ export default {
   },
 
   // --- Highlight box (auto-rendered) ---
-  'components-highlightbox': { vanillaHtml: true, description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.' },
+  'components-highlightbox': { description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.' },
 
   // --- Quote highlight (auto-rendered) ---
-  'components-quotehighlight': { vanillaHtml: true, description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
+  'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
 
   // --- Hero ---
-  'components-hero-hero': { vanillaHtml: true, description: 'Full-width hero banner with background image, overlay, title, summary, and CTA buttons. Four color variants.' },
+  'components-hero-hero': { description: 'Full-width hero banner with background image, overlay, title, summary, and CTA buttons. Four color variants.' },
 
   'components-hero-hero-child': {
-    vanillaHtml: true,
     description: 'Smaller hero banner for child/section pages. Single CTA button, linked label.',
     cssClasses: [
       'mg-hero', 'mg-hero--child', 'mg-hero__overlay', 'mg-hero__content',
@@ -411,7 +426,6 @@ export default {
 
   // --- Footer (auto-rendered + embed) ---
   'components-footer': {
-    vanillaHtml: true,
     description: 'Site footer with optional UNDRR syndication. Loads global footer content from PreventionWeb via a widget script. Works with or without React.',
     doNotModify: 'The Footer structure is a UNDRR branding requirement. Use the documented markup exactly as shown. Do not simplify, reorganize, or omit elements.',
     vanillaHtmlEmbed: {
@@ -453,27 +467,25 @@ export default {
 
   // --- Page header (auto-rendered) ---
   'components-pageheader': {
-    vanillaHtml: true,
     description: 'UNDRR page header with colored decoration stripe, logo, user account link, and language selector dropdown.',
     doNotModify: 'The PageHeader structure (decoration stripe, toolbar wrapper, logo section) is a UNDRR branding requirement. Use the documented markup exactly as shown. The four empty divs inside mg-page-header__decoration are intentional — they render the colored stripe segments.',
   },
 
   // --- Navigation (auto-rendered) ---
-  'components-navigation-breadcrumbs': { vanillaHtml: true, description: 'Breadcrumb navigation trail. White variant available for dark backgrounds.' },
-  'components-navigation-pagination': { vanillaHtml: true, description: 'Page navigation with previous/next links and page number display. Uses legacy class names without the mg- prefix.' },
+  'components-navigation-breadcrumbs': { description: 'Breadcrumb navigation trail. White variant available for dark backgrounds.' },
+  'components-navigation-pagination': { description: 'Page navigation with previous/next links and page number display. Uses legacy class names without the mg- prefix.' },
 
   // --- Forms (auto-rendered) ---
-  'components-forms-text-input': { vanillaHtml: true, description: 'Text input field with label, help text, required indicator, and error state.' },
-  'components-forms-select': { vanillaHtml: true, description: 'Dropdown select field with label, placeholder, help text, and error state.' },
-  'components-forms-checkbox': { vanillaHtml: true, description: 'Styled checkbox with label. Error and disabled states available.' },
-  'components-forms-radio': { vanillaHtml: true, description: 'Styled radio button with label. Error and disabled states available.' },
-  'components-forms-textarea': { vanillaHtml: true, description: 'Multi-line text input with label, help text, and error state.' },
-  'components-forms-formgroup': { vanillaHtml: true, description: 'Fieldset wrapper for grouping related form controls with a legend. Error and disabled states.' },
-  'components-forms-formerrorsummary': { vanillaHtml: true, description: 'Error summary box listing all form validation errors with anchor links to each field.' },
+  'components-forms-text-input': { description: 'Text input field with label, help text, required indicator, and error state.' },
+  'components-forms-select': { description: 'Dropdown select field with label, placeholder, help text, and error state.' },
+  'components-forms-checkbox': { description: 'Styled checkbox with label. Error and disabled states available.' },
+  'components-forms-radio': { description: 'Styled radio button with label. Error and disabled states available.' },
+  'components-forms-textarea': { description: 'Multi-line text input with label, help text, and error state.' },
+  'components-forms-formgroup': { description: 'Fieldset wrapper for grouping related form controls with a legend. Error and disabled states.' },
+  'components-forms-formerrorsummary': { description: 'Error summary box listing all form validation errors with anchor links to each field.' },
 
   // --- CTA ---
   'components-cta': {
-    vanillaHtml: true,
     description: 'Text-based call-to-action section with heading, paragraph, and button.',
     cssClasses: [],
     examples: [
@@ -490,7 +502,6 @@ export default {
 
   // --- Images ---
   'components-images-author-image': {
-    vanillaHtml: true,
     description: 'Circular author portrait with optional hover color accent (yellow, green, red, blue) and size variant.',
     cssClasses: ['author__img'],
     examples: [
@@ -504,7 +515,6 @@ export default {
   },
 
   'components-images-image-with-credit-caption': {
-    vanillaHtml: true,
     description: 'Figure element with image, caption, and photo credit.',
     cssClasses: ['image-figcaption', 'image-figcaption__cart', 'scale-up'],
     examples: [
@@ -525,7 +535,6 @@ export default {
 
   // --- Logos ---
   'components-logos': {
-    vanillaHtml: true,
     description: 'Logo images for UNDRR, PreventionWeb, IRP, and partner organizations.',
     cssClasses: [],
     examples: [
@@ -538,7 +547,6 @@ export default {
 
   // --- Icons ---
   'components-icons': {
-    vanillaHtml: true,
     description: 'Mangrove icon font. Use span elements with mg-icon and mg-icon-{name} classes.',
     cssClasses: ['mg-icon'],
     examples: [
@@ -555,12 +563,11 @@ export default {
   },
 
   // --- Utilities ---
-  'utilities-embedcontainer': { vanillaHtml: true, description: 'Responsive aspect-ratio wrapper for iframes and embeds. Default 16:9 with 4:3, 1:1, and 21:9 variants.' },
-  'components-fullwidth': { vanillaHtml: true, description: 'Makes content break out of its container to span the full viewport width. RTL-safe.' },
-  'components-loader': { vanillaHtml: true, description: 'Animated loading spinner. 40px on mobile, 96px on desktop.' },
+  'utilities-embedcontainer': { description: 'Responsive aspect-ratio wrapper for iframes and embeds. Default 16:9 with 4:3, 1:1, and 21:9 variants.' },
+  'components-fullwidth': { description: 'Makes content break out of its container to span the full viewport width. RTL-safe.' },
+  'components-loader': { description: 'Animated loading spinner. 40px on mobile, 96px on desktop.' },
 
   'components-showmore': {
-    vanillaHtml: true,
     description: 'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
@@ -577,7 +584,6 @@ export default {
   },
 
   'components-error-pages': {
-    vanillaHtml: true,
     description: 'Error page templates (404, 500, etc.) with heading, message, and return link.',
     cssClasses: [],
     examples: [
@@ -594,7 +600,6 @@ export default {
 
   // --- Page templates ---
   'example-page-template-example': {
-    vanillaHtml: true,
     description: 'Complete page templates showing how to compose Mangrove components into working UNDRR-branded pages with all required scripts and assets.',
     examples: [
       {
@@ -913,21 +918,4 @@ export default {
       },
     ],
   },
-
-  // --- React-only components ---
-  'components-charts-barchart': { requiresReact: true, reactNote: 'BarChart uses D3 for rendering. It requires React and the D3 library. Import via npm: import { BarChart } from "@undrr/undrr-mangrove".' },
-  'components-charts-connectedscatterplot': { requiresReact: true, reactNote: 'ConnectedScatterPlot uses D3 for rendering. Requires React and D3. Import via npm.' },
-  'components-charts-histogram': { requiresReact: true, reactNote: 'Histogram uses D3 for rendering. Requires React and D3. Import via npm.' },
-  'components-charts-indexchart': { requiresReact: true, reactNote: 'IndexChart uses D3 for rendering. Requires React and D3. Import via npm.' },
-  'components-maps-mapcomponent': { requiresReact: true, reactNote: 'MapComponent uses Leaflet for interactive maps. Requires React and Leaflet. Import via npm.' },
-  'components-syndicationsearchwidget': { requiresReact: true, reactNote: 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.' },
-  'components-megamenu': { requiresReact: true, reactNote: 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator.' },
-  'components-fetcher': { requiresReact: true, reactNote: 'Fetcher is a generic data-fetching wrapper component. Requires React for state management.' },
-  'components-gallery': { requiresReact: true, reactNote: 'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.' },
-  'components-pager': { requiresReact: true, reactNote: 'Pager manages pagination state. Requires React. Import via npm.' },
-  'components-cookieconsentbanner': { requiresReact: true, reactNote: 'CookieConsentBanner manages consent state and cookie storage. Requires React.' },
-  'components-snackbar': { requiresReact: true, reactNote: 'Snackbar manages auto-dismiss timing and state. Requires React.' },
-  'components-scrollcontainer': { requiresReact: true, reactNote: 'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.' },
-  'components-buttons-sharebuttons': { requiresReact: true, reactNote: 'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.' },
-  'components-table-of-contents': { requiresReact: true, reactNote: 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. Requires React.' },
 };

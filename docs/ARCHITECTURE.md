@@ -157,7 +157,7 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for the list of child themes and the copy w
 
 The build produces AI-friendly component metadata alongside Storybook so coding agents can discover and use components accurately. The pipeline auto-generates from Storybook and component rendering, with some curated data maintained manually.
 
-See [`scripts/ai-manifest/README.md`](../scripts/ai-manifest/README.md) for the full pipeline diagram and documentation.
+The pipeline lives in `scripts/ai-manifest/` (3 files: `generate-ai-manifest.js`, `component-data.js`, `css-utilities.js`). See the header comment in `generate-ai-manifest.js` for details.
 
 ## Known technical constraints
 

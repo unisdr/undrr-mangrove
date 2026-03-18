@@ -10,7 +10,7 @@
  * component SCSS files.
  */
 
-import { CDN_BASE } from './constants.js';
+const CDN_BASE = 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}';
 
 const colorShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 

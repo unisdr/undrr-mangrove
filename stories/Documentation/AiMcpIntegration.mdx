@@ -263,27 +263,22 @@ See the [Storybook MCP documentation](https://storybook.js.org/blog/storybook-mc
 
 ## How the manifest is generated
 
-The build pipeline runs two scripts in sequence after Storybook and webpack finish:
+A single script runs after Storybook and webpack finish:
 
 ```
 storybook build → manifests/components.json (props, types, stories)
 webpack build   → dist/components/*.js (compiled React bundles)
         ↓
-render-component-html.js → rendered-html.json (auto-rendered HTML via SSR)
-        ↓
 generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json
 ```
 
-`render-component-html.js` imports built components from `dist/` and renders them with sample props using `renderToStaticMarkup`. Components that render cleanly in Node.js get auto-generated HTML. Components that use DOMPurify for HTML sanitization (e.g., IconCard) also render successfully because the bundled DOMPurify detects the headless environment and falls back to a passthrough — no mock is needed. Components needing other browser APIs (`document`, `window`) fall back to curated HTML examples.
+`generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges three data sources: the Storybook manifest (props, types), auto-rendered HTML, and curated data from `component-data.js` (descriptions, CSS classes, flags, page templates). Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.
 
-`generate-ai-manifest.js` merges three data sources: the Storybook manifest (props, types), the auto-rendered HTML, and curated data files in `scripts/ai-manifest/data/` (descriptions, CSS classes, flags, page templates). It also reads shared constants from `scripts/ai-manifest/data/constants.js` (asset URLs, required scripts, logo paths, reusable HTML snippets). When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns in HTML examples, CSS class mismatches, and PropTypes coverage.
-
-See [`scripts/ai-manifest/README.md`](https://github.com/unisdr/undrr-mangrove/blob/main/scripts/ai-manifest/README.md) for the full pipeline diagram, entry schema, and maintenance guide.
+The pipeline is 3 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `component-data.js`, and `css-utilities.js`.
 
 To regenerate by hand:
 
 ```bash
-node scripts/ai-manifest/render-component-html.js
 node scripts/ai-manifest/generate-ai-manifest.js
 ```
 

@@ -111,7 +111,7 @@ See the [distribution channels table](ARCHITECTURE.md#component-distribution-cha
 
 ## Step 8: AI manifest (optional)
 
-Add component metadata to `scripts/ai-manifest/data/component-data/` and optionally add to `RENDER_SPECS` in `render-component-html.js` for auto-rendered HTML. See [`scripts/ai-manifest/README.md`](../scripts/ai-manifest/README.md) for details.
+Add component metadata to `scripts/ai-manifest/component-data.js` and optionally add sample props to `SAMPLE_PROPS` in `scripts/ai-manifest/generate-ai-manifest.js` for auto-rendered HTML.
 
 ## Step 9: Verify
 

@@ -1,44 +1,203 @@
 #!/usr/bin/env node
 
 /**
- * generate-ai-manifest.js
+ * generate-ai-manifest.js — AI-friendly component manifest for UNDRR Mangrove
  *
- * Transforms Storybook's components manifest into a tiered set of AI-friendly
- * files that are deployed alongside the static Storybook site:
+ * Single entry point that:
+ *   1. Auto-renders React components from dist/components/ via renderToStaticMarkup
+ *   2. Merges Storybook metadata, auto-rendered HTML, and curated data
+ *   3. Validates curated data keys, a11y patterns, and PropTypes coverage
+ *   4. Writes output files deployed alongside the Storybook site:
  *
- *   llms.txt                       — plain-text discovery file for AI agents
- *   llms.json                      — structured version of llms.txt for tooling
- *   ai-components/index.json       — lightweight component index
- *   ai-components/{id}.json        — full details per component
- *   ai-components/utilities.json   — CSS utility class inventory
- *
- * Depends on render-component-html.js having run first (produces
- * rendered-html.json with auto-rendered component HTML). Both scripts
- * are chained in the `yarn build` command.
+ *        llms.txt                       — plain-text discovery file for AI agents
+ *        llms.json                      — structured version of llms.txt
+ *        ai-components/index.json       — lightweight component index
+ *        ai-components/{id}.json        — full details per component
+ *        ai-components/utilities.json   — CSS utility class inventory
  *
  * Usage:
  *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
  *
  * Flags:
- *   --validate   Check curated data keys against the Storybook manifest and
- *                run a11y lint on curated HTML. Exits non-zero if any
- *                keys are unmatched or a11y violations are found. Useful in CI.
+ *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *
+ * To remove this pipeline: delete scripts/ai-manifest/, remove the build command
+ * from package.json, and delete the docs-build-temp/ai-components/ output.
  */
 
 import fs from 'fs';
 import path from 'path';
-import htmlExamplesRaw from './data/component-data/index.js';
-import cssUtilities from './data/css-utilities.js';
-import {
-  THEME_CSS as THEME_CSS_RAW,
-  REQUIRED_SCRIPTS as REQUIRED_SCRIPTS_RAW,
-  REQUIRED_STYLESHEETS as REQUIRED_STYLESHEETS_RAW,
-  LOGOS as LOGOS_RAW,
-} from './data/constants.js';
+import htmlExamples, { REQUIRES_REACT } from './component-data.js';
+import cssUtilities from './css-utilities.js';
 
+// ---------------------------------------------------------------------------
+// Constants (inlined from former data/constants.js)
+// ---------------------------------------------------------------------------
+
+const CDN_BASE = 'https://cdn.jsdelivr.net/npm/@undrr/undrr-mangrove@{{version}}';
+const ASSETS_BASE = 'https://assets.undrr.org';
 const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
 
-// CLI args
+const THEME_CSS = {
+  undrr: `${CDN_BASE}/dist/css/style.css`,
+  preventionweb: `${CDN_BASE}/dist/css/style-preventionweb.css`,
+  mcr2030: `${CDN_BASE}/dist/css/style-mcr.css`,
+  irp: `${CDN_BASE}/dist/css/style-irp.css`,
+};
+
+const REQUIRED_SCRIPTS = [
+  {
+    name: 'UNDRR analytics (GA4)',
+    url: `${ASSETS_BASE}/static/analytics/v1.0.0/google_analytics_enhancements.js`,
+    placement: 'before closing </body>',
+    attributes: 'defer',
+    note: 'Google Analytics 4 bootstrap and enhancements for UNDRR sites.',
+  },
+  {
+    name: 'UNDRR critical messaging',
+    url: 'https://messaging.undrr.org/src/undrr-messaging.js',
+    placement: 'before closing </body>',
+    attributes: 'defer',
+    note: 'Emergency broadcasts. Injects messages at top of body or into .mg-critical-messaging container.',
+  },
+  {
+    name: 'Cookie consent JS (UMD)',
+    url: `${ASSETS_BASE}/static/cookie-banner/v1/cookieconsent.umd.js`,
+    placement: 'before closing </body>, after analytics',
+    attributes: 'none (synchronous)',
+    note: 'Cookie consent library. Must load before the UNDRR config script.',
+  },
+  {
+    name: 'Cookie consent UNDRR config',
+    url: `${ASSETS_BASE}/static/cookie-banner/v1/cookieconsent-undrr.js`,
+    placement: 'immediately after cookieconsent.umd.js',
+    attributes: 'none (synchronous)',
+    note: 'UNDRR-specific cookie consent configuration.',
+  },
+];
+
+const REQUIRED_STYLESHEETS = [
+  {
+    name: 'Mangrove theme CSS',
+    url: THEME_CSS.undrr,
+    placement: 'head',
+    note: 'Choose one theme. See THEME_CSS for alternatives.',
+  },
+  {
+    name: 'Cookie consent CSS',
+    url: `${ASSETS_BASE}/static/cookie-banner/v1/cookieconsent.css`,
+    placement: 'head',
+    note: 'Required if using the UNDRR cookie consent banner.',
+  },
+];
+
+const LOGOS = {
+  horizontal: `${ASSETS_BASE}/static/logos/undrr/undrr-logo-horizontal.svg`,
+  vertical: `${ASSETS_BASE}/static/logos/undrr/undrr-logo-vertical.svg`,
+  squareBlue: `${ASSETS_BASE}/static/logos/undrr/undrr-logo-square-blue.svg`,
+};
+
+// ---------------------------------------------------------------------------
+// Component rendering: ID mapping and sample props
+// ---------------------------------------------------------------------------
+
+const COMPONENT_IDS = {
+  CtaButton: 'components-buttons-buttons',
+  CtaLink: 'components-buttons-cta-link',
+  VerticalCard: 'components-cards-vertical-card',
+  HorizontalCard: 'components-cards-horizontal-card',
+  BookCard: 'components-cards-book-card',
+  HorizontalBookCard: 'components-cards-horizontal-book-card',
+  IconCard: 'components-cards-icon-card',
+  StatsCard: 'components-cards-stats-card',
+  Breadcrumbs: 'components-navigation-breadcrumbs',
+  Pagination: 'components-navigation-pagination',
+  Tab: 'components-tabs',
+  Hero: 'components-hero-hero',
+  PageHeader: 'components-pageheader',
+  Footer: 'components-footer',
+  QuoteHighlight: 'components-quotehighlight',
+  HighlightBox: 'components-highlightbox',
+  EmbedContainer: 'utilities-embedcontainer',
+  FullWidth: 'components-fullwidth',
+  Loader: 'components-loader',
+  ShowMore: 'components-showmore',
+  Chips: 'components-buttons-chips',
+  TextInput: 'components-forms-text-input',
+  Select: 'components-forms-select',
+  Checkbox: 'components-forms-checkbox',
+  Radio: 'components-forms-radio',
+  Textarea: 'components-forms-textarea',
+  FormGroup: 'components-forms-formgroup',
+  FormErrorSummary: 'components-forms-formerrorsummary',
+  MegaMenu: 'components-megamenu',
+  SyndicationSearchWidget: 'components-syndicationsearchwidget',
+  ScrollContainer: 'components-scrollcontainer',
+  Gallery: 'components-gallery',
+  Pager: 'components-pager',
+  MapComponent: 'components-maps-mapcomponent',
+  BarChart: 'components-charts-barchart',
+  Fetcher: 'components-fetcher',
+  ShareButtons: 'components-buttons-sharebuttons',
+};
+
+function buildSampleProps(React) {
+  return {
+    Chips: { label: 'Flood' },
+    CtaButton: { label: 'Take action' },
+    CtaLink: { label: 'Explore our resources' },
+    TextInput: { label: 'Organization name', required: true, placeholder: 'Enter organization name', helpText: 'Full legal name of your organization.' },
+    Select: { label: 'Country', options: [{ value: 'JP', label: 'Japan' }, { value: 'NP', label: 'Nepal' }, { value: 'PH', label: 'Philippines' }], placeholder: 'Select a country' },
+    Checkbox: { label: 'I agree to the terms and conditions', name: 'terms' },
+    Radio: { label: 'Government', name: 'role', value: 'government' },
+    Textarea: { label: 'Message', name: 'message', rows: 5, placeholder: 'Your message here', helpText: 'Max 500 characters.' },
+    FormGroup: {
+      legend: 'What is your role?',
+      children: React.createElement('div', null,
+        React.createElement('div', { className: 'mg-radio', key: '1' },
+          React.createElement('input', { type: 'radio', id: 'r1', name: 'role', value: 'researcher' }),
+          React.createElement('label', { htmlFor: 'r1' }, 'Researcher')),
+        React.createElement('div', { className: 'mg-radio', key: '2' },
+          React.createElement('input', { type: 'radio', id: 'r2', name: 'role', value: 'practitioner' }),
+          React.createElement('label', { htmlFor: 'r2' }, 'Practitioner'))),
+    },
+    FormErrorSummary: { title: 'There is a problem', errors: [{ id: 'email', message: 'Enter a valid email address' }, { id: 'org', message: 'Organization name is required' }] },
+    VerticalCard: { data: [{ title: 'Building resilience through early warning systems', link: '/news/resilience', imgback: 'https://picsum.photos/600/400', imgalt: 'Workshop', label1: 'Early warning', summaryText: 'New partnerships strengthen disaster preparedness.' }] },
+    HorizontalCard: { data: [{ title: 'Climate adaptation strategies', link: '/news/climate', imgback: 'https://picsum.photos/400/300', imgalt: 'Meeting', label1: 'Climate', summaryText: 'Integrated approaches to climate resilience.' }] },
+    BookCard: { data: [{ title: 'Global Assessment Report 2024', link: '/publications/gar-2024', imgback: 'https://picsum.photos/300/400', imgalt: 'GAR 2024 cover' }] },
+    HorizontalBookCard: { data: [{ title: 'Sendai Framework Monitor Report', link: '/publications/sendai', imgback: 'https://picsum.photos/300/400', imgalt: 'Cover', label1: 'DRR', summaryText: 'Progress on implementation.' }] },
+    IconCard: { data: [{ icon: 'mg-icon mg-icon-globe', imageScale: 'medium', title: 'Global risk assessment', summaryText: 'Analysis of disaster risk trends.', link: '/risk', linkText: 'Learn more' }] },
+    StatsCard: { title: 'Key figures', stats: [{ value: '1.23 million', bottomLabel: 'People affected' }, { value: '195', bottomLabel: 'Countries reporting' }, { value: '$2.8 trillion', bottomLabel: 'Economic losses' }] },
+    Breadcrumbs: { data: [{ text: 'Home' }, { text: 'Publications' }, { text: 'Global Assessment Report 2024' }] },
+    Pagination: { text: 'Page', text2: 'of' },
+    Tab: { tabdata: [{ text: 'Overview', text_id: 'overview', is_default: 'true', data: '<p>Overview of disaster risk reduction.</p>' }, { text: 'Details', text_id: 'details', data: '<p>Implementation guidance.</p>' }], variant: 'horizontal' },
+    Hero: { data: [{ title: 'Reducing disaster risk for a resilient future', imgback: 'https://picsum.photos/1600/600', summaryText: 'The Sendai Framework guides global efforts.', label: 'Featured', primary_button: 'Learn more' }] },
+    PageHeader: { variant: 'default', logoUrl: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg', homeUrl: '/', languages: [{ value: 'en', label: 'English', selected: true }, { value: 'ar', label: 'Arabic' }] },
+    Footer: { enableSyndication: false },
+    QuoteHighlight: { quote: 'Prevention is not a cost. It is an investment in our common future.', attribution: 'Mami Mizutori', attributionTitle: 'SRSG for Disaster Risk Reduction', backgroundColor: 'light', variant: 'line', alignment: 'full' },
+    HighlightBox: { children: React.createElement('div', null, React.createElement('h3', null, 'Key information'), React.createElement('p', null, 'Highlighted content draws attention to important information.')) },
+    EmbedContainer: { children: React.createElement('iframe', { src: 'https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q', title: 'UNDRR video', loading: 'lazy', allowFullScreen: true }) },
+    FullWidth: { children: React.createElement('p', null, 'This section spans the full viewport width.') },
+    Loader: { label: 'Loading content' },
+    ShowMore: { data: [{ button_text: 'Show more', collapsable_wrapper_class: 'mg-show-more--collapsed', collapsable_text: 'Additional content revealed on toggle.' }] },
+    Pager: { page: 3, totalPages: 12, onPageChange: () => {}, layout: 'centered', ariaLabel: 'Search results pages' },
+    MegaMenu: { sections: [{ items: [{ title: 'About', url: '/about', items: [{ title: 'Our mission', url: '/about/mission' }] }, { title: 'Topics', url: '/topics', items: [{ title: 'Early warning', url: '/topics/early-warning' }] }] }] },
+    ScrollContainer: {
+      showArrows: true,
+      children: [
+        React.createElement('div', { key: '1', style: { minWidth: '200px', padding: '1rem', background: '#f0f0f0' } }, 'Item 1'),
+        React.createElement('div', { key: '2', style: { minWidth: '200px', padding: '1rem', background: '#e0e0e0' } }, 'Item 2'),
+        React.createElement('div', { key: '3', style: { minWidth: '200px', padding: '1rem', background: '#d0d0d0' } }, 'Item 3'),
+      ],
+    },
+    Gallery: { media: [{ id: '1', type: 'image', src: 'https://picsum.photos/800/600', alt: 'Disaster risk reduction', title: 'Building resilience', description: 'Communities working to reduce disaster risk.' }] },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// CLI args and file reading
+// ---------------------------------------------------------------------------
+
 const args = process.argv.slice(2);
 const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split('=')[1];
 const buildDir = path.resolve(process.cwd(), buildDirArg || 'docs-build-temp');
@@ -47,8 +206,8 @@ const validateOnly = args.includes('--validate');
 const manifestPath = path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
 const llmsTxtPath = path.join(buildDir, 'llms.txt');
+const distDir = path.resolve(process.cwd(), 'dist/components');
 
-// Read inputs
 if (!fs.existsSync(manifestPath)) {
   console.error(`Storybook manifest not found at ${manifestPath}`);
   console.error('Run "storybook build" first to generate the manifest.');
@@ -58,21 +217,16 @@ if (!fs.existsSync(manifestPath)) {
 const pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
-// Auto-rendered HTML from render-component-html.js (if available)
-const renderedHtmlPath = path.join(outputDir, 'rendered-html.json');
-const renderedHtml = fs.existsSync(renderedHtmlPath)
-  ? JSON.parse(fs.readFileSync(renderedHtmlPath, 'utf8'))
-  : {};
-
 // Replace {{version}} tokens with actual version from package.json
 const replaceVersion = obj => JSON.parse(
   JSON.stringify(obj).replaceAll('{{version}}', pkg.version),
 );
-const htmlExamples = replaceVersion(htmlExamplesRaw);
-const THEME_CSS = replaceVersion(THEME_CSS_RAW);
-const REQUIRED_SCRIPTS = replaceVersion(REQUIRED_SCRIPTS_RAW);
-const REQUIRED_STYLESHEETS = replaceVersion(REQUIRED_STYLESHEETS_RAW);
-const LOGOS = replaceVersion(LOGOS_RAW);
+
+const curatedData = replaceVersion(htmlExamples);
+const themeCss = replaceVersion(THEME_CSS);
+const requiredScripts = replaceVersion(REQUIRED_SCRIPTS);
+const requiredStylesheets = replaceVersion(REQUIRED_STYLESHEETS);
+const logos = replaceVersion(LOGOS);
 const generatedAt = new Date().toISOString();
 
 // ---------------------------------------------------------------------------
@@ -136,7 +290,7 @@ function parseJsDocParams(jsDocTags) {
 }
 
 /** Get the best description for a component, with curated fallback. */
-function getDescription(component, htmlData) {
+function getDescription(component, data) {
   if (component.description) return component.description;
 
   if (component.reactDocgen?.description) {
@@ -147,8 +301,7 @@ function getDescription(component, htmlData) {
     if (desc) return desc.split('\n')[0];
   }
 
-  // Fall back to curated description from component-data data
-  if (htmlData?.description) return htmlData.description;
+  if (data?.description) return data.description;
 
   return '';
 }
@@ -159,15 +312,83 @@ function docsUrl(componentId) {
 }
 
 // ---------------------------------------------------------------------------
+// Auto-render React components from dist/
+// ---------------------------------------------------------------------------
+
+async function renderComponents() {
+  if (!fs.existsSync(distDir)) {
+    console.warn('dist/components/ not found — skipping auto-render');
+    return new Map();
+  }
+
+  const React = (await import('react')).default;
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const prettier = (await import('prettier')).default;
+  const HTMLParser = (await import('prettier/parser-html')).default;
+  const SAMPLE_PROPS = buildSampleProps(React);
+
+  const distFiles = fs.readdirSync(distDir)
+    .filter(f => f.endsWith('.js'))
+    .map(f => f.replace('.js', ''));
+
+  const results = new Map();
+  let rendered = 0;
+  let failed = 0;
+
+  for (const fileName of distFiles) {
+    if (fileName === 'hydrate') continue;
+
+    const componentId = COMPONENT_IDS[fileName];
+    if (!componentId) continue;
+    if (!curatedData[componentId] && !REQUIRES_REACT[componentId]) continue;
+
+    const modulePath = path.join(distDir, `${fileName}.js`);
+
+    try {
+      const mod = await import(modulePath);
+      const Component = mod.default || mod[fileName]
+        || mod[Object.keys(mod).find(k => typeof mod[k] === 'function')];
+
+      const isRenderable = typeof Component === 'function'
+        || (Component != null && typeof Component === 'object' && Component.$$typeof != null);
+      if (!isRenderable) {
+        console.warn(`  skip ${fileName}: no renderable export`);
+        failed++;
+        continue;
+      }
+
+      const props = SAMPLE_PROPS[fileName] || {};
+      const html = renderToStaticMarkup(React.createElement(Component, props));
+      if (html.length < 30) {
+        failed++;
+        continue;
+      }
+
+      const formatted = await prettier.format(html, { parser: 'html', plugins: [HTMLParser], printWidth: 100 });
+      const desc = curatedData[componentId]?.description || fileName;
+      results.set(componentId, [{ name: desc, html: formatted }]);
+      rendered++;
+    } catch (e) {
+      console.warn(`  skip ${fileName}: ${e.message.split('\n')[0]}`);
+      failed++;
+    }
+  }
+
+  console.log(`Rendered component HTML: ${rendered} components, ${failed} skipped`);
+  return results;
+}
+
+// ---------------------------------------------------------------------------
 // Validate curated data
 // ---------------------------------------------------------------------------
 
-// Duplicate key detection now happens in component-data/index.js at import time.
-
 const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
-const unmatchedKeys = Object.keys(htmlExamples).filter(k => !manifestIds.has(k));
+
+// Check curated data keys (component-data.js entries)
+const curatedKeys = Object.keys(curatedData);
+const unmatchedKeys = curatedKeys.filter(k => !manifestIds.has(k));
 const uncoveredIds = [...manifestIds].filter(id =>
-  !htmlExamples[id] && !id.startsWith('example-'),
+  !curatedData[id] && !REQUIRES_REACT[id] && !id.startsWith('example-'),
 );
 
 if (unmatchedKeys.length > 0) {
@@ -175,7 +396,7 @@ if (unmatchedKeys.length > 0) {
   for (const k of unmatchedKeys) console.warn(`  - ${k}`);
 }
 if (uncoveredIds.length > 0) {
-  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data/:`);
+  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data:`);
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
 }
 
@@ -196,7 +417,6 @@ const a11yRules = [
     id: 'icon-missing-aria-hidden',
     label: 'icon element missing aria-hidden="true"',
     test(html) {
-      // Match <i or <span with mg-icon class (but not mg-icon-wrap)
       const iconPattern = /<(?:i|span)\b[^>]*class="[^"]*\bmg-icon\b(?!-wrap)[^"]*"[^>]*>/g;
       let match;
       while ((match = iconPattern.exec(html)) !== null) {
@@ -228,7 +448,7 @@ const a11yRules = [
 
 const a11yViolations = [];
 
-for (const [componentId, data] of Object.entries(htmlExamples)) {
+for (const [componentId, data] of Object.entries(curatedData)) {
   if (!data?.examples) continue;
   for (const example of data.examples) {
     if (!example.html) continue;
@@ -292,184 +512,198 @@ if (validateOnly) {
 }
 
 // ---------------------------------------------------------------------------
-// Transform each component
+// Main: render + generate
 // ---------------------------------------------------------------------------
 
-const indexEntries = [];
-const componentFiles = [];
-
-for (const [, component] of Object.entries(manifest.components)) {
-  const id = component.id;
-  const name = component.name || id;
-  const jsDocParams = parseJsDocParams(component.jsDocTags);
-  const htmlData = htmlExamples[id];
-  const description = getDescription(component, htmlData);
-
-  // --- Index entry (lightweight) ---
-  const indexEntry = { id, name, description };
-  if (component.import) indexEntry.import = component.import;
-  indexEntry.docsUrl = docsUrl(id);
-  indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
-
-  // Vanilla HTML / React flags
-  if (htmlData?.vanillaHtml) {
-    indexEntry.vanillaHtml = true;
-  } else if (htmlData?.requiresReact) {
-    indexEntry.requiresReact = true;
+async function main() {
+  // Auto-render React components (on failure, continue with empty map)
+  let renderedHtml;
+  try {
+    renderedHtml = await renderComponents();
+  } catch (e) {
+    console.warn(`Warning: auto-render failed (${e.message}). Continuing with curated HTML only.`);
+    renderedHtml = new Map();
   }
 
-  indexEntries.push(indexEntry);
+  // -------------------------------------------------------------------------
+  // Transform each component
+  // -------------------------------------------------------------------------
 
-  // --- Full component file ---
-  const detail = { name, description };
-  if (component.import) detail.import = component.import;
-  detail.docsUrl = docsUrl(id);
+  const indexEntries = [];
+  const componentFiles = [];
 
-  // Vanilla HTML / React flags on detail
-  if (htmlData?.vanillaHtml) {
-    detail.vanillaHtml = true;
-  }
-  if (htmlData?.requiresReact) {
-    detail.requiresReact = true;
-    if (htmlData.reactNote) detail.reactNote = htmlData.reactNote;
-  }
+  for (const [, component] of Object.entries(manifest.components)) {
+    const id = component.id;
+    const name = component.name || id;
+    const jsDocParams = parseJsDocParams(component.jsDocTags);
+    const data = curatedData[id];
+    const isReact = REQUIRES_REACT[id];
+    const isVanilla = !isReact;
+    const description = getDescription(component, data);
 
-  // Props
-  if (component.reactDocgen?.props && Object.keys(component.reactDocgen.props).length > 0) {
-    detail.props = {};
-    for (const [propName, propDef] of Object.entries(component.reactDocgen.props)) {
-      const prop = {
-        type: flattenType(propDef.type),
-        required: propDef.required || false,
-      };
-      if (propDef.defaultValue) prop.default = propDef.defaultValue.value;
+    // --- Index entry (lightweight) ---
+    const indexEntry = { id, name, description };
+    if (component.import) indexEntry.import = component.import;
+    indexEntry.docsUrl = docsUrl(id);
+    indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
 
-      const desc = propDef.description || jsDocParams[propName] || '';
-      if (desc) prop.description = desc;
-
-      detail.props[propName] = prop;
+    if (isReact) {
+      indexEntry.requiresReact = true;
+    } else {
+      indexEntry.vanillaHtml = true;
     }
+
+    indexEntries.push(indexEntry);
+
+    // --- Full component file ---
+    const detail = { name, description };
+    if (component.import) detail.import = component.import;
+    detail.docsUrl = docsUrl(id);
+
+    if (isVanilla) {
+      detail.vanillaHtml = true;
+    }
+    if (isReact) {
+      detail.requiresReact = true;
+      detail.reactNote = REQUIRES_REACT[id];
+    }
+
+    // Props
+    if (component.reactDocgen?.props && Object.keys(component.reactDocgen.props).length > 0) {
+      detail.props = {};
+      for (const [propName, propDef] of Object.entries(component.reactDocgen.props)) {
+        const prop = {
+          type: flattenType(propDef.type),
+          required: propDef.required || false,
+        };
+        if (propDef.defaultValue) prop.default = propDef.defaultValue.value;
+
+        const desc = propDef.description || jsDocParams[propName] || '';
+        if (desc) prop.description = desc;
+
+        detail.props[propName] = prop;
+      }
+    }
+
+    // Story examples (React JSX)
+    if (component.stories?.length) {
+      detail.examples = component.stories.map(s => {
+        const example = { name: s.name };
+        if (s.snippet) example.code = s.snippet;
+        return example;
+      });
+    }
+
+    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated
+    if (renderedHtml.has(id)) {
+      detail.renderedHtml = renderedHtml.get(id);
+      detail.renderedHtmlSource = 'auto';
+    } else if (data?.examples) {
+      detail.renderedHtml = data.examples;
+    }
+
+    // CSS classes used by this component
+    if (data?.cssClasses?.length) {
+      detail.cssClasses = data.cssClasses;
+    }
+
+    // Vanilla HTML embed instructions (for syndication components)
+    if (data?.vanillaHtmlEmbed) {
+      detail.vanillaHtmlEmbed = data.vanillaHtmlEmbed;
+    }
+
+    // Do-not-modify flag for branding-critical components
+    if (data?.doNotModify) {
+      detail.doNotModify = data.doNotModify;
+    }
+
+    componentFiles.push({ id, content: detail });
   }
 
-  // Story examples (React JSX)
-  if (component.stories?.length) {
-    detail.examples = component.stories.map(s => {
-      const example = { name: s.name };
-      if (s.snippet) example.code = s.snippet;
-      return example;
-    });
-  }
+  // -------------------------------------------------------------------------
+  // Write ai-components/index.json
+  // -------------------------------------------------------------------------
 
-  // Rendered HTML examples: prefer auto-rendered from dist/, fall back to curated
-  if (renderedHtml[id]) {
-    detail.renderedHtml = renderedHtml[id];
-    detail.renderedHtmlSource = 'auto';
-  } else if (htmlData?.examples) {
-    detail.renderedHtml = htmlData.examples;
-  }
+  fs.mkdirSync(outputDir, { recursive: true });
 
-  // CSS classes used by this component
-  if (htmlData?.cssClasses?.length) {
-    detail.cssClasses = htmlData.cssClasses;
-  }
+  const vanillaCount = indexEntries.filter(e => e.vanillaHtml).length;
+  const reactCount = indexEntries.filter(e => e.requiresReact).length;
 
-  // Vanilla HTML embed instructions (for syndication components)
-  if (htmlData?.vanillaHtmlEmbed) {
-    detail.vanillaHtmlEmbed = htmlData.vanillaHtmlEmbed;
-  }
-
-  // Do-not-modify flag for branding-critical components
-  if (htmlData?.doNotModify) {
-    detail.doNotModify = htmlData.doNotModify;
-  }
-
-  componentFiles.push({ id, content: detail });
-}
-
-// ---------------------------------------------------------------------------
-// Write ai-components/index.json
-// ---------------------------------------------------------------------------
-
-fs.mkdirSync(outputDir, { recursive: true });
-
-const vanillaCount = indexEntries.filter(e => e.vanillaHtml).length;
-const reactCount = indexEntries.filter(e => e.requiresReact).length;
-
-const index = {
-  _ai: 'Component index for the UNDRR Mangrove library. '
-    + 'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). '
-    + 'Some require React (requiresReact: true). '
-    + 'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
-  library: {
-    name: pkg.name,
-    version: pkg.version,
-    description: pkg.description,
-    documentation: DOCS_BASE,
-    repository: 'https://github.com/unisdr/undrr-mangrove',
-    npm: `https://www.npmjs.com/package/${pkg.name}`,
-    cssPrefix: 'mg-',
-    namingConvention: 'BEM (e.g., mg-card__title, mg-button--primary)',
-    themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
-    locales: ['en', 'ar', 'my', 'ja'],
-    rtlSupport: true,
-    semanticHtml: true,
-    breakpoints: {
-      mobile: '480px',
-      tablet: '900px',
-      desktop: '1164px',
-      wide: '1440px',
+  const index = {
+    _ai: 'Component index for the UNDRR Mangrove library. '
+      + 'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). '
+      + 'Some require React (requiresReact: true). '
+      + 'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
+    library: {
+      name: pkg.name,
+      version: pkg.version,
+      description: pkg.description,
+      documentation: DOCS_BASE,
+      repository: 'https://github.com/unisdr/undrr-mangrove',
+      npm: `https://www.npmjs.com/package/${pkg.name}`,
+      cssPrefix: 'mg-',
+      namingConvention: 'BEM (e.g., mg-card__title, mg-button--primary)',
+      themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
+      locales: ['en', 'ar', 'my', 'ja'],
+      rtlSupport: true,
+      semanticHtml: true,
+      breakpoints: {
+        mobile: '480px',
+        tablet: '900px',
+        desktop: '1164px',
+        wide: '1440px',
+      },
+      utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
+      quickstart: {
+        css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
+        cssThemes: themeCss,
+      },
+      requiredAssets: {
+        _note: 'Every UNDRR-branded page should include these assets. Order matters.',
+        stylesheets: requiredStylesheets,
+        scripts: requiredScripts,
+        logos,
+      },
     },
-    utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
-    quickstart: {
-      css: `<link rel="stylesheet" href="${THEME_CSS.undrr}" />`,
-      cssThemes: THEME_CSS,
-    },
-    requiredAssets: {
-      _note: 'Every UNDRR-branded page should include these assets. Order matters.',
-      stylesheets: REQUIRED_STYLESHEETS,
-      scripts: REQUIRED_SCRIPTS,
-      logos: LOGOS,
-    },
-  },
-  components: indexEntries,
-  generatedAt,
-};
+    components: indexEntries,
+    generatedAt,
+  };
 
-const indexJson = JSON.stringify(index, null, 2);
-fs.writeFileSync(path.join(outputDir, 'index.json'), indexJson);
+  const indexJson = JSON.stringify(index, null, 2);
+  fs.writeFileSync(path.join(outputDir, 'index.json'), indexJson);
 
-// ---------------------------------------------------------------------------
-// Write ai-components/{id}.json for each component
-// ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Write ai-components/{id}.json for each component
+  // -------------------------------------------------------------------------
 
-for (const { id, content } of componentFiles) {
-  fs.writeFileSync(
-    path.join(outputDir, `${id}.json`),
-    JSON.stringify(content, null, 2),
-  );
-}
+  for (const { id, content } of componentFiles) {
+    fs.writeFileSync(
+      path.join(outputDir, `${id}.json`),
+      JSON.stringify(content, null, 2),
+    );
+  }
 
-// ---------------------------------------------------------------------------
-// Write ai-components/utilities.json
-// ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Write ai-components/utilities.json
+  // -------------------------------------------------------------------------
 
-const utilities = replaceVersion({
-  _ai: 'CSS utility classes for the UNDRR Mangrove library. '
-    + 'Include the Mangrove CSS bundle to use these classes in plain HTML.',
-  ...cssUtilities,
-  generatedAt,
-});
+  const utilities = replaceVersion({
+    _ai: 'CSS utility classes for the UNDRR Mangrove library. '
+      + 'Include the Mangrove CSS bundle to use these classes in plain HTML.',
+    ...cssUtilities,
+    generatedAt,
+  });
 
-const utilitiesJson = JSON.stringify(utilities, null, 2);
-fs.writeFileSync(path.join(outputDir, 'utilities.json'), utilitiesJson);
+  const utilitiesJson = JSON.stringify(utilities, null, 2);
+  fs.writeFileSync(path.join(outputDir, 'utilities.json'), utilitiesJson);
 
-const utilityClassCount = cssUtilities.categories.reduce((sum, cat) => sum + cat.classes.length, 0);
+  const utilityClassCount = cssUtilities.categories.reduce((sum, cat) => sum + cat.classes.length, 0);
 
-// ---------------------------------------------------------------------------
-// Write llms.txt
-// ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Write llms.txt
+  // -------------------------------------------------------------------------
 
-const llmsTxt = `# UNDRR Mangrove
+  const llmsTxt = `# UNDRR Mangrove
 
 > UI component library for UNDRR's disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org). Provides both React components and vanilla HTML/CSS patterns. Built with Storybook.
 
@@ -498,10 +732,10 @@ ${DOCS_BASE}ai-components/utilities.json
 ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with CSS classes, no React needed. In the index, these have vanillaHtml: true. Each component's detail JSON includes a renderedHtml array with copy-pasteable HTML snippets.
 
 1. Include the Mangrove CSS bundle (pick your theme):
-   - UNDRR: ${THEME_CSS.undrr}
-   - PreventionWeb: ${THEME_CSS.preventionweb}
-   - MCR2030: ${THEME_CSS.mcr2030}
-   - IRP: ${THEME_CSS.irp}
+   - UNDRR: ${themeCss.undrr}
+   - PreventionWeb: ${themeCss.preventionweb}
+   - MCR2030: ${themeCss.mcr2030}
+   - IRP: ${themeCss.irp}
 
 2. Fetch the component index and find what you need
 3. Fetch the component's detailsUrl and use the renderedHtml examples
@@ -541,57 +775,63 @@ The utilities.json file lists ~${utilityClassCount} utility classes grouped by c
 - stories/assets/scss/   Theme stylesheets and design tokens
 `;
 
-fs.writeFileSync(llmsTxtPath, llmsTxt);
+  fs.writeFileSync(llmsTxtPath, llmsTxt);
 
-// ---------------------------------------------------------------------------
-// Write llms.json (structured version for tools that lose markdown URLs)
-// ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Write llms.json
+  // -------------------------------------------------------------------------
 
-const llmsJson = JSON.stringify({
-  name: 'UNDRR Mangrove',
-  description: `UI component library for UNDRR disaster risk reduction websites. ${vanillaCount} vanilla HTML components, ${reactCount} React-only.`,
-  version: pkg.version,
-  package: pkg.name,
-  license: pkg.license || 'See LICENSE file',
-  urls: {
-    storybook: DOCS_BASE,
-    repository: 'https://github.com/unisdr/undrr-mangrove',
-    npm: `https://www.npmjs.com/package/${pkg.name}`,
-    componentIndex: `${DOCS_BASE}ai-components/index.json`,
-    utilities: `${DOCS_BASE}ai-components/utilities.json`,
-    css: THEME_CSS,
-  },
-  requiredAssets: {
-    _note: 'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
-    stylesheets: REQUIRED_STYLESHEETS.map(s => s.url),
-    scripts: REQUIRED_SCRIPTS.map(s => ({ url: s.url, defer: s.attributes === 'defer' })),
-    logos: LOGOS,
-  },
-  conventions: {
-    cssPrefix: 'mg-',
-    naming: 'BEM',
-    themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
-    locales: ['en', 'ar', 'my', 'ja'],
-    breakpoints: { mobile: '480px', tablet: '900px', desktop: '1164px', wide: '1440px' },
-  },
-  generatedAt,
-}, null, 2);
+  const llmsJson = JSON.stringify({
+    name: 'UNDRR Mangrove',
+    description: `UI component library for UNDRR disaster risk reduction websites. ${vanillaCount} vanilla HTML components, ${reactCount} React-only.`,
+    version: pkg.version,
+    package: pkg.name,
+    license: pkg.license || 'See LICENSE file',
+    urls: {
+      storybook: DOCS_BASE,
+      repository: 'https://github.com/unisdr/undrr-mangrove',
+      npm: `https://www.npmjs.com/package/${pkg.name}`,
+      componentIndex: `${DOCS_BASE}ai-components/index.json`,
+      utilities: `${DOCS_BASE}ai-components/utilities.json`,
+      css: themeCss,
+    },
+    requiredAssets: {
+      _note: 'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
+      stylesheets: requiredStylesheets.map(s => s.url),
+      scripts: requiredScripts.map(s => ({ url: s.url, defer: s.attributes === 'defer' })),
+      logos,
+    },
+    conventions: {
+      cssPrefix: 'mg-',
+      naming: 'BEM',
+      themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
+      locales: ['en', 'ar', 'my', 'ja'],
+      breakpoints: { mobile: '480px', tablet: '900px', desktop: '1164px', wide: '1440px' },
+    },
+    generatedAt,
+  }, null, 2);
 
-fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
+  fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
 
-// ---------------------------------------------------------------------------
-// Summary
-// ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Summary
+  // -------------------------------------------------------------------------
 
-const indexSizeKB = (Buffer.byteLength(indexJson) / 1024).toFixed(1);
-const totalDetailKB = componentFiles
-  .reduce((sum, { content }) => sum + Buffer.byteLength(JSON.stringify(content, null, 2)), 0);
-const utilitiesSizeKB = (Buffer.byteLength(utilitiesJson) / 1024).toFixed(1);
+  const indexSizeKB = (Buffer.byteLength(indexJson) / 1024).toFixed(1);
+  const totalDetailKB = componentFiles
+    .reduce((sum, { content }) => sum + Buffer.byteLength(JSON.stringify(content, null, 2)), 0);
+  const utilitiesSizeKB = (Buffer.byteLength(utilitiesJson) / 1024).toFixed(1);
 
-console.log('AI manifest generated:');
-console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
-console.log(`  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`);
-console.log(`  ${outputDir}/*.json (${componentFiles.length} component files, ${(totalDetailKB / 1024).toFixed(1)} KB total)`);
-console.log(`  ${outputDir}/utilities.json (${utilitiesSizeKB} KB)`);
-console.log(`  ${vanillaCount} vanilla HTML components, ${reactCount} React-only components`);
-console.log(`  ${Object.keys(renderedHtml).length} auto-rendered, ${componentFiles.filter(c => c.content.renderedHtml && !c.content.renderedHtmlSource).length} curated HTML`);
+  console.log('AI manifest generated:');
+  console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
+  console.log(`  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`);
+  console.log(`  ${outputDir}/*.json (${componentFiles.length} component files, ${(totalDetailKB / 1024).toFixed(1)} KB total)`);
+  console.log(`  ${outputDir}/utilities.json (${utilitiesSizeKB} KB)`);
+  console.log(`  ${vanillaCount} vanilla HTML components, ${reactCount} React-only components`);
+  console.log(`  ${renderedHtml.size} auto-rendered, ${componentFiles.filter(c => c.content.renderedHtml && !c.content.renderedHtmlSource).length} curated HTML`);
+}
+
+main().catch(e => {
+  console.error('Fatal error:', e);
+  process.exit(1);
+});
