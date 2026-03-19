@@ -2,17 +2,17 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-V2-ROOT-FONT-SIZE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-migration-v2-root-font-size--docs).
 
-Starting in v2, Mangrove sets the default root font-size to the browser standard of 16px. This page explains what changed, who is affected, and how to migrate.
+Starting in v2, Mangrove defaults to the browser-standard 16px root font-size instead of overriding it to 10px.
 
 ## What changed
 
-Mangrove v1 set `html { font-size: 10px }` by default, making `1rem = 10px` throughout. In v2, the SCSS variable `$mg-html-font-size` changes from `10` to `16`. This means:
+Mangrove v1 set `html { font-size: 10px }`, making `1rem = 10px` throughout. v2 changes `$mg-html-font-size` from `10` to `16`. In practice:
 
-- The `html { font-size: 10px }` override is **no longer emitted** by default
-- The browser's native root font-size (16px, or the user's configured preference) is respected
-- All Mangrove components render at **identical pixel sizes** — the `mg-rem()` function recalculates every token at compile time, so `mg-rem(16)` produces `1.6rem` at root 10 and `1rem` at root 16, both resolving to 16px
+- `html { font-size: 10px }` is no longer emitted
+- The browser's own root font-size (typically 16px, or whatever the user has configured) is left alone
+- All Mangrove components still render at the same pixel sizes — `mg-rem()` recalculates every token at compile time, so `mg-rem(16)` outputs `1.6rem` at root 10 and `1rem` at root 16, both resolving to 16px on screen
 
-This change aligns Mangrove with the approach used by Bootstrap, Material UI, Tailwind CSS, and other major design systems. It also improves accessibility by respecting the user's browser font-size preference.
+The 10px root was convenient for mental math (`1.6rem = 16px`) but it overrode user font-size preferences and conflicted with any third-party CSS expecting the browser default. Most design systems (Bootstrap, MUI, Tailwind) use 16px for these reasons.
 
 ### Before and after
 
@@ -34,11 +34,9 @@ This change aligns Mangrove with the approach used by Bootstrap, Material UI, Ta
 
 ## Migration options
 
-You have three options, from least effort to most thorough.
+### Option A: switch to legacy theme CSS (no code changes)
 
-### Option A: switch to legacy theme CSS (zero code changes)
-
-Each theme ships a `-legacy` variant that preserves the v1 behavior (`html { font-size: 10px }`). Change your CSS import path:
+Each theme ships a `-legacy` variant that keeps the v1 behavior (`html { font-size: 10px }`). Just change the CSS import path:
 
 | Standard theme (v2) | Legacy theme (v1 behavior) |
 |---|---|
@@ -72,11 +70,7 @@ This produces the same compiled CSS as v1. The `!default` flag on Mangrove's var
 
 ### Option C: migrate to 16px root (recommended)
 
-This is the recommended path. Audit your custom CSS for raw `rem` values and convert them to work with a 16px root.
-
-**Conversion formula:**
-
-A rem value written for a 10px root needs to be multiplied by `0.625` for a 16px root:
+Audit your custom CSS for raw `rem` values and convert them. A rem value written for a 10px root needs to be multiplied by `0.625` for a 16px root:
 
 ```
 new_rem = old_rem * (10 / 16)
@@ -92,7 +86,7 @@ new_rem = old_rem * 0.625
 | 24px heading | `2.4rem` | `1.5rem` | 24px |
 | 100px width | `10rem` | `6.25rem` | 100px |
 
-**Better approach:** Replace raw rem values with Mangrove spacing and font-size tokens where possible:
+Even better, replace raw rem values with Mangrove tokens where one exists:
 
 ```scss
 // Before — raw rem tied to 10px root
@@ -120,7 +114,7 @@ If no matching token exists, use the `mg-rem()` function directly:
 
 ## Legacy theme deprecation timeline
 
-Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) will be maintained alongside the standard themes for a transition period. There is no fixed end date. When deprecation is scheduled, it will be announced with at least two minor release cycles of advance notice, giving teams time to plan their migration.
+Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) ship alongside standard themes and will continue to be maintained. There is no fixed removal date. When we do deprecate them, we will give at least two minor release cycles of advance notice.
 
 Each legacy theme's compiled CSS includes a comment header identifying it as a legacy variant:
 
@@ -130,7 +124,7 @@ Each legacy theme's compiled CSS includes a comment header identifying it as a l
 
 ## For component authors
 
-When writing SCSS inside Mangrove, follow these rules to ensure your styles work at any root font-size:
+Three rules for SCSS inside Mangrove:
 
 1. **Use `mg-rem($px)` for all rem values.** Pass the intended pixel value. Never hard-code a rem number.
 

@@ -242,42 +242,31 @@ The design token variables in `_variables.scss` use `!default` flags so theme st
 
 ### Root font-size and the mg-rem() function
 
-Mangrove historically sets `html { font-size: 10px }`, making `1rem = 10px` throughout. All spacing, font-size, and width tokens use the `mg-rem($px)` function, which converts an intended pixel value to rem based on a configurable root:
+The default root is 16px (browser standard). Legacy sites that relied on the old 10px root can use the `-legacy` theme variants or set `$mg-html-font-size: 10` in their SCSS. See [MIGRATION-V2-ROOT-FONT-SIZE.md](MIGRATION-V2-ROOT-FONT-SIZE.md) for the full migration guide.
+
+All spacing, font-size, and width tokens go through `mg-rem($px)`, which converts a pixel value to rem for whatever root is configured:
 
 ```scss
 // In _variables.scss
-$mg-html-font-size: 10 !default;
+$mg-html-font-size: 16 !default;
 
 @function mg-rem($px) {
   @return math.div($px, $mg-html-font-size) * 1rem;
 }
 
-// Usage — always pass the intended pixel value:
-$mg-spacing-100: mg-rem(10);   // → 1rem    (when root = 10)
-$mg-font-size-300: mg-rem(16); // → 1.6rem  (when root = 10)
+// Usage — pass the intended pixel value:
+$mg-spacing-100: mg-rem(10);   // → 0.625rem (root=16), 1rem (root=10)
+$mg-font-size-300: mg-rem(16); // → 1rem     (root=16), 1.6rem (root=10)
 ```
 
-**For existing sites** (undrr.org, preventionweb.net, etc.): nothing changes. The default is `10`, and compiled CSS is identical to previous releases.
-
-**For new integrations** that want the browser-standard 16px root: set `$mg-html-font-size: 16` before importing Mangrove SCSS. The `mg-rem()` function recalculates all token values at compile time, and the `html { font-size: 10px }` override is skipped entirely:
+When writing component SCSS, use `mg-rem()` or an existing token. Never hard-code a rem value:
 
 ```scss
-// New project's main stylesheet
-$mg-html-font-size: 16;  // opt in to browser-standard root
-@import "@undrr/undrr-mangrove/stories/assets/scss/variables";
-@import "@undrr/undrr-mangrove/stories/assets/scss/style";
-```
+// Correct
+padding: mg-rem(15);       // 15px at any root
+padding: $mg-spacing-150;  // same thing, via the token
 
-When writing component SCSS, always use `mg-rem()` for rem values instead of hard-coding them. Pass the intended pixel value:
-
-```scss
-// Correct — works at any root
-padding: mg-rem(15);         // 15px → 1.5rem (root=10) or 0.9375rem (root=16)
-
-// Also correct — use existing tokens when one fits
-padding: $mg-spacing-150;   // same result, but via the token
-
-// Wrong — hard-coded rem breaks when root changes
+// Wrong — breaks when root changes
 padding: 1.5rem;
 ```
 
