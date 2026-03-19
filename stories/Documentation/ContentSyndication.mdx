@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Platform services/Content syndication"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+# Content syndication
+
+Mangrove supports embedding syndicated content from the UNDRR platform into any page. Content blocks pull live data from UNDRR's Elasticsearch backend and render as styled card grids -- news, publications, events, and other content types.
+
+The `SyndicationSearchWidget` component powers syndication embeds when configured without search chrome. A typical syndicated content block uses a hardwired query, hides the search box and filters, and renders results as cards:
+
+```html
+<div data-mg-search-widget
+  data-default-query="disaster risk reduction"
+  data-display-mode="card"
+  data-grid-columns="3"
+  data-results-per-page="6"
+  data-show-search-box="false"
+  data-show-facets="false"
+  data-show-results-count="false"
+  data-require-image="true">
+</div>
+```
+
+The `Fetcher` component provides a lower-level data-fetching utility for custom rendering of UNDRR API data.
+
+See:
+- <LinkTo kind="components-syndicationsearchwidget--syndicated-cards" story="syndicated-cards">Syndicated cards example</LinkTo> -- a content block with no search UI
+- <LinkTo kind="components-syndicationsearchwidget" story="docs">SyndicationSearchWidget component</LinkTo> -- full documentation and props
+- <LinkTo kind="components-fetcher" story="docs">Fetcher component</LinkTo> -- generic data-fetching utility
+
+---
+
+Last updated: 19 March 2026
