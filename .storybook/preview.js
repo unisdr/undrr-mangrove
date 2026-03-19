@@ -188,7 +188,7 @@ const preview = {
           [
             'Component standards',
             'Build a component',
-            ['Step by step', 'Review checklist', 'Testing'],
+            ['Step by step', 'Review checklist', 'Testing', 'Hydration'],
             'Writing guidelines',
             'Architecture',
             'Release process',

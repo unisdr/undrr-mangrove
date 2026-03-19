@@ -84,7 +84,7 @@ Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with 
 
 ## Step 6: Add hydration files (Drupal integration only)
 
-If the component will render into server-generated HTML containers, create `fromElement.js`, `hydrate.js`, and `fromElement` tests. See [HYDRATION.md](HYDRATION.md) for the full API, barrel file pattern, and `Pager.fromElement.js` / `Pager.fromElement.test.js` for reference implementations.
+If the component will render into server-generated HTML containers, create `fromElement.js`, `hydrate.js`, and `fromElement` tests. See [Adding hydration support](HYDRATION-AUTHORING.md) for the step-by-step walkthrough, `fromElement` patterns, barrel file format, and `Pager.fromElement.js` / `Pager.fromElement.test.js` for reference implementations.
 
 ## Step 7: Register for build
 
@@ -168,7 +168,8 @@ yarn validate-manifest
 ## Related documentation
 
 - [Architecture](ARCHITECTURE.md) — build system, distribution channels, and Drupal integration
-- [Hydration guide](HYDRATION.md) — full `fromElement` API, `createHydrator` reference, and consumer patterns
+- [Adding hydration support](HYDRATION-AUTHORING.md) — `fromElement` patterns, barrel files, and tests
+- [Hydration guide](HYDRATION.md) — consumer-facing `createHydrator` API and integration examples
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
 - [Writing guidelines](WRITING-SHORT.md) — UX writing standards
 - [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)

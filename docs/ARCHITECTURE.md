@@ -131,7 +131,7 @@ import Component, { fromElement } from "@mangrove/ComponentName";
 createHydrator({ selector: "[data-mg-component-name]", component: Component, fromElement });
 ```
 
-See [HYDRATION.md](HYDRATION.md) for the full API and patterns.
+See [HYDRATION.md](HYDRATION.md) for the consumer API and [HYDRATION-AUTHORING.md](HYDRATION-AUTHORING.md) for adding hydration support to new components.
 
 **Legacy wrapper:** Older components without hydration files use hand-written wrappers that call `document.querySelectorAll()`, parse `data-*` attributes, and call `createRoot()` directly. These are being migrated to the layered pattern.
 
@@ -143,7 +143,7 @@ CSS is **not** auto-synced. After SCSS changes:
 2. Manually copy the compiled CSS to each Drupal child theme's `css/mangrove/mangrove.css`
 3. Commit the updated CSS in the Drupal repository
 
-See [DEVELOPMENT.md](DEVELOPMENT.md) for the list of child themes and the copy workflow.
+The specific child themes that use Mangrove CSS include: undrr, pw, mcr, irp, arise, gp, sfvc. Each maps to one of the four compiled theme stylesheets. See [DEVELOPMENT.md](DEVELOPMENT.md) for the copy workflow.
 
 ### Key Drupal-side files
 
@@ -154,6 +154,60 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for the list of child themes and the copy w
 | `undrr_common/js/mangrove-components.js` | Injects React import map |
 | `undrr_common/js/mangrove-components/*.js` | Built components + wrapper scripts |
 | `{child-theme}/css/mangrove/mangrove.css` | Compiled theme CSS |
+
+## Storybook theme registration
+
+To add a new theme to Storybook (either a new official theme or a development preview), follow these steps after creating the override file and entry point (see the [Theming guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-theming-guide--docs) for steps 1-2).
+
+### Register in preview.js
+
+In `.storybook/preview.js`, add an import and register the theme:
+
+```js
+// Add import at the top with the other theme imports
+import themeMyTheme from '../stories/assets/scss/style-mytheme.scss';
+```
+
+Add the theme to the `themeStyles` map:
+
+```js
+const themeStyles = {
+  'Global UNDRR Theme': themeUNDRR,
+  'PreventionWeb Theme': themePreventionWeb,
+  'IRP Theme': themeIRP,
+  'MCR2030 Theme': themeMCR,
+  'My Theme': themeMyTheme,
+};
+```
+
+Add a toolbar entry in `globalTypes.theme.toolbar.items`:
+
+```js
+items: [
+  { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
+  { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
+  { value: 'IRP Theme', title: 'IRP Theme' },
+  { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
+  { value: 'My Theme', title: 'My Theme' },
+],
+```
+
+The theme entry file name must match the pattern `style(-\w+)?\.scss$` so Storybook's webpack config applies `lazyStyleTag` injection (see `.storybook/main.js`). This gives the imported module `.use()` and `.unuse()` methods that the theme decorator calls to swap stylesheets at runtime.
+
+### Build and test
+
+```bash
+yarn scss   # Compile all style*.scss to stories/assets/css/
+yarn dev    # Start Storybook — use the paintbrush toolbar to switch themes
+```
+
+### Storybook theme switcher internals
+
+1. `.storybook/main.js` configures a webpack rule that matches `style(-\w+)?\.scss$` files in `stories/assets/scss/` and applies `style-loader` with `injectType: 'lazyStyleTag'`. This compiles each theme file into a module with `.use()` and `.unuse()` methods instead of injecting the styles immediately.
+
+2. `.storybook/preview.js` imports all theme SCSS files. A `themeDecorator` function listens for changes to the `theme` global (set by the toolbar) and calls `.unuse()` on the previous theme, then `.use()` on the new one.
+
+3. The default theme (`Global UNDRR Theme`) is loaded on initial render. Only one theme's styles are active at any time.
 
 ## AI manifest pipeline
 
@@ -187,5 +241,6 @@ The design token variables in `_variables.scss` use `!default` flags so theme st
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Development guide](DEVELOPMENT.md) — environment setup, scripts, and workflow
-- [Hydration guide](HYDRATION.md) — layered hydration for server-rendered integration
+- [Hydration guide](HYDRATION.md) — consumer-facing integration guide
+- [Adding hydration support](HYDRATION-AUTHORING.md) — contributor guide for `fromElement`, barrel files, and tests
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
