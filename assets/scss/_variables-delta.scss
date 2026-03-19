@@ -1,0 +1,105 @@
+/**
+ * @tokens DELTA Resilience Colors
+ * @presenter Color
+ *
+ * DELTA Resilience theme overrides for Mangrove.
+ * Source: deltaresilience.org mockups + GitHub issue #776
+ *
+ * Note: Delta's primary is a dark navy (rgb 19 46 72). Mangrove
+ * already defaults to Roboto. Differentiation is primarily in
+ * border-radius, button styling, and color palette.
+ *
+ * Open design questions:
+ * - IconCard accent palette: Delta mockups show 6 pastel icon background
+ *   colors. Their design-system role (semantic, decorative, categorical) is
+ *   unknown. Currently passed as raw hex via `iconColor` prop.
+ */
+
+// Delta-specific colors — brand palette
+$delta-color-primary: rgb(19 46 72); // #132e48 — Delta's dark navy
+$delta-color-primary-800: rgb(12 30 48); // Hover shade — ~20% darker
+$delta-color-red: #b52a32; // Red accent from Delta CSS
+$delta-color-dark: #181823; // Near-black for CTA banners and dark sections
+
+// Delta accent palette — 6 pastel icon colors from "Key Features" cards.
+// TODO: These are sampled from mockups. We need to understand these from a
+// design-system perspective — are they semantic (mapped to categories/sections),
+// decorative, or part of a formalized token set? Until clarified, they are
+// passed as raw hex values via IconCard's `iconColor` prop.
+$delta-color-accent-coral: #f4b8a8;
+$delta-color-accent-teal: #b5d8d8;
+$delta-color-accent-sky: #c0d8e8;
+$delta-color-accent-peach: #f4d0a8; // TODO: confirm exact hex
+$delta-color-accent-sage: #c8d8b5; // TODO: confirm exact hex
+$delta-color-accent-lavender: #d0c0e8; // TODO: confirm exact hex
+
+// Delta card background — avoids overriding the foundational neutral scale
+$delta-color-card-bg: rgb(250 250 250); // #fafafa — Delta's lightest gray
+
+// Interactive colors — links, focus rings (stays blue)
+$mg-color-interactive: $delta-color-primary;
+$mg-color-interactive-active: $delta-color-primary;
+
+// Tags
+$mg-color-tag: $mg-color-interactive;
+$mg-color-tag--hover: $mg-color-interactive-active;
+
+// $mg-color-tag-secondary, $mg-color-tag-accent — use defaults
+$mg-radius-tag: $mg-spacing-50;
+
+// Buttons — outline style, rounded corners, blue border/text on light backgrounds
+$mg-color-button: $delta-color-primary;
+$mg-color-button--hover: $delta-color-primary-800;
+$mg-color-button-background: transparent;
+$mg-color-button-background--hover: rgba($delta-color-primary, 0.06);
+$mg-color-text-button: $delta-color-primary;
+$mg-border-color-button: $delta-color-primary;
+$mg-radius-button: $mg-spacing-50;
+$mg-border-width-button: 2px;
+$mg-padding-button: $mg-spacing-100 $mg-spacing-200;
+$mg-font-size-button: $mg-font-size-250;
+
+// Cards — light tinted background with padding, rounded corners
+$mg-card-background: $delta-color-card-bg;
+$mg-card-padding: $mg-spacing-150;
+$mg-card-border-radius: $mg-spacing-50;
+$mg-card-icon-badge-radius: 15%;
+
+// Form elements
+$mg-color-form-check: $mg-color-interactive;
+$mg-color-form-check--hover: $mg-color-interactive-active;
+$mg-color-form-check--checked: $mg-color-interactive;
+$mg-color-form-focus: $mg-color-interactive;
+$mg-radius-form-input: $mg-spacing-50;
+
+// Mega menu — white panel on Delta (base default is $mg-color-button which is dark navy here)
+$mg-color-mega-content-bg: $mg-color-white;
+
+// Hero — wider overlay and extra padding for Delta's layout
+$mg-color-hero: $delta-color-primary;
+$mg-opacity-hero: 1;
+$mg-hero-overlay-max-width: $mg-width-600;
+$mg-hero-overlay-padding: $mg-spacing-400;
+$mg-color-hero-title: oklch(68.5% 0.169 237.323);
+$mg-color-hero--tertiary: $delta-color-dark; // Dark CTA banner sections
+$mg-spacing-hero-overlay: 2rem 0;
+
+// Tabs — TODO: underline vs boxed style needs confirmation from Delta design team
+$mg-color-tabbar-background: none;
+$mg-color-tab-background: $delta-color-primary;
+$mg-color-tab-background--inactive: $mg-color-white;
+$mg-color-tab-border: $mg-color-blue-200;
+$mg-color-tab-border--hover: $delta-color-primary-800;
+$mg-color-tab-border--active: $mg-color-blue-200;
+$mg-color-tab-background--hover: rgba($delta-color-primary, 0.7);
+$mg-radius-tab: $mg-spacing-50 $mg-spacing-50 0 0;
+$mg-padding-tab: $mg-spacing-150 $mg-spacing-200;
+$mg-color-text-tab: $mg-color-neutral-700;
+$mg-color-text-tab--hover: $mg-color-white;
+$mg-color-text-tab-active: $mg-color-white;
+$mg-padding-tab-section: $mg-spacing-300;
+$mg-radius-tab-section: $mg-spacing-50;
+$mg-box-shadow-tab-section: none;
+$mg-tabs-border-bottom: true;
+
+/* variables end */
