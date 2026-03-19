@@ -1,0 +1,82 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Getting started/Build a component/Review checklist"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Review checklist
+
+Use this checklist to validate a new or existing component against Mangrove's standards. Each item links to the relevant guide for details.
+
+## Structure and naming
+
+- [ ] Component follows BEM naming with `mg-` prefix
+- [ ] Files follow the standard layout: `ComponentName.jsx`, `componentname.scss`, `ComponentName.stories.jsx`, `ComponentName.mdx`
+- [ ] SCSS uses variables from `_variables.scss` (no hardcoded colors or spacing values)
+- [ ] No `defaultProps` (use destructured default parameters instead)
+
+See <LinkTo kind="getting-started-component-standards" story="docs">Component standards</LinkTo> for the full conventions.
+
+## Accessibility
+
+- [ ] Semantic HTML elements used where appropriate
+- [ ] ARIA attributes included (labels, roles, live regions)
+- [ ] Keyboard navigation works (Tab, Enter, Escape, arrow keys as relevant)
+- [ ] Focus states are visible
+- [ ] Color contrast meets WCAG 2.1 AA (4.5:1 for text, 3:1 for UI elements)
+- [ ] jest-axe test included in the test file
+
+See <LinkTo kind="getting-started-accessibility" story="docs">Accessibility</LinkTo> for the testing methodology.
+
+## Stories and documentation
+
+- [ ] Stories use CSF3 format (no `Template.bind({})`)
+- [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, CSS/JS references, changelog)
+- [ ] Changelog entry added to the component's MDX file
+- [ ] Sentence case for all headings and UI text
+
+See <LinkTo kind="getting-started-writing-guidelines" story="docs">Writing guidelines</LinkTo> for UX writing standards.
+
+## Testing
+
+- [ ] Component renders without errors
+- [ ] Props produce expected output (including edge cases)
+- [ ] Tests cover key behaviors and interactions
+- [ ] jest-axe accessibility assertions pass
+
+See <LinkTo kind="getting-started-build-a-component-testing" story="docs">Testing</LinkTo> for the testing setup and patterns.
+
+## Internationalization
+
+- [ ] Text comes from props, not hardcoded
+- [ ] RTL layout works (check with the locale toolbar)
+- [ ] CSS uses logical properties where possible (`margin-inline-start` instead of `margin-left`)
+
+See the RTL support section in <LinkTo kind="getting-started-component-standards" story="docs">Component standards</LinkTo>.
+
+## Drupal integration (if applicable)
+
+- [ ] `fromElement.js` exports a function that extracts props from `data-mg-*` attributes
+- [ ] `hydrate.js` barrel file uses `createHydrator`
+- [ ] `fromElement.test.js` verifies prop extraction
+- [ ] Webpack entry added in `webpack.config.js`
+- [ ] Export added in `src/index.js`
+
+See the <LinkTo kind="getting-started-hydration-guide" story="docs">Hydration guide</LinkTo> for the full pattern.
+
+## AI discoverability (optional)
+
+- [ ] Component appears in the AI manifest after running `yarn validate-manifest`
+
+See <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo>.
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ReviewChecklist.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

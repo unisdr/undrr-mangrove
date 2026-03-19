@@ -21,7 +21,7 @@ These guides live inside Storybook and cover component standards, integration, a
 
 - [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) — onboarding, installation methods, and integration options
 - [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) — component structure, code conventions, and PR process
-- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs) — testing strategies within Storybook
+- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-build-a-component-testing--docs) — testing strategies within Storybook
 - [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
 
 ## Prerequisites
