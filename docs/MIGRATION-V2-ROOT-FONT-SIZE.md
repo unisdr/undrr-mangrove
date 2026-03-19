@@ -14,6 +14,8 @@ Mangrove v1 set `html { font-size: 10px }`, making `1rem = 10px` throughout. v2 
 
 The 10px root was convenient for mental math (`1.6rem = 16px`) but it overrode user font-size preferences and conflicted with any third-party CSS expecting the browser default. Most design systems (Bootstrap, MUI, Tailwind) use 16px for these reasons.
 
+This also fixes a WCAG 2.2 conformance gap. The 10px override prevented users from adjusting text size through their browser's font-size preferences (Success Criterion 1.4.4, Resize Text). Low-vision users who set their browser default to 20px or larger saw no effect on Mangrove-styled content. With the 16px default, all rem-based sizing now scales proportionally with the user's chosen font size.
+
 ### Before and after
 
 | | v1 (root = 10) | v2 (root = 16) |
