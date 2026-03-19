@@ -202,47 +202,6 @@ if (contentWrapper) {
 
 ---
 
-## When the consumer's HTML doesn't match
-
-The `fromElement` functions use clean attribute names (`data-media`, `data-stats`). But existing consumer HTML may use different conventions (Drupal Gutenberg blocks use `data-mg-gallery-data`, `data-mg-stats-card-data`, etc.).
-
-In this case, the consumer wrapper provides its own `fromElement` that bridges the existing HTML contract:
-
-```js
-// Gallery-wrapper.js — Drupal's attributes differ from the generic fromElement
-import createHydrator from "@mangrove/hydrate";
-import { Gallery } from "@mangrove/Gallery";
-
-function fromElement(container) {
-  // Drupal outputs two JSON blobs instead of individual attributes
-  const dataAttr = container.getAttribute("data-mg-gallery-data");
-  const optionsAttr = container.getAttribute("data-mg-gallery-options");
-  const media = dataAttr ? JSON.parse(dataAttr) : [];
-  const options = optionsAttr ? JSON.parse(optionsAttr) : {};
-
-  return {
-    media,
-    showThumbnails: options.showThumbnails !== false,
-    showArrows: options.showArrows !== false,
-    // ...
-  };
-}
-
-createHydrator({ selector: "[data-mg-gallery]", component: Gallery, fromElement });
-```
-
-This is the Layer 3 pattern — the consumer takes control of prop extraction while still using `createHydrator` for mount lifecycle.
-
----
-
-## Architecture
-
-| Layer | Responsibility | Lives in |
-|-------|---------------|----------|
-| **Layer 1** — `createHydrator` | DOM querying, error handling, `createRoot` lifecycle, hydration markers | `src/hydrate.js` (Mangrove) |
-| **Layer 2** — `fromElement` | Extract component props from a DOM element | Per-component `*.fromElement.js` (Mangrove) |
-| **Layer 3** — Consumer glue | Selector choice, prop overrides, site-specific logic | Consumer repo (Drupal, Astro, etc.) |
-
 ## Related documentation
 
 - [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components

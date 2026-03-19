@@ -4,7 +4,7 @@
 
 Mangrove React components can be rendered into server-generated HTML containers. The server renders HTML with `data-mg-*` attributes; a wrapper script imports the component and `createHydrator`, which handles DOM querying, prop extraction, and React root lifecycle -- with automatic fallback to the original HTML on error.
 
-Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803)
+Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803) · **Building a component?** See [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) for the `fromElement` patterns, barrel files, and tests.
 
 ## How it works
 

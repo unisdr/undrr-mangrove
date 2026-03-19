@@ -70,7 +70,7 @@ yarn add @undrr/undrr-mangrove
 - <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration guide</LinkTo>
 - A full yarn/npm-installed demo project is in progress ([#849](https://github.com/unisdr/undrr-mangrove/issues/849))
 
-### Server-rendered hydration
+### Hydration
 
 For Drupal, Astro, or any server-rendered framework that needs React interactivity. Server renders HTML containers with `data-mg-*` attributes; the `createHydrator` runtime mounts React components into them.
 
@@ -86,6 +86,7 @@ All assets are served from versioned CDN endpoints. See the <LinkTo kind="gettin
 - Components use semantic HTML with ARIA attributes for accessibility
 - Most components work without JavaScript (progressive enhancement)
 - Supports modern evergreen browsers -- see <LinkTo kind="getting-started-browser-support" story="docs">browser support</LinkTo>
+- Supports right-to-left (RTL) layouts -- components adapt automatically when `dir="rtl"` is set on the document
 
 For the full architectural picture, see the <LinkTo kind="contributing-architecture" story="docs">architecture guide</LinkTo>.
 
