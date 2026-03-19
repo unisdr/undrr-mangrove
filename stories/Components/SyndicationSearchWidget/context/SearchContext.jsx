@@ -255,7 +255,8 @@ function searchReducer(state, action) {
 
       return {
         ...state,
-        query: defaultQuery,
+        // Preserve query if already set (e.g., from URL params via useHashSync)
+        query: state.query || defaultQuery,
         sortBy: defaultSort,
         facets,
         isInitialized: true,

@@ -102,7 +102,7 @@ import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget
 const defaultConfig = {
   searchEndpoint: 'https://www.undrr.org/search-endpoint',
   resultsPerPage: 5,
-  debounceDelay: 300,
+  debounceDelay: 500,
   minSearchLength: 3,
   defaultQuery: '',
   defaultSort: 'relevance',

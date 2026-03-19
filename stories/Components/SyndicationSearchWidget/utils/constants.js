@@ -327,7 +327,7 @@ export const DEFAULT_CONFIG = {
   searchEndpoint: 'https://www.undrr.org/search-endpoint',
   resultsPerPage: 5,
   facetCountToShow: 500,
-  debounceDelay: 300, // Reduced from 750ms - React 19's useDeferredValue handles this better
+  debounceDelay: 500, // Balances responsiveness (<1s perceived) with fewer wasted API calls
   minSearchLength: 3,
 
   // URL Hash Sync

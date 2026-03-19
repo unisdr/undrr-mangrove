@@ -278,7 +278,7 @@ The component is loaded automatically on pages containing a container with `data
 |------|------|---------|-------------|
 | `searchEndpoint` | string | `/search-endpoint` | API endpoint for Elasticsearch queries |
 | `resultsPerPage` | number | 50 | Number of results to display per page |
-| `debounceDelay` | number | 300 | Milliseconds to wait before executing search |
+| `debounceDelay` | number | 500 | Milliseconds to wait before executing search |
 | `minSearchLength` | number | 3 | Minimum characters required to trigger search |
 | `defaultQuery` | string | `''` | Initial search query |
 | `defaultSort` | string | `'relevance'` | Initial sort order (`relevance`, `newest`, `oldest`) |
@@ -419,7 +419,8 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
-- **1.2.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
+- **1.2.3** — 2026-03-19 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
+- **1.2.2** — 2026-03-19: Fixed search input UI bounce — `useDeferredValue` stale flag was triggering heavy visual feedback (progress bar, button text swap, pulsing overlay, opacity drop) on every keystroke; now only `isLoading` and `isPending` drive visual indicators; increased default `debounceDelay` from 300ms to 500ms to reduce wasted API calls while staying under the 1-second perceived delay threshold; fixed `?text=` and `?query=` URL parameters being ignored due to race condition where `INITIALIZE` action overwrote the query set by `useHashSync`
 - **1.2.1** — 2026-03-13: ([web-backlog#2660](https://gitlab.com/undrr/web-backlog/-/issues/2660)) Native `requireImage`, `interestingnessTiers`, `longevityTiers` config options (moved from Drupal wrapper); `TEASER_FIELDS` constant and `allTeaserFieldsVisible()` as single source of truth for teaser field visibility; ES query optimization (skip aggs/highlights/post_filter for syndication embeds); card-aware loading skeletons; SyndicatedCards story pattern
 - **1.2.0** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.1.0** — 2026-02-26:
