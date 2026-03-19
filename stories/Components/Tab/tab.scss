@@ -65,7 +65,7 @@
 
   .mg-tabs__link {
     position: relative;
-    padding-right: 4rem; // space for the chevron to theright
+    padding-right: mg-rem(40); // space for the chevron to theright
 
     &:hover,
     &:focus {

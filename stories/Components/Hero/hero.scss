@@ -53,7 +53,7 @@
   &__content {
     display: grid;
     margin-top: $mg-spacing-25;
-    row-gap: 1rem;
+    row-gap: mg-rem(10);
   }
 
   &__meta {

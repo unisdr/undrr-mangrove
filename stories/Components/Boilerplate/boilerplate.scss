@@ -9,8 +9,8 @@
   border-radius: $mg-radius-button;
 
   &__title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: mg-rem(15);
+    margin-bottom: mg-rem(10);
 
     a {
       color: $mg-color-interactive;

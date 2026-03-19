@@ -22,7 +22,7 @@
   font-size: $mg-font-size-500;
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 0.75rem 2rem;
+  gap: mg-rem(7.5) mg-rem(20);
 }
 
 .mg-footer--about-footer--description {
@@ -70,7 +70,7 @@
 .mg-footer--social-links {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: mg-rem(15);
   padding-left: 0;
 
   li {

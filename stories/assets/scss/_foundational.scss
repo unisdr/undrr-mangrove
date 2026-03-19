@@ -41,7 +41,7 @@ caption {
 h1 {
   font-family: $mg-font-family;
   font-size: $mg-font-size-600;
-  letter-spacing: 0.06rem;
+  letter-spacing: mg-rem(0.6);
   line-height: 1.08;
   text-wrap: balance;
   font-weight: 700;
@@ -69,7 +69,7 @@ h5 {
 h6 {
   font-size: $mg-font-size-200;
   font-weight: 700;
-  letter-spacing: 0.03rem;
+  letter-spacing: mg-rem(0.3);
   line-height: 1.15;
 }
 
@@ -136,20 +136,20 @@ a {
   ol {
     direction: rtl;
     padding-left: 0;
-    padding-right: 1.125rem;
+    padding-right: mg-rem(11.25);
 
     @include devicebreak(medium) {
-      padding-right: 1.313rem;
+      padding-right: mg-rem(13.13);
     }
 
     li {
       padding-left: 0;
-      padding-right: 0.875rem;
+      padding-right: mg-rem(8.75);
 
       @include devicebreak(medium) {
         // Keep RTL list item text aligned with bullets at medium
         // https://gitlab.com/undrr/web-backlog/-/issues/2444
-        padding-right: 0.875rem;
+        padding-right: mg-rem(8.75);
       }
     }
   }
