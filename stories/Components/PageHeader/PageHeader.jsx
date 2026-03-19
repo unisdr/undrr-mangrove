@@ -15,6 +15,9 @@ export function PageHeader({
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
   homeUrl = '/',
+  showAccount = true,
+  showLanguage = true,
+  showLogo = true,
   languages = [
     { value: 'en', label: 'English', selected: true },
     { value: 'es', label: 'Spanish' },
@@ -56,83 +59,89 @@ export function PageHeader({
         <div className="mg-page-header__container mg-container">
           <div className="mg-page-header__region mg-page-header__region--toolbar">
             {/* UNDRR Logo Section */}
-            <div
-              id="block-undrrlogo"
-              className="mg-page-header__block mg-page-header__block--logo"
-            >
-              <a href={homeUrl}>
-                <img
-                  alt={logoAlt}
-                  src={logoUrl}
-                  width="324"
-                  height="47"
-                  title={logoTitle}
-                  className="mg-page-header__logo-img"
-                />
-              </a>
-            </div>
+            {showLogo && (
+              <div
+                id="block-undrrlogo"
+                className="mg-page-header__block mg-page-header__block--logo"
+              >
+                <a href={homeUrl}>
+                  <img
+                    alt={logoAlt}
+                    src={logoUrl}
+                    width="324"
+                    height="47"
+                    title={logoTitle}
+                    className="mg-page-header__logo-img"
+                  />
+                </a>
+              </div>
+            )}
 
             {/* User icon */}
-            <a title="My account" href="/user">
-              <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
-              <span className="mg-page-header__label">My account</span>
-              {/* <span className="mg-page-header__label-mobile">Login</span> */}
-            </a>
+            {showAccount && (
+              <a title="My account" href="/user">
+                <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
+                <span className="mg-page-header__label">My account</span>
+                {/* <span className="mg-page-header__label-mobile">Login</span> */}
+              </a>
+            )}
 
             {/* Language Dropdown Section */}
-            <div className="mg-page-header__block mg-page-header__block--language">
-              <form
-                className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
-                id="lang_dropdown_form_lang-dropdown-form"
-                action="/"
-                method="post"
-                acceptCharset="UTF-8"
-                noValidate
-              >
-                <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
-                  <label
-                    htmlFor="edit-lang-dropdown-select"
-                    className="mg-u-sr-only"
-                  >
-                    Select your language
-                  </label>
-
-                  <div className="mg-page-header__select-wrapper">
-                    <select
-                      style={{ width: '165px' }}
-                      className="mg-page-header__select lang-dropdown-select-element form-select form-control"
-                      data-lang-dropdown-id="lang-dropdown-form"
-                      id="edit-lang-dropdown-select"
-                      name="lang_dropdown_select"
-                      defaultValue={
-                        languages.find(lang => lang.selected)?.value ||
-                        languages[0]?.value
-                      }
+            {showLanguage && (
+              <div className="mg-page-header__block mg-page-header__block--language">
+                <form
+                  className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
+                  id="lang_dropdown_form_lang-dropdown-form"
+                  action="/"
+                  method="post"
+                  acceptCharset="UTF-8"
+                  noValidate
+                >
+                  <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
+                    <label
+                      htmlFor="edit-lang-dropdown-select"
+                      className="mg-u-sr-only"
                     >
-                      {languages.map((lang, index) => (
-                        <option key={index} value={lang.value}>
-                          {lang.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                      Select your language
+                    </label>
 
-                <noscript>
-                  <div>
-                    <button
-                      type="submit"
-                      id="edit-submit"
-                      name="op"
-                      value="Go"
-                      className="button js-form-submit form-submit btn"
-                    >
-                      Go
-                    </button>
+                    <div className="mg-page-header__select-wrapper">
+                      <select
+                        style={{ width: '165px' }}
+                        className="mg-page-header__select lang-dropdown-select-element form-select form-control"
+                        data-lang-dropdown-id="lang-dropdown-form"
+                        id="edit-lang-dropdown-select"
+                        name="lang_dropdown_select"
+                        defaultValue={
+                          languages.find(lang => lang.selected)?.value ||
+                          languages[0]?.value
+                        }
+                      >
+                        {languages.map((lang, index) => (
+                          <option key={index} value={lang.value}>
+                            {lang.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </noscript>
-              </form>
-            </div>
+
+                  <noscript>
+                    <div>
+                      <button
+                        type="submit"
+                        id="edit-submit"
+                        name="op"
+                        value="Go"
+                        className="button js-form-submit form-submit btn"
+                      >
+                        Go
+                      </button>
+                    </div>
+                  </noscript>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -141,19 +150,25 @@ export function PageHeader({
 }
 
 PageHeader.propTypes = {
-  /** Visual variant: "default" shows the full header, "decoration-only" shows just the colored stripe. */
+  /** Component variant ('default' for full header, 'decoration-only' for stripe only) */
   variant: PropTypes.oneOf(['default', 'decoration-only']),
-  /** Additional CSS class(es). */
+  /** Additional CSS classes */
   className: PropTypes.string,
-  /** URL for the header logo image. */
+  /** URL for the UNDRR logo image */
   logoUrl: PropTypes.string,
-  /** Alt text for the logo. */
+  /** Alt text for the logo image */
   logoAlt: PropTypes.string,
-  /** Title attribute for the logo. */
+  /** Title attribute for the logo image */
   logoTitle: PropTypes.string,
-  /** URL the logo links to. */
+  /** URL for the logo link */
   homeUrl: PropTypes.string,
-  /** Available languages for the language selector dropdown. */
+  /** Show or hide the UNDRR logo section */
+  showLogo: PropTypes.bool,
+  /** Show or hide the "My account" link */
+  showAccount: PropTypes.bool,
+  /** Show or hide the language switcher dropdown */
+  showLanguage: PropTypes.bool,
+  /** Array of language objects: { value, label, selected } */
   languages: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string.isRequired,

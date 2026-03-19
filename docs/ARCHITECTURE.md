@@ -43,7 +43,7 @@ stories/Components/*/ComponentName.hydrate.js  (or .jsx)
 
 ## CSS compilation pipeline
 
-Component SCSS compiles into four theme-variant stylesheets, not per-component CSS files:
+Component SCSS compiles into five theme-variant stylesheets, not per-component CSS files:
 
 ```
 stories/assets/scss/
@@ -51,6 +51,7 @@ stories/assets/scss/
 ├── style-preventionweb.scss    → PreventionWeb theme
 ├── style-irp.scss              → IRP theme
 ├── style-mcr.scss              → MCR2030 theme
+├── style-delta.scss            → DELTA Resilience theme
 ├── _components.scss            → Imports all component SCSS files
 ├── _variables.scss             → Design tokens (SCSS variables with !default)
 ├── _breakpoints.scss           → Responsive breakpoint mixins
@@ -62,9 +63,9 @@ stories/assets/scss/
 1. Each component has its own `.scss` file (e.g., `stories/Components/Pager/pager.scss`)
 2. That file is `@import`-ed in `stories/assets/scss/_components.scss`
 3. `_components.scss` is imported by each theme stylesheet
-4. `yarn scss` compiles all four theme files to `stories/assets/css/`
+4. `yarn scss` compiles all five theme files to `stories/assets/css/`
 
-**When adding a new component's SCSS:** Add the `@import` to `_components.scss`. The component's styles will then be included in all four theme outputs automatically.
+**When adding a new component's SCSS:** Add the `@import` to `_components.scss`. The component's styles will then be included in all five theme outputs automatically.
 
 **Important:** The `!default` flags on variables in `_variables.scss` allow each theme stylesheet to override tokens before the shared styles are processed.
 
@@ -143,7 +144,7 @@ CSS is **not** auto-synced. After SCSS changes:
 2. Manually copy the compiled CSS to each Drupal child theme's `css/mangrove/mangrove.css`
 3. Commit the updated CSS in the Drupal repository
 
-The specific child themes that use Mangrove CSS include: undrr, pw, mcr, irp, arise, gp, sfvc. Each maps to one of the four compiled theme stylesheets. See [DEVELOPMENT.md](DEVELOPMENT.md) for the copy workflow.
+The specific child themes that use Mangrove CSS include: undrr, pw, mcr, irp, arise, gp, sfvc. Each maps to one of the five compiled theme stylesheets. See [DEVELOPMENT.md](DEVELOPMENT.md) for the copy workflow.
 
 ### Key Drupal-side files
 
@@ -176,6 +177,7 @@ const themeStyles = {
   'PreventionWeb Theme': themePreventionWeb,
   'IRP Theme': themeIRP,
   'MCR2030 Theme': themeMCR,
+  'DELTA Resilience Theme': themeDelta,
   'My Theme': themeMyTheme,
 };
 ```
@@ -188,6 +190,7 @@ items: [
   { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
   { value: 'IRP Theme', title: 'IRP Theme' },
   { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
+  { value: 'DELTA Resilience Theme', title: 'DELTA Resilience Theme' },
   { value: 'My Theme', title: 'My Theme' },
 ],
 ```

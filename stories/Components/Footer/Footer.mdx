@@ -180,8 +180,48 @@ When implementing in your site, consider this structure:
 
 [See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A complete vanilla HTML page template using the footer widget.
 
+## Utility footer bar
+
+> **Note:** This component is new and may change as DELTA and other sub-branded sites evolve.
+
+The `mg-footer-bar` is a CSS-only utility component that renders a secondary navigation bar below the main footer. It is used by sub-branded sites (e.g. DELTA Resilience) for product-level links, disclaimers, and legal links.
+
+```html
+<footer class="mg-footer-bar">
+  <div class="mg-container">
+    <div class="mg-footer-bar__row">
+      <div class="mg-footer-bar__links">
+        <strong>DELTA</strong>
+        <a href="/help">Help</a>
+        <a href="/report-bug">Report a bug</a>
+      </div>
+    </div>
+    <hr class="mg-footer-bar__divider" />
+    <div class="mg-footer-bar__row">
+      <p class="mg-footer-bar__text">
+        Descriptive text about the sub-brand.
+      </p>
+      <div class="mg-footer-bar__links">
+        <a href="/privacy">Privacy policy</a>
+        <a href="/terms">Terms and conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+```
+
+### BEM elements
+
+| Element | Description |
+|---------|-------------|
+| `mg-footer-bar__row` | Flex row with space-between alignment |
+| `mg-footer-bar__links` | Inline link group with gap spacing |
+| `mg-footer-bar__text` | Descriptive paragraph (max-width 600px) |
+| `mg-footer-bar__divider` | Horizontal rule separator |
+
 ## Changelog
 
+- **1.0.0-beta.3** — 2026-03-16 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `mg-footer-bar` utility component for sub-branded site footer navigation. Footer social links now inherit color from parent container instead of forcing white (the parent `.mg-footer--about-footer` already sets white link color). Default `includecss` changed to `false` to avoid double-loading CSS that Mangrove provides.
 - **1.0.0-beta.2** — 2026-03-14: Mobile responsive fixes — flex-wrap on social and about-footer links, grid span reset below tablet, button stacking, image overflow constraint, link-spacer stacking for syndicated content; disabled widget injected CSS (`includecss: false`)
 - **1.0.0-beta.1** — 2025-10-17: Added `mg-footer` root class, `.mg-footer--about-footer` modifier, `footer.scss`, and Gutenberg spacer reset
 - **1.0.0-alpha.1** — 2022-12-12: Initial UNDRR-based release (proof of concept)

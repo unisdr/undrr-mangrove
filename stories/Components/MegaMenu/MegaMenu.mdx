@@ -80,6 +80,17 @@ Twig is the right place to resolve the prefix. The React component just renders 
 | logoWidth  | number | —       | Optional explicit width for CLS prevention                                                               |
 | logoHeight | number | —       | Optional explicit height for CLS prevention                                                              |
 
+### Section object properties
+
+| Property         | Type   | Required | Description                                                         |
+| ---------------- | ------ | -------- | ------------------------------------------------------------------- |
+| title            | string | Yes      | Top-level menu item label                                           |
+| icon             | string | No       | Icon class name shown before the title (e.g., `"mg-icon mg-icon-chart-bar"`). Desktop topbar only; hidden in mobile sidebar. |
+| bannerHeading    | string | No       | Heading text shown in the mega content panel                        |
+| bannerDescription| string | No       | Description text shown in the mega content panel                    |
+| bannerButton     | object | No       | `{ url, label }` — when present, the top-level item renders as an `<a>` link |
+| items            | array  | No       | Array of sub-items (triggers mega dropdown when present)            |
+
 ## Accessibility
 
 ### Keyboard navigation
@@ -154,6 +165,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.1.0** — 2026-03-13 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Optional `icon` property on sections for top-level menu item icons (desktop topbar only; decorative, `aria-hidden`). Added section object properties documentation.
 - **1.0.0** — 2026-03-12: Branded variant with optional inline logo (`logoSrc`, `logoAlt`, `logoHref`, `logoWidth`, `logoHeight`); logo shrinks on narrow viewports; hamburger floats over logo with shadow on mobile; documented `logoHref` language prefix handling. Added hydration support with `fromElement` prop extraction and `createHydrator` integration.
 - **0.7.4** — 2026-03-10: Fixed slide-in animation for menus with more than 12 child items ([#825](https://github.com/unisdr/undrr-mangrove/issues/825))
 - **0.7.3** — 2026-02-17: Topbar expands to extra-large breakpoint (1440px) on wider screens

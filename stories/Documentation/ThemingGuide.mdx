@@ -14,7 +14,7 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # Theming guide
 
-Mangrove ships four built-in themes. Each theme overrides a set of SCSS variables to change colors, border radii, spacing, and component-level styling. This page explains how the system works, documents every overridable token, and walks through creating a new theme.
+Mangrove ships five built-in themes. Each theme overrides a set of SCSS variables to change colors, border radii, spacing, and component-level styling. This page explains how the system works, documents every overridable token, and walks through creating a new theme.
 
 <TableOfContents
   title="On this page"
@@ -38,8 +38,9 @@ Mangrove ships four built-in themes. Each theme overrides a set of SCSS variable
 | **PreventionWeb** | `style-preventionweb.scss` | `#0a6969` (teal) | preventionweb.net knowledge platform |
 | **IRP** | `style-irp.scss` | `#0f78bf` (bright blue) | International Recovery Platform |
 | **MCR2030** | `style-mcr.scss` | `#591a61` (purple) | Making Cities Resilient 2030 campaign |
+| **DELTA Resilience** | `style-delta.scss` | `#132e48` (dark navy) | deltaresilience.org standalone app |
 
-The Global UNDRR theme uses the defaults defined in `_variables.scss`. The other three themes each have a `_variables-{name}.scss` file that reassigns the overridable tokens before the rest of the SCSS compiles.
+The Global UNDRR theme uses the defaults defined in `_variables.scss`. The other themes each have a `_variables-{name}.scss` file that reassigns the overridable tokens before the rest of the SCSS compiles.
 
 ## How theming works
 
@@ -78,7 +79,7 @@ The import order inside each theme entry point controls this:
 
 ### What each theme overrides
 
-All three non-default themes follow the same pattern: set a primary brand color, then reassign the interactive, button, tag, form, hero, and tab tokens to use that color.
+All non-default themes follow the same pattern: set a primary brand color, then reassign the interactive, button, tag, form, hero, and tab tokens to use that color.
 
 **PreventionWeb** (`_variables-preventionweb.scss`):
 - Primary: `$pw-color-primary: #0a6969`
@@ -100,6 +101,17 @@ All three non-default themes follow the same pattern: set a primary brand color,
 - Elevated tab sections with box shadow and rounded corners
 - Fully rounded tag corners (`$mg-radius-tag: $mg-spacing-100`)
 - Rounded form inputs (`$mg-radius-form-input: $mg-spacing-100`)
+
+**DELTA Resilience** (`_variables-delta.scss`):
+- Primary interactive: `$delta-color-primary: #132e48` (dark navy, used for links and focus rings)
+- Outline-style buttons: transparent background, blue border/text, 2px border, 8px radius
+- Tinted card backgrounds: `$delta-color-card-bg` (#fafafa) with `$mg-spacing-150` padding and rounded corners
+- Red accent: `$delta-color-red: #b52a32`
+- 6 pastel accent colors for feature card icons (design-system semantics TBD)
+- Dark near-black for CTA banner sections (`$delta-color-dark: #181823`)
+- Rounded tags, tabs, and form inputs (`$mg-radius-*: $mg-spacing-50`)
+- Hero overlay spacing (`$mg-spacing-hero-overlay: 2rem 0`)
+- No font override needed (Mangrove already defaults to Roboto)
 
 ## Design tokens reference
 
@@ -149,6 +161,15 @@ Used by hero, cards, and other components that support color variants.
 | `$mg-padding-button` | `$mg-spacing-100 $mg-spacing-150` | Button padding |
 | `$mg-font-size-button` | `$mg-font-size-250` (`1.4rem`) | Button font size |
 
+### Card tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-card-background` | `none` | Card container background (set to a color for tinted cards) |
+| `$mg-card-padding` | `0` | Card container padding |
+| `$mg-card-border-radius` | `0` | Card container border radius |
+| `$mg-card-icon-badge-radius` | `50%` | Icon badge border radius (circle by default; Delta uses `15%` for rounded rect) |
+
 ### Form tokens
 
 | Token | Default value | Purpose |
@@ -168,7 +189,14 @@ Used by hero, cards, and other components that support color variants.
 | `$mg-color-hero--tertiary` | `$mg-color-tertiary` | Hero tertiary variant |
 | `$mg-color-hero--quaternary` | `$mg-color-quaternary` | Hero quaternary variant |
 | `$mg-opacity-hero` | `0.85` | Hero overlay opacity |
+| `$mg-color-hero-title` | `$mg-color-neutral-0` (white) | Hero title text color |
 | `$mg-spacing-hero-overlay` | `0` | Hero overlay padding |
+
+### CTA tokens
+
+| Token | Default value | Purpose |
+|-------|---------------|---------|
+| `$mg-cta-padding` | `$mg-spacing-400 0` | CTA banner vertical padding |
 
 ### Tab tokens
 
@@ -265,7 +293,7 @@ Arabic is the only locale that triggers RTL. The decorator in `preview.js` sets 
 
 ### RTL in themes
 
-Theming and RTL are independent. All four themes support RTL. When testing a theme in RTL, select the theme from the paintbrush toolbar and the locale from the globe toolbar. Both apply simultaneously.
+Theming and RTL are independent. All five themes support RTL. When testing a theme in RTL, select the theme from the paintbrush toolbar and the locale from the globe toolbar. Both apply simultaneously.
 
 ### RTL-aware CSS patterns
 

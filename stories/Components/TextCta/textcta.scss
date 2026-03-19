@@ -1,27 +1,129 @@
-.trusted-partnerships {
-  &__container {
-    padding: 3rem 1.5rem 6rem;
+/* CTA banner start */
+
+.mg-cta {
+  padding: $mg-cta-padding;
+  background-color: var(--mg-cta-bg, initial);
+
+  &__inner {
+    // Uses mg-container from markup for max-width
   }
 
-  &--header {
+  &__body {
+    max-width: 800px;
+  }
+
+  &__headline {
+    color: $mg-color-white;
+    font-weight: 700;
+    margin-bottom: $mg-spacing-100;
+  }
+
+  &__text {
+    color: rgba($mg-color-white, 0.9);
+    margin-bottom: $mg-spacing-150;
+
     p {
-      margin-top: $mg-spacing-200;
+      margin-bottom: $mg-spacing-75;
 
-      @include devicebreak(medium) {
-        margin-top: $mg-spacing-400;
+      &:last-child {
+        margin-bottom: 0;
       }
     }
 
-    .button-arrow {
-      margin-top: $mg-spacing-200;
+    a {
+      color: $mg-color-white;
+      text-decoration: underline;
+    }
+  }
 
-      @include devicebreak(small) {
-        display: inline-flex;
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $mg-spacing-100;
+    margin-top: $mg-spacing-150;
+  }
+
+  &__image {
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  // Center-aligned variant (default for text-only CTA banners)
+  &--centered {
+    text-align: center;
+
+    .mg-cta__body {
+      margin-inline: auto;
+    }
+
+    .mg-cta__actions {
+      justify-content: center;
+    }
+  }
+
+  // Side-by-side layout when image is present
+  &--with-image {
+    .mg-cta__inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      gap: $mg-spacing-200;
+    }
+
+    .mg-cta__body {
+      max-width: none;
+    }
+
+    .mg-cta__image {
+      max-width: 200px;
+      margin-inline: auto;
+    }
+
+    @include devicebreak(medium) {
+      .mg-cta__inner {
+        grid-template-columns: 1fr auto;
       }
 
-      @include devicebreak(medium) {
-        margin-top: $mg-spacing-300;
+      .mg-cta__image {
+        max-width: 250px;
       }
     }
+  }
+
+  // Color variants — same system as Hero
+  &--primary {
+    background-color: $mg-color-hero;
+  }
+
+  &--secondary {
+    background-color: $mg-color-hero--secondary;
+  }
+
+  &--tertiary {
+    background-color: $mg-color-hero--tertiary;
+  }
+
+  &--quaternary {
+    background-color: $mg-color-hero--quaternary;
+  }
+
+  // Button overrides for dark backgrounds (matches Hero pattern)
+  a.mg-button-primary {
+    background-color: $mg-color-neutral-0;
+  }
+
+  a.mg-button-secondary {
+    background-color: rgba($mg-color-neutral-0, 0.9);
+  }
+
+  a.mg-button,
+  a.mg-button:hover,
+  a.mg-button:visited {
+    color: $mg-color-hero;
   }
 }
+
+/* CTA banner end */

@@ -214,7 +214,7 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} />
+              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} visibleTeaserFields={visibleTeaserFields} />
             </div>
           ))}
         </div>
@@ -226,7 +226,7 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultItem hit={hit} showMetrics={showSearchMetrics} />
+              <ResultItem hit={hit} showMetrics={showSearchMetrics} visibleTeaserFields={visibleTeaserFields} />
             </div>
           ))}
         </div>

@@ -49,6 +49,16 @@
     }
   }
 
+  // Nav list inside branded variant — push items to the end
+  &--branded &__nav {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
   // Logo link
   &__logo {
     flex-shrink: 1;
@@ -158,6 +168,13 @@
     list-style: none;
   }
 
+  // Optional icon before the top-level menu label
+  &__item-icon {
+    margin-inline-end: 0.35em;
+    font-size: 0.85em;
+    vertical-align: baseline;
+  }
+
   // Desktop: Make the top level button links larger
   @media screen and (min-width: $mg-breakpoint-tablet) {
     &__item-link {
@@ -175,7 +192,7 @@
   top: 1px;
   align-items: flex-start;
   justify-content: start;
-  background-color: rgba($mg-color-button, 0.7);
+  background-color: rgba($mg-color-mega-content-bg, 0.7);
   backdrop-filter: blur(10px);
   border-radius: $mg-radius-tab;
   box-shadow: -1px 5px 10px -1px rgb(0 0 0 / 0.25);
@@ -200,7 +217,7 @@
   &__left {
     height: 100%;
     width: 100%; // mobile-first
-    background-color: rgba($mg-color-button, 0.8);
+    background-color: rgba($mg-color-mega-content-bg, 0.8);
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       flex-basis: 33%;

@@ -100,6 +100,7 @@ export default [
       Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.hydrate.js',
+      TextCta: './stories/Components/TextCta/TextCta.hydrate.js',
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.jsx',

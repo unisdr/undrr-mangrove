@@ -290,7 +290,7 @@ Verify that the screen reader announces: the element role, name/label, current s
 
 ### Multi-theme contrast checking
 
-Mangrove ships four themes (UNDRR, PreventionWeb, IRP, MCR2030), each with different color palettes. A color combination that passes AA contrast in one theme may fail in another. When you add or change colors:
+Mangrove ships five themes (UNDRR, PreventionWeb, IRP, MCR2030, DELTA Resilience), each with different color palettes. A color combination that passes AA contrast in one theme may fail in another. When you add or change colors:
 
 1. Use the Storybook theme switcher toolbar to preview each theme.
 2. Check foreground/background contrast with a tool such as the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/).
