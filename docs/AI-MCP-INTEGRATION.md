@@ -100,7 +100,7 @@ The things agents most often get wrong: CSS class prefix, naming pattern, and th
 - All CSS classes use the `mg-` prefix (e.g., `mg-button`, `mg-card`)
 - Classes follow BEM (e.g., `mg-card__title`, `mg-button--primary`)
 - Components use semantic HTML for accessibility
-- Four themes: undrr (default), preventionweb, irp, mcr2030
+- Five themes: undrr (default), preventionweb, irp, mcr2030, delta
 - RTL is supported for Arabic and other right-to-left languages
 
 ### Check what you get back
