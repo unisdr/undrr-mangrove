@@ -138,7 +138,7 @@ const COMPONENT_IDS = {
   Footer: 'components-footer',
   QuoteHighlight: 'components-quotehighlight',
   HighlightBox: 'components-highlightbox',
-  EmbedContainer: 'utilities-embedcontainer',
+  EmbedContainer: 'components-embedcontainer',
   FullWidth: 'components-fullwidth',
   Loader: 'components-loader',
   ShowMore: 'components-showmore',

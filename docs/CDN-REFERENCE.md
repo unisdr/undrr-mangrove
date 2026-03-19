@@ -1,6 +1,6 @@
 # CDN reference
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-cdn-reference--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs).
 
 This page provides an overview of UNDRR's CDN structure and common asset paths. For a complete listing of all available files and versions, explore the CDN directly at [assets.undrr.org/static](https://assets.undrr.org/static/sitemap.html).
 
@@ -97,9 +97,9 @@ Then import the Mangrove component as an ES module:
 </script>
 ```
 
-See the [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs) for complete usage examples.
+See the [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs) for complete usage examples.
 
-All bundled components export a `fromElement` function for automatic prop extraction. The `hydrate.js` runtime (`/components/hydrate.js`) eliminates the manual `createRoot` boilerplate. See the [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-hydration-guide--docs) for details.
+All bundled components export a `fromElement` function for automatic prop extraction. The `hydrate.js` runtime (`/components/hydrate.js`) eliminates the manual `createRoot` boilerplate. See the [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) for details.
 
 ## Analytics
 
@@ -118,7 +118,7 @@ Base URL: `https://assets.undrr.org/static/analytics/{version}/`
 ></script>
 ```
 
-See [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-analytics-enhancements--docs) for configuration options.
+See [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs) for configuration options.
 
 ## Logos
 
@@ -205,6 +205,6 @@ https://assets.undrr.org/static/
 
 ## See also
 
-- [Vanilla HTML/CSS integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs)
-- [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-analytics-enhancements--docs)
-- [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-critical-messaging--docs)
+- [Vanilla HTML/CSS integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
+- [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs)
+- [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs)

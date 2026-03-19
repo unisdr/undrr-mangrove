@@ -1,6 +1,6 @@
 # Browser support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices-browser-support--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-browser-support--docs).
 
 UNDRR Design system's components are compatible and tested in major modern browsers. Browsers and devices we support as follow.
 
@@ -27,3 +27,8 @@ List of mobile browsers and OS supported.
 ## Screen width
 
 For guidance on supported screen widths, see [the Breakpoints section](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-breakpoint--docs).
+
+## Next steps
+
+- [Getting started](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-about-mangrove--docs) — what Mangrove provides and how to use it
+- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) — pre-built CSS and JS URLs for quick integration

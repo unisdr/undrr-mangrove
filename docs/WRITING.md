@@ -1,6 +1,6 @@
 # Writing guidelines for Mangrove
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-writing-guidelines--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-writing-guidelines--docs).
 
 This guide helps anyone contributing to Mangrove write interface copy, documentation, and developer messages that:
 

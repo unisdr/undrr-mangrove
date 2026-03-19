@@ -14,7 +14,7 @@ Thank you for contributing to the UNDRR Mangrove component library.
 - See [`docs/RELEASES.md`](docs/RELEASES.md) for versioning, tagging, and publishing.
 - See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the build system, distribution channels, and Drupal integration flow.
 - See [`docs/COMPONENT-GUIDE.md`](docs/COMPONENT-GUIDE.md) for a step-by-step tutorial on building a new component.
-- For code standards and review process, check out the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in our Storybook docs.
+- For code standards and review process, check out the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in our Storybook docs.
 
 ## Writing guidelines
 
@@ -26,7 +26,7 @@ To keep copy consistent and high quality across UI, docs, and developer messages
 
 ## Component changelogs
 
-Every component MDX file must include a `## Changelog` section tracking its version history. Entries use the format `- **version** — YYYY-MM-DD: description`, with newest entries first. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs#changelog-format) for the full specification and examples.
+Every component MDX file must include a `## Changelog` section tracking its version history. Entries use the format `- **version** — YYYY-MM-DD: description`, with newest entries first. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full specification and examples.
 
 When submitting a PR that modifies a component, add a new changelog entry to that component's MDX file. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
 
@@ -54,4 +54,4 @@ Tips for better manifest output:
 5. Run tests and linters before you open a pull request.
 6. Reference the relevant issue in your PR description.
 
-For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs).
+For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).

@@ -2,7 +2,7 @@
 
 This guide covers the development setup and workflow for contributing to the UNDRR Mangrove component library.
 
-For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs).
+For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs).
 
 ## Related guides
 
@@ -19,10 +19,9 @@ For more detailed information, see the [Getting Started Guide](https://unisdr.gi
 
 These guides live inside Storybook and cover component standards, integration, and best practices:
 
-- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) — onboarding, installation methods, and integration options
-- [Component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) — component structure, code standards, and PR process
-- [Component structure](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-structure--docs) — architecture and organization patterns
-- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs) — testing strategies within Storybook
+- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) — onboarding, installation methods, and integration options
+- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — component structure, code conventions, and PR process
+- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — testing strategies within Storybook
 - [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
 
 ## Prerequisites
@@ -208,7 +207,7 @@ Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_
 
 ## Component development
 
-See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
+See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
 
 ### TypeScript support
 

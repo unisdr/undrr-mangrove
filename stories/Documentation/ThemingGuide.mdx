@@ -3,7 +3,7 @@ import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
-  title="Getting started/Theming guide"
+  title="Getting started/Integration/Theming guide"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -242,113 +242,7 @@ Create `stories/assets/scss/style-mytheme.scss`:
 
 The import order matters: `_variables.scss` first (sets `!default` tokens), then your override file (reassigns without `!default`), then the rest of the SCSS that consumes those variables.
 
-### Step 3: Register the theme in Storybook
-
-In `.storybook/preview.js`, add an import and register the theme:
-
-```js
-// Add import at the top with the other theme imports
-import themeMyTheme from '../stories/assets/scss/style-mytheme.scss';
-```
-
-Add the theme to the `themeStyles` map:
-
-```js
-const themeStyles = {
-  'Global UNDRR Theme': themeUNDRR,
-  'PreventionWeb Theme': themePreventionWeb,
-  'IRP Theme': themeIRP,
-  'MCR2030 Theme': themeMCR,
-  'My Theme': themeMyTheme,
-};
-```
-
-Add a toolbar entry in `globalTypes.theme.toolbar.items`:
-
-```js
-items: [
-  { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
-  { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
-  { value: 'IRP Theme', title: 'IRP Theme' },
-  { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
-  { value: 'My Theme', title: 'My Theme' },
-],
-```
-
-The theme entry file name must match the pattern `style(-\w+)?\.scss$` so Storybook's webpack config applies `lazyStyleTag` injection (see `.storybook/main.js`). This gives the imported module `.use()` and `.unuse()` methods that the theme decorator calls to swap stylesheets at runtime.
-
-### Step 4: Build the CSS
-
-```bash
-yarn scss
-```
-
-This compiles all `style*.scss` files in `stories/assets/scss/` to CSS in `stories/assets/css/`. Your new theme will produce `stories/assets/css/style-mytheme.css`.
-
-### Step 5: Test in Storybook
-
-```bash
-yarn dev
-```
-
-Use the paintbrush icon in the Storybook toolbar to switch to your theme. Every component on every page should reflect your overrides.
-
-## Storybook theme switcher
-
-The toolbar at the top of Storybook includes a paintbrush icon labeled with the current theme name. Selecting a different theme from the dropdown swaps the active stylesheet immediately.
-
-### How it works
-
-1. `.storybook/main.js` configures a webpack rule that matches `style(-\w+)?\.scss$` files in `stories/assets/scss/` and applies `style-loader` with `injectType: 'lazyStyleTag'`. This compiles each theme file into a module with `.use()` and `.unuse()` methods instead of injecting the styles immediately.
-
-2. `.storybook/preview.js` imports all four theme SCSS files. A `themeDecorator` function listens for changes to the `theme` global (set by the toolbar) and calls `.unuse()` on the previous theme, then `.use()` on the new one.
-
-3. The default theme (`Global UNDRR Theme`) is loaded on initial render. Only one theme's styles are active at any time.
-
-### Available toolbar controls
-
-| Control | Icon | Options |
-|---------|------|---------|
-| Theme | Paintbrush | Global UNDRR, PreventionWeb, IRP, MCR2030 |
-| Locale | Globe | English, Arabic, Burmese, Japanese |
-
-## Deploying to Drupal
-
-Drupal child themes each carry their own copy of the compiled Mangrove CSS. The CSS is not auto-synced; you copy it manually after building.
-
-### Build and copy workflow
-
-1. **Build CSS** from the Mangrove directory:
-
-```bash
-yarn scss
-```
-
-This outputs compiled CSS files to `stories/assets/css/`:
-- `style.css` — Global UNDRR
-- `style-preventionweb.css` — PreventionWeb
-- `style-irp.css` — IRP
-- `style-mcr.css` — MCR2030
-
-2. **Copy to each Drupal child theme**. Each UNDRR child theme has a `css/mangrove/mangrove.css` file. Copy the relevant compiled CSS to each:
-
-```bash
-# Example for the main UNDRR theme
-cp stories/assets/css/style.css \
-  /path/to/docroot/themes/custom/undrr/css/mangrove/mangrove.css
-
-# Example for PreventionWeb
-cp stories/assets/css/style-preventionweb.css \
-  /path/to/docroot/themes/custom/pw/css/mangrove/mangrove.css
-```
-
-The specific child themes that use Mangrove CSS include: undrr, pw, mcr, irp, arise, gp, sfvc. Each maps to one of the four compiled theme stylesheets.
-
-3. **Commit the CSS** in the Drupal repository. The compiled CSS files are tracked in git on the Drupal side.
-
-### JS components are separate
-
-The CSS deployment is independent of the JS component workflow. Built React components (`dist/components/*.js`) are copied to `undrr_common/js/mangrove-components/` during the Drupal-side build process. See the <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo> for details on the JS workflow.
+**Contributing a new official theme to Mangrove?** After creating your override file and entry point (steps 1-2 above), you also need to register the theme in Storybook, build the CSS, and deploy to Drupal. See the <LinkTo kind="contributing-architecture" story="docs">Architecture guide</LinkTo> for the Storybook theme registration process and Drupal CSS deployment workflow.
 
 ## RTL considerations
 
@@ -380,3 +274,13 @@ Mangrove uses logical properties and `[dir="rtl"]` selectors where needed. The `
 ### Burmese language adjustments
 
 The `_mixins.scss` file includes `:lang(my)` overrides that reduce font sizes for Burmese text, which requires more vertical space. These apply across all themes.
+
+## Next steps
+
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration</LinkTo> -- variable overrides and build configuration
+- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> -- pre-built theme CSS URLs
+- <LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo> -- Storybook theme registration and Drupal CSS deployment
+
+---
+
+Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ThemingGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

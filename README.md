@@ -15,7 +15,7 @@ If there is a Component or Pattern that you need, or you have any other feedback
 
 ## Getting started
 
-**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
+**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
 
 ### Installation
 
@@ -239,7 +239,7 @@ See the [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?
 For contributing to this library:
 
 - [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
-- [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) - Interactive component documentation and usage examples
+- [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) - Interactive component documentation and usage examples
 - [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
 - [Release Process](./docs/RELEASES.md) - Versioning and publishing
 

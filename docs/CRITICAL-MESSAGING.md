@@ -1,6 +1,6 @@
 # Critical messaging
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CRITICAL-MESSAGING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-critical-messaging--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CRITICAL-MESSAGING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs).
 
 UNDRR provides a failsafe messaging system that broadcasts urgent messages across all UNDRR properties, even when the main CMS is down.
 
@@ -55,4 +55,4 @@ Debug mode provides detailed console logging and development utilities.
 
 ## See also
 
-- [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-analytics-enhancements--docs) — GA4 tracking for UNDRR pages
+- [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs) — GA4 tracking for UNDRR pages

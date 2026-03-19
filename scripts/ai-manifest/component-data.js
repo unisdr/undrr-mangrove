@@ -276,7 +276,7 @@ export default {
   'components-cards-stats-card': { description: 'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.' },
 
   // --- Tags ---
-  'atom-tag': {
+  'components-tag': {
     description: 'Small label for categorization. Variants: default, secondary, outline, accent. Can be span or link.',
     cssClasses: ['mg-tag', 'mg-tag--secondary', 'mg-tag--outline', 'mg-tag--accent', 'mg-tag-container'],
     examples: [
@@ -585,7 +585,7 @@ export default {
   },
 
   // --- Utilities ---
-  'utilities-embedcontainer': { description: 'Responsive aspect-ratio wrapper for iframes and embeds. Default 16:9 with 4:3, 1:1, and 21:9 variants.' },
+  'components-embedcontainer': { description: 'Responsive aspect-ratio wrapper for iframes and embeds. Default 16:9 with 4:3, 1:1, and 21:9 variants.' },
   'components-fullwidth': { description: 'Makes content break out of its container to span the full viewport width. RTL-safe.' },
   'components-loader': { description: 'Animated loading spinner. 40px on mobile, 96px on desktop.' },
 

@@ -16,25 +16,18 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <TableOfContents
   tocData={[
-    { id: 'performance-best-practices', text: 'Performance best practices' },
-    {
-      id: 'accessibility-best-practices',
-      text: 'Accessibility best practices',
-    },
     { id: 'architecture-best-practices', text: 'Architecture best practices' },
-    { id: 'development-best-practices', text: 'Development best practices' },
     { id: 'styling-best-practices', text: 'Styling best practices' },
     { id: 'progressive-enhancement', text: 'Progressive enhancement' },
-    { id: 'related-resources', text: 'Related resources' },
   ]}
   showNumbers={false}
 />
 
 Follow these guidelines to get the most out of Mangrove while building maintainable, accessible, and performant applications.
 
-These practices complement **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">UNDRR's commitment to Mangrove as the standard</LinkTo>** by ensuring your implementation is consistent with the broader organizational approach to web development.
+These practices keep your implementation consistent with the rest of Mangrove. See **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** for background on what's shared and why.
 
-## 🏗️ Architecture best practices
+## Architecture best practices
 
 ### 1. Component organization
 
@@ -230,7 +223,7 @@ function ReportCard({ report }) {
 }
 ```
 
-## 🎨 Styling best practices
+## Styling best practices
 
 ### 1. CSS Custom Properties
 
@@ -277,7 +270,7 @@ function ReportCard({ report }) {
 }
 ```
 
-## 📱 Progressive enhancement
+## Progressive enhancement
 
 ### 1. JavaScript enhancement
 
@@ -352,3 +345,13 @@ For server-rendered frameworks like Drupal, the [Hydration guide](https://github
     sans-serif; /* Generic fallback */
 }
 ```
+
+## Next steps
+
+- <LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo> -- what's shared across UNDRR properties
+- <LinkTo kind="getting-started-accessibility" story="docs">Accessibility</LinkTo> -- WCAG requirements and patterns
+- <LinkTo kind="contributing-component-standards" story="docs">Component standards</LinkTo> -- code conventions for contributors
+
+---
+
+Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/BestPractices.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
