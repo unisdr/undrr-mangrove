@@ -7,7 +7,12 @@
 }
 
 html {
-  font-size: 10px;
+  // Only override the browser default when using the legacy 10px root.
+  // When $mg-html-font-size is 16, skip the override entirely so the
+  // browser default (or user-configured) root font-size is respected.
+  @if $mg-html-font-size != 16 {
+    font-size: $mg-html-font-size * 1px;
+  }
   -webkit-tap-highlight-color: transparent;
 }
 
