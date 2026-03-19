@@ -30,6 +30,16 @@ The search scope can be constrained with `customFilters` (hidden Elasticsearch q
 
 See the <LinkTo kind="components-syndicationsearchwidget" story="docs">SyndicationSearchWidget component</LinkTo> for full documentation, props, query syntax, custom facets, and integration examples.
 
+## Accessibility
+
+Faceted search is one of the most accessibility-sensitive UI patterns. Key considerations:
+
+- Search results announce count changes to screen readers via `aria-live` regions.
+- Filter controls are keyboard navigable -- Tab through facets, Enter to select, Escape to close dropdowns.
+- Active filters are announced and can be removed with keyboard.
+- The mobile filter drawer traps focus and is dismissible with Escape.
+- All interactive elements meet the WCAG 2.2 minimum target size (24x24px, with 44x44px recommended for touch targets).
+
 ---
 
 Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/SearchSyndication.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

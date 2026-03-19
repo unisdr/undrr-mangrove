@@ -31,6 +31,15 @@ import { CookieConsentBanner } from '@undrr/undrr-mangrove';
 
 See the <LinkTo kind="components-cookieconsentbanner" story="docs">CookieConsentBanner component</LinkTo> for full documentation, props, custom configuration, and CDN details.
 
+## Accessibility
+
+The cookie consent banner behaves as a modal overlay. Key considerations:
+
+- The banner traps focus when visible and returns focus to the triggering element on dismissal.
+- All controls are keyboard accessible (Tab to navigate, Enter to activate, Escape to dismiss).
+- The banner uses `role="dialog"` and `aria-label` so screen readers announce it as a dialog.
+- Consent choices persist so the banner does not reappear on every page load, avoiding repeated interruptions for assistive technology users.
+
 ---
 
 Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/CookieConsent.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

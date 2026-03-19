@@ -27,3 +27,8 @@ List of mobile browsers and OS supported.
 ## Screen width
 
 For guidance on supported screen widths, see [the Breakpoints section](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-breakpoint--docs).
+
+## Next steps
+
+- [Getting started](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-about-mangrove--docs) — what Mangrove provides and how to use it
+- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) — pre-built CSS and JS URLs for quick integration

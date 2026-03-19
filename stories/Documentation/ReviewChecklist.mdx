@@ -30,10 +30,16 @@ See <LinkTo kind="contributing-component-standards" story="docs">Component stand
 - [ ] ARIA attributes included (labels, roles, live regions)
 - [ ] Keyboard navigation works (Tab, Enter, Escape, arrow keys as relevant)
 - [ ] Focus states are visible
-- [ ] Color contrast meets WCAG 2.1 AA (4.5:1 for text, 3:1 for UI elements)
+- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for text, 3:1 for UI elements)
 - [ ] jest-axe test included in the test file
+- [ ] Heading hierarchy is logical (no skipped levels)
+- [ ] Images and icons have appropriate alt text (empty `alt=""` for decorative images)
+- [ ] Touch/click targets meet minimum size (24x24px, 44x44px recommended)
+- [ ] Animations respect `prefers-reduced-motion`
+- [ ] Error states are announced to assistive technology (`aria-describedby`, `aria-live`)
+- [ ] Component works across all four themes without contrast failures
 
-See <LinkTo kind="getting-started-accessibility" story="docs">Accessibility</LinkTo> for the testing methodology.
+See <LinkTo kind="getting-started-accessibility" story="docs">Accessibility</LinkTo> for the full guide and testing methodology.
 
 ## Stories and documentation
 

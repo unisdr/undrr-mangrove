@@ -35,6 +35,14 @@ See:
 - <LinkTo kind="components-syndicationsearchwidget" story="docs">SyndicationSearchWidget component</LinkTo> -- full documentation and props
 - <LinkTo kind="components-fetcher" story="docs">Fetcher component</LinkTo> -- generic data-fetching utility
 
+## Accessibility
+
+Syndicated content blocks load dynamically, so assistive technology support requires extra care:
+
+- Card grids use semantic list markup (`<ul>` / `<li>`) so screen readers can convey the number of results and allow list navigation.
+- Images include alt text sourced from the CMS. The `requireImage` filter controls whether results without images are shown -- it does not mark images as decorative.
+- Loading states announce to assistive technology via `aria-live` regions so users are informed when content is being fetched.
+
 ---
 
 Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSyndication.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
