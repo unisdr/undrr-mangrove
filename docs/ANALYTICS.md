@@ -1,6 +1,6 @@
 # Analytics enhancements
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ANALYTICS.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-analytics-enhancements--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ANALYTICS.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs).
 
 UNDRR provides Google Analytics 4 enhancements and domain configuration via a shared, versioned CDN bundle.
 
@@ -28,4 +28,4 @@ The script auto-detects GA4 and configures property IDs for UNDRR domains.
 
 ## See also
 
-- [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-critical-messaging--docs) — Emergency broadcast system for UNDRR pages
+- [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs) — Emergency broadcast system for UNDRR pages

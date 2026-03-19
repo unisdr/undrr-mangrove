@@ -1,6 +1,6 @@
 # Layered hydration
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-hydration-guide--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 Mangrove React components are rendered into server-generated HTML containers via hydration wrappers. This document describes the layered approach that replaces hand-written per-component boilerplate with a shared runtime.
 
@@ -437,9 +437,9 @@ createHydrator({
 
 ## Related documentation
 
-- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) — overview of all integration approaches
-- [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs) — CDN usage with import maps
-- [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-react-integration--docs) — npm package usage
-- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-cdn-reference--docs) — all available CDN paths
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) — how to add new components
+- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) — overview of all integration approaches
+- [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs) — CDN usage with import maps
+- [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs) — npm package usage
+- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) — all available CDN paths
+- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — how to add new components
 - [DEVELOPMENT.md](DEVELOPMENT.md) — development setup and component file structure

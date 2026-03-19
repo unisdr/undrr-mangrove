@@ -1,8 +1,8 @@
 # Component guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-build-a-component-step-by-step--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs).
 
-A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) in Storybook.
+A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook.
 
 ## Decision tree: what files do I need?
 
@@ -46,11 +46,11 @@ Refer to these files as you follow each step below.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.jsx` as a functional component with hooks, destructured props with defaults, JSDoc, PropTypes, and BEM class names prefixed with `mg-`.
 
-See `Pager.jsx` for a complete example and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) for React and PropTypes standards.
+See `Pager.jsx` for a complete example and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
 
 ## Step 2: Create the SCSS file
 
-Create `stories/Components/{Category}/{ComponentName}/componentname.scss` using SCSS variables from `_variables.scss` and BEM naming. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) for styling guidelines.
+Create `stories/Components/{Category}/{ComponentName}/componentname.scss` using SCSS variables from `_variables.scss` and BEM naming. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
 
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
@@ -64,7 +64,7 @@ This is required — without it, your styles won't be included in any theme's co
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.stories.jsx` using CSF3 object syntax (not `Template.bind({})`). Set `component` in the default export for autodocs.
 
-Use `{ args: {} }` for simple stories, `{ render: (args) => ... }` when you need custom JSX wrapping. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) for story format details.
+Use `{ args: {} }` for simple stories, `{ render: (args) => ... }` when you need custom JSX wrapping. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for story format details.
 
 ### Storybook ID derivation
 
@@ -80,7 +80,7 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 ## Step 5: Write MDX documentation
 
-Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) for documentation requirements.
+Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
 ## Step 6: Add hydration files (Drupal integration only)
 
@@ -171,4 +171,4 @@ yarn validate-manifest
 - [Hydration guide](HYDRATION.md) — full `fromElement` API, `createHydrator` reference, and consumer patterns
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
 - [Writing guidelines](WRITING-SHORT.md) — UX writing standards
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) — code standards reference (Storybook)
+- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)

@@ -18,8 +18,8 @@ import React, { useEffect } from 'react';
  * <div class="mg-critical-messaging"></div>
  *
  * See documentation:
- * - Analytics: /?path=/docs/getting-started-analytics-enhancements--docs
- * - Messaging: /?path=/docs/getting-started-critical-messaging--docs
+ * - Analytics: /?path=/docs/platform-services-analytics-enhancements--docs
+ * - Messaging: /?path=/docs/platform-services-critical-messaging--docs
  */
 
 // Import your components

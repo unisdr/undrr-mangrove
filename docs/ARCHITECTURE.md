@@ -1,6 +1,6 @@
 # Architecture
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ARCHITECTURE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-architecture--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ARCHITECTURE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-architecture--docs).
 
 This document explains the build system, distribution channels, and integration patterns for the Mangrove component library. It is the single reference for understanding how source code becomes consumable assets.
 
@@ -173,11 +173,11 @@ The d3 monolith import was replaced with submodule imports (`d3-selection`, `d3-
 
 ### Module-level mutable state
 
-Never use module-level `Set`, `Map`, `Array`, or counters to track state across function calls. These persist between component instances and cause cross-instance bugs. Always declare mutable tracking variables inside the function scope. See [ComponentContribution.mdx](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) for the full anti-pattern explanation.
+Never use module-level `Set`, `Map`, `Array`, or counters to track state across function calls. These persist between component instances and cause cross-instance bugs. Always declare mutable tracking variables inside the function scope. See [ComponentContribution.mdx](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for the full anti-pattern explanation.
 
 ### React 19 defaultProps deprecation
 
-`Component.defaultProps` is deprecated in React 19. Use destructured default parameters instead. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) for the full pattern.
+`Component.defaultProps` is deprecated in React 19. Use destructured default parameters instead. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for the full pattern.
 
 ### SCSS variables with !default
 

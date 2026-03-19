@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 
 <Meta
-  title="Getting started/Component standards"
+  title="Contributing/Component standards"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -13,7 +13,7 @@ import LinkTo from '@storybook/addon-links/react';
 
 # Component standards
 
-Standards, conventions, and contribution process for Mangrove components. For a step-by-step tutorial on building a new component, see the <LinkTo kind="getting-started-build-a-component-step-by-step" story="docs">Build a component</LinkTo> guide.
+Standards, conventions, and contribution process for Mangrove components. For a step-by-step tutorial on building a new component, see the <LinkTo kind="contributing-build-a-component-step-by-step" story="docs">Build a component</LinkTo> guide.
 
 Before contributing, review **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand how shared content structures work across UNDRR properties.
 
@@ -21,13 +21,13 @@ Further information on detailed setup, workflow, and contribution docs in the [d
 
 ### Related guides
 
-- **<LinkTo kind="getting-started-build-a-component-step-by-step" story="docs">Build a component</LinkTo>** — step-by-step tutorial
-- **<LinkTo kind="getting-started-build-a-component-testing" story="docs">Testing components</LinkTo>** — unit, visual, and accessibility testing
-- **<LinkTo kind="getting-started-writing-guidelines" story="docs">Writing guidelines</LinkTo>** — UX writing standards for components and docs
+- **<LinkTo kind="contributing-build-a-component-step-by-step" story="docs">Build a component</LinkTo>** — step-by-step tutorial
+- **<LinkTo kind="contributing-build-a-component-testing" story="docs">Testing components</LinkTo>** — unit, visual, and accessibility testing
+- **<LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>** — UX writing standards for components and docs
 - **<LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>** — accessibility, performance, and architecture guidance
-- **<LinkTo kind="getting-started-architecture" story="docs">Architecture</LinkTo>** — build system, distribution channels, and Drupal integration
-- **<LinkTo kind="getting-started-hydration-guide" story="docs">Hydration guide</LinkTo>** — adding `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
-- **<LinkTo kind="getting-started-release-process" story="docs">Release process</LinkTo>** — versioning, tagging, and publishing
+- **<LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo>** — build system, distribution channels, and Drupal integration
+- **<LinkTo kind="getting-started-integration-hydration-guide" story="docs">Hydration guide</LinkTo>** — adding `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
+- **<LinkTo kind="contributing-release-process" story="docs">Release process</LinkTo>** — versioning, tagging, and publishing
 - [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md) — environment setup, scripts, branching, and commit conventions
 - [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md) — how to propose changes and submit PRs
 
@@ -825,7 +825,7 @@ Stories demonstrate the component's usage and variants:
 
 Every component should have tests covering rendering, props, events, and accessibility (jest-axe). Place test files in a `__tests__` folder within the component directory using the pattern `ComponentName.test.jsx`.
 
-For the full testing setup, patterns, and commands, see the <LinkTo kind="getting-started-build-a-component-testing" story="docs">testing guide</LinkTo>.
+For the full testing setup, patterns, and commands, see the <LinkTo kind="contributing-build-a-component-testing" story="docs">testing guide</LinkTo>.
 
 ## Pull request process
 
@@ -858,7 +858,7 @@ For the full testing setup, patterns, and commands, see the <LinkTo kind="gettin
 
 ## Review checklist
 
-See the <LinkTo kind="getting-started-build-a-component-review-checklist" story="docs">review checklist</LinkTo> for the full validation checklist covering structure, accessibility, documentation, testing, internationalization, and Drupal integration.
+See the <LinkTo kind="contributing-build-a-component-review-checklist" story="docs">review checklist</LinkTo> for the full validation checklist covering structure, accessibility, documentation, testing, internationalization, and Drupal integration.
 
 ## Deprecating components
 

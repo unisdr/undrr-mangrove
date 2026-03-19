@@ -3,7 +3,7 @@ import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
-  title="Getting started/A getting started guide"
+  title="Getting started/Getting started guide"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -51,13 +51,13 @@ Include CSS via CDN and copy HTML structures from the component docs. No build s
 ```
 
 - [See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — a working page with footer widget, analytics, and messaging
-- <LinkTo kind="getting-started-vanilla-html-and-css" story="docs">Vanilla HTML/CSS guide</LinkTo>
+- <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">Vanilla HTML/CSS guide</LinkTo>
 
 ### Sass integration
 
 Import SCSS source files into your build process for custom themes and variable overrides.
 
-- <LinkTo kind="getting-started-sass-integration" story="docs">Sass integration guide</LinkTo>
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>
 
 ### React components
 
@@ -67,18 +67,18 @@ Install via npm and import React components with props-based customization. The 
 yarn add @undrr/undrr-mangrove
 ```
 
-- <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo>
+- <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration guide</LinkTo>
 - A full yarn/npm-installed demo project is in progress ([#849](https://github.com/unisdr/undrr-mangrove/issues/849))
 
 ### Server-rendered hydration
 
 For Drupal, Astro, or any server-rendered framework that needs React interactivity. Server renders HTML containers with `data-mg-*` attributes; the `createHydrator` runtime mounts React components into them.
 
-- <LinkTo kind="getting-started-hydration-guide" story="docs">Hydration guide</LinkTo>
+- <LinkTo kind="getting-started-integration-hydration-guide" story="docs">Hydration guide</LinkTo>
 
 ### CDN and versioning
 
-All assets are served from versioned CDN endpoints. See the <LinkTo kind="getting-started-cdn-reference" story="docs">CDN reference</LinkTo> for URLs and versioning details.
+All assets are served from versioned CDN endpoints. See the <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> for URLs and versioning details.
 
 ## Key principles
 
@@ -87,13 +87,13 @@ All assets are served from versioned CDN endpoints. See the <LinkTo kind="gettin
 - Most components work without JavaScript (progressive enhancement)
 - Supports modern evergreen browsers -- see <LinkTo kind="getting-started-browser-support" story="docs">browser support</LinkTo>
 
-For the full architectural picture, see the <LinkTo kind="getting-started-architecture" story="docs">architecture guide</LinkTo>.
+For the full architectural picture, see the <LinkTo kind="contributing-architecture" story="docs">architecture guide</LinkTo>.
 
 ## Further reading
 
 - <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- accessibility, performance, architecture
-- <LinkTo kind="getting-started-analytics-enhancements" story="docs">Analytics enhancements</LinkTo> -- shared GA4 configuration
-- <LinkTo kind="getting-started-critical-messaging" story="docs">Critical messaging</LinkTo> -- emergency broadcast system
+- <LinkTo kind="platform-services-analytics-enhancements" story="docs">Analytics enhancements</LinkTo> -- shared GA4 configuration
+- <LinkTo kind="platform-services-critical-messaging" story="docs">Critical messaging</LinkTo> -- emergency broadcast system
 - <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo> -- using AI coding tools with Mangrove
 - [Development setup](https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file#development) -- cloning, building, testing, and contributing
 

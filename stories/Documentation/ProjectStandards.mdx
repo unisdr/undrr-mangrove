@@ -87,7 +87,7 @@ If your team has already invested in PrimeReact or a similar library, that inves
 | **Brand and content** | Mangrove | Header, footer, mega menu, content cards, typography, color tokens, syndicated content blocks |
 | **Application UI** | Your framework | Data tables, form controls, dashboards, filters, tree views, date pickers |
 
-A page might look like this (this example assumes a React app importing Mangrove from npm; for Drupal integration, see the <LinkTo kind="getting-started-a-getting-started-guide" story="docs">getting started guide</LinkTo>):
+A page might look like this (this example assumes a React app importing Mangrove from npm; for Drupal integration, see the <LinkTo kind="getting-started-getting-started-guide" story="docs">getting started guide</LinkTo>):
 
 ```jsx
 // Mangrove handles the UNDRR content shell
@@ -159,13 +159,13 @@ A Mangrove theme can be as simple as a single SCSS variable override file. The e
 - IRP: 50 lines
 - MCR2030: 65 lines
 
-The overridable token set currently covers interactive colors, button and tag treatments, hero styling, form controls, and tab appearance. Foundational tokens like typography and spacing are shared across all themes. If you need to customize something outside that set, talk to the Mangrove team -- the overridable set has grown over time as properties have needed more flexibility. Start with the <LinkTo kind="getting-started-theming-guide" story="docs">theming guide</LinkTo>, which walks through creating a new theme file from scratch.
+The overridable token set currently covers interactive colors, button and tag treatments, hero styling, form controls, and tab appearance. Foundational tokens like typography and spacing are shared across all themes. If you need to customize something outside that set, talk to the Mangrove team -- the overridable set has grown over time as properties have needed more flexibility. Start with the <LinkTo kind="getting-started-integration-theming-guide" story="docs">theming guide</LinkTo>, which walks through creating a new theme file from scratch.
 
 ### Bundle sizes
 
 The full CSS theme file is ~26 KB gzipped. If your application already uses React, each component adds roughly 1-15 KB gzipped depending on complexity (React and ReactDOM are externalized, so there's no runtime duplication). Mangrove also works without React -- the CSS and HTML patterns can be used in any server-rendered template (PHP, Twig, etc.) with no JavaScript dependency.
 
-For integration details, see the <LinkTo kind="getting-started-a-getting-started-guide" story="docs">getting started guide</LinkTo>, <LinkTo kind="getting-started-sass-integration" story="docs">Sass integration guide</LinkTo>, or <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo>.
+For integration details, see the <LinkTo kind="getting-started-getting-started-guide" story="docs">getting started guide</LinkTo>, <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, or <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration guide</LinkTo>.
 
 ### When something doesn't fit
 
@@ -210,7 +210,7 @@ The cards use `mg-` classes. Without Mangrove CSS, they're unstyled divs. See th
 
 ## Accessibility
 
-Accessibility is mandatory for every UNDRR digital product, whether it's a content site or an application. Mangrove targets WCAG 2.1 AA. Components with test suites include jest-axe automated checks, and the team manually verifies screen reader support, keyboard navigation, and color contrast. Coverage is expanding; see the <LinkTo kind="getting-started-accessibility" story="docs">accessibility guide</LinkTo> for the testing methodology and the <LinkTo kind="getting-started-component-standards" story="docs">contribution guide</LinkTo> for testing requirements applied to new components.
+Accessibility is mandatory for every UNDRR digital product, whether it's a content site or an application. Mangrove targets WCAG 2.1 AA. Components with test suites include jest-axe automated checks, and the team manually verifies screen reader support, keyboard navigation, and color contrast. Coverage is expanding; see the <LinkTo kind="getting-started-accessibility" story="docs">accessibility guide</LinkTo> for the testing methodology and the <LinkTo kind="contributing-component-standards" story="docs">contribution guide</LinkTo> for testing requirements applied to new components.
 
 If you use Mangrove for the content layer, you inherit that testing for every component you adopt. If you build your own content components, you own compliance for each one separately.
 
@@ -218,7 +218,7 @@ If you use Mangrove for the content layer, you inherit that testing for every co
 
 The UNDRR web team maintains Mangrove. Breaking changes follow semantic versioning, and the team documents them in release notes. Properties can pin to a specific version via npm or CDN to control when they adopt updates.
 
-If Mangrove doesn't have what you need, extend it. File a request as a [GitHub issue](https://github.com/unisdr/undrr-mangrove/issues) describing the use case, or build it yourself and contribute it back. When your team builds something reusable -- a country selector, a progress tracker -- contributing it upstream means it gets maintained alongside the rest of the system instead of staying in one project. See the <LinkTo kind="getting-started-component-standards" story="docs">component contribution guide</LinkTo>.
+If Mangrove doesn't have what you need, extend it. File a request as a [GitHub issue](https://github.com/unisdr/undrr-mangrove/issues) describing the use case, or build it yourself and contribute it back. When your team builds something reusable -- a country selector, a progress tracker -- contributing it upstream means it gets maintained alongside the rest of the system instead of staying in one project. See the <LinkTo kind="contributing-component-standards" story="docs">component contribution guide</LinkTo>.
 
 For architectural questions or time-sensitive needs, contact the UNDRR web team directly.
 
@@ -228,9 +228,9 @@ Use Mangrove for the content patterns your UI shares with the rest of UNDRR. Use
 
 **Next steps:**
 
-1. <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting started guide</LinkTo> -- set up Mangrove and render your first component
-2. <LinkTo kind="getting-started-theming-guide" story="docs">Theming guide</LinkTo> -- create a theme for your property
-3. <LinkTo kind="getting-started-component-standards" story="docs">Component standards</LinkTo> -- conventions, contribution process, and code quality
+1. <LinkTo kind="getting-started-getting-started-guide" story="docs">Getting started guide</LinkTo> -- set up Mangrove and render your first component
+2. <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo> -- create a theme for your property
+3. <LinkTo kind="contributing-component-standards" story="docs">Component standards</LinkTo> -- conventions, contribution process, and code quality
 4. Contact the UNDRR web team for architectural questions
 
 ---

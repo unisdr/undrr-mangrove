@@ -23,7 +23,7 @@ type ButtonProps = {
  *
  * This component exists as a reference for writing TypeScript components
  * in the Mangrove library. See the
- * [component contribution guide](?path=/docs/getting-started-component-contribution-guide--docs)
+ * [component standards](?path=/docs/contributing-component-standards--docs)
  * for conventions and best practices.
  */
 function TypeScriptExampleComponent({
