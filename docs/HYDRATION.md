@@ -441,5 +441,5 @@ createHydrator({
 - [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-vanilla-html-and-css--docs) — CDN usage with import maps
 - [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-react-integration--docs) — npm package usage
 - [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-cdn-reference--docs) — all available CDN paths
-- [Component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs) — how to add new components
+- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-standards--docs) — how to add new components
 - [DEVELOPMENT.md](DEVELOPMENT.md) — development setup and component file structure
