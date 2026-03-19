@@ -243,7 +243,7 @@ export default {
     ],
   },
 
-  'components-cards-icon-card': { description: 'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full.' },
+  'components-cards-icon-card': { description: 'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).' },
   'components-cards-book-card': { description: 'Minimal card for publications: cover image and title only.' },
 
   'components-cards-horizontal-book-card': {
@@ -508,17 +508,11 @@ export default {
 
   // --- CTA ---
   'components-cta': {
-    description: 'Text-based call-to-action section with heading, paragraph, and button.',
-    cssClasses: [],
-    examples: [
-      {
-        name: 'Text CTA section',
-        html: `<div class="mg-container">
-  <h2>Partner with us</h2>
-  <p>Join the global effort to reduce disaster risk and build resilient communities.</p>
-  <a class="mg-button mg-button-primary mg-button-arrow" href="/partner">Become a partner</a>
-</div>`,
-      },
+    description: 'Call-to-action banner with heading, rich text body, action buttons, and optional image. Four color variants (primary, secondary, tertiary, quaternary) plus custom backgroundColor override. Supports centered and side-by-side (with image) layouts.',
+    cssClasses: [
+      'mg-cta', 'mg-cta--primary', 'mg-cta--secondary', 'mg-cta--tertiary', 'mg-cta--quaternary',
+      'mg-cta--centered', 'mg-cta--with-image',
+      'mg-cta__inner', 'mg-cta__body', 'mg-cta__headline', 'mg-cta__text', 'mg-cta__actions', 'mg-cta__image',
     ],
   },
 

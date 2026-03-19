@@ -62,7 +62,8 @@ export function PageHeader({
             {showLogo && (
               <section
                 id="block-undrrlogo"
-                className="mg-page-header__block mg-page-header__block--logo "
+                aria-label="Site branding"
+                className="mg-page-header__block mg-page-header__block--logo"
               >
                 <a href={homeUrl}>
                   <img
@@ -79,7 +80,7 @@ export function PageHeader({
 
             {/* User icon */}
             {showAccount && (
-              <a aria-label="Log in or register" title="Log in or register" href="/user">
+              <a title="My account" href="/user">
                 <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
                 <span className="mg-page-header__label">My account</span>
                 {/* <span className="mg-page-header__label-mobile">Login</span> */}
@@ -88,7 +89,7 @@ export function PageHeader({
 
             {/* Language Dropdown Section */}
             {showLanguage && (
-              <section className="mg-page-header__block mg-page-header__block--language ">
+              <section aria-label="Language selection" className="mg-page-header__block mg-page-header__block--language">
                 <form
                   className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
                   id="lang_dropdown_form_lang-dropdown-form"

@@ -72,6 +72,9 @@ $mg-color-form-check--checked: $mg-color-interactive;
 $mg-color-form-focus: $mg-color-interactive;
 $mg-radius-form-input: $mg-spacing-50;
 
+// Mega menu — white panel on Delta (base default is $mg-color-button which is dark navy here)
+$mg-color-mega-content-bg: $mg-color-white;
+
 // Hero — left-partial overlay already works via max-width: 40rem in component
 $mg-color-hero: $delta-color-primary;
 $mg-opacity-hero: 1;

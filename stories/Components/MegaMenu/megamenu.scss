@@ -192,7 +192,7 @@
   top: 1px;
   align-items: flex-start;
   justify-content: start;
-  background-color: rgba($mg-color-white, 0.7);
+  background-color: rgba($mg-color-mega-content-bg, 0.7);
   backdrop-filter: blur(10px);
   border-radius: $mg-radius-tab;
   box-shadow: -1px 5px 10px -1px rgb(0 0 0 / 0.25);
@@ -217,7 +217,7 @@
   &__left {
     height: 100%;
     width: 100%; // mobile-first
-    background-color: rgba($mg-color-white, 0.8);
+    background-color: rgba($mg-color-mega-content-bg, 0.8);
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       flex-basis: 33%;

@@ -266,7 +266,63 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 7. Background colors
+    // 7. Flex layout
+    // ---------------------------------------------------------------
+    {
+      name: 'Flex layout',
+      description:
+        'Flex container and alignment utilities. Combine with push utilities for content positioning.',
+      classes: [
+        {
+          class: 'mg-u-flex',
+          description: 'Sets display: flex on the element.',
+          usage: '<div class="mg-u-flex mg-u-gap-100">Flex children</div>',
+        },
+        {
+          class: 'mg-u-flex-wrap',
+          description: 'Enables flex-wrap: wrap on the flex container.',
+        },
+        {
+          class: 'mg-u-align-items-center',
+          description: 'Vertically centers flex children (align-items: center).',
+        },
+        {
+          class: 'mg-u-gap-100',
+          description: 'Sets gap: 1rem between flex children.',
+        },
+      ],
+    },
+
+    // ---------------------------------------------------------------
+    // 8. Push alignment
+    // ---------------------------------------------------------------
+    {
+      name: 'Push alignment',
+      description:
+        'Margin-based push utilities using CSS logical properties. RTL-safe: automatically flip for right-to-left languages.',
+      classes: [
+        {
+          class: 'mg-u-push-end',
+          description:
+            'Pushes element to the inline end (right in LTR, left in RTL) via margin-inline-start: auto.',
+          usage:
+            '<div class="mg-u-flex">\n  <span>Left content</span>\n  <button class="mg-u-push-end">Right-aligned</button>\n</div>',
+        },
+        {
+          class: 'mg-u-push-start',
+          description:
+            'Pushes element to the inline start (left in LTR, right in RTL) via margin-inline-end: auto.',
+        },
+        {
+          class: 'mg-u-push-center',
+          description:
+            'Centers element horizontally via margin-inline: auto.',
+        },
+      ],
+    },
+
+    // ---------------------------------------------------------------
+    // 9. Background colors
     // ---------------------------------------------------------------
     {
       name: 'Background colors',
@@ -298,7 +354,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 8. Text colors
+    // 10. Text colors
     // ---------------------------------------------------------------
     {
       name: 'Text colors',
@@ -329,7 +385,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 9. Font sizes
+    // 11. Font sizes
     // ---------------------------------------------------------------
     {
       name: 'Font sizes',
@@ -381,7 +437,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 10. Animations
+    // 12. Animations
     // ---------------------------------------------------------------
     {
       name: 'Animations',
@@ -425,7 +481,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 11. Embed containers
+    // 13. Embed containers
     // ---------------------------------------------------------------
     {
       name: 'Embed containers',
@@ -454,7 +510,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 12. Show more / collapse
+    // 14. Show more / collapse
     // ---------------------------------------------------------------
     {
       name: 'Show more',
