@@ -240,6 +240,47 @@ Never use module-level `Set`, `Map`, `Array`, or counters to track state across 
 
 The design token variables in `_variables.scss` use `!default` flags so theme stylesheets can override them. When adding new variables, always include `!default`.
 
+### Root font-size and the mg-rem() function
+
+Mangrove historically sets `html { font-size: 10px }`, making `1rem = 10px` throughout. All spacing, font-size, and width tokens use the `mg-rem($px)` function, which converts an intended pixel value to rem based on a configurable root:
+
+```scss
+// In _variables.scss
+$mg-html-font-size: 10 !default;
+
+@function mg-rem($px) {
+  @return math.div($px, $mg-html-font-size) * 1rem;
+}
+
+// Usage — always pass the intended pixel value:
+$mg-spacing-100: mg-rem(10);   // → 1rem    (when root = 10)
+$mg-font-size-300: mg-rem(16); // → 1.6rem  (when root = 10)
+```
+
+**For existing sites** (undrr.org, preventionweb.net, etc.): nothing changes. The default is `10`, and compiled CSS is identical to previous releases.
+
+**For new integrations** that want the browser-standard 16px root: set `$mg-html-font-size: 16` before importing Mangrove SCSS. The `mg-rem()` function recalculates all token values at compile time, and the `html { font-size: 10px }` override is skipped entirely:
+
+```scss
+// New project's main stylesheet
+$mg-html-font-size: 16;  // opt in to browser-standard root
+@import "@undrr/undrr-mangrove/stories/assets/scss/variables";
+@import "@undrr/undrr-mangrove/stories/assets/scss/style";
+```
+
+When writing component SCSS, always use `mg-rem()` for rem values instead of hard-coding them. Pass the intended pixel value:
+
+```scss
+// Correct — works at any root
+padding: mg-rem(15);         // 15px → 1.5rem (root=10) or 0.9375rem (root=16)
+
+// Also correct — use existing tokens when one fits
+padding: $mg-spacing-150;   // same result, but via the token
+
+// Wrong — hard-coded rem breaks when root changes
+padding: 1.5rem;
+```
+
 ## Related documentation
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
