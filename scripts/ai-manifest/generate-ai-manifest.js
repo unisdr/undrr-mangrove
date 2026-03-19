@@ -250,6 +250,71 @@ const logos = replaceVersion(LOGOS);
 const generatedAt = new Date().toISOString();
 
 // ---------------------------------------------------------------------------
+// Parse actual npm exports from src/index.js
+// ---------------------------------------------------------------------------
+
+/**
+ * Reads src/index.js and returns a Set of export names that consumers can
+ * actually import from the npm package. This prevents the manifest from
+ * advertising imports that don't exist.
+ */
+function parseNpmExports() {
+  const indexPath = path.resolve(process.cwd(), 'src/index.js');
+  if (!fs.existsSync(indexPath)) {
+    console.warn('src/index.js not found — cannot validate npm exports');
+    return new Set();
+  }
+  const source = fs.readFileSync(indexPath, 'utf8');
+  const names = new Set();
+
+  // Match: export { default as Foo } and export { Foo }
+  const re = /export\s*\{[^}]*?\bas\s+(\w+)|export\s*\{\s*(\w+)\s*\}/g;
+  let match;
+  while ((match = re.exec(source)) !== null) {
+    names.add(match[1] || match[2]);
+  }
+  return names;
+}
+
+const npmExports = parseNpmExports();
+
+// Reverse lookup: Storybook ID → webpack entry name (which matches the npm
+// export name). Derived from COMPONENT_IDS so it self-heals when new
+// components are added. Used as a fallback when Storybook's internal function
+// name (e.g. BarChartProcessor) differs from the npm export (e.g. BarChart).
+const storybookIdToWebpackName = Object.fromEntries(
+  Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name]),
+);
+
+// Manual overrides for npm-only components (no webpack entry in COMPONENT_IDS)
+// whose Storybook function name differs from the npm export name.
+const NPM_NAME_OVERRIDES = {
+  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs npm export
+};
+
+/**
+ * Build a valid import statement for a component, or return empty string if
+ * the component is not exported from the npm package. Tries the Storybook
+ * name first, then the COMPONENT_IDS reverse lookup, then NPM_NAME_OVERRIDES.
+ *
+ * Supported src/index.js export shapes:
+ *   export { default as Foo } from '...';
+ *   export { Foo } from '...';
+ */
+function buildImportStatement(componentName, componentId) {
+  const candidates = [
+    componentName,
+    storybookIdToWebpackName[componentId],
+    NPM_NAME_OVERRIDES[componentName],
+  ].filter(Boolean);
+  const exportName = candidates.find(n => npmExports.has(n));
+  if (exportName) {
+    return `import { ${exportName} } from "${pkg.name}";`;
+  }
+  return '';
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -718,6 +783,7 @@ async function main() {
 
   const indexEntries = [];
   const componentFiles = [];
+  let droppedImportCount = 0;
 
   for (const [, component] of Object.entries(manifest.components)) {
     const id = component.id;
@@ -728,9 +794,17 @@ async function main() {
     const isVanilla = !isReact;
     const description = getDescription(component, data);
 
+    // --- Validated import statement ---
+    // Storybook's react-docgen auto-generates import statements for every
+    // component, but only components exported from src/index.js are actually
+    // importable from the npm package. Use buildImportStatement() which
+    // checks against real exports instead of trusting Storybook's guess.
+    const validImport = buildImportStatement(name, id);
+    if (component.import && !validImport) droppedImportCount++;
+
     // --- Index entry (lightweight) ---
     const indexEntry = { id, name, description };
-    if (component.import) indexEntry.import = component.import;
+    if (validImport) indexEntry.import = validImport;
     indexEntry.docsUrl = docsUrl(id);
     indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
 
@@ -744,7 +818,7 @@ async function main() {
 
     // --- Full component file ---
     const detail = { name, description };
-    if (component.import) detail.import = component.import;
+    if (validImport) detail.import = validImport;
     detail.docsUrl = docsUrl(id);
 
     if (isVanilla) {
@@ -1016,6 +1090,9 @@ The utilities.json file lists ~${utilityClassCount} utility classes grouped by c
   console.log(`  ${outputDir}/utilities.json (${utilitiesSizeKB} KB)`);
   console.log(`  ${vanillaCount} vanilla HTML components, ${reactCount} React-only components`);
   console.log(`  ${renderedHtml.size} auto-rendered, ${componentFiles.filter(c => c.content.renderedHtml && !c.content.renderedHtmlSource).length} curated HTML`);
+  if (droppedImportCount > 0) {
+    console.log(`  ${droppedImportCount} Storybook-generated import(s) removed (not exported from src/index.js)`);
+  }
 }
 
 main().catch(e => {
