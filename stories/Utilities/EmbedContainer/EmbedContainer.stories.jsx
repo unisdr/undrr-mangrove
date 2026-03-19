@@ -2,7 +2,7 @@ import React from 'react';
 import { EmbedContainer } from './EmbedContainer';
 
 export default {
-  title: 'Utilities/EmbedContainer',
+  title: 'Components/EmbedContainer',
   component: EmbedContainer,
   parameters: {
     layout: 'padded',
