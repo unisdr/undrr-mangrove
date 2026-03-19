@@ -13,6 +13,7 @@ html {
   @if $mg-html-font-size != 16 {
     font-size: $mg-html-font-size * 1px;
   }
+
   -webkit-tap-highlight-color: transparent;
 }
 
