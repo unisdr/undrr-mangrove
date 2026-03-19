@@ -45,7 +45,7 @@ You are building components in **Mangrove**, UNDRR's Storybook-powered React com
 2. Add `fromElement.js` and `hydrate.js` barrel (see `docs/HYDRATION.md`)
 3. Add webpack entry in `webpack.config.js` (second config block)
 4. Add export in `src/index.js`
-5. Build: `yarn build` or `ddev mangrove-watch`
+5. Build: `yarn build`
 
 ### Key conventions
 - Functional React components with hooks only (no class components)

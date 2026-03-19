@@ -15,7 +15,7 @@ If there is a Component or Pattern that you need, or you have any other feedback
 
 ## Getting started
 
-**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
+**[→ View the complete getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)** for detailed integration instructions, code examples, and best practices.
 
 ### Installation
 
@@ -55,8 +55,7 @@ The project uses the following branching strategy:
 
 For production use:
 
-- Stable releases will be created as tagged releases
-  - Note: tagged releases are not yet available as we are still in an alpha phase
+- Stable releases are published as [tagged releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases) and on [npm](https://www.npmjs.com/package/@undrr/undrr-mangrove)
 - The `dev` branch is not used
 
 When creating a new feature or fix:
@@ -79,10 +78,10 @@ yarn docker-install
 # Build the project for release inside the Docker container
 yarn docker-build
 
-# Watch for component changes, rebuild them, and copy JS files to the theme (inside Docker)
+# Watch for component changes and rebuild (inside Docker)
 yarn docker-watch
 
-# Watch for component changes, rebuild them, and copy JS files to the theme (direct)
+# Watch for component changes and rebuild (direct)
 yarn watch
 
 # Lint the codebase inside the Docker container
@@ -106,7 +105,7 @@ make run
 # Lint the codebase
 make lint
 
-# Watch for component changes, rebuild them, and copy JS files to the theme
+# Watch for component changes and rebuild
 make watch
 
 # Build for release (default mode is production, you can override it with --mode=development)
@@ -132,7 +131,7 @@ docker exec -it undrr-mangrove-client-1 bash -c "yarn install"
 # Run Storybook locally
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run storybook --ci"
 
-# Watch for component changes, rebuild them, and copy JS files to the theme
+# Watch for component changes and rebuild
 docker exec -it undrr-mangrove-client-1 bash -c "yarn run watch"
 
 # Build the project for release (default mode is production)
@@ -219,25 +218,30 @@ yarn test:coverage
 
 ## Compiled assets
 
-We do not yet make the compiled assets available directly; see:
-<https://gitlab.com/undrr/web-backlog/-/issues/545>
+Compiled assets are available via npm (`@undrr/undrr-mangrove`) and the [UNDRR CDN](https://assets.undrr.org/static/mangrove/). The `dist` directory contains:
 
-Provisional assets are available in the `dist` directory:
+- `dist/components/`: compiled React component ES modules (e.g., `ShareButtons.js`)
+- `dist/css/`: compiled theme stylesheets
+- `dist/js/`: vanilla JS utilities
 
-- `dist/components`: the compiled Storybook components
-  - example: `dist/components/ShareButtons.js`
-- `dist/assets`: the compiled static assets ... jpg, css, web fonts, etc.
-  - example: `dist/assets/css/style-preventionweb.css`
-  - `dist/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2`
+## AI and agent integration
 
-## Developer Resources
+The build generates static JSON files with component metadata so AI coding agents can look up Mangrove components without parsing the Storybook SPA. After deploy, these are available at:
+
+- [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) -- project summary and conventions
+- [`ai-components/index.json`](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) -- all components with names, imports, and links to detail files
+- `ai-components/{id}.json` -- per-component props, types, defaults, and code examples
+
+See the [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs) for details on directing agents to Mangrove and configuring Claude Code, Cursor, or Copilot.
+
+## Developer resources
 
 For contributing to this library:
 
-- 📖 [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
-- 📚 [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs) – Interactive component documentation and usage examples
-- 🧪 [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
-- 🚀 [Release Process](./docs/RELEASES.md) - Versioning and publishing
+- [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
+- [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) - Interactive component documentation and usage examples
+- [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
+- [Release Process](./docs/RELEASES.md) - Versioning and publishing
 
 ## Package Contents
 
@@ -300,7 +304,7 @@ npm outdated
 npm update
 ```
 
-**Note**: We no longer provide bleeding-edge or "latest" endpoints. All CDN assets are now served from stable, versioned releases to ensure consistency and reliability.
+**Note**: Production sites should use versioned CDN paths (e.g., `/static/mangrove/1.3.3/`) for stability. A `latest` alias is available for testing but may change without notice.
 
 ## Assorted technical notes
 

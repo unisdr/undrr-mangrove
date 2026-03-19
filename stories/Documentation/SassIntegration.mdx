@@ -3,7 +3,7 @@ import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
-  title="Getting started/Sass integration"
+  title="Getting started/Integration/Sass integration"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -14,9 +14,9 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # Sass integration guide
 
-Integrate Mangrove's SCSS source files into your project to customize variables, use mixins, and build themes that stay consistent with UNDRR's design system.
+Integrate Mangrove's SCSS source files into your project to customize variables, use mixins, and build themes that work with Mangrove's shared content structures.
 
-Before customizing, review **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">UNDRR's established standards</LinkTo>** so your changes align with the broader organizational approach.
+Before customizing, review **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand what's shared across themes and what each property controls.
 
 <TableOfContents
   title="On this page"
@@ -534,3 +534,13 @@ With `includePaths` configured, your imports resolve relative to the Mangrove pa
 @import "stories/assets/scss/breakpoints";
 @import "stories/assets/scss/mixins";
 ```
+
+## Next steps
+
+- <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo> -- design tokens reference and how to create a new theme
+- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> -- pre-built CSS URLs if you don't need Sass
+- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- architecture and styling patterns
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/SassIntegration.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

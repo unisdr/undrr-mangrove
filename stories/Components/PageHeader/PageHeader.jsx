@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+/**
+ * UNDRR page header with logo, user account link, and language selector.
+ * The "decoration-only" variant renders just the colored stripe.
+ */
 export function PageHeader({
   variant = 'default',
   className,

@@ -1,7 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import './sectionheader.scss';
 import { Heading } from '../../Atom/Typography/Heading/Heading';
 
+/**
+ * Displays a section heading with an optional description line below it.
+ *
+ * @param {Object} props
+ * @param {string} props.headerText      Main heading text
+ * @param {string} [props.descriptionText] Supporting description displayed below the heading
+ */
 export function SectionHeader({ headerText, descriptionText }) {
   return (
     <div className="header__wrapper">
@@ -10,3 +18,10 @@ export function SectionHeader({ headerText, descriptionText }) {
     </div>
   );
 }
+
+SectionHeader.propTypes = {
+  /** Main heading text rendered as an h2. */
+  headerText: PropTypes.string.isRequired,
+  /** Supporting description rendered as an h4 below the heading. */
+  descriptionText: PropTypes.string,
+};

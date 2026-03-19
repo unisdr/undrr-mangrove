@@ -38,3 +38,4 @@ Complete the items that apply to this PR:
 - [ ] Tests cover key behaviors and edge cases
 - [ ] MDX docs follow standard structure
 - [ ] Sentence case for all headings and UI text
+- [ ] AI manifest: if component markup changed, updated `scripts/ai-manifest/component-data.js`

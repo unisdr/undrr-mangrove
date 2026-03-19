@@ -1,9 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import './image.scss';
 import mongoliaGoat from '../../../assets/images/Mongolia-cashmere-goats.jpg';
 import mongoliaGoatmd from '../../../assets/images/Mongolia-cashmere-goats-md.jpg';
 import mongoliaGoatsm from '../../../assets/images/Mongolia-cashmere-goats-sm.jpg';
 
+/**
+ * Renders a responsive image as either an `img` or `picture` element with optional lazy loading.
+ *
+ * @param {Object} props
+ * @param {string} [props.className] CSS class; use 'lazy' to enable lazy-loading placeholders
+ * @param {string} [props.Type]      Render mode: 'img' for a single image, any other value for a picture element
+ */
 export const Image = ({ className, Type }) => {
   const image = {
     srclg: mongoliaGoat,
@@ -57,4 +65,11 @@ export const Image = ({ className, Type }) => {
       )}
     </>
   );
+};
+
+Image.propTypes = {
+  /** CSS class applied to the image or picture element; use 'lazy' to enable lazy loading. */
+  className: PropTypes.string,
+  /** Render mode: 'img' for a single image element, any other value for a responsive picture element. */
+  Type: PropTypes.string,
 };

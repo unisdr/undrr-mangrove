@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default {
-  title: 'Atom/Tag',
+  title: 'Components/Tag',
   parameters: {
     docs: {
       description: {

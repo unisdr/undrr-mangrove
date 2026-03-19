@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 // Default CDN URL for UNDRR Cookie Banner
 const DEFAULT_CDN_BASE = 'https://assets.undrr.org/static/cookie-banner/v1';
@@ -386,6 +387,17 @@ const CookieConsentBanner = ({
   }, [customConfig, debug, forceFallback, cdnBaseUrl]);
 
   return null; // This component does not render anything itself
+};
+
+CookieConsentBanner.propTypes = {
+  /** Custom CookieConsent configuration object to override the default CDN configuration */
+  config: PropTypes.object,
+  /** Enable debug logging for troubleshooting */
+  debug: PropTypes.bool,
+  /** Force the component to use local fallback configuration instead of CDN */
+  forceFallback: PropTypes.bool,
+  /** Base URL for the CDN resources (defaults to UNDRR CDN) */
+  cdnBaseUrl: PropTypes.string,
 };
 
 export default CookieConsentBanner;

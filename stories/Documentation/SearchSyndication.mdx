@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Platform services/Search syndication"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+# Search syndication
+
+Mangrove includes a full-featured search interface for querying content across UNDRR domains (undrr.org, preventionweb.net, and related sites). The `SyndicationSearchWidget` connects to UNDRR's Elasticsearch backend and provides faceted filtering, card and list display modes, and URL hash sync.
+
+A search widget can be embedded on any page with a container element:
+
+```html
+<div data-mg-search-widget
+  data-search-endpoint="https://www.undrr.org/search-endpoint"
+  data-results-per-page="50"
+  data-show-facets="true"
+  data-default-filters='[{"key":"_language","value":"en"}]'>
+</div>
+```
+
+The search scope can be constrained with `customFilters` (hidden Elasticsearch queries) and extended with `customFacets` (user-selectable dropdowns). Content types, date ranges, and taxonomies can all be filtered.
+
+> **Platform dependency:** The search widget requires access to the UNDRR Elasticsearch backend via `/search-endpoint`. It is not a general-purpose search component.
+
+See the <LinkTo kind="components-syndicationsearchwidget" story="docs">SyndicationSearchWidget component</LinkTo> for full documentation, props, query syntax, custom facets, and integration examples.
+
+## Accessibility
+
+Faceted search is one of the most accessibility-sensitive UI patterns. Key considerations:
+
+- Search results announce count changes to screen readers via `aria-live` regions.
+- Filter controls are keyboard navigable -- Tab through facets, Enter to select, Escape to close dropdowns.
+- Active filters are announced and can be removed with keyboard.
+- The mobile filter drawer traps focus and is dismissible with Escape.
+- All interactive elements meet the WCAG 2.2 minimum target size (24x24px, with 44x44px recommended for touch targets).
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/SearchSyndication.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

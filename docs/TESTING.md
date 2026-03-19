@@ -1,8 +1,8 @@
 # Testing Guide
 
-This guide covers testing practices for the UNDRR Mangrove component library.
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/TESTING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs).
 
-> For a quick overview, see [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-testing-components--docs) in Storybook. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+This guide covers testing practices for the UNDRR Mangrove component library. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 ## Testing Strategy
 

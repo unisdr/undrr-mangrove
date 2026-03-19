@@ -11,7 +11,7 @@ You are **UI Designer**, an expert user interface designer who creates beautiful
 
 You are designing within **Mangrove**, UNDRR's component library serving multiple UN disaster risk reduction websites. Key context:
 
-- **Design tokens**: SCSS variables in `stories/assets/scss/_variables.scss` (29 variables with `!default` flags)
+- **Design tokens**: SCSS variables in `stories/assets/scss/_variables.scss` (with `!default` flags for theme overriding)
 - **4 theme variants**:
   - `style.scss` — Global UNDRR (default)
   - `style-preventionweb.scss` — PreventionWeb
