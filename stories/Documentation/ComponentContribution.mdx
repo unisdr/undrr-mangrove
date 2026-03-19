@@ -821,75 +821,11 @@ Stories demonstrate the component's usage and variants:
    - Support both LTR and RTL text directions
    - Include examples with different languages when relevant
 
-## Testing requirements
+## Testing
 
-Components should be thoroughly tested to ensure stability and reliability.
+Every component should have tests covering rendering, props, events, and accessibility (jest-axe). Place test files in a `__tests__` folder within the component directory using the pattern `ComponentName.test.jsx`.
 
-### Unit tests
-
-1. **Create test files**
-
-   - Tests should be placed in a `__tests__` folder within your component directory or at the appropriate level in the project structure
-   - Follow the naming pattern: `ComponentName.test.jsx`
-
-2. **Required tests**
-   - Rendering test (component renders without errors)
-   - Props test (component correctly responds to different props)
-   - Event tests (click handlers and other events work correctly)
-   - Accessibility tests (component meets accessibility requirements)
-
-Example test pattern:
-
-```jsx
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { axe } from 'jest-axe';
-import { MyComponent } from '../MyComponent';
-
-describe('MyComponent', () => {
-  const defaultProps = {
-    variant: 'primary',
-    label: 'Click me',
-  };
-
-  it('renders without crashing', () => {
-    render(<MyComponent {...defaultProps} />);
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
-
-  it('responds to props correctly', () => {
-    render(<MyComponent {...defaultProps} variant="secondary" />);
-    // Assert component renders with secondary variant
-  });
-
-  it('handles events correctly', () => {
-    const handleClick = jest.fn();
-    render(<MyComponent {...defaultProps} onClick={handleClick} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('has no a11y violations', async () => {
-    const { container } = render(<MyComponent {...defaultProps} />);
-    expect(await axe(container)).toHaveNoViolations();
-  });
-});
-```
-
-### Running tests
-
-Use the following commands to run tests:
-
-```bash
-# Run all tests
-yarn test
-
-# Run tests with coverage report
-yarn test:coverage
-
-# Run tests in watch mode during development
-yarn test:watch
-```
+For the full testing setup, patterns, and commands, see the <LinkTo kind="getting-started-build-a-component-testing" story="docs">testing guide</LinkTo>.
 
 ## Pull request process
 
@@ -922,19 +858,7 @@ yarn test:watch
 
 ## Review checklist
 
-Use this checklist when reviewing component PRs:
-
-- [ ] Component follows BEM naming with `mg-` prefix
-- [ ] PropTypes defined with JSDoc descriptions
-- [ ] Accessibility: labels, ARIA attributes, keyboard navigation, jest-axe test
-- [ ] Changelog entry added to the component's MDX file
-- [ ] Stories use CSF3 format (no `Template.bind({})`)
-- [ ] No `defaultProps` (use destructured defaults instead)
-- [ ] SCSS uses variables from `_variables.scss` (no hardcoded colors/spacing)
-- [ ] Tests cover key behaviors and edge cases
-- [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, changelog)
-- [ ] Sentence case for all headings and UI text
-- [ ] If the component will be used in Drupal: `fromElement.js`, `hydrate.js` barrel, and `fromElement.test.js` are included (see [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md))
+See the <LinkTo kind="getting-started-build-a-component-review-checklist" story="docs">review checklist</LinkTo> for the full validation checklist covering structure, accessibility, documentation, testing, internationalization, and Drupal integration.
 
 ## Deprecating components
 
