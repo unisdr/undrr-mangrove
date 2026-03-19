@@ -132,7 +132,6 @@ function SyndicationSearchWidgetInner() {
   // Defer the query value for search execution
   // This keeps the input responsive while search runs in background
   const deferredQuery = useDeferredValue(inputValue);
-  const isStale = inputValue !== deferredQuery;
 
   // Update context when deferred query changes
   useEffect(() => {
@@ -167,8 +166,8 @@ function SyndicationSearchWidgetInner() {
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}
     >
-      {/* Loading progress bar */}
-      {(isLoading || isPending || isStale) && (
+      {/* Loading progress bar — only during actual fetch or transition */}
+      {(isLoading || isPending) && (
         <div className="mg-search__progress" aria-hidden="true">
           <div className="mg-search__progress-bar" />
         </div>
@@ -179,7 +178,7 @@ function SyndicationSearchWidgetInner() {
         <SearchForm
           value={inputValue}
           onChange={setInputValue}
-          isStale={isStale || isPending}
+          isStale={isPending}
           isLoading={isLoading}
           widgetId={widgetId}
         />
@@ -192,13 +191,13 @@ function SyndicationSearchWidgetInner() {
       <div className="mg-search__content">
         {/* Results area */}
         <main
-          className={`mg-search__main ${isStale || isPending ? 'mg-search__main--stale' : ''}`}
+          className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
           data-vf-google-analytics-region="undrr-search-results"
           aria-busy={isLoading || isPending}
         >
           <Suspense fallback={<SearchResultsSkeleton displayMode={config.displayMode} count={config.resultsPerPage} gridColumns={config.gridColumns} />}>
             <SearchResults
-              isStale={isStale || isPending}
+              isStale={isPending}
               widgetId={widgetId}
               showMobileFilterButton={showFacets}
               onOpenFilters={openDrawer}

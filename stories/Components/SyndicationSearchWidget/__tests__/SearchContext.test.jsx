@@ -59,7 +59,7 @@ describe('SearchContext', () => {
         'https://www.undrr.org/search-endpoint'
       );
       expect(capturedConfig.resultsPerPage).toBe(5);
-      expect(capturedConfig.debounceDelay).toBe(300);
+      expect(capturedConfig.debounceDelay).toBe(500);
     });
 
     it('merges custom config with defaults', () => {
@@ -77,7 +77,7 @@ describe('SearchContext', () => {
       expect(capturedConfig.resultsPerPage).toBe(20);
       expect(capturedConfig.customOption).toBe('test');
       // Default values should still be present
-      expect(capturedConfig.debounceDelay).toBe(300);
+      expect(capturedConfig.debounceDelay).toBe(500);
     });
 
     it('provides initial state', () => {
