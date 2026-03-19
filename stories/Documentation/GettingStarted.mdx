@@ -17,28 +17,19 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 <TableOfContents
   tocData={[
     { id: 'what-is-mangrove', text: 'What is Mangrove?' },
-    { id: 'quick-start', text: 'Quick start' },
     { id: 'integration-approaches', text: 'Integration approaches' },
-    { id: 'architecture-overview', text: 'Architecture overview' },
     { id: 'key-principles', text: 'Key principles' },
-    { id: 'common-use-cases', text: 'Common use cases' },
-    { id: 'development-setup', text: 'Development setup' },
-    { id: 'assets-location', text: 'Assets location' },
-    { id: 'analytics-and-messaging', text: 'Analytics and messaging' },
-    { id: 'ai-assisted-development', text: 'AI-assisted development' },
-    { id: 'next-steps', text: 'Next steps' },
+    { id: 'further-reading', text: 'Further reading' },
     { id: 'need-help', text: 'Need help?' },
   ]}
   showNumbers={false}
 />
 
-UNDRR Mangrove is a component library for consistent, accessible UNDRR web development.
+## What is Mangrove?
 
-Read **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand what's shared across UNDRR web properties and where your project fits.
+Mangrove is UNDRR's component library for consistent, accessible web development. Read **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand what's shared across UNDRR web properties and where your project fits.
 
-## What is mangrove?
-
-Mangrove is UNDRR's component library that provides:
+Mangrove provides:
 
 - Pre-built, tested components ready for production
 - Shared content structures across UNDRR properties
@@ -47,483 +38,64 @@ Mangrove is UNDRR's component library that provides:
 - Copy-paste ready code snippets
 - Live examples and documentation for every component
 
-## Quick start
-
-The fastest way to get started:
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <!-- Base styling (choose one theme) -->
-    <link
-      rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css"
-    />
-    <!-- Alternative themes:
-    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-mcr.css" />
-    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-irp.css" />
-    <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-preventionweb.css" />
-    -->
-  </head>
-  <body>
-    <!-- Use a component -->
-    <button class="mg-cta-button mg-cta-button--primary">
-      <span class="mg-cta-button__text">Get Started</span>
-      <span class="mg-cta-button__icon" aria-hidden="true">→</span>
-    </button>
-
-    <!-- Widget loader script -->
-    <script
-      type="text/javascript"
-      src="https://publish.preventionweb.net/widget.js?rand=3d797b"
-    ></script>
-
-    <!-- Widget initialization -->
-    <script>
-      new PW_Widget.initialize({
-        contenttype: 'landingpage',
-        pageid: '83835',
-        includemetatags: false,
-        includecss: false,
-        suffixID: 'footer',
-        activedomain: 'www.undrr.org',
-      });
-    </script>
-
-    <!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
-    <script
-      src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
-      defer
-    ></script>
-
-    <!-- UNDRR Critical Messaging - emergency broadcasts -->
-    <script
-      src="https://messaging.undrr.org/src/undrr-messaging.js"
-      defer
-    ></script>
-  </body>
-</html>
-```
-
-### Complete page example
-
-[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A working example with the UNDRR footer widget, analytics, and messaging scripts.
-
-For a complete page with navigation and footer components, see the <LinkTo kind="components-footer" story="docs">Footer component</LinkTo> documentation.
-
 ## Integration approaches
 
-Choose the approach that best fits your project:
+Choose the approach that fits your project. Each guide has its own quick start with working code examples.
 
-### Approach 1: Vanilla HTML/CSS (simplest)
+### Vanilla HTML/CSS (simplest)
 
-**Best for**: Static sites, existing projects, quick prototypes
+Include CSS via CDN and copy HTML structures from the component docs. No build step, no JavaScript required for most components.
 
-- Include CSS files via CDN
-- Browse the component catalog and select what you need
-- Check the component's documentation page
-- Copy HTML structures from component docs
-- Add the referenced CSS and JS files to your project as specified in the documentation
-- No JavaScript required for most components
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css" />
+```
 
-<LinkTo kind="getting-started-vanilla-html-and-css" story="docs">
-  → See Vanilla HTML/CSS Guide
-</LinkTo>
+- [See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — a working page with footer widget, analytics, and messaging
+- <LinkTo kind="getting-started-vanilla-html-and-css" story="docs">Vanilla HTML/CSS guide</LinkTo>
 
-### Approach 2: Sass integration
+### Sass integration
 
-**Best for**: Custom themes, variable overrides
+Import SCSS source files into your build process for custom themes and variable overrides.
 
-- Import Sass files into your build process
-- Customize variables and mixins
-- Build your own theme variants
+- <LinkTo kind="getting-started-sass-integration" story="docs">Sass integration guide</LinkTo>
 
-<LinkTo kind="getting-started-sass-integration" story="docs">
-  → See Sass Integration Guide
-</LinkTo>
+### React components
 
-### Approach 3: React components
-
-**Best for**: React applications, dynamic interfaces
-
-- Import React components directly
-- Props-based customization
-- TypeScript supported but optional
-
-### Installation via yarn or npm
-
-Install the library via npm or yarn:
+Install via npm and import React components with props-based customization. The npm package ships pre-compiled components with React externalized.
 
 ```bash
-# NPM
-npm install @undrr/undrr-mangrove
-
-# Yarn
 yarn add @undrr/undrr-mangrove
 ```
 
-The npm package includes pre-compiled React components (`components/`), compiled CSS theme files (`css/`), vanilla JS assets (`js/`), SCSS source files for custom theming (`scss/`), and icon fonts (`fonts/`). React and ReactDOM are externalized, so they won't duplicate your existing React runtime.
+- <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo>
+- A full yarn/npm-installed demo project is in progress ([#849](https://github.com/unisdr/undrr-mangrove/issues/849))
 
-### Checking and updating to the latest version
+### Server-rendered hydration
 
-To check the current latest version available on npm:
+For Drupal, Astro, or any server-rendered framework that needs React interactivity. Server renders HTML containers with `data-mg-*` attributes; the `createHydrator` runtime mounts React components into them.
 
-```bash
-npm view @undrr/undrr-mangrove version
-# or
-npm info @undrr/undrr-mangrove version
-```
+- <LinkTo kind="getting-started-hydration-guide" story="docs">Hydration guide</LinkTo>
 
-To install the latest version:
+### CDN and versioning
 
-```bash
-npm install @undrr/undrr-mangrove@latest
-```
-
-To update all dependencies to their latest semver-compatible versions:
-
-```bash
-npm outdated
-npm update
-```
-
-### Production CDN
-
-All assets are now served from versioned endpoints for stability:
-
-```
-https://assets.undrr.org/static/sitemap.html#mangrove-1-2-9
-https://assets.undrr.org/static/mangrove/README.md
-https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
-https://assets.undrr.org/static/mangrove/1.3.3/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.3.3/js/tabs.js
-```
-
-#### Bleeding edge test repo
-
-```
-https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
-https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
-... etc
-```
-
-### Basic node usage
-
-```jsx
-// CSS: load via CDN <link> tag (see "Including styles" in the React integration guide)
-import { StatsCard, QuoteHighlight } from '@undrr/undrr-mangrove';
-
-function App() {
-  return (
-    <>
-      <QuoteHighlight
-        quote="Building resilience is not optional — it is essential."
-        attribution="UNDRR"
-      />
-      <StatsCard
-        title="Key figures"
-        stats={[
-          { label: 'Countries', value: '195', bottomLabel: 'participating' },
-          { label: 'Lives saved', value: '1.2M', bottomLabel: 'since 2015' },
-        ]}
-      />
-    </>
-  );
-}
-```
-
-#### Available React components
-
-These components are exported from `@undrr/undrr-mangrove` and can be imported directly:
-
-| Component | Description |
-|-----------|-------------|
-| `ShareButtons` | Social sharing buttons (LinkedIn, Facebook, X, email, QR code) |
-| `MegaMenu` | Full-featured navigation menu with dropdown panels |
-| `ScrollContainer` | Horizontal scroll container for cards and media |
-| `BarChart` | Bar chart for data visualisation |
-| `MapComponent` | Interactive map display |
-| `QuoteHighlight` | Highlighted quote block with attribution |
-| `Fetcher` | Data-fetching wrapper component |
-| `SyndicationSearchWidget` | Search widget for PreventionWeb syndication |
-| `IconCard` | Card with icon, heading, and description |
-| `StatsCard` | Statistics display card with key metrics |
-| `Gallery` | Image gallery with lightbox |
-| `Pager` | Pagination controls (centered or bar layout) |
-| `CookieConsentBanner` | GDPR-compliant cookie consent banner |
-| `Snackbar` | Temporary notification message |
-| `createHydrator` | Runtime utility for server-rendered hydration |
-
-Browse each component in the sidebar for full props documentation and live examples.
-
-<LinkTo kind="getting-started-react-integration" story="docs">
-  → See React integration guide
-</LinkTo>
-
-### Approach 4: Server-rendered hydration
-
-**Best for**: Drupal, Astro, or any server-rendered framework that needs React interactivity
-
-- Server renders HTML containers with `data-mg-*` attributes
-- The `createHydrator` runtime finds containers, extracts props, and mounts React components
-- Each component ships a `fromElement` function for prop extraction — no hand-written boilerplate per wrapper
-
-[→ See Hydration guide on GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md)
-
-## Architecture overview
-
-Mangrove follows a loose [atomic design](https://atomicdesign.bradfrost.com/) methodology:
-
-```
-Atoms (building blocks)
-├── Typography (headings, paragraphs, links)
-├── Colors (brand palette, semantic colors)
-├── Icons (consistent iconography)
-└── Layout (grid, spacing, containers)
-
-Molecules (simple combinations)
-├── Header navigation
-├── Footer sections
-└── Content blocks
-
-Components (complex functional units)
-├── Buttons (CTAs, chips, share buttons)
-├── Forms (inputs, selects, checkboxes)
-├── Cards (content cards, stats cards)
-├── Navigation (breadcrumbs, menus)
-└── Charts (bar charts, scatter plots)
-```
+All assets are served from versioned CDN endpoints. See the <LinkTo kind="getting-started-cdn-reference" story="docs">CDN reference</LinkTo> for URLs and versioning details.
 
 ## Key principles
 
-### Framework agnostic
+- All CSS classes use the `mg-` prefix (e.g., `mg-card`, `mg-form__input`) to avoid conflicts with your styles
+- Components use semantic HTML with ARIA attributes for accessibility
+- Most components work without JavaScript (progressive enhancement)
+- Supports modern evergreen browsers -- see <LinkTo kind="getting-started-browser-support" story="docs">browser support</LinkTo>
 
-Mangrove works with any technology stack: React, Vue, Angular, plain HTML, WordPress, Drupal, etc.
+For the full architectural picture, see the <LinkTo kind="getting-started-architecture" story="docs">architecture guide</LinkTo>.
 
-- Minimal dependencies, so it won't conflict with your existing setup
-- Repeatable HTML structures keep the look and feel consistent across implementations
+## Further reading
 
-### CSS namespace
-
-All styles use the `mg-` prefix to prevent conflicts with your existing codebase:
-
-```css
-.mg-button {
-  /* Mangrove button */
-}
-.mg-card {
-  /* Mangrove card */
-}
-.mg-form__input {
-  /* Mangrove form input */
-}
-```
-
-### Semantic HTML
-
-Components use proper HTML elements for accessibility and maintain a consistent structure:
-
-1. Each component uses the `mg-` prefix in its class names
-2. Semantic HTML elements are used where appropriate
-3. ARIA attributes are included for accessibility
-
-```html
-<button class="mg-cta-button">Button</button>
-<nav class="mg-breadcrumb">Navigation</nav>
-<main class="mg-content">Main content</main>
-```
-
-Example component structure:
-
-```html
-<div class="mg-component">
-  <div class="mg-component__element">
-    <!-- Component content -->
-  </div>
-</div>
-```
-
-### Progressive enhancement
-
-Components work without JavaScript, enhanced with JS where beneficial.
-
-## Common use cases
-
-### Marketing pages
-
-```html
-<!-- Hero section with CTA -->
-<section class="mg-hero">
-  <div class="mg-container">
-    <h1 class="mg-heading mg-heading--1">Building Resilient Communities</h1>
-    <p class="mg-paragraph mg-paragraph--large">
-      Disaster risk reduction starts here.
-    </p>
-    <button class="mg-cta-button mg-cta-button--primary">
-      <span class="mg-cta-button__text">Learn More</span>
-    </button>
-  </div>
-</section>
-```
-
-### Data dashboards
-
-```jsx
-import { BarChart, StatsCard } from '@undrr/undrr-mangrove';
-
-function Dashboard() {
-  const chartData = [
-    { label: '2020', value: 389 },
-    { label: '2021', value: 412 },
-    { label: '2022', value: 475 },
-  ];
-
-  return (
-    <div className="mg-grid">
-      <StatsCard
-        title="Disaster impact"
-        stats={[
-          { label: 'Events', value: '475', bottomLabel: 'in 2022' },
-          { label: 'Economic losses', value: '$223B', bottomLabel: 'estimated' },
-        ]}
-      />
-      <BarChart data={chartData} />
-    </div>
-  );
-}
-```
-
-### Forms and applications
-
-```html
-<form class="mg-form">
-  <div class="mg-form__group">
-    <label class="mg-form__label" for="email">Email Address</label>
-    <input class="mg-form__input" type="email" id="email" required />
-  </div>
-  <button class="mg-cta-button mg-cta-button--primary" type="submit">
-    Submit Application
-  </button>
-</form>
-```
-
-## Development setup
-
-The steps below cover the basics for getting your development environment running. For more in-depth details on our development process, including our branching strategy, testing with Chromatic, and using Makefile commands, check out the [project `README.md` on GitHub](https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file#development).
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/unisdr/undrr-mangrove.git
-cd undrr-mangrove
-```
-
-2. **Use Docker for development (recommended)**
-
-```bash
-# Start the application, runs Storybook locally on port 6006
-yarn docker-run
-```
-
-Alternatively, if you prefer not to use Docker:
-
-```bash
-# Install dependencies
-yarn install
-
-# Run Storybook locally
-yarn run storybook
-```
-
-3. **Building the project**
-
-```bash
-# Using Docker
-yarn docker-build
-
-# Without Docker
-yarn run build
-```
-
-4. **Testing**
-
-```bash
-# Run tests
-yarn test
-
-# Run with coverage report
-yarn test:coverage
-```
-
-5. **Linting**
-
-```bash
-# Run linting
-yarn run lint
-```
-
-## Assets location
-
-When working with Mangrove assets, you'll find them organized in the following structure:
-
-- **Components**: Available in the `components` directory
-- **CSS files**: Available in the `css` directory
-- **Vanilla JavaScript files**: Available in the `js` directory
-- **Source SCSS files**: Available in the `scss` directory
-
-For complete CDN URLs and versioning details, see the <LinkTo kind="getting-started-cdn-reference" story="docs">CDN reference</LinkTo>.
-
-## Analytics and messaging
-
-All UNDRR pages should include these two scripts:
-
-```html
-<!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
-<script
-  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
-  defer
-></script>
-
-<!-- UNDRR Critical Messaging - emergency broadcasts -->
-<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
-```
-
-For full documentation, see:
-
-<LinkTo kind="getting-started-analytics-enhancements" story="docs">
-  → Analytics enhancements
-</LinkTo>
-
-<LinkTo kind="getting-started-critical-messaging" story="docs">
-  → Critical messaging
-</LinkTo>
-
-## AI-assisted development
-
-Mangrove supports the Model Context Protocol (MCP), enabling AI coding tools like Claude, Cursor, and GitHub Copilot to understand and use components from this library.
-
-Point your AI to the live documentation:
-
-```
-Use the Mangrove component library documented at:
-https://unisdr.github.io/undrr-mangrove/
-
-All CSS classes use the mg- prefix.
-```
-
-<LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">
-  → See the full AI and MCP Integration Guide
-</LinkTo>
-
-## Next steps
-
-1. Choose your integration approach from the guides above
-2. Browse the component library in the sidebar
-3. Read the <LinkTo kind="getting-started-best-practices" story="docs">best practices</LinkTo> for accessibility, performance, and theming
-4. Review the <LinkTo kind="getting-started-react-integration" story="docs">React integration guide</LinkTo> if you are building a React application
-5. [Report issues or request features](https://github.com/unisdr/undrr-mangrove/issues) on GitHub
+- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- accessibility, performance, architecture
+- <LinkTo kind="getting-started-analytics-enhancements" story="docs">Analytics enhancements</LinkTo> -- shared GA4 configuration
+- <LinkTo kind="getting-started-critical-messaging" story="docs">Critical messaging</LinkTo> -- emergency broadcast system
+- <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo> -- using AI coding tools with Mangrove
+- [Development setup](https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file#development) -- cloning, building, testing, and contributing
 
 ## Need help?
 
@@ -531,3 +103,7 @@ All CSS classes use the mg- prefix.
 - [Report bugs on GitHub](https://github.com/unisdr/undrr-mangrove/issues)
 - Contact the UNDRR development team with questions
 - Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases) for updates
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/GettingStarted.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

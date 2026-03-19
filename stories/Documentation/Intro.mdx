@@ -58,7 +58,7 @@ import LinkTo from '@storybook/addon-links/react';
 
 Mangrove provides shared content structures for UNDRR web properties: cards, heroes, navigation, footers, and syndicated content blocks. Each property keeps its own brand colors, component treatments, and application-specific interfaces. The content patterns are shared; your visual identity, application logic, and user experience flows stay yours. Mangrove is used on [undrr.org](https://www.undrr.org), [preventionweb.net](https://www.preventionweb.net), [mcr2030.undrr.org](https://mcr2030.undrr.org), and partner sites.
 
-Mangrove defines content structure once and lets each property theme it independently. Before Mangrove, each property maintained its own UI -- the same accessibility fix or navigation bug got patched separately on each site, and content published on one property couldn't render correctly on another. Mangrove focuses on the patterns that actually need to be shared: the components that let syndicated content render correctly, accessibility fixes propagate, and a bug get fixed once instead of ten times.
+Each UNDRR property themes components independently. The shared layer is the content structure -- the parts that let syndicated content render correctly and accessibility fixes propagate to every site at once.
 
 Use the theme switcher in the toolbar above to preview components in UNDRR, PreventionWeb, IRP, or MCR2030 styles. For more on what Mangrove covers, what it doesn't, and how it fits alongside other frameworks, see <LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>.
 
@@ -86,37 +86,17 @@ Mangrove uses a loose [atomic design](https://atomicdesign.bradfrost.com/chapter
 
 To request a new component or report an issue, [open a GitHub issue](https://github.com/unisdr/undrr-mangrove/issues). [Internal project notes are on the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
-## Quick start
-
-**CSS (via CDN):**
-
-```html
-<!-- Theme styles (choose one) -->
-<!-- UNDRR global style -->
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css"
-/>
-<!-- or -->
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.3.3/css/style-preventionweb.css"
-/>
-```
-
-**npm (for React or build process integration):**
-
-```bash
-yarn add @undrr/undrr-mangrove
-```
-
 ## Need help?
 
 - Browse components in the sidebar
 - Contact the UNDRR development team with questions
 - [Report bugs on GitHub](https://github.com/unisdr/undrr-mangrove/issues)
-- Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
+- [Release notes](https://github.com/unisdr/undrr-mangrove/releases) -- what's new in each version
 
 ## License
 
 Components and code are Apache-2.0 licensed. The UNDRR look and feel is proprietary.
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Intro.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

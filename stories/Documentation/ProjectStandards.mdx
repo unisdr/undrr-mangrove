@@ -68,7 +68,7 @@ What each property controls:
 
 **Mangrove is not a full application framework.** It doesn't handle data tables, form validation, dashboards, workflow state, or user management. If you need PrimeReact or Material UI for that, use them. Mangrove sits alongside those libraries.
 
-**Mangrove is not heavy custom code.** It's a standard React codebase (React, Sass, Storybook). Someone who knows React can read, modify, and extend any component. There's no proprietary framework, no code generation, no specialized toolchain. The only custom part is the content patterns, which are specific to UNDRR's content model. The library is open source, published on npm, and documented here. If the team changes, the next people inherit familiar technology, not a black box.
+**Mangrove is not heavy custom code that needs constant upkeep.** There are no security-sensitive surfaces, no databases, no APIs to keep patched. The core value — the content patterns — is CSS and HTML. An `mg-card` that works today will still work in three years even if the toolchain hasn't been updated. React or Sass might ship new versions, and we'll update when it makes sense, but nobody is blocked in the meantime. The library runs on a generic toolchain (React, Sass, Storybook) with nothing proprietary, and it's open source on npm.
 
 ## Why this approach
 
@@ -232,3 +232,7 @@ Use Mangrove for the content patterns your UI shares with the rest of UNDRR. Use
 2. <LinkTo kind="getting-started-theming-guide" story="docs">Theming guide</LinkTo> -- create a theme for your property
 3. <LinkTo kind="getting-started-component-contribution-guide" story="docs">Component contribution guide</LinkTo> -- add a component back to the shared library
 4. Contact the UNDRR web team for architectural questions
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ProjectStandards.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

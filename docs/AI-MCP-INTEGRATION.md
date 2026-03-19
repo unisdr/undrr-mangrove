@@ -2,117 +2,15 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs).
 
-Mangrove publishes structured component data alongside its Storybook site so AI coding agents can look up components, props, rendered HTML, and usage examples without trying to parse a JavaScript single-page app.
+Mangrove publishes structured component data so AI coding agents can look up components, props, rendered HTML, and usage examples. This page shows you how to point your agent at that data.
 
-## Why a custom pipeline
+## Quick start: point your agent at Mangrove
 
-Several tools exist for connecting Storybook to LLMs. We evaluated them and found they solve a narrower problem than what UNDRR sites need.
+Pick whichever option fits your setup. Each one gives the agent enough context to start generating correct Mangrove markup.
 
-| Tool | What it does | What it doesn't do |
-|------|-------------|-------------------|
-| [`@storybook/mcp`](https://www.npmjs.com/package/@storybook/mcp) (Storybook 10.3+) | Built-in MCP server with component docs, story previews, and test running. Live queries against a running dev server. | Generate static files. Provide rendered HTML for vanilla consumers. Work without a running server (unless self-hosted). Include page recipes, required assets, or branding constraints. |
-| [`@fluentui/storybook-llms-extractor`](https://www.npmjs.com/package/@fluentui/storybook-llms-extractor) | Extracts Storybook metadata into llms.txt format using Playwright. Per-component text files with props and stories. | Provide rendered HTML output. Include page recipes, required scripts, or branding constraints. |
-| [Storybook component manifest](https://github.com/storybookjs/storybook/issues/32276) | Built-in JSON manifest with props, types, and story snippets. | Include rendered HTML, CSS class inventories, or integration guidance. Storybook's own research explicitly excluded visual rendering. |
+### Option 1: give it `llms.txt`
 
-Our pipeline fills the gaps:
-
-- **Rendered HTML** for vanilla consumers who use Mangrove via CDN without React. No other tool provides this.
-- **UNDRR page recipes** — required scripts (analytics, messaging, cookie consent), syndication embed instructions, branding-critical markup flagged as `doNotModify`.
-- **Static deployment** alongside GitHub Pages. No running server needed.
-- **CSS utility inventory** with utility classes grouped by category.
-
-The ecosystem tools are complementary, not competing. We recommend `@storybook/addon-mcp` for local development alongside our static pipeline for deployed documentation.
-
-## How AI agents find Mangrove
-
-Storybook is a single-page app. If an agent fetches the deployed URL, it gets an empty HTML shell and a bunch of script tags. To work around that, the build generates static files at predictable paths.
-
-### `llms.txt` and `llms.json` (entry point)
-
-The site root has a [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, CDN theme URLs, conventions, and links to the component index and utilities.
-
-A structured [`llms.json`](https://unisdr.github.io/undrr-mangrove/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version.
-
-### Component index (`ai-components/index.json`)
-
-The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) lists every component with:
-
-```json
-{
-  "id": "components-cards-vertical-card",
-  "name": "VerticalCard",
-  "description": "Card with stacked image, labels, title, summary, and optional CTA button.",
-  "docsUrl": "...",
-  "detailsUrl": "...",
-  "vanillaHtml": true
-}
-```
-
-The index also includes library-level metadata:
-
-- **`quickstart`** — CSS `<link>` tag, all four theme URLs, and a minimal HTML boilerplate
-- **`breakpoints`** — mobile (480px), tablet (900px), desktop (1164px), wide (1440px)
-- **`requiredAssets`** — every stylesheet, script, and logo URL a UNDRR page needs, with load order and `defer`/`async` attributes
-- **`utilitiesUrl`** — link to the CSS utility class reference
-
-Agents can filter by `vanillaHtml: true` (works as plain HTML/CSS) or `requiresReact: true` (needs React runtime).
-
-### Per-component details (`ai-components/{id}.json`)
-
-Each component gets its own JSON file (1-10 KB) with:
-
-- **Props** with types, defaults, and descriptions (from PropTypes and JSDoc)
-- **Story examples** with JSX code snippets (from Storybook)
-- **Rendered HTML** — copy-pasteable HTML showing the actual DOM structure. Some components are auto-rendered from the built React bundles using `renderToStaticMarkup`; others have curated HTML examples.
-- **CSS classes** — list of BEM classes the component uses
-- **Branding flags** — `doNotModify` warnings on components like PageHeader and Footer where the markup is a UNDRR branding requirement
-
-Components with syndication support (Footer) include a `vanillaHtmlEmbed` field with the complete script-tag embed pattern and configuration options.
-
-### CSS utilities (`ai-components/utilities.json`)
-
-The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.
-
-### Page templates
-
-The [PageTemplateExample](https://unisdr.github.io/undrr-mangrove/ai-components/example-page-template-example.json) detail file includes four complete page templates:
-
-1. **Canonical UNDRR page shell** — full HTML boilerplate with PageHeader, content area, Footer, and all required scripts in the correct load order
-2. **Listing page** — breadcrumbs, filter chips, card grid, pagination
-3. **Detail page** — child hero, article body with highlight boxes, sidebar with related cards
-4. **Form page** — contact form with all input types, validation patterns, and error summary
-
-### Expected agent workflow
-
-**For vanilla HTML consumers:**
-
-1. Fetch `llms.json` for all URLs and conventions
-2. Fetch `ai-components/index.json`, filter by `vanillaHtml: true`
-3. Use the `quickstart` and `requiredAssets` fields to set up the page shell
-4. Fetch component detail files and use `renderedHtml` examples
-
-**For React consumers:**
-
-1. Fetch `ai-components/index.json`
-2. Fetch component detail files for props, types, and story code examples
-3. Import components via npm: `import { ComponentName } from "@undrr/undrr-mangrove"`
-
-## Pointing your agent at Mangrove
-
-### Give it the repo
-
-Agents that can read files (Claude Code, Cursor, Copilot) do best with the GitHub repository directly.
-
-```
-I'm working with the UNDRR Mangrove component library.
-Repository: https://github.com/unisdr/undrr-mangrove
-
-Help me create a page layout using the MegaMenu, Hero, and Footer components.
-```
-
-### Give it `llms.txt`
-
-For agents that can fetch URLs but don't have file access:
+The quickest way to get any agent up to speed. This works with any tool that can fetch a URL.
 
 ```
 Fetch the component library metadata from:
@@ -121,7 +19,18 @@ https://unisdr.github.io/undrr-mangrove/llms.txt
 Use these components to build the requested UI.
 ```
 
-### Give it a specific component
+### Option 2: give it the repo
+
+Agents that can read files (Claude Code, Cursor, Copilot) can work directly from the source.
+
+```
+I'm working with the UNDRR Mangrove component library.
+Repository: https://github.com/unisdr/undrr-mangrove
+
+Help me create a page layout using the MegaMenu, Hero, and Footer components.
+```
+
+### Option 3: give it a specific component
 
 If you know which component you need, point straight at its detail file:
 
@@ -136,7 +45,7 @@ Create a similar paginated list using this component.
 
 ### Claude Code
 
-Point Claude at the `llms.txt` or the repo URL. For consuming projects, add to your `CLAUDE.md`:
+For consuming projects, add to your `CLAUDE.md`:
 
 ```markdown
 ## Component library
@@ -209,15 +118,13 @@ Look for these in AI-generated output:
 
 If you're working on Mangrove itself (not just consuming it), you can connect your AI agent directly to the running Storybook dev server using MCP (Model Context Protocol).
 
-### What this gets you
-
 With the Storybook MCP server running, agents can:
 
 - Query component data through an API instead of parsing files
 - Get URLs to specific stories for visual checks
 - Run interaction and accessibility tests against generated components
 
-### Setting up MCP for local development (optional)
+### Setting up MCP for local development
 
 Storybook 10.3+ includes a built-in MCP server. To try it locally:
 
@@ -237,7 +144,81 @@ See the [Storybook MCP documentation](https://storybook.js.org/docs/next/ai/mcp/
 
 ---
 
-## How the manifest is generated
+## How the manifest works
+
+Storybook is a single-page app. If an agent fetches the deployed URL, it gets an empty HTML shell and a bunch of script tags. To work around that, the build generates static JSON files at predictable paths on GitHub Pages. No running server needed.
+
+### Entry points: `llms.txt` and `llms.json`
+
+The site root has a [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, CDN theme URLs, conventions, and links to the component index and utilities.
+
+A structured [`llms.json`](https://unisdr.github.io/undrr-mangrove/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version.
+
+### Component index (`ai-components/index.json`)
+
+The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) lists every component with:
+
+```json
+{
+  "id": "components-cards-vertical-card",
+  "name": "VerticalCard",
+  "description": "Card with stacked image, labels, title, summary, and optional CTA button.",
+  "docsUrl": "...",
+  "detailsUrl": "...",
+  "vanillaHtml": true
+}
+```
+
+The index also includes library-level metadata:
+
+- **`quickstart`** — CSS `<link>` tag, all four theme URLs, and a minimal HTML boilerplate
+- **`breakpoints`** — mobile (480px), tablet (900px), desktop (1164px), wide (1440px)
+- **`requiredAssets`** — every stylesheet, script, and logo URL a UNDRR page needs, with load order and `defer`/`async` attributes
+- **`utilitiesUrl`** — link to the CSS utility class reference
+
+Agents can filter by `vanillaHtml: true` (works as plain HTML/CSS) or `requiresReact: true` (needs React runtime).
+
+### Per-component details (`ai-components/{id}.json`)
+
+Each component gets its own JSON file (1-10 KB) with:
+
+- **Props** with types, defaults, and descriptions (from PropTypes and JSDoc)
+- **Story examples** with JSX code snippets (from Storybook)
+- **Rendered HTML** — copy-pasteable HTML showing the actual DOM structure. Some components are auto-rendered from the built React bundles using `renderToStaticMarkup`; others have curated HTML examples.
+- **CSS classes** — list of BEM classes the component uses
+- **Branding flags** — `doNotModify` warnings on components like PageHeader and Footer where the markup is a UNDRR branding requirement
+
+Components with syndication support (Footer) include a `vanillaHtmlEmbed` field with the complete script-tag embed pattern and configuration options.
+
+### CSS utilities (`ai-components/utilities.json`)
+
+The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.
+
+### Page templates
+
+The [PageTemplateExample](https://unisdr.github.io/undrr-mangrove/ai-components/example-page-template-example.json) detail file includes four complete page templates:
+
+1. **Canonical UNDRR page shell** — full HTML boilerplate with PageHeader, content area, Footer, and all required scripts in the correct load order
+2. **Listing page** — breadcrumbs, filter chips, card grid, pagination
+3. **Detail page** — child hero, article body with highlight boxes, sidebar with related cards
+4. **Form page** — contact form with all input types, validation patterns, and error summary
+
+### Expected agent workflow
+
+**For vanilla HTML consumers:**
+
+1. Fetch `llms.json` for all URLs and conventions
+2. Fetch `ai-components/index.json`, filter by `vanillaHtml: true`
+3. Use the `quickstart` and `requiredAssets` fields to set up the page shell
+4. Fetch component detail files and use `renderedHtml` examples
+
+**For React consumers:**
+
+1. Fetch `ai-components/index.json`
+2. Fetch component detail files for props, types, and story code examples
+3. Import components via npm: `import { ComponentName } from "@undrr/undrr-mangrove"`
+
+### How it's generated
 
 A single script runs after Storybook and webpack finish:
 
@@ -258,24 +239,32 @@ To regenerate by hand:
 node scripts/ai-manifest/generate-ai-manifest.js
 ```
 
+### Why a custom pipeline
+
+Several tools exist for connecting Storybook to LLMs. We evaluated them and found they solve a narrower problem than what UNDRR sites need.
+
+| Tool | What it does | What it doesn't do |
+|------|-------------|-------------------|
+| [`@storybook/mcp`](https://www.npmjs.com/package/@storybook/mcp) (Storybook 10.3+) | Built-in MCP server with component docs, story previews, and test running. Live queries against a running dev server. | Generate static files. Provide rendered HTML for vanilla consumers. Work without a running server (unless self-hosted). Include page recipes, required assets, or branding constraints. |
+| [`@fluentui/storybook-llms-extractor`](https://www.npmjs.com/package/@fluentui/storybook-llms-extractor) | Extracts Storybook metadata into llms.txt format using Playwright. Per-component text files with props and stories. | Provide rendered HTML output. Include page recipes, required scripts, or branding constraints. |
+| [Storybook component manifest](https://github.com/storybookjs/storybook/issues/32276) | Built-in JSON manifest with props, types, and story snippets. | Include rendered HTML, CSS class inventories, or integration guidance. Storybook's own research explicitly excluded visual rendering. |
+
+Our pipeline fills the gaps:
+
+- **Rendered HTML** for vanilla consumers who use Mangrove via CDN without React. No other tool provides this.
+- **UNDRR page recipes** — required scripts (analytics, messaging, cookie consent), syndication embed instructions, branding-critical markup flagged as `doNotModify`.
+- **Static deployment** alongside GitHub Pages. No running server needed.
+- **CSS utility inventory** with utility classes grouped by category.
+
+The ecosystem tools are complementary, not competing. We recommend `@storybook/mcp` for local development alongside our static pipeline for deployed documentation.
+
 ---
 
 ## Ecosystem and alternatives
 
-These tools address overlapping problems. We use or recommend them alongside our pipeline.
-
 ### Storybook MCP (`@storybook/mcp`)
 
 As of Storybook 10.3 (March 2025), the official [`@storybook/mcp`](https://www.npmjs.com/package/@storybook/mcp) package ships a built-in MCP server at `http://localhost:6006/mcp`. It exposes three tool groups — docs (list/get component metadata), development (story-writing guidance, preview rendering), and testing (run story tests and accessibility checks). Requires a running Storybook dev server or a self-hosted Node.js server with generated manifests.
-
-We evaluated this for Mangrove and decided our custom pipeline is the better fit for now:
-
-- **Vanilla HTML is our primary use case.** ~50 of 65 components are consumed as plain HTML/CSS via CDN. The Storybook MCP is React-centric and has no concept of rendered HTML examples.
-- **Static deployment matters.** Our manifests are JSON files on GitHub Pages — no server to run, no infra to maintain. Any tool that can fetch a URL can use them.
-- **UNDRR-specific context.** Branding flags, required page assets, embed patterns, and theme URLs are domain knowledge the Storybook MCP doesn't cover.
-- **The story test runner is the one capability we can't replicate statically.** If we revisit this later, it would likely be to add `@storybook/mcp` alongside our pipeline for local development, not to replace it.
-
-We recommend the Storybook MCP for teams with React-only component libraries and simpler deployment needs.
 
 - [Storybook 10.3 changelog](https://github.com/storybookjs/storybook/blob/main/CHANGELOG.md#1030)
 - [npm package](https://www.npmjs.com/package/@storybook/mcp)
@@ -284,8 +273,6 @@ We recommend the Storybook MCP for teams with React-only component libraries and
 ### Fluent UI LLMs extractor (`@fluentui/storybook-llms-extractor`)
 
 Microsoft's CLI tool that extracts Storybook metadata into llms.txt format using Playwright. Produces per-component text files with props and story code. Good for teams that want automated llms.txt generation without custom scripting.
-
-We don't use this because it doesn't produce rendered HTML or UNDRR-specific integration data, but it's a solid option for projects with simpler needs.
 
 - [npm package](https://www.npmjs.com/package/@fluentui/storybook-llms-extractor)
 - [Community fork](https://github.com/Acring/storybook-llms-extractor)
