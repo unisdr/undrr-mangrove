@@ -18,7 +18,7 @@ import { useSearchState, useSearchDispatch, useSearchConfig, actions } from '../
  * - #query=<search term> - Search query
  * - #page=<number> - Page number (1-based)
  * - #label=<page title> - Optional page title override
- * - Legacy ?text=<query> parameter migration
+ * - ?text=<query> or ?query=<query> parameter migration (converted to hash format; ?text= takes precedence)
  *
  * @param {Object} options - Hook options
  * @param {boolean} options.enabled - Whether hash sync is enabled
@@ -97,18 +97,23 @@ export function useHashSync({ enabled = true } = {}) {
       return;
     }
 
-    // Migrate legacy ?text= parameter
+    // Migrate query string parameters (?text= or ?query=) to hash format
     const urlParams = new URLSearchParams(window.location.search);
-    const textParam = urlParams.get('text');
+    const queryParam = urlParams.get('text') || urlParams.get('query');
 
-    if (textParam) {
-      // Update URL to use hash format
-      const newHash = `query=${encodeURIComponent(textParam)}`;
-      const newUrl = window.location.origin + window.location.pathname + '#' + newHash;
+    if (queryParam) {
+      // Update URL to use hash format (strip query param, add hash)
+      const newHash = `query=${encodeURIComponent(queryParam)}`;
+      urlParams.delete('text');
+      urlParams.delete('query');
+      const remainingParams = urlParams.toString();
+      const newUrl = window.location.origin + window.location.pathname
+        + (remainingParams ? '?' + remainingParams : '')
+        + '#' + newHash;
       window.history.replaceState(null, '', newUrl);
 
       // Set query in state
-      dispatch(actions.setQuery(textParam));
+      dispatch(actions.setQuery(queryParam));
       lastHashRef.current = newHash;
       isInitializedRef.current = true;
       return;
