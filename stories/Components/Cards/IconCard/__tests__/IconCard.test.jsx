@@ -106,33 +106,31 @@ describe('IconCard', () => {
   });
 
   // --------------------------------------------------
-  // labelPosition
+  // visualLabel
   // --------------------------------------------------
 
-  it('places label before the visual when labelPosition is "top"', () => {
+  it('renders visualLabel inside .mg-card__visual', () => {
     const { container } = render(
       <IconCard
-        data={makeData({ label: 'Category', icon: 'mg-icon mg-icon-globe' })}
-        labelPosition="top"
+        data={makeData({ visualLabel: 'Data', icon: 'mg-icon mg-icon-globe' })}
       />,
     );
 
-    const article = container.querySelector('article');
-    const label = article.querySelector('.mg-card__meta');
-    const visual = article.querySelector('.mg-card__visual');
-
-    // Label should appear before visual in the DOM
-    expect(label).toBeInTheDocument();
-    expect(visual).toBeInTheDocument();
-    expect(
-      label.compareDocumentPosition(visual) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    const visual = container.querySelector('.mg-card__visual');
+    const visualLabel = visual.querySelector('.mg-card__visual-label');
+    expect(visualLabel).toBeInTheDocument();
+    expect(visualLabel).toHaveTextContent('Data');
+    expect(visualLabel.tagName).toBe('SPAN');
   });
 
-  it('places label inside content area by default', () => {
+  it('always renders label inside .mg-card__content regardless of visualLabel', () => {
     const { container } = render(
       <IconCard
-        data={makeData({ label: 'Category', icon: 'mg-icon mg-icon-globe' })}
+        data={makeData({
+          label: 'Category',
+          visualLabel: 'Data',
+          icon: 'mg-icon mg-icon-globe',
+        })}
       />,
     );
 
@@ -140,6 +138,26 @@ describe('IconCard', () => {
     const label = content.querySelector('.mg-card__label');
     expect(label).toBeInTheDocument();
     expect(label).toHaveTextContent('Category');
+  });
+
+  it('supports both visualLabel and label on the same card', () => {
+    const { container } = render(
+      <IconCard
+        data={makeData({
+          label: 'Category',
+          visualLabel: 'Data',
+          icon: 'mg-icon mg-icon-globe',
+        })}
+      />,
+    );
+
+    const visual = container.querySelector('.mg-card__visual');
+    const visualLabel = visual.querySelector('.mg-card__visual-label');
+    expect(visualLabel).toHaveTextContent('Data');
+
+    const content = container.querySelector('.mg-card__content');
+    const contentLabel = content.querySelector('.mg-card__label');
+    expect(contentLabel).toHaveTextContent('Category');
   });
 
   // --------------------------------------------------

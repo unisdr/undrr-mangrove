@@ -343,7 +343,7 @@ const howItWorksCards = [
     imgalt: 'Collect — record and link hazardous events with disaster data',
     imageScale: 'large',
     title: 'Collect',
-    label: 'Data',
+    visualLabel: 'Data',
     summaryText:
       'Record and link hazardous events with disaster losses and damages data. Systematically track disaster effects across sectors, social groups and geographic areas.',
   },
@@ -353,7 +353,7 @@ const howItWorksCards = [
     imgalt: 'Analyze — reveal patterns, trends and hotspots',
     imageScale: 'large',
     title: 'Analyze',
-    label: 'Analysis',
+    visualLabel: 'Analysis',
     summaryText:
       'Analyze links between hazardous events and losses and damages to reveal patterns, trends, and hotspots. Compare across hazards, sectors, events, and locations.',
   },
@@ -363,7 +363,7 @@ const howItWorksCards = [
     imgalt: 'Insights for action — turn raw data into insight',
     imageScale: 'large',
     title: 'Insights for action',
-    label: 'Insights for action',
+    visualLabel: 'Insights for action',
     summaryText:
       'Turn raw data into insight. Produce analytical outputs to support decision-making for prevention, risk reduction, preparedness, recovery, financing and adaptation.',
   },
@@ -469,7 +469,7 @@ const DeltaLandingPage = () => (
         <div className="mg-container">
           <div className="mg-grid mg-grid__col-3">
             {howItWorksCards.map((card, i) => (
-              <IconCard key={i} data={[card]} labelPosition="top" />
+              <IconCard key={i} data={[card]} />
             ))}
           </div>
         </div>

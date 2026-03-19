@@ -19,7 +19,6 @@ describe('iconCardFromElement', () => {
     expect(props).toEqual({
       centered: false,
       variant: 'default',
-      labelPosition: 'content',
       data: [],
     });
   });

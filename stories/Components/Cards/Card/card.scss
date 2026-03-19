@@ -279,11 +279,20 @@ $card-variant-colours: (
     max-width: 500px;
   }
 
+  // Classification label above the icon/image inside the visual area
+  .mg-card__visual-label {
+    font-size: $mg-font-tag;
+    font-weight: 700;
+    color: $mg-color-tag;
+    width: 100%;
+  }
+
   // Reuse shared visual container with icon-specific sizing
   .mg-card__visual {
     flex-shrink: 0;
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     overflow: visible;

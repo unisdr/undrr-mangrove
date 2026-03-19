@@ -82,7 +82,6 @@ Use `iconColor` to add a circular colored background behind the icon (or as a st
 | `data` | Array | Required | Array of card data objects |
 | `centered` | Boolean | `false` | Center-align content |
 | `variant` | String | `'default'` | Visual variant: `'default'` or `'negative'` |
-| `labelPosition` | String | `'content'` | Where the label renders: `'content'` (default, inside card body) or `'top'` (above the visual/image) |
 
 ### Data object properties
 
@@ -99,6 +98,7 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 | `iconSize` | Number | `72` | Width/height of icon in pixels (ignored when `imageScale` is set) |
 | `imageScale` | String | - | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units. |
 | `label` | String | Optional | Badge or category label text |
+| `visualLabel` | String | Optional | Text label rendered above the icon/image in the visual area |
 | `title` | String | Required | Card heading text (required for accessibility) |
 | `srOnlyTitle` | Boolean | `false` | Visually hide title but keep for screen readers (for logo cards) |
 | `summaryText` | String | Optional | Card body text (HTML supported) |
@@ -249,7 +249,6 @@ IconCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 | `data-items` | `[]` | JSON array of card data objects (required) |
 | `data-centered` | `'false'` | Center-align content (`'true'` or `'false'`) |
 | `data-variant` | `'default'` | `'default'` or `'negative'` |
-| `data-label-position` | `'content'` | `'content'` (inside card body) or `'top'` (above visual) |
 
 ```js
 import createHydrator from "https://assets.undrr.org/static/mangrove/1.3.3/components/hydrate.js";
@@ -261,7 +260,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
-- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `labelPosition` prop (`'content'` default or `'top'` to render label above the visual). Added `borderColor` data prop for colored card borders. Added `iconFgColor` data prop for icon glyph color (distinct from `iconColor` which is the background). Icon badge border-radius is now a theme token (`$mg-card-icon-badge-radius`, default `50%`; Delta overrides to `15%`). `iconColor` now works without an `icon` class, rendering a standalone color swatch. Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`).
+- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `visualLabel` field to data items — renders a classification label above the icon/image inside the visual area. This is semantically separate from the existing `label` field (which renders as metadata inside the content area). Both can coexist on the same card. Added `borderColor` data prop for colored card borders. Added `iconFgColor` data prop for icon glyph color (distinct from `iconColor` which is the background). Icon badge border-radius is now a theme token (`$mg-card-icon-badge-radius`, default `50%`; Delta overrides to `15%`). `iconColor` now works without an `icon` class, rendering a standalone color swatch. Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`).
 - **1.1.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
 - **1.1** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `mg-card--plain-title` CSS opt-out modifier. Added hydration support with `fromElement` prop extraction and `createHydrator` integration.
 - **1.0** — 2026-01-13: Initial release with icon/image support, centered variant, negative variant, logo mode with `srOnlyTitle`, and grid layout

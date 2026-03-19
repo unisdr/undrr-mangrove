@@ -17,7 +17,6 @@ const cls = (...classes) =>
  * @param {Array} props.data - Array of card data objects (see data object properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
  * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
- * @param {string} props.labelPosition - Where the label renders: 'content' (default) or 'top' (above visual)
  *
  * Data object properties:
  * @property {string} icon - Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons
@@ -26,6 +25,7 @@ const cls = (...classes) =>
  * @property {number} iconSize - Width/height of icon in pixels (default: 72)
  * @property {string} imageScale - Scale for icons/images: 'small', 'medium', 'large', or 'full'
  * @property {string} label - Badge or category label text
+ * @property {string} visualLabel - Text label rendered above the icon/image in the visual area
  * @property {string} title - Card heading text (required for accessibility)
  * @property {boolean} srOnlyTitle - Visually hide title but keep for screen readers (for logo cards)
  * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
@@ -78,7 +78,7 @@ function renderVisual(item) {
   return null;
 }
 
-export function IconCard({ data, centered = false, variant = 'default', labelPosition = 'content' }) {
+export function IconCard({ data, centered = false, variant = 'default' }) {
   return (
     <>
       {data.map((item, index) => (
@@ -95,16 +95,12 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
             style: { '--mg-card-border': item.borderColor },
           })}
         >
-          {/* Optional Label/Badge - above visual when labelPosition="top" */}
-          {item.label && labelPosition === 'top' && (
-            <div className="mg-card__meta">
-              <span className="mg-card__label">{item.label}</span>
-            </div>
-          )}
-
           {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
           {(item.icon || item.imgback || item.iconColor) && (
             <div className="mg-card__visual">
+              {item.visualLabel && (
+                <span className="mg-card__visual-label">{item.visualLabel}</span>
+              )}
               {item.srOnlyTitle && item.link ? (
                 <a href={item.link} className="mg-card__visual-link">
                   {renderVisual(item)}
@@ -117,8 +113,8 @@ export function IconCard({ data, centered = false, variant = 'default', labelPos
 
           {/* Card Content */}
           <div className="mg-card__content">
-            {/* Optional Label/Badge - default position inside content */}
-            {item.label && labelPosition !== 'top' && (
+            {/* Optional Label/Badge */}
+            {item.label && (
               <div className="mg-card__meta">
                 <span className="mg-card__label">{item.label}</span>
               </div>
@@ -197,6 +193,8 @@ IconCard.propTypes = {
       borderColor: PropTypes.string,
       /** Badge or category label text */
       label: PropTypes.string,
+      /** Text label rendered above the icon/image in the visual area */
+      visualLabel: PropTypes.string,
       /** Card heading text (required for accessibility) */
       title: PropTypes.string.isRequired,
       /** Visually hide title but keep for screen readers (for logo cards) */
@@ -217,6 +215,4 @@ IconCard.propTypes = {
   centered: PropTypes.bool,
   /** Visual variant: default or negative (for dark backgrounds) */
   variant: PropTypes.oneOf(['default', 'negative']),
-  /** Where the label renders: 'content' (default, inside card body) or 'top' (above the visual) */
-  labelPosition: PropTypes.oneOf(['content', 'top']),
 };
