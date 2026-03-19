@@ -201,6 +201,34 @@ describe('SearchContext', () => {
       expect(screen.getByTestId('isInitialized').textContent).toBe('true');
     });
 
+    it('INITIALIZE preserves query already set (e.g., from URL params)', () => {
+      let dispatch;
+      renderWithProvider({}, ({ dispatch: d }) => {
+        dispatch = d;
+      });
+
+      // Simulate useHashSync setting query before INITIALIZE runs
+      act(() => {
+        dispatch(actions.setQuery('url-query'));
+      });
+
+      expect(screen.getByTestId('query').textContent).toBe('url-query');
+
+      // INITIALIZE should not overwrite the existing query
+      act(() => {
+        dispatch(
+          actions.initialize({
+            defaultQuery: '',
+            defaultSort: 'relevance',
+            defaultFilters: [],
+          })
+        );
+      });
+
+      expect(screen.getByTestId('query').textContent).toBe('url-query');
+      expect(screen.getByTestId('isInitialized').textContent).toBe('true');
+    });
+
     it('SET_RESULTS updates results and clears loading', () => {
       let dispatch, state;
 

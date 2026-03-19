@@ -18,7 +18,7 @@ import { useSearchState, useSearchDispatch, useSearchConfig, actions } from '../
  * - #query=<search term> - Search query
  * - #page=<number> - Page number (1-based)
  * - #label=<page title> - Optional page title override
- * - ?text=<query> or ?query=<query> parameter migration (converted to hash format)
+ * - ?text=<query> or ?query=<query> parameter migration (converted to hash format; ?text= takes precedence)
  *
  * @param {Object} options - Hook options
  * @param {boolean} options.enabled - Whether hash sync is enabled
