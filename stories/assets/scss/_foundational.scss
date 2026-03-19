@@ -41,7 +41,7 @@ caption {
 h1 {
   font-family: $mg-font-family;
   font-size: $mg-font-size-600;
-  letter-spacing: mg-rem(0.6);
+  letter-spacing: mg-rem(0.6); // TODO: consider em — should scale with heading font-size
   line-height: 1.08;
   text-wrap: balance;
   font-weight: 700;
@@ -69,7 +69,7 @@ h5 {
 h6 {
   font-size: $mg-font-size-200;
   font-weight: 700;
-  letter-spacing: mg-rem(0.3);
+  letter-spacing: mg-rem(0.3); // TODO: consider em — should scale with heading font-size
   line-height: 1.15;
 }
 

@@ -132,10 +132,10 @@
 
 %ctaimg {
   content: "";
-  height: mg-rem(11.88);
+  height: mg-rem(11.88); // TODO: consider em — icon should scale with link text
   margin-left: $mg-spacing-25;
   margin-top: 2px;
-  width: mg-rem(8.13);
+  width: mg-rem(8.13); // TODO: consider em — icon should scale with link text
 
   @include devicebreak(medium) {
     margin-top: 0;
@@ -290,8 +290,8 @@
   align-items: center;
   content: "";
   cursor: pointer;
-  height: mg-rem(11.25);
-  width: mg-rem(12.5);
+  height: mg-rem(11.25); // TODO: consider em — external link icon should scale with text
+  width: mg-rem(12.5); // TODO: consider em — external link icon should scale with text
 }
 
 %footerlink {
