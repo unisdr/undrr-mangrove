@@ -75,9 +75,11 @@ $mg-radius-form-input: $mg-spacing-50;
 // Mega menu — white panel on Delta (base default is $mg-color-button which is dark navy here)
 $mg-color-mega-content-bg: $mg-color-white;
 
-// Hero — left-partial overlay already works via max-width: 40rem in component
+// Hero — wider overlay and extra padding for Delta's layout
 $mg-color-hero: $delta-color-primary;
 $mg-opacity-hero: 1;
+$mg-hero-overlay-max-width: $mg-width-600;
+$mg-hero-overlay-padding: $mg-spacing-400;
 $mg-color-hero-title: oklch(68.5% 0.169 237.323);
 $mg-color-hero--tertiary: $delta-color-dark; // Dark CTA banner sections
 $mg-spacing-hero-overlay: 2rem 0;

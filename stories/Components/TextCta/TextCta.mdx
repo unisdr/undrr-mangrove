@@ -43,6 +43,10 @@ Works without body text — just a headline and buttons.
 
 <Canvas of={TextCtaStories.HeadlineOnly} />
 
+## Quaternary variant
+
+<Canvas of={TextCtaStories.Quaternary} />
+
 ## Extra padding
 
 Use the `padding` prop to override the theme default. Combined here with `headlineSize="800"` for a larger heading.
@@ -55,6 +59,7 @@ Use the `padding` prop to override the theme default. Combined here with `headli
 |------|------|---------|-------------|
 | `headline` | String | - | Banner heading text |
 | `headlineSize` | String | `'600'` | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`) |
+| `headlineLevel` | Number | `2` | Semantic heading level (2–6). Controls the HTML element independently of visual size |
 | `text` | String | - | Body text (HTML supported via `dangerouslySetInnerHTML`) |
 | `buttons` | Array | `[]` | Array of button objects: `{ label, url, type }` |
 | `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
@@ -90,6 +95,7 @@ TextCta supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
 |-----------|---------|-------------|
 | `data-headline` | `''` | Banner heading text |
 | `data-headline-size` | `'600'` | Font size token (e.g. `'400'`, `'600'`, `'800'`) |
+| `data-headline-level` | `2` | Semantic heading level (2–6) |
 | `data-text` | `''` | Body HTML (sanitized via DOMPurify) |
 | `data-buttons` | `[]` | JSON array of button objects: `{ label, url, type }` |
 | `data-variant` | `'primary'` | `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
@@ -109,8 +115,8 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Accessibility
 
-- Uses semantic `<section>` element
-- Headline uses a `<header>` element — consumers should wrap in an appropriate heading level if needed for document hierarchy
+- Uses semantic `<section>` element with `aria-labelledby` pointing to the headline (falls back to `aria-label="Call to action"` when no headline is provided)
+- Headline renders as a proper heading element (`<h2>` by default). Use `headlineLevel` to match the document outline
 - Button text provides clear action labels
 - Color contrast: white text on theme background colors meets WCAG AA
 - Focus states inherited from `.mg-button` base styles

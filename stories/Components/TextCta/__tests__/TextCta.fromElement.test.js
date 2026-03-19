@@ -23,6 +23,7 @@ describe('textCtaFromElement', () => {
       createContainer({
         headline: 'Join the platform',
         'headline-size': '800',
+        'headline-level': '3',
         text: '<p>Body text</p>',
         buttons,
         variant: 'tertiary',
@@ -37,6 +38,7 @@ describe('textCtaFromElement', () => {
 
     expect(props.headline).toBe('Join the platform');
     expect(props.headlineSize).toBe('800');
+    expect(props.headlineLevel).toBe(3);
     expect(props.text).toBe('<p>Body text</p>');
     expect(props.buttons).toEqual([
       { label: 'Read more', url: '/about' },
@@ -60,6 +62,7 @@ describe('textCtaFromElement', () => {
 
     expect(props.headline).toBe('');
     expect(props.headlineSize).toBe('600');
+    expect(props.headlineLevel).toBe(2);
     expect(props.text).toBe('');
     expect(props.buttons).toEqual([]);
     expect(props.variant).toBe('primary');
@@ -112,5 +115,23 @@ describe('textCtaFromElement', () => {
   it('treats centered="true" as true', () => {
     const props = textCtaFromElement(createContainer({ centered: 'true' }));
     expect(props.centered).toBe(true);
+  });
+
+  // --------------------------------------------------
+  // Headline level parsing
+  // --------------------------------------------------
+
+  it('clamps invalid headline-level to 2', () => {
+    const props = textCtaFromElement(
+      createContainer({ 'headline-level': '99' }),
+    );
+    expect(props.headlineLevel).toBe(2);
+  });
+
+  it('clamps non-numeric headline-level to 2', () => {
+    const props = textCtaFromElement(
+      createContainer({ 'headline-level': 'abc' }),
+    );
+    expect(props.headlineLevel).toBe(2);
   });
 });

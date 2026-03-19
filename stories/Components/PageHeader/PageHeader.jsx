@@ -60,9 +60,8 @@ export function PageHeader({
           <div className="mg-page-header__region mg-page-header__region--toolbar">
             {/* UNDRR Logo Section */}
             {showLogo && (
-              <section
+              <div
                 id="block-undrrlogo"
-                aria-label="Site branding"
                 className="mg-page-header__block mg-page-header__block--logo"
               >
                 <a href={homeUrl}>
@@ -75,7 +74,7 @@ export function PageHeader({
                     className="mg-page-header__logo-img"
                   />
                 </a>
-              </section>
+              </div>
             )}
 
             {/* User icon */}
@@ -89,7 +88,7 @@ export function PageHeader({
 
             {/* Language Dropdown Section */}
             {showLanguage && (
-              <section aria-label="Language selection" className="mg-page-header__block mg-page-header__block--language">
+              <div className="mg-page-header__block mg-page-header__block--language">
                 <form
                   className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
                   id="lang_dropdown_form_lang-dropdown-form"
@@ -141,7 +140,7 @@ export function PageHeader({
                     </div>
                   </noscript>
                 </form>
-              </section>
+              </div>
             )}
           </div>
         </div>

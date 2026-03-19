@@ -36,6 +36,15 @@ export const Tertiary = {
   },
 };
 
+export const Quaternary = {
+  args: {
+    headline: 'Take urgent action on climate',
+    text: '<p>Climate change is increasing the frequency and intensity of disasters worldwide.</p>',
+    buttons: [{ label: 'Learn more', url: '#' }],
+    variant: 'quaternary',
+  },
+};
+
 export const CustomColor = {
   args: {
     headline: 'Custom branded banner',

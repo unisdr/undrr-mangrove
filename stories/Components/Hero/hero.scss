@@ -46,8 +46,8 @@
     background-color: rgba($mg-color-hero, $mg-opacity-hero);
     display: grid;
     margin: $mg-spacing-hero-overlay;
-    max-width: $mg-width-600;
-    padding: $mg-spacing-400;
+    max-width: $mg-hero-overlay-max-width;
+    padding: $mg-hero-overlay-padding;
   }
 
   &__content {

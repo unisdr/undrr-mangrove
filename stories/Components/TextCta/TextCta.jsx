@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
-// import './textcta.scss';
 
 const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
 
@@ -20,6 +19,7 @@ const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
  * @param {string} props.image - Optional image URL displayed alongside the text content
  * @param {string} props.imageAlt - Alt text for the image
  * @param {string} props.headlineSize - Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}`
+ * @param {number} props.headlineLevel - Semantic heading level (2–6). Controls the HTML element (h2, h3, etc.) independently of visual size
  * @param {string} props.padding - Custom CSS padding (overrides theme token)
  * @param {boolean} props.centered - Center-align content (default: true; auto-disabled when image is set)
  * @param {string} props.className - Additional CSS classes
@@ -27,6 +27,7 @@ const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
 export function TextCta({
   headline,
   headlineSize = '600',
+  headlineLevel = 2,
   text,
   buttons = [],
   variant = 'primary',
@@ -38,6 +39,8 @@ export function TextCta({
   className,
 }) {
   const hasImage = !!image;
+  const headlineId = useId();
+  const HeadingTag = `h${headlineLevel}`;
 
   return (
     <section
@@ -48,6 +51,7 @@ export function TextCta({
         !hasImage && centered && 'mg-cta--centered',
         className
       )}
+      {...(headline ? { 'aria-labelledby': headlineId } : { 'aria-label': 'Call to action' })}
       {...((backgroundColor || padding) && {
         style: {
           ...(backgroundColor && { '--mg-cta-bg': backgroundColor }),
@@ -58,9 +62,12 @@ export function TextCta({
       <div className="mg-cta__inner mg-container">
         <div className="mg-cta__body">
           {headline && (
-            <header className={cls('mg-cta__headline', `mg-u-font-size-${headlineSize}`)}>
+            <HeadingTag
+              id={headlineId}
+              className={cls('mg-cta__headline', `mg-u-font-size-${headlineSize}`)}
+            >
               {headline}
-            </header>
+            </HeadingTag>
           )}
 
           {text && (
@@ -105,6 +112,8 @@ TextCta.propTypes = {
   headline: PropTypes.string,
   /** Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}` */
   headlineSize: PropTypes.string,
+  /** Semantic heading level (2–6). Controls the HTML element independently of visual size */
+  headlineLevel: PropTypes.oneOf([2, 3, 4, 5, 6]),
   /** Body text (HTML supported, sanitized via DOMPurify) */
   text: PropTypes.string,
   /** Array of button objects: { label, url, type } */

@@ -9,9 +9,14 @@ export default function textCtaFromElement(container) {
     buttons = [];
   }
 
+  // Parse heading level (2–6), defaulting to 2
+  const rawLevel = parseInt(dataset.headlineLevel, 10);
+  const headlineLevel = rawLevel >= 2 && rawLevel <= 6 ? rawLevel : 2;
+
   return {
     headline: dataset.headline || '',
     headlineSize: dataset.headlineSize || '600',
+    headlineLevel,
     text: dataset.text || '',
     buttons,
     variant: dataset.variant || 'primary',

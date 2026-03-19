@@ -24,8 +24,24 @@ describe('TextCta', () => {
       <TextCta headline="Big heading" headlineSize="800" />,
     );
 
-    const header = container.querySelector('.mg-cta__headline');
-    expect(header).toHaveClass('mg-u-font-size-800');
+    const heading = container.querySelector('.mg-cta__headline');
+    expect(heading).toHaveClass('mg-u-font-size-800');
+  });
+
+  it('renders headline as h2 by default', () => {
+    const { container } = render(<TextCta headline="Default level" />);
+
+    const heading = container.querySelector('.mg-cta__headline');
+    expect(heading.tagName).toBe('H2');
+  });
+
+  it('renders headline at a custom heading level', () => {
+    const { container } = render(
+      <TextCta headline="Custom level" headlineLevel={3} />,
+    );
+
+    const heading = container.querySelector('.mg-cta__headline');
+    expect(heading.tagName).toBe('H3');
   });
 
   // --------------------------------------------------
@@ -39,6 +55,16 @@ describe('TextCta', () => {
 
     const textEl = container.querySelector('.mg-cta__text');
     expect(textEl.innerHTML).toContain('<strong>world</strong>');
+  });
+
+  it('strips dangerous HTML from text prop', () => {
+    const { container } = render(
+      <TextCta text='<p>Safe</p><script>alert("xss")</script>' />,
+    );
+
+    const textEl = container.querySelector('.mg-cta__text');
+    expect(textEl.innerHTML).toContain('Safe');
+    expect(textEl.innerHTML).not.toContain('<script>');
   });
 
   // --------------------------------------------------
@@ -137,6 +163,25 @@ describe('TextCta', () => {
     const { container } = render(<TextCta className="my-custom" />);
 
     expect(container.firstChild).toHaveClass('mg-cta', 'my-custom');
+  });
+
+  // --------------------------------------------------
+  // Accessible name on section
+  // --------------------------------------------------
+
+  it('labels section via aria-labelledby when headline is present', () => {
+    const { container } = render(<TextCta headline="Platform CTA" />);
+
+    const section = container.querySelector('section');
+    const heading = container.querySelector('.mg-cta__headline');
+    expect(section).toHaveAttribute('aria-labelledby', heading.id);
+  });
+
+  it('uses aria-label fallback when no headline is provided', () => {
+    const { container } = render(<TextCta text="<p>Body only</p>" />);
+
+    const section = container.querySelector('section');
+    expect(section).toHaveAttribute('aria-label', 'Call to action');
   });
 
   // --------------------------------------------------
