@@ -12,10 +12,10 @@
 @use "sass:math";
 
 // Root font-size configuration
-// Set to 10 for legacy 10px root (1.6rem = 16px).
-// Set to 16 for browser-standard root (1rem = 16px).
-// New integrations can override before importing Mangrove SCSS.
-$mg-html-font-size: 10 !default;
+// Default is 16 (browser-standard root where 1rem = 16px).
+// Set to 10 for legacy 10px root (1.6rem = 16px) — see style-*-legacy.scss.
+// New integrations should use the default; override only for backward compatibility.
+$mg-html-font-size: 16 !default;
 
 // Converts an intended pixel value to rem for the configured root.
 // Example: mg-rem(16) → 1.6rem (root=10) or 1rem (root=16)

@@ -8,6 +8,10 @@ import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss'
 import themeIRP from '../stories/assets/scss/style-irp.scss';
 import themeMCR from '../stories/assets/scss/style-mcr.scss';
 import themeDelta from '../stories/assets/scss/style-delta.scss';
+import themeLegacy from '../stories/assets/scss/style-legacy.scss';
+import themePWLegacy from '../stories/assets/scss/style-preventionweb-legacy.scss';
+import themeIRPLegacy from '../stories/assets/scss/style-irp-legacy.scss';
+import themeMCRLegacy from '../stories/assets/scss/style-mcr-legacy.scss';
 
 // RTL languages
 const rtlLanguages = ['arabic'];
@@ -90,6 +94,10 @@ const themeStyles = {
   'IRP Theme': themeIRP,
   'MCR2030 Theme': themeMCR,
   'DELTA Resilience Theme': themeDelta,
+  'Global UNDRR Theme (legacy 10px)': themeLegacy,
+  'PreventionWeb Theme (legacy 10px)': themePWLegacy,
+  'IRP Theme (legacy 10px)': themeIRPLegacy,
+  'MCR2030 Theme (legacy 10px)': themeMCRLegacy,
 };
 
 // Track currently active theme
@@ -239,6 +247,10 @@ const preview = {
           { value: 'IRP Theme', title: 'IRP Theme' },
           { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
           { value: 'DELTA Resilience Theme', title: 'DELTA Resilience Theme' },
+          { value: 'Global UNDRR Theme (legacy 10px)', title: 'Global UNDRR Theme (legacy 10px)' },
+          { value: 'PreventionWeb Theme (legacy 10px)', title: 'PreventionWeb Theme (legacy 10px)' },
+          { value: 'IRP Theme (legacy 10px)', title: 'IRP Theme (legacy 10px)' },
+          { value: 'MCR2030 Theme (legacy 10px)', title: 'MCR2030 Theme (legacy 10px)' },
         ],
         showName: true,
         dynamicTitle: true,
