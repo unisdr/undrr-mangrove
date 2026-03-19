@@ -250,6 +250,57 @@ const logos = replaceVersion(LOGOS);
 const generatedAt = new Date().toISOString();
 
 // ---------------------------------------------------------------------------
+// Parse actual npm exports from src/index.js
+// ---------------------------------------------------------------------------
+
+/**
+ * Reads src/index.js and returns a Set of export names that consumers can
+ * actually import from the npm package. This prevents the manifest from
+ * advertising imports that don't exist.
+ */
+function parseNpmExports() {
+  const indexPath = path.resolve(process.cwd(), 'src/index.js');
+  if (!fs.existsSync(indexPath)) {
+    console.warn('src/index.js not found — cannot validate npm exports');
+    return new Set();
+  }
+  const source = fs.readFileSync(indexPath, 'utf8');
+  const names = new Set();
+
+  // Match: export { default as Foo } and export { Foo }
+  const re = /export\s*\{[^}]*?\bas\s+(\w+)|export\s*\{\s*(\w+)\s*\}/g;
+  let match;
+  while ((match = re.exec(source)) !== null) {
+    names.add(match[1] || match[2]);
+  }
+  return names;
+}
+
+const npmExports = parseNpmExports();
+
+// Storybook uses the internal function name (e.g. BarChartProcessor) but
+// src/index.js may re-export it under a different name (e.g. BarChart).
+// Map Storybook name → npm export name for these mismatches.
+const NPM_NAME_OVERRIDES = {
+  BarChartProcessor: 'BarChart',
+  ShowOffSnackbar: 'Snackbar',
+};
+
+/**
+ * Build a valid import statement for a component, or return empty string if
+ * the component is not exported from the npm package. Corrects mismatched
+ * names between Storybook (which uses the internal function name) and
+ * src/index.js (which may re-export under a different name).
+ */
+function buildImportStatement(componentName) {
+  const exportName = NPM_NAME_OVERRIDES[componentName] || componentName;
+  if (npmExports.has(exportName)) {
+    return `import { ${exportName} } from "${pkg.name}";`;
+  }
+  return '';
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -433,6 +484,26 @@ const orphanedIds = Object.entries(COMPONENT_IDS)
 if (orphanedIds.length > 0) {
   console.warn('Warning: COMPONENT_IDS entries with no component-data or REQUIRES_REACT match (will be skipped):');
   for (const entry of orphanedIds) console.warn(`  - ${entry}`);
+}
+
+// Check for Storybook import names that don't match actual npm exports.
+// Storybook's react-docgen generates import statements using the component's
+// internal function name, which may differ from the name in src/index.js.
+if (npmExports.size > 0) {
+  const droppedImports = [];
+  for (const component of Object.values(manifest.components)) {
+    if (!component.import) continue;
+    const name = component.name || component.id;
+    if (!npmExports.has(name)) {
+      droppedImports.push(`${name} (${component.id})`);
+    }
+  }
+  if (droppedImports.length > 0) {
+    console.log(
+      `Import validation: ${droppedImports.length} component(s) had Storybook-generated import statements `
+      + `removed (not exported from src/index.js). ${npmExports.size} valid npm exports found.`,
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -728,9 +799,16 @@ async function main() {
     const isVanilla = !isReact;
     const description = getDescription(component, data);
 
+    // --- Validated import statement ---
+    // Storybook's react-docgen auto-generates import statements for every
+    // component, but only components exported from src/index.js are actually
+    // importable from the npm package. Use buildImportStatement() which
+    // checks against real exports instead of trusting Storybook's guess.
+    const validImport = buildImportStatement(name);
+
     // --- Index entry (lightweight) ---
     const indexEntry = { id, name, description };
-    if (component.import) indexEntry.import = component.import;
+    if (validImport) indexEntry.import = validImport;
     indexEntry.docsUrl = docsUrl(id);
     indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
 
@@ -744,7 +822,7 @@ async function main() {
 
     // --- Full component file ---
     const detail = { name, description };
-    if (component.import) detail.import = component.import;
+    if (validImport) detail.import = validImport;
     detail.docsUrl = docsUrl(id);
 
     if (isVanilla) {
