@@ -8,8 +8,9 @@ At least 8 UN agencies have independently built design systems. Each faces the s
 
 ### OCHA Common Design (closest parallel to Mangrove)
 
-- **URL**: https://github.com/UN-OCHA/common_design_system
-- **Drupal theme**: https://github.com/UN-OCHA/common_design
+- **Brand docs**: https://brand.unocha.org/document/281801#/web-design/common-design
+- **GitHub (Drupal theme)**: https://github.com/UN-OCHA/common_design
+- **GitHub (component library, archived)**: https://github.com/UN-OCHA/common_design_system
 - **WordPress port**: https://github.com/UN-OCHA/common-design-wordpress
 - **Approach**: Drupal base theme with ~40 components using `cd-` BEM prefix. Sites (ReliefWeb, GHO, ODSG, IASC) use child themes for per-site customization. No React dependency -- pure Drupal/Twig.
 - **Starter kit**: https://github.com/UN-OCHA/drupal-starterkit
