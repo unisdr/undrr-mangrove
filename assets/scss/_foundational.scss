@@ -7,7 +7,13 @@
 }
 
 html {
-  font-size: 10px;
+  // Only override the browser default when using the legacy 10px root.
+  // When $mg-html-font-size is 16, skip the override entirely so the
+  // browser default (or user-configured) root font-size is respected.
+  @if $mg-html-font-size != 16 {
+    font-size: $mg-html-font-size * 1px;
+  }
+
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -36,7 +42,7 @@ caption {
 h1 {
   font-family: $mg-font-family;
   font-size: $mg-font-size-600;
-  letter-spacing: 0.06rem;
+  letter-spacing: 0.02em;
   line-height: 1.08;
   text-wrap: balance;
   font-weight: 700;
@@ -64,7 +70,7 @@ h5 {
 h6 {
   font-size: $mg-font-size-200;
   font-weight: 700;
-  letter-spacing: 0.03rem;
+  letter-spacing: 0.024em;
   line-height: 1.15;
 }
 
@@ -131,20 +137,20 @@ a {
   ol {
     direction: rtl;
     padding-left: 0;
-    padding-right: 1.125rem;
+    padding-right: mg-rem(11);
 
     @include devicebreak(medium) {
-      padding-right: 1.313rem;
+      padding-right: mg-rem(13);
     }
 
     li {
       padding-left: 0;
-      padding-right: 0.875rem;
+      padding-right: mg-rem(9);
 
       @include devicebreak(medium) {
         // Keep RTL list item text aligned with bullets at medium
         // https://gitlab.com/undrr/web-backlog/-/issues/2444
-        padding-right: 0.875rem;
+        padding-right: mg-rem(9);
       }
     }
   }

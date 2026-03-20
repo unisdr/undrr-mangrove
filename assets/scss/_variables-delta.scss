@@ -82,7 +82,7 @@ $mg-hero-overlay-max-width: $mg-width-600;
 $mg-hero-overlay-padding: $mg-spacing-400;
 $mg-color-hero-title: oklch(68.5% 0.169 237.323);
 $mg-color-hero--tertiary: $delta-color-dark; // Dark CTA banner sections
-$mg-spacing-hero-overlay: 2rem 0;
+$mg-spacing-hero-overlay: mg-rem(20) 0;
 
 // Tabs — TODO: underline vs boxed style needs confirmation from Delta design team
 $mg-color-tabbar-background: none;

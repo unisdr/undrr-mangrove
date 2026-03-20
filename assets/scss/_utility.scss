@@ -62,10 +62,10 @@
 }
 
 .mg-u-expand-to-size {
-  max-width: calc(100% - 1rem);
+  max-width: calc(100% - #{mg-rem(10)});
 
   @include devicebreak(medium) {
-    max-width: calc(100% - 3rem);
+    max-width: calc(100% - #{mg-rem(30)});
   }
 }
 
