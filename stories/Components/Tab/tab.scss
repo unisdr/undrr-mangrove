@@ -68,7 +68,7 @@
     padding-right: mg-rem(40); // space for the chevron to theright
 
     &:hover,
-    &:focus {
+    &:focus-visible {
       border: none;
     }
 
@@ -83,13 +83,20 @@
       transform: rotate(-45deg);
       vertical-align: top;
       width: 0.45em;
-      transition: transform 0;
+      transition: transform 0.3s ease;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
     }
 
     &.mg-tabs__stacked--open:before {
       top: 30%;
       transform: rotate(135deg);
-      transition: transform 1s ease;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
     }
   }
 }
@@ -157,7 +164,7 @@
 }
 
 .mg-tabs__link:hover,
-.mg-tabs__link:focus {
+.mg-tabs__link:focus-visible {
   background: $mg-color-tab-background--hover;
   border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
   color: $mg-color-text-tab--hover;
@@ -173,7 +180,7 @@
 }
 
 .mg-tabs__link.is-active:hover,
-.mg-tabs__link.is-active:focus {
+.mg-tabs__link.is-active:focus-visible {
   background: $mg-color-tab-background;
   border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
   color: $mg-color-text-tab-active;
@@ -213,6 +220,21 @@
   .mg-tabs__link {
     font-family: $mg-font-family-arabic-body;
   }
+}
+
+// Filter input for stacked tabs
+.mg-tabs__filter {
+  margin-bottom: $mg-spacing-150;
+}
+
+.mg-tabs__filter-input {
+  width: 100%;
+}
+
+.mg-tabs__no-results {
+  padding: $mg-spacing-150;
+  color: $mg-color-neutral-500;
+  font-style: italic;
 }
 
 /* Tab end */
