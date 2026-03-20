@@ -169,16 +169,14 @@
   background-color: white;
 }
 
-@mixin background($background...) {
-  background: linear-gradient($background);
-}
-
 // --- Removed placeholders ---
-// %checbox-radio-before — REMOVED (February 2026). Migrated to .mg-form-check__input.
+// %checkbox-radio-before, %select_default — REMOVED (February 2026).
+//   Migrated to .mg-form-check__input and .mg-form-select in _form-base.scss.
 // %ctaimg, %chevron-right-expanded, %pseudo-icon — REMOVED (March 2026, #854). CtaLink removed.
 // %paragraph-font-400, %footer-block, %arrow, %language_switcher, %absolute__overflow,
-// %select_option, %select_rtl, %select_rtl_after, %select_default, %no-animation, %header,
+// %select_option, %select_rtl, %select_rtl_after, %no-animation, %header,
 // %sub-external, %external, %footerlink, %footerlinkinvert, %selectoption, %logo
 //   — REMOVED (March 2026, #856). Zero consumers.
+// @mixin background() — REMOVED (March 2026, #856). Zero callers; duplicated @mixin background-image().
 
 /* placeholder end */
