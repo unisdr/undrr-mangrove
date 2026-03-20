@@ -241,17 +241,10 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: [
-          { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
-          { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
-          { value: 'IRP Theme', title: 'IRP Theme' },
-          { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
-          { value: 'DELTA Resilience Theme', title: 'DELTA Resilience Theme' },
-          { value: 'Global UNDRR Theme (legacy 10px)', title: 'Global UNDRR Theme (legacy 10px)' },
-          { value: 'PreventionWeb Theme (legacy 10px)', title: 'PreventionWeb Theme (legacy 10px)' },
-          { value: 'IRP Theme (legacy 10px)', title: 'IRP Theme (legacy 10px)' },
-          { value: 'MCR2030 Theme (legacy 10px)', title: 'MCR2030 Theme (legacy 10px)' },
-        ],
+        items: Object.keys(themeStyles).map((name) => ({
+          value: name,
+          title: name,
+        })),
         showName: true,
         dynamicTitle: true,
       },
