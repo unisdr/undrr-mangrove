@@ -20,7 +20,6 @@ const rtlLanguages = ['arabic'];
 const langArr = {
   english: 'en',
   arabic: 'ar',
-  burmese: 'my',
   japanese: 'ja',
 };
 
@@ -230,7 +229,6 @@ const preview = {
         items: [
           { value: 'english', title: 'English' },
           { value: 'arabic', title: 'Arabic' },
-          { value: 'burmese', title: 'Burmese' },
           { value: 'japanese', title: 'Japanese' },
         ],
       },

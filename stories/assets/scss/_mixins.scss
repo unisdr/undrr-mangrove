@@ -132,10 +132,10 @@
 
 %ctaimg {
   content: "";
-  height: mg-rem(11.88); // TODO: consider em — icon should scale with link text
+  height: 1.06em;
   margin-left: $mg-spacing-25;
   margin-top: 2px;
-  width: mg-rem(8.13); // TODO: consider em — icon should scale with link text
+  width: 0.72em;
 
   @include devicebreak(medium) {
     margin-top: 0;
@@ -206,7 +206,7 @@
 }
 
 %select_rtl {
-  padding-left: mg-rem(31.25);
+  padding-left: mg-rem(31);
   padding-right: $mg-spacing-50;
   text-align: right;
 }
@@ -269,7 +269,7 @@
 %header {
   background-color: $mg-color-neutral-100;
   box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
-  height: mg-rem(71.875);
+  height: mg-rem(72);
   left: 0;
   position: fixed;
   top: 0;
@@ -290,8 +290,8 @@
   align-items: center;
   content: "";
   cursor: pointer;
-  height: mg-rem(11.25); // TODO: consider em — external link icon should scale with text
-  width: mg-rem(12.5); // TODO: consider em — external link icon should scale with text
+  height: 0.7em;
+  width: 0.78em;
 }
 
 %footerlink {
@@ -321,37 +321,6 @@
   padding: 0;
 }
 
-// burmese lang
-:lang(my) {
-  %paragraph-font-200 {
-    font-size: $mg-font-size-100;
-    line-height: 1.7;
-
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-200;
-    }
-  }
-
-  %paragraph-font-300 {
-    font-size: $mg-font-size-200;
-
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-300;
-    }
-  }
-
-  %paragraph-font-400 {
-    font-size: $mg-font-size-400;
-    line-height: 1.1;
-
-    @include devicebreak(medium) {
-      font-size: $mg-font-size-500;
-    }
-  }
-  %button {
-    font-size: $mg-font-size-200;
-  }
-}
 
 %logo {
   @include transition(all 0.4s cubic-bezier(0.64, 0.05, 0.35, 1.05));

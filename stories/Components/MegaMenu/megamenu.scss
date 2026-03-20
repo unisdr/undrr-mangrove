@@ -128,7 +128,7 @@
       padding: $mg-spacing-150;
       display: block;
       cursor: pointer;
-      line-height: mg-rem(17.5); // normalization
+      line-height: mg-rem(18); // normalization
       width: max-content; // overflow menu style on mobile
 
       @media screen and (min-width: $mg-breakpoint-tablet) {

@@ -23,6 +23,7 @@ Before customizing, review **<LinkTo kind="getting-started-about-mangrove" story
   tocData={[
     { id: 'installation', text: 'Installation' },
     { id: 'scss-file-structure', text: 'SCSS file structure' },
+    { id: 'root-font-size-and-mg-rem', text: 'Root font-size and mg-rem()' },
     { id: 'variables-reference', text: 'Variables reference' },
     { id: 'mixins-reference', text: 'Mixins reference' },
     { id: 'the-default-override-mechanism', text: 'The !default override mechanism' },
@@ -83,6 +84,27 @@ Each theme entry point follows the same import order:
 ```
 
 `_variables.scss` defines tokens with the `!default` flag, so a theme file imported after it can reassign those variables before they reach the component stylesheets.
+
+## Root font-size and mg-rem()
+
+As of v1.4, Mangrove's default root font-size is the browser standard (typically 16px). The compiled CSS does not set a `font-size` on `html`, so user font-size preferences are respected.
+
+All spacing, font-size, and width tokens use `mg-rem($px)`, a compile-time function that converts pixel values to rem for the configured root:
+
+```scss
+// Pass the intended pixel value — mg-rem() handles the math
+padding: mg-rem(15);       // 15px at any root
+font-size: mg-rem(16);     // 16px at any root (outputs 1rem at root=16)
+```
+
+**For existing sites** that need the old 10px root, set `$mg-html-font-size: 10` before importing Mangrove variables:
+
+```scss
+$mg-html-font-size: 10;
+@import "@undrr/undrr-mangrove/stories/assets/scss/variables";
+```
+
+Or use the pre-compiled legacy theme CSS (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.). See the <LinkTo kind="getting-started-release-notes-v1-4" story="docs">v1.4 release notes</LinkTo> for the full migration guide.
 
 ## Variables reference
 

@@ -75,7 +75,9 @@ The DELTA Resilience theme (`style-delta.css`) has no legacy variant. It was des
 | pw | `stories/assets/css/style-preventionweb-legacy.css` | `themes/custom/pw/css/mangrove/mangrove.css` |
 | mcr | `stories/assets/css/style-mcr-legacy.css` | `themes/custom/mcr/css/mangrove/mangrove.css` |
 | irp | `stories/assets/css/style-irp-legacy.css` | `themes/custom/irp/css/mangrove/mangrove.css` |
-| arise, gp, sfvc | Whichever legacy variant matches | Same `css/mangrove/mangrove.css` path |
+| arise | `stories/assets/css/style-legacy.css` | `themes/custom/arise/css/mangrove/mangrove.css` |
+| gp | `stories/assets/css/style-legacy.css` | `themes/custom/gp/css/mangrove/mangrove.css` |
+| sfvc | `stories/assets/css/style-legacy.css` | `themes/custom/sfvc/css/mangrove/mangrove.css` |
 
 Commit the CSS files to the Drupal repo and deploy. Nothing else changes.
 
@@ -192,7 +194,7 @@ Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) ship 
 
 Compiling a legacy theme from SCSS emits a build warning with a link to this guide. If you load pre-compiled CSS from the CDN or copy compiled files (as Drupal sites do), you won't see that warning — check the comment block at the top of the CSS file instead, which identifies it as a legacy variant.
 
-Legacy themes continue to override user font-size preferences (`html { font-size: 10px }`), which does not conform to WCAG 1.4.4 Resize Text. Migrating to standard themes (Option C) is recommended when feasible.
+Legacy themes continue to override user font-size preferences (`html { font-size: 10px }`), which does not conform to WCAG 1.4.4 Resize Text. This means users who need larger text to read comfortably cannot adjust it through their browser settings. Migrating to standard themes (Option C) is recommended when feasible.
 
 ## Upgrading from 1.3.x
 
@@ -201,7 +203,7 @@ Legacy themes continue to override user font-size preferences (`html { font-size
 3. Check the [root font-size: browser alignment](#root-font-size-browser-alignment) section above — existing Drupal sites should default to Option A (legacy theme), new projects need no action
 4. If you use the SCSS source, run a build and check for the legacy theme deprecation warning
 
-React component APIs are unchanged — same props, same exports, same `data-mg-*` attributes. Gutenberg blocks and their editor previews are unaffected by the theme CSS change.
+React component APIs are unchanged — same props, same exports, same `data-mg-*` attributes. Gutenberg blocks use the same data attributes and render logic as before.
 
 Note that `style-gutenberg.css` does not have a legacy variant. Its rem values are recalculated for the browser-default root, which fixes an existing issue where Gutenberg block previews rendered oversized in the editor iframe. If you added compensatory CSS to work around that, you may need to remove it.
 

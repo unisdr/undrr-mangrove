@@ -102,7 +102,7 @@
   }
 
   &__spinner {
-    width: $mg-spacing-300; // 3rem / 48px
+    width: $mg-spacing-300; // 30px
     height: $mg-spacing-300;
     border: 4px solid $mg-color-neutral-300;
     border-top-color: $mg-color-interactive;
@@ -194,7 +194,7 @@
   // Individual thumbnail button
   &__thumbnail {
     flex-shrink: 0;
-    width: $mg-spacing-400; // 5rem / 80px
+    width: $mg-spacing-400; // 50px
     height: $mg-spacing-400;
     border: none;
     border-left: 4px solid transparent;
@@ -328,14 +328,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: $mg-spacing-200; // 2rem / 32px
+    width: $mg-spacing-200; // 20px
     height: $mg-spacing-200;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgb(0 0 0 / 0.6);
     color: $mg-color-white;
-    font-size: $mg-font-size-100; // 1rem / 16px (close to 14px)
+    font-size: $mg-font-size-100; // 10px
     pointer-events: none;
     padding-left: 2px;
   }

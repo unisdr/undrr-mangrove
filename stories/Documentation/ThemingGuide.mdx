@@ -23,8 +23,6 @@ Mangrove ships five built-in themes. Each theme overrides a set of SCSS variable
     { id: 'how-theming-works', text: 'How theming works' },
     { id: 'design-tokens-reference', text: 'Design tokens reference' },
     { id: 'creating-a-new-theme', text: 'Creating a new theme' },
-    { id: 'storybook-theme-switcher', text: 'Storybook theme switcher' },
-    { id: 'deploying-to-drupal', text: 'Deploying to Drupal' },
     { id: 'rtl-considerations', text: 'RTL considerations' },
   ]}
   showNumbers={false}
@@ -41,6 +39,19 @@ Mangrove ships five built-in themes. Each theme overrides a set of SCSS variable
 | **DELTA Resilience** | `style-delta.scss` | `#132e48` (dark navy) | deltaresilience.org standalone app |
 
 The Global UNDRR theme uses the defaults defined in `_variables.scss`. The other themes each have a `_variables-{name}.scss` file that reassigns the overridable tokens before the rest of the SCSS compiles.
+
+### Legacy theme variants
+
+Each standard theme (except DELTA Resilience) has a `-legacy` variant that preserves the old 10px root font-size from Mangrove 1.3.x. These are intended for backward compatibility during migration — see the [v1.4 release notes](/docs/getting-started-release-notes-v1-4--docs) for the full migration guide.
+
+| Legacy theme | Standard equivalent | Purpose |
+|---|---|---|
+| `style-legacy.scss` | `style.scss` | Global UNDRR with 10px root |
+| `style-preventionweb-legacy.scss` | `style-preventionweb.scss` | PreventionWeb with 10px root |
+| `style-irp-legacy.scss` | `style-irp.scss` | IRP with 10px root |
+| `style-mcr-legacy.scss` | `style-mcr.scss` | MCR2030 with 10px root |
+
+Legacy themes will be maintained through the end of 2026 and removed in v2. New projects should use the standard themes.
 
 ## How theming works
 
@@ -85,7 +96,7 @@ All non-default themes follow the same pattern: set a primary brand color, then 
 - Primary: `$pw-color-primary: #0a6969`
 - Rounded buttons and tab corners (`$mg-radius-button: $mg-spacing-50`)
 - Button hover uses Sendai orange (`$sendai-orange-900`)
-- Hero overlay spacing (`$mg-spacing-hero-overlay: 2rem 0`)
+- Hero overlay spacing (`$mg-spacing-hero-overlay: mg-rem(20) 0`)
 
 **IRP** (`_variables-irp.scss`):
 - Primary: `$irp-color-primary: #0f78bf`
@@ -110,7 +121,7 @@ All non-default themes follow the same pattern: set a primary brand color, then 
 - 6 pastel accent colors for feature card icons (design-system semantics TBD)
 - Dark near-black for CTA banner sections (`$delta-color-dark: #181823`)
 - Rounded tags, tabs, and form inputs (`$mg-radius-*: $mg-spacing-50`)
-- Hero overlay spacing (`$mg-spacing-hero-overlay: 2rem 0`)
+- Hero overlay spacing (`$mg-spacing-hero-overlay: mg-rem(20) 0`)
 - No font override needed (Mangrove already defaults to Roboto)
 
 ## Design tokens reference
@@ -159,7 +170,7 @@ Used by hero, cards, and other components that support color variants.
 | `$mg-color-text-button` | `$mg-color-white` | Button text (used by border color) |
 | `$mg-border-color-button` | `$mg-color-text-button` | Button border color |
 | `$mg-padding-button` | `$mg-spacing-100 $mg-spacing-150` | Button padding |
-| `$mg-font-size-button` | `$mg-font-size-250` (`1.4rem`) | Button font size |
+| `$mg-font-size-button` | `$mg-font-size-250` (14px) | Button font size |
 
 ### Card tokens
 
@@ -301,7 +312,7 @@ Mangrove uses logical properties and `[dir="rtl"]` selectors where needed. The `
 
 ### Burmese language adjustments
 
-The `_mixins.scss` file includes `:lang(my)` overrides that reduce font sizes for Burmese text, which requires more vertical space. These apply across all themes.
+Burmese-specific font-size overrides (`:lang(my)`) were removed in v1.4 as they are not used by any current UNDRR property.
 
 ## Next steps
 
@@ -311,4 +322,4 @@ The `_mixins.scss` file includes `:lang(my)` overrides that reduce font sizes fo
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ThemingGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 20 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ThemingGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
