@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Blockquote } from '../../Atom/BaseTypography/Blockquote/Blockquote';
-// import './blockquotecomp.scss';
+// import './blockquote-component.scss';
 
 /**
  * Renders a styled blockquote with optional color variant wrapping.

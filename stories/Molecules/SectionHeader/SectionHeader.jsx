@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import './sectionheader.scss';
+// import './section-header.scss';
 import { Heading } from '../../Atom/Typography/Heading/Heading';
 
 /**

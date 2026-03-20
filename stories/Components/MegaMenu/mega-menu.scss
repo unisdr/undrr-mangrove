@@ -1,0 +1,750 @@
+.mg-mega-wrapper {
+  position: relative;
+  background: $mg-color-white;
+  box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
+  z-index: 10;
+}
+
+.mg-mega-topbar {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  z-index: 10;
+  padding: 0;
+  max-width: $mg-breakpoint-desktop;
+  margin: 0 auto;
+
+  @media screen and (min-width: $mg-breakpoint-desktop-wide) {
+    max-width: $mg-breakpoint-desktop-wide;
+  }
+
+  // these are note "mobile first" as they seem to cause a glitch with firefox and .mg-container-full-width
+  @media screen and (max-width: $mg-breakpoint-tablet) {
+    padding-left: mg-rem(40); // space for the icon button
+    overflow-x: hidden; // primarily for mobile
+  }
+
+  // --- Branded variant (with inline logo) ---
+  &--branded {
+    align-items: center;
+
+    @media screen and (max-width: $mg-breakpoint-tablet) {
+      padding-left: 0; // logo replaces the left padding
+      overflow-x: hidden;
+    }
+
+    // Hamburger becomes a discrete button (not full-width overlay)
+    .mg-mega-topbar-mobile__icon-button {
+      position: relative;
+      width: auto;
+      margin-inline-start: auto;
+      background: $mg-color-white;
+      flex-shrink: 0;
+      box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
+
+      &:has(.mg-icon-angle-circled-left) {
+        background: $mg-color-white;
+        box-shadow: -3px 0 6px -2px rgb(0 0 0 / 0.15);
+      }
+    }
+  }
+
+  // Nav list inside branded variant — push items to the end
+  &--branded &__nav {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  // Logo link
+  &__logo {
+    flex-shrink: 1;
+    min-width: 0; // allow shrinking below intrinsic size
+    display: flex;
+    align-items: center;
+    padding: $mg-spacing-100 $mg-spacing-150;
+  }
+
+  // Logo image
+  &__logo-img {
+    display: block;
+    height: mg-rem(30);
+    max-width: 100%;
+    width: auto;
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      height: mg-rem(35);
+    }
+  }
+
+  // Inner nav list inside branded variant
+  &__nav {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    // Hide items on mobile (same as default topbar behavior)
+    @media screen and (max-width: $mg-breakpoint-tablet) {
+      // Items are there but non-interactive on mobile (hamburger opens sidebar)
+      pointer-events: none;
+      overflow: hidden;
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  // Hide desktop menu items on mobile/tablet, show on desktop
+  &__item {
+    pointer-events: none; // on mobile we only advertise the buttons, but not clickable
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      display: block;
+      pointer-events: unset;
+    }
+
+    .mg-mega-content {
+      display: none;
+    }
+
+    font-size: $mg-font-size-300;
+    color: $mg-color-interactive;
+    font-weight: bold;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    p {
+      font-weight: normal;
+    }
+
+    > a,
+    > button {
+      padding: $mg-spacing-150;
+      display: block;
+      cursor: pointer;
+      line-height: mg-rem(18); // normalization
+      width: max-content; // overflow menu style on mobile
+
+      @media screen and (min-width: $mg-breakpoint-tablet) {
+        width: unset;
+      }
+    }
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      &--active {
+        background: rgba($mg-color-interactive, 0.2);
+
+        a,
+        .mg-mega-topbar__item-link {
+          color: $mg-color-interactive;
+          text-decoration: none;
+        }
+
+        a.mg-button-primary {
+          color: $mg-color-white;
+          text-decoration: none;
+        }
+
+        .mg-mega-content {
+          display: flex;
+        }
+      }
+    }
+  }
+
+  &__item-link {
+    font-family: $mg-font-family-condensed;
+    color: $mg-color-interactive;
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  // Optional icon before the top-level menu label
+  &__item-icon {
+    margin-inline-end: 0.35em;
+    font-size: 0.85em;
+    vertical-align: baseline;
+  }
+
+  // Desktop: Make the top level button links larger
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    &__item-link {
+      font-size: $mg-font-size-400;
+    }
+  }
+}
+
+.mg-mega-content {
+  // Mobile-first: Start with mobile styles
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  position: relative;
+  top: 1px;
+  align-items: flex-start;
+  justify-content: start;
+  background-color: rgba($mg-color-mega-content-bg, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: $mg-radius-tab;
+  box-shadow: -1px 5px 10px -1px rgb(0 0 0 / 0.25);
+  inset-inline-start: 0;
+  z-index: 1;
+  width: 100%;
+
+  // Desktop: Float over content with horizontal layout
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    display: none;
+    flex-direction: row; // Horizontal layout for left/right sections
+    height: mg-rem(350);
+    overflow: hidden;
+    top: mg-rem(48);
+    position: absolute;
+  }
+
+  &.mg-container-full-width {
+    position: absolute;
+  }
+
+  &__left {
+    height: 100%;
+    width: 100%; // mobile-first
+    background-color: rgba($mg-color-mega-content-bg, 0.8);
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      flex-basis: 33%;
+    }
+  }
+  &__banner {
+    padding: $mg-spacing-250;
+    header {
+      font-size: $mg-font-size-500;
+      font-weight: bold;
+      padding-bottom: $mg-spacing-100;
+    }
+    p {
+      a {
+        text-decoration: underline;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.mg-mega-content,
+.mg-mega-content__left,
+.mg-mega-content__right,
+.mg-mega-topbar__item-link {
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 1px;
+    outline-offset: 1px;
+  }
+}
+
+.mg-mega-content__left {
+  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
+
+  // RTL-friendly border
+  border-inline-end: 2px solid rgba($mg-color-black, 0.2);
+
+  // Mobile-first: Hide section list on mobile
+  .mg-mega-content__section-list {
+    display: none;
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      display: block;
+    }
+  }
+
+  .mg-mega-content__section-list-link:hover,
+  .mg-mega-content__section-list-link {
+    color: $mg-color-interactive-active;
+  }
+}
+
+.mg-mega-content__section-list {
+  padding-inline: $mg-spacing-200;
+}
+
+.mg-mega-content__section-list-item {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .mg-mega-content__section-list-link {
+    text-decoration: none;
+    display: block;
+
+    // RTL-friendly: Use logical properties for better improvements
+    letter-spacing: 0.2px;
+    position: relative;
+    padding: $mg-spacing-150 $mg-spacing-250;
+    margin-inline: -$mg-spacing-200; // extend hit area to both edges
+    font-weight: 600;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      transform 150ms ease;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba($mg-color-interactive, 0.15);
+      text-decoration: underline;
+    }
+
+    // RTL-friendly chevron indicator
+    &::after {
+      content: "›";
+      display: inline-block;
+      position: absolute;
+      font-size: mg-rem(30);
+      inset-inline-end: auto;
+      padding-inline-start: $mg-spacing-150;
+      margin-inline-end: $mg-spacing-150;
+      transition:
+        transform 150ms ease,
+        inset-inline-start 200ms cubic-bezier(0.4, 0, 0.2, 1),
+        inset-inline-end 200ms cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 150ms ease;
+      opacity: 0.55;
+    }
+
+    &--active {
+      padding: $mg-spacing-150 $mg-spacing-250;
+      margin-inline-start: -$mg-spacing-200;
+      border-inline-start: 4px solid $mg-color-interactive; // RTL-friendly vertical rule
+      text-decoration: underline;
+      background: rgba($mg-color-interactive, 0.15);
+
+      &::after {
+        opacity: 1;
+        inset-inline-end: 0;
+      }
+    }
+  }
+}
+
+// RTL: Flip chevron direction
+[dir="rtl"]
+  .mg-mega-content__section-list-item
+  .mg-mega-content__section-list-link::after {
+  content: "‹";
+}
+
+/* Brief pulse to draw attention when active becomes visible */
+@keyframes mg-mega-tab-pulse {
+  0% {
+    box-shadow:
+      inset 4px 0 0 0 $mg-color-button,
+      0 0 0 0 rgba($mg-color-interactive, 0);
+  }
+  60% {
+    box-shadow:
+      inset 4px 0 0 0 $mg-color-button,
+      0 0 0 8px rgba($mg-color-interactive, 0.12);
+  }
+  100% {
+    box-shadow:
+      inset 4px 0 0 0 $mg-color-button,
+      0 0 0 0 rgba($mg-color-interactive, 0);
+  }
+}
+
+.mg-mega-content__section-list-link--active {
+  animation: mg-mega-tab-pulse 700ms ease-out 1;
+}
+
+/* Slide motion for right content when tab changes */
+@keyframes mg-mega-content-swap {
+  0% {
+    transform: translateX(8px);
+    opacity: 0.98;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.mg-mega-content__right--sliding {
+  animation: mg-mega-content-swap 180ms ease-out;
+}
+
+/* Stronger keyboard focus ring for accessibility */
+.mg-mega-content__section-list-link:focus-visible {
+  outline: 2px solid $mg-color-white;
+  outline-offset: -2px;
+}
+
+.mg-mega-content__right {
+  box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
+  flex: 1;
+  height: 100%;
+  display: flex;
+
+  // Mobile-first: full width by default
+  width: 100%;
+
+  // Mobile-first: Show mobile menu, hide desktop menu
+  .mg-mega-content__menu--mobile {
+    display: block;
+  }
+
+  .mg-mega-content__menu--desktop {
+    display: none;
+  }
+
+  // Desktop: Hide mobile menu, show desktop menu
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    .mg-mega-content__menu--mobile {
+      display: none;
+    }
+
+    .mg-mega-content__menu--desktop {
+      display: block;
+
+      // Blue flash background that fades out (retriggered via React key)
+      animation: mg-mega-right-flash 400ms ease-out;
+
+      // Staggered slide-in for menu items
+      li {
+        animation: mg-mega-item-slide-in 250ms ease-out both;
+
+        @for $i from 1 through 25 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{($i - 1) * 30}ms;
+          }
+        }
+      }
+    }
+  }
+
+  ul {
+    flex: 1;
+    padding: $mg-spacing-150;
+    list-style: none;
+    column-count: auto;
+    column-width: 300px;
+    column-gap: $mg-spacing-200;
+    column-fill: balance;
+
+    // nested menus - RTL-friendly
+    ul {
+      padding-block: 0;
+      padding-inline: $mg-spacing-150;
+      opacity: 0.8;
+      break-inside: avoid;
+    }
+
+    li {
+      padding: 0;
+      margin: 0;
+      break-inside: avoid;
+
+      a {
+        display: block;
+        padding: $mg-spacing-50;
+        overflow: hidden;
+        white-space: wrap;
+        text-overflow: clip;
+        color: $mg-color-black;
+        font-weight: bold;
+
+        &:hover {
+          color: $mg-color-black;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/* Subtle blue gradient flash that fades to transparent on right content area */
+@keyframes mg-mega-right-flash {
+  0% {
+    background: linear-gradient(
+      to bottom,
+      rgba($mg-color-interactive, 0.06) 0%,
+      transparent 100%
+    );
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* Menu items slide in from the left */
+@keyframes mg-mega-item-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mg-icon-button {
+  padding: $mg-spacing-100;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: $mg-color-interactive-active;
+  }
+}
+
+.mg-mega-sidebar-section {
+  list-style: none;
+
+  ol {
+    list-style: none;
+    margin: 0;
+
+    li {
+      margin: 0;
+    }
+
+    ol li {
+      list-style: none;
+      padding-block: $mg-spacing-50;
+      padding-inline-start: $mg-spacing-300; // RTL-friendly
+      margin: 0;
+
+      a {
+        color: $mg-color-white;
+        text-decoration: none;
+      }
+
+      &:hover {
+        background: $mg-color-interactive-active;
+      }
+    }
+  }
+}
+
+.mg-mega-sidebar-section__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $mg-color-white;
+  cursor: pointer;
+  padding: $mg-spacing-100 $mg-spacing-250;
+
+  // Mobile-first: Start with mobile styles
+  background: $mg-color-interactive;
+  width: 100%;
+  border: none;
+  border-block-end: 1px solid $mg-color-white; // RTL-friendly
+
+  // Desktop: Remove mobile-specific styles
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    background: transparent;
+    border-block-end: none;
+  }
+
+  &:hover {
+    background: $mg-color-interactive-active;
+    color: $mg-color-white;
+  }
+
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 2px;
+    outline-offset: -1px;
+  }
+
+  // Rotate arrow icon when section is expanded
+  &[aria-expanded="true"] {
+    .mg-icon-angle-circled-left {
+      transform: rotate(-90deg);
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+
+  // Ensure smooth transition for icon default state
+  .mg-icon-angle-circled-left {
+    transition: transform 0.3s ease-in-out;
+  }
+}
+
+// RTL: Flip rotation direction
+[dir="rtl"]
+  .mg-mega-sidebar-section__item[aria-expanded="true"]
+  .mg-icon-angle-circled-left {
+  transform: rotate(90deg);
+}
+
+.mg-mega-sidebar {
+  position: absolute;
+  overflow: auto;
+  background-color: $mg-color-interactive-active;
+  z-index: 10;
+
+  // Mobile-first: Full-width mobile sidebar
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  top: -100%;
+  inset-inline: 0; // RTL-friendly
+  transition: top 0.4s ease-in-out;
+  box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
+
+  &.mg-sidebar-open {
+    top: 0;
+  }
+
+  // Desktop: Side panel from end (right in LTR, left in RTL)
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    width: 300px;
+    height: 100vh;
+    top: 0;
+    inset-inline-start: auto;
+    inset-inline-end: 0; // RTL-friendly: appears from right in LTR, left in RTL
+    box-shadow: -5px 0 8px -4px rgb(0 0 0 / 0.25);
+  }
+}
+
+// RTL: Flip box shadow direction on desktop
+[dir="rtl"] .mg-mega-sidebar {
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    box-shadow: 5px 0 8px -4px rgb(0 0 0 / 0.25);
+  }
+}
+
+.mg-mega-sidebar__list {
+  background: $mg-color-white;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin-bottom: 0;
+  width: 100%;
+  position: relative;
+  inset-inline-end: auto; // RTL-friendly
+}
+
+.mg-mega-sidebar__section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $mg-spacing-150 $mg-spacing-300;
+  color: $mg-color-white;
+  cursor: pointer;
+
+  &:hover {
+    background: $mg-color-interactive-active;
+  }
+}
+
+.mg-mega-topbar-mobile__icon-button {
+  // Mobile-first: Display by default
+  position: absolute;
+  inset-inline-end: 0; // RTL-friendly
+  background: rgb(0 0 0 / 0); // we let the menu items show through to advertise the contents
+  color: $mg-color-interactive;
+  font-size: mg-rem(20);
+  width: 100vw;
+  height: 100%;
+  padding: $mg-spacing-100;
+  border: none;
+  cursor: pointer;
+  align-items: start;
+  justify-content: start;
+  z-index: 14;
+  display: flex;
+
+  // Hide mobile button on desktop
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    display: none;
+  }
+
+  &:hover {
+    // background: $mg-color-interactive-active;
+    color: rgba($mg-color-interactive, 0.9);
+  }
+
+  .mg-mega-topbar {
+    position: relative;
+  }
+
+  &:has(.mg-icon-angle-circled-left) {
+    background: rgb(255 255 255 / 0.8);
+    color: $mg-color-interactive-active;
+    box-shadow: 0 0 4px rgb(0 0 0 / 0.2);
+  }
+}
+
+// Mobile sidebar (slides down/up from the top)
+.mg-mega-mobile-sidebar {
+  // Mobile-first: Show on mobile, hide on desktop
+  width: 100%;
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0; // RTL-friendly
+  z-index: 9;
+  display: block;
+  overflow: auto;
+  background-color: $mg-color-interactive;
+  max-height: 80vh;
+  height: 80vh;
+  transform: translateY(-100vh);
+  transition: transform 0.4s ease-in-out;
+  box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
+
+  &.mg-mega-mobile-sidebar--open {
+    transform: translateY(calc(mg-rem(50) - 2px)); // mystery math?
+  }
+
+  // Desktop: Hide completely
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+// Overlay backdrop (only shown when sidebar open)
+.mg-mega-mobile-sidebar-overlay {
+  // Mobile-first: Show on mobile
+  display: block;
+  position: fixed;
+  inset: 0; // Already RTL-friendly logical property
+  background: rgb(0 0 0 / 0.4);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 9; // just below sidebar which has 10
+
+  // Desktop: Hide
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+// RTL: Flip hamburger shadow direction in branded variant
+[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button {
+  box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
+}
+
+[dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button:has(.mg-icon-angle-circled-left) {
+  box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
+}
+
+// Arabic
+:lang(ar) {
+  .mg-mega-menu__item-link {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
