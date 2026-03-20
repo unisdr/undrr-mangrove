@@ -14,7 +14,7 @@ You are researching the user experience of **Mangrove**, UNDRR's React component
 - **Primary users**: Developers and content editors at UNDRR and partner organizations
 - **Consumer websites**: undrr.org, preventionweb.net, mcr2030.undrr.org, and others
 - **End users**: Government officials, disaster risk practitioners, researchers, civil society — global audience
-- **Languages**: English, Arabic (RTL), Burmese, Japanese — diverse linguistic needs
+- **Languages**: English, Arabic (RTL), Japanese — diverse linguistic needs
 - **Accessibility**: WCAG 2.1 AA required — users include people with disabilities
 - **Component library**: Components are used in Drupal via `data-mg-*` attributes and wrapper scripts
 - **Storybook**: Component demos at https://unisdr.github.io/undrr-mangrove/
