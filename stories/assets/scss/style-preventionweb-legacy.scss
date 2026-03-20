@@ -1,7 +1,7 @@
 // Legacy 10px root variant of the PreventionWeb theme.
 // Use this if your site has custom CSS that assumes 1rem = 10px.
 // See docs/MIGRATION-V2-ROOT-FONT-SIZE.md for migration guidance.
-// This variant will be deprecated in a future release.
+// Provided for backward compatibility; will be removed in a future major release.
 $mg-html-font-size: 10;
 
 @import "./style-preventionweb";

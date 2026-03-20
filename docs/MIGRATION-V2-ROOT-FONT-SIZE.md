@@ -49,19 +49,25 @@ Each theme ships a `-legacy` variant that keeps the v1 behavior (`html { font-si
 
 Legacy themes produce CSS identical to v1. No other changes are needed.
 
+The Delta Resilience theme (`style-delta.css`) has no legacy variant. It was designed for the 16px root and is unaffected by this change.
+
+Use this option if you load compiled CSS from the CDN or from `dist/css/`.
+
 **CDN example:**
 
 ```html
 <!-- Before (v1) -->
 <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css">
 
-<!-- After (v2, using legacy variant) -->
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0/css/style-legacy.css">
+<!-- After (v2, using legacy variant) — replace {version} with the version you upgrade to -->
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/{version}/css/style-legacy.css">
 ```
 
 ### Option B: set the variable in your SCSS
 
-If your project imports Mangrove SCSS source files, set `$mg-html-font-size` to `10` before importing:
+Use this if your build pipeline imports Mangrove SCSS source files and compiles them.
+
+Set `$mg-html-font-size` to `10` before importing:
 
 ```scss
 $mg-html-font-size: 10;
@@ -88,7 +94,7 @@ new_rem = old_rem * 0.625
 | 24px heading | `2.4rem` | `1.5rem` | 24px |
 | 100px width | `10rem` | `6.25rem` | 100px |
 
-Even better, replace raw rem values with Mangrove tokens where one exists:
+Where a Mangrove token exists, prefer it over raw rem values:
 
 ```scss
 // Before — raw rem tied to 10px root
@@ -116,15 +122,13 @@ If no matching token exists, use the `mg-rem()` function directly:
 
 ## Legacy theme deprecation timeline
 
-Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) ship alongside standard themes and will continue to be maintained. There is no fixed removal date. When we do deprecate them, we will give at least two minor release cycles of advance notice.
+Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) ship alongside standard themes and will continue to be maintained. There is no fixed removal date. When we do schedule removal, we will give at least two minor release cycles of advance notice.
 
-Each legacy theme's compiled CSS includes a comment header identifying it as a legacy variant:
+Note that legacy themes continue to override user font-size preferences (`html { font-size: 10px }`), which does not conform to WCAG 1.4.4 Resize Text. Migrating to standard themes (Option C) is recommended when feasible.
 
-```css
-/* Mangrove legacy theme — 10px root (deprecated, use standard theme) */
-```
+## For Mangrove contributors
 
-## For component authors
+The following section is for developers who contribute to the Mangrove library itself, not for sites consuming Mangrove CSS.
 
 Three rules for SCSS inside Mangrove:
 
