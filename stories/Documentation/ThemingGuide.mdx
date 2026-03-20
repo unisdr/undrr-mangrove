@@ -291,13 +291,12 @@ RTL layout is activated by the `dir="rtl"` attribute on the `<html>` element. In
 
 ### Locale toolbar in Storybook
 
-The locale toolbar provides four options:
+The locale toolbar provides three options:
 
 | Locale | Language code | Direction |
 |--------|---------------|-----------|
 | English | `en` | LTR |
 | Arabic | `ar` | RTL |
-| Burmese | `my` | LTR |
 | Japanese | `ja` | LTR |
 
 Arabic is the only locale that triggers RTL. The decorator in `preview.js` sets `lang` and `dir` attributes on `<html>` and `#storybook-root`, and updates `window.UNDRR.langCode` and `window.UNDRR.dir`.
