@@ -22,10 +22,17 @@ There are two layouts. **Horizontal** is a tab bar along the top, best for 2–5
 
 ### Interactions
 
+**Horizontal tabs:**
 - Hovering highlights the full tab.
 - Clicking a tab opens its panel.
-- Arrow keys (left/right) move between tabs. Down arrow moves focus into the open panel.
-- URL hashes work as deep links, e.g. `#mg-tabs__section-tab-2` opens that tab on load.
+- Arrow Left/Right moves between tabs. Down arrow moves focus into the open panel. Home/End jump to first/last tab.
+
+**Stacked tabs:**
+- Clicking a trigger toggles its panel open/closed independently.
+- Arrow Up/Down moves focus between triggers without toggling. Home/End jump to first/last trigger.
+- With `singleOpen`, opening one panel closes all others (accordion behavior).
+
+URL hashes work as deep links in both variants, e.g. `#mg-tabs__section-tab-2` opens that section on load.
 
 ## Usage
 
@@ -129,14 +136,32 @@ Change the modifier class and variant attribute:
 </article>
 ```
 
+**Stacked tabs as FAQ (all closed, single-open)**
+
+Add `data-mg-js-tabs-default-open="false"` to start all panels closed, and `data-mg-js-tabs-single-open` for accordion behavior:
+
+```html
+<article class="mg-tabs mg-tabs--stacked"
+         data-mg-js-tabs
+         data-mg-js-tabs-variant="stacked"
+         data-mg-js-tabs-default-open="false"
+         data-mg-js-tabs-single-open>
+  <ul class="mg-tabs__list">
+    <!-- same item structure as above -->
+  </ul>
+</article>
+```
+
 #### API
 
-Two exported functions:
+Exported functions:
 
 | Function | Description |
 |----------|-------------|
 | `mgTabs(scope?, activateDeepLinkOnLoad?)` | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. |
 | `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)` | Initializes tabs within a scope element. `scope` is an optional DOM element (a tab container or a parent that contains them); defaults to `document`. Use this for tabs injected after page load. |
+| `mgTabsApplyStackedDefaults(container, tabs, panels)` | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state. |
+| `setDisclosureState(trigger, panel, open)` | Sets the open/close state of a stacked disclosure panel. `open` is a boolean. |
 
 If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRuntime()` on the new container:
 
@@ -152,7 +177,9 @@ mgTabsRuntime(newContainer);
 | `data-mg-js-tabs` | `article` | Identifies a tab container |
 | `data-mg-js-tabs-variant` | `article` | `"horizontal"` or `"stacked"` |
 | `data-mg-js-tabs-content` | `li` | Wraps each tab's content section |
-| `data-mg-js-tabs-default` | `a.mg-tabs__link` | Set to `"true"` to make this tab active by default |
+| `data-mg-js-tabs-default` | `a.mg-tabs__link` | Set to `"true"` to make this tab active by default (per-item override) |
+| `data-mg-js-tabs-default-open` | `article` | `"true"` opens all stacked panels on load, `"false"` closes all. Absent = open first. Per-item `data-mg-js-tabs-default` overrides this. |
+| `data-mg-js-tabs-single-open` | `article` | Presence-based. When set, only one stacked panel can be open at a time (accordion). |
 
 ### React usage
 
@@ -176,6 +203,10 @@ const tabdata = [
 |------|------|---------|-------------|
 | `tabdata` | `Array` | — | Array of tab objects (see below) |
 | `variant` | `string` | `"horizontal"` | `"horizontal"` or `"stacked"` |
+| `defaultOpen` | `bool` | `undefined` | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides. |
+| `singleOpen` | `bool` | `false` | Stacked only. When `true`, only one panel can be open at a time. |
+| `filterable` | `bool` | `false` | Stacked only. Renders a search input that filters sections by header and content text. |
+| `filterPlaceholder` | `string` | `"Filter sections…"` | Placeholder and `aria-label` for the filter input. |
 
 Each tab object in `tabdata`:
 
@@ -193,6 +224,7 @@ Each tab object in `tabdata`:
 
 ## Changelog
 
+- **2.5** — 2026-03-20: Added `defaultOpen`, `singleOpen`, and `filterable` props for FAQ/accordion use cases; ARIA disclosure pattern (`role="button"` + `aria-expanded` + `aria-controls` + `hidden="until-found"`) for stacked tabs; keyboard navigation with Arrow Up/Down, Home/End; exported `setDisclosureState()` and `mgTabsApplyStackedDefaults()` helpers; new `data-mg-js-tabs-default-open` and `data-mg-js-tabs-single-open` data attributes
 - **2.4.1** — 2026-03-02: Rewrote usage docs with vanilla JS and React examples, CDN links, HTML markup, and API reference
 - **2.4** — 2026-02-23: Removed deprecated `Version1Tabs` story
 - **2.3** — 2025-09-15: New `mgTabsRuntime()` function; multi-tab-set support; default tab selection via `data-mg-js-tabs-default`; smooth scroll deep linking; stacked open state tracking
