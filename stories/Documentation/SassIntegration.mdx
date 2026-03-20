@@ -193,41 +193,41 @@ Used by hero, cards, and other components for color variants.
 
 ### Spacing
 
-| Variable | Value |
-|----------|-------|
-| `$mg-spacing-0` | `0` |
-| `$mg-spacing-25` | `0.25rem` |
-| `$mg-spacing-50` | `0.5rem` |
-| `$mg-spacing-75` | `0.75rem` |
-| `$mg-spacing-100` | `1rem` |
-| `$mg-spacing-150` | `1.5rem` |
-| `$mg-spacing-175` | `1.8rem` |
-| `$mg-spacing-200` | `2rem` |
-| `$mg-spacing-250` | `2.4rem` |
-| `$mg-spacing-300` | `3rem` |
-| `$mg-spacing-350` | `3.5rem` |
-| `$mg-spacing-400` | `5rem` |
-| `$mg-spacing-500` | `6rem` |
-| `$mg-spacing-600` | `8rem` |
-| `$mg-spacing-800` | `10rem` |
-| `$mg-spacing-1000` | `40rem` |
+| Variable | Pixel value | Definition |
+|----------|------------|------------|
+| `$mg-spacing-0` | 0 | `0` |
+| `$mg-spacing-25` | 2.5px | `mg-rem(2.5)` |
+| `$mg-spacing-50` | 5px | `mg-rem(5)` |
+| `$mg-spacing-75` | 7.5px | `mg-rem(7.5)` |
+| `$mg-spacing-100` | 10px | `mg-rem(10)` |
+| `$mg-spacing-150` | 15px | `mg-rem(15)` |
+| `$mg-spacing-175` | 18px | `mg-rem(18)` |
+| `$mg-spacing-200` | 20px | `mg-rem(20)` |
+| `$mg-spacing-250` | 24px | `mg-rem(24)` |
+| `$mg-spacing-300` | 30px | `mg-rem(30)` |
+| `$mg-spacing-350` | 35px | `mg-rem(35)` |
+| `$mg-spacing-400` | 50px | `mg-rem(50)` |
+| `$mg-spacing-500` | 60px | `mg-rem(60)` |
+| `$mg-spacing-600` | 80px | `mg-rem(80)` |
+| `$mg-spacing-800` | 100px | `mg-rem(100)` |
+| `$mg-spacing-1000` | 400px | `mg-rem(400)` |
 
 ### Font sizes
 
-| Variable | Value | Notes |
-|----------|-------|-------|
-| `$mg-font-size-100` | `1rem` | |
-| `$mg-font-size-150` | `1.125rem` | |
-| `$mg-font-size-200` | `1.25rem` | |
-| `$mg-font-size-250` | `1.4rem` | |
-| `$mg-font-size-300` | `1.6rem` | Regular body text |
-| `$mg-font-size-400` | `1.8rem` | |
-| `$mg-font-size-500` | `2.3rem` | |
-| `$mg-font-size-600` | `3.2rem` | |
-| `$mg-font-size-800` | `3.6rem` | |
-| `$mg-font-size-900` | `4rem` | |
-| `$mg-font-size-1000` | `4.8rem` | |
-| `$mg-font-size-1100` | `6.4rem` | |
+| Variable | Pixel value | Definition | Notes |
+|----------|------------|------------|-------|
+| `$mg-font-size-100` | 10px | `mg-rem(10)` | |
+| `$mg-font-size-150` | 11.25px | `mg-rem(11.25)` | |
+| `$mg-font-size-200` | 12.5px | `mg-rem(12.5)` | |
+| `$mg-font-size-250` | 14px | `mg-rem(14)` | |
+| `$mg-font-size-300` | 16px | `mg-rem(16)` | Regular body text |
+| `$mg-font-size-400` | 18px | `mg-rem(18)` | |
+| `$mg-font-size-500` | 23px | `mg-rem(23)` | |
+| `$mg-font-size-600` | 32px | `mg-rem(32)` | |
+| `$mg-font-size-800` | 36px | `mg-rem(36)` | |
+| `$mg-font-size-900` | 40px | `mg-rem(40)` | |
+| `$mg-font-size-1000` | 48px | `mg-rem(48)` | |
+| `$mg-font-size-1100` | 64px | `mg-rem(64)` | |
 | `$mg-font-body` | `$mg-font-size-300` | Alias for body text |
 | `$mg-font-tag` | `$mg-font-size-250` | Alias for tag text |
 | `$mg-font-line-height-500` | `1.25em` | |
@@ -434,7 +434,7 @@ $mg-radius-form-input: $mg-spacing-50;
 
 // Override hero
 $mg-color-hero: $mg-color-interactive;
-$mg-spacing-hero-overlay: 2rem 0;
+$mg-spacing-hero-overlay: mg-rem(20) 0;
 ```
 
 ### 2. Create your theme entry point
