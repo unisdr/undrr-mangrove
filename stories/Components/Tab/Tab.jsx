@@ -1,6 +1,6 @@
-import React, { useEffect, useDeferredValue, useId, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { mgTabsRuntime, mgTabsApplyStackedDefaults, setDisclosureState } from '../../assets/js/tabs';
+import { mgTabsRuntime } from '../../assets/js/tabs';
 
 /**
  * Renders a tab component with either stacked or horizontal layout.
@@ -22,83 +22,14 @@ export function Tab({
   filterPlaceholder = 'Filter sections\u2026',
 }) {
   const containerRef = useRef(null);
-  const [filterQuery, setFilterQuery] = useState('');
-  const deferredQuery = useDeferredValue(filterQuery);
-  const hasFilteredRef = useRef(false);
-  const hintId = useId();
 
-  // Derive match count from tabdata + query (no separate state needed)
-  const matchCount = useMemo(() => {
-    if (!filterable || variant !== 'stacked') return -1;
-    const q = deferredQuery.toLowerCase().trim();
-    if (!q) return -1;
-    return tabdata.filter(t =>
-      t.text.toLowerCase().includes(q) ||
-      (t.data || '').replace(/<[^>]*>/g, '').toLowerCase().includes(q)
-    ).length;
-  }, [deferredQuery, tabdata, filterable, variant]);
-
-  // Initialize this container's tabs runtime (scoped, not global)
+  // Initialize this container's tabs runtime (scoped, not global).
+  // The runtime handles all behavior: ARIA, keyboard, filtering, defaults.
   useEffect(() => {
     if (containerRef.current) {
       mgTabsRuntime(containerRef.current, true);
     }
   }, []);
-
-  // Filter effect — runs when deferred query changes (skips initial mount)
-  useEffect(() => {
-    if (!filterable || variant !== 'stacked' || !containerRef.current) return;
-    const container = containerRef.current;
-    const query = deferredQuery.toLowerCase().trim();
-
-    if (!query) {
-      // On initial mount (no filter applied yet), skip — mgTabsRuntime handles defaults
-      if (!hasFilteredRef.current) return;
-
-      // Restore: show all items, reset to default state
-      const items = container.querySelectorAll('.mg-tabs__item');
-      const tabs = container.querySelectorAll('.mg-tabs__link');
-      const panels = container.querySelectorAll('[id^="mg-tabs__section"]:not(a)');
-      items.forEach(item => {
-        item.classList.remove('mg-tabs__item--hidden');
-        const contentLi = item.nextElementSibling;
-        if (contentLi?.classList.contains('mg-tabs-content')) {
-          contentLi.classList.remove('mg-tabs-content--hidden');
-        }
-      });
-      mgTabsApplyStackedDefaults(container, tabs, panels);
-      return;
-    }
-
-    hasFilteredRef.current = true;
-    const items = container.querySelectorAll('.mg-tabs__item');
-
-    items.forEach(item => {
-      const trigger = item.querySelector('.mg-tabs__link');
-      const contentLi = item.nextElementSibling;
-      const panel = contentLi?.querySelector('.mg-tabs__section');
-
-      const triggerText = trigger?.textContent?.toLowerCase() || '';
-      const panelText = panel?.textContent?.toLowerCase() || '';
-      const isMatch = triggerText.includes(query) || panelText.includes(query);
-
-      item.classList.toggle('mg-tabs__item--hidden', !isMatch);
-      if (contentLi?.classList.contains('mg-tabs-content')) {
-        contentLi.classList.toggle('mg-tabs-content--hidden', !isMatch);
-      }
-
-      // Auto-expand matching, collapse non-matching
-      if (panel && trigger) {
-        setDisclosureState(trigger, panel, isMatch);
-      }
-    });
-
-    // If the focused element was hidden by filtering, move focus to the filter input
-    const active = document.activeElement;
-    if (active && active.closest && active.closest('.mg-tabs__item--hidden')) {
-      container.querySelector('.mg-tabs__filter-input')?.focus();
-    }
-  }, [deferredQuery, filterable, variant]);
 
   return tabdata ? (
     <article
@@ -108,23 +39,11 @@ export function Tab({
       data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}
       {...(defaultOpen != null ? { 'data-mg-js-tabs-default-open': String(defaultOpen) } : {})}
       {...(singleOpen ? { 'data-mg-js-tabs-single-open': '' } : {})}
+      {...(filterable && variant === 'stacked' ? { 'data-mg-js-tabs-filterable': '' } : {})}
+      {...(filterable && variant === 'stacked' && filterPlaceholder
+        ? { 'data-mg-js-tabs-filter-placeholder': filterPlaceholder }
+        : {})}
     >
-      {filterable && variant === 'stacked' && (
-        <div className="mg-tabs__filter">
-          <input
-            type="search"
-            className="mg-form-input mg-tabs__filter-input"
-            placeholder={filterPlaceholder}
-            aria-label={filterPlaceholder.replace(/\u2026$/, '').trim()}
-            value={filterQuery}
-            onChange={e => setFilterQuery(e.target.value)}
-            aria-describedby={hintId}
-          />
-          <span id={hintId} className="mg-u-sr-only">
-            Results will filter as you type
-          </span>
-        </div>
-      )}
       <ul className="mg-tabs__list">
         {tabdata.map((tab, index) => (
           <React.Fragment key={`tab-group-${index}`}>
@@ -150,16 +69,6 @@ export function Tab({
           </React.Fragment>
         ))}
       </ul>
-      {filterable && variant === 'stacked' && matchCount >= 0 && (
-        <p
-          className={matchCount === 0 ? 'mg-tabs__no-results' : 'mg-u-sr-only'}
-          role="status"
-        >
-          {matchCount === 0
-            ? 'No matching sections found.'
-            : `${matchCount} of ${tabdata.length} sections match.`}
-        </p>
-      )}
     </article>
   ) : (
     <div
