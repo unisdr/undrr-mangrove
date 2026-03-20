@@ -10,17 +10,17 @@ Mangrove now respects the browser's own font-size setting instead of overriding 
 
 Previously, Mangrove set `html { font-size: 10px }`, which overrode whatever the user or browser had configured. Now, Mangrove does not set a root font-size at all. The compiled CSS simply has no `font-size` rule on `html`. The browser decides.
 
-This matters because:
+Why this matters:
 
-- A user who has configured their browser to 20px gets 20px. Mangrove no longer overrides that choice.
+- Users who set their browser to 20px actually get 20px now.
 - Third-party CSS that expects the browser default (16px) no longer conflicts with Mangrove styles.
-- This fixes a WCAG 2.2 conformance gap. The old 10px override prevented users from adjusting text size through their browser's font-size preferences (Success Criterion 1.4.4, Resize Text).
+- The old 10px override prevented users from adjusting text size through their browser preferences, which is a WCAG 2.2 conformance issue (Success Criterion 1.4.4, Resize Text). That's fixed.
 
 All Mangrove components still render at the same pixel sizes. The `mg-rem()` function recalculates every token at compile time, so `mg-rem(16)` outputs `1rem` instead of the old `1.6rem` — both resolve to 16px on screen.
 
 ### What the `$mg-html-font-size: 16` variable means
 
-The variable is **not** "setting the font-size to 16px." It tells `mg-rem()` what the browser default typically is, so it can calculate correct rem values. If a user has configured their browser to 24px, that is what they get — the variable is a math input, not an override.
+This variable does not set the font-size to 16px. It tells `mg-rem()` what the browser default typically is so the rem math comes out right. A user who has set their browser to 24px gets 24px. The variable is a math input, not a CSS override.
 
 ### Before and after
 
@@ -132,7 +132,7 @@ Note that legacy themes continue to override user font-size preferences (`html {
 
 ## DELTA Resilience theme
 
-A new theme (`style-delta.scss`) supports the DELTA Resilience initiative. It includes a dedicated landing page template, theme-specific color tokens, and component adjustments for the DELTA visual identity. The DELTA theme was built for the browser-default root font-size from the start and has no legacy variant.
+DELTA Resilience gets its own theme (`style-delta.scss`) with a dedicated landing page template, theme-specific color tokens, and adjusted component styles. It was built for the browser-default root from the start, so there is no legacy variant.
 
 ## AI integration
 
@@ -144,7 +144,7 @@ The search widget adds native filter controls for content type, country, and dat
 
 ## Documentation
 
-A comprehensive documentation audit improved Storybook organization, added semantic CSS rationale, and updated the project's About page. Cross-referencing between developer guides was improved and the sidebar ordering was cleaned up.
+Storybook organization was cleaned up, semantic CSS rationale was added, and the About page was rewritten. Developer guides now cross-reference each other better and the sidebar ordering makes more sense.
 
 ## Bug fixes
 
@@ -155,10 +155,10 @@ A comprehensive documentation audit improved Storybook organization, added seman
 
 1. Update your dependency: `yarn add @undrr/undrr-mangrove@^1.4.0` (or update `package.json` and run `yarn install`)
 2. If you load Mangrove CSS from the CDN, update the version number in your `<link>` tags
-3. Review the [root font-size: browser alignment](#root-font-size-browser-alignment) section above to determine whether your site needs a migration path (Options A, B, or C)
+3. Check the [root font-size: browser alignment](#root-font-size-browser-alignment) section above — you may need Option A, B, or C depending on your custom CSS
 4. If you use the SCSS source, run a build and check for the legacy theme deprecation warning
 
-No API changes were made to React components. Props, exports, and `data-mg-*` attributes are unchanged.
+React component APIs are unchanged — same props, same exports, same `data-mg-*` attributes.
 
 ## For Mangrove contributors
 
