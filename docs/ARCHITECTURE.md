@@ -242,7 +242,7 @@ The design token variables in `_variables.scss` use `!default` flags so theme st
 
 ### Root font-size and the mg-rem() function
 
-The default root is 16px (browser standard). Legacy sites that relied on the old 10px root can use the `-legacy` theme variants or set `$mg-html-font-size: 10` in their SCSS. See [MIGRATION-V2-ROOT-FONT-SIZE.md](MIGRATION-V2-ROOT-FONT-SIZE.md) for the full migration guide.
+The default root is 16px (browser standard). Legacy sites that relied on the old 10px root can use the `-legacy` theme variants or set `$mg-html-font-size: 10` in their SCSS. See [RELEASE-1.4.md](RELEASE-1.4.md) for the full migration guide.
 
 All spacing, font-size, and width tokens go through `mg-rem($px)`, which converts a pixel value to rem for whatever root is configured:
 
