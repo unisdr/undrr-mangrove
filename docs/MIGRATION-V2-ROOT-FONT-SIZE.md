@@ -122,7 +122,7 @@ If no matching token exists, use the `mg-rem()` function directly:
 
 ## Legacy theme deprecation timeline
 
-Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) ship alongside standard themes and will continue to be maintained. There is no fixed removal date. When we do schedule removal, we will give at least two minor release cycles of advance notice.
+Legacy themes (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.) ship alongside standard themes and will be maintained through the end of 2026. They will be removed in the first major release after that. Compiling a legacy theme emits a warning with a link to this guide.
 
 Note that legacy themes continue to override user font-size preferences (`html { font-size: 10px }`), which does not conform to WCAG 1.4.4 Resize Text. Migrating to standard themes (Option C) is recommended when feasible.
 
