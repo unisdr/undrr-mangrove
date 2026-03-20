@@ -58,7 +58,7 @@ export function Tab({
       // Restore: show all items, reset to default state
       const items = container.querySelectorAll('.mg-tabs__item');
       const tabs = container.querySelectorAll('.mg-tabs__link');
-      const panels = container.querySelectorAll('[id^="mg-tabs__section"]');
+      const panels = container.querySelectorAll('[id^="mg-tabs__section"]:not(a)');
       items.forEach(item => {
         item.classList.remove('mg-tabs__item--hidden');
         const contentLi = item.nextElementSibling;

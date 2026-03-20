@@ -64,7 +64,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       scope.querySelectorAll('[data-mg-js-tabs]') || newTab.closest('.mg-tabs'); // compatibility with v1 tabs
   }
   const tabs = scope.querySelectorAll('.mg-tabs__link');
-  var panels = scope.querySelectorAll('[id^="mg-tabs__section"]');
+  var panels = scope.querySelectorAll('[id^="mg-tabs__section"]:not(a)');
   // v1 compatibility
   // If panels is empty, try finding them in data-mg-js-tabs-content
   if (!panels.length) {
@@ -72,7 +72,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       .closest('.mg-tabs')
       .querySelector('[data-mg-js-tabs-content]');
     if (tabContent) {
-      panels = tabContent.querySelectorAll('[id^="mg-tabs__section"]');
+      panels = tabContent.querySelectorAll('[id^="mg-tabs__section"]:not(a)');
     }
   }
 
