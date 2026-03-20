@@ -27,7 +27,7 @@ You are building components in **Mangrove**, UNDRR's Storybook-powered React com
   ├── ComponentName.jsx
   ├── ComponentName.stories.jsx   # CSF3 format
   ├── ComponentName.mdx           # Optional docs
-  ├── componentname.scss          # BEM with mg- prefix
+  ├── component-name.scss         # BEM with mg- prefix
   └── __tests__/ComponentName.test.jsx
   ```
 - **Gold standard**: `stories/Components/Pager/` — JSDoc, PropTypes, default params, tests, MDX, CSF3
