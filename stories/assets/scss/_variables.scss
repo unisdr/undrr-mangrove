@@ -184,7 +184,7 @@ $mg-spacing-175: mg-rem(18);
 $mg-spacing-200: mg-rem(20);
 $mg-spacing-250: mg-rem(24);
 $mg-spacing-300: mg-rem(30);
-$mg-spacing-350: mg-rem(30);
+$mg-spacing-350: mg-rem(35);
 $mg-spacing-400: mg-rem(50);
 $mg-spacing-500: mg-rem(60);
 $mg-spacing-600: mg-rem(80);
@@ -236,12 +236,12 @@ $mg-font-line-height-700: 1.5em;
     padding-bottom: $mg-spacing-175;
   } @else if $size == "huge" {
     font-size: $mg-font-size-1000;
-    padding-top: $mg-spacing-350;
+    padding-top: $mg-spacing-300;
     padding-bottom: $mg-spacing-250;
   } @else if $size == "xhuge" {
     font-size: $mg-font-size-1100;
     padding-top: $mg-spacing-400;
-    padding-bottom: $mg-spacing-350;
+    padding-bottom: $mg-spacing-300;
   }
 }
 

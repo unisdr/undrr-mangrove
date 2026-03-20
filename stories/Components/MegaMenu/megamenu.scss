@@ -523,7 +523,7 @@
     ol li {
       list-style: none;
       padding-block: $mg-spacing-50;
-      padding-inline-start: $mg-spacing-350; // RTL-friendly
+      padding-inline-start: $mg-spacing-300; // RTL-friendly
       margin: 0;
 
       a {
@@ -641,7 +641,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $mg-spacing-150 $mg-spacing-350;
+  padding: $mg-spacing-150 $mg-spacing-300;
   color: $mg-color-white;
   cursor: pointer;
 
