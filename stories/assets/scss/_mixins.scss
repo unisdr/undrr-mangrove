@@ -130,6 +130,9 @@
 // %checbox-radio-before — REMOVED (February 2026)
 // Migrated to .mg-form-check__input in _form-base.scss.
 
+// %ctaimg, %chevron-right-expanded, %pseudo-icon — REMOVED (March 2026, #854)
+// CtaLink component was removed entirely.
+
 %arrow {
   @include transform(translateY(-50%));
   @include transition(all 200ms ease-in-out);
