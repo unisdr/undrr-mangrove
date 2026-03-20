@@ -20,6 +20,10 @@ $mg-html-font-size: 16 !default;
 // Converts an intended pixel value to rem for the configured root.
 // Example: mg-rem(16) → 1.6rem (root=10) or 1rem (root=16)
 @function mg-rem($px) {
+  @if $mg-html-font-size == 0 {
+    @error "$mg-html-font-size must not be 0 (division by zero). Use 16 (default) or 10 (legacy).";
+  }
+
   @return math.div($px, $mg-html-font-size) * 1rem;
 }
 

@@ -54,7 +54,7 @@ export default {
     // SCSS support with lazy loading for theme files (enables hot reload + theme switching)
     // Theme files use lazyStyleTag so we can toggle them on/off
     config.module.rules.push({
-      test: /style(-\w+)?\.scss$/,
+      test: /style(-[\w-]+)?\.scss$/,
       exclude: /node_modules/,
       use: [
         { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
@@ -67,7 +67,7 @@ export default {
     // Regular SCSS files (component styles, partials, etc.)
     config.module.rules.push({
       test: /\.scss$/,
-      exclude: [/node_modules/, /stories\/assets\/scss\/style(-\w+)?\.scss$/],
+      exclude: [/node_modules/, /stories\/assets\/scss\/style(-[\w-]+)?\.scss$/],
       use: ['style-loader', 'css-loader', 'sass-loader'],
       include: path.resolve(currentDirPath, '../'),
     });
