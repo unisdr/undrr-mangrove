@@ -157,7 +157,6 @@
   line-height: 1.421;
   margin: 0;
   display: block;
-  outline: 0;
   padding: $mg-padding-tab;
   position: relative;
   text-decoration: none;
@@ -170,6 +169,11 @@
   color: $mg-color-text-tab--hover;
   z-index: 1150;
   text-decoration: none;
+}
+
+.mg-tabs__link:focus-visible {
+  outline: 2px solid $mg-color-tab-border--hover;
+  outline-offset: -2px;
 }
 
 .mg-tabs__link.is-active {
@@ -211,6 +215,18 @@
         margin-right: 0;
         padding-right: 0;
       }
+    }
+  }
+
+  // Flip stacked chevron for RTL
+  .mg-tabs--stacked .mg-tabs__link,
+  .mg-tabs--horizontal .mg-tabs__link {
+    padding-right: $mg-padding-tab;
+    padding-left: mg-rem(40);
+
+    &:before {
+      right: auto;
+      left: $mg-spacing-150;
     }
   }
 }

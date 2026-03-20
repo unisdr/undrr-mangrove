@@ -108,28 +108,31 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   const container = tabsListArray[0];
   const stacked = isStacked(container);
 
-  // Add semantics and remove user focusability for each tab
+  // Add semantics and focusability for each tab
   Array.prototype.forEach.call(tabs, (tab, i) => {
-    const tabId = tab.href.split('#')[1];
-    tab.setAttribute('id', tabId);
-    tab.setAttribute('data-tabs__item', tabId);
-    tab.setAttribute('tabindex', '-1');
+    const panelId = tab.href.split('#')[1];
+    tab.setAttribute('data-tabs__item', panelId);
 
     if (stacked) {
       // Disclosure pattern: each trigger is a button that toggles its panel
+      // Give trigger a distinct ID so it doesn't collide with the panel's ID
+      tab.setAttribute('id', panelId + '--trigger');
       tab.setAttribute('role', 'button');
       tab.setAttribute('aria-expanded', 'false');
-      tab.setAttribute('aria-controls', tabId);
+      tab.setAttribute('aria-controls', panelId);
       tab.parentNode.removeAttribute('role');
+      // Stacked triggers must be in the Tab order (disclosure buttons)
+      tab.removeAttribute('tabindex');
     } else {
-      // Horizontal tabs: standard tablist pattern
+      // Horizontal tabs: standard tablist pattern (roving tabindex)
+      tab.setAttribute('id', panelId);
       tab.setAttribute('role', 'tab');
       tab.parentNode.setAttribute('role', 'presentation');
+      tab.setAttribute('tabindex', '-1');
     }
 
     // Reset any active tabs from a previous JS call
     tab.removeAttribute('aria-selected');
-    tab.setAttribute('tabindex', '-1');
     tab.classList.remove('is-active');
 
     // Handle clicking of tabs for mouse users
@@ -147,14 +150,20 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
         e.currentTarget.closest('.mg-tabs');
       const currentlyStacked = isStacked(parentContainer);
 
-      // Stacked: Up/Down to navigate triggers, Home/End for first/last
+      // Stacked: Space/Enter to toggle, Up/Down to navigate, Home/End for first/last
       // Horizontal: Left/Right to navigate tabs, Down to focus panel
+      if (currentlyStacked && (e.key === ' ' || e.key === 'Enter')) {
+        e.preventDefault();
+        mgTabsSwitch(e.currentTarget, panels);
+        return;
+      }
+
       let dir = null;
       if (currentlyStacked) {
         if (e.key === 'ArrowUp') {
-          dir = index - 1;
+          dir = index - 1 < 0 ? tabs.length - 1 : index - 1;
         } else if (e.key === 'ArrowDown') {
-          dir = index + 1;
+          dir = index + 1 >= tabs.length ? 0 : index + 1;
         } else if (e.key === 'Home') {
           dir = 0;
         } else if (e.key === 'End') {
@@ -162,9 +171,9 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
         }
       } else {
         if (e.key === 'ArrowLeft') {
-          dir = index - 1;
+          dir = index - 1 < 0 ? tabs.length - 1 : index - 1;
         } else if (e.key === 'ArrowRight') {
-          dir = index + 1;
+          dir = index + 1 >= tabs.length ? 0 : index + 1;
         } else if (e.key === 'ArrowDown') {
           dir = 'down';
         } else if (e.key === 'Home') {
@@ -274,6 +283,7 @@ const mgTabsSwitch = (newTab, panels) => {
   let parentTabContainer =
     newTab.closest('[data-mg-js-tabs]') || newTab.closest('.mg-tabs'); // compatibility with v1 tabs
   const stacked = isStacked(parentTabContainer);
+  const targetPanelId = newTab.getAttribute('data-tabs__item');
   let oldTab = parentTabContainer.querySelector('[aria-selected]');
 
   // if stacked, toggle the clicked panel independently
@@ -282,7 +292,7 @@ const mgTabsSwitch = (newTab, panels) => {
 
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
-      if (panel.id === newTab.id) {
+      if (panel.id === targetPanelId) {
         const wasHidden = panel.hidden || panel.getAttribute('hidden') === 'until-found';
 
         // In single-open mode, close all other panels before opening
@@ -316,10 +326,10 @@ const mgTabsSwitch = (newTab, panels) => {
     oldTab.setAttribute('tabindex', '-1');
     oldTab.classList.remove('is-active');
 
-    // normal horizontal tabs
+    const oldPanelId = oldTab.getAttribute('data-tabs__item');
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
-      if (panel.id === oldTab.id) {
+      if (panel.id === oldPanelId) {
         panel.hidden = true;
         break;
       }
@@ -336,7 +346,7 @@ const mgTabsSwitch = (newTab, panels) => {
 
   for (let item = 0; item < panels.length; item++) {
     const panel = panels[item];
-    if (panel.id === newTab.id) {
+    if (panel.id === targetPanelId) {
       panel.hidden = false;
       break;
     }

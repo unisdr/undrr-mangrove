@@ -192,6 +192,24 @@ describe('Tab', () => {
         expect(panel.getAttribute('hidden')).toBe('until-found');
       });
     });
+
+    it('gives triggers distinct IDs from panels', () => {
+      const { tabContainer } = renderAndInit('stacked');
+      const tabs = tabContainer.querySelectorAll('.mg-tabs__link');
+      const panels = tabContainer.querySelectorAll('section.mg-tabs__section');
+      tabs.forEach((tab, i) => {
+        expect(tab.id).not.toBe(panels[i].id);
+        expect(tab.id).toContain('--trigger');
+      });
+    });
+
+    it('stacked triggers are in the tab order (no tabindex=-1)', () => {
+      const { tabContainer } = renderAndInit('stacked');
+      const tabs = tabContainer.querySelectorAll('.mg-tabs__link');
+      tabs.forEach(tab => {
+        expect(tab.getAttribute('tabindex')).not.toBe('-1');
+      });
+    });
   });
 
   // -------------------------------------------------------
@@ -281,6 +299,33 @@ describe('Tab', () => {
       tabs[1].focus();
       fireEvent.keyDown(tabs[1], { key: 'End' });
       expect(document.activeElement).toBe(tabs[2]);
+    });
+
+    it('Space key toggles stacked panel', () => {
+      const { tabContainer } = renderAndInit('stacked');
+      const tab = tabContainer.querySelectorAll('.mg-tabs__link')[0];
+      const panel = getPanel(tabContainer, 'tab-1');
+
+      tab.focus();
+      fireEvent.keyDown(tab, { key: ' ' });
+
+      expect(panel.hasAttribute('hidden')).toBe(false);
+      expect(tab.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('arrow keys wrap around in stacked mode', () => {
+      const { tabContainer } = renderAndInit('stacked');
+      const tabs = tabContainer.querySelectorAll('.mg-tabs__link');
+
+      // ArrowUp on first trigger wraps to last
+      tabs[0].focus();
+      fireEvent.keyDown(tabs[0], { key: 'ArrowUp' });
+      expect(document.activeElement).toBe(tabs[2]);
+
+      // ArrowDown on last trigger wraps to first
+      tabs[2].focus();
+      fireEvent.keyDown(tabs[2], { key: 'ArrowDown' });
+      expect(document.activeElement).toBe(tabs[0]);
     });
   });
 

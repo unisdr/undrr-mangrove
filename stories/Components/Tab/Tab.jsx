@@ -92,6 +92,12 @@ export function Tab({
         setDisclosureState(trigger, panel, isMatch);
       }
     });
+
+    // If the focused element was hidden by filtering, move focus to the filter input
+    const active = document.activeElement;
+    if (active && active.closest && active.closest('.mg-tabs__item--hidden')) {
+      container.querySelector('.mg-tabs__filter-input')?.focus();
+    }
   }, [deferredQuery, filterable, variant]);
 
   return tabdata ? (
@@ -109,7 +115,7 @@ export function Tab({
             type="search"
             className="mg-form-input mg-tabs__filter-input"
             placeholder={filterPlaceholder}
-            aria-label={filterPlaceholder}
+            aria-label={filterPlaceholder.replace(/\u2026$/, '').trim()}
             value={filterQuery}
             onChange={e => setFilterQuery(e.target.value)}
             aria-describedby={hintId}
@@ -144,9 +150,14 @@ export function Tab({
           </React.Fragment>
         ))}
       </ul>
-      {filterable && matchCount === 0 && (
-        <p className="mg-tabs__no-results" role="status">
-          No matching sections found.
+      {filterable && variant === 'stacked' && matchCount >= 0 && (
+        <p
+          className={matchCount === 0 ? 'mg-tabs__no-results' : 'mg-u-sr-only'}
+          role="status"
+        >
+          {matchCount === 0
+            ? 'No matching sections found.'
+            : `${matchCount} of ${tabdata.length} sections match.`}
         </p>
       )}
     </article>
