@@ -123,7 +123,6 @@ const LOGOS = {
 
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
-  CtaLink: 'components-buttons-cta-link',
   VerticalCard: 'components-cards-vertical-card',
   HorizontalCard: 'components-cards-horizontal-card',
   BookCard: 'components-cards-book-card',
@@ -165,7 +164,6 @@ function buildSampleProps(React) {
   return {
     Chips: { label: 'Flood' },
     CtaButton: { label: 'Take action' },
-    CtaLink: { label: 'Explore our resources' },
     TextInput: { label: 'Organization name', required: true, placeholder: 'Enter organization name', helpText: 'Full legal name of your organization.' },
     Select: { label: 'Country', options: [{ value: 'JP', label: 'Japan' }, { value: 'NP', label: 'Nepal' }, { value: 'PH', label: 'Philippines' }], placeholder: 'Select a country' },
     Checkbox: { label: 'I agree to the terms and conditions', name: 'terms' },

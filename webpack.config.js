@@ -104,7 +104,6 @@ export default [
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.jsx',
-      CtaLink: './stories/Components/Buttons/CtaLink/CtaLink.jsx',
       TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
       Select: './stories/Components/Forms/Select/Select.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
