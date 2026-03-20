@@ -432,7 +432,17 @@ Components use these approaches for managing state:
    - Each component may have its own SCSS file
    - Import shared variables and mixins from the global styles
 
-2. **Follow the BEM (Block, Element, Modifier) methodology**
+2. **SCSS file naming: kebab-case**
+
+   Name SCSS files in kebab-case derived from the component directory name: `MegaMenu/` → `mega-menu.scss`, `TableOfContents/` → `table-of-contents.scss`.
+
+   - **Matches the CSS ecosystem.** CSS properties are kebab-case (`background-color`), BEM classes are kebab-case (`mg-mega-menu__item`), and Sass partials are conventionally kebab-case (`_variables.scss`). SCSS files that follow the same convention as the language they contain are more predictable.
+   - **Cross-platform safety.** macOS is case-insensitive by default, Linux is case-sensitive. A file named `FullWidth.scss` could silently resolve on macOS but fail in CI on Linux. Kebab-case avoids this entirely.
+   - **PascalCase is for components, not styles.** JSX files use PascalCase (`MegaMenu.jsx`) because that's a React convention. SCSS files are stylesheets, not components — different artifact type, different convention.
+
+   After creating your SCSS file, import it in `stories/assets/scss/_components.scss`.
+
+3. **Follow the BEM (Block, Element, Modifier) methodology**
 
    - **Block**: The main component (e.g., `.mg-card`)
    - **Element**: A part of the block (e.g., `.mg-card__title`, `.mg-card__content`)
@@ -463,7 +473,7 @@ Components use these approaches for managing state:
    - Keep selectors as flat as possible for better performance
    - Don't use element tags in selectors (e.g., use `.mg-card__title` not `h2.mg-card__title`)
 
-3. **Follow the existing design tokens**
+4. **Follow the existing design tokens**
 
    - Use variables for colors, spacing, typography, etc.
    - Retrieve design tokens from `stories/assets/scss/variables`
@@ -477,7 +487,7 @@ Components use these approaches for managing state:
      }
      ```
 
-4. **Responsive design**
+5. **Responsive design**
 
    - All components must be responsive
    - Use the breakpoint mixins provided in the project
@@ -500,7 +510,7 @@ Components use these approaches for managing state:
 
      Available breakpoints: `small` (≤ 47.9375em), `medium` (≥ 48em), `large` (≥ 64em), `xlarge` (≥ 90em), `mediumonlytab` (≤ 89.9375em). See `stories/assets/scss/_breakpoints.scss` for definitions.
 
-5. **Accessibility**
+6. **Accessibility**
    - Ensure sufficient color contrast (WCAG AA minimum)
    - Support keyboard navigation and screen readers
    - Test with accessibility tools
