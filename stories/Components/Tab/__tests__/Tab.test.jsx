@@ -528,6 +528,21 @@ describe('Tab', () => {
       expect(noResults.classList.contains('mg-tabs__no-results--hidden')).toBe(true);
     });
 
+    it('matches all words independently (AND logic, not exact phrase)', () => {
+      const { tabContainer } = renderAndInit('stacked', false, { filterable: true });
+
+      // "section 1" should match "Section 1" (words appear in header)
+      typeFilter(tabContainer, 'section 1');
+      const items = tabContainer.querySelectorAll('.mg-tabs__item');
+      expect(items[0].classList.contains('mg-tabs__item--hidden')).toBe(false);
+      expect(items[1].classList.contains('mg-tabs__item--hidden')).toBe(true);
+
+      // "1 section" should also match (word order doesn't matter)
+      typeFilter(tabContainer, '1 section');
+      expect(items[0].classList.contains('mg-tabs__item--hidden')).toBe(false);
+      expect(items[1].classList.contains('mg-tabs__item--hidden')).toBe(true);
+    });
+
     it('arrow keys skip hidden triggers during filtering', () => {
       const { tabContainer } = renderAndInit('stacked', false, { filterable: true });
 

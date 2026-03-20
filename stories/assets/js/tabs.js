@@ -52,6 +52,21 @@ function findVisibleTab(tabs, fromIndex, step) {
 }
 
 /**
+ * Normalize text for filter matching: collapse smart quotes, dashes,
+ * and other typographic punctuation to their plain ASCII equivalents.
+ * @param {string} text
+ * @returns {string}
+ */
+function normalizeText(text) {
+  return text
+    .replace(/[\u2018\u2019\u201A\u2032]/g, "'")   // smart single quotes, prime
+    .replace(/[\u201C\u201D\u201E\u2033]/g, '"')    // smart double quotes, double prime
+    .replace(/[\u2013\u2014\u2015]/g, '-')           // en dash, em dash, horizontal bar
+    .replace(/\u2026/g, '...')                       // ellipsis
+    .replace(/[\u00A0]/g, ' ');                      // non-breaking space
+}
+
+/**
  * Initialize tabs on a page
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
@@ -491,6 +506,8 @@ function mgTabsInitFilter(container, tabs, panels) {
 
     hasFiltered = true;
     const items = container.querySelectorAll('.mg-tabs__item');
+    const words = normalizeText(query).split(/\s+/).filter(Boolean);
+    if (words.length === 0) return;
     let matches = 0;
 
     items.forEach(item => {
@@ -500,7 +517,8 @@ function mgTabsInitFilter(container, tabs, panels) {
 
       const triggerText = trigger?.textContent?.toLowerCase() || '';
       const panelText = panel?.textContent?.toLowerCase() || '';
-      const isMatch = triggerText.includes(query) || panelText.includes(query);
+      const combinedText = normalizeText(triggerText + ' ' + panelText);
+      const isMatch = words.every(word => combinedText.includes(word));
 
       item.classList.toggle('mg-tabs__item--hidden', !isMatch);
       if (contentLi?.classList.contains('mg-tabs-content')) {
