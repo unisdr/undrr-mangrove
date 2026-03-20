@@ -16,18 +16,6 @@ const getCaptionForLocale = locale => {
         ],
         errorText: 'يجب عليك قبول الشروط والأحكام',
       };
-    case 'burmese':
-      return {
-        label: 'စည်းကမ်းချက်များကိုလက်ခံပါသည်',
-        value: 'terms',
-        legend: 'သင်၏စိတ်ဝင်စားမှုများကိုရွေးချယ်ပါ',
-        items: [
-          { label: 'ဘေးအန္တရာယ်လျှော့ချရေး', value: 'drr' },
-          { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
-          { label: 'ခံနိုင်ရည်', value: 'resilience' },
-        ],
-        errorText: 'စည်းကမ်းချက်များကိုလက်ခံရပါမည်',
-      };
     case 'japanese':
       return {
         label: '利用規約に同意する',

@@ -18,6 +18,7 @@ These shipped on `main` since the 1.3.3 tag. Each is a self-contained improvemen
 - **Documentation** — Storybook reorganization, semantic CSS rationale, sidebar cleanup ([#833](https://github.com/unisdr/undrr-mangrove/pull/833), [#848](https://github.com/unisdr/undrr-mangrove/pull/848))
 - **Footer** — mobile responsive layout fix for narrow viewports ([#838](https://github.com/unisdr/undrr-mangrove/pull/838))
 - **`$mg-spacing-350` fix** — was identical to `$mg-spacing-300` (both 30px), now correctly 35px. All internal usages updated, no visual change. If your SCSS references this token directly, you will get 35px instead of 30px.
+- **CtaLink removed** — the inline call-to-action link component (`.cta__link`) was removed. It was never integrated into Drupal or exported via npm. The CSS classes `cta__link`, `cta--arrow`, and `cta--space` are no longer emitted in compiled theme CSS. The CtaButton component (`.mg-button`) is unaffected.
 
 ## Root font-size: browser alignment
 

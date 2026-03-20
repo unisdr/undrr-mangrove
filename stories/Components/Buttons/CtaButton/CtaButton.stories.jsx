@@ -8,9 +8,6 @@ const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = { detail: 'اقرأ أكثر' };
       return arabicText;
-    case 'burmese':
-      const burmeseText = { detail: 'ပိုပြီးဖတ်ပါ' };
-      return burmeseText;
     case 'japanese':
       const japaneseText = { detail: '続きを読む' };
       return japaneseText;

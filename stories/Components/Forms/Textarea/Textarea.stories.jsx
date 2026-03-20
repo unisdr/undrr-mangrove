@@ -9,13 +9,6 @@ const getCaptionForLocale = locale => {
         helpText: '500 حرف كحد أقصى',
         errorText: 'هذا الحقل مطلوب',
       };
-    case 'burmese':
-      return {
-        label: 'အကျဉ်းချုပ်ဖော်ပြချက်',
-        placeholder: 'စာသားရိုက်ထည့်ပါ',
-        helpText: 'အများဆုံးစာလုံး ၅၀၀',
-        errorText: 'ဤအကွက်လိုအပ်သည်',
-      };
     case 'japanese':
       return {
         label: '簡単な説明',

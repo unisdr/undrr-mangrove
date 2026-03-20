@@ -35,16 +35,6 @@ const getCaptionForLocaleHeading = locale => {
         detail6: 'العنوان 6',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail1: 'ခခေါင်းစီး ၁',
-        detail2: 'ခေါင်းစဉ် ၂',
-        detail3: 'ခေါင်းစဉ် ၃',
-        detail4: 'ခေါင်းစဉ် ၄',
-        detail5: 'ခေါင်းစဉ် ၅',
-        detail6: 'ခေါင်းစီး ၆',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail1: '見出し1',
@@ -85,14 +75,6 @@ const getCaptionForLocaleAbbr = locale => {
         text2: 'لأسلوبك',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail1: 'hyperText အမှတ်အသားဘာသာစကား',
-        detail2: 'Cascading ပုံစံစာရွက်များ',
-        text1: 'သင်သုံးနိုင်သည်',
-        text2: 'မင်းရဲ့စတိုင်လ်ကို',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail1: 'ハイパーテキストマークアップ言語',
@@ -127,13 +109,6 @@ const getCaptionForLocaleBlockquote = locale => {
         citeText: 'الاسم الاول الاسم الاخير-',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail:
-          '“Blockquote သည်အင်တာနက်ကိုယ်တိုင်၏နာကျင်မှုဖြစ်သည်။ ကူးတို့ဆိပ်ရဲ့ ဒဏ်ပေးအုံး ဘယ်သူလဲ။”',
-        citeText: '-နာမည် မျိုးနွယ်အမည်',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail:
@@ -158,9 +133,6 @@ const getCaptionForLocaleCite = locale => {
     case 'arabic':
       const arabicText = { detail: 'الاسم الاول الاسم الاخير-' };
       return arabicText;
-    case 'burmese':
-      const burmeseText = { detail: '-နာမည် မျိုးနွယ်အမည်' };
-      return burmeseText;
     case 'japanese':
       const japaneseText = { detail: '-名前苗字' };
       return japaneseText;
@@ -191,16 +163,6 @@ const getCaptionForLocaleCode = locale => {
           'يحتوي الكائن على طول السلسلة. يمكن أن يكون أيضًا بمثابة عداد أحرف.',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail1: 'ဟိ',
-        detail2: 'အရှည် ()',
-        detail3: 'a ပေါ်မှာနည်းလမ်း',
-        detail4: 'စာတန်း',
-        detail5:
-          'object တွင် string အရှည်ရှိသည်။ ၎င်းကိုဇာတ်ကောင်ကောင်တာတစ်ခုအဖြစ်လည်းဆောင်ရွက်နိုင်သည်။',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail1: 'NS',
@@ -259,23 +221,6 @@ const MyComponent = ({ title, children }) => {
 export default MyComponent;`,
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        blockCode: `// React component ဥပမာ
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         blockCode: `// Reactコンポーネントの例
@@ -327,13 +272,6 @@ const getLocaleForDetails = locale => {
           ': هي حديقة ترفيهية في is the global roadmap for reducing human and economic loss تضم معالم جذب مثيرة وأجنحة دولية وألعاب نارية حائزة على جوائز ومناسبات موسمية خاصة.',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        summary: 'The Sendai Framework စင်တာ',
-        details:
-          ': သည်စိတ်လှုပ်ရှားဖွယ်ဆွဲဆောင်မှုများ၊ နိုင်ငံတကာမဏ္ionsပ်များ၊ ဆုရမီးရှူးမီးပန်းများနှင့်ရာသီအလိုက်အထူးအစီအစဉ်များပါ ၀ င်သော Walt Disney World Resort တွင်အဓိကပန်းခြံဖြစ်သည်။',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         summary: 'エプコットセンター',
@@ -364,12 +302,6 @@ const getLocaleForFigcaption = locale => {
           'يشير النص الوهمي إلى أجزاء المحتوى المستخدمة لملء نموذج موقع الويب. يساعد هذا النص مصممي الويب على تصور أفضل لكيفية ظهور موقع الويب كمنتج نهائي.',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        details:
-          'Dummy စာသားသည် ၀ က်ဘ်ဆိုက်၏လှောင်ပြောင်မှုကိုဖြည့်ရန်အသုံးပြုသောအကြောင်းအရာအနည်းငယ်ကိုရည်ညွှန်းသည်။ ဤစာသားသည် ၀ က်ဘ်ဒီဇိုင်နာများအနေဖြင့် ၀ က်ဘ်ဆိုက်သည်အချောထည်ထုတ်ကုန်တစ်ခုအဖြစ်မည်သို့ပုံဖော်ရန်စိတ်ကူးကောင်းမြင်နိုင်စေသည်။',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         details:
@@ -398,12 +330,6 @@ const getCaptionForLocaleHr = locale => {
           'فقرة كبيرة  UNDRR convenes partners and coordinates activities to create safer, more resilient communities. نولا فاسيليسي.-',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail:
-          'ကြီးမားသောစာပိုဒ်  UNDRR convenes partners and coordinates activities to create safer, more resilient communities. ဖြစ်သည်။  UNDRR convenes partners and coordinates activities to create safer, more resilient communities. ထိုင်သည်။  UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail:
@@ -426,9 +352,6 @@ const getCaptionForLocaleMark = locale => {
     case 'arabic':
       const arabicText = { detail: 'لا إزعاج' };
       return arabicText;
-    case 'burmese':
-      const burmeseText = { detail: 'အဆင်မပြေတာမရှိဘူး' };
-      return burmeseText;
     case 'japanese':
       const japaneseText = { detail: '不快感なし' };
       return japaneseText;
@@ -451,12 +374,6 @@ const getCaptionForLocaleParagraph = locale => {
           'فقرة كبيرة UN Office for Disaster Risk Reduction نولا فاسيليسي.-',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail:
-          'ကြီးမားသောစာပိုဒ် lorem ipsum dolor sit amet, consectetur adipiscing elit ။ Pellentesque porttitor mauris quis pulvinar ultrices Quisque eget placerat odio, vel viverra ipsum ။ Sed pharetra varius dignissim ဖြစ်သည်။ Cras varius luctus est amet sollicitudin ထိုင်သည်။ Donec eget dui eget nulla luctus ultrices ။ Sed eu turpis quam ။ Nulla facilisi',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail:
@@ -485,12 +402,6 @@ const getCaptionForLocaleQuotation = locale => {
           'يفكر العلماء فيما إذا كانت الأرض قد دخلت حقبة جيولوجية جديدة تمامًا: الأنثروبوسين ، أو عصر البشر.',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail:
-          'သိပ္ပံပညာရှင်များသည်ကမ္ဘာမြေသည်လုံးဝဘူမိဗေဒခေတ်ဖြစ်သည့် Anthropocene (သို့) လူသား၏အသက်',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail:
@@ -515,11 +426,6 @@ const getCaptionForLocaleSmall = locale => {
         detail: 'UN Office for Disaster Risk Reduction.',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        detail: 'UN Office for Disaster Risk Reduction ဖြစ်သည်။',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         detail: 'そして盲目になると、彼は迷惑をかけずに彼らを撃退します。',
@@ -568,24 +474,6 @@ const getCaptionForLocaleList = locale => {
         ],
       };
       return arabicText.data;
-    case 'burmese':
-      const burmeseText = {
-        data: [
-          {
-            label: 'ကုလသမဂ္ဂဖွံ့ဖြိုးရေးအစီအစဉ်',
-            text: 'ကုလသမဂ္ဂဖွံ့ဖြိုးမှုအစီအစဉ်သည်ကုလသမဂ္ဂ၏ကမ္ဘာလုံးဆိုင်ရာဖွံ့ဖြိုးရေးကွန်ယက်ဖြစ်သည်။ ၎င်းသည်နိုင်ငံများအကြားနည်းပညာနှင့်ရင်းနှီးမြှုပ်နှံမှုပူးပေါင်းဆောင်ရွက်မှုကိုအားပေးအားမြှောက် ပြု၍ ပြောင်းလဲမှုအတွက်ထောက်ခံသူများနှင့်နိုင်ငံများအားလူတို့အတွက်ပိုမိုကောင်းမွန်သောဘ ၀ ကိုတည်ဆောက်ရန်အကူအညီများ၊ အတွေ့အကြုံများနှင့်အရင်းအမြစ်များသို့ချိတ်ဆက်ပေးသည်။',
-          },
-          {
-            label: 'ကုလသမဂ္ဂဖွံ့ဖြိုးရေးအစီအစဉ်',
-            text: 'ကုလသမဂ္ဂဖွံ့ဖြိုးမှုအစီအစဉ်သည်ကုလသမဂ္ဂ၏ကမ္ဘာလုံးဆိုင်ရာဖွံ့ဖြိုးရေးကွန်ယက်ဖြစ်သည်။ ၎င်းသည်နိုင်ငံများအကြားနည်းပညာနှင့်ရင်းနှီးမြှုပ်နှံမှုပူးပေါင်းဆောင်ရွက်မှုကိုအားပေးအားမြှောက် ပြု၍ ပြောင်းလဲမှုအတွက်ထောက်ခံသူများနှင့်နိုင်ငံများအားလူတို့အတွက်ပိုမိုကောင်းမွန်သောဘ ၀ ကိုတည်ဆောက်ရန်အကူအညီများ၊ အတွေ့အကြုံများနှင့်အရင်းအမြစ်များသို့ချိတ်ဆက်ပေးသည်။',
-          },
-          {
-            label: 'ကုလသမဂ္ဂဖွံ့ဖြိုးရေးအစီအစဉ်',
-            text: 'ကုလသမဂ္ဂဖွံ့ဖြိုးမှုအစီအစဉ်သည်ကုလသမဂ္ဂ၏ကမ္ဘာလုံးဆိုင်ရာဖွံ့ဖြိုးရေးကွန်ယက်ဖြစ်သည်။ ၎င်းသည်နိုင်ငံများအကြားနည်းပညာနှင့်ရင်းနှီးမြှုပ်နှံမှုပူးပေါင်းဆောင်ရွက်မှုကိုအားပေးအားမြှောက် ပြု၍ ပြောင်းလဲမှုအတွက်ထောက်ခံသူများနှင့်နိုင်ငံများအားလူတို့အတွက်ပိုမိုကောင်းမွန်သောဘ ၀ ကိုတည်ဆောက်ရန်အကူအညီများ၊ အတွေ့အကြုံများနှင့်အရင်းအမြစ်များသို့ချိတ်ဆက်ပေးသည်။',
-          },
-        ],
-      };
-      return burmeseText.data;
     case 'japanese':
       const japaneseText = {
         data: [

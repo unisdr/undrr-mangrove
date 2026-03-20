@@ -10,9 +10,6 @@ export const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = { detail: 'ملصق' };
       return arabicText;
-    case 'burmese':
-      const burmeseText = { detail: 'တံဆိပ်' };
-      return burmeseText;
     case 'japanese':
       const japaneseText = { detail: 'ラベル' };
       return japaneseText;
@@ -23,13 +20,9 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={ChipsStories} />
 
-# Buttons and Labels
+# Chips
 
-A button describes what action will be performed when a user clicks or touches it.
-
-### Overview
-
-A button describes the call to action that will be performed when the user clicks/touches it. It has a label and an optional animation.
+Small interactive tags used to show active filters, selections, or categories. Chips can include a dismiss icon to let users remove them.
 
 #### When to use:
 

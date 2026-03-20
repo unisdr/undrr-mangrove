@@ -15,7 +15,7 @@ You are auditing components in **Mangrove**, UNDRR's Storybook-powered React com
 - **Consumers**: UN disaster risk reduction websites (undrr.org, preventionweb.net, mcr2030.undrr.org)
 - **Themes**: 4 theme variants (UNDRR, PreventionWeb, IRP, MCR2030) — audit each theme's contrast
 - **RTL support**: Arabic locale triggers `dir="rtl"` — verify layout and reading order in RTL
-- **Internationalization**: English, Arabic, Burmese, Japanese — verify screen reader behavior across locales
+- **Internationalization**: English, Arabic, Japanese — verify screen reader behavior across locales
 - **Component structure**: Atomic Design (Atom → Molecules → Components) in `stories/`
 - **Test pattern**: `__tests__/ComponentName.test.jsx` using React Testing Library + jest-axe
 - **Existing a11y setup**: `jest-axe` globally configured in `jest.setup.js`

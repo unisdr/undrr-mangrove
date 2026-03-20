@@ -14,18 +14,6 @@ const getCaptionForLocale = locale => {
           { value: 'option3', label: 'الخيار 3' },
         ],
       };
-    case 'burmese':
-      return {
-        label: 'အမျိုးအစား',
-        placeholder: 'ရွေးချယ်ပါ',
-        helpText: 'သင်နှစ်သက်သောဘာသာစကားကိုရွေးချယ်ပါ',
-        errorText: 'ကျေးဇူးပြု၍ရွေးချယ်ပါ',
-        options: [
-          { value: 'option1', label: 'ရွေးချယ်မှု ၁' },
-          { value: 'option2', label: 'ရွေးချယ်မှု ၂' },
-          { value: 'option3', label: 'ရွေးချယ်မှု ၃' },
-        ],
-      };
     case 'japanese':
       return {
         label: 'カテゴリー',

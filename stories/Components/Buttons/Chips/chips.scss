@@ -33,17 +33,3 @@
     margin-right: -$mg-spacing-25;
   }
 }
-
-:lang(my) {
-  .chip {
-    align-items: flex-end;
-
-    &__cross {
-      align-items: baseline;
-
-      &::before {
-        top: 5px;
-      }
-    }
-  }
-}

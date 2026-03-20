@@ -514,7 +514,7 @@ UNDRR websites serve content in Arabic and other right-to-left (RTL) languages. 
 
 The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale resets to `dir="ltr"`.
 
-> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'burmese'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `langArr` mapping in `.storybook/preview.js` or the `lang` attribute on the `<html>` element.
+> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `langArr` mapping in `.storybook/preview.js` or the `lang` attribute on the `<html>` element.
 
 This logic lives in `.storybook/preview.js` in the `getLangCode` decorator. There is also a legacy manual RTL toggle (`setDirection` decorator) that can override the locale setting.
 
@@ -563,7 +563,7 @@ Or nest with `&` when the override is scoped to the block:
 }
 ```
 
-The `_mixins.scss` file includes RTL-aware placeholders such as `%select_rtl` (padding/text-align flip for select inputs), `%select_rtl_after` (repositions a pseudo-element for RTL), and `%left-to-right` (entrance animation that reverses direction under `[dir="rtl"]`).
+The `_mixins.scss` file includes the `%left-to-right` placeholder (entrance animation that reverses direction under `[dir="rtl"]`). Component-level SCSS uses logical properties (`padding-inline-start`, `margin-inline-end`) for RTL-aware spacing.
 
 #### RTL patterns in global styles
 

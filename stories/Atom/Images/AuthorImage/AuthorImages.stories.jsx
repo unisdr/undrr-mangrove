@@ -9,9 +9,6 @@ const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = {};
       return arabicText;
-    case 'burmese':
-      const burmeseText = {};
-      return burmeseText;
     case 'japanese':
       const japaneseText = {};
       return japaneseText;

@@ -38,24 +38,6 @@ export const getCaptionForLocale = locale => {
         ],
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            title: 'အကြောင်းအရာ TAG',
-            summaryText:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            detail: 'ပိုပြီးဖတ်ပါ',
-            label: 'Label or breadcrumb (default label size)',
-            primary_button: 'Primary action',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         contentdata: [
@@ -105,13 +87,13 @@ The Mangrove Hero component defines a section of information with some items. It
 
 #### When to use:
 
-When a page section with data, CTA links and image is to be displayed.
+When a page section with data, call-to-action buttons, and an image is to be displayed.
 
 ### Formatting
 
 #### Default
 
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary),labels, detail links, image and overlay colors (primary, secondary, tertiary and quaternary).
+It consists of a title, paragraph, call-to-action buttons (primary, secondary, and tertiary), labels, detail links, image, and overlay colors (primary, secondary, tertiary, and quaternary).
 
 ### Content
 
@@ -125,7 +107,7 @@ There are two types of Mangrove Hero components: Mangrove Hero Parent and Mangro
 
 ### Interactions
 
-- By clicking on the title and/or CTA Link, the associated page is opened.
+- By clicking on the title or a call-to-action button, the associated page is opened.
 
 ## Changelog
 
