@@ -15,17 +15,6 @@ const getCaptionForLocale = locale => {
         ],
         errorText: 'يرجى تحديد خيار',
       };
-    case 'burmese':
-      return {
-        label: 'ရွေးချယ်မှု A',
-        legend: 'ဦးစားပေးကိုရွေးချယ်ပါ',
-        items: [
-          { label: 'နိမ့်', value: 'low' },
-          { label: 'အလယ်', value: 'medium' },
-          { label: 'မြင့်', value: 'high' },
-        ],
-        errorText: 'ရွေးချယ်မှုတစ်ခုကိုရွေးချယ်ပါ',
-      };
     case 'japanese':
       return {
         label: 'オプション A',

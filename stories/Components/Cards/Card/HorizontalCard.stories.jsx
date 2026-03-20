@@ -40,22 +40,6 @@ This paper explores health risks from climate change in a global context, settin
         ],
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            contenttile: 'အကြောင်းအရာ TAG',
-            title:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            button: 'ပိုပြီးဖတ်ပါ',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         contentdata: [

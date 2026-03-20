@@ -30,21 +30,6 @@ const getCaptionForLocale = locale => {
         ],
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            contenttile: 'အကြောင်းအရာ TAG',
-            title:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
-          },
-        ],
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         contentdata: [

@@ -9,13 +9,6 @@ const getCaptionForLocale = locale => {
         helpText: '8 أحرف كحد أدنى',
         errorText: 'هذا الحقل مطلوب',
       };
-    case 'burmese':
-      return {
-        label: 'ပုံစံတံဆိပ်',
-        placeholder: 'နေရာယူသည်',
-        helpText: 'အနည်းဆုံးစာလုံး ၈ လုံး',
-        errorText: 'ဤအကွက်လိုအပ်သည်',
-      };
     case 'japanese':
       return {
         label: 'フォームラベル',

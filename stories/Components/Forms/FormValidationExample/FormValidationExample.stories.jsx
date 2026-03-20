@@ -39,36 +39,6 @@ const getCaptionForLocale = locale => {
         submitLabel: 'إرسال',
         successMessage: 'تم إرسال النموذج بنجاح.',
       };
-    case 'burmese':
-      return {
-        summaryTitle: 'ပြဿနာတစ်ခုရှိသည်',
-        nameLabel: 'အမည်အပြည့်အစုံ',
-        namePlaceholder: 'သင့်အမည်အပြည့်အစုံထည့်ပါ',
-        nameError: 'သင့်အမည်အပြည့်အစုံထည့်ပါ',
-        emailLabel: 'အီးမေးလ်',
-        emailPlaceholder: 'သင့်အီးမေးလ်ထည့်ပါ',
-        emailError: 'မှန်ကန်သောအီးမေးလ်လိပ်စာထည့်ပါ',
-        categoryLabel: 'အမျိုးအစား',
-        categoryPlaceholder: 'အမျိုးအစားရွေးချယ်ပါ',
-        categoryError: 'အမျိုးအစားရွေးချယ်ပါ',
-        categoryOptions: [
-          { value: 'general', label: 'အထွေထွေမေးမြန်းမှု' },
-          { value: 'technical', label: 'နည်းပညာပံ့ပိုးမှု' },
-          { value: 'feedback', label: 'တုံ့ပြန်ချက်' },
-        ],
-        messageLabel: 'စာတိုပေးပို့ရန်',
-        messagePlaceholder: 'သင့်စာတိုထည့်ပါ',
-        messageError: 'သင့်စာတိုထည့်ပါ',
-        interestsLegend: 'စိတ်ဝင်စားမှုများ',
-        interestsError: 'အနည်းဆုံးစိတ်ဝင်စားမှုတစ်ခုကိုရွေးချယ်ပါ',
-        checkboxes: [
-          { label: 'ဘေးအန္တရာယ်လျှော့ချရေး', value: 'drr' },
-          { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
-          { label: 'စဉ်ဆက်မပြတ်ဖွံ့ဖြိုးရေး', value: 'sdg' },
-        ],
-        submitLabel: 'တင်သွင်းမည်',
-        successMessage: 'ပုံစံအောင်မြင်စွာတင်သွင်းပြီးပါပြီ။',
-      };
     case 'japanese':
       return {
         summaryTitle: '問題があります',
