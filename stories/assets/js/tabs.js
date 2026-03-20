@@ -113,10 +113,11 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     const panelId = tab.href.split('#')[1];
     tab.setAttribute('data-tabs__item', panelId);
 
+    // Give trigger a distinct ID so it doesn't collide with the panel's ID
+    tab.setAttribute('id', panelId + '--trigger');
+
     if (stacked) {
       // Disclosure pattern: each trigger is a button that toggles its panel
-      // Give trigger a distinct ID so it doesn't collide with the panel's ID
-      tab.setAttribute('id', panelId + '--trigger');
       tab.setAttribute('role', 'button');
       tab.setAttribute('aria-expanded', 'false');
       tab.setAttribute('aria-controls', panelId);
@@ -125,7 +126,6 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       tab.removeAttribute('tabindex');
     } else {
       // Horizontal tabs: standard tablist pattern (roving tabindex)
-      tab.setAttribute('id', panelId);
       tab.setAttribute('role', 'tab');
       tab.parentNode.setAttribute('role', 'presentation');
       tab.setAttribute('tabindex', '-1');
@@ -158,29 +158,20 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
         return;
       }
 
+      const prevKey = currentlyStacked ? 'ArrowUp' : 'ArrowLeft';
+      const nextKey = currentlyStacked ? 'ArrowDown' : 'ArrowRight';
       let dir = null;
-      if (currentlyStacked) {
-        if (e.key === 'ArrowUp') {
-          dir = index - 1 < 0 ? tabs.length - 1 : index - 1;
-        } else if (e.key === 'ArrowDown') {
-          dir = index + 1 >= tabs.length ? 0 : index + 1;
-        } else if (e.key === 'Home') {
-          dir = 0;
-        } else if (e.key === 'End') {
-          dir = tabs.length - 1;
-        }
-      } else {
-        if (e.key === 'ArrowLeft') {
-          dir = index - 1 < 0 ? tabs.length - 1 : index - 1;
-        } else if (e.key === 'ArrowRight') {
-          dir = index + 1 >= tabs.length ? 0 : index + 1;
-        } else if (e.key === 'ArrowDown') {
-          dir = 'down';
-        } else if (e.key === 'Home') {
-          dir = 0;
-        } else if (e.key === 'End') {
-          dir = tabs.length - 1;
-        }
+
+      if (e.key === prevKey) {
+        dir = (index - 1 + tabs.length) % tabs.length;
+      } else if (e.key === nextKey) {
+        dir = (index + 1) % tabs.length;
+      } else if (!currentlyStacked && e.key === 'ArrowDown') {
+        dir = 'down';
+      } else if (e.key === 'Home') {
+        dir = 0;
+      } else if (e.key === 'End') {
+        dir = tabs.length - 1;
       }
 
       if (dir !== null) {
@@ -342,7 +333,7 @@ const mgTabsSwitch = (newTab, panels) => {
   // Set the selected state
   newTab.setAttribute('aria-selected', 'true');
   newTab.classList.add('is-active');
-  newTab.classList.toggle('mg-tabs__stacked--open'); // track open state for potential mobile view switch
+  newTab.classList.add('mg-tabs__stacked--open'); // track open state for potential mobile view switch
 
   for (let item = 0; item < panels.length; item++) {
     const panel = panels[item];

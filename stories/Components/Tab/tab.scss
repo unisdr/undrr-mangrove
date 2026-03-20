@@ -219,14 +219,26 @@
   }
 
   // Flip stacked chevron for RTL
-  .mg-tabs--stacked .mg-tabs__link,
-  .mg-tabs--horizontal .mg-tabs__link {
+  .mg-tabs--stacked .mg-tabs__link {
     padding-right: $mg-padding-tab;
     padding-left: mg-rem(40);
 
     &:before {
       right: auto;
       left: $mg-spacing-150;
+    }
+  }
+
+  // Horizontal tabs only have chevrons at mobile breakpoint
+  @media (max-width: $mg-breakpoint-mobile) {
+    .mg-tabs--horizontal .mg-tabs__link {
+      padding-right: $mg-padding-tab;
+      padding-left: mg-rem(40);
+
+      &:before {
+        right: auto;
+        left: $mg-spacing-150;
+      }
     }
   }
 }

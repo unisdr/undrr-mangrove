@@ -34,7 +34,7 @@ export function Tab({
     if (!q) return -1;
     return tabdata.filter(t =>
       t.text.toLowerCase().includes(q) ||
-      (t.data || '').toLowerCase().includes(q)
+      (t.data || '').replace(/<[^>]*>/g, '').toLowerCase().includes(q)
     ).length;
   }, [deferredQuery, tabdata, filterable, variant]);
 
