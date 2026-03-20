@@ -172,7 +172,7 @@
 }
 
 .mg-tabs__link:focus-visible {
-  outline: 2px solid $mg-color-tab-border--hover;
+  outline: 2px solid $mg-color-interactive;
   outline-offset: -2px;
 }
 
@@ -266,8 +266,12 @@
 
 .mg-tabs__no-results {
   padding: $mg-spacing-150;
-  color: $mg-color-neutral-500;
+  color: $mg-color-text-tab-no-results;
   font-style: italic;
+}
+
+.mg-tabs__no-results--hidden {
+  display: none;
 }
 
 /* Tab end */

@@ -7,8 +7,6 @@ import { Tab } from '../Tab';
 // (we call the real runtime ourselves after render for controlled setup).
 jest.mock('../../../assets/js/tabs', () => ({
   mgTabsRuntime: jest.fn(),
-  mgTabsApplyStackedDefaults: jest.requireActual('../../../assets/js/tabs').mgTabsApplyStackedDefaults,
-  setDisclosureState: jest.requireActual('../../../assets/js/tabs').setDisclosureState,
 }));
 
 // Import the real module for direct runtime testing
@@ -453,91 +451,109 @@ describe('Tab', () => {
   // -------------------------------------------------------
 
   describe('filterable', () => {
+    beforeEach(() => { jest.useFakeTimers(); });
+    afterEach(() => { jest.useRealTimers(); });
+
+    /** Helper: type into the runtime-injected filter input and flush the debounce */
+    function typeFilter(container, value) {
+      const input = container.querySelector('.mg-tabs__filter-input');
+      input.value = value;
+      fireEvent.input(input);
+      jest.advanceTimersByTime(200); // flush 150ms debounce
+    }
+
     it('renders filter input when filterable is true on stacked variant', () => {
-      render(<Tab tabdata={tabdata} variant="stacked" filterable />);
-      expect(screen.getByRole('searchbox')).toBeInTheDocument();
+      const { tabContainer } = renderAndInit('stacked', false, { filterable: true });
+      expect(tabContainer.querySelector('.mg-tabs__filter-input')).toBeInTheDocument();
     });
 
     it('does not render filter input on horizontal variant', () => {
-      render(<Tab tabdata={tabdata} variant="horizontal" filterable />);
-      expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+      const { tabContainer } = renderAndInit('horizontal', false, { filterable: true });
+      expect(tabContainer.querySelector('.mg-tabs__filter-input')).not.toBeInTheDocument();
     });
 
     it('renders sr-only hint text', () => {
-      render(<Tab tabdata={tabdata} variant="stacked" filterable />);
-      expect(screen.getByText('Results will filter as you type')).toBeInTheDocument();
+      const { tabContainer } = renderAndInit('stacked', false, { filterable: true });
+      expect(tabContainer.querySelector('.mg-u-sr-only')).toBeInTheDocument();
+      expect(tabContainer.querySelector('.mg-u-sr-only').textContent).toBe(
+        'Results will filter as you type'
+      );
     });
 
     it('hides non-matching items when typing a query', () => {
-      const { container } = render(
-        <Tab tabdata={tabdata} variant="stacked" filterable defaultOpen={false} />
-      );
-      const tabContainer = container.querySelector('[data-mg-js-tabs]');
-      mgTabsRuntime(tabContainer, false);
+      const { tabContainer } = renderAndInit('stacked', false, { filterable: true, defaultOpen: false });
 
-      const input = screen.getByRole('searchbox');
-      fireEvent.change(input, { target: { value: 'Section 1' } });
+      typeFilter(tabContainer, 'Section 1');
 
-      const items = container.querySelectorAll('.mg-tabs__item');
-      // First item should be visible, others hidden via CSS class
+      const items = tabContainer.querySelectorAll('.mg-tabs__item');
       expect(items[0].classList.contains('mg-tabs__item--hidden')).toBe(false);
       expect(items[1].classList.contains('mg-tabs__item--hidden')).toBe(true);
       expect(items[2].classList.contains('mg-tabs__item--hidden')).toBe(true);
     });
 
     it('auto-expands matching panels', () => {
-      const { container } = render(
-        <Tab tabdata={tabdata} variant="stacked" filterable defaultOpen={false} />
-      );
-      const tabContainer = container.querySelector('[data-mg-js-tabs]');
-      mgTabsRuntime(tabContainer, true);
+      const { tabContainer } = renderAndInit('stacked', true, { filterable: true, defaultOpen: false });
 
-      const input = screen.getByRole('searchbox');
-      fireEvent.change(input, { target: { value: 'section 2' } });
+      typeFilter(tabContainer, 'section 2');
 
-      const panel = getPanel(container, 'tab-2');
+      const panel = getPanel(tabContainer, 'tab-2');
       expect(panel.hasAttribute('hidden')).toBe(false);
     });
 
     it('shows no-results message when nothing matches', () => {
-      const { container } = render(
-        <Tab tabdata={tabdata} variant="stacked" filterable />
-      );
-      const tabContainer = container.querySelector('[data-mg-js-tabs]');
-      mgTabsRuntime(tabContainer, false);
+      const { tabContainer } = renderAndInit('stacked', false, { filterable: true });
 
-      const input = screen.getByRole('searchbox');
-      fireEvent.change(input, { target: { value: 'xyznonexistent' } });
+      typeFilter(tabContainer, 'xyznonexistent');
 
-      expect(screen.getByText('No matching sections found.')).toBeInTheDocument();
+      const noResults = tabContainer.querySelector('.mg-tabs__no-results');
+      expect(noResults).toBeInTheDocument();
+      expect(noResults.classList.contains('mg-tabs__no-results--hidden')).toBe(false);
     });
 
     it('restores all items when clearing input', () => {
-      const { container } = render(
-        <Tab tabdata={tabdata} variant="stacked" filterable defaultOpen={false} />
-      );
-      const tabContainer = container.querySelector('[data-mg-js-tabs]');
-      mgTabsRuntime(tabContainer, true);
-
-      const input = screen.getByRole('searchbox');
+      const { tabContainer } = renderAndInit('stacked', true, { filterable: true, defaultOpen: false });
 
       // Filter first
-      fireEvent.change(input, { target: { value: 'Section 1' } });
+      typeFilter(tabContainer, 'Section 1');
       // Then clear
-      fireEvent.change(input, { target: { value: '' } });
+      typeFilter(tabContainer, '');
 
-      const items = container.querySelectorAll('.mg-tabs__item');
+      const items = tabContainer.querySelectorAll('.mg-tabs__item');
       items.forEach(item => {
         expect(item.classList.contains('mg-tabs__item--hidden')).toBe(false);
       });
 
-      // No "no results" message
-      expect(screen.queryByText('No matching sections found.')).not.toBeInTheDocument();
+      // No-results message should be hidden
+      const noResults = tabContainer.querySelector('.mg-tabs__no-results');
+      expect(noResults.classList.contains('mg-tabs__no-results--hidden')).toBe(true);
+    });
+
+    it('arrow keys skip hidden triggers during filtering', () => {
+      const { tabContainer } = renderAndInit('stacked', false, { filterable: true });
+
+      // Filter to show only Section 1 and Section 3 (hide Section 2)
+      typeFilter(tabContainer, 'section');
+      // All match "section", so narrow further
+      typeFilter(tabContainer, '');
+      // Instead, manually hide Section 2 to simulate a filter that hides the middle item
+      const items = tabContainer.querySelectorAll('.mg-tabs__item');
+      items[1].classList.add('mg-tabs__item--hidden');
+
+      const tabs = tabContainer.querySelectorAll('.mg-tabs__link');
+      tabs[0].focus();
+      fireEvent.keyDown(tabs[0], { key: 'ArrowDown' });
+
+      // Should skip hidden Section 2 and land on Section 3
+      expect(document.activeElement).toBe(tabs[2]);
     });
 
     it('uses custom placeholder text', () => {
-      render(<Tab tabdata={tabdata} variant="stacked" filterable filterPlaceholder="Search FAQs…" />);
-      expect(screen.getByPlaceholderText('Search FAQs…')).toBeInTheDocument();
+      const { tabContainer } = renderAndInit('stacked', false, {
+        filterable: true,
+        filterPlaceholder: 'Search FAQs\u2026',
+      });
+      const input = tabContainer.querySelector('.mg-tabs__filter-input');
+      expect(input.placeholder).toBe('Search FAQs\u2026');
     });
   });
 

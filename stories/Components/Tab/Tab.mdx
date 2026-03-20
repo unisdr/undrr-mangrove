@@ -20,6 +20,22 @@ There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 t
 
 <Canvas of={TabStories.Tabs} meta={TabStories} />
 
+### Stacked tabs
+
+<Canvas of={TabStories.StackedTabs} meta={TabStories} />
+
+### Stacked as FAQ (filterable, all closed)
+
+<Canvas of={TabStories.StackedAsFaq} meta={TabStories} />
+
+### Stacked FAQ accordion (filterable + single-open)
+
+<Canvas of={TabStories.StackedFaqAccordion} meta={TabStories} />
+
+### Stacked single-open
+
+<Canvas of={TabStories.StackedSingleOpen} meta={TabStories} />
+
 ## Interactions
 
 **Horizontal tabs:**
@@ -147,21 +163,39 @@ Change the modifier class and variant attribute:
 
 **Stacked tabs as FAQ (all closed, single-open)**
 
-Add `data-mg-js-tabs-default-open="false"` to start all panels closed, and `data-mg-js-tabs-single-open` for accordion behavior:
+Add `data-mg-js-tabs-default-open="false"` to start all panels closed, `data-mg-js-tabs-single-open` for accordion behavior, and `data-mg-js-tabs-filterable` for a search input:
 
 ```html
 <article class="mg-tabs mg-tabs--stacked"
          data-mg-js-tabs
          data-mg-js-tabs-variant="stacked"
          data-mg-js-tabs-default-open="false"
-         data-mg-js-tabs-single-open>
+         data-mg-js-tabs-single-open
+         data-mg-js-tabs-filterable
+         data-mg-js-tabs-filter-placeholder="Search questions…">
   <ul class="mg-tabs__list">
-    <!-- same item structure as above -->
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-faq-1">What is the Sendai Framework?</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-faq-1">
+        <p>The Sendai Framework is a voluntary, non-binding agreement for disaster risk reduction.</p>
+      </section>
+    </li>
+
+    <li class="mg-tabs__item">
+      <a class="mg-tabs__link" href="#mg-tabs__section-faq-2">How do I report progress?</a>
+    </li>
+    <li class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-faq-2">
+        <p>Use the Sendai Framework Monitor to track and report implementation.</p>
+      </section>
+    </li>
   </ul>
 </article>
 ```
 
-The filter feature (`filterable` prop) is only available through the React component. There is no vanilla JS equivalent.
+The filter input, screen-reader-only hint, and status region are injected automatically by the runtime. No additional markup is needed.
 
 #### API
 
@@ -191,6 +225,8 @@ mgTabsRuntime(newContainer);
 | `data-mg-js-tabs-default` | `a.mg-tabs__link` | `"true"` to open this item by default, `"false"` to keep it closed. Overrides the container-level `data-mg-js-tabs-default-open`. |
 | `data-mg-js-tabs-default-open` | `article` | `"true"` opens all stacked panels on load, `"false"` closes all. Absent = open first. Per-item `data-mg-js-tabs-default` overrides this. |
 | `data-mg-js-tabs-single-open` | `article` | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
+| `data-mg-js-tabs-filterable` | `article` | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text. |
+| `data-mg-js-tabs-filter-placeholder` | `article` | Custom placeholder text for the filter input. Defaults to "Filter sections...". |
 
 ### React usage
 
@@ -216,7 +252,7 @@ const tabdata = [
 | `variant` | `string` | `"horizontal"` | `"horizontal"` or `"stacked"` |
 | `defaultOpen` | `bool` | `undefined` | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides. |
 | `singleOpen` | `bool` | `false` | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
-| `filterable` | `bool` | `false` | Stacked only. Renders a search input that filters sections by header and content text. React-only feature — not available via vanilla JS data attributes. |
+| `filterable` | `bool` | `false` | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS. |
 | `filterPlaceholder` | `string` | `"Filter sections…"` | Placeholder text for the filter input. |
 
 Each tab object in `tabdata`:
@@ -236,12 +272,12 @@ Each tab object in `tabdata`:
 ## Changelog
 
 - **2.5** — 2026-03-20:
-  - Added `defaultOpen`, `singleOpen`, and `filterable` props (React); `data-mg-js-tabs-default-open` and `data-mg-js-tabs-single-open` attributes (vanilla JS)
+  - Added `defaultOpen`, `singleOpen`, and `filterable` props (React) and corresponding `data-mg-js-tabs-*` attributes (vanilla JS)
   - ARIA disclosure pattern for stacked tabs (`role="button"`, `aria-expanded`, `aria-controls`, `hidden="until-found"`)
   - Keyboard: Space/Enter to toggle, Arrow Up/Down with wrapping, Home/End
   - Focus indicator: explicit `:focus-visible` outline on tab triggers
   - RTL: chevron and padding flipped for Arabic/RTL layouts
-  - Fixed duplicate IDs between triggers and panels (triggers now use `--trigger` suffix)
+  - **Migration:** trigger elements now have ID `{panelId}--trigger` instead of sharing the panel's ID. Update any CSS/JS that selects triggers by `#mg-tabs__section-{id}` to use `#mg-tabs__section-{id}--trigger` or the class `.mg-tabs__link`
   - Exported `setDisclosureState()` and `mgTabsApplyStackedDefaults()` helpers
 - **2.4.1** — 2026-03-02: Rewrote usage docs with vanilla JS and React examples, CDN links, HTML markup, and API reference
 - **2.4** — 2026-02-23: Removed deprecated `Version1Tabs` story

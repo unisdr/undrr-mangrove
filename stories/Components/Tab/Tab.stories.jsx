@@ -194,3 +194,17 @@ export const StackedSingleOpen = {
   ),
   name: 'Stacked single-open',
 };
+
+export const StackedFaqAccordion = {
+  render: () => (
+    <Tab
+      tabdata={faqData}
+      variant="stacked"
+      defaultOpen={false}
+      singleOpen
+      filterable
+      filterPlaceholder="Search questions…"
+    />
+  ),
+  name: 'Stacked FAQ accordion',
+};

@@ -35,6 +35,23 @@ export function setDisclosureState(trigger, panel, open) {
 }
 
 /**
+ * Find the next visible tab index, skipping items hidden by filtering.
+ * @param {NodeList} tabs - all tab trigger elements
+ * @param {number} fromIndex - current index to start searching from
+ * @param {number} step - direction: +1 for forward, -1 for backward
+ * @returns {number} index of the next visible tab, or -1 if all hidden
+ */
+function findVisibleTab(tabs, fromIndex, step) {
+  const len = tabs.length;
+  let idx = fromIndex;
+  for (let i = 0; i < len; i++) {
+    idx = (idx + step + len) % len;
+    if (!tabs[idx].closest('.mg-tabs__item--hidden')) return idx;
+  }
+  return -1;
+}
+
+/**
  * Initialize tabs on a page
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
@@ -163,18 +180,18 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
       let dir = null;
 
       if (e.key === prevKey) {
-        dir = (index - 1 + tabs.length) % tabs.length;
+        dir = findVisibleTab(tabs, index, -1);
       } else if (e.key === nextKey) {
-        dir = (index + 1) % tabs.length;
+        dir = findVisibleTab(tabs, index, 1);
       } else if (!currentlyStacked && e.key === 'ArrowDown') {
         dir = 'down';
       } else if (e.key === 'Home') {
-        dir = 0;
+        dir = findVisibleTab(tabs, -1, 1);
       } else if (e.key === 'End') {
-        dir = tabs.length - 1;
+        dir = findVisibleTab(tabs, tabs.length, -1);
       }
 
-      if (dir !== null) {
+      if (dir !== null && dir !== -1) {
         e.preventDefault();
         if (dir === 'down') {
           panels[i].focus({ preventScroll: true });
@@ -244,6 +261,11 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   // Activate any deep links to a specific tab
   if (activateDeepLinkOnLoad) {
     mgTabsDeepLinkOnLoad(tabs, panels);
+  }
+
+  // Initialize filter if the container has the filterable attribute
+  if (stacked && container.dataset.mgJsTabsFilterable != null) {
+    mgTabsInitFilter(container, tabs, panels);
   }
 
   // When using anchor links after load, activate the corresponding tab
@@ -384,6 +406,138 @@ export function mgTabsApplyStackedDefaults(container, tabs, panels) {
     }
 
     setDisclosureState(tab, matchingPanel, shouldOpen);
+  });
+}
+
+/**
+ * Initialize filter input for stacked tabs.
+ * Injects a search input, sr-only hint, and status region before the tab list.
+ * Handles debounced filtering, show/hide via CSS classes, panel expand/collapse,
+ * focus rescue, and live region announcements.
+ *
+ * @param {Element} container - the [data-mg-js-tabs] element
+ * @param {NodeList} tabs - the trigger links
+ * @param {NodeList} panels - the section panels
+ */
+function mgTabsInitFilter(container, tabs, panels) {
+  const placeholder = container.dataset.mgJsTabsFilterPlaceholder || 'Filter sections\u2026';
+  const ariaLabel = placeholder.replace(/\u2026$/, '').trim();
+  const totalCount = tabs.length;
+
+  // Build filter DOM
+  const filterWrapper = document.createElement('div');
+  filterWrapper.className = 'mg-tabs__filter';
+
+  const input = document.createElement('input');
+  input.type = 'search';
+  input.className = 'mg-form-input mg-tabs__filter-input';
+  input.placeholder = placeholder;
+  input.setAttribute('aria-label', ariaLabel);
+
+  const hintId = 'mg-tabs-filter-hint-' + Math.random().toString(36).slice(2, 8);
+  input.setAttribute('aria-describedby', hintId);
+
+  const hint = document.createElement('span');
+  hint.id = hintId;
+  hint.className = 'mg-u-sr-only';
+  hint.textContent = 'Results will filter as you type';
+
+  filterWrapper.appendChild(input);
+  filterWrapper.appendChild(hint);
+
+  // Status region for screen reader announcements
+  const status = document.createElement('p');
+  status.className = 'mg-u-sr-only';
+  status.setAttribute('role', 'status');
+
+  // Insert before the tab list
+  const tabList = container.querySelector('.mg-tabs__list');
+  container.insertBefore(filterWrapper, tabList);
+
+  // No-results element (hidden by default, shown when matchCount === 0)
+  // No role="status" here — the sr-only status element handles announcements
+  const noResults = document.createElement('p');
+  noResults.className = 'mg-tabs__no-results mg-tabs__no-results--hidden';
+  noResults.textContent = 'No matching sections found.';
+  if (tabList.nextSibling) {
+    container.insertBefore(noResults, tabList.nextSibling);
+  } else {
+    container.appendChild(noResults);
+  }
+  container.appendChild(status);
+
+  let hasFiltered = false;
+  let debounceTimer = null;
+
+  function applyFilter() {
+    const query = input.value.toLowerCase().trim();
+
+    if (!query) {
+      if (!hasFiltered) return;
+      // Restore: show all items, reset to default state
+      const items = container.querySelectorAll('.mg-tabs__item');
+      items.forEach(item => {
+        item.classList.remove('mg-tabs__item--hidden');
+        const contentLi = item.nextElementSibling;
+        if (contentLi?.classList.contains('mg-tabs-content')) {
+          contentLi.classList.remove('mg-tabs-content--hidden');
+        }
+      });
+      mgTabsApplyStackedDefaults(container, tabs, panels);
+      noResults.classList.add('mg-tabs__no-results--hidden');
+      status.textContent = '';
+      return;
+    }
+
+    hasFiltered = true;
+    const items = container.querySelectorAll('.mg-tabs__item');
+    let matches = 0;
+
+    items.forEach(item => {
+      const trigger = item.querySelector('.mg-tabs__link');
+      const contentLi = item.nextElementSibling;
+      const panel = contentLi?.querySelector('.mg-tabs__section');
+
+      const triggerText = trigger?.textContent?.toLowerCase() || '';
+      const panelText = panel?.textContent?.toLowerCase() || '';
+      const isMatch = triggerText.includes(query) || panelText.includes(query);
+
+      item.classList.toggle('mg-tabs__item--hidden', !isMatch);
+      if (contentLi?.classList.contains('mg-tabs-content')) {
+        contentLi.classList.toggle('mg-tabs-content--hidden', !isMatch);
+      }
+
+      if (panel && trigger) {
+        setDisclosureState(trigger, panel, isMatch);
+      }
+      if (isMatch) matches++;
+    });
+
+    // Focus rescue: if active element is now hidden, move to filter input
+    const active = document.activeElement;
+    if (active && active.closest && active.closest('.mg-tabs__item--hidden')) {
+      input.focus();
+    }
+
+    // Update live regions
+    if (matches === 0) {
+      noResults.classList.remove('mg-tabs__no-results--hidden');
+      status.textContent = 'No matching sections found.';
+    } else {
+      noResults.classList.add('mg-tabs__no-results--hidden');
+      status.textContent = matches + ' of ' + totalCount + ' sections match.';
+    }
+  }
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(applyFilter, 150);
+  });
+
+  // Also handle the native search clear button (fires 'search' event in some browsers)
+  input.addEventListener('search', () => {
+    clearTimeout(debounceTimer);
+    applyFilter();
   });
 }
 
