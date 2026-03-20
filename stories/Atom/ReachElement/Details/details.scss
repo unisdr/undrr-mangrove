@@ -1,6 +1,6 @@
 /* details tag start */
 details {
-  padding: 1rem;
+  padding: mg-rem(10);
   transition: all 0.2s ease-in-out;
 
   &:hover {
@@ -12,7 +12,7 @@ details {
 
     list-style-type: none;
     outline: 0;
-    padding: 1rem 1rem 1rem 2.5rem;
+    padding: mg-rem(10) mg-rem(10) mg-rem(10) mg-rem(25);
     cursor: pointer;
     position: relative;
     transition: background-color 0.2s ease-in-out;
@@ -24,7 +24,7 @@ details {
     &::before {
       content: "";
       position: absolute;
-      left: 1rem;
+      left: mg-rem(10);
       top: 50%;
       transform: translateY(-50%);
       width: 0;
@@ -39,7 +39,7 @@ details {
   p {
     @extend %paragraph-font-200;
 
-    padding: 1rem;
+    padding: mg-rem(10);
     margin: 0;
     line-height: 1.6;
   }
@@ -58,12 +58,12 @@ details {
 [dir="rtl"] {
   details {
     summary {
-      padding: 1rem 2.5rem 1rem 1rem;
+      padding: mg-rem(10) mg-rem(25) mg-rem(10) mg-rem(10);
     }
 
     summary::before {
       left: auto;
-      right: 1rem;
+      right: mg-rem(10);
       transform: translateY(-50%) rotate(180deg);
     }
 

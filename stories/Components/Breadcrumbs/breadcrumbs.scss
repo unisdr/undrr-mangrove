@@ -1,7 +1,7 @@
 .mg-breadcrumb {
   font-family: $mg-font-family-condensed;
   font-weight: 600;
-  margin: 1rem 0 0.5rem;
+  margin: mg-rem(10) 0 mg-rem(5);
   align-items: baseline;
   display: flex;
   flex-wrap: wrap;
@@ -22,7 +22,7 @@
       font-weight: 600;
       letter-spacing: 0.03em;
       margin-right: 0;
-      max-width: calc(100vw - 2rem);
+      max-width: calc(100vw - mg-rem(20));
     }
 
     a {

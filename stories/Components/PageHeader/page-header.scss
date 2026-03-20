@@ -24,7 +24,7 @@
   &__region--toolbar {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: mg-rem(10);
 
     a {
       color: #fff;
@@ -41,7 +41,7 @@
 
   &__block--logo {
     flex-grow: 1;
-    padding: 0.5rem 0 0.5rem 0.1rem;
+    padding: mg-rem(5) 0 mg-rem(5) 1px;
   }
 
   &__logo-img {
@@ -85,11 +85,11 @@
     padding-right: 30px;
     border: none;
     border-radius: 0;
-    font-size: 1.65rem;
+    font-size: $mg-font-size-300;
     background-color: transparent;
     color: #fff;
     direction: rtl;
-    line-height: 2rem;
+    line-height: mg-rem(20);
 
     option {
       color: #333;

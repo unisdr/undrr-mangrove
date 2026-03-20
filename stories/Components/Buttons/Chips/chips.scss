@@ -4,7 +4,7 @@
   border-radius: 20px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
   display: inline-flex;
-  min-height: 1.875rem;
+  min-height: $mg-spacing-250;
   padding: $mg-spacing-25 $mg-spacing-50;
 
   &:hover {
@@ -19,7 +19,7 @@
       height: 22px;
       margin-left: -$mg-spacing-25;
       margin-right: $mg-spacing-25;
-      padding-right: 1.375rem;
+      padding-right: mg-rem(14);
       position: relative;
       top: 0;
       width: auto;

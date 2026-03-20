@@ -1,0 +1,20 @@
+/* ============================================================================
+ * LEGACY 10px ROOT — IRP theme
+ *
+ * This stylesheet uses a 10px root font-size (1rem = 10px), which does not
+ * conform to browser standards or WCAG 1.4.4 Resize Text. It is provided
+ * for backward compatibility with sites that have custom CSS assuming the
+ * 10px root.
+ *
+ * Migrate to the standard theme (style-irp.css) before end of 2026.
+ *
+ * Migration guide: https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md
+ * GitHub issue:     https://github.com/unisdr/undrr-mangrove/issues/836
+ * Pull request:     https://github.com/unisdr/undrr-mangrove/pull/852
+ * ========================================================================= */
+/* stylelint-disable no-invalid-position-at-import-rule, at-rule-empty-line-before */
+@warn "You are compiling the legacy 10px root theme (style-irp-legacy). This variant will be removed after 2026. See docs/RELEASE-1.4.md for migration options.";
+
+$mg-html-font-size: 10;
+
+@import "./style-irp";

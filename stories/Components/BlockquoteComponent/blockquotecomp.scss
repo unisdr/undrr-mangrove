@@ -4,7 +4,7 @@
   padding: $mg-spacing-150 $mg-spacing-100;
 
   @include devicebreak(medium) {
-    padding: 5.313rem $mg-spacing-500;
+    padding: mg-rem(53) $mg-spacing-500;
   }
 
   &.gray {

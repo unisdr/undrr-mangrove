@@ -24,8 +24,8 @@
 
 .mg-share__button {
   font-size: $mg-font-size-400;
-  width: 4rem;
-  height: 4rem;
+  width: mg-rem(40);
+  height: mg-rem(40);
   padding: $mg-spacing-100;
   border-radius: $mg-radius-button;
   background-color: $mg-color-button-background;

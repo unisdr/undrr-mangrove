@@ -1,5 +1,4 @@
 .cta__link {
-  @extend %button;
   @extend %img_none;
 
   color: $mg-color-black;
@@ -54,7 +53,7 @@
         @include transform(translate(0) rotate(180deg));
 
         left: 0;
-        right: 1.25rem;
+        right: mg-rem(12.5);
       }
     }
   }

@@ -55,7 +55,7 @@ textarea {
   font-size: $mg-font-size-300;
   height: 46px;
   margin-top: $mg-spacing-25;
-  padding: 0.625rem;
+  padding: mg-rem(6.25);
   width: 100%;
 
   &::placeholder {

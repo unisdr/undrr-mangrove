@@ -240,6 +240,36 @@ Never use module-level `Set`, `Map`, `Array`, or counters to track state across 
 
 The design token variables in `_variables.scss` use `!default` flags so theme stylesheets can override them. When adding new variables, always include `!default`.
 
+### Root font-size and the mg-rem() function
+
+The default root is 16px (browser standard). Legacy sites that relied on the old 10px root can use the `-legacy` theme variants or set `$mg-html-font-size: 10` in their SCSS. See [RELEASE-1.4.md](RELEASE-1.4.md) for the full migration guide.
+
+All spacing, font-size, and width tokens go through `mg-rem($px)`, which converts a pixel value to rem for whatever root is configured:
+
+```scss
+// In _variables.scss
+$mg-html-font-size: 16 !default;
+
+@function mg-rem($px) {
+  @return math.div($px, $mg-html-font-size) * 1rem;
+}
+
+// Usage — pass the intended pixel value:
+$mg-spacing-100: mg-rem(10);   // → 0.625rem (root=16), 1rem (root=10)
+$mg-font-size-300: mg-rem(16); // → 1rem     (root=16), 1.6rem (root=10)
+```
+
+When writing component SCSS, use `mg-rem()` or an existing token. Never hard-code a rem value:
+
+```scss
+// Correct
+padding: mg-rem(15);       // 15px at any root
+padding: $mg-spacing-150;  // same thing, via the token
+
+// Wrong — breaks when root changes
+padding: 1.5rem;
+```
+
 ## Related documentation
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component

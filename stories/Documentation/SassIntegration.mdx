@@ -23,6 +23,7 @@ Before customizing, review **<LinkTo kind="getting-started-about-mangrove" story
   tocData={[
     { id: 'installation', text: 'Installation' },
     { id: 'scss-file-structure', text: 'SCSS file structure' },
+    { id: 'root-font-size-and-mg-rem', text: 'Root font-size and mg-rem()' },
     { id: 'variables-reference', text: 'Variables reference' },
     { id: 'mixins-reference', text: 'Mixins reference' },
     { id: 'the-default-override-mechanism', text: 'The !default override mechanism' },
@@ -84,6 +85,27 @@ Each theme entry point follows the same import order:
 
 `_variables.scss` defines tokens with the `!default` flag, so a theme file imported after it can reassign those variables before they reach the component stylesheets.
 
+## Root font-size and mg-rem()
+
+As of v1.4, Mangrove's default root font-size is the browser standard (typically 16px). The compiled CSS does not set a `font-size` on `html`, so user font-size preferences are respected.
+
+All spacing, font-size, and width tokens use `mg-rem($px)`, a compile-time function that converts pixel values to rem for the configured root:
+
+```scss
+// Pass the intended pixel value — mg-rem() handles the math
+padding: mg-rem(15);       // 15px at any root
+font-size: mg-rem(16);     // 16px at any root (outputs 1rem at root=16)
+```
+
+**For existing sites** that need the old 10px root, set `$mg-html-font-size: 10` before importing Mangrove variables:
+
+```scss
+$mg-html-font-size: 10;
+@import "@undrr/undrr-mangrove/stories/assets/scss/variables";
+```
+
+Or use the pre-compiled legacy theme CSS (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.). See the <LinkTo kind="getting-started-release-notes-v1-4" story="docs">v1.4 release notes</LinkTo> for the full migration guide.
+
 ## Variables reference
 
 All variables below are defined in `stories/assets/scss/_variables.scss`. Variables marked with `!default` can be overridden by theme files or your own customizations.
@@ -136,7 +158,7 @@ These define the palette and are not overridden per-theme. Override them if you 
 | `$mg-color-text-button` | `$mg-color-white` |
 | `$mg-border-color-button` | `$mg-color-text-button` |
 | `$mg-padding-button` | `$mg-spacing-100 $mg-spacing-150` |
-| `$mg-font-size-button` | `$mg-font-size-250` (1.4rem) |
+| `$mg-font-size-button` | `$mg-font-size-250` (14px) |
 
 ### Form variables (`!default`)
 
@@ -193,41 +215,41 @@ Used by hero, cards, and other components for color variants.
 
 ### Spacing
 
-| Variable | Value |
-|----------|-------|
-| `$mg-spacing-0` | `0` |
-| `$mg-spacing-25` | `0.25rem` |
-| `$mg-spacing-50` | `0.5rem` |
-| `$mg-spacing-75` | `0.75rem` |
-| `$mg-spacing-100` | `1rem` |
-| `$mg-spacing-150` | `1.5rem` |
-| `$mg-spacing-175` | `1.8rem` |
-| `$mg-spacing-200` | `2rem` |
-| `$mg-spacing-250` | `2.4rem` |
-| `$mg-spacing-300` | `3rem` |
-| `$mg-spacing-350` | `3rem` |
-| `$mg-spacing-400` | `5rem` |
-| `$mg-spacing-500` | `6rem` |
-| `$mg-spacing-600` | `8rem` |
-| `$mg-spacing-800` | `10rem` |
-| `$mg-spacing-1000` | `40rem` |
+| Variable | Pixel value | Definition |
+|----------|------------|------------|
+| `$mg-spacing-0` | 0 | `0` |
+| `$mg-spacing-25` | 2.5px | `mg-rem(2.5)` |
+| `$mg-spacing-50` | 5px | `mg-rem(5)` |
+| `$mg-spacing-75` | 7.5px | `mg-rem(7.5)` |
+| `$mg-spacing-100` | 10px | `mg-rem(10)` |
+| `$mg-spacing-150` | 15px | `mg-rem(15)` |
+| `$mg-spacing-175` | 18px | `mg-rem(18)` |
+| `$mg-spacing-200` | 20px | `mg-rem(20)` |
+| `$mg-spacing-250` | 24px | `mg-rem(24)` |
+| `$mg-spacing-300` | 30px | `mg-rem(30)` |
+| `$mg-spacing-350` | 35px | `mg-rem(35)` |
+| `$mg-spacing-400` | 50px | `mg-rem(50)` |
+| `$mg-spacing-500` | 60px | `mg-rem(60)` |
+| `$mg-spacing-600` | 80px | `mg-rem(80)` |
+| `$mg-spacing-800` | 100px | `mg-rem(100)` |
+| `$mg-spacing-1000` | 400px | `mg-rem(400)` |
 
 ### Font sizes
 
-| Variable | Value | Notes |
-|----------|-------|-------|
-| `$mg-font-size-100` | `1rem` | |
-| `$mg-font-size-150` | `1.125rem` | |
-| `$mg-font-size-200` | `1.25rem` | |
-| `$mg-font-size-250` | `1.4rem` | |
-| `$mg-font-size-300` | `1.6rem` | Regular body text |
-| `$mg-font-size-400` | `1.8rem` | |
-| `$mg-font-size-500` | `2.3rem` | |
-| `$mg-font-size-600` | `3.2rem` | |
-| `$mg-font-size-800` | `3.6rem` | |
-| `$mg-font-size-900` | `4rem` | |
-| `$mg-font-size-1000` | `4.8rem` | |
-| `$mg-font-size-1100` | `6.4rem` | |
+| Variable | Pixel value | Definition | Notes |
+|----------|------------|------------|-------|
+| `$mg-font-size-100` | 10px | `mg-rem(10)` | |
+| `$mg-font-size-150` | 11.25px | `mg-rem(11.25)` | |
+| `$mg-font-size-200` | 12.5px | `mg-rem(12.5)` | |
+| `$mg-font-size-250` | 14px | `mg-rem(14)` | |
+| `$mg-font-size-300` | 16px | `mg-rem(16)` | Regular body text |
+| `$mg-font-size-400` | 18px | `mg-rem(18)` | |
+| `$mg-font-size-500` | 23px | `mg-rem(23)` | |
+| `$mg-font-size-600` | 32px | `mg-rem(32)` | |
+| `$mg-font-size-800` | 36px | `mg-rem(36)` | |
+| `$mg-font-size-900` | 40px | `mg-rem(40)` | |
+| `$mg-font-size-1000` | 48px | `mg-rem(48)` | |
+| `$mg-font-size-1100` | 64px | `mg-rem(64)` | |
 | `$mg-font-body` | `$mg-font-size-300` | Alias for body text |
 | `$mg-font-tag` | `$mg-font-size-250` | Alias for tag text |
 | `$mg-font-line-height-500` | `1.25em` | |
@@ -254,12 +276,12 @@ Used by hero, cards, and other components for color variants.
 
 ### Widths
 
-| Variable | Value |
-|----------|-------|
-| `$mg-width-150` | `15rem` |
-| `$mg-width-300` | `30rem` |
-| `$mg-width-400` | `40rem` |
-| `$mg-width-600` | `60rem` |
+| Variable | Pixel value | Definition |
+|----------|------------|------------|
+| `$mg-width-150` | 150px | `mg-rem(150)` |
+| `$mg-width-300` | 300px | `mg-rem(300)` |
+| `$mg-width-400` | 400px | `mg-rem(400)` |
+| `$mg-width-600` | 600px | `mg-rem(600)` |
 
 ## Mixins reference
 
@@ -312,7 +334,7 @@ Sets font size with associated padding for heading-like elements.
 ```scss
 .my-heading {
   @include mg-typography("large");
-  // Outputs: font-size: 3.2rem; padding-top: 2.4rem; padding-bottom: 1.5rem;
+  // Outputs: font-size: 32px; padding-top: 24px; padding-bottom: 15px
 }
 ```
 
@@ -434,7 +456,7 @@ $mg-radius-form-input: $mg-spacing-50;
 
 // Override hero
 $mg-color-hero: $mg-color-interactive;
-$mg-spacing-hero-overlay: 2rem 0;
+$mg-spacing-hero-overlay: mg-rem(20) 0;
 ```
 
 ### 2. Create your theme entry point

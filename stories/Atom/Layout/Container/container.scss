@@ -5,8 +5,8 @@
 // $mg-breakpoint-desktop: 1440px;
 
 .mg-container {
-  padding-right: 1rem;
-  padding-left: 1rem;
+  padding-right: mg-rem(10);
+  padding-left: mg-rem(10);
   margin: 0 auto;
   max-width: 100%;
 

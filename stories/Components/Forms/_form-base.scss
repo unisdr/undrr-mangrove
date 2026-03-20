@@ -41,7 +41,7 @@
   font-size: $mg-font-size-300;
   height: 46px;
   margin-top: $mg-spacing-25;
-  padding: 0.625rem;
+  padding: mg-rem(6.25);
   width: 100%;
 
   &::placeholder {
@@ -113,13 +113,13 @@
   font-size: $mg-font-size-300;
   height: 46px;
   margin-top: $mg-spacing-25;
-  padding: 0.625rem;
+  padding: mg-rem(6.25);
   padding-right: $mg-spacing-200;
   width: 100%;
 
   // Custom dropdown arrow
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231a1a1a' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
-  background-position: right 0.625rem center;
+  background-position: right mg-rem(6.25) center;
   background-repeat: no-repeat;
 
   &:focus-visible {
@@ -295,9 +295,9 @@
 // -----------------------------------------------------------------------------
 [dir="rtl"] {
   .mg-form-select {
-    background-position: left 0.625rem center;
+    background-position: left mg-rem(6.25) center;
     padding-left: $mg-spacing-200;
-    padding-right: 0.625rem;
+    padding-right: mg-rem(6.25);
   }
 
   .mg-form-input[type="date"]::-webkit-calendar-picker-indicator {

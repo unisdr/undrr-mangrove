@@ -9,6 +9,24 @@
  *     \___/|_| \_|____/|_| \_\_| \_\ |_|  |_|\__,_|_| |_|\__, |_|  \___/ \_/ \___|
  *                                                        |___/
  */
+@use "sass:math";
+
+// Root font-size configuration
+// Default is 16 (browser-standard root where 1rem = 16px).
+// Set to 10 for legacy 10px root (1.6rem = 16px) — see style-*-legacy.scss.
+// New integrations should use the default; override only for backward compatibility.
+$mg-html-font-size: 16 !default;
+
+@if $mg-html-font-size == 0 {
+  @error "$mg-html-font-size must not be 0 (division by zero). Use 16 (default) or 10 (legacy).";
+}
+
+// Converts an intended pixel value to rem for the configured root.
+// Example: mg-rem(16) → 1.6rem (root=10) or 1rem (root=16)
+@function mg-rem($px) {
+  @return math.div($px, $mg-html-font-size) * 1rem;
+}
+
 // font file variables
 // Path adjusted for Storybook staticDirs (serves assets/ at root, not /assets/)
 $mgIconFontPath: "../fonts/mangrove-icon-set/font";
@@ -157,21 +175,21 @@ $sendai-turquoise: $sendai-turquoise-900; // alias
  * @presenter Spacing
  */
 $mg-spacing-0: 0;
-$mg-spacing-25: 0.25rem;
-$mg-spacing-50: 0.5rem;
-$mg-spacing-75: 0.75rem;
-$mg-spacing-100: 1rem;
-$mg-spacing-150: 1.5rem;
-$mg-spacing-175: 1.8rem;
-$mg-spacing-200: 2rem;
-$mg-spacing-250: 2.4rem;
-$mg-spacing-300: 3rem;
-$mg-spacing-350: 3rem;
-$mg-spacing-400: 5rem;
-$mg-spacing-500: 6rem;
-$mg-spacing-600: 8rem;
-$mg-spacing-800: 10rem;
-$mg-spacing-1000: 40rem;
+$mg-spacing-25: mg-rem(2.5);
+$mg-spacing-50: mg-rem(5);
+$mg-spacing-75: mg-rem(7.5);
+$mg-spacing-100: mg-rem(10);
+$mg-spacing-150: mg-rem(15);
+$mg-spacing-175: mg-rem(18);
+$mg-spacing-200: mg-rem(20);
+$mg-spacing-250: mg-rem(24);
+$mg-spacing-300: mg-rem(30);
+$mg-spacing-350: mg-rem(35);
+$mg-spacing-400: mg-rem(50);
+$mg-spacing-500: mg-rem(60);
+$mg-spacing-600: mg-rem(80);
+$mg-spacing-800: mg-rem(100);
+$mg-spacing-1000: mg-rem(400);
 
 /**
  * @tokens Font sizes
@@ -180,18 +198,18 @@ $mg-spacing-1000: 40rem;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$mg-font-size-100: 1rem;
-$mg-font-size-150: 1.125rem;
-$mg-font-size-200: 1.25rem;
-$mg-font-size-250: 1.4rem;
-$mg-font-size-300: 1.6rem; // regular body text
-$mg-font-size-400: 1.8rem;
-$mg-font-size-500: 2.3rem;
-$mg-font-size-600: 3.2rem;
-$mg-font-size-800: 3.6rem;
-$mg-font-size-900: 4rem;
-$mg-font-size-1000: 4.8rem;
-$mg-font-size-1100: 6.4rem;
+$mg-font-size-100: mg-rem(10);
+$mg-font-size-150: mg-rem(11.25);
+$mg-font-size-200: mg-rem(12.5);
+$mg-font-size-250: mg-rem(14);
+$mg-font-size-300: mg-rem(16); // regular body text
+$mg-font-size-400: mg-rem(18);
+$mg-font-size-500: mg-rem(23);
+$mg-font-size-600: mg-rem(32);
+$mg-font-size-800: mg-rem(36);
+$mg-font-size-900: mg-rem(40);
+$mg-font-size-1000: mg-rem(48);
+$mg-font-size-1100: mg-rem(64);
 $mg-font-body: $mg-font-size-300;
 $mg-font-tag: $mg-font-size-250 !default;
 $mg-font-line-height-500: 1.25em;
@@ -218,12 +236,12 @@ $mg-font-line-height-700: 1.5em;
     padding-bottom: $mg-spacing-175;
   } @else if $size == "huge" {
     font-size: $mg-font-size-1000;
-    padding-top: $mg-spacing-350;
+    padding-top: $mg-spacing-300;
     padding-bottom: $mg-spacing-250;
   } @else if $size == "xhuge" {
     font-size: $mg-font-size-1100;
     padding-top: $mg-spacing-400;
-    padding-bottom: $mg-spacing-350;
+    padding-bottom: $mg-spacing-300;
   }
 }
 
@@ -250,10 +268,10 @@ $mg-font-family-arabic-body: "Dubai", sans-serif;
  * @presenter Spacing
  */
 
-$mg-width-150: 15rem;
-$mg-width-300: 30rem;
-$mg-width-400: 40rem;
-$mg-width-600: 60rem;
+$mg-width-150: mg-rem(150);
+$mg-width-300: mg-rem(300);
+$mg-width-400: mg-rem(400);
+$mg-width-600: mg-rem(600);
 
 /**
  * @tokens Breakpoints
