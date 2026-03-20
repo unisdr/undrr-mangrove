@@ -248,5 +248,5 @@ Three rules for SCSS inside Mangrove:
 
 ## Related documentation
 
-- [Architecture: root font-size and mg-rem()](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-architecture--docs) — technical details on how the function works
+- [Architecture: root font-size and mg-rem()](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-architecture--docs) — technical details on how the function works
 - [Release process](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-release-process--docs) — how Mangrove versions are published
