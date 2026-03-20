@@ -563,7 +563,7 @@ Or nest with `&` when the override is scoped to the block:
 }
 ```
 
-The `_mixins.scss` file includes RTL-aware placeholders such as `%select_rtl` (padding/text-align flip for select inputs), `%select_rtl_after` (repositions a pseudo-element for RTL), and `%left-to-right` (entrance animation that reverses direction under `[dir="rtl"]`).
+The `_mixins.scss` file includes the `%left-to-right` placeholder (entrance animation that reverses direction under `[dir="rtl"]`). Component-level SCSS uses logical properties (`padding-inline-start`, `margin-inline-end`) for RTL-aware spacing.
 
 #### RTL patterns in global styles
 
