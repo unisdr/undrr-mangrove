@@ -93,15 +93,6 @@
   }
 }
 
-%paragraph-font-400 {
-  font-size: $mg-font-size-400;
-  line-height: 1.1;
-
-  @include devicebreak(medium) {
-    font-size: $mg-font-size-500;
-  }
-}
-
 %border-bottom {
   border-bottom: 1px solid $mg-color-neutral-400;
 }
@@ -119,36 +110,6 @@
   border: none;
 }
 
-%footer-block {
-  align-items: center;
-  border-bottom: 1px solid $mg-color-white;
-  justify-content: space-between;
-  margin-bottom: $mg-spacing-150;
-}
-
-
-// %checbox-radio-before — REMOVED (February 2026)
-// Migrated to .mg-form-check__input in _form-base.scss.
-
-// %ctaimg, %chevron-right-expanded, %pseudo-icon — REMOVED (March 2026, #854)
-// CtaLink component was removed entirely.
-
-%arrow {
-  @include transform(translateY(-50%));
-  @include transition(all 200ms ease-in-out);
-
-  // background:
-  //   url(#{$img-path-Iconfourback}/chevron-down.svg) no-repeat center
-  //   center;
-  content: "";
-  float: right;
-  height: 13px;
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  width: 20px;
-}
-
 %absolute__content {
   content: "";
   height: 100%;
@@ -158,64 +119,11 @@
   width: 100%;
 }
 
-
-%language_switcher {
-  border: none;
-  font-size: $mg-font-size-200;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
 %img_none {
   background-image: none;
 }
 
-%absolute__overflow {
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-  width: 100%;
-}
-
-// %select_default — REMOVED (February 2026)
-// Migrated to .mg-form-select in _form-base.scss.
-
-%select_option {
-  border: 2px solid $mg-color-black;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  display: none;
-  min-height: 100px;
-  padding: 0 $mg-spacing-50;
-  width: 100%;
-
-  &:focus {
-    box-shadow: 0 0 4px $mg-color-blue-800;
-    outline: 0;
-  }
-}
-
-%select_rtl {
-  padding-left: mg-rem(31);
-  padding-right: $mg-spacing-50;
-  text-align: right;
-}
-
-%select_rtl_after {
-  left: 16px;
-  margin: 0;
-  right: auto;
-}
-
-%no-animation {
-  -webkit-animation: none;
-  -moz-animation: none;
-  -ms-animation: none;
-  -o-animation: none;
-  animation: none;
-}
-
+// Viewport animation placeholders (consumed by _utility.scss)
 %left-to-right {
   @include transform(translateX(-100px));
   @include transition(
@@ -257,87 +165,20 @@
   opacity: 1;
 }
 
-%header {
-  background-color: $mg-color-neutral-100;
-  box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
-  height: mg-rem(72);
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 9;
-}
-
 %background-white {
   background-color: white;
-}
-
-%sub-external {
-  align-items: center;
-  justify-content: space-between;
-}
-
-%external {
-  align-items: center;
-  content: "";
-  cursor: pointer;
-  height: 0.7em;
-  width: 0.78em;
-}
-
-%footerlink {
-  @extend %img_none;
-
-  color: $mg-color-white;
-  font-size: $mg-font-size-300;
-  line-height: 1.4;
-
-  &:hover {
-    color: $mg-color-blue-100;
-  }
-}
-
-%footerlinkinvert {
-  color: $mg-color-black;
-
-  &:hover {
-    color: $mg-color-neutral-600;
-  }
-}
-
-%selectoption {
-  border-top: 1px solid $mg-color-neutral-400;
-  cursor: pointer;
-  margin-bottom: 0;
-  padding: 0;
-}
-
-
-%logo {
-  @include transition(all 0.4s cubic-bezier(0.64, 0.05, 0.35, 1.05));
-
-  width: 40px;
-
-  @include devicebreak(xlarge) {
-    height: ($header-height-xlarge + 7px);
-    width: 60px;
-
-    &.scrolled {
-      height: $header-height-xlarge;
-    }
-  }
-
-  @include devicebreak(mediumonlytab) {
-    height: ($header-height-medium + 7px);
-
-    &.scrolled {
-      height: $header-height-medium;
-    }
-  }
 }
 
 @mixin background($background...) {
   background: linear-gradient($background);
 }
+
+// --- Removed placeholders ---
+// %checbox-radio-before — REMOVED (February 2026). Migrated to .mg-form-check__input.
+// %ctaimg, %chevron-right-expanded, %pseudo-icon — REMOVED (March 2026, #854). CtaLink removed.
+// %paragraph-font-400, %footer-block, %arrow, %language_switcher, %absolute__overflow,
+// %select_option, %select_rtl, %select_rtl_after, %select_default, %no-animation, %header,
+// %sub-external, %external, %footerlink, %footerlinkinvert, %selectoption, %logo
+//   — REMOVED (March 2026, #855). Zero consumers.
 
 /* placeholder end */
