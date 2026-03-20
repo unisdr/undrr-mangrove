@@ -119,3 +119,92 @@ export const StackedTabs = {
     return <Tab tabdata={caption} variant="stacked" />;
   },
 };
+
+export const StackedWithDefaultOpen = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return <Tab tabdata={caption} variant="stacked" defaultOpen />;
+  },
+  name: 'Stacked with default open',
+};
+
+export const StackedWithDeepLink = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <>
+        <p>Click a link below to activate a section via deep link:</p>
+        <ul>
+          <li>
+            <a href="#mg-tabs__section-tab-1">Open section 1</a>
+          </li>
+          <li>
+            <a href="#mg-tabs__section-tab-2">Open section 2</a>
+          </li>
+          <li>
+            <a href="#mg-tabs__section-tab-3">Open section 3</a>
+          </li>
+        </ul>
+        <Tab tabdata={caption} variant="stacked" />
+      </>
+    );
+  },
+  name: 'Stacked with deep link',
+};
+
+const faqData = [
+  {
+    text: 'What is the Sendai Framework?',
+    text_id: 'faq-sendai',
+    data: '<p>The Sendai Framework for Disaster Risk Reduction 2015-2030 is a voluntary, non-binding agreement that maps out a broad, people-centred approach to disaster risk reduction.</p>',
+  },
+  {
+    text: 'How do I report national progress?',
+    text_id: 'faq-reporting',
+    data: '<p>National progress is reported through the <a href="#">Sendai Framework Monitor</a>, an online tool for countries to track and report on their implementation.</p>',
+  },
+  {
+    text: 'What data sources are available?',
+    text_id: 'faq-data',
+    data: '<p>Several data platforms support disaster risk reduction:</p><ul><li>DesInventar Sendai — disaster loss data</li><li>Sendai Monitor — national progress reports</li><li>Global Risk Data Platform — hazard and risk data</li></ul>',
+  },
+  {
+    text: 'Who can I contact for support?',
+    text_id: 'faq-contact',
+    data: '<p>Contact the UNDRR regional offices or visit <a href="#">preventionweb.net</a> for resources and community support.</p>',
+  },
+];
+
+export const StackedAsFaq = {
+  render: () => (
+    <Tab
+      tabdata={faqData}
+      variant="stacked"
+      defaultOpen={false}
+      filterable
+      filterPlaceholder="Filter questions…"
+    />
+  ),
+  name: 'Stacked as FAQ',
+};
+
+export const StackedSingleOpen = {
+  render: () => (
+    <Tab tabdata={faqData} variant="stacked" defaultOpen={false} singleOpen />
+  ),
+  name: 'Stacked single-open',
+};
+
+export const StackedFaqAccordion = {
+  render: () => (
+    <Tab
+      tabdata={faqData}
+      variant="stacked"
+      defaultOpen={false}
+      singleOpen
+      filterable
+      filterPlaceholder="Search questions…"
+    />
+  ),
+  name: 'Stacked FAQ accordion',
+};
