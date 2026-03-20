@@ -123,7 +123,7 @@ export const StackedTabs = {
 export const StackedWithDefaultOpen = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Tab tabdata={caption} variant="stacked" />;
+    return <Tab tabdata={caption} variant="stacked" defaultOpen />;
   },
   name: 'Stacked with default open',
 };

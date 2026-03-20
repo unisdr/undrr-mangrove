@@ -231,6 +231,11 @@
   width: 100%;
 }
 
+.mg-tabs__item--hidden,
+.mg-tabs-content--hidden {
+  display: none;
+}
+
 .mg-tabs__no-results {
   padding: $mg-spacing-150;
   color: $mg-color-neutral-500;

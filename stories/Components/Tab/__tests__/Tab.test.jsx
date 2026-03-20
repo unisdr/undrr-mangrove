@@ -8,6 +8,7 @@ import { Tab } from '../Tab';
 jest.mock('../../../assets/js/tabs', () => ({
   mgTabsRuntime: jest.fn(),
   mgTabsApplyStackedDefaults: jest.requireActual('../../../assets/js/tabs').mgTabsApplyStackedDefaults,
+  setDisclosureState: jest.requireActual('../../../assets/js/tabs').setDisclosureState,
 }));
 
 // Import the real module for direct runtime testing
@@ -433,10 +434,10 @@ describe('Tab', () => {
       fireEvent.change(input, { target: { value: 'Section 1' } });
 
       const items = container.querySelectorAll('.mg-tabs__item');
-      // First item should be visible, others hidden
-      expect(items[0].style.display).toBe('');
-      expect(items[1].style.display).toBe('none');
-      expect(items[2].style.display).toBe('none');
+      // First item should be visible, others hidden via CSS class
+      expect(items[0].classList.contains('mg-tabs__item--hidden')).toBe(false);
+      expect(items[1].classList.contains('mg-tabs__item--hidden')).toBe(true);
+      expect(items[2].classList.contains('mg-tabs__item--hidden')).toBe(true);
     });
 
     it('auto-expands matching panels', () => {
@@ -482,7 +483,7 @@ describe('Tab', () => {
 
       const items = container.querySelectorAll('.mg-tabs__item');
       items.forEach(item => {
-        expect(item.style.display).toBe('');
+        expect(item.classList.contains('mg-tabs__item--hidden')).toBe(false);
       });
 
       // No "no results" message

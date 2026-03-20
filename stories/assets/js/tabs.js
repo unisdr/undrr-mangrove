@@ -17,6 +17,24 @@ function isStacked(container) {
 }
 
 /**
+ * Set the open/close state of a stacked disclosure panel.
+ * @param {Element} trigger - the tab link acting as disclosure trigger
+ * @param {Element} panel - the section panel
+ * @param {boolean} open - true to open, false to close
+ */
+export function setDisclosureState(trigger, panel, open) {
+  if (open) {
+    panel.removeAttribute('hidden');
+    trigger.setAttribute('aria-expanded', 'true');
+    trigger.classList.add('is-active', 'mg-tabs__stacked--open');
+  } else {
+    panel.setAttribute('hidden', 'until-found');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.classList.remove('is-active', 'mg-tabs__stacked--open');
+  }
+}
+
+/**
  * Initialize tabs on a page
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
@@ -195,7 +213,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
 
   // Set up container roles and initial state
   tabsListArray.forEach(tabsListset => {
-    if (!isStacked(tabsListset)) {
+    if (!stacked) {
       // Apply role="tablist" to the <ul> so role="tab" children are valid
       const tabListEl = tabsListset.querySelector('.mg-tabs__list') || tabsListset;
       tabListEl.setAttribute('role', 'tablist');
@@ -260,7 +278,7 @@ const mgTabsSwitch = (newTab, panels) => {
 
   // if stacked, toggle the clicked panel independently
   if (stacked) {
-    const singleOpen = parentTabContainer.dataset.mgJsTabsSingleOpen != null;
+    const isSingleOpen = parentTabContainer.dataset.mgJsTabsSingleOpen != null;
 
     for (let item = 0; item < panels.length; item++) {
       const panel = panels[item];
@@ -268,35 +286,22 @@ const mgTabsSwitch = (newTab, panels) => {
         const wasHidden = panel.hidden || panel.getAttribute('hidden') === 'until-found';
 
         // In single-open mode, close all other panels before opening
-        if (singleOpen && wasHidden) {
-          const allTriggers = parentTabContainer.querySelectorAll('.mg-tabs__link');
+        if (isSingleOpen && wasHidden) {
           for (let j = 0; j < panels.length; j++) {
             const otherPanel = panels[j];
             if (otherPanel !== panel && !otherPanel.hidden && otherPanel.getAttribute('hidden') !== 'until-found') {
-              otherPanel.setAttribute('hidden', 'until-found');
-              // Find the corresponding trigger
-              for (let k = 0; k < allTriggers.length; k++) {
-                if (allTriggers[k].getAttribute('data-tabs__item') === otherPanel.id) {
-                  allTriggers[k].setAttribute('aria-expanded', 'false');
-                  allTriggers[k].classList.remove('is-active', 'mg-tabs__stacked--open');
-                  break;
-                }
+              const otherTrigger = parentTabContainer.querySelector(
+                `[data-tabs__item="${otherPanel.id}"]`
+              );
+              if (otherTrigger) {
+                setDisclosureState(otherTrigger, otherPanel, false);
               }
             }
           }
         }
 
-        if (wasHidden) {
-          panel.removeAttribute('hidden');
-          newTab.setAttribute('aria-expanded', 'true');
-          newTab.classList.add('is-active');
-          newTab.classList.add('mg-tabs__stacked--open');
-        } else {
-          panel.setAttribute('hidden', 'until-found');
-          newTab.setAttribute('aria-expanded', 'false');
-          newTab.classList.remove('is-active');
-          newTab.classList.remove('mg-tabs__stacked--open');
-        }
+        setDisclosureState(newTab, panel, wasHidden);
+        break;
       }
     }
     // In stacked/disclosure mode, we don't deselect other tabs or use aria-selected
@@ -316,6 +321,7 @@ const mgTabsSwitch = (newTab, panels) => {
       const panel = panels[item];
       if (panel.id === oldTab.id) {
         panel.hidden = true;
+        break;
       }
     }
   }
@@ -376,15 +382,7 @@ export function mgTabsApplyStackedDefaults(container, tabs, panels) {
       shouldOpen = (i === 0);
     }
 
-    if (shouldOpen) {
-      matchingPanel.removeAttribute('hidden');
-      tab.setAttribute('aria-expanded', 'true');
-      tab.classList.add('is-active', 'mg-tabs__stacked--open');
-    } else {
-      matchingPanel.setAttribute('hidden', 'until-found');
-      tab.setAttribute('aria-expanded', 'false');
-      tab.classList.remove('is-active', 'mg-tabs__stacked--open');
-    }
+    setDisclosureState(tab, matchingPanel, shouldOpen);
   });
 }
 

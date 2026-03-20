@@ -1,6 +1,6 @@
-import React, { useEffect, useDeferredValue, useId, useRef, useState } from 'react';
+import React, { useEffect, useDeferredValue, useId, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { mgTabsRuntime, mgTabsApplyStackedDefaults } from '../../assets/js/tabs';
+import { mgTabsRuntime, mgTabsApplyStackedDefaults, setDisclosureState } from '../../assets/js/tabs';
 
 /**
  * Renders a tab component with either stacked or horizontal layout.
@@ -24,9 +24,19 @@ export function Tab({
   const containerRef = useRef(null);
   const [filterQuery, setFilterQuery] = useState('');
   const deferredQuery = useDeferredValue(filterQuery);
-  const [matchCount, setMatchCount] = useState(-1); // -1 = no filter active
   const hasFilteredRef = useRef(false);
   const hintId = useId();
+
+  // Derive match count from tabdata + query (no separate state needed)
+  const matchCount = useMemo(() => {
+    if (!filterable || variant !== 'stacked') return -1;
+    const q = deferredQuery.toLowerCase().trim();
+    if (!q) return -1;
+    return tabdata.filter(t =>
+      t.text.toLowerCase().includes(q) ||
+      (t.data || '').toLowerCase().includes(q)
+    ).length;
+  }, [deferredQuery, tabdata, filterable, variant]);
 
   // Initialize this container's tabs runtime (scoped, not global)
   useEffect(() => {
@@ -50,20 +60,18 @@ export function Tab({
       const tabs = container.querySelectorAll('.mg-tabs__link');
       const panels = container.querySelectorAll('[id^="mg-tabs__section"]');
       items.forEach(item => {
-        item.style.display = '';
+        item.classList.remove('mg-tabs__item--hidden');
         const contentLi = item.nextElementSibling;
         if (contentLi?.classList.contains('mg-tabs-content')) {
-          contentLi.style.display = '';
+          contentLi.classList.remove('mg-tabs-content--hidden');
         }
       });
       mgTabsApplyStackedDefaults(container, tabs, panels);
-      setMatchCount(-1);
       return;
     }
 
     hasFilteredRef.current = true;
     const items = container.querySelectorAll('.mg-tabs__item');
-    let matches = 0;
 
     items.forEach(item => {
       const trigger = item.querySelector('.mg-tabs__link');
@@ -74,25 +82,16 @@ export function Tab({
       const panelText = panel?.textContent?.toLowerCase() || '';
       const isMatch = triggerText.includes(query) || panelText.includes(query);
 
-      item.style.display = isMatch ? '' : 'none';
+      item.classList.toggle('mg-tabs__item--hidden', !isMatch);
       if (contentLi?.classList.contains('mg-tabs-content')) {
-        contentLi.style.display = isMatch ? '' : 'none';
+        contentLi.classList.toggle('mg-tabs-content--hidden', !isMatch);
       }
 
-      // Auto-expand matching panels
-      if (isMatch && panel && trigger) {
-        panel.removeAttribute('hidden');
-        trigger.setAttribute('aria-expanded', 'true');
-        trigger.classList.add('is-active', 'mg-tabs__stacked--open');
-        matches++;
-      } else if (!isMatch && panel && trigger) {
-        panel.setAttribute('hidden', 'until-found');
-        trigger.setAttribute('aria-expanded', 'false');
-        trigger.classList.remove('is-active', 'mg-tabs__stacked--open');
+      // Auto-expand matching, collapse non-matching
+      if (panel && trigger) {
+        setDisclosureState(trigger, panel, isMatch);
       }
     });
-
-    setMatchCount(matches);
   }, [deferredQuery, filterable, variant]);
 
   return tabdata ? (
@@ -110,6 +109,7 @@ export function Tab({
             type="search"
             className="mg-form-input mg-tabs__filter-input"
             placeholder={filterPlaceholder}
+            aria-label={filterPlaceholder}
             value={filterQuery}
             onChange={e => setFilterQuery(e.target.value)}
             aria-describedby={hintId}
@@ -145,7 +145,7 @@ export function Tab({
         ))}
       </ul>
       {filterable && matchCount === 0 && (
-        <p className="mg-tabs__no-results" role="status" aria-live="assertive">
+        <p className="mg-tabs__no-results" role="status">
           No matching sections found.
         </p>
       )}
