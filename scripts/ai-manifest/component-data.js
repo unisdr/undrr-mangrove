@@ -136,7 +136,6 @@ export default {
   // --- Buttons (auto-rendered) ---
   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons. Arrow and disabled variants.' },
   'components-buttons-chips': { description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant. Uses legacy class names without the mg- prefix.' },
-  'components-buttons-cta-link': { description: 'Inline call-to-action link with arrow or spacing icon. Can render as anchor or span.' },
 
   // --- Cards ---
   'components-cards-vertical-card': {

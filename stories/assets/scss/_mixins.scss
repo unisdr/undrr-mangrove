@@ -130,18 +130,6 @@
 // %checbox-radio-before — REMOVED (February 2026)
 // Migrated to .mg-form-check__input in _form-base.scss.
 
-%ctaimg {
-  content: "";
-  height: 1.06em;
-  margin-left: $mg-spacing-25;
-  margin-top: 2px;
-  width: 0.72em;
-
-  @include devicebreak(medium) {
-    margin-top: 0;
-  }
-}
-
 %arrow {
   @include transform(translateY(-50%));
   @include transition(all 200ms ease-in-out);
@@ -347,59 +335,6 @@
 
 @mixin background($background...) {
   background: linear-gradient($background);
-}
-
-%pseudo-icon {
-  box-sizing: border-box;
-  content: "";
-  display: block;
-  position: absolute;
-}
-
-%chevron-right-expanded {
-  i {
-    @include transition(width 0.3s);
-
-    box-sizing: border-box;
-    display: block;
-    height: $mg-spacing-50;
-    left: mg-rem(12.5);
-    position: relative;
-    width: 0;
-
-    &::before {
-      @extend %pseudo-icon;
-
-      background-color: $mg-color-red-900;
-      display: none;
-      height: 2px;
-      right: 0;
-      top: 7px;
-      width: 100%;
-    }
-
-    &::after {
-      @extend %pseudo-icon;
-      @include transform(rotate(45deg));
-
-      border-right: 2px solid $mg-color-red-900;
-      border-top: 2px solid $mg-color-red-900;
-      height: $mg-spacing-25;
-      right: 0;
-      top: 2px;
-      width: $mg-spacing-25;
-    }
-  }
-
-  &:hover {
-    i {
-      width: $mg-spacing-400;
-
-      &::before {
-        display: unset;
-      }
-    }
-  }
 }
 
 /* placeholder end */
