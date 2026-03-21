@@ -19,10 +19,24 @@ Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
 | MCR2030 | `/css/style-mcr.css` | mcr2030.undrr.org |
 | IRP | `/css/style-irp.css` | recovery.preventionweb.net |
 | DELTA Resilience | `/css/style-delta.css` | deltaresilience.org |
+| Gutenberg editor | `/css/style-gutenberg.css` | Drupal Gutenberg block previews |
+
+#### Legacy theme variants
+
+Legacy variants keep the pre-1.4 behavior (`html { font-size: 10px }`). Use these if your site has custom CSS written for the 10px root. See the [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for migration details.
+
+| Theme | Legacy path |
+|-------|-------------|
+| UNDRR | `/css/style-legacy.css` |
+| PreventionWeb | `/css/style-preventionweb-legacy.css` |
+| MCR2030 | `/css/style-mcr-legacy.css` |
+| IRP | `/css/style-irp-legacy.css` |
+
+The DELTA Resilience theme has no legacy variant.
 
 **Example:**
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -35,7 +49,7 @@ Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
 **Example:**
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.3.3/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -87,7 +101,7 @@ Then import the Mangrove component as an ES module:
 
   // Load component from CDN
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.3.3/components/MegaMenu.js'
+    'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
   );
 
   // Unwrap ESM/CJS interop - bundle may be double-wrapped
@@ -144,7 +158,7 @@ Base URL: `https://assets.undrr.org/static/logos/`
 Pin to a specific version for stability:
 
 ```
-https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
+https://assets.undrr.org/static/mangrove/1.4.0/css/style.css
 ```
 
 ### Latest (testing only)

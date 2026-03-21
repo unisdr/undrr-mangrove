@@ -25,29 +25,28 @@
     <style>
       /* Critical inline styles for immediate render */
       *,*::before,*::after{box-sizing:border-box}
-      html{font-size:10px}
-      body{font-family:system-ui,-apple-system,sans-serif;font-size:1.6rem;line-height:1.5;margin:0;color:#1a1a1a}
-      h1,h2{margin:1rem 0;font-weight:700}
-      h1{font-size:1.4rem;color:#004f91;margin:0}
-      h2{font-size:2.3rem;margin-top:.5rem}
+      body{font-family:system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.5;margin:0;color:#1a1a1a}
+      h1,h2{margin:10px 0;font-weight:700}
+      h1{font-size:14px;color:#004f91;margin:0}
+      h2{font-size:23px;margin-top:5px}
       a{color:#004f91;text-decoration:none}
       a:hover{text-decoration:underline}
       hr{border:1px solid #b3b3b3}
-      small{display:block;margin-bottom:.5rem}
-      .mg-error-page{min-height:100vh;background:#004f91;padding-bottom:2rem}
+      small{display:block;margin-bottom:5px}
+      .mg-error-page{min-height:100vh;background:#004f91;padding-bottom:20px}
       .mg-page-header__decoration{display:flex}
       .mg-page-header__decoration div{width:25%;height:7px}
       .mg-page-header__decoration div:nth-child(1){background:#c10920}
       .mg-page-header__decoration div:nth-child(2){background:#962987}
       .mg-page-header__decoration div:nth-child(3){background:#eb752a}
       .mg-page-header__decoration div:nth-child(4){background:#00afae}
-      .mg-error-page__container{background:#fff;padding:2rem 1.5rem 1rem;max-width:900px;margin:2rem auto}
-      .mg-error-page__search{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem}
-      .mg-error-page__search input{border:1px solid #ccc;padding:.5rem;font-size:1.6rem;max-width:300px}
-      .mg-error-page__details{background:#f5f5f5;padding:1rem;font-size:1.2rem;margin:1rem 0;border-left:3px solid #004f91}
+      .mg-error-page__container{background:#fff;padding:20px 15px 10px;max-width:900px;margin:20px auto}
+      .mg-error-page__search{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
+      .mg-error-page__search input{border:1px solid #ccc;padding:5px;font-size:16px;max-width:300px}
+      .mg-error-page__details{background:#f5f5f5;padding:10px;font-size:12px;margin:10px 0;border-left:3px solid #004f91}
       .mg-error-page__details dt{font-weight:600;display:inline}
-      .mg-error-page__details dd{display:inline;margin:0 1rem 0 .25rem}
-      .mg-button{display:inline-flex;align-items:center;justify-content:center;padding:1rem 1.5rem;font-size:1.4rem;font-weight:600;color:#fff;background:#004f91;border:1px solid #fff;cursor:pointer;text-decoration:none}
+      .mg-error-page__details dd{display:inline;margin:0 10px 0 3px}
+      .mg-button{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;font-size:14px;font-weight:600;color:#fff;background:#004f91;border:1px solid #fff;cursor:pointer;text-decoration:none}
       .mg-button:hover{background:#3372a7;color:#fff;text-decoration:none}
       .mg-u-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(0);border:0}
     </style>
@@ -97,7 +96,7 @@
           document.head.appendChild(el);
         }
         // Load full CSS from CDN (includes fonts)
-        load('link',{rel:'stylesheet',href:'https://assets.undrr.org/static/mangrove/1.3.3/css/style.css'});
+        load('link',{rel:'stylesheet',href:'https://assets.undrr.org/static/mangrove/1.4.0/css/style.css'});
         // Load analytics
         load('script',{src:'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js',crossorigin:'anonymous'});
         load('script',{src:'https://messaging.undrr.org/src/undrr-messaging.js',defer:''});
