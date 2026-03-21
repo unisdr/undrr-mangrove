@@ -35,5 +35,6 @@ Start here when building a new component. Follow these guides in order:
 - [Analytics](ANALYTICS.md) — event tracking and analytics integration
 - [Critical messaging](CRITICAL-MESSAGING.md) — emergency banner and alert patterns
 - [AI and MCP integration](AI-MCP-INTEGRATION.md) — AI manifest and MCP server configuration
+- [AI coding agent guidelines](AI-CODING-AGENTS.md) — practical guidance for AI agents modifying components
 - [Agents](AGENTS.md) — specialized Claude Code agent prompts
 - [Design system research](DESIGN-SYSTEM-RESEARCH.md) — survey of UN agency design systems
