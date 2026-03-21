@@ -47,7 +47,7 @@ Tips for better manifest output:
 
 ## Reviewing PRs
 
-Use the [review checklist](docs/REVIEW-CHECKLIST.md) to validate components against Mangrove's standards before approving.
+Use the [review checklist](docs/REVIEW-CHECKLIST.md) when reviewing component PRs.
 
 ## Submitting changes
 

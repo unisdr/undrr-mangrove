@@ -2,7 +2,7 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs).
 
-Use this checklist to validate a new or existing component against Mangrove's standards. Each item links to the relevant guide for details.
+Use this checklist when building or reviewing a component. Each item links to the relevant guide.
 
 ## Structure and naming
 
@@ -36,7 +36,7 @@ See [Accessibility](ACCESSIBILITY.md) for the full guide and testing methodology
 - [ ] Stories use CSF3 format (no `Template.bind({})`)
 - [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, CSS/JS references, changelog)
 - [ ] MDX includes the review checklist reference after `<Meta>` (see [component guide, step 5](COMPONENT-GUIDE.md#step-5-write-mdx-documentation))
-- [ ] Changelog entry added to the component's MDX file
+- [ ] Changelog entry added to the component's MDX file (see [changelog format](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs))
 - [ ] Sentence case for all headings and UI text
 
 See [Writing guidelines](WRITING-SHORT.md) for UX writing standards.

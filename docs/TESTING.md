@@ -305,7 +305,7 @@ it('renders efficiently', () => {
 ## Related documentation
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
-- [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
 - [Hydration authoring](HYDRATION-AUTHORING.md) — adding Drupal integration (next step after testing)
 
 ## Resources

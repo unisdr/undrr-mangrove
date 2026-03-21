@@ -50,4 +50,4 @@ Originally inspired by Nick DiLallo’s “This is good Writing — Eight princi
 
 - [Full writing guidelines](WRITING.md) — detailed UX writing standards and UN conventions
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
-- [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
