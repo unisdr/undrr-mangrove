@@ -22,7 +22,7 @@ These options are a progression: Option A is the safe immediate upgrade, Option 
 
 ## What else is in 1.4
 
-Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comparison on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.3.3...main). Below are the highlights.
+Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comparison on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.3.3...v1.4.0). Below are the highlights.
 
 ### New features
 
@@ -38,6 +38,7 @@ Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comp
 - Footer: mobile layout fix for narrow viewports ([#838](https://github.com/unisdr/undrr-mangrove/pull/838))
 - Removed the `data-viewport`/`inviewport` scroll animation system entirely. It hid elements with `opacity: 0` until a JS observer fired. If the observer was not present (Storybook, or a failed page load), content remained invisible. No `prefers-reduced-motion` support either. ImageCaptionCredit, ImageCaption, and Heading now render immediately. Only Mangrove's own components used this system; consumer templates are not affected. ([#868](https://github.com/unisdr/undrr-mangrove/pull/868))
 - `$mg-spacing-350` was identical to `$mg-spacing-300` (both 30px). Now correctly 35px. All internal usages updated. This change is present in both standard and legacy CSS. If your SCSS references this token directly, you will get 35px instead of 30px. ([#852](https://github.com/unisdr/undrr-mangrove/pull/852))
+- Static error page templates (Cloudflare 4xx/5xx pages) converted from 10px-root rem values to px. Templates now load standard `style.css` 1.4.0 from CDN and render correctly without a root font-size override. ([#857](https://github.com/unisdr/undrr-mangrove/issues/857))
 
 ### Cleanup
 

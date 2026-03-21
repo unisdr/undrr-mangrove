@@ -307,7 +307,7 @@ npm outdated
 npm update
 ```
 
-**Note**: Production sites should use versioned CDN paths (e.g., `/static/mangrove/1.3.3/`) for stability. A `latest` alias is available for testing but may change without notice.
+**Note**: Production sites should use versioned CDN paths (e.g., `/static/mangrove/1.4.0/`) for stability. A `latest` alias is available for testing but may change without notice.
 
 ## Assorted technical notes
 
