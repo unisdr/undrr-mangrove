@@ -174,18 +174,6 @@ Some users experience motion sickness or distraction from animations. Respect th
 }
 ```
 
-For JavaScript-driven animations, check the media query before starting:
-
-```js
-const prefersReducedMotion = window.matchMedia(
-  '(prefers-reduced-motion: reduce)',
-).matches;
-
-if (!prefersReducedMotion) {
-  element.classList.add('mg-animate-slide-in');
-}
-```
-
 ### 7. Touch target sizes
 
 WCAG 2.2 criterion 2.5.8 requires interactive targets to be at least 24x24 CSS pixels, with 44x44px recommended. This matters for mobile users and people with motor impairments.

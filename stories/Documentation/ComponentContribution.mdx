@@ -573,12 +573,11 @@ Or nest with `&` when the override is scoped to the block:
 }
 ```
 
-The `_mixins.scss` file includes the `%left-to-right` placeholder (entrance animation that reverses direction under `[dir="rtl"]`). Component-level SCSS uses logical properties (`padding-inline-start`, `margin-inline-end`) for RTL-aware spacing.
+Component-level SCSS uses logical properties (`padding-inline-start`, `margin-inline-end`) for RTL-aware spacing.
 
 #### RTL patterns in global styles
 
 - `_foundational.scss` sets `direction: rtl` on `ul` and `ol` elements inside `[dir="rtl"]`
-- `_utility.scss` reverses viewport entrance animations under `[dir="rtl"]`
 
 ### Components with RTL stories
 

@@ -16,12 +16,7 @@ export const credit_options = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function Imagecaption({ label, paragraph, opacityOnly, caption = 'true', credit = 'true' }) {
-  let opacityonly = '';
-  if (opacityOnly === 'yes') {
-    opacityonly = 'mg-opacity-only';
-  }
-
+export function Imagecaption({ label, paragraph, caption = 'true', credit = 'true' }) {
   const caption_variant = caption_options[caption];
   const credit_variant = credit_options[credit];
 
@@ -33,11 +28,9 @@ export function Imagecaption({ label, paragraph, opacityOnly, caption = 'true', 
         <figcaption
           className={cls(
             'mg-image-caption',
-            opacityonly,
             caption_variant,
             credit_variant
           )}
-          data-viewport="true"
         >
           {caption === 'true' && <P label={paragraph} />}
           {credit === 'true' && <Imagecredit label={label} name={name} />}

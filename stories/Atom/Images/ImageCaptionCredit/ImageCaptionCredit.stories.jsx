@@ -99,7 +99,7 @@ export const DefaultImageWithCreditCaption = {
     docs: {
       source: {
         code: `<figure class="mg-image-figcaption">
-  <div class="mg-image-figcaption__cart mg-scale-up">
+  <div class="mg-image-figcaption__cart">
     <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
   </div>
   <figcaption class="mg-image-caption">

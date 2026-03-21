@@ -9,21 +9,19 @@ import React from 'react';
  * @param {React.ReactNode} children - The heading content
  * @param {string} className - Additional CSS classes
  * @param {number} tabIndex - Tab index for accessibility
- * @param {string} dataViewport - Data attribute for viewport tracking
  */
 export const Heading = ({
   type = 2,
   children,
   className,
   tabIndex,
-  dataViewport,
   ...props
 }) => {
   const level = Math.min(Math.max(parseInt(type, 10) || 2, 1), 6);
   const Tag = `h${level}`;
 
   return (
-    <Tag className={className} tabIndex={tabIndex} data-viewport={dataViewport} {...props}>
+    <Tag className={className} tabIndex={tabIndex} {...props}>
       {children}
     </Tag>
   );

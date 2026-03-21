@@ -106,13 +106,9 @@ It consists of three states: Wide, Medium, and Portrait.
 
 - Choose the size controls as either wide, medium or portrait from the Canvas. Caption and Credit controls as true or false from the control tab of canvas.
 - Copy the HTML from the HTML tab.
-- If you want to add left-right animation then add data-viewport="true" attribute to your HTML element.
-
-### Interactions
-
-When the page containing the image is opened, the image zooms out and gives a 3-D effect.
 
 ## Changelog
 
-- **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`image-figcaption` → `mg-image-figcaption`, `image__caption` → `mg-image-caption`, `credits` → `mg-credits`, `scale-up` → `mg-scale-up`). Added BEM modifiers for size variants (`mg-image-figcaption--medium`, `mg-image-figcaption--portrait`). Replaced `defaultProps` with destructured defaults.
+- **1.2** — 2026-03-21: Removed viewport scroll animations (`data-viewport`, `mg-scale-up`, `mg-opacity-only`). Components now render immediately.
+- **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`image-figcaption` → `mg-image-figcaption`, `image__caption` → `mg-image-caption`, `credits` → `mg-credits`). Added BEM modifiers for size variants (`mg-image-figcaption--medium`, `mg-image-figcaption--portrait`). Replaced `defaultProps` with destructured defaults.
 - **1.0** — 2022-12-12: Released component

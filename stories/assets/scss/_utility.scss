@@ -16,66 +16,11 @@
   }
 }
 
-/* animation start */
-*[data-viewport="true"] {
-  @extend %left-to-right;
-
-  &.inviewport {
-    @extend %inviewport_left_right;
-  }
-}
-
-.mg-delay-1 {
-  transition-delay: 0.1s;
-}
-
-.mg-delay-2 {
-  transition-delay: 0.2s;
-}
-
-.mg-delay-3 {
-  transition-delay: 0.3s;
-}
-
-.mg-delay-4 {
-  transition-delay: 0.4s;
-}
-
-.mg-delay-5 {
-  transition-delay: 0.5s;
-}
-
-.mg-scale-up {
-  @extend %scale-up;
-
-  &.inviewport {
-    @include transform(scale(1));
-  }
-}
-
-.mg-opacity-only {
-  @extend %opacity-only;
-
-  &.inviewport {
-    @extend %inviewport_opacity_only;
-  }
-}
-
 .mg-u-expand-to-size {
   max-width: calc(100% - #{mg-rem(10)});
 
   @include devicebreak(medium) {
     max-width: calc(100% - #{mg-rem(30)});
-  }
-}
-
-[dir="rtl"] {
-  *[data-viewport="true"] {
-    @include transform(translateX(100px));
-
-    &.inviewport {
-      @extend %inviewport_left_right;
-    }
   }
 }
 

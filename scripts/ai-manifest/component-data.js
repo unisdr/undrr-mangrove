@@ -507,7 +507,7 @@ export default {
 
   'components-images-image-with-credit-caption': {
     description: 'Figure element with image, caption, and photo credit.',
-    cssClasses: ['mg-image-figcaption', 'mg-image-figcaption__cart', 'mg-scale-up'],
+    cssClasses: ['mg-image-figcaption', 'mg-image-figcaption__cart'],
     examples: [
       {
         name: 'Image with caption and credit',
