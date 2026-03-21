@@ -124,9 +124,15 @@
   a.mg-button-secondary,
   a.mg-button-secondary:hover,
   a.mg-button-secondary:visited {
-    background-color: $mg-color-hero-button-secondary-bg;
+    background-color: $mg-color-hero-button-secondary-background;
     color: $mg-color-hero-button-secondary-color;
     border-color: $mg-border-color-hero-button-secondary;
+  }
+
+  a.mg-button:focus-visible {
+    box-shadow: 0 0 0 2px $mg-color-neutral-0;
+    outline: 2px solid $mg-color-neutral-0;
+    outline-offset: 2px;
   }
 }
 

@@ -310,8 +310,8 @@ $mg-color-button: $mg-color-white !default;
 $mg-color-button--hover: $mg-color-white !default;
 $mg-color-button-background: $mg-color-interactive !default;
 $mg-color-button-background--hover: $mg-color-interactive-active !default;
-$mg-color-button-secondary-background: $mg-color-blue-600 !default;
-$mg-color-button-secondary-background--hover: $mg-color-blue-400 !default;
+$mg-color-button-secondary-background: $mg-color-blue-800 !default;
+$mg-color-button-secondary-background--hover: $mg-color-blue-700 !default;
 $mg-radius-button: $mg-spacing-0 !default;
 $mg-border-width-button: 1px !default;
 $mg-color-text-button: $mg-color-white !default;
@@ -352,9 +352,9 @@ $mg-color-hero-title: $mg-color-neutral-0 !default;
 $mg-spacing-hero-overlay: 0 !default;
 $mg-hero-overlay-max-width: $mg-width-400 !default;
 $mg-hero-overlay-padding: $mg-spacing-200 !default;
-$mg-color-hero-button-secondary-bg: rgba($mg-color-neutral-0, 0.9) !default;
+$mg-color-hero-button-secondary-background: rgba($mg-color-neutral-0, 0.9) !default;
 $mg-color-hero-button-secondary-color: $mg-color-hero !default;
-$mg-border-color-hero-button-secondary: $mg-color-hero !default;
+$mg-border-color-hero-button-secondary: $mg-color-neutral-0 !default;
 
 // mega menu
 $mg-color-mega-content-bg: $mg-color-button !default;
