@@ -46,6 +46,8 @@ Refer to these files as you follow each step below.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.jsx` as a functional component with hooks, destructured props with defaults, JSDoc, PropTypes, and BEM class names prefixed with `mg-`.
 
+> **Accessibility first**: Before writing JSX, review the [accessibility requirements](ACCESSIBILITY.md) for semantic HTML, keyboard interaction patterns, and ARIA attributes. It's much easier to build in accessibility from the start than to add it later.
+
 See `Pager.jsx` for a complete example and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
 
 ## Step 2: Create the SCSS file
@@ -81,6 +83,16 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 ## Step 5: Write MDX documentation
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
+
+**Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
+
+```mdx
+<Meta of={ComponentNameStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Component name
+```
 
 ## Step 6: Add hydration files (Drupal integration only)
 
@@ -151,22 +163,11 @@ yarn validate-manifest
 
 ### Final checklist
 
-- [ ] Component uses functional React with hooks
-- [ ] PropTypes defined with JSDoc descriptions
-- [ ] Defaults via destructuring (no `defaultProps`)
-- [ ] BEM class names with `mg-` prefix
-- [ ] SCSS uses variables from `_variables.scss`
-- [ ] SCSS imported in `_components.scss`
-- [ ] Stories use CSF3 format (no `Template.bind({})`)
-- [ ] Tests include `jest-axe` a11y check
-- [ ] MDX docs with props table, CSS reference, and changelog
-- [ ] Sentence case for all headings and UI text
-- [ ] `fromElement.js` + `hydrate.js` + tests (if Drupal-integrated)
-- [ ] webpack entry + `src/index.js` export (if applicable)
-- [ ] AI manifest data updated (if applicable)
+Run through the [review checklist](REVIEW-CHECKLIST.md) before submitting.
 
 ## Related documentation
 
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
 - [Architecture](ARCHITECTURE.md) — build system, distribution channels, and Drupal integration
 - [Adding hydration support](HYDRATION-AUTHORING.md) — `fromElement` patterns, barrel files, and tests
 - [Hydration guide](HYDRATION.md) — consumer-facing `createHydrator` API and integration examples

@@ -154,6 +154,12 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 - Keep headings in sentence case, and preserve proper nouns and acronyms.
 - Extract and reuse terminology from existing Mangrove documentation to maintain consistency.
 
+## Related documentation
+
+- [Writing guidelines (short)](WRITING-SHORT.md) — quick-reference version of these rules
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
+- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+
 ## Acknowledgements and sources
 
 - Originally inspired by Nick DiLallo’s “This is good Writing — Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).

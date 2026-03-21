@@ -298,6 +298,7 @@ Mangrove ships five themes (UNDRR, PreventionWeb, IRP, MCR2030, DELTA Resilience
 
 ## Next steps
 
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist (12 accessibility items)
 - [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — architecture and styling patterns
 - [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — accessibility requirements for component authors
 - [Testing](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — jest-axe and manual accessibility testing

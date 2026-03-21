@@ -45,3 +45,9 @@ UN guidance:
 - [Mailchimp content style guide](https://styleguide.mailchimp.com/)
 
 Originally inspired by Nick DiLallo’s “This is good Writing — Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
+
+## Related documentation
+
+- [Full writing guidelines](WRITING.md) — detailed UX writing standards and UN conventions
+- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
