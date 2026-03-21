@@ -182,7 +182,7 @@ const prefersReducedMotion = window.matchMedia(
 ).matches;
 
 if (!prefersReducedMotion) {
-  element.classList.add('mg-animate-slide-in');
+  element.style.transition = 'opacity 200ms ease';
 }
 ```
 
