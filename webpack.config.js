@@ -2,7 +2,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import FixStyleOnlyEntriesPlugin from 'webpack-fix-style-only-entries';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
 import webpackEntry from './webpack.entries.js';
@@ -62,7 +61,6 @@ export default [
     },
     plugins: [
       new MiniCssExtractPlugin(),
-      //new FixStyleOnlyEntriesPlugin(),
       new CopyPlugin({
         patterns: [
           { from: 'stories/assets', to: 'assets' },
