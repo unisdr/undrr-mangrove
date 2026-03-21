@@ -60,9 +60,9 @@ See the RTL support section in [Component standards](https://unisdr.github.io/un
 
 ## Drupal integration (if applicable)
 
-- [ ] `fromElement.js` exports a function that extracts props from `data-mg-*` attributes
-- [ ] `hydrate.js` barrel file uses `createHydrator`
-- [ ] `fromElement.test.js` verifies prop extraction
+- [ ] `ComponentName.fromElement.js` exports a function that extracts props from `data-mg-*` attributes
+- [ ] `ComponentName.hydrate.js` barrel file uses `createHydrator`
+- [ ] `ComponentName.fromElement.test.js` verifies prop extraction
 - [ ] Webpack entry added in `webpack.config.js`
 - [ ] Export added in `src/index.js`
 

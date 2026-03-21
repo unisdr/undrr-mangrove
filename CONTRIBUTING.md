@@ -45,6 +45,10 @@ Tips for better manifest output:
 - **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs), add a webpack entry in `webpack.config.js`, a `COMPONENT_IDS` mapping, and a `buildSampleProps()` entry — both in `scripts/ai-manifest/generate-ai-manifest.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
 - **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
+## Reviewing PRs
+
+Use the [review checklist](docs/REVIEW-CHECKLIST.md) to validate components against Mangrove's standards before approving.
+
 ## Submitting changes
 
 1. Create a feature branch from `main`.
@@ -52,6 +56,7 @@ Tips for better manifest output:
 3. Add or update Storybook docs if behavior or usage changes.
 4. If you changed component markup or CSS classes, update `scripts/ai-manifest/component-data.js`.
 5. Run tests and linters before you open a pull request.
-6. Reference the relevant issue in your PR description.
+6. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
+7. Reference the relevant issue in your PR description.
 
 For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).

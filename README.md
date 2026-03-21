@@ -238,10 +238,13 @@ See the [AI and MCP integration guide](https://unisdr.github.io/undrr-mangrove/?
 
 For contributing to this library:
 
-- [Development Guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
+- [All documentation](./docs/README.md) - Complete guide index
+- [Component guide](./docs/COMPONENT-GUIDE.md) - Step-by-step tutorial for building a component
+- [Development guide](./docs/DEVELOPMENT.md) - Setup, workflow, and coding standards
 - [Storybook developer docs](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) - Interactive component documentation and usage examples
-- [Testing Guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
-- [Release Process](./docs/RELEASES.md) - Versioning and publishing
+- [Testing guide](./docs/TESTING.md) - Unit, visual, and accessibility testing
+- [Accessibility](./docs/ACCESSIBILITY.md) - WCAG 2.2 AA requirements and testing
+- [Release process](./docs/RELEASES.md) - Versioning and publishing
 
 ## Package Contents
 

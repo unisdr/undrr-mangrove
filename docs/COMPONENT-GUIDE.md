@@ -46,6 +46,8 @@ Refer to these files as you follow each step below.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.jsx` as a functional component with hooks, destructured props with defaults, JSDoc, PropTypes, and BEM class names prefixed with `mg-`.
 
+> **Accessibility first**: Before writing JSX, review the [accessibility requirements](ACCESSIBILITY.md) — especially semantic HTML, keyboard interaction patterns, and ARIA attributes. Retrofitting accessibility after implementation is significantly harder than building it in from the start.
+
 See `Pager.jsx` for a complete example and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
 
 ## Step 2: Create the SCSS file

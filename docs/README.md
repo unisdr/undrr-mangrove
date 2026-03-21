@@ -1,6 +1,6 @@
 # Mangrove documentation
 
-Guides for building, testing, and maintaining components in the UNDRR Mangrove library. All guides in this directory are also published in [Storybook](https://unisdr.github.io/undrr-mangrove/).
+Guides for building, testing, and maintaining components in the Mangrove library. All guides in this directory are also published in [Storybook](https://unisdr.github.io/undrr-mangrove/).
 
 ## Creating a component
 

@@ -1,21 +1,21 @@
-# Testing Guide
+# Testing guide
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/TESTING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs).
 
-This guide covers testing practices for the UNDRR Mangrove component library. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+This guide covers testing practices for the Mangrove component library. For development setup and commands, see [DEVELOPMENT.md](./DEVELOPMENT.md).
 
-## Testing Strategy
+## Testing strategy
 
 We use multiple testing approaches to ensure component quality:
 
-1. **Unit Tests** - Jest for component logic and behavior
-2. **Visual Tests** - Chromatic for visual regression testing
-3. **Accessibility Tests** - Built into our test suite
-4. **Manual Testing** - Storybook for interactive testing
+1. **Unit tests** - Jest for component logic and behavior
+2. **Visual tests** - Chromatic for visual regression testing
+3. **Accessibility tests** - Built into our test suite
+4. **Manual testing** - Storybook for interactive testing
 
-## Unit Testing with Jest
+## Unit testing with Jest
 
-### Writing Tests
+### Writing tests
 
 Test files should be placed in `__tests__` directories within component folders:
 
@@ -27,7 +27,7 @@ stories/Components/Button/
       └── Button.test.jsx
 ```
 
-### Basic Test Structure
+### Basic test structure
 
 ```javascript
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -49,7 +49,7 @@ describe('Button', () => {
 });
 ```
 
-### Running Tests
+### Running tests
 
 ```bash
 # Run all tests
@@ -68,7 +68,7 @@ yarn test:coverage
 yarn test --verbose
 ```
 
-### Testing Best Practices
+### Testing best practices
 
 1. **Test behavior, not implementation**
    - Focus on what users see and do
@@ -88,9 +88,9 @@ yarn test --verbose
    - Loading states
    - Boundary values
 
-### Common Testing Patterns
+### Common testing patterns
 
-#### Testing Props
+#### Testing props
 
 ```javascript
 it('applies custom className', () => {
@@ -99,7 +99,7 @@ it('applies custom className', () => {
 });
 ```
 
-#### Testing State Changes
+#### Testing state changes
 
 ```javascript
 it('shows tab content when clicked', () => {
@@ -111,7 +111,7 @@ it('shows tab content when clicked', () => {
 });
 ```
 
-#### Testing Async Behavior
+#### Testing async behavior
 
 ```javascript
 it('loads data on mount', async () => {
@@ -125,27 +125,25 @@ it('loads data on mount', async () => {
 });
 ```
 
-## Visual Testing with Chromatic
+## Visual testing with Chromatic
 
 Visual testing is handled automatically through our CI/CD pipeline.
 
-### Quick Overview
+### Quick overview
 
 - Chromatic runs on PRs and main branch pushes
 - Visual changes are highlighted for review
 - Changes on main are auto-accepted as baseline
 - Skip with `[skip chromatic]` in commit message
 
-## Accessibility Testing
+## Accessibility testing
 
-### Automated Testing
+### Automated testing
 
-We use jest-axe for automated accessibility testing:
+We use jest-axe for automated accessibility testing. The `toHaveNoViolations` matcher is globally configured in `jest.setup.js`, so you only need to import `axe`:
 
 ```javascript
-import { axe, toHaveNoViolations } from 'jest-axe';
-
-expect.extend(toHaveNoViolations);
+import { axe } from 'jest-axe';
 
 it('has no accessibility violations', async () => {
   const { container } = render(<Button>Click me</Button>);
@@ -154,26 +152,26 @@ it('has no accessibility violations', async () => {
 });
 ```
 
-### Manual Testing
+### Manual testing
 
-1. **Keyboard Navigation**
+1. **Keyboard navigation**
    - Tab through all interactive elements
    - Ensure focus indicators are visible
    - Test keyboard shortcuts
 
-2. **Screen Reader Testing**
+2. **Screen reader testing**
    - Use NVDA (Windows) or VoiceOver (Mac)
    - Verify announcements make sense
    - Check form labels and descriptions
 
-3. **Color Contrast**
+3. **Color contrast**
    - Use browser DevTools
    - Verify WCAG AA compliance
    - Test with different color blindness simulations
 
-## Testing Components with External Dependencies
+## Testing components with external dependencies
 
-### Mocking Modules
+### Mocking modules
 
 ```javascript
 // Mock an external library
@@ -183,7 +181,7 @@ jest.mock('react-leaflet', () => ({
 }));
 ```
 
-### Mocking API Calls
+### Mocking API calls
 
 ```javascript
 import { rest } from 'msw';
@@ -200,7 +198,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 ```
 
-## Coverage Requirements
+## Coverage requirements
 
 While we don't enforce strict coverage thresholds, aim for:
 
@@ -215,9 +213,9 @@ yarn test:coverage
 open coverage/lcov-report/index.html
 ```
 
-## Debugging Tests
+## Debugging tests
 
-### Common Issues
+### Common issues
 
 1. **Component not rendering**
    - Check import paths
@@ -234,7 +232,7 @@ open coverage/lcov-report/index.html
    - Increase timeout if needed
    - Check promises are properly handled
 
-### Debugging Tools
+### Debugging tools
 
 ```javascript
 // Print current DOM
@@ -247,7 +245,7 @@ screen.debug(screen.getByRole('button'));
 screen.logTestingPlaygroundURL();
 ```
 
-## Continuous Integration
+## Continuous integration
 
 Tests run automatically on:
 
@@ -257,16 +255,16 @@ Tests run automatically on:
 
 Failed tests will block merging and deployment.
 
-## Test Organization
+## Test organization
 
-### Naming Conventions
+### Naming conventions
 
 - Test files: `ComponentName.test.jsx`
 - Test suites: Use `describe` blocks
 - Test cases: Start with "it" or "test"
 - Be descriptive but concise
 
-### Test Structure
+### Test structure
 
 ```javascript
 describe('ComponentName', () => {
@@ -287,7 +285,7 @@ describe('ComponentName', () => {
 });
 ```
 
-## Performance Testing
+## Performance testing
 
 For performance-sensitive components:
 
@@ -308,10 +306,11 @@ it('renders efficiently', () => {
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards
+- [Hydration authoring](HYDRATION-AUTHORING.md) — adding Drupal integration (next step after testing)
 
 ## Resources
 
 - [Jest Documentation](https://jestjs.io/)
 - [React Testing Library](https://testing-library.com/react)
 - [Chromatic Documentation](https://www.chromatic.com/docs/)
-- [WCAG Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+- [WCAG Guidelines](https://www.w3.org/WAI/WCAG22/quickref/)
