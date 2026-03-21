@@ -270,9 +270,9 @@ https://assets.undrr.org/static/mangrove/README.md
 https://assets.undrr.org/static/mangrove/latest/css/style.css
 https://assets.undrr.org/static/mangrove/latest/components/MegaMenu.js
 https://assets.undrr.org/static/mangrove/latest/js/tabs.js
-https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
-https://assets.undrr.org/static/mangrove/1.3.3/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.3.3/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.4.0/css/style.css
+https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js
 ```
 
 #### Bleeding edge test rep
@@ -280,7 +280,7 @@ https://assets.undrr.org/static/mangrove/1.3.3/js/tabs.js
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
+https://assets.undrr.org/static/mangrove/1.4.0/css/style.css
 ... etc
 ```
 

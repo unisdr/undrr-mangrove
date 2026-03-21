@@ -22,7 +22,7 @@ Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
 
 **Example:**
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.3/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -35,7 +35,7 @@ Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
 **Example:**
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.3.3/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -87,7 +87,7 @@ Then import the Mangrove component as an ES module:
 
   // Load component from CDN
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.3.3/components/MegaMenu.js'
+    'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
   );
 
   // Unwrap ESM/CJS interop - bundle may be double-wrapped
@@ -144,7 +144,7 @@ Base URL: `https://assets.undrr.org/static/logos/`
 Pin to a specific version for stability:
 
 ```
-https://assets.undrr.org/static/mangrove/1.3.3/css/style.css
+https://assets.undrr.org/static/mangrove/1.4.0/css/style.css
 ```
 
 ### Latest (testing only)
