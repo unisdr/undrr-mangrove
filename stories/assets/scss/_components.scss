@@ -46,20 +46,20 @@
 @import "../../Components/HighlightBox/highlight-box";
 @import "../../Components/QuoteHighlight/quote-highlight";
 @import "../../Components/Buttons/Chips/chips";
-@import "../../Components/Buttons/CtaButton/buttons";
+@import "../../Components/Buttons/CtaButton/cta-button";
 @import "../../Components/Buttons/ShareButtons/share-buttons";
-@import "../../Components/MegaMenu/megamenu";
+@import "../../Components/MegaMenu/mega-menu";
 @import "../../Components/PageHeader/page-header";
 @import "../../Components/Cards/Card/card";
 @import "../../Components/Cards/StatsCard/stats-card";
 @import "../../Components/Snackbar/snackbar";
 @import "../../Components/Hero/hero";
-@import "../../Components/TextCta/textcta";
+@import "../../Components/TextCta/text-cta";
 @import "../../Components/ScrollContainer/scroll-container";
 @import "../../Components/Tab/tab";
-@import "../../Components/TableOfContents/TableOfContents";
-@import "../../Components/SyndicationSearchWidget/SyndicationSearchWidget";
-@import "../../Components/BlockquoteComponent/blockquotecomp";
+@import "../../Components/TableOfContents/table-of-contents";
+@import "../../Components/SyndicationSearchWidget/syndication-search-widget";
+@import "../../Components/BlockquoteComponent/blockquote-component";
 @import "../../Components/ErrorPages/error-pages";
 @import "../../Components/Footer/footer";
 
@@ -69,5 +69,5 @@
 // Utilities
 @import "../../Utilities/EmbedContainer/embed-container";
 @import "../../Utilities/Loader/loader";
-@import "../../Utilities/FullWidth/FullWidth";
-@import "../../Utilities/ShowMore/ShowMore";
+@import "../../Utilities/FullWidth/full-width";
+@import "../../Utilities/ShowMore/show-more";

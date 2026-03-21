@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import './buttons.scss';
+// import './cta-button.scss';
 
 /**
  * Call-to-action button rendered as a styled anchor link.

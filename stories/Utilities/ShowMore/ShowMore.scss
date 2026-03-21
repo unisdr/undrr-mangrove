@@ -1,26 +1,3 @@
-:root {
-  --mg-show-more-height: 200px;
-}
-
-.mg-show-more--collapsed {
-  max-height: 200px;
-  max-height: var(--mg-show-more-height);
-  overflow: hidden;
-  position: relative;
-  mask-image: linear-gradient(
-    to bottom,
-    black calc(var(--mg-show-more-height) - 80px),
-    transparent var(--mg-show-more-height)
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    black calc(var(--mg-show-more-height) - 80px),
-    transparent var(--mg-show-more-height)
-  );
-}
-
-.mg-show-more--button {
-  position: relative;
-  z-index: 2;
-  padding: mg-rem(10) mg-rem(40);
-}
+// ShowMore.scss — DEPRECATED, use show-more.scss
+@warn "ShowMore.scss is deprecated. Import show-more.scss instead.";
+@import "./show-more";

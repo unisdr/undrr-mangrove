@@ -50,12 +50,12 @@ See `Pager.jsx` for a complete example and the [component standards](https://uni
 
 ## Step 2: Create the SCSS file
 
-Create `stories/Components/{Category}/{ComponentName}/componentname.scss` using SCSS variables from `_variables.scss` and BEM naming. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
+Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
 
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
 ```scss
-@import "../../Components/{Category}/{ComponentName}/componentname";
+@import "../../Components/{Category}/{ComponentName}/component-name";
 ```
 
 This is required — without it, your styles won't be included in any theme's compiled CSS.
