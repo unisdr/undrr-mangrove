@@ -56,7 +56,7 @@ const Template = args => (
                   change in a global context, setting out key risks actions
                 </p>
                 <a
-                  className="mg-button mg-button-primary mg-button-arrow"
+                  className="mg-button mg-button-primary"
                   role="button"
                   href="https://www.undrr.org"
                   type="Primary"
