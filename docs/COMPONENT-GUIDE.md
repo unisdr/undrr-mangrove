@@ -84,12 +84,12 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
-**Add a review checklist reference** right after the `<Meta>` block so developers and tools can always find the standards:
+**Add a review checklist reference** right after the `<Meta>` block so developers and tools can always find the standards. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
 
 ```mdx
 <Meta of={ComponentNameStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
 # Component name
 ```

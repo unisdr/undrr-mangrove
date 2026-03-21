@@ -26,7 +26,7 @@ Start here when building a new component. Follow these guides in order:
 ## Releasing
 
 - [Release process](RELEASES.md) — versioning, tagging, and publishing to npm
-- [Release 1.4](RELEASE-1.4.md) — migration notes for the 1.4 release
+- [Release 1.4](RELEASE-1.4.md) — migration notes for the 1.4 release (may be removed after 2026)
 
 ## Other guides
 
