@@ -135,7 +135,7 @@ export default {
 
   // --- Buttons (auto-rendered) ---
   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons. Arrow and disabled variants.' },
-  'components-buttons-chips': { description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant. Uses legacy class names without the mg- prefix.' },
+  'components-buttons-chips': { description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant.' },
 
   // --- Cards ---
   'components-cards-vertical-card': {
@@ -383,30 +383,6 @@ export default {
   // --- Tabs (auto-rendered) ---
   'components-tabs': { description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity. The script adds ARIA roles (tablist, tab, tabpanel) and keyboard navigation at runtime — do not omit the script or tabs will be inaccessible.' },
 
-  // --- Callout ---
-  'components-callout': {
-    description: 'Styled blockquote with optional color accent (yellow, red, green, blue) and citation.',
-    cssClasses: ['blockquote', 'yellow', 'red', 'green', 'blue'],
-    examples: [
-      {
-        name: 'Default blockquote',
-        html: `<blockquote>
-  Disasters are not natural. They result from the failure to manage risk.
-  <cite>UNDRR</cite>
-</blockquote>`,
-      },
-      {
-        name: 'Colored blockquote',
-        html: `<div class="blockquote blue">
-  <blockquote>
-    Investing in disaster risk reduction saves lives and livelihoods.
-    <cite>Sendai Framework</cite>
-  </blockquote>
-</div>`,
-      },
-    ],
-  },
-
   // --- Highlight box (auto-rendered) ---
   'components-highlightbox': { description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.' },
 
@@ -518,11 +494,11 @@ export default {
   // --- Images ---
   'components-images-author-image': {
     description: 'Circular author portrait with optional hover color accent (yellow, green, red, blue) and size variant.',
-    cssClasses: ['author__img'],
+    cssClasses: ['mg-author-image'],
     examples: [
       {
         name: 'Author image',
-        html: `<div class="author__img large blue">
+        html: `<div class="mg-author-image mg-author-image--large mg-author-image--blue">
   <img src="https://picsum.photos/150/150" alt="Author name" title="Author name" />
 </div>`,
       },
@@ -531,17 +507,17 @@ export default {
 
   'components-images-image-with-credit-caption': {
     description: 'Figure element with image, caption, and photo credit.',
-    cssClasses: ['image-figcaption', 'image-figcaption__cart', 'scale-up'],
+    cssClasses: ['mg-image-figcaption', 'mg-image-figcaption__cart', 'mg-scale-up'],
     examples: [
       {
         name: 'Image with caption and credit',
-        html: `<figure class="image-figcaption">
-  <div class="image-figcaption__cart">
+        html: `<figure class="mg-image-figcaption">
+  <div class="mg-image-figcaption__cart">
     <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
   </div>
   <figcaption>
     Disaster preparedness training in the Philippines.
-    <span class="image-credit">Photo: UNDRR / John Smith</span>
+    <span class="mg-credits">Photo: UNDRR / John Smith</span>
   </figcaption>
 </figure>`,
       },
@@ -739,10 +715,10 @@ export default {
 
   <h1>Publications</h1>
 
-  <!-- Filter chips (legacy class names without mg- prefix) -->
+  <!-- Filter chips -->
   <div style="margin-bottom: 1rem;">
-    <button class="chip chip__cross" type="button" aria-label="Remove filter: Earthquake">Earthquake</button>
-    <button class="chip chip__cross" type="button" aria-label="Remove filter: 2024">2024</button>
+    <button class="mg-chip mg-chip__cross" type="button" aria-label="Remove filter: Earthquake">Earthquake</button>
+    <button class="mg-chip mg-chip__cross" type="button" aria-label="Remove filter: 2024">2024</button>
   </div>
 
   <!-- Card grid -->

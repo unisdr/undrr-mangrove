@@ -98,25 +98,20 @@ export const DefaultImageWithCreditCaption = {
   parameters: {
     docs: {
       source: {
-        code: `<div class="grid-x image-section">
-    <div class="cell image__cart medium-12">
-      <img
-        src="static/media/stories/assets/images/farmland-lg.jpg"
-        alt="farmland"
-      />
+        code: `<figure class="mg-image-figcaption">
+  <div class="mg-image-figcaption__cart mg-scale-up">
+    <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
+  </div>
+  <figcaption class="mg-image-caption">
+    <p>
+      We provide tools such as the DRR Community site PreventionWeb,
+      publications on good practices, and the Global Assessment Report (GAR)
+    </p>
+    <div class="mg-credits">
+      UNDRR/Ghana<br /><strong>Alex Mensah Tenkorang</strong>
     </div>
-    <div class="cell image__description medium-7">
-      <figcaption class="image__caption">
-        <p>
-          We provide tools such as the DRR Community site PreventionWeb, publications on good practices, and the Global Assessment Report (GAR)
-        </p>
-        <div class="image--author">
-          <span class="author__caption author--label">UNDRR/Ghana</span>
-          <span class="author__caption author--name">Firstname Lastname</span>
-        </div>
-      </figcaption>
-    </div>
-    </div>`,
+  </figcaption>
+</figure>`,
       },
     },
   },

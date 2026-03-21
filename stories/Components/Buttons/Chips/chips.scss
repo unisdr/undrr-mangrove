@@ -1,4 +1,4 @@
-.chip {
+.mg-chip {
   align-items: center;
   background: $mg-color-neutral-50;
   border-radius: 20px;
@@ -11,7 +11,7 @@
     background-color: $mg-color-neutral-300;
   }
 
-  &.chip__cross {
+  &.mg-chip__cross {
     &::before {
       // background: url(#{$img-path-Iconfourback}/times-red.svg) no-repeat left;
       content: "";
@@ -28,7 +28,7 @@
 }
 
 [dir="rtl"] {
-  .chip__cross::before {
+  .mg-chip__cross::before {
     margin-left: $mg-spacing-25;
     margin-right: -$mg-spacing-25;
   }

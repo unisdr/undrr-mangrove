@@ -1,5 +1,5 @@
 /* image caption start */
-.image__caption {
+.mg-image-caption {
   border-bottom: 2px solid $mg-color-black;
 
   @include devicebreak(medium) {
@@ -19,7 +19,7 @@
       margin: 0;
     }
 
-    + .credits {
+    + .mg-credits {
       border-top: 1px solid $mg-color-neutral-500;
       display: flex;
       flex-shrink: 0;
@@ -39,7 +39,7 @@
     }
   }
 
-  .credits {
+  .mg-credits {
     display: flex;
     margin-bottom: $mg-spacing-50;
 
@@ -61,13 +61,13 @@
 }
 
 [dir="rtl"] {
-  .image__caption {
+  .mg-image-caption {
     p {
       @include devicebreak(medium) {
         padding-right: 0;
       }
 
-      + .credits {
+      + .mg-credits {
         @include devicebreak(medium) {
           border-right: 1px solid $mg-color-neutral-500;
           border-top: 0;
@@ -79,7 +79,7 @@
       }
     }
 
-    .credits {
+    .mg-credits {
       @include devicebreak(medium) {
         border-left: none;
         margin-left: 0;

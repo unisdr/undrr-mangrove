@@ -55,6 +55,20 @@ const getLangCode = (Story, context) => {
   return <Story {...context} />;
 };
 
+// Simulate the Drupal-side viewport observer for Storybook.
+// Elements with data-viewport="true" start hidden (opacity: 0, visibility: hidden)
+// and only become visible when the "inviewport" class is added. In Drupal, a scroll
+// observer handles this. In Storybook, we add the class immediately so components
+// are visible in stories and docs.
+const viewportDecorator = (Story, context) => {
+  React.useEffect(() => {
+    const targets = document.querySelectorAll('[data-viewport="true"]');
+    targets.forEach(el => el.classList.add('inviewport'));
+  });
+
+  return <Story {...context} />;
+};
+
 const sbFrameReset = (Story, context) => {
   const iframeBody = document.querySelector('body');
   const sidebarItem = parent.document.querySelectorAll('.sidebar-item');
@@ -249,7 +263,7 @@ const preview = {
     },
   },
 
-  decorators: [getLangCode, sbFrameReset, setDirection, themeDecorator],
+  decorators: [getLangCode, sbFrameReset, setDirection, themeDecorator, viewportDecorator],
 
   tags: ['autodocs'],
 };

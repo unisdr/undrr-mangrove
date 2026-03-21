@@ -40,7 +40,9 @@
 @import "../../Components/Forms/Radio/radio";
 @import "../../Components/Forms/Select/select";
 @import "../../Components/Breadcrumbs/breadcrumbs";
-@import "../../Components/Pagination/pagination";
+
+// Deprecated (February 2026) — removal planned by end of 2026. Use Pager instead.
+// @import "../../Components/Pagination/pagination";
 @import "../../Components/Pager/pager";
 @import "../../Components/Gallery/gallery";
 @import "../../Components/HighlightBox/highlight-box";
@@ -57,9 +59,12 @@
 @import "../../Components/TextCta/text-cta";
 @import "../../Components/ScrollContainer/scroll-container";
 @import "../../Components/Tab/tab";
+
+// CSS+vanilla-JS component — Drupal integration via Gutenberg block, not a React export.
 @import "../../Components/TableOfContents/table-of-contents";
 @import "../../Components/SyndicationSearchWidget/syndication-search-widget";
-@import "../../Components/BlockquoteComponent/blockquote-component";
+
+// CSS+static-HTML component — not a React export. Static pages in dist/assets/error-pages/.
 @import "../../Components/ErrorPages/error-pages";
 @import "../../Components/Footer/footer";
 

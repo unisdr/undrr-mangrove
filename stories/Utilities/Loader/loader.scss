@@ -11,7 +11,7 @@
   }
 }
 
-.loader {
+.mg-loader {
   @include animation(loader-animation 2s linear infinite);
 
   border: 8px solid $mg-color-blue-600;
