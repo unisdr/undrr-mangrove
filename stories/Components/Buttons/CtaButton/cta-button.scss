@@ -83,11 +83,11 @@ button {
 }
 
 .mg-button-secondary {
-  background-color: $mg-color-blue-600;
+  background-color: $mg-color-button-secondary-background;
 
   &:hover {
     color: $mg-color-button;
-    background-color: $mg-color-blue-400;
+    background-color: $mg-color-button-secondary-background--hover;
   }
 }
 

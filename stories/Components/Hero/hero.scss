@@ -27,18 +27,22 @@
   }
 
   // Button overrides
-  a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
-  }
-
-  a.mg-button-secondary {
-    background-color: rgba($mg-color-neutral-0, 0.9);
-  }
-
   a.mg-button,
   a.mg-button:hover,
   a.mg-button:visited {
     color: $mg-color-hero;
+  }
+
+  a.mg-button-primary {
+    background-color: $mg-color-neutral-0;
+  }
+
+  a.mg-button-secondary,
+  a.mg-button-secondary:hover,
+  a.mg-button-secondary:visited {
+    background-color: $mg-color-hero-button-secondary-bg;
+    color: $mg-color-hero-button-secondary-color;
+    border-color: $mg-border-color-hero-button-secondary;
   }
 
   &__overlay {
