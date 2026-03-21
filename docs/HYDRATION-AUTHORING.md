@@ -204,7 +204,8 @@ if (contentWrapper) {
 
 ## Related documentation
 
-- [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+- [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards
+- [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components
 - [Architecture](ARCHITECTURE.md) — build system and distribution channels
 - [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference

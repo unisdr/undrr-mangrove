@@ -82,6 +82,16 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
+**Add a review checklist reference** right after the `<Meta>` block so developers and tools can always find the standards:
+
+```mdx
+<Meta of={ComponentNameStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Component name
+```
+
 ## Step 6: Add hydration files (Drupal integration only)
 
 If the component will render into server-generated HTML containers, create `fromElement.js`, `hydrate.js`, and `fromElement` tests. See [Adding hydration support](HYDRATION-AUTHORING.md) for the step-by-step walkthrough, `fromElement` patterns, barrel file format, and `Pager.fromElement.js` / `Pager.fromElement.test.js` for reference implementations.
@@ -167,6 +177,7 @@ yarn validate-manifest
 
 ## Related documentation
 
+- [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards before submitting
 - [Architecture](ARCHITECTURE.md) — build system, distribution channels, and Drupal integration
 - [Adding hydration support](HYDRATION-AUTHORING.md) — `fromElement` patterns, barrel files, and tests
 - [Hydration guide](HYDRATION.md) — consumer-facing `createHydrator` API and integration examples

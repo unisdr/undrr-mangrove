@@ -304,6 +304,11 @@ it('renders efficiently', () => {
 });
 ```
 
+## Related documentation
+
+- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+- [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards
+
 ## Resources
 
 - [Jest Documentation](https://jestjs.io/)
