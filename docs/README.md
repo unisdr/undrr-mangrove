@@ -9,7 +9,7 @@ Start here when building a new component. Follow these guides in order:
 1. [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial from scaffolding to registration
 2. [Testing guide](TESTING.md) — unit, visual, and accessibility testing
 3. [Hydration authoring](HYDRATION-AUTHORING.md) — adding Drupal integration via `fromElement` and `createHydrator`
-4. [Review checklist](REVIEW-CHECKLIST.md) — validate your component against all Mangrove standards before submitting
+4. [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
 
 ## Standards
 
