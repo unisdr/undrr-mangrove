@@ -2,23 +2,47 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v1-4--docs).
 
-We don't usually write long-form release notes for Mangrove. But 1.4 is a bigger release than most, and it represents a new level of maturity for the library. Going forward, we plan to do this for each minor release (1.5, 1.6, etc.) so there is a clear record of what changed and why.
+We don't usually write long-form release notes for Mangrove. 1.4 is big enough that we should, and we plan to keep doing this for each minor release going forward.
 
-The bulk of these notes cover the **root font-size change** — a modernization that aligns Mangrove with browser standards and fixes a long-standing accessibility gap. The rest of the 1.4 work is summarized below with links to the relevant pull requests.
+The big change: Mangrove no longer overrides the browser's font-size setting. That's the one you need to read carefully if you maintain a Drupal site. The rest of 1.4 is a mix of new stuff (DELTA theme, tab improvements, search filters) and a lot of cleanup we'd been putting off.
 
-**For site owners and program managers:** Users who have set a larger font size in their browser will now see that preference respected on sites using the standard Mangrove theme. Previously, Mangrove overrode this setting, which made text harder to read for people who need larger text. Existing Drupal sites should use the legacy theme variant (a one-file swap) while planning a full migration.
+**If you manage a site that uses Mangrove:** people who set a larger font size in their browser will now actually get it. Previously, Mangrove forced `font-size: 10px` on the root, which overrode user preferences. Existing Drupal sites should swap to the legacy theme CSS (one file change) while planning a proper migration.
 
 ## What else is in 1.4
 
-These shipped on `main` since the 1.3.3 tag. Each is a self-contained improvement — the PRs have the full details.
+Everything below shipped on `main` since 1.3.3. The PRs have the details.
 
-- **DELTA Resilience theme** — new theme, landing page template, and component adjustments for the DELTA initiative ([#835](https://github.com/unisdr/undrr-mangrove/pull/835))
-- **AI component manifest** — `manifest.json` and `llms.txt` so AI coding tools can discover and render Mangrove components ([#845](https://github.com/unisdr/undrr-mangrove/pull/845), [#847](https://github.com/unisdr/undrr-mangrove/pull/847))
-- **Search widget** — native filters for content type, country, and date range; four-card syndication layout; debounce and URL param fixes ([#834](https://github.com/unisdr/undrr-mangrove/pull/834), [#851](https://github.com/unisdr/undrr-mangrove/pull/851))
-- **Documentation** — Storybook reorganization, semantic CSS rationale, sidebar cleanup ([#833](https://github.com/unisdr/undrr-mangrove/pull/833), [#848](https://github.com/unisdr/undrr-mangrove/pull/848))
-- **Footer** — mobile responsive layout fix for narrow viewports ([#838](https://github.com/unisdr/undrr-mangrove/pull/838))
-- **`$mg-spacing-350` fix** — was identical to `$mg-spacing-300` (both 30px), now correctly 35px. All internal usages updated, no visual change. If your SCSS references this token directly, you will get 35px instead of 30px.
-- **CtaLink removed** — the inline call-to-action link component (`.cta__link`) was removed. It was never integrated into Drupal or exported via npm. The CSS classes `cta__link`, `cta--arrow`, and `cta--space` are no longer emitted in compiled theme CSS. The CtaButton component (`.mg-button`) is unaffected.
+### New features
+
+- DELTA Resilience theme, with a landing page template and component tweaks for the DELTA initiative ([#835](https://github.com/unisdr/undrr-mangrove/pull/835))
+- Stacked tabs now support `defaultOpen`, `singleOpen`, and keyword filtering ([#860](https://github.com/unisdr/undrr-mangrove/pull/860))
+- Search widget got native filters for content type, country, and date range, plus a four-card syndication layout ([#834](https://github.com/unisdr/undrr-mangrove/pull/834))
+- AI component manifest: `manifest.json` and `llms.txt` for AI coding tools. Includes vanilla HTML examples, CSS utility inventory, and auto-rendered previews ([#845](https://github.com/unisdr/undrr-mangrove/pull/845), [#846](https://github.com/unisdr/undrr-mangrove/pull/846), [#847](https://github.com/unisdr/undrr-mangrove/pull/847))
+
+### Fixes
+
+- Search: fixed the UI bounce on filter changes, increased debounce, fixed URL query param sync ([#851](https://github.com/unisdr/undrr-mangrove/pull/851))
+- Footer: mobile layout fix for narrow viewports ([#838](https://github.com/unisdr/undrr-mangrove/pull/838))
+- Removed the `data-viewport`/`inviewport` scroll animation system entirely. It hid elements with `opacity: 0` until a JS observer fired, so if the observer wasn't present (Storybook, or just a bad page load), content vanished. No `prefers-reduced-motion` support either. ImageCaptionCredit, ImageCaption, and Heading now render immediately. ([#868](https://github.com/unisdr/undrr-mangrove/pull/868))
+- `$mg-spacing-350` was identical to `$mg-spacing-300` (both 30px). Now correctly 35px. All internal usages updated. If your SCSS references this token directly, you'll get 35px instead of 30px.
+
+### Cleanup
+
+- Removed CtaLink (`.cta__link`). Never made it into Drupal or npm. The CSS classes `cta__link`, `cta--arrow`, and `cta--space` no longer appear in compiled CSS. CtaButton (`.mg-button`) is unaffected. ([#854](https://github.com/unisdr/undrr-mangrove/pull/854))
+- SCSS partials renamed to kebab-case (`_card-with-image.scss` instead of `_CardWithImage.scss`). Import paths still work, Sass resolves both. ([#861](https://github.com/unisdr/undrr-mangrove/pull/861))
+- Removed 17 dead dependencies (Babel 6 leftovers, old webpack loaders, unused ESLint configs). 478 transitive packages gone, ~15 MB lighter. ([#869](https://github.com/unisdr/undrr-mangrove/pull/869))
+- Audited CSS-only components and formalized which are CSS-only vs React. Added coding guidelines for AI agents. ([#866](https://github.com/unisdr/undrr-mangrove/pull/866))
+- AI manifest import statements are now validated against actual npm exports ([#850](https://github.com/unisdr/undrr-mangrove/pull/850))
+
+### Tooling
+
+- Storybook 10.3.1, webpack-cli 7 ([#863](https://github.com/unisdr/undrr-mangrove/pull/863))
+- tar bumped 7.5.10 to 7.5.11, security fix ([#829](https://github.com/unisdr/undrr-mangrove/pull/829))
+
+### Docs
+
+- Storybook sidebar reorganized, semantic CSS rationale written up, About page rewritten ([#833](https://github.com/unisdr/undrr-mangrove/pull/833), [#848](https://github.com/unisdr/undrr-mangrove/pull/848))
+- Component creation guides are easier to find now, for both humans and LLMs ([#862](https://github.com/unisdr/undrr-mangrove/pull/862))
 
 ## Root font-size: browser alignment
 
