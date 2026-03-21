@@ -437,51 +437,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 12. Animations
-    // ---------------------------------------------------------------
-    {
-      name: 'Animations',
-      description:
-        'Viewport-triggered animations. Add data-viewport="true" to the element, then apply an animation class. The .inviewport class is added when the element enters the viewport.',
-      classes: [
-        {
-          class: 'mg-scale-up',
-          description:
-            'Scale animation on viewport enter. Element starts scaled down and scales to 1.',
-          usage: '<div class="mg-scale-up" data-viewport="true">Animates on scroll</div>',
-        },
-        {
-          class: 'mg-opacity-only',
-          description:
-            'Fade-in animation on viewport enter. Element starts transparent and fades to full opacity.',
-          usage:
-            '<div class="mg-opacity-only" data-viewport="true">Fades in on scroll</div>',
-        },
-        {
-          class: 'mg-delay-1',
-          description: 'Transition delay of 0.1s.',
-        },
-        {
-          class: 'mg-delay-2',
-          description: 'Transition delay of 0.2s.',
-        },
-        {
-          class: 'mg-delay-3',
-          description: 'Transition delay of 0.3s.',
-        },
-        {
-          class: 'mg-delay-4',
-          description: 'Transition delay of 0.4s.',
-        },
-        {
-          class: 'mg-delay-5',
-          description: 'Transition delay of 0.5s.',
-        },
-      ],
-    },
-
-    // ---------------------------------------------------------------
-    // 13. Embed containers
+    // 12. Embed containers
     // ---------------------------------------------------------------
     {
       name: 'Embed containers',

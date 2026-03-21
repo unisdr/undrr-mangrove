@@ -123,48 +123,6 @@
   background-image: none;
 }
 
-// Viewport animation placeholders (consumed by _utility.scss)
-%left-to-right {
-  @include transform(translateX(-100px));
-  @include transition(
-    transform 1.2s cubic-bezier(0.34, 0.41, 0.03, 1),
-    opacity 1.2s cubic-bezier(0.34, 0.41, 0.03, 1)
-  );
-
-  opacity: 0;
-  visibility: hidden;
-}
-
-%inviewport_left_right {
-  @include transform(translateX(0));
-
-  opacity: 1;
-  visibility: visible;
-}
-
-[dir="rtl"] {
-  %left-to-right {
-    @include transform(translateX(100px));
-  }
-}
-
-%scale-up {
-  @include transform(scale(0.9));
-  @include transition(transform 1.2s cubic-bezier(0.34, 0.41, 0.03, 1));
-}
-
-%opacity-only {
-  @include transition(opacity 1.2s cubic-bezier(0.34, 0.41, 0.03, 1));
-
-  opacity: 0;
-}
-
-%inviewport_opacity_only {
-  @include transform(translateX(0));
-
-  opacity: 1;
-}
-
 %background-white {
   background-color: white;
 }

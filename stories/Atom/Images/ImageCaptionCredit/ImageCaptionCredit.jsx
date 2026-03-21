@@ -22,8 +22,8 @@ export const Images = ({
       : null;
 
   return (
-    <figure data-viewport="true" className={cls('mg-image-figcaption', `${size}`)}>
-      <div data-viewport="true" className="mg-image-figcaption__cart mg-scale-up">
+    <figure className={cls('mg-image-figcaption', `${size}`)}>
+      <div className="mg-image-figcaption__cart">
         {sizeProp === 'wide' && <img src={imagelg} alt={alt} />}
         {sizeProp === 'medium' && <img src={imagemd} alt={alt} />}
         {sizeProp === 'portrait' && <img src={imagesm} alt={alt} />}
@@ -33,7 +33,6 @@ export const Images = ({
         <></>
       ) : (
         <Imagecaption
-          opacityOnly="yes"
           label={label}
           paragraph={paragraph}
           caption={caption}
