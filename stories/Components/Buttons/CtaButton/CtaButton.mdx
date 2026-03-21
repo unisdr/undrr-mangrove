@@ -24,40 +24,42 @@ export const getCaptionForLocale = locale => {
 
 # Buttons
 
-Primary and secondary action buttons used to prompt users to take an action like "Read more" or "Sign up."
+Mangrove's standard button component. Buttons are designed as call-to-action (CTA) elements — they should always direct the user toward a clear next step such as "Read more", "Sign up", or "View documentation."
 
 #### When to use:
 
-- Buttons should be used as primary, secondary or tertiary calls to actions
-- Ideally, a page should have one primary action. A secondary/tertiary option should be used infrequently.
-- If there are multiple choices for an action item, one default button should be active and the other buttons inactive
+- Use buttons to drive a specific user action, not for navigation between pages (use links instead)
+- Each page should have one primary action. Secondary and tertiary options should be used sparingly
+- If there are multiple choices, one button should be the default (primary) and the others secondary or tertiary
 
-### Formatting
+#### Variants
 
-#### Default
-
-There are multiple button types in our design system
-
-1. Primary/Secondary/tertiary buttons
-2. Chips
+| Class | Purpose |
+|-------|---------|
+| `.mg-button.mg-button-primary` | Main call to action — filled background, high contrast |
+| `.mg-button.mg-button-secondary` | Supporting action — lower visual weight than primary |
+| `.mg-button.mg-button-arrow` | Primary with directional arrow icon |
+| `.mg-button.disabled` | Inactive state — not clickable |
 
 ### Content
 
-Button and chip colors and text indicate the default setting and call to action.
+- Use clear, action-oriented labels: "Download report", "Sign up", not "Click here"
+- Keep labels short — ideally 2-3 words
 
 ## Behaviors
 
-The default colors of the buttons will depend on the theme in use such as PW, UNDRR etc.
+Button colors adapt to the active theme (UNDRR, PreventionWeb, DELTA, etc.). In dark contexts like heroes and CTAs, buttons invert to ensure contrast.
 
 <Canvas of={CtaButtonStories.DefaultButtons} meta={CtaButtonStories} />
 
 ### Usage
 
-- Copy the HTML from the HTML tab of the canvas for either buttons or chips.
+- Apply `.mg-button` as the base class, then add a variant class (`.mg-button-primary`, `.mg-button-secondary`)
+- Copy the HTML from the HTML tab of the canvas
 
 ### Interactions
 
-- The hover state is applied to the entire button.
+- Hover state applies to the entire button
 
 ## Changelog
 
