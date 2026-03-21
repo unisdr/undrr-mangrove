@@ -29,17 +29,19 @@ See [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/co
 - [ ] Error states are announced to assistive technology (`aria-describedby`, `aria-live`)
 - [ ] Component works across all five themes without contrast failures
 
-See [Accessibility](ACCESSIBILITY.md) for the full guide and testing methodology.
+See [Accessibility](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-accessibility--docs) for the full guide and testing methodology.
+  - Source: [`ACCESSIBILITY.md`](ACCESSIBILITY.md)
 
 ## Stories and documentation
 
 - [ ] Stories use CSF3 format (no `Template.bind({})`)
 - [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, CSS/JS references, changelog)
-- [ ] MDX includes the review checklist reference after `<Meta>` (see [component guide, step 5](COMPONENT-GUIDE.md#step-5-write-mdx-documentation))
+- [ ] MDX includes the review checklist reference after `<Meta>` (see [component guide, step 5](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs))
 - [ ] Changelog entry added to the component's MDX file (see [changelog format](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs))
 - [ ] Sentence case for all headings and UI text
 
-See [Writing guidelines](WRITING-SHORT.md) for UX writing standards.
+See [Writing guidelines](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-writing-guidelines--docs) for UX writing standards.
+  - Source: [`WRITING.md`](WRITING.md), [`WRITING-SHORT.md`](WRITING-SHORT.md)
 
 ## Testing
 
@@ -48,7 +50,8 @@ See [Writing guidelines](WRITING-SHORT.md) for UX writing standards.
 - [ ] Tests cover key behaviors and interactions
 - [ ] jest-axe accessibility assertions pass
 
-See [Testing](TESTING.md) for the testing setup and patterns.
+See [Testing](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) for the testing setup and patterns.
+  - Source: [`TESTING.md`](TESTING.md)
 
 ## Internationalization
 
@@ -66,17 +69,22 @@ See the RTL support section in [Component standards](https://unisdr.github.io/un
 - [ ] Webpack entry added in `webpack.config.js`
 - [ ] Export added in `src/index.js`
 
-See [Adding hydration support](HYDRATION-AUTHORING.md) for the full pattern.
+See [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) for the full pattern.
+  - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
 
 ## AI discoverability (optional)
 
 - [ ] Component appears in the AI manifest after running `yarn validate-manifest`
 
-See [AI and MCP integration](AI-MCP-INTEGRATION.md).
+See [AI and MCP integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs).
+  - Source: [`AI-MCP-INTEGRATION.md`](AI-MCP-INTEGRATION.md)
 
 ## Related documentation
 
-- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
-- [Testing guide](TESTING.md) — unit, visual, and accessibility testing
-- [Hydration authoring](HYDRATION-AUTHORING.md) — adding Drupal integration
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)
+- [Component guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs) — step-by-step tutorial for building a component
+  - Source: [`COMPONENT-GUIDE.md`](COMPONENT-GUIDE.md)
+- [Testing guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — unit, visual, and accessibility testing
+  - Source: [`TESTING.md`](TESTING.md)
+- [Hydration authoring](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) — adding Drupal integration
+  - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
+- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference
