@@ -9,6 +9,7 @@ Use this checklist to validate a new or existing component against Mangrove's st
 - [ ] Component follows BEM naming with `mg-` prefix
 - [ ] Files follow the standard layout: `ComponentName.jsx`, `component-name.scss`, `ComponentName.stories.jsx`, `ComponentName.mdx`
 - [ ] SCSS uses variables from `_variables.scss` (no hardcoded colors or spacing values)
+- [ ] SCSS imported in `stories/assets/scss/_components.scss`
 - [ ] No `defaultProps` (use destructured default parameters instead)
 
 See [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for the full conventions.

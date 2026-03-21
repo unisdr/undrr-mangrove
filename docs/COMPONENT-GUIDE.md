@@ -161,19 +161,7 @@ yarn validate-manifest
 
 ### Final checklist
 
-- [ ] Component uses functional React with hooks
-- [ ] PropTypes defined with JSDoc descriptions
-- [ ] Defaults via destructuring (no `defaultProps`)
-- [ ] BEM class names with `mg-` prefix
-- [ ] SCSS uses variables from `_variables.scss`
-- [ ] SCSS imported in `_components.scss`
-- [ ] Stories use CSF3 format (no `Template.bind({})`)
-- [ ] Tests include `jest-axe` a11y check
-- [ ] MDX docs with props table, CSS reference, and changelog
-- [ ] Sentence case for all headings and UI text
-- [ ] `fromElement.js` + `hydrate.js` + tests (if Drupal-integrated)
-- [ ] webpack entry + `src/index.js` export (if applicable)
-- [ ] AI manifest data updated (if applicable)
+Run through the [review checklist](REVIEW-CHECKLIST.md) to validate your component against all Mangrove standards before submitting.
 
 ## Related documentation
 
