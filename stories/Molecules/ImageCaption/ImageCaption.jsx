@@ -19,7 +19,7 @@ const cls = (...classes) =>
 export function Imagecaption({ label, paragraph, opacityOnly, ...args }) {
   let opacityonly = '';
   if (opacityOnly === 'yes') {
-    opacityonly = 'opacity-only';
+    opacityonly = 'mg-opacity-only';
   }
 
   let caption_variant = caption_options[`${args.caption}`];
@@ -32,7 +32,7 @@ export function Imagecaption({ label, paragraph, opacityOnly, ...args }) {
       ) : (
         <figcaption
           className={cls(
-            'image__caption',
+            'mg-image-caption',
             `${opacityonly}`,
             `${caption_variant}`,
             `${credit_variant}`

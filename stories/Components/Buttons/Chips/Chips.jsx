@@ -17,7 +17,7 @@ export function Chips({ label, Type = 'Default' }) {
     return (
       <button
         type="button"
-        className="chip chip__cross"
+        className="mg-chip mg-chip__cross"
         aria-label={`Remove filter: ${label}`}
       >
         {label}
@@ -26,7 +26,7 @@ export function Chips({ label, Type = 'Default' }) {
   }
 
   return (
-    <a className="chip" href="#">
+    <a className="mg-chip" href="#">
       {label}
     </a>
   );

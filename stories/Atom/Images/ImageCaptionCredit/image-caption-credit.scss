@@ -1,43 +1,41 @@
 // @import '../../../assets/scss/base';
 
 /* image with caption start */
-.image {
-  &-figcaption {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+.mg-image-figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 
-    .image__caption {
-      margin: $mg-spacing-50 $mg-spacing-100 0;
+  .mg-image-caption {
+    margin: $mg-spacing-50 $mg-spacing-100 0;
 
-      @include devicebreak(medium) {
-        margin: $mg-spacing-150 0 0;
-        width: 58.33333%;
-      }
+    @include devicebreak(medium) {
+      margin: $mg-spacing-150 0 0;
+      width: 58.33333%;
     }
   }
 }
 
-.image-figcaption.medium {
+.mg-image-figcaption.mg-image-figcaption--medium {
   @include devicebreak(medium) {
     margin: 0 auto;
     width: 58.3333%;
 
-    .image__caption {
+    .mg-image-caption {
       width: 100%;
     }
   }
 }
 
-.image-figcaption.portrait {
+.mg-image-figcaption.mg-image-figcaption--portrait {
   align-items: flex-end;
 
   @include devicebreak(medium) {
-    .image-figcaption__cart {
+    .mg-image-figcaption__cart {
       width: 33.33333%;
     }
 
-    .image__caption {
+    .mg-image-caption {
       display: block;
       margin: 0 0 0 $mg-spacing-100;
       padding-bottom: 0;
@@ -49,7 +47,7 @@
         margin-bottom: $mg-spacing-50;
         padding: 0;
 
-        + .credits {
+        + .mg-credits {
           border-top: 1px solid $mg-color-neutral-500;
           margin-left: 0;
           padding: $mg-spacing-50 0 0 0;
@@ -58,7 +56,7 @@
     }
   }
 
-  .credits {
+  .mg-credits {
     border-left: 0;
     border-right: 0;
     margin-bottom: $mg-spacing-50;
@@ -70,7 +68,7 @@
   }
 }
 
-.image-figcaption__cart {
+.mg-image-figcaption__cart {
   img {
     @extend %img-cover;
 
@@ -80,14 +78,12 @@
 
 @include devicebreak(medium) {
   [dir="rtl"] {
-    .image-figcaption.portrait {
-      .image {
-        &__caption {
-          margin: 0 $mg-spacing-100 0 0;
-        }
+    .mg-image-figcaption.mg-image-figcaption--portrait {
+      .mg-image-caption {
+        margin: 0 $mg-spacing-100 0 0;
       }
 
-      .credits {
+      .mg-credits {
         border-right: 0;
         margin-right: 0;
         padding: $mg-spacing-50 0;

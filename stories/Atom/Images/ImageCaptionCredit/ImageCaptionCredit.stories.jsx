@@ -106,7 +106,7 @@ export const DefaultImageWithCreditCaption = {
       />
     </div>
     <div class="cell image__description medium-7">
-      <figcaption class="image__caption">
+      <figcaption class="mg-image-caption">
         <p>
           We provide tools such as the DRR Community site PreventionWeb, publications on good practices, and the Global Assessment Report (GAR)
         </p>

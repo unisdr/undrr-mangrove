@@ -2,15 +2,15 @@ import React from 'react';
 // import './author-image.scss';
 
 export const size_options = {
-  Large: 'large',
+  Large: 'mg-author-image--large',
   Small: '',
 };
 
 export const hover_color_options = {
-  yellow: 'yellow',
-  green: 'green',
-  red: 'red',
-  blue: 'blue',
+  yellow: 'mg-author-image--yellow',
+  green: 'mg-author-image--green',
+  red: 'mg-author-image--red',
+  blue: 'mg-author-image--blue',
 };
 
 const cls = (...classes) =>
@@ -20,7 +20,7 @@ export function Authorimg({ image, alt, ...args }) {
   let size_variant = size_options[`${args.variant}`];
   let Hovercolors = hover_color_options[`${args.hovercolor}`];
   return (
-    <div className={cls('author__img', `${size_variant}`, `${Hovercolors}`)}>
+    <div className={cls('mg-author-image', `${size_variant}`, `${Hovercolors}`)}>
       <img src={image} alt={alt} title={alt} />
     </div>
   );

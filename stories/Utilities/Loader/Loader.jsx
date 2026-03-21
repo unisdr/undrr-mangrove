@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
  * @param {string} [props.className='']     Additional CSS classes to apply
  */
 export function Loader({ label = 'Loading', className = '' }) {
-  const classes = ['loader', className].filter(Boolean).join(' ');
+  const classes = ['mg-loader', className].filter(Boolean).join(' ');
 
   return (
     <div

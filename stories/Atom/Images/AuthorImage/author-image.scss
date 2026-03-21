@@ -1,6 +1,6 @@
 /* author image */
 
-.author__img {
+.mg-author-image {
   border-radius: $author-image-radius;
   height: 80px;
   min-width: 80px;
@@ -32,7 +32,7 @@
     }
 
     @each $name, $color in $colors {
-      &.#{$name}::before {
+      &.mg-author-image--#{$name}::before {
         @include background-image(45deg, $mg-color-yellow, transparent 53%);
       }
     }
@@ -42,14 +42,14 @@
     @extend %img-cover;
   }
 
-  &.large {
+  &.mg-author-image--large {
     height: 180px;
     width: 180px;
   }
 }
 
 [dir="rtl"] {
-  .author__img {
+  .mg-author-image {
     &::before {
       @include transform(scaleX(-1));
     }

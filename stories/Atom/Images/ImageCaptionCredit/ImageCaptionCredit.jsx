@@ -12,8 +12,8 @@ export const Images = ({
   ...args
 }) => {
   let size;
-  const sizes = ['medium', 'portrait'];
-  size = sizes.includes(args.size) ? args.size : '';
+  const sizeModifiers = { medium: 'mg-image-figcaption--medium', portrait: 'mg-image-figcaption--portrait' };
+  size = sizeModifiers[args.size] || '';
 
   const cls = (...classes) =>
     classes.filter(Boolean).length > 0
@@ -21,8 +21,8 @@ export const Images = ({
       : null;
 
   return (
-    <figure data-viewport="true" className={cls('image-figcaption', `${size}`)}>
-      <div data-viewport="true" className="image-figcaption__cart scale-up">
+    <figure data-viewport="true" className={cls('mg-image-figcaption', `${size}`)}>
+      <div data-viewport="true" className="mg-image-figcaption__cart mg-scale-up">
         {args.size === 'wide' && <img src={imagelg} alt={alt} />}
         {args.size === 'medium' && <img src={imagemd} alt={alt} />}
         {args.size === 'portrait' && <img src={imagesm} alt={alt} />}
