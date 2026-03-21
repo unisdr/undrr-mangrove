@@ -16,17 +16,12 @@ export const hover_color_options = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function Authorimg({ image, alt, ...args }) {
-  let size_variant = size_options[`${args.variant}`];
-  let Hovercolors = hover_color_options[`${args.hovercolor}`];
+export function Authorimg({ image, alt, variant = 'Large', hovercolor = 'yellow' }) {
+  const size_variant = size_options[variant];
+  const Hovercolors = hover_color_options[hovercolor];
   return (
-    <div className={cls('mg-author-image', `${size_variant}`, `${Hovercolors}`)}>
+    <div className={cls('mg-author-image', size_variant, Hovercolors)}>
       <img src={image} alt={alt} title={alt} />
     </div>
   );
 }
-
-Authorimg.defaultProps = {
-  size: 'large',
-  hovercolor: 'yellow',
-};
