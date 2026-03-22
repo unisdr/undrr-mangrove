@@ -49,21 +49,45 @@ export const AllVariants = {
       <>
         {/* Light background */}
         <div style={{ marginBottom: '2rem' }}>
-          <p style={{ marginBottom: '0.75rem', fontWeight: 600, fontSize: '14px' }}>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              fontWeight: 600,
+              fontSize: '14px',
+            }}
+          >
             Light background
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              alignItems: 'center',
+            }}
+          >
             <a href="#" className="mg-button mg-button-primary">
               {caption.detail}
             </a>
             <a href="#" className="mg-button mg-button-secondary">
               {caption.detail}
             </a>
-            <a className="mg-button mg-button-primary disabled" aria-disabled="true">
+            <a
+              className="mg-button mg-button-primary disabled"
+              aria-disabled="true"
+            >
               {caption.detail}
             </a>
           </div>
-          <div style={{ marginTop: '0.5rem', display: 'flex', gap: '10px', fontSize: '12px', color: '#666' }}>
+          <div
+            style={{
+              marginTop: '0.5rem',
+              display: 'flex',
+              gap: '10px',
+              fontSize: '12px',
+              color: '#666',
+            }}
+          >
             <span style={{ minWidth: '100px' }}>Primary</span>
             <span style={{ minWidth: '100px' }}>Secondary</span>
             <span>Disabled</span>
@@ -71,17 +95,34 @@ export const AllVariants = {
         </div>
 
         {/* Dark background (hero context) */}
-        <div className="mg-hero" style={{
-          background: 'var(--mg-hero-bg, #004f91)',
-          padding: '2rem',
-          margin: 0,
-          width: 'auto',
-          position: 'static',
-        }}>
-          <p style={{ marginBottom: '0.75rem', fontWeight: 600, fontSize: '14px', color: '#fff' }}>
+        <div
+          className="mg-hero"
+          style={{
+            background: 'var(--mg-hero-bg, #004f91)',
+            padding: '2rem',
+            margin: 0,
+            width: 'auto',
+            position: 'static',
+          }}
+        >
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              fontWeight: 600,
+              fontSize: '14px',
+              color: '#fff',
+            }}
+          >
             Dark background (hero context)
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              alignItems: 'center',
+            }}
+          >
             <a href="#" className="mg-button mg-button-primary">
               {caption.detail}
             </a>
@@ -89,7 +130,15 @@ export const AllVariants = {
               {caption.detail}
             </a>
           </div>
-          <div style={{ marginTop: '0.5rem', display: 'flex', gap: '10px', fontSize: '12px', color: 'rgba(255,255,255,0.7)' }}>
+          <div
+            style={{
+              marginTop: '0.5rem',
+              display: 'flex',
+              gap: '10px',
+              fontSize: '12px',
+              color: 'rgba(255,255,255,0.7)',
+            }}
+          >
             <span style={{ minWidth: '100px' }}>Primary</span>
             <span>Secondary</span>
           </div>
