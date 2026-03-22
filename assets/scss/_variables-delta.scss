@@ -52,10 +52,12 @@ $mg-color-button: $delta-color-primary;
 $mg-color-button--hover: $delta-color-primary-800;
 $mg-color-button-background: transparent;
 $mg-color-button-background--hover: rgba($delta-color-primary, 0.06);
+$mg-color-button-secondary-background: transparent;
+$mg-color-button-secondary-background--hover: rgba($delta-color-primary, 0.06);
 $mg-color-text-button: $delta-color-primary;
 $mg-border-color-button: $delta-color-primary;
 $mg-radius-button: $mg-spacing-50;
-$mg-border-width-button: 2px;
+$mg-border-width-button: 1px;
 $mg-padding-button: $mg-spacing-100 $mg-spacing-200;
 $mg-font-size-button: $mg-font-size-250;
 
@@ -82,6 +84,9 @@ $mg-hero-overlay-max-width: $mg-width-600;
 $mg-hero-overlay-padding: $mg-spacing-400;
 $mg-color-hero-title: oklch(68.5% 0.169 237.323);
 $mg-color-hero--tertiary: $delta-color-dark; // Dark CTA banner sections
+$mg-color-hero-button-secondary-background: $delta-color-primary;
+$mg-color-hero-button-secondary-color: $mg-color-white;
+$mg-border-color-hero-button-secondary: $mg-color-white;
 $mg-spacing-hero-overlay: mg-rem(20) 0;
 
 // Tabs — TODO: underline vs boxed style needs confirmation from Delta design team
