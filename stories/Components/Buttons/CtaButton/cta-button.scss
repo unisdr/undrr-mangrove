@@ -55,45 +55,20 @@ button {
     color: $mg-color-button;
     background-color: $mg-color-button-background--hover;
   }
-
-  // &.button-arrow {
-  //   &::after {
-  //     @include transition(0.2s ease);
-
-  //     background: url(#{$img-path-Iconfourback}/chevron-right-black.svg)
-  //       no-repeat left center;
-  //     content: '';
-  //     height: 20px;
-  //     margin-left: $mg-spacing-25;
-  //     width: 13px;
-  //   }
-
-  //   &:hover::after {
-  //     @include translate(70%, 0);
-  //   }
-
-  //   &.disabled {
-  //     &::after {
-  //       background: url(#{$img-path-Iconfourback}/chevron-right-white.svg)
-  //         no-repeat left center;
-  //       content: '';
-  //     }
-  //   }
-  // }
 }
 
 .mg-button-secondary {
-  background-color: $mg-color-blue-600;
+  background-color: $mg-color-button-secondary-background;
 
   &:hover {
     color: $mg-color-button;
-    background-color: $mg-color-blue-400;
+    background-color: $mg-color-button-secondary-background--hover;
   }
 }
 
 .mg-button.disabled {
-  background-color: $mg-color-neutral-400;
-  color: $mg-color-neutral-300;
+  background-color: $mg-color-neutral-500;
+  color: $mg-color-neutral-0;
   pointer-events: none;
 }
 

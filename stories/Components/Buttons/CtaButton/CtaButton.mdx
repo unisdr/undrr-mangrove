@@ -22,43 +22,51 @@ export const getCaptionForLocale = locale => {
 
 > If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
-# Call-to-action buttons
+# Buttons
 
-Primary and secondary action buttons used to prompt users to take an action like "Read more" or "Sign up."
+Mangrove's standard button component. Buttons are designed as call-to-action (CTA) elements — they should always direct the user toward a clear next step such as "Read more", "Sign up", or "View documentation."
 
 #### When to use:
 
-- Buttons should be used as primary, secondary or tertiary calls to actions
-- Ideally, a page should have one primary action. A secondary/tertiary option should be used infrequently.
-- If there are multiple choices for an action item, one default button should be active and the other buttons inactive
+- Use buttons to drive a specific user action, not for navigation between pages (use links instead)
+- Each page should have one primary action. Secondary and tertiary options should be used sparingly
+- If there are multiple choices, one button should be the default (primary) and the others secondary or tertiary
 
-### Formatting
+#### Variants
 
-#### Default
-
-There are multiple button types in our design system
-
-1. Primary/Secondary/tertiary buttons
-2. Chips
+| Class | Purpose |
+|-------|---------|
+| `.mg-button.mg-button-primary` | Main call to action — filled background, high contrast |
+| `.mg-button.mg-button-secondary` | Supporting action — lower visual weight than primary |
+| `.mg-button.disabled` | Inactive state — not clickable |
 
 ### Content
 
-Button and chip colors and text indicate the default setting and call to action.
+- Use clear, action-oriented labels: "Download report", "Sign up", not "Click here"
+- Keep labels short — ideally 2-3 words
 
 ## Behaviors
 
-The default colors of the buttons will depend on the theme in use such as PW, UNDRR etc.
+Button colors adapt to the active theme (UNDRR, PreventionWeb, DELTA, etc.). In dark contexts like heroes and CTAs, buttons invert to ensure contrast.
 
 <Canvas of={CtaButtonStories.DefaultButtons} meta={CtaButtonStories} />
 
+### All variants
+
+Primary, secondary, and disabled buttons on light and dark backgrounds for easy comparison. Switch themes in the toolbar to see how each variant adapts.
+
+<Canvas of={CtaButtonStories.AllVariants} meta={CtaButtonStories} />
+
 ### Usage
 
-- Copy the HTML from the HTML tab of the canvas for either buttons or chips.
+- Apply `.mg-button` as the base class, then add a variant class (`.mg-button-primary`, `.mg-button-secondary`)
+- Copy the HTML from the HTML tab of the canvas
 
 ### Interactions
 
-- The hover state is applied to the entire button.
+- Hover state applies to the entire button
 
 ## Changelog
 
+- **1.1** — 2026-03-22: Add "All variants" comparison story (light + dark backgrounds). Fix secondary button contrast to meet WCAG AA (blue-800/blue-700, was blue-600/blue-400). Fix disabled button contrast (neutral-500 bg + white text). Remove dead `mg-button-arrow` class and `For_Primary` prop. Add `:focus-visible` ring for buttons on dark backgrounds. Tokenize secondary button and hero secondary button colors for theme overriding.
 - **1.0** — 2022-12-12: Released component

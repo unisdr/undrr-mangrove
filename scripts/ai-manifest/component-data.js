@@ -134,7 +134,7 @@ export default {
   },
 
   // --- Buttons (auto-rendered) ---
-  'components-buttons-buttons': { description: 'Primary and secondary CTA buttons. Arrow and disabled variants.' },
+  'components-buttons-buttons': { description: 'Primary and secondary CTA buttons with disabled variant. Themed via design tokens. WCAG AA contrast on both light and dark backgrounds.' },
   'components-buttons-chips': { description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant.' },
 
   // --- Cards ---
@@ -174,7 +174,7 @@ export default {
       <a href="/reports/gar-2024">Global Assessment Report 2024</a>
     </header>
     <p class="mg-card__summary">The flagship report on global efforts to reduce disaster risk.</p>
-    <a class="mg-button mg-button-primary mg-button-arrow" href="/reports/gar-2024">Read the report</a>
+    <a class="mg-button mg-button-primary" href="/reports/gar-2024">Read the report</a>
   </div>
 </article>`,
       },
@@ -412,7 +412,7 @@ export default {
       </header>
       <div class="mg-hero__summaryText">Multi-hazard early warning systems are one of the most effective tools for disaster risk reduction.</div>
       <div class="mg-hero__buttons">
-        <a class="mg-button mg-button-primary mg-button-arrow" href="/early-warning">Read more</a>
+        <a class="mg-button mg-button-primary" href="/early-warning">Read more</a>
       </div>
     </article>
   </div>
@@ -583,7 +583,7 @@ export default {
         html: `<div class="mg-container mg-container--padded" style="text-align: center;">
   <h1>404</h1>
   <p>Page not found. The page you requested could not be located.</p>
-  <a class="mg-button mg-button-primary mg-button-arrow" href="/">Return to homepage</a>
+  <a class="mg-button mg-button-primary" href="/">Return to homepage</a>
 </div>`,
       },
     ],
@@ -915,7 +915,7 @@ export default {
       </div>
 
       <div style="margin-top: 2rem;">
-        <button type="submit" class="mg-button mg-button-primary mg-button-arrow">Send message</button>
+        <button type="submit" class="mg-button mg-button-primary">Send message</button>
       </div>
     </form>
   </div>

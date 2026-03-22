@@ -37,7 +37,6 @@ function TypeScriptExampleComponent({
       label={label}
       Type={type}
       State="Default"
-      For_Primary="Text"
       variant="contained"
       style={{ width: `${width}px` }}
       onClick={onClick}
