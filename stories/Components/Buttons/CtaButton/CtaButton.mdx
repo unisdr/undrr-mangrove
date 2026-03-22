@@ -51,6 +51,12 @@ Button colors adapt to the active theme (UNDRR, PreventionWeb, DELTA, etc.). In 
 
 <Canvas of={CtaButtonStories.DefaultButtons} meta={CtaButtonStories} />
 
+### All variants
+
+Primary, secondary, and disabled buttons on light and dark backgrounds for easy comparison. Switch themes in the toolbar to see how each variant adapts.
+
+<Canvas of={CtaButtonStories.AllVariants} meta={CtaButtonStories} />
+
 ### Usage
 
 - Apply `.mg-button` as the base class, then add a variant class (`.mg-button-primary`, `.mg-button-secondary`)
@@ -62,4 +68,5 @@ Button colors adapt to the active theme (UNDRR, PreventionWeb, DELTA, etc.). In 
 
 ## Changelog
 
+- **1.1** — 2026-03-22: Add "All variants" comparison story (light + dark backgrounds). Fix secondary button contrast to meet WCAG AA (blue-800/blue-700, was blue-600/blue-400). Fix disabled button contrast (neutral-500 bg + white text). Remove dead `mg-button-arrow` class and `For_Primary` prop. Add `:focus-visible` ring for buttons on dark backgrounds. Tokenize secondary button and hero secondary button colors for theme overriding.
 - **1.0** — 2022-12-12: Released component

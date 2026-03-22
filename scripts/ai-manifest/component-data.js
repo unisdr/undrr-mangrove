@@ -134,7 +134,7 @@ export default {
   },
 
   // --- Buttons (auto-rendered) ---
-  'components-buttons-buttons': { description: 'Primary and secondary CTA buttons. Arrow and disabled variants.' },
+  'components-buttons-buttons': { description: 'Primary and secondary CTA buttons with disabled variant. Themed via design tokens. WCAG AA contrast on both light and dark backgrounds.' },
   'components-buttons-chips': { description: 'Small interactive tag-like buttons for filters and selections. Optional dismiss (X) variant.' },
 
   // --- Cards ---
