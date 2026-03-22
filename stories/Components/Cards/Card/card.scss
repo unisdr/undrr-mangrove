@@ -500,7 +500,7 @@ $card-variant-colours: (
   // Bordered variant (colored border via CSS custom property)
   &--bordered {
     border: 2px solid var(--mg-card-border);
-    padding: max($mg-card-padding + 0rem, $mg-spacing-150);
+    padding: max($mg-card-padding, $mg-spacing-150);
   }
 
   // Centered variant
