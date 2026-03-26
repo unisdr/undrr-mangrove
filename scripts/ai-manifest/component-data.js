@@ -380,6 +380,34 @@ export default {
     ],
   },
 
+  // --- On this page nav ---
+  'components-on-this-page-nav': {
+    description: 'Sticky horizontal "On this page" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js.',
+    cssClasses: [
+      'mg-on-this-page-nav', 'mg-on-this-page-nav--hidden',
+      'mg-on-this-page-nav__list', 'mg-on-this-page-nav__item',
+      'mg-on-this-page-nav__link', 'mg-on-this-page-nav__link--active',
+      'mg-on-this-page-nav__cta', 'mg-on-this-page-nav--exclude',
+    ],
+    examples: [
+      {
+        name: 'Auto-detect (scans headings)',
+        html: `<nav data-mg-on-this-page-nav data-mg-on-this-page-nav-content=".article-body" class="mg-on-this-page-nav"></nav>`,
+      },
+      {
+        name: 'Explicit links with CTA',
+        html: `<nav data-mg-on-this-page-nav class="mg-on-this-page-nav">
+  <ul class="mg-on-this-page-nav__list">
+    <li class="mg-on-this-page-nav__item"><a href="#intro" class="mg-on-this-page-nav__link">Introduction</a></li>
+    <li class="mg-on-this-page-nav__item"><a href="#methods" class="mg-on-this-page-nav__link">Methodology</a></li>
+    <li class="mg-on-this-page-nav__item"><a href="#findings" class="mg-on-this-page-nav__link">Findings</a></li>
+  </ul>
+  <a href="/report.pdf" class="mg-on-this-page-nav__cta">Download report</a>
+</nav>`,
+      },
+    ],
+  },
+
   // --- Tabs (auto-rendered) ---
   'components-tabs': { description: 'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity. The script adds ARIA roles (tablist, tab, tabpanel) and keyboard navigation at runtime — do not omit the script or tabs will be inaccessible.' },
 
