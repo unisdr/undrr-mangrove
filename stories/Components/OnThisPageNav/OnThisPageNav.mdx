@@ -143,6 +143,69 @@ mgOnThisPageNav([myNavElement]);
 mgOnThisPageNavDestroy(myNavElement);
 ```
 
+## Usage with React
+
+This is a vanilla JS component, not a React component. In a React app, render the HTML structure and call the init function in a `useEffect`:
+
+```jsx
+import { useEffect, useRef } from 'react';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '@undrr/undrr-mangrove/js/on-this-page-nav';
+
+function PageWithNav() {
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (nav) mgOnThisPageNav([nav]);
+    return () => {
+      if (nav) mgOnThisPageNavDestroy(nav);
+    };
+  }, []);
+
+  return (
+    <article className="my-article">
+      {/* Auto-detect: empty nav, JS scans headings */}
+      <nav
+        ref={navRef}
+        data-mg-on-this-page-nav
+        data-mg-on-this-page-nav-content=".my-article"
+        className="mg-on-this-page-nav"
+      />
+
+      <h2 id="intro">Introduction</h2>
+      <p>...</p>
+      <h2 id="methods">Methodology</h2>
+      <p>...</p>
+    </article>
+  );
+}
+```
+
+For explicit mode, provide the `<ul>` in JSX — the JS skips heading scanning and just activates scroll-spy:
+
+```jsx
+<nav
+  ref={navRef}
+  data-mg-on-this-page-nav
+  className="mg-on-this-page-nav"
+>
+  <ul className="mg-on-this-page-nav__list">
+    <li className="mg-on-this-page-nav__item">
+      <a href="#intro" className="mg-on-this-page-nav__link">Introduction</a>
+    </li>
+    <li className="mg-on-this-page-nav__item">
+      <a href="#methods" className="mg-on-this-page-nav__link">Methodology</a>
+    </li>
+  </ul>
+  <a href="/report.pdf" className="mg-on-this-page-nav__cta">Download report</a>
+</nav>
+```
+
+The `mgOnThisPageNavDestroy` cleanup in the `useEffect` return ensures the IntersectionObserver and event listeners are properly removed when the component unmounts.
+
 ## Stacking with other sticky elements
 
 The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `--mg-on-this-page-nav-offset` to the MegaMenu's height so the nav docks below it and headings scroll to the correct position.
