@@ -16,6 +16,11 @@
   box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
   padding: 0 $mg-container-spacer;
 
+  // Full-bleed: break out of any parent container to span the viewport.
+  // Works even when nested inside an mg-container or Drupal content column.
+  width: 100vw;
+  margin-inline-start: calc(50% - 50vw);
+
   // Un-stick on short viewports so the bar doesn't dominate the screen.
   // GOV.UK accessibility research found sticky elements at 400% zoom consumed
   // 30%+ of viewport — this prevents that. (technology.blog.gov.uk/2018/05/21)
