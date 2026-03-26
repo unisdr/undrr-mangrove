@@ -1,0 +1,134 @@
+{/* OnThisPageNav.mdx */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as OnThisPageNavStories from './OnThisPageNav.stories';
+
+<Meta of={OnThisPageNavStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# On this page nav
+
+A sticky horizontal navigation bar that links to page sections, with scroll-spy highlighting and an optional call-to-action button. Vanilla JS — no React dependency.
+
+**GitLab issue**: [web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337)
+
+## When to use
+
+Use **On this page nav** for long-form content pages (landing pages, reports, directories) where readers benefit from:
+- Seeing the page structure at a glance
+- Jumping quickly between sections
+- Tracking where they are as they scroll
+
+### On this page nav vs Table of contents
+
+| | On this page nav | Table of contents |
+|---|---|---|
+| Position | Sticky at viewport top | Inline within content |
+| Layout | Horizontal bar | Vertical list |
+| Scroll-spy | Yes (highlights active section) | No |
+| Best for | Persistent navigation on long pages | Static overview at the top of content |
+
+## Modes
+
+### Auto-detect (default)
+
+Place an empty `<nav>` with the activation attribute. The script scans headings and generates links:
+
+```html
+<nav data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-content=".article-body"
+     class="mg-on-this-page-nav">
+</nav>
+```
+
+### Explicit
+
+Provide your own `<ul>` with links. The script activates scroll-spy without scanning headings:
+
+```html
+<nav data-mg-on-this-page-nav class="mg-on-this-page-nav">
+  <ul class="mg-on-this-page-nav__list">
+    <li class="mg-on-this-page-nav__item">
+      <a href="#intro" class="mg-on-this-page-nav__link">Introduction</a>
+    </li>
+    <li class="mg-on-this-page-nav__item">
+      <a href="#methods" class="mg-on-this-page-nav__link">Methodology</a>
+    </li>
+  </ul>
+</nav>
+```
+
+## Data attributes
+
+| Attribute | Values | Default | Purpose |
+|-----------|--------|---------|---------|
+| `data-mg-on-this-page-nav` | (presence) | — | Activates the component |
+| `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
+| `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
+| `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
+| `data-mg-on-this-page-nav-offset` | integer (px) | `"0"` | Scroll offset for fixed headers above |
+
+## CTA button
+
+Add a link with the `mg-on-this-page-nav__cta` class. It pins to the right of the bar:
+
+```html
+<nav data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-content=".article-body"
+     class="mg-on-this-page-nav">
+  <a href="/subscribe" class="mg-on-this-page-nav__cta">Subscribe to updates</a>
+</nav>
+```
+
+In auto-detect mode, the CTA is preserved when the script generates links.
+
+## Excluding headings
+
+Add the `mg-on-this-page-nav--exclude` class to any heading to skip it:
+
+```html
+<h2 class="mg-on-this-page-nav--exclude">This heading won't appear in the nav</h2>
+```
+
+Headings with `mg-u-sr-only` are also excluded.
+
+## CSS classes
+
+| Class | Element | Purpose |
+|-------|---------|---------|
+| `mg-on-this-page-nav` | `<nav>` | Root container |
+| `mg-on-this-page-nav--hidden` | `<nav>` | Applied when no headings found |
+| `mg-on-this-page-nav__list` | `<ul>` | Horizontal scrollable list |
+| `mg-on-this-page-nav__item` | `<li>` | List item wrapper |
+| `mg-on-this-page-nav__link` | `<a>` | Navigation link |
+| `mg-on-this-page-nav__link--active` | `<a>` | Scroll-spy active state |
+| `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned right) |
+| `mg-on-this-page-nav--exclude` | heading | Exclude a heading from auto-detect |
+
+## JavaScript API
+
+The component auto-initializes on `DOMContentLoaded`. For dynamic content or manual initialization:
+
+```js
+import { mgOnThisPageNav } from 'path/to/on-this-page-nav.js';
+
+// Initialize all [data-mg-on-this-page-nav] elements
+mgOnThisPageNav();
+
+// Initialize specific elements
+mgOnThisPageNav([myNavElement]);
+```
+
+## Accessibility
+
+- **Landmark**: Renders as a `<nav>` with `aria-label`
+- **Active section**: `aria-current="true"` on the active link
+- **Keyboard**: Standard tab navigation through links
+- **Focus**: Visible focus indicator on all interactive elements
+- **Motion**: Smooth scroll respects `prefers-reduced-motion`
+- **Click targets**: Links sized to meet minimum touch target guidelines
+
+## Changelog
+
+- **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy)
