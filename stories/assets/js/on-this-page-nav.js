@@ -12,6 +12,20 @@
 // browsers ship native accessibility semantics for :target-current.
 
 /**
+ * Read the offset CSS custom property from the nav element.
+ * Returns the pixel value (number). Falls back to 0.
+ *
+ * @param {HTMLElement} container - The nav element
+ * @returns {number} Offset in pixels
+ */
+function getOffset(container) {
+  const raw = getComputedStyle(container)
+    .getPropertyValue('--mg-on-this-page-nav-offset')
+    .trim();
+  return parseFloat(raw) || 0;
+}
+
+/**
  * Check if the user prefers reduced motion at the current moment.
  * Read at point-of-use so toggling the OS preference takes effect immediately.
  *
@@ -200,7 +214,7 @@ function generateId(text, usedIds) {
  * @param {HTMLElement} container - The nav element
  */
 function setupClickHandlers(container) {
-  const offset = parseInt(container.dataset.mgOnThisPageNavOffset || '0', 10);
+  const offset = getOffset(container);
 
   container.addEventListener('click', e => {
     const link = e.target.closest('.mg-on-this-page-nav__link');
@@ -273,7 +287,7 @@ function setupFocusScrolling(container) {
  */
 function setupScrollSpy(container) {
   const links = container.querySelectorAll('.mg-on-this-page-nav__link');
-  const offset = parseInt(container.dataset.mgOnThisPageNavOffset || '0', 10);
+  const offset = getOffset(container);
 
   // Map heading IDs to their corresponding link elements
   const linkMap = new Map();

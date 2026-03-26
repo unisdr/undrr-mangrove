@@ -14,7 +14,6 @@ import {
  * @param {string} [props.depth]            Max heading level to scan ("2", "3", "4")
  * @param {string} [props.contentSelector]  CSS selector for heading scan scope
  * @param {string} [props.label]            aria-label for the nav
- * @param {string} [props.offset]           Scroll offset in pixels
  * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
  * @param {string} [props.ctaHref]          CTA link URL
  * @param {string} [props.ctaText]          CTA link text
@@ -23,7 +22,6 @@ export default function OnThisPageNav({
   depth = '2',
   contentSelector = null,
   label = 'On this page',
-  offset = '0',
   items = null,
   ctaHref = null,
   ctaText = null,
@@ -39,7 +37,7 @@ export default function OnThisPageNav({
     return () => {
       if (nav) mgOnThisPageNavDestroy(nav);
     };
-  }, [depth, contentSelector, label, offset, items, ctaHref, ctaText]);
+  }, [depth, contentSelector, label, items, ctaHref, ctaText]);
 
   return (
     <nav
@@ -50,7 +48,6 @@ export default function OnThisPageNav({
         'data-mg-on-this-page-nav-content': contentSelector,
       })}
       data-mg-on-this-page-nav-label={label}
-      data-mg-on-this-page-nav-offset={offset}
       className="mg-on-this-page-nav"
     >
       {items && (
@@ -83,8 +80,6 @@ OnThisPageNav.propTypes = {
   contentSelector: PropTypes.string,
   /** Accessible label for the nav element */
   label: PropTypes.string,
-  /** Scroll offset in pixels for fixed headers */
-  offset: PropTypes.string,
   /** Explicit nav items (skips auto-detect when provided) */
   items: PropTypes.arrayOf(
     PropTypes.shape({

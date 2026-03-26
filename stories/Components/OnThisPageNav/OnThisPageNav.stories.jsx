@@ -64,9 +64,10 @@ function useOnThisPageNav(wrapperRef) {
 }
 
 /**
- * Auto-detect mode: the nav scans h2 headings from the content and
- * generates links automatically. Scroll down to see the active state
- * update as each section enters the viewport.
+ * Auto-detect mode: the nav is placed below introductory content inside
+ * a container. As you scroll past, it docks to the top of the viewport
+ * and spans full width. The nav scans h2 headings and highlights the
+ * active section as you scroll.
  */
 export const AutoDetect = {
   render: () => {
@@ -74,33 +75,66 @@ export const AutoDetect = {
     useOnThisPageNav(ref);
 
     return (
-      <article className="mg-auto-detect-demo" ref={ref}>
-        <nav
-          data-mg-on-this-page-nav
-          data-mg-on-this-page-nav-content=".mg-auto-detect-demo"
-          className="mg-on-this-page-nav"
-        />
-
-        <div style={{ padding: '0 1rem' }}>
-          <h2 id="overview">Overview</h2>
-          <SectionContent />
-
-          <h2 id="sendai-framework">Sendai Framework</h2>
-          <SectionContent />
-
-          <h2 id="targets-and-indicators">Targets and indicators</h2>
-          <SectionContent />
-
-          <h2 id="implementation">Implementation</h2>
-          <SectionContent />
-
-          <h2 id="monitoring-and-review">Monitoring and review</h2>
-          <SectionContent />
-
-          <h2 id="stakeholder-engagement">Stakeholder engagement</h2>
-          <SectionContent />
+      <div ref={ref}>
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #004f91 0%, #00afae 100%)',
+            color: 'white',
+            padding: '3rem 2rem',
+          }}
+        >
+          <h1 style={{ margin: '0 0 1rem', fontSize: '2rem' }}>
+            Global assessment report on disaster risk reduction
+          </h1>
+          <p style={{ margin: 0, maxWidth: '700px', opacity: 0.9 }}>
+            The GAR is the flagship report of the United Nations on worldwide
+            efforts to reduce disaster risk. This edition examines how
+            cascading and systemic risks are reshaping the disaster landscape.
+          </p>
         </div>
-      </article>
+
+        <div
+          className="mg-container"
+          style={{ maxWidth: '900px', margin: '0 auto', padding: '1.5rem 1rem 0' }}
+        >
+          <p>
+            This report presents findings from a two-year consultation process
+            involving national governments, regional organizations, the
+            private sector, civil society, and academia.
+          </p>
+        </div>
+
+        <article className="mg-auto-detect-demo">
+          <nav
+            data-mg-on-this-page-nav
+            data-mg-on-this-page-nav-content=".mg-auto-detect-demo"
+            className="mg-on-this-page-nav"
+          />
+
+          <div
+            className="mg-container"
+            style={{ maxWidth: '900px', margin: '0 auto', padding: '0 1rem' }}
+          >
+            <h2 id="overview">Overview</h2>
+            <SectionContent />
+
+            <h2 id="sendai-framework">Sendai Framework</h2>
+            <SectionContent />
+
+            <h2 id="targets-and-indicators">Targets and indicators</h2>
+            <SectionContent />
+
+            <h2 id="implementation">Implementation</h2>
+            <SectionContent />
+
+            <h2 id="monitoring-and-review">Monitoring and review</h2>
+            <SectionContent />
+
+            <h2 id="stakeholder-engagement">Stakeholder engagement</h2>
+            <SectionContent />
+          </div>
+        </article>
+      </div>
     );
   },
 };
@@ -323,8 +357,9 @@ export const ManyItems = {
 };
 
 /**
- * Demonstrates the offset prop for pages with a fixed header above the
- * sticky nav. The offset value (80px) accounts for the header height.
+ * Demonstrates the offset custom property for pages with a fixed header
+ * above the sticky nav. Set --mg-on-this-page-nav-offset to the header
+ * height so the nav docks below it.
  */
 export const WithOffset = {
   render: () => {
@@ -350,8 +385,8 @@ export const WithOffset = {
         <nav
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-offset-demo"
-          data-mg-on-this-page-nav-offset="80"
           className="mg-on-this-page-nav"
+          style={{ '--mg-on-this-page-nav-offset': '80px' }}
         />
 
         <div style={{ padding: '0 1rem' }}>

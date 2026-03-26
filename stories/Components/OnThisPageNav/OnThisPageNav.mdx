@@ -67,7 +67,27 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 | `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
 | `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
 | `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
-| `data-mg-on-this-page-nav-offset` | integer (px) | `"0"` | Scroll offset for fixed headers above the nav (e.g. MegaMenu height) |
+
+## CSS custom properties
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--mg-on-this-page-nav-offset` | `0px` | Docking offset for fixed headers above the nav. Accepts any CSS length (e.g. `80px`, `5rem`). Also used for scroll position calculations |
+
+Set these in your theme CSS or inline on the element:
+
+```css
+/* In a Drupal theme — responsive offset for MegaMenu */
+.mg-on-this-page-nav {
+  --mg-on-this-page-nav-offset: 80px;
+}
+
+@media (max-width: 900px) {
+  .mg-on-this-page-nav {
+    --mg-on-this-page-nav-offset: 56px;
+  }
+}
+```
 
 ## CTA button
 
@@ -125,7 +145,7 @@ mgOnThisPageNavDestroy(myNavElement);
 
 ## Stacking with other sticky elements
 
-The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `data-mg-on-this-page-nav-offset` to the MegaMenu's pixel height so headings scroll to the correct position.
+The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `--mg-on-this-page-nav-offset` to the MegaMenu's height so the nav docks below it and headings scroll to the correct position.
 
 ## Accessibility
 
