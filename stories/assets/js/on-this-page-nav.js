@@ -75,19 +75,27 @@ export function mgOnThisPageNav(scope) {
       list.setAttribute('role', 'list');
     }
 
-    setupClickHandlers(container);
+    // AbortController lets destroy() remove all event listeners at once
+    const ac = new AbortController();
+    container._mgOnThisPageNavAbort = ac;
+
+    setupClickHandlers(container, ac.signal);
     setupScrollSpy(container);
-    setupFocusScrolling(container);
+    setupFocusScrolling(container, ac.signal);
   });
 }
 
 /**
- * Disconnects the observer and removes the initialized flag so the
- * component can be re-initialized or garbage-collected.
+ * Disconnects the observer, removes event listeners, and clears the
+ * initialized flag so the component can be re-initialized or garbage-collected.
  *
  * @param {HTMLElement} container - The nav element to tear down
  */
 export function mgOnThisPageNavDestroy(container) {
+  if (container._mgOnThisPageNavAbort) {
+    container._mgOnThisPageNavAbort.abort();
+    delete container._mgOnThisPageNavAbort;
+  }
   if (container._mgOnThisPageNavObserver) {
     container._mgOnThisPageNavObserver.disconnect();
     delete container._mgOnThisPageNavObserver;
@@ -212,10 +220,9 @@ function generateId(text, usedIds) {
  * Set up click handlers for smooth scrolling and hash updates.
  *
  * @param {HTMLElement} container - The nav element
+ * @param {AbortSignal} signal - Signal to remove listener on destroy
  */
-function setupClickHandlers(container) {
-  const offset = getOffset(container);
-
+function setupClickHandlers(container, signal) {
   container.addEventListener('click', e => {
     const link = e.target.closest('.mg-on-this-page-nav__link');
     if (!link) return;
@@ -229,7 +236,8 @@ function setupClickHandlers(container) {
 
     e.preventDefault();
 
-    // Calculate scroll position with offset + the nav bar's own height
+    // Read offset per click — the custom property may change at breakpoints
+    const offset = getOffset(container);
     const navHeight = container.offsetHeight || 0;
     const top =
       target.getBoundingClientRect().top + window.scrollY - offset - navHeight;
@@ -252,7 +260,7 @@ function setupClickHandlers(container) {
       () => target.removeAttribute('tabindex'),
       { once: true }
     );
-  });
+  }, { signal });
 }
 
 /**
@@ -260,8 +268,9 @@ function setupClickHandlers(container) {
  * Browsers may not auto-scroll a hidden-scrollbar container on focus.
  *
  * @param {HTMLElement} container - The nav element
+ * @param {AbortSignal} signal - Signal to remove listener on destroy
  */
-function setupFocusScrolling(container) {
+function setupFocusScrolling(container, signal) {
   const list = container.querySelector('.mg-on-this-page-nav__list');
   if (!list) return;
 
@@ -277,7 +286,7 @@ function setupFocusScrolling(container) {
       left: scrollTarget,
       behavior: prefersReducedMotion() ? 'auto' : 'smooth',
     });
-  });
+  }, { signal });
 }
 
 /**
@@ -387,8 +396,9 @@ function setupScrollSpy(container) {
 
 // Auto-initialize on DOMContentLoaded (or immediately if already loaded,
 // e.g. when script is deferred or loaded as an ES module)
+// Auto-wrap so the browser Event object is not passed as scope
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', mgOnThisPageNav, false);
+  document.addEventListener('DOMContentLoaded', () => mgOnThisPageNav(), false);
 } else {
   mgOnThisPageNav();
 }
