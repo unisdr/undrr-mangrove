@@ -14,7 +14,8 @@ Thank you for contributing to the UNDRR Mangrove component library.
 - See [`docs/RELEASES.md`](docs/RELEASES.md) for versioning, tagging, and publishing.
 - See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the build system, distribution channels, and Drupal integration flow.
 - See [`docs/COMPONENT-GUIDE.md`](docs/COMPONENT-GUIDE.md) for a step-by-step tutorial on building a new component.
-- For code standards and review process, check out the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in our Storybook docs.
+- For code standards and review process, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
+  - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
 ## Writing guidelines
 
@@ -26,9 +27,26 @@ To keep copy consistent and high quality across UI, docs, and developer messages
 
 ## Component changelogs
 
-Every component MDX file must include a `## Changelog` section tracking its version history. Entries use the format `- **version** — YYYY-MM-DD: description`, with newest entries first. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full specification and examples.
+Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
 
-When submitting a PR that modifies a component, add a new changelog entry to that component's MDX file. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
+**Format** (single-issue entry):
+
+```
+- **version** — YYYY-MM-DD ([web-backlog#NNN](https://gitlab.com/undrr/web-backlog/-/issues/NNN)): Description of the change
+```
+
+**Format** (multi-issue entry):
+
+```
+- **version** — YYYY-MM-DD:
+  - ([web-backlog#NNN](url)) First change
+  - ([web-backlog#NNN](url)) Second change
+```
+
+**Rules**: Always cite the GitLab tracker issue. Newest entries first. Use sentence case. Summarize the user-facing change, not implementation details.
+
+See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full specification and examples.
+  - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
 ## AI manifest for component discovery
 
@@ -47,7 +65,8 @@ Tips for better manifest output:
 
 ## Reviewing PRs
 
-Use the [review checklist](docs/REVIEW-CHECKLIST.md) when reviewing component PRs.
+Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) when reviewing component PRs.
+  - Source: [`docs/REVIEW-CHECKLIST.md`](docs/REVIEW-CHECKLIST.md)
 
 ## Submitting changes
 
@@ -60,3 +79,4 @@ Use the [review checklist](docs/REVIEW-CHECKLIST.md) when reviewing component PR
 7. Reference the relevant issue in your PR description.
 
 For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
+  - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
