@@ -71,7 +71,22 @@ stories/assets/scss/
 
 ## Component distribution channels
 
-Components reach consumers through different channels depending on their registration:
+Components reach consumers through different channels depending on their type and registration:
+
+### Vanilla JS scripts
+
+Scripts in `stories/assets/js/` are auto-discovered by webpack and published to npm at `@undrr/undrr-mangrove/js/`. No manual registration is needed. The CI workflow (`npm-publish.yml`) copies `dist/assets/js/*` into the npm package's `js/` directory.
+
+| Script | npm path | Purpose |
+|--------|----------|---------|
+| `on-this-page-nav.js` | `js/on-this-page-nav.js` | Sticky horizontal nav with scroll-spy |
+| `tabs.js` | `js/tabs.js` | Tabbed content with keyboard nav |
+| `show-more.js` | `js/show-more.js` | Expand/collapse toggle |
+| `undrr.js` | `js/undrr.js` | Shared constants and namespace |
+
+See [`stories/assets/js/README.md`](../stories/assets/js/README.md) for the full pipeline and authoring guide.
+
+### React components
 
 | Component | webpack entry | src/index.js | Channel |
 |-----------|:---:|:---:|---------|
