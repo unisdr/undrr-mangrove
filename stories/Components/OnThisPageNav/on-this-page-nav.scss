@@ -55,7 +55,7 @@
     // Uses mask-image so the fade is transparent (works on any background).
     // padding-inline-end gives the fade space so text isn't masked mid-character.
     padding-inline-end: $mg-spacing-300;
-    mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-300}), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-500}), transparent);
 
     // Hide scrollbar but keep functional
     scrollbar-width: none;
