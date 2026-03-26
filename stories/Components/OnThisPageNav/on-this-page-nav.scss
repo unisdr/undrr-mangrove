@@ -8,7 +8,7 @@
   // --mg-on-this-page-nav-offset: docking offset for fixed headers (default: 0px).
   // Set this in your theme CSS to dock below a sticky MegaMenu or header.
   position: sticky;
-  top: var(--mg-on-this-page-nav-offset, 0px);
+  top: var(--mg-on-this-page-nav-offset, 0);
 
   // Above MegaMenu (10) but below PageHeader (22) and modals (9998+).
   // TODO: replace with a shared z-index token when the design token system adds one.
@@ -50,6 +50,12 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     flex: 1 1 auto;
+
+    // Fade gradient on the trailing edge signals more content is scrollable.
+    // Uses mask-image so the fade is transparent (works on any background).
+    // padding-inline-end gives the fade space so text isn't masked mid-character.
+    padding-inline-end: $mg-spacing-300;
+    mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-300}), transparent);
 
     // Hide scrollbar but keep functional
     scrollbar-width: none;
