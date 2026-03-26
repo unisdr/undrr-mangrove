@@ -3,18 +3,20 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { mgOnThisPageNav } from '../../../assets/js/on-this-page-nav';
 
-// Mock IntersectionObserver for jsdom
+// Track observer callbacks so we can fire mock entries in tests
+let observerCallbacks = [];
+
 beforeAll(() => {
   global.IntersectionObserver = class {
     constructor(cb) {
       this.cb = cb;
+      observerCallbacks.push(cb);
     }
     observe() {}
     unobserve() {}
     disconnect() {}
   };
 
-  // Mock matchMedia for jsdom
   window.matchMedia = jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
@@ -25,6 +27,10 @@ beforeAll(() => {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   }));
+});
+
+beforeEach(() => {
+  observerCallbacks = [];
 });
 
 // Helper: render a page with headings and a nav container, then initialize
@@ -146,6 +152,24 @@ describe('OnThisPageNav', () => {
       expect(link.getAttribute('href')).toBe('#my-heading');
     });
 
+    it('generates unique IDs for duplicate heading text', () => {
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <h2>Overview</h2>
+          <h2>Overview</h2>
+        </main>
+      `;
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav([nav]);
+
+      const headings = document.querySelectorAll('h2');
+      expect(headings[0].id).toBe('overview');
+      expect(headings[1].id).toBe('overview-2');
+    });
+
     it('preserves CTA element', () => {
       const nav = setupAutoDetect({
         ctaHtml:
@@ -154,6 +178,12 @@ describe('OnThisPageNav', () => {
       const cta = nav.querySelector('.mg-on-this-page-nav__cta');
       expect(cta).not.toBeNull();
       expect(cta.textContent).toBe('Subscribe');
+    });
+
+    it('adds role="list" to the generated ul', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      expect(list.getAttribute('role')).toBe('list');
     });
   });
 
@@ -209,15 +239,104 @@ describe('OnThisPageNav', () => {
     });
   });
 
+  describe('scroll-spy active state', () => {
+    it('sets aria-current="true" on the first link at init', () => {
+      const nav = setupAutoDetect();
+      const firstLink = nav.querySelector('.mg-on-this-page-nav__link');
+      expect(firstLink.getAttribute('aria-current')).toBe('true');
+      expect(
+        firstLink.classList.contains('mg-on-this-page-nav__link--active')
+      ).toBe(true);
+    });
+
+    it('only has one active link at a time', () => {
+      const nav = setupAutoDetect();
+      const activeLinks = nav.querySelectorAll('[aria-current="true"]');
+      expect(activeLinks).toHaveLength(1);
+    });
+
+    it('updates active link when observer fires', () => {
+      const nav = setupAutoDetect();
+      const cb = observerCallbacks[observerCallbacks.length - 1];
+
+      // Simulate sec-2 becoming visible
+      const sec1 = document.getElementById('sec-1');
+      const sec2 = document.getElementById('sec-2');
+      cb([
+        {
+          target: sec1,
+          isIntersecting: false,
+          boundingClientRect: { top: -100 },
+        },
+        {
+          target: sec2,
+          isIntersecting: true,
+          boundingClientRect: { top: 50 },
+        },
+      ]);
+
+      const activeLink = nav.querySelector('[aria-current="true"]');
+      expect(activeLink.getAttribute('href')).toBe('#sec-2');
+
+      const firstLink = nav.querySelector('[href="#sec-1"]');
+      expect(firstLink.hasAttribute('aria-current')).toBe(false);
+    });
+  });
+
+  describe('click handling', () => {
+    it('calls scrollTo and pushState on click', () => {
+      const scrollToSpy = jest
+        .spyOn(window, 'scrollTo')
+        .mockImplementation(() => {});
+      const pushStateSpy = jest
+        .spyOn(window.history, 'pushState')
+        .mockImplementation(() => {});
+
+      const nav = setupExplicit([
+        { id: 'a', text: 'Link A' },
+        { id: 'b', text: 'Link B' },
+      ]);
+      const link = nav.querySelector('.mg-on-this-page-nav__link');
+      link.click();
+
+      expect(scrollToSpy).toHaveBeenCalled();
+      expect(pushStateSpy).toHaveBeenCalledWith(null, null, '#a');
+
+      scrollToSpy.mockRestore();
+      pushStateSpy.mockRestore();
+    });
+
+    it('sets tabindex on the target heading', () => {
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+      const nav = setupExplicit([{ id: 'a', text: 'Link A' }]);
+      const link = nav.querySelector('.mg-on-this-page-nav__link');
+      link.click();
+
+      const heading = document.getElementById('a');
+      expect(heading.getAttribute('tabindex')).toBe('-1');
+
+      window.scrollTo.mockRestore();
+    });
+  });
+
+  describe('hidden nav', () => {
+    it('does not create an observer when hidden', () => {
+      const nav = setupAutoDetect({ headings: [] });
+      expect(nav.classList.contains('mg-on-this-page-nav--hidden')).toBe(true);
+      expect(nav._mgOnThisPageNavObserver).toBeUndefined();
+    });
+  });
+
   describe('accessibility', () => {
     it('has no axe violations in auto-detect mode', async () => {
-      const nav = setupAutoDetect();
+      setupAutoDetect();
       const results = await axe(document.body);
       expect(results).toHaveNoViolations();
     });
 
     it('has no axe violations in explicit mode', async () => {
-      const nav = setupExplicit([
+      setupExplicit([
         { id: 'a', text: 'Link A' },
         { id: 'b', text: 'Link B' },
       ]);

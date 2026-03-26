@@ -67,11 +67,11 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 | `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
 | `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
 | `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
-| `data-mg-on-this-page-nav-offset` | integer (px) | `"0"` | Scroll offset for fixed headers above |
+| `data-mg-on-this-page-nav-offset` | integer (px) | `"0"` | Scroll offset for fixed headers above the nav (e.g. MegaMenu height) |
 
 ## CTA button
 
-Add a link with the `mg-on-this-page-nav__cta` class. It pins to the right of the bar:
+Add a link with the `mg-on-this-page-nav__cta` class. It pins to the end of the bar (right in LTR, left in RTL):
 
 ```html
 <nav data-mg-on-this-page-nav
@@ -103,32 +103,53 @@ Headings with `mg-u-sr-only` are also excluded.
 | `mg-on-this-page-nav__item` | `<li>` | List item wrapper |
 | `mg-on-this-page-nav__link` | `<a>` | Navigation link |
 | `mg-on-this-page-nav__link--active` | `<a>` | Scroll-spy active state |
-| `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned right) |
+| `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned to logical end) |
 | `mg-on-this-page-nav--exclude` | heading | Exclude a heading from auto-detect |
 
 ## JavaScript API
 
-The component auto-initializes on `DOMContentLoaded`. For dynamic content or manual initialization:
+The component auto-initializes on `DOMContentLoaded` (or immediately if the script loads after the DOM is ready). For dynamic content or manual initialization:
 
 ```js
-import { mgOnThisPageNav } from 'path/to/on-this-page-nav.js';
+import { mgOnThisPageNav, mgOnThisPageNavDestroy } from 'path/to/on-this-page-nav.js';
 
 // Initialize all [data-mg-on-this-page-nav] elements
 mgOnThisPageNav();
 
 // Initialize specific elements
 mgOnThisPageNav([myNavElement]);
+
+// Tear down (disconnects observer, removes init flag)
+mgOnThisPageNavDestroy(myNavElement);
 ```
+
+## Stacking with other sticky elements
+
+The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `data-mg-on-this-page-nav-offset` to the MegaMenu's pixel height so headings scroll to the correct position.
 
 ## Accessibility
 
 - **Landmark**: Renders as a `<nav>` with `aria-label`
-- **Active section**: `aria-current="true"` on the active link
-- **Keyboard**: Standard tab navigation through links
-- **Focus**: Visible focus indicator on all interactive elements
-- **Motion**: Smooth scroll respects `prefers-reduced-motion`
-- **Click targets**: Links sized to meet minimum touch target guidelines
+- **Active section**: `aria-current="true"` on the active link (correct WCAG 1.3.1 pattern — not `aria-selected`)
+- **List semantics**: `role="list"` on `<ul>` guards against VoiceOver + `list-style: none` bug
+- **Keyboard**: Standard tab navigation through links; focused links auto-scroll into view in the nav bar
+- **Focus management**: Clicking a link moves focus to the target heading (`tabindex="-1"`, removed on blur)
+- **Focus visible**: 2px outline on `:focus-visible` for all interactive elements
+- **Motion**: Smooth scroll and nav auto-scroll both respect `prefers-reduced-motion: reduce`
+- **Zoom**: Un-sticks at `max-height: 400px` to prevent the bar from dominating the viewport at high zoom (per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/))
+- **Touch targets**: Links meet WCAG 2.5.8 Target Size (Minimum) at Level AA (24x24px). Vertical size is approximately 44px
+- **Color contrast**: Active link color (`$mg-color-interactive`) passes 4.5:1 against white across all five themes
+
+## RTL and internationalization
+
+The component supports RTL layouts automatically:
+
+- The nav list scrolls right-to-left via CSS flexbox and `overflow-x`
+- The CTA button pins to the left (logical end) via `margin-inline-start: auto`
+- Arabic headings use the Noto Kufi Arabic font family (`:lang(ar)` override)
+
+Auto-generated IDs from non-Latin headings preserve the original characters. Provide explicit `id` attributes on headings if you need specific URL fragments.
 
 ## Changelog
 
-- **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy)
+- 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y)

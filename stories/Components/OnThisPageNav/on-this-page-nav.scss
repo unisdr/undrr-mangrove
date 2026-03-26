@@ -7,6 +7,8 @@
 .mg-on-this-page-nav {
   position: sticky;
   top: 0;
+
+  // Above MegaMenu (10) but below PageHeader (22) and modals (9998+).
   z-index: 11;
   display: flex;
   align-items: center;
@@ -38,9 +40,8 @@
     margin: 0;
     padding: 0;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     flex: 1 1 auto;
-    gap: 0;
 
     // Hide scrollbar but keep functional
     scrollbar-width: none;
@@ -57,7 +58,7 @@
 
   &__link {
     display: block;
-    padding: $mg-spacing-100 $mg-spacing-150;
+    padding: $mg-spacing-150 $mg-spacing-150;
     font-family: $mg-font-family-condensed;
     font-size: $mg-font-size-250;
     font-weight: 600;
@@ -82,7 +83,9 @@
       outline-offset: -2px;
     }
 
-    &--active {
+    // Active state and active+hover — active wins over hover
+    &--active,
+    &--active:hover {
       color: $mg-color-interactive;
       border-bottom-color: $mg-color-interactive;
     }
@@ -91,7 +94,7 @@
   &__cta {
     flex-shrink: 0;
     margin-inline-start: auto;
-    padding: $mg-spacing-75 $mg-spacing-150;
+    padding: $mg-spacing-150 $mg-spacing-150;
     font-family: $mg-font-family-condensed;
     font-size: $mg-font-size-250;
     font-weight: 600;
@@ -101,14 +104,14 @@
     white-space: nowrap;
     border: 0;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition: background-color 0.2s ease;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }
 
     &:hover {
-      opacity: 0.9;
+      background: $mg-color-interactive-active;
       text-decoration: none;
       color: $mg-color-neutral-0;
     }

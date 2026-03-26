@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import OnThisPageNav from './OnThisPageNav';
 import { mgOnThisPageNav } from '../../assets/js/on-this-page-nav';
 
@@ -48,22 +48,33 @@ const SectionContent = () => (
 );
 
 /**
+ * Hook: initializes the vanilla JS on a scoped container ref.
+ * Avoids the querySelector scoping bug where only the first nav inits
+ * when multiple stories render on the Docs page.
+ */
+function useOnThisPageNav(wrapperRef) {
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const nav = wrapperRef.current.querySelector('[data-mg-on-this-page-nav]');
+    if (nav) {
+      delete nav.dataset.mgOnThisPageNavInitialized;
+      mgOnThisPageNav([nav]);
+    }
+  }, []);
+}
+
+/**
  * Auto-detect mode: the nav scans h2 headings from the content and
  * generates links automatically. Scroll down to see the active state
  * update as each section enters the viewport.
  */
 export const AutoDetect = {
   render: () => {
-    useEffect(() => {
-      const nav = document.querySelector('[data-mg-on-this-page-nav]');
-      if (nav) {
-        delete nav.dataset.mgOnThisPageNavInitialized;
-        mgOnThisPageNav([nav]);
-      }
-    }, []);
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
 
     return (
-      <article className="mg-auto-detect-demo">
+      <article className="mg-auto-detect-demo" ref={ref}>
         <nav
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-auto-detect-demo"
@@ -100,16 +111,11 @@ export const AutoDetect = {
  */
 export const WithNestedHeadings = {
   render: () => {
-    useEffect(() => {
-      const nav = document.querySelector('[data-mg-on-this-page-nav]');
-      if (nav) {
-        delete nav.dataset.mgOnThisPageNavInitialized;
-        mgOnThisPageNav([nav]);
-      }
-    }, []);
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
 
     return (
-      <article className="mg-nested-demo">
+      <article className="mg-nested-demo" ref={ref}>
         <nav
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-depth="3"
@@ -148,16 +154,11 @@ export const WithNestedHeadings = {
  */
 export const ExplicitLinks = {
   render: () => {
-    useEffect(() => {
-      const nav = document.querySelector('[data-mg-on-this-page-nav]');
-      if (nav) {
-        delete nav.dataset.mgOnThisPageNavInitialized;
-        mgOnThisPageNav([nav]);
-      }
-    }, []);
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
 
     return (
-      <article>
+      <article ref={ref}>
         <nav data-mg-on-this-page-nav className="mg-on-this-page-nav">
           <ul className="mg-on-this-page-nav__list">
             <li className="mg-on-this-page-nav__item">
@@ -200,16 +201,11 @@ export const ExplicitLinks = {
  */
 export const WithCTA = {
   render: () => {
-    useEffect(() => {
-      const nav = document.querySelector('[data-mg-on-this-page-nav]');
-      if (nav) {
-        delete nav.dataset.mgOnThisPageNavInitialized;
-        mgOnThisPageNav([nav]);
-      }
-    }, []);
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
 
     return (
-      <article className="mg-cta-demo">
+      <article className="mg-cta-demo" ref={ref}>
         <nav
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-cta-demo"
@@ -245,16 +241,11 @@ export const WithCTA = {
  */
 export const WithExcludedHeading = {
   render: () => {
-    useEffect(() => {
-      const nav = document.querySelector('[data-mg-on-this-page-nav]');
-      if (nav) {
-        delete nav.dataset.mgOnThisPageNavInitialized;
-        mgOnThisPageNav([nav]);
-      }
-    }, []);
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
 
     return (
-      <article className="mg-exclude-demo">
+      <article className="mg-exclude-demo" ref={ref}>
         <nav
           data-mg-on-this-page-nav
           data-mg-on-this-page-nav-content=".mg-exclude-demo"
@@ -277,4 +268,146 @@ export const WithExcludedHeading = {
     );
   },
   name: 'With excluded heading',
+};
+
+/**
+ * Demonstrates horizontal overflow with many nav items. On narrow
+ * viewports the list scrolls horizontally, with the active link
+ * auto-scrolled into view.
+ */
+export const ManyItems = {
+  render: () => {
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
+
+    const sections = [
+      'Executive summary',
+      'Background and context',
+      'Methodology and approach',
+      'Risk assessment findings',
+      'Vulnerability analysis',
+      'Capacity and resources',
+      'Recommendations',
+      'Implementation roadmap',
+      'Monitoring framework',
+      'Annexes and references',
+    ];
+
+    return (
+      <article className="mg-many-demo" ref={ref}>
+        <nav
+          data-mg-on-this-page-nav
+          data-mg-on-this-page-nav-content=".mg-many-demo"
+          className="mg-on-this-page-nav"
+        >
+          <a href="#download" className="mg-on-this-page-nav__cta">
+            Download report
+          </a>
+        </nav>
+
+        <div style={{ padding: '0 1rem' }}>
+          {sections.map((title, i) => {
+            const id = title.toLowerCase().replace(/\s+/g, '-');
+            return (
+              <div key={i}>
+                <h2 id={id}>{title}</h2>
+                <SectionContent />
+              </div>
+            );
+          })}
+        </div>
+      </article>
+    );
+  },
+  name: 'Many items (horizontal overflow)',
+};
+
+/**
+ * Demonstrates the offset prop for pages with a fixed header above the
+ * sticky nav. The offset value (80px) accounts for the header height.
+ */
+export const WithOffset = {
+  render: () => {
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
+
+    return (
+      <article className="mg-offset-demo" ref={ref}>
+        <div
+          style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 12,
+            background: '#004f91',
+            color: 'white',
+            padding: '1rem',
+            fontWeight: 600,
+          }}
+        >
+          Simulated fixed header (80px)
+        </div>
+
+        <nav
+          data-mg-on-this-page-nav
+          data-mg-on-this-page-nav-content=".mg-offset-demo"
+          data-mg-on-this-page-nav-offset="80"
+          className="mg-on-this-page-nav"
+        />
+
+        <div style={{ padding: '0 1rem' }}>
+          <h2 id="offset-section-1">First section</h2>
+          <SectionContent />
+
+          <h2 id="offset-section-2">Second section</h2>
+          <SectionContent />
+
+          <h2 id="offset-section-3">Third section</h2>
+          <SectionContent />
+        </div>
+      </article>
+    );
+  },
+  name: 'With scroll offset',
+};
+
+/**
+ * RTL layout: the nav list flows right-to-left and the CTA pins
+ * to the left (logical end). Uses Arabic heading text.
+ */
+export const RTL = {
+  render: () => {
+    const ref = useRef(null);
+    useOnThisPageNav(ref);
+
+    return (
+      <div dir="rtl" lang="ar" ref={ref}>
+        <article className="mg-rtl-demo">
+          <nav
+            data-mg-on-this-page-nav
+            data-mg-on-this-page-nav-content=".mg-rtl-demo"
+            data-mg-on-this-page-nav-label="في هذه الصفحة"
+            className="mg-on-this-page-nav"
+          >
+            <a href="#subscribe-ar" className="mg-on-this-page-nav__cta">
+              اشترك
+            </a>
+          </nav>
+
+          <div style={{ padding: '0 1rem' }}>
+            <h2 id="overview-ar">نظرة عامة</h2>
+            <SectionContent />
+
+            <h2 id="framework-ar">إطار سنداي</h2>
+            <SectionContent />
+
+            <h2 id="implementation-ar">التنفيذ</h2>
+            <SectionContent />
+
+            <h2 id="monitoring-ar">الرصد والاستعراض</h2>
+            <SectionContent />
+          </div>
+        </article>
+      </div>
+    );
+  },
 };

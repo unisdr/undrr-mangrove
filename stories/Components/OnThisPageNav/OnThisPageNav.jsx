@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { mgOnThisPageNav } from '../../assets/js/on-this-page-nav';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '../../assets/js/on-this-page-nav';
 
 /**
  * Storybook wrapper for the OnThisPageNav vanilla JS component.
@@ -28,12 +31,15 @@ export default function OnThisPageNav({
   const navRef = useRef(null);
 
   useEffect(() => {
-    if (navRef.current) {
-      // Reset init flag so Storybook re-renders work
-      delete navRef.current.dataset.mgOnThisPageNavInitialized;
-      mgOnThisPageNav([navRef.current]);
+    const nav = navRef.current;
+    if (nav) {
+      delete nav.dataset.mgOnThisPageNavInitialized;
+      mgOnThisPageNav([nav]);
     }
-  });
+    return () => {
+      if (nav) mgOnThisPageNavDestroy(nav);
+    };
+  }, [depth, contentSelector, label, offset, items, ctaHref, ctaText]);
 
   return (
     <nav
