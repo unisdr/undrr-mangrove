@@ -175,9 +175,10 @@ function setupClickHandlers(container) {
 
     e.preventDefault();
 
-    // Calculate scroll position with offset
+    // Calculate scroll position with offset + the nav bar's own height
+    const navHeight = container.offsetHeight || 0;
     const top =
-      target.getBoundingClientRect().top + window.pageYOffset - offset;
+      target.getBoundingClientRect().top + window.pageYOffset - offset - navHeight;
 
     window.scrollTo({
       top,
@@ -248,12 +249,15 @@ function setupScrollSpy(container) {
       // The scrollbar is hidden (CSS) — the user doesn't manually scroll
       // the nav. ONS user research found independently-scrolling ToC lists
       // confused users; auto-scrolling to the active link avoids that.
-      if (newLink.scrollIntoView) {
-        newLink.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center',
-        });
+      // We use scrollLeft on the list (not scrollIntoView on the link)
+      // to avoid vertical page scrolling side-effects.
+      const list = newLink.closest('.mg-on-this-page-nav__list');
+      if (list && list.scrollTo) {
+        const linkLeft = newLink.offsetLeft;
+        const linkWidth = newLink.offsetWidth;
+        const listWidth = list.offsetWidth;
+        const scrollTarget = linkLeft - listWidth / 2 + linkWidth / 2;
+        list.scrollTo({ left: scrollTarget, behavior: 'smooth' });
       }
     }
   }
@@ -287,9 +291,9 @@ function setupScrollSpy(container) {
       // If nothing is intersecting, keep the last active (don't clear)
     },
     {
-      // Top margin accounts for offset (fixed header).
+      // Top margin accounts for offset (fixed header) + the nav bar's own height.
       // Bottom margin of -66% means heading must be in top ~33% of viewport.
-      rootMargin: `-${offset}px 0px -66% 0px`,
+      rootMargin: `-${offset + (container.offsetHeight || 0)}px 0px -66% 0px`,
       threshold: [0],
     }
   );
