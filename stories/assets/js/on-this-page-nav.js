@@ -26,16 +26,29 @@ function getOffset(container) {
 }
 
 /**
- * Check if the user prefers reduced motion at the current moment.
- * Read at point-of-use so toggling the OS preference takes effect immediately.
- *
- * @returns {boolean}
+ * @returns {boolean} Whether the user currently prefers reduced motion.
  */
 function prefersReducedMotion() {
   return (
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
+}
+
+/**
+ * Horizontally scroll a link to the center of its list container.
+ *
+ * @param {HTMLElement} link - The link element to center
+ * @param {HTMLElement} list - The scrollable list container
+ */
+function scrollLinkToCenter(link, list) {
+  if (!list.scrollTo) return;
+  const scrollTarget =
+    link.offsetLeft - list.offsetWidth / 2 + link.offsetWidth / 2;
+  list.scrollTo({
+    left: scrollTarget,
+    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+  });
 }
 
 /**
@@ -60,7 +73,7 @@ export function mgOnThisPageNav(scope) {
       );
     }
 
-    // Detect mode: explicit if the container already has a <ul>, otherwise auto-detect
+    // Detect mode: explicit if container already has a <ul>, otherwise auto-detect
     const existingList = container.querySelector('ul');
     if (!existingList) {
       buildNavFromHeadings(container);
@@ -69,13 +82,12 @@ export function mgOnThisPageNav(scope) {
     // Skip setup if no headings were found and nav is hidden
     if (container.classList.contains('mg-on-this-page-nav--hidden')) return;
 
-    // Add role="list" to guard against VoiceOver + list-style:none bug
+    // Guard against VoiceOver + list-style:none bug
     const list = container.querySelector('.mg-on-this-page-nav__list');
     if (list && !list.getAttribute('role')) {
       list.setAttribute('role', 'list');
     }
 
-    // AbortController lets destroy() remove all event listeners at once
     const ac = new AbortController();
     container._mgOnThisPageNavAbort = ac;
 
@@ -121,20 +133,17 @@ function buildNavFromHeadings(container) {
     return;
   }
 
-  // Build heading selector based on depth (h2, or h2+h3, or h2+h3+h4)
   const levels = [];
   for (let i = 2; i <= Math.min(depth, 6); i++) {
     levels.push(`h${i}`);
   }
-  const headingSelector = levels.join(', ');
 
-  const headings = contentScope.querySelectorAll(headingSelector);
+  const headings = contentScope.querySelectorAll(levels.join(', '));
 
-  // Filter out excluded headings
+  // Filter out excluded headings and the TableOfContents "On this page" header
   const filteredHeadings = Array.from(headings).filter(heading => {
     if (heading.classList.contains('mg-on-this-page-nav--exclude')) return false;
     if (heading.classList.contains('mg-u-sr-only')) return false;
-    // Skip the "On this page" header from TableOfContents if present
     if (heading.id === 'on-this-page') return false;
     return true;
   });
@@ -148,7 +157,6 @@ function buildNavFromHeadings(container) {
   const cta = container.querySelector('.mg-on-this-page-nav__cta');
   const ctaClone = cta ? cta.cloneNode(true) : null;
 
-  // Build the list
   const ul = document.createElement('ul');
   ul.className = 'mg-on-this-page-nav__list';
   ul.setAttribute('role', 'list');
@@ -156,7 +164,6 @@ function buildNavFromHeadings(container) {
   const usedIds = new Set();
 
   filteredHeadings.forEach(heading => {
-    // Ensure the heading has an ID
     if (!heading.id) {
       heading.id = generateId(heading.textContent, usedIds);
     }
@@ -174,11 +181,9 @@ function buildNavFromHeadings(container) {
     ul.appendChild(li);
   });
 
-  // Clear container and rebuild
   container.innerHTML = '';
   container.appendChild(ul);
 
-  // Re-append CTA if one existed
   if (ctaClone) {
     container.appendChild(ctaClone);
   }
@@ -197,13 +202,10 @@ function generateId(text, usedIds) {
   let base = text
     .trim()
     .toLowerCase()
-    // Remove punctuation and symbols but keep letters, numbers, spaces, hyphens
     .replace(/[\p{P}\p{S}]/gu, '')
     .replace(/\s+/g, '-')
-    // Remove leading/trailing hyphens
     .replace(/^-+|-+$/g, '');
 
-  // Ensure we have something
   if (!base) base = 'section';
 
   let id = base;
@@ -276,16 +278,7 @@ function setupFocusScrolling(container, signal) {
 
   list.addEventListener('focusin', e => {
     const link = e.target.closest('.mg-on-this-page-nav__link');
-    if (!link || !list.scrollTo) return;
-
-    const linkLeft = link.offsetLeft;
-    const linkWidth = link.offsetWidth;
-    const listWidth = list.offsetWidth;
-    const scrollTarget = linkLeft - listWidth / 2 + linkWidth / 2;
-    list.scrollTo({
-      left: scrollTarget,
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-    });
+    if (link) scrollLinkToCenter(link, list);
   }, { signal });
 }
 
@@ -296,9 +289,8 @@ function setupFocusScrolling(container, signal) {
  */
 function setupScrollSpy(container) {
   const links = container.querySelectorAll('.mg-on-this-page-nav__link');
-  const offset = getOffset(container);
+  const list = container.querySelector('.mg-on-this-page-nav__list');
 
-  // Map heading IDs to their corresponding link elements
   const linkMap = new Map();
   const targets = [];
 
@@ -315,15 +307,12 @@ function setupScrollSpy(container) {
   if (targets.length === 0) return;
 
   let activeId = null;
+  // Track which targets are currently intersecting (avoids DOM expando properties)
+  const intersecting = new Set();
 
-  /**
-   * Update which link is marked active.
-   * @param {string|null} id - The heading ID to activate
-   */
   function setActive(id) {
     if (id === activeId) return;
 
-    // Remove old active state
     if (activeId && linkMap.has(activeId)) {
       const oldLink = linkMap.get(activeId);
       oldLink.classList.remove('mg-on-this-page-nav__link--active');
@@ -332,60 +321,48 @@ function setupScrollSpy(container) {
 
     activeId = id;
 
-    // Set new active state
     if (id && linkMap.has(id)) {
       const newLink = linkMap.get(id);
       newLink.classList.add('mg-on-this-page-nav__link--active');
       newLink.setAttribute('aria-current', 'true');
 
       // Scroll the nav list horizontally to keep active link visible.
-      // The scrollbar is hidden (CSS) — the user doesn't manually scroll
-      // the nav. ONS user research found independently-scrolling ToC lists
-      // confused users; auto-scrolling to the active link avoids that.
-      // We use scrollLeft on the list (not scrollIntoView on the link)
-      // to avoid vertical page scrolling side-effects.
-      const list = newLink.closest('.mg-on-this-page-nav__list');
-      if (list && list.scrollTo) {
-        const linkLeft = newLink.offsetLeft;
-        const linkWidth = newLink.offsetWidth;
-        const listWidth = list.offsetWidth;
-        const scrollTarget = linkLeft - listWidth / 2 + linkWidth / 2;
-        list.scrollTo({
-          left: scrollTarget,
-          behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-        });
-      }
+      // ONS user research found independently-scrolling ToC lists confused users;
+      // auto-scrolling to the active link avoids that. We use scrollTo on the
+      // list (not scrollIntoView on the link) to avoid vertical page scrolling.
+      if (list) scrollLinkToCenter(newLink, list);
     }
   }
 
+  // rootMargin is static after construction — if the offset custom property
+  // changes at a breakpoint, the observer will use the value from init time.
+  // The click handler re-reads offset per click to stay responsive.
+  const offset = getOffset(container);
   const observer = new IntersectionObserver(
     entries => {
-      // Update intersection state from this callback
       entries.forEach(entry => {
-        entry.target._mgIsIntersecting = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          intersecting.add(entry.target);
+        } else {
+          intersecting.delete(entry.target);
+        }
       });
 
-      // Pick the first intersecting target in DOM order (stable, no stale .top values)
-      const firstIntersecting = targets.find(t => t._mgIsIntersecting);
-      if (firstIntersecting) {
-        setActive(firstIntersecting.id);
+      // Pick the first intersecting target in DOM order
+      const firstVisible = targets.find(t => intersecting.has(t));
+      if (firstVisible) {
+        setActive(firstVisible.id);
       }
-      // If nothing is intersecting, keep the last active (don't clear)
     },
     {
-      // Top margin accounts for offset (fixed header) + the nav bar's own height.
-      // Bottom margin of -66% means heading must be in top ~33% of viewport.
       rootMargin: `-${offset + (container.offsetHeight || 0)}px 0px -66% 0px`,
       threshold: [0],
     }
   );
 
   targets.forEach(target => observer.observe(target));
-
-  // Store observer for cleanup via mgOnThisPageNavDestroy()
   container._mgOnThisPageNavObserver = observer;
 
-  // Activate from URL hash if it matches a target, otherwise first link
   const hashId = window.location.hash ? window.location.hash.slice(1) : null;
   if (hashId && linkMap.has(hashId)) {
     setActive(hashId);
@@ -394,8 +371,6 @@ function setupScrollSpy(container) {
   }
 }
 
-// Auto-initialize on DOMContentLoaded (or immediately if already loaded,
-// e.g. when script is deferred or loaded as an ES module)
 // Auto-wrap so the browser Event object is not passed as scope
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => mgOnThisPageNav(), false);

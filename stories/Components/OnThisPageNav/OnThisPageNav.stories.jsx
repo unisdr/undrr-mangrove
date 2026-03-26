@@ -343,10 +343,10 @@ export const ManyItems = {
           {sections.map((title, i) => {
             const id = title.toLowerCase().replace(/\s+/g, '-');
             return (
-              <div key={i}>
+              <React.Fragment key={i}>
                 <h2 id={id}>{title}</h2>
                 <SectionContent />
-              </div>
+              </React.Fragment>
             );
           })}
         </div>
