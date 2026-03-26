@@ -1,0 +1,238 @@
+{/* OnThisPageNav.mdx */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as OnThisPageNavStories from './OnThisPageNav.stories';
+
+<Meta of={OnThisPageNavStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# On this page nav
+
+A sticky horizontal navigation bar that links to page sections, with scroll-spy highlighting and an optional call-to-action button. Vanilla JS — no React dependency.
+
+**GitLab issue**: [web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337)
+
+## When to use
+
+Use **On this page nav** for long-form content pages (landing pages, reports, directories) where readers benefit from:
+- Seeing the page structure at a glance
+- Jumping quickly between sections
+- Tracking where they are as they scroll
+
+### On this page nav vs Table of contents
+
+| | On this page nav | Table of contents |
+|---|---|---|
+| Position | Sticky at viewport top | Inline within content |
+| Layout | Horizontal bar | Vertical list |
+| Scroll-spy | Yes (highlights active section) | No |
+| Best for | Persistent navigation on long pages | Static overview at the top of content |
+
+## Modes
+
+### Auto-detect (default)
+
+Place an empty `<nav>` with the activation attribute. The script scans headings and generates links:
+
+```html
+<nav data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-content=".article-body"
+     class="mg-on-this-page-nav">
+</nav>
+```
+
+### Explicit
+
+Provide your own `<ul>` with links. The script activates scroll-spy without scanning headings:
+
+```html
+<nav data-mg-on-this-page-nav class="mg-on-this-page-nav">
+  <ul class="mg-on-this-page-nav__list">
+    <li class="mg-on-this-page-nav__item">
+      <a href="#intro" class="mg-on-this-page-nav__link">Introduction</a>
+    </li>
+    <li class="mg-on-this-page-nav__item">
+      <a href="#methods" class="mg-on-this-page-nav__link">Methodology</a>
+    </li>
+  </ul>
+</nav>
+```
+
+## Data attributes
+
+| Attribute | Values | Default | Purpose |
+|-----------|--------|---------|---------|
+| `data-mg-on-this-page-nav` | (presence) | — | Activates the component |
+| `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
+| `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
+| `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
+
+## CSS custom properties
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--mg-on-this-page-nav-offset` | `0px` | Docking offset for fixed headers above the nav. Accepts any CSS length (e.g. `80px`, `5rem`). Also used for scroll position calculations |
+
+Set these in your theme CSS or inline on the element:
+
+```css
+/* In a Drupal theme — responsive offset for MegaMenu */
+.mg-on-this-page-nav {
+  --mg-on-this-page-nav-offset: 80px;
+}
+
+@media (max-width: 900px) {
+  .mg-on-this-page-nav {
+    --mg-on-this-page-nav-offset: 56px;
+  }
+}
+```
+
+## CTA button
+
+Add a link with the `mg-on-this-page-nav__cta` class. It pins to the end of the bar (right in LTR, left in RTL):
+
+```html
+<nav data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-content=".article-body"
+     class="mg-on-this-page-nav">
+  <a href="/subscribe" class="mg-on-this-page-nav__cta">Subscribe to updates</a>
+</nav>
+```
+
+In auto-detect mode, the CTA is preserved when the script generates links.
+
+## Excluding headings
+
+Add the `mg-on-this-page-nav--exclude` class to any heading to skip it:
+
+```html
+<h2 class="mg-on-this-page-nav--exclude">This heading won't appear in the nav</h2>
+```
+
+Headings with `mg-u-sr-only` are also excluded.
+
+## CSS classes
+
+| Class | Element | Purpose |
+|-------|---------|---------|
+| `mg-on-this-page-nav` | `<nav>` | Root container |
+| `mg-on-this-page-nav--hidden` | `<nav>` | Applied when no headings found |
+| `mg-on-this-page-nav__list` | `<ul>` | Horizontal scrollable list |
+| `mg-on-this-page-nav__item` | `<li>` | List item wrapper |
+| `mg-on-this-page-nav__link` | `<a>` | Navigation link |
+| `mg-on-this-page-nav__link--active` | `<a>` | Scroll-spy active state |
+| `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned to logical end) |
+| `mg-on-this-page-nav--exclude` | heading | Exclude a heading from auto-detect |
+
+## JavaScript API
+
+The component auto-initializes on `DOMContentLoaded` (or immediately if the script loads after the DOM is ready). For dynamic content or manual initialization:
+
+```js
+import { mgOnThisPageNav, mgOnThisPageNavDestroy } from 'path/to/on-this-page-nav.js';
+
+// Initialize all [data-mg-on-this-page-nav] elements
+mgOnThisPageNav();
+
+// Initialize specific elements
+mgOnThisPageNav([myNavElement]);
+
+// Tear down (disconnects observer, removes init flag)
+mgOnThisPageNavDestroy(myNavElement);
+```
+
+## Usage with React
+
+This is a vanilla JS component, not a React component. In a React app, render the HTML structure and call the init function in a `useEffect`:
+
+```jsx
+import { useEffect, useRef } from 'react';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '@undrr/undrr-mangrove/js/on-this-page-nav';
+
+function PageWithNav() {
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (nav) mgOnThisPageNav([nav]);
+    return () => {
+      if (nav) mgOnThisPageNavDestroy(nav);
+    };
+  }, []);
+
+  return (
+    <article className="my-article">
+      {/* Auto-detect: empty nav, JS scans headings */}
+      <nav
+        ref={navRef}
+        data-mg-on-this-page-nav
+        data-mg-on-this-page-nav-content=".my-article"
+        className="mg-on-this-page-nav"
+      />
+
+      <h2 id="intro">Introduction</h2>
+      <p>...</p>
+      <h2 id="methods">Methodology</h2>
+      <p>...</p>
+    </article>
+  );
+}
+```
+
+For explicit mode, provide the `<ul>` in JSX — the JS skips heading scanning and just activates scroll-spy:
+
+```jsx
+<nav
+  ref={navRef}
+  data-mg-on-this-page-nav
+  className="mg-on-this-page-nav"
+>
+  <ul className="mg-on-this-page-nav__list">
+    <li className="mg-on-this-page-nav__item">
+      <a href="#intro" className="mg-on-this-page-nav__link">Introduction</a>
+    </li>
+    <li className="mg-on-this-page-nav__item">
+      <a href="#methods" className="mg-on-this-page-nav__link">Methodology</a>
+    </li>
+  </ul>
+  <a href="/report.pdf" className="mg-on-this-page-nav__cta">Download report</a>
+</nav>
+```
+
+The `mgOnThisPageNavDestroy` cleanup in the `useEffect` return ensures the IntersectionObserver and event listeners are properly removed when the component unmounts.
+
+## Stacking with other sticky elements
+
+The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `--mg-on-this-page-nav-offset` to the MegaMenu's height so the nav docks below it and headings scroll to the correct position.
+
+## Accessibility
+
+- **Landmark**: Renders as a `<nav>` with `aria-label`
+- **Active section**: `aria-current="true"` on the active link (correct WCAG 1.3.1 pattern — not `aria-selected`)
+- **List semantics**: `role="list"` on `<ul>` guards against VoiceOver + `list-style: none` bug
+- **Keyboard**: Standard tab navigation through links; focused links auto-scroll into view in the nav bar
+- **Focus management**: Clicking a link moves focus to the target heading (`tabindex="-1"`, removed on blur)
+- **Focus visible**: 2px outline on `:focus-visible` for all interactive elements
+- **Motion**: Smooth scroll and nav auto-scroll both respect `prefers-reduced-motion: reduce`
+- **Zoom**: Un-sticks at `max-height: 400px` to prevent the bar from dominating the viewport at high zoom (per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/))
+- **Touch targets**: Links meet WCAG 2.5.8 Target Size (Minimum) at Level AA (24x24px). Vertical size is approximately 44px
+- **Color contrast**: Active link color (`$mg-color-interactive`) passes 4.5:1 against white across all five themes
+
+## RTL and internationalization
+
+The component supports RTL layouts automatically:
+
+- The nav list scrolls right-to-left via CSS flexbox and `overflow-x`
+- The CTA button pins to the left (logical end) via `margin-inline-start: auto`
+- Arabic headings use the Noto Kufi Arabic font family (`:lang(ar)` override)
+
+Auto-generated IDs from non-Latin headings preserve the original characters. Provide explicit `id` attributes on headings if you need specific URL fragments.
+
+## Changelog
+
+- **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))
