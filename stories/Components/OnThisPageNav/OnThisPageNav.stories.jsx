@@ -88,19 +88,23 @@ export const AutoDetect = {
           </h1>
           <p style={{ margin: 0, maxWidth: '700px', opacity: 0.9 }}>
             The GAR is the flagship report of the United Nations on worldwide
-            efforts to reduce disaster risk. This edition examines how
-            cascading and systemic risks are reshaping the disaster landscape.
+            efforts to reduce disaster risk. This edition examines how cascading
+            and systemic risks are reshaping the disaster landscape.
           </p>
         </div>
 
         <div
           className="mg-container"
-          style={{ maxWidth: '900px', margin: '0 auto', padding: '1.5rem 1rem 0' }}
+          style={{
+            maxWidth: '900px',
+            margin: '0 auto',
+            padding: '1.5rem 1rem 0',
+          }}
         >
           <p>
             This report presents findings from a two-year consultation process
-            involving national governments, regional organizations, the
-            private sector, civil society, and academia.
+            involving national governments, regional organizations, the private
+            sector, civil society, and academia.
           </p>
         </div>
 
