@@ -79,7 +79,6 @@ mgShowMore([myButton]);
 | Function | Description |
 |----------|-------------|
 | `mgShowMore(scope?)` | Initializes show-more buttons. `scope` is an optional `NodeList` or array of elements; defaults to all `[data-mg-show-more]` elements. |
-| `mgShowMoreDestroy(item)` | Tears down a button: removes event listeners, clears the initialized flag. The button can be re-initialized afterward. |
 
 ### Deferred initialization
 
@@ -116,7 +115,7 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 
 ## Changelog
 
-- **1.2** — 2026-03-27: Standardized lifecycle: `mgShowMoreDestroy()` export, AbortController-based teardown, `data-mg-show-more-defer` attribute, `type="module"` self-init
+- **1.2** — 2026-03-27: Added `data-mg-show-more-defer` attribute, `type="module"` self-init, idempotency guard
 - **1.1.1** — 2026-03-05: Fixed event listener leak — target click handler now registers once at init instead of on every toggle; clicking expanded content no longer inadvertently collapses it
 - **1.1** — 2026-02-23: Replaced white gradient overlay with CSS `mask-image` for background-agnostic fade effect
 - **1.0** — 2023-08-24: Released component

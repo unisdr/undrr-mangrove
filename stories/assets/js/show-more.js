@@ -26,10 +26,6 @@ export function mgShowMore(scope) {
 
     if (!mgShowMoreTarget) return;
 
-    const ac = new AbortController();
-    item._mgShowMoreAbort = ac;
-    item._mgShowMoreTarget = mgShowMoreTarget;
-
     item.addEventListener('click', event => {
       event.preventDefault();
       mgShowMoreTarget.classList.toggle('mg-show-more--collapsed');
@@ -46,7 +42,7 @@ export function mgShowMore(scope) {
       } else {
         item.classList.add('mg-show-more--button--open');
       }
-    }, { signal: ac.signal });
+    });
 
     // Allow items to be shown by clicking anywhere on the collapsed item
     // https://gitlab.com/undrr/web-backlog/-/issues/1612
@@ -54,25 +50,10 @@ export function mgShowMore(scope) {
       if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
         item.click();
       }
-    }, { signal: ac.signal });
+    });
 
     item.click();
   });
-}
-
-/**
- * Tears down a show-more button: removes event listeners and clears
- * the initialized flag so the button can be re-initialized or garbage-collected.
- *
- * @param {HTMLElement} item - The toggle button element to tear down
- */
-export function mgShowMoreDestroy(item) {
-  if (item._mgShowMoreAbort) {
-    item._mgShowMoreAbort.abort();
-    delete item._mgShowMoreAbort;
-  }
-  delete item._mgShowMoreTarget;
-  delete item.dataset.mgShowMoreInitialized;
 }
 
 // Auto-wrap so the browser Event object is not passed as scope
