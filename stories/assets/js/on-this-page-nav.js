@@ -8,7 +8,7 @@
 //
 // Scroll-spy uses IntersectionObserver. CSS-only scroll-spy
 // (scroll-target-group + :target-current) is emerging in CSS Overflow L5
-// but lacks aria-current support and cross-browser coverage — revisit when
+// but lacks aria-current support and cross-browser coverage - revisit when
 // browsers ship native accessibility semantics for :target-current.
 
 /**
