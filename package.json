@@ -161,7 +161,7 @@
   },
   "resolutions": {
     "@storybook/react/webpack": "5",
-    "http-proxy-agent": "^7.0.0"
+    "http-proxy-agent": "^8.0.0"
   },
   "engine": {
     "node": ">=18.0.0",
