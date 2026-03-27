@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import { mgOnThisPageNav } from '../../../assets/js/on-this-page-nav';
+import { mgOnThisPageNav, mgOnThisPageNavDestroy } from '../../../assets/js/on-this-page-nav';
 
 // Track observer callbacks so we can fire mock entries in tests
 let observerCallbacks = [];
@@ -12,6 +12,12 @@ beforeAll(() => {
       this.cb = cb;
       observerCallbacks.push(cb);
     }
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+
+  global.ResizeObserver = class {
     observe() {}
     unobserve() {}
     disconnect() {}
@@ -367,6 +373,212 @@ describe('OnThisPageNav', () => {
       // Pass a single element (not wrapped in an array)
       expect(() => mgOnThisPageNav(nav)).not.toThrow();
       expect(nav.dataset.mgOnThisPageNavInitialized).toBe('true');
+    });
+  });
+
+  describe('scroll buttons', () => {
+    it('injects prev and next buttons after init', () => {
+      const nav = setupAutoDetect();
+      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev')).not.toBeNull();
+      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--next')).not.toBeNull();
+    });
+
+    it('buttons are hidden when no overflow (jsdom has no layout)', () => {
+      const nav = setupAutoDetect();
+      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      // jsdom reports scrollWidth === clientWidth === 0, so no overflow
+      expect(prevBtn.hidden).toBe(true);
+      expect(nextBtn.hidden).toBe(true);
+    });
+
+    it('next button appears when list has right overflow', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+
+      // Simulate overflow: make scrollWidth larger than clientWidth
+      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+
+      // Trigger the update
+      list.dispatchEvent(new Event('scroll'));
+
+      expect(nextBtn.hidden).toBe(false);
+    });
+
+    it('prev button appears when list is scrolled right', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+
+      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', { value: 200, configurable: true });
+
+      list.dispatchEvent(new Event('scroll'));
+
+      expect(prevBtn.hidden).toBe(false);
+    });
+
+    it('adds has-left-overflow class when prev button is visible', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+
+      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', { value: 200, configurable: true });
+
+      list.dispatchEvent(new Event('scroll'));
+
+      expect(nav.classList.contains('mg-on-this-page-nav--has-left-overflow')).toBe(true);
+    });
+
+    it('next button (LTR) calls scrollBy with positive left', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      list.scrollBy = jest.fn();
+      // jsdom has no layout — give the list a width so scrollBy gets a non-zero left
+      Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+
+      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      nextBtn.hidden = false;
+      nextBtn.click();
+
+      expect(list.scrollBy).toHaveBeenCalled();
+      expect(list.scrollBy.mock.calls[0][0].left).toBeGreaterThan(0);
+    });
+
+    it('prev button (LTR) calls scrollBy with negative left', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      list.scrollBy = jest.fn();
+      Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+
+      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+      prevBtn.hidden = false;
+      prevBtn.click();
+
+      expect(list.scrollBy).toHaveBeenCalled();
+      expect(list.scrollBy.mock.calls[0][0].left).toBeLessThan(0);
+    });
+
+    describe('RTL', () => {
+      let originalGetComputedStyle;
+
+      beforeEach(() => {
+        originalGetComputedStyle = window.getComputedStyle;
+        // Use a Proxy so getPropertyValue and other CSSStyleDeclaration methods
+        // remain functional while overriding only the `direction` property.
+        window.getComputedStyle = (el, pseudo) => {
+          const original = originalGetComputedStyle(el, pseudo);
+          return new Proxy(original, {
+            get(target, prop) {
+              if (prop === 'direction') return 'rtl';
+              const value = target[prop];
+              return typeof value === 'function' ? value.bind(target) : value;
+            },
+          });
+        };
+      });
+
+      afterEach(() => {
+        window.getComputedStyle = originalGetComputedStyle;
+      });
+
+      it('next button (RTL) calls scrollBy with negative left', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+        list.scrollBy = jest.fn();
+        Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+
+        const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+        nextBtn.hidden = false;
+        nextBtn.click();
+
+        expect(list.scrollBy).toHaveBeenCalled();
+        expect(list.scrollBy.mock.calls[0][0].left).toBeLessThan(0);
+      });
+
+      it('prev button (RTL) calls scrollBy with positive left', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+        list.scrollBy = jest.fn();
+        Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+
+        const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+        prevBtn.hidden = false;
+        prevBtn.click();
+
+        expect(list.scrollBy).toHaveBeenCalled();
+        expect(list.scrollBy.mock.calls[0][0].left).toBeGreaterThan(0);
+      });
+
+      it('nextBtn shown at RTL initial position (canScrollFurther = true)', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+        const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+
+        // RTL initial: scrollLeft = 0 (at visual start / right edge)
+        Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+        Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+        Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+
+        list.dispatchEvent(new Event('scroll'));
+
+        expect(nextBtn.hidden).toBe(false);
+      });
+
+      it('prevBtn shown in RTL after scrolling left (scrolledFromStart = true)', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+        const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+
+        // RTL: negative scrollLeft means scrolled away from visual start
+        Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+        Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+        Object.defineProperty(list, 'scrollLeft', { value: -200, configurable: true });
+
+        list.dispatchEvent(new Event('scroll'));
+
+        expect(prevBtn.hidden).toBe(false);
+      });
+
+      it('has-left-overflow added in RTL when canScrollFurther (not scrolledFromStart)', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+
+        // RTL initial state: distFromStart = 0, canScrollFurther = true
+        Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+        Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+        Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+
+        list.dispatchEvent(new Event('scroll'));
+
+        // In RTL, has-left-overflow reflects canScrollFurther (items to the left)
+        expect(nav.classList.contains('mg-on-this-page-nav--has-left-overflow')).toBe(true);
+      });
+    });
+
+    it('destroy removes injected scroll buttons', () => {
+      const nav = setupAutoDetect();
+      expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(2);
+
+      mgOnThisPageNavDestroy(nav);
+
+      expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(0);
+    });
+
+    it('does not duplicate buttons on re-init after destroy', () => {
+      const nav = setupExplicit([
+        { id: 'a', text: 'Link A' },
+        { id: 'b', text: 'Link B' },
+      ]);
+      mgOnThisPageNavDestroy(nav);
+      mgOnThisPageNav([nav]);
+
+      expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(2);
     });
   });
 
