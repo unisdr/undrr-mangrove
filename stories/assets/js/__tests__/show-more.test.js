@@ -47,11 +47,16 @@ describe('mgShowMore', () => {
   });
 
   describe('missing target guard', () => {
-    it('does not throw when target element is missing', () => {
+    it('does not throw and warns when target element is missing', () => {
       document.body.innerHTML = `
         <button data-mg-show-more data-mg-show-more-target=".nonexistent">Show more</button>
       `;
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       expect(() => mgShowMore()).not.toThrow();
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('.nonexistent')
+      );
+      warn.mockRestore();
     });
   });
 

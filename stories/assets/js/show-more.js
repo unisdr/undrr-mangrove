@@ -10,7 +10,7 @@
  */
 export function mgShowMore(scope) {
   const mgShowMoreButtons = scope
-    ? (scope.forEach ? scope : [scope])
+    ? (scope instanceof HTMLElement ? [scope] : scope)
     : document.querySelectorAll('[data-mg-show-more]');
 
   mgShowMoreButtons.forEach(item => {
@@ -26,7 +26,10 @@ export function mgShowMore(scope) {
       item.dataset.mgShowMoreTarget || '.mg-show-more--container';
     const mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
 
-    if (!mgShowMoreTarget) return;
+    if (!mgShowMoreTarget) {
+      console.warn(`[mg-show-more] Target not found: "${mgShowMoreTargetClass}"`);
+      return;
+    }
 
     item.addEventListener('click', event => {
       event.preventDefault();

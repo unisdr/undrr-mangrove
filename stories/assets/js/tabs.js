@@ -77,7 +77,7 @@ function normalizeText(text) {
  */
 export function mgTabs(scope, activateDeepLinkOnLoad = true) {
   const tabContainers = scope
-    ? (scope.forEach ? scope : [scope])
+    ? (scope instanceof HTMLElement ? [scope] : scope)
     : document.querySelectorAll('[data-mg-js-tabs]');
   tabContainers.forEach(container => {
     // Skip auto-init if the element opts out

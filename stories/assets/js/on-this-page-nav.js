@@ -60,7 +60,7 @@ function scrollLinkToCenter(link, list) {
  */
 export function mgOnThisPageNav(scope) {
   const containers = scope
-    ? (scope.forEach ? scope : [scope])
+    ? (scope instanceof HTMLElement ? [scope] : scope)
     : document.querySelectorAll('[data-mg-on-this-page-nav]');
 
   containers.forEach(container => {
