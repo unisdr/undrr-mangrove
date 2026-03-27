@@ -4,10 +4,24 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'stories/**'
+      - 'src/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'webpack.config.js'
+      - 'webpack.entries.js'
+      - 'babel.config.js'
+      - '.babelrc*'
+      - '.github/workflows/dist.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: dist-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-push-dist:
@@ -16,13 +30,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v6
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
-
-      - name: Enable Corepack
-        run: corepack enable
+          cache: 'yarn'
 
       - name: Install dependencies
         run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile

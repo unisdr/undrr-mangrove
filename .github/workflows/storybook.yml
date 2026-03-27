@@ -11,6 +11,8 @@ on:
         '.github/workflows/storybook.yml',
         'package.json',
         'webpack.entries.js',
+        'babel.config.js',
+        '.babelrc*',
       ] # Trigger the action only when files change in the folders defined here
     branches: ['main']
   # Allows you to run this workflow manually from the Actions tab
@@ -32,12 +34,13 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Enable Corepack
+        run: corepack enable
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - name: Enable Corepack
-        run: corepack enable
+          cache: 'yarn'
       - name: Install Dependencies
         run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
       - name: Lint with ESLint and stylelint
