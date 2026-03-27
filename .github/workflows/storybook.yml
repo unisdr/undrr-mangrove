@@ -59,7 +59,7 @@ jobs:
           restore-keys: |
             jest-${{ runner.os }}-
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: output
           path: ./dist
