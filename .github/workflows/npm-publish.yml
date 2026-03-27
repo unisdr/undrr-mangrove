@@ -97,6 +97,12 @@ jobs:
             cp -r dist/components/* npm-package/components/
           fi
 
+          # Copy content schemas
+          if [ -d "schemas/dist" ]; then
+            mkdir -p npm-package/schemas
+            cp schemas/dist/*.schema.json npm-package/schemas/
+          fi
+
           # Copy component SCSS files maintaining structure
           mkdir -p npm-package/scss
           find stories -name "*.scss" -type f | while read file; do
@@ -117,7 +123,7 @@ jobs:
               version: pkg.version,
               description: pkg.description,
               main: "dist/index.js",
-              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "error-pages/**/*", "fonts/**/*"],
+              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "schemas/**/*", "error-pages/**/*", "fonts/**/*"],
               repository: pkg.repository,
               keywords: pkg.keywords,
               author: pkg.author,
