@@ -52,7 +52,7 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 | `data-mg-show-more-target` | No | CSS selector for the content container. Defaults to `".mg-show-more--container"` |
 | `data-mg-show-more-label-collapsed` | No | Button text when content is collapsed. Defaults to "Show more" |
 | `data-mg-show-more-label-open` | No | Button text when content is expanded. Defaults to "Show less" |
-| `data-mg-show-more-defer` | No | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually. |
+| `data-mg-show-more-skip-auto-init` | No | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually. |
 
 ### JavaScript initialization
 
@@ -80,22 +80,22 @@ mgShowMore([myButton]);
 |----------|-------------|
 | `mgShowMore(scope?)` | Initializes show-more buttons. `scope` is an optional `NodeList` or array of elements; defaults to all `[data-mg-show-more]` elements. |
 
-### Deferred initialization
+### Skipping auto-initialization
 
-Add `data-mg-show-more-defer` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
+Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
 
 <Source language="html" code={`
-<a data-mg-show-more data-mg-show-more-defer
+<a data-mg-show-more data-mg-show-more-skip-auto-init
    data-mg-show-more-target=".my-content">Show more</a>
 
 <script type="module">
   import { mgShowMore } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/show-more.js';
   // Initialize after other setup is complete
-  mgShowMore([document.querySelector('[data-mg-show-more-defer]')]);
+  mgShowMore([document.querySelector('[data-mg-show-more-skip-auto-init]')]);
 </script>
 `} />
 
-When you pass elements explicitly via `scope`, the defer attribute is ignored — the consumer is intentionally initializing.
+When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
 
 ### Customizing the collapse height
 
@@ -115,7 +115,7 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 
 ## Changelog
 
-- **1.2** — 2026-03-27: Added `data-mg-show-more-defer` attribute, `type="module"` self-init, idempotency guard
+- **1.2** — 2026-03-27: Added `data-mg-show-more-skip-auto-init` attribute, `type="module"` self-init, idempotency guard, single-element scope support
 - **1.1.1** — 2026-03-05: Fixed event listener leak — target click handler now registers once at init instead of on every toggle; clicking expanded content no longer inadvertently collapses it
 - **1.1** — 2026-02-23: Replaced white gradient overlay with CSS `mask-image` for background-agnostic fade effect
 - **1.0** — 2023-08-24: Released component

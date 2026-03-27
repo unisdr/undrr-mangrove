@@ -69,16 +69,19 @@ function normalizeText(text) {
 /**
  * Initialize tabs on a page.
  *
- * @param {NodeList|HTMLElement[]} [scope] - Elements to init.
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or a single HTMLElement.
  *   Defaults to all [data-mg-js-tabs] in the document.
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
  */
 export function mgTabs(scope, activateDeepLinkOnLoad = true) {
-  const tabContainers = scope || document.querySelectorAll('[data-mg-js-tabs]');
+  const tabContainers = scope
+    ? (scope.forEach ? scope : [scope])
+    : document.querySelectorAll('[data-mg-js-tabs]');
   tabContainers.forEach(container => {
-    // Defer: skip during auto-init if the element opts out
-    if (!scope && container.hasAttribute('data-mg-js-tabs-defer')) return;
+    // Skip auto-init if the element opts out
+    if (!scope && container.hasAttribute('data-mg-js-tabs-skip-auto-init')) return;
     mgTabsRuntime(container, activateDeepLinkOnLoad);
   });
 }

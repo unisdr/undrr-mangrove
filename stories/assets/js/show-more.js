@@ -4,16 +4,18 @@
 /**
  * Initializes "show more" toggle buttons.
  *
- * @param {NodeList|HTMLElement[]} [scope] - Elements to init.
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or a single HTMLElement.
  *   Defaults to all [data-mg-show-more] in the document.
  */
 export function mgShowMore(scope) {
-  const mgShowMoreButtons =
-    scope || document.querySelectorAll('[data-mg-show-more]');
+  const mgShowMoreButtons = scope
+    ? (scope.forEach ? scope : [scope])
+    : document.querySelectorAll('[data-mg-show-more]');
 
   mgShowMoreButtons.forEach(item => {
-    // Defer: skip during auto-init if the element opts out
-    if (!scope && item.hasAttribute('data-mg-show-more-defer')) return;
+    // Skip auto-init if the element opts out
+    if (!scope && item.hasAttribute('data-mg-show-more-skip-auto-init')) return;
     if (item.dataset.mgShowMoreInitialized) return;
     item.dataset.mgShowMoreInitialized = 'true';
 

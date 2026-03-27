@@ -67,7 +67,7 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 | `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
 | `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
 | `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
-| `data-mg-on-this-page-nav-defer` | (presence) | — | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
+| `data-mg-on-this-page-nav-skip-auto-init` | (presence) | — | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
 
 ## CSS custom properties
 
@@ -144,13 +144,13 @@ The script file uses ES module `export` statements, so you **must** load it with
 <script type="module" src="https://assets.undrr.org/testing/static/mangrove/latest/assets/js/on-this-page-nav.js"></script>
 ```
 
-## Deferred initialization
+## Skipping auto-initialization
 
-Add `data-mg-on-this-page-nav-defer` to skip a nav during auto-init. This is useful when another script must run first or when content is injected dynamically:
+Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init. This is useful when another script must run first or when content is injected dynamically:
 
 ```html
 <nav data-mg-on-this-page-nav
-     data-mg-on-this-page-nav-defer
+     data-mg-on-this-page-nav-skip-auto-init
      data-mg-on-this-page-nav-content=".article-body"
      class="mg-on-this-page-nav">
 </nav>
@@ -158,11 +158,11 @@ Add `data-mg-on-this-page-nav-defer` to skip a nav during auto-init. This is use
 <script type="module">
   import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/latest/assets/js/on-this-page-nav.js';
   // Initialize after other setup is complete
-  mgOnThisPageNav([document.querySelector('[data-mg-on-this-page-nav-defer]')]);
+  mgOnThisPageNav([document.querySelector('[data-mg-on-this-page-nav-skip-auto-init]')]);
 </script>
 ```
 
-When you pass elements explicitly via `scope`, the defer attribute is ignored — the consumer is intentionally initializing.
+When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
 
 ## JavaScript API
 
@@ -273,5 +273,5 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
-- **1.1** — 2026-03-27: Added `data-mg-on-this-page-nav-defer` attribute for deferred initialization
+- **1.1** — 2026-03-27: Added `data-mg-on-this-page-nav-skip-auto-init` attribute, single-element scope support
 - **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))
