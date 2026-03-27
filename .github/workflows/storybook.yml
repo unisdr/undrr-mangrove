@@ -11,6 +11,8 @@ on:
         '.github/workflows/storybook.yml',
         'package.json',
         'webpack.entries.js',
+        'babel.config.js',
+        '.babelrc*',
       ] # Trigger the action only when files change in the folders defined here
     branches: ['main']
   # Allows you to run this workflow manually from the Actions tab

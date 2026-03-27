@@ -11,6 +11,8 @@ on:
       - 'package.json'
       - 'webpack.config.js'
       - 'webpack.entries.js'
+      - 'babel.config.js'
+      - '.babelrc*'
       - '.github/workflows/dist.yml'
   workflow_dispatch:
 
