@@ -328,6 +328,48 @@ describe('OnThisPageNav', () => {
     });
   });
 
+  describe('manual init attribute', () => {
+    it('skips elements with data-mg-on-this-page-nav-skip-auto-init during auto-init', () => {
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav data-mg-on-this-page-nav-skip-auto-init
+             class="mg-on-this-page-nav"></nav>
+      `;
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav(); // no scope = auto-init
+      expect(nav.dataset.mgOnThisPageNavInitialized).toBeUndefined();
+    });
+
+    it('processes elements with data-mg-on-this-page-nav-skip-auto-init when scope is passed', () => {
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav data-mg-on-this-page-nav-skip-auto-init
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <h2 id="sec-1">Section one</h2>
+        </main>
+      `;
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      // Explicit scope bypasses the skip-auto-init check
+      mgOnThisPageNav([nav]);
+      expect(nav.dataset.mgOnThisPageNavInitialized).toBe('true');
+    });
+
+    it('accepts a single HTMLElement as scope without throwing', () => {
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <h2 id="sec-1">Section one</h2>
+        </main>
+      `;
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      // Pass a single element (not wrapped in an array)
+      expect(() => mgOnThisPageNav(nav)).not.toThrow();
+      expect(nav.dataset.mgOnThisPageNavInitialized).toBe('true');
+    });
+  });
+
   describe('accessibility', () => {
     it('has no axe violations in auto-detect mode', async () => {
       setupAutoDetect();

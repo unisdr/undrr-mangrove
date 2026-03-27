@@ -54,14 +54,18 @@ function scrollLinkToCenter(link, list) {
 /**
  * Initializes "On this page" sticky navigation bars.
  *
- * @param {NodeList|HTMLElement[]} [scope] - Elements to init.
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or a single HTMLElement.
  *   Defaults to all [data-mg-on-this-page-nav] in the document.
  */
 export function mgOnThisPageNav(scope) {
-  const containers =
-    scope || document.querySelectorAll('[data-mg-on-this-page-nav]');
+  const containers = scope
+    ? (scope instanceof HTMLElement ? [scope] : scope)
+    : document.querySelectorAll('[data-mg-on-this-page-nav]');
 
   containers.forEach(container => {
+    // Skip auto-init if the element opts out
+    if (!scope && container.hasAttribute('data-mg-on-this-page-nav-skip-auto-init')) return;
     if (container.dataset.mgOnThisPageNavInitialized) return;
     container.dataset.mgOnThisPageNavInitialized = 'true';
 

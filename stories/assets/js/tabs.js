@@ -67,13 +67,21 @@ function normalizeText(text) {
 }
 
 /**
- * Initialize tabs on a page
+ * Initialize tabs on a page.
+ *
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or a single HTMLElement.
+ *   Defaults to all [data-mg-js-tabs] in the document.
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
  */
 export function mgTabs(scope, activateDeepLinkOnLoad = true) {
-  const tabContainers = scope || document.querySelectorAll('[data-mg-js-tabs]');
+  const tabContainers = scope
+    ? (scope instanceof HTMLElement ? [scope] : scope)
+    : document.querySelectorAll('[data-mg-js-tabs]');
   tabContainers.forEach(container => {
+    // Skip auto-init if the element opts out
+    if (!scope && container.hasAttribute('data-mg-js-tabs-skip-auto-init')) return;
     mgTabsRuntime(container, activateDeepLinkOnLoad);
   });
 }
@@ -124,6 +132,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     : Array.from(tabsList);
 
   // Check if tabs have already been initialized
+  // Supports both the new dataset property and the legacy attribute for backward compat
   if (tabsList.hasAttribute && tabsList.hasAttribute('data-mg-tabs-initialized')) {
     return;
   }
@@ -601,4 +610,11 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
       }
     }
   }
+}
+
+// Auto-wrap so the browser Event object is not passed as scope
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => mgTabs(), false);
+} else {
+  mgTabs();
 }

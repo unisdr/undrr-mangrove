@@ -77,7 +77,16 @@ Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/g
 
 #### 2. Include the JavaScript
 
-Import `mgTabs` from the CDN and call it once the DOM is ready:
+The script file uses ES module `export` statements, so you **must** load it with `type="module"`:
+
+```html
+<!-- JS: type="module" is required -->
+<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js"></script>
+```
+
+The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so `mgTabs()` runs after the DOM is available.
+
+For manual or dynamic initialization, import the function:
 
 ```html
 <script type="module">
@@ -85,8 +94,6 @@ Import `mgTabs` from the CDN and call it once the DOM is ready:
   mgTabs();
 </script>
 ```
-
-Module scripts are deferred by default, so the DOM is already parsed when this runs. No `DOMContentLoaded` wrapper needed.
 
 `mgTabs()` finds every `[data-mg-js-tabs]` element on the page and wires up the tab behavior.
 
@@ -217,6 +224,27 @@ const newContainer = document.querySelector('#dynamic-tabs');
 mgTabsRuntime(newContainer);
 ```
 
+#### Skipping auto-initialization
+
+Add `data-mg-js-tabs-skip-auto-init` to skip a container during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
+
+```html
+<article class="mg-tabs mg-tabs--horizontal"
+         data-mg-js-tabs
+         data-mg-js-tabs-skip-auto-init
+         data-mg-js-tabs-variant="horizontal">
+  <!-- tab markup -->
+</article>
+
+<script type="module">
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  // Initialize after other setup is complete
+  mgTabs([document.querySelector('[data-mg-js-tabs-skip-auto-init]')]);
+</script>
+```
+
+When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
+
 #### Key data attributes
 
 | Attribute | Element | Purpose |
@@ -229,6 +257,7 @@ mgTabsRuntime(newContainer);
 | `data-mg-js-tabs-single-open` | `article` | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
 | `data-mg-js-tabs-filterable` | `article` | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text. |
 | `data-mg-js-tabs-filter-placeholder` | `article` | Custom placeholder text for the filter input. Defaults to "Filter sections...". |
+| `data-mg-js-tabs-skip-auto-init` | `article` | Presence-based. Skips this container during auto-init. Call `mgTabs([element])` to initialize manually. |
 
 ### React usage
 
@@ -273,6 +302,7 @@ Each tab object in `tabdata`:
 
 ## Changelog
 
+- **2.6** — 2026-03-27: Added `data-mg-js-tabs-skip-auto-init` attribute, `type="module"` self-init, single-element scope support (`mgTabs` wrapper already accepted scope; this release adds the manual-init check and single-element handling)
 - **2.5** — 2026-03-20:
   - Added `defaultOpen`, `singleOpen`, and `filterable` props (React) and corresponding `data-mg-js-tabs-*` attributes (vanilla JS)
   - ARIA disclosure pattern for stacked tabs (`role="button"`, `aria-expanded`, `aria-controls`, `hidden="until-found"`)
