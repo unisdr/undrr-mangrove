@@ -77,7 +77,16 @@ Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/g
 
 #### 2. Include the JavaScript
 
-Import `mgTabs` from the CDN and call it once the DOM is ready:
+The script file uses ES module `export` statements, so you **must** load it with `type="module"`:
+
+```html
+<!-- JS: type="module" is required -->
+<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js"></script>
+```
+
+The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so `mgTabs()` runs after the DOM is available.
+
+For manual or dynamic initialization, import the function:
 
 ```html
 <script type="module">
@@ -85,8 +94,6 @@ Import `mgTabs` from the CDN and call it once the DOM is ready:
   mgTabs();
 </script>
 ```
-
-Module scripts are deferred by default, so the DOM is already parsed when this runs. No `DOMContentLoaded` wrapper needed.
 
 `mgTabs()` finds every `[data-mg-js-tabs]` element on the page and wires up the tab behavior.
 
@@ -207,6 +214,7 @@ Exported functions:
 |----------|-------------|
 | `mgTabs(scope?, activateDeepLinkOnLoad?)` | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. |
 | `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)` | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load. |
+| `mgTabsDestroy(container)` | Tears down a tab container: aborts all event listeners, removes injected filter DOM, clears ARIA attributes, and removes the initialized flag. The container can be re-initialized afterward. |
 | `mgTabsApplyStackedDefaults(container, tabs, panels)` | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state. |
 | `setDisclosureState(trigger, panel, open)` | Sets the open/close state of a stacked disclosure panel. `open` is a boolean. |
 
@@ -216,6 +224,39 @@ If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRu
 const newContainer = document.querySelector('#dynamic-tabs');
 mgTabsRuntime(newContainer);
 ```
+
+#### Deferred initialization
+
+Add `data-mg-js-tabs-defer` to skip a container during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
+
+```html
+<article class="mg-tabs mg-tabs--horizontal"
+         data-mg-js-tabs
+         data-mg-js-tabs-defer
+         data-mg-js-tabs-variant="horizontal">
+  <!-- tab markup -->
+</article>
+
+<script type="module">
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  // Initialize after other setup is complete
+  mgTabs([document.querySelector('[data-mg-js-tabs-defer]')]);
+</script>
+```
+
+When you pass elements explicitly via `scope`, the defer attribute is ignored — the consumer is intentionally initializing.
+
+#### Teardown
+
+To remove all event listeners and injected DOM from a tab container:
+
+```js
+import { mgTabsDestroy } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+
+mgTabsDestroy(container);
+```
+
+This aborts all listeners (tab clicks, keyboard, hashchange, filter), removes injected filter UI, clears ARIA attributes, and removes the initialized flag. The container can be re-initialized by calling `mgTabs([container])` or `mgTabsRuntime(container)` again.
 
 #### Key data attributes
 
@@ -229,6 +270,7 @@ mgTabsRuntime(newContainer);
 | `data-mg-js-tabs-single-open` | `article` | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
 | `data-mg-js-tabs-filterable` | `article` | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text. |
 | `data-mg-js-tabs-filter-placeholder` | `article` | Custom placeholder text for the filter input. Defaults to "Filter sections...". |
+| `data-mg-js-tabs-defer` | `article` | Presence-based. Skips this container during auto-init. Call `mgTabs([element])` to initialize manually. |
 
 ### React usage
 
@@ -273,6 +315,7 @@ Each tab object in `tabdata`:
 
 ## Changelog
 
+- **2.6** — 2026-03-27: Standardized lifecycle: `mgTabsDestroy()` export, AbortController-based teardown, `data-mg-js-tabs-defer` attribute, `type="module"` self-init
 - **2.5** — 2026-03-20:
   - Added `defaultOpen`, `singleOpen`, and `filterable` props (React) and corresponding `data-mg-js-tabs-*` attributes (vanilla JS)
   - ARIA disclosure pattern for stacked tabs (`role="button"`, `aria-expanded`, `aria-controls`, `hidden="until-found"`)

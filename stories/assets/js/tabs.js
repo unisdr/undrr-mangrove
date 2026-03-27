@@ -67,13 +67,18 @@ function normalizeText(text) {
 }
 
 /**
- * Initialize tabs on a page
+ * Initialize tabs on a page.
+ *
+ * @param {NodeList|HTMLElement[]} [scope] - Elements to init.
+ *   Defaults to all [data-mg-js-tabs] in the document.
  * @param {boolean} [activateDeepLinkOnLoad] - if deep linked tabs should be activated on page load, defaults to true
  * @example mgTabs();
  */
 export function mgTabs(scope, activateDeepLinkOnLoad = true) {
   const tabContainers = scope || document.querySelectorAll('[data-mg-js-tabs]');
   tabContainers.forEach(container => {
+    // Defer: skip during auto-init if the element opts out
+    if (!scope && container.hasAttribute('data-mg-js-tabs-defer')) return;
     mgTabsRuntime(container, activateDeepLinkOnLoad);
   });
 }
@@ -124,6 +129,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     : Array.from(tabsList);
 
   // Check if tabs have already been initialized
+  // Supports both the new dataset property and the legacy attribute for backward compat
   if (tabsList.hasAttribute && tabsList.hasAttribute('data-mg-tabs-initialized')) {
     return;
   }
@@ -139,6 +145,10 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
   // Determine variant from the container element
   const container = tabsListArray[0];
   const stacked = isStacked(container);
+
+  // AbortController for clean teardown of all event listeners
+  const ac = new AbortController();
+  container._mgTabsAbort = ac;
 
   // Add semantics and focusability for each tab
   Array.prototype.forEach.call(tabs, (tab, i) => {
@@ -171,7 +181,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     tab.addEventListener('click', e => {
       e.preventDefault();
       mgTabsSwitch(e.currentTarget, panels);
-    });
+    }, { signal: ac.signal });
 
     // Handle keydown events for keyboard users
     tab.addEventListener('keydown', e => {
@@ -219,7 +229,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
           }
         }
       }
-    });
+    }, { signal: ac.signal });
   });
 
   // Add panel semantics and hide them all
@@ -280,7 +290,7 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
 
   // Initialize filter if the container has the filterable attribute
   if (stacked && container.dataset.mgJsTabsFilterable != null) {
-    mgTabsInitFilter(container, tabs, panels);
+    mgTabsInitFilter(container, tabs, panels, ac.signal);
   }
 
   // When using anchor links after load, activate the corresponding tab
@@ -302,7 +312,67 @@ export function mgTabsRuntime(scope, activateDeepLinkOnLoad) {
     if (targetPanelFound) {
       mgTabsDeepLinkOnLoad(tabs, panels);
     }
+  }, { signal: ac.signal });
+}
+
+/**
+ * Tears down a tab container: aborts event listeners, removes injected
+ * filter DOM, clears ARIA attributes, and resets the initialized flag
+ * so the container can be re-initialized or garbage-collected.
+ *
+ * @param {HTMLElement} container - The [data-mg-js-tabs] element to tear down
+ */
+export function mgTabsDestroy(container) {
+  // Abort all event listeners (click, keydown, hashchange, filter input/search)
+  if (container._mgTabsAbort) {
+    container._mgTabsAbort.abort();
+    delete container._mgTabsAbort;
+  }
+
+  // Remove injected filter DOM
+  const filterWrapper = container.querySelector('.mg-tabs__filter');
+  if (filterWrapper) filterWrapper.remove();
+  const noResults = container.querySelector('.mg-tabs__no-results');
+  if (noResults) noResults.remove();
+  const status = container.querySelector(':scope > [role="status"]');
+  if (status) status.remove();
+
+  // Clear ARIA attributes on tabs
+  const tabs = container.querySelectorAll('.mg-tabs__link');
+  tabs.forEach(tab => {
+    tab.removeAttribute('role');
+    tab.removeAttribute('aria-selected');
+    tab.removeAttribute('aria-expanded');
+    tab.removeAttribute('aria-controls');
+    tab.removeAttribute('tabindex');
+    tab.removeAttribute('data-tabs__item');
+    tab.removeAttribute('id');
+    tab.classList.remove('is-active', 'mg-tabs__stacked--open');
+    if (tab.parentNode) {
+      tab.parentNode.removeAttribute('role');
+    }
   });
+
+  // Clear ARIA attributes on panels
+  const panels = container.querySelectorAll('.mg-tabs__section');
+  panels.forEach(panel => {
+    panel.removeAttribute('role');
+    panel.removeAttribute('aria-labelledby');
+    panel.removeAttribute('tabindex');
+    panel.removeAttribute('hidden');
+  });
+
+  // Clear tablist role
+  const tabListEl = container.querySelector('.mg-tabs__list');
+  if (tabListEl) {
+    tabListEl.removeAttribute('role');
+    tabListEl.querySelectorAll(':scope > li').forEach(li => {
+      li.removeAttribute('role');
+    });
+  }
+
+  // Clear initialized flag (both old and new attribute names)
+  container.removeAttribute('data-mg-tabs-initialized');
 }
 
 // The tab switching function
@@ -433,8 +503,9 @@ export function mgTabsApplyStackedDefaults(container, tabs, panels) {
  * @param {Element} container - the [data-mg-js-tabs] element
  * @param {NodeList} tabs - the trigger links
  * @param {NodeList} panels - the section panels
+ * @param {AbortSignal} [signal] - signal to remove listeners on destroy
  */
-function mgTabsInitFilter(container, tabs, panels) {
+function mgTabsInitFilter(container, tabs, panels, signal) {
   const placeholder = container.dataset.mgJsTabsFilterPlaceholder || 'Filter sections\u2026';
   const ariaLabel = placeholder.replace(/\u2026$/, '').trim();
   const totalCount = tabs.length;
@@ -547,16 +618,18 @@ function mgTabsInitFilter(container, tabs, panels) {
     }
   }
 
+  const listenerOpts = signal ? { signal } : undefined;
+
   input.addEventListener('input', () => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(applyFilter, 150);
-  });
+  }, listenerOpts);
 
   // Also handle the native search clear button (fires 'search' event in some browsers)
   input.addEventListener('search', () => {
     clearTimeout(debounceTimer);
     applyFilter();
-  });
+  }, listenerOpts);
 }
 
 function mgTabsDeepLinkOnLoad(tabs, panels) {
@@ -601,4 +674,11 @@ function mgTabsDeepLinkOnLoad(tabs, panels) {
       }
     }
   }
+}
+
+// Auto-wrap so the browser Event object is not passed as scope
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => mgTabs(), false);
+} else {
+  mgTabs();
 }

@@ -67,6 +67,7 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 | `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
 | `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
 | `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
+| `data-mg-on-this-page-nav-defer` | (presence) | — | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
 
 ## CSS custom properties
 
@@ -125,6 +126,43 @@ Headings with `mg-u-sr-only` are also excluded.
 | `mg-on-this-page-nav__link--active` | `<a>` | Scroll-spy active state |
 | `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned to logical end) |
 | `mg-on-this-page-nav--exclude` | heading | Exclude a heading from auto-detect |
+
+## Standalone / vanilla HTML usage
+
+The script file uses ES module `export` statements, so you **must** load it with `type="module"`.
+
+```html
+<!-- HTML: auto-detect mode -->
+<nav class="mg-on-this-page-nav"
+     data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-label="On this page"
+     data-mg-on-this-page-nav-depth="2"
+     data-mg-on-this-page-nav-content=".field--name-body">
+</nav>
+
+<!-- JS: type="module" is required -->
+<script type="module" src="https://assets.undrr.org/testing/static/mangrove/latest/assets/js/on-this-page-nav.js"></script>
+```
+
+## Deferred initialization
+
+Add `data-mg-on-this-page-nav-defer` to skip a nav during auto-init. This is useful when another script must run first or when content is injected dynamically:
+
+```html
+<nav data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-defer
+     data-mg-on-this-page-nav-content=".article-body"
+     class="mg-on-this-page-nav">
+</nav>
+
+<script type="module">
+  import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/latest/assets/js/on-this-page-nav.js';
+  // Initialize after other setup is complete
+  mgOnThisPageNav([document.querySelector('[data-mg-on-this-page-nav-defer]')]);
+</script>
+```
+
+When you pass elements explicitly via `scope`, the defer attribute is ignored — the consumer is intentionally initializing.
 
 ## JavaScript API
 
@@ -235,4 +273,5 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
+- **1.1** — 2026-03-27: Added `data-mg-on-this-page-nav-defer` attribute for deferred initialization
 - **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))

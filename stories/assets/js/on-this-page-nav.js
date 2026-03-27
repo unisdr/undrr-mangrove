@@ -62,6 +62,8 @@ export function mgOnThisPageNav(scope) {
     scope || document.querySelectorAll('[data-mg-on-this-page-nav]');
 
   containers.forEach(container => {
+    // Defer: skip during auto-init if the element opts out
+    if (!scope && container.hasAttribute('data-mg-on-this-page-nav-defer')) return;
     if (container.dataset.mgOnThisPageNavInitialized) return;
     container.dataset.mgOnThisPageNavInitialized = 'true';
 
