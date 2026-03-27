@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/unisdr/undrr-mangrove/schemas/quote",
+  "title": "Quote",
+  "description": "Highlighted quote with optional attribution, portrait image, and visual styling.",
+  "type": "object",
+  "properties": {
+    "quote": {
+      "type": "string",
+      "format": "html",
+      "description": "The quote text (sanitized HTML supported)"
+    },
+    "attribution": {
+      "type": "string",
+      "format": "html",
+      "description": "Name of the person being quoted"
+    },
+    "attributionTitle": {
+      "type": "string",
+      "format": "html",
+      "description": "Title or position of the person being quoted"
+    },
+    "image": {
+      "type": "object",
+      "description": "Portrait or related image",
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "uri",
+          "description": "Image URL"
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alt text for the image"
+        }
+      },
+      "required": [
+        "src"
+      ]
+    },
+    "backgroundColor": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark",
+        "bright"
+      ],
+      "description": "Background color variant",
+      "default": "light"
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "line",
+        "image"
+      ],
+      "description": "Layout variant: line (with separator) or image (with background image)",
+      "default": "line"
+    },
+    "alignment": {
+      "type": "string",
+      "enum": [
+        "full",
+        "left",
+        "right"
+      ],
+      "description": "Layout alignment",
+      "default": "full"
+    }
+  },
+  "required": [
+    "quote"
+  ],
+  "x-mangrove": {
+    "version": "1.0.0",
+    "phase": 1,
+    "implementors": [
+      "QuoteHighlight"
+    ],
+    "deviations": {
+      "image": "Current component uses flat `imageSrc` (string) and `imageAlt` (string) props instead of a nested image object.",
+      "image.src": "Maps to current `imageSrc` prop.",
+      "image.alt": "Maps to current `imageAlt` prop."
+    }
+  }
+}

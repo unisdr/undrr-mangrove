@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/unisdr/undrr-mangrove/schemas/share-action",
+  "title": "Share Action",
+  "description": "Configuration for social sharing buttons with customizable labels and email content.",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "type": "object",
+      "description": "UI labels for the share component (supports localization)",
+      "properties": {
+        "mainLabel": {
+          "type": "string",
+          "description": "Header text displayed above share buttons"
+        },
+        "onCopy": {
+          "type": "string",
+          "description": "Feedback text shown after copying the link"
+        }
+      },
+      "required": [
+        "mainLabel"
+      ]
+    },
+    "sharingSubject": {
+      "type": "string",
+      "description": "Subject line for email sharing"
+    },
+    "sharingBody": {
+      "type": "string",
+      "description": "Body text prepended to the shared URL in emails"
+    }
+  },
+  "required": [
+    "labels"
+  ],
+  "x-mangrove": {
+    "version": "1.0.0",
+    "phase": 1,
+    "implementors": [
+      "ShareButtons"
+    ],
+    "deviations": {
+      "sharingSubject": "Current component uses PascalCase `SharingSubject` prop.",
+      "sharingBody": "Current component uses PascalCase `SharingTextBody` prop. Schema renames to `sharingBody` (camelCase, drops redundant \"Text\")."
+    }
+  }
+}
