@@ -4,16 +4,19 @@ on:
     branches:
       - main
   push:
-    paths: [
-        'stories/**',
-        'src/components/**',
-        'scripts/ai-manifest/**',
-        '.github/workflows/storybook.yml',
-        'package.json',
-        'webpack.entries.js',
-        'babel.config.js',
-        '.babelrc*',
-      ] # Trigger the action only when files change in the folders defined here
+    paths:
+      - 'stories/**'
+      - 'src/components/**'
+      - 'scripts/ai-manifest/**'
+      - '.storybook/**'
+      - '.github/workflows/storybook.yml'
+      - 'package.json'
+      - 'webpack.config.js'
+      - 'webpack.entries.js'
+      - 'babel.config.js'
+      - '.babelrc*'
+      # yarn.lock and tsconfig.json changes without package.json are rare enough to skip
+      # Trigger the action only when files change in the paths defined here
     branches: ['main']
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
