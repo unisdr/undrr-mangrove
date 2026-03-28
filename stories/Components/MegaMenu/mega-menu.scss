@@ -2,14 +2,14 @@
   position: relative;
   background: $mg-color-white;
   box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
-  z-index: 10;
+  z-index: $mg-z-index-nav;
 }
 
 .mg-mega-topbar {
   width: 100%;
   display: flex;
   align-items: flex-start;
-  z-index: 10;
+  z-index: $mg-z-index-nav;
   padding: 0;
   max-width: $mg-breakpoint-desktop;
   margin: 0 auto;
@@ -197,7 +197,7 @@
   border-radius: $mg-radius-tab;
   box-shadow: -1px 5px 10px -1px rgb(0 0 0 / 0.25);
   inset-inline-start: 0;
-  z-index: 1;
+  z-index: 1; // submenu floats above page content within mega-menu stacking context
   width: 100%;
 
   // Desktop: Float over content with horizontal layout
@@ -593,7 +593,7 @@
   position: absolute;
   overflow: auto;
   background-color: $mg-color-interactive-active;
-  z-index: 10;
+  z-index: $mg-z-index-nav;
 
   // Mobile-first: Full-width mobile sidebar
   width: 100%;
@@ -664,7 +664,7 @@
   cursor: pointer;
   align-items: start;
   justify-content: start;
-  z-index: 14;
+  z-index: $mg-z-index-nav-toggle;
   display: flex;
 
   // Hide mobile button on desktop
@@ -695,7 +695,7 @@
   position: absolute;
   top: 0;
   inset-inline-start: 0; // RTL-friendly
-  z-index: 9;
+  z-index: $mg-z-index-nav - 1;
   display: block;
   overflow: auto;
   background-color: $mg-color-interactive;
@@ -725,7 +725,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  z-index: 9; // just below sidebar which has 10
+  z-index: $mg-z-index-nav - 1;
 
   // Desktop: Hide
   @media screen and (min-width: $mg-breakpoint-tablet) {

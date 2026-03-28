@@ -999,7 +999,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__backdrop {
   position: fixed;
   inset: 0;
-  z-index: 9998; // High z-index since it's portaled to body
+  z-index: $mg-z-index-modal - 1; // portaled select backdrop — uses modal layer to clear all page chrome
   background: transparent;
   cursor: default;
 }
@@ -1009,7 +1009,7 @@ $search-input-padding-x: $mg-spacing-250;
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 9999; // Above backdrop
+  z-index: $mg-z-index-modal; // portaled select dropdown — uses modal layer to clear all page chrome
   background: #fff;
   border: 1px solid $search-primary;
   border-top: none;
@@ -1227,7 +1227,7 @@ $search-input-padding-x: $mg-spacing-250;
   position: fixed;
   inset: 0;
   background: rgb(0 0 0 / 0.5);
-  z-index: 1000;
+  z-index: $mg-z-index-drawer - 1; // backdrop behind drawer panel
   animation: mg-search-fade-in 0.2s ease-out;
   cursor: pointer; // Indicate clickable to close
 }
@@ -1252,7 +1252,7 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   flex-direction: column;
   animation: mg-search-slide-in-left 0.3s ease-out;
-  z-index: 1001;
+  z-index: $mg-z-index-drawer;
   cursor: default; // Reset cursor inside drawer
 }
 

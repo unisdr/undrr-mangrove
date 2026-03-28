@@ -24,7 +24,7 @@
     right: 0;
     display: flex;
     gap: $mg-spacing-50;
-    z-index: 1;
+    z-index: 1; // scroll nav above container content — local to scroll-container stacking context
 
     &-button {
       width: $mg-spacing-300;

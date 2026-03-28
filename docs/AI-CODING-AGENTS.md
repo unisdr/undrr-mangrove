@@ -66,6 +66,7 @@ See [#865](https://github.com/unisdr/undrr-mangrove/issues/865) for the ongoing 
 | Story source examples | Updates by habit | Doesn't notice stale static HTML | Check `parameters.docs.source.code` in `.stories.jsx` |
 | AI manifest | Updates after code changes | Doesn't know it exists | Check `scripts/ai-manifest/component-data.js` and `css-utilities.js` |
 | Compiled output | Inspects the result | Trusts the build succeeded | Verify class names in `stories/assets/css/style.css` after build |
+| Z-index values | Knows the layer system | Uses raw numbers | Use `$mg-z-index-*` tokens for global stacking (fixed/sticky/portaled); derive backdrops with `$token - 1`; use raw values + comments for local stacking inside a component's own stacking context |
 
 ## Related documentation
 

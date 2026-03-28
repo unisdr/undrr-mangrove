@@ -12,7 +12,7 @@
       url(//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png)
       no-repeat center center;
     box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.3);
-    z-index: 22;
+    z-index: $mg-z-index-header;
 
     @media (width >= $mg-breakpoint-tablet) {
       .mg-page-header__container {

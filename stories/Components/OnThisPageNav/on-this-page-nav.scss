@@ -9,10 +9,7 @@
   // Set this in your theme CSS to dock below a sticky MegaMenu or header.
   position: sticky;
   top: var(--mg-on-this-page-nav-offset, 0);
-
-  // Above MegaMenu (10) but below PageHeader (22) and modals (9998+).
-  // TODO: replace with a shared z-index token when the design token system adds one.
-  z-index: 11;
+  z-index: $mg-z-index-sticky; // above MegaMenu, below PageHeader
   display: flex;
   align-items: center;
   background: $mg-color-neutral-0;
