@@ -425,6 +425,8 @@ export const RTL = {
             data-mg-on-this-page-nav
             data-mg-on-this-page-nav-content=".mg-rtl-demo"
             data-mg-on-this-page-nav-label="في هذه الصفحة"
+            data-mg-on-this-page-nav-scroll-prev-label="عناصر التنقل السابقة"
+            data-mg-on-this-page-nav-scroll-next-label="عناصر التنقل التالية"
             className="mg-on-this-page-nav"
           >
             <a href="#subscribe-ar" className="mg-on-this-page-nav__cta">

@@ -62,7 +62,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 1; // stretched-link cover — local to stats-card stacking context
   }
 
   // Focus styles for linked cards
@@ -105,7 +105,7 @@
       color: $mg-color-interactive;
       text-decoration: underline;
       position: relative;
-      z-index: 2;
+      z-index: 2; // above stretched-link cover — local to stats-card stacking context
       transition: opacity 200ms ease;
 
       &:hover {

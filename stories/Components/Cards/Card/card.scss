@@ -134,7 +134,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 100;
+    z-index: 100; // stretched-link cover — local to card stacking context
   }
 
   // Inline chevron indicator (CSS border triangle)
@@ -227,7 +227,7 @@ $card-variant-colours: (
 .mg-card__label,
 .mg-card .mg-button {
   position: relative;
-  z-index: 101;
+  z-index: 101; // above stretched-link cover — local to card stacking context
 }
 
 .mg-card__label {
@@ -420,7 +420,7 @@ $card-variant-colours: (
       content: "";
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 1; // stretched-link cover for logo card — local to icon-card stacking context
     }
 
     &:hover {
@@ -483,7 +483,7 @@ $card-variant-colours: (
       color: $mg-color-interactive;
       text-decoration: none;
       position: relative;
-      z-index: 101;
+      z-index: 101; // above stretched-link cover — local to card stacking context
 
       &:hover {
         text-decoration: underline;

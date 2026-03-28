@@ -8,8 +8,11 @@
 //
 // Scroll-spy uses IntersectionObserver. CSS-only scroll-spy
 // (scroll-target-group + :target-current) is emerging in CSS Overflow L5
-// but lacks aria-current support and cross-browser coverage — revisit when
+// but lacks aria-current support and cross-browser coverage - revisit when
 // browsers ship native accessibility semantics for :target-current.
+
+const CHEVRON_LEFT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M11 4L6 8l5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEVRON_RIGHT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M5 4l5 4-5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 /**
  * Read the offset CSS custom property from the nav element.
@@ -54,14 +57,18 @@ function scrollLinkToCenter(link, list) {
 /**
  * Initializes "On this page" sticky navigation bars.
  *
- * @param {NodeList|HTMLElement[]} [scope] - Elements to init.
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or a single HTMLElement.
  *   Defaults to all [data-mg-on-this-page-nav] in the document.
  */
 export function mgOnThisPageNav(scope) {
-  const containers =
-    scope || document.querySelectorAll('[data-mg-on-this-page-nav]');
+  const containers = scope
+    ? (scope instanceof HTMLElement ? [scope] : scope)
+    : document.querySelectorAll('[data-mg-on-this-page-nav]');
 
   containers.forEach(container => {
+    // Skip auto-init if the element opts out
+    if (!scope && container.hasAttribute('data-mg-on-this-page-nav-skip-auto-init')) return;
     if (container.dataset.mgOnThisPageNavInitialized) return;
     container.dataset.mgOnThisPageNavInitialized = 'true';
 
@@ -94,6 +101,7 @@ export function mgOnThisPageNav(scope) {
     setupClickHandlers(container, ac.signal);
     setupScrollSpy(container);
     setupFocusScrolling(container, ac.signal);
+    setupScrollButtons(container, ac.signal);
   });
 }
 
@@ -112,6 +120,12 @@ export function mgOnThisPageNavDestroy(container) {
     container._mgOnThisPageNavObserver.disconnect();
     delete container._mgOnThisPageNavObserver;
   }
+  if (container._mgOnThisPageNavResizeObserver) {
+    container._mgOnThisPageNavResizeObserver.disconnect();
+    delete container._mgOnThisPageNavResizeObserver;
+  }
+  container.querySelectorAll('.mg-on-this-page-nav__scroll-btn').forEach(btn => btn.remove());
+  container.classList.remove('mg-on-this-page-nav--has-left-overflow');
   delete container.dataset.mgOnThisPageNavInitialized;
 }
 
@@ -263,6 +277,144 @@ function setupClickHandlers(container, signal) {
       { once: true }
     );
   }, { signal });
+}
+
+/**
+ * Update scroll button visibility based on the current scroll position of
+ * the list. Also manages keyboard focus if a button is hidden while focused,
+ * and toggles the left-overflow modifier class so the SCSS can add a
+ * left-side gradient mask when content is off-screen to the left.
+ *
+ * RTL: browsers report scrollLeft as 0 at the right edge (visual start) and
+ * decreasing (negative) as the user scrolls left. Math.abs(scrollLeft)
+ * normalises "distance from visual start" across both directions.
+ *
+ * Accepts pre-resolved element references so callers on the scroll/resize hot
+ * path avoid repeated querySelector lookups on every event.
+ *
+ * @param {HTMLElement} container - The nav element
+ * @param {HTMLElement} list - The scrollable list element
+ * @param {HTMLButtonElement} prevBtn - The previous/start scroll button
+ * @param {HTMLButtonElement} nextBtn - The next/end scroll button
+ */
+function updateScrollButtons(container, list, prevBtn, nextBtn) {
+  const sl = list.scrollLeft;
+  const maxScroll = list.scrollWidth - list.clientWidth;
+  const rtl = getComputedStyle(list).direction === 'rtl';
+
+  // distFromStart: absolute distance scrolled from the visual start edge.
+  // The asymmetric thresholds (> 1 vs < maxScroll - 1) absorb sub-pixel
+  // rounding that can prevent scrollLeft from reaching exactly 0 or maxScroll.
+  const distFromStart = Math.abs(sl);
+  const scrolledFromStart = distFromStart > 1;
+  const canScrollFurther = maxScroll > 1 && distFromStart < maxScroll - 1;
+
+  // prevBtn lives at the visual-start edge (left in LTR, right in RTL via flex).
+  // It is shown whenever the user can scroll back toward that edge.
+  if (!scrolledFromStart && prevBtn === document.activeElement) {
+    const firstLink = list.querySelector('.mg-on-this-page-nav__link');
+    if (firstLink) firstLink.focus();
+  }
+  prevBtn.hidden = !scrolledFromStart;
+
+  // nextBtn lives at the visual-end edge (right in LTR, left in RTL via flex).
+  // It is shown whenever more content exists in the scroll-forward direction.
+  // When it hides while focused, prefer the CTA (the DOM-adjacent element after
+  // nextBtn) over the last list link, so focus follows natural tab order.
+  if (!canScrollFurther && nextBtn === document.activeElement) {
+    const cta = container.querySelector('.mg-on-this-page-nav__cta');
+    const links = list.querySelectorAll('.mg-on-this-page-nav__link');
+    const lastLink = links.length ? links[links.length - 1] : null;
+    const fallback = cta || lastLink;
+    if (fallback) fallback.focus();
+  }
+  nextBtn.hidden = !canScrollFurther;
+
+  // has-left-overflow drives the left-edge gradient in SCSS.
+  // Content is physically off-screen to the left when:
+  //   LTR: the user has scrolled right past the start (scrolledFromStart)
+  //   RTL: more visual-end content sits to the left (canScrollFurther)
+  container.classList.toggle(
+    'mg-on-this-page-nav--has-left-overflow',
+    rtl ? canScrollFurther : scrolledFromStart
+  );
+}
+
+/**
+ * Inject prev/next scroll buttons and wire scroll and resize listeners.
+ * Buttons start hidden and become visible only when the list overflows in
+ * the corresponding direction.
+ *
+ * @param {HTMLElement} container - The nav element
+ * @param {AbortSignal} signal - Signal to remove listeners on destroy
+ */
+function setupScrollButtons(container, signal) {
+  const list = container.querySelector('.mg-on-this-page-nav__list');
+  if (!list) return;
+
+  // Disconnect any pre-existing observer before creating a new one (defensive
+  // guard in case setupScrollButtons is ever called twice on the same container).
+  if (container._mgOnThisPageNavResizeObserver) {
+    container._mgOnThisPageNavResizeObserver.disconnect();
+    delete container._mgOnThisPageNavResizeObserver;
+  }
+
+  // Remove any previously injected buttons so re-init never duplicates them
+  container.querySelectorAll('.mg-on-this-page-nav__scroll-btn').forEach(btn => btn.remove());
+
+  const prevBtn = document.createElement('button');
+  prevBtn.type = 'button';
+  prevBtn.className = 'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--prev';
+  // Direction-neutral labels avoid confusion for RTL screen reader users
+  // ("left"/"right" are ambiguous when the reading direction is reversed).
+  // Override via data-mg-on-this-page-nav-scroll-prev-label for translated text.
+  prevBtn.setAttribute(
+    'aria-label',
+    container.dataset.mgOnThisPageNavScrollPrevLabel || 'Previous navigation items'
+  );
+  prevBtn.hidden = true;
+  prevBtn.innerHTML = CHEVRON_LEFT_SVG;
+
+  const nextBtn = document.createElement('button');
+  nextBtn.type = 'button';
+  nextBtn.className = 'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--next';
+  // Override via data-mg-on-this-page-nav-scroll-next-label for translated text.
+  nextBtn.setAttribute(
+    'aria-label',
+    container.dataset.mgOnThisPageNavScrollNextLabel || 'Next navigation items'
+  );
+  nextBtn.hidden = true;
+  nextBtn.innerHTML = CHEVRON_RIGHT_SVG;
+
+  list.insertAdjacentElement('beforebegin', prevBtn);
+  list.insertAdjacentElement('afterend', nextBtn);
+
+  // prevBtn scrolls toward the visual start: left in LTR (-), right in RTL (+).
+  prevBtn.addEventListener('click', () => {
+    const isRTL = getComputedStyle(list).direction === 'rtl';
+    list.scrollBy({
+      left: (isRTL ? 1 : -1) * (list.offsetWidth * 0.5),
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+  }, { signal });
+
+  // nextBtn scrolls toward the visual end: right in LTR (+), left in RTL (-).
+  nextBtn.addEventListener('click', () => {
+    const isRTL = getComputedStyle(list).direction === 'rtl';
+    list.scrollBy({
+      left: (isRTL ? -1 : 1) * (list.offsetWidth * 0.5),
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+  }, { signal });
+
+  list.addEventListener('scroll', () => updateScrollButtons(container, list, prevBtn, nextBtn), { signal, passive: true });
+
+  const ro = new ResizeObserver(() => updateScrollButtons(container, list, prevBtn, nextBtn));
+  ro.observe(list);
+  container._mgOnThisPageNavResizeObserver = ro;
+  signal.addEventListener('abort', () => ro.disconnect(), { once: true });
+
+  updateScrollButtons(container, list, prevBtn, nextBtn);
 }
 
 /**

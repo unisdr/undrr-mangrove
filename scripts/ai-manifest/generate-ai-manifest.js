@@ -1056,6 +1056,10 @@ Several React components support hydration on vanilla HTML pages via the createH
 
 The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
 
+### Z-index layers
+
+Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept; derive backdrops with arithmetic (e.g. z-index: $mg-z-index-drawer - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens ($mg-z-index-nav through $mg-z-index-header, values 10-22) are frozen; do not change their numeric values. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
+
 ### Conventions
 
 - CSS prefix: mg-

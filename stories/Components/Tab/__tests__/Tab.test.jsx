@@ -573,6 +573,40 @@ describe('Tab', () => {
   });
 
   // -------------------------------------------------------
+  // mgTabs lifecycle (wrapper function)
+  // -------------------------------------------------------
+
+  describe('mgTabs lifecycle', () => {
+    const { mgTabs: realMgTabs } = jest.requireActual('../../../assets/js/tabs');
+
+    afterEach(() => {
+      document.body.innerHTML = '';
+    });
+
+    it('skips containers with data-mg-js-tabs-skip-auto-init during auto-init', () => {
+      document.body.innerHTML = `<div data-mg-js-tabs data-mg-js-tabs-skip-auto-init></div>`;
+      realMgTabs(); // no scope = auto-init path
+      const container = document.querySelector('[data-mg-js-tabs]');
+      expect(container.hasAttribute('data-mg-tabs-initialized')).toBe(false);
+    });
+
+    it('processes data-mg-js-tabs-skip-auto-init containers when scope is passed explicitly', () => {
+      const { container: rendered } = render(<Tab tabdata={tabdata} />);
+      const tabContainer = rendered.querySelector('[data-mg-js-tabs]');
+      tabContainer.setAttribute('data-mg-js-tabs-skip-auto-init', '');
+      realMgTabs([tabContainer]);
+      expect(tabContainer.hasAttribute('data-mg-tabs-initialized')).toBe(true);
+    });
+
+    it('accepts a single HTMLElement as scope without throwing', () => {
+      const { container: rendered } = render(<Tab tabdata={tabdata} />);
+      const tabContainer = rendered.querySelector('[data-mg-js-tabs]');
+      expect(() => realMgTabs(tabContainer)).not.toThrow();
+      expect(tabContainer.hasAttribute('data-mg-tabs-initialized')).toBe(true);
+    });
+  });
+
+  // -------------------------------------------------------
   // Accessibility (jest-axe)
   // -------------------------------------------------------
 

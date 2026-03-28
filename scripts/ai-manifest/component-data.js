@@ -385,9 +385,13 @@ export default {
     description: 'Sticky horizontal "On this page" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js.',
     cssClasses: [
       'mg-on-this-page-nav', 'mg-on-this-page-nav--hidden',
+      'mg-on-this-page-nav--has-left-overflow',
       'mg-on-this-page-nav__list', 'mg-on-this-page-nav__item',
       'mg-on-this-page-nav__link', 'mg-on-this-page-nav__link--active',
       'mg-on-this-page-nav__cta', 'mg-on-this-page-nav--exclude',
+      'mg-on-this-page-nav__scroll-btn',
+      'mg-on-this-page-nav__scroll-btn--prev',
+      'mg-on-this-page-nav__scroll-btn--next',
     ],
     examples: [
       {

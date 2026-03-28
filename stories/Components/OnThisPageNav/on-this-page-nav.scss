@@ -9,10 +9,7 @@
   // Set this in your theme CSS to dock below a sticky MegaMenu or header.
   position: sticky;
   top: var(--mg-on-this-page-nav-offset, 0);
-
-  // Above MegaMenu (10) but below PageHeader (22) and modals (9998+).
-  // TODO: replace with a shared z-index token when the design token system adds one.
-  z-index: 11;
+  z-index: $mg-z-index-sticky; // above MegaMenu, below PageHeader
   display: flex;
   align-items: center;
   background: $mg-color-neutral-0;
@@ -63,6 +60,14 @@
 
     &::-webkit-scrollbar {
       display: none;
+    }
+
+    // When content is scrolled left, also fade the leading edge so users know
+    // items are hidden behind the scroll button on that side.
+    .mg-on-this-page-nav--has-left-overflow & {
+      padding-inline-start: $mg-spacing-300;
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 #{$mg-spacing-500}, #000 calc(100% - #{$mg-spacing-500}), transparent);
+      mask-image: linear-gradient(to right, transparent, #000 #{$mg-spacing-500}, #000 calc(100% - #{$mg-spacing-500}), transparent);
     }
   }
 
@@ -136,10 +141,61 @@
       outline-offset: 2px;
     }
   }
+
+  // Scroll arrow buttons — injected by JS when the list overflows.
+  // hidden attribute is toggled by JS based on scroll position.
+  &__scroll-btn {
+    flex-shrink: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $mg-spacing-250; // WCAG 2.5.8 minimum touch target (24px)
+    padding: 0 $mg-spacing-150;
+    border: 0;
+    background: $mg-color-neutral-0;
+    cursor: pointer;
+    color: $mg-color-neutral-600;
+    transition: color 0.2s ease;
+
+    // display:flex above would otherwise override the UA [hidden]{display:none} rule
+    // since author styles always beat the user-agent stylesheet.
+    &[hidden] {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover {
+      color: $mg-color-interactive-active;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: -2px;
+    }
+
+    svg {
+      display: block;
+      pointer-events: none;
+    }
+
+    // In RTL, flex reversal places prevBtn on the right and nextBtn on the left,
+    // so the chevron icons point in the opposite physical direction from the scroll.
+    // Flip them so each icon still points toward its scroll destination.
+    [dir="rtl"] & {
+      svg { transform: scaleX(-1); }
+    }
+  }
 }
 
-// RTL: scrolling direction and text handled automatically by flex + overflow-x,
-// margin-inline-start on CTA handles RTL pinning.
+// RTL: flex layout places prevBtn at the right (visual-start) edge and nextBtn
+// at the left (visual-end) edge. The JS scrollBy direction, button visibility,
+// and chevron icon direction are all RTL-aware. The mask-image gradient uses
+// physical `to right` which fades the correct edge in LTR; RTL gradient
+// correction is a known open item.
 
 // Arabic font override
 :lang(ar) {
