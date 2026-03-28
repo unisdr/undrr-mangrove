@@ -289,16 +289,15 @@ function setupClickHandlers(container, signal) {
  * decreasing (negative) as the user scrolls left. Math.abs(scrollLeft)
  * normalises "distance from visual start" across both directions.
  *
+ * Accepts pre-resolved element references so callers on the scroll/resize hot
+ * path avoid repeated querySelector lookups on every event.
+ *
  * @param {HTMLElement} container - The nav element
+ * @param {HTMLElement} list - The scrollable list element
+ * @param {HTMLButtonElement} prevBtn - The previous/start scroll button
+ * @param {HTMLButtonElement} nextBtn - The next/end scroll button
  */
-function updateScrollButtons(container) {
-  const list = container.querySelector('.mg-on-this-page-nav__list');
-  if (!list) return;
-
-  const prevBtn = container.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
-  const nextBtn = container.querySelector('.mg-on-this-page-nav__scroll-btn--next');
-  if (!prevBtn || !nextBtn) return;
-
+function updateScrollButtons(container, list, prevBtn, nextBtn) {
   const sl = list.scrollLeft;
   const maxScroll = list.scrollWidth - list.clientWidth;
   const rtl = getComputedStyle(list).direction === 'rtl';
@@ -313,17 +312,21 @@ function updateScrollButtons(container) {
   // prevBtn lives at the visual-start edge (left in LTR, right in RTL via flex).
   // It is shown whenever the user can scroll back toward that edge.
   if (!scrolledFromStart && prevBtn === document.activeElement) {
-    const firstLink = container.querySelector('.mg-on-this-page-nav__link');
+    const firstLink = list.querySelector('.mg-on-this-page-nav__link');
     if (firstLink) firstLink.focus();
   }
   prevBtn.hidden = !scrolledFromStart;
 
   // nextBtn lives at the visual-end edge (right in LTR, left in RTL via flex).
   // It is shown whenever more content exists in the scroll-forward direction.
+  // When it hides while focused, prefer the CTA (the DOM-adjacent element after
+  // nextBtn) over the last list link, so focus follows natural tab order.
   if (!canScrollFurther && nextBtn === document.activeElement) {
-    const links = container.querySelectorAll('.mg-on-this-page-nav__link');
+    const cta = container.querySelector('.mg-on-this-page-nav__cta');
+    const links = list.querySelectorAll('.mg-on-this-page-nav__link');
     const lastLink = links.length ? links[links.length - 1] : null;
-    if (lastLink) lastLink.focus();
+    const fallback = cta || lastLink;
+    if (fallback) fallback.focus();
   }
   nextBtn.hidden = !canScrollFurther;
 
@@ -353,24 +356,21 @@ function setupScrollButtons(container, signal) {
   // guard in case setupScrollButtons is ever called twice on the same container).
   if (container._mgOnThisPageNavResizeObserver) {
     container._mgOnThisPageNavResizeObserver.disconnect();
+    delete container._mgOnThisPageNavResizeObserver;
   }
 
   // Remove any previously injected buttons so re-init never duplicates them
   container.querySelectorAll('.mg-on-this-page-nav__scroll-btn').forEach(btn => btn.remove());
 
-  // Read direction at setup time for aria-labels; re-read at click time for
-  // scrollBy so live locale switching (e.g. Storybook toolbar) is respected.
-  const rtlAtInit = getComputedStyle(container).direction === 'rtl';
-
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
   prevBtn.className = 'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--prev';
-  // prevBtn sits at the visual-start edge (left in LTR, right in RTL via flex).
-  // Override labels via data-mg-on-this-page-nav-scroll-prev-label for i18n / RTL.
+  // Direction-neutral labels avoid confusion for RTL screen reader users
+  // ("left"/"right" are ambiguous when the reading direction is reversed).
+  // Override via data-mg-on-this-page-nav-scroll-prev-label for translated text.
   prevBtn.setAttribute(
     'aria-label',
-    container.dataset.mgOnThisPageNavScrollPrevLabel ||
-      (rtlAtInit ? 'Scroll navigation right' : 'Scroll navigation left')
+    container.dataset.mgOnThisPageNavScrollPrevLabel || 'Previous navigation items'
   );
   prevBtn.hidden = true;
   prevBtn.innerHTML = CHEVRON_LEFT_SVG;
@@ -378,12 +378,10 @@ function setupScrollButtons(container, signal) {
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
   nextBtn.className = 'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--next';
-  // nextBtn sits at the visual-end edge (right in LTR, left in RTL via flex).
-  // Override labels via data-mg-on-this-page-nav-scroll-next-label for i18n / RTL.
+  // Override via data-mg-on-this-page-nav-scroll-next-label for translated text.
   nextBtn.setAttribute(
     'aria-label',
-    container.dataset.mgOnThisPageNavScrollNextLabel ||
-      (rtlAtInit ? 'Scroll navigation left' : 'Scroll navigation right')
+    container.dataset.mgOnThisPageNavScrollNextLabel || 'Next navigation items'
   );
   nextBtn.hidden = true;
   nextBtn.innerHTML = CHEVRON_RIGHT_SVG;
@@ -409,13 +407,13 @@ function setupScrollButtons(container, signal) {
     });
   }, { signal });
 
-  list.addEventListener('scroll', () => updateScrollButtons(container), { signal, passive: true });
+  list.addEventListener('scroll', () => updateScrollButtons(container, list, prevBtn, nextBtn), { signal, passive: true });
 
-  const ro = new ResizeObserver(() => updateScrollButtons(container));
+  const ro = new ResizeObserver(() => updateScrollButtons(container, list, prevBtn, nextBtn));
   ro.observe(list);
   container._mgOnThisPageNavResizeObserver = ro;
 
-  updateScrollButtons(container);
+  updateScrollButtons(container, list, prevBtn, nextBtn);
 }
 
 /**

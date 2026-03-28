@@ -67,8 +67,8 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 | `data-mg-on-this-page-nav-depth` | `"2"`, `"3"`, `"4"` | `"2"` | Max heading level to scan (auto-detect mode) |
 | `data-mg-on-this-page-nav-content` | CSS selector | `document.body` | Scope element for heading scan |
 | `data-mg-on-this-page-nav-label` | string | `"On this page"` | `aria-label` for the nav element |
-| `data-mg-on-this-page-nav-scroll-prev-label` | string | `"Scroll navigation left"` (LTR) / `"Scroll navigation right"` (RTL) | `aria-label` for the left scroll button. Override for translated or custom labels. |
-| `data-mg-on-this-page-nav-scroll-next-label` | string | `"Scroll navigation right"` (LTR) / `"Scroll navigation left"` (RTL) | `aria-label` for the right scroll button. Override for translated or custom labels. |
+| `data-mg-on-this-page-nav-scroll-prev-label` | string | `"Previous navigation items"` | `aria-label` for the prev scroll button. Override for translated text (e.g., `"عناصر التنقل السابقة"` in Arabic). |
+| `data-mg-on-this-page-nav-scroll-next-label` | string | `"Next navigation items"` | `aria-label` for the next scroll button. Override for translated text (e.g., `"عناصر التنقل التالية"` in Arabic). |
 | `data-mg-on-this-page-nav-skip-auto-init` | (presence) | — | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
 
 ## CSS custom properties
@@ -266,7 +266,7 @@ The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below th
 - **Zoom**: Un-sticks at `max-height: 400px` to prevent the bar from dominating the viewport at high zoom (per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/))
 - **Touch targets**: Links and scroll buttons meet WCAG 2.5.8 Target Size (Minimum) at Level AA (24x24px). Vertical size is approximately 44px
 - **Color contrast**: Active link color (`$mg-color-interactive`) passes 4.5:1 against white across all five themes
-- **Scroll buttons**: Injected `<button type="button">` elements with `aria-label="Scroll navigation left/right"`. The SVG icon carries `aria-hidden="true"`. Buttons use the `hidden` attribute (not `aria-hidden`) when not applicable, removing them from both the visual and accessibility tree entirely.
+- **Scroll buttons**: Injected `<button type="button">` elements with direction-neutral `aria-label` values ("Previous navigation items" / "Next navigation items") so RTL screen reader users are not misled by physical direction terms. Override with the `data-mg-on-this-page-nav-scroll-*-label` attributes for translated text. The SVG icon carries `aria-hidden="true"`. Buttons use the `hidden` attribute (not `aria-hidden`) when not applicable, removing them from both the visual and accessibility tree entirely.
 
 ## RTL and internationalization
 
@@ -275,7 +275,8 @@ The component supports RTL layouts automatically:
 - The nav list scrolls right-to-left via CSS flexbox and `overflow-x`
 - The CTA button pins to the left (logical end) via `margin-inline-start: auto`
 - Arabic headings use the Noto Kufi Arabic font family (`:lang(ar)` override)
-- Scroll buttons use physical direction labels ("left"/"right") and scroll behavior, with `getComputedStyle(list).direction` used to correctly map which button shows for which overflow direction in RTL
+- Scroll buttons use direction-neutral labels ("Previous navigation items" / "Next navigation items") and RTL-aware `scrollBy` direction; `getComputedStyle(list).direction` maps which button shows for which overflow direction in RTL
+- **Known open item**: the `mask-image` trailing-edge gradient uses a physical `to right` direction and does not auto-flip in RTL (items scrolled off the right edge in RTL have no fade). A follow-up fix will use logical values or a separate RTL rule
 
 Auto-generated IDs from non-Latin headings preserve the original characters. Provide explicit `id` attributes on headings if you need specific URL fragments.
 

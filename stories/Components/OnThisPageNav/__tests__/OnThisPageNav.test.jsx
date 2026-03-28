@@ -392,6 +392,38 @@ describe('OnThisPageNav', () => {
       expect(nextBtn.hidden).toBe(true);
     });
 
+    it('prev button has direction-neutral default aria-label', () => {
+      const nav = setupAutoDetect();
+      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+      expect(prevBtn.getAttribute('aria-label')).toBe('Previous navigation items');
+    });
+
+    it('next button has direction-neutral default aria-label', () => {
+      const nav = setupAutoDetect();
+      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      expect(nextBtn.getAttribute('aria-label')).toBe('Next navigation items');
+    });
+
+    it('aria-label is overridden by data attribute', () => {
+      document.body.innerHTML = `
+        <nav
+          data-mg-on-this-page-nav
+          data-mg-on-this-page-nav-content=".content"
+          data-mg-on-this-page-nav-scroll-prev-label="عناصر التنقل السابقة"
+          data-mg-on-this-page-nav-scroll-next-label="عناصر التنقل التالية"
+          class="mg-on-this-page-nav"
+        ></nav>
+        <main class="content">
+          <h2 id="s1">Section one</h2>
+          <h2 id="s2">Section two</h2>
+        </main>
+      `;
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav([nav]);
+      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev').getAttribute('aria-label')).toBe('عناصر التنقل السابقة');
+      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--next').getAttribute('aria-label')).toBe('عناصر التنقل التالية');
+    });
+
     it('next button appears when list has right overflow', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
@@ -579,6 +611,48 @@ describe('OnThisPageNav', () => {
       mgOnThisPageNav([nav]);
 
       expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(2);
+    });
+
+    it('focus moves to CTA (not last link) when next button hides while focused', () => {
+      const nav = setupAutoDetect({
+        ctaHtml: '<a href="#download" class="mg-on-this-page-nav__cta">Download</a>',
+      });
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+
+      // Simulate overflow so nextBtn is visible
+      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      list.dispatchEvent(new Event('scroll'));
+
+      // Focus nextBtn then scroll to the end so it should hide
+      nextBtn.hidden = false;
+      nextBtn.focus();
+      Object.defineProperty(list, 'scrollLeft', { value: 300, configurable: true });
+      list.dispatchEvent(new Event('scroll'));
+
+      const cta = nav.querySelector('.mg-on-this-page-nav__cta');
+      expect(document.activeElement).toBe(cta);
+    });
+
+    it('focus moves to last link when next button hides while focused and no CTA', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+
+      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      list.dispatchEvent(new Event('scroll'));
+
+      nextBtn.hidden = false;
+      nextBtn.focus();
+      Object.defineProperty(list, 'scrollLeft', { value: 300, configurable: true });
+      list.dispatchEvent(new Event('scroll'));
+
+      const links = nav.querySelectorAll('.mg-on-this-page-nav__link');
+      expect(document.activeElement).toBe(links[links.length - 1]);
     });
   });
 
