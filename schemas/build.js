@@ -8,7 +8,7 @@
  *   node schemas/build.js --validate   Build and validate with ajv
  */
 
-import { readdir, mkdir, writeFile } from 'node:fs/promises';
+import { readdir, mkdir, writeFile, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -50,16 +50,24 @@ async function main() {
     console.log(`  ${file} -> dist/${outName}`);
   }
 
+  // Remove stale JSON files that no longer have a corresponding source module.
+  const expectedJsonFiles = new Set(schemas.map((s) => s.outName));
+  const existingJsonFiles = (await readdir(DIST_DIR)).filter((f) =>
+    f.endsWith('.schema.json'),
+  );
+  for (const staleFile of existingJsonFiles) {
+    if (!expectedJsonFiles.has(staleFile)) {
+      await unlink(path.join(DIST_DIR, staleFile));
+      console.log(`  Removed stale: ${staleFile}`);
+    }
+  }
+
   if (shouldValidate) {
     console.log('\nValidating schemas...\n');
 
     try {
-      const Ajv2020 = (await import('ajv/dist/2020.js')).default;
-      const addFormats = (await import('ajv-formats')).default;
-      const ajv = new Ajv2020({ strict: false, allErrors: true });
-      addFormats(ajv);
-      // Register custom 'html' format (accepts any string, signals sanitization needed)
-      ajv.addFormat('html', true);
+      const { createAjv } = await import('./ajv-setup.js');
+      const ajv = createAjv();
       let errors = 0;
 
       for (const { file, schema } of schemas) {
@@ -78,7 +86,7 @@ async function main() {
       }
     } catch {
       console.error(
-        'Could not import ajv for validation. Install with: yarn add -D ajv',
+        'Could not load AJV for validation. Ensure devDependencies are installed: yarn install',
       );
       process.exit(1);
     }

@@ -16,6 +16,11 @@ export default schemaDocument({
   schema: {
     type: 'object',
     properties: {
+      ariaLabel: textField(
+        'Accessible name for the gallery landmark. Required when multiple ' +
+        'galleries appear on the same page (e.g. "Programme photos", ' +
+        '"Event highlights"). Defaults to "Gallery" in the current component.',
+      ),
       media: arrayOf(
         {
           type: 'object',

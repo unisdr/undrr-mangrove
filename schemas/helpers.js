@@ -48,9 +48,9 @@ export function imageObject(opts = {}) {
     description: opts.description || 'Image with source URL and alt text',
     properties: {
       src: urlField('Image URL'),
-      alt: textField('Alt text for the image'),
+      alt: textField('Alt text for the image. Use empty string ("") for decorative images that convey no information.'),
     },
-    required: ['src'],
+    required: ['src', 'alt'],
   };
 }
 
@@ -61,7 +61,7 @@ export function imageObject(opts = {}) {
  */
 export function linkAction(opts = {}) {
   const properties = {
-    label: textField('Display text for the link or button'),
+    label: textField('Display text for the link or button. Must be descriptive in isolation — avoid generic text like "Read more" or "Click here" without context.'),
     url: urlField('Target URL'),
   };
 
@@ -101,12 +101,14 @@ export function arrayOf(itemSchema, opts = {}) {
  * @param {object} [opts.meta] - Mangrove-specific metadata (implementors, deviations)
  */
 export function schemaDocument({ id, title, description, schema, meta = {} }) {
+  // Document-level fields ($schema, $id, title, description) are placed after
+  // ...schema so they always win over any accidental top-level keys in schema.
   return {
+    ...schema,
     $schema: 'https://json-schema.org/draft/2020-12/schema',
     $id: `https://github.com/unisdr/undrr-mangrove/schemas/${id}`,
     title,
     description,
-    ...schema,
     'x-mangrove': {
       version: '1.0.0',
       phase: 1,

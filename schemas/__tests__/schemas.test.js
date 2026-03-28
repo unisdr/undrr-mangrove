@@ -1,5 +1,6 @@
-import Ajv2020 from 'ajv/dist/2020.js';
-import addFormats from 'ajv-formats';
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
+import { createAjv } from '../ajv-setup.js';
 import cardSchema from '../card.schema.js';
 import statisticSchema from '../statistic.schema.js';
 import quoteSchema from '../quote.schema.js';
@@ -8,9 +9,7 @@ import shareActionSchema from '../share-action.schema.js';
 import gallerySchema from '../gallery.schema.js';
 import textCtaSchema from '../text-cta.schema.js';
 
-const ajv = new Ajv2020({ strict: false, allErrors: true });
-addFormats(ajv);
-ajv.addFormat('html', true);
+const ajv = createAjv();
 
 const schemas = [
   { name: 'card', schema: cardSchema },
@@ -21,6 +20,21 @@ const schemas = [
   { name: 'gallery', schema: gallerySchema },
   { name: 'text-cta', schema: textCtaSchema },
 ];
+
+// Derive expected names from *.schema.js files on disk so new schemas can't
+// be added without a corresponding test entry.
+// __dirname is the schemas/__tests__/ directory; go up one level to schemas/.
+const schemaSourceNames = readdirSync(path.join(__dirname, '..'))
+  .filter((f) => f.endsWith('.schema.js'))
+  .map((f) => f.replace('.schema.js', ''))
+  .sort();
+
+describe('Schema coverage', () => {
+  it('every *.schema.js source file has an entry in the schemas array', () => {
+    const testedNames = schemas.map((s) => s.name).sort();
+    expect(testedNames).toEqual(schemaSourceNames);
+  });
+});
 
 describe('All schemas', () => {
   it.each(schemas)('$name is a valid JSON Schema 2020-12 document', ({ schema }) => {

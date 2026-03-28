@@ -113,9 +113,9 @@ This is what a compiled schema file looks like. The full source is in
             "type": "object",
             "properties": {
               "src": { "type": "string", "format": "uri", "description": "Image URL" },
-              "alt": { "type": "string", "description": "Alt text for the image" }
+              "alt": { "type": "string", "description": "Alt text for the image. Use empty string for decorative images." }
             },
-            "required": ["src"]
+            "required": ["src", "alt"]
           },
           "labels":  { "type": "array", "items": { "type": "string" }, "maxItems": 2 },
           "button":  { "type": "string", "description": "Button label text" },
@@ -171,6 +171,8 @@ are updated to use canonical field names.
 
 ## Using schemas
 
+> **Before you write mapping code:** Several schemas have deviations from current component props — your data may pass schema validation but the component will use different field names. Check the [Deviations](#deviations-from-current-implementations) table before building a CMS mapping or data pipeline. Until Phase 2, use the current prop names listed in the "Current (component)" column.
+
 ### Pre-built JSON files
 
 Built JSON Schema files are published in the npm package under `schemas/`:
@@ -221,6 +223,7 @@ yarn build:schemas --validate # Generate + validate with ajv
 4. Document `implementors` and any `deviations` in the `meta` object
 5. Run `yarn build:schemas --validate` to generate and validate
 6. Add tests in `schemas/__tests__/schemas.test.js`
+7. Update the schema inventory table in this page **and** in `schemas/README.md`
 
 ---
 
@@ -237,7 +240,8 @@ schemas/
 
 Source schemas are JS modules (not raw JSON) so they can use helpers, imports,
 variables, and comments. The build script imports each and serializes to JSON.
-Built files are generated during `yarn build` and published to npm.
+Built files are generated during `yarn build` (which calls `node schemas/build.js`
+automatically) and published to npm.
 
 ---
 
@@ -250,4 +254,4 @@ Built files are generated during `yarn build` and published to npm.
 
 ---
 
-Last updated: 27 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+<a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub (opens in new tab)">View source on GitHub</a>

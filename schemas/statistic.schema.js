@@ -16,6 +16,11 @@ export default schemaDocument({
   schema: {
     type: 'object',
     properties: {
+      ariaLabel: textField(
+        'Accessible name for the statistics group landmark. Required when no ' +
+        'visible title is present, or when multiple statistics groups appear ' +
+        'on the same page.',
+      ),
       title: textField('Heading for the statistics section'),
       stats: arrayOf(
         {

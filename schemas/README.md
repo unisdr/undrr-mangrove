@@ -72,7 +72,10 @@ document with these conventions:
   - `phase` — Implementation phase (currently 1)
   - `implementors` — Mangrove component names that implement this schema
   - `deviations` — Map of canonical field paths to notes about how current
-    component implementations differ
+    component implementations differ. Keys use a **human-readable dot-path
+    notation** (e.g. `items[].image.src`) — this is documentation, not a formal
+    machine-parseable path syntax. Do not write tooling that parses these keys
+    programmatically; treat them as prose labels.
   - `notes` — Additional context about the schema
 
 ### Custom format annotations
@@ -116,7 +119,8 @@ use canonical field names.
 3. Wrap with `schemaDocument()` to get the standard envelope
 4. Document `implementors` and any `deviations` in the `meta` object
 5. Run `yarn build:schemas --validate` to generate and validate
-6. Update this README's schema inventory table
+6. Add tests in `schemas/__tests__/schemas.test.js` (structural + accept/reject cases)
+7. Update the schema inventory table in this README **and** in `stories/Documentation/ContentSchemas.mdx`
 
 ## Architecture
 
@@ -135,6 +139,13 @@ Source schemas are JS modules (not raw JSON) so they can use helpers, imports,
 variables, and comments. The build script imports each and serializes to JSON.
 
 ### Integration diagram
+
+The diagram below shows the build pipeline. In text: schema source files
+(`*.schema.js`) import from `helpers.js` and are compiled by `yarn build:schemas`
+into standalone JSON files in `schemas/dist/`. The CI publish workflow runs this
+build step and copies the compiled JSON into the npm package under `schemas/`.
+Separately, `generate-ai-manifest.js` reads the compiled schemas to enrich the
+AI manifest — this step is non-fatal and skipped if `schemas/dist/` is absent.
 
 ```mermaid
 flowchart TD
