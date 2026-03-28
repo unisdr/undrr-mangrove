@@ -18,7 +18,7 @@
       top: -$mg-spacing-25;
       margin-bottom: -$mg-spacing-25;
       position: relative;
-      z-index: 1;
+      z-index: 1; // border indicator floats above the tab list background — local to tabbar
       border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
     }
   }
@@ -167,7 +167,7 @@
   background: $mg-color-tab-background--hover;
   border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
   color: $mg-color-text-tab--hover;
-  z-index: 1150;
+  z-index: 2; // border-overlap micro-fix within tabbar stacking context
   text-decoration: none;
 }
 

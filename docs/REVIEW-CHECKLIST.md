@@ -8,7 +8,7 @@ Use this checklist when building or reviewing a component. Each item links to th
 
 - [ ] Component follows BEM naming with `mg-` prefix
 - [ ] Files follow the standard layout: `ComponentName.jsx`, `component-name.scss`, `ComponentName.stories.jsx`, `ComponentName.mdx`
-- [ ] SCSS uses variables from `_variables.scss` (no hardcoded colors or spacing values)
+- [ ] SCSS uses variables from `_variables.scss` (no hardcoded colors or spacing values; use `$mg-z-index-*` tokens for global stacking contexts — fixed, sticky, or portaled elements; derive backdrops with `$token - 1`)
 - [ ] SCSS imported in `stories/assets/scss/_components.scss`
 - [ ] No `defaultProps` (use destructured default parameters instead)
 

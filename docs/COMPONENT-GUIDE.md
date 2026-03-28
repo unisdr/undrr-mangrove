@@ -52,7 +52,7 @@ See `Pager.jsx` for a complete example and the [component standards](https://uni
 
 ## Step 2: Create the SCSS file
 
-Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
+Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. For z-index: use `$mg-z-index-*` tokens for global stacking (fixed, sticky, portaled elements) and derive backdrops with `$token - 1` arithmetic; use raw values with comments for local stacking inside a component's own stacking context — see [Design decisions/Z-index layers](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-z-index-layers--docs). See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
 
 **Then add the import to `stories/assets/scss/_components.scss`:**
 

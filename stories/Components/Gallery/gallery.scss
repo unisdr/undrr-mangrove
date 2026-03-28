@@ -98,7 +98,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 3;
+    z-index: 3; // loading spinner above nav buttons — local to gallery stacking context
   }
 
   &__spinner {
@@ -352,7 +352,7 @@
     color: $mg-color-white;
     font-size: $mg-font-size-400;
     cursor: pointer;
-    z-index: 2;
+    z-index: 2; // nav button above gallery images — local to gallery stacking context
     display: flex;
     align-items: center;
     justify-content: center;
@@ -409,7 +409,7 @@
     right: $mg-spacing-100;
     display: flex;
     gap: $mg-spacing-100;
-    z-index: 2;
+    z-index: 2; // arrow controls above gallery images — local to gallery stacking context
   }
 
   &__arrow-button {

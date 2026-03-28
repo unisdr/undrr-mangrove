@@ -21,6 +21,6 @@
 
 .mg-show-more--button {
   position: relative;
-  z-index: 2;
+  z-index: 2; // button sits above the gradient fade-out overlay — local to show-more context
   padding: mg-rem(10) mg-rem(40);
 }

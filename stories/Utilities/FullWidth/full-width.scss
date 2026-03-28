@@ -15,7 +15,7 @@
   position: absolute;
   top: 0;
   width: 100vw;
-  z-index: -1;
+  z-index: $mg-z-index-behind; // pseudo-element background sits behind sibling content
 }
 
 [dir="rtl"] .mg-container-full-width::before {
