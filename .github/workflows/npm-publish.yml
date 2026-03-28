@@ -62,7 +62,7 @@ jobs:
         run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
 
       - name: Build
-        run: yarn build
+        run: yarn build && yarn build:schemas
 
       # Prepare package for publishing - include dist files and SCSS sources
       - name: Prepare package files

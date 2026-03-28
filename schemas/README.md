@@ -1,14 +1,24 @@
-# Mangrove content schemas
+# Mangrove content architecture: schemas
 
-JSON Schema definitions describing the canonical data contracts for Mangrove
-component archetypes. These are the specification for what data each component
-class expects any consumer to provide.
+Mangrove's **content architecture** defines the structural contracts between data
+and components — what each component *carries*, independent of how it looks.
+JSON Schema is the mechanism for formalizing and locking those contracts in.
+
+These schema files are Phase 1: a canonical reference spec for each component
+archetype. No existing component props are changed here. Deviations between
+the canonical field names and current prop names are recorded explicitly;
+resolving them is Phase 2.
+
+## Documentation
+
+The full rationale and schema inventory are documented in Storybook:
+**[Design decisions / Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs)**
 
 ## Status
 
-**Phase 1: Reference specification only.** These schemas document the target
-data contract. They do not yet drive validation, code generation, or contract
-tests. Existing components may use different field names — deviations are
+**Phase 1: first step toward a formal content architecture.** Schemas document
+the target data contract. They do not yet drive validation, code generation, or
+contract tests. Existing components may use different field names — deviations are
 documented in each schema's `x-mangrove.deviations` metadata.
 
 See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
@@ -123,3 +133,38 @@ schemas/
 
 Source schemas are JS modules (not raw JSON) so they can use helpers, imports,
 variables, and comments. The build script imports each and serializes to JSON.
+
+### Integration diagram
+
+```mermaid
+flowchart TD
+    subgraph src["Schema source (committed to git)"]
+        H["helpers.js\nField factories"]
+        S["*.schema.js\n(card, statistic, quote, …)"]
+    end
+
+    H -->|imported by| S
+
+    BUILD["yarn build:schemas\nschemas/build.js"]
+    S --> BUILD
+
+    subgraph dist["schemas/dist/ (gitignored)"]
+        J["*.schema.json\nStandalone JSON Schema files"]
+    end
+
+    BUILD --> J
+
+    subgraph ci["CI — npm-publish.yml"]
+        STEP["yarn build && yarn build:schemas"]
+        PKG["npm publish\n@undrr/undrr-mangrove\nschemas/*.schema.json included"]
+    end
+
+    J --> STEP --> PKG
+
+    subgraph manifest["Local dev — AI manifest"]
+        GEN["generate-ai-manifest.js\nreads x-mangrove.implementors\nand deviations (non-fatal)"]
+        OUT["ai-manifest.json\ncomponent entries enriched\nwith contentSchema field"]
+    end
+
+    J -.->|optional, skipped if dist missing| GEN --> OUT
+```

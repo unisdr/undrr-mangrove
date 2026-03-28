@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta
-  title="Design decisions/Content schemas"
+  title="Design decisions/Content architecture"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -10,18 +10,24 @@ import { Meta } from '@storybook/addon-docs/blocks';
   }}
 />
 
-# Content schemas
+# Content architecture: schemas
 
-Content schemas are JSON Schema definitions describing the canonical data contracts
-for Mangrove component archetypes. They specify what data each component class
-expects any consumer to provide.
+Design systems define how things look. Content management defines what gets stored.
+But neither defines the structural layer between them — what data a component
+*carries*, what fields it requires, and what constraints apply.
+
+That structural layer is **content architecture**: explicit, named contracts that
+survive visual redesigns and work across every property that consumes Mangrove
+(undrr.org, preventionweb.net, MCR2030, IRP). **JSON Schema is how we formalize
+and lock those contracts in.**
 
 ## Status
 
-**Phase 1: Reference specification only.** These schemas document the target data
-contract. They do not yet drive validation, code generation, or contract tests.
-Existing components may use different field names — deviations are documented in
-each schema's metadata.
+**Phase 1: first step toward a formal content architecture.** These schemas
+document the target data contract for each component archetype. They do not yet
+drive validation, code generation, or contract tests — and no existing component
+props are changed. Deviations between the canonical schema and current prop names
+are recorded explicitly; resolving them is Phase 2.
 
 See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
 full vision and [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
@@ -29,11 +35,7 @@ for Phase 1 scope.
 
 ---
 
-## Why content schemas?
-
-Design systems define how things look. Content management defines what gets stored.
-But neither defines the structural contract between them — what data a component
-*carries*. Content schemas fill that gap.
+## Why lock in content architecture through schemas?
 
 Without explicit contracts:
 - Field names drift across implementations (`imgback` vs `image.src`)
@@ -42,6 +44,7 @@ Without explicit contracts:
 - AI tools lack structured metadata about component data requirements
 
 With schemas, the data contract is explicit, versioned, and machine-readable.
+Components can change how they look; the schema records what they carry.
 
 ---
 
@@ -83,6 +86,65 @@ document with these conventions:
 Schemas include both content fields (`title`, `summary`, `image`) and presentation
 attributes (`variant`, `iconColor`, `backgroundColor`). If a consumer needs to
 provide the value to use the component correctly, it is part of the schema.
+
+### Example: card schema (excerpt)
+
+This is what a compiled schema file looks like. The full source is in
+[`schemas/card.schema.js`](https://github.com/unisdr/undrr-mangrove/blob/main/schemas/card.schema.js).
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/unisdr/undrr-mangrove/schemas/card",
+  "title": "Card",
+  "description": "Content card representing a single item (article, event, publication) with image, labels, title, summary, and call-to-action.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "title":   { "type": "string", "description": "Card heading text" },
+          "summary": { "type": "string", "format": "html", "description": "Card body text (sanitized HTML supported)" },
+          "link":    { "type": "string", "format": "uri",  "description": "Primary URL for the card" },
+          "image": {
+            "type": "object",
+            "properties": {
+              "src": { "type": "string", "format": "uri", "description": "Image URL" },
+              "alt": { "type": "string", "description": "Alt text for the image" }
+            },
+            "required": ["src"]
+          },
+          "labels":  { "type": "array", "items": { "type": "string" }, "maxItems": 2 },
+          "button":  { "type": "string", "description": "Button label text" },
+          "buttonType": { "type": "string", "enum": ["Primary", "Secondary"], "default": "Primary" }
+        },
+        "required": ["title"]
+      }
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["primary", "secondary", "tertiary", "quaternary", "default", "negative"],
+      "default": "primary"
+    }
+  },
+  "required": ["items"],
+  "x-mangrove": {
+    "version": "1.0.0",
+    "phase": 1,
+    "implementors": ["VerticalCard", "HorizontalCard", "BookCard", "HorizontalBookCard", "IconCard"],
+    "deviations": {
+      "items": "Current components use `data` as the prop name for the items array.",
+      "items[].image.src": "Maps to current `imgback` prop.",
+      "items[].image.alt": "Maps to current `imgalt` prop.",
+      "items[].labels": "Current components use `label1` and `label2` as separate strings.",
+      "items[].summary": "Current components use `summaryText` as the prop name."
+    }
+  }
+}
+```
 
 ---
 
