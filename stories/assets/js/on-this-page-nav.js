@@ -412,6 +412,7 @@ function setupScrollButtons(container, signal) {
   const ro = new ResizeObserver(() => updateScrollButtons(container, list, prevBtn, nextBtn));
   ro.observe(list);
   container._mgOnThisPageNavResizeObserver = ro;
+  signal.addEventListener('abort', () => ro.disconnect(), { once: true });
 
   updateScrollButtons(container, list, prevBtn, nextBtn);
 }

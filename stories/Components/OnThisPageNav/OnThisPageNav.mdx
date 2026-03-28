@@ -129,8 +129,8 @@ Headings with `mg-u-sr-only` are also excluded.
 | `mg-on-this-page-nav__link--active` | `<a>` | Scroll-spy active state |
 | `mg-on-this-page-nav__cta` | `<a>` | Call-to-action button (pinned to logical end) |
 | `mg-on-this-page-nav__scroll-btn` | `<button>` | Injected by JS; scroll arrow button (base class) |
-| `mg-on-this-page-nav__scroll-btn--prev` | `<button>` | Left scroll arrow (hidden when at start) |
-| `mg-on-this-page-nav__scroll-btn--next` | `<button>` | Right scroll arrow (hidden when at end) |
+| `mg-on-this-page-nav__scroll-btn--prev` | `<button>` | Scroll-toward-start button (hidden when at start) |
+| `mg-on-this-page-nav__scroll-btn--next` | `<button>` | Scroll-toward-end button (hidden when at end) |
 | `mg-on-this-page-nav--exclude` | heading | Exclude a heading from auto-detect |
 
 ## Standalone / vanilla HTML usage
@@ -282,5 +282,5 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
-- **1.1** — 2026-03-27: Added `data-mg-on-this-page-nav-skip-auto-init` attribute, single-element scope support; scroll arrow buttons for horizontal overflow
+- **1.1** — 2026-03-28: Added `data-mg-on-this-page-nav-skip-auto-init` attribute, single-element scope support; scroll arrow buttons for horizontal overflow
 - **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))

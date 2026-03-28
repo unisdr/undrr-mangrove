@@ -654,6 +654,27 @@ describe('OnThisPageNav', () => {
       const links = nav.querySelectorAll('.mg-on-this-page-nav__link');
       expect(document.activeElement).toBe(links[links.length - 1]);
     });
+
+    it('focus moves to first link when prev button hides while focused', () => {
+      const nav = setupAutoDetect();
+      const list = nav.querySelector('.mg-on-this-page-nav__list');
+      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+
+      // Simulate being scrolled so prevBtn is visible
+      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
+      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', { value: 200, configurable: true });
+      list.dispatchEvent(new Event('scroll'));
+
+      // Focus prevBtn then scroll back to the start so it should hide
+      prevBtn.hidden = false;
+      prevBtn.focus();
+      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      list.dispatchEvent(new Event('scroll'));
+
+      const links = nav.querySelectorAll('.mg-on-this-page-nav__link');
+      expect(document.activeElement).toBe(links[0]);
+    });
   });
 
   describe('accessibility', () => {
