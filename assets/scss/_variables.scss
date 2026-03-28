@@ -386,6 +386,34 @@ $mg-tabs-border-bottom: true !default;
 
 $author-image-radius: 50%;
 
+// Z-index layers: use these named tokens for global stacking contexts
+// (fixed, sticky, or portaled elements). One token per UI concept — backdrops
+// and sub-layers use $token - 1 / $token + 1 arithmetic within the component
+// SCSS rather than separate variables. Local stacking within a component's own
+// isolated context uses raw values with an explanatory comment.
+// Pick the nearest existing layer; open a GitHub discussion before adding one.
+
+/**
+ * @tokens Z-index layers
+ */
+
+// Background utility — pseudo-element placed behind all sibling content
+$mg-z-index-behind: -1;      // ::before backgrounds (e.g. mg-container-full-width)
+
+// Navigation zone — ⚠ FROZEN: Drupal themes depend on these exact values
+$mg-z-index-nav: 10;         // MegaMenu (mobile sidebar/overlay uses nav - 1 = 9)
+$mg-z-index-sticky: 11;      // Secondary sticky bars, e.g. OnThisPageNav
+$mg-z-index-nav-toggle: 14;  // Mobile nav hamburger toggle (above all nav layers)
+$mg-z-index-header: 22;      // PageHeader (above nav and sticky bar)
+
+// Overlay zone — floats above page content
+$mg-z-index-drawer: 2000;    // Drawer / side panel (backdrop uses drawer - 1 = 1999)
+$mg-z-index-dropdown: 2500;  // Dropdowns and inline menus (above drawers)
+
+// Modal zone — portaled to <body>, must clear all page chrome
+$mg-z-index-modal: 5000;     // Modal and dialog (backdrop uses modal - 1 = 4999)
+$mg-z-index-toast: 5500;     // Toast notifications (Snackbar), above modals
+
 /**
   * @tokens-end
   */
