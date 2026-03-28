@@ -72,6 +72,15 @@ See the RTL support section in [Component standards](https://unisdr.github.io/un
 See [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) for the full pattern.
   - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
 
+## Content architecture (if component carries structured data)
+
+- [ ] Checked `schemas/` to see if this component maps to an existing archetype (card, statistic, quote, navigation, share-action, gallery, text-cta)
+- [ ] If it does: new/changed props align with canonical field names, or deviations are documented in the schema's `x-mangrove.deviations`
+- [ ] If introducing a new content archetype: schema added in `schemas/` and `yarn build:schemas --validate` passes
+
+See [Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs) for the schema inventory and authoring guide.
+  - Source: [`schemas/README.md`](../schemas/README.md)
+
 ## AI discoverability (optional)
 
 - [ ] Component appears in the AI manifest after running `yarn validate-manifest`

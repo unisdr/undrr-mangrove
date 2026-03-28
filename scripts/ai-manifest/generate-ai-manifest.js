@@ -35,8 +35,42 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+
+// ---------------------------------------------------------------------------
+// Content schemas — map component names to their canonical schema
+// ---------------------------------------------------------------------------
+
+const __aiManifestDir = path.dirname(fileURLToPath(import.meta.url));
+const SCHEMAS_DIR = path.join(__aiManifestDir, '../../schemas/dist');
+
+/**
+ * Load content schemas and build a lookup from component name to schema.
+ * Returns an empty map if schemas aren't built yet (non-fatal).
+ */
+function loadContentSchemas() {
+  const componentToSchema = new Map();
+
+  if (!fs.existsSync(SCHEMAS_DIR)) return componentToSchema;
+
+  const files = fs.readdirSync(SCHEMAS_DIR).filter(f => f.endsWith('.schema.json'));
+
+  for (const file of files) {
+    try {
+      const schema = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, file), 'utf-8'));
+      const implementors = schema['x-mangrove']?.implementors || [];
+      for (const name of implementors) {
+        componentToSchema.set(name, schema);
+      }
+    } catch { /* skip malformed schema files */ }
+  }
+
+  return componentToSchema;
+}
+
+const contentSchemas = loadContentSchemas();
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -866,6 +900,19 @@ async function main() {
       detail.cssClasses = data.cssClasses;
     }
 
+    // Content schema — canonical field definitions from schemas/dist/
+    if (contentSchemas.has(name)) {
+      const schema = contentSchemas.get(name);
+      detail.contentSchema = {
+        $id: schema.$id,
+        title: schema.title,
+        description: schema.description,
+        fields: schema.properties,
+        required: schema.required,
+        deviations: schema['x-mangrove']?.deviations,
+      };
+    }
+
     // Vanilla HTML embed instructions (for syndication components)
     if (data?.vanillaHtmlEmbed) {
       detail.vanillaHtmlEmbed = data.vanillaHtmlEmbed;
@@ -1029,8 +1076,15 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
 
+### Content schemas
+
+Canonical JSON Schema definitions for component data contracts. Components with schemas include a contentSchema field in their detail JSON with field definitions, required fields, and deviation notes (where current prop names differ from canonical names).
+
+Schema source: https://github.com/unisdr/undrr-mangrove/tree/main/schemas
+
 ### Source layout
 
+- schemas/                Content schema definitions (JSON Schema 2020-12)
 - stories/Atom/          Typography, images, layout, navigation
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
