@@ -201,5 +201,6 @@ const validate = createAjv().compile(schema);
 
 - [Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs) — schema inventory and field-name contracts
 - [Migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md) — full rename tables and before/after code examples
+- [schemas/README.md](https://github.com/unisdr/undrr-mangrove/blob/main/schemas/README.md) — schema authoring reference and `createAjv()` usage
 - [Component guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs) — schema-first development workflow
 - [Release process](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-release-process--docs) — how Mangrove versions are published

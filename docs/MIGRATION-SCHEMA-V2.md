@@ -4,7 +4,9 @@ Phase 2 aligns all component props with the canonical content schemas defined in
 
 If you are consuming Mangrove components via npm (`import { VerticalCard } from '@undrr/undrr-mangrove'`), update your JSX props. If you are consuming components via Drupal data attributes, see [Drupal data attribute changes](#drupal-data-attribute-changes).
 
-For background on the schema layer, see [Design decisions / Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs) in Storybook.
+For background on the schema layer and the full v2.0 changelog, see:
+- [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) in Storybook (or [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md))
+- [Design decisions / Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs) — schema inventory and authoring guide
 
 ---
 
