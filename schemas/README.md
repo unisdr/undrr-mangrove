@@ -23,7 +23,8 @@ empty for all schemas — no known prop mismatches remain.
 See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
 full vision, [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
 for Phase 1, and [issue #884](https://github.com/unisdr/undrr-mangrove/issues/884)
-for Phase 2.
+for Phase 2. For upgrading existing integrations, see
+[MIGRATION-SCHEMA-V2.md](../docs/MIGRATION-SCHEMA-V2.md).
 
 ## Quick start
 

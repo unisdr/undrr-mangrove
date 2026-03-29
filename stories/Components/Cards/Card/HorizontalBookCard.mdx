@@ -92,6 +92,7 @@ Card titles display blue color, underline, and a chevron indicator by default. A
 
 ## Changelog
 
+- **2.0.0** — 2026-03-29: **Breaking.** Prop renames to align with canonical card schema ([#884](https://github.com/unisdr/undrr-mangrove/issues/884)): `data` → `items`; `imgback`/`imgalt` → `image.{src,alt}`; `label1`/`label2` → `labels[]`; `summaryText` → `summary`. See [migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
 - **1.2.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
 - **1.2** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
 - **1.1.1** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)

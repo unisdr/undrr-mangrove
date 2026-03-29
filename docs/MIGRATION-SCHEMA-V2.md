@@ -171,6 +171,8 @@ No changes. Gallery was already fully schema-aligned and requires no migration.
 
 Components with `fromElement` hydration functions translate DOM data attributes into React props. For most components, existing Drupal Twig templates require no changes.
 
+**VerticalCard, HorizontalCard, BookCard, and HorizontalBookCard** have no Drupal React hydration at all — there are no wrapper scripts or `fromElement` functions for these components. If your site renders them as server-side HTML only, no action is needed. If you render them via direct React imports (e.g., in a custom JS build), update the props at the call site.
+
 ### No Drupal changes required
 
 **QuoteHighlight** — `fromElement` reads `data-image-src` and `data-image-alt` and maps them to the `image` object. Your Twig templates are unchanged:

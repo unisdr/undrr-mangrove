@@ -203,8 +203,10 @@ yarn build:schemas --validate # Generate + validate with ajv
 ```
 schemas/
   helpers.js              Field definition factory functions
+  ajv-setup.js            Shared AJV factory (createAjv) — use in tests and tooling
   *.schema.js             Schema source files (JS modules)
   build.js                Build script (JS → JSON)
+  dist/                   Compiled JSON schemas (gitignored, built by yarn build:schemas)
   __tests__/
     schemas.test.js       Validation tests for all schemas
 ```

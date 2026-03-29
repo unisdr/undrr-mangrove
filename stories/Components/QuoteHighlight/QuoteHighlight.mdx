@@ -198,6 +198,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **2.0.0** — 2026-03-29: **Breaking.** Prop renames to align with canonical quote schema ([#884](https://github.com/unisdr/undrr-mangrove/issues/884)): `imageSrc`/`imageAlt` → `image.{src,alt}`. `fromElement` bridge is updated — Drupal data attributes unchanged. Also adds DOMPurify sanitization to `quote`, `attribution`, and `attributionTitle` HTML fields. See [migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
 - **1.2** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.1** — 2025-04-23: Added `text-wrap: balance` for better text flow; removed bold font weight from quotes
 - **1.0** — 2025-03-24: Initial release with line and image variants, light/dark/bright backgrounds, portrait/side image support, full/left/right alignment
