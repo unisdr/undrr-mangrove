@@ -125,5 +125,6 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **2.0.0** — 2026-03-29: **Breaking.** Prop renames to align with canonical text-cta schema ([#884](https://github.com/unisdr/undrr-mangrove/issues/884)): `image` (URL string) + `imageAlt` → `image.{src,alt}` object. `fromElement` bridge is updated — Drupal data attributes unchanged. See [migration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
 - **1.0** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release. Full-width banner with BEM class structure (`mg-cta`). Supports `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system, `backgroundColor` for custom colors, `buttons` array prop (multiple buttons with Primary/Secondary types), `text` prop with HTML support (sanitized via DOMPurify), optional `image` for side-by-side layout, `centered` prop, and configurable `headlineSize`/`padding`.
 - **0.1** — 2022-12-12: Initial placeholder (never used in production)

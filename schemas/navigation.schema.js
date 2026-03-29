@@ -78,12 +78,6 @@ export default schemaDocument({
   },
   meta: {
     implementors: ['MegaMenu'],
-    deviations: {
-      ariaLabel:
-        'Current component hardcodes aria-label="Main Navigation". The ' +
-        '`ariaLabel` field enables consumers to supply a custom label, which ' +
-        'is required when multiple navigation landmarks appear on the same page.',
-    },
     notes:
       'MegaMenu also accepts presentation-only props (delay, hoverDelay, ' +
       'logo*) that are component configuration, not content. These are not ' +

@@ -8,15 +8,15 @@ const getCaptionForLocale = locale => {
           {
             contenttile: 'Content tag',
             title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -27,14 +27,14 @@ by vulnerable populations and communities.This paper explores health risks from 
           {
             contenttile: 'علامة المحتوى',
             title: 'عنوان بحجم كبير',
-            summaryText: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
-            label1: 'التسمية 1',
-            label2: 'التسمية 2',
+            summary: `يُعد تغير المناخ <a href="#" class="mg-card__text-link">حالة طوارئ صحية عالمية</a>، حيث تشعر الفئات السكانية والمجتمعات الأكثر ضعفاً بتأثيراته بشكل أكبر. تستكشف هذه الورقة المخاطر الصحية الناجمة عن تغير المناخ في سياق عالمي.`,
+            labels: ['التسمية 1', 'التسمية 2'],
             button: 'الإجراء الأساسي',
             link: 'javascript:void(0)',
-            imgalt: 'شخص ينظر',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'شخص ينظر',
+            },
           },
         ],
       };
@@ -47,9 +47,10 @@ by vulnerable populations and communities.This paper explores health risks from 
             title: '投稿のタイトルはここにあり、2行です',
             button: '続きを読む',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -60,16 +61,16 @@ by vulnerable populations and communities.This paper explores health risks from 
           {
             contenttile: 'Vertical card',
             title: 'Title in large size with up to two lines of text',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
+            summary: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
 by vulnerable populations and communities.
 This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
+            labels: ['Label 1', 'Label 2'],
             button: 'Primary action',
             link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+              alt: 'A person looks on',
+            },
           },
         ],
       };
@@ -106,7 +107,7 @@ export const DefaultVerticalCard = {
           maxWidth: '300px',
         }}
       >
-        <VerticalCard data={caption.contentdata} {...args}></VerticalCard>
+        <VerticalCard items={caption.contentdata} {...args}></VerticalCard>
       </div>
     );
   },
@@ -125,7 +126,7 @@ export const PlainTitleVerticalCard = {
         }}
       >
         <VerticalCard
-          data={caption.contentdata}
+          items={caption.contentdata}
           className="mg-card--plain-title"
           {...args}
         ></VerticalCard>
@@ -139,11 +140,10 @@ export const PlainTitleVerticalCard = {
 export const NoImageVerticalCard = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    const noImageData = caption.contentdata.map(item => ({
-      ...item,
-      imgback: null,
-      imgalt: null,
-    }));
+    const noImageData = caption.contentdata.map(item => {
+      const { image: _image, ...rest } = item;
+      return rest;
+    });
 
     return (
       <div
@@ -151,7 +151,7 @@ export const NoImageVerticalCard = {
           maxWidth: '300px',
         }}
       >
-        <VerticalCard data={noImageData} {...args}></VerticalCard>
+        <VerticalCard items={noImageData} {...args}></VerticalCard>
       </div>
     );
   },

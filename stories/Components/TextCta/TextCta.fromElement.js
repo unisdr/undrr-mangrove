@@ -22,8 +22,7 @@ export default function textCtaFromElement(container) {
     variant: dataset.variant || 'primary',
     backgroundColor: dataset.backgroundColor || undefined,
     padding: dataset.padding || undefined,
-    image: dataset.image || undefined,
-    imageAlt: dataset.imageAlt || '',
+    image: dataset.image ? { src: dataset.image, alt: dataset.imageAlt || '' } : undefined,
     centered: dataset.centered !== 'false',
     className: dataset.className || undefined,
   };

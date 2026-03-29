@@ -23,15 +23,17 @@ and lock those contracts in.**
 
 ## Status
 
-**Phase 1: first step toward a formal content architecture.** These schemas
-document the target data contract for each component archetype. They do not yet
-drive validation, code generation, or contract tests — and no existing component
-props are changed. Deviations between the canonical schema and current prop names
-are recorded explicitly; resolving them is Phase 2.
+**Phase 2: schemas are enforced contracts.** All implementing components use
+canonical schema field names. Contract tests (`*.contract.test.jsx`) validate
+that schema-valid fixtures render correctly — if a schema-valid fixture breaks a
+component, the contract test catches it. The `x-mangrove.deviations` map is empty
+for all schemas.
 
 See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
-full vision and [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
-for Phase 1 scope.
+full vision, [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
+for Phase 1, and [issue #884](https://github.com/unisdr/undrr-mangrove/issues/884)
+for Phase 2. For migration guidance, see [docs/MIGRATION-SCHEMA-V2.md](https://github.com/unisdr/undrr-mangrove/blob/main/docs/MIGRATION-SCHEMA-V2.md).
+For the full v2.0 changelog, see the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) in Storybook.
 
 ---
 
@@ -70,9 +72,9 @@ document with these conventions:
 - **`$id`** — Stable identifier: `https://github.com/unisdr/undrr-mangrove/schemas/{name}`
 - **`x-mangrove`** — Extension namespace containing:
   - `version` — Schema version
-  - `phase` — Implementation phase (currently 1)
+  - `phase` — Implementation phase (currently 2)
   - `implementors` — Mangrove component names that implement this schema
-  - `deviations` — Where current prop names differ from canonical names
+  - `deviations` — Where component prop names differ from canonical names (empty in Phase 2)
   - `notes` — Additional context
 
 ### Custom format annotations
@@ -132,46 +134,17 @@ This is what a compiled schema file looks like. The full source is in
   },
   "required": ["items"],
   "x-mangrove": {
-    "version": "1.0.0",
-    "phase": 1,
+    "version": "2.0.0",
+    "phase": 2,
     "implementors": ["VerticalCard", "HorizontalCard", "BookCard", "HorizontalBookCard", "IconCard"],
-    "deviations": {
-      "items": "Current components use `data` as the prop name for the items array.",
-      "items[].image.src": "Maps to current `imgback` prop.",
-      "items[].image.alt": "Maps to current `imgalt` prop.",
-      "items[].labels": "Current components use `label1` and `label2` as separate strings.",
-      "items[].summary": "Current components use `summaryText` as the prop name."
-    }
+    "deviations": {}
   }
 }
 ```
 
 ---
 
-## Deviations from current implementations
-
-Schemas define **canonical** field names — the target contract. Current component
-props may differ. These deviations will be resolved in Phase 2 when components
-are updated to use canonical field names.
-
-| Canonical (schema) | Current (component) | Affected components |
-|---|---|---|
-| `items` | `data` | All cards |
-| `items[].image.src` | `imgback` | All cards |
-| `items[].image.alt` | `imgalt` | All cards |
-| `items[].labels[]` | `label1`, `label2` | VerticalCard, HorizontalCard, HorizontalBookCard |
-| `items[].summary` | `summaryText` | All cards |
-| `stats[].summary` | `summaryText` | StatsCard |
-| `image.src` / `image.alt` | `imageSrc` / `imageAlt` | QuoteHighlight |
-| `image.src` / `image.alt` | `image` / `imageAlt` | TextCta |
-| `sharingSubject` | `SharingSubject` | ShareButtons |
-| `sharingBody` | `SharingTextBody` | ShareButtons |
-
----
-
 ## Using schemas
-
-> **Before you write mapping code:** Several schemas have deviations from current component props — your data may pass schema validation but the component will use different field names. Check the [Deviations](#deviations-from-current-implementations) table before building a CMS mapping or data pipeline. Until Phase 2, use the current prop names listed in the "Current (component)" column.
 
 ### Pre-built JSON files
 
@@ -192,19 +165,18 @@ schemas/text-cta.schema.json
 Any JSON Schema 2020-12 validator works. Example with [ajv](https://ajv.js.org/):
 
 ```js
-import Ajv2020 from 'ajv/dist/2020.js';
-import addFormats from 'ajv-formats';
+import { createAjv } from '@undrr/undrr-mangrove/schemas/ajv-setup.js';
 import cardSchema from '@undrr/undrr-mangrove/schemas/card.schema.json';
 
-const ajv = new Ajv2020({ strict: false });
-addFormats(ajv);
-ajv.addFormat('html', true);
-
-const validate = ajv.compile(cardSchema);
+const validate = createAjv().compile(cardSchema);
 const valid = validate(myCardData);
 
 if (!valid) console.error(validate.errors);
 ```
+
+`createAjv()` is the shared factory — it configures AJV 2020-12 with `strict: false`,
+`allErrors: true`, `ajv-formats`, and the custom `html` format. Use it instead of
+instantiating AJV directly so all consumers share the same validation behavior.
 
 ### Rebuilding schemas locally
 
@@ -220,7 +192,7 @@ yarn build:schemas --validate # Generate + validate with ajv
 1. Create `schemas/{name}.schema.js` exporting a JSON Schema document
 2. Use helpers from `schemas/helpers.js` for DRY field definitions
 3. Wrap with `schemaDocument()` to get the standard envelope
-4. Document `implementors` and any `deviations` in the `meta` object
+4. Document `implementors` in the `meta` object; implement canonical field names directly (no deviations)
 5. Run `yarn build:schemas --validate` to generate and validate
 6. Add tests in `schemas/__tests__/schemas.test.js`
 7. Update the schema inventory table in this page **and** in `schemas/README.md`
@@ -232,8 +204,10 @@ yarn build:schemas --validate # Generate + validate with ajv
 ```
 schemas/
   helpers.js              Field definition factory functions
+  ajv-setup.js            Shared AJV factory (createAjv) — use in tests and tooling
   *.schema.js             Schema source files (JS modules)
   build.js                Build script (JS → JSON)
+  dist/                   Compiled JSON schemas (gitignored, built by yarn build:schemas)
   __tests__/
     schemas.test.js       Validation tests for all schemas
 ```

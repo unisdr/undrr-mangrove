@@ -7,36 +7,36 @@ import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function HorizontalBookCard({ data, variant = 'primary', className }) {
+export function HorizontalBookCard({ items, variant = 'primary', className }) {
   const variantClass = variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
-      {data.map((item, index) => (
+      {items.map((item, index) => (
         <article key={index} className={cls('mg-card', 'mg-card__hc', 'mg-card-book__hc', variantClass, className)}>
-          {item.imgback && (
+          {item.image?.src && (
             <div className="mg-card__visual">
               <img
-                src={item.imgback}
-                alt={item.imgalt}
+                src={item.image?.src}
+                alt={item.image?.alt}
                 className="mg-card__image"
               />
             </div>
           )}
 
           <div className="mg-card__content">
-            {item.label1 && (
+            {item.labels?.length && (
               <div className="mg-card__meta">
                 <a
                   href={item.link}
                   className="mg-card__label mg-card__label--active"
                 >
-                  {item.label1}
+                  {item.labels?.[0]}
                 </a>
                 <a
                   href={item.link}
                   className="mg-card__label mg-card__label--active"
                 >
-                  {item.label2}
+                  {item.labels?.[1]}
                 </a>
               </div>
             )}
@@ -47,7 +47,7 @@ export function HorizontalBookCard({ data, variant = 'primary', className }) {
             <p
               className="mg-card__summary"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(item.summaryText),
+                __html: DOMPurify.sanitize(item.summary),
               }}
             />
             {item.link && (
@@ -61,7 +61,7 @@ export function HorizontalBookCard({ data, variant = 'primary', className }) {
 }
 
 HorizontalBookCard.propTypes = {
-  data: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
   variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
   className: PropTypes.string,
 };

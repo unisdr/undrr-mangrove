@@ -103,17 +103,5 @@ export default schemaDocument({
       'HorizontalBookCard',
       'IconCard',
     ],
-    deviations: {
-      items:
-        'Current components use `data` as the prop name for the items array.',
-      'items[].image':
-        'Current components use `imgback` (URL string) and `imgalt` (string) as flat properties instead of a nested image object.',
-      'items[].image.src': 'Maps to current `imgback` prop.',
-      'items[].image.alt': 'Maps to current `imgalt` prop.',
-      'items[].labels':
-        'Current components use `label1` and `label2` as separate string props instead of an array. IconCard uses a single `label` string.',
-      'items[].summary':
-        'Current components use `summaryText` as the prop name.',
-    },
   },
 });

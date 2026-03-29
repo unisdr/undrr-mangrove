@@ -41,7 +41,7 @@ export function StatsCard({
             label={stat.label}
             value={stat.value}
             bottomLabel={stat.bottomLabel}
-            summaryText={stat.summaryText}
+            summary={stat.summary}
             link={stat.link}
           />
         ))}
@@ -65,7 +65,7 @@ StatsCard.propTypes = {
       /** Label displayed below the value */
       bottomLabel: PropTypes.string,
       /** Optional descriptive text (supports inline HTML links) */
-      summaryText: PropTypes.string,
+      summary: PropTypes.string,
       /** URL to make the entire stat item clickable */
       link: PropTypes.string,
     })

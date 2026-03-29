@@ -4,10 +4,9 @@ Mangrove's **content architecture** defines the structural contracts between dat
 and components — what each component *carries*, independent of how it looks.
 JSON Schema is the mechanism for formalizing and locking those contracts in.
 
-These schema files are Phase 1: a canonical reference spec for each component
-archetype. No existing component props are changed here. Deviations between
-the canonical field names and current prop names are recorded explicitly;
-resolving them is Phase 2.
+These schema files are the authoritative contracts that Mangrove components
+implement against. All component props align to canonical schema field names
+as of Phase 2.
 
 ## Documentation
 
@@ -16,14 +15,16 @@ The full rationale and schema inventory are documented in Storybook:
 
 ## Status
 
-**Phase 1: first step toward a formal content architecture.** Schemas document
-the target data contract. They do not yet drive validation, code generation, or
-contract tests. Existing components may use different field names — deviations are
-documented in each schema's `x-mangrove.deviations` metadata.
+**Phase 2: schemas are enforced contracts.** All implementing components use
+canonical schema field names. Contract tests (`*.contract.test.jsx`) validate
+that schema-valid fixtures render correctly. The `x-mangrove.deviations` map is
+empty for all schemas — no known prop mismatches remain.
 
 See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
-full vision and [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
-for Phase 1 scope.
+full vision, [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
+for Phase 1, and [issue #884](https://github.com/unisdr/undrr-mangrove/issues/884)
+for Phase 2. For upgrading existing integrations, see
+[MIGRATION-SCHEMA-V2.md](../docs/MIGRATION-SCHEMA-V2.md).
 
 ## Quick start
 
@@ -69,13 +70,11 @@ document with these conventions:
   `https://github.com/unisdr/undrr-mangrove/schemas/{name}`
 - **`x-mangrove`**: Extension namespace containing:
   - `version` — Schema version
-  - `phase` — Implementation phase (currently 1)
+  - `phase` — Implementation phase (currently 2)
   - `implementors` — Mangrove component names that implement this schema
-  - `deviations` — Map of canonical field paths to notes about how current
-    component implementations differ. Keys use a **human-readable dot-path
-    notation** (e.g. `items[].image.src`) — this is documentation, not a formal
-    machine-parseable path syntax. Do not write tooling that parses these keys
-    programmatically; treat them as prose labels.
+  - `deviations` — Map of canonical field paths to notes about how component
+    implementations differ. Empty in Phase 2 — all components use canonical
+    field names. If a future deviation is introduced, document it here.
   - `notes` — Additional context about the schema
 
 ### Custom format annotations
@@ -90,34 +89,12 @@ Schemas include both content fields (title, summary, image) and presentation
 attributes (variant, iconColor, backgroundColor). If a consumer needs to
 provide the value to use the component correctly, it is part of the schema.
 
-## Deviation notes
-
-Schemas define **canonical** field names — the target contract. Current
-component props may differ. These deviations are recorded in each schema's
-`x-mangrove.deviations` object and summarized here:
-
-| Canonical (schema) | Current (component) | Affected components |
-|---|---|---|
-| `items` | `data` | All cards |
-| `items[].image.src` | `imgback` | All cards |
-| `items[].image.alt` | `imgalt` | All cards |
-| `items[].labels[]` | `label1`, `label2` | VerticalCard, HorizontalCard, HorizontalBookCard |
-| `items[].summary` | `summaryText` | All cards |
-| `stats[].summary` | `summaryText` | StatsCard |
-| `image.src` / `image.alt` | `imageSrc` / `imageAlt` | QuoteHighlight |
-| `image.src` / `image.alt` | `image` / `imageAlt` | TextCta |
-| `sharingSubject` | `SharingSubject` | ShareButtons |
-| `sharingBody` | `SharingTextBody` | ShareButtons |
-
-These deviations will be resolved in Phase 2 when components are updated to
-use canonical field names.
-
 ## Adding a new schema
 
 1. Create `schemas/{name}.schema.js` exporting a default JSON Schema document
 2. Use helpers from `schemas/helpers.js` for DRY field definitions
 3. Wrap with `schemaDocument()` to get the standard envelope
-4. Document `implementors` and any `deviations` in the `meta` object
+4. Document `implementors` in the `meta` object; omit `deviations` or leave it empty — implement the schema field names directly in the component
 5. Run `yarn build:schemas --validate` to generate and validate
 6. Add tests in `schemas/__tests__/schemas.test.js` (structural + accept/reject cases)
 7. Update the schema inventory table in this README **and** in `stories/Documentation/ContentSchemas.mdx`

@@ -55,7 +55,6 @@ export default schemaDocument({
   },
   meta: {
     implementors: ['Gallery'],
-    deviations: {},
     notes:
       'Gallery also accepts presentation-only props (showThumbnails, ' +
       'thumbnailPosition, showArrows, arrowStyle, showDescription, ' +

@@ -16,7 +16,7 @@ describe('IconCard', () => {
   it('renders title and summary text', () => {
     render(
       <IconCard
-        data={makeData({ summaryText: 'Card description' })}
+        items={makeData({ summary: 'Card description' })}
       />,
     );
 
@@ -30,7 +30,7 @@ describe('IconCard', () => {
 
   it('renders icon span when data item has icon classes', () => {
     const { container } = render(
-      <IconCard data={makeData({ icon: 'mg-icon mg-icon-globe' })} />,
+      <IconCard items={makeData({ icon: 'mg-icon mg-icon-globe' })} />,
     );
 
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
@@ -45,12 +45,11 @@ describe('IconCard', () => {
   // Image rendering
   // --------------------------------------------------
 
-  it('renders image when imgback is set', () => {
+  it('renders image when image.src is set', () => {
     render(
       <IconCard
-        data={makeData({
-          imgback: '/images/photo.jpg',
-          imgalt: 'A photograph',
+        items={makeData({
+          image: { src: '/images/photo.jpg', alt: 'A photograph' },
         })}
       />,
     );
@@ -67,7 +66,7 @@ describe('IconCard', () => {
   it('applies --mg-icon-bg custom property and --colored modifier for iconColor', () => {
     const { container } = render(
       <IconCard
-        data={makeData({ icon: 'mg-icon mg-icon-globe', iconColor: '#f4b8a8' })}
+        items={makeData({ icon: 'mg-icon mg-icon-globe', iconColor: '#f4b8a8' })}
       />,
     );
 
@@ -79,7 +78,7 @@ describe('IconCard', () => {
   it('applies --mg-icon-fg custom property for iconFgColor', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
+        items={makeData({
           icon: 'mg-icon mg-icon-globe',
           iconColor: '#f4b8a8',
           iconFgColor: '#333',
@@ -97,7 +96,7 @@ describe('IconCard', () => {
 
   it('applies --mg-card-border custom property and --bordered modifier for borderColor', () => {
     const { container } = render(
-      <IconCard data={makeData({ borderColor: '#e8963a' })} />,
+      <IconCard items={makeData({ borderColor: '#e8963a' })} />,
     );
 
     const article = container.querySelector('article');
@@ -112,7 +111,7 @@ describe('IconCard', () => {
   it('renders visualLabel inside .mg-card__visual', () => {
     const { container } = render(
       <IconCard
-        data={makeData({ visualLabel: 'Data', icon: 'mg-icon mg-icon-globe' })}
+        items={makeData({ visualLabel: 'Data', icon: 'mg-icon mg-icon-globe' })}
       />,
     );
 
@@ -126,8 +125,8 @@ describe('IconCard', () => {
   it('always renders label inside .mg-card__content regardless of visualLabel', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
-          label: 'Category',
+        items={makeData({
+          labels: ['Category'],
           visualLabel: 'Data',
           icon: 'mg-icon mg-icon-globe',
         })}
@@ -143,8 +142,8 @@ describe('IconCard', () => {
   it('supports both visualLabel and label on the same card', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
-          label: 'Category',
+        items={makeData({
+          labels: ['Category'],
           visualLabel: 'Data',
           icon: 'mg-icon mg-icon-globe',
         })}
@@ -167,7 +166,7 @@ describe('IconCard', () => {
   it('renders screen-reader-only title when srOnlyTitle is true', () => {
     const { container } = render(
       <IconCard
-        data={makeData({
+        items={makeData({
           srOnlyTitle: true,
           link: '/example',
           icon: 'mg-icon mg-icon-globe',
@@ -191,11 +190,11 @@ describe('IconCard', () => {
   it('has no a11y violations', async () => {
     const { container } = render(
       <IconCard
-        data={[
+        items={[
           {
             title: 'Resilience',
             icon: 'mg-icon mg-icon-globe',
-            summaryText: 'Building disaster resilience worldwide.',
+            summary: 'Building disaster resilience worldwide.',
             link: '/resilience',
           },
         ]}
@@ -208,13 +207,13 @@ describe('IconCard', () => {
   it('has no a11y violations with borderColor and iconColor', async () => {
     const { container } = render(
       <IconCard
-        data={[
+        items={[
           {
             title: 'Colored card',
             icon: 'mg-icon mg-icon-globe',
             iconColor: '#f4b8a8',
             borderColor: '#e8963a',
-            summaryText: 'A styled card.',
+            summary: 'A styled card.',
           },
         ]}
       />,

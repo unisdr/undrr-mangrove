@@ -34,7 +34,7 @@ export default {
   component: ShareButtons,
 
   argTypes: {
-    SharingSubject: {
+    sharingSubject: {
       control: {
         type: 'text',
       },
@@ -42,7 +42,7 @@ export default {
       defaultValue: 'Sharing Link',
     },
 
-    SharingTextBody: {
+    sharingBody: {
       control: {
         type: 'text',
       },

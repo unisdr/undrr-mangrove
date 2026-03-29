@@ -1,5 +1,7 @@
+/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 /**
  * QuoteHighlight Component
@@ -11,8 +13,7 @@ const QuoteHighlight = ({
   quote,
   attribution,
   attributionTitle,
-  imageSrc,
-  imageAlt,
+  image,
   backgroundColor = 'light',
   variant = 'line',
   alignment = 'full',
@@ -20,7 +21,7 @@ const QuoteHighlight = ({
   ...props
 }) => {
   const baseClass = 'mg-quote-highlight';
-  const hasImage = !!imageSrc;
+  const hasImage = !!image?.src;
 
   return (
     <section
@@ -32,7 +33,7 @@ const QuoteHighlight = ({
           {typeof quote === 'string' && !quote.includes('<') ? (
             <p>{quote}</p>
           ) : (
-            <span dangerouslySetInnerHTML={{ __html: quote }} />
+            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(quote) }} />
           )}
         </blockquote>
 
@@ -46,8 +47,8 @@ const QuoteHighlight = ({
               {hasImage && (
                 <div className={`${baseClass}__portrait-container`}>
                   <img
-                    src={imageSrc}
-                    alt={imageAlt || `${attribution || 'Quote'} image`}
+                    src={image?.src}
+                    alt={image?.alt ?? `${attribution || 'Quote'} image`}
                     className={`${baseClass}__portrait`}
                   />
                 </div>
@@ -57,13 +58,13 @@ const QuoteHighlight = ({
                   {attribution && (
                     <p
                       className={`${baseClass}__attribution-name`}
-                      dangerouslySetInnerHTML={{ __html: attribution }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(attribution) }}
                     />
                   )}
                   {attributionTitle && (
                     <p
                       className={`${baseClass}__attribution-title`}
-                      dangerouslySetInnerHTML={{ __html: attributionTitle }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(attributionTitle) }}
                     />
                   )}
                 </div>
@@ -76,8 +77,8 @@ const QuoteHighlight = ({
       {variant === 'image' && hasImage && (
         <div className={`${baseClass}__image-container`}>
           <img
-            src={imageSrc}
-            alt={imageAlt || `${attribution || 'Quote'} image`}
+            src={image?.src}
+            alt={image?.alt ?? `${attribution || 'Quote'} image`}
             className={`${baseClass}__image`}
           />
         </div>
@@ -93,10 +94,8 @@ QuoteHighlight.propTypes = {
   attribution: PropTypes.string,
   /** The title or position of the person being quoted */
   attributionTitle: PropTypes.string,
-  /** URL for the image to display */
-  imageSrc: PropTypes.string,
-  /** Alt text for the image */
-  imageAlt: PropTypes.string,
+  /** Image with src and alt */
+  image: PropTypes.shape({ src: PropTypes.string, alt: PropTypes.string }),
   /** Background color variant */
   backgroundColor: PropTypes.oneOf(['light', 'dark', 'bright']),
   /** Component variant: 'line' (with separator line) or 'image' (with image) */

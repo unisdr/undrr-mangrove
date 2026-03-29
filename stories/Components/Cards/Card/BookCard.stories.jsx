@@ -9,9 +9,10 @@ const getCaptionForLocale = locale => {
             contenttile: 'Content tag',
             title: 'Title in large size',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A publication cover',
+            },
           },
         ],
       };
@@ -23,9 +24,10 @@ const getCaptionForLocale = locale => {
             contenttile: 'علامة المحتوى',
             title: 'عنوان بحجم كبير',
             link: 'javascript:void(0)',
-            imgalt: 'غلاف منشور',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'غلاف منشور',
+            },
           },
         ],
       };
@@ -38,9 +40,10 @@ const getCaptionForLocale = locale => {
             title: '投稿のタイトルはここにあり、2行です',
             button: '続きを読む',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A publication cover',
+            },
           },
         ],
       };
@@ -53,9 +56,10 @@ const getCaptionForLocale = locale => {
             title:
               'Book title in normal header size with up to three lines of text',
             link: 'javascript:void(0)',
-            imgalt: 'A publication cover',
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg',
+              alt: 'A publication cover',
+            },
           },
         ],
       };
@@ -90,7 +94,7 @@ export const DefaultBookCard = {
           maxWidth: '200px',
         }}
       >
-        <BookCard data={caption.contentdata} {...args}></BookCard>
+        <BookCard items={caption.contentdata} {...args}></BookCard>
       </div>
     );
   },

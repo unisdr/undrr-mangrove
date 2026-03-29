@@ -28,6 +28,7 @@ export default function megaMenuFromElement(container) {
   if (dataset.logoHref) props.logoHref = dataset.logoHref;
   if (dataset.logoWidth) props.logoWidth = parseInt(dataset.logoWidth, 10);
   if (dataset.logoHeight) props.logoHeight = parseInt(dataset.logoHeight, 10);
+  if (dataset.ariaLabel) props.ariaLabel = dataset.ariaLabel;
 
   // Static menu structure (optional — most consumers provide this via API)
   if (dataset.sections) {

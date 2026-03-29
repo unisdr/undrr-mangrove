@@ -47,8 +47,7 @@ describe('textCtaFromElement', () => {
     expect(props.variant).toBe('tertiary');
     expect(props.backgroundColor).toBe('#2c5f2d');
     expect(props.padding).toBe('4rem 0');
-    expect(props.image).toBe('https://example.com/photo.jpg');
-    expect(props.imageAlt).toBe('A photo');
+    expect(props.image).toEqual({ src: 'https://example.com/photo.jpg', alt: 'A photo' });
     expect(props.centered).toBe(false);
     expect(props.className).toBe('my-custom');
   });
@@ -69,7 +68,6 @@ describe('textCtaFromElement', () => {
     expect(props.backgroundColor).toBeUndefined();
     expect(props.padding).toBeUndefined();
     expect(props.image).toBeUndefined();
-    expect(props.imageAlt).toBe('');
     expect(props.centered).toBe(true);
     expect(props.className).toBeUndefined();
   });

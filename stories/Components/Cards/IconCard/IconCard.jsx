@@ -14,21 +14,20 @@ const cls = (...classes) =>
  * RTL layout is automatic via CSS [dir="rtl"] - use the Storybook locale toolbar.
  *
  * @param {Object} props
- * @param {Array} props.data - Array of card data objects (see data object properties below)
+ * @param {Array} props.items - Array of card data objects (see data object properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
  * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
  *
  * Data object properties:
  * @property {string} icon - Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons
- * @property {string} imgback - Image URL (alternative to icon, matches VerticalCard)
- * @property {string} imgalt - Alt text for image (matches VerticalCard)
+ * @property {Object} image - { src, alt } Image object (alternative to icon)
  * @property {number} iconSize - Width/height of icon in pixels (default: 72)
  * @property {string} imageScale - Scale for icons/images: 'small', 'medium', 'large', or 'full'
- * @property {string} label - Badge or category label text
+ * @property {string[]} labels - Badge or category label text array
  * @property {string} visualLabel - Text label rendered above the icon/image in the visual area
  * @property {string} title - Card heading text (required for accessibility)
  * @property {boolean} srOnlyTitle - Visually hide title but keep for screen readers (for logo cards)
- * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
+ * @property {string} summary - Card body text, HTML supported
  * @property {string} link - URL for card link
  * @property {string} linkText - Text for text link CTA
  * @property {string} iconColor - Background color for the icon badge (CSS color, e.g., "#f4b8a8")
@@ -39,11 +38,11 @@ const cls = (...classes) =>
  */
 /** Renders the icon/image visual for a card item. */
 function renderVisual(item) {
-  if (item.imgback) {
+  if (item.image?.src) {
     return (
       <img
-        src={item.imgback}
-        alt={item.imgalt || ''}
+        src={item.image?.src}
+        alt={item.image?.alt || ''}
         className={cls(
           'mg-card__image',
           item.imageScale && `mg-card__image--${item.imageScale}`
@@ -78,10 +77,10 @@ function renderVisual(item) {
   return null;
 }
 
-export function IconCard({ data, centered = false, variant = 'default' }) {
+export function IconCard({ items, centered = false, variant = 'default' }) {
   return (
     <>
-      {data.map((item, index) => (
+      {items.map((item, index) => (
         <article
           key={item.id || item.title || `icon-card-${index}`}
           className={cls(
@@ -96,7 +95,7 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
           })}
         >
           {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
-          {(item.icon || item.imgback || item.iconColor) && (
+          {(item.icon || item.image?.src || item.iconColor) && (
             <div className="mg-card__visual">
               {item.visualLabel && (
                 <span className="mg-card__visual-label">{item.visualLabel}</span>
@@ -114,9 +113,9 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
           {/* Card Content */}
           <div className="mg-card__content">
             {/* Optional Label/Badge */}
-            {item.label && (
+            {item.labels?.[0] && (
               <div className="mg-card__meta">
-                <span className="mg-card__label">{item.label}</span>
+                <span className="mg-card__label">{item.labels?.[0]}</span>
               </div>
             )}
 
@@ -137,11 +136,11 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
             )}
 
             {/* Summary */}
-            {item.summaryText && (
+            {item.summary && (
               <p
                 className="mg-card__summary"
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(item.summaryText),
+                  __html: DOMPurify.sanitize(item.summary),
                 }}
               />
             )}
@@ -171,16 +170,17 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
 
 IconCard.propTypes = {
   /** Array of card data objects */
-  data: PropTypes.arrayOf(
+  items: PropTypes.arrayOf(
     PropTypes.shape({
       /** Unique identifier for the card */
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       /** Icon class name (e.g., "mg-icon mg-icon-globe") - see Atom/Icons */
       icon: PropTypes.string,
-      /** Image URL (alternative to icon, matches VerticalCard) */
-      imgback: PropTypes.string,
-      /** Alt text for image (matches VerticalCard) */
-      imgalt: PropTypes.string,
+      /** Image object with src and alt */
+      image: PropTypes.shape({
+        src: PropTypes.string,
+        alt: PropTypes.string,
+      }),
       /** Width/height of icon in pixels (ignored when imageScale is set) */
       iconSize: PropTypes.number,
       /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
@@ -191,16 +191,16 @@ IconCard.propTypes = {
       iconFgColor: PropTypes.string,
       /** Border color for the card (CSS color, e.g., "#e8963a") */
       borderColor: PropTypes.string,
-      /** Badge or category label text */
-      label: PropTypes.string,
+      /** Badge or category label text array */
+      labels: PropTypes.arrayOf(PropTypes.string),
       /** Text label rendered above the icon/image in the visual area */
       visualLabel: PropTypes.string,
       /** Card heading text (required for accessibility) */
       title: PropTypes.string.isRequired,
       /** Visually hide title but keep for screen readers (for logo cards) */
       srOnlyTitle: PropTypes.bool,
-      /** Card body text, HTML supported (matches VerticalCard) */
-      summaryText: PropTypes.string,
+      /** Card body text, HTML supported */
+      summary: PropTypes.string,
       /** URL for card link */
       link: PropTypes.string,
       /** Text for text link CTA */

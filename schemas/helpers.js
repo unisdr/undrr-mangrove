@@ -110,8 +110,8 @@ export function schemaDocument({ id, title, description, schema, meta = {} }) {
     title,
     description,
     'x-mangrove': {
-      version: '1.0.0',
-      phase: 1,
+      version: '2.0.0',
+      phase: 2,
       ...meta,
     },
   };

@@ -19,7 +19,7 @@ export default function shareButtonsFromElement(container) {
       mainLabel: dataset.mainLabel || 'Share this',
       onCopy: dataset.onCopyLabel || 'Link copied',
     },
-    SharingSubject: dataset.sharingSubject || 'Sharing Link',
-    SharingTextBody: dataset.sharingBody || '',
+    sharingSubject: dataset.sharingSubject || 'Sharing Link',
+    sharingBody: dataset.sharingBody || '',
   };
 }

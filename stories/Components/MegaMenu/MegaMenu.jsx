@@ -26,6 +26,7 @@
  * @param {string} [logoHref='/'] - Where the logo links to. Defaults to `/`; on multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`)
  * @param {number} [logoWidth] - Optional explicit width for CLS prevention
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
+ * @param {string} [ariaLabel='Main Navigation'] - Accessible label for the navigation landmark
  * @returns {JSX.Element} Rendered MegaMenu component
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -42,6 +43,7 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
+  ariaLabel = 'Main Navigation',
 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
@@ -114,7 +116,7 @@ const MegaMenu = ({
       className="mg-mega-wrapper"
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
-      aria-label="Main Navigation"
+      aria-label={ariaLabel}
     >
       <TopBar
         sections={sections}
@@ -184,6 +186,8 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
+  /** Accessible label for the navigation landmark */
+  ariaLabel: PropTypes.string,
 };
 
 export default MegaMenu;

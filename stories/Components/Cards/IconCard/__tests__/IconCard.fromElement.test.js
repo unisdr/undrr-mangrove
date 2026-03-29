@@ -9,7 +9,7 @@ function makeContainer(attrs = {}) {
 }
 
 const sampleItems = [
-  { icon: 'mg-icon mg-icon-globe', title: 'Global', summaryText: 'Worldwide coverage' },
+  { icon: 'mg-icon mg-icon-globe', title: 'Global', summary: 'Worldwide coverage' },
   { icon: 'mg-icon mg-icon-chart-bar', title: 'Data', link: '/data' },
 ];
 
@@ -19,7 +19,7 @@ describe('iconCardFromElement', () => {
     expect(props).toEqual({
       centered: false,
       variant: 'default',
-      data: [],
+      items: [],
     });
   });
 
@@ -31,7 +31,7 @@ describe('iconCardFromElement', () => {
         variant: 'negative',
       })
     );
-    expect(props.data).toEqual(sampleItems);
+    expect(props.items).toEqual(sampleItems);
     expect(props.centered).toBe(true);
     expect(props.variant).toBe('negative');
   });
@@ -40,7 +40,7 @@ describe('iconCardFromElement', () => {
     const props = iconCardFromElement(
       makeContainer({ items: '{broken' })
     );
-    expect(props.data).toEqual([]);
+    expect(props.items).toEqual([]);
   });
 
   it('treats centered as false when not explicitly "true"', () => {
