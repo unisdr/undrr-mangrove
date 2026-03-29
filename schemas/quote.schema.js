@@ -42,11 +42,5 @@ export default schemaDocument({
   },
   meta: {
     implementors: ['QuoteHighlight'],
-    deviations: {
-      image:
-        'Current component uses flat `imageSrc` (string) and `imageAlt` (string) props instead of a nested image object.',
-      'image.src': 'Maps to current `imageSrc` prop.',
-      'image.alt': 'Maps to current `imageAlt` prop.',
-    },
   },
 });

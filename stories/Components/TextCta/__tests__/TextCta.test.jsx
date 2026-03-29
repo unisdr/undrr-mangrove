@@ -111,7 +111,7 @@ describe('TextCta', () => {
 
   it('adds mg-cta--with-image class when image is set', () => {
     const { container } = render(
-      <TextCta image="https://example.com/photo.jpg" imageAlt="A photo" />,
+      <TextCta image={{ src: 'https://example.com/photo.jpg', alt: 'A photo' }} />,
     );
 
     expect(container.firstChild).toHaveClass('mg-cta--with-image');
@@ -133,7 +133,7 @@ describe('TextCta', () => {
 
   it('does not add mg-cta--centered when image is present', () => {
     const { container } = render(
-      <TextCta centered image="https://example.com/photo.jpg" />,
+      <TextCta centered image={{ src: 'https://example.com/photo.jpg' }} />,
     );
 
     expect(container.firstChild).not.toHaveClass('mg-cta--centered');
@@ -204,8 +204,7 @@ describe('TextCta', () => {
       <TextCta
         headline="Recovery Help Desk"
         buttons={[{ label: 'Learn more', url: '#' }]}
-        image="https://example.com/photo.jpg"
-        imageAlt="Help desk icon"
+        image={{ src: 'https://example.com/photo.jpg', alt: 'Help desk icon' }}
       />,
     );
     expect(await axe(container)).toHaveNoViolations();

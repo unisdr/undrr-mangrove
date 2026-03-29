@@ -75,8 +75,7 @@ describe('QuoteHighlight', () => {
     render(
       <QuoteHighlight
         {...defaultProps}
-        imageSrc="https://example.com/photo.jpg"
-        imageAlt="Author photo"
+        image={{ src: 'https://example.com/photo.jpg', alt: 'Author photo' }}
       />,
     );
     const img = screen.getByAltText('Author photo');
@@ -123,7 +122,7 @@ describe('QuoteHighlight', () => {
     const { container } = render(
       <QuoteHighlight
         {...defaultProps}
-        imageSrc="https://example.com/photo.jpg"
+        image={{ src: 'https://example.com/photo.jpg' }}
       />,
     );
     expect(
@@ -136,8 +135,7 @@ describe('QuoteHighlight', () => {
       <QuoteHighlight
         {...defaultProps}
         variant="image"
-        imageSrc="https://example.com/photo.jpg"
-        imageAlt="Large photo"
+        image={{ src: 'https://example.com/photo.jpg', alt: 'Large photo' }}
       />,
     );
     const images = screen.getAllByAltText('Large photo');

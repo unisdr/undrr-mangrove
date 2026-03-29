@@ -7,19 +7,21 @@ import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function BookCard({ data, variant = 'primary', className }) {
+export function BookCard({ items, variant = 'primary', className }) {
   const variantClass = variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
-      {data.map((item, index) => (
+      {items.map((item, index) => (
         <article key={index} className={cls('mg-card', 'mg-card__vc', 'mg-card__book', variantClass, className)}>
-          <div className="mg-card__visual">
-            <img
-              src={item.imgback}
-              alt={item.imgalt}
-              className="mg-card__image"
-            />
-          </div>
+          {item.image?.src && (
+            <div className="mg-card__visual">
+              <img
+                src={item.image?.src}
+                alt={item.image?.alt}
+                className="mg-card__image"
+              />
+            </div>
+          )}
 
           <div className="mg-card__content">
             <header className="mg-card__title">
@@ -33,7 +35,7 @@ export function BookCard({ data, variant = 'primary', className }) {
 }
 
 BookCard.propTypes = {
-  data: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
   variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
   className: PropTypes.string,
 };

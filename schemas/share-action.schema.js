@@ -32,12 +32,5 @@ export default schemaDocument({
   },
   meta: {
     implementors: ['ShareButtons'],
-    deviations: {
-      sharingSubject:
-        'Current component uses PascalCase `SharingSubject` prop.',
-      sharingBody:
-        'Current component uses PascalCase `SharingTextBody` prop. ' +
-        'Schema renames to `sharingBody` (camelCase, drops redundant "Text").',
-    },
   },
 });

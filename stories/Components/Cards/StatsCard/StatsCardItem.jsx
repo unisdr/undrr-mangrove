@@ -17,7 +17,7 @@ export function StatsCardItem({
   label,
   value,
   bottomLabel,
-  summaryText,
+  summary,
   link,
   className = '',
   ...props
@@ -60,11 +60,11 @@ export function StatsCardItem({
           {bottomLabel}
         </strong>
       )}
-      {summaryText && (
+      {summary && (
         <p
           className={`${baseClass}__summary`}
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(summaryText),
+            __html: DOMPurify.sanitize(summary),
           }}
         />
       )}
@@ -82,7 +82,7 @@ StatsCardItem.propTypes = {
   /** Label displayed below the value */
   bottomLabel: PropTypes.string,
   /** Optional descriptive text (supports inline HTML links) */
-  summaryText: PropTypes.string,
+  summary: PropTypes.string,
   /** URL to make the entire stat item clickable */
   link: PropTypes.string,
   /** Additional CSS class names */

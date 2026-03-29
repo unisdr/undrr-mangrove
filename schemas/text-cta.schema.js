@@ -54,12 +54,5 @@ export default schemaDocument({
   },
   meta: {
     implementors: ['TextCta'],
-    deviations: {
-      image:
-        'Current component uses flat `image` (URL string) and `imageAlt` ' +
-        '(string) props. Schema uses a nested image object with src/alt.',
-      'image.src': 'Maps to current `image` prop (which is a URL string).',
-      'image.alt': 'Maps to current `imageAlt` prop.',
-    },
   },
 });

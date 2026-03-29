@@ -5,86 +5,85 @@ const translations = {
   english: {
     components: {
       title: 'Components',
-      summaryText:
+      summary:
         'Browse all UNDRR components with UX, accessibility, and implementation guidance.',
       linkText: 'Browse components →',
     },
     configuration: {
       title: 'Configuration',
-      summaryText:
+      summary:
         'Learn how to configure and customize components to match your design requirements.',
       linkText: 'View settings →',
     },
     documentation: {
       title: 'Documentation',
-      summaryText:
+      summary:
         'Access comprehensive documentation with examples and best practices.',
       linkText: 'Read docs →',
     },
     getStarted: {
       title: 'Get started',
-      summaryText:
+      summary:
         'Quick start guide to help you begin using the component library.',
       button: 'Start now',
     },
     learnMore: {
       title: 'Learn more',
-      summaryText:
-        'Dive deep into advanced features and customization options.',
+      summary: 'Dive deep into advanced features and customization options.',
       button: 'Explore',
     },
     latestFeatures: {
-      label: 'New',
+      labels: ['New'],
       title: 'Latest features',
-      summaryText:
+      summary:
         'Check out the newest components and improvements to the library.',
       button: 'View features',
     },
     enhanced: {
-      label: 'Updated',
+      labels: ['Updated'],
       title: 'Enhanced performance',
-      summaryText: 'Performance improvements and bug fixes in this release.',
+      summary: 'Performance improvements and bug fixes in this release.',
       button: 'Learn more',
     },
   },
   arabic: {
     components: {
       title: 'المكونات',
-      summaryText:
+      summary:
         'تصفح جميع مكونات UNDRR مع إرشادات تجربة المستخدم وإمكانية الوصول والتنفيذ.',
       linkText: '← تصفح المكونات',
     },
     configuration: {
       title: 'الإعدادات',
-      summaryText:
+      summary:
         'تعرف على كيفية تكوين المكونات وتخصيصها لتتوافق مع متطلبات التصميم الخاصة بك.',
       linkText: '← عرض الإعدادات',
     },
     documentation: {
       title: 'التوثيق',
-      summaryText: 'الوصول إلى وثائق شاملة مع أمثلة وأفضل الممارسات.',
+      summary: 'الوصول إلى وثائق شاملة مع أمثلة وأفضل الممارسات.',
       linkText: '← اقرأ الوثائق',
     },
     getStarted: {
       title: 'ابدأ الآن',
-      summaryText: 'دليل البدء السريع لمساعدتك على البدء في استخدام المكتبة.',
+      summary: 'دليل البدء السريع لمساعدتك على البدء في استخدام المكتبة.',
       button: 'ابدأ الآن',
     },
     learnMore: {
       title: 'اعرف المزيد',
-      summaryText: 'تعمق في الميزات المتقدمة وخيارات التخصيص.',
+      summary: 'تعمق في الميزات المتقدمة وخيارات التخصيص.',
       button: 'استكشف',
     },
     latestFeatures: {
-      label: 'جديد',
+      labels: ['جديد'],
       title: 'أحدث الميزات',
-      summaryText: 'اطلع على أحدث المكونات والتحسينات في المكتبة.',
+      summary: 'اطلع على أحدث المكونات والتحسينات في المكتبة.',
       button: 'عرض الميزات',
     },
     enhanced: {
-      label: 'محدث',
+      labels: ['محدث'],
       title: 'أداء محسن',
-      summaryText: 'تحسينات الأداء وإصلاحات الأخطاء في هذا الإصدار.',
+      summary: 'تحسينات الأداء وإصلاحات الأخطاء في هذا الإصدار.',
       button: 'اعرف المزيد',
     },
   },
@@ -132,12 +131,12 @@ export const Default = {
     return (
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: componentIcon,
             imageScale: 'medium',
             title: content.components.title,
-            summaryText: content.components.summaryText,
+            summary: content.components.summary,
             linkText: content.components.linkText,
             link: '#',
           },
@@ -157,12 +156,12 @@ export const Centered = {
     return (
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: componentIcon,
             imageScale: 'small',
             title: content.getStarted.title,
-            summaryText: content.getStarted.summaryText,
+            summary: content.getStarted.summary,
             button: content.getStarted.button,
             buttonType: 'Primary',
             link: '#',
@@ -183,13 +182,13 @@ export const WithLabel = {
     return (
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: componentIcon,
             imageScale: 'medium',
-            label: content.latestFeatures.label,
+            labels: content.latestFeatures.labels,
             title: content.latestFeatures.title,
-            summaryText: content.latestFeatures.summaryText,
+            summary: content.latestFeatures.summary,
             button: content.latestFeatures.button,
             link: '#',
           },
@@ -210,12 +209,12 @@ export const GridLayout = {
       <div className="mg-grid mg-grid__col-3">
         <IconCard
           centered
-          data={[
+          items={[
             {
               icon: componentIcon,
               imageScale: 'medium',
               title: content.components.title,
-              summaryText: content.components.summaryText,
+              summary: content.components.summary,
               linkText: content.components.linkText,
               link: '#',
             },
@@ -223,12 +222,12 @@ export const GridLayout = {
         />
         <IconCard
           centered
-          data={[
+          items={[
             {
               icon: settingsIcon,
               imageScale: 'medium',
               title: content.configuration.title,
-              summaryText: content.configuration.summaryText,
+              summary: content.configuration.summary,
               linkText: content.configuration.linkText,
               link: '#',
             },
@@ -236,12 +235,12 @@ export const GridLayout = {
         />
         <IconCard
           centered
-          data={[
+          items={[
             {
               icon: bookIcon,
               imageScale: 'medium',
               title: content.documentation.title,
-              summaryText: content.documentation.summaryText,
+              summary: content.documentation.summary,
               linkText: content.documentation.linkText,
               link: '#',
             },
@@ -260,12 +259,12 @@ export const MixedContent = {
       <div className="mg-grid mg-grid__col-3">
         <IconCard
           {...args}
-          data={[
+          items={[
             {
               icon: componentIcon,
               imageScale: 'medium',
               title: content.getStarted.title,
-              summaryText: content.getStarted.summaryText,
+              summary: content.getStarted.summary,
               button: content.getStarted.button,
               buttonType: 'Primary',
               link: '#',
@@ -274,12 +273,12 @@ export const MixedContent = {
         />
         <IconCard
           {...args}
-          data={[
+          items={[
             {
               icon: settingsIcon,
               imageScale: 'medium',
               title: content.configuration.title,
-              summaryText: content.configuration.summaryText,
+              summary: content.configuration.summary,
               linkText: content.configuration.linkText,
               link: '#',
             },
@@ -287,12 +286,12 @@ export const MixedContent = {
         />
         <IconCard
           {...args}
-          data={[
+          items={[
             {
               icon: bookIcon,
               imageScale: 'medium',
               title: content.documentation.title,
-              summaryText: content.documentation.summaryText,
+              summary: content.documentation.summary,
             },
           ]}
         />
@@ -310,15 +309,16 @@ export const WithLogo = {
     <div className="mg-grid mg-grid__col-3">
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
-            imgalt: 'UNDRR logo',
+            image: {
+              src: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
+              alt: 'UNDRR logo',
+            },
             imageScale: 'large',
             title: 'UNDRR',
             srOnlyTitle: true,
-            summaryText:
+            summary:
               'The United Nations Office for Disaster Risk Reduction works to reduce disaster losses in lives and assets.',
             link: '#',
           },
@@ -326,14 +326,16 @@ export const WithLogo = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
-            imgalt: 'IRP logo',
+            image: {
+              src: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+              alt: 'IRP logo',
+            },
             imageScale: 'large',
             title: 'International Recovery Platform',
             srOnlyTitle: true,
-            summaryText:
+            summary:
               'IRP promotes the exchange of knowledge on recovery to strengthen disaster risk reduction.',
             link: '#',
           },
@@ -341,14 +343,16 @@ export const WithLogo = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
-            imgalt: 'PreventionWeb logo',
+            image: {
+              src: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+              alt: 'PreventionWeb logo',
+            },
             imageScale: 'large',
             title: 'PreventionWeb',
             srOnlyTitle: true,
-            summaryText:
+            summary:
               'PreventionWeb is the global knowledge platform for disaster risk reduction and resilience.',
             link: '#',
           },
@@ -369,12 +373,12 @@ export const Negative = {
       <IconCard
         {...args}
         variant="negative"
-        data={[
+        items={[
           {
             icon: componentIcon,
             imageScale: 'medium',
             title: content.components.title,
-            summaryText: content.components.summaryText,
+            summary: content.components.summary,
             linkText: content.components.linkText,
             link: '#',
           },
@@ -406,14 +410,15 @@ export const RealWorldImages = {
     <div className="mg-grid mg-grid__col-4">
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2021-12/Recovery%20Help%20Desk%20Icon_0.png',
-            imgalt: 'Recovery Help Desk',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2021-12/Recovery%20Help%20Desk%20Icon_0.png',
+              alt: 'Recovery Help Desk',
+            },
             imageScale: 'medium',
             title: 'Recovery Help Desk',
-            summaryText:
+            summary:
               'Access resources and guidance for post-disaster recovery planning.',
             linkText: 'Get support →',
             link: '#',
@@ -422,14 +427,15 @@ export const RealWorldImages = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/inline-images/e_sdg_icons-15-125.png',
-            imgalt: 'SDG 15 - Life on Land',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/inline-images/e_sdg_icons-15-125.png',
+              alt: 'SDG 15 - Life on Land',
+            },
             imageScale: 'medium',
             title: 'SDG 15: Life on Land',
-            summaryText:
+            summary:
               'Protect, restore and promote sustainable use of terrestrial ecosystems.',
             linkText: 'Learn more →',
             link: '#',
@@ -438,14 +444,15 @@ export const RealWorldImages = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-12/partnership_11921003.png',
-            imgalt: 'Partnership',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-12/partnership_11921003.png',
+              alt: 'Partnership',
+            },
             imageScale: 'medium',
             title: 'Partnerships',
-            summaryText:
+            summary:
               'Collaborate with organizations worldwide to strengthen resilience.',
             linkText: 'View partners →',
             link: '#',
@@ -454,15 +461,15 @@ export const RealWorldImages = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-12/earth.png',
-            imgalt: 'Earth',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-12/earth.png',
+              alt: 'Earth',
+            },
             imageScale: 'medium',
             title: 'Global Impact',
-            summaryText:
-              'Disaster risk reduction efforts spanning all continents.',
+            summary: 'Disaster risk reduction efforts spanning all continents.',
             linkText: 'Explore →',
             link: '#',
           },
@@ -481,72 +488,72 @@ export const FeatureCards = {
     <div className="mg-grid mg-grid__col-3">
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-chart-bar',
             iconColor: '#f4b8a8',
             title: 'Analytics',
-            summaryText:
+            summary:
               'From data to decisions - analysis that drives multiple DRR applications, including recovery planning and early warning.',
           },
         ]}
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-globe',
             iconColor: '#f4b8a8',
             title: 'Monitoring',
-            summaryText:
+            summary:
               'Continuous monitoring and tracking of hazardous events and their impacts.',
           },
         ]}
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-file-alt',
             iconColor: '#b5d8d8',
             title: 'Data archiving & integration',
-            summaryText:
+            summary:
               'Preserve, connect and enrich your disaster data leveraging exposure, vulnerability and other relevant baseline information.',
           },
         ]}
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-cubes',
             iconColor: '#b5d8d8',
             title: 'Losses and damages overview',
-            summaryText:
+            summary:
               'Analyze losses and damages data per disaster event, per hazard type, per sector, and per geography.',
           },
         ]}
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-lightbulb',
             iconColor: '#f4b8a8',
             title: 'Multi-sector and multi-level disaster data sharing',
-            summaryText:
+            summary:
               'A tool to support data sharing and application across sectors and levels of government.',
           },
         ]}
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-cubes',
             iconColor: '#c0d8e8',
             title: 'Baseline',
-            summaryText:
+            summary:
               'Exposure & vulnerability statistical and geospatial data enabling post-disaster change and impact analysis.',
           },
         ]}
@@ -564,12 +571,12 @@ export const MixedIconTypes = {
     <div className="mg-grid mg-grid__col-3">
       <IconCard
         {...args}
-        data={[
+        items={[
           {
             icon: 'mg-icon mg-icon-globe',
             imageScale: 'medium',
             title: 'Global network',
-            summaryText: 'Using a CSS icon class from the Mangrove icon set.',
+            summary: 'Using a CSS icon class from the Mangrove icon set.',
             linkText: 'View network →',
             link: '#',
           },
@@ -577,14 +584,15 @@ export const MixedIconTypes = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://www.undrr.org/sites/default/files/2025-10/act_icon.svg',
-            imgalt: 'Act icon',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/2025-10/act_icon.svg',
+              alt: 'Act icon',
+            },
             imageScale: 'medium',
             title: 'Take action',
-            summaryText: 'Using an SVG image URL from the CMS.',
+            summary: 'Using an SVG image URL from the CMS.',
             linkText: 'Act now →',
             link: '#',
           },
@@ -592,14 +600,15 @@ export const MixedIconTypes = {
       />
       <IconCard
         {...args}
-        data={[
+        items={[
           {
-            imgback:
-              'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-11/microphone-icon.png',
-            imgalt: 'Microphone',
+            image: {
+              src: 'https://www.undrr.org/sites/default/files/styles/large_no_crop/public/2025-11/microphone-icon.png',
+              alt: 'Microphone',
+            },
             imageScale: 'medium',
             title: 'Media resources',
-            summaryText: 'Using a PNG image URL from the CMS.',
+            summary: 'Using a PNG image URL from the CMS.',
             linkText: 'Press center →',
             link: '#',
           },

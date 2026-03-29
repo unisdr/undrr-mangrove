@@ -7,9 +7,9 @@ export default function iconCardFromElement(container) {
 
   // Data array is required — parse from JSON data attribute
   try {
-    props.data = dataset.items ? JSON.parse(dataset.items) : [];
+    props.items = dataset.items ? JSON.parse(dataset.items) : [];
   } catch {
-    props.data = [];
+    props.items = [];
   }
 
   return props;

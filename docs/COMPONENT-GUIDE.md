@@ -165,6 +165,93 @@ yarn validate-manifest
 
 Run through the [review checklist](REVIEW-CHECKLIST.md) before submitting.
 
+## Schema-first development workflow
+
+If your component maps to one of the content archetypes in `schemas/` (card, statistic, quote, share-action, gallery, text-cta, navigation), follow this workflow so the component stays aligned with the canonical data contract.
+
+### 1. Author the schema
+
+Create or update the relevant `schemas/*.schema.js` using field helpers from `schemas/helpers.js`. Define canonical field names and types. Document any variations between archetypes in the `meta` object.
+
+```js
+// schemas/my-content.schema.js
+import { schemaDocument, textField, imageObject } from './helpers.js';
+
+export default schemaDocument({
+  id: 'my-content',
+  title: 'My content',
+  description: 'Brief description of this content archetype.',
+  schema: {
+    type: 'object',
+    properties: {
+      title: textField('Heading text'),
+      image: imageObject(),
+    },
+    required: ['title'],
+  },
+  meta: {
+    implementors: ['MyComponent'],
+  },
+});
+```
+
+Run `yarn build:schemas --validate` to compile and validate the schema.
+
+### 2. Implement the component
+
+Use the exact field names from the schema as React props. Do not invent alternative names or abbreviations. If the schema says `image.src`, the prop is `image.src` — not `imgSrc`, `imageSrc`, or `img`.
+
+### 3. Write stories
+
+Use schema-valid data fixtures in story `args`. This documents the expected shape and ensures Storybook renders from real-world-compatible data.
+
+```jsx
+export const Default = {
+  args: {
+    title: 'Card title',
+    image: { src: '/img.jpg', alt: 'Description' },
+  },
+};
+```
+
+### 4. Write contract tests
+
+Create `ComponentName.contract.test.jsx` in `__tests__/`. A contract test validates the fixture against the schema with AJV, then renders and asserts that key content appears.
+
+```jsx
+// __tests__/MyComponent.contract.test.jsx
+import { render, screen } from '@testing-library/react';
+import { createAjv } from '../../../../schemas/ajv-setup.js';
+import schema from '../../../../schemas/dist/my-content.schema.json';
+import { MyComponent } from '../MyComponent';
+
+const validate = createAjv().compile(schema);
+
+const fixture = {
+  title: 'Card title',
+  image: { src: '/img.jpg', alt: 'Description' },
+};
+
+describe('MyComponent contract', () => {
+  it('fixture is schema-valid', () => {
+    expect(validate(fixture)).toBe(true);
+  });
+
+  it('renders schema-valid fixture', () => {
+    render(<MyComponent {...fixture} />);
+    expect(screen.getByText('Card title')).toBeInTheDocument();
+  });
+});
+```
+
+### 5. Run validation
+
+```bash
+yarn build:schemas && yarn test
+```
+
+The build step is required first because contract tests import from `schemas/dist/`, which is gitignored and generated at build time.
+
 ## Related documentation
 
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
@@ -173,4 +260,5 @@ Run through the [review checklist](REVIEW-CHECKLIST.md) before submitting.
 - [Hydration guide](HYDRATION.md) — consumer-facing `createHydrator` API and integration examples
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
 - [Writing guidelines](WRITING-SHORT.md) — UX writing standards
+- [Migration guide: schema-aligned props (v2)](MIGRATION-SCHEMA-V2.md) — breaking prop changes and upgrade path
 - [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)
