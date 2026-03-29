@@ -354,6 +354,8 @@ Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight
 
 This pattern works for any component with hydration support. See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, supported components, and how to add hydration to new components.
 
+> **Full-page example:** The [DELTA Resilience homepage on CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) demonstrates a complete integration — vanilla HTML for PageHeader, Hero, IconCard, TextCta, and Footer with React hydration for MegaMenu and SyndicationSearchWidget. No build tooling required.
+
 ### Manual mounting (for components without hydration support)
 
 Components that don't yet export `fromElement` (BarChart, MapComponent, etc.) can be mounted manually with `createRoot`:
@@ -525,6 +527,7 @@ If a `data-mg-*` container stays empty after the page loads, check these items i
 - Explore the component library in the sidebar
 - Use the HTML tab in each component story to copy markup
 - See the [CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) for all available assets
+- See the [DELTA Resilience CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) for a full-page vanilla HTML + hydration example
 - Override CSS variables for theming
 - Consider the [React integration guide](/?path=/docs/getting-started-integration-react-integration--docs) for dynamic applications
 - See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering React components into server-generated containers
