@@ -3253,13 +3253,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-webpack5-compiler-babel@npm:4.0.0":
-  version: 4.0.0
-  resolution: "@storybook/addon-webpack5-compiler-babel@npm:4.0.0"
+"@storybook/addon-webpack5-compiler-babel@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@storybook/addon-webpack5-compiler-babel@npm:4.0.1"
   dependencies:
     "@babel/core": "npm:^7.26.0"
     babel-loader: "npm:^10.0.0"
-  checksum: 10/abe15a1cd3eedc84f51c37d330be3af86bde812fbb5b87061a0355c7e62d54992ae971a50eb6d53104aeecd052370cd02cbb47aef90d6af6f53de3facb8e0a13
+  checksum: 10/c373b2f75a9233768d5954c6abdbd7899385362a5e6a09ba39185b5a3eb4c67399bb5945f142c14391f31cd1c44daa8d286f729d4ceed598a230e1f8e4f1f82d
   languageName: node
   linkType: hard
 
@@ -4230,7 +4230,7 @@ __metadata:
     "@storybook/addon-docs": "npm:^10.3.1"
     "@storybook/addon-links": "npm:10.3.3"
     "@storybook/addon-themes": "npm:^10.3.1"
-    "@storybook/addon-webpack5-compiler-babel": "npm:4.0.0"
+    "@storybook/addon-webpack5-compiler-babel": "npm:4.0.1"
     "@storybook/cli": "npm:10.3.3"
     "@storybook/react": "npm:10.3.3"
     "@storybook/react-webpack5": "npm:10.3.3"
