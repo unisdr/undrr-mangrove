@@ -110,7 +110,7 @@
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "30.3.0",
     "jest-transform-stub": "2.0.0",
-    "mini-css-extract-plugin": "2.10.1",
+    "mini-css-extract-plugin": "2.10.2",
     "path": "0.12.7",
     "postcss-cli": "11.0.1",
     "postcss-loader": "8.2.1",
