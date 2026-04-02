@@ -183,4 +183,16 @@ describe('mgTableOfContentsInit', () => {
     // Should still find headings since they're children of document.body
     expect(toc.querySelectorAll('li a').length).toBeGreaterThan(0);
   });
+
+  it('warns when content selector points to nonexistent element', () => {
+    const { toc } = setupPage({ contentSelector: '.nonexistent' });
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    mgTableOfContentsInit();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('.nonexistent')
+    );
+    // Should still mark as initialized (no retry without clearing flag)
+    expect(toc.dataset.mgTableOfContentsInitialized).toBe('true');
+    warn.mockRestore();
+  });
 });

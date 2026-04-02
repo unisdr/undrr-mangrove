@@ -44,7 +44,6 @@ export function mgTableOfContents(
     tocElement.getAttribute('data-mg-table-of-contents-show-title') !== 'false';
 
   if (showTitle) {
-    const ListComponent = showNumbers ? 'ol' : 'ul';
     const tocHeader = document.createElement('h2');
     tocHeader.textContent =
       tocElement.getAttribute('data-mg-table-of-contents-title') ||
@@ -118,6 +117,10 @@ export function mgTableOfContentsInit(scope) {
 
     if (contentElement) {
       mgTableOfContents(contentElement, tocElement);
+    } else if (contentSelector) {
+      console.warn(
+        `[mg-table-of-contents] Content element not found: "${contentSelector}"`
+      );
     }
   });
 }
