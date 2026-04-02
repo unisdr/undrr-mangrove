@@ -81,16 +81,35 @@ export function mgTableOfContents(
     link.href = `#${heading.id}`;
     link.textContent = heading.textContent;
 
-    // Smooth scroll on click
+    // Smooth scroll on click, with reduced-motion and focus management
     link.addEventListener('click', e => {
-      e.preventDefault();
       const target = document.getElementById(heading.id);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (window.history && window.history.pushState) {
-          window.history.pushState(null, null, `#${heading.id}`);
-        }
+      if (!target) return;
+
+      e.preventDefault();
+
+      const smooth =
+        typeof window.matchMedia !== 'function' ||
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      target.scrollIntoView({
+        behavior: smooth ? 'smooth' : 'auto',
+        block: 'start',
+      });
+
+      // Update URL hash without triggering a second scroll
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, `#${heading.id}`);
       }
+
+      // Move focus to target for keyboard users
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+      target.addEventListener(
+        'blur',
+        () => target.removeAttribute('tabindex'),
+        { once: true }
+      );
     });
 
     listItem.appendChild(link);
