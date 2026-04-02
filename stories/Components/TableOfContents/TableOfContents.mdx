@@ -72,19 +72,27 @@ To use the TableOfContents component in your React application:
    <TableOfContents tocData={tocData} showNumbers={false} />
    ```
 
-#### DOM Scraping
+#### DOM Scraping (auto-init)
 
-It is possible to populate the Table of Contents by scraping a section.
+The TOC can auto-initialize from a `data-mg-table-of-contents` element. Load the
+standalone script from `stories/assets/js/table-of-contents.js` (published to npm
+as `@undrr/undrr-mangrove/js/table-of-contents.js`):
 
-1. Import `stories\Components\TableOfContents\js\TableOfContentsVanillaJs.js`
-
-2. Add your HTML
-
+```html
+<script type="module" src="path/to/table-of-contents.js"></script>
 ```
-<article className="mg-content">
+
+Add your HTML. Use `data-mg-table-of-contents-content` to specify which element
+contains the headings to scan:
+
+```html
+<article class="mg-content">
   <h1 id="section-1">Welcome to the example</h1>
   <p>The above header is excluded as it is the H1</p>
-  <section data-mg-table-of-contents data-mg-table-of-contents-title="Title name can be optionally passed" className="mg-table-of-contents">
+  <section data-mg-table-of-contents
+           data-mg-table-of-contents-content=".mg-content"
+           data-mg-table-of-contents-title="Title name can be optionally passed"
+           class="mg-table-of-contents">
   </section>
   <h2 id="section-2">Section 2</h2>
   <p>Content for section 2...</p>
@@ -99,18 +107,28 @@ It is possible to populate the Table of Contents by scraping a section.
 </article>
 ```
 
-3. Invoke the JS
+The script auto-initializes on `DOMContentLoaded`. For manual control, import the
+function directly:
 
+```js
+import { mgTableOfContents } from 'stories/assets/js/table-of-contents.js';
+
+const contentElement = document.querySelector('.mg-content');
+const tocElement = document.querySelector('[data-mg-table-of-contents]');
+if (contentElement && tocElement) {
+  mgTableOfContents(contentElement, tocElement);
+}
 ```
-useEffect(() => {
-  // Assuming mgTableOfContents is a function that scrapes the content
-  const contentElement = document.querySelector('.mg-content');
-  const tocElement = document.querySelector('[data-mg-table-of-contents]');
-  if (contentElement && tocElement) {
-    mgTableOfContents(contentElement, tocElement);
-  }
-}, []);
-```
+
+**Data attributes:**
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-mg-table-of-contents` | — | Required. Activates the component. |
+| `data-mg-table-of-contents-content` | `document.body` | CSS selector for the content area to scan for headings. |
+| `data-mg-table-of-contents-title` | `"On this page"` | Title text. Set to `"hidden"` for screen-reader-only. |
+| `data-mg-table-of-contents-show-title` | `"true"` | Set to `"false"` to hide the title entirely. |
+| `data-mg-table-of-contents-skip-auto-init` | — | Opt out of auto-init; call `mgTableOfContentsInit()` manually. |
 
 Notes:
 
