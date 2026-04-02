@@ -81,6 +81,18 @@ export function mgTableOfContents(
     link.href = `#${heading.id}`;
     link.textContent = heading.textContent;
 
+    // Smooth scroll on click
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.getElementById(heading.id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, null, `#${heading.id}`);
+        }
+      }
+    });
+
     listItem.appendChild(link);
     tocList.appendChild(listItem);
   });
