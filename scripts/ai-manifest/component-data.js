@@ -43,7 +43,7 @@ export const REQUIRES_REACT = {
   'components-snackbar': 'Snackbar manages auto-dismiss timing and state. Requires React.',
   'components-scrollcontainer': 'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
   'components-buttons-sharebuttons': 'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.',
-  'components-table-of-contents': 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. Requires React.',
+  'components-table-of-contents': 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. React component available, or use the vanilla JS at js/table-of-contents.js with data-mg-table-of-contents.',
 };
 
 // ---------------------------------------------------------------------------

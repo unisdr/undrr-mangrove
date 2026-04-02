@@ -89,11 +89,12 @@ contains the headings to scan:
 <article class="mg-content">
   <h1 id="section-1">Welcome to the example</h1>
   <p>The above header is excluded as it is the H1</p>
-  <section data-mg-table-of-contents
-           data-mg-table-of-contents-content=".mg-content"
-           data-mg-table-of-contents-title="Title name can be optionally passed"
-           class="mg-table-of-contents">
-  </section>
+  <section
+    data-mg-table-of-contents
+    data-mg-table-of-contents-content=".mg-content"
+    data-mg-table-of-contents-title="Title name can be optionally passed"
+    class="mg-table-of-contents"
+  ></section>
   <h2 id="section-2">Section 2</h2>
   <p>Content for section 2...</p>
   <h2 id="section-3">Section 3</h2>
@@ -122,13 +123,13 @@ if (contentElement && tocElement) {
 
 **Data attributes:**
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-mg-table-of-contents` | — | Required. Activates the component. |
-| `data-mg-table-of-contents-content` | `document.body` | CSS selector for the content area to scan for headings. |
-| `data-mg-table-of-contents-title` | `"On this page"` | Title text. Set to `"hidden"` for screen-reader-only. |
-| `data-mg-table-of-contents-show-title` | `"true"` | Set to `"false"` to hide the title entirely. |
-| `data-mg-table-of-contents-skip-auto-init` | — | Opt out of auto-init; call `mgTableOfContentsInit()` manually. |
+| Attribute                                  | Default          | Description                                                    |
+| ------------------------------------------ | ---------------- | -------------------------------------------------------------- |
+| `data-mg-table-of-contents`                | —                | Required. Activates the component.                             |
+| `data-mg-table-of-contents-content`        | `document.body`  | CSS selector for the content area to scan for headings.        |
+| `data-mg-table-of-contents-title`          | `"On this page"` | Title text. Set to `"hidden"` for screen-reader-only.          |
+| `data-mg-table-of-contents-show-title`     | `"true"`         | Set to `"false"` to hide the title entirely.                   |
+| `data-mg-table-of-contents-skip-auto-init` | —                | Opt out of auto-init; call `mgTableOfContentsInit()` manually. |
 
 Notes:
 
@@ -149,6 +150,7 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 
 ## Changelog
 
+- **1.5** — 2026-04-02 ([web-backlog#2739](https://gitlab.com/undrr/web-backlog/-/issues/2739)): Published vanilla JS as standalone asset in `assets/js/table-of-contents.js` with auto-init support and `data-mg-table-of-contents-content` selector
 - **1.4** — 2025-06-17: Fixed anchor links to work in Storybook/React environments (smooth scrolling, prevent full page navigation)
 - **1.3** — 2024-11-15: Support passing the title name for React usage
 - **1.2** — 2024-11-15: Added optional title via `data-mg-table-of-contents-title`; removed excessive CSS; excluded `.mg-u-sr-only` headers
