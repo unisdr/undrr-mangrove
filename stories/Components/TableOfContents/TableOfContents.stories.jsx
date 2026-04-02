@@ -138,15 +138,15 @@ export const ScrapedContent = {
           and trends in reducing disaster risk.
         </p>
         <p>
-          It was established in 2006 and is convened by the United Nations Office
-          for Disaster Risk Reduction (UNDRR). The Global Platform brings
+          It was established in 2006 and is convened by the United Nations
+          Office for Disaster Risk Reduction (UNDRR). The Global Platform brings
           together governments, UN agencies, international organizations, the
           private sector, civil society and other stakeholders.
         </p>
         <p>
-          Participants share experiences and expertise, review the implementation
-          of international agreements on disaster risk reduction, and identify
-          priorities for action at all levels.
+          Participants share experiences and expertise, review the
+          implementation of international agreements on disaster risk reduction,
+          and identify priorities for action at all levels.
         </p>
 
         <h2 id="sendai-framework">The Sendai Framework</h2>
@@ -170,9 +170,7 @@ export const ScrapedContent = {
           reconstruction.
         </p>
 
-        <h2 id="climate-link">
-          Climate change and disaster risk reduction
-        </h2>
+        <h2 id="climate-link">Climate change and disaster risk reduction</h2>
         <p>
           Climate change is a key driver of disaster risk. Rising temperatures,
           changing precipitation patterns, and more frequent extreme weather
@@ -201,9 +199,7 @@ export const ScrapedContent = {
           only collects H2 headings.
         </p>
 
-        <h2 id="sdg-integration">
-          Sustainable Development Goals
-        </h2>
+        <h2 id="sdg-integration">Sustainable Development Goals</h2>
         <p>
           Disaster risk reduction is integral to achieving the Sustainable
           Development Goals. The SDGs recognize that building resilience and
@@ -228,7 +224,8 @@ export const ScrapedContent = {
         <p>
           Future efforts must focus on addressing systemic risk, strengthening
           local-level resilience, leveraging technology and innovation, and
-          ensuring that no one is left behind in disaster risk reduction efforts.
+          ensuring that no one is left behind in disaster risk reduction
+          efforts.
         </p>
       </article>
     );
