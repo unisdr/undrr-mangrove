@@ -75,11 +75,14 @@ To use the TableOfContents component in your React application:
 #### DOM Scraping (auto-init)
 
 The TOC can auto-initialize from a `data-mg-table-of-contents` element. Load the
-standalone script from `stories/assets/js/table-of-contents.js` (published to npm
-as `@undrr/undrr-mangrove/js/table-of-contents.js`):
+standalone script from the UNDRR CDN (or npm as
+`@undrr/undrr-mangrove/js/table-of-contents.js`):
 
 ```html
-<script type="module" src="path/to/table-of-contents.js"></script>
+<script
+  type="module"
+  src="https://assets.undrr.org/static/mangrove/1.4.0/assets/js/table-of-contents.js"
+></script>
 ```
 
 Add your HTML. Use `data-mg-table-of-contents-content` to specify which element
@@ -112,7 +115,7 @@ The script auto-initializes on `DOMContentLoaded`. For manual control, import th
 function directly:
 
 ```js
-import { mgTableOfContents } from 'stories/assets/js/table-of-contents.js';
+import { mgTableOfContents } from 'https://assets.undrr.org/static/mangrove/1.4.0/assets/js/table-of-contents.js';
 
 const contentElement = document.querySelector('.mg-content');
 const tocElement = document.querySelector('[data-mg-table-of-contents]');
