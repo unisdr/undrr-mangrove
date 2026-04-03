@@ -118,7 +118,7 @@ The `mg-icon--multicolor` modifier switches from `mask-image` (single-color silh
 - Definitions compile into a standalone `mangrove-icons.css` file, shared across all themes (not duplicated per theme).
 - The icon font (`mangrove-icon-set`) is still loaded as a fallback for `fa-*` selectors. It will be removed in a future release once all consumers migrate to `mg-icon-*` (see [#906](https://github.com/unisdr/undrr-mangrove/issues/906) phases 3-4).
 - Windows High Contrast Mode is handled via `forced-color-adjust: none` and a `@media (forced-colors: active)` fallback that sets `background-color: CanvasText`.
-- `mask-image` requires Chrome 120+, Firefox 53+, Safari 15.4+, Edge 120+. CSS custom properties (`var()`) have wider support, so they add no additional browser requirement.
+- `mask-image` requires Chrome 120+, Firefox 53+, Safari 15.4+, Edge 120+. CSS custom properties (`var()`) have wider support, so they add no additional browser requirement. See [browser support](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-browser-support--docs) for the full baseline.
 
 ### Adding a new icon
 
