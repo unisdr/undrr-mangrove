@@ -29,6 +29,7 @@ const svgoConfig = {
     'preset-default',
     'removeDimensions',
     'sortAttrs',
+    { name: 'removeAttrs', params: { attrs: ['class'] } },
   ],
 };
 

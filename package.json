@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build:icons": "node scripts/icon-build.cjs",
-    "build": "NODE_ENV=production yarn run build:icons && yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js",
+    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js",
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
     "build:analyze": "ANALYZE=true NODE_ENV=production webpack --progress",

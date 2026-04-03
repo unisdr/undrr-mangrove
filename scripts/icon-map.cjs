@@ -57,11 +57,19 @@ module.exports = {
   'angle-circled-right': LUCIDE('circle-chevron-right'),
   'menu': LUCIDE('menu'),
 
+  // Legacy aliases — preserve backward compat with old mg-icon-* names
+  'close': LUCIDE('x'),                     // alias for times
+  'copy': LUCIDE('copy'),                   // alias for clone
+  'arrow-left': LUCIDE('arrow-left'),       // alias for left
+  'arrow-right': LUCIDE('arrow-right'),     // alias for right
+  'hamburger': LUCIDE('menu'),              // alias for menu
+  'calendar': LUCIDE('calendar-days'),      // alias for calendar-alt
+
   // Drupal-needed icons (not in current Mangrove set, but referenced in templates)
   'exclamation-triangle': LUCIDE('triangle-alert'),
   'circle-plus': LUCIDE('circle-plus'),
   'user-circle': LUCIDE('circle-user'),
-  'user-tag': LUCIDE('user-check'),
+  'user-tag': LUCIDE('user-pen'),
   'sign-out-alt': LUCIDE('log-out'),
 
   // -------------------------------------------------------------------------
@@ -75,6 +83,7 @@ module.exports = {
   // -------------------------------------------------------------------------
   'facebook': CUSTOM('facebook'),
   'x-social': CUSTOM('x-social'),
+  'twitter': CUSTOM('x-social'),            // legacy alias for x-social
   'linkedin': CUSTOM('linkedin'),
   'youtube': CUSTOM('youtube'),
   'flickr': CUSTOM('flickr'),

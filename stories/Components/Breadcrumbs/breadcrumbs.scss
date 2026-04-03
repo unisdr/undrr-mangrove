@@ -79,6 +79,14 @@
   }
 }
 
+// Forced-colors mode: white variant chevrons could map to Canvas (background)
+// and become invisible. Force CanvasText for visibility.
+@media (forced-colors: active) {
+  .mg-breadcrumb.mg-breadcrumb--white li + li:before {
+    border-color: CanvasText;
+  }
+}
+
 [dir="rtl"] {
   .mg-breadcrumb {
     padding: 0;

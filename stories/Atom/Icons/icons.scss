@@ -17,10 +17,13 @@
   font-family: FontAwesome;
   font-weight: normal;
   src:
-    url("#{$mgIconFontPath}/mangrove-icon-set.ttf") format("ttf"),
-    url("#{$mgIconFontPath}/mangrove-icon-set.woff2") format("woff2");
+    url("#{$mgIconFontPath}/mangrove-icon-set.woff2") format("woff2"),
+    url("#{$mgIconFontPath}/mangrove-icon-set.ttf") format("truetype");
 }
 
+// Legacy font path: applies to fa-* selectors and to .mg-icon elements
+// that do NOT have an mg-icon-* class (i.e. using fa-* names).
+.mg-icon:not([class*="mg-icon-"]),
 .fa-before:before,
 .fab,
 .fas,
@@ -90,13 +93,15 @@
 .fa-menu:before { content: "\f0c9"; }
 
 // Mask-image icon system
+// Only applies when an mg-icon-* class provides the mask-image.
+// Elements with .mg-icon but only fa-* names fall through to the font path above.
 
 .mg-icon {
-  // Render icons via mask-image on ::before. The SVG acts as a stencil;
-  // background-color: currentColor fills the visible area, so the CSS
-  // color property controls icon color just like the font did.
   display: inline-block;
   vertical-align: -0.125em;
+}
+
+.mg-icon[class*="mg-icon-"] {
   forced-color-adjust: none;
 
   &::before {
@@ -118,7 +123,7 @@
 // which makes mask-image icons invisible. Force CanvasText so the icon
 // remains visible in forced-colors mode.
 @media (forced-colors: active) {
-  .mg-icon::before {
+  .mg-icon[class*="mg-icon-"]::before {
     background-color: CanvasText;
   }
 }

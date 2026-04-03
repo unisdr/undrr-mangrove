@@ -18,7 +18,7 @@ export default {
 const sourceBadgeStyle = {
   lucide: { backgroundColor: '#e8f4e8', color: '#2d6a2e' },
   ocha: { backgroundColor: '#e0eef8', color: '#1a5276' },
-  custom: { backgroundColor: '#fef3e2', color: '#8a6d3b' },
+  custom: { backgroundColor: '#fef3e2', color: '#7a5d2b' },
 };
 
 const SourceBadge = ({ source }) => (
