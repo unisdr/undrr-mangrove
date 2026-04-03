@@ -20,8 +20,9 @@ CLAUDE.md
 CONTRIBUTING_ISSUES.md
 .github/copilot-instructions.md
 
-# Auto-generated icon definitions (regenerate with yarn build:icons)
-stories/Atom/Icons/_icon-definitions.scss
+# Auto-generated icon definitions — tracked in git so npm/Drupal consumers
+# can use the SCSS source without running build:icons first.
+# Regenerate with: yarn build:icons
 
 # Ignore npm's package lock, we use yarn
 package-lock.json
