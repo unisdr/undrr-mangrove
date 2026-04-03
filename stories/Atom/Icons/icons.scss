@@ -141,3 +141,25 @@
 .mg-icon--xl {
   font-size: 2em;
 }
+
+// Icon color modifiers — use theme design tokens so colors adapt per theme.
+
+.mg-icon--primary {
+  color: $mg-color-interactive;
+}
+
+.mg-icon--active {
+  color: $mg-color-interactive-active;
+}
+
+.mg-icon--danger {
+  color: $mg-color-red-800;
+}
+
+.mg-icon--muted {
+  color: $mg-color-neutral-500;
+}
+
+.mg-icon--white {
+  color: $mg-color-white;
+}
