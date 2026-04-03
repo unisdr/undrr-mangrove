@@ -110,9 +110,11 @@
     width: 1em;
     height: 1em;
     background-color: currentColor;
+    mask-image: var(--mg-icon-svg);
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
+    -webkit-mask-image: var(--mg-icon-svg);
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
@@ -126,6 +128,19 @@
   .mg-icon[class*="mg-icon-"]::before {
     background-color: CanvasText;
   }
+}
+
+// Multi-color modifier: renders the SVG with its original colors instead of
+// using currentColor through a mask. The mask-image is repurposed as a
+// background-image, so fill/stroke colors from the SVG are preserved.
+.mg-icon--multicolor[class*="mg-icon-"]::before {
+  background-color: transparent;
+  background-image: var(--mg-icon-svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 // Icon size modifiers

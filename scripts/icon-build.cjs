@@ -74,8 +74,7 @@ function buildIconDefinitions() {
 
     rules.push(
       `.mg-icon-${name}::before {\n` +
-      `  mask-image: ${dataUri};\n` +
-      `  -webkit-mask-image: ${dataUri};\n` +
+      `  --mg-icon-svg: ${dataUri};\n` +
       `}`
     );
   }
