@@ -7,6 +7,9 @@
  * URL-encodes them, and writes SCSS mask-image rules to
  * stories/Atom/Icons/_icon-definitions.scss.
  *
+ * Part of the icon font → CSS mask-image migration.
+ * See: https://github.com/unisdr/undrr-mangrove/issues/906
+ *
  * Usage:  node scripts/icon-build.cjs
  *
  * The generated file is NOT imported by default — phase 2 will wire it in.

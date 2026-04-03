@@ -1,13 +1,16 @@
 /**
  * Icon mapping: mg-icon-* name → SVG source path.
  *
+ * Part of the icon font → CSS mask-image migration.
+ * See: https://github.com/unisdr/undrr-mangrove/issues/906
+ *
  * Three source pools:
  *   - Lucide (node_modules/lucide-static/icons/)  — general UI icons
  *   - OCHA  (stories/assets/icons/ocha/)           — humanitarian/DRR domain icons
  *   - Custom (stories/assets/icons/custom/)         — brand logos, UNDRR-specific
  *
- * The build script (build-icons.js) reads this map, optimises each SVG with
- * SVGO, URL-encodes it, and writes mask-image rules to _icon-definitions.scss.
+ * icon-build.cjs reads this map, optimises each SVG with SVGO, URL-encodes
+ * it, and writes mask-image rules to _icon-definitions.scss.
  */
 
 const path = require('path');
