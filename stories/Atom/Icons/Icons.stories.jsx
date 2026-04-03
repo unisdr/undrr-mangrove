@@ -24,7 +24,10 @@ const sourceBadgeStyle = {
 const SourceBadge = ({ source }) => (
   <code
     style={{
-      ...sourceBadgeStyle[source],
+      ...(sourceBadgeStyle[source] || {
+        backgroundColor: '#f0f0f0',
+        color: '#333',
+      }),
       padding: '2px 6px',
       borderRadius: '3px',
       fontSize: '0.75em',

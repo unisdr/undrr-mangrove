@@ -83,6 +83,8 @@ function buildIconDefinitions() {
 
     rules.push(
       `.mg-icon-${name}::before {\n` +
+      `  content: "";\n` +
+      `  background-color: currentColor;\n` +
       `  --mg-icon-svg: ${dataUri};\n` +
       `}`
     );

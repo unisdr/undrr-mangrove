@@ -21,9 +21,11 @@
     url("#{$mgIconFontPath}/mangrove-icon-set.ttf") format("truetype");
 }
 
-// Legacy font path: applies to fa-* selectors and to .mg-icon elements
-// that do NOT have an mg-icon-* class (i.e. using fa-* names).
-.mg-icon:not([class*="mg-icon-"]),
+// Font-family applies to .mg-icon unconditionally. For mask-image icons this
+// is harmless (content: "" doesn't use the font). For fa-* icons this is
+// required for glyph rendering. This avoids the [class*="mg-icon-"] selector
+// which falsely matches BEM modifiers like mg-icon--lg.
+.mg-icon,
 .fa-before:before,
 .fab,
 .fas,
@@ -93,51 +95,45 @@
 .fa-menu:before { content: "\f0c9"; }
 
 // Mask-image icon system
-// Only applies when an mg-icon-* class provides the mask-image.
-// Elements with .mg-icon but only fa-* names fall through to the font path above.
-// [class*="mg-icon-"] also matches BEM modifiers like mg-icon--sm because the
-// substring "mg-icon-" appears in "mg-icon--sm". This is safe because modifiers
-// are always used alongside an icon name class (e.g., "mg-icon mg-icon-globe mg-icon--lg").
-// Using a size modifier alone without an icon name is not supported.
+// The mask-image rendering is activated per-icon by the generated rules in
+// _icon-definitions.scss. Each icon rule sets content: "", background-color,
+// and --mg-icon-svg. The base .mg-icon::before only has the shared mask
+// properties — these are harmless on their own (no content = nothing renders),
+// so font-based fa-* icons are unaffected even when size modifiers are present.
 
 .mg-icon {
   display: inline-block;
   vertical-align: -0.125em;
+  forced-color-adjust: none;
 }
 
-.mg-icon[class*="mg-icon-"] {
-  forced-color-adjust: none;
-
-  &::before {
-    content: "";
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-color: currentColor;
-    mask-image: var(--mg-icon-svg);
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-image: var(--mg-icon-svg);
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-  }
+.mg-icon::before {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  mask-image: var(--mg-icon-svg);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: var(--mg-icon-svg);
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
 }
 
 // Windows High Contrast Mode: the browser overrides background-color,
-// which makes mask-image icons invisible. Force CanvasText so the icon
-// remains visible in forced-colors mode.
+// which makes mask-image icons invisible. The forced-color-adjust: none
+// on .mg-icon prevents this. As a complementary measure, explicitly set
+// CanvasText in forced-colors mode for browsers with partial support.
 @media (forced-colors: active) {
-  .mg-icon[class*="mg-icon-"]::before {
+  .mg-icon::before {
     background-color: CanvasText;
   }
 }
 
 // Multi-color modifier: renders the SVG with its original colors instead of
-// using currentColor through a mask. The mask-image is repurposed as a
-// background-image, so fill/stroke colors from the SVG are preserved.
-.mg-icon--multicolor[class*="mg-icon-"]::before {
+// using currentColor through a mask.
+.mg-icon--multicolor::before {
   background-color: transparent;
   background-image: var(--mg-icon-svg);
   background-size: contain;
@@ -160,4 +156,3 @@
 .mg-icon--xl {
   font-size: 2em;
 }
-
