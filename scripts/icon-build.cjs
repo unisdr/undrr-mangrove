@@ -7,12 +7,12 @@
  * URL-encodes them, and writes SCSS mask-image rules to
  * stories/Atom/Icons/_icon-definitions.scss.
  *
+ * The generated file is imported by stories/Atom/Icons/icons.scss.
+ *
  * Part of the icon font → CSS mask-image migration.
  * See: https://github.com/unisdr/undrr-mangrove/issues/906
  *
  * Usage:  node scripts/icon-build.cjs
- *
- * The generated file is NOT imported by default — phase 2 will wire it in.
  */
 
 const fs = require('fs');
@@ -24,6 +24,7 @@ const OUTPUT = path.resolve(__dirname, '../stories/Atom/Icons/_icon-definitions.
 
 // SVGO config: strip metadata, remove dimensions (we size via CSS),
 // keep viewBox, inline styles → attributes for cleaner output.
+// SVGs must have a viewBox for mask-size: contain to work correctly.
 const svgoConfig = {
   plugins: [
     'preset-default',
@@ -36,6 +37,8 @@ const svgoConfig = {
 function encodeSvg(svgString) {
   // Minimal URI encoding that keeps the data URI readable and compact.
   // Encodes only the characters that break url() in CSS.
+  // Note: double quotes are replaced with single quotes because the
+  // outer CSS delimiter is url("..."). SVG attributes accept either style.
   return svgString
     .replace(/\n/g, '')
     .replace(/\r/g, '')
@@ -64,6 +67,7 @@ function buildIconDefinitions() {
   }
 
   const rules = [];
+  const warnings = [];
 
   for (const name of names) {
     const svgPath = path.resolve(iconMap[name]);
@@ -72,11 +76,20 @@ function buildIconDefinitions() {
     const encoded = encodeSvg(optimised.data);
     const dataUri = `url("data:image/svg+xml,${encoded}")`;
 
+    // Warn if viewBox is missing — icon won't scale correctly via mask-size: contain.
+    if (!optimised.data.includes('viewBox')) {
+      warnings.push(`  mg-icon-${name}: missing viewBox (icon may not scale correctly)`);
+    }
+
     rules.push(
       `.mg-icon-${name}::before {\n` +
       `  --mg-icon-svg: ${dataUri};\n` +
       `}`
     );
+  }
+
+  if (warnings.length > 0) {
+    console.warn('build-icons: warnings:\n' + warnings.join('\n'));
   }
 
   const header =
@@ -86,7 +99,13 @@ function buildIconDefinitions() {
 
   const output = header + '\n' + rules.join('\n\n') + '\n';
 
-  // Ensure output directory exists.
+  // Skip write if content is unchanged (avoids triggering file watchers).
+  const existing = fs.existsSync(OUTPUT) ? fs.readFileSync(OUTPUT, 'utf8') : '';
+  if (existing === output) {
+    console.log(`build-icons: ${names.length} icons, no changes`);
+    return;
+  }
+
   fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
   fs.writeFileSync(OUTPUT, output, 'utf8');
 

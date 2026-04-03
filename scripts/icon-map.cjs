@@ -27,7 +27,6 @@ module.exports = {
   'search': LUCIDE('search'),
   'calendar-alt': LUCIDE('calendar-days'),
   'chart-bar': LUCIDE('bar-chart-3'),
-  'bar-chart': LUCIDE('bar-chart-3'),           // alias for chart-bar
   'envelope': LUCIDE('mail'),
   'newspaper': LUCIDE('newspaper'),
   'building': LUCIDE('building-2'),
@@ -56,8 +55,13 @@ module.exports = {
   'angle-circled-left': LUCIDE('circle-chevron-left'),
   'angle-circled-right': LUCIDE('circle-chevron-right'),
   'menu': LUCIDE('menu'),
+  'info-circle': LUCIDE('info'),
+  'handshake': LUCIDE('handshake'),
+  'map': LUCIDE('map'),
 
-  // Legacy aliases — preserve backward compat with old mg-icon-* names
+  // Legacy aliases — preserve backward compat with old mg-icon-* names.
+  // Paths are relative to the project root. Run via yarn build:icons.
+  'bar-chart': LUCIDE('bar-chart-3'),           // alias for chart-bar
   'close': LUCIDE('x'),                     // alias for times
   'copy': LUCIDE('copy'),                   // alias for clone
   'arrow-left': LUCIDE('arrow-left'),       // alias for left

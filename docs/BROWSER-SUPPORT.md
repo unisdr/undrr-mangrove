@@ -35,7 +35,7 @@ Some Mangrove features require relatively modern CSS. The minimum browser versio
 
 ## Why we don't support older browsers
 
-End-of-life browsers are active security risks. Browsers that no longer receive updates accumulate unpatched vulnerabilities that are publicly documented in CVE databases. Maintaining workarounds for these browsers would mean shipping extra code to the vast majority of users who are on current browsers, while giving a false sense of compatibility to the small number of users on insecure software. Our support policy encourages users and organisations to stay on supported, patched browser versions.
+End-of-life browsers are active security risks. Browsers that no longer receive updates accumulate unpatched vulnerabilities that are publicly documented in CVE databases. Maintaining workarounds for these browsers would mean shipping extra code to the majority of users who are on current browsers, while offering incomplete compatibility to users on software that may have known security vulnerabilities. We recognise that some users, particularly in humanitarian contexts, may have limited access to updated devices — our support policy aims to encourage organisations to keep software current where possible, and to be transparent about what we test against.
 
 ## Screen width
 

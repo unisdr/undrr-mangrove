@@ -95,6 +95,10 @@
 // Mask-image icon system
 // Only applies when an mg-icon-* class provides the mask-image.
 // Elements with .mg-icon but only fa-* names fall through to the font path above.
+// [class*="mg-icon-"] also matches BEM modifiers like mg-icon--sm because the
+// substring "mg-icon-" appears in "mg-icon--sm". This is safe because modifiers
+// are always used alongside an icon name class (e.g., "mg-icon mg-icon-globe mg-icon--lg").
+// Using a size modifier alone without an icon name is not supported.
 
 .mg-icon {
   display: inline-block;
