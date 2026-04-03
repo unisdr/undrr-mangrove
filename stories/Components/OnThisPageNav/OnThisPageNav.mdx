@@ -147,7 +147,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 </nav>
 
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/testing/static/mangrove/latest/assets/js/on-this-page-nav.js"></script>
+<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.0/js/on-this-page-nav.js"></script>
 ```
 
 ## Skipping auto-initialization
@@ -162,7 +162,7 @@ Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init. Th
 </nav>
 
 <script type="module">
-  import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/latest/assets/js/on-this-page-nav.js';
+  import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/on-this-page-nav.js';
   // Initialize after other setup is complete
   mgOnThisPageNav([document.querySelector('[data-mg-on-this-page-nav-skip-auto-init]')]);
 </script>
