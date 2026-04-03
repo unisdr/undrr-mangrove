@@ -90,6 +90,18 @@ Icons use `currentColor`, so they respond to any method of setting `color`:
 <span class="mg-icon mg-icon-facebook" style="color: #1877f2"></span>
 ```
 
+**Multi-color** — by default icons are single-color (the mask technique fills everything with `currentColor`). Add `mg-icon--multicolor` to render the SVG with its original fill/stroke colors preserved:
+
+```html
+<!-- Single-color (default) — SVG rendered as currentColor silhouette -->
+<span class="mg-icon mg-icon-sdg-wheel"></span>
+
+<!-- Multi-color — SVG rendered with its original colors -->
+<span class="mg-icon mg-icon-sdg-wheel mg-icon--multicolor"></span>
+```
+
+This is useful for logos, badges, or any icon that needs more than one color. The SVG source must contain explicit color values (not `currentColor`) for multi-color to work.
+
 <Canvas of={IconsStories.ColoredIcons} meta={IconsStories} />
 
 ## Technical notes

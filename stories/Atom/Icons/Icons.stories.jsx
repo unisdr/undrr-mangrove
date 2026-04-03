@@ -238,6 +238,30 @@ export const ColoredIcons = {
           <Icon name="earthquake" size="xl" style={{ color: '#e4710b' }} />
         </div>
       </div>
+      <div>
+        <h4 style={{ margin: '0 0 0.5rem' }}>
+          Multi-color (<code>mg-icon--multicolor</code>)
+        </h4>
+        <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
+          By default icons are single-color (via mask). Add{' '}
+          <code>mg-icon--multicolor</code> to render the SVG with its original
+          colors instead.
+        </p>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Icon name="sdg-wheel" size="xl" />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              Default (single-color)
+            </p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Icon name="sdg-wheel" size="xl" className="mg-icon--multicolor" />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <code>mg-icon--multicolor</code>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   ),
   name: 'Colored icons',

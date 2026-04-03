@@ -43,6 +43,7 @@
     { "name": "linkedin", "label": "LinkedIn, Social Media", "source": "custom" },
     { "name": "youtube", "label": "YouTube, Video, Media", "source": "custom" },
     { "name": "flickr", "label": "Flickr, Photo Sharing", "source": "custom" },
-    { "name": "earthquake", "label": "Earthquake, Disaster, Seismic", "source": "ocha" }
+    { "name": "earthquake", "label": "Earthquake, Disaster, Seismic", "source": "ocha" },
+    { "name": "sdg-wheel", "label": "SDG Wheel, Sustainable Development Goals", "source": "custom" }
   ]
 }

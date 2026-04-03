@@ -87,4 +87,5 @@ module.exports = {
   'linkedin': CUSTOM('linkedin'),
   'youtube': CUSTOM('youtube'),
   'flickr': CUSTOM('flickr'),
+  'sdg-wheel': CUSTOM('sdg-wheel'),
 };
