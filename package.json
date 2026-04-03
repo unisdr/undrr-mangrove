@@ -8,7 +8,7 @@
     ".": "./src/index.js"
   },
   "scripts": {
-    "build:icons": "node scripts/build-icons.cjs",
+    "build:icons": "node scripts/icon-build.cjs",
     "build": "NODE_ENV=production yarn run build:icons && yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js",
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
