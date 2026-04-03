@@ -72,7 +72,7 @@ Tabs are vanilla JavaScript. No React, no build step, just HTML and a script imp
 Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) lists all themes).
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css" />
 ```
 
 #### 2. Include the JavaScript
@@ -81,7 +81,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 ```html
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js"></script>
+<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.1/js/tabs.js"></script>
 ```
 
 The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so `mgTabs()` runs after the DOM is available.
@@ -90,7 +90,7 @@ For manual or dynamic initialization, import the function:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.1/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -237,7 +237,7 @@ Add `data-mg-js-tabs-skip-auto-init` to skip a container during auto-init. This 
 </article>
 
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.1/js/tabs.js';
   // Initialize after other setup is complete
   mgTabs([document.querySelector('[data-mg-js-tabs-skip-auto-init]')]);
 </script>
