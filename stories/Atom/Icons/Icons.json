@@ -145,6 +145,10 @@
       "label": "Circle left arrow"
     },
     {
+      "name": "rss",
+      "label": "RSS, Feed, Subscribe"
+    },
+    {
       "name": "menu",
       "label": "Menu, Hamburger"
     }
