@@ -63,19 +63,32 @@ Legacy `fa-*` classes still work via the icon font fallback. New code should use
 <span class="mg-icon mg-icon-globe mg-icon--xl"></span>  <!-- 2em -->
 ```
 
-### Color modifiers
+### Coloring
 
-Theme-aware color modifiers that adapt when the active theme changes:
+Icons use `currentColor`, so they respond to any method of setting `color`:
+
+**Color utility classes** — the existing `mg-u-color--*` utilities work directly on icons:
 
 ```html
-<span class="mg-icon mg-icon-globe mg-icon--primary"></span>  <!-- interactive color -->
-<span class="mg-icon mg-icon-search mg-icon--active"></span>   <!-- interactive active -->
-<span class="mg-icon mg-icon-times mg-icon--danger"></span>    <!-- red/alert -->
-<span class="mg-icon mg-icon-times mg-icon--muted"></span>     <!-- neutral/disabled -->
-<span class="mg-icon mg-icon-power-off mg-icon--white"></span> <!-- white (for dark backgrounds) -->
+<span class="mg-icon mg-icon-globe mg-u-color--interactive"></span>
+<span class="mg-icon mg-icon-times mg-u-color--red-800"></span>
+<span class="mg-icon mg-icon-power-off mg-u-color--white"></span>
 ```
 
-Icons also inherit `color` from their parent element, or you can set it via inline style for one-off colors (e.g. brand logos).
+**Parent inheritance** — icons inside a colored element inherit that color:
+
+```html
+<div class="mg-u-color--interactive">
+  <span class="mg-icon mg-icon-globe"></span>
+  <span class="mg-icon mg-icon-search"></span>
+</div>
+```
+
+**Inline style** — for one-off colors (e.g. brand logos):
+
+```html
+<span class="mg-icon mg-icon-facebook" style="color: #1877f2"></span>
+```
 
 <Canvas of={IconsStories.ColoredIcons} meta={IconsStories} />
 
