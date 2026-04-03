@@ -78,9 +78,39 @@ module.exports = {
   'sign-out-alt': LUCIDE('log-out'),
 
   // -------------------------------------------------------------------------
-  // OCHA — humanitarian/DRR domain icons
+  // OCHA — humanitarian/DRR domain icons (curated subset)
+  // Full set: https://brand.unocha.org/d/xEPytAUjC3sH/icons#/-/humanitarian-icons/search-icons
+  // Source repo: https://github.com/rodekruis/OCHA-Humanitarian-Icons
   // -------------------------------------------------------------------------
+
+  // Natural hazards
   'earthquake': OCHA('earthquake'),
+  'tsunami': OCHA('tsunami'),
+  'flood': OCHA('flood'),
+  'flash-flood': OCHA('flash-flood'),
+  'cyclone': OCHA('cyclone'),
+  'drought': OCHA('drought'),
+  'volcano': OCHA('volcano'),
+  'landslide': OCHA('landslide-mudslide'),
+  'storm-surge': OCHA('storm-surge'),
+  'tornado': OCHA('tornado'),
+  'heatwave': OCHA('heatwave'),
+  'cold-wave': OCHA('cold-wave'),
+  'heavy-rain': OCHA('heavy-rain'),
+  'snowfall': OCHA('snowfall'),
+  'fire': OCHA('fire'),
+  'epidemic': OCHA('epidemic'),
+
+  // DRR and humanitarian response
+  'resilience': OCHA('resilience'),
+  'preparedness': OCHA('preparedness'),
+  'response': OCHA('response'),
+  'affected-population': OCHA('affected-population'),
+  'people-in-need': OCHA('people-in-need'),
+  'internally-displaced': OCHA('internally-displaced'),
+  'refugee': OCHA('refugee'),
+  'shelter': OCHA('shelter'),
+  'infrastructure': OCHA('infrastructure'),
 
   // -------------------------------------------------------------------------
   // Custom — brand logos and UNDRR-specific
