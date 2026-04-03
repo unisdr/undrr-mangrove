@@ -55,6 +55,7 @@ module.exports = {
   'angle-circled-left': LUCIDE('circle-chevron-left'),
   'angle-circled-right': LUCIDE('circle-chevron-right'),
   'menu': LUCIDE('menu'),
+  // Icons used in component stories (MegaMenu, StatsCard)
   'info-circle': LUCIDE('info'),
   'handshake': LUCIDE('handshake'),
   'map': LUCIDE('map'),

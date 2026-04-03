@@ -226,17 +226,56 @@ export const ColoredIcons = {
         </div>
       </div>
       <div>
-        <h4 style={{ margin: '0 0 0.5rem' }}>Inline style</h4>
+        <h4 style={{ margin: '0 0 0.5rem' }}>Inline style and links</h4>
         <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
-          For one-off colors (e.g. brand logos), use inline styles.
+          Icons work inside links and inherit the link color. Use inline styles
+          for brand-specific colors.
         </p>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <Icon name="facebook" size="xl" style={{ color: '#1877f2' }} />
-          <Icon name="linkedin" size="xl" style={{ color: '#0a66c2' }} />
-          <Icon name="youtube" size="xl" style={{ color: '#ff0000' }} />
-          <Icon name="x-social" size="xl" style={{ color: '#000' }} />
-          <Icon name="earthquake" size="xl" style={{ color: '#e4710b' }} />
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <a
+            href="https://www.facebook.com/ABORIUNDRR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            style={{ color: '#1877f2' }}
+          >
+            <Icon name="facebook" size="xl" />
+          </a>
+          <a
+            href="https://www.linkedin.com/company/undrr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            style={{ color: '#0a66c2' }}
+          >
+            <Icon name="linkedin" size="xl" />
+          </a>
+          <a
+            href="https://www.youtube.com/@ABORIUNDRR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            style={{ color: '#ff0000' }}
+          >
+            <Icon name="youtube" size="xl" />
+          </a>
+          <a
+            href="https://x.com/ABORIUNDRR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X"
+            style={{ color: '#000' }}
+          >
+            <Icon name="x-social" size="xl" />
+          </a>
         </div>
+        <p style={{ fontSize: '0.75rem', margin: '0.5rem 0 0' }}>
+          <code>
+            {
+              '<a href="..." style="color: #1877f2"><span class="mg-icon mg-icon-facebook mg-icon--xl"></span></a>'
+            }
+          </code>
+        </p>
       </div>
       <div>
         <h4 style={{ margin: '0 0 0.5rem' }}>
