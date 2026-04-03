@@ -84,6 +84,12 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
+Import Storybook doc blocks from `@storybook/addon-docs/blocks` (not `@storybook/blocks`, which was removed in Storybook 9):
+
+```mdx
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+```
+
 **Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
 
 ```mdx

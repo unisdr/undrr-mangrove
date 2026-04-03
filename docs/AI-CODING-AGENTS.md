@@ -17,6 +17,7 @@ Key items agents commonly miss:
 - **BEM naming** with `mg-` prefix on all CSS classes
 - **Story source examples** must match current class names (stale HTML in `parameters.docs.source.code` is invisible to tests but misleads consumers)
 - **CSF3 format** for stories (no `Template.bind({})`)
+- **Storybook imports**: use `import { Meta, Canvas } from '@storybook/addon-docs/blocks'` — not `@storybook/blocks` (that package was removed in Storybook 9; this project is on Storybook 10)
 
 ## Keeping the AI manifest in sync
 
