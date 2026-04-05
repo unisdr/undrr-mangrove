@@ -55,7 +55,7 @@ The failure mode is writing one document that tries to serve both equally — to
 > “Too much information and no information accomplish the same goal.”
 > — Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 
-Also apply this at the API/component design level: consistent naming patterns mean consumers can guess correctly without reading anything. When ` /user/orders` works, `/user/orders/123` should just work too.
+Also apply this at the API/component design level: consistent naming patterns mean consumers can guess correctly without reading anything. When `/user/orders` works, `/user/orders/123` should just work too.
 
 Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 

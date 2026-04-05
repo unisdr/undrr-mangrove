@@ -207,9 +207,9 @@ These are gaps that affect users or accessibility auditors:
 - The arrow button group has no accessible label describing its purpose
 - There are no live announcements when the scroll position changes
 - No keyboard equivalent for mouse drag scrolling beyond the arrow buttons
-- Arrow buttons do not appear on small viewports, including for keyboard users on touch-screen laptops
+- Arrow buttons may be hidden on devices classified as mobile by the component's JavaScript touch/user-agent detection, including some iPads or other misclassified devices
 
-> **Implementation note (for contributors):** The `<section>` and `<nav>` elements lack ARIA labels; there is no `role="region"` or live region on the scroll container itself. Arrow button visibility on small viewports is controlled by a JavaScript mobile-detection check rather than CSS, which is why it applies to all small screens regardless of input type.
+> **Implementation note (for contributors):** The `<section>` and `<nav>` elements lack ARIA labels; there is no `role="region"` or live region on the scroll container itself. Arrow button visibility is controlled by a JavaScript mobile-detection check (`ontouchstart` plus a mobile/iPad user-agent match), not by viewport size or CSS breakpoints, so the limitation affects devices detected as mobile rather than all small screens.
 
 ## Server-rendered / CDN usage
 

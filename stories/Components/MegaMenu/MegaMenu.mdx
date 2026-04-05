@@ -65,7 +65,7 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 </div>
 ```
 
-`logoHref` defaults to `'/'`. If no logo data attributes are set, the Drupal wrapper resolves the logo from the page's body class (for example, `mg-current-domain--www-preventionweb-net`).
+`logoHref` defaults to `'/'` unless your CMS or wrapper provides a different value. If logo asset data attributes are not set, the Drupal wrapper resolves `logoSrc` and `logoAlt` from the page's body class (for example, `mg-current-domain--www-preventionweb-net`). `logoHref` is not inferred from the body class — it must be passed explicitly for language-prefixed URLs.
 
 ## Props
 

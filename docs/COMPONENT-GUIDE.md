@@ -96,7 +96,7 @@ Structure your MDX in this order:
 1. What it does (one sentence)
 2. Live examples (`<Canvas>`)
 3. How to use it (usage snippet + props table)
-4. Behaviours and constraints
+4. Behaviors and constraints
 5. Accessibility
 6. Implementation notes / known limitations (maintainer depth)
 7. Server-rendered / CDN usage (if applicable)
