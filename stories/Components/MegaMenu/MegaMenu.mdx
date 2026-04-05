@@ -55,9 +55,7 @@ import { MegaMenu } from '@components';
 
 ### Multilingual sites and language-prefixed logo links
 
-`logoHref` defaults to `'/'`. The component doesn't know or care about language prefixes (`/ar/`, `/fr/`, etc.) because URL structure varies between CMSs.
-
-In Drupal, have the Twig template output the language-prefixed root into a data attribute. The wrapper reads `data-mg-mega-menu-logo-*` attributes, which override the default `SITE_LOGOS` body class lookup. Example for an Arabic page:
+Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Arabic). In Drupal, output this from Twig into the `data-mg-mega-menu-logo-href` attribute:
 
 ```html
 <div data-mg-mega-menu
@@ -67,7 +65,7 @@ In Drupal, have the Twig template output the language-prefixed root into a data 
 </div>
 ```
 
-Twig is the right place to resolve the prefix. The React component just renders whatever href it receives. If no logo data attributes are set, the Drupal wrapper falls back to a `SITE_LOGOS` map that resolves the logo from the body class (e.g., `mg-current-domain--www-preventionweb-net`).
+`logoHref` defaults to `'/'`. If no logo data attributes are set, the Drupal wrapper resolves the logo from the page's body class (for example, `mg-current-domain--www-preventionweb-net`).
 
 ## Props
 
@@ -155,7 +153,7 @@ MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 | `data-logo-width` | — | Explicit width for CLS prevention |
 | `data-logo-height` | — | Explicit height for CLS prevention |
 
-In Drupal, the wrapper reads the prefixed form (`data-mg-mega-menu-logo-src`, `data-mg-mega-menu-logo-alt`, etc.) following the Drupal `data-mg-{component}-{prop}` convention. These override the `SITE_LOGOS` body class lookup. For CDN / vanilla HTML consumers, use the short `data-logo-*` names listed above (read by `fromElement`).
+> **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
 import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js";

@@ -201,11 +201,15 @@ The scroll container itself does not implement custom keyboard event handlers. U
 
 ### Known limitations
 
-- The `<section>` element has no `aria-label` or `aria-labelledby`, so screen readers may announce it as an unlabelled section
-- The `<nav>` wrapper around arrow buttons has no `aria-label` to describe its purpose
-- There is no `role="region"` or similar on the scrollable container itself, and no live announcements when the scroll position changes
-- On desktop, mouse drag scrolling works, but there is no equivalent keyboard-based drag interaction beyond the arrow buttons
-- Arrow buttons are hidden on mobile devices via a JavaScript mobile detection check rather than CSS, meaning they may not appear for keyboard users on small viewports
+These are gaps that affect users or accessibility auditors:
+
+- Screen readers may announce the scroll container as an unlabelled section (the `<section>` has no `aria-label`)
+- The arrow button group has no accessible label describing its purpose
+- There are no live announcements when the scroll position changes
+- No keyboard equivalent for mouse drag scrolling beyond the arrow buttons
+- Arrow buttons do not appear on small viewports, including for keyboard users on touch-screen laptops
+
+> **Implementation note (for contributors):** The `<section>` and `<nav>` elements lack ARIA labels; there is no `role="region"` or live region on the scroll container itself. Arrow button visibility on small viewports is controlled by a JavaScript mobile-detection check rather than CSS, which is why it applies to all small screens regardless of input type.
 
 ## Server-rendered / CDN usage
 

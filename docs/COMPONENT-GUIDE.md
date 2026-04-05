@@ -84,6 +84,29 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
+### Write for two audiences
+
+Component MDX docs serve two very different readers. Structure content so each can get what they need without wading through what they don't.
+
+**Consumers** (people integrating the component) scan, not read. Lead with a one-sentence description, a working `<Canvas>` example, and a props table. One sentence of context is enough — they don't need to know how it works internally.
+
+**Maintainers** (contributors, reviewers, on-call debuggers) need the "why": design decisions, edge cases, known limitations, and historical context. This belongs at the end of the document, or in a clearly labelled section.
+
+Structure your MDX in this order:
+1. What it does (one sentence)
+2. Live examples (`<Canvas>`)
+3. How to use it (usage snippet + props table)
+4. Behaviours and constraints
+5. Accessibility
+6. Implementation notes / known limitations (maintainer depth)
+7. Server-rendered / CDN usage (if applicable)
+8. Changelog
+
+Avoid explaining implementation internals in the usage or props sections. If you find yourself writing "internally, this component does X because Y", that belongs at the bottom or in a code comment — not in the consumer-facing usage guide.
+
+See [Writing guidelines — Write for two audiences](WRITING.md) for the full principle.
+
+
 **Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
 
 ```mdx
