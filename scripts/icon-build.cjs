@@ -65,6 +65,13 @@ function buildIconDefinitions() {
   const names = Object.keys(iconMap);
   const errors = [];
 
+  // TODO: aliases (e.g. twitter → x-social, calendar → calendar-alt) emit a
+  // full duplicate data URI rather than referencing the canonical icon's value.
+  // Gzip compresses the repetition to ~100 bytes overhead so it's not a runtime
+  // concern, but if the alias list grows significantly consider a two-pass build
+  // that emits `--mg-icon-svg: var(--mg-icon-<canonical>-svg)` for aliases
+  // instead of repeating the encoded URI.
+
   // Pass 1 — validate all SVG paths exist before doing any work.
   // Paths in icon-map.cjs are relative to the project root; anchor to __dirname
   // so the script works regardless of the working directory it is invoked from.
