@@ -116,10 +116,21 @@
   mask-position: center;
 }
 
-// Windows High Contrast Mode: the browser overrides background-color,
-// which makes mask-image icons invisible. The forced-color-adjust: none
-// on .mg-icon prevents this. As a complementary measure, explicitly set
-// CanvasText in forced-colors mode for browsers with partial support.
+// Windows High Contrast Mode (WHCM) strategy — keep both halves together:
+//
+// 1. forced-color-adjust: none on .mg-icon prevents WHCM from overriding
+//    background-color on the ::before pseudo-element. Without it, the browser
+//    sets background-color to a system colour that breaks the mask-image
+//    rendering (the icon becomes invisible or a solid rectangle).
+//
+// 2. background-color: CanvasText in the forced-colors media query explicitly
+//    paints the icon with the WHCM foreground system colour. This ensures the
+//    icon is visible and correctly coloured even when currentColor has been
+//    overridden by a WHCM-adjusted ancestor.
+//
+// Neither rule is sufficient alone — forced-color-adjust: none without the
+// CanvasText fallback can leave icons the wrong colour; CanvasText without
+// forced-color-adjust: none has no effect because WHCM overrides it first.
 @media (forced-colors: active) {
   .mg-icon::before {
     background-color: CanvasText;
