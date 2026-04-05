@@ -39,33 +39,30 @@ const SourceBadge = ({ source }) => (
 );
 
 const Template = args => (
-  <div className="icons-container">
-    {args.icons.map((item, index) => {
-      const mgClass = `mg-icon mg-icon-${item.name}`;
-
-      return (
-        <p
-          key={index}
-          style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
-        >
-          <Icon name={item.name} />
-          <span>
-            {item.label}{' '}
-            <code
-              style={{
-                backgroundColor: '#f0f0f0',
-                padding: '2px 6px',
-                borderRadius: '3px',
-              }}
-            >
-              {mgClass}
-            </code>{' '}
-            {item.source && <SourceBadge source={item.source} />}
-          </span>
-        </p>
-      );
-    })}
-  </div>
+  <table className="mg-table mg-table--striped mg-table--small">
+    <thead>
+      <tr>
+        <th scope="col">Icon</th>
+        <th scope="col">Label</th>
+        <th scope="col">Class</th>
+        <th scope="col">Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      {args.icons.map(item => (
+        <tr key={item.name}>
+          <td>
+            <Icon name={item.name} />
+          </td>
+          <td>{item.label}</td>
+          <td>
+            <code>{`mg-icon mg-icon-${item.name}`}</code>
+          </td>
+          <td>{item.source && <SourceBadge source={item.source} />}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 );
 
 export const DefaultIcons = {

@@ -27,7 +27,19 @@ const OUTPUT = path.resolve(__dirname, '../stories/Atom/Icons/_icon-definitions.
 // SVGs must have a viewBox for mask-size: contain to work correctly.
 const svgoConfig = {
   plugins: [
-    'preset-default',
+    {
+      name: 'preset-default',
+      params: {
+        overrides: {
+          // OCHA icons embed <style>.st0{fill:...}</style> with class="st0" on
+          // multiple paths. The default onlyMatchedOnce: true skips classes used
+          // on more than one element, leaving the <style> block intact. Setting
+          // false ensures every matched element gets its fill inlined before
+          // removeAttrs strips the class="" attributes below.
+          inlineStyles: { onlyMatchedOnce: false },
+        },
+      },
+    },
     'removeDimensions',
     'sortAttrs',
     { name: 'removeAttrs', params: { attrs: ['class'] } },
@@ -53,9 +65,11 @@ function buildIconDefinitions() {
   const names = Object.keys(iconMap);
   const errors = [];
 
-  // Validate all SVG paths exist before doing any work.
+  // Pass 1 — validate all SVG paths exist before doing any work.
+  // Paths in icon-map.cjs are relative to the project root; anchor to __dirname
+  // so the script works regardless of the working directory it is invoked from.
   for (const name of names) {
-    const svgPath = path.resolve(iconMap[name]);
+    const svgPath = path.resolve(__dirname, '..', iconMap[name]);
     if (!fs.existsSync(svgPath)) {
       errors.push(`  mg-icon-${name}: ${iconMap[name]} not found`);
     }
@@ -67,19 +81,34 @@ function buildIconDefinitions() {
   }
 
   const rules = [];
-  const warnings = [];
 
+  // Pass 2 — optimise and encode each SVG.
   for (const name of names) {
-    const svgPath = path.resolve(iconMap[name]);
+    const svgPath = path.resolve(__dirname, '..', iconMap[name]);
     const raw = fs.readFileSync(svgPath, 'utf8');
-    const optimised = optimize(raw, { ...svgoConfig, path: svgPath });
+
+    let optimised;
+    try {
+      optimised = optimize(raw, { ...svgoConfig, path: svgPath });
+    } catch (err) {
+      console.error(`build-icons: SVGO failed on mg-icon-${name} (${iconMap[name]}): ${err.message}`);
+      process.exit(1);
+    }
+
+    // Error if a <style> block survived SVGO — it means class-based fill rules
+    // (e.g. OCHA's .st0{fill:...}) were not inlined. Paths would render unstyled
+    // if the icon is ever used with mg-icon--multicolor (background-image mode).
+    if (optimised.data.includes('<style')) {
+      errors.push(`  mg-icon-${name}: <style> block survived SVGO — class-based fill rules not inlined`);
+    }
+
+    // Error (not warning) — mask-size: contain requires viewBox to scale correctly.
+    if (!optimised.data.includes('viewBox')) {
+      errors.push(`  mg-icon-${name}: missing viewBox — required for mask-size: contain`);
+    }
+
     const encoded = encodeSvg(optimised.data);
     const dataUri = `url("data:image/svg+xml,${encoded}")`;
-
-    // Warn if viewBox is missing — icon won't scale correctly via mask-size: contain.
-    if (!optimised.data.includes('viewBox')) {
-      warnings.push(`  mg-icon-${name}: missing viewBox (icon may not scale correctly)`);
-    }
 
     rules.push(
       `.mg-icon-${name}::before {\n` +
@@ -90,8 +119,9 @@ function buildIconDefinitions() {
     );
   }
 
-  if (warnings.length > 0) {
-    console.warn('build-icons: warnings:\n' + warnings.join('\n'));
+  if (errors.length > 0) {
+    console.error('build-icons: errors:\n' + errors.join('\n'));
+    process.exit(1);
   }
 
   const header =

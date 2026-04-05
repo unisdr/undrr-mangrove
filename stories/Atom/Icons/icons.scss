@@ -115,10 +115,6 @@
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
-  -webkit-mask-image: var(--mg-icon-svg);
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
 }
 
 // Windows High Contrast Mode: the browser overrides background-color,
@@ -140,7 +136,19 @@
   background-repeat: no-repeat;
   background-position: center;
   mask-image: none;
-  -webkit-mask-image: none;
+}
+
+// RTL: flip directional icons horizontally. Icons with an inherent left→right
+// direction must reverse in RTL layouts so they point the correct way.
+[dir="rtl"] {
+  .mg-icon-left::before,
+  .mg-icon-arrow-left::before,
+  .mg-icon-right::before,
+  .mg-icon-arrow-right::before,
+  .mg-icon-angle-circled-left::before,
+  .mg-icon-angle-circled-right::before {
+    transform: scaleX(-1);
+  }
 }
 
 // Icon size modifiers
