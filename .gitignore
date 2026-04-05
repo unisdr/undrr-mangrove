@@ -7,8 +7,6 @@ yarn-error.log
 /docs-build-temp
 /stories/assets/css/style*.css
 /stories/assets/css/style*.css.map
-/stories/assets/css/mangrove-icons.css
-/stories/assets/css/mangrove-icons.css.map
 .DS_Store
 .scannerwork
 .vscode/
