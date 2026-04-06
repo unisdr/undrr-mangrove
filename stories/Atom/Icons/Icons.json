@@ -1,152 +1,82 @@
 {
   "icons": [
-    {
-      "name": "file-alt",
-      "label": "File, Document, Alt"
-    },
-    {
-      "name": "facebook",
-      "label": "Facebook, Social Media"
-    },
-    {
-      "name": "x-social",
-      "label": "Twitter, X, Social Media"
-    },
-    {
-      "name": "linkedin",
-      "label": "LinkedIn, Social Media"
-    },
-    {
-      "name": "flickr",
-      "label": "Flickr, Photo Sharing"
-    },
-    {
-      "name": "youtube",
-      "label": "YouTube, Video, Media"
-    },
-    {
-      "name": "search",
-      "label": "Search, Magnify, Find"
-    },
-    {
-      "name": "envelope",
-      "label": "Envelope, Email, Message"
-    },
-    {
-      "name": "newspaper",
-      "label": "Newspaper, News, Article"
-    },
-    {
-      "name": "chart-bar",
-      "label": "Chart, Bar, Graph, Statistics"
-    },
-    {
-      "name": "file",
-      "label": "File, Document"
-    },
-    {
-      "name": "graduation-cap",
-      "label": "Graduation, Cap, Education"
-    },
-    {
-      "name": "calendar-alt",
-      "label": "Calendar, Date, Schedule"
-    },
-    {
-      "name": "building",
-      "label": "Building, Office, Structure"
-    },
-    {
-      "name": "pen-nib",
-      "label": "Pen, Nib, Write, Edit"
-    },
-    {
-      "name": "business-time",
-      "label": "Business, Time, Work"
-    },
-    {
-      "name": "code-branch",
-      "label": "Code, Branch, Version Control"
-    },
-    {
-      "name": "life-ring",
-      "label": "Life Ring, Support, Help"
-    },
-    {
-      "name": "lightbulb",
-      "label": "Lightbulb, Idea, Inspiration"
-    },
-    {
-      "name": "cubes",
-      "label": "Cubes, Blocks, 3D"
-    },
-    {
-      "name": "bar-chart",
-      "label": "Bar Chart, Graph, Statistics"
-    },
-    {
-      "name": "sort-alpha-down",
-      "label": "Sort, Alphabetical, Order"
-    },
-    {
-      "name": "tags",
-      "label": "Tags, Labels, Categories"
-    },
-    {
-      "name": "landmark",
-      "label": "Landmark, Building, Monument"
-    },
-    {
-      "name": "power-off",
-      "label": "Power Off, Shutdown, Exit"
-    },
-    {
-      "name": "user",
-      "label": "User, Person, Account"
-    },
-    {
-      "name": "times",
-      "label": "Times, Close, Cancel"
-    },
-    {
-      "name": "link",
-      "label": "Link, URL, Connection"
-    },
-    {
-      "name": "clone",
-      "label": "Clone, Copy, Duplicate, Clipboard"
-    },
-    {
-      "name": "globe",
-      "label": "Globe, World, Earth"
-    },
-    {
-      "name": "share",
-      "label": "Share, social media"
-    },
-    {
-      "name": "qrcode",
-      "label": "QR Code, Quick Response, Barcode"
-    },
-    {
-      "name": "left",
-      "label": "Left arrow"
-    },
-    {
-      "name": "right",
-      "label": "Right arrow"
-    },
-    {
-      "name": "angle-circled-right",
-      "label": "Circle right arrow"
-    },
-    {
-      "name": "angle-circled-left",
-      "label": "Circle left arrow"
-    },
-    {
-      "name": "menu",
-      "label": "Menu, Hamburger"
-    }
+    { "name": "file-alt", "label": "File, Document, Alt", "source": "lucide" },
+    { "name": "file", "label": "File, Document", "source": "lucide" },
+    { "name": "search", "label": "Search, Magnify, Find", "source": "lucide" },
+    { "name": "envelope", "label": "Envelope, Email, Message", "source": "lucide" },
+    { "name": "newspaper", "label": "Newspaper, News, Article", "source": "lucide" },
+    { "name": "chart-bar", "label": "Chart, Bar, Graph, Statistics", "source": "lucide" },
+    { "name": "bar-chart", "label": "Bar Chart, Graph, Statistics", "source": "lucide" },
+    { "name": "graduation-cap", "label": "Graduation, Cap, Education", "source": "lucide" },
+    { "name": "calendar-alt", "label": "Calendar, Date, Schedule", "source": "lucide" },
+    { "name": "building", "label": "Building, Office, Structure", "source": "lucide" },
+    { "name": "landmark", "label": "Landmark, Building, Monument", "source": "lucide" },
+    { "name": "pen-nib", "label": "Pen, Nib, Write, Edit", "source": "lucide" },
+    { "name": "business-time", "label": "Business, Time, Work", "source": "lucide" },
+    { "name": "code-branch", "label": "Code, Branch, Version Control", "source": "lucide" },
+    { "name": "life-ring", "label": "Life Ring, Support, Help", "source": "lucide" },
+    { "name": "lightbulb", "label": "Lightbulb, Idea, Inspiration", "source": "lucide" },
+    { "name": "cubes", "label": "Cubes, Blocks, 3D", "source": "lucide" },
+    { "name": "sort-alpha-down", "label": "Sort, Alphabetical, Order", "source": "lucide" },
+    { "name": "tags", "label": "Tags, Labels, Categories", "source": "lucide" },
+    { "name": "power-off", "label": "Power Off, Shutdown, Exit", "source": "lucide" },
+    { "name": "user", "label": "User, Person, Account", "source": "lucide" },
+    { "name": "times", "label": "Times, Close, Cancel", "source": "lucide" },
+    { "name": "link", "label": "Link, URL, Connection", "source": "lucide" },
+    { "name": "clone", "label": "Clone, Copy, Duplicate, Clipboard", "source": "lucide" },
+    { "name": "globe", "label": "Globe, World, Earth", "source": "lucide" },
+    { "name": "share", "label": "Share, Social Media", "source": "lucide" },
+    { "name": "qrcode", "label": "QR Code, Quick Response, Barcode", "source": "lucide" },
+    { "name": "rss", "label": "RSS, Feed, Subscribe", "source": "lucide" },
+    { "name": "left", "label": "Left arrow", "source": "lucide" },
+    { "name": "right", "label": "Right arrow", "source": "lucide" },
+    { "name": "angle-circled-right", "label": "Circle right arrow", "source": "lucide" },
+    { "name": "angle-circled-left", "label": "Circle left arrow", "source": "lucide" },
+    { "name": "menu", "label": "Menu, Hamburger", "source": "lucide" },
+    { "name": "info-circle", "label": "Info, Information, Circle", "source": "lucide" },
+    { "name": "handshake", "label": "Handshake, Partnership, Agreement", "source": "lucide" },
+    { "name": "map", "label": "Map, Location, Geography", "source": "lucide" },
+    { "name": "close", "label": "Close, Cancel (alias for times)", "source": "lucide" },
+    { "name": "copy", "label": "Copy, Duplicate (alias for clone)", "source": "lucide" },
+    { "name": "arrow-left", "label": "Arrow left (alias for left)", "source": "lucide" },
+    { "name": "arrow-right", "label": "Arrow right (alias for right)", "source": "lucide" },
+    { "name": "hamburger", "label": "Hamburger menu (alias for menu)", "source": "lucide" },
+    { "name": "calendar", "label": "Calendar (alias for calendar-alt)", "source": "lucide" },
+    { "name": "exclamation-triangle", "label": "Warning, Alert, Triangle", "source": "lucide" },
+    { "name": "circle-plus", "label": "Add, Plus, Circle", "source": "lucide" },
+    { "name": "user-circle", "label": "User, Account, Circle", "source": "lucide" },
+    { "name": "user-tag", "label": "User, Tag, Role", "source": "lucide" },
+    { "name": "sign-out-alt", "label": "Log Out, Sign Out, Exit", "source": "lucide" },
+    { "name": "facebook", "label": "Facebook, Social Media", "source": "custom" },
+    { "name": "x-social", "label": "X, Twitter, Social Media", "source": "custom" },
+    { "name": "linkedin", "label": "LinkedIn, Social Media", "source": "custom" },
+    { "name": "youtube", "label": "YouTube, Video, Media", "source": "custom" },
+    { "name": "flickr", "label": "Flickr, Photo Sharing", "source": "custom" },
+    { "name": "earthquake", "label": "Earthquake, Seismic", "source": "ocha" },
+    { "name": "tsunami", "label": "Tsunami, Tidal Wave", "source": "ocha" },
+    { "name": "flood", "label": "Flood, Flooding", "source": "ocha" },
+    { "name": "flash-flood", "label": "Flash Flood", "source": "ocha" },
+    { "name": "cyclone", "label": "Cyclone, Hurricane, Typhoon", "source": "ocha" },
+    { "name": "drought", "label": "Drought, Water Scarcity", "source": "ocha" },
+    { "name": "volcano", "label": "Volcano, Eruption", "source": "ocha" },
+    { "name": "landslide", "label": "Landslide, Mudslide", "source": "ocha" },
+    { "name": "storm-surge", "label": "Storm Surge, Coastal Flooding", "source": "ocha" },
+    { "name": "tornado", "label": "Tornado", "source": "ocha" },
+    { "name": "heatwave", "label": "Heatwave, Extreme Heat", "source": "ocha" },
+    { "name": "cold-wave", "label": "Cold Wave, Extreme Cold", "source": "ocha" },
+    { "name": "heavy-rain", "label": "Heavy Rain", "source": "ocha" },
+    { "name": "snowfall", "label": "Snowfall, Snow", "source": "ocha" },
+    { "name": "fire", "label": "Fire, Wildfire", "source": "ocha" },
+    { "name": "epidemic", "label": "Epidemic, Disease Outbreak", "source": "ocha" },
+    { "name": "resilience", "label": "Resilience", "source": "ocha" },
+    { "name": "preparedness", "label": "Preparedness", "source": "ocha" },
+    { "name": "response", "label": "Response, Emergency Response", "source": "ocha" },
+    { "name": "affected-population", "label": "Affected Population", "source": "ocha" },
+    { "name": "people-in-need", "label": "People in Need", "source": "ocha" },
+    { "name": "internally-displaced", "label": "Internally Displaced Persons, IDP", "source": "ocha" },
+    { "name": "refugee", "label": "Refugee", "source": "ocha" },
+    { "name": "shelter", "label": "Shelter, Housing", "source": "ocha" },
+    { "name": "infrastructure", "label": "Infrastructure", "source": "ocha" },
+    { "name": "sdg-wheel", "label": "SDG Wheel, Sustainable Development Goals", "source": "custom" }
   ]
 }

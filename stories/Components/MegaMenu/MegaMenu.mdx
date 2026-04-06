@@ -55,9 +55,7 @@ import { MegaMenu } from '@components';
 
 ### Multilingual sites and language-prefixed logo links
 
-`logoHref` defaults to `'/'`. The component doesn't know or care about language prefixes (`/ar/`, `/fr/`, etc.) because URL structure varies between CMSs.
-
-In Drupal, have the Twig template output the language-prefixed root into a data attribute. The wrapper reads `data-mg-mega-menu-logo-*` attributes, which override the default `SITE_LOGOS` body class lookup. Example for an Arabic page:
+Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Arabic). In Drupal, output this from Twig into the `data-mg-mega-menu-logo-href` attribute:
 
 ```html
 <div data-mg-mega-menu
@@ -67,7 +65,7 @@ In Drupal, have the Twig template output the language-prefixed root into a data 
 </div>
 ```
 
-Twig is the right place to resolve the prefix. The React component just renders whatever href it receives. If no logo data attributes are set, the Drupal wrapper falls back to a `SITE_LOGOS` map that resolves the logo from the body class (e.g., `mg-current-domain--www-preventionweb-net`).
+`logoHref` defaults to `'/'` unless your CMS or wrapper provides a different value. If logo asset data attributes are not set, the Drupal wrapper resolves `logoSrc` and `logoAlt` from the page's body class (for example, `mg-current-domain--www-preventionweb-net`). `logoHref` is not inferred from the body class — it must be passed explicitly for language-prefixed URLs.
 
 ## Props
 
@@ -155,11 +153,11 @@ MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 | `data-logo-width` | — | Explicit width for CLS prevention |
 | `data-logo-height` | — | Explicit height for CLS prevention |
 
-In Drupal, the wrapper reads the prefixed form (`data-mg-mega-menu-logo-src`, `data-mg-mega-menu-logo-alt`, etc.) following the Drupal `data-mg-{component}-{prop}` convention. These override the `SITE_LOGOS` body class lookup. For CDN / vanilla HTML consumers, use the short `data-logo-*` names listed above (read by `fromElement`).
+> **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.0/components/hydrate.js";
-import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js";
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js";
+import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/1.4.1/components/MegaMenu.js";
 createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromElement });
 ```
 
@@ -167,6 +165,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.1.1** — 2026-04-06 ([#916](https://github.com/unisdr/undrr-mangrove/pull/916)): Fixed mobile links non-clickable when using Mangrove nav CSS without the React component, or when JS hydration fails.
 - **1.1.0** — 2026-03-13 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Optional `icon` property on sections for top-level menu item icons (desktop topbar only; decorative, `aria-hidden`). Added section object properties documentation.
 - **1.0.0** — 2026-03-12: Branded variant with optional inline logo (`logoSrc`, `logoAlt`, `logoHref`, `logoWidth`, `logoHeight`); logo shrinks on narrow viewports; hamburger floats over logo with shadow on mobile; documented `logoHref` language prefix handling. Added hydration support with `fromElement` prop extraction and `createHydrator` integration.
 - **0.7.4** — 2026-03-10: Fixed slide-in animation for menus with more than 12 child items ([#825](https://github.com/unisdr/undrr-mangrove/issues/825))

@@ -36,7 +36,7 @@ The DELTA Resilience theme has no legacy variant.
 
 **Example:**
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -49,7 +49,7 @@ The DELTA Resilience theme has no legacy variant.
 **Example:**
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.1/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -101,7 +101,7 @@ Then import the Mangrove component as an ES module:
 
   // Load component from CDN
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
+    'https://assets.undrr.org/static/mangrove/1.4.1/components/MegaMenu.js'
   );
 
   // Unwrap ESM/CJS interop - bundle may be double-wrapped
@@ -158,7 +158,7 @@ Base URL: `https://assets.undrr.org/static/logos/`
 Pin to a specific version for stability:
 
 ```
-https://assets.undrr.org/static/mangrove/1.4.0/css/style.css
+https://assets.undrr.org/static/mangrove/1.4.1/css/style.css
 ```
 
 ### Latest (testing only)

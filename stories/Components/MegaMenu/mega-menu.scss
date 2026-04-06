@@ -89,10 +89,10 @@
     margin: 0;
     list-style: none;
 
-    // Hide items on mobile (same as default topbar behavior)
+    // Clip overflow on mobile so the scrolling content hint works correctly.
+    // pointer-events is left as auto here — it is restricted only when JS has
+    // initialised the full mega menu (see .mg-mega-wrapper--js-active below).
     @media screen and (max-width: $mg-breakpoint-tablet) {
-      // Items are there but non-interactive on mobile (hamburger opens sidebar)
-      pointer-events: none;
       overflow: hidden;
       flex: 1;
       min-width: 0;
@@ -101,11 +101,8 @@
 
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
-    pointer-events: none; // on mobile we only advertise the buttons, but not clickable
-
     @media screen and (min-width: $mg-breakpoint-tablet) {
       display: block;
-      pointer-events: unset;
     }
 
     .mg-mega-content {
@@ -746,5 +743,21 @@
 :lang(ar) {
   .mg-mega-menu__item-link {
     font-family: $mg-font-family-arabic-body;
+  }
+}
+
+// Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be
+// interactive on small screens. This class is added by the React component on
+// mount (useEffect), so it is absent when JS fails or has not yet hydrated,
+// preserving a clickable fallback for server-rendered nav markup.
+.mg-mega-wrapper--js-active {
+  @media screen and (max-width: $mg-breakpoint-tablet) {
+    .mg-mega-topbar__nav {
+      pointer-events: none;
+    }
+
+    .mg-mega-topbar__item {
+      pointer-events: none;
+    }
   }
 }

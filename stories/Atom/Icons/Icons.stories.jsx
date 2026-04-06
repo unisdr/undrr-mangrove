@@ -15,46 +15,54 @@ export default {
   },
 };
 
-// Define a Template function to streamline icon rendering
-const Template = args => (
-  <div className="icons-container">
-    {args.icons.map((item, index) => {
-      // Show both the new mg- format and legacy fa- format
-      const mgClass = `mg-icon mg-icon-${item.name}`;
-      const faClass = `mg-icon fa-${item.name}`;
+const sourceBadgeStyle = {
+  lucide: { backgroundColor: '#e8f4e8', color: '#2d6a2e' },
+  ocha: { backgroundColor: '#e0eef8', color: '#1a5276' },
+  custom: { backgroundColor: '#fef3e2', color: '#7a5d2b' },
+};
 
-      return (
-        <p
-          key={index}
-          style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
-        >
-          <Icon name={item.name} />
-          <span>
-            {item.label}{' '}
-            <code
-              style={{
-                backgroundColor: '#e8f4e8',
-                padding: '2px 6px',
-                borderRadius: '3px',
-              }}
-            >
-              {mgClass}
-            </code>{' '}
-            <code
-              style={{
-                backgroundColor: '#f0f0f0',
-                padding: '2px 6px',
-                borderRadius: '3px',
-                opacity: 0.7,
-              }}
-            >
-              {faClass}
-            </code>
-          </span>
-        </p>
-      );
-    })}
-  </div>
+const SourceBadge = ({ source }) => (
+  <code
+    style={{
+      ...(sourceBadgeStyle[source] || {
+        backgroundColor: '#f0f0f0',
+        color: '#333',
+      }),
+      padding: '2px 6px',
+      borderRadius: '3px',
+      fontSize: '0.75em',
+      fontWeight: 600,
+    }}
+  >
+    {source}
+  </code>
+);
+
+const Template = args => (
+  <table className="mg-table mg-table--striped mg-table--small">
+    <thead>
+      <tr>
+        <th scope="col">Icon</th>
+        <th scope="col">Label</th>
+        <th scope="col">Class</th>
+        <th scope="col">Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      {args.icons.map(item => (
+        <tr key={item.name}>
+          <td>
+            <Icon name={item.name} />
+          </td>
+          <td>{item.label}</td>
+          <td>
+            <code>{`mg-icon mg-icon-${item.name}`}</code>
+          </td>
+          <td>{item.source && <SourceBadge source={item.source} />}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 );
 
 export const DefaultIcons = {
@@ -66,17 +74,16 @@ export const DefaultIcons = {
   parameters: {
     docs: {
       source: {
-        code: `// Preferred format (new)
+        code: `// Preferred format
 <Icon name="globe" />
 // Renders: <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
 
-// Legacy format (still supported)
+// Legacy format (still supported via font fallback)
 <Icon name="fa-globe" />
 // Renders: <span class="mg-icon fa-globe" aria-hidden="true"></span>
 
 // Direct CSS usage
-<span class="mg-icon mg-icon-globe"></span>
-<span class="mg-icon fa-globe"></span>  // legacy fallback`,
+<span class="mg-icon mg-icon-globe"></span>`,
       },
     },
   },
@@ -99,12 +106,202 @@ export const SingleIcon = {
         </p>
       </div>
       <div>
-        <Icon name="fa-envelope" />
+        <Icon name="earthquake" />
         <p>
-          <code>{'<Icon name="fa-envelope" />'}</code> (legacy)
+          <code>{'<Icon name="earthquake" />'}</code> (OCHA)
         </p>
       </div>
     </div>
   ),
-  name: 'Icon Component',
+  name: 'Icon component',
+};
+
+// Color utilities and inheritance demo
+export const ColoredIcons = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div>
+        <h4 style={{ margin: '0 0 0.5rem' }}>
+          Color utilities (<code>mg-u-color--*</code>)
+        </h4>
+        <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
+          Icons inherit <code>color</code>, so the existing{' '}
+          <code>mg-u-color--*</code> utility classes work directly.
+        </p>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Icon name="globe" size="xl" className="mg-u-color--interactive" />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <code>mg-u-color--interactive</code>
+            </p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Icon
+              name="search"
+              size="xl"
+              className="mg-u-color--interactive-active"
+            />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <code>mg-u-color--interactive-active</code>
+            </p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Icon
+              name="exclamation-triangle"
+              size="xl"
+              className="mg-u-color--red-800"
+            />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <code>mg-u-color--red-800</code>
+            </p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Icon name="times" size="xl" className="mg-u-color--neutral-500" />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <code>mg-u-color--neutral-500</code>
+            </p>
+          </div>
+          <div
+            style={{
+              textAlign: 'center',
+              backgroundColor: '#333',
+              padding: '0.5rem',
+              borderRadius: '4px',
+            }}
+          >
+            <Icon name="power-off" size="xl" className="mg-u-color--white" />
+            <p
+              style={{
+                fontSize: '0.75rem',
+                margin: '0.25rem 0 0',
+                color: '#fff',
+              }}
+            >
+              <code>mg-u-color--white</code>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style={{ margin: '0 0 0.5rem' }}>Inherited from parent</h4>
+        <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
+          Icons inside a colored parent inherit that color automatically.
+        </p>
+        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <div
+            className="mg-u-color--interactive"
+            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+          >
+            <Icon name="globe" size="lg" />
+            <Icon name="search" size="lg" />
+            <Icon name="calendar-alt" size="lg" />
+            <span style={{ fontSize: '0.75rem' }}>
+              <code>mg-u-color--interactive</code> on parent
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <span
+              className="mg-tag"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+              }}
+            >
+              <Icon name="tags" /> Tag color
+            </span>
+            <a
+              href="#"
+              className="mg-cta"
+              onClick={e => e.preventDefault()}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+              }}
+            >
+              <Icon name="link" /> Link color
+            </a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style={{ margin: '0 0 0.5rem' }}>Inline style and links</h4>
+        <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
+          Icons work inside links and inherit the link color. Use inline styles
+          for brand-specific colors.
+        </p>
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <a
+            href="https://www.facebook.com/ABORIUNDRR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="UNDRR on Facebook (opens in new tab)"
+            style={{ color: '#1877f2' }}
+          >
+            <Icon name="facebook" size="xl" />
+          </a>
+          <a
+            href="https://www.linkedin.com/company/undrr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="UNDRR on LinkedIn (opens in new tab)"
+            style={{ color: '#0a66c2' }}
+          >
+            <Icon name="linkedin" size="xl" />
+          </a>
+          <a
+            href="https://www.youtube.com/@ABORIUNDRR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="UNDRR on YouTube (opens in new tab)"
+            style={{ color: '#ff0000' }}
+          >
+            <Icon name="youtube" size="xl" />
+          </a>
+          <a
+            href="https://x.com/ABORIUNDRR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="UNDRR on X (opens in new tab)"
+            style={{ color: '#000' }}
+          >
+            <Icon name="x-social" size="xl" />
+          </a>
+        </div>
+        <p style={{ fontSize: '0.75rem', margin: '0.5rem 0 0' }}>
+          <code>
+            {
+              '<a href="..." style="color: #1877f2"><span class="mg-icon mg-icon-facebook mg-icon--xl"></span></a>'
+            }
+          </code>
+        </p>
+      </div>
+      <div>
+        <h4 style={{ margin: '0 0 0.5rem' }}>
+          Multi-color (<code>mg-icon--multicolor</code>)
+        </h4>
+        <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
+          By default icons are single-color (via mask). Add{' '}
+          <code>mg-icon--multicolor</code> to render the SVG with its original
+          colors instead.
+        </p>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Icon name="sdg-wheel" size="xl" />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              Default (single-color)
+            </p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Icon name="sdg-wheel" size="xl" className="mg-icon--multicolor" />
+            <p style={{ fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <code>mg-icon--multicolor</code>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+  name: 'Colored icons',
 };

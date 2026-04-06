@@ -39,11 +39,20 @@
   }
 
   li + li:before {
-    font-family: $mg-font-family-icons;
-    color: $mg-color-text;
-    content: "\f105";
-    padding: 0 12px 0 14px;
-    vertical-align: top;
+    // CSS-only chevron separator (replaces font codepoint \f105)
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    border-right: 0.125em solid $mg-color-text;
+    border-top: 0.125em solid $mg-color-text;
+    transform: rotate(45deg);
+
+    // Asymmetric margin: left side is larger to optically center the rotated
+    // chevron box within the text line. em units scale with font-size.
+    // At 16px base: right = 0.75em (12px), left = 0.875em (14px).
+    margin: 0 0.75em 0 0.875em;
+    vertical-align: middle;
   }
 
   li + li:has(a:empty):before {
@@ -70,7 +79,15 @@
   }
 
   li + li:before {
-    color: $mg-color-white;
+    border-color: $mg-color-white;
+  }
+}
+
+// Forced-colors mode: white variant chevrons could map to Canvas (background)
+// and become invisible. Force CanvasText for visibility.
+@media (forced-colors: active) {
+  .mg-breadcrumb.mg-breadcrumb--white li + li:before {
+    border-color: CanvasText;
   }
 }
 
@@ -98,9 +115,8 @@
     }
 
     li + li:before {
-      @include transform(rotate(180deg));
-
-      padding: 0 14px 0 12px;
+      transform: rotate(225deg);
+      margin: 0 0.875em 0 0.75em;
     }
   }
 }

@@ -49,11 +49,11 @@ Add these `<link>` tags to your HTML `<head>`:
     <!-- UNDRR Theme (Choose one) -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css"
+      href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css"
     />
 
     <!-- Alternative: Prevention Web Theme -->
-    <!-- <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-preventionweb.css"> -->
+    <!-- <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.1/css/style-preventionweb.css"> -->
   </head>
   <body>
     <!-- Your content here -->
@@ -103,7 +103,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css"
+  href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css"
 />
 ```
 
@@ -112,7 +112,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-preventionweb.css"
+  href="https://assets.undrr.org/static/mangrove/1.4.1/css/style-preventionweb.css"
 />
 ```
 
@@ -121,7 +121,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-mcr.css"
+  href="https://assets.undrr.org/static/mangrove/1.4.1/css/style-mcr.css"
 />
 ```
 
@@ -130,7 +130,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-irp.css"
+  href="https://assets.undrr.org/static/mangrove/1.4.1/css/style-irp.css"
 />
 ```
 
@@ -139,7 +139,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.4.0/css/style-delta.css"
+  href="https://assets.undrr.org/static/mangrove/1.4.1/css/style-delta.css"
 />
 ```
 
@@ -231,7 +231,7 @@ Some components (like Tabs) have lightweight JavaScript modules:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.1/js/tabs.js';
 
   document.addEventListener('DOMContentLoaded', () => {
     mgTabs();
@@ -288,7 +288,7 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 
     // Load component from CDN
     const MegaMenuModule = await import(
-      'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
+      'https://assets.undrr.org/static/mangrove/1.4.1/components/MegaMenu.js'
     );
 
     // Unwrap ESM/CJS interop - bundle may be double-wrapped as { default: { default: Component } }
@@ -334,8 +334,8 @@ Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight
 
 ```html
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.4.0/components/hydrate.js';
-  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.4.0/components/ShareButtons.js';
+  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js';
+  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.4.1/components/ShareButtons.js';
 
   createHydrator({
     selector: '[data-mg-share-buttons]',
@@ -354,6 +354,8 @@ Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight
 
 This pattern works for any component with hydration support. See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, supported components, and how to add hydration to new components.
 
+> **Full-page example:** The [DELTA Resilience homepage on CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) demonstrates a complete integration — vanilla HTML for PageHeader, Hero, IconCard, TextCta, and Footer with React hydration for MegaMenu and SyndicationSearchWidget. No build tooling required.
+
 ### Manual mounting (for components without hydration support)
 
 Components that don't yet export `fromElement` (BarChart, MapComponent, etc.) can be mounted manually with `createRoot`:
@@ -365,7 +367,7 @@ Components that don't yet export `fromElement` (BarChart, MapComponent, etc.) ca
   import React from 'react';
   import { createRoot } from 'react-dom/client';
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.4.0/components/MegaMenu.js'
+    'https://assets.undrr.org/static/mangrove/1.4.1/components/MegaMenu.js'
   );
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
   if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
@@ -400,7 +402,7 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
     <!-- Mangrove CSS theme -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.4.0/css/style.css"
+      href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css"
     />
 
     <!-- Import map: provides React to Mangrove ES module bundles -->
@@ -430,8 +432,8 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
 
     <!-- Load the hydration runtime and component, then mount -->
     <script type="module">
-      import createHydrator from 'https://assets.undrr.org/static/mangrove/1.4.0/components/hydrate.js';
-      import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.4.0/components/ShareButtons.js';
+      import createHydrator from 'https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js';
+      import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.4.1/components/ShareButtons.js';
 
       createHydrator({
         selector: '[data-mg-share-buttons]',
@@ -525,6 +527,7 @@ If a `data-mg-*` container stays empty after the page loads, check these items i
 - Explore the component library in the sidebar
 - Use the HTML tab in each component story to copy markup
 - See the [CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) for all available assets
+- See the [DELTA Resilience CodePen](https://codepen.io/khawkins98/pen/019d3720-5233-796f-ae0a-dc141475a30f) for a full-page vanilla HTML + hydration example
 - Override CSS variables for theming
 - Consider the [React integration guide](/?path=/docs/getting-started-integration-react-integration--docs) for dynamic applications
 - See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering React components into server-generated containers

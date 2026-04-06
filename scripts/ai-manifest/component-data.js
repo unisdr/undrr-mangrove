@@ -35,7 +35,7 @@ export const REQUIRES_REACT = {
   'components-charts-indexchart': 'IndexChart uses D3 for rendering. Requires React and D3. Import via npm.',
   'components-maps-mapcomponent': 'MapComponent uses Leaflet for interactive maps. Requires React and Leaflet. Import via npm.',
   'components-syndicationsearchwidget': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.',
-  'components-megamenu': 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator.',
+  'components-megamenu': 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
   'components-fetcher': 'Fetcher is a generic data-fetching wrapper component. Requires React for state management.',
   'components-gallery': 'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
   'components-pager': 'Pager manages pagination state. Requires React. Import via npm.',
@@ -43,7 +43,7 @@ export const REQUIRES_REACT = {
   'components-snackbar': 'Snackbar manages auto-dismiss timing and state. Requires React.',
   'components-scrollcontainer': 'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
   'components-buttons-sharebuttons': 'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.',
-  'components-table-of-contents': 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. Requires React.',
+  'components-table-of-contents': 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. React component available, or use the vanilla JS at js/table-of-contents.js with data-mg-table-of-contents.',
 };
 
 // ---------------------------------------------------------------------------

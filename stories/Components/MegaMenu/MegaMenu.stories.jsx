@@ -411,3 +411,45 @@ export const WithIcons = {
     },
   },
 };
+
+// Simple nav — no sidebar/hamburger, links clickable on all screen sizes.
+// Uses the mg-mega-wrapper--simple modifier class on the root element.
+const simpleNavLinks = [
+  { title: 'Home', url: '/' },
+  { title: 'About', url: '/about' },
+  { title: 'News', url: '/news' },
+  { title: 'Events', url: '/events' },
+  { title: 'Contact', url: '/contact' },
+];
+
+export const SimpleNav = {
+  render: () => (
+    <nav className="mg-mega-wrapper" aria-label="Main Navigation">
+      <ul
+        className="mg-mega-topbar | mg-container-full-width"
+        role="menubar"
+        aria-label="Main navigation menu"
+      >
+        {simpleNavLinks.map(link => (
+          <li key={link.url} className="mg-mega-topbar__item" role="none">
+            <a
+              href={link.url}
+              role="menuitem"
+              className="mg-mega-topbar__item-link"
+            >
+              {link.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A plain HTML nav bar using Mangrove classes without the React mega menu component or mobile sidebar. Because `mg-mega-wrapper--js-active` is absent, links remain clickable on all screen sizes — the same graceful fallback that applies when JS fails to hydrate.',
+      },
+    },
+  },
+};

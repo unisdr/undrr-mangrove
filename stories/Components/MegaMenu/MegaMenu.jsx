@@ -45,6 +45,7 @@ const MegaMenu = ({
 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
+  const [jsActive, setJsActive] = useState(false);
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
@@ -52,6 +53,12 @@ const MegaMenu = ({
   // Refs for timeout management
   const closeTimeoutRef = useRef(null);
   const openTimeoutRef = useRef(null);
+
+  // Signal that JS has mounted and the sidebar is available to handle mobile nav.
+  // This adds --js-active so the CSS can safely hide pointer events on mobile items.
+  useEffect(() => {
+    setJsActive(true);
+  }, []);
 
   // Clear all timeouts on unmount
   useEffect(() => {
@@ -111,7 +118,7 @@ const MegaMenu = ({
 
   return (
     <nav
-      className="mg-mega-wrapper"
+      className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
       aria-label="Main Navigation"
