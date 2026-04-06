@@ -110,6 +110,10 @@
   display: inline-block;
   width: 1em;
   height: 1em;
+
+  // No -webkit-mask-* prefixes: unprefixed mask-* is supported by all browsers
+  // in our target matrix (Chrome 120+, Safari 17.4+, Firefox 53+, Edge 120+).
+  // Prefixes were deliberately removed in commit 3077578d. Do not re-add them.
   mask-image: var(--mg-icon-svg);
   mask-size: contain;
   mask-repeat: no-repeat;
