@@ -95,11 +95,13 @@
 .fa-menu:before { content: "\f0c9"; }
 
 // Mask-image icon system
-// The mask-image rendering is activated per-icon by the generated rules in
-// _icon-definitions.scss. Each icon rule sets content: "", background-color,
-// and --mg-icon-svg. The base .mg-icon::before only has the shared mask
-// properties — these are harmless on their own (no content = nothing renders),
-// so font-based fa-* icons are unaffected even when size modifiers are present.
+// Each generated rule in _icon-definitions.scss sets content: "",
+// background-color: currentColor, and --mg-icon-svg (the SVG data URI).
+// content/background-color CANNOT be in the base .mg-icon::before rule —
+// it shares specificity (0,1,1) with .fa-*:before rules, so a base-rule
+// content: "" would override the fa-* codepoints and break legacy rendering.
+// The per-icon rules (.mg-icon-globe::before) safely set these properties
+// only for actual icon name classes, leaving fa-* icons unaffected.
 
 .mg-icon {
   vertical-align: -0.125em;
