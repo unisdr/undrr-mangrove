@@ -22,9 +22,10 @@
 }
 
 // Font-family applies to .mg-icon unconditionally. For mask-image icons this
-// is harmless (content: "" doesn't use the font). For fa-* icons this is
-// required for glyph rendering. This avoids the [class*="mg-icon-"] selector
-// which falsely matches BEM modifiers like mg-icon--lg.
+// is harmless — the ::before pseudo-element uses content: "" which renders
+// nothing from the font. For fa-* icons this is required for glyph rendering.
+// This avoids the [class*="mg-icon-"] selector which falsely matches BEM
+// modifiers like mg-icon--lg.
 .mg-icon,
 .fa-before:before,
 .fab,
@@ -44,6 +45,8 @@
 
 // Legacy fa-* icon definitions (font-based, removed in phase 4)
 // These keep the font rendering path alive for code that uses fa-* classes.
+// Bare fa-* selectors (specificity 0,1,1) are safe because the base mask rule
+// uses :not([class*="fa-"]) (specificity 0,2,1) and is excluded for these elements.
 
 .fa-rss:before { content: "\f09e"; }
 .fa-file-alt:before { content: "\f15c"; }
@@ -95,23 +98,21 @@
 .fa-menu:before { content: "\f0c9"; }
 
 // Mask-image icon system
-// Each generated rule in _icon-definitions.scss sets content: "",
-// background-color: currentColor, and --mg-icon-svg (the SVG data URI).
-// content/background-color CANNOT be in the base .mg-icon::before rule —
-// it shares specificity (0,1,1) with .fa-*:before rules, so a base-rule
-// content: "" would override the fa-* codepoints and break legacy rendering.
-// The per-icon rules (.mg-icon-globe::before) safely set these properties
-// only for actual icon name classes, leaving fa-* icons unaffected.
+// content: "" and background-color: currentColor live in .mg-icon:not([class*="fa-"])::before
+// (specificity 0,2,1). The :not() excludes fa-* elements, so font glyphs render
+// correctly without a separate background-color reset.
 
 .mg-icon {
   vertical-align: -0.125em;
   forced-color-adjust: none;
 }
 
-.mg-icon::before {
+.mg-icon:not([class*="fa-"])::before {
   display: inline-block;
+  content: "";
   width: 1em;
   height: 1em;
+  background-color: currentColor;
 
   // No -webkit-mask-* prefixes: unprefixed mask-* is supported by all browsers
   // in our target matrix (Chrome 120+, Safari 17.4+, Firefox 53+, Edge 120+).
@@ -135,7 +136,7 @@
 // CanvasText fallback can leave icons the wrong colour; CanvasText without
 // forced-color-adjust: none has no effect because WHCM overrides it first.
 @media (forced-colors: active) {
-  .mg-icon::before {
+  .mg-icon:not([class*="fa-"])::before {
     background-color: CanvasText;
   }
 }
@@ -146,9 +147,10 @@
 // browser does not override background-image in forced-colors mode. The SVG
 // renders with its embedded fill colors (e.g. SDG wheel segments). This is
 // intentional for brand logos and multi-color assets — the forced-colors
-// background-color: CanvasText rule on .mg-icon::before (specificity 0,1,1)
-// does not reach here because .mg-icon--multicolor::before (specificity 0,2,1)
-// wins and resets background-color to transparent. Result: multicolor icons
+// background-color: CanvasText rule on .mg-icon:not([class*="fa-"])::before
+// (specificity 0,2,1) is overridden by .mg-icon--multicolor::before
+// (same specificity 0,2,1, but later in source order), which resets
+// background-color to transparent. Result: multicolor icons
 // retain their original colors in WHCM. Always pair multicolor icons with a
 // visible text label so the color meaning is not the sole conveyor of information.
 .mg-icon--multicolor::before {

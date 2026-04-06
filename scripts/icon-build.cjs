@@ -117,11 +117,11 @@ function buildIconDefinitions() {
     const encoded = encodeSvg(optimised.data);
     const dataUri = `url("data:image/svg+xml,${encoded}")`;
 
-    // content: "" and background-color: currentColor must be per-rule, not in
-    // the base .mg-icon::before. Both share specificity (0,1,1) with fa-*:before
-    // rules; a base-rule content: "" would override fa-* codepoints (same
-    // specificity, later in cascade) and break legacy font rendering.
-    rules.push(`.mg-icon-${name}::before {\n  content: "";\n  background-color: currentColor;\n\n  --mg-icon-svg: ${dataUri};\n}`);
+    // Only emit --mg-icon-svg here. content: "" and background-color: currentColor
+    // live in the base .mg-icon:not([class*="fa-"])::before rule (specificity 0,2,1),
+    // which is excluded for fa-* elements so those rules never interfere with
+    // font glyph rendering.
+    rules.push(`.mg-icon-${name}::before {\n  --mg-icon-svg: ${dataUri};\n}`);
   }
 
   if (errors.length > 0) {
