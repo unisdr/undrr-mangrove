@@ -36,12 +36,6 @@
   cursor: pointer;
   border: $mg-border-width-button solid $mg-border-color-button;
 
-  // Improve icon rendering quality
-  .mg-icon {
-    font-weight: 100;
-    -webkit-text-stroke: 0.25px $mg-color-button-background;
-  }
-
   &:hover {
     background-color: rgba($mg-color-button-background--hover, 0.8);
   }
