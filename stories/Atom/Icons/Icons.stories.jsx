@@ -236,7 +236,7 @@ export const ColoredIcons = {
             href="https://www.facebook.com/ABORIUNDRR"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Facebook"
+            aria-label="UNDRR on Facebook (opens in new tab)"
             style={{ color: '#1877f2' }}
           >
             <Icon name="facebook" size="xl" />
@@ -245,7 +245,7 @@ export const ColoredIcons = {
             href="https://www.linkedin.com/company/undrr/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="LinkedIn"
+            aria-label="UNDRR on LinkedIn (opens in new tab)"
             style={{ color: '#0a66c2' }}
           >
             <Icon name="linkedin" size="xl" />
@@ -254,7 +254,7 @@ export const ColoredIcons = {
             href="https://www.youtube.com/@ABORIUNDRR"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="YouTube"
+            aria-label="UNDRR on YouTube (opens in new tab)"
             style={{ color: '#ff0000' }}
           >
             <Icon name="youtube" size="xl" />
@@ -263,7 +263,7 @@ export const ColoredIcons = {
             href="https://x.com/ABORIUNDRR"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="X"
+            aria-label="UNDRR on X (opens in new tab)"
             style={{ color: '#000' }}
           >
             <Icon name="x-social" size="xl" />

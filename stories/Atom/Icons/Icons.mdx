@@ -106,7 +106,11 @@ Icons use `currentColor`, so they respond to any method of setting `color`:
 <span class="mg-icon mg-icon-sdg-wheel mg-icon--multicolor"></span>
 ```
 
-Multi-color only works with SVGs that have explicit fill/stroke color values in the source file (like the SDG wheel or brand logos). Lucide and OCHA icons use `currentColor` in their source SVGs, so applying `mg-icon--multicolor` to them won't produce a visible difference.
+Multi-color only works with SVGs that have explicit fill/stroke color values in the source file (like the SDG wheel or brand logos).
+
+- **Lucide icons** use `currentColor` in their source SVGs, so `mg-icon--multicolor` won't produce a visible difference — the icon remains a single-color silhouette.
+- **OCHA icons** contain hardcoded fill values from OCHA's brand palette (`#011E41` navy). Applying `mg-icon--multicolor` to an OCHA icon will render it in that navy regardless of the current theme color. Avoid using `mg-icon--multicolor` with OCHA icons in production — use only the default mask-image (single-color) mode so icons follow the theme color.
+- **Custom icons** (social logos, SDG wheel) have explicit brand colors and are the intended use case for `mg-icon--multicolor`.
 
 <Canvas of={IconsStories.ColoredIcons} meta={IconsStories} />
 

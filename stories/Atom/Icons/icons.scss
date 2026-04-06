@@ -117,17 +117,14 @@
 }
 
 // Windows High Contrast Mode (WHCM) strategy — keep both halves together:
-//
-// 1. forced-color-adjust: none on .mg-icon prevents WHCM from overriding
-//    background-color on the ::before pseudo-element. Without it, the browser
-//    sets background-color to a system colour that breaks the mask-image
-//    rendering (the icon becomes invisible or a solid rectangle).
-//
-// 2. background-color: CanvasText in the forced-colors media query explicitly
-//    paints the icon with the WHCM foreground system colour. This ensures the
-//    icon is visible and correctly coloured even when currentColor has been
-//    overridden by a WHCM-adjusted ancestor.
-//
+// (1) forced-color-adjust: none on .mg-icon prevents WHCM from overriding
+//     background-color on the ::before pseudo-element. Without it, the browser
+//     sets background-color to a system colour that breaks the mask-image
+//     rendering (the icon becomes invisible or a solid rectangle).
+// (2) background-color: CanvasText in the forced-colors media query explicitly
+//     paints the icon with the WHCM foreground system colour. This ensures the
+//     icon is visible and correctly coloured even when currentColor has been
+//     overridden by a WHCM-adjusted ancestor.
 // Neither rule is sufficient alone — forced-color-adjust: none without the
 // CanvasText fallback can leave icons the wrong colour; CanvasText without
 // forced-color-adjust: none has no effect because WHCM overrides it first.
@@ -139,6 +136,15 @@
 
 // Multi-color modifier: renders the SVG with its original colors instead of
 // using currentColor through a mask.
+// WHCM note: forced-color-adjust: none is inherited from .mg-icon, so the
+// browser does not override background-image in forced-colors mode. The SVG
+// renders with its embedded fill colors (e.g. SDG wheel segments). This is
+// intentional for brand logos and multi-color assets — the forced-colors
+// background-color: CanvasText rule on .mg-icon::before (specificity 0,1,1)
+// does not reach here because .mg-icon--multicolor::before (specificity 0,2,1)
+// wins and resets background-color to transparent. Result: multicolor icons
+// retain their original colors in WHCM. Always pair multicolor icons with a
+// visible text label so the color meaning is not the sole conveyor of information.
 .mg-icon--multicolor::before {
   background-color: transparent;
   background-image: var(--mg-icon-svg);

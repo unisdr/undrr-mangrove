@@ -117,13 +117,9 @@ function buildIconDefinitions() {
     const encoded = encodeSvg(optimised.data);
     const dataUri = `url("data:image/svg+xml,${encoded}")`;
 
-    rules.push(
-      `.mg-icon-${name}::before {\n` +
-      `  content: "";\n` +
-      `  background-color: currentColor;\n` +
-      `  --mg-icon-svg: ${dataUri};\n` +
-      `}`
-    );
+    // Only the data URI is emitted here. content: "" and background-color: currentColor
+    // live in the base .mg-icon::before rule in icons.scss to avoid 158 redundant lines.
+    rules.push(`.mg-icon-${name}::before {\n  --mg-icon-svg: ${dataUri};\n}`);
   }
 
   if (errors.length > 0) {
