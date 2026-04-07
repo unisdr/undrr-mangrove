@@ -43,7 +43,13 @@ Every component MDX file must include a `## Changelog` section tracking its vers
   - ([web-backlog#NNN](url)) Second change
 ```
 
-**Rules**: Always cite the GitLab tracker issue. Newest entries first. Use sentence case. Summarize the user-facing change, not implementation details.
+**Rules**: Always cite a tracker issue. Newest entries first. Use sentence case. Summarize the user-facing change, not implementation details.
+
+**Issue link preference**:
+1. **GitLab web-backlog** (preferred) — `[web-backlog#NNN](https://gitlab.com/undrr/web-backlog/-/issues/NNN)`
+2. **GitHub issue or PR** (acceptable when no GitLab issue exists) — `[#NNN](https://github.com/unisdr/undrr-mangrove/issues/NNN)`
+
+Use the GitLab web-backlog link whenever the work is tracked there. If there is no GitLab issue, a GitHub issue or pull request link is acceptable.
 
 See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full specification and examples.
   - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
