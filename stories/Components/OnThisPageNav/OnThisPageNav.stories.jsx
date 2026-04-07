@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import OnThisPageNav from './OnThisPageNav';
-import { mgOnThisPageNav } from '../../assets/js/on-this-page-nav';
+import { mgOnThisPageNav, mgOnThisPageNavDestroy } from '../../assets/js/on-this-page-nav';
 import { mgTabsRuntime } from '../../assets/js/tabs';
 
 export default {
@@ -58,9 +58,12 @@ function useOnThisPageNav(wrapperRef) {
     if (!wrapperRef.current) return;
     const nav = wrapperRef.current.querySelector('[data-mg-on-this-page-nav]');
     if (nav) {
-      delete nav.dataset.mgOnThisPageNavInitialized;
+      mgOnThisPageNavDestroy(nav);
       mgOnThisPageNav([nav]);
     }
+    return () => {
+      if (nav) mgOnThisPageNavDestroy(nav);
+    };
   }, []);
 }
 
@@ -497,12 +500,17 @@ export const WithTabsContent = {
         if (!c.dataset.mgTabsInitialized) mgTabsRuntime(c, false);
       });
 
-      // Initialize nav — it scans headings including those inside hidden panels.
+      // Destroy any existing nav init (clears observers and listeners) then
+      // re-initialize so this story's scoped nav doesn't leak on unmount.
       const nav = wrapper.querySelector('[data-mg-on-this-page-nav]');
       if (nav) {
-        delete nav.dataset.mgOnThisPageNavInitialized;
+        mgOnThisPageNavDestroy(nav);
         mgOnThisPageNav([nav]);
       }
+
+      return () => {
+        if (nav) mgOnThisPageNavDestroy(nav);
+      };
     }, []);
 
     return (
