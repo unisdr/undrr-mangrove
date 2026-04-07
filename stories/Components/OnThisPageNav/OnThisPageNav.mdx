@@ -256,7 +256,7 @@ The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below th
 
 ## Tabs integration
 
-When page content includes [Mangrove Tabs](../Tab/Tab.mdx), the nav automatically opens the correct tab before scrolling to a heading inside it — for both horizontal and stacked (disclosure) variants.
+When page content includes [Mangrove Tabs](?path=/docs/components-tabs--docs), the nav automatically opens the correct tab before scrolling to a heading inside it — for both horizontal and stacked (disclosure) variants.
 
 **How it works:** When a nav link points to a heading that lives inside a hidden `.mg-tabs__section`, the click handler finds the corresponding tab trigger (`[data-tabs__item]`) and clicks it programmatically. The tab switch is synchronous, so the heading's position is immediately measurable and the scroll lands in the right place.
 
