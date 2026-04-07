@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import OnThisPageNav from './OnThisPageNav';
-import { mgOnThisPageNav, mgOnThisPageNavDestroy } from '../../assets/js/on-this-page-nav';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '../../assets/js/on-this-page-nav';
 import { mgTabsRuntime } from '../../assets/js/tabs';
 
 export default {
