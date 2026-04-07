@@ -233,6 +233,41 @@ function generateId(text, usedIds) {
 }
 
 /**
+ * If the target element is inside one or more hidden tab panels (.mg-tabs__section),
+ * open them before scrolling so the heading is visible and measurable.
+ * Walks the DOM upward to handle nested tabs, opening outer panels first.
+ *
+ * Works with both horizontal tabs (panel.hidden === true) and stacked/disclosure
+ * tabs (panel.getAttribute('hidden') === 'until-found').
+ *
+ * Tabs are opened by programmatically clicking the corresponding trigger element
+ * ([data-tabs__item]), which runs the mg-tabs switch logic synchronously so
+ * getBoundingClientRect() reflects the heading's true position immediately after.
+ *
+ * @param {HTMLElement} target - The element to scroll to
+ */
+function openContainingTabs(target) {
+  const panels = [];
+  let el = target.parentElement;
+  while (el) {
+    if (el.classList && el.classList.contains('mg-tabs__section')) {
+      panels.push(el);
+    }
+    el = el.parentElement;
+  }
+  // panels is innermost-first; reverse to open outermost first so inner
+  // panels become reachable before we try to open them.
+  for (const panel of panels.reverse()) {
+    const isHidden = panel.hidden || panel.getAttribute('hidden') === 'until-found';
+    if (!isHidden) continue;
+    const tabsContainer = panel.closest('[data-mg-js-tabs]');
+    if (!tabsContainer) continue;
+    const trigger = tabsContainer.querySelector(`[data-tabs__item="${panel.id}"]`);
+    if (trigger) trigger.click();
+  }
+}
+
+/**
  * Set up click handlers for smooth scrolling and hash updates.
  *
  * @param {HTMLElement} container - The nav element
@@ -251,6 +286,11 @@ function setupClickHandlers(container, signal) {
     if (!target) return;
 
     e.preventDefault();
+
+    // Open any containing collapsed tab panel before measuring scroll position.
+    // The tab switch is synchronous, so getBoundingClientRect() is accurate
+    // immediately after the call.
+    openContainingTabs(target);
 
     // Read offset per click — the custom property may change at breakpoints
     const offset = getOffset(container);
