@@ -8,8 +8,10 @@ import {
   enumField,
 } from './helpers.js';
 
-// Navigation items support up to 3 levels of nesting in practice.
-// Spelled out explicitly rather than using recursive $ref for clarity.
+// Navigation items are spelled out as explicit level objects (level1–level3)
+// rather than using recursive $ref. This caps the schema at 3 levels, which
+// matches MegaMenu's current implementation. If deeper nesting is ever needed,
+// replace these with a $defs/$ref recursive definition.
 const level3Item = {
   type: 'object',
   properties: {
@@ -43,8 +45,8 @@ export default schemaDocument({
   id: 'navigation',
   title: 'Navigation',
   description:
-    'Multi-level navigation structure with section banners and recursive ' +
-    'menu items. Used for mega-menu and primary site navigation.',
+    'Multi-level navigation structure with section banners and up to 3 levels ' +
+    'of menu items. Used for mega-menu and primary site navigation.',
   schema: {
     type: 'object',
     properties: {

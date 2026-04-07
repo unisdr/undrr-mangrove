@@ -64,7 +64,9 @@ function loadContentSchemas() {
       for (const name of implementors) {
         componentToSchema.set(name, schema);
       }
-    } catch { /* skip malformed schema files */ }
+    } catch (err) {
+      console.warn(`[ai-manifest] Skipping malformed schema file: ${file} — ${err.message}`);
+    }
   }
 
   return componentToSchema;
