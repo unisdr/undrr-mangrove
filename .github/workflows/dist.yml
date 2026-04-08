@@ -56,6 +56,12 @@ jobs:
           mkdir -p /tmp/dist-branch
           cp -r dist/* /tmp/dist-branch/
 
+          # Preserve yarn cache so the post-job setup-node cache-save step succeeds.
+          # enableGlobalCache: false means yarn uses .yarn/cache inside the workspace,
+          # which gets wiped when we switch branches below.
+          cp .yarnrc.yml /tmp/.yarnrc-backup.yml
+          cp -r .yarn/cache /tmp/yarn-cache-backup/ 2>/dev/null || true
+
           # Reset any local changes to avoid conflicts
           git reset --hard HEAD
           git clean -fd
@@ -81,3 +87,8 @@ jobs:
           git add .
           git commit -m "Deploy dist from ${{ github.sha }}"
           git push --force origin dist
+
+          # Restore yarn cache so the post-job setup-node step can save it
+          mkdir -p .yarn
+          cp -r /tmp/yarn-cache-backup .yarn/cache 2>/dev/null || true
+          cp /tmp/.yarnrc-backup.yml .yarnrc.yml
