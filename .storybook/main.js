@@ -129,7 +129,7 @@ export default {
   },
 
   features: {
-    experimentalComponentsManifest: true,
+    componentsManifest: true,
   },
 
   docs: {
