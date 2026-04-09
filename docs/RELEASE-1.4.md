@@ -130,10 +130,10 @@ Commit the CSS files to the Drupal repo and deploy. Nothing else changes.
 
 ```html
 <!-- Before (1.3.x) -->
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.5.0/css/style.css">
 
 <!-- After (1.4.0, using legacy variant) -->
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.1/css/style-legacy.css">
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.5.0/css/style-legacy.css">
 ```
 
 **For npm consumers loading compiled CSS:**
