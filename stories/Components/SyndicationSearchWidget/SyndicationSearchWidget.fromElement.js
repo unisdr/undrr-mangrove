@@ -3,8 +3,7 @@
  *
  * SyndicationSearchWidget is a complex-tier component: most config values
  * have sensible defaults, so only attributes explicitly set on the container
- * are included. Consumer wrappers (Layer 3) can merge additional config
- * (customFacets, customFilters, etc.) that is too complex for data attributes.
+ * are included.
  */
 export default function syndicationSearchWidgetFromElement(container) {
   const { dataset } = container;
@@ -70,6 +69,27 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.longevityTiers) {
     try {
       config.longevityTiers = JSON.parse(dataset.longevityTiers);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.customFilters) {
+    try {
+      config.customFilters = JSON.parse(dataset.customFilters);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.customFacets) {
+    try {
+      config.customFacets = JSON.parse(dataset.customFacets);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+  if (dataset.visibleTeaserFields) {
+    try {
+      config.visibleTeaserFields = JSON.parse(dataset.visibleTeaserFields);
     } catch {
       /* ignore malformed JSON */
     }

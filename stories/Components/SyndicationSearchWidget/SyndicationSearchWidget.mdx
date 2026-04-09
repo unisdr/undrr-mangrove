@@ -408,6 +408,9 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/u
 | `data-require-image` | — | Only return results with images (`true`/`false`) |
 | `data-interestingness-tiers` | — | JSON array of tier names (e.g., `'["promoted","announced"]'`) |
 | `data-longevity-tiers` | — | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
+| `data-custom-filters` | — | JSON array of custom filter strings (e.g., `'["type:news"]'`) |
+| `data-custom-facets` | — | JSON array of custom facet objects |
+| `data-visible-teaser-fields` | — | JSON array of teaser field names to show |
 
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
@@ -421,6 +424,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.2.4** — 2026-04-09 ([web-backlog#919](https://github.com/unisdr/undrr-mangrove/issues/919)): `fromElement` now parses `data-custom-filters`, `data-custom-facets`, and `data-visible-teaser-fields` as JSON, consistent with `defaultFilters` and `allowedTypes`
 - **1.2.3** — 2026-03-19 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
 - **1.2.2** — 2026-03-19: Fixed search input UI bounce — `useDeferredValue` stale flag was triggering heavy visual feedback (progress bar, button text swap, pulsing overlay, opacity drop) on every keystroke; now only `isLoading` and `isPending` drive visual indicators; increased default `debounceDelay` from 300ms to 500ms to reduce wasted API calls while staying under the 1-second perceived delay threshold; fixed `?text=` and `?query=` URL parameters being ignored due to race condition where `INITIALIZE` action overwrote the query set by `useHashSync`
 - **1.2.1** — 2026-03-13: ([web-backlog#2660](https://gitlab.com/undrr/web-backlog/-/issues/2660)) Native `requireImage`, `interestingnessTiers`, `longevityTiers` config options (moved from Drupal wrapper); `TEASER_FIELDS` constant and `allTeaserFieldsVisible()` as single source of truth for teaser field visibility; ES query optimization (skip aggs/highlights/post_filter for syndication embeds); card-aware loading skeletons; SyndicatedCards story pattern
