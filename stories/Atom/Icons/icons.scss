@@ -175,6 +175,19 @@
   }
 }
 
+// Print: restore background-color so mask-image icons remain visible.
+// Generic print resets (e.g. HTML5 Boilerplate) set `background: transparent !important`
+// on all elements. Font glyphs were unaffected because they use `color`, but mask-image
+// icons are painted via `background-color: currentColor` — without this override every
+// icon is invisible when printing.
+@media print {
+  .mg-icon:not([class*="fa-"])::before {
+    // Specificity 0,2,1 with !important beats any 0,0,1 universal reset.
+    background-color: #000 !important; // sass-lint:disable-line no-important
+    print-color-adjust: exact;
+  }
+}
+
 // Icon size modifiers
 
 .mg-icon--sm {

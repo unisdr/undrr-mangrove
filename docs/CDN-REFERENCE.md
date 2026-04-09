@@ -45,6 +45,8 @@ The DELTA Resilience theme has no legacy variant.
 |--------|------|---------|
 | Tabs | `/js/tabs.js` | Tab component interactivity |
 | Show More | `/js/show-more.js` | Expand/collapse content sections |
+| On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
+| Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 
 **Example:**
 ```html
@@ -193,7 +195,9 @@ https://assets.undrr.org/static/
 │       │   └── style-delta.css
 │       ├── js/
 │       │   ├── tabs.js
-│       │   └── show-more.js
+│       │   ├── show-more.js
+│       │   ├── on-this-page-nav.js
+│       │   └── table-of-contents.js
 │       └── components/
 │           ├── hydrate.js
 │           ├── ShareButtons.js
