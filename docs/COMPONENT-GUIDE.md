@@ -108,7 +108,17 @@ Structure your MDX in this order:
 7. Server-rendered / CDN usage (if applicable)
 8. Changelog
 
+The CDN/server-rendered section (step 7) belongs near the end because most consumers don't need it. Exception: if the server-rendered path is the primary integration for your component, move it to step 2 and note why in a comment.
+
 Avoid explaining implementation internals in the usage or props sections. If you find yourself writing "internally, this component does X because Y", that belongs at the bottom or in a code comment — not in the consumer-facing usage guide.
+
+For contributor-only content within a section, use a labelled blockquote:
+
+```mdx
+> **Implementation note (for contributors):** Why this works the way it does.
+```
+
+For large multi-subsection contributor blocks, use a collapsed `<details>` block instead. See [Writing guidelines — Callout labels](WRITING.md) for the full label conventions.
 
 See [Writing guidelines — Write for two audiences](WRITING.md) for the full principle.
 
