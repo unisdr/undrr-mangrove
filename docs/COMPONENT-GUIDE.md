@@ -118,7 +118,7 @@ For contributor-only content within a section, use a labelled blockquote:
 > **Implementation note (for contributors):** Why this works the way it does.
 ```
 
-For large multi-subsection contributor blocks, use a collapsed `<details>` block instead. See [Writing guidelines — Callout labels](WRITING.md) for the full label conventions.
+For large multi-subsection contributor blocks, use a separate section with a contributor callout at the top, or split into multiple callout blockquotes. See [Writing guidelines — Callout labels](WRITING.md) for the full label conventions.
 
 See [Writing guidelines — Write for two audiences](WRITING.md) for the full principle.
 

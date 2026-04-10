@@ -376,14 +376,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Architecture
 
-<details><summary>Implementation notes (for contributors)</summary>
-
-The component uses React 19's concurrent rendering features for a smooth, non-blocking search experience:
-
-- **`useDeferredValue`**: Keeps the search input responsive while results load in the background
-- **`useTransition`**: Marks filter changes as non-urgent, preventing UI blocking
-- **`Suspense`**: Provides loading skeletons during data fetching
-- **Context + useReducer**: Manages search state without external dependencies
+> **Implementation note (for contributors):** Uses React 19 concurrent features: `useDeferredValue` keeps input responsive while results load; `useTransition` marks filter changes as non-urgent; `Suspense` provides loading skeletons; Context + `useReducer` manages search state without external dependencies.
 
 ### Component structure
 
@@ -422,14 +415,12 @@ This means the component works in any environment (Drupal, Storybook, standalone
 
 On screens ≤800px, the sidebar is replaced with a left-slide drawer:
 
-- **Amazon-style slide-in** from the left edge
-- **Click backdrop to close** (right side)
-- **Sticky header and footer** with "View results" button
-- **Focus trapping** for accessibility
+- Amazon-style slide-in from the left edge
+- Click backdrop to close (right side)
+- Sticky header and footer with "View results" button
+- Focus trapping for accessibility
 
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
-
-</details>
 
 ## Changelog
 

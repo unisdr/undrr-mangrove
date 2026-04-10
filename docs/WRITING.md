@@ -63,17 +63,6 @@ Use consistent callout labels so readers can skim and know exactly what to skip 
 | `> **Integration note:**` | Consumers | Integration-specific context for any consumer (CDN, Drupal, SSR) |
 | `> **Implementation note (for contributors):**` | Maintainers only | Internal rationale, architectural decisions, historical context |
 
-For large contributor-only sections (multiple subsections), prefer a collapsed `<details>` block over a long blockquote:
-
-```mdx
-<details>
-<summary>Implementation notes (for contributors)</summary>
-
-...internal content...
-
-</details>
-```
-
 > “Too much information and no information accomplish the same goal.”
 > — Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 

@@ -14,7 +14,7 @@ Use this as a compact, LLM‑friendly summary of the Mangrove Writing standards.
 
 Layer your docs: what it does → how to use it → why it works that way. Keep the “why” at the end or behind a details block.
 
-**Callout labels:** `> **Note:**` (consumer status), `> **Tip:**` (consumer best practice), `> **Integration note:**` (CDN/Drupal/SSR context for consumers), `> **Implementation note (for contributors):**` (internal rationale, maintainers only). Large contributor sections → use `<details>` instead.
+**Callout labels:** `> **Note:**` (consumer status), `> **Tip:**` (consumer best practice), `> **Integration note:**` (CDN/Drupal/SSR context for consumers), `> **Implementation note (for contributors):**` (internal rationale, maintainers only). Large contributor sections → use an additional blockquote callout or move content to a separate heading.
 
 > “Too much information and no information accomplish the same goal.” — Ibrahim Diallo
 
