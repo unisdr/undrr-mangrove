@@ -89,23 +89,25 @@ The Breadcrumb provides links to each of the previously visited pages and indica
 
 ### Overview
 
-The Breadcrumb component creates navigation links for the current pathname based on an opinionated configuration object. The idea behind this component is to drop it anywhere with minimal or no configuration and get breadcrumbs generated automatically.
+The Breadcrumb component creates navigation links for the current pathname based on an opinionated configuration object. Drop it anywhere on the page; it requires minimal configuration to generate breadcrumbs automatically.
 
 #### When to use:
 
 - To indicate the location of the current page and to navigate back to each of the previously visited pages.
 
-Formatting
+#### Formatting
+
+Links are separated by a visual divider (›). The final item represents the current page and is rendered as plain text rather than a link.
 
 #### Default
 
-It is present under the main navigation bar.
+The breadcrumb appears below the main navigation bar.
 
 ### Behaviors
 
 #### States
 
-There is only a Default state.
+The component renders in a single **default** state. The current-page item receives `aria-current="page"` and is not interactive.
 
 <Canvas of={BreadcrumbsStories.DefaultBreadcrumbs} meta={BreadcrumbsStories} />
 
