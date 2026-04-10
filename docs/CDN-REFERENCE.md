@@ -137,6 +137,14 @@ Base URL: `https://assets.undrr.org/static/analytics/{version}/`
 
 See [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs) for configuration options.
 
+## Favicons
+
+Base URL: `https://assets.undrr.org/static/favicons/{brand}/v1/`
+
+Canonical favicon sets for all 10 UNDRR brands. Each brand directory contains `favicon.ico`, `apple-touch-icon.png`, `favicon-192.png`, and `favicon-512.png`.
+
+See [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) for the full brand list, recommended markup, and integration details.
+
 ## Logos
 
 Base URL: `https://assets.undrr.org/static/logos/`
@@ -216,6 +224,13 @@ https://assets.undrr.org/static/
 │   └── {version}/
 │       ├── google_analytics_enhancements.js
 │       └── index.html
+├── favicons/
+│   └── {brand}/
+│       └── v1/
+│           ├── favicon.ico
+│           ├── apple-touch-icon.png
+│           ├── favicon-192.png
+│           └── favicon-512.png
 ├── logos/
 │   └── undrr/
 │       ├── undrr-logo-horizontal.svg
@@ -225,6 +240,7 @@ https://assets.undrr.org/static/
 
 ## See also
 
+- [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) — brand favicon sets for all UNDRR properties
 - [Vanilla HTML/CSS integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
 - [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs)
 - [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs)
