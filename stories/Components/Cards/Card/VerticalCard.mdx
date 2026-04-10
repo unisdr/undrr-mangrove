@@ -50,11 +50,13 @@ Use the variant control below the canvas to preview each option.
 
 By default, card titles display three signals that they are clickable:
 
-1. **Blue color** matching `$mg-color-interactive` (adapts per theme)
-2. **Underline** with `3px` offset
-3. **Chevron indicator** (CSS border triangle via `::after`)
+1. **Blue color** matching the theme's interactive color (adapts per theme)
+2. **Underline** with a subtle offset
+3. **Chevron indicator** pointing right (flips left automatically in RTL layouts)
 
-On hover, the underline thickens to `2px`. In RTL layouts, the chevron flips direction automatically.
+On hover, the underline intensifies.
+
+> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
 ### Opting out
 
@@ -101,10 +103,12 @@ This removes the blue color, underline, and chevron. The card remains clickable 
 
 ## Accessibility
 
-- The stretched link (`::before` on the title `<a>`) makes the entire card clickable
-- Inline links in the summary use `z-index: 101` to remain independently clickable above the stretched link
+- The entire card surface is clickable as a single link (via the title link)
+- Inline links in the summary remain independently clickable — they are not overridden by the card link
 - Focus states are visible on all interactive elements
 - RTL layout is automatic when `dir="rtl"` is set on the document
+
+> **Implementation note (for contributors):** The card-wide click area uses a CSS `::before` pseudo-element on the title `<a>`, stretched to cover the full card. Inline links in the summary have `z-index: 101` to layer above the stretched link overlay.
 
 ## Changelog
 

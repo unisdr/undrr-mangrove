@@ -44,11 +44,13 @@ Use the variant control below the canvas to preview each option.
 
 By default, card titles display three signals that they are clickable:
 
-1. **Blue color** matching `$mg-color-interactive` (adapts per theme)
-2. **Underline** with `3px` offset
-3. **Chevron indicator** (CSS border triangle via `::after`)
+1. **Blue color** matching the theme's interactive color (adapts per theme)
+2. **Underline** with a subtle offset
+3. **Chevron indicator** pointing right (flips left automatically in RTL layouts)
 
-On hover, the underline thickens to `2px`. In RTL layouts, the chevron flips direction automatically.
+On hover, the underline intensifies.
+
+> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
 ### Opting out
 
@@ -67,6 +69,14 @@ Add `mg-card--plain-title` to disable all link signals while keeping the card cl
   ...
 </article>
 ```
+
+## Responsive behavior
+
+| Breakpoint | Layout |
+|------------|--------|
+| Mobile (< 640px) | Stacked: image on top (300px tall), content below |
+| Tablet (640px+) | Side-by-side: 160px image, content fills remaining width |
+| Desktop (1024px+) | Side-by-side: 330px image, content fills remaining width |
 
 ## Props
 
@@ -88,14 +98,6 @@ Add `mg-card--plain-title` to disable all link signals while keeping the card cl
 | `label1` | String | First category label |
 | `label2` | String | Second category label |
 | `button` | String | CTA button label |
-
-## Responsive behavior
-
-| Breakpoint | Layout |
-|------------|--------|
-| Mobile (< 640px) | Stacked: image on top (300px tall), content below |
-| Tablet (640px+) | Side-by-side: 160px image, content fills remaining width |
-| Desktop (1024px+) | Side-by-side: 330px image, content fills remaining width |
 
 ## Changelog
 

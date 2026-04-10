@@ -26,48 +26,31 @@ export const getCaptionForLocale = locale => {
 
 Small interactive tags used to show active filters, selections, or categories. Chips can include a dismiss icon to let users remove them.
 
-#### When to use:
+## When to use
 
-- Buttons should be used as primary or secondary calls to actions
-- Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
-- Examples of buttons can be to "VIEW MORE" or "READ MORE" or "SIGN UP"
-- If there are multiple choices for an action item, one default button should be active and the other buttons inactive
+- Showing which filters or search terms are currently active
+- Letting users remove individual selections without clearing everything
+- Labelling active categories or tags in a content listing
 
-### Formatting
+## States
 
-#### Default
+**Default (with dismiss icon)** — The chip shows a label and a close icon. Clicking the icon removes the filter or selection.
 
-There are multiple button types in our design system
+**Hover (with dismiss icon)** — The chip changes visual appearance when the user hovers over it, signalling it is interactive.
 
-1. Primary button with arrow and without arrows
-2. Secondary buttons without the arrow
-3. Chips
+**Default (no dismiss icon)** — The chip shows a label only. It communicates a current selection or category but does not allow removal.
 
-### Content
-
-### Behaviors
-
-#### States
-
-Chips: Chips are used to show an active search or filter term.
-
-Chip with default state, and an icon. The close icon lets them cancel or delete the information.
-
-Chip with hover state and icon which changes appearance when a mouse hovers over it.
-
-Chip with default state and no close icon which means it doesn't provide the option of deleting the information written or action which has been taken.
-
-Chip with hover state and close icon. Changes appearance once the mouse moves over it.
+**Hover (no dismiss icon)** — Same visual change as the hover state above; no dismiss action is available.
 
 <Canvas of={ChipsStories.DefaultChips} meta={ChipsStories} />
 
-### Usage
+## Usage
 
-- Copy the HTML from the HTML tab of the canvas for either buttons or chips.
+See the canvas above for an interactive preview of all chip states.
 
-### Interactions
+## Interactions
 
-- The hover state is applied to the entire button.
+- The hover state applies to the entire chip.
 
 ## Changelog
 

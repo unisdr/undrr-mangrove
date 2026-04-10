@@ -7,23 +7,23 @@ import * as SyndicationSearchWidgetStories from './SyndicationSearchWidget.stori
 
 # UNDRR syndication search widget
 
-The **UNDRR syndication search widget** is a full-featured search interface tightly coupled with the UNDRR web platform. It integrates with Elasticsearch via the UNDRR `/search-endpoint` proxy and is designed specifically to query content from UNDRR domains (undrr.org, preventionweb.net, and related sites).
+The **UNDRR syndication search widget** lets users search and filter content across UNDRR domains — undrr.org, preventionweb.net, and related sites. It provides keyword search, faceted filtering, and multiple display modes (list, card, or book card) in a single embeddable component.
 
-Built with React 19 concurrent rendering (`useDeferredValue`, `useTransition`).
-
-> **Platform Dependency:** This component requires access to the UNDRR Elasticsearch backend via `/search-endpoint`. It includes hardcoded domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
+> **Platform dependency:** This component requires access to the UNDRR search backend via `/search-endpoint`. It includes domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
 
 > **Future:** A standalone, configurable search component without platform dependencies may be developed separately for broader use cases.
 
 ## Features
 
-- Uses `useDeferredValue` to keep the input responsive while searching
-- Uses `useTransition` for smooth, non-blocking result updates
+- Keyword search with responsive input — results update as you type
+- Non-blocking result updates keep the page interactive while results load
 - Removable filter chips for active filters
 - Full ARIA support, keyboard navigation, screen reader announcements
 - Styled with Mangrove design tokens
 - Left-slide filter drawer on mobile, inline sidebar on desktop
 - Custom select dropdowns (searchable, multi-select) with no external dependencies like Chosen.js
+
+> **Implementation note (for contributors):** The non-blocking search experience is powered by React 19's concurrent rendering features: `useDeferredValue` keeps the search input responsive while results load in the background; `useTransition` marks filter changes as non-urgent to prevent UI blocking.
 
 ## Default
 
@@ -223,16 +223,19 @@ A hardwired topic query rendered as a content block with no search chrome. Uses 
 
 ## Query syntax
 
-Reference for Elasticsearch query_string syntax. Use this story to test search queries.
+Use this story to test search queries and explore the supported syntax, which includes:
 
-<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
-
-See the story's Docs tab for a comprehensive syntax reference including:
 - Basic queries and phrase matching
 - Wildcards and fuzzy search
 - Boolean operators (AND, OR, NOT)
 - Field-specific searches
 - Date ranges and boosting
+
+<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
+
+See the story's Docs tab for a comprehensive syntax reference.
+
+> **Implementation note (for contributors):** The search input uses Elasticsearch `query_string` syntax, forwarded directly to the `/search-endpoint` proxy.
 
 ## Static mockup
 
@@ -303,59 +306,6 @@ The component is loaded automatically on pages containing a container with `data
 | `interestingnessTiers` | array | `[]` | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`) |
 | `longevityTiers` | array | `[]` | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`) |
 
-## Architecture
-
-The component uses React 19's concurrent features:
-
-- **`useDeferredValue`**: Keeps the search input responsive while results load in the background
-- **`useTransition`**: Marks filter changes as non-urgent, preventing UI blocking
-- **`Suspense`**: Provides loading skeletons during data fetching
-- **Context + useReducer**: Manages search state without external dependencies
-
-### Component structure
-
-```
-SyndicationSearchWidget
-├── SearchProvider (context)
-│   ├── SearchForm (input + button)
-│   ├── ActiveFilters (filter chips)
-│   ├── SearchResults (with Suspense)
-│   │   └── ResultItem (×n)
-│   ├── FacetsSidebar (desktop)
-│   │   ├── SortOptions (relevance/newest/oldest)
-│   │   ├── FacetSelect (×n, from Elasticsearch aggregations)
-│   │   │   └── SelectDropdown (custom Chosen-like component)
-│   │   └── CustomFacetSelect (×n, editor-defined)
-│   └── MobileFilterDrawer (mobile, <800px)
-│       └── FacetsSidebar (reused)
-```
-
-### Custom select dropdown
-
-The facet dropdowns use a custom `SelectDropdown` component instead of Chosen.js, with the same core functionality and no external dependencies:
-
-| Feature | Description |
-|---------|-------------|
-| **Searchable** | Filter input shown when options > 8 |
-| **Multi-select** | Checkbox indicators, multiple selections |
-| **Single-select** | Radio indicators, one selection |
-| **Keyboard navigation** | Arrow keys, Enter, Escape |
-| **Touch-friendly** | 44px trigger height, 40px option height |
-| **Accessible** | ARIA listbox pattern, screen reader support |
-
-This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
-
-### Mobile filter drawer
-
-On screens ≤800px, the sidebar is replaced with a left-slide drawer:
-
-- **Amazon-style slide-in** from the left edge
-- **Click backdrop to close** (right side)
-- **Sticky header and footer** with "View results" button
-- **Focus trapping** for accessibility
-
-UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
-
 ## Accessibility
 
 - All interactive elements have proper ARIA labels
@@ -365,7 +315,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Server-rendered / CDN usage
 
-SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: `fromElement` extracts only the attributes present on the container, and consumer wrappers can merge additional config (customFacets, customFilters, etc.) that is too complex for data attributes.
+SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML — all attributes are optional:
 
 ```html
 <div data-mg-search-widget
@@ -421,6 +371,63 @@ createHydrator({ selector: "[data-mg-search-widget]", component: SyndicationSear
 ```
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+> **Drupal note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container — Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
+
+## Architecture
+
+> **Implementation note (for contributors):** This section covers internal design decisions. Consumers do not need this to integrate the widget.
+
+The component uses React 19's concurrent rendering features for a smooth, non-blocking search experience:
+
+- **`useDeferredValue`**: Keeps the search input responsive while results load in the background
+- **`useTransition`**: Marks filter changes as non-urgent, preventing UI blocking
+- **`Suspense`**: Provides loading skeletons during data fetching
+- **Context + useReducer**: Manages search state without external dependencies
+
+### Component structure
+
+```
+SyndicationSearchWidget
+├── SearchProvider (context)
+│   ├── SearchForm (input + button)
+│   ├── ActiveFilters (filter chips)
+│   ├── SearchResults (with Suspense)
+│   │   └── ResultItem (×n)
+│   ├── FacetsSidebar (desktop)
+│   │   ├── SortOptions (relevance/newest/oldest)
+│   │   ├── FacetSelect (×n, from Elasticsearch aggregations)
+│   │   │   └── SelectDropdown (custom Chosen-like component)
+│   │   └── CustomFacetSelect (×n, editor-defined)
+│   └── MobileFilterDrawer (mobile, <800px)
+│       └── FacetsSidebar (reused)
+```
+
+### Custom select dropdown
+
+The facet dropdowns use a custom `SelectDropdown` component instead of Chosen.js, with the same core functionality and no external dependencies:
+
+| Feature | Description |
+|---------|-------------|
+| **Searchable** | Filter input shown when options > 8 |
+| **Multi-select** | Checkbox indicators, multiple selections |
+| **Single-select** | Radio indicators, one selection |
+| **Keyboard navigation** | Arrow keys, Enter, Escape |
+| **Touch-friendly** | 44px trigger height, 40px option height |
+| **Accessible** | ARIA listbox pattern, screen reader support |
+
+This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
+
+### Mobile filter drawer
+
+On screens ≤800px, the sidebar is replaced with a left-slide drawer:
+
+- **Amazon-style slide-in** from the left edge
+- **Click backdrop to close** (right side)
+- **Sticky header and footer** with "View results" button
+- **Focus trapping** for accessibility
+
+UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Changelog
 
