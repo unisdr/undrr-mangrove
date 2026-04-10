@@ -107,11 +107,11 @@ You can combine styling and responsive modifiers—here's a bordered table that 
 
 <Canvas of={TableStories.BorderedStackedTable} meta={TableStories} />
 
-## Implementation notes
+## Notes
 
-Here's what's happening under the hood: The table component automatically applies CSS classes based on your props, building combinations like `mg-table mg-table--small mg-table--striped mg-table--stacked` for complex layouts.
+Striped tables work especially well for financial data or any content where users need to track across multiple columns — the alternating row colors act as visual guides.
 
-**Pro tip:** Striped tables work especially well for financial data or any content where users need to track across multiple columns—the alternating colors act like visual guidelines.
+> **Implementation note (for contributors):** The component automatically applies CSS classes based on your props, building combinations like `mg-table mg-table--small mg-table--striped mg-table--stacked` for complex layouts.
 
 ### CSS class structure
 
