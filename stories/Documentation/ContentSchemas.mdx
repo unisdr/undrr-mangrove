@@ -1,0 +1,257 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Design decisions/Content architecture"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Content architecture: schemas
+
+Design systems define how things look. Content management defines what gets stored.
+But neither defines the structural layer between them — what data a component
+*carries*, what fields it requires, and what constraints apply.
+
+That structural layer is **content architecture**: explicit, named contracts that
+survive visual redesigns and work across every property that consumes Mangrove
+(undrr.org, preventionweb.net, MCR2030, IRP). **JSON Schema is how we formalize
+and lock those contracts in.**
+
+## Status
+
+**Phase 1: first step toward a formal content architecture.** These schemas
+document the target data contract for each component archetype. They do not yet
+drive validation, code generation, or contract tests — and no existing component
+props are changed. Deviations between the canonical schema and current prop names
+are recorded explicitly; resolving them is Phase 2.
+
+See [issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) for the
+full vision and [issue #883](https://github.com/unisdr/undrr-mangrove/issues/883)
+for Phase 1 scope.
+
+---
+
+## Why lock in content architecture through schemas?
+
+Without explicit contracts:
+- Field names drift across implementations (`imgback` vs `image.src`)
+- CMS output silently mismatches component expectations
+- External consumers must reverse-engineer prop types from source code
+- AI tools lack structured metadata about component data requirements
+
+With schemas, the data contract is explicit, versioned, and machine-readable.
+Components can change how they look; the schema records what they carry.
+
+---
+
+## Schema inventory
+
+| Schema | Description | Implementing components |
+|--------|-------------|------------------------|
+| `card` | Content card with image, labels, title, summary, CTA | VerticalCard, HorizontalCard, BookCard, HorizontalBookCard, IconCard |
+| `statistic` | Key metrics display with icon, value, labels | StatsCard, StatsCardItem |
+| `quote` | Highlighted quote with attribution and image | QuoteHighlight |
+| `navigation` | Multi-level navigation with section banners | MegaMenu |
+| `share-action` | Social sharing buttons with localized labels | ShareButtons |
+| `gallery` | Media gallery (images, videos, embeds) | Gallery |
+| `text-cta` | Call-to-action banner with heading, text, buttons | TextCta |
+
+---
+
+## Schema format
+
+Each schema is a [JSON Schema 2020-12](https://json-schema.org/draft/2020-12/schema)
+document with these conventions:
+
+- **`$id`** — Stable identifier: `https://github.com/unisdr/undrr-mangrove/schemas/{name}`
+- **`x-mangrove`** — Extension namespace containing:
+  - `version` — Schema version
+  - `phase` — Implementation phase (currently 1)
+  - `implementors` — Mangrove component names that implement this schema
+  - `deviations` — Where current prop names differ from canonical names
+  - `notes` — Additional context
+
+### Custom format annotations
+
+- **`"format": "html"`** — The field accepts sanitized HTML. Consumers must sanitize
+  before rendering (Mangrove uses DOMPurify).
+- **`"format": "uri"`** — Standard URI format.
+
+### Content and presentation fields
+
+Schemas include both content fields (`title`, `summary`, `image`) and presentation
+attributes (`variant`, `iconColor`, `backgroundColor`). If a consumer needs to
+provide the value to use the component correctly, it is part of the schema.
+
+### Example: card schema (excerpt)
+
+This is what a compiled schema file looks like. The full source is in
+[`schemas/card.schema.js`](https://github.com/unisdr/undrr-mangrove/blob/main/schemas/card.schema.js).
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/unisdr/undrr-mangrove/schemas/card",
+  "title": "Card",
+  "description": "Content card representing a single item (article, event, publication) with image, labels, title, summary, and call-to-action.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "title":   { "type": "string", "description": "Card heading text" },
+          "summary": { "type": "string", "format": "html", "description": "Card body text (sanitized HTML supported)" },
+          "link":    { "type": "string", "format": "uri",  "description": "Primary URL for the card" },
+          "image": {
+            "type": "object",
+            "properties": {
+              "src": { "type": "string", "format": "uri", "description": "Image URL" },
+              "alt": { "type": "string", "description": "Alt text for the image. Use empty string for decorative images." }
+            },
+            "required": ["src", "alt"]
+          },
+          "labels":  { "type": "array", "items": { "type": "string" }, "maxItems": 2 },
+          "button":  { "type": "string", "description": "Button label text" },
+          "buttonType": { "type": "string", "enum": ["Primary", "Secondary"], "default": "Primary" }
+        },
+        "required": ["title"]
+      }
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["primary", "secondary", "tertiary", "quaternary", "default", "negative"],
+      "default": "primary"
+    }
+  },
+  "required": ["items"],
+  "x-mangrove": {
+    "version": "1.0.0",
+    "phase": 1,
+    "implementors": ["VerticalCard", "HorizontalCard", "BookCard", "HorizontalBookCard", "IconCard"],
+    "deviations": {
+      "items": "Current components use `data` as the prop name for the items array.",
+      "items[].image.src": "Maps to current `imgback` prop.",
+      "items[].image.alt": "Maps to current `imgalt` prop.",
+      "items[].labels": "Current components use `label1` and `label2` as separate strings.",
+      "items[].summary": "Current components use `summaryText` as the prop name."
+    }
+  }
+}
+```
+
+---
+
+## Deviations from current implementations
+
+Schemas define **canonical** field names — the target contract. Current component
+props may differ. These deviations will be resolved in Phase 2 when components
+are updated to use canonical field names.
+
+| Canonical (schema) | Current (component) | Affected components |
+|---|---|---|
+| `items` | `data` | All cards |
+| `items[].image.src` | `imgback` | All cards |
+| `items[].image.alt` | `imgalt` | All cards |
+| `items[].labels[]` | `label1`, `label2` | VerticalCard, HorizontalCard, HorizontalBookCard |
+| `items[].summary` | `summaryText` | All cards |
+| `stats[].summary` | `summaryText` | StatsCard |
+| `image.src` / `image.alt` | `imageSrc` / `imageAlt` | QuoteHighlight |
+| `image.src` / `image.alt` | `image` / `imageAlt` | TextCta |
+| `sharingSubject` | `SharingSubject` | ShareButtons |
+| `sharingBody` | `SharingTextBody` | ShareButtons |
+
+---
+
+## Using schemas
+
+> **Before you write mapping code:** Several schemas have deviations from current component props — your data may pass schema validation but the component will use different field names. Check the [Deviations](#deviations-from-current-implementations) table before building a CMS mapping or data pipeline. Until Phase 2, use the current prop names listed in the "Current (component)" column.
+
+### Pre-built JSON files
+
+Built JSON Schema files are published in the npm package under `schemas/`:
+
+```
+schemas/card.schema.json
+schemas/statistic.schema.json
+schemas/quote.schema.json
+schemas/navigation.schema.json
+schemas/share-action.schema.json
+schemas/gallery.schema.json
+schemas/text-cta.schema.json
+```
+
+### Validating data against a schema
+
+Any JSON Schema 2020-12 validator works. Example with [ajv](https://ajv.js.org/):
+
+```js
+import Ajv2020 from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
+import cardSchema from '@undrr/undrr-mangrove/schemas/card.schema.json';
+
+const ajv = new Ajv2020({ strict: false });
+addFormats(ajv);
+ajv.addFormat('html', true);
+
+const validate = ajv.compile(cardSchema);
+const valid = validate(myCardData);
+
+if (!valid) console.error(validate.errors);
+```
+
+### Rebuilding schemas locally
+
+```bash
+yarn build:schemas            # Generate JSON from source modules
+yarn build:schemas --validate # Generate + validate with ajv
+```
+
+---
+
+## Adding a new schema
+
+1. Create `schemas/{name}.schema.js` exporting a JSON Schema document
+2. Use helpers from `schemas/helpers.js` for DRY field definitions
+3. Wrap with `schemaDocument()` to get the standard envelope
+4. Document `implementors` and any `deviations` in the `meta` object
+5. Run `yarn build:schemas --validate` to generate and validate
+6. Add tests in `schemas/__tests__/schemas.test.js`
+7. Update the schema inventory table in this page **and** in `schemas/README.md`
+
+---
+
+## Architecture
+
+```
+schemas/
+  helpers.js              Field definition factory functions
+  *.schema.js             Schema source files (JS modules)
+  build.js                Build script (JS → JSON)
+  __tests__/
+    schemas.test.js       Validation tests for all schemas
+```
+
+Source schemas are JS modules (not raw JSON) so they can use helpers, imports,
+variables, and comments. The build script imports each and serializes to JSON.
+Built files are generated during `yarn build` (which calls `node schemas/build.js`
+automatically) and published to npm.
+
+---
+
+## References
+
+- [Content architecture: what the shipping container teaches us about design systems](https://www.allaboutken.com/posts/20260327-content-architecture-shipping-container/) — Blog post that inspired this work
+- [GOV.UK content schemas](https://github.com/alphagov/publishing-api/tree/main/content_schemas) — Inspiration for the schema-as-origin pattern
+- [Issue #881](https://github.com/unisdr/undrr-mangrove/issues/881) — Full vision
+- [Issue #883](https://github.com/unisdr/undrr-mangrove/issues/883) — Phase 1 scope
+
+---
+
+<a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ContentSchemas.mdx" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub (opens in new tab)">View source on GitHub</a>
