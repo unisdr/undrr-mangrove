@@ -11,7 +11,7 @@ A responsive wrapper for iframes, videos, and other embedded media. Maintains as
 
 ## The problem
 
-Iframes don't resize responsively by default — embedded content overflows its container or collapses on smaller screens. Applying `aspect-ratio` to a parent container that also holds headings, captions, or other content forces the *entire* container to that ratio, which breaks the layout.
+Applying `aspect-ratio` to a wrapper that also holds headings, captions, or other content forces the entire container to that ratio — breaking layout. This component scopes the ratio to the embed element only, so surrounding content is unaffected.
 
 > **Implementation note (for contributors):** Bare `<iframe>` elements have no intrinsic dimensions. A previous approach applied `aspect-ratio: 16/9` to `.mg-highlight-box:has(iframe)`, which forced the whole container to 16:9. This was especially broken on Safari/WebKit mobile.
 

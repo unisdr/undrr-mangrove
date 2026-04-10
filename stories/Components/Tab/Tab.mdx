@@ -13,9 +13,6 @@ Tabs let users switch between related groups of content without leaving the page
 
 Use tabs when you have two or more named content sections that users might want to switch between, but don't need to compare side by side at the same time.
 
-- Organizing content into sections a user can flip between (e.g. overview, details, resources).
-- The content groups are peers, and users don't need to see them side by side.
-
 Don't use tabs for site navigation. Use links or menus instead.
 
 ## Variants
@@ -57,9 +54,9 @@ URL hashes work as deep links in both variants, e.g. `#mg-tabs__section-tab-2` o
 
 ## Accessibility
 
-**Horizontal tabs** follow the standard ARIA tab pattern. Only the active tab is in the Tab order; use arrow keys to navigate between tabs.
+**Horizontal tabs** follow the standard ARIA tab pattern (`role="tablist"`, `role="tab"` with `aria-selected`, `role="tabpanel"` on panels; roving tabindex). Only the active tab is in the Tab order; use arrow keys to navigate between tabs.
 
-**Stacked tabs** use an accessible disclosure pattern: each trigger has `aria-expanded` to communicate open/closed state. In Chromium browsers (Chrome, Edge), collapsed panels can be found via Ctrl+F (browser find-in-page). Firefox and Safari treat collapsed panels as hidden — they are still accessible via the trigger but are not findable via Ctrl+F.
+**Stacked tabs** use an accessible disclosure pattern: each trigger has `aria-expanded` and `aria-controls` to communicate open/closed state; panels have `role="region"` with `aria-labelledby`. In Chromium browsers (Chrome, Edge), collapsed panels can be found via Ctrl+F (browser find-in-page). Firefox and Safari treat collapsed panels as hidden — they are still accessible via the trigger but are not findable via Ctrl+F.
 
 > **Implementation note (for contributors):** Horizontal tabs use `role="tablist"` on the list, `role="tab"` with `aria-selected` on triggers, and `role="tabpanel"` on panels (roving tabindex). Stacked tabs use `role="button"` with `aria-expanded` and `aria-controls` on triggers, `role="region"` with `aria-labelledby` on panels. The `hidden="until-found"` attribute on stacked panels enables Ctrl+F discoverability in Chromium; other browsers fall back to standard `hidden` behavior.
 
@@ -306,7 +303,9 @@ Each tab object in `tabdata`:
 
 ## Migration
 
-### Upgrading to 2.5: trigger ID change
+> **Note:** The migration notes below apply to stacked tabs and vanilla JS. If you use the React `<Tab>` component with `variant="horizontal"`, no migration is required.
+
+### v2.5: trigger ID change
 
 In version 2.5, the ID of stacked tab trigger elements changed. If you have CSS or JavaScript that selects triggers by ID:
 

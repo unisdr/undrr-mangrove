@@ -74,7 +74,15 @@ Challenge pages look different from error pages so visitors understand they are 
 
 The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 300 × 65 px (normal) or full-width with min 300 px (flexible mode). Most legitimate visitors pass the managed challenge automatically with no interaction.
 
-> **Implementation note (for contributors):** The neutral background (`#f2f2f2`) and teal accent deliberately diverge from the blue error page palette to signal "routine verification checkpoint", not an error state. The centered card follows UX research on reducing CAPTCHA friction. Design references: [Cloudflare Turnstile widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/), [Cloudflare custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/), [Cloudflare additional configuration](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/), [CAPTCHA can ruin your UX (Auth0)](https://auth0.com/blog/captcha-can-ruin-your-ux-here-s-how-to-use-it-right/), [Cloudflare Turnstile accessibility (WCAG 2.1 AA)](https://developers.cloudflare.com/turnstile/frequently-asked-questions/).
+The Cloudflare Turnstile widget is [WCAG 2.1 Level AA compliant](https://developers.cloudflare.com/turnstile/frequently-asked-questions/). Most visitors pass the managed challenge automatically with no interaction required.
+
+> **Implementation note (for contributors):** The neutral background (`#f2f2f2`) and teal accent deliberately diverge from the blue error page palette to signal "routine verification checkpoint", not an error state. The centered card follows UX research on reducing CAPTCHA friction. Design references:
+>
+> - [Cloudflare Turnstile widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/)
+> - [Cloudflare custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/)
+> - [Cloudflare additional configuration](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/)
+> - [CAPTCHA can ruin your UX (Auth0)](https://auth0.com/blog/captcha-can-ruin-your-ux-here-s-how-to-use-it-right/)
+> - [Cloudflare Turnstile accessibility (WCAG 2.1 AA)](https://developers.cloudflare.com/turnstile/frequently-asked-questions/)
 
 ### Important constraints
 

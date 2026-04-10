@@ -51,12 +51,10 @@ Use the variant control below the canvas to preview each option.
 By default, card titles display three signals that they are clickable:
 
 1. **Blue color** matching the theme's interactive color (adapts per theme)
-2. **Underline** with a subtle offset
+2. **Underline** with a 3px offset
 3. **Chevron indicator** pointing right (flips left automatically in RTL layouts)
 
 On hover, the underline intensifies.
-
-> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
 ### Opting out
 
@@ -79,6 +77,8 @@ To disable link visibility signals (for example, on cards where the title should
 This removes the blue color, underline, and chevron. The card remains clickable via the stretched link.
 
 <Canvas of={VerticalCardStories.PlainTitleVerticalCard} />
+
+> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
 ## Props
 
@@ -104,7 +104,7 @@ This removes the blue color, underline, and chevron. The card remains clickable 
 ## Accessibility
 
 - The entire card surface is clickable as a single link (via the title link)
-- Inline links in the summary remain independently clickable — they are not overridden by the card link
+- Inline links in the summary remain independently clickable (`z-index: 101`) — they are not overridden by the card link
 - Focus states are visible on all interactive elements
 - RTL layout is automatic when `dir="rtl"` is set on the document
 

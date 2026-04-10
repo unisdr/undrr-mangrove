@@ -155,8 +155,8 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 
 ### Known limitations
 
-- Screen readers may announce this as an unlabelled section
-- Screen readers cannot programmatically link the quote text to its attribution
+- Screen readers announce this as an unlabelled section — the `<section>` wrapper has no `aria-label` or `aria-labelledby`
+- Screen readers cannot programmatically link the quote text to its attribution — there is no `<cite>`, `<footer>`, or `aria-describedby` connecting them within the `<blockquote>`
 - Screen readers may not identify the attribution text as the source of the quote
 - The auto-generated fallback alt text (e.g., "Mami Mizutori image") may not be descriptive enough for images that convey meaningful content
 

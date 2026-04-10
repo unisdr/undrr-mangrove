@@ -225,6 +225,19 @@ IconCard renders individual cards. When displaying multiple cards in a grid, wra
 - Write lengthy summaries (use regular cards instead)
 - Manually set alignment for RTL - it's automatic
 
+## Migration from v1
+
+If upgrading from the previous IconCard API:
+
+| Old prop | New prop | Notes |
+|----------|----------|-------|
+| `icon` (SVG string) | `icon` (class name) | Now uses CSS classes like `"mg-icon fa-globe"` (matches StatsCard) |
+| `alignment` | Removed | RTL is automatic via CSS |
+| `stackedLayout` | Removed | Always vertical now |
+| `description` | `summaryText` | Aligns with VerticalCard |
+| `image` | `imgback` | Aligns with VerticalCard |
+| `imageAlt` | `imgalt` | Aligns with VerticalCard |
+
 ## Server-rendered / CDN usage
 
 IconCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
@@ -250,19 +263,6 @@ createHydrator({ selector: "[data-mg-icon-card]", component: IconCard, fromEleme
 ```
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
-
-## Migration from v1
-
-If upgrading from the previous IconCard API:
-
-| Old prop | New prop | Notes |
-|----------|----------|-------|
-| `icon` (SVG string) | `icon` (class name) | Now uses CSS classes like `"mg-icon fa-globe"` (matches StatsCard) |
-| `alignment` | Removed | RTL is automatic via CSS |
-| `stackedLayout` | Removed | Always vertical now |
-| `description` | `summaryText` | Aligns with VerticalCard |
-| `image` | `imgback` | Aligns with VerticalCard |
-| `imageAlt` | `imgalt` | Aligns with VerticalCard |
 
 ## Changelog
 

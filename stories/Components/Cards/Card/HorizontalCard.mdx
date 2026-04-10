@@ -45,12 +45,10 @@ Use the variant control below the canvas to preview each option.
 By default, card titles display three signals that they are clickable:
 
 1. **Blue color** matching the theme's interactive color (adapts per theme)
-2. **Underline** with a subtle offset
+2. **Underline** with a 3px offset
 3. **Chevron indicator** pointing right (flips left automatically in RTL layouts)
 
 On hover, the underline intensifies.
-
-> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
 ### Opting out
 
@@ -69,6 +67,8 @@ Add `mg-card--plain-title` to disable all link signals while keeping the card cl
   ...
 </article>
 ```
+
+> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
 ## Responsive behavior
 

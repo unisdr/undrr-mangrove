@@ -13,6 +13,26 @@ import * as CookieConsentBannerStories from './CookieConsentBanner.stories';
 
 The Cookie Consent Banner component provides a configurable cookie consent solution for UNDRR websites, loading the official UNDRR cookie consent implementation directly from the UNDRR CDN.
 
+> **Quick start for Drupal / plain HTML integrators:** If you're integrating on a Drupal or plain HTML site, see [Plain HTML / CDN usage](#plain-html--cdn-usage) for the three-line include — no React wrapper needed.
+
+## Plain HTML / CDN usage
+
+If you're working on a plain HTML site (no React), you don't need this React wrapper. For Drupal and other server-rendered contexts, these three tags are the recommended integration — no React wrapper is needed. Simply include the following tags and the banner will initialise automatically:
+
+```html
+<!-- UNDRR Cookie Banner Implementation -->
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css"
+/>
+<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js"></script>
+<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js"></script>
+```
+
+For a complete implementation example, see the [UNDRR Cookie Banner documentation](https://assets.undrr.org/static/cookie-banner/v1/example.html).
+
+> **Implementation note (for contributors):** The banner's CDN resources live at `https://assets.undrr.org/static/cookie-banner/v1/`: `cookieconsent.css` (styling), `cookieconsent.umd.js` (core library), and `cookieconsent-undrr.js` (UNDRR-specific configuration). The React component constructs resource URLs by appending these filenames to the configured `cdnBaseUrl`.
+
 ## Features
 
 - Fully customizable consent modal and preferences modal
@@ -275,24 +295,6 @@ The cookie consent banner is built with accessibility in mind, including:
 - Keyboard navigation support
 - Focus management
 - Screen reader friendly content
-
-## Plain HTML / CDN usage
-
-If you're working on a plain HTML site (no React), you don't need this React wrapper. Simply include the following tags and the banner will initialise automatically:
-
-```html
-<!-- UNDRR Cookie Banner Implementation -->
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css"
-/>
-<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js"></script>
-<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js"></script>
-```
-
-For a complete implementation example, see the [UNDRR Cookie Banner documentation](https://assets.undrr.org/static/cookie-banner/v1/example.html).
-
-> **Implementation note (for contributors):** The banner's CDN resources live at `https://assets.undrr.org/static/cookie-banner/v1/`: `cookieconsent.css` (styling), `cookieconsent.umd.js` (core library), and `cookieconsent-undrr.js` (UNDRR-specific configuration). The React component constructs resource URLs by appending these filenames to the configured `cdnBaseUrl`.
 
 ## References
 

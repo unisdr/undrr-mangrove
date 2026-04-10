@@ -46,11 +46,32 @@ Small interactive tags used to show active filters, selections, or categories. C
 
 ## Usage
 
-See the canvas above for an interactive preview of all chip states.
+### Chip with dismiss
+
+```html
+<span class="mg-chip">
+  Label
+  <button class="mg-chip__cross" aria-label="Remove Label filter">×</button>
+</span>
+```
+
+### Chip without dismiss
+
+```html
+<span class="mg-chip">Label</span>
+```
+
+Copy from the HTML tab in the canvas above for the full rendered output with any additional wrapper classes.
 
 ## Interactions
 
 - The hover state applies to the entire chip.
+
+## Accessibility
+
+- The dismiss button is icon-only. Provide an accessible name via `aria-label` that includes the filter value: `aria-label="Remove [label text]"` — for example, `aria-label="Remove Sendai Framework"`.
+- Keyboard users activate the dismiss button with **Enter** or **Space**.
+- After a chip is dismissed, move focus to the next chip or the related search input — do not drop focus.
 
 ## Changelog
 

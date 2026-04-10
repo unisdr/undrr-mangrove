@@ -372,11 +372,11 @@ createHydrator({ selector: "[data-mg-search-widget]", component: SyndicationSear
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
-> **Drupal note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container — Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
+> **Integration note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container — Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
 
 ## Architecture
 
-> **Implementation note (for contributors):** This section covers internal design decisions. Consumers do not need this to integrate the widget.
+<details><summary>Implementation notes (for contributors)</summary>
 
 The component uses React 19's concurrent rendering features for a smooth, non-blocking search experience:
 
@@ -428,6 +428,8 @@ On screens ≤800px, the sidebar is replaced with a left-slide drawer:
 - **Focus trapping** for accessibility
 
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
+
+</details>
 
 ## Changelog
 

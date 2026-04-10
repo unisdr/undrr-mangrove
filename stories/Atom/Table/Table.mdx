@@ -107,7 +107,7 @@ You can combine styling and responsive modifiers—here's a bordered table that 
 
 <Canvas of={TableStories.BorderedStackedTable} meta={TableStories} />
 
-## Notes
+## Technical notes
 
 Striped tables work especially well for financial data or any content where users need to track across multiple columns — the alternating row colors act as visual guides.
 
@@ -120,12 +120,20 @@ Striped tables work especially well for financial data or any content where user
 - **Styling:** `mg-table--striped`, `mg-table--border`
 - **Responsive:** `mg-table--stacked`, `mg-table--scroll`
 
-### Setup steps
+### Class combinations
 
-1. **Choose your size:** Select Large or Small from the size control
-2. **Pick a variant:** Default, Striped, or Bordered from the variant control
-3. **Set responsiveness:** Choose Stacked, Auto, or Scroll from the responsive control
-4. **Copy the code:** Grab the HTML from the HTML tab and you're good to go
+Combine modifier classes to get the right table for your context:
+
+```html
+<!-- Small, striped, stacks on mobile -->
+<table class="mg-table mg-table--small mg-table--striped mg-table--stacked">…</table>
+
+<!-- Bordered, auto-responsive (uses JS or CSS container) -->
+<table class="mg-table mg-table--border mg-table--auto">…</table>
+
+<!-- Default table — no modifiers needed -->
+<table class="mg-table">…</table>
+```
 
 ## Usage guidelines
 
