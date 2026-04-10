@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Platform services/Cookie consent"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+# Cookie consent
+
+Mangrove provides a shared cookie consent banner that loads from the UNDRR CDN. It handles consent categories (necessary, functionality, analytics), multilingual support, and compliance with UNDRR privacy requirements.
+
+The banner can be added to any page with three script/link tags -- no React required:
+
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css" />
+<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js"></script>
+<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js"></script>
+```
+
+For React applications, import the `CookieConsentBanner` component:
+
+```jsx
+import { CookieConsentBanner } from '@undrr/undrr-mangrove';
+
+<CookieConsentBanner />
+```
+
+See the <LinkTo kind="components-cookieconsentbanner" story="docs">CookieConsentBanner component</LinkTo> for full documentation, props, custom configuration, and CDN details.
+
+## Accessibility
+
+The cookie consent banner behaves as a modal overlay. Key considerations:
+
+- The banner traps focus when visible and returns focus to the triggering element on dismissal.
+- All controls are keyboard accessible (Tab to navigate, Enter to activate, Escape to dismiss).
+- The banner uses `role="dialog"` and `aria-label` so screen readers announce it as a dialog.
+- Consent choices persist so the banner does not reappear on every page load, avoiding repeated interruptions for assistive technology users.
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/CookieConsent.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

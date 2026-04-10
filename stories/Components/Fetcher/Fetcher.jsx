@@ -1,5 +1,8 @@
+// TODO: Layered hydration (.fromElement.js + .hydrate.js) not yet adopted for
+// this component. See docs/HYDRATION.md for the pattern.
 import React from 'react';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const RESPONSE_PARAMS = {
   isLoading: false,
@@ -22,6 +25,18 @@ export const generateQueryParams = params => {
   return urlSearchParams.toString();
 };
 
+/**
+ * Generic data fetcher that retrieves JSON from an API endpoint and passes the
+ * response to a render prop. Supports optional query parameters and basic
+ * authentication credentials.
+ *
+ * @param {Object} props
+ * @param {string} props.api              API endpoint URL to fetch data from.
+ * @param {Function} props.render         Render prop receiving { isLoading, data }.
+ * @param {Object} [props.queryParams={}] Key-value pairs appended as URL query parameters.
+ * @param {string} [props.username]       Username for basic authentication (currently unused).
+ * @param {string} [props.password]       Password for basic authentication (currently unused).
+ */
 const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
   const [response, setResponse] = useState(RESPONSE_PARAMS);
 
@@ -74,6 +89,19 @@ const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
   };
 
   return <div>{render(response)}</div>;
+};
+
+Fetcher.propTypes = {
+  /** API endpoint URL to fetch data from. */
+  api: PropTypes.string.isRequired,
+  /** Render prop receiving { isLoading, data } response object. */
+  render: PropTypes.func.isRequired,
+  /** Key-value pairs appended as URL query parameters. */
+  queryParams: PropTypes.object,
+  /** Username for basic authentication. */
+  username: PropTypes.string,
+  /** Password for basic authentication. */
+  password: PropTypes.string,
 };
 
 export default Fetcher;

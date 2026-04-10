@@ -1,0 +1,326 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import * as UtilityCssStories from './UtilityCss.stories';
+
+<Meta title="Components/Utility CSS" />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Utility classes
+
+Mangrove provides a growing collection of utility classes for common styling and layout needs.
+
+## Sass
+
+Sass/CSS is located at `stories/assets/scss/_utility.scss`
+
+## Screen reader only (.mg-u-sr-only)
+
+This utility class hides content visually while keeping it accessible to screen readers.
+
+```html
+<span class="mg-u-sr-only">Screen reader only text</span>
+```
+
+## Responsive display utilities
+
+Control element visibility based on screen size.
+
+### Show on large screens only (.mg-u-responsive--show-large)
+
+Hides content on small screens, shows on medium screens and up.
+
+```html
+<div class="mg-u-responsive--show-large">This content only appears on larger screens</div>
+```
+
+### Show on small screens only (.mg-u-responsive--show-small)
+
+Shows content on small screens, hides on medium screens and up.
+
+```html
+<div class="mg-u-responsive--show-small">This content only appears on smaller screens</div>
+```
+
+## Layout utilities
+
+### Expand to size (.mg-u-expand-to-size)
+
+Creates responsive container widths with margin adjustments.
+
+```html
+<div class="mg-u-expand-to-size">Responsive container content</div>
+```
+
+### Overflow hidden (.mg-u-overflow-hidden)
+
+Hides content that overflows the container boundaries.
+
+```html
+<div class="mg-u-overflow-hidden">Content that won't show scrollbars</div>
+```
+
+## Text wrapping utilities
+
+### Balanced text wrap (.mg-u-text-wrap-balanced)
+
+Creates balanced line breaks for more aesthetically pleasing text layout.
+
+```html
+<div class="mg-u-text-wrap-balanced">Your text content here</div>
+```
+
+### Pretty text wrap (.mg-u-text-wrap-pretty)
+
+Optimizes text wrapping for improved readability.
+
+```html
+<div class="mg-u-text-wrap-pretty">Your text content here</div>
+```
+
+### Comma separator (.mg-u-comma-between)
+
+Automatically adds commas between child elements, useful for lists.
+
+```html
+<div class="mg-u-comma-between">
+  <span>Item 1</span>
+  <span>Item 2</span>
+  <span>Item 3</span>
+</div>
+```
+
+## Background color utilities
+
+Comprehensive background color utilities based on the Mangrove color system.
+
+### Basic colors
+
+```html
+<!-- Basic colors -->
+<div class="mg-u-background-color--white">White background</div>
+<div class="mg-u-background-color--black">Black background</div>
+```
+
+### Blue shades (.mg-u-background-color--blue-*)
+
+Available in shades from 50 (lightest) to 900 (darkest):
+
+```html
+<div class="mg-u-background-color--blue-50">Blue 50</div>
+<div class="mg-u-background-color--blue-100">Blue 100</div>
+<div class="mg-u-background-color--blue-200">Blue 200</div>
+<div class="mg-u-background-color--blue-300">Blue 300</div>
+<div class="mg-u-background-color--blue-400">Blue 400</div>
+<div class="mg-u-background-color--blue-500">Blue 500</div>
+<div class="mg-u-background-color--blue-600">Blue 600</div>
+<div class="mg-u-background-color--blue-700">Blue 700</div>
+<div class="mg-u-background-color--blue-800">Blue 800</div>
+<div class="mg-u-background-color--blue-900">Blue 900</div>
+```
+
+### Orange shades (.mg-u-background-color--orange-*)
+
+Available in shades from 50 (lightest) to 900 (darkest):
+
+```html
+<div class="mg-u-background-color--orange-50">Orange 50</div>
+<div class="mg-u-background-color--orange-900">Orange 900</div>
+```
+
+### Red shades (.mg-u-background-color--red-*)
+
+Available in shades from 50 (lightest) to 900 (darkest):
+
+```html
+<div class="mg-u-background-color--red-50">Red 50</div>
+<div class="mg-u-background-color--red-900">Red 900</div>
+```
+
+### Neutral shades (.mg-u-background-color--neutral-*)
+
+Available from neutral-0 (white) to neutral-900 (black):
+
+```html
+<div class="mg-u-background-color--neutral-0">Neutral 0</div>
+<div class="mg-u-background-color--neutral-25">Neutral 25</div>
+<div class="mg-u-background-color--neutral-50">Neutral 50</div>
+<div class="mg-u-background-color--neutral-100">Neutral 100</div>
+<div class="mg-u-background-color--neutral-500">Neutral 500</div>
+<div class="mg-u-background-color--neutral-900">Neutral 900</div>
+```
+
+### Accent colors (.mg-u-background-color--accent-*)
+
+Special accent colors for highlighting:
+
+```html
+<div class="mg-u-background-color--accent-100">Accent 100</div>
+<div class="mg-u-background-color--accent-200">Accent 200</div>
+<div class="mg-u-background-color--accent-300">Accent 300</div>
+<div class="mg-u-background-color--accent-400">Accent 400</div>
+```
+
+### Sendai framework colors (.mg-u-background-color--sendai-*)
+
+Colors from the Sendai Framework for Disaster Risk Reduction:
+
+```html
+<div class="mg-u-background-color--sendai-red">Sendai red</div>
+<div class="mg-u-background-color--sendai-orange">Sendai orange</div>
+<div class="mg-u-background-color--sendai-purple">Sendai purple</div>
+<div class="mg-u-background-color--sendai-turquoise">Sendai turquoise</div>
+```
+
+### Interactive colors (.mg-u-background-color--interactive*)
+
+Colors for interactive elements like buttons and links:
+
+```html
+<div class="mg-u-background-color--interactive">Interactive default</div>
+<div class="mg-u-background-color--interactive-active">Interactive active state</div>
+```
+
+## Text color utilities
+
+Text color utilities follow the same color system as background utilities.
+
+### Basic colors
+
+```html
+<span class="mg-u-color--white">White text</span>
+<span class="mg-u-color--black">Black text</span>
+```
+
+### Blue text colors (.mg-u-color--blue-*)
+
+```html
+<span class="mg-u-color--blue-50">Blue 50 text</span>
+<span class="mg-u-color--blue-500">Blue 500 text</span>
+<span class="mg-u-color--blue-900">Blue 900 text</span>
+```
+
+### Orange text colors (.mg-u-color--orange-*)
+
+```html
+<span class="mg-u-color--orange-50">Orange 50 text</span>
+<span class="mg-u-color--orange-900">Orange 900 text</span>
+```
+
+### Red text colors (.mg-u-color--red-*)
+
+```html
+<span class="mg-u-color--red-50">Red 50 text</span>
+<span class="mg-u-color--red-900">Red 900 text</span>
+```
+
+### Neutral text colors (.mg-u-color--neutral-*)
+
+```html
+<span class="mg-u-color--neutral-0">Neutral 0 text</span>
+<span class="mg-u-color--neutral-500">Neutral 500 text</span>
+<span class="mg-u-color--neutral-900">Neutral 900 text</span>
+```
+
+### Accent text colors (.mg-u-color--accent-*)
+
+```html
+<span class="mg-u-color--accent-100">Accent 100 text</span>
+<span class="mg-u-color--accent-400">Accent 400 text</span>
+```
+
+### Sendai text colors (.mg-u-color--sendai-*)
+
+```html
+<span class="mg-u-color--sendai-red">Sendai red text</span>
+<span class="mg-u-color--sendai-orange">Sendai orange text</span>
+<span class="mg-u-color--sendai-purple">Sendai purple text</span>
+<span class="mg-u-color--sendai-turquoise">Sendai turquoise text</span>
+```
+
+### Interactive text colors (.mg-u-color--interactive*)
+
+Text colors for interactive elements:
+
+```html
+<span class="mg-u-color--interactive">Interactive text</span>
+<span class="mg-u-color--interactive-active">Interactive active text</span>
+```
+
+## Flex utilities
+
+Basic flexbox layout utilities for composing inline layouts.
+
+<Canvas of={UtilityCssStories.FlexUtilities} />
+
+| Class | CSS | Description |
+|-------|-----|-------------|
+| `.mg-u-flex` | `display: flex` | Enables flexbox on the element |
+| `.mg-u-flex-wrap` | `flex-wrap: wrap` | Allows flex items to wrap |
+| `.mg-u-align-items-center` | `align-items: center` | Vertically centers flex items |
+| `.mg-u-gap-100` | `gap: 1rem` | Adds 1rem gap between flex items |
+
+```html
+<div class="mg-u-flex mg-u-align-items-center mg-u-gap-100">
+  <span>Item 1</span>
+  <span>Item 2</span>
+</div>
+```
+
+## Alignment push utilities
+
+RTL-safe utilities to push an element toward one side of its container using CSS logical properties (`margin-inline-start`, `margin-inline-end`). These automatically flip in RTL contexts. Pair with `.mg-u-flex` for inline layouts.
+
+<Canvas of={UtilityCssStories.PushUtilities} />
+
+| Class | CSS | Effect |
+|-------|-----|--------|
+| `.mg-u-push-end` | `margin-inline-start: auto` | Pushes element to the inline end (right in LTR, left in RTL) |
+| `.mg-u-push-start` | `margin-inline-end: auto` | Pushes element to the inline start (left in LTR, right in RTL) |
+| `.mg-u-push-center` | `margin-inline: auto` | Centers element horizontally |
+
+### Examples
+
+Push a button to the end of a flex row:
+
+```html
+<div class="mg-u-flex mg-u-align-items-center">
+  <h2>How it works</h2>
+  <a href="#" class="mg-button mg-button-primary mg-u-push-end">View all</a>
+</div>
+```
+
+Center a block element:
+
+```html
+<img src="logo.svg" class="mg-u-push-center" alt="Logo" />
+```
+
+## Font size utilities (.mg-u-font-size-*)
+
+Responsive font-size classes based on Mangrove design tokens. Each class sets a mobile-first base size and scales up at the medium breakpoint (48em / 768px).
+
+| Class | Mobile | Desktop (>=48em) | Line height |
+|-------|--------|-------------------|-------------|
+| `.mg-u-font-size-150` | 1.125rem | 1.125rem | 1.5em |
+| `.mg-u-font-size-200` | 1.25rem | 1.25rem | 1.5em |
+| `.mg-u-font-size-250` | 1.4rem | 1.4rem | 1.5em |
+| `.mg-u-font-size-300` | 1.6rem | 1.6rem | 1.5em |
+| `.mg-u-font-size-400` | 1.6rem | 1.8rem | 1.5em |
+| `.mg-u-font-size-500` | 1.8rem | 2.3rem | 1.25em |
+| `.mg-u-font-size-600` | 2.3rem | 3.2rem | 1.25em |
+| `.mg-u-font-size-800` | 3.2rem | 3.6rem | 1.25em |
+| `.mg-u-font-size-900` | 3.6rem | 4rem | 1.25em |
+
+A language-specific line-height override is included for Arabic (`:lang(ar)` — 1.4) on larger sizes.
+
+```html
+<p class="mg-u-font-size-600">Large responsive text</p>
+<h2 class="mg-u-font-size-900">Override heading size</h2>
+```
+
+## Changelog
+
+- **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added flex layout utilities (`mg-u-flex`, `mg-u-flex-wrap`, `mg-u-align-items-center`, `mg-u-gap-100`) and RTL-safe alignment push utilities (`mg-u-push-end`, `mg-u-push-start`, `mg-u-push-center`) using CSS logical properties
+- **1.2** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)): Added 9 font-size utility classes (5 with responsive scaling) and language-specific line-height overrides
+- **1.1** — 2025-07-03: Added interactive examples, responsive display utilities, layout utilities, comprehensive color utilities, and restructured documentation
+- **1.0** — 2024-11-08: Initial utility CSS reference and documentation

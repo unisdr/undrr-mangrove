@@ -59,7 +59,7 @@ describe('SearchContext', () => {
         'https://www.undrr.org/search-endpoint'
       );
       expect(capturedConfig.resultsPerPage).toBe(5);
-      expect(capturedConfig.debounceDelay).toBe(300);
+      expect(capturedConfig.debounceDelay).toBe(500);
     });
 
     it('merges custom config with defaults', () => {
@@ -77,7 +77,7 @@ describe('SearchContext', () => {
       expect(capturedConfig.resultsPerPage).toBe(20);
       expect(capturedConfig.customOption).toBe('test');
       // Default values should still be present
-      expect(capturedConfig.debounceDelay).toBe(300);
+      expect(capturedConfig.debounceDelay).toBe(500);
     });
 
     it('provides initial state', () => {
@@ -198,6 +198,34 @@ describe('SearchContext', () => {
 
       expect(screen.getByTestId('query').textContent).toBe('initial query');
       expect(screen.getByTestId('sortBy').textContent).toBe('newest');
+      expect(screen.getByTestId('isInitialized').textContent).toBe('true');
+    });
+
+    it('INITIALIZE preserves query already set (e.g., from URL params)', () => {
+      let dispatch;
+      renderWithProvider({}, ({ dispatch: d }) => {
+        dispatch = d;
+      });
+
+      // Simulate useHashSync setting query before INITIALIZE runs
+      act(() => {
+        dispatch(actions.setQuery('url-query'));
+      });
+
+      expect(screen.getByTestId('query').textContent).toBe('url-query');
+
+      // INITIALIZE should not overwrite the existing query
+      act(() => {
+        dispatch(
+          actions.initialize({
+            defaultQuery: '',
+            defaultSort: 'relevance',
+            defaultFilters: [],
+          })
+        );
+      });
+
+      expect(screen.getByTestId('query').textContent).toBe('url-query');
       expect(screen.getByTestId('isInitialized').textContent).toBe('true');
     });
 

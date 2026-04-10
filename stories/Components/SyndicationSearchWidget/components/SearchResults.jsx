@@ -87,7 +87,7 @@ export function SearchResults({
         aria-busy="true"
         aria-live="polite"
       >
-        <SearchSkeleton count={5} />
+        <SearchSkeleton count={resultsPerPage} displayMode={displayMode} gridColumns={cardGridCols} />
       </div>
     );
   }
@@ -214,7 +214,7 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} />
+              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} visibleTeaserFields={visibleTeaserFields} />
             </div>
           ))}
         </div>
@@ -226,7 +226,7 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultItem hit={hit} showMetrics={showSearchMetrics} />
+              <ResultItem hit={hit} showMetrics={showSearchMetrics} visibleTeaserFields={visibleTeaserFields} />
             </div>
           ))}
         </div>
@@ -240,10 +240,32 @@ export function SearchResults({
 
 /**
  * Loading skeleton component.
+ * Renders a card grid skeleton for card/card-book modes, list skeleton otherwise.
  * @param {Object} props - Component props
  * @param {number} props.count - Number of skeleton items
+ * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
+ * @param {number} props.gridColumns - Grid columns for card modes
  */
-function SearchSkeleton({ count = 3 }) {
+function SearchSkeleton({ count = 3, displayMode = 'list', gridColumns }) {
+  const isCardMode = displayMode === 'card' || displayMode === 'card-book';
+  const cols = isCardMode ? Math.min(Math.max(gridColumns ?? count, 2), 6) : undefined;
+
+  if (isCardMode) {
+    return (
+      <div className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`} aria-hidden="true">
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className="mg-search__skeleton-card">
+            <div className="mg-search__skeleton-card-image" />
+            <div className="mg-search__skeleton-card-body">
+              <div className="mg-search__skeleton-title" />
+              <div className="mg-search__skeleton-meta" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="mg-search__skeleton" aria-hidden="true">
       {Array.from({ length: count }).map((_, i) => (

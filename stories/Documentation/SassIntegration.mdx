@@ -3,7 +3,7 @@ import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <Meta
-  title="Getting started/Sass integration"
+  title="Getting started/Integration/Sass integration"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -14,81 +14,489 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # Sass integration guide
 
-Take full control of Mangrove styling by integrating Sass files directly into your build process. Perfect for custom themes and design system extensions.
+Integrate Mangrove's SCSS source files into your project to customize variables, use mixins, and build themes that work with Mangrove's shared content structures.
 
-When customizing Mangrove with Sass, it's important to work within **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">UNDRR's established standards</LinkTo>** to ensure your customizations align with the broader organizational approach and can benefit from centralized updates.
+Before customizing, review **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand what's shared across themes and what each property controls.
 
 <TableOfContents
   title="On this page"
   tocData={[
-    { id: 'quick-setup', text: 'Quick Setup' },
-    { id: 'available-sass-files', text: 'Available Sass Files' },
-    { id: 'customization-examples', text: 'Customization Examples' },
-    { id: 'building-custom-components', text: 'Building Custom Components' },
-    { id: 'theme-creation', text: 'Theme Creation' },
-    { id: 'build-scripts', text: 'Build Scripts' },
-    { id: 'best-practices', text: 'Best Practices' },
-    { id: 'next-steps', text: 'Next Steps' },
+    { id: 'installation', text: 'Installation' },
+    { id: 'scss-file-structure', text: 'SCSS file structure' },
+    { id: 'root-font-size-and-mg-rem', text: 'Root font-size and mg-rem()' },
+    { id: 'variables-reference', text: 'Variables reference' },
+    { id: 'mixins-reference', text: 'Mixins reference' },
+    { id: 'the-default-override-mechanism', text: 'The !default override mechanism' },
+    { id: 'creating-a-theme-override', text: 'Creating a theme override' },
+    { id: 'importing-individual-component-styles', text: 'Importing individual component styles' },
+    { id: 'build-tool-configuration', text: 'Build tool configuration' },
   ]}
   showNumbers={false}
 />
 
-## Quick setup
-
-### 1. Install Mangrove
-
-**Via npm/yarn**
+## Installation
 
 ```bash
-# Install as a dependency
-yarn install @undrr/undrr-mangrove
-
-# Or with yarn
 yarn add @undrr/undrr-mangrove
+
+# or
+npm install @undrr/undrr-mangrove
 ```
 
-**Via Git Submodule** (For direct access)
+The SCSS source files are in `stories/assets/scss/` within the installed package.
 
-```bash
-# Add as a submodule
-git submodule add https://github.com/unisdr/undrr-mangrove.git src/sass/mangrove
+## SCSS file structure
 
-# Update submodule
-git submodule update --init --recursive
+Mangrove's styles are organized as a set of SCSS partials imported by a theme entry point. The default theme is `style.scss`:
+
+```
+stories/assets/scss/
+  style.scss                   # Default (UNDRR) theme entry point
+  style-preventionweb.scss     # PreventionWeb theme
+  style-irp.scss               # IRP theme
+  style-mcr.scss               # MCR2030 theme
+  style-delta.scss             # DELTA Resilience theme
+  style-gutenberg.scss         # Legacy Gutenberg editor subset
+  _variables.scss              # Design tokens and component variables
+  _variables-preventionweb.scss # PW variable overrides
+  _variables-irp.scss          # IRP variable overrides
+  _variables-mcr.scss          # MCR variable overrides
+  _variables-delta.scss        # DELTA Resilience variable overrides
+  _fonts.scss                  # Web font imports
+  _breakpoints.scss            # devicebreak() mixin
+  _mixins.scss                 # Vendor-prefix and utility mixins
+  _utility.scss                # CSS utility classes
+  _foundational.scss           # Base typography and element styles
+  _components.scss             # Rollup of all component SCSS imports
 ```
 
-### 2. Import Sass Files
-
-Create your main Sass file (`src/sass/main.scss`):
+Each theme entry point follows the same import order:
 
 ```scss
-// 1. Import Mangrove variables first (for customization)
-@import '~@undrr/undrr-mangrove/scss/variables';
-
-// 2. Override variables here (optional)
-$mg-primary-color: #0066cc;
-$mg-secondary-color: #ff6b35;
-$mg-font-family-base: 'Roboto', Arial, sans-serif;
-
-// 3. Import Mangrove core styles
-@import '~@undrr/undrr-mangrove/scss/mixins';
-@import '~@undrr/undrr-mangrove/scss/base';
-@import '~@undrr/undrr-mangrove/scss/layout';
-
-// 4. Import component styles you need
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-@import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/form-base';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/TextInput/text-input';
-
-// 5. Add your custom styles
-@import 'custom/components';
-@import 'custom/layouts';
+@import "./variables";            // Base tokens
+@import "./variables-{theme}";    // Theme-specific overrides (omitted in default)
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./utility";
+@import "./foundational";
+@import "./components";
 ```
 
-### 3. Configure Your Build Tool
+`_variables.scss` defines tokens with the `!default` flag, so a theme file imported after it can reassign those variables before they reach the component stylesheets.
 
-**Webpack Configuration**
+## Root font-size and mg-rem()
+
+As of v1.4, Mangrove's default root font-size is the browser standard (typically 16px). The compiled CSS does not set a `font-size` on `html`, so user font-size preferences are respected.
+
+All spacing, font-size, and width tokens use `mg-rem($px)`, a compile-time function that converts pixel values to rem for the configured root:
+
+```scss
+// Pass the intended pixel value — mg-rem() handles the math
+padding: mg-rem(15);       // 15px at any root
+font-size: mg-rem(16);     // 16px at any root (outputs 1rem at root=16)
+```
+
+**For existing sites** that need the old 10px root, set `$mg-html-font-size: 10` before importing Mangrove variables:
+
+```scss
+$mg-html-font-size: 10;
+@import "@undrr/undrr-mangrove/stories/assets/scss/variables";
+```
+
+Or use the pre-compiled legacy theme CSS (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.). See the <LinkTo kind="getting-started-release-notes-v1-4" story="docs">v1.4 release notes</LinkTo> for the full migration guide.
+
+## Variables reference
+
+All variables below are defined in `stories/assets/scss/_variables.scss`. Variables marked with `!default` can be overridden by theme files or your own customizations.
+
+### Interactive colors (`!default`)
+
+| Variable | Default value | Purpose |
+|----------|--------------|---------|
+| `$mg-color-interactive` | `$mg-color-blue-900` (#004f91) | Links, primary actions |
+| `$mg-color-interactive-active` | `$mg-color-blue-700` (#3372a7) | Hover/active state for interactive elements |
+
+### Color scales (not `!default`)
+
+These define the palette and are not overridden per-theme. Override them if you need to change the entire color system.
+
+**Blue** (`$mg-color-blue-50` through `$mg-color-blue-900`): #e6edf4 to #004f91
+
+**Orange** (`$mg-color-orange-50` through `$mg-color-orange-900`): #fdf1ea to #eb752a
+
+**Red** (`$mg-color-red-50` through `$mg-color-red-900`): #f9e6e9 to #c10920
+
+**Neutral** (`$mg-color-neutral-0` through `$mg-color-neutral-900`): #fff to #000, plus aliases `$mg-color-black` (#1a1a1a) and `$mg-color-white` (#fff)
+
+**Accent**: `$mg-color-accent-100` (#f4e496), `$mg-color-accent-200` (#d3cea9), `$mg-color-accent-300` (#fdf6d9), `$mg-color-accent-400` (#0a6969)
+
+**Sendai Framework**: `$sendai-red`, `$sendai-orange`, `$sendai-purple`, `$sendai-turquoise` (each with -400, -600, -800, -900 shades)
+
+### Tag variables (`!default`)
+
+| Variable | Default value |
+|----------|--------------|
+| `$mg-color-tag` | `$mg-color-interactive` |
+| `$mg-color-tag--hover` | `$mg-color-interactive-active` |
+| `$mg-color-tag-secondary` | `$mg-color-neutral-500` |
+| `$mg-color-tag-secondary--hover` | `$mg-color-neutral-600` |
+| `$mg-color-tag-accent` | `$mg-color-orange-900` |
+| `$mg-color-tag-accent--hover` | `$mg-color-orange-800` |
+| `$mg-radius-tag` | `$mg-spacing-0` (0) |
+
+### Button variables (`!default`)
+
+| Variable | Default value |
+|----------|--------------|
+| `$mg-color-button` | `$mg-color-white` |
+| `$mg-color-button--hover` | `$mg-color-white` |
+| `$mg-color-button-background` | `$mg-color-interactive` |
+| `$mg-color-button-background--hover` | `$mg-color-interactive-active` |
+| `$mg-radius-button` | `$mg-spacing-0` (0) |
+| `$mg-border-width-button` | `1px` |
+| `$mg-color-text-button` | `$mg-color-white` |
+| `$mg-border-color-button` | `$mg-color-text-button` |
+| `$mg-padding-button` | `$mg-spacing-100 $mg-spacing-150` |
+| `$mg-font-size-button` | `$mg-font-size-250` (14px) |
+
+### Form variables (`!default`)
+
+| Variable | Default value |
+|----------|--------------|
+| `$mg-color-form-check` | `$mg-color-interactive` |
+| `$mg-color-form-check--hover` | `$mg-color-interactive-active` |
+| `$mg-color-form-check--checked` | `$mg-color-interactive` |
+| `$mg-color-form-focus` | `$mg-color-interactive` |
+| `$mg-radius-form-input` | `$mg-spacing-0` (0) |
+
+### Shared variant colors (`!default`)
+
+Used by hero, cards, and other components for color variants.
+
+| Variable | Default value |
+|----------|--------------|
+| `$mg-color-secondary` | `$mg-color-orange-800` |
+| `$mg-color-tertiary` | `$mg-color-neutral-900` |
+| `$mg-color-quaternary` | `$mg-color-red-800` |
+
+### Hero variables (`!default`)
+
+| Variable | Default value |
+|----------|--------------|
+| `$mg-color-hero` | `$mg-color-interactive` |
+| `$mg-color-hero--secondary` | `$mg-color-secondary` |
+| `$mg-color-hero--tertiary` | `$mg-color-tertiary` |
+| `$mg-color-hero--quaternary` | `$mg-color-quaternary` |
+| `$mg-opacity-hero` | `0.85` |
+| `$mg-spacing-hero-overlay` | `0` |
+
+### Tab variables (`!default`)
+
+| Variable | Default value |
+|----------|--------------|
+| `$mg-color-tabbar-background` | `$mg-color-blue-50` |
+| `$mg-color-tab-background` | `$mg-color-blue-200` |
+| `$mg-color-tab-background--inactive` | `$mg-color-tabbar-background` |
+| `$mg-color-tab-background--hover` | `$mg-color-blue-800` |
+| `$mg-color-tab-border` | `$mg-color-neutral-700` |
+| `$mg-color-tab-border--hover` | `$mg-color-neutral-900` |
+| `$mg-color-tab-border--active` | `$mg-color-blue-800` |
+| `$mg-radius-tab` | `$mg-spacing-0` (0) |
+| `$mg-padding-tab` | `$mg-spacing-75 $mg-spacing-150` |
+| `$mg-color-text-tab` | `$mg-color-neutral-700` |
+| `$mg-color-text-tab--hover` | `$mg-color-white` |
+| `$mg-color-text-tab-active` | `$mg-color-neutral-700` |
+| `$mg-color-tab-section-background` | `$mg-color-neutral-0` |
+| `$mg-padding-tab-section` | `$mg-spacing-100 $mg-spacing-0` |
+| `$mg-radius-tab-section` | `$mg-spacing-0` (0) |
+| `$mg-box-shadow-tab-section` | `none` |
+| `$mg-tabs-border-bottom` | `true` |
+
+### Spacing
+
+| Variable | Pixel value | Definition |
+|----------|------------|------------|
+| `$mg-spacing-0` | 0 | `0` |
+| `$mg-spacing-25` | 2.5px | `mg-rem(2.5)` |
+| `$mg-spacing-50` | 5px | `mg-rem(5)` |
+| `$mg-spacing-75` | 7.5px | `mg-rem(7.5)` |
+| `$mg-spacing-100` | 10px | `mg-rem(10)` |
+| `$mg-spacing-150` | 15px | `mg-rem(15)` |
+| `$mg-spacing-175` | 18px | `mg-rem(18)` |
+| `$mg-spacing-200` | 20px | `mg-rem(20)` |
+| `$mg-spacing-250` | 24px | `mg-rem(24)` |
+| `$mg-spacing-300` | 30px | `mg-rem(30)` |
+| `$mg-spacing-350` | 35px | `mg-rem(35)` |
+| `$mg-spacing-400` | 50px | `mg-rem(50)` |
+| `$mg-spacing-500` | 60px | `mg-rem(60)` |
+| `$mg-spacing-600` | 80px | `mg-rem(80)` |
+| `$mg-spacing-800` | 100px | `mg-rem(100)` |
+| `$mg-spacing-1000` | 400px | `mg-rem(400)` |
+
+### Font sizes
+
+| Variable | Pixel value | Definition | Notes |
+|----------|------------|------------|-------|
+| `$mg-font-size-100` | 10px | `mg-rem(10)` | |
+| `$mg-font-size-150` | 11.25px | `mg-rem(11.25)` | |
+| `$mg-font-size-200` | 12.5px | `mg-rem(12.5)` | |
+| `$mg-font-size-250` | 14px | `mg-rem(14)` | |
+| `$mg-font-size-300` | 16px | `mg-rem(16)` | Regular body text |
+| `$mg-font-size-400` | 18px | `mg-rem(18)` | |
+| `$mg-font-size-500` | 23px | `mg-rem(23)` | |
+| `$mg-font-size-600` | 32px | `mg-rem(32)` | |
+| `$mg-font-size-800` | 36px | `mg-rem(36)` | |
+| `$mg-font-size-900` | 40px | `mg-rem(40)` | |
+| `$mg-font-size-1000` | 48px | `mg-rem(48)` | |
+| `$mg-font-size-1100` | 64px | `mg-rem(64)` | |
+| `$mg-font-body` | `$mg-font-size-300` | Alias for body text |
+| `$mg-font-tag` | `$mg-font-size-250` | Alias for tag text |
+| `$mg-font-line-height-500` | `1.25em` | |
+| `$mg-font-line-height-700` | `1.5em` | |
+
+### Font families
+
+| Variable | Value |
+|----------|-------|
+| `$mg-font-family` | `"Roboto", sans-serif` |
+| `$mg-font-family-condensed` | `"Roboto Condensed", sans-serif` |
+| `$mg-font-family-icons` | `"fontawesome"` |
+| `$mg-font-family-arabic-headings` | `"Noto Kufi Arabic", sans-serif` |
+| `$mg-font-family-arabic-body` | `"Dubai", sans-serif` |
+
+### Breakpoints
+
+| Variable | Value |
+|----------|-------|
+| `$mg-breakpoint-mobile` | `480px` |
+| `$mg-breakpoint-tablet` | `900px` |
+| `$mg-breakpoint-desktop` | `1164px` |
+| `$mg-breakpoint-desktop-wide` | `1440px` |
+
+### Widths
+
+| Variable | Pixel value | Definition |
+|----------|------------|------------|
+| `$mg-width-150` | 150px | `mg-rem(150)` |
+| `$mg-width-300` | 300px | `mg-rem(300)` |
+| `$mg-width-400` | 400px | `mg-rem(400)` |
+| `$mg-width-600` | 600px | `mg-rem(600)` |
+
+## Mixins reference
+
+### `devicebreak` (from `_breakpoints.scss`)
+
+Responsive media query mixin. This is the primary breakpoint utility used throughout Mangrove.
+
+```scss
+@mixin devicebreak($point) { ... }
+```
+
+**Breakpoint values:**
+
+| Name | Media query | Approximate size |
+|------|------------|-----------------|
+| `small` | `width <= 47.9375em` | Up to ~767px |
+| `mediumonlytab` | `width <= 89.9375em` | Up to ~1439px |
+| `medium` | `width >= 48em` | 768px and up |
+| `large` | `width >= 64em` | 1024px and up |
+| `xlarge` | `width >= 90em` | 1440px and up |
+
+**Usage:**
+
+```scss
+.my-component {
+  padding: $mg-spacing-100;
+
+  @include devicebreak(medium) {
+    padding: $mg-spacing-200;
+  }
+
+  @include devicebreak(xlarge) {
+    padding: $mg-spacing-300;
+  }
+}
+```
+
+### `mg-typography` (from `_variables.scss`)
+
+Sets font size with associated padding for heading-like elements.
+
+```scss
+@mixin mg-typography($size) { ... }
+```
+
+**Size values:** `"extra-small"`, `"small"`, `"medium"`, `"large"`, `"xlarge"`, `"huge"`, `"xhuge"`
+
+**Usage:**
+
+```scss
+.my-heading {
+  @include mg-typography("large");
+  // Outputs: font-size: 32px; padding-top: 24px; padding-bottom: 15px
+}
+```
+
+### Vendor-prefix mixins (from `_mixins.scss`)
+
+These mixins add vendor prefixes for CSS properties. Note that if your build pipeline already includes Autoprefixer, you may not need these.
+
+| Mixin | Signature | Purpose |
+|-------|-----------|---------|
+| `transition` | `@include transition($transitions...)` | Prefixed `transition` |
+| `transform` | `@include transform($transforms)` | Prefixed `transform` |
+| `rotate` | `@include rotate($deg)` | Shorthand for `transform: rotate()` |
+| `translate` | `@include translate($x, $y)` | Shorthand for `transform: translate()` |
+| `scale` | `@include scale($scale)` | Shorthand for `transform: scale()` |
+| `skew` | `@include skew($x, $y)` | Shorthand for `transform: skew()` |
+| `animation` | `@include animation($animation)` | Prefixed `animation` |
+| `gradient` | `@include gradient($direction, $list)` | Prefixed `linear-gradient` background |
+| `background` | `@include background($background...)` | Unprefixed `linear-gradient` background |
+| `background-image` | `@include background-image($deg, $colorname, $opacity)` | Unprefixed `linear-gradient` background |
+| `x-appearance` | `@include x-appearance($value)` | Prefixed `appearance` |
+
+**Usage:**
+
+```scss
+.my-element {
+  @include transition(all 0.3s ease);
+  @include transform(translateY(-50%));
+}
+
+.my-rotated {
+  @include rotate(45);
+}
+```
+
+### Placeholder selectors (from `_mixins.scss`)
+
+Mangrove also defines `%placeholder` selectors for common patterns. Use these with `@extend`:
+
+| Placeholder | Purpose |
+|-------------|---------|
+| `%paragraph-font-100` to `%paragraph-font-300` | Responsive font sizes (smaller on mobile, larger on desktop) |
+| `%border-bottom` | `border-bottom: 1px solid $mg-color-neutral-400` |
+| `%img-cover` | Full-width cover-fit image |
+
+## The `!default` override mechanism
+
+The `!default` flag in SCSS means "use this value only if the variable has not already been assigned." This is how Mangrove supports theming.
+
+In `_variables.scss`:
+
+```scss
+$mg-color-interactive: $mg-color-blue-900 !default;
+$mg-radius-button: $mg-spacing-0 !default;
+```
+
+Mangrove's built-in themes import `_variables.scss` first, then a theme-specific override file that reassigns selected tokens **without** `!default`. Because the override comes second, its plain assignments overwrite the earlier `!default` values. Any token the override file does not touch keeps its default.
+
+For example, `style-preventionweb.scss` imports the base variables first, then a theme-specific override file:
+
+```scss
+// style-preventionweb.scss
+@import "./variables";              // Sets defaults
+@import "./variables-preventionweb"; // Overrides the !default variables
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./utility";
+@import "./foundational";
+@import "./components";
+```
+
+And `_variables-preventionweb.scss` reassigns the variables that need to differ:
+
+```scss
+$pw-color-primary: #0a6969;
+
+$mg-color-interactive: $pw-color-primary;
+$mg-color-interactive-active: $pw-color-primary;
+$mg-color-button-background: $pw-color-primary;
+$mg-color-button-background--hover: $sendai-orange-900;
+$mg-radius-button: $mg-spacing-50;
+// ...
+```
+
+Because these assignments happen after `_variables.scss` loads, they replace the `!default` values before any component stylesheet reads them.
+
+## Creating a theme override
+
+To create your own theme, write a variables override file and a theme entry point that follows the same import order.
+
+### 1. Create your override file
+
+```scss
+// _variables-myorg.scss
+
+// Define your brand color
+$myorg-color-primary: #2e7d32;
+
+// Override interactive colors
+$mg-color-interactive: $myorg-color-primary;
+$mg-color-interactive-active: darken($myorg-color-primary, 10%);
+
+// Override button styling
+$mg-color-button-background: $myorg-color-primary;
+$mg-color-button-background--hover: $mg-color-interactive-active;
+$mg-radius-button: $mg-spacing-50;
+
+// Override tag colors
+$mg-color-tag: $mg-color-interactive;
+$mg-color-tag--hover: $mg-color-interactive-active;
+
+// Override form colors
+$mg-color-form-check: $mg-color-interactive;
+$mg-color-form-focus: $mg-color-interactive;
+$mg-radius-form-input: $mg-spacing-50;
+
+// Override hero
+$mg-color-hero: $mg-color-interactive;
+$mg-spacing-hero-overlay: mg-rem(20) 0;
+```
+
+### 2. Create your theme entry point
+
+```scss
+// style-myorg.scss
+@import "./variables";
+@import "./variables-myorg";
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
+@import "./utility";
+@import "./foundational";
+@import "./components";
+```
+
+This follows the same structure as PreventionWeb, IRP, and MCR themes. All `!default` variables from `_variables.scss` that you reassigned in `_variables-myorg.scss` will carry through to every component stylesheet.
+
+## Importing individual component styles
+
+If you only need styles for specific components, import the partials directly. Each component has its own `.scss` file. The full list is in `stories/assets/scss/_components.scss`.
+
+```scss
+// Import base dependencies first
+@import "stories/assets/scss/variables";
+@import "stories/assets/scss/breakpoints";
+@import "stories/assets/scss/mixins";
+@import "stories/assets/scss/foundational";
+
+// Then import only the components you need
+@import "stories/Components/Buttons/CtaButton/buttons";
+@import "stories/Components/Cards/Card/card";
+@import "stories/Components/Forms/form-base";
+@import "stories/Components/Tab/tab";
+```
+
+Note: many component stylesheets depend on variables and mixins from `_variables.scss`, `_breakpoints.scss`, and `_mixins.scss`, so always import those first.
+
+## Build tool configuration
+
+When using Mangrove's SCSS from `node_modules`, configure your Sass compiler to resolve imports from the package.
+
+**Webpack:**
 
 ```javascript
 // webpack.config.js
@@ -107,8 +515,7 @@ module.exports = {
             options: {
               sassOptions: {
                 includePaths: [
-                  path.resolve(__dirname, 'node_modules'),
-                  path.resolve(__dirname, 'src/sass'),
+                  path.resolve(__dirname, 'node_modules/@undrr/undrr-mangrove'),
                 ],
               },
             },
@@ -120,7 +527,7 @@ module.exports = {
 };
 ```
 
-**Vite Configuration**
+**Vite:**
 
 ```javascript
 // vite.config.js
@@ -130,557 +537,29 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@undrr/undrr-mangrove/scss/variables";`,
-        includePaths: ['node_modules'],
+        includePaths: [
+          'node_modules/@undrr/undrr-mangrove',
+        ],
       },
     },
   },
 });
 ```
 
-**Gulp Task**
-
-```javascript
-// gulpfile.js
-const gulp = require('gulp');
-const sass = require('gulp-sass')(require('sass'));
-
-gulp.task('sass', function () {
-  return gulp
-    .src('src/sass/**/*.scss')
-    .pipe(
-      sass({
-        includePaths: ['node_modules'],
-      }).on('error', sass.logError)
-    )
-    .pipe(gulp.dest('dist/css'));
-});
-```
-
-## Available Sass files
-
-### Core Foundation
+With `includePaths` configured, your imports resolve relative to the Mangrove package root:
 
 ```scss
-// Essential variables and mixins
-@import '~@undrr/undrr-mangrove/scss/variables';
-@import '~@undrr/undrr-mangrove/scss/mixins';
-
-// Base styles and typography
-@import '~@undrr/undrr-mangrove/scss/base';
-@import '~@undrr/undrr-mangrove/scss/_typography';
-
-// Layout systems
-@import '~@undrr/undrr-mangrove/scss/layout';
-@import '~@undrr/undrr-mangrove/stories/Atom/Layout/Grid/grid';
-```
-
-### Component Categories
-
-```scss
-// Buttons
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/Chips/chips';
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/ShareButtons/share-buttons';
-
-// Forms
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/form-base';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/TextInput/text-input';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/Textarea/textarea';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/Select/select';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/Checkbox/checkbox';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/Radio/radio';
-
-// Content Components
-@import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@undrr/undrr-mangrove/stories/Components/Cards/StatsCards/stats-cards';
-@import '~@undrr/undrr-mangrove/stories/Components/QuoteHighlight/quote-highlight';
-
-// Navigation
-@import '~@undrr/undrr-mangrove/stories/Components/Breadcrumbs/breadcrumbs';
-@import '~@undrr/undrr-mangrove/stories/Components/Pagination/pagination';
-@import '~@undrr/undrr-mangrove/stories/Components/MegaMenu/mega-menu';
-```
-
-## Customization examples
-
-### 1. Custom Color Palette
-
-```scss
-// Override Mangrove colors before importing components
-// Use actual Mangrove color variables
-
-// Primary brand colors (override blue shades)
-$mg-color-blue-900: #003366; // Custom primary blue
-$mg-color-blue-800: #1a519c; // Slightly lighter
-$mg-color-blue-700: #3372a7; // Active state
-
-// Secondary colors (override orange shades)
-$mg-color-orange-900: #ff8c42; // Custom orange
-$mg-color-orange-800: #ff6b35; // Hover state
-
-// Interactive colors
-$mg-color-interactive: $mg-color-blue-900;
-$mg-color-interactive-active: $mg-color-blue-700;
-
-// Text and neutral colors
-$mg-color-text: $mg-color-neutral-800;
-$mg-color-neutral-400: #808080; // Custom gray
-
-// Component-specific color overrides
-$mg-color-button-background: $mg-color-interactive;
-$mg-color-button-background--hover: $mg-color-interactive-active;
-$mg-color-hero: $mg-color-interactive;
-$mg-color-label: $mg-color-interactive;
-```
-
-### 2. Typography Customization
-
-```scss
-// Import Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-// Override font families
-$mg-font-family: 'Inter', 'Roboto', Arial, sans-serif;
-$mg-font-family-condensed: 'Inter', 'Roboto Condensed', Arial, sans-serif;
-
-// Override font sizes (Mangrove uses rem units)
-$mg-font-size-100: 0.875rem; // 14px - small text
-$mg-font-size-200: 1rem; // 16px - body text
-$mg-font-size-300: 1.125rem; // 18px - large body
-$mg-font-size-400: 1.25rem; // 20px - small heading
-$mg-font-size-500: 1.5rem; // 24px - medium heading
-$mg-font-size-600: 2rem; // 32px - large heading
-$mg-font-size-800: 2.5rem; // 40px - extra large
-$mg-font-size-900: 3rem; // 48px - huge
-$mg-font-size-1000: 3.5rem; // 56px - massive
-
-// Override body and label sizes
-$mg-font-body: $mg-font-size-300;
-$mg-font-label: $mg-font-size-200;
-$mg-font-line-height-500: 1.4em;
-
-// Button typography
-$mg-font-size-button: $mg-font-size-200;
-```
-
-### 3. Spacing and Layout
-
-```scss
-// Override Mangrove spacing variables
-$mg-spacing-0: 0;
-$mg-spacing-25: 0.125rem; // 2px
-$mg-spacing-50: 0.25rem; // 4px
-$mg-spacing-75: 0.5rem; // 8px
-$mg-spacing-100: 0.75rem; // 12px
-$mg-spacing-150: 1rem; // 16px - base spacing
-$mg-spacing-175: 1.25rem; // 20px
-$mg-spacing-200: 1.5rem; // 24px
-$mg-spacing-250: 2rem; // 32px
-$mg-spacing-300: 2.5rem; // 40px
-$mg-spacing-350: 3rem; // 48px
-$mg-spacing-400: 4rem; // 64px
-$mg-spacing-500: 5rem; // 80px
-$mg-spacing-600: 6rem; // 96px
-$mg-spacing-800: 8rem; // 128px
-$mg-spacing-1000: 10rem; // 160px
-
-// Container and layout overrides
-$mg-container-spacer: $mg-spacing-200; // Container padding
-
-// Button styling
-$mg-padding-button: $mg-spacing-100 $mg-spacing-200;
-$mg-radius-button: $mg-spacing-50; // Rounded corners
-$mg-border-width-button: 2px;
-
-// Component borders and radii
-$mg-radius-label: $mg-spacing-25;
-$mg-radius-tab: $mg-spacing-50;
-
-// Breakpoints (Mangrove uses px values)
-$mg-breakpoint-mobile: 480px; // Small devices
-$mg-breakpoint-tablet: 900px; // Medium devices
-$mg-breakpoint-desktop: 1164px; // Large devices
-$mg-breakpoint-desktop-wide: 1440px; // Extra large devices
-```
-
-### 4. Component-Specific Overrides
-
-```scss
-// Hero component customization
-$mg-color-hero: $mg-color-blue-900;
-$mg-color-hero--secondary: $mg-color-orange-900;
-$mg-color-hero--tertiary: $mg-color-neutral-700;
-$mg-color-hero--quaternary: $mg-color-red-900;
-$mg-opacity-hero: 0.9;
-$mg-spacing-hero-overlay: $mg-spacing-100;
-
-// Tab component styling
-$mg-color-tabbar-background: $mg-color-blue-50;
-$mg-color-tab-background: $mg-color-neutral-0;
-$mg-color-tab-border: $mg-color-neutral-300;
-$mg-color-tab-border--active: $mg-color-interactive;
-$mg-color-tab-background--inactive: $mg-color-tabbar-background;
-$mg-color-tab-background--hover: $mg-color-blue-50;
-$mg-radius-tab: $mg-spacing-50;
-$mg-padding-tab: $mg-spacing-100 $mg-spacing-200;
-$mg-color-text-tab: $mg-color-neutral-600;
-$mg-color-text-tab--hover: $mg-color-interactive;
-$mg-color-text-tab-active: $mg-color-interactive;
-
-// Button component styling
-$mg-color-button: $mg-color-white;
-$mg-color-button--hover: $mg-color-white;
-$mg-color-text-button: $mg-color-white;
-$mg-border-color-button: $mg-color-interactive;
-
-// Author image radius (for profile pictures)
-$author-image-radius: 50%; // Circular images
-```
-
-## Building custom components
-
-### Component Structure
-
-Follow Mangrove's BEM-inspired naming convention:
-
-```scss
-// custom/components/_news-card.scss
-.mg-news-card {
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: var(--mg-border-radius);
-  box-shadow: var(--mg-shadow-sm);
-  overflow: hidden;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--mg-shadow-lg);
-  }
-
-  &__image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  &__content {
-    padding: var(--mg-spacing-4);
-    flex: 1;
-  }
-
-  &__category {
-    @include mg-label-base;
-    background: var(--mg-color-interactive);
-    color: white;
-    margin-bottom: var(--mg-spacing-2);
-  }
-
-  &__title {
-    @include mg-heading-3;
-    margin-bottom: var(--mg-spacing-3);
-
-    a {
-      color: inherit;
-      text-decoration: none;
-
-      &:hover {
-        color: var(--mg-color-interactive);
-      }
-    }
-  }
-
-  &__excerpt {
-    @include mg-paragraph-base;
-    color: var(--mg-color-text-muted);
-    margin-bottom: var(--mg-spacing-4);
-  }
-
-  &__meta {
-    display: flex;
-    align-items: center;
-    gap: var(--mg-spacing-3);
-    font-size: var(--mg-font-size-sm);
-    color: var(--mg-color-text-light);
-  }
-
-  &__date {
-    &::before {
-      content: '📅 ';
-      margin-right: var(--mg-spacing-1);
-    }
-  }
-
-  &__author {
-    &::before {
-      content: '✍️ ';
-      margin-right: var(--mg-spacing-1);
-    }
-  }
-
-  // Variants
-  &--featured {
-    border-top: 4px solid var(--mg-color-interactive);
-
-    .mg-news-card__title {
-      color: var(--mg-color-interactive);
-    }
-  }
-
-  &--urgent {
-    border-left: 4px solid var(--mg-color-danger);
-
-    .mg-news-card__category {
-      background: var(--mg-color-danger);
-    }
-  }
-}
-```
-
-### Using Mangrove Mixins
-
-Leverage existing Mangrove mixins for consistency:
-
-```scss
-// Available mixins
-@mixin mg-button-base {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--mg-spacing-3) var(--mg-spacing-4);
-  border: none;
-  border-radius: var(--mg-border-radius);
-  font-family: inherit;
-  font-size: var(--mg-font-size-base);
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-@mixin mg-card-base {
-  background: white;
-  border-radius: var(--mg-border-radius);
-  box-shadow: var(--mg-shadow-sm);
-  overflow: hidden;
-}
-
-@mixin mg-form-control {
-  width: 100%;
-  padding: var(--mg-spacing-3);
-  border: 1px solid var(--mg-color-border);
-  border-radius: var(--mg-border-radius);
-  font-family: inherit;
-  font-size: var(--mg-font-size-base);
-  transition: border-color 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: var(--mg-color-interactive);
-    box-shadow: 0 0 0 2px rgba(var(--mg-color-interactive-rgb), 0.2);
-  }
-}
-
-// Use in your components
-.my-custom-button {
-  @include mg-button-base;
-  background: var(--mg-color-secondary);
-  color: white;
-}
-
-.my-custom-card {
-  @include mg-card-base;
-  padding: var(--mg-spacing-6);
-}
-
-.my-custom-input {
-  @include mg-form-control;
-}
-```
-
-## Theme creation
-
-Create a complete custom theme by extending Mangrove:
-
-```scss
-// themes/_my-organization.scss
-
-// 1. Define brand colors using Mangrove's color system
-// Override the blue color scale for your primary brand
-$mg-color-blue-900: #1a5f7a; // Primary brand color
-$mg-color-blue-800: #2d6f8a; // Slightly lighter
-$mg-color-blue-700: #40809a; // Active states
-$mg-color-blue-600: #5390aa; // Hover states
-$mg-color-blue-500: #66a0ba; // Light accents
-
-// Override orange scale for secondary colors
-$mg-color-orange-900: #57a773; // Secondary brand color
-$mg-color-orange-800: #6ab783; // Lighter secondary
-$mg-color-orange-700: #7dc793; // Secondary accents
-
-// Custom accent colors (using red scale)
-$mg-color-red-900: #f4a261; // Accent color
-$mg-color-red-800: #f5b071; // Light accent
-
-// 2. Update interactive colors to use your brand
-$mg-color-interactive: $mg-color-blue-900;
-$mg-color-interactive-active: $mg-color-blue-700;
-
-// 3. Override component-specific variables
-$mg-color-button-background: $mg-color-interactive;
-$mg-color-button-background--hover: $mg-color-interactive-active;
-$mg-color-hero: $mg-color-interactive;
-$mg-color-hero--secondary: $mg-color-orange-900;
-$mg-color-hero--tertiary: $mg-color-neutral-700;
-$mg-color-label: $mg-color-interactive;
-
-// 4. Custom spacing for brand identity
-$mg-spacing-150: 1.2rem; // Slightly tighter spacing
-$mg-spacing-200: 1.8rem; // Custom section spacing
-$mg-radius-button: $mg-spacing-75; // More rounded buttons
-$mg-radius-label: $mg-spacing-50; // Rounded labels
-
-// 5. Typography adjustments
-$mg-font-family: 'Your-Brand-Font', 'Roboto', sans-serif;
-$mg-font-size-button: $mg-font-size-250; // Larger button text
-
-// 6. Create custom component variants
-.mg-hero--branded {
-  background: linear-gradient(
-    135deg,
-    #{$mg-color-blue-900} 0%,
-    #{$mg-color-orange-900} 100%
-  );
-
-  .mg-hero__title {
-    color: $mg-color-white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-}
-
-.mg-cta-button--branded {
-  background: $mg-color-red-900;
-  border-color: $mg-color-red-900;
-
-  &:hover {
-    background: $mg-color-red-800;
-    border-color: $mg-color-red-800;
-    transform: translateY(-1px);
-  }
-}
-
-.mg-card--branded {
-  border-top: 3px solid $mg-color-interactive;
-
-  &:hover {
-    border-top-color: $mg-color-orange-900;
-  }
-}
-
-// 7. Dark mode support using Mangrove variables
-[data-theme='dark'] {
-  --mg-color-bg: #{$mg-color-neutral-800};
-  --mg-color-text: #{$mg-color-neutral-0};
-  --mg-color-border: #{$mg-color-neutral-400};
-  --mg-color-interactive: #{$mg-color-blue-700};
-}
-```
-
-## Build scripts
-
-### Package.json Scripts
-
-```json
-{
-  "scripts": {
-    "sass": "sass src/sass/main.scss:dist/css/style.css --watch",
-    "sass:build": "sass src/sass/main.scss:dist/css/style.css --style=compressed",
-    "sass:dev": "sass src/sass/main.scss:dist/css/style.css --watch --source-map",
-    "build": "yarn run sass:build && yarn run js:build",
-    "dev": "concurrently \"yarn run sass:dev\" \"yarn run js:dev\""
-  }
-}
-```
-
-### PostCSS Integration
-
-```javascript
-// postcss.config.js
-module.exports = {
-  plugins: [
-    require('autoprefixer'),
-    require('cssnano')({
-      preset: 'default',
-    }),
-  ],
-};
-```
-
-## Best practices
-
-### 1. Import Order
-
-Always import in this order to ensure proper cascading:
-
-```scss
-// 1. External dependencies
-@import 'normalize.css';
-
-// 2. Mangrove variables (for overriding)
-@import '~@undrr/undrr-mangrove/scss/variables';
-
-// 3. Your variable overrides
-@import 'variables/colors';
-@import 'variables/typography';
-@import 'variables/spacing';
-
-// 4. Mangrove mixins and base
-@import '~@undrr/undrr-mangrove/scss/mixins';
-@import '~@undrr/undrr-mangrove/scss/base';
-
-// 5. Mangrove components (only what you need)
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-
-// 6. Your custom components
-@import 'components/news-card';
-@import 'components/hero-banner';
-```
-
-### 2. Selective Imports
-
-Only import components you actually use:
-
-```scss
-// Instead of importing everything
-// @import "~@undrr/undrr-mangrove/stories/**/*";
-
-// Import selectively
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-@import '~@undrr/undrr-mangrove/stories/Components/Cards/Card/card';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/form-base';
-@import '~@undrr/undrr-mangrove/stories/Components/Forms/TextInput/text-input';
-```
-
-### 3. Variable Overrides
-
-Override variables before importing components:
-
-```scss
-// ❌ Wrong - too late to override
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
-$mg-button-primary-bg: #custom-color;
-
-// ✅ Correct - override before import
-$mg-button-primary-bg: #custom-color;
-@import '~@undrr/undrr-mangrove/stories/Components/Buttons/CtaButton/cta-button';
+@import "stories/assets/scss/variables";
+@import "stories/assets/scss/breakpoints";
+@import "stories/assets/scss/mixins";
 ```
 
 ## Next steps
 
-- **Explore Variables**: Check `/scss/_variables.scss` for all customizable options
-- **Study Components**: Look at existing component Sass files for patterns
-- **Build Tools**: Set up your preferred build process with Sass compilation
-- **Custom Theme**: Create your organization's unique theme extension
+- <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo> -- design tokens reference and how to create a new theme
+- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> -- pre-built CSS URLs if you don't need Sass
+- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- architecture and styling patterns
 
-Need help? Check out the [React Integration Guide](/?path=/docs/getting-started-react-integration--docs) or [Best Practices](/?path=/docs/getting-started-best-practices--docs)!
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/SassIntegration.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

@@ -3,6 +3,8 @@ import * as Stories from './ErrorPage.stories.jsx';
 
 <Meta of={Stories} title="Components/Error pages" />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # Standard error pages
 
 Consistent error pages improve clarity and reduce friction when things go wrong. Use the `ErrorPage` component to display common HTTP error states with clear guidance and next steps.
@@ -62,15 +64,25 @@ Challenge pages are shown when Cloudflare needs to verify a visitor (e.g., CAPTC
 
 ### Design approach
 
-The challenge page design follows [Cloudflare's guidance on custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/) and UX research on CAPTCHA friction:
+Challenge pages look different from error pages so visitors understand they are being verified — not blocked by an error:
 
-- **Neutral background** (`#f2f2f2`) instead of the blue error background — signals "routine checkpoint", not "something broke"
-- **Centered, narrower card** with rounded corners and subtle shadow — focuses attention on the verification widget
-- **UNDRR logo for trust** — unexpected interstitials can feel like phishing; brand presence reassures visitors
-- **Calm, non-error language** — "routine check", not "blocked" or "suspicious"; no technical details shown by default
-- **Generous whitespace** — the page should feel unhurried; the Turnstile widget is the sole focus
+- Neutral grey background — distinct from the blue error page background
+- Centered card with rounded corners — focuses attention on the verification widget
+- UNDRR logo — brand presence reassures visitors they are in the right place
+- Calm, plain language ("routine check", not "blocked" or "suspicious")
+- Generous whitespace — the Turnstile widget is the sole focus
 
-The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 300 x 65px (normal) or full-width with min 300px (flexible mode). The card is sized to comfortably contain it. Most legitimate visitors pass the managed challenge automatically with no interaction.
+The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 300 × 65 px (normal) or full-width with min 300 px (flexible mode). Most legitimate visitors pass the managed challenge automatically with no interaction.
+
+The Cloudflare Turnstile widget is [WCAG 2.1 Level AA compliant](https://developers.cloudflare.com/turnstile/frequently-asked-questions/). Most visitors pass the managed challenge automatically with no interaction required.
+
+> **Implementation note (for contributors):** The neutral background (`#f2f2f2`) and teal accent deliberately diverge from the blue error page palette to signal "routine verification checkpoint", not an error state. The centered card follows UX research on reducing CAPTCHA friction. Design references:
+>
+> - [Cloudflare Turnstile widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/)
+> - [Cloudflare custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/)
+> - [Cloudflare additional configuration](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/)
+> - [CAPTCHA can ruin your UX (Auth0)](https://auth0.com/blog/captcha-can-ruin-your-ux-here-s-how-to-use-it-right/)
+> - [Cloudflare Turnstile accessibility (WCAG 2.1 AA)](https://developers.cloudflare.com/turnstile/frequently-asked-questions/)
 
 ### Important constraints
 
@@ -78,14 +90,6 @@ The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 30
 - **Do not** use aggressive language ("blocked", "suspicious", "threat") on verification pages
 - The `::CAPTCHA_BOX::` token is **required** in both static HTML templates — Cloudflare replaces it with the actual widget at runtime
 - Static templates must not exceed 1.5 MB (Cloudflare limit)
-
-### Design references
-
-- [Cloudflare Turnstile widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/) — widget sizes, themes, and rendering modes
-- [Cloudflare custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/) — customization options and constraints
-- [Cloudflare additional configuration](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/) — CSP restrictions, favicon, and referrer policy warnings
-- [CAPTCHA can ruin your UX (Auth0)](https://auth0.com/blog/captcha-can-ruin-your-ux-here-s-how-to-use-it-right/) — friction impact and mitigation strategies
-- [Cloudflare Turnstile accessibility (WCAG 2.1 AA)](https://developers.cloudflare.com/turnstile/frequently-asked-questions/) — the widget is WCAG 2.1 Level AA compliant
 
 ### Interactive challenge
 
@@ -177,21 +181,21 @@ Use these static HTML pages directly from the CDN when integrating with CDNs or 
 
 **Cloudflare-specific templates:**
 ```text
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/5xx.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/challenge.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/managed-challenge.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/5xx.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/challenge.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/managed-challenge.html
 ```
 
 **Individual error pages** (for platforms that support per-code configuration):
 ```text
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/401.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/403.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/404.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/429.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/500.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/502.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/503.html
-https://assets.undrr.org/static/mangrove/latest/assets/error-pages/504.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/401.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/403.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/404.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/429.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/500.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/502.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/503.html
+https://assets.undrr.org/static/mangrove/1.5.0/error-pages/504.html
 ```
 
 ## CSS and JS references
@@ -208,6 +212,7 @@ https://assets.undrr.org/static/mangrove/latest/assets/error-pages/504.html
 
 ## Changelog
 
+- **1.4.0** — 2026-03-21: Converted inline styles from 10px-root rem values to px. Static templates now work correctly with the standard 1.4 theme (no root font-size override). ([#857](https://github.com/unisdr/undrr-mangrove/issues/857))
 - **1.3.0** — 2026-02-13: Challenge pages now use neutral background and teal accent to differentiate from error pages ([#2615](https://gitlab.com/undrr/web-backlog/-/issues/2615))
 - **1.2.0** — 2025-11-25: Added 401, 500, 504, 5xx, challenge, managed-challenge static templates; client-side URL display; `vf:page-type` meta tags ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))
 - **1.1.0** — 2025-11-25: Added Cloudflare integration with error tokens and deferred asset loading ([#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556))

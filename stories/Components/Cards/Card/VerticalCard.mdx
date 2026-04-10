@@ -1,136 +1,120 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { VerticalCard } from './VerticalCard';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as VerticalCardStories from './VerticalCard.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        contentdata: [
-          {
-            contenttile: 'Content tag',
-            title: 'Title in large size',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-by vulnerable populations and communities.This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
-            button: 'Primary action',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        contentdata: [
-          {
-            contenttile: 'علامة المحتوى',
-            title: ' عنوان المشاركة يظهر هنا ويتكون من سطرين',
-            button: 'اقرأ أكث',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            contenttile: 'အကြောင်းအရာ TAG',
-            title:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            button: 'ပိုပြီးဖတ်ပါ',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return burmeseText;
-    case 'japanese':
-      const japaneseText = {
-        contentdata: [
-          {
-            contenttile: 'コンテンツタグ',
-            title: '投稿のタイトルはここにあり、2行です',
-            button: '続きを読む',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return japaneseText;
-    default:
-      const dummy = {
-        contentdata: [
-          {
-            contenttile: 'Vertical card',
-            title: 'Title in large size with up to two lines of text',
-            summaryText: `Climate change is a <a href="#" class="mg-card__text-link">global health emergency</a>, with impacts felt most acutely
-by vulnerable populations and communities.
-This paper explores health risks from climate change in a global context, setting out key risks actions`,
-            label1: 'Label 1',
-            label2: 'Label 2',
-            button: 'Primary action',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return dummy;
-  }
-};
 
 <Meta of={VerticalCardStories} />
 
-# Mangrove card (vertical)
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
-The Mangrove Vertical Card components are cards with information and/or image.
+# Vertical card
 
-### Overview
+A content teaser card in portrait/stacked layout. Image on top, text below. Used across all UNDRR sites for news, events, publications, and general content listings.
 
-The Mangrove Vertical Card component defines a card of information with some items. It is a multi-usage component that creates boxes that are usually teasing some kind of content.
+## When to use
 
-#### When to use:
+- Content listings and search results in grid layouts
+- News and event teasers
+- Any content that benefits from a prominent image above a title and summary
 
-When a card with data, CTA links and image is to be displayed.
+## Anatomy
 
-### Formatting
+- **Image** (optional): 16:9 aspect ratio, full width of the card
+- **Labels** (optional): Content type or category tags
+- **Title**: Linked heading with blue color, underline, and chevron indicator
+- **Summary** (optional): Body text, supports inline HTML links
+- **CTA button** (optional): Primary action button
 
-#### Default
+The entire card is clickable via a stretched link on the title.
 
-It consists of a title, paragraph, CTA links (primary, secondary and tertiary), labels and/or image.
+<Canvas of={VerticalCardStories.DefaultVerticalCard} />
 
-It's image in 16x9 in aspect ratio.
+### Without image
 
-### Content
+The card works without an image. The content area fills the full card.
 
-There are two types of Mangrove Vertical Card components: Mangrove Vertical Card with Image and Mangrove Vertical Card without Image.
+<Canvas of={VerticalCardStories.NoImageVerticalCard} />
 
-<Canvas of={VerticalCardStories.DefaultVerticalCard} meta={VerticalCardStories} />
+## Color variants
 
-### Usage
+Use the `variant` prop to change the title accent color. These match the Hero component color system and adapt per theme.
 
-- Grab the HTML from the HTML tab.
+| Variant | Class | Color |
+|---------|-------|-------|
+| `primary` (default) | — | `$mg-color-interactive` (blue) |
+| `secondary` | `mg-card--secondary` | `$mg-color-secondary` (orange) |
+| `tertiary` | `mg-card--tertiary` | `$mg-color-tertiary` (black) |
+| `quaternary` | `mg-card--quaternary` | `$mg-color-quaternary` (red) |
 
-### Interactions
+Use the variant control below the canvas to preview each option.
 
-- Hover state applies to the image only.
-- By clicking on the CTA Link, the associated page is opened.
+## Title link visibility
+
+By default, card titles display three signals that they are clickable:
+
+1. **Blue color** matching the theme's interactive color (adapts per theme)
+2. **Underline** with a 3px offset
+3. **Chevron indicator** pointing right (flips left automatically in RTL layouts)
+
+On hover, the underline intensifies.
+
+### Opting out
+
+To disable link visibility signals (for example, on cards where the title should look like a plain heading), add the `mg-card--plain-title` class.
+
+**In React:**
+
+```jsx
+<VerticalCard data={data} className="mg-card--plain-title" />
+```
+
+**In Drupal templates or static HTML:**
+
+```html
+<article class="mg-card mg-card__vc mg-card--plain-title">
+  ...
+</article>
+```
+
+This removes the blue color, underline, and chevron. The card remains clickable via the stretched link.
+
+<Canvas of={VerticalCardStories.PlainTitleVerticalCard} />
+
+> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | Array | Required | Array of card data objects |
+| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `className` | String | — | Additional CSS classes on the card element |
+
+### Data object properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `title` | String | Card heading text |
+| `link` | String | URL for the title link and stretched link |
+| `imgback` | String | Image URL |
+| `imgalt` | String | Alt text for the image |
+| `summaryText` | String | Body text (HTML supported) |
+| `label1` | String | First category label |
+| `label2` | String | Second category label |
+| `button` | String | CTA button label |
+
+## Accessibility
+
+- The entire card surface is clickable as a single link (via the title link)
+- Inline links in the summary remain independently clickable (`z-index: 101`) — they are not overridden by the card link
+- Focus states are visible on all interactive elements
+- RTL layout is automatic when `dir="rtl"` is set on the document
+
+> **Implementation note (for contributors):** The card-wide click area uses a CSS `::before` pseudo-element on the title `<a>`, stretched to cover the full card. Inline links in the summary have `z-index: 101` to layer above the stretched link overlay.
 
 ## Changelog
 
+- **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`). Defaults to transparent/no padding; themes override for tinted card backgrounds (e.g., DELTA uses light gray with padding and rounded corners).
+- **1.2.1** — 2026-03-12: Fix chevron caret orphaning on its own line (Word Joiner in `::after` content). Trim trailing whitespace from title text to prevent underline artifacts.
+- **1.2** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
 - **1.1.1** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)
 - **1.1** — 2023-08-08: Handle case when image is not available
 - **1.0** — 2023-01-24: Released component

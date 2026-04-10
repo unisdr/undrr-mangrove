@@ -7,6 +7,11 @@ import themeUNDRR from '../stories/assets/scss/style.scss';
 import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss';
 import themeIRP from '../stories/assets/scss/style-irp.scss';
 import themeMCR from '../stories/assets/scss/style-mcr.scss';
+import themeDelta from '../stories/assets/scss/style-delta.scss';
+import themeLegacy from '../stories/assets/scss/style-legacy.scss';
+import themePWLegacy from '../stories/assets/scss/style-preventionweb-legacy.scss';
+import themeIRPLegacy from '../stories/assets/scss/style-irp-legacy.scss';
+import themeMCRLegacy from '../stories/assets/scss/style-mcr-legacy.scss';
 
 // RTL languages
 const rtlLanguages = ['arabic'];
@@ -15,7 +20,6 @@ const rtlLanguages = ['arabic'];
 const langArr = {
   english: 'en',
   arabic: 'ar',
-  burmese: 'my',
   japanese: 'ja',
 };
 
@@ -88,6 +92,11 @@ const themeStyles = {
   'PreventionWeb Theme': themePreventionWeb,
   'IRP Theme': themeIRP,
   'MCR2030 Theme': themeMCR,
+  'DELTA Resilience Theme': themeDelta,
+  'Global UNDRR Theme (legacy 10px)': themeLegacy,
+  'PreventionWeb Theme (legacy 10px)': themePWLegacy,
+  'IRP Theme (legacy 10px)': themeIRPLegacy,
+  'MCR2030 Theme (legacy 10px)': themeMCRLegacy,
 };
 
 // Track currently active theme
@@ -174,7 +183,40 @@ const preview = {
         order: [
           'Introduction',
           'Getting started',
-          ['Intro', 'How to use our design system?', 'Browser support'],
+          [
+            'About Mangrove',
+            'Getting started guide',
+            'Integration',
+            [
+              'Vanilla HTML and CSS',
+              'Sass integration',
+              'React integration',
+              'Theming guide',
+              'CDN reference',
+              'Hydration guide',
+            ],
+            'Best practices',
+            'Accessibility',
+            'Browser support',
+            'AI and MCP integration',
+          ],
+          'Contributing',
+          [
+            'Component standards',
+            'Build a component',
+            ['Step by step', 'Review checklist', 'Testing', 'Hydration'],
+            'Writing guidelines',
+            'Architecture',
+            'Release process',
+          ],
+          'Platform services',
+          [
+            'Analytics enhancements',
+            'Critical messaging',
+            'Cookie consent',
+            'Content syndication',
+            'Search syndication',
+          ],
           'Design decisions',
           'Components',
           'Utilities',
@@ -188,13 +230,12 @@ const preview = {
     locale: {
       name: 'Locale',
       description: 'locale',
-      defaultValue: 'en',
+      defaultValue: 'english',
       toolbar: {
         icon: 'globe',
         items: [
           { value: 'english', title: 'English' },
           { value: 'arabic', title: 'Arabic' },
-          { value: 'burmese', title: 'Burmese' },
           { value: 'japanese', title: 'Japanese' },
         ],
       },
@@ -205,12 +246,10 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: [
-          { value: 'Global UNDRR Theme', title: 'Global UNDRR Theme' },
-          { value: 'PreventionWeb Theme', title: 'PreventionWeb Theme' },
-          { value: 'IRP Theme', title: 'IRP Theme' },
-          { value: 'MCR2030 Theme', title: 'MCR2030 Theme' },
-        ],
+        items: Object.keys(themeStyles).map((name) => ({
+          value: name,
+          title: name,
+        })),
         showName: true,
         dynamicTitle: true,
       },

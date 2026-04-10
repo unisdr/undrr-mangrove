@@ -38,24 +38,6 @@ const getCaptionForLocale = locale => {
         ],
       };
       return arabicText.data;
-    case 'burmese':
-      const burmeseText = {
-        data: [
-          {
-            text: 'အိမ်',
-          },
-          {
-            text: 'ဒုတိယအဆင့်',
-          },
-          {
-            text: 'တတိယအဆင့်',
-          },
-          {
-            text: 'စာမျက်နှာခေါင်းစဉ်',
-          },
-        ],
-      };
-      return burmeseText.data;
     case 'japanese':
       const japaneseText = {
         data: [

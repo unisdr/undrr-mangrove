@@ -9,6 +9,8 @@ The Mega Menu component provides a navigation menu with multiple levels and sect
 
 <Meta of={MegaMenuStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 ## Default
 
 A basic mega menu implementation with default settings.
@@ -27,27 +29,146 @@ The mega menu fully supports RTL languages with automatic layout mirroring.
 
 <Canvas of={MegaMenuStories.RTL} meta={MegaMenuStories} />
 
+## With logo (branded variant)
+
+Sub-branded sites (PreventionWeb, MCR2030, Global Platform, etc.) can pass `logoSrc` to put a logo inline with the nav items. This replaces the separate logo row you'd otherwise need between the PageHeader and navigation, so the header stays two tiers instead of three.
+
+Switch between logos with the **brand** control below.
+
+<Canvas of={MegaMenuStories.WithLogo} meta={MegaMenuStories} />
+
 ## Usage
 
-```
+```jsx
 import { MegaMenu } from '@components';
 
-const MyComponent = () => (
-  <MegaMenu items={menuItems} />
-);
+// Default (no logo)
+<MegaMenu sections={menuItems} />
+
+// Branded variant (with logo)
+<MegaMenu
+  sections={menuItems}
+  logoSrc="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+  logoAlt="PreventionWeb"
+/>
 ```
+
+### Multilingual sites and language-prefixed logo links
+
+Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Arabic). In Drupal, output this from Twig into the `data-mg-mega-menu-logo-href` attribute:
+
+```html
+<div data-mg-mega-menu
+     data-mg-mega-menu-logo-src="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+     data-mg-mega-menu-logo-alt="PreventionWeb"
+     data-mg-mega-menu-logo-href="/ar/">
+</div>
+```
+
+`logoHref` defaults to `'/'` unless your CMS or wrapper provides a different value. If logo asset data attributes are not set, the Drupal wrapper resolves `logoSrc` and `logoAlt` from the page's body class (for example, `mg-current-domain--www-preventionweb-net`). `logoHref` is not inferred from the body class — it must be passed explicitly for language-prefixed URLs.
 
 ## Props
 
-| Prop       | Type   | Default | Description                                                           |
-| ---------- | ------ | ------- | --------------------------------------------------------------------- |
-| items      | array  | []      | Array of menu items to display                                        |
-| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave              |
-| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens) |
-| className  | string | ''      | Additional CSS class names                                            |
+| Prop       | Type   | Default | Description                                                                                              |
+| ---------- | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
+| sections   | array  | []      | Array of menu sections to display                                                                        |
+| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave                                                 |
+| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens)                                    |
+| logoSrc    | string | —       | Image URL for the logo. When provided, enables the branded variant                                       |
+| logoAlt    | string | ''      | Alt text for the logo image                                                                              |
+| logoHref   | string | '/'     | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
+| logoWidth  | number | —       | Optional explicit width for CLS prevention                                                               |
+| logoHeight | number | —       | Optional explicit height for CLS prevention                                                              |
+
+### Section object properties
+
+| Property         | Type   | Required | Description                                                         |
+| ---------------- | ------ | -------- | ------------------------------------------------------------------- |
+| title            | string | Yes      | Top-level menu item label                                           |
+| icon             | string | No       | Icon class name shown before the title (e.g., `"mg-icon mg-icon-chart-bar"`). Desktop topbar only; hidden in mobile sidebar. |
+| bannerHeading    | string | No       | Heading text shown in the mega content panel                        |
+| bannerDescription| string | No       | Description text shown in the mega content panel                    |
+| bannerButton     | object | No       | `{ url, label }` — when present, the top-level item renders as an `<a>` link |
+| items            | array  | No       | Array of sub-items (triggers mega dropdown when present)            |
+
+## Accessibility
+
+### Keyboard navigation
+
+- **Arrow Left / Arrow Right**: Moves focus between top-level menu items in the menu bar
+- **Arrow Down**: From a top-level item, moves focus into the open submenu section; within the sidebar, moves focus to the next menu item (or into the expanded section)
+- **Arrow Up**: Within the sidebar, moves focus to the previous menu item
+- **Tab / Shift+Tab**: Moves focus through focusable elements within an open submenu section
+- **Escape**: Closes any open submenu panel and returns to the top-level menu bar
+- Focus on a top-level item also triggers its submenu to open (via `onFocus`)
+
+### ARIA attributes
+
+- The root `<nav>` element has `aria-label="Main Navigation"`
+- The top bar uses `role="menubar"` with `aria-label="Main navigation menu"`
+- Top-level menu items use `role="menuitem"` with `aria-haspopup="true"` when they have submenus, and `aria-expanded` to indicate open/closed state
+- Parent `<li>` elements use `role="none"` to remove implicit list semantics from the menu pattern
+- Submenu panels use `role="region"` with `aria-label="Menu section"` and `aria-live="polite"` to announce content changes
+- Nested submenu lists use `role="menu"` with descriptive `aria-label` values (e.g., "Categories", "Submenu items")
+- Nested links use `role="menuitem"` and `aria-haspopup` when they contain further sub-items
+- Category links use `aria-current="page"` to indicate the currently highlighted category
+
+### Mobile menu
+
+- The hamburger button has `aria-label="Toggle navigation menu"` and `aria-haspopup="true"`; its icon is marked `aria-hidden="true"`
+- The mobile sidebar uses `role="dialog"` with `aria-label="Mobile navigation menu"`
+- Sidebar section buttons have `aria-expanded` and `aria-pressed` to indicate open/closed state
+- The backdrop overlay is a `<button>` element with `aria-label="Close mobile navigation"`
+
+### Branded variant
+
+- When `logoSrc` is provided, the logo link has `aria-label` set to `logoAlt` (falling back to "Home")
+
+### Known limitations
+
+- Focus is not explicitly trapped within the mobile sidebar dialog; users can Tab to elements behind the overlay
+- The hamburger button does not reflect the sidebar's open state via `aria-expanded`
+- When a submenu closes (via Escape or mouse leave), focus is not programmatically returned to the triggering menu item
+
+## Server-rendered / CDN usage
+
+MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
+
+```html
+<div data-mg-mega-menu
+  data-delay="300"
+  data-hover-delay="180"
+  data-sections='[{"title":"About","items":[...]}]'>
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-delay` | `300` | Delay in ms before closing the menu on mouse leave |
+| `data-hover-delay` | `180` | Delay in ms before opening the menu on hover |
+| `data-sections` | — | JSON array of menu sections (optional; most consumers provide this via API) |
+| `data-logo-src` | — | Logo image URL |
+| `data-logo-alt` | `''` | Alt text for the logo image |
+| `data-logo-href` | `'/'` | Where the logo links to (e.g., `/ar/` for language-prefixed root) |
+| `data-logo-width` | — | Explicit width for CLS prevention |
+| `data-logo-height` | — | Explicit height for CLS prevention |
+
+> **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js";
+createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
 
+- **1.1.1** — 2026-04-06 ([#916](https://github.com/unisdr/undrr-mangrove/pull/916)): Fixed mobile links non-clickable when using Mangrove nav CSS without the React component, or when JS hydration fails.
+- **1.1.0** — 2026-03-13 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Optional `icon` property on sections for top-level menu item icons (desktop topbar only; decorative, `aria-hidden`). Added section object properties documentation.
+- **1.0.0** — 2026-03-12: Branded variant with optional inline logo (`logoSrc`, `logoAlt`, `logoHref`, `logoWidth`, `logoHeight`); logo shrinks on narrow viewports; hamburger floats over logo with shadow on mobile; documented `logoHref` language prefix handling. Added hydration support with `fromElement` prop extraction and `createHydrator` integration.
+- **0.7.4** — 2026-03-10: Fixed slide-in animation for menus with more than 12 child items ([#825](https://github.com/unisdr/undrr-mangrove/issues/825))
 - **0.7.3** — 2026-02-17: Topbar expands to extra-large breakpoint (1440px) on wider screens
 - **0.7.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
 - **0.7.1** — 2025-12-09: Refined UX of opening 3rd level menu on desktop (subtle colours and animation)

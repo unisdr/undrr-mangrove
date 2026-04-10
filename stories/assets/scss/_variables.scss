@@ -9,9 +9,27 @@
  *     \___/|_| \_|____/|_| \_\_| \_\ |_|  |_|\__,_|_| |_|\__, |_|  \___/ \_/ \___|
  *                                                        |___/
  */
+@use "sass:math";
+
+// Root font-size configuration
+// Default is 16 (browser-standard root where 1rem = 16px).
+// Set to 10 for legacy 10px root (1.6rem = 16px) — see style-*-legacy.scss.
+// New integrations should use the default; override only for backward compatibility.
+$mg-html-font-size: 16 !default;
+
+@if $mg-html-font-size == 0 {
+  @error "$mg-html-font-size must not be 0 (division by zero). Use 16 (default) or 10 (legacy).";
+}
+
+// Converts an intended pixel value to rem for the configured root.
+// Example: mg-rem(16) → 1.6rem (root=10) or 1rem (root=16)
+@function mg-rem($px) {
+  @return math.div($px, $mg-html-font-size) * 1rem;
+}
+
 // font file variables
 // Path adjusted for Storybook staticDirs (serves assets/ at root, not /assets/)
-$mgIconFontPath: "../fonts/mangrove-icon-set/font";
+$mgIconFontPath: "../fonts/mangrove-icon-set/font" !default;
 
 // image variables
 $img-path: "~/stories/assets/images";
@@ -157,21 +175,21 @@ $sendai-turquoise: $sendai-turquoise-900; // alias
  * @presenter Spacing
  */
 $mg-spacing-0: 0;
-$mg-spacing-25: 0.25rem;
-$mg-spacing-50: 0.5rem;
-$mg-spacing-75: 0.75rem;
-$mg-spacing-100: 1rem;
-$mg-spacing-150: 1.5rem;
-$mg-spacing-175: 1.8rem;
-$mg-spacing-200: 2rem;
-$mg-spacing-250: 2.4rem;
-$mg-spacing-300: 3rem;
-$mg-spacing-350: 3rem;
-$mg-spacing-400: 5rem;
-$mg-spacing-500: 6rem;
-$mg-spacing-600: 8rem;
-$mg-spacing-800: 10rem;
-$mg-spacing-1000: 40rem;
+$mg-spacing-25: mg-rem(2.5);
+$mg-spacing-50: mg-rem(5);
+$mg-spacing-75: mg-rem(7.5);
+$mg-spacing-100: mg-rem(10);
+$mg-spacing-150: mg-rem(15);
+$mg-spacing-175: mg-rem(18);
+$mg-spacing-200: mg-rem(20);
+$mg-spacing-250: mg-rem(24);
+$mg-spacing-300: mg-rem(30);
+$mg-spacing-350: mg-rem(35);
+$mg-spacing-400: mg-rem(50);
+$mg-spacing-500: mg-rem(60);
+$mg-spacing-600: mg-rem(80);
+$mg-spacing-800: mg-rem(100);
+$mg-spacing-1000: mg-rem(400);
 
 /**
  * @tokens Font sizes
@@ -180,20 +198,20 @@ $mg-spacing-1000: 40rem;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$mg-font-size-100: 1rem;
-$mg-font-size-150: 1.125rem;
-$mg-font-size-200: 1.25rem;
-$mg-font-size-250: 1.4rem;
-$mg-font-size-300: 1.6rem; // regular body text
-$mg-font-size-400: 1.8rem;
-$mg-font-size-500: 2.3rem;
-$mg-font-size-600: 3.2rem;
-$mg-font-size-800: 3.6rem;
-$mg-font-size-900: 4rem;
-$mg-font-size-1000: 4.8rem;
-$mg-font-size-1100: 6.4rem;
+$mg-font-size-100: mg-rem(10);
+$mg-font-size-150: mg-rem(11.25);
+$mg-font-size-200: mg-rem(12.5);
+$mg-font-size-250: mg-rem(14);
+$mg-font-size-300: mg-rem(16); // regular body text
+$mg-font-size-400: mg-rem(18);
+$mg-font-size-500: mg-rem(23);
+$mg-font-size-600: mg-rem(32);
+$mg-font-size-800: mg-rem(36);
+$mg-font-size-900: mg-rem(40);
+$mg-font-size-1000: mg-rem(48);
+$mg-font-size-1100: mg-rem(64);
 $mg-font-body: $mg-font-size-300;
-$mg-font-tag: $mg-font-size-200;
+$mg-font-tag: $mg-font-size-250 !default;
 $mg-font-line-height-500: 1.25em;
 $mg-font-line-height-700: 1.5em;
 
@@ -218,12 +236,12 @@ $mg-font-line-height-700: 1.5em;
     padding-bottom: $mg-spacing-175;
   } @else if $size == "huge" {
     font-size: $mg-font-size-1000;
-    padding-top: $mg-spacing-350;
+    padding-top: $mg-spacing-300;
     padding-bottom: $mg-spacing-250;
   } @else if $size == "xhuge" {
     font-size: $mg-font-size-1100;
     padding-top: $mg-spacing-400;
-    padding-bottom: $mg-spacing-350;
+    padding-bottom: $mg-spacing-300;
   }
 }
 
@@ -250,10 +268,10 @@ $mg-font-family-arabic-body: "Dubai", sans-serif;
  * @presenter Spacing
  */
 
-$mg-width-150: 15rem;
-$mg-width-300: 30rem;
-$mg-width-400: 40rem;
-$mg-width-600: 60rem;
+$mg-width-150: mg-rem(150);
+$mg-width-300: mg-rem(300);
+$mg-width-400: mg-rem(400);
+$mg-width-600: mg-rem(600);
 
 /**
  * @tokens Breakpoints
@@ -292,6 +310,8 @@ $mg-color-button: $mg-color-white !default;
 $mg-color-button--hover: $mg-color-white !default;
 $mg-color-button-background: $mg-color-interactive !default;
 $mg-color-button-background--hover: $mg-color-interactive-active !default;
+$mg-color-button-secondary-background: $mg-color-blue-800 !default;
+$mg-color-button-secondary-background--hover: $mg-color-blue-700 !default;
 $mg-radius-button: $mg-spacing-0 !default;
 $mg-border-width-button: 1px !default;
 $mg-color-text-button: $mg-color-white !default;
@@ -308,13 +328,36 @@ $mg-color-form-check--checked: $mg-color-interactive !default;
 $mg-color-form-focus: $mg-color-interactive !default;
 $mg-radius-form-input: $mg-spacing-0 !default;
 
-// hero
+// card
+$mg-card-background: none !default;
+$mg-card-padding: 0rem !default;
+$mg-card-border-radius: 0 !default;
+$mg-card-icon-badge-radius: 20% !default;
+
+// CTA banner
+$mg-cta-padding: $mg-spacing-400 0 !default;
+
+// shared variant accent colours (used by hero, cards, and other components)
+$mg-color-secondary: $mg-color-orange-800 !default;
+$mg-color-tertiary: $mg-color-neutral-900 !default;
+$mg-color-quaternary: $mg-color-red-800 !default;
+
+// hero (aliases for backward compatibility)
 $mg-color-hero: $mg-color-interactive !default;
-$mg-color-hero--secondary: $mg-color-orange-800 !default;
-$mg-color-hero--tertiary: $mg-color-neutral-900 !default;
-$mg-color-hero--quaternary: $mg-color-red-800 !default;
+$mg-color-hero--secondary: $mg-color-secondary !default;
+$mg-color-hero--tertiary: $mg-color-tertiary !default;
+$mg-color-hero--quaternary: $mg-color-quaternary !default;
 $mg-opacity-hero: 0.85 !default;
+$mg-color-hero-title: $mg-color-neutral-0 !default;
 $mg-spacing-hero-overlay: 0 !default;
+$mg-hero-overlay-max-width: $mg-width-400 !default;
+$mg-hero-overlay-padding: $mg-spacing-200 !default;
+$mg-color-hero-button-secondary-background: rgba($mg-color-neutral-0, 0.9) !default;
+$mg-color-hero-button-secondary-color: $mg-color-hero !default;
+$mg-border-color-hero-button-secondary: $mg-color-neutral-0 !default;
+
+// mega menu
+$mg-color-mega-content-bg: $mg-color-button !default;
 
 // tabs
 $mg-color-tabbar-background: $mg-color-blue-50 !default;
@@ -329,6 +372,7 @@ $mg-padding-tab: $mg-spacing-75 $mg-spacing-150 !default;
 $mg-color-text-tab: $mg-color-neutral-700 !default;
 $mg-color-text-tab--hover: $mg-color-white !default;
 $mg-color-text-tab-active: $mg-color-neutral-700 !default;
+$mg-color-text-tab-no-results: $mg-color-neutral-500 !default;
 $mg-color-tab-section-background: $mg-color-neutral-0 !default;
 $mg-padding-tab-section: $mg-spacing-100 $mg-spacing-0 !default;
 $mg-radius-tab-section: $mg-spacing-0 !default;
@@ -341,6 +385,34 @@ $mg-tabs-border-bottom: true !default;
  */
 
 $author-image-radius: 50%;
+
+// Z-index layers: use these named tokens for global stacking contexts
+// (fixed, sticky, or portaled elements). One token per UI concept — backdrops
+// and sub-layers use $token - 1 / $token + 1 arithmetic within the component
+// SCSS rather than separate variables. Local stacking within a component's own
+// isolated context uses raw values with an explanatory comment.
+// Pick the nearest existing layer; open a GitHub discussion before adding one.
+
+/**
+ * @tokens Z-index layers
+ */
+
+// Background utility — pseudo-element placed behind all sibling content
+$mg-z-index-behind: -1;      // ::before backgrounds (e.g. mg-container-full-width)
+
+// Navigation zone — ⚠ FROZEN: Drupal themes depend on these exact values
+$mg-z-index-nav: 10;         // MegaMenu (mobile sidebar/overlay uses nav - 1 = 9)
+$mg-z-index-sticky: 11;      // Secondary sticky bars, e.g. OnThisPageNav
+$mg-z-index-nav-toggle: 14;  // Mobile nav hamburger toggle (above all nav layers)
+$mg-z-index-header: 22;      // PageHeader (above nav and sticky bar)
+
+// Overlay zone — floats above page content
+$mg-z-index-drawer: 2000;    // Drawer / side panel (backdrop uses drawer - 1 = 1999)
+$mg-z-index-dropdown: 2500;  // Dropdowns and inline menus (above drawers)
+
+// Modal zone — portaled to <body>, must clear all page chrome
+$mg-z-index-modal: 5000;     // Modal and dialog (backdrop uses modal - 1 = 4999)
+$mg-z-index-toast: 5500;     // Toast notifications (Snackbar), above modals
 
 /**
   * @tokens-end

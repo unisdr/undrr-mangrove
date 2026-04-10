@@ -29,7 +29,7 @@ $mg-color-form-focus: $mg-color-interactive;
 
 // Hero
 $mg-color-hero: $mg-color-interactive;
-$mg-spacing-hero-overlay: 2rem 0;
+$mg-spacing-hero-overlay: mg-rem(20) 0;
 
 // Tabs
 $mg-color-tabbar-background: rgba($pw-color-primary, 0.1);

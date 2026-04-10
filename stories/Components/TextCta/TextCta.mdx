@@ -1,65 +1,129 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { TextCta } from './TextCta';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as TextCtaStories from './TextCta.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        header: 'United Nations Office for Disaster Risk Reduction',
-        description:
-          'Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.',
-        button: 'READ MORE',
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        header: 'انضم إلينا في شراكة برنامج الأمم المتحدة الإنمائية',
-        description:
-          'الشراكة هي جوهر كل ما يقوم به برنامج الأمم المتحدة الإنمائي. نحن نقدم حضورًا عالميًا تقريبًا في جميع أنحاء العالم. نحن مصممون على حشد الوسائل اللازمة لتنفيذ خطة عام 2030 من خلال شراكة عالمية متجددة من أجل التنمية المستدامة ، مع التركيز على الأشد فقرا وضعفا.',
-        button: 'انضم إلينا',
-      };
-      return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        header: 'UNDRR Partnership တွင် ကျွန်ုပ်တို့နှင့် ပူးပေါင်းပါ။',
-        description:
-          'UNDRR ၏လုပ်ဆောင်မှုအားလုံး၏ အဓိကအချက်မှာ မိတ်ဖက်ဆက်ဆံရေးဖြစ်သည်။ ကျွန်ုပ်တို့သည် ကမ္ဘာတစ်ဝှမ်းရှိ စကြဝဠာနီးပါးတည်ရှိမှုကို ပေးဆောင်ပါသည်။ အဆင်းရဲဆုံးနှင့် ထိခိုက်လွယ်ဆုံးသူများကို အာရုံစိုက်ခြင်းဖြင့် စဉ်ဆက်မပြတ်ဖွံ့ဖြိုးတိုးတက်သော ကမ္ဘာလုံးဆိုင်ရာ ပူးပေါင်းဆောင်ရွက်မှုကို ပြန်လည်အသက်သွင်းထားသော ကမ္ဘာလုံးဆိုင်ရာ ပူးပေါင်းဆောင်ရွက်မှုမှတစ်ဆင့် 2030 အစီအစဉ်ကို အကောင်အထည်ဖော်ရန် နည်းလမ်းများကို စုစည်းရန် ကျွန်ုပ်တို့ ဆုံးဖြတ်ထားပါသည်။',
-        button: 'ငါတို့နဲ့လာပူးပေါင်းပါ',
-      };
-      return burmeseText;
-    case 'japanese':
-      const japaneseText = {
-        header: 'UNDRRパートナーシップにご参加ください',
-        description:
-          'パートナーシップは、UNDRRが行うすべての中心です。私たちは世界中でほぼ普遍的な存在感を提供します。私たちは、最も貧しく最も脆弱な人々に焦点を当て、持続可能な開発のためのグローバルなパートナーシップを活性化することにより、2030アジェンダを実施するための手段を動員することを決意しています。',
-        button: '参加しませんか',
-      };
-      return japaneseText;
-    default:
-      return {
-        header: 'United Nations Office for Disaster Risk Reduction',
-        description:
-          'Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.',
-        button: 'READ MORE',
-      };
-  }
-};
 
 <Meta of={TextCtaStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # CTA
 
-(NOTE: This is yet to be adapated to the UNDRR system and styles.)
+A full-width call-to-action banner with heading, rich text body, and action buttons. Uses the same color variant system as Hero (primary, secondary, tertiary, quaternary) and supports custom background colors.
 
-CTA block defines a section of information data with some items - title, button/cta and description. `H2`, `P` and `Button` atoms tags are used for creating this section.
+## Default (primary)
 
-<Canvas of={TextCtaStories.DefaultTextCta} meta={TextCtaStories} />
+<Canvas of={TextCtaStories.Default} />
 
-### Usage
+## Secondary variant
 
-- Take HTML from the HTML tab in canvas
+<Canvas of={TextCtaStories.Secondary} />
+
+## Tertiary variant
+
+Used by DELTA Resilience for the "Learn more about the system" CTA.
+
+<Canvas of={TextCtaStories.Tertiary} />
+
+## Custom background color
+
+Use `backgroundColor` for any CSS color value, overriding the variant.
+
+<Canvas of={TextCtaStories.CustomColor} />
+
+## With image
+
+When `image` is provided, the layout switches to a side-by-side grid layout with text on the left and image on the right. Stacks vertically on mobile. Inspired by the IRP Recovery Help Desk CTA pattern.
+
+<Canvas of={TextCtaStories.WithImage} />
+
+## Left-aligned
+
+<Canvas of={TextCtaStories.LeftAligned} />
+
+## Headline only
+
+Works without body text — just a headline and buttons.
+
+<Canvas of={TextCtaStories.HeadlineOnly} />
+
+## Quaternary variant
+
+<Canvas of={TextCtaStories.Quaternary} />
+
+## Extra padding
+
+Use the `padding` prop to override the theme default. Combined here with `headlineSize="800"` for a larger heading.
+
+<Canvas of={TextCtaStories.ExtraPadding} />
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `headline` | String | - | Banner heading text |
+| `headlineSize` | String | `'600'` | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`) |
+| `headlineLevel` | Number | `2` | Semantic heading level (2–6). Controls the HTML element independently of visual size |
+| `text` | String | - | Body text (HTML supported via `dangerouslySetInnerHTML`) |
+| `buttons` | Array | `[]` | Array of button objects: `{ label, url, type }` |
+| `variant` | String | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `backgroundColor` | String | - | Custom CSS background color (overrides variant) |
+| `padding` | String | - | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token |
+| `image` | String | - | Image URL displayed alongside text (triggers side-by-side layout) |
+| `imageAlt` | String | `''` | Alt text for the image |
+| `centered` | Boolean | `true` | Center-align content (auto-disabled when `image` is set) |
+| `className` | String | - | Additional CSS classes |
+
+### Button object
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `label` | String | Required | Button text |
+| `url` | String | `'#'` | Button link URL |
+| `type` | String | `'Primary'` | Button style: `'Primary'` or `'Secondary'` |
+
+## Server-rendered / CDN usage
+
+TextCta supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+
+```html
+<div data-mg-text-cta
+  data-headline="Join the global platform"
+  data-text="<p>Register now for the Global Platform.</p>"
+  data-buttons='[{"label":"Register","url":"/register"},{"label":"Learn more","url":"/about","type":"Secondary"}]'
+  data-variant="primary">
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-headline` | `''` | Banner heading text |
+| `data-headline-size` | `'600'` | Font size token (e.g. `'400'`, `'600'`, `'800'`) |
+| `data-headline-level` | `2` | Semantic heading level (2–6) |
+| `data-text` | `''` | Body HTML (sanitized via DOMPurify) |
+| `data-buttons` | `[]` | JSON array of button objects: `{ label, url, type }` |
+| `data-variant` | `'primary'` | `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
+| `data-background-color` | - | Custom CSS background color |
+| `data-padding` | - | Custom CSS padding |
+| `data-image` | - | Image URL (triggers side-by-side layout) |
+| `data-image-alt` | `''` | Alt text for the image |
+| `data-centered` | `'true'` | `'true'` or `'false'` |
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import TextCta, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/TextCta.js";
+createHydrator({ selector: "[data-mg-text-cta]", component: TextCta, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+## Accessibility
+
+- Uses semantic `<section>` element with `aria-labelledby` pointing to the headline (falls back to `aria-label="Call to action"` when no headline is provided)
+- Headline renders as a proper heading element (`<h2>` by default). Use `headlineLevel` to match the document outline
+- Button text provides clear action labels
+- Color contrast: white text on theme background colors meets WCAG AA
+- Focus states inherited from `.mg-button` base styles
 
 ## Changelog
 
-- **1.0** — 2022-12-12: Released component
+- **1.0** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release. Full-width banner with BEM class structure (`mg-cta`). Supports `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system, `backgroundColor` for custom colors, `buttons` array prop (multiple buttons with Primary/Secondary types), `text` prop with HTML support (sanitized via DOMPurify), optional `image` for side-by-side layout, `centered` prop, and configurable `headlineSize`/`padding`.
+- **0.1** — 2022-12-12: Initial placeholder (never used in production)

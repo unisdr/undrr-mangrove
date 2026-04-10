@@ -4,6 +4,8 @@ import * as PageHeaderStories from './PageHeader.stories';
 
 <Meta of={PageHeaderStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # Page header
 
 The PageHeader component provides a comprehensive header with UNDRR branding, navigation elements, and visual decoration. It includes the UNDRR logo, language switcher, and the distinctive colored stripe that serves as visual branding. It can also render just the decoration stripe when used in decoration-only mode.
@@ -13,7 +15,6 @@ The PageHeader component provides a comprehensive header with UNDRR branding, na
 The PageHeader component displays a complete header structure that includes:
 
 - A dark toolbar section with UNDRR logo and language switcher
-- Google Analytics integration with proper data attributes
 - Responsive design that adapts to different screen sizes
 - The signature four-colored decorative stripe
 - Option to render only the decoration stripe for lightweight branding
@@ -70,11 +71,9 @@ The PageHeader component includes several content areas:
 
 **Visual Decoration:**
 
-- Four colored stripes representing UNDRR brand colors:
-  - Red: `$sendai-red-900` (#c10920)
-  - Purple: `$sendai-purple-900` (#962987)
-  - Orange: `$sendai-orange-900` (#eb752a)
-  - Teal: `$sendai-turquoise-900` (#00afae)
+- Four colored stripes representing UNDRR brand colors: red (#c10920), purple (#962987), orange (#eb752a), and teal (#00afae)
+
+> **Implementation note (for contributors):** The stripe colors map to SCSS variables `$sendai-red-900`, `$sendai-purple-900`, `$sendai-orange-900`, and `$sendai-turquoise-900` in `_variables.scss`.
 
 ### Behaviors
 
@@ -87,12 +86,11 @@ The PageHeader component maintains static display with interactive elements:
 3. **Responsive**: Adapts logo size on mobile devices (≤500px)
 4. **Decoration Only**: Renders only the colored stripe when variant is set to 'decoration-only'
 
-#### Google Analytics Integration
+#### Google Analytics integration
 
-The component includes proper data attributes for Google Analytics tracking:
+The toolbar wrapper sets `data-vf-google-analytics-region="undrr-black-bar"` for analytics tracking.
 
-- `data-vf-google-analytics-region="undrr-black-bar"` on the toolbar wrapper
-- Preserves all original Drupal data attributes for form processing
+> **Implementation note (for contributors):** The toolbar wrapper includes `data-vf-google-analytics-region="undrr-black-bar"` and all original Drupal data attributes for analytics and form processing. See [Integration Notes](#integration-notes) below for the full attribute list.
 
 ### Usage
 
@@ -130,6 +128,11 @@ To use the PageHeader component in your React application:
        { value: 'fr', label: 'Français' },
      ]}
    />
+   ```
+
+5. Decoration bar only (no logo, account, or language — for sub-branded sites like DELTA that provide their own navigation):
+   ```jsx
+   <PageHeader showLogo={false} showAccount={false} showLanguage={false} />
    ```
 
 #### Vanilla HTML/CSS
@@ -247,14 +250,17 @@ The PageHeader component follows accessibility best practices:
 
 | Prop      | Type   | Default                                                                 | Description                                                                      |
 | --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| variant   | String | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
-| className | String | undefined                                                               | Additional CSS classes to apply                                                  |
-| logoUrl   | String | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
-| logoAlt   | String | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
-| logoTitle | String | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
-| homeUrl   | String | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
-| languages | Array  | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
-| ...args   | Object | {}                                                                      | Additional props passed to the root element                                      |
+| variant     | String  | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
+| className   | String  | undefined                                                               | Additional CSS classes to apply                                                  |
+| logoUrl     | String  | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
+| logoAlt     | String  | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
+| logoTitle   | String  | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
+| homeUrl     | String  | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
+| showLogo    | Boolean | true                                                                    | Show or hide the UNDRR logo section                                              |
+| showAccount | Boolean | true                                                                    | Show or hide the "My account" link                                               |
+| showLanguage | Boolean | true                                                                    | Show or hide the language switcher dropdown                                      |
+| languages   | Array   | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
+| ...args     | Object  | {}                                                                      | Additional props passed to the root element                                      |
 
 ### Integration Notes
 
@@ -277,6 +283,7 @@ The PageHeader component follows accessibility best practices:
 
 ## Changelog
 
+- **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.
 - **1.2** — 2026-02-09: Migrated icon classes from `fa-*` to `mg-icon-*` namespace
 - **1.1** — 2025-10-27: Improved responsiveness of UNDRR logo
 - **1.0** — 2025-06-04: Initial release with decoration stripe, UNDRR logo, language switcher, Google Analytics integration, and decoration-only variant

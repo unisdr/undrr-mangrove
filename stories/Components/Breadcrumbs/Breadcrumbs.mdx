@@ -40,24 +40,6 @@ export const getCaptionForLocale = locale => {
         ],
       };
       return arabicText.data;
-    case 'burmese':
-      const burmeseText = {
-        data: [
-          {
-            text: 'အိမ်',
-          },
-          {
-            text: 'ဒုတိယအဆင့်',
-          },
-          {
-            text: 'တတိယအဆင့်',
-          },
-          {
-            text: 'စာမျက်နှာခေါင်းစဉ်',
-          },
-        ],
-      };
-      return burmeseText.data;
     case 'japanese':
       const japaneseText = {
         data: [
@@ -99,41 +81,52 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={BreadcrumbsStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # Breadcrumbs
 
 The Breadcrumb provides links to each of the previously visited pages and indicates the location of the current page.
 
-### Overview
+The Breadcrumb component creates navigation links for the current pathname based on an opinionated configuration object. Drop it anywhere on the page; it requires minimal configuration to generate breadcrumbs automatically.
 
-The Breadcrumb component creates navigation links for the current pathname based on an opinionated configuration object. The idea behind this component is to drop it anywhere with minimal or no configuration and get breadcrumbs generated automatically.
-
-#### When to use:
+## When to use
 
 - To indicate the location of the current page and to navigate back to each of the previously visited pages.
 
-Formatting
+## Formatting
 
-#### Default
+Links are separated by a CSS chevron separator rendered via `::before`. The final item represents the current page and is rendered as plain text rather than a link.
 
-It is present under the main navigation bar.
+## Default
 
-### Behaviors
+The breadcrumb appears below the main navigation bar.
 
-#### States
+## States
 
-There is only a Default state.
+The component renders in a single **default** state. The current-page item receives `aria-current="page"` and is not interactive.
 
 <Canvas of={BreadcrumbsStories.DefaultBreadcrumbs} meta={BreadcrumbsStories} />
 
-### Usage:
+## Usage
 
-1. Copy the HTML from the HTML tab of canvas.
-2. If you want to add left-right animation then add data-viewport="true" attribute to your HTML element.
+```html
+<nav aria-label="Breadcrumb">
+  <ol class="mg-breadcrumb">
+    <li class="mg-breadcrumb__item"><a href="/">Home</a></li>
+    <li class="mg-breadcrumb__item"><a href="/section">Section</a></li>
+    <li class="mg-breadcrumb__item" aria-current="page">Current page</li>
+  </ol>
+</nav>
+```
 
-### Interactions
+The final item receives `aria-current="page"` and renders as plain text (not a link).
+
+## Interactions
 
 - By clicking on the breadcrumb, the current page is redirected to the respective previous page.
 
 ## Changelog
 
+- **1.2** — 2026-04-09: Fixed invalid `aria-current` value (now correctly set to `"page"` on the active item); removed redundant `aria-label` from non-active breadcrumb links
+- **1.1** — 2026-03-21: Removed stale `data-viewport` animation reference from documentation.
 - **1.0** — 2022-12-12: Released component

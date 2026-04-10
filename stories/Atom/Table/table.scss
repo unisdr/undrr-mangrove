@@ -23,7 +23,7 @@
       @extend %border-none;
 
       &:nth-child(even) {
-        background-color: $mg-color-neutral-200;
+        background-color: $mg-color-neutral-25;
       }
     }
   }
@@ -126,13 +126,5 @@
     }
   }
 }
-
-// burmese lang
-// :lang(my) {
-//   th,
-//   td {
-//     line-height: 1.7;
-//   }
-// }
 
 /* table tag end */

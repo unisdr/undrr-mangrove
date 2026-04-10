@@ -1,33 +1,48 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as TypeScriptStories from './TypeScriptExampleComponent.stories';
 
 <Meta of={TypeScriptStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # TypeScript demo component
 
-This component demonstrates use of TypeScript in Storybook components while maintaining compatibility with the exisiting JavaScript codebase.
+This component demonstrates use of TypeScript in Storybook components while maintaining compatibility with the existing JavaScript codebase.
 
 ## Related
 
+- [Component standards](?path=/docs/contributing-component-standards--docs) — TypeScript conventions and best practices
 - [TypeScript in Storybook](https://storybook.js.org/docs/react/configure/typescript)
-- [Official TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [TypeScript React Cheatsheet](https://github.com/typescript-cheatsheets/react)
+- [TypeScript React cheatsheet](https://github.com/typescript-cheatsheets/react)
 
 ## Example
 
 <Canvas of={TypeScriptStories.Submit} meta={TypeScriptStories} />
 
+## What this component demonstrates
+
+- **Typed props** with a union type for `type` (`'Primary' | 'Secondary'`) instead of a bare `string`
+- **Optional props** with `onClick?: () => void`
+- **JSDoc comments** on the component and its props (visible in Storybook's controls panel)
+- **Explicit return type** (`JSX.Element`) on the component function
+- **CSF3 stories** using `Meta` and `StoryObj` from `@storybook/react`
+
 ## Working with non-TypeScript code
 
-When integrating with JavaScript components:
+When importing existing JavaScript components from TypeScript files, TypeScript infers types from PropTypes and JSDoc where possible. For components without PropTypes, you can add a local type declaration:
 
 ```typescript
-// Type declarations for existing JS components
-declare module 'javascript-component' {
+// types/SomeJsComponent.d.ts
+declare module '../path/to/SomeJsComponent' {
   export interface Props {
     value: string;
     onChange: (value: string) => void;
   }
-  export default function Component(props: Props): JSX.Element;
+  export default function SomeJsComponent(props: Props): JSX.Element;
 }
 ```
+
+## Changelog
+
+- **1.1.0** — 2026-03-12: Updated to CSF3 story format, added JSDoc comments, typed `type` prop as union, added explicit return type
+- **1.0.0** — Initial TypeScript demo component

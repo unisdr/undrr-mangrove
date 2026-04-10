@@ -2,7 +2,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import FixStyleOnlyEntriesPlugin from 'webpack-fix-style-only-entries';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
 import webpackEntry from './webpack.entries.js';
@@ -62,7 +61,6 @@ export default [
     },
     plugins: [
       new MiniCssExtractPlugin(),
-      //new FixStyleOnlyEntriesPlugin(),
       new CopyPlugin({
         patterns: [
           { from: 'stories/assets', to: 'assets' },
@@ -82,25 +80,58 @@ export default [
     mode: packMode, // Set mode dynamically
     cache: { type: 'filesystem' },
     entry: {
+      hydrate: './src/hydrate.js',
+      // Drupal-integrated components (hydration + npm)
       ShareButtons:
-        './stories/Components/Buttons/ShareButtons/ShareButtons.jsx',
-      MegaMenu: './stories/Components/MegaMenu/MegaMenu.jsx',
+        './stories/Components/Buttons/ShareButtons/ShareButtons.hydrate.js',
+      MegaMenu: './stories/Components/MegaMenu/MegaMenu.hydrate.js',
       ScrollContainer:
-        './stories/Components/ScrollContainer/ScrollContainer.jsx',
+        './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
       BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
       MapComponent: './stories/Components/Map/MapComponent.jsx',
-      QuoteHighlight: './stories/Components/QuoteHighlight/QuoteHighlight.jsx',
+      QuoteHighlight:
+        './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
-        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.jsx',
-      IconCard: './stories/Components/Cards/IconCard/IconCard.jsx',
-      Gallery: './stories/Components/Gallery/Gallery.jsx',
-      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.jsx',
-      Pager: './stories/Components/Pager/Pager.jsx',
+        './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.hydrate.js',
+      IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
+      Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
+      StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
+      Pager: './stories/Components/Pager/Pager.hydrate.js',
+      TextCta: './stories/Components/TextCta/TextCta.hydrate.js',
+      // Vanilla components (bundled for AI manifest auto-rendering)
+      Chips: './stories/Components/Buttons/Chips/Chips.jsx',
+      CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.jsx',
+      TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
+      Select: './stories/Components/Forms/Select/Select.jsx',
+      Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
+      Radio: './stories/Components/Forms/Radio/Radio.jsx',
+      Textarea: './stories/Components/Forms/Textarea/Textarea.jsx',
+      FormGroup: './stories/Components/Forms/FormGroup/FormGroup.jsx',
+      FormErrorSummary:
+        './stories/Components/Forms/FormErrorSummary/FormErrorSummary.jsx',
+      VerticalCard: './stories/Components/Cards/Card/VerticalCard.jsx',
+      HorizontalCard: './stories/Components/Cards/Card/HorizontalCard.jsx',
+      BookCard: './stories/Components/Cards/Card/BookCard.jsx',
+      HorizontalBookCard:
+        './stories/Components/Cards/Card/HorizontalBookCard.jsx',
+      Breadcrumbs: './stories/Components/Breadcrumbs/Breadcrumbs.jsx',
+      // Deprecated (February 2026) — removal planned by end of 2026. Use Pager instead.
+      // Pagination: './stories/Components/Pagination/Pagination.jsx',
+      Tab: './stories/Components/Tab/Tab.jsx',
+      Hero: './stories/Components/Hero/Hero.jsx',
+      PageHeader: './stories/Components/PageHeader/PageHeader.jsx',
+      Footer: './stories/Components/Footer/Footer.jsx',
+      HighlightBox: './stories/Components/HighlightBox/HighlightBox.jsx',
+      EmbedContainer: './stories/Utilities/EmbedContainer/EmbedContainer.jsx',
+      FullWidth: './stories/Utilities/FullWidth/FullWidth.jsx',
+      Loader: './stories/Utilities/Loader/Loader.jsx',
+      ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
     },
     externals: {
       react: 'react',
       'react-dom': 'react-dom',
+      'react-dom/client': 'react-dom/client',
     },
     output: {
       path: path.resolve(currentDirPath, 'dist/components'),

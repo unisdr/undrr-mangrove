@@ -1,24 +1,13 @@
 /* content-card start */
-// $colors: (
-//   'yellow': $mg-color-yellow,
-//   'red': $mg-color-red-900,
-//   'green': $mg-color-green,
-//   'blue': $mg-color-azure,
-//   'gray': $mg-color-neutral-100,
-// );
-// $backgroundcolors: (
-//   'yellow': $mg-color-yellow-light,
-//   'red': $mg-color-red-600,
-//   'green': $mg-color-green-light,
-//   'blue': $mg-color-azure-light,
-//   'gray': $mg-color-neutral-100,
-// );
 
 // MG CARD using CSS GRID
 .mg-card {
   display: inline-block;
   position: relative;
   margin-bottom: $mg-spacing-100;
+  background: $mg-card-background;
+  padding: $mg-card-padding;
+  border-radius: $mg-card-border-radius;
 
   // Vertical CARD
   &__vc {
@@ -101,7 +90,7 @@
   &__image {
     object-fit: cover;
     width: 100%;
-    align-self: center;
+    align-self: flex-start;
   }
 
   &__label {
@@ -124,9 +113,11 @@
     padding-top: $mg-spacing-100;
 
     a {
-      color: $mg-color-text;
+      color: $mg-color-interactive;
       cursor: pointer;
-      display: inline-block;
+      display: inline;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .active {
@@ -135,14 +126,90 @@
     }
   }
 
-  &__title a::after {
+  // Stretched link overlay (covers entire card)
+  &__title a::before {
     bottom: 0;
     content: "";
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 100;
+    z-index: 100; // stretched-link cover — local to card stacking context
+  }
+
+  // Inline chevron indicator (CSS border triangle)
+  &__title a::after {
+    border-color: currentColor;
+    border-style: solid;
+    border-width: 0.15em 0.15em 0 0;
+    content: "\2060"; // Word joiner: prevents caret from orphaning on its own line
+    display: inline-block;
+    height: 0.35em;
+    margin-inline-start: 0.25em;
+    position: relative;
+    top: -0.1em;
+    transform: rotate(45deg);
+    translate: 0 0;
+    vertical-align: middle;
+    width: 0.35em;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: translate 200ms ease;
+    }
+  }
+
+  // Focus: card-level outline when title link is focused via keyboard
+  &__title a:focus-visible {
+    outline: 2px solid $mg-color-interactive;
+    outline-offset: 2px;
+  }
+
+  // Hover: thicker underline + nudge chevron
+  &:hover &__title a {
+    text-decoration-thickness: 2px;
+  }
+
+  &:hover &__title a::after {
+    @media (prefers-reduced-motion: no-preference) {
+      translate: 0.15em 0;
+    }
+  }
+}
+
+// RTL chevron — flip direction
+[dir="rtl"] .mg-card__title a::after {
+  transform: rotate(225deg);
+}
+
+[dir="rtl"] .mg-card:hover .mg-card__title a::after {
+  @media (prefers-reduced-motion: no-preference) {
+    translate: -0.15em 0;
+  }
+}
+
+// Color variants (shared accent colours from _variables.scss)
+$card-variant-colours: (
+  "secondary": $mg-color-secondary,
+  "tertiary": $mg-color-tertiary,
+  "quaternary": $mg-color-quaternary,
+);
+
+@each $name, $color in $card-variant-colours {
+  .mg-card--#{$name} .mg-card__title a {
+    color: #{$color};
+  }
+}
+
+// Opt-out modifier: plain title (no blue, no underline, no chevron)
+// Double class selector ensures this overrides variant colors regardless of source order
+.mg-card.mg-card--plain-title {
+  .mg-card__title a {
+    color: $mg-color-text;
+    text-decoration: none;
+  }
+
+  .mg-card__title a::after {
+    content: none;
   }
 }
 
@@ -160,7 +227,11 @@
 .mg-card__label,
 .mg-card .mg-button {
   position: relative;
-  z-index: 101;
+  z-index: 101; // above stretched-link cover — local to card stacking context
+}
+
+.mg-card__label {
+  font-weight: 700;
 }
 
 .mg-card__summary a:hover,
@@ -208,12 +279,21 @@
     max-width: 500px;
   }
 
+  // Classification label above the icon/image inside the visual area
+  .mg-card__visual-label {
+    font-size: $mg-font-tag;
+    font-weight: 700;
+    color: $mg-color-tag;
+    width: 100%;
+  }
+
   // Reuse shared visual container with icon-specific sizing
   .mg-card__visual {
     flex-shrink: 0;
     width: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: flex-start;
     overflow: visible;
     container-type: inline-size; // Enable container queries for icon scaling
@@ -311,6 +391,23 @@
     .mg-icon {
       margin: 0 auto;
     }
+
+    // Colored background behind icon (circle by default, rounded rect in Delta)
+    &--colored {
+      background-color: var(--mg-icon-bg);
+      border-radius: $mg-card-icon-badge-radius;
+      aspect-ratio: 1;
+      width: 72px;
+      min-width: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .mg-icon {
+        font-size: 32px;
+        color: var(--mg-icon-fg, #{$mg-color-neutral-700});
+      }
+    }
   }
 
   // Visual link for logo cards (srOnlyTitle) - stretched link pattern
@@ -323,7 +420,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 1; // stretched-link cover for logo card — local to icon-card stacking context
     }
 
     &:hover {
@@ -356,11 +453,12 @@
     line-height: $mg-font-line-height-500;
 
     a {
-      color: $mg-color-text;
-      text-decoration: none;
+      color: $mg-color-interactive;
+      text-decoration: underline;
+      text-underline-offset: 3px;
 
       &:hover {
-        text-decoration: underline;
+        text-decoration-thickness: 2px;
       }
 
       &:focus-visible {
@@ -385,7 +483,7 @@
       color: $mg-color-interactive;
       text-decoration: none;
       position: relative;
-      z-index: 101;
+      z-index: 101; // above stretched-link cover — local to card stacking context
 
       &:hover {
         text-decoration: underline;
@@ -397,6 +495,12 @@
         border-radius: 2px;
       }
     }
+  }
+
+  // Bordered variant (colored border via CSS custom property)
+  &--bordered {
+    border: 2px solid var(--mg-card-border);
+    padding: max($mg-card-padding, $mg-spacing-150);
   }
 
   // Centered variant

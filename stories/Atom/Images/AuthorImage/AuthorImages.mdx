@@ -1,6 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
 import { Authorimg } from './AuthorImages';
-import user from '../../../assets/images/author.png';
 import * as AuthorImagesStories from './AuthorImages.stories';
 
 export const getCaptionForLocale = locale => {
@@ -11,9 +10,6 @@ export const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = {};
       return arabicText;
-    case 'burmese':
-      const burmeseText = {};
-      return burmeseText;
     case 'japanese':
       const japaneseText = {};
       return japaneseText;
@@ -23,6 +19,8 @@ export const getCaptionForLocale = locale => {
 };
 
 <Meta of={AuthorImagesStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
 # Author image
 
@@ -55,4 +53,5 @@ There are two states in the Author Image component: Small and Large.
 
 ## Changelog
 
+- **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`author__img` → `mg-author-image`). Added BEM modifiers for size (`mg-author-image--large`) and hover color (`mg-author-image--yellow`, etc.). Replaced `defaultProps` with destructured defaults.
 - **1.0** — 2022-12-12: Released component

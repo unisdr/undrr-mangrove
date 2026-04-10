@@ -1,16 +1,16 @@
 import React from 'react';
+import { HighlightBox } from './HighlightBox';
 
 export default {
   title: 'Components/HighlightBox',
+  component: HighlightBox,
   parameters: {
     layout: 'padded',
   },
 };
 
 export const Default = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box',
     children: (
       <>
         <h3>Default Highlight Box</h3>
@@ -27,9 +27,8 @@ export const Default = {
 };
 
 export const Primary = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box mg-highlight-box--primary',
+    variant: 'primary',
     children: (
       <>
         <h3>Primary Highlight Box</h3>
@@ -43,9 +42,8 @@ export const Primary = {
 };
 
 export const Secondary = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box mg-highlight-box--secondary',
+    variant: 'secondary',
     children: (
       <>
         <h3>Secondary Highlight Box</h3>
@@ -57,9 +55,8 @@ export const Secondary = {
 };
 
 export const Centered = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box mg-highlight-box--centered',
+    centered: true,
     children: (
       <>
         <h3>Centered Highlight Box</h3>
@@ -71,10 +68,9 @@ export const Centered = {
 };
 
 export const CenteredPrimary = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className:
-      'mg-highlight-box mg-highlight-box--primary mg-highlight-box--centered',
+    variant: 'primary',
+    centered: true,
     children: (
       <>
         <h3>Centered Primary Box</h3>
@@ -85,38 +81,40 @@ export const CenteredPrimary = {
 };
 
 export const WithVideo = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box mg-highlight-box--primary',
+    variant: 'primary',
+    centered: true,
     children: (
-      <>
-        <h3>Featured video</h3>
-        <iframe
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title="Video example"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-        <p>
-          Videos and other embedded media work well inside highlight boxes to
-          draw attention to important content.
-        </p>
-      </>
+      <figure>
+        <h3>Related video: Disaster risk reduction explained</h3>
+        <div className="mg-embed-container">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q"
+            title="Related video: Disaster risk reduction explained"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+        <figcaption className="mt-10">
+          Caption describing the related video.
+        </figcaption>
+      </figure>
     ),
   },
 };
 
 export const FloatStart = {
-  render: () => (
+  render: args => (
     <div>
-      <div className="mg-highlight-box mg-highlight-box--float-start mg-highlight-box--secondary">
+      <HighlightBox {...args}>
         <h4>Floated Box</h4>
         <p>
           This box floats to the start (left in LTR, right in RTL) on larger
           screens.
         </p>
         <p>On mobile, it stacks normally.</p>
-      </div>
+      </HighlightBox>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -136,15 +134,19 @@ export const FloatStart = {
       </p>
     </div>
   ),
+  args: {
+    variant: 'secondary',
+    float: 'start',
+  },
 };
 
 export const FloatEnd = {
-  render: () => (
+  render: args => (
     <div>
-      <div className="mg-highlight-box mg-highlight-box--float-end mg-highlight-box--primary">
+      <HighlightBox {...args}>
         <h4>Float End</h4>
         <p>This floats to the end (right in LTR, left in RTL).</p>
-      </div>
+      </HighlightBox>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -158,12 +160,14 @@ export const FloatEnd = {
       </p>
     </div>
   ),
+  args: {
+    variant: 'primary',
+    float: 'end',
+  },
 };
 
 export const WithImage = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box',
     children: (
       <>
         <h3>Box with Image</h3>
@@ -179,9 +183,8 @@ export const WithImage = {
 };
 
 export const WithList = {
-  render: args => <div className={args.className}>{args.children}</div>,
   args: {
-    className: 'mg-highlight-box mg-highlight-box--secondary',
+    variant: 'secondary',
     children: (
       <>
         <h3>Key Points</h3>
@@ -199,12 +202,12 @@ export const WithList = {
 // RTL examples
 export const RTLFloatStart = {
   name: 'RTL float start (appears on right)',
-  render: () => (
+  render: args => (
     <div style={{ direction: 'rtl' }}>
-      <div className="mg-highlight-box mg-highlight-box--float-start mg-highlight-box--secondary">
+      <HighlightBox {...args}>
         <h4>صندوق عائم</h4>
         <p>يطفو هذا الصندوق إلى البداية (اليمين في RTL).</p>
-      </div>
+      </HighlightBox>
       <p>
         هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا
         النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من
@@ -216,16 +219,20 @@ export const RTLFloatStart = {
       </p>
     </div>
   ),
+  args: {
+    variant: 'secondary',
+    float: 'start',
+  },
 };
 
 export const RTLFloatEnd = {
   name: 'RTL float end (appears on left)',
-  render: () => (
+  render: args => (
     <div style={{ direction: 'rtl' }}>
-      <div className="mg-highlight-box mg-highlight-box--float-end mg-highlight-box--primary">
+      <HighlightBox {...args}>
         <h4>صندوق عائم</h4>
         <p>يطفو هذا الصندوق إلى النهاية (اليسار في RTL).</p>
-      </div>
+      </HighlightBox>
       <p>
         هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا
         النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من
@@ -237,4 +244,8 @@ export const RTLFloatEnd = {
       </p>
     </div>
   ),
+  args: {
+    variant: 'primary',
+    float: 'end',
+  },
 };

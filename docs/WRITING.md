@@ -1,5 +1,7 @@
 # Writing guidelines for Mangrove
 
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-writing-guidelines--docs).
+
 This guide helps anyone contributing to Mangrove write interface copy, documentation, and developer messages that:
 
 - Improve user experience
@@ -35,6 +37,38 @@ This guide helps anyone contributing to Mangrove write interface copy, documenta
 - Front‑load the most important detail. Make the next action obvious.
 - Example: On a tracking page, show “Arrives tomorrow” before “Order #123456.”
 - Reference: [GOV.UK — front‑load your content](https://www.gov.uk/guidance/content-design/writing-for-gov-uk#front-load-your-content)
+
+## Write for two audiences
+
+Technical documentation — especially component docs — serves two distinct audiences with different needs. Confusing them produces documentation that serves neither.
+
+**Consumers** (integrators, builders) scan like a menu. They want to know: does this component do what I need, and what props does it take? Give them a one-line description, a working example, and a props table. That is often enough. Resist the urge to explain your internals.
+
+**Maintainers** (library contributors, on-call debuggers) need the full picture: why a prop exists, why there are two data sources, why a field is sometimes null, what a past breaking change affected. This context prevents future developers from “fixing” things that weren’t broken.
+
+The failure mode is writing one document that tries to serve both equally — too deep to skim, not structured enough to dig into. Instead:
+
+- Lead with what it does
+- Follow with how to use it (example first, then props)
+- Place the “why” at the end, or in a collapsed details block
+
+### Callout labels
+
+Use consistent callout labels so readers can skim and know exactly what to skip or read:
+
+| Label | Audience | Use for |
+|-------|----------|---------|
+| `> **Note:**` | Consumers | Status, beta warnings, important gotchas |
+| `> **Tip:**` | Consumers | Best-practice suggestions, optional enhancements |
+| `> **Integration note:**` | Consumers | Integration-specific context for any consumer (CDN, Drupal, SSR) |
+| `> **Implementation note (for contributors):**` | Maintainers only | Internal rationale, architectural decisions, historical context |
+
+> “Too much information and no information accomplish the same goal.”
+> — Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
+
+Also apply this at the API/component design level: consistent naming patterns mean consumers can guess correctly without reading anything. When `/user/orders` works, `/user/orders/123` should just work too.
+
+Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 
 ## Serve a functional purpose
 
@@ -152,7 +186,14 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 - Keep headings in sentence case, and preserve proper nouns and acronyms.
 - Extract and reuse terminology from existing Mangrove documentation to maintain consistency.
 
+## Related documentation
+
+- [Writing guidelines (short)](WRITING-SHORT.md) — quick-reference version of these rules
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
+- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+
 ## Acknowledgements and sources
 
 - Originally inspired by Nick DiLallo’s “This is good Writing — Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
+- The “Write for two audiences” section is inspired by Ibrahim Diallo’s “[How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)” (2025).
 - Additional references are listed above in each section.

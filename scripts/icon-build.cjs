@@ -1,0 +1,152 @@
+#!/usr/bin/env node
+
+/**
+ * icon-build.cjs
+ *
+ * Reads SVG files listed in icon-map.cjs, optimises them with SVGO,
+ * URL-encodes them, and writes SCSS mask-image rules to
+ * stories/Atom/Icons/_icon-definitions.scss.
+ *
+ * The generated file is imported by stories/Atom/Icons/icons.scss.
+ *
+ * Part of the icon font → CSS mask-image migration.
+ * See: https://github.com/unisdr/undrr-mangrove/issues/906
+ *
+ * Usage:  node scripts/icon-build.cjs
+ */
+
+const fs = require('fs');
+const path = require('path');
+const { optimize } = require('svgo');
+const iconMap = require('./icon-map.cjs');
+
+const OUTPUT = path.resolve(__dirname, '../stories/Atom/Icons/_icon-definitions.scss');
+
+// SVGO config: strip metadata, remove dimensions (we size via CSS),
+// keep viewBox, inline styles → attributes for cleaner output.
+// SVGs must have a viewBox for mask-size: contain to work correctly.
+const svgoConfig = {
+  plugins: [
+    {
+      name: 'preset-default',
+      params: {
+        overrides: {
+          // OCHA icons embed <style>.st0{fill:...}</style> with class="st0" on
+          // multiple paths. The default onlyMatchedOnce: true skips classes used
+          // on more than one element, leaving the <style> block intact. Setting
+          // false ensures every matched element gets its fill inlined before
+          // removeAttrs strips the class="" attributes below.
+          inlineStyles: { onlyMatchedOnce: false },
+        },
+      },
+    },
+    'removeDimensions',
+    'sortAttrs',
+    { name: 'removeAttrs', params: { attrs: ['class'] } },
+  ],
+};
+
+function encodeSvg(svgString) {
+  // Minimal URI encoding that keeps the data URI readable and compact.
+  // Encodes only the characters that break url() in CSS.
+  // Note: double quotes are replaced with single quotes because the
+  // outer CSS delimiter is url("..."). SVG attributes accept either style.
+  return svgString
+    .replace(/\n/g, '')
+    .replace(/\r/g, '')
+    .replace(/\t/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+    .replace(/#/g, '%23')
+    .replace(/"/g, "'");
+}
+
+function buildIconDefinitions() {
+  const names = Object.keys(iconMap);
+  const errors = [];
+
+  // TODO: aliases (e.g. twitter → x-social, calendar → calendar-alt) emit a
+  // full duplicate data URI rather than referencing the canonical icon's value.
+  // Gzip compresses the repetition to ~100 bytes overhead so it's not a runtime
+  // concern, but if the alias list grows significantly consider a two-pass build
+  // that emits `--mg-icon-svg: var(--mg-icon-<canonical>-svg)` for aliases
+  // instead of repeating the encoded URI.
+
+  // Pass 1 — validate all SVG paths exist before doing any work.
+  // Paths in icon-map.cjs are relative to the project root; anchor to __dirname
+  // so the script works regardless of the working directory it is invoked from.
+  for (const name of names) {
+    const svgPath = path.resolve(__dirname, '..', iconMap[name]);
+    if (!fs.existsSync(svgPath)) {
+      errors.push(`  mg-icon-${name}: ${iconMap[name]} not found`);
+    }
+  }
+
+  if (errors.length > 0) {
+    console.error('build-icons: missing SVG files:\n' + errors.join('\n'));
+    process.exit(1);
+  }
+
+  const rules = [];
+
+  // Pass 2 — optimise and encode each SVG.
+  for (const name of names) {
+    const svgPath = path.resolve(__dirname, '..', iconMap[name]);
+    const raw = fs.readFileSync(svgPath, 'utf8');
+
+    let optimised;
+    try {
+      optimised = optimize(raw, { ...svgoConfig, path: svgPath });
+    } catch (err) {
+      console.error(`build-icons: SVGO failed on mg-icon-${name} (${iconMap[name]}): ${err.message}`);
+      process.exit(1);
+    }
+
+    // Error if a <style> block survived SVGO — it means class-based fill rules
+    // (e.g. OCHA's .st0{fill:...}) were not inlined. Paths would render unstyled
+    // if the icon is ever used with mg-icon--multicolor (background-image mode).
+    if (optimised.data.includes('<style')) {
+      errors.push(`  mg-icon-${name}: <style> block survived SVGO — class-based fill rules not inlined`);
+    }
+
+    // Error (not warning) — mask-size: contain requires viewBox to scale correctly.
+    if (!optimised.data.includes('viewBox')) {
+      errors.push(`  mg-icon-${name}: missing viewBox — required for mask-size: contain`);
+    }
+
+    const encoded = encodeSvg(optimised.data);
+    const dataUri = `url("data:image/svg+xml,${encoded}")`;
+
+    // Only emit --mg-icon-svg here. content: "" and background-color: currentColor
+    // live in the base .mg-icon:not([class*="fa-"])::before rule (specificity 0,2,1),
+    // which is excluded for fa-* elements so those rules never interfere with
+    // font glyph rendering.
+    rules.push(`.mg-icon-${name}::before {\n  --mg-icon-svg: ${dataUri};\n}`);
+  }
+
+  if (errors.length > 0) {
+    console.error('build-icons: errors:\n' + errors.join('\n'));
+    process.exit(1);
+  }
+
+  const header =
+    '// Auto-generated by scripts/icon-build.cjs — do not edit by hand.\n' +
+    '// To regenerate: yarn build:icons\n' +
+    `// ${names.length} icons from Lucide, OCHA, and custom SVG sources.\n`;
+
+  const output = header + '\n' + rules.join('\n\n') + '\n';
+
+  // Skip write if content is unchanged (avoids triggering file watchers).
+  const existing = fs.existsSync(OUTPUT) ? fs.readFileSync(OUTPUT, 'utf8') : '';
+  if (existing === output) {
+    console.log(`build-icons: ${names.length} icons, no changes`);
+    return;
+  }
+
+  fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
+  fs.writeFileSync(OUTPUT, output, 'utf8');
+
+  console.log(`build-icons: wrote ${names.length} icon rules to ${path.relative(process.cwd(), OUTPUT)}`);
+}
+
+buildIconDefinitions();

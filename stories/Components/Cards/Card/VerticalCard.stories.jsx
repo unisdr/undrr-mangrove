@@ -39,22 +39,6 @@ by vulnerable populations and communities.This paper explores health risks from 
         ],
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        contentdata: [
-          {
-            contenttile: 'အကြောင်းအရာ TAG',
-            title:
-              'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ၊ နာမည်က ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-            button: 'ပိုပြီးဖတ်ပါ',
-            link: 'javascript:void(0)',
-            imgalt: 'A person looks on',
-            imgback:
-              'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-          },
-        ],
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         contentdata: [
@@ -97,6 +81,10 @@ export default {
   title: 'Components/Cards/Vertical Card',
   component: VerticalCard,
 
+  args: {
+    variant: 'primary',
+  },
+
   argTypes: {
     variant: {
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
@@ -104,8 +92,6 @@ export default {
       control: {
         type: 'inline-radio',
       },
-
-      defaultValue: 'primary',
     },
   },
 };
@@ -126,6 +112,28 @@ export const DefaultVerticalCard = {
   },
 
   name: 'Vertical Card',
+};
+
+export const PlainTitleVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard
+          data={caption.contentdata}
+          className="mg-card--plain-title"
+          {...args}
+        ></VerticalCard>
+      </div>
+    );
+  },
+
+  name: 'Plain title (opt-out)',
 };
 
 export const NoImageVerticalCard = {

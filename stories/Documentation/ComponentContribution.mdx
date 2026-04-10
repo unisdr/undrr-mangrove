@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 
 <Meta
-  title="Getting started/Component contribution guide"
+  title="Contributing/Component standards"
   parameters={{
     viewMode: 'docs',
     previewTabs: {
@@ -11,13 +11,25 @@ import LinkTo from '@storybook/addon-links/react';
   }}
 />
 
-# Component contribution guide
+# Component standards
 
-This guide explains how to contribute new components to the Mangrove library and outlines the standards and best practices to follow.
+Standards, conventions, and contribution process for Mangrove components. For a step-by-step tutorial on building a new component, see the <LinkTo kind="contributing-build-a-component-step-by-step" story="docs">Build a component</LinkTo> guide.
 
-Before contributing, please review **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove: the UNDRR standard</LinkTo>** to understand the broader context of why Mangrove is the default choice for UNDRR web properties and how contributions fit into this ecosystem.
+Before contributing, review **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand how shared content structures work across UNDRR properties.
 
 Further information on detailed setup, workflow, and contribution docs in the [development section of our GitHub README](https://github.com/unisdr/undrr-mangrove/?tab=readme-ov-file#development).
+
+### Related guides
+
+- **<LinkTo kind="contributing-build-a-component-step-by-step" story="docs">Build a component</LinkTo>** — step-by-step tutorial
+- **<LinkTo kind="contributing-build-a-component-testing" story="docs">Testing components</LinkTo>** — unit, visual, and accessibility testing
+- **<LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>** — UX writing standards for components and docs
+- **<LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>** — accessibility, performance, and architecture guidance
+- **<LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo>** — build system, distribution channels, and Drupal integration
+- **<LinkTo kind="contributing-build-a-component-hydration" story="docs">Adding hydration support</LinkTo>** — `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
+- **<LinkTo kind="contributing-release-process" story="docs">Release process</LinkTo>** — versioning, tagging, and publishing
+- [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md) — environment setup, scripts, branching, and commit conventions
+- [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md) — how to propose changes and submit PRs
 
 ## Component development workflow
 
@@ -30,7 +42,7 @@ Before starting development:
 - Identify the props/parameters the component will accept
 - Consider accessibility requirements from the beginning
 - Plan responsive behaviors for different screen sizes
-- Ensure your component aligns with **<LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Mangrove standards</LinkTo>** for consistency and governance
+- Ensure your component follows the shared content patterns described in **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>**
 
 ### 2. Component structure
 
@@ -38,11 +50,18 @@ All components in Mangrove follow a consistent file structure:
 
 ```
 stories/Components/[ComponentCategory]/[ComponentName]/
-├── ComponentName.jsx      # React component implementation
-├── ComponentName.mdx      # Documentation
-├── ComponentName.stories.jsx  # Storybook stories
-└── component-name.scss    # Component-specific styles (optional)
+├── ComponentName.jsx              # React component implementation
+├── ComponentName.mdx              # Documentation
+├── ComponentName.stories.jsx      # Storybook stories
+├── component-name.scss            # Component-specific styles (optional)
+├── ComponentName.fromElement.js   # Hydration prop extraction (optional)
+├── ComponentName.hydrate.js       # Barrel re-exporting component + fromElement (optional)
+└── __tests__/
+    ├── ComponentName.test.jsx
+    └── ComponentName.fromElement.test.js  # Tests for prop extraction (optional)
 ```
+
+The `fromElement` and `hydrate` files are needed when a component is used in server-rendered contexts (Drupal, Astro). See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for when and how to add these files.
 
 #### Component categories
 
@@ -155,7 +174,7 @@ All components must include comprehensive JSDoc comments to document their purpo
 
    ```jsx
    /**
-    * Button component that follows the Mangrove design system guidelines
+    * Button component that follows Mangrove's component guidelines
     * @param {Object} props - Component props
     * @param {string} props.variant - Button variant ('primary', 'secondary', 'tertiary', 'danger')
     * @param {string} [props.size='md'] - Button size ('sm', 'md', 'lg')
@@ -266,29 +285,27 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
 
 3. **TypeScript Stories**
 
-   When writing stories for TypeScript components, use the appropriate TypeScript types from Storybook:
+   When writing stories for TypeScript components, use CSF3 object syntax with Storybook's `Meta` and `StoryObj` types:
 
    ```tsx
-   import React from 'react';
+   import type { Meta, StoryObj } from '@storybook/react-webpack5';
    import TypedButton from './TypedButton';
-   import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-   export default {
+   const meta: Meta<typeof TypedButton> = {
      title: 'Components/Buttons/TypedButton',
      component: TypedButton,
-   } as ComponentMeta<typeof TypedButton>;
+   };
 
-   // Create a typed template
-   const Template: ComponentStory<typeof TypedButton> = (
-     args: React.ComponentProps<typeof TypedButton>
-   ) => <TypedButton {...args} />;
+   export default meta;
+   type Story = StoryObj<typeof TypedButton>;
 
-   // Create stories with typed args
-   export const Primary = Template.bind({});
-   Primary.args = {
-     label: 'Submit',
-     type: 'primary',
-     width: 120,
+   // CSF3: use object syntax with args
+   export const Primary: Story = {
+     args: {
+       label: 'Submit',
+       type: 'primary',
+       width: 120,
+     },
    };
    ```
 
@@ -318,7 +335,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Prefer interfaces for public APIs and type aliases for props and other internal types
    - Include proper JSDoc comments even with TypeScript types (they provide additional context)
 
-5. **Example TypeScript Component**
+5. **Example TypeScript component**
 
    The Mangrove library includes a TypeScript example component in `stories/Components/TypeScriptExampleComponent` that demonstrates these principles:
 
@@ -328,30 +345,84 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 
    type ButtonProps = {
+     /** Button label text */
      label: string;
-     type: string;
+     /** Visual style variant */
+     type: 'Primary' | 'Secondary';
+     /** Button width in pixels */
      width: number;
+     /** Optional click handler */
+     onClick?: () => void;
    };
 
-   function TypeScriptExampleComponent({ label, type, width }: ButtonProps) {
+   function TypeScriptExampleComponent({
+     label,
+     type,
+     width,
+     onClick,
+   }: ButtonProps): JSX.Element {
      return (
-       <>
-         <CtaButton
-           label={label}
-           Type={type}
-           State="Default"
-           For_Primary="Text"
-           variant="contained"
-           style={{ width: `${width}px` }}
-         >
-           {label}
-         </CtaButton>
-       </>
+       <CtaButton
+         label={label}
+         Type={type}
+         State="Default"
+         variant="contained"
+         style={{ width: `${width}px` }}
+         onClick={onClick}
+       >
+         {label}
+       </CtaButton>
      );
    }
 
    export default TypeScriptExampleComponent;
    ```
+
+   And its CSF3 stories file:
+
+   ```tsx
+   // TypeScriptExampleComponent.stories.tsx
+   import type { Meta, StoryObj } from '@storybook/react-webpack5';
+   import TypeScriptExampleComponent from './TypeScriptExampleComponent';
+
+   const meta: Meta<typeof TypeScriptExampleComponent> = {
+     title: 'Example/TypeScript component',
+     component: TypeScriptExampleComponent,
+   };
+
+   export default meta;
+   type Story = StoryObj<typeof TypeScriptExampleComponent>;
+
+   export const Submit: Story = {
+     args: {
+       label: 'Submit',
+       type: 'Secondary',
+       width: 400,
+     },
+   };
+   ```
+
+### State management
+
+Components use these approaches for managing state:
+
+- Use React's `useState` and `useEffect` hooks for component-specific state
+- Support both controlled (state managed by parent) and uncontrolled (internal state) modes where appropriate
+
+```jsx
+// Controlled
+<InputComponent value={value} onChange={handleChange} />
+
+// Uncontrolled with default value
+<InputComponent defaultValue="Default" />
+```
+
+### Performance
+
+- Use `React.memo` for components that render often with the same props
+- Use `useCallback` for event handlers passed as props
+- Split large components into smaller, focused components
+- Use conditional rendering to avoid unnecessary DOM elements
 
 ### Styling guidelines
 
@@ -360,7 +431,17 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Each component may have its own SCSS file
    - Import shared variables and mixins from the global styles
 
-2. **Follow the BEM (Block, Element, Modifier) methodology**
+2. **SCSS file naming: kebab-case**
+
+   Name SCSS files in kebab-case derived from the component directory name: `MegaMenu/` → `mega-menu.scss`, `TableOfContents/` → `table-of-contents.scss`.
+
+   - **Matches the CSS ecosystem.** CSS properties are kebab-case (`background-color`), BEM classes are kebab-case (`mg-mega-menu__item`), and Sass partials are conventionally kebab-case (`_variables.scss`). SCSS files that follow the same convention as the language they contain are more predictable.
+   - **Cross-platform safety.** macOS is case-insensitive by default, Linux is case-sensitive. A file named `FullWidth.scss` could silently resolve on macOS but fail in CI on Linux. Kebab-case avoids this entirely.
+   - **PascalCase is for components, not styles.** JSX files use PascalCase (`MegaMenu.jsx`) because that's a React convention. SCSS files are stylesheets, not components — different artifact type, different convention.
+
+   After creating your SCSS file, import it in `stories/assets/scss/_components.scss`.
+
+3. **Follow the BEM (Block, Element, Modifier) methodology**
 
    - **Block**: The main component (e.g., `.mg-card`)
    - **Element**: A part of the block (e.g., `.mg-card__title`, `.mg-card__content`)
@@ -391,7 +472,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    - Keep selectors as flat as possible for better performance
    - Don't use element tags in selectors (e.g., use `.mg-card__title` not `h2.mg-card__title`)
 
-3. **Follow the existing design tokens**
+4. **Follow the existing design tokens**
 
    - Use variables for colors, spacing, typography, etc.
    - Retrieve design tokens from `stories/assets/scss/variables`
@@ -405,7 +486,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
      }
      ```
 
-4. **Responsive design**
+5. **Responsive design**
 
    - All components must be responsive
    - Use the breakpoint mixins provided in the project
@@ -416,21 +497,124 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
      .mg-component {
        // Mobile styles (default)
 
-       @include mg-media-breakpoint-up(md) {
-         // Tablet styles
+       @include devicebreak(medium) {
+         // Tablet styles (≥ 48em)
        }
 
-       @include mg-media-breakpoint-up(lg) {
-         // Desktop styles
+       @include devicebreak(large) {
+         // Desktop styles (≥ 64em)
        }
      }
      ```
 
-5. **Accessibility**
+     Available breakpoints: `small` (≤ 47.9375em), `medium` (≥ 48em), `large` (≥ 64em), `xlarge` (≥ 90em), `mediumonlytab` (≤ 89.9375em). See `stories/assets/scss/_breakpoints.scss` for definitions.
+
+6. **Accessibility**
    - Ensure sufficient color contrast (WCAG AA minimum)
    - Support keyboard navigation and screen readers
    - Test with accessibility tools
    - Use appropriate focus states for interactive elements
+
+## RTL support
+
+UNDRR websites serve content in Arabic and other right-to-left (RTL) languages. Every component must work correctly in both LTR and RTL layouts.
+
+### How RTL is triggered
+
+The Storybook locale toolbar (globe icon) controls text direction. Selecting **Arabic** sets `dir="rtl"` and `lang="ar"` on the document and on the `#storybook-root` element. The runtime globals `window.UNDRR.langCode` and `window.UNDRR.dir` are also updated. Selecting any other locale resets to `dir="ltr"`.
+
+> **Note:** `window.UNDRR.langCode` stores the English-language name of the locale (e.g., `'arabic'`, `'english'`, `'japanese'`), not an ISO 639-1 code. To get the ISO code (e.g., `'ar'`, `'en'`), use the `langArr` mapping in `.storybook/preview.js` or the `lang` attribute on the `<html>` element.
+
+This logic lives in `.storybook/preview.js` in the `getLangCode` decorator. There is also a legacy manual RTL toggle (`setDirection` decorator) that can override the locale setting.
+
+### SCSS patterns for RTL
+
+There are two approaches for handling directional layout in SCSS. Prefer logical properties for new code; fall back to `[dir="rtl"]` overrides when logical properties are not sufficient.
+
+#### 1. CSS logical properties (preferred)
+
+Use logical properties instead of physical ones. These automatically flip in RTL contexts with no extra CSS:
+
+| Physical property | Logical replacement |
+|---|---|
+| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
+| `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
+| `left` / `right` | `inset-inline-start` / `inset-inline-end` |
+| `text-align: left` | `text-align: start` |
+| `float: left` | `float: inline-start` |
+
+Shorthand forms like `margin-inline`, `padding-inline`, and `inset-inline` set both sides at once. See `mega-menu.scss` for extensive use of this approach.
+
+#### 2. `[dir="rtl"]` selector overrides
+
+When logical properties cannot express the override (e.g., flipping a `transform`, changing a `background-position`, or mirroring an icon), use the `[dir="rtl"]` attribute selector:
+
+```scss
+.mg-component__arrow {
+  transform: rotate(0deg);
+}
+
+[dir="rtl"] .mg-component__arrow {
+  transform: rotate(180deg);
+}
+```
+
+Or nest with `&` when the override is scoped to the block:
+
+```scss
+.mg-component__separator {
+  border-left: 2px solid $mg-color-neutral-400;
+
+  [dir="rtl"] & {
+    border-left: none;
+    border-right: 2px solid $mg-color-neutral-400;
+  }
+}
+```
+
+Component-level SCSS uses logical properties (`padding-inline-start`, `margin-inline-end`) for RTL-aware spacing.
+
+#### RTL patterns in global styles
+
+- `_foundational.scss` sets `direction: rtl` on `ul` and `ol` elements inside `[dir="rtl"]`
+
+### Components with RTL stories
+
+These components have dedicated RTL story exports you can reference as examples:
+
+- **MegaMenu** — `RTL` story: full menu layout with flipped chevrons, borders, and sidebar
+- **Pager** — `RTL` story: pagination controls in Arabic
+- **QuoteHighlight** — `RTLLeftAlignedQuote`, `RTLRightAlignedQuote`: directional float behavior
+- **HighlightBox** — `RTLFloatStart`, `RTLFloatEnd`: logical float behavior in RTL
+- **IndexChart** — `CustomRtlIndexChart`: chart axis and label direction
+- **ScatterPlotChart** — `CustomRtlConnectedScatterplot`: RTL chart rendering
+- **StatsCard** — locale-aware story that switches direction based on toolbar selection
+
+Many other components (Breadcrumbs, Buttons, Cards, Forms, Tab, Table, Hero) include Arabic translations that respond to the locale toolbar without needing a separate RTL story export.
+
+### Checklist for RTL-compatible components
+
+When building or reviewing a component, verify each of these:
+
+- [ ] Use `margin-inline-*`, `padding-inline-*`, `inset-inline-*` instead of physical `left`/`right` equivalents
+- [ ] Use `text-align: start` / `text-align: end` instead of `left` / `right`
+- [ ] Flip arrows, chevrons, and carets under `[dir="rtl"]` (typically by reversing a `transform`)
+- [ ] Swap `border-left` / `border-right` under `[dir="rtl"]`, or use `border-inline-start` / `border-inline-end`
+- [ ] Verify `flex-direction: row` reverses correctly in RTL; avoid forcing `row-reverse`
+- [ ] Replace positional `left` / `right` with `inset-inline-start` / `inset-inline-end`
+- [ ] Reverse `translateX` and `rotate` values under `[dir="rtl"]` where direction matters
+- [ ] Avoid inline styles with `left`, `right`, `marginLeft`, `marginRight` (these do not respond to `dir`)
+
+### Testing with the locale toolbar
+
+1. Start Storybook with `yarn dev`
+2. Open your component's story
+3. Click the globe icon in the Storybook toolbar
+4. Select **Arabic** to switch to RTL mode
+5. Verify the layout mirrors correctly: text flows right-to-left, icons/chevrons point the opposite direction, spacing and borders appear on the correct side
+6. Switch back to **English** to confirm no layout artifacts remain
+
+If your component has complex RTL behavior, add a dedicated RTL story export (see the MegaMenu or QuoteHighlight stories for the pattern).
 
 ## Documentation requirements
 
@@ -464,7 +648,7 @@ Every component MDX file must end with a `## Changelog` section (H2 level) that 
 - **Heading level**: Always `## Changelog` (H2)
 - **Single-issue entry**: `- **version** — YYYY-MM-DD ([web-backlog#NNN](url)): description`
 - **Multi-issue entry**: When multiple issues ship in the same version, use sub-bullets — one per issue, each citing its own tracker issue
-- **Tracker issue**: Always cite the GitLab tracker issue in parentheses using the short format `web-backlog#NNN` linked to the full URL
+- **Tracker issue**: Always cite a tracker issue in parentheses. Prefer the GitLab web-backlog in the short format `web-backlog#NNN` linked to the full URL. If no GitLab issue exists, a GitHub issue or pull request link is acceptable (`#NNN` linked to the GitHub URL)
 - **Version**: Semver without `v` prefix (e.g., `1.0`, `2.1.3`, not `v1.0` or `Version 1.0`)
 - **Separator**: Em dash `—` between version and date, colon `:` after date
 - **Date**: ISO 8601 format (`YYYY-MM-DD`) for traceability
@@ -525,6 +709,33 @@ This rule applies to:
 - `# UNDRR logos` ✅
 
 This approach ensures consistency across all documentation and provides a clean, readable hierarchy that matches modern documentation standards.
+
+### Linking to other docs pages
+
+MDX files are rendered inside Storybook's iframe. Relative file paths (e.g. `../Tab/Tab.mdx`) do not work — Storybook does not route by file path.
+
+**Use the `?path=/docs/` query parameter** to link to any other story or docs page:
+
+```md
+[Tabs](?path=/docs/components-tabs--docs)
+[Accessibility guide](?path=/docs/getting-started-accessibility--docs)
+[Form validation example](?path=/docs/example-form-validation--docs)
+```
+
+**How to derive the path ID** from a story's `title`:
+
+1. Take the `title` from the story's default export (e.g. `'Components/On this page nav'`)
+2. Lowercase everything
+3. Replace spaces and slashes with hyphens
+4. Append `--docs`
+
+| Story title | Path ID |
+|-------------|---------|
+| `Components/Tabs` | `?path=/docs/components-tabs--docs` |
+| `Components/On this page nav` | `?path=/docs/components-on-this-page-nav--docs` |
+| `Getting started/Accessibility` | `?path=/docs/getting-started-accessibility--docs` |
+
+For external URLs (GitHub, GitLab, external sites), use a standard absolute URL. Do not use relative paths for anything outside the MDX file's own imports.
 
 Example structure:
 
@@ -645,75 +856,11 @@ Stories demonstrate the component's usage and variants:
    - Support both LTR and RTL text directions
    - Include examples with different languages when relevant
 
-## Testing requirements
+## Testing
 
-Components should be thoroughly tested to ensure stability and reliability.
+Every component should have tests covering rendering, props, events, and accessibility (jest-axe). Place test files in a `__tests__` folder within the component directory using the pattern `ComponentName.test.jsx`.
 
-### Unit tests
-
-1. **Create test files**
-
-   - Tests should be placed in a `__tests__` folder within your component directory or at the appropriate level in the project structure
-   - Follow the naming pattern: `ComponentName.test.jsx`
-
-2. **Required tests**
-   - Rendering test (component renders without errors)
-   - Props test (component correctly responds to different props)
-   - Event tests (click handlers and other events work correctly)
-   - Accessibility tests (component meets accessibility requirements)
-
-Example test pattern:
-
-```jsx
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { axe } from 'jest-axe';
-import { MyComponent } from '../MyComponent';
-
-describe('MyComponent', () => {
-  const defaultProps = {
-    variant: 'primary',
-    label: 'Click me',
-  };
-
-  it('renders without crashing', () => {
-    render(<MyComponent {...defaultProps} />);
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
-
-  it('responds to props correctly', () => {
-    render(<MyComponent {...defaultProps} variant="secondary" />);
-    // Assert component renders with secondary variant
-  });
-
-  it('handles events correctly', () => {
-    const handleClick = jest.fn();
-    render(<MyComponent {...defaultProps} onClick={handleClick} />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('has no a11y violations', async () => {
-    const { container } = render(<MyComponent {...defaultProps} />);
-    expect(await axe(container)).toHaveNoViolations();
-  });
-});
-```
-
-### Running tests
-
-Use the following commands to run tests:
-
-```bash
-# Run all tests
-yarn test
-
-# Run tests with coverage report
-yarn test:coverage
-
-# Run tests in watch mode during development
-yarn test:watch
-```
+For the full testing setup, patterns, and commands, see the <LinkTo kind="contributing-build-a-component-testing" story="docs">testing guide</LinkTo>.
 
 ## Pull request process
 
@@ -744,6 +891,91 @@ yarn test:watch
    - Once approved, the changes will be merged to `main`
    - The changes will be automatically deployed to the GitHub Pages site
 
+## Review checklist
+
+See the <LinkTo kind="contributing-build-a-component-review-checklist" story="docs">review checklist</LinkTo> for the full validation checklist covering structure, accessibility, documentation, testing, internationalization, and Drupal integration.
+
+## Deprecating components
+
+When a component is no longer needed, has been replaced, or has been merged into another component, follow this process to deprecate and eventually remove it.
+
+### When to deprecate
+
+- The component has been **replaced** by a newer component with better functionality
+- The component is **no longer needed** due to changes in design or requirements
+- The component has been **merged** into another component
+
+### How to mark a component as deprecated
+
+Apply all three of the following:
+
+1. **Console warning** — Add a runtime warning so consumers are notified during development:
+
+   ```jsx
+   export function OldComponent(props) {
+     React.useEffect(() => {
+       console.warn(
+         'OldComponent is deprecated and will be removed in the next major version. Use NewComponent instead.'
+       );
+     }, []);
+     // ...
+   }
+   ```
+
+2. **JSDoc `@deprecated` tag** — Add to the component's JSDoc block so IDEs surface the deprecation:
+
+   ```jsx
+   /**
+    * @deprecated Use NewComponent instead. Will be removed in the next major version.
+    */
+   export function OldComponent(props) { ... }
+   ```
+
+3. **Storybook badge** — Add a `deprecated` tag and a banner in the component's MDX documentation:
+
+   ```jsx
+   // ComponentName.stories.jsx
+   export default {
+     title: 'Components/Category/ComponentName',
+     tags: ['deprecated'],
+   };
+   ```
+
+   ```mdx
+   {/* ComponentName.mdx */}
+   > **Deprecated:** This component will be removed in the next major version.
+   > Use [NewComponent](?path=/docs/components-category-newcomponent--docs) instead.
+   ```
+
+### Migration path
+
+Every deprecation must include a clear migration path:
+
+- Document the replacement component or alternative approach in the MDX file
+- Link directly to the replacement component's Storybook page
+- Note any prop name changes or behavioral differences between old and new
+
+### Timeline
+
+- Deprecated components must remain available for **at least one minor release** before removal
+- Removal is a **breaking change** and requires a major version bump
+
+### Changelog entry
+
+Use the standard changelog format with a `**Deprecated:**` prefix:
+
+```markdown
+- **2.1** — 2026-03-01: **Deprecated:** Use NewComponent instead
+```
+
+### Removal
+
+When removing a deprecated component:
+
+- Use `BREAKING CHANGE:` in the commit body to trigger a major version bump
+- Remove all related files (component, stories, styles, tests, MDX)
+- Update any cross-references in other component documentation
+
 ## Troubleshooting common issues
 
 ### Component styling issues
@@ -769,3 +1001,7 @@ yarn test:watch
 - Make sure all required dependencies are installed
 - Check for syntax errors in your JSX/JavaScript
 - Verify that your SCSS is valid and properly formatted
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/ComponentContribution.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

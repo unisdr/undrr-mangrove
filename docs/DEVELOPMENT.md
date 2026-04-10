@@ -2,7 +2,7 @@
 
 This guide covers the development setup and workflow for contributing to the UNDRR Mangrove component library.
 
-For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-a-getting-started-guide--docs).
+For more detailed information, see the [Getting Started Guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs).
 
 ## Related guides
 
@@ -12,6 +12,17 @@ For more detailed information, see the [Getting Started Guide](https://unisdr.gi
 - **Testing guide**: unit, visual, and accessibility testing — [docs/TESTING.md](./TESTING.md)
 - **Writing guidelines**: UX writing standards — [docs/WRITING.md](./WRITING.md)
 - **Writing quick reference**: concise checklist for AI tools and reviews — [docs/WRITING-SHORT.md](./WRITING-SHORT.md)
+- **Architecture**: build system, distribution channels, and Drupal integration — [docs/ARCHITECTURE.md](./ARCHITECTURE.md)
+- **Component guide**: step-by-step tutorial for building a new component — [docs/COMPONENT-GUIDE.md](./COMPONENT-GUIDE.md)
+
+### Storybook documentation
+
+These guides live inside Storybook and cover component standards, integration, and best practices:
+
+- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) — onboarding, installation methods, and integration options
+- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — component structure, code conventions, and PR process
+- [Testing components](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — testing strategies within Storybook
+- [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — accessibility, performance, and architecture guidance
 
 ## Prerequisites
 
@@ -63,7 +74,19 @@ make run
 - Feature branches - Create from `main` for new work
 - No `dev` branch is used
 
-### Creating Features
+### Branch naming convention
+
+Branch names use a conventional prefix matching the commit type, followed by a short kebab-case description:
+
+```
+feat/short-description       — new features
+fix/short-description        — bug fixes
+chore/short-description      — maintenance, deps, CI
+docs/short-description       — documentation only
+refactor/short-description   — code restructuring
+```
+
+### Creating features
 
 1. Create a branch from `main`
 
@@ -86,7 +109,7 @@ make run
 
 ### Commit Message Convention
 
-We use conventional commits for automated versioning:
+We use conventional commits for readable history and PR title validation:
 
 - `fix:` - Bug fixes (patch release)
 - `feat:` - New features (minor release)
@@ -107,7 +130,7 @@ Include `BREAKING CHANGE:` in the commit body for major releases.
 yarn dev
 yarn storybook
 
-# Run tests
+# Run tests (see docs/TESTING.md for detailed patterns and coverage requirements)
 yarn test                 # Run all tests
 yarn test:watch          # Watch mode
 yarn test:coverage       # Generate coverage report
@@ -119,8 +142,7 @@ yarn lint:js           # Lint JavaScript/JSX
 yarn lint:css          # Lint CSS/SCSS
 
 # Build
-yarn build             # Build for production
-yarn build-storybook   # Build Storybook static site
+yarn build             # Build for production (SCSS + Storybook + webpack)
 ```
 
 ### Docker Commands
@@ -142,69 +164,54 @@ make watch            # Watch for changes
 make build            # Build for release
 ```
 
-## Component Development
+## Deploying theme CSS to Drupal
 
-### File Structure
+CSS is **not** auto-synced and must be copied manually after each SCSS change. Built JavaScript (`dist/components/*.js`) is copied to the Drupal theme during the Drupal-side build process.
 
-Components follow this structure:
+### Child themes
 
-```text
-stories/
-  └── Components/
-      └── ComponentName/
-          ├── ComponentName.jsx
-          ├── ComponentName.stories.jsx
-          ├── ComponentName.scss
-          └── __tests__/
-              └── ComponentName.test.jsx
-```
+All theme directories live under `docroot/themes/custom/` in the Drupal project. The following child themes consume Mangrove CSS at `css/mangrove/mangrove.css`:
 
-### Component Guidelines
+| Theme directory | Site |
+|---|---|
+| `undrr` | undrr.org (global UNDRR) |
+| `pw` | preventionweb.net |
+| `mcr` | mcr2030.undrr.org |
+| `irp` | IRP |
+| `arise` | ARISE |
+| `gp` | Global Platform |
+| `sfvc` | SFVC |
 
-- Use functional components with hooks
-- Follow BEM naming for CSS classes
-- Include JSDoc comments for props
-- Write stories for all component states
-- Add tests for component logic
+Other child themes (`iddrr`, `wtad`) and base themes (`base`, `ev_base`, `undrr_common`) exist but do not use Mangrove CSS.
 
-### TypeScript Support
+### Workflow
 
-While JSX is the default, TypeScript is fully supported:
+1. Compile SCSS:
 
-```typescript
-// ComponentName.tsx
-interface ComponentProps {
-  title: string;
-  onClick?: () => void;
-}
+   ```bash
+   yarn scss
+   ```
 
-export const Component: React.FC<ComponentProps> = ({ title, onClick }) => {
-  // Component implementation
-};
-```
+   This writes compiled CSS to `stories/assets/css/`.
 
-## Code Style
+2. Copy the compiled CSS to each applicable child theme:
 
-### JavaScript/JSX
+   ```bash
+   cp stories/assets/css/style.css \
+     /path/to/docroot/themes/custom/<theme>/css/mangrove/mangrove.css
+   ```
 
-- Use ES6+ features
-- Prefer functional components
-- Follow existing patterns in the codebase
-- No unnecessary comments unless explaining complex logic
+   Repeat for each child theme that needs the update. Theme-specific stylesheets (`style-preventionweb.scss`, `style-irp.scss`, `style-mcr.scss`) compile to their own CSS files; copy the matching file to the corresponding theme.
 
-### CSS/SCSS
+3. Commit the updated `mangrove.css` files in the Drupal repository.
 
-- Follow BEM methodology
-- Use SCSS variables for consistency
-- Organize styles hierarchically
-- Keep specificity low
+## Component development
 
-### Import Order
+See the [component guide](COMPONENT-GUIDE.md) for the step-by-step tutorial and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook for code standards (React patterns, BEM, PropTypes, JSDoc, TypeScript, import order).
 
-1. React imports
-2. External library imports
-3. Internal component imports
-4. Style imports
+### TypeScript support
+
+While JSX is the default, TypeScript is fully supported. Path aliases available: `@/*` → `src/*`, `@components/*` → `stories/Components/*`.
 
 ## Debugging
 

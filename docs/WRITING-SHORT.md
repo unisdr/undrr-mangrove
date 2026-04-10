@@ -10,6 +10,13 @@ Use this as a compact, LLM‑friendly summary of the Mangrove Writing standards.
 6. Remove unnecessary words — if design alone works, skip text.
 7. Consistency — same terminology, tone, and style everywhere.
 8. Strong writing basics — active voice, plain language, clarity, rhythm.
+9. Write for two audiences — consumers scan (give them a description + example + props); maintainers read for the “why” (design decisions, edge cases, history). Don’t conflate them in one document.
+
+Layer your docs: what it does → how to use it → why it works that way. Keep the “why” at the end or behind a details block.
+
+**Callout labels:** `> **Note:**` (consumer status), `> **Tip:**` (consumer best practice), `> **Integration note:**` (CDN/Drupal/SSR context for consumers), `> **Implementation note (for contributors):**` (internal rationale, maintainers only). Large contributor sections → use an additional blockquote callout or move content to a separate heading.
+
+> “Too much information and no information accomplish the same goal.” — Ibrahim Diallo
 
 Also:
 
@@ -45,3 +52,11 @@ UN guidance:
 - [Mailchimp content style guide](https://styleguide.mailchimp.com/)
 
 Originally inspired by Nick DiLallo’s “This is good Writing — Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
+
+The “Write for two audiences” principle is inspired by Ibrahim Diallo’s “[How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)” (2025).
+
+## Related documentation
+
+- [Full writing guidelines](WRITING.md) — detailed UX writing standards and UN conventions
+- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist

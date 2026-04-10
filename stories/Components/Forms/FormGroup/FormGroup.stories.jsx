@@ -21,22 +21,6 @@ const getCaptionForLocale = locale => {
         ],
         errorText: 'يرجى اختيار خيار واحد على الأقل',
       };
-    case 'burmese':
-      return {
-        checkboxLegend: 'သင်၏စိတ်ဝင်စားမှုများကိုရွေးချယ်ပါ',
-        radioLegend: 'ဦးစားပေးကိုရွေးချယ်ပါ',
-        checkboxes: [
-          { label: 'ဘေးအန္တရာယ်လျှော့ချရေး', value: 'drr' },
-          { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
-          { label: 'ခံနိုင်ရည်', value: 'resilience' },
-        ],
-        radios: [
-          { label: 'နိမ့်', value: 'low' },
-          { label: 'အလယ်', value: 'medium' },
-          { label: 'မြင့်', value: 'high' },
-        ],
-        errorText: 'အနည်းဆုံးရွေးချယ်မှုတစ်ခုကိုရွေးချယ်ပါ',
-      };
     case 'japanese':
       return {
         checkboxLegend: '興味のある分野を選択',

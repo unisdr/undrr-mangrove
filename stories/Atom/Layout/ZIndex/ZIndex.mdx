@@ -1,0 +1,113 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Design decisions/Z-index layers"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Z-index layers
+
+Mangrove uses named z-index tokens instead of magic numbers. When adding a new component, pick the nearest existing layer rather than inventing a value. If no layer fits, open a discussion before adding one.
+
+## Layer reference
+
+One token per UI concept. Backdrops and sub-layers are expressed as arithmetic offsets (`$token - 1`) inside the component's own SCSS rather than as separate variables.
+
+| Token | Value | Used by |
+|-------|-------|---------|
+| `$mg-z-index-behind` | -1 | Pseudo-element backgrounds placed behind sibling content (e.g. `.mg-container-full-width::before`) |
+| `$mg-z-index-nav` | 10 | MegaMenu navigation bar, topbar, sidebar (mobile overlay uses `nav - 1` = 9) |
+| `$mg-z-index-sticky` | 11 | Secondary sticky bars above the nav bar (OnThisPageNav) |
+| `$mg-z-index-nav-toggle` | 14 | Mobile nav hamburger toggle (floats above all nav layers) |
+| `$mg-z-index-header` | 22 | PageHeader (above nav and sticky bar) |
+| `$mg-z-index-drawer` | 2000 | Drawer / side panel (backdrop uses `drawer - 1` = 1999) |
+| `$mg-z-index-dropdown` | 2500 | Dropdowns and inline menus (above drawers) |
+| `$mg-z-index-modal` | 5000 | Modal and dialog foreground (backdrop uses `modal - 1` = 4999) |
+| `$mg-z-index-toast` | 5500 | Toast notifications (Snackbar), above modals |
+
+## Design decisions
+
+### Why named layers rather than raw numbers?
+
+Magic numbers like `z-index: 22` are invisible outside their file. A developer adding a new sticky header has no way to know that 22 is "the PageHeader level" without reading every SCSS file. Named tokens express intent and keep the stacking order visible in one place.
+
+### Why are the navigation zone values (10–22) so close together?
+
+These values are frozen from production. Drupal themes that integrate Mangrove may contain CSS written against these exact numbers (e.g. `z-index: 15` to sit between `$mg-z-index-nav-toggle` and `$mg-z-index-header`). Changing them would silently break those site-level overrides. The gaps reflect historical decisions that cannot safely change without coordinating with all downstream themes.
+
+### What counts as a global vs a local layer?
+
+- **Global** — an element that establishes a stacking context relative to the page (fixed/sticky positioned, portaled to `<body>`, or deliberately negative). Use a token.
+- **Local** — an element that stacks within an already-isolated stacking context (e.g. a stretched-link cover inside `position: relative` card, a spinner above gallery images). Use a raw value with a comment explaining the intent.
+
+### One token, relative offsets
+
+Rather than a separate token for every sub-layer (backdrop, panel, overlay), Mangrove defines one token per UI concept and expresses related elements as arithmetic offsets in the component SCSS:
+
+```scss
+// In syndication-search-widget.scss
+.mg-search__drawer-backdrop { z-index: $mg-z-index-drawer - 1; }
+.mg-search__drawer           { z-index: $mg-z-index-drawer; }
+```
+
+Changing the token value automatically updates all related elements in that component.
+
+### Why don't cards, tabs, or gallery have tokens?
+
+These components use small raw values (1, 2, 3) within their own `position: relative` stacking context — they are invisible to the page-level stacking order. Giving them tokens would imply they can conflict with navigation or modals, which they cannot. Raw values with explanatory comments are the correct approach here.
+
+## Usage
+
+```scss
+// Variables are available globally through the compiled stylesheet.
+// No @use needed in component SCSS files — imported via _components.scss.
+
+// Global stacking: use a token
+.my-sticky-bar {
+  position: sticky;
+  top: 0;
+  z-index: $mg-z-index-sticky; // above MegaMenu, below PageHeader
+}
+
+// Backdrop pattern: derive from the foreground token
+.my-drawer-backdrop { z-index: $mg-z-index-drawer - 1; }
+.my-drawer          { z-index: $mg-z-index-drawer; }
+
+// Negative background: pseudo-element behind sibling content
+.my-section::before {
+  position: absolute;
+  inset: 0;
+  z-index: $mg-z-index-behind; // stays behind sibling content
+}
+
+// Local stacking: raw value + comment (inside an isolated stacking context)
+.my-card {
+  position: relative; // creates a stacking context
+
+  &__cover-link::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1; // stretched-link cover — local to card stacking context
+  }
+
+  &__action-button {
+    position: relative;
+    z-index: 2; // above stretched-link cover — local to card stacking context
+  }
+}
+```
+
+## Adding a new layer
+
+1. Check whether an existing layer is close enough. Most components can share a layer.
+2. Express backdrops and sub-layers as `$existing-token - 1` in your SCSS rather than adding new tokens.
+3. If no existing layer fits and arithmetic offsets won't work, [open a GitHub discussion](https://github.com/unisdr/undrr-mangrove/discussions) before adding a token. Include which components are involved and why they need a distinct layer.
+4. Add the token to `stories/assets/scss/_variables.scss` inside the `@tokens Z-index layers` block with a comment.
+5. Update this page's layer reference table.
+
+Do **not** add a token for local stacking inside a component's own `position: relative` container — use a raw value with a comment instead. Do **not** change the navigation zone values (10–22) without coordinating downstream Drupal theme compatibility.

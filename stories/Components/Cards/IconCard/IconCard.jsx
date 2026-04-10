@@ -25,14 +25,59 @@ const cls = (...classes) =>
  * @property {number} iconSize - Width/height of icon in pixels (default: 72)
  * @property {string} imageScale - Scale for icons/images: 'small', 'medium', 'large', or 'full'
  * @property {string} label - Badge or category label text
+ * @property {string} visualLabel - Text label rendered above the icon/image in the visual area
  * @property {string} title - Card heading text (required for accessibility)
  * @property {boolean} srOnlyTitle - Visually hide title but keep for screen readers (for logo cards)
  * @property {string} summaryText - Card body text, HTML supported (matches VerticalCard)
  * @property {string} link - URL for card link
  * @property {string} linkText - Text for text link CTA
+ * @property {string} iconColor - Background color for the icon badge (CSS color, e.g., "#f4b8a8")
+ * @property {string} iconFgColor - Foreground (glyph) color for the icon (CSS color). Overrides the default neutral gray.
+ * @property {string} borderColor - Border color for the card (CSS color, e.g., "#e8963a")
  * @property {string} button - Button label text
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
+/** Renders the icon/image visual for a card item. */
+function renderVisual(item) {
+  if (item.imgback) {
+    return (
+      <img
+        src={item.imgback}
+        alt={item.imgalt || ''}
+        className={cls(
+          'mg-card__image',
+          item.imageScale && `mg-card__image--${item.imageScale}`
+        )}
+        {...(!item.imageScale && {
+          width: item.iconSize || 72,
+          height: item.iconSize || 72,
+        })}
+      />
+    );
+  }
+  if (item.icon || item.iconColor) {
+    return (
+      <span
+        className={cls(
+          'mg-card__icon-wrap',
+          item.imageScale && `mg-card__icon-wrap--${item.imageScale}`,
+          item.iconColor && 'mg-card__icon-wrap--colored'
+        )}
+        aria-hidden="true"
+        {...((item.iconColor || item.iconFgColor) && {
+          style: {
+            ...(item.iconColor && { '--mg-icon-bg': item.iconColor }),
+            ...(item.iconFgColor && { '--mg-icon-fg': item.iconFgColor }),
+          },
+        })}
+      >
+        {item.icon && <span className={item.icon} />}
+      </span>
+    );
+  }
+  return null;
+}
+
 export function IconCard({ data, centered = false, variant = 'default' }) {
   return (
     <>
@@ -43,63 +88,26 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
             'mg-card',
             'mg-card__icon',
             centered && 'mg-card__icon--centered',
-            variant && variant !== 'default' && `mg-card__icon--${variant}`
+            variant && variant !== 'default' && `mg-card__icon--${variant}`,
+            item.borderColor && 'mg-card__icon--bordered'
           )}
+          {...(item.borderColor && {
+            style: { '--mg-card-border': item.borderColor },
+          })}
         >
           {/* Icon or Image - wrapped in link when srOnlyTitle is true */}
-          {(item.icon || item.imgback) && (
+          {(item.icon || item.imgback || item.iconColor) && (
             <div className="mg-card__visual">
+              {item.visualLabel && (
+                <span className="mg-card__visual-label">{item.visualLabel}</span>
+              )}
               {item.srOnlyTitle && item.link ? (
                 <a href={item.link} className="mg-card__visual-link">
-                  {item.imgback ? (
-                    <img
-                      src={item.imgback}
-                      alt={item.imgalt || ''}
-                      className={cls(
-                        'mg-card__image',
-                        item.imageScale && `mg-card__image--${item.imageScale}`
-                      )}
-                      {...(!item.imageScale && {
-                        width: item.iconSize || 72,
-                        height: item.iconSize || 72,
-                      })}
-                    />
-                  ) : item.icon ? (
-                    <span
-                      className={cls(
-                        'mg-card__icon-wrap',
-                        item.imageScale && `mg-card__icon-wrap--${item.imageScale}`
-                      )}
-                      aria-hidden="true"
-                    >
-                      <span className={item.icon} />
-                    </span>
-                  ) : null}
+                  {renderVisual(item)}
                 </a>
-              ) : item.imgback ? (
-                <img
-                  src={item.imgback}
-                  alt={item.imgalt || ''}
-                  className={cls(
-                    'mg-card__image',
-                    item.imageScale && `mg-card__image--${item.imageScale}`
-                  )}
-                  {...(!item.imageScale && {
-                    width: item.iconSize || 72,
-                    height: item.iconSize || 72,
-                  })}
-                />
-              ) : item.icon ? (
-                <span
-                  className={cls(
-                    'mg-card__icon-wrap',
-                    item.imageScale && `mg-card__icon-wrap--${item.imageScale}`
-                  )}
-                  aria-hidden="true"
-                >
-                  <span className={item.icon} />
-                </span>
-              ) : null}
+              ) : (
+                renderVisual(item)
+              )}
             </div>
           )}
 
@@ -121,9 +129,9 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
                 )}
               >
                 {item.link && !item.button && !item.srOnlyTitle ? (
-                  <a href={item.link}>{item.title}</a>
+                  <a href={item.link}>{item.title?.trim()}</a>
                 ) : (
-                  item.title
+                  item.title?.trim()
                 )}
               </header>
             )}
@@ -177,8 +185,16 @@ IconCard.propTypes = {
       iconSize: PropTypes.number,
       /** Image width scale: small (72px), medium (50%), large (75%), full (100%) */
       imageScale: PropTypes.oneOf(['small', 'medium', 'large', 'full']),
+      /** Background color for the icon badge (CSS color, e.g., "#f4b8a8") */
+      iconColor: PropTypes.string,
+      /** Foreground (glyph) color for the icon (CSS color). Overrides the default neutral gray. */
+      iconFgColor: PropTypes.string,
+      /** Border color for the card (CSS color, e.g., "#e8963a") */
+      borderColor: PropTypes.string,
       /** Badge or category label text */
       label: PropTypes.string,
+      /** Text label rendered above the icon/image in the visual area */
+      visualLabel: PropTypes.string,
       /** Card heading text (required for accessibility) */
       title: PropTypes.string.isRequired,
       /** Visually hide title but keep for screen readers (for logo cards) */

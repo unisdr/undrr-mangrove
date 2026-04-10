@@ -3,6 +3,8 @@ import * as PagerStories from './Pager.stories';
 
 <Meta of={PagerStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # Pager
 
 Pagination for multi-page content. Also usable as CSS/HTML markup for server-rendered pages like Drupal views.
@@ -24,7 +26,7 @@ Pagination for multi-page content. Also usable as CSS/HTML markup for server-ren
 ### React
 
 ```jsx
-import { Pager } from '@undrr/mangrove/components/Pager';
+import { Pager } from '@undrr/undrr-mangrove';
 
 function MyComponent() {
   const [page, setPage] = React.useState(1);
@@ -153,6 +155,46 @@ The sliding window and ellipsis keep the list short on high page counts.
 | `jumpToAction` | `string` | `'Go'` | Submit button text |
 | `emptyState` | `string` | — | When set, shows a notice instead of pagination |
 | `emptyAction` | `{ label, onClick }` | — | Optional action button inside the empty notice |
+
+## Drupal integration
+
+The Pager supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering into server-generated HTML containers.
+
+### Data attributes
+
+| Attribute | Type | Default | Maps to prop |
+|-----------|------|---------|-------------|
+| `data-page` | integer | `1` | `page` |
+| `data-total-pages` | integer | `null` (mini-pager) | `totalPages` |
+| `data-layout` | `'centered'` \| `'bar'` | `'centered'` | `layout` |
+| `data-show-jump-to` | `'true'` \| `'false'` | `'false'` | `showJumpTo` |
+| `data-aria-label` | string | `'Pagination'` | `ariaLabel` |
+| `data-range-label` | string | — | `rangeLabel` |
+| `data-jump-to-label` | string | — | `jumpToLabel` |
+| `data-jump-to-action` | string | — | `jumpToAction` |
+
+`onPageChange` is not extracted from the DOM — it must be provided by the consumer wrapper.
+
+### HTML
+
+```html
+<nav data-mg-pager
+  data-page="3"
+  data-total-pages="20"
+  data-layout="centered"
+  data-aria-label="Pagination">
+</nav>
+```
+
+### Consumer wrapper (3-line pattern)
+
+```js
+import createHydrator from "@mangrove/hydrate";
+import Pager, { fromElement } from "@mangrove/Pager";
+createHydrator({ selector: "[data-mg-pager]", component: Pager, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, Drupal behavior integration, and advanced patterns.
 
 ## CSS class reference
 

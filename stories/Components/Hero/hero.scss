@@ -19,28 +19,36 @@
 
   @media (min-width: $mg-breakpoint-tablet) {
     aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
-    padding-left: calc(
-      50vw - calc($mg-breakpoint-desktop / 2)
-    ); // to keep the overlay fixed
+    padding-left: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
   }
 
   @media (min-width: $mg-breakpoint-desktop-wide) {
-    padding-left: calc(
-      50vw - calc($mg-breakpoint-desktop-wide / 2)
-    ); // to keep the overlay fixed
+    padding-left: calc(50vw - calc($mg-breakpoint-desktop-wide / 2)); // to keep the overlay fixed
   }
 
   // Button overrides
-  a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
-  }
-  a.mg-button-secondary {
-    background-color: rgba($mg-color-neutral-0, 0.9);
-  }
   a.mg-button,
   a.mg-button:hover,
   a.mg-button:visited {
     color: $mg-color-hero;
+  }
+
+  a.mg-button-primary {
+    background-color: $mg-color-neutral-0;
+  }
+
+  a.mg-button-secondary,
+  a.mg-button-secondary:hover,
+  a.mg-button-secondary:visited {
+    background-color: $mg-color-hero-button-secondary-background;
+    color: $mg-color-hero-button-secondary-color;
+    border-color: $mg-border-color-hero-button-secondary;
+  }
+
+  a.mg-button:focus-visible {
+    box-shadow: 0 0 0 2px $mg-color-neutral-0;
+    outline: 2px solid $mg-color-neutral-0;
+    outline-offset: 2px;
   }
 
   &__overlay {
@@ -48,14 +56,14 @@
     background-color: rgba($mg-color-hero, $mg-opacity-hero);
     display: grid;
     margin: $mg-spacing-hero-overlay;
-    max-width: $mg-width-400;
-    padding: $mg-spacing-200;
+    max-width: $mg-hero-overlay-max-width;
+    padding: $mg-hero-overlay-padding;
   }
 
   &__content {
     display: grid;
     margin-top: $mg-spacing-25;
-    row-gap: 1rem;
+    row-gap: mg-rem(10);
   }
 
   &__meta {
@@ -88,12 +96,18 @@
 
   // Title styles (for both <h1> and <a>)
   &__title {
-    color: $mg-color-neutral-0;
+    color: $mg-color-hero-title;
     margin-bottom: $mg-spacing-25;
     display: inline-block;
     font-weight: bold;
     font-size: $mg-font-size-600;
     line-height: 1.2;
+
+    a,
+    a:hover,
+    a:visited {
+      color: $mg-color-hero-title;
+    }
 
     // General text styles for larger text
     .text-xxl {
@@ -119,7 +133,7 @@
     h4,
     h5,
     h6 {
-      color: $mg-color-neutral-0;
+      color: $mg-color-hero-title;
       font-weight: bold;
       font-size: $mg-font-size-600;
 
@@ -172,10 +186,20 @@ $variant-colours: (
 @each $name, $color in $variant-colours {
   .mg-hero--#{$name} .mg-hero__overlay {
     background-color: rgba($color, $mg-opacity-hero);
+
     a.mg-button,
     a.mg-button:hover,
     a.mg-button:visited {
       color: #{$color};
+    }
+
+    // Preserve secondary button's dedicated tokens over the generic color above
+    a.mg-button-secondary,
+    a.mg-button-secondary:hover,
+    a.mg-button-secondary:visited {
+      background-color: $mg-color-hero-button-secondary-background;
+      color: $mg-color-hero-button-secondary-color;
+      border-color: $mg-border-color-hero-button-secondary;
     }
   }
 }
@@ -186,14 +210,10 @@ $variant-colours: (
   padding-right: $mg-spacing-100;
 
   @media (min-width: $mg-breakpoint-tablet) {
-    padding-right: calc(
-      50vw - calc($mg-breakpoint-desktop / 2)
-    ); // to keep the overlay fixed
+    padding-right: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
   }
 
   @media (min-width: $mg-breakpoint-desktop-wide) {
-    padding-right: calc(
-      50vw - calc($mg-breakpoint-desktop-wide / 2)
-    ); // to keep the overlay fixed
+    padding-right: calc(50vw - calc($mg-breakpoint-desktop-wide / 2)); // to keep the overlay fixed
   }
 }

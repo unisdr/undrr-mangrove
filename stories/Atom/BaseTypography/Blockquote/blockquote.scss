@@ -1,4 +1,4 @@
-blockquote {
+.mg-body blockquote {
   font-size: $mg-font-size-600;
   font-weight: 600;
   line-height: 1.16;
@@ -7,12 +7,5 @@ blockquote {
   @include devicebreak(medium) {
     font-size: $mg-font-size-900;
     line-height: 1.15;
-  }
-}
-
-// burmese lang
-:lang(my) {
-  blockquote {
-    line-height: 1.7;
   }
 }

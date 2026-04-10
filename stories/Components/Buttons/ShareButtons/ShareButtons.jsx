@@ -293,8 +293,6 @@ const ShareButtons = ({
       url.searchParams.set('utm_campaign', 'share_box');
       const qrCodeUrl = url.toString();
 
-      // console.log('Generating QR code for URL:', qrCodeUrl);
-
       // Generate QR code as data URL
       const dataUrl = await QRCode.toDataURL(qrCodeUrl, {
         width: 1024,
@@ -307,8 +305,6 @@ const ShareButtons = ({
 
       setQrCodeDataUrl(dataUrl);
       setQrModalOpen(true);
-
-      // console.log('QR code generated successfully');
     } catch (error) {
       console.error('Error generating QR code:', error);
       alert('Failed to generate QR code. Please try again.');
@@ -324,9 +320,6 @@ const ShareButtons = ({
 
         const item = new ClipboardItem({ 'image/png': blob });
         await navigator.clipboard.write([item]);
-
-        // console.log('QR code copied to clipboard successfully');
-        // Visual feedback is now handled in the QRCodeModal component
       }
     } catch (error) {
       console.error('Error copying QR code to clipboard:', error);
@@ -383,8 +376,6 @@ const ShareButtons = ({
 
         // Clean up the object URL
         URL.revokeObjectURL(downloadUrl);
-
-        // console.log('QR code downloaded successfully as:', filename);
       }
     } catch (error) {
       console.error('Error downloading QR code:', error);
@@ -529,7 +520,7 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
         {coppied ? copiedLabel : visibleLink}
       </div>
       <div className="mg-share__stack-icon">
-        <span className="mg-icon mg-icon-clone" alt="Copy icon"></span>
+        <span className="mg-icon mg-icon-clone" aria-hidden="true"></span>
       </div>
     </button>
   );

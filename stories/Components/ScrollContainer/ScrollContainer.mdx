@@ -8,6 +8,8 @@ The Scroll Container component provides a responsive horizontal scrolling contai
 
 <Meta of={ScrollContainerStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 ## Default
 
 A basic scroll container implementation with default settings.
@@ -182,6 +184,72 @@ const MyComponent = () => (
    - Navigation arrows are hidden on mobile devices
    - Optimized for touch interactions
 
+## Accessibility
+
+### Arrow button labels
+
+When `showArrows` is enabled, the left and right navigation buttons have `aria-label="Scroll left"` and `aria-label="Scroll right"` respectively. Buttons are automatically `disabled` when there is no content to scroll in that direction, which prevents activation and communicates state to assistive technologies.
+
+### Container semantics
+
+- The component wraps content in a `<section>` element, providing a sectioning landmark
+- The arrow buttons are grouped inside a `<nav>` element with class `mg-scroll__nav`
+
+### Keyboard support
+
+The scroll container itself does not implement custom keyboard event handlers. Users can scroll horizontally using native browser mechanisms (e.g., Shift+scroll wheel on desktop). The arrow buttons are standard `<button>` elements and are reachable via Tab and activatable with Enter or Space.
+
+### Known limitations
+
+These are gaps that affect users or accessibility auditors:
+
+- Screen readers may announce the scroll container as an unlabelled section (the `<section>` has no `aria-label`)
+- The arrow button group has no accessible label describing its purpose
+- There are no live announcements when the scroll position changes
+- No keyboard equivalent for mouse drag scrolling beyond the arrow buttons
+- Arrow buttons may be hidden on devices classified as mobile by the component's JavaScript touch/user-agent detection, including some iPads or other misclassified devices
+
+> **Implementation note (for contributors):** The `<section>` and `<nav>` elements lack ARIA labels; there is no `role="region"` or live region on the scroll container itself. Arrow button visibility is controlled by a JavaScript mobile-detection check (`ontouchstart` plus a mobile/iPad user-agent match), not by viewport size or CSS breakpoints, so the limitation affects devices detected as mobile rather than all small screens.
+
+## Server-rendered / CDN usage
+
+ScrollContainer supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element with server-rendered child content:
+
+```html
+<div data-mg-scroll-container
+  data-height="300px"
+  data-min-width="200px"
+  data-item-width="250px"
+  data-padding="16"
+  data-show-arrows="true"
+  data-step-size="300">
+  <div class="mg-scroll__content">
+    <div class="card">Card 1</div>
+    <div class="card">Card 2</div>
+  </div>
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-height` | `'auto'` | Container height (CSS value) |
+| `data-min-width` | `'auto'` | Minimum width (CSS value) |
+| `data-item-width` | `'auto'` | Width for individual items (CSS value) |
+| `data-padding` | `'0'` | Container padding |
+| `data-show-arrows` | `'false'` | Show navigation arrows (`'true'` or `'false'`) |
+| `data-step-size` | `null` | Scroll step in pixels for arrow navigation |
+
+Child elements are extracted from a `.mg-scroll__content` wrapper inside the container. If no wrapper is found, the container's `innerHTML` is used directly.
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import ScrollContainer, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/ScrollContainer.js";
+createHydrator({ selector: "[data-mg-scroll-container]", component: ScrollContainer, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
 ## Changelog
 
+- **1.1** — 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.0** — 2025-03-27: Initial release with responsive design, mouse drag scrolling, and optional navigation arrows

@@ -12,6 +12,9 @@
 @import "../../Atom/BaseTypography/Quotation/quotation";
 @import "../../Atom/BaseTypography/Small/small";
 @import "../../Atom/Colors/color";
+
+// Icon definitions — included here so every theme CSS file contains icons.
+// See: https://github.com/unisdr/undrr-mangrove/issues/906
 @import "../../Atom/Icons/icons";
 @import "../../Atom/Images/AuthorImage/author-image";
 @import "../../Atom/Images/Image/image";
@@ -40,26 +43,32 @@
 @import "../../Components/Forms/Radio/radio";
 @import "../../Components/Forms/Select/select";
 @import "../../Components/Breadcrumbs/breadcrumbs";
-@import "../../Components/Pagination/pagination";
+
+// Deprecated (February 2026) — removal planned by end of 2026. Use Pager instead.
+// @import "../../Components/Pagination/pagination";
 @import "../../Components/Pager/pager";
 @import "../../Components/Gallery/gallery";
 @import "../../Components/HighlightBox/highlight-box";
 @import "../../Components/QuoteHighlight/quote-highlight";
 @import "../../Components/Buttons/Chips/chips";
-@import "../../Components/Buttons/CtaButton/buttons";
-@import "../../Components/Buttons/CtaLink/cta-link";
+@import "../../Components/Buttons/CtaButton/cta-button";
 @import "../../Components/Buttons/ShareButtons/share-buttons";
-@import "../../Components/MegaMenu/megamenu";
+@import "../../Components/MegaMenu/mega-menu";
 @import "../../Components/PageHeader/page-header";
 @import "../../Components/Cards/Card/card";
 @import "../../Components/Cards/StatsCard/stats-card";
 @import "../../Components/Snackbar/snackbar";
 @import "../../Components/Hero/hero";
+@import "../../Components/TextCta/text-cta";
 @import "../../Components/ScrollContainer/scroll-container";
 @import "../../Components/Tab/tab";
-@import "../../Components/TableOfContents/TableOfContents";
-@import "../../Components/SyndicationSearchWidget/SyndicationSearchWidget";
-@import "../../Components/BlockquoteComponent/blockquotecomp";
+
+// CSS+vanilla-JS component — Drupal integration via Gutenberg block, not a React export.
+@import "../../Components/TableOfContents/table-of-contents";
+@import "../../Components/OnThisPageNav/on-this-page-nav";
+@import "../../Components/SyndicationSearchWidget/syndication-search-widget";
+
+// CSS+static-HTML component — not a React export. Static pages in dist/assets/error-pages/.
 @import "../../Components/ErrorPages/error-pages";
 @import "../../Components/Footer/footer";
 
@@ -67,6 +76,7 @@
 @import "../../Molecules/ImageCaption/image-caption";
 
 // Utilities
+@import "../../Utilities/EmbedContainer/embed-container";
 @import "../../Utilities/Loader/loader";
-@import "../../Utilities/FullWidth/FullWidth";
-@import "../../Utilities/ShowMore/ShowMore";
+@import "../../Utilities/FullWidth/full-width";
+@import "../../Utilities/ShowMore/show-more";

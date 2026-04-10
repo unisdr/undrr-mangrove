@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { TopBarItem } from './TopBarItem';
 import { TopBarMobileIconButton } from './TopBarMobileIconButton.jsx';
 
@@ -10,6 +10,11 @@ export function TopBar({
   activeItem,
   sectionListRef,
   itemListRef,
+  logoSrc,
+  logoAlt = '',
+  logoHref = '/',
+  logoWidth,
+  logoHeight,
 }) {
   const handleFocusByArrows = (e, index) => {
     // Prevent default browser scrolling for arrow keys
@@ -30,6 +35,64 @@ export function TopBar({
     }
   };
 
+  const menuItems = sections.map((section, index) => (
+    <TopBarItem
+      key={index}
+      index={index}
+      ref={element => (itemListRef.current[index] = element)}
+      title={section.title}
+      icon={section.icon}
+      bannerDescription={section.bannerDescription}
+      link={section.bannerButton}
+      children={section.sections}
+      onMouseEnter={() => handleItemHover(index)}
+      activeItem={activeItem}
+      section={section}
+      handleOnKeyDown={e => {
+        handleFocusByArrows(e, index);
+      }}
+      sectionListRef={sectionListRef}
+      itemListRef={itemListRef}
+    />
+  ));
+
+  // Branded variant: logo + nav wrapped in a <div>
+  if (logoSrc) {
+    return (
+      <div className="mg-mega-topbar mg-mega-topbar--branded | mg-container-full-width">
+        <a
+          className="mg-mega-topbar__logo"
+          href={logoHref}
+          aria-label={logoAlt || 'Home'}
+        >
+          <img
+            className="mg-mega-topbar__logo-img"
+            src={logoSrc}
+            alt={logoAlt}
+            {...(logoWidth != null ? { width: logoWidth } : {})}
+            {...(logoHeight != null ? { height: logoHeight } : {})}
+          />
+        </a>
+
+        {/* Mobile/Tablet hamburger button - hidden on desktop via CSS */}
+        <TopBarMobileIconButton
+          isOpen={showSidebar}
+          onClick={() => toggleShowSidebar()}
+        />
+
+        <ul
+          className="mg-mega-topbar__nav"
+          role="menubar"
+          aria-label="Main navigation menu"
+        >
+          {/* Desktop menu items - hidden on mobile/tablet via CSS */}
+          {menuItems}
+        </ul>
+      </div>
+    );
+  }
+
+  // Default variant: unchanged <ul> root
   return (
     <ul
       className="mg-mega-topbar | mg-container-full-width"
@@ -43,25 +106,7 @@ export function TopBar({
       />
 
       {/* Desktop menu items - hidden on mobile/tablet via CSS */}
-      {sections.map((section, index) => (
-        <TopBarItem
-          key={index}
-          index={index}
-          ref={element => (itemListRef.current[index] = element)}
-          title={section.title}
-          bannerDescription={section.bannerDescription}
-          link={section.bannerButton}
-          children={section.sections}
-          onMouseEnter={() => handleItemHover(index)}
-          activeItem={activeItem}
-          section={section}
-          handleOnKeyDown={e => {
-            handleFocusByArrows(e, index);
-          }}
-          sectionListRef={sectionListRef}
-          itemListRef={itemListRef}
-        />
-      ))}
+      {menuItems}
     </ul>
   );
 }

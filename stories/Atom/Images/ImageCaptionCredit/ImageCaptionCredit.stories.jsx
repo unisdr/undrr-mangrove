@@ -23,13 +23,6 @@ const getCaptionForLocale = locale => {
           'الألم بحد ذاته يسبب الكثير من الألم ، لكن التركيز الأساسي ينصب على العميل. Morbi lorem tortor، fermentum eu lorem at، venenatis malesuada laughter.',
       };
       return arabicText;
-    case 'burmese':
-      const burmeseText = {
-        label: ['UNDRR/အန်ဂိုလာ', <br />, <strong>ဂျရုမ်း ဘဲလ်</strong>],
-        paragraph:
-          'နာကျင်မှုကိုယ်တိုင်က နာကျင်ပေမယ့် အဓိက အာရုံစိုက်တာက ဖောက်သည်အပေါ်ပါ။ Morbi lorem tortor, fermentum eu lorem at, venenatis malesuada ရယ်မောခြင်း။',
-      };
-      return burmeseText;
     case 'japanese':
       const japaneseText = {
         label: ['UNDRR /アンゴラ', <br />, <strong>ジェロームベル</strong>],
@@ -105,25 +98,20 @@ export const DefaultImageWithCreditCaption = {
   parameters: {
     docs: {
       source: {
-        code: `<div class="grid-x image-section">
-    <div class="cell image__cart medium-12">
-      <img
-        src="static/media/stories/assets/images/farmland-lg.jpg"
-        alt="farmland"
-      />
+        code: `<figure class="mg-image-figcaption">
+  <div class="mg-image-figcaption__cart">
+    <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
+  </div>
+  <figcaption class="mg-image-caption">
+    <p>
+      We provide tools such as the DRR Community site PreventionWeb,
+      publications on good practices, and the Global Assessment Report (GAR)
+    </p>
+    <div class="mg-credits">
+      UNDRR/Ghana<br /><strong>Alex Mensah Tenkorang</strong>
     </div>
-    <div class="cell image__description medium-7">
-      <figcaption class="image__caption">
-        <p>
-          We provide tools such as the DRR Community site PreventionWeb, publications on good practices, and the Global Assessment Report (GAR)
-        </p>
-        <div class="image--author">
-          <span class="author__caption author--label">UNDRR/Ghana</span>
-          <span class="author__caption author--name">Firstname Lastname</span>
-        </div>
-      </figcaption>
-    </div>
-    </div>`,
+  </figcaption>
+</figure>`,
       },
     },
   },

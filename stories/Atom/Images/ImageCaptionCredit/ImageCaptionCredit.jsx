@@ -9,11 +9,12 @@ export const Images = ({
   alt,
   label,
   paragraph,
-  ...args
+  size: sizeProp = 'wide',
+  caption = 'true',
+  credit = 'true',
 }) => {
-  let size;
-  const sizes = ['medium', 'portrait'];
-  size = sizes.includes(args.size) ? args.size : '';
+  const sizeModifiers = { medium: 'mg-image-figcaption--medium', portrait: 'mg-image-figcaption--portrait' };
+  const size = sizeModifiers[sizeProp] || '';
 
   const cls = (...classes) =>
     classes.filter(Boolean).length > 0
@@ -21,30 +22,23 @@ export const Images = ({
       : null;
 
   return (
-    <figure data-viewport="true" className={cls('image-figcaption', `${size}`)}>
-      <div data-viewport="true" className="image-figcaption__cart scale-up">
-        {args.size === 'wide' && <img src={imagelg} alt={alt} />}
-        {args.size === 'medium' && <img src={imagemd} alt={alt} />}
-        {args.size === 'portrait' && <img src={imagesm} alt={alt} />}
+    <figure className={cls('mg-image-figcaption', `${size}`)}>
+      <div className="mg-image-figcaption__cart">
+        {sizeProp === 'wide' && <img src={imagelg} alt={alt} />}
+        {sizeProp === 'medium' && <img src={imagemd} alt={alt} />}
+        {sizeProp === 'portrait' && <img src={imagesm} alt={alt} />}
       </div>
 
-      {args.caption === 'false' && args.credit === 'false' ? (
+      {caption === 'false' && credit === 'false' ? (
         <></>
       ) : (
         <Imagecaption
-          opacityOnly="yes"
           label={label}
           paragraph={paragraph}
-          caption={args.caption}
-          credit={args.credit}
+          caption={caption}
+          credit={credit}
         />
       )}
     </figure>
   );
-};
-
-Images.defaultProps = {
-  size: 'wide',
-  caption: 'true',
-  credit: 'true',
 };

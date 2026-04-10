@@ -16,66 +16,11 @@
   }
 }
 
-/* animation start */
-*[data-viewport="true"] {
-  @extend %left-to-right;
-
-  &.inviewport {
-    @extend %inviewport_left_right;
-  }
-}
-
-.delay-1 {
-  transition-delay: 0.1s;
-}
-
-.delay-2 {
-  transition-delay: 0.2s;
-}
-
-.delay-3 {
-  transition-delay: 0.3s;
-}
-
-.delay-4 {
-  transition-delay: 0.4s;
-}
-
-.delay-5 {
-  transition-delay: 0.5s;
-}
-
-.scale-up {
-  @extend %scale-up;
-
-  &.inviewport {
-    @include transform(scale(1));
-  }
-}
-
-.opacity-only {
-  @extend %opacity-only;
-
-  &.inviewport {
-    @extend %inviewport_opacity_only;
-  }
-}
-
 .mg-u-expand-to-size {
-  max-width: calc(100% - 1rem);
+  max-width: calc(100% - #{mg-rem(10)});
 
   @include devicebreak(medium) {
-    max-width: calc(100% - 3rem);
-  }
-}
-
-[dir="rtl"] {
-  *[data-viewport="true"] {
-    @include transform(translateX(100px));
-
-    &.inviewport {
-      @extend %inviewport_left_right;
-    }
+    max-width: calc(100% - #{mg-rem(30)});
   }
 }
 
@@ -105,10 +50,6 @@ $colors-solid: (
       background: #{$color};
     }
 
-    // .blockquote
-    .blockquote {
-      background-color: #{$color};
-    }
   }
 }
 
@@ -501,3 +442,97 @@ $colors-solid: (
 }
 
 /* Color utilities end */
+
+/* Flex and alignment utilities start */
+
+// Flex container utilities
+.mg-u-flex { display: flex; }
+.mg-u-flex-wrap { flex-wrap: wrap; }
+.mg-u-align-items-center { align-items: center; }
+.mg-u-gap-100 { gap: $mg-spacing-100; }
+
+// RTL-safe push utilities using CSS logical properties.
+// Push an element toward the inline-end, inline-start, or center
+// by collapsing the opposite margin with auto.
+.mg-u-push-end { margin-inline-start: auto; }
+.mg-u-push-start { margin-inline-end: auto; }
+.mg-u-push-center { margin-inline: auto; }
+
+/* Flex and alignment utilities end */
+
+/* Font size utilities start */
+
+.mg-u-font-size-150 {
+  font-size: $mg-font-size-150;
+  line-height: $mg-font-line-height-700;
+}
+
+.mg-u-font-size-200 {
+  font-size: $mg-font-size-200;
+  line-height: $mg-font-line-height-700;
+}
+
+.mg-u-font-size-250 {
+  font-size: $mg-font-size-250;
+  line-height: $mg-font-line-height-700;
+}
+
+.mg-u-font-size-300 {
+  font-size: $mg-font-size-300;
+  line-height: $mg-font-line-height-700;
+}
+
+.mg-u-font-size-400 {
+  font-size: $mg-font-size-300;
+  line-height: $mg-font-line-height-700;
+
+  @include devicebreak(medium) {
+    font-size: $mg-font-size-400;
+  }
+}
+
+.mg-u-font-size-500 {
+  font-size: $mg-font-size-400;
+  line-height: $mg-font-line-height-500;
+
+  @include devicebreak(medium) {
+    font-size: $mg-font-size-500;
+  }
+}
+
+.mg-u-font-size-600 {
+  font-size: $mg-font-size-500;
+  line-height: $mg-font-line-height-500;
+
+  @include devicebreak(medium) {
+    font-size: $mg-font-size-600;
+  }
+}
+
+.mg-u-font-size-800 {
+  font-size: $mg-font-size-600;
+  line-height: $mg-font-line-height-500;
+
+  @include devicebreak(medium) {
+    font-size: $mg-font-size-800;
+  }
+}
+
+.mg-u-font-size-900 {
+  font-size: $mg-font-size-800;
+  line-height: $mg-font-line-height-500;
+
+  @include devicebreak(medium) {
+    font-size: $mg-font-size-900;
+  }
+}
+
+:lang(ar) {
+  .mg-u-font-size-600,
+  .mg-u-font-size-800,
+  .mg-u-font-size-900 {
+    line-height: 1.4;
+  }
+}
+
+/* Font size utilities end */

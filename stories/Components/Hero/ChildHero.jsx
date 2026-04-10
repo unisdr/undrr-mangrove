@@ -1,6 +1,5 @@
-import React, { Fragment } from 'react';
-// import './hero.scss';
-// import '../../../assets/scss/_grid.scss';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { CtaButton } from '../Buttons/CtaButton/CtaButton';
 // import imgPath from '../../../assets/images/hero_background.png';
 
@@ -14,7 +13,11 @@ export const variantOptions = {
   quaternary: 'quaternary',
 };
 
-export function ChildHero({ data, variant }) {
+/**
+ * Smaller hero banner for child/section pages with linked label, title, and single CTA button.
+ * Renders one section per item in the data array (typically one).
+ */
+export function ChildHero({ data, variant = 'primary' }) {
   let variantActive = variantOptions[`${variant}`];
   return (
     <>
@@ -28,7 +31,7 @@ export function ChildHero({ data, variant }) {
           )}
           style={{ backgroundImage: `url(${item.imgback})` }}
         >
-          <div key={index} className="mg-hero__overlay">
+          <div className="mg-hero__overlay">
             <article className="mg-hero__content">
               <div className="mg-hero__meta">
                 <a href={item.link} className="mg-hero__label">
@@ -56,6 +59,18 @@ export function ChildHero({ data, variant }) {
   );
 }
 
-ChildHero.defaultParameters = {
-  variant: 'primary',
+ChildHero.propTypes = {
+  /** Array of child hero content objects (typically one). */
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      imgback: PropTypes.string,
+      label: PropTypes.string,
+      title: PropTypes.string.isRequired,
+      link: PropTypes.string,
+      summaryText: PropTypes.string,
+      primary_button: PropTypes.string,
+    })
+  ).isRequired,
+  /** Color variant: primary (default blue), secondary, tertiary, or quaternary. */
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
 };

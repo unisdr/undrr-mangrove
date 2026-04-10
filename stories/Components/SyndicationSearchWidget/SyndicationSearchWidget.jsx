@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
@@ -42,6 +43,63 @@ export function SyndicationSearchWidget({ config }) {
     </SearchProvider>
   );
 }
+
+SyndicationSearchWidget.propTypes = {
+  /** Widget configuration object merged with DEFAULT_CONFIG from utils/constants. */
+  config: PropTypes.shape({
+    /** Elasticsearch proxy endpoint URL. */
+    searchEndpoint: PropTypes.string,
+    /** Number of results per page. */
+    resultsPerPage: PropTypes.number,
+    /** Debounce delay in milliseconds for search input. */
+    debounceDelay: PropTypes.number,
+    /** Minimum characters before a search is triggered. */
+    minSearchLength: PropTypes.number,
+    /** Whether to synchronize search state with the URL hash. */
+    enableHashSync: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['auto'])]),
+    /** Initial search query string. */
+    defaultQuery: PropTypes.string,
+    /** Default sort order. */
+    defaultSort: PropTypes.oneOf(['relevance', 'newest', 'oldest']),
+    /** Whether to display the search input box. */
+    showSearchBox: PropTypes.bool,
+    /** Whether to display the total results count. */
+    showResultsCount: PropTypes.bool,
+    /** Whether to display the search timer. */
+    showSearchTimer: PropTypes.bool,
+    /** Whether to display the facet sidebar. */
+    showFacets: PropTypes.bool,
+    /** Whether to display active filter chips above results. */
+    showActiveFilters: PropTypes.bool,
+    /** Whether to display search performance metrics. */
+    showSearchMetrics: PropTypes.bool,
+    /** Whether to display pagination controls. */
+    showPager: PropTypes.bool,
+    /** Filters applied by default on initialization. */
+    defaultFilters: PropTypes.arrayOf(PropTypes.shape({
+      key: PropTypes.string,
+      value: PropTypes.string,
+    })),
+    /** Facet keys to show; null shows all available facets. */
+    visibleFilters: PropTypes.arrayOf(PropTypes.string),
+    /** Content type restrictions; null allows all types. */
+    allowedTypes: PropTypes.arrayOf(PropTypes.string),
+    /** Additional query string appended to every search request. */
+    queryAppend: PropTypes.string,
+    /** Custom filter definitions. */
+    customFilters: PropTypes.array,
+    /** Custom facet definitions. */
+    customFacets: PropTypes.array,
+    /** Result display mode. */
+    displayMode: PropTypes.oneOf(['list', 'card', 'card-book']),
+    /** Number of grid columns for card display modes. */
+    gridColumns: PropTypes.number,
+    /** Controls which teaser fields are visible; null shows all. */
+    visibleTeaserFields: PropTypes.object,
+    /** Whether to exclude results that have no image. */
+    requireImage: PropTypes.bool,
+  }).isRequired,
+};
 
 // Alias for backwards compatibility
 export const SearchWidget = SyndicationSearchWidget;
@@ -74,7 +132,6 @@ function SyndicationSearchWidgetInner() {
   // Defer the query value for search execution
   // This keeps the input responsive while search runs in background
   const deferredQuery = useDeferredValue(inputValue);
-  const isStale = inputValue !== deferredQuery;
 
   // Update context when deferred query changes
   useEffect(() => {
@@ -109,8 +166,8 @@ function SyndicationSearchWidgetInner() {
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}
     >
-      {/* Loading progress bar */}
-      {(isLoading || isPending || isStale) && (
+      {/* Loading progress bar — only during actual fetch or transition */}
+      {(isLoading || isPending) && (
         <div className="mg-search__progress" aria-hidden="true">
           <div className="mg-search__progress-bar" />
         </div>
@@ -121,7 +178,7 @@ function SyndicationSearchWidgetInner() {
         <SearchForm
           value={inputValue}
           onChange={setInputValue}
-          isStale={isStale || isPending}
+          isStale={isPending}
           isLoading={isLoading}
           widgetId={widgetId}
         />
@@ -134,13 +191,13 @@ function SyndicationSearchWidgetInner() {
       <div className="mg-search__content">
         {/* Results area */}
         <main
-          className={`mg-search__main ${isStale || isPending ? 'mg-search__main--stale' : ''}`}
+          className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
           data-vf-google-analytics-region="undrr-search-results"
           aria-busy={isLoading || isPending}
         >
-          <Suspense fallback={<SearchResultsSkeleton />}>
+          <Suspense fallback={<SearchResultsSkeleton displayMode={config.displayMode} count={config.resultsPerPage} gridColumns={config.gridColumns} />}>
             <SearchResults
-              isStale={isStale || isPending}
+              isStale={isPending}
               widgetId={widgetId}
               showMobileFilterButton={showFacets}
               onOpenFilters={openDrawer}
@@ -174,11 +231,31 @@ function SyndicationSearchWidgetInner() {
 
 /**
  * Loading skeleton for search results.
+ * Renders a card grid skeleton for card/card-book modes, list skeleton otherwise.
  */
-function SearchResultsSkeleton() {
+function SearchResultsSkeleton({ displayMode = 'list', count = 5, gridColumns }) {
+  const isCardMode = displayMode === 'card' || displayMode === 'card-book';
+  const cols = isCardMode ? Math.min(Math.max(gridColumns ?? count, 2), 6) : undefined;
+
+  if (isCardMode) {
+    return (
+      <div className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`} aria-busy="true" aria-label="Loading results">
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className="mg-search__skeleton-card">
+            <div className="mg-search__skeleton-card-image" />
+            <div className="mg-search__skeleton-card-body">
+              <div className="mg-search__skeleton-title" />
+              <div className="mg-search__skeleton-meta" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="mg-search__skeleton" aria-busy="true" aria-label="Loading results">
-      {[1, 2, 3, 4, 5].map((i) => (
+      {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="mg-search__skeleton-item">
           <div className="mg-search__skeleton-title" />
           <div className="mg-search__skeleton-meta" />

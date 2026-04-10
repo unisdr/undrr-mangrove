@@ -1,31 +1,37 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { Icons } from './Icons';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import { Icon } from './Icon';
-import data from './Icons.json';
 import * as IconsStories from './Icons.stories';
 
 <Meta of={IconsStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # Icons
 
-The Icon components grab attention and draw users into content, helping them quickly understand the context in which they are placed.
+Icons help users quickly understand context and available actions. They render via CSS `mask-image` backed by SVG data URIs, so the CSS `color` property controls the icon color.
 
-Icons use the **Mangrove** namespace (`mg-icon-*`) as the preferred format. Legacy `fa-*` (FontAwesome-style) classes remain supported for backwards compatibility.
+Icons come from three sources, shown with colored badges in the gallery below:
 
-## When to use:
+- **Lucide** (green) — general UI icons (search, menu, arrows, etc.). [lucide.dev](https://lucide.dev), MIT license.
+- **OCHA** (blue) — humanitarian and disaster risk reduction icons (earthquake, flood, cyclone, etc.). [OCHA Humanitarian Icons](https://github.com/UN-OCHA/humanitarian-icons), CC0-1.0 license.
+- **Custom** (orange) — brand logos and UNDRR-specific icons maintained in `stories/assets/icons/custom/`.
 
-- **Dense and Complex Content**: Use icons to help users comprehend available actions in complex interfaces.
-- **Space Saving**: Replace words or long phrases with icons to save space without losing meaning.
-- **Avoid Visual Clutter**: Use icons sparingly to prevent overwhelming the user with too many visual elements.
+Some icons have aliases for backward compatibility (e.g., `close` maps to `times`, `copy` to `clone`, `twitter` to `x-social`). Aliases appear in the gallery and work identically to the canonical name. See `scripts/icon-map.cjs` for the full alias list.
+
+## When to use
+
+- **Dense content**: Icons help users scan available actions in complex interfaces.
+- **Space saving**: Replace words or long phrases with icons where meaning is clear.
+- **Use sparingly**: Too many icons create visual noise instead of reducing it.
 
 <Canvas of={IconsStories.DefaultIcons} meta={IconsStories} />
 
 ## Usage
 
-### React Component (Recommended)
+### React component (recommended)
 
 ```jsx
-import { Icon } from './Icon';
+import Icon from './Icon';
 
 // Just the icon name (recommended)
 <Icon name="globe" />
@@ -33,25 +39,29 @@ import { Icon } from './Icon';
 // With size modifier
 <Icon name="globe" size="lg" />
 
-// Legacy fa- format (still supported)
+// With color utility or custom class
+<Icon name="globe" className="mg-u-color--interactive" />
+
+// Multi-color (preserves SVG's original colors)
+<Icon name="sdg-wheel" className="mg-icon--multicolor" />
+
+// Legacy fa- format (still supported via font fallback)
 <Icon name="fa-globe" />
 ```
 
-### CSS Classes
+### CSS classes
 
-Use `mg-icon` base class with `mg-icon-{name}` (preferred) or `fa-{name}` (legacy):
+Use `mg-icon` base class with `mg-icon-{name}`:
 
 ```html
-<!-- Preferred format -->
 <span class="mg-icon mg-icon-globe"></span>
 <span class="mg-icon mg-icon-chart-bar"></span>
-
-<!-- Legacy format (still supported) -->
-<span class="mg-icon fa-globe"></span>
-<span class="mg-icon fa-rss"></span>
+<span class="mg-icon mg-icon-earthquake"></span>
 ```
 
-### Size Modifiers
+Legacy `fa-*` classes still work via the icon font fallback. New code should use `mg-icon-*`.
+
+### Size modifiers
 
 ```html
 <span class="mg-icon mg-icon-globe mg-icon--sm"></span>  <!-- 0.875em -->
@@ -59,13 +69,118 @@ Use `mg-icon` base class with `mg-icon-{name}` (preferred) or `fa-{name}` (legac
 <span class="mg-icon mg-icon-globe mg-icon--xl"></span>  <!-- 2em -->
 ```
 
+### Coloring
+
+Icons use `currentColor`, so they respond to any method of setting `color`:
+
+**Color utility classes** — the existing `mg-u-color--*` utilities work directly on icons:
+
+```html
+<span class="mg-icon mg-icon-globe mg-u-color--interactive"></span>
+<span class="mg-icon mg-icon-times mg-u-color--red-800"></span>
+<span class="mg-icon mg-icon-power-off mg-u-color--white"></span>
+```
+
+**Parent inheritance** — icons inside a colored element inherit that color:
+
+```html
+<div class="mg-u-color--interactive">
+  <span class="mg-icon mg-icon-globe"></span>
+  <span class="mg-icon mg-icon-search"></span>
+</div>
+```
+
+**Inline style** — for one-off colors (e.g. brand logos):
+
+```html
+<span class="mg-icon mg-icon-facebook" style="color: #1877f2"></span>
+```
+
+**Multi-color** — by default icons are single-color (the mask fills everything with `currentColor`). Add `mg-icon--multicolor` to render the SVG with its original fill/stroke colors preserved:
+
+```html
+<!-- Single-color (default) — SVG rendered as currentColor silhouette -->
+<span class="mg-icon mg-icon-sdg-wheel"></span>
+
+<!-- Multi-color — SVG rendered with its original colors -->
+<span class="mg-icon mg-icon-sdg-wheel mg-icon--multicolor"></span>
+```
+
+Multi-color only works with SVGs that have explicit fill/stroke color values in the source file (like the SDG wheel or brand logos).
+
+- **Lucide icons** use `currentColor` in their source SVGs, so `mg-icon--multicolor` won't produce a visible difference — the icon remains a single-color silhouette.
+- **OCHA icons** don't respond to the `mg-icon--multicolor` modifier — they always render in their built-in navy color, regardless of the current theme. Avoid `mg-icon--multicolor` with OCHA icons; use the default (single-color) mode so they follow the theme color.
+
+> **Implementation note (for contributors):** OCHA icons contain hardcoded fill values from OCHA's brand palette (`#011E41` navy) in their source SVGs. Because `mg-icon--multicolor` switches from `mask-image` (which ignores fill colors) to `background-image` (which preserves them), OCHA icons always render in navy when the modifier is applied.
+
+- **Custom icons** (social logos, SDG wheel) have explicit brand colors and are the intended use case for `mg-icon--multicolor`.
+
+<Canvas of={IconsStories.ColoredIcons} meta={IconsStories} />
+
+### Migrating from `fa-*` to `mg-icon-*`
+
+For most icons, replace `fa-` with `mg-icon-`:
+
+| Old class | New class |
+|---|---|
+| `fa-globe` | `mg-icon-globe` |
+| `fa-search` | `mg-icon-search` |
+| `fa-envelope` | `mg-icon-envelope` |
+| `fa-times` | `mg-icon-times` (or `mg-icon-close`) |
+| `fa-bar-chart` | `mg-icon-chart-bar` (or `mg-icon-bar-chart`) |
+| `fa-file-alt` | `mg-icon-file-alt` |
+| `fa-calendar-alt` | `mg-icon-calendar-alt` (or `mg-icon-calendar`) |
+| `fa-clone` | `mg-icon-clone` (or `mg-icon-copy`) |
+| `fa-twitter` | `mg-icon-x-social` (or `mg-icon-twitter`) |
+| `fa-left` | `mg-icon-left` (or `mg-icon-arrow-left`) |
+| `fa-right` | `mg-icon-right` (or `mg-icon-arrow-right`) |
+| `fa-menu` | `mg-icon-menu` (or `mg-icon-hamburger`) |
+
+The full list is in `scripts/icon-map.cjs`. Legacy `fa-*` classes still work during the transition but will be removed in a future release (see [#906](https://github.com/unisdr/undrr-mangrove/issues/906) phases 3-4).
+
+## Adding a new icon
+
+1. **Find or create the SVG.** Browse [Lucide](https://lucide.dev) for UI icons, [OCHA Humanitarian Icons](https://github.com/UN-OCHA/humanitarian-icons) for domain icons, or create a custom SVG. Custom SVGs must use `viewBox="0 0 24 24"`. Place custom files in `stories/assets/icons/custom/`.
+
+2. **Add an entry to `scripts/icon-map.cjs`:**
+   ```js
+   // For a Lucide icon:
+   'my-icon': LUCIDE('lucide-icon-name'),
+   // For a custom SVG at stories/assets/icons/custom/my-icon.svg:
+   'my-icon': CUSTOM('my-icon'),
+   // For an OCHA icon at stories/assets/icons/ocha/my-icon.svg:
+   'my-icon': OCHA('my-icon'),
+   ```
+
+3. **Add the icon to `Icons.json`** with `name`, `label`, and `source` fields. This drives the Storybook gallery — icons not in this file won't appear in the gallery but will still work in CSS.
+
+4. **Run `yarn build:icons`** to regenerate `_icon-definitions.scss`. The generated file is already imported by `icons.scss`, so no manual import step is needed.
+
+5. The icon is now available as `<Icon name="my-icon" />` and `<span class="mg-icon mg-icon-my-icon"></span>`.
+
 ## Technical notes
 
-- The font image files are located in the `\stories\assets\fonts\mangrove-icon-set` directory. Consult the accomponying README.md for information on updating.
-- We use font icons because they provide a reliable way to integrate across our diverse ecosystem.
+**Browser support:** `mask-image` requires Chrome 120+, Firefox 53+, Safari 15.4+, Edge 120+. CSS custom properties (`var()`) have wider support, so they add no additional browser requirement. See [browser support](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-browser-support--docs) for the full baseline.
+
+**Legacy icon font:** The `mangrove-icon-set` icon font is still loaded as a fallback for `fa-*` selectors. It will be removed in a future release once all consumers migrate to `mg-icon-*` (see [#906](https://github.com/unisdr/undrr-mangrove/issues/906) phases 3-4).
+
+> **Implementation note (for contributors):** Each icon sets a `--mg-icon-svg` CSS custom property containing the SVG as a data URI; the base `.mg-icon::before` rule applies `mask-image: var(--mg-icon-svg)` so each data URI is defined once rather than duplicated. The `mg-icon--multicolor` modifier switches to `background-image: var(--mg-icon-svg)` to preserve original fill/stroke colors.
+>
+> Key implementation details:
+> - Icon definitions are auto-generated by `scripts/icon-build.cjs` from the mapping in `scripts/icon-map.cjs` (`yarn build:icons`)
+> - Imported into the theme SCSS build via `stories/assets/scss/_components.scss` — icon styles ship with each theme's CSS rather than a separate file
+> - HCFM: `forced-color-adjust: none` prevents browser color overrides; a `@media (forced-colors: active)` fallback sets `background-color: CanvasText`
+
+## Accessibility
+
+- Icons use `aria-hidden="true"` since they are decorative. If an icon conveys meaning on its own, pair it with visually hidden text.
+- Icons remain visible in Windows High Contrast Mode (forced-colors).
+- Icons scale with browser zoom via `em` units.
+- When an icon is the sole content of a button or link, the interactive element must meet a minimum target size of 24x24 CSS pixels (WCAG 2.5.8). The `mg-share__button` class (40x40px) is a good reference pattern.
 
 ## Changelog
 
+- **2.1** — 2026-04-04 ([undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906)): Icons now render via CSS mask-image backed by Lucide, OCHA, and custom SVG sources. Added `--mg-icon-svg` custom property pattern, `mg-icon--multicolor` modifier, source attribution badges, migration table, and expanded icon set (79 icons including aliases). No breaking change — icon font retained as fallback for `fa-*` selectors.
 - **2.0** — 2026-02-03: **Breaking:** Icons now use `mg-icon-*` namespaced classes; added Icon React component with automatic class normalization; size modifiers (`.mg-icon--sm`, `.mg-icon--lg`, `.mg-icon--xl`); `fa-*` classes maintained for backwards compatibility
 - **1.3** — 2025-08-06: Added `.fa-qrcode` icon
 - **1.2** — 2025-05-14: Added `.fa-menu` icon

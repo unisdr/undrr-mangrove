@@ -10,9 +10,6 @@ export const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = { detail: 'ملصق' };
       return arabicText;
-    case 'burmese':
-      const burmeseText = { detail: 'တံဆိပ်' };
-      return burmeseText;
     case 'japanese':
       const japaneseText = { detail: 'ラベル' };
       return japaneseText;
@@ -23,58 +20,60 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={ChipsStories} />
 
-# Buttons and Labels
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
-A button describes what action will be performed when a user clicks or touches it.
+# Chips
 
-### Overview
+Small interactive tags used to show active filters, selections, or categories. Chips can include a dismiss icon to let users remove them.
 
-A button describes the call to action that will be performed when the user clicks/touches it. It has a label and an optional animation.
+## When to use
 
-#### When to use:
+- Showing which filters or search terms are currently active
+- Letting users remove individual selections without clearing everything
+- Labelling active categories or tags in a content listing
 
-- Buttons should be used as primary or secondary calls to actions
-- Ideally, a page should have one or two primary buttons only. Other call-to-actions should be shown as secondary buttons
-- Examples of buttons can be to "VIEW MORE" or "READ MORE" or "SIGN UP"
-- If there are multiple choices for an action item, one default button should be active and the other buttons inactive
+## States
 
-### Formatting
+**Default (with dismiss icon)** — The chip shows a label and a close icon. Clicking the icon removes the filter or selection.
 
-#### Default
+**Hover (with dismiss icon)** — The chip changes visual appearance when the user hovers over it, signalling it is interactive.
 
-There are multiple button types in our design system
+**Default (no dismiss icon)** — The chip shows a label only. It communicates a current selection or category but does not allow removal.
 
-1. Primary button with arrow and without arrows
-2. Secondary buttons without the arrow
-3. CTA links with and without expanding arrows
-4. Chips
-
-### Content
-
-### Behaviors
-
-#### States
-
-Chips: Chips are used to show an active search or filter term.
-
-Chip with default state, and an icon. The close icon lets them cancel or delete the information.
-
-Chip with hover state and icon which changes appearance when a mouse hovers over it.
-
-Chip with default state and no close icon which means it doesn't provide the option of deleting the information written or action which has been taken.
-
-Chip with hover state and close icon. Changes appearance once the mouse moves over it.
+**Hover (no dismiss icon)** — Same visual change as the hover state above; no dismiss action is available.
 
 <Canvas of={ChipsStories.DefaultChips} meta={ChipsStories} />
 
-### Usage
+## Usage
 
-- Copy the HTML from the HTML Tab of canvas for either Chips, CTA Button, and CTA Link from the controls.
+### Chip with dismiss
 
-### Interactions
+```html
+<span class="mg-chip">
+  Label
+  <button class="mg-chip__cross" aria-label="Remove Label filter">×</button>
+</span>
+```
 
-- The hover state is applied to the entire button.
+### Chip without dismiss
+
+```html
+<span class="mg-chip">Label</span>
+```
+
+Copy from the HTML tab in the canvas above for the full rendered output with any additional wrapper classes.
+
+## Interactions
+
+- The hover state applies to the entire chip.
+
+## Accessibility
+
+- The dismiss button is icon-only. Provide an accessible name via `aria-label` that includes the filter value: `aria-label="Remove [label text]"` — for example, `aria-label="Remove Sendai Framework"`.
+- Keyboard users activate the dismiss button with **Enter** or **Space**.
+- After a chip is dismissed, move focus to the next chip or the related search input — do not drop focus.
 
 ## Changelog
 
+- **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`chip` → `mg-chip`, `chip__cross` → `mg-chip__cross`).
 - **1.0** — 2022-12-12: Released component

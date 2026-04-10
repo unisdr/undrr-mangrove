@@ -1,28 +1,39 @@
 // mg-show-more
 // https://gitlab.com/undrr/web-backlog/-/issues/1082
 
-export function mgShowMore() {
-  const mgShowMoreButtons = document.querySelectorAll('[data-mg-show-more]');
+/**
+ * Initializes "show more" toggle buttons.
+ *
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or a single HTMLElement.
+ *   Defaults to all [data-mg-show-more] in the document.
+ */
+export function mgShowMore(scope) {
+  const mgShowMoreButtons = scope
+    ? (scope instanceof HTMLElement ? [scope] : scope)
+    : document.querySelectorAll('[data-mg-show-more]');
 
   mgShowMoreButtons.forEach(item => {
+    // Skip auto-init if the element opts out
+    if (!scope && item.hasAttribute('data-mg-show-more-skip-auto-init')) return;
     if (item.dataset.mgShowMoreInitialized) return;
     item.dataset.mgShowMoreInitialized = 'true';
 
     item.dataset.dataVfGoogleAnalyticsLabel =
       'Show more: ' + item.dataset.mgShowMoreLabelCollapsed || `Show more`;
 
+    const mgShowMoreTargetClass =
+      item.dataset.mgShowMoreTarget || '.mg-show-more--container';
+    const mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
+
+    if (!mgShowMoreTarget) {
+      console.warn(`[mg-show-more] Target not found: "${mgShowMoreTargetClass}"`);
+      return;
+    }
+
     item.addEventListener('click', event => {
       event.preventDefault();
-      let mgShowMoreTargetClass =
-        item.dataset.mgShowMoreTarget || '.mg-show-more--container';
-      let mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
       mgShowMoreTarget.classList.toggle('mg-show-more--collapsed');
-
-      // Allow items to be shown by clicking anywhere on the collapsed item
-      // https://gitlab.com/undrr/web-backlog/-/issues/1612
-      mgShowMoreTarget.addEventListener('click', () => {
-        item.click();
-      });
 
       // Which label to show?
       item.textContent = mgShowMoreTarget.classList.contains(
@@ -38,8 +49,21 @@ export function mgShowMore() {
       }
     });
 
+    // Allow items to be shown by clicking anywhere on the collapsed item
+    // https://gitlab.com/undrr/web-backlog/-/issues/1612
+    mgShowMoreTarget.addEventListener('click', () => {
+      if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
+        item.click();
+      }
+    });
+
     item.click();
   });
 }
 
-document.addEventListener('DOMContentLoaded', mgShowMore, false);
+// Auto-wrap so the browser Event object is not passed as scope
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => mgShowMore(), false);
+} else {
+  mgShowMore();
+}

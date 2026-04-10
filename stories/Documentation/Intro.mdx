@@ -56,113 +56,49 @@ import LinkTo from '@storybook/addon-links/react';
   </a>
 </div>
 
-The Mangrove Component Library marks a quiet revolution in how UNDRR approaches its digital presence.
+Mangrove provides shared content structures for UNDRR web properties: cards, heroes, navigation, footers, and syndicated content blocks. Each property keeps its own brand colors, component treatments, and application-specific interfaces. The content patterns are shared; your visual identity, application logic, and user experience flows stay yours. Mangrove is used on [undrr.org](https://www.undrr.org), [preventionweb.net](https://www.preventionweb.net), [mcr2030.undrr.org](https://mcr2030.undrr.org), and partner sites.
 
-For years, each UNDRR web property -- PreventionWeb and UNDRR.org to SFM, IRP, and so on -- operated in isolation. They maintained their own UI elements, coded navigation menus differently, and handled accessibility fixes in their own way. When something needed fixing like a screen reader incompatibility or a JavaScript bug in the header, it often had to be fixed not once, but ten times. Multiply that by every update, redesign, or new feature, and the cost of fragmentation became clear.
+Each UNDRR property themes components independently. The shared layer is the content structure -- the parts that let syndicated content render correctly and accessibility fixes propagate to every site at once.
 
-Mangrove offers a better way. By centralizing a shared design system, UNDRR is moving from siloed, repetitive development toward a more strategic, collaborative model. Instead of forking components across platforms, we're investing in a single, reusable library—built to scale, accessible by default, and ready to serve content consistently across platforms.
-
-This isn't just a technical upgrade. It's a shift in mindset. It means our users get a familiar, accessible experience no matter where they land. It means content created in one system can flow seamlessly into another. And it means our limited development capacity can focus on what matters: delivering new features, meeting user needs, and responding quickly when things break.
-
-## Key benefits
-
-- ✅ **Standardization reduces duplication**: Fixes and improvements are applied once, not across multiple systems
-- ✅ **Better user experience**: A unified interface improves navigation, familiarity, and trust
-- ✅ **Accessibility by default**: Centralized components make compliance easier and more consistent
-- ✅ **Faster, focused development**: Developers spend less time reinventing and more time innovating
-- ✅ **Cross-site content sharing**: Consistent design enables syndication of news, publications, and more
-
-This project stops short of being a full design system and instead focuses on providing usable components that are informed by the UNDRR brand guidelines and project styles. These components offer consistency, documentation and portability to speed quality development with the expected look and feel, while helping reduce entropy—critical in ensuring websites remain accessible.
-
-Mangrove is how we future-proof our platform. It's how we scale with integrity, accessibility, and resilience. And it's one of the most practical investments we can make in the long-term strength of UNDRR's web ecosystem.
+Use the theme switcher in the toolbar above to preview components in UNDRR, PreventionWeb, IRP, or MCR2030 styles. For more on what Mangrove covers, what it doesn't, and how it fits alongside other frameworks, see <LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>.
 
 ---
 
 ## Getting started
 
-👉 **<LinkTo kind="getting-started-a-getting-started-guide" story="docs">Start with the Getting Started Guide</LinkTo>** for a complete overview and quick setup.
-
-**📋 <LinkTo kind="getting-started-mangrove-the-undrr-standard" story="docs">Why Mangrove is the standard</LinkTo>**
-Understanding UNDRR's commitment to Mangrove as the universal system for all web properties and when to use it.
-
-**🎯 <LinkTo kind="getting-started-vanilla-html-and-css" story="docs">Vanilla HTML/CSS Guide</LinkTo>**
-For static sites, legacy projects, or when you want minimal dependencies. Just add CSS files and copy HTML structures.
-
-**🎨 <LinkTo kind="getting-started-sass-integration" story="docs">Sass Integration Guide</LinkTo>**
-Take control of styling with custom themes, variable overrides, and build process integration.
-
-**⚛️ <LinkTo kind="getting-started-react-integration" story="docs">React Integration Guide</LinkTo>**
-Full React components with TypeScript integrations, props-based customization, and modern development patterns.
-
-**🤖 <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP Integration</LinkTo>**
-Use AI coding agents like Claude and Cursor with Mangrove's MCP support for faster, pattern-compliant development.
-
-**📋 <LinkTo kind="getting-started-best-practices" story="docs">Best Practices</LinkTo>**
-Performance optimization, accessibility guidelines, and development best practices.
-
-## Process
-
-- If there is a Component or Pattern that you need, or you have any other feedback, question or comment please contact us.
-- Components can be created and are also subject to updates and removal. These changes are documented -- if you'd like to request a new component, [get in touch](https://github.com/unisdr/undrr-mangrove).
-- [Internal notes on the project can be seen in the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
+- <LinkTo kind="getting-started-getting-started-guide" story="docs">Getting started guide</LinkTo> -- setup and first component
+- <LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo> -- what it covers, what it doesn't, why semantic CSS
+- <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">Vanilla HTML/CSS</LinkTo> -- add CSS files and copy HTML structures, no build step
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration</LinkTo> -- custom themes, variable overrides, build process
+- <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration</LinkTo> -- React components with props-based customization
+- <LinkTo kind="getting-started-integration-hydration-guide" story="docs">Hydration guide</LinkTo> -- render React components into server-generated HTML (Drupal, Astro)
+- <LinkTo kind="getting-started-ai-and-mcp-integration" story="docs">AI and MCP integration</LinkTo> -- use AI coding agents with Mangrove's MCP support
+- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- accessibility, performance, architecture
 
 ## Structure
 
-Mangrove uses a loose [atomic design](https://atomicdesign.bradfrost.com/chapter-2/) approach, but major concepts are split as follows:
+Mangrove uses a loose [atomic design](https://atomicdesign.bradfrost.com/chapter-2/) approach. The Storybook sidebar is organized as:
 
-- **Getting started**: High level information on what Mangrove is, and comprehensive onboarding guides for different use cases
-- **Design decisions**: Colours, spacing, typography and foundational design elements
-- **Components**: The bread and butter of cards, buttons, forms, and interactive elements
-- **Templates** (to come): High-level organisms that show a whole section layout or page
+- **Getting started**: What Mangrove is, integration guides (HTML/CSS, Sass, React, CDN, hydration)
+- **Contributing**: Component standards, build-a-component tutorial, writing guidelines, architecture, releases
+- **Platform services**: Analytics, critical messaging, cookie consent, content and search syndication (shared UNDRR infrastructure)
+- **Design decisions**: Colors, spacing, typography, and foundational design elements
+- **Components**: Cards, buttons, forms, navigation, and interactive elements
+- **Utilities**: CSS utilities, loaders, and layout helpers
 
-## Codebase
-
-Code is available [on GitHub](https://github.com/unisdr/undrr-mangrove) and through [a public Storybook website](https://unisdr.github.io/undrr-mangrove/).
-
-Developers are encouraged to consume the project through the remotely available CSS to help ensure "up-to-date-ness".
-
-### Quick start URLs
-
-**CSS Files (for HTML/CSS approach):**
-
-```html
-<!-- Theme styles (choose one) -->
-<!-- UNDRR global style -->
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.3.1/css/style.css"
-/>
-<!-- or -->
-<link
-  rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.3.1/css/style-preventionweb.css"
-/>
-```
-
-**npm Package (for React/build process integration):**
-
-```bash
-yarn install @undrr/undrr-mangrove
-```
+To request a new component or report an issue, [open a GitHub issue](https://github.com/unisdr/undrr-mangrove/issues). [Internal project notes are on the GitLab Wiki](https://git.un.org/undrr/web-backlog/-/wikis/Mangrove:-the-UNDRR-Component-library).
 
 ## Need help?
 
-- 📖 **Start here**: <LinkTo kind="getting-started-a-getting-started-guide" story="docs">Getting Started Guide</LinkTo>
-- 🧱 **Browse Components**: Explore the component library in the sidebar
-- 💬 **Questions**: Contact the UNDRR development team
-- 🐛 **Issues**: [Report bugs on GitLab](https://gitlab.com/undrr/web-backlog/-/issues)
-- 📈 **Updates**: Follow [releases on GitHub](https://github.com/unisdr/undrr-mangrove/releases)
+- Browse components in the sidebar
+- Contact the UNDRR development team with questions
+- [Report bugs on GitHub](https://github.com/unisdr/undrr-mangrove/issues)
+- [Release notes](https://github.com/unisdr/undrr-mangrove/releases) -- what's new in each version
 
-## Credits & License
-
-### Credits
-
-The Mangrove component library is built with:
-
-- [Storybook](https://storybook.js.org/) - For component documentation and development
-- [React](https://reactjs.org/) - For component implementation
-- [SCSS](https://sass-lang.com/) - For component styling
-
-### License
+## License
 
 Components and code are Apache-2.0 licensed. The UNDRR look and feel is proprietary.
+
+---
+
+Last updated: 19 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Intro.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

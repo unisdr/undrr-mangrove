@@ -1,6 +1,15 @@
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { mgTableOfContents } from './js/TableOfContentsVanillaJs';
 
+/**
+ * Renders an in-page table of contents with smooth-scroll anchor links.
+ *
+ * @param {Object} props
+ * @param {Array<{id: string, text: string}>} props.tocData Array of heading entries to list
+ * @param {boolean} [props.showNumbers]  Whether to render an ordered list instead of unordered
+ * @param {string} [props.title]         Heading text displayed above the list
+ */
 export default function TableOfContents({
   tocData,
   showNumbers = false,
@@ -63,8 +72,16 @@ export default function TableOfContents({
   );
 }
 
-TableOfContents.defaultParameters = {
-  tocData: [],
-  showNumbers: false,
-  title: 'On this page',
+TableOfContents.propTypes = {
+  /** Array of heading entries, each with an id and display text */
+  tocData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  /** Whether to render an ordered list instead of unordered */
+  showNumbers: PropTypes.bool,
+  /** Heading text displayed above the list */
+  title: PropTypes.string,
 };

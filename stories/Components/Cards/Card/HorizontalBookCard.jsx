@@ -1,24 +1,18 @@
 /* eslint-disable react/no-danger */
-import React, { Fragment } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export const hovercolors_options = {
-  yellow: '',
-  red: 'red',
-  blue: 'blue',
-  green: 'green',
-};
-
-export function HorizontalBookCard({ data, Hovercolors }) {
-  let hovercolors_variant = hovercolors_options[`${Hovercolors}`];
+export function HorizontalBookCard({ data, variant = 'primary', className }) {
+  const variantClass = variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
       {data.map((item, index) => (
-        <article key={index} className="mg-card mg-card__hc mg-card-book__hc">
+        <article key={index} className={cls('mg-card', 'mg-card__hc', 'mg-card-book__hc', variantClass, className)}>
           {item.imgback && (
             <div className="mg-card__visual">
               <img
@@ -29,7 +23,7 @@ export function HorizontalBookCard({ data, Hovercolors }) {
             </div>
           )}
 
-          <div className={cls('mg-card__content', `${hovercolors_variant}`)}>
+          <div className="mg-card__content">
             {item.label1 && (
               <div className="mg-card__meta">
                 <a
@@ -48,7 +42,7 @@ export function HorizontalBookCard({ data, Hovercolors }) {
             )}
 
             <header className="mg-card__title">
-              <a href={item.link}>{item.title}</a>
+              <a href={item.link}>{item.title?.trim()}</a>
             </header>
             <p
               className="mg-card__summary"
@@ -66,6 +60,8 @@ export function HorizontalBookCard({ data, Hovercolors }) {
   );
 }
 
-HorizontalBookCard.defaultProps = {
-  Hovercolors: 'yellow',
+HorizontalBookCard.propTypes = {
+  data: PropTypes.array.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
+  className: PropTypes.string,
 };

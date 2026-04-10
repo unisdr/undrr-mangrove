@@ -1,0 +1,206 @@
+// On this page nav
+// https://gitlab.com/undrr/web-backlog/-/issues/337
+// A sticky horizontal navigation bar that links to page sections.
+// Supports auto-detected headings or explicit author-provided links,
+// with optional CTA button and scroll-spy active state.
+
+.mg-on-this-page-nav {
+  // --mg-on-this-page-nav-offset: docking offset for fixed headers (default: 0px).
+  // Set this in your theme CSS to dock below a sticky MegaMenu or header.
+  position: sticky;
+  top: var(--mg-on-this-page-nav-offset, 0);
+  z-index: $mg-z-index-sticky; // above MegaMenu, below PageHeader
+  display: flex;
+  align-items: center;
+  background: $mg-color-neutral-0;
+  box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
+  padding: 0 $mg-container-spacer;
+
+  // Full-bleed: break out of any parent container to span the viewport.
+  // Works even when nested inside an mg-container or Drupal content column.
+  width: 100vw;
+  margin-inline-start: calc(50% - 50vw);
+
+  // Un-stick on short viewports so the bar doesn't dominate the screen.
+  // GOV.UK accessibility research found sticky elements at 400% zoom consumed
+  // 30%+ of viewport — this prevents that. (technology.blog.gov.uk/2018/05/21)
+  @media screen and (height <= 400px) {
+    position: static;
+    box-shadow: none;
+    border-bottom: 1px solid $mg-color-neutral-50;
+  }
+
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    padding: 0 $mg-spacing-200;
+  }
+
+  &--hidden {
+    display: none;
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    flex: 1 1 auto;
+
+    // Fade gradient on the trailing edge signals more content is scrollable.
+    // Uses mask-image so the fade is transparent (works on any background).
+    // padding-inline-end gives the fade space so text isn't masked mid-character.
+    padding-inline-end: $mg-spacing-300;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-500}), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-500}), transparent);
+
+    // Hide scrollbar but keep functional
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    // When content is scrolled left, also fade the leading edge so users know
+    // items are hidden behind the scroll button on that side.
+    .mg-on-this-page-nav--has-left-overflow & {
+      padding-inline-start: $mg-spacing-300;
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 #{$mg-spacing-500}, #000 calc(100% - #{$mg-spacing-500}), transparent);
+      mask-image: linear-gradient(to right, transparent, #000 #{$mg-spacing-500}, #000 calc(100% - #{$mg-spacing-500}), transparent);
+    }
+  }
+
+  &__item {
+    flex-shrink: 0;
+    display: flex;
+  }
+
+  &__link {
+    display: block;
+    padding: $mg-spacing-150 $mg-spacing-150;
+    font-family: $mg-font-family-condensed;
+    font-size: $mg-font-size-250;
+    font-weight: 600;
+    color: $mg-color-neutral-600;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover {
+      color: $mg-color-interactive-active;
+      border-bottom-color: $mg-color-interactive-active;
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: -2px;
+    }
+
+    // Active state and active+hover — active wins over hover
+    &--active,
+    &--active:hover {
+      color: $mg-color-interactive;
+      border-bottom-color: $mg-color-interactive;
+    }
+  }
+
+  &__cta {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    padding: $mg-spacing-150 $mg-spacing-150;
+    font-family: $mg-font-family-condensed;
+    font-size: $mg-font-size-250;
+    font-weight: 600;
+    color: $mg-color-neutral-0;
+    background: $mg-color-interactive;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover {
+      background: $mg-color-interactive-active;
+      text-decoration: none;
+      color: $mg-color-neutral-0;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+  }
+
+  // Scroll arrow buttons — injected by JS when the list overflows.
+  // hidden attribute is toggled by JS based on scroll position.
+  &__scroll-btn {
+    flex-shrink: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $mg-spacing-250; // WCAG 2.5.8 minimum touch target (24px)
+    padding: 0 $mg-spacing-150;
+    border: 0;
+    background: $mg-color-neutral-0;
+    cursor: pointer;
+    color: $mg-color-neutral-600;
+    transition: color 0.2s ease;
+
+    // display:flex above would otherwise override the UA [hidden]{display:none} rule
+    // since author styles always beat the user-agent stylesheet.
+    &[hidden] {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover {
+      color: $mg-color-interactive-active;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: -2px;
+    }
+
+    svg {
+      display: block;
+      pointer-events: none;
+    }
+
+    // In RTL, flex reversal places prevBtn on the right and nextBtn on the left,
+    // so the chevron icons point in the opposite physical direction from the scroll.
+    // Flip them so each icon still points toward its scroll destination.
+    [dir="rtl"] & {
+      svg { transform: scaleX(-1); }
+    }
+  }
+}
+
+// RTL: flex layout places prevBtn at the right (visual-start) edge and nextBtn
+// at the left (visual-end) edge. The JS scrollBy direction, button visibility,
+// and chevron icon direction are all RTL-aware. The mask-image gradient uses
+// physical `to right` which fades the correct edge in LTR; RTL gradient
+// correction is a known open item.
+
+// Arabic font override
+:lang(ar) {
+  .mg-on-this-page-nav__link,
+  .mg-on-this-page-nav__cta {
+    font-family: $mg-font-family-arabic-headings;
+  }
+}

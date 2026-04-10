@@ -338,3 +338,118 @@ export const RTL = {
     },
   },
 };
+
+const brandLogos = {
+  PreventionWeb: {
+    logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+    logoAlt: 'PreventionWeb',
+  },
+  IRP: {
+    logoSrc: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+    logoAlt: 'International Recovery Platform',
+  },
+  MCR2030: {
+    logoSrc:
+      'https://mcr2030.undrr.org/sites/default/files/2020-10/MCR---Main-Logo---Color.png',
+    logoAlt: 'Making Cities Resilient 2030',
+  },
+  'Global Platform 2025': {
+    logoSrc:
+      'https://assets.undrr.org/static/logos/gp/2025/GP_2025_logo_web.svg',
+    logoAlt: 'Global Platform for Disaster Risk Reduction 2025',
+  },
+};
+
+const brandArgType = {
+  brand: {
+    control: 'select',
+    options: Object.keys(brandLogos),
+    description: 'Sub-brand logo to display',
+  },
+};
+
+export const WithLogo = {
+  render: ({ brand, ...args }) => <MegaMenu {...args} {...brandLogos[brand]} />,
+  args: {
+    delay: 5000,
+    sections: sections,
+    brand: 'PreventionWeb',
+  },
+  argTypes: brandArgType,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Logo sits inline with the nav items. Pick a different sub-brand from the **brand** control to see how each logo fits.',
+      },
+    },
+  },
+};
+
+// Sections with icons on top-level items
+const sectionsWithIcons = sections.map((section, i) => ({
+  ...section,
+  icon: [
+    'mg-icon mg-icon-info-circle',
+    'mg-icon mg-icon-chart-bar',
+    'mg-icon mg-icon-globe',
+  ][i % 3],
+}));
+
+export const WithIcons = {
+  render: args => <MegaMenu {...args} />,
+  args: {
+    delay: 5000,
+    sections: sectionsWithIcons,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Top-level menu items can show an optional icon before the label via the `icon` property on each section. Icons are decorative (`aria-hidden`) and only appear on the desktop topbar.',
+      },
+    },
+  },
+};
+
+// Simple nav — no sidebar/hamburger, links clickable on all screen sizes.
+// Uses the mg-mega-wrapper--simple modifier class on the root element.
+const simpleNavLinks = [
+  { title: 'Home', url: '/' },
+  { title: 'About', url: '/about' },
+  { title: 'News', url: '/news' },
+  { title: 'Events', url: '/events' },
+  { title: 'Contact', url: '/contact' },
+];
+
+export const SimpleNav = {
+  render: () => (
+    <nav className="mg-mega-wrapper" aria-label="Main Navigation">
+      <ul
+        className="mg-mega-topbar | mg-container-full-width"
+        role="menubar"
+        aria-label="Main navigation menu"
+      >
+        {simpleNavLinks.map(link => (
+          <li key={link.url} className="mg-mega-topbar__item" role="none">
+            <a
+              href={link.url}
+              role="menuitem"
+              className="mg-mega-topbar__item-link"
+            >
+              {link.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A plain HTML nav bar using Mangrove classes without the React mega menu component or mobile sidebar. Because `mg-mega-wrapper--js-active` is absent, links remain clickable on all screen sizes — the same graceful fallback that applies when JS fails to hydrate.',
+      },
+    },
+  },
+};

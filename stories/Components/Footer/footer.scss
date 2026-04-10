@@ -1,6 +1,4 @@
-.mg-footer,
-.page-node-type-landing_page_gutenberg .field--name-body > * {
-  // reset the spacer for the landing page body of the footer
+.mg-footer {
   --mg-gutenberg-spacer: 0;
 }
 
@@ -23,16 +21,56 @@
 .mg-footer--about-footer--links {
   font-size: $mg-font-size-500;
   display: inline-flex;
-  gap: 0.75rem 2rem;
+  flex-wrap: wrap;
+  gap: mg-rem(7.5) mg-rem(20);
 }
 
 .mg-footer--about-footer--description {
   font-size: $mg-font-size-400;
 }
 
+// Utility footer bar — secondary navigation below the main footer
+// Used by sub-branded sites (e.g. DELTA) for product-level links
+.mg-footer-bar {
+  border-top: 1px solid $mg-color-neutral-200;
+  padding: $mg-spacing-150 0;
+  font-size: $mg-font-size-300;
+  color: $mg-color-neutral-600;
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: $mg-spacing-100;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $mg-spacing-50 $mg-spacing-200;
+
+    a {
+      color: $mg-color-interactive;
+    }
+  }
+
+  &__text {
+    max-width: 600px;
+    margin: 0;
+  }
+
+  &__divider {
+    border: 0;
+    border-top: 1px solid $mg-color-neutral-200;
+    margin: $mg-spacing-100 0;
+  }
+}
+
 .mg-footer--social-links {
   display: inline-flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: mg-rem(15);
   padding-left: 0;
 
   li {
@@ -40,7 +78,35 @@
   }
 
   li a {
-    color: $mg-color-white;
     text-underline-offset: 5px;
+  }
+}
+
+// Footer buttons: wrap into rows instead of overflowing
+.mg-footer .mg-button + .mg-button {
+  margin-inline-start: 0;
+}
+
+// Reset grid spans below tablet so footer columns stack
+@media (max-width: $mg-breakpoint-tablet) {
+  .mg-footer {
+    .mg-grid__col--span-2,
+    .mg-grid__col--span-3 {
+      grid-column-end: auto;
+    }
+  }
+
+  // Constrain footer images (Sendai/SDG logos)
+  .mg-footer img {
+    max-width: min(300px, 76vw);
+  }
+}
+
+// Link-spacer mobile stacking (syndicated widget content)
+@media (max-width: $mg-breakpoint-mobile) {
+  .mg-footer .link-spacer {
+    display: grid;
+    margin-right: 0;
+    white-space: normal;
   }
 }

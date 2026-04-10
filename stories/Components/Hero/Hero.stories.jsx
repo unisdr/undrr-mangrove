@@ -36,22 +36,6 @@ const getCaptionForLocale = locale => {
         },
       ],
     },
-    burmese: {
-      contentdata: [
-        {
-          title: 'အကြောင်းအရာ TAG',
-          summaryText: 'ပို့စ်ခေါင်းစဉ်ကဒီမှာပါ၊ အဲဒါကစာကြောင်းနှစ်ကြောင်းပါ',
-          detail: 'ပိုပြီးဖတ်ပါ',
-          label: 'Label in medium size',
-          primary_button: 'Primary action',
-          secondary_button: 'Secondary action',
-          link: '/#',
-          imgalt: 'A person looks on',
-          imgback:
-            'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
-        },
-      ],
-    },
     japanese: {
       contentdata: [
         {

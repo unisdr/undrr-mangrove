@@ -1,5 +1,7 @@
 import { Authorimg } from './AuthorImages';
-import user from '../../../assets/images/author.png';
+
+const user =
+  'https://www.undrr.org/sites/default/files/styles/por/public/2024-05/Kamal-Kishore_UNDRR-SRSG-C-A.Tardy_min.jpg';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -9,9 +11,6 @@ const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = {};
       return arabicText;
-    case 'burmese':
-      const burmeseText = {};
-      return burmeseText;
     case 'japanese':
       const japaneseText = {};
       return japaneseText;
@@ -50,7 +49,13 @@ export default {
 export const DefaultAuthorImage = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
-    return <Authorimg image={user} alt="Headshot of XYZ" {...args}></Authorimg>;
+    return (
+      <Authorimg
+        image={user}
+        alt="Kamal Kishore, UNDRR SRSG"
+        {...args}
+      ></Authorimg>
+    );
   },
 
   name: 'Author image',

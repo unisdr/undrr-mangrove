@@ -1,4 +1,7 @@
+// TODO: Layered hydration (.fromElement.js + .hydrate.js) not yet adopted for
+// this component. See docs/HYDRATION.md for the pattern.
 import React from 'react';
+import PropTypes from 'prop-types';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import 'leaflet/dist/leaflet.css';
@@ -30,6 +33,16 @@ function RemoveAttributionPrefix() {
   return null;
 }
 
+/**
+ * Renders a Leaflet map with clustered markers sized proportionally to their values.
+ *
+ * @param {Object} props
+ * @param {Array<{label: string, value: number, coords: number[], continent: string, country_id: string}>} props.data Marker data with coordinates and continent grouping
+ * @param {number[]} [props.center]  Map center as [latitude, longitude]
+ * @param {number} [props.zoom]      Initial zoom level
+ * @param {number} [props.maxZoom]   Maximum allowed zoom level
+ * @param {number} [props.minZoom]   Minimum allowed zoom level
+ */
 export default function MapComponent({
   data,
   center = [20, 0],
@@ -170,3 +183,24 @@ export default function MapComponent({
     </MapContainer>
   );
 }
+
+MapComponent.propTypes = {
+  /** Array of marker data objects with coordinates and continent grouping */
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.number,
+      coords: PropTypes.arrayOf(PropTypes.number),
+      continent: PropTypes.string,
+      country_id: PropTypes.string,
+    })
+  ).isRequired,
+  /** Map center as [latitude, longitude] */
+  center: PropTypes.arrayOf(PropTypes.number),
+  /** Initial zoom level */
+  zoom: PropTypes.number,
+  /** Maximum allowed zoom level */
+  maxZoom: PropTypes.number,
+  /** Minimum allowed zoom level */
+  minZoom: PropTypes.number,
+};

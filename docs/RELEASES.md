@@ -1,5 +1,7 @@
 # Release process guide
 
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-release-process--docs).
+
 This guide explains the release process for the UNDRR Mangrove component library.
 
 ## Overview
@@ -19,6 +21,17 @@ We follow Conventional Commits for consistent, readable commit history, but we d
 yarn test
 yarn lint
 ```
+
+Review any components whose markup changed since the last release and update their HTML examples in `scripts/ai-manifest/component-data.js`. If utility classes were added or removed, update `scripts/ai-manifest/css-utilities.js`. These curated files feed the AI component manifest and can drift from reality between releases.
+
+You can check for drift by running a full build and then validating the manifest:
+
+```bash
+yarn build
+yarn validate-manifest
+```
+
+The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
 ### 2. Update the version
 
@@ -76,10 +89,9 @@ If component JS or CSS changed:
 
 ```bash
 yarn build
-yarn watch --copy    # copies dist/components/*.js to undrr_common/js/mangrove-components/
 ```
 
-If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
+Copy built JS from `dist/components/` to `undrr_common/js/mangrove-components/` in the Drupal theme. If CSS changed, manually copy compiled CSS to each child theme's `css/mangrove/mangrove.css`.
 
 ## Manual npm publish (fallback)
 
@@ -93,7 +105,7 @@ If automated publishing fails, you can trigger it manually:
 
 Mangrove tracks changes at two levels:
 
-- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-component-contribution-guide--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
+- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
 - **Project releases** (GitHub Releases): Track library-wide releases. Created during the release process above.
 
 Component changelogs and project releases serve different audiences — component changelogs help developers working with a specific component, while project releases help consumers of the npm package understand what changed between versions.
@@ -141,9 +153,9 @@ https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/static/mangrove/1.3.1/css/style.css
-https://assets.undrr.org/static/mangrove/1.3.1/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.3.1/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.5.0/css/style.css
+https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.5.0/js/tabs.js
 ```
 
 ## CI/CD configuration

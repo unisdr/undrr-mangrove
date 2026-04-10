@@ -1,27 +1,3 @@
-.trusted-partnerships {
-  &__container {
-    padding: 3rem 1.5rem 6rem;
-  }
-
-  &--header {
-    p {
-      margin-top: $mg-spacing-200;
-
-      @include devicebreak(medium) {
-        margin-top: $mg-spacing-400;
-      }
-    }
-
-    .button-arrow {
-      margin-top: $mg-spacing-200;
-
-      @include devicebreak(small) {
-        display: inline-flex;
-      }
-
-      @include devicebreak(medium) {
-        margin-top: $mg-spacing-300;
-      }
-    }
-  }
-}
+// textcta.scss — DEPRECATED, use text-cta.scss
+@import "./text-cta";
+@warn "textcta.scss is deprecated. Import text-cta.scss instead.";

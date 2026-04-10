@@ -10,9 +10,6 @@ export const getCaptionForLocale = locale => {
     case 'arabic':
       const arabicText = { text: 'صفحة', text2: 'من' };
       return arabicText;
-    case 'burmese':
-      const burmeseText = { text: 'စာမျက်နှာ', text2: '၏' };
-      return burmeseText;
     case 'japanese':
       const japaneseText = { text: 'ページ', text2: 'の' };
       return japaneseText;
@@ -23,9 +20,11 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={PaginationStories} />
 
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
 # Pagination
 
-> **Deprecated (February 2026).** Use the [Pager](?path=/docs/components-pager--docs) component instead. This component will be removed in a future release.
+> **Deprecated (February 2026).** Use the [Pager](?path=/docs/components-pager--docs) component instead. This component will be removed by end of 2026.
 
 The Pagination component divides the content of the website into different pages.
 
@@ -61,4 +60,5 @@ By clicking on the forward or backward arrow, the pages are flipped forwards or 
 
 ## Changelog
 
+- **Deprecated** — 2026-02: Deprecated in favor of the [Pager](?path=/docs/components-pager--docs) component. Removal planned by end of 2026. Removed from CSS bundle and webpack build.
 - **1.0** — 2022-12-12: Released component

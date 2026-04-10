@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const variant_options = {
   default: '',
@@ -24,9 +25,9 @@ export const TableTag = ({
   text,
   tdtext,
   details,
-  variant,
-  size,
-  responsive,
+  variant = 'default',
+  size = 'large',
+  responsive = 'auto',
   ...args
 }) => {
   let table_type = variant_options[`${variant}`];
@@ -52,9 +53,9 @@ export const TableTag = ({
     >
       <thead>
         <tr>
-          <th>{text}</th>
-          <th>{text}</th>
-          <th>{text}</th>
+          <th scope="col">{text}</th>
+          <th scope="col">{text}</th>
+          <th scope="col">{text}</th>
         </tr>
       </thead>
       <tbody>
@@ -83,8 +84,18 @@ export const TableTag = ({
   );
 };
 
-TableTag.defaultProps = {
-  variant: 'default',
-  size: 'large',
-  responsive: 'auto',
+/** Styled HTML table with variant, size, and responsive behavior options. */
+TableTag.propTypes = {
+  /** Header cell text. */
+  text: PropTypes.string,
+  /** Body cell text. */
+  tdtext: PropTypes.string,
+  /** Detail text for the last column. */
+  details: PropTypes.string,
+  /** Visual variant. */
+  variant: PropTypes.oneOf(['default', 'striped', 'border']),
+  /** Table size. */
+  size: PropTypes.oneOf(['large', 'small']),
+  /** Responsive behavior: auto (default), stacked, or scroll. */
+  responsive: PropTypes.oneOf(['auto', 'stacked', 'scroll']),
 };

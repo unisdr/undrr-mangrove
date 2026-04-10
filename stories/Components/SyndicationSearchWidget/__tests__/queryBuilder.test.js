@@ -4,7 +4,7 @@
  */
 
 import { buildQuery, getAggregationBuckets } from '../utils/queryBuilder';
-import { DEFAULT_CONFIG, SCORING_CONFIG } from '../utils/constants';
+import { DEFAULT_CONFIG, SCORING_CONFIG, buildTierRanges, buildTierFilter } from '../utils/constants';
 
 describe('queryBuilder', () => {
   const defaultState = {
@@ -435,6 +435,150 @@ describe('queryBuilder', () => {
     });
   });
 
+  describe('requireImage filter', () => {
+    it('adds term filter for has_image when requireImage is true', () => {
+      const config = { ...DEFAULT_CONFIG, requireImage: true };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      expect(filters).toContainEqual({ term: { has_image: 'true' } });
+    });
+
+    it('does not add image filter when requireImage is false', () => {
+      const config = { ...DEFAULT_CONFIG, requireImage: false };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      const hasImageFilter = filters.find(f => f.term?.has_image);
+      expect(hasImageFilter).toBeUndefined();
+    });
+  });
+
+  describe('tier filters', () => {
+    it('adds interestingness range filter to base query', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        interestingnessTiers: ['promoted', 'announced'],
+      };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      const tierFilter = filters.find(
+        f => f.bool?.should?.some(s => s.range?.field_meta_interestingness)
+      );
+      expect(tierFilter).toBeDefined();
+      expect(tierFilter.bool.should).toHaveLength(2);
+    });
+
+    it('adds longevity range filter to base query', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        longevityTiers: ['today', 'days'],
+      };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      const tierFilter = filters.find(
+        f => f.bool?.should?.some(s => s.range?.field_meta_longevity)
+      );
+      expect(tierFilter).toBeDefined();
+      expect(tierFilter.bool.should).toHaveLength(2);
+    });
+
+    it('adds single range filter (no bool wrapper) for one tier', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        interestingnessTiers: ['promoted'],
+      };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      const tierFilter = filters.find(f => f.range?.field_meta_interestingness);
+      expect(tierFilter).toBeDefined();
+      expect(tierFilter.range.field_meta_interestingness).toHaveProperty('gte');
+      expect(tierFilter.range.field_meta_interestingness).toHaveProperty('lte');
+    });
+
+    it('does not add tier filters when arrays are empty', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        interestingnessTiers: [],
+        longevityTiers: [],
+      };
+      const result = buildQuery(defaultState, config);
+      const filters = result.query.function_score.query.bool.filter;
+
+      const hasTierFilter = filters.some(
+        f =>
+          f.range?.field_meta_interestingness ||
+          f.range?.field_meta_longevity ||
+          f.bool?.should?.some(s => s.range?.field_meta_interestingness || s.range?.field_meta_longevity)
+      );
+      expect(hasTierFilter).toBe(false);
+    });
+  });
+
+  describe('aggregation skip (showFacets: false)', () => {
+    it('omits aggs when showFacets is false', () => {
+      const config = { ...DEFAULT_CONFIG, showFacets: false };
+      const result = buildQuery(defaultState, config);
+
+      expect(result.aggs).toBeUndefined();
+    });
+
+    it('includes aggs when showFacets is true', () => {
+      const config = { ...DEFAULT_CONFIG, showFacets: true };
+      const result = buildQuery(defaultState, config);
+
+      expect(result.aggs).toBeDefined();
+    });
+
+    it('omits post_filter when showFacets is false even with facet state', () => {
+      const config = { ...DEFAULT_CONFIG, showFacets: false };
+      const result = buildQuery(
+        { ...defaultState, facets: { type: ['news'] } },
+        config
+      );
+
+      expect(result.post_filter).toBeUndefined();
+    });
+  });
+
+  describe('highlight skip in card mode', () => {
+    it('omits highlight in card mode when summary is hidden', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        displayMode: 'card',
+        visibleTeaserFields: { summary: false },
+      };
+      const result = buildQuery(defaultState, config);
+
+      expect(result.highlight).toBeUndefined();
+    });
+
+    it('includes highlight in card mode when summary is visible', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        displayMode: 'card',
+        visibleTeaserFields: { summary: true },
+      };
+      const result = buildQuery(defaultState, config);
+
+      expect(result.highlight).toBeDefined();
+    });
+
+    it('includes highlight in list mode even when summary is hidden', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        displayMode: 'list',
+        visibleTeaserFields: { summary: false },
+      };
+      const result = buildQuery(defaultState, config);
+
+      expect(result.highlight).toBeDefined();
+    });
+  });
+
   describe('highlight configuration', () => {
     it('includes highlight configuration', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
@@ -544,5 +688,93 @@ describe('getAggregationBuckets', () => {
     };
 
     expect(getAggregationBuckets(aggs, 'type')).toEqual([]);
+  });
+});
+
+describe('buildTierRanges', () => {
+  it('derives min/max ranges from cumulative tier config', () => {
+    const tiers = {
+      low: { max: 10, weight: 0.1 },
+      mid: { max: 50, weight: 1.0 },
+      high: { max: 100, weight: 3.0 },
+    };
+    const ranges = buildTierRanges(tiers);
+
+    expect(ranges.low).toEqual({ min: 0, max: 10 });
+    expect(ranges.mid).toEqual({ min: 11, max: 50 });
+    expect(ranges.high).toEqual({ min: 51, max: 100 });
+  });
+
+  it('handles SCORING_CONFIG.interestingness correctly', () => {
+    const ranges = buildTierRanges(SCORING_CONFIG.interestingness);
+
+    expect(ranges.demoted).toEqual({ min: 0, max: 10 });
+    expect(ranges.deferred).toEqual({ min: 11, max: 30 });
+    expect(ranges.average).toEqual({ min: 31, max: 50 });
+    expect(ranges.promoted).toEqual({ min: 51, max: 75 });
+    expect(ranges.announced).toEqual({ min: 76, max: 100 });
+  });
+
+  it('sorts by max for robustness regardless of input order', () => {
+    // Intentionally out of order
+    const tiers = {
+      high: { max: 100, weight: 3.0 },
+      low: { max: 10, weight: 0.1 },
+      mid: { max: 50, weight: 1.0 },
+    };
+    const ranges = buildTierRanges(tiers);
+
+    expect(ranges.low).toEqual({ min: 0, max: 10 });
+    expect(ranges.mid).toEqual({ min: 11, max: 50 });
+    expect(ranges.high).toEqual({ min: 51, max: 100 });
+  });
+});
+
+describe('buildTierFilter', () => {
+  const ranges = {
+    low: { min: 0, max: 10 },
+    mid: { min: 11, max: 50 },
+    high: { min: 51, max: 100 },
+  };
+
+  it('returns null for empty array', () => {
+    expect(buildTierFilter('field', [], ranges)).toBeNull();
+  });
+
+  it('returns null for null/undefined input', () => {
+    expect(buildTierFilter('field', null, ranges)).toBeNull();
+    expect(buildTierFilter('field', undefined, ranges)).toBeNull();
+  });
+
+  it('returns null for non-array truthy input', () => {
+    expect(buildTierFilter('field', 'promoted', ranges)).toBeNull();
+    expect(buildTierFilter('field', true, ranges)).toBeNull();
+  });
+
+  it('returns single range query for one tier', () => {
+    const result = buildTierFilter('score', ['mid'], ranges);
+    expect(result).toEqual({ range: { score: { gte: 11, lte: 50 } } });
+  });
+
+  it('returns bool.should of range queries for multiple tiers', () => {
+    const result = buildTierFilter('score', ['mid', 'high'], ranges);
+    expect(result).toEqual({
+      bool: {
+        should: [
+          { range: { score: { gte: 11, lte: 50 } } },
+          { range: { score: { gte: 51, lte: 100 } } },
+        ],
+        minimum_should_match: 1,
+      },
+    });
+  });
+
+  it('ignores unknown tier names', () => {
+    const result = buildTierFilter('score', ['mid', 'unknown'], ranges);
+    expect(result).toEqual({ range: { score: { gte: 11, lte: 50 } } });
+  });
+
+  it('returns null when all tier names are unknown', () => {
+    expect(buildTierFilter('score', ['foo', 'bar'], ranges)).toBeNull();
   });
 });

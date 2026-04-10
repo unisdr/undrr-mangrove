@@ -20,20 +20,6 @@ const getCaptionForLocale = locale => {
           { label: 'تغير المناخ', value: 'climate' },
         ],
       };
-    case 'burmese':
-      return {
-        title: 'ပြဿနာတစ်ခုရှိသည်',
-        emailError: 'မှန်ကန်သောအီးမေးလ်လိပ်စာထည့်ပါ',
-        nameError: 'သင့်အမည်အပြည့်အစုံထည့်ပါ',
-        interestsError: 'အနည်းဆုံးစိတ်ဝင်စားမှုတစ်ခုကိုရွေးချယ်ပါ',
-        emailLabel: 'အီးမေးလ်',
-        nameLabel: 'အမည်အပြည့်အစုံ',
-        interestsLegend: 'သင်၏စိတ်ဝင်စားမှုများကိုရွေးချယ်ပါ',
-        checkboxes: [
-          { label: 'ဘေးအန္တရာယ်လျှော့ချရေး', value: 'drr' },
-          { label: 'ရာသီဥတုပြောင်းလဲမှု', value: 'climate' },
-        ],
-      };
     case 'japanese':
       return {
         title: '問題があります',

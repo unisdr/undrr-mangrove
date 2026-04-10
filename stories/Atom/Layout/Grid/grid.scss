@@ -5,7 +5,7 @@ g-grid {
 
 .mg-grid > * {
   flex: 1;
-  margin: $mg-spacing-0 $mg-spacing-0 1rem 1.2292%;
+  margin: $mg-spacing-0 $mg-spacing-0 $mg-spacing-100 1.2292%;
 }
 
 .mg-grid > *:first-child {

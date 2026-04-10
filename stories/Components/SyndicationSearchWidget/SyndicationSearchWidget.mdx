@@ -3,25 +3,27 @@ import * as SyndicationSearchWidgetStories from './SyndicationSearchWidget.stori
 
 <Meta of={SyndicationSearchWidgetStories} />
 
-# UNDRR Syndication Search Widget
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
-The **UNDRR Syndication Search Widget** is a full-featured search interface tightly coupled with the UNDRR web platform. It integrates with Elasticsearch via the UNDRR `/search-endpoint` proxy and is designed specifically to query content from UNDRR domains (undrr.org, preventionweb.net, and related sites).
+# UNDRR syndication search widget
 
-Built with React 19 concurrent rendering (`useDeferredValue`, `useTransition`).
+The **UNDRR syndication search widget** lets users search and filter content across UNDRR domains — undrr.org, preventionweb.net, and related sites. It provides keyword search, faceted filtering, and multiple display modes (list, card, or book card) in a single embeddable component.
 
-> **Platform Dependency:** This component requires access to the UNDRR Elasticsearch backend via `/search-endpoint`. It includes hardcoded domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
+> **Platform dependency:** This component requires access to the UNDRR search backend via `/search-endpoint`. It includes domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
 
 > **Future:** A standalone, configurable search component without platform dependencies may be developed separately for broader use cases.
 
 ## Features
 
-- **Responsive input**: Uses `useDeferredValue` to keep the input responsive while searching
-- **Non-blocking updates**: Uses `useTransition` for smooth result updates
-- **Active filters**: Displays removable chips for selected filters
-- **Accessibility**: Full ARIA support, keyboard navigation, screen reader announcements
-- **Theming**: Uses Mangrove design tokens for consistent styling
-- **Mobile-first**: Left-slide filter drawer on mobile, inline sidebar on desktop
-- **Zero external dependencies**: Custom select dropdowns with Chosen-like functionality (searchable, multi-select) without requiring Chosen.js or any other library
+- Keyword search with responsive input — results update as you type
+- Non-blocking result updates keep the page interactive while results load
+- Removable filter chips for active filters
+- Full ARIA support, keyboard navigation, screen reader announcements
+- Styled with Mangrove design tokens
+- Left-slide filter drawer on mobile, inline sidebar on desktop
+- Custom select dropdowns (searchable, multi-select) with no external dependencies like Chosen.js
+
+> **Implementation note (for contributors):** The non-blocking search experience is powered by React 19's concurrent rendering features: `useDeferredValue` keeps the search input responsive while results load in the background; `useTransition` marks filter changes as non-urgent to prevent UI blocking.
 
 ## Default
 
@@ -213,18 +215,27 @@ Override `searchEndpoint` to point at a different Elasticsearch proxy (DDEV, sta
 
 <Canvas of={SyndicationSearchWidgetStories.CustomEndpoint} meta={SyndicationSearchWidgetStories} />
 
+## Syndicated cards
+
+A hardwired topic query rendered as a content block with no search chrome. Uses `defaultQuery` to seed a topic, `requireImage` to ensure every card has a visual, and `visibleTeaserFields` to strip the content type badge and teaser text for a clean image + title + date card. Adjust `resultsPerPage` and `gridColumns` for different card counts.
+
+<Canvas of={SyndicationSearchWidgetStories.SyndicatedCards} meta={SyndicationSearchWidgetStories} />
+
 ## Query syntax
 
-Reference for Elasticsearch query_string syntax. Use this story to test search queries.
+Use this story to test search queries and explore the supported syntax, which includes:
 
-<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
-
-See the story's Docs tab for a comprehensive syntax reference including:
 - Basic queries and phrase matching
 - Wildcards and fuzzy search
 - Boolean operators (AND, OR, NOT)
 - Field-specific searches
 - Date ranges and boosting
+
+<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
+
+See the story's Docs tab for a comprehensive syntax reference.
+
+> **Implementation note (for contributors):** The search input uses Elasticsearch `query_string` syntax, forwarded directly to the `/search-endpoint` proxy.
 
 ## Static mockup
 
@@ -235,7 +246,7 @@ A static HTML mockup for CSS testing without API calls.
 ## Usage
 
 ```jsx
-import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget';
+import { SyndicationSearchWidget } from '@undrr/undrr-mangrove';
 
 <SyndicationSearchWidget
   config={{
@@ -272,7 +283,7 @@ The component is loaded automatically on pages containing a container with `data
 |------|------|---------|-------------|
 | `searchEndpoint` | string | `/search-endpoint` | API endpoint for Elasticsearch queries |
 | `resultsPerPage` | number | 50 | Number of results to display per page |
-| `debounceDelay` | number | 300 | Milliseconds to wait before executing search |
+| `debounceDelay` | number | 500 | Milliseconds to wait before executing search |
 | `minSearchLength` | number | 3 | Minimum characters required to trigger search |
 | `defaultQuery` | string | `''` | Initial search query |
 | `defaultSort` | string | `'relevance'` | Initial sort order (`relevance`, `newest`, `oldest`) |
@@ -291,15 +302,81 @@ The component is loaded automatically on pages containing a container with `data
 | `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
 | `gridColumns` | number | `null` | Grid columns for card modes (2-6). `null` = use `resultsPerPage` |
 | `visibleTeaserFields` | object | `null` | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
+| `requireImage` | boolean | `false` | Only return results that have an image (`has_image:true` ES filter) |
+| `interestingnessTiers` | array | `[]` | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`) |
+| `longevityTiers` | array | `[]` | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`) |
+
+## Accessibility
+
+- All interactive elements have proper ARIA labels
+- Keyboard navigation with Tab, Enter, and Escape
+- Screen reader announcements for result counts and filter changes
+- Focus management on filter removal
+
+## Server-rendered / CDN usage
+
+SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML — all attributes are optional:
+
+```html
+<div data-mg-search-widget
+  data-search-endpoint="/search-endpoint"
+  data-results-per-page="50"
+  data-default-query=""
+  data-default-sort="relevance"
+  data-display-mode="list"
+  data-show-facets="true"
+  data-show-search-box="true"
+  data-show-results-count="true"
+  data-show-active-filters="true"
+  data-show-pager="true"
+  data-enable-hash-sync="true"
+  data-default-filters='[{"key":"_language","value":"en"}]'>
+</div>
+```
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-search-endpoint` | — | Elasticsearch proxy URL |
+| `data-results-per-page` | — | Number of results per page |
+| `data-debounce-delay` | — | Milliseconds before executing search |
+| `data-min-search-length` | — | Minimum characters to trigger search |
+| `data-default-query` | — | Initial search query |
+| `data-default-sort` | — | Initial sort order |
+| `data-display-mode` | — | `'list'`, `'card'`, or `'card-book'` |
+| `data-grid-columns` | — | Grid columns for card modes (2-6) |
+| `data-query-append` | — | Query string to append to all searches |
+| `data-show-search-box` | — | Show search input |
+| `data-show-results-count` | — | Show result count |
+| `data-show-facets` | — | Show facets sidebar |
+| `data-show-active-filters` | — | Show active filter chips |
+| `data-show-pager` | — | Show pagination |
+| `data-show-search-metrics` | — | Show debug metrics |
+| `data-show-search-timer` | — | Show search execution time |
+| `data-enable-hash-sync` | — | Sync search state to URL hash |
+| `data-default-filters` | — | JSON array of `{key, value}` filter objects |
+| `data-allowed-types` | — | JSON object restricting content type options |
+| `data-require-image` | — | Only return results with images (`true`/`false`) |
+| `data-interestingness-tiers` | — | JSON array of tier names (e.g., `'["promoted","announced"]'`) |
+| `data-longevity-tiers` | — | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
+| `data-custom-filters` | — | JSON array of custom filter strings (e.g., `'["type:news"]'`) |
+| `data-custom-facets` | — | JSON array of custom facet objects |
+| `data-visible-teaser-fields` | — | JSON array of teaser field names to show |
+
+All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
+
+```js
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import SyndicationSearchWidget, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/SyndicationSearchWidget.js";
+createHydrator({ selector: "[data-mg-search-widget]", component: SyndicationSearchWidget, fromElement });
+```
+
+See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+
+> **Integration note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container — Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
 
 ## Architecture
 
-The component uses React 19's concurrent features:
-
-- **`useDeferredValue`**: Keeps the search input responsive while results load in the background
-- **`useTransition`**: Marks filter changes as non-urgent, preventing UI blocking
-- **`Suspense`**: Provides loading skeletons during data fetching
-- **Context + useReducer**: Manages search state without external dependencies
+> **Implementation note (for contributors):** Uses React 19 concurrent features: `useDeferredValue` keeps input responsive while results load; `useTransition` marks filter changes as non-urgent; `Suspense` provides loading skeletons; Context + `useReducer` manages search state without external dependencies.
 
 ### Component structure
 
@@ -338,22 +415,20 @@ This means the component works in any environment (Drupal, Storybook, standalone
 
 On screens ≤800px, the sidebar is replaced with a left-slide drawer:
 
-- **Amazon-style slide-in** from the left edge
-- **Click backdrop to close** (right side)
-- **Sticky header and footer** with "View results" button
-- **Focus trapping** for accessibility
+- Amazon-style slide-in from the left edge
+- Click backdrop to close (right side)
+- Sticky header and footer with "View results" button
+- Focus trapping for accessibility
 
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
-## Accessibility
-
-- All interactive elements have proper ARIA labels
-- Keyboard navigation with Tab, Enter, and Escape
-- Screen reader announcements for result counts and filter changes
-- Focus management on filter removal
-
 ## Changelog
 
+- **1.2.4** — 2026-04-09 ([web-backlog#919](https://github.com/unisdr/undrr-mangrove/issues/919)): `fromElement` now parses `data-custom-filters`, `data-custom-facets`, and `data-visible-teaser-fields` as JSON, consistent with `defaultFilters` and `allowedTypes`
+- **1.2.3** — 2026-03-19 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
+- **1.2.2** — 2026-03-19: Fixed search input UI bounce — `useDeferredValue` stale flag was triggering heavy visual feedback (progress bar, button text swap, pulsing overlay, opacity drop) on every keystroke; now only `isLoading` and `isPending` drive visual indicators; increased default `debounceDelay` from 300ms to 500ms to reduce wasted API calls while staying under the 1-second perceived delay threshold; fixed `?text=` and `?query=` URL parameters being ignored due to race condition where `INITIALIZE` action overwrote the query set by `useHashSync`
+- **1.2.1** — 2026-03-13: ([web-backlog#2660](https://gitlab.com/undrr/web-backlog/-/issues/2660)) Native `requireImage`, `interestingnessTiers`, `longevityTiers` config options (moved from Drupal wrapper); `TEASER_FIELDS` constant and `allTeaserFieldsVisible()` as single source of truth for teaser field visibility; ES query optimization (skip aggs/highlights/post_filter for syndication embeds); card-aware loading skeletons; SyndicatedCards story pattern
+- **1.2.0** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.1.0** — 2026-02-26:
   - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results — search results now include taxonomy terms (Hazard, Country, Theme) alongside content nodes; `vid:` prefix in type filter for vocabulary filtering; configurable `searchEndpoint` with CustomEndpoint story documenting override patterns
   - ([web-backlog#2636](https://gitlab.com/undrr/web-backlog/-/issues/2636)) Card display modes (`displayMode`: list/card/card-book) with `gridColumns` control; teaser field visibility (`visibleTeaserFields`) with CSS-based hiding for 7 toggleable fields; Drupal image style rewriting for card aspect ratios
