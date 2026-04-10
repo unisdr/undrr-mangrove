@@ -1,0 +1,130 @@
+// =============================================================================
+// FLEXBOX UTILITIES
+// =============================================================================
+// Flexbox container and item utilities for page layouts.
+// Naming convention: .mg-u-{property}--{value}
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// FLEX DIRECTION
+// -----------------------------------------------------------------------------
+
+.mg-u-flex-direction--row {
+  flex-direction: row;
+}
+
+.mg-u-flex-direction--column {
+  flex-direction: column;
+}
+
+// Responsive: column on mobile, row on tablet+
+.mg-u-flex-direction--row--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    flex-direction: row;
+  }
+}
+
+.mg-u-flex-direction--column--md {
+  @media (width >= $mg-breakpoint-tablet) {
+    flex-direction: column;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// FLEX WRAP
+// -----------------------------------------------------------------------------
+
+.mg-u-flex-wrap--wrap {
+  flex-wrap: wrap;
+}
+
+.mg-u-flex-wrap--nowrap {
+  flex-wrap: nowrap;
+}
+
+// -----------------------------------------------------------------------------
+// JUSTIFY CONTENT
+// -----------------------------------------------------------------------------
+
+.mg-u-justify-content--start {
+  justify-content: flex-start;
+}
+
+.mg-u-justify-content--end {
+  justify-content: flex-end;
+}
+
+.mg-u-justify-content--center {
+  justify-content: center;
+}
+
+.mg-u-justify-content--between {
+  justify-content: space-between;
+}
+
+// -----------------------------------------------------------------------------
+// ALIGN ITEMS
+// -----------------------------------------------------------------------------
+
+.mg-u-align-items--start {
+  align-items: flex-start;
+}
+
+.mg-u-align-items--end {
+  align-items: flex-end;
+}
+
+.mg-u-align-items--center {
+  align-items: center;
+}
+
+.mg-u-align-items--stretch {
+  align-items: stretch;
+}
+
+// -----------------------------------------------------------------------------
+// GAP
+// -----------------------------------------------------------------------------
+
+.mg-u-gap-0 {
+  gap: $mg-spacing-0;
+}
+
+.mg-u-gap-50 {
+  gap: $mg-spacing-50;
+}
+
+.mg-u-gap-100 {
+  gap: $mg-spacing-100;
+}
+
+.mg-u-gap-200 {
+  gap: $mg-spacing-200;
+}
+
+.mg-u-gap-300 {
+  gap: $mg-spacing-300;
+}
+
+.mg-u-gap-400 {
+  gap: $mg-spacing-400;
+}
+
+// -----------------------------------------------------------------------------
+// FLEX ITEM UTILITIES
+// -----------------------------------------------------------------------------
+
+// Fill available space equally
+.mg-u-flex--1 {
+  flex: 1 1 0%;
+}
+
+// Don't grow or shrink
+.mg-u-flex--none {
+  flex: none;
+}
+
+// Prevent item from shrinking
+.mg-u-flex-shrink--0 {
+  flex-shrink: 0;
+}
