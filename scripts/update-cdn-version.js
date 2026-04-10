@@ -59,6 +59,22 @@ const allowedExtensions = new Set([
 ]);
 
 /**
+ * Returns true if the file should be excluded from CDN version rewriting.
+ * Historical release notes (docs/RELEASE-X.Y.md for older versions) contain
+ * fixed CDN URLs that document a specific release and must not be updated.
+ */
+function isIgnoredFile(filePath) {
+  const rel = path.relative(rootDir, filePath).replace(/\\/g, '/');
+  const releaseNoteMatch = rel.match(/^docs\/RELEASE-(.+)\.md$/);
+  if (releaseNoteMatch) {
+    const fileVersion = releaseNoteMatch[1]; // e.g. "1.4"
+    const currentMajorMinor = version.split('.').slice(0, 2).join('.'); // e.g. "1.5"
+    return fileVersion !== currentMajorMinor;
+  }
+  return false;
+}
+
+/**
  * Recursively gather file paths under a directory.
  */
 function listFilesRecursively(startDir) {
@@ -109,6 +125,7 @@ let changedCount = 0;
 const changedFiles = [];
 
 for (const filePath of files) {
+  if (isIgnoredFile(filePath)) continue;
   let content;
   try {
     content = fs.readFileSync(filePath, 'utf8');

@@ -52,6 +52,17 @@ The failure mode is writing one document that tries to serve both equally — to
 - Follow with how to use it (example first, then props)
 - Place the “why” at the end, or in a collapsed details block
 
+### Callout labels
+
+Use consistent callout labels so readers can skim and know exactly what to skip or read:
+
+| Label | Audience | Use for |
+|-------|----------|---------|
+| `> **Note:**` | Consumers | Status, beta warnings, important gotchas |
+| `> **Tip:**` | Consumers | Best-practice suggestions, optional enhancements |
+| `> **Integration note:**` | Consumers | Integration-specific context for any consumer (CDN, Drupal, SSR) |
+| `> **Implementation note (for contributors):**` | Maintainers only | Internal rationale, architectural decisions, historical context |
+
 > “Too much information and no information accomplish the same goal.”
 > — Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 

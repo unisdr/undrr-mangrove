@@ -520,7 +520,7 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
         {coppied ? copiedLabel : visibleLink}
       </div>
       <div className="mg-share__stack-icon">
-        <span className="mg-icon mg-icon-clone" alt="Copy icon"></span>
+        <span className="mg-icon mg-icon-clone" aria-hidden="true"></span>
       </div>
     </button>
   );

@@ -36,7 +36,7 @@ The DELTA Resilience theme has no legacy variant.
 
 **Example:**
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.4.1/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.5.0/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -45,11 +45,13 @@ The DELTA Resilience theme has no legacy variant.
 |--------|------|---------|
 | Tabs | `/js/tabs.js` | Tab component interactivity |
 | Show More | `/js/show-more.js` | Expand/collapse content sections |
+| On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
+| Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 
 **Example:**
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.4.1/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.5.0/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -101,7 +103,7 @@ Then import the Mangrove component as an ES module:
 
   // Load component from CDN
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.4.1/components/MegaMenu.js'
+    'https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js'
   );
 
   // Unwrap ESM/CJS interop - bundle may be double-wrapped
@@ -135,6 +137,14 @@ Base URL: `https://assets.undrr.org/static/analytics/{version}/`
 
 See [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs) for configuration options.
 
+## Favicons
+
+Base URL: `https://assets.undrr.org/static/favicons/{brand}/v1/`
+
+Canonical favicon sets for all 10 UNDRR brands. Each brand directory contains `favicon.ico`, `apple-touch-icon.png`, `favicon-192.png`, and `favicon-512.png`.
+
+See [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) for the full brand list, recommended markup, and integration details.
+
 ## Logos
 
 Base URL: `https://assets.undrr.org/static/logos/`
@@ -158,7 +168,7 @@ Base URL: `https://assets.undrr.org/static/logos/`
 Pin to a specific version for stability:
 
 ```
-https://assets.undrr.org/static/mangrove/1.4.1/css/style.css
+https://assets.undrr.org/static/mangrove/1.5.0/css/style.css
 ```
 
 ### Latest (testing only)
@@ -193,7 +203,9 @@ https://assets.undrr.org/static/
 │       │   └── style-delta.css
 │       ├── js/
 │       │   ├── tabs.js
-│       │   └── show-more.js
+│       │   ├── show-more.js
+│       │   ├── on-this-page-nav.js
+│       │   └── table-of-contents.js
 │       └── components/
 │           ├── hydrate.js
 │           ├── ShareButtons.js
@@ -212,6 +224,13 @@ https://assets.undrr.org/static/
 │   └── {version}/
 │       ├── google_analytics_enhancements.js
 │       └── index.html
+├── favicons/
+│   └── {brand}/
+│       └── v1/
+│           ├── favicon.ico
+│           ├── apple-touch-icon.png
+│           ├── favicon-192.png
+│           └── favicon-512.png
 ├── logos/
 │   └── undrr/
 │       ├── undrr-logo-horizontal.svg
@@ -221,6 +240,7 @@ https://assets.undrr.org/static/
 
 ## See also
 
+- [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) — brand favicon sets for all UNDRR properties
 - [Vanilla HTML/CSS integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
 - [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs)
 - [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs)

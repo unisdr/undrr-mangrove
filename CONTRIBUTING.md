@@ -29,23 +29,7 @@ To keep copy consistent and high quality across UI, docs, and developer messages
 
 Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
 
-**Format** (single-issue entry):
-
-```
-- **version** — YYYY-MM-DD ([web-backlog#NNN](https://gitlab.com/undrr/web-backlog/-/issues/NNN)): Description of the change
-```
-
-**Format** (multi-issue entry):
-
-```
-- **version** — YYYY-MM-DD:
-  - ([web-backlog#NNN](url)) First change
-  - ([web-backlog#NNN](url)) Second change
-```
-
-**Rules**: Always cite the GitLab tracker issue. Newest entries first. Use sentence case. Summarize the user-facing change, not implementation details.
-
-See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full specification and examples.
+See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full format specification, issue link guidance, and examples.
   - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
 ## AI manifest for component discovery

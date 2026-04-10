@@ -102,7 +102,50 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 - **Error handling** displays fallback message if syndication fails
 - **Loading states** provide visual feedback during content loading
 
-## Implementation notes
+## Working example
+
+[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A complete vanilla HTML page template using the footer widget.
+
+## Utility footer bar
+
+> **Note:** This component is new and may change as DELTA and other sub-branded sites evolve.
+
+The `mg-footer-bar` is a CSS-only utility component that renders a secondary navigation bar below the main footer. It is used by sub-branded sites (e.g. DELTA Resilience) for product-level links, disclaimers, and legal links.
+
+```html
+<footer class="mg-footer-bar">
+  <div class="mg-container">
+    <div class="mg-footer-bar__row">
+      <div class="mg-footer-bar__links">
+        <strong>DELTA</strong>
+        <a href="/help">Help</a>
+        <a href="/report-bug">Report a bug</a>
+      </div>
+    </div>
+    <hr class="mg-footer-bar__divider" />
+    <div class="mg-footer-bar__row">
+      <p class="mg-footer-bar__text">
+        Descriptive text about the sub-brand.
+      </p>
+      <div class="mg-footer-bar__links">
+        <a href="/privacy">Privacy policy</a>
+        <a href="/terms">Terms and conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+```
+
+### BEM elements
+
+| Element | Description |
+|---------|-------------|
+| `mg-footer-bar__row` | Flex row with space-between alignment |
+| `mg-footer-bar__links` | Inline link group with gap spacing |
+| `mg-footer-bar__text` | Descriptive paragraph (max-width 600px) |
+| `mg-footer-bar__divider` | Horizontal rule separator |
+
+## Syndication loading
 
 ### JavaScript approach
 
@@ -177,49 +220,6 @@ When implementing in your site, consider this structure:
   }
 />
 ```
-
-## Working example
-
-[See on CodePen](https://codepen.io/khawkins98/pen/MYwbKwe) — A complete vanilla HTML page template using the footer widget.
-
-## Utility footer bar
-
-> **Note:** This component is new and may change as DELTA and other sub-branded sites evolve.
-
-The `mg-footer-bar` is a CSS-only utility component that renders a secondary navigation bar below the main footer. It is used by sub-branded sites (e.g. DELTA Resilience) for product-level links, disclaimers, and legal links.
-
-```html
-<footer class="mg-footer-bar">
-  <div class="mg-container">
-    <div class="mg-footer-bar__row">
-      <div class="mg-footer-bar__links">
-        <strong>DELTA</strong>
-        <a href="/help">Help</a>
-        <a href="/report-bug">Report a bug</a>
-      </div>
-    </div>
-    <hr class="mg-footer-bar__divider" />
-    <div class="mg-footer-bar__row">
-      <p class="mg-footer-bar__text">
-        Descriptive text about the sub-brand.
-      </p>
-      <div class="mg-footer-bar__links">
-        <a href="/privacy">Privacy policy</a>
-        <a href="/terms">Terms and conditions</a>
-      </div>
-    </div>
-  </div>
-</footer>
-```
-
-### BEM elements
-
-| Element | Description |
-|---------|-------------|
-| `mg-footer-bar__row` | Flex row with space-between alignment |
-| `mg-footer-bar__links` | Inline link group with gap spacing |
-| `mg-footer-bar__text` | Descriptive paragraph (max-width 600px) |
-| `mg-footer-bar__divider` | Horizontal rule separator |
 
 ## Changelog
 

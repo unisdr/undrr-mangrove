@@ -677,6 +677,206 @@ describe('OnThisPageNav', () => {
     });
   });
 
+  describe('tabs integration', () => {
+    it('clicks the tab trigger when heading is inside a hidden horizontal tab panel', () => {
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <article data-mg-js-tabs>
+            <ul class="mg-tabs__list">
+              <li class="mg-tabs__item">
+                <a class="mg-tabs__link"
+                   href="#mg-tabs__section-tab1"
+                   data-tabs__item="mg-tabs__section-tab1"
+                   id="mg-tabs__section-tab1--trigger">Tab 1</a>
+              </li>
+              <li class="mg-tabs-content">
+                <section class="mg-tabs__section" id="mg-tabs__section-tab1" hidden>
+                  <h2 id="inside-tab">Section inside tab</h2>
+                </section>
+              </li>
+            </ul>
+          </article>
+        </main>
+      `;
+
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav([nav]);
+
+      const trigger = document.getElementById('mg-tabs__section-tab1--trigger');
+      const triggerClickSpy = jest.fn();
+      trigger.addEventListener('click', triggerClickSpy);
+
+      const link = nav.querySelector('[href="#inside-tab"]');
+      expect(link).not.toBeNull();
+      link.click();
+
+      expect(triggerClickSpy).toHaveBeenCalledTimes(1);
+
+      window.scrollTo.mockRestore();
+    });
+
+    it('clicks the tab trigger when heading is inside a stacked panel (hidden="until-found")', () => {
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <article data-mg-js-tabs>
+            <ul class="mg-tabs__list">
+              <li class="mg-tabs__item">
+                <a class="mg-tabs__link"
+                   href="#mg-tabs__section-stacked1"
+                   data-tabs__item="mg-tabs__section-stacked1"
+                   id="mg-tabs__section-stacked1--trigger">Stacked 1</a>
+              </li>
+              <li class="mg-tabs-content">
+                <section class="mg-tabs__section" id="mg-tabs__section-stacked1" hidden="until-found">
+                  <h2 id="stacked-heading">Stacked heading</h2>
+                </section>
+              </li>
+            </ul>
+          </article>
+        </main>
+      `;
+
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav([nav]);
+
+      const trigger = document.getElementById('mg-tabs__section-stacked1--trigger');
+      const triggerClickSpy = jest.fn();
+      trigger.addEventListener('click', triggerClickSpy);
+
+      const link = nav.querySelector('[href="#stacked-heading"]');
+      expect(link).not.toBeNull();
+      link.click();
+
+      expect(triggerClickSpy).toHaveBeenCalledTimes(1);
+
+      window.scrollTo.mockRestore();
+    });
+
+    it('does not click any trigger when heading is not inside a tab panel', () => {
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+      const nav = setupExplicit([{ id: 'regular', text: 'Regular' }]);
+
+      // No tab triggers exist; clicking should not throw
+      const link = nav.querySelector('[href="#regular"]');
+      expect(() => link.click()).not.toThrow();
+
+      window.scrollTo.mockRestore();
+    });
+
+    it('does not click the trigger when the panel is already visible', () => {
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <article data-mg-js-tabs>
+            <ul class="mg-tabs__list">
+              <li class="mg-tabs__item">
+                <a class="mg-tabs__link"
+                   href="#mg-tabs__section-open"
+                   data-tabs__item="mg-tabs__section-open"
+                   id="mg-tabs__section-open--trigger">Open tab</a>
+              </li>
+              <li class="mg-tabs-content">
+                <!-- Panel is NOT hidden — already visible -->
+                <section class="mg-tabs__section" id="mg-tabs__section-open">
+                  <h2 id="visible-heading">Visible heading</h2>
+                </section>
+              </li>
+            </ul>
+          </article>
+        </main>
+      `;
+
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav([nav]);
+
+      const trigger = document.getElementById('mg-tabs__section-open--trigger');
+      const triggerClickSpy = jest.fn();
+      trigger.addEventListener('click', triggerClickSpy);
+
+      const link = nav.querySelector('[href="#visible-heading"]');
+      link.click();
+
+      expect(triggerClickSpy).not.toHaveBeenCalled();
+
+      window.scrollTo.mockRestore();
+    });
+
+    it('opens outer panel before inner panel for nested tabs', () => {
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav
+             data-mg-on-this-page-nav-content=".content"
+             class="mg-on-this-page-nav"></nav>
+        <main class="content">
+          <!-- outer tabs -->
+          <article data-mg-js-tabs id="outer-tabs">
+            <ul class="mg-tabs__list">
+              <li class="mg-tabs__item">
+                <a class="mg-tabs__link"
+                   href="#mg-tabs__section-outer"
+                   data-tabs__item="mg-tabs__section-outer"
+                   id="mg-tabs__section-outer--trigger">Outer tab</a>
+              </li>
+              <li class="mg-tabs-content">
+                <section class="mg-tabs__section" id="mg-tabs__section-outer" hidden>
+                  <!-- inner tabs nested inside the outer panel -->
+                  <article data-mg-js-tabs id="inner-tabs">
+                    <ul class="mg-tabs__list">
+                      <li class="mg-tabs__item">
+                        <a class="mg-tabs__link"
+                           href="#mg-tabs__section-inner"
+                           data-tabs__item="mg-tabs__section-inner"
+                           id="mg-tabs__section-inner--trigger">Inner tab</a>
+                      </li>
+                      <li class="mg-tabs-content">
+                        <section class="mg-tabs__section" id="mg-tabs__section-inner" hidden>
+                          <h2 id="deep-heading">Deep heading</h2>
+                        </section>
+                      </li>
+                    </ul>
+                  </article>
+                </section>
+              </li>
+            </ul>
+          </article>
+        </main>
+      `;
+
+      const nav = document.querySelector('[data-mg-on-this-page-nav]');
+      mgOnThisPageNav([nav]);
+
+      const callOrder = [];
+      document.getElementById('mg-tabs__section-outer--trigger')
+        .addEventListener('click', () => callOrder.push('outer'));
+      document.getElementById('mg-tabs__section-inner--trigger')
+        .addEventListener('click', () => callOrder.push('inner'));
+
+      const link = nav.querySelector('[href="#deep-heading"]');
+      expect(link).not.toBeNull();
+      link.click();
+
+      expect(callOrder).toEqual(['outer', 'inner']);
+
+      window.scrollTo.mockRestore();
+    });
+  });
+
   describe('accessibility', () => {
     it('has no axe violations in auto-detect mode', async () => {
       setupAutoDetect();

@@ -214,23 +214,9 @@ function MyGallery() {
 }
 ```
 
-## Design decisions
+## Implementation details
 
-### Image container
-- Default 16:9 aspect ratio prevents layout shift
-- `object-fit: contain` preserves image proportions
-- Neutral background ($mg-color-neutral-50) fills empty space
-- Supports all image aspect ratios
-
-### Thumbnail scrolling
-- Native overflow scrolling for performance
-- Auto-scrolls selected thumbnail into view
-- Custom scrollbar styling matches design system
-
-### Navigation behavior
-- Arrow buttons disable at boundaries (first/last image)
-- Keyboard navigation works when gallery is focused
-- Thumbnail clicking provides instant feedback
+> **Implementation note (for contributors):** Image container: default 16:9 aspect ratio prevents layout shift; `object-fit: contain` preserves proportions; neutral background (`$mg-color-neutral-50`) fills empty space. Thumbnail scrolling: native overflow scrolling; auto-scrolls selected thumbnail into view; custom scrollbar styling. Navigation: arrow buttons disable at boundaries; keyboard navigation requires gallery focus; thumbnail click gives instant feedback.
 
 ## Best practices
 
@@ -290,8 +276,8 @@ Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
 | `data-loop` | `'false'` | Enable infinite loop navigation |
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js";
-import { Gallery, fromElement } from "https://assets.undrr.org/static/mangrove/1.4.1/components/Gallery.js";
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import { Gallery, fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/Gallery.js";
 createHydrator({ selector: "[data-mg-gallery]", component: Gallery, fromElement });
 ```
 

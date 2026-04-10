@@ -155,10 +155,12 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 
 ### Known limitations
 
-- The `<section>` element has no `aria-label` or `aria-labelledby`, so screen readers may announce it as an unlabelled section
-- No `<figure>` / `<figcaption>` pattern is used; the quote and its attribution are not programmatically associated (e.g., via `aria-describedby` or `<footer>` within the `<blockquote>`)
-- The `<cite>` element is not used for the attribution, which would give screen readers stronger semantic context for the source of the quote
-- The fallback alt text (e.g., "Mami Mizutori image") may not be descriptive enough for images that convey meaningful content
+- Screen readers announce this as an unlabelled section — the `<section>` wrapper has no `aria-label` or `aria-labelledby`
+- Screen readers cannot programmatically link the quote text to its attribution — there is no `<cite>`, `<footer>`, or `aria-describedby` connecting them within the `<blockquote>`
+- Screen readers may not identify the attribution text as the source of the quote
+- The auto-generated fallback alt text (e.g., "Mami Mizutori image") may not be descriptive enough for images that convey meaningful content
+
+> **Implementation note (for contributors):** The outer wrapper is a `<section>` with no `aria-label` or `aria-labelledby`. The quote and attribution use `<p>` elements within `<blockquote>` rather than a `<figure>`/`<figcaption>` or `<footer>`/`<cite>` pattern, so there is no programmatic association between the quote and its source.
 
 ## Server-rendered / CDN usage
 
@@ -189,8 +191,8 @@ QuoteHighlight supports [layered hydration](https://github.com/unisdr/undrr-mang
 | `data-alignment` | `'full'` | `'full'`, `'left'`, or `'right'` |
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js";
-import QuoteHighlight, { fromElement } from "https://assets.undrr.org/static/mangrove/1.4.1/components/QuoteHighlight.js";
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import QuoteHighlight, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/QuoteHighlight.js";
 createHydrator({ selector: "[data-mg-quote-highlight]", component: QuoteHighlight, fromElement });
 ```
 

@@ -95,7 +95,7 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 | `imgback` | String | Optional | Image URL (alternative to `icon`) |
 | `imgalt` | String | Optional | Alt text for image |
 | `iconColor` | String | - | Background color for the icon badge (CSS color value). Can be used without `icon` to render a color-only swatch. |
-| `iconFgColor` | String | - | Foreground (glyph) color for the icon. Overrides the default neutral gray. Set via `--mg-icon-fg` custom property. |
+| `iconFgColor` | String | - | Foreground (glyph) color for the icon. Pass any CSS color value to override the default gray (e.g., `'#ffffff'` for white). |
 | `borderColor` | String | - | Border color for the card (CSS color value). Renders a 2px solid border via `--mg-card-border` custom property. |
 | `iconSize` | Number | `72` | Width/height of icon in pixels (ignored when `imageScale` is set) |
 | `imageScale` | String | - | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units. |
@@ -108,6 +108,8 @@ These properties align with VerticalCard and HorizontalCard for consistency:
 | `linkText` | String | Optional | Text for text link CTA |
 | `button` | String | Optional | Button label text |
 | `buttonType` | String | `'Primary'` | Button style: `'Primary'` or `'Secondary'` |
+
+> **Implementation note (for contributors):** `iconFgColor` is applied via the `--mg-icon-fg` CSS custom property on the icon element. `borderColor` is applied via `--mg-card-border`.
 
 ## Code examples
 
@@ -196,13 +198,15 @@ IconCard renders individual cards. When displaying multiple cards in a grid, wra
 
 ## Accessibility
 
-- Icons are decorative and use `aria-hidden="true"`
-- Images require `imgalt` for screen readers
-- Titles can be linked for entire card click areas (stretched link pattern)
-- **Logo cards**: Use `srOnlyTitle: true` to visually hide the title while keeping it accessible — the image becomes the clickable element
-- Buttons and links have visible focus states (`:focus-visible`)
+- Icons are decorative and announced as hidden to screen readers
+- Images require descriptive alt text via `imgalt`
+- When a `link` is provided, the entire card surface is clickable as a single link
+- **Logo cards**: Set `srOnlyTitle: true` to visually hide the title while keeping it accessible for screen readers
+- Buttons and links have visible focus states
 - Color contrast meets WCAG AA standards
-- RTL layout handled automatically via CSS `[dir="rtl"]`
+- RTL layout is automatic for right-to-left locales (e.g., Arabic)
+
+> **Implementation note (for contributors):** Icon elements have `aria-hidden="true"`. Focus states use the `:focus-visible` CSS pseudo-class. RTL layout is applied via a CSS `[dir="rtl"]` attribute selector. Whole-card clickability uses the stretched-link pattern (a `::before` pseudo-element on the title `<a>`, covering the card surface).
 
 ## Best practices
 
@@ -253,8 +257,8 @@ IconCard supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 | `data-variant` | `'default'` | `'default'` or `'negative'` |
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.4.1/components/hydrate.js";
-import IconCard, { fromElement } from "https://assets.undrr.org/static/mangrove/1.4.1/components/IconCard.js";
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
+import IconCard, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/IconCard.js";
 createHydrator({ selector: "[data-mg-icon-card]", component: IconCard, fromElement });
 ```
 

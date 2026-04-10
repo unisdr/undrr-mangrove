@@ -134,4 +134,41 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('interestingnessTiers');
     expect(config).not.toHaveProperty('longevityTiers');
   });
+
+  it('parses JSON customFilters', () => {
+    const filters = ['type:news', 'region:asia'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'custom-filters': JSON.stringify(filters) })
+    );
+    expect(config.customFilters).toEqual(filters);
+  });
+
+  it('parses JSON customFacets', () => {
+    const facets = [{ field: 'region', label: 'Region' }];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'custom-facets': JSON.stringify(facets) })
+    );
+    expect(config.customFacets).toEqual(facets);
+  });
+
+  it('parses JSON visibleTeaserFields', () => {
+    const fields = ['title', 'date'];
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'visible-teaser-fields': JSON.stringify(fields) })
+    );
+    expect(config.visibleTeaserFields).toEqual(fields);
+  });
+
+  it('ignores malformed JSON for customFilters, customFacets, visibleTeaserFields', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({
+        'custom-filters': 'not-json',
+        'custom-facets': '{broken',
+        'visible-teaser-fields': '[bad',
+      })
+    );
+    expect(config).not.toHaveProperty('customFilters');
+    expect(config).not.toHaveProperty('customFacets');
+    expect(config).not.toHaveProperty('visibleTeaserFields');
+  });
 });

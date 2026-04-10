@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import OnThisPageNav from './OnThisPageNav';
-import { mgOnThisPageNav } from '../../assets/js/on-this-page-nav';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '../../assets/js/on-this-page-nav';
+import { mgTabsRuntime } from '../../assets/js/tabs';
 
 export default {
   title: 'Components/On this page nav',
@@ -57,9 +61,12 @@ function useOnThisPageNav(wrapperRef) {
     if (!wrapperRef.current) return;
     const nav = wrapperRef.current.querySelector('[data-mg-on-this-page-nav]');
     if (nav) {
-      delete nav.dataset.mgOnThisPageNavInitialized;
+      mgOnThisPageNavDestroy(nav);
       mgOnThisPageNav([nav]);
     }
+    return () => {
+      if (nav) mgOnThisPageNavDestroy(nav);
+    };
   }, []);
 }
 
@@ -451,4 +458,118 @@ export const RTL = {
       </div>
     );
   },
+};
+
+const tabSections = [
+  {
+    label: 'Risk assessment',
+    id: 'risk',
+    headingId: 'risk-assessment',
+  },
+  {
+    label: 'Vulnerability analysis',
+    id: 'vulnerability',
+    headingId: 'vulnerability-analysis',
+  },
+  {
+    label: 'Capacity and resources',
+    id: 'capacity',
+    headingId: 'capacity-and-resources',
+  },
+];
+
+/**
+ * Integration example: On this page nav + Tabs.
+ *
+ * The nav auto-detects all h2 headings on the page, including those inside
+ * collapsed horizontal tab panels. Clicking a nav link for a heading that
+ * lives inside a hidden panel automatically opens the correct tab first
+ * (synchronously), then scrolls to the heading.
+ *
+ * Stacked (disclosure) tabs work the same way — the nav click opens the
+ * collapsed disclosure panel before scrolling.
+ */
+export const WithTabsContent = {
+  render: () => {
+    const ref = useRef(null);
+
+    useEffect(() => {
+      const wrapper = ref.current;
+      if (!wrapper) return;
+
+      // Initialize tabs before the nav so panels are in their initial state
+      // (all but the first hidden for horizontal, defaults applied for stacked).
+      wrapper.querySelectorAll('[data-mg-js-tabs]').forEach(c => {
+        if (!c.dataset.mgTabsInitialized) mgTabsRuntime(c, false);
+      });
+
+      // Destroy any existing nav init (clears observers and listeners) then
+      // re-initialize so this story's scoped nav doesn't leak on unmount.
+      const nav = wrapper.querySelector('[data-mg-on-this-page-nav]');
+      if (nav) {
+        mgOnThisPageNavDestroy(nav);
+        mgOnThisPageNav([nav]);
+      }
+
+      return () => {
+        if (nav) mgOnThisPageNavDestroy(nav);
+      };
+    }, []);
+
+    return (
+      <article ref={ref} className="mg-tabs-nav-demo">
+        <nav
+          data-mg-on-this-page-nav
+          data-mg-on-this-page-nav-content=".mg-tabs-nav-demo"
+          className="mg-on-this-page-nav"
+        />
+
+        <div style={{ padding: '0 1rem' }}>
+          <h2 id="introduction">Introduction</h2>
+          <SectionContent />
+
+          <p style={{ marginBottom: '1rem' }}>
+            The following tabs each contain a section heading. Clicking that
+            heading in the navigation bar above will open the correct tab and
+            scroll to it — even if the tab is currently closed.
+          </p>
+
+          {/* Horizontal tabs — each panel contains an h2 that the nav links to */}
+          <div
+            className="mg-tabs mg-tabs--horizontal"
+            data-mg-js-tabs
+            data-mg-js-tabs-variant="horizontal"
+          >
+            <ul className="mg-tabs__list">
+              {tabSections.map(tab => (
+                <React.Fragment key={tab.id}>
+                  <li className="mg-tabs__item">
+                    <a
+                      className="mg-tabs__link"
+                      href={`#mg-tabs__section-${tab.id}`}
+                    >
+                      {tab.label}
+                    </a>
+                  </li>
+                  <li className="mg-tabs-content" data-mg-js-tabs-content>
+                    <section
+                      className="mg-tabs__section"
+                      id={`mg-tabs__section-${tab.id}`}
+                    >
+                      <h2 id={tab.headingId}>{tab.label}</h2>
+                      <SectionContent />
+                    </section>
+                  </li>
+                </React.Fragment>
+              ))}
+            </ul>
+          </div>
+
+          <h2 id="conclusions">Conclusions</h2>
+          <SectionContent />
+        </div>
+      </article>
+    );
+  },
+  name: 'With tabs content',
 };

@@ -147,7 +147,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 </nav>
 
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/static/mangrove/1.4.1/js/on-this-page-nav.js"></script>
+<script type="module" src="https://assets.undrr.org/static/mangrove/1.5.0/js/on-this-page-nav.js"></script>
 ```
 
 ## Skipping auto-initialization
@@ -162,7 +162,7 @@ Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init. Th
 </nav>
 
 <script type="module">
-  import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/1.4.1/js/on-this-page-nav.js';
+  import { mgOnThisPageNav } from 'https://assets.undrr.org/static/mangrove/1.5.0/js/on-this-page-nav.js';
   // Initialize after other setup is complete
   mgOnThisPageNav([document.querySelector('[data-mg-on-this-page-nav-skip-auto-init]')]);
 </script>
@@ -254,6 +254,50 @@ The `mgOnThisPageNavDestroy` cleanup in the `useEffect` return ensures the Inter
 
 The nav uses `z-index: 11`, which places it above the MegaMenu (10) but below the PageHeader (22) and modals (9998+). When both the MegaMenu and this nav are sticky on the same page, set `--mg-on-this-page-nav-offset` to the MegaMenu's height so the nav docks below it and headings scroll to the correct position.
 
+## Tabs integration
+
+When page content includes [Mangrove Tabs](?path=/docs/components-tabs--docs), the nav automatically opens the correct tab before scrolling to a heading inside it — for both horizontal and stacked (disclosure) variants.
+
+**How it works:** When a nav link points to a heading that lives inside a hidden `.mg-tabs__section`, the click handler finds the corresponding tab trigger (`[data-tabs__item]`) and clicks it programmatically. The tab switch is synchronous, so the heading's position is immediately measurable and the scroll lands in the right place.
+
+No extra configuration is needed. The integration activates whenever a target heading is inside a closed tab panel, regardless of whether the tab uses horizontal or stacked layout.
+
+```html
+<!-- Horizontal tabs: clicking "Risk assessment" in the nav opens tab 1 -->
+<nav data-mg-on-this-page-nav
+     data-mg-on-this-page-nav-content=".article-body"
+     class="mg-on-this-page-nav"></nav>
+
+<div class="article-body">
+  <h2 id="overview">Overview</h2>
+  <p>...</p>
+
+  <div class="mg-tabs mg-tabs--horizontal" data-mg-js-tabs data-mg-js-tabs-variant="horizontal">
+    <ul class="mg-tabs__list">
+      <li class="mg-tabs__item">
+        <a class="mg-tabs__link" href="#mg-tabs__section-risk">Risk assessment</a>
+      </li>
+      <li class="mg-tabs-content" data-mg-js-tabs-content>
+        <section class="mg-tabs__section" id="mg-tabs__section-risk">
+          <h2 id="risk-assessment">Risk assessment</h2>
+          <p>...</p>
+        </section>
+      </li>
+    </ul>
+  </div>
+</div>
+```
+
+Headings inside tab panels appear in the nav list as normal — they are picked up by `querySelectorAll` even when their parent panel is hidden. Initialization order matters: initialize tabs before the nav so panels are in their correct initial state when the nav scans headings.
+
+```js
+// Initialize tabs first, then the nav
+document.querySelectorAll('[data-mg-js-tabs]').forEach(c => mgTabsRuntime(c));
+mgOnThisPageNav();
+```
+
+See the **With tabs content** story for a live example.
+
 ## Accessibility
 
 - **Landmark**: Renders as a `<nav>` with `aria-label`
@@ -282,5 +326,6 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
+- **1.1.1** — 2026-04-07 ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337)): Tabs integration — nav links to headings inside hidden tab panels now automatically open the correct tab before scrolling
 - **1.1** — 2026-03-28: Added `data-mg-on-this-page-nav-skip-auto-init` attribute, single-element scope support; scroll arrow buttons for horizontal overflow
 - **1.0** — 2026-03-26: Initial release (auto-detect, explicit, CTA, scroll-spy, RTL, a11y) ([web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337))
