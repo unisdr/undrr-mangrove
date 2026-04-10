@@ -25,7 +25,7 @@ export function Breadcrumbcomponent({ data, Color, ...args }) {
         {data.map((item, i) => {
           if (i === lastIndex) {
             return (
-              <li key={i} aria-current={item.text}>
+              <li key={i} aria-current="page">
                 {item.text}
               </li>
             );
@@ -33,7 +33,7 @@ export function Breadcrumbcomponent({ data, Color, ...args }) {
 
           return (
             <li key={i}>
-              <a href="#" aria-label={item.text}>
+              <a href="#">
                 {item.text}
               </a>
             </li>
