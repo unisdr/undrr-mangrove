@@ -15,7 +15,6 @@ The PageHeader component provides a comprehensive header with UNDRR branding, na
 The PageHeader component displays a complete header structure that includes:
 
 - A dark toolbar section with UNDRR logo and language switcher
-- Google Analytics integration with proper data attributes
 - Responsive design that adapts to different screen sizes
 - The signature four-colored decorative stripe
 - Option to render only the decoration stripe for lightweight branding
@@ -72,11 +71,9 @@ The PageHeader component includes several content areas:
 
 **Visual Decoration:**
 
-- Four colored stripes representing UNDRR brand colors:
-  - Red: `$sendai-red-900` (#c10920)
-  - Purple: `$sendai-purple-900` (#962987)
-  - Orange: `$sendai-orange-900` (#eb752a)
-  - Teal: `$sendai-turquoise-900` (#00afae)
+- Four colored stripes representing UNDRR brand colors: red (#c10920), purple (#962987), orange (#eb752a), and teal (#00afae)
+
+> **Implementation note (for contributors):** The stripe colors map to SCSS variables `$sendai-red-900`, `$sendai-purple-900`, `$sendai-orange-900`, and `$sendai-turquoise-900` in `_variables.scss`.
 
 ### Behaviors
 
@@ -89,12 +86,9 @@ The PageHeader component maintains static display with interactive elements:
 3. **Responsive**: Adapts logo size on mobile devices (≤500px)
 4. **Decoration Only**: Renders only the colored stripe when variant is set to 'decoration-only'
 
-#### Google Analytics Integration
+#### Google Analytics integration
 
-The component includes proper data attributes for Google Analytics tracking:
-
-- `data-vf-google-analytics-region="undrr-black-bar"` on the toolbar wrapper
-- Preserves all original Drupal data attributes for form processing
+> **Implementation note (for contributors):** The toolbar wrapper includes `data-vf-google-analytics-region="undrr-black-bar"` and all original Drupal data attributes for analytics and form processing. See [Integration Notes](#integration-notes) below for the full attribute list.
 
 ### Usage
 

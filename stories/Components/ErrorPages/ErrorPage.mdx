@@ -64,15 +64,17 @@ Challenge pages are shown when Cloudflare needs to verify a visitor (e.g., CAPTC
 
 ### Design approach
 
-The challenge page design follows [Cloudflare's guidance on custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/) and UX research on CAPTCHA friction:
+Challenge pages look different from error pages so visitors understand they are being verified — not blocked by an error:
 
-- **Neutral background** (`#f2f2f2`) instead of the blue error background — signals "routine checkpoint", not "something broke"
-- **Centered, narrower card** with rounded corners and subtle shadow — focuses attention on the verification widget
-- **UNDRR logo for trust** — unexpected interstitials can feel like phishing; brand presence reassures visitors
-- **Calm, non-error language** — "routine check", not "blocked" or "suspicious"; no technical details shown by default
-- **Generous whitespace** — the page should feel unhurried; the Turnstile widget is the sole focus
+- Neutral grey background — distinct from the blue error page background
+- Centered card with rounded corners — focuses attention on the verification widget
+- UNDRR logo — brand presence reassures visitors they are in the right place
+- Calm, plain language ("routine check", not "blocked" or "suspicious")
+- Generous whitespace — the Turnstile widget is the sole focus
 
-The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 300 x 65px (normal) or full-width with min 300px (flexible mode). The card is sized to comfortably contain it. Most legitimate visitors pass the managed challenge automatically with no interaction.
+The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 300 × 65 px (normal) or full-width with min 300 px (flexible mode). Most legitimate visitors pass the managed challenge automatically with no interaction.
+
+> **Implementation note (for contributors):** The neutral background (`#f2f2f2`) and teal accent deliberately diverge from the blue error page palette to signal "routine verification checkpoint", not an error state. The centered card follows UX research on reducing CAPTCHA friction. Design references: [Cloudflare Turnstile widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/), [Cloudflare custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/), [Cloudflare additional configuration](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/), [CAPTCHA can ruin your UX (Auth0)](https://auth0.com/blog/captcha-can-ruin-your-ux-here-s-how-to-use-it-right/), [Cloudflare Turnstile accessibility (WCAG 2.1 AA)](https://developers.cloudflare.com/turnstile/frequently-asked-questions/).
 
 ### Important constraints
 
@@ -80,14 +82,6 @@ The Cloudflare Turnstile widget (which replaces `::CAPTCHA_BOX::`) renders at 30
 - **Do not** use aggressive language ("blocked", "suspicious", "threat") on verification pages
 - The `::CAPTCHA_BOX::` token is **required** in both static HTML templates — Cloudflare replaces it with the actual widget at runtime
 - Static templates must not exceed 1.5 MB (Cloudflare limit)
-
-### Design references
-
-- [Cloudflare Turnstile widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/) — widget sizes, themes, and rendering modes
-- [Cloudflare custom challenge pages](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/) — customization options and constraints
-- [Cloudflare additional configuration](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/) — CSP restrictions, favicon, and referrer policy warnings
-- [CAPTCHA can ruin your UX (Auth0)](https://auth0.com/blog/captcha-can-ruin-your-ux-here-s-how-to-use-it-right/) — friction impact and mitigation strategies
-- [Cloudflare Turnstile accessibility (WCAG 2.1 AA)](https://developers.cloudflare.com/turnstile/frequently-asked-questions/) — the widget is WCAG 2.1 Level AA compliant
 
 ### Interactive challenge
 
