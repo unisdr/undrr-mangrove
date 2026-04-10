@@ -29,7 +29,7 @@ $mg-html-font-size: 16 !default;
 
 // font file variables
 // Path adjusted for Storybook staticDirs (serves assets/ at root, not /assets/)
-$mgIconFontPath: "../fonts/mangrove-icon-set/font";
+$mgIconFontPath: "../fonts/mangrove-icon-set/font" !default;
 
 // image variables
 $img-path: "~/stories/assets/images";
