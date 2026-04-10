@@ -110,6 +110,9 @@ export function schemaDocument({ id, title, description, schema, meta = {} }) {
     title,
     description,
     'x-mangrove': {
+      // TODO (Phase 2): version is shared across all schemas. Once schemas start
+      // evolving at different rates, move this to a per-schema field in meta so
+      // consumers can track individual schema versions independently.
       version: '1.0.0',
       phase: 1,
       ...meta,

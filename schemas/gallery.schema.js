@@ -47,6 +47,16 @@ export default schemaDocument({
             ),
           },
           required: ['id'],
+          // Require alt text when the media type is explicitly set to 'image'.
+          // The default type is 'image' per the enum default, but JSON Schema
+          // if/then only fires on values present in the data instance — omitting
+          // `type` does not trigger the constraint, so consumers should always
+          // supply type when providing image items.
+          if: {
+            properties: { type: { const: 'image' } },
+            required: ['type'],
+          },
+          then: { required: ['alt'] },
         },
         { minItems: 1 },
       ),

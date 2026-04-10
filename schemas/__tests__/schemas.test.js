@@ -219,6 +219,19 @@ describe('Gallery schema', () => {
   it('rejects gallery without media', () => {
     expect(validate({})).toBe(false);
   });
+
+  it('rejects image-type media item without alt', () => {
+    // The if/then conditional requires alt when type is explicitly 'image'.
+    expect(validate({ media: [{ id: 'img-1', type: 'image', src: 'https://example.com/photo.jpg' }] })).toBe(false);
+  });
+
+  it('accepts image-type media item with alt', () => {
+    expect(validate({ media: [{ id: 'img-1', type: 'image', src: 'https://example.com/photo.jpg', alt: 'Photo' }] })).toBe(true);
+  });
+
+  it('accepts image-type media item with empty alt (decorative)', () => {
+    expect(validate({ media: [{ id: 'img-1', type: 'image', src: 'https://example.com/photo.jpg', alt: '' }] })).toBe(true);
+  });
 });
 
 describe('Text CTA schema', () => {

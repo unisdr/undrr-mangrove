@@ -14,6 +14,7 @@
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
     "build:analyze": "ANALYZE=true NODE_ENV=production webpack --progress",
     "build:schemas": "node schemas/build.js",
+    "validate:schemas": "node schemas/build.js --validate-only",
     "dev": "NODE_ENV=development yarn run scss-watch & yarn run storybook",
     "storybook": "NODE_ENV=development storybook dev -p 6006",
     "update-cdn-version": "node scripts/update-cdn-version.js",
