@@ -221,18 +221,22 @@ function BrandIdentityPage({ themeName }) {
           <strong>Do:</strong> Use {theme.colors.brand[0]?.name} ({primaryColor}) for
           navigation headers and brand elements on {theme.url}.
         </HighlightBox>
-        <HighlightBox>
-          <strong>Don't:</strong> Mix brand colors from other UNDRR properties.
-          Each property has its own identity.
+        <HighlightBox variant="secondary">
+          <span style={{ color: 'white' }}>
+            <strong>Don't:</strong> Mix brand colors from other UNDRR properties.
+            Each property has its own identity.
+          </span>
         </HighlightBox>
       </div>
       <div style={{ ...grid2, marginTop: '1rem' }}>
         <HighlightBox>
           <strong>Do:</strong> Use Roboto Condensed for headings and Roboto Regular for body text.
         </HighlightBox>
-        <HighlightBox>
-          <strong>Don't:</strong> Use Arial, Helvetica, or other system fonts.
-          Stick to the specified font families.
+        <HighlightBox variant="secondary">
+          <span style={{ color: 'white' }}>
+            <strong>Don't:</strong> Use Arial, Helvetica, or other system fonts.
+            Stick to the specified font families.
+          </span>
         </HighlightBox>
       </div>
     </div>
