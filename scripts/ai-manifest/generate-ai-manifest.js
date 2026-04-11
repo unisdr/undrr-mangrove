@@ -1029,6 +1029,23 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
 
+### Brand guide
+
+The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners):
+
+- **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons for each UNDRR property. Switch themes in the toolbar to see different brands.
+- **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance including brand positioning, communication rules, logo usage, and photography standards.
+- **About this guide** (${DOCS_BASE}?path=/docs/brand-about-this-guide--docs): Overview of all five UNDRR web properties with links.
+
+Key brand facts:
+- UNDRR brand characteristics: Knowledgeable, Approachable, Collaborative
+- Communication: avoid UN jargon, use the inverted pyramid, make stories around real people, portray prevention positively
+- Typography: Roboto Condensed for headings, Roboto for body text, Noto Kufi Arabic for Arabic headings
+- Five themed properties: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (blue #0f78bf), DELTA Resilience (navy #132e48)
+- Photo sizes: Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1)
+- Logo safety zone: width of the "U" in UNDRR
+- OCHA humanitarian icons for hazard-related content, Mangrove icon set for web UI
+
 ### Source layout
 
 - stories/Atom/          Typography, images, layout, navigation

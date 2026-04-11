@@ -179,6 +179,7 @@ const preview = {
           [
             'About this guide',
             'Brand identity',
+            'Brand guidelines',
             'Common patterns',
             'Component gallery',
           ],
