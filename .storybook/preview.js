@@ -175,6 +175,13 @@ const preview = {
         method: 'alphabetical',
         order: [
           'Introduction',
+          'Brand',
+          [
+            'About this guide',
+            'Brand identity',
+            'Common patterns',
+            'Component gallery',
+          ],
           'Getting started',
           [
             'About Mangrove',
