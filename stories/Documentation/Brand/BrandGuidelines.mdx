@@ -91,7 +91,7 @@ UNDRR's brand is defined by three core characteristics:
 - **Communicate on prevention in a positive way** — use positive images
 - **Make stories around real people**, not just issues
 - **Be short and concise on the web** — use the inverted pyramid structure
-- For detailed writing guidance, see the <LinkTo kind="getting-started-contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>
+- For detailed writing guidance, see the <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>
 
 ---
 
@@ -167,13 +167,13 @@ UNDRR uses two icon sets:
 UNDRR's web presences should be consistent and connected. The following components
 are shared across all UNDRR sites:
 
-### Global header
+### Page header
 
-The global navigation should appear on all UNDRR sites and tools. It displays the
-language selector, login icon, and global menu linking to core resources. The main
-navigation often uses a sticky header with the Sendai color stripe.
+The page header displays the Sendai color stripe, UNDRR logo, and global navigation
+on every page. It includes the language selector, login icon, and links to core
+resources and tools.
 
-See: <LinkTo kind="components-mega-menu" story="docs">Mega menu component</LinkTo>
+See: <LinkTo kind="components-pageheader" story="docs">Page header component</LinkTo> | <LinkTo kind="components-mega-menu" story="docs">Mega menu component</LinkTo>
 
 ### Footer
 
@@ -190,11 +190,15 @@ See: <LinkTo kind="components-footer" story="docs">Footer component</LinkTo>
 ### Typography
 
 All external-facing print and web material should use **Roboto** (the UN official typeface).
-For internal communication and email, Arial can be used as a substitute.
+Headings use **Roboto Condensed**. For internal communication and email, Arial can be used as a substitute.
 
-Language-specific fonts:
-- **Arabic**: Noto Kufi Arabic
-- **Chinese**: Helvetica Neue
+**Language-specific fonts:** Mangrove supports automatic font overrides for scripts that
+require specialized typography. When content is marked with a language attribute
+(e.g., `lang="ar"`), CSS `:lang()` selectors apply the appropriate fonts automatically.
+
+| Language | Selector | Font override |
+|----------|----------|---------------|
+| Arabic | `:lang(ar)` | Noto Kufi Arabic (headings), Dubai (body) |
 
 See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</LinkTo>
 
@@ -204,7 +208,7 @@ See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</Lin
 
 - <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> — theme-specific colors, typography, logos, buttons, and icons
 - <LinkTo kind="brand-about-this-guide" story="docs">About this guide</LinkTo> — overview of all UNDRR web properties
-- <LinkTo kind="getting-started-contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> — editorial standards for web content
+- <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> — editorial standards for web content
 - [UN web standards](https://www.un.org/styleguide/) — UN-wide branding and style guidance
 
 ---
