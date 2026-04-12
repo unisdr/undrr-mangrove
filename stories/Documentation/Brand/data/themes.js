@@ -54,7 +54,7 @@ export const themes = {
     tagline: 'Knowledge platform for disaster risk reduction',
     logo: {
       src: `${CDN}/pw/pw-logo.svg`,
-      srcWhite: `${CDN}/pw/pw-logo.svg`,
+      // srcWhite: `${CDN}/pw/pw-logo-white.svg`,  // No dedicated white variant on CDN yet — dark-background preview hidden
       alt: 'PreventionWeb logo',
       variants: [
         { label: 'Logo (SVG)', url: `${CDN}/pw/pw-logo.svg` },
@@ -86,7 +86,7 @@ export const themes = {
     tagline: 'International Recovery Platform',
     logo: {
       src: `${CDN}/irp/irp-logo.svg`,
-      srcWhite: `${CDN}/irp/irp-logo.svg`,
+      // srcWhite: `${CDN}/irp/irp-logo-white.svg`,  // No dedicated white variant on CDN yet — dark-background preview hidden
       alt: 'IRP logo',
       variants: [
         { label: 'Logo (SVG)', url: `${CDN}/irp/irp-logo.svg` },

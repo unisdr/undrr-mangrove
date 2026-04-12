@@ -114,28 +114,45 @@ function BrandIdentityPage({ themeName }) {
               </div>
             )}
           </div>
-          <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>Download logo files:</p>
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            {theme.logo.variants.map((v) => (
-              <a
-                key={v.url}
-                href={v.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  padding: '0.5rem 1rem',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '4px',
-                  textDecoration: 'none',
-                  color: primaryColor,
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                }}
-              >
-                {v.label}
-              </a>
-            ))}
-          </div>
+          <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            Download a copy or hotlink directly to the CDN:
+          </p>
+          <table style={{ width: '100%', fontSize: '0.8125rem', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                <th style={{ textAlign: 'left', padding: '0.5rem 0.75rem 0.5rem 0', fontWeight: 600 }}>
+                  Variant
+                </th>
+                <th style={{ textAlign: 'left', padding: '0.5rem 0.75rem', fontWeight: 600 }}>
+                  CDN URL (copy to hotlink)
+                </th>
+                <th style={{ textAlign: 'left', padding: '0.5rem 0', fontWeight: 600 }}>
+                  Download
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {theme.logo.variants.map((v) => (
+                <tr key={v.url} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                  <td style={{ padding: '0.5rem 0.75rem 0.5rem 0' }}>{v.label}</td>
+                  <td style={{ padding: '0.5rem 0.75rem', fontFamily: 'monospace', fontSize: '0.75rem', wordBreak: 'break-all' }}>
+                    <code>{v.url}</code>
+                  </td>
+                  <td style={{ padding: '0.5rem 0' }}>
+                    <a
+                      href={v.url}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: primaryColor, fontWeight: 500, whiteSpace: 'nowrap' }}
+                    >
+                      Download ↓
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <hr style={{ margin: '2rem 0' }} />
         </>
       )}
