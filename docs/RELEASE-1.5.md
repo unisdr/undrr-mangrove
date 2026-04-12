@@ -19,6 +19,20 @@ The main change in 1.5: icons now render via CSS `mask-image` instead of a font.
 | Planning the `fa-*` → `mg-icon-*` migration | [Icon migration roadmap](#icon-migration-roadmap-fa--mg-icon-) |
 | A React / npm consumer | [Upgrading from 1.4.x](#upgrading-from-14x) — note the [breaking changes](#breaking-changes) |
 
+## 1.5.1 addendum
+
+Released April 2026. Two changes:
+
+1. **New Brand section in Storybook** ([#925](https://github.com/unisdr/undrr-mangrove/issues/925), [#927](https://github.com/unisdr/undrr-mangrove/pull/927)): A brand guide aimed at non-technical UNDRR colleagues (content editors, brand managers, external partners). Five new pages: About this guide, Brand identity (theme-aware, responds to the theme picker), Brand guidelines (editorial content migrated from SharePoint), Common patterns (shared foundations), and Component gallery (curated catalog of 40+ components). Replaces the outdated Google Sites / SharePoint web style guide references.
+
+2. **Heading font fix** (visual change for all sites): Headings now render in Roboto Condensed as originally specified. Previously h1-h6 inherited the body font (Roboto Regular). This affects every UNDRR site that ships the compiled CSS.
+
+   > **If you manage a site that uses Mangrove:** Your headings will look slightly narrower and more authoritative after this update. The character metrics match the existing brand specification — you're now seeing the intended typography.
+
+   The change is controlled by a new SCSS token `$mg-font-family-headings` (defaults to `$mg-font-family-condensed`). Theme authors can override it if needed.
+
+Full diff: [v1.5.0...v1.5.1 on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.5.0...v1.5.1).
+
 ## What's new since 1.4.0
 
 ### New components
