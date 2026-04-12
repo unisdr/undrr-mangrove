@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
-import { DesignTokenDocBlock } from 'storybook-design-token';
 
 <Meta
   title="Brand/Common patterns"
@@ -14,21 +13,16 @@ import { DesignTokenDocBlock } from 'storybook-design-token';
 
 # Common patterns
 
-Shared foundations across all UNDRR web properties. These values don't change when
-you switch themes — they're the underlying structure that keeps all five properties
-feeling coherent.
+The structural foundations shared across every UNDRR web property. These don't
+change when you switch themes.
+
+For token tables (exact hex values, pixel sizes, etc.), see the
+<LinkTo kind="design-decisions-colors" story="docs">Design decisions</LinkTo>
+section. This page explains the concepts in plain language and points to where
+to find the details.
 
 For theme-specific colors, typography, and components, see
 <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo>.
-
----
-
-## Spacing scale
-
-Consistent spacing creates visual rhythm. Use these tokens instead of arbitrary
-pixel values. Based on a 5px baseline grid.
-
-<DesignTokenDocBlock categoryName="Spacing" viewType="card" />
 
 ---
 
@@ -46,22 +40,6 @@ automatically at each threshold.
 
 The `mg-grid` utility handles column reflow across these breakpoints automatically.
 A 4-column grid becomes 2 columns on tablet and 1 column on mobile.
-
----
-
-## Typography foundations
-
-Every property uses the same two font families:
-
-- **Roboto Condensed** for headings (h1-h6) — compact, authoritative
-- **Roboto** for body text — readable, widely supported
-- **Noto Kufi Arabic** + **Dubai** for Arabic content (automatic via `lang="ar"`)
-
-The full font-size scale:
-
-<DesignTokenDocBlock categoryName="Font sizes" viewType="table" />
-
-See: <LinkTo kind="design-decisions-typography" story="docs">Typography reference</LinkTo>
 
 ---
 
@@ -83,9 +61,35 @@ See: <LinkTo kind="design-decisions-grid" story="docs">Grid reference</LinkTo>
 
 ---
 
+## Typography system
+
+Every property uses the same two font families:
+
+- **Roboto Condensed** for headings (h1-h6) — compact, authoritative
+- **Roboto** for body text — readable, widely supported
+- **Noto Kufi Arabic** + **Dubai** for Arabic content (automatic via `lang="ar"`)
+
+See: <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>
+·
+<LinkTo kind="design-decisions-fonts" story="docs">Fonts</LinkTo>
+
+---
+
+## Spacing, colors, and neutral shades
+
+Spacing uses a 5px baseline grid. Neutral colors (body text, secondary text,
+backgrounds) are shared across all themes — only brand and accent colors change
+per property.
+
+See: <LinkTo kind="design-decisions-spacing" story="docs">Spacing</LinkTo>
+·
+<LinkTo kind="design-decisions-colors" story="docs">Colors</LinkTo>
+
+---
+
 ## Accessibility
 
-All Mangrove components follow these accessibility standards:
+All Mangrove components follow these standards:
 
 - **WCAG 2.1 AA** contrast ratios (4.5:1 for body text, 3:1 for large text)
 - **Keyboard navigation** — all interactive elements reachable via Tab
@@ -109,7 +113,7 @@ on a container and Mangrove applies the right font and text direction automatica
 </div>
 ```
 
-The theme switcher in the Storybook toolbar (top right) lets you preview locales.
+The locale switcher in the Storybook toolbar lets you preview different languages.
 
 ---
 
@@ -127,17 +131,11 @@ See: <LinkTo kind="components-icons" story="docs">Full icon set</LinkTo>
 
 ---
 
-## Shared neutral colors
-
-These neutral tones are the same across all themes:
-
-<DesignTokenDocBlock categoryName="Colors - neutral" viewType="card" />
-
----
-
 ## Z-index layers
 
-Mangrove uses named tokens for stacking contexts to avoid z-index chaos:
+Mangrove uses named tokens for stacking contexts to avoid z-index chaos. Use
+`$mg-z-index-*` tokens from `_variables.scss` for global stacking (fixed, sticky,
+portaled elements).
 
 See: <LinkTo kind="design-decisions-z-index-layers" story="docs">Z-index layers</LinkTo>
 
