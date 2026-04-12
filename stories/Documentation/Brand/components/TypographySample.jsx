@@ -26,7 +26,8 @@ const WEIGHT_NAMES = {
 
 function weightName(weight) {
   if (weight == null) return '';
-  const key = typeof weight === 'number' ? weight : String(weight).toLowerCase();
+  const key =
+    typeof weight === 'number' ? weight : String(weight).toLowerCase();
   return WEIGHT_NAMES[key] || String(weight);
 }
 
@@ -85,7 +86,8 @@ TypographySample.propTypes = {
   /** CSS font-size value. */
   fontSize: PropTypes.string.isRequired,
   /** Font weight (number or string). */
-  fontWeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  fontWeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   /** Display label for this typography level. */
   label: PropTypes.string.isRequired,
   /** Custom sample text (defaults to label). */

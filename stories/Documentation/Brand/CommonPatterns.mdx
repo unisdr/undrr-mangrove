@@ -17,12 +17,19 @@ The structural foundations shared across every UNDRR web property. These don't
 change when you switch themes.
 
 For token tables (exact hex values, pixel sizes, etc.), see the
-<LinkTo kind="design-decisions-colors" story="docs">Design decisions</LinkTo>
+
+<LinkTo kind="design-decisions-colors" story="docs">
+  Design decisions
+</LinkTo>
 section. This page explains the concepts in plain language and points to where
 to find the details.
 
 For theme-specific colors, typography, and components, see
-<LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo>.
+
+<LinkTo kind="brand-brand-identity" story="docs">
+  Brand identity
+</LinkTo>
+.
 
 ---
 
@@ -31,12 +38,12 @@ For theme-specific colors, typography, and components, see
 Mangrove uses a mobile-first approach with four breakpoints. Content reflows
 automatically at each threshold.
 
-| Breakpoint | Value | Use case |
-|------------|-------|----------|
-| Mobile | 480px | Phones in portrait |
-| Tablet | 900px | Tablets and small laptops |
-| Desktop | 1164px | Primary target for most content |
-| Wide desktop | 1440px | Large displays, dashboards |
+| Breakpoint   | Value  | Use case                        |
+| ------------ | ------ | ------------------------------- |
+| Mobile       | 480px  | Phones in portrait              |
+| Tablet       | 900px  | Tablets and small laptops       |
+| Desktop      | 1164px | Primary target for most content |
+| Wide desktop | 1440px | Large displays, dashboards      |
 
 The `mg-grid` utility handles column reflow across these breakpoints automatically.
 A 4-column grid becomes 2 columns on tablet and 1 column on mobile.
@@ -48,12 +55,12 @@ A 4-column grid becomes 2 columns on tablet and 1 column on mobile.
 The `mg-grid` utility provides responsive CSS Grid layouts with built-in breakpoint
 behavior. Apply `mg-grid` to a container and `mg-grid__col-{N}` to control column count.
 
-| Class | Desktop | Tablet | Mobile |
-|-------|---------|--------|--------|
-| `mg-grid__col-2` | 2 cols | 1 col | 1 col |
-| `mg-grid__col-3` | 3 cols | 2 cols | 1 col |
-| `mg-grid__col-4` | 4 cols | 2 cols | 1 col |
-| `mg-grid__col-6` | 6 cols | 3 cols | 1 col |
+| Class            | Desktop | Tablet | Mobile |
+| ---------------- | ------- | ------ | ------ |
+| `mg-grid__col-2` | 2 cols  | 1 col  | 1 col  |
+| `mg-grid__col-3` | 3 cols  | 2 cols | 1 col  |
+| `mg-grid__col-4` | 4 cols  | 2 cols | 1 col  |
+| `mg-grid__col-6` | 6 cols  | 3 cols | 1 col  |
 
 Span modifiers: `mg-grid__col--span-2`, `mg-grid__col--span-3`, `mg-grid__col--span-all`.
 
@@ -71,7 +78,10 @@ Every property uses the same two font families:
 
 See: <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>
 ·
-<LinkTo kind="design-decisions-fonts" story="docs">Fonts</LinkTo>
+
+<LinkTo kind="design-decisions-fonts" story="docs">
+  Fonts
+</LinkTo>
 
 ---
 
@@ -83,7 +93,10 @@ per property.
 
 See: <LinkTo kind="design-decisions-spacing" story="docs">Spacing</LinkTo>
 ·
-<LinkTo kind="design-decisions-colors" story="docs">Colors</LinkTo>
+
+<LinkTo kind="design-decisions-colors" story="docs">
+  Colors
+</LinkTo>
 
 ---
 

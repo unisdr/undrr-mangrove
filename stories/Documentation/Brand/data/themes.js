@@ -14,19 +14,56 @@ const CDN = 'https://assets.undrr.org/static/logos';
  */
 export const colorProbes = {
   brand: [
-    { probe: 'mg-hero__overlay', property: 'background-color', name: 'Hero / primary', usage: 'Hero banners, branded sections' },
-    { probe: 'mg-button mg-button-primary', property: 'background-color', name: 'Button primary', usage: 'Primary action buttons' },
-    { probe: 'mg-tag', property: 'background-color', name: 'Tag', usage: 'Content tags and labels' },
-    { probe: 'mg-tag mg-tag--secondary', property: 'background-color', name: 'Tag secondary', usage: 'Secondary tags' },
+    {
+      probe: 'mg-hero__overlay',
+      property: 'background-color',
+      name: 'Hero / primary',
+      usage: 'Hero banners, branded sections',
+    },
+    {
+      probe: 'mg-button mg-button-primary',
+      property: 'background-color',
+      name: 'Button primary',
+      usage: 'Primary action buttons',
+    },
+    {
+      probe: 'mg-tag',
+      property: 'background-color',
+      name: 'Tag',
+      usage: 'Content tags and labels',
+    },
+    {
+      probe: 'mg-tag mg-tag--secondary',
+      property: 'background-color',
+      name: 'Tag secondary',
+      usage: 'Secondary tags',
+    },
   ],
   accent: [
-    { probe: 'mg-tag mg-tag--accent', property: 'background-color', name: 'Accent', usage: 'Accent highlights and callouts' },
+    {
+      probe: 'mg-tag mg-tag--accent',
+      property: 'background-color',
+      name: 'Accent',
+      usage: 'Accent highlights and callouts',
+    },
   ],
   neutral: [
     { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
-    { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
-    { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
-    { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
+    {
+      color: '#666666',
+      name: 'Secondary text',
+      usage: 'Descriptions, metadata, captions',
+    },
+    {
+      color: '#f2f2f2',
+      name: 'Background light',
+      usage: 'Section backgrounds, cards',
+    },
+    {
+      color: '#ffffff',
+      name: 'White',
+      usage: 'Page background, card surfaces',
+    },
   ],
 };
 
@@ -43,7 +80,10 @@ export const themes = {
       variants: [
         { label: 'Blue (SVG)', url: `${CDN}/undrr/undrr-logo-blue.svg` },
         { label: 'White (SVG)', url: `${CDN}/undrr/undrr-logo-white.svg` },
-        { label: 'Square (SVG)', url: `${CDN}/undrr/undrr-logo-square-blue.svg` },
+        {
+          label: 'Square (SVG)',
+          url: `${CDN}/undrr/undrr-logo-square-blue.svg`,
+        },
       ],
     },
   },
@@ -56,9 +96,7 @@ export const themes = {
       src: `${CDN}/pw/pw-logo.svg`,
       // srcWhite: `${CDN}/pw/pw-logo-white.svg`,  // No dedicated white variant on CDN yet — dark-background preview hidden
       alt: 'PreventionWeb logo',
-      variants: [
-        { label: 'Logo (SVG)', url: `${CDN}/pw/pw-logo.svg` },
-      ],
+      variants: [{ label: 'Logo (SVG)', url: `${CDN}/pw/pw-logo.svg` }],
     },
   },
   'MCR2030 Theme': {
@@ -88,9 +126,7 @@ export const themes = {
       src: `${CDN}/irp/irp-logo.svg`,
       // srcWhite: `${CDN}/irp/irp-logo-white.svg`,  // No dedicated white variant on CDN yet — dark-background preview hidden
       alt: 'IRP logo',
-      variants: [
-        { label: 'Logo (SVG)', url: `${CDN}/irp/irp-logo.svg` },
-      ],
+      variants: [{ label: 'Logo (SVG)', url: `${CDN}/irp/irp-logo.svg` }],
     },
   },
   'DELTA Resilience Theme': {

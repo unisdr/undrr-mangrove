@@ -27,9 +27,7 @@ describe('TypographySample', () => {
   });
 
   it('uses custom sample text when provided', () => {
-    render(
-      <TypographySample {...defaultProps} sampleText="Custom sample" />,
-    );
+    render(<TypographySample {...defaultProps} sampleText="Custom sample" />);
 
     expect(screen.getByText('Custom sample')).toBeInTheDocument();
     expect(screen.queryByText('Page title')).not.toBeInTheDocument();
@@ -44,7 +42,7 @@ describe('TypographySample', () => {
 
   it('labels numeric weights with correct OpenType names', () => {
     const { rerender } = render(
-      <TypographySample {...defaultProps} fontWeight={400} />,
+      <TypographySample {...defaultProps} fontWeight={400} />
     );
     expect(screen.getByText('Roboto Condensed Regular')).toBeInTheDocument();
 
@@ -60,7 +58,7 @@ describe('TypographySample', () => {
 
   it('labels string weights (normal, bold)', () => {
     const { rerender } = render(
-      <TypographySample {...defaultProps} fontWeight="bold" />,
+      <TypographySample {...defaultProps} fontWeight="bold" />
     );
     expect(screen.getByText('Roboto Condensed Bold')).toBeInTheDocument();
 

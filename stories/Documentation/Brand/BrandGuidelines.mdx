@@ -1,6 +1,4 @@
-{/*
-  Source: Migrated from UNDRR SharePoint style guide pages, April 2026.
-  Original URLs:
+{/* Source: Migrated from UNDRR SharePoint style guide pages, April 2026. Original URLs:
   - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/UNDRR-Brand-Positioning.aspx
   - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Logos.aspx
   - https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Colors-typography.aspx
@@ -26,8 +24,11 @@ import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
 
 Editorial and visual identity guidelines for all UNDRR communications. For
 theme-specific colors, typography, and component previews, see the
-<LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> page
-and use the theme picker in the toolbar.
+
+<LinkTo kind="brand-brand-identity" story="docs">
+  Brand identity
+</LinkTo>
+page and use the theme picker in the toolbar.
 
 ---
 
@@ -35,23 +36,37 @@ and use the theme picker in the toolbar.
 
 UNDRR's brand is defined by three core characteristics:
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '1rem',
+    marginBottom: '2rem',
+  }}
+>
   <HighlightBox variant="primary">
     <span style={{ color: 'white' }}>
       <strong>Knowledgeable</strong>
-      <p>Convince people with credible knowledge of what may and will happen.</p>
+      <p>
+        Convince people with credible knowledge of what may and will happen.
+      </p>
     </span>
   </HighlightBox>
   <HighlightBox variant="primary">
     <span style={{ color: 'white' }}>
       <strong>Approachable</strong>
-      <p>We need to work with all the different stakeholders to complete our mission.</p>
+      <p>
+        We need to work with all the different stakeholders to complete our
+        mission.
+      </p>
     </span>
   </HighlightBox>
   <HighlightBox variant="primary">
     <span style={{ color: 'white' }}>
       <strong>Collaborative</strong>
-      <p>We need to be seen at the same level as the people we are working with.</p>
+      <p>
+        We need to be seen at the same level as the people we are working with.
+      </p>
     </span>
   </HighlightBox>
 </div>
@@ -80,9 +95,9 @@ UNDRR's brand is defined by three core characteristics:
 ## Communication guidelines
 
 <HighlightBox>
-  <strong>The inverted pyramid:</strong> Lead with the most important information.
-  Supporting details follow. Background and context come last. Readers should get
-  the key message even if they only read the first paragraph.
+  <strong>The inverted pyramid:</strong> Lead with the most important
+  information. Supporting details follow. Background and context come last.
+  Readers should get the key message even if they only read the first paragraph.
 </HighlightBox>
 
 **Effective communication rules:**
@@ -100,7 +115,11 @@ UNDRR's brand is defined by three core characteristics:
 {/* Source: https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Logos.aspx */}
 
 For logo files and downloads, switch to your property's theme on the
-<LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> page.
+
+<LinkTo kind="brand-brand-identity" story="docs">
+  Brand identity
+</LinkTo>
+page.
 
 ### UNDRR logo rules
 
@@ -127,7 +146,14 @@ For logo files and downloads, switch to your property's theme on the
 
 {/* Source: https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Photography-and-Icons.aspx */}
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1rem',
+    marginBottom: '1.5rem',
+  }}
+>
   <HighlightBox>
     <strong>Do:</strong> Illustrations and photography should portray a positive
     image of disaster prevention and recovery. Human faces and stories should be
@@ -135,8 +161,9 @@ For logo files and downloads, switch to your property's theme on the
   </HighlightBox>
   <HighlightBox variant="secondary">
     <span style={{ color: 'white' }}>
-      <strong>Don't:</strong> Conference pictures should be kept to the strict minimum.
-      We do not want to convey a conference-focused image of the organization.
+      <strong>Don't:</strong> Conference pictures should be kept to the strict
+      minimum. We do not want to convey a conference-focused image of the
+      organization.
     </span>
   </HighlightBox>
 </div>
@@ -146,12 +173,12 @@ For logo files and downloads, switch to your property's theme on the
 
 ### Photo sizes
 
-| Use case | Aspect ratio | Dimensions |
-|----------|-------------|------------|
-| Hero banner | 16:6 | 1440 x 540 px |
-| News image | 16:9 | 1164 x 665 px |
-| Publication cover | 3:4 | 176 x 235 px |
-| People thumbnail | 1:1 | 176 x 176 px |
+| Use case          | Aspect ratio | Dimensions    |
+| ----------------- | ------------ | ------------- |
+| Hero banner       | 16:6         | 1440 x 540 px |
+| News image        | 16:9         | 1164 x 665 px |
+| Publication cover | 3:4          | 176 x 235 px  |
+| People thumbnail  | 1:1          | 176 x 176 px  |
 
 ### Icons
 
@@ -198,9 +225,9 @@ Headings use **Roboto Condensed**. For internal communication and email, Arial c
 require specialized typography. When content is marked with a language attribute
 (e.g., `lang="ar"`), CSS `:lang()` selectors apply the appropriate fonts automatically.
 
-| Language | Selector | Font override |
-|----------|----------|---------------|
-| Arabic | `:lang(ar)` | Noto Kufi Arabic (headings), Dubai (body) |
+| Language | Selector    | Font override                             |
+| -------- | ----------- | ----------------------------------------- |
+| Arabic   | `:lang(ar)` | Noto Kufi Arabic (headings), Dubai (body) |
 
 See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</LinkTo>
 
@@ -208,9 +235,18 @@ See: <LinkTo kind="design-decisions-fonts" story="docs">Fonts documentation</Lin
 
 ## Resources
 
-- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> — theme-specific colors, typography, logos, buttons, and icons
-- <LinkTo kind="brand-about-this-guide" story="docs">About this guide</LinkTo> — overview of all UNDRR web properties
-- <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> — editorial standards for web content
+- <LinkTo kind="brand-brand-identity" story="docs">
+    Brand identity
+  </LinkTo>
+  — theme-specific colors, typography, logos, buttons, and icons
+- <LinkTo kind="brand-about-this-guide" story="docs">
+    About this guide
+  </LinkTo>
+  — overview of all UNDRR web properties
+- <LinkTo kind="contributing-writing-guidelines" story="docs">
+    Writing guidelines
+  </LinkTo>
+  — editorial standards for web content
 - [UNDRR Style Guides (intranet)](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Style-Guides.aspx) — additional communications guidance for internal UNDRR users (requires UN SharePoint access)
 - [UN web standards](https://www.un.org/styleguide/) — UN-wide branding and style guidance
 

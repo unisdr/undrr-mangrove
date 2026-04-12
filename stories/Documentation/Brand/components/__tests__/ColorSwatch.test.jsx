@@ -19,7 +19,13 @@ describe('ColorSwatch', () => {
   // --------------------------------------------------
 
   it('renders the swatch with an explicit color', () => {
-    render(<ColorSwatch color="#004f91" name="Primary blue" usage="Headers and navigation" />);
+    render(
+      <ColorSwatch
+        color="#004f91"
+        name="Primary blue"
+        usage="Headers and navigation"
+      />
+    );
 
     expect(screen.getByText('Primary blue')).toBeInTheDocument();
     expect(screen.getByText('Headers and navigation')).toBeInTheDocument();
@@ -28,7 +34,7 @@ describe('ColorSwatch', () => {
 
   it('renders without a usage description', () => {
     const { container } = render(
-      <ColorSwatch color="#004f91" name="Primary blue" />,
+      <ColorSwatch color="#004f91" name="Primary blue" />
     );
 
     expect(screen.getByText('Primary blue')).toBeInTheDocument();
@@ -74,7 +80,9 @@ describe('ColorSwatch', () => {
 
   it('shows error feedback when clipboard fails', async () => {
     Object.assign(navigator, {
-      clipboard: { writeText: jest.fn().mockRejectedValue(new Error('denied')) },
+      clipboard: {
+        writeText: jest.fn().mockRejectedValue(new Error('denied')),
+      },
     });
 
     render(<ColorSwatch color="#004f91" name="Primary blue" />);
@@ -112,13 +120,13 @@ describe('ColorSwatch', () => {
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute(
       'aria-label',
-      'Copy hex value #004f91 for Primary blue',
+      'Copy hex value #004f91 for Primary blue'
     );
   });
 
   it('has no accessibility violations', async () => {
     const { container } = render(
-      <ColorSwatch color="#004f91" name="Primary blue" usage="Headers" />,
+      <ColorSwatch color="#004f91" name="Primary blue" usage="Headers" />
     );
 
     const results = await axe(container);

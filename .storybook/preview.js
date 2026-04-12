@@ -247,7 +247,7 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: Object.keys(themeStyles).map((name) => ({
+        items: Object.keys(themeStyles).map(name => ({
           value: name,
           title: name,
         })),

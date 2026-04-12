@@ -40,10 +40,7 @@ function rgbToHex(rgb) {
   const r = parseInt(match[1], 10);
   const g = parseInt(match[2], 10);
   const b = parseInt(match[3], 10);
-  return (
-    '#' +
-    [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')
-  );
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 
 /**
@@ -136,10 +133,7 @@ export function ColorSwatch({
             : `${name} color unavailable`
         }
       >
-        <span
-          className="mg-color-swatch__hex"
-          style={{ color: textColor }}
-        >
+        <span className="mg-color-swatch__hex" style={{ color: textColor }}>
           {copyState === 'copied'
             ? 'Copied!'
             : copyState === 'failed'
