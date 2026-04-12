@@ -254,6 +254,7 @@ $mg-font-line-height-700: 1.5em;
 
 $mg-font-family: "Roboto", sans-serif;
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
+$mg-font-family-headings: $mg-font-family-condensed !default;
 $mg-font-family-icons: "fontawesome";
 
 // Arabic fonts
@@ -352,7 +353,10 @@ $mg-color-hero-title: $mg-color-neutral-0 !default;
 $mg-spacing-hero-overlay: 0 !default;
 $mg-hero-overlay-max-width: $mg-width-400 !default;
 $mg-hero-overlay-padding: $mg-spacing-200 !default;
-$mg-color-hero-button-secondary-background: rgba($mg-color-neutral-0, 0.9) !default;
+$mg-color-hero-button-secondary-background: rgba(
+  $mg-color-neutral-0,
+  0.9
+) !default;
 $mg-color-hero-button-secondary-color: $mg-color-hero !default;
 $mg-border-color-hero-button-secondary: $mg-color-neutral-0 !default;
 
@@ -398,21 +402,21 @@ $author-image-radius: 50%;
  */
 
 // Background utility — pseudo-element placed behind all sibling content
-$mg-z-index-behind: -1;      // ::before backgrounds (e.g. mg-container-full-width)
+$mg-z-index-behind: -1; // ::before backgrounds (e.g. mg-container-full-width)
 
 // Navigation zone — ⚠ FROZEN: Drupal themes depend on these exact values
-$mg-z-index-nav: 10;         // MegaMenu (mobile sidebar/overlay uses nav - 1 = 9)
-$mg-z-index-sticky: 11;      // Secondary sticky bars, e.g. OnThisPageNav
-$mg-z-index-nav-toggle: 14;  // Mobile nav hamburger toggle (above all nav layers)
-$mg-z-index-header: 22;      // PageHeader (above nav and sticky bar)
+$mg-z-index-nav: 10; // MegaMenu (mobile sidebar/overlay uses nav - 1 = 9)
+$mg-z-index-sticky: 11; // Secondary sticky bars, e.g. OnThisPageNav
+$mg-z-index-nav-toggle: 14; // Mobile nav hamburger toggle (above all nav layers)
+$mg-z-index-header: 22; // PageHeader (above nav and sticky bar)
 
 // Overlay zone — floats above page content
-$mg-z-index-drawer: 2000;    // Drawer / side panel (backdrop uses drawer - 1 = 1999)
-$mg-z-index-dropdown: 2500;  // Dropdowns and inline menus (above drawers)
+$mg-z-index-drawer: 2000; // Drawer / side panel (backdrop uses drawer - 1 = 1999)
+$mg-z-index-dropdown: 2500; // Dropdowns and inline menus (above drawers)
 
 // Modal zone — portaled to <body>, must clear all page chrome
-$mg-z-index-modal: 5000;     // Modal and dialog (backdrop uses modal - 1 = 4999)
-$mg-z-index-toast: 5500;     // Toast notifications (Snackbar), above modals
+$mg-z-index-modal: 5000; // Modal and dialog (backdrop uses modal - 1 = 4999)
+$mg-z-index-toast: 5500; // Toast notifications (Snackbar), above modals
 
 /**
   * @tokens-end
