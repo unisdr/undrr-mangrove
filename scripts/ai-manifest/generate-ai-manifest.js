@@ -1341,20 +1341,40 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
 
 ### Brand guide
 
-The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners):
+The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners). Five pages:
 
-- **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons for each UNDRR property. Switch themes in the toolbar to see different brands.
-- **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance including brand positioning, communication rules, logo usage, and photography standards.
-- **About this guide** (${DOCS_BASE}?path=/docs/brand-about-this-guide--docs): Overview of all five UNDRR web properties with links.
+- **About this guide** (${DOCS_BASE}?path=/docs/brand-about-this-guide--docs): Overview with theme-map cards linking to each UNDRR property's brand identity preset.
+- **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons. Switch themes via toolbar or append \`&globals=theme:<Theme Name>\` to the URL. Colors are probed live from compiled CSS via \`getComputedStyle\`, so they stay in sync with SCSS.
+- **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance — brand positioning, communication rules, logo usage, photography standards, web elements. Migrated from UNDRR SharePoint.
+- **Common patterns** (${DOCS_BASE}?path=/docs/brand-common-patterns--docs): Plain-language reference for foundations shared across all themes — breakpoints, grid classes (\`mg-grid__col-{N}\`), accessibility standards, language support (\`lang="ar"\` mechanism), icon sources, z-index.
+- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 8 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
 
-Key brand facts:
-- UNDRR brand characteristics: Knowledgeable, Approachable, Collaborative
-- Communication: avoid UN jargon, use the inverted pyramid, make stories around real people, portray prevention positively
-- Typography: Roboto Condensed for headings, Roboto for body text, Noto Kufi Arabic for Arabic headings
-- Five themed properties: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (blue #0f78bf), DELTA Resilience (navy #132e48)
-- Photo sizes: Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1)
-- Logo safety zone: width of the "U" in UNDRR
-- OCHA humanitarian icons for hazard-related content, Mangrove icon set for web UI
+Theme key facts:
+- Five themed properties with resolved primary colors: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (bright blue #0f78bf), DELTA Resilience (navy #132e48).
+- Neutrals are shared across all themes — only brand/accent colors change per property.
+
+Brand characteristics (UNDRR voice): Knowledgeable, Approachable, Collaborative.
+
+Editorial rules:
+- Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
+
+Typography:
+- Headings: Roboto Condensed (via \`$mg-font-family-headings\` token, defaults to \`$mg-font-family-condensed\`). Applied to h1-h6 globally.
+- Body: Roboto (\`$mg-font-family\`).
+- Arabic: Noto Kufi Arabic (headings) + Dubai (body), applied automatically via \`:lang(ar)\` selectors when \`lang="ar"\` is set on a container.
+
+Photo sizes (credit/source required on every image):
+- Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1).
+
+Logos (hosted on CDN for hotlinking or download):
+- UNDRR: https://assets.undrr.org/static/logos/undrr/undrr-logo-blue.svg (blue, white, square variants)
+- PreventionWeb: https://assets.undrr.org/static/logos/pw/pw-logo.svg
+- IRP: https://assets.undrr.org/static/logos/irp/irp-logo.svg
+- MCR2030 and DELTA: not yet on CDN
+- Safety zone equals the width of the "U" in UNDRR. Do not place on busy backgrounds. Use inverse (white) variant on dark backgrounds.
+
+Icons:
+- Lucide for general UI icons, OCHA for humanitarian/hazard icons (earthquake, tsunami, flood, cyclone, drought, resilience), plus custom UNDRR icons. Use via \`<Icon name="..."/>\` or CSS classes \`mg-icon mg-icon-{name}\`.
 
 ### Source layout
 
