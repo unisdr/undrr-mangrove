@@ -4,6 +4,16 @@ import { axe } from 'jest-axe';
 import { ColorSwatch } from '../ColorSwatch';
 
 describe('ColorSwatch', () => {
+  const originalClipboard = navigator.clipboard;
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: originalClipboard,
+      writable: true,
+      configurable: true,
+    });
+  });
+
   // --------------------------------------------------
   // Rendering with explicit color
   // --------------------------------------------------

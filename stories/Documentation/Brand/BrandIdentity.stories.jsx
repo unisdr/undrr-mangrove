@@ -5,7 +5,7 @@
  * hook issues in docs mode.
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ColorSwatch } from './components/ColorSwatch';
 import { TypographySample } from './components/TypographySample';
 import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
@@ -14,14 +14,43 @@ import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
 import { Icon } from '../../Atom/Icons/Icon';
 import { P } from '../../Atom/BaseTypography/Paragraph/Paragraph';
 import { Small } from '../../Atom/BaseTypography/Small/Small';
-import { getTheme } from './data/themes';
+import { getTheme, colorProbes } from './data/themes';
 
 const grid4 = { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' };
 const grid2 = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' };
 
+/**
+ * Reads a CSS color value from the DOM by creating a temporary probe element.
+ */
+function probeColor(className, property = 'background-color') {
+  const el = document.createElement('div');
+  el.className = className;
+  el.style.position = 'absolute';
+  el.style.visibility = 'hidden';
+  document.body.appendChild(el);
+  const val = window.getComputedStyle(el).getPropertyValue(property);
+  document.body.removeChild(el);
+  return val;
+}
+
+function rgbToHex(rgb) {
+  if (!rgb) return null;
+  const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!match) return null;
+  return '#' + [1, 2, 3].map(i => parseInt(match[i], 10).toString(16).padStart(2, '0')).join('');
+}
+
 function BrandIdentityPage({ themeName }) {
+  // Re-render after CSS is loaded by the theme decorator.
+  // The decorator's useEffect injects CSS after the first render,
+  // so we need a second pass to probe the correct values.
+  const [, rerender] = useState(0);
+  useEffect(() => {
+    requestAnimationFrame(() => rerender((n) => n + 1));
+  }, [themeName]);
+
   const theme = getTheme(themeName);
-  const primaryColor = theme.colors.brand[0]?.color || '#004f91';
+  const primaryColor = rgbToHex(probeColor('mg-button-primary')) || '#004f91';
 
   return (
     <div style={{ fontFamily: "'Roboto', sans-serif", maxWidth: 900 }}>
@@ -111,27 +140,28 @@ function BrandIdentityPage({ themeName }) {
         </>
       )}
 
-      {/* Color palette */}
+      {/* Color palette — probed live from compiled theme CSS */}
       <h2>Color palette</h2>
-      <p>Colors used across {theme.url}. Click any swatch to copy its hex value.</p>
+      <p>Colors used across {theme.url}. Click any swatch to copy its hex value.
+        These values are read directly from the active theme's compiled CSS.</p>
 
       <h3>Brand and interactive colors</h3>
       <div style={grid4}>
-        {theme.colors.brand.map((c, i) => (
-          <ColorSwatch key={`brand-${i}`} color={c.color} name={c.name} usage={c.usage} />
+        {colorProbes.brand.map((c, i) => (
+          <ColorSwatch key={`brand-${i}`} color={rgbToHex(probeColor(c.probe, c.property))} name={c.name} usage={c.usage} />
         ))}
       </div>
 
       <h3>Accent colors</h3>
       <div style={grid4}>
-        {theme.colors.accent.map((c, i) => (
-          <ColorSwatch key={`accent-${i}`} color={c.color} name={c.name} usage={c.usage} />
+        {colorProbes.accent.map((c, i) => (
+          <ColorSwatch key={`accent-${i}`} color={rgbToHex(probeColor(c.probe, c.property))} name={c.name} usage={c.usage} />
         ))}
       </div>
 
       <h3>Neutral colors</h3>
       <div style={grid4}>
-        {theme.colors.neutral.map((c, i) => (
+        {colorProbes.neutral.map((c, i) => (
           <ColorSwatch key={`neutral-${i}`} color={c.color} name={c.name} usage={c.usage} />
         ))}
       </div>
@@ -218,7 +248,7 @@ function BrandIdentityPage({ themeName }) {
       <h2>Usage guidelines</h2>
       <div style={grid2}>
         <HighlightBox>
-          <strong>Do:</strong> Use {theme.colors.brand[0]?.name} ({primaryColor}) for
+          <strong>Do:</strong> Use the primary brand color ({primaryColor}) for
           navigation headers and brand elements on {theme.url}.
         </HighlightBox>
         <HighlightBox variant="secondary">

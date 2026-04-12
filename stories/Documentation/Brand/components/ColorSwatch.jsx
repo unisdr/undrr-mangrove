@@ -12,7 +12,7 @@ import './color-swatch.css';
 
 /**
  * Returns white or dark text depending on background luminance.
- * Uses the W3C relative luminance formula.
+ * Uses the ITU-R BT.601 perceived brightness formula.
  *
  * @param {string} hex - Hex color string (e.g., '#004f91')
  * @returns {'#fff'|'#1a1a1a'} Contrasting text color
@@ -69,32 +69,38 @@ export function ColorSwatch({
   usage,
 }) {
   const probeRef = useRef(null);
-  const [hex, setHex] = useState(explicitColor || null);
+  const copyTimerRef = useRef(null);
+  const [probedHex, setProbedHex] = useState(null);
   const [copyState, setCopyState] = useState('idle'); // 'idle' | 'copied' | 'failed'
 
+  // Probe CSS value for non-explicit colors
   useEffect(() => {
-    if (explicitColor) {
-      setHex(explicitColor);
-      return;
-    }
-    if (!probeRef.current) return;
+    if (explicitColor || !probeRef.current) return;
     const computed = window.getComputedStyle(probeRef.current);
     const raw = computed.getPropertyValue(property);
     const resolved = rgbToHex(raw);
     if (resolved && resolved !== '#000000') {
-      setHex(resolved);
+      setProbedHex(resolved);
     }
   }, [probe, property, explicitColor]);
 
+  // Use explicit color directly (not stored in state) so prop changes take effect
+  const hex = explicitColor || probedHex;
+
+  useEffect(() => {
+    return () => clearTimeout(copyTimerRef.current);
+  }, []);
+
   const handleCopy = useCallback(async () => {
     if (!hex) return;
+    clearTimeout(copyTimerRef.current);
     try {
       await navigator.clipboard.writeText(hex);
       setCopyState('copied');
-      setTimeout(() => setCopyState('idle'), 1500);
+      copyTimerRef.current = setTimeout(() => setCopyState('idle'), 1500);
     } catch {
       setCopyState('failed');
-      setTimeout(() => setCopyState('idle'), 2000);
+      copyTimerRef.current = setTimeout(() => setCopyState('idle'), 2000);
     }
   }, [hex]);
 

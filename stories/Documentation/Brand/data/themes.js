@@ -1,12 +1,34 @@
 /**
  * @file themes.js
- * @description Theme color palettes for brand pages. Values sourced from
- * _variables.scss and _variables-{theme}.scss.
- *
- * Update these when theme tokens change (brand refreshes).
+ * @description Theme metadata and logo URLs for brand pages.
+ * Color values are read live from the compiled CSS via getComputedStyle
+ * probes in ColorSwatch — no hardcoded hex values to maintain.
  */
 
 const CDN = 'https://assets.undrr.org/static/logos';
+
+/**
+ * CSS class → property mappings for probing theme colors from the DOM.
+ * Each entry becomes a ColorSwatch on the brand identity page.
+ * The resolved color comes from the active Storybook theme's compiled CSS.
+ */
+export const colorProbes = {
+  brand: [
+    { probe: 'mg-hero__overlay', property: 'background-color', name: 'Hero / primary', usage: 'Hero banners, branded sections' },
+    { probe: 'mg-button mg-button-primary', property: 'background-color', name: 'Button primary', usage: 'Primary action buttons' },
+    { probe: 'mg-tag', property: 'background-color', name: 'Tag', usage: 'Content tags and labels' },
+    { probe: 'mg-tag mg-tag--secondary', property: 'background-color', name: 'Tag secondary', usage: 'Secondary tags' },
+  ],
+  accent: [
+    { probe: 'mg-tag mg-tag--accent', property: 'background-color', name: 'Accent', usage: 'Accent highlights and callouts' },
+  ],
+  neutral: [
+    { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
+    { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
+    { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
+    { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
+  ],
+};
 
 export const themes = {
   'Global UNDRR Theme': {
@@ -24,26 +46,6 @@ export const themes = {
         { label: 'Square (SVG)', url: `${CDN}/undrr/undrr-logo-square-blue.svg` },
       ],
     },
-    colors: {
-      brand: [
-        { color: '#004f91', name: 'Primary blue', usage: 'Headers, navigation, brand identity' },
-        { color: '#004f91', name: 'Interactive', usage: 'Links, buttons, clickable elements' },
-        { color: '#3372a7', name: 'Interactive hover', usage: 'Hovered links and buttons' },
-        { color: '#004f91', name: 'Hero background', usage: 'Hero banners and branded sections' },
-      ],
-      accent: [
-        { color: '#c10920', name: 'Red', usage: 'Alerts, emphasis, Sendai markers' },
-        { color: '#eb752a', name: 'Orange', usage: 'Secondary accents, highlights' },
-        { color: '#f4e496', name: 'Yellow', usage: 'Tags, soft highlights, warnings' },
-        { color: '#0a6969', name: 'Teal', usage: 'Secondary palette, accent blocks' },
-      ],
-      neutral: [
-        { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
-        { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
-        { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
-        { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
-      ],
-    },
   },
   'PreventionWeb Theme': {
     id: 'preventionweb',
@@ -58,26 +60,6 @@ export const themes = {
         { label: 'Logo (SVG)', url: `${CDN}/pw/pw-logo.svg` },
       ],
     },
-    colors: {
-      brand: [
-        { color: '#0a6969', name: 'Primary teal', usage: 'Headers, navigation, brand identity' },
-        { color: '#0a6969', name: 'Interactive', usage: 'Links, buttons, clickable elements' },
-        { color: '#0a6969', name: 'Interactive hover', usage: 'Hovered links and buttons' },
-        { color: '#0a6969', name: 'Hero background', usage: 'Hero banners and branded sections' },
-      ],
-      accent: [
-        { color: '#eb752a', name: 'Orange', usage: 'Button hover, secondary actions' },
-        { color: '#c10920', name: 'Red', usage: 'Alerts, emphasis' },
-        { color: '#f4e496', name: 'Yellow', usage: 'Tags, soft highlights' },
-        { color: '#004f91', name: 'Blue', usage: 'Accent blocks, secondary palette' },
-      ],
-      neutral: [
-        { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
-        { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
-        { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
-        { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
-      ],
-    },
   },
   'MCR2030 Theme': {
     id: 'mcr2030',
@@ -89,33 +71,13 @@ export const themes = {
     // 2. Replace `null` below with:
     //    {
     //      src: `${CDN}/mcr2030/mcr2030-logo.svg`,
-    //      srcWhite: `${CDN}/mcr2030/mcr2030-logo-white.svg`,  // if a white variant exists
+    //      srcWhite: `${CDN}/mcr2030/mcr2030-logo-white.svg`,
     //      alt: 'MCR2030 logo',
     //      variants: [
     //        { label: 'Logo (SVG)', url: `${CDN}/mcr2030/mcr2030-logo.svg` },
     //      ],
     //    }
     logo: null,
-    colors: {
-      brand: [
-        { color: '#591a61', name: 'Primary purple', usage: 'Headers, navigation, brand identity' },
-        { color: '#591a61', name: 'Interactive', usage: 'Links, buttons, clickable elements' },
-        { color: '#591a61', name: 'Interactive hover', usage: 'Hovered links and buttons' },
-        { color: '#591a61', name: 'Hero background', usage: 'Hero banners and branded sections' },
-      ],
-      accent: [
-        { color: '#eb752a', name: 'Orange', usage: 'Secondary actions, highlights' },
-        { color: '#c10920', name: 'Red', usage: 'Alerts, emphasis' },
-        { color: '#f4e496', name: 'Yellow', usage: 'Tags, soft highlights' },
-        { color: '#004f91', name: 'Blue', usage: 'Accent blocks' },
-      ],
-      neutral: [
-        { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
-        { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
-        { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
-        { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
-      ],
-    },
   },
   'IRP Theme': {
     id: 'irp',
@@ -130,26 +92,6 @@ export const themes = {
         { label: 'Logo (SVG)', url: `${CDN}/irp/irp-logo.svg` },
       ],
     },
-    colors: {
-      brand: [
-        { color: '#0f78bf', name: 'Primary blue', usage: 'Headers, navigation, brand identity' },
-        { color: '#0f78bf', name: 'Interactive', usage: 'Links, buttons, clickable elements' },
-        { color: '#0f78bf', name: 'Interactive hover', usage: 'Hovered links and buttons' },
-        { color: '#0f78bf', name: 'Hero background', usage: 'Hero banners and branded sections' },
-      ],
-      accent: [
-        { color: '#eb752a', name: 'Orange', usage: 'Secondary actions, highlights' },
-        { color: '#c10920', name: 'Red', usage: 'Alerts, emphasis' },
-        { color: '#f4e496', name: 'Yellow', usage: 'Tags, soft highlights' },
-        { color: '#0a6969', name: 'Teal', usage: 'Accent blocks' },
-      ],
-      neutral: [
-        { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
-        { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
-        { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
-        { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
-      ],
-    },
   },
   'DELTA Resilience Theme': {
     id: 'delta',
@@ -160,26 +102,6 @@ export const themes = {
       src: require('../../../assets/images/delta-logo-placeholder.svg'),
       alt: 'DELTA Resilience logo (placeholder)',
       variants: [],
-    },
-    colors: {
-      brand: [
-        { color: '#132e48', name: 'Primary navy', usage: 'Headers, navigation, brand identity' },
-        { color: '#132e48', name: 'Interactive', usage: 'Links, buttons, clickable elements' },
-        { color: '#132e48', name: 'Interactive hover', usage: 'Hovered links and buttons' },
-        { color: '#132e48', name: 'Hero background', usage: 'Hero banners and branded sections' },
-      ],
-      accent: [
-        { color: '#2196f3', name: 'Bright blue', usage: 'Accents, highlights, data viz' },
-        { color: '#eb752a', name: 'Orange', usage: 'Secondary actions' },
-        { color: '#c10920', name: 'Red', usage: 'Alerts, emphasis' },
-        { color: '#f4e496', name: 'Yellow', usage: 'Tags, soft highlights' },
-      ],
-      neutral: [
-        { color: '#1a1a1a', name: 'Body text', usage: 'Primary text, headings' },
-        { color: '#666666', name: 'Secondary text', usage: 'Descriptions, metadata, captions' },
-        { color: '#f2f2f2', name: 'Background light', usage: 'Section backgrounds, cards' },
-        { color: '#ffffff', name: 'White', usage: 'Page background, card surfaces' },
-      ],
     },
   },
 };
