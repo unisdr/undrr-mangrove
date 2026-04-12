@@ -1,0 +1,140 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { VerticalCard } from '../../Components/Cards/Card/VerticalCard';
+
+<Meta
+  title="Brand/About this guide"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# UNDRR web style guide
+
+Colors, fonts, and components used across UNDRR websites.
+
+---
+
+## Who this is for
+
+For content editors, designers, and partners who work with UNDRR web properties.
+This guide shows the visual identity of each property so you can stay on-brand
+without needing to read code or install anything. For developers, see
+
+<LinkTo kind="getting-started-getting-started-guide" story="docs">
+  Getting started
+</LinkTo>
+.
+
+---
+
+## Choose your property
+
+Each UNDRR web property has its own visual identity. Click a card to see that
+property's colors, fonts, and component styles on the
+
+<LinkTo kind="brand-brand-identity" story="docs">
+  Brand identity
+</LinkTo>
+page.
+
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '1rem',
+  }}
+>
+  <VerticalCard
+    data={[
+      {
+        title: 'UNDRR',
+        summaryText: 'undrr.org',
+        link: '/?path=/story/brand-brand-identity--docs&globals=theme:Global+UNDRR+Theme',
+        imgback:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23004f91' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='32' font-family='sans-serif' text-anchor='middle'%3EUNDRR%3C/text%3E%3C/svg%3E",
+        imgalt: 'UNDRR primary blue',
+      },
+    ]}
+  />
+  <VerticalCard
+    data={[
+      {
+        title: 'PreventionWeb',
+        summaryText: 'preventionweb.net',
+        link: '/?path=/story/brand-brand-identity--docs&globals=theme:PreventionWeb+Theme',
+        imgback:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%230a6969' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='24' font-family='sans-serif' text-anchor='middle'%3EPreventionWeb%3C/text%3E%3C/svg%3E",
+        imgalt: 'PreventionWeb primary teal',
+      },
+    ]}
+  />
+  <VerticalCard
+    data={[
+      {
+        title: 'MCR2030',
+        summaryText: 'mcr2030.undrr.org',
+        link: '/?path=/story/brand-brand-identity--docs&globals=theme:MCR2030+Theme',
+        imgback:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23591a61' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='32' font-family='sans-serif' text-anchor='middle'%3EMCR2030%3C/text%3E%3C/svg%3E",
+        imgalt: 'MCR2030 primary purple',
+      },
+    ]}
+  />
+  <VerticalCard
+    data={[
+      {
+        title: 'IRP',
+        summaryText: 'International Recovery Platform',
+        link: '/?path=/story/brand-brand-identity--docs&globals=theme:IRP+Theme',
+        imgback:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%230f78bf' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='32' font-family='sans-serif' text-anchor='middle'%3EIRP%3C/text%3E%3C/svg%3E",
+        imgalt: 'IRP primary bright blue',
+      },
+    ]}
+  />
+  <VerticalCard
+    data={[
+      {
+        title: 'DELTA Resilience',
+        summaryText: 'deltaresilience.org',
+        link: '/?path=/story/brand-brand-identity--docs&globals=theme:DELTA+Resilience+Theme',
+        imgback:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23132e48' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='24' font-family='sans-serif' text-anchor='middle'%3EDELTA%3C/text%3E%3C/svg%3E",
+        imgalt: 'DELTA Resilience primary dark navy',
+      },
+    ]}
+  />
+</div>
+
+---
+
+## How to use the theme switcher
+
+Use the **theme selector** in the toolbar above to see how components look in each
+property's style. When browsing a brand page, switch to that property's theme for
+the most accurate preview.
+
+---
+
+## Quick links
+
+- <LinkTo kind="getting-started-getting-started-guide" story="docs">
+    Getting started guide
+  </LinkTo>
+  (for developers)
+- <LinkTo kind="design-decisions-colors" story="docs">
+    Full color reference
+  </LinkTo>
+  (all tokens, developer-oriented)
+- <LinkTo kind="design-decisions-typography" story="docs">
+    Full typography reference
+  </LinkTo>
+- [Report an issue](https://github.com/unisdr/undrr-mangrove/issues)
+
+---
+
+Last updated: 11 April 2026

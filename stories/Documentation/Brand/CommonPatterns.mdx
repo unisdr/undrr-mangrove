@@ -1,0 +1,157 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Brand/Common patterns"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Common patterns
+
+The structural foundations shared across every UNDRR web property. These don't
+change when you switch themes.
+
+For token tables (exact hex values, pixel sizes, etc.), see the
+
+<LinkTo kind="design-decisions-colors" story="docs">
+  Design decisions
+</LinkTo>
+section. This page explains the concepts in plain language and points to where
+to find the details.
+
+For theme-specific colors, typography, and components, see
+
+<LinkTo kind="brand-brand-identity" story="docs">
+  Brand identity
+</LinkTo>
+.
+
+---
+
+## Breakpoints
+
+Mangrove uses a mobile-first approach with four breakpoints. Content reflows
+automatically at each threshold.
+
+| Breakpoint   | Value  | Use case                        |
+| ------------ | ------ | ------------------------------- |
+| Mobile       | 480px  | Phones in portrait              |
+| Tablet       | 900px  | Tablets and small laptops       |
+| Desktop      | 1164px | Primary target for most content |
+| Wide desktop | 1440px | Large displays, dashboards      |
+
+The `mg-grid` utility handles column reflow across these breakpoints automatically.
+A 4-column grid becomes 2 columns on tablet and 1 column on mobile.
+
+---
+
+## Grid system
+
+The `mg-grid` utility provides responsive CSS Grid layouts with built-in breakpoint
+behavior. Apply `mg-grid` to a container and `mg-grid__col-{N}` to control column count.
+
+| Class            | Desktop | Tablet | Mobile |
+| ---------------- | ------- | ------ | ------ |
+| `mg-grid__col-2` | 2 cols  | 1 col  | 1 col  |
+| `mg-grid__col-3` | 3 cols  | 2 cols | 1 col  |
+| `mg-grid__col-4` | 4 cols  | 2 cols | 1 col  |
+| `mg-grid__col-6` | 6 cols  | 3 cols | 1 col  |
+
+Span modifiers: `mg-grid__col--span-2`, `mg-grid__col--span-3`, `mg-grid__col--span-all`.
+
+See: <LinkTo kind="design-decisions-grid" story="docs">Grid reference</LinkTo>
+
+---
+
+## Typography system
+
+Every property uses the same two font families:
+
+- **Roboto Condensed** for headings (h1-h6) — compact, authoritative
+- **Roboto** for body text — readable, widely supported
+- **Noto Kufi Arabic** + **Dubai** for Arabic content (automatic via `lang="ar"`)
+
+See: <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>
+·
+
+<LinkTo kind="design-decisions-fonts" story="docs">
+  Fonts
+</LinkTo>
+
+---
+
+## Spacing, colors, and neutral shades
+
+Spacing uses a 5px baseline grid. Neutral colors (body text, secondary text,
+backgrounds) are shared across all themes — only brand and accent colors change
+per property.
+
+See: <LinkTo kind="design-decisions-spacing" story="docs">Spacing</LinkTo>
+·
+
+<LinkTo kind="design-decisions-colors" story="docs">
+  Colors
+</LinkTo>
+
+---
+
+## Accessibility
+
+All Mangrove components follow these standards:
+
+- **WCAG 2.1 AA** contrast ratios (4.5:1 for body text, 3:1 for large text)
+- **Keyboard navigation** — all interactive elements reachable via Tab
+- **Focus indicators** — visible focus rings with 2px outline
+- **ARIA landmarks** — semantic HTML + ARIA for screen reader support
+- **Touch targets** — minimum 44x44 pixels for tap targets
+- **RTL support** — logical CSS properties for Arabic layouts
+
+See: <LinkTo kind="getting-started-accessibility" story="docs">Accessibility documentation</LinkTo>
+
+---
+
+## Language support
+
+Mangrove supports English, Arabic, Japanese, and Myanmar. Set the `lang` attribute
+on a container and Mangrove applies the right font and text direction automatically:
+
+```html
+<div lang="ar" dir="rtl">
+  <!-- Arabic fonts, right-to-left layout -->
+</div>
+```
+
+The locale switcher in the Storybook toolbar lets you preview different languages.
+
+---
+
+## Icon system
+
+Mangrove includes 80+ icons from three sources:
+
+- **Lucide** — general UI icons (search, calendar, chart, user)
+- **OCHA** — humanitarian icons for hazards and disaster response (earthquake, tsunami, flood, resilience)
+- **Custom** — UNDRR-specific icons
+
+Use classes (`mg-icon mg-icon-{name}`) in HTML or the `<Icon name="..." />` React component.
+
+See: <LinkTo kind="components-icons" story="docs">Full icon set</LinkTo>
+
+---
+
+## Z-index layers
+
+Mangrove uses named tokens for stacking contexts to avoid z-index chaos. Use
+`$mg-z-index-*` tokens from `_variables.scss` for global stacking (fixed, sticky,
+portaled elements).
+
+See: <LinkTo kind="design-decisions-z-index-layers" story="docs">Z-index layers</LinkTo>
+
+---
+
+Last updated: 12 April 2026

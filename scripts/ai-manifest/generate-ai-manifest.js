@@ -164,51 +164,302 @@ function buildSampleProps(React) {
   return {
     Chips: { label: 'Flood' },
     CtaButton: { label: 'Take action' },
-    TextInput: { label: 'Organization name', required: true, placeholder: 'Enter organization name', helpText: 'Full legal name of your organization.' },
-    Select: { label: 'Country', options: [{ value: 'JP', label: 'Japan' }, { value: 'NP', label: 'Nepal' }, { value: 'PH', label: 'Philippines' }], placeholder: 'Select a country' },
+    TextInput: {
+      label: 'Organization name',
+      required: true,
+      placeholder: 'Enter organization name',
+      helpText: 'Full legal name of your organization.',
+    },
+    Select: {
+      label: 'Country',
+      options: [
+        { value: 'JP', label: 'Japan' },
+        { value: 'NP', label: 'Nepal' },
+        { value: 'PH', label: 'Philippines' },
+      ],
+      placeholder: 'Select a country',
+    },
     Checkbox: { label: 'I agree to the terms and conditions', name: 'terms' },
     Radio: { label: 'Government', name: 'role', value: 'government' },
-    Textarea: { label: 'Message', name: 'message', rows: 5, placeholder: 'Your message here', helpText: 'Max 500 characters.' },
+    Textarea: {
+      label: 'Message',
+      name: 'message',
+      rows: 5,
+      placeholder: 'Your message here',
+      helpText: 'Max 500 characters.',
+    },
     FormGroup: {
       legend: 'What is your role?',
-      children: React.createElement('div', null,
-        React.createElement('div', { className: 'mg-radio', key: '1' },
-          React.createElement('input', { type: 'radio', id: 'r1', name: 'role', value: 'researcher' }),
-          React.createElement('label', { htmlFor: 'r1' }, 'Researcher')),
-        React.createElement('div', { className: 'mg-radio', key: '2' },
-          React.createElement('input', { type: 'radio', id: 'r2', name: 'role', value: 'practitioner' }),
-          React.createElement('label', { htmlFor: 'r2' }, 'Practitioner'))),
+      children: React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'div',
+          { className: 'mg-radio', key: '1' },
+          React.createElement('input', {
+            type: 'radio',
+            id: 'r1',
+            name: 'role',
+            value: 'researcher',
+          }),
+          React.createElement('label', { htmlFor: 'r1' }, 'Researcher')
+        ),
+        React.createElement(
+          'div',
+          { className: 'mg-radio', key: '2' },
+          React.createElement('input', {
+            type: 'radio',
+            id: 'r2',
+            name: 'role',
+            value: 'practitioner',
+          }),
+          React.createElement('label', { htmlFor: 'r2' }, 'Practitioner')
+        )
+      ),
     },
-    FormErrorSummary: { title: 'There is a problem', errors: [{ id: 'email', message: 'Enter a valid email address' }, { id: 'org', message: 'Organization name is required' }] },
-    VerticalCard: { data: [{ title: 'Building resilience through early warning systems', link: '/news/resilience', imgback: 'https://picsum.photos/600/400', imgalt: 'Workshop', label1: 'Early warning', summaryText: 'New partnerships strengthen disaster preparedness.' }] },
-    HorizontalCard: { data: [{ title: 'Climate adaptation strategies', link: '/news/climate', imgback: 'https://picsum.photos/400/300', imgalt: 'Meeting', label1: 'Climate', summaryText: 'Integrated approaches to climate resilience.' }] },
-    BookCard: { data: [{ title: 'Global Assessment Report 2024', link: '/publications/gar-2024', imgback: 'https://picsum.photos/300/400', imgalt: 'GAR 2024 cover' }] },
-    HorizontalBookCard: { data: [{ title: 'Sendai Framework Monitor Report', link: '/publications/sendai', imgback: 'https://picsum.photos/300/400', imgalt: 'Cover', label1: 'DRR', summaryText: 'Progress on implementation.' }] },
-    IconCard: { data: [{ icon: 'mg-icon mg-icon-globe', imageScale: 'medium', title: 'Global risk assessment', summaryText: 'Analysis of disaster risk trends.', link: '/risk', linkText: 'Learn more' }] },
-    StatsCard: { title: 'Key figures', stats: [{ value: '1.23 million', bottomLabel: 'People affected' }, { value: '195', bottomLabel: 'Countries reporting' }, { value: '$2.8 trillion', bottomLabel: 'Economic losses' }] },
-    Breadcrumbs: { data: [{ text: 'Home' }, { text: 'Publications' }, { text: 'Global Assessment Report 2024' }] },
+    FormErrorSummary: {
+      title: 'There is a problem',
+      errors: [
+        { id: 'email', message: 'Enter a valid email address' },
+        { id: 'org', message: 'Organization name is required' },
+      ],
+    },
+    VerticalCard: {
+      data: [
+        {
+          title: 'Building resilience through early warning systems',
+          link: '/news/resilience',
+          imgback: 'https://picsum.photos/600/400',
+          imgalt: 'Workshop',
+          label1: 'Early warning',
+          summaryText: 'New partnerships strengthen disaster preparedness.',
+        },
+      ],
+    },
+    HorizontalCard: {
+      data: [
+        {
+          title: 'Climate adaptation strategies',
+          link: '/news/climate',
+          imgback: 'https://picsum.photos/400/300',
+          imgalt: 'Meeting',
+          label1: 'Climate',
+          summaryText: 'Integrated approaches to climate resilience.',
+        },
+      ],
+    },
+    BookCard: {
+      data: [
+        {
+          title: 'Global Assessment Report 2024',
+          link: '/publications/gar-2024',
+          imgback: 'https://picsum.photos/300/400',
+          imgalt: 'GAR 2024 cover',
+        },
+      ],
+    },
+    HorizontalBookCard: {
+      data: [
+        {
+          title: 'Sendai Framework Monitor Report',
+          link: '/publications/sendai',
+          imgback: 'https://picsum.photos/300/400',
+          imgalt: 'Cover',
+          label1: 'DRR',
+          summaryText: 'Progress on implementation.',
+        },
+      ],
+    },
+    IconCard: {
+      data: [
+        {
+          icon: 'mg-icon mg-icon-globe',
+          imageScale: 'medium',
+          title: 'Global risk assessment',
+          summaryText: 'Analysis of disaster risk trends.',
+          link: '/risk',
+          linkText: 'Learn more',
+        },
+      ],
+    },
+    StatsCard: {
+      title: 'Key figures',
+      stats: [
+        { value: '1.23 million', bottomLabel: 'People affected' },
+        { value: '195', bottomLabel: 'Countries reporting' },
+        { value: '$2.8 trillion', bottomLabel: 'Economic losses' },
+      ],
+    },
+    Breadcrumbs: {
+      data: [
+        { text: 'Home' },
+        { text: 'Publications' },
+        { text: 'Global Assessment Report 2024' },
+      ],
+    },
     Pagination: { text: 'Page', text2: 'of' },
-    Tab: { tabdata: [{ text: 'Overview', text_id: 'overview', is_default: 'true', data: '<p>Overview of disaster risk reduction.</p>' }, { text: 'Details', text_id: 'details', data: '<p>Implementation guidance.</p>' }], variant: 'horizontal' },
-    Hero: { data: [{ title: 'Reducing disaster risk for a resilient future', imgback: 'https://picsum.photos/1600/600', summaryText: 'The Sendai Framework guides global efforts.', label: 'Featured', primary_button: 'Learn more' }] },
-    PageHeader: { variant: 'default', logoUrl: 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg', homeUrl: '/', languages: [{ value: 'en', label: 'English', selected: true }, { value: 'ar', label: 'Arabic' }] },
+    Tab: {
+      tabdata: [
+        {
+          text: 'Overview',
+          text_id: 'overview',
+          is_default: 'true',
+          data: '<p>Overview of disaster risk reduction.</p>',
+        },
+        {
+          text: 'Details',
+          text_id: 'details',
+          data: '<p>Implementation guidance.</p>',
+        },
+      ],
+      variant: 'horizontal',
+    },
+    Hero: {
+      data: [
+        {
+          title: 'Reducing disaster risk for a resilient future',
+          imgback: 'https://picsum.photos/1600/600',
+          summaryText: 'The Sendai Framework guides global efforts.',
+          label: 'Featured',
+          primary_button: 'Learn more',
+        },
+      ],
+    },
+    PageHeader: {
+      variant: 'default',
+      logoUrl:
+        'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+      homeUrl: '/',
+      languages: [
+        { value: 'en', label: 'English', selected: true },
+        { value: 'ar', label: 'Arabic' },
+      ],
+    },
     Footer: { enableSyndication: false },
-    QuoteHighlight: { quote: 'Prevention is not a cost. It is an investment in our common future.', attribution: 'Mami Mizutori', attributionTitle: 'SRSG for Disaster Risk Reduction', backgroundColor: 'light', variant: 'line', alignment: 'full' },
-    HighlightBox: { children: React.createElement('div', null, React.createElement('h3', null, 'Key information'), React.createElement('p', null, 'Highlighted content draws attention to important information.')) },
-    EmbedContainer: { children: React.createElement('iframe', { src: 'https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q', title: 'UNDRR video', loading: 'lazy', allowFullScreen: true }) },
-    FullWidth: { children: React.createElement('p', null, 'This section spans the full viewport width.') },
+    QuoteHighlight: {
+      quote:
+        'Prevention is not a cost. It is an investment in our common future.',
+      attribution: 'Mami Mizutori',
+      attributionTitle: 'SRSG for Disaster Risk Reduction',
+      backgroundColor: 'light',
+      variant: 'line',
+      alignment: 'full',
+    },
+    HighlightBox: {
+      children: React.createElement(
+        'div',
+        null,
+        React.createElement('h3', null, 'Key information'),
+        React.createElement(
+          'p',
+          null,
+          'Highlighted content draws attention to important information.'
+        )
+      ),
+    },
+    EmbedContainer: {
+      children: React.createElement('iframe', {
+        src: 'https://www.youtube-nocookie.com/embed/bIpPtHJbV-Q',
+        title: 'UNDRR video',
+        loading: 'lazy',
+        allowFullScreen: true,
+      }),
+    },
+    FullWidth: {
+      children: React.createElement(
+        'p',
+        null,
+        'This section spans the full viewport width.'
+      ),
+    },
     Loader: { label: 'Loading content' },
-    ShowMore: { data: [{ button_text: 'Show more', collapsable_wrapper_class: 'mg-show-more--collapsed', collapsable_text: 'Additional content revealed on toggle.' }] },
-    Pager: { page: 3, totalPages: 12, onPageChange: () => {}, layout: 'centered', ariaLabel: 'Search results pages' },
-    MegaMenu: { sections: [{ items: [{ title: 'About', url: '/about', items: [{ title: 'Our mission', url: '/about/mission' }] }, { title: 'Topics', url: '/topics', items: [{ title: 'Early warning', url: '/topics/early-warning' }] }] }] },
+    ShowMore: {
+      data: [
+        {
+          button_text: 'Show more',
+          collapsable_wrapper_class: 'mg-show-more--collapsed',
+          collapsable_text: 'Additional content revealed on toggle.',
+        },
+      ],
+    },
+    Pager: {
+      page: 3,
+      totalPages: 12,
+      onPageChange: () => {},
+      layout: 'centered',
+      ariaLabel: 'Search results pages',
+    },
+    MegaMenu: {
+      sections: [
+        {
+          items: [
+            {
+              title: 'About',
+              url: '/about',
+              items: [{ title: 'Our mission', url: '/about/mission' }],
+            },
+            {
+              title: 'Topics',
+              url: '/topics',
+              items: [{ title: 'Early warning', url: '/topics/early-warning' }],
+            },
+          ],
+        },
+      ],
+    },
     ScrollContainer: {
       showArrows: true,
       children: [
-        React.createElement('div', { key: '1', style: { minWidth: '200px', padding: '1rem', background: '#f0f0f0' } }, 'Item 1'),
-        React.createElement('div', { key: '2', style: { minWidth: '200px', padding: '1rem', background: '#e0e0e0' } }, 'Item 2'),
-        React.createElement('div', { key: '3', style: { minWidth: '200px', padding: '1rem', background: '#d0d0d0' } }, 'Item 3'),
+        React.createElement(
+          'div',
+          {
+            key: '1',
+            style: {
+              minWidth: '200px',
+              padding: '1rem',
+              background: '#f0f0f0',
+            },
+          },
+          'Item 1'
+        ),
+        React.createElement(
+          'div',
+          {
+            key: '2',
+            style: {
+              minWidth: '200px',
+              padding: '1rem',
+              background: '#e0e0e0',
+            },
+          },
+          'Item 2'
+        ),
+        React.createElement(
+          'div',
+          {
+            key: '3',
+            style: {
+              minWidth: '200px',
+              padding: '1rem',
+              background: '#d0d0d0',
+            },
+          },
+          'Item 3'
+        ),
       ],
     },
-    Gallery: { media: [{ id: '1', type: 'image', src: 'https://picsum.photos/800/600', alt: 'Disaster risk reduction', title: 'Building resilience', description: 'Communities working to reduce disaster risk.' }] },
+    Gallery: {
+      media: [
+        {
+          id: '1',
+          type: 'image',
+          src: 'https://picsum.photos/800/600',
+          alt: 'Disaster risk reduction',
+          title: 'Building resilience',
+          description: 'Communities working to reduce disaster risk.',
+        },
+      ],
+    },
   };
 }
 
@@ -217,7 +468,9 @@ function buildSampleProps(React) {
 // ---------------------------------------------------------------------------
 
 const args = process.argv.slice(2);
-const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split('=')[1];
+const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split(
+  '='
+)[1];
 const buildDir = path.resolve(process.cwd(), buildDirArg || 'docs-build-temp');
 const validateOnly = args.includes('--validate');
 
@@ -232,13 +485,14 @@ if (!fs.existsSync(manifestPath)) {
   process.exit(1);
 }
 
-const pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
+const pkg = JSON.parse(
+  fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
+);
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
 // Replace {{version}} tokens with actual version from package.json
-const replaceVersion = obj => JSON.parse(
-  JSON.stringify(obj).replaceAll('{{version}}', pkg.version),
-);
+const replaceVersion = obj =>
+  JSON.parse(JSON.stringify(obj).replaceAll('{{version}}', pkg.version));
 
 const curatedData = replaceVersion(htmlExamples);
 const themeCss = replaceVersion(THEME_CSS);
@@ -281,7 +535,7 @@ const npmExports = parseNpmExports();
 // components are added. Used as a fallback when Storybook's internal function
 // name (e.g. BarChartProcessor) differs from the npm export (e.g. BarChart).
 const storybookIdToWebpackName = Object.fromEntries(
-  Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name]),
+  Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name])
 );
 
 // Manual overrides for npm-only components (no webpack entry in COMPONENT_IDS)
@@ -410,7 +664,8 @@ async function renderComponents() {
   const HTMLParser = (await import('prettier/parser-html')).default;
   const SAMPLE_PROPS = buildSampleProps(React);
 
-  const distFiles = fs.readdirSync(distDir)
+  const distFiles = fs
+    .readdirSync(distDir)
     .filter(f => f.endsWith('.js'))
     .map(f => f.replace('.js', ''));
 
@@ -430,9 +685,12 @@ async function renderComponents() {
     try {
       const mod = await import(modulePath);
       const isComponentLike = v =>
-        typeof v === 'function' || (v != null && typeof v === 'object' && v.$$typeof != null);
-      const Component = mod.default || mod[fileName]
-        || mod[Object.keys(mod).find(k => isComponentLike(mod[k]))];
+        typeof v === 'function' ||
+        (v != null && typeof v === 'object' && v.$$typeof != null);
+      const Component =
+        mod.default ||
+        mod[fileName] ||
+        mod[Object.keys(mod).find(k => isComponentLike(mod[k]))];
 
       if (!isComponentLike(Component)) {
         console.warn(`  skip ${fileName}: no renderable export`);
@@ -443,14 +701,20 @@ async function renderComponents() {
       const props = SAMPLE_PROPS[fileName] || {};
       const html = renderToStaticMarkup(React.createElement(Component, props));
       if (html.length < 30) {
-        console.warn(`  skip ${fileName}: rendered HTML too short (${html.length} chars)`);
+        console.warn(
+          `  skip ${fileName}: rendered HTML too short (${html.length} chars)`
+        );
         failed++;
         continue;
       }
 
       let formatted;
       try {
-        formatted = await prettier.format(html, { parser: 'html', plugins: [HTMLParser], printWidth: 100 });
+        formatted = await prettier.format(html, {
+          parser: 'html',
+          plugins: [HTMLParser],
+          printWidth: 100,
+        });
       } catch {
         formatted = html;
       }
@@ -463,7 +727,9 @@ async function renderComponents() {
     }
   }
 
-  console.log(`Rendered component HTML: ${rendered} components, ${failed} skipped`);
+  console.log(
+    `Rendered component HTML: ${rendered} components, ${failed} skipped`
+  );
   return results;
 }
 
@@ -476,8 +742,8 @@ const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
 // Check curated data keys (component-data.js entries)
 const curatedKeys = Object.keys(curatedData);
 const unmatchedKeys = curatedKeys.filter(k => !manifestIds.has(k));
-const uncoveredIds = [...manifestIds].filter(id =>
-  !curatedData[id] && !REQUIRES_REACT[id] && !id.startsWith('example-'),
+const uncoveredIds = [...manifestIds].filter(
+  id => !curatedData[id] && !REQUIRES_REACT[id] && !id.startsWith('example-')
 );
 
 if (unmatchedKeys.length > 0) {
@@ -485,7 +751,9 @@ if (unmatchedKeys.length > 0) {
   for (const k of unmatchedKeys) console.warn(`  - ${k}`);
 }
 if (uncoveredIds.length > 0) {
-  console.warn(`Note: ${uncoveredIds.length} component(s) have no entry in component-data:`);
+  console.warn(
+    `Note: ${uncoveredIds.length} component(s) have no entry in component-data:`
+  );
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
 }
 
@@ -494,7 +762,9 @@ const orphanedIds = Object.entries(COMPONENT_IDS)
   .filter(([, id]) => !curatedData[id] && !REQUIRES_REACT[id])
   .map(([fileName, id]) => `${fileName} → ${id}`);
 if (orphanedIds.length > 0) {
-  console.warn('Warning: COMPONENT_IDS entries with no component-data or REQUIRES_REACT match (will be skipped):');
+  console.warn(
+    'Warning: COMPONENT_IDS entries with no component-data or REQUIRES_REACT match (will be skipped):'
+  );
   for (const entry of orphanedIds) console.warn(`  - ${entry}`);
 }
 
@@ -507,15 +777,18 @@ const a11yRules = [
     id: 'role-button-on-link',
     label: 'role="button" on link element',
     test(html) {
-      return /<a[^>]*role="button"[^>]*href=/.test(html)
-        || /<a[^>]*href=[^>]*role="button"/.test(html);
+      return (
+        /<a[^>]*role="button"[^>]*href=/.test(html) ||
+        /<a[^>]*href=[^>]*role="button"/.test(html)
+      );
     },
   },
   {
     id: 'icon-missing-aria-hidden',
     label: 'icon element missing aria-hidden="true"',
     test(html) {
-      const iconPattern = /<(?:i|span)\b[^>]*class="[^"]*\bmg-icon\b(?!-wrap)[^"]*"[^>]*>/g;
+      const iconPattern =
+        /<(?:i|span)\b[^>]*class="[^"]*\bmg-icon\b(?!-wrap)[^"]*"[^>]*>/g;
       let match;
       while ((match = iconPattern.exec(html)) !== null) {
         if (!/aria-hidden\s*=\s*"true"/.test(match[0])) return true;
@@ -580,7 +853,8 @@ const a11yRules = [
   },
   {
     id: 'role-img-with-interactive-children',
-    label: 'role="img" on element containing interactive content (hides children from AT)',
+    label:
+      'role="img" on element containing interactive content (hides children from AT)',
     test(html) {
       const roleImgPattern = /<(\w+)\b[^>]*role="img"[^>]*>[\s\S]*?<\/\1>/g;
       let match;
@@ -624,14 +898,13 @@ if (a11yViolations.length > 0) {
 
 const totalComponents = Object.keys(manifest.components).length;
 const withProps = Object.values(manifest.components).filter(
-  c => c.reactDocgen?.props && Object.keys(c.reactDocgen.props).length > 0,
+  c => c.reactDocgen?.props && Object.keys(c.reactDocgen.props).length > 0
 ).length;
-const coverage = totalComponents > 0
-  ? Math.round((withProps / totalComponents) * 100)
-  : 0;
+const coverage =
+  totalComponents > 0 ? Math.round((withProps / totalComponents) * 100) : 0;
 
 console.log(
-  `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`,
+  `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`
 );
 
 // ---------------------------------------------------------------------------
@@ -670,7 +943,8 @@ async function checkCuratedDrift() {
   const SAMPLE_PROPS = buildSampleProps(React);
   const warnings = [];
 
-  const distFiles = fs.readdirSync(distDir)
+  const distFiles = fs
+    .readdirSync(distDir)
     .filter(f => f.endsWith('.js'))
     .map(f => f.replace('.js', ''));
 
@@ -687,14 +961,19 @@ async function checkCuratedDrift() {
     try {
       const mod = await import(modulePath);
       const isComponentLike = v =>
-        typeof v === 'function' || (v != null && typeof v === 'object' && v.$$typeof != null);
-      const Component = mod.default || mod[fileName]
-        || mod[Object.keys(mod).find(k => isComponentLike(mod[k]))];
+        typeof v === 'function' ||
+        (v != null && typeof v === 'object' && v.$$typeof != null);
+      const Component =
+        mod.default ||
+        mod[fileName] ||
+        mod[Object.keys(mod).find(k => isComponentLike(mod[k]))];
 
       if (!isComponentLike(Component)) continue;
 
       const props = SAMPLE_PROPS[fileName] || {};
-      const rendered = renderToStaticMarkup(React.createElement(Component, props));
+      const rendered = renderToStaticMarkup(
+        React.createElement(Component, props)
+      );
       if (rendered.length < 30) continue;
 
       const renderedClasses = extractBemClasses(rendered);
@@ -706,13 +985,19 @@ async function checkCuratedDrift() {
       // Compare only BEM blocks/elements (not modifiers, which are prop-dependent).
       // Curated HTML often shows multiple variants, but auto-render only produces one,
       // so modifier differences (mg-card--secondary etc.) are expected noise.
-      const staleInCurated = [...curatedClasses].filter(c => !isBemModifier(c) && !renderedClasses.has(c));
-      const missingFromCurated = [...renderedClasses].filter(c => !isBemModifier(c) && !curatedClasses.has(c));
+      const staleInCurated = [...curatedClasses].filter(
+        c => !isBemModifier(c) && !renderedClasses.has(c)
+      );
+      const missingFromCurated = [...renderedClasses].filter(
+        c => !isBemModifier(c) && !curatedClasses.has(c)
+      );
 
       if (staleInCurated.length > 0 || missingFromCurated.length > 0) {
         const parts = [];
-        if (staleInCurated.length > 0) parts.push(`curated has: ${staleInCurated.join(', ')}`);
-        if (missingFromCurated.length > 0) parts.push(`rendered has: ${missingFromCurated.join(', ')}`);
+        if (staleInCurated.length > 0)
+          parts.push(`curated has: ${staleInCurated.join(', ')}`);
+        if (missingFromCurated.length > 0)
+          parts.push(`rendered has: ${missingFromCurated.join(', ')}`);
         warnings.push(`  ${componentId}: ${parts.join(' | ')}`);
       }
     } catch {
@@ -730,18 +1015,26 @@ if (validateOnly) {
   let failed = false;
 
   if (unmatchedKeys.length > 0) {
-    console.error('Validation failed: component-data keys do not match manifest.');
+    console.error(
+      'Validation failed: component-data keys do not match manifest.'
+    );
     failed = true;
   }
   if (a11yViolations.length > 0) {
-    console.error(`Validation failed: ${a11yViolations.length} a11y violation(s) in curated HTML.`);
+    console.error(
+      `Validation failed: ${a11yViolations.length} a11y violation(s) in curated HTML.`
+    );
     failed = true;
   }
 
   // Fail if any Storybook component has no manifest entry at all
   if (uncoveredIds.length > 0) {
-    console.error(`Validation failed: ${uncoveredIds.length} component(s) have no entry in component-data or REQUIRES_REACT.`);
-    console.error('Add an entry to scripts/ai-manifest/component-data.js or REQUIRES_REACT for each:');
+    console.error(
+      `Validation failed: ${uncoveredIds.length} component(s) have no entry in component-data or REQUIRES_REACT.`
+    );
+    console.error(
+      'Add an entry to scripts/ai-manifest/component-data.js or REQUIRES_REACT for each:'
+    );
     for (const id of uncoveredIds) console.error(`  - ${id}`);
     failed = true;
   }
@@ -749,9 +1042,13 @@ if (validateOnly) {
   // Run drift check (warnings only — does not fail the build)
   const driftWarnings = await checkCuratedDrift();
   if (driftWarnings.length > 0) {
-    console.warn('Curated HTML drift detected (BEM classes differ from auto-rendered output):');
+    console.warn(
+      'Curated HTML drift detected (BEM classes differ from auto-rendered output):'
+    );
     for (const w of driftWarnings) console.warn(w);
-    console.warn('Review component-data.js entries above — curated HTML may be stale.');
+    console.warn(
+      'Review component-data.js entries above — curated HTML may be stale.'
+    );
   }
 
   if (failed) {
@@ -771,7 +1068,9 @@ async function main() {
   try {
     renderedHtml = await renderComponents();
   } catch (e) {
-    console.warn(`Warning: auto-render failed (${e.message}). Continuing with curated HTML only.`);
+    console.warn(
+      `Warning: auto-render failed (${e.message}). Continuing with curated HTML only.`
+    );
     renderedHtml = new Map();
   }
 
@@ -828,9 +1127,14 @@ async function main() {
     }
 
     // Props
-    if (component.reactDocgen?.props && Object.keys(component.reactDocgen.props).length > 0) {
+    if (
+      component.reactDocgen?.props &&
+      Object.keys(component.reactDocgen.props).length > 0
+    ) {
       detail.props = {};
-      for (const [propName, propDef] of Object.entries(component.reactDocgen.props)) {
+      for (const [propName, propDef] of Object.entries(
+        component.reactDocgen.props
+      )) {
         const prop = {
           type: flattenType(propDef.type),
           required: propDef.required || false,
@@ -889,10 +1193,11 @@ async function main() {
   const reactCount = indexEntries.filter(e => e.requiresReact).length;
 
   const index = {
-    _ai: 'Component index for the UNDRR Mangrove library. '
-      + 'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). '
-      + 'Some require React (requiresReact: true). '
-      + 'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
+    _ai:
+      'Component index for the UNDRR Mangrove library. ' +
+      'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). ' +
+      'Some require React (requiresReact: true). ' +
+      'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
     library: {
       name: pkg.name,
       version: pkg.version,
@@ -918,7 +1223,8 @@ async function main() {
         cssThemes: themeCss,
       },
       requiredAssets: {
-        _note: 'Every UNDRR-branded page should include these assets. Order matters.',
+        _note:
+          'Every UNDRR-branded page should include these assets. Order matters.',
         stylesheets: requiredStylesheets,
         scripts: requiredScripts,
         logos,
@@ -938,7 +1244,7 @@ async function main() {
   for (const { id, content } of componentFiles) {
     fs.writeFileSync(
       path.join(outputDir, `${id}.json`),
-      JSON.stringify(content, null, 2),
+      JSON.stringify(content, null, 2)
     );
   }
 
@@ -947,8 +1253,9 @@ async function main() {
   // -------------------------------------------------------------------------
 
   const utilities = replaceVersion({
-    _ai: 'CSS utility classes for the UNDRR Mangrove library. '
-      + 'Include the Mangrove CSS bundle to use these classes in plain HTML.',
+    _ai:
+      'CSS utility classes for the UNDRR Mangrove library. ' +
+      'Include the Mangrove CSS bundle to use these classes in plain HTML.',
     ...cssUtilities,
     generatedAt,
   });
@@ -956,7 +1263,10 @@ async function main() {
   const utilitiesJson = JSON.stringify(utilities, null, 2);
   fs.writeFileSync(path.join(outputDir, 'utilities.json'), utilitiesJson);
 
-  const utilityClassCount = cssUtilities.categories.reduce((sum, cat) => sum + cat.classes.length, 0);
+  const utilityClassCount = cssUtilities.categories.reduce(
+    (sum, cat) => sum + cat.classes.length,
+    0
+  );
 
   // -------------------------------------------------------------------------
   // Write llms.txt
@@ -1029,6 +1339,43 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
 
+### Brand guide
+
+The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners). Five pages:
+
+- **About this guide** (${DOCS_BASE}?path=/docs/brand-about-this-guide--docs): Overview with theme-map cards linking to each UNDRR property's brand identity preset.
+- **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons. Switch themes via toolbar or append \`&globals=theme:<Theme Name>\` to the URL. Colors are probed live from compiled CSS via \`getComputedStyle\`, so they stay in sync with SCSS.
+- **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance — brand positioning, communication rules, logo usage, photography standards, web elements. Migrated from UNDRR SharePoint.
+- **Common patterns** (${DOCS_BASE}?path=/docs/brand-common-patterns--docs): Plain-language reference for foundations shared across all themes — breakpoints, grid classes (\`mg-grid__col-{N}\`), accessibility standards, language support (\`lang="ar"\` mechanism), icon sources, z-index.
+- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 8 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
+
+Theme key facts:
+- Five themed properties with resolved primary colors: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (bright blue #0f78bf), DELTA Resilience (navy #132e48).
+- Neutrals are shared across all themes — only brand/accent colors change per property.
+
+Brand characteristics (UNDRR voice): Knowledgeable, Approachable, Collaborative.
+
+Editorial rules:
+- Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
+
+Typography:
+- Headings: Roboto Condensed (via \`$mg-font-family-headings\` token, defaults to \`$mg-font-family-condensed\`). Applied to h1-h6 globally.
+- Body: Roboto (\`$mg-font-family\`).
+- Arabic: Noto Kufi Arabic (headings) + Dubai (body), applied automatically via \`:lang(ar)\` selectors when \`lang="ar"\` is set on a container.
+
+Photo sizes (credit/source required on every image):
+- Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1).
+
+Logos (hosted on CDN for hotlinking or download):
+- UNDRR: https://assets.undrr.org/static/logos/undrr/undrr-logo-blue.svg (blue, white, square variants)
+- PreventionWeb: https://assets.undrr.org/static/logos/pw/pw-logo.svg
+- IRP: https://assets.undrr.org/static/logos/irp/irp-logo.svg
+- MCR2030 and DELTA: not yet on CDN
+- Safety zone equals the width of the "U" in UNDRR. Do not place on busy backgrounds. Use inverse (white) variant on dark backgrounds.
+
+Icons:
+- Lucide for general UI icons, OCHA for humanitarian/hazard icons (earthquake, tsunami, flood, cyclone, drought, resilience), plus custom UNDRR icons. Use via \`<Icon name="..."/>\` or CSS classes \`mg-icon mg-icon-{name}\`.
+
 ### Source layout
 
 - stories/Atom/          Typography, images, layout, navigation
@@ -1044,35 +1391,48 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
   // Write llms.json
   // -------------------------------------------------------------------------
 
-  const llmsJson = JSON.stringify({
-    name: 'UNDRR Mangrove',
-    description: `UI component library for UNDRR disaster risk reduction websites. ${vanillaCount} vanilla HTML components, ${reactCount} React-only.`,
-    version: pkg.version,
-    package: pkg.name,
-    license: pkg.license || 'See LICENSE file',
-    urls: {
-      storybook: DOCS_BASE,
-      repository: 'https://github.com/unisdr/undrr-mangrove',
-      npm: `https://www.npmjs.com/package/${pkg.name}`,
-      componentIndex: `${DOCS_BASE}ai-components/index.json`,
-      utilities: `${DOCS_BASE}ai-components/utilities.json`,
-      css: themeCss,
+  const llmsJson = JSON.stringify(
+    {
+      name: 'UNDRR Mangrove',
+      description: `UI component library for UNDRR disaster risk reduction websites. ${vanillaCount} vanilla HTML components, ${reactCount} React-only.`,
+      version: pkg.version,
+      package: pkg.name,
+      license: pkg.license || 'See LICENSE file',
+      urls: {
+        storybook: DOCS_BASE,
+        repository: 'https://github.com/unisdr/undrr-mangrove',
+        npm: `https://www.npmjs.com/package/${pkg.name}`,
+        componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        utilities: `${DOCS_BASE}ai-components/utilities.json`,
+        css: themeCss,
+      },
+      requiredAssets: {
+        _note:
+          'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
+        stylesheets: requiredStylesheets.map(s => s.url),
+        scripts: requiredScripts.map(s => ({
+          url: s.url,
+          defer: s.attributes === 'defer',
+        })),
+        logos,
+      },
+      conventions: {
+        cssPrefix: 'mg-',
+        naming: 'BEM',
+        themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
+        locales: ['en', 'ar', 'my', 'ja'],
+        breakpoints: {
+          mobile: '480px',
+          tablet: '900px',
+          desktop: '1164px',
+          wide: '1440px',
+        },
+      },
+      generatedAt,
     },
-    requiredAssets: {
-      _note: 'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
-      stylesheets: requiredStylesheets.map(s => s.url),
-      scripts: requiredScripts.map(s => ({ url: s.url, defer: s.attributes === 'defer' })),
-      logos,
-    },
-    conventions: {
-      cssPrefix: 'mg-',
-      naming: 'BEM',
-      themes: ['undrr', 'preventionweb', 'irp', 'mcr2030'],
-      locales: ['en', 'ar', 'my', 'ja'],
-      breakpoints: { mobile: '480px', tablet: '900px', desktop: '1164px', wide: '1440px' },
-    },
-    generatedAt,
-  }, null, 2);
+    null,
+    2
+  );
 
   fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
 
@@ -1081,19 +1441,32 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
   // -------------------------------------------------------------------------
 
   const indexSizeKB = (Buffer.byteLength(indexJson) / 1024).toFixed(1);
-  const totalDetailKB = componentFiles
-    .reduce((sum, { content }) => sum + Buffer.byteLength(JSON.stringify(content, null, 2)), 0);
+  const totalDetailKB = componentFiles.reduce(
+    (sum, { content }) =>
+      sum + Buffer.byteLength(JSON.stringify(content, null, 2)),
+    0
+  );
   const utilitiesSizeKB = (Buffer.byteLength(utilitiesJson) / 1024).toFixed(1);
 
   console.log('AI manifest generated:');
   console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
-  console.log(`  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`);
-  console.log(`  ${outputDir}/*.json (${componentFiles.length} component files, ${(totalDetailKB / 1024).toFixed(1)} KB total)`);
+  console.log(
+    `  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`
+  );
+  console.log(
+    `  ${outputDir}/*.json (${componentFiles.length} component files, ${(totalDetailKB / 1024).toFixed(1)} KB total)`
+  );
   console.log(`  ${outputDir}/utilities.json (${utilitiesSizeKB} KB)`);
-  console.log(`  ${vanillaCount} vanilla HTML components, ${reactCount} React-only components`);
-  console.log(`  ${renderedHtml.size} auto-rendered, ${componentFiles.filter(c => c.content.renderedHtml && !c.content.renderedHtmlSource).length} curated HTML`);
+  console.log(
+    `  ${vanillaCount} vanilla HTML components, ${reactCount} React-only components`
+  );
+  console.log(
+    `  ${renderedHtml.size} auto-rendered, ${componentFiles.filter(c => c.content.renderedHtml && !c.content.renderedHtmlSource).length} curated HTML`
+  );
   if (droppedImportCount > 0) {
-    console.log(`  ${droppedImportCount} Storybook-generated import(s) removed (not exported from src/index.js)`);
+    console.log(
+      `  ${droppedImportCount} Storybook-generated import(s) removed (not exported from src/index.js)`
+    );
   }
 }
 
