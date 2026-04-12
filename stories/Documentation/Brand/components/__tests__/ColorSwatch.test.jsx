@@ -27,10 +27,12 @@ describe('ColorSwatch', () => {
   });
 
   it('renders without a usage description', () => {
-    render(<ColorSwatch color="#004f91" name="Primary blue" />);
+    const { container } = render(
+      <ColorSwatch color="#004f91" name="Primary blue" />,
+    );
 
     expect(screen.getByText('Primary blue')).toBeInTheDocument();
-    expect(screen.queryByClassName?.('mg-color-swatch__usage')).toBeFalsy();
+    expect(container.querySelector('.mg-color-swatch__usage')).toBeNull();
   });
 
   // --------------------------------------------------
@@ -92,8 +94,12 @@ describe('ColorSwatch', () => {
   it('falls back to #000000 when probe resolves nothing', () => {
     render(<ColorSwatch probe="mg-nonexistent-class" name="Unknown" />);
 
-    // Should still render without crashing
     expect(screen.getByText('Unknown')).toBeInTheDocument();
+    expect(screen.getByText('#000000')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-label',
+      'Copy hex value #000000 for Unknown',
+    );
   });
 
   // --------------------------------------------------
