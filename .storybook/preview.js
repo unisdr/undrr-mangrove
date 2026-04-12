@@ -175,6 +175,14 @@ const preview = {
         method: 'alphabetical',
         order: [
           'Introduction',
+          'Brand',
+          [
+            'About this guide',
+            'Brand identity',
+            'Brand guidelines',
+            'Common patterns',
+            'Component gallery',
+          ],
           'Getting started',
           [
             'About Mangrove',
@@ -239,7 +247,7 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: Object.keys(themeStyles).map((name) => ({
+        items: Object.keys(themeStyles).map(name => ({
           value: name,
           title: name,
         })),
