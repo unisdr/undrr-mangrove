@@ -91,15 +91,15 @@ describe('ColorSwatch', () => {
   // Probe fallback
   // --------------------------------------------------
 
-  it('falls back to #000000 when probe resolves nothing', () => {
+  it('falls back to #000000 and disables copy when probe resolves nothing', () => {
     render(<ColorSwatch probe="mg-nonexistent-class" name="Unknown" />);
 
     expect(screen.getByText('Unknown')).toBeInTheDocument();
     expect(screen.getByText('#000000')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toHaveAttribute(
-      'aria-label',
-      'Copy hex value #000000 for Unknown',
-    );
+
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-label', 'Unknown color unavailable');
   });
 
   // --------------------------------------------------

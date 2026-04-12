@@ -42,11 +42,29 @@ describe('TypographySample', () => {
     expect(screen.getByText('42px / 700')).toBeInTheDocument();
   });
 
-  it('labels regular weight for values below 600', () => {
-    render(
+  it('labels numeric weights with correct OpenType names', () => {
+    const { rerender } = render(
       <TypographySample {...defaultProps} fontWeight={400} />,
     );
+    expect(screen.getByText('Roboto Condensed Regular')).toBeInTheDocument();
 
+    rerender(<TypographySample {...defaultProps} fontWeight={500} />);
+    expect(screen.getByText('Roboto Condensed Medium')).toBeInTheDocument();
+
+    rerender(<TypographySample {...defaultProps} fontWeight={600} />);
+    expect(screen.getByText('Roboto Condensed SemiBold')).toBeInTheDocument();
+
+    rerender(<TypographySample {...defaultProps} fontWeight={900} />);
+    expect(screen.getByText('Roboto Condensed Black')).toBeInTheDocument();
+  });
+
+  it('labels string weights (normal, bold)', () => {
+    const { rerender } = render(
+      <TypographySample {...defaultProps} fontWeight="bold" />,
+    );
+    expect(screen.getByText('Roboto Condensed Bold')).toBeInTheDocument();
+
+    rerender(<TypographySample {...defaultProps} fontWeight="normal" />);
     expect(screen.getByText('Roboto Condensed Regular')).toBeInTheDocument();
   });
 

@@ -10,6 +10,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './typography-sample.css';
 
+const WEIGHT_NAMES = {
+  100: 'Thin',
+  200: 'ExtraLight',
+  300: 'Light',
+  400: 'Regular',
+  500: 'Medium',
+  600: 'SemiBold',
+  700: 'Bold',
+  800: 'ExtraBold',
+  900: 'Black',
+  normal: 'Regular',
+  bold: 'Bold',
+};
+
+function weightName(weight) {
+  if (weight == null) return '';
+  const key = typeof weight === 'number' ? weight : String(weight).toLowerCase();
+  return WEIGHT_NAMES[key] || String(weight);
+}
+
 /**
  * Typography sample with visual rendering and font metadata.
  *
@@ -49,7 +69,7 @@ export function TypographySample({
       </div>
       <div className="mg-typography-sample__meta">
         <span className="mg-typography-sample__font-name">
-          {fontFamily} {typeof fontWeight === 'number' && fontWeight >= 600 ? 'Bold' : 'Regular'}
+          {fontFamily} {weightName(fontWeight)}
         </span>
         <span className="mg-typography-sample__font-spec">
           {fontSize} / {fontWeight}

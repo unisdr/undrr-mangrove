@@ -129,7 +129,12 @@ export function ColorSwatch({
         className="mg-color-swatch__block"
         style={{ backgroundColor: displayHex }}
         onClick={handleCopy}
-        aria-label={`Copy hex value ${displayHex} for ${name}`}
+        disabled={!hex}
+        aria-label={
+          hex
+            ? `Copy hex value ${displayHex} for ${name}`
+            : `${name} color unavailable`
+        }
       >
         <span
           className="mg-color-swatch__hex"
