@@ -1,0 +1,380 @@
+// =============================================================================
+// SPACING UTILITIES
+// =============================================================================
+// Margin and padding utilities using Mangrove spacing tokens.
+// Naming convention: .mg-u-{property}-{direction}-{size}
+// Mangrove uses a 10px base font size, so 1rem = 10px.
+// Token suffixes map directly to rem values: -100 = 1rem = 10px
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Spacing scale map
+// Maps token suffix to spacing variable for loop generation
+// -----------------------------------------------------------------------------
+$mg-spacing-scale: (
+  "0": $mg-spacing-0,
+  "25": $mg-spacing-25,
+  "50": $mg-spacing-50,
+  "75": $mg-spacing-75,
+  "100": $mg-spacing-100,
+  "150": $mg-spacing-150,
+  "175": $mg-spacing-175,
+  "200": $mg-spacing-200,
+  "250": $mg-spacing-250,
+  "300": $mg-spacing-300,
+  "400": $mg-spacing-400,
+  "500": $mg-spacing-500,
+  "600": $mg-spacing-600,
+  "800": $mg-spacing-800,
+);
+
+// -----------------------------------------------------------------------------
+// MARGIN UTILITIES
+// -----------------------------------------------------------------------------
+
+// All sides
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-#{$key} {
+    margin: $value;
+  }
+}
+
+// Margin top
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-top-#{$key} {
+    margin-top: $value;
+  }
+}
+
+// Margin right
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-right-#{$key} {
+    margin-right: $value;
+  }
+}
+
+// Margin bottom
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-bottom-#{$key} {
+    margin-bottom: $value;
+  }
+}
+
+// Margin left
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-left-#{$key} {
+    margin-left: $value;
+  }
+}
+
+// Margin horizontal (x-axis: left + right)
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-x-#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+}
+
+// Margin vertical (y-axis: top + bottom)
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-y-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+}
+
+// Auto margins
+.mg-u-margin-auto {
+  margin: auto;
+}
+
+.mg-u-margin-x-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mg-u-margin-y-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.mg-u-margin-top-auto {
+  margin-top: auto;
+}
+
+.mg-u-margin-right-auto {
+  margin-right: auto;
+}
+
+.mg-u-margin-bottom-auto {
+  margin-bottom: auto;
+}
+
+.mg-u-margin-left-auto {
+  margin-left: auto;
+}
+
+// Negative margins (for Drupal compatibility)
+@each $key, $value in $mg-spacing-scale {
+  @if $key != "0" {
+    .mg-u-margin-top-negative-#{$key} {
+      margin-top: -$value;
+    }
+  }
+}
+
+@each $key, $value in $mg-spacing-scale {
+  @if $key != "0" {
+    .mg-u-margin-right-negative-#{$key} {
+      margin-right: -$value;
+    }
+  }
+}
+
+@each $key, $value in $mg-spacing-scale {
+  @if $key != "0" {
+    .mg-u-margin-bottom-negative-#{$key} {
+      margin-bottom: -$value;
+    }
+  }
+}
+
+@each $key, $value in $mg-spacing-scale {
+  @if $key != "0" {
+    .mg-u-margin-left-negative-#{$key} {
+      margin-left: -$value;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// PADDING UTILITIES
+// -----------------------------------------------------------------------------
+
+// All sides
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-#{$key} {
+    padding: $value;
+  }
+}
+
+// Padding top
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-top-#{$key} {
+    padding-top: $value;
+  }
+}
+
+// Padding right
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-right-#{$key} {
+    padding-right: $value;
+  }
+}
+
+// Padding bottom
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-bottom-#{$key} {
+    padding-bottom: $value;
+  }
+}
+
+// Padding left
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-left-#{$key} {
+    padding-left: $value;
+  }
+}
+
+// Padding horizontal (x-axis: left + right)
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-x-#{$key} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+}
+
+// Padding vertical (y-axis: top + bottom)
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-y-#{$key} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE SPACING UTILITIES
+// -----------------------------------------------------------------------------
+// Pattern: .mg-u-{property}-{direction}-{size}--{breakpoint}
+// Breakpoints: sm (mobile), md (tablet), lg (desktop), xl (wide desktop)
+// -----------------------------------------------------------------------------
+
+// Responsive margin top
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-top-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      margin-top: $value;
+    }
+  }
+
+  .mg-u-margin-top-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      margin-top: $value;
+    }
+  }
+
+  .mg-u-margin-top-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      margin-top: $value;
+    }
+  }
+
+  .mg-u-margin-top-#{$key}--xl {
+    @media (width >= $mg-breakpoint-desktop-wide) {
+      margin-top: $value;
+    }
+  }
+}
+
+// Responsive margin bottom
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-margin-bottom-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      margin-bottom: $value;
+    }
+  }
+
+  .mg-u-margin-bottom-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      margin-bottom: $value;
+    }
+  }
+
+  .mg-u-margin-bottom-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      margin-bottom: $value;
+    }
+  }
+
+  .mg-u-margin-bottom-#{$key}--xl {
+    @media (width >= $mg-breakpoint-desktop-wide) {
+      margin-bottom: $value;
+    }
+  }
+}
+
+// Responsive padding top
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-top-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      padding-top: $value;
+    }
+  }
+
+  .mg-u-padding-top-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      padding-top: $value;
+    }
+  }
+
+  .mg-u-padding-top-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      padding-top: $value;
+    }
+  }
+
+  .mg-u-padding-top-#{$key}--xl {
+    @media (width >= $mg-breakpoint-desktop-wide) {
+      padding-top: $value;
+    }
+  }
+}
+
+// Responsive padding bottom
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-bottom-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      padding-bottom: $value;
+    }
+  }
+
+  .mg-u-padding-bottom-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      padding-bottom: $value;
+    }
+  }
+
+  .mg-u-padding-bottom-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      padding-bottom: $value;
+    }
+  }
+
+  .mg-u-padding-bottom-#{$key}--xl {
+    @media (width >= $mg-breakpoint-desktop-wide) {
+      padding-bottom: $value;
+    }
+  }
+}
+
+// Responsive padding x-axis
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-x-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      padding-left: $value;
+      padding-right: $value;
+    }
+  }
+
+  .mg-u-padding-x-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      padding-left: $value;
+      padding-right: $value;
+    }
+  }
+
+  .mg-u-padding-x-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      padding-left: $value;
+      padding-right: $value;
+    }
+  }
+
+  .mg-u-padding-x-#{$key}--xl {
+    @media (width >= $mg-breakpoint-desktop-wide) {
+      padding-left: $value;
+      padding-right: $value;
+    }
+  }
+}
+
+// Responsive padding y-axis
+@each $key, $value in $mg-spacing-scale {
+  .mg-u-padding-y-#{$key}--sm {
+    @media (width <= $mg-breakpoint-mobile) {
+      padding-top: $value;
+      padding-bottom: $value;
+    }
+  }
+
+  .mg-u-padding-y-#{$key}--md {
+    @media (width >= $mg-breakpoint-tablet) {
+      padding-top: $value;
+      padding-bottom: $value;
+    }
+  }
+
+  .mg-u-padding-y-#{$key}--lg {
+    @media (width >= $mg-breakpoint-desktop) {
+      padding-top: $value;
+      padding-bottom: $value;
+    }
+  }
+
+  .mg-u-padding-y-#{$key}--xl {
+    @media (width >= $mg-breakpoint-desktop-wide) {
+      padding-top: $value;
+      padding-bottom: $value;
+    }
+  }
+}
