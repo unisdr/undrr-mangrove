@@ -565,4 +565,13 @@ $card-variant-colours: (
   }
 }
 
+// Arabic font override for card titles. Covers all card variants
+// (Vertical, Horizontal, Book, Icon) since they share .mg-card__title.
+:lang(ar) {
+  .mg-card__title,
+  .mg-card__title a {
+    font-family: $mg-font-family-arabic-headings;
+  }
+}
+
 /* content-card end */

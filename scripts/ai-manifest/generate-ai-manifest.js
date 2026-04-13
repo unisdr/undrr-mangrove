@@ -1359,9 +1359,9 @@ Editorial rules:
 - Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
 
 Typography:
-- Headings: Roboto Condensed (via \`$mg-font-family-headings\` token, defaults to \`$mg-font-family-condensed\`). Applied to h1-h6 globally.
+- Headings: Roboto Condensed (via \`$mg-font-family-headings\` token, defaults to \`$mg-font-family-condensed\`, \`!default\`-flagged so themes can override). Applied globally to h1-h6 and to non-semantic title classes: \`.mg-hero__title\`, \`.mg-card__title\`, \`.mg-stats-card-item__value\`, \`.mg-stats-card-item__bottom-label\`, \`.mg-gallery__title\`, \`.mg-tabs__link\`, \`.mg-on-this-page-nav__link\`, \`.mg-on-this-page-nav__cta\`, \`.mg-mega-topbar__item-link\`, \`.mg-button\`, \`.mg-footer--about-footer--links\`. New components that render visual headings should use this token rather than \`$mg-font-family-condensed\` directly.
 - Body: Roboto (\`$mg-font-family\`).
-- Arabic: Noto Kufi Arabic (headings) + Dubai (body), applied automatically via \`:lang(ar)\` selectors when \`lang="ar"\` is set on a container.
+- Arabic: Noto Kufi Arabic (headings) + Dubai (body), applied automatically via \`:lang(ar)\` selectors when \`lang="ar"\` is set on a container. Heading-class components must include a matching \`:lang(ar)\` block routing to \`$mg-font-family-arabic-headings\` since Roboto Condensed has no Arabic glyph coverage.
 
 Photo sizes (credit/source required on every image):
 - Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1).

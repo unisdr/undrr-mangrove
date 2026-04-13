@@ -6,7 +6,7 @@ import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
 
 ## Roboto
 
-Roboto is the primary font family used throughout Mangrove for body text, UI elements, and general content.
+Roboto is the primary font family used throughout Mangrove for body text and form content.
 
 ```scss
 $mg-font-family: "Roboto", sans-serif;
@@ -14,22 +14,32 @@ $mg-font-family: "Roboto", sans-serif;
 
 **Usage:**
 - Body text and paragraphs
-- Form inputs and buttons
-- Navigation and UI elements
+- Form inputs and form labels
 - Default for all text content
 
 ### Roboto Condensed
 
-Roboto Condensed is used for specific components where space efficiency is important.
+Roboto Condensed is used in two distinct contexts: headings (where the brand calls for a more authoritative typeface) and dense UI chrome (where space efficiency is the design intent). Two SCSS tokens cover these intents:
 
 ```scss
+// Semantic alias — use this for heading and heading-like contexts
+$mg-font-family-headings: $mg-font-family-condensed !default;
+
+// Raw token — use when compact width is the goal and the element is not
+// a heading (dense navigation, tag-style labels, place names)
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
 ```
 
-**Usage:**
-- Breadcrumbs
-- Mega menu item links
-- Compact UI elements
+**When to use which:**
+
+| Token | Use for |
+|---|---|
+| `$mg-font-family-headings` | h1–h6, `.mg-hero__title`, `.mg-card__title`, `.mg-stats-card-item__value`, `.mg-gallery__title`, `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-mega-topbar__item-link`, `.mg-button` (CTA buttons), and any new component class that renders as a visual heading |
+| `$mg-font-family-condensed` | Compact-width UI chrome where the goal is space efficiency, not heading semantics. Currently: breadcrumbs. Future candidates may include dense labels and tag-style metadata where horizontal space is at a premium. |
+
+If a class is clearly a heading, prefer `$mg-font-family-headings`. If it is dense UI chrome whose role is "fit more in less space", use `$mg-font-family-condensed`. Themes can override the heading token globally without affecting the raw condensed token.
+
+The `!default` flag on `$mg-font-family-headings` lets a consumer theme remap the heading font to a different family without forking the SCSS.
 
 ## Font sources
 

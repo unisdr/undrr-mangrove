@@ -41,6 +41,10 @@
 
   &__value {
     font-family: $mg-font-family-headings;
+
+    // Tabular lining figures: "1,200" and "1,777" align column-wise when stacked
+    // and disambiguate condensed digits at display scale.
+    font-variant-numeric: tabular-nums lining-nums;
     font-size: $mg-font-size-900;
     font-weight: 700;
     color: $mg-color-interactive;
@@ -77,6 +81,7 @@
   }
 
   &__bottom-label {
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-size-500;
     font-weight: 600;
     color: $mg-color-text;
@@ -222,5 +227,13 @@
       border-left: none;
       border-right: 4px solid $mg-color-interactive;
     }
+  }
+}
+
+// Arabic font override for stat labels and values.
+:lang(ar) {
+  .mg-stats-card-item__value,
+  .mg-stats-card-item__bottom-label {
+    font-family: $mg-font-family-arabic-headings;
   }
 }

@@ -218,3 +218,17 @@ $variant-colours: (
     padding-right: calc(50vw - calc($mg-breakpoint-desktop-wide / 2)); // to keep the overlay fixed
   }
 }
+
+// Arabic font override for the title wrapper. $mg-font-family-headings is
+// Roboto Condensed which has no Arabic glyph coverage; route to Noto Kufi
+// Arabic. Scoped to heading tags + anchor so unrelated descendant content
+// (slotted subtitles, body copy) keeps its own font.
+:lang(ar) {
+  .mg-hero__title,
+  .mg-hero__title a,
+  .mg-hero__title h1,
+  .mg-hero__title h2,
+  .mg-hero__title h3 {
+    font-family: $mg-font-family-arabic-headings;
+  }
+}
