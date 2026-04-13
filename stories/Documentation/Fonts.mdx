@@ -19,14 +19,17 @@ $mg-font-family: "Roboto", sans-serif;
 
 ### Roboto Condensed
 
-Roboto Condensed is used in two distinct contexts: headings (where the brand calls for a more authoritative typeface) and dense UI chrome (where space efficiency is the design intent). Two SCSS tokens cover these intents:
+Roboto Condensed is reserved for **compact UI labels and decorative chrome**, not for narrative headings. Long-form headings (h1–h6 used in articles, story content, page bodies) inherit the body face — Roboto Condensed at h1/h2 size feels too tight for sustained reading.
+
+Two SCSS tokens cover the condensed-font use cases:
 
 ```scss
-// Semantic alias — use this for heading and heading-like contexts
+// Semantic alias — use this for component-level title/label classes that act
+// as visual headings within a card, hero, tab, or other UI chrome context.
 $mg-font-family-headings: $mg-font-family-condensed !default;
 
 // Raw token — use when compact width is the goal and the element is not
-// a heading (dense navigation, tag-style labels, place names)
+// a heading (e.g. dense navigation that needs to fit more characters).
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
 ```
 
@@ -34,12 +37,11 @@ $mg-font-family-condensed: "Roboto Condensed", sans-serif;
 
 | Token | Use for |
 |---|---|
-| `$mg-font-family-headings` | h1–h6, `.mg-hero__title`, `.mg-card__title`, `.mg-stats-card-item__value`, `.mg-gallery__title`, `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-mega-topbar__item-link`, `.mg-button` (CTA buttons), and any new component class that renders as a visual heading |
-| `$mg-font-family-condensed` | Compact-width UI chrome where the goal is space efficiency, not heading semantics. Currently: breadcrumbs. Future candidates may include dense labels and tag-style metadata where horizontal space is at a premium. |
+| (default body font) | h1–h6 in narrative content. They inherit Roboto from `body`. Do not declare a `font-family` on h1–h6 in component SCSS. |
+| `$mg-font-family-headings` | Component title/label classes: `.mg-hero__title`, `.mg-hero__label`, `.mg-card__title`, `.mg-card__label`, `.mg-stats-card-item__value`, `.mg-stats-card-item__label`, `.mg-stats-card-item__bottom-label`, `.mg-gallery__title`, `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-on-this-page-nav__cta`, `.mg-mega-topbar__item-link`, `.mg-mega-content__banner header`, `.mg-button` (CTA buttons), `.mg-footer--about-footer--links`, `.mg-tag`, and any new component class that functions as a chip, label, or compact title within UI chrome. |
+| `$mg-font-family-condensed` | Dense UI chrome where compact width is the explicit design goal, not heading semantics. Currently: breadcrumbs. |
 
-If a class is clearly a heading, prefer `$mg-font-family-headings`. If it is dense UI chrome whose role is "fit more in less space", use `$mg-font-family-condensed`. Themes can override the heading token globally without affecting the raw condensed token.
-
-The `!default` flag on `$mg-font-family-headings` lets a consumer theme remap the heading font to a different family without forking the SCSS.
+If a class is a visual title or label inside a component (not part of narrative body content), prefer `$mg-font-family-headings`. The `!default` flag on the token lets a consumer theme remap the family without forking the SCSS.
 
 ## Font sources
 

@@ -21,22 +21,17 @@ The main change in 1.5: icons now render via CSS `mask-image` instead of a font.
 
 ## 1.5.1 addendum
 
-Released April 2026. Three changes:
+Released April 2026. Two changes:
 
 1. **New Brand section in Storybook** ([#925](https://github.com/unisdr/undrr-mangrove/issues/925), [#927](https://github.com/unisdr/undrr-mangrove/pull/927)): A brand guide aimed at non-technical UNDRR colleagues (content editors, brand managers, external partners). Five new pages: About this guide, Brand identity (theme-aware, responds to the theme picker), Brand guidelines (editorial content migrated from SharePoint), Common patterns (shared foundations), and Component gallery (curated catalog of 40+ components). Replaces the outdated Google Sites / SharePoint web style guide references.
 
-2. **Heading font fix — semantic h1–h6** (visual change for all sites): Headings now render in Roboto Condensed as originally specified. Previously h1-h6 inherited the body font (Roboto Regular). This affects every UNDRR site that ships the compiled CSS.
-
-   > **If you manage a site that uses Mangrove:** Your headings will look slightly narrower and more authoritative after this update. The character metrics match the existing brand specification — you're now seeing the intended typography.
-
-   The change is controlled by a new SCSS token `$mg-font-family-headings` (defaults to `$mg-font-family-condensed`, `!default`-flagged so themes can override it).
-
-3. **Heading font fix — non-semantic title classes** ([#929](https://github.com/unisdr/undrr-mangrove/pull/929)): The `$mg-font-family-headings` token also applies to component classes that visually function as titles but don't render through h1–h6. Caught by review specialists after the initial heading-font work shipped.
+2. **Roboto Condensed scoped to component titles, labels, and UI chrome** (visual change for all sites — [#929](https://github.com/unisdr/undrr-mangrove/pull/929)): A new `$mg-font-family-headings` SCSS token (`!default`-flagged so themes can override) is applied to component classes that act as visual titles, labels, or decorative chrome. **Narrative h1–h6 still use Roboto** because Roboto Condensed at heading size feels too tight for sustained reading.
 
    Affected classes:
 
-   - `.mg-hero__title`, `.mg-card__title` (all card variants), `.mg-stats-card-item__value`, `.mg-stats-card-item__bottom-label`, `.mg-gallery__title`
-   - `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-on-this-page-nav__cta`, `.mg-mega-topbar__item-link`, `.mg-button` (CTA buttons), `.mg-footer--about-footer--links`
+   - **Titles:** `.mg-hero__title`, `.mg-card__title` (all card variants), `.mg-stats-card-item__value`, `.mg-stats-card-item__bottom-label`, `.mg-gallery__title`, `.mg-mega-content__banner header`
+   - **Labels and tags:** `.mg-hero__label`, `.mg-card__label`, `.mg-stats-card-item__label`, `.mg-tag` (and variants)
+   - **UI chrome:** `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-on-this-page-nav__cta`, `.mg-mega-topbar__item-link`, `.mg-button` (CTA buttons), `.mg-footer--about-footer--links`
 
    Also in this batch:
 
@@ -46,7 +41,7 @@ Released April 2026. Three changes:
    - **Token consistency:** MegaMenu top-level links and the OnThisPageNav pinned CTA migrated from raw `$mg-font-family-condensed` to the semantic `$mg-font-family-headings` alias. Same rendered font; future-proof if a theme overrides the heading token.
    - **Tab Arabic override realigned:** `.mg-tabs__link` Arabic font moves from `$mg-font-family-arabic-body` (Dubai) to `$mg-font-family-arabic-headings` (Noto Kufi Arabic) to match the new Latin treatment and the OnThisPageNav precedent.
 
-   > **If you manage a site that uses Mangrove:** Card titles, big stat numbers, tabs, on-this-page nav, and CTA buttons will look slightly more compact and authoritative after this update. The opt-out is `font-family: $mg-font-family;` on the specific class in your theme override, or override the global token by reassigning `$mg-font-family-headings`.
+   > **If you manage a site that uses Mangrove:** Card titles, big stat numbers, hero labels, tags, tabs, on-this-page nav, and CTA buttons will look slightly more compact and authoritative after this update. Long-form article headings (h1–h6) are unchanged — they still render in Roboto. The opt-out for any individual class is `font-family: $mg-font-family;` in your theme override, or override the global token by reassigning `$mg-font-family-headings`.
 
    > **Post-ship validation we're tracking:** UX research recommended a 5–8 person usability check on the new tab treatment (does the heading font on tab labels affect active-state identification time?) and a 12-card PreventionWeb publications grid screenshot comparison (does condensed scan as fast as regular at high content density?). Neither blocks the release, but if either signals a regression, the per-component opt-out above is the path back.
 

@@ -31,6 +31,7 @@
   }
 
   &__label {
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-size-200;
     font-weight: 600;
     color: $mg-color-tag;
@@ -233,7 +234,8 @@
 // Arabic font override for stat labels and values.
 :lang(ar) {
   .mg-stats-card-item__value,
-  .mg-stats-card-item__bottom-label {
+  .mg-stats-card-item__bottom-label,
+  .mg-stats-card-item__label {
     font-family: $mg-font-family-arabic-headings;
   }
 }

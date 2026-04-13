@@ -232,6 +232,7 @@ $card-variant-colours: (
 }
 
 .mg-card__label {
+  font-family: $mg-font-family-headings;
   font-weight: 700;
 }
 
@@ -565,11 +566,12 @@ $card-variant-colours: (
   }
 }
 
-// Arabic font override for card titles. Covers all card variants
+// Arabic font override for card titles and labels. Covers all card variants
 // (Vertical, Horizontal, Book, Icon) since they share .mg-card__title.
 :lang(ar) {
   .mg-card__title,
-  .mg-card__title a {
+  .mg-card__title a,
+  .mg-card__label {
     font-family: $mg-font-family-arabic-headings;
   }
 }

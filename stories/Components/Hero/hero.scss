@@ -77,6 +77,7 @@
 
   &__label {
     display: inline-block;
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-tag;
     font-weight: bold;
     margin-right: $mg-spacing-25;
@@ -228,7 +229,8 @@ $variant-colours: (
   .mg-hero__title a,
   .mg-hero__title h1,
   .mg-hero__title h2,
-  .mg-hero__title h3 {
+  .mg-hero__title h3,
+  .mg-hero__label {
     font-family: $mg-font-family-arabic-headings;
   }
 }
