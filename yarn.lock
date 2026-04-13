@@ -4290,7 +4290,7 @@ __metadata:
     storybook-design-token: "npm:^5.0.0"
     style-loader: "npm:4.0.0"
     stylelint: "npm:17.6.0"
-    stylelint-config-recommended-scss: "npm:17.0.0"
+    stylelint-config-recommended-scss: "npm:17.0.1"
     stylelint-config-standard-scss: "npm:17.0.0"
     stylelint-prettier: "npm:5.0.3"
     stylelint-scss: "npm:7.0.0"
@@ -14690,7 +14690,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint-config-recommended-scss@npm:17.0.0, stylelint-config-recommended-scss@npm:^17.0.0":
+"stylelint-config-recommended-scss@npm:17.0.1":
+  version: 17.0.1
+  resolution: "stylelint-config-recommended-scss@npm:17.0.1"
+  dependencies:
+    postcss-scss: "npm:^4.0.9"
+    stylelint-config-recommended: "npm:^18.0.0"
+    stylelint-scss: "npm:^7.0.0"
+  peerDependencies:
+    postcss: ^8.3.3
+    stylelint: ^17.0.0
+  peerDependenciesMeta:
+    postcss:
+      optional: true
+  checksum: 10/633b07237649be61f6edd1f17f48d1ec797f3b0a763f06af97d38a8b6161cb2a4542c460b0e734a957d57ca7ab9d4a522ab1347b0522e64611ff4a7f28333ec8
+  languageName: node
+  linkType: hard
+
+"stylelint-config-recommended-scss@npm:^17.0.0":
   version: 17.0.0
   resolution: "stylelint-config-recommended-scss@npm:17.0.0"
   dependencies:
