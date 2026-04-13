@@ -101,6 +101,7 @@ Add `mg-card--plain-title` to disable all link signals while keeping the card cl
 
 ## Changelog
 
+- **1.3** — 2026-04-13: `.mg-card__title` and `.mg-card__label` now use `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing both to `$mg-font-family-arabic-headings`. Same change applies to all card variants.
 - **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`). Defaults to transparent/no padding; themes override for tinted card backgrounds (e.g., DELTA uses light gray with padding and rounded corners).
 - **1.1.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
 - **1.1** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.

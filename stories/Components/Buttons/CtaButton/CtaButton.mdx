@@ -68,5 +68,6 @@ Primary, secondary, and disabled buttons on light and dark backgrounds for easy 
 
 ## Changelog
 
+- **1.2** — 2026-04-13: `.mg-button` now declares an explicit `font-family: $mg-font-family-headings;` (was inheriting body Roboto). Aligns with the existing `:lang(ar)` override which already used `$mg-font-family-arabic-headings` — Latin and Arabic now match.
 - **1.1** — 2026-03-22: Add "All variants" comparison story (light + dark backgrounds). Fix secondary button contrast to meet WCAG AA (blue-800/blue-700, was blue-600/blue-400). Fix disabled button contrast (neutral-500 bg + white text). Remove dead `mg-button-arrow` class and `For_Primary` prop. Add `:focus-visible` ring for buttons on dark backgrounds. Tokenize secondary button and hero secondary button colors for theme overriding.
 - **1.0** — 2022-12-12: Released component

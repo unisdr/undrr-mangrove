@@ -77,6 +77,7 @@
 
   &__label {
     display: inline-block;
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-tag;
     font-weight: bold;
     margin-right: $mg-spacing-25;
@@ -99,6 +100,7 @@
     color: $mg-color-hero-title;
     margin-bottom: $mg-spacing-25;
     display: inline-block;
+    font-family: $mg-font-family-headings;
     font-weight: bold;
     font-size: $mg-font-size-600;
     line-height: 1.2;
@@ -215,5 +217,20 @@ $variant-colours: (
 
   @media (min-width: $mg-breakpoint-desktop-wide) {
     padding-right: calc(50vw - calc($mg-breakpoint-desktop-wide / 2)); // to keep the overlay fixed
+  }
+}
+
+// Arabic font override for the title wrapper. $mg-font-family-headings is
+// Roboto Condensed which has no Arabic glyph coverage; route to Noto Kufi
+// Arabic. Scoped to heading tags + anchor so unrelated descendant content
+// (slotted subtitles, body copy) keeps its own font.
+:lang(ar) {
+  .mg-hero__title,
+  .mg-hero__title a,
+  .mg-hero__title h1,
+  .mg-hero__title h2,
+  .mg-hero__title h3,
+  .mg-hero__label {
+    font-family: $mg-font-family-arabic-headings;
   }
 }
