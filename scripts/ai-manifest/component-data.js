@@ -423,13 +423,14 @@ export default {
 
   // --- Hero ---
   'components-hero-hero': {
-    description: 'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media image column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios and a configurable heading level (h1–h3).',
+    description: 'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
     cssClasses: [
       'mg-hero', 'mg-hero--secondary', 'mg-hero--tertiary', 'mg-hero--quaternary',
       'mg-hero--split', 'mg-hero--split-2-3', 'mg-hero--split-1-2', 'mg-hero--split-1-3',
       'mg-hero__overlay', 'mg-hero__split-grid', 'mg-hero__content',
       'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',
-      'mg-hero__media', 'mg-hero__media-img',
+      'mg-hero__media', 'mg-hero__media--video', 'mg-hero__media--html',
+      'mg-hero__media-img', 'mg-hero__media-iframe',
     ],
   },
 

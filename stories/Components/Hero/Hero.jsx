@@ -47,6 +47,44 @@ export function Hero({
     </header>
   );
 
+  const renderMedia = (media) => {
+    if (!media) return null;
+    const type = media.type || 'image';
+
+    if (type === 'video') {
+      return (
+        <div className="mg-hero__media mg-hero__media--video">
+          <iframe
+            src={media.src}
+            title={media.title || 'Embedded video'}
+            className="mg-hero__media-iframe"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      );
+    }
+
+    if (type === 'html') {
+      return (
+        <div
+          className="mg-hero__media mg-hero__media--html"
+          dangerouslySetInnerHTML={{ __html: media.html || '' }}
+        />
+      );
+    }
+
+    return (
+      <div className="mg-hero__media">
+        <img
+          src={media.src}
+          alt={media.alt || ''}
+          className="mg-hero__media-img"
+        />
+      </div>
+    );
+  };
+
   const renderContent = (item) => (
     <article className="mg-hero__content">
       <div className="mg-hero__meta">
@@ -88,15 +126,7 @@ export function Hero({
           >
             <div className="mg-hero__split-grid">
               {renderContent(item)}
-              {item.media && (
-                <div className="mg-hero__media">
-                  <img
-                    src={item.media.src}
-                    alt={item.media.alt || ''}
-                    className="mg-hero__media-img"
-                  />
-                </div>
-              )}
+              {renderMedia(item.media)}
             </div>
           </section>
         ))}
@@ -134,11 +164,18 @@ Hero.propTypes = {
       detail: PropTypes.string,
       primary_button: PropTypes.string,
       secondary_button: PropTypes.string,
-      /** Media for split layout. Only `type: 'image'` is supported in v1. */
+      /**
+       * Media for split layout. Discriminated by `type`:
+       * - `image` (default): `src` (required), `alt` (optional; empty string for decorative).
+       * - `video`: `src` is an iframe-embeddable URL (e.g. `https://www.youtube.com/embed/…`), `title` is required for a11y.
+       * - `html`: `html` is a pre-sanitized HTML string rendered via `dangerouslySetInnerHTML`. The consumer (e.g. Drupal) must sanitize.
+       */
       media: PropTypes.shape({
-        type: PropTypes.oneOf(['image']),
+        type: PropTypes.oneOf(['image', 'video', 'html']),
         src: PropTypes.string,
         alt: PropTypes.string,
+        title: PropTypes.string,
+        html: PropTypes.string,
       }),
     })
   ).isRequired,

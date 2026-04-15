@@ -162,6 +162,59 @@ describe('Hero — split layout', () => {
   });
 });
 
+describe('Hero — split layout media types', () => {
+  it('renders a video iframe with title when media.type="video"', () => {
+    const videoItem = {
+      ...baseItem,
+      media: {
+        type: 'video',
+        src: 'https://www.youtube.com/embed/abc123',
+        title: 'UNDRR video',
+      },
+    };
+    const { container } = render(<Hero data={[videoItem]} layout="split" />);
+    const iframe = container.querySelector('.mg-hero__media-iframe');
+    expect(iframe).toBeInTheDocument();
+    expect(iframe).toHaveAttribute('src', 'https://www.youtube.com/embed/abc123');
+    expect(iframe).toHaveAttribute('title', 'UNDRR video');
+    expect(container.querySelector('.mg-hero__media--video')).toBeInTheDocument();
+  });
+
+  it('falls back to a default iframe title when media.title is omitted', () => {
+    const videoItem = {
+      ...baseItem,
+      media: { type: 'video', src: 'https://www.youtube.com/embed/abc123' },
+    };
+    const { container } = render(<Hero data={[videoItem]} layout="split" />);
+    expect(container.querySelector('.mg-hero__media-iframe')).toHaveAttribute(
+      'title',
+      'Embedded video'
+    );
+  });
+
+  it('renders raw HTML when media.type="html"', () => {
+    const htmlItem = {
+      ...baseItem,
+      media: { type: 'html', html: '<p class="custom-embed">Custom widget</p>' },
+    };
+    const { container } = render(<Hero data={[htmlItem]} layout="split" />);
+    const slot = container.querySelector('.mg-hero__media--html');
+    expect(slot).toBeInTheDocument();
+    expect(slot.querySelector('.custom-embed')).toHaveTextContent('Custom widget');
+  });
+
+  it('renders an image when media.type is omitted (backwards compatible)', () => {
+    const legacyItem = {
+      ...baseItem,
+      media: { src: 'https://example.com/photo.jpg', alt: 'A test photo' },
+    };
+    render(<Hero data={[legacyItem]} layout="split" />);
+    expect(
+      screen.getByRole('img', { name: 'A test photo' })
+    ).toBeInTheDocument();
+  });
+});
+
 describe('Hero — accessibility', () => {
   it('has no axe violations in background layout', async () => {
     const { container } = render(<Hero data={[baseItem]} />);
@@ -171,6 +224,21 @@ describe('Hero — accessibility', () => {
   it('has no axe violations in split layout', async () => {
     const { container } = render(
       <Hero data={[splitItem]} layout="split" headingLevel="h2" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no axe violations with a video media slot', async () => {
+    const videoItem = {
+      ...baseItem,
+      media: {
+        type: 'video',
+        src: 'https://www.youtube.com/embed/abc123',
+        title: 'UNDRR video',
+      },
+    };
+    const { container } = render(
+      <Hero data={[videoItem]} layout="split" headingLevel="h2" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

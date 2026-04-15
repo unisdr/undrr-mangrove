@@ -214,3 +214,54 @@ export const SplitMediaLed = {
     split: '1/3',
   },
 };
+
+export const SplitWithVideo = {
+  name: 'Split — video embed',
+  args: {
+    data: [
+      {
+        title: 'Watch: early warning for all',
+        summaryText:
+          '<p>A short film on how multi-hazard early warning systems save lives in every region.</p>',
+        label: 'Video',
+        primary_button: 'More stories',
+        media: {
+          type: 'video',
+          src: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+          title: 'Early warning for all — UNDRR',
+        },
+      },
+    ],
+    layout: 'split',
+    variant: 'primary',
+    headingLevel: 'h2',
+    split: '1/2',
+  },
+};
+
+export const SplitWithHtml = {
+  name: 'Split — custom HTML slot',
+  args: {
+    data: [
+      {
+        title: 'Disaster risk by the numbers',
+        summaryText:
+          '<p>Key indicators from the 2026 Global Assessment Report, visualised alongside the narrative.</p>',
+        label: 'Report',
+        primary_button: 'Read the full report',
+        media: {
+          type: 'html',
+          html:
+            '<div style="background:#f2f4f7;color:#0b2545;padding:2rem;display:grid;place-items:center;text-align:center;font-family:Roboto,sans-serif;">' +
+            '<div><div style="font-size:3rem;font-weight:700;">$202B</div>' +
+            '<div style="font-size:1rem;">annual losses from disasters, 2020–2024</div></div>' +
+            '</div>',
+        },
+      },
+    ],
+    layout: 'split',
+    variant: 'quaternary',
+    headingLevel: 'h2',
+    split: '1/2',
+  },
+};

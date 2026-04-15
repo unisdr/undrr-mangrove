@@ -22,6 +22,18 @@ The Hero component is a full-width page section with a title, summary text, and 
 
 The `headingLevel` prop controls the HTML heading element used for the title (`h1`, `h2`, or `h3`; default `h1`). Set it to `h1` when the Hero is the page's primary heading, or `h2`/`h3` when it appears mid-page below another heading.
 
+### Media slot (split layout only)
+
+The media column accepts three shapes, discriminated by `media.type`:
+
+| `media.type` | Required fields | Notes |
+|---|---|---|
+| `"image"` (default) | `src`, `alt` (empty string for decorative) | Rendered as a cover-fit `<img>`. |
+| `"video"` | `src` (iframe-embeddable URL), `title` | Rendered as a 16:9 `<iframe>`. Use the provider's embed URL (e.g. `https://www.youtube.com/embed/…`). `title` is required for screen reader users. |
+| `"html"` | `html` (pre-sanitized HTML string) | Rendered via `dangerouslySetInnerHTML`. The **consumer must sanitize** — Mangrove does not escape this string. Use for custom embeds, stat callouts, or any markup that doesn't fit image/video. |
+
+Omitting `media.type` falls back to `image` for backwards compatibility with existing content.
+
 ### Column split (split layout only)
 
 The `split` prop controls the content/media column ratio, aligned to the MG 12-column grid:
@@ -45,13 +57,21 @@ The `split` prop controls the content/media column ratio, aligned to the MG 12-c
 
 <Canvas of={HeroStories.SplitDefault} meta={HeroStories} />
 
+## Example — split with video
+
+<Canvas of={HeroStories.SplitWithVideo} meta={HeroStories} />
+
+## Example — split with custom HTML
+
+<Canvas of={HeroStories.SplitWithHtml} meta={HeroStories} />
+
 ## Interactions
 
 - Clicking the title (if a `link` is provided) or CTA buttons navigates to the linked destination.
 
 ## Changelog
 
-- **1.5** — 2026-04-15 ([#942](https://github.com/unisdr/undrr-mangrove/issues/942)): Added `layout="split"` — solid-background two-column layout with `headingLevel` and `split` props. Title now always rendered inside a heading element (`headingLevel`, default `h1`); links are placed inside the heading rather than replacing it.
+- **1.5** — 2026-04-15 ([#942](https://github.com/unisdr/undrr-mangrove/issues/942)): Added `layout="split"` — solid-background two-column layout with `headingLevel` and `split` props. Title now always rendered inside a heading element (`headingLevel`, default `h1`); links are placed inside the heading rather than replacing it. Split layout media column accepts `type: 'image'` (default), `type: 'video'` (iframe embed), or `type: 'html'` (pre-sanitized HTML string).
 - **1.4** — 2026-04-13: `.mg-hero__title` and `.mg-hero__label` now use `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing both to `$mg-font-family-arabic-headings`.
 - **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Hero title color is now a theme token (`$mg-color-hero-title`, default white). Overlay width increased from `$mg-width-400` (40rem) to `$mg-width-600` (60rem) and padding from `$mg-spacing-200` to `$mg-spacing-400` for better content readability across all themes.
 - **1.2** — 2024-09-20: Conditional rendering of headline (anchor tag when link is present, header tag otherwise); added HTML support in title and summaryText fields

@@ -298,10 +298,31 @@ $variant-colours: (
     }
   }
 
+  // Video embeds force a 16:9 ratio so iframes never collapse.
+  .mg-hero__media--video {
+    aspect-ratio: 16 / 9;
+  }
+
+  // HTML slot: let consumer content define its own layout; ensure it fills the column.
+  .mg-hero__media--html {
+    display: flex;
+
+    > * {
+      width: 100%;
+    }
+  }
+
   .mg-hero__media-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+  }
+
+  .mg-hero__media-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
     display: block;
   }
 }
