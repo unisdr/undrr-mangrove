@@ -422,7 +422,16 @@ export default {
   'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
 
   // --- Hero ---
-  'components-hero-hero': { description: 'Full-width hero banner with background image, overlay, title, summary, and CTA buttons. Four color variants.' },
+  'components-hero-hero': {
+    description: 'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media image column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios and a configurable heading level (h1–h3).',
+    cssClasses: [
+      'mg-hero', 'mg-hero--secondary', 'mg-hero--tertiary', 'mg-hero--quaternary',
+      'mg-hero--split', 'mg-hero--split-2-3', 'mg-hero--split-1-2', 'mg-hero--split-1-3',
+      'mg-hero__overlay', 'mg-hero__split-grid', 'mg-hero__content',
+      'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',
+      'mg-hero__media', 'mg-hero__media-img',
+    ],
+  },
 
   'components-hero-hero-child': {
     description: 'Smaller hero banner for child/section pages. Single CTA button, linked label.',

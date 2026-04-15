@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import { Hero } from '../Hero';
 
 const baseItem = {
@@ -158,5 +159,19 @@ describe('Hero — split layout', () => {
     render(<Hero data={[itemWithLink]} layout="split" headingLevel="h2" />);
     const heading = screen.getByRole('heading', { level: 2 });
     expect(heading.querySelector('a[href="/topic"]')).toBeInTheDocument();
+  });
+});
+
+describe('Hero — accessibility', () => {
+  it('has no axe violations in background layout', async () => {
+    const { container } = render(<Hero data={[baseItem]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no axe violations in split layout', async () => {
+    const { container } = render(
+      <Hero data={[splitItem]} layout="split" headingLevel="h2" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
   });
 });
