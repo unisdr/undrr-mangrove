@@ -30,7 +30,7 @@ The media column accepts three shapes, discriminated by `media.type`:
 |---|---|---|
 | `"image"` (default) | `src`, `alt` (empty string for decorative) | Rendered as a cover-fit `<img>`. |
 | `"video"` | `src` (iframe-embeddable URL), `title` | Rendered as a 16:9 `<iframe>`. Use the provider's embed URL (e.g. `https://www.youtube.com/embed/…`). `title` is required for screen reader users. |
-| `"html"` | `html` (pre-sanitized HTML string) | Rendered via `dangerouslySetInnerHTML`. The **consumer must sanitize** — Mangrove does not escape this string. Use for custom embeds, figures with attribution overlays, or any markup that doesn't fit image/video. A `<figure>` with an `<img>` and `<figcaption>` is styled by Mangrove as an attribution strip overlaid on the image. |
+| `"html"` | `html` (pre-sanitized HTML string) | Rendered via `dangerouslySetInnerHTML`. The **consumer must sanitize** — Mangrove does not escape this string. Use for custom embeds, figures with attribution overlays, or any markup that doesn't fit image/video. A `<figure>` dropped directly into the slot is styled by Mangrove as a full-bleed image with an attribution strip overlay. Wrap content in your own container (as in the example below) to add padding, decoration, or composition on top of the hero's coloured background. |
 
 Omitting `media.type` falls back to `image` for backwards compatibility with existing content.
 

@@ -252,13 +252,16 @@ export const SplitWithHtml = {
         media: {
           type: 'html',
           html: `
-<figure>
-  <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="Aerial view of a road through a green forest" />
-  <figcaption>
-    <strong>From the cover essay</strong>
-    <span>Photo: UNDRR</span>
-  </figcaption>
-</figure>`,
+<div style="padding: 1.5rem; box-sizing: border-box; height: 100%; display: flex; flex-direction: column; gap: 0.75rem;">
+  <span style="align-self: flex-start; background: rgba(255, 255, 255, 0.18); color: #fff; font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 999px;">Custom composition</span>
+  <figure style="margin: 0; flex: 1; position: relative; overflow: hidden; border-radius: 4px;">
+    <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="Aerial view of a road through a green forest" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+    <figcaption style="position: absolute; inset-inline: 0; inset-block-end: 0; background: rgba(0, 0, 0, 0.7); color: #fff; padding: 0.5rem 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+      <strong>From the cover essay</strong>
+      <span>Photo: UNDRR</span>
+    </figcaption>
+  </figure>
+</div>`,
         },
       },
     ],
