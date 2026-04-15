@@ -1,4 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import { Hero } from './Hero';
 import * as HeroStories from './Hero.stories';
 
@@ -8,28 +8,50 @@ import * as HeroStories from './Hero.stories';
 
 # Mangrove hero (main)
 
-The Mangrove Hero components are page sections with images and overlay colors for primary, secondary, tertiary, and quaternary variants.
+The Hero component is a full-width page section with a title, summary text, and optional CTA buttons. It supports two layout modes and four colour variants.
 
 ## Overview
 
-The Mangrove Hero component defines a section with an image, some text, and optional CTA buttons. It is highly customizable and can be styled in four different variants: primary, secondary, tertiary, and quaternary.
+### Layouts
 
-### When to use:
+**`layout="background"` (default):** A full-bleed background image with a semi-transparent coloured overlay. Use at the top of campaign or homepage-style pages.
 
-Use this component when you want to display a prominent section with an image background, title, text, and optional action buttons.
+**`layout="split"`:** A solid theme-coloured background with a content column on the left and a media image on the right. Use for topic pages, section introductions, or any page where rich body copy and a representative image are equally important. The content column always comes first in the DOM (and visually in LTR/RTL both).
 
-## Example
+### Heading level
 
-This story shows the default Hero component with a link in the title.
+The `headingLevel` prop controls the HTML heading element used for the title (`h1`, `h2`, or `h3`; default `h1`). Set it to `h1` when the Hero is the page's primary heading, or `h2`/`h3` when it appears mid-page below another heading.
+
+### Column split (split layout only)
+
+The `split` prop controls the content/media column ratio, aligned to the MG 12-column grid:
+
+| `split` | Content | Media | Use case |
+|---|---|---|---|
+| `"2/3"` (default) | 8 cols | 4 cols | Text-heavy topic pages |
+| `"1/2"` | 6 cols | 6 cols | Balanced content and image |
+| `"1/3"` | 4 cols | 8 cols | Media-led, image dominates |
+
+### When to use
+
+- Use `layout="background"` for visually-led pages where the image is central to the brand moment.
+- Use `layout="split"` when you need dense body copy alongside a representative image (e.g., topic pages, campaign sections).
+
+## Example — background (default)
 
 <Canvas of={HeroStories.Default} meta={HeroStories} />
 
+## Example — split layout
+
+<Canvas of={HeroStories.SplitDefault} meta={HeroStories} />
+
 ## Interactions
 
-- Clicking on the title (if it has a link) or CTA buttons triggers the associated action (navigating to the link or executing a JavaScript function).
+- Clicking the title (if a `link` is provided) or CTA buttons navigates to the linked destination.
 
 ## Changelog
 
+- **1.5** — 2026-04-15 ([#942](https://github.com/unisdr/undrr-mangrove/issues/942)): Added `layout="split"` — solid-background two-column layout with `headingLevel` and `split` props. Title now always rendered inside a heading element (`headingLevel`, default `h1`); links are placed inside the heading rather than replacing it.
 - **1.4** — 2026-04-13: `.mg-hero__title` and `.mg-hero__label` now use `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing both to `$mg-font-family-arabic-headings`.
 - **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Hero title color is now a theme token (`$mg-color-hero-title`, default white). Overlay width increased from `$mg-width-400` (40rem) to `$mg-width-600` (60rem) and padding from `$mg-spacing-200` to `$mg-spacing-400` for better content readability across all themes.
 - **1.2** — 2024-09-20: Conditional rendering of headline (anchor tag when link is present, header tag otherwise); added HTML support in title and summaryText fields

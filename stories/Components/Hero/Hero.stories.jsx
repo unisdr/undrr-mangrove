@@ -85,6 +85,27 @@ export default {
       description: 'Variant of the Hero component',
       defaultValue: 'primary',
     },
+    layout: {
+      options: ['background', 'split'],
+      control: { type: 'inline-radio' },
+      description:
+        'Layout mode: full-bleed background image, or solid background with media column.',
+      defaultValue: 'background',
+    },
+    headingLevel: {
+      options: ['h1', 'h2', 'h3'],
+      control: { type: 'inline-radio' },
+      description:
+        "Heading element for the title. Use h1 for the page's primary heading, h2/h3 for mid-page.",
+      defaultValue: 'h1',
+    },
+    split: {
+      options: ['2/3', '1/2', '1/3'],
+      control: { type: 'inline-radio' },
+      description:
+        'Column split for layout="split". Content column is always first.',
+      defaultValue: '2/3',
+    },
   },
 };
 
@@ -142,5 +163,54 @@ export const WithHtmlInTitle = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     return <Hero data={caption.contentdata} {...args} />;
+  },
+};
+
+const splitMediaData = [
+  {
+    title: 'Comprehensive disaster and climate risk management',
+    summaryText:
+      '<p>CRM is a holistic approach to managing the risks associated with both climatic and non-climatic hazards across varied time scales and levels.</p><p>It seeks to build long-term resilience among countries and communities in vulnerable conditions.</p>',
+    label: 'Topic',
+    primary_button: 'Download a flyer on CRM',
+    secondary_button: 'Learn more',
+    media: {
+      type: 'image',
+      src: 'https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg',
+      alt: 'Aerial view of a road through a green forest',
+    },
+  },
+];
+
+export const SplitDefault = {
+  name: 'Split — 2/3 content (default)',
+  args: {
+    data: splitMediaData,
+    layout: 'split',
+    variant: 'primary',
+    headingLevel: 'h1',
+    split: '2/3',
+  },
+};
+
+export const SplitBalanced = {
+  name: 'Split — 1/2 balanced',
+  args: {
+    data: splitMediaData,
+    layout: 'split',
+    variant: 'secondary',
+    headingLevel: 'h2',
+    split: '1/2',
+  },
+};
+
+export const SplitMediaLed = {
+  name: 'Split — 1/3 media-led',
+  args: {
+    data: splitMediaData,
+    layout: 'split',
+    variant: 'tertiary',
+    headingLevel: 'h2',
+    split: '1/3',
   },
 };
