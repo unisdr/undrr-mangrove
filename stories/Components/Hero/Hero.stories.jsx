@@ -183,7 +183,7 @@ const splitMediaData = [
 ];
 
 export const SplitDefault = {
-  name: 'Split — 2/3 content (default)',
+  name: 'Split, 2/3 content (default)',
   args: {
     data: splitMediaData,
     layout: 'split',
@@ -194,7 +194,7 @@ export const SplitDefault = {
 };
 
 export const SplitBalanced = {
-  name: 'Split — 1/2 balanced',
+  name: 'Split, 1/2 balanced',
   args: {
     data: splitMediaData,
     layout: 'split',
@@ -205,7 +205,7 @@ export const SplitBalanced = {
 };
 
 export const SplitMediaLed = {
-  name: 'Split — 1/3 media-led',
+  name: 'Split, 1/3 media-led',
   args: {
     data: splitMediaData,
     layout: 'split',
@@ -216,7 +216,7 @@ export const SplitMediaLed = {
 };
 
 export const SplitWithVideo = {
-  name: 'Split — video embed',
+  name: 'Split, video embed',
   args: {
     data: [
       {
@@ -240,7 +240,7 @@ export const SplitWithVideo = {
 };
 
 export const SplitWithHtml = {
-  name: 'Split — custom HTML slot',
+  name: 'Split, custom HTML slot',
   args: {
     data: [
       {
@@ -251,11 +251,17 @@ export const SplitWithHtml = {
         primary_button: 'Read the full report',
         media: {
           type: 'html',
-          html:
-            '<div style="background:#f2f4f7;color:#0b2545;padding:2rem;display:grid;place-items:center;text-align:center;font-family:Roboto,sans-serif;">' +
-            '<div><div style="font-size:3rem;font-weight:700;">$202B</div>' +
-            '<div style="font-size:1rem;">annual losses from disasters, 2020–2024</div></div>' +
-            '</div>',
+          html: `
+<section class="mg-stats-card mg-stats-card--highlighted" aria-label="Disaster losses">
+  <div class="mg-grid mg-grid__col-1">
+    <article class="mg-card mg-stats-card-item">
+      <span class="mg-stats-card-item__label">Annual average, 2020–2024</span>
+      <data class="mg-stats-card-item__value" value="202000000000">$202B</data>
+      <strong class="mg-stats-card-item__bottom-label">in disaster losses</strong>
+      <p class="mg-stats-card-item__summary">Source: UNDRR Global Assessment Report.</p>
+    </article>
+  </div>
+</section>`,
         },
       },
     ],
