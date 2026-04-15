@@ -244,24 +244,21 @@ export const SplitWithHtml = {
   args: {
     data: [
       {
-        title: 'Disaster risk by the numbers',
+        title: 'Global Assessment Report 2026',
         summaryText:
-          '<p>Key indicators from the 2026 Global Assessment Report, visualised alongside the narrative.</p>',
-        label: 'Report',
-        primary_button: 'Read the full report',
+          "<p>UNDRR's flagship biennial review of global progress on disaster risk reduction.</p>",
+        label: 'Flagship report',
+        primary_button: 'Read the report',
         media: {
           type: 'html',
           html: `
-<section class="mg-stats-card mg-stats-card--highlighted" aria-label="Disaster losses">
-  <div class="mg-grid mg-grid__col-1">
-    <article class="mg-card mg-stats-card-item">
-      <span class="mg-stats-card-item__label">Annual average, 2020–2024</span>
-      <data class="mg-stats-card-item__value" value="202000000000">$202B</data>
-      <strong class="mg-stats-card-item__bottom-label">in disaster losses</strong>
-      <p class="mg-stats-card-item__summary">Source: UNDRR Global Assessment Report.</p>
-    </article>
-  </div>
-</section>`,
+<figure>
+  <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="Aerial view of a road through a green forest" />
+  <figcaption>
+    <strong>From the cover essay</strong>
+    <span>Photo: UNDRR</span>
+  </figcaption>
+</figure>`,
         },
       },
     ],

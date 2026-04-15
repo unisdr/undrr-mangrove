@@ -310,6 +310,37 @@ $variant-colours: (
     > * {
       width: 100%;
     }
+
+    // First-class rendering for a <figure> + <figcaption> composition inside
+    // the slot (image with an attribution overlay). Consumers get this for free
+    // by dropping in semantic markup.
+    > figure {
+      position: relative;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+
+      > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        padding: 0;
+      }
+
+      > figcaption {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        background: rgba($mg-color-neutral-900, 0.75);
+        color: $mg-color-neutral-0;
+        padding: $mg-spacing-50 $mg-spacing-100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: $mg-spacing-100;
+      }
+    }
   }
 
   .mg-hero__media-img {
