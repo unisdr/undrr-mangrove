@@ -183,7 +183,7 @@ const splitMediaData = [
 ];
 
 export const SplitDefault = {
-  name: 'Split, 2/3 content (default)',
+  name: 'Split (2/3 content, default)',
   args: {
     data: splitMediaData,
     layout: 'split',
@@ -194,7 +194,7 @@ export const SplitDefault = {
 };
 
 export const SplitBalanced = {
-  name: 'Split, 1/2 balanced',
+  name: 'Split (1/2 balanced)',
   args: {
     data: splitMediaData,
     layout: 'split',
@@ -205,7 +205,7 @@ export const SplitBalanced = {
 };
 
 export const SplitMediaLed = {
-  name: 'Split, 1/3 media-led',
+  name: 'Split (1/3 media-led)',
   args: {
     data: splitMediaData,
     layout: 'split',
@@ -216,7 +216,7 @@ export const SplitMediaLed = {
 };
 
 export const SplitWithVideo = {
-  name: 'Split, video embed',
+  name: 'Split (video embed)',
   args: {
     data: [
       {
@@ -240,7 +240,7 @@ export const SplitWithVideo = {
 };
 
 export const SplitWithHtml = {
-  name: 'Split, custom HTML slot',
+  name: 'Split (custom HTML slot)',
   args: {
     data: [
       {
