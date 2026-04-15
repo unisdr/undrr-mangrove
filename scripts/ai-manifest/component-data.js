@@ -435,7 +435,9 @@ export default {
   },
 
   'components-hero-hero-child': {
-    description: 'Smaller hero banner for child/section pages. Single CTA button, linked label.',
+    description: 'DEPRECATED — planned for removal by end of 2026. Never adopted in production across UNDRR sites; do not use in new work. Migrate to the main Hero component (`headingLevel="h2"`/`"h3"` or `layout="split"`), which covers the same use cases. Kept available for reference only. Smaller hero banner for child/section pages. Single CTA button, linked label.',
+    deprecated: true,
+    deprecationNotice: 'Planned for removal by end of 2026. Migrate to `components-hero-hero`.',
     cssClasses: [
       'mg-hero', 'mg-hero--child', 'mg-hero__overlay', 'mg-hero__content',
       'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',
