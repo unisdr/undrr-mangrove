@@ -422,10 +422,22 @@ export default {
   'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
 
   // --- Hero ---
-  'components-hero-hero': { description: 'Full-width hero banner with background image, overlay, title, summary, and CTA buttons. Four color variants.' },
+  'components-hero-hero': {
+    description: 'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
+    cssClasses: [
+      'mg-hero', 'mg-hero--secondary', 'mg-hero--tertiary', 'mg-hero--quaternary',
+      'mg-hero--split', 'mg-hero--split-2-3', 'mg-hero--split-1-2', 'mg-hero--split-1-3',
+      'mg-hero__overlay', 'mg-hero__split-grid', 'mg-hero__content',
+      'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',
+      'mg-hero__media', 'mg-hero__media--video', 'mg-hero__media--html',
+      'mg-hero__media-img', 'mg-hero__media-iframe',
+    ],
+  },
 
   'components-hero-hero-child': {
-    description: 'Smaller hero banner for child/section pages. Single CTA button, linked label.',
+    description: 'DEPRECATED — planned for removal by end of 2026. Never adopted in production across UNDRR sites; do not use in new work. Migrate to the main Hero component (`headingLevel="h2"`/`"h3"` or `layout="split"`), which covers the same use cases. Kept available for reference only. Smaller hero banner for child/section pages. Single CTA button, linked label.',
+    deprecated: true,
+    deprecationNotice: 'Planned for removal by end of 2026. Migrate to `components-hero-hero`.',
     cssClasses: [
       'mg-hero', 'mg-hero--child', 'mg-hero__overlay', 'mg-hero__content',
       'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',
