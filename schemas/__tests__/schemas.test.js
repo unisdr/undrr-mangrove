@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { createAjv } from '../ajv-setup.js';
 import cardSchema from '../card.schema.js';
@@ -34,6 +34,38 @@ describe('Schema coverage', () => {
     const testedNames = schemas.map((s) => s.name).sort();
     expect(testedNames).toEqual(schemaSourceNames);
   });
+});
+
+// Walk stories/ once and collect the set of component file basenames so we can
+// verify implementor names resolve to real on-disk components. Prevents silent
+// rot when a component is renamed or deleted without updating x-mangrove.implementors.
+const STORIES_DIR = path.join(__dirname, '..', '..', 'stories');
+
+function collectComponentBasenames(dir, acc = new Set()) {
+  for (const entry of readdirSync(dir)) {
+    const full = path.join(dir, entry);
+    const stat = statSync(full);
+    if (stat.isDirectory()) {
+      if (entry === '__tests__' || entry === 'node_modules') continue;
+      collectComponentBasenames(full, acc);
+    } else if (entry.endsWith('.jsx') && !entry.endsWith('.stories.jsx') && !entry.endsWith('.test.jsx')) {
+      acc.add(entry.replace(/\.jsx$/, ''));
+    }
+  }
+  return acc;
+}
+
+const componentBasenames = collectComponentBasenames(STORIES_DIR);
+
+describe('Schema implementors resolve to on-disk components', () => {
+  it.each(schemas)(
+    '$name: every implementor has a matching stories/**/{name}.jsx file',
+    ({ schema }) => {
+      const implementors = schema['x-mangrove'].implementors;
+      const missing = implementors.filter((name) => !componentBasenames.has(name));
+      expect(missing).toEqual([]);
+    },
+  );
 });
 
 describe('All schemas', () => {

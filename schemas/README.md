@@ -94,20 +94,13 @@ provide the value to use the component correctly, it is part of the schema.
 
 Schemas define **canonical** field names — the target contract. Current
 component props may differ. These deviations are recorded in each schema's
-`x-mangrove.deviations` object and summarized here:
+`x-mangrove.deviations` object.
 
-| Canonical (schema) | Current (component) | Affected components |
-|---|---|---|
-| `items` | `data` | All cards |
-| `items[].image.src` | `imgback` | All cards |
-| `items[].image.alt` | `imgalt` | All cards |
-| `items[].labels[]` | `label1`, `label2` | VerticalCard, HorizontalCard, HorizontalBookCard |
-| `items[].summary` | `summaryText` | All cards |
-| `stats[].summary` | `summaryText` | StatsCard |
-| `image.src` / `image.alt` | `imageSrc` / `imageAlt` | QuoteHighlight |
-| `image.src` / `image.alt` | `image` / `imageAlt` | TextCta |
-| `sharingSubject` | `SharingSubject` | ShareButtons |
-| `sharingBody` | `SharingTextBody` | ShareButtons |
+The consolidated deviations table lives in Storybook to avoid dual
+maintenance: **[Design decisions / Content architecture — Deviations](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs#deviations-from-current-implementations)**
+([source](../stories/Documentation/ContentSchemas.mdx)). When adding,
+renaming, or resolving a deviation, update `x-mangrove.deviations` in the
+schema source **and** the table in `ContentSchemas.mdx`.
 
 These deviations will be resolved in Phase 2 when components are updated to
 use canonical field names.
@@ -120,7 +113,7 @@ use canonical field names.
 4. Document `implementors` and any `deviations` in the `meta` object
 5. Run `yarn build:schemas --validate` to generate and validate
 6. Add tests in `schemas/__tests__/schemas.test.js` (structural + accept/reject cases)
-7. Update the schema inventory table in this README **and** in `stories/Documentation/ContentSchemas.mdx`
+7. Update the schema inventory table in this README **and** in `stories/Documentation/ContentSchemas.mdx`. If the new schema documents deviations, add them only to the table in `ContentSchemas.mdx` (canonical).
 
 ## Architecture
 
