@@ -39,8 +39,13 @@ caption {
   padding: $mg-spacing-0;
 }
 
+// h1-h6 inherit Roboto from body. Roboto Condensed is reserved for compact UI
+// labels (cards, tags, hero labels) and decorative chrome (tabs, on-this-page
+// nav, mega menu links, CTA buttons) where space efficiency or visual chrome
+// is the design intent. Long-form narrative headings need the body face for
+// readability.
+
 h1 {
-  font-family: $mg-font-family;
   font-size: $mg-font-size-600;
   letter-spacing: 0.02em;
   line-height: 1.08;

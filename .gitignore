@@ -22,3 +22,4 @@ CONTRIBUTING_ISSUES.md
 # Ignore npm's package lock, we use yarn
 package-lock.json
 npm-debug.log
+.gstack/

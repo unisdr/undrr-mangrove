@@ -127,6 +127,7 @@
   }
 
   &__title {
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-size-400;
     font-weight: 700;
     margin-bottom: $mg-spacing-50;
@@ -494,5 +495,12 @@
       right: auto;
       left: $mg-spacing-100;
     }
+  }
+}
+
+// Arabic font override for gallery title.
+:lang(ar) {
+  .mg-gallery__title {
+    font-family: $mg-font-family-arabic-headings;
   }
 }

@@ -19,6 +19,34 @@ The main change in 1.5: icons now render via CSS `mask-image` instead of a font.
 | Planning the `fa-*` → `mg-icon-*` migration | [Icon migration roadmap](#icon-migration-roadmap-fa--mg-icon-) |
 | A React / npm consumer | [Upgrading from 1.4.x](#upgrading-from-14x) — note the [breaking changes](#breaking-changes) |
 
+## 1.5.1 addendum
+
+Released April 2026. Two changes:
+
+1. **New Brand section in Storybook** ([#925](https://github.com/unisdr/undrr-mangrove/issues/925), [#927](https://github.com/unisdr/undrr-mangrove/pull/927)): A brand guide aimed at non-technical UNDRR colleagues (content editors, brand managers, external partners). Five new pages: About this guide, Brand identity (theme-aware, responds to the theme picker), Brand guidelines (editorial content migrated from SharePoint), Common patterns (shared foundations), and Component gallery (curated catalog of 40+ components). Replaces the outdated Google Sites / SharePoint web style guide references.
+
+2. **Roboto Condensed scoped to component titles, labels, and UI chrome** (visual change for all sites — [#929](https://github.com/unisdr/undrr-mangrove/pull/929)): A new `$mg-font-family-headings` SCSS token (`!default`-flagged so themes can override) is applied to component classes that act as visual titles, labels, or decorative chrome. **Narrative h1–h6 still use Roboto** because Roboto Condensed at heading size feels too tight for sustained reading.
+
+   Affected classes:
+
+   - **Titles:** `.mg-hero__title`, `.mg-card__title` (all card variants), `.mg-stats-card-item__value`, `.mg-stats-card-item__bottom-label`, `.mg-gallery__title`, `.mg-mega-content__banner header`
+   - **Labels and tags:** `.mg-hero__label`, `.mg-card__label`, `.mg-stats-card-item__label`, `.mg-tag` (and variants)
+   - **UI chrome:** `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-on-this-page-nav__cta`, `.mg-mega-topbar__item-link`, `.mg-button` (CTA buttons), `.mg-footer--about-footer--links`
+
+   Also in this batch:
+
+   - **OnThisPageNav size bump:** link and pinned-CTA font-size moves from 14px to 16px (`$mg-font-size-250` → `$mg-font-size-300`) for legibility on a navigation element users need to read and click.
+   - **StatsCard tabular numerals:** big stat numbers now use `font-variant-numeric: tabular-nums lining-nums` so multi-digit values like "1,200 cities" align column-wise when stacked.
+   - **Arabic font coverage:** every component touched by the heading-font extension also gained a `:lang(ar)` block routing to `$mg-font-family-arabic-headings` (Noto Kufi Arabic). Without these, Arabic titles would have fallen back to a system font on Roboto Condensed, which has no Arabic glyph coverage.
+   - **Token consistency:** MegaMenu top-level links and the OnThisPageNav pinned CTA migrated from raw `$mg-font-family-condensed` to the semantic `$mg-font-family-headings` alias. Same rendered font; future-proof if a theme overrides the heading token.
+   - **Tab Arabic override realigned:** `.mg-tabs__link` Arabic font moves from `$mg-font-family-arabic-body` (Dubai) to `$mg-font-family-arabic-headings` (Noto Kufi Arabic) to match the new Latin treatment and the OnThisPageNav precedent.
+
+   > **If you manage a site that uses Mangrove:** Card titles, big stat numbers, hero labels, tags, tabs, on-this-page nav, and CTA buttons will look slightly more compact and authoritative after this update. Long-form article headings (h1–h6) are unchanged — they still render in Roboto. The opt-out for any individual class is `font-family: $mg-font-family;` in your theme override, or override the global token by reassigning `$mg-font-family-headings`.
+
+   > **Post-ship validation we're tracking:** UX research recommended a 5–8 person usability check on the new tab treatment (does the heading font on tab labels affect active-state identification time?) and a 12-card PreventionWeb publications grid screenshot comparison (does condensed scan as fast as regular at high content density?). Neither blocks the release, but if either signals a regression, the per-component opt-out above is the path back.
+
+Full diff: [v1.5.0...v1.5.1 on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.5.0...v1.5.1).
+
 ## What's new since 1.4.0
 
 ### New components

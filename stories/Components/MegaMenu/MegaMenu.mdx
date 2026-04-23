@@ -165,6 +165,8 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.2.1** — 2026-04-14 ([https://github.com/unisdr/undrr-mangrove/issues/939](https://github.com/unisdr/undrr-mangrove/issues/939)): Scoped submenu CSS multicolumn layout to tablet+ viewports. Primarily a Safari mobile fix: third-level menu items rendered invisibly (space reserved, content unpainted) due to a long-standing interaction between multicolumn containers and descendant `opacity < 1`. Other browsers were unaffected.
+- **1.2** — 2026-04-13: `.mg-mega-topbar__item-link` migrated from raw `$mg-font-family-condensed` to the semantic `$mg-font-family-headings` alias. Same rendered font; future-proof if a theme overrides the heading token independently of the condensed token.
 - **1.1.1** — 2026-04-06 ([#916](https://github.com/unisdr/undrr-mangrove/pull/916)): Fixed mobile links non-clickable when using Mangrove nav CSS without the React component, or when JS hydration fails.
 - **1.1.0** — 2026-03-13 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Optional `icon` property on sections for top-level menu item icons (desktop topbar only; decorative, `aria-hidden`). Added section object properties documentation.
 - **1.0.0** — 2026-03-12: Branded variant with optional inline logo (`logoSrc`, `logoAlt`, `logoHref`, `logoWidth`, `logoHeight`); logo shrinks on narrow viewports; hamburger floats over logo with shadow on mobile; documented `logoHref` language prefix handling. Added hydration support with `fromElement` prop extraction and `createHydrator` integration.

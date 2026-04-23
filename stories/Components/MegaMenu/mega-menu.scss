@@ -156,7 +156,7 @@
   }
 
   &__item-link {
-    font-family: $mg-font-family-condensed;
+    font-family: $mg-font-family-headings;
     color: $mg-color-interactive;
     background: none;
     border: none;
@@ -223,6 +223,7 @@
   &__banner {
     padding: $mg-spacing-250;
     header {
+      font-family: $mg-font-family-headings;
       font-size: $mg-font-size-500;
       font-weight: bold;
       padding-bottom: $mg-spacing-100;
@@ -430,10 +431,19 @@
     flex: 1;
     padding: $mg-spacing-150;
     list-style: none;
-    column-count: auto;
-    column-width: 300px;
-    column-gap: $mg-spacing-200;
-    column-fill: balance;
+
+    // Multicolumn layout only on desktop. This is primarily a Safari fix:
+    // on mobile Safari, descendants with opacity < 1 inside a multicolumn
+    // container are not painted (space reserved, text invisible). Other
+    // browsers render fine either way, and at mobile widths the columns
+    // collapse to 1 anyway, so scoping to tablet+ loses nothing.
+    // See https://github.com/unisdr/undrr-mangrove/issues/939.
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      column-count: auto;
+      column-width: 300px;
+      column-gap: $mg-spacing-200;
+      column-fill: balance;
+    }
 
     // nested menus - RTL-friendly
     ul {
