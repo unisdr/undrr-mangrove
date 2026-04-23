@@ -156,8 +156,8 @@ MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 > **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js";
-import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js";
+import createHydrator from "https://assets.undrr.org/static/mangrove/1.6.0/components/hydrate.js";
+import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/1.6.0/components/MegaMenu.js";
 createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromElement });
 ```
 

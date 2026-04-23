@@ -1,0 +1,117 @@
+[13:19:05.793] [INFO] storybook v10.3.5
+[13:19:06.471] [DEBUG] Getting package.json info for /Users/khawkins/Documents/git/drupal-base/docroot/libraries/undrr-mangrove/package.json...
+[13:19:08.443] [DEBUG] Serving static files from node_modules/@chromatic-com/storybook/assets at /addon-visual-tests-assets
+[13:19:08.444] [DEBUG] Serving static files from stories/assets at /
+[13:19:08.958] [INFO] Addon-docs: using MDX3
+[13:19:09.764] [INFO] Using implicit CSS loaders
+[13:19:09.843] [INFO] Using default Webpack5 setup
+[13:19:09.848] [INFO] Starting...
+[13:19:09.860] [WARN] unable to find package.json for react-leaflet
+[13:19:10.062] [DEBUG] Starting preview..
+[13:19:10.074] [INFO] Addon-docs: using MDX3
+[13:19:10.076] [INFO] Using implicit CSS loaders
+[13:19:10.080] [INFO] Using default Webpack5 setup
+[13:19:10.706] [DEBUG] Using tsconfig paths for react-docgen
+[13:19:25.805] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style-delta.scss 8:9        root stylesheet
+
+[13:19:25.809] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+You are compiling the legacy 10px root theme (style-irp-legacy). This variant will be removed after 2026. See docs/RELEASE-1.4.md for migration options.
+
+stories/assets/scss/style-irp-legacy.scss 16:1  root stylesheet
+
+[13:19:25.811] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style-irp.scss 8:9          @import
+stories/assets/scss/style-irp-legacy.scss 20:9  root stylesheet
+
+[13:19:25.816] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style-irp.scss 8:9          root stylesheet
+
+[13:19:25.817] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+You are compiling the legacy 10px root theme (style-legacy). This variant will be removed after 2026. See docs/RELEASE-1.4.md for migration options.
+
+stories/assets/scss/style-legacy.scss 16:1  root stylesheet
+
+[13:19:25.818] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style.scss 7:9              @import
+stories/assets/scss/style-legacy.scss 20:9      root stylesheet
+
+[13:19:25.820] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+You are compiling the legacy 10px root theme (style-mcr-legacy). This variant will be removed after 2026. See docs/RELEASE-1.4.md for migration options.
+
+stories/assets/scss/style-mcr-legacy.scss 16:1  root stylesheet
+
+[13:19:25.822] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style-mcr.scss 8:9          @import
+stories/assets/scss/style-mcr-legacy.scss 20:9  root stylesheet
+
+[13:19:25.828] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style-mcr.scss 8:9          root stylesheet
+
+[13:19:25.829] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+You are compiling the legacy 10px root theme (style-preventionweb-legacy). This variant will be removed after 2026. See docs/RELEASE-1.4.md for migration options.
+
+stories/assets/scss/style-preventionweb-legacy.scss 16:1  root stylesheet
+
+[13:19:25.831] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1            @import
+stories/assets/scss/_components.scss 38:9                 @import
+stories/assets/scss/style-preventionweb.scss 8:9          @import
+stories/assets/scss/style-preventionweb-legacy.scss 20:9  root stylesheet
+
+[13:19:25.834] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1    @import
+stories/assets/scss/_components.scss 38:9         @import
+stories/assets/scss/style-preventionweb.scss 8:9  root stylesheet
+
+[13:19:25.845] [WARN] Module Warning (from ./node_modules/sass-loader/dist/cjs.js):
+_form-legacy.scss is deprecated. Migrate to BEM classes from _form-base.scss. Removal: August 2026.
+
+stories/Components/Forms/_form-legacy.scss 5:1  @import
+stories/assets/scss/_components.scss 38:9       @import
+stories/assets/scss/style.scss 7:9              root stylesheet
+
+[13:19:25.847] [ERROR] Failed to build the preview
+[13:19:25.863] [WARN] Force closed preview build
+[13:19:25.865] [ERROR] [38;2;241;97;97mSB_BUILDER-WEBPACK5_0003 (WebpackCompilationError): There were problems when compiling your code with Webpack.
+Run Storybook with --debug-webpack for more information.[39m
+    at starter (file://./node_modules/@storybook/builder-webpack5/dist/index.js:799:11)
+    at starter.next (<anonymous>)
+    at Module.start (file://./node_modules/@storybook/builder-webpack5/dist/index.js:857:34)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async storybookDevServer (file://./node_modules/storybook/dist/core-server/index.js:7503:83)
+    at async buildOrThrow (file://./node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file://./node_modules/storybook/dist/core-server/index.js:8033:41)
+    at async withTelemetry (file://./node_modules/storybook/dist/_node-chunks/chunk-FIR43JGQ.js:225:12)
+    at async dev (file://./node_modules/storybook/dist/bin/core.js:2736:3)
+    at async _Command.<anonymous> (file://./node_modules/storybook/dist/bin/core.js:2806:92)
+[13:19:25.868] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

@@ -1,0 +1,104 @@
+{
+  "type": "object",
+  "properties": {
+    "ariaLabel": {
+      "type": "string",
+      "description": "Accessible name for the gallery landmark. Required when multiple galleries appear on the same page (e.g. \"Programme photos\", \"Event highlights\"). Defaults to \"Gallery\" in the current component."
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the media item"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video",
+              "embed",
+              "html"
+            ],
+            "description": "Media type",
+            "default": "image"
+          },
+          "src": {
+            "type": "string",
+            "format": "uri",
+            "description": "Primary media source URL"
+          },
+          "alt": {
+            "type": "string",
+            "description": "Alt text for images"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title displayed below the media"
+          },
+          "description": {
+            "type": "string",
+            "description": "Caption or description text"
+          },
+          "thumbnail": {
+            "type": "string",
+            "format": "uri",
+            "description": "Thumbnail image URL (falls back to src for images)"
+          },
+          "poster": {
+            "type": "string",
+            "format": "uri",
+            "description": "Poster image for video items"
+          },
+          "embedUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Embed URL for iframe-based media (used when type is embed)"
+          },
+          "html": {
+            "type": "string",
+            "format": "html",
+            "description": "Raw HTML content (used when type is html)"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "if": {
+          "properties": {
+            "type": {
+              "const": "image"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "then": {
+          "required": [
+            "alt"
+          ]
+        }
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "media"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/unisdr/undrr-mangrove/schemas/gallery",
+  "title": "Gallery",
+  "description": "Media gallery supporting images, videos, embeds, and HTML content with thumbnails and navigation.",
+  "x-mangrove": {
+    "version": "1.0.0",
+    "phase": 1,
+    "implementors": [
+      "Gallery"
+    ],
+    "deviations": {},
+    "notes": "Gallery also accepts presentation-only props (showThumbnails, thumbnailPosition, showArrows, arrowStyle, showDescription, enableKeyboard, loop, initialIndex) that are component configuration, not content data."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "type": "object",
+  "properties": {
+    "ariaLabel": {
+      "type": "string",
+      "description": "Accessible name for the navigation landmark. Provide a unique label when multiple nav elements appear on the page (e.g. \"Main navigation\", \"Footer navigation\"). Defaults to \"Main Navigation\" in the current component."
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Display title for the section in the top navigation bar"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Icon class name for the section tab (e.g. \"mg-icon mg-icon-globe\")"
+          },
+          "bannerHeading": {
+            "type": "string",
+            "description": "Heading text for the section banner"
+          },
+          "bannerDescription": {
+            "type": "string",
+            "format": "html",
+            "description": "Description text for the section banner (HTML supported)"
+          },
+          "bannerButton": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Display text for the link or button. Must be descriptive in isolation — avoid generic text like \"Read more\" or \"Click here\" without context."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Target URL"
+              }
+            },
+            "required": [
+              "label"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Menu item display text"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Menu item URL"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "Menu item display text"
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Menu item URL"
+                      },
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "description": "Menu item display text"
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "Menu item URL"
+                            }
+                          },
+                          "required": [
+                            "title"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "title"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "title"
+              ]
+            }
+          }
+        }
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "sections"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/unisdr/undrr-mangrove/schemas/navigation",
+  "title": "Navigation",
+  "description": "Multi-level navigation structure with section banners and up to 3 levels of menu items. Used for mega-menu and primary site navigation.",
+  "x-mangrove": {
+    "version": "1.0.0",
+    "phase": 1,
+    "implementors": [
+      "MegaMenu"
+    ],
+    "deviations": {
+      "ariaLabel": "Current component hardcodes aria-label=\"Main Navigation\". The `ariaLabel` field enables consumers to supply a custom label, which is required when multiple navigation landmarks appear on the same page."
+    },
+    "notes": "MegaMenu also accepts presentation-only props (delay, hoverDelay, logo*) that are component configuration, not content. These are not part of the content schema."
+  }
+}

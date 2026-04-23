@@ -49,11 +49,11 @@ Add these `<link>` tags to your HTML `<head>`:
     <!-- UNDRR Theme (Choose one) -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.5.0/css/style.css"
+      href="https://assets.undrr.org/static/mangrove/1.6.0/css/style.css"
     />
 
     <!-- Alternative: Prevention Web Theme -->
-    <!-- <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.5.0/css/style-preventionweb.css"> -->
+    <!-- <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.6.0/css/style-preventionweb.css"> -->
   </head>
   <body>
     <!-- Your content here -->
@@ -103,7 +103,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.5.0/css/style.css"
+  href="https://assets.undrr.org/static/mangrove/1.6.0/css/style.css"
 />
 ```
 
@@ -112,7 +112,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.5.0/css/style-preventionweb.css"
+  href="https://assets.undrr.org/static/mangrove/1.6.0/css/style-preventionweb.css"
 />
 ```
 
@@ -121,7 +121,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.5.0/css/style-mcr.css"
+  href="https://assets.undrr.org/static/mangrove/1.6.0/css/style-mcr.css"
 />
 ```
 
@@ -130,7 +130,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.5.0/css/style-irp.css"
+  href="https://assets.undrr.org/static/mangrove/1.6.0/css/style-irp.css"
 />
 ```
 
@@ -139,7 +139,7 @@ Choose the theme that matches your UNDRR property:
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/mangrove/1.5.0/css/style-delta.css"
+  href="https://assets.undrr.org/static/mangrove/1.6.0/css/style-delta.css"
 />
 ```
 
@@ -231,7 +231,7 @@ Some components (like Tabs) have lightweight JavaScript modules:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.5.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/1.6.0/js/tabs.js';
 
   document.addEventListener('DOMContentLoaded', () => {
     mgTabs();
@@ -288,7 +288,7 @@ React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.o
 
     // Load component from CDN
     const MegaMenuModule = await import(
-      'https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js'
+      'https://assets.undrr.org/static/mangrove/1.6.0/components/MegaMenu.js'
     );
 
     // Unwrap ESM/CJS interop - bundle may be double-wrapped as { default: { default: Component } }
@@ -334,8 +334,8 @@ Components that support hydration (ShareButtons, ScrollContainer, QuoteHighlight
 
 ```html
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js';
-  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.5.0/components/ShareButtons.js';
+  import createHydrator from 'https://assets.undrr.org/static/mangrove/1.6.0/components/hydrate.js';
+  import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.6.0/components/ShareButtons.js';
 
   createHydrator({
     selector: '[data-mg-share-buttons]',
@@ -367,7 +367,7 @@ Components that don't yet export `fromElement` (BarChart, MapComponent, etc.) ca
   import React from 'react';
   import { createRoot } from 'react-dom/client';
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js'
+    'https://assets.undrr.org/static/mangrove/1.6.0/components/MegaMenu.js'
   );
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
   if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
@@ -402,7 +402,7 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
     <!-- Mangrove CSS theme -->
     <link
       rel="stylesheet"
-      href="https://assets.undrr.org/static/mangrove/1.5.0/css/style.css"
+      href="https://assets.undrr.org/static/mangrove/1.6.0/css/style.css"
     />
 
     <!-- Import map: provides React to Mangrove ES module bundles -->
@@ -432,8 +432,8 @@ A self-contained page you can save as an `.html` file and open in a browser. It 
 
     <!-- Load the hydration runtime and component, then mount -->
     <script type="module">
-      import createHydrator from 'https://assets.undrr.org/static/mangrove/1.5.0/components/hydrate.js';
-      import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.5.0/components/ShareButtons.js';
+      import createHydrator from 'https://assets.undrr.org/static/mangrove/1.6.0/components/hydrate.js';
+      import ShareButtons, { fromElement } from 'https://assets.undrr.org/static/mangrove/1.6.0/components/ShareButtons.js';
 
       createHydrator({
         selector: '[data-mg-share-buttons]',
