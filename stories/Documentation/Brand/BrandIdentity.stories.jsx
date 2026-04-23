@@ -412,7 +412,10 @@ function BrandIdentityPage({ themeName }) {
       <p style={{ fontSize: '0.875rem', color: '#666' }}>
         Showing 21 of 80+ icons, including OCHA humanitarian icons. See the full
         set in the{' '}
-        <LinkTo kind="components-icons" story="docs">Icons documentation</LinkTo>.
+        <LinkTo kind="components-icons" story="docs">
+          Icons documentation
+        </LinkTo>
+        .
       </p>
 
       <hr style={{ margin: '2rem 0' }} />
