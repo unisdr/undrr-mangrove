@@ -10,6 +10,8 @@ const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
  * Supports the same color variant system as Hero (primary, secondary,
  * tertiary, quaternary) plus a `backgroundColor` prop for custom colors.
  *
+ * @see schemas/text-cta.schema.js — canonical field names and documented deviations.
+ *
  * @param {Object} props
  * @param {string} props.headline - Banner heading text
  * @param {string} props.text - Body text (HTML supported, rendered via dangerouslySetInnerHTML)

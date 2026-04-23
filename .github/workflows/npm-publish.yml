@@ -62,7 +62,7 @@ jobs:
         run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --refresh-lockfile # To allow compatibility with dependency updaters
 
       - name: Build
-        run: yarn build
+        run: yarn build && yarn build:schemas --validate-only
 
       # Prepare package for publishing - include dist files and SCSS sources
       - name: Prepare package files
@@ -97,6 +97,10 @@ jobs:
             cp -r dist/components/* npm-package/components/
           fi
 
+          # Copy content schemas (fails loudly if build:schemas did not produce files)
+          mkdir -p npm-package/schemas
+          cp schemas/dist/*.schema.json npm-package/schemas/
+
           # Copy component SCSS files maintaining structure
           mkdir -p npm-package/scss
           find stories -name "*.scss" -type f | while read file; do
@@ -117,7 +121,11 @@ jobs:
               version: pkg.version,
               description: pkg.description,
               main: "dist/index.js",
-              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "error-pages/**/*", "fonts/**/*"],
+              exports: {
+                ".": "./dist/index.js",
+                "./schemas/*": "./schemas/*"
+              },
+              files: ["components/**/*", "css/**/*", "js/**/*", "scss/**/*.scss", "schemas/**/*", "error-pages/**/*", "fonts/**/*"],
               repository: pkg.repository,
               keywords: pkg.keywords,
               author: pkg.author,

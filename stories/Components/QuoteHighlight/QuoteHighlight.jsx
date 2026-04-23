@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
  *
  * A component that displays a highlighted quote with an optional image, attribution, and title.
  * Multiple variants are available: with a separator line or with an image, and with different alignments.
+ *
+ * @see schemas/quote.schema.js — canonical field names and documented deviations.
  */
 const QuoteHighlight = ({
   quote,

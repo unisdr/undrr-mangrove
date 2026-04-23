@@ -73,6 +73,20 @@ See the RTL support section in [Component standards](https://unisdr.github.io/un
 See [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) for the full pattern.
   - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
 
+## Content architecture (if component accepts content-shaped props)
+
+Applies to any component that takes structured content as input — items, images, text, navigation, stats, etc. (anything a CMS would feed it, as opposed to theme-level configuration).
+
+- [ ] Checked `schemas/` to see if this component maps to an existing archetype (card, statistic, quote, navigation, share-action, gallery, text-cta). Components already mapped carry a `@see schemas/{name}.schema.js` breadcrumb in their source file.
+- [ ] **Adding a prop:** new prop name aligns with the canonical field in the schema, or the deviation is documented in `x-mangrove.deviations`
+- [ ] **Renaming a prop to match canonical:** matching entry removed from the schema's `x-mangrove.deviations`, and from the deviations table in `stories/Documentation/ContentSchemas.mdx`
+- [ ] **Adding a component to an existing archetype:** component name added to the schema's `x-mangrove.implementors`, and to the "Implementing components" columns in `schemas/README.md` and `stories/Documentation/ContentSchemas.mdx`
+- [ ] **Removing or renaming an implementing component:** name removed from the schema's `x-mangrove.implementors` and both inventory tables
+- [ ] **Introducing a new content archetype:** schema added in `schemas/`, `yarn build:schemas --validate` passes, inventory tables updated in both `schemas/README.md` and `ContentSchemas.mdx`
+
+See [Content architecture](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs) for the schema inventory and authoring guide.
+  - Source: [`schemas/README.md`](../schemas/README.md)
+
 ## AI discoverability (optional)
 
 - [ ] Component appears in the AI manifest after running `yarn validate-manifest`

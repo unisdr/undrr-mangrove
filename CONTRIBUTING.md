@@ -47,6 +47,21 @@ Tips for better manifest output:
 - **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs), add a webpack entry in `webpack.config.js`, a `COMPONENT_IDS` mapping, and a `buildSampleProps()` entry — both in `scripts/ai-manifest/generate-ai-manifest.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
 - **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
+## Content architecture and schemas
+
+Mangrove's `schemas/` directory contains JSON Schema definitions for component archetypes — the formal record of what data each component carries (see [About Mangrove](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-about-mangrove--docs) and the [content architecture page](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs)).
+
+When contributing a new component or modifying an existing one:
+
+- Components already mapped to a schema carry a `@see schemas/{name}.schema.js` breadcrumb in their source file — follow it before changing props.
+- Check `schemas/` to see if your component maps to an existing archetype (card, statistic, quote, navigation, share-action, gallery, text-cta).
+- If it does, ensure your prop names align with the canonical field names, or document any deviation in the schema's `x-mangrove.deviations` metadata.
+- If you are renaming a prop to match its canonical field, **remove** the corresponding entry from `x-mangrove.deviations` and from the deviations table in `stories/Documentation/ContentSchemas.mdx`.
+- If you are adding a new component that implements an existing archetype, add its name to `x-mangrove.implementors` on the schema and to the inventory table in `stories/Documentation/ContentSchemas.mdx`.
+- If you're introducing a genuinely new content archetype, consider adding a schema. See [`schemas/README.md`](schemas/README.md) for authoring instructions.
+
+Run `yarn build:schemas` after editing schema source files to regenerate `schemas/dist/`.
+
 ## Reviewing PRs
 
 Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) when reviewing component PRs.

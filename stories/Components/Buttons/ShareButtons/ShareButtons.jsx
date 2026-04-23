@@ -228,6 +228,8 @@ const QRCodeModal = ({
  *                           onCopy: "Copied"
  *  @param {string} SharingSubject - subject of the Email that will be prefilled to the user
  *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
+ *
+ *  @see schemas/share-action.schema.js — canonical field names and documented deviations.
  */
 const ShareButtons = ({
   labels,

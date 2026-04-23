@@ -13,6 +13,8 @@ const cls = (...classes) =>
  * A card variant with icon/image, title, summary, and optional CTA.
  * RTL layout is automatic via CSS [dir="rtl"] - use the Storybook locale toolbar.
  *
+ * @see schemas/card.schema.js — canonical field names and documented deviations.
+ *
  * @param {Object} props
  * @param {Array} props.data - Array of card data objects (see data object properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)

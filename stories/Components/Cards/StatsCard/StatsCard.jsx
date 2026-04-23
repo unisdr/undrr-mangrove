@@ -9,6 +9,8 @@ import { StatsCardItem } from './StatsCardItem';
  * A flexible card component for displaying statistics and key metrics in an engaging,
  * scannable format. Displays individual stat cards in a grid layout with optional
  * icons, dual labels, descriptions, and call-to-action links.
+ *
+ * @see schemas/statistic.schema.js — canonical field names and documented deviations.
  */
 export function StatsCard({
   title,
