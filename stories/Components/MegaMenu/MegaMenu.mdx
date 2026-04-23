@@ -165,6 +165,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.2.2** — 2026-04-23: Declared `title` (required) and `icon` (optional) on the section-object `PropTypes` shape. Both props were already used by `TopBar` and `Sidebar` and documented in the section object properties table, but were absent from runtime `PropTypes` validation, so consumers got no warning when passing sections without a `title`.
 - **1.2.1** — 2026-04-14 ([https://github.com/unisdr/undrr-mangrove/issues/939](https://github.com/unisdr/undrr-mangrove/issues/939)): Scoped submenu CSS multicolumn layout to tablet+ viewports. Primarily a Safari mobile fix: third-level menu items rendered invisibly (space reserved, content unpainted) due to a long-standing interaction between multicolumn containers and descendant `opacity < 1`. Other browsers were unaffected.
 - **1.2** — 2026-04-13: `.mg-mega-topbar__item-link` migrated from raw `$mg-font-family-condensed` to the semantic `$mg-font-family-headings` alias. Same rendered font; future-proof if a theme overrides the heading token independently of the condensed token.
 - **1.1.1** — 2026-04-06 ([#916](https://github.com/unisdr/undrr-mangrove/pull/916)): Fixed mobile links non-clickable when using Mangrove nav CSS without the React component, or when JS hydration fails.

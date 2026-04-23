@@ -10,6 +10,8 @@
  * `logoHref`, e.g. `data-mg-mega-menu-logo-href="/ar/"` on Arabic pages.
  *
  * @param {Object[]} sections - Array of section objects containing menu structure
+ * @param {string} sections[].title - Top-level menu item label (required)
+ * @param {string} sections[].icon - Optional icon class name shown before the title on desktop topbar (e.g. "mg-icon mg-icon-chart-bar")
  * @param {string} sections[].bannerHeading - Heading text for the section banner
  * @param {string} sections[].bannerDescription - Description text for the section banner
  * @param {Object} sections[].bannerButton - Optional button object for the banner
@@ -164,6 +166,8 @@ MegaMenu.propTypes = {
   /** Array of section objects containing the menu structure. */
   sections: PropTypes.arrayOf(
     PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      icon: PropTypes.string,
       bannerHeading: PropTypes.string,
       bannerDescription: PropTypes.string,
       bannerButton: PropTypes.shape({
