@@ -1,21 +1,23 @@
 import React from 'react';
 import { linkTo } from '@storybook/addon-links';
-import { useGlobals } from '@storybook/preview-api';
+import { addons } from 'storybook/preview-api';
 
 /**
  * A card that navigates to a target story and updates a Storybook global,
  * for use in the brand guide overview page.
  *
- * Uses linkTo() and useGlobals() instead of <a href> to avoid navigating
+ * Uses linkTo() and addons.getChannel() instead of <a href> to avoid navigating
  * the preview iframe directly — which strips the Storybook UI shell and
  * breaks on GitHub Pages where Storybook is deployed to a subpath.
+ *
+ * Uses addons.getChannel().emit('updateGlobals') rather than the useGlobals()
+ * hook because Storybook hooks can only be called in story/decorator functions,
+ * not in regular React components.
  */
 export function StorybookNavCard({ title, summary, imgback, imgalt, theme }) {
-  const [, updateGlobals] = useGlobals();
-
   function handleClick(e) {
     e.preventDefault();
-    updateGlobals({ theme });
+    addons.getChannel().emit('updateGlobals', { globals: { theme } });
     linkTo('Brand/Brand identity', 'Docs')();
   }
 

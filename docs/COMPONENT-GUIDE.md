@@ -135,24 +135,21 @@ import LinkTo from '@storybook/addon-links/react';
 See the <LinkTo kind="components-pager" story="docs">Pager</LinkTo> component.
 ```
 
-**Use `linkTo` + `useGlobals` for interactive navigation** (e.g., a card that navigates AND switches a global like the theme):
+**Use `linkTo` + `addons.getChannel()` for interactive navigation** (e.g., a card that navigates AND switches a global like the theme). Do NOT use Storybook hooks (`useGlobals`, `useArgs`) in regular React components — they only work inside story/decorator functions. Use `addons.getChannel().emit()` instead:
 
 ```jsx
 import { linkTo } from '@storybook/addon-links';
-import { useGlobals } from '@storybook/preview-api';
+import { addons } from 'storybook/preview-api';
 
 function NavCard({ theme }) {
-  const [, updateGlobals] = useGlobals();
   function handleClick(e) {
     e.preventDefault();
-    updateGlobals({ theme });
+    addons.getChannel().emit('updateGlobals', { globals: { theme } });
     linkTo('Brand/Brand identity', 'Docs')();
   }
   return <button onClick={handleClick}>Go</button>;
 }
 ```
-
-`updateGlobals` persists across story navigation, so the global (theme) is already set when the target story renders. Both approaches use Storybook's channel — they never touch `window.location` inside the iframe.
 
 **Never use `href="/?path=..."` or `href="?path=..."` in MDX or stories.** Both navigate the iframe directly.
 
