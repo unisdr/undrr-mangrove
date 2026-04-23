@@ -123,6 +123,39 @@ For large multi-subsection contributor blocks, use a separate section with a con
 See [Writing guidelines — Write for two audiences](WRITING.md) for the full principle.
 
 
+### Linking within Storybook docs
+
+All MDX docs and embedded JSX stories render inside Storybook's **preview iframe** at `iframe.html`. Plain `<a href>` clicks navigate the iframe directly — stripping the Storybook UI shell and breaking on GitHub Pages where the site is deployed to a subpath (`/undrr-mangrove/`).
+
+**Use `<LinkTo>` for prose story links** — it sends a channel message to the Storybook manager and works on any deployment path:
+
+```mdx
+import LinkTo from '@storybook/addon-links/react';
+
+See the <LinkTo kind="components-pager" story="docs">Pager</LinkTo> component.
+```
+
+**Use `linkTo` + `useGlobals` for interactive navigation** (e.g., a card that navigates AND switches a global like the theme):
+
+```jsx
+import { linkTo } from '@storybook/addon-links';
+import { useGlobals } from '@storybook/preview-api';
+
+function NavCard({ theme }) {
+  const [, updateGlobals] = useGlobals();
+  function handleClick(e) {
+    e.preventDefault();
+    updateGlobals({ theme });
+    linkTo('Brand/Brand identity', 'Docs')();
+  }
+  return <button onClick={handleClick}>Go</button>;
+}
+```
+
+`updateGlobals` persists across story navigation, so the global (theme) is already set when the target story renders. Both approaches use Storybook's channel — they never touch `window.location` inside the iframe.
+
+**Never use `href="/?path=..."` or `href="?path=..."` in MDX or stories.** Both navigate the iframe directly.
+
 **Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
 
 ```mdx

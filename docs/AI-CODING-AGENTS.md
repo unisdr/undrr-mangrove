@@ -18,6 +18,7 @@ Key items agents commonly miss:
 - **Story source examples** must match current class names (stale HTML in `parameters.docs.source.code` is invisible to tests but misleads consumers)
 - **CSF3 format** for stories (no `Template.bind({})`)
 - **Storybook imports**: use `import { Meta, Canvas } from '@storybook/addon-docs/blocks'` — not `@storybook/blocks` (that package was removed in Storybook 9; this project is on Storybook 10)
+- **Storybook links**: use `<LinkTo kind="..." story="...">` from `@storybook/addon-links/react` for prose story links. Never use `href="/?path=..."` or `href="?path=..."` — all MDX and stories render inside the preview iframe, so plain `<a href>` navigates the iframe directly, stripping the Storybook UI shell. For interactive navigation that also sets a global (e.g., theme-switching cards), use `linkTo` + `useGlobals` from `@storybook/preview-api` in an onClick handler — see the `StorybookNavCard` component in `stories/Documentation/Brand/components/` as a reference, and the [Component guide — Linking within Storybook docs](COMPONENT-GUIDE.md) section.
 
 ## Keeping the AI manifest in sync
 
