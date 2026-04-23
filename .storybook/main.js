@@ -94,9 +94,11 @@ export default {
     };
 
     // Provide process global for browser compatibility
+    // Note: do NOT define 'process.env' here — Storybook's own DefinePlugin
+    // already defines process.env.* keys and webpack disallows both parent and
+    // child keys in the same DefinePlugin pass (WebpackCompilationError).
     config.plugins.push(
       new webpack.DefinePlugin({
-        'process.env': {},
         'process.version': '"v20.0.0"',
         'process.platform': '"browser"',
       })
