@@ -4,10 +4,19 @@ Mangrove's **content architecture** defines the structural contracts between dat
 and components — what each component *carries*, independent of how it looks.
 JSON Schema is the mechanism for formalizing and locking those contracts in.
 
+Conceptually this applies strategic patterns from Domain-Driven Design: schemas
+are a **Published Language**, canonical field names are the **Ubiquitous
+Language**, and hydration wrappers in consuming systems (e.g. Drupal) act as
+**Anti-Corruption Layers**. Tactical DDD patterns do not apply and are out of
+scope. See the [Content architecture Storybook page][storybook-doc] for the
+full framing.
+
 These schema files are Phase 1: a canonical reference spec for each component
 archetype. No existing component props are changed here. Deviations between
 the canonical field names and current prop names are recorded explicitly;
-resolving them is Phase 2.
+resolving them is the Phase 2 ubiquitous-language alignment pass.
+
+[storybook-doc]: https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-content-architecture--docs
 
 ## Documentation
 

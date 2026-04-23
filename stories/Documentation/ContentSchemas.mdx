@@ -35,6 +35,19 @@ for Phase 1 scope.
 
 ---
 
+## Conceptual foundation: strategic Domain-Driven Design
+
+Content schemas apply strategic patterns from [Domain-Driven Design](https://en.wikipedia.org/wiki/Domain-driven_design) (DDD) to Mangrove's content layer. If you are familiar with Evans' vocabulary, this is where each schema sits:
+
+- **Published Language** — the schemas themselves. A formally specified, versioned vocabulary that every system communicating through Mangrove components can conform to, rather than each consumer inventing its own terms.
+- **Ubiquitous Language** — the canonical field names each schema defines (e.g. `image.src`, `items[].summary`, `sharingBody`). The `x-mangrove.deviations` metadata on each schema records known gaps between the domain language and current component code; closing those gaps is the Phase 2 alignment pass.
+- **Anti-Corruption Layer** — the hydration wrappers in consuming systems. For example, the Drupal theme's `undrr_common/js/mangrove-components/MegaMenu-wrapper.js` translates CMS-native terms (taxonomy IDs, `view.name`, `field_url_alt`) into Mangrove's domain terms, keeping CMS shape out of component internals.
+- **Bounded context granularity** — the seven archetypes define the modelling boundary. New archetypes are a deliberate design decision, not accretion from one-off components.
+
+Mangrove uses strategic DDD only. Tactical DDD patterns (aggregates, repositories, domain events, identity-bearing entities as code) do not apply to a design-system component library and are explicitly out of scope. If a future contributor asks "where is the aggregate root?" — there isn't one, by design.
+
+---
+
 ## Why lock in content architecture through schemas?
 
 Without explicit contracts:
