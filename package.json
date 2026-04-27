@@ -173,5 +173,5 @@
     "type": "git",
     "url": "https://github.com/unisdr/undrr-mangrove.git"
   },
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.14.1"
 }
