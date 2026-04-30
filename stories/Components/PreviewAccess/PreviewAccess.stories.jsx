@@ -12,7 +12,7 @@ export default {
     docs: {
       description: {
         component:
-          'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Vanilla JS, body-level. Not a security mechanism: the PIN sits in the DOM. See the Docs tab for the HTML usage.',
+          'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Vanilla JS only — not a security mechanism, since the PIN sits in the DOM. See the Docs tab for HTML usage.',
       },
     },
   },

@@ -11,11 +11,11 @@ import * as PreviewAccessStories from './PreviewAccess.stories';
 
 A page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Once unlocked, the page stays unlocked for the rest of the browser session.
 
-> **Note:** This is not a security mechanism. The PIN sits in the DOM and the unlock is held in `sessionStorage`, so anyone with developer tools can bypass it. The component is editorial signalling for review audiences (a "wet paint" sign). For real access control, gate the page at the edge with a service like Cloudflare Access.
+> **Note:** This is not a security mechanism. The PIN sits in the DOM and the unlock is held in `sessionStorage`, so anyone with developer tools can bypass it. The component is editorial signalling for review audiences only.
 
 ## Examples
 
-The static preview below shows the modal panel inline so theme, copy, and RTL can be reviewed without locking the Storybook canvas. To see the real body-level overlay behaviour, run the **Live demo** story.
+The static preview below shows the modal panel inline so theme and copy can be reviewed without locking the Storybook canvas. To see the real body-level overlay behaviour, run the **Live demo** story.
 
 <Canvas of={PreviewAccessStories.Default} />
 
@@ -27,15 +27,15 @@ Use the locale toolbar to preview the modal in other languages, including Arabic
 
 ## When to use
 
-- Sharing in-progress dashboards or content with reviewers before public launch
-- Hiding partly-built pages from search engines and casual visitors
+- Sharing unfinished dashboards or content with reviewers before public launch
+- Hiding unfinished pages from search engines and casual visitors
 - Marking a whole product preview (for example, a DELTA preview site) with a single shared PIN
 
-For real access control, use server-side authentication. This component is for editorial signalling only.
+For real access control, gate the page at the edge with a service like Cloudflare Access. This component is for editorial signalling only.
 
 ## Vanilla HTML usage
 
-Three things in the page:
+You need three things in the page:
 
 ```html
 <!-- 1. CSS in <head> -->
@@ -48,9 +48,9 @@ Three things in the page:
 <script type="module" src="https://assets.undrr.org/static/mangrove/1.6.0/js/preview-access.js"></script>
 ```
 
-That is the minimum. With nothing else set, the gate uses the default PIN `5498`, default UNDRR copy, and the contact link points to `undrr.org/contact-us`.
+That is the minimum: with nothing else set, the gate uses the default PIN `5498`, default UNDRR copy, and the contact link points to `undrr.org/contact-us`.
 
-> **Tip:** Place the trigger as the first child of `<body>` so any content above it does not get a chance to paint before the gate's CSS rule fires.
+> **Tip:** Place the trigger as the first child of `<body>` so any content above it does not paint before the gate hides it.
 
 ### Realistic example
 
@@ -72,7 +72,7 @@ All attributes go on the trigger element. All optional except the bare `data-mg-
 | `data-mg-preview-access` | — | Presence activates the gate. No value needed. |
 | `data-mg-preview-pin` | `5498` | The PIN that unlocks the page. |
 | `data-mg-preview-id` | `location.pathname` | Scope key for the `sessionStorage` unlock. Set the same id on multiple pages to share an unlock across them. |
-| `data-mg-preview-eyebrow` | `UNDRR · Preview` | Small uppercase label above the title. Useful for naming the product. |
+| `data-mg-preview-eyebrow` | `UNDRR · Preview` | Small label above the title. Useful for naming the product. |
 | `data-mg-preview-title` | `Preview access required` | Modal heading. |
 | `data-mg-preview-message` | Generic UNDRR preview copy | Body paragraph explaining what the page is and how to get in. |
 | `data-mg-preview-contact-url` | `https://www.undrr.org/contact-us` | Where the help link goes. |
@@ -89,7 +89,7 @@ All attributes go on the trigger element. All optional except the bare `data-mg-
 | `mg-preview-access--unlocked` | trigger `<div>` | Set on success; releases the gate's CSS rule |
 | `mg-preview-access__overlay` | injected `<div>` | Fixed full-viewport scrim with the modal centred inside |
 | `mg-preview-access__modal` | injected `<div>` | The modal panel |
-| `mg-preview-access__eyebrow` | `<p>` | Small uppercase product label |
+| `mg-preview-access__eyebrow` | `<p>` | Small product label above the title |
 | `mg-preview-access__title` | `<h1>` | Modal heading |
 | `mg-preview-access__body` | `<p>` | Modal body copy |
 | `mg-preview-access__form` | `<form>` | Form wrapper |
@@ -183,24 +183,26 @@ The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are se
 
 ## Implementation notes
 
-> **Implementation note (for contributors):** This section explains the design decisions behind the gate. Skip it if you are integrating the component; it exists to prevent future contributors from "fixing" things that were intentional.
+> **Implementation note (for contributors):** Design decisions behind the gate. These choices were intentional — read before "fixing" them.
 
-**CSS-first anti-flash via `:has()`.** The gate hides page content with a CSS rule, not JavaScript. The rule is `body:has([data-mg-preview-access]:not(.mg-preview-access--unlocked)) > *:not(.mg-preview-access__overlay) { visibility: hidden }`. The moment the parser sees the trigger element, the rule fires and everything else is hidden. There is no flash of unstyled content and no race with deferred scripts. The cost is that the trigger should be the first child of `<body>` so any content above it does not get to paint first. `:has()` is universally supported since late 2023.
+**CSS-first anti-flash via `:has()`.** The gate hides page content with a CSS rule, not JavaScript. The rule is `body:has([data-mg-preview-access]:not(.mg-preview-access--unlocked)) > *:not(.mg-preview-access__overlay) { visibility: hidden }`. The moment the parser sees the trigger element, the rule applies and the rest of the page is hidden. There is no flash of unstyled content and no race with deferred scripts. The cost is that the trigger should be the first child of `<body>` so any content above it does not paint first. `:has()` is supported in all current evergreen browsers since late 2023.
 
 **`visibility: hidden`, not `display: none`.** Layout is preserved. The page stays in its final shape behind the modal, and on unlock there is no reflow. Side effect: images and iframes still load in the background, so the page is ready to read the moment the gate drops.
 
-**`inert` on body siblings.** While the modal is up, every direct child of `<body>` except the overlay gets `inert` and `aria-hidden="true"`. That gives a focus trap, screen-reader hiding, and pointer-event blocking in one attribute. No focus-trap library is needed.
+**`inert` on body siblings.** While the modal is up, every direct child of `<body>` except the overlay gets `inert`. That gives a focus trap, assistive-technology hiding, and pointer-event blocking in one attribute. No focus-trap library is needed. ARIA 1.2 says `aria-hidden` is redundant when `inert` is set, so `aria-hidden` is intentionally omitted to avoid an axe-flagged "focused element inside aria-hidden ancestor" pattern.
 
 **Session persistence.** Once unlocked, the gate sets `sessionStorage["mg-preview-access:<id>"] = "unlocked"`. The id defaults to `location.pathname` but is overridable via `data-mg-preview-id`, so a single PIN can cover a whole product preview (set the same id on every page in the preview).
 
-**Bespoke modal shell.** Mangrove does not yet have a dialog/modal primitive. The styles use Mangrove tokens where they exist (`$mg-z-index-modal`, `$mg-color-interactive`, `$mg-spacing-*`, `$mg-font-family-headings`, the Arabic font swap via `:lang(ar)`) but the panel itself is bespoke. When a modal primitive lands in Mangrove, this component should be refactored to consume it.
+**Contact URL allow-list.** The runtime validates `data-mg-preview-contact-url` against an `http:`/`https:`/`mailto:` allow-list before rendering the link. Anything else (for example, `javascript:`) is replaced with the default UNDRR contact page. This is defence-in-depth in case a Drupal template ever interpolates an unsanitised editor field into the attribute.
+
+**Bespoke modal shell.** Mangrove does not yet have a dialog/modal primitive. The styles use Mangrove tokens (`$mg-z-index-modal`, `$mg-color-modal-scrim`, `$mg-color-interactive`, `$mg-spacing-*`, `$mg-font-family-headings`, the Arabic font swap via `:lang(ar)`) but the panel itself is bespoke. When a modal primitive lands in Mangrove, this component should be refactored to consume it.
 
 ## Known limitations
 
 - **Single trigger per page.** The script honours one trigger per page (the first match). Multi-zone gating (a preview block inside an otherwise public page) is a different pattern.
 - **No Escape-to-close.** Deliberate. The gate should hold until a PIN is entered. A dismissible variant would be a separate prop.
 - **`:has()` is the entire anti-flash strategy.** If support for an older browser is ever needed, add a one-line inline `<script>` in `<head>` that sets a class on `<html>` and wire the CSS rule to that class as well.
-- **PIN in the DOM.** Not access control. Bears repeating because someone always asks.
+- **PIN in the DOM.** This is editorial signalling, not access control. Anyone with developer tools can read the PIN and bypass the gate.
 
 ## Changelog
 
