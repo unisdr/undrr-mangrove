@@ -52,28 +52,6 @@ export const ProductBranded = {
 };
 
 /**
- * RTL preview with Arabic copy. Verifies the Arabic font swap and direction.
- */
-export const ArabicRtl = {
-  name: 'Arabic (RTL)',
-  render: args => (
-    <div lang="ar" dir="rtl">
-      <PreviewAccess {...args} />
-    </div>
-  ),
-  args: {
-    eyebrow: 'UNDRR · معاينة',
-    title: 'يلزم رمز الوصول للمعاينة',
-    message:
-      'هذه الصفحة قيد المعاينة وغير جاهزة للتوزيع العام بعد. يرجى إدخال رمز الوصول المقدم من UNDRR للمتابعة.',
-    pinLabel: 'رمز الوصول',
-    submitLabel: 'فتح',
-    contactUrl: 'https://www.undrr.org/contact-us',
-    contactLabel: 'هل تحتاج إلى مساعدة؟ تواصل مع UNDRR',
-  },
-};
-
-/**
  * Live demo. Activates the real body-level gate inside an iframe-scoped
  * Storybook canvas. Reset to relock for testing the unlock flow again.
  */

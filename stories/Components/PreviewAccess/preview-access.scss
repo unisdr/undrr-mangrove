@@ -45,10 +45,8 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__eyebrow {
     margin: 0 0 $mg-spacing-50;
     font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-200;
+    font-size: $mg-font-size-250;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
     color: $mg-color-interactive;
   }
 
@@ -76,10 +74,8 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     display: block;
     margin: 0 0 mg-rem(6);
     font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-250;
+    font-size: $mg-font-size-300;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
     color: $mg-color-neutral-700;
   }
 
@@ -110,10 +106,8 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__submit {
     padding: mg-rem(10) $mg-spacing-200;
     font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-250;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: $mg-font-size-300;
+    font-weight: 600;
     color: $mg-color-white;
     background: $mg-color-interactive;
     border: 0;
