@@ -380,6 +380,41 @@ export default {
     ],
   },
 
+  // --- Preview access ---
+  'components-preview-access': {
+    description: 'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM.',
+    cssClasses: [
+      'mg-preview-access--unlocked',
+      'mg-preview-access__overlay',
+      'mg-preview-access__modal',
+      'mg-preview-access__eyebrow',
+      'mg-preview-access__title',
+      'mg-preview-access__body',
+      'mg-preview-access__form',
+      'mg-preview-access__label',
+      'mg-preview-access__field',
+      'mg-preview-access__input',
+      'mg-preview-access__submit',
+      'mg-preview-access__error',
+      'mg-preview-access__contact',
+    ],
+    examples: [
+      {
+        name: 'Default gate (PIN 5498)',
+        html: `<div data-mg-preview-access></div>`,
+      },
+      {
+        name: 'Branded gate with shared id',
+        html: `<div data-mg-preview-access
+     data-mg-preview-pin="5498"
+     data-mg-preview-id="delta-2026-preview"
+     data-mg-preview-eyebrow="DELTA Resilience · Preview"
+     data-mg-preview-title="This page is a preview"
+     data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>`,
+      },
+    ],
+  },
+
   // --- On this page nav ---
   'components-on-this-page-nav': {
     description: 'Sticky horizontal "On this page" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js.',

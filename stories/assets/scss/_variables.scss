@@ -418,6 +418,10 @@ $mg-z-index-dropdown: 2500; // Dropdowns and inline menus (above drawers)
 $mg-z-index-modal: 5000; // Modal and dialog (backdrop uses modal - 1 = 4999)
 $mg-z-index-toast: 5500; // Toast notifications (Snackbar), above modals
 
+// Modal scrim. Neutral-tinted by default so it reads as backdrop across all
+// themes; child themes can override for a branded scrim if desired.
+$mg-color-modal-scrim: rgba($mg-color-neutral-900, 0.85) !default;
+
 /**
   * @tokens-end
   */
