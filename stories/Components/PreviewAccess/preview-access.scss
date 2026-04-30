@@ -1,0 +1,171 @@
+// Preview access
+// Soft preview gate for unfinished UNDRR pages. CSS hides the page on parse
+// (via :has()); the runtime layers a modal over it and asks for a PIN.
+// Not a security mechanism — see preview-access.js header.
+
+// 1. The gate. While a [data-mg-preview-access] element exists in the document
+//    and has not been marked unlocked, hide all direct children of <body>
+//    except the overlay. visibility (not display) preserves layout so the
+//    page does not reflow on unlock.
+body:has([data-mg-preview-access]:not(.mg-preview-access--unlocked))
+  > *:not(.mg-preview-access__overlay) {
+  visibility: hidden !important;
+}
+
+html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
+  overflow: hidden;
+}
+
+.mg-preview-access {
+  // Trigger element itself is invisible; presence is the activation signal.
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: $mg-z-index-modal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $mg-spacing-200;
+    background: rgb(13 30 50 / 0.92);
+
+    // Re-assert visibility in case the gate rule's specificity ever shifts.
+    visibility: visible !important;
+  }
+
+  &__modal {
+    width: 100%;
+    max-width: mg-rem(480);
+    padding: $mg-spacing-350;
+    background: $mg-color-white;
+    border-radius: mg-rem(4);
+    border-top: mg-rem(4) solid $mg-color-interactive;
+    box-shadow: 0 mg-rem(8) mg-rem(32) rgb(0 0 0 / 0.25);
+  }
+
+  &__eyebrow {
+    margin: 0 0 $mg-spacing-50;
+    font-family: $mg-font-family-headings;
+    font-size: $mg-font-size-200;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $mg-color-interactive;
+  }
+
+  &__title {
+    margin: 0 0 $mg-spacing-150;
+    font-family: $mg-font-family-headings;
+    font-size: $mg-font-size-500;
+    line-height: 1.2;
+    color: $mg-color-neutral-800;
+  }
+
+  &__body {
+    margin: 0 0 $mg-spacing-250;
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-300;
+    line-height: 1.5;
+    color: $mg-color-neutral-700;
+  }
+
+  &__form {
+    margin: 0;
+  }
+
+  &__label {
+    display: block;
+    margin: 0 0 mg-rem(6);
+    font-family: $mg-font-family-headings;
+    font-size: $mg-font-size-250;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $mg-color-neutral-700;
+  }
+
+  &__field {
+    display: flex;
+    gap: $mg-spacing-50;
+    margin: 0 0 $mg-spacing-50;
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    padding: mg-rem(10) mg-rem(12);
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-300;
+    color: $mg-color-neutral-800;
+    background: $mg-color-white;
+    border: 1px solid $mg-color-neutral-200;
+    border-radius: mg-rem(4);
+
+    &:focus {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+      border-color: $mg-color-interactive;
+    }
+  }
+
+  &__submit {
+    padding: mg-rem(10) $mg-spacing-200;
+    font-family: $mg-font-family-headings;
+    font-size: $mg-font-size-250;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $mg-color-white;
+    background: $mg-color-interactive;
+    border: 0;
+    border-radius: mg-rem(4);
+    cursor: pointer;
+
+    &:hover {
+      background: $mg-color-interactive-active;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+    }
+  }
+
+  &__error {
+    min-height: $mg-spacing-200;
+    margin: 0 0 $mg-spacing-150;
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-250;
+    color: $mg-color-red-900;
+  }
+
+  &__contact {
+    margin: 0;
+    padding-top: $mg-spacing-150;
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-250;
+    color: $mg-color-neutral-600;
+    border-top: 1px solid $mg-color-neutral-100;
+
+    a {
+      color: $mg-color-interactive;
+      text-decoration: underline;
+    }
+  }
+}
+
+// RTL / Arabic font swap. Roboto Condensed has no Arabic glyph coverage,
+// so swap heading/UI families when lang="ar" is set on the page.
+:lang(ar) {
+  .mg-preview-access__eyebrow,
+  .mg-preview-access__title,
+  .mg-preview-access__label,
+  .mg-preview-access__submit {
+    font-family: $mg-font-family-arabic-headings;
+  }
+
+  .mg-preview-access__body,
+  .mg-preview-access__error,
+  .mg-preview-access__contact {
+    font-family: $mg-font-family-arabic-body;
+  }
+}
