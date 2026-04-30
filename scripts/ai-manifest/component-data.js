@@ -382,7 +382,7 @@ export default {
 
   // --- Preview access ---
   'components-preview-access': {
-    description: 'Soft "wet paint" preview gate. Drop <div data-mg-preview-access> into a page and a PIN-prompt modal covers the content until the right code is entered. Unlock persists in sessionStorage for the browser session. CSS-first via :has() (no flash). Vanilla JS — requires preview-access.js. Not a security mechanism: the PIN sits in the DOM.',
+    description: 'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM.',
     cssClasses: [
       'mg-preview-access--unlocked',
       'mg-preview-access__overlay',

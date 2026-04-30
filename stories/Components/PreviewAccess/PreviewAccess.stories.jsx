@@ -12,7 +12,7 @@ export default {
     docs: {
       description: {
         component:
-          'A soft preview gate for unfinished UNDRR pages. Drop `<div data-mg-preview-access>` into a page and a PIN-prompt modal covers the content until someone enters the right code. Vanilla JS, body-level — see the docs tab for the HTML usage. Not a security mechanism: the PIN sits in the DOM.',
+          'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Vanilla JS, body-level. Not a security mechanism: the PIN sits in the DOM. See the Docs tab for the HTML usage.',
       },
     },
   },
