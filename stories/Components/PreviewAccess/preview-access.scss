@@ -1,7 +1,7 @@
 // Preview access
 // Soft preview gate for unfinished UNDRR pages. CSS hides the page on parse
 // (via :has()); the runtime layers a modal over it and asks for a PIN.
-// Not a security mechanism — see preview-access.js header.
+// Not a security mechanism (see preview-access.js header).
 
 // 1. The gate. While a [data-mg-preview-access] element exists in the document
 //    and has not been marked unlocked, hide all direct children of <body>
@@ -17,7 +17,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 }
 
 .mg-preview-access {
-  // Trigger element itself is invisible; presence is the activation signal.
+  // The trigger element itself is invisible; presence is the activation signal.
   &__overlay {
     position: fixed;
     inset: 0;
@@ -26,9 +26,10 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     align-items: center;
     justify-content: center;
     padding: $mg-spacing-200;
-    background: rgb(13 30 50 / 0.92);
+    background: $mg-color-modal-scrim;
 
-    // Re-assert visibility in case the gate rule's specificity ever shifts.
+    // Re-assert visibility against the gate rule above, which uses !important
+    // to win over any component-level visibility overrides on body siblings.
     visibility: visible !important;
   }
 
@@ -37,17 +38,21 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     max-width: mg-rem(480);
     padding: $mg-spacing-350;
     background: $mg-color-white;
-    border-radius: mg-rem(4);
+
+    // Sharp-cornered to match Mangrove chrome (Hero, PageHeader, Cards).
+    border-radius: 0;
     border-top: mg-rem(4) solid $mg-color-interactive;
     box-shadow: 0 mg-rem(8) mg-rem(32) rgb(0 0 0 / 0.25);
   }
 
+  // Eyebrow uses a neutral colour so it passes 4.5:1 across all five themes.
+  // Brand identity is carried by the top accent border and the submit button.
   &__eyebrow {
     margin: 0 0 $mg-spacing-50;
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-250;
     font-weight: 700;
-    color: $mg-color-interactive;
+    color: $mg-color-neutral-700;
   }
 
   &__title {
@@ -72,7 +77,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 
   &__label {
     display: block;
-    margin: 0 0 mg-rem(6);
+    margin: 0 0 $mg-spacing-50;
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-300;
     font-weight: 700;
@@ -88,38 +93,42 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__input {
     flex: 1;
     min-width: 0;
-    padding: mg-rem(10) mg-rem(12);
+    padding: $mg-spacing-100 $mg-spacing-150;
     font-family: $mg-font-family;
     font-size: $mg-font-size-300;
     color: $mg-color-neutral-800;
     background: $mg-color-white;
     border: 1px solid $mg-color-neutral-200;
-    border-radius: mg-rem(4);
+    border-radius: 0;
 
     &:focus {
-      outline: 2px solid $mg-color-interactive;
+      outline: 2px solid $mg-color-form-focus;
       outline-offset: 2px;
-      border-color: $mg-color-interactive;
+      border-color: $mg-color-form-focus;
     }
   }
 
   &__submit {
-    padding: mg-rem(10) $mg-spacing-200;
+    padding: $mg-spacing-100 $mg-spacing-200;
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-300;
     font-weight: 600;
     color: $mg-color-white;
     background: $mg-color-interactive;
     border: 0;
-    border-radius: mg-rem(4);
+    border-radius: 0;
     cursor: pointer;
 
+    // $mg-color-interactive-active equals $mg-color-interactive in several
+    // themes (PW, IRP, MCR, DELTA), so layer a brightness shift to ensure
+    // the hover affordance is visible everywhere.
     &:hover {
       background: $mg-color-interactive-active;
+      filter: brightness(0.92);
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
+      outline: 2px solid $mg-color-form-focus;
       outline-offset: 2px;
     }
   }
@@ -150,13 +159,13 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 // RTL / Arabic font swap. Roboto Condensed has no Arabic glyph coverage,
 // so swap heading/UI families when lang="ar" is set on the page.
 :lang(ar) {
-  .mg-preview-access__eyebrow,
   .mg-preview-access__title,
   .mg-preview-access__label,
   .mg-preview-access__submit {
     font-family: $mg-font-family-arabic-headings;
   }
 
+  .mg-preview-access__eyebrow,
   .mg-preview-access__body,
   .mg-preview-access__error,
   .mg-preview-access__contact {

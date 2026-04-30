@@ -3,13 +3,13 @@
 //
 // The presence of an element with [data-mg-preview-access] in the body
 // activates the gate. CSS hides the page on parse via :has(); this script
-// layers a modal on top asking for a PIN. On success, the gate is marked
+// layers a modal over it and asks for a PIN. On success, the gate is marked
 // unlocked and the unlock is persisted in sessionStorage.
 //
 // Not a security mechanism. The PIN lives in the DOM. Treat this as a
-// "wet paint" sign — strong, unmissable, but trivial to bypass for anyone
+// "wet paint" sign: strong, unmissable, but trivial to bypass for anyone
 // who wants to. If a page genuinely must not be seen, gate it at the edge
-// (e.g., Cloudflare Access).
+// (for example, Cloudflare Access).
 
 const DEFAULTS = {
   pin: '5498',
@@ -31,6 +31,31 @@ const BODY_ID = 'mg-preview-access-body';
 const ERROR_ID = 'mg-preview-access-error';
 const INPUT_ID = 'mg-preview-access-pin';
 
+// Schemes allowed for the contact URL. Anything else (javascript:, data:, etc.)
+// is rejected to the default UNDRR contact page.
+const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:'];
+
+// Module-scoped registry of overlays and the elements that previously held focus.
+// WeakMap keyed by gate avoids stashing DOM-side expandos and lets the entries
+// drop when a gate is detached and unreferenced.
+const overlays = new WeakMap();
+const previousFocus = new WeakMap();
+
+/**
+ * Validate that a contact URL uses an allow-listed scheme. Returns the URL
+ * string when safe; falls back to the default contact page otherwise.
+ */
+function safeContactUrl(value) {
+  if (!value) return DEFAULTS.contactUrl;
+  try {
+    const url = new URL(value, window.location.href);
+    if (SAFE_URL_SCHEMES.includes(url.protocol)) return value;
+  } catch (e) {
+    // Fall through to default.
+  }
+  return DEFAULTS.contactUrl;
+}
+
 function readConfig(el) {
   return {
     id:
@@ -40,8 +65,7 @@ function readConfig(el) {
     eyebrow: el.getAttribute('data-mg-preview-eyebrow') || DEFAULTS.eyebrow,
     title: el.getAttribute('data-mg-preview-title') || DEFAULTS.title,
     message: el.getAttribute('data-mg-preview-message') || DEFAULTS.message,
-    contactUrl:
-      el.getAttribute('data-mg-preview-contact-url') || DEFAULTS.contactUrl,
+    contactUrl: safeContactUrl(el.getAttribute('data-mg-preview-contact-url')),
     contactLabel:
       el.getAttribute('data-mg-preview-contact-label') || DEFAULTS.contactLabel,
     pinLabel: el.getAttribute('data-mg-preview-pin-label') || DEFAULTS.pinLabel,
@@ -86,15 +110,14 @@ function escapeText(value) {
 function buildOverlay(config) {
   const overlay = document.createElement('div');
   overlay.className = 'mg-preview-access__overlay';
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
-  overlay.setAttribute('aria-labelledby', TITLE_ID);
-  overlay.setAttribute('aria-describedby', BODY_ID);
 
+  // role="dialog" and the labelling/description references live on the modal
+  // panel, not the overlay scrim — the scrim is presentational.
   overlay.innerHTML =
-    `<div class="mg-preview-access__modal">` +
+    `<div class="mg-preview-access__modal" role="dialog" aria-modal="true" ` +
+      `aria-labelledby="${TITLE_ID}" aria-describedby="${BODY_ID}">` +
       `<p class="mg-preview-access__eyebrow">${escapeText(config.eyebrow)}</p>` +
-      `<h1 class="mg-preview-access__title" id="${TITLE_ID}">${escapeText(config.title)}</h1>` +
+      `<h2 class="mg-preview-access__title" id="${TITLE_ID}">${escapeText(config.title)}</h2>` +
       `<p class="mg-preview-access__body" id="${BODY_ID}">${escapeText(config.message)}</p>` +
       `<form class="mg-preview-access__form" novalidate>` +
         `<label class="mg-preview-access__label" for="${INPUT_ID}">${escapeText(config.pinLabel)}</label>` +
@@ -105,7 +128,9 @@ function buildOverlay(config) {
             `aria-describedby="${ERROR_ID}" />` +
           `<button class="mg-preview-access__submit" type="submit">${escapeText(config.submitLabel)}</button>` +
         `</div>` +
-        `<p class="mg-preview-access__error" id="${ERROR_ID}" role="alert" aria-live="polite"></p>` +
+        // role="alert" implies aria-live="assertive" + aria-atomic="true"; do
+        // not also set aria-live, that creates undefined behaviour.
+        `<p class="mg-preview-access__error" id="${ERROR_ID}" role="alert"></p>` +
       `</form>` +
       `<p class="mg-preview-access__contact">` +
         `<a href="${escapeText(config.contactUrl)}">${escapeText(config.contactLabel)}</a>` +
@@ -117,21 +142,19 @@ function buildOverlay(config) {
 
 /**
  * Set/unset `inert` on every direct child of <body> except the overlay.
- * Gives focus-trapping, screen-reader hiding, and pointer-blocking in one.
+ * Snapshots the children up front so subsequent DOM mutations cannot skew
+ * the iteration. `inert` already implies aria-hidden for assistive tech,
+ * so the redundant aria-hidden writes are intentionally omitted (ARIA 1.2).
  */
 function setSiblingsInert(overlay, on) {
-  const children = document.body.children;
-  for (let i = 0; i < children.length; i += 1) {
-    const child = children[i];
-    if (child === overlay) continue;
+  Array.from(document.body.children).forEach(child => {
+    if (child === overlay) return;
     if (on) {
       child.setAttribute('inert', '');
-      child.setAttribute('aria-hidden', 'true');
     } else {
       child.removeAttribute('inert');
-      child.removeAttribute('aria-hidden');
     }
-  }
+  });
 }
 
 function unlockGate(gate, overlay, config) {
@@ -139,6 +162,24 @@ function unlockGate(gate, overlay, config) {
   markUnlocked(gate);
   setSiblingsInert(overlay, false);
   overlay.remove();
+  overlays.delete(gate);
+
+  // Return focus to a known landmark so keyboard and screen reader users are
+  // not dropped on document.body with no announcement of the state change.
+  // The previously focused element (often body itself before mount) is the
+  // safest fallback; otherwise focus the now-revealed <main> or first heading.
+  const restore =
+    previousFocus.get(gate) ||
+    document.querySelector('main, [role="main"]') ||
+    document.querySelector('h1, h2') ||
+    document.body;
+  previousFocus.delete(gate);
+  if (restore && typeof restore.focus === 'function') {
+    if (restore === document.body && !restore.hasAttribute('tabindex')) {
+      restore.setAttribute('tabindex', '-1');
+    }
+    restore.focus({ preventScroll: true });
+  }
 }
 
 function bindHandlers(overlay, gate, config) {
@@ -157,8 +198,10 @@ function bindHandlers(overlay, gate, config) {
     }
   });
 
+  // Clear the error only when the input has a value; avoids flicker while the
+  // user is mid-correction and re-entering the same first character.
   input.addEventListener('input', () => {
-    if (error.textContent) error.textContent = '';
+    if (error.textContent && input.value) error.textContent = '';
   });
 }
 
@@ -190,11 +233,19 @@ export function mgPreviewAccess(scope) {
       return;
     }
 
+    // Capture whoever currently has focus so we can restore it on unlock.
+    previousFocus.set(
+      gate,
+      document.activeElement && document.activeElement !== document.body
+        ? document.activeElement
+        : null,
+    );
+
     const overlay = buildOverlay(config);
     document.body.appendChild(overlay);
     setSiblingsInert(overlay, true);
     bindHandlers(overlay, gate, config);
-    gate._mgPreviewAccessOverlay = overlay;
+    overlays.set(gate, overlay);
 
     // Move focus into the modal once layout settles.
     requestAnimationFrame(() => {
@@ -212,26 +263,40 @@ export function mgPreviewAccess(scope) {
  */
 export function mgPreviewAccessDestroy(gate) {
   if (!gate) return;
-  const overlay = gate._mgPreviewAccessOverlay;
+  const overlay = overlays.get(gate);
   if (overlay && overlay.parentNode) {
     setSiblingsInert(overlay, false);
     overlay.remove();
   }
-  gate._mgPreviewAccessOverlay = null;
+  overlays.delete(gate);
+  previousFocus.delete(gate);
   delete gate.dataset.mgPreviewAccessInitialized;
   gate.classList.remove('mg-preview-access--unlocked');
 }
 
-// Expose for manual re-init (e.g., SPA route changes), matching the
+// Expose for manual re-init (for example, SPA route changes), matching the
 // mgShowMore / mgOnThisPageNav vanilla utility pattern.
 if (typeof window !== 'undefined') {
   window.mgPreviewAccess = mgPreviewAccess;
 }
 
+// Auto-init only when a gate is already in the document. The guard prevents
+// the side effect of attaching an overlay if the module is imported by a
+// React/Storybook consumer that has not yet rendered (or may never render) a
+// real gate.
+function autoInit() {
+  if (
+    typeof document !== 'undefined' &&
+    document.querySelector('[data-mg-preview-access]')
+  ) {
+    mgPreviewAccess();
+  }
+}
+
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => mgPreviewAccess());
+    document.addEventListener('DOMContentLoaded', autoInit);
   } else {
-    mgPreviewAccess();
+    autoInit();
   }
 }

@@ -12,21 +12,21 @@ const DEFAULT_MESSAGE =
 /**
  * Storybook / docs preview of the preview-access modal panel.
  *
- * Renders a static visual preview of the modal markup — useful for previewing
- * copy, RTL layout, and theme application without actually gating Storybook.
- * To activate the real body-level gate behaviour, pass `live`. The live mode
- * renders the trigger div and calls the vanilla mgPreviewAccess() runtime; on
+ * Renders a static visual preview of the modal markup, useful for previewing
+ * copy, theme, and RTL without actually gating Storybook. To activate the
+ * real body-level gate behaviour, pass `live`. In `live` mode the runtime
+ * appends the overlay to `document.body` (not into the React tree). On
  * unmount it removes the overlay and restores body siblings.
  *
- * For production pages, prefer dropping `<div data-mg-preview-access>` directly
- * into the HTML and loading js/preview-access.js — the gate is fundamentally a
- * page-level concern, not a subtree component.
+ * For production pages, prefer dropping `<div data-mg-preview-access>` into
+ * the HTML directly and loading js/preview-access.js. The gate is
+ * fundamentally a page-level concern, not a subtree component.
  *
  * @param {Object}  props
  * @param {boolean} [props.live]            When true, mounts the real gate.
  * @param {string}  [props.pin]             Unlock PIN.
  * @param {string}  [props.id]              sessionStorage scope key.
- * @param {string}  [props.eyebrow]         Small uppercase label above the title.
+ * @param {string}  [props.eyebrow]         Small label above the title.
  * @param {string}  [props.title]           Modal heading.
  * @param {string}  [props.message]         Modal body copy.
  * @param {string}  [props.contactUrl]      Help link URL.
@@ -50,6 +50,10 @@ export default function PreviewAccess({
 }) {
   const gateRef = useRef(null);
 
+  // Only mount/unmount on `live` toggles; copy-prop edits update the data
+  // attributes in place via React's normal render path. The runtime reads
+  // attributes once at init, so changing copy after mount is intentionally
+  // a no-op — keeping the gate stable avoids overlay flicker and lost focus.
   useEffect(() => {
     if (!live) return undefined;
     const gate = gateRef.current;
@@ -59,19 +63,7 @@ export default function PreviewAccess({
     return () => {
       if (gate) mgPreviewAccessDestroy(gate);
     };
-  }, [
-    live,
-    pin,
-    id,
-    eyebrow,
-    title,
-    message,
-    contactUrl,
-    contactLabel,
-    pinLabel,
-    submitLabel,
-    errorMessage,
-  ]);
+  }, [live]);
 
   if (live) {
     return (
@@ -92,11 +84,24 @@ export default function PreviewAccess({
     );
   }
 
+  // Static preview: mirrors the runtime's modal panel structure so reviewers
+  // see the same markup that ships in production. Form is wired to no-op so
+  // the user can still tab through, but the gate behaviour is not active.
   return (
-    <div className="mg-preview-access__modal">
+    <div
+      className="mg-preview-access__modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mg-preview-access-title-preview"
+      aria-describedby="mg-preview-access-body-preview"
+    >
       <p className="mg-preview-access__eyebrow">{eyebrow}</p>
-      <h2 className="mg-preview-access__title">{title}</h2>
-      <p className="mg-preview-access__body">{message}</p>
+      <h2 className="mg-preview-access__title" id="mg-preview-access-title-preview">
+        {title}
+      </h2>
+      <p className="mg-preview-access__body" id="mg-preview-access-body-preview">
+        {message}
+      </p>
       <form
         className="mg-preview-access__form"
         noValidate
@@ -113,12 +118,17 @@ export default function PreviewAccess({
             inputMode="numeric"
             autoComplete="off"
             spellCheck="false"
+            aria-describedby="mg-preview-access-error-preview"
           />
           <button className="mg-preview-access__submit" type="submit">
             {submitLabel}
           </button>
         </div>
-        <p className="mg-preview-access__error" role="status" aria-live="polite" />
+        <p
+          className="mg-preview-access__error"
+          id="mg-preview-access-error-preview"
+          role="alert"
+        />
       </form>
       <p className="mg-preview-access__contact">
         <a href={contactUrl}>{contactLabel}</a>
@@ -134,7 +144,7 @@ PreviewAccess.propTypes = {
   pin: PropTypes.string,
   /** sessionStorage scope key. Defaults to location.pathname when null. */
   id: PropTypes.string,
-  /** Small uppercase label above the title. */
+  /** Small label above the title. */
   eyebrow: PropTypes.string,
   /** Modal heading. */
   title: PropTypes.string,

@@ -8,14 +8,12 @@ import {
 } from '../../../assets/js/preview-access';
 
 beforeAll(() => {
-  // jsdom lacks rAF in some environments; route it to a microtask.
   if (typeof window.requestAnimationFrame !== 'function') {
     window.requestAnimationFrame = cb => setTimeout(cb, 0);
   }
 });
 
 afterEach(() => {
-  // Clean up any lingering overlays and unlocks between tests.
   document.body.innerHTML = '';
   try {
     sessionStorage.clear();
@@ -34,6 +32,22 @@ describe('PreviewAccess (static preview)', () => {
       'href',
       'https://www.undrr.org/contact-us',
     );
+  });
+
+  it('uses h2 (not h1) for the modal title to avoid host-page heading conflicts', () => {
+    render(<PreviewAccess title="Preview" />);
+    const heading = screen.getByText('Preview');
+    expect(heading.tagName).toBe('H2');
+  });
+
+  it('places dialog semantics on the modal panel, not a wrapper scrim', () => {
+    const { container } = render(<PreviewAccess />);
+    const dialog = container.querySelector('[role="dialog"]');
+    expect(dialog).toBeTruthy();
+    expect(dialog).toHaveClass('mg-preview-access__modal');
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(dialog).toHaveAttribute('aria-labelledby');
+    expect(dialog).toHaveAttribute('aria-describedby');
   });
 
   it('renders custom copy from props', () => {
@@ -74,16 +88,27 @@ describe('mgPreviewAccess (vanilla runtime)', () => {
       'data-mg-preview-eyebrow': 'Custom · Preview',
     });
     mgPreviewAccess([gate]);
-    const overlay = document.querySelector('.mg-preview-access__overlay');
-    expect(overlay).toBeTruthy();
-    expect(overlay.getAttribute('role')).toBe('dialog');
-    expect(overlay.getAttribute('aria-modal')).toBe('true');
+    const dialog = document.querySelector('[role="dialog"]');
+    expect(dialog).toBeTruthy();
+    expect(dialog).toHaveClass('mg-preview-access__modal');
+    expect(dialog.getAttribute('aria-modal')).toBe('true');
     expect(
-      overlay.querySelector('.mg-preview-access__title').textContent,
+      dialog.querySelector('.mg-preview-access__title').textContent,
     ).toBe('Custom title');
     expect(
-      overlay.querySelector('.mg-preview-access__eyebrow').textContent,
+      dialog.querySelector('.mg-preview-access__title').tagName,
+    ).toBe('H2');
+    expect(
+      dialog.querySelector('.mg-preview-access__eyebrow').textContent,
     ).toBe('Custom · Preview');
+  });
+
+  it('uses role=alert without aria-live on the error region', () => {
+    const gate = mountGate({ 'data-mg-preview-id': 'test-alert' });
+    mgPreviewAccess([gate]);
+    const error = document.querySelector('.mg-preview-access__error');
+    expect(error.getAttribute('role')).toBe('alert');
+    expect(error.hasAttribute('aria-live')).toBe(false);
   });
 
   it('marks the gate unlocked when the correct PIN is submitted', () => {
@@ -125,7 +150,7 @@ describe('mgPreviewAccess (vanilla runtime)', () => {
     expect(gate.classList.contains('mg-preview-access--unlocked')).toBe(false);
   });
 
-  it('clears the error when the user edits the input', () => {
+  it('clears the error when the user types a non-empty value', () => {
     const gate = mountGate({ 'data-mg-preview-id': 'test-clear', 'data-mg-preview-pin': '1' });
     mgPreviewAccess([gate]);
     const overlay = document.querySelector('.mg-preview-access__overlay');
@@ -137,6 +162,7 @@ describe('mgPreviewAccess (vanilla runtime)', () => {
     fireEvent.submit(form);
     expect(error.textContent).not.toBe('');
 
+    input.value = '01';
     fireEvent.input(input, { target: { value: '01' } });
     expect(error.textContent).toBe('');
   });
@@ -149,20 +175,35 @@ describe('mgPreviewAccess (vanilla runtime)', () => {
     expect(gate.classList.contains('mg-preview-access--unlocked')).toBe(true);
   });
 
-  it('applies inert and aria-hidden to body siblings while the overlay is up', () => {
+  it('still mounts the overlay when sessionStorage throws (private mode)', () => {
+    const original = Storage.prototype.getItem;
+    Storage.prototype.getItem = function throwingGetItem() {
+      throw new Error('SecurityError: private mode');
+    };
+    try {
+      const gate = mountGate({ 'data-mg-preview-id': 'test-storage-err' });
+      mgPreviewAccess([gate]);
+      expect(document.querySelector('.mg-preview-access__overlay')).toBeTruthy();
+    } finally {
+      Storage.prototype.getItem = original;
+    }
+  });
+
+  it('applies inert (without aria-hidden) to body siblings while the overlay is up', () => {
     const sibling = document.createElement('main');
     document.body.appendChild(sibling);
     const gate = mountGate({ 'data-mg-preview-id': 'test-inert', 'data-mg-preview-pin': '1' });
     mgPreviewAccess([gate]);
     expect(sibling.hasAttribute('inert')).toBe(true);
-    expect(sibling.getAttribute('aria-hidden')).toBe('true');
+    // ARIA 1.2: aria-hidden is redundant when inert is set; we deliberately
+    // don't write it. axe also flags aria-hidden on focused-ancestor.
+    expect(sibling.hasAttribute('aria-hidden')).toBe(false);
 
     const form = document.querySelector('.mg-preview-access__form');
     document.querySelector('.mg-preview-access__input').value = '1';
     fireEvent.submit(form);
 
     expect(sibling.hasAttribute('inert')).toBe(false);
-    expect(sibling.hasAttribute('aria-hidden')).toBe(false);
   });
 
   it('mgPreviewAccessDestroy removes the overlay and clears init', () => {
@@ -180,13 +221,62 @@ describe('mgPreviewAccess (vanilla runtime)', () => {
       'data-mg-preview-id': 'test-skip-auto',
       'data-mg-preview-access-skip-auto-init': '',
     });
-    // Auto-init path: no scope passed.
     mgPreviewAccess();
-    // Auto-init queries the first matching element; with the skip flag, no
-    // overlay should be created.
     expect(document.querySelector('.mg-preview-access__overlay')).toBeNull();
-    // Explicit init still works.
     mgPreviewAccess([gate]);
     expect(document.querySelector('.mg-preview-access__overlay')).toBeTruthy();
+  });
+
+  it('is idempotent — initialising the same gate twice does not stack overlays', () => {
+    const gate = mountGate({ 'data-mg-preview-id': 'test-idem' });
+    mgPreviewAccess([gate]);
+    mgPreviewAccess([gate]);
+    expect(document.querySelectorAll('.mg-preview-access__overlay').length).toBe(1);
+  });
+
+  it('rejects javascript: contact URLs and falls back to the UNDRR contact page', () => {
+    const gate = mountGate({
+      'data-mg-preview-id': 'test-xss',
+      // eslint-disable-next-line no-script-url
+      'data-mg-preview-contact-url': 'javascript:alert(1)',
+    });
+    mgPreviewAccess([gate]);
+    const link = document.querySelector('.mg-preview-access__contact a');
+    expect(link.getAttribute('href')).toBe('https://www.undrr.org/contact-us');
+  });
+
+  it('rejects data: contact URLs', () => {
+    const gate = mountGate({
+      'data-mg-preview-id': 'test-data-uri',
+      'data-mg-preview-contact-url': 'data:text/html,<script>alert(1)</script>',
+    });
+    mgPreviewAccess([gate]);
+    const link = document.querySelector('.mg-preview-access__contact a');
+    expect(link.getAttribute('href')).toBe('https://www.undrr.org/contact-us');
+  });
+
+  it('accepts http, https, and mailto contact URLs', () => {
+    ['https://example.org/help', 'http://example.org/help', 'mailto:help@undrr.org'].forEach(
+      (url, i) => {
+        document.body.innerHTML = '';
+        const gate = mountGate({
+          'data-mg-preview-id': `test-scheme-${i}`,
+          'data-mg-preview-contact-url': url,
+        });
+        mgPreviewAccess([gate]);
+        const link = document.querySelector('.mg-preview-access__contact a');
+        expect(link.getAttribute('href')).toBe(url);
+      },
+    );
+  });
+});
+
+describe('PreviewAccess (live mode)', () => {
+  it('mounts the overlay on document.body when live and removes it on unmount', () => {
+    const { unmount } = render(<PreviewAccess live id="rtl-live" pin="42" />);
+    // Overlay is appended to document.body, not the React tree.
+    expect(document.querySelector('.mg-preview-access__overlay')).toBeTruthy();
+    unmount();
+    expect(document.querySelector('.mg-preview-access__overlay')).toBeNull();
   });
 });
