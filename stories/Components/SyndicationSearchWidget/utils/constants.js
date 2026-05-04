@@ -74,7 +74,11 @@ export const TAXONOMY_VOCABULARIES = [
  * Maps parent content types to their subtype fields and options.
  * Subtypes appear as indented children under parent types in the Type dropdown.
  *
- * @type {Object.<string, {field: string, options: Array<{id: string, name: string}>}>}
+ * Each value may be a single subtype config object or an array of configs
+ * when a parent type has multiple subtype fields (e.g. publication has both
+ * UNDRR-specific types and PW-specific types).
+ *
+ * @type {Object.<string, ({field: string, options: Array<{id: string, name: string}>}|Array<{field: string, options: Array<{id: string, name: string}>}>)>}
  */
 export const CONTENT_SUBTYPES = {
   // Only field_news_type is currently indexed in Elasticsearch.
@@ -99,21 +103,35 @@ export const CONTENT_SUBTYPES = {
       { id: '880', name: 'Interview' },
     ],
   },
-  // Publication subtypes - undrr_publication_type IS indexed
-  publication: {
-    field: 'undrr_publication_type',
-    options: [
-      { id: '744', name: 'Fact sheet' },
-      { id: '749', name: 'Newsletter' },
-      { id: '750', name: 'Other' },
-      { id: '1027', name: 'Policy brief' },
-      { id: '746', name: 'Reports' },
-      { id: '743', name: 'Tool kit' },
-      { id: '745', name: 'UNDRR Document' },
-      { id: '747', name: 'Words into Action' },
-      { id: '748', name: 'Working paper' },
-    ],
-  },
+  // Publication subtypes - two fields used by different sites:
+  // - undrr_publication_type: taxonomy term IDs, used on UNDRR.org
+  // - field_publication_type: list_string values, used on PreventionWeb
+  publication: [
+    {
+      field: 'undrr_publication_type',
+      options: [
+        { id: '744', name: 'Fact sheet' },
+        { id: '749', name: 'Newsletter' },
+        { id: '750', name: 'Other' },
+        { id: '1027', name: 'Policy brief' },
+        { id: '746', name: 'Reports' },
+        { id: '743', name: 'Tool kit' },
+        { id: '745', name: 'UNDRR Document' },
+        { id: '747', name: 'Words into Action' },
+        { id: '748', name: 'Working paper' },
+      ],
+    },
+    {
+      field: 'field_publication_type',
+      options: [
+        { id: 'Documents and publications', name: 'Documents and publications' },
+        { id: 'Policies and plans', name: 'Policies and plans' },
+        { id: 'Educational materials', name: 'Educational materials' },
+        { id: 'Statements', name: 'Statements' },
+        { id: 'UN resolutions and reports', name: 'UN resolutions and reports' },
+      ],
+    },
+  ],
   // Resource subtypes - field_resource_type indexed in ES
   resource: {
     field: 'field_resource_type',
@@ -225,6 +243,7 @@ export const FACET_FIELDS = [
   { key: 'field_news_type', label: 'News type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_blog_type', label: 'Blog type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'undrr_publication_type', label: 'Publication type', vocabulary: 'terms', type: 'select-multiple' },
+  { key: 'field_publication_type', label: 'Publication type (PW)', vocabulary: 'list', type: 'select-multiple' },
   { key: 'field_resource_type', label: 'Resource type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_organization_type', label: 'Organization type', vocabulary: 'list', type: 'select-multiple' },
   // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES)
