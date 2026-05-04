@@ -103,12 +103,13 @@ export const CONTENT_SUBTYPES = {
       { id: '880', name: 'Interview' },
     ],
   },
-  // Publication subtypes - two fields used by different sites:
-  // - undrr_publication_type: taxonomy term IDs, used on UNDRR.org
+  // Publication subtypes - three fields for different sites:
+  // - field_undrr_publication_types: taxonomy term IDs, used on UNDRR.org
   // - field_publication_type: list_string values, used on PreventionWeb
+  // - field_irp_publication_subtype: taxonomy term IDs, used on IRP
   publication: [
     {
-      field: 'undrr_publication_type',
+      field: 'field_undrr_publication_types',
       options: [
         { id: '744', name: 'Fact sheet' },
         { id: '749', name: 'Newsletter' },
@@ -129,6 +130,29 @@ export const CONTENT_SUBTYPES = {
         { id: 'Educational materials', name: 'Educational materials' },
         { id: 'Statements', name: 'Statements' },
         { id: 'UN resolutions and reports', name: 'UN resolutions and reports' },
+      ],
+    },
+    {
+      field: 'field_irp_publication_subtype',
+      options: [
+        { id: '893', name: 'Case Study' },
+        { id: '894', name: 'CRNA - COVID-19 Recovery Needs Assessments' },
+        { id: '895', name: 'CRNA Guidance' },
+        { id: '896', name: 'Disaster Recovery Guidance' },
+        { id: '898', name: 'DRF - Disaster Recovery Frameworks' },
+        { id: '897', name: 'DRF Guidance' },
+        { id: '899', name: 'Events documents' },
+        { id: '900', name: 'IRP Herald' },
+        { id: '972', name: 'IRP Herald in Japanese' },
+        { id: '934', name: 'Meetings and conferences' },
+        { id: '935', name: 'News' },
+        { id: '936', name: 'Organizations' },
+        { id: '902', name: 'PDNA - Post Disaster Needs Assessments' },
+        { id: '901', name: 'PDNA Guidance' },
+        { id: '903', name: 'Publications' },
+        { id: '904', name: 'Reports and analysis' },
+        { id: '905', name: 'Tools and guidelines' },
+        { id: '937', name: 'Training' },
       ],
     },
   ],
@@ -242,8 +266,9 @@ export const FACET_FIELDS = [
   // These are indexed in ES (field names differ from Drupal field names)
   { key: 'field_news_type', label: 'News type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_blog_type', label: 'Blog type', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'undrr_publication_type', label: 'Publication type', vocabulary: 'terms', type: 'select-multiple' },
+  { key: 'field_undrr_publication_types', label: 'UNDRR publication types', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_publication_type', label: 'Publication type (PW)', vocabulary: 'list', type: 'select-multiple' },
+  { key: 'field_irp_publication_subtype', label: 'IRP publication subtype', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_resource_type', label: 'Resource type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_organization_type', label: 'Organization type', vocabulary: 'list', type: 'select-multiple' },
   // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES)
