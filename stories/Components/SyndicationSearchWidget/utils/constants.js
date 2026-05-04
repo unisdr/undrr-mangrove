@@ -437,12 +437,15 @@ export const TAXONOMY_VOCABULARY_MAP = new Map(TAXONOMY_VOCABULARIES.map(v => [v
  * @type {Map<string, {id: string, name: string, field: string, parentType: string}>}
  */
 export const SUBTYPE_MAP = new Map(
-  Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) =>
-    config.options.map(option => [
-      `${config.field}:${option.id}`,
-      { ...option, field: config.field, parentType },
-    ])
-  )
+  Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) => {
+    const configs = Array.isArray(config) ? config : [config];
+    return configs.flatMap(c =>
+      c.options.map(option => [
+        `${c.field}:${option.id}`,
+        { ...option, field: c.field, parentType },
+      ])
+    );
+  })
 );
 
 /**
@@ -450,7 +453,10 @@ export const SUBTYPE_MAP = new Map(
  * @type {Map<string, string>}
  */
 export const SUBTYPE_FIELD_TO_PARENT = new Map(
-  Object.entries(CONTENT_SUBTYPES).map(([parentType, config]) => [config.field, parentType])
+  Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) => {
+    const configs = Array.isArray(config) ? config : [config];
+    return configs.map(c => [c.field, parentType]);
+  })
 );
 
 /**
@@ -672,10 +678,12 @@ export function getParentTypeForField(field) {
  * Get subtype configuration for a parent content type.
  *
  * @param {string} parentType - The parent type ID (e.g., "news")
- * @returns {{field: string, options: Array}|null} Subtype config or null if none
+ * @returns {Array<{field: string, options: Array}>|null} Subtype config array or null if none
  */
 export function getSubtypesForType(parentType) {
-  return CONTENT_SUBTYPES[parentType] || null;
+  const config = CONTENT_SUBTYPES[parentType];
+  if (!config) return null;
+  return Array.isArray(config) ? config : [config];
 }
 
 /**

@@ -48,7 +48,12 @@ export function FacetsSidebar({ widgetId = 'search' }) {
 
   // Build set of subtype field names to skip (they're merged into type)
   const subtypeFields = useMemo(() => {
-    return new Set(Object.values(CONTENT_SUBTYPES).map(config => config.field));
+    return new Set(
+      Object.values(CONTENT_SUBTYPES).flatMap(config => {
+        const configs = Array.isArray(config) ? config : [config];
+        return configs.map(c => c.field);
+      })
+    );
   }, []);
 
   /**
