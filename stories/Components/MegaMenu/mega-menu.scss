@@ -204,8 +204,9 @@
     align-items: stretch; // both panels fill the full panel height (fixes divider)
     min-height: mg-rem(350);
 
-    // Panel sits at top: 48px; subtract so it never exceeds the viewport.
-    max-height: calc(100vh - mg-rem(48));
+    // Panel sits at top: 48px; cap at 70 % of viewport so the menu never
+    // dominates the screen. Internal __left/__right panels scroll independently.
+    max-height: 70vh;
 
     // Each panel scrolls independently; the parent clips overflow.
     overflow: hidden;
