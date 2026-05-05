@@ -449,7 +449,12 @@
     // See https://github.com/unisdr/undrr-mangrove/issues/939.
     @media screen and (min-width: $mg-breakpoint-tablet) {
       column-count: auto;
-      column-width: 300px;
+
+      // 280px lets 3 columns appear once the right pane reaches ~940px
+      // (i.e. at the $mg-breakpoint-desktop-wide max-width of 1440px).
+      // 300px was too wide — 3 columns never formed within the normal
+      // constrained layout. See https://github.com/unisdr/undrr-mangrove/issues/970.
+      column-width: 280px;
       column-gap: $mg-spacing-200;
       column-fill: balance;
     }
