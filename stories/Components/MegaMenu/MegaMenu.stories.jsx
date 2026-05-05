@@ -203,6 +203,75 @@ const sections = [
           },
         ],
       },
+      {
+        title: 'Our History',
+        url: '/about/history',
+        items: [
+          { title: 'Founding', url: '/about/history/founding' },
+          { title: 'Key Milestones', url: '/about/history/milestones' },
+        ],
+      },
+      {
+        title: 'Governance',
+        url: '/about/governance',
+        items: [
+          { title: 'Member States', url: '/about/governance/member-states' },
+          { title: 'Advisory Board', url: '/about/governance/advisory-board' },
+        ],
+      },
+      {
+        title: 'Partnerships',
+        url: '/about/partnerships',
+        items: [
+          { title: 'UN Agencies', url: '/about/partnerships/un-agencies' },
+          { title: 'Civil Society', url: '/about/partnerships/civil-society' },
+          {
+            title: 'Private Sector',
+            url: '/about/partnerships/private-sector',
+          },
+        ],
+      },
+      {
+        title: 'Offices',
+        url: '/about/offices',
+        items: [
+          { title: 'Geneva HQ', url: '/about/offices/geneva' },
+          { title: 'New York Liaison', url: '/about/offices/new-york' },
+          { title: 'Bonn Office', url: '/about/offices/bonn' },
+        ],
+      },
+      {
+        title: 'Careers',
+        url: '/about/careers',
+        items: [
+          { title: 'Open Positions', url: '/about/careers/jobs' },
+          { title: 'Internships', url: '/about/careers/internships' },
+        ],
+      },
+      {
+        title: 'Funding & Donors',
+        url: '/about/funding',
+        items: [
+          { title: 'Annual Report', url: '/about/funding/annual-report' },
+          { title: 'Donor List', url: '/about/funding/donors' },
+        ],
+      },
+      {
+        title: 'Accountability',
+        url: '/about/accountability',
+        items: [
+          {
+            title: 'Evaluation Reports',
+            url: '/about/accountability/evaluations',
+          },
+          { title: 'Audit Reports', url: '/about/accountability/audits' },
+        ],
+      },
+      {
+        title: 'Contact Us',
+        url: '/about/contact',
+        items: [{ title: 'Media Enquiries', url: '/about/contact/media' }],
+      },
     ],
   },
   {
