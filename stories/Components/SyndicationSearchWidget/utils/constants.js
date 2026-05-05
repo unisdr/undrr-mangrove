@@ -540,7 +540,7 @@ export function isFilterVisible(key, visibleFilters) {
  */
 export const TEASER_FIELDS = {
   image:           { label: 'Image',            selector: '.mg-card__visual' },
-  contentType:     { label: 'Content type',     selector: '.mg-card__tag' },
+  contentType:     { label: 'Content type',     selector: '.mg-card__label' },
   publicationType: { label: 'Publication type', selector: '.mg-card__publication-type' },
   date:            { label: 'Date',             selector: '.mg-card__date' },
   summary:         { label: 'Summary',          selector: '.mg-card__description' },
