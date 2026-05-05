@@ -201,8 +201,13 @@
   @media screen and (min-width: $mg-breakpoint-tablet) {
     display: none;
     flex-direction: row; // Horizontal layout for left/right sections
-    height: mg-rem(350);
-    overflow: hidden;
+    min-height: mg-rem(350);
+    max-height: 70vh;
+    overflow-x: hidden;
+
+    // Scroll only when content genuinely exceeds 70vh (extreme edge case).
+    // For normal left-nav overflow the panel simply grows above 350px.
+    overflow-y: auto;
     top: mg-rem(48);
     position: absolute;
   }
