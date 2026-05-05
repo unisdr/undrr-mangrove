@@ -404,6 +404,15 @@
 
   // Desktop: Hide mobile menu, show desktop menu
   @media screen and (min-width: $mg-breakpoint-tablet) {
+    // Don't stretch the menu ul to the panel's fixed height. Without this,
+    // CSS multicol fills both columns to 350 px then pushes surplus items
+    // into a third column that overflows and gets clipped by the parent's
+    // overflow: hidden. align-items: flex-start lets the ul be its natural
+    // (content-driven) height so multicol never needs to generate
+    // overflow columns. See https://github.com/unisdr/undrr-mangrove/issues/970.
+    align-items: flex-start;
+    overflow-y: auto; // scroll vertically if items exceed the 350px pane height
+
     .mg-mega-content__menu--mobile {
       display: none;
     }
