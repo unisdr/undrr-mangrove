@@ -776,7 +776,7 @@ $search-input-padding-x: $mg-spacing-250;
 // Drupal teaser templates (see web-backlog#2660).
 
 .mg-search--hide-image .mg-card__visual { display: none; }
-.mg-search--hide-contentType .mg-card__tag { display: none; }
+.mg-search--hide-contentType .mg-card__label { display: none; }
 .mg-search--hide-publicationType .mg-card__publication-type { display: none; }
 .mg-search--hide-date .mg-card__date { display: none; }
 .mg-search--hide-siteName .mg-search__result-site-name { display: none; }

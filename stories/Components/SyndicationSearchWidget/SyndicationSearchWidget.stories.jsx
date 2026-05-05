@@ -409,7 +409,7 @@ Results are sorted by date (\`defaultSort: 'newest'\`).
 \`\`\`js
 visibleTeaserFields: {
   image: true,           // Card image (.mg-card__visual)
-  contentType: false,    // Content type badge (.mg-card__tag)
+  contentType: false,    // Content type badge (.mg-card__label)
   publicationType: false,// Publication subtype (.mg-card__publication-type)
   date: true,            // Publication date (.mg-card__date)
   siteName: false,       // Domain label (.mg-search__result-site-name)

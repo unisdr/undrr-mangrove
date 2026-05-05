@@ -424,6 +424,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.2.6** — 2026-05-05: Fixed incorrect CSS selector for `contentType` teaser field — `.mg-card__tag` is not a BEM class; corrected to `.mg-card__label` in `TEASER_FIELDS`, the hide rule in `syndication-search-widget.scss`, and the story comment
 - **1.2.5** — 2026-05-04 ([web-backlog#1479](https://gitlab.com/undrr/web-backlog/-/work_items/1479)): PW publication subtypes — `CONTENT_SUBTYPES.publication` expanded to support three independent subtype fields (`field_undrr_publication_types`, `field_publication_type`, `field_irp_publication_subtype`); fixed silent aggregation failure caused by incorrect field key `undrr_publication_type` (missing `field_` prefix and plural suffix); all array-iteration sites normalised for backwards compatibility with single-config subtypes on other content types
 - **1.2.4** — 2026-04-09 ([web-backlog#919](https://github.com/unisdr/undrr-mangrove/issues/919)): `fromElement` now parses `data-custom-filters`, `data-custom-facets`, and `data-visible-teaser-fields` as JSON, consistent with `defaultFilters` and `allowedTypes`
 - **1.2.3** — 2026-03-19 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
