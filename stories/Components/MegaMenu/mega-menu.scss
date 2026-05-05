@@ -225,6 +225,7 @@
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       flex-basis: 33%;
+      height: auto; // override mobile height: 100%; let align-items: stretch control cross size
       min-height: 0; // allow flex child to shrink below content height for scroll
       overflow-y: auto; // independent scroll, separate from the right panel
     }
