@@ -84,14 +84,18 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-// Search form
-.mg-search__form {
+// Search form (used by both the in-widget SearchForm and the standalone
+// SyndicationSearchBar). Layout primitives are shared between the two so
+// the detached bar matches the widget's input visually.
+.mg-search__form,
+.mg-search-bar {
   display: flex;
   gap: $mg-spacing-50;
   margin-bottom: $mg-spacing-100;
 }
 
-.mg-search__input-wrapper {
+.mg-search__input-wrapper,
+.mg-search-bar__input-wrapper {
   position: relative;
   flex: 1;
 }
