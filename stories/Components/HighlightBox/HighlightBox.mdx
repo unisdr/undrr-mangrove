@@ -163,6 +163,6 @@ Existing CKEditor content using `.mg-highlight-box` classes will continue to wor
 
 ## Changelog
 
-- **1.2** — 2026-05-07: Inline white text color for `primary` and `secondary` variants so they remain legible when rendered in Storybook MDX docs pages where the theme stylesheet is not loaded by the story decorator. ([#926](https://github.com/unisdr/undrr-mangrove/issues/926))
+- **1.2** — 2026-05-07: Force descendants of `primary` / `secondary` variants to inherit the white text color so body text (`<p>`, headings, etc.) stays legible when host CSS — including Storybook's docs theme — applies its own bare-element color rules. ([#926](https://github.com/unisdr/undrr-mangrove/issues/926))
 - **1.1** — 2026-03-10: Removed `.mg-highlight-box:has(iframe)` rule that broke layout on Safari/WebKit mobile. Video embeds now use the [`.mg-embed-container`](/docs/utilities-embedcontainer--docs) utility wrapper instead of applying aspect ratio to the whole container. [`web-backlog#2672`](https://gitlab.com/undrr/web-backlog/-/work_items/2672)
 - **1.0** — 2026-02-04: Initial release with tone variants (default, primary, secondary) and layout variants (full, centered, float-start, float-end)

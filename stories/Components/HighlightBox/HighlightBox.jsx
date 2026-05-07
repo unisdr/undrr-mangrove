@@ -42,16 +42,7 @@ export function HighlightBox({
     .filter(Boolean)
     .join(' ');
 
-  // Storybook MDX docs pages render inline JSX outside the theme decorator,
-  // so component SCSS may not be loaded. Inline the variant text color to
-  // guarantee legibility even without the cascade.
-  const style = variant !== 'default' ? { color: '#fff' } : undefined;
-
-  return (
-    <div className={classes} style={style}>
-      {children}
-    </div>
-  );
+  return <div className={classes}>{children}</div>;
 }
 
 HighlightBox.propTypes = {

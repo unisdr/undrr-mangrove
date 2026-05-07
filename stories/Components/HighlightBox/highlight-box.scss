@@ -28,15 +28,17 @@
   background: var(--tag-color-background-purple, #{$sendai-purple});
 }
 
-.mg-highlight-box--primary,
-.mg-highlight-box--secondary {
+.mg-highlight-box.mg-highlight-box--primary,
+.mg-highlight-box.mg-highlight-box--secondary {
   border: none;
   box-shadow: inset 0 -8px 0 0 rgb(255 255 255 / 0.5);
   color: $mg-color-white;
 
-  a,
-  a:hover,
-  a:visited {
+  // Force every descendant to inherit the variant's white color. The double
+  // class selector and descendant `*` give us specificity (0,2,1) so we beat
+  // Storybook's `.sbdocs-content p { color: ... }` (0,1,1) and any host-site
+  // bare-element typography rules.
+  * {
     color: inherit;
   }
 }
