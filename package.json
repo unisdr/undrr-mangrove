@@ -176,7 +176,8 @@
     "minimatch@^9.0.4": "^9.0.7",
     "minimatch@^9.0.5": "^9.0.7",
     "minimatch@^10.1.1": "^10.2.3",
-    "minimatch@^10.2.2": "^10.2.3"
+    "minimatch@^10.2.2": "^10.2.3",
+    "brace-expansion@^2.0.1": "^2.0.3"
   },
   "engine": {
     "node": ">=18.0.0",
