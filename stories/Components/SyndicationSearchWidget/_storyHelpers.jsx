@@ -110,34 +110,26 @@ import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget
 `;
 
 /**
- * Build a CSF3 meta object for one of the split widget story files.
- *
- * @param {string} subpath - The trailing segment of the title path,
- *   e.g. `'Layouts'`. Final title becomes
- *   `Components/Syndicated search/Widget/<subpath>`.
- * @param {object} component - The widget React component (passed in to
- *   avoid this file pulling SCSS via the widget import chain).
+ * Shared meta fragment (decorators, parameters, argTypes) for the split
+ * widget story files. Each file inlines a literal default export so
+ * Storybook's CSF indexer can statically read `title` and `component`,
+ * but spreads in this fragment to keep the docs description and config
+ * controls consistent.
  */
-export function makeWidgetMeta(subpath, component) {
-  return {
-    title: subpath
-      ? `Components/Syndicated search/Widget/${subpath}`
-      : 'Components/Syndicated search/Widget',
-    component,
-    decorators: [withInlineDescription],
-    parameters: {
-      layout: 'padded',
-      docs: {
-        description: {
-          component: widgetDocsDescription,
-        },
+export const widgetMetaShared = {
+  decorators: [withInlineDescription],
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: widgetDocsDescription,
       },
     },
-    argTypes: {
-      config: {
-        description: 'Widget configuration object',
-        control: 'object',
-      },
+  },
+  argTypes: {
+    config: {
+      description: 'Widget configuration object',
+      control: 'object',
     },
-  };
-}
+  },
+};

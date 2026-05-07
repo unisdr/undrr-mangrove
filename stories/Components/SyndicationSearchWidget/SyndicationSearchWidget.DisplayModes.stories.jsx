@@ -6,9 +6,13 @@
 
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { allTeaserFieldsVisible } from './utils/constants';
-import { defaultConfig, makeWidgetMeta } from './_storyHelpers';
+import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
-export default makeWidgetMeta('Display modes', SyndicationSearchWidget);
+export default {
+  title: 'Components/Syndicated search/Widget/Display modes',
+  component: SyndicationSearchWidget,
+  ...widgetMetaShared,
+};
 
 /**
  * Card display mode — vertical cards in a grid.

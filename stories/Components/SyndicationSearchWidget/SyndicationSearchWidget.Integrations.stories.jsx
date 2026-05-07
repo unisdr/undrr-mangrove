@@ -8,9 +8,13 @@
 
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { allTeaserFieldsVisible } from './utils/constants';
-import { defaultConfig, makeWidgetMeta } from './_storyHelpers';
+import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
-export default makeWidgetMeta('Integrations', SyndicationSearchWidget);
+export default {
+  title: 'Components/Syndicated search/Widget/Integrations',
+  component: SyndicationSearchWidget,
+  ...widgetMetaShared,
+};
 
 /**
  * Taxonomy term results — mixed node and term results.

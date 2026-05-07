@@ -8,9 +8,13 @@
  */
 
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
-import { defaultConfig, makeWidgetMeta } from './_storyHelpers';
+import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
-export default makeWidgetMeta('', SyndicationSearchWidget);
+export default {
+  title: 'Components/Syndicated search/Widget',
+  component: SyndicationSearchWidget,
+  ...widgetMetaShared,
+};
 
 /**
  * Default story — the widget with all features enabled.

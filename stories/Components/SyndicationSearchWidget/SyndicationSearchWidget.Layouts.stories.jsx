@@ -7,9 +7,13 @@
 
 import React from 'react';
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
-import { defaultConfig, makeWidgetMeta } from './_storyHelpers';
+import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
-export default makeWidgetMeta('Layouts', SyndicationSearchWidget);
+export default {
+  title: 'Components/Syndicated search/Widget/Layouts',
+  component: SyndicationSearchWidget,
+  ...widgetMetaShared,
+};
 
 /**
  * Facets hidden — search + results only.

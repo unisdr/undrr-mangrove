@@ -5,9 +5,13 @@
  */
 
 import { SyndicationSearchWidget } from './SyndicationSearchWidget';
-import { defaultConfig, makeWidgetMeta } from './_storyHelpers';
+import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
-export default makeWidgetMeta('Toggles', SyndicationSearchWidget);
+export default {
+  title: 'Components/Syndicated search/Widget/Toggles',
+  component: SyndicationSearchWidget,
+  ...widgetMetaShared,
+};
 
 /**
  * With pager disabled.
