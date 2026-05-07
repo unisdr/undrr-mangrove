@@ -98,9 +98,10 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__input {
   width: 100%;
-  padding: $mg-spacing-75 $search-input-padding-x $mg-spacing-75 $mg-spacing-100;
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
+  padding: $mg-padding-button;
+  padding-right: $search-input-padding-x;
+  border: $mg-border-width-button solid $search-border;
+  border-radius: $mg-radius-button;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:focus {
@@ -116,19 +117,24 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__clear {
   position: absolute;
-  right: $search-input-padding-x;
+  right: $mg-spacing-50;
   top: 50%;
   transform: translateY(-50%);
-  padding: $mg-spacing-25 $mg-spacing-50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $mg-spacing-200;
+  height: $mg-spacing-200;
+  padding: 0;
   background: none;
   border: none;
-  font-size: $mg-font-size-200;
-  color: $search-text-muted;
+  font-size: $mg-font-size-100;
+  color: $search-text;
   cursor: pointer;
   line-height: 1;
 
   &:hover {
-    color: $search-text;
+    color: $search-primary;
   }
 }
 
@@ -151,33 +157,16 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+// Submit button: visual styling comes from .mg-button / .mg-button-primary.
+// Only layout-specific spacing for the icon + label is defined here.
 .mg-search__submit {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-75 $mg-spacing-150;
-  font-size: $mg-font-size-100;
-  font-weight: 500;
-  color: #fff;
-  background-color: $search-primary;
-  border: none;
-  border-radius: $search-radius;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: $search-primary-dark;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba($search-primary, 0.3);
-  }
+  gap: 0.5rem;
 }
 
 .mg-search__submit-icon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  line-height: 1;
 }
 
 // Submit button loading state

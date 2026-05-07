@@ -85,7 +85,7 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
             onClick={handleClear}
             aria-label="Clear search"
           >
-            <span aria-hidden="true">&times;</span>
+            <span className="mg-icon mg-icon-close" aria-hidden="true" />
           </button>
         )}
 
@@ -101,32 +101,19 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
 
       <button
         type="submit"
-        className={`mg-search__submit btn btn-primary ${isLoading || isStale ? 'mg-search__submit--loading' : ''}`}
+        className={`mg-button mg-button-primary mg-search__submit ${isLoading || isStale ? 'mg-search__submit--loading' : ''}`}
         aria-label={isLoading || isStale ? 'Searching...' : 'Submit search'}
         aria-busy={isLoading || isStale}
       >
-        <span className="mg-search__submit-text">
-          {isLoading || isStale ? 'Searching' : 'Search'}
-        </span>
         <span className="mg-search__submit-icon" aria-hidden="true">
           {isLoading || isStale ? (
             <span className="mg-search__submit-spinner" />
           ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <span className="mg-icon mg-icon-search" />
           )}
+        </span>
+        <span className="mg-search__submit-text">
+          {isLoading || isStale ? 'Searching' : 'Search'}
         </span>
       </button>
     </form>

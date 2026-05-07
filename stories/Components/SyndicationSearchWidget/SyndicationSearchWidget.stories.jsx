@@ -1005,8 +1005,14 @@ Use this story to:
               defaultValue="climate change"
             />
           </div>
-          <button type="submit" className="mg-search__submit btn btn-primary">
-            Search
+          <button
+            type="submit"
+            className="mg-button mg-button-primary mg-search__submit"
+          >
+            <span className="mg-search__submit-icon" aria-hidden="true">
+              <span className="mg-icon mg-icon-search" />
+            </span>
+            <span className="mg-search__submit-text">Search</span>
           </button>
         </form>
 
