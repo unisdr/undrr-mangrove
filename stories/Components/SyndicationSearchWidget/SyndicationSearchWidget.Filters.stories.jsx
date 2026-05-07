@@ -10,7 +10,7 @@ import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
 export default {
-  title: 'Components/Syndicated search/Widget/Filters',
+  title: 'Components/Syndicated search/Filters',
   component: SyndicationSearchWidget,
   ...widgetMetaShared,
 };

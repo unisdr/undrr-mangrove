@@ -8,7 +8,7 @@ import { SyndicationSearchWidget } from './SyndicationSearchWidget';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
 export default {
-  title: 'Components/Syndicated search/Widget/Toggles',
+  title: 'Components/Syndicated search/Toggles',
   component: SyndicationSearchWidget,
   ...widgetMetaShared,
 };

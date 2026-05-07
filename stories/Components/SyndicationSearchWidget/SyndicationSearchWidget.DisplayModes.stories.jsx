@@ -9,7 +9,7 @@ import { allTeaserFieldsVisible } from './utils/constants';
 import { defaultConfig, widgetMetaShared } from './_storyHelpers';
 
 export default {
-  title: 'Components/Syndicated search/Widget/Display modes',
+  title: 'Components/Syndicated search/Display modes',
   component: SyndicationSearchWidget,
   ...widgetMetaShared,
 };
