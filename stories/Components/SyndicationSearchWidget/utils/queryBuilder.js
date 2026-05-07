@@ -16,6 +16,7 @@ import {
   TAXONOMY_VOCABULARY_MAP,
   buildTierRanges,
   buildTierFilter,
+  resolveFacetsLayout,
 } from './constants';
 
 /**
@@ -51,7 +52,8 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
 
   // Build post_filter with all facet filters (applied after aggregations).
   // Skip entirely when facets are hidden — no user-driven facets will be active.
-  const postFilter = config.showFacets !== false
+  const facetsActive = resolveFacetsLayout(config) !== false;
+  const postFilter = facetsActive
     ? buildPostFilter(facets, facetOperators, customFacets, config)
     : null;
 
@@ -74,7 +76,7 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
 
   // Skip aggregations when facets are hidden — avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.
-  if (config.showFacets !== false) {
+  if (facetsActive) {
     result.aggs = buildAggregations(facetFields, facetCountToShow);
   }
 

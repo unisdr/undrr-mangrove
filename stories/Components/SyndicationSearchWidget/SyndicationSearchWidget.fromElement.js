@@ -31,6 +31,13 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showResultsCount = dataset.showResultsCount !== 'false';
   if (dataset.showFacets !== undefined)
     config.showFacets = dataset.showFacets !== 'false';
+  // New union prop for facets layout: 'false' | 'sidebar' | 'horizontal'.
+  // Drupal data attributes always arrive as strings, so the literal string
+  // 'false' is mapped to the boolean false; other values pass through and
+  // are validated by the resolver in utils/constants.js.
+  if (dataset.facets !== undefined) {
+    config.facets = dataset.facets === 'false' ? false : dataset.facets;
+  }
   if (dataset.showActiveFilters !== undefined)
     config.showActiveFilters = dataset.showActiveFilters !== 'false';
   if (dataset.showPager !== undefined)

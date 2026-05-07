@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
+import { resolveFacetsLayout } from './utils/constants';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 import ActiveFilters from './components/ActiveFilters';
@@ -67,7 +68,14 @@ SyndicationSearchWidget.propTypes = {
     showResultsCount: PropTypes.bool,
     /** Whether to display the search timer. */
     showSearchTimer: PropTypes.bool,
-    /** Whether to display the facet sidebar. */
+    /**
+     * Facets layout — visibility and placement.
+     * `false` hides facets entirely; `'sidebar'` (default) renders them in
+     * the right-hand sidebar; `'horizontal'` renders them as a horizontal
+     * strip above the results region.
+     */
+    facets: PropTypes.oneOf([false, 'sidebar', 'horizontal']),
+    /** @deprecated Use `facets` instead. Boolean shorthand: false hides, true → 'sidebar'. */
     showFacets: PropTypes.bool,
     /** Whether to display active filter chips above results. */
     showActiveFilters: PropTypes.bool,
@@ -163,7 +171,9 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
-  const { showFacets, showActiveFilters, showSearchMetrics } = config;
+  const { showActiveFilters, showSearchMetrics } = config;
+  const facetsLayout = resolveFacetsLayout(config);
+  const facetsActive = facetsLayout !== false;
   const { isLoading } = state;
 
   // Count active filters for mobile button badge
@@ -193,6 +203,19 @@ function SyndicationSearchWidgetInner() {
         />
       )}
 
+      {/* Horizontal facet strip — only when facets layout is 'horizontal'.
+          Renders the same FacetsSidebar contents but in a row above results;
+          on small viewports the strip is hidden and the mobile filter drawer
+          handles the same job. */}
+      {facetsLayout === 'horizontal' && (
+        <div
+          className="mg-search__facets-strip"
+          data-vf-google-analytics-region="undrr-search-facets"
+        >
+          <FacetsSidebar widgetId={widgetId} />
+        </div>
+      )}
+
       {/* Active filter chips */}
       {showActiveFilters && <ActiveFilters widgetId={widgetId} />}
 
@@ -208,7 +231,7 @@ function SyndicationSearchWidgetInner() {
             <SearchResults
               isStale={isPending}
               widgetId={widgetId}
-              showMobileFilterButton={showFacets}
+              showMobileFilterButton={facetsActive}
               onOpenFilters={openDrawer}
               activeFilterCount={activeFilterCount}
             />
@@ -216,7 +239,7 @@ function SyndicationSearchWidgetInner() {
         </main>
 
         {/* Facets sidebar - desktop only */}
-        {showFacets && (
+        {facetsLayout === 'sidebar' && (
           <aside
             className="mg-search__sidebar"
             data-vf-google-analytics-region="undrr-search-facets"
@@ -226,8 +249,9 @@ function SyndicationSearchWidgetInner() {
         )}
       </div>
 
-      {/* Mobile filter drawer */}
-      {showFacets && (
+      {/* Mobile filter drawer — used by both sidebar and horizontal layouts
+          on small viewports. */}
+      {facetsActive && (
         <MobileFilterDrawer
           isOpen={isDrawerOpen}
           onClose={closeDrawer}

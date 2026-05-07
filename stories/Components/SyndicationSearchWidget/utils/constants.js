@@ -423,6 +423,36 @@ export const DEFAULT_CONFIG = {
 };
 
 /**
+ * Resolve the facets layout from a (merged or partial) config object.
+ *
+ * The component exposes a single union prop `facets` for layout:
+ *   - `false`        — facets are not rendered at all
+ *   - `'sidebar'`    — facets render in the right-hand sidebar (default)
+ *   - `'horizontal'` — facets render as a horizontal strip above results
+ *
+ * Older consumers used a boolean `showFacets`. When `facets` is unset, this
+ * helper falls back to `showFacets` so existing configs keep working without
+ * change. Callers that just need a yes/no answer can compare the result to
+ * `false` (e.g. for skipping aggregation queries when facets are off).
+ *
+ * @param {Object} config - Widget config (merged with DEFAULT_CONFIG or partial)
+ * @returns {false | 'sidebar' | 'horizontal'}
+ */
+export function resolveFacetsLayout(config) {
+  if (
+    config.facets === false
+    || config.facets === 'sidebar'
+    || config.facets === 'horizontal'
+  ) {
+    return config.facets;
+  }
+  if (config.showFacets === false) {
+    return false;
+  }
+  return 'sidebar';
+}
+
+/**
  * Lookup maps for fast access.
  */
 export const DOMAIN_MAP = new Map(DOMAINS.map(d => [d.id, d]));

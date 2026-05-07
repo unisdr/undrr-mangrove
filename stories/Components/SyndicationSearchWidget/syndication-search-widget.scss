@@ -247,6 +247,34 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
+// Horizontal facets strip — used when config.facets === 'horizontal'.
+// Renders the same FacetsSidebar contents as a row above results. On
+// narrow viewports the strip is hidden and the mobile filter drawer
+// handles facet selection (same pattern as the sidebar layout).
+.mg-search__facets-strip {
+  margin-bottom: $mg-spacing-150;
+
+  // Inside the strip, the facets container and dropdown row should flow
+  // horizontally instead of stacking. SortOptions and individual facet
+  // dropdowns wrap to a new row when they don't fit.
+  .mg-search__facets,
+  .mg-search__facet-containers {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: $mg-spacing-100;
+  }
+
+  .mg-search__facet {
+    flex: 0 1 auto;
+    min-width: mg-rem(180);
+  }
+
+  @media (width <= 768px) {
+    display: none;
+  }
+}
+
 // Results
 .mg-search__results {
   transition: opacity 0.2s ease-out;

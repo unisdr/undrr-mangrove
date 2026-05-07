@@ -179,22 +179,53 @@ export const HiddenFacets = {
   args: {
     config: {
       ...defaultConfig,
-      showFacets: false,
+      facets: false,
     },
   },
   parameters: {
     docs: {
       description: {
         story: `
-Hides the facets sidebar for a simpler search experience.
+Hides the facets entirely for a simpler search experience.
 
 \`\`\`js
 config: {
-  showFacets: false,
+  facets: false,
 }
 \`\`\`
 
 The search still works with all filters via URL hash — users just can't see or modify them through the UI.
+
+Legacy \`showFacets: false\` continues to work as a backwards-compatible alias for \`facets: false\`.
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Horizontal facet strip layout.
+ */
+export const HorizontalFacets = {
+  args: {
+    config: {
+      ...defaultConfig,
+      facets: 'horizontal',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Renders facets as a horizontal strip above the results region instead of in a right-hand sidebar. Useful in narrow content regions or where a sidebar would compete with surrounding page chrome.
+
+\`\`\`js
+config: {
+  facets: 'horizontal',
+}
+\`\`\`
+
+On viewports under 768px the strip is hidden and the mobile filter drawer takes over (same pattern as the sidebar layout).
         `,
       },
     },

@@ -65,6 +65,30 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('showSearchBox');
     expect(config).not.toHaveProperty('showFacets');
     expect(config).not.toHaveProperty('enableHashSync');
+    expect(config).not.toHaveProperty('facets');
+  });
+
+  describe('data-facets (union prop)', () => {
+    it('extracts facets="sidebar"', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ facets: 'sidebar' })
+      );
+      expect(config.facets).toBe('sidebar');
+    });
+
+    it('extracts facets="horizontal"', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ facets: 'horizontal' })
+      );
+      expect(config.facets).toBe('horizontal');
+    });
+
+    it('maps the literal string "false" to boolean false', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ facets: 'false' })
+      );
+      expect(config.facets).toBe(false);
+    });
   });
 
   it('parses JSON defaultFilters', () => {

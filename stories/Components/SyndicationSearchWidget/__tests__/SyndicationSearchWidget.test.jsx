@@ -112,6 +112,35 @@ describe('SyndicationSearchWidget', () => {
         document.querySelector('.mg-search__sidebar')
       ).not.toBeInTheDocument();
     });
+
+    // facets layout — new union prop
+    it('renders sidebar when facets is "sidebar"', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
+      expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
+      expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+    });
+
+    it('renders horizontal strip when facets is "horizontal"', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'horizontal' }} />);
+      expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
+      expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+    });
+
+    it('hides facets entirely when facets is false', () => {
+      render(<SyndicationSearchWidget config={{ facets: false }} />);
+      expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+      expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+    });
+
+    it('treats facets prop as taking precedence over legacy showFacets', () => {
+      render(
+        <SyndicationSearchWidget
+          config={{ facets: 'horizontal', showFacets: false }}
+        />
+      );
+      // facets wins: horizontal strip renders even though showFacets is false
+      expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
+    });
   });
 
   describe('search input', () => {
