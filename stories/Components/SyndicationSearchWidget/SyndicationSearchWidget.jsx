@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
@@ -77,6 +78,18 @@ SyndicationSearchWidget.propTypes = {
     facets: PropTypes.oneOf([false, 'sidebar', 'horizontal']),
     /** @deprecated Use `facets` instead. Boolean shorthand: false hides, true → 'sidebar'. */
     showFacets: PropTypes.bool,
+    /**
+     * CSS selector for a DOM element outside the widget where the facets
+     * UI should be rendered (via React portal). Useful when a consuming
+     * page wants to place facets in a left rail or other region that is
+     * not a child of the widget container. When set and the element is
+     * found, the in-widget sidebar / strip is suppressed and the facets
+     * are rendered into the target instead. The widget's React tree spans
+     * the portal so search context still flows. If the target element is
+     * not present at mount time, the widget falls back to the in-widget
+     * layout chosen by `facets` and a warning is logged.
+     */
+    facetsTarget: PropTypes.string,
     /** Whether to display active filter chips above results. */
     showActiveFilters: PropTypes.bool,
     /** Whether to display search performance metrics. */
@@ -171,10 +184,35 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
-  const { showActiveFilters, showSearchMetrics } = config;
+  const { showActiveFilters, showSearchMetrics, facetsTarget } = config;
   const facetsLayout = resolveFacetsLayout(config);
   const facetsActive = facetsLayout !== false;
   const { isLoading } = state;
+
+  // Resolve external facets target (AC2: facets in a separate DOM region).
+  // Looked up once on mount when a selector is configured. If the target
+  // node isn't in the document, fall back to the in-widget layout and log
+  // a single console warning so editors and developers can see why the
+  // portal didn't take effect.
+  const [facetsTargetEl, setFacetsTargetEl] = useState(null);
+  useEffect(() => {
+    if (!facetsActive || !facetsTarget || typeof document === 'undefined') {
+      setFacetsTargetEl(null);
+      return;
+    }
+    const el = document.querySelector(facetsTarget);
+    if (el) {
+      setFacetsTargetEl(el);
+    } else {
+      setFacetsTargetEl(null);
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[SyndicationSearchWidget] facetsTarget selector "${facetsTarget}" did not match any element; falling back to in-widget facets layout.`
+      );
+    }
+  }, [facetsActive, facetsTarget]);
+
+  const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
   // Count active filters for mobile button badge
   const activeFilterCount = countActiveFilters(state);
@@ -203,11 +241,12 @@ function SyndicationSearchWidgetInner() {
         />
       )}
 
-      {/* Horizontal facet strip — only when facets layout is 'horizontal'.
-          Renders the same FacetsSidebar contents but in a row above results;
-          on small viewports the strip is hidden and the mobile filter drawer
+      {/* Horizontal facet strip — only when facets layout is 'horizontal'
+          AND no external target is taking the facets via portal. Renders
+          the same FacetsSidebar contents but in a row above results; on
+          small viewports the strip is hidden and the mobile filter drawer
           handles the same job. */}
-      {facetsLayout === 'horizontal' && (
+      {facetsLayout === 'horizontal' && !facetsPortaled && (
         <div
           className="mg-search__facets-strip"
           data-vf-google-analytics-region="undrr-search-facets"
@@ -231,15 +270,15 @@ function SyndicationSearchWidgetInner() {
             <SearchResults
               isStale={isPending}
               widgetId={widgetId}
-              showMobileFilterButton={facetsActive}
+              showMobileFilterButton={facetsActive && !facetsPortaled}
               onOpenFilters={openDrawer}
               activeFilterCount={activeFilterCount}
             />
           </Suspense>
         </main>
 
-        {/* Facets sidebar - desktop only */}
-        {facetsLayout === 'sidebar' && (
+        {/* Facets sidebar — desktop only, and only when not portaled out. */}
+        {facetsLayout === 'sidebar' && !facetsPortaled && (
           <aside
             className="mg-search__sidebar"
             data-vf-google-analytics-region="undrr-search-facets"
@@ -249,9 +288,24 @@ function SyndicationSearchWidgetInner() {
         )}
       </div>
 
-      {/* Mobile filter drawer — used by both sidebar and horizontal layouts
-          on small viewports. */}
-      {facetsActive && (
+      {/* External facets portal — when facetsTarget resolves to a DOM node,
+          render the facets there instead of inside the widget. The React
+          tree spans the portal so SearchContext still flows. */}
+      {facetsPortaled
+        && createPortal(
+          <div
+            className="mg-search__facets-external"
+            data-vf-google-analytics-region="undrr-search-facets"
+          >
+            <FacetsSidebar widgetId={widgetId} />
+          </div>,
+          facetsTargetEl
+        )}
+
+      {/* Mobile filter drawer — used by sidebar and horizontal layouts on
+          small viewports. Suppressed when facets are portaled to an
+          external region (the host page controls placement there). */}
+      {facetsActive && !facetsPortaled && (
         <MobileFilterDrawer
           isOpen={isDrawerOpen}
           onClose={closeDrawer}

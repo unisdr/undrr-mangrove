@@ -91,6 +91,13 @@ describe('syndicationSearchWidgetFromElement', () => {
     });
   });
 
+  it('extracts facetsTarget selector', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'facets-target': '#left-rail' })
+    );
+    expect(config.facetsTarget).toBe('#left-rail');
+  });
+
   it('parses JSON defaultFilters', () => {
     const filters = [{ key: '_language', value: 'fr' }];
     const { config } = syndicationSearchWidgetFromElement(

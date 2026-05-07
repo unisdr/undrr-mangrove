@@ -23,6 +23,7 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.gridColumns)
     config.gridColumns = parseInt(dataset.gridColumns, 10);
   if (dataset.queryAppend) config.queryAppend = dataset.queryAppend;
+  if (dataset.facetsTarget) config.facetsTarget = dataset.facetsTarget;
 
   // Boolean props (only set if explicitly present)
   if (dataset.showSearchBox !== undefined)

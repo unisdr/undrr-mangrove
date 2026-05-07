@@ -233,6 +233,63 @@ On viewports under 768px the strip is hidden and the mobile filter drawer takes 
 };
 
 /**
+ * Facets rendered in an external DOM region via portal.
+ */
+export const ExternalFacetsRegion = {
+  args: {
+    config: {
+      ...defaultConfig,
+      facets: 'sidebar',
+      facetsTarget: '#mg-story-external-facets',
+    },
+  },
+  render: args => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '240px 1fr',
+        gap: '1.5rem',
+        alignItems: 'flex-start',
+      }}
+    >
+      <aside
+        id="mg-story-external-facets"
+        style={{
+          padding: '1rem',
+          background: '#f7f7f7',
+          borderRadius: '4px',
+          minHeight: '4rem',
+        }}
+      >
+        {/* Facets render here via createPortal */}
+      </aside>
+      <div>
+        <SyndicationSearchWidget {...args} />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Renders the facets UI into a DOM element outside the widget's own container, identified by a CSS selector. Useful when a consuming page wants to place facets in a left rail or other region of the page that is not a child of the widget.
+
+\`\`\`js
+config: {
+  facetsTarget: '#my-page-left-rail',
+}
+\`\`\`
+
+The widget's React tree spans the portal so search context still flows — the facets and results stay in sync without any extra wiring. Drupal sites can pass the target via \`data-facets-target\`.
+
+If the target element is not present at mount time the widget falls back to the in-widget \`facets\` layout and logs a single console warning.
+        `,
+      },
+    },
+  },
+};
+
+/**
  * Minimal configuration - just search.
  */
 export const Minimal = {
