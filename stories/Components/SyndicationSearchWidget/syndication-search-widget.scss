@@ -258,20 +258,45 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facets-strip {
   margin-bottom: $mg-spacing-150;
 
-  // Inside the strip, the facets container and dropdown row should flow
-  // horizontally instead of stacking. SortOptions and individual facet
-  // dropdowns wrap to a new row when they don't fit.
-  .mg-search__facets,
-  .mg-search__facet-containers {
+  // Treat Sort and every facet as direct siblings of the same flex row so
+  // they share a consistent track width and wrap together. Without
+  // display:contents on .mg-search__facet-containers the facets would
+  // share a single nested column, getting squeezed when the row is wide
+  // enough to fit them inline but not wide enough to give each one a
+  // readable width.
+  .mg-search__facets {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-end;
-    gap: $mg-spacing-100;
+    gap: $mg-spacing-100 $mg-spacing-150;
   }
 
+  .mg-search__facet-containers {
+    display: contents;
+  }
+
+  // Sort and each facet become equal-width flex cells. The flex-basis of
+  // 200px is the preferred size; min-width keeps them from squeezing
+  // narrower than the longest legend / placeholder, and the flex-grow of
+  // 1 lets them fill the trailing slack on the last wrapped row instead
+  // of leaving a ragged right edge.
+  .mg-search__sort,
   .mg-search__facet {
-    flex: 0 1 auto;
+    flex: 1 1 mg-rem(200);
     min-width: mg-rem(180);
+    max-width: mg-rem(280);
+  }
+
+  // Inline the Sort radios so the Sort fieldset is the same height as a
+  // facet dropdown rather than three stacked rows.
+  .mg-search__sort-option {
+    display: inline-flex;
+    margin-right: $mg-spacing-100;
+    margin-bottom: 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 
   @media (width <= 768px) {
