@@ -424,7 +424,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
-- **Unreleased** ([mangrove#981](https://github.com/unisdr/undrr-mangrove/issues/981)):
+- **Unreleased** — 2026-05-07 ([mangrove#981](https://github.com/unisdr/undrr-mangrove/issues/981)):
   - `SearchForm` submit and clear buttons now use the standard `mg-button mg-button-primary` and `mg-icon-search` / `mg-icon-close` primitives instead of a bespoke variant with an inline Lucide SVG; `.mg-search__input` aligns to the same padding, border-width and border-radius tokens as `mg-button` so the input and submit button share the same natural height and corner radius; clear button is a 20×20 hit target with darker default color and brand-color hover
   - Fixed URL hash query being stomped on initial mount — the `deferredQuery` effect was unconditionally dispatching `setQuery('')` on first render, racing `useHashSync`'s hash-loaded query before INITIALIZE could preserve it; the effect now skips its first render
   - Fixed `enableHashSync: 'true'` (string) silently disabling hash sync — Drupal data attributes always arrive as strings, but the hook used a strict `=== true` comparison; now accepts both boolean `true` and string `'true'`
