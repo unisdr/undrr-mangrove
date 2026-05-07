@@ -135,6 +135,23 @@ describe('SyndicationSearchWidget', () => {
 
       expect(input).toHaveValue('');
     });
+
+    // Regression: on a /search#query=news load, useHashSync dispatches
+    // setQuery('news'), but the deferredQuery effect was firing on first
+    // render with deferredQuery='' and stomping the hash-loaded value before
+    // INITIALIZE could preserve it. The effect now skips its first render.
+    it('does not stomp the URL hash query on initial mount', async () => {
+      window.history.pushState({}, '', '/search#query=news');
+
+      render(<SyndicationSearchWidget config={{ enableHashSync: true }} />);
+
+      const input = screen.getByRole('searchbox');
+      await waitFor(() => {
+        expect(input).toHaveValue('news');
+      });
+
+      window.history.pushState({}, '', '/');
+    });
   });
 
   describe('search execution', () => {

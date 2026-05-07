@@ -18,7 +18,7 @@
  * @module SyndicationSearchWidget
  */
 
-import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback } from 'react';
+import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
@@ -133,8 +133,17 @@ function SyndicationSearchWidgetInner() {
   // This keeps the input responsive while search runs in background
   const deferredQuery = useDeferredValue(inputValue);
 
-  // Update context when deferred query changes
+  // Update context when deferred query changes.
+  // Skip the first render: on initial mount, useHashSync may have already
+  // dispatched setQuery from the URL hash (e.g. #query=news). If we ran an
+  // unconditional setQuery('') here on mount we would stomp that value before
+  // INITIALIZE could preserve it. Subsequent renders sync user input as normal.
+  const isFirstQuerySync = useRef(true);
   useEffect(() => {
+    if (isFirstQuerySync.current) {
+      isFirstQuerySync.current = false;
+      return;
+    }
     dispatch(actions.setQuery(deferredQuery));
   }, [deferredQuery, dispatch]);
 
