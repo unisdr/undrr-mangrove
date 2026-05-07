@@ -12,7 +12,7 @@ import { SyndicationSearchWidget } from './SyndicationSearchWidget';
  * coupling between the two; the URL is the contract.
  */
 export default {
-  title: 'Components/SyndicationSearchBar',
+  title: 'Components/Syndicated search/Bar',
   component: SyndicationSearchBar,
   tags: ['autodocs'],
   parameters: {
