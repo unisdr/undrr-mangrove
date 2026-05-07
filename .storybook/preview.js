@@ -99,34 +99,22 @@ const themeStyles = {
   'MCR2030 Theme (legacy 10px)': themeMCRLegacy,
 };
 
-// Track currently active theme
-let activeThemeStyle = null;
+// Load the default theme at module init so MDX docs-only pages render with
+// component CSS even before any story-bound decorator has run.
+let activeThemeStyle = themeStyles['Global UNDRR Theme'];
+activeThemeStyle.use();
 
 const themeDecorator = (Story, context) => {
   const selectedTheme = context.globals.theme;
 
   React.useEffect(() => {
-    // Unload previous theme
-    if (activeThemeStyle) {
-      activeThemeStyle.unuse();
-    }
-
-    // Load selected theme
     const newThemeStyle = themeStyles[selectedTheme];
-    if (newThemeStyle) {
+    if (newThemeStyle && newThemeStyle !== activeThemeStyle) {
+      activeThemeStyle.unuse();
       newThemeStyle.use();
       activeThemeStyle = newThemeStyle;
     }
   }, [selectedTheme]);
-
-  // Load default theme on initial render
-  React.useEffect(() => {
-    const defaultTheme = themeStyles['Global UNDRR Theme'];
-    if (defaultTheme && !activeThemeStyle) {
-      defaultTheme.use();
-      activeThemeStyle = defaultTheme;
-    }
-  }, []);
 
   return <Story {...context} />;
 };
