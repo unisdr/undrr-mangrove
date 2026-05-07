@@ -48,8 +48,19 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showSearchMetrics = dataset.showSearchMetrics === 'true';
   if (dataset.showSearchTimer !== undefined)
     config.showSearchTimer = dataset.showSearchTimer === 'true';
-  if (dataset.enableHashSync !== undefined)
-    config.enableHashSync = dataset.enableHashSync !== 'false';
+  // enableHashSync supports a tri-state: boolean true/false, or the string
+  // 'auto' (default), which lets the Drupal wrapper auto-disable hash sync
+  // when more than one widget is mounted on the same page. Collapsing to a
+  // bool would lose that signal — preserve 'auto' as the literal string.
+  // The useHashSync hook recognises both boolean true and the string 'true',
+  // so non-'auto' values can safely collapse to booleans.
+  if (dataset.enableHashSync !== undefined) {
+    if (dataset.enableHashSync === 'auto') {
+      config.enableHashSync = 'auto';
+    } else {
+      config.enableHashSync = dataset.enableHashSync !== 'false';
+    }
+  }
   if (dataset.requireImage !== undefined)
     config.requireImage = dataset.requireImage === 'true';
 

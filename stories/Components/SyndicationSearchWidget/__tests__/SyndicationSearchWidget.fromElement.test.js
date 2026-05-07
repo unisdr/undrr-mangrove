@@ -68,6 +68,34 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('facets');
   });
 
+  // enableHashSync is a tri-state: boolean true/false or the literal string
+  // 'auto'. The Drupal wrapper auto-disables hash sync when multiple
+  // widgets are mounted on the same page by checking
+  // `config.enableHashSync === 'auto'`; collapsing 'auto' to a boolean
+  // here would silently break that.
+  describe('data-enable-hash-sync', () => {
+    it('preserves the string "auto" as a string', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ 'enable-hash-sync': 'auto' })
+      );
+      expect(config.enableHashSync).toBe('auto');
+    });
+
+    it('maps the string "true" to boolean true', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ 'enable-hash-sync': 'true' })
+      );
+      expect(config.enableHashSync).toBe(true);
+    });
+
+    it('maps the string "false" to boolean false', () => {
+      const { config } = syndicationSearchWidgetFromElement(
+        makeContainer({ 'enable-hash-sync': 'false' })
+      );
+      expect(config.enableHashSync).toBe(false);
+    });
+  });
+
   describe('data-facets (union prop)', () => {
     it('extracts facets="sidebar"', () => {
       const { config } = syndicationSearchWidgetFromElement(
