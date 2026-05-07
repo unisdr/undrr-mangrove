@@ -88,33 +88,21 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
             <span className="mg-icon mg-icon-close" aria-hidden="true" />
           </button>
         )}
-
-        {/* Loading/stale indicator */}
-        {(isLoading || isStale) && (
-          <span
-            className="mg-search__loading"
-            aria-hidden="true"
-            title="Searching..."
-          />
-        )}
       </div>
 
+      {/* Loading state is conveyed by the widget-level progress strip and
+          aria-busy on the results region; the submit button keeps a stable
+          icon + label to avoid stacking multiple animated indicators. */}
       <button
         type="submit"
-        className={`mg-button mg-button-primary mg-search__submit ${isLoading || isStale ? 'mg-search__submit--loading' : ''}`}
-        aria-label={isLoading || isStale ? 'Searching...' : 'Submit search'}
+        className="mg-button mg-button-primary mg-search__submit"
+        aria-label="Submit search"
         aria-busy={isLoading || isStale}
       >
         <span className="mg-search__submit-icon" aria-hidden="true">
-          {isLoading || isStale ? (
-            <span className="mg-search__submit-spinner" />
-          ) : (
-            <span className="mg-icon mg-icon-search" />
-          )}
+          <span className="mg-icon mg-icon-search" />
         </span>
-        <span className="mg-search__submit-text">
-          {isLoading || isStale ? 'Searching' : 'Search'}
-        </span>
+        <span className="mg-search__submit-text">Search</span>
       </button>
     </form>
   );
