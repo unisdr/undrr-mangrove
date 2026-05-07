@@ -287,18 +287,6 @@ $search-input-padding-x: $mg-spacing-250;
     max-width: mg-rem(280);
   }
 
-  // Inline the Sort radios so the Sort fieldset is the same height as a
-  // facet dropdown rather than three stacked rows.
-  .mg-search__sort-option {
-    display: inline-flex;
-    margin-right: $mg-spacing-100;
-    margin-bottom: 0;
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
   @media (width <= 768px) {
     display: none;
   }
@@ -659,7 +647,7 @@ $search-input-padding-x: $mg-spacing-250;
   gap: $mg-spacing-100;
 }
 
-// Sort Options
+// Sort Options — rendered as a dropdown to match the facet selects.
 .mg-search__sort {
   padding: 0;
   margin: 0;
@@ -670,23 +658,6 @@ $search-input-padding-x: $mg-spacing-250;
     font-size: $mg-font-size-200;
     margin-bottom: $mg-spacing-50;
     color: $search-text;
-  }
-}
-
-.mg-search__sort-option {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-25;
-
-  input[type="radio"] {
-    margin: 0;
-  }
-
-  label {
-    font-size: $mg-font-size-200;
-    color: $search-text;
-    cursor: pointer;
   }
 }
 
