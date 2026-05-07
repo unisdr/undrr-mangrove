@@ -112,6 +112,163 @@ describe('SyndicationSearchWidget', () => {
         document.querySelector('.mg-search__sidebar')
       ).not.toBeInTheDocument();
     });
+
+    // facets layout — new union prop
+    it('renders sidebar when facets is "sidebar"', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
+      expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
+      expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+    });
+
+    it('renders horizontal strip when facets is "horizontal"', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'horizontal' }} />);
+      expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
+      expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+    });
+
+    it('hides facets entirely when facets is false', () => {
+      render(<SyndicationSearchWidget config={{ facets: false }} />);
+      expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+      expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+    });
+
+    it('treats facets prop as taking precedence over legacy showFacets', () => {
+      render(
+        <SyndicationSearchWidget
+          config={{ facets: 'horizontal', showFacets: false }}
+        />
+      );
+      // facets wins: horizontal strip renders even though showFacets is false
+      expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
+    });
+
+    // facetsTarget — AC2: portal facets to an external DOM region
+    it('renders facets into facetsTarget element via portal', () => {
+      const target = document.createElement('div');
+      target.id = 'external-facets';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ facets: 'sidebar', facetsTarget: '#external-facets' }}
+          />
+        );
+
+        // Portal renders facets inside the external target, not the sidebar
+        expect(target.querySelector('.mg-search__facets-external')).toBeInTheDocument();
+        expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    it('falls back to in-widget layout and warns when facetsTarget selector is not found', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ facets: 'sidebar', facetsTarget: '#does-not-exist' }}
+          />
+        );
+
+        // No portal element anywhere
+        expect(document.querySelector('.mg-search__facets-external')).not.toBeInTheDocument();
+        // In-widget sidebar still rendered
+        expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
+        // Warning logged once
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('facetsTarget selector "#does-not-exist"')
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('does not render the in-widget horizontal strip when facets are portaled', () => {
+      const target = document.createElement('div');
+      target.id = 'external-facets-h';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ facets: 'horizontal', facetsTarget: '#external-facets-h' }}
+          />
+        );
+
+        expect(target.querySelector('.mg-search__facets-external')).toBeInTheDocument();
+        expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    // searchTarget — search input portal (replaces the deleted standalone bar)
+    it('renders the search input into searchTarget element via portal', () => {
+      const target = document.createElement('div');
+      target.id = 'external-search';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#external-search' }}
+          />
+        );
+
+        // Search form ends up in the external target
+        expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
+        expect(target.querySelector('input[type="search"]')).toBeInTheDocument();
+        // ...and not as a direct child of the widget container
+        const widget = document.querySelector('[data-mg-search-widget]');
+        expect(widget.querySelector(':scope > form[role="search"]')).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    it('falls back to in-widget input and warns when searchTarget selector is not found', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#missing-search' }}
+          />
+        );
+
+        expect(screen.getByRole('search')).toBeInTheDocument();
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('searchTarget selector "#missing-search"')
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('keeps results in the widget container while the search input is portaled', () => {
+      const target = document.createElement('div');
+      target.id = 'external-search-2';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#external-search-2' }}
+          />
+        );
+
+        const widget = document.querySelector('[data-mg-search-widget]');
+        // Input portaled out
+        expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
+        // Results stay in the widget container
+        expect(widget.querySelector('.mg-search__main')).toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
   });
 
   describe('search input', () => {
@@ -134,6 +291,23 @@ describe('SyndicationSearchWidget', () => {
       fireEvent.click(clearButton);
 
       expect(input).toHaveValue('');
+    });
+
+    // Regression: on a /search#query=news load, useHashSync dispatches
+    // setQuery('news'), but the deferredQuery effect was firing on first
+    // render with deferredQuery='' and stomping the hash-loaded value before
+    // INITIALIZE could preserve it. The effect now skips its first render.
+    it('does not stomp the URL hash query on initial mount', async () => {
+      window.history.pushState({}, '', '/search#query=news');
+
+      render(<SyndicationSearchWidget config={{ enableHashSync: true }} />);
+
+      const input = screen.getByRole('searchbox');
+      await waitFor(() => {
+        expect(input).toHaveValue('news');
+      });
+
+      window.history.pushState({}, '', '/');
     });
   });
 

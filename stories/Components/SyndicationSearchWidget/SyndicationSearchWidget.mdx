@@ -1,5 +1,10 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
 import * as SyndicationSearchWidgetStories from './SyndicationSearchWidget.stories';
+import * as LayoutsStories from './SyndicationSearchWidget.Layouts.stories';
+import * as DisplayModesStories from './SyndicationSearchWidget.DisplayModes.stories';
+import * as FiltersStories from './SyndicationSearchWidget.Filters.stories';
+import * as IntegrationsStories from './SyndicationSearchWidget.Integrations.stories';
+import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
 
 <Meta of={SyndicationSearchWidgetStories} />
 
@@ -41,7 +46,7 @@ A search widget initialized with a pre-filled search query.
 
 A search widget with the facets sidebar hidden.
 
-<Canvas of={SyndicationSearchWidgetStories.HiddenFacets} meta={SyndicationSearchWidgetStories} />
+<Canvas of={LayoutsStories.HiddenFacets} meta={LayoutsStories} />
 
 ## Minimal configuration
 
@@ -53,25 +58,25 @@ Search-only mode without result counts, timers, or filters.
 
 Shows search performance metrics (score, interestingness, longevity) for debugging.
 
-<Canvas of={SyndicationSearchWidgetStories.DebugMetrics} meta={SyndicationSearchWidgetStories} />
+<Canvas of={TogglesStories.DebugMetrics} meta={TogglesStories} />
 
 ## Card display
 
 Renders search results as vertical cards in a responsive grid. `gridColumns` controls the grid column count (2-6); if not set, it defaults to `resultsPerPage`. Drupal image styles are automatically rewritten to `landscape_16_9` (16:9) to match the vertical card aspect ratio.
 
-<Canvas of={SyndicationSearchWidgetStories.CardDisplay} meta={SyndicationSearchWidgetStories} />
+<Canvas of={DisplayModesStories.CardDisplay} meta={DisplayModesStories} />
 
 ## Card book display
 
 Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-card__book` classes. Drupal image styles are automatically rewritten to `por` (3:4 portrait) to match the book card aspect ratio.
 
-<Canvas of={SyndicationSearchWidgetStories.CardBookDisplay} meta={SyndicationSearchWidgetStories} />
+<Canvas of={DisplayModesStories.CardBookDisplay} meta={DisplayModesStories} />
 
 ## Hidden teaser fields
 
 Hide specific fields from pre-rendered teaser HTML using `visibleTeaserFields`. Set a field key to `false` to hide it; `null` (default) shows all fields. Uses CSS modifier classes for zero JS overhead.
 
-<Canvas of={SyndicationSearchWidgetStories.HiddenTeaserFields} meta={SyndicationSearchWidgetStories} />
+<Canvas of={DisplayModesStories.HiddenTeaserFields} meta={DisplayModesStories} />
 
 **Toggleable fields:** `image`, `contentType`, `publicationType`, `date`, `siteName`, `summary`, `organization`. Title is intentionally not toggleable.
 
@@ -88,7 +93,7 @@ customFilters: [
 ]
 ```
 
-<Canvas of={SyndicationSearchWidgetStories.CustomFilters} meta={SyndicationSearchWidgetStories} />
+<Canvas of={FiltersStories.CustomFilters} meta={FiltersStories} />
 
 **Common filter patterns:**
 - `type:news` - Restrict to content type
@@ -128,7 +133,7 @@ customFacets: [
 ]
 ```
 
-<Canvas of={SyndicationSearchWidgetStories.CustomFacets} meta={SyndicationSearchWidgetStories} />
+<Canvas of={FiltersStories.CustomFacets} meta={FiltersStories} />
 
 **Structure:**
 ```json
@@ -183,7 +188,7 @@ customFacets: [
 ]
 ```
 
-<Canvas of={SyndicationSearchWidgetStories.CustomFiltersAndFacets} meta={SyndicationSearchWidgetStories} />
+<Canvas of={FiltersStories.CustomFiltersAndFacets} meta={FiltersStories} />
 
 ## Allowed types
 
@@ -197,7 +202,7 @@ allowedTypes: {
 }
 ```
 
-<Canvas of={SyndicationSearchWidgetStories.AllowedTypes} meta={SyndicationSearchWidgetStories} />
+<Canvas of={FiltersStories.AllowedTypes} meta={FiltersStories} />
 
 **Available type IDs:** `news`, `event`, `publication`, `landing`, `vacancy`, `resource`, `collections`, `blog`, `terminology`, `organization`, `national_platform`
 
@@ -207,41 +212,160 @@ allowedTypes: {
 
 Demonstrates mixed search results containing both content nodes and taxonomy terms (Hazard, Country, Theme). Taxonomy terms display differently: vocabulary name as type badge, no date, defaults to preventionweb.net.
 
-<Canvas of={SyndicationSearchWidgetStories.TaxonomyTermResults} meta={SyndicationSearchWidgetStories} />
+<Canvas of={IntegrationsStories.TaxonomyTermResults} meta={IntegrationsStories} />
 
 ## Custom endpoint
 
 Override `searchEndpoint` to point at a different Elasticsearch proxy (DDEV, staging, etc.).
 
-<Canvas of={SyndicationSearchWidgetStories.CustomEndpoint} meta={SyndicationSearchWidgetStories} />
+<Canvas of={IntegrationsStories.CustomEndpoint} meta={IntegrationsStories} />
 
 ## Syndicated cards
 
 A hardwired topic query rendered as a content block with no search chrome. Uses `defaultQuery` to seed a topic, `requireImage` to ensure every card has a visual, and `visibleTeaserFields` to strip the content type badge and teaser text for a clean image + title + date card. Adjust `resultsPerPage` and `gridColumns` for different card counts.
 
-<Canvas of={SyndicationSearchWidgetStories.SyndicatedCards} meta={SyndicationSearchWidgetStories} />
+<Canvas of={IntegrationsStories.SyndicatedCards} meta={IntegrationsStories} />
 
-## Query syntax
+## Query syntax reference
 
-Use this story to test search queries and explore the supported syntax, which includes:
+The search input uses Elasticsearch `query_string` syntax, forwarded directly to the `/search-endpoint` proxy. Drop any of the queries below into the search box on the [Default story](?path=/story/components-syndicated-search--default) to verify behaviour, or use them as a reference when writing `customFilters`.
 
-- Basic queries and phrase matching
-- Wildcards and fuzzy search
-- Boolean operators (AND, OR, NOT)
-- Field-specific searches
-- Date ranges and boosting
+### Basic queries
 
-<Canvas of={SyndicationSearchWidgetStories.QuerySyntax} meta={SyndicationSearchWidgetStories} />
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `climate change` | Simple multi-word | Matches docs with both words (AND), stop words removed, fuzziness added |
+| `disaster risk reduction` | Common phrase | Stop words "the", "of" etc. removed for consistent matching |
+| `The Draft Articles on the Protection` | With stop words | Same results as "Draft Articles Protection" |
 
-See the story's Docs tab for a comprehensive syntax reference.
+### Exact phrase matching
 
-> **Implementation note (for contributors):** The search input uses Elasticsearch `query_string` syntax, forwarded directly to the `/search-endpoint` proxy.
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `"climate change"` | Exact phrase | Matches exact phrase, no fuzziness, no stop word removal |
+| `"Draft Articles"` | Exact phrase | Finds documents with "Draft Articles" as consecutive words |
+| `"disaster risk reduction"` | Exact phrase | Stricter matching than without quotes |
 
-## Static mockup
+### Wildcards and fuzzy
 
-A static HTML mockup for CSS testing without API calls.
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `ris?` | Single char wildcard | Matches "risk", "rise", etc. |
+| `red*` | Multi-char wildcard | Matches "reduction", "reduce", "red", etc. |
+| `evnt~1` | Fuzzy (edit distance 1) | Matches "event" (typo tolerance) |
+| `earthquke~2` | Fuzzy (edit distance 2) | Matches "earthquake" |
 
-<Canvas of={SyndicationSearchWidgetStories.StaticMockup} meta={SyndicationSearchWidgetStories} />
+### Boolean operators
+
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `flood AND drought` | AND operator | Both terms required |
+| `flood OR drought` | OR operator | Either term matches |
+| `flood NOT tsunami` | NOT operator | Excludes tsunami results |
+| `-"Red Cross"` | Exclude phrase | Excludes exact phrase |
+| `(UNDRR AND "New York")` | Grouped | Parentheses for grouping |
+
+### Field-specific searches
+
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `title:sendai` | Search title only | Matches "sendai" in title field |
+| `_language:en` | Language filter | English content only |
+| `type:landing` | Content type | Landing pages only |
+| `type:(news OR publication)` | Multiple types | News or publications |
+
+### Date ranges
+
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `published_at:[2023-01-01 TO 2023-12-31]` | Date range | Content from 2023 |
+| `published_at:[2020-01-01 TO *]` | Open range | Content from 2020 onwards |
+| `published_at:[* TO 2022-12-31]` | Open range | Content before 2023 |
+
+### Boosting
+
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `history^1.1 review` | Term boosting | "history" weighted 1.1x higher |
+| `title:sendai^2 body:sendai` | Field boosting | Title matches weighted 2x |
+
+### Edge cases verified by the query builder
+
+| Query | Description | Expected behaviour |
+|-------|-------------|--------------------|
+| `a` | Too short | Should not trigger search (min 3 chars) |
+| `   spaces   ` | Extra whitespace | Trimmed and searched as `spaces` |
+| `:` | Special char only | Handled gracefully |
+| `""` | Empty quotes | Handled gracefully |
+
+### Query sanitisation (auto-fixed)
+
+These malformed queries are automatically sanitised to prevent Elasticsearch errors:
+
+| Query | Problem | Auto-corrected to |
+|-------|---------|-------------------|
+| `"local` | Unclosed quote | `local` |
+| `local OR ` | Trailing operator | `local` |
+| `AND climate` | Leading operator | `climate` |
+| `flood OR` | Trailing OR | `flood` |
+| `AND` | Standalone operator | (empty — no search) |
+| `climate-` | Trailing special char | `climate` |
+
+## Static markup reference
+
+For CSS testing without making API calls, here is the canonical HTML the widget produces. Useful for stylesheet work, theme integration, and quick visual checks.
+
+```html
+<div class="mg-search-widget">
+  <form class="mg-search__form" role="search">
+    <div class="mg-search__input-wrapper">
+      <input type="search" class="mg-search__input form-control"
+             placeholder="Search..." />
+    </div>
+    <button type="submit" class="mg-button mg-button-primary mg-search__submit">
+      <span class="mg-search__submit-icon" aria-hidden="true">
+        <span class="mg-icon mg-icon-search"></span>
+      </span>
+      <span class="mg-search__submit-text">Search</span>
+    </button>
+  </form>
+
+  <div class="mg-search__active-filters">
+    <span class="mg-search__active-filters-label">Filtered by:</span>
+    <ul class="mg-search__active-filters-list">
+      <li>
+        <button class="mg-search__filter-chip">
+          <span>News</span>
+          <span class="mg-search__filter-chip-remove">&times;</span>
+        </button>
+      </li>
+    </ul>
+    <button class="mg-search__clear-all">Clear all filters</button>
+  </div>
+
+  <div class="mg-search__results">
+    <p class="mg-search__results-count">
+      Showing <strong>2</strong> of <strong>1,234</strong> results
+      <span class="mg-search__results-time">(42ms)</span>
+    </p>
+
+    <div class="mg-search__results-list">
+      <article class="mg-search__result">
+        <div class="mg-search__result-content">
+          <div class="mg-search__result-text">
+            <h4 class="mg-search__result-title"><a href="#">Result title</a></h4>
+            <div class="mg-search__result-meta">
+              <span class="mg-search__result-type">publication</span>
+              <span class="mg-search__result-date">2024-06-15</span>
+            </div>
+            <p class="mg-search__result-snippet">Result teaser text.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+```
 
 ## Usage
 
@@ -424,6 +548,15 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.3.0** — 2026-05-07 ([mangrove#981](https://github.com/unisdr/undrr-mangrove/issues/981)):
+  - New `facets` config prop (`false | 'sidebar' | 'horizontal'`, default `'sidebar'`) replaces the boolean `showFacets` for layout control; `'horizontal'` renders the facets as a strip above the results region instead of a sidebar. Legacy `showFacets: false` continues to work as a backwards-compatible alias for `facets: false`. Drupal sites can pass the layout via `data-facets="horizontal"`
+  - New `facetsTarget` config prop (CSS selector) renders the facets UI into an external DOM region via React portal — letting consuming pages place facets in a left rail or other region outside the widget's own container while results render where the widget is mounted. Search context spans the portal so facets and results stay in sync without extra wiring. Drupal sites pass the selector via `data-facets-target`. If the selector doesn't match an element at mount time, the widget falls back to the in-widget `facets` layout and logs a console warning
+  - New `searchTarget` config prop (CSS selector) renders the search input into an external DOM region via React portal — mirrors `facetsTarget`. Used together they let consumers freely arrange search input / facets / results across page regions while keeping a single widget instance and shared `SearchContext`. Drupal sites pass the selector via `data-search-target`. Falls back to in-widget rendering (with a console warning) if the target element is not present at mount time. For **cross-page** hero patterns the recommended approach is a plain HTML `<form action="/search">` submitting to the results page with a `#query=` fragment
+  - Storybook stories regrouped under `Components/Syndicated search/{Widget,Bar}` and split into category files (`Layouts`, `Display modes`, `Filters`, `Integrations`, `Toggles`) so the sidebar reflects the family rather than a flat list of 26 entries. Pure reorganisation — no story content removed, just moved. The `QuerySyntax` and `StaticMockup` reference stories are now reference sections in this MDX page
+  - `SearchForm` submit and clear buttons now use the standard `mg-button mg-button-primary` and `mg-icon-search` / `mg-icon-close` primitives instead of a bespoke variant with an inline Lucide SVG; `.mg-search__input` aligns to the same padding, border-width and border-radius tokens as `mg-button` so the input and submit button share the same natural height and corner radius; clear button is a 20×20 hit target with darker default color and brand-color hover
+  - Removed the in-input loading spinner (`.mg-search__loading`) and the submit-button spinner (`.mg-search__submit-spinner` / `.mg-search__submit--loading`) so loading state is conveyed by a single indicator — the widget-level progress strip plus `aria-busy` on the results region; the submit button now keeps a stable "Search" label and search icon while a search runs
+  - Fixed URL hash query being stomped on initial mount — the `deferredQuery` effect was unconditionally dispatching `setQuery('')` on first render, racing `useHashSync`'s hash-loaded query before INITIALIZE could preserve it; the effect now skips its first render
+  - Fixed `enableHashSync: 'true'` (string) silently disabling hash sync — Drupal data attributes always arrive as strings, but the hook used a strict `=== true` comparison; now accepts both boolean `true` and string `'true'`
 - **1.2.6** — 2026-05-05: Fixed incorrect CSS selector for `contentType` teaser field — `.mg-card__tag` is not a BEM class; corrected to `.mg-card__label` in `TEASER_FIELDS`, the hide rule in `syndication-search-widget.scss`, and the story comment
 - **1.2.5** — 2026-05-04 ([web-backlog#1479](https://gitlab.com/undrr/web-backlog/-/work_items/1479)): PW publication subtypes — `CONTENT_SUBTYPES.publication` expanded to support three independent subtype fields (`field_undrr_publication_types`, `field_publication_type`, `field_irp_publication_subtype`); fixed silent aggregation failure caused by incorrect field key `undrr_publication_type` (missing `field_` prefix and plural suffix); all array-iteration sites normalised for backwards compatibility with single-config subtypes on other content types
 - **1.2.4** — 2026-04-09 ([web-backlog#919](https://github.com/unisdr/undrr-mangrove/issues/919)): `fromElement` now parses `data-custom-filters`, `data-custom-facets`, and `data-visible-teaser-fields` as JSON, consistent with `defaultFilters` and `allowedTypes`
