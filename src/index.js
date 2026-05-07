@@ -13,7 +13,6 @@ export { default as MapComponent } from '../stories/Components/Map/MapComponent'
 export { default as QuoteHighlight } from '../stories/Components/QuoteHighlight/QuoteHighlight';
 export { default as Fetcher } from '../stories/Components/Fetcher/Fetcher';
 export { default as SyndicationSearchWidget } from '../stories/Components/SyndicationSearchWidget/SyndicationSearchWidget';
-export { default as SyndicationSearchBar } from '../stories/Components/SyndicationSearchWidget/SyndicationSearchBar';
 export { Gallery } from '../stories/Components/Gallery/Gallery';
 export { default as IconCard } from '../stories/Components/Cards/IconCard/IconCard';
 export { default as StatsCard } from '../stories/Components/Cards/StatsCard/StatsCard';

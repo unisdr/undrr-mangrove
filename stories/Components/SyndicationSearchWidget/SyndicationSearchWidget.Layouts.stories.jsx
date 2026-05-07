@@ -76,6 +76,59 @@ On viewports under 768px the strip is hidden and the mobile filter drawer takes 
 };
 
 /**
+ * Search input rendered in an external DOM region via portal.
+ *
+ * Common "hero search" pattern: input lives in a banner region, results
+ * render where the widget is mounted. Same React tree spans the portal,
+ * so input state and results stay in sync without any URL-hash bridge.
+ */
+export const ExternalSearchRegion = {
+  args: {
+    config: {
+      ...defaultConfig,
+      searchTarget: '#mg-story-hero-search',
+    },
+  },
+  render: args => (
+    <div>
+      <div
+        id="mg-story-hero-search"
+        style={{
+          padding: '2rem',
+          background: 'linear-gradient(135deg, #003366, #00558a)',
+          borderRadius: '4px',
+          marginBottom: '1.5rem',
+        }}
+      >
+        {/* SearchForm portals into here */}
+      </div>
+      <SyndicationSearchWidget {...args} />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Renders the search input into a DOM element outside the widget's own container, identified by a CSS selector. Useful for hero / banner patterns where the input sits in a styled region above the page while results render lower down.
+
+\`\`\`js
+config: {
+  searchTarget: '#hero-search',
+}
+\`\`\`
+
+The widget's React tree spans the portal so \`SearchContext\` still flows — typing in the portaled input updates the deferred query and re-runs the search live, no URL-hash dance required. Drupal sites pass the target via \`data-search-target\`.
+
+If the target element is not present at mount time the widget falls back to rendering the input in-place and logs a single console warning.
+
+For **cross-page** hero patterns (input on a landing page, results on \`/search\`), use a plain HTML form posting to the results URL with a \`#query=\` fragment instead — \`searchTarget\` only works within one page.
+        `,
+      },
+    },
+  },
+};
+
+/**
  * Facets rendered in an external DOM region via portal.
  */
 export const ExternalFacetsRegion = {

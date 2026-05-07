@@ -98,6 +98,13 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config.facetsTarget).toBe('#left-rail');
   });
 
+  it('extracts searchTarget selector', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'search-target': '#hero-search' })
+    );
+    expect(config.searchTarget).toBe('#hero-search');
+  });
+
   it('parses JSON defaultFilters', () => {
     const filters = [{ key: '_language', value: 'fr' }];
     const { config } = syndicationSearchWidgetFromElement(

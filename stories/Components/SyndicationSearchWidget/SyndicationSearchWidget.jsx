@@ -90,6 +90,20 @@ SyndicationSearchWidget.propTypes = {
      * layout chosen by `facets` and a warning is logged.
      */
     facetsTarget: PropTypes.string,
+    /**
+     * CSS selector for a DOM element outside the widget where the search
+     * input should be rendered (via React portal). Lets a consuming page
+     * place a "hero" search input in a banner region while results render
+     * where the widget is mounted. The same React tree spans the portal,
+     * so the input, facets, and results all share `SearchContext` — no
+     * separate component, no URL-hash bridge needed for the same-page
+     * case. If the target element is not present at mount time the
+     * widget falls back to rendering the input in-place and logs a
+     * console warning. For cross-page hero patterns (input on landing,
+     * results on `/search`), use a plain HTML form posting to the
+     * results page with a `#query=...` fragment instead.
+     */
+    searchTarget: PropTypes.string,
     /** Whether to display active filter chips above results. */
     showActiveFilters: PropTypes.bool,
     /** Whether to display search performance metrics. */
@@ -184,9 +198,10 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
-  const { showActiveFilters, showSearchMetrics, facetsTarget } = config;
+  const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } = config;
   const facetsLayout = resolveFacetsLayout(config);
   const facetsActive = facetsLayout !== false;
+  const showSearchBox = config.showSearchBox !== false;
   const { isLoading } = state;
 
   // Resolve external facets target (AC2: facets in a separate DOM region).
@@ -214,6 +229,29 @@ function SyndicationSearchWidgetInner() {
 
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
+  // Resolve external search-input target (AC3: search input rendered in a
+  // separate DOM region — typically a hero/banner region while results
+  // render lower on the page). Same pattern as facetsTarget.
+  const [searchTargetEl, setSearchTargetEl] = useState(null);
+  useEffect(() => {
+    if (!showSearchBox || !searchTarget || typeof document === 'undefined') {
+      setSearchTargetEl(null);
+      return;
+    }
+    const el = document.querySelector(searchTarget);
+    if (el) {
+      setSearchTargetEl(el);
+    } else {
+      setSearchTargetEl(null);
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[SyndicationSearchWidget] searchTarget selector "${searchTarget}" did not match any element; falling back to in-widget search input.`
+      );
+    }
+  }, [showSearchBox, searchTarget]);
+
+  const searchPortaled = showSearchBox && searchTargetEl !== null;
+
   // Count active filters for mobile button badge
   const activeFilterCount = countActiveFilters(state);
 
@@ -230,8 +268,9 @@ function SyndicationSearchWidgetInner() {
         </div>
       )}
 
-      {/* Search form */}
-      {config.showSearchBox !== false && (
+      {/* Search form — rendered in-widget unless searchTarget is portaling
+          it elsewhere on the page. */}
+      {showSearchBox && !searchPortaled && (
         <SearchForm
           value={inputValue}
           onChange={setInputValue}
@@ -287,6 +326,24 @@ function SyndicationSearchWidgetInner() {
           </aside>
         )}
       </div>
+
+      {/* External search-input portal — when searchTarget resolves to a
+          DOM node, render the SearchForm there instead of inside the
+          widget. The React tree spans the portal so SearchContext (and
+          therefore live input state) still flows. */}
+      {searchPortaled
+        && createPortal(
+          <div className="mg-search__form-external">
+            <SearchForm
+              value={inputValue}
+              onChange={setInputValue}
+              isStale={isPending}
+              isLoading={isLoading}
+              widgetId={widgetId}
+            />
+          </div>,
+          searchTargetEl
+        )}
 
       {/* External facets portal — when facetsTarget resolves to a DOM node,
           render the facets there instead of inside the widget. The React

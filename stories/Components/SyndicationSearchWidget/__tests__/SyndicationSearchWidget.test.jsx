@@ -204,6 +204,71 @@ describe('SyndicationSearchWidget', () => {
         target.remove();
       }
     });
+
+    // searchTarget — search input portal (replaces the deleted standalone bar)
+    it('renders the search input into searchTarget element via portal', () => {
+      const target = document.createElement('div');
+      target.id = 'external-search';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#external-search' }}
+          />
+        );
+
+        // Search form ends up in the external target
+        expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
+        expect(target.querySelector('input[type="search"]')).toBeInTheDocument();
+        // ...and not as a direct child of the widget container
+        const widget = document.querySelector('[data-mg-search-widget]');
+        expect(widget.querySelector(':scope > form[role="search"]')).not.toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
+
+    it('falls back to in-widget input and warns when searchTarget selector is not found', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#missing-search' }}
+          />
+        );
+
+        expect(screen.getByRole('search')).toBeInTheDocument();
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('searchTarget selector "#missing-search"')
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('keeps results in the widget container while the search input is portaled', () => {
+      const target = document.createElement('div');
+      target.id = 'external-search-2';
+      document.body.appendChild(target);
+
+      try {
+        render(
+          <SyndicationSearchWidget
+            config={{ searchTarget: '#external-search-2' }}
+          />
+        );
+
+        const widget = document.querySelector('[data-mg-search-widget]');
+        // Input portaled out
+        expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
+        // Results stay in the widget container
+        expect(widget.querySelector('.mg-search__main')).toBeInTheDocument();
+      } finally {
+        target.remove();
+      }
+    });
   });
 
   describe('search input', () => {

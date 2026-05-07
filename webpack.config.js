@@ -94,8 +94,6 @@ export default [
       Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
         './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.hydrate.js',
-      SyndicationSearchBar:
-        './stories/Components/SyndicationSearchWidget/SyndicationSearchBar.hydrate.js',
       IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',
       Gallery: './stories/Components/Gallery/Gallery.hydrate.js',
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
