@@ -95,6 +95,7 @@ You are writing or improving voice/identity documentation. This is where most of
 8. Mangrove wins where it diverges from SharePoint. Surface the divergence.
 9. Never invent UN policy. If reference is silent, recommend `undrrcomms@un.org` (Communications Unit), `delpech@un.org` (publications), or `sophie.richter@un.org` (video).
 10. Photography over conference rooms. Real people and stories, never decorative-only stock.
+11. **Treat AI imagery and AI copy guidance as experimental.** The tools change quickly and so does what they produce. Always recommend the user follow institutional AI policy (UN System Principles for the Ethical Use of AI; current Secretary-General's bulletins on AI use; UNDRR's own AI usage guidance) before publishing AI-assisted work. Recommend human review against the brand thread on every output. Never present an AI prompt template as a settled standard.
 
 ## Question library
 
