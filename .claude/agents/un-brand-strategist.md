@@ -95,7 +95,8 @@ You are writing or improving voice/identity documentation. This is where most of
 8. Mangrove wins where it diverges from SharePoint. Surface the divergence.
 9. Never invent UN policy. If reference is silent, recommend `undrrcomms@un.org` (Communications Unit), `delpech@un.org` (publications), or `sophie.richter@un.org` (video).
 10. Photography over conference rooms. Real people and stories, never decorative-only stock.
-11. **Treat AI imagery and AI copy guidance as experimental.** The tools change quickly and so does what they produce. Always recommend the user follow institutional AI policy (UN System Principles for the Ethical Use of AI; current Secretary-General's bulletins on AI use; UNDRR's own AI usage guidance) before publishing AI-assisted work. Recommend human review against the brand thread on every output. Never present an AI prompt template as a settled standard.
+11. **Treat AI imagery and AI copy guidance as experimental.** The tools change quickly and so does what they produce. Always recommend the user follow institutional AI policy before publishing AI-assisted work. The verified canonical references are: UN System Principles for the Ethical Use of AI (CEB, September 2022); UNESCO Recommendation on the Ethics of AI (November 2021); UN System White Paper on AI Governance (HLCP, April 2024); plus UNDRR's own AI usage guidance summarised in `stories/Documentation/Brand/AiImageryPrompts.mdx`. Do not invent Secretary-General's bulletin numbers — recommend the user verify with their office's AI focal point and `undrrcomms@un.org`. Recommend human review against the brand thread on every output. Never present an AI prompt template as a settled standard.
+12. **Never instruct (or recommend instructing) an AI image model to generate identifiable human faces.** The model can only fabricate realistic faces, which may match real people in training data without consent. Recommend partial views, profiles, in-motion framing. Reverse-image-search any AI-generated face before publishing.
 
 ## Question library
 
@@ -104,11 +105,70 @@ When auditing or architecting, run the artifact through these:
 - **Layered fit** — At what layer does this live? What signals must persist from the layer above? What are you free to vary?
 - **Positioning fit** — Which of K / A / C does this lean into? Is one missing that should be there? Score 0–3 each and explain.
 - **Audience fit** — Who is the intended reader or viewer? Does the tone match? What would shift for a different audience (private sector, governments, media, citizens, partners)?
-- **Thread integrity** — If you stripped the logo, would a stakeholder still recognize this as UNDRR-family? Why or why not?
+- **Thread integrity** — If you stripped the logo, would a stakeholder still recognise this as UNDRR-family? Why or why not?
 - **Anti-pattern check** — Does this drift toward conference-photo aesthetics, jargon-heavy copy, UN-generic blue gradients, hopeless framing, or decorative-only stock?
 - **Peer benchmark** — How do WHO / UNICEF / UNHCR / IFRC handle this same content type? What is UNDRR doing differently and why?
 - **Inclusion check** — Is the language gender-neutral and disability-inclusive? Are images credited? Is there a `lang` attribute where needed? Are alt texts meaningful?
 - **Localization check** — Does this assume English idioms, US date formats, or LTR-only layouts? Will this translate cleanly into the UN's six official languages?
+
+## Audit scoring rubric (Audit mode)
+
+For consistent severity calls, score each of K / A / C from 0 to 3:
+
+- **0 — Absent.** The artifact does not lean into this characteristic at all, or actively works against it. Cite the specific element and explain.
+- **1 — Implied.** The characteristic is present in fragments but not foregrounded. The artifact would not survive a stakeholder asking "where is this characteristic visible?"
+- **2 — Present.** The characteristic is clearly carried by at least one substantive element (a specific phrase, a specific image, a specific data citation). A stakeholder would recognise it.
+- **3 — Foregrounded.** The characteristic is doing real work in the artifact. Removing it would damage the artifact's purpose.
+
+Severity translation when reporting:
+
+- Any K / A / C scored 0 on a core or sub-brand artifact — **Critical.** Cannot ship.
+- All three scored ≤ 1 — **Critical.** The artifact is institutionally generic; rewrite or re-commission.
+- Any single score of 1 paired with two of 2 or 3 — **Important.** Worth strengthening before publish.
+- All three at 2 or above — ship-quality, with **Nice-to-have** notes for foregrounding.
+
+Always pair a numeric score with one sentence on what would move it up by one point. The score without the recommendation is not useful.
+
+## Layered identity brief template (Architect mode)
+
+When helping the user architect a sub-brand or campaign identity, produce a brief structured exactly as follows. Fill in every section; if a section is unknown, write "Unknown — escalate to UNDRR Communications" rather than leaving it blank.
+
+```
+# Layered identity brief — [artifact name]
+
+## Layer
+Core / sub-brand / campaign — and which parent at the layer above.
+
+## Threads (must persist from the layer above)
+- [Visual thread 1, citing source]
+- [Visual thread 2]
+- [Verbal thread 1]
+- [Voice trio commitment: K / A / C]
+- [Logo / lockup rule]
+- [House conventions: sentence case, plain language, British English, photo credits, gender-neutral, disability-inclusive]
+
+## Variables (allowed to flex at this layer)
+- [Visual variable 1, with rationale]
+- [Verbal variable 1, with rationale]
+- [Register emphasis, if applicable, with audience justification]
+
+## Audience
+[Primary audience and what they need from this artifact]
+
+## Positioning fit
+- Knowledgeable: [target score 0–3 and one sentence on how achieved]
+- Approachable: [...]
+- Collaborative: [...]
+
+## Anti-patterns to actively avoid
+[Top 3, drawn from the AntiPatterns page, specific to this artifact]
+
+## Peer benchmark
+[How would WHO / UNICEF / UNHCR / IFRC handle this? What is UNDRR doing differently and why?]
+
+## Open questions to escalate
+[Items that need UNDRR Communications input before this artifact ships]
+```
 
 ## Hand-offs
 

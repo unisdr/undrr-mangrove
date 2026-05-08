@@ -25,16 +25,38 @@ Generative image and language models produce on-brand work only when the prompt 
     Use of AI tools at UNDRR must follow institutional guidance:
   </p>
   <ul>
-    <li><strong>UN System Principles for the Ethical Use of Artificial Intelligence</strong> (CEB-endorsed, 2022) and any subsequent UN guidance issued by your office.</li>
-    <li><strong>Secretary-General's Bulletin and policy memos on the institutional use of AI</strong> — confirm the current version with the UN Office of Information and Communications Technology and your direct supervisor before publishing AI-assisted work.</li>
-    <li><strong>UNDRR's own AI usage and imagery guidance</strong>, including the constraints on this page (no AI imagery for named people or specific real events; provenance label on publication; human review against the brand thread; positive framing of prevention).</li>
+    <li>
+      <strong>UN System Principles for the Ethical Use of Artificial Intelligence</strong> (CEB-endorsed, September 2022) — <a href="https://unsceb.org/principles-ethical-use-artificial-intelligence-united-nations-system">unsceb.org/principles-ethical-use-artificial-intelligence-united-nations-system</a>
+    </li>
+    <li>
+      <strong>UNESCO Recommendation on the Ethics of Artificial Intelligence</strong> (November 2021) — <a href="https://www.unesco.org/en/artificial-intelligence/recommendation-ethics">unesco.org/en/artificial-intelligence/recommendation-ethics</a>
+    </li>
+    <li>
+      <strong>UN System White Paper on AI Governance</strong> (HLCP, April 2024) — <a href="https://unsceb.org/united-nations-system-white-paper-ai-governance">unsceb.org/united-nations-system-white-paper-ai-governance</a>
+    </li>
+    <li>
+      <strong>UNDRR's own AI usage and imagery guidance</strong>, including the constraints on this page (no AI imagery for named people or specific real events; never instruct a model to generate identifiable faces; provenance label on publication; human review against the brand thread; positive framing of prevention).
+    </li>
   </ul>
   <p>
-    If your office has not yet issued local AI guidance, contact UNDRR Communications (<code>undrrcomms@un.org</code>) before publishing.
+    Confirm any subsequent UN guidance with UNDRR Communications (<code>undrrcomms@un.org</code>) and your office's local AI focal point before publishing AI-assisted work.
   </p>
 </HighlightBox>
 
-> **Important:** AI-generated images are not a substitute for credited photography of real people. Use AI imagery for **editorial illustration, infographic backgrounds, hero textures, and concept exploration** — not for representing real communities or specific events. When you publish AI-generated imagery, label it as such. UNDRR's editorial standard requires credit and source for every image; AI-generated work must surface its provenance the same way.
+<HighlightBox variant="primary">
+  <strong>The standing rules — read before any prompt below.</strong>
+  <ol>
+    <li><strong>Never use AI imagery for named people or specific real events.</strong> Use AI for editorial illustration, conceptual diagrams, infographic backgrounds, and concept exploration only. For real communities and specific events, commission credited photography.</li>
+    <li><strong>Never instruct a model to generate identifiable human faces.</strong> Models cannot generate "named individuals" — they fabricate realistic faces that may match real people in their training data, without consent. Treat any clearly recognisable face in an AI output as a fail and regenerate. Where people appear, ask for partial views — faces turned, in profile, obscured by working posture, or at a distance.</li>
+    <li><strong>Never generate identifiable images of children.</strong> For child-focused topics, use illustration with no human figures, or commission credited photography with documented consent.</li>
+    <li><strong>Specify a named country, not a region.</strong> "Pacific Islands" or "sub-Saharan Africa" produce cultural pastiche. Pick one named place per generation (for example, "Vanuatu, Efate Island," "Kenya, Mombasa County") and a specific built-environment cue.</li>
+    <li><strong>Disability inclusion is required, not optional, in every people-inclusive prompt.</strong> The Sendai Framework explicitly addresses disability-inclusive DRR. Ask for at least one disabled person as a participant (not a recipient) — for example, a wheelchair user among community planners, a sign language interpreter at a briefing, a participant using a white cane near an early-warning siren.</li>
+    <li><strong>Decolonial framing.</strong> Avoid "outside expert / local recipient" prompt structures. Frame people as peers with named professional roles. The unmarked party in a prompt is the one most likely to default to white/male in model output.</li>
+    <li><strong>Diversity must be specified, not implied.</strong> "Diverse" alone is a weak token. Name what you want: skin-tone range including dark brown, varied ages including older adults, varied body types, varied hair textures including textured and curly hair worn naturally.</li>
+    <li><strong>Reverse-image-search every AI-generated face before publishing.</strong> If results return a real person, regenerate.</li>
+    <li><strong>Label AI-generated imagery on publication.</strong> UNDRR's editorial standard requires credit and source for every image. Generative work surfaces its provenance the same way. Where the platform supports it, attach <a href="https://contentcredentials.org">C2PA Content Credentials</a> (cryptographic provenance manifest) so downstream readers can verify origin and edits.</li>
+  </ol>
+</HighlightBox>
 
 ---
 
@@ -54,29 +76,31 @@ After generating, run the result through the <LinkTo kind="brand-anti-patterns" 
 
 Use these prompts to explore visual direction. Real publication still requires credited photography per the SharePoint Photography & Icons rule.
 
+> **Substitute the bracketed values for each generation.** The named place and built-environment cue are intentional — without them models default to cultural pastiche.
+
 ### Hero — community-led prevention
 
-> Documentary photograph of a coastal community planting mangrove seedlings in late afternoon light, Pacific Islands setting, named individuals visible (community leaders, women, families), real working clothing, candid composition, 16:6 aspect ratio for hero banner, focal subject left of centre, hopeful but grounded mood, no text overlay, photo-realistic, environmental documentary style.
+> Documentary photograph of a coastal community planting mangrove seedlings in late afternoon light. Setting: [named country and locality, with one specific built-environment cue — e.g., "Vanuatu, Efate Island, concrete-block community hall with corrugated-iron roof in mid-ground"]. People shown in mid-action with faces partially turned, in profile, or obscured by working posture; no frontal close-up portraits; faces are not the focal subject. Mixed team across deliberately varied skin tones (full range including dark brown), varied ages including older adults, varied body types and hair textures including textured and curly hair worn naturally; at least one participant is a disabled person taking part as a peer (for example, a wheelchair user planting from a seated position, or a participant with a white cane on the path). Real working clothing appropriate to the place; no aid-worker hi-vis vests or branded uniforms. Candid composition, 16:6 aspect ratio for hero banner, focal subject left of centre, hopeful but grounded mood, no text overlay, photo-realistic, environmental documentary style.
 
-What to expect: a wide hero with people doing the work, in their place, in real clothing. Composition leaves negative space on the right for editorial copy.
+What to expect: a wide hero with people doing the work, in a specifically named place, in real clothing. Composition leaves negative space on the right for editorial copy.
 
-What to reject: hard-hat stock-photo workers, decorative globes, unfamiliar landscapes that could be anywhere, posed group portraits looking at the camera.
+What to reject: hard-hat stock-photo workers, decorative globes, unfamiliar landscapes that could be anywhere, posed group portraits looking at the camera, single-region "Pacific Islands" pastiche when the country was specified, faces sharp enough to be recognisable.
 
 ### Hero — recovery in progress
 
-> Documentary photograph, two months after a coastal cyclone, community kitchen serving a meal in a re-opened school, named volunteers, morning light, 16:6 aspect ratio for hero banner, hopeful but factual mood, focal subject left of centre, no overt drama, no destruction in the foreground, photo-realistic.
+> Documentary photograph, two months after a coastal cyclone, community kitchen serving a meal in a re-opened school. Setting: [named country and locality]. Mixed team — at least one man and one older adult cooking actively; women shown leading or coordinating, not only serving. No children visible as focal subjects. No frontal portraits; people in mid-action with faces partially turned, in profile, or obscured by working posture. Deliberately varied skin tones, ages, and body types; at least one disabled person present as a participant. Morning light, 16:6 aspect ratio for hero banner, hopeful but factual mood, focal subject left of centre, no overt drama, no destruction in the foreground, no exposed personal belongings or improvised shelters as focal subject, agency conveyed through purposeful action, no expressions of distress, grief, or shock, no comparison to a "before" state in the same frame, photo-realistic.
 
-What to expect: forward-looking framing — the recovery in progress, not the disaster. Specific space, specific moment, specific people.
+What to expect: forward-looking framing — the recovery in progress, not the disaster. Named place, mixed team, dignity preserved through action and partial views.
 
-What to reject: rubble as primary subject, helpless figures, generic "humanitarian distribution" wide shots, flag-and-banner imagery.
+What to reject: rubble as primary subject, helpless figures, distressed faces, identifiable children, generic "humanitarian distribution" wide shots, flag-and-banner imagery, anyone in a hi-vis vest directing local labour.
 
 ### Hero — knowledge platform
 
-> Documentary photograph of a researcher reviewing flood-risk maps with a local government planner, daylight office or community centre, mid-shot, 16:6 aspect ratio, neutral and authoritative mood, recognisable maps and printed reports on the table, focal subjects centred, no text overlay, photo-realistic.
+> Documentary photograph of two government planners from [named country]'s national disaster management agency reviewing printed flood-risk maps as peers. Mid-shot, daylight working office appropriate to the country (not a glass-walled boardroom). Both figures positioned as professional equals — neither shown as instructor or recipient; both with named professional roles implied through clothing and posture. Mixed gender, varied ages including older adults, deliberately varied skin tones across the full range. At least one of the two figures is a disabled person — for example, a wheelchair user at the table or a participant using a hearing aid. People shown in profile or three-quarter view; no frontal portraits; faces not the focal subject. Recognisable maps and printed reports on the table. 16:6 aspect ratio, neutral and authoritative mood, focal subjects centred on the work, no text overlay, photo-realistic.
 
-What to expect: institutional but warm — two people working together with real artifacts on the table. Reads as Knowledgeable + Collaborative.
+What to expect: institutional but warm — two professionals as peers with real artifacts on the table. Reads as Knowledgeable + Collaborative without the development-aid frame.
 
-What to reject: generic boardroom stock, suited figures pointing at laptops, abstract globe-and-data overlays.
+What to reject: any "outside researcher / local recipient" framing, generic boardroom stock, suited figures pointing at laptops, abstract globe-and-data overlays, recognisable faces, an unmarked figure (model defaults to white/male) paired with an explicitly "local" figure.
 
 ---
 
@@ -86,27 +110,51 @@ Use these for explainer pages, methodology graphics, infographic backgrounds. Av
 
 ### Illustration — early warning systems
 
-> Flat vector editorial illustration depicting an early warning system for coastal flooding, Pacific Islands community context, palette: Sendai colors at reduced saturation plus UNDRR Corporate Blue as the primary accent, no human figures, no logos, isometric 3/4 perspective, recognisable elements (sensor buoy, transmission tower, community siren, household receiver), clear connecting flow lines, white background, suitable for use behind editorial copy at 16:9 aspect ratio.
+> Flat vector editorial illustration depicting an early warning system for coastal flooding in [named country and ecosystem context — for example, "Bangladesh, Sundarbans delta," or "Mozambique, Beira coastal plain"]. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. No human figures. No logos. Side-elevation perspective, not isometric, not 3/4 view. Recognisable elements: sensor buoy at sea, transmission relay tower, community siren, household receiver showing both a visual flashing alert and an audible siren cone, with captioning visible on a TV screen for accessibility. Clear connecting flow lines. White background. Suitable for use behind editorial copy at 16:9 aspect ratio.
 
-What to expect: a clean, technical illustration that explains a system without falling into corporate-isometric clichés. Reads as Knowledgeable.
+What to expect: a clean, technical illustration that explains a system without falling into corporate-isometric clichés or "smart-city" sci-fi tropes. Reads as Knowledgeable. Accessibility cues (visual alert plus captioning) visible alongside the audible siren.
 
-What to reject: AI-generic isometric workplaces, decorative gradients, colour-noise, illegible details, anything with people pointing at things.
+What to reject: AI-generic isometric workplaces, decorative gradients, colour-noise, illegible details, drone or holographic overlays, single-region pastiche when the country was specified, household receiver with audible alert only.
 
 ### Illustration — urban resilience
 
-> Flat vector editorial illustration of a city block adapting to flooding and heatwaves, palette: Sendai colors at reduced saturation plus UNDRR Corporate Blue as the primary accent, no human figures, no logos, side elevation view, recognisable elements (green roofs, permeable pavement, shaded street trees, raised infrastructure, cool refuge buildings), white background, suitable for an MCR2030 explainer at 16:9 aspect ratio.
+> Flat vector editorial illustration of a city block in [named city, named country] adapting to flooding and heatwaves. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. No human figures. No logos. Side-elevation view. Recognisable elements: green roofs, permeable pavement, shaded street trees, raised infrastructure, cool refuge buildings, accessible step-free routes, tactile paving at crossings, ramps at building entrances. White background. Suitable for an MCR2030 explainer at 16:9 aspect ratio.
 
-What to expect: a clear urban-systems illustration showing recognisable adaptation strategies. Reads as Approachable + Collaborative.
+What to expect: a clear urban-systems illustration showing recognisable adaptation strategies, including accessibility infrastructure as part of the resilient city.
 
-What to reject: smart-city tropes (drone overlays, holographic data), unrealistic skyline, generic "future city" visuals.
+What to reject: smart-city tropes (drone overlays, holographic data), unrealistic skyline, generic "future city" visuals, accessibility infrastructure missing from the frame.
 
 ### Illustration — recovery framework
 
-> Flat vector editorial illustration showing the four phases of disaster recovery (response, early recovery, recovery, long-term resilience) as a horizontal flow, palette: Sendai colors at reduced saturation plus UNDRR Corporate Blue as the primary accent, no human figures, no logos, simple line-and-fill style, recognisable framework elements per phase (assessment, restoration, reconstruction, monitoring), white background, suitable for an IRP methodology page.
+> Flat vector editorial illustration showing the four phases of disaster recovery (response, early recovery, recovery, long-term resilience) as a horizontal flow. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. No human figures. No logos. Simple line-and-fill style. Recognisable framework elements per phase (assessment, restoration, reconstruction, monitoring). White background. Suitable for an IRP methodology page at 16:9 aspect ratio.
 
 What to expect: a clear flow that earns its place on a methodology page. Reads as Knowledgeable.
 
 What to reject: pie charts pretending to be illustrations, decorative arrows that do not signal flow, gradient blobs without meaning.
+
+### Illustration — disability-inclusive evacuation drill
+
+> Flat vector editorial illustration of a community evacuation drill in [named city, named country]. Setting: a public square or coastal promenade with clear evacuation route signage in the local language script. Mixed group of participants — wheelchair users and people with white canes shown as drill leaders coordinating the route, sign language interpreter at a briefing point, evacuation buddy pairs (one disabled person, one non-disabled). Mixed gender, varied ages including older adults, deliberately varied skin tones across the full range. Recognisable elements: accessible evacuation signage with both pictograms and text, tactile paving along the route, a designated accessible assembly point with shade. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. No identifiable faces (figures shown in motion or in profile). White background. 16:9 aspect ratio.
+
+What to expect: a community evacuation drill with disability inclusion as the framing, not the afterthought. Reads as Approachable + Collaborative.
+
+What to reject: disabled participants shown only as recipients of help; medical or charity-poster framing; any single phenotype dominant.
+
+### Illustration — indigenous-led DRR
+
+> Flat vector editorial illustration of indigenous community-led [DRR practice — for example, "traditional savanna fire management," "mangrove guardianship," "watershed stewardship"] in [named region, named country, named ecosystem]. Indigenous practitioners shown as the protagonists carrying out the practice; no outside-expert figure in frame; no instructor/recipient framing. Mixed gender, varied ages including older adults. Working clothing only — do not generate ceremonial dress, regalia, or culturally specific iconography. People shown in mid-action, faces partially turned or in profile, no frontal portraits, no identifiable faces. Recognisable ecosystem cues drawn from the named region (do not generate generic tropical or generic forest scenery). Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. White background. 16:9 aspect ratio.
+
+What to expect: indigenous-led practice shown as expertise, with the ecosystem and country specifically rendered. Reads as Knowledgeable + Collaborative.
+
+What to reject: ceremonial regalia, cultural pastiche from a different region, an outside expert in the frame, any "teaching the locals" framing, faces sharp enough to be recognisable.
+
+### Illustration — gender-and-disasters
+
+> Flat vector editorial illustration of a women-led DRR planning meeting in [named country]. Women shown as decision-makers — speaking, pointing at maps, signing documents; not as audience or note-takers. Mixed ages including older women; men present as participants but not as facilitators. Deliberately varied skin tones across the full range, varied body types, varied hair textures. At least one participant is a disabled woman — for example, a wheelchair user at the table or a participant using a hearing aid. People in profile or three-quarter view; no frontal portraits; no identifiable faces. Recognisable elements: maps, planning documents, working office appropriate to the country (not a glass-walled boardroom). Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. White background. 16:9 aspect ratio.
+
+What to expect: women shown as DRR decision-makers, with disability inclusion built in. Reads as Knowledgeable + Collaborative + Hopeful.
+
+What to reject: women shown serving food, taking notes, or in care roles only; men as facilitators with women as audience; single-phenotype groups; identifiable faces.
 
 ---
 
@@ -116,7 +164,7 @@ For chart styling and infographic backgrounds rather than data — UNDRR data vi
 
 ### Infographic background — Sendai progress
 
-> Vector infographic background, single horizontal band, palette: Sendai colors at reduced saturation, no foreground elements, very subtle texture or gradient suggesting progress over time, suitable as a background behind a sequential data visualisation about Sendai Framework targets, low-contrast so foreground type and chart elements remain readable, 16:6 aspect ratio.
+> Vector infographic background, single horizontal band, palette: Sendai colours at reduced saturation, no foreground elements, very subtle texture or gradient suggesting progress over time, suitable as a background behind a sequential data visualisation about Sendai Framework targets, low-contrast so foreground type and chart elements remain readable, 16:6 aspect ratio.
 
 What to expect: an unobtrusive backdrop that signals UNDRR brand without competing with chart content.
 
@@ -126,27 +174,29 @@ What to reject: anything that calls attention to itself, busy patterns, gradient
 
 ## Sub-brand-specific variants
 
-The base prompts above target core UNDRR. For sub-brand-specific work, layer on the sub-brand audience and emphasis. Reference the parent palette via the <LinkTo kind="brand-brand-identity" story="docs">brand identity</LinkTo> page.
+> **Sub-brand variants inherit every standing rule above.** Named place, no identifiable faces, no children, disability inclusion, deliberately varied skin tones across the full range, no decolonial-aid framing. Do not drop these rules when layering sub-brand colour. The variants below are full additive prompt blocks, not snippets — re-state the standing rules in your final prompt.
+
+The variants below are working hypotheses pending review by UNDRR Communications (`undrrcomms@un.org`). Each sub-brand has a distinct audience and mission; the visual register should follow.
 
 ### PreventionWeb (knowledge platform)
 
-> Add to base prompt: "PreventionWeb context — knowledge platform audience (researchers, practitioners), emphasis on data, methodology, and reproducibility. Replace UNDRR Corporate Blue with PreventionWeb teal as the primary accent."
+> Replace "UNDRR Corporate Blue" in the base prompt with "PreventionWeb teal as the primary accent." Audience emphasis: researchers, practitioners, national disaster authorities. Visual register: Knowledgeable. Show real working artifacts (printed reports, datasets on screens, methodology diagrams, citation-rich tables) rather than abstract "knowledge" visuals (glowing networks, lightbulbs, abstract data). Avoid: generic boardroom or research-lab stock.
 
 ### MCR2030 (cities and local governments)
 
-> Add to base prompt: "MCR2030 context — local government audience (mayors, municipal planners, community leaders), emphasis on peer cities and replicable action. Replace UNDRR Corporate Blue with MCR2030 purple as the primary accent."
+> Replace "UNDRR Corporate Blue" in the base prompt with "MCR2030 purple as the primary accent." Audience emphasis: mayors, municipal planners, community leaders. Visual register: Collaborative, warm, peer-recognising. Show plural cities of varied scale, peer-comparison framings (named cities side by side), municipal staff as protagonists (not central-government figures). Avoid: starchitect skylines, single-megacity dominance, "smart city" sci-fi imagery.
 
 ### IRP (recovery)
 
-> Add to base prompt: "IRP context — disaster recovery practitioners, emphasis on the long arc from response to long-term resilience. Replace UNDRR Corporate Blue with IRP bright blue as the primary accent."
+> Replace "UNDRR Corporate Blue" in the base prompt with "IRP bright blue as the primary accent." Audience emphasis: recovery practitioners, national disaster recovery offices. Visual register: Hopeful but grounded — the long arc from response to long-term resilience. Show recovery in progress, not the disaster; show monitoring and methodology, not just rebuilt buildings. Avoid: ribbon-cutting imagery, before-and-after shock comparisons, distressed survivors.
 
 ### ARISE (private sector)
 
-> Add to base prompt: "ARISE context — private-sector partners (companies, insurers, logistics, finance), emphasis on continuity, ROI, and industry partnerships. Add subtle business-context cues (port, supply chain, infrastructure) without falling into corporate stock visual clichés."
+> Replace "UNDRR Corporate Blue" in the base prompt with "ARISE accent colour as the primary accent." Audience emphasis: companies, insurers, logistics, finance, industry associations. Visual register: Authoritative + Hopeful — continuity, partnership, peer recognition. Show local industry workers as protagonists, not as recipients of foreign expertise; show partnership models rather than transactional aid framings. Avoid: an outside expert in a hi-vis vest directing local labour; corporate stock visual clichés (handshake-over-globe, abstract supply-chain swooshes); language or imagery that drifts toward business-development voice. The ARISE artifact must still pass the "would this read on undrr.org" test.
 
 ### DELTA Resilience
 
-> Add to base prompt: "DELTA Resilience context — data and methodology audience, emphasis on rigour, transparency, and analytical depth. Replace UNDRR Corporate Blue with DELTA dark navy as the primary accent."
+> Replace "UNDRR Corporate Blue" in the base prompt with "DELTA dark navy as the primary accent." Audience emphasis: data and methodology specialists, evaluators, researchers. Visual register: Authoritative — rigour, transparency, analytical depth. Show real methodological artifacts (assessment frameworks, monitoring matrices, validation steps); show people in the work as analysts and evaluators rather than "data scientists at a screen." Avoid: glowing data-visualisation tropes, AI-generic "researcher with laptop" stock.
 
 ---
 
@@ -168,44 +218,46 @@ What to reject: alt text that starts with "Image of" / "Photo of" (UN/Microsoft 
 
 ### British-English converter
 
-> Convert the following text from American English to British English (Oxford spelling) per UNDRR Policies and SOPs. Preserve all proper nouns, organisation names, and quoted speech exactly. Text: [paste].
+> Convert the following text from American English to British English (Oxford spelling) per UNDRR Policies and SOPs. Preserve all proper nouns, organisation names, indigenous and place names, transliterations from non-Latin scripts, diacritics (Māori macrons, Spanish accents, Arabic transliteration choices), and quoted speech exactly. Text: [paste].
 
 ### Tone-register rewriter
 
-> Rewrite the following copy in [Authoritative / Warm / Hopeful / Urgent] register per UNDRR's written voice. Hold the K / A / C voice trio (Knowledgeable, Approachable, Collaborative). Use British English (Oxford spelling). Use sentence case for any headings. Front-load key information. Avoid jargon. Avoid em-dashes; use parentheses for qualifiers. Copy: [paste].
+> Rewrite the following copy in **[ONE register]**, where the registers are defined as:
+>
+> - **Authoritative** — sourced (cite the report, resolution, or dataset by name and date), neutral (state what the evidence shows; let the reader draw the conclusion), precise (full names of frameworks and reports), no institutional fog ("it is important to note that"). For policy summaries, research findings, methodology, official statements.
+> - **Warm** — names people, places, jobs, ages; specific sensory detail; quoted speech in people's own words; emotion at the edges. For people stories, community profiles, partner spotlights, recovery narratives.
+> - **Hopeful** — forward-looking and evidence-based; collective ("communities," "partners," "member states" named); specific futures ("by 2030," not "in the coming years"); never glosses over what is still hard. For prevention success, recovery progress, anniversary content.
+> - **Urgent** — front-loaded (verb in first six words); imperative; concrete (specific actions, times, places); restrained (urgency from precision, not adjectives). For live disasters, early warnings, time-sensitive calls to action.
+>
+> Hold the K / A / C voice trio (Knowledgeable, Approachable, Collaborative) regardless of register. Use British English (Oxford spelling). Use sentence case for any headings. Avoid jargon. Em-dashes are fine in body prose; do not use them in UI strings, button labels, or story names. Copy: [paste].
 
 ### Headline generator
 
-> Generate three headline options in sentence case for a [news / explainer / event / methodology] page about [topic]. UNDRR house style: front-load the key fact, name a place if possible, name a number if available, no marketing-flavoured language, British English. Examples of preferred style: "Cyclone Y deaths halved by Pacific early warning network." "Eighty hectares of mangrove kept Talcahuano-Sur's port open during March cyclone."
+> Generate three headline options in sentence case for a [news / explainer / event / methodology] page about [topic]. UNDRR house style: front-load the key fact, name a place if possible, name a number if available, no marketing-flavoured language, British English (Oxford spelling). Examples of preferred style: "Cyclone deaths halved across Pacific early warning network." "Eighty hectares of mangrove kept Talcahuano-Sur's port open during the March cyclone."
 
 ---
 
-## Evaluating outputs
+## Pre-publish checklist
 
 Before using any AI-generated output, check it against:
 
+**Standing rules (must hold):**
+
+- [ ] No identifiable human faces in the output. Reverse-image-search any face that reads as recognisable; if the search returns a real person, regenerate.
+- [ ] No identifiable images of children.
+- [ ] If the prompt depicts people, the output includes the disability inclusion you specified, deliberately varied skin tones across the full range, and varied ages.
+- [ ] No "outside expert / local recipient" framing.
+- [ ] The output will be labelled as AI-generated on publication, with C2PA Content Credentials attached where the platform supports them.
+
+**Brand thread:**
+
 - [ ] Does it lean into Knowledgeable, Approachable, or Collaborative? (Ideally more than one.)
-- [ ] Does it avoid all <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo>? (Conference rooms, disaster tourism, decorative-only stock, generic blue-NGO aesthetic, jargon walls, empty optimism.)
+- [ ] Does it avoid all <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo>?
 - [ ] Does it respect the layered identity? (At what layer does it live? Is the thread to the layer above intact?)
-- [ ] Are people, if depicted, named or unnamed? Unnamed AI-generated people are decorative-only by definition — flag and reconsider.
 - [ ] Does the colour serve meaning, or fill space?
-- [ ] Will the result be labelled as AI-generated when published?
-- [ ] Is the content factually accurate? Cross-check against UNDRR sources before publishing.
+- [ ] Is the content factually accurate? Cross-check against UNDRR sources.
 
-If any answer is no, regenerate with a tighter prompt or escalate to UNDRR Communications (`undrrcomms@un.org`).
-
----
-
-## A closing reminder
-
-This guidance is experimental. The tools listed are external products that change without notice; their outputs vary from week to week and across versions of the same model. The prompt patterns on this page are based on what has worked so far for UNDRR's brand thread, and they will be revised as we learn more.
-
-Two things stay constant regardless of how the tools evolve:
-
-1. **Follow institutional AI guidance.** UN System Principles for the Ethical Use of Artificial Intelligence, current Secretary-General's bulletins on AI use, your office's local AI policy, and UNDRR's own AI imagery guidance (the constraints on this page). When in doubt, ask UNDRR Communications (`undrrcomms@un.org`) before publishing.
-2. **Human review is required.** No AI output ships without a human checking it against the <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo> list, the layered identity, and the K / A / C voice trio. The model is a draft generator, not a publisher.
-
-If you find a prompt pattern that produces consistently better outputs than the ones documented here, share it with the Mangrove maintainers so this page can be updated. If a pattern starts producing worse outputs because a tool changed, flag that too — the guidance is meant to evolve with the tools.
+If any standing-rule answer is no, **do not publish** — regenerate with a tighter prompt or commission credited human work instead. If a brand-thread answer is no, regenerate with a tighter prompt or escalate to UNDRR Communications (`undrrcomms@un.org`).
 
 ---
 
