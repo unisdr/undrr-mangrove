@@ -41,8 +41,7 @@ Agents can also be used to frame ongoing work within a conversation — ask Clau
 |-------|------|------------------------|
 | **UI Designer** | `ui-designer.md` | Design component specifications, define states and responsive behavior, work with design tokens across themes |
 | **UX Researcher** | `ux-researcher.md` | Plan usability testing, create user personas, map user journeys, validate design decisions with research |
-| **Brand Guardian** | `brand-guardian.md` | Audit multi-theme consistency, check design token coverage, prevent brand leakage between themes (tactical, internal) |
-| **UN Brand Strategist** | `un-brand-strategist.md` | Audit, architect, or articulate UNDRR's layered identity (core → sub-brand → campaign); strategic / external-consultant lens distinct from Brand Guardian |
+| **Brand Guardian** | `brand-guardian.md` | Audit multi-theme consistency, check design token coverage, prevent brand leakage between themes |
 | **Inclusive Visuals** | `inclusive-visuals.md` | Audit components for cultural sensitivity, linguistic inclusion, dignified disaster representation, and global audience needs |
 
 ### Testing and performance
