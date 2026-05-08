@@ -12,3 +12,6 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 ## Unreleased
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
+
+- **Brand documentation expansion** — added six new Storybook MDX pages under `Brand/` covering the layered identity model (core UNDRR → sub-brand → campaign), visual voice, written voice and tone, audience mapping, anti-patterns, and AI imagery prompts. Reconciled the Arabic typography note in `BrandGuidelines.mdx` with the live Mangrove guidance (Noto Kufi Arabic + Dubai).
+- **New AI agent: UN Brand Strategist** (`.claude/agents/un-brand-strategist.md`) — strategic / external-consultant lens for UNDRR's layered identity. Distinct from the tactical Brand Guardian (token consistency).

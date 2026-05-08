@@ -1,0 +1,139 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+
+<Meta
+  title="Brand/Layered identity"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Layered identity
+
+UNDRR's brand is not a single identity. It is a layered system. Three layers stack together: the core UNDRR identity at the foundation, sub-brand identities for major properties and programmes, and campaign or partner-product identities at the top. At every boundary between layers, two things must be intentional: what stays constant (the *thread*), and what is allowed to flex (the *variable*).
+
+This page is the source of truth for how those layers relate. It is the precondition for the rest of this guide — read this first, then move on to <LinkTo kind="brand-visual-voice" story="docs">visual voice</LinkTo>, <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo>, and <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo>.
+
+---
+
+## The three layers
+
+```
+Core UNDRR  ──── thread ────▶  Sub-brand  ──── thread ────▶  Campaign / partner
+(undrr.org)                    (PreventionWeb,                (Global Platform editions,
+                                MCR2030, IRP,                  IDDRR, anniversaries,
+                                ARISE, DELTA)                  partner microsites)
+```
+
+### Layer 1 — Core UNDRR
+
+The UN Office for Disaster Risk Reduction. One agency, one institutional voice. Everything else inherits from this layer.
+
+Lives at: undrr.org.
+
+### Layer 2 — Sub-brand
+
+Programmes, platforms, and partnerships that carry their own audience and mission, but operate under the UNDRR umbrella. PreventionWeb (knowledge platform for DRR practitioners), MCR2030 (Making Cities Resilient — local-government audience), IRP (International Recovery Platform), ARISE (private sector alliance), DELTA Resilience (data and methodology).
+
+Lives at: preventionweb.net, mcr2030.undrr.org, recovery.preventionweb.net, ariseglobalnetwork.org, deltaresilience.org.
+
+### Layer 3 — Campaign / partner product
+
+Time-bound or audience-specific surfaces. A Global Platform edition (each one has a host country and an edition identity). The International Day for Disaster Risk Reduction (IDDRR) annual campaign. Sendai Framework anniversary microsites. Partner-led microsites that need to read as UNDRR-affiliated without being UNDRR.
+
+Lives at: per-event microsites, partner products, social media campaign assets.
+
+> **Note:** The VerbalVisual-authored Global Platform and Regional Platform style guides describe this campaign-tier model directly: "a symbiotic relationship between the evergreen conference identity and edition-specific host country branding opportunities within the system." Bring that thinking into web work.
+
+---
+
+## What threads through every layer
+
+These are constant. They are what makes a touchpoint recognizably UNDRR-family. If a campaign artifact omits these, it is not on-brand — and probably should not be on a UNDRR property.
+
+| Thread | Source | Notes |
+| --- | --- | --- |
+| The UNDRR positioning trio: **Knowledgeable, Approachable, Collaborative** | <LinkTo kind="brand-brand-guidelines" story="docs">Brand guidelines</LinkTo> | Pressure-test every visual and verbal choice against these three |
+| Roboto + Roboto Condensed (UN official typeface) | UN web standards, in-tree `_variables.scss` | Arial only as substitute for internal email and Office documents |
+| Sentence case for headings and titles | <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo> | Capitalize only proper nouns and acronyms |
+| Plain language; no UN jargon | <LinkTo kind="brand-brand-guidelines" story="docs">Brand guidelines</LinkTo> | Inverted-pyramid structure on the web |
+| Real people and stories in photography; conference rooms minimum | SharePoint Photography & Icons page | Always credit photos |
+| Gender-neutral and disability-inclusive language | UN guidelines; UN Geneva disability strategy | British English (Oxford spelling) per Policies and SOPs |
+| The UN logo takes precedence when used; UNDRR logo safety zone = width of "U" | SharePoint Logos page | UN parent identity is non-negotiable |
+| Sendai Framework logo on official publications and online sites | SharePoint Logos page | Inverse logo on dark backgrounds |
+| Shared component structure (Mangrove `mg-` prefix; BEM) | `_variables.scss`, theme files | Components are structurally identical across themes |
+
+---
+
+## What flexes per sub-brand
+
+Sub-brands are allowed to differentiate to serve their audience. The Mangrove SCSS token system encodes this directly: tokens marked `!default` in `_variables.scss` are explicitly designed to be overridden per sub-brand.
+
+| Variable | Core-locked or sub-brand? | Notes |
+| --- | --- | --- |
+| Typography family | **Locked** | All sub-brands inherit Roboto / Roboto Condensed |
+| Spacing scale | **Locked** | Layout rhythm is consistent across sub-brands |
+| Base palette (neutrals, blacks, whites) | **Locked** | The structural greyscale is shared |
+| **Interactive colors** (primary, secondary, accent) | Sub-brand | Override via `!default` |
+| **Buttons, tags** (color, hover treatments) | Sub-brand | Override via `!default` |
+| **Hero treatments** (overlay color, gradient stops) | Sub-brand | Override via `!default` |
+| **Form chrome** | Sub-brand | Override via `!default` |
+| **Tabs, accents** | Sub-brand | Override via `!default` |
+| **Logo lockup** | Sub-brand | Sendai Framework logo above color stripe per SharePoint Logos page |
+
+> **Tip:** When you ask "should this be a token in `_variables.scss` or hardcoded?" the answer is the layer model. Anything that should look the same across all sub-brands is core-locked. Anything that should differentiate is `!default`. If you cannot decide, the question is upstream: at what layer does this expression live?
+
+---
+
+## What flexes per campaign / partner
+
+Campaigns inherit their sub-brand's frame and flex within it. The sub-brand's color and accent decisions persist; the campaign gets to add an edition-specific accent, motif, or hero treatment without breaking the parent identity.
+
+<HighlightBox>
+  <strong>The campaign-tier rule from the VerbalVisual Global Platform style guide:</strong> the evergreen conference identity is non-negotiable; the edition-specific host-country expression is a layer added on top. The same logic applies to a Sendai-anniversary site, an IDDRR landing page, or a partner microsite that needs UNDRR endorsement signals.
+</HighlightBox>
+
+A campaign artifact must always carry:
+
+- The parent sub-brand's typography and spacing
+- A clear UNDRR or sub-brand logo lockup, with UN-family endorsement signals (color stripe, footer attribution)
+- The parent sub-brand's tone of voice as the floor — campaign tone can be more urgent or more celebratory, but never less institutionally credible
+
+A campaign artifact may flex:
+
+- Hero treatment, motif, or texture
+- One campaign-specific accent color, layered on the sub-brand palette
+- Edition-specific photography or illustration commissioned for the moment
+- Headline expression that leans further into one of the K / A / C trio (an anniversary site can lean Collaborative; a live-disaster response page can lean Knowledgeable + urgent)
+
+---
+
+## Decision rule for any new artifact
+
+Ask in this order:
+
+1. **At what layer does this live?** Core, sub-brand, or campaign? If you cannot answer, you are not ready to design.
+2. **What thread must persist from the layer above?** Name it explicitly.
+3. **What is allowed to flex at this layer?** Name it explicitly.
+4. **Does the result lean into Knowledgeable / Approachable / Collaborative?** If a stakeholder stripped the logo, would they still recognize this as UNDRR-family?
+
+If steps 1–3 are clear and step 4 holds, the artifact is on-brand. If any of the four is uncertain, escalate to UNDRR Communications (`undrrcomms@un.org`) before publishing.
+
+---
+
+## Related
+
+- <LinkTo kind="brand-brand-guidelines" story="docs">Brand guidelines</LinkTo> — positioning, logo, photography, typography fundamentals
+- <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo> — color, type, photography, iconography in practice
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> — the tone spectrum and when to use each register
+- <LinkTo kind="brand-audience-mapping" story="docs">Audience mapping</LinkTo> — how voice and visual emphasis shift per audience
+- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> — what UNDRR is *not*
+- <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo> — example prompts for generative image and language models
+
+---
+
+Last updated: 8 May 2026

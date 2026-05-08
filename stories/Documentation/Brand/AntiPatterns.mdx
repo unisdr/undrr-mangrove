@@ -1,0 +1,234 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+
+<Meta
+  title="Brand/Anti-patterns"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Anti-patterns
+
+Brand identities are sharper when defined in opposition. This page is the explicit list of what UNDRR is *not* — patterns that drift the brand off-course visually or verbally. Every anti-pattern carries a counter-example so the alternative is clear.
+
+This page is the negative space companion to the <LinkTo kind="brand-brand-guidelines" story="docs">brand guidelines</LinkTo> and <LinkTo kind="brand-visual-voice" story="docs">visual voice</LinkTo> page.
+
+---
+
+## Photography anti-patterns
+
+### Conference rooms
+
+The SharePoint Photography & Icons page calls this out by name: *"Conference pictures should be kept to the strict minimum (we do not want to convey that image)."*
+
+- **Avoid:** wide shots of plenary halls, panel speakers behind name plates, hands raised at a general assembly, suited delegates in conversation.
+- **Prefer:** community-led action — the project itself, named people doing the work, the place the work happens in.
+
+### Disaster tourism
+
+Imagery framed for emotional reaction without showing recovery, prevention, or human agency.
+
+- **Avoid:** rubble and devastation as the dominant visual; helpless figures in shock; landscape shots of destruction with no people.
+- **Prefer:** what people are *doing* — clearing debris, rebuilding, planning, monitoring. UNDRR's positive-framing rule (per BrandGuidelines.mdx) is editorial, not just aesthetic.
+
+### Decorative-only stock
+
+Photos with no place, no name, no story — a generic person in a hard hat, a stock-globe-with-lights image.
+
+- **Avoid:** unnamed "local resident" photography; royalty-free generics that could illustrate any NGO.
+- **Prefer:** named individuals in their context, with full credit. "Maria, 34, a community health worker in Talcahuano (UN Women / Flickr)" beats "a worker."
+
+### Missing or hidden credits
+
+- **Avoid:** uncredited photos. The SharePoint reference is explicit: "Photos should always display the credit and source information."
+- **Prefer:** visible credits below or beside every photo, ideally including organisation, photographer, and license.
+
+---
+
+## Visual anti-patterns
+
+### Generic blue-NGO aesthetic
+
+The colour-blue-and-globe-and-corporate-gradient combination that any UN or development agency could use.
+
+- **Avoid:** Corporate Blue gradient backgrounds with no other UNDRR signal; isolated UN-blue heroes that could be WHO or UNICEF.
+- **Prefer:** Sendai colors used intentionally; UNDRR Corporate Blue as the institutional anchor, not the entire visual.
+
+### Sendai stripe as decoration
+
+The Sendai diagonal stripe is one of UNDRR's most recognisable visual assets. Using it as wallpaper drains its meaning.
+
+- **Avoid:** the stripe filling backgrounds, repeated across slide masters, used at low opacity behind unrelated content.
+- **Prefer:** the stripe in formal lockup contexts (logo lockups, report covers, social cards) and as a small bridging element where appropriate.
+
+### Theme leakage
+
+When a sub-brand artifact uses another sub-brand's primary color by accident.
+
+- **Avoid:** UNDRR Corporate Blue appearing in a PreventionWeb context, or PreventionWeb teal appearing on undrr.org.
+- **Prefer:** sub-brand consistency. The Mangrove `!default` token system enforces this — never hardcode hex values inside component SCSS. (This is Brand Guardian's lane; flag it to them.)
+
+### Decorative-only color
+
+Color used purely to fill space rather than carry meaning.
+
+- **Avoid:** rainbow charts where each colour is decorative, multi-colour CTAs, accent stripes added because the layout looks bare.
+- **Prefer:** color that signals state, hierarchy, or brand. If it does not signal, remove it.
+
+### Conference-photo aesthetic in illustration
+
+The illustrated equivalent of conference rooms — generic boardroom-style isometric scenes, suited figures pointing at charts, decorative globe-and-handshake imagery.
+
+- **Avoid:** AI-generic isometrics, "diverse-team-pointing-at-laptop" scenes, abstract globe-and-network compositions.
+- **Prefer:** illustration grounded in the work itself. Specific places, specific actions, recognisable objects.
+
+---
+
+## Iconography anti-patterns
+
+### Mixing icon systems within a context
+
+- **Avoid:** OCHA humanitarian icons next to Mangrove UI icons in the same UI control, or Font Awesome icons in any new work.
+- **Prefer:** OCHA icons for DRR concepts (hazards, response themes) and Mangrove for web UI (chevrons, navigation, controls). Never both as decoration in the same row.
+
+### Font Awesome on new properties
+
+The SharePoint Photography & Icons page lists Font Awesome as the web icon font. Mangrove supersedes that.
+
+- **Avoid:** new components or pages introducing Font Awesome.
+- **Prefer:** the Mangrove icon set. See <LinkTo kind="components-icons" story="docs">Icons documentation</LinkTo>.
+
+---
+
+## Verbal anti-patterns
+
+### UN jargon walls
+
+The brand guidelines call this out explicitly: avoid UN jargon whenever possible.
+
+- **Avoid:** "stakeholders are encouraged to leverage best practices to mainstream DRR within the broader 2030 Agenda framework."
+- **Prefer:** "Local governments can use the MCR2030 toolkit to plan for floods and heatwaves."
+
+### Institutional passive
+
+- **Avoid:** "It has been determined that early warning systems are effective."
+- **Prefer:** "Early warning systems reduced cyclone deaths by 50% across the Pacific between 2014 and 2024 (UNDRR GAR 2024)."
+
+### Empty optimism
+
+UNDRR is institutionally serious. Hope must be grounded in evidence.
+
+- **Avoid:** "Together, we will build a safer future." (no who, no when, no how)
+- **Prefer:** "Communities in 47 countries reduced flood damage by 38% after installing early warning systems. By 2030, the same approach can scale to 200 cities under MCR2030."
+
+### Marketing-flavoured copy on campaigns
+
+Campaign tone can lean Hopeful or Urgent, but Authoritative is the credibility floor.
+
+- **Avoid:** taglines that sound like a startup launch ("Disrupt disaster. Reimagine resilience.")
+- **Prefer:** language that earns its claims with evidence, named partners, and specific commitments.
+
+### Disaster-tourism prose
+
+The verbal counterpart to disaster-tourism photography.
+
+- **Avoid:** "Catastrophic devastation tore through the coastal community, leaving lives shattered."
+- **Prefer:** "Cyclone Y made landfall in Country X on 14 March 2026. Two months later, three of the four worst-hit communities are reporting full water and power restoration. UNDRR is supporting recovery in the fourth alongside [partner]."
+
+### Gendered or non-inclusive language
+
+The UN guidelines and the UNDRR Policies and SOPs are clear on this.
+
+- **Avoid:** "mankind," "manpower," "chairman," "spokesman," "the elderly," "the disabled," "suffers from."
+- **Prefer:** "humankind," "workforce," "chair," "spokesperson," "older people," "disabled people" or "people with disabilities" (regional preference applies — see UN Disability-Inclusive Language Guidelines), "lives with."
+
+### Non-descriptive link text
+
+- **Avoid:** "Click here," "Read more," "Learn more."
+- **Prefer:** "Read the 2024 Global Assessment Report," "Find your country's Sendai progress report."
+
+### American spelling on official content
+
+Per UNDRR Policies and SOPs: external content is British English (Oxford spelling).
+
+- **Avoid:** "organize," "color," "behavior," "analyze," "center."
+- **Prefer:** "organise," "colour," "behaviour," "analyse," "centre."
+
+### Em-dashes in UI strings or story names
+
+Mangrove house convention.
+
+- **Avoid:** em-dashes (—) in component story names, UI labels, button text.
+- **Prefer:** parentheses for qualifiers; full sentences for explanation.
+
+---
+
+## Layered-identity anti-patterns
+
+### Campaign without sub-brand thread
+
+A microsite that uses a Sendai-style stripe and a UNDRR-blue colour, but adopts a typeface and layout system that breaks from Mangrove conventions — reads as an unrelated agency that licensed the logo.
+
+- **Avoid:** campaign sites built without inheriting the parent sub-brand's typography, spacing, or component vocabulary.
+- **Prefer:** the campaign-tier rule — evergreen identity locked, edition-specific accent layered on top. See <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>.
+
+### Sub-brand without UN-family thread
+
+A sub-brand that has gone so far in differentiating that it no longer reads as UN-family — different typography, no UN logo lockup, no Sendai stripe.
+
+- **Avoid:** stripping institutional anchors in pursuit of differentiation.
+- **Prefer:** flexing the sub-brand variables (interactive colors, accents, hero treatment) while keeping the locked thread (Roboto / Roboto Condensed, sentence case, Sendai stripe in lockups, UN logo precedence).
+
+### Decorative-only Sendai logo
+
+The Sendai Framework logo is institutional, not decorative.
+
+- **Avoid:** placing the Sendai logo without context, on backgrounds that conflict with the inverse-on-dark rule, or alongside unrelated brand elements.
+- **Prefer:** following the SharePoint Logos page rule — Sendai logo on official publications and online sites, with sub-brands appearing above the colour stripe to separate from the overall concept.
+
+---
+
+## Quick check before publishing
+
+Run any new artifact past:
+
+- [ ] No conference photography
+- [ ] No disaster tourism
+- [ ] No decorative-only stock
+- [ ] All photos credited
+- [ ] No generic blue-NGO aesthetic; UNDRR-specific signals visible
+- [ ] No Sendai stripe wallpaper; used in lockup contexts only
+- [ ] No theme leakage; sub-brand colours stay in their lane
+- [ ] No mixed icon systems in a single control row
+- [ ] No Font Awesome on new work
+- [ ] No UN jargon walls
+- [ ] No institutional passive
+- [ ] No empty optimism
+- [ ] No marketing-flavoured taglines
+- [ ] No disaster-tourism prose
+- [ ] No gendered or non-inclusive language
+- [ ] No "click here" / "read more" link text
+- [ ] British English (Oxford spelling) on external content
+- [ ] No em-dashes in UI strings
+- [ ] Layered-identity thread to the layer above is intact
+
+If anything fails, escalate to UNDRR Communications (`undrrcomms@un.org`) before publishing.
+
+---
+
+## Related
+
+- <LinkTo kind="brand-brand-guidelines" story="docs">Brand guidelines</LinkTo>
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo>
+- <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo>
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo>
+- <LinkTo kind="brand-audience-mapping" story="docs">Audience mapping</LinkTo>
+
+---
+
+Last updated: 8 May 2026

@@ -1,0 +1,190 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+
+<Meta
+  title="Brand/AI imagery prompts"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# AI imagery prompts
+
+Generative image and language models produce on-brand work only when the prompt is specific. This page is a working library of prompt templates that translate the UNDRR <LinkTo kind="brand-visual-voice" story="docs">visual voice</LinkTo> and <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo> into instructions a model can follow.
+
+> **Important:** AI-generated images are not a substitute for credited photography of real people. Use AI imagery for **editorial illustration, infographic backgrounds, hero textures, and concept exploration** — not for representing real communities or specific events. When you publish AI-generated imagery, label it as such. UNDRR's editorial standard requires credit and source for every image; AI-generated work must surface its provenance the same way.
+
+---
+
+## How to use this page
+
+Each prompt block contains:
+
+1. **The prompt** — copy-paste into your image or language model
+2. **What to expect** — the kind of output that should come back
+3. **What to reject** — outputs that fail the brand thread
+
+After generating, run the result through the <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo> checklist before using it anywhere.
+
+---
+
+## Hero photography (for concept exploration only — not for publication)
+
+Use these prompts to explore visual direction. Real publication still requires credited photography per the SharePoint Photography & Icons rule.
+
+### Hero — community-led prevention
+
+> Documentary photograph of a coastal community planting mangrove seedlings in late afternoon light, Pacific Islands setting, named individuals visible (community leaders, women, families), real working clothing, candid composition, 16:6 aspect ratio for hero banner, focal subject left of centre, hopeful but grounded mood, no text overlay, photo-realistic, environmental documentary style.
+
+What to expect: a wide hero with people doing the work, in their place, in real clothing. Composition leaves negative space on the right for editorial copy.
+
+What to reject: hard-hat stock-photo workers, decorative globes, unfamiliar landscapes that could be anywhere, posed group portraits looking at the camera.
+
+### Hero — recovery in progress
+
+> Documentary photograph, two months after a coastal cyclone, community kitchen serving a meal in a re-opened school, named volunteers, morning light, 16:6 aspect ratio for hero banner, hopeful but factual mood, focal subject left of centre, no overt drama, no destruction in the foreground, photo-realistic.
+
+What to expect: forward-looking framing — the recovery in progress, not the disaster. Specific space, specific moment, specific people.
+
+What to reject: rubble as primary subject, helpless figures, generic "humanitarian distribution" wide shots, flag-and-banner imagery.
+
+### Hero — knowledge platform
+
+> Documentary photograph of a researcher reviewing flood-risk maps with a local government planner, daylight office or community centre, mid-shot, 16:6 aspect ratio, neutral and authoritative mood, recognisable maps and printed reports on the table, focal subjects centred, no text overlay, photo-realistic.
+
+What to expect: institutional but warm — two people working together with real artifacts on the table. Reads as Knowledgeable + Collaborative.
+
+What to reject: generic boardroom stock, suited figures pointing at laptops, abstract globe-and-data overlays.
+
+---
+
+## Editorial illustration
+
+Use these for explainer pages, methodology graphics, infographic backgrounds. Avoid using them where credited photography of real people would do the job better.
+
+### Illustration — early warning systems
+
+> Flat vector editorial illustration depicting an early warning system for coastal flooding, Pacific Islands community context, palette: Sendai colors at reduced saturation plus UNDRR Corporate Blue as the primary accent, no human figures, no logos, isometric 3/4 perspective, recognisable elements (sensor buoy, transmission tower, community siren, household receiver), clear connecting flow lines, white background, suitable for use behind editorial copy at 16:9 aspect ratio.
+
+What to expect: a clean, technical illustration that explains a system without falling into corporate-isometric clichés. Reads as Knowledgeable.
+
+What to reject: AI-generic isometric workplaces, decorative gradients, colour-noise, illegible details, anything with people pointing at things.
+
+### Illustration — urban resilience
+
+> Flat vector editorial illustration of a city block adapting to flooding and heatwaves, palette: Sendai colors at reduced saturation plus UNDRR Corporate Blue as the primary accent, no human figures, no logos, side elevation view, recognisable elements (green roofs, permeable pavement, shaded street trees, raised infrastructure, cool refuge buildings), white background, suitable for an MCR2030 explainer at 16:9 aspect ratio.
+
+What to expect: a clear urban-systems illustration showing recognisable adaptation strategies. Reads as Approachable + Collaborative.
+
+What to reject: smart-city tropes (drone overlays, holographic data), unrealistic skyline, generic "future city" visuals.
+
+### Illustration — recovery framework
+
+> Flat vector editorial illustration showing the four phases of disaster recovery (response, early recovery, recovery, long-term resilience) as a horizontal flow, palette: Sendai colors at reduced saturation plus UNDRR Corporate Blue as the primary accent, no human figures, no logos, simple line-and-fill style, recognisable framework elements per phase (assessment, restoration, reconstruction, monitoring), white background, suitable for an IRP methodology page.
+
+What to expect: a clear flow that earns its place on a methodology page. Reads as Knowledgeable.
+
+What to reject: pie charts pretending to be illustrations, decorative arrows that do not signal flow, gradient blobs without meaning.
+
+---
+
+## Infographic and data viz prompts
+
+For chart styling and infographic backgrounds rather than data — UNDRR data viz uses the in-tree chart components (`stories/Components/BarChart`, `Map`, etc.) for actual data display.
+
+### Infographic background — Sendai progress
+
+> Vector infographic background, single horizontal band, palette: Sendai colors at reduced saturation, no foreground elements, very subtle texture or gradient suggesting progress over time, suitable as a background behind a sequential data visualisation about Sendai Framework targets, low-contrast so foreground type and chart elements remain readable, 16:6 aspect ratio.
+
+What to expect: an unobtrusive backdrop that signals UNDRR brand without competing with chart content.
+
+What to reject: anything that calls attention to itself, busy patterns, gradients that fight the data.
+
+---
+
+## Sub-brand-specific variants
+
+The base prompts above target core UNDRR. For sub-brand-specific work, layer on the sub-brand audience and emphasis. Reference the parent palette via the <LinkTo kind="brand-brand-identity" story="docs">brand identity</LinkTo> page.
+
+### PreventionWeb (knowledge platform)
+
+> Add to base prompt: "PreventionWeb context — knowledge platform audience (researchers, practitioners), emphasis on data, methodology, and reproducibility. Replace UNDRR Corporate Blue with PreventionWeb teal as the primary accent."
+
+### MCR2030 (cities and local governments)
+
+> Add to base prompt: "MCR2030 context — local government audience (mayors, municipal planners, community leaders), emphasis on peer cities and replicable action. Replace UNDRR Corporate Blue with MCR2030 purple as the primary accent."
+
+### IRP (recovery)
+
+> Add to base prompt: "IRP context — disaster recovery practitioners, emphasis on the long arc from response to long-term resilience. Replace UNDRR Corporate Blue with IRP bright blue as the primary accent."
+
+### ARISE (private sector)
+
+> Add to base prompt: "ARISE context — private-sector partners (companies, insurers, logistics, finance), emphasis on continuity, ROI, and industry partnerships. Add subtle business-context cues (port, supply chain, infrastructure) without falling into corporate stock visual clichés."
+
+### DELTA Resilience
+
+> Add to base prompt: "DELTA Resilience context — data and methodology audience, emphasis on rigour, transparency, and analytical depth. Replace UNDRR Corporate Blue with DELTA dark navy as the primary accent."
+
+---
+
+## Language model prompts (copy and editorial)
+
+Use these prompt templates with a language model when drafting headlines, captions, alt text, or summaries.
+
+### Alt text generator
+
+> Write alt text for the following image in ≤120 characters. UNDRR house style: descriptive, names people if known, names location if known, names what they are doing, no decorative adjectives, plain English. Image description: [paste].
+
+What to expect: short, factual alt text usable on the web. Names where possible, action-led.
+
+What to reject: alt text that starts with "Image of" / "Photo of" (UN/Microsoft a11y guidance — assume the reader knows it is an image).
+
+### Sentence-case rewriter
+
+> Rewrite the following heading in sentence case per UNDRR house style. Capitalise only the first word, proper nouns, and acronyms. Do not change the meaning. Heading: [paste].
+
+### British-English converter
+
+> Convert the following text from American English to British English (Oxford spelling) per UNDRR Policies and SOPs. Preserve all proper nouns, organisation names, and quoted speech exactly. Text: [paste].
+
+### Tone-register rewriter
+
+> Rewrite the following copy in [Authoritative / Warm / Hopeful / Urgent] register per UNDRR's written voice. Hold the K / A / C voice trio (Knowledgeable, Approachable, Collaborative). Use British English (Oxford spelling). Use sentence case for any headings. Front-load key information. Avoid jargon. Avoid em-dashes; use parentheses for qualifiers. Copy: [paste].
+
+### Headline generator
+
+> Generate three headline options in sentence case for a [news / explainer / event / methodology] page about [topic]. UNDRR house style: front-load the key fact, name a place if possible, name a number if available, no marketing-flavoured language, British English. Examples of preferred style: "Cyclone Y deaths halved by Pacific early warning network." "Eighty hectares of mangrove kept Talcahuano-Sur's port open during March cyclone."
+
+---
+
+## Evaluating outputs
+
+Before using any AI-generated output, check it against:
+
+- [ ] Does it lean into Knowledgeable, Approachable, or Collaborative? (Ideally more than one.)
+- [ ] Does it avoid all <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo>? (Conference rooms, disaster tourism, decorative-only stock, generic blue-NGO aesthetic, jargon walls, empty optimism.)
+- [ ] Does it respect the layered identity? (At what layer does it live? Is the thread to the layer above intact?)
+- [ ] Are people, if depicted, named or unnamed? Unnamed AI-generated people are decorative-only by definition — flag and reconsider.
+- [ ] Does the colour serve meaning, or fill space?
+- [ ] Will the result be labelled as AI-generated when published?
+- [ ] Is the content factually accurate? Cross-check against UNDRR sources before publishing.
+
+If any answer is no, regenerate with a tighter prompt or escalate to UNDRR Communications (`undrrcomms@un.org`).
+
+---
+
+## Related
+
+- <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo> — the visual rules these prompts encode
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> — the verbal rules
+- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> — what to reject in any output
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo> — the model behind every choice
+
+---
+
+Last updated: 8 May 2026

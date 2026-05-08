@@ -1,0 +1,176 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+
+<Meta
+  title="Brand/Visual voice"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Visual voice
+
+Visual voice is how the brand sounds when you cannot read the words. Color, type, photography, iconography, layout rhythm, motion, illustration, and data viz all carry the same three characteristics — Knowledgeable, Approachable, Collaborative — and connect every artifact back to UNDRR's <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>.
+
+This page is the practical companion to the <LinkTo kind="brand-brand-guidelines" story="docs">brand guidelines</LinkTo>. The guidelines say *what* to do; this page says *how it should feel*.
+
+---
+
+## Color
+
+The Mangrove token system in `stories/assets/scss/_variables.scss` is the source of truth for color values. This section explains how to *use* color, not what hex to type. For live previews of every theme's palette, switch the theme picker in the Storybook toolbar and visit the <LinkTo kind="brand-brand-identity" story="docs">brand identity</LinkTo> page.
+
+### How color carries voice
+
+- **UNDRR Corporate Blue** (the core thread, behind the UN logo and on primary buttons) is the institutional anchor — it signals UN credibility before anything else loads. Use it sparingly so it stays meaningful.
+- **Sendai colors** (the diagonal stripe used across logo lockups, report covers, and social cards) are UNDRR's most recognisable visual asset. They appear at full saturation in formal contexts (publications, hero lockups) and at reduced saturation in supporting contexts (backgrounds, infographics, illustration palettes). Saturation is the lever — full saturation is celebratory or attention-getting; reduced is institutional and calm.
+- **Sub-brand interactive colors** (PreventionWeb teal, MCR2030 purple, IRP bright blue, ARISE, DELTA dark navy) carry the audience signal. They differentiate within the family without breaking from it.
+- **Neutrals** carry the rhythm. They are core-locked across all sub-brands so reading rhythm stays consistent.
+
+> **Tip:** When in doubt about whether a color belongs in a layout, ask whether it serves *meaning* (state, hierarchy, brand) or *decoration*. UNDRR is institutionally serious; decorative-only color tends to read as generic.
+
+### Layered application
+
+| Layer | What flexes | Example |
+| --- | --- | --- |
+| Core UNDRR | Nothing — Corporate Blue and Sendai stripe are locked | undrr.org hero, report covers |
+| Sub-brand | Interactive primary, secondary, accent; hero overlay | PreventionWeb teal CTAs, MCR2030 purple accents |
+| Campaign | One additional accent on top of sub-brand palette | Global Platform edition accent, IDDRR annual color |
+
+---
+
+## Typography
+
+Roboto and Roboto Condensed are the UN official typefaces. They are core-locked: every sub-brand and campaign uses them. This is one of the strongest threads in the layered identity — when stakeholders ask "what makes this look like a UN agency," typography is half the answer.
+
+| Use | Family | Notes |
+| --- | --- | --- |
+| Headings (H1–H4) | Roboto Condensed | Adds institutional weight without going formal |
+| Body, UI text | Roboto | Accessible default, wide weight range |
+| Internal email and Office documents | Arial | Substitute when Roboto is not available |
+| Arabic content (`:lang(ar)`) | Noto Kufi Arabic (headings), Dubai (body) | Mangrove default — supersedes the older Noto Nasteh guidance from the SharePoint reference |
+
+> **Note:** Sentence case for all UI headings and titles. Capitalize only proper nouns and acronyms. No em-dashes in UI strings — use parentheses for qualifiers (house convention; matches in-tree style).
+
+---
+
+## Photography
+
+The single strongest expression of UNDRR's "Approachable" and "Collaborative" characteristics. Everything else flows from getting this right.
+
+### What photography should do
+
+- **Portray a positive image of disaster prevention and recovery.** Not the disaster itself; not the aftermath without agency. Show what people are *doing*.
+- **Put human faces and stories at the centre.** Real people, named, in their context. Community-led, not crew-shots.
+- **Credit always.** Photos must display credit and source information. This is policy, not preference.
+
+### What photography should not do
+
+- Conference rooms. Specifically called out in the SharePoint Photography & Icons page: "Conference pictures should be kept to the strict minimum (we do not want to convey that image)."
+- Decorative-only stock with no place, no name, no story.
+- Disaster-tourism imagery — devastation framed for emotional effect without showing recovery, prevention, or response.
+- Hopeless framing — UNDRR's positive-framing rule is editorial, not just aesthetic.
+
+### Photo sizes (Mangrove + SharePoint agree)
+
+| Use | Aspect ratio | Dimensions |
+| --- | --- | --- |
+| Hero banner | 16:6 | 1440 × 540 |
+| News image | 16:9 | 1164 × 665 |
+| Publication cover | 3:4 | 176 × 235 |
+| People thumbnail | 1:1 | 176 × 176 |
+
+For prompt examples that produce on-brand photography from generative image models, see <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo>.
+
+---
+
+## Iconography
+
+Two icon systems serve different purposes. Both are correct; neither is decorative.
+
+| System | When to use | Source |
+| --- | --- | --- |
+| **OCHA humanitarian icons** | Natural hazards, manmade disasters, DRR-specific concepts | ReliefWeb, The Noun Project (free) |
+| **Mangrove icon set** | Web UI elements (chevrons, navigation, controls, document/link/email indicators) | In-tree at `stories/assets/fonts` |
+
+> **Note:** The SharePoint Photography & Icons page lists Font Awesome as the web icon font. **Mangrove supersedes that.** Mangrove ships its own icon set; the older Font Awesome guidance is legacy. When in doubt, use the Mangrove icon. See <LinkTo kind="components-icons" story="docs">Icons documentation</LinkTo>.
+
+Inside webpack-bundled components, write `<span class="mg-icon mg-icon-X">` directly rather than importing the Icon component — this is a hard-won house convention.
+
+---
+
+## Layout rhythm
+
+Spacing, line height, and grid are core-locked across all sub-brands. This is the second-strongest thread (after typography) — it is what makes a PreventionWeb article and an MCR2030 article *feel* like cousins even though they are coloured differently.
+
+- **Spacing scale** lives in `_variables.scss` and is not overridable per theme. Do not introduce one-off spacing values inside components.
+- **Line length** stays around 60–75 characters for body text. The inverted-pyramid structure rewards readers who scan.
+- **Vertical rhythm** is consistent. Components do not introduce theme-specific spacing hacks.
+
+---
+
+## Motion
+
+Motion is a quiet thread today — Mangrove uses subtle, functional transitions (150ms hover, 200ms reveal). Three principles:
+
+1. **Function over delight.** Motion confirms an action or signals a state change. It is rarely decorative.
+2. **Respect `prefers-reduced-motion`.** UNDRR audiences include disabled users; motion that ignores the system preference fails the brand's "Approachable" characteristic.
+3. **Never animate at the campaign layer in a way that breaks the sub-brand layer.** A campaign motif can have its own micro-interaction; the sub-brand chrome should not.
+
+---
+
+## Illustration
+
+Illustration is allowed but not required. When used, it carries the same constraints as photography: human-centred, place-rooted, credit-attributed where the source matters.
+
+- **Editorial illustration** for explainers and stat callouts: prefer isometric or flat vector with the Sendai palette at reduced saturation. No human figures unless the artist is briefed on UNDRR's representation rules.
+- **Diagrammatic illustration** for system explainers: line work first, color second. Treat as informational, not decorative.
+- **Avoid AI-generic isometrics** — uncanny lighting, copy-paste people, the "blue gradient NGO" aesthetic. See <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo>.
+
+For prompt examples that produce on-brand illustration, see <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo>.
+
+---
+
+## Data visualisation
+
+Data viz is voice. The same chart, same data, with different palette and treatment, can feel either Knowledgeable (institutional, trustworthy) or marketing-flavoured (noisy, persuasive). UNDRR is the former.
+
+- **Palette** — Sendai colors at reduced saturation for sequential or qualitative scales. Use Corporate Blue only for the primary series. Avoid rainbow palettes.
+- **Line weight** — consistent stroke widths; no decorative outlines.
+- **Annotation** — written annotations belong on the chart, not in the caption. Make the chart explain itself.
+- **Source** — every chart cites its source. This is editorial, not decorative.
+
+---
+
+## Layered application checklist
+
+Before shipping any new visual artifact, run it through:
+
+- [ ] At what layer does this live? (Core / sub-brand / campaign)
+- [ ] What threads must persist from the layer above? Are they intact?
+- [ ] What is flexing? Is the flex justified by audience, mission, or moment?
+- [ ] Does the artifact lean into at least one of Knowledgeable, Approachable, Collaborative?
+- [ ] If you stripped the logo, would a stakeholder still recognise this as UNDRR-family?
+- [ ] Are images credited?
+- [ ] Does the icon set match Mangrove (web UI) or OCHA (DRR concepts)?
+- [ ] Does the colour serve meaning, not decoration?
+
+If any answer is no or uncertain, escalate to UNDRR Communications (`undrrcomms@un.org`) before publishing.
+
+---
+
+## Related
+
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo> — the model behind every decision on this page
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> — the verbal half of voice
+- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> — what UNDRR is *not*
+- <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo> — turn this guidance into prompts
+- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> — live theme previews
+
+---
+
+Last updated: 8 May 2026

@@ -1,0 +1,165 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+
+<Meta
+  title="Brand/Written voice"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Written voice
+
+UNDRR has one voice across every property. What changes from page to page is *register*, not voice. This page covers the four registers — urgent, authoritative, warm, hopeful — and when each is right.
+
+For sentence-level mechanics (active voice, plain language, error messages, link text, gender-neutral terminology, accessibility), the source of truth is the <LinkTo kind="contributing-writing-guidelines" story="docs">writing guidelines</LinkTo>. Read that first; this page sits on top of it.
+
+---
+
+## The voice (constant)
+
+The brand positioning trio defines the voice itself. Every UNDRR sentence should ladder back to at least one of:
+
+- **Knowledgeable.** Credible, sourced, never speculative. Present tense over future tense when describing risk. Numbers from primary sources, not rounded paraphrases.
+- **Approachable.** Plain language. No jargon walls. Active voice. Sentences are short enough to scan; long enough to carry meaning.
+- **Collaborative.** Speaks *with* readers, not *at* them. "We" includes the reader. Names partners by name. Avoids the institutional passive ("it has been determined that").
+
+If a sentence does not lean into at least one of those three, rewrite it.
+
+---
+
+## The four registers
+
+Register is how voice meets the moment. The voice is the same; the temperature changes.
+
+### 1. Urgent
+
+When: live disasters, early warnings, time-sensitive calls to action, evacuation guidance, "what to do in the next hour" content.
+
+How it sounds:
+
+- Front-loaded. The verb arrives in the first six words.
+- Imperative. "Move to higher ground." "Tune in to local radio."
+- Concrete. Specific actions, specific times, specific places.
+- Restrained. Urgency comes from precision, not adjectives. Never "catastrophic devastation"; always "Cyclone X made landfall at 14:30 local time."
+
+Anti-pattern: false urgency on non-urgent content. A campaign launch is not an emergency.
+
+### 2. Authoritative
+
+When: policy summaries, research findings, the Sendai Framework references, official statements, methodology pages, Words into Action guidance.
+
+How it sounds:
+
+- Sourced. Cite the report, the resolution, the dataset.
+- Neutral. State what the evidence shows; let the reader draw the conclusion.
+- Precise. "The 2015–2030 Sendai Framework" not "the Sendai goals." "The 2024 Global Assessment Report" not "recent UNDRR research."
+- Long sentences are allowed if the structure earns them — but break for readability.
+
+Anti-pattern: institutional fog ("it is important to note that"). Cut.
+
+### 3. Warm
+
+When: people stories, community profiles, partner spotlights, recovery narratives, success cases.
+
+How it sounds:
+
+- Named. People have names, places, jobs, ages. "Maria, 34, a community health worker in Talcahuano" beats "a local resident."
+- Specific. The mango tree, the school's blue gate, the morning the river rose.
+- Quoted. People speak in their own words; quotes are not rewritten for grammatical perfection.
+- Emotion at the edges. Let the reader feel without telling them how to feel.
+
+Anti-pattern: humanitarian-poverty-porn. Show agency, not victimhood.
+
+### 4. Hopeful
+
+When: prevention success, recovery progress, framework anniversaries, future-facing communication, IDDRR campaign content.
+
+How it sounds:
+
+- Forward-looking but evidence-based. "Communities reduced flood damage by 38% after installing early warning systems" beats "things are getting better."
+- Plural. The progress is collective. UNDRR, partners, member states, communities all named.
+- Specific futures. "By 2030" beats "in the coming years."
+- Earns optimism. Never glosses over what is still hard.
+
+Anti-pattern: empty optimism. UNDRR is institutionally serious — hope is grounded, not promotional.
+
+---
+
+## Layered application
+
+| Layer | Voice | Register flexibility |
+| --- | --- | --- |
+| Core UNDRR (undrr.org) | Locked: K / A / C trio | All four registers; Authoritative is the floor |
+| Sub-brand (PreventionWeb, MCR2030, IRP, ARISE, DELTA) | Locked: K / A / C trio | All four; emphasis shifts per audience (PreventionWeb skews Knowledgeable; MCR2030 skews Collaborative; IRP skews Hopeful) |
+| Campaign / partner | Locked: K / A / C trio | Campaign register can lean further into Urgent or Hopeful, but Authoritative remains the credibility floor |
+
+> **Tip:** When a campaign tone feels off, check whether it has dropped Authoritative entirely. UNDRR campaigns can be warm or hopeful, but they cannot be marketing-flavoured. Credibility is non-negotiable.
+
+---
+
+## House conventions
+
+These are not stylistic preferences. They are conventions enforced in-tree and in publications.
+
+| Convention | Source |
+| --- | --- |
+| **British English (Oxford spelling)** for publications and external content | UNDRR Policies and SOPs; UN Editorial Manual |
+| **Sentence case** for headings, titles, navigation, buttons | <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>; Material Design |
+| **No em-dashes in UI strings or story names** | Mangrove house convention; use parentheses for qualifiers |
+| **Descriptive link text** — never "click here" | UN/Microsoft inclusive-communication guidance |
+| **Gender-neutral terms** by default ("chair," "spokesperson," "humankind") | <LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>; UN gender-inclusive language guidelines |
+| **Disability-inclusive language** | UN Disability Inclusion Strategy; UN Geneva guidelines |
+| **Photo credits** always | SharePoint Photography & Icons page |
+| **UN docs links** structured `https://www.undocs.org/xx/xx/xxxx` | Policies and SOPs |
+| **Country names** from UNTERM | Policies and SOPs |
+| **Front-loaded** key info; inverted-pyramid structure | <LinkTo kind="brand-brand-guidelines" story="docs">Brand guidelines</LinkTo>; GOV.UK |
+
+---
+
+## Audience-aware voice
+
+The same news story can be told four ways for four audiences. The voice is constant; the framing shifts. See <LinkTo kind="brand-audience-mapping" story="docs">audience mapping</LinkTo> for the framing rules.
+
+---
+
+## Common rewrites
+
+| Drift | Rewrite | Why |
+| --- | --- | --- |
+| "Stakeholders are encouraged to leverage best practices to mainstream DRR." | "Local governments can use the MCR2030 toolkit to plan for floods and heatwaves." | Jargon → plain; abstract → concrete |
+| "It has been determined that early warning systems are effective." | "Early warning systems reduced cyclone deaths by 50% across the Pacific between 2014 and 2024 (UNDRR GAR 2024)." | Institutional passive → sourced active |
+| "Click here for more information." | "Read the full 2024 Global Assessment Report." | Non-descriptive link → action + source |
+| "Mankind faces unprecedented climate-driven risks." | "People everywhere face new climate-driven risks." | Gendered → neutral; emotive adjective → factual |
+| "Despite catastrophic destruction, the community is rebuilding." | "Two months after the floods, Talcahuano's community kitchen is feeding 200 people a day." | Adjective-led drama → specific human action |
+
+---
+
+## Decision rule
+
+Before publishing, ask:
+
+1. **Does this lean into Knowledgeable, Approachable, or Collaborative?** Ideally more than one.
+2. **What register does the moment call for?** Urgent, Authoritative, Warm, or Hopeful.
+3. **Does the chosen register hold the Authoritative floor?** Even Hopeful UNDRR copy must read as institutionally credible.
+4. **Are house conventions met?** Sentence case, descriptive links, gender-neutral, British English, photo credits, no em-dashes.
+
+If any answer is no, rewrite. If unsure on policy or facts, escalate to UNDRR Communications (`undrrcomms@un.org`).
+
+---
+
+## Related
+
+- <LinkTo kind="contributing-writing-guidelines" story="docs">Full writing guidelines</LinkTo> — sentence-level mechanics
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo> — the model behind voice consistency
+- <LinkTo kind="brand-audience-mapping" story="docs">Audience mapping</LinkTo> — how to flex voice per audience
+- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> — what UNDRR is *not*
+- <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo> — example prompts for language models
+
+---
+
+Last updated: 8 May 2026
