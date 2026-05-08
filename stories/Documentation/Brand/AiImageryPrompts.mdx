@@ -22,7 +22,10 @@ Generative image and language models produce on-brand work only when the prompt 
     Generative AI for imagery and language is moving fast. The tools change every few weeks, and so does what they produce from the same prompt. This page is also experimental: the prompt patterns below are a starting point, not a settled standard, and they will be revised as we learn what works for UNDRR. Treat every output as a draft to evaluate, not a final asset.
   </p>
   <p>
-    Use of AI tools at UNDRR must follow institutional guidance:
+    <strong>This page is derivative of UNDRR's institutional AI guidance, not a one-to-one match of it.</strong> The relevant policies on UN SharePoint and within UNDRR are still in development. The constraints documented here are working rules pulled from the institutional sources below; if SharePoint policy and this page disagree at any point, SharePoint policy wins. Confirm the current version with UNDRR Communications (<code>undrrcomms@un.org</code>) and your office's AI focal point before publishing AI-assisted work.
+  </p>
+  <p>
+    Institutional sources this page is derived from:
   </p>
   <ul>
     <li>
@@ -35,26 +38,23 @@ Generative image and language models produce on-brand work only when the prompt 
       <strong>UN System White Paper on AI Governance</strong> (HLCP, April 2024) — <a href="https://unsceb.org/united-nations-system-white-paper-ai-governance">unsceb.org/united-nations-system-white-paper-ai-governance</a>
     </li>
     <li>
-      <strong>UNDRR's own AI usage and imagery guidance</strong>, including the constraints on this page (no AI imagery for named people or specific real events; never instruct a model to generate identifiable faces; provenance label on publication; human review against the brand thread; positive framing of prevention).
+      <strong>UNDRR Communications guidance on SharePoint</strong> (in development; check with <code>undrrcomms@un.org</code> for the current version).
     </li>
   </ul>
-  <p>
-    Confirm any subsequent UN guidance with UNDRR Communications (<code>undrrcomms@un.org</code>) and your office's local AI focal point before publishing AI-assisted work.
-  </p>
 </HighlightBox>
 
 <HighlightBox variant="primary">
   <strong>The standing rules — read before any prompt below.</strong>
   <ol>
-    <li><strong>Never use AI imagery for named people or specific real events.</strong> Use AI for editorial illustration, conceptual diagrams, infographic backgrounds, and concept exploration only. For real communities and specific events, commission credited photography.</li>
-    <li><strong>Never instruct a model to generate identifiable human faces.</strong> Models cannot generate "named individuals" — they fabricate realistic faces that may match real people in their training data, without consent. Treat any clearly recognisable face in an AI output as a fail and regenerate. Where people appear, ask for partial views — faces turned, in profile, obscured by working posture, or at a distance.</li>
+    <li><strong>No photorealistic AI of human beings.</strong> AI imagery may depict people only in clearly stylised forms — flat vector, line illustration, editorial illustration. The output must not read as photographic. This aligns with AP, Reuters, and Guardian editorial standards on AI in journalism, and with the BBC's permissive lane for stylised graphics. For real publication imagery of real people, commission credited photography.</li>
+    <li><strong>Never use AI imagery for named people or specific real events.</strong> Use AI for editorial illustration, conceptual diagrams, infographic backgrounds, and concept exploration only.</li>
+    <li><strong>Never instruct a model to generate identifiable human faces.</strong> Models cannot generate "named individuals" — they fabricate realistic faces that may match real people in their training data, without consent. Even in stylised illustration, ask for faces in profile, three-quarter view, in motion, or without rendered detail.</li>
     <li><strong>Never generate identifiable images of children.</strong> For child-focused topics, use illustration with no human figures, or commission credited photography with documented consent.</li>
     <li><strong>Specify a named country, not a region.</strong> "Pacific Islands" or "sub-Saharan Africa" produce cultural pastiche. Pick one named place per generation (for example, "Vanuatu, Efate Island," "Kenya, Mombasa County") and a specific built-environment cue.</li>
     <li><strong>Disability inclusion is required, not optional, in every people-inclusive prompt.</strong> The Sendai Framework explicitly addresses disability-inclusive DRR. Ask for at least one disabled person as a participant (not a recipient) — for example, a wheelchair user among community planners, a sign language interpreter at a briefing, a participant using a white cane near an early-warning siren.</li>
     <li><strong>Decolonial framing.</strong> Avoid "outside expert / local recipient" prompt structures. Frame people as peers with named professional roles. The unmarked party in a prompt is the one most likely to default to white/male in model output.</li>
     <li><strong>Diversity must be specified, not implied.</strong> "Diverse" alone is a weak token. Name what you want: skin-tone range including dark brown, varied ages including older adults, varied body types, varied hair textures including textured and curly hair worn naturally.</li>
-    <li><strong>Reverse-image-search every AI-generated face before publishing.</strong> If results return a real person, regenerate.</li>
-    <li><strong>Label AI-generated imagery on publication.</strong> UNDRR's editorial standard requires credit and source for every image. Generative work surfaces its provenance the same way. Where the platform supports it, attach <a href="https://contentcredentials.org">C2PA Content Credentials</a> (cryptographic provenance manifest) so downstream readers can verify origin and edits.</li>
+    <li><strong>Label AI-generated imagery on publication.</strong> UNDRR's editorial standard requires credit and source for every image; generative work surfaces its provenance the same way. <a href="https://contentcredentials.org">C2PA Content Credentials</a> (cryptographic provenance manifests) are an emerging standard worth exploring as platform support grows; adopt opportunistically where the publishing tool supports it. This is not yet a UNDRR-wide commitment.</li>
   </ol>
 </HighlightBox>
 
@@ -72,35 +72,35 @@ After generating, run the result through the <LinkTo kind="brand-anti-patterns" 
 
 ---
 
-## Hero photography (for concept exploration only — not for publication)
+## Stylised illustration of people (no photo-realistic AI of humans)
 
-Use these prompts to explore visual direction. Real publication still requires credited photography per the SharePoint Photography & Icons rule.
-
+> **Photorealistic AI of human beings is not permitted on UNDRR properties.** This aligns with editorial-standard practice at AP, Reuters, and the Guardian (no AI photoreal in journalism), with the BBC's permissive lane for stylised graphics and illustrations, and with sector guidance from Bond and Oxfam. AI imagery may depict people only in clearly stylised forms — flat vector, line illustration, editorial illustration. The output must not read as photographic. For real publication imagery of real people, commission credited photography per the SharePoint Photography & Icons rule.
+>
 > **Substitute the bracketed values for each generation.** The named place and built-environment cue are intentional — without them models default to cultural pastiche.
 
-### Hero — community-led prevention
+### Stylised illustration — community-led prevention
 
-> Documentary photograph of a coastal community planting mangrove seedlings in late afternoon light. Setting: [named country and locality, with one specific built-environment cue — e.g., "Vanuatu, Efate Island, concrete-block community hall with corrugated-iron roof in mid-ground"]. People shown in mid-action with faces partially turned, in profile, or obscured by working posture; no frontal close-up portraits; faces are not the focal subject. Mixed team across deliberately varied skin tones (full range including dark brown), varied ages including older adults, varied body types and hair textures including textured and curly hair worn naturally; at least one participant is a disabled person taking part as a peer (for example, a wheelchair user planting from a seated position, or a participant with a white cane on the path). Real working clothing appropriate to the place; no aid-worker hi-vis vests or branded uniforms. Candid composition, 16:6 aspect ratio for hero banner, focal subject left of centre, hopeful but grounded mood, no text overlay, photo-realistic, environmental documentary style.
+> Flat vector editorial illustration of a coastal community planting mangrove seedlings in late afternoon light. Setting: [named country and locality, with one specific built-environment cue — for example, "Vanuatu, Efate Island, concrete-block community hall with corrugated-iron roof in mid-ground"]. Clearly stylised, not photo-realistic; flat fills and soft outlines, no skin-tone gradients that mimic photography, no rendered facial detail, no rendered eyes. Faces shown in profile, three-quarter view, or obscured by working posture; never frontal portraits. Mixed team across deliberately varied skin tones (full range including dark brown), varied ages including older adults, varied body types and hair textures including textured and curly hair worn naturally; at least one participant is a disabled person taking part as a peer (for example, a wheelchair user planting from a seated position, or a participant with a white cane on the path). Real working clothing appropriate to the place; no aid-worker hi-vis vests or branded uniforms. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. 16:6 aspect ratio for hero banner, focal subject left of centre, hopeful but grounded mood, no text overlay.
 
-What to expect: a wide hero with people doing the work, in a specifically named place, in real clothing. Composition leaves negative space on the right for editorial copy.
+What to expect: a stylised hero illustration with people doing the work in a specifically named place. Composition leaves negative space on the right for editorial copy.
 
-What to reject: hard-hat stock-photo workers, decorative globes, unfamiliar landscapes that could be anywhere, posed group portraits looking at the camera, single-region "Pacific Islands" pastiche when the country was specified, faces sharp enough to be recognisable.
+What to reject: any output that reads as photo-realistic (rendered eyes, photographic skin-tone gradient, photographic lighting); hard-hat stock figures; decorative globes; unfamiliar landscapes that could be anywhere; posed compositions looking at the viewer; single-region pastiche when the country was specified.
 
-### Hero — recovery in progress
+### Stylised illustration — recovery in progress
 
-> Documentary photograph, two months after a coastal cyclone, community kitchen serving a meal in a re-opened school. Setting: [named country and locality]. Mixed team — at least one man and one older adult cooking actively; women shown leading or coordinating, not only serving. No children visible as focal subjects. No frontal portraits; people in mid-action with faces partially turned, in profile, or obscured by working posture. Deliberately varied skin tones, ages, and body types; at least one disabled person present as a participant. Morning light, 16:6 aspect ratio for hero banner, hopeful but factual mood, focal subject left of centre, no overt drama, no destruction in the foreground, no exposed personal belongings or improvised shelters as focal subject, agency conveyed through purposeful action, no expressions of distress, grief, or shock, no comparison to a "before" state in the same frame, photo-realistic.
+> Flat vector editorial illustration, two months after a coastal cyclone, community kitchen serving a meal in a re-opened school. Setting: [named country and locality]. Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail, no rendered eyes. Mixed team — at least one man and one older adult cooking actively; women shown leading or coordinating, not only serving. No children in the frame as focal subjects. Faces shown in profile, three-quarter view, or in motion; never frontal portraits. Deliberately varied skin tones, ages, and body types; at least one disabled person present as a participant. No destruction in the foreground; no exposed personal belongings or improvised shelters as focal subject; no expressions of distress, grief, or shock; no comparison to a "before" state in the same frame. Agency conveyed through purposeful action. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. 16:6 aspect ratio, hopeful but factual mood.
 
-What to expect: forward-looking framing — the recovery in progress, not the disaster. Named place, mixed team, dignity preserved through action and partial views.
+What to expect: a stylised illustration of recovery in progress — forward-looking framing, named place, mixed team, dignity preserved through action and stylised abstraction.
 
-What to reject: rubble as primary subject, helpless figures, distressed faces, identifiable children, generic "humanitarian distribution" wide shots, flag-and-banner imagery, anyone in a hi-vis vest directing local labour.
+What to reject: any output that reads as photo-realistic; rubble as primary subject; helpless figures; distressed faces; children; generic "humanitarian distribution" wide shots; flag-and-banner imagery; anyone in a hi-vis vest directing local labour.
 
-### Hero — knowledge platform
+### Stylised illustration — knowledge platform
 
-> Documentary photograph of two government planners from [named country]'s national disaster management agency reviewing printed flood-risk maps as peers. Mid-shot, daylight working office appropriate to the country (not a glass-walled boardroom). Both figures positioned as professional equals — neither shown as instructor or recipient; both with named professional roles implied through clothing and posture. Mixed gender, varied ages including older adults, deliberately varied skin tones across the full range. At least one of the two figures is a disabled person — for example, a wheelchair user at the table or a participant using a hearing aid. People shown in profile or three-quarter view; no frontal portraits; faces not the focal subject. Recognisable maps and printed reports on the table. 16:6 aspect ratio, neutral and authoritative mood, focal subjects centred on the work, no text overlay, photo-realistic.
+> Flat vector editorial illustration of two government planners from [named country]'s national disaster management agency reviewing printed flood-risk maps as peers. Mid-shot, daylight working office appropriate to the country (not a glass-walled boardroom). Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail, no rendered eyes. Both figures positioned as professional equals — neither shown as instructor or recipient. Mixed gender, varied ages including older adults, deliberately varied skin tones across the full range. At least one of the two figures is a disabled person (for example, a wheelchair user at the table or a participant using a hearing aid). People shown in profile or three-quarter view; never frontal portraits. Recognisable maps and printed reports on the table. Palette: Sendai colours at reduced saturation plus UNDRR Corporate Blue as the primary accent. 16:6 aspect ratio, neutral and authoritative mood, focal subjects centred on the work, no text overlay.
 
-What to expect: institutional but warm — two professionals as peers with real artifacts on the table. Reads as Knowledgeable + Collaborative without the development-aid frame.
+What to expect: a stylised illustration of two professionals as peers with real artifacts on the table. Reads as Knowledgeable + Collaborative without the development-aid frame.
 
-What to reject: any "outside researcher / local recipient" framing, generic boardroom stock, suited figures pointing at laptops, abstract globe-and-data overlays, recognisable faces, an unmarked figure (model defaults to white/male) paired with an explicitly "local" figure.
+What to reject: any output that reads as photo-realistic; "outside researcher / local recipient" framing; generic boardroom stock; suited figures pointing at laptops; abstract globe-and-data overlays; an unmarked figure (model defaults to white/male) paired with an explicitly "local" figure.
 
 ---
 
@@ -243,11 +243,12 @@ Before using any AI-generated output, check it against:
 
 **Standing rules (must hold):**
 
-- [ ] No identifiable human faces in the output. Reverse-image-search any face that reads as recognisable; if the search returns a real person, regenerate.
+- [ ] The output is clearly stylised, not photo-realistic. Any output that reads as photographic of human beings is a fail — regenerate or commission credited photography instead.
+- [ ] No identifiable human faces in the output. If a face reads as recognisable, regenerate.
 - [ ] No identifiable images of children.
 - [ ] If the prompt depicts people, the output includes the disability inclusion you specified, deliberately varied skin tones across the full range, and varied ages.
 - [ ] No "outside expert / local recipient" framing.
-- [ ] The output will be labelled as AI-generated on publication, with C2PA Content Credentials attached where the platform supports them.
+- [ ] The output will be labelled as AI-generated on publication. Where the publishing tool supports it, attach C2PA Content Credentials (opportunistic; not yet a UNDRR-wide requirement).
 
 **Brand thread:**
 
