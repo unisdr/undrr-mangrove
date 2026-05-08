@@ -1341,11 +1341,17 @@ Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixe
 
 ### Brand guide
 
-The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners). Five pages:
+The Storybook includes a Brand section for non-technical users (content editors, brand managers, external partners). Eleven pages:
 
 - **About this guide** (${DOCS_BASE}?path=/docs/brand-about-this-guide--docs): Overview with theme-map cards linking to each UNDRR property's brand identity preset.
 - **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons. Switch themes via toolbar or append \`&globals=theme:<Theme Name>\` to the URL. Colors are probed live from compiled CSS via \`getComputedStyle\`, so they stay in sync with SCSS.
 - **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance — brand positioning, communication rules, logo usage, photography standards, web elements. Migrated from UNDRR SharePoint.
+- **Layered identity** (${DOCS_BASE}?path=/docs/brand-layered-identity--docs): The strategic model behind UNDRR's identity — core UNDRR → sub-brand (PreventionWeb, MCR2030, IRP, ARISE, DELTA) → campaign / partner product. At every layer boundary, names the *thread* (constant) and the *variable* (allowed to flex). Decision rule for any new artifact.
+- **Visual voice** (${DOCS_BASE}?path=/docs/brand-visual-voice--docs): How color, typography, photography, iconography, layout rhythm, motion, illustration, and data viz express the K/A/C positioning trio (Knowledgeable, Approachable, Collaborative).
+- **Written voice** (${DOCS_BASE}?path=/docs/brand-written-voice--docs): Four voice registers (Urgent, Authoritative, Warm, Hopeful) mapped to content type, plus house conventions: British English (Oxford spelling), sentence case, no em-dashes in UI strings, descriptive link text, gender-neutral and disability-inclusive language.
+- **Audience mapping** (${DOCS_BASE}?path=/docs/brand-audience-mapping--docs): How voice and visual emphasis shift across five audiences (governments, practitioners, local governments, private sector, media/citizens), with one-story-five-framings worked example.
+- **Anti-patterns** (${DOCS_BASE}?path=/docs/brand-anti-patterns--docs): Explicit list of what UNDRR is *not* — conference rooms, disaster tourism, generic blue-NGO aesthetic, jargon walls, empty optimism, etc., each with counter-examples.
+- **AI imagery prompts** (${DOCS_BASE}?path=/docs/brand-ai-imagery-prompts--docs): Copy-paste prompt templates for image and language models, organised by use case (hero photography, editorial illustration, infographic backgrounds, sub-brand variants, language-model toolkit). AI imagery is for editorial illustration and concept exploration only — never for representing real people or specific events.
 - **Common patterns** (${DOCS_BASE}?path=/docs/brand-common-patterns--docs): Plain-language reference for foundations shared across all themes — breakpoints, grid classes (\`mg-grid__col-{N}\`), accessibility standards, language support (\`lang="ar"\` mechanism), icon sources, z-index.
 - **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 8 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
 
