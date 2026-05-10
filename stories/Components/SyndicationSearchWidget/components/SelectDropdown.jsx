@@ -38,6 +38,9 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+const EMPTY_OPTIONS = [];
+const EMPTY_VALUE = [];
+
 /**
  * SelectDropdown component.
  *
@@ -55,8 +58,8 @@ export function SelectDropdown({
   id,
   label,
   placeholder = 'Select...',
-  options = [],
-  value = [],
+  options = EMPTY_OPTIONS,
+  value = EMPTY_VALUE,
   onChange,
   multiple = false,
   searchThreshold = 8,

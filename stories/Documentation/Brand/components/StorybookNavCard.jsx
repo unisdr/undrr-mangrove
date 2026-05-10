@@ -21,11 +21,21 @@ export function StorybookNavCard({ title, summary, imgback, imgalt, theme }) {
     linkTo('Brand/Brand identity', 'Docs')();
   }
 
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick(e);
+    }
+  }
+
   return (
     <article
       className="mg-card mg-card__vc"
       style={{ cursor: 'pointer' }}
+      role="button"
+      tabIndex={0}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       <div className="mg-card__visual">
         <img alt={imgalt} className="mg-card__image" src={imgback} />

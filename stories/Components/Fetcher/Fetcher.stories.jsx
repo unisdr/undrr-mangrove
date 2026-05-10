@@ -24,7 +24,7 @@ export const Default = {
   render: () => {
     const renderData = ({ isLoading, data }) => (
       <div>
-        {isLoading && <p>Loading data...</p>}
+        {isLoading && <p>Loading data…</p>}
         <pre>{JSON.stringify(data, null, 4)}</pre>
       </div>
     );
@@ -46,7 +46,7 @@ export const WithSearchTerm = {
   render: () => {
     const renderData = ({ isLoading, data }) => (
       <div>
-        {isLoading && <p>Searching...</p>}
+        {isLoading && <p>Searching…</p>}
         <pre>{JSON.stringify(data, null, 4)}</pre>
       </div>
     );
@@ -68,7 +68,7 @@ export const WithoutQueryParams = {
   render: () => {
     const renderData = ({ isLoading, data }) => (
       <div>
-        {isLoading && <p>Loading data...</p>}
+        {isLoading && <p>Loading data…</p>}
         <pre>{JSON.stringify(data, null, 4)}</pre>
       </div>
     );
