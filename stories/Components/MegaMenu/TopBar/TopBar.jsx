@@ -44,7 +44,6 @@ export function TopBar({
       icon={section.icon}
       bannerDescription={section.bannerDescription}
       link={section.bannerButton}
-      children={section.sections}
       onMouseEnter={() => handleItemHover(index)}
       activeItem={activeItem}
       section={section}
@@ -53,7 +52,9 @@ export function TopBar({
       }}
       sectionListRef={sectionListRef}
       itemListRef={itemListRef}
-    />
+    >
+      {section.sections}
+    </TopBarItem>
   ));
 
   // Branded variant: logo + nav wrapped in a <div>
