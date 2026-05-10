@@ -111,7 +111,9 @@ export function FacetsSidebar({ widgetId = 'search' }) {
     }
 
     // Sort by weight
-    const sorted = [...customFacets].sort((a, b) => (a.weight || 50) - (b.weight || 50));
+    const sorted = customFacets.toSorted(
+      (a, b) => (a.weight || 50) - (b.weight || 50)
+    );
 
     return sorted.map((facet) => (
       <CustomFacetSelect
