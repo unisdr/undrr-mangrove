@@ -8,7 +8,7 @@
  * @module SearchWidget/context/SearchContext
  */
 
-import React, { createContext, useContext, useReducer, useMemo } from 'react';
+import React, { createContext, use, useReducer, useMemo } from 'react';
 import { DEFAULT_CONFIG } from '../utils/constants';
 
 /**
@@ -327,7 +327,7 @@ export function SearchProvider({ config: userConfig, children }) {
  * @throws {Error} If used outside SearchProvider
  */
 export function useSearchConfig() {
-  const config = useContext(SearchConfigContext);
+  const config = use(SearchConfigContext);
   if (config === null) {
     throw new Error('useSearchConfig must be used within a SearchProvider');
   }
@@ -340,7 +340,7 @@ export function useSearchConfig() {
  * @throws {Error} If used outside SearchProvider
  */
 export function useSearchState() {
-  const state = useContext(SearchStateContext);
+  const state = use(SearchStateContext);
   if (state === null) {
     throw new Error('useSearchState must be used within a SearchProvider');
   }
@@ -353,7 +353,7 @@ export function useSearchState() {
  * @throws {Error} If used outside SearchProvider
  */
 export function useSearchDispatch() {
-  const dispatch = useContext(SearchDispatchContext);
+  const dispatch = use(SearchDispatchContext);
   if (dispatch === null) {
     throw new Error('useSearchDispatch must be used within a SearchProvider');
   }

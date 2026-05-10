@@ -12,7 +12,7 @@ export default function Histogram({
 }) {
   const svgRef = useRef();
 
-  const [visibleSeries, setVisibleSeries] = useState(
+  const [visibleSeries, setVisibleSeries] = useState(() =>
     dataSeries.map(() => true)
   );
 

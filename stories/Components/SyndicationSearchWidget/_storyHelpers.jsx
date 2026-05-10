@@ -30,7 +30,7 @@ export const withInlineDescription = (Story, context) => {
           padding: '1rem',
           background: '#f8f9fa',
           borderRadius: '4px',
-          borderLeft: '4px solid #0969da',
+          boxShadow: 'inset 2px 0 0 #0969da',
           lineHeight: '1.6',
         }}
       >
