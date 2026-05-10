@@ -130,7 +130,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
       {/* Loading indicator for taxonomies */}
       {taxonomiesLoading && (
         <div className="mg-search__facets-loading" aria-live="polite">
-          Loading filters...
+          Loading filters…
         </div>
       )}
 

@@ -9,6 +9,8 @@ import { max } from 'd3-array';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { transformDataForBarChart } from './chart-helpers';
 
+const EMPTY_DATA = [];
+
 /**
  * Renders a D3-powered bar chart with configurable axes, colors, and accessibility attributes.
  *
@@ -35,7 +37,7 @@ import { transformDataForBarChart } from './chart-helpers';
  * @param {{top: number, right: number, bottom: number, left: number}} [props.margin] SVG margins
  */
 export default function BarChartProcessor({
-  data = [],
+  data = EMPTY_DATA,
   cumulative = 'false',
   startYear = 2015,
   endYear = 2030,
