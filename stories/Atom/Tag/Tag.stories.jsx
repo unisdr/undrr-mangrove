@@ -167,7 +167,7 @@ export const TagContainer = {
       </div>
       <div>
         <p style={{ margin: '0 0 8px', fontWeight: 'bold' }}>
-          Drupal migration — existing markup structure:
+          Drupal migration (existing markup structure):
         </p>
         <div className="mg-tag-container">
           <a href="/taxonomy/term/123">Earthquake</a>
