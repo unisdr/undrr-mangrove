@@ -8,8 +8,13 @@ export const variant_options = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function FooterConditions({ style, footerdata, ...args }) {
-  let screen_variant = variant_options[`${args.variant}`];
+export function FooterConditions({
+  style,
+  footerdata,
+  variant = 'default',
+  ...args
+}) {
+  let screen_variant = variant_options[variant];
   return (
     <ul className={cls('footer-links', `${screen_variant}`)}>
       {footerdata.map((item, index) => (
@@ -20,7 +25,3 @@ export function FooterConditions({ style, footerdata, ...args }) {
     </ul>
   );
 }
-
-FooterConditions.defaultProps = {
-  variant: 'default',
-};

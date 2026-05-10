@@ -47,9 +47,11 @@ const getLangCode = (Story, context) => {
     window.UNDRR.dir = direction;
 
     // Dispatch load event for components that listen for it
-    setTimeout(() => {
+    const loadEventTimer = setTimeout(() => {
       window.dispatchEvent(new Event('load'));
     }, 10);
+
+    return () => clearTimeout(loadEventTimer);
   }, [activeLang]);
 
   return <Story {...context} />;

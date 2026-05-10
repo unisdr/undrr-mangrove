@@ -36,13 +36,13 @@ ArrowButtons.propTypes = {
 // Scroll container component
 const ScrollContainer = ({
   children,
-  height,
-  minWidth,
-  itemWidth,
-  padding,
-  className,
-  showArrows,
-  stepSize,
+  height = 'auto',
+  minWidth = 'auto',
+  itemWidth = 'auto',
+  padding = '0',
+  className = '',
+  showArrows = false,
+  stepSize = null,
   ...props
 }) => {
   const containerRef = useRef(null);
@@ -294,15 +294,6 @@ ScrollContainer.propTypes = {
   className: PropTypes.string,
   showArrows: PropTypes.bool,
   stepSize: PropTypes.number,
-};
-ScrollContainer.defaultProps = {
-  height: 'auto',
-  minWidth: 'auto',
-  itemWidth: 'auto',
-  padding: '0',
-  className: '',
-  showArrows: false,
-  stepSize: null,
 };
 
 export default React.memo(ScrollContainer);
