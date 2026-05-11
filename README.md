@@ -2,6 +2,8 @@
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://unisdr.github.io/undrr-mangrove/)
 [![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
+<!-- React Doctor score is a periodic snapshot, not live. Refresh after audit sweeps by re-running `npx -y react-doctor@latest .` and updating the s/e/w/f params below. See docs/AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor. -->
+[![React Doctor](https://www.react.doctor/share/badge?p=%40undrr%2Fundrr-mangrove&s=66&e=31&w=312&f=125)](https://www.react.doctor/share?p=%40undrr%2Fundrr-mangrove&s=66&e=31&w=312&f=125)
 
 # Mangrove: the UNDRR component library
 

@@ -141,6 +141,9 @@ yarn lint               # Run all linters
 yarn lint:js           # Lint JavaScript/JSX
 yarn lint:css          # Lint CSS/SCSS
 
+# Component-quality audit (correctness, perf, a11y, architecture)
+npx -y react-doctor@latest .   # See docs/AI-CODING-AGENTS.md
+
 # Build
 yarn build             # Build for production (SCSS + Storybook + webpack)
 ```
