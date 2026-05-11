@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import QRCode from 'qrcode';
 import LinkUrls from './links.json';
 
@@ -524,5 +525,44 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
     </button>
   );
 }
+
+QRCodeModal.propTypes = {
+  /** Controls modal visibility. */
+  isOpen: PropTypes.bool.isRequired,
+  /** Called when the user closes the modal (Escape, click-outside, or close button). */
+  onClose: PropTypes.func.isRequired,
+  /** Data URL for the generated QR code image. */
+  qrCodeDataUrl: PropTypes.string,
+  /** Called when the user copies the QR image to the clipboard. Should return a Promise. */
+  onCopy: PropTypes.func.isRequired,
+  /** Called when the user downloads the QR image. */
+  onDownload: PropTypes.func.isRequired,
+  /** URL the QR code encodes (also shown in the modal caption). */
+  sharedLink: PropTypes.string.isRequired,
+  /** Localised confirmation text shown after a successful copy. */
+  copiedLabel: PropTypes.string,
+};
+
+ShareButtons.propTypes = {
+  /** Translated labels: `mainLabel` is the section header text; `onCopy` is the
+   * confirmation text shown after copy / QR-image-copied actions. */
+  labels: PropTypes.shape({
+    mainLabel: PropTypes.string,
+    onCopy: PropTypes.string,
+  }).isRequired,
+  /** Subject line used for email share and the QR caption. */
+  SharingSubject: PropTypes.string,
+  /** Body text prefixed to the shared URL in email and clipboard payloads. */
+  SharingTextBody: PropTypes.string,
+};
+
+CopyButton.propTypes = {
+  /** Localised confirmation text shown after a successful copy. */
+  copiedLabel: PropTypes.string.isRequired,
+  /** URL to copy; also rendered (with `http(s)://` stripped) as the button label. */
+  sharedLink: PropTypes.string.isRequired,
+  /** Optional CSS class applied to the root button element. */
+  className: PropTypes.string,
+};
 
 export default ShareButtons;
