@@ -44,7 +44,7 @@ Most of the manifest auto-generates from Storybook and component rendering. Two 
 
 Tips for better manifest output:
 
-- **Add PropTypes to your components.** The manifest extracts prop names, types, defaults, and descriptions from PropTypes and JSDoc comments via react-docgen. Components without PropTypes appear in the manifest with no prop documentation.
+- **Add PropTypes to your components.** The manifest extracts prop names, types, defaults, and descriptions from PropTypes and JSDoc comments via react-docgen. Components without PropTypes appear in the manifest with no prop documentation. The practical ceiling is ~87% (the remaining ~13% are CSS-utility doc pages, vanilla CSS patterns, story-only examples, or intentional stubs); see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md#proptypes-coverage-the-practical-ceiling-is-87) before chasing gaps.
 - **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs), add a webpack entry in `webpack.config.js`, a `COMPONENT_IDS` mapping, and a `buildSampleProps()` entry — both in `scripts/ai-manifest/generate-ai-manifest.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
 - **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 

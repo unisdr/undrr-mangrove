@@ -47,6 +47,23 @@ return null;
 return <></>;
 ```
 
+### PropTypes coverage: the practical ceiling is ~87%
+
+`yarn validate-manifest` reports the share of components with documented `propTypes`. As of v1.7.0 the ceiling is **~87% (61 of 70)** and reaching it took two scoped passes (#1005, #1007). The remaining 9 entries are *not* PropTypes gaps to chase — they are manifest entries that do not have a React prop contract by design. Don't open PRs trying to push the percentage higher unless you're changing what the manifest classifies as a "component".
+
+The 9 currently exempt entries, grouped by why:
+
+| Why | Entries |
+|---|---|
+| **CSS-utility documentation pages** (catalogue utility classes; no React props) | `Fontsizeutilities`, `Normalize`, `Typography`, `UtilityCSS` |
+| **Vanilla CSS patterns with no `.jsx` file** (consumed as HTML + class names; correctly listed as vanilla-HTML in the manifest) | `Tag` |
+| **Story-only examples / page templates** (single-shot demonstrations, not reusable components) | `TypographyIntegrationExample`, `Formvalidation`, `PageTemplateExample` |
+| **Intentional empty stubs** (design-token / layout demos with `Component.propTypes = {}`) | `Grid` |
+
+If you add a new entry that falls into one of these buckets, expect it to keep the percentage flat — that's correct behaviour, not coverage drift. If you add a *real* React component, declaring `propTypes` (or fixing the docgen-friendliness of an existing one — see the empty-Fragment gotcha above) is the path to raising the floor.
+
+If at some future point this list shifts (e.g. a vanilla pattern becomes a React component, or an example graduates into a reusable component), update this table in the same PR.
+
 ## CSS class rename gotchas
 
 Renaming CSS classes is a common task that creates subtle breakage because CSS failures are silent — elements just lose styling with no error. When renaming classes:
