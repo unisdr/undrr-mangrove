@@ -386,7 +386,14 @@ const CookieConsentBanner = ({
     };
   }, [customConfig, debug, forceFallback, cdnBaseUrl]);
 
-  return null; // This component does not render anything itself
+  // Returning an empty Fragment instead of `null` so the Storybook docgen pass
+  // (which is configured to use `react-docgen`, see .storybook/main.js) can
+  // classify this as a React component and extract its prop contract.
+  // `react-docgen` uses JSX presence to identify components; a pure side-effect
+  // component that only returns `null` would otherwise have its `propTypes`
+  // dropped from the AI manifest. Empty Fragments render nothing in the DOM —
+  // behaviourally identical to `return null` for consumers. See #1006.
+  return <></>;
 };
 
 CookieConsentBanner.propTypes = {

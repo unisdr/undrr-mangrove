@@ -8,6 +8,8 @@
 import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 
+const EMPTY_OPTIONS = [];
+
 /**
  * Select component.
  *
@@ -33,7 +35,7 @@ export function Select({
   name,
   label,
   hideLabel = false,
-  options = [],
+  options = EMPTY_OPTIONS,
   placeholder,
   value,
   defaultValue,

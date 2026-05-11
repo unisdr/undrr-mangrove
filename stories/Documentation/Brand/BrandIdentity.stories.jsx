@@ -82,7 +82,7 @@ function BrandIdentityPage({ themeName }) {
           style={{
             fontFamily: "'Roboto Condensed', sans-serif",
             fontSize: '2.625rem',
-            fontWeight: 700,
+            fontWeight: 600,
             margin: 0,
             letterSpacing: '-0.5px',
           }}
@@ -399,7 +399,7 @@ function BrandIdentityPage({ themeName }) {
             <Icon name={icon.name} size="lg" />
             <div
               style={{
-                fontSize: '0.6875rem',
+                fontSize: '0.75rem',
                 color: '#666',
                 marginTop: '0.25rem',
               }}

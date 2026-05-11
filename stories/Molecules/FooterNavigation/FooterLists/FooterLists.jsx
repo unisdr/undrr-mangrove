@@ -17,9 +17,10 @@ export function FooterLists({
   ariacontrol,
   arialabel,
   data,
+  variant = 'default',
   ...args
 }) {
-  let screen_variant = variant_options[`${args.variant}`];
+  let screen_variant = variant_options[variant];
   return (
     <div
       className={cls('cell', 'medium-2', 'footer-item', `${screen_variant}`)}
@@ -48,7 +49,3 @@ export function FooterLists({
     </div>
   );
 }
-
-FooterLists.defaultProps = {
-  variant: 'default',
-};

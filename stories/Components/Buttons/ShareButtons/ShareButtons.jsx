@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import QRCode from 'qrcode';
 import LinkUrls from './links.json';
 
@@ -22,6 +23,17 @@ const QRCodeModal = ({
 }) => {
   const modalRef = useRef(null);
   const [qrCodeCopied, setQrCodeCopied] = useState(false);
+
+  // Reset the "copied" confirmation when the modal reopens. Tracking the
+  // previous isOpen in a ref lets us detect the false→true transition during
+  // render — no extra useEffect round-trip needed.
+  const prevIsOpenRef = useRef(isOpen);
+  if (isOpen !== prevIsOpenRef.current) {
+    prevIsOpenRef.current = isOpen;
+    if (isOpen) {
+      setQrCodeCopied(false);
+    }
+  }
 
   useEffect(() => {
     const handleEscape = e => {
@@ -48,13 +60,6 @@ const QRCodeModal = ({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
-
-  // Reset copy state when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setQrCodeCopied(false);
-    }
-  }, [isOpen]);
 
   const handleCopy = async () => {
     try {
@@ -485,25 +490,20 @@ const ShareButtons = ({
  */
 export function CopyButton({ copiedLabel, sharedLink, className }) {
   const [coppied, setCoppied] = useState(false);
-  const [visibleLink, setVisibleLink] = useState(sharedLink);
+
+  // visibleLink is fully derived from sharedLink: strip the leading http(s)://
+  // for display. Computed during render so we don't need useState/useEffect.
+  let visibleLink = sharedLink;
+  if (sharedLink.startsWith('https://')) {
+    visibleLink = sharedLink.replace('https://', '');
+  } else if (sharedLink.startsWith('http://')) {
+    visibleLink = sharedLink.replace('http://', '');
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sharedLink);
     setCoppied(true);
   };
-
-  //on sharedLink change, update visibleLink to not show http/s
-  useEffect(() => {
-    let newVisibleLink = sharedLink;
-    //replace https only if it is in the beginning of the URL
-    if (sharedLink.startsWith('https://')) {
-      //replace replaces only first occurence
-      newVisibleLink = sharedLink.replace('https://', '');
-    } else if (sharedLink.startsWith('http://')) {
-      newVisibleLink = sharedLink.replace('http://', '');
-    }
-    setVisibleLink(newVisibleLink);
-  }, [sharedLink]);
 
   return (
     <button
@@ -525,5 +525,44 @@ export function CopyButton({ copiedLabel, sharedLink, className }) {
     </button>
   );
 }
+
+QRCodeModal.propTypes = {
+  /** Controls modal visibility. */
+  isOpen: PropTypes.bool.isRequired,
+  /** Called when the user closes the modal (Escape, click-outside, or close button). */
+  onClose: PropTypes.func.isRequired,
+  /** Data URL for the generated QR code image. */
+  qrCodeDataUrl: PropTypes.string,
+  /** Called when the user copies the QR image to the clipboard. Should return a Promise. */
+  onCopy: PropTypes.func.isRequired,
+  /** Called when the user downloads the QR image. */
+  onDownload: PropTypes.func.isRequired,
+  /** URL the QR code encodes (also shown in the modal caption). */
+  sharedLink: PropTypes.string.isRequired,
+  /** Localised confirmation text shown after a successful copy. */
+  copiedLabel: PropTypes.string,
+};
+
+ShareButtons.propTypes = {
+  /** Translated labels: `mainLabel` is the section header text; `onCopy` is the
+   * confirmation text shown after copy / QR-image-copied actions. */
+  labels: PropTypes.shape({
+    mainLabel: PropTypes.string,
+    onCopy: PropTypes.string,
+  }).isRequired,
+  /** Subject line used for email share and the QR caption. */
+  SharingSubject: PropTypes.string,
+  /** Body text prefixed to the shared URL in email and clipboard payloads. */
+  SharingTextBody: PropTypes.string,
+};
+
+CopyButton.propTypes = {
+  /** Localised confirmation text shown after a successful copy. */
+  copiedLabel: PropTypes.string.isRequired,
+  /** URL to copy; also rendered (with `http(s)://` stripped) as the button label. */
+  sharedLink: PropTypes.string.isRequired,
+  /** Optional CSS class applied to the root button element. */
+  className: PropTypes.string,
+};
 
 export default ShareButtons;

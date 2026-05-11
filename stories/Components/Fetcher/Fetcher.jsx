@@ -9,6 +9,8 @@ const RESPONSE_PARAMS = {
   data: [] || {},
 };
 
+const EMPTY_QUERY_PARAMS = {};
+
 export const generateQueryParams = params => {
   const urlSearchParams = new URLSearchParams();
 
@@ -37,7 +39,13 @@ export const generateQueryParams = params => {
  * @param {string} [props.username]       Username for basic authentication (currently unused).
  * @param {string} [props.password]       Password for basic authentication (currently unused).
  */
-const Fetcher = ({ api, render, queryParams = {}, username, password }) => {
+const Fetcher = ({
+  api,
+  render,
+  queryParams = EMPTY_QUERY_PARAMS,
+  username,
+  password,
+}) => {
   const [response, setResponse] = useState(RESPONSE_PARAMS);
 
   useEffect(() => {

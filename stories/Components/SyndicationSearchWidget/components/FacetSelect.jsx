@@ -13,6 +13,8 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+
+const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
 import {
   ALWAYS_OR_FACETS,
@@ -44,7 +46,7 @@ const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
  */
 export function FacetSelect({
   field,
-  buckets = [],
+  buckets = EMPTY_BUCKETS,
   getLabel,
   widgetId = 'search',
   allowedTypes = null,

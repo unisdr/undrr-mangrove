@@ -150,7 +150,7 @@ const COMPONENT_IDS = {
   FormGroup: 'components-forms-formgroup',
   FormErrorSummary: 'components-forms-formerrorsummary',
   MegaMenu: 'components-megamenu',
-  SyndicationSearchWidget: 'components-syndicationsearchwidget',
+  SyndicationSearchWidget: 'components-syndicated-search',
   ScrollContainer: 'components-scrollcontainer',
   Gallery: 'components-gallery',
   Pager: 'components-pager',

@@ -8,8 +8,14 @@ export const variant_options = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function FooterConditions2({ style, text, footerdata2, ...args }) {
-  let screen_variant = variant_options[`${args.variant}`];
+export function FooterConditions2({
+  style,
+  text,
+  footerdata2,
+  variant = 'default',
+  ...args
+}) {
+  let screen_variant = variant_options[variant];
   return (
     <ul className={cls('footer-lists', `${screen_variant}`)}>
       {footerdata2.map((item, index) => (
@@ -20,7 +26,3 @@ export function FooterConditions2({ style, text, footerdata2, ...args }) {
     </ul>
   );
 }
-
-FooterConditions2.defaultProps = {
-  variant: 'default',
-};
