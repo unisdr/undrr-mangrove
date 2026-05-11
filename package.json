@@ -107,7 +107,7 @@
     "glob": "13.0.6",
     "globals": "17.6.0",
     "html-entities": "2.6.0",
-    "jest": "30.3.0",
+    "jest": "30.4.2",
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "30.3.0",
     "jest-transform-stub": "2.0.0",
