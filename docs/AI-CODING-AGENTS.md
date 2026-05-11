@@ -119,12 +119,15 @@ Beyond standard React linting, these conventions have been codified through the 
 
 - **No em-dashes (`—`) in JSX text** — use parentheses, colons, semicolons, or commas. Em dashes read as model-output filler. *(Story names and UI labels follow the same rule.)*
 - **No three-period ellipses (`...`) in JSX text** — use the typographic `…` (or `&hellip;`). Common in loading / init labels: `Loading…`, `Initialising search…`.
+- **English locale follows the editorial split:** Oxford-flavoured British English (UN editorial style) in JSX text, story titles, error messages, JSDoc descriptions, and MDX prose; US English in code identifiers (variable / function / file / package names; CSS properties; JS API names) to match the JavaScript ecosystem. So `color` (CSS property) but `Wait while we colour the chart…` (UI string).
 - **No `Component.defaultProps`** — use destructured default parameters. React 19 removes this for function components.
 - **Prefer `use(Context)` over `useContext(Context)`** on React 19+. `use()` reads context conditionally inside branches, hooks, and loops; identical at top-level call sites.
 - **Hoist default `[]` / `{}` props to module-level constants.** `function X({ items = [] })` creates a new array reference every render, breaking `useMemo` / `React.memo` consumer stability. Write `const EMPTY_ITEMS = []` at module scope and use `items = EMPTY_ITEMS`.
 - **Extract inline render helpers as named components.** Arrow helpers like `const renderTitle = (item) => (…)` defined inside the component body get a new identity each render. Lift them to module scope (PascalCase) so React reconciles them as real components.
 - **Lazy-init `useState` from computed values.** `useState(data.map(…))` re-runs the initializer every render — use `useState(() => data.map(…))`.
 - **Always return a cleanup from `useEffect`** for `setTimeout` / `setInterval` / `addEventListener` / subscriptions. Anything that registers must unregister on re-run and unmount.
+
+The editorial rules in this list (em-dashes, ellipses, English locale) operationalise the brand-voice policy. The source of truth for the editorial side lives in the Storybook `Brand/Written voice` page (`stories/Documentation/Brand/WrittenVoice.mdx`, introduced in PR #983), which catalogues the full set of house conventions with their UN-policy citations. When the brand doc and this section drift, the brand doc wins — this section is the developer-tooling view of those rules.
 
 ### Findings to triage carefully
 
