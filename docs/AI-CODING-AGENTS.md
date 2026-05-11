@@ -81,9 +81,28 @@ Beyond standard React linting, these conventions have been codified through the 
 - **Lazy-init `useState` from computed values.** `useState(data.map(…))` re-runs the initializer every render — use `useState(() => data.map(…))`.
 - **Always return a cleanup from `useEffect`** for `setTimeout` / `setInterval` / `addEventListener` / subscriptions. Anything that registers must unregister on re-run and unmount.
 
-### Known false positives in this codebase
+### Findings to triage carefully
 
-These rules fire but are not actionable as written. Don't churn on them:
+Not every react-doctor finding wants fixing. Two flavours show up:
+
+#### Intentional patterns
+
+Rules that fire correctly on patterns Mangrove deliberately uses. Don't suppress blindly, but also don't try to refactor them away.
+
+- **`react/no-danger` (`dangerouslySetInnerHTML`) ×20.** Mangrove is a Drupal component library; Hero, QuoteHighlight, Gallery, TextCta, MegaMenu/Section, Map, and ScrollContainer accept rich HTML authored in Drupal's text editor (sanitised at save time by Drupal's text-format pipeline). The rule will keep firing on legitimate call sites. Two acceptable patterns:
+  - **Sanitise inline** (gold standard) — `dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }}`. The component owns the sanitisation contract; callers can pass any string. See `IconCard.jsx`, `TextCta.jsx`.
+  - **Caller-sanitised, documented contract** — `dangerouslySetInnerHTML={{ __html: item.html }}` with the PropTypes JSDoc explicitly declaring the prop pre-sanitised. The component trusts the caller; the contract must be stated in the prop documentation. See `Hero.jsx` — the `html` media variant documents: *"is a pre-sanitised HTML string rendered via dangerouslySetInnerHTML. The consumer (e.g. Drupal) must sanitise."*
+
+  Triage checklist for each call site:
+  - Where does the HTML come from? Drupal editor field (trusted, Drupal sanitises at save) / DOMPurify-sanitised (trusted) / user form input / external API (default to untrusted).
+  - Is the sanitisation contract documented in PropTypes JSDoc?
+  - Prefer inline `// eslint-disable-next-line react/no-danger -- <reason>` over a file-level `/* eslint-disable react/no-danger */`.
+
+- **`react-doctor/rendering-hydration-mismatch-time` ×20.** Chart stories (`Histogram.stories.jsx`, `IndexChart.stories.jsx`) use `Math.random()` to generate fixture data. Fine in Storybook; would mismatch under SSR. The chart *components* themselves are server-safe — the *stories* are intentionally client-only.
+
+#### False positives
+
+Rules that fire but aren't actionable as written.
 
 - **`no-z-index-9999`** — the rule wants a 1–50 scale, but `_variables.scss` defines `$mg-z-index-modal: 5000` etc. by intent. Use the `$mg-z-index-*` tokens instead of raw numbers, accept that the rule will keep firing for tokenised values.
 - **`iframe-has-title`** when `title={a || 'fallback'}` — the static analyzer can't see through the `||` fallback. Titles are present and valid.
