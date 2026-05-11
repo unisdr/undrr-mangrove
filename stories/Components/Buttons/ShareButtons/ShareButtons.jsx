@@ -23,6 +23,17 @@ const QRCodeModal = ({
   const modalRef = useRef(null);
   const [qrCodeCopied, setQrCodeCopied] = useState(false);
 
+  // Reset the "copied" confirmation when the modal reopens. Tracking the
+  // previous isOpen in a ref lets us detect the false→true transition during
+  // render — no extra useEffect round-trip needed.
+  const prevIsOpenRef = useRef(isOpen);
+  if (isOpen !== prevIsOpenRef.current) {
+    prevIsOpenRef.current = isOpen;
+    if (isOpen) {
+      setQrCodeCopied(false);
+    }
+  }
+
   useEffect(() => {
     const handleEscape = e => {
       if (e.key === 'Escape') {
@@ -48,13 +59,6 @@ const QRCodeModal = ({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
-
-  // Reset copy state when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setQrCodeCopied(false);
-    }
-  }, [isOpen]);
 
   const handleCopy = async () => {
     try {
@@ -485,25 +489,20 @@ const ShareButtons = ({
  */
 export function CopyButton({ copiedLabel, sharedLink, className }) {
   const [coppied, setCoppied] = useState(false);
-  const [visibleLink, setVisibleLink] = useState(sharedLink);
+
+  // visibleLink is fully derived from sharedLink: strip the leading http(s)://
+  // for display. Computed during render so we don't need useState/useEffect.
+  let visibleLink = sharedLink;
+  if (sharedLink.startsWith('https://')) {
+    visibleLink = sharedLink.replace('https://', '');
+  } else if (sharedLink.startsWith('http://')) {
+    visibleLink = sharedLink.replace('http://', '');
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sharedLink);
     setCoppied(true);
   };
-
-  //on sharedLink change, update visibleLink to not show http/s
-  useEffect(() => {
-    let newVisibleLink = sharedLink;
-    //replace https only if it is in the beginning of the URL
-    if (sharedLink.startsWith('https://')) {
-      //replace replaces only first occurence
-      newVisibleLink = sharedLink.replace('https://', '');
-    } else if (sharedLink.startsWith('http://')) {
-      newVisibleLink = sharedLink.replace('http://', '');
-    }
-    setVisibleLink(newVisibleLink);
-  }, [sharedLink]);
 
   return (
     <button
