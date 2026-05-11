@@ -123,7 +123,7 @@
     "react-syntax-highlighter": "16.1.1",
     "remark-gfm": "^4.0.1",
     "sass": "^1.99.0",
-    "sass-loader": "16.0.7",
+    "sass-loader": "16.0.8",
     "storybook": "^10.3.6",
     "storybook-addon-rtl": "3.0.1",
     "storybook-design-token": "^5.0.0",
