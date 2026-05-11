@@ -162,8 +162,18 @@ Hero.propTypes = {
     PropTypes.shape({
       imgback: PropTypes.string,
       label: PropTypes.string,
+      /**
+       * Heading text. Rendered via `dangerouslySetInnerHTML` to allow inline
+       * markup (e.g. `<em>`, `<br>`) from CMS-authored content. The consumer
+       * (e.g. Drupal text-format pipeline) must sanitise.
+       */
       title: PropTypes.string.isRequired,
       link: PropTypes.string,
+      /**
+       * Summary / lede text. Rendered via `dangerouslySetInnerHTML` to allow
+       * inline markup from CMS-authored content. The consumer (e.g. Drupal
+       * text-format pipeline) must sanitise.
+       */
       summaryText: PropTypes.string,
       detail: PropTypes.string,
       primary_button: PropTypes.string,
