@@ -33,6 +33,20 @@ Things to check:
 
 After changes, run `yarn build` to regenerate the compiled manifest and verify it.
 
+### Side-effect components: return an empty Fragment, not `null`
+
+Storybook is configured to use `react-docgen` (the basic, faster variant — see `.storybook/main.js`). `react-docgen` uses JSX presence to identify React components. A component whose render body only does `return null;` — a common shape for purely side-effect components that manage external libraries via `useEffect` — is **not classified as a component** by `react-docgen`, so its `propTypes` are silently dropped from the AI manifest.
+
+Fix: return `<></>` (an empty Fragment) instead of `null`. Empty Fragments render nothing in the DOM — behaviourally identical to `null` from a consumer's perspective — but `react-docgen` sees the JSX and extracts the component's `propTypes` correctly. `CookieConsentBanner` is the canonical example.
+
+```jsx
+// Won't be picked up by react-docgen → manifest reports 0 props
+return null;
+
+// Same runtime behaviour, but react-docgen extracts the props
+return <></>;
+```
+
 ## CSS class rename gotchas
 
 Renaming CSS classes is a common task that creates subtle breakage because CSS failures are silent — elements just lose styling with no error. When renaming classes:
