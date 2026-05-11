@@ -39,15 +39,11 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
    * Custom facets use index as value (query is looked up by queryBuilder).
    */
   const dropdownOptions = useMemo(() => {
-    return options
-      .map((option, index) => {
-        if (!option.label) return null;
-        return {
-          value: String(index),
-          label: option.label,
-        };
-      })
-      .filter(Boolean);
+    return options.flatMap((option, index) =>
+      option.label
+        ? [{ value: String(index), label: option.label }]
+        : []
+    );
   }, [options]);
 
   /**

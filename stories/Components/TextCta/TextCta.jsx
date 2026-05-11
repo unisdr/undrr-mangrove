@@ -4,6 +4,8 @@ import DOMPurify from 'dompurify';
 
 const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
 
+const EMPTY_BUTTONS = [];
+
 /**
  * Call-to-action banner with heading, rich text, and action buttons.
  *
@@ -31,7 +33,7 @@ export function TextCta({
   headlineSize = '600',
   headlineLevel = 2,
   text,
-  buttons = [],
+  buttons = EMPTY_BUTTONS,
   variant = 'primary',
   backgroundColor,
   padding,

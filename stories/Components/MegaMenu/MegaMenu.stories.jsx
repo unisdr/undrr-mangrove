@@ -203,6 +203,147 @@ const sections = [
           },
         ],
       },
+      {
+        title: 'Our History',
+        url: '/about/history',
+        items: [
+          { title: 'Founding (1999)', url: '/about/history/founding' },
+          { title: 'Key Milestones', url: '/about/history/milestones' },
+          { title: 'Hyogo Framework Era', url: '/about/history/hyogo' },
+          { title: 'Sendai Framework Adoption', url: '/about/history/sendai' },
+          { title: '25th Anniversary', url: '/about/history/25-years' },
+          { title: 'Institutional Evolution', url: '/about/history/evolution' },
+        ],
+      },
+      {
+        title: 'Governance',
+        url: '/about/governance',
+        items: [
+          { title: 'Member States', url: '/about/governance/member-states' },
+          { title: 'Advisory Board', url: '/about/governance/advisory-board' },
+          {
+            title: 'Executive Committee',
+            url: '/about/governance/executive-committee',
+          },
+          { title: 'Working Groups', url: '/about/governance/working-groups' },
+          {
+            title: 'Intergovernmental Meetings',
+            url: '/about/governance/igm',
+          },
+          {
+            title: 'Resolutions & Mandates',
+            url: '/about/governance/resolutions',
+          },
+        ],
+      },
+      {
+        title: 'Partnerships',
+        url: '/about/partnerships',
+        items: [
+          { title: 'UN Agencies', url: '/about/partnerships/un-agencies' },
+          { title: 'Civil Society', url: '/about/partnerships/civil-society' },
+          {
+            title: 'Private Sector',
+            url: '/about/partnerships/private-sector',
+          },
+          {
+            title: 'Academic Institutions',
+            url: '/about/partnerships/academia',
+          },
+          {
+            title: 'Regional Organizations',
+            url: '/about/partnerships/regional',
+          },
+          {
+            title: 'Technology Partners',
+            url: '/about/partnerships/technology',
+          },
+        ],
+      },
+      {
+        title: 'Offices',
+        url: '/about/offices',
+        items: [
+          { title: 'Geneva HQ', url: '/about/offices/geneva' },
+          { title: 'New York Liaison', url: '/about/offices/new-york' },
+          { title: 'Bonn Office', url: '/about/offices/bonn' },
+          { title: 'Incheon Office', url: '/about/offices/incheon' },
+          { title: 'Kobe Office', url: '/about/offices/kobe' },
+          { title: 'Panama Office', url: '/about/offices/panama' },
+          { title: 'Nairobi Office', url: '/about/offices/nairobi' },
+          { title: 'Bangkok Office', url: '/about/offices/bangkok' },
+        ],
+      },
+      {
+        title: 'Careers',
+        url: '/about/careers',
+        items: [
+          { title: 'Open Positions', url: '/about/careers/jobs' },
+          { title: 'Internships', url: '/about/careers/internships' },
+          { title: 'Consultancies', url: '/about/careers/consultancies' },
+          {
+            title: 'Junior Professional Officers',
+            url: '/about/careers/jpo',
+          },
+          {
+            title: 'Fellowship Programme',
+            url: '/about/careers/fellowships',
+          },
+          {
+            title: 'Volunteer Opportunities',
+            url: '/about/careers/volunteers',
+          },
+          { title: 'How to Apply', url: '/about/careers/how-to-apply' },
+        ],
+      },
+      {
+        title: 'Funding & Donors',
+        url: '/about/funding',
+        items: [
+          { title: 'Annual Report', url: '/about/funding/annual-report' },
+          { title: 'Donor List', url: '/about/funding/donors' },
+          { title: 'Core Funding', url: '/about/funding/core' },
+          {
+            title: 'Earmarked Contributions',
+            url: '/about/funding/earmarked',
+          },
+          { title: 'Trust Funds', url: '/about/funding/trust-funds' },
+          { title: 'Partner Reports', url: '/about/funding/partner-reports' },
+        ],
+      },
+      {
+        title: 'Accountability',
+        url: '/about/accountability',
+        items: [
+          {
+            title: 'Evaluation Reports',
+            url: '/about/accountability/evaluations',
+          },
+          { title: 'Audit Reports', url: '/about/accountability/audits' },
+          {
+            title: 'Internal Oversight',
+            url: '/about/accountability/oversight',
+          },
+          {
+            title: 'Programme Assessments',
+            url: '/about/accountability/programmes',
+          },
+          {
+            title: 'Financial Statements',
+            url: '/about/accountability/financials',
+          },
+        ],
+      },
+      {
+        title: 'Contact Us',
+        url: '/about/contact',
+        items: [
+          { title: 'Media Enquiries', url: '/about/contact/media' },
+          { title: 'General Contact', url: '/about/contact/general' },
+          { title: 'Mailing List', url: '/about/contact/mailing-list' },
+          { title: 'Regional Contacts', url: '/about/contact/regional' },
+        ],
+      },
     ],
   },
   {

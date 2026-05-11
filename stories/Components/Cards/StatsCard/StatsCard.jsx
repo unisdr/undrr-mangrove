@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Heading } from '../../../Atom/Typography/Heading/Heading';
 import { StatsCardItem } from './StatsCardItem';
 
+const EMPTY_STATS = [];
+
 /**
  * StatsCard Component
  *
@@ -14,7 +16,7 @@ import { StatsCardItem } from './StatsCardItem';
  */
 export function StatsCard({
   title,
-  stats = [],
+  stats = EMPTY_STATS,
   variant = 'default',
   className = '',
   ...props

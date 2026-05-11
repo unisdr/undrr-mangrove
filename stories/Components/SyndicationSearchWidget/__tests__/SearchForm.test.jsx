@@ -81,39 +81,44 @@ describe('SearchForm', () => {
   });
 
   describe('loading states', () => {
-    it('shows loading indicator when isLoading is true', () => {
+    // The submit button keeps a stable label and icon during search; loading
+    // is conveyed by aria-busy and the widget-level progress strip, not by
+    // swapping the button label or icon. This avoids stacking three animated
+    // indicators (input spinner + button spinner + progress strip) on top of
+    // each other when a search is running.
+    it('sets aria-busy on the submit button when isLoading is true', () => {
       renderWithProvider({ isLoading: true });
 
-      const button = screen.getByRole('button', { name: /searching/i });
+      const button = screen.getByRole('button', { name: /submit search/i });
       expect(button).toHaveAttribute('aria-busy', 'true');
     });
 
-    it('shows loading indicator when isStale is true', () => {
+    it('sets aria-busy on the submit button when isStale is true', () => {
       renderWithProvider({ isStale: true });
 
-      const button = screen.getByRole('button', { name: /searching/i });
+      const button = screen.getByRole('button', { name: /submit search/i });
       expect(button).toHaveAttribute('aria-busy', 'true');
     });
 
-    it('shows normal state when not loading', () => {
+    it('clears aria-busy when not loading', () => {
       renderWithProvider({ isLoading: false, isStale: false });
 
       const button = screen.getByRole('button', { name: /submit search/i });
       expect(button).toHaveAttribute('aria-busy', 'false');
     });
 
-    it('displays "Searching" text during loading', () => {
+    it('keeps the "Search" label and search icon while loading', () => {
       renderWithProvider({ isLoading: true });
 
-      const buttonText = screen.getByRole('button', { name: /searching/i });
-      expect(buttonText).toHaveTextContent('Searching');
+      const button = screen.getByRole('button', { name: /submit search/i });
+      expect(button).toHaveTextContent('Search');
+      expect(button.querySelector('.mg-icon-search')).toBeInTheDocument();
+      expect(button.querySelector('.mg-search__submit-spinner')).not.toBeInTheDocument();
     });
 
-    it('displays "Search" text when not loading', () => {
-      renderWithProvider({ isLoading: false });
-
-      const buttonText = screen.getByRole('button', { name: /submit search/i });
-      expect(buttonText).toHaveTextContent('Search');
+    it('does not render an in-input loading spinner', () => {
+      const { container } = renderWithProvider({ isLoading: true });
+      expect(container.querySelector('.mg-search__loading')).not.toBeInTheDocument();
     });
   });
 

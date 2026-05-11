@@ -54,6 +54,10 @@ See [Writing guidelines](https://unisdr.github.io/undrr-mangrove/?path=/docs/con
 See [Testing](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) for the testing setup and patterns.
   - Source: [`TESTING.md`](TESTING.md)
 
+## Component quality
+
+- [ ] `npx -y react-doctor@latest .` shows no new errors and the score is equal or higher than where you found it. See the [`react-doctor` guidance](AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor) for house conventions and known false positives.
+
 ## Internationalization
 
 - [ ] Text comes from props, not hardcoded

@@ -58,7 +58,7 @@ export function SearchResults({
   if (!isInitialized) {
     return (
       <div className="mg-search__results-placeholder">
-        <p>Initializing search...</p>
+        <p>Initializing search…</p>
       </div>
     );
   }

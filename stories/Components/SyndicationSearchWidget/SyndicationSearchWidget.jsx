@@ -18,11 +18,13 @@
  * @module SyndicationSearchWidget
  */
 
-import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback } from 'react';
+import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
+import { resolveFacetsLayout } from './utils/constants';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 import ActiveFilters from './components/ActiveFilters';
@@ -67,8 +69,41 @@ SyndicationSearchWidget.propTypes = {
     showResultsCount: PropTypes.bool,
     /** Whether to display the search timer. */
     showSearchTimer: PropTypes.bool,
-    /** Whether to display the facet sidebar. */
+    /**
+     * Facets layout — visibility and placement.
+     * `false` hides facets entirely; `'sidebar'` (default) renders them in
+     * the right-hand sidebar; `'horizontal'` renders them as a horizontal
+     * strip above the results region.
+     */
+    facets: PropTypes.oneOf([false, 'sidebar', 'horizontal']),
+    /** @deprecated Use `facets` instead. Boolean shorthand: false hides, true → 'sidebar'. */
     showFacets: PropTypes.bool,
+    /**
+     * CSS selector for a DOM element outside the widget where the facets
+     * UI should be rendered (via React portal). Useful when a consuming
+     * page wants to place facets in a left rail or other region that is
+     * not a child of the widget container. When set and the element is
+     * found, the in-widget sidebar / strip is suppressed and the facets
+     * are rendered into the target instead. The widget's React tree spans
+     * the portal so search context still flows. If the target element is
+     * not present at mount time, the widget falls back to the in-widget
+     * layout chosen by `facets` and a warning is logged.
+     */
+    facetsTarget: PropTypes.string,
+    /**
+     * CSS selector for a DOM element outside the widget where the search
+     * input should be rendered (via React portal). Lets a consuming page
+     * place a "hero" search input in a banner region while results render
+     * where the widget is mounted. The same React tree spans the portal,
+     * so the input, facets, and results all share `SearchContext` — no
+     * separate component, no URL-hash bridge needed for the same-page
+     * case. If the target element is not present at mount time the
+     * widget falls back to rendering the input in-place and logs a
+     * console warning. For cross-page hero patterns (input on landing,
+     * results on `/search`), use a plain HTML form posting to the
+     * results page with a `#query=...` fragment instead.
+     */
+    searchTarget: PropTypes.string,
     /** Whether to display active filter chips above results. */
     showActiveFilters: PropTypes.bool,
     /** Whether to display search performance metrics. */
@@ -133,8 +168,17 @@ function SyndicationSearchWidgetInner() {
   // This keeps the input responsive while search runs in background
   const deferredQuery = useDeferredValue(inputValue);
 
-  // Update context when deferred query changes
+  // Update context when deferred query changes.
+  // Skip the first render: on initial mount, useHashSync may have already
+  // dispatched setQuery from the URL hash (e.g. #query=news). If we ran an
+  // unconditional setQuery('') here on mount we would stomp that value before
+  // INITIALIZE could preserve it. Subsequent renders sync user input as normal.
+  const isFirstQuerySync = useRef(true);
   useEffect(() => {
+    if (isFirstQuerySync.current) {
+      isFirstQuerySync.current = false;
+      return;
+    }
     dispatch(actions.setQuery(deferredQuery));
   }, [deferredQuery, dispatch]);
 
@@ -154,8 +198,59 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
-  const { showFacets, showActiveFilters, showSearchMetrics } = config;
+  const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } = config;
+  const facetsLayout = resolveFacetsLayout(config);
+  const facetsActive = facetsLayout !== false;
+  const showSearchBox = config.showSearchBox !== false;
   const { isLoading } = state;
+
+  // Resolve external facets target (AC2: facets in a separate DOM region).
+  // Looked up once on mount when a selector is configured. If the target
+  // node isn't in the document, fall back to the in-widget layout and log
+  // a single console warning so editors and developers can see why the
+  // portal didn't take effect.
+  const [facetsTargetEl, setFacetsTargetEl] = useState(null);
+  useEffect(() => {
+    if (!facetsActive || !facetsTarget || typeof document === 'undefined') {
+      setFacetsTargetEl(null);
+      return;
+    }
+    const el = document.querySelector(facetsTarget);
+    if (el) {
+      setFacetsTargetEl(el);
+    } else {
+      setFacetsTargetEl(null);
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[SyndicationSearchWidget] facetsTarget selector "${facetsTarget}" did not match any element; falling back to in-widget facets layout.`
+      );
+    }
+  }, [facetsActive, facetsTarget]);
+
+  const facetsPortaled = facetsActive && facetsTargetEl !== null;
+
+  // Resolve external search-input target (AC3: search input rendered in a
+  // separate DOM region — typically a hero/banner region while results
+  // render lower on the page). Same pattern as facetsTarget.
+  const [searchTargetEl, setSearchTargetEl] = useState(null);
+  useEffect(() => {
+    if (!showSearchBox || !searchTarget || typeof document === 'undefined') {
+      setSearchTargetEl(null);
+      return;
+    }
+    const el = document.querySelector(searchTarget);
+    if (el) {
+      setSearchTargetEl(el);
+    } else {
+      setSearchTargetEl(null);
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[SyndicationSearchWidget] searchTarget selector "${searchTarget}" did not match any element; falling back to in-widget search input.`
+      );
+    }
+  }, [showSearchBox, searchTarget]);
+
+  const searchPortaled = showSearchBox && searchTargetEl !== null;
 
   // Count active filters for mobile button badge
   const activeFilterCount = countActiveFilters(state);
@@ -173,8 +268,9 @@ function SyndicationSearchWidgetInner() {
         </div>
       )}
 
-      {/* Search form */}
-      {config.showSearchBox !== false && (
+      {/* Search form — rendered in-widget unless searchTarget is portaling
+          it elsewhere on the page. */}
+      {showSearchBox && !searchPortaled && (
         <SearchForm
           value={inputValue}
           onChange={setInputValue}
@@ -182,6 +278,20 @@ function SyndicationSearchWidgetInner() {
           isLoading={isLoading}
           widgetId={widgetId}
         />
+      )}
+
+      {/* Horizontal facet strip — only when facets layout is 'horizontal'
+          AND no external target is taking the facets via portal. Renders
+          the same FacetsSidebar contents but in a row above results; on
+          small viewports the strip is hidden and the mobile filter drawer
+          handles the same job. */}
+      {facetsLayout === 'horizontal' && !facetsPortaled && (
+        <div
+          className="mg-search__facets-strip"
+          data-vf-google-analytics-region="undrr-search-facets"
+        >
+          <FacetsSidebar widgetId={widgetId} />
+        </div>
       )}
 
       {/* Active filter chips */}
@@ -199,15 +309,15 @@ function SyndicationSearchWidgetInner() {
             <SearchResults
               isStale={isPending}
               widgetId={widgetId}
-              showMobileFilterButton={showFacets}
+              showMobileFilterButton={facetsActive && !facetsPortaled}
               onOpenFilters={openDrawer}
               activeFilterCount={activeFilterCount}
             />
           </Suspense>
         </main>
 
-        {/* Facets sidebar - desktop only */}
-        {showFacets && (
+        {/* Facets sidebar — desktop only, and only when not portaled out. */}
+        {facetsLayout === 'sidebar' && !facetsPortaled && (
           <aside
             className="mg-search__sidebar"
             data-vf-google-analytics-region="undrr-search-facets"
@@ -217,8 +327,42 @@ function SyndicationSearchWidgetInner() {
         )}
       </div>
 
-      {/* Mobile filter drawer */}
-      {showFacets && (
+      {/* External search-input portal — when searchTarget resolves to a
+          DOM node, render the SearchForm there instead of inside the
+          widget. The React tree spans the portal so SearchContext (and
+          therefore live input state) still flows. */}
+      {searchPortaled
+        && createPortal(
+          <div className="mg-search__form-external">
+            <SearchForm
+              value={inputValue}
+              onChange={setInputValue}
+              isStale={isPending}
+              isLoading={isLoading}
+              widgetId={widgetId}
+            />
+          </div>,
+          searchTargetEl
+        )}
+
+      {/* External facets portal — when facetsTarget resolves to a DOM node,
+          render the facets there instead of inside the widget. The React
+          tree spans the portal so SearchContext still flows. */}
+      {facetsPortaled
+        && createPortal(
+          <div
+            className="mg-search__facets-external"
+            data-vf-google-analytics-region="undrr-search-facets"
+          >
+            <FacetsSidebar widgetId={widgetId} />
+          </div>,
+          facetsTargetEl
+        )}
+
+      {/* Mobile filter drawer — used by sidebar and horizontal layouts on
+          small viewports. Suppressed when facets are portaled to an
+          external region (the host page controls placement there). */}
+      {facetsActive && !facetsPortaled && (
         <MobileFilterDrawer
           isOpen={isDrawerOpen}
           onClose={closeDrawer}

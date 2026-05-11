@@ -84,23 +84,28 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-// Search form
-.mg-search__form {
+// Search form (used by both the in-widget SearchForm and the standalone
+// SyndicationSearchBar). Layout primitives are shared between the two so
+// the detached bar matches the widget's input visually.
+.mg-search__form,
+.mg-search-bar {
   display: flex;
   gap: $mg-spacing-50;
   margin-bottom: $mg-spacing-100;
 }
 
-.mg-search__input-wrapper {
+.mg-search__input-wrapper,
+.mg-search-bar__input-wrapper {
   position: relative;
   flex: 1;
 }
 
 .mg-search__input {
   width: 100%;
-  padding: $mg-spacing-75 $search-input-padding-x $mg-spacing-75 $mg-spacing-100;
-  border: 1px solid $search-border;
-  border-radius: $search-radius;
+  padding: $mg-padding-button;
+  padding-right: $search-input-padding-x;
+  border: $mg-border-width-button solid $search-border;
+  border-radius: $mg-radius-button;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:focus {
@@ -116,84 +121,45 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__clear {
   position: absolute;
-  right: $search-input-padding-x;
+  right: $mg-spacing-50;
   top: 50%;
   transform: translateY(-50%);
-  padding: $mg-spacing-25 $mg-spacing-50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $mg-spacing-200;
+  height: $mg-spacing-200;
+  padding: 0;
   background: none;
   border: none;
-  font-size: $mg-font-size-200;
-  color: $search-text-muted;
+  font-size: $mg-font-size-100;
+  color: $search-text;
   cursor: pointer;
   line-height: 1;
 
   &:hover {
-    color: $search-text;
+    color: $search-primary;
   }
-}
-
-.mg-search__loading {
-  position: absolute;
-  right: $mg-spacing-75;
-  top: 50%;
-  transform: translateY(-50%);
-  width: $mg-spacing-100;
-  height: $mg-spacing-100;
-  border: 2px solid $search-border-light;
-  border-top-color: $search-primary;
-  border-radius: 50%;
-  animation: mg-search-spin 0.8s linear infinite;
 }
 
 @keyframes mg-search-spin {
   to {
-    transform: translateY(-50%) rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
+// Submit button: visual styling comes from .mg-button / .mg-button-primary.
+// Only layout-specific spacing for the icon + label is defined here.
+// Loading state is conveyed by the widget-level progress strip
+// (.mg-search__progress) and aria-busy, not by a button-side spinner.
 .mg-search__submit {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-75 $mg-spacing-150;
-  font-size: $mg-font-size-100;
-  font-weight: 500;
-  color: #fff;
-  background-color: $search-primary;
-  border: none;
-  border-radius: $search-radius;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: $search-primary-dark;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba($search-primary, 0.3);
-  }
+  gap: 0.5rem;
 }
 
 .mg-search__submit-icon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-}
-
-// Submit button loading state
-.mg-search__submit--loading {
-  opacity: 0.85;
-  cursor: wait;
-}
-
-.mg-search__submit-spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgb(255 255 255 / 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: mg-search-spin 0.7s linear infinite;
+  line-height: 1;
 }
 
 // Active filters
@@ -282,6 +248,47 @@ $search-input-padding-x: $mg-spacing-250;
 
   @media (width <= 768px) {
     display: none; // TODO: Mobile drawer in Phase 2
+  }
+}
+
+// Horizontal facets strip — used when config.facets === 'horizontal'.
+// Renders the same FacetsSidebar contents as a row above results. On
+// narrow viewports the strip is hidden and the mobile filter drawer
+// handles facet selection (same pattern as the sidebar layout).
+.mg-search__facets-strip {
+  margin-bottom: $mg-spacing-150;
+
+  // Treat Sort and every facet as direct siblings of the same flex row so
+  // they share a consistent track width and wrap together. Without
+  // display:contents on .mg-search__facet-containers the facets would
+  // share a single nested column, getting squeezed when the row is wide
+  // enough to fit them inline but not wide enough to give each one a
+  // readable width.
+  .mg-search__facets {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: $mg-spacing-100 $mg-spacing-150;
+  }
+
+  .mg-search__facet-containers {
+    display: contents;
+  }
+
+  // Sort and each facet become equal-width flex cells. The flex-basis of
+  // 200px is the preferred size; min-width keeps them from squeezing
+  // narrower than the longest legend / placeholder, and the flex-grow of
+  // 1 lets them fill the trailing slack on the last wrapped row instead
+  // of leaving a ragged right edge.
+  .mg-search__sort,
+  .mg-search__facet {
+    flex: 1 1 mg-rem(200);
+    min-width: mg-rem(180);
+    max-width: mg-rem(280);
+  }
+
+  @media (width <= 768px) {
+    display: none;
   }
 }
 
@@ -640,7 +647,7 @@ $search-input-padding-x: $mg-spacing-250;
   gap: $mg-spacing-100;
 }
 
-// Sort Options
+// Sort Options — rendered as a dropdown to match the facet selects.
 .mg-search__sort {
   padding: 0;
   margin: 0;
@@ -651,23 +658,6 @@ $search-input-padding-x: $mg-spacing-250;
     font-size: $mg-font-size-200;
     margin-bottom: $mg-spacing-50;
     color: $search-text;
-  }
-}
-
-.mg-search__sort-option {
-  display: flex;
-  align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-25;
-
-  input[type="radio"] {
-    margin: 0;
-  }
-
-  label {
-    font-size: $mg-font-size-200;
-    color: $search-text;
-    cursor: pointer;
   }
 }
 
@@ -776,7 +766,7 @@ $search-input-padding-x: $mg-spacing-250;
 // Drupal teaser templates (see web-backlog#2660).
 
 .mg-search--hide-image .mg-card__visual { display: none; }
-.mg-search--hide-contentType .mg-card__tag { display: none; }
+.mg-search--hide-contentType .mg-card__label { display: none; }
 .mg-search--hide-publicationType .mg-card__publication-type { display: none; }
 .mg-search--hide-date .mg-card__date { display: none; }
 .mg-search--hide-siteName .mg-search__result-site-name { display: none; }

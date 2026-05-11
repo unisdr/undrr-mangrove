@@ -74,7 +74,11 @@ export const TAXONOMY_VOCABULARIES = [
  * Maps parent content types to their subtype fields and options.
  * Subtypes appear as indented children under parent types in the Type dropdown.
  *
- * @type {Object.<string, {field: string, options: Array<{id: string, name: string}>}>}
+ * Each value may be a single subtype config object or an array of configs
+ * when a parent type has multiple subtype fields (e.g. publication has both
+ * UNDRR-specific types and PW-specific types).
+ *
+ * @type {Object.<string, ({field: string, options: Array<{id: string, name: string}>}|Array<{field: string, options: Array<{id: string, name: string}>}>)>}
  */
 export const CONTENT_SUBTYPES = {
   // Only field_news_type is currently indexed in Elasticsearch.
@@ -99,21 +103,59 @@ export const CONTENT_SUBTYPES = {
       { id: '880', name: 'Interview' },
     ],
   },
-  // Publication subtypes - undrr_publication_type IS indexed
-  publication: {
-    field: 'undrr_publication_type',
-    options: [
-      { id: '744', name: 'Fact sheet' },
-      { id: '749', name: 'Newsletter' },
-      { id: '750', name: 'Other' },
-      { id: '1027', name: 'Policy brief' },
-      { id: '746', name: 'Reports' },
-      { id: '743', name: 'Tool kit' },
-      { id: '745', name: 'UNDRR Document' },
-      { id: '747', name: 'Words into Action' },
-      { id: '748', name: 'Working paper' },
-    ],
-  },
+  // Publication subtypes - three fields for different sites:
+  // - field_undrr_publication_types: taxonomy term IDs, used on UNDRR.org
+  // - field_publication_type: list_string values, used on PreventionWeb
+  // - field_irp_publication_subtype: taxonomy term IDs, used on IRP
+  publication: [
+    {
+      field: 'field_undrr_publication_types',
+      options: [
+        { id: '744', name: 'Fact sheet' },
+        { id: '749', name: 'Newsletter' },
+        { id: '750', name: 'Other' },
+        { id: '1027', name: 'Policy brief' },
+        { id: '746', name: 'Reports' },
+        { id: '743', name: 'Tool kit' },
+        { id: '745', name: 'UNDRR Document' },
+        { id: '747', name: 'Words into Action' },
+        { id: '748', name: 'Working paper' },
+      ],
+    },
+    {
+      field: 'field_publication_type',
+      options: [
+        { id: 'Documents and publications', name: 'Documents and publications' },
+        { id: 'Policies and plans', name: 'Policies and plans' },
+        { id: 'Educational materials', name: 'Educational materials' },
+        { id: 'Statements', name: 'Statements' },
+        { id: 'UN resolutions and reports', name: 'UN resolutions and reports' },
+      ],
+    },
+    {
+      field: 'field_irp_publication_subtype',
+      options: [
+        { id: '893', name: 'Case Study' },
+        { id: '894', name: 'CRNA - COVID-19 Recovery Needs Assessments' },
+        { id: '895', name: 'CRNA Guidance' },
+        { id: '896', name: 'Disaster Recovery Guidance' },
+        { id: '898', name: 'DRF - Disaster Recovery Frameworks' },
+        { id: '897', name: 'DRF Guidance' },
+        { id: '899', name: 'Events documents' },
+        { id: '900', name: 'IRP Herald' },
+        { id: '972', name: 'IRP Herald in Japanese' },
+        { id: '934', name: 'Meetings and conferences' },
+        { id: '935', name: 'News' },
+        { id: '936', name: 'Organizations' },
+        { id: '902', name: 'PDNA - Post Disaster Needs Assessments' },
+        { id: '901', name: 'PDNA Guidance' },
+        { id: '903', name: 'Publications' },
+        { id: '904', name: 'Reports and analysis' },
+        { id: '905', name: 'Tools and guidelines' },
+        { id: '937', name: 'Training' },
+      ],
+    },
+  ],
   // Resource subtypes - field_resource_type indexed in ES
   resource: {
     field: 'field_resource_type',
@@ -224,7 +266,9 @@ export const FACET_FIELDS = [
   // These are indexed in ES (field names differ from Drupal field names)
   { key: 'field_news_type', label: 'News type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_blog_type', label: 'Blog type', vocabulary: 'terms', type: 'select-multiple' },
-  { key: 'undrr_publication_type', label: 'Publication type', vocabulary: 'terms', type: 'select-multiple' },
+  { key: 'field_undrr_publication_types', label: 'UNDRR publication types', vocabulary: 'terms', type: 'select-multiple' },
+  { key: 'field_publication_type', label: 'Publication type (PW)', vocabulary: 'list', type: 'select-multiple' },
+  { key: 'field_irp_publication_subtype', label: 'IRP publication subtype', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_resource_type', label: 'Resource type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'field_organization_type', label: 'Organization type', vocabulary: 'list', type: 'select-multiple' },
   // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES)
@@ -379,6 +423,36 @@ export const DEFAULT_CONFIG = {
 };
 
 /**
+ * Resolve the facets layout from a (merged or partial) config object.
+ *
+ * The component exposes a single union prop `facets` for layout:
+ *   - `false`        — facets are not rendered at all
+ *   - `'sidebar'`    — facets render in the right-hand sidebar (default)
+ *   - `'horizontal'` — facets render as a horizontal strip above results
+ *
+ * Older consumers used a boolean `showFacets`. When `facets` is unset, this
+ * helper falls back to `showFacets` so existing configs keep working without
+ * change. Callers that just need a yes/no answer can compare the result to
+ * `false` (e.g. for skipping aggregation queries when facets are off).
+ *
+ * @param {Object} config - Widget config (merged with DEFAULT_CONFIG or partial)
+ * @returns {false | 'sidebar' | 'horizontal'}
+ */
+export function resolveFacetsLayout(config) {
+  if (
+    config.facets === false
+    || config.facets === 'sidebar'
+    || config.facets === 'horizontal'
+  ) {
+    return config.facets;
+  }
+  if (config.showFacets === false) {
+    return false;
+  }
+  return 'sidebar';
+}
+
+/**
  * Lookup maps for fast access.
  */
 export const DOMAIN_MAP = new Map(DOMAINS.map(d => [d.id, d]));
@@ -393,12 +467,15 @@ export const TAXONOMY_VOCABULARY_MAP = new Map(TAXONOMY_VOCABULARIES.map(v => [v
  * @type {Map<string, {id: string, name: string, field: string, parentType: string}>}
  */
 export const SUBTYPE_MAP = new Map(
-  Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) =>
-    config.options.map(option => [
-      `${config.field}:${option.id}`,
-      { ...option, field: config.field, parentType },
-    ])
-  )
+  Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) => {
+    const configs = Array.isArray(config) ? config : [config];
+    return configs.flatMap(c =>
+      c.options.map(option => [
+        `${c.field}:${option.id}`,
+        { ...option, field: c.field, parentType },
+      ])
+    );
+  })
 );
 
 /**
@@ -406,7 +483,10 @@ export const SUBTYPE_MAP = new Map(
  * @type {Map<string, string>}
  */
 export const SUBTYPE_FIELD_TO_PARENT = new Map(
-  Object.entries(CONTENT_SUBTYPES).map(([parentType, config]) => [config.field, parentType])
+  Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) => {
+    const configs = Array.isArray(config) ? config : [config];
+    return configs.map(c => [c.field, parentType]);
+  })
 );
 
 /**
@@ -490,7 +570,7 @@ export function isFilterVisible(key, visibleFilters) {
  */
 export const TEASER_FIELDS = {
   image:           { label: 'Image',            selector: '.mg-card__visual' },
-  contentType:     { label: 'Content type',     selector: '.mg-card__tag' },
+  contentType:     { label: 'Content type',     selector: '.mg-card__label' },
   publicationType: { label: 'Publication type', selector: '.mg-card__publication-type' },
   date:            { label: 'Date',             selector: '.mg-card__date' },
   summary:         { label: 'Summary',          selector: '.mg-card__description' },
@@ -628,10 +708,12 @@ export function getParentTypeForField(field) {
  * Get subtype configuration for a parent content type.
  *
  * @param {string} parentType - The parent type ID (e.g., "news")
- * @returns {{field: string, options: Array}|null} Subtype config or null if none
+ * @returns {Array<{field: string, options: Array}>|null} Subtype config array or null if none
  */
 export function getSubtypesForType(parentType) {
-  return CONTENT_SUBTYPES[parentType] || null;
+  const config = CONTENT_SUBTYPES[parentType];
+  if (!config) return null;
+  return Array.isArray(config) ? config : [config];
 }
 
 /**

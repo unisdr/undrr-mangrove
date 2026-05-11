@@ -23,3 +23,4 @@ CONTRIBUTING_ISSUES.md
 package-lock.json
 npm-debug.log
 .gstack/
+debug-storybook.log

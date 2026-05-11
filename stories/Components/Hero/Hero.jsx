@@ -18,22 +18,8 @@ const splitSuffixMap = {
   '1/3': '1-3',
 };
 
-/**
- * Full-width hero banner. Supports two layouts:
- * - `background` (default): full-bleed background image with coloured overlay.
- * - `split`: solid theme-colour background with a content column and a media column side by side.
- */
-export function Hero({
-  data,
-  variant = 'primary',
-  layout = 'background',
-  headingLevel = 'h1',
-  split = '2/3',
-}) {
-  const variantActive = variantOptions[variant];
-  const HeadingTag = headingLevel;
-
-  const renderTitle = (item) => (
+function HeroTitle({ item, HeadingTag }) {
+  return (
     <header className="mg-hero__title">
       <HeadingTag className="text-xxl">
         {item.link ? (
@@ -46,51 +32,53 @@ export function Hero({
       </HeadingTag>
     </header>
   );
+}
 
-  const renderMedia = (media) => {
-    if (!media) return null;
-    const type = media.type || 'image';
+function HeroMedia({ media }) {
+  if (!media) return null;
+  const type = media.type || 'image';
 
-    if (type === 'video') {
-      return (
-        <div className="mg-hero__media mg-hero__media--video">
-          <iframe
-            src={media.src}
-            title={media.title || 'Embedded video'}
-            className="mg-hero__media-iframe"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
-      );
-    }
-
-    if (type === 'html') {
-      return (
-        <div
-          className="mg-hero__media mg-hero__media--html"
-          dangerouslySetInnerHTML={{ __html: media.html || '' }}
-        />
-      );
-    }
-
+  if (type === 'video') {
     return (
-      <div className="mg-hero__media">
-        <img
+      <div className="mg-hero__media mg-hero__media--video">
+        <iframe
           src={media.src}
-          alt={media.alt || ''}
-          className="mg-hero__media-img"
+          title={media.title || 'Embedded video'}
+          className="mg-hero__media-iframe"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
         />
       </div>
     );
-  };
+  }
 
-  const renderContent = (item) => (
+  if (type === 'html') {
+    return (
+      <div
+        className="mg-hero__media mg-hero__media--html"
+        dangerouslySetInnerHTML={{ __html: media.html || '' }}
+      />
+    );
+  }
+
+  return (
+    <div className="mg-hero__media">
+      <img
+        src={media.src}
+        alt={media.alt || ''}
+        className="mg-hero__media-img"
+      />
+    </div>
+  );
+}
+
+function HeroContent({ item, HeadingTag }) {
+  return (
     <article className="mg-hero__content">
       <div className="mg-hero__meta">
         {item.label && <span className="mg-hero__label">{item.label}</span>}
       </div>
-      {renderTitle(item)}
+      <HeroTitle item={item} HeadingTag={HeadingTag} />
       <div className="mg-hero__summaryText">
         <span dangerouslySetInnerHTML={{ __html: item.summaryText }} />
       </div>
@@ -109,6 +97,22 @@ export function Hero({
       </div>
     </article>
   );
+}
+
+/**
+ * Full-width hero banner. Supports two layouts:
+ * - `background` (default): full-bleed background image with coloured overlay.
+ * - `split`: solid theme-colour background with a content column and a media column side by side.
+ */
+export function Hero({
+  data,
+  variant = 'primary',
+  layout = 'background',
+  headingLevel = 'h1',
+  split = '2/3',
+}) {
+  const variantActive = variantOptions[variant];
+  const HeadingTag = headingLevel;
 
   if (layout === 'split') {
     const splitSuffix = splitSuffixMap[split] || '2-3';
@@ -125,8 +129,8 @@ export function Hero({
             )}
           >
             <div className="mg-hero__split-grid">
-              {renderContent(item)}
-              {renderMedia(item.media)}
+              <HeroContent item={item} HeadingTag={HeadingTag} />
+              <HeroMedia media={item.media} />
             </div>
           </section>
         ))}
@@ -144,7 +148,7 @@ export function Hero({
           style={{ backgroundImage: `url(${item.imgback})` }}
         >
           <div className="mg-hero__overlay">
-            {renderContent(item)}
+            <HeroContent item={item} HeadingTag={HeadingTag} />
           </div>
         </section>
       ))}
@@ -158,8 +162,18 @@ Hero.propTypes = {
     PropTypes.shape({
       imgback: PropTypes.string,
       label: PropTypes.string,
+      /**
+       * Heading text. Rendered via `dangerouslySetInnerHTML` to allow inline
+       * markup (e.g. `<em>`, `<br>`) from CMS-authored content. The consumer
+       * (e.g. Drupal text-format pipeline) must sanitise.
+       */
       title: PropTypes.string.isRequired,
       link: PropTypes.string,
+      /**
+       * Summary / lede text. Rendered via `dangerouslySetInnerHTML` to allow
+       * inline markup from CMS-authored content. The consumer (e.g. Drupal
+       * text-format pipeline) must sanitise.
+       */
       summaryText: PropTypes.string,
       detail: PropTypes.string,
       primary_button: PropTypes.string,

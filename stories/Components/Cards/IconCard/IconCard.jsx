@@ -40,7 +40,7 @@ const cls = (...classes) =>
  * @property {string} buttonType - Button style: 'Primary' or 'Secondary'
  */
 /** Renders the icon/image visual for a card item. */
-function renderVisual(item) {
+function Visual({ item }) {
   if (item.imgback) {
     return (
       <img
@@ -105,10 +105,10 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
               )}
               {item.srOnlyTitle && item.link ? (
                 <a href={item.link} className="mg-card__visual-link">
-                  {renderVisual(item)}
+                  <Visual item={item} />
                 </a>
               ) : (
-                renderVisual(item)
+                <Visual item={item} />
               )}
             </div>
           )}

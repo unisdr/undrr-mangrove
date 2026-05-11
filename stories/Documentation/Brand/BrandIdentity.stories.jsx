@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import LinkTo from '@storybook/addon-links/react';
 import { ColorSwatch } from './components/ColorSwatch';
 import { TypographySample } from './components/TypographySample';
 import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
@@ -81,7 +82,7 @@ function BrandIdentityPage({ themeName }) {
           style={{
             fontFamily: "'Roboto Condensed', sans-serif",
             fontSize: '2.625rem',
-            fontWeight: 700,
+            fontWeight: 600,
             margin: 0,
             letterSpacing: '-0.5px',
           }}
@@ -398,7 +399,7 @@ function BrandIdentityPage({ themeName }) {
             <Icon name={icon.name} size="lg" />
             <div
               style={{
-                fontSize: '0.6875rem',
+                fontSize: '0.75rem',
                 color: '#666',
                 marginTop: '0.25rem',
               }}
@@ -411,7 +412,10 @@ function BrandIdentityPage({ themeName }) {
       <p style={{ fontSize: '0.875rem', color: '#666' }}>
         Showing 21 of 80+ icons, including OCHA humanitarian icons. See the full
         set in the{' '}
-        <a href="/?path=/docs/components-icons--docs">Icons documentation</a>.
+        <LinkTo kind="components-icons" story="docs">
+          Icons documentation
+        </LinkTo>
+        .
       </p>
 
       <hr style={{ margin: '2rem 0' }} />

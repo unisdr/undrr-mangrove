@@ -34,7 +34,12 @@ export const REQUIRES_REACT = {
   'components-charts-histogram': 'Histogram uses D3 for rendering. Requires React and D3. Import via npm.',
   'components-charts-indexchart': 'IndexChart uses D3 for rendering. Requires React and D3. Import via npm.',
   'components-maps-mapcomponent': 'MapComponent uses Leaflet for interactive maps. Requires React and Leaflet. Import via npm.',
-  'components-syndicationsearchwidget': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.',
+  'components-syndicated-search': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.',
+  'components-syndicated-search-display-modes': 'SyndicationSearchWidget display-mode variants (list / card / card-book layouts and teaser-field visibility). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-filters': 'SyndicationSearchWidget filter and facet customisation variants (customFilters, customFacets, allowedTypes). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-integrations': 'SyndicationSearchWidget integration / syndication examples (taxonomy term results, custom endpoints, syndicated card layouts as content blocks). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-layouts': 'SyndicationSearchWidget layout variants — facets sidebar, horizontal facet strip, and external-region portals (facetsTarget, searchTarget). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-toggles': 'SyndicationSearchWidget UI visibility toggles (showPager, showSearchMetrics). Requires React 19. Same hydration pattern as the main widget.',
   'components-megamenu': 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
   'components-fetcher': 'Fetcher is a generic data-fetching wrapper component. Requires React for state management.',
   'components-gallery': 'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
@@ -376,6 +381,41 @@ export default {
     <tr><td>2023</td><td>399</td><td>86,473</td><td>$280 billion</td></tr>
   </tbody>
 </table>`,
+      },
+    ],
+  },
+
+  // --- Preview access ---
+  'components-preview-access': {
+    description: 'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM.',
+    cssClasses: [
+      'mg-preview-access--unlocked',
+      'mg-preview-access__overlay',
+      'mg-preview-access__modal',
+      'mg-preview-access__eyebrow',
+      'mg-preview-access__title',
+      'mg-preview-access__body',
+      'mg-preview-access__form',
+      'mg-preview-access__label',
+      'mg-preview-access__field',
+      'mg-preview-access__input',
+      'mg-preview-access__submit',
+      'mg-preview-access__error',
+      'mg-preview-access__contact',
+    ],
+    examples: [
+      {
+        name: 'Default gate (PIN 5498)',
+        html: `<div data-mg-preview-access></div>`,
+      },
+      {
+        name: 'Branded gate with shared id',
+        html: `<div data-mg-preview-access
+     data-mg-preview-pin="5498"
+     data-mg-preview-id="delta-2026-preview"
+     data-mg-preview-eyebrow="DELTA Resilience · Preview"
+     data-mg-preview-title="This page is a preview"
+     data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>`,
       },
     ],
   },

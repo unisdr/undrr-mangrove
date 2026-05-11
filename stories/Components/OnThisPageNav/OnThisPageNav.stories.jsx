@@ -531,7 +531,7 @@ export const WithTabsContent = {
           <p style={{ marginBottom: '1rem' }}>
             The following tabs each contain a section heading. Clicking that
             heading in the navigation bar above will open the correct tab and
-            scroll to it — even if the tab is currently closed.
+            scroll to it, even if the tab is currently closed.
           </p>
 
           {/* Horizontal tabs — each panel contains an h2 that the nav links to */}
