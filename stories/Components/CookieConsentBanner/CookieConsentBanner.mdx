@@ -305,4 +305,5 @@ The cookie consent banner is built with accessibility in mind, including:
 
 ## Changelog
 
+- **1.1** — 2026-05-11: Return an empty Fragment instead of `null` so Storybook's `react-docgen` pass can classify the component and extract its `propTypes` for the AI manifest. No runtime change (empty Fragments render nothing in the DOM). [#1006](https://github.com/unisdr/undrr-mangrove/issues/1006).
 - **1.0** — 2025-06-17: Initial release
