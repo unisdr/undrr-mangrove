@@ -68,6 +68,15 @@ npx -y react-doctor@latest .
 
 It prints a 0–100 health score, a categorised list of findings, and writes a full per-rule report to a temp directory. PRs #985, #987, #988, #989 systematically cleared the most mechanical findings (em-dashes, three-period ellipses, `defaultProps`, default `[]`/`{}` props, `useContext`, inline render helpers, etc.). Tracker issue [#986](https://github.com/unisdr/undrr-mangrove/issues/986) tracks remaining categories.
 
+### Refreshing the README badge
+
+The React Doctor badge in `README.md` is a manually-pinned snapshot, not live. Refresh it after an audit sweep (or any PR that materially moves the score) by:
+
+1. Run `npx -y react-doctor@latest .` and note the share URL printed at the bottom — it embeds `s` (score), `e` (errors), `w` (warnings), `f` (files affected).
+2. Update the four query-string params in both the badge image and the link target in the README.
+
+There is no CI step that does this automatically, so a stale badge is a sign the audit hasn't been refreshed recently — that's by design, since the score itself is most useful as a deliberate periodic check rather than a per-commit signal.
+
 ### House conventions enforced by react-doctor
 
 Beyond standard React linting, these conventions have been codified through the audit. Future agents should follow them rather than re-introducing the patterns:
