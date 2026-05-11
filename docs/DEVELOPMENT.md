@@ -26,8 +26,8 @@ These guides live inside Storybook and cover component standards, integration, a
 
 ## Prerequisites
 
-- Node.js 22 (use nvm or similar to manage versions)
-- Yarn v4 (enabled via Corepack)
+- Node.js 22+ (minimum supported; CI and Docker run on Node 24). The repo ships a `.nvmrc` so `nvm use` picks the pinned version. `engines.node` in `package.json` enforces the floor.
+- Yarn v4 (enabled via Corepack; version pinned via `packageManager` in `package.json`)
 - Docker (optional, for containerized development)
 - Git
 

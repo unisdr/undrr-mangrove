@@ -4,6 +4,9 @@
   "description": "Mangrove design System for UNDRR",
   "main": "src/index.js",
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "exports": {
     ".": "./src/index.js"
   },
