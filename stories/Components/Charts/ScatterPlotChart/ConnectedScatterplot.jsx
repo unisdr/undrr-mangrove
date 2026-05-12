@@ -2,6 +2,14 @@ import React from 'react';
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 
+/**
+ * Renders a D3-powered connected scatterplot (path through points in order).
+ *
+ * @deprecated since v1.7.x — will be removed in v1.8. UNDRR is consolidating on
+ * [Recharts](https://recharts.org/) for charting; this in-tree D3 wrapper never
+ * reached wide-scale implementation. New code should use Recharts directly. See
+ * the removal tracker: https://github.com/unisdr/undrr-mangrove/issues/1011
+ */
 export default function ConnectedScatterplot({
   data,
   width,

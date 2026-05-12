@@ -36,6 +36,11 @@ function RemoveAttributionPrefix() {
 /**
  * Renders a Leaflet map with clustered markers sized proportionally to their values.
  *
+ * @deprecated since v1.7.x — will be removed in v1.8. UNDRR is adopting UNEP/GRID
+ * [MAPX](https://mapx.org/) as the standard mapping technology; this in-tree
+ * Leaflet wrapper never reached wide-scale implementation. New code should embed
+ * MAPX directly. See the removal tracker: https://github.com/unisdr/undrr-mangrove/issues/1011
+ *
  * @param {Object} props
  * @param {Array<{label: string, value: number, coords: number[], continent: string, country_id: string}>} props.data Marker data with coordinates and continent grouping
  * @param {number[]} [props.center]  Map center as [latitude, longitude]

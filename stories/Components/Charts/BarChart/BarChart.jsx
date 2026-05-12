@@ -14,6 +14,11 @@ const EMPTY_DATA = [];
 /**
  * Renders a D3-powered bar chart with configurable axes, colors, and accessibility attributes.
  *
+ * @deprecated since v1.7.x — will be removed in v1.8. UNDRR is consolidating on
+ * [Recharts](https://recharts.org/) for charting; this in-tree D3 wrapper never
+ * reached wide-scale implementation. New code should use Recharts directly. See
+ * the removal tracker: https://github.com/unisdr/undrr-mangrove/issues/1011
+ *
  * @param {Object} props
  * @param {Array<{label: string, value: number}>} [props.data] Array of data objects with label and value properties
  * @param {string} [props.cumulative]     Whether to accumulate values across bars ('true'/'false')
