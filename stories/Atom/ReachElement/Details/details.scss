@@ -1,4 +1,19 @@
 /* details tag start */
+
+/* Baseline: usability essentials for all <details> elements */
+details {
+  > summary {
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+      border-radius: mg-rem(2);
+    }
+  }
+}
+
+/* Enhanced: opt-in card treatment via .mg-details */
 details.mg-details {
   border: 1px solid $mg-color-neutral-200;
   border-radius: mg-rem(4);
@@ -9,25 +24,18 @@ details.mg-details {
     box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
   }
 
-  summary {
+  > summary {
     @extend %paragraph-font-300;
 
     color: $mg-color-interactive;
     font-weight: 600;
     list-style-type: none;
     padding: mg-rem(10) mg-rem(10) mg-rem(10) mg-rem(25);
-    cursor: pointer;
     position: relative;
     transition: background-color 0.2s ease-in-out;
 
     &:hover {
       background-color: $mg-color-blue-50;
-      border-radius: mg-rem(2);
-    }
-
-    &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
-      outline-offset: 2px;
       border-radius: mg-rem(2);
     }
 
@@ -61,7 +69,7 @@ details.mg-details {
   &[open] {
     border-color: $mg-color-blue-300;
 
-    summary {
+    > summary {
       margin-bottom: 0;
       padding-bottom: mg-rem(10);
       border-bottom: 1px solid $mg-color-neutral-200;
@@ -75,18 +83,18 @@ details.mg-details {
 
 [dir="rtl"] {
   details.mg-details {
-    summary {
+    > summary {
       padding: mg-rem(10) mg-rem(25) mg-rem(10) mg-rem(10);
     }
 
-    summary::before {
+    > summary::before {
       left: auto;
       right: mg-rem(10);
       transform: translateY(-50%) rotate(180deg);
     }
 
     &[open] {
-      summary::before {
+      > summary::before {
         transform: translateY(-50%) rotate(0deg);
       }
     }

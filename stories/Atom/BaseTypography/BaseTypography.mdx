@@ -268,7 +268,9 @@ Typographic scale when using code in text component:
 
 ## Details
 
-The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the summary element. Add the `mg-details` class to apply Mangrove styling; bare `<details>` retains browser-default appearance.
+The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the `summary` element.
+
+Mangrove applies a light baseline to all `<details>` elements — a pointer cursor on the summary and a branded focus ring — keeping the browser's native disclosure marker intact. For a richer card treatment, add the `mg-details` class.
 
 export const getLocaleForDetails = locale => {
   switch (locale) {
@@ -306,10 +308,10 @@ export const getLocaleForDetails = locale => {
   meta={BaseTypographyStories}
 />
 
-Bare `<details>` without `mg-details` renders with browser-default styling:
+Bare `<details>` with Mangrove's baseline styling — native disclosure marker, pointer cursor, and branded focus ring:
 
 <Canvas
-  of={BaseTypographyStories.TypographyDetailsUnstyled}
+  of={BaseTypographyStories.TypographyDetailsBaseline}
   meta={BaseTypographyStories}
 />
 
@@ -698,7 +700,7 @@ export const getCaptionForLocaleList = locale => {
 ## Changelog
 
 - **1.2** — 2025-07-14 ([#865](https://github.com/unisdr/undrr-mangrove/issues/865)):
-  - Refactored `details`/`summary` styles to opt-in `mg-details` class to prevent global style leakage; bare `<details>` retains browser defaults
+  - Refactored `details`/`summary` styles to opt-in `mg-details` class; bare `<details>` receives a light baseline (pointer cursor, branded focus ring) without altering the native disclosure marker
   - Replaced `outline: 0` on `summary` with explicit `:focus-visible` style for keyboard accessibility
   - Improved `hr` with brand-blue top border and vertical breathing room
   - Improved `dt` with brand blue colour and bold weight; added `dd + dt` group spacing

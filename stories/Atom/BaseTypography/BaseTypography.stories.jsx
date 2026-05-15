@@ -681,15 +681,15 @@ export const TypographyDetails = Template(
   getLocaleForDetails
 );
 
-const DetailsTagUnstyled = ({ summary, details }) => (
+const DetailsTagBaseline = ({ summary, details }) => (
   <details>
     <summary>{summary}</summary>
     <p>{details}</p>
   </details>
 );
 
-export const TypographyDetailsUnstyled = Template(
-  DetailsTagUnstyled,
+export const TypographyDetailsBaseline = Template(
+  DetailsTagBaseline,
   getLocaleForDetails
 );
 
