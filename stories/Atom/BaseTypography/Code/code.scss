@@ -133,9 +133,10 @@ figure.mg-code-block {
   pointer-events: none;
 }
 
-// Prism token colours — used by react-syntax-highlighter in Storybook
-// and by Prism.js on Drupal pages. Background is $mg-color-neutral-800.
-//
+// Prism token colours — used by react-syntax-highlighter in Storybook/React.
+// These rules are also available if Prism.js is separately loaded (e.g. via
+// a Drupal module), but Mangrove does not load Prism itself. Background is
+// $mg-color-neutral-800.
 // NOTE: .token.* class names are Prism.js's API — they are emitted by the
 // tokeniser, not defined by Mangrove. Do not rename or add mg- prefixes.
 // Mangrove owns only the colour values applied here.
