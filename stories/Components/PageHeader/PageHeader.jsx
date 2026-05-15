@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from '../../Atom/Icons/Icon';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
@@ -80,7 +81,7 @@ export function PageHeader({
             {/* User icon */}
             {showAccount && (
               <a title="My account" href="/user">
-                <i className="mg-icon mg-icon-user" aria-hidden="true"></i>{' '}
+                <Icon name="user" />{' '}
                 <span className="mg-page-header__label">My account</span>
                 {/* <span className="mg-page-header__label-mobile">Login</span> */}
               </a>
