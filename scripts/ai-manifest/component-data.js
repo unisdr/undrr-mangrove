@@ -306,8 +306,8 @@ export default {
 
   // --- Typography ---
   'components-typography': {
-    description: 'Base typography styles applied to standard HTML heading and body elements. No extra classes needed.',
-    cssClasses: [],
+    description: 'Base typography styles applied to standard HTML heading and body elements. Use `mg-details` on a `<details>` element to apply Mangrove styled disclosure.',
+    cssClasses: ['mg-details'],
     examples: [
       {
         name: 'Heading hierarchy',
@@ -320,6 +320,13 @@ export default {
   <h6>Heading level 6</h6>
   <p>Body text uses the base font size. Mangrove applies a consistent type scale across breakpoints.</p>
 </div>`,
+      },
+      {
+        name: 'Details disclosure',
+        html: `<details class="mg-details">
+  <summary>The Sendai Framework</summary>
+  <p>The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.</p>
+</details>`,
       },
     ],
   },

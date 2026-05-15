@@ -101,6 +101,8 @@ dl {
 }
 
 dt {
+  color: $mg-color-blue-900;
+  font-weight: 600;
   margin-bottom: $mg-spacing-25;
 }
 
@@ -114,12 +116,18 @@ dd {
   }
 }
 
+dd + dt {
+  margin-block-start: $mg-spacing-100;
+}
+
 header {
   text-wrap: balance;
 }
 
 hr {
-  border: 1px solid $mg-color-neutral-200;
+  border: 0;
+  border-block-start: 2px solid $mg-color-blue-200;
+  margin-block: $mg-spacing-200;
 }
 
 img {

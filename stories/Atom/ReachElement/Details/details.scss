@@ -1,5 +1,7 @@
 /* details tag start */
-details {
+details.mg-details {
+  border: 1px solid $mg-color-neutral-200;
+  border-radius: mg-rem(4);
   padding: mg-rem(10);
   transition: all 0.2s ease-in-out;
 
@@ -10,12 +12,24 @@ details {
   summary {
     @extend %paragraph-font-300;
 
+    color: $mg-color-interactive;
+    font-weight: 600;
     list-style-type: none;
-    outline: 0;
     padding: mg-rem(10) mg-rem(10) mg-rem(10) mg-rem(25);
     cursor: pointer;
     position: relative;
     transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $mg-color-blue-50;
+      border-radius: mg-rem(2);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $mg-color-interactive;
+      outline-offset: 2px;
+      border-radius: mg-rem(2);
+    }
 
     &::-webkit-details-marker {
       display: none;
@@ -45,8 +59,12 @@ details {
   }
 
   &[open] {
+    border-color: $mg-color-blue-300;
+
     summary {
       margin-bottom: 0;
+      padding-bottom: mg-rem(10);
+      border-bottom: 1px solid $mg-color-neutral-200;
 
       &::before {
         transform: translateY(-50%) rotate(180deg);
@@ -56,7 +74,7 @@ details {
 }
 
 [dir="rtl"] {
-  details {
+  details.mg-details {
     summary {
       padding: mg-rem(10) mg-rem(25) mg-rem(10) mg-rem(10);
     }
