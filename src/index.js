@@ -22,6 +22,7 @@ export { default as StatsCard } from '../stories/Components/Cards/StatsCard/Stat
 export { default as Pager } from '../stories/Components/Pager/Pager';
 export { default as TextCta } from '../stories/Components/TextCta/TextCta';
 export { default as Snackbar } from '../stories/Components/Snackbar/Snackbar';
+export { default as FeaturePromo } from '../stories/Components/FeaturePromo/FeaturePromo';
 
 // Import global styles
 import '../stories/assets/scss/style.scss';

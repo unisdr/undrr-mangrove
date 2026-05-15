@@ -1,0 +1,110 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as FeaturePromoStories from './FeaturePromo.stories';
+
+<Meta of={FeaturePromoStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Feature Promo
+
+A full-width editorial spotlight placing a large image beside a coloured content panel that partially overlaps the image. Use it to anchor a page section around a key publication, initiative, or campaign.
+
+## Features
+
+- **CSS Grid overlap layout**: Image and panel share grid rows for a precise, overlap effect
+- **Reverse variant**: Flip image to the right with `reverse`
+- **Four colour variants**: `primary`, `secondary`, `tertiary`, `quaternary` — driven by theme tokens
+- **Configurable heading level**: `headlineLevel` (2–6) for correct document outline
+- **Optional CTA**: Link is rendered only when both `ctaLabel` and `ctaUrl` are supplied
+- **External link support**: Adds `target="_blank"` and `rel="noopener noreferrer"` when `ctaExternal` is set
+- **Accessible**: Image alt drives AT visibility; panel text is white on brand-colour backgrounds
+
+## Examples
+
+### Primary (default)
+
+<Canvas of={FeaturePromoStories.Primary} />
+
+### Secondary
+
+<Canvas of={FeaturePromoStories.Secondary} />
+
+### Tertiary
+
+<Canvas of={FeaturePromoStories.Tertiary} />
+
+### Quaternary
+
+<Canvas of={FeaturePromoStories.Quaternary} />
+
+### Image right (reverse)
+
+<Canvas of={FeaturePromoStories.ImageRight} />
+
+### Without summary
+
+<Canvas of={FeaturePromoStories.NoSummary} />
+
+### Without CTA
+
+<Canvas of={FeaturePromoStories.NoCta} />
+
+### External CTA link
+
+<Canvas of={FeaturePromoStories.ExternalLink} />
+
+## Usage
+
+### CSS classes
+
+```html
+<!-- Image left, primary panel -->
+<section class="mg-feature-promo mg-feature-promo--primary">
+  <div class="mg-feature-promo__media">
+    <img src="photo.jpg" alt="Descriptive alt text" class="mg-feature-promo__image" />
+  </div>
+  <div class="mg-feature-promo__panel">
+    <h2 class="mg-feature-promo__heading">Heading text</h2>
+    <p class="mg-feature-promo__summary">Optional summary.</p>
+    <a href="/path" class="mg-feature-promo__cta mg-button mg-button--primary">CTA label</a>
+  </div>
+</section>
+
+<!-- Image right (reverse) -->
+<section class="mg-feature-promo mg-feature-promo--secondary mg-feature-promo--reverse">
+  <!-- same interior structure -->
+</section>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `image` | `string` | — | Image URL (**required**) |
+| `imageAlt` | `string` | — | Alt text; use `""` for decorative images (**required**) |
+| `heading` | `string` | — | Panel heading text (**required**) |
+| `summary` | `string` | — | Body text beneath the heading |
+| `ctaLabel` | `string` | — | CTA link label; omit to hide CTA |
+| `ctaUrl` | `string` | — | CTA link href; omit to hide CTA |
+| `ctaExternal` | `boolean` | `false` | Opens CTA in a new tab with `noopener` |
+| `reverse` | `boolean` | `false` | Flips layout so image is on the right |
+| `variant` | `'primary' \| 'secondary' \| 'tertiary' \| 'quaternary'` | `'primary'` | Panel colour variant |
+| `headlineLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `2` | Semantic heading level |
+| `className` | `string` | `''` | Additional CSS classes on the root element |
+
+### Colour variants
+
+| Variant | CSS modifier | Panel colour |
+|---|---|---|
+| Primary | `.mg-feature-promo--primary` | Interactive blue (`$mg-color-interactive`) |
+| Secondary | `.mg-feature-promo--secondary` | Sendai purple |
+| Tertiary | `.mg-feature-promo--tertiary` | Sendai turquoise |
+| Quaternary | `.mg-feature-promo--quaternary` | Sendai orange |
+
+Panel background is driven by `--mg-feature-promo-panel-bg`, which can be overridden per-theme.
+
+## Changelog
+
+### v1.0
+
+- Initial release with CSS Grid overlap layout, four colour variants, and reverse option

@@ -511,6 +511,53 @@ npm run build</code></pre>
   // --- Quote highlight (auto-rendered) ---
   'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
 
+  // --- Feature Promo ---
+  'components-featurepromo': {
+    description: 'Full-width editorial spotlight with a large image and an overlapping coloured content panel. Use on article/publication pages to anchor a key campaign, report, or initiative. CSS Grid handles the overlap — the panel covers ~50% of the image width on desktop and stacks below on mobile.',
+    cssClasses: [
+      'mg-feature-promo',
+      'mg-feature-promo--primary',
+      'mg-feature-promo--secondary',
+      'mg-feature-promo--tertiary',
+      'mg-feature-promo--quaternary',
+      'mg-feature-promo--reverse',
+      'mg-feature-promo__media',
+      'mg-feature-promo__image',
+      'mg-feature-promo__panel',
+      'mg-feature-promo__heading',
+      'mg-feature-promo__summary',
+      'mg-feature-promo__cta',
+    ],
+    examples: [
+      {
+        name: 'Primary variant (image left)',
+        html: `<section class="mg-feature-promo mg-feature-promo--primary" aria-label="Global Assessment Report on Disaster Risk Reduction 2024">
+  <div class="mg-feature-promo__media">
+    <img src="https://picsum.photos/1200/800" alt="Scientists review flood data in the field" class="mg-feature-promo__image" />
+  </div>
+  <div class="mg-feature-promo__panel">
+    <h2 class="mg-feature-promo__heading">Global Assessment Report on Disaster Risk Reduction 2024</h2>
+    <p class="mg-feature-promo__summary">Early warning systems are one of the most effective tools for reducing disaster risk.</p>
+    <a href="/publications/gar2024" class="mg-feature-promo__cta mg-button mg-button--primary">Read the report</a>
+  </div>
+</section>`,
+      },
+      {
+        name: 'Secondary variant, image right (reverse)',
+        html: `<section class="mg-feature-promo mg-feature-promo--secondary mg-feature-promo--reverse" aria-label="Sendai Framework Progress Report">
+  <div class="mg-feature-promo__media">
+    <img src="https://picsum.photos/1200/800" alt="Aerial view of a resilient coastal community" class="mg-feature-promo__image" />
+  </div>
+  <div class="mg-feature-promo__panel">
+    <h2 class="mg-feature-promo__heading">Sendai Framework Progress Report</h2>
+    <p class="mg-feature-promo__summary">Tracking implementation across 195 member states.</p>
+    <a href="/sendai-framework/progress" class="mg-feature-promo__cta mg-button mg-button--primary">View the progress</a>
+  </div>
+</section>`,
+      },
+    ],
+  },
+
   // --- Hero ---
   'components-hero-hero': {
     description: 'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',

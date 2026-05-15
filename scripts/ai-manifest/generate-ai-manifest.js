@@ -137,6 +137,7 @@ const COMPONENT_IDS = {
   Footer: 'components-footer',
   QuoteHighlight: 'components-quotehighlight',
   HighlightBox: 'components-highlightbox',
+  FeaturePromo: 'components-featurepromo',
   EmbedContainer: 'components-embedcontainer',
   FullWidth: 'components-fullwidth',
   Loader: 'components-loader',
@@ -459,6 +460,14 @@ function buildSampleProps(React) {
           description: 'Communities working to reduce disaster risk.',
         },
       ],
+    },
+    FeaturePromo: {
+      image: 'https://picsum.photos/1200/800',
+      imageAlt: 'Scientists review flood data in a field setting',
+      heading: 'Global Assessment Report on Disaster Risk Reduction 2024',
+      summary: 'Early warning systems reduce disaster deaths eightfold.',
+      ctaLabel: 'Read the report',
+      ctaUrl: '/publications/gar2024',
     },
   };
 }
