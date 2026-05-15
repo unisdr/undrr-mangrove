@@ -680,6 +680,19 @@ export const TypographyDetails = Template(
   DetailsComponent,
   getLocaleForDetails
 );
+
+const DetailsTagUnstyled = ({ summary, details }) => (
+  <details>
+    <summary>{summary}</summary>
+    <p>{details}</p>
+  </details>
+);
+
+export const TypographyDetailsUnstyled = Template(
+  DetailsTagUnstyled,
+  getLocaleForDetails
+);
+
 export const TypographyFigcaption = Template(
   FigcaptionComponent,
   getLocaleForFigcaption
