@@ -48,12 +48,12 @@ details.mg-details {
       position: absolute;
       left: mg-rem(10);
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-50%); // ► collapsed
       width: 0;
       height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 8px solid $mg-color-interactive;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 8px solid $mg-color-interactive;
       transition: transform 0.2s ease-in-out;
     }
   }
@@ -75,7 +75,7 @@ details.mg-details {
       border-bottom: 1px solid $mg-color-neutral-200;
 
       &::before {
-        transform: translateY(-50%) rotate(180deg);
+        transform: translateY(-50%) rotate(90deg); // ▼ open
       }
     }
   }
@@ -90,12 +90,12 @@ details.mg-details {
     > summary::before {
       left: auto;
       right: mg-rem(10);
-      transform: translateY(-50%) rotate(180deg);
+      transform: translateY(-50%) rotate(180deg); // ◄ collapsed (RTL)
     }
 
     &[open] {
       > summary::before {
-        transform: translateY(-50%) rotate(0deg);
+        transform: translateY(-50%) rotate(90deg); // ▼ open (RTL)
       }
     }
   }
