@@ -11,6 +11,8 @@ export { default as ScrollContainer } from '../stories/Components/ScrollContaine
 export { default as BarChart } from '../stories/Components/Charts/BarChart/BarChart';
 export { default as MapComponent } from '../stories/Components/Map/MapComponent';
 export { default as QuoteHighlight } from '../stories/Components/QuoteHighlight/QuoteHighlight';
+// CodeBlock is a Storybook documentation component (syntax highlighting via react-syntax-highlighter).
+// Drupal pages use Prism.js directly; no .hydrate.js/.fromElement.js needed for server-side blocks.
 export { CodeBlock } from '../stories/Components/CodeBlock/CodeBlock';
 export { default as Fetcher } from '../stories/Components/Fetcher/Fetcher';
 export { default as SyndicationSearchWidget } from '../stories/Components/SyndicationSearchWidget/SyndicationSearchWidget';

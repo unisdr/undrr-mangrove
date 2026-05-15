@@ -125,7 +125,7 @@ header {
 
 hr {
   border: 0;
-  border-block-start: 2px solid $mg-color-blue-200;
+  border-block-start: 2px solid $mg-color-neutral-400; // #808080 — 3.95:1 on white (non-text contrast)
   margin-block: $mg-spacing-200;
 }
 

@@ -1,10 +1,10 @@
 .mg-code,
 code {
-  background: $mg-color-blue-50;
+  background: $mg-color-neutral-25;
   padding: $mg-spacing-25 $mg-spacing-50;
   border-radius: $mg-spacing-25;
-  border: 1px solid $mg-color-blue-200;
-  color: $mg-color-blue-900;
+  border: 1px solid $mg-color-neutral-100;
+  color: $mg-color-text;
   font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
   font-size: 0.875em;
   line-height: 1.4;
@@ -26,6 +26,8 @@ pre > code {
   border-radius: mg-rem(6);
   line-height: 1.6;
   overflow-wrap: normal;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 // Standalone block-code display (e.g. ShareButtons URL)
@@ -39,6 +41,8 @@ pre > code {
   line-height: 1.6;
   overflow-x: auto;
   overflow-wrap: anywhere;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 // Language badge — shared positioning rules
@@ -83,7 +87,7 @@ figure.mg-code-block {
 
   figcaption {
     background: $mg-color-neutral-700;
-    color: $mg-color-neutral-300;
+    color: $mg-color-neutral-200; // #b3b3b3 — 6.03:1 on neutral-700
     padding: $mg-spacing-50 $mg-spacing-150;
     font-family: $mg-font-family;
     font-size: $mg-font-size-200;
@@ -150,7 +154,7 @@ figure.mg-code-block {
 
 .token.class-name,
 .token.tag {
-  color: $sendai-red-400; // #d45363 — 5.3:1 on neutral-800
+  color: $mg-color-blue-100; // #ccdce9 — 13.0:1 on neutral-800
 }
 
 .token.attr-name,

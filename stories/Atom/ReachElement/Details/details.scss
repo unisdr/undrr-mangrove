@@ -15,10 +15,10 @@ details {
 
 /* Enhanced: opt-in card treatment via .mg-details */
 details.mg-details {
-  border: 1px solid $mg-color-neutral-200;
+  border: 1px solid $mg-color-neutral-400; // #808080 — 3.95:1 on white (passes WCAG 1.4.11)
   border-radius: mg-rem(4);
   padding: mg-rem(10);
-  transition: all 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
     box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
@@ -35,7 +35,7 @@ details.mg-details {
     transition: background-color 0.2s ease-in-out;
 
     &:hover {
-      background-color: $mg-color-blue-50;
+      background-color: rgba($mg-color-interactive, 0.08); // theme-adaptive tint
       border-radius: mg-rem(2);
     }
 
@@ -67,12 +67,12 @@ details.mg-details {
   }
 
   &[open] {
-    border-color: $mg-color-blue-300;
+    border-color: $mg-color-interactive; // theme-adaptive; #004f91 = 8.27:1 on white
 
     > summary {
       margin-bottom: 0;
       padding-bottom: mg-rem(10);
-      border-bottom: 1px solid $mg-color-neutral-200;
+      border-bottom: 1px solid $mg-color-neutral-400; // 3.95:1 on white
 
       &::before {
         transform: translateY(-50%) rotate(90deg); // ▼ open
@@ -98,6 +98,14 @@ details.mg-details {
         transform: translateY(-50%) rotate(90deg); // ▼ open (RTL)
       }
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details.mg-details,
+  details.mg-details > summary,
+  details.mg-details > summary::before {
+    transition: none;
   }
 }
 
