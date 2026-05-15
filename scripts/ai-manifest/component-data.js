@@ -465,6 +465,13 @@ export default {
   // --- Highlight box (auto-rendered) ---
   'components-highlightbox': { description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.' },
 
+  // --- CodeBlock ---
+  'components-codeblock': {
+    description: 'Syntax-highlighted code block with optional filename header. Supports plain dark blocks, per-language Prism colouring (bash, javascript, jsx), language badge via data-language attribute, and a Vercel-inspired filename header via figure.mg-code-block + figcaption. For inline <code> in prose, use the bare HTML element — no component needed.',
+    cssClasses: ['mg-code-block', 'mg-code--block'],
+    html: `<pre data-language="Bash"><code>npm install</code></pre>`,
+  },
+
   // --- Quote highlight (auto-rendered) ---
   'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
 

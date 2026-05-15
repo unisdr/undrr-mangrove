@@ -245,49 +245,14 @@ export const getCaptionForLocaleCode = locale => {
   }
 };
 
-The code component is used to define a piece of computer code. The content inside is displayed in the browser's default monospace font.
-
-- We can use the <code>code</code> in any component to render the text found within the <code>code tag</code> in monospace font.
-- We can use the <code>blockCode</code> prop to render multi-line code blocks with the <code>mg-code--block</code> class.
-
-Typographic scale when using code in text component:
+Use `<code>` inline within prose to render technical terms in the browser's default monospace font:
 
 <Canvas
   of={BaseTypographyStories.TypographyCode}
   meta={BaseTypographyStories}
 />
 
-### Code block
-
-Plain block — no language label:
-
-<Canvas
-  of={BaseTypographyStories.TypographyCodeBlock}
-  meta={BaseTypographyStories}
-/>
-
-With syntax highlighting: add `data-language="Bash"` to the `<pre>` element to show a language badge in the top-right corner. When using `react-syntax-highlighter`, the badge appears automatically from the `language-*` class on `<code>`.
-
-<Canvas
-  of={BaseTypographyStories.TypographyCodeBlockHighlighted}
-  meta={BaseTypographyStories}
-/>
-
-### Code block with filename header
-
-Wrap in `<figure class="mg-code-block">` with a `<figcaption>` to add a Vercel-inspired filename header — useful when the snippet has a clear paste destination:
-
-```html
-<figure class="mg-code-block">
-  <figcaption>MyComponent.jsx</figcaption>
-  <pre><code>…</code></pre>
-</figure>
-```
-
-<Canvas
-  of={BaseTypographyStories.TypographyCodeBlockFile}
-  meta={BaseTypographyStories}
-/>
+For syntax-highlighted blocks, plain dark blocks, and filename-header wrappers, see the **[CodeBlock component](/docs/components-codeblock--docs)**.
 
 <Anchor storyId="foundation-typography-basetypography--details" />
 

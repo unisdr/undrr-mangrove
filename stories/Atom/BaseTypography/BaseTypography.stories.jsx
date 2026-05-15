@@ -2,7 +2,7 @@ import { Heading as HeadingComponent } from '../Typography/Heading/Heading';
 import { Abbreviation as AbbrComponent } from './Abbr/Abbr';
 import { Blockquote } from './Blockquote/Blockquote';
 import { Cite as CiteComponent } from './Cite/Cite';
-import { Code as CodeComponent } from './Code/Code';
+import { Code as CodeComponent } from './Code/Code'; // inline <code> only — see Components/CodeBlock for full block component
 import { Hr as HrComponent } from './Hr/Hr';
 import { Mark as MarkComponent } from './Mark/Mark';
 import { P as PComponent } from './Paragraph/Paragraph';
@@ -182,99 +182,6 @@ const getCaptionForLocaleCode = locale => {
         detail5:
           'object contains the length of the string. It can also serve as a character counter.',
       };
-  }
-};
-
-const getCaptionForLocaleCodeBlock = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        blockCode: `// React component example
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        blockCode: `// مثال مكون React
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return arabicText;
-    case 'japanese':
-      const japaneseText = {
-        blockCode: `// Reactコンポーネントの例
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return japaneseText;
-    default:
-      return {
-        blockCode: `// React component example
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-  }
-};
-
-const getCaptionForLocaleCodeBlockHighlighted = locale => {
-  const bashExample = `#!/bin/bash
-# Build and deploy the project
-set -e
-
-echo "Installing dependencies..."
-npm ci --production
-
-echo "Building assets..."
-npm run build
-
-echo "Deploy complete."`;
-
-  switch (locale) {
-    case 'arabic':
-    case 'japanese':
-    default:
-      return { blockCode: bashExample, language: 'bash' };
   }
 };
 
@@ -634,29 +541,8 @@ export const TypographySmall = Template(
   SmallComponent,
   getCaptionForLocaleSmall
 );
+
 export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
-export const TypographyCodeBlock = Template(
-  CodeComponent,
-  getCaptionForLocaleCodeBlock
-);
-export const TypographyCodeBlockHighlighted = Template(
-  CodeComponent,
-  getCaptionForLocaleCodeBlockHighlighted
-);
-
-const CodeBlockWithFile = ({ blockCode }) => (
-  <figure className="mg-code-block">
-    <figcaption>MyComponent.jsx</figcaption>
-    <pre>
-      <code>{blockCode}</code>
-    </pre>
-  </figure>
-);
-
-export const TypographyCodeBlockFile = Template(
-  CodeBlockWithFile,
-  getCaptionForLocaleCodeBlock
-);
 
 export const TypographyAbbreviation = Template(
   AbbrComponent,
