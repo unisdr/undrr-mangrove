@@ -643,6 +643,21 @@ export const TypographyCodeBlockHighlighted = Template(
   CodeComponent,
   getCaptionForLocaleCodeBlockHighlighted
 );
+
+const CodeBlockWithFile = ({ blockCode }) => (
+  <figure className="mg-code-block">
+    <figcaption>MyComponent.jsx</figcaption>
+    <pre>
+      <code>{blockCode}</code>
+    </pre>
+  </figure>
+);
+
+export const TypographyCodeBlockFile = Template(
+  CodeBlockWithFile,
+  getCaptionForLocaleCodeBlock
+);
+
 export const TypographyAbbreviation = Template(
   AbbrComponent,
   getCaptionForLocaleAbbr

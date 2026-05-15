@@ -12,19 +12,109 @@ code {
 }
 
 pre {
+  position: relative; // anchor for language badge
   margin-block: $mg-spacing-100;
   overflow-x: auto;
 }
 
-pre > code,
+pre > code {
+  display: block;
+  background: $mg-color-neutral-800;
+  color: $mg-color-neutral-0;
+  padding: $mg-spacing-150;
+  border: none;
+  border-radius: mg-rem(6);
+  line-height: 1.6;
+  overflow-wrap: normal;
+}
+
+// Standalone block-code display (e.g. ShareButtons URL)
 .mg-code--block {
   display: block;
   background: $mg-color-neutral-800;
   color: $mg-color-neutral-0;
   padding: $mg-spacing-100 $mg-spacing-150;
   border: none;
-  border-left: 4px solid $mg-color-blue-700;
-  border-radius: 0 mg-rem(4) mg-rem(4) 0;
+  border-radius: mg-rem(4);
+  line-height: 1.6;
+  overflow-x: auto;
+  overflow-wrap: anywhere;
+}
+
+// Language badge — shared positioning rules
+// data-language: hand-authored HTML (<pre data-language="Bash">)
+// :has selector: react-syntax-highlighter puts language-X on <code>, not <pre>
+pre[data-language],
+pre:has(> code[class*='language-']) {
+  > code {
+    padding-block-start: $mg-spacing-250; // room for badge
+  }
+
+  &::after {
+    position: absolute;
+    top: $mg-spacing-75;
+    right: $mg-spacing-100;
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-100;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $mg-color-neutral-300;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+pre[data-language]::after {
+  content: attr(data-language);
+}
+
+// Per-language badge labels for react-syntax-highlighter output
+pre:has(> code.language-bash)::after       { content: "Bash"; }
+pre:has(> code.language-javascript)::after { content: "JavaScript"; }
+pre:has(> code.language-jsx)::after        { content: "JSX"; }
+
+// Vercel-inspired filename header: figure.mg-code-block > figcaption + pre
+figure.mg-code-block {
+  margin-block: $mg-spacing-100;
+  border-radius: mg-rem(6);
+  overflow: hidden;
+
+  figcaption {
+    background: $mg-color-neutral-700;
+    color: $mg-color-neutral-300;
+    padding: $mg-spacing-50 $mg-spacing-150;
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-200;
+    font-style: normal;
+    line-height: 1.6;
+  }
+
+  pre {
+    margin-block: 0;
+
+    // Badge suppressed — figcaption already labels the block
+    &[data-language]::after,
+    &:has(> code[class*='language-'])::after {
+      display: none;
+    }
+
+    > code {
+      border-radius: 0;
+      padding-block-start: $mg-spacing-150; // restore normal padding — no badge needed
+    }
+  }
+}
+
+[dir='rtl'] {
+  pre[data-language],
+  pre:has(> code[class*='language-']) {
+    &::after {
+      left: $mg-spacing-100;
+      right: auto;
+    }
+  }
 }
 
 // Prism token colours — used by react-syntax-highlighter in Storybook
