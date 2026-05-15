@@ -30,7 +30,7 @@ details.mg-details {
     color: $mg-color-interactive;
     font-weight: 600;
     list-style-type: none;
-    padding: mg-rem(10) mg-rem(10) mg-rem(10) mg-rem(25);
+    padding: mg-rem(10) mg-rem(10) mg-rem(10) mg-rem(32);
     position: relative;
     transition: background-color 0.2s ease-in-out;
 
@@ -84,7 +84,7 @@ details.mg-details {
 [dir="rtl"] {
   details.mg-details {
     > summary {
-      padding: mg-rem(10) mg-rem(25) mg-rem(10) mg-rem(10);
+      padding: mg-rem(10) mg-rem(32) mg-rem(10) mg-rem(10);
     }
 
     > summary::before {
