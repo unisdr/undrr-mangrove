@@ -37,6 +37,14 @@ Add the `language` prop to enable Prism syntax colouring and an automatic langua
 
 Supported languages: `bash`, `javascript`, `jsx`.
 
+### With line numbers
+
+Add `lineNumbers` to show a gutter (requires `language`):
+
+<Canvas of={CodeBlockStories.WithLineNumbers} />
+
+<Canvas of={CodeBlockStories.WithLineNumbersAndFilename} />
+
 ### With filename header
 
 Pass a `filename` prop to wrap the block in a `<figure class="mg-code-block">` with a `<figcaption>` header — useful when the snippet has a clear paste destination:

@@ -91,6 +91,26 @@ describe('CodeBlock', () => {
   });
 
   // --------------------------------------------------
+  // Line numbers
+  // --------------------------------------------------
+
+  it('applies showLineNumbers when lineNumbers prop is true', () => {
+    const { container } = render(
+      <CodeBlock code="echo hello" language="bash" lineNumbers />,
+    );
+    // Mock renders <code class="language-bash">, SyntaxHighlighter receives
+    // showLineNumbers={true}; structural test confirms it renders without error
+    expect(container.querySelector('code[class*="language-bash"]')).toBeInTheDocument();
+  });
+
+  it('has no a11y violations (with line numbers)', async () => {
+    const { container } = render(
+      <CodeBlock code="const x = 1;" language="javascript" lineNumbers />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  // --------------------------------------------------
   // Accessibility — plain
   // --------------------------------------------------
 

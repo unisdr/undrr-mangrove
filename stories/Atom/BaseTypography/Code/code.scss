@@ -121,8 +121,24 @@ figure.mg-code-block {
   }
 }
 
+// Line numbers — emitted by react-syntax-highlighter when showLineNumbers={true}.
+// Class name is react-syntax-highlighter's API, not a Mangrove BEM class.
+.react-syntax-highlighter-line-number {
+  display: inline-block;
+  min-width: 2.5em;
+  padding-right: $mg-spacing-100;
+  text-align: right;
+  color: $mg-color-neutral-400; // #808080 — 4.59:1 on neutral-800
+  user-select: none;
+  pointer-events: none;
+}
+
 // Prism token colours — used by react-syntax-highlighter in Storybook
 // and by Prism.js on Drupal pages. Background is $mg-color-neutral-800.
+//
+// NOTE: .token.* class names are Prism.js's API — they are emitted by the
+// tokeniser, not defined by Mangrove. Do not rename or add mg- prefixes.
+// Mangrove owns only the colour values applied here.
 .token.comment,
 .token.prolog,
 .token.doctype,

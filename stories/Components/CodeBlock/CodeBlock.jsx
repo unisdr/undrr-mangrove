@@ -16,13 +16,19 @@ SyntaxHighlighter.registerLanguage('jsx', jsx);
  * - With `language`: syntax highlighted via react-syntax-highlighter (PrismLight).
  * - With `filename`: wraps in `<figure class="mg-code-block">` with a
  *   `<figcaption>` filename header.
+ * - With `lineNumbers`: shows gutter line numbers (requires `language`).
  *
  * For inline `<code>` snippets inside prose, use the bare `<code>` element
  * directly — no component needed.
  */
-export const CodeBlock = ({ code, language, filename }) => {
+export const CodeBlock = ({ code, language, filename, lineNumbers }) => {
   const block = language ? (
-    <SyntaxHighlighter language={language} useInlineStyles={false}>
+    <SyntaxHighlighter
+      language={language}
+      useInlineStyles={false}
+      showLineNumbers={lineNumbers}
+      wrapLines={lineNumbers}
+    >
       {code}
     </SyntaxHighlighter>
   ) : (
@@ -50,4 +56,6 @@ CodeBlock.propTypes = {
   language: PropTypes.oneOf(['bash', 'javascript', 'jsx']),
   /** Optional filename shown in the header bar above the block */
   filename: PropTypes.string,
+  /** Show line numbers in the gutter. Requires `language` to be set. */
+  lineNumbers: PropTypes.bool,
 };

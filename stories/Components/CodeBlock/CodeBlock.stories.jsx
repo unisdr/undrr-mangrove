@@ -17,6 +17,10 @@ export default {
       control: 'text',
       description: 'Optional filename for the header bar',
     },
+    lineNumbers: {
+      control: 'boolean',
+      description: 'Show line numbers (requires language)',
+    },
   },
 };
 
@@ -74,5 +78,24 @@ export const WithFilenameAndLanguage = {
     code: bashExample,
     language: 'bash',
     filename: 'deploy.sh',
+  },
+};
+
+export const WithLineNumbers = {
+  name: 'With line numbers',
+  args: {
+    code: jsxExample,
+    language: 'jsx',
+    lineNumbers: true,
+  },
+};
+
+export const WithLineNumbersAndFilename = {
+  name: 'With line numbers + filename',
+  args: {
+    code: jsxExample,
+    language: 'jsx',
+    filename: 'MyComponent.jsx',
+    lineNumbers: true,
   },
 };
