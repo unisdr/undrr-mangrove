@@ -257,6 +257,27 @@ export default MyComponent;`,
   }
 };
 
+const getCaptionForLocaleCodeBlockHighlighted = locale => {
+  const bashExample = `#!/bin/bash
+# Build and deploy the project
+set -e
+
+echo "Installing dependencies..."
+npm ci --production
+
+echo "Building assets..."
+npm run build
+
+echo "Deploy complete."`;
+
+  switch (locale) {
+    case 'arabic':
+    case 'japanese':
+    default:
+      return { blockCode: bashExample, language: 'bash' };
+  }
+};
+
 const getLocaleForDetails = locale => {
   switch (locale) {
     case 'english':
@@ -617,6 +638,10 @@ export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
 export const TypographyCodeBlock = Template(
   CodeComponent,
   getCaptionForLocaleCodeBlock
+);
+export const TypographyCodeBlockHighlighted = Template(
+  CodeComponent,
+  getCaptionForLocaleCodeBlockHighlighted
 );
 export const TypographyAbbreviation = Template(
   AbbrComponent,

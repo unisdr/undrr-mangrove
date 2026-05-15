@@ -1,18 +1,74 @@
 .mg-code,
 code {
-  background: $mg-color-neutral-50;
+  background: $mg-color-blue-50;
   padding: $mg-spacing-25 $mg-spacing-50;
   border-radius: $mg-spacing-25;
-  border: 1px solid $mg-color-neutral-200;
-  color: $mg-color-neutral-800;
+  border: 1px solid $mg-color-blue-200;
+  color: $mg-color-blue-900;
   font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
   font-size: 0.875em;
   line-height: 1.4;
-  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+pre {
+  margin-block: $mg-spacing-100;
+  overflow-x: auto;
 }
 
 pre > code,
 .mg-code--block {
   display: block;
+  background: $mg-color-neutral-800;
+  color: $mg-color-neutral-0;
   padding: $mg-spacing-100 $mg-spacing-150;
+  border: none;
+  border-left: 4px solid $mg-color-blue-700;
+  border-radius: 0 mg-rem(4) mg-rem(4) 0;
+}
+
+// Prism token colours — used by react-syntax-highlighter in Storybook
+// and by Prism.js on Drupal pages. Background is $mg-color-neutral-800.
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: $mg-color-neutral-300; // #999 — 6.37:1 on neutral-800
+}
+
+.token.keyword,
+.token.boolean {
+  color: $sendai-purple-400; // #b669ab — 4.55:1 on neutral-800
+}
+
+.token.string,
+.token.char,
+.token.attr-value,
+.token.selector,
+.token.regex {
+  color: $sendai-turquoise-400; // #4dc7c6 — 7.9:1 on neutral-800
+}
+
+.token.number,
+.token.unit {
+  color: $sendai-orange-400; // #f19e6a — 5.9:1 on neutral-800
+}
+
+.token.function {
+  color: $mg-color-blue-200; // #b3cade — 6.5:1 on neutral-800
+}
+
+.token.class-name,
+.token.tag {
+  color: $sendai-red-400; // #d45363 — 5.3:1 on neutral-800
+}
+
+.token.attr-name,
+.token.variable {
+  color: $mg-color-blue-300;
+}
+
+.token.operator,
+.token.punctuation {
+  color: $mg-color-neutral-100;
 }
