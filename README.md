@@ -226,6 +226,28 @@ Compiled assets are available via npm (`@undrr/undrr-mangrove`) and the [UNDRR C
 - `dist/css/`: compiled theme stylesheets
 - `dist/js/`: vanilla JS utilities
 
+## Drupal integration
+
+Mangrove components hydrate into server-rendered Drupal HTML using `createHydrator`. The server renders a container with `data-mg-*` attributes; a Drupal behaviour imports the component and mounts it:
+
+```js
+// Uses @mangrove/* import map aliases provided by the undrr_common theme
+import createHydrator from "@mangrove/hydrate";
+import Component, { fromElement } from "@mangrove/ComponentName";
+
+const hydrator = createHydrator({
+  selector: "[data-mg-component-name]",
+  component: Component,
+  fromElement,
+});
+
+Drupal.behaviors.mangroveComponentName = {
+  attach(context) { hydrator.update(context); },
+};
+```
+
+On error, `createHydrator` automatically restores the original server HTML — no blank regions on failure. See [`docs/HYDRATION.md`](./docs/HYDRATION.md) for the full pattern, prop extraction, and CDN/Astro/Vite variants.
+
 ## AI and agent integration
 
 The build generates static JSON files with component metadata so AI coding agents can look up Mangrove components without parsing the Storybook SPA. After deploy, these are available at:
