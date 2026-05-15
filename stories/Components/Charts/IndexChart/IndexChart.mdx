@@ -8,7 +8,7 @@ import * as IndexChartStories from './IndexChart.stories';
 
 # IndexChart
 
-NOTE: This is currently a proof of concept not used in production and may be removed.
+> **⚠ Deprecated.** This component is deprecated as of v1.7.x and will be removed in **v1.8**. UNDRR is consolidating on [Recharts](https://recharts.org/) for charting; this in-tree D3 wrapper never reached wide-scale implementation. New code should use Recharts directly. See the [removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011) for the migration plan.
 
 The `IndexChart` component visualizes data as a line graph with points representing specific values over time. It's designed to show trends and changes in data across time, making it easier to analyze and interpret.
 
@@ -171,4 +171,5 @@ The `IndexChart` component uses SVG to render a line graph with points represent
 
 ## Changelog
 
+- **1.1** — 2026-05-12: Deprecated. Will be removed in v1.8; new code should use [Recharts](https://recharts.org/). The earlier "proof of concept not used in production" note is superseded by the formal deprecation. See the [removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011).
 - **1.0** — 2024-08-14: Initial release

@@ -101,7 +101,7 @@ const count = text.length;
 
       <h2>Details</h2>
 
-      <details>
+      <details className="mg-details">
         <summary>The Sendai Framework</summary>
         <p>
           The framework is the global roadmap for reducing human and economic

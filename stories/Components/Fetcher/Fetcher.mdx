@@ -8,6 +8,8 @@ import * as FetcherStories from './Fetcher.stories';
 
 # Fetcher
 
+> **⚠ Deprecated.** This component is deprecated as of v1.7.x and will be removed in **v1.8**. The render-prop fetching pattern has been superseded by ecosystem libraries with caching, retries, and suspense integration. New code should use [react-query](https://tanstack.com/query), [SWR](https://swr.vercel.app/), or server-side data loading. See the [removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011) for the migration plan.
+
 The `Fetcher` component is a flexible data-fetching utility for React applications.
 
 ## Props
@@ -126,4 +128,5 @@ Ensure that the `render` function used within `Fetcher` is accessible and handle
 
 ## Changelog
 
+- **1.1** — 2026-05-12: Deprecated. Will be removed in v1.8; new code should use [react-query](https://tanstack.com/query), [SWR](https://swr.vercel.app/), or server-side data loading. See the [removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011).
 - **1.0** — 2024-09-04: Initial release
