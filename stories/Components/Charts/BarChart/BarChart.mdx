@@ -10,6 +10,8 @@ import { Loader } from '../../../Utilities/Loader/Loader';
 
 # BarChart
 
+> **⚠ Deprecated.** This component is deprecated as of v1.7.x and will be removed in **v1.8**. UNDRR is consolidating on [Recharts](https://recharts.org/) for charting; this in-tree D3 wrapper never reached wide-scale implementation. New code should use Recharts directly. See the [removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011) for the migration plan.
+
 The `BarChart` component visualizes categorical data using D3.js. It displays bars representing data points with customizable colors, labels, and axis options.
 
 ## Props
@@ -147,4 +149,5 @@ Ensure keyboard navigation and ARIA roles are properly implemented for enhanced 
 
 ## Changelog
 
+- **1.1** — 2026-05-12: Deprecated. Will be removed in v1.8; consumers should migrate to [Recharts](https://recharts.org/). See the [removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011).
 - **1.0** — 2024-08-08: Initial release
