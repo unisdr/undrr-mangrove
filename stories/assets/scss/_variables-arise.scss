@@ -1,0 +1,67 @@
+/**
+ * @tokens ARISE Colors
+ * @presenter Color
+ *
+ * ARISE (Private Sector Alliance for Disaster Resilient Societies)
+ * theme overrides for Mangrove.
+ *
+ * Source: docroot/themes/custom/arise/scss/utils/variables.scss
+ * Logo guidelines: ARISE-LOGO-GUIDELINES.pdf (UNDRR SharePoint)
+ *
+ * Note: ARISE uses its distinctive burgundy red (#921d2c) for the
+ * nav/header/topbar — this is the interactive color here.
+ * The live site also uses a near-black navy (#00223f) for footer
+ * and dark-section backgrounds.
+ *
+ * TODO: ARISE uses Teko for headings on ariseglobalnetwork.org.
+ * Adding that font import here is deferred until a designer confirms
+ * it should be part of the Mangrove ARISE theme.
+ */
+
+// ARISE brand palette — from arise Drupal theme variables
+$arise-color-primary: #921d2c; // Burgundy red — nav, header, interactive
+$arise-color-primary-800: #6e1621; // Hover shade (~25% darker)
+$arise-color-dark: #00223f; // Near-black navy — footer, dark sections
+
+// Interactive colors — links, focus rings, primary UI
+$mg-color-interactive: $arise-color-primary;
+$mg-color-interactive-active: $arise-color-primary;
+
+// Tags
+$mg-color-tag: $mg-color-interactive;
+$mg-color-tag--hover: $arise-color-primary-800;
+
+// $mg-color-tag-secondary, $mg-color-tag-accent — use defaults
+$mg-radius-tag: $mg-spacing-50;
+
+// Buttons
+$mg-color-button-background: $arise-color-primary;
+$mg-color-button-background--hover: $arise-color-primary-800;
+$mg-radius-button: $mg-spacing-50;
+
+// Form elements
+$mg-color-form-check: $mg-color-interactive;
+$mg-color-form-check--hover: $mg-color-interactive-active;
+$mg-color-form-check--checked: $mg-color-interactive;
+$mg-color-form-focus: $mg-color-interactive;
+$mg-radius-form-input: $mg-spacing-50;
+
+// Hero
+$mg-color-hero: $mg-color-interactive;
+$mg-spacing-hero-overlay: mg-rem(20) 0;
+
+// Tabs
+$mg-color-tabbar-background: rgba($arise-color-primary, 0.1);
+$mg-color-tab-background: rgba($arise-color-primary, 0.8);
+$mg-color-tab-background--inactive: $mg-color-tabbar-background;
+$mg-color-tab-background--hover: $arise-color-primary;
+$mg-color-tab-border: rgba($arise-color-primary, 0.3);
+$mg-color-tab-border--hover: $arise-color-primary-800;
+$mg-color-tab-border--active: $mg-color-tab-border;
+$mg-radius-tab: $mg-spacing-50 $mg-spacing-50 0 0;
+$mg-color-text-tab: $mg-color-neutral-700;
+$mg-color-text-tab--hover: $mg-color-white;
+$mg-color-text-tab-active: $mg-color-white;
+$mg-tabs-border-bottom: true;
+
+/* variables end */

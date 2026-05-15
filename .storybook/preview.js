@@ -8,6 +8,7 @@ import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss'
 import themeIRP from '../stories/assets/scss/style-irp.scss';
 import themeMCR from '../stories/assets/scss/style-mcr.scss';
 import themeDelta from '../stories/assets/scss/style-delta.scss';
+import themeARISE from '../stories/assets/scss/style-arise.scss';
 import themeLegacy from '../stories/assets/scss/style-legacy.scss';
 import themePWLegacy from '../stories/assets/scss/style-preventionweb-legacy.scss';
 import themeIRPLegacy from '../stories/assets/scss/style-irp-legacy.scss';
@@ -95,6 +96,7 @@ const themeStyles = {
   'IRP Theme': themeIRP,
   'MCR2030 Theme': themeMCR,
   'DELTA Resilience Theme': themeDelta,
+  'ARISE Theme': themeARISE,
   'Global UNDRR Theme (legacy 10px)': themeLegacy,
   'PreventionWeb Theme (legacy 10px)': themePWLegacy,
   'IRP Theme (legacy 10px)': themeIRPLegacy,
