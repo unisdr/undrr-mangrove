@@ -170,6 +170,7 @@ const preview = {
           'Brand',
           [
             'About this guide',
+            'Where to start',
             'Brand identity',
             'Brand guidelines',
             'Common patterns',
