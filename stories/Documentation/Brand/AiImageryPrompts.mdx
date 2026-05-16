@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
-import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+import { DocCallout } from './components/DocCallout';
 
 <Meta
   title="Brand/AI imagery prompts"
@@ -16,7 +16,7 @@ import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
 
 Generative image and language models produce on-brand work only when the prompt is specific. This page is a working library of prompt templates that translate the UNDRR <LinkTo kind="brand-visual-voice" story="docs">visual voice</LinkTo> and <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo> into instructions a model can follow.
 
-<HighlightBox variant="secondary">
+<DocCallout variant="warning">
   <strong>Experimental — both the tools and the guidance.</strong>
   <p>
     Generative AI for imagery and language is moving fast. The tools change every few weeks, and so does what they produce from the same prompt. This page is also experimental: the prompt patterns below are a starting point, not a settled standard, and they will be revised as we learn what works for UNDRR. Treat every output as a draft to evaluate, not a final asset.
@@ -41,9 +41,9 @@ Generative image and language models produce on-brand work only when the prompt 
       <strong>UNDRR Communications guidance on SharePoint</strong> (in development; check with <code>undrrcomms@un.org</code> for the current version).
     </li>
   </ul>
-</HighlightBox>
+</DocCallout>
 
-<HighlightBox variant="primary">
+<DocCallout variant="info">
   <strong>The standing rules — read before any prompt below.</strong>
   <ol>
     <li><strong>No photorealistic AI of human beings.</strong> AI imagery may depict people only in clearly stylised forms — flat vector, line illustration, editorial illustration. The output must not read as photographic. This aligns with AP, Reuters, and Guardian editorial standards on AI in journalism, and with the BBC's permissive lane for stylised graphics. For real publication imagery of real people, commission credited photography.</li>
@@ -59,7 +59,7 @@ Generative image and language models produce on-brand work only when the prompt 
     <li><strong>Use specific hex codes for colours.</strong> "Sendai colours" alone means nothing to an image model. The full palette is: <code>#c10920</code> Sendai red, <code>#eb752a</code> Sendai orange, <code>#962987</code> Sendai purple, <code>#00afae</code> Sendai turquoise. Reduced-saturation versions: <code>#d45363</code>, <code>#f19e6a</code>, <code>#b669ab</code>, <code>#4dc7c6</code>. Plus <code>#004f91</code> UNDRR Corporate Blue. Sub-brand primaries: <code>#0a6969</code> PreventionWeb teal, <code>#591a61</code> MCR2030 purple, <code>#0f78bf</code> IRP bright blue, <code>#132e48</code> DELTA dark navy. Always include the actual hex values in prompts, not just the colour name.</li>
     <li><strong>Label AI-generated imagery on publication.</strong> UNDRR's editorial standard requires credit and source for every image; generative work surfaces its provenance the same way. <a href="https://contentcredentials.org">C2PA Content Credentials</a> (cryptographic provenance manifests) are an emerging standard worth exploring as platform support grows; adopt opportunistically where the publishing tool supports it. This is not yet a UNDRR-wide commitment.</li>
   </ol>
-</HighlightBox>
+</DocCallout>
 
 ---
 
