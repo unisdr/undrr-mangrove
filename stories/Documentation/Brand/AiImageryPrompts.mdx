@@ -17,49 +17,40 @@ import { DocCallout } from './components/DocCallout';
 Generative image and language models produce on-brand work only when the prompt is specific. This page is a working library of prompt templates that translate the UNDRR <LinkTo kind="brand-visual-voice" story="docs">visual voice</LinkTo> and <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo> into instructions a model can follow.
 
 <DocCallout variant="warning">
-  <strong>Experimental — both the tools and the guidance.</strong>
-  <p>
-    Generative AI for imagery and language is moving fast. The tools change every few weeks, and so does what they produce from the same prompt. This page is also experimental: the prompt patterns below are a starting point, not a settled standard, and they will be revised as we learn what works for UNDRR. Treat every output as a draft to evaluate, not a final asset.
-  </p>
-  <p>
-    <strong>This page is derivative of UNDRR's institutional AI guidance, not a one-to-one match of it.</strong> The relevant policies on UN SharePoint and within UNDRR are still in development. The constraints documented here are working rules pulled from the institutional sources below; if SharePoint policy and this page disagree at any point, SharePoint policy wins. Confirm the current version with UNDRR Communications (<code>undrrcomms@un.org</code>) and your office's AI focal point before publishing AI-assisted work.
-  </p>
-  <p>
-    Institutional sources this page is derived from:
-  </p>
-  <ul>
-    <li>
-      <strong>UN System Principles for the Ethical Use of Artificial Intelligence</strong> (CEB-endorsed, September 2022) — <a href="https://unsceb.org/principles-ethical-use-artificial-intelligence-united-nations-system">unsceb.org/principles-ethical-use-artificial-intelligence-united-nations-system</a>
-    </li>
-    <li>
-      <strong>UNESCO Recommendation on the Ethics of Artificial Intelligence</strong> (November 2021) — <a href="https://www.unesco.org/en/artificial-intelligence/recommendation-ethics">unesco.org/en/artificial-intelligence/recommendation-ethics</a>
-    </li>
-    <li>
-      <strong>UN System White Paper on AI Governance</strong> (HLCP, April 2024) — <a href="https://unsceb.org/united-nations-system-white-paper-ai-governance">unsceb.org/united-nations-system-white-paper-ai-governance</a>
-    </li>
-    <li>
-      <strong>UNDRR Communications guidance on SharePoint</strong> (in development; check with <code>undrrcomms@un.org</code> for the current version).
-    </li>
-  </ul>
+  <strong>Experimental guidance.</strong> These prompts are a starting point, not a settled standard — tools change frequently and the same prompt produces different results over time. Treat every output as a draft to evaluate, not a final asset.
 </DocCallout>
 
-<DocCallout variant="info">
-  <strong>The standing rules — read before any prompt below.</strong>
-  <ol>
-    <li><strong>No photorealistic AI of human beings.</strong> AI imagery may depict people only in clearly stylised forms — flat vector, line illustration, editorial illustration. The output must not read as photographic. This aligns with AP, Reuters, and Guardian editorial standards on AI in journalism, and with the BBC's permissive lane for stylised graphics. For real publication imagery of real people, commission credited photography.</li>
-    <li><strong>Never use AI imagery for named people or specific real events.</strong> Use AI for editorial illustration, conceptual diagrams, infographic backgrounds, and concept exploration only.</li>
-    <li><strong>Never instruct a model to generate identifiable human faces.</strong> Models cannot generate "named individuals" — they fabricate realistic faces that may match real people in their training data, without consent. Even in stylised illustration, ask for faces in profile, three-quarter view, in motion, or without rendered detail.</li>
-    <li><strong>Never generate identifiable images of children.</strong> For child-focused topics, use illustration with no human figures, or commission credited photography with documented consent.</li>
-    <li><strong>No rendered text or standalone icons in AI outputs.</strong> AI image models render text as gibberish (mangled letters that look like writing but aren't), and they invent icons that drift from the OCHA + Mangrove icon systems. Every prompt should include "no text, no rendered letters, no logos, no icons." If signage is conceptually needed in the frame, request "pictogram-only signs without rendered words." Add real text, captions, and icons in your design tool (Figma, Illustrator) <em>after</em> generation, never inside the AI output.</li>
-    <li><strong>Specify a named country, not a region.</strong> "Pacific Islands" or "sub-Saharan Africa" produce cultural pastiche. Pick one named place per generation (for example, "Vanuatu, Efate Island," "Kenya, Mombasa County") and a specific built-environment cue.</li>
-    <li><strong>Diversity within a named place — name what kind of gathering this is.</strong> The named-country rule and the diversity rule pull against each other in single-country contexts: when you name "Bangladesh," the model defaults to a single ethnic phenotype even when you ask for varied skin tones. Resolve this by being explicit about the type of gathering. <strong>Local community context</strong> (a single village, a specific community-led activity): ethnic homogeneity may be appropriate to the place; diversity should come through age, gender, ability, and role — not through forced ethnic mixing of a community that does not in fact look that way. <strong>National-government context in a country with significant within-country diversity</strong>: name the heritage groups explicitly — for example, "Bangladeshi government planners reflecting Bangladesh's ethnic diversity — participants of Bengali, Adivasi, and Chittagong Hill Tracts heritage," or for Brazil "of Afro-Brazilian, Indigenous, European-Brazilian, and Asian-Brazilian heritage." Ask for the diversity that actually exists in that place. <strong>Regional or international convening hosted in a named country</strong>: name the participating countries — for example, "South Asian regional DRR planning meeting hosted in Dhaka, with participants from Bangladesh, Bhutan, India, Maldives, Nepal, Pakistan, and Sri Lanka." Name the nature of the gathering, not just the host country.</li>
-    <li><strong>Disability inclusion is required, not optional, in every people-inclusive prompt.</strong> The Sendai Framework explicitly addresses disability-inclusive DRR. Ask for at least one disabled person as a participant (not a recipient) — for example, a wheelchair user among community planners, a sign language interpreter at a briefing, a participant using a white cane near an early-warning siren.</li>
-    <li><strong>Decolonial framing.</strong> Avoid "outside expert / local recipient" prompt structures. Frame people as peers with named professional roles. The unmarked party in a prompt is the one most likely to default to white/male in model output.</li>
-    <li><strong>Diversity must be specified, not implied — and varied within the named place.</strong> "Diverse" alone is a weak token. Name what you want: skin-tone range across the range relevant to the named place, varied ages including older adults, varied body types, varied hair textures including textured and curly hair worn naturally. Vary clothing within regional norms — not all participants in identical dress.</li>
-    <li><strong>Use specific hex codes for colours.</strong> "Sendai colours" alone means nothing to an image model. The full palette is: <code>#c10920</code> Sendai red, <code>#eb752a</code> Sendai orange, <code>#962987</code> Sendai purple, <code>#00afae</code> Sendai turquoise. Reduced-saturation versions: <code>#d45363</code>, <code>#f19e6a</code>, <code>#b669ab</code>, <code>#4dc7c6</code>. Plus <code>#004f91</code> UNDRR Corporate Blue. Sub-brand primaries: <code>#0a6969</code> PreventionWeb teal, <code>#591a61</code> MCR2030 purple, <code>#0f78bf</code> IRP bright blue, <code>#132e48</code> DELTA dark navy. Always include the actual hex values in prompts, not just the colour name.</li>
-    <li><strong>Label AI-generated imagery on publication.</strong> UNDRR's editorial standard requires credit and source for every image; generative work surfaces its provenance the same way. <a href="https://contentcredentials.org">C2PA Content Credentials</a> (cryptographic provenance manifests) are an emerging standard worth exploring as platform support grows; adopt opportunistically where the publishing tool supports it. This is not yet a UNDRR-wide commitment.</li>
-  </ol>
+This page is derivative of UNDRR's institutional AI guidance, not a one-to-one match of it. The constraints here are working rules pulled from the sources listed below. If SharePoint policy and this page disagree at any point, SharePoint policy wins. Confirm the current version with UNDRR Communications (`undrrcomms@un.org`) and your office's AI focal point before publishing AI-assisted work.
+
+**Institutional sources this page is derived from:**
+
+- **UN System Principles for the Ethical Use of Artificial Intelligence** (CEB-endorsed, September 2022) — [unsceb.org/principles-ethical-use-artificial-intelligence-united-nations-system](https://unsceb.org/principles-ethical-use-artificial-intelligence-united-nations-system)
+- **UNESCO Recommendation on the Ethics of Artificial Intelligence** (November 2021) — [unesco.org/en/artificial-intelligence/recommendation-ethics](https://www.unesco.org/en/artificial-intelligence/recommendation-ethics)
+- **UN System White Paper on AI Governance** (HLCP, April 2024) — [unsceb.org/united-nations-system-white-paper-ai-governance](https://unsceb.org/united-nations-system-white-paper-ai-governance)
+- **UNDRR Communications guidance on SharePoint** (in development; check with `undrrcomms@un.org` for the current version).
+
+---
+
+## Standing rules
+
+Read these before using any prompt on this page. Run every output through the <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo> checklist before publishing.
+
+<DocCallout variant="warning">
+  <strong>Rules 1–5 are absolute prohibitions with no exceptions.</strong> No photorealistic humans, no named people or events, no identifiable faces, no images of children, no rendered text or icons in AI outputs.
 </DocCallout>
+
+1. **No photorealistic AI of human beings.** AI imagery may depict people only in clearly stylised forms — flat vector, line illustration, editorial illustration. The output must not read as photographic. This aligns with AP, Reuters, and Guardian editorial standards on AI in journalism, and with the BBC's permissive lane for stylised graphics. For real publication imagery of real people, commission credited photography.
+1. **Never use AI imagery for named people or specific real events.** Use AI for editorial illustration, conceptual diagrams, infographic backgrounds, and concept exploration only.
+1. **Never instruct a model to generate identifiable human faces.** Models cannot generate "named individuals" — they fabricate realistic faces that may match real people in their training data, without consent. Even in stylised illustration, ask for faces in profile, three-quarter view, in motion, or without rendered detail.
+1. **Never generate identifiable images of children.** For child-focused topics, use illustration with no human figures, or commission credited photography with documented consent.
+1. **No rendered text or standalone icons in AI outputs.** AI image models render text as gibberish (mangled letters that look like writing but aren't), and they invent icons that drift from the OCHA + Mangrove icon systems. Every prompt should include "no text, no rendered letters, no logos, no icons." If signage is conceptually needed in the frame, request "pictogram-only signs without rendered words." Add real text, captions, and icons in your design tool (Figma, Illustrator) _after_ generation, never inside the AI output.
+1. **Specify a named country, not a region.** "Pacific Islands" or "sub-Saharan Africa" produce cultural pastiche. Pick one named place per generation (for example, "Vanuatu, Efate Island," "Kenya, Mombasa County") and a specific built-environment cue.
+1. **Diversity within a named place — name what kind of gathering this is.** The named-country rule and the diversity rule pull against each other in single-country contexts: when you name "Bangladesh," the model defaults to a single ethnic phenotype even when you ask for varied skin tones. Resolve this by being explicit about the type of gathering. **Local community context** (a single village, a specific community-led activity): ethnic homogeneity may be appropriate to the place; diversity should come through age, gender, ability, and role — not through forced ethnic mixing of a community that does not in fact look that way. **National-government context in a country with significant within-country diversity**: name the heritage groups explicitly — for example, "Bangladeshi government planners reflecting Bangladesh's ethnic diversity — participants of Bengali, Adivasi, and Chittagong Hill Tracts heritage," or for Brazil "of Afro-Brazilian, Indigenous, European-Brazilian, and Asian-Brazilian heritage." Ask for the diversity that actually exists in that place. **Regional or international convening hosted in a named country**: name the participating countries — for example, "South Asian regional DRR planning meeting hosted in Dhaka, with participants from Bangladesh, Bhutan, India, Maldives, Nepal, Pakistan, and Sri Lanka." Name the nature of the gathering, not just the host country.
+1. **Disability inclusion is required, not optional, in every people-inclusive prompt.** The Sendai Framework explicitly addresses disability-inclusive DRR. Ask for at least one disabled person as a participant (not a recipient) — for example, a wheelchair user among community planners, a sign language interpreter at a briefing, a participant using a white cane near an early-warning siren.
+1. **Decolonial framing.** Avoid "outside expert / local recipient" prompt structures. Frame people as peers with named professional roles. The unmarked party in a prompt is the one most likely to default to white/male in model output.
+1. **Diversity must be specified, not implied — and varied within the named place.** "Diverse" alone is a weak token. Name what you want: skin-tone range across the range relevant to the named place, varied ages including older adults, varied body types, varied hair textures including textured and curly hair worn naturally. Vary clothing within regional norms — not all participants in identical dress.
+1. **Use specific hex codes for colours.** "Sendai colours" alone means nothing to an image model. The full palette is: `#c10920` Sendai red, `#eb752a` Sendai orange, `#962987` Sendai purple, `#00afae` Sendai turquoise. Reduced-saturation versions: `#d45363`, `#f19e6a`, `#b669ab`, `#4dc7c6`. Plus `#004f91` UNDRR Corporate Blue. Sub-brand primaries: `#0a6969` PreventionWeb teal, `#591a61` MCR2030 purple, `#0f78bf` IRP bright blue, `#132e48` DELTA dark navy, `#921d2c` ARISE burgundy. Always include the actual hex values in prompts, not just the colour name.
+1. **Label AI-generated imagery on publication.** UNDRR's editorial standard requires credit and source for every image; generative work surfaces its provenance the same way. [C2PA Content Credentials](https://contentcredentials.org) (cryptographic provenance manifests) are an emerging standard worth exploring as platform support grows; adopt opportunistically where the publishing tool supports it. This is not yet a UNDRR-wide commitment.
 
 ---
 
