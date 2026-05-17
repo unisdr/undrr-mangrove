@@ -42,11 +42,7 @@ The Mangrove token system in `stories/assets/scss/_variables.scss` is the source
 
 ### Layered application
 
-| Layer | What flexes | Example |
-| --- | --- | --- |
-| Core UNDRR | Nothing — Corporate Blue and Sendai stripe are locked | undrr.org hero, report covers |
-| Sub-brand | Interactive primary, secondary, accent; hero overlay | PreventionWeb teal CTAs, MCR2030 purple accents |
-| Campaign | One additional accent on top of sub-brand palette | Global Platform edition accent, IDDRR annual colour |
+For the canonical "what threads through every layer / what flexes at each layer" table — covering colour, typography, photography, language, logo, components — see <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>.
 
 ---
 
@@ -54,14 +50,7 @@ The Mangrove token system in `stories/assets/scss/_variables.scss` is the source
 
 Roboto and Roboto Condensed are the UN official typefaces. They are core-locked: every sub-brand and campaign uses them. This is one of the strongest threads in the layered identity — when stakeholders ask "what makes this look like a UN agency," typography is half the answer.
 
-| Use | Family | Notes |
-| --- | --- | --- |
-| Headings (H1–H4) | Roboto Condensed | Adds institutional weight without going formal |
-| Body, UI text | Roboto | Accessible default, wide weight range |
-| Internal email and Office documents | Arial | Substitute when Roboto is not available |
-| Arabic content (`:lang(ar)`) | Noto Kufi Arabic (headings), Dubai (body) | Mangrove default — supersedes the older Noto Nasteh guidance from the SharePoint reference |
-
-> **Note:** Sentence case for all UI headings and titles. Capitalise only proper nouns and acronyms. No em-dashes in UI strings — use parentheses for qualifiers (house convention; matches in-tree style).
+For the full font table (which family for which use, the language-override table for Arabic via `:lang(ar)`, the Mangrove-supersedes-SharePoint note for Noto Kufi Arabic + Dubai), see the typography section of <LinkTo kind="brand-brand-guidelines" story="docs">brand guidelines</LinkTo>. For the shared-foundations summary (breakpoints, grid, icons, z-index), see <LinkTo kind="brand-common-patterns" story="docs">common patterns</LinkTo>. For house conventions around sentence case, em-dashes, and link text, see <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo>.
 
 ---
 
@@ -82,16 +71,9 @@ The single strongest expression of UNDRR's "Approachable" and "Collaborative" ch
 - Disaster-tourism imagery — devastation framed for emotional effect without showing recovery, prevention, or response.
 - Hopeless framing — UNDRR's positive-framing rule is editorial, not just aesthetic.
 
-### Photo sizes (Mangrove + SharePoint agree)
+### Photo sizes
 
-| Use | Aspect ratio | Dimensions |
-| --- | --- | --- |
-| Hero banner | 16:6 | 1440 × 540 |
-| News image | 16:9 | 1164 × 665 |
-| Publication cover | 3:4 | 176 × 235 |
-| People thumbnail | 1:1 | 176 × 176 |
-
-For prompt examples that produce on-brand photography from generative image models, see <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo>.
+For the canonical photo size table (hero, news, publication, thumbnail), see <LinkTo kind="brand-brand-guidelines" story="docs">brand guidelines</LinkTo>. For generative imagery, see the <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> and the <LinkTo kind="brand-ai-imagery-prompts" story="docs">prompt cookbook</LinkTo>.
 
 ---
 
@@ -153,18 +135,7 @@ Data viz is voice. The same chart, same data, with different palette and treatme
 
 ## Pre-publish checklist
 
-Before shipping any new visual artifact, run it through:
-
-- [ ] At what layer does this live? (Core / sub-brand / campaign)
-- [ ] What threads must persist from the layer above? Are they intact?
-- [ ] What is flexing? Is the flex justified by audience, mission, or moment?
-- [ ] Does the artifact lean into at least one of Knowledgeable, Approachable, Collaborative?
-- [ ] If you stripped the logo, would a stakeholder still recognise this as UNDRR-family?
-- [ ] Are images credited?
-- [ ] Does the icon set match Mangrove (web UI) or OCHA (DRR concepts)?
-- [ ] Does the colour serve meaning, not decoration?
-
-If any answer is no or uncertain, escalate to UNDRR Communications (`undrrcomms@un.org`) before publishing.
+For the unified pre-publish checklist (Must hold / Should hold / Craft, grouped by stakes), see <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns and pre-publish checklist</LinkTo>. The Must-hold rows are the ones that will get a piece pulled if missed.
 
 ---
 
