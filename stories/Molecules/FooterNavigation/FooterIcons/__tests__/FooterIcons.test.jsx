@@ -8,9 +8,9 @@ describe('FooterIcons', () => {
   // Structure
   // --------------------------------------------------
 
-  it('renders a <ul> with class footer-icons', () => {
+  it('renders a <ul> with class mg-footer--social-links', () => {
     const { container } = render(<FooterIcons />);
-    expect(container.querySelector('ul.footer-icons')).toBeInTheDocument();
+    expect(container.querySelector('ul.mg-footer--social-links')).toBeInTheDocument();
   });
 
   it('renders all five social links', () => {
@@ -38,19 +38,6 @@ describe('FooterIcons', () => {
     iconSpans.forEach(span => {
       expect(span).toHaveAttribute('aria-hidden', 'true');
     });
-  });
-
-  // --------------------------------------------------
-  // Backward-compat classes
-  // --------------------------------------------------
-
-  it('preserves legacy CSS class on each social link', () => {
-    const { container } = render(<FooterIcons />);
-    expect(container.querySelector('a.facebook')).toBeInTheDocument();
-    expect(container.querySelector('a.linkedin')).toBeInTheDocument();
-    expect(container.querySelector('a.instagram')).toBeInTheDocument();
-    expect(container.querySelector('a.twitter')).toBeInTheDocument();
-    expect(container.querySelector('a.youtube')).toBeInTheDocument();
   });
 
   // --------------------------------------------------
