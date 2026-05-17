@@ -226,9 +226,11 @@ Compiled assets are available via npm (`@undrr/undrr-mangrove`) and the [UNDRR C
 - `dist/css/`: compiled theme stylesheets
 - `dist/js/`: vanilla JS utilities
 
-## Drupal integration
+## Non-React site integration (Drupal, Astro, etc.)
 
-Mangrove components hydrate into server-rendered Drupal HTML using `createHydrator`. The server renders a container with `data-mg-*` attributes; a Drupal behaviour imports the component and mounts it:
+Mangrove components can hydrate into server-rendered HTML on non-React consumers. The common wrapper pattern is `createHydrator` plus a framework/site hook that re-scans when new DOM is injected.
+
+### Drupal behavior pattern
 
 ```js
 // Uses @mangrove/* import map aliases provided by the undrr_common theme
@@ -246,7 +248,7 @@ Drupal.behaviors.mangroveComponentName = {
 };
 ```
 
-On error, `createHydrator` automatically restores the original server HTML — no blank regions on failure. See [`docs/HYDRATION.md`](./docs/HYDRATION.md) for the full pattern, prop extraction, and CDN/Astro/Vite variants.
+For other consumers (Astro/Vite/vanilla wrappers), use the same hydrator setup and call `hydrator.update(...)` from that platform's lifecycle hook when injecting new DOM. On error, `createHydrator` automatically restores the original server HTML — no blank regions on failure. See [`docs/HYDRATION.md`](./docs/HYDRATION.md) for full examples and platform variants.
 
 ## AI and agent integration
 
