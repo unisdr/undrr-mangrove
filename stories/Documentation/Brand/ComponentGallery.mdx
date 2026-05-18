@@ -17,135 +17,129 @@ import LinkTo from '@storybook/addon-links/react';
   }}
 />
 
-# Component gallery
+# Choosing the right component
 
-A curated catalog of Mangrove components, organised by purpose. Click any component to see live examples, variants, and usage guidance.
+The Storybook sidebar (Components, Atom, Molecules) is the full catalog of every Mangrove component. This page sits on top of it — for the moments when multiple components could plausibly do the job and you need a judgement call about which one is right.
 
-For theme-specific previews, switch themes in the toolbar. Every component adapts to the selected theme automatically.
-
----
-
-## Page structure
-
-Components that define the overall shape of a page.
-
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="components-pageheader" story="docs">Page header</LinkTo> | Sticky top navigation with UNDRR branding, language selector, and login |
-| <LinkTo kind="components-megamenu" story="docs">Mega menu</LinkTo> | Multi-column dropdown navigation for complex sites |
-| <LinkTo kind="components-navigation-breadcrumbs" story="docs">Breadcrumbs</LinkTo> | Hierarchical navigation trail |
-| <LinkTo kind="components-on-this-page-nav" story="docs">On-this-page nav</LinkTo> | Sticky table of contents for long articles |
-| <LinkTo kind="components-footer" story="docs">Footer</LinkTo> | Site-wide footer with navigation, social links, Sendai/SDG logos |
+It does not list every component. For the ones with one obvious use (the page header, the footer, error pages, the cookie consent banner), open the sidebar and pick them. The decisions below are the ones worth talking through.
 
 ---
 
-## Hero and headers
+## Choosing a hero
 
-High-visibility sections that establish context.
+UNDRR has three hero patterns. The default is **Hero** — use it unless one of the other two earns its place.
 
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="components-hero-hero" story="docs">Hero</LinkTo> | Full-width banner with title, summary, call-to-action, and background image |
-| <LinkTo kind="components-hero-hero-child" story="docs">Child hero</LinkTo> | Compact hero for sub-pages |
-| <LinkTo kind="components-featurepromo" story="docs">Feature promo</LinkTo> | Editorial spotlight with image/panel overlap; four colour variants |
+| If the page is… | Use | Why |
+| --- | --- | --- |
+| A landing page, a section root, or any page that carries the primary "what this is" message | <LinkTo kind="components-hero-hero" story="docs">Hero</LinkTo> | Full-width banner, title, summary, call-to-action, background image. The expected pattern for an entry point. |
+| A sub-page where the parent already set context (article body, secondary content, sub-section landing) | <LinkTo kind="components-hero-hero-child" story="docs">Child hero</LinkTo> | Compact form keeps the reader oriented without consuming hero real estate twice in one journey. |
+| An editorial spotlight — promoting a specific story, report, or campaign rather than introducing the page | <LinkTo kind="components-featurepromo" story="docs">Feature promo</LinkTo> | Image and panel overlap; four colour variants. Reads as editorial weight, not page chrome. |
 
----
-
-## Content cards
-
-For listings, teasers, and content summaries.
-
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="components-cards-vertical-card" story="docs">Vertical card</LinkTo> | Image-above-text card (news, articles, events) |
-| <LinkTo kind="components-cards-horizontal-card" story="docs">Horizontal card</LinkTo> | Side-by-side image and text |
-| <LinkTo kind="components-cards-book-card" story="docs">Book card</LinkTo> | Publication cover with metadata |
-| <LinkTo kind="components-cards-icon-card" story="docs">Icon card</LinkTo> | Card with prominent icon (services, categories) |
-| <LinkTo kind="components-cards-stats-card" story="docs">Stats card</LinkTo> | Numeric highlights with label and context |
-| <LinkTo kind="components-quotehighlight" story="docs">Quote highlight</LinkTo> | Featured quote with attribution |
-| <LinkTo kind="components-highlightbox" story="docs">Highlight box</LinkTo> | Emphasised content container with tone variants |
+> **Anti-pattern:** Using Hero on every page in a section. The repetition flattens hierarchy and tells the reader nothing about where they are in the journey.
 
 ---
 
-## Interactive elements
+## Choosing a card for listings
 
-Buttons, forms, and user input.
+Cards are the workhorse of UNDRR listings. The choice is about what the reader needs to see at a glance, not about aesthetics.
 
-| Component | What it does |
+| If the listing is… | Use | What it shows |
+| --- | --- | --- |
+| News, events, articles — image-led with title and short summary | <LinkTo kind="components-cards-vertical-card" story="docs">Vertical card</LinkTo> | Image above text. Default choice for most editorial listings. |
+| A mixed list where some items have images and some do not, or the image is contextual | <LinkTo kind="components-cards-horizontal-card" story="docs">Horizontal card</LinkTo> | Image beside text. Survives missing imagery better than vertical. |
+| Publications — the cover *is* the recognition cue | <LinkTo kind="components-cards-book-card" story="docs">Book card</LinkTo> | Publication cover with metadata. Reserved for the catalogue, not generic content. |
+| A directory of services, categories, or thematic entries | <LinkTo kind="components-cards-icon-card" story="docs">Icon card</LinkTo> | Prominent icon with title and short body. Icon does navigation work the title cannot. |
+| Numeric highlights — a stat that should be remembered, not skimmed | <LinkTo kind="components-cards-stats-card" story="docs">Stats card</LinkTo> | Large number with label and context. Use sparingly so each card carries weight. |
+
+> **Anti-pattern:** Mixing card variants in a single grid. Pick one variant per listing; rhythm is more important than novelty.
+
+---
+
+## Calling out content within a page
+
+Three components emphasise content within body copy. They are not interchangeable.
+
+| If the content is… | Use | When it earns its place |
+| --- | --- | --- |
+| A direct quotation from a named person | <LinkTo kind="components-quotehighlight" story="docs">Quote highlight</LinkTo> | The speaker is the point. Without attribution the component loses its purpose. |
+| A factual call-out, definition, or warning that needs to break the reading rhythm | <LinkTo kind="components-highlightbox" story="docs">Highlight box</LinkTo> | The reader needs to *stop and absorb* this — not just notice it. Tone variants (primary / secondary / warning) match the message register. |
+| Editorial context for a documentation page (note, tip, warning, deprecation) | DocCallout (used in-tree on the Brand pages; see `stories/Documentation/Brand/components/DocCallout.jsx`) | Lighter weight than Highlight box; for prose annotation rather than reader interruption. |
+
+> **Anti-pattern:** Using Highlight box for every paragraph that feels important. If everything is highlighted, nothing is.
+
+---
+
+## Pagination: Pager vs Pagination
+
+Both let the reader move through long results. They are not the same control.
+
+| Choose | When |
 | --- | --- |
-| <LinkTo kind="components-buttons-buttons" story="docs">Buttons</LinkTo> | Primary and secondary action buttons |
-| <LinkTo kind="components-buttons-chips" story="docs">Chips</LinkTo> | Filter chips and tag selectors |
-| <LinkTo kind="components-buttons-sharebuttons" story="docs">Share buttons</LinkTo> | Social media share links with copy-URL |
-| <LinkTo kind="components-forms-checkbox" story="docs">Forms</LinkTo> | Text inputs, checkboxes, radios, selects |
-| <LinkTo kind="components-tabs" story="docs">Tabs</LinkTo> | Horizontal tab bar with active state |
-| <LinkTo kind="components-pager" story="docs">Pager</LinkTo> | Pagination for long result lists |
-| <LinkTo kind="components-navigation-pagination" story="docs">Pagination</LinkTo> | Classic page number navigation |
+| <LinkTo kind="components-pager" story="docs">Pager</LinkTo> | Sequential reading where the reader is moving through results one at a time (article series, search results scanned in order). Previous / next is the primary affordance. |
+| <LinkTo kind="components-navigation-pagination" story="docs">Pagination</LinkTo> | Random-access pagination where the reader may want to jump to a specific page or know how far through they are (publication catalogue, large filtered listings). |
+
+> **Anti-pattern:** Showing both on the same listing. Pick one based on how the reader will use the results.
+
+---
+
+## In-page navigation
+
+Mangrove has three components that help readers navigate within or across pages. Each has a distinct job.
+
+| Component | Use when |
+| --- | --- |
+| <LinkTo kind="components-megamenu" story="docs">Mega menu</LinkTo> | Site-level navigation across many sections. Reserved for the site header on properties with deep IA. |
+| <LinkTo kind="components-navigation-breadcrumbs" story="docs">Breadcrumbs</LinkTo> | The reader is more than one level deep in a hierarchy and needs to climb back. |
+| <LinkTo kind="components-on-this-page-nav" story="docs">On-this-page nav</LinkTo> | The page is long enough that the reader will want to jump between sections (long articles, methodology pages, reference docs). Sticky sidebar pattern. |
+| <LinkTo kind="components-table-of-contents" story="docs">Table of contents</LinkTo> | A static index at the top of a long document — for printable or linear-reading contexts where the sticky sidebar is not appropriate. |
+
+> **Anti-pattern:** Using On-this-page nav on a short page. The sticky chrome competes with content the reader doesn't need help finding.
+
+---
+
+## Forms and interactive controls
+
+The interactive components are mostly one-of-each — pick by name. The two that need a decision:
+
+- **<LinkTo kind="components-buttons-buttons" story="docs">Buttons</LinkTo> vs <LinkTo kind="components-buttons-chips" story="docs">Chips</LinkTo>.** Buttons trigger an action ("Submit," "Download"). Chips toggle a state ("filter by region," "selected tag"). If clicking the control changes a filter or selection rather than performing an action, use a chip.
+- **<LinkTo kind="components-buttons-sharebuttons" story="docs">Share buttons</LinkTo>** belong on shareable artifacts — articles, reports, campaign pages — not on every page. The presence of the component on a page implies the reader is expected to share it.
+
+For text inputs, checkboxes, radios, and selects, see the <LinkTo kind="components-forms-checkbox" story="docs">Forms documentation</LinkTo>.
 
 ---
 
 ## Data visualisation
 
-For charts, maps, and media.
+These are not competing components — pick by data type.
 
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="components-charts-barchart" story="docs">Bar chart</LinkTo> | Horizontal and vertical bar charts |
-| <LinkTo kind="components-maps-mapcomponent" story="docs">Map</LinkTo> | Interactive geographic maps (Leaflet-based) |
-| <LinkTo kind="components-gallery" story="docs">Gallery</LinkTo> | Image grid with lightbox |
-| <LinkTo kind="components-table-of-contents" story="docs">Table of contents</LinkTo> | Auto-generated content index |
+- **<LinkTo kind="components-charts-barchart" story="docs">Bar chart</LinkTo>** for ranked or compared quantities.
+- **<LinkTo kind="components-maps-mapcomponent" story="docs">Map</LinkTo>** for geographically distributed data (Leaflet-based; respect the no-decorative-globes anti-pattern in <LinkTo kind="brand-anti-patterns" story="docs">anti-patterns</LinkTo>).
+- **<LinkTo kind="components-gallery" story="docs">Gallery</LinkTo>** for sets of credited photographs.
 
----
-
-## Typography
-
-Headings, paragraphs, and text styling.
-
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="components-typography" story="docs">Base typography</LinkTo> | Headings, paragraphs, quotes, code, lists |
-| <LinkTo kind="components-typography-links" story="docs">Links</LinkTo> | Primary, secondary, and variant link styles |
-| <LinkTo kind="components-typography-typography-integration-example" story="docs">Typography integration</LinkTo> | Complete typography example page |
+For chart styling rules (palette, line weight, annotation, source citation), see the data visualisation section of <LinkTo kind="brand-visual-voice" story="docs">visual voice</LinkTo>.
 
 ---
 
-## Layout helpers
+## Page chrome (required, not optional)
 
-Utilities for structuring pages.
+Every UNDRR page uses the same chrome. There is no decision to make here — use them as shipped.
 
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="design-decisions-grid-layout" story="docs">Grid</LinkTo> | Responsive CSS Grid system |
-| <LinkTo kind="components-scrollcontainer" story="docs">Scroll container</LinkTo> | Horizontal scrolling content carousels |
-| <LinkTo kind="components-font-size-utilities" story="docs">Font size utilities</LinkTo> | CSS classes for typography overrides |
-
----
-
-## Platform features
-
-Shared infrastructure across UNDRR sites.
-
-| Component | What it does |
-| --- | --- |
-| <LinkTo kind="components-cookieconsentbanner" story="docs">Cookie consent</LinkTo> | GDPR-compliant cookie banner |
-| <LinkTo kind="components-snackbar" story="docs">Snackbar</LinkTo> | Temporary notifications and alerts |
-| <LinkTo kind="components-syndicated-search" story="docs">Syndication search</LinkTo> | Cross-site content search widget |
-| <LinkTo kind="components-fetcher" story="docs">Fetcher</LinkTo> | Async content loading wrapper |
-| <LinkTo kind="components-error-pages" story="docs">Error pages</LinkTo> | 404, 500, and maintenance pages |
-| <LinkTo kind="example-page-template-example" story="docs">Page template</LinkTo> | Complete page layout example |
+- <LinkTo kind="components-pageheader" story="docs">Page header</LinkTo> — sticky top navigation with UNDRR branding, language selector, login.
+- <LinkTo kind="components-footer" story="docs">Footer</LinkTo> — site-wide footer with navigation, social links, Sendai and SDG logos.
+- <LinkTo kind="components-cookieconsentbanner" story="docs">Cookie consent</LinkTo> — GDPR-compliant cookie banner.
+- <LinkTo kind="components-error-pages" story="docs">Error pages</LinkTo> — 404, 500, maintenance.
 
 ---
 
-## Icons
+## Browse the full catalog
 
-80+ icons for UI and humanitarian content. Includes Lucide general icons and OCHA hazard icons (earthquake, tsunami, flood, cyclone, drought).
-
-See the full set in <LinkTo kind="components-icons" story="docs">icons documentation</LinkTo>.
+For everything not covered above (layout utilities, snackbar notifications, the icon set, content syndication, fetchers, the page template scaffold), open the **Components**, **Atom**, and **Molecules** sections in the left sidebar. Each component has live examples, props documentation, and code samples on its own page.
 
 ---
 
 ## Need something that's not here?
 
-[Open a GitHub issue](https://github.com/unisdr/undrr-mangrove/issues) to request a new component or variant. For one-off patterns, check the existing components — most cases are covered by combining them.
+[Open a GitHub issue](https://github.com/unisdr/undrr-mangrove/issues) to request a new component or variant. For one-off patterns, check whether two existing components combine to cover the case — most do.
 
 ---
 
