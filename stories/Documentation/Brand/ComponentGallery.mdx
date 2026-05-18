@@ -131,6 +131,15 @@ Every UNDRR page uses the same chrome. There is no decision to make here — use
 
 ---
 
+## Platform scripts (every page)
+
+Two shared script bundles ship outside the React component layer. They are required on every UNDRR page — not optional, not decision-based. Both are hosted on UNDRR infrastructure and versioned independently of Mangrove.
+
+- <LinkTo kind="platform-services-analytics-enhancements" story="docs">Analytics enhancements</LinkTo> — Google Analytics 4 enhancements and per-domain property configuration via a shared CDN bundle. Auto-detects GA4 and applies the right UNDRR property IDs by domain. Drop in the `<script>` tag and the rest is automatic.
+- <LinkTo kind="platform-services-critical-messaging" story="docs">Critical messaging</LinkTo> — failsafe broadcast system for urgent messages across all UNDRR properties. Continues to function even when the main CMS is down (hosted on GitHub Pages). Supports URL/domain targeting so messages appear only where they should. Optional `mg-critical-messaging` container controls placement; defaults to top of `<body>`.
+
+---
+
 ## Browse the full catalog
 
 For everything not covered above (layout utilities, snackbar notifications, the icon set, content syndication, fetchers, the page template scaffold), open the **Components**, **Atom**, and **Molecules** sections in the left sidebar. Each component has live examples, props documentation, and code samples on its own page.
