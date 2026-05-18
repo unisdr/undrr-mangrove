@@ -4315,7 +4315,7 @@ __metadata:
     sass: "npm:^1.99.0"
     sass-loader: "npm:16.0.8"
     storybook: "npm:^10.3.6"
-    storybook-addon-rtl: "npm:3.0.1"
+    storybook-addon-rtl: "npm:3.0.2"
     storybook-design-token: "npm:^5.0.0"
     style-loader: "npm:4.0.0"
     stylelint: "npm:~17.11.0"
@@ -14395,12 +14395,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"storybook-addon-rtl@npm:3.0.1":
-  version: 3.0.1
-  resolution: "storybook-addon-rtl@npm:3.0.1"
+"storybook-addon-rtl@npm:3.0.2":
+  version: 3.0.2
+  resolution: "storybook-addon-rtl@npm:3.0.2"
   peerDependencies:
     storybook: ^10.0.0
-  checksum: 10/8c7856cef04afdefd1a7d37c521cab16eaf216a28f600de0fc322c045ab5c681fb734d0dba21a2f59dbf1e22984db1710014b9f196d121a48d807591fa9a2afe
+  checksum: 10/d902dc2dc2a91bd790fdbb60ffa53225651023c6e921f5c56bfba494945baf12fdc3f60ffe3bc896aa35846e12a86382d6ef2d1f8798f12cfb725eb44b82effe
   languageName: node
   linkType: hard
 
