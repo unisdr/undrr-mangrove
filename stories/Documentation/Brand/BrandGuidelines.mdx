@@ -9,6 +9,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+import { DocCallout } from './components/DocCallout';
 
 <Meta
   title="Brand/Brand guidelines"
@@ -21,6 +22,10 @@ import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
 />
 
 # Brand guidelines
+
+<DocCallout variant="warning">
+  <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
+</DocCallout>
 
 {/* prettier-ignore */}
 Editorial and visual identity guidelines for all UNDRR communications. For theme-specific colors, typography, and component previews, see the <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> page and use the theme picker in the toolbar.
