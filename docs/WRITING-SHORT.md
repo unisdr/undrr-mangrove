@@ -29,7 +29,7 @@ Also:
 ## Additions from style guides
 
 - Use direct, plain language; front‑load key info; keep sentences short. (GOV.UK, PlainLanguage.gov)
-- Descriptive link text; avoid “click here.” (GOV.UK)
+- Descriptive link text; avoid “click here.” In tables, link the row’s title rather than adding a trailing “View” column. (GOV.UK)
 - Sentence case for UI; keep proper nouns/acronyms capitalized. (Material Design)
 - Calm, actionable errors: what happened, why (if helpful), what to do next. (NN/g)
 - Inclusive language; avoid idioms/slang; meaningful alt text and link text. (Microsoft)
