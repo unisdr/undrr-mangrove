@@ -18,120 +18,30 @@ import { DocCallout } from './components/DocCallout';
   <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
 </DocCallout>
 
-A working library for turning a rough idea ("I want something about financing for disaster risk reduction") into a UNDRR-brand-compliant prompt. Three ways to use this page:
+You do not write the image prompt. A language model does, given (a) your one-sentence brief and (b) the UNDRR brand block below. Then you paste the result into Midjourney, DALL-E, Imagen, or Stable Diffusion to generate the image.
 
-1. **Look at a holistic example** to see what a finished UNDRR prompt looks like.
-2. **Use the formula** – combine your topic with the UNDRR style block.
-3. **Use the LLM meta-prompt** – paste your rough brief into ChatGPT or Claude and it writes the image prompt for you.
-
-**First time here?** The LLM meta-prompt (section 3) is the lowest-friction path – it only asks for a rough brief and handles the rest.
-
-<DocCallout variant="warning">
-  Read the <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> before using anything on this page. The 12 standing rules (no photoreal humans, no children, no rendered text, named country, disability-as-peer, decolonial framing, etc.) are the floor – every prompt here assumes you have read them.
-</DocCallout>
+This page gives you the brand block, a worked example, and reference material. Read the <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> first if you have not — the 13 standing rules (no photoreal humans, no children, no rendered text, named country, disability inclusion, decolonial framing, etc.) are the floor that the brand block applies.
 
 ---
 
-## 1. Holistic examples (what "good" looks like)
+## The workflow
 
-These three prompts cover the most common UNDRR use cases. Read them to internalise the pattern; then jump to the formula or meta-prompt below to build your own.
+1. **Write a one-sentence conceptual brief** about what you want to convey. Not a prompt – a brief.
+   - *"I want to show how community-led DRR practices protect neighbourhood forests and coastal communities."*
+   - *"I want a hero image about disaster-risk financing at the national-government level."*
+   - *"I want an explainer illustration of multi-hazard early warning systems."*
+2. **Paste the brief plus the UNDRR brand block** (below) into Gemini, Claude, or ChatGPT.
+3. **The language model returns a complete on-brand image prompt.** It applies the 13 UNDRR standing rules to your specific brief and asks up to three clarifying questions if the brief is thin (country? level? roles?).
+4. **Paste that prompt into your image model** (Midjourney, DALL-E, Imagen, Stable Diffusion).
+5. **Check the output** against the unified <LinkTo kind="brand-anti-patterns" story="docs">pre-publish checklist</LinkTo> before publishing.
 
-### A. Hero illustration with people
-
-> Flat vector editorial illustration of a coastal community planting mangrove seedlings in late afternoon light. Setting: Vanuatu, Efate Island, concrete-block community hall with corrugated-iron roof in mid-ground. Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail. Faces in profile, three-quarter view, or obscured by working posture; never frontal portraits. Mixed team: deliberately varied skin tones, ages including older persons, body types; at least one person with a visible disability participating as a peer. Working clothing appropriate to the place; no aid-worker hi-vis vests. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:6 hero banner, focal subject left of centre, hopeful mood, no text, no rendered letters, no logos, no icons.
-
-**Reads as:** Approachable + Collaborative. Negative space right of centre for editorial copy.
-
-### B. Conceptual diagram (no people)
-
-> Flat vector editorial illustration of an early warning system for coastal flooding in Bangladesh, Sundarbans delta. No human figures. Side-elevation perspective, not isometric. Elements: sensor buoy at sea, transmission relay tower, community siren, household receiver showing a flashing visual alert symbol and audible siren waves, TV screen with a closed-captioning pictogram (no rendered words). Clear connecting flow lines. White background. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:9 aspect ratio, no text, no rendered letters, no logos, no icons.
-
-**Reads as:** Knowledgeable. Explains a system without sci-fi tropes; accessibility cues built in.
-
-### C. Infographic background
-
-> Vector infographic background, single horizontal band, palette: Sendai colours at reduced saturation (#d45363, #f19e6a, #b669ab, #4dc7c6), no foreground elements, very subtle texture or gradient suggesting progress over time, suitable as a background behind a sequential data visualisation about Sendai Framework targets, low-contrast so foreground type and chart elements remain readable, 16:6 aspect ratio. No text, no rendered letters, no logos, no icons.
-
-**Reads as:** Institutional, unobtrusive. Signals UNDRR brand without competing with the chart.
-
-### D. People in a professional, non-community setting (the financing / policy case)
-
-> Flat vector editorial illustration of a national-government planning meeting reviewing a multi-year DRR investment plan in Indonesia. Setting: working government office in Jakarta – wooden table, daylight from a side window, printed budget projections and a national risk map laid out. Mixed planners as peers: representatives of the finance ministry, disaster management agency, and planning ministry. Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail. Faces in profile or three-quarter view; no frontal portraits. Mixed gender, varied ages including older persons, deliberately varied skin tones reflecting Indonesia's actual diversity (Javanese, Sundanese, Batak, Bugis, Papuan and other heritage groups). At least one person with a visible disability participating as a peer (for example a wheelchair user at the table or a participant using a hearing aid). Working clothing appropriate to a government office – no aid-worker hi-vis vests. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:6 hero banner, focal subject left of centre, negative space right of centre for editorial copy, no text, no rendered letters, no logos, no icons.
-
-**Reads as:** Knowledgeable + Collaborative. Avoids the conference-room and "outside expert / local recipient" traps that this kind of subject usually falls into.
+The brand block, the worked example, and the reference prompts on this page all exist so step 2 produces something usable.
 
 ---
 
-## 2. The formula
+## The UNDRR brand block (copy-paste into your LLM)
 
-Every UNDRR-on-brand image prompt is three blocks bolted together:
-
-```
-[YOUR SUBJECT] + [UNDRR STYLE BLOCK] + [OUTPUT SPEC]
-```
-
-Pick a style block based on whether your image has people or not. Pick an output spec based on where the image will sit on the page.
-
-### The UNDRR style block (with people)
-
-Copy this verbatim and paste it after your subject.
-
-> Clearly stylised flat vector editorial illustration, not photo-realistic. Faces in profile, three-quarter view, or obscured – no frontal portraits, no rendered facial detail, no identifiable faces. No children. Mixed team: deliberately varied skin tones appropriate to the named place, ages including older persons, body sizes including larger-bodied adults, hair textures (including textured and curly hair worn naturally), varied clothing within regional norms. **At least one person with a visible disability as a peer** (not a recipient) – "persons with disabilities" is the UN canonical first-mention form; "disabled participant" is acceptable shorthand on subsequent mentions. No "outside expert / local recipient" framing – frame people as peers with named professional roles. Working clothing appropriate to the place; no aid-worker hi-vis vests unless the named role requires them. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). No text, no rendered letters, no logos, no icons; pictogram-only signs without rendered words if signage is needed in frame.
-
-### The UNDRR style block (no people, diagram or background)
-
-> Clearly stylised flat vector illustration. Side-elevation or top-down perspective; avoid corporate-isometric clichés. Recognisable real-world elements appropriate to the named place. White background. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). No text, no rendered letters, no logos, no icons. No decorative gradients, drone overlays, holographic data, or smart-city sci-fi tropes.
-
-### Sub-brand colour swap
-
-For sub-brand work, replace `UNDRR Corporate Blue (#004f91)` in the style block with the sub-brand primary:
-
-| Sub-brand | Primary to substitute |
-| --- | --- |
-| PreventionWeb | `#0a6969` PreventionWeb teal |
-| MCR2030 | `#591a61` MCR2030 purple |
-| IRP | `#0f78bf` IRP bright blue |
-| ARISE | `#921d2c` ARISE burgundy |
-| DELTA Resilience | `#132e48` DELTA dark navy |
-
-<DocCallout variant="warning">
-  <strong>Colour swap alone is not enough.</strong> Each sub-brand has visual-emphasis cues that must be layered in – for example PreventionWeb wants real research artifacts on the table; MCR2030 wants plural cities of varied scale; ARISE wants local industry workers as protagonists, never aid-recipient framings. Read the per-property guidance in <LinkTo kind="brand-sub-brand-rationale" story="docs">sub-brand rationale</LinkTo> before writing a sub-brand prompt.
-</DocCallout>
-
-### Output spec
-
-Append one of these depending on use case:
-
-- **Hero banner:** `16:6 aspect ratio, focal subject left of centre, negative space right of centre for editorial copy.`
-- **News image:** `16:9 aspect ratio, focal subject centred.`
-- **Infographic background:** `16:6 aspect ratio, low-contrast, no foreground elements.`
-- **Explainer / methodology illustration:** `16:9 aspect ratio, side-elevation perspective, white background.`
-
-### Worked example: from "financing for DRR" to a usable prompt
-
-If your starting brief is "I want something about financing for DRR," answer three questions before you write anything:
-
-1. **Which country?** (Not a region – see Rule 6 in the <LinkTo kind="brand-ai-imagery-policy" story="docs">policy</LinkTo>.) Pick the country your story is actually about, or a representative country if the story is sectoral.
-2. **Which level?** Community / sub-national / national-government / regional convening / international. Each implies a different setting and a different cast.
-3. **Which roles are in the frame?** Be specific – "finance ministry, disaster management agency, planning ministry" beats "officials." Named roles drive named compositions.
-
-Once you have those three, write your subject as a single specific sentence:
-
-> National-government planning meeting reviewing a multi-year DRR investment plan in Indonesia. Setting: working government office in Jakarta, printed budget projections and risk maps on the table. Mixed planners – finance ministry, disaster management agency, planning ministry – as peers.
-
-Then add the **style block (with people)** verbatim, then add the **output spec** – `16:6 aspect ratio, focal subject left of centre, negative space right of centre for editorial copy.`
-
-Glue them together and you have the prompt that became example D above. The model gets clear instructions, the editorial guardrails are in the prompt, and the output should pass the <LinkTo kind="brand-anti-patterns" story="docs">pre-publish checklist</LinkTo>.
-
-If you cannot answer the three questions, jump to the LLM meta-prompt below – paste your rough brief in and the LLM will ask you the same questions.
-
----
-
-## 3. LLM meta-prompt (let an LLM write the image prompt for you)
-
-If you have a rough brief but you don't want to assemble the formula yourself, paste this meta-prompt plus your brief into ChatGPT, Claude, or any general-purpose LLM. The LLM will return a complete UNDRR-on-brand image prompt.
-
-> You are helping a UNDRR communications officer write a prompt for an AI image model (Midjourney, DALL·E, Imagen, Stable Diffusion). Produce one prompt as a single paragraph. Apply every rule below without omission.
+> You are helping a UNDRR communications officer write a prompt for an AI image model (Midjourney, DALL-E, Imagen, Stable Diffusion). The officer will paste a one-sentence conceptual brief at the end. Produce one image prompt as a single paragraph. Apply every rule below without omission.
 >
 > **UNDRR standing rules – non-negotiable.**
 >
@@ -154,48 +64,97 @@ If you have a rough brief but you don't want to assemble the formula yourself, p
 >
 > **Anti-patterns to avoid in the generated prompt.** Conference rooms; disaster tourism; decorative-only stock; AI-generic isometrics; corporate stock visual clichés (handshake-over-globe, abstract supply-chain swooshes); smart-city sci-fi tropes; "outside expert / local recipient" framing; white-saviour postures; tokenising single-disability representation; invented neurodivergence iconography.
 >
-> **The officer's brief:** [PASTE YOUR ROUGH BRIEF HERE]
+> **The officer's brief:** [PASTE YOUR ONE-SENTENCE BRIEF HERE]
 >
 > **If the brief is thin** – missing country, level (community / sub-national / national / regional / international), roles in the frame, or output context – ask up to three clarifying questions before producing the prompt. If the brief is complete, return only the finished image prompt as a single paragraph. Do not return commentary or explanations. Do not return a list of rules – apply them inside the prompt.
 
 ---
 
-## 4. Language model prompts (copy and editorial)
+## Worked example
 
-These are for drafting headlines, captions, alt text, and tone-shifting copy with a language model. Same principle as above – paste with your text.
+**Conceptual brief:** *"I want to show how community-led DRR practices protect neighbourhood forests and coastal communities."*
+
+**You paste:** the brand block above, then your brief on the last line.
+
+**The LLM may first ask:**
+
+1. Which country?
+2. Which scale – a single village, a sub-national programme, or a national initiative?
+3. Which DRR practice – mangrove restoration, slope stabilisation, community early-warning, urban tree canopy, something else?
+
+**You answer** (for example): *"Vanuatu, Efate Island. Village-scale community programme. Mangrove restoration."*
+
+**The LLM returns** (something like):
+
+> Flat vector editorial illustration of a community-led mangrove restoration programme in Vanuatu, Efate Island, in late afternoon light. Setting: a coastal village with a concrete-block community hall and corrugated-iron roofing in mid-ground. Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail. Faces in profile, three-quarter view, or obscured by working posture; never frontal portraits. Mixed team of village residents: deliberately varied skin tones appropriate to the Pacific island context, varied ages including older persons (at least one participant aged 60+ in an active planting role), varied body sizes including larger-bodied adults, varied hair textures, working clothing appropriate to the place – no aid-worker hi-vis vests. At least one person with a visible disability participating as a peer (for example a wheelchair user near a raised planting boardwalk, or a participant using a hearing aid). Real planting tools and seedling trays in the frame. No children. Decolonial framing – community members are the protagonists, no outside expert directing them. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:6 hero banner, focal subject left of centre, hopeful but factual mood, no text, no rendered letters, no logos, no icons.
+
+**You paste that** into Midjourney / DALL-E / Imagen / Stable Diffusion.
+
+**You check the output** against the <LinkTo kind="brand-anti-patterns" story="docs">pre-publish checklist</LinkTo> – especially the Must-hold rows (no photoreal humans, no children, no rendered text, named country, disability inclusion, decolonial framing). If anything fails, regenerate with a tighter prompt; do not publish a failing output.
+
+---
+
+## Sub-brand variants
+
+For sub-brand work, add a line to your conceptual brief naming the sub-brand. The LLM will swap the primary colour and layer in the sub-brand's visual emphasis (read <LinkTo kind="brand-sub-brand-rationale" story="docs">sub-brand rationale</LinkTo> for the cues each sub-brand wants).
+
+| Sub-brand | Primary to substitute | Sub-brand visual cues to bolt in |
+| --- | --- | --- |
+| PreventionWeb | `#0a6969` teal | Real research artifacts, methodology in progress, citation-rich tables |
+| MCR2030 | `#591a61` purple | Plural cities of varied scale, municipal staff as protagonists, accessible infrastructure |
+| IRP | `#0f78bf` bright blue | Recovery in progress (not the disaster), named partner organisations, the build-back-better verb |
+| ARISE | `#921d2c` burgundy | Local SME owners and workers as protagonists, partnership models, never aid-recipient framings |
+| DELTA Resilience | `#132e48` dark navy | National-government data analysts, real methodological artifacts, Collect / Analyze / Insights spine |
+
+<DocCallout variant="warning">
+  <strong>Colour swap alone is not enough.</strong> Each sub-brand has distinct visual emphasis that must be layered into the brief before the LLM generates the prompt. See <LinkTo kind="brand-sub-brand-rationale" story="docs">sub-brand rationale</LinkTo>.
+</DocCallout>
+
+---
+
+## Reference: complete example prompts
+
+For times when you want to see what a finished UNDRR-on-brand prompt looks like without going through the LLM. These are the same shape the LLM will return.
+
+### Hero illustration with people
+
+> Flat vector editorial illustration of a coastal community planting mangrove seedlings in late afternoon light. Setting: Vanuatu, Efate Island, concrete-block community hall with corrugated-iron roof in mid-ground. Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail. Faces in profile, three-quarter view, or obscured by working posture; never frontal portraits. Mixed team: deliberately varied skin tones, ages including older persons, body types; at least one person with a visible disability participating as a peer. Working clothing appropriate to the place; no aid-worker hi-vis vests. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:6 hero banner, focal subject left of centre, hopeful mood, no text, no rendered letters, no logos, no icons.
+
+### Conceptual diagram with no people
+
+> Flat vector editorial illustration of an early warning system for coastal flooding in Bangladesh, Sundarbans delta. No human figures. Side-elevation perspective, not isometric. Elements: sensor buoy at sea, transmission relay tower, community siren, household receiver showing a flashing visual alert symbol and audible siren waves, TV screen with a closed-captioning pictogram (no rendered words). Clear connecting flow lines. White background. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:9 aspect ratio, no text, no rendered letters, no logos, no icons.
+
+### Infographic background
+
+> Vector infographic background, single horizontal band, palette: Sendai colours at reduced saturation (#d45363, #f19e6a, #b669ab, #4dc7c6), no foreground elements, very subtle texture or gradient suggesting progress over time, suitable as a background behind a sequential data visualisation about Sendai Framework targets, low-contrast so foreground type and chart elements remain readable, 16:6 aspect ratio. No text, no rendered letters, no logos, no icons.
+
+### People in a professional non-community setting (financing / policy)
+
+> Flat vector editorial illustration of a national-government planning meeting reviewing a multi-year DRR investment plan in Indonesia. Setting: working government office in Jakarta – wooden table, daylight from a side window, printed budget projections and a national risk map laid out. Mixed planners as peers: representatives of the finance ministry, disaster management agency, and planning ministry. Clearly stylised, not photo-realistic; flat fills and soft outlines, no rendered facial detail. Faces in profile or three-quarter view; no frontal portraits. Mixed gender, varied ages including older persons, deliberately varied skin tones reflecting Indonesia's actual diversity (Javanese, Sundanese, Batak, Bugis, Papuan and other heritage groups). At least one person with a visible disability participating as a peer (for example a wheelchair user at the table or a participant using a hearing aid). Working clothing appropriate to a government office – no aid-worker hi-vis vests. Palette: Sendai reduced-saturation (#d45363, #f19e6a, #b669ab, #4dc7c6) plus UNDRR Corporate Blue (#004f91). 16:6 hero banner, focal subject left of centre, negative space right of centre for editorial copy, no text, no rendered letters, no logos, no icons.
+
+---
+
+## For editorial copy (not images)
+
+The workflow above is for image prompts. Three language-model templates for editorial copy that come up alongside imagery:
 
 ### Alt text generator
 
 > Write alt text for the following image in ≤120 characters. UNDRR house style: descriptive, names people if known, names location if known, names what they are doing, no decorative adjectives, plain English. Do not start with "Image of" or "Photo of." Image description: [paste].
 
-### Sentence-case rewriter
-
-> Rewrite the following heading in sentence case per UNDRR house style. Capitalise only the first word, proper nouns, and acronyms. Do not change the meaning. Heading: [paste].
-
 ### British-English converter
 
 > Convert the following text from American English to British English (Oxford spelling) per UNDRR Policies and SOPs. Preserve all proper nouns, organisation names, indigenous and place names, transliterations from non-Latin scripts, diacritics (Māori macrons, Spanish accents, Arabic transliteration choices), and quoted speech exactly. Text: [paste].
 
-### Tone-register rewriter
+### Sentence-case rewriter
 
-> Rewrite the following copy in **[ONE register]**, where the registers are defined as:
->
-> - **Authoritative** – sourced (cite the report, resolution, or dataset by name and date), neutral (state what the evidence shows; let the reader draw the conclusion), precise (full names of frameworks and reports), no institutional fog ("it is important to note that"). For policy summaries, research findings, methodology, official statements.
-> - **Warm** – names people, places, jobs, ages; specific sensory detail; quoted speech in people's own words; emotion at the edges. For people stories, community profiles, partner spotlights, recovery narratives.
-> - **Hopeful** – forward-looking and evidence-based; collective ("communities," "partners," "member states" named); specific futures ("by 2030," not "in the coming years"); never glosses over what is still hard. For prevention success, recovery progress, anniversary content.
-> - **Procedural** – numbered, defined-terms, second-person imperative, prescriptive. For Words into Action guides, methodology, operational updates, technical specifications.
-> - **Diplomatic** – multilateral attribution ("championed by [Member State]," "co-led with the Government of…"); acknowledges named states and partners; ceremonial register without being florid. For commemorative observances, member-state-facing statements, Regional Platform openings.
-> - **Time-sensitive** – front-loaded (verb in first six words); imperative; concrete (specific actions, times, places); restrained (urgency from precision, not adjectives). For early-warning calls-to-action, EW4All milestones, partner-amplification on behalf of OCHA / IFRC / national authorities, time-bounded launches and deadlines. UNDRR rarely voices live-disaster content itself – do not manufacture an emergency tone UNDRR does not actually use.
->
-> Hold the K / A / C voice trio (Knowledgeable, Approachable, Collaborative) regardless of register. Use British English (Oxford spelling). Use sentence case for any headings. Avoid jargon. Em-dashes are fine in body prose; do not use them in UI strings, button labels, or story names. Copy: [paste].
+> Rewrite the following heading in sentence case per UNDRR house style. Capitalise only the first word, proper nouns, and acronyms. Do not change the meaning. Heading: [paste].
 
-### Headline generator
-
-> Generate three headline options in sentence case for a [news / explainer / event / methodology] page about [topic]. UNDRR house style: front-load the key fact, name a place if possible, name a number if available, no marketing-flavoured language, British English (Oxford spelling). Examples of preferred style: "Cyclone deaths halved across Pacific early warning network." "Eighty hectares of mangrove kept Talcahuano-Sur's port open during the March cyclone."
+For a fuller register-rewriter prompt covering all six UNDRR registers (Authoritative / Procedural / Warm / Hopeful / Diplomatic / Time-sensitive), see <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo>.
 
 ---
 
-## 5. Before you publish
+## Pre-publish
 
 Run every output through the unified <LinkTo kind="brand-anti-patterns" story="docs">pre-publish checklist</LinkTo>. The Must-hold rows are the ones that will get a piece pulled if missed.
 
@@ -205,12 +164,12 @@ If a standing-rule check fails, **do not publish** – regenerate with a tighter
 
 ## Related
 
-- <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> – the standing rules these prompts assume
+- <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> – the 13 standing rules the brand block assumes
 - <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> – pre-publish checklist
 - <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo> – the broader visual rules
-- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> – for AI-assisted copy drafting
-- <LinkTo kind="brand-sub-brand-rationale" story="docs">Sub-brand rationale</LinkTo> – per-property emphasis to layer into sub-brand prompts
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> – the six-register taxonomy and copy-rewriter prompts
+- <LinkTo kind="brand-sub-brand-rationale" story="docs">Sub-brand rationale</LinkTo> – per-property emphasis to layer into sub-brand briefs
 
 ---
 
-Last updated: 18 May 2026
+Last updated: 19 May 2026
