@@ -15,38 +15,38 @@ This guide helps anyone contributing to Mangrove write interface copy, documenta
 - Prefer verbs that match the action (for example, “Save changes” instead of “OK”).
 - Break down complex steps into smaller, scannable chunks.
 - Example: Instead of “Form submission failed,” use “We couldn’t save your changes. Try again in a few minutes.”
-- Reference: [GOV.UK content design principles — writing for services](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
+- Reference: [GOV.UK content design principles – writing for services](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
 
 ## Tell the truth
 
 - Be clear and honest. Avoid misdirection and false urgency.
 - State limits and constraints explicitly (for example, file size caps) and admit uncertainty when needed.
 - Example: “This file is too large to upload (max 10MB)” is better than “Upload failed.”
-- Reference: [Nielsen Norman Group — error message guidelines](https://www.nngroup.com/articles/error-message-guidelines/)
+- Reference: [Nielsen Norman Group – error message guidelines](https://www.nngroup.com/articles/error-message-guidelines/)
 
 ## Include everybody
 
 - Use inclusive, respectful language for all genders, ethnicities, abilities, orientations, and backgrounds.
 - Avoid idioms, colloquialisms, and culturally specific metaphors.
 - Provide alt text and meaningful, descriptive link text.
-- Reference: [Microsoft writing style guide — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
+- Reference: [Microsoft writing style guide – inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
 
 ## Say the right thing at the right time
 
 - Provide relevant information exactly when users need it.
 - Front‑load the most important detail. Make the next action obvious.
 - Example: On a tracking page, show “Arrives tomorrow” before “Order #123456.”
-- Reference: [GOV.UK — front‑load your content](https://www.gov.uk/guidance/content-design/writing-for-gov-uk#front-load-your-content)
+- Reference: [GOV.UK – front‑load your content](https://www.gov.uk/guidance/content-design/writing-for-gov-uk#front-load-your-content)
 
 ## Write for two audiences
 
-Technical documentation — especially component docs — serves two distinct audiences with different needs. Confusing them produces documentation that serves neither.
+Technical documentation – especially component docs – serves two distinct audiences with different needs. Confusing them produces documentation that serves neither.
 
 **Consumers** (integrators, builders) scan like a menu. They want to know: does this component do what I need, and what props does it take? Give them a one-line description, a working example, and a props table. That is often enough. Resist the urge to explain your internals.
 
 **Maintainers** (library contributors, on-call debuggers) need the full picture: why a prop exists, why there are two data sources, why a field is sometimes null, what a past breaking change affected. This context prevents future developers from “fixing” things that weren’t broken.
 
-The failure mode is writing one document that tries to serve both equally — too deep to skim, not structured enough to dig into. Instead:
+The failure mode is writing one document that tries to serve both equally – too deep to skim, not structured enough to dig into. Instead:
 
 - Lead with what it does
 - Follow with how to use it (example first, then props)
@@ -64,23 +64,23 @@ Use consistent callout labels so readers can skim and know exactly what to skip 
 | `> **Implementation note (for contributors):**` | Maintainers only | Internal rationale, architectural decisions, historical context |
 
 > “Too much information and no information accomplish the same goal.”
-> — Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
+> – Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 
 Also apply this at the API/component design level: consistent naming patterns mean consumers can guess correctly without reading anything. When `/user/orders` works, `/user/orders/123` should just work too.
 
-Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
+Reference: [Ibrahim Diallo – How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 
 ## Serve a functional purpose
 
-- Every piece of copy should guide, explain, or prevent errors — never filler.
+- Every piece of copy should guide, explain, or prevent errors – never filler.
 - Example: Replace “Welcome to Settings” with “Change your password and update your email here.”
-- Reference: [Material Design — writing guidelines](https://m2.material.io/design/communication/writing.html)
+- Reference: [Material Design – writing guidelines](https://m2.material.io/design/communication/writing.html)
 
 ## Sometimes, no writing is best
 
 - Remove unnecessary words when design alone works.
 - Example: Do not add a “Welcome” banner to a calculator app.
-- Reference: [Nielsen Norman Group — minimalist writing](https://www.nngroup.com/articles/minimalist-writing/)
+- Reference: [Nielsen Norman Group – minimalist writing](https://www.nngroup.com/articles/minimalist-writing/)
 
 ## Stay consistent
 
@@ -92,7 +92,7 @@ Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https
 
 - Prefer active voice; use plain language and short sentences.
 - Read copy aloud to check rhythm and clarity.
-- Reference: [PlainLanguage.gov — guidelines](https://www.plainlanguage.gov/guidelines/)
+- Reference: [PlainLanguage.gov – guidelines](https://www.plainlanguage.gov/guidelines/)
 
 ---
 
@@ -110,29 +110,30 @@ Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https
 - Use second person (“you”) and speak directly to the user. Keep sentences and paragraphs short for scannability. Aim to front‑load key information. References: [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk), [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 - Structure pages with meaningful headings and lists. Make one point per paragraph, and prefer bulleted lists for steps and options. Reference: [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 - Use descriptive link text and avoid “click here.” Put the action or destination in the link. Reference: [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
-  - **In tables, link the thing being named — not a trailing “View” or “More” column.** If every row needs a link to the same target type, put the link on the row’s title cell and drop the dedicated link column. A “View / View / View” column repeats noise on every row, fails screen-reader users (who hear the same word again and again with no destination), and duplicates information the title already carries. Example below.
+  - **In tables, link the thing being named – not a trailing “View” or “More” column.** If every row needs a link to the same target type, put the link on the row’s title cell and drop the dedicated link column. A “View / View / View” column repeats noise on every row, fails screen-reader users (who hear the same word again and again with no destination), and duplicates information the title already carries. Example below.
     - Avoid: a third column with `View` / `View` / `View` repeated as the link text on every row.
     - Prefer: link the component name in the first column and drop the trailing column. The link text becomes the destination (`Hero`, `Vertical card`, `Bar chart`) rather than a generic verb.
-- Prefer sentence case for UI labels and headings; capitalize proper nouns and acronyms. Reference: [Material Design — writing](https://m2.material.io/design/communication/writing.html)
+- **No em-dashes anywhere in prose, UI, or documentation.** UN editorial style uses a **spaced en-dash** ` – ` (`U+2013` with a space on each side) wherever American or British convention would use an em-dash (`—`, `U+2014`). This applies to body prose, headings, callouts, table cells, blockquotes, and UI strings – everywhere UNDRR text is rendered. Date ranges and number ranges remain **unspaced en-dashes** (`2015–2030`, `pp. 12–18`). Hyphens (`-`) are unchanged – they remain in compound modifiers (`build-back-better`, `early-warning siren`). Reference: UN Editorial Manual.
+- Prefer sentence case for UI labels and headings; capitalize proper nouns and acronyms. Reference: [Material Design – writing](https://m2.material.io/design/communication/writing.html)
 - Contractions are acceptable when they improve clarity and tone. Avoid exclamation marks and overly casual slang. Reference: [Mailchimp content style guide](https://styleguide.mailchimp.com/)
 - Make dates and times unambiguous by writing out the month (for example, “10 October 2025”). Use units and numerals consistently. Reference: [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 
 ## Error message patterns
 
-- Include three parts where useful: what happened, why (if it helps), and what to do next. Keep the tone calm and helpful. Reference: [Nielsen Norman Group — error message guidelines](https://www.nngroup.com/articles/error-message-guidelines/)
+- Include three parts where useful: what happened, why (if it helps), and what to do next. Keep the tone calm and helpful. Reference: [Nielsen Norman Group – error message guidelines](https://www.nngroup.com/articles/error-message-guidelines/)
 - Place validation messages near the related field and preserve the user’s input. Don’t blame the user or expose raw error codes.
 - Use buttons and links that state the next action (for example, “Try again” or “Upload a smaller file”).
 
 ## Inclusive communication
 
-- Use gender‑neutral and inclusive language. Avoid ableist terms and culturally specific idioms. Reference: [Microsoft — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
+- Use gender‑neutral and inclusive language. Avoid ableist terms and culturally specific idioms. Reference: [Microsoft – inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
 - Write alt text that conveys purpose, not just appearance, and ensure link text is meaningful out of context.
-- Prefer people‑first or identity‑first language according to the community’s preference when relevant. Reference: [Microsoft — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
+- Prefer people‑first or identity‑first language according to the community’s preference when relevant. Reference: [Microsoft – inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
 
 ### UN guidance for gender‑inclusive English
 
-- Follow the United Nations strategies for gender‑inclusive language in English, using gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Avoid gender‑biased expressions and stereotypes. References: [UN gender‑inclusive language — guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
-- Make gender visible only when relevant to the communication. Prefer neutral constructions (plural antecedents, relative pronoun “who,” or rephrasing to omit gendered pronouns). Reference: [UN gender‑inclusive language — guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
+- Follow the United Nations strategies for gender‑inclusive language in English, using gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Avoid gender‑biased expressions and stereotypes. References: [UN gender‑inclusive language – guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
+- Make gender visible only when relevant to the communication. Prefer neutral constructions (plural antecedents, relative pronoun “who,” or rephrasing to omit gendered pronouns). Reference: [UN gender‑inclusive language – guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
 
 ### Disability‑inclusive communication
 
@@ -179,7 +180,7 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 
 ## Localization and internationalization
 
-- Avoid idioms, jokes, and region‑specific metaphors. Leave space for text expansion and avoid concatenating strings. References: [Microsoft — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/), [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
+- Avoid idioms, jokes, and region‑specific metaphors. Leave space for text expansion and avoid concatenating strings. References: [Microsoft – inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/), [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 - Use clear, unambiguous formats for numbers, dates, and times. Write month names to avoid numeric ambiguity. Reference: [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
 
 ## For AI assistants
@@ -191,12 +192,12 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 
 ## Related documentation
 
-- [Writing guidelines (short)](WRITING-SHORT.md) — quick-reference version of these rules
-- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
-- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
+- [Writing guidelines (short)](WRITING-SHORT.md) – quick-reference version of these rules
+- [Review checklist](REVIEW-CHECKLIST.md) – pre-submission component checklist
+- [Component guide](COMPONENT-GUIDE.md) – step-by-step tutorial for building a component
 
 ## Acknowledgements and sources
 
-- Originally inspired by Nick DiLallo’s “This is good Writing — Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
+- Originally inspired by Nick DiLallo’s “This is good Writing – Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
 - The “Write for two audiences” section is inspired by Ibrahim Diallo’s “[How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)” (2025).
 - Additional references are listed above in each section.

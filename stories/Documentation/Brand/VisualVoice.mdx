@@ -19,7 +19,7 @@ import { DocCallout } from './components/DocCallout';
   <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
 </DocCallout>
 
-Visual voice is how the brand sounds when you cannot read the words. Colour, type, photography, iconography, layout rhythm, motion, illustration, and data viz all carry the same three characteristics — **Knowledgeable, Approachable, Collaborative** — and connect every artifact back to UNDRR's <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>.
+Visual voice is how the brand sounds when you cannot read the words. Colour, type, photography, iconography, layout rhythm, motion, illustration, and data viz all carry the same three characteristics – **Knowledgeable, Approachable, Collaborative** – and connect every artifact back to UNDRR's <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>.
 
 This page is the practical companion to the <LinkTo kind="brand-brand-guidelines" story="docs">brand guidelines</LinkTo>. The guidelines say *what* to do; this page says *how it should feel*.
 
@@ -32,10 +32,10 @@ One row per medium. The K/A/C column names the characteristic this medium leans 
 | Medium | What it signals | K/A/C anchor | Locked thread | Variable | Avoid |
 | --- | --- | --- | --- | --- | --- |
 | **Colour** | Brand recognition; state and hierarchy | All three | Corporate Blue as the institutional anchor; Sendai stripe in lockup contexts; neutrals core-locked | Sub-brand interactive primary (PreventionWeb teal, MCR2030 purple, IRP bright blue, ARISE burgundy, DELTA dark navy); one campaign accent on top of sub-brand | Decorative-only colour; rainbow chart palettes; Sendai stripe as wallpaper |
-| **Typography** | UN-family credibility before anything else loads | Knowledgeable | Roboto + Roboto Condensed (UNDRR-adopted web typefaces, aligned with UN visual identity practice — "UN official" attribution pending confirmation with `undrrcomms@un.org`); sentence case; Arabic via `:lang(ar)` → Noto Kufi Arabic + Dubai | Heading scale per layout; weight per emphasis | Theme-specific font swaps; American-English-shaped headings; em-dashes in UI |
+| **Typography** | UN-family credibility before anything else loads | Knowledgeable | Roboto + Roboto Condensed (UNDRR-adopted web typefaces, aligned with UN visual identity practice – "UN official" attribution pending confirmation with `undrrcomms@un.org`); sentence case; Arabic via `:lang(ar)` → Noto Kufi Arabic + Dubai | Heading scale per layout; weight per emphasis | Theme-specific font swaps; American-English-shaped headings; em-dashes in UI |
 | **Photography** | "Approachable" and "Collaborative" made visible | A + C | Real people, named, in their context; credit and source on every photo; positive prevention/recovery framing | Hero crop and aspect per use; sub-brand subject emphasis (researchers for PreventionWeb, municipal staff for MCR2030, etc.) | Conference rooms; decorative-only stock; disaster-tourism framing; hopeless aftermath |
-| **Iconography** | DRR concepts (OCHA) vs web UI (Mangrove) | Approachable | OCHA humanitarian icons for hazards; Mangrove icon set for web UI | None per-theme — same icon set, same controls | Font Awesome on new work; mixed icon systems in one control row |
-| **Layout rhythm** | Reading rhythm that makes sub-brand articles feel like cousins | Approachable | Spacing scale (`_variables.scss`); 60–75 char line length; vertical rhythm | None per-theme — spacing is core-locked | Theme-specific spacing hacks; one-off spacing values inside components |
+| **Iconography** | DRR concepts (OCHA) vs web UI (Mangrove) | Approachable | OCHA humanitarian icons for hazards; Mangrove icon set for web UI | None per-theme – same icon set, same controls | Font Awesome on new work; mixed icon systems in one control row |
+| **Layout rhythm** | Reading rhythm that makes sub-brand articles feel like cousins | Approachable | Spacing scale (`_variables.scss`); 60–75 char line length; vertical rhythm | None per-theme – spacing is core-locked | Theme-specific spacing hacks; one-off spacing values inside components |
 | **Motion** | Functional state change; never decoration | Approachable | 150ms hover, 200ms reveal; respect `prefers-reduced-motion` | Campaign motifs may have micro-interactions; sub-brand chrome may not | Decorative motion; animation that breaks the layer above |
 | **Illustration** | Place-rooted story, not decoration | A + C | Editorial illustration for explainers; diagrammatic for systems; human-centred when used | Per-campaign motif; per-sub-brand subject emphasis | AI-generic isometrics; "blue gradient NGO" aesthetic; uncanny copy-paste figures |
 | **Data viz** | Sourced rigour over persuasion | Knowledgeable | Sendai reduced-saturation palette for sequential / qualitative scales; Corporate Blue for primary series; source citation on every chart | Sub-brand primary may replace Corporate Blue for the primary series in sub-brand contexts | Rainbow palettes; decorative outlines; marketing-flavoured chart framing |
@@ -48,7 +48,7 @@ For the canonical "what threads through every layer / what flexes at each layer"
 
 ## Photography (in depth)
 
-Photography is the single strongest expression of UNDRR's "Approachable" and "Collaborative" characteristics. Everything else flows from getting this right — which is why it gets its own section rather than living only in the table above.
+Photography is the single strongest expression of UNDRR's "Approachable" and "Collaborative" characteristics. Everything else flows from getting this right – which is why it gets its own section rather than living only in the table above.
 
 <HighlightBox>
   <strong>SharePoint Photography & Icons page:</strong> "Conference pictures should be kept to the strict minimum (we do not want to convey that image)."
@@ -56,8 +56,8 @@ Photography is the single strongest expression of UNDRR's "Approachable" and "Co
 
 | Do | Avoid |
 | --- | --- |
-| Show what people are *doing* — clearing, rebuilding, planning, monitoring | The disaster itself; aftermath without agency |
-| Real people, named, in their context — community-led, not crew-shots | Decorative-only stock with no place, no name, no story |
+| Show what people are *doing* – clearing, rebuilding, planning, monitoring | The disaster itself; aftermath without agency |
+| Real people, named, in their context – community-led, not crew-shots | Decorative-only stock with no place, no name, no story |
 | Display credit and source on every photo (policy, not preference) | Conference rooms; suited delegates; plenary halls |
 | Positive prevention and recovery framing | Disaster-tourism imagery; hopeless framing |
 
@@ -67,13 +67,13 @@ For generative imagery (AI illustration when a real photo is not available), see
 
 ## Motion (in depth)
 
-Motion is a quiet thread today, but the order of these principles matters — read them in sequence:
+Motion is a quiet thread today, but the order of these principles matters – read them in sequence:
 
 1. **Function over delight.** Motion confirms an action or signals a state change. It is rarely decorative.
 2. **Respect `prefers-reduced-motion`.** UNDRR audiences include disabled users; motion that ignores the system preference fails the brand's "Approachable" characteristic. This is non-negotiable.
 3. **Never animate at the campaign layer in a way that breaks the sub-brand layer.** A campaign motif can have its own micro-interaction; the sub-brand chrome should not.
 
-If principle 2 conflicts with principle 1 (e.g. a state-confirmation animation a reduced-motion user cannot see), provide a non-motion equivalent — a colour change, an icon swap, a focus state shift. Never silently skip the confirmation.
+If principle 2 conflicts with principle 1 (e.g. a state-confirmation animation a reduced-motion user cannot see), provide a non-motion equivalent – a colour change, an icon swap, a focus state shift. Never silently skip the confirmation.
 
 ---
 
@@ -85,11 +85,11 @@ For the unified pre-publish checklist (Must hold / Should hold / Craft, grouped 
 
 ## Related
 
-- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo> — the model behind every decision on this page
-- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> — the verbal half of voice
-- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> — what UNDRR is *not*
-- <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo> — turn this guidance into prompts
-- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> — live theme previews
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo> – the model behind every decision on this page
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> – the verbal half of voice
+- <LinkTo kind="brand-anti-patterns" story="docs">Anti-patterns</LinkTo> – what UNDRR is *not*
+- <LinkTo kind="brand-ai-imagery-prompts" story="docs">AI imagery prompts</LinkTo> – turn this guidance into prompts
+- <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> – live theme previews
 
 ---
 
