@@ -18,6 +18,10 @@ import { DocCallout } from './components/DocCallout';
   <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
 </DocCallout>
 
+<DocCallout variant="warning">
+  <strong>Work in progress – output quality is not yet where UNDRR needs it (May 2026).</strong> The workflow below (one-sentence brief → language model applies brand block → image prompt → image model) is sound in principle, but current image-model output frequently fails one or more brand checks. Known shortcomings include: faces still trend photo-real even when "stylised" is requested; disability representation gets tokenised, omitted, or rendered with medicalised cues; named-country specificity collapses into regional pastiche; rendered text leaks through despite explicit instructions; older persons and larger-bodied adults appear in background roles rather than as protagonists. Treat every output as a draft to evaluate against the pre-publish checklist, never as a finished asset. For anything publishable today, commission credited photography or illustration. Contribute prompt refinements and example outputs that improve adherence via <a href="https://github.com/unisdr/undrr-mangrove/issues">GitHub issues</a>.
+</DocCallout>
+
 You do not write the image prompt. A language model does, given (a) your one-sentence brief and (b) the UNDRR brand block below. Then you paste the result into Midjourney, DALL-E, Imagen, or Stable Diffusion to generate the image.
 
 This page gives you the brand block, a worked example, and reference material. Read the <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> first if you have not — the 13 standing rules (no photoreal humans, no children, no rendered text, named country, disability inclusion, decolonial framing, etc.) are the floor that the brand block applies.
