@@ -12,7 +12,7 @@ import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
 
 # UNDRR syndication search widget
 
-The **UNDRR syndication search widget** lets users search and filter content across UNDRR domains — undrr.org, preventionweb.net, and related sites. It provides keyword search, faceted filtering, and multiple display modes (list, card, or book card) in a single embeddable component.
+The **UNDRR syndication search widget** lets users search and filter content across UNDRR domains: undrr.org, preventionweb.net, and related sites. It provides keyword search, faceted filtering, and multiple display modes (list, card, or book card) in a single embeddable component.
 
 > **Platform dependency:** This component requires access to the UNDRR search backend via `/search-endpoint`. It includes domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
 
@@ -20,7 +20,7 @@ The **UNDRR syndication search widget** lets users search and filter content acr
 
 ## Features
 
-- Keyword search with responsive input — results update as you type
+- Keyword search with responsive input: results update as you type
 - Non-blocking result updates keep the page interactive while results load
 - Removable filter chips for active filters
 - Full ARIA support, keyboard navigation, screen reader announcements
@@ -192,7 +192,7 @@ customFacets: [
 
 ## Allowed types
 
-Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content—it limits the filter UI options.
+Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content, it limits the filter UI options.
 
 **This example uses:**
 ```js
@@ -308,7 +308,7 @@ These malformed queries are automatically sanitised to prevent Elasticsearch err
 | `local OR ` | Trailing operator | `local` |
 | `AND climate` | Leading operator | `climate` |
 | `flood OR` | Trailing OR | `flood` |
-| `AND` | Standalone operator | (empty — no search) |
+| `AND` | Standalone operator | (empty, no search) |
 | `climate-` | Trailing special char | `climate` |
 
 ## Static markup reference
@@ -439,7 +439,7 @@ The component is loaded automatically on pages containing a container with `data
 
 ## Server-rendered / CDN usage
 
-SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML — all attributes are optional:
+SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML (all attributes are optional):
 
 ```html
 <div data-mg-search-widget
@@ -460,31 +460,31 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/u
 
 | Attribute | Default | Description |
 |-----------|---------|-------------|
-| `data-search-endpoint` | — | Elasticsearch proxy URL |
-| `data-results-per-page` | — | Number of results per page |
-| `data-debounce-delay` | — | Milliseconds before executing search |
-| `data-min-search-length` | — | Minimum characters to trigger search |
-| `data-default-query` | — | Initial search query |
-| `data-default-sort` | — | Initial sort order |
-| `data-display-mode` | — | `'list'`, `'card'`, or `'card-book'` |
-| `data-grid-columns` | — | Grid columns for card modes (2-6) |
-| `data-query-append` | — | Query string to append to all searches |
-| `data-show-search-box` | — | Show search input |
-| `data-show-results-count` | — | Show result count |
-| `data-show-facets` | — | Show facets sidebar |
-| `data-show-active-filters` | — | Show active filter chips |
-| `data-show-pager` | — | Show pagination |
-| `data-show-search-metrics` | — | Show debug metrics |
-| `data-show-search-timer` | — | Show search execution time |
-| `data-enable-hash-sync` | — | Sync search state to URL hash |
-| `data-default-filters` | — | JSON array of `{key, value}` filter objects |
-| `data-allowed-types` | — | JSON object restricting content type options |
-| `data-require-image` | — | Only return results with images (`true`/`false`) |
-| `data-interestingness-tiers` | — | JSON array of tier names (e.g., `'["promoted","announced"]'`) |
-| `data-longevity-tiers` | — | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
-| `data-custom-filters` | — | JSON array of custom filter strings (e.g., `'["type:news"]'`) |
-| `data-custom-facets` | — | JSON array of custom facet objects |
-| `data-visible-teaser-fields` | — | JSON array of teaser field names to show |
+| `data-search-endpoint` |  | Elasticsearch proxy URL |
+| `data-results-per-page` |  | Number of results per page |
+| `data-debounce-delay` |  | Milliseconds before executing search |
+| `data-min-search-length` |  | Minimum characters to trigger search |
+| `data-default-query` |  | Initial search query |
+| `data-default-sort` |  | Initial sort order |
+| `data-display-mode` |  | `'list'`, `'card'`, or `'card-book'` |
+| `data-grid-columns` |  | Grid columns for card modes (2-6) |
+| `data-query-append` |  | Query string to append to all searches |
+| `data-show-search-box` |  | Show search input |
+| `data-show-results-count` |  | Show result count |
+| `data-show-facets` |  | Show facets sidebar |
+| `data-show-active-filters` |  | Show active filter chips |
+| `data-show-pager` |  | Show pagination |
+| `data-show-search-metrics` |  | Show debug metrics |
+| `data-show-search-timer` |  | Show search execution time |
+| `data-enable-hash-sync` |  | Sync search state to URL hash |
+| `data-default-filters` |  | JSON array of `{key, value}` filter objects |
+| `data-allowed-types` |  | JSON object restricting content type options |
+| `data-require-image` |  | Only return results with images (`true`/`false`) |
+| `data-interestingness-tiers` |  | JSON array of tier names (e.g., `'["promoted","announced"]'`) |
+| `data-longevity-tiers` |  | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
+| `data-custom-filters` |  | JSON array of custom filter strings (e.g., `'["type:news"]'`) |
+| `data-custom-facets` |  | JSON array of custom facet objects |
+| `data-visible-teaser-fields` |  | JSON array of teaser field names to show |
 
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
@@ -496,7 +496,7 @@ createHydrator({ selector: "[data-mg-search-widget]", component: SyndicationSear
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
-> **Integration note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container — Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
+> **Integration note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container: Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
 
 ## Architecture
 
@@ -548,25 +548,26 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
-- **1.3.0** — 2026-05-07 ([mangrove#981](https://github.com/unisdr/undrr-mangrove/issues/981)):
+- **1.3.1**, 2026-05-23 ([mangrove#1031](https://github.com/unisdr/undrr-mangrove/issues/1031)): Fixed programmatic default filters being dropped on facet-less widgets. `buildQuery` skipped `post_filter` entirely when the facet UI was hidden, so any `defaultFilters` (or filters injected via the `configModifiers` hook) never reached Elasticsearch and the widget returned an unfiltered search. `post_filter` now applies whenever there are active facet or custom-facet values, even with facets hidden; aggregations stay skipped, so the 1.2.1 payload optimization is unchanged. Regression introduced in 1.2.1.
+- **1.3.0**, 2026-05-07 ([mangrove#981](https://github.com/unisdr/undrr-mangrove/issues/981)):
   - New `facets` config prop (`false | 'sidebar' | 'horizontal'`, default `'sidebar'`) replaces the boolean `showFacets` for layout control; `'horizontal'` renders the facets as a strip above the results region instead of a sidebar. Legacy `showFacets: false` continues to work as a backwards-compatible alias for `facets: false`. Drupal sites can pass the layout via `data-facets="horizontal"`
-  - New `facetsTarget` config prop (CSS selector) renders the facets UI into an external DOM region via React portal — letting consuming pages place facets in a left rail or other region outside the widget's own container while results render where the widget is mounted. Search context spans the portal so facets and results stay in sync without extra wiring. Drupal sites pass the selector via `data-facets-target`. If the selector doesn't match an element at mount time, the widget falls back to the in-widget `facets` layout and logs a console warning
-  - New `searchTarget` config prop (CSS selector) renders the search input into an external DOM region via React portal — mirrors `facetsTarget`. Used together they let consumers freely arrange search input / facets / results across page regions while keeping a single widget instance and shared `SearchContext`. Drupal sites pass the selector via `data-search-target`. Falls back to in-widget rendering (with a console warning) if the target element is not present at mount time. For **cross-page** hero patterns the recommended approach is a plain HTML `<form action="/search">` submitting to the results page with a `#query=` fragment
-  - Storybook stories regrouped under `Components/Syndicated search/{Widget,Bar}` and split into category files (`Layouts`, `Display modes`, `Filters`, `Integrations`, `Toggles`) so the sidebar reflects the family rather than a flat list of 26 entries. Pure reorganisation — no story content removed, just moved. The `QuerySyntax` and `StaticMockup` reference stories are now reference sections in this MDX page
+  - New `facetsTarget` config prop (CSS selector) renders the facets UI into an external DOM region via React portal, letting consuming pages place facets in a left rail or other region outside the widget's own container while results render where the widget is mounted. Search context spans the portal so facets and results stay in sync without extra wiring. Drupal sites pass the selector via `data-facets-target`. If the selector doesn't match an element at mount time, the widget falls back to the in-widget `facets` layout and logs a console warning
+  - New `searchTarget` config prop (CSS selector) renders the search input into an external DOM region via React portal, mirroring `facetsTarget`. Used together they let consumers freely arrange search input / facets / results across page regions while keeping a single widget instance and shared `SearchContext`. Drupal sites pass the selector via `data-search-target`. Falls back to in-widget rendering (with a console warning) if the target element is not present at mount time. For **cross-page** hero patterns the recommended approach is a plain HTML `<form action="/search">` submitting to the results page with a `#query=` fragment
+  - Storybook stories regrouped under `Components/Syndicated search/{Widget,Bar}` and split into category files (`Layouts`, `Display modes`, `Filters`, `Integrations`, `Toggles`) so the sidebar reflects the family rather than a flat list of 26 entries. Pure reorganisation: no story content removed, just moved. The `QuerySyntax` and `StaticMockup` reference stories are now reference sections in this MDX page
   - `SearchForm` submit and clear buttons now use the standard `mg-button mg-button-primary` and `mg-icon-search` / `mg-icon-close` primitives instead of a bespoke variant with an inline Lucide SVG; `.mg-search__input` aligns to the same padding, border-width and border-radius tokens as `mg-button` so the input and submit button share the same natural height and corner radius; clear button is a 20×20 hit target with darker default color and brand-color hover
-  - Removed the in-input loading spinner (`.mg-search__loading`) and the submit-button spinner (`.mg-search__submit-spinner` / `.mg-search__submit--loading`) so loading state is conveyed by a single indicator — the widget-level progress strip plus `aria-busy` on the results region; the submit button now keeps a stable "Search" label and search icon while a search runs
-  - Fixed URL hash query being stomped on initial mount — the `deferredQuery` effect was unconditionally dispatching `setQuery('')` on first render, racing `useHashSync`'s hash-loaded query before INITIALIZE could preserve it; the effect now skips its first render
-  - Fixed `enableHashSync: 'true'` (string) silently disabling hash sync — Drupal data attributes always arrive as strings, but the hook used a strict `=== true` comparison; now accepts both boolean `true` and string `'true'`
-- **1.2.6** — 2026-05-05: Fixed incorrect CSS selector for `contentType` teaser field — `.mg-card__tag` is not a BEM class; corrected to `.mg-card__label` in `TEASER_FIELDS`, the hide rule in `syndication-search-widget.scss`, and the story comment
-- **1.2.5** — 2026-05-04 ([web-backlog#1479](https://gitlab.com/undrr/web-backlog/-/work_items/1479)): PW publication subtypes — `CONTENT_SUBTYPES.publication` expanded to support three independent subtype fields (`field_undrr_publication_types`, `field_publication_type`, `field_irp_publication_subtype`); fixed silent aggregation failure caused by incorrect field key `undrr_publication_type` (missing `field_` prefix and plural suffix); all array-iteration sites normalised for backwards compatibility with single-config subtypes on other content types
-- **1.2.4** — 2026-04-09 ([web-backlog#919](https://github.com/unisdr/undrr-mangrove/issues/919)): `fromElement` now parses `data-custom-filters`, `data-custom-facets`, and `data-visible-teaser-fields` as JSON, consistent with `defaultFilters` and `allowedTypes`
-- **1.2.3** — 2026-03-19 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
-- **1.2.2** — 2026-03-19: Fixed search input UI bounce — `useDeferredValue` stale flag was triggering heavy visual feedback (progress bar, button text swap, pulsing overlay, opacity drop) on every keystroke; now only `isLoading` and `isPending` drive visual indicators; increased default `debounceDelay` from 300ms to 500ms to reduce wasted API calls while staying under the 1-second perceived delay threshold; fixed `?text=` and `?query=` URL parameters being ignored due to race condition where `INITIALIZE` action overwrote the query set by `useHashSync`
-- **1.2.1** — 2026-03-13: ([web-backlog#2660](https://gitlab.com/undrr/web-backlog/-/issues/2660)) Native `requireImage`, `interestingnessTiers`, `longevityTiers` config options (moved from Drupal wrapper); `TEASER_FIELDS` constant and `allTeaserFieldsVisible()` as single source of truth for teaser field visibility; ES query optimization (skip aggs/highlights/post_filter for syndication embeds); card-aware loading skeletons; SyndicatedCards story pattern
-- **1.2.0** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
-- **1.1.0** — 2026-02-26:
-  - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results — search results now include taxonomy terms (Hazard, Country, Theme) alongside content nodes; `vid:` prefix in type filter for vocabulary filtering; configurable `searchEndpoint` with CustomEndpoint story documenting override patterns
+  - Removed the in-input loading spinner (`.mg-search__loading`) and the submit-button spinner (`.mg-search__submit-spinner` / `.mg-search__submit--loading`) so loading state is conveyed by a single indicator: the widget-level progress strip plus `aria-busy` on the results region; the submit button now keeps a stable "Search" label and search icon while a search runs
+  - Fixed URL hash query being stomped on initial mount: the `deferredQuery` effect was unconditionally dispatching `setQuery('')` on first render, racing `useHashSync`'s hash-loaded query before INITIALIZE could preserve it; the effect now skips its first render
+  - Fixed `enableHashSync: 'true'` (string) silently disabling hash sync: Drupal data attributes always arrive as strings, but the hook used a strict `=== true` comparison; now accepts both boolean `true` and string `'true'`
+- **1.2.6**, 2026-05-05: Fixed incorrect CSS selector for `contentType` teaser field: `.mg-card__tag` is not a BEM class; corrected to `.mg-card__label` in `TEASER_FIELDS`, the hide rule in `syndication-search-widget.scss`, and the story comment
+- **1.2.5**, 2026-05-04 ([web-backlog#1479](https://gitlab.com/undrr/web-backlog/-/work_items/1479)): PW publication subtypes: `CONTENT_SUBTYPES.publication` expanded to support three independent subtype fields (`field_undrr_publication_types`, `field_publication_type`, `field_irp_publication_subtype`); fixed silent aggregation failure caused by incorrect field key `undrr_publication_type` (missing `field_` prefix and plural suffix); all array-iteration sites normalised for backwards compatibility with single-config subtypes on other content types
+- **1.2.4**, 2026-04-09 ([web-backlog#919](https://github.com/unisdr/undrr-mangrove/issues/919)): `fromElement` now parses `data-custom-filters`, `data-custom-facets`, and `data-visible-teaser-fields` as JSON, consistent with `defaultFilters` and `allowedTypes`
+- **1.2.3**, 2026-03-19 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): When both `siteName` and `contentType` are hidden via `visibleTeaserFields`, the `.mg-search__result-badges` wrapper div is no longer injected into the DOM. Previously the empty wrapper was still rendered and hidden by CSS.
+- **1.2.2**, 2026-03-19: Fixed search input UI bounce: `useDeferredValue` stale flag was triggering heavy visual feedback (progress bar, button text swap, pulsing overlay, opacity drop) on every keystroke; now only `isLoading` and `isPending` drive visual indicators; increased default `debounceDelay` from 300ms to 500ms to reduce wasted API calls while staying under the 1-second perceived delay threshold; fixed `?text=` and `?query=` URL parameters being ignored due to race condition where `INITIALIZE` action overwrote the query set by `useHashSync`
+- **1.2.1**, 2026-03-13: ([web-backlog#2660](https://gitlab.com/undrr/web-backlog/-/issues/2660)) Native `requireImage`, `interestingnessTiers`, `longevityTiers` config options (moved from Drupal wrapper); `TEASER_FIELDS` constant and `allTeaserFieldsVisible()` as single source of truth for teaser field visibility; ES query optimization (skip aggs/highlights/post_filter for syndication embeds); card-aware loading skeletons; SyndicatedCards story pattern
+- **1.2.0**, 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
+- **1.1.0**, 2026-02-26:
+  - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results: search results now include taxonomy terms (Hazard, Country, Theme) alongside content nodes; `vid:` prefix in type filter for vocabulary filtering; configurable `searchEndpoint` with CustomEndpoint story documenting override patterns
   - ([web-backlog#2636](https://gitlab.com/undrr/web-backlog/-/issues/2636)) Card display modes (`displayMode`: list/card/card-book) with `gridColumns` control; teaser field visibility (`visibleTeaserFields`) with CSS-based hiding for 7 toggleable fields; Drupal image style rewriting for card aspect ratios
-- **1.0.0** — 2026-02-13: Pager styles extracted to standalone `Components/Pager` component; internal `Pager.jsx` is now a thin wrapper; no API changes
-- **1.0.0-alpha.2** — 2026-01-01: Mobile filter drawer; custom SelectDropdown replacing Chosen.js (searchable, keyboard navigable, touch-friendly); loading state improvements; compact mobile filter button
-- **1.0.0-alpha.1** — 2025-12-12: Initial React 19 implementation with faceted filtering, URL hash sync, Elasticsearch teaser support, taxonomy facet labels, custom facets, Google Analytics integration, skeleton loading
+- **1.0.0**, 2026-02-13: Pager styles extracted to standalone `Components/Pager` component; internal `Pager.jsx` is now a thin wrapper; no API changes
+- **1.0.0-alpha.2**, 2026-01-01: Mobile filter drawer; custom SelectDropdown replacing Chosen.js (searchable, keyboard navigable, touch-friendly); loading state improvements; compact mobile filter button
+- **1.0.0-alpha.1**, 2025-12-12: Initial React 19 implementation with faceted filtering, URL hash sync, Elasticsearch teaser support, taxonomy facet labels, custom facets, Google Analytics integration, skeleton loading
