@@ -10,7 +10,7 @@ import { Pager } from '../../Pager/Pager';
 import { useSearchState, useSearchDispatch, useSearchConfig, actions } from '../context/SearchContext';
 
 /**
- * SearchPager — search-context-aware pagination.
+ * SearchPager: search-context-aware pagination.
  *
  * @param {Object} props
  * @param {string} [props.widgetId] Unique widget ID for accessibility

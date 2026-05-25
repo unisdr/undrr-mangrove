@@ -51,11 +51,20 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
   const mainQuery = buildMainQuery(query, scoring, config);
 
   // Build post_filter with all facet filters (applied after aggregations).
-  // Skip entirely when facets are hidden — no user-driven facets will be active.
+  // The facet UI being hidden only means no *user-driven* selections will
+  // appear; programmatic default filters (defaultFilters, config-modifier
+  // injected) still arrive as facet/customFacet state and must reach
+  // Elasticsearch. So build the post_filter whenever the facet UI is shown OR
+  // there are active values to apply. See unisdr/undrr-mangrove#1031.
   const facetsActive = resolveFacetsLayout(config) !== false;
-  const postFilter = facetsActive
-    ? buildPostFilter(facets, facetOperators, customFacets, config)
-    : null;
+  const hasActiveFacets =
+    (facets && Object.values(facets).some(v => Array.isArray(v) && v.length > 0)) ||
+    (customFacets &&
+      Object.values(customFacets).some(v => Array.isArray(v) && v.length > 0));
+  const postFilter =
+    facetsActive || hasActiveFacets
+      ? buildPostFilter(facets, facetOperators, customFacets, config)
+      : null;
 
   const isCardMode = config.displayMode === 'card' || config.displayMode === 'card-book';
   const summaryHidden = config.visibleTeaserFields?.summary === false;
@@ -67,14 +76,14 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
     query: mainQuery,
   };
 
-  // Skip highlights in card mode when summary is hidden — card teasers use
+  // Skip highlights in card mode when summary is hidden: card teasers use
   // pre-rendered HTML and don't show body text, so highlight fragments are
   // wasted response payload.
   if (!(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
 
-  // Skip aggregations when facets are hidden — avoids unnecessary server work
+  // Skip aggregations when facets are hidden: avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.
   if (facetsActive) {
     result.aggs = buildAggregations(facetFields, facetCountToShow);
@@ -142,7 +151,7 @@ function buildBaseFilters(config) {
 
   // Filter by published status for nodes.
   // Taxonomy terms don't have a `status` field in the index (it's node-only),
-  // so we must also allow documents where status doesn't exist — otherwise
+  // so we must also allow documents where status doesn't exist, otherwise
   // all taxonomy term results would be silently excluded.
   filters.push({
     bool: {
