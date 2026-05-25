@@ -1,6 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
+/**
+ * Renders a D3-powered histogram with toggleable data series.
+ *
+ * @deprecated since v1.7.x — will be removed in v1.8. UNDRR is consolidating on
+ * [Recharts](https://recharts.org/) for charting; this in-tree D3 wrapper never
+ * reached wide-scale implementation. New code should use Recharts directly. See
+ * the removal tracker: https://github.com/unisdr/undrr-mangrove/issues/1011
+ */
 export default function Histogram({
   dataSeries,
   width,
@@ -12,7 +20,7 @@ export default function Histogram({
 }) {
   const svgRef = useRef();
 
-  const [visibleSeries, setVisibleSeries] = useState(
+  const [visibleSeries, setVisibleSeries] = useState(() =>
     dataSeries.map(() => true)
   );
 

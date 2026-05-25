@@ -101,7 +101,7 @@ const count = text.length;
 
       <h2>Details</h2>
 
-      <details>
+      <details className="mg-details">
         <summary>The Sendai Framework</summary>
         <p>
           The framework is the global roadmap for reducing human and economic
@@ -189,46 +189,46 @@ const count = text.length;
       </p>
 
       <p className="mg-u-font-size-150">
-        Font size 150 — fine print (1.125rem). Terms, conditions, and
+        Font size 150: fine print (1.125rem). Terms, conditions, and
         supplementary notes.
       </p>
 
       <p className="mg-u-font-size-200">
-        Font size 200 — small text (1.25rem). Captions, metadata, and secondary
+        Font size 200: small text (1.25rem). Captions, metadata, and secondary
         information.
       </p>
 
       <p className="mg-u-font-size-250">
-        Font size 250 — intermediate (1.4rem). Bridge between small text and
-        body copy.
+        Font size 250: intermediate (1.4rem). Bridge between small text and body
+        copy.
       </p>
 
       <p className="mg-u-font-size-300">
-        Font size 300 — base body size (1.6rem), no responsive scaling. UNDRR
+        Font size 300: base body size (1.6rem), no responsive scaling. UNDRR
         oversees the implementation of the Sendai Framework for Disaster Risk
         Reduction 2015–2030.
       </p>
 
       <p className="mg-u-font-size-400">
-        Font size 400 — slightly larger (1.6rem → 1.8rem). Supporting countries
+        Font size 400: slightly larger (1.6rem → 1.8rem). Supporting countries
         in implementation, monitoring, and knowledge sharing.
       </p>
 
       <p className="mg-u-font-size-500">
-        Font size 500 — medium emphasis (1.8rem → 2.3rem). Reducing existing
-        risk and preventing the creation of new risk.
+        Font size 500: medium emphasis (1.8rem → 2.3rem). Reducing existing risk
+        and preventing the creation of new risk.
       </p>
 
       <p className="mg-u-font-size-600">
-        Font size 600 — large (2.3rem → 3.2rem). Building resilience.
+        Font size 600: large (2.3rem → 3.2rem). Building resilience.
       </p>
 
       <p className="mg-u-font-size-800">
-        Font size 800 — display (3.2rem → 3.6rem). Global targets.
+        Font size 800: display (3.2rem → 3.6rem). Global targets.
       </p>
 
       <p className="mg-u-font-size-900">
-        Font size 900 — hero (3.6rem → 4rem). Sendai.
+        Font size 900: hero (3.6rem → 4rem). Sendai.
       </p>
 
       <h3>Applied to headings</h3>
@@ -248,8 +248,8 @@ const count = text.length;
         style={{ padding: '1.5rem' }}
       >
         <p className="mg-u-font-size-600" style={{ margin: 0 }}>
-          Font size 600 on a neutral background — useful for hero sections or
-          pull quotes.
+          Font size 600 on a neutral background (useful for hero sections or
+          pull quotes).
         </p>
       </div>
 

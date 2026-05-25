@@ -156,7 +156,7 @@
   }
 
   &__item-link {
-    font-family: $mg-font-family-condensed;
+    font-family: $mg-font-family-headings;
     color: $mg-color-interactive;
     background: none;
     border: none;
@@ -201,7 +201,14 @@
   @media screen and (min-width: $mg-breakpoint-tablet) {
     display: none;
     flex-direction: row; // Horizontal layout for left/right sections
-    height: mg-rem(350);
+    align-items: stretch; // both panels fill the full panel height (fixes divider)
+    min-height: mg-rem(350);
+
+    // Panel sits at top: 48px; cap at 70 % of viewport so the menu never
+    // dominates the screen. Internal __left/__right panels scroll independently.
+    max-height: 70vh;
+
+    // Each panel scrolls independently; the parent clips overflow.
     overflow: hidden;
     top: mg-rem(48);
     position: absolute;
@@ -218,11 +225,15 @@
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
       flex-basis: 33%;
+      height: auto; // override mobile height: 100%; let align-items: stretch control cross size
+      min-height: 0; // allow flex child to shrink below content height for scroll
+      overflow-y: auto; // independent scroll, separate from the right panel
     }
   }
   &__banner {
     padding: $mg-spacing-250;
     header {
+      font-family: $mg-font-family-headings;
       font-size: $mg-font-size-500;
       font-weight: bold;
       padding-bottom: $mg-spacing-100;
@@ -386,7 +397,6 @@
 .mg-mega-content__right {
   box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
   flex: 1;
-  height: 100%;
   display: flex;
 
   // Mobile-first: full width by default
@@ -403,6 +413,17 @@
 
   // Desktop: Hide mobile menu, show desktop menu
   @media screen and (min-width: $mg-breakpoint-tablet) {
+    // Don't stretch the menu ul to the panel's fixed height. Without this,
+    // CSS multicol fills both columns to 350 px then pushes surplus items
+    // into a third column that overflows and gets clipped by the parent's
+    // overflow: hidden. align-items: flex-start lets the ul be its natural
+    // (content-driven) height so multicol never needs to generate
+    // overflow columns. See https://github.com/unisdr/undrr-mangrove/issues/970.
+    align-items: flex-start;
+    min-height: 0; // allow flex child to shrink below content height for scroll
+    min-width: 0; // prevent flex item from overflowing its allocated width
+    overflow-y: auto; // independent scroll, separate from the left panel
+
     .mg-mega-content__menu--mobile {
       display: none;
     }
@@ -430,10 +451,24 @@
     flex: 1;
     padding: $mg-spacing-150;
     list-style: none;
-    column-count: auto;
-    column-width: 300px;
-    column-gap: $mg-spacing-200;
-    column-fill: balance;
+
+    // Multicolumn layout only on desktop. This is primarily a Safari fix:
+    // on mobile Safari, descendants with opacity < 1 inside a multicolumn
+    // container are not painted (space reserved, text invisible). Other
+    // browsers render fine either way, and at mobile widths the columns
+    // collapse to 1 anyway, so scoping to tablet+ loses nothing.
+    // See https://github.com/unisdr/undrr-mangrove/issues/939.
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      column-count: auto;
+
+      // 280px lets 3 columns appear once the right pane reaches ~940px
+      // (i.e. at the $mg-breakpoint-desktop-wide max-width of 1440px).
+      // 300px was too wide — 3 columns never formed within the normal
+      // constrained layout. See https://github.com/unisdr/undrr-mangrove/issues/970.
+      column-width: 280px;
+      column-gap: $mg-spacing-200;
+      column-fill: balance;
+    }
 
     // nested menus - RTL-friendly
     ul {

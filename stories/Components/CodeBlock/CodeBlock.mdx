@@ -1,0 +1,71 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as CodeBlockStories from './CodeBlock.stories';
+
+<Meta of={CodeBlockStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Code block
+
+A component for displaying formatted source code. Supports plain blocks, syntax highlighting, and an optional filename header bar.
+
+For inline `<code>` snippets inside prose, use the bare HTML element — no component needed. See [Base Typography](/docs/components-typography--docs#code) for inline code styling.
+
+## Examples
+
+### Plain block
+
+A plain dark block — use when no language label is needed:
+
+<Canvas of={CodeBlockStories.Plain} />
+
+**HTML pattern:**
+```html
+<pre><code>your code here</code></pre>
+```
+
+Add `data-language="Bash"` to `<pre>` to show a language badge without syntax colouring:
+```html
+<pre data-language="Bash"><code>npm install</code></pre>
+```
+
+### Syntax highlighted
+
+Add the `language` prop to enable Prism syntax colouring and an automatic language badge:
+
+<Canvas of={CodeBlockStories.WithLanguage} />
+
+Supported languages: `bash`, `javascript`, `jsx`.
+
+### With line numbers
+
+Add `lineNumbers` to show a gutter (requires `language`):
+
+<Canvas of={CodeBlockStories.WithLineNumbers} />
+
+<Canvas of={CodeBlockStories.WithLineNumbersAndFilename} />
+
+### With filename header
+
+Pass a `filename` prop to wrap the block in a `<figure class="mg-code-block">` with a `<figcaption>` header — useful when the snippet has a clear paste destination:
+
+<Canvas of={CodeBlockStories.WithFilename} />
+
+<Canvas of={CodeBlockStories.WithFilenameAndLanguage} />
+
+**HTML pattern:**
+```html
+<figure class="mg-code-block">
+  <figcaption>MyComponent.jsx</figcaption>
+  <pre><code>…</code></pre>
+</figure>
+```
+
+## Changelog
+
+### v1.2
+
+- New component extracted from Base Typography
+- Added `filename` prop for the `figure.mg-code-block` wrapper
+- Simplified API: `code` (required), `language` (optional), `filename` (optional)
+- CSS: removed left accent border; clean `border-radius: 6px`; language badge via `data-language` / CSS `:has()`; RTL badge positioning

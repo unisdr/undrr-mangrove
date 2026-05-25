@@ -13,6 +13,8 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+
+const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
 import {
   ALWAYS_OR_FACETS,
@@ -20,6 +22,16 @@ import {
   parseTypeValue,
   getContentType,
 } from '../utils/constants';
+
+/**
+ * Maps ES subtype field names to their corresponding allowedTypes key.
+ * Used to filter individual subtypes when an editor restricts specific
+ * subtype values (e.g. allowedTypes.publicationTypes for PW publications).
+ */
+const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
+  field_news_type: 'newsTypes',
+  field_publication_type: 'publicationTypes',
+};
 
 /**
  * FacetSelect component.
@@ -34,7 +46,7 @@ import {
  */
 export function FacetSelect({
   field,
-  buckets = [],
+  buckets = EMPTY_BUCKETS,
   getLabel,
   widgetId = 'search',
   allowedTypes = null,
@@ -89,18 +101,27 @@ export function FacetSelect({
               const vocabId = bucketKey.startsWith('vid:') ? bucketKey.slice(4) : bucketKey;
               return allowedTypes.vocabularies.includes(vocabId);
             }
-            // No vocabulary restriction configured — show all
+            // No vocabulary restriction configured: show all
             return true;
           }
 
-          // For subtypes, check if parent type is allowed
+          // For subtypes: first check parent type is allowed, then check
+          // any field-specific subtype allowlist (e.g. publicationTypes, newsTypes).
           if (bucket.isSubtype && bucket.parentType) {
             if (Array.isArray(allowedTypes)) {
               return allowedTypes.includes(bucket.parentType);
             }
-            if (typeof allowedTypes === 'object' && allowedTypes.types) {
-              return allowedTypes.types.includes(bucket.parentType);
+            if (typeof allowedTypes === 'object') {
+              if (allowedTypes.types && !allowedTypes.types.includes(bucket.parentType)) {
+                return false;
+              }
+              const parsed = parseTypeValue(bucketKey);
+              const subtypeKey = FIELD_TO_SUBTYPE_ALLOWLIST_KEY[parsed.field];
+              if (subtypeKey && allowedTypes[subtypeKey]) {
+                return allowedTypes[subtypeKey].includes(parsed.value);
+              }
             }
+            return true;
           }
           // For parent types, check if type is allowed
           if (Array.isArray(allowedTypes)) {

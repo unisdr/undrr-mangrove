@@ -14,6 +14,7 @@ Thank you for contributing to the UNDRR Mangrove component library.
 - See [`docs/RELEASES.md`](docs/RELEASES.md) for versioning, tagging, and publishing.
 - See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the build system, distribution channels, and Drupal integration flow.
 - See [`docs/COMPONENT-GUIDE.md`](docs/COMPONENT-GUIDE.md) for a step-by-step tutorial on building a new component.
+- See [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) if you are an AI coding agent (Claude Code, Cursor, Copilot, etc.) — covers the workflow gaps between human and agent contributors, including the `react-doctor` quality check and the project's house conventions for JSX text.
 - For code standards and review process, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
   - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
@@ -43,7 +44,7 @@ Most of the manifest auto-generates from Storybook and component rendering. Two 
 
 Tips for better manifest output:
 
-- **Add PropTypes to your components.** The manifest extracts prop names, types, defaults, and descriptions from PropTypes and JSDoc comments via react-docgen. Components without PropTypes appear in the manifest with no prop documentation.
+- **Add PropTypes to your components.** The manifest extracts prop names, types, defaults, and descriptions from PropTypes and JSDoc comments via react-docgen. Components without PropTypes appear in the manifest with no prop documentation. The practical ceiling is ~87% (the remaining ~13% are CSS-utility doc pages, vanilla CSS patterns, story-only examples, or intentional stubs); see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md#proptypes-coverage-the-practical-ceiling-is-87) before chasing gaps.
 - **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs), add a webpack entry in `webpack.config.js`, a `COMPONENT_IDS` mapping, and a `buildSampleProps()` entry — both in `scripts/ai-manifest/generate-ai-manifest.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
 - **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
@@ -58,7 +59,7 @@ Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/c
 2. Write clear commits using Conventional Commits.
 3. Add or update Storybook docs if behavior or usage changes.
 4. If you changed component markup or CSS classes, update `scripts/ai-manifest/component-data.js`.
-5. Run tests and linters before you open a pull request.
+5. Run tests and linters before you open a pull request (`yarn test`, `yarn lint`). For component-quality findings, also run `npx -y react-doctor@latest .` — see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) for the house conventions it enforces.
 6. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
 7. Reference the relevant issue in your PR description.
 

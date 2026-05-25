@@ -2,6 +2,8 @@
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://unisdr.github.io/undrr-mangrove/)
 [![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
+<!-- React Doctor score is a periodic snapshot, not live. Refresh after audit sweeps by re-running `npx -y react-doctor@latest .` and updating the s/e/w/f params below. See docs/AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor. -->
+[![React Doctor](https://www.react.doctor/share/badge?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0)](https://www.react.doctor/share?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0)
 
 # Mangrove: the UNDRR component library
 
@@ -267,9 +269,9 @@ Production sites should pin to a specific version:
 ```
 https://assets.undrr.org/static/sitemap.html#mangrove-1-2-10
 https://assets.undrr.org/static/mangrove/README.md
-https://assets.undrr.org/static/mangrove/1.5.0/css/style.css
-https://assets.undrr.org/static/mangrove/1.5.0/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/1.5.0/js/tabs.js
+https://assets.undrr.org/static/mangrove/1.7.0/css/style.css
+https://assets.undrr.org/static/mangrove/1.7.0/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/1.7.0/js/tabs.js
 ```
 
 #### Bleeding edge test rep
@@ -277,7 +279,7 @@ https://assets.undrr.org/static/mangrove/1.5.0/js/tabs.js
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/static/mangrove/1.5.0/css/style.css
+https://assets.undrr.org/static/mangrove/1.7.0/css/style.css
 ... etc
 ```
 

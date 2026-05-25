@@ -518,7 +518,7 @@ describe('queryBuilder', () => {
     });
   });
 
-  describe('aggregation skip (showFacets: false)', () => {
+  describe('facets hidden (showFacets: false)', () => {
     it('omits aggs when showFacets is false', () => {
       const config = { ...DEFAULT_CONFIG, showFacets: false };
       const result = buildQuery(defaultState, config);
@@ -533,14 +533,62 @@ describe('queryBuilder', () => {
       expect(result.aggs).toBeDefined();
     });
 
-    it('omits post_filter when showFacets is false even with facet state', () => {
+    it('omits post_filter when showFacets is false and no facets are active', () => {
+      const config = { ...DEFAULT_CONFIG, showFacets: false };
+      const result = buildQuery(defaultState, config);
+
+      expect(result.post_filter).toBeUndefined();
+    });
+
+    it('still omits aggs when showFacets is false even with active facet state', () => {
       const config = { ...DEFAULT_CONFIG, showFacets: false };
       const result = buildQuery(
         { ...defaultState, facets: { type: ['news'] } },
         config
       );
 
-      expect(result.post_filter).toBeUndefined();
+      // Aggregations stay skipped when facets are hidden: nothing renders them.
+      expect(result.aggs).toBeUndefined();
+    });
+
+    it('applies post_filter for programmatic default filters when facets are hidden', () => {
+      // Regression: default filters (e.g. injected via defaultFilters / config
+      // modifier) land in facet state and must still reach Elasticsearch even
+      // though the facet UI is hidden. See unisdr/undrr-mangrove#1031.
+      const config = { ...DEFAULT_CONFIG, showFacets: false };
+      const result = buildQuery(
+        { ...defaultState, facets: { field_country_region: ['75'] } },
+        config
+      );
+
+      expect(result.post_filter).toEqual({
+        term: { field_country_region: '75' },
+      });
+    });
+
+    it('applies post_filter for custom facet selections when facets are hidden', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        showFacets: false,
+        customFacets: [
+          {
+            id: 'resourceType',
+            title: 'Resource type',
+            options: [
+              { label: 'Reports', query: 'type:publication' },
+              { label: 'Training', query: 'type:resource' },
+            ],
+          },
+        ],
+      };
+      const result = buildQuery(
+        { ...defaultState, customFacets: { resourceType: ['0'] } },
+        config
+      );
+
+      expect(result.post_filter).toEqual({
+        query_string: { query: 'type:publication' },
+      });
     });
   });
 

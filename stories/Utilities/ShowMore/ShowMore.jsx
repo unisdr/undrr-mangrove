@@ -13,6 +13,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { mgShowMore } from '../../assets/js/show-more';
 
+const EMPTY_DATA = [];
+
 /**
  * ShowMore component.
  *
@@ -25,7 +27,7 @@ import { mgShowMore } from '../../assets/js/show-more';
  * @param {string} props.data[].collapsable_wrapper_class     CSS class for the content wrapper (used as a selector target)
  * @param {string} props.data[].collapsable_text              Text content to show/hide
  */
-export function ShowMore({ data = [] }) {
+export function ShowMore({ data = EMPTY_DATA }) {
   useEffect(() => {
     mgShowMore();
   }, []);

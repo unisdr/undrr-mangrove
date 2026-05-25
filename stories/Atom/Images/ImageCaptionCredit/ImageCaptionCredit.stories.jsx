@@ -7,7 +7,11 @@ const getCaptionForLocale = locale => {
   switch (locale) {
     case 'english':
       const engText = {
-        label: ['UNDRR/Ghana', <br />, <strong>Alex Mensah Tenkorang</strong>],
+        label: [
+          'UNDRR/Ghana',
+          <br key="br" />,
+          <strong key="name">Alex Mensah Tenkorang</strong>,
+        ],
         paragraph:
           'This is a sample text to go along with the imagery of the story',
       };
@@ -16,8 +20,8 @@ const getCaptionForLocale = locale => {
       const arabicText = {
         label: [
           'برنامج الأمم المتحدة الإنمائي / أنغولا',
-          <br />,
-          <strong>جيروم بيل</strong>,
+          <br key="br" />,
+          <strong key="name">جيروم بيل</strong>,
         ],
         paragraph:
           'الألم بحد ذاته يسبب الكثير من الألم ، لكن التركيز الأساسي ينصب على العميل. Morbi lorem tortor، fermentum eu lorem at، venenatis malesuada laughter.',
@@ -25,14 +29,22 @@ const getCaptionForLocale = locale => {
       return arabicText;
     case 'japanese':
       const japaneseText = {
-        label: ['UNDRR /アンゴラ', <br />, <strong>ジェロームベル</strong>],
+        label: [
+          'UNDRR /アンゴラ',
+          <br key="br" />,
+          <strong key="name">ジェロームベル</strong>,
+        ],
         paragraph:
           '痛み自体は多くの痛みですが、主な焦点は顧客にあります。 Morbi lorem tortor、fermentum eu lorem at、venenatismalesuadaの笑い声。',
       };
       return japaneseText;
     default:
       return {
-        label: ['UNDRR/Ghana', <br />, <strong>Alex Mensah Tenkorang</strong>],
+        label: [
+          'UNDRR/Ghana',
+          <br key="br" />,
+          <strong key="name">Alex Mensah Tenkorang</strong>,
+        ],
         paragraph:
           'This is a sample text to go along with the imagery of the story',
       };

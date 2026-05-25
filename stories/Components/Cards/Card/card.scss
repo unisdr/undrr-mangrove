@@ -106,6 +106,7 @@
   }
 
   &__title {
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-size-500;
     font-weight: bold;
     line-height: $mg-font-line-height-500;
@@ -231,6 +232,7 @@ $card-variant-colours: (
 }
 
 .mg-card__label {
+  font-family: $mg-font-family-headings;
   font-weight: 700;
 }
 
@@ -561,6 +563,16 @@ $card-variant-colours: (
         align-items: center;
       }
     }
+  }
+}
+
+// Arabic font override for card titles and labels. Covers all card variants
+// (Vertical, Horizontal, Book, Icon) since they share .mg-card__title.
+:lang(ar) {
+  .mg-card__title,
+  .mg-card__title a,
+  .mg-card__label {
+    font-family: $mg-font-family-arabic-headings;
   }
 }
 

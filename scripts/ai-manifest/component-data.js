@@ -34,7 +34,12 @@ export const REQUIRES_REACT = {
   'components-charts-histogram': 'Histogram uses D3 for rendering. Requires React and D3. Import via npm.',
   'components-charts-indexchart': 'IndexChart uses D3 for rendering. Requires React and D3. Import via npm.',
   'components-maps-mapcomponent': 'MapComponent uses Leaflet for interactive maps. Requires React and Leaflet. Import via npm.',
-  'components-syndicationsearchwidget': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.',
+  'components-syndicated-search': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. See the hydration documentation.',
+  'components-syndicated-search-display-modes': 'SyndicationSearchWidget display-mode variants (list / card / card-book layouts and teaser-field visibility). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-filters': 'SyndicationSearchWidget filter and facet customisation variants (customFilters, customFacets, allowedTypes). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-integrations': 'SyndicationSearchWidget integration / syndication examples (taxonomy term results, custom endpoints, syndicated card layouts as content blocks). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-layouts': 'SyndicationSearchWidget layout variants — facets sidebar, horizontal facet strip, and external-region portals (facetsTarget, searchTarget). Requires React 19. Same hydration pattern as the main widget.',
+  'components-syndicated-search-toggles': 'SyndicationSearchWidget UI visibility toggles (showPager, showSearchMetrics). Requires React 19. Same hydration pattern as the main widget.',
   'components-megamenu': 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
   'components-fetcher': 'Fetcher is a generic data-fetching wrapper component. Requires React for state management.',
   'components-gallery': 'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
@@ -301,8 +306,8 @@ export default {
 
   // --- Typography ---
   'components-typography': {
-    description: 'Base typography styles applied to standard HTML heading and body elements. No extra classes needed.',
-    cssClasses: [],
+    description: 'Base typography styles applied to standard HTML heading and body elements. Use `mg-details` on a `<details>` element to apply Mangrove styled disclosure.',
+    cssClasses: ['mg-details'],
     examples: [
       {
         name: 'Heading hierarchy',
@@ -315,6 +320,13 @@ export default {
   <h6>Heading level 6</h6>
   <p>Body text uses the base font size. Mangrove applies a consistent type scale across breakpoints.</p>
 </div>`,
+      },
+      {
+        name: 'Details disclosure',
+        html: `<details class="mg-details">
+  <summary>The Sendai Framework</summary>
+  <p>The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.</p>
+</details>`,
       },
     ],
   },
@@ -380,6 +392,41 @@ export default {
     ],
   },
 
+  // --- Preview access ---
+  'components-preview-access': {
+    description: 'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM.',
+    cssClasses: [
+      'mg-preview-access--unlocked',
+      'mg-preview-access__overlay',
+      'mg-preview-access__modal',
+      'mg-preview-access__eyebrow',
+      'mg-preview-access__title',
+      'mg-preview-access__body',
+      'mg-preview-access__form',
+      'mg-preview-access__label',
+      'mg-preview-access__field',
+      'mg-preview-access__input',
+      'mg-preview-access__submit',
+      'mg-preview-access__error',
+      'mg-preview-access__contact',
+    ],
+    examples: [
+      {
+        name: 'Default gate (PIN 5498)',
+        html: `<div data-mg-preview-access></div>`,
+      },
+      {
+        name: 'Branded gate with shared id',
+        html: `<div data-mg-preview-access
+     data-mg-preview-pin="5498"
+     data-mg-preview-id="delta-2026-preview"
+     data-mg-preview-eyebrow="DELTA Resilience · Preview"
+     data-mg-preview-title="This page is a preview"
+     data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>`,
+      },
+    ],
+  },
+
   // --- On this page nav ---
   'components-on-this-page-nav': {
     description: 'Sticky horizontal "On this page" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js.',
@@ -418,14 +465,69 @@ export default {
   // --- Highlight box (auto-rendered) ---
   'components-highlightbox': { description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.' },
 
+  // --- CodeBlock ---
+  'components-codeblock': {
+    description: `Formatted source code display. Two rendering paths share the same CSS:
+
+VANILLA HTML (Drupal pages): Use \`<pre><code>\` directly. Prism.js (loaded globally) tokenises the code and emits \`.token.*\` span elements — Mangrove's \`code.scss\` styles those classes. Add a \`data-language="Bash"\` attribute on \`<pre>\` for a language badge. Wrap in \`<figure class="mg-code-block"><figcaption>filename</figcaption>…</figure>\` for a filename header bar.
+
+REACT (Storybook / JS apps): Use the \`CodeBlock\` component. Props: \`code\` (required string), \`language\` ("bash" | "javascript" | "jsx" — enables react-syntax-highlighter/PrismLight which emits the same \`.token.*\` classes), \`filename\` (string — adds the figure/figcaption wrapper), \`lineNumbers\` (boolean — gutter line numbers, requires \`language\`).
+
+IMPORTANT — token classes: \`.token.keyword\`, \`.token.string\`, \`.token.tag\` etc. are NOT Mangrove BEM classes. They are emitted by Prism.js (and react-syntax-highlighter under the hood). Mangrove owns the \`code.scss\` rules that colour them; the class names themselves are Prism's API. Do not rename or prefix them with \`mg-\`.
+
+For inline \`<code>\` snippets in prose, use the bare HTML element — the global \`code.scss\` styles it automatically. The CodeBlock component is only for block-level code display.`,
+    cssClasses: [
+      // Mangrove-defined classes:
+      'mg-code-block',      // <figure> wrapper with filename header
+      'mg-code--block',     // standalone block variant (e.g. ShareButtons URL display)
+      // Prism.js token classes (styled by Mangrove, emitted by Prism/react-syntax-highlighter):
+      // .token.comment .token.keyword .token.string .token.number .token.function
+      // .token.class-name .token.tag .token.attr-name .token.attr-value
+      // .token.operator .token.punctuation .token.boolean
+    ],
+    examples: [
+      {
+        name: 'Plain block',
+        html: `<pre><code>npm install @undrr/undrr-mangrove</code></pre>`,
+      },
+      {
+        name: 'With language badge (Prism.js tokenises on page load)',
+        html: `<pre data-language="Bash"><code class="language-bash">#!/bin/bash
+npm ci --production
+npm run build</code></pre>`,
+      },
+      {
+        name: 'With filename header',
+        html: `<figure class="mg-code-block">
+  <figcaption>deploy.sh</figcaption>
+  <pre data-language="Bash"><code class="language-bash">#!/bin/bash
+npm ci --production
+npm run build</code></pre>
+</figure>`,
+      },
+    ],
+  },
+
   // --- Quote highlight (auto-rendered) ---
   'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },
 
   // --- Hero ---
-  'components-hero-hero': { description: 'Full-width hero banner with background image, overlay, title, summary, and CTA buttons. Four color variants.' },
+  'components-hero-hero': {
+    description: 'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
+    cssClasses: [
+      'mg-hero', 'mg-hero--secondary', 'mg-hero--tertiary', 'mg-hero--quaternary',
+      'mg-hero--split', 'mg-hero--split-2-3', 'mg-hero--split-1-2', 'mg-hero--split-1-3',
+      'mg-hero__overlay', 'mg-hero__split-grid', 'mg-hero__content',
+      'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',
+      'mg-hero__media', 'mg-hero__media--video', 'mg-hero__media--html',
+      'mg-hero__media-img', 'mg-hero__media-iframe',
+    ],
+  },
 
   'components-hero-hero-child': {
-    description: 'Smaller hero banner for child/section pages. Single CTA button, linked label.',
+    description: 'DEPRECATED — planned for removal by end of 2026. Never adopted in production across UNDRR sites; do not use in new work. Migrate to the main Hero component (`headingLevel="h2"`/`"h3"` or `layout="split"`), which covers the same use cases. Kept available for reference only. Smaller hero banner for child/section pages. Single CTA button, linked label.',
+    deprecated: true,
+    deprecationNotice: 'Planned for removal by end of 2026. Migrate to `components-hero-hero`.',
     cssClasses: [
       'mg-hero', 'mg-hero--child', 'mg-hero__overlay', 'mg-hero__content',
       'mg-hero__meta', 'mg-hero__label', 'mg-hero__title', 'mg-hero__summaryText', 'mg-hero__buttons',

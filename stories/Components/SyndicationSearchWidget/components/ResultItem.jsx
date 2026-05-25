@@ -121,7 +121,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
   const highlight = hit.highlight || {};
   const isTerm = isTaxonomyTermResult(source);
 
-  // Extract fields — type may arrive as an array from Elasticsearch
+  // Extract fields: type may arrive as an array from Elasticsearch
   const {
     nid,
     title,
@@ -135,7 +135,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
   const type = Array.isArray(rawType) ? rawType[0] : rawType;
 
   // Get domain info.
-  // Taxonomy terms don't have field_domain_access — use their vocabulary's
+  // Taxonomy terms don't have field_domain_access, so use their vocabulary's
   // default domain (typically preventionweb.net).
   const domainId = isTerm
     ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
@@ -170,7 +170,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
       : domainId;
 
     // Organizations are assigned to all domains, making the domain badge
-    // meaningless noise — suppress it and show a type tag instead.
+    // meaningless noise, so suppress it and show a type tag instead.
     const isOrganization = type === 'organization';
 
     // Resolve relative URLs and swap card variant for card display modes
@@ -185,7 +185,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
     // to Drupal's teaser view template class names.
     //
     // Skip badge injection entirely when both siteName and contentType are
-    // hidden via visibleTeaserFields — avoids rendering an empty wrapper div.
+    // hidden via visibleTeaserFields: avoids rendering an empty wrapper div.
     const hideSiteName = visibleTeaserFields?.siteName === false;
     const hideContentType = visibleTeaserFields?.contentType === false;
     const skipBadges = hideSiteName && hideContentType;
@@ -198,7 +198,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
       }
       if (titleFieldIndex !== -1) {
         // Organizations show a content type tag; everything else shows a site name.
-        // Respect visibleTeaserFields — skip the individual badge if its field is hidden,
+        // Respect visibleTeaserFields: skip the individual badge if its field is hidden,
         // and skip the wrapper entirely if the relevant badge would be empty.
         let badgeContent = '';
         if (isOrganization) {
@@ -254,7 +254,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
     }
   }, [publishedAt]);
 
-  // Get type label — vocabulary name for terms, content type for nodes
+  // Get type label: vocabulary name for terms, content type for nodes
   const typeLabel = useMemo(() => {
     if (isTerm) {
       const vocabInfo = getTaxonomyVocabulary(vid);
@@ -298,7 +298,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
             {domainLabel && type !== 'organization' && (
               <span className="mg-search__result-domain">{domainLabel}</span>
             )}
-            {/* Taxonomy terms don't have published_at — skip date */}
+            {/* Taxonomy terms don't have published_at, so skip date */}
             {!isTerm && formattedDate && (
               <time
                 className="mg-search__result-date"

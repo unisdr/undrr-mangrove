@@ -48,7 +48,12 @@ export function FacetsSidebar({ widgetId = 'search' }) {
 
   // Build set of subtype field names to skip (they're merged into type)
   const subtypeFields = useMemo(() => {
-    return new Set(Object.values(CONTENT_SUBTYPES).map(config => config.field));
+    return new Set(
+      Object.values(CONTENT_SUBTYPES).flatMap(config => {
+        const configs = Array.isArray(config) ? config : [config];
+        return configs.map(c => c.field);
+      })
+    );
   }, []);
 
   /**
@@ -106,7 +111,9 @@ export function FacetsSidebar({ widgetId = 'search' }) {
     }
 
     // Sort by weight
-    const sorted = [...customFacets].sort((a, b) => (a.weight || 50) - (b.weight || 50));
+    const sorted = customFacets.toSorted(
+      (a, b) => (a.weight || 50) - (b.weight || 50)
+    );
 
     return sorted.map((facet) => (
       <CustomFacetSelect
@@ -125,7 +132,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
       {/* Loading indicator for taxonomies */}
       {taxonomiesLoading && (
         <div className="mg-search__facets-loading" aria-live="polite">
-          Loading filters...
+          Loading filters…
         </div>
       )}
 

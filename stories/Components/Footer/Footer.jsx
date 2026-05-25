@@ -21,10 +21,12 @@ const defaultSyndicationConfig = {
   activedomain: 'www.undrr.org',
 };
 
+const EMPTY_SYNDICATION_CONFIG = {};
+
 export function Footer({
   variant = 'default',
   enableSyndication = true,
-  syndicationConfig = {},
+  syndicationConfig = EMPTY_SYNDICATION_CONFIG,
   complementaryContent = null,
   children,
   className,
@@ -117,7 +119,7 @@ export function Footer({
           className={`pw-widget-${mergedSyndicationConfig.suffixID}`}
           ref={syndicationRef}
         >
-          Loading UNDRR footer content...
+          Loading UNDRR footer content…
         </div>
       )}
     </footer>

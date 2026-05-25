@@ -77,6 +77,7 @@
 
   &__label {
     display: inline-block;
+    font-family: $mg-font-family-headings;
     font-size: $mg-font-tag;
     font-weight: bold;
     margin-right: $mg-spacing-25;
@@ -99,6 +100,7 @@
     color: $mg-color-hero-title;
     margin-bottom: $mg-spacing-25;
     display: inline-block;
+    font-family: $mg-font-family-headings;
     font-weight: bold;
     font-size: $mg-font-size-600;
     line-height: 1.2;
@@ -204,8 +206,8 @@ $variant-colours: (
   }
 }
 
-// RTL tweaks
-[dir="rtl"] .mg-hero {
+// RTL tweaks (background layout only)
+[dir="rtl"] .mg-hero:not(.mg-hero--split) {
   margin-right: calc(50% - (50vw)); // to expand out of the parent container
   padding-right: $mg-spacing-100;
 
@@ -215,5 +217,181 @@ $variant-colours: (
 
   @media (min-width: $mg-breakpoint-desktop-wide) {
     padding-right: calc(50vw - calc($mg-breakpoint-desktop-wide / 2)); // to keep the overlay fixed
+  }
+}
+
+// Split layout variant
+.mg-hero--split {
+  background-image: none;
+  aspect-ratio: unset;
+
+  // Reset background-layout padding offsets
+  padding-left: 0;
+  background-color: $mg-color-hero;
+
+  // Button/CTA overrides (mirrors background layout, but scoped to split section
+  // since there is no __overlay to target)
+  a.mg-button,
+  a.mg-button:hover,
+  a.mg-button:visited {
+    color: $mg-color-hero;
+  }
+
+  a.mg-button-primary {
+    background-color: $mg-color-neutral-0;
+  }
+
+  a.mg-button-secondary,
+  a.mg-button-secondary:hover,
+  a.mg-button-secondary:visited {
+    background-color: $mg-color-hero-button-secondary-background;
+    color: $mg-color-hero-button-secondary-color;
+    border-color: $mg-border-color-hero-button-secondary;
+  }
+
+  a.mg-button:focus-visible {
+    box-shadow: 0 0 0 2px $mg-color-neutral-0;
+    outline: 2px solid $mg-color-neutral-0;
+    outline-offset: 2px;
+  }
+
+  .mg-hero__split-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; // default 2/3
+    align-items: stretch;
+    max-width: $mg-breakpoint-desktop;
+    margin: 0 auto;
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &.mg-hero--split-1-2 .mg-hero__split-grid {
+    grid-template-columns: 1fr 1fr;
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &.mg-hero--split-1-3 .mg-hero__split-grid {
+    grid-template-columns: 1fr 2fr;
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mg-hero__content {
+    display: grid;
+    row-gap: mg-rem(10);
+    padding: $mg-spacing-200 $mg-spacing-100;
+    align-content: center;
+  }
+
+  .mg-hero__media {
+    overflow: hidden;
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  // Video embeds force a 16:9 ratio so iframes never collapse.
+  .mg-hero__media--video {
+    aspect-ratio: 16 / 9;
+  }
+
+  // HTML slot: let consumer content define its own layout; ensure it fills the column.
+  .mg-hero__media--html {
+    display: flex;
+
+    > * {
+      width: 100%;
+    }
+
+    // First-class rendering for a <figure> + <figcaption> composition inside
+    // the slot (image with an attribution overlay). Consumers get this for free
+    // by dropping in semantic markup.
+    > figure {
+      position: relative;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+
+      > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        padding: 0;
+      }
+
+      > figcaption {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        background: rgba($mg-color-neutral-900, 0.75);
+        color: $mg-color-neutral-0;
+        padding: $mg-spacing-50 $mg-spacing-100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: $mg-spacing-100;
+      }
+    }
+  }
+
+  .mg-hero__media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .mg-hero__media-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+}
+
+// Variant colours at full opacity for split (no rgba wrapper needed — no photo underneath)
+@each $name, $color in $variant-colours {
+  .mg-hero--split.mg-hero--#{$name} {
+    background-color: $color;
+
+    a.mg-button,
+    a.mg-button:hover,
+    a.mg-button:visited {
+      color: #{$color};
+    }
+  }
+}
+
+// RTL for split: reset outer offsets and reverse column order via grid direction
+[dir="rtl"] .mg-hero--split {
+  margin-right: 0;
+  padding-right: 0;
+
+  .mg-hero__split-grid {
+    direction: rtl; // reverses grid item order (content stays first semantically)
+  }
+}
+
+// Arabic font override for the title wrapper. $mg-font-family-headings is
+// Roboto Condensed which has no Arabic glyph coverage; route to Noto Kufi
+// Arabic. Scoped to heading tags + anchor so unrelated descendant content
+// (slotted subtitles, body copy) keeps its own font.
+:lang(ar) {
+  .mg-hero__title,
+  .mg-hero__title a,
+  .mg-hero__title h1,
+  .mg-hero__title h2,
+  .mg-hero__title h3,
+  .mg-hero__label {
+    font-family: $mg-font-family-arabic-headings;
   }
 }

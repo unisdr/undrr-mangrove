@@ -23,6 +23,8 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.gridColumns)
     config.gridColumns = parseInt(dataset.gridColumns, 10);
   if (dataset.queryAppend) config.queryAppend = dataset.queryAppend;
+  if (dataset.facetsTarget) config.facetsTarget = dataset.facetsTarget;
+  if (dataset.searchTarget) config.searchTarget = dataset.searchTarget;
 
   // Boolean props (only set if explicitly present)
   if (dataset.showSearchBox !== undefined)
@@ -31,6 +33,13 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showResultsCount = dataset.showResultsCount !== 'false';
   if (dataset.showFacets !== undefined)
     config.showFacets = dataset.showFacets !== 'false';
+  // New union prop for facets layout: 'false' | 'sidebar' | 'horizontal'.
+  // Drupal data attributes always arrive as strings, so the literal string
+  // 'false' is mapped to the boolean false; other values pass through and
+  // are validated by the resolver in utils/constants.js.
+  if (dataset.facets !== undefined) {
+    config.facets = dataset.facets === 'false' ? false : dataset.facets;
+  }
   if (dataset.showActiveFilters !== undefined)
     config.showActiveFilters = dataset.showActiveFilters !== 'false';
   if (dataset.showPager !== undefined)
@@ -39,8 +48,19 @@ export default function syndicationSearchWidgetFromElement(container) {
     config.showSearchMetrics = dataset.showSearchMetrics === 'true';
   if (dataset.showSearchTimer !== undefined)
     config.showSearchTimer = dataset.showSearchTimer === 'true';
-  if (dataset.enableHashSync !== undefined)
-    config.enableHashSync = dataset.enableHashSync !== 'false';
+  // enableHashSync supports a tri-state: boolean true/false, or the string
+  // 'auto' (default), which lets the Drupal wrapper auto-disable hash sync
+  // when more than one widget is mounted on the same page. Collapsing to a
+  // bool would lose that signal, so preserve 'auto' as the literal string.
+  // The useHashSync hook recognises both boolean true and the string 'true',
+  // so non-'auto' values can safely collapse to booleans.
+  if (dataset.enableHashSync !== undefined) {
+    if (dataset.enableHashSync === 'auto') {
+      config.enableHashSync = 'auto';
+    } else {
+      config.enableHashSync = dataset.enableHashSync !== 'false';
+    }
+  }
   if (dataset.requireImage !== undefined)
     config.requireImage = dataset.requireImage === 'true';
 

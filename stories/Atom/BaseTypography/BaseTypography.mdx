@@ -245,30 +245,22 @@ export const getCaptionForLocaleCode = locale => {
   }
 };
 
-The code component is used to define a piece of computer code. The content inside is displayed in the browser's default monospace font.
-
-- We can use the <code>code</code> in any component to render the text found within the <code>code tag</code> in monospace font.
-- We can use the <code>blockCode</code> prop to render multi-line code blocks with the <code>mg-code--block</code> class.
-
-Typographic scale when using code in text component:
+Use `<code>` inline within prose to render technical terms in the browser's default monospace font:
 
 <Canvas
   of={BaseTypographyStories.TypographyCode}
   meta={BaseTypographyStories}
 />
 
-### Code block example
-
-<Canvas
-  of={BaseTypographyStories.TypographyCodeBlock}
-  meta={BaseTypographyStories}
-/>
+For syntax-highlighted blocks, plain dark blocks, and filename-header wrappers, see the **[CodeBlock component](/docs/components-codeblock--docs)**.
 
 <Anchor storyId="foundation-typography-basetypography--details" />
 
 ## Details
 
-The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the summary element.
+The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the `summary` element.
+
+Mangrove applies a light baseline to all `<details>` elements — a pointer cursor on the summary and a branded focus ring — keeping the browser's native disclosure marker intact. For a richer card treatment, add the `mg-details` class.
 
 export const getLocaleForDetails = locale => {
   switch (locale) {
@@ -303,6 +295,13 @@ export const getLocaleForDetails = locale => {
 
 <Canvas
   of={BaseTypographyStories.TypographyDetails}
+  meta={BaseTypographyStories}
+/>
+
+Bare `<details>` with Mangrove's baseline styling — native disclosure marker, pointer cursor, and branded focus ring:
+
+<Canvas
+  of={BaseTypographyStories.TypographyDetailsBaseline}
   meta={BaseTypographyStories}
 />
 
@@ -690,6 +689,12 @@ export const getCaptionForLocaleList = locale => {
 
 ## Changelog
 
+- **1.2** — 2025-07-14 ([#865](https://github.com/unisdr/undrr-mangrove/issues/865)):
+  - Refactored `details`/`summary` styles to opt-in `mg-details` class; bare `<details>` receives a light baseline (pointer cursor, branded focus ring) without altering the native disclosure marker
+  - Replaced `outline: 0` on `summary` with explicit `:focus-visible` style for keyboard accessibility
+  - Improved `hr` with brand-blue top border and vertical breathing room
+  - Improved `dt` with bold weight for clear labelling without link ambiguity; added `dd + dt` group spacing
+  - Redesigned code block: removed left accent border in favour of clean full-radius dark block; added language badge (top-right) via `data-language` attribute or CSS `:has()` for syntax-highlighted output; added `figure.mg-code-block` + `figcaption` wrapper for Vercel-inspired filename headers
 - **1.1** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)):
   - Added optional `size` prop to Paragraph component for applying font-size utility classes
   - Fixed Paragraph `label` prop support — callers passing `label` instead of `detail` now render correctly

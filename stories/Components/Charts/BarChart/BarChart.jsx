@@ -9,8 +9,15 @@ import { max } from 'd3-array';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { transformDataForBarChart } from './chart-helpers';
 
+const EMPTY_DATA = [];
+
 /**
  * Renders a D3-powered bar chart with configurable axes, colors, and accessibility attributes.
+ *
+ * @deprecated since v1.7.x — will be removed in v1.8. UNDRR is consolidating on
+ * [Recharts](https://recharts.org/) for charting; this in-tree D3 wrapper never
+ * reached wide-scale implementation. New code should use Recharts directly. See
+ * the removal tracker: https://github.com/unisdr/undrr-mangrove/issues/1011
  *
  * @param {Object} props
  * @param {Array<{label: string, value: number}>} [props.data] Array of data objects with label and value properties
@@ -35,7 +42,7 @@ import { transformDataForBarChart } from './chart-helpers';
  * @param {{top: number, right: number, bottom: number, left: number}} [props.margin] SVG margins
  */
 export default function BarChartProcessor({
-  data = [],
+  data = EMPTY_DATA,
   cumulative = 'false',
   startYear = 2015,
   endYear = 2030,

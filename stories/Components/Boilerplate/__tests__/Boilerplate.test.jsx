@@ -10,7 +10,11 @@ describe('Boilerplate', () => {
   };
 
   it('renders title and children', () => {
-    render(<Boilerplate {...defaultProps} title="Hello" children={<p>Body text</p>} />);
+    render(
+      <Boilerplate {...defaultProps} title="Hello">
+        <p>Body text</p>
+      </Boilerplate>
+    );
 
     expect(screen.getByText('Hello')).toBeInTheDocument();
     expect(screen.getByText('Body text')).toBeInTheDocument();

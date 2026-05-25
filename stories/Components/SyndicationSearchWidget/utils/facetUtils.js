@@ -40,18 +40,30 @@ export function getMergedTypeBuckets(aggregations) {
       parentType: null,
     });
 
-    // Check if this parent type has subtypes configured
+    // Check if this parent type has subtypes configured.
+    // May be a single config object or an array of configs.
     const subtypeConfig = CONTENT_SUBTYPES[parentBucket.key];
     if (subtypeConfig) {
-      const subtypeBuckets = aggregations[subtypeConfig.field]?.buckets || [];
-      const sortedSubtypes = [...subtypeBuckets].sort((a, b) => b.doc_count - a.doc_count);
-      for (const subtypeBucket of sortedSubtypes) {
-        result.push({
-          key: createSubtypeValue(subtypeConfig.field, subtypeBucket.key),
-          doc_count: subtypeBucket.doc_count,
-          isSubtype: true,
-          parentType: parentBucket.key,
-        });
+      const configs = Array.isArray(subtypeConfig) ? subtypeConfig : [subtypeConfig];
+      // Collect subtypes from all fields for this parent, then sort globally by
+      // count so mixed-field parents (e.g. publication with field_publication_type
+      // + field_undrr_publication_types + field_irp_publication_subtype) render
+      // in a single count-ordered list rather than per-field groups.
+      const allSubtypes = [];
+      for (const config of configs) {
+        const subtypeBuckets = aggregations[config.field]?.buckets || [];
+        for (const subtypeBucket of subtypeBuckets) {
+          allSubtypes.push({
+            key: createSubtypeValue(config.field, subtypeBucket.key),
+            doc_count: subtypeBucket.doc_count,
+            isSubtype: true,
+            parentType: parentBucket.key,
+          });
+        }
+      }
+      allSubtypes.sort((a, b) => b.doc_count - a.doc_count);
+      for (const subtype of allSubtypes) {
+        result.push(subtype);
       }
     }
   }

@@ -15,6 +15,7 @@
 .mg-tag {
   display: inline-block;
   padding: $mg-spacing-25 $mg-spacing-50;
+  font-family: $mg-font-family-headings;
   font-size: $mg-font-size-250;
   font-weight: 500;
   line-height: 1.4;
@@ -111,5 +112,12 @@
       background-color: var(--tag-color-background-hover, #{$mg-color-tag--hover});
       text-decoration: none;
     }
+  }
+}
+
+// Arabic font override for tags.
+:lang(ar) {
+  .mg-tag {
+    font-family: $mg-font-family-arabic-headings;
   }
 }

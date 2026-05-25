@@ -77,6 +77,8 @@ export const getCaptionForLocale = locale => {
 
 <Meta of={ChildHeroStories} />
 
+> **⚠️ Deprecated — planned for removal by the end of 2026.** ChildHero was never adopted in production across UNDRR sites, and the main [Hero](?path=/docs/components-hero-hero--docs) component now covers the same use cases via `headingLevel="h2"` / `"h3"` and the `layout="split"` variant. Do not adopt ChildHero in new work; migrate existing usage to Hero. This documentation is retained for reference while the component is still available.
+
 > If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
 
 # Mangrove hero (sub)
@@ -113,4 +115,6 @@ There are two types of Mangrove Hero components: Mangrove Hero Parent and Mangro
 
 ## Changelog
 
+- **1.2** — 2026-04-15 ([#942](https://github.com/unisdr/undrr-mangrove/issues/942)): Marked as deprecated. Planned for removal by end of 2026. Migrate to the main Hero component (`headingLevel="h2"`/`"h3"` or `layout="split"`).
+- **1.1** — 2026-04-13: Inherits the `.mg-hero__title` heading-font and Arabic-override change from Hero (same SCSS file).
 - **1.0** — 2022-12-12: Released component

@@ -1,0 +1,209 @@
+{/* PreviewAccess.mdx */}
+
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as PreviewAccessStories from './PreviewAccess.stories';
+
+<Meta of={PreviewAccessStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Preview access
+
+A page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Once unlocked, the page stays unlocked for the rest of the browser session.
+
+> **Note:** This is not a security mechanism. The PIN sits in the DOM and the unlock is held in `sessionStorage`, so anyone with developer tools can bypass it. The component is editorial signalling for review audiences only.
+
+## Examples
+
+The static preview below shows the modal panel inline so theme and copy can be reviewed without locking the Storybook canvas. To see the real body-level overlay behaviour, run the **Live demo** story.
+
+<Canvas of={PreviewAccessStories.Default} />
+
+Override copy for a specific product preview:
+
+<Canvas of={PreviewAccessStories.ProductBranded} />
+
+Use the locale toolbar to preview the modal in other languages, including Arabic with RTL.
+
+## When to use
+
+- Sharing unfinished dashboards or content with reviewers before public launch
+- Hiding unfinished pages from search engines and casual visitors
+- Marking a whole product preview (for example, a DELTA preview site) with a single shared PIN
+
+For real access control, gate the page at the edge with a service like Cloudflare Access. This component is for editorial signalling only.
+
+## Vanilla HTML usage
+
+You need three things in the page:
+
+```html
+<!-- 1. CSS in <head> -->
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.7.0/css/style.css" />
+
+<!-- 2. Trigger as the first element in <body> -->
+<div data-mg-preview-access></div>
+
+<!-- 3. Script before </body> as type="module" (the file uses ESM exports) -->
+<script type="module" src="https://assets.undrr.org/static/mangrove/1.7.0/js/preview-access.js"></script>
+```
+
+That is the minimum: with nothing else set, the gate uses the default PIN `5498`, default UNDRR copy, and the contact link points to `undrr.org/contact-us`.
+
+> **Tip:** Place the trigger as the first child of `<body>` so any content above it does not paint before the gate hides it.
+
+### Realistic example
+
+```html
+<div data-mg-preview-access
+     data-mg-preview-pin="5498"
+     data-mg-preview-id="delta-2026-preview"
+     data-mg-preview-eyebrow="DELTA Resilience · Preview"
+     data-mg-preview-title="This page is a preview"
+     data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>
+```
+
+## Data attributes
+
+All attributes go on the trigger element. All optional except the bare `data-mg-preview-access`.
+
+| Attribute | Default | Purpose |
+| --- | --- | --- |
+| `data-mg-preview-access` | — | Presence activates the gate. No value needed. |
+| `data-mg-preview-pin` | `5498` | The PIN that unlocks the page. |
+| `data-mg-preview-id` | `location.pathname` | Scope key for the `sessionStorage` unlock. Set the same id on multiple pages to share an unlock across them. |
+| `data-mg-preview-eyebrow` | `UNDRR · Preview` | Small label above the title. Useful for naming the product. |
+| `data-mg-preview-title` | `Preview access required` | Modal heading. |
+| `data-mg-preview-message` | Generic UNDRR preview copy | Body paragraph explaining what the page is and how to get in. |
+| `data-mg-preview-contact-url` | `https://www.undrr.org/contact-us` | Where the help link goes. |
+| `data-mg-preview-contact-label` | `Need help? Contact UNDRR` | Visible text of the help link. |
+| `data-mg-preview-pin-label` | `Access PIN` | Form label for the PIN input. Override for translation. |
+| `data-mg-preview-submit-label` | `Unlock` | Submit button label. Override for translation. |
+| `data-mg-preview-error-message` | `That PIN is not correct. Please try again.` | Error copy on a wrong PIN. Override for translation. |
+| `data-mg-preview-access-skip-auto-init` | — | Skips this gate during auto-init. Call `mgPreviewAccess([element])` manually when ready. |
+
+## CSS classes
+
+| Class | Element | Purpose |
+| --- | --- | --- |
+| `mg-preview-access--unlocked` | trigger `<div>` | Set on success; releases the gate's CSS rule |
+| `mg-preview-access__overlay` | injected `<div>` | Fixed full-viewport scrim with the modal centred inside |
+| `mg-preview-access__modal` | injected `<div>` | The modal panel |
+| `mg-preview-access__eyebrow` | `<p>` | Small product label above the title |
+| `mg-preview-access__title` | `<h1>` | Modal heading |
+| `mg-preview-access__body` | `<p>` | Modal body copy |
+| `mg-preview-access__form` | `<form>` | Form wrapper |
+| `mg-preview-access__label` | `<label>` | PIN input label |
+| `mg-preview-access__field` | `<div>` | Input and submit row |
+| `mg-preview-access__input` | `<input>` | PIN input |
+| `mg-preview-access__submit` | `<button>` | Submit button |
+| `mg-preview-access__error` | `<p>` | Live region for the wrong-PIN error |
+| `mg-preview-access__contact` | `<p>` | Contact link footer |
+
+## JavaScript API
+
+The component auto-initialises on `DOMContentLoaded` (or immediately if the script loads after the DOM is ready). For dynamic content or manual initialisation:
+
+```js
+import {
+  mgPreviewAccess,
+  mgPreviewAccessDestroy,
+} from 'path/to/preview-access.js';
+
+// Initialise the first [data-mg-preview-access] in the document
+mgPreviewAccess();
+
+// Initialise specific elements
+mgPreviewAccess([myGateElement]);
+
+// Tear down (removes the overlay, restores body siblings, clears init flag)
+mgPreviewAccessDestroy(myGateElement);
+```
+
+The runtime is also exposed as `window.mgPreviewAccess` for plain-script consumers.
+
+## Usage with React
+
+> **Integration note:** This is a vanilla JS, body-level gate, fundamentally a page-level concern rather than a subtree component. The exported `<PreviewAccess>` React component renders a static visual preview of the modal panel for Storybook docs. To activate the real gate from a React app, prefer one of the patterns below.
+
+```jsx
+// Option A: drop the trigger element in your root layout and let the
+// auto-init handle the rest.
+function RootLayout({ children }) {
+  return (
+    <>
+      <div data-mg-preview-access data-mg-preview-pin="5498" />
+      {children}
+    </>
+  );
+}
+```
+
+```jsx
+// Option B: call mgPreviewAccess() yourself in a top-level effect.
+import { useEffect, useRef } from 'react';
+import {
+  mgPreviewAccess,
+  mgPreviewAccessDestroy,
+} from '@undrr/undrr-mangrove/js/preview-access';
+
+function Gate() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const gate = ref.current;
+    if (gate) mgPreviewAccess([gate]);
+    return () => { if (gate) mgPreviewAccessDestroy(gate); };
+  }, []);
+  return <div ref={ref} data-mg-preview-access data-mg-preview-pin="5498" />;
+}
+```
+
+To activate the real gate from the Storybook story, pass `live` to `<PreviewAccess>`. See the **Live demo** story.
+
+## Drupal integration
+
+> **Integration note:** When this lands in the Drupal multidomain platform, the natural shape is a node-level boolean field (for example, `field_preview_mode`), a site-level config setting holding the current PIN, and a Twig fragment that renders the trigger div with both, conditional on the boolean being true. The data-attribute API was shaped to make that template trivial.
+
+## Accessibility
+
+- The overlay renders as `role="dialog"` with `aria-modal="true"`, `aria-labelledby` pointing at the title, and `aria-describedby` pointing at the body
+- Body siblings receive `inert` and `aria-hidden="true"` so focus is trapped in the modal and the rest of the page is hidden from assistive technology
+- The wrong-PIN error uses `role="alert"` and `aria-live="polite"` so the message is announced
+- Focus moves into the PIN input on mount, after `requestAnimationFrame` so layout has settled
+- The submit button passes 4.5:1 contrast against `$mg-color-interactive` across all five themes
+- There is no Escape-to-close. The gate is meant to hold until a PIN is entered
+
+## RTL and internationalisation
+
+The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are set on the document:
+
+- `:lang(ar)` swaps the heading and UI families to `$mg-font-family-arabic-headings`, because Roboto Condensed has no Arabic glyph coverage
+- Body, error, and contact copy swap to `$mg-font-family-arabic-body`
+- All visible copy comes from data attributes, so translations are a content-only change
+
+## Implementation notes
+
+> **Implementation note (for contributors):** Design decisions behind the gate. These choices were intentional — read before "fixing" them.
+
+**CSS-first anti-flash via `:has()`.** The gate hides page content with a CSS rule, not JavaScript. The rule is `body:has([data-mg-preview-access]:not(.mg-preview-access--unlocked)) > *:not(.mg-preview-access__overlay) { visibility: hidden }`. The moment the parser sees the trigger element, the rule applies and the rest of the page is hidden. There is no flash of unstyled content and no race with deferred scripts. The cost is that the trigger should be the first child of `<body>` so any content above it does not paint first. `:has()` is supported in all current evergreen browsers since late 2023.
+
+**`visibility: hidden`, not `display: none`.** Layout is preserved. The page stays in its final shape behind the modal, and on unlock there is no reflow. Side effect: images and iframes still load in the background, so the page is ready to read the moment the gate drops.
+
+**`inert` on body siblings.** While the modal is up, every direct child of `<body>` except the overlay gets `inert`. That gives a focus trap, assistive-technology hiding, and pointer-event blocking in one attribute. No focus-trap library is needed. ARIA 1.2 says `aria-hidden` is redundant when `inert` is set, so `aria-hidden` is intentionally omitted to avoid an axe-flagged "focused element inside aria-hidden ancestor" pattern.
+
+**Session persistence.** Once unlocked, the gate sets `sessionStorage["mg-preview-access:<id>"] = "unlocked"`. The id defaults to `location.pathname` but is overridable via `data-mg-preview-id`, so a single PIN can cover a whole product preview (set the same id on every page in the preview).
+
+**Contact URL allow-list.** The runtime validates `data-mg-preview-contact-url` against an `http:`/`https:`/`mailto:` allow-list before rendering the link. Anything else (for example, `javascript:`) is replaced with the default UNDRR contact page. This is defence-in-depth in case a Drupal template ever interpolates an unsanitised editor field into the attribute.
+
+**Bespoke modal shell.** Mangrove does not yet have a dialog/modal primitive. The styles use Mangrove tokens (`$mg-z-index-modal`, `$mg-color-modal-scrim`, `$mg-color-interactive`, `$mg-spacing-*`, `$mg-font-family-headings`, the Arabic font swap via `:lang(ar)`) but the panel itself is bespoke. When a modal primitive lands in Mangrove, this component should be refactored to consume it.
+
+## Known limitations
+
+- **Single trigger per page.** The script honours one trigger per page (the first match). Multi-zone gating (a preview block inside an otherwise public page) is a different pattern.
+- **No Escape-to-close.** Deliberate. The gate should hold until a PIN is entered. A dismissible variant would be a separate prop.
+- **`:has()` is the entire anti-flash strategy.** If support for an older browser is ever needed, add a one-line inline `<script>` in `<head>` that sets a class on `<html>` and wire the CSS rule to that class as well.
+- **PIN in the DOM.** This is editorial signalling, not access control. Anyone with developer tools can read the PIN and bypass the gate.
+
+## Changelog
+
+- **1.0** — 2026-04-30: Initial release. Vanilla JS and CSS, body-level gate, `sessionStorage`-scoped unlock, RTL and Arabic font swap, `inert`-based focus trap, override-able copy via data attributes.
