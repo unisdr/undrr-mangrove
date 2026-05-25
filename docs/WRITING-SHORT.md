@@ -2,21 +2,21 @@
 
 Use this as a compact, LLM‑friendly summary of the Mangrove Writing standards.
 
-1. Improve UX — simplify flows, clarify actions, reduce friction.
-2. Be truthful — avoid false urgency; state limits clearly; admit uncertainty.
-3. Inclusive language — respect all users; avoid idioms/slang; ensure accessibility.
-4. Context first — surface the most important info at the right moment.
-5. Functional purpose — copy should guide, explain, or prevent errors.
-6. Remove unnecessary words — if design alone works, skip text.
-7. Consistency — same terminology, tone, and style everywhere.
-8. Strong writing basics — active voice, plain language, clarity, rhythm.
-9. Write for two audiences — consumers scan (give them a description + example + props); maintainers read for the “why” (design decisions, edge cases, history). Don’t conflate them in one document.
+1. Improve UX – simplify flows, clarify actions, reduce friction.
+2. Be truthful – avoid false urgency; state limits clearly; admit uncertainty.
+3. Inclusive language – respect all users; avoid idioms/slang; ensure accessibility.
+4. Context first – surface the most important info at the right moment.
+5. Functional purpose – copy should guide, explain, or prevent errors.
+6. Remove unnecessary words – if design alone works, skip text.
+7. Consistency – same terminology, tone, and style everywhere.
+8. Strong writing basics – active voice, plain language, clarity, rhythm.
+9. Write for two audiences – consumers scan (give them a description + example + props); maintainers read for the “why” (design decisions, edge cases, history). Don’t conflate them in one document.
 
 Layer your docs: what it does → how to use it → why it works that way. Keep the “why” at the end or behind a details block.
 
 **Callout labels:** `> **Note:**` (consumer status), `> **Tip:**` (consumer best practice), `> **Integration note:**` (CDN/Drupal/SSR context for consumers), `> **Implementation note (for contributors):**` (internal rationale, maintainers only). Large contributor sections → use an additional blockquote callout or move content to a separate heading.
 
-> “Too much information and no information accomplish the same goal.” — Ibrahim Diallo
+> “Too much information and no information accomplish the same goal.” – Ibrahim Diallo
 
 Also:
 
@@ -29,7 +29,8 @@ Also:
 ## Additions from style guides
 
 - Use direct, plain language; front‑load key info; keep sentences short. (GOV.UK, PlainLanguage.gov)
-- Descriptive link text; avoid “click here.” (GOV.UK)
+- Descriptive link text; avoid “click here.” In tables, link the row’s title rather than adding a trailing “View” column. (GOV.UK)
+- **No em-dashes anywhere.** UN editorial style uses a spaced en-dash ` – ` (`U+2013` with spaces) wherever em-dashes (`—`) would normally appear. Date ranges stay as unspaced en-dashes (`2015–2030`). Hyphens (`-`) are unchanged.
 - Sentence case for UI; keep proper nouns/acronyms capitalized. (Material Design)
 - Calm, actionable errors: what happened, why (if helpful), what to do next. (NN/g)
 - Inclusive language; avoid idioms/slang; meaningful alt text and link text. (Microsoft)
@@ -45,18 +46,18 @@ UN guidance:
 ## References
 
 - [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
-- [Nielsen Norman Group — error messages](https://www.nngroup.com/articles/error-message-guidelines/)
-- [Microsoft — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
-- [Material Design — writing](https://m2.material.io/design/communication/writing.html)
-- [PlainLanguage.gov — guidelines](https://www.plainlanguage.gov/guidelines/)
+- [Nielsen Norman Group – error messages](https://www.nngroup.com/articles/error-message-guidelines/)
+- [Microsoft – inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
+- [Material Design – writing](https://m2.material.io/design/communication/writing.html)
+- [PlainLanguage.gov – guidelines](https://www.plainlanguage.gov/guidelines/)
 - [Mailchimp content style guide](https://styleguide.mailchimp.com/)
 
-Originally inspired by Nick DiLallo’s “This is good Writing — Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
+Originally inspired by Nick DiLallo’s “This is good Writing – Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
 
 The “Write for two audiences” principle is inspired by Ibrahim Diallo’s “[How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)” (2025).
 
 ## Related documentation
 
-- [Full writing guidelines](WRITING.md) — detailed UX writing standards and UN conventions
-- [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
-- [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
+- [Full writing guidelines](WRITING.md) – detailed UX writing standards and UN conventions
+- [Component guide](COMPONENT-GUIDE.md) – step-by-step tutorial for building a component
+- [Review checklist](REVIEW-CHECKLIST.md) – pre-submission component checklist

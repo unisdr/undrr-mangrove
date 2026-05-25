@@ -1,0 +1,141 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { DocCallout } from './components/DocCallout';
+
+<Meta
+  title="Brand/Anti-patterns"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Anti-patterns and pre-publish checklist
+
+<DocCallout variant="warning">
+  <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
+</DocCallout>
+
+Brand identities are sharper when defined in opposition. This page is the unified pre-publish checklist for any UNDRR artifact, plus a short list of anti-patterns that are easy to repeat and worth naming explicitly.
+
+For the positive form of these rules:
+
+- <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo> – photography, colour, illustration, data viz rules
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo> – verbal rules, registers, house conventions
+- <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> – standing rules for generative imagery
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo> – the model behind the threads-and-variables rules
+
+---
+
+## Anti-patterns worth naming
+
+### Sendai stripe as wallpaper
+
+The Sendai diagonal stripe is one of UNDRR's most recognisable visual assets. Using it as wallpaper drains its meaning.
+
+- **Avoid:** the stripe filling backgrounds, repeated across slide masters, used at low opacity behind unrelated content.
+- **Prefer:** the stripe in formal lockup contexts (logo lockups, report covers, social cards) and as a small bridging element where appropriate.
+
+### Theme leakage
+
+When a sub-brand colour appears on a property it does not belong to. Corporate Blue is the core anchor and threads through every layer; sub-brand primaries should not.
+
+- **Avoid:** PreventionWeb teal appearing on undrr.org; MCR2030 purple appearing on a PreventionWeb page; ARISE burgundy appearing in a DELTA context.
+- **Prefer:** sub-brand consistency. The Mangrove `!default` token system enforces this – never hardcode hex values inside component SCSS.
+
+### Conference-photo aesthetic in illustration
+
+The illustrated equivalent of conference rooms – generic boardroom-style isometric scenes, suited figures pointing at charts, decorative globe-and-handshake imagery.
+
+- **Avoid:** AI-generic isometrics, "diverse-team-pointing-at-laptop" scenes, abstract globe-and-network compositions.
+- **Prefer:** illustration grounded in the work itself. Specific places, specific actions, recognisable objects.
+
+### Mixing icon systems within a context
+
+- **Avoid:** OCHA humanitarian icons next to Mangrove UI icons in the same UI control, or Font Awesome icons in any new work.
+- **Prefer:** OCHA icons for DRR concepts (hazards, response themes) and Mangrove for web UI (chevrons, navigation, controls). Never both as decoration in the same row.
+
+### Font Awesome on new properties
+
+The SharePoint Photography & Icons page lists Font Awesome as the web icon font. Mangrove supersedes that.
+
+- **Avoid:** new components or pages introducing Font Awesome.
+- **Prefer:** the Mangrove icon set. See <LinkTo kind="components-icons" story="docs">Icons documentation</LinkTo>.
+
+### Decorative-only Sendai logo
+
+The Sendai Framework logo is institutional, not decorative.
+
+- **Avoid:** placing the Sendai logo without context, on backgrounds that conflict with the inverse-on-dark rule, or alongside unrelated brand elements.
+- **Prefer:** following the SharePoint Logos page rule – Sendai logo on official publications and online sites, with sub-brands appearing above the colour stripe to separate from the overall concept.
+
+### Campaign without sub-brand thread
+
+A microsite that uses a Sendai-style stripe and a UNDRR-blue colour, but adopts a typeface and layout system that breaks from Mangrove conventions – reads as an unrelated agency that licensed the logo.
+
+- **Avoid:** campaign sites built without inheriting the parent sub-brand's typography, spacing, or component vocabulary.
+- **Prefer:** the campaign-tier rule – evergreen identity locked, edition-specific accent layered on top. See <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>.
+
+### Sub-brand without UN-family thread
+
+A sub-brand that has gone so far in differentiating that it no longer reads as UN-family – different typography, no UN logo lockup, no Sendai stripe.
+
+- **Avoid:** stripping institutional anchors in pursuit of differentiation.
+- **Prefer:** flexing the sub-brand variables (interactive colours, accents, hero treatment) while keeping the locked thread (Roboto / Roboto Condensed, sentence case, Sendai stripe in lockups, UN logo precedence).
+
+---
+
+## Unified pre-publish checklist
+
+Run any new artifact (page, illustration, photo, copy, prompt output) through this list before publishing. Grouped by stakes.
+
+### Must hold (institutional risk – do not publish if any fails)
+
+- [ ] All photos credited (`SharePoint Photography & Icons` rule)
+- [ ] No gendered or non-inclusive language (see <LinkTo kind="brand-written-voice" story="docs">written voice</LinkTo>)
+- [ ] Layered-identity thread to the layer above is intact (see <LinkTo kind="brand-layered-identity" story="docs">layered identity</LinkTo>)
+- [ ] No conference photography (or conference-aesthetic illustration)
+- [ ] No disaster tourism (rubble and devastation as dominant frame; helpless figures)
+- [ ] No empty optimism (hope without evidence)
+- [ ] If AI-generated: all 12 <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo> standing rules pass (no photoreal humans, no children, no rendered text, named country, etc.)
+- [ ] If AI-generated and people-inclusive: at least one disabled participant as a peer, not a recipient
+
+### Should hold (brand drift)
+
+- [ ] No decorative-only stock; people are named, in their context
+- [ ] No generic blue-NGO aesthetic; UNDRR-specific signals visible
+- [ ] No theme leakage; sub-brand colours stay in their lane
+- [ ] No marketing-flavoured taglines
+- [ ] No disaster-tourism prose (adjective-led drama instead of named facts)
+- [ ] No UN jargon walls; plain language
+- [ ] No institutional passive ("it has been determined that")
+- [ ] Authoritative register holds even in Warm / Hopeful / Diplomatic / Time-sensitive copy
+
+### Craft
+
+- [ ] No Sendai stripe wallpaper; used in lockup contexts only
+- [ ] No mixed icon systems in a single control row
+- [ ] No Font Awesome on new work
+- [ ] No "click here" / "read more" link text; descriptive link text only. In tables, link the row's title rather than adding a trailing "View" or "More" column
+- [ ] British English (Oxford spelling) on external prose; US English in code identifiers
+- [ ] No em-dashes anywhere. Spaced en-dash ` – ` (U+2013, with surrounding spaces) wherever an em-dash would conventionally appear. Date and number ranges remain unspaced en-dashes (`2015–2030`)
+- [ ] Sentence case for headings, titles, navigation, buttons
+
+If a **Must hold** check fails, **do not publish.** Escalate to UNDRR Communications (`undrrcomms@un.org`).
+
+---
+
+## Related
+
+- <LinkTo kind="brand-brand-guidelines" story="docs">Brand guidelines</LinkTo>
+- <LinkTo kind="brand-layered-identity" story="docs">Layered identity</LinkTo>
+- <LinkTo kind="brand-visual-voice" story="docs">Visual voice</LinkTo>
+- <LinkTo kind="brand-written-voice" story="docs">Written voice</LinkTo>
+- <LinkTo kind="brand-ai-imagery-policy" story="docs">AI imagery policy</LinkTo>
+- <LinkTo kind="brand-audience-mapping" story="docs">Audience mapping</LinkTo>
+
+---
+
+Last updated: 18 May 2026

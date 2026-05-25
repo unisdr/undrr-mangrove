@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import { StorybookNavCard } from './components/StorybookNavCard';
+import { DocCallout } from './components/DocCallout';
 
 <Meta
   title="Brand/About this guide"
@@ -14,7 +15,11 @@ import { StorybookNavCard } from './components/StorybookNavCard';
 
 # UNDRR web style guide
 
-Colors, fonts, and components used across UNDRR websites.
+<DocCallout variant="warning">
+  <strong>Prototype guidance, under review (May 2026).</strong> The Brand section is a working draft pending UNDRR Communications confirmation. Treat its claims as provisional and contribute corrections via <a href="https://github.com/unisdr/undrr-mangrove/issues">a GitHub issue</a> or <code>undrrcomms@un.org</code>.
+</DocCallout>
+
+Colours, fonts, and components used across UNDRR websites.
 
 ---
 
@@ -28,7 +33,7 @@ For content editors, designers, and partners who work with UNDRR web properties.
 ## Choose your property
 
 {/* prettier-ignore */}
-Each UNDRR web property has its own visual identity. Click a card to see that property's colors, fonts, and component styles on the <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> page.
+Each UNDRR web property has its own visual identity. Click a card to see that property's colours, fonts, and component styles on the <LinkTo kind="brand-brand-identity" story="docs">Brand identity</LinkTo> page.
 
 <div
   style={{
@@ -41,36 +46,43 @@ Each UNDRR web property has its own visual identity. Click a card to see that pr
     title="UNDRR"
     summary="undrr.org"
     theme="Global UNDRR Theme"
-    imgback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23004f91' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='32' font-family='sans-serif' text-anchor='middle'%3EUNDRR%3C/text%3E%3C/svg%3E"
-    imgalt="UNDRR primary blue"
+    imgback="/img/brand-guides/undrr.svg"
+    imgalt="UNDRR brand card"
   />
   <StorybookNavCard
     title="PreventionWeb"
     summary="preventionweb.net"
     theme="PreventionWeb Theme"
-    imgback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%230a6969' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='24' font-family='sans-serif' text-anchor='middle'%3EPreventionWeb%3C/text%3E%3C/svg%3E"
-    imgalt="PreventionWeb primary teal"
+    imgback="/img/brand-guides/preventionweb.svg"
+    imgalt="PreventionWeb brand card"
   />
   <StorybookNavCard
     title="MCR2030"
     summary="mcr2030.undrr.org"
     theme="MCR2030 Theme"
-    imgback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23591a61' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='32' font-family='sans-serif' text-anchor='middle'%3EMCR2030%3C/text%3E%3C/svg%3E"
-    imgalt="MCR2030 primary purple"
+    imgback="/img/brand-guides/mcr2030.svg"
+    imgalt="MCR2030 brand card"
   />
   <StorybookNavCard
     title="IRP"
     summary="International Recovery Platform"
     theme="IRP Theme"
-    imgback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%230f78bf' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='32' font-family='sans-serif' text-anchor='middle'%3EIRP%3C/text%3E%3C/svg%3E"
-    imgalt="IRP primary bright blue"
+    imgback="/img/brand-guides/irp.svg"
+    imgalt="IRP brand card"
   />
   <StorybookNavCard
     title="DELTA Resilience"
     summary="deltaresilience.org"
     theme="DELTA Resilience Theme"
-    imgback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23132e48' width='400' height='200'/%3E%3Ctext x='200' y='110' fill='white' font-size='24' font-family='sans-serif' text-anchor='middle'%3EDELTA%3C/text%3E%3C/svg%3E"
-    imgalt="DELTA Resilience primary dark navy"
+    imgback="/img/brand-guides/delta.svg"
+    imgalt="DELTA Resilience brand card"
+  />
+  <StorybookNavCard
+    title="ARISE"
+    summary="ariseglobalnetwork.org"
+    theme="ARISE Theme"
+    imgback="/img/brand-guides/arise.svg"
+    imgalt="ARISE brand card"
   />
 </div>
 
@@ -88,10 +100,10 @@ the most accurate preview.
 
 {/* prettier-ignore */}
 - <LinkTo kind="getting-started-getting-started-guide" story="docs">Getting started guide</LinkTo> (for developers)
-- <LinkTo kind="design-decisions-colors" story="docs">Full color reference</LinkTo> (all tokens, developer-oriented)
+- <LinkTo kind="design-decisions-colors" story="docs">Full colour reference</LinkTo> (all tokens, developer-oriented)
 - <LinkTo kind="design-decisions-typography" story="docs">Full typography reference</LinkTo>
 - [Report an issue](https://github.com/unisdr/undrr-mangrove/issues)
 
 ---
 
-Last updated: 11 April 2026
+Last updated: 18 May 2026
