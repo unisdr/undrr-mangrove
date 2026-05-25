@@ -70,7 +70,7 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to display the search timer. */
     showSearchTimer: PropTypes.bool,
     /**
-     * Facets layout — visibility and placement.
+     * Facets layout: visibility and placement.
      * `false` hides facets entirely; `'sidebar'` (default) renders them in
      * the right-hand sidebar; `'horizontal'` renders them as a horizontal
      * strip above the results region.
@@ -95,7 +95,7 @@ SyndicationSearchWidget.propTypes = {
      * input should be rendered (via React portal). Lets a consuming page
      * place a "hero" search input in a banner region while results render
      * where the widget is mounted. The same React tree spans the portal,
-     * so the input, facets, and results all share `SearchContext` — no
+     * so the input, facets, and results all share `SearchContext`, with no
      * separate component, no URL-hash bridge needed for the same-page
      * case. If the target element is not present at mount time the
      * widget falls back to rendering the input in-place and logs a
@@ -230,7 +230,7 @@ function SyndicationSearchWidgetInner() {
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
   // Resolve external search-input target (AC3: search input rendered in a
-  // separate DOM region — typically a hero/banner region while results
+  // separate DOM region, typically a hero/banner region while results
   // render lower on the page). Same pattern as facetsTarget.
   const [searchTargetEl, setSearchTargetEl] = useState(null);
   useEffect(() => {
@@ -261,14 +261,14 @@ function SyndicationSearchWidgetInner() {
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}
     >
-      {/* Loading progress bar — only during actual fetch or transition */}
+      {/* Loading progress bar: only during actual fetch or transition */}
       {(isLoading || isPending) && (
         <div className="mg-search__progress" aria-hidden="true">
           <div className="mg-search__progress-bar" />
         </div>
       )}
 
-      {/* Search form — rendered in-widget unless searchTarget is portaling
+      {/* Search form: rendered in-widget unless searchTarget is portaling
           it elsewhere on the page. */}
       {showSearchBox && !searchPortaled && (
         <SearchForm
@@ -280,7 +280,7 @@ function SyndicationSearchWidgetInner() {
         />
       )}
 
-      {/* Horizontal facet strip — only when facets layout is 'horizontal'
+      {/* Horizontal facet strip: only when facets layout is 'horizontal'
           AND no external target is taking the facets via portal. Renders
           the same FacetsSidebar contents but in a row above results; on
           small viewports the strip is hidden and the mobile filter drawer
@@ -316,7 +316,7 @@ function SyndicationSearchWidgetInner() {
           </Suspense>
         </main>
 
-        {/* Facets sidebar — desktop only, and only when not portaled out. */}
+        {/* Facets sidebar: desktop only, and only when not portaled out. */}
         {facetsLayout === 'sidebar' && !facetsPortaled && (
           <aside
             className="mg-search__sidebar"
@@ -327,7 +327,7 @@ function SyndicationSearchWidgetInner() {
         )}
       </div>
 
-      {/* External search-input portal — when searchTarget resolves to a
+      {/* External search-input portal: when searchTarget resolves to a
           DOM node, render the SearchForm there instead of inside the
           widget. The React tree spans the portal so SearchContext (and
           therefore live input state) still flows. */}
@@ -345,7 +345,7 @@ function SyndicationSearchWidgetInner() {
           searchTargetEl
         )}
 
-      {/* External facets portal — when facetsTarget resolves to a DOM node,
+      {/* External facets portal: when facetsTarget resolves to a DOM node,
           render the facets there instead of inside the widget. The React
           tree spans the portal so SearchContext still flows. */}
       {facetsPortaled
@@ -359,7 +359,7 @@ function SyndicationSearchWidgetInner() {
           facetsTargetEl
         )}
 
-      {/* Mobile filter drawer — used by sidebar and horizontal layouts on
+      {/* Mobile filter drawer: used by sidebar and horizontal layouts on
           small viewports. Suppressed when facets are portaled to an
           external region (the host page controls placement there). */}
       {facetsActive && !facetsPortaled && (

@@ -76,14 +76,14 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
     query: mainQuery,
   };
 
-  // Skip highlights in card mode when summary is hidden — card teasers use
+  // Skip highlights in card mode when summary is hidden: card teasers use
   // pre-rendered HTML and don't show body text, so highlight fragments are
   // wasted response payload.
   if (!(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
 
-  // Skip aggregations when facets are hidden — avoids unnecessary server work
+  // Skip aggregations when facets are hidden: avoids unnecessary server work
   // and response payload for syndication embeds that only show result cards.
   if (facetsActive) {
     result.aggs = buildAggregations(facetFields, facetCountToShow);
@@ -151,7 +151,7 @@ function buildBaseFilters(config) {
 
   // Filter by published status for nodes.
   // Taxonomy terms don't have a `status` field in the index (it's node-only),
-  // so we must also allow documents where status doesn't exist — otherwise
+  // so we must also allow documents where status doesn't exist, otherwise
   // all taxonomy term results would be silently excluded.
   filters.push({
     bool: {
