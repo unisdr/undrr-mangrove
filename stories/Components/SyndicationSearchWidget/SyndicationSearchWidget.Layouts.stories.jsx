@@ -16,7 +16,7 @@ export default {
 };
 
 /**
- * Facets hidden — search + results only.
+ * Facets hidden: search + results only.
  */
 export const HiddenFacets = {
   args: {
@@ -37,7 +37,7 @@ config: {
 }
 \`\`\`
 
-The search still works with all filters via URL hash — users just can't see or modify them through the UI.
+The search still works with all filters via URL hash, but users just can't see or modify them through the UI.
 
 Legacy \`showFacets: false\` continues to work as a backwards-compatible alias for \`facets: false\`.
         `,
@@ -117,11 +117,11 @@ config: {
 }
 \`\`\`
 
-The widget's React tree spans the portal so \`SearchContext\` still flows — typing in the portaled input updates the deferred query and re-runs the search live, no URL-hash dance required. Drupal sites pass the target via \`data-search-target\`.
+The widget's React tree spans the portal so \`SearchContext\` still flows: typing in the portaled input updates the deferred query and re-runs the search live, no URL-hash dance required. Drupal sites pass the target via \`data-search-target\`.
 
 If the target element is not present at mount time the widget falls back to rendering the input in-place and logs a single console warning.
 
-For **cross-page** hero patterns (input on a landing page, results on \`/search\`), use a plain HTML form posting to the results URL with a \`#query=\` fragment instead — \`searchTarget\` only works within one page.
+For **cross-page** hero patterns (input on a landing page, results on \`/search\`), use a plain HTML form posting to the results URL with a \`#query=\` fragment instead, because \`searchTarget\` only works within one page.
         `,
       },
     },
@@ -176,7 +176,7 @@ config: {
 }
 \`\`\`
 
-The widget's React tree spans the portal so search context still flows — the facets and results stay in sync without any extra wiring. Drupal sites can pass the target via \`data-facets-target\`.
+The widget's React tree spans the portal so search context still flows: the facets and results stay in sync without any extra wiring. Drupal sites can pass the target via \`data-facets-target\`.
 
 If the target element is not present at mount time the widget falls back to the in-widget \`facets\` layout and logs a single console warning.
         `,

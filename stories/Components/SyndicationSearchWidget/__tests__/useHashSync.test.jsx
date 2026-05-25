@@ -22,7 +22,7 @@ function renderWithHashSync(config = {}, enabled = true) {
   );
 }
 
-describe('useHashSync — URL parameter migration', () => {
+describe('useHashSync: URL parameter migration', () => {
   let replaceStateSpy;
 
   beforeEach(() => {

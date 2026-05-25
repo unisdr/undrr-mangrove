@@ -101,7 +101,7 @@ export function FacetSelect({
               const vocabId = bucketKey.startsWith('vid:') ? bucketKey.slice(4) : bucketKey;
               return allowedTypes.vocabularies.includes(vocabId);
             }
-            // No vocabulary restriction configured — show all
+            // No vocabulary restriction configured: show all
             return true;
           }
 

@@ -251,7 +251,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-// Horizontal facets strip — used when config.facets === 'horizontal'.
+// Horizontal facets strip: used when config.facets === 'horizontal'.
 // Renders the same FacetsSidebar contents as a row above results. On
 // narrow viewports the strip is hidden and the mobile filter drawer
 // handles facet selection (same pattern as the sidebar layout).
@@ -566,7 +566,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 }
 
-// Card skeleton — layout is controlled by mg-grid classes applied in JSX.
+// Card skeleton: layout is controlled by mg-grid classes applied in JSX.
 // Reset the flex declarations inherited from .mg-search__skeleton so they
 // don't fight mg-grid's own flex fallback / CSS grid (@supports) path.
 .mg-search__skeleton--card {
@@ -647,7 +647,7 @@ $search-input-padding-x: $mg-spacing-250;
   gap: $mg-spacing-100;
 }
 
-// Sort Options — rendered as a dropdown to match the facet selects.
+// Sort Options: rendered as a dropdown to match the facet selects.
 .mg-search__sort {
   padding: 0;
   margin: 0;
@@ -723,7 +723,7 @@ $search-input-padding-x: $mg-spacing-250;
   margin-bottom: $mg-spacing-25;
 }
 
-// Content type badge — uses the system-level .mg-tag atom.
+// Content type badge: uses the system-level .mg-tag atom.
 // No additional styles needed; the class is applied in ResultItem.jsx.
 
 // Site name label in search results
@@ -989,7 +989,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__backdrop {
   position: fixed;
   inset: 0;
-  z-index: $mg-z-index-modal - 1; // portaled select backdrop — uses modal layer to clear all page chrome
+  z-index: $mg-z-index-modal - 1; // portaled select backdrop: uses modal layer to clear all page chrome
   background: transparent;
   cursor: default;
 }
@@ -999,7 +999,7 @@ $search-input-padding-x: $mg-spacing-250;
   top: 100%;
   left: 0;
   right: 0;
-  z-index: $mg-z-index-modal; // portaled select dropdown — uses modal layer to clear all page chrome
+  z-index: $mg-z-index-modal; // portaled select dropdown: uses modal layer to clear all page chrome
   background: #fff;
   border: 1px solid $search-primary;
   border-top: none;

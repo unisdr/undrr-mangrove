@@ -1,6 +1,6 @@
 /**
  * @file SyndicationSearchWidget.stories.jsx
- * @description Quickstart stories for the SyndicationSearchWidget — the
+ * @description Quickstart stories for the SyndicationSearchWidget: the
  * default render and a couple of common starting configurations. Variant
  * stories live in sibling files (Layouts, Display modes, Filters,
  * Integrations, Toggles) and are grouped under the same Storybook
@@ -17,7 +17,7 @@ export default {
 };
 
 /**
- * Default story — the widget with all features enabled.
+ * Default story: the widget with all features enabled.
  */
 export const Default = {
   args: {
@@ -73,7 +73,7 @@ Useful for:
 };
 
 /**
- * Minimal configuration — just the search box and results.
+ * Minimal configuration: just the search box and results.
  */
 export const Minimal = {
   args: {

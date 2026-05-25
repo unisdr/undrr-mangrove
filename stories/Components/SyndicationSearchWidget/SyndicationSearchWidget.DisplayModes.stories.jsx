@@ -15,7 +15,7 @@ export default {
 };
 
 /**
- * Card display mode — vertical cards in a grid.
+ * Card display mode: vertical cards in a grid.
  */
 export const CardDisplay = {
   args: {
@@ -52,7 +52,7 @@ automatically (1 col mobile, multi-col desktop).
 };
 
 /**
- * Card book display mode — book cover style cards.
+ * Card book display mode: book cover style cards.
  */
 export const CardBookDisplay = {
   args: {
@@ -84,7 +84,7 @@ Useful for publication-heavy search results.
 };
 
 /**
- * Hidden teaser fields — toggle visibility of specific teaser fields.
+ * Hidden teaser fields: toggle visibility of specific teaser fields.
  */
 export const HiddenTeaserFields = {
   args: {
@@ -123,7 +123,7 @@ visibleTeaserFields: {
 }
 \`\`\`
 
-Uses CSS modifier classes — zero JS overhead, \`display: none\` removes from layout and accessibility tree.
+Uses CSS modifier classes: zero JS overhead, \`display: none\` removes from layout and accessibility tree.
         `,
       },
     },

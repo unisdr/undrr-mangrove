@@ -1,6 +1,6 @@
 /**
  * @file SyndicationSearchWidget.Toggles.stories.jsx
- * @description Boolean visibility toggles — variants that exercise the
+ * @description Boolean visibility toggles: variants that exercise the
  * `show*` config flags (pager, debug metrics).
  */
 
@@ -70,9 +70,9 @@ config: {
 \`\`\`
 
 Shows for each result:
-- **Score** — Elasticsearch relevance score
-- **Int** — Interestingness value (editorial weight)
-- **Long** — Longevity value (content freshness decay)
+- **Score**: Elasticsearch relevance score
+- **Int**: Interestingness value (editorial weight)
+- **Long**: Longevity value (content freshness decay)
 
 Useful for debugging search ranking and understanding why certain results appear higher.
         `,

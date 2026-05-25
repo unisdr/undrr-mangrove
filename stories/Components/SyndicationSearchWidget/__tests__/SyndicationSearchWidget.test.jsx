@@ -113,7 +113,7 @@ describe('SyndicationSearchWidget', () => {
       ).not.toBeInTheDocument();
     });
 
-    // facets layout — new union prop
+    // facets layout: new union prop
     it('renders sidebar when facets is "sidebar"', () => {
       render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
       expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
@@ -142,7 +142,7 @@ describe('SyndicationSearchWidget', () => {
       expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
     });
 
-    // facetsTarget — AC2: portal facets to an external DOM region
+    // facetsTarget, AC2: portal facets to an external DOM region
     it('renders facets into facetsTarget element via portal', () => {
       const target = document.createElement('div');
       target.id = 'external-facets';
@@ -205,7 +205,7 @@ describe('SyndicationSearchWidget', () => {
       }
     });
 
-    // searchTarget — search input portal (replaces the deleted standalone bar)
+    // searchTarget: search input portal (replaces the deleted standalone bar)
     it('renders the search input into searchTarget element via portal', () => {
       const target = document.createElement('div');
       target.id = 'external-search';
