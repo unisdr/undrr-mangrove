@@ -770,7 +770,7 @@ npm run build</code></pre>
             </a>
           </div>
           <a title="My account" href="/user">
-            <i class="mg-icon mg-icon-user" aria-hidden="true"></i>
+            <span class="mg-icon mg-icon-user" aria-hidden="true"></span>
             <span class="mg-page-header__label">My account</span>
           </a>
           <div class="mg-page-header__block mg-page-header__block--language">

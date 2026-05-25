@@ -30,7 +30,6 @@
       color: $mg-color-text;
       font-weight: 600;
       letter-spacing: 0.03em;
-      transition: opacity 0.2s ease;
 
       &:hover {
         color: $mg-color-text;
@@ -125,5 +124,11 @@
 :lang(ar) {
   .mg-breadcrumb {
     font-family: $mg-font-family-arabic-body;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mg-breadcrumb li a {
+    transition: opacity 0.2s ease;
   }
 }
