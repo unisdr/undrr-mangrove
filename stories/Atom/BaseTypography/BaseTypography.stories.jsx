@@ -2,7 +2,7 @@ import { Heading as HeadingComponent } from '../Typography/Heading/Heading';
 import { Abbreviation as AbbrComponent } from './Abbr/Abbr';
 import { Blockquote } from './Blockquote/Blockquote';
 import { Cite as CiteComponent } from './Cite/Cite';
-import { Code as CodeComponent } from './Code/Code';
+import { Code as CodeComponent } from './Code/Code'; // inline <code> only — see Components/CodeBlock for full block component
 import { Hr as HrComponent } from './Hr/Hr';
 import { Mark as MarkComponent } from './Mark/Mark';
 import { P as PComponent } from './Paragraph/Paragraph';
@@ -181,78 +181,6 @@ const getCaptionForLocaleCode = locale => {
         detail4: 'String',
         detail5:
           'object contains the length of the string. It can also serve as a character counter.',
-      };
-  }
-};
-
-const getCaptionForLocaleCodeBlock = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {
-        blockCode: `// React component example
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return engText;
-    case 'arabic':
-      const arabicText = {
-        blockCode: `// مثال مكون React
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return arabicText;
-    case 'japanese':
-      const japaneseText = {
-        blockCode: `// Reactコンポーネントの例
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
-      };
-      return japaneseText;
-    default:
-      return {
-        blockCode: `// React component example
-import React from 'react';
-
-const MyComponent = ({ title, children }) => {
-  return (
-    <div className="my-component">
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
-
-export default MyComponent;`,
       };
   }
 };
@@ -613,11 +541,9 @@ export const TypographySmall = Template(
   SmallComponent,
   getCaptionForLocaleSmall
 );
+
 export const TypographyCode = Template(CodeComponent, getCaptionForLocaleCode);
-export const TypographyCodeBlock = Template(
-  CodeComponent,
-  getCaptionForLocaleCodeBlock
-);
+
 export const TypographyAbbreviation = Template(
   AbbrComponent,
   getCaptionForLocaleAbbr
@@ -655,6 +581,19 @@ export const TypographyDetails = Template(
   DetailsComponent,
   getLocaleForDetails
 );
+
+const DetailsTagBaseline = ({ summary, details }) => (
+  <details>
+    <summary>{summary}</summary>
+    <p>{details}</p>
+  </details>
+);
+
+export const TypographyDetailsBaseline = Template(
+  DetailsTagBaseline,
+  getLocaleForDetails
+);
+
 export const TypographyFigcaption = Template(
   FigcaptionComponent,
   getLocaleForFigcaption

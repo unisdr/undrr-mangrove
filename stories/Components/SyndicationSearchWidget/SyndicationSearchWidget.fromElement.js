@@ -51,7 +51,7 @@ export default function syndicationSearchWidgetFromElement(container) {
   // enableHashSync supports a tri-state: boolean true/false, or the string
   // 'auto' (default), which lets the Drupal wrapper auto-disable hash sync
   // when more than one widget is mounted on the same page. Collapsing to a
-  // bool would lose that signal — preserve 'auto' as the literal string.
+  // bool would lose that signal, so preserve 'auto' as the literal string.
   // The useHashSync hook recognises both boolean true and the string 'true',
   // so non-'auto' values can safely collapse to booleans.
   if (dataset.enableHashSync !== undefined) {

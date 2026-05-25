@@ -1,6 +1,6 @@
 /**
  * @file SyndicationSearchWidget.Integrations.stories.jsx
- * @description Integration / syndication examples — patterns for embedding
+ * @description Integration / syndication examples: patterns for embedding
  * the widget on landing pages and other UNDRR properties: taxonomy term
  * results, custom Elasticsearch endpoints, and the no-chrome syndicated
  * publication / card layouts used as content blocks.
@@ -17,7 +17,7 @@ export default {
 };
 
 /**
- * Taxonomy term results — mixed node and term results.
+ * Taxonomy term results: mixed node and term results.
  */
 export const TaxonomyTermResults = {
   args: {
@@ -47,7 +47,7 @@ Taxonomy term results differ from node results:
 };
 
 /**
- * Custom endpoint — point at a different Elasticsearch proxy.
+ * Custom endpoint: point at a different Elasticsearch proxy.
  */
 export const CustomEndpoint = {
   args: {
@@ -98,7 +98,7 @@ If no \`searchEndpoint\` is provided, the widget uses \`https://www.undrr.org/se
 };
 
 /**
- * Syndicated publication books — book cover cards without search UI.
+ * Syndicated publication books: book cover cards without search UI.
  *
  * Embeds recent publications as book-cover cards. Useful for a
  * "Latest publications" rail on any UNDRR property.
@@ -148,10 +148,10 @@ Any UNDRR property can embed this to show the latest publications without buildi
 };
 
 /**
- * Syndicated cards — hardwired topic query, no search UI.
+ * Syndicated cards: hardwired topic query, no search UI.
  *
  * Demonstrates embedding a fixed topic query as a content block.
- * No search box, no facets, no pager — just cards for a specific
+ * No search box, no facets, no pager, just cards for a specific
  * subject like "early warning" or "rainfall". Use this pattern on
  * landing pages to surface relevant content without exposing search.
  * Adjust `resultsPerPage` and `gridColumns` for different card counts.
@@ -214,9 +214,9 @@ config: {
 }
 \`\`\`
 
-The key is \`defaultQuery\` — it seeds the search with a topic so the widget loads results immediately without user interaction. Combined with hidden search UI, the result is a static-looking content block that's actually live.
+The key is \`defaultQuery\`: it seeds the search with a topic so the widget loads results immediately without user interaction. Combined with hidden search UI, the result is a static-looking content block that's actually live.
 
-\`requireImage: true\` adds a \`has_image:true\` filter to the Elasticsearch query, so only results with an image are returned. \`visibleTeaserFields\` controls which card fields are visible — here the content type badge, publication type, summary text, site name, and organization are all hidden for a clean card showing just image, title, and date. Toggle any field to \`true\`/\`false\` in Storybook controls to experiment.
+\`requireImage: true\` adds a \`has_image:true\` filter to the Elasticsearch query, so only results with an image are returned. \`visibleTeaserFields\` controls which card fields are visible: here the content type badge, publication type, summary text, site name, and organization are all hidden for a clean card showing just image, title, and date. Toggle any field to \`true\`/\`false\` in Storybook controls to experiment.
 
 **Typical uses:**
 - "Latest on early warning" rail on a landing page

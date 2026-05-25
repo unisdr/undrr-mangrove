@@ -306,8 +306,8 @@ export default {
 
   // --- Typography ---
   'components-typography': {
-    description: 'Base typography styles applied to standard HTML heading and body elements. No extra classes needed.',
-    cssClasses: [],
+    description: 'Base typography styles applied to standard HTML heading and body elements. Use `mg-details` on a `<details>` element to apply Mangrove styled disclosure.',
+    cssClasses: ['mg-details'],
     examples: [
       {
         name: 'Heading hierarchy',
@@ -320,6 +320,13 @@ export default {
   <h6>Heading level 6</h6>
   <p>Body text uses the base font size. Mangrove applies a consistent type scale across breakpoints.</p>
 </div>`,
+      },
+      {
+        name: 'Details disclosure',
+        html: `<details class="mg-details">
+  <summary>The Sendai Framework</summary>
+  <p>The Sendai Framework is the global roadmap for reducing human and economic loss as a direct result of disasters.</p>
+</details>`,
       },
     ],
   },
@@ -457,6 +464,49 @@ export default {
 
   // --- Highlight box (auto-rendered) ---
   'components-highlightbox': { description: 'Highlighted content box. Tones: default, primary, secondary. Layouts: centered, float-start, float-end. Supports embedded video.' },
+
+  // --- CodeBlock ---
+  'components-codeblock': {
+    description: `Formatted source code display. Two rendering paths share the same CSS:
+
+VANILLA HTML (Drupal pages): Use \`<pre><code>\` directly. Prism.js (loaded globally) tokenises the code and emits \`.token.*\` span elements — Mangrove's \`code.scss\` styles those classes. Add a \`data-language="Bash"\` attribute on \`<pre>\` for a language badge. Wrap in \`<figure class="mg-code-block"><figcaption>filename</figcaption>…</figure>\` for a filename header bar.
+
+REACT (Storybook / JS apps): Use the \`CodeBlock\` component. Props: \`code\` (required string), \`language\` ("bash" | "javascript" | "jsx" — enables react-syntax-highlighter/PrismLight which emits the same \`.token.*\` classes), \`filename\` (string — adds the figure/figcaption wrapper), \`lineNumbers\` (boolean — gutter line numbers, requires \`language\`).
+
+IMPORTANT — token classes: \`.token.keyword\`, \`.token.string\`, \`.token.tag\` etc. are NOT Mangrove BEM classes. They are emitted by Prism.js (and react-syntax-highlighter under the hood). Mangrove owns the \`code.scss\` rules that colour them; the class names themselves are Prism's API. Do not rename or prefix them with \`mg-\`.
+
+For inline \`<code>\` snippets in prose, use the bare HTML element — the global \`code.scss\` styles it automatically. The CodeBlock component is only for block-level code display.`,
+    cssClasses: [
+      // Mangrove-defined classes:
+      'mg-code-block',      // <figure> wrapper with filename header
+      'mg-code--block',     // standalone block variant (e.g. ShareButtons URL display)
+      // Prism.js token classes (styled by Mangrove, emitted by Prism/react-syntax-highlighter):
+      // .token.comment .token.keyword .token.string .token.number .token.function
+      // .token.class-name .token.tag .token.attr-name .token.attr-value
+      // .token.operator .token.punctuation .token.boolean
+    ],
+    examples: [
+      {
+        name: 'Plain block',
+        html: `<pre><code>npm install @undrr/undrr-mangrove</code></pre>`,
+      },
+      {
+        name: 'With language badge (Prism.js tokenises on page load)',
+        html: `<pre data-language="Bash"><code class="language-bash">#!/bin/bash
+npm ci --production
+npm run build</code></pre>`,
+      },
+      {
+        name: 'With filename header',
+        html: `<figure class="mg-code-block">
+  <figcaption>deploy.sh</figcaption>
+  <pre data-language="Bash"><code class="language-bash">#!/bin/bash
+npm ci --production
+npm run build</code></pre>
+</figure>`,
+      },
+    ],
+  },
 
   // --- Quote highlight (auto-rendered) ---
   'components-quotehighlight': { description: 'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.' },

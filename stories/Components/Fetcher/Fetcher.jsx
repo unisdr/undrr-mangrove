@@ -32,6 +32,12 @@ export const generateQueryParams = params => {
  * response to a render prop. Supports optional query parameters and basic
  * authentication credentials.
  *
+ * @deprecated since v1.7.x — will be removed in v1.8. The render-prop fetching
+ * pattern has been superseded by ecosystem libraries with caching, retries, and
+ * suspense integration. New code should use [react-query](https://tanstack.com/query),
+ * [SWR](https://swr.vercel.app/), or server-side data loading. See the removal
+ * tracker: https://github.com/unisdr/undrr-mangrove/issues/1011
+ *
  * @param {Object} props
  * @param {string} props.api              API endpoint URL to fetch data from.
  * @param {Function} props.render         Render prop receiving { isLoading, data }.
