@@ -114,7 +114,7 @@ describe('ResultItem', () => {
 
     const wrapper = screen.getByRole('article');
     const inner = wrapper.querySelector('[class*="mg-card"]');
-    // Original teaser has hc classes — should remain
+    // Original teaser has hc classes, should remain
     expect(inner.className).toContain('mg-card__hc');
     expect(inner.className).toContain('mg-card-book__hc');
   });
