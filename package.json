@@ -68,7 +68,7 @@
     "@babel/preset-env": "7.29.7",
     "@babel/preset-react": "7.29.7",
     "@babel/preset-typescript": "7.29.7",
-    "@chromatic-com/storybook": "5.1.2",
+    "@chromatic-com/storybook": "5.2.1",
     "@eslint/eslintrc": "3.3.5",
     "@eslint/js": "10.0.1",
     "@storybook/addon-a11y": "^10.3.6",
@@ -128,7 +128,7 @@
     "sass": "^1.99.0",
     "sass-loader": "16.0.8",
     "storybook": "^10.3.6",
-    "storybook-addon-rtl": "3.0.1",
+    "storybook-addon-rtl": "3.0.2",
     "storybook-design-token": "^5.0.0",
     "style-loader": "4.0.0",
     "stylelint": "~17.12.0",
@@ -190,5 +190,5 @@
     "type": "git",
     "url": "https://github.com/unisdr/undrr-mangrove.git"
   },
-  "packageManager": "yarn@4.14.1"
+  "packageManager": "yarn@4.15.0"
 }
