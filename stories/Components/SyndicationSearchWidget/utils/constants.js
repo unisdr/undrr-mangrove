@@ -407,12 +407,12 @@ export const DEFAULT_CONFIG = {
   gridColumns: null, // Grid columns for card modes (2-6). null = use resultsPerPage.
 
   // Teaser field visibility
-  visibleTeaserFields: null, // {image: false, date: false, ...} — null = all visible
+  visibleTeaserFields: null, // {image: false, date: false, ...}: null = all visible
 
-  // Require image — adds has_image:true filter to exclude results without images
+  // Require image: adds has_image:true filter to exclude results without images
   requireImage: false,
 
-  // Tier filters — array of tier names to restrict results by editorial weight or freshness.
+  // Tier filters: array of tier names to restrict results by editorial weight or freshness.
   // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.
   // Interestingness tiers: 'demoted', 'deferred', 'average', 'promoted', 'announced'
   // Longevity tiers: 'today', 'days', 'week', 'month', 'year', 'longtime', 'always'
@@ -426,9 +426,9 @@ export const DEFAULT_CONFIG = {
  * Resolve the facets layout from a (merged or partial) config object.
  *
  * The component exposes a single union prop `facets` for layout:
- *   - `false`        — facets are not rendered at all
- *   - `'sidebar'`    — facets render in the right-hand sidebar (default)
- *   - `'horizontal'` — facets render as a horizontal strip above results
+ *   - `false`        : facets are not rendered at all
+ *   - `'sidebar'`    : facets render in the right-hand sidebar (default)
+ *   - `'horizontal'` : facets render as a horizontal strip above results
  *
  * Older consumers used a boolean `showFacets`. When `facets` is unset, this
  * helper falls back to `showFacets` so existing configs keep working without
@@ -557,12 +557,12 @@ export function isFilterVisible(key, visibleFilters) {
 
 /**
  * Toggleable teaser fields and the BEM selectors they control.
- * This is the single source of truth — the SCSS rules, buildHiddenFieldClasses(),
+ * This is the single source of truth: the SCSS rules, buildHiddenFieldClasses(),
  * and story configs all derive from this list.
  *
  * Each entry maps a config key (used in `visibleTeaserFields`) to:
- * - `label` — human-readable name for Storybook / docs
- * - `selector` — CSS selector targeted by `mg-search--hide-{key}`
+ * - `label`: human-readable name for Storybook / docs
+ * - `selector`: CSS selector targeted by `mg-search--hide-{key}`
  *
  * Title (.mg-card__title) is intentionally not toggleable.
  *
@@ -742,7 +742,7 @@ export function buildTierRanges(tiers) {
 /**
  * Build an Elasticsearch filter for selected tier names.
  * Returns a `range` query (single tier) or `bool.should` of `range` queries
- * (multiple tiers) — avoids query_string parsing overhead and escaping risks.
+ * (multiple tiers): avoids query_string parsing overhead and escaping risks.
  *
  * @param {string} field - ES field name (e.g., 'field_meta_interestingness')
  * @param {Array<string>} tierNames - Selected tier keys (e.g., ['promoted', 'announced'])
