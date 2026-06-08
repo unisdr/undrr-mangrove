@@ -4733,7 +4733,7 @@ __metadata:
     eslint-config-prettier: "npm:10.1.8"
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
-    eslint-plugin-mdx: "npm:3.7.0"
+    eslint-plugin-mdx: "npm:3.8.1"
     eslint-plugin-prettier: "npm:^5.5.5"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:7.1.1"
@@ -8033,13 +8033,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-mdx@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "eslint-mdx@npm:3.7.0"
+"eslint-mdx@npm:^3.8.1":
+  version: 3.8.1
+  resolution: "eslint-mdx@npm:3.8.1"
   dependencies:
     acorn: "npm:^8.15.0"
     acorn-jsx: "npm:^5.3.2"
-    espree: "npm:^9.6.1 || ^10.4.0"
+    espree: "npm:^9.6.1 || ^10.4.0 || ^11.2.0"
     estree-util-visit: "npm:^2.0.0"
     remark-mdx: "npm:^3.1.0"
     remark-parse: "npm:^11.0.0"
@@ -8055,7 +8055,7 @@ __metadata:
   peerDependenciesMeta:
     remark-lint-file-extension:
       optional: true
-  checksum: 10/4c83c1246086ae2628272cf93d942c872ca4cd882f3f8f18e1419793e3cab7b5456d2eb729f869d730f7fec1b9f6e64cfe1f03175575a26b306147ecc5e6ef27
+  checksum: 10/0d60503e24994a7b19ca14c7c51188554e83d61e652ea0de5fb2f71b280c17825c985e641e37b4bfcddadb1917b76f9b9ecc3e4436738425701e1646cdda68b4
   languageName: node
   linkType: hard
 
@@ -8125,11 +8125,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-mdx@npm:3.7.0":
-  version: 3.7.0
-  resolution: "eslint-plugin-mdx@npm:3.7.0"
+"eslint-plugin-mdx@npm:3.8.1":
+  version: 3.8.1
+  resolution: "eslint-plugin-mdx@npm:3.8.1"
   dependencies:
-    eslint-mdx: "npm:^3.7.0"
+    eslint-mdx: "npm:^3.8.1"
     mdast-util-from-markdown: "npm:^2.0.2"
     mdast-util-mdx: "npm:^3.0.0"
     micromark-extension-mdxjs: "npm:^3.0.0"
@@ -8141,7 +8141,7 @@ __metadata:
     vfile: "npm:^6.0.3"
   peerDependencies:
     eslint: ">=8.0.0"
-  checksum: 10/0a91fe71eabf1b33b2cf4146266807460b5b807df613fddc9c046c9eda54d19b990c12fe1042ecc7a98581bd13eda3210d6cdf6cfb2266621f5030dd0a0713c1
+  checksum: 10/c3f4b9b8147490c9e4fd0b5241de02787403b0aa624b1780bd3f832d9c6e9273b5ffaae60c37fea5c8d7a04a46920697988076247c0e09ff6c8d0bb4b6617968
   languageName: node
   linkType: hard
 
@@ -8321,7 +8321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"espree@npm:^10.0.1, espree@npm:^9.6.1 || ^10.4.0":
+"espree@npm:^10.0.1":
   version: 10.4.0
   resolution: "espree@npm:10.4.0"
   dependencies:
@@ -8332,7 +8332,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"espree@npm:^11.2.0":
+"espree@npm:^11.2.0, espree@npm:^9.6.1 || ^10.4.0 || ^11.2.0":
   version: 11.2.0
   resolution: "espree@npm:11.2.0"
   dependencies:
