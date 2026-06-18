@@ -11,7 +11,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { useSearchState, useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
+import { useSearchState, useSearchConfig, useSearchLabels } from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   FACET_FIELDS,
@@ -33,6 +33,7 @@ import CustomFacetSelect from './CustomFacetSelect';
 export function FacetsSidebar({ widgetId = 'search' }) {
   const config = useSearchConfig();
   const { aggregations } = useSearchState();
+  const labels = useSearchLabels();
   const { getLabel, isLoading: taxonomiesLoading } = useTaxonomies();
 
   const { visibleFilters, allowedTypes, customFacets = [], facetFields } = config;
@@ -132,7 +133,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
       {/* Loading indicator for taxonomies */}
       {taxonomiesLoading && (
         <div className="mg-search__facets-loading" aria-live="polite">
-          Loading filters…
+          {labels.loadingFilters}
         </div>
       )}
 

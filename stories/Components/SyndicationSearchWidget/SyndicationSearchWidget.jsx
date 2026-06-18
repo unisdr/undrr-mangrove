@@ -37,10 +37,11 @@ import MobileFilterDrawer from './components/MobileFilterDrawer';
  *
  * @param {Object} props - Component props
  * @param {Object} props.config - Widget configuration
+ * @param {Object} [props.labels] - UI label overrides; merged with DEFAULT_LABELS
  */
-export function SyndicationSearchWidget({ config }) {
+export function SyndicationSearchWidget({ config, labels }) {
   return (
-    <SearchProvider config={config}>
+    <SearchProvider config={config} labels={labels}>
       <SyndicationSearchWidgetInner />
     </SearchProvider>
   );
@@ -134,6 +135,12 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
   }).isRequired,
+  /**
+   * UI label overrides merged with DEFAULT_LABELS.
+   * Pass any subset to translate or customise individual strings.
+   * Dynamic strings use `{placeholder}` tokens — see `interpolateLabel`.
+   */
+  labels: PropTypes.object,
 };
 
 // Alias for backwards compatibility

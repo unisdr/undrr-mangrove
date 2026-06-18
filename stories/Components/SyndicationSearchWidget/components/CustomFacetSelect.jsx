@@ -10,7 +10,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+import { useSearchState, useSearchDispatch, useSearchLabels, interpolateLabel, actions } from '../context/SearchContext';
 import { SelectDropdown } from './SelectDropdown';
 import { FACET_SEARCH_THRESHOLD } from '../utils/constants';
 
@@ -30,6 +30,7 @@ import { FACET_SEARCH_THRESHOLD } from '../utils/constants';
 export function CustomFacetSelect({ facet, widgetId = 'search' }) {
   const { customFacets } = useSearchState();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
 
   const { id, title, options = [], multiSelect = false } = facet;
   const selectedValues = customFacets?.[id] || [];
@@ -86,12 +87,14 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
       <SelectDropdown
         id={selectId}
         label={title}
-        placeholder={`Select ${title.toLowerCase()}`}
+        placeholder={interpolateLabel(labels.selectPlaceholder, { label: title.toLowerCase() })}
         options={dropdownOptions}
         value={multiSelect ? selectedValues : (selectedValues[0] || '')}
         onChange={handleChange}
         multiple={multiSelect}
         searchThreshold={FACET_SEARCH_THRESHOLD}
+        searchInputPlaceholder={labels.dropdownSearchPlaceholder}
+        noOptionsText={labels.dropdownNoOptions}
       />
     </fieldset>
   );

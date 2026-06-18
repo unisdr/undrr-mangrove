@@ -23,7 +23,7 @@
  */
 
 import React, { useEffect, useRef, useCallback } from 'react';
-import { useSearchState } from '../context/SearchContext';
+import { useSearchState, useSearchLabels, interpolateLabel } from '../context/SearchContext';
 import FacetsSidebar from './FacetsSidebar';
 
 /**
@@ -39,6 +39,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   const drawerRef = useRef(null);
   const closeButtonRef = useRef(null);
   const state = useSearchState();
+  const labels = useSearchLabels();
 
   // Count active filters for the header
   const activeFilterCount = countActiveFilters(state);
@@ -135,7 +136,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
         {/* Drawer header - sticky */}
         <header className="mg-search__drawer-header">
           <h2 id={`${widgetId}-drawer-title`} className="mg-search__drawer-title">
-            Filters
+            {labels.drawerTitle}
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-count">
                 {activeFilterCount}
@@ -147,7 +148,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             type="button"
             className="mg-search__drawer-close"
             onClick={onClose}
-            aria-label="Close filters"
+            aria-label={labels.closeFilters}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -179,10 +180,13 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             className="mg-search__drawer-apply"
             onClick={onClose}
           >
-            View results
+            {labels.viewResults}
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-apply-count">
-                ({activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''} applied)
+                {interpolateLabel(
+                  activeFilterCount !== 1 ? labels.filtersAppliedPlural : labels.filtersApplied,
+                  { count: activeFilterCount }
+                )}
               </span>
             )}
           </button>

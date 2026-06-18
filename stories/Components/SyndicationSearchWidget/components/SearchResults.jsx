@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { useSearchState, useSearchConfig } from '../context/SearchContext';
+import { useSearchState, useSearchConfig, useSearchLabels, interpolateLabel } from '../context/SearchContext';
 import { buildHiddenFieldClasses } from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
@@ -31,6 +31,7 @@ export function SearchResults({
 }) {
   const state = useSearchState();
   const config = useSearchConfig();
+  const labels = useSearchLabels();
 
   const {
     results,
@@ -58,7 +59,7 @@ export function SearchResults({
   if (!isInitialized) {
     return (
       <div className="mg-search__results-placeholder">
-        <p>Initializing search…</p>
+        <p>{labels.initializing}</p>
       </div>
     );
   }
@@ -72,9 +73,9 @@ export function SearchResults({
         aria-live="assertive"
       >
         <p>
-          <strong>Search error:</strong> {error}
+          <strong>{labels.searchError}</strong> {error}
         </p>
-        <p>Please try again or refine your search terms.</p>
+        <p>{labels.searchErrorRetry}</p>
       </div>
     );
   }
@@ -96,10 +97,10 @@ export function SearchResults({
   if (!query && (!results || results.length === 0)) {
     return (
       <div className="mg-search__results-empty">
-        <p>Enter a search term to find content.</p>
+        <p>{labels.enterSearchTerm}</p>
         {minSearchLength > 1 && (
           <p className="mg-search__results-hint">
-            Minimum {minSearchLength} characters required.
+            {interpolateLabel(labels.minimumCharacters, { min: minSearchLength })}
           </p>
         )}
       </div>
@@ -115,9 +116,9 @@ export function SearchResults({
         aria-live="polite"
       >
         <p>
-          No results found for <strong>"{query}"</strong>.
+          {interpolateLabel(labels.noResults, { query })}
         </p>
-        <p>Try different search terms or adjust your filters.</p>
+        <p>{labels.noResultsHint}</p>
       </div>
     );
   }
@@ -139,8 +140,13 @@ export function SearchResults({
         {!isLoading && totalResults !== null && (
           <>
             {totalResults === 0
-              ? `No results found${query ? ` for "${query}"` : ''}`
-              : `${totalResults.toLocaleString()} result${totalResults !== 1 ? 's' : ''} found${query ? ` for "${query}"` : ''}`}
+              ? interpolateLabel(query ? labels.srNoResultsForQuery : labels.srNoResults, { query })
+              : interpolateLabel(
+                  totalResults !== 1
+                    ? (query ? labels.srResultsFoundPluralForQuery : labels.srResultsFoundPlural)
+                    : (query ? labels.srResultsFoundForQuery : labels.srResultsFound),
+                  { count: totalResults.toLocaleString(), query }
+                )}
           </>
         )}
       </div>
@@ -152,16 +158,15 @@ export function SearchResults({
             {(() => {
               const startResult = (page - 1) * resultsPerPage + 1;
               const endResult = Math.min(page * resultsPerPage, totalResults || 0);
-              return (
-                <>
-                  Showing <strong>{startResult.toLocaleString()}</strong>-<strong>{endResult.toLocaleString()}</strong> of{' '}
-                  <strong>{totalResults?.toLocaleString() || 0}</strong> results
-                </>
-              );
+              return interpolateLabel(labels.showingResults, {
+                start: startResult.toLocaleString(),
+                end: endResult.toLocaleString(),
+                total: (totalResults?.toLocaleString() || 0),
+              });
             })()}
             {query && (
               <>
-                {' '}for <strong>"{query}"</strong>
+                {' '}{interpolateLabel(labels.forQuery, { query })}
               </>
             )}
             {showSearchTimer && searchTime !== null && (
@@ -178,7 +183,9 @@ export function SearchResults({
             type="button"
             className="mg-search__filter-btn"
             onClick={onOpenFilters}
-            aria-label={activeFilterCount > 0 ? `Filters, ${activeFilterCount} active` : 'Filters'}
+            aria-label={activeFilterCount > 0
+              ? interpolateLabel(labels.filtersButtonActive, { count: activeFilterCount })
+              : labels.filtersButton}
           >
             <svg
               className="mg-search__filter-btn-icon"
@@ -195,7 +202,7 @@ export function SearchResults({
             >
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
             </svg>
-            <span>Filters</span>
+            <span>{labels.filtersButton}</span>
             {activeFilterCount > 0 && (
               <span className="mg-search__filter-btn-badge">
                 {activeFilterCount}
@@ -210,7 +217,7 @@ export function SearchResults({
         <div
           className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}`.trim()}
           role="list"
-          aria-label="Search results"
+          aria-label={labels.searchResultsLabel}
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
@@ -222,7 +229,7 @@ export function SearchResults({
         <div
           className={`mg-search__results-list ${hiddenFieldClasses}`.trim()}
           role="list"
-          aria-label="Search results"
+          aria-label={labels.searchResultsLabel}
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">

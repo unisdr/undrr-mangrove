@@ -30,5 +30,12 @@ export default function pagerFromElement(container) {
     rangeLabel: dataset.rangeLabel || undefined,
     jumpToLabel: dataset.jumpToLabel || undefined,
     jumpToAction: dataset.jumpToAction || undefined,
+    prevLabel: dataset.prevLabel || undefined,
+    nextLabel: dataset.nextLabel || undefined,
+    goPrevLabel: dataset.goPrevLabel || undefined,
+    goNextLabel: dataset.goNextLabel || undefined,
+    pageLabel: dataset.pageLabel || undefined,
+    currentPageLabel: dataset.currentPageLabel || undefined,
+    pageOfLabel: dataset.pageOfLabel || undefined,
   };
 }

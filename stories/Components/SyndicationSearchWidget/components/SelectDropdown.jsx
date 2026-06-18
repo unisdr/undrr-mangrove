@@ -63,6 +63,8 @@ export function SelectDropdown({
   onChange,
   multiple = false,
   searchThreshold = 8,
+  searchInputPlaceholder = 'Search...',
+  noOptionsText = 'No options found',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -295,7 +297,7 @@ export function SelectDropdown({
                 ref={searchInputRef}
                 type="text"
                 className="mg-select__search-input"
-                placeholder="Search..."
+                placeholder={searchInputPlaceholder}
                 value={searchQuery}
                 onChange={handleSearchChange}
                 aria-label={`Search ${label}`}
@@ -314,7 +316,7 @@ export function SelectDropdown({
             aria-multiselectable={multiple}
           >
             {filteredOptions.length === 0 ? (
-              <li className="mg-select__empty">No options found</li>
+              <li className="mg-select__empty">{noOptionsText}</li>
             ) : (
               filteredOptions.map((option, index) => (
                 <li

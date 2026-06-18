@@ -10,18 +10,9 @@
  * @module SearchWidget/components/SortOptions
  */
 
-import React, { useCallback } from 'react';
-import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+import React, { useCallback, useMemo } from 'react';
+import { useSearchState, useSearchDispatch, useSearchLabels, actions } from '../context/SearchContext';
 import { SelectDropdown } from './SelectDropdown';
-
-/**
- * Sort options configuration.
- */
-const SORT_OPTIONS = [
-  { value: 'relevance', label: 'Relevance' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'oldest', label: 'Oldest' },
-];
 
 /**
  * SortOptions component.
@@ -32,6 +23,13 @@ const SORT_OPTIONS = [
 export function SortOptions({ widgetId = 'search' }) {
   const { sortBy } = useSearchState();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
+
+  const sortOptions = useMemo(() => [
+    { value: 'relevance', label: labels.sortRelevance },
+    { value: 'newest', label: labels.sortNewest },
+    { value: 'oldest', label: labels.sortOldest },
+  ], [labels.sortRelevance, labels.sortNewest, labels.sortOldest]);
 
   const handleChange = useCallback(
     value => {
@@ -47,12 +45,12 @@ export function SortOptions({ widgetId = 'search' }) {
 
   return (
     <fieldset className="mg-search__sort">
-      <legend id={`${selectId}-label`}>Sort</legend>
+      <legend id={`${selectId}-label`}>{labels.sortLegend}</legend>
       <SelectDropdown
         id={selectId}
-        label="Sort"
-        placeholder="Sort by"
-        options={SORT_OPTIONS}
+        label={labels.sortLegend}
+        placeholder={labels.sortPlaceholder}
+        options={sortOptions}
         value={sortBy || 'relevance'}
         onChange={handleChange}
         multiple={false}

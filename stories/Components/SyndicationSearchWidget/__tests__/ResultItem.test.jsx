@@ -137,6 +137,6 @@ describe('ResultItem', () => {
   it('renders error state when domain is missing', () => {
     render(<ResultItem hit={createHit({ field_domain_access: undefined })} />);
 
-    expect(screen.getByText(/has no assigned domain/)).toBeInTheDocument();
+    expect(screen.getByText(/currently unavailable/)).toBeInTheDocument();
   });
 });
