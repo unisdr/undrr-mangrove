@@ -11,6 +11,8 @@ import DOMPurify from 'dompurify';
  *
  * When a `link` prop is provided, the entire stat item becomes clickable
  * while still allowing inline links in the description to work independently.
+ *
+ * @see schemas/statistic.schema.js — canonical field names and documented deviations.
  */
 export function StatsCardItem({
   icon,

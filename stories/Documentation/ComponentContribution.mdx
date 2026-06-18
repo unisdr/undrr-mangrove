@@ -27,6 +27,7 @@ Further information on detailed setup, workflow, and contribution docs in the [d
 - **<LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>** — accessibility, performance, and architecture guidance
 - **<LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo>** — build system, distribution channels, and Drupal integration
 - **<LinkTo kind="contributing-build-a-component-hydration" story="docs">Adding hydration support</LinkTo>** — `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
+- **<LinkTo kind="design-decisions-content-architecture" story="docs">Content architecture</LinkTo>** — schema inventory and field-name contracts for component archetypes
 - **<LinkTo kind="contributing-release-process" story="docs">Release process</LinkTo>** — versioning, tagging, and publishing
 - [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md) — environment setup, scripts, branching, and commit conventions
 - [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md) — how to propose changes and submit PRs
@@ -40,6 +41,7 @@ Before starting development:
 - Check if a similar component already exists to avoid duplication
 - Define the component's purpose, functionality, and variants
 - Identify the props/parameters the component will accept
+- **Check `schemas/`** to see if your component maps to an existing content archetype (card, statistic, quote, navigation, share-action, gallery, text-cta). If it does, align prop names with the canonical field names in that schema. See <LinkTo kind="design-decisions-content-architecture" story="docs">Content architecture</LinkTo> for the schema inventory and authoring guide.
 - Consider accessibility requirements from the beginning
 - Plan responsive behaviors for different screen sizes
 - Ensure your component follows the shared content patterns described in **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>**

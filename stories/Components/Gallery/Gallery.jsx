@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+// Content contract: see schemas/gallery.schema.js for canonical field names and documented deviations.
 function GalleryComponent({
   media,
   initialIndex = 0,
