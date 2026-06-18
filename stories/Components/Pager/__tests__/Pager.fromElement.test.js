@@ -33,6 +33,13 @@ describe('pagerFromElement', () => {
         'range-label': 'Showing {start}–{end} of 200',
         'jump-to-label': 'Go to page',
         'jump-to-action': 'Go',
+        'prev-label': 'Précédent',
+        'next-label': 'Suivant',
+        'go-prev-label': 'Aller à la page précédente',
+        'go-next-label': 'Aller à la page suivante',
+        'page-label': 'Page {page}',
+        'current-page-label': 'Page {page}, page actuelle',
+        'page-of-label': 'Page {page} sur {total}',
       })
     );
 
@@ -44,6 +51,24 @@ describe('pagerFromElement', () => {
     expect(props.rangeLabel).toBe('Showing {start}–{end} of 200');
     expect(props.jumpToLabel).toBe('Go to page');
     expect(props.jumpToAction).toBe('Go');
+    expect(props.prevLabel).toBe('Précédent');
+    expect(props.nextLabel).toBe('Suivant');
+    expect(props.goPrevLabel).toBe('Aller à la page précédente');
+    expect(props.goNextLabel).toBe('Aller à la page suivante');
+    expect(props.pageLabel).toBe('Page {page}');
+    expect(props.currentPageLabel).toBe('Page {page}, page actuelle');
+    expect(props.pageOfLabel).toBe('Page {page} sur {total}');
+  });
+
+  it('returns undefined for label props when absent', () => {
+    const props = pagerFromElement(createContainer({ page: '1', 'total-pages': '10' }));
+    expect(props.prevLabel).toBeUndefined();
+    expect(props.nextLabel).toBeUndefined();
+    expect(props.goPrevLabel).toBeUndefined();
+    expect(props.goNextLabel).toBeUndefined();
+    expect(props.pageLabel).toBeUndefined();
+    expect(props.currentPageLabel).toBeUndefined();
+    expect(props.pageOfLabel).toBeUndefined();
   });
 
   it('parses page as integer', () => {

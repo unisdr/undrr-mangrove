@@ -534,6 +534,10 @@ In a Drupal Twig template, supply translated labels via the `data-labels` JSON a
 
 > **Important:** Function-valued labels (required for Arabic and Russian plural forms) cannot be expressed in JSON. For those languages, either bundle a custom JS module that provides the labels object directly, or accept English-fallback plural strings via `data-labels` and handle pluralization server-side.
 
+> **Drupal Twig note:** Use single quotes for the `data-labels` attribute value so that the JSON's double quotes remain unescaped. If any translated string itself contains an apostrophe (common in French), encode it as `’` (the Unicode right single quotation mark) in the JSON, or escape it as `&#39;` in the HTML attribute.
+
+> **RTL layout:** Supplying Arabic labels via `data-labels` or the `labels` prop translates the text content only. The widget's CSS currently uses physical properties and does not flip for right-to-left scripts. RTL layout support is tracked as a separate issue.
+
 ### `labels` prop vs `config` prop
 
 `labels` contains UI strings only. All search behaviour — endpoint, facets, filters, pagination — belongs in `config`. The two props are independent and can be used together.

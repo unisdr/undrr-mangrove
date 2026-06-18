@@ -36,7 +36,7 @@ export default {
 export const LABELS_ES = {
   searchFormLabel: 'Buscar contenido',
   searchLabel: 'Buscar',
-  searchPlaceholder: 'Buscar...',
+  searchPlaceholder: 'Buscar…',
   searchHint: 'Introduzca los términos de búsqueda',
   searchHintMin: 'Introduzca al menos {min} caracteres para buscar',
   clearSearch: 'Borrar búsqueda',
@@ -80,7 +80,7 @@ export const LABELS_ES = {
   matchModeGroupLabel: 'Coincidencia:',
   matchModeAny: 'Cualquiera de estos',
   matchModeAll: 'Todos estos',
-  dropdownSearchPlaceholder: 'Buscar...',
+  dropdownSearchPlaceholder: 'Buscar…',
   dropdownNoOptions: 'No se encontraron opciones',
   sortLegend: 'Ordenar',
   sortPlaceholder: 'Ordenar por',
@@ -243,7 +243,7 @@ export const LABELS_JA = {
 export const LABELS_ZH = {
   searchFormLabel: '搜索内容',
   searchLabel: '搜索',
-  searchPlaceholder: '搜索...',
+  searchPlaceholder: '搜索…',
   searchHint: '请输入搜索词',
   searchHintMin: '请至少输入 {min} 个字符进行搜索',
   clearSearch: '清除搜索',
@@ -287,7 +287,7 @@ export const LABELS_ZH = {
   matchModeGroupLabel: '匹配方式：',
   matchModeAny: '以下任意一项',
   matchModeAll: '以下全部项目',
-  dropdownSearchPlaceholder: '搜索...',
+  dropdownSearchPlaceholder: '搜索…',
   dropdownNoOptions: '未找到选项',
   sortLegend: '排序',
   sortPlaceholder: '排序方式',
@@ -341,7 +341,7 @@ const AR_FILTER_FORMS = {
 export const LABELS_AR = {
   searchFormLabel: 'البحث في المحتوى',
   searchLabel: 'بحث',
-  searchPlaceholder: 'بحث...',
+  searchPlaceholder: 'بحث…',
   searchHint: 'أدخل مصطلحات البحث',
   searchHintMin: 'أدخل ما لا يقل عن {min} أحرف للبحث',
   clearSearch: 'مسح البحث',
@@ -385,7 +385,7 @@ export const LABELS_AR = {
   matchModeGroupLabel: 'مطابقة:',
   matchModeAny: 'أي من هذه',
   matchModeAll: 'جميع هذه',
-  dropdownSearchPlaceholder: 'بحث...',
+  dropdownSearchPlaceholder: 'بحث…',
   dropdownNoOptions: 'لم يتم العثور على خيارات',
   sortLegend: 'ترتيب',
   sortPlaceholder: 'الترتيب حسب',
@@ -423,7 +423,7 @@ const RU_ACTIVE_FORMS = { one: 'активный', few: 'активных', many
 export const LABELS_RU = {
   searchFormLabel: 'Поиск по содержимому',
   searchLabel: 'Поиск',
-  searchPlaceholder: 'Поиск...',
+  searchPlaceholder: 'Поиск…',
   searchHint: 'Введите поисковый запрос',
   searchHintMin: 'Введите не менее {min} символов для поиска',
   clearSearch: 'Очистить поиск',
@@ -441,6 +441,7 @@ export const LABELS_RU = {
   forQuery: 'по запросу «{query}»',
   srNoResults: 'Результаты не найдены',
   srNoResultsForQuery: 'По запросу {query} результатов не найдено',
+  // srResultsFound is only called when count === 1; hard-coded singular form is correct here
   srResultsFound: ({ count }) => `Найден ${count} результат`,
   srResultsFoundPlural: ({ count }) => {
     const form = ruResults.select(count);
@@ -461,7 +462,7 @@ export const LABELS_RU = {
   filteredBy: 'Отфильтровано по:',
   activeFiltersRegion: 'Активные фильтры',
   andConnector: 'и',
-  removeFilter: 'Удалить фильтр: {field} — {value}',
+  removeFilter: 'Удалить фильтр: {field}, {value}',
   clearAllFilters: 'Сбросить все фильтры',
   clearAllFiltersLabel: ({ count }) => `Сбросить все активные фильтры (${count})`,
   activeFiltersCount: ({ count }) => `${count} ${RU_ACTIVE_FORMS[ruFilters.select(count)] ?? 'активный'} ${RU_FILTER_FORMS[ruFilters.select(count)] ?? 'фильтр'}`,
@@ -482,7 +483,7 @@ export const LABELS_RU = {
   matchModeGroupLabel: 'Совпадение:',
   matchModeAny: 'Любое из',
   matchModeAll: 'Все из',
-  dropdownSearchPlaceholder: 'Поиск...',
+  dropdownSearchPlaceholder: 'Поиск…',
   dropdownNoOptions: 'Варианты не найдены',
   sortLegend: 'Сортировка',
   sortPlaceholder: 'Сортировать по',
@@ -515,12 +516,12 @@ Dynamic strings use \`{placeholder}\` tokens; function-valued keys enable comple
 Use the label objects in this file as a copy-paste reference for your own translations module.
 
 \`\`\`jsx
-// Copy the relevant LABELS_${lang} object into your own translations file,
-// then import it from there — never import from a .stories file in production.
-import { SyndicationSearchWidget } from '@undrr/mangrove';
-import { labels${lang} } from './translations/${lang.toLowerCase()}';
+// Copy the relevant LABELS_${lang} object from this file into your own
+// translations module (any export name works). Never import from .stories files.
+import { SyndicationSearchWidget } from '@undrr/undrr-mangrove';
+import { labels } from './translations/${lang.toLowerCase()}';
 
-<SyndicationSearchWidget config={config} labels={labels${lang}} />
+<SyndicationSearchWidget config={config} labels={labels} />
 \`\`\`
 `;
 

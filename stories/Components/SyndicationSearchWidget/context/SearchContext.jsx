@@ -64,6 +64,7 @@ export const DEFAULT_LABELS = {
 
   // SearchResults — mobile filter button
   filtersButton: 'Filters',
+  // filtersButtonActive always receives {count}; no separate singular key (count is inline)
   filtersButtonActive: 'Filters, {count} active',
   searchResultsLabel: 'Search results',
   searchResultsPaginationLabel: 'Search results pagination',

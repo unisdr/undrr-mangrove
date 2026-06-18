@@ -16,6 +16,7 @@ export { default as QuoteHighlight } from '../stories/Components/QuoteHighlight/
 export { CodeBlock } from '../stories/Components/CodeBlock/CodeBlock';
 export { default as Fetcher } from '../stories/Components/Fetcher/Fetcher';
 export { default as SyndicationSearchWidget } from '../stories/Components/SyndicationSearchWidget/SyndicationSearchWidget';
+export { DEFAULT_LABELS, interpolateLabel } from '../stories/Components/SyndicationSearchWidget/context/SearchContext';
 export { Gallery } from '../stories/Components/Gallery/Gallery';
 export { default as IconCard } from '../stories/Components/Cards/IconCard/IconCard';
 export { default as StatsCard } from '../stories/Components/Cards/StatsCard/StatsCard';
