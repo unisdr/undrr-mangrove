@@ -8,13 +8,10 @@ export { default as CookieConsentBanner } from '../stories/Components/CookieCons
 export { default as ShareButtons } from '../stories/Components/Buttons/ShareButtons/ShareButtons';
 export { default as MegaMenu } from '../stories/Components/MegaMenu/MegaMenu';
 export { default as ScrollContainer } from '../stories/Components/ScrollContainer/ScrollContainer';
-export { default as BarChart } from '../stories/Components/Charts/BarChart/BarChart';
-export { default as MapComponent } from '../stories/Components/Map/MapComponent';
 export { default as QuoteHighlight } from '../stories/Components/QuoteHighlight/QuoteHighlight';
 // CodeBlock is a Storybook documentation component (syntax highlighting via react-syntax-highlighter).
 // Drupal pages use Prism.js directly; no .hydrate.js/.fromElement.js needed for server-side blocks.
 export { CodeBlock } from '../stories/Components/CodeBlock/CodeBlock';
-export { default as Fetcher } from '../stories/Components/Fetcher/Fetcher';
 export { default as SyndicationSearchWidget } from '../stories/Components/SyndicationSearchWidget/SyndicationSearchWidget';
 export { DEFAULT_LABELS, interpolateLabel } from '../stories/Components/SyndicationSearchWidget/context/SearchContext';
 export { Gallery } from '../stories/Components/Gallery/Gallery';

@@ -17,9 +17,9 @@ _Notable cross-cutting changes between releases land here. Per-component changes
 
 - **Dependency update cooldown.** Renovate now waits until a release is at least 7 days old before it proposes the update (`minimumReleaseAge: "7 days"` with `internalChecksFilter: "strict"`), so a compromised package version that gets detected and unpublished within its first days never reaches a pull request here. Security advisories (`vulnerabilityAlerts`) are exempt, so genuine fixes are not delayed. Dependabot is retired and Renovate is now the sole dependency bot, which also ends the duplicate update PRs. A separate spike tracks evaluating pnpm for its scripts-off-by-default behaviour (#1038). (#1039)
 
-### Deprecations
+### Removed
 
-- **D3 chart components, `MapComponent`, and `Fetcher` are deprecated and will be removed in v1.8.** UNDRR is consolidating on external standards for these capabilities — [Recharts](https://recharts.org/) for charting, UNEP/GRID [MAPX](https://mapx.org/) for mapping, and ecosystem data-fetching libraries ([react-query](https://tanstack.com/query) / [SWR](https://swr.vercel.app/) / server-side load) for data loading. The in-tree wrappers never reached wide-scale implementation. Consumer-facing npm exports affected: `BarChart`, `MapComponent`, `Fetcher`. Internal-only (Storybook stories) affected: `Histogram`, `IndexChart`, `ConnectedScatterplot`. See the [v1.8 removal tracker](https://github.com/unisdr/undrr-mangrove/issues/1011) for the migration plan and removal checklist. Consumers using these three exports should plan to migrate before v1.8 ships.
+- **D3 chart components, `MapComponent`, and `Fetcher` removed.** The npm exports `BarChart`, `MapComponent`, and `Fetcher` are no longer published. The internal-only Storybook stories `Histogram`, `IndexChart`, and `ConnectedScatterplot` are also removed. D3 and Leaflet packages are dropped from the dependency tree. Migrate charting to [Recharts](https://recharts.org/), mapping to [MAPX](https://mapx.org/), and data loading to [react-query](https://tanstack.com/query) / [SWR](https://swr.vercel.app/) or server-side load. ([#1011](https://github.com/unisdr/undrr-mangrove/issues/1011))
 
 ## 1.7.0 — 2026-05-11
 

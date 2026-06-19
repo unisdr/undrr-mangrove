@@ -29,11 +29,6 @@
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
-  'components-charts-barchart': 'BarChart uses D3 for rendering. It requires React and the D3 library. Import via npm: import { BarChart } from "@undrr/undrr-mangrove".',
-  'components-charts-connectedscatterplot': 'ConnectedScatterPlot uses D3 for rendering. Requires React and D3. Import via npm.',
-  'components-charts-histogram': 'Histogram uses D3 for rendering. Requires React and D3. Import via npm.',
-  'components-charts-indexchart': 'IndexChart uses D3 for rendering. Requires React and D3. Import via npm.',
-  'components-maps-mapcomponent': 'MapComponent uses Leaflet for interactive maps. Requires React and Leaflet. Import via npm.',
   'components-syndicated-search': 'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
   'components-syndicated-search-translations': 'SyndicationSearchWidget translation label sets for ES, FR, JA, ZH-Hans, AR, and RU. Pass via the labels prop (React) or data-labels JSON attribute (Drupal). String keys support {token} substitution; function keys handle Intl.PluralRules plural forms for Arabic (6-form) and Russian (3-form). Function keys cannot be serialized to JSON for data-labels.',
   'components-syndicated-search-display-modes': 'SyndicationSearchWidget display-mode variants (list / card / card-book layouts and teaser-field visibility). Requires React 19. Same hydration pattern as the main widget.',
@@ -42,7 +37,6 @@ export const REQUIRES_REACT = {
   'components-syndicated-search-layouts': 'SyndicationSearchWidget layout variants — facets sidebar, horizontal facet strip, and external-region portals (facetsTarget, searchTarget). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-toggles': 'SyndicationSearchWidget UI visibility toggles (showPager, showSearchMetrics). Requires React 19. Same hydration pattern as the main widget.',
   'components-megamenu': 'MegaMenu manages complex open/close state and keyboard navigation. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
-  'components-fetcher': 'Fetcher is a generic data-fetching wrapper component. Requires React for state management.',
   'components-gallery': 'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
   'components-pager': 'Pager manages pagination state. Requires React. Import via npm. Supports translated labels via props: prevLabel, nextLabel, goPrevLabel, goNextLabel, pageLabel, currentPageLabel, pageOfLabel (all string or function). Can be hydrated via createHydrator using data-prev-label, data-next-label, etc. attributes.',
   'components-cookieconsentbanner': 'CookieConsentBanner manages consent state and cookie storage. Requires React.',
