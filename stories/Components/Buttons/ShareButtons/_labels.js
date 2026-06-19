@@ -12,7 +12,7 @@ export const LABELS_ES = {
   qrCodeTitle: 'Código QR',
   qrCodeDescription:
     'Este código QR contiene el enlace a continuación. Puede copiar la imagen o añadirla a sus materiales impresos o de presentación.',
-  closeModal: 'Cerrar modal',
+  closeModal: 'Cerrar cuadro de diálogo',
   copyImage: 'Copiar imagen',
   downloadImage: 'Descargar imagen',
   closeMessage: 'Cerrar mensaje',
@@ -39,7 +39,7 @@ export const LABELS_FR = {
   shareOnLinkedIn: 'Partager sur LinkedIn',
   shareOnFacebook: 'Partager sur Facebook',
   shareOnX: 'Partager sur X',
-  shareViaEmail: 'Partager par e-mail',
+  shareViaEmail: 'Partager par courriel',
   generateQRCode: 'Générer un code QR',
   copyToClipboard: 'Copier dans le presse-papiers',
 };

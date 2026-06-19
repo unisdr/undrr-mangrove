@@ -139,8 +139,8 @@ export const LABELS_FR = {
   sortLegend: 'Trier',
   sortPlaceholder: 'Trier par',
   sortRelevance: 'Pertinence',
-  sortNewest: 'Plus récent',
-  sortOldest: 'Plus ancien',
+  sortNewest: 'Le plus récent',
+  sortOldest: 'Le plus ancien',
   loadingFilters: 'Chargement des filtres…',
   pagerPrevious: 'Précédent',
   pagerNext: 'Suivant',
@@ -167,7 +167,7 @@ export const LABELS_JA = {
   submitSearchText: '検索',
   initializing: '検索を読み込んでいます…',
   srSearching: '検索中…',
-  searchError: '検索エラー:',
+  searchError: '検索エラー：',
   searchErrorRetry:
     'もう一度お試しいただくか、検索キーワードを変更してください。',
   enterSearchTerm: 'コンテンツを検索するにはキーワードを入力してください。',
@@ -178,7 +178,7 @@ export const LABELS_JA = {
   showingResultsApprox: '{total}件以上の結果のうち{start}〜{end}件を表示',
   forQuery: '「{query}」の',
   srNoResults: '結果が見つかりませんでした',
-  srNoResultsForQuery: '{query}に一致する結果が見つかりませんでした',
+  srNoResultsForQuery: '「{query}」に一致する結果が見つかりませんでした',
   srResultsFound: '{count}件の結果が見つかりました',
   srResultsFoundPlural: '{count}件の結果が見つかりました',
   srResultsFoundForQuery: '「{query}」の検索結果が{count}件見つかりました',
@@ -191,10 +191,10 @@ export const LABELS_JA = {
   filtersButtonActive: 'フィルター（{count}件有効）',
   searchResultsLabel: '検索結果',
   searchResultsPaginationLabel: '検索結果のページ送り',
-  filteredBy: '絞り込み条件:',
+  filteredBy: '絞り込み条件：',
   activeFiltersRegion: '有効なフィルター',
   andConnector: 'かつ',
-  removeFilter: 'フィルターを削除: {field}が「{value}」',
+  removeFilter: 'フィルターを削除：{field}が「{value}」',
   clearAllFilters: 'すべてのフィルターをクリア',
   clearAllFiltersLabel: '{count}件の有効なフィルターをすべてクリア',
   activeFiltersCount: '{count}件のフィルターが有効',
@@ -206,7 +206,7 @@ export const LABELS_JA = {
   filtersAppliedPlural: '（{count}件のフィルターを適用中）',
   selectPlaceholder: '{label}を選択',
   matchModeLabel: '{label}の一致モード',
-  matchModeGroupLabel: '一致:',
+  matchModeGroupLabel: '一致：',
   matchModeAny: 'いずれか',
   matchModeAll: 'すべて',
   dropdownSearchPlaceholder: '検索…',
@@ -255,8 +255,8 @@ export const LABELS_ZH = {
   srNoResultsForQuery: '未找到「{query}」的相关结果',
   srResultsFound: '找到 {count} 条结果',
   srResultsFoundPlural: '找到 {count} 条结果',
-  srResultsFoundForQuery: '找到 {count} 条关于"{query}"的结果',
-  srResultsFoundPluralForQuery: '找到 {count} 条关于"{query}"的结果',
+  srResultsFoundForQuery: '找到 {count} 条关于「{query}」的结果',
+  srResultsFoundPluralForQuery: '找到 {count} 条关于「{query}」的结果',
   srResultsFoundApprox: '找到超过 {count} 条结果',
   srResultsFoundApproxForQuery: '找到超过 {count} 条关于"{query}"的结果',
   filtersButton: '筛选',
@@ -319,7 +319,7 @@ const AR_RESULT_FORMS = {
   one: 'نتيجة',
   two: 'نتيجتان',
   few: 'نتائج',
-  many: 'نتيجة',
+  many: 'نتائج',
   other: 'نتيجة',
 };
 
@@ -380,9 +380,12 @@ export const LABELS_AR = {
   removeFilter: 'إزالة عامل التصفية: {field} هو {value}',
   clearAllFilters: 'مسح جميع عوامل التصفية',
   clearAllFiltersLabel: ({ count }) =>
-    `مسح جميع عوامل التصفية النشطة البالغة ${count}`,
-  activeFiltersCount: ({ count }) =>
-    `${count} ${AR_FILTER_FORMS[arPlural.select(count)] ?? AR_FILTER_FORMS.other} نشط`,
+    `مسح جميع عوامل التصفية النشطة (${count})`,
+  activeFiltersCount: ({ count }) => {
+    const form = arPlural.select(count);
+    const adj = form === 'two' ? 'نشطان' : 'نشط';
+    return `${count} ${AR_FILTER_FORMS[form] ?? AR_FILTER_FORMS.other} ${adj}`;
+  },
   activeFiltersCountPlural: ({ count }) => {
     const form = arPlural.select(count);
     const adj = form === 'zero' || form === 'few' ? 'نشطة' : 'نشط';

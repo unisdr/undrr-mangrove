@@ -251,5 +251,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.2** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `scrollLeftLabel` and `scrollRightLabel` props into a single `labels` object with `DEFAULT_SCROLL_LABELS` export. Backwards compatible — `DEFAULT_SCROLL_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
 - **1.1** — 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.0** — 2025-03-27: Initial release with responsive design, mouse drag scrolling, and optional navigation arrows

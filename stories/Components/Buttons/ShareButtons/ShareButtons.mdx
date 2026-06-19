@@ -117,6 +117,8 @@ See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.7** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Locale wiring extended from 2 keys/3 locales to 15 keys/6 locales. `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches all translated strings in stories. Backwards compatible — `DEFAULT_SHARE_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
 - **1.6** — 2026-05-11: Declared PropTypes for `ShareButtons`, `QRCodeModal`, and `CopyButton`, so the AI manifest documents the prop contracts. No runtime change.
 - **1.5** — 2026-04-09: Fixed invalid `alt` attribute on icon `<span>` — replaced with `aria-hidden="true"` (WCAG 4.1.2)
 - **1.4** — 2026-03-03: Added hydration support with `fromElement` prop extraction and `createHydrator` integration

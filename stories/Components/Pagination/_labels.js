@@ -19,13 +19,13 @@ export const LABELS_FR = {
 export const LABELS_JA = {
   prevLabel: '前へ',
   nextLabel: '次へ',
-  nextAriaLabel: '次のページ',
+  nextAriaLabel: '次のページへ',
 };
 
 export const LABELS_ZH = {
   prevLabel: '上一页',
   nextLabel: '下一页',
-  nextAriaLabel: '下一页',
+  nextAriaLabel: '前往下一页',
 };
 
 export const LABELS_AR = {
@@ -35,7 +35,7 @@ export const LABELS_AR = {
 };
 
 export const LABELS_RU = {
-  prevLabel: 'Назад',
-  nextLabel: 'Вперёд',
+  prevLabel: 'Предыдущая',
+  nextLabel: 'Следующая',
   nextAriaLabel: 'Следующая страница',
 };

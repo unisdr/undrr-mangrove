@@ -316,6 +316,8 @@ You can also select triggers by class (`.mg-tabs__link`) — this works in all v
 
 ## Changelog
 
+- **2.8** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` prop into a `labels` object with `DEFAULT_TAB_LABELS` export. Pass `labels={{ filterPlaceholder: '...' }}` instead of `filterPlaceholder` directly. Backwards compatible — `DEFAULT_TAB_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
 - **2.7** — 2026-04-13: `.mg-tabs__link` now uses `$mg-font-family-headings` (Roboto Condensed) instead of `$mg-font-family` (Roboto). The `:lang(ar)` override switched from `$mg-font-family-arabic-body` (Dubai) to `$mg-font-family-arabic-headings` (Noto Kufi Arabic) to match.
 - **2.6** — 2026-03-27: Added `data-mg-js-tabs-skip-auto-init` attribute, `type="module"` self-init, single-element scope support (`mgTabs` wrapper already accepted scope; this release adds the manual-init check and single-element handling)
 - **2.5** — 2026-03-20:
