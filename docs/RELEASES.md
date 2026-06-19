@@ -57,7 +57,19 @@ yarn update-cdn-version --dry-run  # preview changes first
 
 This updates CDN URLs in README.md, MDX docs, and story files from the old version to the new one.
 
-### 4. Commit, tag, and push
+### 4. Update CHANGELOG.md
+
+In `CHANGELOG.md`, rename the `## Unreleased` section to `## X.Y.Z — YYYY-MM-DD` and add a link to the GitHub Release below the heading (the release page is created in step 6, so you can add the link now and it will resolve once the release is published):
+
+```markdown
+## 1.3.0 — 2026-01-15
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v1.3.0) for full details.
+```
+
+Then add a fresh empty `## Unreleased` section above it for the next cycle.
+
+### 5. Commit, tag, and push
 
 ```bash
 git add .
@@ -66,7 +78,7 @@ git tag v1.3.0
 git push origin main --tags
 ```
 
-### 5. Monitor the publish
+### 6. Monitor the publish
 
 The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml), which automatically:
 
@@ -74,16 +86,16 @@ The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr
 - Packages distribution files and SCSS sources
 - Publishes to the npm registry
 
-### 6. Create a GitHub Release
+### 7. Create a GitHub Release
 
 Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag. Include a summary of changes — you can use the "Generate release notes" button for a starting point.
 
-### 7. Verify
+### 8. Verify
 
 - [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
 - [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) has the release notes
 
-### 8. Update the Drupal theme (if needed)
+### 9. Update the Drupal theme (if needed)
 
 If component JS or CSS changed:
 
