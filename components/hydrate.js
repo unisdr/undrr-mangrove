@@ -1,5 +1,5 @@
 /*!
  * This is a UNDRR Mangrove component: https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
- * Compiled on: 2026-06-19T12:23:02.796Z
+ * Compiled on: 2026-06-19T12:53:26.819Z
  */
 import{default as r}from"react";import{createRoot as e}from"react-dom/client";function t({selector:t,component:o,fromElement:n,options:a={}}){const{clearContainer:c=!0,debugLabel:i=t,onError:l,identifierPrefix:u}=a,d=o?.default??o,s=u??t.replace(/[[\]\.#=>"' ]/g,"").replace(/^data-mg-?/,"mg-"),m=[];function f(o=document){const a=o.querySelectorAll(t),u=[];return a.forEach((t,o)=>{if("true"===t.dataset.mgHydrated)return;const a=c?t.innerHTML:null;try{const a=n(t);c&&(t.innerHTML="");const f=e(t,{identifierPrefix:`${s}-${o}-`,onCaughtError(r,e){console.error(`[${i}] Caught error in container #${o}:`,r,e),l&&l(r,t)},onUncaughtError(r,e){console.error(`[${i}] Uncaught error in container #${o}:`,r,e),l&&l(r,t)},onRecoverableError(r){console.warn(`[${i}] Recoverable error in container #${o}:`,r)}});f.render(r.createElement(d,a)),t.dataset.mgHydrated="true",m.push({root:f,container:t}),u.push(f)}catch(r){console.error(`[${i}] Container #${o}:`,r),null!==a&&(t.innerHTML=a),l&&l(r,t)}}),u}return f(),{get roots(){return m.map(r=>r.root)},update:f,unmountAll(){m.forEach(({root:r,container:e})=>{r.unmount(),delete e.dataset.mgHydrated}),m.length=0}}}export{t as default};
