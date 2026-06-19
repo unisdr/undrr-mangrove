@@ -16,9 +16,22 @@ export default {
 };
 
 const tabdata = [
-  { text: 'Section A', text_id: 'section-a', data: '<p>Content for section A.</p>', is_default: 'true' },
-  { text: 'Section B', text_id: 'section-b', data: '<p>Content for section B.</p>' },
-  { text: 'Section C', text_id: 'section-c', data: '<p>Content for section C.</p>' },
+  {
+    text: 'Section A',
+    text_id: 'section-a',
+    data: '<p>Content for section A.</p>',
+    is_default: 'true',
+  },
+  {
+    text: 'Section B',
+    text_id: 'section-b',
+    data: '<p>Content for section B.</p>',
+  },
+  {
+    text: 'Section C',
+    text_id: 'section-c',
+    data: '<p>Content for section C.</p>',
+  },
 ];
 
 const baseArgs = {

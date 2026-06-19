@@ -18,11 +18,7 @@ export default {
   component: Breadcrumbcomponent,
 };
 
-const data = [
-  { text: 'Home' },
-  { text: 'Section' },
-  { text: 'Current page' },
-];
+const data = [{ text: 'Home' }, { text: 'Section' }, { text: 'Current page' }];
 
 export const Spanish = {
   args: { data, navLabel: 'ruta de navegación' },
