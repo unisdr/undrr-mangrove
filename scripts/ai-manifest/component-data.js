@@ -50,6 +50,17 @@ export const REQUIRES_REACT = {
   'components-scrollcontainer': 'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
   'components-buttons-sharebuttons': 'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.',
   'components-table-of-contents': 'TableOfContents inspects the DOM for heading elements and manages scroll-spy state. React component available, or use the vanilla JS at js/table-of-contents.js with data-mg-table-of-contents.',
+  'components-buttons-sharebuttons-translations': 'ShareButtons translation label sets for ES, FR, JA, ZH, AR, RU. Pass via the labels prop.',
+  'components-gallery-translations': 'Gallery translation label sets for ES, FR, JA, ZH, AR, RU. Pass galleryAriaLabel, prevLabel, nextLabel, loadingLabel props.',
+  'components-megamenu-translations': 'MegaMenu translation label sets for ES, FR, JA, ZH, AR, RU. Pass navLabel, closeMobileNavLabel props.',
+  'components-snackbar-translations': 'Snackbar translation label sets for ES, FR, JA, ZH, AR, RU. Pass closeLabel, closeAriaLabel props.',
+  'components-scrollcontainer-translations': 'ScrollContainer translation label sets for ES, FR, JA, ZH, AR, RU. Pass scrollLeftLabel, scrollRightLabel props.',
+  'components-pagination-translations': 'Pagination translation label sets for ES, FR, JA, ZH, AR, RU. Pass prevLabel, nextLabel, nextAriaLabel props.',
+  'components-breadcrumbs-translations': 'Breadcrumbs translation label sets for ES, FR, JA, ZH, AR, RU. Pass navLabel prop.',
+  'components-tableofcontents-translations': 'TableOfContents translation label sets for ES, FR, JA, ZH, AR, RU. Pass title prop.',
+  'components-onthispagenav-translations': 'OnThisPageNav translation label sets for ES, FR, JA, ZH, AR, RU. Pass label prop.',
+  'components-forms-formerrorsummary-translations': 'FormErrorSummary translation label sets for ES, FR, JA, ZH, AR, RU. Pass title prop.',
+  'components-tab-translations': 'Tab translation label sets for ES, FR, JA, ZH, AR, RU. Pass filterPlaceholder prop.',
 };
 
 // ---------------------------------------------------------------------------
