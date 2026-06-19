@@ -11,6 +11,7 @@
 
 import React, { useMemo } from 'react';
 import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP } from '../utils/constants';
+import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
 
 /**
  * Swap card variant classes and image styles on teaser HTML for card display modes.
@@ -117,6 +118,7 @@ function ScoreMetrics({ hit, source }) {
  * @param {Object|null} props.visibleTeaserFields - Teaser field visibility map from config
  */
 export function ResultItem({ hit, showMetrics = false, displayMode = 'list', visibleTeaserFields = null }) {
+  const labels = useSearchLabels();
   const source = hit._source || {};
   const highlight = hit.highlight || {};
   const isTerm = isTaxonomyTermResult(source);
@@ -152,8 +154,8 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
       <article className="mg-search__result mg-search__result--error">
         {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <p className="mg-search__result-error">
-          Content item {nid || 'unknown'} has no assigned domain and cannot be shown.{' '}
-          <a href="https://www.undrr.org/contact-us">Report this error</a>.
+          {interpolateLabel(labels.domainAccessError, { nid: nid || 'unknown' })}{' '}
+          <a href="https://www.undrr.org/contact-us">{labels.reportErrorLink}</a>.
         </p>
       </article>
     );

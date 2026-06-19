@@ -16,6 +16,10 @@ function GalleryComponent({
   enableKeyboard = true,
   loop = false,
   onMediaChange,
+  galleryAriaLabel = 'Gallery',
+  prevLabel = 'Previous item',
+  nextLabel = 'Next item',
+  loadingLabel = 'Loading media',
 }) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isLoading, setIsLoading] = useState(false);
@@ -144,7 +148,7 @@ function GalleryComponent({
       ref={galleryRef}
       className={galleryClasses}
       role="region"
-      aria-label="Gallery"
+      aria-label={galleryAriaLabel}
       tabIndex={enableKeyboard ? 0 : undefined}
       onKeyDown={handleKeyDown}
     >
@@ -200,7 +204,7 @@ function GalleryComponent({
             />
           )}
           {isLoading && (
-            <div className="mg-gallery__loading" aria-live="polite" aria-label="Loading media">
+            <div className="mg-gallery__loading" aria-live="polite" aria-label={loadingLabel}>
               <div className="mg-gallery__spinner"></div>
             </div>
           )}
@@ -213,7 +217,7 @@ function GalleryComponent({
               className="mg-gallery__arrow mg-gallery__arrow--prev"
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
-              aria-label="Previous item"
+              aria-label={prevLabel}
               type="button"
             >
               ‹
@@ -222,7 +226,7 @@ function GalleryComponent({
               className="mg-gallery__arrow mg-gallery__arrow--next"
               onClick={handleNext}
               disabled={!loop && activeIndex === media.length - 1}
-              aria-label="Next item"
+              aria-label={nextLabel}
               type="button"
             >
               ›
@@ -235,7 +239,7 @@ function GalleryComponent({
               className="mg-gallery__arrow-button mg-gallery__arrow-button--prev"
               onClick={handlePrevious}
               disabled={!loop && activeIndex === 0}
-              aria-label="Previous item"
+              aria-label={prevLabel}
               type="button"
             >
               ‹
@@ -244,7 +248,7 @@ function GalleryComponent({
               className="mg-gallery__arrow-button mg-gallery__arrow-button--next"
               onClick={handleNext}
               disabled={!loop && activeIndex === media.length - 1}
-              aria-label="Next item"
+              aria-label={nextLabel}
               type="button"
             >
               ›
@@ -347,6 +351,14 @@ GalleryComponent.propTypes = {
   loop: PropTypes.bool,
   /** Callback when media item changes: (index, item) => {} */
   onMediaChange: PropTypes.func,
+  /** Accessible label for the gallery region */
+  galleryAriaLabel: PropTypes.string,
+  /** Accessible label for the previous item button */
+  prevLabel: PropTypes.string,
+  /** Accessible label for the next item button */
+  nextLabel: PropTypes.string,
+  /** Accessible label for the loading indicator */
+  loadingLabel: PropTypes.string,
 };
 
 export const Gallery = React.memo(GalleryComponent);

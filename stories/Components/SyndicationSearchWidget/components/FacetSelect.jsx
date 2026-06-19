@@ -12,7 +12,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useSearchState, useSearchDispatch, actions } from '../context/SearchContext';
+import { useSearchState, useSearchDispatch, useSearchLabels, interpolateLabel, actions } from '../context/SearchContext';
 
 const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
@@ -53,6 +53,7 @@ export function FacetSelect({
 }) {
   const { facets, facetOperators } = useSearchState();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
 
   const { key, label, vocabulary, type } = field;
   const isMultiple = type === 'select-multiple';
@@ -272,21 +273,23 @@ export function FacetSelect({
       <SelectDropdown
         id={selectId}
         label={label}
-        placeholder={`Select ${label.toLowerCase()}`}
+        placeholder={interpolateLabel(labels.selectPlaceholder, { label: label.toLowerCase() })}
         options={options}
         value={isMultiple ? selectedValues : selectedValues[0] || ''}
         onChange={handleChange}
         multiple={isMultiple}
         searchThreshold={FACET_SEARCH_THRESHOLD}
+        searchInputPlaceholder={labels.dropdownSearchPlaceholder}
+        noOptionsText={labels.dropdownNoOptions}
       />
       {showOperatorToggle && (
         <div className="mg-search__facet-operator">
           <div className="mg-search__facet-operator-row">
-            <span className="mg-search__facet-operator-label">Match:</span>
+            <span className="mg-search__facet-operator-label">{labels.matchModeGroupLabel}</span>
             <div
               className="mg-search__facet-operator-toggle"
               role="radiogroup"
-              aria-label={`Match mode for ${label}`}
+              aria-label={interpolateLabel(labels.matchModeLabel, { label })}
             >
               <label
                 className={`mg-search__facet-operator-option ${
@@ -302,7 +305,7 @@ export function FacetSelect({
                   checked={currentOperator === 'OR'}
                   onChange={() => handleOperatorChange('OR')}
                 />
-                <span>Any of these</span>
+                <span>{labels.matchModeAny}</span>
               </label>
               <label
                 className={`mg-search__facet-operator-option ${
@@ -318,7 +321,7 @@ export function FacetSelect({
                   checked={currentOperator === 'AND'}
                   onChange={() => handleOperatorChange('AND')}
                 />
-                <span>All of these</span>
+                <span>{labels.matchModeAll}</span>
               </label>
             </div>
           </div>

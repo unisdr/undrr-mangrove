@@ -115,5 +115,14 @@ export default function syndicationSearchWidgetFromElement(container) {
     }
   }
 
-  return { config };
+  let labels;
+  if (dataset.labels) {
+    try {
+      labels = JSON.parse(dataset.labels);
+    } catch {
+      /* ignore malformed JSON */
+    }
+  }
+
+  return labels ? { config, labels } : { config };
 }

@@ -237,4 +237,36 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).not.toHaveProperty('customFacets');
     expect(config).not.toHaveProperty('visibleTeaserFields');
   });
+
+  describe('data-labels', () => {
+    it('returns labels object when valid JSON is provided', () => {
+      const labelOverrides = { searchPlaceholder: 'Buscar…', submitSearchText: 'Buscar' };
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: JSON.stringify(labelOverrides) })
+      );
+      expect(result.labels).toEqual(labelOverrides);
+    });
+
+    it('returns { config, labels } shape when data-labels is present', () => {
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: '{"searchLabel":"Chercher"}' })
+      );
+      expect(result).toHaveProperty('config');
+      expect(result).toHaveProperty('labels');
+    });
+
+    it('returns { config } only (no labels key) when data-labels is absent', () => {
+      const result = syndicationSearchWidgetFromElement(makeContainer());
+      expect(result).toHaveProperty('config');
+      expect(result).not.toHaveProperty('labels');
+    });
+
+    it('silently ignores malformed data-labels JSON', () => {
+      const result = syndicationSearchWidgetFromElement(
+        makeContainer({ labels: '{broken json' })
+      );
+      expect(result).toHaveProperty('config');
+      expect(result).not.toHaveProperty('labels');
+    });
+  });
 });

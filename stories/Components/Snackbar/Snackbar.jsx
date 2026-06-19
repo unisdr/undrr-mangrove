@@ -18,6 +18,8 @@ const Snackbar = ({
   message,
   onClose,
   openedMiliseconds,
+  closeLabel = 'Close',
+  closeAriaLabel = 'Close notification',
 }) => {
   let icon;
   const closeButtonRef = useRef(null);
@@ -105,9 +107,9 @@ const Snackbar = ({
             ref={closeButtonRef}
             className="mg-button"
             onClick={() => onClose()}
-            aria-label="Close notification"
+            aria-label={closeAriaLabel}
           >
-            Close
+            {closeLabel}
           </button>
         </div>
       </div>
@@ -195,6 +197,10 @@ Snackbar.propTypes = {
   onClose: PropTypes.func.isRequired,
   /** Auto-dismiss delay in milliseconds. Omit to keep the snackbar open until dismissed. */
   openedMiliseconds: PropTypes.number,
+  /** Visible text label for the close button. */
+  closeLabel: PropTypes.string,
+  /** Accessible label for the close button (used by screen readers). */
+  closeAriaLabel: PropTypes.string,
 };
 
 export default Snackbar;

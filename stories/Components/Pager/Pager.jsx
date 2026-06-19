@@ -28,6 +28,13 @@ import { PagerJump } from './components/PagerJump';
  * @param {string} [props.jumpToAction]      Button text for jump-to submit
  * @param {string} [props.emptyState]        Message to show instead of pagination
  * @param {{ label: string, onClick: Function }} [props.emptyAction]  Action for the empty state
+ * @param {string|Function} [props.prevLabel]       Visible text for Previous button
+ * @param {string|Function} [props.nextLabel]       Visible text for Next button
+ * @param {string|Function} [props.goPrevLabel]     aria-label for Previous button
+ * @param {string|Function} [props.goNextLabel]     aria-label for Next button
+ * @param {string|Function} [props.pageLabel]       aria-label template for numbered page buttons ({page} token)
+ * @param {string|Function} [props.currentPageLabel] aria-label for the current page button ({page} token)
+ * @param {string|Function} [props.pageOfLabel]     Screen-reader announcement template ({page}, {total} tokens)
  */
 export function Pager({
   page,
@@ -43,6 +50,13 @@ export function Pager({
   jumpToAction,
   emptyState,
   emptyAction,
+  prevLabel = 'Previous',
+  nextLabel = 'Next',
+  goPrevLabel = 'Go to previous page',
+  goNextLabel = 'Go to next page',
+  pageLabel = 'Page {page}',
+  currentPageLabel = 'Page {page}, current page',
+  pageOfLabel = 'Page {page} of {total}',
 }) {
   // Empty / notice state
   if (emptyState) {
@@ -79,6 +93,12 @@ export function Pager({
             totalPages={totalPages}
             onPageChange={onPageChange}
             isLoading={isLoading}
+            prevLabel={prevLabel}
+            nextLabel={nextLabel}
+            goPrevLabel={goPrevLabel}
+            goNextLabel={goNextLabel}
+            pageLabel={pageLabel}
+            currentPageLabel={currentPageLabel}
           />
 
           {showJumpTo && (
@@ -94,8 +114,9 @@ export function Pager({
 
         {/* Screen reader announcement */}
         <div className="mg-u-sr-only" aria-live="polite">
-          Page {page}
-          {totalPages !== null && totalPages !== undefined && ` of ${totalPages}`}
+          {typeof pageOfLabel === 'function'
+            ? pageOfLabel({ page, total: totalPages ?? '' })
+            : String(pageOfLabel).replace(/\{page\}/g, page).replace(/\{total\}/g, totalPages ?? '')}
         </div>
       </nav>
     );
@@ -109,12 +130,17 @@ export function Pager({
         totalPages={totalPages}
         onPageChange={onPageChange}
         isLoading={isLoading}
+        prevLabel={prevLabel}
+        nextLabel={nextLabel}
+        goPrevLabel={goPrevLabel}
+        goNextLabel={goNextLabel}
+        pageLabel={pageLabel}
+        currentPageLabel={currentPageLabel}
       />
 
       {/* Screen reader announcement */}
       <div className="mg-u-sr-only" aria-live="polite">
-        Page {page}
-        {totalPages !== null && totalPages !== undefined && ` of ${totalPages}`}
+        {String(pageOfLabel).replace(/\{page\}/g, page).replace(/\{total\}/g, totalPages ?? '')}
       </div>
     </nav>
   );
@@ -140,6 +166,13 @@ Pager.propTypes = {
     label: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
   }),
+  prevLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  nextLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  goPrevLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  goNextLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  pageLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  currentPageLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  pageOfLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 };
 
 export default Pager;

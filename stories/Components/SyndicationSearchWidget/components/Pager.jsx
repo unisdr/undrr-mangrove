@@ -7,7 +7,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { Pager } from '../../Pager/Pager';
-import { useSearchState, useSearchDispatch, useSearchConfig, actions } from '../context/SearchContext';
+import { useSearchState, useSearchDispatch, useSearchConfig, useSearchLabels, actions } from '../context/SearchContext';
 
 /**
  * SearchPager: search-context-aware pagination.
@@ -19,6 +19,7 @@ export function SearchPager({ widgetId = '' }) {
   const { page, totalResults, isLoading } = useSearchState();
   const dispatch = useSearchDispatch();
   const { resultsPerPage } = useSearchConfig();
+  const labels = useSearchLabels();
 
   const totalPages = useMemo(() => {
     if (!totalResults || totalResults === 0) return 0;
@@ -44,7 +45,14 @@ export function SearchPager({ widgetId = '' }) {
       totalPages={totalPages}
       isLoading={isLoading}
       onPageChange={handlePageChange}
-      ariaLabel="Search results pagination"
+      ariaLabel={labels.searchResultsPaginationLabel}
+      prevLabel={labels.pagerPrevious}
+      nextLabel={labels.pagerNext}
+      goPrevLabel={labels.pagerGoToPrevious}
+      goNextLabel={labels.pagerGoToNext}
+      pageLabel={labels.pagerPage}
+      currentPageLabel={labels.pagerCurrentPage}
+      pageOfLabel={labels.pagerPageOf}
     />
   );
 }

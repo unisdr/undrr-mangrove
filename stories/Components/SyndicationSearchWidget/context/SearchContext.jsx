@@ -9,6 +9,162 @@
  */
 
 import React, { createContext, use, useReducer, useMemo } from 'react';
+
+/**
+ * Default English UI labels for the search widget.
+ * Pass a partial object via the `labels` prop to SyndicationSearchWidget to
+ * override any subset of keys. Unspecified keys fall back to these defaults.
+ *
+ * String keys may contain `{token}` placeholders; pass `vars` to
+ * `interpolateLabel(key, vars)` to substitute values at render time.
+ *
+ * Function keys receive a `vars` object and return a string. Use this form for
+ * languages with plural rules requiring more than two forms (Russian, Arabic).
+ * NOTE: function-valued keys cannot be serialized to JSON and are therefore
+ * not usable via the `data-labels` HTML attribute — they must be provided as
+ * a React prop or bundled JS module.
+ *
+ * @type {Object<string, string|function(Object): string>}
+ */
+export const DEFAULT_LABELS = {
+  // SearchForm
+  searchFormLabel: 'Search content',
+  searchLabel: 'Search',
+  searchPlaceholder: 'Search...',
+  searchHint: 'Enter search terms',
+  searchHintMin: 'Enter at least {min} characters to search',
+  clearSearch: 'Clear search',
+  submitSearch: 'Submit search',
+  submitSearchText: 'Search',
+
+  // SearchResults — status messages
+  initializing: 'Loading search…',
+  searchError: 'Search could not be completed.',
+  searchErrorRetry: 'Please try again or use different search terms.',
+  enterSearchTerm: 'Enter a search term to begin searching.',
+  minimumCharacters: 'Minimum {min} characters required.',
+  noResults: 'No results found for “{query}”.',
+  noResultsHint: 'Try different search terms or adjust your filters.',
+
+  // SearchResults — visible count
+  showingResults: 'Showing {start}–{end} of {total} results',
+  // Used when Elasticsearch caps the total (relation === 'gte'); {total} is the cap value
+  showingResultsApprox: 'Showing {start}–{end} of more than {total} results',
+  forQuery: 'for “{query}”',
+
+  // SearchResults — screen-reader live region announcements
+  // srSearching fires while a search is in progress (between submit and results)
+  srSearching: 'Searching…',
+  srNoResults: 'No results found',
+  srNoResultsForQuery: 'No results found for {query}',
+  // count === 1 uses srResultsFound; count !== 1 uses srResultsFoundPlural
+  srResultsFound: '{count} result found',
+  srResultsFoundPlural: '{count} results found',
+  // count === 1 uses srResultsFoundForQuery; count !== 1 uses srResultsFoundPluralForQuery
+  srResultsFoundForQuery: '{count} result found for {query}',
+  srResultsFoundPluralForQuery: '{count} results found for {query}',
+  // Used when Elasticsearch caps the total (relation === 'gte')
+  srResultsFoundApprox: 'More than {count} results found',
+  srResultsFoundApproxForQuery: 'More than {count} results found for {query}',
+
+  // SearchResults — mobile filter button
+  filtersButton: 'Filters',
+  // filtersButtonActive always receives {count}; no separate singular key (count is inline)
+  filtersButtonActive: 'Filters, {count} active',
+  searchResultsLabel: 'Search results',
+  searchResultsPaginationLabel: 'Search results pagination',
+
+  // ActiveFilters
+  filteredBy: 'Filtered by:',
+  activeFiltersRegion: 'Active filters',
+  andConnector: 'and',
+  removeFilter: 'Remove filter: {field} is {value}',
+  clearAllFilters: 'Clear all filters',
+  clearAllFiltersLabel: 'Clear all {count} active filters',
+  // count === 1 uses activeFiltersCount; count !== 1 uses activeFiltersCountPlural
+  activeFiltersCount: '{count} active filter',
+  activeFiltersCountPlural: '{count} active filters',
+
+  // MobileFilterDrawer
+  drawerTitle: 'Filters',
+  closeFilters: 'Close filters',
+  viewResults: 'View results',
+  // count === 1 uses filtersApplied; count !== 1 uses filtersAppliedPlural
+  filtersApplied: '{count} filter applied',
+  filtersAppliedPlural: '{count} filters applied',
+
+  // FacetSelect — boolean operator (any/all) for multi-select filters
+  selectPlaceholder: 'Select {label}',
+  matchModeLabel: 'Search type for {label}',
+  matchModeGroupLabel: 'Search type:',
+  matchModeAny: 'Match any of these',
+  matchModeAll: 'Match all of these',
+
+  // SelectDropdown internals (passed as props)
+  dropdownSearchPlaceholder: 'Search...',
+  dropdownNoOptions: 'No matches found',
+
+  // SortOptions
+  sortLegend: 'Sort',
+  sortPlaceholder: 'Sort by',
+  sortRelevance: 'Relevance',
+  sortNewest: 'Newest',
+  sortOldest: 'Oldest',
+
+  // FacetsSidebar
+  loadingFilters: 'Loading filters…',
+
+  // Pager (prev/next/page labels passed to PagerList via SearchPager)
+  pagerPrevious: 'Previous',
+  pagerNext: 'Next',
+  pagerGoToPrevious: 'Go to previous page',
+  pagerGoToNext: 'Go to next page',
+  pagerPage: 'Page {page}',
+  pagerCurrentPage: 'Page {page}, current page',
+  // Used in the sr-only live region: 'Page {page} of {total}'
+  pagerPageOf: 'Page {page} of {total}',
+
+  // ResultItem — content unavailable (no domain assignment in CMS)
+  // This is an admin/configuration error state; end users see a friendly message.
+  // The {nid} token is available for debug builds but omit it in production labels.
+  domainAccessError: 'This content is currently unavailable.',
+  reportErrorLink: 'Report this issue',
+};
+
+/**
+ * Resolve a label value and substitute `{key}` tokens.
+ *
+ * `template` may be:
+ *   - A plain string with optional `{key}` tokens — tokens are substituted from `vars`.
+ *   - A function `(vars) => string` — called with `vars` and expected to return a
+ *     fully resolved string. Use this for languages with complex plural rules (Russian,
+ *     Arabic, etc.) where two static keys are not enough.
+ *
+ * @param {string|Function} template
+ * @param {Object} [vars={}]
+ * @returns {string}
+ *
+ * @example — static string
+ *   interpolateLabel('{count} results found', { count: 5 }) // '5 results found'
+ *
+ * @example — function for Russian plurals
+ *   interpolateLabel(
+ *     ({ count }) => {
+ *       const form = new Intl.PluralRules('ru').select(count);
+ *       const forms = { one: 'результат', few: 'результата', other: 'результатов' };
+ *       return `Найдено ${count} ${forms[form] ?? forms.other}`;
+ *     },
+ *     { count: 3 }
+ *   ) // 'Найдено 3 результата'
+ */
+export function interpolateLabel(template, vars = {}) {
+  if (typeof template === 'function') {
+    return String(template(vars));
+  }
+  return String(template).replace(/\{(\w+)\}/g, (_, key) =>
+    Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : `{${key}}`
+  );
+}
 import { DEFAULT_CONFIG } from '../utils/constants';
 
 /**
@@ -40,8 +196,9 @@ const initialState = {
   // Aggregations from Elasticsearch (for facet counts)
   aggregations: null,
 
-  // Total result count
+  // Total result count and Elasticsearch relation ('eq' = exact, 'gte' = capped)
   totalResults: 0,
+  totalResultsRelation: 'eq',
 
   // Loading state
   isLoading: false,
@@ -220,6 +377,7 @@ function searchReducer(state, action) {
         results: action.payload.hits?.hits || [],
         aggregations: action.payload.aggregations || null,
         totalResults: action.payload.hits?.total?.value || 0,
+        totalResultsRelation: action.payload.hits?.total?.relation || 'eq',
         searchTime: action.payload.took || null,
         isLoading: false,
         error: null,
@@ -280,6 +438,11 @@ function searchReducer(state, action) {
 const SearchConfigContext = createContext(null);
 
 /**
+ * Context for UI labels (static, merged with DEFAULT_LABELS).
+ */
+const SearchLabelsContext = createContext(DEFAULT_LABELS);
+
+/**
  * Context for search state (dynamic).
  */
 const SearchStateContext = createContext(null);
@@ -297,12 +460,18 @@ const SearchDispatchContext = createContext(null);
  * @param {Object} props.config - Search widget configuration
  * @param {React.ReactNode} props.children - Child components
  */
-export function SearchProvider({ config: userConfig, children }) {
+export function SearchProvider({ config: userConfig, labels: userLabels, children }) {
   // Merge user config with defaults
   const config = useMemo(() => ({
     ...DEFAULT_CONFIG,
     ...userConfig,
   }), [userConfig]);
+
+  // Merge user labels with defaults
+  const labels = useMemo(() => ({
+    ...DEFAULT_LABELS,
+    ...userLabels,
+  }), [userLabels]);
 
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
@@ -312,11 +481,13 @@ export function SearchProvider({ config: userConfig, children }) {
 
   return (
     <SearchConfigContext.Provider value={config}>
-      <SearchStateContext.Provider value={stateValue}>
-        <SearchDispatchContext.Provider value={dispatch}>
-          {children}
-        </SearchDispatchContext.Provider>
-      </SearchStateContext.Provider>
+      <SearchLabelsContext.Provider value={labels}>
+        <SearchStateContext.Provider value={stateValue}>
+          <SearchDispatchContext.Provider value={dispatch}>
+            {children}
+          </SearchDispatchContext.Provider>
+        </SearchStateContext.Provider>
+      </SearchLabelsContext.Provider>
     </SearchConfigContext.Provider>
   );
 }
@@ -332,6 +503,14 @@ export function useSearchConfig() {
     throw new Error('useSearchConfig must be used within a SearchProvider');
   }
   return config;
+}
+
+/**
+ * Hook to access UI labels (merged with DEFAULT_LABELS).
+ * @returns {Object} Labels object
+ */
+export function useSearchLabels() {
+  return use(SearchLabelsContext);
 }
 
 /**

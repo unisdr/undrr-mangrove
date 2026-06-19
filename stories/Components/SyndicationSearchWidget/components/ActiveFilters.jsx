@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useId } from 'react';
-import { useSearchState, useSearchConfig, useSearchDispatch, actions } from '../context/SearchContext';
+import { useSearchState, useSearchConfig, useSearchDispatch, useSearchLabels, interpolateLabel, actions } from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   getDomain,
@@ -25,6 +25,7 @@ export function ActiveFilters() {
   const state = useSearchState();
   const config = useSearchConfig();
   const dispatch = useSearchDispatch();
+  const labels = useSearchLabels();
   const labelId = useId();
   const { getLabel: getTaxonomyLabel } = useTaxonomies();
 
@@ -130,10 +131,10 @@ export function ActiveFilters() {
     <div
       className="mg-search__active-filters"
       role="region"
-      aria-label="Active filters"
+      aria-label={labels.activeFiltersRegion}
     >
       <span className="mg-search__active-filters-label" id={labelId}>
-        Filtered by:
+        {labels.filteredBy}
       </span>
 
       <ul
@@ -151,14 +152,14 @@ export function ActiveFilters() {
                   className="mg-search__filter-chip-connector"
                   aria-hidden="true"
                 >
-                  and
+                  {labels.andConnector}
                 </span>
               )}
             <button
               type="button"
               className="mg-search__filter-chip"
               onClick={() => handleRemove(chip)}
-              aria-label={`Remove filter: ${chip.fieldLabel} is ${chip.label}`}
+              aria-label={interpolateLabel(labels.removeFilter, { field: chip.fieldLabel, value: chip.label })}
             >
               <span className="mg-search__filter-chip-label">{chip.label}</span>
               <span className="mg-search__filter-chip-remove" aria-hidden="true">
@@ -174,15 +175,18 @@ export function ActiveFilters() {
           type="button"
           className="mg-search__clear-all"
           onClick={handleClearAll}
-          aria-label={`Clear all ${chips.length} active filters`}
+          aria-label={interpolateLabel(labels.clearAllFiltersLabel, { count: chips.length })}
         >
-          Clear all filters
+          {labels.clearAllFilters}
         </button>
       )}
 
       {/* Screen reader announcement */}
       <span className="mg-u-sr-only" role="status" aria-live="polite">
-        {chips.length} active filter{chips.length !== 1 ? 's' : ''}
+        {interpolateLabel(
+          chips.length !== 1 ? labels.activeFiltersCountPlural : labels.activeFiltersCount,
+          { count: chips.length }
+        )}
       </span>
     </div>
   );

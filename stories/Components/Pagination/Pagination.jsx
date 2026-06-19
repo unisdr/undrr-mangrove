@@ -10,13 +10,13 @@ import PropTypes from 'prop-types';
  * @param {string} [props.text] - Decorative text displayed before the first page number.
  * @param {string} [props.text2] - Decorative text displayed before the last page number.
  */
-export function Pagination({ text, text2 }) {
+export function Pagination({ text, text2, prevLabel = 'Previous', nextLabel = 'Next', nextAriaLabel = 'Next page' }) {
   return (
     <nav className="pagination" aria-label="Pagination">
       <ul>
         <li className="disabled">
           <span aria-disabled="true">
-            Previous
+            {prevLabel}
           </span>
         </li>
         <li>
@@ -36,8 +36,8 @@ export function Pagination({ text, text2 }) {
           </span>
         </li>
         <li>
-          <a href="#" aria-label="Next page">
-            Next
+          <a href="#" aria-label={nextAriaLabel}>
+            {nextLabel}
           </a>
         </li>
       </ul>
@@ -50,4 +50,10 @@ Pagination.propTypes = {
   text: PropTypes.string,
   /** Decorative text displayed before the last page number. */
   text2: PropTypes.string,
+  /** Visible label for the previous page link. */
+  prevLabel: PropTypes.string,
+  /** Visible label for the next page link. */
+  nextLabel: PropTypes.string,
+  /** Accessible label for the next page anchor. */
+  nextAriaLabel: PropTypes.string,
 };

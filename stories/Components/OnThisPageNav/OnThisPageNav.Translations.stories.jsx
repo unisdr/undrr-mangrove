@@ -1,0 +1,54 @@
+/**
+ * @file OnThisPageNav.Translations.stories.jsx
+ * @description Stories demonstrating label prop translation for the OnThisPageNav component.
+ *
+ * Translatable prop: label (the aria-label for the nav element, also rendered
+ * as the section heading by the vanilla JS runtime).
+ * Defaults to "On this page" — pass to override.
+ *
+ * Languages provided: ES, FR, JA, ZH, AR, RU
+ */
+
+import OnThisPageNav from './OnThisPageNav';
+
+export default {
+  title: 'Components/OnThisPageNav/Translations',
+  component: OnThisPageNav,
+};
+
+const items = [
+  { href: '#introduction', text: 'Introduction' },
+  { href: '#background', text: 'Background' },
+  { href: '#findings', text: 'Findings' },
+  { href: '#conclusion', text: 'Conclusion' },
+];
+
+export const Spanish = {
+  args: { items, label: 'En esta página' },
+  name: 'Spanish (es)',
+};
+
+export const French = {
+  args: { items, label: 'Sur cette page' },
+  name: 'French (fr)',
+};
+
+export const Japanese = {
+  args: { items, label: 'このページの内容' },
+  name: 'Japanese (ja)',
+};
+
+export const Chinese = {
+  args: { items, label: '本页内容' },
+  name: 'Chinese (zh)',
+};
+
+export const Arabic = {
+  args: { items, label: 'في هذه الصفحة' },
+  name: 'Arabic (ar)',
+};
+
+export const Russian = {
+  args: { items, label: 'На этой странице' },
+  name: 'Russian (ru)',
+};
