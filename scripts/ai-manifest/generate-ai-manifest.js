@@ -154,9 +154,6 @@ const COMPONENT_IDS = {
   ScrollContainer: 'components-scrollcontainer',
   Gallery: 'components-gallery',
   Pager: 'components-pager',
-  MapComponent: 'components-maps-mapcomponent',
-  BarChart: 'components-charts-barchart',
-  Fetcher: 'components-fetcher',
   ShareButtons: 'components-buttons-sharebuttons',
 };
 
@@ -533,7 +530,7 @@ const npmExports = parseNpmExports();
 // Reverse lookup: Storybook ID → webpack entry name (which matches the npm
 // export name). Derived from COMPONENT_IDS so it self-heals when new
 // components are added. Used as a fallback when Storybook's internal function
-// name (e.g. BarChartProcessor) differs from the npm export (e.g. BarChart).
+// name differs from the npm export name.
 const storybookIdToWebpackName = Object.fromEntries(
   Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name])
 );

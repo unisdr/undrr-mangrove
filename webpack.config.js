@@ -87,11 +87,8 @@ export default [
       MegaMenu: './stories/Components/MegaMenu/MegaMenu.hydrate.js',
       ScrollContainer:
         './stories/Components/ScrollContainer/ScrollContainer.hydrate.js',
-      BarChart: './stories/Components/Charts/BarChart/BarChart.jsx',
-      MapComponent: './stories/Components/Map/MapComponent.jsx',
       QuoteHighlight:
         './stories/Components/QuoteHighlight/QuoteHighlight.hydrate.js',
-      Fetcher: './stories/Components/Fetcher/Fetcher.jsx',
       SyndicationSearchWidget:
         './stories/Components/SyndicationSearchWidget/SyndicationSearchWidget.hydrate.js',
       IconCard: './stories/Components/Cards/IconCard/IconCard.hydrate.js',

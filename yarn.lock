@@ -3593,17 +3593,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-leaflet/core@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@react-leaflet/core@npm:3.0.0"
-  peerDependencies:
-    leaflet: ^1.9.0
-    react: ^19.0.0
-    react-dom: ^19.0.0
-  checksum: 10/193f4928ff609a922493f05e2f301f53a3d9b8387e90fc6ab4bc4f78f97272cad000fbdf0f1d23069f67cb35d3d855734ce5a5feab98619aebfc3334be2967c7
-  languageName: node
-  linkType: hard
-
 "@rtsao/scc@npm:^1.1.0":
   version: 1.1.0
   resolution: "@rtsao/scc@npm:1.1.0"
@@ -3969,22 +3958,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@terraformer/arcgis@npm:^2.1.0":
-  version: 2.1.2
-  resolution: "@terraformer/arcgis@npm:2.1.2"
-  dependencies:
-    "@terraformer/common": "npm:^2.1.2"
-  checksum: 10/087dfc7a6f304f6a677714982336846956b753ca867bd7fd775aedc2d5a4cf233229e2970ad72a7ad310c6a6904dc4585d143ac6353331ca5ea70399fb259ae4
-  languageName: node
-  linkType: hard
-
-"@terraformer/common@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "@terraformer/common@npm:2.1.2"
-  checksum: 10/78807f8102f478f97193cb6eb79fb4976462ba75fbfb8ec0b2ac21f3d2554177bfd78f2b19ed0a111c03e3047ac2110656f01a7de57712f86cd44fd8cda2c049
-  languageName: node
-  linkType: hard
-
 "@testing-library/dom@npm:^10.4.1":
   version: 10.4.1
   resolution: "@testing-library/dom@npm:10.4.1"
@@ -4135,45 +4108,6 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/b4172927cd1387cf037c3ade785ef46c87537b7bc2803d7f6663b4904d0c5d6f726415d1adb2fee4fecb21746738f11336076449265d46be4ce110cc3a8c8436
-  languageName: node
-  linkType: hard
-
-"@types/d3-array@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "@types/d3-array@npm:3.2.2"
-  checksum: 10/1afebd05b688cafaaea295f765b409789f088b274b8a7ca40a4bc2b79760044a898e06a915f40bbc59cf39eabdd2b5d32e960b136fc025fd05c9a9d4435614c6
-  languageName: node
-  linkType: hard
-
-"@types/d3-axis@npm:^3.0.6":
-  version: 3.0.6
-  resolution: "@types/d3-axis@npm:3.0.6"
-  dependencies:
-    "@types/d3-selection": "npm:*"
-  checksum: 10/8af56b629a0597ac8ef5051b6ad5390818462d8e588e1b52fb181808b1c0525d12a658730fad757e1ae256d0db170a0e29076acdef21acc98b954608d1c37b84
-  languageName: node
-  linkType: hard
-
-"@types/d3-scale@npm:^4.0.9":
-  version: 4.0.9
-  resolution: "@types/d3-scale@npm:4.0.9"
-  dependencies:
-    "@types/d3-time": "npm:*"
-  checksum: 10/2cae90a5e39252ae51388f3909ffb7009178582990462838a4edd53dd7e2e08121b38f0d2e1ac0e28e41167e88dea5b99e064ca139ba917b900a8020cf85362f
-  languageName: node
-  linkType: hard
-
-"@types/d3-selection@npm:*, @types/d3-selection@npm:^3.0.11":
-  version: 3.0.11
-  resolution: "@types/d3-selection@npm:3.0.11"
-  checksum: 10/2d2d993b9e9553d066566cb22916c632e5911090db99e247bd8c32855a344e6b7c25b674f3c27956c367a6b3b1214b09931ce854788c3be2072003e01f2c75d7
-  languageName: node
-  linkType: hard
-
-"@types/d3-time@npm:*":
-  version: 3.0.4
-  resolution: "@types/d3-time@npm:3.0.4"
-  checksum: 10/b1eb4255066da56023ad243fd4ae5a20462d73bd087a0297c7d49ece42b2304a4a04297568c604a38541019885b2bc35a9e0fd704fad218e9bc9c5f07dc685ce
   languageName: node
   linkType: hard
 
@@ -4713,10 +4647,6 @@ __metadata:
     "@storybook/react-webpack5": "npm:^10.4.6"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/react": "npm:16.3.2"
-    "@types/d3-array": "npm:^3.2.2"
-    "@types/d3-axis": "npm:^3.0.6"
-    "@types/d3-scale": "npm:^4.0.9"
-    "@types/d3-selection": "npm:^3.0.11"
     "@types/dompurify": "npm:3.2.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.61.1"
     "@typescript-eslint/parser": "npm:^8.61.1"
@@ -4731,10 +4661,6 @@ __metadata:
     css-loader: "npm:7.1.4"
     css-minimizer-webpack-plugin: "npm:8.0.0"
     d3: "npm:7.9.0"
-    d3-array: "npm:^3.2.4"
-    d3-axis: "npm:^3.0.0"
-    d3-scale: "npm:^4.0.2"
-    d3-selection: "npm:^3.0.0"
     dompurify: "npm:^3.4.11"
     eslint: "npm:10.5.0"
     eslint-config-prettier: "npm:10.1.8"
@@ -4746,7 +4672,6 @@ __metadata:
     eslint-plugin-react-hooks: "npm:7.1.1"
     eslint-plugin-spellcheck: "npm:0.0.20"
     eslint-plugin-storybook: "npm:^10.4.6"
-    esri-leaflet: "npm:3.1.0"
     file-loader: "npm:6.2.0"
     glob: "npm:13.0.6"
     globals: "npm:17.6.0"
@@ -4755,7 +4680,6 @@ __metadata:
     jest-axe: "npm:^10.0.0"
     jest-environment-jsdom: "npm:30.4.1"
     jest-transform-stub: "npm:2.0.0"
-    leaflet: "npm:1.9.4"
     lucide-static: "npm:^1.21.0"
     mini-css-extract-plugin: "npm:2.10.2"
     path: "npm:0.12.7"
@@ -4767,8 +4691,6 @@ __metadata:
     qrcode: "npm:^1.5.4"
     react: "npm:19.2.7"
     react-dom: "npm:19.2.7"
-    react-leaflet: "npm:5.0.0"
-    react-leaflet-markercluster: "npm:5.0.0-rc.0"
     react-syntax-highlighter: "npm:16.1.1"
     remark-gfm: "npm:^4.0.1"
     sass: "npm:^1.101.0"
@@ -6813,7 +6735,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:2.5.0 - 3, d3-array@npm:3, d3-array@npm:^3.2.0, d3-array@npm:^3.2.4":
+"d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:2.5.0 - 3, d3-array@npm:3, d3-array@npm:^3.2.0":
   version: 3.2.4
   resolution: "d3-array@npm:3.2.4"
   dependencies:
@@ -6822,7 +6744,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-axis@npm:3, d3-axis@npm:^3.0.0":
+"d3-axis@npm:3":
   version: 3.0.0
   resolution: "d3-axis@npm:3.0.0"
   checksum: 10/15ec43ecbd4e7b606fcda60f67a522e45576dfd6aa83dff47f3e91ef6c8448841a09cd91f630b492250dcec67c6ea64463510ead5e632ff6b827aeefae1d42ad
@@ -7011,7 +6933,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-scale@npm:4, d3-scale@npm:^4.0.2":
+"d3-scale@npm:4":
   version: 4.0.2
   resolution: "d3-scale@npm:4.0.2"
   dependencies:
@@ -7024,7 +6946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-selection@npm:2 - 3, d3-selection@npm:3, d3-selection@npm:^3.0.0":
+"d3-selection@npm:2 - 3, d3-selection@npm:3":
   version: 3.0.0
   resolution: "d3-selection@npm:3.0.0"
   checksum: 10/0e5acfd305b31628b7be5009ba7303d84bb34817a88ed4dde9c8bd9c23528573fc5272f89fc04e5be03d2cbf5441a248d7274aaf55a8ef3dad46e16333d72298
@@ -8382,18 +8304,6 @@ __metadata:
   dependencies:
     estraverse: "npm:^5.2.0"
   checksum: 10/44ffcd89e714ea6b30143e7f119b104fc4d75e77ee913f34d59076b40ef2d21967f84e019f84e1fd0465b42cdbf725db449f232b5e47f29df29ed76194db8e16
-  languageName: node
-  linkType: hard
-
-"esri-leaflet@npm:3.1.0":
-  version: 3.1.0
-  resolution: "esri-leaflet@npm:3.1.0"
-  dependencies:
-    "@terraformer/arcgis": "npm:^2.1.0"
-    tiny-binary-search: "npm:^1.0.3"
-  peerDependencies:
-    leaflet: ^1.0.0
-  checksum: 10/3440dc581d8bff61461c21aa0506fbb844814d1769405d213a60fb4e392da03fc89f6932cdb5f9eb963ffca176760251ebb68b3b02814040a5e8251e0cd96728
   languageName: node
   linkType: hard
 
@@ -11065,22 +10975,6 @@ __metadata:
   dependencies:
     language-subtag-registry: "npm:^0.3.20"
   checksum: 10/d3a7c14b694e67f519153d6df6cb200681648d38d623c3bfa9d6a66a5ec5493628acb88e9df5aceef3cf1902ab263a205e7d59ee4cf1d6bb67e707b83538bd6d
-  languageName: node
-  linkType: hard
-
-"leaflet.markercluster@npm:^1.5.3":
-  version: 1.5.3
-  resolution: "leaflet.markercluster@npm:1.5.3"
-  peerDependencies:
-    leaflet: ^1.3.1
-  checksum: 10/28dc441de7012b19628144407bde89576f758dbea31ecb86e3412d1fb3a46723fb47d2ba45d9b858c2e65592479a127474fb1cbf7ff33b3023c4d14f851e5fe4
-  languageName: node
-  linkType: hard
-
-"leaflet@npm:1.9.4, leaflet@npm:^1.9.4":
-  version: 1.9.4
-  resolution: "leaflet@npm:1.9.4"
-  checksum: 10/7b6a74d503980961a85bdabebf9d1162c26db0e88195800ceea311682b653d621718f2ada3c9aab903a735af9862c9ae278ba550d4429acbd954d43449cd0d77
   languageName: node
   linkType: hard
 
@@ -13972,36 +13866,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-leaflet-markercluster@npm:5.0.0-rc.0":
-  version: 5.0.0-rc.0
-  resolution: "react-leaflet-markercluster@npm:5.0.0-rc.0"
-  dependencies:
-    "@react-leaflet/core": "npm:^3.0.0"
-    leaflet: "npm:^1.9.4"
-    leaflet.markercluster: "npm:^1.5.3"
-    react-leaflet: "npm:^5.0.0"
-  peerDependencies:
-    leaflet: ^1.9.4
-    leaflet.markercluster: ^1.5.3
-    react: ^19.0.0
-    react-leaflet: ^5.0.0
-  checksum: 10/7bc51ed504ed4b1ff9efae70db28737b95c0c07b53c0bcbadf726267ef4433920d047c2166a58aee46f4969f504340a4dcf4013266ae30f5c9bb05af48dccb4a
-  languageName: node
-  linkType: hard
-
-"react-leaflet@npm:5.0.0, react-leaflet@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "react-leaflet@npm:5.0.0"
-  dependencies:
-    "@react-leaflet/core": "npm:^3.0.0"
-  peerDependencies:
-    leaflet: ^1.9.0
-    react: ^19.0.0
-    react-dom: ^19.0.0
-  checksum: 10/170bf8d83141c8406fddc8cab41608ec6938efaafa5ae08c2060f9c0739370b84ed61d809c092d9f9ea79461399519f18f1cdf06dcb0e26d61d89eda46fb30be
-  languageName: node
-  linkType: hard
-
 "react-syntax-highlighter@npm:16.1.1":
   version: 16.1.1
   resolution: "react-syntax-highlighter@npm:16.1.1"
@@ -15779,13 +15643,6 @@ __metadata:
   version: 1.3.4
   resolution: "thenby@npm:1.3.4"
   checksum: 10/4422e71677adb8215a34e2096845f51114dd285faf730915e7171e6d2a778a29c6df75523c731eee3b7feddf57436ef7764ff526dbb1686af390a064ee15a14f
-  languageName: node
-  linkType: hard
-
-"tiny-binary-search@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "tiny-binary-search@npm:1.0.3"
-  checksum: 10/811eb7b53a9664d14023926ae02f4406c8b215355de1e647809962dba421fbb2c10891f0d45c433043d80f563ce7037dcaf200103bca5674a9cb23803ebb1df7
   languageName: node
   linkType: hard
 
