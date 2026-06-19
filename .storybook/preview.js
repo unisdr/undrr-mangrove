@@ -20,7 +20,11 @@ const rtlLanguages = ['arabic'];
 const langArr = {
   english: 'en',
   arabic: 'ar',
+  french: 'fr',
   japanese: 'ja',
+  russian: 'ru',
+  spanish: 'es',
+  chinese: 'zh',
 };
 
 // Decorator to set language and text direction based on locale global
@@ -227,7 +231,11 @@ const preview = {
         items: [
           { value: 'english', title: 'English' },
           { value: 'arabic', title: 'Arabic' },
+          { value: 'french', title: 'French' },
           { value: 'japanese', title: 'Japanese' },
+          { value: 'russian', title: 'Russian' },
+          { value: 'spanish', title: 'Spanish' },
+          { value: 'chinese', title: 'Simplified Chinese' },
         ],
       },
     },
