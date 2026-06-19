@@ -60,5 +60,7 @@ By clicking on the forward or backward arrow, the pages are flipped forwards or 
 
 ## Changelog
 
+- **1.1** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `prevLabel`, `nextLabel`, and `nextAriaLabel` props into a single `labels` object with `DEFAULT_PAGINATION_LABELS` export. Backwards compatible — `DEFAULT_PAGINATION_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+
 - **Deprecated** — 2026-02: Deprecated in favor of the [Pager](?path=/docs/components-pager--docs) component. Removal planned by end of 2026. Removed from CSS bundle and webpack build.
 - **1.0** — 2022-12-12: Released component

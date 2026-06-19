@@ -35,6 +35,11 @@ import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
 
+export const DEFAULT_MEGAMENU_LABELS = {
+  navLabel: 'Main Navigation',
+  closeMobileNavLabel: 'Close mobile navigation',
+};
+
 const MegaMenu = ({
   sections,
   delay = 300,
@@ -44,9 +49,12 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
-  navLabel = 'Main Navigation',
-  closeMobileNavLabel = 'Close mobile navigation',
+  labels = {},
 }) => {
+  const { navLabel, closeMobileNavLabel } = {
+    ...DEFAULT_MEGAMENU_LABELS,
+    ...labels,
+  };
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const [jsActive, setJsActive] = useState(false);
@@ -197,10 +205,11 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
-  /** Accessible label for the main nav element. */
-  navLabel: PropTypes.string,
-  /** Accessible label for the mobile sidebar close overlay button. */
-  closeMobileNavLabel: PropTypes.string,
+  /** Translated UI labels. Keys: navLabel, closeMobileNavLabel. */
+  labels: PropTypes.shape({
+    navLabel: PropTypes.string,
+    closeMobileNavLabel: PropTypes.string,
+  }),
 };
 
 export default MegaMenu;

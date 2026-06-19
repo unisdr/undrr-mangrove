@@ -2,13 +2,22 @@
  * @file Tab.Translations.stories.jsx
  * @description Stories demonstrating label prop translation for the Tab component.
  *
- * Translatable prop: filterPlaceholder (the search input shown when filterable=true
- * and variant='stacked'). Defaults to English "Filter sections…".
+ * Translatable prop (via the `labels` object): filterPlaceholder (the search
+ * input shown when filterable=true and variant='stacked').
+ * Defaults to English "Filter sections…".
  *
  * Languages provided: ES, FR, JA, ZH, AR, RU
  */
 
 import { Tab } from './Tab';
+import {
+  LABELS_AR,
+  LABELS_ES,
+  LABELS_FR,
+  LABELS_JA,
+  LABELS_RU,
+  LABELS_ZH,
+} from './_labels';
 
 export default {
   title: 'Components/Tab/Translations',
@@ -41,31 +50,31 @@ const baseArgs = {
 };
 
 export const Spanish = {
-  args: { ...baseArgs, filterPlaceholder: 'Filtrar secciones…' },
+  args: { ...baseArgs, labels: LABELS_ES },
   name: 'Spanish (es)',
 };
 
 export const French = {
-  args: { ...baseArgs, filterPlaceholder: 'Filtrer les sections…' },
+  args: { ...baseArgs, labels: LABELS_FR },
   name: 'French (fr)',
 };
 
 export const Japanese = {
-  args: { ...baseArgs, filterPlaceholder: 'セクションを絞り込む…' },
+  args: { ...baseArgs, labels: LABELS_JA },
   name: 'Japanese (ja)',
 };
 
 export const Chinese = {
-  args: { ...baseArgs, filterPlaceholder: '筛选章节…' },
+  args: { ...baseArgs, labels: LABELS_ZH },
   name: 'Chinese (zh)',
 };
 
 export const Arabic = {
-  args: { ...baseArgs, filterPlaceholder: 'تصفية الأقسام…' },
+  args: { ...baseArgs, labels: LABELS_AR },
   name: 'Arabic (ar)',
 };
 
 export const Russian = {
-  args: { ...baseArgs, filterPlaceholder: 'Фильтр разделов…' },
+  args: { ...baseArgs, labels: LABELS_RU },
   name: 'Russian (ru)',
 };

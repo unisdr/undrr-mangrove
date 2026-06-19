@@ -1,6 +1,11 @@
 import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+export const DEFAULT_SCROLL_LABELS = {
+  scrollLeftLabel: 'Scroll left',
+  scrollRightLabel: 'Scroll right',
+};
+
 // Separate arrow buttons component
 const ArrowButtons = React.memo(
   ({ onScroll, leftButtonRef, rightButtonRef, scrollLeftLabel = 'Scroll left', scrollRightLabel = 'Scroll right' }) => {
@@ -45,10 +50,13 @@ const ScrollContainer = ({
   className = '',
   showArrows = false,
   stepSize = null,
-  scrollLeftLabel = 'Scroll left',
-  scrollRightLabel = 'Scroll right',
+  labels = {},
   ...props
 }) => {
+  const { scrollLeftLabel, scrollRightLabel } = {
+    ...DEFAULT_SCROLL_LABELS,
+    ...labels,
+  };
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const leftButtonRef = useRef(null);
@@ -300,10 +308,11 @@ ScrollContainer.propTypes = {
   className: PropTypes.string,
   showArrows: PropTypes.bool,
   stepSize: PropTypes.number,
-  /** Accessible label for the scroll-left button. */
-  scrollLeftLabel: PropTypes.string,
-  /** Accessible label for the scroll-right button. */
-  scrollRightLabel: PropTypes.string,
+  /** Translated UI label strings */
+  labels: PropTypes.shape({
+    scrollLeftLabel: PropTypes.string,
+    scrollRightLabel: PropTypes.string,
+  }),
 };
 
 export default React.memo(ScrollContainer);
