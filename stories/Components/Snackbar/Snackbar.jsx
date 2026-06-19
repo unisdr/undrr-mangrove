@@ -12,15 +12,20 @@ import { ErrorIcon, WarningIcon, InfoIcon, SuccessIcon } from './SnackbarIcons';
  * @param {Number} openedMiliseconds time after opening before the snackbar automatically disappears (in milliseconds)
  * @returns Component that renders a snackbar based on opened, severity, message and onClose props
  */
+export const DEFAULT_SNACKBAR_LABELS = {
+  closeLabel: 'Close',
+  closeAriaLabel: 'Close notification',
+};
+
 const Snackbar = ({
   severity,
   opened,
   message,
   onClose,
   openedMiliseconds,
-  closeLabel = 'Close',
-  closeAriaLabel = 'Close notification',
+  labels = {},
 }) => {
+  const { closeLabel, closeAriaLabel } = { ...DEFAULT_SNACKBAR_LABELS, ...labels };
   let icon;
   const closeButtonRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -121,6 +126,7 @@ export const ShowOffSnackbar = ({
   severity = 'info',
   message = 'Showing off an example of the snackbar',
   openedMiliseconds,
+  labels = {},
 }) => {
   const [SnackbarOpen, setSnackbarOpen] = React.useState(false);
   return (
@@ -139,6 +145,7 @@ export const ShowOffSnackbar = ({
           severity={severity}
           opened={SnackbarOpen}
           message={message}
+          labels={labels}
           onClose={() => {
             setSnackbarOpen(false);
           }}
@@ -197,10 +204,11 @@ Snackbar.propTypes = {
   onClose: PropTypes.func.isRequired,
   /** Auto-dismiss delay in milliseconds. Omit to keep the snackbar open until dismissed. */
   openedMiliseconds: PropTypes.number,
-  /** Visible text label for the close button. */
-  closeLabel: PropTypes.string,
-  /** Accessible label for the close button (used by screen readers). */
-  closeAriaLabel: PropTypes.string,
+  /** Translated UI labels. Keys: closeLabel, closeAriaLabel. */
+  labels: PropTypes.shape({
+    closeLabel: PropTypes.string,
+    closeAriaLabel: PropTypes.string,
+  }),
 };
 
 export default Snackbar;

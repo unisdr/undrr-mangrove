@@ -2,13 +2,19 @@
  * @file Gallery.Translations.stories.jsx
  * @description Stories demonstrating label prop translation for the Gallery component.
  *
- * Translatable props: galleryAriaLabel, prevLabel, nextLabel, loadingLabel.
- * These default to English — pass any subset to override.
- *
+ * Pass a `labels` object to override any subset of UI strings.
  * Languages provided: ES, FR, JA, ZH, AR, RU
  */
 
 import { Gallery } from './Gallery';
+import {
+  LABELS_AR,
+  LABELS_ES,
+  LABELS_FR,
+  LABELS_JA,
+  LABELS_RU,
+  LABELS_ZH,
+} from './_labels';
 
 export default {
   title: 'Components/Gallery/Translations',
@@ -47,92 +53,32 @@ const baseArgs = {
   enableKeyboard: true,
 };
 
-// ---------------------------------------------------------------------------
-// Spanish (es)
-// ---------------------------------------------------------------------------
-export const LABELS_ES = {
-  galleryAriaLabel: 'Galería',
-  prevLabel: 'Elemento anterior',
-  nextLabel: 'Elemento siguiente',
-  loadingLabel: 'Cargando medio',
-};
-
 export const Spanish = {
-  args: { ...baseArgs, ...LABELS_ES },
+  args: { ...baseArgs, labels: LABELS_ES },
   name: 'Spanish (es)',
 };
 
-// ---------------------------------------------------------------------------
-// French (fr)
-// ---------------------------------------------------------------------------
-export const LABELS_FR = {
-  galleryAriaLabel: 'Galerie',
-  prevLabel: 'Élément précédent',
-  nextLabel: 'Élément suivant',
-  loadingLabel: 'Chargement du média',
-};
-
 export const French = {
-  args: { ...baseArgs, ...LABELS_FR },
+  args: { ...baseArgs, labels: LABELS_FR },
   name: 'French (fr)',
 };
 
-// ---------------------------------------------------------------------------
-// Japanese (ja)
-// ---------------------------------------------------------------------------
-export const LABELS_JA = {
-  galleryAriaLabel: 'ギャラリー',
-  prevLabel: '前のアイテム',
-  nextLabel: '次のアイテム',
-  loadingLabel: 'メディアを読み込んでいます…',
-};
-
 export const Japanese = {
-  args: { ...baseArgs, ...LABELS_JA },
+  args: { ...baseArgs, labels: LABELS_JA },
   name: 'Japanese (ja)',
 };
 
-// ---------------------------------------------------------------------------
-// Simplified Chinese (zh)
-// ---------------------------------------------------------------------------
-export const LABELS_ZH = {
-  galleryAriaLabel: '图库',
-  prevLabel: '上一项',
-  nextLabel: '下一项',
-  loadingLabel: '正在加载媒体',
-};
-
 export const Chinese = {
-  args: { ...baseArgs, ...LABELS_ZH },
+  args: { ...baseArgs, labels: LABELS_ZH },
   name: 'Chinese (zh)',
 };
 
-// ---------------------------------------------------------------------------
-// Arabic (ar) — Modern Standard Arabic
-// ---------------------------------------------------------------------------
-export const LABELS_AR = {
-  galleryAriaLabel: 'معرض الصور',
-  prevLabel: 'العنصر السابق',
-  nextLabel: 'العنصر التالي',
-  loadingLabel: 'جارٍ تحميل الوسائط',
-};
-
 export const Arabic = {
-  args: { ...baseArgs, ...LABELS_AR },
+  args: { ...baseArgs, labels: LABELS_AR },
   name: 'Arabic (ar)',
 };
 
-// ---------------------------------------------------------------------------
-// Russian (ru)
-// ---------------------------------------------------------------------------
-export const LABELS_RU = {
-  galleryAriaLabel: 'Галерея',
-  prevLabel: 'Предыдущий элемент',
-  nextLabel: 'Следующий элемент',
-  loadingLabel: 'Загрузка медиа',
-};
-
 export const Russian = {
-  args: { ...baseArgs, ...LABELS_RU },
+  args: { ...baseArgs, labels: LABELS_RU },
   name: 'Russian (ru)',
 };

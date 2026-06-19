@@ -565,7 +565,7 @@ describe('Tab', () => {
     it('uses custom placeholder text', () => {
       const { tabContainer } = renderAndInit('stacked', false, {
         filterable: true,
-        filterPlaceholder: 'Search FAQs\u2026',
+        labels: { filterPlaceholder: 'Search FAQs\u2026' },
       });
       const input = tabContainer.querySelector('.mg-tabs__filter-input');
       expect(input.placeholder).toBe('Search FAQs\u2026');

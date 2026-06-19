@@ -1,8 +1,32 @@
 import MegaMenu from './MegaMenu';
+import {
+  LABELS_ES,
+  LABELS_FR,
+  LABELS_JA,
+  LABELS_ZH,
+  LABELS_AR,
+  LABELS_RU,
+} from './_labels';
+
+const LOCALE_LABELS = {
+  spanish: LABELS_ES,
+  french: LABELS_FR,
+  japanese: LABELS_JA,
+  chinese: LABELS_ZH,
+  arabic: LABELS_AR,
+  russian: LABELS_RU,
+};
+
+const withLocaleLabels = (Story, context) => {
+  const labels = LOCALE_LABELS[context.globals?.locale];
+  if (!labels) return <Story />;
+  return <Story {...context} args={{ ...context.args, labels }} />;
+};
 
 export default {
   title: 'Components/MegaMenu',
   component: MegaMenu,
+  decorators: [withLocaleLabels],
   parameters: {
     layout: 'fullscreen',
   },
@@ -443,9 +467,7 @@ const sections = [
 ];
 
 export const Default = {
-  render: (args, { globals: { locale } }) => {
-    return <MegaMenu {...args} />;
-  },
+  render: args => <MegaMenu {...args} />,
 
   args: {
     delay: 5000,

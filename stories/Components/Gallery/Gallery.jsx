@@ -5,6 +5,13 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+export const DEFAULT_GALLERY_LABELS = {
+  galleryAriaLabel: 'Gallery',
+  prevLabel: 'Previous item',
+  nextLabel: 'Next item',
+  loadingLabel: 'Loading media',
+};
+
 function GalleryComponent({
   media,
   initialIndex = 0,
@@ -16,11 +23,12 @@ function GalleryComponent({
   enableKeyboard = true,
   loop = false,
   onMediaChange,
-  galleryAriaLabel = 'Gallery',
-  prevLabel = 'Previous item',
-  nextLabel = 'Next item',
-  loadingLabel = 'Loading media',
+  labels = {},
 }) {
+  const { galleryAriaLabel, prevLabel, nextLabel, loadingLabel } = {
+    ...DEFAULT_GALLERY_LABELS,
+    ...labels,
+  };
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isLoading, setIsLoading] = useState(false);
   const galleryRef = useRef(null);
@@ -351,14 +359,13 @@ GalleryComponent.propTypes = {
   loop: PropTypes.bool,
   /** Callback when media item changes: (index, item) => {} */
   onMediaChange: PropTypes.func,
-  /** Accessible label for the gallery region */
-  galleryAriaLabel: PropTypes.string,
-  /** Accessible label for the previous item button */
-  prevLabel: PropTypes.string,
-  /** Accessible label for the next item button */
-  nextLabel: PropTypes.string,
-  /** Accessible label for the loading indicator */
-  loadingLabel: PropTypes.string,
+  /** Translated UI label strings */
+  labels: PropTypes.shape({
+    galleryAriaLabel: PropTypes.string,
+    prevLabel: PropTypes.string,
+    nextLabel: PropTypes.string,
+    loadingLabel: PropTypes.string,
+  }),
 };
 
 export const Gallery = React.memo(GalleryComponent);

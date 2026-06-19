@@ -1,4 +1,27 @@
 import { Gallery } from './Gallery';
+import {
+  LABELS_AR,
+  LABELS_ES,
+  LABELS_FR,
+  LABELS_JA,
+  LABELS_RU,
+  LABELS_ZH,
+} from './_labels';
+
+const LOCALE_LABELS = {
+  spanish: LABELS_ES,
+  french: LABELS_FR,
+  japanese: LABELS_JA,
+  chinese: LABELS_ZH,
+  arabic: LABELS_AR,
+  russian: LABELS_RU,
+};
+
+const withLocaleLabels = (Story, context) => {
+  const labels = LOCALE_LABELS[context.globals?.locale];
+  if (!labels) return <Story />;
+  return <Story {...context} args={{ ...context.args, labels }} />;
+};
 
 // Sample images (using placeholder service)
 const sampleImages = [
@@ -38,6 +61,7 @@ const manyImages = Array.from({ length: 12 }, (_, i) => ({
 export default {
   title: 'Components/Gallery',
   component: Gallery,
+  decorators: [withLocaleLabels],
   argTypes: {
     thumbnailPosition: {
       options: ['left', 'bottom'],

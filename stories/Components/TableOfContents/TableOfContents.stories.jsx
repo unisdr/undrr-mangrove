@@ -4,73 +4,186 @@ import { mgTableOfContents } from './js/TableOfContentsVanillaJs';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
-    case 'english':
-      return [
-        {
-          id: 'section-1',
-          text: 'What is the Global Platform for Disaster Risk Reduction?',
-        },
-        { id: 'section-2', text: 'Who organizes the Global Platform for DRR?' },
-        {
-          id: 'section-3',
-          text: 'What are the objectives of the Global Platform for DRR?',
-        },
-        {
-          id: 'section-4',
-          text: 'How does the Global Platform for DRR link to the Sustainable Development Goals and the Paris Agreement?',
-        },
-        {
-          id: 'section-5',
-          text: 'What are the linkages between the Global Platform and the Regional Platforms?',
-        },
-        { id: 'section-6', text: 'What is the Sendai Framework for DRR?' },
-      ];
     case 'arabic':
-      return [
-        {
-          id: 'section-1',
-          text: 'ما هي المنصة العالمية للحد من مخاطر الكوارث؟',
-        },
-        {
-          id: 'section-2',
-          text: 'من ينظم المنصة العالمية للحد من مخاطر الكوارث؟',
-        },
-        {
-          id: 'section-3',
-          text: 'ما هي أهداف المنصة العالمية للحد من مخاطر الكوارث؟',
-        },
-        {
-          id: 'section-4',
-          text: 'كيف ترتبط المنصة العالمية للحد من مخاطر الكوارث بأهداف التنمية المستدامة واتفاقية باريس؟',
-        },
-        {
-          id: 'section-5',
-          text: 'ما هي الروابط بين المنصة العالمية والمنصات الإقليمية؟',
-        },
-        { id: 'section-6', text: 'ما هو إطار سنداي للحد من مخاطر الكوارث؟' },
-      ];
-
+      return {
+        title: 'في هذه الصفحة',
+        tocData: [
+          {
+            id: 'section-1',
+            text: 'ما هي المنصة العالمية للحد من مخاطر الكوارث؟',
+          },
+          {
+            id: 'section-2',
+            text: 'من ينظم المنصة العالمية للحد من مخاطر الكوارث؟',
+          },
+          {
+            id: 'section-3',
+            text: 'ما هي أهداف المنصة العالمية للحد من مخاطر الكوارث؟',
+          },
+          {
+            id: 'section-4',
+            text: 'كيف ترتبط المنصة العالمية للحد من مخاطر الكوارث بأهداف التنمية المستدامة واتفاقية باريس؟',
+          },
+          {
+            id: 'section-5',
+            text: 'ما هي الروابط بين المنصة العالمية والمنصات الإقليمية؟',
+          },
+          { id: 'section-6', text: 'ما هو إطار سنداي للحد من مخاطر الكوارث؟' },
+        ],
+      };
+    case 'spanish':
+      return {
+        title: 'En esta página',
+        tocData: [
+          {
+            id: 'section-1',
+            text: '¿Qué es la Plataforma Global para la Reducción del Riesgo de Desastres?',
+          },
+          {
+            id: 'section-2',
+            text: '¿Quién organiza la Plataforma Global para la RRD?',
+          },
+          {
+            id: 'section-3',
+            text: '¿Cuáles son los objetivos de la Plataforma Global para la RRD?',
+          },
+          {
+            id: 'section-4',
+            text: '¿Cómo se vincula la Plataforma Global con los ODS y el Acuerdo de París?',
+          },
+          {
+            id: 'section-5',
+            text: '¿Cuáles son los vínculos entre la Plataforma Global y las Plataformas Regionales?',
+          },
+          { id: 'section-6', text: '¿Qué es el Marco de Sendai para la RRD?' },
+        ],
+      };
+    case 'french':
+      return {
+        title: 'Sur cette page',
+        tocData: [
+          {
+            id: 'section-1',
+            text: "Qu'est-ce que la Plateforme mondiale pour la réduction des risques de catastrophe ?",
+          },
+          {
+            id: 'section-2',
+            text: 'Qui organise la Plateforme mondiale pour la RRC ?',
+          },
+          {
+            id: 'section-3',
+            text: 'Quels sont les objectifs de la Plateforme mondiale pour la RRC ?',
+          },
+          {
+            id: 'section-4',
+            text: "Comment la Plateforme mondiale pour la RRC est-elle liée aux ODD et à l'Accord de Paris ?",
+          },
+          {
+            id: 'section-5',
+            text: 'Quels sont les liens entre la Plateforme mondiale et les Plateformes régionales ?',
+          },
+          {
+            id: 'section-6',
+            text: "Qu'est-ce que le Cadre de Sendai pour la RRC ?",
+          },
+        ],
+      };
+    case 'japanese':
+      return {
+        title: 'このページの内容',
+        tocData: [
+          {
+            id: 'section-1',
+            text: '防災のためのグローバルプラットフォームとは何ですか？',
+          },
+          {
+            id: 'section-2',
+            text: '防災のためのグローバルプラットフォームは誰が主催しますか？',
+          },
+          {
+            id: 'section-3',
+            text: '防災のためのグローバルプラットフォームの目的は何ですか？',
+          },
+          {
+            id: 'section-4',
+            text: 'グローバルプラットフォームはSDGsおよびパリ協定とどのように連携していますか？',
+          },
+          {
+            id: 'section-5',
+            text: 'グローバルプラットフォームと地域プラットフォームの関連性は何ですか？',
+          },
+          { id: 'section-6', text: '仙台防災枠組とは何ですか？' },
+        ],
+      };
+    case 'chinese':
+      return {
+        title: '本页内容',
+        tocData: [
+          { id: 'section-1', text: '什么是全球减少灾害风险平台？' },
+          { id: 'section-2', text: '谁负责组织全球减灾平台？' },
+          { id: 'section-3', text: '全球减灾平台的目标是什么？' },
+          {
+            id: 'section-4',
+            text: '全球减灾平台如何与可持续发展目标和《巴黎协定》相衔接？',
+          },
+          { id: 'section-5', text: '全球平台与区域平台之间有哪些联系？' },
+          { id: 'section-6', text: '什么是《仙台减少灾害风险框架》？' },
+        ],
+      };
+    case 'russian':
+      return {
+        title: 'На этой странице',
+        tocData: [
+          {
+            id: 'section-1',
+            text: 'Что такое Глобальная платформа по снижению риска бедствий?',
+          },
+          {
+            id: 'section-2',
+            text: 'Кто организует Глобальную платформу по СРБ?',
+          },
+          { id: 'section-3', text: 'Каковы цели Глобальной платформы по СРБ?' },
+          {
+            id: 'section-4',
+            text: 'Как Глобальная платформа по СРБ связана с ЦУР и Парижским соглашением?',
+          },
+          {
+            id: 'section-5',
+            text: 'Какова связь между Глобальной платформой и региональными платформами?',
+          },
+          {
+            id: 'section-6',
+            text: 'Что такое Сендайская рамочная программа по СРБ?',
+          },
+        ],
+      };
     default:
-      return [
-        {
-          id: 'section-1',
-          text: 'What is the Global Platform for Disaster Risk Reduction?',
-        },
-        { id: 'section-2', text: 'Who organizes the Global Platform for DRR?' },
-        {
-          id: 'section-3',
-          text: 'What are the objectives of the Global Platform for DRR?',
-        },
-        {
-          id: 'section-4',
-          text: 'How does the Global Platform for DRR link to the Sustainable Development Goals and the Paris Agreement?',
-        },
-        {
-          id: 'section-5',
-          text: 'What are the linkages between the Global Platform and the Regional Platforms?',
-        },
-        { id: 'section-6', text: 'What is the Sendai Framework for DRR?' },
-      ];
+      return {
+        title: 'On this page',
+        tocData: [
+          {
+            id: 'section-1',
+            text: 'What is the Global Platform for Disaster Risk Reduction?',
+          },
+          {
+            id: 'section-2',
+            text: 'Who organizes the Global Platform for DRR?',
+          },
+          {
+            id: 'section-3',
+            text: 'What are the objectives of the Global Platform for DRR?',
+          },
+          {
+            id: 'section-4',
+            text: 'How does the Global Platform for DRR link to the Sustainable Development Goals and the Paris Agreement?',
+          },
+          {
+            id: 'section-5',
+            text: 'What are the linkages between the Global Platform and the Regional Platforms?',
+          },
+          { id: 'section-6', text: 'What is the Sendai Framework for DRR?' },
+        ],
+      };
   }
 };
 
@@ -87,8 +200,8 @@ export const List = {
     showNumbers: false,
   },
   render: (args, { globals: { locale } }) => {
-    const tocData = getCaptionForLocale(locale);
-    return <TableOfContents {...args} tocData={tocData} />;
+    const { title, tocData } = getCaptionForLocale(locale);
+    return <TableOfContents {...args} title={title} tocData={tocData} />;
   },
 };
 
@@ -97,8 +210,8 @@ export const Numbered = {
     showNumbers: true,
   },
   render: (args, { globals: { locale } }) => {
-    const tocData = getCaptionForLocale(locale);
-    return <TableOfContents {...args} tocData={tocData} />;
+    const { title, tocData } = getCaptionForLocale(locale);
+    return <TableOfContents {...args} title={title} tocData={tocData} />;
   },
 };
 

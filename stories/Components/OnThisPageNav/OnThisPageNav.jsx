@@ -5,6 +5,10 @@ import {
   mgOnThisPageNavDestroy,
 } from '../../assets/js/on-this-page-nav';
 
+export const DEFAULT_ON_THIS_PAGE_LABELS = {
+  label: 'On this page',
+};
+
 /**
  * Storybook wrapper for the OnThisPageNav vanilla JS component.
  * Renders the HTML structure and calls mgOnThisPageNav() via useEffect.
@@ -13,7 +17,7 @@ import {
  * @param {Object} props
  * @param {string} [props.depth]            Max heading level to scan ("2", "3", "4")
  * @param {string} [props.contentSelector]  CSS selector for heading scan scope
- * @param {string} [props.label]            aria-label for the nav
+ * @param {object} [props.labels]           UI label overrides
  * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
  * @param {string} [props.ctaHref]          CTA link URL
  * @param {string} [props.ctaText]          CTA link text
@@ -21,11 +25,12 @@ import {
 export default function OnThisPageNav({
   depth = '2',
   contentSelector = null,
-  label = 'On this page',
+  labels = {},
   items = null,
   ctaHref = null,
   ctaText = null,
 }) {
+  const { label } = { ...DEFAULT_ON_THIS_PAGE_LABELS, ...labels };
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -78,8 +83,10 @@ OnThisPageNav.propTypes = {
   depth: PropTypes.string,
   /** CSS selector to scope heading scan (defaults to document.body) */
   contentSelector: PropTypes.string,
-  /** Accessible label for the nav element */
-  label: PropTypes.string,
+  /** UI label overrides */
+  labels: PropTypes.shape({
+    label: PropTypes.string,
+  }),
   /** Explicit nav items (skips auto-detect when provided) */
   items: PropTypes.arrayOf(
     PropTypes.shape({

@@ -2,6 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { mgTabsRuntime } from '../../assets/js/tabs';
 
+export const DEFAULT_TAB_LABELS = {
+  filterPlaceholder: 'Filter sections…',
+};
+
 /**
  * Renders a tab component with either stacked or horizontal layout.
  * @param {Object} props - The component props.
@@ -10,7 +14,7 @@ import { mgTabsRuntime } from '../../assets/js/tabs';
  * @param {boolean} [props.defaultOpen] - Whether stacked panels start open (true), closed (false), or default (undefined = open first).
  * @param {boolean} [props.singleOpen=false] - When true, only one stacked panel can be open at a time.
  * @param {boolean} [props.filterable=false] - When true, renders a search input to filter stacked sections.
- * @param {string} [props.filterPlaceholder='Filter sections\u2026'] - Placeholder text for the filter input.
+ * @param {object} [props.labels] - UI label overrides.
  * @returns {JSX.Element} A React component representing the tab structure.
  */
 export function Tab({
@@ -19,8 +23,9 @@ export function Tab({
   defaultOpen,
   singleOpen = false,
   filterable = false,
-  filterPlaceholder = 'Filter sections\u2026',
+  labels = {},
 }) {
+  const { filterPlaceholder } = { ...DEFAULT_TAB_LABELS, ...labels };
   const containerRef = useRef(null);
 
   // Initialize this container's tabs runtime (scoped, not global).
@@ -101,6 +106,8 @@ Tab.propTypes = {
   singleOpen: PropTypes.bool,
   /** When true, renders a search input to filter stacked sections by text content. */
   filterable: PropTypes.bool,
-  /** Placeholder text for the filter input. */
-  filterPlaceholder: PropTypes.string,
+  /** UI label overrides. */
+  labels: PropTypes.shape({
+    filterPlaceholder: PropTypes.string,
+  }),
 };
