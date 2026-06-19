@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 // Separate arrow buttons component
 const ArrowButtons = React.memo(
-  ({ onScroll, leftButtonRef, rightButtonRef }) => {
+  ({ onScroll, leftButtonRef, rightButtonRef, scrollLeftLabel = 'Scroll left', scrollRightLabel = 'Scroll right' }) => {
     return (
       <nav className="mg-scroll__nav">
         <button
           ref={leftButtonRef}
           className="mg-scroll__nav-button"
           onClick={() => onScroll('left')}
-          aria-label="Scroll left"
+          aria-label={scrollLeftLabel}
         >
           ←
         </button>
@@ -18,7 +18,7 @@ const ArrowButtons = React.memo(
           ref={rightButtonRef}
           className="mg-scroll__nav-button"
           onClick={() => onScroll('right')}
-          aria-label="Scroll right"
+          aria-label={scrollRightLabel}
         >
           →
         </button>
@@ -31,6 +31,8 @@ ArrowButtons.propTypes = {
   onScroll: PropTypes.func.isRequired,
   leftButtonRef: PropTypes.object.isRequired,
   rightButtonRef: PropTypes.object.isRequired,
+  scrollLeftLabel: PropTypes.string,
+  scrollRightLabel: PropTypes.string,
 };
 
 // Scroll container component
@@ -43,6 +45,8 @@ const ScrollContainer = ({
   className = '',
   showArrows = false,
   stepSize = null,
+  scrollLeftLabel = 'Scroll left',
+  scrollRightLabel = 'Scroll right',
   ...props
 }) => {
   const containerRef = useRef(null);
@@ -257,6 +261,8 @@ const ScrollContainer = ({
           onScroll={scroll}
           leftButtonRef={leftButtonRef}
           rightButtonRef={rightButtonRef}
+          scrollLeftLabel={scrollLeftLabel}
+          scrollRightLabel={scrollRightLabel}
         />
       )}
       <div
@@ -294,6 +300,10 @@ ScrollContainer.propTypes = {
   className: PropTypes.string,
   showArrows: PropTypes.bool,
   stepSize: PropTypes.number,
+  /** Accessible label for the scroll-left button. */
+  scrollLeftLabel: PropTypes.string,
+  /** Accessible label for the scroll-right button. */
+  scrollRightLabel: PropTypes.string,
 };
 
 export default React.memo(ScrollContainer);

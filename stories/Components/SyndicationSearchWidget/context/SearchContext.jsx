@@ -48,6 +48,8 @@ export const DEFAULT_LABELS = {
 
   // SearchResults — visible count
   showingResults: 'Showing {start}–{end} of {total} results',
+  // Used when Elasticsearch caps the total (relation === 'gte'); {total} is the cap value
+  showingResultsApprox: 'Showing {start}–{end} of more than {total} results',
   forQuery: 'for “{query}”',
 
   // SearchResults — screen-reader live region announcements
@@ -61,6 +63,9 @@ export const DEFAULT_LABELS = {
   // count === 1 uses srResultsFoundForQuery; count !== 1 uses srResultsFoundPluralForQuery
   srResultsFoundForQuery: '{count} result found for {query}',
   srResultsFoundPluralForQuery: '{count} results found for {query}',
+  // Used when Elasticsearch caps the total (relation === 'gte')
+  srResultsFoundApprox: 'More than {count} results found',
+  srResultsFoundApproxForQuery: 'More than {count} results found for {query}',
 
   // SearchResults — mobile filter button
   filtersButton: 'Filters',
@@ -191,8 +196,9 @@ const initialState = {
   // Aggregations from Elasticsearch (for facet counts)
   aggregations: null,
 
-  // Total result count
+  // Total result count and Elasticsearch relation ('eq' = exact, 'gte' = capped)
   totalResults: 0,
+  totalResultsRelation: 'eq',
 
   // Loading state
   isLoading: false,
@@ -371,6 +377,7 @@ function searchReducer(state, action) {
         results: action.payload.hits?.hits || [],
         aggregations: action.payload.aggregations || null,
         totalResults: action.payload.hits?.total?.value || 0,
+        totalResultsRelation: action.payload.hits?.total?.relation || 'eq',
         searchTime: action.payload.took || null,
         isLoading: false,
         error: null,

@@ -51,6 +51,7 @@ export const LABELS_ES = {
   noResults: 'No se encontraron resultados para "{query}".',
   noResultsHint: 'Pruebe términos diferentes o ajuste sus filtros.',
   showingResults: 'Mostrando {start}–{end} de {total} resultados',
+  showingResultsApprox: 'Mostrando {start}–{end} de más de {total} resultados',
   forQuery: 'para "{query}"',
   srNoResults: 'No se encontraron resultados',
   srNoResultsForQuery: 'No se encontraron resultados para {query}',
@@ -58,6 +59,8 @@ export const LABELS_ES = {
   srResultsFoundPlural: 'Se encontraron {count} resultados',
   srResultsFoundForQuery: 'Se encontró {count} resultado para "{query}"',
   srResultsFoundPluralForQuery: 'Se encontraron {count} resultados para "{query}"',
+  srResultsFoundApprox: 'Más de {count} resultados encontrados',
+  srResultsFoundApproxForQuery: 'Más de {count} resultados encontrados para "{query}"',
   filtersButton: 'Filtros',
   filtersButtonActive: 'Filtros activos: {count}',
   searchResultsLabel: 'Resultados de búsqueda',
@@ -118,8 +121,9 @@ export const LABELS_FR = {
   enterSearchTerm: 'Saisissez un terme de recherche pour trouver du contenu.',
   minimumCharacters: 'Minimum {min} caractères requis.',
   noResults: 'Aucun résultat trouvé pour « {query} ».',
-  noResultsHint: ‘Essayez d’autres termes ou ajustez vos filtres.’,
+  noResultsHint: "Essayez d’autres termes ou ajustez vos filtres.",
   showingResults: 'Affichage de {start}–{end} sur {total} résultats',
+  showingResultsApprox: 'Affichage de {start}–{end} sur plus de {total} résultats',
   forQuery: 'pour « {query} »',
   srNoResults: 'Aucun résultat trouvé',
   srNoResultsForQuery: 'Aucun résultat trouvé pour {query}',
@@ -127,6 +131,8 @@ export const LABELS_FR = {
   srResultsFoundPlural: '{count} résultats trouvés',
   srResultsFoundForQuery: '{count} résultat trouvé pour « {query} »',
   srResultsFoundPluralForQuery: '{count} résultats trouvés pour « {query} »',
+  srResultsFoundApprox: 'Plus de {count} résultats trouvés',
+  srResultsFoundApproxForQuery: 'Plus de {count} résultats trouvés pour « {query} »',
   filtersButton: 'Filtres',
   filtersButtonActive: ({ count }) => count === 1 ? 'Filtres, 1 actif' : `Filtres, ${count} actifs`,
   searchResultsLabel: 'Résultats de recherche',
@@ -147,7 +153,7 @@ export const LABELS_FR = {
   selectPlaceholder: 'Sélectionner {label}',
   matchModeLabel: 'Mode de correspondance pour {label}',
   matchModeGroupLabel: 'Correspondance :',
-  matchModeAny: ‘L’un de ces éléments’,
+  matchModeAny: 'L’un de ces éléments',
   matchModeAll: 'Tous ces éléments',
   dropdownSearchPlaceholder: 'Rechercher…',
   dropdownNoOptions: 'Aucune option trouvée',
@@ -189,6 +195,7 @@ export const LABELS_JA = {
   noResults: '「{query}」に一致する結果が見つかりませんでした。',
   noResultsHint: '別のキーワードを試すか、フィルターを調整してください。',
   showingResults: '{total}件中{start}〜{end}件を表示',
+  showingResultsApprox: '{total}件以上の結果のうち{start}〜{end}件を表示',
   forQuery: '「{query}」の',
   srNoResults: '結果が見つかりませんでした',
   srNoResultsForQuery: '{query}に一致する結果が見つかりませんでした',
@@ -196,6 +203,8 @@ export const LABELS_JA = {
   srResultsFoundPlural: '{count}件の結果が見つかりました',
   srResultsFoundForQuery: '「{query}」の検索結果が{count}件見つかりました',
   srResultsFoundPluralForQuery: '「{query}」の検索結果が{count}件見つかりました',
+  srResultsFoundApprox: '{count}件以上の検索結果が見つかりました',
+  srResultsFoundApproxForQuery: '「{query}」の検索結果が{count}件以上見つかりました',
   filtersButton: 'フィルター',
   filtersButtonActive: 'フィルター（{count}件有効）',
   searchResultsLabel: '検索結果',
@@ -221,7 +230,7 @@ export const LABELS_JA = {
   dropdownSearchPlaceholder: '検索…',
   dropdownNoOptions: '該当する選択肢がありません',
   sortLegend: '並び替え',
-  sortPlaceholder: '並び替えの基準',
+  sortPlaceholder: '並び替え',
   sortRelevance: '関連度',
   sortNewest: '新しい順',
   sortOldest: '古い順',
@@ -255,16 +264,19 @@ export const LABELS_ZH = {
   searchErrorRetry: '请重试或修改您的搜索词。',
   enterSearchTerm: '请输入搜索词以查找内容。',
   minimumCharacters: '至少需要 {min} 个字符。',
-  noResults: '未找到"{query}"的相关结果。',
+  noResults: '未找到「{query}」的相关结果。',
   noResultsHint: '请尝试其他搜索词或调整筛选条件。',
   showingResults: '显示第 {start}–{end} 条，共 {total} 条结果',
-  forQuery: '关于"{query}"',
+  showingResultsApprox: '显示第 {start}–{end} 条，共超过 {total} 条结果',
+  forQuery: '关于「{query}」',
   srNoResults: '未找到结果',
-  srNoResultsForQuery: '未找到{query}的相关结果',
+  srNoResultsForQuery: '未找到「{query}」的相关结果',
   srResultsFound: '找到 {count} 条结果',
   srResultsFoundPlural: '找到 {count} 条结果',
   srResultsFoundForQuery: '找到 {count} 条关于"{query}"的结果',
   srResultsFoundPluralForQuery: '找到 {count} 条关于"{query}"的结果',
+  srResultsFoundApprox: '找到超过 {count} 条结果',
+  srResultsFoundApproxForQuery: '找到超过 {count} 条关于"{query}"的结果',
   filtersButton: '筛选',
   filtersButtonActive: '筛选，{count} 个已启用',
   searchResultsLabel: '搜索结果',
@@ -356,6 +368,7 @@ export const LABELS_AR = {
   noResults: 'لم يتم العثور على نتائج لـ "{query}".',
   noResultsHint: 'جرّب مصطلحات بحث مختلفة أو عدّل عوامل التصفية.',
   showingResults: 'عرض {start}–{end} من أصل {total} نتيجة',
+  showingResultsApprox: 'عرض {start}–{end} من أكثر من {total} نتيجة',
   forQuery: 'لـ "{query}"',
   srNoResults: 'لم يتم العثور على نتائج',
   srNoResultsForQuery: 'لم يتم العثور على نتائج لـ {query}',
@@ -363,8 +376,14 @@ export const LABELS_AR = {
   srResultsFoundPlural: ({ count }) => `تم العثور على ${count} ${AR_RESULT_FORMS[arPlural.select(count)] ?? AR_RESULT_FORMS.other}`,
   srResultsFoundForQuery: ({ count, query }) => `تم العثور على ${count} ${AR_RESULT_FORMS[arPlural.select(count)] ?? AR_RESULT_FORMS.other} لـ "${query}"`,
   srResultsFoundPluralForQuery: ({ count, query }) => `تم العثور على ${count} ${AR_RESULT_FORMS[arPlural.select(count)] ?? AR_RESULT_FORMS.other} لـ "${query}"`,
+  srResultsFoundApprox: ({ count }) => `أكثر من ${count} ${AR_RESULT_FORMS[arPlural.select(count)] ?? AR_RESULT_FORMS.other}`,
+  srResultsFoundApproxForQuery: ({ count, query }) => `أكثر من ${count} ${AR_RESULT_FORMS[arPlural.select(count)] ?? AR_RESULT_FORMS.other} لـ "${query}"`,
   filtersButton: 'عوامل التصفية',
-  filtersButtonActive: ({ count }) => `عوامل التصفية، ${count} ${AR_FILTER_FORMS[arPlural.select(count)] ?? AR_FILTER_FORMS.other} نشط`,
+  filtersButtonActive: ({ count }) => {
+    const form = arPlural.select(count);
+    const adj = (form === 'zero' || form === 'few') ? 'نشطة' : 'نشط';
+    return `عوامل التصفية، ${count} ${AR_FILTER_FORMS[form] ?? AR_FILTER_FORMS.other} ${adj}`;
+  },
   searchResultsLabel: 'نتائج البحث',
   searchResultsPaginationLabel: 'ترقيم صفحات نتائج البحث',
   filteredBy: 'مُصفَّى حسب:',
@@ -374,7 +393,11 @@ export const LABELS_AR = {
   clearAllFilters: 'مسح جميع عوامل التصفية',
   clearAllFiltersLabel: ({ count }) => `مسح جميع عوامل التصفية النشطة البالغة ${count}`,
   activeFiltersCount: ({ count }) => `${count} ${AR_FILTER_FORMS[arPlural.select(count)] ?? AR_FILTER_FORMS.other} نشط`,
-  activeFiltersCountPlural: ({ count }) => `${count} ${AR_FILTER_FORMS[arPlural.select(count)] ?? AR_FILTER_FORMS.other} نشطة`,
+  activeFiltersCountPlural: ({ count }) => {
+    const form = arPlural.select(count);
+    const adj = (form === 'zero' || form === 'few') ? 'نشطة' : 'نشط';
+    return `${count} ${AR_FILTER_FORMS[form] ?? AR_FILTER_FORMS.other} ${adj}`;
+  },
   drawerTitle: 'عوامل التصفية',
   closeFilters: 'إغلاق عوامل التصفية',
   viewResults: 'عرض النتائج',
@@ -438,9 +461,10 @@ export const LABELS_RU = {
   noResults: 'По запросу «{query}» ничего не найдено.',
   noResultsHint: 'Попробуйте другие слова или измените фильтры.',
   showingResults: 'Показано {start}–{end} из {total} результатов',
+  showingResultsApprox: 'Показано {start}–{end} из более чем {total} результатов',
   forQuery: 'по запросу «{query}»',
   srNoResults: 'Результаты не найдены',
-  srNoResultsForQuery: 'По запросу {query} результатов не найдено',
+  srNoResultsForQuery: 'По запросу «{query}» результатов не найдено',
   // srResultsFound is only called when count === 1; hard-coded singular form is correct here
   srResultsFound: ({ count }) => `Найден ${count} результат`,
   srResultsFoundPlural: ({ count }) => {
@@ -451,6 +475,14 @@ export const LABELS_RU = {
   srResultsFoundPluralForQuery: ({ count, query }) => {
     const form = ruResults.select(count);
     return `По запросу «${query}» найдено ${count} ${RU_RESULT_FORMS[form] ?? RU_RESULT_FORMS.other}`;
+  },
+  srResultsFoundApprox: ({ count }) => {
+    const form = ruResults.select(count);
+    return `Более ${count} ${RU_RESULT_FORMS[form] ?? RU_RESULT_FORMS.other}`;
+  },
+  srResultsFoundApproxForQuery: ({ count, query }) => {
+    const form = ruResults.select(count);
+    return `По запросу «${query}» найдено более ${count} ${RU_RESULT_FORMS[form] ?? RU_RESULT_FORMS.other}`;
   },
   filtersButton: 'Фильтры',
   filtersButtonActive: ({ count }) => {
@@ -468,7 +500,7 @@ export const LABELS_RU = {
   activeFiltersCount: ({ count }) => `${count} ${RU_ACTIVE_FORMS[ruFilters.select(count)] ?? 'активный'} ${RU_FILTER_FORMS[ruFilters.select(count)] ?? 'фильтр'}`,
   activeFiltersCountPlural: ({ count }) => {
     const form = ruFilters.select(count);
-    return `${RU_ACTIVE_FORMS[form] ?? 'активных'} фильтров: ${count}`;
+    return `${count} ${RU_ACTIVE_FORMS[form] ?? 'активных'} ${RU_FILTER_FORMS[form] ?? 'фильтров'}`;
   },
   drawerTitle: 'Фильтры',
   closeFilters: 'Закрыть фильтры',

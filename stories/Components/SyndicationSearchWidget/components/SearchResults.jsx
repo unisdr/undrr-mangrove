@@ -36,6 +36,7 @@ export function SearchResults({
   const {
     results,
     totalResults,
+    totalResultsRelation,
     searchTime,
     isLoading,
     error,
@@ -141,6 +142,8 @@ export function SearchResults({
           <>
             {totalResults === 0
               ? interpolateLabel(query ? labels.srNoResultsForQuery : labels.srNoResults, { query })
+              : totalResultsRelation === 'gte'
+              ? interpolateLabel(query ? labels.srResultsFoundApproxForQuery : labels.srResultsFoundApprox, { count: totalResults.toLocaleString(), query })
               : interpolateLabel(
                   totalResults !== 1
                     ? (query ? labels.srResultsFoundPluralForQuery : labels.srResultsFoundPlural)
@@ -158,7 +161,10 @@ export function SearchResults({
             {(() => {
               const startResult = (page - 1) * resultsPerPage + 1;
               const endResult = Math.min(page * resultsPerPage, totalResults || 0);
-              return interpolateLabel(labels.showingResults, {
+              const countLabel = totalResultsRelation === 'gte'
+                ? labels.showingResultsApprox
+                : labels.showingResults;
+              return interpolateLabel(countLabel, {
                 start: startResult.toLocaleString(),
                 end: endResult.toLocaleString(),
                 total: (totalResults?.toLocaleString() || 0),

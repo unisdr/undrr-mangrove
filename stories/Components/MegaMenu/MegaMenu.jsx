@@ -44,6 +44,8 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
+  navLabel = 'Main Navigation',
+  closeMobileNavLabel = 'Close mobile navigation',
 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
@@ -123,7 +125,7 @@ const MegaMenu = ({
       className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
-      aria-label="Main Navigation"
+      aria-label={navLabel}
     >
       <TopBar
         sections={sections}
@@ -144,7 +146,7 @@ const MegaMenu = ({
       {showSidebar && (
         <button
           className="mg-mega-mobile-sidebar-overlay"
-          aria-label="Close mobile navigation"
+          aria-label={closeMobileNavLabel}
           onClick={() => setShowSidebar(false)}
         />
       )}
@@ -195,6 +197,10 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
+  /** Accessible label for the main nav element. */
+  navLabel: PropTypes.string,
+  /** Accessible label for the mobile sidebar close overlay button. */
+  closeMobileNavLabel: PropTypes.string,
 };
 
 export default MegaMenu;
