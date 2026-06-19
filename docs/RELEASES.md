@@ -88,7 +88,35 @@ The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr
 
 ### 7. Create a GitHub Release
 
-Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag. Include a summary of changes — you can use the "Generate release notes" button for a starting point.
+Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag.
+
+Write the release notes as a **curated, themed narrative** — not a flat list of commits. Start by reviewing the commit log since the previous tag:
+
+```bash
+git log v1.7.0..v1.8.0 --oneline
+```
+
+Group the work into themed sections that match what actually landed. Common sections (use what fits, skip what doesn't):
+
+- **Breaking changes** — always first if present; include a migration path
+- **New features** — user-visible additions, one bullet per meaningful feature with a PR link
+- **Bug fixes** — notable fixes worth calling out
+- **Security** — any dependency patches or policy changes
+- **Documentation & code quality** — significant doc or internal quality improvements
+- **Dependencies** — batched dep updates (one line is fine)
+
+Each bullet should be **bold component or feature name** followed by PR link(s) and a one-sentence description of what changed and why it matters to a consumer. GitHub's "Generate release notes" button produces a useful raw list of PR titles — use it as a checklist to ensure nothing is missed, then rewrite into themed prose.
+
+Close with a CDN snippet so consumers can copy-paste the new version:
+
+~~~markdown
+## CDN
+```html
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/1.3.0/css/style.css">
+```
+~~~
+
+See [past releases](https://github.com/unisdr/undrr-mangrove/releases) for worked examples of this format.
 
 ### 8. Verify
 
