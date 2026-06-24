@@ -1,0 +1,109 @@
+// Feature Promo component
+// Full-width editorial spotlight with an overlapping image and colour panel.
+// Variables and mixins are imported at the theme level via @use in mangrove.scss.
+// Do not import them here to avoid duplication.
+
+// ------------------------------------------------------------------
+// Component-level custom properties (theme-overridable)
+// ------------------------------------------------------------------
+
+.mg-feature-promo--primary   { --mg-feature-promo-panel-bg: #{$mg-color-interactive}; }
+.mg-feature-promo--secondary { --mg-feature-promo-panel-bg: #{$sendai-purple}; }
+.mg-feature-promo--tertiary  { --mg-feature-promo-panel-bg: #{$sendai-turquoise}; }
+.mg-feature-promo--quaternary{ --mg-feature-promo-panel-bg: #{$sendai-orange}; }
+
+// ------------------------------------------------------------------
+// Base — mobile-first stacked layout
+// ------------------------------------------------------------------
+
+.mg-feature-promo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &__media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__panel {
+    background: var(--mg-feature-promo-panel-bg, #{$mg-color-interactive});
+    color: $mg-color-white;
+    padding: $mg-spacing-400;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: $mg-spacing-200;
+
+    // Ensure all text descendants use the white override regardless of host styles
+    * {
+      color: inherit;
+    }
+  }
+
+  &__heading {
+    margin: 0;
+    font-size: mg-rem(28);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__summary {
+    margin: 0;
+    font-size: mg-rem(16);
+    line-height: 1.6;
+  }
+
+  &__cta {
+    align-self: flex-start;
+    margin-top: $mg-spacing-50;
+  }
+}
+
+// ------------------------------------------------------------------
+// Desktop layout — CSS Grid with overlap
+// ------------------------------------------------------------------
+//  12-column grid:
+//    Normal:  image spans cols 1–8, panel spans cols 7–12  (cols 7–8 overlap)
+//    Reverse: image spans cols 5–12, panel spans cols 1–6  (cols 5–6 overlap)
+
+@include devicebreak(medium) {
+  .mg-feature-promo {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 1fr;
+    min-height: 360px;
+
+    &__media {
+      grid-column: 1 / 9;
+      grid-row: 1;
+      aspect-ratio: unset;
+      height: 100%;
+    }
+
+    &__panel {
+      grid-column: 7 / 13;
+      grid-row: 1;
+      z-index: 1;
+      padding: $mg-spacing-500 $mg-spacing-400;
+    }
+  }
+
+  .mg-feature-promo--reverse {
+    .mg-feature-promo__media {
+      grid-column: 5 / 13;
+    }
+
+    .mg-feature-promo__panel {
+      grid-column: 1 / 7;
+    }
+  }
+}
