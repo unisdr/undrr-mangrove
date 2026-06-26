@@ -52,8 +52,8 @@
     // Uses mask-image so the fade is transparent (works on any background).
     // padding-inline-end gives the fade space so text isn't masked mid-character.
     padding-inline-end: var(--mg-spacing-300);
-    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - #{var(--mg-spacing-500)}), transparent);
-    mask-image: linear-gradient(to right, #000 calc(100% - #{var(--mg-spacing-500)}), transparent);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--mg-spacing-500)), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--mg-spacing-500)), transparent);
 
     // Hide scrollbar but keep functional
     scrollbar-width: none;
@@ -66,8 +66,8 @@
     // items are hidden behind the scroll button on that side.
     .mg-on-this-page-nav--has-left-overflow & {
       padding-inline-start: var(--mg-spacing-300);
-      -webkit-mask-image: linear-gradient(to right, transparent, #000 #{var(--mg-spacing-500)}, #000 calc(100% - #{var(--mg-spacing-500)}), transparent);
-      mask-image: linear-gradient(to right, transparent, #000 #{var(--mg-spacing-500)}, #000 calc(100% - #{var(--mg-spacing-500)}), transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--mg-spacing-500), #000 calc(100% - var(--mg-spacing-500)), transparent);
+      mask-image: linear-gradient(to right, transparent, #000 var(--mg-spacing-500), #000 calc(100% - var(--mg-spacing-500)), transparent);
     }
   }
 
