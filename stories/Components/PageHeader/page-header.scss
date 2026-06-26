@@ -12,7 +12,7 @@
       url(//www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png)
       no-repeat center center;
     box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.3);
-    z-index: $mg-z-index-header;
+    z-index: var(--mg-z-index-header);
 
     @media (width >= $mg-breakpoint-tablet) {
       .mg-page-header__container {
@@ -132,8 +132,8 @@
   display: inline-block;
   font-size: $mg-font-tag;
   font-weight: bold;
-  margin-right: $mg-spacing-25;
-  padding: $mg-spacing-25 0;
+  margin-right: var(--mg-spacing-25);
+  padding: var(--mg-spacing-25) 0;
 
   @media (max-width: $mg-breakpoint-tablet) {
     display: none;

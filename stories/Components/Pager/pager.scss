@@ -3,9 +3,9 @@
 // ========================================
 
 .mg-pager {
-  margin-top: $mg-spacing-200;
-  padding-top: $mg-spacing-150;
-  border-top: 1px solid $mg-color-neutral-50;
+  margin-top: var(--mg-spacing-200);
+  padding-top: var(--mg-spacing-150);
+  border-top: 1px solid rgb(var(--mg-color-neutral-50));
 }
 
 // ----------------------------------------
@@ -17,7 +17,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: $mg-spacing-25;
+  gap: var(--mg-spacing-25);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -30,7 +30,7 @@
   &--ellipsis {
     display: flex;
     align-items: center;
-    padding: 0 $mg-spacing-25;
+    padding: 0 var(--mg-spacing-25);
   }
 }
 
@@ -40,52 +40,52 @@
   justify-content: center;
   min-width: 40px;
   min-height: 40px;
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   font-size: $mg-font-size-200;
   font-weight: 500;
-  color: $mg-color-text;
+  color: rgb(var(--mg-color-text));
   background: #fff;
-  border: 1px solid $mg-color-neutral-100;
-  border-radius: $mg-spacing-25;
+  border: 1px solid rgb(var(--mg-color-neutral-100));
+  border-radius: var(--mg-spacing-25);
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 
   &:hover:not(:disabled, .mg-pager__link--disabled) {
-    background: $mg-color-blue-50;
-    border-color: $mg-color-interactive;
-    color: $mg-color-interactive;
+    background: rgb(var(--mg-color-blue-50));
+    border-color: rgb(var(--mg-color-interactive));
+    color: rgb(var(--mg-color-interactive));
   }
 
   &:focus-visible {
-    outline: 2px solid $mg-color-interactive;
+    outline: 2px solid rgb(var(--mg-color-interactive));
     outline-offset: 2px;
   }
 
   &--current {
     color: #fff;
-    background: $mg-color-interactive;
-    border-color: $mg-color-interactive;
+    background: rgb(var(--mg-color-interactive));
+    border-color: rgb(var(--mg-color-interactive));
     cursor: default;
 
     &:hover {
-      background: $mg-color-interactive;
+      background: rgb(var(--mg-color-interactive));
       color: #fff;
     }
   }
 
   &--disabled,
   &:disabled {
-    color: $mg-color-neutral-500;
-    background: $mg-color-neutral-50;
-    border-color: $mg-color-neutral-50;
+    color: rgb(var(--mg-color-neutral-500));
+    background: rgb(var(--mg-color-neutral-50));
+    border-color: rgb(var(--mg-color-neutral-50));
     cursor: not-allowed;
     opacity: 0.5;
   }
 
   &--prev,
   &--next {
-    gap: $mg-spacing-25;
-    padding: $mg-spacing-50 $mg-spacing-75;
+    gap: var(--mg-spacing-25);
+    padding: var(--mg-spacing-50) var(--mg-spacing-75);
   }
 }
 
@@ -100,7 +100,7 @@
 }
 
 .mg-pager__ellipsis {
-  color: $mg-color-neutral-500;
+  color: rgb(var(--mg-color-neutral-500));
   font-size: $mg-font-size-200;
 }
 
@@ -112,7 +112,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 
   @media (width >= $mg-breakpoint-tablet) {
     flex-direction: row;
@@ -126,7 +126,7 @@
 
 .mg-pager__range {
   margin: 0;
-  color: $mg-color-neutral-500;
+  color: rgb(var(--mg-color-neutral-500));
   font-size: $mg-font-size-200;
   white-space: nowrap;
 }
@@ -138,12 +138,12 @@
 .mg-pager__jump {
   display: inline-flex;
   align-items: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
   margin: 0;
 }
 
 .mg-pager__jump-label {
-  color: $mg-color-neutral-500;
+  color: rgb(var(--mg-color-neutral-500));
   font-size: $mg-font-size-200;
   white-space: nowrap;
 }
@@ -151,16 +151,16 @@
 .mg-pager__jump-input {
   width: 4em;
   min-height: 40px;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   font-size: $mg-font-size-200;
-  color: $mg-color-text;
+  color: rgb(var(--mg-color-text));
   background: #fff;
-  border: 1px solid $mg-color-neutral-100;
-  border-radius: $mg-spacing-25;
+  border: 1px solid rgb(var(--mg-color-neutral-100));
+  border-radius: var(--mg-spacing-25);
   text-align: center;
 
   &:focus-visible {
-    outline: 2px solid $mg-color-interactive;
+    outline: 2px solid rgb(var(--mg-color-interactive));
     outline-offset: 2px;
   }
 }
@@ -170,23 +170,23 @@
   align-items: center;
   justify-content: center;
   min-height: 40px;
-  padding: $mg-spacing-25 $mg-spacing-75;
+  padding: var(--mg-spacing-25) var(--mg-spacing-75);
   font-size: $mg-font-size-200;
   font-weight: 500;
   color: #fff;
-  background: $mg-color-interactive;
-  border: 1px solid $mg-color-interactive;
-  border-radius: $mg-spacing-25;
+  background: rgb(var(--mg-color-interactive));
+  border: 1px solid rgb(var(--mg-color-interactive));
+  border-radius: var(--mg-spacing-25);
   cursor: pointer;
   transition: background-color 0.15s;
 
   &:hover:not(:disabled) {
-    background: $mg-color-interactive-active;
-    border-color: $mg-color-interactive-active;
+    background: rgb(var(--mg-color-interactive-active));
+    border-color: rgb(var(--mg-color-interactive-active));
   }
 
   &:focus-visible {
-    outline: 2px solid $mg-color-interactive;
+    outline: 2px solid rgb(var(--mg-color-interactive));
     outline-offset: 2px;
   }
 
@@ -202,27 +202,27 @@
 
 .mg-pager__notice {
   text-align: center;
-  color: $mg-color-neutral-500;
+  color: rgb(var(--mg-color-neutral-500));
   font-size: $mg-font-size-200;
-  padding: $mg-spacing-100 0;
+  padding: var(--mg-spacing-100) 0;
 }
 
 .mg-pager__notice-action {
   display: inline;
   padding: 0;
   font: inherit;
-  color: $mg-color-interactive;
+  color: rgb(var(--mg-color-interactive));
   background: none;
   border: none;
   cursor: pointer;
   text-decoration: underline;
 
   &:hover {
-    color: $mg-color-interactive-active;
+    color: rgb(var(--mg-color-interactive-active));
   }
 
   &:focus-visible {
-    outline: 2px solid $mg-color-interactive;
+    outline: 2px solid rgb(var(--mg-color-interactive));
     outline-offset: 2px;
   }
 }

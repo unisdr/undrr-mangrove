@@ -21,12 +21,12 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__overlay {
     position: fixed;
     inset: 0;
-    z-index: $mg-z-index-modal;
+    z-index: var(--mg-z-index-modal);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: $mg-spacing-200;
-    background: $mg-color-modal-scrim;
+    padding: var(--mg-spacing-200);
+    background: var(--mg-color-modal-scrim);
 
     // Re-assert visibility against the gate rule above, which uses !important
     // to win over any component-level visibility overrides on body siblings.
@@ -36,39 +36,39 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__modal {
     width: 100%;
     max-width: mg-rem(480);
-    padding: $mg-spacing-350;
-    background: $mg-color-white;
+    padding: var(--mg-spacing-350);
+    background: rgb(var(--mg-color-white));
 
     // Sharp-cornered to match Mangrove chrome (Hero, PageHeader, Cards).
     border-radius: 0;
-    border-top: mg-rem(4) solid $mg-color-interactive;
+    border-top: mg-rem(4) solid rgb(var(--mg-color-interactive));
     box-shadow: 0 mg-rem(8) mg-rem(32) rgb(0 0 0 / 0.25);
   }
 
   // Eyebrow uses a neutral colour so it passes 4.5:1 across all five themes.
   // Brand identity is carried by the top accent border and the submit button.
   &__eyebrow {
-    margin: 0 0 $mg-spacing-50;
+    margin: 0 0 var(--mg-spacing-50);
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-250;
     font-weight: 700;
-    color: $mg-color-neutral-700;
+    color: rgb(var(--mg-color-neutral-700));
   }
 
   &__title {
-    margin: 0 0 $mg-spacing-150;
+    margin: 0 0 var(--mg-spacing-150);
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-500;
     line-height: 1.2;
-    color: $mg-color-neutral-800;
+    color: rgb(var(--mg-color-neutral-800));
   }
 
   &__body {
-    margin: 0 0 $mg-spacing-250;
+    margin: 0 0 var(--mg-spacing-250);
     font-family: $mg-font-family;
     font-size: $mg-font-size-300;
     line-height: 1.5;
-    color: $mg-color-neutral-700;
+    color: rgb(var(--mg-color-neutral-700));
   }
 
   &__form {
@@ -77,80 +77,80 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 
   &__label {
     display: block;
-    margin: 0 0 $mg-spacing-50;
+    margin: 0 0 var(--mg-spacing-50);
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-300;
     font-weight: 700;
-    color: $mg-color-neutral-700;
+    color: rgb(var(--mg-color-neutral-700));
   }
 
   &__field {
     display: flex;
-    gap: $mg-spacing-50;
-    margin: 0 0 $mg-spacing-50;
+    gap: var(--mg-spacing-50);
+    margin: 0 0 var(--mg-spacing-50);
   }
 
   &__input {
     flex: 1;
     min-width: 0;
-    padding: $mg-spacing-100 $mg-spacing-150;
+    padding: var(--mg-spacing-100) var(--mg-spacing-150);
     font-family: $mg-font-family;
     font-size: $mg-font-size-300;
-    color: $mg-color-neutral-800;
-    background: $mg-color-white;
-    border: 1px solid $mg-color-neutral-200;
+    color: rgb(var(--mg-color-neutral-800));
+    background: rgb(var(--mg-color-white));
+    border: 1px solid rgb(var(--mg-color-neutral-200));
     border-radius: 0;
 
     &:focus {
-      outline: 2px solid $mg-color-form-focus;
+      outline: 2px solid rgb(var(--mg-color-form-focus));
       outline-offset: 2px;
-      border-color: $mg-color-form-focus;
+      border-color: rgb(var(--mg-color-form-focus));
     }
   }
 
   &__submit {
-    padding: $mg-spacing-100 $mg-spacing-200;
+    padding: var(--mg-spacing-100) var(--mg-spacing-200);
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-300;
     font-weight: 600;
-    color: $mg-color-white;
-    background: $mg-color-interactive;
+    color: rgb(var(--mg-color-white));
+    background: rgb(var(--mg-color-interactive));
     border: 0;
     border-radius: 0;
     cursor: pointer;
 
-    // $mg-color-interactive-active equals $mg-color-interactive in several
+    // rgb(var(--mg-color-interactive-active)) equals rgb(var(--mg-color-interactive)) in several
     // themes (PW, IRP, MCR, DELTA), so layer a brightness shift to ensure
     // the hover affordance is visible everywhere.
     &:hover {
-      background: $mg-color-interactive-active;
+      background: rgb(var(--mg-color-interactive-active));
       filter: brightness(0.92);
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-form-focus;
+      outline: 2px solid rgb(var(--mg-color-form-focus));
       outline-offset: 2px;
     }
   }
 
   &__error {
-    min-height: $mg-spacing-200;
-    margin: 0 0 $mg-spacing-150;
+    min-height: var(--mg-spacing-200);
+    margin: 0 0 var(--mg-spacing-150);
     font-family: $mg-font-family;
     font-size: $mg-font-size-250;
-    color: $mg-color-red-900;
+    color: rgb(var(--mg-color-red-900));
   }
 
   &__contact {
     margin: 0;
-    padding-top: $mg-spacing-150;
+    padding-top: var(--mg-spacing-150);
     font-family: $mg-font-family;
     font-size: $mg-font-size-250;
-    color: $mg-color-neutral-600;
-    border-top: 1px solid $mg-color-neutral-100;
+    color: rgb(var(--mg-color-neutral-600));
+    border-top: 1px solid rgb(var(--mg-color-neutral-100));
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: underline;
     }
   }

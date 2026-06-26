@@ -8,7 +8,7 @@
   justify-content: center;
   transform: translate(-50%, -300%);
   transition: transform 0.3s ease-in-out;
-  z-index: $mg-z-index-toast; // above modals and all page chrome
+  z-index: var(--mg-z-index-toast); // above modals and all page chrome
   width: calc(100% - 32px); // Ensure it works on small screens
   max-width: 600px; // Limit width on large screens
 
@@ -25,24 +25,24 @@
 .mg-snackbar {
   display: flex;
   align-items: center;
-  background-color: $mg-color-interactive;
-  color: $mg-color-white;
+  background-color: rgb(var(--mg-color-interactive));
+  color: rgb(var(--mg-color-white));
   border-radius: var(--mg-radius-tab);
-  padding: $mg-padding-button;
+  padding: var(--mg-padding-button);
   box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
-  fill: $mg-color-white;
+  fill: rgb(var(--mg-color-white));
   width: 100%;
 
   // Ensure appropriate color contrast for accessibility
   &__error {
-    background-color: $mg-color-red-900;
-    color: $mg-color-white; // Ensure text is readable
+    background-color: rgb(var(--mg-color-red-900));
+    color: rgb(var(--mg-color-white)); // Ensure text is readable
   }
 
   // severity - use colors with sufficient contrast ratio
   &__error {
-    background-color: $mg-color-red-900;
-    color: $mg-color-white;
+    background-color: rgb(var(--mg-color-red-900));
+    color: rgb(var(--mg-color-white));
   }
 
   &__warning {
@@ -51,25 +51,24 @@
       $lightness: -10%
     ); // Dark amber color for warning state
 
-    color: $mg-color-white; // Use white text to be consistent with other severity types
+    color: rgb(var(--mg-color-white)); // Use white text to be consistent with other severity types
   }
 
   &__info {
-    background-color: $mg-color-interactive;
-    color: $mg-color-white;
+    background-color: rgb(var(--mg-color-interactive));
+    color: rgb(var(--mg-color-white));
   }
 
   &__success {
     background-color: #14527a; // Slightly darker for better distinction (blue-900 darkened 5% lightness)
-
-    color: $mg-color-white;
+    color: rgb(var(--mg-color-white));
   }
 
   &__content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: $mg-spacing-100;
+    gap: var(--mg-spacing-100);
     width: 100%;
 
     @media (max-width: $mg-breakpoint-mobile) {
@@ -79,7 +78,7 @@
 
       // On mobile, make the close button span the full width
       .mg-button {
-        margin-top: $mg-spacing-100;
+        margin-top: var(--mg-spacing-100);
         width: 100%;
         min-height: 44px; // Ensure touchable area is large enough
       }
@@ -87,7 +86,7 @@
   }
 
   &__message {
-    margin-right: $mg-spacing-200;
+    margin-right: var(--mg-spacing-200);
     flex: 1; // Allow message to take up available space
     overflow-wrap: break-word; // Prevent overflow of long words
   }
@@ -96,7 +95,7 @@
   .mg-button {
     min-width: 88px;
     min-height: 36px;
-    padding: $mg-spacing-50 $mg-spacing-150;
+    padding: var(--mg-spacing-50) var(--mg-spacing-150);
     font-weight: bold;
     cursor: pointer;
     border-radius: 4px;
@@ -114,7 +113,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-white;
+      outline: 2px solid rgb(var(--mg-color-white));
       outline-offset: 2px;
     }
 
