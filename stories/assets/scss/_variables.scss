@@ -284,22 +284,58 @@ $sendai-turquoise: $sendai-turquoise-900; // alias
  * @tokens Spacing
  * @presenter Spacing
  */
-$mg-spacing-0: 0;
-$mg-spacing-25: mg-rem(2.5);
-$mg-spacing-50: mg-rem(5);
-$mg-spacing-75: mg-rem(7.5);
-$mg-spacing-100: mg-rem(10);
-$mg-spacing-150: mg-rem(15);
-$mg-spacing-175: mg-rem(18);
-$mg-spacing-200: mg-rem(20);
-$mg-spacing-250: mg-rem(24);
-$mg-spacing-300: mg-rem(30);
-$mg-spacing-350: mg-rem(35);
-$mg-spacing-400: mg-rem(50);
-$mg-spacing-500: mg-rem(60);
-$mg-spacing-600: mg-rem(80);
-$mg-spacing-800: mg-rem(100);
-$mg-spacing-1000: mg-rem(400);
+$_mg-spacing-0--raw:    0;
+$_mg-spacing-25--raw:   mg-rem(2.5);
+$_mg-spacing-50--raw:   mg-rem(5);
+$_mg-spacing-75--raw:   mg-rem(7.5);
+$_mg-spacing-100--raw:  mg-rem(10);
+$_mg-spacing-150--raw:  mg-rem(15);
+$_mg-spacing-175--raw:  mg-rem(18);
+$_mg-spacing-200--raw:  mg-rem(20);
+$_mg-spacing-250--raw:  mg-rem(24);
+$_mg-spacing-300--raw:  mg-rem(30);
+$_mg-spacing-350--raw:  mg-rem(35);
+$_mg-spacing-400--raw:  mg-rem(50);
+$_mg-spacing-500--raw:  mg-rem(60);
+$_mg-spacing-600--raw:  mg-rem(80);
+$_mg-spacing-800--raw:  mg-rem(100);
+$_mg-spacing-1000--raw: mg-rem(400);
+
+:root {
+  --mg-spacing-0:    #{$_mg-spacing-0--raw};
+  --mg-spacing-25:   #{$_mg-spacing-25--raw};
+  --mg-spacing-50:   #{$_mg-spacing-50--raw};
+  --mg-spacing-75:   #{$_mg-spacing-75--raw};
+  --mg-spacing-100:  #{$_mg-spacing-100--raw};
+  --mg-spacing-150:  #{$_mg-spacing-150--raw};
+  --mg-spacing-175:  #{$_mg-spacing-175--raw};
+  --mg-spacing-200:  #{$_mg-spacing-200--raw};
+  --mg-spacing-250:  #{$_mg-spacing-250--raw};
+  --mg-spacing-300:  #{$_mg-spacing-300--raw};
+  --mg-spacing-350:  #{$_mg-spacing-350--raw};
+  --mg-spacing-400:  #{$_mg-spacing-400--raw};
+  --mg-spacing-500:  #{$_mg-spacing-500--raw};
+  --mg-spacing-600:  #{$_mg-spacing-600--raw};
+  --mg-spacing-800:  #{$_mg-spacing-800--raw};
+  --mg-spacing-1000: #{$_mg-spacing-1000--raw};
+}
+
+$mg-spacing-0:    var(--mg-spacing-0);
+$mg-spacing-25:   var(--mg-spacing-25);
+$mg-spacing-50:   var(--mg-spacing-50);
+$mg-spacing-75:   var(--mg-spacing-75);
+$mg-spacing-100:  var(--mg-spacing-100);
+$mg-spacing-150:  var(--mg-spacing-150);
+$mg-spacing-175:  var(--mg-spacing-175);
+$mg-spacing-200:  var(--mg-spacing-200);
+$mg-spacing-250:  var(--mg-spacing-250);
+$mg-spacing-300:  var(--mg-spacing-300);
+$mg-spacing-350:  var(--mg-spacing-350);
+$mg-spacing-400:  var(--mg-spacing-400);
+$mg-spacing-500:  var(--mg-spacing-500);
+$mg-spacing-600:  var(--mg-spacing-600);
+$mg-spacing-800:  var(--mg-spacing-800);
+$mg-spacing-1000: var(--mg-spacing-1000);
 
 /**
  * @tokens Font sizes
