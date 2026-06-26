@@ -1,14 +1,14 @@
 .mg-chip {
   align-items: center;
-  background: $mg-color-neutral-50;
+  background: var(--mg-color-neutral-50);
   border-radius: 20px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
   display: inline-flex;
-  min-height: $mg-spacing-250;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  min-height: var(--mg-spacing-250);
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
 
   &:hover {
-    background-color: $mg-color-neutral-300;
+    background-color: var(--mg-color-neutral-300);
   }
 
   &.mg-chip__cross {
@@ -17,8 +17,8 @@
       content: "";
       display: inline-flex;
       height: 22px;
-      margin-left: -$mg-spacing-25;
-      margin-right: $mg-spacing-25;
+      margin-left: -var(--mg-spacing-25);
+      margin-right: var(--mg-spacing-25);
       padding-right: mg-rem(14);
       position: relative;
       top: 0;
@@ -29,7 +29,7 @@
 
 [dir="rtl"] {
   .mg-chip__cross::before {
-    margin-left: $mg-spacing-25;
-    margin-right: -$mg-spacing-25;
+    margin-left: var(--mg-spacing-25);
+    margin-right: -var(--mg-spacing-25);
   }
 }

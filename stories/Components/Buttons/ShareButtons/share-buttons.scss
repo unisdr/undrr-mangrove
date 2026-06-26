@@ -2,12 +2,12 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 }
 
 .mg-share__header {
-  font-family: $mg-font-family;
-  color: $mg-color-text;
+  font-family: var(--mg-font-family);
+  color: var(--mg-color-text);
   font-weight: 600;
   font-size: $mg-font-size-300;
   display: flex;
@@ -16,7 +16,7 @@
 
 .mg-share__buttons {
   display: flex;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
   flex-direction: row;
   justify-content: left;
   align-items: center;
@@ -26,22 +26,22 @@
   font-size: $mg-font-size-400;
   width: mg-rem(40);
   height: mg-rem(40);
-  padding: $mg-spacing-100;
-  border-radius: $mg-radius-button;
-  background-color: $mg-color-button-background;
-  color: $mg-color-button;
+  padding: var(--mg-spacing-100);
+  border-radius: var(--mg-radius-button);
+  background-color: var(--mg-color-button-background);
+  color: var(--mg-color-button);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border: $mg-border-width-button solid $mg-border-color-button;
+  border: var(--mg-border-width-button) solid var(--mg-border-color-button);
 
   &:hover {
     background-color: rgb(var(--mg-color-blue-700) / 0.8);
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background--hover;
+    box-shadow: 0 0 4px var(--mg-color-button-background--hover);
     outline: 0;
   }
 }
@@ -52,10 +52,10 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  border: 0 solid $mg-border-color-button;
-  color: $mg-color-button;
-  font-family: $mg-font-family;
-  padding: $mg-spacing-100;
+  border: 0 solid var(--mg-border-color-button);
+  color: var(--mg-color-button);
+  font-family: var(--mg-font-family);
+  padding: var(--mg-spacing-100);
   background-color: rgb(var(--mg-color-blue-900));
 
   &:hover .mg-share__copy-text {
@@ -77,7 +77,7 @@
 }
 
 .mg-share__copy-text {
-  color: $mg-color-button;
+  color: var(--mg-color-button);
   font-size: $mg-font-size-100;
   overflow: hidden;
   scrollbar-width: 0;

@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------------
 .mg-form-field {
   display: block;
-  margin-bottom: $mg-spacing-100;
+  margin-bottom: var(--mg-spacing-100);
 }
 
 // -----------------------------------------------------------------------------
@@ -17,11 +17,11 @@
   font-size: $mg-font-size-300;
 
   &--disabled {
-    color: $mg-color-neutral-400;
+    color: var(--mg-color-neutral-400);
   }
 
   &--required::after {
-    color: $mg-color-red-900;
+    color: var(--mg-color-red-900);
     content: " *";
   }
 }
@@ -33,23 +33,23 @@
   @extend %background-white;
 
   appearance: none;
-  border: 2px solid $mg-color-black;
-  border-radius: $mg-radius-form-input;
+  border: 2px solid var(--mg-color-black);
+  border-radius: var(--mg-radius-form-input);
   box-sizing: border-box;
   display: block;
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family);
   font-size: $mg-font-size-300;
   height: 46px;
-  margin-top: $mg-spacing-25;
+  margin-top: var(--mg-spacing-25);
   padding: mg-rem(6.25);
   width: 100%;
 
   &::placeholder {
-    color: $mg-color-neutral-500;
+    color: var(--mg-color-neutral-500);
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-form-focus;
+    box-shadow: 0 0 4px var(--mg-color-form-focus);
     outline: 0;
   }
 }
@@ -58,17 +58,17 @@
   @extend %mg-form-input-base;
 
   &--disabled {
-    background-color: $mg-color-white;
-    border-color: $mg-color-neutral-400;
-    color: $mg-color-neutral-400;
+    background-color: var(--mg-color-white);
+    border-color: var(--mg-color-neutral-400);
+    color: var(--mg-color-neutral-400);
 
     &::placeholder {
-      color: $mg-color-neutral-400;
+      color: var(--mg-color-neutral-400);
     }
   }
 
   &--error {
-    border-color: $mg-color-red-900;
+    border-color: var(--mg-color-red-900);
   }
 }
 
@@ -83,17 +83,17 @@
   resize: vertical;
 
   &--disabled {
-    background-color: $mg-color-white;
-    border-color: $mg-color-neutral-400;
-    color: $mg-color-neutral-400;
+    background-color: var(--mg-color-white);
+    border-color: var(--mg-color-neutral-400);
+    color: var(--mg-color-neutral-400);
 
     &::placeholder {
-      color: $mg-color-neutral-400;
+      color: var(--mg-color-neutral-400);
     }
   }
 
   &--error {
-    border-color: $mg-color-red-900;
+    border-color: var(--mg-color-red-900);
   }
 }
 
@@ -104,17 +104,17 @@
   @extend %background-white;
 
   appearance: none;
-  border: 2px solid $mg-color-black;
-  border-radius: $mg-radius-form-input;
+  border: 2px solid var(--mg-color-black);
+  border-radius: var(--mg-radius-form-input);
   box-sizing: border-box;
   cursor: pointer;
   display: block;
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family);
   font-size: $mg-font-size-300;
   height: 46px;
-  margin-top: $mg-spacing-25;
+  margin-top: var(--mg-spacing-25);
   padding: mg-rem(6.25);
-  padding-right: $mg-spacing-200;
+  padding-right: var(--mg-spacing-200);
   width: 100%;
 
   // Custom dropdown arrow
@@ -123,19 +123,19 @@
   background-repeat: no-repeat;
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-form-focus;
+    box-shadow: 0 0 4px var(--mg-color-form-focus);
     outline: 0;
   }
 
   &--disabled {
-    background-color: $mg-color-white;
-    border-color: $mg-color-neutral-400;
-    color: $mg-color-neutral-400;
+    background-color: var(--mg-color-white);
+    border-color: var(--mg-color-neutral-400);
+    color: var(--mg-color-neutral-400);
     cursor: default;
   }
 
   &--error {
-    border-color: $mg-color-red-900;
+    border-color: var(--mg-color-red-900);
   }
 }
 
@@ -150,18 +150,18 @@
   // Base input (shared between checkbox and radio)
   &__input {
     appearance: none;
-    border: 2px solid $mg-color-form-check;
+    border: 2px solid var(--mg-color-form-check);
     cursor: pointer;
     height: 16px;
     margin: 0;
     width: 16px;
 
     &:hover {
-      border-color: $mg-color-form-check--hover;
+      border-color: var(--mg-color-form-check--hover);
     }
 
     &:focus-visible {
-      box-shadow: 0 0 4px $mg-color-form-focus;
+      box-shadow: 0 0 4px var(--mg-color-form-focus);
       outline: 0;
     }
 
@@ -172,23 +172,23 @@
     &--radio {
       background-color: transparent;
       border-radius: 100%;
-      box-shadow: inset 0 0 0 $mg-color-white;
+      box-shadow: inset 0 0 0 var(--mg-color-white);
     }
 
     &--disabled {
-      border-color: $mg-color-neutral-400;
+      border-color: var(--mg-color-neutral-400);
       cursor: default;
 
       &:hover {
-        border-color: $mg-color-neutral-400;
+        border-color: var(--mg-color-neutral-400);
       }
     }
 
     &--error {
-      border-color: $mg-color-red-900;
+      border-color: var(--mg-color-red-900);
 
       &:hover {
-        border-color: $mg-color-red-900;
+        border-color: var(--mg-color-red-900);
       }
     }
   }
@@ -203,64 +203,64 @@
 
 // Checked states (must be outside BEM nesting for specificity)
 .mg-form-check__input--checkbox:checked {
-  background-color: $mg-color-form-check--checked;
+  background-color: var(--mg-color-form-check--checked);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/%3E%3C/svg%3E");
-  border-color: $mg-color-form-check--checked;
+  border-color: var(--mg-color-form-check--checked);
 }
 
 .mg-form-check__input--radio:checked {
-  background-color: $mg-color-form-check--checked;
-  box-shadow: inset 0 0 0 3px $mg-color-white;
+  background-color: var(--mg-color-form-check--checked);
+  box-shadow: inset 0 0 0 3px var(--mg-color-white);
 }
 
 // -----------------------------------------------------------------------------
 // Help text
 // -----------------------------------------------------------------------------
 .mg-form-help {
-  color: $mg-color-neutral-500;
+  color: var(--mg-color-neutral-500);
   font-size: $mg-font-size-200;
   margin-bottom: 0;
-  margin-top: $mg-spacing-25;
+  margin-top: var(--mg-spacing-25);
 }
 
 // -----------------------------------------------------------------------------
 // Error text
 // -----------------------------------------------------------------------------
 .mg-form-error {
-  color: $mg-color-red-900;
+  color: var(--mg-color-red-900);
   font-size: $mg-font-size-300;
   margin-bottom: 0;
-  margin-top: $mg-spacing-25;
+  margin-top: var(--mg-spacing-25);
 }
 
 // -----------------------------------------------------------------------------
 // Form error summary
 // -----------------------------------------------------------------------------
 .mg-form-error-summary {
-  background-color: $mg-color-red-50;
-  border-left: 4px solid $mg-color-red-900;
-  margin-bottom: $mg-spacing-200;
-  padding: $mg-spacing-150;
+  background-color: var(--mg-color-red-50);
+  border-left: 4px solid var(--mg-color-red-900);
+  margin-bottom: var(--mg-spacing-200);
+  padding: var(--mg-spacing-150);
 
   &:focus {
-    outline: 3px solid $mg-color-blue-800;
+    outline: 3px solid var(--mg-color-blue-800);
     outline-offset: 0;
   }
 
   &__title {
-    color: $mg-color-red-900;
+    color: var(--mg-color-red-900);
     font-size: $mg-font-size-300;
     font-weight: 700;
-    margin-bottom: $mg-spacing-75;
+    margin-bottom: var(--mg-spacing-75);
     margin-top: 0;
   }
 
   &__list {
     margin: 0;
-    padding-left: $mg-spacing-100;
+    padding-left: var(--mg-spacing-100);
 
     li {
-      margin-bottom: $mg-spacing-50;
+      margin-bottom: var(--mg-spacing-50);
 
       &:last-child {
         margin-bottom: 0;
@@ -268,7 +268,7 @@
     }
 
     a {
-      color: $mg-color-red-900;
+      color: var(--mg-color-red-900);
       font-weight: 600;
       text-decoration: underline;
     }
@@ -296,7 +296,7 @@
 [dir="rtl"] {
   .mg-form-select {
     background-position: left mg-rem(6.25) center;
-    padding-left: $mg-spacing-200;
+    padding-left: var(--mg-spacing-200);
     padding-right: mg-rem(6.25);
   }
 

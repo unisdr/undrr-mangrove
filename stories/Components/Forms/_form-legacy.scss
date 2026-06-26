@@ -12,28 +12,28 @@ label {
   &.error {
     @extend %paragraph-font-300;
 
-    color: $mg-color-black;
+    color: var(--mg-color-black);
     margin-top: 0;
   }
 
   &.disabled {
-    color: $mg-color-neutral-400;
+    color: var(--mg-color-neutral-400);
   }
 }
 
 .help {
-  color: $mg-color-neutral-500;
+  color: var(--mg-color-neutral-500);
   display: block;
   font-size: $mg-font-size-200;
   margin-bottom: 0;
-  margin-top: $mg-spacing-25;
+  margin-top: var(--mg-spacing-25);
 }
 
 .error {
-  color: $mg-color-red-900;
+  color: var(--mg-color-red-900);
   font-size: $mg-font-size-300;
   margin-bottom: 0;
-  margin-top: $mg-spacing-25;
+  margin-top: var(--mg-spacing-25);
 }
 
 input[type="text"],
@@ -47,22 +47,22 @@ textarea {
   @extend %background-white;
 
   appearance: none;
-  border: 2px solid $mg-color-black;
+  border: 2px solid var(--mg-color-black);
   border-radius: 0;
   box-sizing: border-box;
   display: block;
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family);
   font-size: $mg-font-size-300;
   height: 46px;
   padding: mg-rem(6.25);
   width: 100%;
 
   &::placeholder {
-    color: $mg-color-neutral-500;
+    color: var(--mg-color-neutral-500);
   }
 
   &:focus {
-    box-shadow: 0 0 4px $mg-color-blue-800;
+    box-shadow: 0 0 4px var(--mg-color-blue-800);
     outline: 0;
   }
 
@@ -72,28 +72,28 @@ textarea {
   }
 
   &.disabled {
-    background-color: $mg-color-white;
-    border: 2px solid $mg-color-neutral-400;
-    color: $mg-color-neutral-400;
+    background-color: var(--mg-color-white);
+    border: 2px solid var(--mg-color-neutral-400);
+    color: var(--mg-color-neutral-400);
 
     &::placeholder {
-      color: $mg-color-neutral-400;
+      color: var(--mg-color-neutral-400);
     }
   }
 
   &.error {
-    border: 2px solid $mg-color-red-900;
+    border: 2px solid var(--mg-color-red-900);
   }
 }
 
 input[type="date"] {
-  background-color: $mg-color-white;
-  color: $mg-color-neutral-500;
+  background-color: var(--mg-color-white);
+  color: var(--mg-color-neutral-500);
 }
 
 .help {
   &.disabled {
-    color: $mg-color-neutral-400;
+    color: var(--mg-color-neutral-400);
   }
 }
 
@@ -121,7 +121,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   textarea {
     @media (hover: none) and (pointer: coarse) {
       input[type="date"] {
-        padding-right: $mg-spacing-100;
+        padding-right: var(--mg-spacing-100);
       }
     }
   }
