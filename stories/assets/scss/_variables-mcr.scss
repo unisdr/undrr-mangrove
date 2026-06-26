@@ -1,3 +1,8 @@
+// MCR build-time Sass configuration.
+// Runtime CSS custom property overrides live in _theme-mcr.scss.
+// As the v2.0 migration progresses, sections move from this file to _theme-mcr.scss.
+// When this file contains only comments, delete it.
+
 // @use "sass:color";
 /**
  * @tokens MCR Colors
@@ -43,23 +48,5 @@ $mg-radius-form-input: $mg-spacing-100;
 // Hero
 $mg-color-hero: $mg-color-interactive;
 $mg-spacing-hero-overlay: mg-rem(20) 0;
-
-// Tabs
-$mg-color-tabbar-background: none;
-$mg-color-tab-background: $mcr-color-purple-800;
-$mg-color-tab-background--inactive: $mg-color-white;
-$mg-color-tab-border: $mcr-color-purple-200;
-$mg-color-tab-border--hover: $mcr-color-purple-800;
-$mg-color-tab-border--active: $mcr-color-purple-200;
-$mg-color-tab-background--hover: rgba($mcr-color-purple-800, 0.6);
-$mg-radius-tab: $mg-spacing-150 $mg-spacing-150 0 0;
-$mg-padding-tab: $mg-spacing-200 $mg-spacing-300;
-$mg-color-text-tab: $mg-color-neutral-700;
-$mg-color-text-tab--hover: $mg-color-white;
-$mg-color-text-tab-active: $mg-color-white;
-$mg-padding-tab-section: $mg-spacing-500;
-$mg-radius-tab-section: $mg-spacing-200;
-$mg-box-shadow-tab-section: rgb(0 0 0 / 0.24) 0 6px 5px 0;
-$mg-tabs-border-bottom: true;
 
 /* variables end */

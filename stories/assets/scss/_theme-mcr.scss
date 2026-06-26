@@ -1,0 +1,29 @@
+// MCR theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-mcr is present on <body> or a wrapping element.
+//
+// As v2.0 migration progresses, sections move from _variables-mcr.scss into here.
+// When _variables-mcr.scss contains only comments, delete it.
+
+// MCR brand palette (local to this file — not emitted as global :root properties)
+$_mcr-purple--raw:     89 26 97;
+$_mcr-purple-800--raw: 110 38 119;
+$_mcr-purple-200--raw: 222 208 215;
+
+.mg-theme-mcr {
+  // Tab overrides (migrated from _variables-mcr.scss)
+  --mg-color-tabbar-background:        none;
+  --mg-color-tab-background:           rgb(#{$_mcr-purple-800--raw});
+  --mg-color-tab-background--inactive: rgb(var(--mg-color-neutral-0));
+  --mg-color-tab-border:               rgb(#{$_mcr-purple-200--raw});
+  --mg-color-tab-border--hover:        rgb(#{$_mcr-purple-800--raw});
+  --mg-color-tab-border--active:       rgb(#{$_mcr-purple-200--raw});
+  --mg-color-tab-background--hover:    rgb(#{$_mcr-purple-800--raw} / 0.6);
+  --mg-radius-tab:                     var(--mg-spacing-150) var(--mg-spacing-150) 0 0;
+  --mg-padding-tab:                    var(--mg-spacing-200) var(--mg-spacing-300);
+  --mg-color-text-tab:                 rgb(var(--mg-color-neutral-700));
+  --mg-color-text-tab--hover:          rgb(var(--mg-color-neutral-0));
+  --mg-color-text-tab-active:          rgb(var(--mg-color-neutral-0));
+  --mg-padding-tab-section:            var(--mg-spacing-500);
+  --mg-radius-tab-section:             var(--mg-spacing-200);
+  --mg-box-shadow-tab-section:         rgb(var(--mg-color-neutral-900) / 0.24) 0 6px 5px 0;
+}
