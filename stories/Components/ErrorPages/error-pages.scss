@@ -1,11 +1,11 @@
 .mg-error-page {
   min-height: 100vh;
-  background-color: $mg-color-blue-900;
-  color: $mg-color-text;
+  background-color: rgb(var(--mg-color-blue-900));
+  color: rgb(var(--mg-color-text));
   padding-bottom: mg-rem(20);
 
   h1 {
-    color: $mg-color-blue-900;
+    color: rgb(var(--mg-color-blue-900));
     font-size: mg-rem(14);
     padding: 0;
     margin: 0;
@@ -18,13 +18,13 @@
     align-items: center;
 
     input[type="search"] {
-      border: 1px solid $mg-color-neutral-100;
+      border: 1px solid rgb(var(--mg-color-neutral-100));
       max-width: 300px;
     }
   }
 
   &__container {
-    background: $mg-color-neutral-0;
+    background: rgb(var(--mg-color-neutral-0));
     padding: mg-rem(20) mg-rem(15) mg-rem(10);
     max-width: 900px;
     margin: mg-rem(20) auto;
@@ -40,7 +40,7 @@
   }
 
   &--challenge {
-    background-color: $mg-color-neutral-25;
+    background-color: rgb(var(--mg-color-neutral-25));
 
     .mg-error-page__container {
       text-align: center;
@@ -61,7 +61,7 @@
     h1 {
       font-size: mg-rem(23);
       font-weight: 600;
-      color: $mg-color-text;
+      color: rgb(var(--mg-color-text));
       margin: 0 0 mg-rem(5);
     }
   }

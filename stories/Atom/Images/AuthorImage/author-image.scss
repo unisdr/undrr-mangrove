@@ -1,7 +1,7 @@
 /* author image */
 
 .mg-author-image {
-  border-radius: $author-image-radius;
+  border-radius: var(--mg-author-image-radius);
   height: 80px;
   min-width: 80px;
   overflow: hidden;
@@ -12,28 +12,28 @@
     @extend %absolute__content;
     @include transition(all 0.6s);
 
-    border-radius: $author-image-radius;
+    border-radius: var(--mg-author-image-radius);
     opacity: 0;
     overflow: hidden;
   }
 
   &:hover {
     $colors: (
-      "yellow": $mg-color-yellow,
-      "red": $mg-color-red-900,
-      "green": $mg-color-green,
-      "blue": $mg-color-azure,
+      "yellow": var(--mg-color-yellow),
+      "red": rgb(var(--mg-color-red-900)),
+      "green": var(--mg-color-green),
+      "blue": var(--mg-color-azure),
     );
 
     &::before {
-      @include background-image(45deg, $mg-color-yellow, transparent 53%);
+      @include background-image(45deg, var(--mg-color-yellow), transparent 53%);
 
       opacity: 0.75;
     }
 
     @each $name, $color in $colors {
       &.mg-author-image--#{$name}::before {
-        @include background-image(45deg, $mg-color-yellow, transparent 53%);
+        @include background-image(45deg, var(--mg-color-yellow), transparent 53%);
       }
     }
   }

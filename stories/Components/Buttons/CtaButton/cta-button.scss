@@ -18,18 +18,18 @@
   background: transparent;
   display: flex;
   font-family: $mg-font-family-headings;
-  font-size: $mg-font-size-button;
+  font-size: var(--mg-font-size-button);
   font-weight: 600;
   line-height: 1;
-  border-radius: $mg-radius-button;
-  color: $mg-color-button;
+  border-radius: var(--mg-radius-button);
+  color: rgb(var(--mg-color-button));
   cursor: pointer;
   justify-content: center;
-  padding: $mg-padding-button;
-  border: $mg-border-width-button solid $mg-border-color-button;
+  padding: var(--mg-padding-button);
+  border: var(--mg-border-width-button) solid var(--mg-border-color-button);
 
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background--hover;
+    box-shadow: 0 0 4px rgb(var(--mg-color-button-background--hover));
     outline: 0;
   }
 
@@ -44,32 +44,32 @@
 
 button {
   &:focus-visible {
-    box-shadow: 0 0 4px $mg-color-button-background;
+    box-shadow: 0 0 4px rgb(var(--mg-color-button-background));
     outline: 0;
   }
 }
 
 .mg-button-primary {
-  background-color: $mg-color-button-background;
+  background-color: rgb(var(--mg-color-button-background));
 
   &:hover {
-    color: $mg-color-button;
-    background-color: $mg-color-button-background--hover;
+    color: rgb(var(--mg-color-button));
+    background-color: rgb(var(--mg-color-button-background--hover));
   }
 }
 
 .mg-button-secondary {
-  background-color: $mg-color-button-secondary-background;
+  background-color: rgb(var(--mg-color-button-secondary-background));
 
   &:hover {
-    color: $mg-color-button;
-    background-color: $mg-color-button-secondary-background--hover;
+    color: rgb(var(--mg-color-button));
+    background-color: rgb(var(--mg-color-button-secondary-background--hover));
   }
 }
 
 .mg-button.disabled {
-  background-color: $mg-color-neutral-500;
-  color: $mg-color-neutral-0;
+  background-color: rgb(var(--mg-color-neutral-500));
+  color: rgb(var(--mg-color-neutral-0));
   pointer-events: none;
 }
 
@@ -81,7 +81,7 @@ button {
 //           @include transform(rotate(180deg));
 
 //           margin-left: 0;
-//           margin-right: $mg-spacing-25;
+//           margin-right: var(--mg-spacing-25);
 //         }
 
 //         &:hover::after {

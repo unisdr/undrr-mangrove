@@ -1,0 +1,30 @@
+// PreventionWeb theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-preventionweb is present on <body> or a wrapping element.
+$_pw-color-primary--raw: 10 105 105;
+
+.mg-theme-preventionweb {
+  --mg-color-interactive:          #{$_pw-color-primary--raw};
+  --mg-color-interactive-active:   #{$_pw-color-primary--raw};
+  --mg-color-tag:                  var(--mg-color-interactive);
+  --mg-color-tag--hover:           var(--mg-color-interactive-active);
+  --mg-color-button-background:    #{$_pw-color-primary--raw};
+  --mg-color-button-background--hover: var(--sendai-orange-900);
+  --mg-radius-button:              var(--mg-spacing-50);
+  --mg-color-form-check:           var(--mg-color-interactive);
+  --mg-color-form-check--hover:    var(--mg-color-interactive-active);
+  --mg-color-form-check--checked:  var(--mg-color-interactive);
+  --mg-color-form-focus:           var(--mg-color-interactive);
+  --mg-color-hero:                 var(--mg-color-interactive);
+  --mg-spacing-hero-overlay:       #{mg-rem(20)} 0;
+  --mg-color-tabbar-background:    rgb(#{$_pw-color-primary--raw} / 0.1);
+  --mg-color-tab-background:       rgb(#{$_pw-color-primary--raw} / 0.1);
+  --mg-color-tab-border:           var(--mg-color-interactive);
+  --mg-color-tab-border--hover:    var(--mg-color-interactive);
+  --mg-color-tab-border--active:   var(--mg-color-tab-background);
+  --mg-color-tab-background--inactive: var(--mg-color-tabbar-background);
+  --mg-color-tab-background--hover: rgb(#{$_pw-color-primary--raw} / 0.2);
+  --mg-radius-tab:                 var(--mg-spacing-50) var(--mg-spacing-50) 0 0;
+  --mg-color-text-tab:             var(--mg-color-neutral-700);
+  --mg-color-text-tab--hover:      var(--mg-color-neutral-700);
+  --mg-color-text-tab-active:      var(--mg-color-neutral-900);
+}

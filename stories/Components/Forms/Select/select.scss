@@ -4,7 +4,7 @@
 [dir="rtl"] {
   .mg-form-select {
     background-position: left mg-rem(6.25) center;
-    padding-left: $mg-spacing-200;
+    padding-left: var(--mg-spacing-200);
     padding-right: mg-rem(6.25);
   }
 }

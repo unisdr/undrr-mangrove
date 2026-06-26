@@ -1,0 +1,61 @@
+// Delta Resilience theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-delta is present on <body> or a wrapping element.
+$_delta-color-primary--raw: 19 46 72;
+$_delta-color-primary-800--raw: 12 30 48;
+$_delta-color-dark--raw: 24 24 35;
+$_delta-color-card-bg--raw: 250 250 250;
+
+.mg-theme-delta {
+  --mg-color-interactive:          #{$_delta-color-primary--raw};
+  --mg-color-interactive-active:   #{$_delta-color-primary--raw};
+  --mg-color-tag:                  var(--mg-color-interactive);
+  --mg-color-tag--hover:           var(--mg-color-interactive-active);
+  --mg-radius-tag:                 var(--mg-spacing-50);
+  --mg-color-button:               #{$_delta-color-primary--raw};
+  --mg-color-button--hover:        #{$_delta-color-primary-800--raw};
+  --mg-color-button-background:    transparent;
+  --mg-color-button-background--hover: rgb(#{$_delta-color-primary--raw} / 0.06);
+  --mg-color-button-secondary-background: transparent;
+  --mg-color-button-secondary-background--hover: rgb(#{$_delta-color-primary--raw} / 0.06);
+  --mg-color-text-button:          #{$_delta-color-primary--raw};
+  --mg-border-color-button:        #{$_delta-color-primary--raw};
+  --mg-radius-button:              var(--mg-spacing-50);
+  --mg-border-width-button:        1px;
+  --mg-padding-button:             var(--mg-spacing-100) var(--mg-spacing-200);
+  --mg-font-size-button:           #{$mg-font-size-250};
+  --mg-card-background:            rgb(#{$_delta-color-card-bg--raw});
+  --mg-card-padding:               var(--mg-spacing-150);
+  --mg-card-border-radius:         var(--mg-spacing-50);
+  --mg-card-icon-badge-radius:     15%;
+  --mg-color-form-check:           var(--mg-color-interactive);
+  --mg-color-form-check--hover:    var(--mg-color-interactive-active);
+  --mg-color-form-check--checked:  var(--mg-color-interactive);
+  --mg-color-form-focus:           var(--mg-color-interactive);
+  --mg-radius-form-input:          var(--mg-spacing-50);
+  --mg-color-mega-content-bg:      var(--mg-color-white);
+  --mg-color-hero:                 #{$_delta-color-primary--raw};
+  --mg-opacity-hero:               1;
+  --mg-hero-overlay-max-width:     var(--mg-width-600);
+  --mg-hero-overlay-padding:       var(--mg-spacing-400);
+  --mg-color-hero-title:           oklch(68.5% 0.169 237.323);
+  --mg-color-hero--tertiary:       rgb(#{$_delta-color-dark--raw});
+  --mg-color-hero-button-secondary-background: rgb(#{$_delta-color-primary--raw});
+  --mg-color-hero-button-secondary-color: var(--mg-color-white);
+  --mg-border-color-hero-button-secondary: var(--mg-color-white);
+  --mg-spacing-hero-overlay:       #{mg-rem(20)} 0;
+  --mg-color-tabbar-background:    none;
+  --mg-color-tab-background:       rgb(#{$_delta-color-primary--raw});
+  --mg-color-tab-background--inactive: var(--mg-color-white);
+  --mg-color-tab-border:           var(--mg-color-blue-200);
+  --mg-color-tab-border--hover:    rgb(#{$_delta-color-primary-800--raw});
+  --mg-color-tab-border--active:   var(--mg-color-blue-200);
+  --mg-color-tab-background--hover: rgb(#{$_delta-color-primary--raw} / 0.7);
+  --mg-radius-tab:                 var(--mg-spacing-50) var(--mg-spacing-50) 0 0;
+  --mg-padding-tab:                var(--mg-spacing-150) var(--mg-spacing-200);
+  --mg-color-text-tab:             var(--mg-color-neutral-700);
+  --mg-color-text-tab--hover:      var(--mg-color-white);
+  --mg-color-text-tab-active:      var(--mg-color-white);
+  --mg-padding-tab-section:        var(--mg-spacing-300);
+  --mg-radius-tab-section:         var(--mg-spacing-50);
+  --mg-box-shadow-tab-section:     none;
+}

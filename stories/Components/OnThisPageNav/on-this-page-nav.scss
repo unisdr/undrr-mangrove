@@ -9,12 +9,12 @@
   // Set this in your theme CSS to dock below a sticky MegaMenu or header.
   position: sticky;
   top: var(--mg-on-this-page-nav-offset, 0);
-  z-index: $mg-z-index-sticky; // above MegaMenu, below PageHeader
+  z-index: var(--mg-z-index-sticky); // above MegaMenu, below PageHeader
   display: flex;
   align-items: center;
-  background: $mg-color-neutral-0;
+  background: rgb(var(--mg-color-neutral-0));
   box-shadow: 0 2px 3px 0 rgb(51 51 51 / 0.31);
-  padding: 0 $mg-container-spacer;
+  padding: 0 var(--mg-container-spacer);
 
   // Full-bleed: break out of any parent container to span the viewport.
   // Works even when nested inside an mg-container or Drupal content column.
@@ -27,11 +27,11 @@
   @media screen and (height <= 400px) {
     position: static;
     box-shadow: none;
-    border-bottom: 1px solid $mg-color-neutral-50;
+    border-bottom: 1px solid rgb(var(--mg-color-neutral-50));
   }
 
   @media screen and (min-width: $mg-breakpoint-tablet) {
-    padding: 0 $mg-spacing-200;
+    padding: 0 var(--mg-spacing-200);
   }
 
   &--hidden {
@@ -51,9 +51,9 @@
     // Fade gradient on the trailing edge signals more content is scrollable.
     // Uses mask-image so the fade is transparent (works on any background).
     // padding-inline-end gives the fade space so text isn't masked mid-character.
-    padding-inline-end: $mg-spacing-300;
-    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-500}), transparent);
-    mask-image: linear-gradient(to right, #000 calc(100% - #{$mg-spacing-500}), transparent);
+    padding-inline-end: var(--mg-spacing-300);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--mg-spacing-500)), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--mg-spacing-500)), transparent);
 
     // Hide scrollbar but keep functional
     scrollbar-width: none;
@@ -65,9 +65,9 @@
     // When content is scrolled left, also fade the leading edge so users know
     // items are hidden behind the scroll button on that side.
     .mg-on-this-page-nav--has-left-overflow & {
-      padding-inline-start: $mg-spacing-300;
-      -webkit-mask-image: linear-gradient(to right, transparent, #000 #{$mg-spacing-500}, #000 calc(100% - #{$mg-spacing-500}), transparent);
-      mask-image: linear-gradient(to right, transparent, #000 #{$mg-spacing-500}, #000 calc(100% - #{$mg-spacing-500}), transparent);
+      padding-inline-start: var(--mg-spacing-300);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--mg-spacing-500), #000 calc(100% - var(--mg-spacing-500)), transparent);
+      mask-image: linear-gradient(to right, transparent, #000 var(--mg-spacing-500), #000 calc(100% - var(--mg-spacing-500)), transparent);
     }
   }
 
@@ -78,11 +78,11 @@
 
   &__link {
     display: block;
-    padding: $mg-spacing-150 $mg-spacing-150;
+    padding: var(--mg-spacing-150) var(--mg-spacing-150);
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-300;
     font-weight: 600;
-    color: $mg-color-neutral-600;
+    color: rgb(var(--mg-color-neutral-600));
     text-decoration: none;
     white-space: nowrap;
     border-bottom: 3px solid transparent;
@@ -93,33 +93,33 @@
     }
 
     &:hover {
-      color: $mg-color-interactive-active;
-      border-bottom-color: $mg-color-interactive-active;
+      color: rgb(var(--mg-color-interactive-active));
+      border-bottom-color: rgb(var(--mg-color-interactive-active));
       text-decoration: none;
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
+      outline: 2px solid rgb(var(--mg-color-interactive));
       outline-offset: -2px;
     }
 
     // Active state and active+hover — active wins over hover
     &--active,
     &--active:hover {
-      color: $mg-color-interactive;
-      border-bottom-color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
+      border-bottom-color: rgb(var(--mg-color-interactive));
     }
   }
 
   &__cta {
     flex-shrink: 0;
     margin-inline-start: auto;
-    padding: $mg-spacing-150 $mg-spacing-150;
+    padding: var(--mg-spacing-150) var(--mg-spacing-150);
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-300;
     font-weight: 600;
-    color: $mg-color-neutral-0;
-    background: $mg-color-interactive;
+    color: rgb(var(--mg-color-neutral-0));
+    background: rgb(var(--mg-color-interactive));
     text-decoration: none;
     white-space: nowrap;
     border: 0;
@@ -131,13 +131,13 @@
     }
 
     &:hover {
-      background: $mg-color-interactive-active;
+      background: rgb(var(--mg-color-interactive-active));
       text-decoration: none;
-      color: $mg-color-neutral-0;
+      color: rgb(var(--mg-color-neutral-0));
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
+      outline: 2px solid rgb(var(--mg-color-interactive));
       outline-offset: 2px;
     }
   }
@@ -150,12 +150,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: $mg-spacing-250; // WCAG 2.5.8 minimum touch target (24px)
-    padding: 0 $mg-spacing-150;
+    min-width: var(--mg-spacing-250); // WCAG 2.5.8 minimum touch target (24px)
+    padding: 0 var(--mg-spacing-150);
     border: 0;
-    background: $mg-color-neutral-0;
+    background: rgb(var(--mg-color-neutral-0));
     cursor: pointer;
-    color: $mg-color-neutral-600;
+    color: rgb(var(--mg-color-neutral-600));
     transition: color 0.2s ease;
 
     // display:flex above would otherwise override the UA [hidden]{display:none} rule
@@ -169,11 +169,11 @@
     }
 
     &:hover {
-      color: $mg-color-interactive-active;
+      color: rgb(var(--mg-color-interactive-active));
     }
 
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
+      outline: 2px solid rgb(var(--mg-color-interactive));
       outline-offset: -2px;
     }
 

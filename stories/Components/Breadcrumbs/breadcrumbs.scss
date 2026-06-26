@@ -27,12 +27,12 @@
 
     a {
       background: none;
-      color: $mg-color-text;
+      color: rgb(var(--mg-color-text));
       font-weight: 600;
       letter-spacing: 0.03em;
 
       &:hover {
-        color: $mg-color-text;
+        color: rgb(var(--mg-color-text));
       }
     }
   }
@@ -43,8 +43,8 @@
     display: inline-block;
     width: 0.4em;
     height: 0.4em;
-    border-right: 0.125em solid $mg-color-text;
-    border-top: 0.125em solid $mg-color-text;
+    border-right: 0.125em solid rgb(var(--mg-color-text));
+    border-top: 0.125em solid rgb(var(--mg-color-text));
     transform: rotate(45deg);
 
     // Asymmetric margin: left side is larger to optically center the rotated
@@ -61,12 +61,12 @@
 
 .mg-breadcrumb.mg-breadcrumb--white {
   li {
-    color: $mg-color-white;
+    color: rgb(var(--mg-color-white));
     a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
 
       &:hover {
-        color: $mg-color-white;
+        color: rgb(var(--mg-color-white));
         opacity: 0.7;
       }
     }
@@ -74,11 +74,11 @@
 
   &:last-of-type,
   li:last-of-type {
-    color: $mg-color-white;
+    color: rgb(var(--mg-color-white));
   }
 
   li + li:before {
-    border-color: $mg-color-white;
+    border-color: rgb(var(--mg-color-white));
   }
 }
 

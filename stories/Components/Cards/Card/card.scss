@@ -4,15 +4,15 @@
 .mg-card {
   display: inline-block;
   position: relative;
-  margin-bottom: $mg-spacing-100;
-  background: $mg-card-background;
-  padding: $mg-card-padding;
-  border-radius: $mg-card-border-radius;
+  margin-bottom: var(--mg-spacing-100);
+  background: var(--mg-card-background);
+  padding: var(--mg-card-padding);
+  border-radius: var(--mg-card-border-radius);
 
   // Vertical CARD
   &__vc {
     display: grid;
-    gap: $mg-spacing-50;
+    gap: var(--mg-spacing-50);
 
     .mg-card__visual {
       aspect-ratio: 16/9;
@@ -22,10 +22,10 @@
 
   // Horizontal CARD
   &__hc {
-    color: $mg-color-neutral-800;
+    color: rgb(var(--mg-color-neutral-800));
     display: grid;
     grid-template-columns: 1fr;
-    gap: $mg-spacing-100;
+    gap: var(--mg-spacing-100);
 
     .mg-card__content {
       grid-column: 1 / 3;
@@ -59,7 +59,7 @@
   &__hc.mg-card-book__hc {
     .mg-card__visual {
       align-self: flex-start;
-      border: 1px solid rgba($mg-color-neutral-600, 0.2);
+      border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
       max-width: 200px;
       overflow: hidden;
 
@@ -71,7 +71,7 @@
 
     &:has(.mg-card__visual) {
       grid-template-rows: unset;
-      gap: 0 $mg-spacing-100;
+      gap: 0 var(--mg-spacing-100);
 
       @media (min-width: $mg-breakpoint-mobile) {
         grid-template-columns: 160px 1fr;
@@ -94,14 +94,14 @@
   }
 
   &__label {
-    color: $mg-color-tag;
+    color: rgb(var(--mg-color-tag));
     cursor: pointer;
     display: inline-block;
     font-size: $mg-font-tag;
-    margin-right: $mg-spacing-50;
+    margin-right: var(--mg-spacing-50);
 
     &:hover {
-      color: $mg-color-tag;
+      color: rgb(var(--mg-color-tag));
     }
   }
 
@@ -110,11 +110,11 @@
     font-size: $mg-font-size-500;
     font-weight: bold;
     line-height: $mg-font-line-height-500;
-    padding-bottom: $mg-spacing-75;
-    padding-top: $mg-spacing-100;
+    padding-bottom: var(--mg-spacing-75);
+    padding-top: var(--mg-spacing-100);
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       cursor: pointer;
       display: inline;
       text-decoration: underline;
@@ -122,7 +122,7 @@
     }
 
     .active {
-      background: $mg-color-neutral-50;
+      background: rgb(var(--mg-color-neutral-50));
       font-weight: bold;
     }
   }
@@ -161,7 +161,7 @@
 
   // Focus: card-level outline when title link is focused via keyboard
   &__title a:focus-visible {
-    outline: 2px solid $mg-color-interactive;
+    outline: 2px solid rgb(var(--mg-color-interactive));
     outline-offset: 2px;
   }
 
@@ -190,9 +190,9 @@
 
 // Color variants (shared accent colours from _variables.scss)
 $card-variant-colours: (
-  "secondary": $mg-color-secondary,
-  "tertiary": $mg-color-tertiary,
-  "quaternary": $mg-color-quaternary,
+  "secondary": rgb(var(--mg-color-secondary)),
+  "tertiary": rgb(var(--mg-color-tertiary)),
+  "quaternary": rgb(var(--mg-color-quaternary)),
 );
 
 @each $name, $color in $card-variant-colours {
@@ -205,7 +205,7 @@ $card-variant-colours: (
 // Double class selector ensures this overrides variant colors regardless of source order
 .mg-card.mg-card--plain-title {
   .mg-card__title a {
-    color: $mg-color-text;
+    color: rgb(var(--mg-color-text));
     text-decoration: none;
   }
 
@@ -215,12 +215,12 @@ $card-variant-colours: (
 }
 
 .mg-card__summary {
-  padding-bottom: $mg-spacing-50;
+  padding-bottom: var(--mg-spacing-50);
 }
 
 .mg-card__summary a,
 .mg-card__text-link {
-  color: $mg-color-interactive;
+  color: rgb(var(--mg-color-interactive));
 }
 
 .mg-card__summary a,
@@ -247,11 +247,11 @@ $card-variant-colours: (
 
   .mg-card__visual {
     aspect-ratio: 3/4;
-    border: 1px solid rgba($mg-color-neutral-600, 0.2);
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
   }
   .mg-card__title {
     font-size: $mg-font-size-300;
-    padding-top: $mg-spacing-25;
+    padding-top: var(--mg-spacing-25);
   }
 }
 
@@ -270,7 +270,7 @@ $card-variant-colours: (
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
   max-width: 300px;
 
   @media (min-width: $mg-breakpoint-mobile) {
@@ -285,7 +285,7 @@ $card-variant-colours: (
   .mg-card__visual-label {
     font-size: $mg-font-tag;
     font-weight: 700;
-    color: $mg-color-tag;
+    color: rgb(var(--mg-color-tag));
     width: 100%;
   }
 
@@ -357,7 +357,7 @@ $card-variant-colours: (
 
   // Icon class container - uses container query units to scale like images
   .mg-card__icon-wrap {
-    color: $mg-color-interactive;
+    color: rgb(var(--mg-color-interactive));
     line-height: 1;
     display: flex;
     align-items: center;
@@ -397,7 +397,7 @@ $card-variant-colours: (
     // Colored background behind icon (circle by default, rounded rect in Delta)
     &--colored {
       background-color: var(--mg-icon-bg);
-      border-radius: $mg-card-icon-badge-radius;
+      border-radius: var(--mg-card-icon-badge-radius);
       aspect-ratio: 1;
       width: 72px;
       min-width: 72px;
@@ -407,7 +407,7 @@ $card-variant-colours: (
 
       .mg-icon {
         font-size: 32px;
-        color: var(--mg-icon-fg, #{$mg-color-neutral-700});
+        color: var(--mg-icon-fg, rgb(var(--mg-color-neutral-700)));
       }
     }
   }
@@ -434,7 +434,7 @@ $card-variant-colours: (
       outline: none;
 
       &::after {
-        outline: 2px solid $mg-color-interactive;
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
       }
     }
@@ -455,7 +455,7 @@ $card-variant-colours: (
     line-height: $mg-font-line-height-500;
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: underline;
       text-underline-offset: 3px;
 
@@ -464,7 +464,7 @@ $card-variant-colours: (
       }
 
       &:focus-visible {
-        outline: 2px solid $mg-color-interactive;
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
         border-radius: 2px;
       }
@@ -473,16 +473,16 @@ $card-variant-colours: (
 
   .mg-card__cta {
     margin-top: auto;
-    padding-top: $mg-spacing-100;
+    padding-top: var(--mg-spacing-100);
   }
 
   .mg-card__link {
     margin-top: auto;
-    padding-top: $mg-spacing-75;
+    padding-top: var(--mg-spacing-75);
     margin-bottom: 0;
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: none;
       position: relative;
       z-index: 101; // above stretched-link cover — local to card stacking context
@@ -492,7 +492,7 @@ $card-variant-colours: (
       }
 
       &:focus-visible {
-        outline: 2px solid $mg-color-interactive;
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
         border-radius: 2px;
       }
@@ -502,7 +502,7 @@ $card-variant-colours: (
   // Bordered variant (colored border via CSS custom property)
   &--bordered {
     border: 2px solid var(--mg-card-border);
-    padding: max($mg-card-padding, $mg-spacing-150);
+    padding: max(var(--mg-card-padding), var(--mg-spacing-150));
   }
 
   // Centered variant
@@ -522,27 +522,27 @@ $card-variant-colours: (
   // Negative variant (for dark backgrounds)
   &--negative {
     .mg-card__icon-wrap {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     .mg-card__label {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     .mg-card__title,
     .mg-card__title a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
     }
 
     .mg-card__summary {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     .mg-card__link a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
 
       &:focus-visible {
-        outline-color: $mg-color-white;
+        outline-color: rgb(var(--mg-color-white));
       }
     }
   }

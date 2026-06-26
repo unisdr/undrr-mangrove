@@ -9,12 +9,12 @@
 .mg-hero {
   background-size: cover;
   background-position: center;
-  color: $mg-color-neutral-0;
+  color: rgb(var(--mg-color-neutral-0));
   display: grid;
   grid-template-columns: 1fr;
   position: relative;
   margin-left: calc(50% - (50vw)); // to expand out of the parent container
-  padding-left: $mg-spacing-100;
+  padding-left: var(--mg-spacing-100);
   width: 100vw;
 
   @media (min-width: $mg-breakpoint-tablet) {
@@ -30,44 +30,44 @@
   a.mg-button,
   a.mg-button:hover,
   a.mg-button:visited {
-    color: $mg-color-hero;
+    color: rgb(var(--mg-color-hero));
   }
 
   a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
+    background-color: rgb(var(--mg-color-neutral-0));
   }
 
   a.mg-button-secondary,
   a.mg-button-secondary:hover,
   a.mg-button-secondary:visited {
-    background-color: $mg-color-hero-button-secondary-background;
-    color: $mg-color-hero-button-secondary-color;
-    border-color: $mg-border-color-hero-button-secondary;
+    background-color: var(--mg-color-hero-button-secondary-background);
+    color: rgb(var(--mg-color-hero-button-secondary-color));
+    border-color: rgb(var(--mg-border-color-hero-button-secondary));
   }
 
   a.mg-button:focus-visible {
-    box-shadow: 0 0 0 2px $mg-color-neutral-0;
-    outline: 2px solid $mg-color-neutral-0;
+    box-shadow: 0 0 0 2px rgb(var(--mg-color-neutral-0));
+    outline: 2px solid rgb(var(--mg-color-neutral-0));
     outline-offset: 2px;
   }
 
   &__overlay {
     align-items: center;
-    background-color: rgba($mg-color-hero, $mg-opacity-hero);
+    background-color: rgb(var(--mg-color-blue-900) / var(--mg-opacity-hero));
     display: grid;
-    margin: $mg-spacing-hero-overlay;
-    max-width: $mg-hero-overlay-max-width;
-    padding: $mg-hero-overlay-padding;
+    margin: var(--mg-spacing-hero-overlay);
+    max-width: var(--mg-hero-overlay-max-width);
+    padding: var(--mg-hero-overlay-padding);
   }
 
   &__content {
     display: grid;
-    margin-top: $mg-spacing-25;
+    margin-top: var(--mg-spacing-25);
     row-gap: mg-rem(10);
   }
 
   &__meta {
-    padding-bottom: $mg-spacing-25;
+    padding-bottom: var(--mg-spacing-25);
 
     &.meta-detail {
       display: flex;
@@ -80,8 +80,8 @@
     font-family: $mg-font-family-headings;
     font-size: $mg-font-tag;
     font-weight: bold;
-    margin-right: $mg-spacing-25;
-    padding: $mg-spacing-25 0;
+    margin-right: var(--mg-spacing-25);
+    padding: var(--mg-spacing-25) 0;
 
     &.detail {
       font-weight: normal;
@@ -92,13 +92,13 @@
   a,
   a:hover,
   a:visited {
-    color: $mg-color-neutral-0;
+    color: rgb(var(--mg-color-neutral-0));
   }
 
   // Title styles (for both <h1> and <a>)
   &__title {
-    color: $mg-color-hero-title;
-    margin-bottom: $mg-spacing-25;
+    color: rgb(var(--mg-color-hero-title));
+    margin-bottom: var(--mg-spacing-25);
     display: inline-block;
     font-family: $mg-font-family-headings;
     font-weight: bold;
@@ -108,7 +108,7 @@
     a,
     a:hover,
     a:visited {
-      color: $mg-color-hero-title;
+      color: rgb(var(--mg-color-hero-title));
     }
 
     // General text styles for larger text
@@ -135,7 +135,7 @@
     h4,
     h5,
     h6 {
-      color: $mg-color-hero-title;
+      color: rgb(var(--mg-color-hero-title));
       font-weight: bold;
       font-size: $mg-font-size-600;
 
@@ -161,14 +161,14 @@
   &__summaryText {
     @include mg-typography("small");
 
-    margin-bottom: $mg-spacing-25;
+    margin-bottom: var(--mg-spacing-25);
   }
 }
 
 .mg-hero__buttons {
-  padding-top: $mg-spacing-75;
+  padding-top: var(--mg-spacing-75);
   display: flex;
-  padding-bottom: $mg-spacing-50;
+  padding-bottom: var(--mg-spacing-50);
 }
 
 // Child variant
@@ -179,29 +179,29 @@
 }
 
 // Stylistic variants
-$variant-colours: (
-  "secondary": $mg-color-hero--secondary,
-  "tertiary": $mg-color-hero--tertiary,
-  "quaternary": $mg-color-hero--quaternary,
+$variant-colour-props: (
+  "secondary": "--mg-color-orange-800",
+  "tertiary":  "--mg-color-neutral-900",
+  "quaternary": "--mg-color-red-800",
 );
 
-@each $name, $color in $variant-colours {
+@each $name, $prop in $variant-colour-props {
   .mg-hero--#{$name} .mg-hero__overlay {
-    background-color: rgba($color, $mg-opacity-hero);
+    background-color: rgb(var(#{$prop}) / var(--mg-opacity-hero));
 
     a.mg-button,
     a.mg-button:hover,
     a.mg-button:visited {
-      color: #{$color};
+      color: rgb(var(#{$prop}));
     }
 
     // Preserve secondary button's dedicated tokens over the generic color above
     a.mg-button-secondary,
     a.mg-button-secondary:hover,
     a.mg-button-secondary:visited {
-      background-color: $mg-color-hero-button-secondary-background;
-      color: $mg-color-hero-button-secondary-color;
-      border-color: $mg-border-color-hero-button-secondary;
+      background-color: var(--mg-color-hero-button-secondary-background);
+      color: rgb(var(--mg-color-hero-button-secondary-color));
+      border-color: rgb(var(--mg-border-color-hero-button-secondary));
     }
   }
 }
@@ -209,7 +209,7 @@ $variant-colours: (
 // RTL tweaks (background layout only)
 [dir="rtl"] .mg-hero:not(.mg-hero--split) {
   margin-right: calc(50% - (50vw)); // to expand out of the parent container
-  padding-right: $mg-spacing-100;
+  padding-right: var(--mg-spacing-100);
 
   @media (min-width: $mg-breakpoint-tablet) {
     padding-right: calc(50vw - calc($mg-breakpoint-desktop / 2)); // to keep the overlay fixed
@@ -227,31 +227,31 @@ $variant-colours: (
 
   // Reset background-layout padding offsets
   padding-left: 0;
-  background-color: $mg-color-hero;
+  background-color: rgb(var(--mg-color-hero));
 
   // Button/CTA overrides (mirrors background layout, but scoped to split section
   // since there is no __overlay to target)
   a.mg-button,
   a.mg-button:hover,
   a.mg-button:visited {
-    color: $mg-color-hero;
+    color: rgb(var(--mg-color-hero));
   }
 
   a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
+    background-color: rgb(var(--mg-color-neutral-0));
   }
 
   a.mg-button-secondary,
   a.mg-button-secondary:hover,
   a.mg-button-secondary:visited {
-    background-color: $mg-color-hero-button-secondary-background;
-    color: $mg-color-hero-button-secondary-color;
-    border-color: $mg-border-color-hero-button-secondary;
+    background-color: var(--mg-color-hero-button-secondary-background);
+    color: rgb(var(--mg-color-hero-button-secondary-color));
+    border-color: rgb(var(--mg-border-color-hero-button-secondary));
   }
 
   a.mg-button:focus-visible {
-    box-shadow: 0 0 0 2px $mg-color-neutral-0;
-    outline: 2px solid $mg-color-neutral-0;
+    box-shadow: 0 0 0 2px rgb(var(--mg-color-neutral-0));
+    outline: 2px solid rgb(var(--mg-color-neutral-0));
     outline-offset: 2px;
   }
 
@@ -286,7 +286,7 @@ $variant-colours: (
   .mg-hero__content {
     display: grid;
     row-gap: mg-rem(10);
-    padding: $mg-spacing-200 $mg-spacing-100;
+    padding: var(--mg-spacing-200) var(--mg-spacing-100);
     align-content: center;
   }
 
@@ -332,13 +332,13 @@ $variant-colours: (
         position: absolute;
         inset-inline: 0;
         inset-block-end: 0;
-        background: rgba($mg-color-neutral-900, 0.75);
-        color: $mg-color-neutral-0;
-        padding: $mg-spacing-50 $mg-spacing-100;
+        background: rgb(var(--mg-color-neutral-900) / 0.75);
+        color: rgb(var(--mg-color-neutral-0));
+        padding: var(--mg-spacing-50) var(--mg-spacing-100);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: $mg-spacing-100;
+        gap: var(--mg-spacing-100);
       }
     }
   }
@@ -359,14 +359,14 @@ $variant-colours: (
 }
 
 // Variant colours at full opacity for split (no rgba wrapper needed — no photo underneath)
-@each $name, $color in $variant-colours {
+@each $name, $prop in $variant-colour-props {
   .mg-hero--split.mg-hero--#{$name} {
-    background-color: $color;
+    background-color: rgb(var(#{$prop}));
 
     a.mg-button,
     a.mg-button:hover,
     a.mg-button:visited {
-      color: #{$color};
+      color: rgb(var(#{$prop}));
     }
   }
 }

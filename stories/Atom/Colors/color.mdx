@@ -1,5 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { DesignTokenDocBlock } from 'storybook-design-token';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta
   title="Design decisions/Colors"
@@ -11,84 +10,112 @@ import { DesignTokenDocBlock } from 'storybook-design-token';
   }}
 />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+export const PALETTE_GROUPS = [
+  {
+    label: 'Blue',
+    tokens: [
+      '--mg-color-blue-50','--mg-color-blue-100','--mg-color-blue-200',
+      '--mg-color-blue-300','--mg-color-blue-400','--mg-color-blue-500',
+      '--mg-color-blue-600','--mg-color-blue-700','--mg-color-blue-800',
+      '--mg-color-blue-900',
+    ],
+  },
+  {
+    label: 'Orange',
+    tokens: [
+      '--mg-color-orange-50','--mg-color-orange-100','--mg-color-orange-200',
+      '--mg-color-orange-300','--mg-color-orange-400','--mg-color-orange-500',
+      '--mg-color-orange-600','--mg-color-orange-700','--mg-color-orange-800',
+      '--mg-color-orange-900',
+    ],
+  },
+  {
+    label: 'Red',
+    tokens: [
+      '--mg-color-red-50','--mg-color-red-100','--mg-color-red-200',
+      '--mg-color-red-300','--mg-color-red-400','--mg-color-red-500',
+      '--mg-color-red-600','--mg-color-red-700','--mg-color-red-800',
+      '--mg-color-red-900',
+    ],
+  },
+  {
+    label: 'Neutral',
+    tokens: [
+      '--mg-color-neutral-0','--mg-color-neutral-25','--mg-color-neutral-50',
+      '--mg-color-neutral-100','--mg-color-neutral-200','--mg-color-neutral-300',
+      '--mg-color-neutral-400','--mg-color-neutral-500','--mg-color-neutral-600',
+      '--mg-color-neutral-700','--mg-color-neutral-800','--mg-color-neutral-900',
+    ],
+  },
+  {
+    label: 'Accent',
+    tokens: [
+      '--mg-color-accent-100','--mg-color-accent-200',
+      '--mg-color-accent-300','--mg-color-accent-400',
+    ],
+  },
+  {
+    label: 'Interactive',
+    tokens: [
+      '--mg-color-interactive','--mg-color-interactive-active',
+      '--mg-color-secondary','--mg-color-tertiary','--mg-color-quaternary',
+    ],
+  },
+  {
+    label: 'Sendai Framework',
+    tokens: [
+      '--sendai-red','--sendai-orange','--sendai-purple','--sendai-turquoise',
+      '--sendai-red-400','--sendai-red-600','--sendai-red-800','--sendai-red-900',
+      '--sendai-orange-400','--sendai-orange-600','--sendai-orange-800','--sendai-orange-900',
+      '--sendai-purple-400','--sendai-purple-600','--sendai-purple-800','--sendai-purple-900',
+      '--sendai-turquoise-400','--sendai-turquoise-600','--sendai-turquoise-800','--sendai-turquoise-900',
+    ],
+  },
+  {
+    label: 'UNDRR',
+    tokens: [
+      '--undrr-color-corporate-blue',
+    ],
+  },
+];
 
-# Colours
+export function ColorSwatch({ token }) {
+  const raw = typeof document !== 'undefined'
+    ? getComputedStyle(document.documentElement).getPropertyValue(token).trim()
+    : '';
+  // Space-separated RGB channels (e.g. "0 79 145") need wrapping in rgb().
+  // Hex, named colors, oklch, etc. can be used directly.
+  const isChannels = /^\d/.test(raw);
+  const color = isChannels ? `rgb(${raw})` : raw || 'transparent';
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+      <div style={{
+        width: '48px',
+        height: '48px',
+        borderRadius: '4px',
+        background: color,
+        border: '1px solid rgba(0,0,0,0.1)',
+        flexShrink: 0,
+      }} />
+      <div>
+        <code style={{ display: 'block', fontSize: '13px' }}>{token}</code>
+        <span style={{ fontSize: '12px', color: '#666' }}>{raw || '(not resolved)'}</span>
+      </div>
+    </div>
+  );
+}
 
-The Color represents the various colors that can be used on the website as per the brand guidelines. All these colors are defined as SCSS variables globally and used accordingly in components.
+export function PaletteGroup({ label, tokens }) {
+  return (
+    <div style={{ marginBottom: '32px' }}>
+      <h3 style={{ marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>{label}</h3>
+      {tokens.map(t => <ColorSwatch key={t} token={t} />)}
+    </div>
+  );
+}
 
-## Primary colours
+# Colors
 
-The base colors of the UI, the ones that are most frequently used in the interface.
+These swatches are read live from the compiled CSS custom properties on `:root`. Any theme override (`.mg-theme-mcr`, `.mg-theme-irp`, etc.) will be visible when that class is applied to the Storybook preview element.
 
-<DesignTokenDocBlock
-  categoryName="Colors - basic"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## Accent colours
-
-<DesignTokenDocBlock
-  categoryName="Colors - accent"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## Interactive colours
-
-Interactive colors are used for primary links and action items that can be clicked or touched to emphasize important actions and highlight information in the application.
-
-<DesignTokenDocBlock
-  categoryName="Colors - interactive"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## Neutral colours
-
-<DesignTokenDocBlock
-  categoryName="Colors - neutral"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## Component colours
-
-<DesignTokenDocBlock
-  categoryName="Colors - component"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## UNDRR
-
-<DesignTokenDocBlock
-  categoryName="UNDRR Colors"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## PreventionWeb
-
-<DesignTokenDocBlock
-  categoryName="PW Colors"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## DELTA Resilience
-
-<DesignTokenDocBlock
-  categoryName="DELTA Resilience Colors"
-  maxHeight={600}
-  viewType="table"
-/>
-
-## Sendai Framework
-
-<DesignTokenDocBlock
-  categoryName="Sendai Framework Colors"
-  maxHeight={600}
-  viewType="table"
-/>
+{PALETTE_GROUPS.map(g => <PaletteGroup key={g.label} label={g.label} tokens={g.tokens} />)}

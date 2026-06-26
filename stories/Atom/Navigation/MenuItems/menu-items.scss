@@ -9,13 +9,13 @@
     letter-spacing: 0.03em;
 
     &:hover {
-      color: $mg-color-neutral-600;
+      color: rgb(var(--mg-color-neutral-600));
       cursor: pointer;
     }
 
     &.selected {
-      border-bottom: 2px solid $mg-color-red-900;
-      padding-bottom: $mg-spacing-25;
+      border-bottom: 2px solid rgb(var(--mg-color-red-900));
+      padding-bottom: var(--mg-spacing-25);
     }
   }
 }

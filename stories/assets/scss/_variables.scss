@@ -15,7 +15,7 @@
 // Default is 16 (browser-standard root where 1rem = 16px).
 // Set to 10 for legacy 10px root (1.6rem = 16px) — see style-*-legacy.scss.
 // New integrations should use the default; override only for backward compatibility.
-$mg-html-font-size: 16 !default;
+$mg-html-font-size: 16 !default; // BUILD-TIME ONLY
 
 @if $mg-html-font-size == 0 {
   @error "$mg-html-font-size must not be 0 (division by zero). Use 16 (default) or 10 (legacy).";
@@ -29,174 +29,101 @@ $mg-html-font-size: 16 !default;
 
 // font file variables
 // Path adjusted for Storybook staticDirs (serves assets/ at root, not /assets/)
-$mgIconFontPath: "../fonts/mangrove-icon-set/font" !default;
+$mgIconFontPath: "../fonts/mangrove-icon-set/font" !default; // BUILD-TIME ONLY
 
 // image variables
-$img-path: "~/stories/assets/images";
-$img-path-Icon: "~/stories/assets/icons";
-$img-path-Iconback: "~/stories/assets/icons";
-$img-path-Iconfourback: "~/stories/assets/icons";
-
-/**
- * @tokens Colors - basic
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
+$img-path: "~/stories/assets/images"; // BUILD-TIME ONLY
+$img-path-Icon: "~/stories/assets/icons"; // BUILD-TIME ONLY
+$img-path-Iconback: "~/stories/assets/icons"; // BUILD-TIME ONLY
+$img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
 
 // MG-COLORS BLUE SHADES (#004f91)
-// $mg-color-blue-0: #fff;
-$mg-color-blue-50: #e6edf4;
-$mg-color-blue-100: #ccdce9;
-$mg-color-blue-200: #b3cade;
-$mg-color-blue-300: #99b9d3;
-$mg-color-blue-400: #80a7c8;
-$mg-color-blue-500: #6695bd;
-$mg-color-blue-600: #4d84b2;
-$mg-color-blue-700: #3372a7;
-$mg-color-blue-800: #1a619c;
-$mg-color-blue-900: #004f91;
+:root {
+  --mg-color-blue-50:  230 237 244;
+  --mg-color-blue-100: 204 220 233;
+  --mg-color-blue-200: 179 202 222;
+  --mg-color-blue-300: 153 185 211;
+  --mg-color-blue-400: 128 167 200;
+  --mg-color-blue-500: 102 149 189;
+  --mg-color-blue-600: 77 132 178;
+  --mg-color-blue-700: 51 114 167;
+  --mg-color-blue-800: 26 97 156;
+  --mg-color-blue-900: 0 79 145;
+}
 
 // MG-COLORS ORANGE SHADES (#eb752a)
-// $mg-color-orange-0: #fff;
-$mg-color-orange-50: #fdf1ea;
-$mg-color-orange-100: #fbe3d4;
-$mg-color-orange-200: #f9d6bf;
-$mg-color-orange-300: #f7c8aa;
-$mg-color-orange-400: #f5ba95;
-$mg-color-orange-500: #f3ac7f;
-$mg-color-orange-600: #f19e6a;
-$mg-color-orange-700: #ef9155;
-$mg-color-orange-800: #ed833f;
-$mg-color-orange-900: #eb752a;
+:root {
+  --mg-color-orange-50:  253 241 234;
+  --mg-color-orange-100: 251 227 212;
+  --mg-color-orange-200: 249 214 191;
+  --mg-color-orange-300: 247 200 170;
+  --mg-color-orange-400: 245 186 149;
+  --mg-color-orange-500: 243 172 127;
+  --mg-color-orange-600: 241 158 106;
+  --mg-color-orange-700: 239 145 85;
+  --mg-color-orange-800: 237 131 63;
+  --mg-color-orange-900: 235 117 42;
+}
 
 // MG-COLORS RED SHADES (#c10920)
-// $mg-color-red-0: #fff;
-$mg-color-red-50: #f9e6e9;
-$mg-color-red-100: #f3ced2;
-$mg-color-red-200: #ecb5bc;
-$mg-color-red-300: #e69da6;
-$mg-color-red-400: #e08490;
-$mg-color-red-500: #da6b79;
-$mg-color-red-600: #d45363;
-$mg-color-red-700: #cd3a4d;
-$mg-color-red-800: #c72236;
-$mg-color-red-900: #c10920;
+:root {
+  --mg-color-red-50:  249 230 233;
+  --mg-color-red-100: 243 206 210;
+  --mg-color-red-200: 236 181 188;
+  --mg-color-red-300: 230 157 166;
+  --mg-color-red-400: 224 132 144;
+  --mg-color-red-500: 218 107 121;
+  --mg-color-red-600: 212 83 99;
+  --mg-color-red-700: 205 58 77;
+  --mg-color-red-800: 199 34 54;
+  --mg-color-red-900: 193 9 32;
+}
 
-/**
- * @tokens Colors - neutral
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-$mg-color-neutral-0: #fff;
-$mg-color-neutral-25: #f2f2f2;
-$mg-color-neutral-50: #e6e6e6;
-$mg-color-neutral-100: #ccc;
-$mg-color-neutral-200: #b3b3b3;
-$mg-color-neutral-300: #999;
-$mg-color-neutral-400: #808080;
-$mg-color-neutral-500: #666;
-$mg-color-neutral-600: #4d4d4d;
-$mg-color-neutral-700: #333;
-$mg-color-neutral-800: #1a1a1a;
-$mg-color-neutral-900: #000;
-$mg-color-black: $mg-color-neutral-800;
-$mg-color-white: $mg-color-neutral-0;
-
-/**
- * @tokens Colors - accent
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
+// MG-COLORS NEUTRAL
+:root {
+  --mg-color-neutral-0:   255 255 255;
+  --mg-color-neutral-25:  242 242 242;
+  --mg-color-neutral-50:  230 230 230;
+  --mg-color-neutral-100: 204 204 204;
+  --mg-color-neutral-200: 179 179 179;
+  --mg-color-neutral-300: 153 153 153;
+  --mg-color-neutral-400: 128 128 128;
+  --mg-color-neutral-500: 102 102 102;
+  --mg-color-neutral-600: 77 77 77;
+  --mg-color-neutral-700: 51 51 51;
+  --mg-color-neutral-800: 26 26 26;
+  --mg-color-neutral-900: 0 0 0;
+}
 
 // MG-COLORS ACCENT
-$mg-color-accent-100: #f4e496;
-$mg-color-accent-200: #d3cea9;
-$mg-color-accent-300: #fdf6d9;
-$mg-color-accent-400: #0a6969;
+:root {
+  --mg-color-accent-100: 244 228 150;
+  --mg-color-accent-200: 211 206 169;
+  --mg-color-accent-300: 253 246 217;
+  --mg-color-accent-400: 10 105 105;
+}
 
 /**
- * @tokens Colors - interactive
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
+ * Spacing scale — CSS custom properties emitted to :root.
  */
-
-$mg-color-interactive-active: $mg-color-blue-700 !default;
-$mg-color-interactive: $mg-color-blue-900 !default;
-
-/**
- * @tokens UNDRR Colors
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-// Unclear if these are needed
-$undrr-color-corporate-blue: $mg-color-blue-900;
-
-/**
- * @tokens Sendai Framework Colors
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-// SENDAI COLORS
-$sendai-red-400: #d45363;
-$sendai-red-600: #cd3a4d;
-$sendai-red-800: #c72236;
-$sendai-red-900: #c10920;
-$sendai-red: $sendai-red-900; // alias
-
-$sendai-orange-400: #f19e6a;
-$sendai-orange-600: #ef9155;
-$sendai-orange-800: #ed833f;
-$sendai-orange-900: #eb752a;
-$sendai-orange: $sendai-orange-900; // alias
-
-$sendai-purple-400: #b669ab;
-$sendai-purple-600: #ab549f;
-$sendai-purple-800: #a13e93;
-$sendai-purple-900: #962987;
-$sendai-purple: $sendai-purple-900; // alias
-
-$sendai-turquoise-400: #4dc7c6;
-$sendai-turquoise-600: #33bfbe;
-$sendai-turquoise-800: #1ab7b6;
-$sendai-turquoise-900: #00afae;
-$sendai-turquoise: $sendai-turquoise-900; // alias
-
-/**
- * @tokens Spacing
- * @presenter Spacing
- */
-$mg-spacing-0: 0;
-$mg-spacing-25: mg-rem(2.5);
-$mg-spacing-50: mg-rem(5);
-$mg-spacing-75: mg-rem(7.5);
-$mg-spacing-100: mg-rem(10);
-$mg-spacing-150: mg-rem(15);
-$mg-spacing-175: mg-rem(18);
-$mg-spacing-200: mg-rem(20);
-$mg-spacing-250: mg-rem(24);
-$mg-spacing-300: mg-rem(30);
-$mg-spacing-350: mg-rem(35);
-$mg-spacing-400: mg-rem(50);
-$mg-spacing-500: mg-rem(60);
-$mg-spacing-600: mg-rem(80);
-$mg-spacing-800: mg-rem(100);
-$mg-spacing-1000: mg-rem(400);
-
-/**
- * @tokens Font sizes
- * @presenter FontSize
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
+:root {
+  --mg-spacing-0:    0;
+  --mg-spacing-25:   #{mg-rem(2.5)};
+  --mg-spacing-50:   #{mg-rem(5)};
+  --mg-spacing-75:   #{mg-rem(7.5)};
+  --mg-spacing-100:  #{mg-rem(10)};
+  --mg-spacing-150:  #{mg-rem(15)};
+  --mg-spacing-175:  #{mg-rem(18)};
+  --mg-spacing-200:  #{mg-rem(20)};
+  --mg-spacing-250:  #{mg-rem(24)};
+  --mg-spacing-300:  #{mg-rem(30)};
+  --mg-spacing-350:  #{mg-rem(35)};
+  --mg-spacing-400:  #{mg-rem(50)};
+  --mg-spacing-500:  #{mg-rem(60)};
+  --mg-spacing-600:  #{mg-rem(80)};
+  --mg-spacing-800:  #{mg-rem(100)};
+  --mg-spacing-1000: #{mg-rem(400)};
+}
 
 $mg-font-size-100: mg-rem(10);
 $mg-font-size-150: mg-rem(11.25);
@@ -224,33 +151,26 @@ $mg-font-line-height-700: 1.5em;
     font-size: $mg-font-size-400;
   } @else if $size == "medium" {
     font-size: $mg-font-size-500;
-    padding-top: $mg-spacing-250;
-    padding-bottom: $mg-spacing-150;
+    padding-top: var(--mg-spacing-250);
+    padding-bottom: var(--mg-spacing-150);
   } @else if $size == "large" {
     font-size: $mg-font-size-600;
-    padding-top: $mg-spacing-250;
-    padding-bottom: $mg-spacing-150;
+    padding-top: var(--mg-spacing-250);
+    padding-bottom: var(--mg-spacing-150);
   } @else if $size == "xlarge" {
     font-size: $mg-font-size-900;
-    padding-top: $mg-spacing-300;
-    padding-bottom: $mg-spacing-175;
+    padding-top: var(--mg-spacing-300);
+    padding-bottom: var(--mg-spacing-175);
   } @else if $size == "huge" {
     font-size: $mg-font-size-1000;
-    padding-top: $mg-spacing-300;
-    padding-bottom: $mg-spacing-250;
+    padding-top: var(--mg-spacing-300);
+    padding-bottom: var(--mg-spacing-250);
   } @else if $size == "xhuge" {
     font-size: $mg-font-size-1100;
-    padding-top: $mg-spacing-400;
-    padding-bottom: $mg-spacing-300;
+    padding-top: var(--mg-spacing-400);
+    padding-bottom: var(--mg-spacing-300);
   }
 }
-
-/**
- * @tokens Font families
- * @presenter FontFamily
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
 
 $mg-font-family: "Roboto", sans-serif;
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
@@ -264,131 +184,39 @@ $mg-font-family-arabic-body: "Dubai", sans-serif;
 // $mg-font-family-icons: "mangrove-icon-set";
 // Not yet activated as we are using the FontAwesome namespace
 
-/**
- * @tokens Widths
- * @presenter Spacing
- */
-
-$mg-width-150: mg-rem(150);
-$mg-width-300: mg-rem(300);
-$mg-width-400: mg-rem(400);
-$mg-width-600: mg-rem(600);
-
-/**
- * @tokens Breakpoints
- * @presenter Spacing
- */
-
+// BUILD-TIME ONLY — breakpoints cannot be CSS custom properties.
+// @media queries require static values resolved at compile time; var() is invalid there.
+// Do not add --mg-breakpoint-* custom properties.
 $mg-breakpoint-mobile: 480px;
 $mg-breakpoint-tablet: 900px;
-$mg-breakpoint-desktop: 1164px; // see the docs: this is our main target but we also have a "wide" breakpoint as a secondary use case
+$mg-breakpoint-desktop: 1164px;
 $mg-breakpoint-desktop-wide: 1440px;
 
-/**
- * @tokens Colors - component
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-// page container
-$mg-container-spacer: $mg-spacing-150;
-
-// text
-$mg-color-text: $mg-color-neutral-800;
-
-// tag
-$mg-color-tag: $mg-color-interactive !default;
-$mg-color-tag--hover: $mg-color-interactive-active !default;
-$mg-color-tag-secondary: $mg-color-neutral-500 !default;
-$mg-color-tag-secondary--hover: $mg-color-neutral-600 !default;
-$mg-color-tag-accent: $mg-color-orange-900 !default;
-$mg-color-tag-accent--hover: $mg-color-orange-800 !default;
-$mg-radius-tag: $mg-spacing-0 !default;
-
-// button
-$mg-color-button: $mg-color-white !default;
-$mg-color-button--hover: $mg-color-white !default;
-$mg-color-button-background: $mg-color-interactive !default;
-$mg-color-button-background--hover: $mg-color-interactive-active !default;
-$mg-color-button-secondary-background: $mg-color-blue-800 !default;
-$mg-color-button-secondary-background--hover: $mg-color-blue-700 !default;
-$mg-radius-button: $mg-spacing-0 !default;
-$mg-border-width-button: 1px !default;
-$mg-color-text-button: $mg-color-white !default;
-$mg-border-color-button: $mg-color-text-button !default;
-$mg-padding-button: $mg-spacing-100 $mg-spacing-150 !default;
-$mg-font-size-button: $mg-font-size-250 !default;
-
-// form check (checkbox / radio)
-$mg-color-form-check: $mg-color-interactive !default;
-$mg-color-form-check--hover: $mg-color-interactive-active !default;
-$mg-color-form-check--checked: $mg-color-interactive !default;
-
-// form inputs (text, textarea, select)
-$mg-color-form-focus: $mg-color-interactive !default;
-$mg-radius-form-input: $mg-spacing-0 !default;
-
-// card
-$mg-card-background: none !default;
-$mg-card-padding: 0rem !default;
-$mg-card-border-radius: 0 !default;
-$mg-card-icon-badge-radius: 20% !default;
-
-// CTA banner
-$mg-cta-padding: $mg-spacing-400 0 !default;
-
-// shared variant accent colours (used by hero, cards, and other components)
-$mg-color-secondary: $mg-color-orange-800 !default;
-$mg-color-tertiary: $mg-color-neutral-900 !default;
-$mg-color-quaternary: $mg-color-red-800 !default;
-
-// hero (aliases for backward compatibility)
-$mg-color-hero: $mg-color-interactive !default;
-$mg-color-hero--secondary: $mg-color-secondary !default;
-$mg-color-hero--tertiary: $mg-color-tertiary !default;
-$mg-color-hero--quaternary: $mg-color-quaternary !default;
-$mg-opacity-hero: 0.85 !default;
-$mg-color-hero-title: $mg-color-neutral-0 !default;
-$mg-spacing-hero-overlay: 0 !default;
-$mg-hero-overlay-max-width: $mg-width-400 !default;
-$mg-hero-overlay-padding: $mg-spacing-200 !default;
-$mg-color-hero-button-secondary-background: rgba(
-  $mg-color-neutral-0,
-  0.9
-) !default;
-$mg-color-hero-button-secondary-color: $mg-color-hero !default;
-$mg-border-color-hero-button-secondary: $mg-color-neutral-0 !default;
-
-// mega menu
-$mg-color-mega-content-bg: $mg-color-button !default;
-
 // tabs
-$mg-color-tabbar-background: $mg-color-blue-50 !default;
-$mg-color-tab-background: $mg-color-blue-200 !default;
-$mg-color-tab-background--inactive: $mg-color-tabbar-background !default;
-$mg-color-tab-border: $mg-color-neutral-700 !default;
-$mg-color-tab-border--hover: $mg-color-neutral-900 !default;
-$mg-color-tab-border--active: $mg-color-blue-800 !default;
-$mg-color-tab-background--hover: $mg-color-blue-800 !default;
-$mg-radius-tab: $mg-spacing-0 !default;
-$mg-padding-tab: $mg-spacing-75 $mg-spacing-150 !default;
-$mg-color-text-tab: $mg-color-neutral-700 !default;
-$mg-color-text-tab--hover: $mg-color-white !default;
-$mg-color-text-tab-active: $mg-color-neutral-700 !default;
-$mg-color-text-tab-no-results: $mg-color-neutral-500 !default;
-$mg-color-tab-section-background: $mg-color-neutral-0 !default;
-$mg-padding-tab-section: $mg-spacing-100 $mg-spacing-0 !default;
-$mg-radius-tab-section: $mg-spacing-0 !default;
-$mg-box-shadow-tab-section: none !default;
+// BUILD-TIME ONLY: $mg-tabs-border-bottom drives @if conditional in tab.scss.
+// Cannot become a CSS custom property — no runtime conditional equivalent exists.
+// All sub-brands use true. To disable, set to false before @use.
 $mg-tabs-border-bottom: true !default;
 
-/**
- * @tokens Component sizing
- * @presenter Spacing
- */
-
-$author-image-radius: 50%;
+:root {
+  --mg-color-tabbar-background:      rgb(var(--mg-color-blue-50));
+  --mg-color-tab-background:         rgb(var(--mg-color-blue-200));
+  --mg-color-tab-background--inactive: rgb(var(--mg-color-blue-50));
+  --mg-color-tab-border:             rgb(var(--mg-color-neutral-700));
+  --mg-color-tab-border--hover:      rgb(var(--mg-color-neutral-900));
+  --mg-color-tab-border--active:     rgb(var(--mg-color-blue-800));
+  --mg-color-tab-background--hover:  rgb(var(--mg-color-blue-800));
+  --mg-radius-tab:                   0;
+  --mg-padding-tab:                  var(--mg-spacing-75) var(--mg-spacing-150);
+  --mg-color-text-tab:               rgb(var(--mg-color-neutral-700));
+  --mg-color-text-tab--hover:        rgb(var(--mg-color-neutral-0));
+  --mg-color-text-tab-active:        rgb(var(--mg-color-neutral-700));
+  --mg-color-text-tab-no-results:    rgb(var(--mg-color-neutral-500));
+  --mg-color-tab-section-background: rgb(var(--mg-color-neutral-0));
+  --mg-padding-tab-section:          var(--mg-spacing-100) var(--mg-spacing-0);
+  --mg-radius-tab-section:           0;
+  --mg-box-shadow-tab-section:       none;
+}
 
 // Z-index layers: use these named tokens for global stacking contexts
 // (fixed, sticky, or portaled elements). One token per UI concept — backdrops
@@ -397,55 +225,150 @@ $author-image-radius: 50%;
 // isolated context uses raw values with an explanatory comment.
 // Pick the nearest existing layer; open a GitHub discussion before adding one.
 
-/**
- * @tokens Z-index layers
- */
+:root {
+  // Interactive
+  --mg-color-interactive:          var(--mg-color-blue-900);
+  --mg-color-interactive-active:   var(--mg-color-blue-700);
 
-// Background utility — pseudo-element placed behind all sibling content
-$mg-z-index-behind: -1; // ::before backgrounds (e.g. mg-container-full-width)
+  // Text + aliases
+  --mg-color-text:                 var(--mg-color-neutral-800);
+  --mg-color-black:                var(--mg-color-neutral-800);
+  --mg-color-white:                var(--mg-color-neutral-0);
 
-// Navigation zone — ⚠ FROZEN: Drupal themes depend on these exact values
-$mg-z-index-nav: 10; // MegaMenu (mobile sidebar/overlay uses nav - 1 = 9)
-$mg-z-index-sticky: 11; // Secondary sticky bars, e.g. OnThisPageNav
-$mg-z-index-nav-toggle: 14; // Mobile nav hamburger toggle (above all nav layers)
-$mg-z-index-header: 22; // PageHeader (above nav and sticky bar)
+  // Tags
+  --mg-color-tag:                  var(--mg-color-interactive);
+  --mg-color-tag--hover:           var(--mg-color-interactive-active);
+  --mg-color-tag-secondary:        var(--mg-color-neutral-500);
+  --mg-color-tag-secondary--hover: var(--mg-color-neutral-600);
+  --mg-color-tag-accent:           var(--mg-color-orange-900);
+  --mg-color-tag-accent--hover:    var(--mg-color-orange-800);
 
-// Overlay zone — floats above page content
-$mg-z-index-drawer: 2000; // Drawer / side panel (backdrop uses drawer - 1 = 1999)
-$mg-z-index-dropdown: 2500; // Dropdowns and inline menus (above drawers)
+  // Buttons
+  --mg-color-button:               var(--mg-color-neutral-0);
+  --mg-color-button--hover:        var(--mg-color-neutral-0);
+  --mg-color-button-background:    var(--mg-color-interactive);
+  --mg-color-button-background--hover: var(--mg-color-interactive-active);
+  --mg-color-button-secondary-background: var(--mg-color-blue-800);
+  --mg-color-button-secondary-background--hover: var(--mg-color-blue-700);
+  --mg-color-text-button:          var(--mg-color-neutral-0);
+  --mg-border-color-button:        var(--mg-color-text-button);
 
-// Modal zone — portaled to <body>, must clear all page chrome
-$mg-z-index-modal: 5000; // Modal and dialog (backdrop uses modal - 1 = 4999)
-$mg-z-index-toast: 5500; // Toast notifications (Snackbar), above modals
+  // Form
+  --mg-color-form-check:           var(--mg-color-interactive);
+  --mg-color-form-check--hover:    var(--mg-color-interactive-active);
+  --mg-color-form-check--checked:  var(--mg-color-interactive);
+  --mg-color-form-focus:           var(--mg-color-interactive);
 
-// Modal scrim. Neutral-tinted by default so it reads as backdrop across all
-// themes; child themes can override for a branded scrim if desired.
-$mg-color-modal-scrim: rgba($mg-color-neutral-900, 0.85) !default;
+  // Brand hierarchy
+  --mg-color-secondary:            var(--mg-color-orange-800);
+  --mg-color-tertiary:             var(--mg-color-neutral-900);
+  --mg-color-quaternary:           var(--mg-color-red-800);
 
-/**
-  * @tokens-end
-  */
+  // Hero
+  --mg-color-hero:                 var(--mg-color-interactive);
+  --mg-color-hero--secondary:      var(--mg-color-secondary);
+  --mg-color-hero--tertiary:       var(--mg-color-tertiary);
+  --mg-color-hero--quaternary:     var(--mg-color-quaternary);
+  --mg-color-hero-title:           var(--mg-color-neutral-0);
+  --mg-color-hero-button-secondary-background: rgb(var(--mg-color-neutral-0) / 0.9);
+  --mg-color-hero-button-secondary-color: var(--mg-color-hero);
+  --mg-border-color-hero-button-secondary: var(--mg-color-neutral-0);
 
-// @deprecated Legacy UNDP color variables — will be removed in a future major release.
-// Migrate to Mangrove's standard color tokens ($mg-color-{hue}-{shade}):
-//   $mg-color-green       → $mg-color-green-600 or a custom semantic variable
-//   $mg-color-green-light → $mg-color-green-200
-//   $mg-color-green-dark  → $mg-color-green-800
-//   $mg-color-yellow      → $mg-color-yellow-500
-//   $mg-color-yellow-light → $mg-color-yellow-100
-//   $mg-color-yellow-dark → $mg-color-yellow-700
-//   $mg-color-azure*      → $mg-color-blue-100 / $mg-color-neutral-100
-//   $mg-color-ebony-clay  → $mg-color-neutral-700
-$mg-color-green: #008484;
-$mg-color-green-light: #90ee90;
-$mg-color-yellow: #ff0;
-$mg-color-yellow-light: lightyellow;
-$mg-color-yellow-dark: #d6d624;
-$mg-color-azure: #f0ffff;
-$mg-color-azure-dark: #d4e3e3;
-$mg-color-azure-light: #f0f8f8;
-$mg-color-ebony-clay: #3d4242;
-$mg-color-green-dark: #006400;
+  // Mega menu
+  --mg-color-mega-content-bg:      var(--mg-color-button);
+
+  // Modal
+  --mg-color-modal-scrim:          rgb(var(--mg-color-neutral-900) / 0.85);
+
+  // Legacy one-off colors (hardcoded — no palette backing)
+  --mg-color-green:                #008484;
+  --mg-color-green-light:          #90ee90;
+  --mg-color-green-dark:           #006400;
+  --mg-color-yellow:               #ff0;
+  --mg-color-yellow-light:         lightyellow;
+  --mg-color-yellow-dark:          #d6d624;
+  --mg-color-azure:                #f0ffff;
+  --mg-color-azure-dark:           #d4e3e3;
+  --mg-color-azure-light:          #f0f8f8;
+  --mg-color-ebony-clay:           #3d4242;
+
+  // Sendai Framework
+  --sendai-red-400:     #d45363;
+  --sendai-red-600:     #cd3a4d;
+  --sendai-red-800:     #c72236;
+  --sendai-red-900:     #c10920;
+  --sendai-red:         var(--sendai-red-900);
+  --sendai-orange-400:  #f19e6a;
+  --sendai-orange-600:  #ef9155;
+  --sendai-orange-800:  #ed833f;
+  --sendai-orange-900:  #eb752a;
+  --sendai-orange:      var(--sendai-orange-900);
+  --sendai-purple-400:  #b669ab;
+  --sendai-purple-600:  #ab549f;
+  --sendai-purple-800:  #a13e93;
+  --sendai-purple-900:  #962987;
+  --sendai-purple:      var(--sendai-purple-900);
+  --sendai-turquoise-400: #4dc7c6;
+  --sendai-turquoise-600: #33bfbe;
+  --sendai-turquoise-800: #1ab7b6;
+  --sendai-turquoise-900: #00afae;
+  --sendai-turquoise:   var(--sendai-turquoise-900);
+
+  // UNDRR
+  --undrr-color-corporate-blue: var(--mg-color-blue-900);
+}
+
+:root {
+  // Container
+  --mg-container-spacer:         var(--mg-spacing-150);
+
+  // Tag
+  --mg-radius-tag:               var(--mg-spacing-0);
+
+  // Button
+  --mg-radius-button:            var(--mg-spacing-0);
+  --mg-border-width-button:      1px;
+  --mg-padding-button:           var(--mg-spacing-100) var(--mg-spacing-150);
+  --mg-font-size-button:         #{$mg-font-size-250};
+
+  // Form
+  --mg-radius-form-input:        var(--mg-spacing-0);
+
+  // Card
+  --mg-card-background:          none;
+  --mg-card-padding:             0rem;
+  --mg-card-border-radius:       0;
+  --mg-card-icon-badge-radius:   20%;
+
+  // CTA
+  --mg-cta-padding:              var(--mg-spacing-400) 0;
+
+  // Author image
+  --mg-author-image-radius:      50%;
+
+  // Hero
+  --mg-opacity-hero:             0.85;
+  --mg-spacing-hero-overlay:     0;
+  --mg-hero-overlay-max-width:   #{mg-rem(400)};
+  --mg-hero-overlay-padding:     var(--mg-spacing-200);
+
+  // Widths (build-time resolved)
+  --mg-width-150:                #{mg-rem(150)};
+  --mg-width-300:                #{mg-rem(300)};
+  --mg-width-400:                #{mg-rem(400)};
+  --mg-width-600:                #{mg-rem(600)};
+
+  // Z-index (named stacking contexts)
+  --mg-z-index-behind:     -1;
+  --mg-z-index-nav:        10;
+  --mg-z-index-sticky:     11;
+  --mg-z-index-nav-toggle: 14;
+  --mg-z-index-header:     22;
+  --mg-z-index-drawer:     2000;
+  --mg-z-index-dropdown:   2500;
+  --mg-z-index-modal:      5000;
+  --mg-z-index-toast:      5500;
+}
 
 // Header height
 $header-height-xlarge: 115px;

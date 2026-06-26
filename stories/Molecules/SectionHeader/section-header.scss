@@ -1,7 +1,7 @@
 /* header section start */
 .mg-section-header {
   h2 {
-    margin-bottom: $mg-spacing-100;
+    margin-bottom: var(--mg-spacing-100);
   }
 }
 

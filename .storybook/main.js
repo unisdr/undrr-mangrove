@@ -25,13 +25,6 @@ export default {
         },
       },
     },
-    {
-      name: 'storybook-design-token',
-      options: {
-        preserveCSSVars: true,
-        // DESIGN_TOKEN_GLOB: "stories/assets/scss/.{scss,svg}"
-      },
-    },
     '@storybook/addon-links',
     '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',

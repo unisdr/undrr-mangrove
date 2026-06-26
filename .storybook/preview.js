@@ -105,6 +105,20 @@ const themeStyles = {
   'MCR2030 Theme (legacy 10px)': themeMCRLegacy,
 };
 
+// Maps toolbar theme names to the CSS class applied to <body> so that
+// .mg-theme-* CSS custom property overrides take effect at runtime.
+const themeClasses = {
+  'PreventionWeb Theme': 'mg-theme-preventionweb',
+  'PreventionWeb Theme (legacy 10px)': 'mg-theme-preventionweb',
+  'IRP Theme': 'mg-theme-irp',
+  'IRP Theme (legacy 10px)': 'mg-theme-irp',
+  'MCR2030 Theme': 'mg-theme-mcr',
+  'MCR2030 Theme (legacy 10px)': 'mg-theme-mcr',
+  'DELTA Resilience Theme': 'mg-theme-delta',
+};
+
+const allThemeClasses = Object.values(themeClasses);
+
 // Load the default theme at module init so MDX docs-only pages render with
 // component CSS even before any story-bound decorator has run.
 let activeThemeStyle = themeStyles['Global UNDRR Theme'];
@@ -119,6 +133,14 @@ const themeDecorator = (Story, context) => {
       activeThemeStyle.unuse();
       newThemeStyle.use();
       activeThemeStyle = newThemeStyle;
+    }
+
+    // Apply the sub-brand class so .mg-theme-* CSS custom property overrides
+    // take effect. Remove all theme classes first, then add the new one.
+    document.body.classList.remove(...allThemeClasses);
+    const themeClass = themeClasses[selectedTheme];
+    if (themeClass) {
+      document.body.classList.add(themeClass);
     }
   }, [selectedTheme]);
 

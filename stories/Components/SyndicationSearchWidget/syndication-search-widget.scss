@@ -12,23 +12,23 @@
 
 // Component-specific variables (using Mangrove tokens)
 // Colors
-$search-primary: $mg-color-interactive;
-$search-primary-dark: $mg-color-interactive-active;
-$search-chip-bg: $mg-color-blue-50;
-$search-chip-hover: $mg-color-blue-100;
-$search-text: $mg-color-text;
-$search-text-muted: $mg-color-neutral-500;
-$search-border: $mg-color-neutral-100;
-$search-border-light: $mg-color-neutral-50;
-$search-skeleton-bg: $mg-color-neutral-25;
-$search-error-bg: $mg-color-red-50;
-$search-error-border: $mg-color-red-400;
-$search-debug-bg: $mg-color-yellow-light;
-$search-debug-text: $mg-color-yellow-dark;
+$search-primary: rgb(var(--mg-color-interactive));
+$search-primary-dark: rgb(var(--mg-color-interactive-active));
+$search-chip-bg: rgb(var(--mg-color-blue-50));
+$search-chip-hover: rgb(var(--mg-color-blue-100));
+$search-text: rgb(var(--mg-color-text));
+$search-text-muted: rgb(var(--mg-color-neutral-500));
+$search-border: rgb(var(--mg-color-neutral-100));
+$search-border-light: rgb(var(--mg-color-neutral-50));
+$search-skeleton-bg: rgb(var(--mg-color-neutral-25));
+$search-error-bg: rgb(var(--mg-color-red-50));
+$search-error-border: rgb(var(--mg-color-red-400));
+$search-debug-bg: var(--mg-color-yellow-light);
+$search-debug-text: var(--mg-color-yellow-dark);
 
 // Spacing & sizing (component needs rounded corners, base theme has 0)
-$search-radius: $mg-spacing-25;
-$search-input-padding-x: $mg-spacing-250;
+$search-radius: var(--mg-spacing-25);
+$search-input-padding-x: var(--mg-spacing-250);
 
 // Screen reader only utility
 .mg-u-sr-only {
@@ -90,8 +90,8 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__form,
 .mg-search-bar {
   display: flex;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-100;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-100);
 }
 
 .mg-search__input-wrapper,
@@ -114,14 +114,14 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__clear {
   position: absolute;
-  right: $mg-spacing-50;
+  right: var(--mg-spacing-50);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: $mg-spacing-200;
-  height: $mg-spacing-200;
+  width: var(--mg-spacing-200);
+  height: var(--mg-spacing-200);
   padding: 0;
   background: none;
   border: none;
@@ -160,9 +160,9 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-100;
-  padding: $mg-spacing-75;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-100);
+  padding: var(--mg-spacing-75);
   background: $search-chip-bg;
   border-radius: $search-radius;
 }
@@ -170,13 +170,13 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__active-filters-label {
   font-weight: 500;
   color: $search-text;
-  margin-right: $mg-spacing-25;
+  margin-right: var(--mg-spacing-25);
 }
 
 .mg-search__active-filters-list {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -185,8 +185,8 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-chip {
   display: inline-flex;
   align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  gap: var(--mg-spacing-50);
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   color: $search-text;
   background: #fff;
   border: 1px solid $search-border;
@@ -210,7 +210,7 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__clear-all {
-  padding: $mg-spacing-25 $mg-spacing-75;
+  padding: var(--mg-spacing-25) var(--mg-spacing-75);
   color: $search-primary;
   background: none;
   border: 1px solid $search-primary;
@@ -227,7 +227,7 @@ $search-input-padding-x: $mg-spacing-250;
 // Content layout
 .mg-search__content {
   display: flex;
-  gap: $mg-spacing-200;
+  gap: var(--mg-spacing-200);
 }
 
 .mg-search__main {
@@ -249,7 +249,7 @@ $search-input-padding-x: $mg-spacing-250;
 // narrow viewports the strip is hidden and the mobile filter drawer
 // handles facet selection (same pattern as the sidebar layout).
 .mg-search__facets-strip {
-  margin-bottom: $mg-spacing-150;
+  margin-bottom: var(--mg-spacing-150);
 
   // Treat Sort and every facet as direct siblings of the same flex row so
   // they share a consistent track width and wrap together. Without
@@ -261,7 +261,7 @@ $search-input-padding-x: $mg-spacing-250;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-end;
-    gap: $mg-spacing-100 $mg-spacing-150;
+    gap: var(--mg-spacing-100) var(--mg-spacing-150);
   }
 
   .mg-search__facet-containers {
@@ -295,8 +295,8 @@ $search-input-padding-x: $mg-spacing-250;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-100;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-100);
 }
 
 .mg-search__results-count {
@@ -316,8 +316,8 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-btn {
   display: none; // Hidden on desktop by default
   align-items: center;
-  gap: $mg-spacing-25;
-  padding: $mg-spacing-50 $mg-spacing-75;
+  gap: var(--mg-spacing-25);
+  padding: var(--mg-spacing-50) var(--mg-spacing-75);
   font-size: $mg-font-size-200;
   font-weight: 500;
   color: $search-primary;
@@ -349,7 +349,7 @@ $search-input-padding-x: $mg-spacing-250;
   justify-content: center;
   min-width: 18px;
   height: 18px;
-  padding: 0 $mg-spacing-25;
+  padding: 0 var(--mg-spacing-25);
   font-size: $mg-font-size-200;
   font-weight: 600;
   color: #fff;
@@ -360,12 +360,12 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__results-list {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 }
 
 .mg-search__results-more {
-  margin-top: $mg-spacing-150;
-  padding: $mg-spacing-100;
+  margin-top: var(--mg-spacing-150);
+  padding: var(--mg-spacing-100);
   font-size: $mg-font-size-200;
   color: $search-text-muted;
   background: $search-chip-bg;
@@ -375,12 +375,12 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__results-empty,
 .mg-search__results-placeholder {
-  padding: $mg-spacing-200;
+  padding: var(--mg-spacing-200);
   text-align: center;
   color: $search-text-muted;
 
   p {
-    margin: 0 0 $mg-spacing-50;
+    margin: 0 0 var(--mg-spacing-50);
   }
 }
 
@@ -389,13 +389,13 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__results-error {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   background: $search-error-bg;
   border: 1px solid $search-error-border;
   border-radius: $search-radius;
 
   p {
-    margin: 0 0 $mg-spacing-50;
+    margin: 0 0 var(--mg-spacing-50);
 
     &:last-child {
       margin-bottom: 0;
@@ -405,7 +405,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 // Result item
 .mg-search__result {
-  padding-bottom: $mg-spacing-150;
+  padding-bottom: var(--mg-spacing-150);
   border-bottom: 1px solid $search-border-light;
 
   &:last-child {
@@ -416,7 +416,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__result-content {
   display: flex;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 }
 
 .mg-search__result-image {
@@ -441,7 +441,7 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__result-title {
-  margin: 0 0 $mg-spacing-50;
+  margin: 0 0 var(--mg-spacing-50);
   font-size: $mg-font-size-200;
   font-weight: 600;
   line-height: 1.3;
@@ -456,7 +456,7 @@ $search-input-padding-x: $mg-spacing-250;
 
     em {
       font-style: normal;
-      background: rgba($search-primary, 0.1);
+      background: rgb(var(--mg-color-blue-900) / 0.1);
       padding: 0 2px;
     }
   }
@@ -465,14 +465,14 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-50);
   font-size: $mg-font-size-150;
   color: $search-text-muted;
 }
 
 .mg-search__result-type {
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   background: $search-chip-bg;
   border-radius: $search-radius;
   text-transform: uppercase;
@@ -483,7 +483,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-date {
   &::before {
     content: '•';
-    margin-right: $mg-spacing-50;
+    margin-right: var(--mg-spacing-50);
     color: $search-border;
   }
 }
@@ -496,7 +496,7 @@ $search-input-padding-x: $mg-spacing-250;
 
   em {
     font-style: normal;
-    background: rgba($search-primary, 0.1);
+    background: rgb(var(--mg-color-blue-900) / 0.1);
     padding: 0 2px;
   }
 }
@@ -504,27 +504,27 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-metrics {
   display: flex;
   flex-wrap: wrap;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-50);
 }
 
 .mg-search__result-metric {
   display: inline-block;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   font-size: $mg-font-size-200;
   background: $search-debug-bg;
-  border-radius: $mg-spacing-25;
+  border-radius: var(--mg-spacing-25);
 }
 
 // Loading skeleton
 .mg-search__skeleton {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 }
 
 .mg-search__skeleton-item {
-  padding-bottom: $mg-spacing-150;
+  padding-bottom: var(--mg-spacing-150);
   border-bottom: 1px solid $search-border-light;
 }
 
@@ -538,21 +538,21 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__skeleton-title {
-  height: $mg-spacing-150;
+  height: var(--mg-spacing-150);
   width: 70%;
-  margin-bottom: $mg-spacing-75;
+  margin-bottom: var(--mg-spacing-75);
 }
 
 .mg-search__skeleton-meta {
-  height: $mg-spacing-100;
+  height: var(--mg-spacing-100);
   width: 40%;
-  margin-bottom: $mg-spacing-75;
+  margin-bottom: var(--mg-spacing-75);
 }
 
 .mg-search__skeleton-text {
-  height: $mg-spacing-100;
+  height: var(--mg-spacing-100);
   width: 100%;
-  margin-bottom: $mg-spacing-50;
+  margin-bottom: var(--mg-spacing-50);
 
   &--short {
     width: 60%;
@@ -582,7 +582,7 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-search__skeleton-card-body {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
 
   .mg-search__skeleton-title {
     width: 85%;
@@ -605,7 +605,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 // Facets placeholder
 .mg-search__facets-placeholder {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   background: $search-chip-bg;
   border-radius: $search-radius;
 }
@@ -624,11 +624,11 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facets {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 }
 
 .mg-search__facets-loading {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   font-size: $mg-font-size-200;
   color: $search-text-muted;
   text-align: center;
@@ -637,7 +637,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-containers {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-100;
+  gap: var(--mg-spacing-100);
 }
 
 // Sort Options: rendered as a dropdown to match the facet selects.
@@ -649,7 +649,7 @@ $search-input-padding-x: $mg-spacing-250;
   legend {
     font-weight: 600;
     font-size: $mg-font-size-200;
-    margin-bottom: $mg-spacing-50;
+    margin-bottom: var(--mg-spacing-50);
     color: $search-text;
   }
 }
@@ -663,14 +663,14 @@ $search-input-padding-x: $mg-spacing-250;
   legend {
     font-weight: 600;
     font-size: $mg-font-size-200;
-    margin-bottom: $mg-spacing-50;
+    margin-bottom: var(--mg-spacing-50);
     color: $search-text;
   }
 }
 
 .mg-search__facet-select {
   width: 100%;
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   font-size: $mg-font-size-200;
   border: 1px solid $search-border;
   border-radius: $search-radius;
@@ -680,14 +680,14 @@ $search-input-padding-x: $mg-spacing-250;
   &:focus {
     outline: none;
     border-color: $search-primary;
-    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+    box-shadow: 0 0 0 2px rgb(var(--mg-color-blue-900) / 0.15);
   }
 
   &[multiple] {
     min-height: 100px;
 
     option {
-      padding: $mg-spacing-25 $mg-spacing-50;
+      padding: var(--mg-spacing-25) var(--mg-spacing-50);
 
       &:checked {
         background-color: $search-chip-bg;
@@ -699,7 +699,7 @@ $search-input-padding-x: $mg-spacing-250;
 // Custom facet styling
 // .mg-search__facet--custom {
 //   background: $search-chip-bg;
-//   padding: $mg-spacing-100;
+//   padding: var(--mg-spacing-100);
 //   border-radius: $search-radius;
 // }
 
@@ -712,8 +712,8 @@ $search-input-padding-x: $mg-spacing-250;
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $mg-spacing-50;
-  margin-bottom: $mg-spacing-25;
+  gap: var(--mg-spacing-50);
+  margin-bottom: var(--mg-spacing-25);
 }
 
 // Content type badge: uses the system-level .mg-tag atom.
@@ -723,7 +723,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__result-site-name {
   display: inline-block;
   margin: 0;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   font-size: $mg-font-size-200;
   color: $search-text-muted;
   background: $search-chip-bg;
@@ -733,7 +733,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 // Error result styling
 .mg-search__result--error {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   background: $search-error-bg;
   border: 1px solid $search-error-border;
   border-radius: $search-radius;
@@ -771,7 +771,7 @@ $search-input-padding-x: $mg-spacing-250;
 // ========================================
 
 .mg-search__results-grid {
-  gap: $mg-spacing-150;
+  gap: var(--mg-spacing-150);
 
   // Card items within grid
   > [role="listitem"] {
@@ -851,11 +851,11 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-toggle {
   display: inline-flex;
   align-items: center;
-  gap: $mg-spacing-25;
+  gap: var(--mg-spacing-25);
   background: none;
   border: none;
-  padding: $mg-spacing-50 0;
-  margin-top: $mg-spacing-50;
+  padding: var(--mg-spacing-50) 0;
+  margin-top: var(--mg-spacing-50);
   font-size: $mg-font-size-200;
   color: $search-primary;
   cursor: pointer;
@@ -898,7 +898,7 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: $mg-spacing-200;
+  padding: var(--mg-spacing-200);
 }
 
 .mg-search__spinner {
@@ -913,7 +913,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__loader-text {
   text-align: center;
   color: $search-text-muted;
-  margin-top: $mg-spacing-100;
+  margin-top: var(--mg-spacing-100);
 }
 
 // ========================================
@@ -925,7 +925,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select {
   position: relative;
   width: 100%;
-  margin-top: $mg-spacing-50;
+  margin-top: var(--mg-spacing-50);
 }
 
 .mg-select__trigger {
@@ -934,13 +934,13 @@ $search-input-padding-x: $mg-spacing-250;
   justify-content: space-between;
   width: 100%;
   min-height: 44px; // Touch-friendly
-  padding: $mg-spacing-50 $mg-spacing-75;
+  padding: var(--mg-spacing-50) var(--mg-spacing-75);
   font-size: $mg-font-size-300;
   color: $search-text;
   text-align: left;
-  background-color: $mg-color-white;
-  border: 2px solid $mg-color-black;
-  border-radius: $mg-radius-form-input;
+  background-color: rgb(var(--mg-color-white));
+  border: 2px solid rgb(var(--mg-color-black));
+  border-radius: var(--mg-radius-form-input);
   cursor: pointer;
   transition: border-color 0.15s, box-shadow 0.15s;
 
@@ -950,7 +950,7 @@ $search-input-padding-x: $mg-spacing-250;
 
   &:focus-visible {
     outline: 0;
-    box-shadow: 0 0 4px $mg-color-form-focus;
+    box-shadow: 0 0 4px rgb(var(--mg-color-form-focus));
   }
 
   .mg-select--open & {
@@ -969,7 +969,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-select__trigger-icon {
   flex-shrink: 0;
-  margin-left: $mg-spacing-50;
+  margin-left: var(--mg-spacing-50);
   color: $search-text-muted;
   transition: transform 0.2s ease;
 
@@ -981,7 +981,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__backdrop {
   position: fixed;
   inset: 0;
-  z-index: $mg-z-index-modal - 1; // portaled select backdrop: uses modal layer to clear all page chrome
+  z-index: calc(var(--mg-z-index-modal) - 1); // portaled select backdrop: uses modal layer to clear all page chrome
   background: transparent;
   cursor: default;
 }
@@ -991,7 +991,7 @@ $search-input-padding-x: $mg-spacing-250;
   top: 100%;
   left: 0;
   right: 0;
-  z-index: $mg-z-index-modal; // portaled select dropdown: uses modal layer to clear all page chrome
+  z-index: var(--mg-z-index-modal); // portaled select dropdown: uses modal layer to clear all page chrome
   background: #fff;
   border: 1px solid $search-primary;
   border-top: none;
@@ -1012,22 +1012,22 @@ $search-input-padding-x: $mg-spacing-250;
 }
 
 .mg-select__search {
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   border-bottom: 1px solid $search-border-light;
 }
 
 .mg-select__search-input {
   width: 100%;
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   font-size: $mg-font-size-300;
-  border: 2px solid $mg-color-black;
-  border-radius: $mg-radius-form-input;
-  background-color: $mg-color-white;
+  border: 2px solid rgb(var(--mg-color-black));
+  border-radius: var(--mg-radius-form-input);
+  background-color: rgb(var(--mg-color-white));
 
   &:focus-visible {
     outline: 0;
     border-color: $search-primary;
-    box-shadow: 0 0 4px $mg-color-form-focus;
+    box-shadow: 0 0 4px rgb(var(--mg-color-form-focus));
   }
 
   &::placeholder {
@@ -1038,7 +1038,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__list {
   list-style: none;
   margin: 0;
-  padding: $mg-spacing-25 0;
+  padding: var(--mg-spacing-25) 0;
   max-height: 240px;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1047,8 +1047,8 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-select__option {
   display: flex;
   align-items: center;
-  gap: $mg-spacing-50;
-  padding: $mg-spacing-50 $mg-spacing-75;
+  gap: var(--mg-spacing-50);
+  padding: var(--mg-spacing-50) var(--mg-spacing-75);
   min-height: 40px; // Touch-friendly
   cursor: pointer;
   transition: background-color 0.1s ease;
@@ -1059,7 +1059,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &--selected {
-    background-color: rgba($search-primary, 0.08);
+    background-color: rgb(var(--mg-color-blue-900) / 0.08);
 
     .mg-select__option-label {
       font-weight: 600;
@@ -1068,7 +1068,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &--selected#{&}--highlighted {
-    background-color: rgba($search-primary, 0.12);
+    background-color: rgb(var(--mg-color-blue-900) / 0.12);
   }
 }
 
@@ -1079,11 +1079,11 @@ $search-input-padding-x: $mg-spacing-250;
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  border: 2px solid $mg-color-form-check;
+  border: 2px solid rgb(var(--mg-color-form-check));
   color: $search-primary;
 
   &--checkbox {
-    border-radius: $mg-radius-form-input;
+    border-radius: var(--mg-radius-form-input);
   }
 
   &--radio {
@@ -1091,13 +1091,13 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &:hover {
-    border-color: $mg-color-form-check--hover;
+    border-color: rgb(var(--mg-color-form-check--hover));
   }
 
   .mg-select__option--selected & {
-    border-color: $mg-color-form-check--checked;
-    background-color: $mg-color-form-check--checked;
-    color: $mg-color-white;
+    border-color: rgb(var(--mg-color-form-check--checked));
+    background-color: rgb(var(--mg-color-form-check--checked));
+    color: rgb(var(--mg-color-white));
   }
 }
 
@@ -1123,7 +1123,7 @@ $search-input-padding-x: $mg-spacing-250;
 
 // Subtype options (indented children under parent content types)
 .mg-select__option--subtype {
-  padding-left: $mg-spacing-150;
+  padding-left: var(--mg-spacing-150);
 
   .mg-select__option-label {
     font-size: $mg-font-size-100;
@@ -1131,14 +1131,14 @@ $search-input-padding-x: $mg-spacing-250;
     // Add visual connector
     &::before {
       content: "└";
-      margin-right: $mg-spacing-25;
+      margin-right: var(--mg-spacing-25);
       color: $search-text-muted;
     }
   }
 }
 
 .mg-select__empty {
-  padding: $mg-spacing-100;
+  padding: var(--mg-spacing-100);
   text-align: center;
   color: $search-text-muted;
   font-size: $mg-font-size-200;
@@ -1151,25 +1151,25 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-option {
   display: grid;
   grid-template-columns: 1.25em 1fr auto;
-  padding: $mg-spacing-50;
+  padding: var(--mg-spacing-50);
   border-radius: $search-radius;
   align-items: baseline;
-  gap: 0 $mg-spacing-25;
+  gap: 0 var(--mg-spacing-25);
   transition: background-color 0.15s ease;
 
   &:hover {
-    background-color: rgba($search-primary, 0.05);
+    background-color: rgb(var(--mg-color-blue-900) / 0.05);
   }
 
   input[type="checkbox"],
   input[type="radio"] {
     margin: 0;
     cursor: pointer;
-    accent-color: $mg-color-form-check--checked;
+    accent-color: rgb(var(--mg-color-form-check--checked));
   }
 
   label {
-    padding-left: $mg-spacing-25;
+    padding-left: var(--mg-spacing-25);
     font-weight: normal;
     text-wrap: balance;
     cursor: pointer;
@@ -1184,7 +1184,7 @@ $search-input-padding-x: $mg-spacing-250;
 
   // Selected/checked state
   &:has(input:checked) {
-    background-color: rgba($search-primary, 0.08);
+    background-color: rgb(var(--mg-color-blue-900) / 0.08);
 
     label {
       font-weight: 600;
@@ -1215,7 +1215,7 @@ $search-input-padding-x: $mg-spacing-250;
   position: fixed;
   inset: 0;
   background: rgb(0 0 0 / 0.5);
-  z-index: $mg-z-index-drawer - 1; // backdrop behind drawer panel
+  z-index: calc(var(--mg-z-index-drawer) - 1); // backdrop behind drawer panel
   animation: mg-search-fade-in 0.2s ease-out;
   cursor: pointer; // Indicate clickable to close
 }
@@ -1240,7 +1240,7 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   flex-direction: column;
   animation: mg-search-slide-in-left 0.3s ease-out;
-  z-index: $mg-z-index-drawer;
+  z-index: var(--mg-z-index-drawer);
   cursor: default; // Reset cursor inside drawer
 }
 
@@ -1257,7 +1257,7 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   border-bottom: 1px solid $search-border;
   flex-shrink: 0;
   min-height: 56px; // Consistent header height
@@ -1270,7 +1270,7 @@ $search-input-padding-x: $mg-spacing-250;
   color: $search-text;
   display: flex;
   align-items: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
 }
 
 .mg-search__drawer-count {
@@ -1279,7 +1279,7 @@ $search-input-padding-x: $mg-spacing-250;
   justify-content: center;
   min-width: 22px;
   height: 22px;
-  padding: 0 $mg-spacing-25;
+  padding: 0 var(--mg-spacing-25);
   font-size: $mg-font-size-200;
   font-weight: 600;
   color: #fff;
@@ -1315,13 +1315,13 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__drawer-content {
   flex: 1;
   overflow-y: auto;
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain; // Prevent scroll chaining
 }
 
 .mg-search__drawer-footer {
-  padding: $mg-spacing-100 $mg-spacing-150;
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   border-top: 1px solid $search-border;
   flex-shrink: 0;
   background: #fff; // Ensure footer is opaque
@@ -1331,10 +1331,10 @@ $search-input-padding-x: $mg-spacing-250;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
   width: 100%;
   min-height: 48px; // Touch-friendly height
-  padding: $mg-spacing-75 $mg-spacing-100;
+  padding: var(--mg-spacing-75) var(--mg-spacing-100);
   font-size: $mg-font-size-200;
   font-weight: 600;
   color: #fff;
@@ -1419,15 +1419,15 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__facet-operator {
   display: flex;
   flex-direction: column;
-  gap: $mg-spacing-50;
-  margin-top: $mg-spacing-75;
+  gap: var(--mg-spacing-50);
+  margin-top: var(--mg-spacing-75);
   font-size: $mg-font-size-200;
 }
 
 .mg-search__facet-operator-row {
   display: flex;
   align-items: center;
-  gap: $mg-spacing-50;
+  gap: var(--mg-spacing-50);
 }
 
 .mg-search__facet-operator-label {
@@ -1444,13 +1444,13 @@ $search-input-padding-x: $mg-spacing-250;
 
 .mg-search__facet-operator-toggle {
   display: inline-flex;
-  gap: $mg-spacing-25;
+  gap: var(--mg-spacing-25);
 }
 
 .mg-search__facet-operator-option {
   display: flex;
   align-items: center;
-  padding: $mg-spacing-25 $mg-spacing-50;
+  padding: var(--mg-spacing-25) var(--mg-spacing-50);
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
   font-weight: 400;
@@ -1492,7 +1492,7 @@ $search-input-padding-x: $mg-spacing-250;
 .mg-search__filter-chip-connector {
   display: inline-flex;
   align-items: center;
-  margin-right: $mg-spacing-25;
+  margin-right: var(--mg-spacing-25);
   color: $search-text-muted;
   font-weight: 600;
   text-transform: uppercase;

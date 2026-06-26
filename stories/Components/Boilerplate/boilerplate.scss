@@ -4,16 +4,16 @@
 
 .mg-boilerplate {
   // Add your base styles here
-  padding: $mg-spacing-100;
-  border: 1px solid $mg-color-red-900;
-  border-radius: $mg-radius-button;
+  padding: var(--mg-spacing-100);
+  border: 1px solid rgb(var(--mg-color-red-900));
+  border-radius: var(--mg-radius-button);
 
   &__title {
     font-size: mg-rem(15);
     margin-bottom: mg-rem(10);
 
     a {
-      color: $mg-color-interactive;
+      color: rgb(var(--mg-color-interactive));
       text-decoration: underline;
       text-underline-offset: 3px;
 
@@ -22,7 +22,7 @@
       }
 
       &:focus-visible {
-        outline: 2px solid $mg-color-interactive;
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
       }
     }
@@ -34,10 +34,10 @@
 
   // Add any additional nested styles or modifiers here
   &--primary {
-    background-color: $mg-color-blue-200;
+    background-color: rgb(var(--mg-color-blue-200));
   }
 
   &--secondary {
-    background-color: $mg-color-blue-100;
+    background-color: rgb(var(--mg-color-blue-100));
   }
 }

@@ -1,7 +1,7 @@
 /* CTA banner start */
 
 .mg-cta {
-  padding: $mg-cta-padding;
+  padding: var(--mg-cta-padding);
   background-color: var(--mg-cta-bg, initial);
 
   &__inner {
@@ -13,17 +13,17 @@
   }
 
   &__headline {
-    color: $mg-color-white;
+    color: rgb(var(--mg-color-white));
     font-weight: 700;
-    margin-bottom: $mg-spacing-100;
+    margin-bottom: var(--mg-spacing-100);
   }
 
   &__text {
-    color: rgba($mg-color-white, 0.9);
-    margin-bottom: $mg-spacing-150;
+    color: rgb(var(--mg-color-neutral-0) / 0.9);
+    margin-bottom: var(--mg-spacing-150);
 
     p {
-      margin-bottom: $mg-spacing-75;
+      margin-bottom: var(--mg-spacing-75);
 
       &:last-child {
         margin-bottom: 0;
@@ -31,7 +31,7 @@
     }
 
     a {
-      color: $mg-color-white;
+      color: rgb(var(--mg-color-white));
       text-decoration: underline;
     }
   }
@@ -39,8 +39,8 @@
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: $mg-spacing-100;
-    margin-top: $mg-spacing-150;
+    gap: var(--mg-spacing-100);
+    margin-top: var(--mg-spacing-150);
   }
 
   &__image {
@@ -70,7 +70,7 @@
       display: grid;
       grid-template-columns: 1fr;
       align-items: center;
-      gap: $mg-spacing-200;
+      gap: var(--mg-spacing-200);
     }
 
     .mg-cta__body {
@@ -95,43 +95,43 @@
 
   // Color variants — same system as Hero
   &--primary {
-    background-color: $mg-color-hero;
+    background-color: rgb(var(--mg-color-hero));
   }
 
   &--secondary {
-    background-color: $mg-color-hero--secondary;
+    background-color: rgb(var(--mg-color-hero--secondary));
   }
 
   &--tertiary {
-    background-color: $mg-color-hero--tertiary;
+    background-color: rgb(var(--mg-color-hero--tertiary));
   }
 
   &--quaternary {
-    background-color: $mg-color-hero--quaternary;
+    background-color: rgb(var(--mg-color-hero--quaternary));
   }
 
   // Button overrides for dark backgrounds (matches Hero pattern)
   a.mg-button,
   a.mg-button:hover,
   a.mg-button:visited {
-    color: $mg-color-hero;
+    color: rgb(var(--mg-color-hero));
   }
 
   a.mg-button-primary {
-    background-color: $mg-color-neutral-0;
+    background-color: rgb(var(--mg-color-neutral-0));
   }
 
   a.mg-button-secondary,
   a.mg-button-secondary:hover,
   a.mg-button-secondary:visited {
-    background-color: $mg-color-hero-button-secondary-background;
-    color: $mg-color-hero-button-secondary-color;
-    border-color: $mg-border-color-hero-button-secondary;
+    background-color: var(--mg-color-hero-button-secondary-background);
+    color: rgb(var(--mg-color-hero-button-secondary-color));
+    border-color: rgb(var(--mg-border-color-hero-button-secondary));
   }
 
   a.mg-button:focus-visible {
-    box-shadow: 0 0 0 2px $mg-color-neutral-0;
-    outline: 2px solid $mg-color-neutral-0;
+    box-shadow: 0 0 0 2px rgb(var(--mg-color-neutral-0));
+    outline: 2px solid rgb(var(--mg-color-neutral-0));
     outline-offset: 2px;
   }
 }

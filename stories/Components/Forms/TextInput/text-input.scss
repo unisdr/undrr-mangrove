@@ -2,7 +2,7 @@
 // Shared form styles live in _form-base.scss.
 
 .mg-form-input[type="date"] {
-  color: $mg-color-neutral-500;
+  color: rgb(var(--mg-color-neutral-500));
 
   &::-webkit-calendar-picker-indicator {
     appearance: none;
