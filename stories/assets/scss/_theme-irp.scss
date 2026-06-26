@@ -4,12 +4,12 @@ $_irp-color-primary--raw: 15 120 191;
 $_irp-color-green--raw: 140 198 63;
 
 .mg-theme-irp {
-  --mg-color-interactive:          rgb(#{$_irp-color-primary--raw});
-  --mg-color-interactive-active:   rgb(#{$_irp-color-primary--raw});
+  --mg-color-interactive:          #{$_irp-color-primary--raw};
+  --mg-color-interactive-active:   #{$_irp-color-primary--raw};
   --mg-color-tag:                  var(--mg-color-interactive);
   --mg-color-tag--hover:           var(--mg-color-interactive-active);
   --mg-radius-tag:                 var(--mg-spacing-50);
-  --mg-color-button-background:    rgb(#{$_irp-color-primary--raw});
+  --mg-color-button-background:    #{$_irp-color-primary--raw};
   --mg-color-button-background--hover: var(--sendai-orange-900);
   --mg-radius-button:              var(--mg-spacing-50);
   --mg-color-form-check:           var(--mg-color-interactive);
