@@ -15,10 +15,10 @@
   }
 
   &--disabled &__legend {
-    color: var(--mg-color-neutral-400);
+    color: rgb(var(--mg-color-neutral-400));
   }
 
   &--error &__legend {
-    color: var(--mg-color-red-900);
+    color: rgb(var(--mg-color-red-900));
   }
 }

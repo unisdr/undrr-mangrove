@@ -2,7 +2,7 @@
 // -
 // A compact tag used to categorise content (content type, country, theme, etc.).
 // Inherits its background from the --tag-color-background CSS custom property set
-// by each site theme, falling back to the var(--mg-color-tag) token.
+// by each site theme, falling back to the rgb(var(--mg-color-tag)) token.
 // -
 // Usage:
 //   <span class="mg-tag">Organization</span>
@@ -20,55 +20,55 @@
   font-weight: 500;
   line-height: 1.4;
   color: #fff;
-  background-color: var(--mg-color-tag);
-  background-color: var(--tag-color-background, #{var(--mg-color-tag)});
+  background-color: rgb(var(--mg-color-tag));
+  background-color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
   border-radius: var(--mg-radius-tag);
   text-decoration: none;
   transition: background-color 0.2s ease;
 
   &:hover {
     color: #fff;
-    background-color: var(--mg-color-tag--hover);
-    background-color: var(--tag-color-background-hover, #{var(--mg-color-tag--hover)});
+    background-color: rgb(var(--mg-color-tag--hover));
+    background-color: var(--tag-color-background-hover, #{rgb(var(--mg-color-tag--hover))});
     text-decoration: none;
   }
 }
 
 // --secondary: de-emphasised/metadata tags (neutral gray)
 .mg-tag--secondary {
-  background-color: var(--mg-color-tag-secondary);
-  background-color: var(--tag-color-background-secondary, #{var(--mg-color-tag-secondary)});
+  background-color: rgb(var(--mg-color-tag-secondary));
+  background-color: var(--tag-color-background-secondary, #{rgb(var(--mg-color-tag-secondary))});
 
   &:hover {
-    background-color: var(--mg-color-tag-secondary--hover);
-    background-color: var(--tag-color-background-secondary-hover, #{var(--mg-color-tag-secondary--hover)});
+    background-color: rgb(var(--mg-color-tag-secondary--hover));
+    background-color: var(--tag-color-background-secondary-hover, #{rgb(var(--mg-color-tag-secondary--hover))});
   }
 }
 
 // --outline: subtle border-only tag
 .mg-tag--outline {
-  color: var(--mg-color-tag);
-  color: var(--tag-color-background, #{var(--mg-color-tag)});
+  color: rgb(var(--mg-color-tag));
+  color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
   background-color: transparent;
-  border: 1px solid var(--mg-color-tag);
-  border-color: var(--tag-color-background, #{var(--mg-color-tag)});
+  border: 1px solid rgb(var(--mg-color-tag));
+  border-color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
 
   &:hover {
-    color: var(--mg-color-tag);
-    color: var(--tag-color-background, #{var(--mg-color-tag)});
-    background-color: var(--mg-color-blue-50);
-    background-color: var(--tag-color-background-outline-hover, #{var(--mg-color-blue-50)});
+    color: rgb(var(--mg-color-tag));
+    color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
+    background-color: rgb(var(--mg-color-blue-50));
+    background-color: var(--tag-color-background-outline-hover, #{rgb(var(--mg-color-blue-50))});
   }
 }
 
 // --accent: featured/highlighted content (orange)
 .mg-tag--accent {
-  background-color: var(--mg-color-tag-accent);
-  background-color: var(--tag-color-background-accent, #{var(--mg-color-tag-accent)});
+  background-color: rgb(var(--mg-color-tag-accent));
+  background-color: var(--tag-color-background-accent, #{rgb(var(--mg-color-tag-accent))});
 
   &:hover {
-    background-color: var(--mg-color-tag-accent--hover);
-    background-color: var(--tag-color-background-accent-hover, #{var(--mg-color-tag-accent--hover)});
+    background-color: rgb(var(--mg-color-tag-accent--hover));
+    background-color: var(--tag-color-background-accent-hover, #{rgb(var(--mg-color-tag-accent--hover))});
   }
 }
 
@@ -100,16 +100,16 @@
     font-weight: 500;
     line-height: 1.4;
     color: #fff;
-    background-color: var(--mg-color-tag);
-    background-color: var(--tag-color-background, #{var(--mg-color-tag)});
+    background-color: rgb(var(--mg-color-tag));
+    background-color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
     border-radius: var(--mg-radius-tag);
     text-decoration: none;
     transition: background-color 0.2s ease;
 
     &:hover {
       color: #fff;
-      background-color: var(--mg-color-tag--hover);
-      background-color: var(--tag-color-background-hover, #{var(--mg-color-tag--hover)});
+      background-color: rgb(var(--mg-color-tag--hover));
+      background-color: var(--tag-color-background-hover, #{rgb(var(--mg-color-tag--hover))});
       text-decoration: none;
     }
   }

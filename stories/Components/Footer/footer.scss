@@ -4,13 +4,13 @@
 
 .mg-footer--about-footer {
   text-wrap: balance;
-  color: var(--mg-color-white);
+  color: rgb(var(--mg-color-white));
   padding-bottom: var(--mg-spacing-200);
   padding-top: var(--mg-spacing-200);
 
   a,
   a:hover {
-    color: var(--mg-color-white);
+    color: rgb(var(--mg-color-white));
   }
 
   .container {
@@ -40,10 +40,10 @@
 // Utility footer bar — secondary navigation below the main footer
 // Used by sub-branded sites (e.g. DELTA) for product-level links
 .mg-footer-bar {
-  border-top: 1px solid var(--mg-color-neutral-200);
+  border-top: 1px solid rgb(var(--mg-color-neutral-200));
   padding: var(--mg-spacing-150) 0;
   font-size: $mg-font-size-300;
-  color: var(--mg-color-neutral-600);
+  color: rgb(var(--mg-color-neutral-600));
 
   &__row {
     display: flex;
@@ -59,7 +59,7 @@
     gap: var(--mg-spacing-50) var(--mg-spacing-200);
 
     a {
-      color: var(--mg-color-interactive);
+      color: rgb(var(--mg-color-interactive));
     }
   }
 
@@ -70,7 +70,7 @@
 
   &__divider {
     border: 0;
-    border-top: 1px solid var(--mg-color-neutral-200);
+    border-top: 1px solid rgb(var(--mg-color-neutral-200));
     margin: var(--mg-spacing-100) 0;
   }
 }

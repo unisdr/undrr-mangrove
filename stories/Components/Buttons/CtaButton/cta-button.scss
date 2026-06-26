@@ -22,14 +22,14 @@
   font-weight: 600;
   line-height: 1;
   border-radius: var(--mg-radius-button);
-  color: var(--mg-color-button);
+  color: rgb(var(--mg-color-button));
   cursor: pointer;
   justify-content: center;
   padding: var(--mg-padding-button);
   border: var(--mg-border-width-button) solid var(--mg-border-color-button);
 
   &:focus-visible {
-    box-shadow: 0 0 4px var(--mg-color-button-background--hover);
+    box-shadow: 0 0 4px rgb(var(--mg-color-button-background--hover));
     outline: 0;
   }
 
@@ -44,32 +44,32 @@
 
 button {
   &:focus-visible {
-    box-shadow: 0 0 4px var(--mg-color-button-background);
+    box-shadow: 0 0 4px rgb(var(--mg-color-button-background));
     outline: 0;
   }
 }
 
 .mg-button-primary {
-  background-color: var(--mg-color-button-background);
+  background-color: rgb(var(--mg-color-button-background));
 
   &:hover {
-    color: var(--mg-color-button);
-    background-color: var(--mg-color-button-background--hover);
+    color: rgb(var(--mg-color-button));
+    background-color: rgb(var(--mg-color-button-background--hover));
   }
 }
 
 .mg-button-secondary {
-  background-color: var(--mg-color-button-secondary-background);
+  background-color: rgb(var(--mg-color-button-secondary-background));
 
   &:hover {
-    color: var(--mg-color-button);
-    background-color: var(--mg-color-button-secondary-background--hover);
+    color: rgb(var(--mg-color-button));
+    background-color: rgb(var(--mg-color-button-secondary-background--hover));
   }
 }
 
 .mg-button.disabled {
-  background-color: var(--mg-color-neutral-500);
-  color: var(--mg-color-neutral-0);
+  background-color: rgb(var(--mg-color-neutral-500));
+  color: rgb(var(--mg-color-neutral-0));
   pointer-events: none;
 }
 

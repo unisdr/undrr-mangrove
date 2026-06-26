@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  color: var(--mg-color-text);
+  color: rgb(var(--mg-color-text));
   font-family: $mg-font-family;
   font-size: $mg-font-size-300;
   line-height: $mg-font-line-height-700;
@@ -125,7 +125,7 @@ header {
 
 hr {
   border: 0;
-  border-block-start: 2px solid var(--mg-color-neutral-400); // #808080 — 3.95:1 on white (non-text contrast)
+  border-block-start: 2px solid rgb(var(--mg-color-neutral-400)); // #808080 — 3.95:1 on white (non-text contrast)
   margin-block: var(--mg-spacing-200);
 }
 
@@ -135,11 +135,11 @@ img {
 }
 
 a {
-  color: var(--mg-color-interactive);
+  color: rgb(var(--mg-color-interactive));
   text-decoration: none;
 
   &:hover {
-    color: var(--mg-color-interactive-active);
+    color: rgb(var(--mg-color-interactive-active));
     text-decoration: underline;
   }
 }

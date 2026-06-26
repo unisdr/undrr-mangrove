@@ -22,7 +22,7 @@
 
   // Horizontal CARD
   &__hc {
-    color: var(--mg-color-neutral-800);
+    color: rgb(var(--mg-color-neutral-800));
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--mg-spacing-100);
@@ -94,14 +94,14 @@
   }
 
   &__label {
-    color: var(--mg-color-tag);
+    color: rgb(var(--mg-color-tag));
     cursor: pointer;
     display: inline-block;
     font-size: $mg-font-tag;
     margin-right: var(--mg-spacing-50);
 
     &:hover {
-      color: var(--mg-color-tag);
+      color: rgb(var(--mg-color-tag));
     }
   }
 
@@ -114,7 +114,7 @@
     padding-top: var(--mg-spacing-100);
 
     a {
-      color: var(--mg-color-interactive);
+      color: rgb(var(--mg-color-interactive));
       cursor: pointer;
       display: inline;
       text-decoration: underline;
@@ -122,7 +122,7 @@
     }
 
     .active {
-      background: var(--mg-color-neutral-50);
+      background: rgb(var(--mg-color-neutral-50));
       font-weight: bold;
     }
   }
@@ -161,7 +161,7 @@
 
   // Focus: card-level outline when title link is focused via keyboard
   &__title a:focus-visible {
-    outline: 2px solid var(--mg-color-interactive);
+    outline: 2px solid rgb(var(--mg-color-interactive));
     outline-offset: 2px;
   }
 
@@ -190,9 +190,9 @@
 
 // Color variants (shared accent colours from _variables.scss)
 $card-variant-colours: (
-  "secondary": var(--mg-color-secondary),
-  "tertiary": var(--mg-color-tertiary),
-  "quaternary": var(--mg-color-quaternary),
+  "secondary": rgb(var(--mg-color-secondary)),
+  "tertiary": rgb(var(--mg-color-tertiary)),
+  "quaternary": rgb(var(--mg-color-quaternary)),
 );
 
 @each $name, $color in $card-variant-colours {
@@ -205,7 +205,7 @@ $card-variant-colours: (
 // Double class selector ensures this overrides variant colors regardless of source order
 .mg-card.mg-card--plain-title {
   .mg-card__title a {
-    color: var(--mg-color-text);
+    color: rgb(var(--mg-color-text));
     text-decoration: none;
   }
 
@@ -220,7 +220,7 @@ $card-variant-colours: (
 
 .mg-card__summary a,
 .mg-card__text-link {
-  color: var(--mg-color-interactive);
+  color: rgb(var(--mg-color-interactive));
 }
 
 .mg-card__summary a,
@@ -285,7 +285,7 @@ $card-variant-colours: (
   .mg-card__visual-label {
     font-size: $mg-font-tag;
     font-weight: 700;
-    color: var(--mg-color-tag);
+    color: rgb(var(--mg-color-tag));
     width: 100%;
   }
 
@@ -357,7 +357,7 @@ $card-variant-colours: (
 
   // Icon class container - uses container query units to scale like images
   .mg-card__icon-wrap {
-    color: var(--mg-color-interactive);
+    color: rgb(var(--mg-color-interactive));
     line-height: 1;
     display: flex;
     align-items: center;
@@ -407,7 +407,7 @@ $card-variant-colours: (
 
       .mg-icon {
         font-size: 32px;
-        color: var(--mg-icon-fg, var(--mg-color-neutral-700));
+        color: var(--mg-icon-fg, rgb(var(--mg-color-neutral-700)));
       }
     }
   }
@@ -434,7 +434,7 @@ $card-variant-colours: (
       outline: none;
 
       &::after {
-        outline: 2px solid var(--mg-color-interactive);
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
       }
     }
@@ -455,7 +455,7 @@ $card-variant-colours: (
     line-height: $mg-font-line-height-500;
 
     a {
-      color: var(--mg-color-interactive);
+      color: rgb(var(--mg-color-interactive));
       text-decoration: underline;
       text-underline-offset: 3px;
 
@@ -464,7 +464,7 @@ $card-variant-colours: (
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mg-color-interactive);
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
         border-radius: 2px;
       }
@@ -482,7 +482,7 @@ $card-variant-colours: (
     margin-bottom: 0;
 
     a {
-      color: var(--mg-color-interactive);
+      color: rgb(var(--mg-color-interactive));
       text-decoration: none;
       position: relative;
       z-index: 101; // above stretched-link cover — local to card stacking context
@@ -492,7 +492,7 @@ $card-variant-colours: (
       }
 
       &:focus-visible {
-        outline: 2px solid var(--mg-color-interactive);
+        outline: 2px solid rgb(var(--mg-color-interactive));
         outline-offset: 2px;
         border-radius: 2px;
       }
@@ -522,7 +522,7 @@ $card-variant-colours: (
   // Negative variant (for dark backgrounds)
   &--negative {
     .mg-card__icon-wrap {
-      color: var(--mg-color-white);
+      color: rgb(var(--mg-color-white));
     }
 
     .mg-card__label {
@@ -531,7 +531,7 @@ $card-variant-colours: (
 
     .mg-card__title,
     .mg-card__title a {
-      color: var(--mg-color-white);
+      color: rgb(var(--mg-color-white));
     }
 
     .mg-card__summary {
@@ -539,10 +539,10 @@ $card-variant-colours: (
     }
 
     .mg-card__link a {
-      color: var(--mg-color-white);
+      color: rgb(var(--mg-color-white));
 
       &:focus-visible {
-        outline-color: var(--mg-color-white);
+        outline-color: rgb(var(--mg-color-white));
       }
     }
   }

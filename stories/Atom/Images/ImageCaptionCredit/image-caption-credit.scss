@@ -48,7 +48,7 @@
         padding: 0;
 
         + .mg-credits {
-          border-top: 1px solid var(--mg-color-neutral-500);
+          border-top: 1px solid rgb(var(--mg-color-neutral-500));
           margin-left: 0;
           padding: var(--mg-spacing-50) 0 0 0;
         }

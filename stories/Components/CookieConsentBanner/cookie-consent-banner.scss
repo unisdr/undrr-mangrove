@@ -2,32 +2,32 @@
 // #cc-main {
 //   // CSS Variables used by vanilla-cookieconsent
 //   --cc-bg: #fff;
-//   --cc-primary-color: var(--mg-color-text);
-//   --cc-secondary-color: var(--mg-color-neutral-600);
-//   --cc-btn-primary-bg: var(--mg-color-interactive);
+//   --cc-primary-color: rgb(var(--mg-color-text));
+//   --cc-secondary-color: rgb(var(--mg-color-neutral-600));
+//   --cc-btn-primary-bg: rgb(var(--mg-color-interactive));
 //   --cc-btn-primary-color: #fff;
-//   --cc-btn-primary-border-color: var(--mg-color-interactive);
-//   --cc-btn-primary-hover-bg: var(--mg-color-interactive-active);
+//   --cc-btn-primary-border-color: rgb(var(--mg-color-interactive));
+//   --cc-btn-primary-hover-bg: rgb(var(--mg-color-interactive-active));
 //   --cc-btn-primary-hover-color: #fff;
-//   --cc-btn-secondary-bg: var(--mg-color-neutral-50);
-//   --cc-btn-secondary-color: var(--mg-color-text);
-//   --cc-btn-secondary-border-color: var(--mg-color-neutral-100);
-//   --cc-btn-secondary-hover-bg: var(--mg-color-neutral-100);
-//   --cc-btn-secondary-hover-color: var(--mg-color-text);
-//   --cc-toggle-on-bg: var(--mg-color-interactive);
-//   --cc-toggle-off-bg: var(--mg-color-neutral-400);
-//   --cc-toggle-readonly-bg: var(--mg-color-neutral-200);
+//   --cc-btn-secondary-bg: rgb(var(--mg-color-neutral-50));
+//   --cc-btn-secondary-color: rgb(var(--mg-color-text));
+//   --cc-btn-secondary-border-color: rgb(var(--mg-color-neutral-100));
+//   --cc-btn-secondary-hover-bg: rgb(var(--mg-color-neutral-100));
+//   --cc-btn-secondary-hover-color: rgb(var(--mg-color-text));
+//   --cc-toggle-on-bg: rgb(var(--mg-color-interactive));
+//   --cc-toggle-off-bg: rgb(var(--mg-color-neutral-400));
+//   --cc-toggle-readonly-bg: rgb(var(--mg-color-neutral-200));
 //   --cc-toggle-on-knob-bg: #fff;
 //   --cc-toggle-off-knob-bg: #fff;
 //   --cc-toggle-readonly-knob-bg: #fff;
-//   --cc-cookie-category-block-bg: var(--mg-color-blue-50);
-//   --cc-cookie-category-block-hover-bg: var(--mg-color-blue-100);
-//   --cc-section-border: var(--mg-color-neutral-50);
-//   --cc-cookie-table-border: var(--mg-color-neutral-100);
-//   --cc-separator-border-color: var(--mg-color-neutral-100);
+//   --cc-cookie-category-block-bg: rgb(var(--mg-color-blue-50));
+//   --cc-cookie-category-block-hover-bg: rgb(var(--mg-color-blue-100));
+//   --cc-section-border: rgb(var(--mg-color-neutral-50));
+//   --cc-cookie-table-border: rgb(var(--mg-color-neutral-100));
+//   --cc-separator-border-color: rgb(var(--mg-color-neutral-100));
 //   --cc-overlay-bg: rgb(4 6 8 / 0.85);
-//   --cc-webkit-scrollbar-bg: var(--mg-color-neutral-200);
-//   --cc-webkit-scrollbar-hover-bg: var(--mg-color-interactive);
+//   --cc-webkit-scrollbar-bg: rgb(var(--mg-color-neutral-200));
+//   --cc-webkit-scrollbar-hover-bg: rgb(var(--mg-color-interactive));
 //   --cc-font-family: var(--mg-font-family);
 //   --cc-modal-border-radius: 0;
 //   --cc-btn-border-radius: 0;
@@ -36,17 +36,17 @@
 //   // Custom link styles
 //   .cc__link,
 //   a {
-//     color: var(--mg-color-interactive);
+//     color: rgb(var(--mg-color-interactive));
 //     text-decoration: underline;
 
 //     &:hover {
-//       color: var(--mg-color-interactive-active);
+//       color: rgb(var(--mg-color-interactive-active));
 //     }
 //   }
 
 //   // Bottom bar consent modal customization
 //   #cm.bar {
-//     border-top: 1px solid var(--mg-color-neutral-100);
+//     border-top: 1px solid rgb(var(--mg-color-neutral-100));
 //     box-shadow: 0 -2px 10px rgb(0 0 0 / 0.1);
 
 //     .c-bn {
@@ -62,7 +62,7 @@
 
 //     .pm__badge {
 //       padding: var(--mg-spacing-25) var(--mg-spacing-50);
-//       background: var(--mg-color-interactive);
+//       background: rgb(var(--mg-color-interactive));
 //       color: #fff;
 //       font-size: 0.8rem;
 //       border-radius: 2px;

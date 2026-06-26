@@ -20,7 +20,7 @@
   &:hover {
     $colors: (
       "yellow": var(--mg-color-yellow),
-      "red": var(--mg-color-red-900),
+      "red": rgb(var(--mg-color-red-900)),
       "green": var(--mg-color-green),
       "blue": var(--mg-color-azure),
     );

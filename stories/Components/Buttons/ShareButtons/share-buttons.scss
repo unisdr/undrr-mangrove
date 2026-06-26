@@ -7,7 +7,7 @@
 
 .mg-share__header {
   font-family: $mg-font-family;
-  color: var(--mg-color-text);
+  color: rgb(var(--mg-color-text));
   font-weight: 600;
   font-size: $mg-font-size-300;
   display: flex;
@@ -28,8 +28,8 @@
   height: mg-rem(40);
   padding: var(--mg-spacing-100);
   border-radius: var(--mg-radius-button);
-  background-color: var(--mg-color-button-background);
-  color: var(--mg-color-button);
+  background-color: rgb(var(--mg-color-button-background));
+  color: rgb(var(--mg-color-button));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +41,7 @@
   }
 
   &:focus-visible {
-    box-shadow: 0 0 4px var(--mg-color-button-background--hover);
+    box-shadow: 0 0 4px rgb(var(--mg-color-button-background--hover));
     outline: 0;
   }
 }
@@ -53,7 +53,7 @@
   align-items: center;
   cursor: pointer;
   border: 0 solid var(--mg-border-color-button);
-  color: var(--mg-color-button);
+  color: rgb(var(--mg-color-button));
   font-family: $mg-font-family;
   padding: var(--mg-spacing-100);
   background-color: rgb(var(--mg-color-blue-900));
@@ -77,7 +77,7 @@
 }
 
 .mg-share__copy-text {
-  color: var(--mg-color-button);
+  color: rgb(var(--mg-color-button));
   font-size: $mg-font-size-100;
   overflow: hidden;
   scrollbar-width: 0;
