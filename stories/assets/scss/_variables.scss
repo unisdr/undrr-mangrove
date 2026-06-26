@@ -69,7 +69,7 @@ $_mg-color-blue-900--raw: 0 79 145;
   --mg-color-blue-900: #{$_mg-color-blue-900--raw};
 }
 
-$mg-color-blue-50:  rgb(var(--mg-color-blue-50));
+$mg-color-blue-50: rgb(var(--mg-color-blue-50));
 $mg-color-blue-100: rgb(var(--mg-color-blue-100));
 $mg-color-blue-200: rgb(var(--mg-color-blue-200));
 $mg-color-blue-300: rgb(var(--mg-color-blue-300));
@@ -105,7 +105,7 @@ $_mg-color-orange-900--raw: 235 117 42;
   --mg-color-orange-900: #{$_mg-color-orange-900--raw};
 }
 
-$mg-color-orange-50:  rgb(var(--mg-color-orange-50));
+$mg-color-orange-50: rgb(var(--mg-color-orange-50));
 $mg-color-orange-100: rgb(var(--mg-color-orange-100));
 $mg-color-orange-200: rgb(var(--mg-color-orange-200));
 $mg-color-orange-300: rgb(var(--mg-color-orange-300));
@@ -141,7 +141,7 @@ $_mg-color-red-900--raw: 193 9 32;
   --mg-color-red-900: #{$_mg-color-red-900--raw};
 }
 
-$mg-color-red-50:  rgb(var(--mg-color-red-50));
+$mg-color-red-50: rgb(var(--mg-color-red-50));
 $mg-color-red-100: rgb(var(--mg-color-red-100));
 $mg-color-red-200: rgb(var(--mg-color-red-200));
 $mg-color-red-300: rgb(var(--mg-color-red-300));
@@ -160,9 +160,9 @@ $mg-color-red-900: rgb(var(--mg-color-red-900));
  */
 
 // MG-COLORS NEUTRAL
-$_mg-color-neutral-0--raw:   255 255 255;
-$_mg-color-neutral-25--raw:  242 242 242;
-$_mg-color-neutral-50--raw:  230 230 230;
+$_mg-color-neutral-0--raw: 255 255 255;
+$_mg-color-neutral-25--raw: 242 242 242;
+$_mg-color-neutral-50--raw: 230 230 230;
 $_mg-color-neutral-100--raw: 204 204 204;
 $_mg-color-neutral-200--raw: 179 179 179;
 $_mg-color-neutral-300--raw: 153 153 153;
@@ -188,9 +188,9 @@ $_mg-color-neutral-900--raw: 0 0 0;
   --mg-color-neutral-900: #{$_mg-color-neutral-900--raw};
 }
 
-$mg-color-neutral-0:   rgb(var(--mg-color-neutral-0));
-$mg-color-neutral-25:  rgb(var(--mg-color-neutral-25));
-$mg-color-neutral-50:  rgb(var(--mg-color-neutral-50));
+$mg-color-neutral-0: rgb(var(--mg-color-neutral-0));
+$mg-color-neutral-25: rgb(var(--mg-color-neutral-25));
+$mg-color-neutral-50: rgb(var(--mg-color-neutral-50));
 $mg-color-neutral-100: rgb(var(--mg-color-neutral-100));
 $mg-color-neutral-200: rgb(var(--mg-color-neutral-200));
 $mg-color-neutral-300: rgb(var(--mg-color-neutral-300));
@@ -284,21 +284,21 @@ $sendai-turquoise: $sendai-turquoise-900; // alias
  * @tokens Spacing
  * @presenter Spacing
  */
-$_mg-spacing-0--raw:    0;
-$_mg-spacing-25--raw:   mg-rem(2.5);
-$_mg-spacing-50--raw:   mg-rem(5);
-$_mg-spacing-75--raw:   mg-rem(7.5);
-$_mg-spacing-100--raw:  mg-rem(10);
-$_mg-spacing-150--raw:  mg-rem(15);
-$_mg-spacing-175--raw:  mg-rem(18);
-$_mg-spacing-200--raw:  mg-rem(20);
-$_mg-spacing-250--raw:  mg-rem(24);
-$_mg-spacing-300--raw:  mg-rem(30);
-$_mg-spacing-350--raw:  mg-rem(35);
-$_mg-spacing-400--raw:  mg-rem(50);
-$_mg-spacing-500--raw:  mg-rem(60);
-$_mg-spacing-600--raw:  mg-rem(80);
-$_mg-spacing-800--raw:  mg-rem(100);
+$_mg-spacing-0--raw: 0;
+$_mg-spacing-25--raw: mg-rem(2.5);
+$_mg-spacing-50--raw: mg-rem(5);
+$_mg-spacing-75--raw: mg-rem(7.5);
+$_mg-spacing-100--raw: mg-rem(10);
+$_mg-spacing-150--raw: mg-rem(15);
+$_mg-spacing-175--raw: mg-rem(18);
+$_mg-spacing-200--raw: mg-rem(20);
+$_mg-spacing-250--raw: mg-rem(24);
+$_mg-spacing-300--raw: mg-rem(30);
+$_mg-spacing-350--raw: mg-rem(35);
+$_mg-spacing-400--raw: mg-rem(50);
+$_mg-spacing-500--raw: mg-rem(60);
+$_mg-spacing-600--raw: mg-rem(80);
+$_mg-spacing-800--raw: mg-rem(100);
 $_mg-spacing-1000--raw: mg-rem(400);
 
 :root {
@@ -320,21 +320,21 @@ $_mg-spacing-1000--raw: mg-rem(400);
   --mg-spacing-1000: #{$_mg-spacing-1000--raw};
 }
 
-$mg-spacing-0:    var(--mg-spacing-0);
-$mg-spacing-25:   var(--mg-spacing-25);
-$mg-spacing-50:   var(--mg-spacing-50);
-$mg-spacing-75:   var(--mg-spacing-75);
-$mg-spacing-100:  var(--mg-spacing-100);
-$mg-spacing-150:  var(--mg-spacing-150);
-$mg-spacing-175:  var(--mg-spacing-175);
-$mg-spacing-200:  var(--mg-spacing-200);
-$mg-spacing-250:  var(--mg-spacing-250);
-$mg-spacing-300:  var(--mg-spacing-300);
-$mg-spacing-350:  var(--mg-spacing-350);
-$mg-spacing-400:  var(--mg-spacing-400);
-$mg-spacing-500:  var(--mg-spacing-500);
-$mg-spacing-600:  var(--mg-spacing-600);
-$mg-spacing-800:  var(--mg-spacing-800);
+$mg-spacing-0: var(--mg-spacing-0);
+$mg-spacing-25: var(--mg-spacing-25);
+$mg-spacing-50: var(--mg-spacing-50);
+$mg-spacing-75: var(--mg-spacing-75);
+$mg-spacing-100: var(--mg-spacing-100);
+$mg-spacing-150: var(--mg-spacing-150);
+$mg-spacing-175: var(--mg-spacing-175);
+$mg-spacing-200: var(--mg-spacing-200);
+$mg-spacing-250: var(--mg-spacing-250);
+$mg-spacing-300: var(--mg-spacing-300);
+$mg-spacing-350: var(--mg-spacing-350);
+$mg-spacing-400: var(--mg-spacing-400);
+$mg-spacing-500: var(--mg-spacing-500);
+$mg-spacing-600: var(--mg-spacing-600);
+$mg-spacing-800: var(--mg-spacing-800);
 $mg-spacing-1000: var(--mg-spacing-1000);
 
 /**
@@ -428,9 +428,9 @@ $mg-width-600: mg-rem(600);
 // BUILD-TIME ONLY — breakpoints cannot be CSS custom properties.
 // @media queries require static values resolved at compile time; var() is invalid there.
 // Do not add --mg-breakpoint-* custom properties.
-$mg-breakpoint-mobile:       480px;
-$mg-breakpoint-tablet:       900px;
-$mg-breakpoint-desktop:      1164px;
+$mg-breakpoint-mobile: 480px;
+$mg-breakpoint-tablet: 900px;
+$mg-breakpoint-desktop: 1164px;
 $mg-breakpoint-desktop-wide: 1440px;
 
 /**
@@ -573,6 +573,151 @@ $mg-z-index-toast: 5500; // Toast notifications (Snackbar), above modals
 // Modal scrim. Neutral-tinted by default so it reads as backdrop across all
 // themes; child themes can override for a branded scrim if desired.
 $mg-color-modal-scrim: rgb(var(--mg-color-neutral-900) / 0.85) !default;
+
+:root {
+  // Interactive
+  --mg-color-interactive:          var(--mg-color-blue-900);
+  --mg-color-interactive-active:   var(--mg-color-blue-700);
+
+  // Text + aliases
+  --mg-color-text:                 var(--mg-color-neutral-800);
+  --mg-color-black:                var(--mg-color-neutral-800);
+  --mg-color-white:                var(--mg-color-neutral-0);
+
+  // Tags
+  --mg-color-tag:                  var(--mg-color-interactive);
+  --mg-color-tag--hover:           var(--mg-color-interactive-active);
+  --mg-color-tag-secondary:        var(--mg-color-neutral-500);
+  --mg-color-tag-secondary--hover: var(--mg-color-neutral-600);
+  --mg-color-tag-accent:           var(--mg-color-orange-900);
+  --mg-color-tag-accent--hover:    var(--mg-color-orange-800);
+
+  // Buttons
+  --mg-color-button:               var(--mg-color-neutral-0);
+  --mg-color-button--hover:        var(--mg-color-neutral-0);
+  --mg-color-button-background:    var(--mg-color-interactive);
+  --mg-color-button-background--hover: var(--mg-color-interactive-active);
+  --mg-color-button-secondary-background: var(--mg-color-blue-800);
+  --mg-color-button-secondary-background--hover: var(--mg-color-blue-700);
+  --mg-color-text-button:          var(--mg-color-neutral-0);
+  --mg-border-color-button:        var(--mg-color-text-button);
+
+  // Form
+  --mg-color-form-check:           var(--mg-color-interactive);
+  --mg-color-form-check--hover:    var(--mg-color-interactive-active);
+  --mg-color-form-check--checked:  var(--mg-color-interactive);
+  --mg-color-form-focus:           var(--mg-color-interactive);
+
+  // Brand hierarchy
+  --mg-color-secondary:            var(--mg-color-orange-800);
+  --mg-color-tertiary:             var(--mg-color-neutral-900);
+  --mg-color-quaternary:           var(--mg-color-red-800);
+
+  // Hero
+  --mg-color-hero:                 var(--mg-color-interactive);
+  --mg-color-hero--secondary:      var(--mg-color-secondary);
+  --mg-color-hero--tertiary:       var(--mg-color-tertiary);
+  --mg-color-hero--quaternary:     var(--mg-color-quaternary);
+  --mg-color-hero-title:           var(--mg-color-neutral-0);
+  --mg-color-hero-button-secondary-background: rgb(var(--mg-color-neutral-0) / 0.9);
+  --mg-color-hero-button-secondary-color: var(--mg-color-hero);
+  --mg-border-color-hero-button-secondary: var(--mg-color-neutral-0);
+
+  // Mega menu
+  --mg-color-mega-content-bg:      var(--mg-color-button);
+
+  // Modal
+  --mg-color-modal-scrim:          rgb(var(--mg-color-neutral-900) / 0.85);
+
+  // Legacy one-off colors (hardcoded — no palette backing)
+  --mg-color-green:                #008484;
+  --mg-color-green-light:          #90ee90;
+  --mg-color-green-dark:           #006400;
+  --mg-color-yellow:               #ff0;
+  --mg-color-yellow-light:         lightyellow;
+  --mg-color-yellow-dark:          #d6d624;
+  --mg-color-azure:                #f0ffff;
+  --mg-color-azure-dark:           #d4e3e3;
+  --mg-color-azure-light:          #f0f8f8;
+  --mg-color-ebony-clay:           #3d4242;
+
+  // Sendai Framework
+  --sendai-red-400:     #d45363;
+  --sendai-red-600:     #cd3a4d;
+  --sendai-red-800:     #c72236;
+  --sendai-red-900:     #c10920;
+  --sendai-red:         var(--sendai-red-900);
+  --sendai-orange-400:  #f19e6a;
+  --sendai-orange-600:  #ef9155;
+  --sendai-orange-800:  #ed833f;
+  --sendai-orange-900:  #eb752a;
+  --sendai-orange:      var(--sendai-orange-900);
+  --sendai-purple-400:  #b669ab;
+  --sendai-purple-600:  #ab549f;
+  --sendai-purple-800:  #a13e93;
+  --sendai-purple-900:  #962987;
+  --sendai-purple:      var(--sendai-purple-900);
+  --sendai-turquoise-400: #4dc7c6;
+  --sendai-turquoise-600: #33bfbe;
+  --sendai-turquoise-800: #1ab7b6;
+  --sendai-turquoise-900: #00afae;
+  --sendai-turquoise:   var(--sendai-turquoise-900);
+
+  // UNDRR
+  --undrr-color-corporate-blue: var(--mg-color-blue-900);
+}
+
+:root {
+  // Container
+  --mg-container-spacer:         var(--mg-spacing-150);
+
+  // Tag
+  --mg-radius-tag:               var(--mg-spacing-0);
+
+  // Button
+  --mg-radius-button:            var(--mg-spacing-0);
+  --mg-border-width-button:      1px;
+  --mg-padding-button:           var(--mg-spacing-100) var(--mg-spacing-150);
+  --mg-font-size-button:         #{$mg-font-size-250};
+
+  // Form
+  --mg-radius-form-input:        var(--mg-spacing-0);
+
+  // Card
+  --mg-card-background:          none;
+  --mg-card-padding:             0rem;
+  --mg-card-border-radius:       0;
+  --mg-card-icon-badge-radius:   20%;
+
+  // CTA
+  --mg-cta-padding:              var(--mg-spacing-400) 0;
+
+  // Author image
+  --mg-author-image-radius:      50%;
+
+  // Hero
+  --mg-opacity-hero:             0.85;
+  --mg-spacing-hero-overlay:     0;
+  --mg-hero-overlay-max-width:   #{$mg-width-400};
+  --mg-hero-overlay-padding:     var(--mg-spacing-200);
+
+  // Widths (build-time resolved)
+  --mg-width-150:                #{$mg-width-150};
+  --mg-width-300:                #{$mg-width-300};
+  --mg-width-400:                #{$mg-width-400};
+  --mg-width-600:                #{$mg-width-600};
+
+  // Z-index (named stacking contexts)
+  --mg-z-index-behind:     -1;
+  --mg-z-index-nav:        10;
+  --mg-z-index-sticky:     11;
+  --mg-z-index-nav-toggle: 14;
+  --mg-z-index-header:     22;
+  --mg-z-index-drawer:     2000;
+  --mg-z-index-dropdown:   2500;
+  --mg-z-index-modal:      5000;
+  --mg-z-index-toast:      5500;
+}
 
 /**
   * @tokens-end
