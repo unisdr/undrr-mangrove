@@ -38,13 +38,44 @@ The raw color palette scales in `_variables.scss`:
 
 Sendai colors (`$sendai-*`) and deprecated UNDP colors (`$mg-color-green`, `$mg-color-azure`, etc.) are **excluded** — they are not part of the core palette and will be addressed separately.
 
+### Color format: space-separated RGB channels
+
+All palette colors are stored as space-separated RGB channel values, not hex strings. This makes every color automatically alpha-capable with no extra variables, and eliminates the need for `-rgb` twin properties.
+
+```scss
+:root {
+  --mg-color-blue-900: 0 79 145;
+  --mg-color-neutral-900: 0 0 0;
+  --mg-color-neutral-0: 255 255 255;
+}
+```
+
+Usage in component SCSS:
+
+```scss
+color: rgb(var(--mg-color-blue-900));               // solid
+background: rgb(var(--mg-color-blue-900) / 0.15);   // with alpha
+```
+
+SCSS aliases follow the same pattern — the alias value is the `var()` reference, and usages in component SCSS that currently call `rgba($mg-color-X, 0.5)` migrate to `rgb(var(--mg-color-X) / 0.5)`. Because Phase A keeps SCSS aliases in place and does not change component SCSS, `rgba()` call sites in components are **not** updated in Phase A — they are addressed when each component is migrated end-to-end (Phase C and beyond).
+
+**`$mg-color-modal-scrim` edge case:** This semantic variable is defined in `_variables.scss` as `rgba($mg-color-neutral-900, 0.85)`. Once `$mg-color-neutral-900` aliases to `var(--mg-color-neutral-900)`, Sass cannot evaluate the `rgba()` call at build time. Fix: rewrite the definition to use `rgb()` with the channel variable directly:
+
+```scss
+$mg-color-modal-scrim: rgb(var(--mg-color-neutral-900) / 0.85) !default;
+```
+
+This is the only semantic variable definition that must change in Phase A.
+
+**Future:** OKLCH (perceptually uniform, better for palette generation) is the intended color space for v3. The channel approach adopted here is a stepping stone — the infrastructure is identical, only the channel format changes.
+
 ### Pattern for each variable
 
 Every palette variable follows this three-part structure in `_variables.scss`:
 
 ```scss
-// Raw value — private, used only to populate :root
-$_mg-color-blue-900--raw: #004f91;
+// Raw channel values — private, used only to populate :root
+$_mg-color-blue-900--raw: 0 79 145;
 
 // :root emission — the CSS custom property
 :root {
@@ -55,45 +86,7 @@ $_mg-color-blue-900--raw: #004f91;
 $mg-color-blue-900: var(--mg-color-blue-900);
 ```
 
-The `--raw` private variable uses the `$_` prefix (single leading underscore by Sass convention indicates internal/private) and the `--raw` suffix to make its role unambiguous. It is never referenced outside `_variables.scss`.
-
-The interpolation `#{$_mg-color-blue-900--raw}` is required because Sass would otherwise emit `var(...)` rather than the literal hex value inside the `:root` block.
-
-### RGB channel twins
-
-Only two palette variables are used inside `rgba()` calls in component SCSS:
-
-- `$mg-color-neutral-600` (card borders)
-- `$mg-color-neutral-900` (modal scrim, hero overlay)
-
-These receive `-rgb` channel variants alongside the standard property:
-
-```scss
-:root {
-  --mg-color-neutral-900:     #000000;
-  --mg-color-neutral-900-rgb: 0 0 0;
-}
-```
-
-The corresponding `rgba()` call sites in component SCSS are updated to use the modern syntax:
-
-```scss
-// Before
-background-color: rgba($mg-color-neutral-900, 0.85);
-
-// After
-background-color: rgb(var(--mg-color-neutral-900-rgb) / 0.85);
-```
-
-No other palette variables need `-rgb` twins in this pilot. The `rgba()` calls that use semantic variables (`$mg-color-interactive`, `$mg-color-white`) are not affected by Phase A.
-
-**Edge case:** `$mg-color-modal-scrim` is defined in `_variables.scss` as `rgba($mg-color-neutral-900, 0.85)`. After Phase A aliases `$mg-color-neutral-900` to `var(--mg-color-neutral-900)`, this Sass call breaks at compile time. Fix: rewrite the `$mg-color-modal-scrim` definition to use the `$_raw` private variable:
-
-```scss
-$mg-color-modal-scrim: rgb(var(--mg-color-neutral-900-rgb) / 0.85) !default;
-```
-
-This is the only semantic variable definition that must be updated as part of Phase A.
+The `$_` prefix and `--raw` suffix mark the private variable as internal. It is never referenced outside `_variables.scss`. The interpolation `#{...}` is required so Sass emits the channel values literally rather than attempting to evaluate them.
 
 ### What stays SCSS-only
 
@@ -188,7 +181,7 @@ As the v2.0 migration progresses, content moves from `_variables-mcr.scss` into 
   --mg-color-tab-border:               #ded0d7; /* mcr-purple-200 */
   --mg-color-tab-border--hover:        #6e2677;
   --mg-color-tab-border--active:       #ded0d7;
-  --mg-color-tab-background--hover:    rgb(110 38 119 / 0.6); /* mcr-purple-800 at 60% */
+  --mg-color-tab-background--hover:    rgb(var(--mg-color-mcr-purple-800) / 0.6);
   --mg-radius-tab:                     var(--mg-spacing-150) var(--mg-spacing-150) 0 0;
   --mg-padding-tab:                    var(--mg-spacing-200) var(--mg-spacing-300);
   --mg-color-text-tab:                 #333333; /* mg-color-neutral-700 */
@@ -196,7 +189,7 @@ As the v2.0 migration progresses, content moves from `_variables-mcr.scss` into 
   --mg-color-text-tab-active:          #ffffff;
   --mg-padding-tab-section:            var(--mg-spacing-500);
   --mg-radius-tab-section:             var(--mg-spacing-200);
-  --mg-box-shadow-tab-section:         rgb(0 0 0 / 0.24) 0 6px 5px 0;
+  --mg-box-shadow-tab-section:         rgb(var(--mg-color-neutral-900) / 0.24) 0 6px 5px 0;
   --mg-color-tabbar-background:        none;
 }
 ```
@@ -241,7 +234,8 @@ Findings feed directly into the v2.0 full migration plan.
 ## Acceptance criteria
 
 - [ ] All raw palette color variables (`$mg-color-blue-*`, orange, red, neutral, accent) emitted as CSS custom properties on `:root`
-- [ ] `$mg-color-neutral-600` and `$mg-color-neutral-900` have `-rgb` channel twins; `rgba()` call sites updated to `rgb(var() / alpha)` syntax
+- [ ] All palette colors stored as space-separated RGB channels (`--mg-color-X: R G B`), not hex strings
+- [ ] `$mg-color-modal-scrim` definition updated to `rgb(var(--mg-color-neutral-900) / 0.85)` — the only semantic variable changed in Phase A
 - [ ] SCSS aliases (`$mg-color-X: var(--mg-color-X)`) in place for all Phase A variables; existing component SCSS compiles without changes
 - [ ] Tab component SCSS uses `var(--mg-*)` for all tab-specific tokens; no remaining `$mg-color-tab-*` or `$mg-radius-tab` references
 - [ ] Spacing scale (`$mg-spacing-*`) emitted as `--mg-spacing-*` custom properties on `:root` with SCSS aliases
