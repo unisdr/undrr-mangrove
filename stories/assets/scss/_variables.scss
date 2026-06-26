@@ -37,13 +37,6 @@ $img-path-Icon: "~/stories/assets/icons"; // BUILD-TIME ONLY
 $img-path-Iconback: "~/stories/assets/icons"; // BUILD-TIME ONLY
 $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
 
-/**
- * @tokens Colors - basic
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
 // MG-COLORS BLUE SHADES (#004f91)
 :root {
   --mg-color-blue-50:  230 237 244;
@@ -86,13 +79,6 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
   --mg-color-red-900: 193 9 32;
 }
 
-/**
- * @tokens Colors - neutral
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
 // MG-COLORS NEUTRAL
 :root {
   --mg-color-neutral-0:   255 255 255;
@@ -109,13 +95,6 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
   --mg-color-neutral-900: 0 0 0;
 }
 
-/**
- * @tokens Colors - accent
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
 // MG-COLORS ACCENT
 :root {
   --mg-color-accent-100: 244 228 150;
@@ -125,29 +104,7 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
 }
 
 /**
- * @tokens Colors - interactive
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-/**
- * @tokens UNDRR Colors
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-/**
- * @tokens Sendai Framework Colors
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
-/**
- * @tokens Spacing
- * @presenter Spacing
+ * Spacing scale — CSS custom properties emitted to :root.
  */
 :root {
   --mg-spacing-0:    0;
@@ -167,13 +124,6 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
   --mg-spacing-800:  #{mg-rem(100)};
   --mg-spacing-1000: #{mg-rem(400)};
 }
-
-/**
- * @tokens Font sizes
- * @presenter FontSize
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
 
 $mg-font-size-100: mg-rem(10);
 $mg-font-size-150: mg-rem(11.25);
@@ -222,13 +172,6 @@ $mg-font-line-height-700: 1.5em;
   }
 }
 
-/**
- * @tokens Font families
- * @presenter FontFamily
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
-
 $mg-font-family: "Roboto", sans-serif;
 $mg-font-family-condensed: "Roboto Condensed", sans-serif;
 $mg-font-family-headings: $mg-font-family-condensed !default;
@@ -241,11 +184,6 @@ $mg-font-family-arabic-body: "Dubai", sans-serif;
 // $mg-font-family-icons: "mangrove-icon-set";
 // Not yet activated as we are using the FontAwesome namespace
 
-/**
- * @tokens Breakpoints
- * @presenter Spacing
- */
-
 // BUILD-TIME ONLY — breakpoints cannot be CSS custom properties.
 // @media queries require static values resolved at compile time; var() is invalid there.
 // Do not add --mg-breakpoint-* custom properties.
@@ -253,13 +191,6 @@ $mg-breakpoint-mobile: 480px;
 $mg-breakpoint-tablet: 900px;
 $mg-breakpoint-desktop: 1164px;
 $mg-breakpoint-desktop-wide: 1440px;
-
-/**
- * @tokens Colors - component
- * @presenter Color
- *
- * https://github.com/UX-and-I/storybook-design-token
- */
 
 // tabs
 // BUILD-TIME ONLY: $mg-tabs-border-bottom drives @if conditional in tab.scss.
@@ -287,21 +218,12 @@ $mg-tabs-border-bottom: true !default;
   --mg-box-shadow-tab-section:       none;
 }
 
-/**
- * @tokens Component sizing
- * @presenter Spacing
- */
-
 // Z-index layers: use these named tokens for global stacking contexts
 // (fixed, sticky, or portaled elements). One token per UI concept — backdrops
 // and sub-layers use $token - 1 / $token + 1 arithmetic within the component
 // SCSS rather than separate variables. Local stacking within a component's own
 // isolated context uses raw values with an explanatory comment.
 // Pick the nearest existing layer; open a GitHub discussion before adding one.
-
-/**
- * @tokens Z-index layers
- */
 
 :root {
   // Interactive
@@ -447,10 +369,6 @@ $mg-tabs-border-bottom: true !default;
   --mg-z-index-modal:      5000;
   --mg-z-index-toast:      5500;
 }
-
-/**
-  * @tokens-end
-  */
 
 // Header height
 $header-height-xlarge: 115px;
