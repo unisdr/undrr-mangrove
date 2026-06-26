@@ -19,7 +19,7 @@
   }
 
   &__text {
-    color: rgba($mg-color-white, 0.9);
+    color: rgb(var(--mg-color-neutral-0) / 0.9);
     margin-bottom: $mg-spacing-150;
 
     p {

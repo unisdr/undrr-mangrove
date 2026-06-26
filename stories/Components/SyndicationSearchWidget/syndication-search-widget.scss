@@ -456,7 +456,7 @@ $search-input-padding-x: $mg-spacing-250;
 
     em {
       font-style: normal;
-      background: rgba($search-primary, 0.1);
+      background: rgb(var(--mg-color-blue-900) / 0.1);
       padding: 0 2px;
     }
   }
@@ -496,7 +496,7 @@ $search-input-padding-x: $mg-spacing-250;
 
   em {
     font-style: normal;
-    background: rgba($search-primary, 0.1);
+    background: rgb(var(--mg-color-blue-900) / 0.1);
     padding: 0 2px;
   }
 }
@@ -680,7 +680,7 @@ $search-input-padding-x: $mg-spacing-250;
   &:focus {
     outline: none;
     border-color: $search-primary;
-    box-shadow: 0 0 0 2px rgba($search-primary, 0.15);
+    box-shadow: 0 0 0 2px rgb(var(--mg-color-blue-900) / 0.15);
   }
 
   &[multiple] {
@@ -1059,7 +1059,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &--selected {
-    background-color: rgba($search-primary, 0.08);
+    background-color: rgb(var(--mg-color-blue-900) / 0.08);
 
     .mg-select__option-label {
       font-weight: 600;
@@ -1068,7 +1068,7 @@ $search-input-padding-x: $mg-spacing-250;
   }
 
   &--selected#{&}--highlighted {
-    background-color: rgba($search-primary, 0.12);
+    background-color: rgb(var(--mg-color-blue-900) / 0.12);
   }
 }
 
@@ -1158,7 +1158,7 @@ $search-input-padding-x: $mg-spacing-250;
   transition: background-color 0.15s ease;
 
   &:hover {
-    background-color: rgba($search-primary, 0.05);
+    background-color: rgb(var(--mg-color-blue-900) / 0.05);
   }
 
   input[type="checkbox"],
@@ -1184,7 +1184,7 @@ $search-input-padding-x: $mg-spacing-250;
 
   // Selected/checked state
   &:has(input:checked) {
-    background-color: rgba($search-primary, 0.08);
+    background-color: rgb(var(--mg-color-blue-900) / 0.08);
 
     label {
       font-weight: 600;

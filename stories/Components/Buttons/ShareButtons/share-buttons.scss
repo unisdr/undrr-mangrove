@@ -37,7 +37,7 @@
   border: $mg-border-width-button solid $mg-border-color-button;
 
   &:hover {
-    background-color: rgba($mg-color-button-background--hover, 0.8);
+    background-color: rgb(var(--mg-color-blue-700) / 0.8);
   }
 
   &:focus-visible {
@@ -56,7 +56,7 @@
   color: $mg-color-button;
   font-family: $mg-font-family;
   padding: $mg-spacing-100;
-  background-color: rgba($mg-color-button-background, 1);
+  background-color: rgb(var(--mg-color-blue-900));
 
   &:hover .mg-share__copy-text {
     text-decoration: underline;
@@ -95,7 +95,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba($mg-color-button-background, 0.5);
+  background-color: rgb(var(--mg-color-blue-900) / 0.5);
 
   img {
     width: 18px;

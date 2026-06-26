@@ -53,7 +53,7 @@
 
   &__overlay {
     align-items: center;
-    background-color: rgba($mg-color-hero, $mg-opacity-hero);
+    background-color: rgb(var(--mg-color-blue-900) / #{$mg-opacity-hero});
     display: grid;
     margin: $mg-spacing-hero-overlay;
     max-width: $mg-hero-overlay-max-width;
@@ -179,20 +179,20 @@
 }
 
 // Stylistic variants
-$variant-colours: (
-  "secondary": $mg-color-hero--secondary,
-  "tertiary": $mg-color-hero--tertiary,
-  "quaternary": $mg-color-hero--quaternary,
+$variant-colour-props: (
+  "secondary": "--mg-color-orange-800",
+  "tertiary":  "--mg-color-neutral-900",
+  "quaternary": "--mg-color-red-800",
 );
 
-@each $name, $color in $variant-colours {
+@each $name, $prop in $variant-colour-props {
   .mg-hero--#{$name} .mg-hero__overlay {
-    background-color: rgba($color, $mg-opacity-hero);
+    background-color: rgb(var(#{$prop}) / #{$mg-opacity-hero});
 
     a.mg-button,
     a.mg-button:hover,
     a.mg-button:visited {
-      color: #{$color};
+      color: rgb(var(#{$prop}));
     }
 
     // Preserve secondary button's dedicated tokens over the generic color above
@@ -359,14 +359,14 @@ $variant-colours: (
 }
 
 // Variant colours at full opacity for split (no rgba wrapper needed — no photo underneath)
-@each $name, $color in $variant-colours {
+@each $name, $prop in $variant-colour-props {
   .mg-hero--split.mg-hero--#{$name} {
-    background-color: $color;
+    background-color: rgb(var(#{$prop}));
 
     a.mg-button,
     a.mg-button:hover,
     a.mg-button:visited {
-      color: #{$color};
+      color: rgb(var(#{$prop}));
     }
   }
 }

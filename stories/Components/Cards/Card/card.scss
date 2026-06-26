@@ -526,7 +526,7 @@ $card-variant-colours: (
     }
 
     .mg-card__label {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     .mg-card__title,
@@ -535,7 +535,7 @@ $card-variant-colours: (
     }
 
     .mg-card__summary {
-      color: rgba($mg-color-white, 0.8);
+      color: rgb(var(--mg-color-neutral-0) / 0.8);
     }
 
     .mg-card__link a {

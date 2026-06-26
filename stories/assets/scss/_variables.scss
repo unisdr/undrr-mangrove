@@ -69,16 +69,16 @@ $_mg-color-blue-900--raw: 0 79 145;
   --mg-color-blue-900: #{$_mg-color-blue-900--raw};
 }
 
-$mg-color-blue-50:  var(--mg-color-blue-50);
-$mg-color-blue-100: var(--mg-color-blue-100);
-$mg-color-blue-200: var(--mg-color-blue-200);
-$mg-color-blue-300: var(--mg-color-blue-300);
-$mg-color-blue-400: var(--mg-color-blue-400);
-$mg-color-blue-500: var(--mg-color-blue-500);
-$mg-color-blue-600: var(--mg-color-blue-600);
-$mg-color-blue-700: var(--mg-color-blue-700);
-$mg-color-blue-800: var(--mg-color-blue-800);
-$mg-color-blue-900: var(--mg-color-blue-900);
+$mg-color-blue-50:  rgb(var(--mg-color-blue-50));
+$mg-color-blue-100: rgb(var(--mg-color-blue-100));
+$mg-color-blue-200: rgb(var(--mg-color-blue-200));
+$mg-color-blue-300: rgb(var(--mg-color-blue-300));
+$mg-color-blue-400: rgb(var(--mg-color-blue-400));
+$mg-color-blue-500: rgb(var(--mg-color-blue-500));
+$mg-color-blue-600: rgb(var(--mg-color-blue-600));
+$mg-color-blue-700: rgb(var(--mg-color-blue-700));
+$mg-color-blue-800: rgb(var(--mg-color-blue-800));
+$mg-color-blue-900: rgb(var(--mg-color-blue-900));
 
 // MG-COLORS ORANGE SHADES (#eb752a)
 $_mg-color-orange-50--raw: 253 241 234;
@@ -105,16 +105,16 @@ $_mg-color-orange-900--raw: 235 117 42;
   --mg-color-orange-900: #{$_mg-color-orange-900--raw};
 }
 
-$mg-color-orange-50:  var(--mg-color-orange-50);
-$mg-color-orange-100: var(--mg-color-orange-100);
-$mg-color-orange-200: var(--mg-color-orange-200);
-$mg-color-orange-300: var(--mg-color-orange-300);
-$mg-color-orange-400: var(--mg-color-orange-400);
-$mg-color-orange-500: var(--mg-color-orange-500);
-$mg-color-orange-600: var(--mg-color-orange-600);
-$mg-color-orange-700: var(--mg-color-orange-700);
-$mg-color-orange-800: var(--mg-color-orange-800);
-$mg-color-orange-900: var(--mg-color-orange-900);
+$mg-color-orange-50:  rgb(var(--mg-color-orange-50));
+$mg-color-orange-100: rgb(var(--mg-color-orange-100));
+$mg-color-orange-200: rgb(var(--mg-color-orange-200));
+$mg-color-orange-300: rgb(var(--mg-color-orange-300));
+$mg-color-orange-400: rgb(var(--mg-color-orange-400));
+$mg-color-orange-500: rgb(var(--mg-color-orange-500));
+$mg-color-orange-600: rgb(var(--mg-color-orange-600));
+$mg-color-orange-700: rgb(var(--mg-color-orange-700));
+$mg-color-orange-800: rgb(var(--mg-color-orange-800));
+$mg-color-orange-900: rgb(var(--mg-color-orange-900));
 
 // MG-COLORS RED SHADES (#c10920)
 $_mg-color-red-50--raw: 249 230 233;
@@ -141,16 +141,16 @@ $_mg-color-red-900--raw: 193 9 32;
   --mg-color-red-900: #{$_mg-color-red-900--raw};
 }
 
-$mg-color-red-50:  var(--mg-color-red-50);
-$mg-color-red-100: var(--mg-color-red-100);
-$mg-color-red-200: var(--mg-color-red-200);
-$mg-color-red-300: var(--mg-color-red-300);
-$mg-color-red-400: var(--mg-color-red-400);
-$mg-color-red-500: var(--mg-color-red-500);
-$mg-color-red-600: var(--mg-color-red-600);
-$mg-color-red-700: var(--mg-color-red-700);
-$mg-color-red-800: var(--mg-color-red-800);
-$mg-color-red-900: var(--mg-color-red-900);
+$mg-color-red-50:  rgb(var(--mg-color-red-50));
+$mg-color-red-100: rgb(var(--mg-color-red-100));
+$mg-color-red-200: rgb(var(--mg-color-red-200));
+$mg-color-red-300: rgb(var(--mg-color-red-300));
+$mg-color-red-400: rgb(var(--mg-color-red-400));
+$mg-color-red-500: rgb(var(--mg-color-red-500));
+$mg-color-red-600: rgb(var(--mg-color-red-600));
+$mg-color-red-700: rgb(var(--mg-color-red-700));
+$mg-color-red-800: rgb(var(--mg-color-red-800));
+$mg-color-red-900: rgb(var(--mg-color-red-900));
 
 /**
  * @tokens Colors - neutral
@@ -188,20 +188,20 @@ $_mg-color-neutral-900--raw: 0 0 0;
   --mg-color-neutral-900: #{$_mg-color-neutral-900--raw};
 }
 
-$mg-color-neutral-0:   var(--mg-color-neutral-0);
-$mg-color-neutral-25:  var(--mg-color-neutral-25);
-$mg-color-neutral-50:  var(--mg-color-neutral-50);
-$mg-color-neutral-100: var(--mg-color-neutral-100);
-$mg-color-neutral-200: var(--mg-color-neutral-200);
-$mg-color-neutral-300: var(--mg-color-neutral-300);
-$mg-color-neutral-400: var(--mg-color-neutral-400);
-$mg-color-neutral-500: var(--mg-color-neutral-500);
-$mg-color-neutral-600: var(--mg-color-neutral-600);
-$mg-color-neutral-700: var(--mg-color-neutral-700);
-$mg-color-neutral-800: var(--mg-color-neutral-800);
-$mg-color-neutral-900: var(--mg-color-neutral-900);
-$mg-color-black: var(--mg-color-neutral-800);
-$mg-color-white: var(--mg-color-neutral-0);
+$mg-color-neutral-0:   rgb(var(--mg-color-neutral-0));
+$mg-color-neutral-25:  rgb(var(--mg-color-neutral-25));
+$mg-color-neutral-50:  rgb(var(--mg-color-neutral-50));
+$mg-color-neutral-100: rgb(var(--mg-color-neutral-100));
+$mg-color-neutral-200: rgb(var(--mg-color-neutral-200));
+$mg-color-neutral-300: rgb(var(--mg-color-neutral-300));
+$mg-color-neutral-400: rgb(var(--mg-color-neutral-400));
+$mg-color-neutral-500: rgb(var(--mg-color-neutral-500));
+$mg-color-neutral-600: rgb(var(--mg-color-neutral-600));
+$mg-color-neutral-700: rgb(var(--mg-color-neutral-700));
+$mg-color-neutral-800: rgb(var(--mg-color-neutral-800));
+$mg-color-neutral-900: rgb(var(--mg-color-neutral-900));
+$mg-color-black: rgb(var(--mg-color-neutral-800));
+$mg-color-white: rgb(var(--mg-color-neutral-0));
 
 /**
  * @tokens Colors - accent
@@ -223,10 +223,10 @@ $_mg-color-accent-400--raw: 10 105 105;
   --mg-color-accent-400: #{$_mg-color-accent-400--raw};
 }
 
-$mg-color-accent-100: var(--mg-color-accent-100);
-$mg-color-accent-200: var(--mg-color-accent-200);
-$mg-color-accent-300: var(--mg-color-accent-300);
-$mg-color-accent-400: var(--mg-color-accent-400);
+$mg-color-accent-100: rgb(var(--mg-color-accent-100));
+$mg-color-accent-200: rgb(var(--mg-color-accent-200));
+$mg-color-accent-300: rgb(var(--mg-color-accent-300));
+$mg-color-accent-400: rgb(var(--mg-color-accent-400));
 
 /**
  * @tokens Colors - interactive
