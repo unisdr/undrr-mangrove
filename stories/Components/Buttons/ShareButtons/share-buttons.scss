@@ -6,7 +6,7 @@
 }
 
 .mg-share__header {
-  font-family: var(--mg-font-family);
+  font-family: $mg-font-family;
   color: var(--mg-color-text);
   font-weight: 600;
   font-size: $mg-font-size-300;
@@ -54,7 +54,7 @@
   cursor: pointer;
   border: 0 solid var(--mg-border-color-button);
   color: var(--mg-color-button);
-  font-family: var(--mg-font-family);
+  font-family: $mg-font-family;
   padding: var(--mg-spacing-100);
   background-color: rgb(var(--mg-color-blue-900));
 

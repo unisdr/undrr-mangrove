@@ -17,7 +17,7 @@
       content: "";
       display: inline-flex;
       height: 22px;
-      margin-left: -var(--mg-spacing-25);
+      margin-left: calc(-1 * var(--mg-spacing-25));
       margin-right: var(--mg-spacing-25);
       padding-right: mg-rem(14);
       position: relative;
@@ -30,6 +30,6 @@
 [dir="rtl"] {
   .mg-chip__cross::before {
     margin-left: var(--mg-spacing-25);
-    margin-right: -var(--mg-spacing-25);
+    margin-right: calc(-1 * var(--mg-spacing-25));
   }
 }

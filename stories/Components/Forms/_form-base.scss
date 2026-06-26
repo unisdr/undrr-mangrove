@@ -37,7 +37,7 @@
   border-radius: var(--mg-radius-form-input);
   box-sizing: border-box;
   display: block;
-  font-family: var(--mg-font-family);
+  font-family: $mg-font-family;
   font-size: $mg-font-size-300;
   height: 46px;
   margin-top: var(--mg-spacing-25);
@@ -109,7 +109,7 @@
   box-sizing: border-box;
   cursor: pointer;
   display: block;
-  font-family: var(--mg-font-family);
+  font-family: $mg-font-family;
   font-size: $mg-font-size-300;
   height: 46px;
   margin-top: var(--mg-spacing-25);

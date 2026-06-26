@@ -97,7 +97,7 @@
     color: var(--mg-color-tag);
     cursor: pointer;
     display: inline-block;
-    font-size: var(--mg-font-tag);
+    font-size: $mg-font-tag;
     margin-right: var(--mg-spacing-50);
 
     &:hover {
@@ -109,7 +109,7 @@
     font-family: $mg-font-family-headings;
     font-size: $mg-font-size-500;
     font-weight: bold;
-    line-height: var(--mg-font-line-height-500);
+    line-height: $mg-font-line-height-500;
     padding-bottom: var(--mg-spacing-75);
     padding-top: var(--mg-spacing-100);
 
@@ -283,7 +283,7 @@ $card-variant-colours: (
 
   // Classification label above the icon/image inside the visual area
   .mg-card__visual-label {
-    font-size: var(--mg-font-tag);
+    font-size: $mg-font-tag;
     font-weight: 700;
     color: var(--mg-color-tag);
     width: 100%;
@@ -452,7 +452,7 @@ $card-variant-colours: (
     margin: 0;
     font-size: $mg-font-size-500;
     font-weight: bold;
-    line-height: var(--mg-font-line-height-500);
+    line-height: $mg-font-line-height-500;
 
     a {
       color: var(--mg-color-interactive);
