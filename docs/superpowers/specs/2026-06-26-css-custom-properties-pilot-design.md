@@ -17,7 +17,7 @@ Two sequential phases in one branch:
 
 ## What this pilot does NOT cover
 
-- Spacing, typography, breakpoints, or any non-color variables.
+- Spacing, typography, breakpoints, or any non-color variables (except spacing custom properties needed for Phase C MCR overrides — see below).
 - Any component other than Tab in Phase C.
 - Removing the SCSS alias layer (that happens in the full v2.0 migration).
 - The `@use`/`@forward` Dart Sass migration (tracked separately in #683, bundled at v2.0).
@@ -143,7 +143,7 @@ Note: `$mg-tabs-border-bottom` is **not migrated** (see below).
 
 All `$mg-color-tab-*`, `$mg-radius-tab`, `$mg-padding-tab`, `$mg-box-shadow-tab-section`, and `$mg-color-text-tab-*` references are replaced with their `var(--mg-*)` equivalents.
 
-References to `$mg-spacing-*`, `$mg-breakpoint-*`, `$mg-font-*`, and `$mg-font-family-*` are left as SCSS variables — spacing and typography are out of scope for this pilot.
+References to `$mg-spacing-*`, `$mg-breakpoint-*`, `$mg-font-*`, and `$mg-font-family-*` are left as SCSS variables — spacing and typography are out of scope for this pilot. Exception: the spacing values used by Tab's MCR overrides require `--mg-spacing-*` custom properties to exist (see Phase C MCR overrides below).
 
 The `@if $mg-tabs-border-bottom` block stays as-is with an explicit comment:
 
@@ -156,31 +156,52 @@ The `@if $mg-tabs-border-bottom` block stays as-is with an explicit comment:
 }
 ```
 
-### MCR theme overrides for Tab
+### Spacing custom properties (required for Phase C)
 
-The Tab section of `_variables-mcr.scss` is removed and replaced with a scoped selector block. Location: either at the end of `_variables-mcr.scss`, or in a new `_theme-mcr.scss` if the team wants to separate theme CSS from build-time configuration — this is an open question for the PR review.
+The MCR tab overrides use spacing values (`$mg-spacing-150`, `$mg-spacing-200`, `$mg-spacing-300`, `$mg-spacing-500`) for radius and padding. For the `.mg-theme-mcr` selector to reference these cleanly without hardcoded values, the spacing scale must be emitted as custom properties first.
+
+The full spacing scale is emitted on `:root` in `_variables.scss` using the same `$_raw` / `:root` / alias pattern as Phase A colors. SCSS aliases (`$mg-spacing-X: var(--mg-spacing-X)`) are kept so existing component SCSS is unaffected.
+
+Note: spacing values are computed by `mg-rem()` at build time. The `$_raw` privates hold the rem-computed value:
 
 ```scss
+$_mg-spacing-150--raw: mg-rem(15); // → 0.9375rem (root=16)
+
+:root {
+  --mg-spacing-150: #{$_mg-spacing-150--raw};
+}
+
+$mg-spacing-150: var(--mg-spacing-150);
+```
+
+### MCR theme overrides for Tab
+
+The Tab section is removed from `_variables-mcr.scss` and placed in a new file `_theme-mcr.scss`. This separation is intentional: `_variables-mcr.scss` holds build-time Sass configuration (palette variables, `!default` overrides); `_theme-mcr.scss` holds runtime CSS custom property overrides as a scoped selector block.
+
+As the v2.0 migration progresses, content moves from `_variables-mcr.scss` into `_theme-mcr.scss`. When `_variables-mcr.scss` is empty, it is deleted. The two-file state is an honest progress indicator.
+
+```scss
+// _theme-mcr.scss
 .mg-theme-mcr {
-  --mg-color-tab-background:          #6e2677; /* mcr-purple-800 */
-  --mg-color-tab-background--inactive: #ffffff;
-  --mg-color-tab-border:              #ded0d7; /* mcr-purple-200 */
-  --mg-color-tab-border--hover:       #6e2677;
-  --mg-color-tab-border--active:      #ded0d7;
-  --mg-color-tab-background--hover:   rgb(110 38 119 / 0.6); /* mcr-purple-800 at 60% */
-  --mg-radius-tab:                    var(--mg-spacing-150) var(--mg-spacing-150) 0 0;
-  --mg-padding-tab:                   var(--mg-spacing-200) var(--mg-spacing-300);
-  --mg-color-text-tab:                #333333; /* mg-color-neutral-700 */
-  --mg-color-text-tab--hover:         #ffffff;
-  --mg-color-text-tab-active:         #ffffff;
-  --mg-padding-tab-section:           var(--mg-spacing-500);
-  --mg-radius-tab-section:            var(--mg-spacing-200);
-  --mg-box-shadow-tab-section:        rgb(0 0 0 / 0.24) 0 6px 5px 0;
-  --mg-color-tabbar-background:       none;
+  --mg-color-tab-background:           #6e2677; /* mcr-purple-800 */
+  --mg-color-tab-background--inactive:  #ffffff;
+  --mg-color-tab-border:               #ded0d7; /* mcr-purple-200 */
+  --mg-color-tab-border--hover:        #6e2677;
+  --mg-color-tab-border--active:       #ded0d7;
+  --mg-color-tab-background--hover:    rgb(110 38 119 / 0.6); /* mcr-purple-800 at 60% */
+  --mg-radius-tab:                     var(--mg-spacing-150) var(--mg-spacing-150) 0 0;
+  --mg-padding-tab:                    var(--mg-spacing-200) var(--mg-spacing-300);
+  --mg-color-text-tab:                 #333333; /* mg-color-neutral-700 */
+  --mg-color-text-tab--hover:          #ffffff;
+  --mg-color-text-tab-active:          #ffffff;
+  --mg-padding-tab-section:            var(--mg-spacing-500);
+  --mg-radius-tab-section:             var(--mg-spacing-200);
+  --mg-box-shadow-tab-section:         rgb(0 0 0 / 0.24) 0 6px 5px 0;
+  --mg-color-tabbar-background:        none;
 }
 ```
 
-Note: spacing custom properties (`--mg-spacing-*`) are not defined in this pilot. Until they are, the MCR theme overrides above use hardcoded values for spacing-derived properties rather than `var(--mg-spacing-*)`. A TODO comment marks each one.
+`_theme-mcr.scss` is `@import`ed (or `@use`d after #683) from `style-mcr.scss`, after `_variables-mcr.scss`.
 
 ### Applied in Drupal / HTML
 
@@ -192,14 +213,15 @@ The `.mg-theme-mcr` class is applied to `<body>` or a wrapping element by the Dr
 
 ```
 stories/assets/scss/
-  _variables.scss              # Emits :root { --mg-* } + $_raw privates + SCSS aliases
-  _variables-mcr.scss          # MCR palette + .mg-theme-mcr { --mg-* overrides }
-  _variables-irp.scss          # Unchanged in this pilot
+  _variables.scss               # Emits :root { --mg-* } for colors + spacing; $_raw privates; SCSS aliases
+  _variables-mcr.scss           # MCR build-time Sass config (shrinks as migration progresses; deleted when empty)
+  _theme-mcr.scss               # NEW: .mg-theme-mcr { --mg-* overrides } (runtime CSS)
+  _variables-irp.scss           # Unchanged in this pilot
   _variables-preventionweb.scss # Unchanged in this pilot
-  _variables-delta.scss        # Unchanged in this pilot
+  _variables-delta.scss         # Unchanged in this pilot
 
 stories/Components/Tab/
-  tab.scss                     # Uses var(--mg-*) for all tab tokens
+  tab.scss                      # Uses var(--mg-*) for all tab-specific tokens
 ```
 
 ---
@@ -222,9 +244,11 @@ Findings feed directly into the v2.0 full migration plan.
 - [ ] `$mg-color-neutral-600` and `$mg-color-neutral-900` have `-rgb` channel twins; `rgba()` call sites updated to `rgb(var() / alpha)` syntax
 - [ ] SCSS aliases (`$mg-color-X: var(--mg-color-X)`) in place for all Phase A variables; existing component SCSS compiles without changes
 - [ ] Tab component SCSS uses `var(--mg-*)` for all tab-specific tokens; no remaining `$mg-color-tab-*` or `$mg-radius-tab` references
-- [ ] MCR tab overrides expressed as `.mg-theme-mcr { --mg-* }` selector block; corresponding SCSS variable assignments removed from `_variables-mcr.scss`
+- [ ] Spacing scale (`$mg-spacing-*`) emitted as `--mg-spacing-*` custom properties on `:root` with SCSS aliases
+- [ ] `_theme-mcr.scss` created; Tab overrides expressed as `.mg-theme-mcr { --mg-* }` selector block
+- [ ] Corresponding Tab SCSS variable assignments removed from `_variables-mcr.scss`
+- [ ] `_theme-mcr.scss` imported in `style-mcr.scss` after `_variables-mcr.scss`
 - [ ] `$mg-tabs-border-bottom` boolean retained with `BUILD-TIME ONLY` comment block
 - [ ] Breakpoints, `$mg-html-font-size`, and path variables annotated with `BUILD-TIME ONLY` comments
 - [ ] Storybook builds and renders Tab component correctly in both default and MCR theme
 - [ ] No new Sass warnings or errors introduced
-- [ ] PR description documents the open question: should theme CSS live in `_variables-mcr.scss` or a separate `_theme-mcr.scss`?
