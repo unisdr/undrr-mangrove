@@ -263,7 +263,7 @@
   box-shadow: inset 0 5px 5px -3px rgb(0 0 0 / 0.2);
 
   // RTL-friendly border
-  border-inline-end: 2px solid rgba($mg-color-black, 0.2);
+  border-inline-end: 2px solid rgb(var(--mg-color-neutral-800) / 0.2);
 
   // Mobile-first: Hide section list on mobile
   .mg-mega-content__section-list {

@@ -60,10 +60,7 @@
   }
 
   &__success {
-    background-color: color.adjust(
-      $mg-color-interactive,
-      $lightness: -5%
-    ); // Slightly darker for better distinction
+    background-color: #14527a; // Slightly darker for better distinction (blue-900 darkened 5% lightness)
 
     color: $mg-color-white;
   }

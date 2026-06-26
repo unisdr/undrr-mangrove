@@ -332,7 +332,7 @@ $variant-colours: (
         position: absolute;
         inset-inline: 0;
         inset-block-end: 0;
-        background: rgba($mg-color-neutral-900, 0.75);
+        background: rgb(var(--mg-color-neutral-900) / 0.75);
         color: $mg-color-neutral-0;
         padding: $mg-spacing-50 $mg-spacing-100;
         display: flex;

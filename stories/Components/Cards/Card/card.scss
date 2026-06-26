@@ -59,7 +59,7 @@
   &__hc.mg-card-book__hc {
     .mg-card__visual {
       align-self: flex-start;
-      border: 1px solid rgba($mg-color-neutral-600, 0.2);
+      border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
       max-width: 200px;
       overflow: hidden;
 
@@ -247,7 +247,7 @@ $card-variant-colours: (
 
   .mg-card__visual {
     aspect-ratio: 3/4;
-    border: 1px solid rgba($mg-color-neutral-600, 0.2);
+    border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
   }
   .mg-card__title {
     font-size: $mg-font-size-300;
