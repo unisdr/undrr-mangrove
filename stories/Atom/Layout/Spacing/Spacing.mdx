@@ -50,7 +50,7 @@ export function SpacingRow({ token }) {
       <td style={{ padding: '6px 12px', fontFamily: 'monospace', fontSize: '13px' }}>{token}</td>
       <td style={{ padding: '6px 12px', fontSize: '13px' }}>{value || '—'}</td>
       <td style={{ padding: '6px 12px' }}>
-        <div style={{ width: value || 0, height: '16px', background: 'var(--mg-color-interactive, #004f91)', borderRadius: '2px', minWidth: value ? '2px' : 0 }} />
+        <div style={{ width: value || 0, height: '16px', background: 'var(--mg-color-interactive, #004f91)', borderRadius: '2px', minWidth: parseFloat(value) > 0 ? '2px' : 0 }} />
       </td>
     </tr>
   );
@@ -71,4 +71,4 @@ export function SpacingRow({ token }) {
 
 ### Usage
 
-Use of standard spaces are already applied on different components, if you want to change the space, that can be done in **stories/assets/scss/\_variables.scss**.
+Standard spacing values are applied across all components. To override spacing in a theme, set `--mg-spacing-*` custom properties on `:root` or inside a `.mg-theme-{name} { }` selector block in your theme file.
