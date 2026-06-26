@@ -1,11 +1,10 @@
 // MCR theme — runtime CSS custom property overrides.
 // Applied when .mg-theme-mcr is present on <body> or a wrapping element.
-//
 // As v2.0 migration progresses, sections move from _variables-mcr.scss into here.
 // When _variables-mcr.scss contains only comments, delete it.
 
 // MCR brand palette (local to this file — not emitted as global :root properties)
-$_mcr-purple--raw:     89 26 97;
+$_mcr-purple--raw: 89 26 97;
 $_mcr-purple-800--raw: 110 38 119;
 $_mcr-purple-200--raw: 222 208 215;
 
