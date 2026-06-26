@@ -510,24 +510,30 @@ $mg-border-color-hero-button-secondary: $mg-color-neutral-0 !default;
 $mg-color-mega-content-bg: $mg-color-button !default;
 
 // tabs
-$mg-color-tabbar-background: $mg-color-blue-50 !default;
-$mg-color-tab-background: $mg-color-blue-200 !default;
-$mg-color-tab-background--inactive: $mg-color-tabbar-background !default;
-$mg-color-tab-border: $mg-color-neutral-700 !default;
-$mg-color-tab-border--hover: $mg-color-neutral-900 !default;
-$mg-color-tab-border--active: $mg-color-blue-800 !default;
-$mg-color-tab-background--hover: $mg-color-blue-800 !default;
-$mg-radius-tab: $mg-spacing-0 !default;
-$mg-padding-tab: $mg-spacing-75 $mg-spacing-150 !default;
-$mg-color-text-tab: $mg-color-neutral-700 !default;
-$mg-color-text-tab--hover: $mg-color-white !default;
-$mg-color-text-tab-active: $mg-color-neutral-700 !default;
-$mg-color-text-tab-no-results: $mg-color-neutral-500 !default;
-$mg-color-tab-section-background: $mg-color-neutral-0 !default;
-$mg-padding-tab-section: $mg-spacing-100 $mg-spacing-0 !default;
-$mg-radius-tab-section: $mg-spacing-0 !default;
-$mg-box-shadow-tab-section: none !default;
+// BUILD-TIME ONLY: $mg-tabs-border-bottom drives @if conditional in tab.scss.
+// Cannot become a CSS custom property — no runtime conditional equivalent exists.
+// All sub-brands use true. To disable, set to false before @use.
 $mg-tabs-border-bottom: true !default;
+
+:root {
+  --mg-color-tabbar-background:      rgb(var(--mg-color-blue-50));
+  --mg-color-tab-background:         rgb(var(--mg-color-blue-200));
+  --mg-color-tab-background--inactive: rgb(var(--mg-color-blue-50));
+  --mg-color-tab-border:             rgb(var(--mg-color-neutral-700));
+  --mg-color-tab-border--hover:      rgb(var(--mg-color-neutral-900));
+  --mg-color-tab-border--active:     rgb(var(--mg-color-blue-800));
+  --mg-color-tab-background--hover:  rgb(var(--mg-color-blue-800));
+  --mg-radius-tab:                   0;
+  --mg-padding-tab:                  var(--mg-spacing-75) var(--mg-spacing-150);
+  --mg-color-text-tab:               rgb(var(--mg-color-neutral-700));
+  --mg-color-text-tab--hover:        rgb(var(--mg-color-neutral-0));
+  --mg-color-text-tab-active:        rgb(var(--mg-color-neutral-700));
+  --mg-color-text-tab-no-results:    rgb(var(--mg-color-neutral-500));
+  --mg-color-tab-section-background: rgb(var(--mg-color-neutral-0));
+  --mg-padding-tab-section:          var(--mg-spacing-100) var(--mg-spacing-0);
+  --mg-radius-tab-section:           0;
+  --mg-box-shadow-tab-section:       none;
+}
 
 /**
  * @tokens Component sizing

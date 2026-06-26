@@ -27,7 +27,7 @@
   align-items: center;
   background-color: $mg-color-interactive;
   color: $mg-color-white;
-  border-radius: $mg-radius-tab;
+  border-radius: var(--mg-radius-tab);
   padding: $mg-padding-button;
   box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
   fill: $mg-color-white;

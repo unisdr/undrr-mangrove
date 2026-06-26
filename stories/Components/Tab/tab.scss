@@ -1,5 +1,5 @@
 .mg-tabs__list {
-  background: $mg-color-tabbar-background;
+  background: var(--mg-color-tabbar-background);
   width: 100%;
   margin: 0;
   display: -webkit-inline-box;
@@ -19,7 +19,7 @@
       margin-bottom: -$mg-spacing-25;
       position: relative;
       z-index: 1; // border indicator floats above the tab list background — local to tabbar
-      border-bottom: $mg-spacing-25 solid $mg-color-tab-border;
+      border-bottom: $mg-spacing-25 solid var(--mg-color-tab-border);
     }
   }
 }
@@ -148,53 +148,53 @@
 
 .mg-tabs__link {
   border: none;
-  border-radius: $mg-radius-tab;
-  background: $mg-color-tab-background--inactive;
-  color: $mg-color-text-tab;
+  border-radius: var(--mg-radius-tab);
+  background: var(--mg-color-tab-background--inactive);
+  color: var(--mg-color-text-tab);
   font-family: $mg-font-family-headings;
   font-size: $mg-font-size-400;
   font-weight: 600;
   line-height: 1.421;
   margin: 0;
   display: block;
-  padding: $mg-padding-tab;
+  padding: var(--mg-padding-tab);
   position: relative;
   text-decoration: none;
 }
 
 .mg-tabs__link:hover,
 .mg-tabs__link:focus-visible {
-  background: $mg-color-tab-background--hover;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
-  color: $mg-color-text-tab--hover;
+  background: var(--mg-color-tab-background--hover);
+  border-bottom: $mg-spacing-25 solid var(--mg-color-tab-border--hover);
+  color: var(--mg-color-text-tab--hover);
   z-index: 2; // border-overlap micro-fix within tabbar stacking context
   text-decoration: none;
 }
 
 .mg-tabs__link:focus-visible {
-  outline: 2px solid $mg-color-interactive;
+  outline: 2px solid var(--mg-color-interactive);
   outline-offset: -2px;
 }
 
 .mg-tabs__link.is-active {
-  color: $mg-color-text-tab-active;
-  background-color: $mg-color-tab-background;
+  color: var(--mg-color-text-tab-active);
+  background-color: var(--mg-color-tab-background);
   text-shadow: none;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--active;
+  border-bottom: $mg-spacing-25 solid var(--mg-color-tab-border--active);
 }
 
 .mg-tabs__link.is-active:hover,
 .mg-tabs__link.is-active:focus-visible {
-  background: $mg-color-tab-background;
-  border-bottom: $mg-spacing-25 solid $mg-color-tab-border--hover;
-  color: $mg-color-text-tab-active;
+  background: var(--mg-color-tab-background);
+  border-bottom: $mg-spacing-25 solid var(--mg-color-tab-border--hover);
+  color: var(--mg-color-text-tab-active);
 }
 
 .mg-tabs__section {
-  background-color: $mg-color-tab-section-background;
-  box-shadow: $mg-box-shadow-tab-section;
-  padding: $mg-padding-tab-section;
-  border-radius: 0 0 $mg-radius-tab-section $mg-radius-tab-section;
+  background-color: var(--mg-color-tab-section-background);
+  box-shadow: var(--mg-box-shadow-tab-section);
+  padding: var(--mg-padding-tab-section);
+  border-radius: 0 0 var(--mg-radius-tab-section) var(--mg-radius-tab-section);
 
   // ensure tab content is available to interaction
   // https://gitlab.com/undrr/web-backlog/-/issues/1929
@@ -220,7 +220,7 @@
 
   // Flip stacked chevron for RTL
   .mg-tabs--stacked .mg-tabs__link {
-    padding-right: $mg-padding-tab;
+    padding-right: var(--mg-padding-tab);
     padding-left: mg-rem(40);
 
     &:before {
@@ -232,7 +232,7 @@
   // Horizontal tabs only have chevrons at mobile breakpoint
   @media (max-width: $mg-breakpoint-mobile) {
     .mg-tabs--horizontal .mg-tabs__link {
-      padding-right: $mg-padding-tab;
+      padding-right: var(--mg-padding-tab);
       padding-left: mg-rem(40);
 
       &:before {
@@ -266,7 +266,7 @@
 
 .mg-tabs__no-results {
   padding: $mg-spacing-150;
-  color: $mg-color-text-tab-no-results;
+  color: var(--mg-color-text-tab-no-results);
   font-style: italic;
 }
 

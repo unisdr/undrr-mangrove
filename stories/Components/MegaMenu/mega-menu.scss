@@ -191,7 +191,7 @@
   justify-content: start;
   background-color: rgba($mg-color-mega-content-bg, 0.7);
   backdrop-filter: blur(10px);
-  border-radius: $mg-radius-tab;
+  border-radius: var(--mg-radius-tab);
   box-shadow: -1px 5px 10px -1px rgb(0 0 0 / 0.25);
   inset-inline-start: 0;
   z-index: 1; // submenu floats above page content within mega-menu stacking context
