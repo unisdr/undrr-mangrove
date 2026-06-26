@@ -26,7 +26,7 @@ Before customizing, review **<LinkTo kind="getting-started-about-mangrove" story
     { id: 'root-font-size-and-mg-rem', text: 'Root font-size and mg-rem()' },
     { id: 'variables-reference', text: 'Variables reference' },
     { id: 'mixins-reference', text: 'Mixins reference' },
-    { id: 'the-default-override-mechanism', text: 'The !default override mechanism' },
+    { id: 'the-css-custom-property-override-mechanism', text: 'The CSS custom property override mechanism' },
     { id: 'creating-a-theme-override', text: 'Creating a theme override' },
     { id: 'importing-individual-component-styles', text: 'Importing individual component styles' },
     { id: 'build-tool-configuration', text: 'Build tool configuration' },
@@ -57,11 +57,11 @@ stories/assets/scss/
   style-mcr.scss               # MCR2030 theme
   style-delta.scss             # DELTA Resilience theme
   style-gutenberg.scss         # Legacy Gutenberg editor subset
-  _variables.scss              # Design tokens and component variables
-  _variables-preventionweb.scss # PW variable overrides
-  _variables-irp.scss          # IRP variable overrides
-  _variables-mcr.scss          # MCR variable overrides
-  _variables-delta.scss        # DELTA Resilience variable overrides
+  _variables.scss              # Design tokens and build-time SCSS variables
+  _theme-preventionweb.scss    # PW CSS custom property overrides (.mg-theme-preventionweb { })
+  _theme-irp.scss              # IRP CSS custom property overrides (.mg-theme-irp { })
+  _theme-mcr.scss              # MCR CSS custom property overrides (.mg-theme-mcr { })
+  _theme-delta.scss            # DELTA Resilience CSS custom property overrides (.mg-theme-delta { })
   _fonts.scss                  # Web font imports
   _breakpoints.scss            # devicebreak() mixin
   _mixins.scss                 # Vendor-prefix and utility mixins
@@ -73,8 +73,8 @@ stories/assets/scss/
 Each theme entry point follows the same import order:
 
 ```scss
-@import "./variables";            // Base tokens
-@import "./variables-{theme}";    // Theme-specific overrides (omitted in default)
+@import "./variables";        // Build-time SCSS tokens (breakpoints, font sizes, families)
+@import "./theme-{name}";     // CSS custom property overrides via .mg-theme-{name} { } (omitted in default)
 @import "./fonts";
 @import "./breakpoints";
 @import "./mixins";
@@ -83,7 +83,7 @@ Each theme entry point follows the same import order:
 @import "./components";
 ```
 
-`_variables.scss` defines tokens with the `!default` flag, so a theme file imported after it can reassign those variables before they reach the component stylesheets.
+Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block defined in `_theme-{name}.scss`. Build-time-only tokens (breakpoints, font sizes, font families, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
 
 ## Root font-size and mg-rem()
 
@@ -380,25 +380,16 @@ Mangrove also defines `%placeholder` selectors for common patterns. Use these wi
 | `%border-bottom` | `border-bottom: 1px solid $mg-color-neutral-400` |
 | `%img-cover` | Full-width cover-fit image |
 
-## The `!default` override mechanism
+## The CSS custom property override mechanism
 
-The `!default` flag in SCSS means "use this value only if the variable has not already been assigned." This is how Mangrove supports theming.
+Mangrove themes override CSS custom properties at runtime using a `.mg-theme-{name}` selector block. Color and spacing tokens are defined as CSS custom properties in the compiled output. A theme file (`_theme-{name}.scss`) contains a single selector block that reassigns the relevant properties. Applying the class to `<body>` or a wrapping element activates the theme without any CSS rebuild.
 
-In `_variables.scss`:
-
-```scss
-$mg-color-interactive: $mg-color-blue-900 !default;
-$mg-radius-button: $mg-spacing-0 !default;
-```
-
-Mangrove's built-in themes import `_variables.scss` first, then a theme-specific override file that reassigns selected tokens **without** `!default`. Because the override comes second, its plain assignments overwrite the earlier `!default` values. Any token the override file does not touch keeps its default.
-
-For example, `style-preventionweb.scss` imports the base variables first, then a theme-specific override file:
+For example, `style-preventionweb.scss` imports the base variables and the theme selector block:
 
 ```scss
 // style-preventionweb.scss
-@import "./variables";              // Sets defaults
-@import "./variables-preventionweb"; // Overrides the !default variables
+@import "./variables";           // Build-time SCSS tokens
+@import "./theme-preventionweb"; // .mg-theme-preventionweb { } block
 @import "./fonts";
 @import "./breakpoints";
 @import "./mixins";
@@ -407,62 +398,64 @@ For example, `style-preventionweb.scss` imports the base variables first, then a
 @import "./components";
 ```
 
-And `_variables-preventionweb.scss` reassigns the variables that need to differ:
+And `_theme-preventionweb.scss` overrides the custom properties that differ:
 
 ```scss
-$pw-color-primary: #0a6969;
-
-$mg-color-interactive: $pw-color-primary;
-$mg-color-interactive-active: $pw-color-primary;
-$mg-color-button-background: $pw-color-primary;
-$mg-color-button-background--hover: $sendai-orange-900;
-$mg-radius-button: $mg-spacing-50;
-// ...
+.mg-theme-preventionweb {
+  --mg-color-interactive: 10, 105, 105;       // #0a6969 as RGB channel values
+  --mg-color-interactive-active: 10, 105, 105;
+  --mg-color-button-background: var(--mg-color-interactive);
+  --mg-color-button-background--hover: /* sendai orange */;
+  --mg-radius-button: var(--mg-spacing-50);
+  // ...
+}
 ```
 
-Because these assignments happen after `_variables.scss` loads, they replace the `!default` values before any component stylesheet reads them.
+Applying `class="mg-theme-preventionweb"` to `<body>` activates those overrides for the entire page. Any token the theme file does not override keeps its base custom property value.
+
+**Build-time-only tokens** (breakpoints, font sizes, font families, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables. They are resolved at compile time and are not overridable at runtime via CSS custom properties.
 
 ## Creating a theme override
 
-To create your own theme, write a variables override file and a theme entry point that follows the same import order.
+To create your own theme, write a theme selector file and a theme entry point that follows the same import order.
 
-### 1. Create your override file
+### 1. Create your theme selector file
 
 ```scss
-// _variables-myorg.scss
+// _theme-myorg.scss
 
-// Define your brand color
-$myorg-color-primary: #2e7d32;
+.mg-theme-myorg {
+  // Override interactive colors (values are RGB channel triplets)
+  --mg-color-interactive: 46, 125, 50;        // #2e7d32
+  --mg-color-interactive-active: 27, 94, 32;  // darken(#2e7d32, ~10%)
 
-// Override interactive colors
-$mg-color-interactive: $myorg-color-primary;
-$mg-color-interactive-active: darken($myorg-color-primary, 10%);
+  // Override button styling
+  --mg-color-button-background: var(--mg-color-interactive);
+  --mg-color-button-background--hover: var(--mg-color-interactive-active);
+  --mg-radius-button: var(--mg-spacing-50);
 
-// Override button styling
-$mg-color-button-background: $myorg-color-primary;
-$mg-color-button-background--hover: $mg-color-interactive-active;
-$mg-radius-button: $mg-spacing-50;
+  // Override tag colors
+  --mg-color-tag: var(--mg-color-interactive);
+  --mg-color-tag--hover: var(--mg-color-interactive-active);
 
-// Override tag colors
-$mg-color-tag: $mg-color-interactive;
-$mg-color-tag--hover: $mg-color-interactive-active;
+  // Override form colors
+  --mg-color-form-check: var(--mg-color-interactive);
+  --mg-color-form-focus: var(--mg-color-interactive);
+  --mg-radius-form-input: var(--mg-spacing-50);
 
-// Override form colors
-$mg-color-form-check: $mg-color-interactive;
-$mg-color-form-focus: $mg-color-interactive;
-$mg-radius-form-input: $mg-spacing-50;
-
-// Override hero
-$mg-color-hero: $mg-color-interactive;
-$mg-spacing-hero-overlay: mg-rem(20) 0;
+  // Override hero
+  --mg-color-hero: var(--mg-color-interactive);
+}
 ```
+
+Apply `class="mg-theme-myorg"` to `<body>` or a wrapping element to activate the theme.
 
 ### 2. Create your theme entry point
 
 ```scss
 // style-myorg.scss
 @import "./variables";
-@import "./variables-myorg";
+@import "./theme-myorg";
 @import "./fonts";
 @import "./breakpoints";
 @import "./mixins";
@@ -471,7 +464,7 @@ $mg-spacing-hero-overlay: mg-rem(20) 0;
 @import "./components";
 ```
 
-This follows the same structure as PreventionWeb, IRP, and MCR themes. All `!default` variables from `_variables.scss` that you reassigned in `_variables-myorg.scss` will carry through to every component stylesheet.
+This follows the same structure as the PreventionWeb, IRP, and MCR themes. The `.mg-theme-myorg` selector block is compiled into the output CSS and activates at runtime when the class is present.
 
 ## Importing individual component styles
 

@@ -53,7 +53,7 @@ stories/assets/scss/
 ├── style-mcr.scss              → MCR2030 theme
 ├── style-delta.scss            → DELTA Resilience theme
 ├── _components.scss            → Imports all component SCSS files
-├── _variables.scss             → Design tokens (SCSS variables with !default)
+├── _variables.scss             → Build-time SCSS tokens (breakpoints, font sizes, families); color/spacing tokens are CSS custom properties
 ├── _breakpoints.scss           → Responsive breakpoint mixins
 └── _mixins.scss                → Shared SCSS mixins
 ```
@@ -67,7 +67,7 @@ stories/assets/scss/
 
 **When adding a new component's SCSS:** Add the `@import` to `_components.scss`. The component's styles will then be included in all five theme outputs automatically.
 
-**Important:** The `!default` flags on variables in `_variables.scss` allow each theme stylesheet to override tokens before the shared styles are processed.
+**Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. Build-time-only tokens (breakpoints, font sizes, font families, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
 
 ## Component distribution channels
 
@@ -251,9 +251,13 @@ Never use module-level `Set`, `Map`, `Array`, or counters to track state across 
 
 `Component.defaultProps` is deprecated in React 19. Use destructured default parameters instead. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for the full pattern.
 
-### SCSS variables with !default
+### CSS custom properties and SCSS variables
 
-The design token variables in `_variables.scss` use `!default` flags so theme stylesheets can override them. When adding new variables, always include `!default`.
+Mangrove uses two distinct token mechanisms:
+
+**CSS custom properties** (`--mg-color-*`, `--mg-spacing-*`): color and spacing tokens defined in the compiled output. Themes override these at runtime via a `.mg-theme-{name} { }` selector block in `_theme-{name}.scss`. Applying the class to `<body>` or a wrapping element activates the theme without any CSS rebuild.
+
+**Build-time SCSS `!default` variables**: used for tokens that must be resolved at compile time and cannot be overridden at runtime. This includes breakpoints (`$mg-breakpoint-*`), font sizes (`$mg-font-size-*`), font families (`$mg-font-family-*`), `$mg-html-font-size`, and `$mg-tabs-border-bottom`. When adding new build-time-only variables, include `!default` so consuming projects can override them before importing Mangrove.
 
 ### Root font-size and the mg-rem() function
 
