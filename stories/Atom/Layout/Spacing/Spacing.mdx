@@ -1,5 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { DesignTokenDocBlock } from 'storybook-design-token';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta
   title="Design decisions/Spacing"
@@ -23,8 +22,53 @@ The Spacing units create visual rhythm and balance.
 
 ### States
 
-<DesignTokenDocBlock categoryName="Spacing" maxHeight={600} viewType="card" />
+export const SPACING_TOKENS = [
+  '--mg-spacing-0',
+  '--mg-spacing-25',
+  '--mg-spacing-50',
+  '--mg-spacing-75',
+  '--mg-spacing-100',
+  '--mg-spacing-150',
+  '--mg-spacing-175',
+  '--mg-spacing-200',
+  '--mg-spacing-250',
+  '--mg-spacing-300',
+  '--mg-spacing-350',
+  '--mg-spacing-400',
+  '--mg-spacing-500',
+  '--mg-spacing-600',
+  '--mg-spacing-800',
+  '--mg-spacing-1000',
+];
+
+export function SpacingRow({ token }) {
+  const value = typeof document !== 'undefined'
+    ? getComputedStyle(document.documentElement).getPropertyValue(token).trim()
+    : '';
+  return (
+    <tr>
+      <td style={{ padding: '6px 12px', fontFamily: 'monospace', fontSize: '13px' }}>{token}</td>
+      <td style={{ padding: '6px 12px', fontSize: '13px' }}>{value || '—'}</td>
+      <td style={{ padding: '6px 12px' }}>
+        <div style={{ width: value || 0, height: '16px', background: 'var(--mg-color-interactive, #004f91)', borderRadius: '2px', minWidth: value ? '2px' : 0 }} />
+      </td>
+    </tr>
+  );
+}
+
+<table style={{ borderCollapse: 'collapse', width: '100%' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left' }}>
+      <th style={{ padding: '6px 12px', fontSize: '13px' }}>Token</th>
+      <th style={{ padding: '6px 12px', fontSize: '13px' }}>Value</th>
+      <th style={{ padding: '6px 12px', fontSize: '13px' }}>Preview</th>
+    </tr>
+  </thead>
+  <tbody>
+    {SPACING_TOKENS.map(t => <SpacingRow key={t} token={t} />)}
+  </tbody>
+</table>
 
 ### Usage
 
-Use of standard spaces are already applied on different components, if you want to change the space, that can be done in **stories/assets/scss/\_varaibles.scss**.
+Use of standard spaces are already applied on different components, if you want to change the space, that can be done in **stories/assets/scss/\_variables.scss**.

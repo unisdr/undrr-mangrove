@@ -1,5 +1,4 @@
-import { Meta, Story, Source } from '@storybook/addon-docs/blocks';
-import { DesignTokenDocBlock } from 'storybook-design-token';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta
   title="Design decisions/Widths"
@@ -17,4 +16,37 @@ import { DesignTokenDocBlock } from 'storybook-design-token';
 
 > **@deprecated** — Legacy from the UNDP design system. These width tokens are not part of the current UNDRR distribution and are not used by any active Mangrove components. They will be removed in a future major release. Use standard CSS layout techniques (flexbox, grid) or Mangrove's `$mg-spacing-*` and `$mg-breakpoint-*` tokens instead.
 
-<DesignTokenDocBlock categoryName="Widths" maxHeight={600} viewType="table" />
+export const WIDTH_TOKENS = [
+  '--mg-width-150',
+  '--mg-width-300',
+  '--mg-width-400',
+  '--mg-width-600',
+];
+
+export function WidthRow({ token }) {
+  const value = typeof document !== 'undefined'
+    ? getComputedStyle(document.documentElement).getPropertyValue(token).trim()
+    : '';
+  return (
+    <tr>
+      <td style={{ padding: '6px 12px', fontFamily: 'monospace', fontSize: '13px' }}>{token}</td>
+      <td style={{ padding: '6px 12px', fontSize: '13px' }}>{value || '—'}</td>
+      <td style={{ padding: '6px 12px' }}>
+        <div style={{ width: value || 0, height: '16px', background: 'var(--mg-color-interactive, #004f91)', borderRadius: '2px' }} />
+      </td>
+    </tr>
+  );
+}
+
+<table style={{ borderCollapse: 'collapse', width: '100%' }}>
+  <thead>
+    <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left' }}>
+      <th style={{ padding: '6px 12px', fontSize: '13px' }}>Token</th>
+      <th style={{ padding: '6px 12px', fontSize: '13px' }}>Value</th>
+      <th style={{ padding: '6px 12px', fontSize: '13px' }}>Preview</th>
+    </tr>
+  </thead>
+  <tbody>
+    {WIDTH_TOKENS.map(t => <WidthRow key={t} token={t} />)}
+  </tbody>
+</table>

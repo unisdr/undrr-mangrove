@@ -125,7 +125,6 @@
     "sass-loader": "16.0.8",
     "storybook": "^10.4.6",
     "storybook-addon-rtl": "3.0.2",
-    "storybook-design-token": "^5.0.0",
     "style-loader": "4.0.0",
     "stylelint": "~17.13.0",
     "stylelint-config-recommended-scss": "17.0.1",
