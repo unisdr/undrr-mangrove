@@ -1,7 +1,7 @@
 mark {
-  background: $mg-color-yellow-light;
+  background: var(--mg-color-yellow-light);
   font-size: $mg-font-size-200;
-  padding: $mg-spacing-25;
+  padding: var(--mg-spacing-25);
 
   @include devicebreak(medium) {
     font-size: $mg-font-size-300;

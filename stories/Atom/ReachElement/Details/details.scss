@@ -6,7 +6,7 @@ details {
     cursor: pointer;
 
     &:focus-visible {
-      outline: 2px solid $mg-color-interactive;
+      outline: 2px solid var(--mg-color-interactive);
       outline-offset: 2px;
       border-radius: mg-rem(2);
     }
@@ -15,7 +15,7 @@ details {
 
 /* Enhanced: opt-in card treatment via .mg-details */
 details.mg-details {
-  border: 1px solid $mg-color-neutral-400; // #808080 — 3.95:1 on white (passes WCAG 1.4.11)
+  border: 1px solid var(--mg-color-neutral-400); // #808080 — 3.95:1 on white (passes WCAG 1.4.11)
   border-radius: mg-rem(4);
   padding: mg-rem(10);
   transition: box-shadow 0.2s ease-in-out;
@@ -27,7 +27,7 @@ details.mg-details {
   > summary {
     @extend %paragraph-font-300;
 
-    color: $mg-color-interactive;
+    color: var(--mg-color-interactive);
     font-weight: 600;
     list-style-type: none;
     padding: mg-rem(10) mg-rem(10) mg-rem(10) mg-rem(32);
@@ -53,7 +53,7 @@ details.mg-details {
       height: 0;
       border-top: 6px solid transparent;
       border-bottom: 6px solid transparent;
-      border-left: 8px solid $mg-color-interactive;
+      border-left: 8px solid var(--mg-color-interactive);
       transition: transform 0.2s ease-in-out;
     }
   }
@@ -67,12 +67,12 @@ details.mg-details {
   }
 
   &[open] {
-    border-color: $mg-color-interactive; // theme-adaptive; #004f91 = 8.27:1 on white
+    border-color: var(--mg-color-interactive); // theme-adaptive; #004f91 = 8.27:1 on white
 
     > summary {
       margin-bottom: 0;
       padding-bottom: mg-rem(10);
-      border-bottom: 1px solid $mg-color-neutral-400; // 3.95:1 on white
+      border-bottom: 1px solid var(--mg-color-neutral-400); // 3.95:1 on white
 
       &::before {
         transform: translateY(-50%) rotate(90deg); // ▼ open
