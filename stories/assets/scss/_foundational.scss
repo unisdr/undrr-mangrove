@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  color: $mg-color-text;
+  color: var(--mg-color-text);
   font-family: $mg-font-family;
   font-size: $mg-font-size-300;
   line-height: $mg-font-line-height-700;
@@ -35,8 +35,8 @@ h4,
 h5,
 h6,
 caption {
-  margin: $mg-spacing-100 $mg-spacing-0;
-  padding: $mg-spacing-0;
+  margin: var(--mg-spacing-100) var(--mg-spacing-0);
+  padding: var(--mg-spacing-0);
 }
 
 // h1-h6 inherit Roboto from body. Roboto Condensed is reserved for compact UI
@@ -85,38 +85,38 @@ p {
 
 ul,
 ol {
-  margin: 0 0 $mg-spacing-100;
-  padding-left: $mg-spacing-200;
+  margin: 0 0 var(--mg-spacing-100);
+  padding-left: var(--mg-spacing-200);
   list-style-position: outside;
 
   li {
-    margin-bottom: $mg-spacing-0;
-    padding-left: $mg-spacing-0;
+    margin-bottom: var(--mg-spacing-0);
+    padding-left: var(--mg-spacing-0);
   }
 }
 
 dl {
   line-height: 1.37;
-  margin: $mg-spacing-0;
+  margin: var(--mg-spacing-0);
 }
 
 dt {
   font-weight: 600;
-  margin-bottom: $mg-spacing-25;
+  margin-bottom: var(--mg-spacing-25);
 }
 
 dd {
-  margin-bottom: $mg-spacing-50;
-  margin-inline-start: $mg-spacing-200;
+  margin-bottom: var(--mg-spacing-50);
+  margin-inline-start: var(--mg-spacing-200);
 
   @include devicebreak(medium) {
-    margin-bottom: $mg-spacing-100;
-    margin-inline-start: $mg-spacing-300;
+    margin-bottom: var(--mg-spacing-100);
+    margin-inline-start: var(--mg-spacing-300);
   }
 }
 
 dd + dt {
-  margin-block-start: $mg-spacing-100;
+  margin-block-start: var(--mg-spacing-100);
 }
 
 header {
@@ -125,8 +125,8 @@ header {
 
 hr {
   border: 0;
-  border-block-start: 2px solid $mg-color-neutral-400; // #808080 — 3.95:1 on white (non-text contrast)
-  margin-block: $mg-spacing-200;
+  border-block-start: 2px solid var(--mg-color-neutral-400); // #808080 — 3.95:1 on white (non-text contrast)
+  margin-block: var(--mg-spacing-200);
 }
 
 img {
@@ -135,11 +135,11 @@ img {
 }
 
 a {
-  color: $mg-color-interactive;
+  color: var(--mg-color-interactive);
   text-decoration: none;
 
   &:hover {
-    color: $mg-color-interactive-active;
+    color: var(--mg-color-interactive-active);
     text-decoration: underline;
   }
 }
