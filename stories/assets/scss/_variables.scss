@@ -45,112 +45,46 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
  */
 
 // MG-COLORS BLUE SHADES (#004f91)
-$_mg-color-blue-50--raw: 230 237 244;
-$_mg-color-blue-100--raw: 204 220 233;
-$_mg-color-blue-200--raw: 179 202 222;
-$_mg-color-blue-300--raw: 153 185 211;
-$_mg-color-blue-400--raw: 128 167 200;
-$_mg-color-blue-500--raw: 102 149 189;
-$_mg-color-blue-600--raw: 77 132 178;
-$_mg-color-blue-700--raw: 51 114 167;
-$_mg-color-blue-800--raw: 26 97 156;
-$_mg-color-blue-900--raw: 0 79 145;
-
 :root {
-  --mg-color-blue-50:  #{$_mg-color-blue-50--raw};
-  --mg-color-blue-100: #{$_mg-color-blue-100--raw};
-  --mg-color-blue-200: #{$_mg-color-blue-200--raw};
-  --mg-color-blue-300: #{$_mg-color-blue-300--raw};
-  --mg-color-blue-400: #{$_mg-color-blue-400--raw};
-  --mg-color-blue-500: #{$_mg-color-blue-500--raw};
-  --mg-color-blue-600: #{$_mg-color-blue-600--raw};
-  --mg-color-blue-700: #{$_mg-color-blue-700--raw};
-  --mg-color-blue-800: #{$_mg-color-blue-800--raw};
-  --mg-color-blue-900: #{$_mg-color-blue-900--raw};
+  --mg-color-blue-50:  230 237 244;
+  --mg-color-blue-100: 204 220 233;
+  --mg-color-blue-200: 179 202 222;
+  --mg-color-blue-300: 153 185 211;
+  --mg-color-blue-400: 128 167 200;
+  --mg-color-blue-500: 102 149 189;
+  --mg-color-blue-600: 77 132 178;
+  --mg-color-blue-700: 51 114 167;
+  --mg-color-blue-800: 26 97 156;
+  --mg-color-blue-900: 0 79 145;
 }
-
-$mg-color-blue-50:  rgb(var(--mg-color-blue-50));
-$mg-color-blue-100: rgb(var(--mg-color-blue-100));
-$mg-color-blue-200: rgb(var(--mg-color-blue-200));
-$mg-color-blue-300: rgb(var(--mg-color-blue-300));
-$mg-color-blue-400: rgb(var(--mg-color-blue-400));
-$mg-color-blue-500: rgb(var(--mg-color-blue-500));
-$mg-color-blue-600: rgb(var(--mg-color-blue-600));
-$mg-color-blue-700: rgb(var(--mg-color-blue-700));
-$mg-color-blue-800: rgb(var(--mg-color-blue-800));
-$mg-color-blue-900: rgb(var(--mg-color-blue-900));
 
 // MG-COLORS ORANGE SHADES (#eb752a)
-$_mg-color-orange-50--raw: 253 241 234;
-$_mg-color-orange-100--raw: 251 227 212;
-$_mg-color-orange-200--raw: 249 214 191;
-$_mg-color-orange-300--raw: 247 200 170;
-$_mg-color-orange-400--raw: 245 186 149;
-$_mg-color-orange-500--raw: 243 172 127;
-$_mg-color-orange-600--raw: 241 158 106;
-$_mg-color-orange-700--raw: 239 145 85;
-$_mg-color-orange-800--raw: 237 131 63;
-$_mg-color-orange-900--raw: 235 117 42;
-
 :root {
-  --mg-color-orange-50:  #{$_mg-color-orange-50--raw};
-  --mg-color-orange-100: #{$_mg-color-orange-100--raw};
-  --mg-color-orange-200: #{$_mg-color-orange-200--raw};
-  --mg-color-orange-300: #{$_mg-color-orange-300--raw};
-  --mg-color-orange-400: #{$_mg-color-orange-400--raw};
-  --mg-color-orange-500: #{$_mg-color-orange-500--raw};
-  --mg-color-orange-600: #{$_mg-color-orange-600--raw};
-  --mg-color-orange-700: #{$_mg-color-orange-700--raw};
-  --mg-color-orange-800: #{$_mg-color-orange-800--raw};
-  --mg-color-orange-900: #{$_mg-color-orange-900--raw};
+  --mg-color-orange-50:  253 241 234;
+  --mg-color-orange-100: 251 227 212;
+  --mg-color-orange-200: 249 214 191;
+  --mg-color-orange-300: 247 200 170;
+  --mg-color-orange-400: 245 186 149;
+  --mg-color-orange-500: 243 172 127;
+  --mg-color-orange-600: 241 158 106;
+  --mg-color-orange-700: 239 145 85;
+  --mg-color-orange-800: 237 131 63;
+  --mg-color-orange-900: 235 117 42;
 }
-
-$mg-color-orange-50:  rgb(var(--mg-color-orange-50));
-$mg-color-orange-100: rgb(var(--mg-color-orange-100));
-$mg-color-orange-200: rgb(var(--mg-color-orange-200));
-$mg-color-orange-300: rgb(var(--mg-color-orange-300));
-$mg-color-orange-400: rgb(var(--mg-color-orange-400));
-$mg-color-orange-500: rgb(var(--mg-color-orange-500));
-$mg-color-orange-600: rgb(var(--mg-color-orange-600));
-$mg-color-orange-700: rgb(var(--mg-color-orange-700));
-$mg-color-orange-800: rgb(var(--mg-color-orange-800));
-$mg-color-orange-900: rgb(var(--mg-color-orange-900));
 
 // MG-COLORS RED SHADES (#c10920)
-$_mg-color-red-50--raw: 249 230 233;
-$_mg-color-red-100--raw: 243 206 210;
-$_mg-color-red-200--raw: 236 181 188;
-$_mg-color-red-300--raw: 230 157 166;
-$_mg-color-red-400--raw: 224 132 144;
-$_mg-color-red-500--raw: 218 107 121;
-$_mg-color-red-600--raw: 212 83 99;
-$_mg-color-red-700--raw: 205 58 77;
-$_mg-color-red-800--raw: 199 34 54;
-$_mg-color-red-900--raw: 193 9 32;
-
 :root {
-  --mg-color-red-50:  #{$_mg-color-red-50--raw};
-  --mg-color-red-100: #{$_mg-color-red-100--raw};
-  --mg-color-red-200: #{$_mg-color-red-200--raw};
-  --mg-color-red-300: #{$_mg-color-red-300--raw};
-  --mg-color-red-400: #{$_mg-color-red-400--raw};
-  --mg-color-red-500: #{$_mg-color-red-500--raw};
-  --mg-color-red-600: #{$_mg-color-red-600--raw};
-  --mg-color-red-700: #{$_mg-color-red-700--raw};
-  --mg-color-red-800: #{$_mg-color-red-800--raw};
-  --mg-color-red-900: #{$_mg-color-red-900--raw};
+  --mg-color-red-50:  249 230 233;
+  --mg-color-red-100: 243 206 210;
+  --mg-color-red-200: 236 181 188;
+  --mg-color-red-300: 230 157 166;
+  --mg-color-red-400: 224 132 144;
+  --mg-color-red-500: 218 107 121;
+  --mg-color-red-600: 212 83 99;
+  --mg-color-red-700: 205 58 77;
+  --mg-color-red-800: 199 34 54;
+  --mg-color-red-900: 193 9 32;
 }
-
-$mg-color-red-50:  rgb(var(--mg-color-red-50));
-$mg-color-red-100: rgb(var(--mg-color-red-100));
-$mg-color-red-200: rgb(var(--mg-color-red-200));
-$mg-color-red-300: rgb(var(--mg-color-red-300));
-$mg-color-red-400: rgb(var(--mg-color-red-400));
-$mg-color-red-500: rgb(var(--mg-color-red-500));
-$mg-color-red-600: rgb(var(--mg-color-red-600));
-$mg-color-red-700: rgb(var(--mg-color-red-700));
-$mg-color-red-800: rgb(var(--mg-color-red-800));
-$mg-color-red-900: rgb(var(--mg-color-red-900));
 
 /**
  * @tokens Colors - neutral
@@ -160,48 +94,20 @@ $mg-color-red-900: rgb(var(--mg-color-red-900));
  */
 
 // MG-COLORS NEUTRAL
-$_mg-color-neutral-0--raw:   255 255 255;
-$_mg-color-neutral-25--raw:  242 242 242;
-$_mg-color-neutral-50--raw:  230 230 230;
-$_mg-color-neutral-100--raw: 204 204 204;
-$_mg-color-neutral-200--raw: 179 179 179;
-$_mg-color-neutral-300--raw: 153 153 153;
-$_mg-color-neutral-400--raw: 128 128 128;
-$_mg-color-neutral-500--raw: 102 102 102;
-$_mg-color-neutral-600--raw: 77 77 77;
-$_mg-color-neutral-700--raw: 51 51 51;
-$_mg-color-neutral-800--raw: 26 26 26;
-$_mg-color-neutral-900--raw: 0 0 0;
-
 :root {
-  --mg-color-neutral-0:   #{$_mg-color-neutral-0--raw};
-  --mg-color-neutral-25:  #{$_mg-color-neutral-25--raw};
-  --mg-color-neutral-50:  #{$_mg-color-neutral-50--raw};
-  --mg-color-neutral-100: #{$_mg-color-neutral-100--raw};
-  --mg-color-neutral-200: #{$_mg-color-neutral-200--raw};
-  --mg-color-neutral-300: #{$_mg-color-neutral-300--raw};
-  --mg-color-neutral-400: #{$_mg-color-neutral-400--raw};
-  --mg-color-neutral-500: #{$_mg-color-neutral-500--raw};
-  --mg-color-neutral-600: #{$_mg-color-neutral-600--raw};
-  --mg-color-neutral-700: #{$_mg-color-neutral-700--raw};
-  --mg-color-neutral-800: #{$_mg-color-neutral-800--raw};
-  --mg-color-neutral-900: #{$_mg-color-neutral-900--raw};
+  --mg-color-neutral-0:   255 255 255;
+  --mg-color-neutral-25:  242 242 242;
+  --mg-color-neutral-50:  230 230 230;
+  --mg-color-neutral-100: 204 204 204;
+  --mg-color-neutral-200: 179 179 179;
+  --mg-color-neutral-300: 153 153 153;
+  --mg-color-neutral-400: 128 128 128;
+  --mg-color-neutral-500: 102 102 102;
+  --mg-color-neutral-600: 77 77 77;
+  --mg-color-neutral-700: 51 51 51;
+  --mg-color-neutral-800: 26 26 26;
+  --mg-color-neutral-900: 0 0 0;
 }
-
-$mg-color-neutral-0:   rgb(var(--mg-color-neutral-0));
-$mg-color-neutral-25:  rgb(var(--mg-color-neutral-25));
-$mg-color-neutral-50:  rgb(var(--mg-color-neutral-50));
-$mg-color-neutral-100: rgb(var(--mg-color-neutral-100));
-$mg-color-neutral-200: rgb(var(--mg-color-neutral-200));
-$mg-color-neutral-300: rgb(var(--mg-color-neutral-300));
-$mg-color-neutral-400: rgb(var(--mg-color-neutral-400));
-$mg-color-neutral-500: rgb(var(--mg-color-neutral-500));
-$mg-color-neutral-600: rgb(var(--mg-color-neutral-600));
-$mg-color-neutral-700: rgb(var(--mg-color-neutral-700));
-$mg-color-neutral-800: rgb(var(--mg-color-neutral-800));
-$mg-color-neutral-900: rgb(var(--mg-color-neutral-900));
-$mg-color-black: rgb(var(--mg-color-neutral-800));
-$mg-color-white: rgb(var(--mg-color-neutral-0));
 
 /**
  * @tokens Colors - accent
@@ -211,22 +117,12 @@ $mg-color-white: rgb(var(--mg-color-neutral-0));
  */
 
 // MG-COLORS ACCENT
-$_mg-color-accent-100--raw: 244 228 150;
-$_mg-color-accent-200--raw: 211 206 169;
-$_mg-color-accent-300--raw: 253 246 217;
-$_mg-color-accent-400--raw: 10 105 105;
-
 :root {
-  --mg-color-accent-100: #{$_mg-color-accent-100--raw};
-  --mg-color-accent-200: #{$_mg-color-accent-200--raw};
-  --mg-color-accent-300: #{$_mg-color-accent-300--raw};
-  --mg-color-accent-400: #{$_mg-color-accent-400--raw};
+  --mg-color-accent-100: 244 228 150;
+  --mg-color-accent-200: 211 206 169;
+  --mg-color-accent-300: 253 246 217;
+  --mg-color-accent-400: 10 105 105;
 }
-
-$mg-color-accent-100: rgb(var(--mg-color-accent-100));
-$mg-color-accent-200: rgb(var(--mg-color-accent-200));
-$mg-color-accent-300: rgb(var(--mg-color-accent-300));
-$mg-color-accent-400: rgb(var(--mg-color-accent-400));
 
 /**
  * @tokens Colors - interactive
@@ -235,18 +131,12 @@ $mg-color-accent-400: rgb(var(--mg-color-accent-400));
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-$mg-color-interactive-active: $mg-color-blue-700 !default;
-$mg-color-interactive: $mg-color-blue-900 !default;
-
 /**
  * @tokens UNDRR Colors
  * @presenter Color
  *
  * https://github.com/UX-and-I/storybook-design-token
  */
-
-// Unclear if these are needed
-$undrr-color-corporate-blue: $mg-color-blue-900;
 
 /**
  * @tokens Sendai Framework Colors
@@ -255,87 +145,28 @@ $undrr-color-corporate-blue: $mg-color-blue-900;
  * https://github.com/UX-and-I/storybook-design-token
  */
 
-// SENDAI COLORS
-$sendai-red-400: #d45363;
-$sendai-red-600: #cd3a4d;
-$sendai-red-800: #c72236;
-$sendai-red-900: #c10920;
-$sendai-red: $sendai-red-900; // alias
-
-$sendai-orange-400: #f19e6a;
-$sendai-orange-600: #ef9155;
-$sendai-orange-800: #ed833f;
-$sendai-orange-900: #eb752a;
-$sendai-orange: $sendai-orange-900; // alias
-
-$sendai-purple-400: #b669ab;
-$sendai-purple-600: #ab549f;
-$sendai-purple-800: #a13e93;
-$sendai-purple-900: #962987;
-$sendai-purple: $sendai-purple-900; // alias
-
-$sendai-turquoise-400: #4dc7c6;
-$sendai-turquoise-600: #33bfbe;
-$sendai-turquoise-800: #1ab7b6;
-$sendai-turquoise-900: #00afae;
-$sendai-turquoise: $sendai-turquoise-900; // alias
-
 /**
  * @tokens Spacing
  * @presenter Spacing
  */
-$_mg-spacing-0--raw:    0;
-$_mg-spacing-25--raw:   mg-rem(2.5);
-$_mg-spacing-50--raw:   mg-rem(5);
-$_mg-spacing-75--raw:   mg-rem(7.5);
-$_mg-spacing-100--raw:  mg-rem(10);
-$_mg-spacing-150--raw:  mg-rem(15);
-$_mg-spacing-175--raw:  mg-rem(18);
-$_mg-spacing-200--raw:  mg-rem(20);
-$_mg-spacing-250--raw:  mg-rem(24);
-$_mg-spacing-300--raw:  mg-rem(30);
-$_mg-spacing-350--raw:  mg-rem(35);
-$_mg-spacing-400--raw:  mg-rem(50);
-$_mg-spacing-500--raw:  mg-rem(60);
-$_mg-spacing-600--raw:  mg-rem(80);
-$_mg-spacing-800--raw:  mg-rem(100);
-$_mg-spacing-1000--raw: mg-rem(400);
-
 :root {
-  --mg-spacing-0:    #{$_mg-spacing-0--raw};
-  --mg-spacing-25:   #{$_mg-spacing-25--raw};
-  --mg-spacing-50:   #{$_mg-spacing-50--raw};
-  --mg-spacing-75:   #{$_mg-spacing-75--raw};
-  --mg-spacing-100:  #{$_mg-spacing-100--raw};
-  --mg-spacing-150:  #{$_mg-spacing-150--raw};
-  --mg-spacing-175:  #{$_mg-spacing-175--raw};
-  --mg-spacing-200:  #{$_mg-spacing-200--raw};
-  --mg-spacing-250:  #{$_mg-spacing-250--raw};
-  --mg-spacing-300:  #{$_mg-spacing-300--raw};
-  --mg-spacing-350:  #{$_mg-spacing-350--raw};
-  --mg-spacing-400:  #{$_mg-spacing-400--raw};
-  --mg-spacing-500:  #{$_mg-spacing-500--raw};
-  --mg-spacing-600:  #{$_mg-spacing-600--raw};
-  --mg-spacing-800:  #{$_mg-spacing-800--raw};
-  --mg-spacing-1000: #{$_mg-spacing-1000--raw};
+  --mg-spacing-0:    0;
+  --mg-spacing-25:   #{mg-rem(2.5)};
+  --mg-spacing-50:   #{mg-rem(5)};
+  --mg-spacing-75:   #{mg-rem(7.5)};
+  --mg-spacing-100:  #{mg-rem(10)};
+  --mg-spacing-150:  #{mg-rem(15)};
+  --mg-spacing-175:  #{mg-rem(18)};
+  --mg-spacing-200:  #{mg-rem(20)};
+  --mg-spacing-250:  #{mg-rem(24)};
+  --mg-spacing-300:  #{mg-rem(30)};
+  --mg-spacing-350:  #{mg-rem(35)};
+  --mg-spacing-400:  #{mg-rem(50)};
+  --mg-spacing-500:  #{mg-rem(60)};
+  --mg-spacing-600:  #{mg-rem(80)};
+  --mg-spacing-800:  #{mg-rem(100)};
+  --mg-spacing-1000: #{mg-rem(400)};
 }
-
-$mg-spacing-0:    var(--mg-spacing-0);
-$mg-spacing-25:   var(--mg-spacing-25);
-$mg-spacing-50:   var(--mg-spacing-50);
-$mg-spacing-75:   var(--mg-spacing-75);
-$mg-spacing-100:  var(--mg-spacing-100);
-$mg-spacing-150:  var(--mg-spacing-150);
-$mg-spacing-175:  var(--mg-spacing-175);
-$mg-spacing-200:  var(--mg-spacing-200);
-$mg-spacing-250:  var(--mg-spacing-250);
-$mg-spacing-300:  var(--mg-spacing-300);
-$mg-spacing-350:  var(--mg-spacing-350);
-$mg-spacing-400:  var(--mg-spacing-400);
-$mg-spacing-500:  var(--mg-spacing-500);
-$mg-spacing-600:  var(--mg-spacing-600);
-$mg-spacing-800:  var(--mg-spacing-800);
-$mg-spacing-1000: var(--mg-spacing-1000);
 
 /**
  * @tokens Font sizes
@@ -370,24 +201,24 @@ $mg-font-line-height-700: 1.5em;
     font-size: $mg-font-size-400;
   } @else if $size == "medium" {
     font-size: $mg-font-size-500;
-    padding-top: $mg-spacing-250;
-    padding-bottom: $mg-spacing-150;
+    padding-top: var(--mg-spacing-250);
+    padding-bottom: var(--mg-spacing-150);
   } @else if $size == "large" {
     font-size: $mg-font-size-600;
-    padding-top: $mg-spacing-250;
-    padding-bottom: $mg-spacing-150;
+    padding-top: var(--mg-spacing-250);
+    padding-bottom: var(--mg-spacing-150);
   } @else if $size == "xlarge" {
     font-size: $mg-font-size-900;
-    padding-top: $mg-spacing-300;
-    padding-bottom: $mg-spacing-175;
+    padding-top: var(--mg-spacing-300);
+    padding-bottom: var(--mg-spacing-175);
   } @else if $size == "huge" {
     font-size: $mg-font-size-1000;
-    padding-top: $mg-spacing-300;
-    padding-bottom: $mg-spacing-250;
+    padding-top: var(--mg-spacing-300);
+    padding-bottom: var(--mg-spacing-250);
   } @else if $size == "xhuge" {
     font-size: $mg-font-size-1100;
-    padding-top: $mg-spacing-400;
-    padding-bottom: $mg-spacing-300;
+    padding-top: var(--mg-spacing-400);
+    padding-bottom: var(--mg-spacing-300);
   }
 }
 
@@ -411,16 +242,6 @@ $mg-font-family-arabic-body: "Dubai", sans-serif;
 // Not yet activated as we are using the FontAwesome namespace
 
 /**
- * @tokens Widths
- * @presenter Spacing
- */
-
-$mg-width-150: mg-rem(150);
-$mg-width-300: mg-rem(300);
-$mg-width-400: mg-rem(400);
-$mg-width-600: mg-rem(600);
-
-/**
  * @tokens Breakpoints
  * @presenter Spacing
  */
@@ -439,75 +260,6 @@ $mg-breakpoint-desktop-wide: 1440px;
  *
  * https://github.com/UX-and-I/storybook-design-token
  */
-
-// page container
-$mg-container-spacer: $mg-spacing-150;
-
-// text
-$mg-color-text: $mg-color-neutral-800;
-
-// tag
-$mg-color-tag: $mg-color-interactive !default;
-$mg-color-tag--hover: $mg-color-interactive-active !default;
-$mg-color-tag-secondary: $mg-color-neutral-500 !default;
-$mg-color-tag-secondary--hover: $mg-color-neutral-600 !default;
-$mg-color-tag-accent: $mg-color-orange-900 !default;
-$mg-color-tag-accent--hover: $mg-color-orange-800 !default;
-$mg-radius-tag: $mg-spacing-0 !default;
-
-// button
-$mg-color-button: $mg-color-white !default;
-$mg-color-button--hover: $mg-color-white !default;
-$mg-color-button-background: $mg-color-interactive !default;
-$mg-color-button-background--hover: $mg-color-interactive-active !default;
-$mg-color-button-secondary-background: $mg-color-blue-800 !default;
-$mg-color-button-secondary-background--hover: $mg-color-blue-700 !default;
-$mg-radius-button: $mg-spacing-0 !default;
-$mg-border-width-button: 1px !default;
-$mg-color-text-button: $mg-color-white !default;
-$mg-border-color-button: $mg-color-text-button !default;
-$mg-padding-button: $mg-spacing-100 $mg-spacing-150 !default;
-$mg-font-size-button: $mg-font-size-250 !default;
-
-// form check (checkbox / radio)
-$mg-color-form-check: $mg-color-interactive !default;
-$mg-color-form-check--hover: $mg-color-interactive-active !default;
-$mg-color-form-check--checked: $mg-color-interactive !default;
-
-// form inputs (text, textarea, select)
-$mg-color-form-focus: $mg-color-interactive !default;
-$mg-radius-form-input: $mg-spacing-0 !default;
-
-// card
-$mg-card-background: none !default;
-$mg-card-padding: 0rem !default;
-$mg-card-border-radius: 0 !default;
-$mg-card-icon-badge-radius: 20% !default;
-
-// CTA banner
-$mg-cta-padding: $mg-spacing-400 0 !default;
-
-// shared variant accent colours (used by hero, cards, and other components)
-$mg-color-secondary: $mg-color-orange-800 !default;
-$mg-color-tertiary: $mg-color-neutral-900 !default;
-$mg-color-quaternary: $mg-color-red-800 !default;
-
-// hero (aliases for backward compatibility)
-$mg-color-hero: $mg-color-interactive !default;
-$mg-color-hero--secondary: $mg-color-secondary !default;
-$mg-color-hero--tertiary: $mg-color-tertiary !default;
-$mg-color-hero--quaternary: $mg-color-quaternary !default;
-$mg-opacity-hero: 0.85 !default;
-$mg-color-hero-title: $mg-color-neutral-0 !default;
-$mg-spacing-hero-overlay: 0 !default;
-$mg-hero-overlay-max-width: $mg-width-400 !default;
-$mg-hero-overlay-padding: $mg-spacing-200 !default;
-$mg-color-hero-button-secondary-background: rgb(var(--mg-color-neutral-0) / 0.9) !default;
-$mg-color-hero-button-secondary-color: $mg-color-hero !default;
-$mg-border-color-hero-button-secondary: $mg-color-neutral-0 !default;
-
-// mega menu
-$mg-color-mega-content-bg: $mg-color-button !default;
 
 // tabs
 // BUILD-TIME ONLY: $mg-tabs-border-bottom drives @if conditional in tab.scss.
@@ -540,8 +292,6 @@ $mg-tabs-border-bottom: true !default;
  * @presenter Spacing
  */
 
-$author-image-radius: 50%;
-
 // Z-index layers: use these named tokens for global stacking contexts
 // (fixed, sticky, or portaled elements). One token per UI concept — backdrops
 // and sub-layers use $token - 1 / $token + 1 arithmetic within the component
@@ -552,27 +302,6 @@ $author-image-radius: 50%;
 /**
  * @tokens Z-index layers
  */
-
-// Background utility — pseudo-element placed behind all sibling content
-$mg-z-index-behind: -1; // ::before backgrounds (e.g. mg-container-full-width)
-
-// Navigation zone — ⚠ FROZEN: Drupal themes depend on these exact values
-$mg-z-index-nav: 10; // MegaMenu (mobile sidebar/overlay uses nav - 1 = 9)
-$mg-z-index-sticky: 11; // Secondary sticky bars, e.g. OnThisPageNav
-$mg-z-index-nav-toggle: 14; // Mobile nav hamburger toggle (above all nav layers)
-$mg-z-index-header: 22; // PageHeader (above nav and sticky bar)
-
-// Overlay zone — floats above page content
-$mg-z-index-drawer: 2000; // Drawer / side panel (backdrop uses drawer - 1 = 1999)
-$mg-z-index-dropdown: 2500; // Dropdowns and inline menus (above drawers)
-
-// Modal zone — portaled to <body>, must clear all page chrome
-$mg-z-index-modal: 5000; // Modal and dialog (backdrop uses modal - 1 = 4999)
-$mg-z-index-toast: 5500; // Toast notifications (Snackbar), above modals
-
-// Modal scrim. Neutral-tinted by default so it reads as backdrop across all
-// themes; child themes can override for a branded scrim if desired.
-$mg-color-modal-scrim: rgb(var(--mg-color-neutral-900) / 0.85) !default;
 
 :root {
   // Interactive
@@ -698,14 +427,14 @@ $mg-color-modal-scrim: rgb(var(--mg-color-neutral-900) / 0.85) !default;
   // Hero
   --mg-opacity-hero:             0.85;
   --mg-spacing-hero-overlay:     0;
-  --mg-hero-overlay-max-width:   #{$mg-width-400};
+  --mg-hero-overlay-max-width:   #{mg-rem(400)};
   --mg-hero-overlay-padding:     var(--mg-spacing-200);
 
   // Widths (build-time resolved)
-  --mg-width-150:                #{$mg-width-150};
-  --mg-width-300:                #{$mg-width-300};
-  --mg-width-400:                #{$mg-width-400};
-  --mg-width-600:                #{$mg-width-600};
+  --mg-width-150:                #{mg-rem(150)};
+  --mg-width-300:                #{mg-rem(300)};
+  --mg-width-400:                #{mg-rem(400)};
+  --mg-width-600:                #{mg-rem(600)};
 
   // Z-index (named stacking contexts)
   --mg-z-index-behind:     -1;
@@ -722,27 +451,6 @@ $mg-color-modal-scrim: rgb(var(--mg-color-neutral-900) / 0.85) !default;
 /**
   * @tokens-end
   */
-
-// @deprecated Legacy UNDP color variables — will be removed in a future major release.
-// Migrate to Mangrove's standard color tokens ($mg-color-{hue}-{shade}):
-//   $mg-color-green       → $mg-color-green-600 or a custom semantic variable
-//   $mg-color-green-light → $mg-color-green-200
-//   $mg-color-green-dark  → $mg-color-green-800
-//   $mg-color-yellow      → $mg-color-yellow-500
-//   $mg-color-yellow-light → $mg-color-yellow-100
-//   $mg-color-yellow-dark → $mg-color-yellow-700
-//   $mg-color-azure*      → $mg-color-blue-100 / $mg-color-neutral-100
-//   $mg-color-ebony-clay  → $mg-color-neutral-700
-$mg-color-green: #008484;
-$mg-color-green-light: #90ee90;
-$mg-color-yellow: #ff0;
-$mg-color-yellow-light: lightyellow;
-$mg-color-yellow-dark: #d6d624;
-$mg-color-azure: #f0ffff;
-$mg-color-azure-dark: #d4e3e3;
-$mg-color-azure-light: #f0f8f8;
-$mg-color-ebony-clay: #3d4242;
-$mg-color-green-dark: #006400;
 
 // Header height
 $header-height-xlarge: 115px;

@@ -18,17 +18,17 @@ $mg-color-tag: $mg-color-interactive;
 $mg-color-tag--hover: $mg-color-interactive-active;
 
 // $mg-color-tag-secondary, $mg-color-tag-accent — use defaults
-$mg-radius-tag: $mg-spacing-50;
+$mg-radius-tag: mg-rem(5);
 $mg-color-button-background: $irp-color-primary;
-$mg-color-button-background--hover: $sendai-orange-900;
-$mg-radius-button: $mg-spacing-50;
+$mg-color-button-background--hover: #eb752a;
+$mg-radius-button: mg-rem(5);
 
 // Form elements
 $mg-color-form-check: $mg-color-interactive;
 $mg-color-form-check--hover: $mg-color-interactive-active;
 $mg-color-form-check--checked: $mg-color-interactive;
 $mg-color-form-focus: $mg-color-interactive;
-$mg-radius-form-input: $mg-spacing-50;
+$mg-radius-form-input: mg-rem(5);
 
 // Hero
 $mg-color-hero: $mg-color-interactive;
@@ -36,13 +36,13 @@ $mg-spacing-hero-overlay: mg-rem(20) 0;
 
 // Tabs
 $mg-color-tabbar-background: rgba($irp-color-green, 0.1);
-$mg-color-text-tab: $mg-color-neutral-500;
-$mg-color-text-tab-active: $mg-color-neutral-700;
+$mg-color-text-tab: rgb(102 102 102);
+$mg-color-text-tab-active: rgb(51 51 51);
 $mg-color-tab-background: rgba($irp-color-green, 0.3);
 $mg-color-tab-background--inactive: $mg-color-tabbar-background;
 $mg-color-tab-background--hover: $irp-color-green;
-$mg-radius-tab: $mg-spacing-0 $mg-spacing-0 0 0;
-$mg-color-tab-border: $mg-color-neutral-300;
+$mg-radius-tab: 0 0 0 0;
+$mg-color-tab-border: rgb(153 153 153);
 $mg-color-tab-border--hover: rgba($irp-color-green, 0.1);
 $mg-color-tab-border--active: $mg-color-tab-border--hover;
 $mg-tabs-border-bottom: true;

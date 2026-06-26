@@ -25,7 +25,7 @@
 }
 
 .mg-highlight-box--secondary {
-  background: var(--tag-color-background-purple, #{$sendai-purple});
+  background: var(--tag-color-background-purple, var(--sendai-purple));
 }
 
 .mg-highlight-box.mg-highlight-box--primary,

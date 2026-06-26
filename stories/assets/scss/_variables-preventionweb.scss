@@ -18,8 +18,8 @@ $mg-color-tag--hover: $mg-color-interactive-active;
 
 // $mg-color-tag-secondary, $mg-color-tag-accent — use defaults
 $mg-color-button-background: $pw-color-primary;
-$mg-color-button-background--hover: $sendai-orange-900;
-$mg-radius-button: $mg-spacing-50;
+$mg-color-button-background--hover: #eb752a;
+$mg-radius-button: mg-rem(5);
 
 // Form elements
 $mg-color-form-check: $mg-color-interactive;
@@ -39,10 +39,10 @@ $mg-color-tab-border--hover: $mg-color-interactive;
 $mg-color-tab-border--active: $mg-color-tab-background;
 $mg-color-tab-background--inactive: $mg-color-tabbar-background;
 $mg-color-tab-background--hover: rgba($mg-color-interactive, 0.2);
-$mg-radius-tab: $mg-spacing-50 $mg-spacing-50 0 0;
+$mg-radius-tab: mg-rem(5) mg-rem(5) 0 0;
 $mg-tabs-border-bottom: true;
-$mg-color-text-tab: $mg-color-neutral-700;
-$mg-color-text-tab--hover: $mg-color-neutral-700;
-$mg-color-text-tab-active: $mg-color-neutral-900;
+$mg-color-text-tab: rgb(51 51 51);
+$mg-color-text-tab--hover: rgb(51 51 51);
+$mg-color-text-tab-active: rgb(0 0 0);
 
 /* variables end */

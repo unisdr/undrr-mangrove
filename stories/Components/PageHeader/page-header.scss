@@ -110,19 +110,19 @@
       display: inline-block;
 
       &:nth-child(1) {
-        background: $sendai-red-900;
+        background: var(--sendai-red-900);
       }
 
       &:nth-child(2) {
-        background: $sendai-purple-900;
+        background: var(--sendai-purple-900);
       }
 
       &:nth-child(3) {
-        background: $sendai-orange-900;
+        background: var(--sendai-orange-900);
       }
 
       &:nth-child(4) {
-        background: $sendai-turquoise-900;
+        background: var(--sendai-turquoise-900);
       }
     }
   }

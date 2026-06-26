@@ -43,8 +43,6 @@
 }
 
 .mg-container--spacer {
-  --mg-container-spacer: #{$mg-container-spacer};
-
   // exclude spacing for certain combinations of elements
   > .mg-u-sr-only:first-child ~ .mg-hero,
   > .mg-hero:first-child,
