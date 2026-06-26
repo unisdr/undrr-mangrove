@@ -35,7 +35,7 @@ details.mg-details {
     transition: background-color 0.2s ease-in-out;
 
     &:hover {
-      background-color: rgb(var(--mg-color-blue-900) / 0.08); // theme-adaptive tint
+      background-color: rgb(var(--mg-color-blue-900) / 0.08); // interactive hover tint
       border-radius: mg-rem(2);
     }
 
