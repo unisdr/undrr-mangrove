@@ -1,7 +1,7 @@
 // IRP theme — runtime CSS custom property overrides.
 // Applied when .mg-theme-irp is present on <body> or a wrapping element.
 $_irp-color-primary--raw: 15 120 191;
-$_irp-color-green--raw:   140 198 63;
+$_irp-color-green--raw: 140 198 63;
 
 .mg-theme-irp {
   --mg-color-interactive:          rgb(#{$_irp-color-primary--raw});

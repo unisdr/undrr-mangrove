@@ -249,9 +249,9 @@ $mg-font-family-arabic-body: "Dubai", sans-serif;
 // BUILD-TIME ONLY — breakpoints cannot be CSS custom properties.
 // @media queries require static values resolved at compile time; var() is invalid there.
 // Do not add --mg-breakpoint-* custom properties.
-$mg-breakpoint-mobile:       480px;
-$mg-breakpoint-tablet:       900px;
-$mg-breakpoint-desktop:      1164px;
+$mg-breakpoint-mobile: 480px;
+$mg-breakpoint-tablet: 900px;
+$mg-breakpoint-desktop: 1164px;
 $mg-breakpoint-desktop-wide: 1440px;
 
 /**

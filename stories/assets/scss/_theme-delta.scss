@@ -1,9 +1,9 @@
 // Delta Resilience theme — runtime CSS custom property overrides.
 // Applied when .mg-theme-delta is present on <body> or a wrapping element.
-$_delta-color-primary--raw:     19 46 72;
+$_delta-color-primary--raw: 19 46 72;
 $_delta-color-primary-800--raw: 12 30 48;
-$_delta-color-dark--raw:        24 24 35;
-$_delta-color-card-bg--raw:     250 250 250;
+$_delta-color-dark--raw: 24 24 35;
+$_delta-color-card-bg--raw: 250 250 250;
 
 .mg-theme-delta {
   --mg-color-interactive:          rgb(#{$_delta-color-primary--raw});
