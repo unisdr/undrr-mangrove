@@ -1320,6 +1320,21 @@ The utilities.json file lists ~${utilityClassCount} utility classes grouped by c
 
 Use $mg-z-index-* tokens from _variables.scss for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept; derive backdrops with arithmetic (e.g. z-index: $mg-z-index-drawer - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens ($mg-z-index-nav through $mg-z-index-header, values 10-22) are frozen; do not change their numeric values. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
 
+### Design tokens
+
+Color and spacing tokens are CSS custom properties on \`:root\`. Palette colors use space-separated RGB channels to enable alpha compositing:
+
+\`\`\`css
+--mg-color-blue-900: 0 79 145;
+--mg-color-interactive: var(--mg-color-blue-900);
+\`\`\`
+
+Consuming a color token: \`rgb(var(--mg-color-interactive))\` or with alpha: \`rgb(var(--mg-color-interactive) / 0.1)\`.
+
+Sub-brand themes apply CSS custom property overrides via a \`.mg-theme-{name}\` class on \`<body>\` or a wrapping element (e.g. \`.mg-theme-irp\`, \`.mg-theme-preventionweb\`, \`.mg-theme-mcr\`, \`.mg-theme-delta\`). No rebuild needed to switch themes at runtime.
+
+Font sizes, font families, breakpoints, and \`$mg-tabs-border-bottom\` remain as SCSS-only build-time variables — they are not available as CSS custom properties.
+
 ### Conventions
 
 - CSS prefix: mg-

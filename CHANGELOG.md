@@ -15,6 +15,8 @@ _Notable cross-cutting changes between releases land here. Per-component changes
 
 ## 2.0.0 — unreleased
 
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0) and [Storybook release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) for full details.
+
 ### Breaking: CSS custom properties replace SCSS variable theming API
 
 Color and spacing tokens are now CSS custom properties on `:root`. The SCSS backward-compat aliases (`$mg-color-*`, `$mg-spacing-*`) are removed. All component stylesheets use `var(--mg-color-*)` and `var(--mg-spacing-*)` internally.
