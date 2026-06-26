@@ -25,4 +25,24 @@ $_mcr-purple-200--raw: 222 208 215;
   --mg-padding-tab-section:            var(--mg-spacing-500);
   --mg-radius-tab-section:             var(--mg-spacing-200);
   --mg-box-shadow-tab-section:         rgb(var(--mg-color-neutral-900) / 0.24) 0 6px 5px 0;
+
+  // Interactive + component overrides (moved from _variables-mcr.scss)
+  --mg-color-interactive:          rgb(#{$_mcr-purple--raw});
+  --mg-color-interactive-active:   rgb(#{$_mcr-purple--raw});
+  --mg-color-tag:                  var(--mg-color-interactive);
+  --mg-color-tag--hover:           var(--mg-color-interactive-active);
+  --mg-radius-tag:                 var(--mg-spacing-100);
+  --mg-color-button-background:    rgb(#{$_mcr-purple--raw});
+  --mg-color-button-background--hover: rgb(#{$_mcr-purple-800--raw});
+  --mg-radius-button:              var(--mg-spacing-300);
+  --mg-border-width-button:        2px;
+  --mg-padding-button:             var(--mg-spacing-150) var(--mg-spacing-300);
+  --mg-font-size-button:           #{$mg-font-size-400};
+  --mg-color-form-check:           var(--mg-color-interactive);
+  --mg-color-form-check--hover:    var(--mg-color-interactive-active);
+  --mg-color-form-check--checked:  var(--mg-color-interactive);
+  --mg-color-form-focus:           var(--mg-color-interactive);
+  --mg-radius-form-input:          var(--mg-spacing-100);
+  --mg-color-hero:                 var(--mg-color-interactive);
+  --mg-spacing-hero-overlay:       #{mg-rem(20)} 0;
 }

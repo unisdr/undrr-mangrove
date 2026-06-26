@@ -1,0 +1,32 @@
+// IRP theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-irp is present on <body> or a wrapping element.
+$_irp-color-primary--raw: 15 120 191;
+$_irp-color-green--raw:   140 198 63;
+
+.mg-theme-irp {
+  --mg-color-interactive:          rgb(#{$_irp-color-primary--raw});
+  --mg-color-interactive-active:   rgb(#{$_irp-color-primary--raw});
+  --mg-color-tag:                  var(--mg-color-interactive);
+  --mg-color-tag--hover:           var(--mg-color-interactive-active);
+  --mg-radius-tag:                 var(--mg-spacing-50);
+  --mg-color-button-background:    rgb(#{$_irp-color-primary--raw});
+  --mg-color-button-background--hover: var(--sendai-orange-900);
+  --mg-radius-button:              var(--mg-spacing-50);
+  --mg-color-form-check:           var(--mg-color-interactive);
+  --mg-color-form-check--hover:    var(--mg-color-interactive-active);
+  --mg-color-form-check--checked:  var(--mg-color-interactive);
+  --mg-color-form-focus:           var(--mg-color-interactive);
+  --mg-radius-form-input:          var(--mg-spacing-50);
+  --mg-color-hero:                 var(--mg-color-interactive);
+  --mg-spacing-hero-overlay:       #{mg-rem(20)} 0;
+  --mg-color-tabbar-background:    rgb(#{$_irp-color-green--raw} / 0.1);
+  --mg-color-text-tab:             var(--mg-color-neutral-500);
+  --mg-color-text-tab-active:      var(--mg-color-neutral-700);
+  --mg-color-tab-background:       rgb(#{$_irp-color-green--raw} / 0.3);
+  --mg-color-tab-background--inactive: var(--mg-color-tabbar-background);
+  --mg-color-tab-background--hover: rgb(#{$_irp-color-green--raw});
+  --mg-radius-tab:                 var(--mg-spacing-0) var(--mg-spacing-0) 0 0;
+  --mg-color-tab-border:           var(--mg-color-neutral-300);
+  --mg-color-tab-border--hover:    rgb(#{$_irp-color-green--raw} / 0.1);
+  --mg-color-tab-border--active:   rgb(#{$_irp-color-green--raw} / 0.1);
+}
