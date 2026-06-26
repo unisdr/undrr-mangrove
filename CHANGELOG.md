@@ -13,6 +13,38 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+## 2.0.0 — unreleased
+
+### Breaking: CSS custom properties replace SCSS variable theming API
+
+Color and spacing tokens are now CSS custom properties on `:root`. The SCSS backward-compat aliases (`$mg-color-*`, `$mg-spacing-*`) are removed. All component stylesheets use `var(--mg-color-*)` and `var(--mg-spacing-*)` internally.
+
+**Palette format:** colors use space-separated RGB channels (`--mg-color-blue-900: 0 79 145`) so alpha compositing is available without twin variables: `rgb(var(--mg-color-blue-900) / 0.5)`.
+
+**Consumer migration:**
+
+- Replace `$mg-color-*` and `$mg-spacing-*` SCSS variable references with the equivalent CSS custom property: `$mg-color-interactive` becomes `var(--mg-color-interactive)`, etc.
+- Anywhere you used `rgba($mg-color-X, 0.N)`, use `rgb(var(--mg-color-X) / 0.N)` instead.
+- SCSS variables that remain (BUILD-TIME ONLY — `@media` queries, font sizes, font families, `$mg-html-font-size`, `$mg-tabs-border-bottom`): no change required.
+
+### Breaking: sub-brand theming moves from SCSS `!default` to CSS custom property selector blocks
+
+The `_variables-irp.scss`, `_variables-preventionweb.scss`, `_variables-delta.scss`, and `_variables-mcr.scss` files are deleted. Each is replaced by a `_theme-{name}.scss` file containing a `.mg-theme-{name} { }` selector block that overrides CSS custom properties at runtime.
+
+**Consumer migration:**
+
+- Replace `@import "./variables-{name}"` with `@import "./theme-{name}"` in custom entry-point SCSS files.
+- Apply the `.mg-theme-{name}` class to `<body>` or a wrapping element at runtime instead of relying on SCSS compile-time overrides.
+- SCSS `$mg-color-* !default` overrides in downstream stylesheets no longer take effect for color/spacing tokens; move those overrides to CSS custom properties inside `.mg-theme-{name} { }`.
+
+### Breaking: `hero.scss` variant colour map
+
+The `$variant-colour-props` map in `hero.scss` now stores CSS custom property name strings (`"--mg-color-orange-800"`) rather than resolved SCSS color values. Consumers that previously overrode `$mg-color-hero--secondary !default` must switch to overriding the relevant `--mg-color-*` custom property on `:root`.
+
+### Removed: `storybook-design-token` plugin
+
+The `storybook-design-token` npm package is removed. The Design decisions/Colors, Spacing, Widths, Breakpoints, and Typography Storybook pages now render token values directly from `getComputedStyle` (for CSS custom properties) or as static tables (for build-time SCSS tokens). (#1061)
+
 ## 1.8.0 — 2026-06-19
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v1.8.0) for full details.
