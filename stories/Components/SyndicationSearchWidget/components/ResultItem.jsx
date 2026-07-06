@@ -139,9 +139,15 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
   // Get domain info.
   // Taxonomy terms don't have field_domain_access, so use their vocabulary's
   // default domain (typically preventionweb.net).
+  // Organizations are assigned to every domain, so field_domain_access[0] is
+  // arbitrary (often alphabetically first, e.g. AFRP); they're served
+  // authoritatively only through PreventionWeb, so pin them there.
+  // See undrr/web-backlog#2906.
   const domainId = isTerm
     ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
-    : (Array.isArray(domainArray) ? domainArray[0] : domainArray);
+    : type === 'organization'
+      ? 'www_preventionweb_net'
+      : (Array.isArray(domainArray) ? domainArray[0] : domainArray);
   const domainInfo = domainId ? DOMAIN_MAP.get(domainId) : null;
   const baseUrl = domainInfo?.url || 'https://www.preventionweb.net';
 
