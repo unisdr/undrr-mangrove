@@ -1,0 +1,175 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+
+<Meta
+  title="Components/Utility CSS/Position"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Position utilities
+
+Control element positioning, z-index, overflow, and object fit with position utilities.
+
+## Position type
+
+```html
+<div class="mg-u-position--static">Static (default)</div>
+<div class="mg-u-position--relative">Relative</div>
+<div class="mg-u-position--absolute">Absolute</div>
+<div class="mg-u-position--fixed">Fixed</div>
+<div class="mg-u-position--sticky">Sticky</div>
+```
+
+## Basic positioning
+
+Position elements at the edges of their container:
+
+```html
+<div class="mg-u-position--absolute mg-u-top-0">Top: 0</div>
+<div class="mg-u-position--absolute mg-u-right-0">Right: 0</div>
+<div class="mg-u-position--absolute mg-u-bottom-0">Bottom: 0</div>
+<div class="mg-u-position--absolute mg-u-left-0">Left: 0</div>
+```
+
+## Z-index
+
+Semantic z-index values for common UI patterns:
+
+```html
+<div class="mg-u-z-index--dropdown">z-index: 1000 (dropdowns)</div>
+<div class="mg-u-z-index--sticky">z-index: 1020 (sticky headers)</div>
+<div class="mg-u-z-index--fixed">z-index: 1030 (fixed elements)</div>
+<div class="mg-u-z-index--modal-backdrop">z-index: 1040 (modal backdrop)</div>
+<div class="mg-u-z-index--modal">z-index: 1050 (modals)</div>
+<div class="mg-u-z-index--tooltip">z-index: 1070 (tooltips)</div>
+```
+
+## Float
+
+```html
+<div class="mg-u-float--left">Float left</div>
+<div class="mg-u-float--right">Float right</div>
+<div class="mg-u-float--none">No float</div>
+```
+
+### Clear float
+
+```html
+<div class="mg-u-clear--both">Clear both</div>
+```
+
+### Clearfix
+
+```html
+<div class="mg-u-clearfix">
+  <div class="mg-u-float--left">Floated content</div>
+</div>
+```
+
+## Overflow
+
+Control how content overflows its container:
+
+```html
+<div class="mg-u-overflow--auto">Auto scrollbars</div>
+<div class="mg-u-overflow--hidden">Hidden overflow</div>
+<div class="mg-u-overflow--visible">Visible overflow</div>
+```
+
+### Axis-specific overflow
+
+```html
+<div class="mg-u-overflow-x--auto">Horizontal scroll</div>
+<div class="mg-u-overflow-x--hidden">Hide horizontal overflow</div>
+<div class="mg-u-overflow-y--auto">Vertical scroll</div>
+<div class="mg-u-overflow-y--hidden">Hide vertical overflow</div>
+```
+
+## Object fit
+
+Control how replaced elements (img, video) fit their container:
+
+```html
+<img class="mg-u-object-fit--contain" src="image.jpg" alt="" />
+<img class="mg-u-object-fit--cover" src="image.jpg" alt="" />
+<img class="mg-u-object-fit--fill" src="image.jpg" alt="" />
+```
+
+### Object position
+
+```html
+<img
+  class="mg-u-object-fit--cover mg-u-object-position--top"
+  src="image.jpg"
+  alt=""
+/>
+<img
+  class="mg-u-object-fit--cover mg-u-object-position--center"
+  src="image.jpg"
+  alt=""
+/>
+```
+
+## Common patterns
+
+### Corner positioning
+
+```html
+<div class="mg-u-position--relative">
+  <div class="mg-u-position--absolute mg-u-top-0 mg-u-left-0">Top left</div>
+  <div class="mg-u-position--absolute mg-u-top-0 mg-u-right-0">Top right</div>
+  <div class="mg-u-position--absolute mg-u-bottom-0 mg-u-left-0">
+    Bottom left
+  </div>
+  <div class="mg-u-position--absolute mg-u-bottom-0 mg-u-right-0">
+    Bottom right
+  </div>
+</div>
+```
+
+### Sticky header
+
+```html
+<header
+  class="mg-u-position--sticky mg-u-top-0 mg-u-z-index--sticky mg-u-background-color--white"
+>
+  Sticky navigation
+</header>
+```
+
+### Scrollable container
+
+```html
+<div class="mg-u-overflow-y--auto" style="max-height: 300px;">
+  Long scrollable content...
+</div>
+```
+
+### Responsive image
+
+```html
+<div class="mg-u-overflow--hidden">
+  <img
+    class="mg-u-width--full mg-u-height--full mg-u-object-fit--cover"
+    src="image.jpg"
+    alt=""
+  />
+</div>
+```
+
+## Drupal migration
+
+| Legacy class | Mangrove class             |
+| ------------ | -------------------------- |
+| `.ps-ab`     | `.mg-u-position--absolute` |
+| `.ps-rl`     | `.mg-u-position--relative` |
+| `.pr`        | `.mg-u-position--relative` |
+
+## Source file
+
+`stories/assets/scss/utilities/_position.scss`
