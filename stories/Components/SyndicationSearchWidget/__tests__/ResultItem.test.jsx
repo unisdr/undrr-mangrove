@@ -5,12 +5,17 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ResultItem, swapCardVariant } from '../components/ResultItem';
+import { ResultItem, swapCardVariant, stripHiddenTeaserFields } from '../components/ResultItem';
 
 // Sample teaser HTML mimicking Elasticsearch output
 const TEASER_HC = [
   '<div class="mg-card mg-card__hc mg-card-book__hc">',
+  '<div class="mg-card__visual"><a href="/node/1"><img src="/image.jpg" alt="Cover" /></a></div>',
+  '<div class="mg-card__content">',
   '<div class="field field--name-node-title"><a href="/node/1">Title</a></div>',
+  '<div class="mg-card__date">15 Jun 2024</div>',
+  '<div class="mg-card__description">Description summary text</div>',
+  '</div>',
   '</div>',
 ].join('');
 
@@ -89,6 +94,20 @@ describe('swapCardVariant', () => {
   });
 });
 
+describe('stripHiddenTeaserFields', () => {
+  it('returns html unchanged when visibleTeaserFields is null or empty', () => {
+    expect(stripHiddenTeaserFields(TEASER_HC, null)).toBe(TEASER_HC);
+    expect(stripHiddenTeaserFields(TEASER_HC, {})).toBe(TEASER_HC);
+  });
+
+  it('removes elements matching hidden field selectors', () => {
+    const result = stripHiddenTeaserFields(TEASER_HC, { image: false, summary: false });
+    expect(result).not.toContain('mg-card__visual');
+    expect(result).not.toContain('mg-card__description');
+    expect(result).toContain('mg-card__date');
+  });
+});
+
 describe('ResultItem', () => {
   it('renders teaser HTML with card class swap for card mode', () => {
     render(<ResultItem hit={createHit()} displayMode="card" />);
@@ -132,6 +151,37 @@ describe('ResultItem', () => {
     render(<ResultItem hit={createHit()} />);
 
     expect(screen.getByText('www.undrr.org')).toBeInTheDocument();
+  });
+
+  it('strips hidden fields programmatically from teaser HTML when visibleTeaserFields is passed', () => {
+    render(
+      <ResultItem
+        hit={createHit()}
+        visibleTeaserFields={{ image: false, summary: false, date: false }}
+      />
+    );
+
+    const wrapper = screen.getByRole('article');
+    expect(wrapper.querySelector('.mg-card__visual')).toBeNull();
+    expect(wrapper.querySelector('.mg-card__description')).toBeNull();
+    expect(wrapper.querySelector('.mg-card__date')).toBeNull();
+  });
+
+  it('renders fallback mode respecting visibleTeaserFields', () => {
+    const hitWithoutTeaser = createHit({
+      teaser: null,
+      published_at: '2024-06-15T10:00:00Z',
+    });
+
+    render(
+      <ResultItem
+        hit={hitWithoutTeaser}
+        visibleTeaserFields={{ date: false, siteName: false }}
+      />
+    );
+
+    expect(screen.queryByText('15 Jun 2024')).toBeNull();
+    expect(screen.queryByText('UNDRR.org')).toBeNull();
   });
 
   it('renders error state when domain is missing', () => {

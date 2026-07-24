@@ -10,7 +10,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP } from '../utils/constants';
+import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP, TEASER_FIELDS } from '../utils/constants';
 import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
 
 /**
@@ -84,6 +84,55 @@ function resolveRelativeUrls(html, baseUrl) {
   return htmlString
     .replace(/href="\/([^"]*?)"/g, `href="${baseUrl}/$1"`)
     .replace(/src="\/([^"]*?)"/g, `src="${baseUrl}/$1"`);
+}
+
+/**
+ * Strip elements corresponding to hidden teaser fields from HTML string.
+ *
+ * Uses DOMParser in browser/jsdom environment to parse the HTML string,
+ * find elements matching selectors for fields set to `false` in `visibleTeaserFields`,
+ * and remove them from the DOM tree before returning the cleaned HTML string.
+ *
+ * @param {string} html - Teaser HTML string
+ * @param {Object|null} visibleTeaserFields - Map of field keys to booleans. null = all visible.
+ * @returns {string} Cleaned HTML string without hidden field elements.
+ */
+export function stripHiddenTeaserFields(html, visibleTeaserFields) {
+  if (!html || !visibleTeaserFields) return html;
+
+  const fieldsToHide = Object.entries(visibleTeaserFields)
+    .filter(([, visible]) => visible === false)
+    .map(([fieldKey]) => fieldKey);
+
+  if (fieldsToHide.length === 0) return html;
+
+  if (typeof window !== 'undefined' && typeof DOMParser !== 'undefined') {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+      const container = doc.body.firstElementChild;
+      if (container) {
+        let modified = false;
+        fieldsToHide.forEach(fieldKey => {
+          const fieldConfig = TEASER_FIELDS[fieldKey];
+          if (fieldConfig?.selector) {
+            const elements = container.querySelectorAll(fieldConfig.selector);
+            if (elements.length > 0) {
+              elements.forEach(el => el.remove());
+              modified = true;
+            }
+          }
+        });
+        if (modified) {
+          return container.innerHTML;
+        }
+      }
+    } catch {
+      // Fall back to original html if parsing fails
+    }
+  }
+
+  return html;
 }
 
 /**
@@ -227,13 +276,16 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
       }
     }
 
+    // Strip hidden teaser fields programmatically from HTML before rendering
+    const cleanHtml = stripHiddenTeaserFields(finalHtml, visibleTeaserFields);
+
     // Use vocabulary name as result type for terms, content type for nodes
     const resultType = isTerm ? vid : type;
 
     return (
       <article className="mg-search__result" data-result-type={resultType}>
         {showMetrics && <ScoreMetrics hit={hit} source={source} />}
-        <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
+        <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
       </article>
     );
   }
@@ -285,6 +337,11 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
 
   const resultType = isTerm ? vid : type;
 
+  const hideContentType = visibleTeaserFields?.contentType === false;
+  const hideSiteName = visibleTeaserFields?.siteName === false;
+  const hideDate = visibleTeaserFields?.date === false;
+  const hideSummary = visibleTeaserFields?.summary === false;
+
   return (
     <article className="mg-search__result" data-result-type={resultType}>
       {showMetrics && <ScoreMetrics hit={hit} source={source} />}
@@ -299,26 +356,28 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
           </h3>
 
           {/* Metadata line */}
-          <div className="mg-search__result-meta">
-            {typeLabel && (
-              <span className="mg-search__result-type">{typeLabel}</span>
-            )}
-            {domainLabel && type !== 'organization' && (
-              <span className="mg-search__result-domain">{domainLabel}</span>
-            )}
-            {/* Taxonomy terms don't have published_at, so skip date */}
-            {!isTerm && formattedDate && (
-              <time
-                className="mg-search__result-date"
-                dateTime={publishedAt}
-              >
-                {formattedDate}
-              </time>
-            )}
-          </div>
+          {(!hideContentType || !hideSiteName || !hideDate) && (
+            <div className="mg-search__result-meta">
+              {!hideContentType && typeLabel && (
+                <span className="mg-search__result-type">{typeLabel}</span>
+              )}
+              {!hideSiteName && domainLabel && type !== 'organization' && (
+                <span className="mg-search__result-domain">{domainLabel}</span>
+              )}
+              {/* Taxonomy terms don't have published_at, so skip date */}
+              {!hideDate && !isTerm && formattedDate && (
+                <time
+                  className="mg-search__result-date"
+                  dateTime={publishedAt}
+                >
+                  {formattedDate}
+                </time>
+              )}
+            </div>
+          )}
 
           {/* Snippet */}
-          {highlightedBody && (
+          {!hideSummary && highlightedBody && (
             <p
               className="mg-search__result-snippet"
               dangerouslySetInnerHTML={{ __html: highlightedBody }}
