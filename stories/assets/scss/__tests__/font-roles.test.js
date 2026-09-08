@@ -31,9 +31,11 @@
 const fs = require('fs');
 const path = require('path');
 const sass = require('sass');
-// @babel/parser ships with @babel/core and babel-jest, both direct
-// devDependencies, so it is always installed. Used here only to read JSX
-// structure — see the ui-container section for why a regex will not do.
+// Used only to read JSX structure — see the ui-container section for why a
+// regex will not do. Declared in devDependencies at 7.x deliberately, even
+// though @babel/core would drag a copy in anyway: @babel/parser 8 is ESM-only
+// and cannot be `require`d from a CJS jest suite, so relying on hoisting would
+// leave this suite one dependency bump away from failing to load at all.
 const parser = require('@babel/parser');
 
 const SCSS_DIR = path.resolve(__dirname, '..');
@@ -214,6 +216,126 @@ describe('the roles are defined in every bundle', () => {
       });
       expect(declaredAt).toBeLessThan(usedAt);
     }
+  });
+});
+
+/**
+ * Section: what each role resolves to.
+ *
+ * Everything above this point asserts that the roles are DEFINED — in every
+ * bundle, ahead of first use, and referenced instead of a face name. None of it
+ * asserts what they are defined AS. That gap is not theoretical: changing
+ * `--mg-font-family-ui` in `_variables.scss` from the condensed face to the
+ * plain one restyles every Latin chrome element in the library — cards, tags,
+ * tabs, breadcrumbs, nav — and the whole suite stayed green.
+ *
+ * The Latin map is the primary correctness gate for #1098. The migration's
+ * claim is that Latin output is byte-identical to the faces it replaced, and
+ * that claim lives entirely in these five values.
+ *
+ * Expected values are derived from the face variables rather than retyped, so a
+ * deliberate face change is a one-line edit in `_variables.scss` and the test
+ * follows it. What these assertions pin is the role-to-face ASSIGNMENT, which
+ * is the decision; the font names are not.
+ */
+describe('the roles resolve to the intended faces', () => {
+  const FACES = [
+    'mg-font-face-sans',
+    'mg-font-face-sans-condensed',
+    'mg-font-face-mono',
+    'mg-font-face-arabic-display',
+    'mg-font-face-arabic-sans',
+  ];
+
+  /**
+   * Each face variable as Sass emits it. Read out of `_variables.scss` through
+   * the same interpolation the role map uses, so quote stripping (`"Roboto",
+   * sans-serif` -> `Roboto, sans-serif`) happens identically on both sides of
+   * every comparison below.
+   */
+  const faces = (() => {
+    const probe = FACES.map(name => `  --${name}: #{$${name}};`).join('\n');
+    const css = sass.compileString(
+      `@import "variables";\n.mg-face-probe {\n${probe}\n}\n`,
+      {
+        loadPaths: [SCSS_DIR],
+        silenceDeprecations: ['import'],
+        logger: sass.Logger.silent,
+      }
+    ).css;
+    const found = rules(css).find(rule => rule.selector === '.mg-face-probe');
+    return Object.fromEntries(
+      FACES.map(name => [name, found && found.decls[`--${name}`]])
+    );
+  })();
+
+  /**
+   * The role values an element carries, merged last-wins across every rule with
+   * this exact selector — which is how the cascade reads them.
+   */
+  const roleMap = (entry, selector) => {
+    const merged = {};
+    for (const rule of rules(compile(entry))) {
+      if (rule.selector !== selector) continue;
+      for (const role of ROLES) {
+        const value = rule.decls[`--mg-font-family-${role}`];
+        if (value !== undefined) merged[role] = value;
+      }
+    }
+    return merged;
+  };
+
+  test('the face probe resolved every face variable', () => {
+    // Guards the guard. The expectations below build their expected side out of
+    // this object, so an empty read has to be caught here rather than produce a
+    // comparison of undefined against undefined downstream.
+    expect(faces).toEqual(
+      Object.fromEntries(FACES.map(name => [name, expect.stringMatching(/\S/)]))
+    );
+  });
+
+  test.each(BUNDLES)(
+    '%s.css maps the Latin roles onto the Latin faces',
+    entry => {
+      // Faces are bound outside the brand mixin, so every bundle emits the same
+      // Latin map; a brand re-pointing a role has to do it at runtime.
+      expect(roleMap(entry, ':root')).toEqual({
+        text: faces['mg-font-face-sans'],
+        heading: faces['mg-font-face-sans'],
+        display: faces['mg-font-face-sans-condensed'],
+        ui: faces['mg-font-face-sans-condensed'],
+        code: faces['mg-font-face-mono'],
+      });
+    }
+  );
+
+  test.each(['style', 'style-all'])(
+    '%s.css re-points the roles onto Arabic faces on an Arabic root',
+    entry => {
+      // Exhaustive, not a subset: `code` must be ABSENT here. The monospace
+      // stack is the same in both scripts, so it inherits from `:root`, and a
+      // stray Arabic `code` value would be a silently wrong face for every code
+      // block on an Arabic page.
+      expect(roleMap(entry, ':root:lang(ar)')).toEqual({
+        text: faces['mg-font-face-arabic-sans'],
+        heading: faces['mg-font-face-arabic-display'],
+        display: faces['mg-font-face-arabic-display'],
+        ui: faces['mg-font-face-arabic-sans'],
+      });
+    }
+  );
+
+  test('the two scripts disagree about ui, which is why the role exists', () => {
+    // `ui` is the whole point of the split: Latin chrome is condensed, Arabic
+    // has no condensed axis and collapses onto the body face. A map where the
+    // two scripts agreed would still satisfy every assertion above if the faces
+    // were edited to match, and would mean the role model had been abandoned.
+    const latin = roleMap('style', ':root');
+    const arabic = roleMap('style', ':root:lang(ar)');
+
+    expect(latin.ui).not.toEqual(latin.text);
+    expect(arabic.ui).toEqual(arabic.text);
+    expect(arabic.heading).not.toEqual(arabic.text);
   });
 });
 

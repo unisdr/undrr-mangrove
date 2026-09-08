@@ -50,22 +50,55 @@ const BOUNDARY_SELECTORS = [BOUNDARY_TO_LATIN, BOUNDARY_TO_ARABIC];
 const ARABIC_ROOT = ':root:lang(ar)';
 
 /**
- * Compiled role values. Sass interpolation strips string quotes, so the roles
- * are emitted UNQUOTED (`Roboto, sans-serif`) while the `@font-face` blocks
- * that load those files keep their quotes. Asserting the quoted form here would
- * fail against correct output.
+ * Compiled role values, derived from the face variables in `_variables.scss`
+ * rather than retyped, so a deliberate face change is edited in one place. What
+ * these tables pin is the role-to-face ASSIGNMENT on each side of a boundary —
+ * the decision — not the font names, which are Task 1's to choose.
+ *
+ * Sass interpolation strips string quotes, so the roles are emitted UNQUOTED
+ * (`Roboto, sans-serif`) while the `@font-face` blocks that load those files
+ * keep their quotes. Reading the faces back through the same interpolation is
+ * what makes both sides of every comparison agree about that.
  */
+const FACES = [
+  'mg-font-face-sans',
+  'mg-font-face-sans-condensed',
+  'mg-font-face-arabic-display',
+  'mg-font-face-arabic-sans',
+];
+
+const face = (() => {
+  const probe = FACES.map(name => `  --${name}: #{$${name}};`).join('\n');
+  const css = sass.compileString(
+    `@import "variables";\n.mg-face-probe {\n${probe}\n}\n`,
+    {
+      loadPaths: [SCSS_DIR],
+      silenceDeprecations: ['import'],
+      logger: sass.Logger.silent,
+    }
+  ).css;
+  const found = {};
+  for (const name of FACES) {
+    const match = new RegExp(`--${name}\\s*:\\s*([^;}]+)`).exec(css);
+    // Left null when the probe fails to read a face. The tests below compare
+    // against these values, so a null makes every one of them fail loudly
+    // rather than pass against a hole.
+    found[name] = match && match[1].trim().replace(/\s+/g, ' ');
+  }
+  return found;
+})();
+
 const LATIN_ROLES = {
-  '--mg-font-family-text': 'Roboto, sans-serif',
-  '--mg-font-family-heading': 'Roboto, sans-serif',
-  '--mg-font-family-display': 'Roboto Condensed, sans-serif',
-  '--mg-font-family-ui': 'Roboto Condensed, sans-serif',
+  '--mg-font-family-text': face['mg-font-face-sans'],
+  '--mg-font-family-heading': face['mg-font-face-sans'],
+  '--mg-font-family-display': face['mg-font-face-sans-condensed'],
+  '--mg-font-family-ui': face['mg-font-face-sans-condensed'],
 };
 const ARABIC_ROLES = {
-  '--mg-font-family-text': 'Noto Sans Arabic, sans-serif',
-  '--mg-font-family-heading': 'Noto Kufi Arabic, sans-serif',
-  '--mg-font-family-display': 'Noto Kufi Arabic, sans-serif',
-  '--mg-font-family-ui': 'Noto Sans Arabic, sans-serif',
+  '--mg-font-family-text': face['mg-font-face-arabic-sans'],
+  '--mg-font-family-heading': face['mg-font-face-arabic-display'],
+  '--mg-font-family-display': face['mg-font-face-arabic-display'],
+  '--mg-font-family-ui': face['mg-font-face-arabic-sans'],
 };
 
 const compiled = new Map();
