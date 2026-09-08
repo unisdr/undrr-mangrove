@@ -1,7 +1,11 @@
 /*
- * Font role map. Faces (Sass, _variables.scss) say what fonts exist; roles
- * (custom properties) say what job the type is doing, and this is the only
- * place a role is bound to a face. Component stylesheets reference roles.
+ * Script routing for the font roles. The roles themselves are defined in
+ * _variables.scss, on the top-level `:root` block, because every supported
+ * build path reaches _variables.scss — including the per-component Sass recipe
+ * in SassIntegration.mdx, which imports no style*.scss entry point and so never
+ * reaches this file. Defining the roles here would leave that build with role
+ * references and no definitions; the declarations would be invalid at
+ * computed-value time and every element would lose its family.
  * See unisdr/undrr-mangrove#1098.
  *
  *   text     body, p, h4-h6, th, td
@@ -10,23 +14,11 @@
  *   ui       scanned chrome: cards, tags, tabs, breadcrumbs, nav, buttons
  *   code     code / pre
  *
- * Latin: text and heading are both Roboto, display and ui are both Roboto
- * Condensed, so this indirection renders identically to the faces it replaces.
- *
- * Imported by every style*.scss entry point, not by _foundational.scss:
- * style-gutenberg.scss deliberately skips the foundational typography but
- * still compiles card.scss, hero.scss and cta-button.scss, and a role
- * reference with no map is invalid at computed-value time — the declaration
- * would be dropped and the element would silently fall back to inheritance.
- * Component stylesheets therefore carry no var() fallbacks.
+ * This file is imported by every style*.scss entry point, not by
+ * _foundational.scss: style-gutenberg.scss deliberately skips the foundational
+ * typography but still compiles card.scss, hero.scss and cta-button.scss, and
+ * those need the Arabic routing too.
  */
-:root {
-  --mg-font-family-text: #{$mg-font-face-sans};
-  --mg-font-family-heading: #{$mg-font-face-sans};
-  --mg-font-family-display: #{$mg-font-face-sans-condensed};
-  --mg-font-family-ui: #{$mg-font-face-sans-condensed};
-  --mg-font-family-code: #{$mg-font-face-mono};
-}
 
 /* Arabic fonts */
 

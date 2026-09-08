@@ -152,16 +152,18 @@ $mg-font-line-height-700: 1.5em;
 // faces per script in _font-roles.scss. No component stylesheet may name a
 // face: it references a role. See unisdr/undrr-mangrove#1098.
 
-// These are deliberately NOT `!default`. Re-pointing a role is a CSS custom
-// property override (`.mg-theme-* { --mg-font-family-ui: ...; }`) and works at
-// runtime per theme; swapping a face in Sass would apply to every brand in the
-// combined style-all.css, because these variables live outside the brand mixin.
-// A brand may therefore only re-point roles among the faces Mangrove ships,
-// which are the faces _fonts.scss loads @font-face rules for.
-$mg-font-face-sans: "Roboto", sans-serif;
-$mg-font-face-sans-condensed: "Roboto Condensed", sans-serif;
+// Faces keep `!default` so a consumer compiling Mangrove from source can swap
+// in a licensed brand face before the import. That is the only way to introduce
+// a face Mangrove does not ship: a runtime role override
+// (`.mg-theme-* { --mg-font-family-ui: ...; }`) can only re-point a role among
+// the faces _fonts.scss already loads @font-face rules for.
+// These variables live outside the brand mixin, so a Sass override applies to
+// every brand in the combined style-all.css. Per-brand faces need the runtime
+// override instead.
+$mg-font-face-sans: "Roboto", sans-serif !default;
+$mg-font-face-sans-condensed: "Roboto Condensed", sans-serif !default;
 $mg-font-face-mono: ui-monospace, "SFMono-Regular", "Consolas",
-  "Liberation Mono", "Menlo", monospace;
+  "Liberation Mono", "Menlo", monospace !default;
 
 // Arabic fonts
 // Noto Kufi Arabic for headings, Noto Sans Arabic for body. Decided in
@@ -185,8 +187,8 @@ $mg-font-face-mono: ui-monospace, "SFMono-Regular", "Consolas",
 // 400/700 binary where Latin has a ladder. Nothing is faux bolded: the 600
 // used in _foundational.scss resolves UP to the real Bold. The cost is a lost
 // tier of emphasis, not a rendering defect.
-$mg-font-face-arabic-display: "Noto Kufi Arabic", sans-serif;
-$mg-font-face-arabic-sans: "Noto Sans Arabic", sans-serif;
+$mg-font-face-arabic-display: "Noto Kufi Arabic", sans-serif !default;
+$mg-font-face-arabic-sans: "Noto Sans Arabic", sans-serif !default;
 
 // BUILD-TIME ONLY — breakpoints cannot be CSS custom properties.
 // @media queries require static values resolved at compile time; var() is invalid there.
@@ -203,11 +205,29 @@ $mg-breakpoint-desktop-wide: 1440px;
 $mg-tabs-border-bottom: true !default;
 
 // Tokens deliberately NOT in the token sources.
+// - The font roles are bound to faces here because every supported build path
+//   reaches _variables.scss, including the per-component Sass recipe in
+//   SassIntegration.mdx, which imports no entry point and therefore never sees
+//   _font-roles.scss. A role reference with no definition is invalid at
+//   computed-value time, so the whole declaration is dropped and the element
+//   loses its family. Component stylesheets carry no var() fallbacks, so this
+//   block is what makes that safe. Script routing stays in _font-roles.scss.
 // - The Sendai ramp and the legacy one-off colours predate the naming
 //   convention, carry their own prefixes, and no theme overrides them.
 // - The status-label and empty-state blocks are component tokens with no
 //   brand overrides; they read the generated tokens at runtime.
 :root {
+  // Font roles. Faces above say what fonts exist; roles say what job the type
+  // is doing. Latin: text and heading are both Roboto, display and ui are both
+  // Roboto Condensed, so this indirection renders identically to the faces it
+  // replaced. _font-roles.scss re-points these per script.
+  // See unisdr/undrr-mangrove#1098.
+  --mg-font-family-text: #{$mg-font-face-sans};
+  --mg-font-family-heading: #{$mg-font-face-sans};
+  --mg-font-family-display: #{$mg-font-face-sans-condensed};
+  --mg-font-family-ui: #{$mg-font-face-sans-condensed};
+  --mg-font-family-code: #{$mg-font-face-mono};
+
   // Legacy one-off colors (hardcoded — no palette backing)
   --mg-color-green: #008484;
   --mg-color-green-light: #90ee90;
