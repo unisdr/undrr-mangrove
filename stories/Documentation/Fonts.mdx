@@ -75,26 +75,26 @@ When content is marked with a language attribute (e.g., `lang="ar"`), CSS `:lang
 
 ### Supported languages
 
-| Language | Selector    | Font override                  |
-| -------- | ----------- | ------------------------------ |
-| Arabic   | `:lang(ar)` | Dubai (headings and body text) |
+| Language | Selector    | Font override                                        |
+| -------- | ----------- | ---------------------------------------------------- |
+| Arabic   | `:lang(ar)` | Noto Kufi Arabic (headings), Noto Sans Arabic (body) |
 
 ---
 
 ## Arabic fonts
 
-Arabic content uses a dedicated font, Dubai, which covers the Arabic script that Roboto and Roboto Condensed do not.
+Arabic content uses dedicated fonts, which cover the Arabic script that Roboto and Roboto Condensed do not.
 
 ### Font usage
 
-| Purpose          | Font  | Weight   | Variable                          |
-| ---------------- | ----- | -------- | --------------------------------- |
-| Headings (h1-h6) | Dubai | 400, 700 | `$mg-font-family-arabic-headings` |
-| Body text        | Dubai | 400, 700 | `$mg-font-family-arabic-body`     |
+| Purpose          | Font             | Weight   | Variable                          |
+| ---------------- | ---------------- | -------- | --------------------------------- |
+| Headings (h1-h6) | Noto Kufi Arabic | 400, 700 | `$mg-font-family-arabic-headings` |
+| Body text        | Noto Sans Arabic | 400, 700 | `$mg-font-family-arabic-body`     |
 
-> **Note**: Arabic used to pair Noto Kufi Arabic headings with Dubai body text. That was two typefaces and two downloads doing one job, so Mangrove now sets Dubai for both. Only Regular (400) and Bold (700) are published upstream, so Arabic has a two-step weight ladder where Latin has a full one. Nothing is faux-bolded: the `600` used in `_foundational.scss` resolves up to the real Bold face.
+> **Note**: This pairing was decided in [#1089](https://github.com/unisdr/undrr-mangrove/issues/1089), replacing Dubai across every brand. Kufi is a display style -- angular and high contrast -- so it belongs in headings and not at body size; Noto Sans Arabic carries the running text and shares Noto Sans' proportions. Both are SIL Open Font License 1.1.
 >
-> Dubai's own licence is unresolved for this use. The EULA requires the font to be embedded so an end user cannot extract it, and forbids redistribution; Mangrove serves a plain WOFF2 from an open CDN, referenced by an Apache-2.0 library. This needs a legal read, not a design one. Tracked in [#1089](https://github.com/unisdr/undrr-mangrove/issues/1089).
+> Only Regular (400) and Bold (700) are published in the UNDRR asset library for either family, so Arabic has a two-step weight ladder where Latin has a full one. Both upstream families span 100-900, so adding a weight is a packaging task, not an upstream limit. Note the ladder is not symmetric: `600` resolves up to Bold, but `500` resolves *down* to Regular. Roboto Condensed publishes no Medium either, so chrome set in the condensed face behaves the same way in Latin.
 
 ### Implementation
 
@@ -111,14 +111,18 @@ To see Arabic fonts in action, [view the Hero component with Arabic locale](?pat
 
 ### Arabic font sources
 
-| Font  | Weight        | CDN path                                                      |
-| ----- | ------------- | ------------------------------------------------------------- |
-| Dubai | 400 (Regular) | `https://assets.undrr.org/static/fonts/dubai/v1.0.0/Regular/` |
-| Dubai | 700 (Bold)    | `https://assets.undrr.org/static/fonts/dubai/v1.0.0/Bold/`    |
+| Font             | Weight        | CDN path                                                                |
+| ---------------- | ------------- | ----------------------------------------------------------------------- |
+| Noto Kufi Arabic | 400 (Regular) | `https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Regular/`       |
+| Noto Kufi Arabic | 700 (Bold)    | `https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Bold/`          |
+| Noto Sans Arabic | 400 (Regular) | `https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Regular/`       |
+| Noto Sans Arabic | 700 (Bold)    | `https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Bold/`          |
 
-Light and Medium are not declared: they return 404 on the CDN.
+No other weights are declared: only Regular and Bold are published in the UNDRR asset library.
 
-**Font formats**: WOFF2 and WOFF formats are served for optimal browser compatibility and compression.
+Each weight is split into `arabic`, `latin` and `latin-ext` files, declared with a matching `unicode-range` so a browser fetches only the subsets a page renders. An English string inside an Arabic page pulls the small `latin` file, not the much larger `arabic` one.
+
+**Font formats**: WOFF2 only. Browsers that support WOFF (v1) but not WOFF2 are about 0.28% of global traffic, most of it IE11, which lost support in June 2022.
 
 ### RTL support
 

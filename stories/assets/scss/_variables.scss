@@ -128,31 +128,29 @@ $mg-font-family-headings: $mg-font-family-condensed !default;
 $mg-font-family-icons: "fontawesome" !default;
 
 // Arabic fonts
-// One Arabic family across headings and body. Mangrove previously paired Noto
-// Kufi Arabic headings with Dubai body text, which is two typefaces doing one
-// job and two font downloads for Arabic readers. Kufi is conventionally a
-// display style and Dubai reads better at body size, so dropping it costs
-// readers nothing -- though note the UAE federal design system and OCHA's own
-// base theme both set Noto Kufi for body, so the principle is not absolute.
+// Noto Kufi Arabic for headings, Noto Sans Arabic for body. Decided in
+// unisdr/undrr-mangrove#1089, which replaced Dubai across every brand.
 
-// Dubai came from OCHA, but the inheritance is weaker than it looks and is now
-// out of date on both halves. Dubai was OCHA's ALTERNATIVE subtheme pairing
-// (body only, never headings, Regular only), not their base theme, which used
-// Noto Kufi Arabic. And on 2026-05-28 OCHA's brand guidance moved to Almarai
-// for display and Noto Sans Arabic for body. No published reason.
+// Dubai was inherited from OCHA, but the inheritance was weaker than it looked
+// and had gone out of date on both halves. Dubai was OCHA's ALTERNATIVE
+// subtheme pairing (body only, never headings, Regular only), not their base
+// theme, which used Noto Kufi Arabic. And on 2026-05-28 OCHA's brand guidance
+// moved to Almarai for display and Noto Sans Arabic for body.
 
-// There is also an unresolved licensing question: the Dubai EULA requires the
-// font be embedded so an end user cannot extract it, and forbids further
-// distribution. We serve it as a plain woff2 from an open CDN, referenced by an
-// Apache-2.0 component library that points other organisations at that copy.
-// Needs a legal read, not a design one. See issue #1089.
+// Both Noto families are SIL Open Font License 1.1.
 
-// Only Regular and Bold exist upstream -- Light and Medium 404 on the CDN --
-// so Arabic has a 400/700 binary where Latin has a ladder. Nothing is faux
-// bolded: the 600 used in _foundational.scss resolves UP to the real Bold. The
-// cost is a lost tier of emphasis, not a rendering defect.
-$mg-font-family-arabic-headings: "Dubai", sans-serif !default;
-$mg-font-family-arabic-body: "Dubai", sans-serif !default;
+// This is two Arabic families where 2.0.0-alpha.3 had one. Kufi is a display
+// style -- angular, high contrast, architectural -- so it earns its place in
+// headings and is the wrong choice at body size; Noto Sans Arabic carries the
+// running text and shares Noto Sans' proportions. The second download is
+// subset by unicode-range, so a page pays for the scripts it actually renders.
+
+// Only Regular and Bold exist upstream for both families, so Arabic has a
+// 400/700 binary where Latin has a ladder. Nothing is faux bolded: the 600
+// used in _foundational.scss resolves UP to the real Bold. The cost is a lost
+// tier of emphasis, not a rendering defect.
+$mg-font-family-arabic-headings: "Noto Kufi Arabic", sans-serif !default;
+$mg-font-family-arabic-body: "Noto Sans Arabic", sans-serif !default;
 
 // $mg-font-family-icons: "mangrove-icon-set";
 // Not yet activated as we are using the FontAwesome namespace

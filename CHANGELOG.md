@@ -13,6 +13,21 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+### Arabic typefaces changed: Dubai replaced by Noto Kufi Arabic and Noto Sans Arabic
+
+Closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089).
+
+| Token | Before | After |
+|---|---|---|
+| `$mg-font-family-arabic-headings` | `"Dubai", sans-serif` | `"Noto Kufi Arabic", sans-serif` |
+| `$mg-font-family-arabic-body` | `"Dubai", sans-serif` | `"Noto Sans Arabic", sans-serif` |
+
+Arabic buttons take the body family, matching `REVIEW-CHECKLIST.md` and the CtaButton, Chips and ShareButtons components. A bare `<button>` and `.mg-preview-access__submit` previously took the headings family, so two buttons on one page could render in two typefaces — invisible while both Arabic tokens resolved to Dubai. `header` and `th` still take the headings family; changing those is a typographic-role decision tracked separately.
+
+**Breaking:** Mangrove no longer emits a Dubai `@font-face`. A theme that restates either token as Dubai still compiles, but must now declare its own face or drop the override.
+
+Rationale, the CDN paths, and why this reverses the single-Arabic-family decision made in `2.0.0-alpha.3` are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
+
 ## 2.0.0 — unreleased
 
 Development releases began with `2.0.0-alpha.1` under the npm `next` dist-tag. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for the first alpha, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2 and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3. The [Storybook release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) cover the complete 2.0 line; the tagged stable GitHub Release link lands with 2.0.0.
