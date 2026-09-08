@@ -156,7 +156,7 @@
   }
 
   &__item-link {
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     color: rgb(var(--mg-color-interactive));
     background: none;
     border: none;
@@ -233,7 +233,7 @@
   &__banner {
     padding: var(--mg-spacing-250);
     header {
-      font-family: $mg-font-family-headings;
+      font-family: var(--mg-font-family-ui);
       font-size: $mg-font-size-500;
       font-weight: bold;
       padding-bottom: var(--mg-spacing-100);
@@ -779,11 +779,6 @@
 
 [dir="rtl"] .mg-mega-topbar--branded .mg-mega-topbar-mobile__icon-button:has(.mg-icon-angle-circled-left) {
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
-}
-
-// Arabic
-.mg-mega-menu__item-link:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }
 
 // Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be

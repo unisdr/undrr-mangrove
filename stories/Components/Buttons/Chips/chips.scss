@@ -8,7 +8,7 @@
   color: rgb(var(--mg-color-text));
   cursor: pointer;
   display: inline-flex;
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   font-size: $mg-font-size-250;
   font-weight: 500;
   justify-content: center;
@@ -69,8 +69,4 @@
     margin-inline-end: calc(-1 * var(--mg-spacing-50));
     margin-inline-start: var(--mg-spacing-50);
   }
-}
-
-.mg-chip:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }

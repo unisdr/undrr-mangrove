@@ -148,13 +148,22 @@
   }
 
   &__title {
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-500;
     font-weight: bold;
     line-height: $mg-font-line-height-500;
     padding-bottom: var(--mg-spacing-75);
     padding-top: var(--mg-spacing-100);
     text-wrap: balance;
+
+    // `.mg-card__title` is a <header> wrapper, and consuming sites put a real
+    // heading tag inside it. The unconditional `h1, h2, h3` heading-role rule
+    // in _foundational.scss would match that child and beat the family it
+    // inherits from here, so the title claims its own subtree.
+    // See unisdr/undrr-mangrove#1098.
+    :is(h1, h2, h3) {
+      font-family: var(--mg-font-family-ui);
+    }
 
     a {
       color: rgb(var(--mg-color-interactive));
@@ -275,7 +284,7 @@ $card-variant-colours: (
 }
 
 .mg-card__label {
-  font-family: $mg-font-family-headings;
+  font-family: var(--mg-font-family-ui);
   font-weight: 700;
 }
 
@@ -602,14 +611,6 @@ $card-variant-colours: (
       }
     }
   }
-}
-
-// Arabic font override for card titles and labels. Covers all card variants
-// (Vertical, Horizontal, Book, Icon) since they share .mg-card__title.
-.mg-card__title:lang(ar),
-.mg-card__title a:lang(ar),
-.mg-card__label:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
 }
 
 /* content-card end */

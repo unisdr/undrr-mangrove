@@ -164,7 +164,7 @@
 
   &__label {
     display: inline-block;
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-tag;
     font-weight: bold;
     margin-right: var(--mg-spacing-25);
@@ -187,12 +187,20 @@
     color: rgb(var(--mg-color-hero-title));
     margin-bottom: var(--mg-spacing-25);
     display: inline-block;
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-display);
     font-weight: bold;
     font-size: $mg-font-size-600;
     line-height: 1.2;
     max-width: 18ch;
     text-wrap: balance;
+
+    // `.mg-hero__title` is a <header> wrapping the heading tag (Hero.jsx), so
+    // the unconditional `h1, h2, h3` heading-role rule in _foundational.scss
+    // would match that child and beat the family it inherits from here. The
+    // title claims its own subtree instead. See unisdr/undrr-mangrove#1098.
+    :is(h1, h2, h3, a) {
+      font-family: var(--mg-font-family-display);
+    }
 
     a,
     a:hover,
@@ -546,17 +554,4 @@ $variant-colour-props: (
   .mg-hero__split-grid {
     direction: rtl; // reverses grid item order (content stays first semantically)
   }
-}
-
-// Arabic font override for the title wrapper. $mg-font-family-headings is
-// Roboto Condensed which has no Arabic glyph coverage; route to the Arabic
-// family. Scoped to heading tags + anchor so unrelated descendant content
-// (slotted subtitles, body copy) keeps its own font.
-.mg-hero__title:lang(ar),
-.mg-hero__title a:lang(ar),
-.mg-hero__title h1:lang(ar),
-.mg-hero__title h2:lang(ar),
-.mg-hero__title h3:lang(ar),
-.mg-hero__label:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
 }

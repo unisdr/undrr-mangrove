@@ -19,16 +19,11 @@
 }
 
 .mg-footer--about-footer--links {
-  font-family: $mg-font-family-headings;
+  font-family: var(--mg-font-family-ui);
   font-size: $mg-font-size-500;
   display: inline-flex;
   flex-wrap: wrap;
   gap: mg-rem(7.5) mg-rem(20);
-}
-
-// Arabic font override for about-footer links.
-.mg-footer--about-footer--links:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
 }
 
 .mg-footer--about-footer--description {

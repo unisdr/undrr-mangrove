@@ -79,7 +79,7 @@
   &__link {
     display: block;
     padding: var(--mg-spacing-150) var(--mg-spacing-150);
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-300;
     font-weight: 600;
     color: rgb(var(--mg-color-neutral-600));
@@ -116,7 +116,7 @@
     flex-shrink: 0;
     margin-inline-start: auto;
     padding: var(--mg-spacing-150) var(--mg-spacing-150);
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-300;
     font-weight: 600;
     color: rgb(var(--mg-color-neutral-0));
@@ -195,9 +195,3 @@
 // and chevron icon direction are all RTL-aware. The mask-image gradient uses
 // physical `to right` which fades the correct edge in LTR; RTL gradient
 // correction is a known open item.
-
-// Arabic font override
-.mg-on-this-page-nav__link:lang(ar),
-.mg-on-this-page-nav__cta:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
-}

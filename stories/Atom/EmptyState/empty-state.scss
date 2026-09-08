@@ -26,7 +26,7 @@
   align-items: center;
   gap: var(--mg-empty-state-gap);
   padding: var(--mg-empty-state-padding);
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   text-align: center;
 
   &__media {
@@ -50,7 +50,7 @@
   // table cell a <p> is often the honest choice.
   &__title {
     margin: 0;
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: var(--mg-empty-state-title-font-size);
     font-weight: 700;
     line-height: 1.3;
@@ -114,13 +114,4 @@
 .mg-empty-state-cell {
   padding: 0;
   text-align: center;
-}
-
-// Arabic font overrides.
-.mg-empty-state:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
-}
-
-.mg-empty-state__title:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
 }

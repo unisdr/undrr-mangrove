@@ -131,7 +131,7 @@
   border-radius: var(--mg-radius-tab);
   background: var(--mg-color-tab-background--inactive);
   color: var(--mg-color-text-tab);
-  font-family: $mg-font-family-headings;
+  font-family: var(--mg-font-family-ui);
   font-size: var(--mg-font-size-tab);
   font-weight: 600;
   line-height: 1.421;
@@ -476,7 +476,7 @@
       border-radius: 50%;
       content: "+";
       display: flex;
-      font-family: $mg-font-family;
+      font-family: var(--mg-font-family-text);
       font-size: var(--mg-font-size-tab);
       font-weight: 400;
       height: mg-rem(30);
@@ -575,11 +575,6 @@
       left: var(--mg-spacing-100);
     }
   }
-}
-
-// Arabic
-.mg-tabs__link:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
 }
 
 // Filter input for stacked tabs
