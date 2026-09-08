@@ -27,10 +27,8 @@
 }
 
 // Arabic font override for about-footer links.
-:lang(ar) {
-  .mg-footer--about-footer--links {
-    font-family: $mg-font-family-arabic-headings;
-  }
+.mg-footer--about-footer--links:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
 }
 
 .mg-footer--about-footer--description {

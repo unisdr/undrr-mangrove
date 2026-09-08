@@ -73,10 +73,8 @@
   }
 }
 
-:lang(ar) #cc-main {
-  .c-bn,
-  .cm__btn,
-  .pm__btn {
-    font-family: $mg-font-family-arabic-body;
-  }
+#cc-main .c-bn:lang(ar),
+#cc-main .cm__btn:lang(ar),
+#cc-main .pm__btn:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }

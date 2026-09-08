@@ -1,4 +1,5 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
 
 <Meta title="Design decisions/Fonts" />
 
@@ -94,7 +95,7 @@ Arabic content uses dedicated fonts, which cover the Arabic script that Roboto a
 
 > **Note**: This pairing was decided in [#1089](https://github.com/unisdr/undrr-mangrove/issues/1089), replacing Dubai across every brand. Kufi is a display style -- angular and high contrast -- so it belongs in headings and not at body size; Noto Sans Arabic carries the running text and shares Noto Sans' proportions. Both are SIL Open Font License 1.1.
 >
-> Only Regular (400) and Bold (700) are published in the UNDRR asset library for either family, so Arabic has a two-step weight ladder where Latin has a full one. Both upstream families span 100-900, so adding a weight is a packaging task, not an upstream limit. Note the ladder is not symmetric: `600` resolves up to Bold, but `500` resolves *down* to Regular. Roboto Condensed publishes no Medium either, so chrome set in the condensed face behaves the same way in Latin.
+> Only Regular (400) and Bold (700) are published in the UNDRR asset library for either family, so Arabic has a two-step weight ladder where Latin has a full one. Both upstream families span 100-900, so adding a weight is a packaging task, not an upstream limit. Note the ladder is not symmetric: `600` resolves up to Bold, but `500` resolves _down_ to Regular. Roboto Condensed publishes no Medium either, so chrome set in the condensed face behaves the same way in Latin.
 
 ### Implementation
 
@@ -107,16 +108,16 @@ Add the `lang="ar"` attribute to enable Arabic fonts:
 </div>
 ```
 
-To see Arabic fonts in action, [view the Hero component with Arabic locale](?path=/story/components-hero-hero--default&globals=locale:arabic;addonRtl:rtl).
+To see Arabic fonts in action, view the <LinkTo kind="Components/Hero/Hero" story="Default">Hero component</LinkTo> with the locale toolbar set to Arabic.
 
 ### Arabic font sources
 
-| Font             | Weight        | CDN path                                                                |
-| ---------------- | ------------- | ----------------------------------------------------------------------- |
-| Noto Kufi Arabic | 400 (Regular) | `https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Regular/`       |
-| Noto Kufi Arabic | 700 (Bold)    | `https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Bold/`          |
-| Noto Sans Arabic | 400 (Regular) | `https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Regular/`       |
-| Noto Sans Arabic | 700 (Bold)    | `https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Bold/`          |
+| Font             | Weight        | CDN path                                                          |
+| ---------------- | ------------- | ----------------------------------------------------------------- |
+| Noto Kufi Arabic | 400 (Regular) | `https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Regular/` |
+| Noto Kufi Arabic | 700 (Bold)    | `https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Bold/`    |
+| Noto Sans Arabic | 400 (Regular) | `https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Regular/` |
+| Noto Sans Arabic | 700 (Bold)    | `https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Bold/`    |
 
 No other weights are declared: only Regular and Bold are published in the UNDRR asset library.
 
@@ -146,6 +147,8 @@ When creating components that explicitly set `font-family`, add language-specifi
 
 ### Pattern for Arabic fonts
 
+Attach `:lang(ar)` to the element you are styling. Never use it as an ancestor.
+
 ```scss
 // Component styles
 .my-component {
@@ -153,12 +156,33 @@ When creating components that explicitly set `font-family`, add language-specifi
 }
 
 // Arabic font override (add at end of component file)
-:lang(ar) {
-  .my-component {
-    font-family: $mg-font-family-arabic-body;
-  }
+.my-component:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }
 ```
+
+The nested form `:lang(ar) { .my-component { ... } }` compiles to `:lang(ar) .my-component`, where `:lang()` constrains the **ancestor** and `.my-component` is merely a descendant. That rule fires on every matching element beneath an Arabic root regardless of that element's own language, so an English island inside an Arabic page renders in Arabic typography. Anchoring the pseudo-class to the element matches on **computed** language, which inherits and therefore stops at a `lang="en"` boundary. Fixed in [#1092](https://github.com/unisdr/undrr-mangrove/issues/1092).
+
+### Language boundaries
+
+Anchoring stops the Arabic rules from _matching_ non-Arabic elements, but `font-family` still inherits: a `lang="en"` island would otherwise inherit the Arabic family from `body:lang(ar)`. Two zero-specificity rules in `_foundational.scss` reassert the family at the switch point only, using a child combinator so component children that inherit their container's face keep it.
+
+```scss
+:where(:lang(ar)) > :where([lang]:not([lang=''], :lang(ar))) {
+  font-family: $mg-font-family;
+}
+
+:where(:not(:lang(ar))) > :where([lang]:not([lang='']):lang(ar)) {
+  font-family: $mg-font-family-arabic-body;
+}
+```
+
+Two consequences worth knowing:
+
+- `lang=""` means _unknown_ in HTML, not _Latin_, so an element carrying it inherits rather than being reset.
+- The boundary rules can only reassert one family, and they reassert the base body face. A language switch on a generic element (`<span>`, `<a>`) inside component chrome — an English link inside an Arabic `.mg-card__title` — therefore falls back to Roboto rather than Roboto Condensed. Put `lang` on the element that carries the component class instead; `:where()` gives the boundary rules zero specificity, so the component rule wins.
+
+See <LinkTo kind="Design decisions/Language boundaries">Language boundaries</LinkTo> for a live demo that reads the resolved font family back out of the rendered page.
 
 ---
 
@@ -174,4 +198,4 @@ When creating components that explicitly set `font-family`, add language-specifi
 
 ---
 
-Last updated: 5 January 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Fonts.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 8 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Fonts.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

@@ -121,10 +121,8 @@
 }
 
 // Arabic
-:lang(ar) {
-  .mg-breadcrumb {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-breadcrumb:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }
 
 @media (prefers-reduced-motion: no-preference) {

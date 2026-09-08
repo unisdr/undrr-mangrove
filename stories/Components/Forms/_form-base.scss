@@ -345,10 +345,8 @@
 // -----------------------------------------------------------------------------
 // Arabic font override
 // -----------------------------------------------------------------------------
-:lang(ar) {
-  .mg-form-input,
-  .mg-form-textarea,
-  .mg-form-select {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-form-input:lang(ar),
+.mg-form-textarea:lang(ar),
+.mg-form-select:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }

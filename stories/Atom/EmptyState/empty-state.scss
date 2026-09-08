@@ -117,12 +117,10 @@
 }
 
 // Arabic font overrides.
-:lang(ar) {
-  .mg-empty-state {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-empty-state:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
+}
 
-  .mg-empty-state__title {
-    font-family: $mg-font-family-arabic-headings;
-  }
+.mg-empty-state__title:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
 }

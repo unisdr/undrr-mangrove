@@ -782,10 +782,8 @@
 }
 
 // Arabic
-:lang(ar) {
-  .mg-mega-menu__item-link {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-mega-menu__item-link:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }
 
 // Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be

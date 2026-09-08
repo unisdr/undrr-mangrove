@@ -55,7 +55,7 @@
   @include mg-focus-ring;
 }
 
-:lang(ar) .mg-user-feedback__question {
+.mg-user-feedback__question:lang(ar) {
   font-family: $mg-font-family-arabic-body;
 }
 
