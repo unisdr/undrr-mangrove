@@ -29,6 +29,9 @@
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
+  'design-decisions-language-boundaries':
+    'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
+
   'components-syndicated-search':
     'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
   'components-syndicated-search-translations':
