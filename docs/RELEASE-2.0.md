@@ -38,6 +38,7 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 | `2.0.0-alpha.1` | Published under `next` | CSS custom-property theming, 16px root and sub-brand runtime selectors |
 | `2.0.0-alpha.2` | Published under `next` | Experience principles, component surfaces, interaction states, responsive behaviour and multilingual resilience |
 | `2.0.0-alpha.3` | Release-ready on `main`; not yet published | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
+| `2.0.0-alpha.4` | In development on `main` | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai |
 
 ### Alpha.2 experience and interaction baseline
 
@@ -80,9 +81,9 @@ DELTA's theme was built on a navy that appears nowhere in DELTA's own codebase. 
 
 #### Arabic text uses one family
 
-Arabic headings were Noto Kufi Arabic and body was Dubai. Both are now Dubai, so Arabic readers download one font instead of two. Only Regular and Bold exist upstream, so Arabic has a 400/700 ladder where Latin has four steps; nothing is faux-bolded.
+Arabic headings were Noto Kufi Arabic and body was Dubai. Both became Dubai in alpha.3, so Arabic readers downloaded one font instead of two.
 
-Two caveats worth stating. Dropping Kufi is a judgement, not a correction — the UAE Federal Design System and OCHA's own base theme both set it for body. And **the Dubai licensing position is unresolved**: its EULA forbids redistribution and requires the font be embedded so it cannot be extracted, while Mangrove serves it as a plain woff2 from an open CDN. That needs a legal read. Both are tracked in [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089), along with the fact that OCHA — where Mangrove got Dubai — moved off it in May 2026.
+A caveat was stated at the time: dropping Kufi was a judgement rather than a correction. **That has since been settled the other way** — see [Arabic typography settled](#alpha4-arabic-typography-settled) below. Dubai is no longer shipped.
 
 #### Not yet resolved
 
@@ -92,6 +93,28 @@ These are known and deliberately unfinished in alpha.3:
 - The accent ramp is the largest remaining accessibility debt and is the reason most of the 65 WCAG exceptions exist. Retuning it is a brand decision.
 - Forced-colours behaviour has not been verified in real Windows High Contrast, only in emulation. The two-band mixins are built to degrade correctly there, but that is reasoned, not observed.
 - `--mg-color-focus-ring-inverse` resolves to white in all five themes, so it is a seam with nothing behind it yet. It earns its keep only when a theme retunes it.
+
+### Alpha.4 Arabic typography settled
+
+**Arabic now pairs Noto Kufi Arabic headings with Noto Sans Arabic body text. Dubai is removed.** This closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089), which asked for the Arabic typeface to be chosen deliberately rather than inherited.
+
+Dubai came to Mangrove from OCHA, but the inheritance was weaker than it looked and had gone stale on both halves. Dubai was OCHA's *alternative* subtheme pairing — body only, never headings, Regular only — not their base theme, which used Noto Kufi Arabic. And on 2026-05-28 OCHA's own brand guidance moved to Almarai for display and Noto Sans Arabic for body.
+
+Both Noto families are [SIL Open Font License 1.1](https://openfontlicense.org/).
+
+This is two Arabic families where alpha.3 had one, and that is deliberate. Kufi is a display style — angular, high contrast, architectural — so it earns its place in headings and is the wrong choice at body size; Noto Sans Arabic carries the running text and shares Noto Sans' proportions. The second download is subset by `unicode-range` across `arabic`, `latin` and `latin-ext`, so a page fetches only the scripts it renders — an English string inside an Arabic page pulls the small `latin` file, not the much larger `arabic` one.
+
+Only Regular (400) and Bold (700) are published in the UNDRR asset library for either family, unchanged from Dubai, so Arabic keeps a 400/700 ladder where Latin has four steps. Both upstream families span 100-900, so adding a weight is an asset-library packaging task rather than an upstream limitation.
+
+Per the CSS font-matching rules a target of `600` resolves up to Bold, but a target of `400`-`500` resolves *down*, so `font-weight: 500` renders Regular in Arabic. That is less of a divergence from Latin than it first appears: Roboto publishes a Medium, but **Roboto Condensed does not**, so compact chrome set in the condensed face already renders Regular at 500 in both scripts. Only the `font-weight: 500` declarations sitting on the Roboto body face actually differ. This was equally true of Dubai.
+
+**Two costs worth stating plainly.**
+
+*Glyph coverage narrows.* Dubai was a single unsubsetted file; the replacements are subsetted, and the asset library publishes only the `arabic`, `latin` and `latin-ext` subsets — not `math` or `symbols`. Around 158 codepoints Dubai rendered now fall through to the next font in the stack. The ones most likely to appear in DRR content are the superscripts `²` and `³` (as in km², m³), `±`, the fractions `½ ¼ ¾`, `µ`, the comparison and statistical signs `≤ ≥ ≠ ≈ ∞ √ ∑ ∫ ‰`, Greek letters, and the footnote daggers `† ‡`. These still render, in the reader's fallback face, at a different weight and cap-height. Closing the gap means publishing the missing subsets in the asset library, not a change here.
+
+*Arabic pages get heavier.* Two families means two Arabic downloads. For a page using both weights of both faces the `arabic` subsets total roughly 187 KB against Dubai's 115 KB — about **+72 KB (+63%)**. The `unicode-range` split genuinely helps the Latin subsets, which are small and fetched only when Latin appears, but it does not offset the second Arabic face. This is the price of the heading/body distinction; it is a real cost, not a free one.
+
+**If you override the Arabic tokens**, `$mg-font-family-arabic-headings` and `$mg-font-family-arabic-body` now default to `"Noto Kufi Arabic", sans-serif` and `"Noto Sans Arabic", sans-serif`. If you restated either as Dubai, that override still compiles but Mangrove no longer emits a Dubai `@font-face`, so you must declare your own or drop the override. The fonts are served WOFF2-only from `https://assets.undrr.org/fonts/`.
 
 ## Find your path
 

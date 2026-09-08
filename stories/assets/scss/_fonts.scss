@@ -10,5 +10,12 @@ $font-path-roboto-condensed: "https://assets.undrr.org/static/fonts/roboto-conde
 
 /* Arabic Fonts */
 
-/* Dubai - for body text in Arabic */
-@import "../fonts/dubai/dubai";
+/* Noto Kufi Arabic - for headings in Arabic */
+$font-path-noto-kufi-arabic: "https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0" !default;
+
+@import "../fonts/noto-kufi-arabic/noto-kufi-arabic";
+
+/* Noto Sans Arabic - for body text in Arabic */
+$font-path-noto-sans-arabic: "https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0" !default;
+
+@import "../fonts/noto-sans-arabic/noto-sans-arabic";

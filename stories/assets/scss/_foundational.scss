@@ -199,13 +199,25 @@ a {
 
 /* Arabic fonts */
 :lang(ar) {
-  /* Body text uses Dubai */
+  /* Body text uses Noto Sans Arabic.
+     `button` belongs here, not with the headings: REVIEW-CHECKLIST.md sets the
+     rule that compact heading chrome takes the Arabic headings token while
+     buttons take the body one, and CtaButton, Chips and ShareButtons all follow
+     it. Only a bare, unclassed `button` reached the headings token, via
+     `:lang(ar) button` at (0,1,1) losing to `:lang(ar) .mg-button` at (0,2,0) --
+     so two buttons on one page rendered in two typefaces. That was invisible
+     while both Arabic tokens resolved to Dubai. See unisdr/undrr-mangrove#1089. */
   body,
-  p {
+  p,
+  button {
     font-family: $mg-font-family-arabic-body;
   }
 
-  /* Headings use Dubai, same as body: one Arabic family */
+  /* Headings use Noto Kufi Arabic, a display face.
+     `header` and `th` are still here and arguably should not be -- `header`
+     matches the element, so a whole page-header subtree inherits a display
+     face -- but changing them is a typographic-role decision, not a defect
+     fix, and is tracked with the wider font-role taxonomy work. */
   h1,
   h2,
   h3,
@@ -213,7 +225,6 @@ a {
   h5,
   h6,
   header,
-  button,
   th {
     font-family: $mg-font-family-arabic-headings;
   }

@@ -162,11 +162,13 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 // so swap heading/UI families when lang="ar" is set on the page.
 :lang(ar) {
   .mg-preview-access__title,
-  .mg-preview-access__label,
-  .mg-preview-access__submit {
+  .mg-preview-access__label {
     font-family: $mg-font-family-arabic-headings;
   }
 
+  // __submit is a button, so it takes the body family per REVIEW-CHECKLIST.md,
+  // matching CtaButton, Chips and ShareButtons. See unisdr/undrr-mangrove#1089.
+  .mg-preview-access__submit,
   .mg-preview-access__eyebrow,
   .mg-preview-access__body,
   .mg-preview-access__error,

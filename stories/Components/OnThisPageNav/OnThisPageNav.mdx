@@ -318,7 +318,7 @@ The component supports RTL layouts automatically:
 
 - The nav list scrolls right-to-left via CSS flexbox and `overflow-x`
 - The CTA button pins to the left (logical end) via `margin-inline-start: auto`
-- Arabic headings use the Dubai font family (`:lang(ar)` override)
+- Arabic headings use the Noto Kufi Arabic font family (`:lang(ar)` override)
 - Scroll buttons use direction-neutral labels ("Previous navigation items" / "Next navigation items") and RTL-aware `scrollBy` direction; `getComputedStyle(list).direction` maps which button shows for which overflow direction in RTL
 - **Known open item**: the `mask-image` trailing-edge gradient uses a physical `to right` direction and does not auto-flip in RTL (items scrolled off the right edge in RTL have no fade). A follow-up fix will use logical values or a separate RTL rule
 
@@ -326,6 +326,7 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
+- **1.5** — 2026-09-08 ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic navigation links render in Noto Kufi Arabic. The `:lang(ar)` override points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic.
 - **1.4** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Replaced the heavy drop shadow with a crisp divider and aligned link, CTA, and scroll-control transitions and focus states with the shared modernisation tokens. Removed redundant per-language story exports in favour of the global locale toolbar.
 - **1.3** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `label` prop into a `labels` object with `DEFAULT_ON_THIS_PAGE_LABELS` export. Pass `labels={{ label: '...' }}` instead of `label` directly. Backwards compatible — `DEFAULT_ON_THIS_PAGE_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
 

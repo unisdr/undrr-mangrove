@@ -1,0 +1,79 @@
+/* Noto Sans Arabic - Arabic body text.
+   OFL-1.1. Repackaged from @fontsource/noto-sans-arabic v5.3.0 by the UNDRR asset library;
+   see https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/.
+
+   The Arabic companion to Noto Sans, sharing its proportions and weight
+   structure. Paired with Noto Kufi Arabic for headings.
+
+   Regular (400) and Bold (700) are the only weights published in the UNDRR
+   asset library. The upstream family spans 100-900, so adding a weight is an
+   asset-library packaging task, not an upstream limitation.
+
+   Per the CSS font-matching rules a target of 600 resolves UP to Bold, but a
+   target of 400-500 resolves DOWN, so `font-weight: 500` renders Regular here.
+   Whether that differs from Latin depends on the face: Roboto publishes a
+   Medium, but Roboto Condensed does not, so chrome set in the condensed face
+   already renders Regular at 500 in both scripts. Nothing is faux-bolded.
+
+   Each subset is declared separately with a unicode-range so the browser only
+   fetches the files a page needs -- an English string inside an Arabic page
+   pulls the small latin file, not the much larger arabic one. The ranges are
+   generated from each file's actual cmap, so they neither over-declare
+   (causing a wasted download) nor under-declare (blocking glyphs that are
+   present in the file). WOFF2 only, per the asset library's format policy. */
+
+/* Regular (400) */
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('#{$font-path-noto-sans-arabic}/Regular/noto-sans-arabic-arabic-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020, U+00A0, U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FBC2, U+FBD3-FD8F, U+FD92-FDC7, U+FDCF, U+FDF0-FDFF, U+FE70-FE74, U+FE76-FEFC, U+FEFF, U+10EFD-10EFF;
+}
+
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('#{$font-path-noto-sans-arabic}/Regular/noto-sans-arabic-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-0301, U+0303-0304, U+0308, U+2009, U+200B, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A, U+20AC, U+2122, U+2212, U+FEFF;
+}
+
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('#{$font-path-noto-sans-arabic}/Regular/noto-sans-arabic-latin-ext-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020, U+00A0, U+0100-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0130, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-0151, U+0154-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+02C7, U+02C9, U+02DD, U+0300-0301, U+0303-0304, U+0308, U+1E80-1E85, U+1E9E, U+1EF2-1EF3, U+FEFF;
+}
+
+/* Bold (700) */
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('#{$font-path-noto-sans-arabic}/Bold/noto-sans-arabic-arabic-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020, U+00A0, U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FBC2, U+FBD3-FD8F, U+FD92-FDC7, U+FDCF, U+FDF0-FDFF, U+FE70-FE74, U+FE76-FEFC, U+FEFF, U+10EFD-10EFF;
+}
+
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('#{$font-path-noto-sans-arabic}/Bold/noto-sans-arabic-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-0301, U+0303-0304, U+0308, U+2009, U+200B, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A, U+20AC, U+2122, U+2212, U+FEFF;
+}
+
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('#{$font-path-noto-sans-arabic}/Bold/noto-sans-arabic-latin-ext-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020, U+00A0, U+0100-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0130, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-0151, U+0154-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+02C7, U+02C9, U+02DD, U+0300-0301, U+0303-0304, U+0308, U+1E80-1E85, U+1E9E, U+1EF2-1EF3, U+FEFF;
+}
