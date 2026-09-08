@@ -664,11 +664,14 @@ export default {
       'mg-tabs__item',
       'mg-tabs__link',
       'mg-tabs__panels',
+      'mg-tabs--responsive-stacked',
+      'mg-tabs__mobile-item',
+      'mg-tabs__mobile-link',
       'mg-tabs-content',
       'mg-tabs__section',
     ],
     description:
-      'Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Use mgTabsDestroy(scope) before removing dynamically initialised markup.',
+      'Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Use mgTabsDestroy(scope) before removing dynamically initialised markup.',
   },
 
   // --- Highlight box (auto-rendered) ---

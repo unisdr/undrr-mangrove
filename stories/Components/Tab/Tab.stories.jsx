@@ -242,6 +242,22 @@ export const ScrollableGroup = {
   },
 };
 
+export const StacksOnMobile = {
+  args: {
+    tabdata: sectionData,
+    stackOnMobile: true,
+    labels: { tabListLabel: 'Programme sections' },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Resize below 480px to switch to stacked disclosures. At 480px and above, the same sections use the horizontal rail. The selected panel is retained when changing layout.',
+      },
+    },
+  },
+};
+
 export const NarrowContainer = {
   ...ScrollableGroup,
   decorators: [

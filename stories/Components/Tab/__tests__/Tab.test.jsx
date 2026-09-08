@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  within,
+} from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { Tab } from '../Tab';
 
@@ -1056,6 +1062,281 @@ describe('Tab', () => {
   // -------------------------------------------------------
   // Accessibility (jest-axe)
   // -------------------------------------------------------
+
+  describe('optional mobile stacking', () => {
+    function resizeTo(width) {
+      window.innerWidth = width;
+      fireEvent.resize(window);
+    }
+
+    it.each([375, 479, 480, 1024])(
+      'uses disclosures only below 480px when opted in (%ipx)',
+      width => {
+        window.innerWidth = width;
+        const { tabContainer } = renderAndInit('horizontal', true, {
+          stackOnMobile: true,
+        });
+        expect(tabContainer).toHaveAttribute('data-mg-js-tabs-stack-on-mobile');
+        expect(
+          within(tabContainer).getAllByRole(width < 480 ? 'button' : 'tab')
+        ).toHaveLength(3);
+        expect(
+          tabContainer.querySelectorAll(
+            width < 480 ? '[role="region"]' : '[role="tabpanel"]'
+          )
+        ).toHaveLength(3);
+        if (width < 480)
+          expect(within(tabContainer).queryByRole('tablist')).toBeNull();
+      }
+    );
+
+    it('keeps default horizontal tabs horizontal during viewport changes', () => {
+      const { tabContainer } = renderAndInit();
+      expect(tabContainer).not.toHaveAttribute(
+        'data-mg-js-tabs-stack-on-mobile'
+      );
+      resizeTo(375);
+      expect(within(tabContainer).getAllByRole('tab')).toHaveLength(3);
+      resizeTo(1024);
+      expect(within(tabContainer).getAllByRole('tab')).toHaveLength(3);
+    });
+
+    it('keeps explicit stacked sections stacked and preserves open panels at every width', () => {
+      const { tabContainer } = renderAndInit('stacked', false, {
+        stackOnMobile: true,
+      });
+      const triggers = tabContainer.querySelectorAll('[role="button"]');
+      fireEvent.click(triggers[1]);
+      resizeTo(375);
+      resizeTo(1024);
+      expect(within(tabContainer).getAllByRole('button')).toHaveLength(3);
+      expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('opens the selected tab on mobile and restores the latest open interaction on desktop', () => {
+      const { tabContainer } = renderAndInit('horizontal', true, {
+        stackOnMobile: true,
+      });
+      const triggers = within(tabContainer).getAllByRole('tab');
+      fireEvent.click(triggers[1]);
+      resizeTo(375);
+      const mobileTriggers = within(tabContainer).getAllByRole('button');
+      expect(mobileTriggers[1]).toHaveAttribute('aria-expanded', 'true');
+      expect(mobileTriggers[0]).toHaveAttribute('aria-expanded', 'false');
+      expect(document.activeElement).toBe(mobileTriggers[1]);
+      fireEvent.click(mobileTriggers[2]);
+      expect(mobileTriggers[1]).toHaveAttribute('aria-expanded', 'true');
+      expect(mobileTriggers[2]).toHaveAttribute('aria-expanded', 'true');
+      resizeTo(480);
+      expect(triggers[2]).toHaveAttribute('aria-selected', 'true');
+      expect(getPanel(tabContainer, 'tab-2')).toHaveAttribute('hidden');
+      expect(getPanel(tabContainer, 'tab-3')).not.toHaveAttribute('hidden');
+      expect(document.activeElement).toBe(triggers[2]);
+      expect(
+        Array.from(triggers).filter(trigger => trigger.tabIndex === 0)
+      ).toEqual([triggers[2]]);
+    });
+
+    it('supports disclosure keyboard navigation and panel associations in mobile mode', () => {
+      window.innerWidth = 375;
+      const { tabContainer } = renderAndInit('horizontal', true, {
+        stackOnMobile: true,
+      });
+      const triggers = within(tabContainer).getAllByRole('button');
+      triggers[0].focus();
+      fireEvent.keyDown(triggers[0], { key: 'ArrowDown' });
+      expect(document.activeElement).toBe(triggers[1]);
+      expect(triggers[1]).toHaveAttribute('aria-expanded', 'false');
+      fireEvent.keyDown(triggers[1], { key: 'Enter' });
+      expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      const panel = getPanel(tabContainer, 'tab-2');
+      expect(triggers[1]).toHaveAttribute('aria-controls', panel.id);
+      expect(panel).toHaveAttribute('aria-labelledby', triggers[1].id);
+      expect(panel).not.toHaveAttribute('hidden');
+    });
+
+    it('keeps a focused control visible when returning from mobile with multiple panels open', () => {
+      const data = tabdata.map(tab => ({
+        ...tab,
+        data: `<button>Action ${tab.text}</button>`,
+      }));
+      const { tabContainer } = renderAndInit('horizontal', true, {
+        tabdata: data,
+        stackOnMobile: true,
+      });
+      resizeTo(375);
+      fireEvent.click(
+        within(tabContainer).getByRole('button', { name: 'Section 3' })
+      );
+      const control = getPanel(tabContainer, 'tab-1').querySelector('button');
+      control.focus();
+      resizeTo(1024);
+      expect(
+        within(tabContainer).getByRole('tab', { name: 'Section 1' })
+      ).toHaveAttribute('aria-selected', 'true');
+      expect(getPanel(tabContainer, 'tab-1')).not.toHaveAttribute('hidden');
+      expect(document.activeElement).toBe(control);
+      expect(getPanel(tabContainer, 'tab-3')).toHaveAttribute('hidden');
+    });
+
+    it('preserves live form controls and their values across mobile and desktop transitions', () => {
+      const data = tabdata.map(tab => ({
+        ...tab,
+        data: `<label>Notes ${tab.text}<input type="text" /></label>`,
+      }));
+      const { tabContainer } = renderAndInit('horizontal', true, {
+        tabdata: data,
+        stackOnMobile: true,
+      });
+      const panel = getPanel(tabContainer, 'tab-1');
+      const input = panel.querySelector('input');
+      const listener = jest.fn();
+      input.addEventListener('input', listener);
+      fireEvent.input(input, { target: { value: 'Unsaved notes' } });
+      input.focus();
+      resizeTo(375);
+      expect(panel.querySelector('input')).toBe(input);
+      expect(input).toHaveValue('Unsaved notes');
+      expect(document.activeElement).toBe(input);
+      resizeTo(1024);
+      expect(panel.querySelector('input')).toBe(input);
+      expect(input).toHaveValue('Unsaved notes');
+      expect(document.activeElement).toBe(input);
+      fireEvent.input(input, { target: { value: 'More unsaved notes' } });
+      expect(listener).toHaveBeenCalledTimes(2);
+    });
+
+    it('restores a usable selected panel when every mobile disclosure is closed', () => {
+      const { tabContainer } = renderAndInit('horizontal', true, {
+        stackOnMobile: true,
+      });
+      const triggers = within(tabContainer).getAllByRole('tab');
+      fireEvent.click(triggers[1]);
+      resizeTo(375);
+      fireEvent.click(
+        within(tabContainer).getByRole('button', { name: 'Section 2' })
+      );
+      expect(tabContainer.querySelector('[aria-expanded="true"]')).toBeNull();
+      resizeTo(1024);
+      expect(triggers[1]).toHaveAttribute('aria-selected', 'true');
+      expect(getPanel(tabContainer, 'tab-2')).not.toHaveAttribute('hidden');
+      expect(document.activeElement).toBe(triggers[1]);
+    });
+
+    it('passes full accessibility checks after crossing the breakpoint in both directions', async () => {
+      const { container } = renderAndInit('horizontal', true, {
+        stackOnMobile: true,
+      });
+      resizeTo(375);
+      expect(await axe(container)).toHaveNoViolations();
+      resizeTo(480);
+      expect(await axe(container)).toHaveNoViolations();
+    });
+
+    it('switches opted-in legacy HTML without replacing panel content or duplicating wrappers', () => {
+      const result = render(<div />);
+      const host = result.container.firstElementChild;
+      host.innerHTML = `<article class="mg-tabs mg-tabs--horizontal" data-mg-js-tabs data-mg-js-tabs-stack-on-mobile>
+        <ul class="mg-tabs__list">${tabdata
+          .map(
+            tab => `<li class="mg-tabs__item"><a class="mg-tabs__link" href="#mg-tabs__section-${tab.text_id}">${tab.text}</a></li>
+        <li class="mg-tabs-content" data-mg-js-tabs-content><section class="mg-tabs__section" id="mg-tabs__section-${tab.text_id}">${tab.data}</section></li>`
+          )
+          .join('')}</ul></article>`;
+      const container = host.firstElementChild;
+      const panel = getPanel(container, 'tab-2');
+      mgTabsRuntime(container, true);
+      const trigger = within(container).getByRole('tab', { name: 'Section 2' });
+      fireEvent.click(trigger);
+      for (let cycle = 0; cycle < 2; cycle++) {
+        resizeTo(375);
+        expect(
+          within(container).getByRole('button', { name: 'Section 2' })
+        ).toHaveAttribute('aria-expanded', 'true');
+        resizeTo(1024);
+        expect(trigger).toHaveAttribute('role', 'tab');
+        expect(trigger).toHaveAttribute('aria-selected', 'true');
+        expect(getPanel(container, 'tab-2')).toBe(panel);
+        expect(container.querySelectorAll('.mg-tabs__rail')).toHaveLength(1);
+      }
+      mgTabsDestroy(container);
+    });
+
+    it('supports responsive v1 tablists whose panels are siblings outside the initialisation scope', () => {
+      const result = render(<div />);
+      const host = result.container.firstElementChild;
+      host.innerHTML = `<article class="mg-tabs"><ul class="mg-tabs__list" data-mg-js-tabs data-mg-js-tabs-stack-on-mobile>
+        ${tabdata.map(tab => `<li class="mg-tabs__item"><a class="mg-tabs__link" href="#mg-tabs__section-${tab.text_id}">${tab.text}</a></li>`).join('')}
+        </ul><div class="mg-tabs-content" data-mg-js-tabs-content>
+        ${tabdata.map(tab => `<section class="mg-tabs__section" id="mg-tabs__section-${tab.text_id}">${tab.data}</section>`).join('')}</div></article>`;
+      const list = host.querySelector('[data-mg-js-tabs]');
+      const originalPanel = getPanel(host, 'tab-3');
+      window.innerWidth = 375;
+      mgTabsRuntime(list, true);
+      expect(within(host).getAllByRole('button')).toHaveLength(3);
+      fireEvent.click(within(host).getByRole('button', { name: 'Section 3' }));
+      expect(originalPanel).not.toHaveAttribute('hidden');
+      resizeTo(1024);
+      expect(
+        within(host).getByRole('tab', { name: 'Section 3' })
+      ).toHaveAttribute('aria-selected', 'true');
+      expect(getPanel(host, 'tab-3')).toBe(originalPanel);
+      resizeTo(375);
+      expect(
+        within(host).getByRole('button', { name: 'Section 3' })
+      ).toHaveAttribute('aria-expanded', 'true');
+      mgTabsDestroy(list);
+      expect(host.querySelector('.mg-tabs__rail')).toBeNull();
+      expect(getPanel(host, 'tab-3')).toBe(originalPanel);
+    });
+
+    it('stops responsive enhancement after destroy and supports reinitialisation', () => {
+      const { tabContainer } = renderAndInit('horizontal', true, {
+        stackOnMobile: true,
+      });
+      resizeTo(375);
+      mgTabsDestroy(tabContainer);
+      const markup = tabContainer.innerHTML;
+      resizeTo(1024);
+      resizeTo(375);
+      expect(tabContainer.innerHTML).toBe(markup);
+      mgTabsRuntime(tabContainer, true);
+      expect(within(tabContainer).getAllByRole('button')).toHaveLength(3);
+      resizeTo(1024);
+      expect(within(tabContainer).getAllByRole('tab')).toHaveLength(3);
+      expect(tabContainer.querySelectorAll('.mg-tabs__rail')).toHaveLength(1);
+    });
+
+    it('supports React opt-in and data updates while mobile without losing or duplicating panels', () => {
+      const runtimeMock = jest.requireMock(
+        '../../../assets/js/tabs'
+      ).mgTabsRuntime;
+      runtimeMock.mockImplementation(mgTabsRuntime);
+      window.innerWidth = 375;
+      try {
+        const result = render(<Tab tabdata={tabdata} />);
+        expect(screen.getAllByRole('tab')).toHaveLength(3);
+        result.rerender(<Tab tabdata={tabdata} stackOnMobile />);
+        expect(screen.getAllByRole('button')).toHaveLength(3);
+        const nextData = [
+          ...tabdata,
+          { text: 'Section 4', text_id: 'tab-4', data: '<p>New content</p>' },
+        ];
+        result.rerender(<Tab tabdata={nextData} stackOnMobile />);
+        fireEvent.click(screen.getByRole('button', { name: 'Section 4' }));
+        expect(screen.getByText('New content')).toBeVisible();
+        result.rerender(<Tab tabdata={nextData} stackOnMobile={false} />);
+        expect(screen.getAllByRole('tab')).toHaveLength(4);
+        expect(
+          result.container.querySelectorAll('.mg-tabs__section')
+        ).toHaveLength(4);
+        result.unmount();
+      } finally {
+        runtimeMock.mockReset();
+      }
+    });
+  });
 
   describe('accessibility', () => {
     it('horizontal tabs have no axe violations', async () => {

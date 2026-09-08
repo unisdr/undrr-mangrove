@@ -47,23 +47,39 @@
   }
 }
 
-// Shared styles for stacked tabs
+// Shared styles for explicit and opt-in responsive stacked tabs. Both markup
+// shapes use the same disclosure treatment; the runtime controls visibility.
 @mixin stacked-tabs {
-  > .mg-tabs__list {
+  > .mg-tabs__list,
+  > .mg-tabs__panels {
     display: flex;
     flex-direction: column; // Stack tabs vertically
   }
 
-  > .mg-tabs__list > .mg-tabs__item {
+  > .mg-tabs__list > .mg-tabs__item,
+  > .mg-tabs-content > .mg-tabs__mobile-item,
+  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__mobile-item,
+  > .mg-tabs__panels > .mg-tabs-content > .mg-tabs__mobile-item {
     width: 100%; // Make each tab take full width
     margin-bottom: var(--mg-spacing-25); // Add spacing between tabs
   }
 
-  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__section {
+  > .mg-tabs-content > .mg-tabs__section,
+  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__section,
+  > .mg-tabs__panels > .mg-tabs-content > .mg-tabs__section {
     padding: var(--mg-spacing-150);
   }
 
-  > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link {
+  > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link,
+  > .mg-tabs-content > .mg-tabs__mobile-item > .mg-tabs__mobile-link,
+  > .mg-tabs__list
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link,
+  > .mg-tabs__panels
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link {
     position: relative;
     padding-right: mg-rem(40); // space for the chevron to theright
 
@@ -398,7 +414,8 @@
 }
 
 @mixin modern-stacked-tabs {
-  > .mg-tabs__list {
+  > .mg-tabs__list,
+  > .mg-tabs__panels {
     background: transparent;
 
     &::after {
@@ -406,12 +423,24 @@
     }
   }
 
-  > .mg-tabs__list > .mg-tabs__item {
+  > .mg-tabs__list > .mg-tabs__item,
+  > .mg-tabs-content > .mg-tabs__mobile-item,
+  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__mobile-item,
+  > .mg-tabs__panels > .mg-tabs-content > .mg-tabs__mobile-item {
     box-shadow: inset 0 -1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
     margin-bottom: 0;
   }
 
-  > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link {
+  > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link,
+  > .mg-tabs-content > .mg-tabs__mobile-item > .mg-tabs__mobile-link,
+  > .mg-tabs__list
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link,
+  > .mg-tabs__panels
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link {
     background: rgb(var(--mg-color-neutral-0));
     border: 0;
     border-radius: 0;
@@ -480,7 +509,9 @@
     }
   }
 
-  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__section {
+  > .mg-tabs-content > .mg-tabs__section,
+  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__section,
+  > .mg-tabs__panels > .mg-tabs-content > .mg-tabs__section {
     background: rgb(var(--mg-color-neutral-0));
     border-radius: 0;
     box-shadow: none;
@@ -496,6 +527,12 @@
 // The explicit stacked variant remains a disclosure pattern at every width.
 .mg-tabs--stacked {
   @include modern-stacked-tabs;
+}
+
+// The author-level item display rule otherwise wins over the browser's
+// hidden styling when responsive disclosures replace legacy desktop triggers.
+.mg-tabs--responsive-stacked > .mg-tabs__list > .mg-tabs__item[hidden] {
+  display: none;
 }
 
 [dir="rtl"] {
@@ -516,7 +553,20 @@
   }
 
   // Flip stacked chevron for RTL
-  .mg-tabs--stacked > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link {
+  .mg-tabs--stacked > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link,
+  .mg-tabs--responsive-stacked
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link,
+  > .mg-tabs__list
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link,
+  .mg-tabs--responsive-stacked
+    > .mg-tabs__panels
+    > .mg-tabs-content
+    > .mg-tabs__mobile-item
+    > .mg-tabs__mobile-link {
     padding-right: var(--mg-spacing-200);
     padding-left: mg-rem(40);
 

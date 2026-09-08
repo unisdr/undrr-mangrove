@@ -23,6 +23,7 @@ export function Tab({
   variant = 'horizontal',
   defaultOpen,
   singleOpen = false,
+  stackOnMobile = false,
   filterable = false,
   labels = DEFAULT_TAB_LABELS,
 }) {
@@ -44,6 +45,7 @@ export function Tab({
     variant,
     defaultOpen,
     singleOpen,
+    stackOnMobile,
     filterable,
     filterPlaceholder,
     tabListLabel,
@@ -55,11 +57,16 @@ export function Tab({
       className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}
       data-mg-js-tabs
       data-mg-js-tabs-label={tabListLabel}
+      {...(stackOnMobile && variant !== 'stacked'
+        ? { 'data-mg-js-tabs-stack-on-mobile': '' }
+        : {})}
       data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}
-      {...(defaultOpen != null
+      {...(variant === 'stacked' && defaultOpen != null
         ? { 'data-mg-js-tabs-default-open': String(defaultOpen) }
         : {})}
-      {...(singleOpen ? { 'data-mg-js-tabs-single-open': '' } : {})}
+      {...(variant === 'stacked' && singleOpen
+        ? { 'data-mg-js-tabs-single-open': '' }
+        : {})}
       {...(filterable && variant === 'stacked'
         ? { 'data-mg-js-tabs-filterable': '' }
         : {})}
@@ -100,6 +107,11 @@ export function Tab({
                 data-mg-js-tabs-content
                 key={tab.text_id}
               >
+                {stackOnMobile && (
+                  <div className="mg-tabs__mobile-item" hidden>
+                    <TabTrigger tab={tab} mobile />
+                  </div>
+                )}
                 <TabPanel tab={tab} />
               </div>
             ))}
@@ -116,10 +128,12 @@ export function Tab({
   );
 }
 
-function TabTrigger({ tab }) {
+function TabTrigger({ tab, mobile = false }) {
   return (
     <a
-      className="mg-tabs__link"
+      className={
+        mobile ? 'mg-tabs__link mg-tabs__mobile-link' : 'mg-tabs__link'
+      }
       href={`#mg-tabs__section-${tab.text_id}`}
       data-mg-js-tabs-default={tab.is_default}
     >
@@ -159,6 +173,8 @@ Tab.propTypes = {
   defaultOpen: PropTypes.bool,
   /** When true, only one stacked panel can be open at a time (accordion behavior). */
   singleOpen: PropTypes.bool,
+  /** Opt in to stacked disclosures below 480px for the horizontal variant. */
+  stackOnMobile: PropTypes.bool,
   /** When true, renders a search input to filter stacked sections by text content. */
   filterable: PropTypes.bool,
   /** UI label overrides. */

@@ -17,7 +17,7 @@ Don't use tabs for site navigation. Use links or menus instead.
 
 ## Variants
 
-There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. Horizontal tabs stay in one row at every viewport width: the group centres when it fits, and the tab rail scrolls horizontally when it overflows. Choose stacked explicitly for FAQs, many sections or exceptionally long labels.
+There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. Horizontal tabs stay in one row at every viewport width: the group centres when it fits, and the tab rail scrolls horizontally when it overflows. Choose stacked explicitly for FAQs, many sections or exceptionally long labels. Set `stackOnMobile` to opt horizontal tabs into stacked disclosures below 480px.
 
 <Canvas of={TabStories.CentredGroup} meta={TabStories} />
 
@@ -28,6 +28,27 @@ The tab rail scrolls independently of the content below. Faded edges indicate mo
 <Canvas of={TabStories.ScrollableGroup} meta={TabStories} />
 
 <Canvas of={TabStories.NarrowContainer} meta={TabStories} />
+
+### Optional mobile stacking
+
+Horizontal scrolling is the default. For the previous mobile disclosure layout, pass `stackOnMobile` or add the presence-based `data-mg-js-tabs-stack-on-mobile` attribute to existing HTML. At widths below 480px, the component switches its layout, accessibility roles and keyboard navigation together. At 480px and above it returns to horizontal tabs. The current section opens when entering the mobile layout. When returning to the rail, the focused section or the section you last used is selected, reopening it if necessary. Mobile sections can be toggled independently. Options such as filtering, `defaultOpen` and `singleOpen` remain specific to the explicit stacked variant. Panel content stays mounted, preserving form values; focus stays in the panel or transfers to its equivalent tab control.
+
+```jsx
+<Tab tabdata={tabdata} stackOnMobile />
+```
+
+```html
+<article
+  class="mg-tabs mg-tabs--horizontal"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="horizontal"
+  data-mg-js-tabs-stack-on-mobile
+>
+  <!-- Existing horizontal tab markup -->
+</article>
+```
+
+<Canvas of={TabStories.StacksOnMobile} meta={TabStories} />
 
 ### Stacked tabs
 
@@ -288,7 +309,8 @@ When you pass elements explicitly via `scope`, the skip attribute is ignored —
 | Attribute                            | Element                                     | Purpose                                                                                                                                                                                                                                                                                                         |
 | ------------------------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `data-mg-js-tabs`                    | `article`                                   | Identifies a tab container                                                                                                                                                                                                                                                                                      |
-| `data-mg-js-tabs-variant`            | `article`                                   | `"horizontal"` or `"stacked"`; horizontal no longer changes variant on mobile                                                                                                                                                                                                                                   |
+| `data-mg-js-tabs-variant`            | `article`                                   | `"horizontal"` or `"stacked"`; horizontal scrolls on mobile unless mobile stacking is enabled                                                                                                                                                                                                                   |
+| `data-mg-js-tabs-stack-on-mobile`    | `article`                                   | Presence-based opt-in: horizontal tabs become stacked below 480px. Omit to keep horizontal scrolling. Ignored for explicit stacked tabs.                                                                                                                                                                        |
 | `data-mg-js-tabs-label`              | `article`                                   | Accessible horizontal tablist name, default "Sections"                                                                                                                                                                                                                                                          |
 | `data-mg-js-tabs-content`            | `div` (horizontal) or `li` (stacked/legacy) | Wraps each tab's content section                                                                                                                                                                                                                                                                                |
 | `data-mg-js-tabs-default`            | `a.mg-tabs__link`                           | `"true"` to open this item by default, `"false"` to keep it closed. Overrides the container-level `data-mg-js-tabs-default-open`.                                                                                                                                                                               |
@@ -325,14 +347,15 @@ const tabdata = [
 
 **Props:**
 
-| Prop          | Type     | Default              | Description                                                                                                                                                                                                  |
-| ------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `tabdata`     | `Array`  | —                    | Array of tab objects (see below)                                                                                                                                                                             |
-| `variant`     | `string` | `"horizontal"`       | `"horizontal"` or `"stacked"`                                                                                                                                                                                |
-| `defaultOpen` | `bool`   | `undefined`          | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides.                                                                                         |
-| `singleOpen`  | `bool`   | `false`              | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
-| `filterable`  | `bool`   | `false`              | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS.                                                        |
-| `labels`      | `object` | `DEFAULT_TAB_LABELS` | `tabListLabel` names the tablist (default "Sections"); `filterPlaceholder` names the stacked filter input (default "Filter sections…").                                                                      |
+| Prop            | Type     | Default              | Description                                                                                                                                                                                                  |
+| --------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tabdata`       | `Array`  | —                    | Array of tab objects (see below)                                                                                                                                                                             |
+| `variant`       | `string` | `"horizontal"`       | `"horizontal"` or `"stacked"`                                                                                                                                                                                |
+| `stackOnMobile` | `bool`   | `false`              | Horizontal only. Switch to stacked disclosures below 480px; restore the rail at 480px and above.                                                                                                             |
+| `defaultOpen`   | `bool`   | `undefined`          | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides.                                                                                         |
+| `singleOpen`    | `bool`   | `false`              | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
+| `filterable`    | `bool`   | `false`              | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS.                                                        |
+| `labels`        | `object` | `DEFAULT_TAB_LABELS` | `tabListLabel` names the tablist (default "Sections"); `filterPlaceholder` names the stacked filter input (default "Filter sections…").                                                                      |
 
 Each tab object in `tabdata`:
 
@@ -352,7 +375,7 @@ Each tab object in `tabdata`:
 
 ### v2.10: centred, scrollable horizontal tabs
 
-Horizontal tabs now stay horizontal below 480px. Choose `variant="stacked"` (HTML: `mg-tabs--stacked` and `data-mg-js-tabs-variant="stacked"`) when disclosure behaviour is required. Existing stacked options are unchanged.
+Horizontal tabs now stay horizontal below 480px by default. To restore automatic mobile stacking, set `stackOnMobile` (HTML: `data-mg-js-tabs-stack-on-mobile`). Choose `variant="stacked"` (HTML: `mg-tabs--stacked` and `data-mg-js-tabs-variant="stacked"`) when disclosure behaviour is required. Existing stacked options are unchanged.
 
 The React wrapper renders a separate rail and panel container. Existing vanilla markup is enhanced automatically, preserving panel IDs and hash links; custom selectors that expect panels inside `.mg-tabs__list` must be updated. Pair the updated stylesheet with the updated runtime. Use the canonical horizontal HTML above for new integrations.
 
@@ -369,7 +392,7 @@ You can also select triggers by class (`.mg-tabs__link`) — this works in all v
 
 ## Changelog
 
-- **2.10** — 2026-09-08 ([#1094](https://github.com/unisdr/undrr-mangrove/issues/1094)): Centred horizontal tab groups with soft active pills, independent mobile scrolling, overflow fades, RTL-aware keyboard navigation and selection reveal. Separated panels from the tablist, added accessible group labels and lifecycle cleanup, and retained explicit stacked disclosures. Horizontal tabs no longer become stacked below 480px.
+- **2.10** — 2026-09-08 ([#1094](https://github.com/unisdr/undrr-mangrove/issues/1094)): Centred horizontal tab groups with soft active pills, independent mobile scrolling, overflow fades, RTL-aware keyboard navigation and selection reveal. Separated panels from the tablist, added accessible group labels and lifecycle cleanup, and retained explicit stacked disclosures. Horizontal tabs scroll below 480px by default; the optional `stackOnMobile` prop / `data-mg-js-tabs-stack-on-mobile` attribute restores responsive disclosure behaviour.
 
 - **2.9** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed horizontal tabs as a flat navigation rail with a continuous baseline, precise active underline, and non-shifting hover/focus states. Simplified stacked tabs into clean disclosure rows with quiet separators, circular plus/minus controls, larger hit areas, and token-driven motion. Removed redundant per-language story exports in favour of the global locale toolbar.
 - **2.8** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` prop into a `labels` object with `DEFAULT_TAB_LABELS` export. Pass `labels={{ filterPlaceholder: '...' }}` instead of `filterPlaceholder` directly. Backwards compatible — `DEFAULT_TAB_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.

@@ -1,5 +1,7 @@
 // Shared horizontal tabs and explicit stacked disclosures.
 const instances = new WeakMap();
+const responsiveInstances = new WeakMap();
+const MOBILE_BREAKPOINT = 480;
 const isStacked = container => container.dataset.mgJsTabsVariant === 'stacked';
 
 export function setDisclosureState(trigger, panel, open) {
@@ -51,17 +53,140 @@ export function mgTabsRuntime(scope = document, activateDeepLinkOnLoad = true) {
 export function mgTabsDestroy(scope = document) {
   containersIn(scope)
     .reverse()
-    .forEach(container => instances.get(container)?.destroy());
+    .forEach(container =>
+      (
+        responsiveInstances.get(container) || instances.get(container)
+      )?.destroy()
+    );
 }
 
-function initContainer(container, activateDeepLinkOnLoad) {
-  if (instances.has(container)) return;
+/** Capture selection and focus before replacing a responsive layout. */
+function mgTabsGetState(container) {
+  return instances.get(container)?.getState();
+}
+
+function initResponsiveContainer(container, activateDeepLinkOnLoad) {
+  const root = container.closest('.mg-tabs') || container;
+  const originalVariant = container.getAttribute('data-mg-js-tabs-variant');
+  const wasHorizontal = root.classList.contains('mg-tabs--horizontal');
+  const wasStacked = root.classList.contains('mg-tabs--stacked');
   const owned = selector =>
     Array.from(container.querySelectorAll(selector)).filter(
       element => element.closest('[data-mg-js-tabs]') === container
     );
-  const tabs = owned('.mg-tabs__link');
+  const tabs = owned('.mg-tabs__link:not(.mg-tabs__mobile-link)');
+  const generated = [];
+  const mobileItems = tabs
+    .map(tab => {
+      const id = tab.getAttribute('href')?.split('#')[1];
+      const panel = Array.from(root.querySelectorAll('[id]')).find(
+        element => element.id === id
+      );
+      if (!panel) return null;
+      let item = panel.previousElementSibling;
+      if (!item?.classList.contains('mg-tabs__mobile-item')) {
+        item = document.createElement('div');
+        item.className = 'mg-tabs__mobile-item';
+        const trigger = tab.cloneNode(true);
+        trigger.removeAttribute('id');
+        trigger.classList.add('mg-tabs__mobile-link');
+        item.append(trigger);
+        panel.before(item);
+        generated.push(item);
+      }
+      return item;
+    })
+    .filter(Boolean);
+  const visibility = new Map();
+  const hide = (element, hidden) => {
+    if (!element) return;
+    if (!visibility.has(element))
+      visibility.set(element, element.getAttribute('hidden'));
+    element.hidden = hidden;
+  };
+  const restoreVisibility = () => {
+    visibility.forEach((value, element) => {
+      if (value === null) element.removeAttribute('hidden');
+      else element.setAttribute('hidden', value);
+    });
+    visibility.clear();
+  };
+  let mobile;
+  const restoreVariant = () => {
+    const variantChanged =
+      container.getAttribute('data-mg-js-tabs-variant') !== originalVariant;
+    root.classList.toggle(
+      'mg-tabs--horizontal',
+      variantChanged ? !isStacked(container) : wasHorizontal
+    );
+    root.classList.toggle(
+      'mg-tabs--stacked',
+      variantChanged ? isStacked(container) : wasStacked
+    );
+    root.classList.remove('mg-tabs--responsive-stacked');
+  };
+  const update = () => {
+    const nextMobile = window.innerWidth < MOBILE_BREAKPOINT;
+    if (nextMobile === mobile) return;
+    const state = mgTabsGetState(container);
+    instances.get(container)?.destroy();
+    restoreVisibility();
+    restoreVariant();
+    mobile = nextMobile;
+    if (mobile) {
+      root.classList.remove('mg-tabs--horizontal');
+      root.classList.add('mg-tabs--stacked', 'mg-tabs--responsive-stacked');
+    }
+    tabs.forEach(tab => hide(tab.closest('.mg-tabs__item'), mobile));
+    mobileItems.forEach(item => hide(item, !mobile));
+    // Canonical React rail stays mounted. Legacy markup remains interleaved on mobile.
+    hide(owned('.mg-tabs__rail')[0], mobile);
+    initContainer(container, activateDeepLinkOnLoad, {
+      responsive: false,
+      responsiveMobile: mobile,
+      initialState: state,
+    });
+  };
+  responsiveInstances.set(container, {
+    destroy() {
+      window.removeEventListener('resize', update);
+      window.removeEventListener('orientationchange', update);
+      instances.get(container)?.destroy();
+      restoreVisibility();
+      generated.forEach(item => item.remove());
+      restoreVariant();
+      responsiveInstances.delete(container);
+    },
+  });
+  update();
+  window.addEventListener('resize', update);
+  window.addEventListener('orientationchange', update);
+}
+
+function initContainer(container, activateDeepLinkOnLoad, options = {}) {
+  if (instances.has(container)) return;
+  if (
+    options.responsive !== false &&
+    container.hasAttribute('data-mg-js-tabs-stack-on-mobile') &&
+    !isStacked(container)
+  ) {
+    if (!responsiveInstances.has(container))
+      initResponsiveContainer(container, activateDeepLinkOnLoad);
+    return;
+  }
   const root = container.closest('.mg-tabs') || container;
+  const owned = selector =>
+    Array.from(
+      (options.responsiveMobile ? root : container).querySelectorAll(selector)
+    ).filter(element => {
+      const owner = element.closest('[data-mg-js-tabs]');
+      return owner === container || (options.responsiveMobile && !owner);
+    });
+  const tabs = owned(
+    options.responsiveMobile
+      ? '.mg-tabs__mobile-link'
+      : '.mg-tabs__link:not(.mg-tabs__mobile-link)'
+  );
   const panels = tabs.map(tab => {
     const id = tab.getAttribute('href')?.split('#')[1];
     return Array.from(root.querySelectorAll('[id]')).find(element => {
@@ -70,7 +195,7 @@ function initContainer(container, activateDeepLinkOnLoad) {
     });
   });
   if (!tabs.length || panels.some(panel => !panel)) return;
-  const stacked = isStacked(container);
+  const stacked = options.responsiveMobile || isStacked(container);
   const cleanups = [];
   const snapshots = new Map();
   const remember = element => {
@@ -198,6 +323,7 @@ function initContainer(container, activateDeepLinkOnLoad) {
     );
   };
   let activeTab;
+  let lastInteracted;
   const reveal = (tab, animate = false) => {
     if (!scroller || !tab) return;
     const view = scroller.getBoundingClientRect();
@@ -229,9 +355,14 @@ function initContainer(container, activateDeepLinkOnLoad) {
     { focus = false, toggle = false, animate = false } = {}
   ) => {
     const index = tabs.indexOf(tab);
+    lastInteracted = tab;
     if (stacked) {
       const open = toggle ? panels[index].hasAttribute('hidden') : true;
-      if (open && container.hasAttribute('data-mg-js-tabs-single-open')) {
+      if (
+        open &&
+        !options.responsiveMobile &&
+        container.hasAttribute('data-mg-js-tabs-single-open')
+      ) {
         tabs.forEach((other, i) => setDisclosureState(other, panels[i], false));
       }
       setDisclosureState(tab, panels[index], open);
@@ -251,7 +382,9 @@ function initContainer(container, activateDeepLinkOnLoad) {
 
   tabs.forEach((tab, i) => {
     const panel = panels[i];
-    tab.id = tab.id || panel.id + '--trigger';
+    tab.id =
+      tab.id ||
+      panel.id + (options.responsiveMobile ? '--mobile-trigger' : '--trigger');
     tab.setAttribute('data-tabs__item', panel.id);
     tab.setAttribute('aria-controls', panel.id);
     tab.setAttribute('role', stacked ? 'button' : 'tab');
@@ -313,9 +446,36 @@ function initContainer(container, activateDeepLinkOnLoad) {
     activate(
       tabs.find(tab => tab.dataset.mgJsTabsDefault === 'true') || tabs[0]
     );
+  if (options.responsiveMobile && !options.initialState) {
+    tabs.forEach((tab, index) => setDisclosureState(tab, panels[index], false));
+    activate(
+      tabs.find(tab => tab.dataset.mgJsTabsDefault === 'true') || tabs[0]
+    );
+  }
   if (activateDeepLinkOnLoad) activateHash();
+  if (options.initialState) {
+    const { panelId, focus } = options.initialState;
+    const index = panels.findIndex(panel => panel.id === panelId);
+    if (index >= 0) {
+      if (stacked)
+        tabs.forEach((tab, i) => setDisclosureState(tab, panels[i], false));
+      activate(tabs[index]);
+      if (focus) {
+        let target = focus.trigger ? tabs[index] : panels[index];
+        if (!focus.trigger)
+          focus.path.forEach(childIndex => {
+            target = target?.children[childIndex];
+          });
+        target?.focus({ preventScroll: true });
+      }
+    }
+  }
   listen(window, 'hashchange', activateHash);
-  if (stacked && container.hasAttribute('data-mg-js-tabs-filterable'))
+  if (
+    stacked &&
+    !options.responsiveMobile &&
+    container.hasAttribute('data-mg-js-tabs-filterable')
+  )
     cleanups.push(mgTabsInitFilter(container, tabs, panels));
   let alive = true;
   if (scroller) {
@@ -338,6 +498,33 @@ function initContainer(container, activateDeepLinkOnLoad) {
   }
   container.setAttribute('data-mg-tabs-initialized', 'true');
   instances.set(container, {
+    getState() {
+      const focused = document.activeElement;
+      const triggerIndex = tabs.indexOf(focused);
+      const panelIndex = panels.findIndex(panel => panel.contains(focused));
+      const focusedIndex = panelIndex >= 0 ? panelIndex : triggerIndex;
+      const selected =
+        lastInteracted ||
+        activeTab ||
+        tabs.find(tab => tab.getAttribute('aria-expanded') === 'true') ||
+        tabs[0];
+      const index = focusedIndex >= 0 ? focusedIndex : tabs.indexOf(selected);
+      let focus;
+      if (focusedIndex >= 0) {
+        const path = [];
+        if (panelIndex >= 0) {
+          let child = focused;
+          while (child !== panels[panelIndex]) {
+            path.unshift(
+              Array.from(child.parentElement.children).indexOf(child)
+            );
+            child = child.parentElement;
+          }
+        }
+        focus = { trigger: triggerIndex >= 0, path };
+      }
+      return { panelId: panels[index].id, focus };
+    },
     destroy() {
       alive = false;
       cleanups.reverse().forEach(cleanup => cleanup());
