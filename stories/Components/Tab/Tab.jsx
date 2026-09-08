@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { mgTabsRuntime } from '../../assets/js/tabs';
+import { mgTabsRuntime, mgTabsDestroy } from '../../assets/js/tabs';
 
 export const DEFAULT_TAB_LABELS = {
   filterPlaceholder: 'Filter sections…',
+  tabListLabel: 'Sections',
 };
 
 /**
@@ -23,57 +24,88 @@ export function Tab({
   defaultOpen,
   singleOpen = false,
   filterable = false,
-  labels = {},
+  labels = DEFAULT_TAB_LABELS,
 }) {
-  const { filterPlaceholder } = { ...DEFAULT_TAB_LABELS, ...labels };
+  const { filterPlaceholder, tabListLabel } = {
+    ...DEFAULT_TAB_LABELS,
+    ...labels,
+  };
   const containerRef = useRef(null);
 
   // Initialize this container's tabs runtime (scoped, not global).
   // The runtime handles all behavior: ARIA, keyboard, filtering, defaults.
   useEffect(() => {
-    if (containerRef.current) {
-      mgTabsRuntime(containerRef.current, true);
-    }
-  }, []);
+    const container = containerRef.current;
+    if (!container) return;
+    mgTabsRuntime(container, true);
+    return () => mgTabsDestroy(container);
+  }, [
+    tabdata,
+    variant,
+    defaultOpen,
+    singleOpen,
+    filterable,
+    filterPlaceholder,
+    tabListLabel,
+  ]);
 
   return tabdata ? (
     <article
       ref={containerRef}
       className={`mg-tabs ${variant === 'stacked' ? 'mg-tabs--stacked' : 'mg-tabs--horizontal'}`}
       data-mg-js-tabs
+      data-mg-js-tabs-label={tabListLabel}
       data-mg-js-tabs-variant={variant === 'stacked' ? 'stacked' : 'horizontal'}
-      {...(defaultOpen != null ? { 'data-mg-js-tabs-default-open': String(defaultOpen) } : {})}
+      {...(defaultOpen != null
+        ? { 'data-mg-js-tabs-default-open': String(defaultOpen) }
+        : {})}
       {...(singleOpen ? { 'data-mg-js-tabs-single-open': '' } : {})}
-      {...(filterable && variant === 'stacked' ? { 'data-mg-js-tabs-filterable': '' } : {})}
+      {...(filterable && variant === 'stacked'
+        ? { 'data-mg-js-tabs-filterable': '' }
+        : {})}
       {...(filterable && variant === 'stacked' && filterPlaceholder
         ? { 'data-mg-js-tabs-filter-placeholder': filterPlaceholder }
         : {})}
     >
-      <ul className="mg-tabs__list">
-        {tabdata.map((tab, index) => (
-          <React.Fragment key={`tab-group-${index}`}>
-            <li className="mg-tabs__item">
-              <a
-                className="mg-tabs__link"
-                href={`#mg-tabs__section-${tab.text_id}`}
-                data-mg-js-tabs-default={tab.is_default}
+      {variant === 'stacked' ? (
+        <ul className="mg-tabs__list">
+          {tabdata.map(tab => (
+            <React.Fragment key={tab.text_id}>
+              <li className="mg-tabs__item">
+                <TabTrigger tab={tab} />
+              </li>
+              <li className="mg-tabs-content" data-mg-js-tabs-content>
+                <TabPanel tab={tab} />
+              </li>
+            </React.Fragment>
+          ))}
+        </ul>
+      ) : (
+        <>
+          <div className="mg-tabs__rail">
+            <div className="mg-tabs__scroll">
+              <ul className="mg-tabs__list">
+                {tabdata.map(tab => (
+                  <li className="mg-tabs__item" key={tab.text_id}>
+                    <TabTrigger tab={tab} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="mg-tabs__panels">
+            {tabdata.map(tab => (
+              <div
+                className="mg-tabs-content"
+                data-mg-js-tabs-content
+                key={tab.text_id}
               >
-                {tab.text}
-              </a>
-            </li>
-            <li className="mg-tabs-content" data-mg-js-tabs-content>
-              <section
-                className="mg-tabs__section"
-                id={`mg-tabs__section-${tab.text_id}`}
-              >
-                {tab.data ? (
-                  <div dangerouslySetInnerHTML={{ __html: tab.data }} />
-                ) : null}
-              </section>
-            </li>
-          </React.Fragment>
-        ))}
-      </ul>
+                <TabPanel tab={tab} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </article>
   ) : (
     <div
@@ -81,6 +113,29 @@ export function Tab({
         __html: '<!-- mgTabs: No tab data passed -->',
       }}
     />
+  );
+}
+
+function TabTrigger({ tab }) {
+  return (
+    <a
+      className="mg-tabs__link"
+      href={`#mg-tabs__section-${tab.text_id}`}
+      data-mg-js-tabs-default={tab.is_default}
+    >
+      {tab.text}
+    </a>
+  );
+}
+
+function TabPanel({ tab }) {
+  return (
+    <section
+      className="mg-tabs__section"
+      id={`mg-tabs__section-${tab.text_id}`}
+    >
+      {tab.data ? <div dangerouslySetInnerHTML={{ __html: tab.data }} /> : null}
+    </section>
   );
 }
 
@@ -92,7 +147,7 @@ Tab.propTypes = {
       text: PropTypes.string.isRequired,
       /** Unique identifier used for the tab section anchor. */
       text_id: PropTypes.string.isRequired,
-      /** HTML content rendered inside the tab panel. */
+      /** Pre-sanitised HTML content rendered inside the tab panel. Consumers must sanitise it before passing it. */
       data: PropTypes.string,
       /** Whether this tab should be selected by default. */
       is_default: PropTypes.string,
@@ -109,5 +164,6 @@ Tab.propTypes = {
   /** UI label overrides. */
   labels: PropTypes.shape({
     filterPlaceholder: PropTypes.string,
+    tabListLabel: PropTypes.string,
   }),
 };

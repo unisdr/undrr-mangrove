@@ -211,3 +211,120 @@ export const StackedFaqAccordion = {
   ),
   name: 'Stacked FAQ accordion',
 };
+
+const sectionData = [
+  ['Overview', 'An overview of the programme and its priorities.'],
+  ['Risk knowledge', 'Evidence and resources to understand disaster risk.'],
+  ['Early warning', 'Early warning systems that reach everyone at risk.'],
+  [
+    'Local resilience',
+    'Support for cities and communities building resilience.',
+  ],
+  ['Progress and reporting', 'Track progress against the Sendai Framework.'],
+  ['Resources', 'Explore publications, tools and learning materials.'],
+].map(([text, summary], index) => ({
+  text,
+  text_id: `rail-${index + 1}`,
+  data: `<p>${summary}</p>`,
+}));
+
+export const CentredGroup = {
+  args: {
+    tabdata: sectionData.slice(0, 3),
+    labels: { tabListLabel: 'Programme sections' },
+  },
+};
+
+export const ScrollableGroup = {
+  args: {
+    tabdata: sectionData,
+    labels: { tabListLabel: 'Programme sections' },
+  },
+};
+
+export const NarrowContainer = {
+  ...ScrollableGroup,
+  decorators: [
+    Story => (
+      <div style={{ maxWidth: '24rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const OversizedLabel = {
+  args: {
+    tabdata: sectionData.map((tab, index) =>
+      index === 1
+        ? {
+            ...tab,
+            text: 'Understanding disaster risk and strengthening resilience across communities and institutions',
+          }
+        : tab
+    ),
+  },
+  decorators: [
+    Story => (
+      <div style={{ maxWidth: '24rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const OffscreenDefault = {
+  args: {
+    tabdata: sectionData.map((tab, index) => ({
+      ...tab,
+      is_default: index === sectionData.length - 1 ? 'true' : 'false',
+    })),
+  },
+  decorators: [
+    Story => (
+      <div style={{ maxWidth: '24rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const HorizontalDeepLink = {
+  render: args => (
+    <>
+      <p>
+        <a href="#mg-tabs__section-rail-6">Open resources</a>
+      </p>
+      <Tab tabdata={sectionData} labels={args.labels} />
+    </>
+  ),
+};
+
+export const IndependentGroups = {
+  render: args => (
+    <>
+      <Tab
+        tabdata={sectionData}
+        labels={{ ...args.labels, tabListLabel: 'Programme sections' }}
+      />
+      <Tab
+        tabdata={sectionData
+          .slice(0, 3)
+          .map(tab => ({ ...tab, text_id: `second-${tab.text_id}` }))}
+        labels={{ ...args.labels, tabListLabel: 'Related sections' }}
+      />
+    </>
+  ),
+};
+
+export const RightToLeft = {
+  globals: { locale: 'arabic' },
+  render: args => (
+    <div dir="rtl" lang="ar">
+      <Tab
+        tabdata={getCaptionForLocale('arabic')}
+        labels={{ ...args.labels, tabListLabel: 'الأقسام' }}
+      />
+    </div>
+  ),
+};

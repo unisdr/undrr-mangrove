@@ -17,9 +17,17 @@ Don't use tabs for site navigation. Use links or menus instead.
 
 ## Variants
 
-There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. On screens narrower than 480 px, horizontal tabs collapse to stacked automatically.
+There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. Horizontal tabs stay in one row at every viewport width: the group centres when it fits, and the tab rail scrolls horizontally when it overflows. Choose stacked explicitly for FAQs, many sections or exceptionally long labels.
 
-<Canvas of={TabStories.Tabs} meta={TabStories} />
+<Canvas of={TabStories.CentredGroup} meta={TabStories} />
+
+### Scrollable horizontal tabs
+
+The tab rail scrolls independently of the content below. Faded edges indicate more tabs; swiping the rail does not change the selected panel. Selecting a tab brings it into view. Use the theme and locale toolbars to inspect the same treatment across brands and languages.
+
+<Canvas of={TabStories.ScrollableGroup} meta={TabStories} />
+
+<Canvas of={TabStories.NarrowContainer} meta={TabStories} />
 
 ### Stacked tabs
 
@@ -40,11 +48,13 @@ There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 t
 ## Interactions
 
 **Horizontal tabs:**
-- Hovering highlights the full tab.
-- Clicking a tab opens its panel.
-- Arrow Left/Right moves between tabs (wraps around). Down arrow moves focus into the open panel. Home/End jump to first/last tab.
+
+- A soft fill identifies the selected tab. Hover and keyboard focus have distinct treatments.
+- Clicking a tab opens its panel and reveals the tab in the rail without scrolling the page vertically. Native scrolling alone preserves selection.
+- Arrow Left/Right selects and focuses the adjacent tab (wraps around, with directions reversed in RTL). Down arrow moves focus into the open panel. Home/End select the first/last tab. Initial default and deep-link selection does not steal focus.
 
 **Stacked tabs:**
+
 - Clicking a trigger toggles its panel open/closed independently.
 - Space or Enter activates the focused trigger.
 - Arrow Up/Down moves focus between triggers (wraps around). Home/End jump to first/last trigger.
@@ -54,7 +64,7 @@ URL hashes work as deep links in both variants, e.g. `#mg-tabs__section-tab-2` o
 
 ## Accessibility
 
-**Horizontal tabs** follow the standard ARIA tab pattern (`role="tablist"`, `role="tab"` with `aria-selected`, `role="tabpanel"` on panels; roving tabindex). Only the active tab is in the Tab order; use arrow keys to navigate between tabs.
+**Horizontal tabs** follow the standard ARIA tab pattern (`role="tablist"`, `role="tab"` with `aria-selected`, `role="tabpanel"` on panels; roving tabindex). Only the active tab is in the Tab order; use arrow keys to navigate between tabs. Panels sit outside the tablist. Give each group a meaningful accessible name using `labels.tabListLabel` (React) or `data-mg-js-tabs-label` (HTML), which defaults to "Sections". Without JavaScript, all panel content remains visible.
 
 **Stacked tabs** use an accessible disclosure pattern: each trigger has `aria-expanded` and `aria-controls` to communicate open/closed state; panels have `role="region"` with `aria-labelledby`. In Chromium browsers (Chrome, Edge), collapsed panels can be found via Ctrl+F (browser find-in-page). Firefox and Safari treat collapsed panels as hidden — they are still accessible via the trigger but are not findable via Ctrl+F.
 
@@ -73,7 +83,10 @@ Tabs are vanilla JavaScript. No React, no build step, just HTML and a script imp
 Pick the Mangrove theme stylesheet for your site ([CDN reference](/?path=/docs/getting-started-integration-cdn-reference--docs) lists all themes).
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/css/style.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/css/style.css"
+/>
 ```
 
 #### 2. Include the JavaScript
@@ -82,7 +95,10 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 ```html
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/js/tabs.js"></script>
+<script
+  type="module"
+  src="https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/js/tabs.js"
+></script>
 ```
 
 The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so `mgTabs()` runs after the DOM is available.
@@ -103,52 +119,59 @@ For manual or dynamic initialization, import the function:
 **Horizontal tabs (default)**
 
 ```html
-<article class="mg-tabs mg-tabs--horizontal"
-         data-mg-js-tabs
-         data-mg-js-tabs-variant="horizontal">
-  <ul class="mg-tabs__list">
-    <!-- Tab 1 -->
-    <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-tab-1">Tab title 1</a>
-    </li>
-    <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-tab-1">
-        <p>Content for tab 1.</p>
+<article
+  class="mg-tabs mg-tabs--horizontal"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="horizontal"
+  data-mg-js-tabs-label="Programme sections"
+>
+  <div class="mg-tabs__rail">
+    <div class="mg-tabs__scroll">
+      <ul class="mg-tabs__list">
+        <li class="mg-tabs__item">
+          <a class="mg-tabs__link" href="#mg-tabs__section-overview">
+            Overview
+          </a>
+        </li>
+        <li class="mg-tabs__item">
+          <a
+            class="mg-tabs__link"
+            href="#mg-tabs__section-details"
+            data-mg-js-tabs-default="true"
+          >
+            Details
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="mg-tabs__panels">
+    <div class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-overview">
+        <p>Overview content.</p>
       </section>
-    </li>
-
-    <!-- Tab 2 (default selected) -->
-    <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-tab-2"
-         data-mg-js-tabs-default="true">Tab title 2</a>
-    </li>
-    <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-tab-2">
-        <p>Content for tab 2.</p>
+    </div>
+    <div class="mg-tabs-content" data-mg-js-tabs-content>
+      <section class="mg-tabs__section" id="mg-tabs__section-details">
+        <p>Detail content.</p>
       </section>
-    </li>
-
-    <!-- Tab 3 -->
-    <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-tab-3">Tab title 3</a>
-    </li>
-    <li class="mg-tabs-content" data-mg-js-tabs-content>
-      <section class="mg-tabs__section" id="mg-tabs__section-tab-3">
-        <p>Content for tab 3.</p>
-      </section>
-    </li>
-  </ul>
+    </div>
+  </div>
 </article>
 ```
+
+Existing interleaved HTML is also supported: the runtime moves horizontal panels outside the list during initialisation. Keep all panel IDs unique across the page. Panel HTML must be sanitised by the consuming application before it is passed to Mangrove.
 
 **Stacked tabs (accordion-style)**
 
 Change the modifier class and variant attribute:
 
 ```html
-<article class="mg-tabs mg-tabs--stacked"
-         data-mg-js-tabs
-         data-mg-js-tabs-variant="stacked">
+<article
+  class="mg-tabs mg-tabs--stacked"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="stacked"
+>
   <ul class="mg-tabs__list">
     <li class="mg-tabs__item">
       <a class="mg-tabs__link" href="#mg-tabs__section-item-1">Section 1</a>
@@ -176,29 +199,40 @@ Change the modifier class and variant attribute:
 Add `data-mg-js-tabs-default-open="false"` to start all panels closed, `data-mg-js-tabs-single-open` for accordion behavior, and `data-mg-js-tabs-filterable` for a search input:
 
 ```html
-<article class="mg-tabs mg-tabs--stacked"
-         data-mg-js-tabs
-         data-mg-js-tabs-variant="stacked"
-         data-mg-js-tabs-default-open="false"
-         data-mg-js-tabs-single-open
-         data-mg-js-tabs-filterable
-         data-mg-js-tabs-filter-placeholder="Search questions…">
+<article
+  class="mg-tabs mg-tabs--stacked"
+  data-mg-js-tabs
+  data-mg-js-tabs-variant="stacked"
+  data-mg-js-tabs-default-open="false"
+  data-mg-js-tabs-single-open
+  data-mg-js-tabs-filterable
+  data-mg-js-tabs-filter-placeholder="Search questions…"
+>
   <ul class="mg-tabs__list">
     <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-faq-1">What is the Sendai Framework?</a>
+      <a class="mg-tabs__link" href="#mg-tabs__section-faq-1">
+        What is the Sendai Framework?
+      </a>
     </li>
     <li class="mg-tabs-content" data-mg-js-tabs-content>
       <section class="mg-tabs__section" id="mg-tabs__section-faq-1">
-        <p>The Sendai Framework is a voluntary, non-binding agreement for disaster risk reduction.</p>
+        <p>
+          The Sendai Framework is a voluntary, non-binding agreement for
+          disaster risk reduction.
+        </p>
       </section>
     </li>
 
     <li class="mg-tabs__item">
-      <a class="mg-tabs__link" href="#mg-tabs__section-faq-2">How do I report progress?</a>
+      <a class="mg-tabs__link" href="#mg-tabs__section-faq-2">
+        How do I report progress?
+      </a>
     </li>
     <li class="mg-tabs-content" data-mg-js-tabs-content>
       <section class="mg-tabs__section" id="mg-tabs__section-faq-2">
-        <p>Use the Sendai Framework Monitor to track and report implementation.</p>
+        <p>
+          Use the Sendai Framework Monitor to track and report implementation.
+        </p>
       </section>
     </li>
   </ul>
@@ -211,12 +245,13 @@ The filter input, screen-reader-only hint, and status region are injected automa
 
 Exported functions:
 
-| Function | Description |
-|----------|-------------|
-| `mgTabs(scope?, activateDeepLinkOnLoad?)` | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. |
-| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)` | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load. |
-| `mgTabsApplyStackedDefaults(container, tabs, panels)` | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state. |
-| `setDisclosureState(trigger, panel, open)` | Sets the open/close state of a stacked disclosure panel. `open` is a boolean. |
+| Function                                              | Description                                                                                                                                                                                |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mgTabs(scope?, activateDeepLinkOnLoad?)`             | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`.                              |
+| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)`      | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load.                                 |
+| `mgTabsDestroy(scope?)`                               | Removes listeners and observers, restores progressively enhanced markup and makes content visible. Call before removing vanilla tab sets; the React wrapper handles cleanup automatically. |
+| `mgTabsApplyStackedDefaults(container, tabs, panels)` | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state.                                                                                |
+| `setDisclosureState(trigger, panel, open)`            | Sets the open/close state of a stacked disclosure panel. `open` is a boolean.                                                                                                              |
 
 If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRuntime()` on the new container:
 
@@ -230,10 +265,12 @@ mgTabsRuntime(newContainer);
 Add `data-mg-js-tabs-skip-auto-init` to skip a container during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
 
 ```html
-<article class="mg-tabs mg-tabs--horizontal"
-         data-mg-js-tabs
-         data-mg-js-tabs-skip-auto-init
-         data-mg-js-tabs-variant="horizontal">
+<article
+  class="mg-tabs mg-tabs--horizontal"
+  data-mg-js-tabs
+  data-mg-js-tabs-skip-auto-init
+  data-mg-js-tabs-variant="horizontal"
+>
   <!-- tab markup -->
 </article>
 
@@ -248,17 +285,18 @@ When you pass elements explicitly via `scope`, the skip attribute is ignored —
 
 #### Key data attributes
 
-| Attribute | Element | Purpose |
-|-----------|---------|---------|
-| `data-mg-js-tabs` | `article` | Identifies a tab container |
-| `data-mg-js-tabs-variant` | `article` | `"horizontal"` or `"stacked"` |
-| `data-mg-js-tabs-content` | `li` | Wraps each tab's content section |
-| `data-mg-js-tabs-default` | `a.mg-tabs__link` | `"true"` to open this item by default, `"false"` to keep it closed. Overrides the container-level `data-mg-js-tabs-default-open`. |
-| `data-mg-js-tabs-default-open` | `article` | `"true"` opens all stacked panels on load, `"false"` closes all. Absent = open first. Per-item `data-mg-js-tabs-default` overrides this. |
-| `data-mg-js-tabs-single-open` | `article` | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
-| `data-mg-js-tabs-filterable` | `article` | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text. |
-| `data-mg-js-tabs-filter-placeholder` | `article` | Custom placeholder text for the filter input. Defaults to "Filter sections...". |
-| `data-mg-js-tabs-skip-auto-init` | `article` | Presence-based. Skips this container during auto-init. Call `mgTabs([element])` to initialize manually. |
+| Attribute                            | Element                                     | Purpose                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-js-tabs`                    | `article`                                   | Identifies a tab container                                                                                                                                                                                                                                                                                      |
+| `data-mg-js-tabs-variant`            | `article`                                   | `"horizontal"` or `"stacked"`; horizontal no longer changes variant on mobile                                                                                                                                                                                                                                   |
+| `data-mg-js-tabs-label`              | `article`                                   | Accessible horizontal tablist name, default "Sections"                                                                                                                                                                                                                                                          |
+| `data-mg-js-tabs-content`            | `div` (horizontal) or `li` (stacked/legacy) | Wraps each tab's content section                                                                                                                                                                                                                                                                                |
+| `data-mg-js-tabs-default`            | `a.mg-tabs__link`                           | `"true"` to open this item by default, `"false"` to keep it closed. Overrides the container-level `data-mg-js-tabs-default-open`.                                                                                                                                                                               |
+| `data-mg-js-tabs-default-open`       | `article`                                   | `"true"` opens all stacked panels on load, `"false"` closes all. Absent = open first. Per-item `data-mg-js-tabs-default` overrides this.                                                                                                                                                                        |
+| `data-mg-js-tabs-single-open`        | `article`                                   | Presence-based. When set, only one stacked panel can be open at a time (accordion). `singleOpen` only governs click behavior — it does not enforce a single-open constraint on the initial state. Use `data-mg-js-tabs-default-open="false"` with `data-mg-js-tabs-single-open` for typical accordion behavior. |
+| `data-mg-js-tabs-filterable`         | `article`                                   | Presence-based. When set on a stacked container, injects a search input that filters sections by header and content text.                                                                                                                                                                                       |
+| `data-mg-js-tabs-filter-placeholder` | `article`                                   | Custom placeholder text for the filter input. Defaults to "Filter sections...".                                                                                                                                                                                                                                 |
+| `data-mg-js-tabs-skip-auto-init`     | `article`                                   | Presence-based. Skips this container during auto-init. Call `mgTabs([element])` to initialize manually.                                                                                                                                                                                                         |
 
 ### React usage
 
@@ -270,30 +308,39 @@ import { Tab } from 'stories/Components/Tab/Tab';
 
 const tabdata = [
   { text: 'Overview', text_id: 'overview', data: '<p>Overview content</p>' },
-  { text: 'Details', text_id: 'details', data: '<p>Detail content</p>', is_default: 'true' },
+  {
+    text: 'Details',
+    text_id: 'details',
+    data: '<p>Detail content</p>',
+    is_default: 'true',
+  },
 ];
 
-<Tab tabdata={tabdata} variant="horizontal" />
+<Tab
+  tabdata={tabdata}
+  variant="horizontal"
+  labels={{ tabListLabel: 'Programme sections' }}
+/>;
 ```
 
 **Props:**
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tabdata` | `Array` | — | Array of tab objects (see below) |
-| `variant` | `string` | `"horizontal"` | `"horizontal"` or `"stacked"` |
-| `defaultOpen` | `bool` | `undefined` | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides. |
-| `singleOpen` | `bool` | `false` | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
-| `filterable` | `bool` | `false` | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS. |
-| `filterPlaceholder` | `string` | `"Filter sections…"` | Placeholder text for the filter input. |
+| Prop          | Type     | Default              | Description                                                                                                                                                                                                  |
+| ------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tabdata`     | `Array`  | —                    | Array of tab objects (see below)                                                                                                                                                                             |
+| `variant`     | `string` | `"horizontal"`       | `"horizontal"` or `"stacked"`                                                                                                                                                                                |
+| `defaultOpen` | `bool`   | `undefined`          | Stacked only. `true` opens all panels, `false` closes all, `undefined` opens first. Per-item `is_default` overrides.                                                                                         |
+| `singleOpen`  | `bool`   | `false`              | Stacked only. When `true`, only one panel can be open at a time. Only governs click behavior — does not enforce single-open on initial state. Use with `defaultOpen={false}` for typical accordion behavior. |
+| `filterable`  | `bool`   | `false`              | Stacked only. Renders a search input that filters sections by header and content text. Also available via `data-mg-js-tabs-filterable` in vanilla JS.                                                        |
+| `labels`      | `object` | `DEFAULT_TAB_LABELS` | `tabListLabel` names the tablist (default "Sections"); `filterPlaceholder` names the stacked filter input (default "Filter sections…").                                                                      |
 
 Each tab object in `tabdata`:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `text` | `string` | Tab label |
-| `text_id` | `string` | Unique identifier (used in `id` and `href` attributes) |
-| `data` | `string` | HTML content for the tab panel |
+| Property     | Type     | Description                                                                     |
+| ------------ | -------- | ------------------------------------------------------------------------------- |
+| `text`       | `string` | Tab label                                                                       |
+| `text_id`    | `string` | Unique identifier (used in `id` and `href` attributes)                          |
+| `data`       | `string` | HTML content for the tab panel                                                  |
 | `is_default` | `string` | `"true"` to open by default, `"false"` to keep closed. Overrides `defaultOpen`. |
 
 ### See also
@@ -303,7 +350,13 @@ Each tab object in `tabdata`:
 
 ## Migration
 
-> **Note:** The migration notes below apply to stacked tabs and vanilla JS. If you use the React `<Tab>` component with `variant="horizontal"`, no migration is required.
+### v2.10: centred, scrollable horizontal tabs
+
+Horizontal tabs now stay horizontal below 480px. Choose `variant="stacked"` (HTML: `mg-tabs--stacked` and `data-mg-js-tabs-variant="stacked"`) when disclosure behaviour is required. Existing stacked options are unchanged.
+
+The React wrapper renders a separate rail and panel container. Existing vanilla markup is enhanced automatically, preserving panel IDs and hash links; custom selectors that expect panels inside `.mg-tabs__list` must be updated. Pair the updated stylesheet with the updated runtime. Use the canonical horizontal HTML above for new integrations.
+
+Horizontal tabs use `--mg-tab-background--active` and `--mg-tab-indicator--active` for the selected pill. Keep overrides scoped to the theme and check text, selected-state and focus contrast together. For dynamically removed vanilla components, call `mgTabsDestroy(container)` before removing their DOM. React performs this cleanup automatically.
 
 ### v2.5: trigger ID change
 
@@ -315,6 +368,8 @@ In version 2.5, the ID of stacked tab trigger elements changed. If you have CSS 
 You can also select triggers by class (`.mg-tabs__link`) — this works in all versions.
 
 ## Changelog
+
+- **2.10** — 2026-09-08 ([#1094](https://github.com/unisdr/undrr-mangrove/issues/1094)): Centred horizontal tab groups with soft active pills, independent mobile scrolling, overflow fades, RTL-aware keyboard navigation and selection reveal. Separated panels from the tablist, added accessible group labels and lifecycle cleanup, and retained explicit stacked disclosures. Horizontal tabs no longer become stacked below 480px.
 
 - **2.9** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed horizontal tabs as a flat navigation rail with a continuous baseline, precise active underline, and non-shifting hover/focus states. Simplified stacked tabs into clean disclosure rows with quiet separators, circular plus/minus controls, larger hit areas, and token-driven motion. Removed redundant per-language story exports in favour of the global locale toolbar.
 - **2.8** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` prop into a `labels` object with `DEFAULT_TAB_LABELS` export. Pass `labels={{ filterPlaceholder: '...' }}` instead of `filterPlaceholder` directly. Backwards compatible — `DEFAULT_TAB_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.

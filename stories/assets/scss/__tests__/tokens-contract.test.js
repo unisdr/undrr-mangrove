@@ -31,6 +31,9 @@ const RUNTIME_TAB_TOKENS = [
   'color--hover',
   'color--active',
   'background--hover',
+  'background--active',
+  'rail-background',
+  'rail-border',
   'indicator--hover',
   'indicator--active',
 ];
@@ -700,42 +703,34 @@ const COMPONENT_PAIRS = [
   },
 
   // --- v2 tabs: tab.scss `.mg-tabs--horizontal` --------------------------
-  // The v2 list background is `transparent`, so these resolve against the
-  // page, not against the legacy tab-bar tint.
+  // The rail uses an opaque surface; active and hover fills composite on it.
   {
     name: 'v2 tab label, resting',
     fg: '--mg-tab-color',
-    bg: [],
+    bg: ['--mg-tab-rail-background'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-tabs--horizontal .mg-tabs__link on a transparent list',
+    why: 'SC 1.4.3 — horizontal tab label on the rail surface',
   },
   {
     name: 'v2 tab label, hover',
     fg: '--mg-tab-color--hover',
-    bg: ['--mg-tab-background--hover'],
+    bg: ['--mg-tab-rail-background', '--mg-tab-background--hover'],
     min: 4.5,
     why: 'SC 1.4.3 — hover tints the tab and recolours the label',
   },
   {
     name: 'v2 tab label, active',
     fg: '--mg-tab-color--active',
-    bg: [],
+    bg: ['--mg-tab-rail-background', '--mg-tab-background--active'],
     min: 4.5,
-    why: 'SC 1.4.3 — the active v2 tab keeps a transparent background',
+    why: 'SC 1.4.3 — selected label on its brand-tinted pill',
   },
   {
     name: 'v2 tab indicator, active',
     fg: '--mg-tab-indicator--active',
-    bg: [],
+    bg: ['--mg-tab-rail-background', '--mg-tab-background--active'],
     min: 3,
-    why: 'SC 1.4.11 — the inset underline is how the selected tab is identified',
-  },
-  {
-    name: 'v2 tab indicator, hover',
-    fg: '--mg-tab-indicator--hover',
-    bg: [],
-    min: 3,
-    why: 'SC 1.4.11 — hover state indicator on a transparent tab',
+    why: 'SC 1.4.11 — selected pill border remains distinct from its inner fill',
   },
 
   // --- Form controls: _form-base.scss ------------------------------------
@@ -1136,7 +1131,6 @@ const COMPONENT_PAIRS = [
     min: 3,
     why: 'SC 1.4.11 — the pale swatches sit at 1.3-2.2:1, so the ring is their boundary',
   },
-
 ];
 
 /**
@@ -1272,18 +1266,6 @@ const WCAG_EXCEPTIONS = {
   ],
 
   // v2 tabs.
-  'irp|v2 tab label, hover': [
-    4.35,
-    'IRP interactive-active on its own 6% wash; marginal',
-  ],
-  'base|v2 tab indicator, hover': [
-    2.28,
-    '45% accent wash; raise the alpha or use the solid accent',
-  ],
-  'preventionweb|v2 tab indicator, hover': [2.09, '45% accent wash'],
-  'irp|v2 tab indicator, hover': [1.9, '45% accent wash'],
-  'mcr|v2 tab indicator, hover': [2.58, '45% accent wash'],
-  'delta|v2 tab indicator, hover': [2.28, '45% accent wash'],
 
   // Card and hero share the orange secondary accent.
   'base|card title, secondary variant': [
@@ -1385,7 +1367,10 @@ const PERCEPTUAL_EXCEPTIONS = {
       // are recorded so neither measure gets to hide it.
       [
         `${theme}|dataviz label on categorical fill 2`,
-        [54.6, 'black on orange: passes WCAG 2 at 6.66, short of the Oklab floor'],
+        [
+          54.6,
+          'black on orange: passes WCAG 2 at 6.66, short of the Oklab floor',
+        ],
       ],
       [
         `${theme}|dataviz label on Sendai target C`,
@@ -1444,40 +1429,6 @@ const PERCEPTUAL_EXCEPTIONS = {
   'base|legacy tab label, active': [
     60.8,
     'a mid-tone pair just short of body-text readable (WCAG 2 disagrees: 7.47:1 clears the 4.5:1 minimum)',
-  ],
-
-  'base|v2 tab label, hover': [
-    61.1,
-    'the interactive-active label on its own faint wash (WCAG 2 disagrees: 4.64:1 clears the 4.5:1 minimum)',
-  ],
-  'irp|v2 tab label, hover': [
-    59.8,
-    'the interactive-active label on its own faint wash',
-  ],
-  'delta|v2 tab label, hover': [
-    62.6,
-    'the interactive-active label on its own faint wash (WCAG 2 disagrees: 4.94:1 clears the 4.5:1 minimum)',
-  ],
-
-  'base|v2 tab indicator, hover': [
-    38.3,
-    '45% accent wash; raise the alpha or use the solid accent',
-  ],
-  'preventionweb|v2 tab indicator, hover': [
-    34.5,
-    '45% accent wash; raise the alpha or use the solid accent',
-  ],
-  'irp|v2 tab indicator, hover': [
-    29,
-    '45% accent wash; raise the alpha or use the solid accent',
-  ],
-  'mcr|v2 tab indicator, hover': [
-    42.5,
-    '45% accent wash; raise the alpha or use the solid accent',
-  ],
-  'delta|v2 tab indicator, hover': [
-    38.3,
-    '45% accent wash; raise the alpha or use the solid accent',
   ],
 
   'base|error summary text on its tinted panel': [
@@ -1765,7 +1716,6 @@ describe('where the two contrast measures disagree', () => {
    */
   const DISAGREEMENTS = [
     'base | legacy tab label, active | WCAG 2 PASSES 7.47:1 (min 4.5) | perceptual fails 60.8 (BODY_TEXT needs 63)',
-    'base | v2 tab label, hover | WCAG 2 PASSES 4.64:1 (min 4.5) | perceptual fails 61.1 (BODY_TEXT needs 63)',
     'base | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'base | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'base | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
@@ -1778,7 +1728,6 @@ describe('where the two contrast measures disagree', () => {
     'mcr | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'mcr | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'mcr | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
-    'delta | v2 tab label, hover | WCAG 2 PASSES 4.94:1 (min 4.5) | perceptual fails 62.6 (BODY_TEXT needs 63)',
     'delta | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'delta | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',

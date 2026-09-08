@@ -654,8 +654,21 @@ export default {
 
   // --- Tabs (auto-rendered) ---
   'components-tabs': {
+    cssClasses: [
+      'mg-tabs',
+      'mg-tabs--horizontal',
+      'mg-tabs--stacked',
+      'mg-tabs__rail',
+      'mg-tabs__scroll',
+      'mg-tabs__list',
+      'mg-tabs__item',
+      'mg-tabs__link',
+      'mg-tabs__panels',
+      'mg-tabs-content',
+      'mg-tabs__section',
+    ],
     description:
-      'Tabbed content with stacked or horizontal variants. Requires tabs.js vanilla JS for interactivity. The script adds ARIA roles (tablist, tab, tabpanel) and keyboard navigation at runtime — do not omit the script or tabs will be inaccessible.',
+      'Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Use mgTabsDestroy(scope) before removing dynamically initialised markup.',
   },
 
   // --- Highlight box (auto-rendered) ---

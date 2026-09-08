@@ -49,21 +49,21 @@
 
 // Shared styles for stacked tabs
 @mixin stacked-tabs {
-  .mg-tabs__list {
+  > .mg-tabs__list {
     display: flex;
     flex-direction: column; // Stack tabs vertically
   }
 
-  .mg-tabs__item {
+  > .mg-tabs__list > .mg-tabs__item {
     width: 100%; // Make each tab take full width
     margin-bottom: var(--mg-spacing-25); // Add spacing between tabs
   }
 
-  .mg-tabs__section {
+  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__section {
     padding: var(--mg-spacing-150);
   }
 
-  .mg-tabs__link {
+  > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link {
     position: relative;
     padding-right: mg-rem(40); // space for the chevron to theright
 
@@ -105,45 +105,9 @@
   @include stacked-tabs;
 }
 
-.mg-tabs--horizontal {
-  // for smaller screens we mimic stacked tabs
-  @media (max-width: $mg-breakpoint-mobile) {
-    @include stacked-tabs;
-  }
-
-  @media (min-width: $mg-breakpoint-mobile) {
-    .mg-tabs__list {
-      display: grid;
-      min-width: 800px;
-      grid-template-areas:
-        "a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a"
-        "b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b";
-    }
-
-    .mg-tabs__item {
-      grid-row: 1;
-      display: flex;
-    }
-
-    .mg-tabs__link {
-      width: max-content; // force the tab title to be one line and not squisshed by min-content
-      text-align: center;
-      flex-grow: 1;
-    }
-
-    .mg-tabs-content {
-      width: 100%;
-      height: 100%;
-      grid-row: 2;
-      grid-column: 1 / -1;
-      grid-area: b;
-    }
-  }
-
-  // edge case with css grid and not selecting even though not visible
-  .mg-tabs-content[hidden] {
-    display: none;
-  }
+// Hidden panels must not regain grid display from the shared content styles.
+.mg-tabs--horizontal .mg-tabs-content[hidden] {
+  display: none;
 }
 
 .mg-tabs__link {
@@ -242,100 +206,199 @@
   position: relative;
 }
 
-// Modern tab variants: horizontal tabs behave like a navigation rail, while
-// stacked tabs behave like disclosure rows. These selectors intentionally sit
-// after the legacy shared styles so existing markup and JS contracts remain
-// unchanged while the current variants receive the refreshed visual language.
+// Horizontal controls have their own scrollport; panels never join the rail.
+// max-content plus max-inline-size centres fitting groups without losing the
+// leading edge of an overflowing group (including in RTL).
 .mg-tabs--horizontal {
-  .mg-tabs__list {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+
+  > .mg-tabs__rail {
+    background: var(--mg-tab-rail-background);
+    border: 1px solid var(--mg-tab-rail-border);
+    border-radius: calc(var(--mg-tab-radius) + var(--mg-tab-rail-padding));
+    box-sizing: border-box;
+    inline-size: max-content;
+    max-inline-size: 100%;
+    margin-inline: auto;
+    position: relative;
+    isolation: isolate;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 1px;
+      inline-size: var(--mg-tab-rail-fade-size);
+      pointer-events: none;
+      border-radius: inherit;
+      opacity: 0;
+      z-index: 3; // Local overlay above the rail's scrolling labels.
+    }
+
+    &::before {
+      inset-inline-start: 0;
+      background: linear-gradient(
+        to right,
+        var(--mg-tab-rail-background),
+        transparent
+      );
+    }
+
+    &::after {
+      inset-inline-end: 0;
+      background: linear-gradient(
+        to left,
+        var(--mg-tab-rail-background),
+        transparent
+      );
+    }
+
+    &[data-mg-tabs-overflow-start]::before,
+    &[data-mg-tabs-overflow-end]::after {
+      opacity: 1;
+    }
+
+    // Keep labels and both focus bands clear during keyboard navigation.
+    &:has(:focus-visible)::before,
+    &:has(:focus-visible)::after {
+      opacity: 0;
+    }
+
+    &:dir(rtl)::before {
+      background: linear-gradient(
+        to left,
+        var(--mg-tab-rail-background),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::after {
+      background: linear-gradient(
+        to right,
+        var(--mg-tab-rail-background),
+        transparent
+      );
+    }
+  }
+
+  > .mg-tabs__rail > .mg-tabs__scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    scroll-padding-inline: var(--mg-tab-rail-padding);
+    border-radius: inherit;
+  }
+
+  > .mg-tabs__rail > .mg-tabs__scroll > .mg-tabs__list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--mg-tab-rail-gap);
+    inline-size: max-content;
+    min-inline-size: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: var(--mg-tab-rail-padding);
     background: transparent;
-    box-shadow: inset 0 -1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
+    list-style: none;
 
     &::after {
       display: none;
     }
   }
 
-  .mg-tabs__link {
+  > .mg-tabs__rail > .mg-tabs__scroll > .mg-tabs__list > .mg-tabs__item {
+    display: flex;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  > .mg-tabs__rail
+    > .mg-tabs__scroll
+    > .mg-tabs__list
+    > .mg-tabs__item
+    > .mg-tabs__link {
     align-items: center;
+    justify-content: center;
     background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: inset 0 calc(var(--mg-tab-indicator-size) * -1) 0 transparent;
+    border: 1px solid transparent;
+    border-radius: var(--mg-tab-radius);
+    box-sizing: border-box;
+    box-shadow: none;
     color: var(--mg-tab-color);
     display: flex;
-    min-height: var(--mg-tab-min-block-size);
-    padding: var(--mg-tab-padding);
-    text-align: start;
+    min-block-size: var(--mg-tab-min-block-size);
+    padding: var(--mg-spacing-75) var(--mg-spacing-150);
+    text-align: center;
+    white-space: nowrap;
+    scroll-margin-inline: var(--mg-tab-rail-padding);
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
         background-color var(--mg-motion-duration-fast)
           var(--mg-motion-easing-standard),
-        box-shadow var(--mg-motion-duration-fast)
+        border-color var(--mg-motion-duration-fast)
           var(--mg-motion-easing-standard),
         color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
     }
 
     &:hover {
       background: var(--mg-tab-background--hover);
-      border: 0;
-      box-shadow: inset 0 calc(var(--mg-tab-indicator-size) * -1) 0
-        var(--mg-tab-indicator--hover);
       color: var(--mg-tab-color--hover);
-    }
-
-    &:focus-visible {
-      @include mg-focus-ring;
-
-      background: rgb(var(--mg-color-interactive) / 0.06);
-      border: 0;
     }
 
     &.is-active,
     &.is-active:hover {
-      background: transparent;
-      border: 0;
-      box-shadow: inset 0 calc(var(--mg-tab-indicator-size) * -1) 0
-        var(--mg-tab-indicator--active);
+      background: var(--mg-tab-background--active);
+      border-color: var(--mg-tab-indicator--active);
       color: var(--mg-tab-color--active);
     }
 
-    // The active tab's indicator bar and the focus ring's separator band are
-    // both box-shadows, and this selector outranks the :focus-visible rule
-    // above, so declaring only the bar here would silently drop the band from
-    // the one tab roving tabindex actually lands on. Both are listed.
+    &:focus-visible,
     &.is-active:focus-visible {
-      background: transparent;
-      border: 0;
-      box-shadow:
-        inset 0 calc(var(--mg-tab-indicator-size) * -1) 0
-          var(--mg-tab-indicator--active),
-        0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0));
-      color: var(--mg-tab-color--active);
+      @include mg-focus-ring;
     }
   }
 
-  @media (min-width: $mg-breakpoint-mobile) {
-    .mg-tabs__list {
-      display: grid;
-      min-width: 0;
-      overflow-x: auto;
-      scrollbar-width: thin;
+  > .mg-tabs__panels {
+    min-inline-size: 0;
+    margin-block-start: var(--mg-tab-panel-gap);
+  }
+
+  > .mg-tabs__panels > .mg-tabs-content {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  @media (forced-colors: active) {
+    > .mg-tabs__rail {
+      border-color: CanvasText;
+
+      &::before,
+      &::after {
+        display: none;
+      }
     }
 
-    .mg-tabs__item {
-      display: flex;
+    > .mg-tabs__rail > .mg-tabs__scroll {
+      // System scrollbars remain the overflow affordance when fades disappear.
+      scrollbar-width: auto;
     }
 
-    .mg-tabs-content {
-      padding-top: var(--mg-spacing-100);
+    > .mg-tabs__rail
+      > .mg-tabs__scroll
+      > .mg-tabs__list
+      > .mg-tabs__item
+      > .mg-tabs__link.is-active {
+      border-color: Highlight;
     }
   }
 }
 
 @mixin modern-stacked-tabs {
-  .mg-tabs__list {
+  > .mg-tabs__list {
     background: transparent;
 
     &::after {
@@ -343,12 +406,12 @@
     }
   }
 
-  .mg-tabs__item {
+  > .mg-tabs__list > .mg-tabs__item {
     box-shadow: inset 0 -1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
     margin-bottom: 0;
   }
 
-  .mg-tabs__link {
+  > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link {
     background: rgb(var(--mg-color-neutral-0));
     border: 0;
     border-radius: 0;
@@ -417,7 +480,7 @@
     }
   }
 
-  .mg-tabs__section {
+  > .mg-tabs__list > .mg-tabs-content > .mg-tabs__section {
     background: rgb(var(--mg-color-neutral-0));
     border-radius: 0;
     box-shadow: none;
@@ -433,13 +496,6 @@
 // The explicit stacked variant remains a disclosure pattern at every width.
 .mg-tabs--stacked {
   @include modern-stacked-tabs;
-}
-
-// Horizontal tabs collapse to the same disclosure pattern on small screens.
-.mg-tabs--horizontal {
-  @media (max-width: $mg-breakpoint-mobile) {
-    @include modern-stacked-tabs;
-  }
 }
 
 [dir="rtl"] {
@@ -460,26 +516,13 @@
   }
 
   // Flip stacked chevron for RTL
-  .mg-tabs--stacked .mg-tabs__link {
+  .mg-tabs--stacked > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link {
     padding-right: var(--mg-spacing-200);
     padding-left: mg-rem(40);
 
     &:before {
       right: auto;
       left: var(--mg-spacing-100);
-    }
-  }
-
-  // Horizontal tabs only have chevrons at mobile breakpoint
-  @media (max-width: $mg-breakpoint-mobile) {
-    .mg-tabs--horizontal .mg-tabs__link {
-      padding-right: var(--mg-spacing-200);
-      padding-left: mg-rem(40);
-
-      &:before {
-        right: auto;
-        left: var(--mg-spacing-100);
-      }
     }
   }
 }
