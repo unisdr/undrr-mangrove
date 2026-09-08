@@ -1,0 +1,107 @@
+/**
+ * Styles for the language-boundary demo.
+ *
+ * Deliberately declares no `font-family` anywhere. The whole point of the demo
+ * is to show which family the library's own cascade resolves to, so any
+ * declaration here would mask the thing under observation. The wrapper carries
+ * `lang="en"` so the demo chrome reads in the Latin family by inheritance.
+ */
+
+.mg-lang-demo {
+  border: 1px solid rgb(var(--mg-color-neutral-300, 200 200 200));
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.mg-lang-demo__heading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.mg-lang-demo__intro {
+  margin: 0 0 1rem;
+  max-width: 70ch;
+}
+
+.mg-lang-demo__legend {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 1.25rem;
+}
+
+.mg-lang-demo__legend-item {
+  background: rgb(var(--mg-color-neutral-50, 245 245 245));
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+}
+
+.mg-lang-demo__legend-sample {
+  display: block;
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+}
+
+.mg-lang-demo__legend-name {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.mg-lang-demo__stage {
+  background: rgb(var(--mg-color-neutral-0, 255 255 255));
+  border: 1px dashed rgb(var(--mg-color-neutral-400, 160 160 160));
+  border-radius: 4px;
+  font-size: 1.125rem;
+  padding: 1rem;
+}
+
+.mg-lang-demo__stage [lang] {
+  border-inline-start: 3px solid rgb(var(--mg-color-interactive, 0 90 156));
+  margin: 0.75rem 0;
+  padding-inline-start: 0.75rem;
+}
+
+.mg-lang-demo__table {
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin-top: 1.25rem;
+  width: 100%;
+}
+
+.mg-lang-demo__table caption {
+  text-align: start;
+}
+
+.mg-lang-demo__table th,
+.mg-lang-demo__table td {
+  border-bottom: 1px solid rgb(var(--mg-color-neutral-200, 220 220 220));
+  padding: 0.35rem 0.5rem;
+  text-align: start;
+  vertical-align: top;
+}
+
+.mg-lang-demo__element {
+  white-space: nowrap;
+}
+
+/*
+ * Status is carried by the words "matches" / "does not match", not by colour.
+ * Mangrove has no semantic success/error colour token, and status conveyed by
+ * colour alone fails WCAG 1.4.1 anyway.
+ */
+.mg-lang-demo__status--mismatch {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.mg-lang-demo__note {
+  opacity: 0.85;
+}
+
+.mg-lang-demo__summary {
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
