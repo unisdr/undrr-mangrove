@@ -96,16 +96,15 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 ### Keyboard navigation
 
 - **Arrow Left / Arrow Right**: Moves focus between top-level menu items in the menu bar
-- **Arrow Down**: From a top-level item, moves focus into the open submenu section; within the sidebar, moves focus to the next menu item (or into the expanded section)
-- **Arrow Up**: Within the sidebar, moves focus to the previous menu item
+- **Arrow Down**: On desktop, moves focus from a top-level item into its open submenu section
 - **Tab / Shift+Tab**: Moves focus through focusable elements within an open submenu section
-- **Escape**: Closes any open submenu panel and returns to the top-level menu bar
+- **Escape**: Closes the mobile dialog and returns focus to the opener; on desktop, closes the open submenu panel
 - Focus on a top-level item also triggers its submenu to open (via `onFocus`)
 
 ### ARIA attributes
 
 - The root `<nav>` element has `aria-label="Main Navigation"`
-- The top bar uses `role="menubar"` with `aria-label="Main navigation menu"`
+- On desktop, the top bar uses `role="menubar"` with `aria-label="Main navigation menu"`
 - Top-level menu items use `role="menuitem"` with `aria-haspopup="true"` when they have submenus, and `aria-expanded` to indicate open/closed state
 - Parent `<li>` elements use `role="none"` to remove implicit list semantics from the menu pattern
 - Submenu panels use `role="region"` with `aria-label="Menu section"` and `aria-live="polite"` to announce content changes
@@ -115,10 +114,11 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 
 ### Mobile menu
 
-- The hamburger button has `aria-label="Toggle navigation menu"` and `aria-haspopup="true"`; its icon is marked `aria-hidden="true"`
-- The mobile sidebar uses `role="dialog"` with `aria-label="Mobile navigation menu"`
-- Sidebar section buttons have `aria-expanded` and `aria-pressed` to indicate open/closed state
-- The backdrop overlay is a `<button>` element with `aria-label="Close mobile navigation"`
+- The opening button exposes `aria-expanded`, `aria-controls` and `aria-haspopup="dialog"`, with translated open/close labels.
+- The full-screen menu uses `role="dialog"` and `aria-modal="true"`, labelled by the current level heading.
+- Links and drill-in buttons use native navigation semantics. Tab and Shift+Tab stay within the open dialog, including controls in expanded banner content; arrow keys retain native browser behaviour.
+- Entering a level focuses its heading. Back restores the previous row and scroll position. Close and Escape restore the opener; resizing to desktop moves focus to a desktop navigation item.
+- The closed dialog is hidden. Decorative desktop strip items become inert on mobile after hydration, keeping the full-strip opening target available.
 
 ### Branded variant
 
@@ -126,9 +126,7 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 
 ### Known limitations
 
-- Focus is not explicitly trapped within the mobile sidebar dialog; users can Tab to elements behind the overlay
-- The hamburger button does not reflect the sidebar's open state via `aria-expanded`
-- When a submenu closes (via Escape or mouse leave), focus is not programmatically returned to the triggering menu item
+- On desktop, when a submenu closes via Escape or mouse leave, focus is not programmatically returned to the triggering menu item
 
 ## Server-rendered / CDN usage
 

@@ -33,6 +33,7 @@ export function TopBarItem({
   return (
     <li
       inert={inert ? true : undefined}
+      aria-hidden={inert ? true : undefined}
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
       onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
       onFocus={onMouseEnter}

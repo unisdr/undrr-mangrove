@@ -36,7 +36,13 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
 
   useLayoutEffect(() => {
     if (!open) {
-      openerRef.current?.focus();
+      const wrapper = dialogRef.current?.closest('.mg-mega-wrapper');
+      const desktop = window.matchMedia?.('(min-width: 900px)').matches;
+      const target = desktop
+        ? wrapper?.querySelector('.mg-mega-topbar__item-link')
+        : openerRef.current;
+      if (openerRef.current) target?.focus();
+      openerRef.current = null;
       setPath(EMPTY_PATH);
       historyRef.current = [];
       return;
@@ -77,6 +83,14 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
     }
   }, [path, open]);
 
+  // A CMS/React update can remove the focused link without changing the path.
+  // Leave surviving focus alone, but recover to the current heading if it vanished.
+  useLayoutEffect(() => {
+    if (open && !dialogRef.current?.contains(document.activeElement)) {
+      headingRef.current?.focus();
+    }
+  });
+
   const enter = index => {
     historyRef.current.push({ index, scrollTop: dialogRef.current.scrollTop });
     setPath(previous => [...previous, index]);
@@ -93,12 +107,35 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
     }
     if (event.key === 'Tab') {
       const focusable = Array.from(
-        dialogRef.current.querySelectorAll('a[href], button, summary')
-      ).filter(
-        element =>
-          !element.closest('details:not([open])') ||
-          element.tagName === 'SUMMARY'
-      );
+        dialogRef.current.querySelectorAll(
+          'a[href], button, input, select, textarea, summary, iframe, [contenteditable="true"], [tabindex], audio[controls], video[controls]'
+        )
+      ).filter(element => {
+        if (
+          element.tabIndex < 0 ||
+          element.matches(':disabled, input[type="hidden"]') ||
+          element.closest('[hidden], [inert]')
+        )
+          return false;
+        for (
+          let details = element.parentElement?.closest('details:not([open])');
+          details;
+          details = details.parentElement?.closest('details:not([open])')
+        ) {
+          if (details.querySelector(':scope > summary') !== element)
+            return false;
+        }
+        for (
+          let ancestor = element;
+          ancestor && ancestor !== dialogRef.current;
+          ancestor = ancestor.parentElement
+        ) {
+          const style = window.getComputedStyle(ancestor);
+          if (style.display === 'none' || style.visibility === 'hidden')
+            return false;
+        }
+        return true;
+      });
       const first = focusable[0];
       const last = focusable.at(-1);
       if (

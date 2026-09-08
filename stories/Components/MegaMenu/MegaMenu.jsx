@@ -152,7 +152,7 @@ const MegaMenu = ({
   return (
     <nav
       ref={wrapperRef}
-      className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}`}
+      className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${showSidebar ? ' mg-mega-wrapper--mobile-open' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
       aria-label={navLabel}

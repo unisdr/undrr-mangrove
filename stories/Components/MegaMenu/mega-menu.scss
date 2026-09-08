@@ -980,3 +980,19 @@
     animation: none;
   }
 }
+
+.mg-mega-topbar__mobile-trigger {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media screen and (min-width: $mg-breakpoint-tablet) {
+    display: none;
+  }
+}
+
+// The full-screen dialog must escape the nav layer as a stacking unit, so
+// neighbouring sticky page tools cannot cover its close control.
+.mg-mega-wrapper--mobile-open {
+  z-index: var(--mg-z-index-modal);
+}
