@@ -616,3 +616,17 @@ export const SimpleNav = {
     },
   },
 };
+
+export const ProgressiveMobile = {
+  name: 'Progressive mobile navigation',
+  globals: { viewport: { value: 'iphone12', isRotated: false } },
+  args: { sections },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'At widths below 900px, tap anywhere on the navigation strip. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
+      },
+    },
+  },
+};

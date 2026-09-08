@@ -2,6 +2,7 @@ import React from 'react';
 import Section from '../Section/Section.jsx';
 
 export function TopBarItem({
+  inert,
   title,
   icon,
   onMouseEnter,
@@ -20,7 +21,10 @@ export function TopBarItem({
   const label = (
     <>
       {icon && (
-        <span className={`mg-mega-topbar__item-icon ${icon}`} aria-hidden="true" />
+        <span
+          className={`mg-mega-topbar__item-icon ${icon}`}
+          aria-hidden="true"
+        />
       )}
       {title}
     </>
@@ -28,6 +32,7 @@ export function TopBarItem({
 
   return (
     <li
+      inert={inert ? true : undefined}
       className={`mg-mega-topbar__item ${isActive ? 'mg-mega-topbar__item--active' : ''}`}
       onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
       onFocus={onMouseEnter}

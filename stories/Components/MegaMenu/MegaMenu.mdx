@@ -163,7 +163,27 @@ createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromEleme
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
+## Mobile progressive navigation
+
+Below 900px, the existing navigation strip opens a full-screen menu. Each group
+opens a new level on the same surface, with a labelled back button and a separate
+Close action. Parent destinations remain available as overview links. Introductory
+banner content is available beneath the links in a disclosure; desktop banners
+remain unchanged. Returning restores the previous row focus and scroll position.
+Escape closes the menu and returns focus to the opener. Reduced motion is respected.
+
+This is a drop-in update: existing `sections`, logo and timing props, Drupal
+attributes and hydration entry points require no changes. The existing `labels`
+object also accepts `menuLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`
+and `toggleMobileNavLabel`; omitted keys use English defaults. Rich banner HTML
+retains the existing caller-sanitised contract.
+
+<Canvas of={MegaMenuStories.ProgressiveMobile} />
+
 ## Changelog
+
+- **1.3.0** — 2026-09-08: Added mobile progressive navigation with a consistent surface, explicit back and close actions, nested levels, preserved destination and banner content, focus and scroll restoration, reduced motion and translated controls. Existing data and integration contracts remain supported.
+
 
 - **1.2.5** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a menu link whose own language is not Arabic.
 - **1.2.4** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed desktop navigation with an underline active state, an opaque high-clarity menu surface, lighter dividers, and restrained panel elevation. Removed redundant per-language story exports in favour of the global locale toolbar.

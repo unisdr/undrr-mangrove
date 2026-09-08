@@ -1,128 +1,217 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useLayoutEffect, useRef, useState, useId } from 'react';
 
-import Section from '../Section/Section';
+const EMPTY_PATH = [];
 
-function SidebarItem({
-  section,
-  sectionListRef,
-  sectionIndex,
-  handleSectionToggle,
-  index,
-  itemListRef,
-  ref,
-  handleOnKeyDown,
-}) {
-  const display = sectionIndex === index;
-  const hasChildren = section?.items && section.items.length > 0;
-
-  return (
-    <li
-      className="mg-mega-sidebar-section"
-      onKeyDown={handleOnKeyDown}
-      role="none"
-    >
-      {hasChildren ? (
-        <button
-          className="mg-mega-sidebar-section__item"
-          onClick={() => handleSectionToggle(index)}
-          aria-pressed={display}
-          aria-expanded={display}
-          aria-haspopup="true"
-          ref={ref}
-          role="menuitem"
-        >
-          <span>{section.title}</span>
-          <span
-            className="mg-icon mg-icon-angle-circled-left"
-            aria-hidden="true"
-          ></span>
-        </button>
-      ) : (
-        <a
-          className="mg-mega-sidebar-section__item"
-          href={section.url || section.bannerButton?.url || '#'}
-          ref={ref}
-          role="menuitem"
-        >
-          <span>{section.title}</span>
-        </a>
-      )}
-
-      {hasChildren && display && (
-        <Section
-          section={section}
-          index={index}
-          sectionListRef={sectionListRef}
-          itemListRef={itemListRef}
-        />
-      )}
-    </li>
-  );
-}
-
-export function Sidebar({ sections, itemListRef, sectionListRef, open }) {
-  const [sectionIndex, setSectionIndex] = useState(null);
-
-  // Reset expanded sections when sidebar closes
-  useEffect(() => {
-    if (!open) {
-      setSectionIndex(null);
+// Ordinary navigation links and drill-in buttons deliberately use native Tab
+// behaviour, rather than application-menu roles and roving tabindex.
+export function Sidebar({ sections, open, onClose, labels, id }) {
+  const [path, setPath] = useState(EMPTY_PATH);
+  const openerRef = useRef(null);
+  const dialogRef = useRef(null);
+  const headingRef = useRef(null);
+  const listRef = useRef(null);
+  const historyRef = useRef([]);
+  const returningRef = useRef(null);
+  const titleId = useId();
+  let current = null;
+  let parent = null;
+  let items = sections;
+  let validPath = true;
+  for (const index of path) {
+    parent = current;
+    current = items?.[index];
+    if (!current) {
+      validPath = false;
+      break;
     }
-  }, [open]);
+    items = current.items || [];
+  }
+  useLayoutEffect(() => {
+    if (!validPath) {
+      historyRef.current = [];
+      returningRef.current = null;
+      setPath(EMPTY_PATH);
+    }
+  }, [validPath]);
 
-  const handleSectionToggle = index => {
-    if (index === sectionIndex) {
-      setSectionIndex(null);
+  useLayoutEffect(() => {
+    if (!open) {
+      openerRef.current?.focus();
+      setPath(EMPTY_PATH);
+      historyRef.current = [];
       return;
     }
-    setSectionIndex(index);
-  };
+    const opener =
+      dialogRef.current
+        .closest('.mg-mega-wrapper')
+        ?.querySelector('.mg-mega-topbar-mobile__icon-button') ||
+      document.activeElement;
+    openerRef.current = opener;
+    const containFocus = event => {
+      if (!dialogRef.current?.contains(event.target))
+        headingRef.current?.focus();
+    };
+    document.addEventListener('focusin', containFocus);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    headingRef.current?.focus();
+    return () => {
+      document.removeEventListener('focusin', containFocus);
+      document.body.style.overflow = previousOverflow;
+      if (opener?.isConnected) opener.focus();
+    };
+  }, [open]);
 
-  const handleFocusByArrows = (e, index) => {
-    // Prevent default scrolling behavior with arrow keys
-    if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-      e.preventDefault();
+  useLayoutEffect(() => {
+    if (!open) return;
+    const saved = returningRef.current;
+    if (saved) {
+      listRef.current
+        ?.querySelectorAll('[data-mg-menu-entry]')
+        [saved.index]?.focus({ preventScroll: true });
+      dialogRef.current.scrollTop = saved.scrollTop;
+      returningRef.current = null;
+    } else {
+      dialogRef.current.scrollTop = 0;
+      headingRef.current?.focus();
     }
+  }, [path, open]);
 
-    const itemRef = itemListRef?.current;
-
-    if (e.key === 'ArrowDown' && index < itemRef?.length - 1) {
-      if (Number.isInteger(sectionIndex)) {
-        sectionListRef.current?.[index].focus();
-      } else {
-        itemRef[index + 1].focus();
+  const enter = index => {
+    historyRef.current.push({ index, scrollTop: dialogRef.current.scrollTop });
+    setPath(previous => [...previous, index]);
+  };
+  const back = () => {
+    returningRef.current = historyRef.current.pop();
+    setPath(previous => previous.slice(0, -1));
+  };
+  const handleKeyDown = event => {
+    if (event.key === 'Escape') {
+      event.stopPropagation();
+      event.preventDefault();
+      onClose();
+    }
+    if (event.key === 'Tab') {
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll('a[href], button, summary')
+      ).filter(
+        element =>
+          !element.closest('details:not([open])') ||
+          element.tagName === 'SUMMARY'
+      );
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (
+        event.shiftKey &&
+        (document.activeElement === first ||
+          document.activeElement === headingRef.current)
+      ) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
       }
     }
-    if (e.key === 'ArrowUp' && index >= 1) {
-      itemRef[index - 1].focus();
-    }
   };
+  const overviewUrl = current?.url || current?.bannerButton?.url;
 
   return (
     <div
-      className={`mg-mega-mobile-sidebar ${open ? 'mg-mega-mobile-sidebar--open' : ''}`}
+      id={id}
+      ref={dialogRef}
+      className={`mg-mega-mobile-sidebar mg-mega-mobile-sidebar--progressive${open ? ' mg-mega-mobile-sidebar--open' : ''}`}
       role="dialog"
-      aria-label="Mobile navigation menu"
+      aria-modal={open ? 'true' : undefined}
+      aria-labelledby={titleId}
+      hidden={!open}
+      onKeyDown={handleKeyDown}
     >
-      <ul
-        className="mg-mega-sidebar__list"
-        role="menu"
-        aria-label="Navigation options"
-      >
-        {sections.map((section, index) => (
-          <SidebarItem
-            key={index}
-            index={index}
-            section={section}
-            ref={element => (itemListRef.current[index] = element)}
-            sectionIndex={sectionIndex}
-            handleSectionToggle={handleSectionToggle}
-            sectionListRef={sectionListRef}
-            itemListRef={itemListRef}
-            handleOnKeyDown={e => handleFocusByArrows(e, index)}
-          />
-        ))}
-      </ul>
+      <div className="mg-mega-mobile-sidebar__header">
+        {path.length > 0 ? (
+          <button className="mg-mega-mobile-sidebar__back" onClick={back}>
+            <span className="mg-mega-mobile-sidebar__arrow" aria-hidden="true">
+              ←
+            </span>
+            {parent?.title || labels.allSectionsLabel}
+          </button>
+        ) : (
+          <span>{labels.menuLabel}</span>
+        )}
+        <button
+          className="mg-mega-mobile-sidebar__close"
+          onClick={onClose}
+          aria-label={labels.closeMobileNavLabel}
+        >
+          {labels.closeLabel}
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div className="mg-mega-mobile-sidebar__page" key={path.join('-')}>
+        <h2
+          id={titleId}
+          ref={headingRef}
+          tabIndex={-1}
+          className="mg-mega-mobile-sidebar__title"
+        >
+          {current?.title || labels.allSectionsLabel}
+        </h2>
+        {overviewUrl && (
+          <a className="mg-mega-mobile-sidebar__overview" href={overviewUrl}>
+            {!current.url
+              ? current.bannerButton?.label || labels.overviewLabel
+              : labels.overviewLabel}
+          </a>
+        )}
+        {current?.url &&
+          current.bannerButton?.url &&
+          current.url !== current.bannerButton.url && (
+            <a
+              className="mg-mega-mobile-sidebar__overview"
+              href={current.bannerButton.url}
+            >
+              {current.bannerButton.label || labels.overviewLabel}
+            </a>
+          )}
+        <ul ref={listRef} className="mg-mega-sidebar__list">
+          {(items || []).map((item, index) => (
+            <li className="mg-mega-sidebar-section" key={index}>
+              {item.items?.length > 0 || item.bannerDescription ? (
+                <button
+                  className="mg-mega-sidebar-section__item"
+                  data-mg-menu-entry
+                  onClick={() => enter(index)}
+                >
+                  {item.title}
+                  <span
+                    className="mg-mega-mobile-sidebar__arrow"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </button>
+              ) : (
+                <a
+                  className="mg-mega-sidebar-section__item"
+                  data-mg-menu-entry
+                  href={item.url || item.bannerButton?.url || '#'}
+                >
+                  {item.title}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+        {current?.bannerDescription && (
+          <details className="mg-mega-mobile-sidebar__intro">
+            <summary>{current.bannerHeading || current.title}</summary>
+            {/* Same caller-sanitised HTML contract as the existing desktop banner. */}
+            <div
+              dangerouslySetInnerHTML={{ __html: current.bannerDescription }}
+            />
+          </details>
+        )}
+      </div>
     </div>
   );
 }

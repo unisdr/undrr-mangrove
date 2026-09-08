@@ -30,7 +30,7 @@
  * @param {number} [logoHeight] - Optional explicit height for CLS prevention
  * @returns {JSX.Element} Rendered MegaMenu component
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import PropTypes from 'prop-types';
 import { TopBar } from './TopBar/TopBar';
 import { Sidebar } from './TopBar/Sidebar';
@@ -38,6 +38,11 @@ import { Sidebar } from './TopBar/Sidebar';
 export const DEFAULT_MEGAMENU_LABELS = {
   navLabel: 'Main Navigation',
   closeMobileNavLabel: 'Close mobile navigation',
+  menuLabel: 'Menu',
+  allSectionsLabel: 'All sections',
+  closeLabel: 'Close',
+  overviewLabel: 'Overview',
+  toggleMobileNavLabel: 'Open navigation menu',
 };
 
 const MegaMenu = ({
@@ -49,14 +54,18 @@ const MegaMenu = ({
   logoHref = '/',
   logoWidth,
   logoHeight,
-  labels = {},
+  labels = DEFAULT_MEGAMENU_LABELS,
 }) => {
-  const { navLabel, closeMobileNavLabel } = {
+  const resolvedLabels = {
     ...DEFAULT_MEGAMENU_LABELS,
     ...labels,
   };
+  const { navLabel, closeMobileNavLabel } = resolvedLabels;
+  const sidebarId = useId();
+  const wrapperRef = useRef(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [jsActive, setJsActive] = useState(false);
 
   const itemListRef = useRef([]);
@@ -111,9 +120,9 @@ const MegaMenu = ({
 
   // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = e => {
       // Check if click is outside the mega menu wrapper
-      const megaWrapper = document.querySelector('.mg-mega-wrapper');
+      const megaWrapper = wrapperRef.current;
       if (megaWrapper && !megaWrapper.contains(e.target)) {
         setActiveItem(null);
       }
@@ -128,14 +137,30 @@ const MegaMenu = ({
     }
   }, [activeItem]);
 
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const query = window.matchMedia('(min-width: 900px)');
+    const closeOnDesktop = () => {
+      setIsMobile(!query.matches);
+      if (query.matches) setShowSidebar(false);
+    };
+    closeOnDesktop();
+    query.addEventListener('change', closeOnDesktop);
+    return () => query.removeEventListener('change', closeOnDesktop);
+  }, []);
+
   return (
     <nav
+      ref={wrapperRef}
       className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
       aria-label={navLabel}
     >
       <TopBar
+        isMobile={isMobile}
+        sidebarId={sidebarId}
+        labels={resolvedLabels}
         sections={sections}
         handleItemHover={handleItemHover}
         toggleShowSidebar={() => setShowSidebar(prev => !prev)}
@@ -155,16 +180,18 @@ const MegaMenu = ({
         <button
           className="mg-mega-mobile-sidebar-overlay"
           aria-label={closeMobileNavLabel}
+          tabIndex={-1}
           onClick={() => setShowSidebar(false)}
         />
       )}
 
-      {/* Sidebar is always mounted for smooth open/close transitions */}
+      {/* Keep the controller mounted so close and reopen reset predictably. */}
       <Sidebar
+        id={sidebarId}
+        labels={resolvedLabels}
+        onClose={() => setShowSidebar(false)}
         open={showSidebar}
         sections={sections}
-        itemListRef={itemListRef}
-        sectionListRef={sectionListRef}
       />
     </nav>
   );
@@ -205,10 +232,15 @@ MegaMenu.propTypes = {
   logoWidth: PropTypes.number,
   /** Explicit height for the logo (CLS prevention). */
   logoHeight: PropTypes.number,
-  /** Translated UI labels. Keys: navLabel, closeMobileNavLabel. */
+  /** Translated UI labels. All keys are optional; existing label objects remain supported. */
   labels: PropTypes.shape({
     navLabel: PropTypes.string,
     closeMobileNavLabel: PropTypes.string,
+    menuLabel: PropTypes.string,
+    allSectionsLabel: PropTypes.string,
+    closeLabel: PropTypes.string,
+    overviewLabel: PropTypes.string,
+    toggleMobileNavLabel: PropTypes.string,
   }),
 };
 
