@@ -198,36 +198,76 @@ a {
 }
 
 /* Arabic fonts */
-:lang(ar) {
-  /* Body text uses Noto Sans Arabic.
-     `button` belongs here, not with the headings: REVIEW-CHECKLIST.md sets the
-     rule that compact heading chrome takes the Arabic headings token while
-     buttons take the body one, and CtaButton, Chips and ShareButtons all follow
-     it. Only a bare, unclassed `button` reached the headings token, via
-     `:lang(ar) button` at (0,1,1) losing to `:lang(ar) .mg-button` at (0,2,0) --
-     so two buttons on one page rendered in two typefaces. That was invisible
-     while both Arabic tokens resolved to Dubai. See unisdr/undrr-mangrove#1089. */
-  body,
-  p,
-  button {
-    font-family: $mg-font-family-arabic-body;
-  }
 
-  /* Headings use Noto Kufi Arabic, a display face.
-     `header` and `th` are still here and arguably should not be -- `header`
-     matches the element, so a whole page-header subtree inherits a display
-     face -- but changing them is a typographic-role decision, not a defect
-     fix, and is tracked with the wider font-role taxonomy work. */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  header,
-  th {
-    font-family: $mg-font-family-arabic-headings;
-  }
+/*
+ * The pseudo-class is attached to the element itself, never used as a
+ * descendant combinator. `:lang()` already inherits down the tree, so
+ * `h1:lang(ar)` matches any heading whose *computed* language is Arabic and
+ * correctly stops at a `lang="en"` boundary. The older `:lang(ar) h1` form
+ * matched every descendant of an Arabic root regardless of that element's own
+ * language. See unisdr/undrr-mangrove#1092.
+ */
+
+/* Body text uses Noto Sans Arabic.
+   `button` belongs here, not with the headings: REVIEW-CHECKLIST.md sets the
+   rule that compact heading chrome takes the Arabic headings token while
+   buttons take the body one, and CtaButton, Chips and ShareButtons all follow
+   it. See unisdr/undrr-mangrove#1089. */
+body:lang(ar),
+p:lang(ar),
+button:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
+}
+
+/* Headings use Noto Kufi Arabic, a display face.
+   `header` and `th` are still here and arguably should not be -- `header`
+   matches the element, so a whole page-header subtree inherits a display face
+   -- but changing them is a typographic-role decision, not a defect fix, and
+   is tracked with the wider font-role taxonomy work. */
+h1:lang(ar),
+h2:lang(ar),
+h3:lang(ar),
+h4:lang(ar),
+h5:lang(ar),
+h6:lang(ar),
+header:lang(ar),
+th:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
+}
+
+/*
+ * Language boundaries. Anchoring `:lang(ar)` stops the Arabic rules from
+ * *matching* non-Arabic elements, but `font-family` still inherits: a
+ * `lang="en"` island inside an Arabic page would otherwise inherit the Arabic
+ * family from `body:lang(ar)`.
+ *
+ * The family is therefore reasserted at the boundary ONLY -- on the element
+ * that declares the new language -- and everything below it inherits normally.
+ * A language sub-root always has a parent of the outer language, because
+ * `:lang()` inherits, so the child combinator selects exactly these switch
+ * points.
+ *
+ * This must not be written as a descendant selector. A rule matching every
+ * descendant would also match component children that are meant to inherit
+ * their container's family -- `.mg-card__title a`, `.mg-hero__title h2` -- and
+ * a matched declaration beats an inherited one however low its specificity, so
+ * those would lose Roboto Condensed. Matching only the switch point leaves
+ * component inheritance intact.
+ *
+ * Both halves are wrapped in `:where()` for zero specificity, so a component
+ * rule on the boundary element itself still wins. `[lang]:not([lang=""])`
+ * keeps `lang=""` -- which HTML defines as *unknown*, not *Latin* -- inheriting
+ * rather than guessed at.
+ *
+ * The second rule handles the mirror case for free: an Arabic island inside an
+ * otherwise Latin page. See unisdr/undrr-mangrove#1092.
+ */
+:where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar))) {
+  font-family: $mg-font-family;
+}
+
+:where(:not(:lang(ar))) > :where([lang]:not([lang=""]):lang(ar)) {
+  font-family: $mg-font-family-arabic-body;
 }
 
 /* typography end */

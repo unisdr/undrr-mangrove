@@ -313,12 +313,10 @@ $colors-solid: (
   }
 }
 
-:lang(ar) {
-  .mg-u-font-size-600,
-  .mg-u-font-size-800,
-  .mg-u-font-size-900 {
-    line-height: 1.4;
-  }
+.mg-u-font-size-600:lang(ar),
+.mg-u-font-size-800:lang(ar),
+.mg-u-font-size-900:lang(ar) {
+  line-height: 1.4;
 }
 
 /* Font size utilities end */

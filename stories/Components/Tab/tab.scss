@@ -485,10 +485,8 @@
 }
 
 // Arabic
-:lang(ar) {
-  .mg-tabs__link {
-    font-family: $mg-font-family-arabic-headings;
-  }
+.mg-tabs__link:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
 }
 
 // Filter input for stacked tabs

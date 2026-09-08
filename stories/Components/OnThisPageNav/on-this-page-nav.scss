@@ -197,9 +197,7 @@
 // correction is a known open item.
 
 // Arabic font override
-:lang(ar) {
-  .mg-on-this-page-nav__link,
-  .mg-on-this-page-nav__cta {
-    font-family: $mg-font-family-arabic-headings;
-  }
+.mg-on-this-page-nav__link:lang(ar),
+.mg-on-this-page-nav__cta:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
 }

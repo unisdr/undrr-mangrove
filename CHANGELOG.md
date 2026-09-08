@@ -13,6 +13,22 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+### Arabic typography now respects language boundaries
+
+Closes [issue #1092](https://github.com/unisdr/undrr-mangrove/issues/1092). Every `:lang(ar)` override was written as a descendant selector — `:lang(ar) { h1 { ... } }`, compiling to `:lang(ar) h1`. `:lang()` there matches the *root* and the `h1` is merely a descendant, so the rule fired on every heading beneath an Arabic root regardless of that heading's own language. An English island inside an Arabic page — a quotation, a citation, an untranslated widget — rendered in Arabic typography.
+
+- The pseudo-class is now attached to the styled element (`h1:lang(ar)`), across `_foundational.scss`, `_utility.scss` and 19 component stylesheets. `:lang()` already inherits down the tree, so this matches on *computed* language and stops at a `lang="en"` boundary. Specificity is unchanged in all 24 compiled selectors, and no rule changed position in the cascade.
+- **Two new rules in `_foundational.scss`**, because anchoring alone was not enough — `font-family` still inherits, so a `lang="en"` island kept the Arabic family it inherited from `body:lang(ar)`. The family is reasserted at the language boundary only, on the element that declares the new language, and everything below it inherits normally:
+
+  ```scss
+  :where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar))) { font-family: $mg-font-family; }
+  :where(:not(:lang(ar))) > :where([lang]:not([lang=""]):lang(ar)) { font-family: $mg-font-family-arabic-body; }
+  ```
+
+  A language sub-root always has a parent of the outer language, so the child combinator selects exactly these switch points. It deliberately is **not** a descendant selector: a rule matching every descendant would also match component children that inherit their container's family — a `.mg-card__title` link, a `.mg-hero__title` heading — and a matched declaration beats an inherited one at any specificity, so those would lose Roboto Condensed. Both rules carry zero specificity via `:where()`, so a component rule on the boundary element itself still wins. `[lang]:not([lang=""])` leaves `lang=""` — *unknown* language per HTML, not *Latin* — inheriting rather than guessed at.
+- **Arabic resuming inside a non-Arabic island now works**, as does an Arabic island on an otherwise Latin page — the second rule handles both. Previously only `<p>` recovered, by accident of `p:lang(ar)` existing.
+- This is a selector fix, not a font change. It predates the Noto change below and behaved identically with Dubai. No font token is changed.
+
 ### Arabic typefaces changed: Dubai replaced by Noto Kufi Arabic and Noto Sans Arabic
 
 Closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089).

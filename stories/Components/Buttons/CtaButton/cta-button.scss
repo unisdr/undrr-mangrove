@@ -219,8 +219,6 @@
 // }
 
 // Arabic font override
-:lang(ar) {
-  .mg-button {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-button:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }

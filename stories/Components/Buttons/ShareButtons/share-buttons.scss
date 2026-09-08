@@ -107,9 +107,7 @@
 }
 
 // Arabic
-:lang(ar) {
-  .mg-share__header,
-  .mg-share__copy-button {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-share__header:lang(ar),
+.mg-share__copy-button:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }

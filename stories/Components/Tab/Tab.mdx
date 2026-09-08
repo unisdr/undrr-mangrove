@@ -316,6 +316,7 @@ You can also select triggers by class (`.mg-tabs__link`) — this works in all v
 
 ## Changelog
 
+- **2.10.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tab link whose own language is not Arabic.
 - **2.10** — 2026-09-08 ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic tab links render in Noto Kufi Arabic. The `:lang(ar)` override on `.mg-tabs__link` points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic, so the override once again selects a different family from Arabic body text.
 - **2.9** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed horizontal tabs as a flat navigation rail with a continuous baseline, precise active underline, and non-shifting hover/focus states. Simplified stacked tabs into clean disclosure rows with quiet separators, circular plus/minus controls, larger hit areas, and token-driven motion. Removed redundant per-language story exports in favour of the global locale toolbar.
 - **2.8** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` prop into a `labels` object with `DEFAULT_TAB_LABELS` export. Pass `labels={{ filterPlaceholder: '...' }}` instead of `filterPlaceholder` directly. Backwards compatible — `DEFAULT_TAB_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.

@@ -64,8 +64,6 @@
 }
 
 // Arabic body font, matching the treatment used elsewhere for compact UI text.
-:lang(ar) {
-  .mg-status-label {
-    font-family: $mg-font-family-arabic-body;
-  }
+.mg-status-label:lang(ar) {
+  font-family: $mg-font-family-arabic-body;
 }

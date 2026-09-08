@@ -552,13 +552,11 @@ $variant-colour-props: (
 // Roboto Condensed which has no Arabic glyph coverage; route to the Arabic
 // family. Scoped to heading tags + anchor so unrelated descendant content
 // (slotted subtitles, body copy) keeps its own font.
-:lang(ar) {
-  .mg-hero__title,
-  .mg-hero__title a,
-  .mg-hero__title h1,
-  .mg-hero__title h2,
-  .mg-hero__title h3,
-  .mg-hero__label {
-    font-family: $mg-font-family-arabic-headings;
-  }
+.mg-hero__title:lang(ar),
+.mg-hero__title a:lang(ar),
+.mg-hero__title h1:lang(ar),
+.mg-hero__title h2:lang(ar),
+.mg-hero__title h3:lang(ar),
+.mg-hero__label:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
 }

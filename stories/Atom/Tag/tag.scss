@@ -116,8 +116,6 @@
 }
 
 // Arabic font override for tags.
-:lang(ar) {
-  .mg-tag {
-    font-family: $mg-font-family-arabic-headings;
-  }
+.mg-tag:lang(ar) {
+  font-family: $mg-font-family-arabic-headings;
 }
