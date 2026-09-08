@@ -1,6 +1,7 @@
 // Shared horizontal tabs and explicit stacked disclosures.
 const instances = new WeakMap();
 const responsiveInstances = new WeakMap();
+const pendingStates = new WeakMap();
 const MOBILE_BREAKPOINT = 480;
 const isStacked = container => container.dataset.mgJsTabsVariant === 'stacked';
 
@@ -41,7 +42,12 @@ export function mgTabs(scope, activateDeepLinkOnLoad = true) {
   containersIn(scope).forEach(container => {
     if (!scope && container.hasAttribute('data-mg-js-tabs-skip-auto-init'))
       return;
-    initContainer(container, activateDeepLinkOnLoad);
+    const retained = pendingStates.get(container);
+    const requestedVariant = isStacked(container) ? 'stacked' : 'horizontal';
+    const initialState =
+      retained?.requestedVariant === requestedVariant ? retained : undefined;
+    pendingStates.delete(container);
+    initContainer(container, activateDeepLinkOnLoad, { initialState });
   });
 }
 
@@ -49,15 +55,23 @@ export function mgTabsRuntime(scope = document, activateDeepLinkOnLoad = true) {
   mgTabs(scope, activateDeepLinkOnLoad);
 }
 
-/** Remove enhancement, listeners and observers so a container can be initialised again. */
-export function mgTabsDestroy(scope = document) {
+/**
+ * Remove enhancement, listeners and observers so a container can be initialised again.
+ * Set preserveState for a same-layout refresh; unmounting or an explicit reset
+ * should use the default. Retained state is keyed weakly and consumed once.
+ */
+export function mgTabsDestroy(scope = document, preserveState = false) {
   containersIn(scope)
     .reverse()
-    .forEach(container =>
+    .forEach(container => {
+      const state = preserveState ? mgTabsGetState(container) : undefined;
+      if (state)
+        pendingStates.set(container, { ...state, restoreOpenPanels: true });
+      else pendingStates.delete(container);
       (
         responsiveInstances.get(container) || instances.get(container)
-      )?.destroy()
-    );
+      )?.destroy();
+    });
 }
 
 /** Capture selection and focus before replacing a responsive layout. */
@@ -65,7 +79,11 @@ function mgTabsGetState(container) {
   return instances.get(container)?.getState();
 }
 
-function initResponsiveContainer(container, activateDeepLinkOnLoad) {
+function initResponsiveContainer(
+  container,
+  activateDeepLinkOnLoad,
+  initialState
+) {
   const root = container.closest('.mg-tabs') || container;
   const originalVariant = container.getAttribute('data-mg-js-tabs-variant');
   const wasHorizontal = root.classList.contains('mg-tabs--horizontal');
@@ -128,7 +146,8 @@ function initResponsiveContainer(container, activateDeepLinkOnLoad) {
   const update = () => {
     const nextMobile = window.innerWidth < MOBILE_BREAKPOINT;
     if (nextMobile === mobile) return;
-    const state = mgTabsGetState(container);
+    const state = mgTabsGetState(container) || initialState;
+    initialState = undefined;
     instances.get(container)?.destroy();
     restoreVisibility();
     restoreVariant();
@@ -171,7 +190,11 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     !isStacked(container)
   ) {
     if (!responsiveInstances.has(container))
-      initResponsiveContainer(container, activateDeepLinkOnLoad);
+      initResponsiveContainer(
+        container,
+        activateDeepLinkOnLoad,
+        options.initialState
+      );
     return;
   }
   const root = container.closest('.mg-tabs') || container;
@@ -195,6 +218,7 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     });
   });
   if (!tabs.length || panels.some(panel => !panel)) return;
+  const requestedVariant = isStacked(container) ? 'stacked' : 'horizontal';
   const stacked = options.responsiveMobile || isStacked(container);
   const cleanups = [];
   const snapshots = new Map();
@@ -470,13 +494,25 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
       }
     }
   }
+  if (
+    stacked &&
+    options.initialState?.stacked &&
+    options.initialState.restoreOpenPanels
+  ) {
+    const openIds = new Set(options.initialState.openPanelIds);
+    tabs.forEach((tab, index) =>
+      setDisclosureState(tab, panels[index], openIds.has(panels[index].id))
+    );
+  }
   listen(window, 'hashchange', activateHash);
   if (
     stacked &&
     !options.responsiveMobile &&
     container.hasAttribute('data-mg-js-tabs-filterable')
   )
-    cleanups.push(mgTabsInitFilter(container, tabs, panels));
+    cleanups.push(
+      mgTabsInitFilter(container, tabs, panels, options.initialState?.filter)
+    );
   let alive = true;
   if (scroller) {
     listen(scroller, 'scroll', updateOverflow, { passive: true });
@@ -523,7 +559,21 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
         }
         focus = { trigger: triggerIndex >= 0, path };
       }
-      return { panelId: panels[index].id, focus };
+      const filterInput = container.querySelector(
+        ':scope > .mg-tabs__filter > .mg-tabs__filter-input'
+      );
+      return {
+        filter: filterInput
+          ? { query: filterInput.value, focused: filterInput === focused }
+          : undefined,
+        panelId: panels[index].id,
+        requestedVariant,
+        focus,
+        stacked,
+        openPanelIds: panels
+          .filter(panel => !panel.hasAttribute('hidden'))
+          .map(panel => panel.id),
+      };
     },
     destroy() {
       alive = false;
@@ -592,7 +642,7 @@ export function mgTabsApplyStackedDefaults(container, tabs, panels) {
  * @param {NodeList} tabs - the trigger links
  * @param {NodeList} panels - the section panels
  */
-function mgTabsInitFilter(container, tabs, panels) {
+function mgTabsInitFilter(container, tabs, panels, initialFilter) {
   const placeholder =
     container.dataset.mgJsTabsFilterPlaceholder || 'Filter sections\u2026';
   const ariaLabel = placeholder.replace(/\u2026$/, '').trim();
@@ -719,6 +769,11 @@ function mgTabsInitFilter(container, tabs, panels) {
   };
   input.addEventListener('input', onInput);
   input.addEventListener('search', onSearch);
+  if (initialFilter) {
+    input.value = initialFilter.query;
+    if (input.value) applyFilter();
+    if (initialFilter.focused) input.focus({ preventScroll: true });
+  }
   return () => {
     clearTimeout(debounceTimer);
     input.removeEventListener('input', onInput);

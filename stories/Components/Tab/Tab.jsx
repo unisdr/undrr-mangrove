@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { mgTabsRuntime, mgTabsDestroy } from '../../assets/js/tabs';
 
@@ -39,7 +39,7 @@ export function Tab({
     const container = containerRef.current;
     if (!container) return;
     mgTabsRuntime(container, true);
-    return () => mgTabsDestroy(container);
+    return () => mgTabsDestroy(container, true);
   }, [
     tabdata,
     variant,
@@ -82,7 +82,7 @@ export function Tab({
                 <TabTrigger tab={tab} />
               </li>
               <li className="mg-tabs-content" data-mg-js-tabs-content>
-                <TabPanel tab={tab} />
+                <TabPanel textId={tab.text_id} data={tab.data} />
               </li>
             </React.Fragment>
           ))}
@@ -112,7 +112,7 @@ export function Tab({
                     <TabTrigger tab={tab} mobile />
                   </div>
                 )}
-                <TabPanel tab={tab} />
+                <TabPanel textId={tab.text_id} data={tab.data} />
               </div>
             ))}
           </div>
@@ -142,16 +142,15 @@ function TabTrigger({ tab, mobile = false }) {
   );
 }
 
-function TabPanel({ tab }) {
+// Keep unchanged rich content mounted through parent renders. Reassigning
+// innerHTML would otherwise discard live form values and embedded state.
+const TabPanel = memo(function TabPanel({ textId, data }) {
   return (
-    <section
-      className="mg-tabs__section"
-      id={`mg-tabs__section-${tab.text_id}`}
-    >
-      {tab.data ? <div dangerouslySetInnerHTML={{ __html: tab.data }} /> : null}
+    <section className="mg-tabs__section" id={`mg-tabs__section-${textId}`}>
+      {data ? <div dangerouslySetInnerHTML={{ __html: data }} /> : null}
     </section>
   );
-}
+});
 
 Tab.propTypes = {
   /** Array of tab objects, each containing text, text_id, and optional HTML data. */
