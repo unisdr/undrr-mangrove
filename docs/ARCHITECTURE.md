@@ -257,7 +257,7 @@ Mangrove uses two distinct token mechanisms:
 
 **CSS custom properties** (`--mg-color-*`, `--mg-spacing-*`): color and spacing tokens defined in the compiled output. Themes override these at runtime via a `.mg-theme-{name} { }` selector block in `_theme-{name}.scss`. Applying the class to `<body>` or a wrapping element activates the theme without any CSS rebuild.
 
-**Build-time SCSS `!default` variables**: used for tokens that must be resolved at compile time and cannot be overridden at runtime. This includes breakpoints (`$mg-breakpoint-*`), font sizes (`$mg-font-size-*`), font families (`$mg-font-family-*`), and `$mg-tabs-border-bottom`. These carry `!default` so a consuming project can override them before importing Mangrove; include it on any new build-time variable for the same reason. (`$mg-html-font-size` is the exception — it is fixed at `16`, see below.)
+**Build-time SCSS `!default` variables**: used for tokens that must be resolved at compile time and cannot be overridden at runtime. This includes breakpoints (`$mg-breakpoint-*`), font sizes (`$mg-font-size-*`), font faces (`$mg-font-face-*`, which `@font-face` and Sass interpolation need at compile time), and `$mg-tabs-border-bottom`. Font *families* are not on this list: components read the `--mg-font-family-*` role custom properties, which are re-pointed per script at runtime. These carry `!default` so a consuming project can override them before importing Mangrove; include it on any new build-time variable for the same reason. (`$mg-html-font-size` is the exception — it is fixed at `16`, see below.)
 
 ### Why a custom token generator
 

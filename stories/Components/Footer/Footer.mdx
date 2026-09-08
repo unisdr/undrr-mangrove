@@ -225,6 +225,7 @@ When implementing in your site, consider this structure:
 
 ## Changelog
 
+- **1.0.0-beta.6** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic about-footer links now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-footer--about-footer--links` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.0.0-beta.5** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to about-footer links whose own language is not Arabic.
 - **1.0.0-beta.4** — 2026-04-13: `.mg-footer--about-footer--links` now uses `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing to `$mg-font-family-arabic-headings`.
 - **1.0.0-beta.3** — 2026-03-16 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `mg-footer-bar` utility component for sub-branded site footer navigation. Footer social links now inherit color from parent container instead of forcing white (the parent `.mg-footer--about-footer` already sets white link color). Default `includecss` changed to `false` to avoid double-loading CSS that Mangrove provides.

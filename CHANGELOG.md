@@ -13,6 +13,28 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+### Font families are now five script-mapped roles
+
+Closes [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098), and [#1095](https://github.com/unisdr/undrr-mangrove/issues/1095) as a side effect.
+
+Font families moved from Sass variables to CSS custom properties, and from naming a *typeface* to naming a *job*. A component stylesheet now declares `font-family: var(--mg-font-family-ui)` and never names a face; `_font-roles.scss` re-points the roles for Arabic, so the same declaration is correct in both scripts.
+
+| Role | Latin | Arabic |
+|---|---|---|
+| `--mg-font-family-text` | Roboto | Noto Sans Arabic |
+| `--mg-font-family-heading` | Roboto | Noto Kufi Arabic |
+| `--mg-font-family-display` | Roboto Condensed | Noto Kufi Arabic |
+| `--mg-font-family-ui` | Roboto Condensed | Noto Sans Arabic |
+| `--mg-font-family-code` | mono stack | mono stack |
+
+- **Latin rendering is unchanged.** Every one of the 80 Latin `font-family` declarations in the compiled bundles resolves to the face it resolved to before, verified bundle by bundle and in a browser. The indirection buys correct Arabic, not a new Latin look.
+- **Arabic chrome changes face, deliberately.** The old model routed by element — every heading and all compact chrome took Noto Kufi Arabic. The new model routes by role, and Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic. Card titles, labels, tags, tabs, breadcrumbs, navigation links and stat values move from Kufi to Noto Sans Arabic. Kufi is kept for narrative h1–h3 and the hero title, where a display face belongs. Measured, not assumed: Arabic chrome runs about 10.8% *narrower* than the Latin equivalent, so nothing needed width compensation.
+- **19 component-level `:lang(ar)` font blocks were deleted.** Script routing lives in `_font-roles.scss` and nowhere else. This supersedes the per-component pattern that [#1091](https://github.com/unisdr/undrr-mangrove/pull/1091) and [#1093](https://github.com/unisdr/undrr-mangrove/pull/1093) both had to touch, and it is now a review-checklist violation to add one back: a component-level override takes the component out of the map.
+- **`#1095` is fixed by the deletion.** The mega menu's Arabic override named `.mg-mega-topbar__item-link`'s non-existent sibling, so Arabic top-bar links were rendering in Roboto Condensed, which has no Arabic glyph coverage. On the `ui` role they now resolve to Noto Sans Arabic.
+- **One new limitation.** `_foundational.scss` declares `h1, h2, h3 { font-family: var(--mg-font-family-heading); }`, a matched declaration where Latin had only inheritance. A `ui` or `display` container that wraps a heading must claim its own subtree — `.mg-card__title :is(h1, h2, h3, a)`, as `card.scss` and `hero.scss` do — or the heading drops to the body face. A test enforces this across Mangrove's own components; it cannot see consumer markup, and in Latin the failure is invisible because `text` and `heading` are both Roboto.
+
+**Breaking:** `$mg-font-family`, `$mg-font-family-condensed`, `$mg-font-family-headings`, `$mg-font-family-icons`, `$mg-font-family-arabic-headings` and `$mg-font-family-arabic-body` are removed. A `@use ... with` consumer fails to build; an `@import` consumer's assignment silently does nothing, so `_variables.scss` emits a `@warn` naming the replacement role for each. The five faces the roles point at — `$mg-font-face-sans`, `-sans-condensed`, `-mono`, `-arabic-display`, `-arabic-sans` — keep `!default`, and overriding one is still the way to introduce a typeface Mangrove does not ship. Migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
+
 ### Arabic typography now respects language boundaries
 
 Closes [issue #1092](https://github.com/unisdr/undrr-mangrove/issues/1092). Every `:lang(ar)` override was written as a descendant selector — `:lang(ar) { h1 { ... } }`, compiling to `:lang(ar) h1`. `:lang()` there matches the *root* and the `h1` is merely a descendant, so the rule fired on every heading beneath an Arabic root regardless of that heading's own language. An English island inside an Arabic page — a quotation, a citation, an untranslated widget — rendered in Arabic typography.

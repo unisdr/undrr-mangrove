@@ -318,7 +318,7 @@ The component supports RTL layouts automatically:
 
 - The nav list scrolls right-to-left via CSS flexbox and `overflow-x`
 - The CTA button pins to the left (logical end) via `margin-inline-start: auto`
-- Arabic headings use the Noto Kufi Arabic font family (`:lang(ar)` override)
+- Arabic links and the CTA render in Noto Sans Arabic, via the `ui` font role. The component carries no `:lang(ar)` rule of its own
 - Scroll buttons use direction-neutral labels ("Previous navigation items" / "Next navigation items") and RTL-aware `scrollBy` direction; `getComputedStyle(list).direction` maps which button shows for which overflow direction in RTL
 - **Known open item**: the `mask-image` trailing-edge gradient uses a physical `to right` direction and does not auto-flip in RTL (items scrolled off the right edge in RTL have no fade). A follow-up fix will use logical values or a separate RTL rule
 
@@ -326,6 +326,7 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
+- **1.5.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic navigation links and the CTA now render in Noto Sans Arabic instead of Noto Kufi Arabic. Both classes read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Arabic labels measure about 10.8% narrower than their Latin equivalents, so the horizontal scroller needed no adjustment. Latin rendering is unchanged.
 - **1.5.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a nav link or CTA whose own language is not Arabic.
 - **1.5** — 2026-09-08 ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic navigation links render in Noto Kufi Arabic. The `:lang(ar)` override points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic.
 - **1.4** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Replaced the heavy drop shadow with a crisp divider and aligned link, CTA, and scroll-control transitions and focus states with the shared modernisation tokens. Removed redundant per-language story exports in favour of the global locale toolbar.

@@ -26,7 +26,7 @@ export default create({
   appBorderColor: '#ccdce9', // $mg-color-blue-100
   appBorderRadius: 4,
 
-  // Typography ($mg-font-family)
+  // Typography (--mg-font-family-text)
   fontBase: '"Roboto", "Helvetica Neue", Arial, sans-serif',
   fontCode: '"Roboto Mono", "SFMono-Regular", Consolas, monospace',
   textColor: '#1a1a1a', // $mg-color-neutral-800

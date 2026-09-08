@@ -38,7 +38,7 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 | `2.0.0-alpha.1` | Published under `next` | CSS custom-property theming, 16px root and sub-brand runtime selectors |
 | `2.0.0-alpha.2` | Published under `next` | Experience principles, component surfaces, interaction states, responsive behaviour and multilingual resilience |
 | `2.0.0-alpha.3` | Release-ready on `main`; not yet published | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
-| `2.0.0-alpha.4` | In development on `main` | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai |
+| `2.0.0-alpha.4` | In development on `main` | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai, and font families rebuilt as five script-mapped roles |
 
 ### Alpha.2 experience and interaction baseline
 
@@ -114,7 +114,7 @@ Per the CSS font-matching rules a target of `600` resolves up to Bold, but a tar
 
 *Arabic pages get heavier.* Two families means two Arabic downloads. For a page using both weights of both faces the `arabic` subsets total roughly 187 KB against Dubai's 115 KB — about **+72 KB (+63%)**. The `unicode-range` split genuinely helps the Latin subsets, which are small and fetched only when Latin appears, but it does not offset the second Arabic face. This is the price of the heading/body distinction; it is a real cost, not a free one.
 
-**If you override the Arabic tokens**, `$mg-font-family-arabic-headings` and `$mg-font-family-arabic-body` now default to `"Noto Kufi Arabic", sans-serif` and `"Noto Sans Arabic", sans-serif`. If you restated either as Dubai, that override still compiles but Mangrove no longer emits a Dubai `@font-face`, so you must declare your own or drop the override. The fonts are served WOFF2-only from `https://assets.undrr.org/fonts/`.
+**If you override the Arabic tokens**, note that `$mg-font-family-arabic-headings` and `$mg-font-family-arabic-body` were removed later in alpha.4 by the font role model — see [breaking change #8](#8-font-family-variables-replaced-by-five-roles). The faces are now `$mg-font-face-arabic-display` (`"Noto Kufi Arabic", sans-serif`) and `$mg-font-face-arabic-sans` (`"Noto Sans Arabic", sans-serif`). Mangrove no longer emits a Dubai `@font-face`, so a theme that wants Dubai must declare its own. The fonts are served WOFF2-only from `https://assets.undrr.org/fonts/`.
 
 ## Find your path
 
@@ -124,6 +124,7 @@ Per the CSS font-matching rules a target of `600` resolves up to Bold, but a tar
 | A **sub-brand** Drupal/CDN consumer (PW, IRP, MCR, DELTA) | [Sub-brand theming migration](#sub-brand-theming-migration) — add the `mg-theme-*` body class |
 | A **DELTA** consumer | [DELTA's palette is corrected](#deltas-palette-is-corrected) — your brand colours changed |
 | A developer who imports Mangrove SCSS | [Breaking changes](#breaking-changes) |
+| A developer who overrides a **font-family** variable | [Breaking change #8](#8-font-family-variables-replaced-by-five-roles) — all six were removed |
 | A developer who overrides sub-brand tokens | [Sub-brand theming migration](#sub-brand-theming-migration) |
 | A developer who uses the **`--sendai-*` accent colours** | [Alpha.3](#alpha3-token-pipeline-and-colour-methodology) — deprecated, replaced by `--mg-sendai-target-a`…`-g` |
 | An AI agent or tool reading this for API context | [Token API summary](#token-api-summary) |
@@ -174,7 +175,7 @@ The following remain as SCSS variables (BUILD-TIME ONLY — no CSS custom proper
 |---|---|
 | `$mg-breakpoint-*` | `@media` queries require static values at compile time |
 | `$mg-font-size-*` | Resolved at compile time for interpolation |
-| `$mg-font-family*` | Resolved at compile time |
+| `$mg-font-face-*` | `@font-face` and Sass interpolation need a compile-time value. These are the typefaces; the families components read are the `--mg-font-family-*` roles, which are custom properties — see [#8](#8-font-family-variables-replaced-by-five-roles) |
 | `$mg-html-font-size` | Base rem anchor, compile-time only |
 | `$mg-tabs-border-bottom` | `@if` conditional, compile-time only |
 
@@ -254,6 +255,73 @@ Added in alpha.3. Three tokens moved from a bare RGB channel triple to a complet
 ```
 
 **`--mg-border-color-button` is a fix.** It held channels but was consumed in a bare colour position, so the declaration was invalid in every theme and no button border was ever painted.
+
+### 8. Font-family variables replaced by five roles
+
+Added in alpha.4, closing [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098). All six font-family SCSS variables are removed and replaced by five CSS custom properties.
+
+| Removed | Replacement role |
+|---|---|
+| `$mg-font-family` | `--mg-font-family-text` |
+| `$mg-font-family-headings` | `--mg-font-family-ui` |
+| `$mg-font-family-condensed` | `--mg-font-family-ui` |
+| `$mg-font-family-arabic-headings` | `--mg-font-family-heading` |
+| `$mg-font-family-arabic-body` | `--mg-font-family-text` |
+| `$mg-font-family-icons` | none — it had no stylesheet consumer, and `icons.scss` names the FontAwesome family directly |
+
+**Latin rendering is unchanged.** Every Latin element resolves to the face it resolved to before: `text` and `heading` are both Roboto, `display` and `ui` are both Roboto Condensed. If you consume compiled CSS and your pages are Latin-only, there is nothing to do and nothing to see.
+
+**Arabic rendering does change, deliberately.** The old model routed by *element* — every heading and all compact chrome took Noto Kufi Arabic. The new model routes by *role*, and Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic. Arabic card titles, labels, tags, tabs, breadcrumbs, navigation links and stat values move from Kufi to Noto Sans Arabic; Kufi is kept for narrative h1–h3 and the hero title, where a display face belongs. Arabic chrome measures about 10.8% *narrower* than the Latin equivalent, so nothing needed width compensation.
+
+This also fixes [issue #1095](https://github.com/unisdr/undrr-mangrove/issues/1095) as a side effect: the mega menu's Arabic override named a class that does not exist, so Arabic top-bar links were rendering in Roboto Condensed, which has no Arabic coverage at all.
+
+#### What you need to do
+
+**If you consume compiled CSS:** nothing.
+
+**If you set a font-family variable before importing Mangrove**, what happens depends on how you import.
+
+- `@use "..." with (...)` — the build **fails loudly**: Sass rejects a configured variable that no longer exists. Four of the eleven known consuming Drupal themes are on this path.
+- `@import` with `!default` — the assignment **silently does nothing**, which is the dangerous case and is why `_variables.scss` emits a `@warn` for all six names. Seven consuming themes are on this path. Watch your Sass build log for a line beginning `Mangrove 2.0:`; each one names the role that replaced the variable you set.
+
+**Move the override to the role**, in a `.mg-theme-*` block for one brand or `:root` for all of them:
+
+```scss
+// Before (1.x / early 2.0 alphas)
+$mg-font-family-headings: "Roboto", sans-serif;
+@import "@undrr/undrr-mangrove/scss/assets/scss/style";
+
+// After
+.mg-theme-myorg {
+  --mg-font-family-ui: var(--mg-font-family-text);
+}
+```
+
+**A role override can only re-point among the faces Mangrove ships** a `@font-face` for. To introduce a typeface Mangrove does not load, override the face variable instead — they kept `!default` for exactly this — and load the font yourself:
+
+```scss
+$mg-font-face-sans-condensed: "Barlow Condensed", sans-serif;
+@import "@undrr/undrr-mangrove/scss/assets/scss/style";
+```
+
+Faces are declared outside the brand mixins, so that assignment applies to **every** brand in the combined `style-all.css`. Per-brand typefaces from `tokens/*.yaml` are not part of this change.
+
+#### If you write SCSS against Mangrove
+
+Two authoring rules changed, and both are in the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs).
+
+- **Do not write `:lang(ar)` font rules.** Nineteen component-level blocks were deleted. Script routing lives in `_font-roles.scss` and nowhere else; a component that names a role gets Arabic for free, and a component-level override takes it back out of the map. This supersedes the pattern that [#1091](https://github.com/unisdr/undrr-mangrove/pull/1091) and [#1093](https://github.com/unisdr/undrr-mangrove/pull/1093) both worked on.
+- **A `ui` or `display` container that can wrap a heading must claim its own subtree.** `_foundational.scss` now declares `h1, h2, h3 { font-family: var(--mg-font-family-heading); }`, where Latin previously had only inheritance. A matched declaration beats an inherited one at any specificity, so an unclaimed heading inside such a container drops to the body face. Use the form in `card.scss` and `hero.scss`:
+
+  ```scss
+  .mg-card__title :is(h1, h2, h3, a) {
+    font-family: var(--mg-font-family-ui);
+  }
+  ```
+
+  Mangrove's own components are covered by a test. **Your markup is not.** If you place an `<h2>` inside a Mangrove `ui` container — a `.mg-card__title` that Mangrove's own JSX fills with a link — the heading loses the chrome face. It is invisible in Latin, because `text` and `heading` are both Roboto; in Arabic it jumps from Noto Sans Arabic to Noto Kufi Arabic. Either keep headings out of those containers or add the claim in your own stylesheet.
+
+Full reference: [Fonts](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-fonts--docs).
 
 ## Sub-brand theming migration
 
