@@ -49,15 +49,15 @@ return <></>;
 
 ### PropTypes coverage: there is a practical ceiling
 
-`yarn validate-manifest` reports the share of components with documented `propTypes`. As of v2.0.0-alpha.3 it stands at **84% (57 of 68)**; reaching the earlier ceiling took two scoped passes (#1005, #1007). The remaining 11 entries are *not* PropTypes gaps to chase — they are manifest entries that do not have a React prop contract by design. Don't open PRs trying to push the percentage higher unless you're changing what the manifest classifies as a "component".
+`yarn validate-manifest` reports the share of components with documented `propTypes`. As of v2.0.0-alpha.4 it stands at **83% (57 of 69)**; reaching the earlier ceiling took two scoped passes (#1005, #1007). The remaining 12 entries are *not* PropTypes gaps to chase — they are manifest entries that do not have a React prop contract by design. Don't open PRs trying to push the percentage higher unless you're changing what the manifest classifies as a "component".
 
-The 11 currently exempt entries, grouped by why (re-derive the count with `yarn validate-manifest` rather than trusting this number):
+The 12 currently exempt entries, grouped by why (re-derive the count with `yarn validate-manifest` rather than trusting this number):
 
 | Why | Entries |
 |---|---|
 | **CSS-utility documentation pages** (catalogue utility classes; no React props) | `Fontsizeutilities`, `Normalize`, `Typography`, `UtilityCSS` |
 | **Vanilla CSS patterns with no `.jsx` file** (consumed as HTML + class names; correctly listed as vanilla-HTML in the manifest) | `Tag`, `Statuslabel`, `Emptystate` |
-| **Story-only examples / page templates** (single-shot demonstrations, not reusable components) | `TypographyIntegrationExample`, `Formvalidation`, `PageTemplateExample` |
+| **Story-only examples / page templates** (single-shot demonstrations, not reusable components) | `TypographyIntegrationExample`, `Formvalidation`, `PageTemplateExample`, `LanguageBoundaryDemo` |
 | **Intentional empty stubs** (design-token / layout demos with `Component.propTypes = {}`) | `Grid` |
 
 If you add a new entry that falls into one of these buckets, expect it to keep the percentage flat — that's correct behaviour, not coverage drift. If you add a *real* React component, declaring `propTypes` (or fixing the docgen-friendliness of an existing one — see the empty-Fragment gotcha above) is the path to raising the floor.
