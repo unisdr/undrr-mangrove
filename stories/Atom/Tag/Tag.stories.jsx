@@ -89,6 +89,28 @@ export const Accent = {
 };
 
 export const AllVariants = {
+  play: async ({ canvasElement }) => {
+    const tags = [...canvasElement.querySelectorAll('.mg-tag')];
+    for (let index = 0; index < tags.length; index += 2) {
+      const label = tags[index];
+      const link = tags[index + 1];
+      expect(label.getBoundingClientRect().height).toBe(
+        link.getBoundingClientRect().height
+      );
+      for (const property of [
+        'display',
+        'padding',
+        'minWidth',
+        'minHeight',
+        'lineHeight',
+        'borderWidth',
+      ]) {
+        expect(getComputedStyle(label)[property]).toBe(
+          getComputedStyle(link)[property]
+        );
+      }
+    }
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <div
