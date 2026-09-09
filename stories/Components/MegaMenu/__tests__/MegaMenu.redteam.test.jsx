@@ -38,14 +38,13 @@ describe('MegaMenu red-team regressions', () => {
       },
     ]);
     fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));
-    within(dialog).getByText('Introduction').closest('details').open = true;
     const back = within(dialog).getByRole('button', { name: 'All sections' });
     back.focus();
     fireEvent.keyDown(back, { key: 'Tab', shiftKey: true });
     expect(within(dialog).getByText('Outer disclosure')).toHaveFocus();
   });
 
-  it('allows native Tab from an expanded introduction into its authored form fields', () => {
+  it('allows native Tab into immediately visible authored form fields', () => {
     const { dialog } = openMenu([
       {
         title: 'Search',
@@ -55,17 +54,21 @@ describe('MegaMenu red-team regressions', () => {
       },
     ]);
     fireEvent.click(within(dialog).getByRole('button', { name: 'Search' }));
-    const summary = within(dialog).getByText('Search this site');
-    summary.closest('details').open = true;
-    summary.focus();
+    const close = within(dialog).getByRole('button', {
+      name: 'Close mobile navigation',
+    });
+    close.focus();
+    expect(
+      within(dialog).getByRole('textbox', { name: 'Search terms' })
+    ).toBeVisible();
     const tab = new KeyboardEvent('keydown', {
       key: 'Tab',
       bubbles: true,
       cancelable: true,
     });
-    fireEvent(summary, tab);
+    fireEvent(close, tab);
     expect(tab.defaultPrevented).toBe(false);
-    expect(summary).toHaveFocus();
+    expect(close).toHaveFocus();
   });
 
   it('wraps Tab from the final authored input to the first control', () => {
@@ -78,7 +81,6 @@ describe('MegaMenu red-team regressions', () => {
       },
     ]);
     fireEvent.click(within(dialog).getByRole('button', { name: 'Search' }));
-    within(dialog).getByText('Search this site').closest('details').open = true;
     const input = within(dialog).getByRole('textbox', { name: 'Search terms' });
     input.focus();
     const tab = new KeyboardEvent('keydown', {

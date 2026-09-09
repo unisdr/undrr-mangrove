@@ -210,43 +210,48 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
               {current.bannerButton.label || labels.overviewLabel}
             </a>
           )}
-        <ul ref={listRef} className="mg-mega-sidebar__list">
-          {(items || []).map((item, index) => (
-            <li className="mg-mega-sidebar-section" key={index}>
-              {item.items?.length > 0 || item.bannerDescription ? (
-                <button
-                  className="mg-mega-sidebar-section__item"
-                  data-mg-menu-entry
-                  onClick={() => enter(index)}
-                >
-                  {item.title}
-                  <span
-                    className="mg-mega-mobile-sidebar__arrow"
-                    aria-hidden="true"
+        {items?.length > 0 && (
+          <ul ref={listRef} className="mg-mega-sidebar__list">
+            {(items || []).map((item, index) => (
+              <li className="mg-mega-sidebar-section" key={index}>
+                {item.items?.length > 0 || item.bannerDescription ? (
+                  <button
+                    className="mg-mega-sidebar-section__item"
+                    data-mg-menu-entry
+                    onClick={() => enter(index)}
                   >
-                    →
-                  </span>
-                </button>
-              ) : (
-                <a
-                  className="mg-mega-sidebar-section__item"
-                  data-mg-menu-entry
-                  href={item.url || item.bannerButton?.url || '#'}
-                >
-                  {item.title}
-                </a>
-              )}
-            </li>
-          ))}
-        </ul>
+                    {item.title}
+                    <span
+                      className="mg-mega-mobile-sidebar__arrow"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </button>
+                ) : (
+                  <a
+                    className="mg-mega-sidebar-section__item"
+                    data-mg-menu-entry
+                    href={item.url || item.bannerButton?.url || '#'}
+                  >
+                    {item.title}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
         {current?.bannerDescription && (
-          <details className="mg-mega-mobile-sidebar__intro">
-            <summary>{current.bannerHeading || current.title}</summary>
+          <div className="mg-mega-mobile-sidebar__intro">
+            {current.bannerHeading &&
+              current.bannerHeading !== current.title && (
+                <h3>{current.bannerHeading}</h3>
+              )}
             {/* Same caller-sanitised HTML contract as the existing desktop banner. */}
             <div
               dangerouslySetInnerHTML={{ __html: current.bannerDescription }}
             />
-          </details>
+          </div>
         )}
       </div>
     </div>

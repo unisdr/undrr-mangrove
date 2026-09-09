@@ -934,14 +934,8 @@
     text-decoration: underline;
   }
 
-  .mg-mega-mobile-sidebar__intro {
+  .mg-mega-sidebar__list + .mg-mega-mobile-sidebar__intro {
     margin-top: var(--mg-spacing-250);
-
-    summary {
-      cursor: pointer;
-      padding-block: var(--mg-spacing-150);
-      min-height: mg-rem(44);
-    }
   }
 
   a:focus-visible,
