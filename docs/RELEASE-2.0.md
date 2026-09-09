@@ -1,6 +1,6 @@
 # Mangrove 2.0 release notes
 
-Mangrove 2.0 combines three related workstreams: the runtime theming foundation published in `2.0.0-alpha.1`, the experience and interaction baseline in `2.0.0-alpha.2`, and the design token pipeline introduced in `2.0.0-alpha.3`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for the first alpha, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2 and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3. The tagged `v1.8.2...v2.0.0` comparison lands with the stable release.
+Mangrove 2.0 combines four related workstreams: the runtime theming foundation published in `2.0.0-alpha.1`, the experience and interaction baseline in `2.0.0-alpha.2`, the design token pipeline introduced in `2.0.0-alpha.3`, and the typography and navigation refinements prepared for `2.0.0-alpha.4`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for the first alpha, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2 and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3. The tagged `v1.8.2...v2.0.0` comparison lands with the stable release.
 
 > **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the alpha.1 theming migration requires no integration change. Alpha.2 intentionally refreshes component presentation and interaction while retaining existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal.
 >
@@ -16,7 +16,7 @@ Mangrove 2.0 combines three related workstreams: the runtime theming foundation 
 
 ## Try the alpha
 
-2.0 ships as a **prerelease** under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. This release is `2.0.0-alpha.3`; until the manual publish completes, `@next` may still resolve to an earlier alpha.
+2.0 ships as a **prerelease** under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. This release candidate is `2.0.0-alpha.4`; until it is published, `@next` continues to resolve to `2.0.0-alpha.3`. The alpha.4 CDN links below become available after the versioned assets are deployed.
 
 ```bash
 # npm (prerelease tag — does not become your default version)
@@ -25,8 +25,8 @@ npm install @undrr/undrr-mangrove@next
 
 ```html
 <!-- CDN, versioned path (pick the base or a sub-brand stylesheet) -->
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/css/style.css">
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/css/style-preventionweb.css">
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style-preventionweb.css">
 ```
 
 For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and — for a sub-brand — add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
@@ -37,8 +37,8 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 |---|---|---|
 | `2.0.0-alpha.1` | Published under `next` | CSS custom-property theming, 16px root and sub-brand runtime selectors |
 | `2.0.0-alpha.2` | Published under `next` | Experience principles, component surfaces, interaction states, responsive behaviour and multilingual resilience |
-| `2.0.0-alpha.3` | Release-ready on `main`; not yet published | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
-| `2.0.0-alpha.4` | In development on `main` | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles |
+| `2.0.0-alpha.3` | Published under `next` | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
+| `2.0.0-alpha.4` | Release candidate; not yet published | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles; centred responsive tabs and progressive mobile navigation |
 
 ### Alpha.2 experience and interaction baseline
 
@@ -271,7 +271,9 @@ These are known and deliberately unfinished in alpha.3:
 - Forced-colours behaviour has not been verified in real Windows High Contrast, only in emulation. The two-band mixins are built to degrade correctly there, but that is reasoned, not observed.
 - `--mg-color-focus-ring-inverse` resolves to white in all five themes, so it is a seam with nothing behind it yet. It earns its keep only when a theme retunes it.
 
-### Alpha.4 Arabic typography settled
+### Alpha.4 typography and navigation
+
+#### Arabic typography settled
 
 **Arabic now pairs Noto Kufi Arabic headings with Noto Sans Arabic body text. Dubai is removed.** This closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089), which asked for the Arabic typeface to be chosen deliberately rather than inherited.
 
@@ -324,6 +326,14 @@ Every `:lang(ar)` override had been written as a descendant selector: `:lang(ar)
 - **Arabic resuming inside a non-Arabic island now works**, as does an Arabic island on an otherwise Latin page — the second rule handles both. Previously only `<p>` recovered, by accident of `p:lang(ar)` existing.
 
 This is a selector fix, not a font change. It predates the Noto move above and behaved identically with Dubai; no font token changed with it.
+
+#### Tabs and mobile navigation
+
+[Tabs (#1097)](https://github.com/unisdr/undrr-mangrove/pull/1097) centre a compact group when it fits and scroll horizontally when it overflows. The active tab uses a soft brand tint. Existing HTML is enhanced without a markup migration. React consumers can opt into mobile stacking with `stackOnMobile`; plain HTML uses `data-mg-js-tabs-stack-on-mobile`. Panels retain their state through responsive changes, and manual rail scrolling does not change selection.
+
+[MegaMenu (#1100)](https://github.com/unisdr/undrr-mangrove/pull/1100) reveals one mobile level at a time, with Back above the title and a separate Close control. Section headings link to their landing pages. Top-level sections remain prominent while inner links use regular body typography. The panel is at least 400px where space permits, capped at the smaller of 700px or 90% of the viewport, leaving the page visible for outside dismissal. Translucency, blur and short RTL-aware transitions have opaque, motion-free accessibility-preference fallbacks. Focus and scroll restore on return; closing and rapid reopening are covered by regression tests. Existing `sections`, logo props, Drupal markup and hydration entry points remain supported. New labels are optional. Simple Nav removes the unused hamburger gutter and scrolls on mobile overflow.
+
+Compiled-CSS consumers do not need a markup migration for these navigation updates. Sass consumers must apply the font-role migration in [breaking change #8](#8-font-family-variables-replaced-by-five-roles), and themes depending on Dubai must supply their own font declaration.
 
 ## Find your path
 

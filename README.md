@@ -293,9 +293,9 @@ Production sites should pin to a specific version:
 ```
 https://assets.undrr.org/static/sitemap.html#mangrove-1-2-10
 https://assets.undrr.org/static/mangrove/README.md
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/css/style.css
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/js/tabs.js
+https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css
+https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/components/MegaMenu.js
+https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/js/tabs.js
 ```
 
 #### Bleeding edge test rep
@@ -303,7 +303,7 @@ https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/js/tabs.js
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.3/css/style.css
+https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css
 ... etc
 ```
 

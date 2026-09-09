@@ -30,9 +30,9 @@ const targetBase = useTesting
 // - prod latest or semver
 // - testing in either segment ordering ("testing/static" or "static/testing") and latest or semver
 const urlPatterns = [
-  /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
-  /https:\/\/assets\.undrr\.org\/testing\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
-  /https:\/\/assets\.undrr\.org\/static\/testing\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+  /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
+  /https:\/\/assets\.undrr\.org\/testing\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
+  /https:\/\/assets\.undrr\.org\/static\/testing\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
 ];
 
 // Directories to ignore during traversal

@@ -13,11 +13,21 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
-Work towards `2.0.0-alpha.4`. Detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
+## 2.0.0-alpha.4 — 2026-09-09
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
+
+Detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
 
 - **Font families are now five script-mapped roles.** Component stylesheets declare `font-family: var(--mg-font-family-ui)` and never name a typeface; `_fonts.scss` re-points the roles for Arabic. Latin rendering is unchanged; Arabic chrome moves from Noto Kufi Arabic to Noto Sans Arabic. **Breaking:** all six `$mg-font-family-*` variables are removed. Closes [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098) and, as a side effect, [#1095](https://github.com/unisdr/undrr-mangrove/issues/1095). See [breaking change #8](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
 - **Arabic typography now respects language boundaries.** `:lang(ar)` overrides are anchored to the styled element and the family is reasserted at the language switch point, so an English island inside an Arabic page no longer renders in Arabic typography. Closes [issue #1092](https://github.com/unisdr/undrr-mangrove/issues/1092).
 - **Arabic typefaces changed: Dubai is replaced by Noto Kufi Arabic and Noto Sans Arabic.** **Breaking:** Mangrove no longer emits a Dubai `@font-face`, so a theme that wants Dubai must declare its own. Closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089).
+
+### Navigation and release tooling
+
+- **Tabs:** centred groups, horizontal scrolling, soft active states and optional mobile stacking, with legacy HTML enhancement and retained panel state. ([#1097](https://github.com/unisdr/undrr-mangrove/pull/1097))
+- **MegaMenu:** progressive mobile navigation with Back above the heading, linked section headings, distinct section/link typography, a bounded translucent surface, outside dismissal and accessible RTL-aware transitions. Existing section data and hydration contracts remain supported; Simple Nav gains mobile overflow scrolling. ([#1100](https://github.com/unisdr/undrr-mangrove/pull/1100))
+- **Build and release tooling:** exclude `_site` output from Jest discovery ([#1090](https://github.com/unisdr/undrr-mangrove/pull/1090)) and update prerelease CDN URLs during release preparation.
 
 ## 2.0.0 — unreleased
 
@@ -34,7 +44,7 @@ Development releases began with `2.0.0-alpha.1` under the npm `next` dist-tag: [
 - **DELTA's palette was corrected** (alpha.3) against DELTA's own sources: 26 of its 57 tokens change, and its buttons go from unfilled navy text to white on brand blue. The other four themes are unaffected.
 - **New `StatusLabel` and `EmptyState` components and a Sendai-target data-visualisation palette** (alpha.3). The `--sendai-*` accent colours and their utility classes are deprecated, for removal in 2.1.
 - **Colour contrast is graded twice** (alpha.3), on WCAG 2 and an Oklab perceptual measure, across every theme and state.
-- **Arabic typography was settled and font families rebuilt as roles** (alpha.4) — see [Unreleased](#unreleased) above.
+- **Arabic typography was settled and font families rebuilt as roles** (alpha.4) — see [alpha.4](#200-alpha4--2026-09-09) above.
 
 ### Breaking changes
 
