@@ -1,3 +1,4 @@
+import { expect, within } from 'storybook/test';
 import { TableTag } from './Table';
 
 const getCaptionForLocale = locale => {
@@ -246,4 +247,27 @@ export const ColumnAlignment = {
     </table>
   ),
   name: 'Column alignment',
+};
+
+export const NarrowScroll = {
+  name: 'Narrow scroll region',
+  render: () => (
+    <div style={{ width: '280px', maxWidth: '100%' }}>
+      <TableTag
+        responsive="scroll"
+        scrollLabel="Disaster records"
+        text="Country and region"
+        tdtext="Democratic Republic of the Congo"
+        details="A long description of disaster risk reduction measures"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const region = within(canvasElement).getByRole('region', {
+      name: 'Disaster records',
+    });
+    expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
+    expect(region.getBoundingClientRect().width).toBeLessThanOrEqual(280);
+    expect(region).toHaveAttribute('tabindex', '0');
+  },
 };

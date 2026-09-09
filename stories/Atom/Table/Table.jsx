@@ -28,6 +28,7 @@ export const TableTag = ({
   variant = 'default',
   size = 'large',
   responsive = 'auto',
+  scrollLabel = 'Scrollable table',
   ...args
 }) => {
   let table_type = variant_options[`${variant}`];
@@ -46,11 +47,8 @@ export const TableTag = ({
     .filter(Boolean)
     .join(' ');
 
-  return (
-    <table
-      className={tableClasses}
-      tabIndex={responsive === 'scroll' ? '0' : undefined}
-    >
+  const table = (
+    <table className={tableClasses}>
       <thead>
         <tr>
           <th scope="col">{text}</th>
@@ -82,6 +80,19 @@ export const TableTag = ({
       </tbody>
     </table>
   );
+
+  return responsive === 'scroll' ? (
+    <div
+      className="mg-table-scroll-region"
+      role="region"
+      aria-label={scrollLabel}
+      tabIndex={0}
+    >
+      {table}
+    </div>
+  ) : (
+    table
+  );
 };
 
 /** Styled HTML table with variant, size, and responsive behavior options. */
@@ -96,6 +107,8 @@ TableTag.propTypes = {
   variant: PropTypes.oneOf(['default', 'striped', 'border']),
   /** Table size. */
   size: PropTypes.oneOf(['large', 'small']),
+  /** Accessible name of the scroll region; translate for the page language. */
+  scrollLabel: PropTypes.string,
   /** Responsive behavior: auto (default), stacked, or scroll. */
   responsive: PropTypes.oneOf(['auto', 'stacked', 'scroll']),
 };

@@ -103,7 +103,15 @@ On smaller screens, this converts to a card-like layout using `.mg-table--stacke
 
 ### Scrollable table
 
-For wide tables that need horizontal scrolling. The `.mg-table--scroll` class provides smooth horizontal navigation directly on the table element.
+For wide tables, `responsive="scroll"` now renders a `.mg-table-scroll-region` around the native table. The region is keyboard-focusable and has an accessible name; translate the optional `scrollLabel` prop for the page language. Default and stacked markup remain unchanged. The legacy `.mg-table--scroll` class is retained, but new plain HTML should use a wrapper:
+
+```html
+<div class="mg-table-scroll-region" role="region" aria-label="Disaster records" tabindex="0">
+  <table class="mg-table"><!-- headers and cells --></table>
+</div>
+```
+
+Default cells have more breathing room; `.mg-table--small` retains compact density. Long prose wraps naturally. The scroll region keeps wide columns together without making the page itself scroll horizontally.
 
 <Canvas of={TableStories.ScrollableTable} meta={TableStories} />
 
@@ -155,6 +163,8 @@ The table component handles all the responsive heavy lifting for you, so you can
 - RTL (right-to-left) language support is built-in
 
 ## Changelog
+
+- **2.3** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Improved cell spacing with a distinct compact density and natural text wrapping. The React scroll option now creates a labelled, keyboard-focusable scroll region while preserving native table semantics; existing table modifiers remain supported.
 
 - **2.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Made logical start alignment the table default and added explicit start, centre and end cell modifiers for textual, status and numeric columns across LTR and RTL layouts.
 - **2.1** — 2026-04-05 ([undrr-mangrove#907](https://github.com/unisdr/undrr-mangrove/pull/907)): Fixed `mg-table--striped` stripe color from `$mg-color-neutral-200` (`#b3b3b3`) to `$mg-color-neutral-25` (`#f2f2f2`) — the previous value was far too dark

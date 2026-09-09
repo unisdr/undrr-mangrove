@@ -26,7 +26,7 @@ export const Default = {
         alignItems: 'center',
       }}
     >
-      <span className="mg-tag">Organisation</span>
+      <span className="mg-tag">Organization</span>
       <span className="mg-tag">News</span>
       <span className="mg-tag">Publication</span>
       <span className="mg-tag">Event</span>
@@ -122,7 +122,7 @@ export const AllVariants = {
         }}
       >
         <strong style={{ minWidth: '80px' }}>Default</strong>
-        <span className="mg-tag">Organisation</span>
+        <span className="mg-tag">Organization</span>
         <a href="#" className="mg-tag">
           Link
         </a>
@@ -182,7 +182,7 @@ export const TagContainer = {
           Auto-styled children (no .mg-tag class needed):
         </p>
         <div className="mg-tag-container">
-          <span>Organisation</span>
+          <span>Organization</span>
           <span>News</span>
           <a href="#">Nepal</a>
           <div>Event</div>
@@ -207,7 +207,7 @@ export const InContext = {
   render: () => (
     <div className="mg-card__content" style={{ maxWidth: '600px' }}>
       <div style={{ marginBottom: '8px' }}>
-        <span className="mg-tag">Organisation</span>
+        <span className="mg-tag">Organization</span>
       </div>
       <h3 className="mg-card__title" style={{ margin: '0 0 8px' }}>
         <a href="#">

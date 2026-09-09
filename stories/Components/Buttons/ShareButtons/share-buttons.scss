@@ -1,5 +1,6 @@
 .mg-share {
-  max-width: 400px;
+  max-inline-size: mg-rem(400);
+  min-inline-size: 0;
   display: flex;
   flex-direction: column;
   gap: var(--mg-spacing-100);
@@ -10,98 +11,88 @@
   color: rgb(var(--mg-color-text));
   font-weight: 600;
   font-size: $mg-font-size-300;
-  display: flex;
-  justify-content: start;
+  margin: 0;
 }
 
 .mg-share__buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--mg-spacing-50);
-  flex-direction: row;
-  justify-content: left;
   align-items: center;
 }
 
-.mg-share__button {
-  font-size: $mg-font-size-400;
-  width: mg-rem(40);
-  height: mg-rem(40);
+.mg-share__button,
+.mg-share__copy-button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: mg-rem(40);
   padding: var(--mg-spacing-100);
   border-radius: var(--mg-radius-button);
   background-color: var(--mg-color-button-background);
   color: rgb(var(--mg-color-button));
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
   border: var(--mg-border-width-button) solid var(--mg-border-color-button);
 
-  &:hover {
-    background-color: rgb(var(--mg-color-blue-700) / 0.8);
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
   }
 
-  // Was a 4px glow in --mg-color-button-background--hover, painted directly on
-  // a button whose own fill is --mg-color-button-background: a near-same-colour
-  // halo on a filled surface, so effectively no indicator. The two-band ring
-  // is judged against its own white separator, so it reads on the filled
-  // button regardless of which theme is painting it.
+  &:hover {
+    background-color: var(--mg-color-button-background--hover);
+    color: rgb(var(--mg-color-button--hover));
+  }
+
   &:focus-visible {
     @include mg-focus-ring;
   }
-}
 
-.mg-share__copy-button {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  border: 0 solid var(--mg-border-color-button);
-  color: rgb(var(--mg-color-button));
-  font-family: var(--mg-font-family-text);
-  padding: var(--mg-spacing-100);
-  background-color: rgb(var(--mg-color-blue-900));
-
-  &:hover .mg-share__copy-text {
-    text-decoration: underline;
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
   }
 }
 
-.mg-share__clip-icon {
-  flex-shrink: 0;
-  width: 25px;
-  height: 25px;
+.mg-share__button {
+  flex: 0 0 mg-rem(40);
+  inline-size: mg-rem(40);
+  block-size: mg-rem(40);
+  font-size: $mg-font-size-400;
+}
+
+.mg-share__copy-button {
+  gap: var(--mg-spacing-100);
+  max-inline-size: 100%;
+  font-family: var(--mg-font-family-text);
+  text-align: start;
+
+  &:hover .mg-share__copy-text {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
+.mg-share__clip-icon,
+.mg-share__stack-icon {
+  flex: 0 0 mg-rem(24);
+  inline-size: mg-rem(24);
+  block-size: mg-rem(24);
   display: flex;
   justify-content: center;
   align-items: center;
 
   img {
-    width: 18px;
+    inline-size: mg-rem(18);
   }
 }
 
 .mg-share__copy-text {
-  color: rgb(var(--mg-color-button));
-  font-size: $mg-font-size-100;
-  overflow: hidden;
-  scrollbar-width: 0;
-  height: 17px;
-  flex: auto;
-  align-items: start;
-  margin-right: 1em;
-  margin-left: 1em;
-}
-
-.mg-share__stack-icon {
-  flex-shrink: 0;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(var(--mg-color-blue-900) / 0.5);
-
-  img {
-    width: 18px;
-  }
+  min-inline-size: 0;
+  flex: 1;
+  font-size: $mg-font-size-250;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }

@@ -3,12 +3,8 @@
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
-  word-break: auto-phrase; // https://gitlab.com/undrr/web-backlog/-/issues/2053
-  text-wrap: balance;
-
-  @include devicebreak(medium) {
-    width: auto;
-  }
+  overflow-wrap: anywhere;
+  text-wrap: wrap;
 
   &.mg-table--small {
     th,
@@ -81,14 +77,9 @@
 .mg-table td {
   font-size: $mg-font-size-300;
   line-height: 1.4;
-  padding: var(--mg-spacing-25);
+  padding: var(--mg-spacing-100) var(--mg-spacing-150);
   text-align: start;
   vertical-align: top;
-
-  @include devicebreak(medium) {
-    padding: var(--mg-spacing-25) var(--mg-spacing-200) var(--mg-spacing-25)
-      var(--mg-spacing-25);
-  }
 }
 
 .mg-table thead tr th {
@@ -129,14 +120,22 @@
   }
 }
 
-[dir="rtl"] {
-  .mg-table th,
-  .mg-table td {
-    @include devicebreak(medium) {
-      padding: var(--mg-spacing-25) var(--mg-spacing-25) var(--mg-spacing-25)
-        var(--mg-spacing-200);
-    }
-  }
+// Keep compact density available explicitly.
+.mg-table.mg-table--small th,
+.mg-table.mg-table--small td {
+  padding: var(--mg-spacing-50) var(--mg-spacing-100);
 }
 
-/* table tag end */
+.mg-table-scroll-region {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+
+  > .mg-table {
+    min-inline-size: mg-rem(600);
+  }
+
+  &:focus-visible {
+    @include mg-focus-ring-inset;
+  }
+}

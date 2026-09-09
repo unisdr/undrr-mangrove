@@ -148,3 +148,20 @@ export const WhiteBreadcrumbs = {
     },
   },
 };
+
+export const LongTrail = {
+  name: 'Long trail',
+  render: () => (
+    <div style={{ width: '280px', maxWidth: '100%' }}>
+      <Breadcrumbcomponent
+        data={[
+          { text: 'Home' },
+          { text: 'Research and publications' },
+          {
+            text: 'Disaster risk reduction and climate adaptation across regions',
+          },
+        ]}
+      />
+    </div>
+  ),
+};
