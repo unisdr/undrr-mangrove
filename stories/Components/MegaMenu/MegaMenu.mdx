@@ -48,7 +48,7 @@ import { MegaMenu } from '@components';
 // Branded variant (with logo)
 <MegaMenu
   sections={menuItems}
-  logoSrc="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+  logoSrc="https://assets.undrr.org/logos/pw/pw-logo.svg"
   logoAlt="PreventionWeb"
 />
 ```
@@ -59,7 +59,7 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 
 ```html
 <div data-mg-mega-menu
-     data-mg-mega-menu-logo-src="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+     data-mg-mega-menu-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
      data-mg-mega-menu-logo-alt="PreventionWeb"
      data-mg-mega-menu-logo-href="/ar/">
 </div>
@@ -154,8 +154,8 @@ MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/b
 > **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
-import createHydrator from "https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/components/hydrate.js";
-import MegaMenu, { fromElement } from "https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/components/MegaMenu.js";
+import createHydrator from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js";
+import MegaMenu, { fromElement } from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/MegaMenu.js";
 createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromElement });
 ```
 

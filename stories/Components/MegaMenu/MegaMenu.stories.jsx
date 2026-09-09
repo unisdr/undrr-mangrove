@@ -504,11 +504,11 @@ export const RTL = {
 
 const brandLogos = {
   PreventionWeb: {
-    logoSrc: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+    logoSrc: 'https://assets.undrr.org/logos/pw/pw-logo.svg',
     logoAlt: 'PreventionWeb',
   },
   IRP: {
-    logoSrc: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+    logoSrc: 'https://assets.undrr.org/logos/irp/irp-logo.svg',
     logoAlt: 'International Recovery Platform',
   },
   MCR2030: {
@@ -517,8 +517,7 @@ const brandLogos = {
     logoAlt: 'Making Cities Resilient 2030',
   },
   'Global Platform 2025': {
-    logoSrc:
-      'https://assets.undrr.org/static/logos/gp/2025/GP_2025_logo_web.svg',
+    logoSrc: 'https://assets.undrr.org/logos/gp/2025/GP_2025_logo_web.svg',
     logoAlt: 'Global Platform for Disaster Risk Reduction 2025',
   },
 };

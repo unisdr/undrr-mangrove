@@ -42,7 +42,7 @@ import cssUtilities from './css-utilities.js';
 // Constants
 // ---------------------------------------------------------------------------
 
-const CDN_BASE = 'https://assets.undrr.org/static/mangrove/{{version}}';
+const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
 const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
 
@@ -346,7 +346,7 @@ function buildSampleProps(React) {
     PageHeader: {
       variant: 'default',
       logoUrl:
-        'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+        'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
       homeUrl: '/',
       languages: [
         { value: 'en', label: 'English', selected: true },
@@ -1606,9 +1606,9 @@ Photo sizes (credit/source required on every image):
 - Hero 1440x540 (16:6), News 1164x665 (16:9), Publication 176x235 (3:4), Thumbnail 176x176 (1:1).
 
 Logos (hosted on CDN for hotlinking or download):
-- UNDRR: https://assets.undrr.org/static/logos/undrr/undrr-logo-blue.svg (blue, white, square variants)
-- PreventionWeb: https://assets.undrr.org/static/logos/pw/pw-logo.svg
-- IRP: https://assets.undrr.org/static/logos/irp/irp-logo.svg
+- UNDRR: https://assets.undrr.org/logos/undrr/undrr-logo-blue.svg (blue, white, square variants)
+- PreventionWeb: https://assets.undrr.org/logos/pw/pw-logo.svg
+- IRP: https://assets.undrr.org/logos/irp/irp-logo.svg
 - MCR2030 and DELTA: not yet on CDN
 - Safety zone equals the width of the "U" in UNDRR. Do not place on busy backgrounds. Use inverse (white) variant on dark backgrounds.
 

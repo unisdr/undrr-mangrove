@@ -7,7 +7,7 @@ const { execFileSync } = require('child_process');
 const script = path.resolve(__dirname, '../update-cdn-version.js');
 const target = '2.0.0-alpha.4';
 const old = '2.0.0-alpha.3';
-const url = (version, prefix = 'static/mangrove') =>
+const url = (version, prefix = 'mangrove') =>
   `https://assets.undrr.org/${prefix}/${version}/css/style.css`;
 let root;
 beforeEach(() => {
@@ -26,6 +26,8 @@ it('updates prerelease and stable CDN links while preserving historical releases
     [
       url(old),
       url('1.8.2'),
+      url(old, 'static/mangrove'),
+      url(old, 'testing/mangrove'),
       url(old, 'static/testing/mangrove'),
       url(old, 'testing/static/mangrove'),
     ].join('\n')
@@ -34,7 +36,7 @@ it('updates prerelease and stable CDN links while preserving historical releases
   fs.writeFileSync(path.join(root, 'docs/RELEASE-2.0.md'), url(old));
   execFileSync(process.execPath, [script, `--root=${root}`]);
   expect(fs.readFileSync(path.join(root, 'README.md'), 'utf8')).toBe(
-    Array(4).fill(url(target)).join('\n')
+    Array(6).fill(url(target)).join('\n')
   );
   expect(fs.readFileSync(path.join(root, 'docs/RELEASE-1.8.md'), 'utf8')).toBe(
     url('1.8.2')
@@ -51,6 +53,6 @@ it('keeps dry runs read-only and supports prerelease testing URLs', () => {
   expect(fs.readFileSync(file, 'utf8')).toBe(url(old));
   execFileSync(process.execPath, [script, `--root=${root}`, '--testing']);
   expect(fs.readFileSync(file, 'utf8')).toBe(
-    url(target, 'static/testing/mangrove')
+    url(target, 'testing/mangrove')
   );
 });

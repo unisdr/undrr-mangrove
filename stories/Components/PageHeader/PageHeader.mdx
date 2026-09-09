@@ -31,7 +31,7 @@ The PageHeader component displays a complete header structure that includes:
 
 #### Default
 
-The PageHeader component renders as a comprehensive header with the UNDRR logo (sourced from [https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg](https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg)), language switcher, and colored decoration stripe.
+The PageHeader component renders as a comprehensive header with the UNDRR logo (sourced from [https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg](https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg)), language switcher, and colored decoration stripe.
 
 <Canvas of={PageHeaderStories.Default} meta={PageHeaderStories} />
 
@@ -119,7 +119,7 @@ To use the PageHeader component in your React application:
 4. With custom configuration:
    ```jsx
    <PageHeader
-     logoUrl="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg"
+     logoUrl="https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg"
      logoAlt="UNDRR Logo"
      homeUrl="https://www.undrr.org"
      languages={[
@@ -164,7 +164,7 @@ For non-React applications, use these HTML structures:
           <a href="/">
             <img
               alt="UNDRR Logo"
-              src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg"
+              src="https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg"
               width="324"
               height="47"
               title="UNDRR Logo"
@@ -252,7 +252,7 @@ The PageHeader component follows accessibility best practices:
 | --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | variant     | String  | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
 | className   | String  | undefined                                                               | Additional CSS classes to apply                                                  |
-| logoUrl     | String  | 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
+| logoUrl     | String  | 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
 | logoAlt     | String  | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
 | logoTitle   | String  | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
 | homeUrl     | String  | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
@@ -282,6 +282,8 @@ The PageHeader component follows accessibility best practices:
 - Useful for footers, section dividers, or other decorative contexts
 
 ## Changelog
+
+- **1.5.1** — 2026-09-09: The default logo URL now uses the canonical assets CDN root. Custom logo URLs remain supported.
 
 - **1.5** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refined toolbar spacing and divider, added visible focus and 40px controls, and corrected duplicate logo breakpoints without cropping the logo. Language controls follow writing direction; the toolbar retains its 10px inline gutter at every breakpoint, including desktop. Existing decoration and toolbar background are retained.
 

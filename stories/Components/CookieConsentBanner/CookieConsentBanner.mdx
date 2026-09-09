@@ -23,15 +23,15 @@ If you're working on a plain HTML site (no React), you don't need this React wra
 <!-- UNDRR Cookie Banner Implementation -->
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css"
+  href="https://assets.undrr.org/cookie-banner/v1/cookieconsent.css"
 />
-<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js"></script>
-<script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js"></script>
+<script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent.umd.js"></script>
+<script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent-undrr.js"></script>
 ```
 
-For a complete implementation example, see the [UNDRR Cookie Banner documentation](https://assets.undrr.org/static/cookie-banner/v1/example.html).
+For a complete implementation example, see the [UNDRR Cookie Banner documentation](https://assets.undrr.org/cookie-banner/v1/example.html).
 
-> **Implementation note (for contributors):** The banner's CDN resources live at `https://assets.undrr.org/static/cookie-banner/v1/`: `cookieconsent.css` (styling), `cookieconsent.umd.js` (core library), and `cookieconsent-undrr.js` (UNDRR-specific configuration). The React component constructs resource URLs by appending these filenames to the configured `cdnBaseUrl`.
+> **Implementation note (for contributors):** The banner's CDN resources live at `https://assets.undrr.org/cookie-banner/v1/`: `cookieconsent.css` (styling), `cookieconsent.umd.js` (core library), and `cookieconsent-undrr.js` (UNDRR-specific configuration). The React component constructs resource URLs by appending these filenames to the configured `cdnBaseUrl`.
 
 ## Features
 
@@ -227,7 +227,7 @@ The CookieConsentBanner component accepts the following props:
 | config        | Object  | defaultConfig                                      | Configuration object for the cookie consent banner        |
 | debug         | Boolean | false                                              | Enable verbose console logging for troubleshooting        |
 | forceFallback | Boolean | false                                              | Skip CDN loading and use the local fallback configuration |
-| cdnBaseUrl    | String  | 'https://assets.undrr.org/static/cookie-banner/v1' | Base URL for CDN resources                                |
+| cdnBaseUrl    | String  | 'https://assets.undrr.org/cookie-banner/v1' | Base URL for CDN resources                                |
 
 ### Configuration Object Structure
 
@@ -301,12 +301,14 @@ The cookie consent banner is built with accessibility in mind, including:
 
 ## References
 
-- [UNDRR Cookie Banner CDN](https://assets.undrr.org/static/cookie-banner/v1/example.html) - Official implementation example
+- [UNDRR Cookie Banner CDN](https://assets.undrr.org/cookie-banner/v1/example.html) - Official implementation example
 - [UNDRR Privacy Policy](https://www.undrr.org/undrr-privacy-policy)
 - [UNDRR Terms and Conditions](https://www.undrr.org/terms-and-conditions-use-undrrorg)
 - [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent) - Underlying library reference
 
 ## Changelog
+
+- **1.2.2** — 2026-09-09: The default cookie-banner CDN base now uses the canonical assets root. Custom CDN bases remain supported.
 
 - **1.2.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a consent button whose own language is not Arabic.
 - **1.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):

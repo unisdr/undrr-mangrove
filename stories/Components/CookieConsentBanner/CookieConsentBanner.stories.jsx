@@ -22,7 +22,7 @@ export default {
     cdnBaseUrl: {
       control: 'text',
       description: 'Base URL for the CDN resources (defaults to UNDRR CDN)',
-      defaultValue: 'https://assets.undrr.org/static/cookie-banner/v1',
+      defaultValue: 'https://assets.undrr.org/cookie-banner/v1',
     },
   },
 };
@@ -52,7 +52,7 @@ export const WithResetButton = {
           below.
         </p>
         <p>
-          <small>CDN: https://assets.undrr.org/static/cookie-banner/v1/</small>
+          <small>CDN: https://assets.undrr.org/cookie-banner/v1/</small>
         </p>
         <CookieConsentBanner {...args} />
         <button onClick={handleResetConsent}>Reset Consent</button>

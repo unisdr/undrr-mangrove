@@ -990,7 +990,7 @@ npm run build</code></pre>
     examples: [
       {
         name: 'Logo',
-        html: `<img src="https://assets.undrr.org/static/logos/undrr/undrr-logo-blue.svg" alt="UNDRR" />`,
+        html: `<img src="https://assets.undrr.org/logos/undrr/undrr-logo-blue.svg" alt="UNDRR" />`,
       },
     ],
   },
@@ -1091,9 +1091,9 @@ npm run build</code></pre>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Page title - UNDRR</title>
   <!-- Theme CSS (required, choose one) -->
-  <link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/{{version}}/css/style.css" />
+  <link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
   <!-- Cookie consent CSS (required if using cookie banner) -->
-  <link rel="stylesheet" href="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.css" />
+  <link rel="stylesheet" href="https://assets.undrr.org/cookie-banner/v1/cookieconsent.css" />
 </head>
 <body>
 <!-- Page header — DO NOT MODIFY this structure, it is a UNDRR branding requirement -->
@@ -1107,7 +1107,7 @@ npm run build</code></pre>
         <div class="mg-page-header__region mg-page-header__region--toolbar">
           <div class="mg-page-header__block mg-page-header__block--logo">
             <a href="/">
-              <img class="mg-page-header__logo-img" src="https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg" alt="UNDRR" width="324" height="47" />
+              <img class="mg-page-header__logo-img" src="https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg" alt="UNDRR" width="324" height="47" />
             </a>
           </div>
           <a title="My account" href="/user">
@@ -1167,13 +1167,13 @@ npm run build</code></pre>
 <!-- === Required scripts (order matters) === -->
 
   <!-- UNDRR analytics (GA4) -->
-  <script src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" defer></script>
+  <script src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js" defer></script>
   <!-- UNDRR critical messaging -->
   <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
   <!-- Cookie consent JS (UMD) -->
-  <script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent.umd.js"></script>
+  <script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent.umd.js"></script>
   <!-- Cookie consent UNDRR config -->
-  <script src="https://assets.undrr.org/static/cookie-banner/v1/cookieconsent-undrr.js"></script>
+  <script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent-undrr.js"></script>
 </body>
 </html>`,
       },

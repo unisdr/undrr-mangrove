@@ -12,7 +12,7 @@ const cls = (...classes) =>
 export function PageHeader({
   variant = 'default',
   className,
-  logoUrl = 'https://assets.undrr.org/static/logos/undrr/undrr-logo-horizontal.svg',
+  logoUrl = 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
   homeUrl = '/',

@@ -2,13 +2,13 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs).
 
-This page provides an overview of UNDRR's CDN structure and common asset paths. For a complete listing of all available files and versions, explore the CDN directly at [assets.undrr.org/static](https://assets.undrr.org/static/sitemap.html).
+This page provides an overview of UNDRR's CDN structure and common asset paths. For a complete listing of all available files and versions, explore the CDN directly at [assets.undrr.org](https://assets.undrr.org/sitemap.html).
 
-UNDRR assets are served from `https://assets.undrr.org/static/` with versioned endpoints for stability.
+UNDRR assets are served from `https://assets.undrr.org/` with versioned endpoints for stability.
 
 ## Mangrove component library
 
-Base URL: `https://assets.undrr.org/static/mangrove/{version}/`
+Base URL: `https://assets.undrr.org/mangrove/{version}/`
 
 ### CSS themes
 
@@ -36,7 +36,7 @@ The DELTA Resilience theme has no legacy variant.
 
 **Example:**
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -51,7 +51,7 @@ The DELTA Resilience theme has no legacy variant.
 **Example:**
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -104,7 +104,7 @@ Then import the Mangrove component as an ES module:
 
   // Load component from CDN
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/components/MegaMenu.js'
+    'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/MegaMenu.js'
   );
 
   // Unwrap ESM/CJS interop - bundle may be double-wrapped
@@ -121,7 +121,7 @@ All bundled components export a `fromElement` function for automatic prop extrac
 
 ## Analytics
 
-Base URL: `https://assets.undrr.org/static/analytics/{version}/`
+Base URL: `https://assets.undrr.org/analytics/{version}/`
 
 | Asset | Path | Purpose |
 |-------|------|---------|
@@ -131,7 +131,7 @@ Base URL: `https://assets.undrr.org/static/analytics/{version}/`
 **Example:**
 ```html
 <script
-  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
   defer
 ></script>
 ```
@@ -140,7 +140,7 @@ See [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs
 
 ## Favicons
 
-Base URL: `https://assets.undrr.org/static/favicons/{brand}/v1/`
+Base URL: `https://assets.undrr.org/favicons/{brand}/v1/`
 
 Canonical favicon sets for all 10 UNDRR brands. Each brand directory contains `favicon.ico`, `apple-touch-icon.png`, `favicon-192.png`, and `favicon-512.png`.
 
@@ -148,7 +148,7 @@ See [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisi
 
 ## Logos
 
-Base URL: `https://assets.undrr.org/static/logos/`
+Base URL: `https://assets.undrr.org/logos/`
 
 | Logo | Path |
 |------|------|
@@ -169,7 +169,7 @@ Base URL: `https://assets.undrr.org/static/logos/`
 Pin to a specific version for stability:
 
 ```
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css
 ```
 
 ### Latest (testing only)
@@ -193,7 +193,7 @@ https://assets.undrr.org/testing/static/mangrove/{version}/
 ## URL structure
 
 ```
-https://assets.undrr.org/static/
+https://assets.undrr.org/
 ├── mangrove/
 │   └── {version}/
 │       ├── css/

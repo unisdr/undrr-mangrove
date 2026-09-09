@@ -23,13 +23,14 @@ console.log(`Scanning ${rootDir} to update Mangrove CDN links to version ${versi
 
 // Build replacement target
 const targetBase = useTesting
-  ? `https://assets.undrr.org/static/testing/mangrove/${version}/`
-  : `https://assets.undrr.org/static/mangrove/${version}/`;
+  ? `https://assets.undrr.org/testing/mangrove/${version}/`
+  : `https://assets.undrr.org/mangrove/${version}/`;
 
 // URL matchers for any existing forms
-// - prod latest or semver
-// - testing in either segment ordering ("testing/static" or "static/testing") and latest or semver
+// Canonical versioned URLs plus legacy static/testing forms as inputs.
+// Replacements always use the canonical path; latest remains unpinned.
 const urlPatterns = [
+  /https:\/\/assets\.undrr\.org\/(?:testing\/)?mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
   /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
   /https:\/\/assets\.undrr\.org\/testing\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
   /https:\/\/assets\.undrr\.org\/static\/testing\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,

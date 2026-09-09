@@ -313,7 +313,7 @@ export const WithLogo = {
         data={[
           {
             imgback:
-              'https://assets.undrr.org/static/logos/undrr/undrr-logo-square-blue.svg',
+              'https://assets.undrr.org/logos/undrr/undrr-logo-square-blue.svg',
             imgalt: 'UNDRR logo',
             imageScale: 'large',
             title: 'UNDRR',
@@ -328,7 +328,7 @@ export const WithLogo = {
         {...args}
         data={[
           {
-            imgback: 'https://assets.undrr.org/static/logos/irp/irp-logo.svg',
+            imgback: 'https://assets.undrr.org/logos/irp/irp-logo.svg',
             imgalt: 'IRP logo',
             imageScale: 'large',
             title: 'International Recovery Platform',
@@ -343,7 +343,7 @@ export const WithLogo = {
         {...args}
         data={[
           {
-            imgback: 'https://assets.undrr.org/static/logos/pw/pw-logo.svg',
+            imgback: 'https://assets.undrr.org/logos/pw/pw-logo.svg',
             imgalt: 'PreventionWeb logo',
             imageScale: 'large',
             title: 'PreventionWeb',

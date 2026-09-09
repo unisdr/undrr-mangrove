@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
  *
  * <!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
  * <script
- *   src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+ *   src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
  *   defer
  * ></script>
  *
@@ -312,7 +312,7 @@ const PageTemplateExample = () => {
     // Load UNDRR Analytics script
     const analyticsScript = document.createElement('script');
     analyticsScript.src =
-      'https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js';
+      'https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js';
     analyticsScript.defer = true;
     document.body.appendChild(analyticsScript);
 

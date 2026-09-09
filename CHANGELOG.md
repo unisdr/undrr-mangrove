@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- CDN references now use the canonical `assets.undrr.org/` root across documentation, examples, font URLs and component defaults. The release URL updater emits canonical paths while continuing to accept legacy paths as migration inputs.
+
 ## 2.0.0-alpha.4 — 2026-09-09
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.

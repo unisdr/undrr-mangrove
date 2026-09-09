@@ -5,7 +5,7 @@
  * probes in ColorSwatch — no hardcoded hex values to maintain.
  */
 
-const CDN = 'https://assets.undrr.org/static/logos';
+const CDN = 'https://assets.undrr.org/logos';
 
 /**
  * CSS class → property mappings for probing theme colors from the DOM.

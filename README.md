@@ -220,7 +220,7 @@ yarn test:coverage
 
 ## Compiled assets
 
-Compiled assets are available via npm (`@undrr/undrr-mangrove`) and the [UNDRR CDN](https://assets.undrr.org/static/mangrove/). The `dist` directory contains:
+Compiled assets are available via npm (`@undrr/undrr-mangrove`) and the [UNDRR CDN](https://assets.undrr.org/mangrove/). The `dist` directory contains:
 
 - `dist/components/`: compiled React component ES modules (e.g., `ShareButtons.js`)
 - `dist/css/`: compiled theme stylesheets
@@ -291,11 +291,11 @@ For CDN and static asset hosting in the [UNDRR Static assets repo](https://gitla
 Production sites should pin to a specific version:
 
 ```
-https://assets.undrr.org/static/sitemap.html#mangrove-1-2-10
-https://assets.undrr.org/static/mangrove/README.md
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/js/tabs.js
+https://assets.undrr.org/sitemap.html#mangrove-1-2-10
+https://assets.undrr.org/mangrove/README.md
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/MegaMenu.js
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/tabs.js
 ```
 
 #### Bleeding edge test rep
@@ -303,7 +303,7 @@ https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/js/tabs.js
 ```
 https://assets.undrr.org/testing/static/sitemap.html#mangrove-1-2-4
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css
 ... etc
 ```
 

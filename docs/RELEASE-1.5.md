@@ -178,7 +178,7 @@ UI control icons (search, menu, arrows) are most visibly changed. Domain icons o
 
 ```
 # CDN
-https://assets.undrr.org/static/mangrove/1.5.0/css/style.css
+https://assets.undrr.org/mangrove/1.5.0/css/style.css
 
 # npm
 yarn add @undrr/undrr-mangrove@^1.5.0

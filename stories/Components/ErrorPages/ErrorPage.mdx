@@ -14,7 +14,7 @@ The error pages and guidance shown here are recommendations. When implementing i
 For static error pages (e.g., for CDN or upstream error handling), it is important to:
 
 - **Include UNDRR analytics code** to track error events and user behavior:
-  `<script type="text/javascript" src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
+  `<script type="text/javascript" src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
 - **Include UNDRR critical messaging JavaScript** to ensure users receive important updates or alerts, even on error pages.
   `<script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>`
 
@@ -156,7 +156,7 @@ For static error pages (e.g., for CDN or upstream error handling), include these
 <!-- UNDRR analytics - tracks error events -->
 <script
   type="text/javascript"
-  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
   crossorigin="anonymous"
   referrerpolicy="no-referrer"
 ></script>
@@ -185,22 +185,22 @@ Use these static HTML pages directly from the CDN when integrating with CDNs or 
 **Cloudflare-specific templates:**
 
 ```text
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/5xx.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/challenge.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/managed-challenge.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/5xx.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/challenge.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/managed-challenge.html
 ```
 
 **Individual error pages** (for platforms that support per-code configuration):
 
 ```text
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/401.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/403.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/404.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/429.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/500.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/502.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/503.html
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/504.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/401.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/403.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/404.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/429.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/500.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/502.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/503.html
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/error-pages/504.html
 ```
 
 ## CSS and JS references
@@ -216,6 +216,8 @@ https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/error-pages/504.html
 - Request details (Ray ID, IP, location) help support teams diagnose issues
 
 ## Changelog
+
+- **1.4.2** — 2026-09-09: Asset URLs in the stylesheet and static error templates now use the canonical CDN root.
 
 - **1.4.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Replaced the challenge panel's hard-coded radius and shadow with shared card surface tokens so it follows theme expression.
 - **1.4.0** — 2026-03-21: Converted inline styles from 10px-root rem values to px. Static templates now work correctly with the standard 1.4 theme (no root font-size override). ([#857](https://github.com/unisdr/undrr-mangrove/issues/857))

@@ -10,7 +10,7 @@
  * component SCSS files.
  */
 
-const CDN_BASE = 'https://assets.undrr.org/static/mangrove/{{version}}';
+const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 
 const colorShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 

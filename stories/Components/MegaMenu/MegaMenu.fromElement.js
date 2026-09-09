@@ -10,7 +10,7 @@
  * @example
  * <div data-mg-mega-menu
  *   data-delay="300"
- *   data-logo-src="https://assets.undrr.org/static/logos/pw/pw-logo.svg"
+ *   data-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
  *   data-logo-alt="PreventionWeb"
  *   data-logo-href="/ar/">
  * </div>

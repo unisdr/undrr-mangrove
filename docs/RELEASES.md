@@ -112,7 +112,7 @@ Close with a CDN snippet so consumers can copy-paste the new version:
 ~~~markdown
 ## CDN
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css">
 ```
 ~~~
 
@@ -244,8 +244,8 @@ Create the release from the tag as usual (steps 7–8), then verify:
 ```bash
 npm view @undrr/undrr-mangrove dist-tags                     # stable: latest -> X.Y.Z ; prerelease: next -> X.Y.Z-alpha.N and latest UNCHANGED
 npm pack @undrr/undrr-mangrove@X.Y.Z --dry-run 2>&1 | tail -1  # sanity-check file count/size
-curl -sI https://assets.undrr.org/static/mangrove/latest/css/style.css | head -1   # CDN latest/ reachable
-curl -sI https://assets.undrr.org/static/mangrove/X.Y.Z/css/style.css  | head -1   # versioned path
+curl -sI https://assets.undrr.org/mangrove/latest/css/style.css | head -1   # CDN latest/ reachable
+curl -sI https://assets.undrr.org/mangrove/X.Y.Z/css/style.css  | head -1   # versioned path
 ```
 
 The versioned `X.Y.Z/` URL will **404 until the GitLab shared-web-assets pipeline publishes it** — that pipeline, not this repo's `dist` push, creates versioned paths, and under the org flag it may need to be checked or triggered manually on the GitLab side. `latest/` should return 200 once GitLab has synced the `dist` push.
@@ -316,9 +316,9 @@ https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/components/MegaMenu.js
-https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/js/tabs.js
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/MegaMenu.js
+https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/tabs.js
 ```
 
 ## CI/CD configuration

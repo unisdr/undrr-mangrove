@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // Default CDN URL for UNDRR Cookie Banner
-const DEFAULT_CDN_BASE = 'https://assets.undrr.org/static/cookie-banner/v1';
+const DEFAULT_CDN_BASE = 'https://assets.undrr.org/cookie-banner/v1';
 
 /**
  * Generates a cache buster string in YYYYMMDDHHMM format

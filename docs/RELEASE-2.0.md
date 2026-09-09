@@ -25,8 +25,8 @@ npm install @undrr/undrr-mangrove@next
 
 ```html
 <!-- CDN, versioned path (pick the base or a sub-brand stylesheet) -->
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style.css">
-<link rel="stylesheet" href="https://assets.undrr.org/static/mangrove/2.0.0-alpha.4/css/style-preventionweb.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style-preventionweb.css">
 ```
 
 For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and — for a sub-brand — add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).

@@ -10,7 +10,7 @@ Add this script to your HTML page, typically before the closing `</body>` tag:
 
 ```html
 <script
-  src="https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js"
+  src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
   defer
 ></script>
 ```
@@ -23,8 +23,8 @@ The script auto-detects GA4 and configures property IDs for UNDRR domains.
 
 ## Resources
 
-- [Analytics documentation](https://assets.undrr.org/static/analytics/v1.0.0/index.html) — Full implementation guide
-- [google_analytics_enhancements.js](https://assets.undrr.org/static/analytics/v1.0.0/google_analytics_enhancements.js) — Source file
+- [Analytics documentation](https://assets.undrr.org/analytics/v1.0.0/index.html) — Full implementation guide
+- [google_analytics_enhancements.js](https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js) — Source file
 
 ## See also
 
