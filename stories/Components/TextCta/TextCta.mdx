@@ -70,6 +70,7 @@ Use the `padding` prop to override the theme default. Combined here with `headli
 | `headlineSize`    | String  | `'600'`     | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`) |
 | `headlineLevel`   | Number  | `2`         | Semantic heading level (2–6). Controls the HTML element independently of visual size |
 | `text`            | String  | -           | Body text (HTML supported via `dangerouslySetInnerHTML`)                             |
+| `children` | React node | — | Composed content below the copy, before any buttons. Supply a native form or other content; the CTA does not manage its behaviour. |
 | `buttons`         | Array   | `[]`        | Array of button objects: `{ label, url, type }`                                      |
 | `variant`         | String  | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'`              |
 | `backgroundColor` | String  | -           | Custom CSS background color (overrides variant)                                      |
@@ -91,6 +92,19 @@ Use the `padding` prop to override the theme default. Combined here with `headli
 | `outline` | Boolean | `false`     | Use the transparent outline treatment              |
 | `target`  | String  | -           | Link browsing context, such as `'_blank'`          |
 | `rel`     | String  | -           | Link relationship tokens                           |
+
+## Composed content
+
+Pass a form or other React content as `children` to reuse the CTA shell. Its
+heading, copy, optional image and existing button API stay independent of the
+content. Use `centered={false}` for form compositions and give the form an
+appropriate contrasting surface. The content slot spans the full grid row in
+inline layouts. Form behaviour, validation and service integration belong to the
+caller.
+
+For Drupal-owned forms, render the CTA classes directly around the native form.
+Do not apply `data-mg-text-cta` hydration to custom form content: the current
+hydrator supports the existing text/button data model, not arbitrary children.
 
 ## Server-rendered / CDN usage
 
@@ -147,6 +161,8 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 - Focus states inherited from `.mg-button` base styles
 
 ## Changelog
+
+- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Explored in the CTA block prototype alongside the original newsletter pattern. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
 
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Added an optional eyebrow and responsive inline content/action layout for wide promotional banners.

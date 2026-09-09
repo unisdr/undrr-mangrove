@@ -44,6 +44,7 @@ export function TextCta({
   centered = true,
   layout = 'stacked',
   className,
+  children,
 }) {
   const hasImage = !!image;
   const headlineId = useId();
@@ -93,6 +94,10 @@ export function TextCta({
             )}
           </div>
 
+          {children != null && (
+            <div className="mg-cta__custom-content">{children}</div>
+          )}
+
           {buttons.length > 0 && (
             <div className="mg-cta__actions">
               {buttons.map((btn, i) => (
@@ -122,6 +127,8 @@ export function TextCta({
 }
 
 TextCta.propTypes = {
+  /** Composed content, such as a form. Rendered after copy and before buttons. */
+  children: PropTypes.node,
   /** Optional short label above the headline */
   eyebrow: PropTypes.string,
   /** Banner heading text */

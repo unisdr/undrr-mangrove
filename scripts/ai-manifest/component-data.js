@@ -944,6 +944,7 @@ npm run build</code></pre>
       'mg-cta__headline',
       'mg-cta__text',
       'mg-cta__actions',
+      'mg-cta__custom-content',
       'mg-cta__image',
     ],
   },

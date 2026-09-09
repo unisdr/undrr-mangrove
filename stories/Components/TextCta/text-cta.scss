@@ -46,6 +46,13 @@
     }
   }
 
+  &__custom-content {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-block-start: var(--mg-spacing-150);
+    text-align: start;
+  }
+
   &__actions {
     display: flex;
     flex-wrap: wrap;

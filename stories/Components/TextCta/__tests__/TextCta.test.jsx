@@ -253,3 +253,26 @@ describe('TextCta', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('composed CTA content', () => {
+  it('keeps caller-owned form controls and existing actions independently accessible', async () => {
+    const { container } = render(
+      <TextCta headline="Stay informed" centered={false} buttons={[{ label: 'More information', url: '/about' }]}>
+        <form aria-label="Subscribe">
+          <label htmlFor="cta-email">Email address</label>
+          <input id="cta-email" name="email" type="email" required />
+          <button type="submit">Subscribe</button>
+        </form>
+      </TextCta>
+    );
+    expect(screen.getByRole('form', { name: 'Subscribe' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Email address' })).toHaveAttribute('name', 'email');
+    expect(screen.getByRole('link', { name: 'More information' })).toHaveAttribute('href', '/about');
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('adds no content wrapper for existing button-only usage', () => {
+    const { container } = render(<TextCta headline="Read more" buttons={[{ label: 'Read', url: '/read' }]} />);
+    expect(container.querySelector('.mg-cta__custom-content')).not.toBeInTheDocument();
+  });
+});
