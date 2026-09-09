@@ -181,7 +181,6 @@ export function Sidebar({
       onKeyDown={handleKeyDown}
     >
       <div className="mg-mega-mobile-sidebar__header">
-        <span>{labels.menuLabel}</span>
         <button
           className="mg-mega-mobile-sidebar__close"
           onClick={onClose}
