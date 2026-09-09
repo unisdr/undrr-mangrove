@@ -70,7 +70,7 @@ stories/assets/scss/
   generated/_tokens-{brand}.scss  # Build output of `yarn build:tokens` — never edit
   _tokens-tabs.scss            # Tab token block
   _tokens-data-viz.scss        # Data-visualisation palettes
-  _fonts.scss                  # Web font imports
+  _fonts.scss                  # @font-face blocks and the Arabic script map
   _breakpoints.scss            # devicebreak() mixin
   _mixins.scss                 # Focus ring, vendor-prefix and utility mixins
   _utility.scss                # CSS utility classes
@@ -156,7 +156,7 @@ Type is the one place where the SCSS layer and the custom-property layer both ma
 | `$mg-font-face-arabic-display` | `"Noto Kufi Arabic", sans-serif` |
 | `$mg-font-face-arabic-sans` | `"Noto Sans Arabic", sans-serif` |
 
-**Roles** are CSS custom properties. Every component stylesheet reads a role; none reads a face. `_font-roles.scss` re-points the roles for Arabic, which is why no component carries a `:lang(ar)` font rule.
+**Roles** are CSS custom properties. Every component stylesheet reads a role; none reads a face. `_fonts.scss` re-points the roles for Arabic, which is why no component carries a `:lang(ar)` font rule.
 
 | Role | Latin | Arabic |
 |------|-------|--------|
@@ -292,6 +292,7 @@ If you only need specific components, import the partials directly. The full lis
 ```scss
 // Import base dependencies first
 @import "stories/assets/scss/variables";
+@import "stories/assets/scss/fonts";
 @import "stories/assets/scss/breakpoints";
 @import "stories/assets/scss/mixins";
 @import "stories/assets/scss/foundational";
@@ -305,7 +306,7 @@ If you only need specific components, import the partials directly. The full lis
 
 Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Import those first or the build fails.
 
-`_foundational.scss` earns its place in that list twice over: it carries the base typography, and it imports `_font-roles.scss`, which re-points the roles for Arabic. Drop it and the roles still resolve, but only to their Latin faces — Arabic text asks for Roboto, which has no Arabic coverage, and every glyph falls back to whatever the reader's OS supplies. Nothing warns you.
+`_fonts.scss` earns its place in that list twice over: it declares the `@font-face` blocks, and it carries the Arabic script map that re-points the roles. Drop it and the roles still resolve, but only to their Latin faces — Arabic text asks for Roboto, which has no Arabic coverage, and every glyph falls back to whatever the reader's OS supplies. Nothing warns you. Import it exactly once: Sass's legacy `@import` re-emits, so a second import would duplicate all 32 `@font-face` blocks.
 
 This import list is checked by a test that compiles it and asserts both halves: the roles defined ahead of their first use, and the Arabic map present. If you shorten it, expect Times New Roman or an unstyled Arabic page.
 

@@ -22,10 +22,12 @@
  *     computed-value time, the declaration is dropped, and the element falls
  *     back to Times. This actually happened twice during #1098. The mirror
  *     failure is worse because it is not invalid at all: the shared import
- *     list every UNDRR Drupal theme compiles reaches `_foundational.scss` and
- *     no entry point, so it once carried the Latin map with no Arabic map
- *     behind it, and every Arabic glyph on every production site fell back to
- *     the OS default. See `describe('the shared Drupal import list')`.
+ *     list every UNDRR Drupal theme compiles reaches `_fonts.scss`,
+ *     `_foundational.scss` and `_utility.scss` and no entry point, so while
+ *     the Arabic map lived in a file only the entry points reached it carried
+ *     the Latin map with no Arabic map behind it, and every Arabic glyph on
+ *     every production site fell back to the OS default. See
+ *     `describe('the shared Drupal import list')`.
  *  3. Sass variables a consumer sets before the import. The removed names are
  *     silent no-ops now, so the removal is only safe while the `@warn` guard
  *     covers every one of them.
@@ -350,11 +352,12 @@ describe('the roles resolve to the intended faces', () => {
 
 describe('the documented per-component Sass recipe', () => {
   /**
-   * SassIntegration.mdx tells consumers they may import `variables`,
+   * SassIntegration.mdx tells consumers they may import `variables`, `fonts`,
    * `breakpoints`, `mixins`, `foundational` and then individual components —
-   * no `style*.scss` entry point. That path never reaches `_font-roles.scss`.
-   * Before #1098's fix round it compiled to twelve role references and zero
-   * definitions, and rendered every element in Times.
+   * no `style*.scss` entry point. Before #1098's fix round it compiled to
+   * twelve role references and zero definitions, and rendered every element in
+   * Times; before this round it omitted `fonts`, so it carried neither the
+   * `@font-face` blocks nor the Arabic script map.
    *
    * The recipe is read out of the doc rather than retyped, so a doc edit that
    * changes the supported path is checked against the SCSS rather than
@@ -428,13 +431,14 @@ describe('the documented per-component Sass recipe', () => {
  * `undrr_common/scss/_mangrove-components.scss` in the Drupal platform repo is
  * the shared list every UNDRR theme builds — twelve of them. It imports
  * `fonts`, `breakpoints`, `mixins`, `foundational`, `utility` and then the
- * component partials one by one. It imports NO `style*.scss` entry point, and
- * no theme imports `font-roles` either.
+ * component partials one by one. It imports NO `style*.scss` entry point.
  *
- * Until unisdr/undrr-mangrove#1098's fix wave, `_font-roles.scss` was reachable
- * only from the entry points — which is what Storybook and `yarn scss` build,
- * and is why three reviews and a green suite missed it. Every production site
- * shipped the role definitions with no Arabic map behind them.
+ * Until unisdr/undrr-mangrove#1098's fix wave the Arabic script map lived in a
+ * separate `_font-roles.scss` reachable only from the entry points — which is
+ * what Storybook and `yarn scss` build, and is why three reviews and a green
+ * suite missed it. Every production site shipped the role definitions with no
+ * Arabic map behind them. The map now lives in `_fonts.scss`, which this list
+ * names in its own right.
  *
  * This suite therefore compiles the consumer's shape rather than Mangrove's.
  * The list below is deliberately a re-statement, not a read of the consumer
@@ -499,15 +503,45 @@ describe('the shared Drupal import list', () => {
   });
 
   test('emits the script map exactly once', () => {
-    // `_font-roles.scss` is imported from `_foundational.scss` AND from every
-    // entry point, so a build that reaches both would emit it twice without the
-    // `$mg-font-roles-emitted` guard. Duplicated rules are not a rendering bug,
-    // but they are dead weight in a file every UNDRR page loads, and a second
-    // copy would mask an ordering mistake in the first.
+    // `_fonts.scss` carries the map and the `@font-face` blocks, and Sass's
+    // legacy `@import` re-emits, so any build path that reaches it twice would
+    // duplicate both. Duplicated rules are not a rendering bug, but they are
+    // dead weight in a file every UNDRR page loads, and a second copy would
+    // mask an ordering mistake in the first.
     const once = css => (css.match(/:root:lang\(ar\)\s*\{/g) || []).length;
 
     expect(once(consumerCss)).toBe(1);
     for (const entry of BUNDLES) expect(once(compile(entry))).toBe(1);
+  });
+
+  test('emits every @font-face block exactly once', () => {
+    // The guard the map used to carry cannot be extended to the faces: Sass
+    // forbids `@import` inside `@if`, so `_fonts.scss` cannot make itself
+    // idempotent. Importing it twice — from an entry point and again from a
+    // partial that entry point pulls in — silently doubles 32 `@font-face`
+    // blocks in a file every UNDRR page loads. Counting them here is what
+    // keeps "import _fonts.scss exactly once" enforceable.
+    const faceKeys = css =>
+      [...css.matchAll(/@font-face\s*\{([\s\S]*?)\}/g)].map(block =>
+        ['font-family', 'font-weight', 'font-style', 'src', 'unicode-range']
+          .map(prop => {
+            const found = new RegExp(`${prop}:\\s*([^;]+);`).exec(block[1]);
+            return found ? found[1].trim() : '';
+          })
+          .join('|')
+      );
+
+    for (const [name, css] of [
+      ['the consumer import list', consumerCss],
+      ...BUNDLES.map(entry => [entry, compile(entry)]),
+    ]) {
+      const keys = faceKeys(css);
+      expect(keys.length).toBeGreaterThan(0);
+      expect({ name, duplicates: keys.length - new Set(keys).size }).toEqual({
+        name,
+        duplicates: 0,
+      });
+    }
   });
 });
 

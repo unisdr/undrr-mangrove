@@ -1,14 +1,3 @@
-// Script routing for the font roles. Imported here, not only from the
-// style*.scss entry points, because _foundational.scss is what real consumers
-// import: the shared Drupal import list
-// (undrr_common/scss/_mangrove-components.scss) pulls in fonts, breakpoints,
-// mixins, foundational and utility and reaches no entry point. Without this
-// line every production site compiled the Arabic rules below with no Arabic
-// map behind them. _font-roles.scss guards itself against a second emission,
-// so the entry points keep their own import and nothing is emitted twice.
-// See unisdr/undrr-mangrove#1098.
-@import "./font-roles";
-
 /* typography start */
 *,
 *::before,
@@ -77,6 +66,14 @@ caption {
 // the same matched declaration before #1098, no `ui` container needs to claim
 // its own subtree: a heading nested in `.mg-card__title` or `.mg-hero__title`
 // resolves exactly as it did on main.
+
+// This rule reads the `heading` role, which _variables.scss defines as the
+// Latin face and _fonts.scss re-points to Noto Kufi Arabic. Compile
+// _foundational.scss without _fonts.scss and the rule still matches but
+// resolves to Roboto, which has no Arabic coverage. Every documented import
+// list names both; _fonts.scss does not import itself into this file, because
+// the entry points already import it and Sass's legacy `@import` would emit its
+// 32 `@font-face` blocks a second time.
 h1:lang(ar),
 h2:lang(ar),
 h3:lang(ar) {

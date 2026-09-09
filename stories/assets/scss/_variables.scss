@@ -160,9 +160,9 @@ $mg-font-line-height-700: 1.5em;
 // common case for the licensed brand faces the `!default` escape hatch exists
 // to admit. `meta.inspect()` renders the list the way Sass wrote it.
 
-// It lives here, and _font-roles.scss calls it rather than importing
-// `sass:meta` itself: both files are pulled into one scope by the legacy
-// `@import` chain, and two `@use "sass:meta"` rules in that scope collide.
+// It lives here, and _fonts.scss calls it rather than importing `sass:meta`
+// itself: both files are pulled into one scope by the legacy `@import` chain,
+// and two `@use "sass:meta"` rules in that scope collide.
 // See unisdr/undrr-mangrove#1098.
 @function mg-font-stack($stack) {
   @return meta.inspect($stack);
@@ -170,7 +170,7 @@ $mg-font-line-height-700: 1.5em;
 
 // Faces name what fonts exist. Roles (--mg-font-family-text / -heading /
 // -display / -ui / -code) name the reader's task and are mapped onto these
-// faces per script in _font-roles.scss. No component stylesheet may name a
+// faces per script in _fonts.scss. No component stylesheet may name a
 // face: it references a role. See unisdr/undrr-mangrove#1098.
 
 // Faces keep `!default` so a consumer compiling Mangrove from source can swap
@@ -232,11 +232,11 @@ $mg-tabs-border-bottom: true !default;
 // Tokens deliberately NOT in the token sources.
 // - The font roles are bound to faces here because every supported build path
 //   reaches _variables.scss, including the per-component Sass recipe in
-//   SassIntegration.mdx, which imports no entry point and therefore never sees
-//   _font-roles.scss. A role reference with no definition is invalid at
+//   SassIntegration.mdx. A role reference with no definition is invalid at
 //   computed-value time, so the whole declaration is dropped and the element
 //   loses its family. Component stylesheets carry no var() fallbacks, so this
-//   block is what makes that safe. Script routing stays in _font-roles.scss.
+//   block is what makes that safe. Script routing stays in _fonts.scss, which
+//   that recipe imports for the @font-face blocks anyway.
 // - The Sendai ramp and the legacy one-off colours predate the naming
 //   convention, carry their own prefixes, and no theme overrides them.
 // - The status-label and empty-state blocks are component tokens with no
@@ -245,7 +245,7 @@ $mg-tabs-border-bottom: true !default;
   // Font roles. Faces above say what fonts exist; roles say what job the type
   // is doing. Latin: text and heading are both Roboto, display and ui are both
   // Roboto Condensed, so this indirection renders identically to the faces it
-  // replaced. _font-roles.scss re-points these per script.
+  // replaced. _fonts.scss re-points these per script.
   // See unisdr/undrr-mangrove#1098.
   --mg-font-family-text: #{mg-font-stack($mg-font-face-sans)};
   --mg-font-family-heading: #{mg-font-stack($mg-font-face-sans)};

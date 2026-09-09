@@ -31,7 +31,7 @@ Consume a role the same way as any other Mangrove token:
 }
 ```
 
-The roles are defined on `:root` in `_variables.scss`, and the Arabic script map in `_font-roles.scss` is imported from the top of `_foundational.scss`. Between them, every supported build path gets both halves — including the per-component Sass recipe in the <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, which imports no `style*.scss` entry point. That matters more than it sounds: the shared import list every UNDRR Drupal theme compiles reaches `_foundational.scss` and no entry point, and a build with the role definitions but no script map renders Arabic in Roboto, which has no Arabic coverage at all. Component stylesheets carry no `var()` fallbacks and do not need any.
+The roles are defined on `:root` in `_variables.scss`, and the Arabic script map lives in `_fonts.scss` alongside the `@font-face` blocks. Between them, every supported build path gets both halves — including the per-component Sass recipe in the <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, which imports no `style*.scss` entry point. That matters more than it sounds: the shared import list every UNDRR Drupal theme compiles reaches `_foundational.scss` and no entry point, and a build with the role definitions but no script map renders Arabic in Roboto, which has no Arabic coverage at all. Component stylesheets carry no `var()` fallbacks and do not need any.
 
 ### Why the roles split the way they do
 
@@ -100,7 +100,7 @@ All font declarations use `font-display: swap` to prevent invisible text during 
 
 ## Language-specific fonts
 
-Script routing is a property of the roles, not of any component. One file, `_font-roles.scss`, re-points the roles for Arabic; nothing else in the library carries a `:lang(ar)` font rule.
+Script routing is a property of the roles, not of any component. One file, `_fonts.scss`, re-points the roles for Arabic; nothing else in the library carries a `:lang(ar)` font rule.
 
 ### How it works
 
@@ -214,7 +214,7 @@ Earlier alphas made that declaration unconditional and had `card.scss` and `hero
 
 ### Language boundaries
 
-`:lang()` matching stops at a `lang="en"` boundary, but that alone is not enough, because both `font-family` and custom properties **inherit**: a `lang="en"` island inside an Arabic page would keep the Arabic role values, and any element with no `font-family` of its own would keep the Arabic _used_ value regardless. Two zero-specificity rules in `_font-roles.scss` reassert both at the switch point only, using a child combinator so component children that inherit their container's face keep it.
+`:lang()` matching stops at a `lang="en"` boundary, but that alone is not enough, because both `font-family` and custom properties **inherit**: a `lang="en"` island inside an Arabic page would keep the Arabic role values, and any element with no `font-family` of its own would keep the Arabic _used_ value regardless. Two zero-specificity rules in `_fonts.scss` reassert both at the switch point only, using a child combinator so component children that inherit their container's face keep it.
 
 ```scss
 // A non-Arabic sub-root inside an Arabic page.

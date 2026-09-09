@@ -177,7 +177,7 @@ To activate the real gate from the Storybook story, pass `live` to `<PreviewAcce
 
 The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are set on the document:
 
-- The gate's headings and chrome read `var(--mg-font-family-ui)` and its body, error and contact copy read `var(--mg-font-family-text)`. Both roles resolve to Noto Sans Arabic under `lang="ar"`, because Roboto Condensed has no Arabic glyph coverage. The component carries no `:lang(ar)` rule of its own — routing lives in `_font-roles.scss`
+- The gate's headings and chrome read `var(--mg-font-family-ui)` and its body, error and contact copy read `var(--mg-font-family-text)`. Both roles resolve to Noto Sans Arabic under `lang="ar"`, because Roboto Condensed has no Arabic glyph coverage. The component carries no `:lang(ar)` rule of its own — routing lives in `_fonts.scss`
 - All visible copy comes from data attributes, so translations are a content-only change
 
 ## Implementation notes
