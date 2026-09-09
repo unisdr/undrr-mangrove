@@ -44,16 +44,18 @@ describe('mobile progressive menu', () => {
     expect(
       within(dialog).getByRole('heading', { name: 'About' })
     ).toHaveFocus();
-    expect(
-      within(dialog).getByRole('link', { name: 'About overview' })
-    ).toHaveAttribute('href', '/about');
+    expect(within(dialog).getByRole('link', { name: 'About' })).toHaveAttribute(
+      'href',
+      '/about'
+    );
     expect(
       within(dialog).getByText('Authored introduction')
     ).toBeInTheDocument();
     fireEvent.click(within(dialog).getByRole('button', { name: 'News' }));
-    expect(
-      within(dialog).getByRole('link', { name: 'Overview' })
-    ).toHaveAttribute('href', '/news');
+    expect(within(dialog).getByRole('link', { name: 'News' })).toHaveAttribute(
+      'href',
+      '/news'
+    );
     expect(
       within(dialog).getByRole('link', { name: 'Awards' })
     ).toHaveAttribute('href', '/awards');
@@ -142,7 +144,7 @@ describe('mobile progressive menu', () => {
     const { dialog } = openMenu({ sections: data });
     fireEvent.click(within(dialog).getByRole('button', { name: 'Campaign' }));
     expect(
-      within(dialog).getByRole('link', { name: 'Overview' })
+      within(dialog).getByRole('link', { name: 'Campaign' })
     ).toHaveAttribute('href', '/campaign');
     expect(
       within(dialog).getByRole('link', { name: 'Join us' })

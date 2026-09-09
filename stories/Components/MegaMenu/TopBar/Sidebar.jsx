@@ -191,15 +191,17 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
           tabIndex={-1}
           className="mg-mega-mobile-sidebar__title"
         >
-          {current?.title || labels.allSectionsLabel}
+          {overviewUrl ? (
+            <a
+              className="mg-mega-mobile-sidebar__title-link"
+              href={overviewUrl}
+            >
+              {current.title}
+            </a>
+          ) : (
+            current?.title || labels.allSectionsLabel
+          )}
         </h2>
-        {overviewUrl && (
-          <a className="mg-mega-mobile-sidebar__overview" href={overviewUrl}>
-            {!current.url
-              ? current.bannerButton?.label || labels.overviewLabel
-              : labels.overviewLabel}
-          </a>
-        )}
         {current?.url &&
           current.bannerButton?.url &&
           current.url !== current.bannerButton.url && (

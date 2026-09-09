@@ -931,6 +931,13 @@
     }
   }
 
+  .mg-mega-mobile-sidebar__title-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.12em;
+  }
+
   .mg-mega-mobile-sidebar__overview {
     display: inline-flex;
     align-items: center;
