@@ -619,6 +619,27 @@ export const SimpleNav = {
 
 export const ProgressiveMobile = {
   name: 'Progressive mobile navigation',
+  render: args => (
+    <>
+      <MegaMenu {...args} />
+      <main
+        style={{
+          minHeight: '100vh',
+          padding: 'var(--mg-spacing-300)',
+          background: 'rgb(var(--mg-color-interactive) / 0.08)',
+        }}
+      >
+        <h1>Knowledge for a resilient future</h1>
+        <p>
+          Explore resources, research and practical guidance for reducing
+          disaster risk.
+        </p>
+        <h2>Latest publications</h2>
+        <p>Discover evidence and insights from communities around the world.</p>
+        <a href="#resources">Explore resources</a>
+      </main>
+    </>
+  ),
   globals: { viewport: { value: 'iphone12', isRotated: false } },
   args: { sections },
   parameters: {

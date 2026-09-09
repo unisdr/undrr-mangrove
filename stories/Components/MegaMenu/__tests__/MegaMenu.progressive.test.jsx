@@ -59,7 +59,7 @@ describe('mobile progressive menu', () => {
     expect(
       within(dialog).getByRole('link', { name: 'Awards' })
     ).toHaveAttribute('href', '/awards');
-    fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Back' }));
     expect(within(dialog).getByRole('button', { name: 'News' })).toHaveFocus();
   });
 
@@ -68,9 +68,7 @@ describe('mobile progressive menu', () => {
     dialog.scrollTop = 180;
     fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));
     expect(dialog.scrollTop).toBe(0);
-    fireEvent.click(
-      within(dialog).getByRole('button', { name: 'All sections' })
-    );
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Back' }));
     expect(dialog.scrollTop).toBe(180);
     expect(within(dialog).getByRole('button', { name: 'About' })).toHaveFocus();
     fireEvent.keyDown(dialog, { key: 'Escape' });
@@ -164,6 +162,31 @@ describe('mobile progressive menu', () => {
     expect(
       within(dialog).getByRole('heading', { name: 'All sections' })
     ).toHaveFocus();
+  });
+
+  it('keeps only an inert exit surface and cancels its timer when reopened', () => {
+    jest.useFakeTimers();
+    try {
+      const { dialog, opener } = openMenu();
+      fireEvent.click(
+        within(dialog).getByRole('button', { name: 'Close mobile navigation' })
+      );
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(dialog).not.toHaveAttribute('hidden');
+      expect(dialog).toHaveAttribute('inert');
+      expect(document.body.style.overflow).toBe('');
+      fireEvent.click(opener);
+      act(() => jest.advanceTimersByTime(200));
+      expect(screen.getByRole('dialog')).toBe(dialog);
+      expect(dialog).not.toHaveAttribute('inert');
+      fireEvent.click(
+        within(dialog).getByRole('button', { name: 'Close mobile navigation' })
+      );
+      act(() => jest.advanceTimersByTime(200));
+      expect(dialog).toHaveAttribute('hidden');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('has no axe violations in the overview and section dialog', async () => {

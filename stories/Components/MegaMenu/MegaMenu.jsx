@@ -39,6 +39,7 @@ export const DEFAULT_MEGAMENU_LABELS = {
   navLabel: 'Main Navigation',
   closeMobileNavLabel: 'Close mobile navigation',
   menuLabel: 'Menu',
+  backLabel: 'Back',
   allSectionsLabel: 'All sections',
   closeLabel: 'Close',
   overviewLabel: 'Overview',
@@ -64,12 +65,29 @@ const MegaMenu = ({
   const sidebarId = useId();
   const wrapperRef = useRef(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [retained, setRetained] = useState(false);
+  const present = showSidebar || retained;
   const [activeItem, setActiveItem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [jsActive, setJsActive] = useState(false);
 
   const itemListRef = useRef([]);
   const sectionListRef = useRef([]);
+
+  // Keep the surface mounted briefly for its exit transition, but release
+  // focus/scroll and remove it from interaction immediately when closed.
+  useEffect(() => {
+    if (showSidebar) {
+      setRetained(true);
+      return;
+    }
+    if (!retained) return;
+    const reduced = window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const timeout = setTimeout(() => setRetained(false), reduced ? 0 : 180);
+    return () => clearTimeout(timeout);
+  }, [showSidebar, retained]);
 
   // Refs for timeout management
   const closeTimeoutRef = useRef(null);
@@ -152,7 +170,7 @@ const MegaMenu = ({
   return (
     <nav
       ref={wrapperRef}
-      className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${showSidebar ? ' mg-mega-wrapper--mobile-open' : ''}`}
+      className={`mg-mega-wrapper${jsActive ? ' mg-mega-wrapper--js-active' : ''}${present ? ' mg-mega-wrapper--mobile-open' : ''}`}
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleEscape}
       aria-label={navLabel}
@@ -176,9 +194,10 @@ const MegaMenu = ({
       />
 
       {/* Backdrop overlay – closes sidebar on click */}
-      {showSidebar && (
+      {present && (
         <button
-          className="mg-mega-mobile-sidebar-overlay"
+          className={`mg-mega-mobile-sidebar-overlay${showSidebar ? ' mg-mega-mobile-sidebar-overlay--open' : ''}`}
+          aria-hidden={!showSidebar}
           aria-label={closeMobileNavLabel}
           tabIndex={-1}
           onClick={() => setShowSidebar(false)}
@@ -190,6 +209,7 @@ const MegaMenu = ({
         id={sidebarId}
         labels={resolvedLabels}
         onClose={() => setShowSidebar(false)}
+        present={present}
         open={showSidebar}
         sections={sections}
       />
@@ -237,6 +257,7 @@ MegaMenu.propTypes = {
     navLabel: PropTypes.string,
     closeMobileNavLabel: PropTypes.string,
     menuLabel: PropTypes.string,
+    backLabel: PropTypes.string,
     allSectionsLabel: PropTypes.string,
     closeLabel: PropTypes.string,
     overviewLabel: PropTypes.string,

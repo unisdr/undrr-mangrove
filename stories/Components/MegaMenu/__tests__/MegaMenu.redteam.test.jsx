@@ -38,7 +38,9 @@ describe('MegaMenu red-team regressions', () => {
       },
     ]);
     fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));
-    const back = within(dialog).getByRole('button', { name: 'All sections' });
+    const back = within(dialog).getByRole('button', {
+      name: 'Close mobile navigation',
+    });
     back.focus();
     fireEvent.keyDown(back, { key: 'Tab', shiftKey: true });
     expect(within(dialog).getByText('Outer disclosure')).toHaveFocus();
@@ -91,7 +93,7 @@ describe('MegaMenu red-team regressions', () => {
     fireEvent(input, tab);
     expect(tab.defaultPrevented).toBe(true);
     expect(
-      within(dialog).getByRole('button', { name: 'All sections' })
+      within(dialog).getByRole('button', { name: 'Close mobile navigation' })
     ).toHaveFocus();
   });
 

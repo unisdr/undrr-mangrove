@@ -4,7 +4,14 @@ const EMPTY_PATH = [];
 
 // Ordinary navigation links and drill-in buttons deliberately use native Tab
 // behaviour, rather than application-menu roles and roving tabindex.
-export function Sidebar({ sections, open, onClose, labels, id }) {
+export function Sidebar({
+  sections,
+  open,
+  present = open,
+  onClose,
+  labels,
+  id,
+}) {
   const [path, setPath] = useState(EMPTY_PATH);
   const openerRef = useRef(null);
   const dialogRef = useRef(null);
@@ -14,11 +21,9 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
   const returningRef = useRef(null);
   const titleId = useId();
   let current = null;
-  let parent = null;
   let items = sections;
   let validPath = true;
   for (const index of path) {
-    parent = current;
     current = items?.[index];
     if (!current) {
       validPath = false;
@@ -43,10 +48,11 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
         : openerRef.current;
       if (openerRef.current) target?.focus();
       openerRef.current = null;
-      setPath(EMPTY_PATH);
-      historyRef.current = [];
       return;
     }
+    setPath(EMPTY_PATH);
+    historyRef.current = [];
+    returningRef.current = null;
     const opener =
       dialogRef.current
         .closest('.mg-mega-wrapper')
@@ -67,6 +73,14 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
       if (opener?.isConnected) opener.focus();
     };
   }, [open]);
+
+  useLayoutEffect(() => {
+    if (!present) {
+      setPath(EMPTY_PATH);
+      historyRef.current = [];
+      returningRef.current = null;
+    }
+  }, [present]);
 
   useLayoutEffect(() => {
     if (!open) return;
@@ -161,20 +175,13 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
       role="dialog"
       aria-modal={open ? 'true' : undefined}
       aria-labelledby={titleId}
-      hidden={!open}
+      hidden={!present}
+      aria-hidden={!open}
+      inert={!open ? true : undefined}
       onKeyDown={handleKeyDown}
     >
       <div className="mg-mega-mobile-sidebar__header">
-        {path.length > 0 ? (
-          <button className="mg-mega-mobile-sidebar__back" onClick={back}>
-            <span className="mg-mega-mobile-sidebar__arrow" aria-hidden="true">
-              ←
-            </span>
-            {parent?.title || labels.allSectionsLabel}
-          </button>
-        ) : (
-          <span>{labels.menuLabel}</span>
-        )}
+        <span>{labels.menuLabel}</span>
         <button
           className="mg-mega-mobile-sidebar__close"
           onClick={onClose}
@@ -188,6 +195,14 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
         className={`mg-mega-mobile-sidebar__page${path.length ? ' mg-mega-mobile-sidebar__page--section' : ''}`}
         key={path.join('-')}
       >
+        {path.length > 0 && (
+          <button className="mg-mega-mobile-sidebar__back" onClick={back}>
+            <span className="mg-mega-mobile-sidebar__arrow" aria-hidden="true">
+              ←
+            </span>
+            {labels.backLabel}
+          </button>
+        )}
         <h2
           id={titleId}
           ref={headingRef}

@@ -819,25 +819,40 @@
 // desktop classes and the full-strip opening target remain compatible.
 .mg-mega-mobile-sidebar--progressive {
   position: fixed;
-  inset: 0;
+  inset: 0 0 auto;
   width: 100%;
-  height: 100vh;
-  /* stylelint-disable-next-line unit-allowed-list -- track mobile browser chrome */
-  height: 100dvh;
-  max-height: none;
+  height: auto;
+
+  --mg-mega-mobile-viewport: 90vh;
+
+  min-height: min(400px, var(--mg-mega-mobile-viewport));
+  max-height: min(700px, var(--mg-mega-mobile-viewport));
+
+  /* stylelint-disable unit-allowed-list -- dynamic viewport leaves a dismiss area above browser chrome */
+  @supports (height: 100dvh) {
+    --mg-mega-mobile-viewport: 90dvh;
+  }
+  /* stylelint-enable unit-allowed-list */
   background: rgb(var(--mg-color-neutral-0));
   color: rgb(var(--mg-color-text));
   z-index: var(--mg-z-index-modal);
   overscroll-behavior: contain;
-  transform: none;
-  transition: none;
+  opacity: 0;
+  transform: translateX(var(--mg-mega-enter-offset, 8px));
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+  pointer-events: none;
 
   &[hidden] {
     display: none;
   }
 
   &.mg-mega-mobile-sidebar--open {
-    transform: none;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    animation: mg-mega-surface-enter 180ms ease-out;
   }
 
   .mg-mega-mobile-sidebar__header {
@@ -852,6 +867,11 @@
     padding-top: max(var(--mg-spacing-100), env(safe-area-inset-top));
     background: rgb(var(--mg-color-neutral-0));
     box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-600) / 0.2);
+  }
+
+  .mg-mega-mobile-sidebar__page > .mg-mega-mobile-sidebar__back {
+    margin-block: calc(-1 * var(--mg-spacing-100)) var(--mg-spacing-150);
+    margin-inline-start: calc(-1 * var(--mg-spacing-50));
   }
 
   .mg-mega-mobile-sidebar__back,
@@ -1021,4 +1041,68 @@
 // neighbouring sticky page tools cannot cover its close control.
 .mg-mega-wrapper--mobile-open {
   z-index: var(--mg-z-index-modal);
+}
+
+@keyframes mg-mega-surface-enter {
+  from {
+    opacity: 0;
+    transform: translateX(var(--mg-mega-enter-offset, 8px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mg-mega-mobile-sidebar-overlay {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  background: rgb(var(--mg-color-black) / 0.16);
+
+  &--open {
+    opacity: 1;
+    pointer-events: auto;
+    animation: mg-mega-backdrop-enter 180ms ease-out;
+  }
+}
+
+@keyframes mg-mega-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@supports (backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px)) {
+  .mg-mega-mobile-sidebar--progressive {
+    background: rgb(var(--mg-color-neutral-0) / 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce),
+  (prefers-contrast: more),
+  (prefers-reduced-transparency: reduce),
+  (forced-colors: active) {
+  .mg-mega-mobile-sidebar--progressive {
+    background: rgb(var(--mg-color-neutral-0));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: none;
+    animation: none;
+
+    &.mg-mega-mobile-sidebar--open,
+    .mg-mega-mobile-sidebar__page {
+      animation: none;
+    }
+  }
+
+  .mg-mega-mobile-sidebar-overlay {
+    transition: none;
+    animation: none;
+  }
 }
