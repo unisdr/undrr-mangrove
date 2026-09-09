@@ -937,6 +937,19 @@
     }
   }
 
+  .mg-mega-mobile-sidebar__page--section .mg-mega-sidebar-section__item {
+    min-height: mg-rem(44);
+    padding-block: var(--mg-spacing-100);
+    font-family: $mg-font-family;
+    font-size: $mg-font-size-300;
+    font-weight: 400;
+    line-height: 1.5;
+
+    &:lang(ar) {
+      font-family: $mg-font-family-arabic-body;
+    }
+  }
+
   .mg-mega-mobile-sidebar__title-link {
     color: inherit;
     text-decoration: underline;
@@ -963,7 +976,8 @@
     @include mg-focus-ring-inset;
   }
 
-  .mg-mega-mobile-sidebar__arrow {
+  .mg-mega-mobile-sidebar__arrow,
+  .mg-mega-mobile-sidebar__chevron {
     flex-shrink: 0;
 
     &:dir(rtl) {

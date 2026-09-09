@@ -184,7 +184,10 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
           <span aria-hidden="true">×</span>
         </button>
       </div>
-      <div className="mg-mega-mobile-sidebar__page" key={path.join('-')}>
+      <div
+        className={`mg-mega-mobile-sidebar__page${path.length ? ' mg-mega-mobile-sidebar__page--section' : ''}`}
+        key={path.join('-')}
+      >
         <h2
           id={titleId}
           ref={headingRef}
@@ -223,12 +226,21 @@ export function Sidebar({ sections, open, onClose, labels, id }) {
                     onClick={() => enter(index)}
                   >
                     {item.title}
-                    <span
-                      className="mg-mega-mobile-sidebar__arrow"
+                    <svg
+                      className="mg-mega-mobile-sidebar__chevron"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       aria-hidden="true"
+                      focusable="false"
                     >
-                      →
-                    </span>
+                      <path d="m9 6 6 6-6 6" />
+                    </svg>
                   </button>
                 ) : (
                   <a
