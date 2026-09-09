@@ -57,7 +57,7 @@ const words = {
   },
 };
 
-function DemoForm({ text, preferences = false }) {
+function DemoForm({ text, preferences = false, tone = 'strong' }) {
   const [submitted, setSubmitted] = useState(false);
   const id = useId();
   return (
@@ -69,8 +69,9 @@ function DemoForm({ text, preferences = false }) {
         setSubmitted(true);
       }}
       style={{
-        padding: 'var(--mg-spacing-200)',
-        background: 'rgb(var(--mg-color-neutral-0))',
+        padding: tone === 'soft' ? 0 : 'var(--mg-spacing-200)',
+        background:
+          tone === 'soft' ? 'transparent' : 'rgb(var(--mg-color-neutral-0))',
         color: 'rgb(var(--mg-color-text))',
         borderRadius: 'var(--mg-card-border-radius)',
       }}
@@ -130,11 +131,13 @@ export default {
   parameters: { layout: 'padded' },
   args: {
     variant: 'primary',
+    tone: 'strong',
     centered: false,
     headlineSize: '700',
     padding: 'clamp(1rem, 4vw, 2rem)',
   },
   argTypes: {
+    tone: { control: 'inline-radio', options: ['strong', 'soft'] },
     variant: {
       control: 'inline-radio',
       options: ['primary', 'secondary', 'tertiary', 'quaternary'],
@@ -192,6 +195,7 @@ export const WithImage = {
   },
 };
 export const Newsletter = {
+  args: { tone: 'soft' },
   render: (args, { globals }) => {
     const text = words[globals.locale] || words.english;
     return (
@@ -201,12 +205,13 @@ export const Newsletter = {
         headline={text.news}
         text={text.newsText}
       >
-        <DemoForm key={globals.locale} text={text} />
+        <DemoForm key={globals.locale} text={text} tone={args.tone} />
       </TextCta>
     );
   },
 };
 export const NewsletterWithPreferences = {
+  args: { tone: 'soft' },
   render: (args, { globals }) => {
     const text = words[globals.locale] || words.english;
     return (
@@ -216,7 +221,12 @@ export const NewsletterWithPreferences = {
         headline={text.news}
         text={text.newsText}
       >
-        <DemoForm key={globals.locale} text={text} preferences />
+        <DemoForm
+          key={globals.locale}
+          text={text}
+          preferences
+          tone={args.tone}
+        />
       </TextCta>
     );
   },

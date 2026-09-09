@@ -37,6 +37,7 @@ export function TextCta({
   text,
   buttons = EMPTY_BUTTONS,
   variant = 'primary',
+  tone = 'strong',
   backgroundColor,
   padding,
   image,
@@ -55,6 +56,7 @@ export function TextCta({
       className={cls(
         'mg-cta',
         variant && `mg-cta--${variant}`,
+        tone === 'soft' && 'mg-cta--soft',
         layout === 'inline' && 'mg-cta--inline',
         hasImage && 'mg-cta--with-image',
         !hasImage && centered && layout !== 'inline' && 'mg-cta--centered',
@@ -129,6 +131,8 @@ export function TextCta({
 TextCta.propTypes = {
   /** Composed content, such as a form. Rendered after copy and before buttons. */
   children: PropTypes.node,
+  /** Strong colour surface or pale accent surface with dark text. */
+  tone: PropTypes.oneOf(['strong', 'soft']),
   /** Optional short label above the headline */
   eyebrow: PropTypes.string,
   /** Banner heading text */

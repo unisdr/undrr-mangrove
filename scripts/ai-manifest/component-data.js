@@ -930,10 +930,11 @@ npm run build</code></pre>
   // --- CTA ---
   'components-cta': {
     description:
-      'Call-to-action banner with heading, rich text body, action buttons, and optional image. Four color variants (primary, secondary, tertiary, quaternary) plus custom backgroundColor override. Supports centered and side-by-side (with image) layouts.',
+      'Call-to-action banner with heading, rich text body, action buttons, and optional image. Four color variants (primary, secondary, tertiary, quaternary), strong or soft accent tone, and custom backgroundColor override. Supports centered and side-by-side (with image) layouts.',
     cssClasses: [
       'mg-cta',
       'mg-cta--primary',
+      'mg-cta--soft',
       'mg-cta--secondary',
       'mg-cta--tertiary',
       'mg-cta--quaternary',

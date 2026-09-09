@@ -13,6 +13,15 @@ A full-width call-to-action banner with heading, rich text body, and action butt
 
 <Canvas of={TextCtaStories.Default} />
 
+## Soft accent surface
+
+Use `tone="soft"` for a pale version of the selected accent with dark heading and
+body text. It works with each `variant`, including newsletter, image and ordinary
+button CTAs. `tone="strong"` remains the default. Static HTML uses `mg-cta--soft`;
+data-attribute integrations use `data-tone="soft"`.
+
+<Canvas of={TextCtaStories.Soft} />
+
 ## Secondary variant
 
 <Canvas of={TextCtaStories.Secondary} />
@@ -72,6 +81,7 @@ Use the `padding` prop to override the theme default. Combined here with `headli
 | `text`            | String  | -           | Body text (HTML supported via `dangerouslySetInnerHTML`)                             |
 | `children` | React node | — | Composed content below the copy, before any buttons. Supply a native form or other content; the CTA does not manage its behaviour. |
 | `buttons`         | Array   | `[]`        | Array of button objects: `{ label, url, type }`                                      |
+| `tone` | String | `'strong'` | Surface emphasis: `'strong'` or `'soft'`. Soft uses a pale accent wash with dark text and normal button styling. |
 | `variant`         | String  | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'`              |
 | `backgroundColor` | String  | -           | Custom CSS background color (overrides variant)                                      |
 | `padding`         | String  | -           | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token                          |
@@ -162,7 +172,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
-- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Explored in the CTA block prototype alongside the original newsletter pattern. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
+- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Added a reusable soft accent tone with dark text, normal buttons and `data-tone` support. Explored in the CTA block prototype alongside the original newsletter pattern. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
 
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Added an optional eyebrow and responsive inline content/action layout for wide promotional banners.

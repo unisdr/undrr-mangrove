@@ -276,3 +276,10 @@ describe('composed CTA content', () => {
     expect(container.querySelector('.mg-cta__custom-content')).not.toBeInTheDocument();
   });
 });
+
+test('soft tone composes with accent variant without changing the default', () => {
+  const { container, rerender } = render(<TextCta headline="Updates" tone="soft" variant="secondary" />);
+  expect(container.querySelector('section')).toHaveClass('mg-cta--soft', 'mg-cta--secondary');
+  rerender(<TextCta headline="Updates" />);
+  expect(container.querySelector('section')).not.toHaveClass('mg-cta--soft');
+});

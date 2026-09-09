@@ -96,3 +96,13 @@ export const ExtraPadding = {
     padding: '8rem 0',
   },
 };
+
+export const Soft = {
+  args: {
+    headline: 'Stay connected',
+    text: '<p>Discover the latest ideas, research and opportunities to reduce disaster risk.</p>',
+    buttons: [{ label: 'Explore updates', url: '#' }],
+    tone: 'soft',
+    centered: false,
+  },
+};

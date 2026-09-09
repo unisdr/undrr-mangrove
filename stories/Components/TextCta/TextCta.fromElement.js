@@ -21,6 +21,7 @@ export default function textCtaFromElement(container) {
     text: dataset.text || '',
     buttons,
     variant: dataset.variant || 'primary',
+    tone: dataset.tone === 'soft' ? 'soft' : 'strong',
     backgroundColor: dataset.backgroundColor || undefined,
     padding: dataset.padding || undefined,
     image: dataset.image || undefined,

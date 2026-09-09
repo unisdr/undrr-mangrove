@@ -31,9 +31,9 @@ leads to the PreventionWeb homepage.
 
 ## Newsletter signup
 
-The same shell accepts an independently composed FormAction. The white form
-surface is supplied by the example, so labels and controls keep their normal
-contrast against the coloured CTA. Submissions only display a local demo message.
+The same shell accepts an independently composed FormAction. Newsletter examples default to the pale `soft` tone with dark text. Switch
+`tone` to `strong` to compare the coloured banner; that version supplies a white
+form surface to keep controls legible. Submissions only display a local demo message.
 
 <Canvas of={Stories.Newsletter} />
 
@@ -61,7 +61,7 @@ The current TextCta hydrator does not preserve arbitrary form children: do not
 apply its hydration marker to this composition. Provider integrations should keep
 ownership of their markup and behaviour.
 
-Use the theme, colour and locale controls to compare these examples. This is a
+Use the tone, theme, colour and locale controls to compare these examples. This is a
 layout exploration; the original newsletter prototype has the fuller simulated
 error/confirmation journey.
 

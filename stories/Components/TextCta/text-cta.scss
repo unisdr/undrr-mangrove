@@ -1,6 +1,8 @@
 /* CTA banner start */
 
 .mg-cta {
+  --mg-cta-accent: var(--mg-color-hero);
+
   padding: var(--mg-cta-padding);
   background-color: var(--mg-cta-bg, initial);
 
@@ -133,59 +135,91 @@
 
   // Color variants — same system as Hero
   &--primary {
+    --mg-cta-accent: var(--mg-color-hero);
+
     background-color: rgb(var(--mg-color-hero));
   }
 
   &--secondary {
+    --mg-cta-accent: var(--mg-color-hero--secondary);
+
     background-color: rgb(var(--mg-color-hero--secondary));
   }
 
   &--tertiary {
+    --mg-cta-accent: var(--mg-color-hero--tertiary);
+
     background-color: rgb(var(--mg-color-hero--tertiary));
   }
 
   &--quaternary {
+    --mg-cta-accent: var(--mg-color-hero--quaternary);
+
     background-color: rgb(var(--mg-color-hero--quaternary));
   }
 
-  // Button overrides for dark backgrounds (matches Hero pattern)
-  a.mg-button,
-  a.mg-button:hover,
-  a.mg-button:visited {
-    color: rgb(var(--mg-color-hero));
-  }
-
-  a.mg-button-primary {
+  &--soft {
     background-color: rgb(var(--mg-color-neutral-0));
+    background-image: linear-gradient(
+      rgb(var(--mg-cta-accent) / 0.08),
+      rgb(var(--mg-cta-accent) / 0.08)
+    );
+
+    .mg-cta__eyebrow,
+    .mg-cta__headline {
+      color: rgb(var(--mg-color-neutral-900));
+    }
+
+    .mg-cta__text {
+      color: rgb(var(--mg-color-neutral-800));
+
+      a {
+        color: rgb(var(--mg-color-interactive));
+      }
+    }
   }
 
-  a.mg-button-secondary,
-  a.mg-button-secondary:hover,
-  a.mg-button-secondary:visited {
-    background-color: var(--mg-color-hero-button-secondary-background);
-    color: rgb(var(--mg-color-hero-button-secondary-color));
-    border-color: rgb(var(--mg-border-color-hero-button-secondary));
-  }
+  // Strong surfaces need inverse buttons; soft surfaces use normal buttons.
+  &:where(:not(.mg-cta--soft)) {
+    // Button overrides for dark backgrounds (matches Hero pattern)
+    a.mg-button,
+    a.mg-button:hover,
+    a.mg-button:visited {
+      color: rgb(var(--mg-color-hero));
+    }
 
-  a.mg-button.mg-button-outline,
-  a.mg-button.mg-button-outline:hover,
-  a.mg-button.mg-button-outline:visited {
-    background-color: transparent;
-    border-color: rgb(var(--mg-color-neutral-0) / 0.72);
-    border-style: solid;
-    border-width: var(--mg-border-width-button, 1px);
-    color: rgb(var(--mg-color-neutral-0));
-  }
+    a.mg-button-primary {
+      background-color: rgb(var(--mg-color-neutral-0));
+    }
 
-  a.mg-button.mg-button-outline:hover {
-    background-color: rgb(var(--mg-color-neutral-0) / 0.12);
-    border-color: rgb(var(--mg-color-neutral-0));
-  }
+    a.mg-button-secondary,
+    a.mg-button-secondary:hover,
+    a.mg-button-secondary:visited {
+      background-color: var(--mg-color-hero-button-secondary-background);
+      color: rgb(var(--mg-color-hero-button-secondary-color));
+      border-color: rgb(var(--mg-border-color-hero-button-secondary));
+    }
 
-  a.mg-button:focus-visible {
-    box-shadow: 0 0 0 2px rgb(var(--mg-color-neutral-0));
-    outline: 2px solid rgb(var(--mg-color-focus-ring-inverse));
-    outline-offset: 2px;
+    a.mg-button.mg-button-outline,
+    a.mg-button.mg-button-outline:hover,
+    a.mg-button.mg-button-outline:visited {
+      background-color: transparent;
+      border-color: rgb(var(--mg-color-neutral-0) / 0.72);
+      border-style: solid;
+      border-width: var(--mg-border-width-button, 1px);
+      color: rgb(var(--mg-color-neutral-0));
+    }
+
+    a.mg-button.mg-button-outline:hover {
+      background-color: rgb(var(--mg-color-neutral-0) / 0.12);
+      border-color: rgb(var(--mg-color-neutral-0));
+    }
+
+    a.mg-button:focus-visible {
+      box-shadow: 0 0 0 2px rgb(var(--mg-color-neutral-0));
+      outline: 2px solid rgb(var(--mg-color-focus-ring-inverse));
+      outline-offset: 2px;
+    }
   }
 }
 

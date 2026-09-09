@@ -141,3 +141,9 @@ describe('textCtaFromElement', () => {
     expect(props.headlineLevel).toBe(2);
   });
 });
+
+test('extracts optional soft tone and preserves strong as the default', () => {
+  expect(textCtaFromElement(createContainer({ tone: 'soft' })).tone).toBe('soft');
+  expect(textCtaFromElement(createContainer()).tone).toBe('strong');
+  expect(textCtaFromElement(createContainer({ tone: 'invalid' })).tone).toBe('strong');
+});
