@@ -57,7 +57,7 @@ In v2, customise runtime CSS properties on the relevant theme or wrapper. Colour
 }
 ```
 
-The old `$mg-color-tag*` and `$mg-radius-tag` Sass override examples are superseded by the runtime properties above. No HTML migration or JavaScript is required. Tags occupy slightly more space; all tags share a 40px minimum size so adding a link does not change geometry and long labels wrap rather than clip. Use `.mg-tag-container` for wrapping groups with consistent spacing.
+The old `$mg-color-tag*` and `$mg-radius-tag` Sass override examples are superseded by the runtime properties above. No HTML migration or JavaScript is required. Tags occupy slightly more space; all tags share a compact 28px minimum height so adding a link does not change geometry and long labels wrap rather than clip. Use `.mg-tag-container` for wrapping groups with consistent spacing.
 
 ## Examples
 
@@ -67,7 +67,7 @@ The old `$mg-color-tag*` and `$mg-radius-tag` Sass override examples are superse
 
 ### As link
 
-Anchors with `href` have an underlined hover state, a visible keyboard focus ring and a 40px minimum target. Static tags and anchors without `href` have no hover feedback. Transitions run only when reduced motion is not requested.
+Anchors with `href` have an underlined hover state, a visible keyboard focus ring and a minimum 24px-wide target. Static tags and anchors without `href` have no hover feedback. Transitions run only when reduced motion is not requested.
 
 <Canvas of={TagStories.AsLink} />
 
@@ -132,7 +132,7 @@ Container children and individually classed tags share the same styling. Explici
 
 ## Changelog
 
-- **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed spacing, line height and base radius for v2; aligned auto-styled children with the UI font role and modifier styling. Static and linked tags share 40px minimum geometry; linked tags gain keyboard focus, reduced-motion transitions and forced-colour support; static labels no longer react to hover. Long labels wrap and container spacing works in RTL without double margins. Existing classes and legacy colour overrides remain supported; corrected runtime theming guidance.
+- **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed spacing, line height and base radius for v2; aligned auto-styled children with the UI font role and modifier styling. Static and linked tags share compact geometry (28px minimum height, 24px minimum width); linked tags gain keyboard focus, reduced-motion transitions and forced-colour support; static labels no longer react to hover. Long labels wrap and container spacing works in RTL without double margins. Existing classes and legacy colour overrides remain supported; corrected runtime theming guidance.
 
 - **1.1.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tags now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-tag` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.1.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tag whose own language is not Arabic.

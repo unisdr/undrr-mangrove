@@ -12,11 +12,11 @@
 
   display: inline-flex;
   align-items: center;
-  min-block-size: mg-rem(40);
-  min-inline-size: mg-rem(40);
+  min-block-size: mg-rem(28);
+  min-inline-size: mg-rem(24);
   box-sizing: border-box;
   max-inline-size: 100%;
-  padding: var(--mg-spacing-50) var(--mg-spacing-100);
+  padding: var(--mg-spacing-25) var(--mg-spacing-100);
   border: 1px solid transparent;
   border-radius: var(--mg-radius-tag);
   font-family: var(--mg-font-family-ui);

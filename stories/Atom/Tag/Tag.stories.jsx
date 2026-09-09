@@ -237,10 +237,10 @@ export const ReflowAndLanguages = {
     expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
     for (const destination of canvas.getAllByRole('link')) {
       expect(destination.getBoundingClientRect().height).toBeGreaterThanOrEqual(
-        40
+        24
       );
       expect(destination.getBoundingClientRect().width).toBeGreaterThanOrEqual(
-        40
+        24
       );
     }
     const label = canvas.getByText('Research');

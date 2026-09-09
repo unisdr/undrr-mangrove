@@ -452,7 +452,7 @@ export default {
   // --- Tags ---
   'components-tag': {
     description:
-      'Compact taxonomy label with theme-owned colours and radius. Variants: default, secondary, outline, accent. Use spans for static metadata and anchors with href for destinations. Container children receive the same styling; links have keyboard focus and 40px minimum targets.',
+      'Compact taxonomy label with theme-owned colours and radius. Variants: default, secondary, outline, accent. Use spans for static metadata and anchors with href for destinations. Container children receive the same styling; static and linked tags share compact geometry (28px minimum height, 24px minimum width); links have visible keyboard focus.',
     cssClasses: [
       'mg-tag',
       'mg-tag--secondary',
