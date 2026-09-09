@@ -1,4 +1,5 @@
 import React from 'react';
+import { expect } from 'storybook/test';
 import { PageHeader } from './PageHeader';
 
 export default {
@@ -18,6 +19,12 @@ export default {
 };
 
 export const Default = {
+  play: async ({ canvasElement }) => {
+    const container = canvasElement.querySelector('.mg-page-header__container');
+    const style = getComputedStyle(container);
+    expect(parseFloat(style.paddingInlineStart)).toBeGreaterThanOrEqual(10);
+    expect(parseFloat(style.paddingInlineEnd)).toBeGreaterThanOrEqual(10);
+  },
   args: {
     variant: 'default',
   },

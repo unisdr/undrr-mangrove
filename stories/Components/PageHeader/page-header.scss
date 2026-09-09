@@ -2,6 +2,8 @@
   // Base styles for page header
 
   .mg-page-header__container {
+    padding-inline: mg-rem(10);
+
     @media (max-width: $mg-breakpoint-tablet) {
       max-width: 100%;
     }
@@ -13,12 +15,6 @@
       no-repeat center center;
     border-block-end: 1px solid rgb(var(--mg-color-neutral-0) / 0.16);
     z-index: var(--mg-z-index-header);
-
-    @media (width >= $mg-breakpoint-tablet) {
-      .mg-page-header__container {
-        padding: 0;
-      }
-    }
   }
 
   &__region--toolbar {
