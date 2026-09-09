@@ -42,6 +42,28 @@
       inline-size: 100%;
     }
 
+    // Let the parent grid/flex row determine height; keep media intrinsic and
+    // give any remaining space to the content. Book covers keep their grid.
+    &:not(.mg-card__book) {
+      display: flex;
+      flex-direction: column;
+
+      > .mg-card__visual {
+        flex-shrink: 0;
+      }
+
+      > .mg-card__content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+
+        > .mg-button:last-child {
+          margin-block-start: auto;
+          align-self: flex-start;
+        }
+      }
+    }
+
     @include mg-card-image-zoom;
   }
 
@@ -108,7 +130,6 @@
       @media (min-width: $mg-breakpoint-mobile) {
         max-width: unset;
       }
-
     }
 
     &:has(.mg-card__visual) {

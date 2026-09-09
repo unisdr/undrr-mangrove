@@ -33,6 +33,37 @@ The card works without an image. The content area fills the full card.
 
 <Canvas of={VerticalCardStories.NoImageVerticalCard} />
 
+## Cards together
+
+Let the containing grid or flex row stretch its items to the tallest sibling.
+Vertical cards fill that space, keep their image at 16:9, and push the final CTA
+to the bottom. Standalone cards keep their natural height. Each wrapped row sizes
+independently; no fixed card height or text truncation is needed.
+
+### Responsive grid
+
+Place cards directly in a CSS grid with its default stretch alignment. Resize
+this example to compare rows, including cards without an image or action.
+
+<Canvas of={VerticalCardStories.GridOfCards} />
+
+### Flex rows and wrappers
+
+Use `align-items: stretch` on the row. If your CMS adds a wrapper around each
+card, make that wrapper `display: flex` too so the card can stretch inside it.
+An ancestor using `align-items: start` or a block wrapper will keep cards at their
+natural height; the card cannot determine its siblings' height on its own.
+
+<Canvas of={VerticalCardStories.FlexRowOfCards} />
+
+### Horizontal scrolling
+
+Enable ScrollContainer's existing `stretchItems` prop (or
+`data-stretch-items="true"` for HTML initialization). Its default remains `false`
+for other types of scrolling content.
+
+<Canvas of={VerticalCardStories.ScrollingCards} />
+
 ## Color variants
 
 Use the `variant` prop to change the title accent color. These match the Hero component color system and adapt per theme.
@@ -111,6 +142,8 @@ This removes the blue color, underline, and chevron. The card remains clickable 
 > **Implementation note (for contributors):** The card-wide click area uses a CSS `::before` pseudo-element on the title `<a>`, stretched to cover the full card. Inline links in the summary have `z-index: 2` to layer above the stretched link overlay.
 
 ## Changelog
+
+- **1.4.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Vertical cards use the height supplied by grid and flex rows, keeping images intrinsic and aligning final CTAs at the bottom. Added mixed-content grid, wrapped flex and scrolling examples. Standalone sizing and existing markup remain supported.
 
 - **1.4.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic card titles and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-card__title` and `.mg-card__label` read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.4.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a card title or label whose own language is not Arabic.

@@ -42,7 +42,7 @@ export default {
 
 const Template = args => (
   <section style={{ maxWidth: '800px', margin: '0 auto' }}>
-    <ScrollContainer {...args}>
+    <ScrollContainer stretchItems {...args}>
       {/* Example content to demonstrate horizontal scrolling */}
       {[...scrollCardExamples, ...scrollCardExamples.slice(0, 3)].map(
         (card, i) => (

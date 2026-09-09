@@ -1,3 +1,6 @@
+import { expect } from 'storybook/test';
+import ScrollContainer from '../../ScrollContainer/ScrollContainer';
+import { scrollCardExamples } from '../../ScrollContainer/ScrollContainerExamples';
 import { VerticalCard } from './VerticalCard';
 
 const getCaptionForLocale = locale => {
@@ -157,4 +160,94 @@ export const NoImageVerticalCard = {
   },
 
   name: 'Vertical Card Without Image',
+};
+
+// Mixed content deliberately exercises wrapping, missing media and missing CTAs.
+const groupedCards = scrollCardExamples.map((card, index) => ({
+  title: card.title,
+  summaryText: card.summary,
+  imgback: index === 3 ? undefined : card.image,
+  imgalt: card.alt,
+  button: index === 4 ? undefined : card.action,
+  link: `#card-example-${index + 1}`,
+}));
+
+// Browser geometry assertions catch regressions that DOM-only tests cannot.
+const checkCardRows = async ({ canvasElement }) => {
+  await canvasElement.ownerDocument.fonts.ready;
+  const rows = new Map();
+  canvasElement.querySelectorAll('.mg-card__vc').forEach(card => {
+    const bounds = card.getBoundingClientRect();
+    const key = Math.round(bounds.top);
+    const row = rows.get(key) || [];
+    row.push(card);
+    rows.set(key, row);
+  });
+  expect([...rows.values()].flat()).toHaveLength(groupedCards.length);
+  rows.forEach(cards => {
+    const bottoms = cards.map(card => card.getBoundingClientRect().bottom);
+    expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(1);
+    const actions = cards
+      .map(card => card.querySelector('.mg-button'))
+      .filter(Boolean);
+    if (actions.length > 1) {
+      const actionBottoms = actions.map(
+        action => action.getBoundingClientRect().bottom
+      );
+      expect(
+        Math.max(...actionBottoms) - Math.min(...actionBottoms)
+      ).toBeLessThan(1);
+    }
+  });
+};
+
+export const GridOfCards = {
+  play: checkCardRows,
+  render: args => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
+        gap: '1rem',
+        maxWidth: '1000px',
+      }}
+    >
+      <VerticalCard {...args} data={groupedCards} />
+    </div>
+  ),
+};
+
+export const FlexRowOfCards = {
+  play: checkCardRows,
+  render: args => (
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'stretch',
+        gap: '1rem',
+        maxWidth: '1000px',
+      }}
+    >
+      {groupedCards.map(card => (
+        <div
+          key={card.link}
+          style={{ display: 'flex', flex: '1 1 260px', minWidth: 0 }}
+        >
+          <VerticalCard {...args} data={[card]} />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const ScrollingCards = {
+  play: checkCardRows,
+  render: args => (
+    <ScrollContainer stretchItems itemWidth="280px" showArrows>
+      {groupedCards.map(card => (
+        <VerticalCard {...args} key={card.link} data={[card]} />
+      ))}
+    </ScrollContainer>
+  ),
 };
