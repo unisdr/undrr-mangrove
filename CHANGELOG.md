@@ -13,7 +13,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
-- Storybook inline Docs canvases now receive the selected locale’s language and direction, fixing Arabic examples that inherited an explicit English canvas boundary. ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109))
+- Storybook inline Docs canvases now receive the selected locale’s language and direction, fixing Arabic examples that inherited an explicit English canvas boundary and preserving RTL across theme or control changes. ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109))
 
 - CDN references now use the canonical `assets.undrr.org/` root across documentation, examples, font URLs and component defaults. The release URL updater emits canonical paths while continuing to accept legacy paths as migration inputs.
 

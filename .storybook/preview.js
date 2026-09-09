@@ -29,18 +29,14 @@ const getLangCode = (Story, context) => {
 
   React.useEffect(() => {
     const langCode = langArr[activeLang] || 'en';
-    const direction = rtlLanguages.includes(activeLang) ? 'rtl' : 'ltr';
+    const direction =
+      rtlLanguages.includes(activeLang) || context.globals.addonRtl === 'rtl'
+        ? 'rtl'
+        : 'ltr';
 
     // Set lang on html element
     const htmlElem = document.documentElement;
     htmlElem.setAttribute('lang', langCode);
-
-    // Inline Docs stories have their own lang="en" boundary. Set the locale
-    // on this story's canvas too; changing <html> cannot override that boundary.
-    if (context.canvasElement) {
-      context.canvasElement.setAttribute('lang', langCode);
-      context.canvasElement.setAttribute('dir', direction);
-    }
 
     // Set dir on both html and #storybook-root (where RTL addon sets it)
     htmlElem.setAttribute('dir', direction);
@@ -59,7 +55,23 @@ const getLangCode = (Story, context) => {
     }, 10);
 
     return () => clearTimeout(loadEventTimer);
-  }, [activeLang, context.canvasElement]);
+  }, [activeLang, context.globals.addonRtl]);
+
+  // The RTL addon writes canvas.dir during every render, including theme/args
+  // changes. Apply locale attributes after each render so it cannot reset an
+  // Arabic canvas to LTR. Keep the manual RTL toggle for other languages.
+  React.useLayoutEffect(() => {
+    const canvas = context.canvasElement;
+    if (canvas) {
+      canvas.setAttribute('lang', langArr[activeLang] || 'en');
+      canvas.setAttribute(
+        'dir',
+        rtlLanguages.includes(activeLang) || context.globals.addonRtl === 'rtl'
+          ? 'rtl'
+          : 'ltr'
+      );
+    }
+  });
 
   return <Story {...context} />;
 };
