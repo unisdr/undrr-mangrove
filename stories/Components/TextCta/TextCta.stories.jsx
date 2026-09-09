@@ -11,8 +11,8 @@ export default {
 
 export const Default = {
   args: {
-    headline: 'United Nations Office for Disaster Risk Reduction',
-    text: '<p>Together, we can achieve the global goal set by the UN Secretary-General that every person on the planet is covered by an early warning system within the next 5 years.</p>',
+    headline: 'Turn knowledge into action',
+    text: '<p>Discover practical resources and connect with people working to reduce disaster risk.</p>',
     buttons: [{ label: 'Read more', url: '#' }],
   },
 };

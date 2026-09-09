@@ -1,5 +1,7 @@
-import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
 import * as TextCtaStories from './TextCta.stories';
+import * as CtaBlockStories from '../../Patterns/CtaBlock/CtaBlock.stories';
 
 <Meta of={TextCtaStories} />
 
@@ -7,89 +9,141 @@ import * as TextCtaStories from './TextCta.stories';
 
 # CTA
 
-A full-width call-to-action banner with heading, rich text body, and action buttons. Uses the same color variant system as Hero (primary, secondary, tertiary, quaternary) and supports custom background colors.
+A call-to-action block brings a heading, supporting copy and a next step together.
+Use it for an invitation, a resource, a campaign or a short signup form. TextCta
+provides the layout and visual treatment; its contents determine the purpose.
 
-## Default (primary)
+Use `buttons` for action links, or compose a form or other content through
+`children`. The block does not submit forms, manage subscriptions or connect to a
+service. For an individual action without a promotional block, use
+
+<LinkTo kind="Components/Buttons/Buttons" story="Editorial CTA">
+  a CTA button
+</LinkTo>
+.
+
+## Choose the emphasis
+
+Colour and emphasis are separate decisions. `variant` chooses the theme accent;
+`tone` chooses how strongly it appears. Existing CTAs keep the strong default.
+
+| Treatment                 | Useful for                                                             | Text and actions                                                                |
+| ------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `tone="soft"`             | Newsletter promotion, supporting invitations, blocks within an article | Pale accent surface, dark text and ordinary button styling                      |
+| `tone="strong"` (default) | Campaigns, prominent invitations, major next steps                     | Solid accent surface, light text and buttons styled for the coloured background |
+
+### Soft
+
+A quieter block can invite action without dominating the surrounding content.
+Change `variant` to compare accent colours, or `tone` to compare emphasis.
+
+<Canvas of={TextCtaStories.Soft} />
+<Controls of={TextCtaStories.Soft} include={['tone', 'variant', 'centered']} />
+
+### Strong
 
 <Canvas of={TextCtaStories.Default} />
 
-## Soft accent surface
+## Compose a form
 
-Use `tone="soft"` for a pale version of the selected accent with dark heading and
-body text. It works with each `variant`, including newsletter, image and ordinary
-button CTAs. `tone="strong"` remains the default. Static HTML uses `mg-cta--soft`;
-data-attribute integrations use `data-tone="soft"`.
+A newsletter signup is one use of the block. The example below supplies an
+independent FormAction as `children`, using the soft tone and start-aligned copy.
+Its submission is a local demonstration only: it sends no data and creates no
+subscription.
 
-<Canvas of={TextCtaStories.Soft} />
+<Canvas of={CtaBlockStories.Newsletter} />
 
-## Secondary variant
+```jsx
+<TextCta
+  headline="Stay informed"
+  text="Choose the updates that matter to you."
+  tone="soft"
+  centered={false}
+>
+  <YourSignupForm />
+</TextCta>
+```
 
-<Canvas of={TextCtaStories.Secondary} />
+For several fields, supply a regular form layout with its action after the fields.
+The site owns its choices, validation, privacy information and submission service;
+none of those require newsletter-specific CTA props.
 
-## Tertiary variant
+<Canvas of={CtaBlockStories.NewsletterWithPreferences} />
 
-Used by DELTA Resilience for the "Learn more about the system" CTA.
+Compare the preserved
 
-<Canvas of={TextCtaStories.Tertiary} />
+<LinkTo kind="Example/Newsletter promotion" story="Compact signup">
+  newsletter pattern
+</LinkTo>
+and
+<LinkTo kind="Example/CTA block prototype" story="Newsletter">
+  CTA block exploration
+</LinkTo>
+for alternate compositions and fuller simulated feedback states.
 
-## Custom background color
+## Arrange the content
 
-Use `backgroundColor` for any CSS color value, overriding the variant.
+### With an image
 
-<Canvas of={TextCtaStories.CustomColor} />
-
-## With image
-
-When `image` is provided, the layout switches to a side-by-side grid layout with text on the left and image on the right. Stacks vertically on mobile. Inspired by the IRP Recovery Help Desk CTA pattern.
+An optional image sits at the inline end of the copy and stacks on narrow screens.
+Its placement follows text direction. Supply meaningful `imageAlt` text, or an
+empty string for a decorative image.
 
 <Canvas of={TextCtaStories.WithImage} />
 
-## Left-aligned
+### Inline actions
 
-<Canvas of={TextCtaStories.LeftAligned} />
-
-## Inline actions
-
-Use `layout="inline"` for a wide promotional banner with copy on the left and actions aligned to the right. It returns to a natural stacked flow on narrow screens.
+Use `layout="inline"` for a wide banner with copy and action links side by side.
+It stacks on narrow screens. Composed `children` occupy their own full-width row;
+use the default stacked layout for a simple signup block.
 
 <Canvas of={TextCtaStories.Inline} />
 
-## Headline only
+### Alignment and size
 
-Works without body text — just a headline and buttons.
+Text-only CTAs are centred by default. Set `centered={false}` to align content to
+the start edge; this is generally easier to scan for forms and longer copy. An
+image or inline layout disables centring automatically.
 
-<Canvas of={TextCtaStories.HeadlineOnly} />
+`headlineLevel` chooses the semantic heading level independently of
+`headlineSize`. `padding` can override the theme spacing when a placement needs
+more or less room. Body copy and images are optional.
 
-## Quaternary variant
+## Accent colours
 
-<Canvas of={TextCtaStories.Quaternary} />
+All four accents support both tones and follow the selected site theme. Secondary
+is a colour choice, not a synonym for the soft tone.
 
-## Extra padding
+| `variant`           | Accent source           |
+| ------------------- | ----------------------- |
+| `primary` (default) | Main theme accent       |
+| `secondary`         | Secondary theme accent  |
+| `tertiary`          | Tertiary theme accent   |
+| `quaternary`        | Quaternary theme accent |
 
-Use the `padding` prop to override the theme default. Combined here with `headlineSize="800"` for a larger heading.
-
-<Canvas of={TextCtaStories.ExtraPadding} />
+Use the controls above to compare them. Prefer theme accents over custom colours
+so text and action treatments stay coordinated across sites.
 
 ## Props
 
-| Prop              | Type    | Default     | Description                                                                          |
-| ----------------- | ------- | ----------- | ------------------------------------------------------------------------------------ |
-| `eyebrow`         | String  | -           | Optional short label above the headline                                              |
-| `headline`        | String  | -           | Banner heading text                                                                  |
-| `headlineSize`    | String  | `'600'`     | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`) |
-| `headlineLevel`   | Number  | `2`         | Semantic heading level (2–6). Controls the HTML element independently of visual size |
-| `text`            | String  | -           | Body text (HTML supported via `dangerouslySetInnerHTML`)                             |
-| `children` | React node | — | Composed content below the copy, before any buttons. Supply a native form or other content; the CTA does not manage its behaviour. |
-| `buttons`         | Array   | `[]`        | Array of button objects: `{ label, url, type }`                                      |
-| `tone` | String | `'strong'` | Surface emphasis: `'strong'` or `'soft'`. Soft uses a pale accent wash with dark text and normal button styling. |
-| `variant`         | String  | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'`              |
-| `backgroundColor` | String  | -           | Custom CSS background color (overrides variant)                                      |
-| `padding`         | String  | -           | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token                          |
-| `image`           | String  | -           | Image URL displayed alongside text (triggers side-by-side layout)                    |
-| `imageAlt`        | String  | `''`        | Alt text for the image                                                               |
-| `centered`        | Boolean | `true`      | Center-align content (auto-disabled when `image` is set)                             |
-| `layout`          | String  | `'stacked'` | Content/action arrangement: `'stacked'` or `'inline'`                                |
-| `className`       | String  | -           | Additional CSS classes                                                               |
+| Prop              | Type       | Default     | Description                                                                                                                        |
+| ----------------- | ---------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `eyebrow`         | String     | -           | Optional short label above the headline                                                                                            |
+| `headline`        | String     | -           | Banner heading text                                                                                                                |
+| `headlineSize`    | String     | `'600'`     | Font size token applied as `mg-u-font-size-{value}` (e.g. `'400'`, `'600'`, `'800'`)                                               |
+| `headlineLevel`   | Number     | `2`         | Semantic heading level (2–6). Controls the HTML element independently of visual size                                               |
+| `text`            | String     | -           | Body text (HTML supported via `dangerouslySetInnerHTML`)                                                                           |
+| `children`        | React node | —           | Composed content below the copy, before any buttons. Supply a native form or other content; the CTA does not manage its behaviour. |
+| `buttons`         | Array      | `[]`        | Array of button objects: `{ label, url, type }`                                                                                    |
+| `tone`            | String     | `'strong'`  | Surface emphasis: `'strong'` or `'soft'`. Soft uses a pale accent wash with dark text and normal button styling.                   |
+| `variant`         | String     | `'primary'` | Color variant: `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'`                                                            |
+| `backgroundColor` | String     | -           | Custom CSS background color (overrides variant)                                                                                    |
+| `padding`         | String     | -           | Custom CSS padding (e.g. `'8rem 0'`), overrides theme token                                                                        |
+| `image`           | String     | -           | Image URL displayed alongside text (triggers side-by-side layout)                                                                  |
+| `imageAlt`        | String     | `''`        | Alt text for the image                                                                                                             |
+| `centered`        | Boolean    | `true`      | Center-align content (auto-disabled when `image` is set)                                                                           |
+| `layout`          | String     | `'stacked'` | Content/action arrangement: `'stacked'` or `'inline'`                                                                              |
+| `className`       | String     | -           | Additional CSS classes                                                                                                             |
 
 ### Button object
 
@@ -103,7 +157,7 @@ Use the `padding` prop to override the theme default. Combined here with `headli
 | `target`  | String  | -           | Link browsing context, such as `'_blank'`          |
 | `rel`     | String  | -           | Link relationship tokens                           |
 
-## Composed content
+## Integration guidance
 
 Pass a form or other React content as `children` to reuse the CTA shell. Its
 heading, copy, optional image and existing button API stay independent of the
@@ -117,6 +171,10 @@ Do not apply `data-mg-text-cta` hydration to custom form content: the current
 hydrator supports the existing text/button data model, not arbitrary children.
 
 ## Server-rendered / CDN usage
+
+The new `tone` and `children` options are shown from the local build and are not
+available in the published alpha.4 bundle. Use a release containing these changes
+when integrating them. The CDN example below demonstrates the existing button API.
 
 TextCta supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
@@ -140,6 +198,7 @@ TextCta supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
 | `data-headline-level`   | `2`         | Semantic heading level (2–6)                             |
 | `data-text`             | `''`        | Body HTML (sanitized via DOMPurify)                      |
 | `data-buttons`          | `[]`        | JSON array of button objects: `{ label, url, type }`     |
+| `data-tone`             | `'strong'`  | `'strong'` or `'soft'`; available from the next release  |
 | `data-variant`          | `'primary'` | `'primary'`, `'secondary'`, `'tertiary'`, `'quaternary'` |
 | `data-background-color` | -           | Custom CSS background color                              |
 | `data-padding`          | -           | Custom CSS padding                                       |
@@ -167,12 +226,13 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 - Uses semantic `<section>` element with `aria-labelledby` pointing to the headline (falls back to `aria-label="Call to action"` when no headline is provided)
 - Headline renders as a proper heading element (`<h2>` by default). Use `headlineLevel` to match the document outline
 - Button text provides clear action labels
-- Color contrast: white text on theme background colors meets WCAG AA
-- Focus states inherited from `.mg-button` base styles
+- Soft tone uses dark text; strong tone uses light text. Check contrast for the chosen theme and any custom backgrounds or child content.
+- Soft-tone actions inherit normal button focus styles; strong-tone action links use the inverse focus treatment.
+- Composed forms need visible labels, correctly grouped choices and accessible error/confirmation feedback supplied by their owner.
 
 ## Changelog
 
-- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Added a reusable soft accent tone with dark text, normal buttons and `data-tone` support. Explored in the CTA block prototype alongside the original newsletter pattern. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
+- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Added a reusable soft accent tone with dark text, normal buttons and `data-tone` support. Reworked the main CTA guide around emphasis, composed forms and responsive layouts, while preserving both earlier prototypes. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
 
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Added an optional eyebrow and responsive inline content/action layout for wide promotional banners.
