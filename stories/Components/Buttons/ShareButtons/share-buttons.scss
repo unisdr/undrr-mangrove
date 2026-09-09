@@ -30,10 +30,10 @@
   min-block-size: mg-rem(40);
   padding: var(--mg-spacing-100);
   border-radius: var(--mg-radius-button);
-  background-color: var(--mg-color-button-background);
-  color: rgb(var(--mg-color-button));
+  background-color: transparent;
+  color: rgb(var(--mg-color-text));
   cursor: pointer;
-  border: var(--mg-border-width-button) solid var(--mg-border-color-button);
+  border: 1px solid transparent;
 
   @media (prefers-reduced-motion: no-preference) {
     transition:
@@ -43,8 +43,8 @@
   }
 
   &:hover {
-    background-color: var(--mg-color-button-background--hover);
-    color: rgb(var(--mg-color-button--hover));
+    background-color: rgb(var(--mg-color-neutral-50));
+    color: rgb(var(--mg-color-text));
   }
 
   &:focus-visible {
@@ -64,6 +64,8 @@
 }
 
 .mg-share__copy-button {
+  background-color: rgb(var(--mg-color-neutral-25));
+  border-color: rgb(var(--mg-color-neutral-300) / 0.4);
   gap: var(--mg-spacing-100);
   max-inline-size: 100%;
   font-family: var(--mg-font-family-text);

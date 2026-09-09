@@ -611,6 +611,22 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — .mg-button-cta:hover::after retints the badge',
   },
 
+  // --- Quiet sharing controls ------------------------------------------
+  {
+    name: 'share copy label',
+    fg: '--mg-color-text',
+    bg: ['--mg-color-neutral-25'],
+    min: 4.5,
+    why: 'SC 1.4.3 — URL and copied feedback on the quiet copy surface',
+  },
+  {
+    name: 'share control hover',
+    fg: '--mg-color-text',
+    bg: ['--mg-color-neutral-50'],
+    min: 4.5,
+    why: 'SC 1.4.3 — copy text and icons on the neutral hover surface',
+  },
+
   // --- Tags: tag.scss ----------------------------------------------------
   // Filled tags use neutral-0; outline tags keep the themed foreground.
   {
