@@ -1,5 +1,5 @@
 .mg-breadcrumb {
-  font-family: $mg-font-family-condensed;
+  font-family: var(--mg-font-family-ui);
   font-weight: 600;
   margin: mg-rem(10) 0 mg-rem(5);
   align-items: baseline;
@@ -118,11 +118,6 @@
       margin: 0 0.875em 0 0.75em;
     }
   }
-}
-
-// Arabic
-.mg-breadcrumb:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }
 
 @media (prefers-reduced-motion: no-preference) {

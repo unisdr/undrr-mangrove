@@ -5,45 +5,83 @@ import LinkTo from '@storybook/addon-links/react';
 
 # Fonts
 
-## Roboto
+Mangrove has two layers of type token, and the distinction is the whole model.
 
-Roboto is the primary font family used throughout Mangrove for body text and form content.
+**Faces say what fonts exist.** Five Sass variables, one per typeface Mangrove ships a `@font-face` for.
+
+**Roles say what job the type is doing.** Five CSS custom properties — text, heading, display, ui, code. A component stylesheet names a role and never a face, because the role is what changes between scripts. Introduced in [unisdr/undrr-mangrove#1098](https://github.com/unisdr/undrr-mangrove/issues/1098).
+
+**Latin rendering did not change when the roles landed.** Every Latin element resolves to exactly the face it resolved to before: text and heading are both Roboto, display and ui are both Roboto Condensed. No new `font-family` declaration matches a Latin element, which is why a consuming theme that sets its own face on `h1`–`h3` still wins. The indirection buys correct Arabic, not a new Latin look.
+
+## Font roles
+
+| Role                       | Latin            | Arabic           | Used for                                                                                                |
+| -------------------------- | ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
+| `--mg-font-family-text`    | Roboto           | Noto Sans Arabic | `body`, paragraphs, h4–h6, `th`, `td`, a bare `header`, form fields, chips, status labels, every button |
+| `--mg-font-family-heading` | Roboto           | Noto Kufi Arabic | narrative h1–h3, and only in Arabic — see below                                                         |
+| `--mg-font-family-display` | Roboto Condensed | Noto Kufi Arabic | the hero title, and nothing else today                                                                  |
+| `--mg-font-family-ui`      | Roboto Condensed | Noto Sans Arabic | scanned chrome: card and gallery titles, labels, tags, tabs, breadcrumbs, navigation links, stat values |
+| `--mg-font-family-code`    | mono stack       | mono stack       | `code`, `pre`                                                                                           |
+
+Consume a role the same way as any other Mangrove token:
 
 ```scss
-$mg-font-family: 'Roboto', sans-serif;
+.mg-my-component__title {
+  font-family: var(--mg-font-family-ui);
+}
 ```
 
-**Usage:**
+The roles are defined on `:root` in `_variables.scss`, and the Arabic script map lives in `_fonts.scss` alongside the `@font-face` blocks. Between them, every supported build path gets both halves — including the per-component Sass recipe in the <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, which imports no `style*.scss` entry point. That matters more than it sounds: the shared import list every UNDRR Drupal theme compiles reaches `_foundational.scss` and no entry point, and a build with the role definitions but no script map renders Arabic in Roboto, which has no Arabic coverage at all. Component stylesheets carry no `var()` fallbacks and do not need any.
 
-- Body text and paragraphs
-- Form inputs and form labels
-- Default for all text content
+### Why the roles split the way they do
 
-### Roboto Condensed
+**`text` and `heading` are the same face in Latin and different faces in Arabic.** Latin narrative headings deliberately use the body face: Roboto Condensed at heading size feels too tight for sustained reading. Arabic has a genuine display face in Noto Kufi Arabic, so `heading` uses it. Keeping the two roles separate is what lets those two facts coexist without a `:lang()` rule in a component.
 
-Roboto Condensed is reserved for **compact navigation labels and decorative chrome**, not for buttons or narrative headings. Buttons and long-form headings (h1–h6 used in articles, story content, page bodies) use the body face; Roboto gives actions a calmer, more legible treatment, while Roboto Condensed at heading size feels too tight for sustained reading.
+Because the two are identical in Latin, the `heading` declaration in `_foundational.scss` is scoped to `:lang(ar)`. An unconditional `h1, h2, h3 { font-family: ... }` would change nothing in Latin and would silently override a consuming theme's brand face: at (0,0,1) it ties with the theme's own `h1` rule and wins on source order, because `mangrove.css` loads last. Latin `h1`–`h3` are therefore left to inherit, as they were before the roles landed.
 
-Two SCSS tokens cover the condensed-font use cases:
+**`ui` and `display` are the same face in Latin and different faces in Arabic.** Roboto Condensed serves both the hero title and compact chrome. Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic while `display` keeps Kufi. This is the single change most visible to an Arabic reader: card titles, tags, tabs, navigation links and stat labels moved from Kufi to Noto Sans Arabic, and Latin did not move at all.
+
+**Narrowing was measured, not assumed.** Arabic chrome set in Noto Sans Arabic was expected to run wider than Latin Roboto Condensed and does not: a representative navigation row measures 849px in Arabic against 952px in Latin, about **10.8% narrower**, and 9% narrower than the same row in Kufi. No width compensation was needed anywhere.
+
+**`code` is not remapped.** The monospace stack is script-independent, so Arabic inherits it from `:root` unchanged.
+
+## Faces
+
+Faces are Sass variables, all `!default`.
+
+| Face                           | Value                                                                               |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| `$mg-font-face-sans`           | `"Roboto", sans-serif`                                                              |
+| `$mg-font-face-sans-condensed` | `"Roboto Condensed", sans-serif`                                                    |
+| `$mg-font-face-mono`           | `ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace` |
+| `$mg-font-face-arabic-display` | `"Noto Kufi Arabic", sans-serif`                                                    |
+| `$mg-font-face-arabic-sans`    | `"Noto Sans Arabic", sans-serif`                                                    |
+
+Do not reference a face from a component stylesheet. Faces exist so the role map has something to point at, and so a consumer compiling from source can substitute a licensed brand face.
+
+**Quote any family name that is not a plain CSS identifier** — anything containing a space, a digit-leading word or punctuation. `_variables.scss` renders a face into its role through `mg-font-stack()`, which preserves the quotes; plain Sass interpolation would strip them, and `Frutiger 55 Roman` unquoted is not a valid custom-ident, so the whole declaration would be invalid at computed-value time and every element would fall back to the browser's default serif. Frutiger, Univers and Helvetica Neue LT Std all name weights numerically, so this is the common case rather than the exotic one.
+
+## Overriding type
+
+There are two override paths and they do different things. Pick by asking whether the font you want is one Mangrove already loads.
+
+**Re-point a role — runtime, per brand, shipped faces only.** A CSS custom property override in a `.mg-theme-*` block (or `:root`) can send a role to any face Mangrove emits a `@font-face` for. No rebuild, and it affects only the brand you scope it to.
 
 ```scss
-// Semantic alias — use this for component-level title/label classes that act
-// as visual headings within a card, hero, tab, or other UI chrome context.
-$mg-font-family-headings: $mg-font-family-condensed !default;
-
-// Raw token — use when compact width is the goal and the element is not
-// a heading (e.g. dense navigation that needs to fit more characters).
-$mg-font-family-condensed: 'Roboto Condensed', sans-serif;
+.mg-theme-myorg {
+  // Give this brand's chrome the body face instead of the condensed one.
+  --mg-font-family-ui: var(--mg-font-family-text);
+}
 ```
 
-**When to use which:**
+**Override a face — build time, all brands, bring your own font.** Assigning a `$mg-font-face-*` variable before importing Mangrove is the only way to introduce a typeface Mangrove does not ship, and you must load that typeface yourself. Faces are declared outside the brand mixins, so in the combined `style-all.css` one assignment applies to every brand.
 
-| Token                       | Use for                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| (default body font)         | h1–h6 in narrative content. They inherit Roboto from `body`. Do not declare a `font-family` on h1–h6 in component SCSS.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `$mg-font-family-headings`  | Component title/label classes: `.mg-hero__title`, `.mg-hero__label`, `.mg-card__title`, `.mg-card__label`, `.mg-stats-card-item__value`, `.mg-stats-card-item__label`, `.mg-stats-card-item__bottom-label`, `.mg-gallery__title`, `.mg-tabs__link`, `.mg-on-this-page-nav__link`, `.mg-on-this-page-nav__cta`, `.mg-mega-topbar__item-link`, `.mg-mega-content__banner header`, `.mg-button` (CTA buttons), `.mg-footer--about-footer--links`, `.mg-tag`, and any new component class that functions as a chip, label, or compact title within UI chrome. |
-| `$mg-font-family-condensed` | Dense UI chrome where compact width is the explicit design goal, not heading semantics. Currently: breadcrumbs.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+```scss
+$mg-font-face-sans-condensed: 'Barlow Condensed', sans-serif;
+@import '@undrr/undrr-mangrove/scss/assets/scss/style';
+```
 
-If a class is a visual title or label inside a component (not part of narrative body content), prefer `$mg-font-family-headings`. The `!default` flag on the token lets a consumer theme remap the family without forking the SCSS.
+Per-brand typefaces driven from `tokens/*.yaml` are not available. Faces stayed in Sass deliberately — `@font-face` and Sass interpolation both need a compile-time value — and moving them into the token pipeline is a separate piece of work.
 
 ## Font sources
 
@@ -62,23 +100,25 @@ All font declarations use `font-display: swap` to prevent invisible text during 
 
 ## Language-specific fonts
 
-Mangrove supports language-specific font overrides for scripts that require specialized typography. These fonts are applied automatically based on the `lang` attribute.
+Script routing is a property of the roles, not of any component. One file, `_fonts.scss`, re-points the roles for Arabic; nothing else in the library carries a `:lang(ar)` font rule.
 
 ### How it works
 
-When content is marked with a language attribute (e.g., `lang="ar"`), CSS `:lang()` selectors automatically apply the appropriate fonts:
+`:lang()` matches on **computed** language, which inherits, so marking a subtree with `lang="ar"` is enough:
 
 ```html
-<div lang="ar">
-  <!-- Arabic fonts applied automatically -->
+<div lang="ar" dir="rtl">
+  <!-- Arabic faces applied automatically, at every role -->
 </div>
 ```
 
+There are three rules in the map. `:root:lang(ar)` handles an Arabic document. Two zero-specificity boundary rules handle a language island — an Arabic sub-root on a Latin page, or a Latin sub-root on an Arabic page — and are covered under [Language boundaries](#language-boundaries) below.
+
 ### Supported languages
 
-| Language | Selector    | Font override                                        |
-| -------- | ----------- | ---------------------------------------------------- |
-| Arabic   | `:lang(ar)` | Noto Kufi Arabic (headings), Noto Sans Arabic (body) |
+| Language | Selector    | Roles re-pointed                                                                                       |
+| -------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| Arabic   | `:lang(ar)` | `text` and `ui` to Noto Sans Arabic; `heading` and `display` to Noto Kufi Arabic. `code` is unchanged. |
 
 ---
 
@@ -88,12 +128,14 @@ Arabic content uses dedicated fonts, which cover the Arabic script that Roboto a
 
 ### Font usage
 
-| Purpose          | Font             | Weight   | Variable                          |
-| ---------------- | ---------------- | -------- | --------------------------------- |
-| Headings (h1-h6) | Noto Kufi Arabic | 400, 700 | `$mg-font-family-arabic-headings` |
-| Body text        | Noto Sans Arabic | 400, 700 | `$mg-font-family-arabic-body`     |
+| Purpose                                                     | Font                                              | Weight   | Roles                |
+| ----------------------------------------------------------- | ------------------------------------------------- | -------- | -------------------- |
+| Narrative h1–h3 and the hero title                          | Noto Kufi Arabic (`$mg-font-face-arabic-display`) | 400, 700 | `heading`, `display` |
+| Everything else — body text, h4–h6, `th`, and all UI chrome | Noto Sans Arabic (`$mg-font-face-arabic-sans`)    | 400, 700 | `text`, `ui`         |
 
 > **Note**: This pairing was decided in [#1089](https://github.com/unisdr/undrr-mangrove/issues/1089), replacing Dubai across every brand. Kufi is a display style -- angular and high contrast -- so it belongs in headings and not at body size; Noto Sans Arabic carries the running text and shares Noto Sans' proportions. Both are SIL Open Font License 1.1.
+>
+> Kufi's reach narrowed when the roles landed. It had been applied to every heading and to all compact chrome; it now covers narrative h1–h3 and the hero title only, because h4–h6, `th` and the hero label sit at or below body size, and chrome is scanned rather than read. Everything else takes Noto Sans Arabic.
 >
 > Only Regular (400) and Bold (700) are published in the UNDRR asset library for either family, so Arabic has a two-step weight ladder where Latin has a full one. Both upstream families span 100-900, so adding a weight is a packaging task, not an upstream limit. Note the ladder is not symmetric: `600` resolves up to Bold, but `500` resolves _down_ to Regular. Roboto Condensed publishes no Medium either, so chrome set in the condensed face behaves the same way in Latin.
 
@@ -129,7 +171,7 @@ Each weight is split into `arabic`, `latin` and `latin-ext` files, declared with
 
 Arabic fonts and RTL layout are handled separately:
 
-- **`lang="ar"`** - Triggers Arabic font styles via `:lang(ar)` selector
+- **`lang="ar"`** - Re-points the font roles to the Arabic faces via `:lang(ar)`
 - **`dir="rtl"`** - Triggers RTL layout adjustments (padding, margins, transforms)
 
 For full Arabic support, use both attributes:
@@ -143,44 +185,56 @@ For full Arabic support, use both attributes:
 
 ## Component development
 
-When creating components that explicitly set `font-family`, add language-specific overrides to ensure proper rendering.
-
-### Pattern for Arabic fonts
-
-Attach `:lang(ar)` to the element you are styling. Never use it as an ancestor.
+Pick a role. That is the whole authoring rule.
 
 ```scss
-// Component styles
-.my-component {
-  font-family: $mg-font-family;
-}
-
-// Arabic font override (add at end of component file)
-.my-component:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
+.mg-my-component__title {
+  font-family: var(--mg-font-family-ui);
 }
 ```
 
-The nested form `:lang(ar) { .my-component { ... } }` compiles to `:lang(ar) .my-component`, where `:lang()` constrains the **ancestor** and `.my-component` is merely a descendant. That rule fires on every matching element beneath an Arabic root regardless of that element's own language, so an English island inside an Arabic page renders in Arabic typography. Anchoring the pseudo-class to the element matches on **computed** language, which inherits and therefore stops at a `lang="en"` boundary. Fixed in [#1092](https://github.com/unisdr/undrr-mangrove/issues/1092).
+**Do not write a `:lang(ar)` font rule in a component stylesheet.** Nineteen of them were deleted when the roles landed, and adding one back takes the component _out_ of the script map: the map re-points the role, and a component rule that names a face directly no longer follows it. The rule that used to be mandatory is now the thing to avoid.
+
+Choosing between the roles:
+
+| If the element is...                                                    | Use                                                                         |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| a title, label, value, tag, tab or navigation link — scanned, not read  | `ui`                                                                        |
+| narrative running text, a form field, a button, a chip, or a table cell | `text`                                                                      |
+| a narrative h1–h3                                                       | nothing — `_foundational.scss` sets `heading` in Arabic, and Latin inherits |
+| an h4–h6, a `th`, a `td`, or a bare `header`                            | nothing — it inherits `text` from `body`                                    |
+| the hero title                                                          | `display`                                                                   |
+| a code or preformatted block                                            | `code`                                                                      |
+
+### Headings inside a ui container
+
+Nothing to do. `_foundational.scss` gives `h1`–`h3` a matched `font-family` only under `:lang(ar)`, and Arabic headings carried exactly that declaration before the roles landed, so a heading nested inside a `ui` or `display` container resolves the way it always has: the container's face in Latin, Noto Kufi Arabic in Arabic.
+
+Earlier alphas made that declaration unconditional and had `card.scss` and `hero.scss` claim their own subtrees with `:is(h1, h2, h3, a)` to defend against it. Both the declaration and the claims are gone. Scoping the rule to Arabic removed the problem rather than defending against it, and it removed a second one with it: an unconditional heading rule also outranked consuming themes that set a brand face on `h1`–`h3`.
 
 ### Language boundaries
 
-Anchoring stops the Arabic rules from _matching_ non-Arabic elements, but `font-family` still inherits: a `lang="en"` island would otherwise inherit the Arabic family from `body:lang(ar)`. Two zero-specificity rules in `_foundational.scss` reassert the family at the switch point only, using a child combinator so component children that inherit their container's face keep it.
+`:lang()` matching stops at a `lang="en"` boundary, but that alone is not enough, because both `font-family` and custom properties **inherit**: a `lang="en"` island inside an Arabic page would keep the Arabic role values, and any element with no `font-family` of its own would keep the Arabic _used_ value regardless. Two zero-specificity rules in `_fonts.scss` reassert both at the switch point only, using a child combinator so component children that inherit their container's face keep it.
 
 ```scss
+// A non-Arabic sub-root inside an Arabic page.
 :where(:lang(ar)) > :where([lang]:not([lang=''], :lang(ar))) {
-  font-family: $mg-font-family;
-}
+  --mg-font-family-text: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-heading: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-display: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-ui: #{mg-font-stack($mg-font-face-sans-condensed)};
 
-:where(:not(:lang(ar))) > :where([lang]:not([lang='']):lang(ar)) {
-  font-family: $mg-font-family-arabic-body;
+  font-family: var(--mg-font-family-text);
 }
 ```
 
-Two consequences worth knowing:
+The mirror rule, `:where(:not(:lang(ar))) > :where([lang]:not([lang='']):lang(ar))`, does the same in the other direction with the Arabic faces. The descendant form of either would be wrong for the same reason it was wrong in [#1093](https://github.com/unisdr/undrr-mangrove/issues/1093): it would also match component children meant to inherit their container's family.
+
+Three consequences worth knowing:
 
 - `lang=""` means _unknown_ in HTML, not _Latin_, so an element carrying it inherits rather than being reset.
-- The boundary rules can only reassert one family, and they reassert the base body face. A language switch on a generic element (`<span>`, `<a>`) inside component chrome — an English link inside an Arabic `.mg-card__title` — therefore falls back to Roboto rather than Roboto Condensed. Put `lang` on the element that carries the component class instead; `:where()` gives the boundary rules zero specificity, so the component rule wins.
+- The boundary rules can only reassert one `font-family`, and they reassert the text role. A language switch on a generic element (`<span>`, `<a>`) inside component chrome — an English link inside an Arabic `.mg-card__title` — therefore falls back to Roboto rather than Roboto Condensed. Put `lang` on the element that carries the component class instead; `:where()` gives the boundary rules zero specificity, so the component rule wins.
+- `--mg-font-family-code` is absent from both rules by design. The monospace stack is the same in either script, so it inherits from `:root` and there is nothing to restore.
 
 See <LinkTo kind="Design decisions/Language boundaries">Language boundaries</LinkTo> for a live demo that reads the resolved font family back out of the rendered page.
 
@@ -198,4 +252,4 @@ See <LinkTo kind="Design decisions/Language boundaries">Language boundaries</Lin
 
 ---
 
-Last updated: 8 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Fonts.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 9 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Fonts.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

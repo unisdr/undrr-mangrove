@@ -15,7 +15,7 @@
 .mg-tag {
   display: inline-block;
   padding: var(--mg-spacing-25) var(--mg-spacing-50);
-  font-family: $mg-font-family-headings;
+  font-family: var(--mg-font-family-ui);
   font-size: $mg-font-size-250;
   font-weight: 500;
   line-height: 1.4;
@@ -113,9 +113,4 @@
       text-decoration: none;
     }
   }
-}
-
-// Arabic font override for tags.
-.mg-tag:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
 }

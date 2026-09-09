@@ -273,6 +273,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.3.3** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic card titles and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-card__title` and `.mg-card__label` read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Unified title, CTA, and visual-link focus states behind the theme-adaptive `mg-focus-ring` mixin with a consistent radius.
   - Added the shared raised card surface, elevation motion, and improved title/body wrapping through semantic modernisation tokens.

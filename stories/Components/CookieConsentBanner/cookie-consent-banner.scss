@@ -26,7 +26,7 @@
   --cc-cookie-table-border: rgb(var(--mg-color-neutral-200)) !important;
   --cc-separator-border-color: rgb(var(--mg-color-neutral-200)) !important;
   --cc-overlay-bg: rgb(var(--mg-color-neutral-900) / 0.82) !important;
-  --cc-font-family: #{$mg-font-family} !important;
+  --cc-font-family: var(--mg-font-family-text) !important;
   --cc-modal-border-radius: var(--mg-card-border-radius) !important;
   --cc-btn-border-radius: var(--mg-radius-button) !important;
 
@@ -44,7 +44,7 @@
   .c-bn,
   .cm__btn,
   .pm__btn {
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     font-weight: 600;
 
     @media (prefers-reduced-motion: no-preference) {
@@ -71,10 +71,4 @@
     border-block-start: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
     box-shadow: 0 -8px 24px rgb(var(--mg-color-neutral-900) / 0.08);
   }
-}
-
-#cc-main .c-bn:lang(ar),
-#cc-main .cm__btn:lang(ar),
-#cc-main .pm__btn:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }

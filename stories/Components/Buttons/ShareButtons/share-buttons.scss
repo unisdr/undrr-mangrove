@@ -6,7 +6,7 @@
 }
 
 .mg-share__header {
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   color: rgb(var(--mg-color-text));
   font-weight: 600;
   font-size: $mg-font-size-300;
@@ -58,7 +58,7 @@
   cursor: pointer;
   border: 0 solid var(--mg-border-color-button);
   color: rgb(var(--mg-color-button));
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   padding: var(--mg-spacing-100);
   background-color: rgb(var(--mg-color-blue-900));
 
@@ -104,10 +104,4 @@
   img {
     width: 18px;
   }
-}
-
-// Arabic
-.mg-share__header:lang(ar),
-.mg-share__copy-button:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }

@@ -77,6 +77,7 @@ Use `size="immersive"` for a tall editorial feature and `contained` when the Her
 
 ## Changelog
 
+- **1.6.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic hero labels now render in Noto Sans Arabic; the hero title keeps Noto Kufi Arabic. `.mg-hero__title` reads the `display` font role and `.mg-hero__label` the `ui` role, rather than naming a typeface, and the component's `:lang(ar)` block is gone. A heading nested inside `.mg-hero__title` needs no special handling and none is declared. Latin rendering is unchanged.
 - **1.6.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a hero title or label whose own language is not Arabic.
 - **1.6** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Refreshed the background hero with a full-bleed directional gradient that keeps text contrast strong while revealing more of the image. The gradient follows the content edge in LTR and RTL, shifts vertically on narrow screens, and exposes semantic opacity tokens for theme tuning.

@@ -177,8 +177,7 @@ To activate the real gate from the Storybook story, pass `live` to `<PreviewAcce
 
 The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are set on the document:
 
-- `:lang(ar)` swaps the heading and UI families to `$mg-font-family-arabic-headings`, because Roboto Condensed has no Arabic glyph coverage
-- Body, error, and contact copy swap to `$mg-font-family-arabic-body`
+- The gate's headings and chrome read `var(--mg-font-family-ui)` and its body, error and contact copy read `var(--mg-font-family-text)`. Both roles resolve to Noto Sans Arabic under `lang="ar"`, because Roboto Condensed has no Arabic glyph coverage. The component carries no `:lang(ar)` rule of its own — routing lives in `_fonts.scss`
 - All visible copy comes from data attributes, so translations are a content-only change
 
 ## Implementation notes
@@ -195,7 +194,7 @@ The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are se
 
 **Contact URL allow-list.** The runtime validates `data-mg-preview-contact-url` against an `http:`/`https:`/`mailto:` allow-list before rendering the link. Anything else (for example, `javascript:`) is replaced with the default UNDRR contact page. This is defence-in-depth in case a Drupal template ever interpolates an unsanitised editor field into the attribute.
 
-**Bespoke modal shell.** Mangrove does not yet have a dialog/modal primitive. The styles use Mangrove tokens (`$mg-z-index-modal`, `$mg-color-modal-scrim`, `$mg-color-interactive`, `$mg-spacing-*`, `$mg-font-family-headings`, the Arabic font swap via `:lang(ar)`) but the panel itself is bespoke. When a modal primitive lands in Mangrove, this component should be refactored to consume it.
+**Bespoke modal shell.** Mangrove does not yet have a dialog/modal primitive. The styles use Mangrove tokens (`$mg-z-index-modal`, `$mg-color-modal-scrim`, `$mg-color-interactive`, `$mg-spacing-*`, `var(--mg-font-family-ui)`, `var(--mg-font-family-text)`) but the panel itself is bespoke. When a modal primitive lands in Mangrove, this component should be refactored to consume it.
 
 ## Known limitations
 
@@ -206,5 +205,6 @@ The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are se
 
 ## Changelog
 
+- **1.0.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic gate headings and the submit button now render in Noto Sans Arabic instead of Noto Kufi Arabic, and the gate's text input renders in Noto Sans Arabic instead of Roboto, which has no Arabic coverage — the old `:lang(ar)` block listed every other element but not `.mg-preview-access__input`. The gate reads the `ui` and `text` font roles rather than naming a typeface, and that block is gone. In Latin, the submit button changes from Roboto Condensed to Roboto: it was the one button in the library on the `ui` role, and buttons take `text`. Everything else in the gate renders unchanged.
 - **1.0.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to gate text whose own language is not Arabic.
 - **1.0** — 2026-04-30: Initial release. Vanilla JS and CSS, body-level gate, `sessionStorage`-scoped unlock, RTL and Arabic font swap, `inert`-based focus trap, override-able copy via data attributes.

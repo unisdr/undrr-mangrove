@@ -52,7 +52,7 @@ details.mg-details {
       border-radius: 50%;
       content: "+";
       display: flex;
-      font-family: $mg-font-family;
+      font-family: var(--mg-font-family-text);
       font-size: $mg-font-size-400;
       font-weight: 400;
       height: mg-rem(30);

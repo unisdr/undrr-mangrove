@@ -49,7 +49,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   // Brand identity is carried by the top accent border and the submit button.
   &__eyebrow {
     margin: 0 0 var(--mg-spacing-50);
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-250;
     font-weight: 700;
     color: rgb(var(--mg-color-neutral-700));
@@ -57,7 +57,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 
   &__title {
     margin: 0 0 var(--mg-spacing-150);
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-500;
     line-height: 1.2;
     color: rgb(var(--mg-color-neutral-800));
@@ -65,7 +65,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 
   &__body {
     margin: 0 0 var(--mg-spacing-250);
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-300;
     line-height: 1.5;
     color: rgb(var(--mg-color-neutral-700));
@@ -78,7 +78,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__label {
     display: block;
     margin: 0 0 var(--mg-spacing-50);
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-300;
     font-weight: 700;
     color: rgb(var(--mg-color-neutral-700));
@@ -94,7 +94,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     flex: 1;
     min-width: 0;
     padding: var(--mg-spacing-100) var(--mg-spacing-150);
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-300;
     color: rgb(var(--mg-color-neutral-800));
     background: rgb(var(--mg-color-white));
@@ -113,7 +113,14 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
 
   &__submit {
     padding: var(--mg-spacing-100) var(--mg-spacing-200);
-    font-family: $mg-font-family-headings;
+
+    // Buttons take `text`, not `ui` — the rule is uniform across the library
+    // (REVIEW-CHECKLIST.md) and `_foundational.scss` puts bare `button` there
+    // too. This one carried `ui` only because it predated the role model and
+    // used $mg-font-family-headings. Both roles resolve to Noto Sans Arabic in
+    // Arabic, so the change is Latin-only: Roboto Condensed to Roboto, which is
+    // what every other Mangrove button already renders in.
+    font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-300;
     font-weight: 600;
     color: rgb(var(--mg-color-white));
@@ -138,7 +145,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__error {
     min-height: var(--mg-spacing-200);
     margin: 0 0 var(--mg-spacing-150);
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-250;
     color: rgb(var(--mg-color-red-900));
   }
@@ -146,7 +153,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__contact {
     margin: 0;
     padding-top: var(--mg-spacing-150);
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-250;
     color: rgb(var(--mg-color-neutral-600));
     border-top: 1px solid rgb(var(--mg-color-neutral-100));
@@ -156,21 +163,4 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
       text-decoration: underline;
     }
   }
-}
-
-// RTL / Arabic font swap. Roboto Condensed has no Arabic glyph coverage,
-// so swap heading/UI families when lang="ar" is set on the page.
-// __submit is a button, so it takes the body family per REVIEW-CHECKLIST.md,
-// matching CtaButton, Chips and ShareButtons. See unisdr/undrr-mangrove#1089.
-.mg-preview-access__title:lang(ar),
-.mg-preview-access__label:lang(ar) {
-  font-family: $mg-font-family-arabic-headings;
-}
-
-.mg-preview-access__submit:lang(ar),
-.mg-preview-access__eyebrow:lang(ar),
-.mg-preview-access__body:lang(ar),
-.mg-preview-access__error:lang(ar),
-.mg-preview-access__contact:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }

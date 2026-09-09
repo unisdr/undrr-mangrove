@@ -30,7 +30,7 @@
 }
 
 .mg-user-feedback__question {
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   font-size: $mg-font-size-250;
   font-weight: 700;
   line-height: 1.4;
@@ -53,10 +53,6 @@
   border-radius: var(--mg-radius-button);
 
   @include mg-focus-ring;
-}
-
-.mg-user-feedback__question:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }
 
 @media (min-width: $mg-breakpoint-tablet) {

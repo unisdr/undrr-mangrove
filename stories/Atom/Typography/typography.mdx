@@ -14,23 +14,33 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Typography
 
-Font tokens are build-time SCSS variables. They are resolved at compile time and are not available as CSS custom properties at runtime.
+Font sizes are build-time SCSS variables, resolved at compile time. Font families are not: they are CSS custom properties, so they can change per script and per brand at runtime.
 
-### Font families
+### Font roles
+
+A component names a role, never a typeface. `_fonts.scss` re-points the roles for Arabic, so the same declaration renders correctly in both scripts. Latin resolves exactly as it did before the roles were introduced, and no new `font-family` declaration matches a Latin element — the `heading` rule on `h1`–`h3` is scoped to `:lang(ar)`, so a consuming theme's own heading face still wins.
+
+| Role | Latin | Arabic |
+|---|---|---|
+| `--mg-font-family-text` | Roboto | Noto Sans Arabic |
+| `--mg-font-family-heading` | Roboto | Noto Kufi Arabic |
+| `--mg-font-family-display` | Roboto Condensed | Noto Kufi Arabic |
+| `--mg-font-family-ui` | Roboto Condensed | Noto Sans Arabic |
+| `--mg-font-family-code` | mono stack | mono stack |
+
+### Font faces
+
+The typefaces the roles point at. Sass variables, all `!default`; do not reference them from component SCSS.
 
 | Token | Value |
 |---|---|
-| `$mg-font-family` | `"Roboto", sans-serif` |
-| `$mg-font-family-condensed` | `"Roboto Condensed", sans-serif` |
-| `$mg-font-family-headings` | `$mg-font-family-condensed` (overridable via `!default`) |
-| `$mg-font-family-icons` | `"fontawesome"` |
+| `$mg-font-face-sans` | `"Roboto", sans-serif` |
+| `$mg-font-face-sans-condensed` | `"Roboto Condensed", sans-serif` |
+| `$mg-font-face-mono` | `ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace` |
+| `$mg-font-face-arabic-display` | `"Noto Kufi Arabic", sans-serif` |
+| `$mg-font-face-arabic-sans` | `"Noto Sans Arabic", sans-serif` |
 
-### Localisation fonts
-
-| Token | Value |
-|---|---|
-| `$mg-font-family-arabic-headings` | `"Noto Kufi Arabic", sans-serif` |
-| `$mg-font-family-arabic-body` | `"Noto Sans Arabic", sans-serif` |
+See [Fonts](?path=/docs/design-decisions-fonts--docs) for how to choose a role and how to override one.
 
 ### Font sizes
 

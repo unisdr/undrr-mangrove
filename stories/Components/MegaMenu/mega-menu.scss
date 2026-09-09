@@ -156,7 +156,7 @@
   }
 
   &__item-link {
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     color: rgb(var(--mg-color-interactive));
     background: none;
     border: none;
@@ -233,7 +233,7 @@
   &__banner {
     padding: var(--mg-spacing-250);
     header {
-      font-family: $mg-font-family-headings;
+      font-family: var(--mg-font-family-ui);
       font-size: $mg-font-size-500;
       font-weight: bold;
       padding-bottom: var(--mg-spacing-100);
@@ -794,11 +794,6 @@
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
-// Arabic
-.mg-mega-menu__item-link:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
-}
-
 // Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be
 // interactive on small screens. This class is added by the React component on
 // mount (useEffect), so it is absent when JS fails or has not yet hydrated,
@@ -884,13 +879,10 @@
     border: 0;
     background: transparent;
     color: rgb(var(--mg-color-interactive));
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     text-align: start;
     cursor: pointer;
 
-    &:lang(ar) {
-      font-family: $mg-font-family-arabic-body;
-    }
   }
 
   .mg-mega-mobile-sidebar__close {
@@ -905,7 +897,7 @@
   }
 
   .mg-mega-mobile-sidebar__title {
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-500;
     font-weight: 700;
     line-height: 1.25;
@@ -913,9 +905,6 @@
     text-wrap: balance;
     overflow-wrap: anywhere;
 
-    &:lang(ar) {
-      font-family: $mg-font-family-arabic-headings;
-    }
   }
 
   .mg-mega-sidebar__list {
@@ -940,7 +929,7 @@
     background: transparent;
     border: 0;
     border-radius: var(--mg-spacing-50);
-    font-family: $mg-font-family-headings;
+    font-family: var(--mg-font-family-ui);
     font-size: $mg-font-size-400;
     font-weight: 600;
     line-height: 1.35;
@@ -948,9 +937,6 @@
     text-decoration: none;
     overflow-wrap: anywhere;
 
-    &:lang(ar) {
-      font-family: $mg-font-family-arabic-headings;
-    }
 
     &:hover {
       background: rgb(var(--mg-color-interactive) / 0.08);
@@ -960,14 +946,11 @@
   .mg-mega-mobile-sidebar__page--section .mg-mega-sidebar-section__item {
     min-height: mg-rem(44);
     padding-block: var(--mg-spacing-100);
-    font-family: $mg-font-family;
+    font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-300;
     font-weight: 400;
     line-height: 1.5;
 
-    &:lang(ar) {
-      font-family: $mg-font-family-arabic-body;
-    }
   }
 
   .mg-mega-mobile-sidebar__title-link {

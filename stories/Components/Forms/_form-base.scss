@@ -37,7 +37,7 @@
   border-radius: var(--mg-radius-form-input);
   box-sizing: border-box;
   display: block;
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   font-size: var(--mg-font-size-form-input);
   height: var(--mg-form-input-block-size);
   margin-top: var(--mg-spacing-25);
@@ -119,7 +119,7 @@
   box-sizing: border-box;
   cursor: pointer;
   display: block;
-  font-family: $mg-font-family;
+  font-family: var(--mg-font-family-text);
   font-size: var(--mg-font-size-form-input);
   height: var(--mg-form-input-block-size);
   margin-top: var(--mg-spacing-25);
@@ -340,13 +340,4 @@
     margin-right: 0;
     text-align: right;
   }
-}
-
-// -----------------------------------------------------------------------------
-// Arabic font override
-// -----------------------------------------------------------------------------
-.mg-form-input:lang(ar),
-.mg-form-textarea:lang(ar),
-.mg-form-select:lang(ar) {
-  font-family: $mg-font-family-arabic-body;
 }

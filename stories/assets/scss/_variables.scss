@@ -60,6 +60,30 @@
   }
 }
 
+// The same guard for the font-family variables removed by the role model
+// (unisdr/undrr-mangrove#1098). Separate loop because each name maps to a
+// different replacement role and the message has to say which.
+// $mg-font-family is the one a consumer is most likely to have set: it carried
+// 22 declarations before the migration.
+@each $_legacy, $_role
+  in (
+    "mg-font-family": "text",
+    "mg-font-family-headings": "ui",
+    "mg-font-family-condensed": "ui",
+    "mg-font-family-icons": "",
+    "mg-font-family-arabic-headings": "heading",
+    "mg-font-family-arabic-body": "text"
+  )
+{
+  @if meta.variable-exists($_legacy) {
+    @if $_role == "" {
+      @warn "Mangrove 2.0: `$#{$_legacy}` no longer exists and has no replacement — it had no stylesheet consumer, and icons.scss names the FontAwesome family directly. See docs/RELEASE-2.0.md.";
+    } @else {
+      @warn "Mangrove 2.0: `$#{$_legacy}` no longer has any effect — font families are role custom properties now. Move the override into a `.mg-theme-* { --mg-font-family-#{$_role}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
+    }
+  }
+}
+
 // Root font-size anchor: fixed at the browser-standard 16px root (1rem = 16px),
 // used by mg-rem() to convert intended pixel values to rem at build time. The
 // legacy 10px root — the `!default` override and the style-*-legacy.scss
@@ -122,10 +146,49 @@ $mg-font-line-height-700: 1.5em;
   }
 }
 
-$mg-font-family: "Roboto", sans-serif !default;
-$mg-font-family-condensed: "Roboto Condensed", sans-serif !default;
-$mg-font-family-headings: $mg-font-family-condensed !default;
-$mg-font-family-icons: "fontawesome" !default;
+// --- Font faces ---
+// A font stack, rendered for a custom property value with its quoting intact.
+
+// Plain interpolation of a Sass list strips the quotes from its quoted
+// members, and a custom property value is parsed as a token stream rather than
+// as a font-family. An override such as
+// `$mg-font-face-sans: "Frutiger 55 Roman", sans-serif` would emit
+// `Frutiger 55 Roman`; `55` is not a valid custom-ident, so the declaration is
+// invalid at computed-value time, the role is never defined, and every element
+// referencing it falls back to the browser's default serif. Frutiger, Univers
+// and Helvetica Neue LT Std all name weights numerically, so this is the
+// common case for the licensed brand faces the `!default` escape hatch exists
+// to admit. `meta.inspect()` renders the list the way Sass wrote it.
+
+// It lives here, and _fonts.scss calls it rather than importing `sass:meta`
+// itself: both files are pulled into one scope by the legacy `@import` chain,
+// and two `@use "sass:meta"` rules in that scope collide.
+// See unisdr/undrr-mangrove#1098.
+@function mg-font-stack($stack) {
+  @return meta.inspect($stack);
+}
+
+// Faces name what fonts exist. Roles (--mg-font-family-text / -heading /
+// -display / -ui / -code) name the reader's task and are mapped onto these
+// faces per script in _fonts.scss. No component stylesheet may name a
+// face: it references a role. See unisdr/undrr-mangrove#1098.
+
+// Faces keep `!default` so a consumer compiling Mangrove from source can swap
+// in a licensed brand face before the import. That is the only way to introduce
+// a face Mangrove does not ship: a runtime role override
+// (`.mg-theme-* { --mg-font-family-ui: ...; }`) can only re-point a role among
+// the faces _fonts.scss already loads @font-face rules for.
+// These variables live outside the brand mixin, so a Sass override applies to
+// every brand in the combined style-all.css. Per-brand faces need the runtime
+// override instead.
+// Quote any family name that is not a plain CSS identifier — anything with a
+// space, a digit-leading word or punctuation. The `:root` block below
+// round-trips these through `mg-font-stack()` so the quotes survive into the
+// emitted custom property; see the note on that function.
+$mg-font-face-sans: "Roboto", sans-serif !default;
+$mg-font-face-sans-condensed: "Roboto Condensed", sans-serif !default;
+$mg-font-face-mono: ui-monospace, "SFMono-Regular", "Consolas",
+  "Liberation Mono", "Menlo", monospace !default;
 
 // Arabic fonts
 // Noto Kufi Arabic for headings, Noto Sans Arabic for body. Decided in
@@ -149,11 +212,8 @@ $mg-font-family-icons: "fontawesome" !default;
 // 400/700 binary where Latin has a ladder. Nothing is faux bolded: the 600
 // used in _foundational.scss resolves UP to the real Bold. The cost is a lost
 // tier of emphasis, not a rendering defect.
-$mg-font-family-arabic-headings: "Noto Kufi Arabic", sans-serif !default;
-$mg-font-family-arabic-body: "Noto Sans Arabic", sans-serif !default;
-
-// $mg-font-family-icons: "mangrove-icon-set";
-// Not yet activated as we are using the FontAwesome namespace
+$mg-font-face-arabic-display: "Noto Kufi Arabic", sans-serif !default;
+$mg-font-face-arabic-sans: "Noto Sans Arabic", sans-serif !default;
 
 // BUILD-TIME ONLY — breakpoints cannot be CSS custom properties.
 // @media queries require static values resolved at compile time; var() is invalid there.
@@ -170,11 +230,29 @@ $mg-breakpoint-desktop-wide: 1440px;
 $mg-tabs-border-bottom: true !default;
 
 // Tokens deliberately NOT in the token sources.
+// - The font roles are bound to faces here because every supported build path
+//   reaches _variables.scss, including the per-component Sass recipe in
+//   SassIntegration.mdx. A role reference with no definition is invalid at
+//   computed-value time, so the whole declaration is dropped and the element
+//   loses its family. Component stylesheets carry no var() fallbacks, so this
+//   block is what makes that safe. Script routing stays in _fonts.scss, which
+//   that recipe imports for the @font-face blocks anyway.
 // - The Sendai ramp and the legacy one-off colours predate the naming
 //   convention, carry their own prefixes, and no theme overrides them.
 // - The status-label and empty-state blocks are component tokens with no
 //   brand overrides; they read the generated tokens at runtime.
 :root {
+  // Font roles. Faces above say what fonts exist; roles say what job the type
+  // is doing. Latin: text and heading are both Roboto, display and ui are both
+  // Roboto Condensed, so this indirection renders identically to the faces it
+  // replaced. _fonts.scss re-points these per script.
+  // See unisdr/undrr-mangrove#1098.
+  --mg-font-family-text: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-heading: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-display: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-ui: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-code: #{mg-font-stack($mg-font-face-mono)};
+
   // Legacy one-off colors (hardcoded — no palette backing)
   --mg-color-green: #008484;
   --mg-color-green-light: #90ee90;

@@ -70,7 +70,7 @@ stories/assets/scss/
   generated/_tokens-{brand}.scss  # Build output of `yarn build:tokens` — never edit
   _tokens-tabs.scss            # Tab token block
   _tokens-data-viz.scss        # Data-visualisation palettes
-  _fonts.scss                  # Web font imports
+  _fonts.scss                  # @font-face blocks and the Arabic script map
   _breakpoints.scss            # devicebreak() mixin
   _mixins.scss                 # Focus ring, vendor-prefix and utility mixins
   _utility.scss                # CSS utility classes
@@ -142,18 +142,35 @@ Generated from `tokens/mangrove.yaml` into `generated/_tokens-mangrove.scss`, an
 
 Aliases over that scale: `$mg-font-body` (`$mg-font-size-300`), `$mg-font-tag` (`$mg-font-size-250`), `$mg-font-line-height-500` (`1.25em`), `$mg-font-line-height-700` (`1.5em`).
 
-### Font families
+### Font faces and font roles
+
+Type is the one place where the SCSS layer and the custom-property layer both matter, so it has two token sets.
+
+**Faces** are Sass variables — one per typeface Mangrove ships a `@font-face` for. All `!default`.
 
 | Variable | Value |
 |----------|-------|
-| `$mg-font-family` | `"Roboto", sans-serif` |
-| `$mg-font-family-condensed` | `"Roboto Condensed", sans-serif` |
-| `$mg-font-family-headings` | `$mg-font-family-condensed` (`!default`) |
-| `$mg-font-family-icons` | `"fontawesome"` |
-| `$mg-font-family-arabic-headings` | `"Noto Kufi Arabic", sans-serif` |
-| `$mg-font-family-arabic-body` | `"Noto Sans Arabic", sans-serif` |
+| `$mg-font-face-sans` | `"Roboto", sans-serif` |
+| `$mg-font-face-sans-condensed` | `"Roboto Condensed", sans-serif` |
+| `$mg-font-face-mono` | `ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace` |
+| `$mg-font-face-arabic-display` | `"Noto Kufi Arabic", sans-serif` |
+| `$mg-font-face-arabic-sans` | `"Noto Sans Arabic", sans-serif` |
 
-Arabic pairs Noto Kufi Arabic headings with Noto Sans Arabic body text, replacing Dubai; the reasoning is in the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs).
+**Roles** are CSS custom properties. Every component stylesheet reads a role; none reads a face. `_fonts.scss` re-points the roles for Arabic, which is why no component carries a `:lang(ar)` font rule.
+
+| Role | Latin | Arabic |
+|------|-------|--------|
+| `--mg-font-family-text` | `$mg-font-face-sans` | `$mg-font-face-arabic-sans` |
+| `--mg-font-family-heading` | `$mg-font-face-sans` | `$mg-font-face-arabic-display` |
+| `--mg-font-family-display` | `$mg-font-face-sans-condensed` | `$mg-font-face-arabic-display` |
+| `--mg-font-family-ui` | `$mg-font-face-sans-condensed` | `$mg-font-face-arabic-sans` |
+| `--mg-font-family-code` | `$mg-font-face-mono` | `$mg-font-face-mono` |
+
+Latin resolves exactly as it did before the roles existed, and no new `font-family` declaration matches a Latin element, so a theme that sets its own face on `h1`–`h3` keeps it. To re-point a role for one brand, override the custom property in a `.mg-theme-*` block — but a role can only point at a face Mangrove already loads. To introduce a typeface Mangrove does not ship, assign the face variable before the import and load the font yourself; quote any family name that is not a plain CSS identifier. Note that faces sit outside the brand mixins, so a Sass override applies to every brand in `style-all.css`.
+
+The six 1.x font variables — `$mg-font-family`, `-condensed`, `-headings`, `-icons`, `-arabic-headings`, `-arabic-body` — were removed in 2.0. See [breaking change #8](/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes for what to do if you set any of them.
+
+Arabic pairs Noto Kufi Arabic display type with Noto Sans Arabic body text, replacing Dubai; the reasoning is in the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs).
 
 ### Compile-time constants
 
@@ -275,6 +292,7 @@ If you only need specific components, import the partials directly. The full lis
 ```scss
 // Import base dependencies first
 @import "stories/assets/scss/variables";
+@import "stories/assets/scss/fonts";
 @import "stories/assets/scss/breakpoints";
 @import "stories/assets/scss/mixins";
 @import "stories/assets/scss/foundational";
@@ -286,7 +304,11 @@ If you only need specific components, import the partials directly. The full lis
 @import "stories/Components/Tab/tab";
 ```
 
-Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block, and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Import those first or the build fails.
+Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Import those first or the build fails.
+
+`_fonts.scss` earns its place in that list twice over: it declares the `@font-face` blocks, and it carries the Arabic script map that re-points the roles. Drop it and the roles still resolve, but only to their Latin faces — Arabic text asks for Roboto, which has no Arabic coverage, and every glyph falls back to whatever the reader's OS supplies. Nothing warns you. Import it exactly once: Sass's legacy `@import` re-emits, so a second import would duplicate all 32 `@font-face` blocks.
+
+This import list is checked by a test that compiles it and asserts both halves: the roles defined ahead of their first use, and the Arabic map present. If you shorten it, expect Times New Roman or an unstyled Arabic page.
 
 ## Build tool configuration
 
