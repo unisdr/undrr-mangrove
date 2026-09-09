@@ -1,0 +1,204 @@
+// Story-only exploration: intentionally excluded from the distributed stylesheet.
+.mg-hub-example {
+  color: rgb(var(--mg-color-neutral-900));
+  background: rgb(var(--mg-color-neutral-0));
+  min-inline-size: 0;
+
+  &__parent {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-150);
+    padding: var(--mg-spacing-150) clamp(1rem, 4vw, 3rem);
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
+  }
+
+  &__brand {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  &__organization {
+    max-inline-size: 20rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  &__escape {
+    margin-inline-start: auto;
+    font-size: 0.875rem;
+  }
+
+  &__global {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-150);
+    padding-inline: clamp(1rem, 4vw, 3rem);
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
+    a {
+      padding-block: var(--mg-spacing-100);
+    }
+  }
+
+  &__shell {
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 3rem);
+  }
+
+  &__breadcrumbs {
+    padding-block: var(--mg-spacing-150);
+    font-size: 0.875rem;
+  }
+
+  &__name {
+    display: inline-block;
+    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+    font-family: var(--mg-font-family-ui);
+    font-weight: 700;
+    text-decoration: none;
+    padding-block: var(--mg-spacing-75);
+  }
+
+  &__navigation {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
+    margin-block-start: var(--mg-spacing-100);
+
+    ul {
+      display: flex;
+      inline-size: max-content;
+      min-inline-size: 100%;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: var(--mg-spacing-50);
+    }
+    li {
+      margin: 0;
+      padding: 0;
+    }
+    a {
+      display: block;
+      min-block-size: 2.75rem;
+      padding: var(--mg-spacing-100) var(--mg-spacing-150);
+      border-block-end: 3px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    a[aria-current] {
+      border-block-end-color: currentColor;
+      background: rgb(var(--mg-color-interactive) / 0.07);
+      font-weight: 700;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:focus-visible {
+      outline-offset: -3px;
+    }
+  }
+
+  &__main {
+    padding-block: clamp(1.5rem, 4vw, 3rem) var(--mg-spacing-400);
+  }
+  &__intro {
+    max-inline-size: 49rem;
+    margin-block-end: var(--mg-spacing-250);
+  }
+  &__intro h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin-block: 0 var(--mg-spacing-150);
+  }
+  &__intro > p {
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+  &__section {
+    margin-block-start: var(--mg-spacing-300);
+  }
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--mg-spacing-200);
+  }
+  &__cards .mg-card {
+    min-inline-size: 0;
+  }
+  &__reading {
+    display: grid;
+    gap: var(--mg-spacing-300);
+  }
+  &__article {
+    min-inline-size: 0;
+    max-inline-size: 46rem;
+  }
+  &__article section {
+    margin-block-end: var(--mg-spacing-300);
+    scroll-margin-block-start: var(--mg-spacing-200);
+  }
+  &__article p {
+    line-height: 1.75;
+  }
+  &__contents {
+    border-inline-start: 2px solid rgb(var(--mg-color-neutral-300));
+    padding-inline-start: var(--mg-spacing-150);
+    align-self: start;
+    p {
+      font-weight: 700;
+      margin-block: 0 var(--mg-spacing-50);
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    a {
+      display: inline-block;
+      padding-block: var(--mg-spacing-50);
+    }
+  }
+
+  &__skip {
+    position: absolute;
+    clip-path: inset(50%);
+    &:focus {
+      position: static;
+      clip-path: none;
+      display: block;
+      padding: var(--mg-spacing-100);
+    }
+  }
+
+  @media (width >= 60rem) {
+    &__reading--with-contents {
+      grid-template-columns: minmax(0, 1fr) 13rem;
+    }
+    &__reading--with-contents &__contents {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    &__reading--with-contents &__article {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+
+  @media (width <= 36rem) {
+    &__organization {
+      display: none;
+    }
+    &__navigation a {
+      padding-inline: var(--mg-spacing-100);
+    }
+  }
+
+  @media (forced-colors: active) {
+    &__navigation a[aria-current] {
+      border-block-end-color: Highlight;
+    }
+  }
+}

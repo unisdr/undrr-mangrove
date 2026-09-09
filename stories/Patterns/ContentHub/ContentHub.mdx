@@ -1,0 +1,122 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './ContentHub.stories';
+import layers from '../../assets/patterns/content-hub-layers.svg';
+
+<Meta of={Stories} />
+
+# Landing pages and content hubs
+
+> **Note:** A Storybook exploration for [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112), not a published component or a new CMS content type. Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+A content hub gives a substantial group of pages a shared identity and a reliable
+route between sections. Breadcrumbs explain ancestry; hub navigation makes sibling
+content discoverable without a return trip to the landing page.
+
+These examples use illustrative Sendai Framework Monitor content. They are not
+reporting instructions or a proposed final site map. Internal links navigate within
+the example; parent-site links and the reporting-platform link leave the demo.
+
+## The layers
+
+<img src={layers} alt="Architecture sketch comparing a parent website, content hub and microsite, with separate publishing choices and the navigation layers of a hub detail page." style={{ width: '100%', height: 'auto' }} />
+
+[Open the editable SVG](https://github.com/unisdr/undrr-mangrove/blob/feat/content-hub-patterns/stories/assets/patterns/content-hub-layers.svg)
+and [read the information architecture brief](https://github.com/unisdr/undrr-mangrove/blob/feat/content-hub-patterns/docs/design/content-hubs.md).
+The brief includes alternative mobile and deep-section sketches, research references
+and questions to test with real content.
+
+| Pattern | Its job | Navigation emphasis |
+| --- | --- | --- |
+| Basic landing page | Introduce a subject and direct people to useful content | Parent navigation and grouped routes |
+| Content hub | Support repeated movement across related pages | Shared resource name and section links |
+| Microsite | Support a more distinct experience or subbrand | Its own navigation with a clear parent connection |
+
+Publishing is a separate choice. Drupal, a static build or another application can
+support these experiences. A hub can also link to a tool with its own task-oriented
+navigation without adopting that tool's interface.
+
+## Basic landing page
+
+A page title, introduction and grouped content routes are enough for many landing
+pages. Persistent section navigation is not required merely because related pages exist.
+The Monitor link below enters the hub so the change in navigation can be compared.
+
+<Canvas of={Stories.BasicLanding} />
+
+## Hub home
+
+A stable resource name and short set of section links establish a place within the
+parent site. The larger introductory heading belongs to this home page; it does not
+repeat above every detail page.
+
+<Canvas of={Stories.HubHome} />
+
+## Hub detail
+
+Try moving from Reporting to How to report, then to another section. Reporting stays
+active on descendants, while the page heading and breadcrumbs identify the exact page.
+These are ordinary navigation links, not controls for tab panels.
+
+<Canvas of={Stories.HubDetail} />
+
+<Controls of={Stories.HubDetail} />
+
+The `parentNavigation` control compares a compact parent masthead with a fuller
+navigation row. The compact version keeps an explicit link to UNDRR; it is a
+hypothesis to test, not a recommendation to remove existing global navigation.
+A production composition still needs the site's search, language access and global
+menu. The prototype simplifies those utilities to make the local hierarchy easier to judge.
+
+Use the locale toolbar for Arabic and resize the canvas for mobile. The section
+strip scrolls horizontally, keeps ordinary keyboard link navigation and indicates
+the current section. The theme toolbar applies Mangrove's shared tokens.
+
+## A deeper page
+
+The breadcrumb trail retains the parent guidance page while Reporting remains the
+active hub section. This initial example tests a shallow hierarchy without another
+permanent navigation rail.
+
+<Canvas of={Stories.DeeperPage} />
+
+A dense reference section may benefit from a scoped sibling rail. That remains a
+valid alternative: avoid adding both a full section rail and a full in-page rail
+without a clear need. A labelled mobile Sections disclosure is another option to
+compare when the section strip grows long.
+
+## Composition and possible components
+
+| Already available | Explored here |
+| --- | --- |
+| Vertical cards for grouped routes | Persistent hub identity and section navigation |
+| Soft CTA for a route into the reporting tool | Full and compact parent-header compositions |
+| Breadcrumb styling, typography and theme tokens | Page hierarchy, optional contents links and responsive placement |
+
+The prototype uses native breadcrumb links with existing styles, plus VerticalCard
+and TextCta. Its `mg-hub-example` layout styles load only with these stories. It adds
+no production exports, hydration API or distributed CSS classes, so existing pages
+and components retain their behaviour. A small hub identity/navigation component
+could graduate from this exploration after testing real labels and page depth.
+
+The hash routing is demonstration code. A production site should supply canonical
+page URLs, current-page and active-ancestor state, and its own rendering or routing.
+Use distinct navigation labels and `aria-current="page"` for an exact current page;
+the prototype uses `aria-current="location"` for its active ancestor section.
+
+## Questions for the next iteration
+
+- Can someone entering on a detail page identify the resource and reach a sibling section?
+- Does compact parent navigation clarify the hub without obscuring the wider site?
+- When does a section need a sibling rail or mobile disclosure rather than a scrolling strip?
+- Which pages are long enough to benefit from On this page links?
+- Can shared content belong to several collections without duplicating its canonical page?
+
+The [GOV.UK service navigation pattern](https://design-system.service.gov.uk/patterns/navigate-a-service/)
+provides a useful reference for separating parent identity from local navigation.
+Its [current-page and active-section states](https://design-system.service.gov.uk/components/service-navigation/)
+help distinguish a section landing page from its descendants. This is an analogy for
+content hubs, not a requirement to copy a transactional service header.
+
+## Changelog
+
+- **1.0** — 2026-09-09: Added basic landing, hub home, detail and deeper-page explorations, English/Arabic content, parent-header comparison, and information architecture sketches. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
