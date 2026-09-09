@@ -18,7 +18,7 @@ Font sizes are build-time SCSS variables, resolved at compile time. Font familie
 
 ### Font roles
 
-A component names a role, never a typeface. `_font-roles.scss` re-points the roles for Arabic, so the same declaration renders correctly in both scripts. Latin resolves exactly as it did before the roles were introduced.
+A component names a role, never a typeface. `_font-roles.scss` re-points the roles for Arabic, so the same declaration renders correctly in both scripts. Latin resolves exactly as it did before the roles were introduced, and no new `font-family` declaration matches a Latin element — the `heading` rule on `h1`–`h3` is scoped to `:lang(ar)`, so a consuming theme's own heading face still wins.
 
 | Role | Latin | Arabic |
 |---|---|---|

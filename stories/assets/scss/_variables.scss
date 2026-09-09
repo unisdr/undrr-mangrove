@@ -147,6 +147,27 @@ $mg-font-line-height-700: 1.5em;
 }
 
 // --- Font faces ---
+// A font stack, rendered for a custom property value with its quoting intact.
+
+// Plain interpolation of a Sass list strips the quotes from its quoted
+// members, and a custom property value is parsed as a token stream rather than
+// as a font-family. An override such as
+// `$mg-font-face-sans: "Frutiger 55 Roman", sans-serif` would emit
+// `Frutiger 55 Roman`; `55` is not a valid custom-ident, so the declaration is
+// invalid at computed-value time, the role is never defined, and every element
+// referencing it falls back to the browser's default serif. Frutiger, Univers
+// and Helvetica Neue LT Std all name weights numerically, so this is the
+// common case for the licensed brand faces the `!default` escape hatch exists
+// to admit. `meta.inspect()` renders the list the way Sass wrote it.
+
+// It lives here, and _font-roles.scss calls it rather than importing
+// `sass:meta` itself: both files are pulled into one scope by the legacy
+// `@import` chain, and two `@use "sass:meta"` rules in that scope collide.
+// See unisdr/undrr-mangrove#1098.
+@function mg-font-stack($stack) {
+  @return meta.inspect($stack);
+}
+
 // Faces name what fonts exist. Roles (--mg-font-family-text / -heading /
 // -display / -ui / -code) name the reader's task and are mapped onto these
 // faces per script in _font-roles.scss. No component stylesheet may name a
@@ -160,6 +181,10 @@ $mg-font-line-height-700: 1.5em;
 // These variables live outside the brand mixin, so a Sass override applies to
 // every brand in the combined style-all.css. Per-brand faces need the runtime
 // override instead.
+// Quote any family name that is not a plain CSS identifier — anything with a
+// space, a digit-leading word or punctuation. The `:root` block below
+// round-trips these through `mg-font-stack()` so the quotes survive into the
+// emitted custom property; see the note on that function.
 $mg-font-face-sans: "Roboto", sans-serif !default;
 $mg-font-face-sans-condensed: "Roboto Condensed", sans-serif !default;
 $mg-font-face-mono: ui-monospace, "SFMono-Regular", "Consolas",
@@ -222,11 +247,11 @@ $mg-tabs-border-bottom: true !default;
   // Roboto Condensed, so this indirection renders identically to the faces it
   // replaced. _font-roles.scss re-points these per script.
   // See unisdr/undrr-mangrove#1098.
-  --mg-font-family-text: #{$mg-font-face-sans};
-  --mg-font-family-heading: #{$mg-font-face-sans};
-  --mg-font-family-display: #{$mg-font-face-sans-condensed};
-  --mg-font-family-ui: #{$mg-font-face-sans-condensed};
-  --mg-font-family-code: #{$mg-font-face-mono};
+  --mg-font-family-text: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-heading: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-display: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-ui: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-code: #{mg-font-stack($mg-font-face-mono)};
 
   // Legacy one-off colors (hardcoded — no palette backing)
   --mg-color-green: #008484;

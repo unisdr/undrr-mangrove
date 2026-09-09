@@ -269,9 +269,16 @@ Added in alpha.4, closing [issue #1098](https://github.com/unisdr/undrr-mangrove
 | `$mg-font-family-arabic-body` | `--mg-font-family-text` |
 | `$mg-font-family-icons` | none — it had no stylesheet consumer, and `icons.scss` names the FontAwesome family directly |
 
-**Latin rendering is unchanged.** Every Latin element resolves to the face it resolved to before: `text` and `heading` are both Roboto, `display` and `ui` are both Roboto Condensed. If you consume compiled CSS and your pages are Latin-only, there is nothing to do and nothing to see.
+**Latin rendering is unchanged.** Every Latin element resolves to the face it resolved to before: `text` and `heading` are both Roboto, `display` and `ui` are both Roboto Condensed. No new `font-family` declaration matches a Latin element — the one new heading rule is scoped to `:lang(ar)` precisely so that a theme setting its own face on `h1`–`h3` keeps it. If you consume compiled CSS and your pages are Latin-only, there is nothing to do and nothing to see.
 
-**Arabic rendering does change, deliberately.** The old model routed by *element* — every heading and all compact chrome took Noto Kufi Arabic. The new model routes by *role*, and Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic. Arabic card titles, labels, tags, tabs, breadcrumbs, navigation links and stat values move from Kufi to Noto Sans Arabic; Kufi is kept for narrative h1–h3 and the hero title, where a display face belongs. Arabic chrome measures about 10.8% *narrower* than the Latin equivalent, so nothing needed width compensation.
+The one Latin change anywhere in the library is `.mg-preview-access__submit`, which moves from Roboto Condensed to Roboto so that every button in the library is on the same role.
+
+**Arabic rendering does change, deliberately.** The old model routed by *element* — every heading and all compact chrome took Noto Kufi Arabic. The new model routes by *role*, and Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic. Kufi is kept for narrative h1–h3 and the hero title, where a display face belongs. Everything else that had it moves to Noto Sans Arabic:
+
+- chrome, because `ui` collapses: card titles and labels, gallery and empty-state titles, tags, tabs, breadcrumbs, mega-menu and on-this-page navigation links, stat values, the hero label;
+- prose-sized elements that the old model swept up with the headings, because they now inherit `text`: `h4`, `h5`, `h6`, `th`, and the bare `header` element — which previously handed a display face to every page-header subtree.
+
+Arabic chrome measures about 10.8% *narrower* than the Latin equivalent, so nothing needed width compensation.
 
 This also fixes [issue #1095](https://github.com/unisdr/undrr-mangrove/issues/1095) as a side effect: the mega menu's Arabic override named a class that does not exist, so Arabic top-bar links were rendering in Roboto Condensed, which has no Arabic coverage at all.
 
@@ -311,15 +318,7 @@ Faces are declared outside the brand mixins, so that assignment applies to **eve
 Two authoring rules changed, and both are in the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs).
 
 - **Do not write `:lang(ar)` font rules.** Nineteen component-level blocks were deleted. Script routing lives in `_font-roles.scss` and nowhere else; a component that names a role gets Arabic for free, and a component-level override takes it back out of the map. This supersedes the pattern that [#1091](https://github.com/unisdr/undrr-mangrove/pull/1091) and [#1093](https://github.com/unisdr/undrr-mangrove/pull/1093) both worked on.
-- **A `ui` or `display` container that can wrap a heading must claim its own subtree.** `_foundational.scss` now declares `h1, h2, h3 { font-family: var(--mg-font-family-heading); }`, where Latin previously had only inheritance. A matched declaration beats an inherited one at any specificity, so an unclaimed heading inside such a container drops to the body face. Use the form in `card.scss` and `hero.scss`:
-
-  ```scss
-  .mg-card__title :is(h1, h2, h3, a) {
-    font-family: var(--mg-font-family-ui);
-  }
-  ```
-
-  Mangrove's own components are covered by a test. **Your markup is not.** If you place an `<h2>` inside a Mangrove `ui` container — a `.mg-card__title` that Mangrove's own JSX fills with a link — the heading loses the chrome face. It is invisible in Latin, because `text` and `heading` are both Roboto; in Arabic it jumps from Noto Sans Arabic to Noto Kufi Arabic. Either keep headings out of those containers or add the claim in your own stylesheet.
+- **Do not declare a family on `h1`–`h6`, `p`, `th`, `td` or a bare `header`.** They inherit `text` from `body`; h1–h3 additionally get `heading` from `_foundational.scss`, and that rule is scoped to `:lang(ar)` on purpose. In Latin `heading` and `text` are the same face, so an unconditional declaration would buy nothing and cost a great deal: at (0,0,1) it ties with a consuming theme's own `h1` rule and wins on source order, because `mangrove.css` loads last. Latin headings therefore stay on pure inheritance, exactly as in 1.x, and a theme's brand face survives.
 
 Full reference: [Fonts](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-fonts--docs).
 

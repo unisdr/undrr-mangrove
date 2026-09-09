@@ -50,15 +50,23 @@ const BOUNDARY_SELECTORS = [BOUNDARY_TO_LATIN, BOUNDARY_TO_ARABIC];
 const ARABIC_ROOT = ':root:lang(ar)';
 
 /**
+ * The only `:lang(ar)` font-family rule outside the role map, and the only
+ * consumer of the `heading` role. Anchored to the heading itself, like every
+ * other `:lang(ar)` rule here, so it stops at a `lang="en"` boundary.
+ */
+const ARABIC_HEADINGS = ['h1:lang(ar)', 'h2:lang(ar)', 'h3:lang(ar)'];
+
+/**
  * Compiled role values, derived from the face variables in `_variables.scss`
  * rather than retyped, so a deliberate face change is edited in one place. What
  * these tables pin is the role-to-face ASSIGNMENT on each side of a boundary —
  * the decision — not the font names, which are Task 1's to choose.
  *
- * Sass interpolation strips string quotes, so the roles are emitted UNQUOTED
- * (`Roboto, sans-serif`) while the `@font-face` blocks that load those files
- * keep their quotes. Reading the faces back through the same interpolation is
- * what makes both sides of every comparison agree about that.
+ * The faces are read back through `mg-font-stack()`, the same helper the role
+ * map uses, so both sides of every comparison are rendered identically. That
+ * helper exists because plain interpolation strips a list's quotes, which turns
+ * a face override such as `"Frutiger 55 Roman", sans-serif` into an invalid
+ * custom-ident and silently drops the whole declaration.
  */
 const FACES = [
   'mg-font-face-sans',
@@ -68,7 +76,9 @@ const FACES = [
 ];
 
 const face = (() => {
-  const probe = FACES.map(name => `  --${name}: #{$${name}};`).join('\n');
+  const probe = FACES.map(
+    name => `  --${name}: #{mg-font-stack($${name})};`
+  ).join('\n');
   const css = sass.compileString(
     `@import "variables";\n.mg-face-probe {\n${probe}\n}\n`,
     {
@@ -205,6 +215,19 @@ describe('Arabic typography selectors (compiled CSS)', () => {
     expect(declarationsFor(compile(entry), ARABIC_ROOT)).toEqual(ARABIC_ROLES);
   });
 
+  test.each(ENTRIES)('%s.scss puts Arabic h1-h3 on the heading role', entry => {
+    // Noto Kufi Arabic is a display face and is reserved for narrative h1-h3
+    // and the hero title; everything at or below body size takes Noto Sans
+    // Arabic. This rule is what keeps Kufi in the product at all — delete it
+    // and Latin is unchanged, the suite is green, and Arabic headings quietly
+    // become body text.
+    const css = compile(entry);
+    for (const selector of ARABIC_HEADINGS)
+      expect(declarationsFor(css, selector)).toEqual({
+        'font-family': 'var(--mg-font-family-heading)',
+      });
+  });
+
   test.each(ENTRIES)(
     '%s.scss resets to the Latin roles at a boundary',
     entry => {
@@ -256,12 +279,20 @@ describe('Arabic typography selectors (compiled CSS)', () => {
     '%s.scss routes every script substitution through the role map',
     entry => {
       // #1098's central claim: no component stylesheet carries a `:lang(ar)`
-      // font override any more. A component names a role; the three rules above
+      // font override any more. A component names a role; the three map rules
       // re-point the roles. A new `:lang(ar) { font-family: ... }` block in a
       // component would restore the per-component drift this replaced, and
       // would be invisible to every other assertion here.
+      //
+      // `h1:lang(ar), h2:lang(ar), h3:lang(ar)` is the one allowed exception,
+      // and it is not a component override: it is the `heading` role's only
+      // consumer. The rule is scoped to Arabic because in Latin `heading` and
+      // `text` are both Roboto, so an unconditional `h1, h2, h3` bought nothing
+      // and cost two production themes their brand face — it is a matched
+      // declaration at (0,0,1) that ties with the consumer's own `h1` rule and
+      // wins on source order. Its VALUE is asserted below.
       const css = compile(entry);
-      const ROLE_MAP = [ARABIC_ROOT, ...BOUNDARY_SELECTORS];
+      const ROLE_MAP = [ARABIC_ROOT, ...BOUNDARY_SELECTORS, ...ARABIC_HEADINGS];
 
       const strays = arabicSelectors(css)
         .filter(selector => !ROLE_MAP.includes(selector))
@@ -280,6 +311,8 @@ describe('Arabic typography at a language boundary (DOM)', () => {
     document.documentElement.dir = 'rtl';
     document.body.innerHTML = `
       <h1 id="ar-heading">عنوان</h1>
+      <h2 id="ar-heading-2">عنوان</h2>
+      <h3 id="ar-heading-3">عنوان</h3>
       <p id="ar-body">نص</p>
       <span class="mg-tag" id="ar-tag">وسم</span>
       <span class="mg-u-font-size-600" id="ar-size-600">وسم</span>

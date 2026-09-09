@@ -10,16 +10,22 @@
  * A byte-identical Latin diff proves a lot, but it is structurally blind to
  * three things, and each of them has already bitten this change once:
  *
- *  1. DOM nesting. `_foundational.scss` now gives `h1, h2, h3` a *matched*
- *     `font-family` where Latin previously had only inheritance. A `ui`
- *     container that wraps a heading must therefore claim its own subtree, or
- *     the heading silently drops to the body face. Latin output is unchanged
- *     either way (`text` and `heading` are both Roboto), so only Arabic breaks,
- *     and only when a consumer nests a heading. See `describe('ui containers')`.
+ *  1. Which role a component names. Re-pointing `.mg-tag`, `.mg-tabs__link` or
+ *     `.mg-breadcrumb` from `ui` to `text` changes the Latin face from Roboto
+ *     Condensed to Roboto on every page — and used to pass the whole suite,
+ *     because nothing asserted the assignment. Nor did anything notice when
+ *     the `heading` role lost its last consumer, which silently removes Noto
+ *     Kufi Arabic from the product. See `describe('every component names the
+ *     role it is meant to')`.
  *  2. Build paths. `style-gutenberg.scss` does not import `_foundational.scss`;
  *     a role reference with no definition in scope is invalid at
  *     computed-value time, the declaration is dropped, and the element falls
- *     back to Times. This actually happened twice during #1098.
+ *     back to Times. This actually happened twice during #1098. The mirror
+ *     failure is worse because it is not invalid at all: the shared import
+ *     list every UNDRR Drupal theme compiles reaches `_foundational.scss` and
+ *     no entry point, so it once carried the Latin map with no Arabic map
+ *     behind it, and every Arabic glyph on every production site fell back to
+ *     the OS default. See `describe('the shared Drupal import list')`.
  *  3. Sass variables a consumer sets before the import. The removed names are
  *     silent no-ops now, so the removal is only safe while the `@warn` guard
  *     covers every one of them.
@@ -31,12 +37,6 @@
 const fs = require('fs');
 const path = require('path');
 const sass = require('sass');
-// Used only to read JSX structure — see the ui-container section for why a
-// regex will not do. Declared in devDependencies at 7.x deliberately, even
-// though @babel/core would drag a copy in anyway: @babel/parser 8 is ESM-only
-// and cannot be `require`d from a CJS jest suite, so relying on hoisting would
-// leave this suite one dependency bump away from failing to load at all.
-const parser = require('@babel/parser');
 
 const SCSS_DIR = path.resolve(__dirname, '..');
 const REPO_ROOT = path.resolve(__dirname, '../../../..');
@@ -92,29 +92,6 @@ function splitBalanced(input, separator) {
 }
 
 /**
- * A selector's compound selectors, outermost first. Splits on combinators and
- * descendant whitespace at paren depth 0, so `.a :is(h1, h2)` yields
- * `['.a', ':is(h1, h2)']` rather than tearing the `:is()` list apart.
- */
-function compounds(selector) {
-  const out = [];
-  let depth = 0;
-  let current = '';
-  for (const char of selector) {
-    if (char === '(') depth += 1;
-    if (char === ')') depth -= 1;
-    if (depth === 0 && /[\s>+~]/.test(char)) {
-      if (current) out.push(current);
-      current = '';
-    } else {
-      current += char;
-    }
-  }
-  if (current) out.push(current);
-  return out;
-}
-
-/**
  * Every `(selector, declarations)` pair in `css`, one entry per selector in a
  * selector list. Declarations are last-wins, as the cascade is.
  */
@@ -128,6 +105,23 @@ function rules(css) {
       out.push({ selector: selector.replace(/\s+/g, ' '), decls });
   }
   return out;
+}
+
+/**
+ * The role custom properties an element carries under `selector`, merged
+ * last-wins across every rule with that exact selector — which is how the
+ * cascade reads them.
+ */
+function roleMapIn(css, selector) {
+  const merged = {};
+  for (const rule of rules(css)) {
+    if (rule.selector !== selector) continue;
+    for (const role of ROLES) {
+      const value = rule.decls[`--mg-font-family-${role}`];
+      if (value !== undefined) merged[role] = value;
+    }
+  }
+  return merged;
 }
 
 describe('every font-family names a role', () => {
@@ -249,12 +243,16 @@ describe('the roles resolve to the intended faces', () => {
 
   /**
    * Each face variable as Sass emits it. Read out of `_variables.scss` through
-   * the same interpolation the role map uses, so quote stripping (`"Roboto",
-   * sans-serif` -> `Roboto, sans-serif`) happens identically on both sides of
-   * every comparison below.
+   * `mg-font-stack()`, the same helper the role map uses, so both sides of
+   * every comparison below are rendered identically. That helper exists
+   * because plain interpolation strips a list's quotes: an override such as
+   * `"Frutiger 55 Roman", sans-serif` would emit an invalid custom-ident and
+   * the role would never be defined at all — see the face-override test below.
    */
   const faces = (() => {
-    const probe = FACES.map(name => `  --${name}: #{$${name}};`).join('\n');
+    const probe = FACES.map(
+      name => `  --${name}: #{mg-font-stack($${name})};`
+    ).join('\n');
     const css = sass.compileString(
       `@import "variables";\n.mg-face-probe {\n${probe}\n}\n`,
       {
@@ -269,21 +267,7 @@ describe('the roles resolve to the intended faces', () => {
     );
   })();
 
-  /**
-   * The role values an element carries, merged last-wins across every rule with
-   * this exact selector — which is how the cascade reads them.
-   */
-  const roleMap = (entry, selector) => {
-    const merged = {};
-    for (const rule of rules(compile(entry))) {
-      if (rule.selector !== selector) continue;
-      for (const role of ROLES) {
-        const value = rule.decls[`--mg-font-family-${role}`];
-        if (value !== undefined) merged[role] = value;
-      }
-    }
-    return merged;
-  };
+  const roleMap = (entry, selector) => roleMapIn(compile(entry), selector);
 
   test('the face probe resolved every face variable', () => {
     // Guards the guard. The expectations below build their expected side out of
@@ -324,6 +308,31 @@ describe('the roles resolve to the intended faces', () => {
       });
     }
   );
+
+  test('a face override that needs quotes survives into the role', () => {
+    // The `!default` on the face variables exists so a consumer compiling from
+    // source can drop in a licensed brand face. Frutiger, Univers and Helvetica
+    // Neue LT Std all name weights numerically, so the family name MUST stay
+    // quoted: `Frutiger 55 Roman` is not a valid custom-ident, the custom
+    // property is invalid at computed-value time, the role is never defined,
+    // and every element that references it renders in the browser's default
+    // serif. That is what plain `#{$face}` interpolation emitted, and it is
+    // silent — the build is clean and the page is Times.
+    const css = sass.compileString(
+      '$mg-font-face-sans: "Frutiger 55 Roman", sans-serif;\n' +
+        '@import "variables";\n',
+      {
+        loadPaths: [SCSS_DIR],
+        silenceDeprecations: ['import'],
+        logger: sass.Logger.silent,
+      }
+    ).css;
+
+    expect(roleMapIn(css, ':root')).toMatchObject({
+      text: '"Frutiger 55 Roman", sans-serif',
+      heading: '"Frutiger 55 Roman", sans-serif',
+    });
+  });
 
   test('the two scripts disagree about ui, which is why the role exists', () => {
     // `ui` is the whole point of the split: Latin chrome is condensed, Arabic
@@ -392,6 +401,114 @@ describe('the documented per-component Sass recipe', () => {
       if (usedAt !== -1) expect(declaredAt).toBeLessThan(usedAt);
     }
   });
+
+  test('carries the Arabic script map too', () => {
+    // Defining the roles is not enough: a build with the Latin map and no
+    // Arabic map asks for Roboto on an Arabic page, and Roboto has no Arabic
+    // coverage, so every glyph falls back to whatever the OS supplies. It is
+    // silent — no warning, no invalid declaration, correct-looking Latin.
+    const css = sass.compileString(recipe().join('\n'), {
+      loadPaths: [REPO_ROOT],
+      silenceDeprecations: ['import'],
+      logger: sass.Logger.silent,
+    }).css;
+
+    expect(Object.keys(roleMapIn(css, ':root:lang(ar)')).sort()).toEqual([
+      'display',
+      'heading',
+      'text',
+      'ui',
+    ]);
+  });
+});
+
+/**
+ * Section: the import list real consumers compile.
+ *
+ * `undrr_common/scss/_mangrove-components.scss` in the Drupal platform repo is
+ * the shared list every UNDRR theme builds — twelve of them. It imports
+ * `fonts`, `breakpoints`, `mixins`, `foundational`, `utility` and then the
+ * component partials one by one. It imports NO `style*.scss` entry point, and
+ * no theme imports `font-roles` either.
+ *
+ * Until unisdr/undrr-mangrove#1098's fix wave, `_font-roles.scss` was reachable
+ * only from the entry points — which is what Storybook and `yarn scss` build,
+ * and is why three reviews and a green suite missed it. Every production site
+ * shipped the role definitions with no Arabic map behind them.
+ *
+ * This suite therefore compiles the consumer's shape rather than Mangrove's.
+ * The list below is deliberately a re-statement, not a read of the consumer
+ * repo: Mangrove cannot see that file, and the contract it has to keep is
+ * "importing `foundational` is enough".
+ */
+describe('the shared Drupal import list', () => {
+  const CONSUMER_IMPORTS = [
+    'stories/assets/scss/variables',
+    'stories/assets/scss/fonts',
+    'stories/assets/scss/breakpoints',
+    'stories/assets/scss/mixins',
+    'stories/assets/scss/foundational',
+    'stories/assets/scss/utility',
+    'stories/Atom/Tag/tag',
+    'stories/Components/Cards/Card/card',
+    'stories/Components/Hero/hero',
+    'stories/Components/Tab/tab',
+    'stories/Components/Breadcrumbs/breadcrumbs',
+  ];
+
+  const consumerCss = (() => {
+    const source = CONSUMER_IMPORTS.map(file => `@import "${file}";`).join(
+      '\n'
+    );
+    return sass.compileString(source, {
+      loadPaths: [REPO_ROOT],
+      silenceDeprecations: ['import'],
+      logger: sass.Logger.silent,
+    }).css;
+  })();
+
+  test('defines all five roles', () => {
+    expect(
+      ROLES.filter(role =>
+        new RegExp(`--mg-font-family-${role}\\s*:`).test(consumerCss)
+      )
+    ).toEqual(ROLES);
+  });
+
+  test('carries the Arabic script map', () => {
+    expect(roleMapIn(consumerCss, ':root:lang(ar)')).toEqual({
+      text: expect.stringContaining('Noto Sans Arabic'),
+      heading: expect.stringContaining('Noto Kufi Arabic'),
+      display: expect.stringContaining('Noto Kufi Arabic'),
+      ui: expect.stringContaining('Noto Sans Arabic'),
+    });
+  });
+
+  test('carries both language-boundary rules', () => {
+    // Custom properties inherit, so a `lang="en"` island inside an Arabic page
+    // keeps resolving the roles to Arabic faces unless they are restated at the
+    // switch point — and `font-family` itself inherits as a used value, so the
+    // boundary has to restate that too. See unisdr/undrr-mangrove#1093.
+    const boundaries = rules(consumerCss).filter(rule =>
+      rule.selector.includes('[lang]:not([lang=""]')
+    );
+
+    expect(boundaries).toHaveLength(2);
+    for (const boundary of boundaries)
+      expect(boundary.decls['font-family']).toBe('var(--mg-font-family-text)');
+  });
+
+  test('emits the script map exactly once', () => {
+    // `_font-roles.scss` is imported from `_foundational.scss` AND from every
+    // entry point, so a build that reaches both would emit it twice without the
+    // `$mg-font-roles-emitted` guard. Duplicated rules are not a rendering bug,
+    // but they are dead weight in a file every UNDRR page loads, and a second
+    // copy would mask an ordering mistake in the first.
+    const once = css => (css.match(/:root:lang\(ar\)\s*\{/g) || []).length;
+
+    expect(once(consumerCss)).toBe(1);
+    for (const entry of BUNDLES) expect(once(compile(entry))).toBe(1);
+  });
 });
 
 describe('the removed font variables warn at compile time', () => {
@@ -459,243 +576,162 @@ describe('the removed font variables warn at compile time', () => {
 });
 
 /**
- * Section: `ui` containers that wrap a heading.
+ * Section: which role each component names.
  *
- * `_foundational.scss` sets `h1, h2, h3 { font-family: var(--mg-font-family-heading) }`.
- * That is a MATCHED declaration, and a matched declaration beats an inherited
- * one at any specificity. So a container that sets a different role — a card
- * title on `ui`, a hero title on `display` — loses that role for any heading
- * nested inside it unless it claims its own subtree explicitly.
+ * Everything above pins what the five roles are DEFINED as. None of it pins
+ * which role a given component asks for, and that is the other half of the
+ * decision: the red team re-pointed `.mg-tag`, `.mg-tabs__link` and
+ * `.mg-breadcrumb` from `ui` to `text` — Roboto Condensed to Roboto on every
+ * Latin page, Mangrove's whole chrome voice — and the entire suite passed. It
+ * also deleted the heading rule outright, removing Noto Kufi Arabic from the
+ * product, and the entire suite passed.
  *
- * In Latin this is invisible: `text`, `heading` and the container's role all
- * resolve to a Roboto variant that happens to look right, and `ui` vs `heading`
- * is the difference between Roboto Condensed and Roboto — which the
- * byte-identical Latin gate DOES catch for the containers that exist today, but
- * cannot catch at all for markup a consumer writes. In Arabic it is a visible
- * face change: Noto Kufi Arabic instead of Noto Sans Arabic.
- *
- * Both the container list and the claim list are derived from compiled CSS, and
- * the nesting is derived from Mangrove's own JSX. Nothing here is a
- * hand-maintained list of components, because a hand-maintained list is exactly
- * what stops being true when someone adds the ninth card variant.
+ * The Latin byte-identical gate cannot help here either: it compares this
+ * branch against its own base, so once a wrong assignment is in the base it IS
+ * the baseline. What follows is therefore an explicit table, checked in.
+ * Changing a component's role is a legitimate design decision; it just has to
+ * be made on purpose, in this file, next to the SCSS edit.
  */
-describe('ui containers that wrap a heading claim their subtree', () => {
-  /** Headings that carry a matched declaration from _foundational.scss. */
-  const MATCHED_HEADINGS = ['h1', 'h2', 'h3'];
-
-  /** Roles that differ from `heading` and therefore need a subtree claim. */
-  const CONTAINER_ROLES = ['ui', 'display'];
-
-  const mentionsHeading = compound =>
-    MATCHED_HEADINGS.some(tag =>
-      new RegExp(`(^|[^-\\w])${tag}([^-\\w]|$)`).test(compound)
-    );
-
+describe('every component names the role it is meant to', () => {
   /**
-   * Split the `ui`/`display` rules into the containers (subject is not a
-   * heading) and the claims (subject is, or includes, a heading).
+   * `selector -> role`, exhaustive over compiled `style.css`. Derived from the
+   * compiled output rather than the source so that a change reaching the
+   * cascade by any route — a nested rule, a mixin, a theme partial — shows up.
+   *
+   * The six non-Gutenberg bundles emit exactly this map; `style-gutenberg.css`
+   * emits a subset, because it compiles four components rather than all of
+   * them.
    */
-  const partition = entry => {
-    const containers = [];
-    const claims = [];
+  const ROLE_BY_SELECTOR = new Map([
+    ['#cc-main .c-bn', 'text'],
+    ['#cc-main .cm__btn', 'text'],
+    ['#cc-main .pm__btn', 'text'],
+    ['.mg-breadcrumb', 'ui'],
+    ['.mg-button', 'text'],
+    ['.mg-button.mg-button-cta::after', 'text'],
+    ['.mg-card__label', 'ui'],
+    ['.mg-card__title', 'ui'],
+    ['.mg-chip', 'text'],
+    ['.mg-code', 'code'],
+    ['.mg-empty-state', 'text'],
+    ['.mg-empty-state__title', 'ui'],
+    ['.mg-footer--about-footer--links', 'ui'],
+    ['.mg-form-input', 'text'],
+    ['.mg-form-select', 'text'],
+    ['.mg-form-textarea', 'text'],
+    ['.mg-gallery__title', 'ui'],
+    ['.mg-hero__label', 'ui'],
+    ['.mg-hero__title', 'display'],
+    ['.mg-mega-content__banner header', 'ui'],
+    ['.mg-mega-topbar__item-link', 'ui'],
+    ['.mg-on-this-page-nav__cta', 'ui'],
+    ['.mg-on-this-page-nav__link', 'ui'],
+    ['.mg-preview-access__body', 'text'],
+    ['.mg-preview-access__contact', 'text'],
+    ['.mg-preview-access__error', 'text'],
+    ['.mg-preview-access__eyebrow', 'ui'],
+    ['.mg-preview-access__input', 'text'],
+    ['.mg-preview-access__label', 'ui'],
+    ['.mg-preview-access__submit', 'text'],
+    ['.mg-preview-access__title', 'ui'],
+    ['.mg-search__input', 'text'],
+    ['.mg-share__copy-button', 'text'],
+    ['.mg-share__header', 'text'],
+    ['.mg-stats-card-item__bottom-label', 'ui'],
+    ['.mg-stats-card-item__label', 'ui'],
+    ['.mg-stats-card-item__value', 'ui'],
+    ['.mg-status-label', 'text'],
+    [
+      '.mg-tabs--stacked > .mg-tabs-content > .mg-tabs__mobile-item > .mg-tabs__mobile-link::before',
+      'text',
+    ],
+    [
+      '.mg-tabs--stacked > .mg-tabs__list > .mg-tabs-content > .mg-tabs__mobile-item > .mg-tabs__mobile-link::before',
+      'text',
+    ],
+    [
+      '.mg-tabs--stacked > .mg-tabs__list > .mg-tabs__item > .mg-tabs__link::before',
+      'text',
+    ],
+    [
+      '.mg-tabs--stacked > .mg-tabs__panels > .mg-tabs-content > .mg-tabs__mobile-item > .mg-tabs__mobile-link::before',
+      'text',
+    ],
+    ['.mg-tabs__link', 'ui'],
+    ['.mg-tag', 'ui'],
+    ['.mg-user-feedback__question', 'text'],
+    [':where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar)))', 'text'],
+    [
+      ':where(:not(:lang(ar))) > :where([lang]:not([lang=""]):lang(ar))',
+      'text',
+    ],
+    ['body', 'text'],
+    ['button', 'text'],
+    ['code', 'code'],
+    ['details.mg-details > summary::before', 'text'],
+    ['figure.mg-code-block figcaption', 'text'],
+    ['h1:lang(ar)', 'heading'],
+    ['h2:lang(ar)', 'heading'],
+    ['h3:lang(ar)', 'heading'],
+    ['pre:has(> code[class*=language-])::after', 'text'],
+    ['pre[data-language]::after', 'text'],
+  ]);
 
+  /** `selector -> role` for every rule in `entry` whose family names a role. */
+  const roleBySelector = entry => {
+    const found = new Map();
     for (const { selector, decls } of rules(compile(entry))) {
       const role = /^var\(--mg-font-family-([a-z]+)\)$/.exec(
         decls['font-family'] || ''
       )?.[1];
-      if (!CONTAINER_ROLES.includes(role)) continue;
-      // A pseudo-element is generated content, not a container for markup.
-      if (selector.includes('::')) continue;
-
-      const parts = compounds(selector);
-      const subject = parts[parts.length - 1];
-
-      if (mentionsHeading(subject)) {
-        claims.push({
-          selector,
-          role,
-          container: parts.slice(0, -1).join(' '),
-          subject,
-        });
-        continue;
-      }
-
-      containers.push({
-        selector,
-        role,
-        // What an element must look like to be this container: every class on
-        // the subject compound, the subject's element type when it names one,
-        // and every class the selector requires of an ancestor.
-        classes: [...subject.matchAll(/\.([-\w]+)/g)].map(m => m[1]),
-        tag: (/^[a-z][-\w]*/.exec(subject) || [null])[0],
-        ancestors: parts
-          .slice(0, -1)
-          .flatMap(part => [...part.matchAll(/\.([-\w]+)/g)].map(m => m[1])),
-      });
-    }
-
-    return { containers, claims };
-  };
-
-  /** Every .jsx file Mangrove ships, tests excluded. */
-  const jsxFiles = (dir = STORIES_DIR, out = []) => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        if (entry.name === '__tests__' || entry.name === 'node_modules')
-          continue;
-        jsxFiles(full, out);
-      } else if (entry.name.endsWith('.jsx')) {
-        out.push(full);
-      }
-    }
-    return out;
-  };
-
-  /**
-   * Class names a `className` attribute can put on the element. Every string
-   * literal in the expression counts, which over-collects for a ternary — a
-   * false positive here asks for a subtree claim the component may not strictly
-   * need, which is harmless; a false negative would hide a real defect.
-   */
-  const classTokens = node => {
-    const out = [];
-    (function walk(n) {
-      if (!n || typeof n !== 'object') return;
-      if (Array.isArray(n)) return n.forEach(walk);
-      if (n.type === 'StringLiteral') out.push(...n.value.split(/\s+/));
-      if (n.type === 'TemplateElement')
-        out.push(...(n.value.cooked || '').split(/\s+/));
-      for (const key of Object.keys(n)) if (key !== 'loc') walk(n[key]);
-    })(node);
-    return out.filter(Boolean);
-  };
-
-  const elementName = element => {
-    const name = element.openingElement.name;
-    return name.type === 'JSXIdentifier' ? name.name : null;
-  };
-
-  /**
-   * A literal h1-h3, or a dynamic tag whose name says it renders a heading
-   * (`<HeadingTag>`, the level-configurable pattern Hero and TextCta use). h4-h6
-   * are deliberately excluded: _foundational.scss gives them no matched
-   * declaration, so they inherit their container's role and are safe.
-   */
-  const isHeading = name =>
-    Boolean(name) && (/^h[1-3]$/.test(name) || /heading/i.test(name));
-
-  /** Every (container, heading) nesting in Mangrove's own JSX. */
-  const nestings = containers => {
-    const found = [];
-    for (const file of jsxFiles()) {
-      // The JSX as written, not the transformed output.
-      const ast = parser.parse(fs.readFileSync(file, 'utf8'), {
-        sourceType: 'module',
-        plugins: ['jsx'],
-      });
-      const stack = [];
-      (function walk(node) {
-        if (!node || typeof node !== 'object') return;
-        if (Array.isArray(node)) return node.forEach(walk);
-        let pushed = false;
-        if (node.type === 'JSXElement') {
-          const attribute = (node.openingElement.attributes || []).find(
-            a => a.type === 'JSXAttribute' && a.name.name === 'className'
-          );
-          const classes = attribute ? classTokens(attribute.value) : [];
-          const name = elementName(node);
-          stack.push(classes);
-          pushed = true;
-          const ancestorClasses = new Set(stack.slice(0, -1).flat());
-
-          for (const container of containers) {
-            if (!container.classes.every(c => classes.includes(c))) continue;
-            if (container.tag && container.tag !== name) continue;
-            if (!container.ancestors.every(c => ancestorClasses.has(c)))
-              continue;
-            (function find(child) {
-              if (!child || typeof child !== 'object') return;
-              if (Array.isArray(child)) return child.forEach(find);
-              if (child.type === 'JSXElement' && isHeading(elementName(child)))
-                found.push({
-                  container: container.selector,
-                  role: container.role,
-                  heading: elementName(child),
-                  where: `${path.relative(REPO_ROOT, file)}:${
-                    child.loc.start.line
-                  }`,
-                });
-              for (const key of Object.keys(child))
-                if (key !== 'loc') find(child[key]);
-            })(node.children);
-          }
-        }
-        for (const key of Object.keys(node)) if (key !== 'loc') walk(node[key]);
-        if (pushed) stack.pop();
-      })(ast.program);
+      if (role) found.set(selector, role);
     }
     return found;
   };
 
-  /** True when `claims` gives `container`'s whole subtree the container role. */
-  const coversEveryHeading = subject =>
-    MATCHED_HEADINGS.every(tag =>
-      new RegExp(`(^|[^-\\w])${tag}([^-\\w]|$)`).test(subject)
-    );
+  const sorted = map =>
+    [...map].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
 
-  const claimed = (claims, container, role) =>
-    claims.some(
-      claim =>
-        claim.container === container &&
-        claim.role === role &&
-        coversEveryHeading(claim.subject)
-    );
-
-  test('every such container in Mangrove’s JSX has a claim', () => {
-    const { containers, claims } = partition('style');
-    const unclaimed = nestings(containers)
-      .filter(n => !claimed(claims, n.container, n.role))
-      .map(
-        n =>
-          `${n.container} wraps <${n.heading}> at ${n.where} — add ` +
-          `\`${n.container} :is(h1, h2, h3, a) { font-family: var(--mg-font-family-${n.role}); }\``
-      );
-
-    expect(unclaimed).toEqual([]);
-  });
-
-  test('the derivation is not vacuous', () => {
-    // Everything above passes trivially if the compiled CSS stops yielding
-    // containers or the JSX walk stops yielding nestings. Both numbers are
-    // floors, not exact counts, so adding a component does not fail the suite.
-    const { containers, claims } = partition('style');
-    expect(containers.length).toBeGreaterThanOrEqual(10);
-    expect(claims.length).toBeGreaterThanOrEqual(2);
-    expect(nestings(containers).length).toBeGreaterThanOrEqual(1);
-  });
-
-  test.each(['style', 'style-gutenberg'])(
-    '%s.css: every claim restates its container’s own role',
+  test.each(BUNDLES.filter(entry => entry !== 'style-gutenberg'))(
+    '%s.css assigns exactly the roles the table records',
     entry => {
-      // A claim that names the wrong role is worse than no claim: it looks like
-      // protection and silently repaints the subtree. Assert the declaration,
-      // not the selector.
-      const { containers, claims } = partition(entry);
-      const byRole = new Map(containers.map(c => [c.selector, c.role]));
-
-      expect(claims.length).toBeGreaterThanOrEqual(2);
-      for (const claim of claims) {
-        expect({
-          selector: claim.selector,
-          role: claim.role,
-          coversHeadings: coversEveryHeading(claim.subject),
-        }).toEqual({
-          selector: claim.selector,
-          role: byRole.get(claim.container),
-          coversHeadings: true,
-        });
-      }
+      expect(sorted(roleBySelector(entry))).toEqual(sorted(ROLE_BY_SELECTOR));
     }
   );
+
+  test('style-gutenberg.css is a subset, with the same roles', () => {
+    // It compiles container, grid, cta-button, card, hero, tab and full-width
+    // and skips _foundational.scss, so it carries fewer selectors — but a
+    // selector it does carry must not have drifted to a different role.
+    const found = roleBySelector('style-gutenberg');
+
+    expect(found.size).toBeGreaterThan(0);
+    expect(sorted(found)).toEqual(
+      sorted(found).map(([selector]) => [
+        selector,
+        ROLE_BY_SELECTOR.get(selector),
+      ])
+    );
+  });
+
+  test('every role has at least one consumer', () => {
+    // `heading` is the one at risk: after unisdr/undrr-mangrove#1098's fix wave
+    // its only consumer is `h1:lang(ar), h2:lang(ar), h3:lang(ar)` in
+    // _foundational.scss. Deleting that rule is invisible in Latin — heading
+    // and text are both Roboto — and silently takes Noto Kufi Arabic out of the
+    // product. A role no one asks for is a role that has been abandoned.
+    const consumers = Object.fromEntries(
+      ROLES.map(role => [
+        role,
+        [...roleBySelector('style')]
+          .filter(([, assigned]) => assigned === role)
+          .map(([selector]) => selector),
+      ])
+    );
+
+    expect(
+      Object.fromEntries(ROLES.map(role => [role, consumers[role].length > 0]))
+    ).toEqual(Object.fromEntries(ROLES.map(role => [role, true])));
+    expect(consumers.heading).toContain('h1:lang(ar)');
+  });
 });

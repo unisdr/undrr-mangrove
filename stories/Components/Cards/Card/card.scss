@@ -156,16 +156,6 @@
     padding-top: var(--mg-spacing-100);
     text-wrap: balance;
 
-    // `.mg-card__title` is a <header> wrapper, and consuming sites put a real
-    // heading tag inside it. The unconditional `h1, h2, h3` heading-role rule
-    // in _foundational.scss would match that child and beat the family it
-    // inherits from here, so the title claims its own subtree. `a` is listed
-    // for symmetry with `.mg-hero__title`; it already inherits this family.
-    // See unisdr/undrr-mangrove#1098.
-    :is(h1, h2, h3, a) {
-      font-family: var(--mg-font-family-ui);
-    }
-
     a {
       color: rgb(var(--mg-color-interactive));
       cursor: pointer;

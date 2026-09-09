@@ -194,14 +194,6 @@
     max-width: 18ch;
     text-wrap: balance;
 
-    // `.mg-hero__title` is a <header> wrapping the heading tag (Hero.jsx), so
-    // the unconditional `h1, h2, h3` heading-role rule in _foundational.scss
-    // would match that child and beat the family it inherits from here. The
-    // title claims its own subtree instead. See unisdr/undrr-mangrove#1098.
-    :is(h1, h2, h3, a) {
-      font-family: var(--mg-font-family-display);
-    }
-
     a,
     a:hover,
     a:visited {

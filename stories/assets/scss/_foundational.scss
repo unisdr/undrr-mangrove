@@ -1,3 +1,14 @@
+// Script routing for the font roles. Imported here, not only from the
+// style*.scss entry points, because _foundational.scss is what real consumers
+// import: the shared Drupal import list
+// (undrr_common/scss/_mangrove-components.scss) pulls in fonts, breakpoints,
+// mixins, foundational and utility and reaches no entry point. Without this
+// line every production site compiled the Arabic rules below with no Arabic
+// map behind them. _font-roles.scss guards itself against a second emission,
+// so the entry points keep their own import and nothing is emitted twice.
+// See unisdr/undrr-mangrove#1098.
+@import "./font-roles";
+
 /* typography start */
 *,
 *::before,
@@ -51,13 +62,24 @@ caption {
 // inheriting from body — no declaration, so a heading nested in a ui container
 // keeps that container's face.
 
-// This IS a matched declaration where Latin previously had only inheritance,
-// so any container that sets a different family and wraps an h1-h3 must claim
-// its own subtree or the heading would win here. `.mg-hero__title` and
-// `.mg-card__title` are `<header>` wrappers of exactly that shape and do so.
-h1,
-h2,
-h3 {
+// SCOPED TO ARABIC ON PURPOSE. In Latin, heading and text are both Roboto, so
+// an unconditional `h1, h2, h3` declaration buys nothing here — and it costs a
+// great deal, because it is a MATCHED declaration at (0,0,1) that ties with a
+// consuming theme's own `h1` rule and wins on source order, mangrove.css being
+// loaded last. Two production themes set a licensed brand face on h1-h3 that
+// way (MCR's acta-bold, ARISE's Teko) and would have lost it sitewide. Latin
+// therefore stays on pure inheritance, exactly as it was before
+// unisdr/undrr-mangrove#1098; Arabic, where heading (Noto Kufi Arabic) really
+// does differ from text (Noto Sans Arabic), keeps the matched declaration it
+// already had on main.
+
+// Because the declaration only ever matches Arabic, and Arabic's h1-h3 carried
+// the same matched declaration before #1098, no `ui` container needs to claim
+// its own subtree: a heading nested in `.mg-card__title` or `.mg-hero__title`
+// resolves exactly as it did on main.
+h1:lang(ar),
+h2:lang(ar),
+h3:lang(ar) {
   font-family: var(--mg-font-family-heading);
 }
 

@@ -11,17 +11,17 @@ Mangrove has two layers of type token, and the distinction is the whole model.
 
 **Roles say what job the type is doing.** Five CSS custom properties — text, heading, display, ui, code. A component stylesheet names a role and never a face, because the role is what changes between scripts. Introduced in [unisdr/undrr-mangrove#1098](https://github.com/unisdr/undrr-mangrove/issues/1098).
 
-**Latin rendering did not change when the roles landed.** Every Latin element resolves to exactly the face it resolved to before: text and heading are both Roboto, display and ui are both Roboto Condensed. The indirection buys correct Arabic, not a new Latin look.
+**Latin rendering did not change when the roles landed.** Every Latin element resolves to exactly the face it resolved to before: text and heading are both Roboto, display and ui are both Roboto Condensed. No new `font-family` declaration matches a Latin element, which is why a consuming theme that sets its own face on `h1`–`h3` still wins. The indirection buys correct Arabic, not a new Latin look.
 
 ## Font roles
 
-| Role                       | Latin            | Arabic           | Used for                                                                                                       |
-| -------------------------- | ---------------- | ---------------- | -------------------------------------------------------------------------------------------------------------- |
-| `--mg-font-family-text`    | Roboto           | Noto Sans Arabic | `body`, paragraphs, h4–h6, `th`, `td`, form fields, buttons                                                    |
-| `--mg-font-family-heading` | Roboto           | Noto Kufi Arabic | narrative h1–h3                                                                                                |
-| `--mg-font-family-display` | Roboto Condensed | Noto Kufi Arabic | the hero title, and nothing else today                                                                         |
-| `--mg-font-family-ui`      | Roboto Condensed | Noto Sans Arabic | scanned chrome: card and gallery titles, labels, tags, chips, tabs, breadcrumbs, navigation links, stat values |
-| `--mg-font-family-code`    | mono stack       | mono stack       | `code`, `pre`                                                                                                  |
+| Role                       | Latin            | Arabic           | Used for                                                                                                |
+| -------------------------- | ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
+| `--mg-font-family-text`    | Roboto           | Noto Sans Arabic | `body`, paragraphs, h4–h6, `th`, `td`, a bare `header`, form fields, chips, status labels, every button |
+| `--mg-font-family-heading` | Roboto           | Noto Kufi Arabic | narrative h1–h3, and only in Arabic — see below                                                         |
+| `--mg-font-family-display` | Roboto Condensed | Noto Kufi Arabic | the hero title, and nothing else today                                                                  |
+| `--mg-font-family-ui`      | Roboto Condensed | Noto Sans Arabic | scanned chrome: card and gallery titles, labels, tags, tabs, breadcrumbs, navigation links, stat values |
+| `--mg-font-family-code`    | mono stack       | mono stack       | `code`, `pre`                                                                                           |
 
 Consume a role the same way as any other Mangrove token:
 
@@ -31,11 +31,13 @@ Consume a role the same way as any other Mangrove token:
 }
 ```
 
-The roles are defined on `:root` in `_variables.scss`, so every supported build path reaches them — including the per-component Sass recipe in the <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, which imports no `style*.scss` entry point. Component stylesheets carry no `var()` fallbacks and do not need any.
+The roles are defined on `:root` in `_variables.scss`, and the Arabic script map in `_font-roles.scss` is imported from the top of `_foundational.scss`. Between them, every supported build path gets both halves — including the per-component Sass recipe in the <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, which imports no `style*.scss` entry point. That matters more than it sounds: the shared import list every UNDRR Drupal theme compiles reaches `_foundational.scss` and no entry point, and a build with the role definitions but no script map renders Arabic in Roboto, which has no Arabic coverage at all. Component stylesheets carry no `var()` fallbacks and do not need any.
 
 ### Why the roles split the way they do
 
 **`text` and `heading` are the same face in Latin and different faces in Arabic.** Latin narrative headings deliberately use the body face: Roboto Condensed at heading size feels too tight for sustained reading. Arabic has a genuine display face in Noto Kufi Arabic, so `heading` uses it. Keeping the two roles separate is what lets those two facts coexist without a `:lang()` rule in a component.
+
+Because the two are identical in Latin, the `heading` declaration in `_foundational.scss` is scoped to `:lang(ar)`. An unconditional `h1, h2, h3 { font-family: ... }` would change nothing in Latin and would silently override a consuming theme's brand face: at (0,0,1) it ties with the theme's own `h1` rule and wins on source order, because `mangrove.css` loads last. Latin `h1`–`h3` are therefore left to inherit, as they were before the roles landed.
 
 **`ui` and `display` are the same face in Latin and different faces in Arabic.** Roboto Condensed serves both the hero title and compact chrome. Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic while `display` keeps Kufi. This is the single change most visible to an Arabic reader: card titles, tags, tabs, navigation links and stat labels moved from Kufi to Noto Sans Arabic, and Latin did not move at all.
 
@@ -56,6 +58,8 @@ Faces are Sass variables, all `!default`.
 | `$mg-font-face-arabic-sans`    | `"Noto Sans Arabic", sans-serif`                                                    |
 
 Do not reference a face from a component stylesheet. Faces exist so the role map has something to point at, and so a consumer compiling from source can substitute a licensed brand face.
+
+**Quote any family name that is not a plain CSS identifier** — anything containing a space, a digit-leading word or punctuation. `_variables.scss` renders a face into its role through `mg-font-stack()`, which preserves the quotes; plain Sass interpolation would strip them, and `Frutiger 55 Roman` unquoted is not a valid custom-ident, so the whole declaration would be invalid at computed-value time and every element would fall back to the browser's default serif. Frutiger, Univers and Helvetica Neue LT Std all name weights numerically, so this is the common case rather than the exotic one.
 
 ## Overriding type
 
@@ -193,35 +197,20 @@ Pick a role. That is the whole authoring rule.
 
 Choosing between the roles:
 
-| If the element is...                                                         | Use                                                   |
-| ---------------------------------------------------------------------------- | ----------------------------------------------------- |
-| a title, label, value, tag, chip, tab or navigation link — scanned, not read | `ui`                                                  |
-| narrative running text, a form field, a button, or a table cell              | `text`                                                |
-| a narrative h1–h3                                                            | nothing — `_foundational.scss` already sets `heading` |
-| an h4–h6                                                                     | nothing — it inherits `text` from `body`              |
-| the hero title                                                               | `display`                                             |
-| a code or preformatted block                                                 | `code`                                                |
+| If the element is...                                                    | Use                                                                         |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| a title, label, value, tag, tab or navigation link — scanned, not read  | `ui`                                                                        |
+| narrative running text, a form field, a button, a chip, or a table cell | `text`                                                                      |
+| a narrative h1–h3                                                       | nothing — `_foundational.scss` sets `heading` in Arabic, and Latin inherits |
+| an h4–h6, a `th`, a `td`, or a bare `header`                            | nothing — it inherits `text` from `body`                                    |
+| the hero title                                                          | `display`                                                                   |
+| a code or preformatted block                                            | `code`                                                                      |
 
-### A ui container that wraps a heading must claim its subtree
+### Headings inside a ui container
 
-`_foundational.scss` declares `h1, h2, h3 { font-family: var(--mg-font-family-heading); }`. That is a **matched** declaration where Latin previously had only inheritance, and a matched declaration beats an inherited one at any specificity. So a container on the `ui` or `display` role loses that role for any heading nested inside it, unless it claims the subtree:
+Nothing to do. `_foundational.scss` gives `h1`–`h3` a matched `font-family` only under `:lang(ar)`, and Arabic headings carried exactly that declaration before the roles landed, so a heading nested inside a `ui` or `display` container resolves the way it always has: the container's face in Latin, Noto Kufi Arabic in Arabic.
 
-```scss
-.mg-my-component__title {
-  font-family: var(--mg-font-family-ui);
-
-  // Without this, an <h2> placed inside drops to the body face.
-  :is(h1, h2, h3, a) {
-    font-family: var(--mg-font-family-ui);
-  }
-}
-```
-
-`card.scss` and `hero.scss` both carry this form. A test derives the containers and their claims from the compiled CSS and checks them against Mangrove's own JSX, so a heading added inside an unclaimed container fails the suite with the selector, the file and line, and the rule to add.
-
-**It cannot see consumer markup, and that is the honest limitation.** Mangrove's own card title holds a link; a Drupal site may put an `<h2>` in the same slot. Nothing in the library will catch that, and in Latin the failure is invisible anyway, because `text` and `heading` both resolve to Roboto — it only shows up in Arabic, where the heading jumps from Noto Sans Arabic to Noto Kufi Arabic. If you author markup against a Mangrove `ui` container, either keep headings out of it or claim the subtree in your own stylesheet.
-
-A container could instead redefine `--mg-font-family-heading` for its own subtree, which would self-heal at any nesting depth. That was tried and rejected: it breaks at a language boundary, where the boundary rules reassert the role values and a container-scoped redefinition below them no longer holds. The explicit `:is()` claim is the form that survives both.
+Earlier alphas made that declaration unconditional and had `card.scss` and `hero.scss` claim their own subtrees with `:is(h1, h2, h3, a)` to defend against it. Both the declaration and the claims are gone. Scoping the rule to Arabic removed the problem rather than defending against it, and it removed a second one with it: an unconditional heading rule also outranked consuming themes that set a brand face on `h1`–`h3`.
 
 ### Language boundaries
 
@@ -230,10 +219,10 @@ A container could instead redefine `--mg-font-family-heading` for its own subtre
 ```scss
 // A non-Arabic sub-root inside an Arabic page.
 :where(:lang(ar)) > :where([lang]:not([lang=''], :lang(ar))) {
-  --mg-font-family-text: #{$mg-font-face-sans};
-  --mg-font-family-heading: #{$mg-font-face-sans};
-  --mg-font-family-display: #{$mg-font-face-sans-condensed};
-  --mg-font-family-ui: #{$mg-font-face-sans-condensed};
+  --mg-font-family-text: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-heading: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-display: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-ui: #{mg-font-stack($mg-font-face-sans-condensed)};
 
   font-family: var(--mg-font-family-text);
 }
