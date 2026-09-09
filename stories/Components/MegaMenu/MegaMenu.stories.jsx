@@ -576,7 +576,7 @@ export const WithIcons = {
 };
 
 // Simple nav — no sidebar/hamburger, links clickable on all screen sizes.
-// Uses the mg-mega-wrapper--simple modifier class on the root element.
+// CSS detects the absent hamburger, removes its gutter and allows mobile overflow scrolling.
 const simpleNavLinks = [
   { title: 'Home', url: '/' },
   { title: 'About', url: '/about' },
@@ -611,7 +611,7 @@ export const SimpleNav = {
     docs: {
       description: {
         story:
-          'A plain HTML nav bar using Mangrove classes without the React mega menu component or mobile sidebar. Because `mg-mega-wrapper--js-active` is absent, links remain clickable on all screen sizes — the same graceful fallback that applies when JS fails to hydrate.',
+          'A plain HTML nav bar using Mangrove classes without the React mega menu component or mobile sidebar. On mobile, links start at the rail edge and scroll horizontally when they overflow; no additional markup or JavaScript is needed. Because `mg-mega-wrapper--js-active` is absent, links remain clickable on all screen sizes — the same graceful fallback that applies when JS fails to hydrate.',
       },
     },
   },

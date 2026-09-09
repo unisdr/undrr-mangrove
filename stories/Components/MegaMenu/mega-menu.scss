@@ -1106,3 +1106,22 @@
     animation: none;
   }
 }
+
+// Existing plain HTML navigation needs no hamburger gutter or JS enhancement.
+// Keep overflow local to the rail so every destination remains reachable.
+@media screen and (max-width: $mg-breakpoint-tablet) {
+  .mg-mega-topbar:not(.mg-mega-topbar--branded, :has(.mg-mega-topbar-mobile__icon-button)) {
+    padding-inline: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+
+    > .mg-mega-topbar__item {
+      flex: 0 0 auto;
+    }
+
+    .mg-mega-topbar__item-link:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+  }
+}
