@@ -826,7 +826,7 @@
   height: 100dvh;
   max-height: none;
   background: rgb(var(--mg-color-neutral-0));
-  color: rgb(var(--mg-color-black));
+  color: rgb(var(--mg-color-text));
   z-index: var(--mg-z-index-modal);
   overscroll-behavior: contain;
   transform: none;
@@ -886,7 +886,9 @@
 
   .mg-mega-mobile-sidebar__title {
     font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-600;
+    font-size: $mg-font-size-500;
+    font-weight: 700;
+    line-height: 1.25;
     margin: 0 0 var(--mg-spacing-150);
     text-wrap: balance;
     overflow-wrap: anywhere;
@@ -898,7 +900,9 @@
 
   .mg-mega-sidebar__list {
     background: transparent;
-    margin: var(--mg-spacing-150) 0;
+    width: auto;
+    margin-block: var(--mg-spacing-150);
+    margin-inline: calc(-1 * var(--mg-spacing-100));
     padding: 0;
     list-style: none;
   }
@@ -917,7 +921,9 @@
     border: 0;
     border-radius: var(--mg-spacing-50);
     font-family: $mg-font-family-headings;
-    font-size: $mg-font-size-500;
+    font-size: $mg-font-size-400;
+    font-weight: 600;
+    line-height: 1.35;
     text-align: start;
     text-decoration: none;
     overflow-wrap: anywhere;
