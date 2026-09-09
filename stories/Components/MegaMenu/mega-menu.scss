@@ -707,10 +707,15 @@
   padding: var(--mg-spacing-100);
   border: none;
   cursor: pointer;
-  align-items: start;
+  align-items: center;
   justify-content: start;
   z-index: var(--mg-z-index-nav-toggle);
   display: flex;
+
+  > .mg-icon {
+    display: flex;
+    line-height: 1;
+  }
 
   // Hide mobile button on desktop
   @media screen and (min-width: $mg-breakpoint-tablet) {
