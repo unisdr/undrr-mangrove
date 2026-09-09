@@ -1,4 +1,5 @@
 import React from 'react';
+import { expect, userEvent, within } from 'storybook/test';
 
 export default {
   title: 'Components/Tag',
@@ -25,7 +26,7 @@ export const Default = {
         alignItems: 'center',
       }}
     >
-      <span className="mg-tag">Organization</span>
+      <span className="mg-tag">Organisation</span>
       <span className="mg-tag">News</span>
       <span className="mg-tag">Publication</span>
       <span className="mg-tag">Event</span>
@@ -79,7 +80,7 @@ export const Accent = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
       <span className="mg-tag mg-tag--accent">Featured</span>
-      <span className="mg-tag mg-tag--accent">Urgent</span>
+      <span className="mg-tag mg-tag--accent">Spotlight</span>
       <a href="#" className="mg-tag mg-tag--accent">
         Highlighted
       </a>
@@ -99,7 +100,7 @@ export const AllVariants = {
         }}
       >
         <strong style={{ minWidth: '80px' }}>Default</strong>
-        <span className="mg-tag">Organization</span>
+        <span className="mg-tag">Organisation</span>
         <a href="#" className="mg-tag">
           Link
         </a>
@@ -159,7 +160,7 @@ export const TagContainer = {
           Auto-styled children (no .mg-tag class needed):
         </p>
         <div className="mg-tag-container">
-          <span>Organization</span>
+          <span>Organisation</span>
           <span>News</span>
           <a href="#">Nepal</a>
           <div>Event</div>
@@ -184,7 +185,7 @@ export const InContext = {
   render: () => (
     <div className="mg-card__content" style={{ maxWidth: '600px' }}>
       <div style={{ marginBottom: '8px' }}>
-        <span className="mg-tag">Organization</span>
+        <span className="mg-tag">Organisation</span>
       </div>
       <h3 className="mg-card__title" style={{ margin: '0 0 8px' }}>
         <a href="#">
@@ -199,4 +200,52 @@ export const InContext = {
     </div>
   ),
   name: 'In context',
+};
+
+export const ReflowAndLanguages = {
+  name: 'Reflow and languages',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByRole('link', {
+      name: 'Disaster risk reduction and climate adaptation',
+    });
+    const group = link.parentElement;
+    // A real browser catches CSS cascade and sizing failures that jsdom cannot.
+    expect(getComputedStyle(link).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+    for (const destination of canvas.getAllByRole('link')) {
+      expect(destination.getBoundingClientRect().height).toBeGreaterThanOrEqual(
+        40
+      );
+      expect(destination.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+        40
+      );
+    }
+    const label = canvas.getByText('Research');
+    const background = getComputedStyle(label).backgroundColor;
+    await userEvent.hover(label);
+    expect(getComputedStyle(label).backgroundColor).toBe(background);
+    await userEvent.unhover(label);
+    await userEvent.tab();
+    await expect(link).toHaveFocus();
+    expect(getComputedStyle(link).outlineStyle).not.toBe('none');
+  },
+  render: () => (
+    <div style={{ maxWidth: '280px', display: 'grid', gap: '24px' }}>
+      <div className="mg-tag-container">
+        <span className="mg-tag mg-tag--secondary">Research</span>
+        <a href="#topic" className="mg-tag mg-tag--outline">
+          Disaster risk reduction and climate adaptation
+        </a>
+        <a href="#identifier">Averylongunbrokentaxonomyidentifierforreflow</a>
+      </div>
+      <div className="mg-tag-container" lang="ar" dir="rtl">
+        <span>الحد من مخاطر الكوارث</span>
+        <a href="#warning">الإنذار المبكر</a>
+        <a href="#climate" className="mg-tag mg-tag--outline">
+          التكيف مع تغير المناخ
+        </a>
+      </div>
+    </div>
+  ),
 };

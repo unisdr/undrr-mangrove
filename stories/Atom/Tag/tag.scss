@@ -1,116 +1,131 @@
-// Tag — Mangrove-native replacement for .st-tag--spl.
-// -
-// A compact tag used to categorise content (content type, country, theme, etc.).
-// Inherits its background from the --tag-color-background CSS custom property set
-// by each site theme, falling back to the rgb(var(--mg-color-tag)) token.
-// -
-// Usage:
-//   <span class="mg-tag">Organization</span>
-//   <a href="…" class="mg-tag">Nepal</a>
-//   <span class="mg-tag mg-tag--secondary">Metadata</span>
-//   <span class="mg-tag mg-tag--outline">Subtle</span>
-//   <span class="mg-tag mg-tag--accent">Featured</span>
-//   <div class="mg-tag-container"><span>Auto</span><a href="#">Styled</a></div>
+// Compact taxonomy labels. Keep legacy theme overrides and container markup.
+// :where() gives auto-styled children the same specificity as .mg-tag, so
+// explicit modifiers win regardless of which markup a Drupal view emits.
+.mg-tag,
+.mg-tag-container > :where(span, div, a, li) {
+  --mg-tag-background: var(--tag-color-background, rgb(var(--mg-color-tag)));
+  --mg-tag-background-hover: var(
+    --tag-color-background-hover,
+    rgb(var(--mg-color-tag--hover))
+  );
+  --mg-tag-foreground: rgb(var(--mg-color-neutral-0));
 
-.mg-tag {
   display: inline-block;
-  padding: var(--mg-spacing-25) var(--mg-spacing-50);
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: var(--mg-spacing-50) var(--mg-spacing-100);
+  border: 1px solid transparent;
+  border-radius: var(--mg-radius-tag);
   font-family: var(--mg-font-family-ui);
   font-size: $mg-font-size-250;
   font-weight: 500;
-  line-height: 1.4;
-  color: #fff;
-  background-color: rgb(var(--mg-color-tag));
-  background-color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
-  border-radius: var(--mg-radius-tag);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+  color: var(--mg-tag-foreground);
+  background-color: var(--mg-tag-background);
   text-decoration: none;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    color: #fff;
-    background-color: rgb(var(--mg-color-tag--hover));
-    background-color: var(--tag-color-background-hover, #{rgb(var(--mg-color-tag--hover))});
-    text-decoration: none;
-  }
 }
 
-// --secondary: de-emphasised/metadata tags (neutral gray)
 .mg-tag--secondary {
-  background-color: rgb(var(--mg-color-tag-secondary));
-  background-color: var(--tag-color-background-secondary, #{rgb(var(--mg-color-tag-secondary))});
-
-  &:hover {
-    background-color: rgb(var(--mg-color-tag-secondary--hover));
-    background-color: var(--tag-color-background-secondary-hover, #{rgb(var(--mg-color-tag-secondary--hover))});
-  }
+  --mg-tag-background: var(
+    --tag-color-background-secondary,
+    rgb(var(--mg-color-tag-secondary))
+  );
+  --mg-tag-background-hover: var(
+    --tag-color-background-secondary-hover,
+    rgb(var(--mg-color-tag-secondary--hover))
+  );
 }
 
-// --outline: subtle border-only tag
 .mg-tag--outline {
-  color: rgb(var(--mg-color-tag));
-  color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
-  background-color: transparent;
-  border: 1px solid rgb(var(--mg-color-tag));
-  border-color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
+  --mg-tag-foreground: var(--tag-color-background, rgb(var(--mg-color-tag)));
+  --mg-tag-background: transparent;
+  --mg-tag-background-hover: var(
+    --tag-color-background-outline-hover,
+    rgb(var(--mg-color-blue-50))
+  );
 
-  &:hover {
-    color: rgb(var(--mg-color-tag));
-    color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
-    background-color: rgb(var(--mg-color-blue-50));
-    background-color: var(--tag-color-background-outline-hover, #{rgb(var(--mg-color-blue-50))});
-  }
+  border-color: currentColor;
 }
 
-// --accent: featured/highlighted content (orange)
 .mg-tag--accent {
-  background-color: rgb(var(--mg-color-tag-accent));
-  background-color: var(--tag-color-background-accent, #{rgb(var(--mg-color-tag-accent))});
+  --mg-tag-background: var(
+    --tag-color-background-accent,
+    rgb(var(--mg-color-tag-accent))
+  );
+  --mg-tag-background-hover: var(
+    --tag-color-background-accent-hover,
+    rgb(var(--mg-color-tag-accent--hover))
+  );
+}
+
+// Only destinations are interactive. No hover affordance on static metadata
+// or anchors without href. Real padding keeps neighbouring hit areas separate.
+a.mg-tag[href],
+.mg-tag-container > a[href] {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: mg-rem(40);
+  min-inline-size: mg-rem(40);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover {
-    background-color: rgb(var(--mg-color-tag-accent--hover));
-    background-color: var(--tag-color-background-accent-hover, #{rgb(var(--mg-color-tag-accent--hover))});
+    color: var(--mg-tag-foreground);
+    background-color: var(--mg-tag-background-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  &:focus-visible {
+    @include mg-focus-ring;
+
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 }
 
-// Adjacent tag spacing
 .mg-tag + .mg-tag {
-  margin-left: var(--mg-spacing-25);
+  margin-inline-start: var(--mg-spacing-50);
 }
 
-[dir="rtl"] .mg-tag + .mg-tag {
-  margin-left: 0;
-  margin-right: var(--mg-spacing-25);
-}
-
-// Tag container — auto-styles child elements as tags.
-// Useful for Drupal migration from .st-tag--spl where child markup may not
-// carry individual .mg-tag classes.
 .mg-tag-container {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--mg-spacing-25);
+  align-items: center;
+  gap: var(--mg-spacing-50);
 
-  > span,
-  > div,
-  > a,
-  > li {
-    display: inline-block;
-    padding: var(--mg-spacing-25) var(--mg-spacing-50);
-    font-size: $mg-font-size-250;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #fff;
-    background-color: rgb(var(--mg-color-tag));
-    background-color: var(--tag-color-background, #{rgb(var(--mg-color-tag))});
-    border-radius: var(--mg-radius-tag);
-    text-decoration: none;
-    transition: background-color 0.2s ease;
+  // A container owns spacing, even when children already have .mg-tag.
+  > .mg-tag {
+    margin-inline-start: 0;
+  }
+}
+
+@media (forced-colors: active) {
+  .mg-tag,
+  .mg-tag-container > :where(span, div, a, li) {
+    color: CanvasText;
+    background-color: Canvas;
+    border-color: CanvasText;
+  }
+
+  a.mg-tag[href],
+  .mg-tag-container > a[href] {
+    color: LinkText;
+    border-color: LinkText;
 
     &:hover {
-      color: #fff;
-      background-color: rgb(var(--mg-color-tag--hover));
-      background-color: var(--tag-color-background-hover, #{rgb(var(--mg-color-tag--hover))});
-      text-decoration: none;
+      color: LinkText;
+      background-color: Canvas;
+    }
+
+    &:focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
     }
   }
 }

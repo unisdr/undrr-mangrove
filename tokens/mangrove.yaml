@@ -398,7 +398,7 @@ font-size:
 
 radius:
   $type: dimension
-  tag: { $value: '{spacing.0}' }
+  tag: { $value: '{spacing.50}' }
   button: { $value: '{spacing.50}' }
   form-input: { $value: '{spacing.50}' }
   tab: { $value: '0' }

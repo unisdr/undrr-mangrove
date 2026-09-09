@@ -34,29 +34,30 @@ A compact label used to categorise content by type, country, theme, or other tax
 
 ### Theming
 
-The background color can be overridden per site theme using CSS custom properties:
+Tag keeps the shared `ui` font role and theme-owned colours. Its default radius is now 4px; sub-brand radius overrides remain in control. Tags are taxonomy metadata: use Chips for actions or removable filters and StatusLabel for workflow states.
+
+In v2, customise runtime CSS properties on the relevant theme or wrapper. Colour tokens contain RGB channels; the legacy `--tag-color-background*` hooks accept complete CSS colours and remain supported.
 
 ```css
-:root {
+.my-theme {
+  --mg-radius-tag: 0.25rem;
+  --mg-color-tag: 31 105 179;
+  --mg-color-tag--hover: 20 74 122;
+}
+
+/* Existing site overrides still work. Check text contrast for custom colours. */
+.my-theme {
   --tag-color-background: #1f69b3;
   --tag-color-background-hover: #144a7a;
   --tag-color-background-secondary: #666;
   --tag-color-background-secondary-hover: #4d4d4d;
-  --tag-color-background-accent: #eb752a;
-  --tag-color-background-accent-hover: #ed833f;
+  --tag-color-background-accent: #333;
+  --tag-color-background-accent-hover: #262626;
   --tag-color-background-outline-hover: #e6edf4;
 }
 ```
 
-Or via SCSS variables before importing the stylesheet:
-
-```scss
-$mg-color-tag: #1f69b3;
-$mg-color-tag--hover: #144a7a;
-$mg-color-tag-secondary: #666;
-$mg-color-tag-accent: #eb752a;
-$mg-radius-tag: 4px;
-```
+The old `$mg-color-tag*` and `$mg-radius-tag` Sass override examples are superseded by the runtime properties above. No HTML migration or JavaScript is required. Tags occupy slightly more space; linked tags have a 40px minimum target and long labels wrap rather than clip. Use `.mg-tag-container` for wrapping groups with consistent spacing.
 
 ## Examples
 
@@ -66,7 +67,7 @@ $mg-radius-tag: 4px;
 
 ### As link
 
-Tags rendered as `<a>` elements gain a hover background transition.
+Anchors with `href` have an underlined hover state, a visible keyboard focus ring and a 40px minimum target. Static tags and anchors without `href` have no hover feedback. Transitions run only when reduced motion is not requested.
 
 <Canvas of={TagStories.AsLink} />
 
@@ -84,7 +85,7 @@ Border-only tags for a lightweight appearance.
 
 ### Accent
 
-Orange tags for featured or highlighted content.
+Theme-coloured tags for featured content; the base theme uses a dark neutral. These do not convey urgency or workflow status.
 
 <Canvas of={TagStories.Accent} />
 
@@ -109,22 +110,29 @@ The `.mg-tag-container` class auto-styles direct child elements (`span`, `div`, 
 | `.mg-tag` | Base tag element (`<span>` or `<a>`) |
 | `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags |
 | `.mg-tag--outline` | Border-only variant with transparent background |
-| `.mg-tag--accent` | Orange variant for featured/highlighted content |
+| `.mg-tag--accent` | Theme-owned accent variant for featured content |
 | `.mg-tag-container` | Wrapper that auto-styles direct children as tags |
 
 ## Design tokens
 
-| Token | Default | Description |
-|-------|---------|-------------|
-| `$mg-color-tag` | `$mg-color-interactive` (blue-900) | Default background |
-| `$mg-color-tag--hover` | `$mg-color-interactive-active` (blue-700) | Default hover background |
-| `$mg-color-tag-secondary` | `$mg-color-neutral-500` (#666) | Secondary background |
-| `$mg-color-tag-secondary--hover` | `$mg-color-neutral-600` (#4d4d4d) | Secondary hover background |
-| `$mg-color-tag-accent` | `$mg-color-orange-900` (#eb752a) | Accent background |
-| `$mg-color-tag-accent--hover` | `$mg-color-orange-800` (#ed833f) | Accent hover background |
-| `$mg-radius-tag` | `0` | Border radius |
+| Token | Purpose |
+|-------|---------|
+| `--mg-color-tag`, `--mg-color-tag--hover` | Default fill / linked hover fill (RGB channels) |
+| `--mg-color-tag-secondary`, `--mg-color-tag-secondary--hover` | Metadata fill / linked hover fill |
+| `--mg-color-tag-accent`, `--mg-color-tag-accent--hover` | Featured fill / linked hover fill |
+| `--mg-radius-tag` | Theme-owned radius (base: 4px) |
+| `--mg-font-family-ui` | Compact label typography, with central script routing |
+| `--mg-color-focus-ring` | Linked keyboard focus ring |
+
+### Reflow and languages
+
+Container children and individually classed tags share the same styling. Explicit modifiers still apply inside the container. Long taxonomy terms wrap, including unbroken identifiers; spacing follows the writing direction.
+
+<Canvas of={TagStories.ReflowAndLanguages} />
 
 ## Changelog
+
+- **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed spacing, line height and base radius for v2; aligned auto-styled children with the UI font role and modifier styling. Linked tags gain 40px targets, keyboard focus, reduced-motion transitions and forced-colour support; static labels no longer react to hover. Long labels wrap and container spacing works in RTL without double margins. Existing classes and legacy colour overrides remain supported; corrected runtime theming guidance.
 
 - **1.1.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tags now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-tag` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.1.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tag whose own language is not Arabic.

@@ -756,6 +756,7 @@ describe('every component names the role it is meant to', () => {
     ],
     ['.mg-tabs__link', 'ui'],
     ['.mg-tag', 'ui'],
+    ['.mg-tag-container > :where(span, div, a, li)', 'ui'],
     ['.mg-user-feedback__question', 'text'],
     [':where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar)))', 'text'],
     [
