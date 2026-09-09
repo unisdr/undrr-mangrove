@@ -1,7 +1,6 @@
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import * as TextCtaStories from './TextCta.stories';
-import * as CtaBlockStories from '../../Patterns/CtaBlock/CtaBlock.stories';
 
 <Meta of={TextCtaStories} />
 
@@ -51,7 +50,7 @@ independent FormAction as `children`, using the soft tone and start-aligned copy
 Its submission is a local demonstration only: it sends no data and creates no
 subscription.
 
-<Canvas of={CtaBlockStories.Newsletter} />
+<Canvas of={TextCtaStories.Newsletter} />
 
 ```jsx
 <TextCta
@@ -68,18 +67,10 @@ For several fields, supply a regular form layout with its action after the field
 The site owns its choices, validation, privacy information and submission service;
 none of those require newsletter-specific CTA props.
 
-<Canvas of={CtaBlockStories.NewsletterWithPreferences} />
+<Canvas of={TextCtaStories.NewsletterWithPreferences} />
 
-Compare the preserved
-
-<LinkTo kind="Example/Newsletter promotion" story="Compact signup">
-  newsletter pattern
-</LinkTo>
-and
-<LinkTo kind="Example/CTA block prototype" story="Newsletter">
-  CTA block exploration
-</LinkTo>
-for alternate compositions and fuller simulated feedback states.
+See the <LinkTo kind="Example/Newsletter promotion" story="After article">newsletter promotion pattern</LinkTo>
+for article placement, preferences and simulated validation, failure and confirmation states.
 
 ## Arrange the content
 
@@ -94,8 +85,8 @@ empty string for a decorative image.
 ### Inline actions
 
 Use `layout="inline"` for a wide banner with copy and action links side by side.
-It stacks on narrow screens. Composed `children` occupy their own full-width row;
-use the default stacked layout for a simple signup block.
+It stacks on narrow screens. Supplying composed `children` selects a stacked layout so the copy, content and
+buttons each retain the full available width.
 
 <Canvas of={TextCtaStories.Inline} />
 
@@ -162,8 +153,7 @@ so text and action treatments stay coordinated across sites.
 Pass a form or other React content as `children` to reuse the CTA shell. Its
 heading, copy, optional image and existing button API stay independent of the
 content. Use `centered={false}` for form compositions and give the form an
-appropriate contrasting surface. The content slot spans the full grid row in
-inline layouts. Form behaviour, validation and service integration belong to the
+appropriate contrasting surface. Supplying content selects a stacked layout even when `layout="inline"`. Form behaviour, validation and service integration belong to the
 caller.
 
 For Drupal-owned forms, render the CTA classes directly around the native form.
@@ -232,7 +222,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
-- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Added a reusable soft accent tone with dark text, normal buttons and `data-tone` support. Reworked the main CTA guide around emphasis, composed forms and responsive layouts, while preserving both earlier prototypes. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
+- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Added a reusable soft accent tone with dark text, normal buttons and `data-tone` support. Reworked the main CTA guide around emphasis, composed forms and responsive layouts, and consolidated the form examples into the CTA stories. The newsletter pattern retains the complete simulated journey. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
 
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Added an optional eyebrow and responsive inline content/action layout for wide promotional banners.

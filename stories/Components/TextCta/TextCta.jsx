@@ -48,6 +48,7 @@ export function TextCta({
   children,
 }) {
   const hasImage = !!image;
+  const inlineActions = layout === 'inline' && children == null;
   const headlineId = useId();
   const HeadingTag = `h${headlineLevel}`;
 
@@ -57,7 +58,7 @@ export function TextCta({
         'mg-cta',
         variant && `mg-cta--${variant}`,
         tone === 'soft' && 'mg-cta--soft',
-        layout === 'inline' && 'mg-cta--inline',
+        inlineActions && 'mg-cta--inline',
         hasImage && 'mg-cta--with-image',
         !hasImage && centered && layout !== 'inline' && 'mg-cta--centered',
         className

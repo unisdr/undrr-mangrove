@@ -12,18 +12,11 @@ Copy, cadence and choices here are illustrative. The form examples simulate a
 response locally: no address is stored or sent, and no subscription is created.
 Use the locale and theme toolbars, and resize the canvas to compare layouts.
 
-## Link to a signup page
+## Validation and confirmation
 
-Keep the promotion short when the destination needs to explain several newsletters
-or handle a provider-managed signup journey.
-
-<Canvas of={Stories.LinkOnly} />
-
-## Compact email signup
-
-FormAction joins one email field and its submit button. A visible label, useful
-expectations and inline validation accompany the controls. Submit a sample address
-to see the simulated confirmation state.
+Submit an empty or invalid address to see validation, then a sample address to see
+the simulated confirmation. Focus moves to the confirmation heading and returns
+to the email field when starting again.
 
 <Canvas of={Stories.CompactSignup} />
 
@@ -58,7 +51,7 @@ simulated outcomes; doing so resets the example.
 
 Use native form markup styled by Mangrove when integrating with Drupal. Let the
 site supply its real action, field names, hidden fields and submission behaviour.
-For provider-hosted forms, use the link-only pattern or an appropriately styled
+For provider-hosted forms, link to the signup page or use an appropriately styled
 integration. Do not copy the simulated submission handler into production.
 
 The compact example uses a native input inside FormAction. The preferences example
@@ -72,4 +65,4 @@ reader announcements, RTL, mobile layout and axe checks on the integrated page.
 
 ## Changelog
 
-- **1.0** — 2026-09-09: Added link-only, compact and preference-based newsletter promotion examples, article placement, simulated failure and confirmation, and an interactive validation check. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
+- **1.0** — 2026-09-09: Added article placement, preferences, simulated failure and confirmation, and an interactive validation check. Consolidated visual CTA examples into the CTA component docs. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))

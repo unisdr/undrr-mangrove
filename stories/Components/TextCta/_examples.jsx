@@ -1,12 +1,10 @@
 import React, { useId, useState } from 'react';
-import { TextCta } from '../../Components/TextCta/TextCta';
-import { FormAction } from '../../Components/Forms/FormAction/FormAction';
-import { FormGroup } from '../../Components/Forms/FormGroup/FormGroup';
-import { Checkbox } from '../../Components/Forms/Checkbox/Checkbox';
-import { TextInput } from '../../Components/Forms/TextInput/TextInput';
-import reportImage from '../../assets/images/author.png';
+import { FormAction } from '../Forms/FormAction/FormAction';
+import { FormGroup } from '../Forms/FormGroup/FormGroup';
+import { Checkbox } from '../Forms/Checkbox/Checkbox';
+import { TextInput } from '../Forms/TextInput/TextInput';
 
-const words = {
+export const ctaExampleWords = {
   english: {
     join: 'Help build a more resilient future',
     joinText:
@@ -26,8 +24,8 @@ const words = {
     help: 'Weekly updates. Unsubscribe at any time.',
     topics: 'Your interests (optional)',
     choices: ['Early warning', 'Climate resilience', 'Risk governance'],
-    success: 'Thanks — this demo has received your request.',
-    note: 'Prototype: submissions stay in this page and do not create a subscription.',
+    success: 'Thanks, this demo has received your request.',
+    note: 'Demonstration only: no data is sent and no subscription is created.',
   },
   arabic: {
     join: 'ساهم في بناء مستقبل أكثر قدرة على الصمود',
@@ -57,7 +55,7 @@ const words = {
   },
 };
 
-function DemoForm({ text, preferences = false, tone = 'strong' }) {
+export function CtaExampleForm({ text, preferences = false, tone = 'strong' }) {
   const [submitted, setSubmitted] = useState(false);
   const id = useId();
   return (
@@ -126,108 +124,3 @@ function DemoForm({ text, preferences = false, tone = 'strong' }) {
   );
 }
 
-export default {
-  title: 'Example/CTA block prototype',
-  parameters: { layout: 'padded' },
-  args: {
-    variant: 'primary',
-    tone: 'strong',
-    centered: false,
-    headlineSize: '700',
-    padding: 'clamp(1rem, 4vw, 2rem)',
-  },
-  argTypes: {
-    tone: { control: 'inline-radio', options: ['strong', 'soft'] },
-    variant: {
-      control: 'inline-radio',
-      options: ['primary', 'secondary', 'tertiary', 'quaternary'],
-    },
-    centered: { control: 'boolean' },
-    headlineSize: { control: 'text' },
-    padding: { control: 'text' },
-  },
-};
-
-export const GetInvolved = {
-  render: (args, { globals }) => {
-    const text = words[globals.locale] || words.english;
-    return (
-      <TextCta
-        {...args}
-        headline={text.join}
-        text={text.joinText}
-        buttons={[
-          {
-            label: text.joinAction,
-            url: 'https://www.undrr.org',
-            type: 'Secondary',
-          },
-          {
-            label: text.more,
-            url: 'https://www.undrr.org',
-            type: 'Secondary',
-            outline: true,
-          },
-        ]}
-      />
-    );
-  },
-};
-export const WithImage = {
-  render: (args, { globals }) => {
-    const text = words[globals.locale] || words.english;
-    return (
-      <TextCta
-        {...args}
-        headline={text.report}
-        text={text.reportText}
-        image={reportImage}
-        imageAlt=""
-        buttons={[
-          {
-            label: text.reportAction,
-            url: 'https://www.preventionweb.net',
-            type: 'Secondary',
-          },
-        ]}
-      />
-    );
-  },
-};
-export const Newsletter = {
-  args: { tone: 'soft' },
-  render: (args, { globals }) => {
-    const text = words[globals.locale] || words.english;
-    return (
-      <TextCta
-        {...args}
-        eyebrow={text.eyebrow}
-        headline={text.news}
-        text={text.newsText}
-      >
-        <DemoForm key={globals.locale} text={text} tone={args.tone} />
-      </TextCta>
-    );
-  },
-};
-export const NewsletterWithPreferences = {
-  args: { tone: 'soft' },
-  render: (args, { globals }) => {
-    const text = words[globals.locale] || words.english;
-    return (
-      <TextCta
-        {...args}
-        eyebrow={text.eyebrow}
-        headline={text.news}
-        text={text.newsText}
-      >
-        <DemoForm
-          key={globals.locale}
-          text={text}
-          preferences
-          tone={args.tone}
-        />
-      </TextCta>
-    );
-  },
-};

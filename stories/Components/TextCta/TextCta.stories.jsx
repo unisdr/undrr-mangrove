@@ -1,3 +1,4 @@
+import { CtaExampleForm, ctaExampleWords } from './_examples';
 import { TextCta } from './TextCta';
 import { INLINE_CTA_ARGS } from './_fixtures';
 
@@ -104,5 +105,43 @@ export const Soft = {
     buttons: [{ label: 'Explore updates', url: '#' }],
     tone: 'soft',
     centered: false,
+  },
+};
+
+export const Newsletter = {
+  args: { tone: 'soft', centered: false, padding: 'clamp(1rem, 4vw, 2rem)' },
+  render: (args, { globals }) => {
+    const text = ctaExampleWords[globals.locale] || ctaExampleWords.english;
+    return (
+      <TextCta
+        {...args}
+        eyebrow={text.eyebrow}
+        headline={text.news}
+        text={text.newsText}
+      >
+        <CtaExampleForm key={globals.locale} text={text} tone={args.tone} />
+      </TextCta>
+    );
+  },
+};
+export const NewsletterWithPreferences = {
+  args: { tone: 'soft', centered: false, padding: 'clamp(1rem, 4vw, 2rem)' },
+  render: (args, { globals }) => {
+    const text = ctaExampleWords[globals.locale] || ctaExampleWords.english;
+    return (
+      <TextCta
+        {...args}
+        eyebrow={text.eyebrow}
+        headline={text.news}
+        text={text.newsText}
+      >
+        <CtaExampleForm
+          key={globals.locale}
+          text={text}
+          preferences
+          tone={args.tone}
+        />
+      </TextCta>
+    );
   },
 };

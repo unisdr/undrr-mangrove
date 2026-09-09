@@ -283,3 +283,15 @@ test('soft tone composes with accent variant without changing the default', () =
   rerender(<TextCta headline="Updates" />);
   expect(container.querySelector('section')).not.toHaveClass('mg-cta--soft');
 });
+
+test('composed content uses stacked layout even when inline actions are requested', () => {
+  const { container, rerender } = render(
+    <TextCta headline="Updates" layout="inline" buttons={[{ label: 'Details', url: '/details' }]}>
+      <p>Composed content</p>
+    </TextCta>
+  );
+  expect(container.querySelector('section')).not.toHaveClass('mg-cta--inline');
+  expect(screen.getByText('Composed content')).toBeInTheDocument();
+  rerender(<TextCta headline="Updates" layout="inline" buttons={[{ label: 'Details', url: '/details' }]} />);
+  expect(container.querySelector('section')).toHaveClass('mg-cta--inline');
+});

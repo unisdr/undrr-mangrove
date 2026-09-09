@@ -4,7 +4,6 @@ import { FormAction } from '../../Components/Forms/FormAction/FormAction';
 import { TextInput } from '../../Components/Forms/TextInput/TextInput';
 import { FormGroup } from '../../Components/Forms/FormGroup/FormGroup';
 import { Checkbox } from '../../Components/Forms/Checkbox/Checkbox';
-import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
 
 const copy = {
   english: {
@@ -32,7 +31,7 @@ const copy = {
     confirmed:
       'Follow the link in the confirmation email to finish signing up.',
     reset: 'Use another email address',
-    demo: 'Interactive example only — no data is sent and no subscription is created.',
+    demo: 'Interactive example only: no data is sent and no subscription is created.',
     article: 'Turning early warning into early action',
     excerpt:
       'Timely information gives communities more time to prepare. Local knowledge, accessible communication and clear responsibilities help turn a warning into action.',
@@ -155,13 +154,7 @@ function Promotion({
           {text.title}
         </h2>
         <p style={{ maxWidth: '60ch' }}>{text.intro}</p>
-        {layout === 'link' ? (
-          <CtaButton
-            href="https://www.preventionweb.net/subscribe-preventionweb-updates"
-            label={text.explore}
-            Variant="CTA"
-          />
-        ) : status === 'success' ? (
+        {status === 'success' ? (
           <div>
             <h3 ref={confirmation} tabIndex={-1}>
               {text.confirmation}
@@ -251,8 +244,6 @@ const render =
       locale={globals.locale}
     />
   );
-export const LinkOnly = { render: render('link') };
-export const CompactSignup = { render: render('compact') };
 export const WithPreferences = { render: render('preferences') };
 export const ServiceError = {
   render: render('preferences'),
@@ -267,12 +258,17 @@ export const AfterArticle = {
           <h1>{text.article}</h1>
           <p>{text.excerpt}</p>
         </article>
-        <Promotion {...args} locale={globals.locale} />
+        <Promotion
+          key={`${globals.locale}-${args.response}`}
+          {...args}
+          locale={globals.locale}
+        />
       </div>
     );
   },
 };
-export const SignupInteraction = {
+export const CompactSignup = {
+  name: 'Validation and confirmation',
   render: render('compact'),
   play: async ({ canvasElement, globals }) => {
     const text = copy[globals.locale] || copy.english;
