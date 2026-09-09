@@ -30,6 +30,16 @@ The Stats card component highlights important statistics, metrics, or "by the nu
 
 The default story shows three statistics with dual labels (top and bottom).
 
+### Mixed content and sibling heights
+
+Cards in a row stretch to the tallest sibling. On narrow screens, stacked cards
+retain their natural height. Resize this example or change the language/theme to
+test varied text lengths and optional content.
+
+The figures are illustrative. Optional icons, labels and descriptions retain their natural order.
+
+<Canvas of={StatsCardStories.MixedContent} />
+
 ## With icons
 
 <Canvas of={StatsCardStories.WithIcons} />
@@ -157,6 +167,8 @@ createHydrator({ selector: "[data-mg-stats-card]", component: StatsCard, fromEle
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.4.4** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Added a mixed-content example with short and long text, optional icons and labels, and linked cards to demonstrate sibling-height behaviour.
 
 - **1.4.3** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic stat values and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. The three `.mg-stats-card-item__*` classes read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.4.2** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a stat value or label whose own language is not Arabic.

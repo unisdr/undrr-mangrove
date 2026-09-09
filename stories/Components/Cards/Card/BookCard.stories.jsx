@@ -97,3 +97,40 @@ export const DefaultBookCard = {
 
   name: 'Book Card',
 };
+
+export const MixedTitleLengths = {
+  render: (args, { globals: { locale } }) => {
+    const base = getCaptionForLocale(locale).contentdata[0];
+    const titles =
+      locale === 'arabic'
+        ? [
+            'إطار سنداي',
+            'الحد من مخاطر الكوارث وبناء القدرة على الصمود',
+            'دليل عملي لدعم المجتمعات المحلية في تخطيط نظم الإنذار المبكر الشاملة للجميع',
+          ]
+        : [
+            'Sendai Framework',
+            'Disaster risk reduction and resilience',
+            'A practical guide to inclusive early warning systems and community preparedness',
+          ];
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns:
+            'repeat(auto-fit, minmax(min(100%, 180px), 200px))',
+          gap: '1rem',
+        }}
+      >
+        <BookCard
+          {...args}
+          data={titles.map((title, index) => ({
+            ...base,
+            title,
+            link: `#publication-${index + 1}`,
+          }))}
+        />
+      </div>
+    );
+  },
+};

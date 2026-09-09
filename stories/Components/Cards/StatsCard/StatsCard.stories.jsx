@@ -1,3 +1,4 @@
+import { expect } from 'storybook/test';
 import { StatsCard } from './StatsCard';
 
 const getCaptionForLocale = locale => {
@@ -342,5 +343,44 @@ export const Linked = {
         {...args}
       />
     );
+  },
+};
+
+// Illustrative figures; deliberately uneven content exercises sibling heights.
+export const MixedContent = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const cards = [...canvasElement.querySelectorAll('.mg-card')];
+    expect(cards).toHaveLength(3);
+    const rows = new Map();
+    cards.forEach(card => {
+      const { top, bottom } = card.getBoundingClientRect();
+      const key = Math.round(top);
+      rows.set(key, [...(rows.get(key) || []), bottom]);
+    });
+    rows.forEach(bottoms => {
+      expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(1);
+    });
+  },
+  args: {
+    title: 'Programme snapshot (illustrative figures)',
+    stats: [
+      { value: '12', bottomLabel: 'Projects' },
+      {
+        label: 'Regional collaboration',
+        value: '48',
+        bottomLabel: 'Partner organizations sharing risk information',
+        summaryText:
+          'Partners share evidence across borders to support local planning, strengthen early warning systems, and reach communities with accessible information before a disaster occurs.',
+      },
+      {
+        icon: 'mg-icon mg-icon-globe',
+        value: '7',
+        bottomLabel: 'Countries',
+        summaryText:
+          'Explore the <a href="#programme-details">programme details</a>.',
+        link: '#country-details',
+      },
+    ],
   },
 };

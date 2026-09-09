@@ -1,3 +1,4 @@
+import { expect } from 'storybook/test';
 import { HorizontalCard } from './HorizontalCard';
 
 const getCaptionForLocale = locale => {
@@ -104,4 +105,36 @@ export const DefaultHorizontalCard = {
   },
 
   name: 'Horizontal Card',
+};
+
+export const LongContent = {
+  render: (args, { globals: { locale } }) => {
+    const base = getCaptionForLocale(locale).contentdata[0];
+    return (
+      <div style={{ maxWidth: '900px' }}>
+        <HorizontalCard
+          {...args}
+          data={[
+            {
+              ...base,
+              summaryText: Array(3)
+                .fill(base.summaryText || base.title)
+                .join(' '),
+            },
+          ]}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const frame = canvasElement
+      .querySelector('.mg-card__visual')
+      .getBoundingClientRect();
+    const image = canvasElement
+      .querySelector('.mg-card__image')
+      .getBoundingClientRect();
+    expect(Math.abs(frame.bottom - image.bottom)).toBeLessThan(1);
+    expect(Math.abs(frame.height - image.height)).toBeLessThan(1);
+  },
 };

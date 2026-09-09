@@ -61,6 +61,16 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 <Canvas of={IconCardStories.GridLayout} />
 
+### Mixed content and sibling heights
+
+Cards in a row stretch to the tallest sibling. On narrow screens, stacked cards
+retain their natural height. Resize this example or change the language/theme to
+test varied text lengths and optional content.
+
+This group includes a CTA, a text link and a card without an action; each action treatment retains its own spacing.
+
+<Canvas of={IconCardStories.MixedContent} />
+
 ### With logo
 
 <Canvas of={IconCardStories.WithLogo} />
@@ -272,6 +282,8 @@ createHydrator({
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.3.4** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Added the mixed-content card group to the docs with a browser assertion for equal sibling heights. Fixed-size coloured badges no longer reserve an oversized illustration frame above their titles.
 
 - **1.3.3** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic card titles and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-card__title` and `.mg-card__label` read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):

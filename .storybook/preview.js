@@ -35,6 +35,13 @@ const getLangCode = (Story, context) => {
     const htmlElem = document.documentElement;
     htmlElem.setAttribute('lang', langCode);
 
+    // Inline Docs stories have their own lang="en" boundary. Set the locale
+    // on this story's canvas too; changing <html> cannot override that boundary.
+    if (context.canvasElement) {
+      context.canvasElement.setAttribute('lang', langCode);
+      context.canvasElement.setAttribute('dir', direction);
+    }
+
     // Set dir on both html and #storybook-root (where RTL addon sets it)
     htmlElem.setAttribute('dir', direction);
     const storybookRoot = document.getElementById('storybook-root');
@@ -52,7 +59,7 @@ const getLangCode = (Story, context) => {
     }, 10);
 
     return () => clearTimeout(loadEventTimer);
-  }, [activeLang]);
+  }, [activeLang, context.canvasElement]);
 
   return <Story {...context} />;
 };

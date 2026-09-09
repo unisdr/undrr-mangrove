@@ -1,3 +1,4 @@
+import { expect } from 'storybook/test';
 import { IconCard } from './IconCard';
 
 // Content translations for locale-aware stories
@@ -254,6 +255,20 @@ export const GridLayout = {
 
 // Mixed content - demonstrating different CTA options
 export const MixedContent = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const cards = [...canvasElement.querySelectorAll('.mg-card')];
+    expect(cards).toHaveLength(3);
+    const rows = new Map();
+    cards.forEach(card => {
+      const { top, bottom } = card.getBoundingClientRect();
+      const key = Math.round(top);
+      rows.set(key, [...(rows.get(key) || []), bottom]);
+    });
+    rows.forEach(bottoms => {
+      expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(1);
+    });
+  },
   render: (args, { globals: { locale } }) => {
     const content = getContent(locale);
     return (
@@ -477,6 +492,21 @@ export const RealWorldImages = {
 
 // Feature cards with colored icon backgrounds (DELTA Resilience pattern)
 export const FeatureCards = {
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const visuals = [...canvasElement.querySelectorAll('.mg-card__visual')];
+    expect(visuals.length).toBeGreaterThan(0);
+    visuals.forEach(visual => {
+      const badge = visual.querySelector('.mg-card__icon-wrap--colored');
+      expect(badge).not.toBeNull();
+      expect(
+        Math.abs(
+          visual.getBoundingClientRect().height -
+            badge.getBoundingClientRect().height
+        )
+      ).toBeLessThan(1);
+    });
+  },
   render: args => (
     <div className="mg-grid mg-grid__col-3">
       <IconCard
