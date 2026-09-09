@@ -1,3 +1,69 @@
+// The font entry point. This file owns everything about type FACES: the asset
+// paths, the `@font-face` declarations, and the script routing that re-points
+// the font roles for Arabic. There is one font import, not two —
+// _font-roles.scss was folded in here by unisdr/undrr-mangrove#1098.
+
+// The roles themselves are NOT defined here. They are declared on the top-level
+// `:root` block in _variables.scss, because every supported build path reaches
+// _variables.scss — including the per-component Sass recipe in
+// SassIntegration.mdx. A role reference with no definition is invalid at
+// computed-value time, so a build that reached the components but not the
+// definitions would render every element in Times.
+
+// The roles, and what belongs on each:
+
+//   text     running text and anything read as prose: body, buttons, form
+//            fields, chips, status labels, share and feedback text. `p`,
+//            `h4`-`h6`, `th`, `td` and the bare `header` element are on this
+//            role too, but by INHERITING from `body` — none of them carries a
+//            declaration, so a heading placed inside a `ui` container keeps
+//            that container's face.
+//   heading  narrative h1-h3, and only in Arabic. In Latin `heading` and `text`
+//            are the same face, so h1-h3 are left to inherit rather than given
+//            a matched declaration that would beat a consuming theme's own
+//            brand face. See the note in _foundational.scss.
+//   display  the hero title, and nothing else.
+//   ui       scanned chrome, where space efficiency or visual chrome is the
+//            design intent: card, gallery and empty-state titles, labels,
+//            stats values, tags, tabs, breadcrumbs, the mega topbar and
+//            on-this-page nav links, and the hero LABEL. Not buttons — those
+//            read as prose and take `text`.
+//   code     code / pre
+
+// IMPORT _variables.scss BEFORE THIS FILE. The script routing at the bottom
+// builds its values with `mg-font-stack()` and the `$mg-font-face-*` variables,
+// all of which _variables.scss owns, so this file does not compile on its own.
+// The failure is a hard `Undefined variable` error rather than a silent
+// fallback, but not every build path names both files in the same place — see
+// the Drupal list below.
+
+// IMPORT THIS FILE EXACTLY ONCE PER BUILD. Sass's legacy `@import` re-emits,
+// and `@import` is not allowed inside `@if`, so the `@font-face` partials below
+// cannot be guarded — a second visit would duplicate all 32 blocks. Every
+// supported build path reaches it once and only once:
+
+//   - the seven style*.scss entry points import _variables.scss and then this
+//     file, both directly;
+//   - the shared import list every UNDRR Drupal theme compiles
+//     (undrr_common/scss/_mangrove-components.scss) names `fonts` in its own
+//     right — first in the list, ahead of breakpoints, mixins, foundational and
+//     utility. It does NOT name `variables` anywhere: the theme entry point one
+//     level up supplies that, either as `@use "variables" as *` or as a plain
+//     `@import`, before it reaches the list. So the ordering rule above is a
+//     contract across two files, and copying or reordering that list without
+//     carrying its entry point's `variables` import is a compile error;
+//   - the per-component recipe in SassIntegration.mdx names both, in order.
+
+// _foundational.scss therefore does NOT import it. It used to import
+// _font-roles.scss, because that file was reachable from the entry points only
+// and every production site was compiling the roles with no Arabic map behind
+// them: Arabic text asked for Roboto, which has no Arabic coverage, and every
+// glyph fell back to the OS default. Silently. Folding the map into the file
+// consumers already import closes that hole at the source instead of routing
+// around it. A test in __tests__/font-roles.test.js counts the `@font-face`
+// blocks in every compiled bundle and in the consumer import list, so adding a
+// second import of this file fails the suite rather than shipping quietly.
+
 /* Roboto */
 $font-path-roboto: "https://assets.undrr.org/static/fonts/roboto/v1.0.0" !default;
 
@@ -10,5 +76,97 @@ $font-path-roboto-condensed: "https://assets.undrr.org/static/fonts/roboto-conde
 
 /* Arabic Fonts */
 
-/* Dubai - for body text in Arabic */
-@import "../fonts/dubai/dubai";
+/* Noto Kufi Arabic - for headings in Arabic */
+$font-path-noto-kufi-arabic: "https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0" !default;
+
+@import "../fonts/noto-kufi-arabic/noto-kufi-arabic";
+
+/* Noto Sans Arabic - for body text in Arabic */
+$font-path-noto-sans-arabic: "https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0" !default;
+
+@import "../fonts/noto-sans-arabic/noto-sans-arabic";
+
+@mixin mg-font-roles-arabic {
+  --mg-font-family-text: #{mg-font-stack($mg-font-face-arabic-sans)};
+  --mg-font-family-heading: #{mg-font-stack($mg-font-face-arabic-display)};
+  --mg-font-family-display: #{mg-font-stack($mg-font-face-arabic-display)};
+  --mg-font-family-ui: #{mg-font-stack($mg-font-face-arabic-sans)};
+}
+
+@mixin mg-font-roles-latin {
+  --mg-font-family-text: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-heading: #{mg-font-stack($mg-font-face-sans)};
+  --mg-font-family-display: #{mg-font-stack($mg-font-face-sans-condensed)};
+  --mg-font-family-ui: #{mg-font-stack($mg-font-face-sans-condensed)};
+}
+
+/* Arabic fonts */
+
+/*
+ * Script routing lives here and nowhere else. No component stylesheet carries
+ * a `:lang(ar)` font-family override any more: a component names a role, and
+ * this map re-points the roles for Arabic.
+ * See unisdr/undrr-mangrove#1098.
+ *
+ * Arabic has no condensed axis, so ui collapses onto Noto Sans Arabic — that
+ * is why Arabic card titles, tags, tabs, breadcrumbs and nav change face here
+ * while Latin does not. Noto Kufi Arabic is a display face and is kept for
+ * narrative h1-h3 and the hero title only. h4-h6, th and the bare `header`
+ * element are at or below body size, so they take text. The hero LABEL is
+ * `ui` — it is chrome, not narrative — so it lands on Noto Sans Arabic too,
+ * by a different route than h4-h6 but on the same face.
+ * Pending the reader test scheduled in unisdr/undrr-mangrove#1098, moving
+ * Arabic narrative headings onto the body face is one token value here.
+ *
+ * Both sides are defined, because custom properties inherit. Anchoring
+ * `:lang(ar)` to the styled element (unisdr/undrr-mangrove#1092) stops the
+ * Arabic rules *matching* a `lang="en"` island, but the island would still
+ * inherit the Arabic role values from its Arabic ancestor. The Latin values
+ * are therefore reasserted at the boundary.
+ *
+ * The boundary rules match only the *switch point* — the element that declares
+ * the new language — with a child combinator. A language sub-root always has a
+ * parent of the outer language, because `:lang()` inherits, so the child
+ * combinator selects exactly those elements. Writing this as a descendant
+ * selector would be wrong for the same reason it was wrong in
+ * unisdr/undrr-mangrove#1093: it would also match component children meant to
+ * inherit their container's family.
+ *
+ * Both boundary rules are wrapped in `:where()` for zero specificity so a
+ * component rule on the boundary element itself still wins.
+ * `[lang]:not([lang=""])` keeps `lang=""` — which HTML defines as *unknown*,
+ * not *Latin* — inheriting rather than guessed at.
+ *
+ * The boundary rules also restate `font-family` itself, as
+ * unisdr/undrr-mangrove#1093 did. Re-pointing the roles is not enough on its
+ * own: `font-family` is an inherited property, and an element with no
+ * font-family declaration of its own — a plain `<section lang="en">`, or a `p`
+ * inside it — would keep inheriting the *used* family from its Arabic
+ * ancestor no matter what the roles below it now say. The text role is the
+ * right value there, because that is what `body` sets.
+ *
+ * `--mg-font-family-code` is not remapped: the monospace stack is the same in
+ * both scripts, so it inherits from `:root` everywhere.
+ */
+
+/* Arabic document root. Needs a higher specificity than the plain `:root` in
+   _variables.scss, which also matches `html`, so this one is not wrapped in
+   `:where()`. No font-family here — `body` already sets the text role. The
+   boundary rules below never match `html`, so they stay at zero specificity. */
+:root:lang(ar) {
+  @include mg-font-roles-arabic;
+}
+
+/* An Arabic sub-root inside an otherwise Latin page. */
+:where(:not(:lang(ar))) > :where([lang]:not([lang=""]):lang(ar)) {
+  @include mg-font-roles-arabic;
+
+  font-family: var(--mg-font-family-text);
+}
+
+/* A non-Arabic sub-root inside an Arabic page. */
+:where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar))) {
+  @include mg-font-roles-latin;
+
+  font-family: var(--mg-font-family-text);
+}
