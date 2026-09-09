@@ -30,16 +30,29 @@
 //            read as prose and take `text`.
 //   code     code / pre
 
+// IMPORT _variables.scss BEFORE THIS FILE. The script routing at the bottom
+// builds its values with `mg-font-stack()` and the `$mg-font-face-*` variables,
+// all of which _variables.scss owns, so this file does not compile on its own.
+// The failure is a hard `Undefined variable` error rather than a silent
+// fallback, but not every build path names both files in the same place — see
+// the Drupal list below.
+
 // IMPORT THIS FILE EXACTLY ONCE PER BUILD. Sass's legacy `@import` re-emits,
 // and `@import` is not allowed inside `@if`, so the `@font-face` partials below
 // cannot be guarded — a second visit would duplicate all 32 blocks. Every
 // supported build path reaches it once and only once:
 
-//   - the seven style*.scss entry points import it directly;
+//   - the seven style*.scss entry points import _variables.scss and then this
+//     file, both directly;
 //   - the shared import list every UNDRR Drupal theme compiles
 //     (undrr_common/scss/_mangrove-components.scss) names `fonts` in its own
-//     right, alongside foundational and utility;
-//   - the per-component recipe in SassIntegration.mdx names it too.
+//     right — first in the list, ahead of breakpoints, mixins, foundational and
+//     utility. It does NOT name `variables` anywhere: the theme entry point one
+//     level up supplies that, either as `@use "variables" as *` or as a plain
+//     `@import`, before it reaches the list. So the ordering rule above is a
+//     contract across two files, and copying or reordering that list without
+//     carrying its entry point's `variables` import is a compile error;
+//   - the per-component recipe in SassIntegration.mdx names both, in order.
 
 // _foundational.scss therefore does NOT import it. It used to import
 // _font-roles.scss, because that file was reachable from the entry points only

@@ -444,10 +444,20 @@ describe('the documented per-component Sass recipe', () => {
  * The list below is deliberately a re-statement, not a read of the consumer
  * repo: Mangrove cannot see that file, and the contract it has to keep is
  * "importing `foundational` is enough".
+ *
+ * The shape has two levels, and modelling it as one loses the part that can
+ * break. The shared list starts at `fonts` and never names `variables`; the
+ * theme entry point that compiles the list supplies `variables` above it. Since
+ * unisdr/undrr-mangrove#1098 folded the Arabic map into `_fonts.scss`, that
+ * file needs `mg-font-stack()` and the `$mg-font-face-*` variables in scope, so
+ * the split is now load-bearing: the list compiles only because of a line in a
+ * file it does not contain.
  */
 describe('the shared Drupal import list', () => {
+  /**
+   * The list itself, in its real order — `fonts` first, no `variables`.
+   */
   const CONSUMER_IMPORTS = [
-    'stories/assets/scss/variables',
     'stories/assets/scss/fonts',
     'stories/assets/scss/breakpoints',
     'stories/assets/scss/mixins',
@@ -460,32 +470,65 @@ describe('the shared Drupal import list', () => {
     'stories/Components/Breadcrumbs/breadcrumbs',
   ];
 
-  const consumerCss = (() => {
-    const source = CONSUMER_IMPORTS.map(file => `@import "${file}";`).join(
-      '\n'
-    );
-    return sass.compileString(source, {
-      loadPaths: [REPO_ROOT],
-      silenceDeprecations: ['import'],
-      logger: sass.Logger.silent,
-    }).css;
-  })();
+  /**
+   * What the theme entry points put above that list. Both flavours ship: the
+   * `undrr`, `arise`, `gp` and `sfvc` themes `@use` the variables module with
+   * `as *`, while `irp`, `mcr` and `pw` legacy-`@import` it ahead of their
+   * sub-brand file. The two do not expose the same members — `@use ... as *`
+   * exports only the module's own public names, where `@import` flattens
+   * everything into one scope — so a dependency `_fonts.scss` picks up can
+   * satisfy one and not the other. Both are compiled for that reason.
+   */
+  const PRELUDES = {
+    'use-as-star': '@use "stories/assets/scss/variables" as *;',
+    'legacy-import': '@import "stories/assets/scss/variables";',
+  };
+
+  const consumerCache = new Map();
+  /** Lazy and memoised: a compile failure has to land inside a named test. */
+  const compileConsumer = prelude => {
+    if (!consumerCache.has(prelude)) {
+      consumerCache.set(
+        prelude,
+        sass.compileString(
+          [prelude, ...CONSUMER_IMPORTS.map(file => `@import "${file}";`)].join(
+            '\n'
+          ),
+          {
+            loadPaths: [REPO_ROOT],
+            silenceDeprecations: ['import'],
+            logger: sass.Logger.silent,
+          }
+        ).css
+      );
+    }
+    return consumerCache.get(prelude);
+  };
+
+  const consumerCss = () => compileConsumer(PRELUDES['use-as-star']);
+
+  test.each(Object.entries(PRELUDES))(
+    'compiles under a %s theme entry, list starting at `fonts`',
+    (_flavour, prelude) => {
+      // The whole point of starting the list at `fonts`: if `_fonts.scss` grows
+      // a dependency the entry point's `variables` does not satisfy, this is
+      // where a real theme's build breaks, and the failure is a thrown
+      // `Undefined variable` rather than a missing declaration.
+      expect(roleMapIn(compileConsumer(prelude), ':root:lang(ar)')).toEqual({
+        text: expect.stringContaining('Noto Sans Arabic'),
+        heading: expect.stringContaining('Noto Kufi Arabic'),
+        display: expect.stringContaining('Noto Kufi Arabic'),
+        ui: expect.stringContaining('Noto Sans Arabic'),
+      });
+    }
+  );
 
   test('defines all five roles', () => {
     expect(
       ROLES.filter(role =>
-        new RegExp(`--mg-font-family-${role}\\s*:`).test(consumerCss)
+        new RegExp(`--mg-font-family-${role}\\s*:`).test(consumerCss())
       )
     ).toEqual(ROLES);
-  });
-
-  test('carries the Arabic script map', () => {
-    expect(roleMapIn(consumerCss, ':root:lang(ar)')).toEqual({
-      text: expect.stringContaining('Noto Sans Arabic'),
-      heading: expect.stringContaining('Noto Kufi Arabic'),
-      display: expect.stringContaining('Noto Kufi Arabic'),
-      ui: expect.stringContaining('Noto Sans Arabic'),
-    });
   });
 
   test('carries both language-boundary rules', () => {
@@ -493,7 +536,7 @@ describe('the shared Drupal import list', () => {
     // keeps resolving the roles to Arabic faces unless they are restated at the
     // switch point — and `font-family` itself inherits as a used value, so the
     // boundary has to restate that too. See unisdr/undrr-mangrove#1093.
-    const boundaries = rules(consumerCss).filter(rule =>
+    const boundaries = rules(consumerCss()).filter(rule =>
       rule.selector.includes('[lang]:not([lang=""]')
     );
 
@@ -510,7 +553,7 @@ describe('the shared Drupal import list', () => {
     // mask an ordering mistake in the first.
     const once = css => (css.match(/:root:lang\(ar\)\s*\{/g) || []).length;
 
-    expect(once(consumerCss)).toBe(1);
+    expect(once(consumerCss())).toBe(1);
     for (const entry of BUNDLES) expect(once(compile(entry))).toBe(1);
   });
 
@@ -532,7 +575,7 @@ describe('the shared Drupal import list', () => {
       );
 
     for (const [name, css] of [
-      ['the consumer import list', consumerCss],
+      ['the consumer import list', consumerCss()],
       ...BUNDLES.map(entry => [entry, compile(entry)]),
     ]) {
       const keys = faceKeys(css);
