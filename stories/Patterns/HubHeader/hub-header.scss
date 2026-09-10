@@ -86,19 +86,29 @@
   &__identity {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+
+    // Box-centred, not baseline. Baseline alignment is right for text against
+    // text; the section links are 44px hit areas, and so is the name.
+    align-items: center;
     gap: var(--mg-spacing-100) var(--mg-spacing-150);
     padding-block: var(--mg-spacing-100);
   }
 
   &__name {
     flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    // Matches the section links. At 1.125rem on a 1.5em line plus the old
+    // padding the target was 42px, under the 44px the review checklist asks
+    // for, and the divider it carries fell 2px short of the row.
+    min-block-size: 2.75rem;
+    padding-block: 0;
     font-size: 1.125rem;
     font-family: var(--mg-font-family-ui);
     font-weight: 700;
     color: rgb(var(--mg-hub-header-ink));
     text-decoration: none;
-    padding-block: var(--mg-spacing-75);
 
     &:hover {
       color: rgb(var(--mg-hub-header-link-hover));
@@ -112,8 +122,15 @@
       outline-offset: var(--mg-focus-ring-offset);
     }
 
+    // The same hairline the mega menu uses between its columns. Suppressed once
+    // the links wrap to their own line, where the line break is the separator
+    // and a trailing rule would hang at the end of a line with nothing after
+    // it — the orphan mark this row already had to design out once.
+    // The links carry 15px of their own inline padding, so the wider padding
+    // here is what puts the rule near the middle of the gap rather than at its
+    // first third, where it read as a mark trailing the name.
     @media (width >= 48rem) {
-      padding-inline-end: var(--mg-spacing-150);
+      padding-inline-end: var(--mg-spacing-250);
       border-inline-end: 1px solid
         rgb(var(--mg-hub-header-rule) / var(--mg-hub-header-rule-alpha));
     }

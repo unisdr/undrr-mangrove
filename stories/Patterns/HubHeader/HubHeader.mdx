@@ -100,6 +100,15 @@ active section scrolled into view.
 > colour — weight and the leading rule carry it, and neither was
 > colour-dependent to begin with.
 >
+> The hairline between the name and the links is the same device the mega menu
+> uses between its columns, so it is a reused idiom rather than a new one. What
+> was wrong with it was geometry, not choice: the name's box was 42px against a
+> 44px row, so the rule fell just short of full height — close enough to read as
+> a fault rather than a deliberate tick — and it sat at the first third of the
+> gap, which made it read as a mark trailing the name instead of a boundary. The
+> name is now the same 44px box as a section link, which also brings its touch
+> target up to the size the review checklist asks for.
+>
 > The current item is marked by an underline that hugs the word, not the item's
 > padding box. The padding box is what `Tab`, the MegaMenu topbar and
 > `OnThisPageNav` all underline, and it is what reads as a tab; hugging the word
@@ -132,3 +141,4 @@ active section scrolled into view.
   - Stated the link hover colour, which the global `a:hover` was otherwise darkening into near-invisibility on a coloured surface.
   - Marked the current section with a word-hugging underline instead of a leading rule, which read as a stray pipe on a coloured surface.
   - Added optional banner `actions`, rendered with the shared `CtaButton`.
+  - Gave the hub name a full 44px box, which centres its divider against the row and brings the link's touch target up to the recommended size.
