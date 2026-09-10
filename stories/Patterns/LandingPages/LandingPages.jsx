@@ -310,7 +310,11 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
           current={page.title}
         />
 
-        <main id={`${id}-content`} className="mg-page-main" tabIndex={-1}>
+        <main
+          id={`${id}-content`}
+          className="mg-page-main | mg-container--spacer"
+          tabIndex={-1}
+        >
           {archetype === 'topic' && (
             <>
               <Hero
@@ -326,7 +330,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 ]}
               />
 
-              <section className="mg-demo-section">
+              <section>
                 <h2>{page.routesHeading}</h2>
                 <p className="mg-demo-lede | mg-u-font-size-500">
                   {page.routesIntro}
@@ -362,7 +366,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 </div>
               </section>
 
-              <section className="mg-demo-section">
+              <section>
                 <h2>{page.relatedHeading}</h2>
                 <div className="mg-grid mg-grid__col-3">
                   <VerticalCard
@@ -430,7 +434,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 </p>
               </div>
               {page.groups.map(([heading, titles]) => (
-                <section key={heading} className="mg-demo-section">
+                <section key={heading}>
                   <h2>{heading}</h2>
                   <p>
                     <a href={links.collection}>{page.groupLink}</a>

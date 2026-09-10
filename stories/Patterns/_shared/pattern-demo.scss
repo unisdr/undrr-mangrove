@@ -1,24 +1,18 @@
 // Demo scaffolding for the pattern stories. Not distributed, and prefixed
 // mg-demo- so nothing here reads as public API.
-// Everything left is a margin, a measure or a padding, and every one of them is
-// here because Mangrove ships no spacing utility and no measure utility — see
-// unisdr/undrr-mangrove#1119. Given those, most of this file would be classes
-// in the markup instead. There is deliberately no typography: the base scale and
-// the mg-u-font-size utilities cover it, and a demo that overrides them is a
-// demo not trusting the library.
-
-// Rhythm between the sections of a composed page.
-.mg-demo-section {
-  margin-block-start: var(--mg-spacing-300);
-}
+// Four declarations, each of which the library has no way to express:
+//   - a measure, because there is no max-width utility for running text
+//   - the skip link's focus reveal, because there is no skip link (#1117)
+//   - a mobile gutter, because mg-container's is 10px at every width
+//   - band padding, because there is no spacing utility
+//
+// Inter-element spacing and typography are the library's: mg-container--spacer
+// handles the rhythm between sections, and the base scale plus mg-u-font-size
+// handle the type. Nothing here overrides either.
 
 .mg-demo-lede,
 .mg-demo-intro {
   max-inline-size: 49rem;
-}
-
-.mg-demo-intro {
-  margin-block-end: var(--mg-spacing-250);
 }
 
 .mg-demo-skip-link {
@@ -48,8 +42,4 @@
 
 .mg-demo-band--feature {
   padding-block: var(--mg-spacing-400);
-}
-
-.mg-demo-band h2 {
-  margin-block-start: 0;
 }

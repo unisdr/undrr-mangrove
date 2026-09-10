@@ -393,7 +393,7 @@ export function ContentHub({
         <main
           ref={content}
           id={`${prefix}-content`}
-          className="mg-page-main"
+          className="mg-page-main | mg-container--spacer"
           tabIndex={-1}
         >
           {pageHero && (
@@ -435,7 +435,7 @@ export function ContentHub({
                   buttons={[{ label: text.open, url: href('overview') }]}
                 />
               )}
-              <section className="mg-demo-section">
+              <section>
                 <h2>{text.related}</h2>
                 <p className="mg-demo-lede | mg-u-font-size-500">
                   {text.relatedIntro}
@@ -528,7 +528,7 @@ export function ContentHub({
             </div>
           )}
           {['about', 'indicators', 'reports', 'data'].includes(page) && (
-            <section className="mg-demo-section">
+            <section>
               <h2>{text.resources}</h2>
               <p>{text.reportText}</p>
               <a href="https://sendaimonitor.undrr.org/">{text.reportLink}</a>
