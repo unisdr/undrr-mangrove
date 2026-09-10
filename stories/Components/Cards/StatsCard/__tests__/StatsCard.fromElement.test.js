@@ -40,9 +40,7 @@ describe('statsCardFromElement', () => {
   });
 
   it('returns empty stats array for invalid JSON', () => {
-    const props = statsCardFromElement(
-      makeContainer({ stats: 'not-json' })
-    );
+    const props = statsCardFromElement(makeContainer({ stats: 'not-json' }));
     expect(props.stats).toEqual([]);
   });
 

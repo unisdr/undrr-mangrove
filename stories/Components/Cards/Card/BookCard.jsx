@@ -8,11 +8,21 @@ const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
 export function BookCard({ data, variant = 'primary', className }) {
-  const variantClass = variant && variant !== 'primary' ? `mg-card--${variant}` : null;
+  const variantClass =
+    variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
       {data.map((item, index) => (
-        <article key={index} className={cls('mg-card', 'mg-card__vc', 'mg-card__book', variantClass, className)}>
+        <article
+          key={index}
+          className={cls(
+            'mg-card',
+            'mg-card__vc',
+            'mg-card__book',
+            variantClass,
+            className
+          )}
+        >
           <div className="mg-card__visual">
             <img
               src={item.imgback}

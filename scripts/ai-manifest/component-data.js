@@ -330,7 +330,7 @@ export default {
 
   'components-cards-icon-card': {
     description:
-      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
+      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
   },
   'components-cards-book-card': {
     description: 'Minimal card for publications: cover image and title only.',

@@ -33,11 +33,9 @@ export function StatsCard({
     gridClasses = 'mg-grid mg-grid--auto-fit';
   }
 
-  const classes = [
-    baseClass,
-    variant && `${baseClass}--${variant}`,
-    className,
-  ].filter(Boolean).join(' ');
+  const classes = [baseClass, variant && `${baseClass}--${variant}`, className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <section className={classes} aria-label={title || 'Statistics'} {...props}>
@@ -71,7 +69,8 @@ StatsCard.propTypes = {
       /** Label displayed above the value (e.g., "Target A") */
       label: PropTypes.string,
       /** The main statistic value (e.g., "1,500+", "45%", "$223B") */
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       /** Label displayed below the value */
       bottomLabel: PropTypes.string,
       /** Optional descriptive text (supports inline HTML links) */

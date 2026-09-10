@@ -14,11 +14,7 @@ describe('IconCard', () => {
   // --------------------------------------------------
 
   it('renders title and summary text', () => {
-    render(
-      <IconCard
-        data={makeData({ summaryText: 'Card description' })}
-      />,
-    );
+    render(<IconCard data={makeData({ summaryText: 'Card description' })} />);
 
     expect(screen.getByText('Test card')).toBeInTheDocument();
     expect(screen.getByText('Card description')).toBeInTheDocument();
@@ -30,7 +26,7 @@ describe('IconCard', () => {
 
   it('renders icon span when data item has icon classes', () => {
     const { container } = render(
-      <IconCard data={makeData({ icon: 'mg-icon mg-icon-globe' })} />,
+      <IconCard data={makeData({ icon: 'mg-icon mg-icon-globe' })} />
     );
 
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
@@ -52,7 +48,7 @@ describe('IconCard', () => {
           imgback: '/images/photo.jpg',
           imgalt: 'A photograph',
         })}
-      />,
+      />
     );
 
     const img = screen.getByRole('img', { name: 'A photograph' });
@@ -68,7 +64,7 @@ describe('IconCard', () => {
     const { container } = render(
       <IconCard
         data={makeData({ icon: 'mg-icon mg-icon-globe', iconColor: '#f4b8a8' })}
-      />,
+      />
     );
 
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
@@ -84,7 +80,7 @@ describe('IconCard', () => {
           iconColor: '#f4b8a8',
           iconFgColor: '#333',
         })}
-      />,
+      />
     );
 
     const iconWrap = container.querySelector('.mg-card__icon-wrap');
@@ -97,7 +93,7 @@ describe('IconCard', () => {
 
   it('applies --mg-card-border custom property and --bordered modifier for borderColor', () => {
     const { container } = render(
-      <IconCard data={makeData({ borderColor: '#e8963a' })} />,
+      <IconCard data={makeData({ borderColor: '#e8963a' })} />
     );
 
     const article = container.querySelector('article');
@@ -113,7 +109,7 @@ describe('IconCard', () => {
     const { container } = render(
       <IconCard
         data={makeData({ visualLabel: 'Data', icon: 'mg-icon mg-icon-globe' })}
-      />,
+      />
     );
 
     const visual = container.querySelector('.mg-card__visual');
@@ -131,7 +127,7 @@ describe('IconCard', () => {
           visualLabel: 'Data',
           icon: 'mg-icon mg-icon-globe',
         })}
-      />,
+      />
     );
 
     const content = container.querySelector('.mg-card__content');
@@ -148,7 +144,7 @@ describe('IconCard', () => {
           visualLabel: 'Data',
           icon: 'mg-icon mg-icon-globe',
         })}
-      />,
+      />
     );
 
     const visual = container.querySelector('.mg-card__visual');
@@ -172,7 +168,7 @@ describe('IconCard', () => {
           link: '/example',
           icon: 'mg-icon mg-icon-globe',
         })}
-      />,
+      />
     );
 
     const header = container.querySelector('.mg-card__title');
@@ -193,7 +189,7 @@ describe('IconCard', () => {
           linkText: 'Explore',
           onClick,
         })}
-      />,
+      />
     );
 
     const titleLink = screen.getByRole('link', { name: 'Test card' });
@@ -221,7 +217,7 @@ describe('IconCard', () => {
             link: '/resilience',
           },
         ]}
-      />,
+      />
     );
 
     expect(await axe(container)).toHaveNoViolations();
@@ -239,9 +235,54 @@ describe('IconCard', () => {
             summaryText: 'A styled card.',
           },
         ]}
-      />,
+      />
     );
 
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+const sass = require('sass');
+const path = require('path');
+
+/** Compiled once: layout bugs of this kind are invisible to jsdom. */
+let compiled;
+const css = () => {
+  if (compiled === undefined) {
+    compiled = sass.compile(
+      path.resolve(__dirname, '../../../../assets/scss/style.scss'),
+      {
+        loadPaths: [path.resolve(__dirname, '../../../../assets/scss')],
+        logger: sass.Logger.silent,
+      }
+    ).css;
+  }
+  return compiled;
+};
+
+const ruleFor = selector => {
+  const match = css().match(
+    new RegExp(
+      `${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`
+    )
+  );
+  return match ? match[1] : '';
+};
+
+describe('icon card layout', () => {
+  test("centred cards centre the icon on the visual's cross axis", () => {
+    // The visual is a column flex container, so justify-content centres it
+    // vertically. Without align-items the icon stays pinned left while the
+    // text centres — which is what shipped.
+    const rule = ruleFor('.mg-card__icon--centered .mg-card__visual');
+    expect(rule).toMatch(/align-items:\s*center/);
+  });
+
+  test('horizontal cards give the visual an explicit size', () => {
+    // imageScale pins --small to 72px and sizes the glyph by container query;
+    // in a row that holds the column open wider than the icon drawn in it.
+    const rule = ruleFor('.mg-card__icon--horizontal .mg-card__visual');
+    expect(rule).toMatch(/inline-size:\s*var\(--mg-card-icon-size/);
+    expect(rule).toMatch(/aspect-ratio:\s*auto/);
   });
 });

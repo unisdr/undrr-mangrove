@@ -12,7 +12,8 @@
   box-shadow: var(--mg-card-shadow);
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: box-shadow var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+    transition: box-shadow var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
   }
 
   &:hover {
@@ -579,11 +580,57 @@ $card-variant-colours: (
     text-align: center;
 
     .mg-card__visual {
+      // The visual is a column flex container, so its horizontal axis is the
+      // cross axis: justify-content centres it vertically and leaves the icon
+      // pinned left by the inherited align-items: flex-start.
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mg-card__icon-wrap {
       justify-content: center;
     }
 
     .mg-card__content {
       align-items: center;
+    }
+  }
+
+  // Icon beside the content rather than above it, the arrangement undrr.org
+  // uses for "what would you like to do" route rows.
+  // This owns the visual's size rather than deferring to the imageScale
+  // aspect-ratio rules. Those size the icon from the visual's width via a
+  // container query, and pin --small to a fixed 72px; in a row that leaves an
+  // auto grid column held open at 72px while the glyph draws smaller, which
+  // reads as dead space between the icon and the text.
+  &--horizontal {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--mg-spacing-200);
+    max-width: none;
+
+    .mg-card__visual {
+      inline-size: var(--mg-card-icon-size, 3rem);
+      block-size: var(--mg-card-icon-size, 3rem);
+      aspect-ratio: auto;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mg-card__icon-wrap {
+      justify-content: center;
+    }
+
+    .mg-card__icon-wrap .mg-icon,
+    .mg-card__image {
+      inline-size: var(--mg-card-icon-size, 3rem);
+      min-inline-size: 0;
+      font-size: var(--mg-card-icon-size, 3rem);
+    }
+
+    .mg-card__content {
+      min-inline-size: 0;
     }
   }
 
@@ -624,6 +671,7 @@ $card-variant-colours: (
       text-align: center;
 
       .mg-card__visual {
+        align-items: center;
         justify-content: center;
       }
 

@@ -641,3 +641,32 @@ export const MixedIconTypes = {
     centered: true,
   },
 };
+
+export const Horizontal = {
+  args: {
+    orientation: 'horizontal',
+    data: [
+      {
+        icon: 'mg-icon mg-icon-tags',
+        title: 'Understand the indicators',
+        summaryText:
+          'What the 38 indicators measure, and how the framework connects to the SDGs.',
+        link: '#',
+      },
+      {
+        icon: 'mg-icon mg-icon-chart-bar',
+        title: 'Explore the data',
+        summaryText:
+          'Global, regional and country progress against the seven global targets.',
+        link: '#',
+      },
+      {
+        icon: 'mg-icon mg-icon-file-alt',
+        title: 'Report on the Sendai Framework',
+        summaryText:
+          'Step-by-step guidance and video tutorials for national focal points.',
+        link: '#',
+      },
+    ],
+  },
+};

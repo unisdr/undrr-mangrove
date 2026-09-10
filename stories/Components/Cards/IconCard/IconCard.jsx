@@ -16,6 +16,7 @@ const cls = (...classes) =>
  * @param {Object} props
  * @param {Array} props.data - Array of card data objects (see data object properties below)
  * @param {boolean} props.centered - Center-align content (default: false, left-aligned)
+ * @param {'vertical'|'horizontal'} props.orientation - Icon above the content, or beside it (default: vertical)
  * @param {string} props.variant - Visual variant: 'default' or 'negative' (for dark backgrounds)
  *
  * Data object properties:
@@ -79,7 +80,12 @@ function Visual({ item }) {
   return null;
 }
 
-export function IconCard({ data, centered = false, variant = 'default' }) {
+export function IconCard({
+  data,
+  centered = false,
+  variant = 'default',
+  orientation = 'vertical',
+}) {
   return (
     <>
       {data.map((item, index) => (
@@ -89,6 +95,7 @@ export function IconCard({ data, centered = false, variant = 'default' }) {
             'mg-card',
             'mg-card__icon',
             centered && 'mg-card__icon--centered',
+            orientation === 'horizontal' && 'mg-card__icon--horizontal',
             variant && variant !== 'default' && `mg-card__icon--${variant}`,
             item.borderColor && 'mg-card__icon--bordered'
           )}
@@ -232,4 +239,10 @@ IconCard.propTypes = {
   centered: PropTypes.bool,
   /** Visual variant: default or negative (for dark backgrounds) */
   variant: PropTypes.oneOf(['default', 'negative']),
+  /**
+   * `vertical` stacks the icon above the content. `horizontal` sets it beside
+   * the content, the arrangement undrr.org uses for "what would you like to do"
+   * route rows. Horizontal owns the visual's size, so `imageScale` is ignored.
+   */
+  orientation: PropTypes.oneOf(['vertical', 'horizontal']),
 };
