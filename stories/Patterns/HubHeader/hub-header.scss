@@ -16,6 +16,12 @@
   --mg-hub-header-banner-surface: var(--mg-color-hero);
   --mg-hub-header-ink: var(--mg-color-neutral-0);
   --mg-hub-header-link: var(--mg-color-neutral-0);
+
+  // The global `a:hover` sets --mg-color-interactive-active, and at (0,2,1) it
+  // outspecifies a plain link rule. Unstated, that lands a dark hover colour
+  // meant for white backgrounds on a coloured bar. On a colour the link holds
+  // its colour and the underline carries the hover instead.
+  --mg-hub-header-link-hover: var(--mg-color-neutral-0);
   --mg-hub-header-marker: var(--mg-color-neutral-0);
   --mg-hub-header-rule: var(--mg-color-neutral-0);
   --mg-hub-header-rule-alpha: 0.4;
@@ -48,6 +54,7 @@
     --mg-hub-header-surface: var(--mg-color-neutral-0);
     --mg-hub-header-ink: var(--mg-color-text);
     --mg-hub-header-link: var(--mg-color-interactive);
+    --mg-hub-header-link-hover: var(--mg-color-interactive-active);
     --mg-hub-header-marker: var(--mg-color-interactive);
     --mg-hub-header-rule: var(--mg-color-neutral-300);
     --mg-hub-header-rule-alpha: 1;
@@ -94,6 +101,7 @@
     padding-block: var(--mg-spacing-75);
 
     &:hover {
+      color: rgb(var(--mg-hub-header-link-hover));
       text-decoration: underline;
     }
 
@@ -217,7 +225,14 @@
     }
 
     a:hover {
+      color: rgb(var(--mg-hub-header-link-hover));
       text-decoration: underline;
+    }
+
+    // Active wins over hover: the current item must not restyle itself into
+    // looking like an ordinary link when the pointer crosses it.
+    a[aria-current]:hover {
+      color: rgb(var(--mg-hub-header-ink));
     }
 
     // Inset, because the list is a scrollport: an outward ring on the first or

@@ -96,6 +96,14 @@ active section scrolled into view.
 > colour — weight and the leading rule carry it, and neither was
 > colour-dependent to begin with.
 >
+> Hover is stated explicitly rather than left to inherit. The global `a:hover`
+> in `_foundational.scss` sets `--mg-color-interactive-active`, and at `(0,2,1)`
+> it outspecifies a plain link rule — unstated, that lands a dark hover colour
+> meant for white backgrounds on a coloured bar. `Hero` had already hit this and
+> solved it by listing `a, a:hover, a:visited` together; the same applies here.
+> The current item also holds its colour on hover, so it cannot restyle itself
+> into looking like an ordinary link when the pointer crosses it.
+>
 > The tint darkens rather than lightens, which raises the contrast of the white
 > links above it in every theme — IRP gains the most, from 4.71:1 to 6.01:1,
 > having been the closest to failing AA. Tertiary is the exception: its surface
@@ -110,3 +118,4 @@ active section scrolled into view.
 - **1.0** — 2026-09-10: Added the hub header with compact and expressive variants. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
   - Added `surface` variants. Unified is the default; `detached` keeps the navigation on the page background.
   - Tinted the bar so it stratifies from the banner without a divider.
+  - Stated the link hover colour, which the global `a:hover` was otherwise darkening into near-invisibility on a coloured surface.
