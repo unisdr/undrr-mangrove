@@ -10,7 +10,7 @@ export default {
   argTypes: {
     imageProminence: {
       control: 'inline-radio',
-      options: ['large', 'compact'],
+      options: ['large', 'compact', 'split'],
     },
     heroImage: {
       control: 'inline-radio',
@@ -41,4 +41,9 @@ export const NoHeroImage = {
 export const AlternateHeroImage = {
   name: 'Different image than the teaser',
   args: { imageProminence: 'large', heroImage: 'alternate' },
+};
+
+export const SplitHero = {
+  name: 'Split hero (text and image side by side)',
+  args: { imageProminence: 'split', heroImage: 'main' },
 };

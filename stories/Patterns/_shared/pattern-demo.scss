@@ -14,6 +14,15 @@
   max-inline-size: 49rem;
 }
 
+// The width of ArticleStory's centred content column: the reading article's
+// own 46rem measure, plus the gap and the 16rem rail. Shared by the intro
+// block, the compact header image and the reading grid so they read as one
+// column. Centring itself is `mg-container`'s own job (`margin: 0 auto`) —
+// each of these elements carries the `mg-container` class in the markup, and
+// this file only adds the one thing `mg-container` doesn't already provide:
+// a narrower measure than its own breakpoint scale.
+$mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
+
 .mg-demo-shell {
   @media (width < 48rem) {
     padding-inline: var(--mg-spacing-200);
@@ -31,23 +40,71 @@
   padding-block: var(--mg-spacing-400);
 }
 
-// ArticleStory's header image. There is no aspect-ratio or object-fit
-// utility, so both variants declare their own here. The 21:9 and 16:9 ratios
-// are the visual variable under test in undrr/web-backlog#3060, not settled
-// values, so they belong to the demo rather than the library.
+// ArticleStory's header image. Shown at its natural aspect ratio rather than
+// cropped to a fixed one — how much of the photo survives a crop is exactly
+// the kind of image-compression/quality trade-off undrr/web-backlog#3060
+// asks to revisit, so this reference design doesn't presume an answer.
 .mg-demo-article-image {
   inline-size: 100%;
-  object-fit: cover;
+  block-size: auto;
 }
 
-.mg-demo-article-header .mg-container-full-width .mg-demo-article-image {
-  aspect-ratio: 21 / 9;
-}
-
+// Capped at the same column width as the intro and reading grid (see
+// `mg-container` note above) so all three read as one centred column.
 .mg-demo-article-media--compact {
-  max-inline-size: 46rem;
+  max-inline-size: $mg-demo-article-column-width;
 }
 
-.mg-demo-article-media--compact .mg-demo-article-image {
-  aspect-ratio: 16 / 9;
+// Caption (what the photo shows) and credit (who took it) are different
+// kinds of information and get their own layout rather than one string with
+// a slash in it. They sit in a row (display: flex, flex-wrap: wrap — see the
+// mg-u-flex/mg-u-flex-wrap classes in the markup): caption takes the
+// flexible remaining space and wraps normally, credit gets its own capped,
+// right-aligned measure, so a long credit (organisation names can run long)
+// wraps within its own column instead of stretching edge to edge on the
+// large/full-bleed image or crowding the caption.
+.mg-demo-article-media-foot {
+  justify-content: space-between;
+  gap: var(--mg-spacing-100) var(--mg-spacing-200);
+  margin-block: var(--mg-spacing-50) var(--mg-spacing-300);
+}
+
+.mg-demo-article-caption {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  text-align: start;
+}
+
+.mg-demo-article-credit {
+  flex: 0 1 auto;
+  max-inline-size: 20rem;
+  text-align: end;
+  color: rgb(var(--mg-color-neutral-700));
+}
+
+// Share and "On this page" live together in the reading grid's rail column in
+// every variant — a full-bleed image has no natural "beside" for share icons
+// to sit in, so a single margin-rail placement is a simpler contract than one
+// that depends on whether an image is present. display: flex is the mg-u-flex
+// class in the markup; there's no flex-direction utility, so that stays here.
+.mg-demo-article-rail {
+  flex-direction: column;
+  gap: var(--mg-spacing-200);
+}
+
+// The reading grid's 1fr article column stretches to fill whatever width is
+// left in its container, so on a wide viewport the ~46rem article sits flush
+// left while the rail drifts out to the far edge — a dead gap opens up
+// between them instead of one at a predictable edge. Capping the grid (and
+// the intro block, below) at their shared column width, both carrying
+// `mg-container` for the actual centring, keeps article and rail adjacent as
+// a single visually centred unit. Scoped to ArticleStory specifically —
+// `mg-reading--with-contents` is also `ContentHub`'s, which shares this
+// stylesheet but isn't part of this fix.
+.mg-demo-article-header ~ .mg-reading--with-contents {
+  max-inline-size: $mg-demo-article-column-width;
+}
+
+.mg-demo-article-header .mg-demo-intro {
+  max-inline-size: $mg-demo-article-column-width;
 }

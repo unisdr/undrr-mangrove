@@ -27,11 +27,14 @@ to address non-economic losses in the Pacific Indigenous Communities Nadi,
 Fiji](https://www.undrr.org/news/towards-knowledge-action-and-resolve-address-non-economic-losses-pacific-indigenous) —
 so reviewers are judging the layout against an actual case rather than a
 synthetic one. The live page returns a bot-check 403 to automated fetches, so
-the headline, date, source line, quote, editors' recommendations and taxonomy
-tags are reproduced from screenshots of the page rather than scraped, and the
-header image is the real photo from the story; the body paragraphs are a
-short factual summary of the consultation, not a full reproduction of the
-article text.
+this was built from a saved copy of the page. The headline, date, source
+line, two-sentence summary, editors' recommendations, taxonomy tags
+and both images (including the article's second inline photo, used here for
+the `alternate` `heroImage` state) are reproduced as published. The reading
+body is placeholder (lorem ipsum) text, not the article — sized to roughly
+the same length, with inline links in the same places a real body would carry
+them, so the `mg-reading` column can be judged at a realistic length without
+reproducing the article's text.
 
 ## Large, prominent image
 
@@ -61,19 +64,53 @@ here.
 Demonstrates the decoupling directly: the image here is not the one a card
 or social preview for this story would use.
 
+## Split hero (text and image side by side)
+
+<Canvas of={Stories.SplitHero} />
+
+A third `imageProminence`, added as a "left field" comparison point:
+education.gouv.fr runs its news pages with a two-column hero on a tinted
+band — headline/lede/byline in one column, a smaller image beside it, rather
+than a large image above or below the text. This reuses the shipped `Hero`
+component's `layout="split"` (already used by `ContentHub`) rather than
+introducing a new header treatment: `split="2/3"` keeps the text column
+dominant, and `data[0].media` is omitted when `heroImage` is `"none"`, so
+`Hero` falls back to a text-only band gracefully. Known gap: `Hero` has no
+caption slot, so this variant loses the photo credit the other three show.
+
+Building this surfaced real bugs in `Hero` itself, fixed at the source rather
+than patched around here: the title was capped at `max-width: 18ch` (about
+three words) with no responsive step-down, which wrapped a real news headline
+into a cramped stack with a mid-word break — even short titles in `Hero`'s own
+stories wrapped harder than intended. The split content column also carried
+its own hardcoded `max-width` instead of the shared `mg-container` utility
+every other centred element on the page uses, and its inner content had a
+small forced inline padding pushing text off that column's edge. All three
+are now fixed in `Hero`/`hero.scss` directly, so every `Hero` consumer
+benefits, not just this pattern.
+
+## Share lives in the margin rail
+
+`ShareButtons` sits in the same rail as "On this page", in every variant —
+not beside the photo. An earlier version anchored share to the image, but a
+full-bleed image has no natural "beside" for it to sit in, and a rail
+placement doesn't need a separate fallback for `heroImage: "none"`.
+
 ## Building one
 
 The page composes existing, shipped pieces rather than introducing new ones:
 `mg-container-full-width` for the header image's bleed, `mg-reading`/
 `mg-reading__article` for the body and `TableOfContents`, `VerticalCard` in an
-`mg-grid` for related content, `ShareButtons` under the byline, `mg-tag-container`
-for the taxonomy links under "Explore further", and `UserFeedback` for the
-"Is this page useful?" prompt and report-an-issue link — the same building
-blocks `ContentHub` uses, plus the ones a full article page needs that a hub
-page doesn't. What is new is demonstration-only: the `mg-demo-article-*`
-classes that size the header image, loaded only with these stories.
-"Editors' recommendations" is plain markup — there is no shipped component for
-it yet.
+`mg-grid` for related content, `ShareButtons` in the margin rail,
+`mg-tag-container` for the taxonomy links under "Explore further", and
+`UserFeedback` for the "Is this page useful?" prompt and report-an-issue link
+— the same building blocks `ContentHub` uses, plus the ones a full article
+page needs that a hub page doesn't. The body also scatters `QuoteHighlight`,
+`HighlightBox` and `EmbedContainer` as a rough positioning experiment — see
+"Still to test". What is new is demonstration-only: the `mg-demo-article-*`
+classes that size the header image and lay out the rail, loaded only with
+these stories. "Editors' recommendations" is plain markup — there is no
+shipped component for it yet.
 
 ## Design decisions
 
@@ -112,3 +149,32 @@ design is reviewed.
     list, taxonomy tags and `UserFeedback` at the foot of the page.
   - Content replaced with a real undrr.org story so the layout is judged
     against an actual case.
+  - Body copy replaced with an original summary written from the full
+    article, and the `alternate` `heroImage` state now uses the article's
+    real second inline photo instead of an unrelated stock image.
+  - Header image no longer forced to a fixed aspect ratio (was cropping the
+    photo); the reading body is now placeholder text sized to the article's
+    real length, with inline links, and the article's two-sentence summary
+    sits above the header image as the lede.
+  - Removed the pull quote above the header image. `ShareButtons` moved from
+    the byline block to sit beside the header image, falling back to the
+    byline only when `heroImage` is `"none"`.
+  - Design review against the four reference sites: dropped centering the
+    headline/lede/byline over the image (no reference site centers article
+    text) in favour of left alignment, and increased the headline's type
+    scale. Unified `ShareButtons` into the same margin rail as "On this page"
+    in every variant, rather than beside the photo only when one exists.
+    Scattered `QuoteHighlight`, `HighlightBox` and `EmbedContainer` through
+    the body as a rough positioning experiment, English only for now.
+  - Added a `split` `imageProminence`: a two-column hero (text and image side
+    by side on a tinted band), reusing `Hero`'s `layout="split"`, after
+    education.gouv.fr's news-page treatment.
+  - Fixed the underlying `Hero` component rather than papering over it in this
+    pattern: removed the title's unconditional `max-width: 18ch` (and the
+    duplicate rule in the immersive variant), dropped the split content
+    column's forced inline padding, and paired `.mg-hero__split-grid` with
+    `mg-container` so it shares the page's real centred measure instead of
+    its own hardcoded breakpoint. Also removed `HeroTitle`'s dead `text-xxl`
+    class, its always-unreachable `text-xl` sibling, the inline `<span>`
+    wrapper it needed, and the now-redundant `<header>` — `mg-hero__title`
+    is applied to the heading tag directly.

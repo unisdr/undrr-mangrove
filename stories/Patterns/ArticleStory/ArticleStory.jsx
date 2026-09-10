@@ -1,11 +1,15 @@
 import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 import { VerticalCard } from '../../Components/Cards/Card/VerticalCard';
+import { Hero } from '../../Components/Hero/Hero';
 import TableOfContents from '../../Components/TableOfContents/TableOfContents';
 import ShareButtons from '../../Components/Buttons/ShareButtons/ShareButtons';
 import { LABELS_AR as SHARE_LABELS_AR } from '../../Components/Buttons/ShareButtons/_labels';
 import UserFeedback from '../../Components/UserFeedback/UserFeedback';
 import { LABELS_AR as FEEDBACK_LABELS_AR } from '../../Components/UserFeedback/_labels';
+import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
+import QuoteHighlight from '../../Components/QuoteHighlight/QuoteHighlight';
+import { EmbedContainer } from '../../Utilities/EmbedContainer/EmbedContainer';
 import { UndrrChrome } from '../_shared/UndrrChrome';
 import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
@@ -13,40 +17,60 @@ import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 // and prominent, or kept inside the reading column? `heroImage` is the
 // separate question of whether the image used for teasers and social cards
 // also has to be the one shown here. The label, title, lede and byline always
-// sit above the image, matching undrr.org and the comparison sites in the
-// ticket — the image is not what carries the reader into the story.
+// sit above the image, left-aligned, matching every comparison site in the
+// ticket — none of them centers headline text over an image, and an initial
+// centered treatment here didn't survive a design review against them.
+// Share and "On this page" live together in a margin rail in every variant,
+// rather than sitting beside the photo — a full-bleed image has no natural
+// "beside", and a single rail placement is a simpler contract than one that
+// depends on whether an image is present.
 //
 // Content is drawn from a real undrr.org story (see the mdx doc for the
 // source URL) so reviewers are judging the layout against a real case, not a
-// synthetic one. The page itself returns a bot-check 403 to automated
-// fetches, so the copy below is taken from screenshots of the live page
-// rather than scraped — the headline, date, image, editors' recommendations
-// and taxonomy tags are reproduced verbatim; the body paragraphs are a short,
-// factual summary of the consultation rather than a full reproduction of the
-// article text.
+// synthetic one. The live page returns a bot-check 403 to automated fetches,
+// so this was built from a saved copy of the page rather than scraped. The
+// headline, date, source line, two-sentence summary, both images and their
+// captions, editors' recommendations and taxonomy tags are reproduced as
+// published. The reading body below is placeholder text, not the article.
 const images = {
   main: {
     src: 'https://www.undrr.org/sites/default/files/2026-09/Group_photo_IMG_2626.jpg',
     alt: {
-      english:
-        'Group photo from the non-economic losses consultation with Pacific Indigenous Peoples and local communities, Nadi, Fiji.',
-      arabic:
-        'صورة جماعية من مشاورة الخسائر غير الاقتصادية مع الشعوب الأصلية والمجتمعات المحلية في المحيط الهادئ، نادي، فيجي.',
-    },
-    caption: {
       english: 'Group photo from NELs Consultation/UNDRR',
       arabic: 'صورة جماعية من مشاورة الخسائر غير الاقتصادية/مكتب الأمم المتحدة للحد من مخاطر الكوارث',
     },
+    // The real caption follows a "Description/Credit" convention; split into
+    // two fields so each can have its own layout below the image, rather
+    // than one string with a slash in it.
+    caption: {
+      english: 'Group photo from NELs Consultation',
+      arabic: 'صورة جماعية من مشاورة الخسائر غير الاقتصادية',
+    },
+    credit: {
+      english: 'UNDRR',
+      arabic: 'مكتب الأمم المتحدة للحد من مخاطر الكوارث',
+    },
   },
   alternate: {
-    src: 'https://www.undrr.org/sites/default/files/2021-04/WiA-childyouthengage.jpg',
+    // The article's second inline image — a real photo from the same story,
+    // used here only to demonstrate that the header image can differ from
+    // the teaser/social image, not as this story's actual second image slot.
+    src: 'https://www.undrr.org/sites/default/files/2026-09/rsz_2rsz_11rsz_nel_pic_2.jpg',
     alt: {
-      english: 'A community engagement session on traditional knowledge and risk.',
-      arabic: 'جلسة إشراك مجتمعي حول المعرفة التقليدية والمخاطر.',
+      english: 'Discussions during the NELs Consultation/UNDRR',
+      arabic: 'نقاشات خلال مشاورة الخسائر غير الاقتصادية/مكتب الأمم المتحدة للحد من مخاطر الكوارث',
     },
+    // Lorem ipsum caption/credit, so the caption/credit layout can be judged
+    // with a generic placeholder rather than a developer note about the
+    // heroImage toggle. Credit text is deliberately longer than the real
+    // image's, to check how a long credit behaves in its own layout.
     caption: {
-      english: 'Illustrative image only — not the teaser image for this story.',
-      arabic: 'صورة توضيحية فقط — ليست صورة العرض المصغر لهذا الخبر.',
+      english: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      arabic: 'لوريم إيبسوم دولور سيت أميت، كونسيكتيتور أديبيسكينغ إيليت.',
+    },
+    credit: {
+      english: 'Placeholder Photography Credit and Licensing Collective',
+      arabic: 'مجموعة توضيحية لحقوق التصوير الفوتوغرافي والترخيص',
     },
   },
 };
@@ -60,24 +84,135 @@ const words = {
     label: 'Update',
     title:
       'Towards knowledge, action and resolve to address non-economic losses in the Pacific Indigenous Communities Nadi, Fiji',
-    quote: '"Know your history and know what you have lost."',
-    quoteAttribution: '— Mr. Joeli Ditoka',
+    summary:
+      'The consultation reaffirmed growing climate risks and deep concerns among Indigenous Peoples. Around 45 participants from Indigenous communities across 11 countries shared experiences of the non-economic losses affecting their communities.',
     date: '8 September 2026',
-    author:
-      'Source(s): United Nations Office for Disaster Risk Reduction (UNDRR), Santiago Network',
+    sourceLabel: 'Source(s):',
+    sources: [
+      {
+        name: 'United Nations Office for Disaster Risk Reduction (UNDRR)',
+        href: 'https://www.undrr.org/organization/united-nations-office-disaster-risk-reduction-undrr',
+      },
+      {
+        name: 'Santiago Network',
+        href: 'https://www.undrr.org/organization/santiago-network',
+      },
+    ],
     onPage: 'On this page',
     sections: [
       {
         heading: 'About the consultation',
-        body: 'The consultation on non-economic losses (NELs) brought together Pacific Indigenous Peoples and local communities in Nadi, Fiji, on 20 August 2026, held in conjunction with the Local Communities and Indigenous Peoples Platform (LCIPP) Regional Gathering for the Pacific, in partnership between UNDRR and the Santiago Network.',
+        // Placeholder copy: sized to roughly the real article's body length,
+        // with inline links (like the real page has), so the reading column
+        // can be judged at realistic length. It is generic filler text, not
+        // the article. See the mdx doc.
+        paragraphs: [
+          <>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.{' '}
+            <a href="https://www.undrr.org/words-into-action">
+              Ut enim ad minim veniam
+            </a>
+            , quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+            commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+            officia deserunt mollit anim id est laborum.
+          </>,
+          <>
+            Curabitur pretium tincidunt lacus, nulla gravida orci a odio.
+            Nullam varius, turpis et commodo pharetra,{' '}
+            <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
+              est eros bibendum elit
+            </a>
+            , nec luctus magna felis sollicitudin mauris. Integer in mauris eu
+            nibh euismod gravida. Duis ac tellus et risus vulputate vehicula.
+            Donec lobortis risus a elit. Ut ullamcorper, ligula eu tempor
+            congue, eros est euismod turpis, id tincidunt sapien risus a quam.
+          </>,
+          <>
+            Maecenas fermentum consequat mi. Pellentesque malesuada nulla a
+            mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis,
+            neque. Aliquam faucibus, elit ut dictum aliquet,{' '}
+            <a href="https://www.undrr.org/taxonomy">
+              felis nisl adipiscing sapien
+            </a>
+            , sed malesuada diam lacus eget erat. Cras mollis scelerisque
+            nunc. Nullam arcu. Aliquam consequat. Curabitur augue lorem,
+            dapibus quis, laoreet et, pretium ac, nisi.
+          </>,
+        ],
       },
       {
         heading: 'Non-economic losses',
-        body: 'Non-economic losses are the impacts of disasters and climate change that cannot be replaced or compensated financially: loss of cultural heritage, ancestral knowledge, community cohesion and connection to land. Participants shared how these losses are already being felt across the Pacific.',
+        paragraphs: [
+          <>
+            Aliquam eget maximus est, id dignissim quam. Proin gravida nibh
+            vel velit auctor aliquet.{' '}
+            <a href="https://www.undrr.org/words-into-action">
+              Aenean sollicitudin, lorem quis bibendum auctor
+            </a>
+            , nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis
+            sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi
+            accumsan ipsum velit.
+          </>,
+          <>
+            Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non
+            mauris vitae erat consequat auctor eu in elit. Mauris in erat
+            justo.{' '}
+            <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
+              Nullam ac urna eu felis dapibus condimentum
+            </a>{' '}
+            sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin
+            condimentum fermentum nunc.
+          </>,
+          <>
+            Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas
+            quam, ut aliquam massa nisl quis neque. Suspendisse in orci enim.
+            Nunc semper augue nec diam vestibulum, non vulputate purus
+            fermentum. Integer eget augue sed lacus lobortis suscipit.{' '}
+            <a href="https://www.undrr.org/taxonomy">
+              Nam nec ligula fringilla, feugiat metus vitae
+            </a>
+            , sagittis tortor. Vestibulum in massa nec turpis facilisis
+            facilisis.
+          </>,
+        ],
       },
       {
         heading: 'What happens next',
-        body: 'Findings from the consultation feed into regional guidance on integrating Indigenous and traditional knowledge into disaster risk reduction planning across the Pacific, alongside the resources listed under editors’ recommendations below.',
+        paragraphs: [
+          <>
+            Sed vel lectus sed nunc consequat feugiat. Integer imperdiet
+            lectus quam, ut porttitor lectus lacinia consectetur.{' '}
+            <a href="https://www.undrr.org/words-into-action">
+              Donec ut libero sed arcu vehicula ultricies
+            </a>{' '}
+            a non tortor. Vestibulum ante ipsum primis in faucibus orci luctus
+            et ultrices posuere cubilia curae. In hac habitasse platea
+            dictumst.
+          </>,
+          <>
+            Suspendisse potenti. Nullam eget mi in purus lobortis eleifend.
+            Sed nec ante dictum sem condimentum ullamcorper quis venenatis
+            nisi.{' '}
+            <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
+              Duis aute irure dolor in reprehenderit
+            </a>{' '}
+            in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Vivamus quis mi ex. Nulla facilisi.
+          </>,
+          <>
+            Quisque euismod, urna eu tincidunt consectetur, nisi nisl aliquam
+            enim, nec fringilla justo nisl eget arcu. Aliquam erat volutpat.
+            Class aptent taciti sociosqu ad litora torquent per conubia
+            nostra, per inceptos himenaeos.{' '}
+            <a href="https://www.undrr.org/taxonomy">
+              Nam nec ligula fringilla
+            </a>
+            , feugiat metus vitae, sagittis tortor congue.
+          </>,
+        ],
       },
     ],
     related: 'Related news and events',
@@ -126,24 +261,106 @@ const words = {
     label: 'تحديث',
     title:
       'نحو المعرفة والعمل والعزم لمعالجة الخسائر غير الاقتصادية لدى المجتمعات الأصلية في المحيط الهادئ، نادي، فيجي',
-    quote: '"اعرف تاريخك واعرف ما فقدته."',
-    quoteAttribution: '— السيد جويلي ديتوكا',
     date: '8 سبتمبر 2026',
-    author:
-      'المصدر: مكتب الأمم المتحدة للحد من مخاطر الكوارث (UNDRR)، وشبكة سانتياغو',
+    sourceLabel: 'المصدر:',
+    sources: [
+      {
+        name: 'مكتب الأمم المتحدة للحد من مخاطر الكوارث (UNDRR)',
+        href: 'https://www.undrr.org/organization/united-nations-office-disaster-risk-reduction-undrr',
+      },
+      {
+        name: 'شبكة سانتياغو',
+        href: 'https://www.undrr.org/organization/santiago-network',
+      },
+    ],
     onPage: 'في هذه الصفحة',
     sections: [
       {
         heading: 'عن المشاورة',
-        body: 'جمعت مشاورة الخسائر غير الاقتصادية الشعوب الأصلية والمجتمعات المحلية في المحيط الهادئ في نادي، فيجي، في 20 أغسطس 2026، بالتزامن مع اللقاء الإقليمي لمنصة المجتمعات المحلية والشعوب الأصلية (LCIPP) للمحيط الهادئ، بشراكة بين مكتب الأمم المتحدة للحد من مخاطر الكوارث وشبكة سانتياغو.',
+        // نص تجريبي بطول مماثل تقريباً لطول المقال الحقيقي، مع روابط داخلية
+        // (كما في الصفحة الحقيقية)، لاختبار عمود القراءة بطول واقعي — وليس
+        // نص المقال نفسه. راجع ملف mdx للتفاصيل.
+        paragraphs: [
+          <>
+            هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد
+            هذا النص من{' '}
+            <a href="https://www.undrr.org/words-into-action">
+              مولد النص العربى
+            </a>
+            ، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة
+            إلى زيادة عدد الحروف التى يولدها التطبيق.
+          </>,
+          <>
+            إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى
+            زيادة عدد الفقرات كما تريد،{' '}
+            <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
+              النص لن يبدو مقسما ولا يحوي أخطاء لغوية
+            </a>
+            ، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص.
+          </>,
+          <>
+            حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية
+            لتصميم الموقع، ويستخدم{' '}
+            <a href="https://www.undrr.org/taxonomy">مولد النص العربى</a>{' '}
+            لتوليد جمل تشبه الجمل الحقيقية من حيث طول الفقرة وعدد الكلمات.
+          </>,
+        ],
       },
       {
         heading: 'الخسائر غير الاقتصادية',
-        body: 'الخسائر غير الاقتصادية هي آثار الكوارث وتغير المناخ التي لا يمكن تعويضها مالياً: فقدان التراث الثقافي والمعرفة الموروثة والتماسك المجتمعي والارتباط بالأرض. شارك الحاضرون تجاربهم حول هذه الخسائر التي باتت محسوسة بالفعل في أنحاء المحيط الهادئ.',
+        paragraphs: [
+          <>
+            فيصعب على المصمم أن يجد نصوصاً واقعية من خلال جمل عربية أو حتى
+            انجليزية غير مفهومة المعنى، لذلك يتم استخدام{' '}
+            <a href="https://www.undrr.org/words-into-action">
+              مولد النص العربى
+            </a>{' '}
+            لتوليد جمل تشبه الجمل الحقيقية من حيث طول الفقرة وعدد الكلمات.
+          </>,
+          <>
+            فيبدو التصميم مألوفاً وواضحاً للعميل بشكل أفضل من الاعتماد على
+            نصوص لا تشبه في شكلها النص الطبيعي.{' '}
+            <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
+              يمكن أن تجد العديد من الأدوات الحرة
+            </a>{' '}
+            على شبكة الإنترنت لتوليد نصوص تجريبية بأطوال مختلفة.
+          </>,
+          <>
+            وتُستخدم هذه النصوص عادة في مراحل التصميم الأولى قبل توفر المحتوى
+            الفعلي، مما يتيح للمصممين والمطورين{' '}
+            <a href="https://www.undrr.org/taxonomy">
+              تقييم شكل الصفحة وتوزيع العناصر عليها
+            </a>{' '}
+            بشكل واقعي دون الانتظار حتى اكتمال كتابة المحتوى النهائي.
+          </>,
+        ],
       },
       {
         heading: 'ماذا يحدث بعد ذلك',
-        body: 'تُغذّي نتائج المشاورة الإرشادات الإقليمية بشأن دمج معارف الشعوب الأصلية والمعرفة التقليدية في تخطيط الحد من مخاطر الكوارث في أنحاء المحيط الهادئ، إلى جانب الموارد المدرجة ضمن توصيات المحررين أدناه.',
+        paragraphs: [
+          <>
+            يمكن أن تجد العديد من الأدوات الحرة على شبكة الإنترنت لتوليد
+            نصوص تجريبية بأطوال مختلفة، وتُستخدم هذه النصوص عادة في{' '}
+            <a href="https://www.undrr.org/words-into-action">
+              مراحل التصميم الأولى
+            </a>{' '}
+            قبل توفر المحتوى الفعلي.
+          </>,
+          <>
+            مما يتيح للمصممين والمطورين تقييم شكل الصفحة وتوزيع العناصر
+            عليها بشكل واقعي دون الانتظار حتى اكتمال كتابة المحتوى النهائي،
+            وهذا ما تتيحه{' '}
+            <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
+              الأدوات الحرة المتاحة على الإنترنت
+            </a>
+            .
+          </>,
+          <>
+            وبذلك يمكن تقييم عمود القراءة بطول واقعي قبل توفر النص النهائي
+            للمقال، وهو ما يخدم هدف هذا التصميم المرجعي في{' '}
+            <a href="https://www.undrr.org/taxonomy">هذه المرحلة</a> من العمل.
+          </>,
+        ],
       },
     ],
     related: 'أخبار وفعاليات ذات صلة',
@@ -206,19 +423,36 @@ export function ArticleStory({
   const prefix = `article-${instanceId.replace(/:/g, '')}`;
   const image = heroImage === 'alternate' ? images.alternate : images.main;
   const large = imageProminence === 'large';
+  const split = imageProminence === 'split';
+
+  const shareButtons = (
+    <ShareButtons
+      SharingSubject={text.title}
+      labels={arabic ? SHARE_LABELS_AR : undefined}
+    />
+  );
 
   const headerImage =
     heroImage !== 'none' ? (
       <figure
-        className={large ? 'mg-container-full-width' : 'mg-demo-article-media--compact'}
+        className={
+          large
+            ? 'mg-container-full-width'
+            : 'mg-demo-article-media--compact | mg-container'
+        }
       >
         <img
           src={image.src}
           alt={image.alt[locale] || image.alt.english}
           className="mg-demo-article-image"
         />
-        <figcaption className="mg-u-font-size-250">
-          {image.caption[locale] || image.caption.english}
+        <figcaption className="mg-demo-article-media-foot | mg-u-flex mg-u-flex-wrap">
+          <span className="mg-demo-article-caption | mg-u-font-size-250">
+            {image.caption[locale] || image.caption.english}
+          </span>
+          <span className="mg-demo-article-credit | mg-u-font-size-250">
+            {image.credit[locale] || image.credit.english}
+          </span>
         </figcaption>
       </figure>
     ) : null;
@@ -237,37 +471,111 @@ export function ArticleStory({
             className="mg-demo-article-header"
             data-image-prominence={imageProminence}
           >
-            <div className="mg-demo-intro">
-              <p className="mg-u-font-size-250">{text.label}</p>
-              <h1>{text.title}</h1>
-              <blockquote className="mg-demo-lede | mg-u-font-size-500">
-                <p>{text.quote}</p>
-                <cite>{text.quoteAttribution}</cite>
-              </blockquote>
-              <p className="mg-u-font-size-250">
-                {text.date} · {text.author}
-              </p>
-              <ShareButtons
-                SharingSubject={text.title}
-                labels={arabic ? SHARE_LABELS_AR : undefined}
+            {split ? (
+              <Hero
+                headingLevel="h1"
+                layout="split"
+                split="2/3"
+                data={[
+                  {
+                    label: text.label,
+                    title: text.title,
+                    summaryText: text.summary,
+                    // Hero's `detail` slot is plain text only — no room for
+                    // real links here. The non-split header links the
+                    // organisation names; this is a known gap of reusing
+                    // Hero for the split variant. See the mdx doc.
+                    detail: `${text.date} · ${text.sourceLabel} ${text.sources.map(source => source.name).join(', ')}`,
+                    media:
+                      heroImage !== 'none'
+                        ? {
+                            type: 'image',
+                            src: image.src,
+                            alt: image.alt[locale] || image.alt.english,
+                          }
+                        : undefined,
+                  },
+                ]}
+              />
+            ) : (
+              <>
+                <div className="mg-demo-intro | mg-container">
+                  <p>
+                    <a href="https://www.undrr.org/news" className="mg-tag">
+                      {text.label}
+                    </a>
+                  </p>
+                  <h1 className="mg-u-font-size-900">{text.title}</h1>
+                  <p className="mg-demo-lede | mg-u-font-size-500">
+                    {text.summary}
+                  </p>
+                  <p className="mg-u-font-size-250">
+                    {text.date} · {text.sourceLabel}{' '}
+                    {text.sources.map((source, index) => (
+                      <React.Fragment key={source.name}>
+                        {index > 0 && ', '}
+                        <a href={source.href}>{source.name}</a>
+                      </React.Fragment>
+                    ))}
+                  </p>
+                </div>
+                {headerImage}
+              </>
+            )}
+          </header>
+          <div className="mg-reading mg-reading--with-contents | mg-container">
+            <div className="mg-demo-article-rail | mg-u-flex">
+              {/* Share lives in the margin rail regardless of image state,
+                  rather than competing for space beside the photo. */}
+              {shareButtons}
+              <TableOfContents
+                key={locale}
+                title={text.onPage}
+                tocData={text.sections.map((section, index) => ({
+                  id: `${prefix}/section/${index}`,
+                  text: section.heading,
+                }))}
               />
             </div>
-            {headerImage}
-          </header>
-          <div className="mg-reading mg-reading--with-contents">
-            <TableOfContents
-              key={locale}
-              title={text.onPage}
-              tocData={text.sections.map((section, index) => ({
-                id: `${prefix}/section/${index}`,
-                text: section.heading,
-              }))}
-            />
             <div className="mg-reading__article">
               {text.sections.map((section, index) => (
                 <section key={section.heading} id={`${prefix}/section/${index}`}>
                   <h2>{section.heading}</h2>
-                  <p>{section.body}</p>
+                  {section.paragraphs.map((paragraph, paragraphIndex) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <p key={paragraphIndex}>{paragraph}</p>
+                  ))}
+                  {/* Positioning experiment only, per undrr/web-backlog#3060:
+                      how do a quote, a callout and an embed sit inside this
+                      reading column once real content types get involved?
+                      English only for now — not translated yet. */}
+                  {!arabic && index === 0 && (
+                    <QuoteHighlight
+                      quote="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore."
+                      attribution="Placeholder attribution"
+                      attributionTitle="Role or title"
+                      variant="line"
+                      alignment="full"
+                    />
+                  )}
+                  {!arabic && index === 1 && (
+                    <HighlightBox variant="secondary" float="end">
+                      <p>
+                        <strong>45</strong> participants from Indigenous
+                        communities across <strong>11</strong> countries.
+                      </p>
+                    </HighlightBox>
+                  )}
+                  {!arabic && index === 2 && (
+                    <EmbedContainer aspectRatio="16x9">
+                      <iframe
+                        src="https://www.youtube.com/embed/lJWNmqYmKEQ"
+                        title="This is how timely early warnings save lives — UNDRR"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </EmbedContainer>
+                  )}
                 </section>
               ))}
             </div>
@@ -321,9 +629,12 @@ ArticleStory.propTypes = {
   /**
    * `large` bleeds the header image full width, the way news.un.org, UNESCO
    * and UNDP's story pages do. `compact` keeps it inside the reading column,
-   * closer to the current undrr.org treatment.
+   * closer to the current undrr.org treatment. `split` runs a two-column
+   * hero — text column and image column side by side on a tinted band,
+   * reusing the shipped `Hero` component's `layout="split"` — the treatment
+   * education.gouv.fr uses on its news pages.
    */
-  imageProminence: PropTypes.oneOf(['large', 'compact']),
+  imageProminence: PropTypes.oneOf(['large', 'compact', 'split']),
   /**
    * Which image the header shows, independent of `imageProminence`. `main`
    * reuses the image a teaser/social card would use for this story. `alternate`

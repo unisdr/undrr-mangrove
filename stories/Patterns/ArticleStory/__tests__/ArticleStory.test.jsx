@@ -13,6 +13,37 @@ test('the headline carries the page, with or without a header image', () => {
   ).toBeVisible();
 });
 
+test('links the source organisations in the byline', () => {
+  const { container } = render(<ArticleStory heroImage="none" />);
+  const header = container.querySelector('.mg-demo-article-header');
+  const undrrLink = within(header).getByRole('link', {
+    name: 'United Nations Office for Disaster Risk Reduction (UNDRR)',
+  });
+  expect(undrrLink).toHaveAttribute(
+    'href',
+    'https://www.undrr.org/organization/united-nations-office-disaster-risk-reduction-undrr'
+  );
+  expect(
+    within(header).getByRole('link', { name: 'Santiago Network' })
+  ).toHaveAttribute(
+    'href',
+    'https://www.undrr.org/organization/santiago-network'
+  );
+});
+
+test('caption and credit sit under the image as separate elements, each with its own layout', () => {
+  const { container } = render(<ArticleStory heroImage="main" />);
+  const foot = container.querySelector('.mg-demo-article-media-foot');
+  expect(foot.tagName).toBe('FIGCAPTION');
+  const caption = foot.querySelector('.mg-demo-article-caption');
+  const credit = foot.querySelector('.mg-demo-article-credit');
+  expect(caption).toBeInTheDocument();
+  expect(credit).toBeInTheDocument();
+  expect(caption).not.toBe(credit);
+  expect(caption).toHaveTextContent('Group photo from NELs Consultation');
+  expect(credit).toHaveTextContent('UNDRR');
+});
+
 test('drops the header image when heroImage is "none"', () => {
   const { container } = render(<ArticleStory heroImage="none" />);
   const header = container.querySelector('.mg-demo-article-header');
@@ -68,11 +99,60 @@ test('the large treatment bleeds the header image full width; compact keeps it i
   ).toBeInTheDocument();
 });
 
-test('offers social share actions for the article', () => {
+test('the split treatment runs the headline and image side by side, in a Hero split layout', () => {
+  const { container } = render(<ArticleStory imageProminence="split" heroImage="main" />);
+  const header = container.querySelector('.mg-demo-article-header');
+  expect(header.querySelector('.mg-hero--split')).toBeInTheDocument();
+  expect(within(header).getByRole('heading', { level: 1 })).toBeVisible();
+  expect(within(header).getByRole('img')).toBeInTheDocument();
+});
+
+test('the split treatment drops the media column when there is no header image', () => {
+  const { container } = render(<ArticleStory imageProminence="split" heroImage="none" />);
+  const header = container.querySelector('.mg-demo-article-header');
+  expect(within(header).queryByRole('img')).not.toBeInTheDocument();
+});
+
+test('share actions live in the margin rail alongside "On this page", with or without a header image', () => {
+  for (const heroImage of ['main', 'none']) {
+    const { container, unmount } = render(<ArticleStory heroImage={heroImage} />);
+    const header = container.querySelector('.mg-demo-article-header');
+    expect(
+      within(header).queryByRole('button', { name: 'Share on LinkedIn' })
+    ).not.toBeInTheDocument();
+    const rail = container.querySelector('.mg-demo-article-rail');
+    expect(
+      within(rail).getByRole('button', { name: 'Share on LinkedIn' })
+    ).toBeInTheDocument();
+    expect(
+      within(rail).getByRole('button', { name: 'Share on Facebook' })
+    ).toBeInTheDocument();
+    expect(rail.querySelector('.mg-table-of-contents')).toBeInTheDocument();
+    unmount();
+  }
+});
+
+test('no longer carries a pull quote above the image', () => {
   const { container } = render(<ArticleStory />);
   const header = container.querySelector('.mg-demo-article-header');
-  expect(within(header).getByRole('button', { name: 'Share on LinkedIn' })).toBeInTheDocument();
-  expect(within(header).getByRole('button', { name: 'Share on Facebook' })).toBeInTheDocument();
+  expect(header.querySelector('blockquote')).not.toBeInTheDocument();
+});
+
+test('positioning experiment: a quote, a callout and a video embed sit inside the reading body (English only)', () => {
+  const { container } = render(<ArticleStory />);
+  expect(container.querySelector('.mg-quote-highlight')).toBeInTheDocument();
+  expect(container.querySelector('.mg-highlight-box')).toBeInTheDocument();
+  expect(container.querySelector('.mg-embed-container')).toBeInTheDocument();
+  expect(
+    screen.getByTitle('This is how timely early warnings save lives — UNDRR')
+  ).toBeInTheDocument();
+});
+
+test('the positioning experiment is not translated yet, by design', () => {
+  const { container } = render(<ArticleStory locale="arabic" />);
+  expect(container.querySelector('.mg-quote-highlight')).not.toBeInTheDocument();
+  expect(container.querySelector('.mg-highlight-box')).not.toBeInTheDocument();
+  expect(container.querySelector('.mg-embed-container')).not.toBeInTheDocument();
 });
 
 test('lists editors’ recommendations as links', () => {
@@ -123,13 +203,15 @@ test('has no accessibility violations across the image variants', async () => {
     { imageProminence: 'large', heroImage: 'main' },
     { imageProminence: 'compact', heroImage: 'none' },
     { imageProminence: 'compact', heroImage: 'alternate' },
+    { imageProminence: 'split', heroImage: 'main' },
+    { imageProminence: 'split', heroImage: 'none' },
   ]) {
     const { container, unmount } = render(<ArticleStory {...props} />);
     // eslint-disable-next-line no-await-in-loop
     expect(await axe(container)).toHaveNoViolations();
     unmount();
   }
-});
+}, 15000);
 
 test('renders the Arabic locale right-to-left with translated copy', () => {
   const { container } = render(<ArticleStory locale="arabic" />);
