@@ -52,24 +52,32 @@ the plain detail page below — the chrome above the content is the same in all 
 
 <Canvas of={Stories.HubDetailWithHero} />
 
-## The same page with a separate hero
+## The same page with a video hero
 
-The comparison worth making. Here the hub header stays `compact` and a `Hero`
-block sits below it, the way body content would — which is what happens if the
-hero stays an editorial block and the hub header is only chrome.
+The comparison worth making, and the reason it is a video. Here the hub header
+stays `compact` and a `Hero` block sits below it, the way body content would.
 
-Scroll between this and the example above. The chrome-owned banner is one
-surface; this is two, with a visible seam where the compact identity row meets
-the hero. Two questions decide it, and neither is really a visual one:
+If the page hero carried the same photograph, this example and the one above
+would look almost identical — the banner was built to resemble a hero, and
+`mg-hero--split` sets `aspect-ratio: unset`, so both are content-height driven.
+A screenshot would show you nothing. **What actually differs is capability.**
+`Hero` accepts `media.type` of `image`, `video` or `html`, plus immersive and
+tone variants. The hub header's banner accepts an image. That is the price of
+making it chrome, and it is easier to judge when you can see it.
 
-- **Who configures the hero?** If the banner is chrome, hub pages get their
-  hero from the hub rather than from the page body — consistent by construction,
-  but an editor's knowledge of heroes elsewhere stops transferring.
-- **What can a hub page's hero be?** A chrome-owned banner supports what the hub
-  header supports. A body-content hero can be a video, a custom composition, or
-  anything else `Hero` grows later.
+<Canvas of={Stories.HubDetailWithVideoHero} />
 
-<Canvas of={Stories.HubDetailWithPageHero} />
+So the choice is editorial rather than visual:
+
+- **Who configures the hero?** If the banner is chrome, hub pages get their hero
+  from the hub rather than from the page body — consistent by construction, but
+  an editor's knowledge of heroes elsewhere stops transferring.
+- **What is a hub page's hero allowed to be?** A chrome-owned banner supports
+  what the hub header supports, today and whenever `Hero` grows something new.
+  This page could not exist under that model without extending the banner too.
+
+Flip `heroSource` on any story to compare the two directly, and `pageHeroMedia`
+to see the same page with a photograph instead.
 
 ## Hub detail
 
@@ -247,4 +255,5 @@ content hubs, not a requirement to copy a transactional service header.
   - Gave the hub home the alternating tinted band real UNDRR landing pages are built from, and moved the parent chrome into a shared `UndrrChrome` helper.
   - Dropped the basic landing page example and the layers diagram; landing pages now have their own story set, and the diagram belongs with the research brief.
   - Moved identity and section navigation into a `HubHeader` organism, whose expressive variant carries the banner instead of composing a separate `Hero`.
-  - Added a `heroSource` comparison between a chrome-owned banner and a separate page hero, and fixed the full-width bands, whose bleed was hidden behind the pattern wrapper's own background.
+  - Added a `heroSource` comparison between a chrome-owned banner and a separate page hero, using a video to show what a chrome-owned banner cannot be.
+  - Fixed the full-width bands, whose bleed was hidden behind the pattern wrapper's own background.

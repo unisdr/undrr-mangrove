@@ -217,13 +217,21 @@ test('offers the hero as header chrome or as a separate page block', () => {
   chrome.unmount();
 
   const body = render(
-    <ContentHub initialPage="how-to-report" withHero heroSource="page" />
+    <ContentHub
+      initialPage="how-to-report"
+      withHero
+      heroSource="page"
+      pageHeroMedia="video"
+    />
   );
   // The header stays compact, and the hero is a separate block below it.
   expect(
     body.container.querySelector('.mg-hub-header--compact')
   ).toBeInTheDocument();
   expect(body.container.querySelector('.mg-hero')).toBeInTheDocument();
+  // The point of the comparison: a body-content hero can be something the
+  // chrome-owned banner cannot.
+  expect(body.container.querySelector('.mg-hero__media iframe')).toBeVisible();
   // Either way the page has exactly one h1 and keeps its navigation.
   expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   expect(

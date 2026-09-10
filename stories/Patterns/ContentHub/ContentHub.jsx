@@ -141,7 +141,13 @@ const words = {
   },
 };
 
-// Same demonstration image the Hero stories use.
+// Same demonstration media the Hero stories use.
+const heroVideo = {
+  type: 'video',
+  src: 'https://www.youtube.com/embed/lJWNmqYmKEQ',
+  title: 'This is how timely early warnings save lives — UNDRR',
+};
+
 const heroImage =
   'https://www.undrr.org/sites/default/files/2023-11/resilient-infrastructure-pikoso-kz-shutterstock.jpg';
 
@@ -161,6 +167,7 @@ export function ContentHub({
   showOnThisPage = true,
   withHero = false,
   heroSource = 'header',
+  pageHeroMedia = 'image',
   routeCards = 'vertical',
   routePrefix,
 }) {
@@ -377,7 +384,10 @@ export function ContentHub({
                 {
                   title,
                   summaryText: intro,
-                  media: { type: 'image', src: heroImage, alt: '' },
+                  media:
+                    pageHeroMedia === 'video'
+                      ? heroVideo
+                      : { type: 'image', src: heroImage, alt: '' },
                 },
               ]}
             />
@@ -512,6 +522,11 @@ ContentHub.propTypes = {
    * `Hero` block below it, the way body content would.
    */
   heroSource: PropTypes.oneOf(['header', 'page']),
+  /**
+   * Media for a `page` hero. `video` is the point of the comparison: it is
+   * something a chrome-owned banner cannot be, so it makes the trade concrete.
+   */
+  pageHeroMedia: PropTypes.oneOf(['image', 'video']),
   /** Presentation for the route card group. Destinations are identical either way. */
   routeCards: PropTypes.oneOf(['vertical', 'icon']),
   /** Render the On this page sidebar on detail pages. */
