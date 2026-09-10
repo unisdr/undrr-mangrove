@@ -8,7 +8,7 @@ test('the headline carries the page, with or without a header image', () => {
   expect(
     screen.getByRole('heading', {
       level: 1,
-      name: 'Early warning systems reach three more countries',
+      name: 'Towards knowledge, action and resolve to address non-economic losses in the Pacific Indigenous Communities Nadi, Fiji',
     })
   ).toBeVisible();
 });
@@ -17,6 +17,17 @@ test('drops the header image when heroImage is "none"', () => {
   const { container } = render(<ArticleStory heroImage="none" />);
   const header = container.querySelector('.mg-demo-article-header');
   expect(within(header).queryByRole('img')).not.toBeInTheDocument();
+});
+
+test('the headline sits above the header image, not the other way round', () => {
+  const { container } = render(<ArticleStory heroImage="main" />);
+  const header = container.querySelector('.mg-demo-article-header');
+  const heading = within(header).getByRole('heading', { level: 1 });
+  const image = within(header).getByRole('img');
+  // eslint-disable-next-line no-bitwise
+  expect(
+    heading.compareDocumentPosition(image) & Node.DOCUMENT_POSITION_FOLLOWING
+  ).toBeTruthy();
 });
 
 test('the main and alternate hero images are visibly different photos', () => {
@@ -54,6 +65,45 @@ test('the large treatment bleeds the header image full width; compact keeps it i
   ).not.toBeInTheDocument();
   expect(
     compact.container.querySelector('.mg-demo-article-media--compact img')
+  ).toBeInTheDocument();
+});
+
+test('offers social share actions for the article', () => {
+  const { container } = render(<ArticleStory />);
+  const header = container.querySelector('.mg-demo-article-header');
+  expect(within(header).getByRole('button', { name: 'Share on LinkedIn' })).toBeInTheDocument();
+  expect(within(header).getByRole('button', { name: 'Share on Facebook' })).toBeInTheDocument();
+});
+
+test('lists editors’ recommendations as links', () => {
+  render(<ArticleStory />);
+  const heading = screen.getByRole('heading', {
+    name: "Editors' recommendations",
+  });
+  const list = heading.nextElementSibling;
+  expect(within(list).getAllByRole('link').length).toBeGreaterThan(0);
+});
+
+test('groups explore-further tags by taxonomy (hazards, themes, country and region)', () => {
+  const { container } = render(<ArticleStory />);
+  screen.getByRole('heading', { name: 'Explore further' });
+  expect(screen.getByText('Hazards')).toBeInTheDocument();
+  expect(screen.getByText('Themes')).toBeInTheDocument();
+  expect(screen.getByText('Country and region')).toBeInTheDocument();
+  expect(
+    container.querySelectorAll('.mg-tag-container a').length
+  ).toBeGreaterThan(0);
+});
+
+test('asks whether the page was useful and offers to report an issue', () => {
+  render(<ArticleStory />);
+  expect(
+    screen.getByRole('heading', { name: 'Is this page useful?' })
+  ).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Yes' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'No' })).toBeInTheDocument();
+  expect(
+    screen.getByRole('link', { name: 'Report an issue on this page' })
   ).toBeInTheDocument();
 });
 

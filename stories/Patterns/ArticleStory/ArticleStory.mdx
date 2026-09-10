@@ -7,12 +7,13 @@ import * as Stories from './ArticleStory.stories';
 
 > **Note:** Reference design for [undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-A news or event article page: headline, header image, reading body and
-related content. The ticket compares undrr.org's current story pages against
-news.un.org, UNESCO and UNDP, which run a large image above the headline
-rather than a small one beside it. This pattern makes that comparison
-directly testable, and separates two questions the ticket raises that are
-easy to conflate:
+A news or event article page: headline, header image, social share, reading
+body, related content, editors' recommendations, taxonomy tags and page
+feedback — the full page, not just the header. The ticket compares
+undrr.org's current story pages against news.un.org, UNESCO and UNDP, which
+run a large image above the headline rather than a small one beside it. This
+pattern makes that comparison directly testable, and separates two questions
+the ticket raises that are easy to conflate:
 
 - **How prominent is the header image?** `imageProminence` — `large` bleeds
   it full width; `compact` keeps it inside the reading column.
@@ -20,6 +21,17 @@ easy to conflate:
   `heroImage` — `main` reuses that image, `alternate` shows a different one
   in that position, `none` drops it from the article page entirely without
   affecting what a teaser card or an Open Graph tag uses.
+
+The content is a real undrr.org story — [Towards knowledge, action and resolve
+to address non-economic losses in the Pacific Indigenous Communities Nadi,
+Fiji](https://www.undrr.org/news/towards-knowledge-action-and-resolve-address-non-economic-losses-pacific-indigenous) —
+so reviewers are judging the layout against an actual case rather than a
+synthetic one. The live page returns a bot-check 403 to automated fetches, so
+the headline, date, source line, quote, editors' recommendations and taxonomy
+tags are reproduced from screenshots of the page rather than scraped, and the
+header image is the real photo from the story; the body paragraphs are a
+short factual summary of the consultation, not a full reproduction of the
+article text.
 
 ## Large, prominent image
 
@@ -51,12 +63,17 @@ or social preview for this story would use.
 
 ## Building one
 
-The header composes existing pieces rather than introducing a new component:
-`mg-container-full-width` for the bleed, `mg-reading`/`mg-reading__article`
-for the body and `TableOfContents`, and `VerticalCard` in an `mg-grid` for
-related content — the same building blocks `ContentHub` uses. What is new is
-demonstration-only: the `mg-demo-article-*` classes that size the header
-image, loaded only with these stories.
+The page composes existing, shipped pieces rather than introducing new ones:
+`mg-container-full-width` for the header image's bleed, `mg-reading`/
+`mg-reading__article` for the body and `TableOfContents`, `VerticalCard` in an
+`mg-grid` for related content, `ShareButtons` under the byline, `mg-tag-container`
+for the taxonomy links under "Explore further", and `UserFeedback` for the
+"Is this page useful?" prompt and report-an-issue link — the same building
+blocks `ContentHub` uses, plus the ones a full article page needs that a hub
+page doesn't. What is new is demonstration-only: the `mg-demo-article-*`
+classes that size the header image, loaded only with these stories.
+"Editors' recommendations" is plain markup — there is no shipped component for
+it yet.
 
 ## Design decisions
 
@@ -89,3 +106,9 @@ design is reviewed.
   layout — large and compact image variants, and a `heroImage` toggle
   decoupling the header image from the teaser/social image, in English and
   Arabic. ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))
+  - Title, lede and byline sit above the header image, not below it, matching
+    undrr.org and the comparison sites.
+  - Adds `ShareButtons` under the byline, and an editors' recommendations
+    list, taxonomy tags and `UserFeedback` at the foot of the page.
+  - Content replaced with a real undrr.org story so the layout is judged
+    against an actual case.
