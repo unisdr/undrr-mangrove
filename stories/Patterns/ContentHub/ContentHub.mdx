@@ -1,6 +1,5 @@
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as Stories from './ContentHub.stories';
-import layers from '../../assets/patterns/content-hub-layers.svg';
 
 <Meta of={Stories} />
 
@@ -16,36 +15,21 @@ These examples use illustrative Sendai Framework Monitor content. They are not
 reporting instructions or a proposed final site map. Internal links navigate within
 the example; the header, global menu and reporting-platform links leave the demo.
 
-## The layers
+## Landing page, hub or microsite
 
-<img
-  src={layers}
-  alt="Architecture sketch comparing a parent website, content hub and microsite, with separate publishing choices and the navigation layers of a hub detail page."
-  style={{ width: '100%', height: 'auto' }}
-/>
+Three landing page shapes are drawn out separately in
+[Landing page patterns](?path=/docs/example-landing-pages--docs), including the
+topic page that is the usual precursor to a hub.
 
-[Open the editable SVG](https://github.com/unisdr/undrr-mangrove/blob/950f2f5695ff253eb6a447362d188e0de35d0957/stories/assets/patterns/content-hub-layers.svg)
-and [read the information architecture brief](https://github.com/unisdr/undrr-mangrove/blob/950f2f5695ff253eb6a447362d188e0de35d0957/docs/design/content-hubs.md).
-The brief includes alternative mobile and deep-section sketches, research references
-and questions to test with real content.
-
-| Pattern            | Its job                                                 | Navigation emphasis                               |
-| ------------------ | ------------------------------------------------------- | ------------------------------------------------- |
-| Basic landing page | Introduce a subject and direct people to useful content | Parent navigation and grouped routes              |
-| Content hub        | Support repeated movement across related pages          | Shared resource name and section links            |
-| Microsite          | Support a more distinct experience or subbrand          | Its own navigation with a clear parent connection |
+| Pattern      | Its job                                                 | Navigation emphasis                               |
+| ------------ | ------------------------------------------------------- | ------------------------------------------------- |
+| Landing page | Introduce a subject and direct people to useful content | Parent navigation and grouped routes              |
+| Content hub  | Support repeated movement across related pages          | Shared resource name and section links            |
+| Microsite    | Support a more distinct experience or subbrand          | Its own navigation with a clear parent connection |
 
 Publishing is a separate choice. Drupal, a static build or another application can
 support these experiences. A hub can also link to a tool with its own task-oriented
 navigation without adopting that tool's interface.
-
-## Basic landing page
-
-A page title, introduction and grouped content routes are enough for many landing
-pages. Persistent section navigation is not required merely because related pages exist.
-The Monitor link below enters the hub so the change in navigation can be compared.
-
-<Canvas of={Stories.BasicLanding} />
 
 ## Hub home
 
@@ -54,6 +38,15 @@ parent site. The larger introductory heading belongs to this home page; it does 
 repeat above every detail page.
 
 <Canvas of={Stories.HubHome} />
+
+## A detail page with a hero
+
+The case the identity row is designed for. The hero keeps its full bleed and
+carries the page's only `h1`; the identity row above it is unchanged from the
+example before, which is the whole point. Compare it with the plain detail page
+below — the chrome above the content is identical in both.
+
+<Canvas of={Stories.HubDetailWithHero} />
 
 ## Hub detail
 
@@ -89,6 +82,14 @@ permanent navigation rail.
 
 <Canvas of={Stories.DeeperPage} />
 
+This story is also the argument that the strip is not a tab set: its active item
+is two levels above the page you are reading. No tab can do that.
+
+A dense reference section may benefit from a scoped sibling rail. That remains a
+valid alternative: avoid adding both a full section rail and a full in-page rail
+without a clear need. A labelled mobile Sections disclosure is another option to
+compare when the section strip grows long.
+
 ## Icon routes
 
 `routeCards` swaps the vertical cards for icon cards, which is how undrr.org
@@ -99,21 +100,9 @@ than a component variant.
 
 <Canvas of={Stories.HubHomeIconRoutes} />
 
-## A detail page with a hero
-
-<Canvas of={Stories.HubDetailWithHero} />
-
-A dense reference section may benefit from a scoped sibling rail. That remains a
-valid alternative: avoid adding both a full section rail and a full in-page rail
-without a clear need. A labelled mobile Sections disclosure is another option to
-compare when the section strip grows long.
-
-This story is also the argument that the strip is not a tab set: its active item
-is two levels above the page you are reading. No tab can do that.
-
 ## Design decisions
 
-> **Implementation note (for contributors):** the rest of this section records why the pattern looks the way it does. Consumers reviewing the examples above do not need it.
+> **Implementation note (for contributors):** the rest of this section records why the pattern looks the way it does. Consumers reviewing the examples above do not need it. The fuller [information architecture brief](https://github.com/unisdr/undrr-mangrove/blob/950f2f5695ff253eb6a447362d188e0de35d0957/docs/design/content-hubs.md) carries the research behind it, including alternative mobile and deep-section sketches and the questions still worth testing.
 
 ### Why the section strip does not look like tabs
 
@@ -181,7 +170,7 @@ the trail's last crumb repeats the hub name a few pixels below it; on a section
 page and a first-level detail page it repeats the active section link and the
 page heading. It is shown where it says something nothing else does: on a page
 deep enough to have an intermediate parent the section strip cannot show, and on
-the basic landing page, which has no hub navigation at all.
+the hub's parent landing page, which has no hub navigation at all.
 
 The cost of hiding it is the route up to the hub's parent landing page, which
 nothing else offers — the hub name links to the hub home and the logo links to
@@ -223,9 +212,10 @@ content hubs, not a requirement to copy a transactional service header.
 
 ## Changelog
 
-- **1.0** — 2026-09-09: Added landing, hub home, detail and deeper-page explorations with English and Arabic content, and the information architecture sketches. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
+- **1.0** — 2026-09-09: Added hub home, detail and deeper-page explorations with English and Arabic content. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
   - Placed every example under the standard UNDRR `PageHeader` and `MegaMenu`, and dropped the compact parent-header comparison as out of scope for version one.
   - Replaced the tab-like active state with a leading-rule marker, moved the hub name onto the section row as invariant chrome, and removed the duplicate Overview label.
   - Added a split-hero example, an icon-card option for route groups, and the shipped `TableOfContents` in place of a bespoke rail.
   - Showed breadcrumbs only where they add ancestry the hub navigation cannot.
   - Gave the hub home the alternating tinted band real UNDRR landing pages are built from, and moved the parent chrome into a shared `UndrrChrome` helper.
+  - Dropped the basic landing page example and the layers diagram; landing pages now have their own story set, and the diagram belongs with the research brief.

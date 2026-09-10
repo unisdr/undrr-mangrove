@@ -23,11 +23,11 @@ export default {
   ),
 };
 
-export const BasicLanding = {
-  name: 'Basic landing page',
-  args: { initialPage: 'landing' },
-};
 export const HubHome = { name: 'Hub home', args: { initialPage: 'overview' } };
+export const HubDetailWithHero = {
+  name: 'Hub detail with a hero',
+  args: { initialPage: 'how-to-report', withHero: true },
+};
 export const HubDetail = {
   name: 'Hub detail',
   args: { initialPage: 'how-to-report' },
@@ -39,8 +39,4 @@ export const DeeperPage = {
 export const HubHomeIconRoutes = {
   name: 'Hub home with icon routes',
   args: { initialPage: 'overview', routeCards: 'icon' },
-};
-export const HubDetailWithHero = {
-  name: 'Hub detail with a hero',
-  args: { initialPage: 'how-to-report', withHero: true },
 };
