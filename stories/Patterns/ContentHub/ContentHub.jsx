@@ -7,6 +7,7 @@ import TableOfContents from '../../Components/TableOfContents/TableOfContents';
 import { Hero } from '../../Components/Hero/Hero';
 import { HubHeader } from '../HubHeader/HubHeader';
 import { UndrrChrome } from '../_shared/UndrrChrome';
+import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
 const words = {
   english: {
@@ -334,9 +335,7 @@ export function ContentHub({
 
   return (
     <div lang={arabic ? 'ar' : 'en'} dir={arabic ? 'rtl' : undefined}>
-      <a className="mg-demo-skip-link" href={`#${prefix}-content`}>
-        {text.skip}
-      </a>
+      <SkipLink targetId={`${prefix}-content`} label={text.skip} />
       <UndrrChrome locale={locale} id={prefix} />
       <div className="mg-demo-shell | mg-container">
         {showBreadcrumbs && (

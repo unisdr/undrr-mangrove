@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { UndrrChrome } from '../_shared/UndrrChrome';
+import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 import { Hero } from '../../Components/Hero/Hero';
 import { VerticalCard } from '../../Components/Cards/Card/VerticalCard';
 import { IconCard } from '../../Components/Cards/IconCard/IconCard';
@@ -297,9 +298,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
   return (
     <div lang={arabic ? 'ar' : 'en'} dir={arabic ? 'rtl' : undefined}>
-      <a className="mg-demo-skip-link" href={`#${id}-content`}>
-        {text.skip}
-      </a>
+      <SkipLink targetId={`${id}-content`} label={text.skip} />
       <UndrrChrome locale={locale} id={id} />
 
       <div className="mg-demo-shell | mg-container">

@@ -734,6 +734,7 @@ describe('every component names the role it is meant to', () => {
     ['.mg-preview-access__title', 'ui'],
     ['.mg-search__input', 'text'],
     ['.mg-share__copy-button', 'text'],
+    ['.mg-skip-link:focus', 'ui'],
     ['.mg-share__header', 'text'],
     ['.mg-stats-card-item__bottom-label', 'ui'],
     ['.mg-stats-card-item__label', 'ui'],

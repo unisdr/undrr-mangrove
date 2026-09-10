@@ -593,5 +593,20 @@ export default {
         },
       ],
     },
+
+    {
+      name: 'Skip link',
+      description:
+        'Bypass block for keyboard users. Hidden until focused, then shown in normal flow at the top of the page.',
+      classes: [
+        {
+          class: 'mg-skip-link',
+          description:
+            'Visually hidden anchor that reveals on keyboard focus. Its target must carry both an id and tabindex="-1", or focus stays on the link and only the scroll position moves. Not a substitute for, and not built on, mg-u-sr-only, which has no focus reveal.',
+          usage:
+            '<a class="mg-skip-link" href="#main-content">Skip to main content</a>\n<header id="header">...</header>\n<main id="main-content" tabindex="-1">...</main>',
+        },
+      ],
+    },
   ],
 };

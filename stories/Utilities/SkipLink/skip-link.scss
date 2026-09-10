@@ -1,0 +1,40 @@
+// Skip link.
+
+// Visually hidden until focused. Deliberately not .mg-u-sr-only: that utility
+// is permanently hidden text for assistive technology and has no :focus
+// reveal, so an anchor carrying it stays invisible when tabbed to.
+
+// On focus the link returns to normal flow rather than overlaying the page, so
+// the header below moves down and nothing is obscured. Colours are the two
+// theme-invariant tokens — neutral-0 and text — so the same pair that grades
+// for body copy grades here in all five themes, whatever the link happens to
+// sit on.
+
+.mg-skip-link {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+
+  &:focus {
+    background-color: rgb(var(--mg-color-neutral-0));
+    block-size: auto;
+    border-block-end: 2px solid rgb(var(--mg-color-interactive));
+    clip-path: none;
+    color: rgb(var(--mg-color-text));
+    display: block;
+    font-family: var(--mg-font-family-ui);
+    inline-size: auto;
+    overflow: visible;
+    padding: var(--mg-spacing-100) var(--mg-spacing-200);
+    position: static;
+    text-decoration: underline;
+    white-space: normal;
+
+    // Inset ring: the link spans the full width at the very top of the
+    // viewport, where an outward ring would be drawn off-screen.
+    @include mg-focus-ring-inset;
+  }
+}

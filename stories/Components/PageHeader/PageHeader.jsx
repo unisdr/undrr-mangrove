@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '../../Atom/Icons/Icon';
+import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
@@ -13,6 +14,8 @@ export function PageHeader({
   variant = 'default',
   className,
   idPrefix = '',
+  skipLinkTarget,
+  skipLinkLabel = 'Skip to main content',
   logoUrl = 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
@@ -52,108 +55,113 @@ export function PageHeader({
   }
 
   return (
-    <header id={id('header')} className={headerClasses} {...args}>
-      {/* Decoration stripe */}
-      <div className="mg-page-header__decoration">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <div
-        className="mg-page-header__toolbar-wrapper"
-        data-vf-google-analytics-region="undrr-black-bar"
-      >
-        <div className="mg-page-header__container mg-container">
-          <div className="mg-page-header__region mg-page-header__region--toolbar">
-            {/* UNDRR Logo Section */}
-            {showLogo && (
-              <div
-                id={id('block-undrrlogo')}
-                className="mg-page-header__block mg-page-header__block--logo"
-              >
-                <a href={homeUrl}>
-                  <img
-                    alt={logoAlt}
-                    src={logoUrl}
-                    width="324"
-                    height="47"
-                    title={logoTitle}
-                    className="mg-page-header__logo-img"
-                  />
-                </a>
-              </div>
-            )}
-
-            {/* User icon */}
-            {showAccount && (
-              <a title="My account" href="/user">
-                <Icon name="user" />{' '}
-                <span className="mg-page-header__label">My account</span>
-                {/* <span className="mg-page-header__label-mobile">Login</span> */}
-              </a>
-            )}
-
-            {/* Language Dropdown Section */}
-            {showLanguage && (
-              <div className="mg-page-header__block mg-page-header__block--language">
-                <form
-                  className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
-                  id={id('lang_dropdown_form_lang-dropdown-form')}
-                  action="/"
-                  method="post"
-                  acceptCharset="UTF-8"
-                  noValidate
+    <React.Fragment>
+      {skipLinkTarget && (
+        <SkipLink targetId={skipLinkTarget} label={skipLinkLabel} />
+      )}
+      <header id={id('header')} className={headerClasses} {...args}>
+        {/* Decoration stripe */}
+        <div className="mg-page-header__decoration">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div
+          className="mg-page-header__toolbar-wrapper"
+          data-vf-google-analytics-region="undrr-black-bar"
+        >
+          <div className="mg-page-header__container mg-container">
+            <div className="mg-page-header__region mg-page-header__region--toolbar">
+              {/* UNDRR Logo Section */}
+              {showLogo && (
+                <div
+                  id={id('block-undrrlogo')}
+                  className="mg-page-header__block mg-page-header__block--logo"
                 >
-                  <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
-                    <label
-                      htmlFor={id('edit-lang-dropdown-select')}
-                      className="mg-u-sr-only"
-                    >
-                      Select your language
-                    </label>
+                  <a href={homeUrl}>
+                    <img
+                      alt={logoAlt}
+                      src={logoUrl}
+                      width="324"
+                      height="47"
+                      title={logoTitle}
+                      className="mg-page-header__logo-img"
+                    />
+                  </a>
+                </div>
+              )}
 
-                    <div className="mg-page-header__select-wrapper">
-                      <select
-                        style={{ width: '165px' }}
-                        className="mg-page-header__select lang-dropdown-select-element form-select form-control"
-                        data-lang-dropdown-id="lang-dropdown-form"
-                        id={id('edit-lang-dropdown-select')}
-                        name="lang_dropdown_select"
-                        defaultValue={
-                          languages.find(lang => lang.selected)?.value ||
-                          languages[0]?.value
-                        }
-                      >
-                        {languages.map((lang, index) => (
-                          <option key={index} value={lang.value}>
-                            {lang.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
+              {/* User icon */}
+              {showAccount && (
+                <a title="My account" href="/user">
+                  <Icon name="user" />{' '}
+                  <span className="mg-page-header__label">My account</span>
+                  {/* <span className="mg-page-header__label-mobile">Login</span> */}
+                </a>
+              )}
 
-                  <noscript>
-                    <div>
-                      <button
-                        type="submit"
-                        id={id('edit-submit')}
-                        name="op"
-                        value="Go"
-                        className="button js-form-submit form-submit btn"
+              {/* Language Dropdown Section */}
+              {showLanguage && (
+                <div className="mg-page-header__block mg-page-header__block--language">
+                  <form
+                    className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
+                    id={id('lang_dropdown_form_lang-dropdown-form')}
+                    action="/"
+                    method="post"
+                    acceptCharset="UTF-8"
+                    noValidate
+                  >
+                    <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
+                      <label
+                        htmlFor={id('edit-lang-dropdown-select')}
+                        className="mg-u-sr-only"
                       >
-                        Go
-                      </button>
+                        Select your language
+                      </label>
+
+                      <div className="mg-page-header__select-wrapper">
+                        <select
+                          style={{ width: '165px' }}
+                          className="mg-page-header__select lang-dropdown-select-element form-select form-control"
+                          data-lang-dropdown-id="lang-dropdown-form"
+                          id={id('edit-lang-dropdown-select')}
+                          name="lang_dropdown_select"
+                          defaultValue={
+                            languages.find(lang => lang.selected)?.value ||
+                            languages[0]?.value
+                          }
+                        >
+                          {languages.map((lang, index) => (
+                            <option key={index} value={lang.value}>
+                              {lang.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                  </noscript>
-                </form>
-              </div>
-            )}
+
+                    <noscript>
+                      <div>
+                        <button
+                          type="submit"
+                          id={id('edit-submit')}
+                          name="op"
+                          value="Go"
+                          className="button js-form-submit form-submit btn"
+                        >
+                          Go
+                        </button>
+                      </div>
+                    </noscript>
+                  </form>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </React.Fragment>
   );
 }
 
@@ -164,6 +172,13 @@ PageHeader.propTypes = {
   className: PropTypes.string,
   /** Namespace for the header's element ids. Required when a page renders more than one PageHeader. */
   idPrefix: PropTypes.string,
+  /**
+   * Id of the page's `<main>` element. When set, the header emits a skip link
+   * before itself. The target must also carry `tabIndex={-1}`.
+   */
+  skipLinkTarget: PropTypes.string,
+  /** Label for that skip link. */
+  skipLinkLabel: PropTypes.string,
   /** URL for the UNDRR logo image */
   logoUrl: PropTypes.string,
   /** Alt text for the logo image */

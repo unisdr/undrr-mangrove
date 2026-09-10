@@ -1,0 +1,107 @@
+import { Meta, Canvas, Source } from '@storybook/addon-docs/blocks';
+import * as SkipLinkStories from './SkipLink.stories';
+
+<Meta of={SkipLinkStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Skip link
+
+The first focusable element on a page. It is hidden until it receives keyboard focus, then appears in normal flow above the header and moves focus into the page's main content.
+
+An UNDRR page opens with a brand bar, a mega menu strip and, on a hub page, an identity row and section links. Without a skip link, reaching the first paragraph means tabbing through all of it, on every page.
+
+## When to use it
+
+Use it on every full page. WCAG 2.4.1 Bypass Blocks (Level A) can be met by landmarks alone, and Mangrove provides those, but landmark navigation is a screen-reader affordance. A sighted keyboard user has no equivalent, and this is it.
+
+It is not needed in an embedded fragment or a syndicated widget, which is not a page and has no header to bypass.
+
+## Default
+
+<Canvas of={SkipLinkStories.DefaultSkipLink} />
+
+## Focused
+
+The only state that renders. Focus is placed on the link when the story loads.
+
+<Canvas of={SkipLinkStories.Focused} />
+
+## Translated and right-to-left
+
+The label is a prop, so it carries the page language. The stylesheet uses logical properties throughout, so nothing needs to change for right-to-left.
+
+<Canvas of={SkipLinkStories.TranslatedRtl} />
+
+## The target needs an id and tabIndex
+
+This is the part that is easiest to get wrong. The element the link points at must carry **both** attributes:
+
+<Source language="html" code={`
+<a class="mg-skip-link" href="#main-content">Skip to main content</a>
+
+<header id="header"><!-- brand bar, mega menu --></header>
+
+<main id="main-content" tabindex="-1">
+  <h1>Page title</h1>
+</main>
+`} />
+
+Without `tabindex="-1"` the browser scrolls to the target but leaves focus on the link, so the next Tab press lands back in the navigation the user just skipped — the link appears to do nothing. `tabindex="-1"` makes the element programmatically focusable without adding it to the tab order.
+
+The React component also calls `focus()` on the target when the link is activated, because whether fragment navigation moves focus on its own has never been consistent across browsers. The `href` still works without JavaScript.
+
+## Where it goes
+
+First focusable element inside the page wrapper, before the brand bar. Anything focusable placed above it — a cookie banner control, a preview bar — is something a keyboard user meets before the bypass, which defeats the purpose.
+
+## Should `PageHeader` carry it?
+
+Not by default, but it can on request. `PageHeader` takes two optional props:
+
+<Source language="jsx" code={`
+<PageHeader skipLinkTarget="main-content" skipLinkLabel="Skip to main content" />
+`} />
+
+With `skipLinkTarget` set, the header renders the skip link immediately before its own `<header>` element. Omit the prop and the output is exactly what it was before, so nothing existing changes.
+
+It is opt-in rather than automatic because `PageHeader` renders `<header id="header">` and has no notion of the page's main content id. A default target would be a guess, and a skip link pointing at an id that does not exist on the page is worse than no skip link: it appears in the tab order, announces a promise, and does nothing. One prop is a small enough ask to keep the link honest.
+
+Note also that most production UNDRR pages render their header from Drupal Twig rather than from this React component, so for those pages the markup below is what ships, not the prop.
+
+## React
+
+<Source language="jsx" code={`
+import { SkipLink } from '@undrr/undrr-mangrove';
+
+<SkipLink targetId="main-content" label="Skip to main content" />
+`} />
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `targetId` | string | `'main-content'` | Id of the `<main>` element to skip to. That element also needs `tabIndex={-1}`. |
+| `label` | string | `'Skip to main content'` | Visible link text. Supply a translated string on non-English pages. |
+| `className` | string | — | Additional CSS classes |
+| `onClick` | function | — | Additional click handler, called after focus moves to the target |
+
+## Plain HTML
+
+The component is one anchor and one class, so a Twig template or a static page can emit it directly:
+
+<Source language="html" code={`
+<a class="mg-skip-link" href="#main-content">Skip to main content</a>
+`} />
+
+## CSS
+
+| Class | Description |
+|---|---|
+| `mg-skip-link` | Visually hidden until focused, then shown in normal flow with a bordered white band |
+
+`mg-skip-link` is deliberately not built on `mg-u-sr-only`. That utility has no `:focus` reveal — correct for permanently hidden text, wrong for a link whose whole behaviour is *becomes visible when focused*.
+
+Colours come from `--mg-color-neutral-0` and `--mg-color-text`, the same theme-invariant pair body copy uses, so the revealed link grades in all five themes whatever it happens to sit on. The focus ring is the inset variant, because the link spans the full width at the very top of the viewport where an outward ring would be drawn off-screen.
+
+## Changelog
+
+- **1.0** — 2026-09-10 ([#1117](https://github.com/unisdr/undrr-mangrove/issues/1117)): New component. Visually hidden anchor that reveals on focus in normal flow, moves focus to its target, takes its label from props and works in right-to-left. `PageHeader` gained optional `skipLinkTarget` and `skipLinkLabel` props. The content hub and landing page patterns moved off their local `mg-demo-skip-link` class, which is gone.

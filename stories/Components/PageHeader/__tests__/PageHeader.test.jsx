@@ -106,6 +106,39 @@ describe('PageHeader', () => {
   });
 
   // --------------------------------------------------
+  // Skip link
+  // --------------------------------------------------
+
+  it('emits no skip link unless a target is given', () => {
+    const { container } = render(<PageHeader />);
+
+    expect(container.querySelector('.mg-skip-link')).toBeNull();
+    expect(container.firstChild).toHaveClass('mg-page-header');
+  });
+
+  it('emits a skip link before the header when a target is given', () => {
+    const { container } = render(<PageHeader skipLinkTarget="main-content" />);
+
+    const link = screen.getByRole('link', { name: 'Skip to main content' });
+
+    expect(link).toHaveAttribute('href', '#main-content');
+    expect(container.firstChild).toBe(link);
+  });
+
+  it('takes a translated skip link label', () => {
+    render(
+      <PageHeader
+        skipLinkTarget="main-content"
+        skipLinkLabel="Aller au contenu principal"
+      />
+    );
+
+    expect(
+      screen.getByRole('link', { name: 'Aller au contenu principal' })
+    ).toBeInTheDocument();
+  });
+
+  // --------------------------------------------------
   // Accessibility
   // --------------------------------------------------
 

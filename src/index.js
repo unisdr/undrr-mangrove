@@ -28,6 +28,7 @@ export {
   default as UserFeedback,
   DEFAULT_USER_FEEDBACK_LABELS,
 } from '../stories/Components/UserFeedback/UserFeedback';
+export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
 
 // Import global styles
 import '../stories/assets/scss/style.scss';

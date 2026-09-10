@@ -127,6 +127,7 @@ export default [
       FullWidth: './stories/Utilities/FullWidth/FullWidth.jsx',
       Loader: './stories/Utilities/Loader/Loader.jsx',
       ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
+      SkipLink: './stories/Utilities/SkipLink/SkipLink.jsx',
     },
     externals: {
       react: 'react',

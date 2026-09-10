@@ -1064,6 +1064,34 @@ npm run build</code></pre>
     ],
   },
 
+  // Added here rather than in unisdr/undrr-mangrove#1113, which shipped the
+  // pattern without a manifest entry and left `validate-manifest` failing.
+  'components-reading-column': {
+    description:
+      'Page composition: a body column held to a readable measure, with an optional table-of-contents sidebar that sticks from 48rem up and stacks above the article on narrow screens.',
+    cssClasses: [
+      'mg-reading',
+      'mg-reading--with-contents',
+      'mg-reading__article',
+    ],
+  },
+
+  'components-skip-link': {
+    description:
+      'Bypass block: an anchor that stays visually hidden until it receives keyboard focus, then appears in normal flow above the header. Points at the page\'s <main>, which must carry both an id and tabindex="-1" so focus lands there rather than only the scroll position. The label is a prop, and the stylesheet uses logical properties, so it works translated and in right-to-left. Place it as the first focusable element in the page wrapper, before the brand bar. Not built on mg-u-sr-only, which has no focus reveal.',
+    cssClasses: ['mg-skip-link'],
+    examples: [
+      {
+        name: 'Skip link with its target',
+        html: `<a class="mg-skip-link" href="#main-content">Skip to main content</a>
+<header id="header"><!-- brand bar, mega menu --></header>
+<main id="main-content" tabindex="-1">
+  <h1>Page title</h1>
+</main>`,
+      },
+    ],
+  },
+
   'components-error-pages': {
     description:
       'Error page templates (404, 500, etc.) with heading, message, and return link.',

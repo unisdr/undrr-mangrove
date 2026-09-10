@@ -14,18 +14,6 @@
   max-inline-size: 49rem;
 }
 
-.mg-demo-skip-link {
-  position: absolute;
-  clip-path: inset(50%);
-
-  &:focus {
-    position: static;
-    clip-path: none;
-    display: block;
-    padding: var(--mg-spacing-100);
-  }
-}
-
 .mg-demo-shell {
   @media (width < 48rem) {
     padding-inline: var(--mg-spacing-200);
