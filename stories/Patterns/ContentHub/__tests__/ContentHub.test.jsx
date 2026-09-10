@@ -55,9 +55,15 @@ test('uses page links for lateral navigation and keeps Reporting active on a chi
 test('keeps the standard UNDRR header and global navigation above the hub', () => {
   render(<ContentHub initialPage="how-to-report" />);
   const global = screen.getByRole('navigation', { name: 'UNDRR navigation' });
-  expect(
-    within(global).getByRole('menuitem', { name: 'Our work' })
-  ).toHaveAttribute('href', 'https://www.undrr.org/our-work');
+  // The section title also names the panel's banner button, so pick the
+  // top-level bar link rather than matching on the accessible name alone.
+  const topLevelLink = within(global)
+    .getAllByRole('link', { name: 'Our work' })
+    .find(link => link.classList.contains('mg-mega-topbar__item-link'));
+  expect(topLevelLink).toHaveAttribute(
+    'href',
+    'https://www.undrr.org/our-work'
+  );
   // The hub's own navigation stays a separate landmark with its own label.
   expect(
     within(global).queryByRole('link', { name: 'Reporting' })
@@ -294,12 +300,6 @@ test('routes are horizontal icon cards by default, vertical on request', () => {
 
 test('has no detectable accessibility violations on a detail page', async () => {
   const { container } = render(<ContentHub initialPage="how-to-report" />);
-  // Scoped to the hub itself. The parent chrome is shipped MegaMenu and
-  // PageHeader markup; MegaMenu's desktop topbar has its own pre-existing axe
-  // failures (aria-required-children, landmark-unique, aria-allowed-role) that
-  // this composition cannot correct from the outside. Remove this scoping once
-  // MegaMenu is fixed.
-  expect(
-    await axe(container.querySelector('.mg-demo-shell'))
-  ).toHaveNoViolations();
+  // Unscoped: the parent chrome (MegaMenu, PageHeader) is covered too.
+  expect(await axe(container)).toHaveNoViolations();
 });

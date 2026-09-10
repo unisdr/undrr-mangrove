@@ -104,10 +104,10 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 ### ARIA attributes
 
 - The root `<nav>` element has `aria-label="Main Navigation"`
-- On desktop, the top bar uses `role="menubar"` with `aria-label="Main navigation menu"`
-- Top-level menu items use `role="menuitem"` with `aria-haspopup="true"` when they have submenus, and `aria-expanded` to indicate open/closed state
-- Parent `<li>` elements use `role="none"` to remove implicit list semantics from the menu pattern
-- Submenu panels use `role="region"` with `aria-label="Menu section"` and `aria-live="polite"` to announce content changes
+- The top bar is a plain `<ul>` of links inside that labelled `<nav>`. It carries no `menubar` role: this is site navigation made of ordinary links, not an application menu, and `menubar` cannot legally contain the bar's hamburger button or its submenu panels
+- Top-level items are ordinary links (or buttons where no URL is authored). Where a panel exists, `aria-expanded` announces it as a disclosure in both states
+- Submenu panels use `role="region"` with `aria-live="polite"`, labelled by their own section title
+- Each panel's category and submenu areas are `<nav>` landmarks named after their section (e.g. "About categories", "About submenu"), so a landmark list stays navigable when several sections are present
 - Nested submenu lists use `role="menu"` with descriptive `aria-label` values (e.g., "Categories", "Submenu items")
 - Nested links use `role="menuitem"` and `aria-haspopup` when they contain further sub-items
 - Category links use `aria-current="page"` to indicate the currently highlighted category
@@ -186,6 +186,8 @@ retains the existing caller-sanitised contract.
 <Canvas of={MegaMenuStories.ProgressiveMobile} />
 
 ## Changelog
+
+- **1.4.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): **Fixed:** the desktop top bar failed three axe rules whenever more than one section was present, which was never caught because the component's only axe assertion opened the mobile dialog first. The `menubar` role and its `menuitem`/`none` companions are gone — the bar is now a plain list of links inside the labelled `<nav>`, resolving `aria-required-children` (critical), and `aria-expanded` now reports both states on items that open a panel. Each section's landmarks are named after the section rather than sharing "Category navigation" and "Submenu content" (`landmark-unique`), and the category area is a `<nav>` element instead of an `<aside role="navigation">` (`aria-allowed-role`). Keyboard behaviour across the bar and into a panel is unchanged. The mobile hamburger is no longer clipped where the top bar is narrower than the viewport, such as a docs canvas or a constrained page: its overlay is anchored to the top bar rather than assumed to be `100vw`. A desktop-state axe assertion now covers the bar.
 
 - **1.3.0** — 2026-09-08 ([#1099](https://github.com/unisdr/undrr-mangrove/issues/1099)): Added mobile progressive navigation with a consistent surface, explicit back and close actions, nested levels, linked section headings and preserved banner content, focus and scroll restoration, reduced motion and translated controls. Existing data and integration contracts remain supported. Authored content appears immediately, without a duplicate disclosure heading. The mobile hamburger is vertically centred without icon baseline spacing. Top-level sections use the shared semibold heading family; inner destinations use smaller regular body text and tighter spacing with 44px minimum targets. Forward chevrons distinguish entering a group from the Back arrow. Section headings remain compact and bold, with aligned text edges. Plain HTML Simple Nav removes the unused hamburger gutter and allows horizontal scrolling on mobile without markup changes. The redundant toolbar Menu label is omitted, leaving Close at the top right. Back sits above the title; the bounded translucent surface leaves an outside-dismiss area and uses RTL-aware fades with opaque accessibility-preference fallbacks.
 

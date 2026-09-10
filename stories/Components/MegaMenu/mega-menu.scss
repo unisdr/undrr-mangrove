@@ -695,14 +695,19 @@
 .mg-mega-topbar-mobile__icon-button {
   // Mobile-first: Display by default
   position: absolute;
-  inset-inline-end: 0; // RTL-friendly
+
+  // Anchored to both edges of the topbar rather than assumed to be
+  // viewport-wide: a `100vw` overlay overhangs and is clipped by the parent's
+  // `overflow-x` wherever the topbar is narrower than the viewport (a docs
+  // canvas, an embed, any constrained page).
+  inset-inline: 0; // RTL-friendly
   background: rgb(
     0 0 0 / 0
   ); // we let the menu items show through to advertise the contents
 
   color: rgb(var(--mg-color-interactive));
   font-size: mg-rem(20);
-  width: 100vw;
+  width: auto;
   height: 100%;
   padding: var(--mg-spacing-100);
   border: none;

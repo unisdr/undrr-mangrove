@@ -53,9 +53,6 @@ test('localizes copy and direction from the locale toolbar', () => {
 
 test('has no detectable accessibility violations in the page body', async () => {
   const { container } = render(<LandingPage archetype="topic" id="demo" />);
-  // Scoped to the pattern. The parent chrome is shipped MegaMenu markup, whose
-  // desktop topbar has its own pre-existing axe failures.
-  expect(
-    await axe(container.querySelector('.mg-demo-shell'))
-  ).toHaveNoViolations();
+  // Unscoped: the parent chrome (MegaMenu) is covered too.
+  expect(await axe(container)).toHaveNoViolations();
 });

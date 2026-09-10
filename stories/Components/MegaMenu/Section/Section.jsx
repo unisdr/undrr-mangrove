@@ -12,6 +12,10 @@ export default function Section({
   const [focusIndex, setFocusIndex] = useState(0);
   const [focusableElements, setFocusableElements] = useState([]);
 
+  // Landmarks inside every section share a name unless it is derived from the
+  // section itself, which leaves a screen-reader landmark list unusable.
+  const sectionTitle = section?.title || 'Menu section';
+
   const asideRef = useRef(null);
   const contentRef = useRef(null);
 
@@ -94,7 +98,7 @@ export default function Section({
       {section && section.items && (
         <article
           className="mg-mega-content | mg-container-full-width"
-          aria-label="Menu section"
+          aria-label={sectionTitle}
           aria-live="polite"
           tabIndex={0}
           ref={element => (sectionListRef.current[index] = element)}
@@ -105,12 +109,11 @@ export default function Section({
           {section.bannerHeading &&
             section.bannerDescription &&
             section.items && (
-              <aside
+              <nav
                 className="mg-mega-content__left"
-                aria-label="Category navigation"
+                aria-label={`${sectionTitle} categories`}
                 ref={asideRef}
                 tabIndex={0}
-                role="navigation"
               >
                 <section className="mg-mega-content__banner">
                   <header>{section.bannerHeading}</header>
@@ -171,15 +174,14 @@ export default function Section({
                     ))}
                   </ul>
                 ) : null}
-              </aside>
+              </nav>
             )}
           {section.items && (
-            <section
+            <nav
               className="mg-mega-content__right"
-              aria-label="Submenu content"
+              aria-label={`${sectionTitle} submenu`}
               ref={contentRef}
               tabIndex={0}
-              role="navigation"
             >
               {/* Mobile version - shows all nested items */}
               <ul
@@ -287,7 +289,7 @@ export default function Section({
                       </li>
                     ))}
               </ul>
-            </section>
+            </nav>
           )}
 
           {/*  If there are no child items just show the banner description in a call to action style */}
@@ -297,7 +299,7 @@ export default function Section({
         <article
           className="mg-mega-content | mg-container-full-width"
           aria-live="polite"
-          aria-label="Submenu item"
+          aria-label={sectionTitle}
           tabIndex={0}
           ref={element => (sectionListRef.current[index] = element)}
           dangerouslySetInnerHTML={{ __html: section.bannerDescription }}

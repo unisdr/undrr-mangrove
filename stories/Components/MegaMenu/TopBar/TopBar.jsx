@@ -87,11 +87,7 @@ export function TopBar({
           onClick={() => toggleShowSidebar()}
         />
 
-        <ul
-          className="mg-mega-topbar__nav"
-          role={isMobile ? undefined : 'menubar'}
-          aria-label={isMobile ? undefined : 'Main navigation menu'}
-        >
+        <ul className="mg-mega-topbar__nav">
           {/* Desktop menu items - hidden on mobile/tablet via CSS */}
           {menuItems}
         </ul>
@@ -101,16 +97,9 @@ export function TopBar({
 
   // Default variant: unchanged <ul> root
   return (
-    <ul
-      className="mg-mega-topbar | mg-container-full-width"
-      role={isMobile ? undefined : 'menubar'}
-      aria-label={isMobile ? undefined : 'Main navigation menu'}
-    >
+    <ul className="mg-mega-topbar | mg-container-full-width">
       {/* Mobile/Tablet hamburger button - hidden on desktop via CSS */}
-      <li
-        className="mg-mega-topbar__mobile-trigger"
-        role={isMobile ? undefined : 'none'}
-      >
+      <li className="mg-mega-topbar__mobile-trigger">
         <TopBarMobileIconButton
           sidebarId={sidebarId}
           labels={labels}

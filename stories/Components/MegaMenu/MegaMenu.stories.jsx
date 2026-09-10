@@ -587,18 +587,10 @@ const simpleNavLinks = [
 export const SimpleNav = {
   render: () => (
     <nav className="mg-mega-wrapper" aria-label="Main Navigation">
-      <ul
-        className="mg-mega-topbar | mg-container-full-width"
-        role="menubar"
-        aria-label="Main navigation menu"
-      >
+      <ul className="mg-mega-topbar | mg-container-full-width">
         {simpleNavLinks.map(link => (
-          <li key={link.url} className="mg-mega-topbar__item" role="none">
-            <a
-              href={link.url}
-              role="menuitem"
-              className="mg-mega-topbar__item-link"
-            >
+          <li key={link.url} className="mg-mega-topbar__item">
+            <a href={link.url} className="mg-mega-topbar__item-link">
               {link.title}
             </a>
           </li>

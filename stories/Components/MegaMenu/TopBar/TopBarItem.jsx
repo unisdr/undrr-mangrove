@@ -17,6 +17,9 @@ export function TopBarItem({
   index,
 }) {
   let isActive = index === activeItem;
+  // The panel below is a disclosure, not a menu: announce expanded state
+  // only where a panel actually exists.
+  const hasPanel = Boolean(section && section.items);
 
   const label = (
     <>
@@ -38,7 +41,6 @@ export function TopBarItem({
       onMouseEnter={section || bannerDescription ? onMouseEnter : undefined}
       onFocus={onMouseEnter}
       onKeyDown={handleOnKeyDown}
-      role="none"
     >
       {/* Render link if no children and link URL exists, otherwise just show title */}
       {/* {!children && link && link.url ? <a href={link.url}>{title}</a> : title} */}
@@ -47,9 +49,7 @@ export function TopBarItem({
           className="mg-mega-topbar__item-link"
           href={link.url}
           ref={ref}
-          role="menuitem"
-          aria-haspopup={section && section.items ? 'true' : undefined}
-          aria-expanded={isActive ? 'true' : undefined}
+          aria-expanded={hasPanel ? String(isActive) : undefined}
         >
           {label}
         </a>
@@ -57,9 +57,7 @@ export function TopBarItem({
         <button
           className="mg-mega-topbar__item-link"
           ref={ref}
-          role="menuitem"
-          aria-haspopup={section && section.items ? 'true' : undefined}
-          aria-expanded={isActive ? 'true' : undefined}
+          aria-expanded={hasPanel ? String(isActive) : undefined}
         >
           {label}
         </button>
