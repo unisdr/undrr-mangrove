@@ -70,6 +70,20 @@
     .mg-container {
       padding-inline: var(--mg-spacing-200);
     }
+
+    // Once the links wrap to their own line the strip should behave like any
+    // mobile scroller: out to the screen edges, so the fade sits at the edge
+    // and shows there is more to reach rather than stopping short of it.
+    &__nav {
+      margin-inline: calc(var(--mg-spacing-200) * -1);
+    }
+
+    // The gutter, less the padding the first link already carries, so its
+    // label lines up with the hub name above instead of sitting inside it.
+    &__nav ul {
+      padding-inline: calc(var(--mg-spacing-200) - var(--mg-spacing-150));
+      scroll-padding-inline: var(--mg-spacing-200);
+    }
   }
 
   // The bar bleeds so a coloured header meets the banner or hero below it with
