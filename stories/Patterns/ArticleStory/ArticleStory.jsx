@@ -35,9 +35,14 @@ import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 const images = {
   main: {
     src: 'https://www.undrr.org/sites/default/files/2026-09/Group_photo_IMG_2626.jpg',
+    // Alt text describes the photo itself, distinct from the caption below
+    // it (which names the event, not what the image shows) — a screen-reader
+    // user shouldn't hear the same string twice.
     alt: {
-      english: 'Group photo from NELs Consultation/UNDRR',
-      arabic: 'صورة جماعية من مشاورة الخسائر غير الاقتصادية/مكتب الأمم المتحدة للحد من مخاطر الكوارث',
+      english:
+        'Group photo from the non-economic losses consultation with Pacific Indigenous Peoples and local communities, Nadi, Fiji.',
+      arabic:
+        'صورة جماعية من مشاورة الخسائر غير الاقتصادية مع الشعوب الأصلية والمجتمعات المحلية في المحيط الهادئ، نادي، فيجي.',
     },
     // The real caption follows a "Description/Credit" convention; split into
     // two fields so each can have its own layout below the image, rather
@@ -261,6 +266,8 @@ const words = {
     label: 'تحديث',
     title:
       'نحو المعرفة والعمل والعزم لمعالجة الخسائر غير الاقتصادية لدى المجتمعات الأصلية في المحيط الهادئ، نادي، فيجي',
+    summary:
+      'أكدت المشاورة تزايد المخاطر المناخية والقلق العميق لدى الشعوب الأصلية. شارك نحو 45 مشاركاً من مجتمعات الشعوب الأصلية من 11 دولة تجاربهم مع الخسائر غير الاقتصادية التي تؤثر على مجتمعاتهم.',
     date: '8 سبتمبر 2026',
     sourceLabel: 'المصدر:',
     sources: [

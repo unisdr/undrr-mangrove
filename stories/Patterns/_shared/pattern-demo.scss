@@ -21,6 +21,11 @@
 // each of these elements carries the `mg-container` class in the markup, and
 // this file only adds the one thing `mg-container` doesn't already provide:
 // a narrower measure than its own breakpoint scale.
+// The 46rem and 16rem here are copied from `.mg-reading__article`'s measure
+// and the "On this page" rail column, both declared independently in
+// `stories/Utilities/PagePatterns/page-patterns.scss` — there is no shared
+// variable to reference instead. If either changes there, this drifts out of
+// sync silently; check both files together.
 $mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
 
 .mg-demo-shell {
@@ -106,5 +111,14 @@ $mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
 }
 
 .mg-demo-article-header .mg-demo-intro {
+  max-inline-size: $mg-demo-article-column-width;
+}
+
+// Hero's `.mg-hero__split-grid` carries plain `mg-container` (fixed in
+// hero.scss), which centres at mg-container's own breakpoint scale — wider
+// than this pattern's own column. Narrowed to match here so the `split`
+// variant's header lines up with the reading grid below it, not just with
+// generic `mg-container` siblings elsewhere on the page.
+.mg-demo-article-header .mg-hero__split-grid {
   max-inline-size: $mg-demo-article-column-width;
 }

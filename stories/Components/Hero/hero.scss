@@ -394,6 +394,12 @@ $variant-colour-props: (
     grid-template-columns: 2fr 1fr; // default 2/3
     align-items: stretch;
 
+    // .mg-hero__content's own inline padding used to be the only thing
+    // separating the two columns; removing that padding (above) left them
+    // with no gap at all. Declared here instead, on the grid itself, so it
+    // doesn't depend on the content column's own spacing.
+    column-gap: var(--mg-spacing-200);
+
     @media (max-width: $mg-breakpoint-tablet) {
       grid-template-columns: 1fr;
     }
