@@ -6,9 +6,9 @@ export default {
   title: 'Example/Content hub',
   component: ContentHub,
   parameters: { layout: 'fullscreen' },
-  args: { parentNavigation: 'compact', showOnThisPage: true },
+  args: { showOnThisPage: true, withHero: false, routeCards: 'vertical' },
   argTypes: {
-    parentNavigation: { control: 'inline-radio', options: ['compact', 'full'] },
+    routeCards: { control: 'inline-radio', options: ['vertical', 'icon'] },
     initialPage: { control: false },
     locale: { table: { disable: true } },
     routePrefix: { table: { disable: true } },
@@ -25,7 +25,7 @@ export default {
 
 export const BasicLanding = {
   name: 'Basic landing page',
-  args: { initialPage: 'landing', parentNavigation: 'full' },
+  args: { initialPage: 'landing' },
 };
 export const HubHome = { name: 'Hub home', args: { initialPage: 'overview' } };
 export const HubDetail = {
@@ -35,4 +35,12 @@ export const HubDetail = {
 export const DeeperPage = {
   name: 'Deeper page',
   args: { initialPage: 'validate-data' },
+};
+export const HubHomeIconRoutes = {
+  name: 'Hub home with icon routes',
+  args: { initialPage: 'overview', routeCards: 'icon' },
+};
+export const HubDetailWithHero = {
+  name: 'Hub detail with a hero',
+  args: { initialPage: 'how-to-report', withHero: true },
 };

@@ -1,0 +1,184 @@
+// Story-only exploration: intentionally excluded from the distributed stylesheet.
+.mg-landing-example {
+  color: rgb(var(--mg-color-neutral-900));
+  background: rgb(var(--mg-color-neutral-0));
+  min-inline-size: 0;
+
+  &__breadcrumbs {
+    padding-block: var(--mg-spacing-150);
+    font-size: 0.875rem;
+  }
+
+  &__intro {
+    max-inline-size: 49rem;
+    margin-block-end: var(--mg-spacing-250);
+  }
+
+  &__intro h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin-block: 0 var(--mg-spacing-150);
+  }
+
+  &__lede {
+    max-inline-size: 49rem;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  &__section {
+    margin-block-start: var(--mg-spacing-400);
+  }
+
+  // Tinted full-width band. Real UNDRR landing pages alternate plain and tinted
+  // bands down the page; mg-container-full-width bleeds the inherited
+  // background out to the viewport edges.
+  &__band {
+    background-color: rgb(var(--mg-color-neutral-50));
+    margin-block-start: var(--mg-spacing-400);
+  }
+
+  &__band-inner {
+    padding-block: var(--mg-spacing-300);
+  }
+
+  &__band h2 {
+    margin-block-start: 0;
+  }
+
+  // The report masthead: a coloured band carrying the title and lede, the
+  // treatment the Gutenberg "page header" pattern produces.
+  &__masthead {
+    background-color: rgb(var(--mg-color-interactive));
+    color: rgb(var(--mg-color-neutral-0));
+    margin-block-end: var(--mg-spacing-300);
+  }
+
+  &__masthead-inner {
+    padding-block: var(--mg-spacing-400);
+    max-inline-size: 49rem;
+  }
+
+  &__masthead h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin-block: 0 var(--mg-spacing-150);
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--mg-spacing-150) var(--mg-spacing-250);
+    list-style: none;
+    padding: 0;
+    margin-block: var(--mg-spacing-200) 0;
+
+    li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--mg-spacing-100);
+      margin: 0;
+      font-family: var(--mg-font-family-ui);
+      font-weight: 700;
+    }
+
+    .mg-icon {
+      color: rgb(var(--mg-color-interactive));
+      font-size: 1.75rem;
+    }
+  }
+
+  &__cards,
+  &__routes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--mg-spacing-200);
+    margin-block-start: var(--mg-spacing-200);
+  }
+
+  &__cards .mg-card,
+  &__routes .mg-card {
+    min-inline-size: 0;
+  }
+
+  // Icon routes read as a row: icon at the inline start, content beside it.
+  &__routes .mg-card__icon {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--mg-spacing-150);
+    max-width: none;
+
+    .mg-card__visual {
+      inline-size: auto;
+      aspect-ratio: 1;
+      block-size: 3rem;
+    }
+
+    .mg-card__content {
+      min-inline-size: 0;
+    }
+  }
+
+  // Index pages put a row of book covers under each subsection heading.
+  &__books {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+    gap: var(--mg-spacing-200);
+    margin-block-start: var(--mg-spacing-200);
+  }
+
+  &__reading {
+    display: grid;
+    gap: var(--mg-spacing-250);
+  }
+
+  &__article {
+    min-inline-size: 0;
+    max-inline-size: 46rem;
+  }
+
+  &__article section {
+    margin-block-end: var(--mg-spacing-300);
+    scroll-margin-block-start: var(--mg-spacing-200);
+  }
+
+  &__article p {
+    line-height: 1.75;
+  }
+
+  &__skip {
+    position: absolute;
+    clip-path: inset(50%);
+
+    &:focus {
+      position: static;
+      clip-path: none;
+      display: block;
+      padding: var(--mg-spacing-100);
+    }
+  }
+
+  @media (width >= 48rem) {
+    &__reading {
+      grid-template-columns: minmax(0, 1fr) 16rem;
+      column-gap: var(--mg-spacing-300);
+      align-items: start;
+    }
+
+    &__reading > div:has(.mg-table-of-contents) {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      inset-block-start: var(--mg-spacing-200);
+    }
+
+    &__reading &__article {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+}

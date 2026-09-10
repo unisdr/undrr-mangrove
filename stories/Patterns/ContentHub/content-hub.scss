@@ -4,72 +4,121 @@
   background: rgb(var(--mg-color-neutral-0));
   min-inline-size: 0;
 
-  &__parent {
-    display: flex;
-    align-items: center;
-    gap: var(--mg-spacing-150);
-    padding: var(--mg-spacing-150) clamp(1rem, 4vw, 3rem);
-    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
-  }
-
-  &__brand {
-    font-size: 1.75rem;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  &__organization {
-    max-inline-size: 20rem;
-    font-size: 0.875rem;
-    line-height: 1.4;
-  }
-
-  &__escape {
-    margin-inline-start: auto;
-    font-size: 0.875rem;
-  }
-
-  &__global {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--mg-spacing-150);
-    padding-inline: clamp(1rem, 4vw, 3rem);
-    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
-    a {
-      padding-block: var(--mg-spacing-100);
-    }
-  }
-
-  &__shell {
-    max-inline-size: 76rem;
-    margin-inline: auto;
-    padding-inline: clamp(1rem, 4vw, 3rem);
-  }
-
   &__breadcrumbs {
     padding-block: var(--mg-spacing-150);
     font-size: 0.875rem;
   }
 
-  &__name {
-    display: inline-block;
-    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
-    font-family: var(--mg-font-family-ui);
-    font-weight: 700;
-    text-decoration: none;
-    padding-block: var(--mg-spacing-75);
+  // Identity is chrome, not a title: the name and its section links share one
+  // row, and that row is the same height on every hub page whether or not the
+  // page carries a hero. Invariance is what stops it reading as a heading.
+  &__identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--mg-spacing-100) var(--mg-spacing-150);
+    margin-block: var(--mg-spacing-100) var(--mg-spacing-200);
   }
 
+  &__name {
+    flex: 0 0 auto;
+    font-size: 1.125rem;
+    font-family: var(--mg-font-family-ui);
+    font-weight: 700;
+    color: rgb(var(--mg-color-text));
+    text-decoration: none;
+    padding-block: var(--mg-spacing-75);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--mg-focus-ring-offset)
+        rgb(var(--mg-color-neutral-0));
+      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-focus-ring));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
+
+    @media (width >= 48rem) {
+      padding-inline-end: var(--mg-spacing-150);
+      border-inline-end: 1px solid rgb(var(--mg-color-neutral-300));
+    }
+  }
+
+  // Deliberately not a tab set and deliberately not the mega menu topbar. Both
+  // of those mark the active item with a 3px bottom border; so does
+  // OnThisPageNav, which sits on these same pages. A leading rule is the repo's
+  // existing idiom for "this is the destination you are on" (see
+  // mg-mega-content__section-list-link--active), and it is the one
+  // horizontal-strip treatment that is not already spoken for.
   &__navigation {
-    overflow-x: auto;
-    scrollbar-width: thin;
-    border-block-end: 1px solid rgb(var(--mg-color-neutral-300));
-    margin-block-start: var(--mg-spacing-100);
+    flex: 1 1 20rem;
+    min-inline-size: 0;
+    position: relative;
+    isolation: isolate;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--mg-spacing-300);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 3;
+    }
+
+    &::before {
+      inset-inline-start: 0;
+      background: linear-gradient(
+        to right,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &::after {
+      inset-inline-end: 0;
+      background: linear-gradient(
+        to left,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::before {
+      background: linear-gradient(
+        to left,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::after {
+      background: linear-gradient(
+        to right,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &[data-overflow-start]::before,
+    &[data-overflow-end]::after {
+      opacity: 1;
+    }
+
+    // Keep labels and the focus ring clear during keyboard navigation.
+    &:has(:focus-visible)::before,
+    &:has(:focus-visible)::after {
+      opacity: 0;
+    }
 
     ul {
       display: flex;
-      inline-size: max-content;
-      min-inline-size: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-padding-inline: var(--mg-spacing-150);
       list-style: none;
       padding: 0;
       margin: 0;
@@ -80,29 +129,55 @@
       padding: 0;
     }
     a {
-      display: block;
+      display: flex;
+      align-items: center;
       min-block-size: 2.75rem;
       padding: var(--mg-spacing-100) var(--mg-spacing-150);
-      border-block-end: 3px solid transparent;
+      scroll-margin-inline: var(--mg-spacing-150);
+      color: rgb(var(--mg-color-interactive));
       text-decoration: none;
       white-space: nowrap;
     }
+
+    // Three signals, so the state never rests on colour alone: the current
+    // item stops looking like a link (near-black), gains weight, and gains a
+    // leading rule. Only one item is ever marked, so it cannot read as a
+    // separator.
     a[aria-current] {
-      border-block-end-color: currentColor;
-      background: rgb(var(--mg-color-interactive) / 0.07);
       font-weight: 700;
+      color: rgb(var(--mg-color-text));
     }
+
+    a[aria-current]::before {
+      content: "";
+      display: inline-block;
+      block-size: 0.85em;
+      border-inline-start: var(--mg-spacing-25) solid
+        rgb(var(--mg-color-interactive));
+      margin-inline-end: var(--mg-spacing-50);
+    }
+
     a:hover {
       text-decoration: underline;
     }
+
+    // Inset, because the list is a scrollport: an outward ring on the first or
+    // last item would be clipped.
     a:focus-visible {
-      outline-offset: -3px;
+      box-shadow:
+        inset 0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0)),
+        inset 0 0 0
+          calc(var(--mg-focus-ring-offset) + var(--mg-focus-ring-width))
+          rgb(var(--mg-color-focus-ring));
+      outline: 0;
+
+      @media (forced-colors: active) {
+        outline: var(--mg-focus-ring-width) solid Highlight;
+        outline-offset: calc(var(--mg-focus-ring-width) * -1);
+      }
     }
   }
 
-  &__main {
-    padding-block: clamp(1.5rem, 4vw, 3rem) var(--mg-spacing-400);
-  }
   &__intro {
     max-inline-size: 49rem;
     margin-block-end: var(--mg-spacing-250);
@@ -120,6 +195,52 @@
   &__section {
     margin-block-start: var(--mg-spacing-300);
   }
+
+  &__lede {
+    max-inline-size: 49rem;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  // A tinted full-width band. Real UNDRR landing pages alternate plain and
+  // tinted bands down the page; mg-container-full-width bleeds the inherited
+  // background out to the viewport edges.
+  &__band {
+    background-color: rgb(var(--mg-color-neutral-50));
+    margin-block-start: var(--mg-spacing-400);
+  }
+
+  &__band-inner {
+    padding-block: var(--mg-spacing-300);
+  }
+
+  &__band h2 {
+    margin-block-start: 0;
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--mg-spacing-150) var(--mg-spacing-250);
+    list-style: none;
+    padding: 0;
+    margin-block: var(--mg-spacing-200) 0;
+
+    li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--mg-spacing-100);
+      margin: 0;
+      font-family: var(--mg-font-family-ui);
+      font-weight: 700;
+    }
+
+    .mg-icon {
+      color: rgb(var(--mg-color-interactive));
+      font-size: 1.75rem;
+    }
+  }
   &__cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
@@ -128,9 +249,54 @@
   &__cards .mg-card {
     min-inline-size: 0;
   }
+
+  // Icon route cards, laid out the way undrr.org already presents them: icon at
+  // the inline start, title and summary beside it. IconCard ships column-only,
+  // so this is a story-local override until a horizontal variant is added to
+  // the component itself.
+  &__cards--icon .mg-card__icon {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--mg-spacing-150);
+    max-width: none;
+
+    .mg-card__visual {
+      inline-size: auto;
+      aspect-ratio: 1;
+      block-size: 3rem;
+    }
+
+    .mg-card__content {
+      min-inline-size: 0;
+    }
+  }
   &__reading {
     display: grid;
-    gap: var(--mg-spacing-300);
+    gap: var(--mg-spacing-250);
+  }
+
+  // On this page belongs in a right-hand sidebar wherever there is room for
+  // one; it only stacks above the article on narrow viewports.
+  @media (width >= 48rem) {
+    &__reading--with-contents {
+      grid-template-columns: minmax(0, 1fr) 16rem;
+      column-gap: var(--mg-spacing-300);
+      align-items: start;
+    }
+
+    // TableOfContents renders its own wrapper div around the section.
+    &__reading--with-contents > div:has(.mg-table-of-contents) {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      inset-block-start: var(--mg-spacing-200);
+    }
+
+    &__reading--with-contents &__article {
+      grid-column: 1;
+      grid-row: 1;
+    }
   }
   &__article {
     min-inline-size: 0;
@@ -143,25 +309,6 @@
   &__article p {
     line-height: 1.75;
   }
-  &__contents {
-    border-inline-start: 2px solid rgb(var(--mg-color-neutral-300));
-    padding-inline-start: var(--mg-spacing-150);
-    align-self: start;
-    p {
-      font-weight: 700;
-      margin-block: 0 var(--mg-spacing-50);
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    a {
-      display: inline-block;
-      padding-block: var(--mg-spacing-50);
-    }
-  }
-
   &__skip {
     position: absolute;
     clip-path: inset(50%);
@@ -173,32 +320,21 @@
     }
   }
 
-  @media (width >= 60rem) {
-    &__reading--with-contents {
-      grid-template-columns: minmax(0, 1fr) 13rem;
+  @media (forced-colors: active) {
+    // A border takes system colours; a background would be forced to Canvas
+    // and the marker would disappear.
+    &__navigation a[aria-current]::before {
+      border-inline-start-color: Highlight;
     }
-    &__reading--with-contents &__contents {
-      grid-column: 2;
-      grid-row: 1;
-    }
-    &__reading--with-contents &__article {
-      grid-column: 1;
-      grid-row: 1;
-    }
-  }
 
-  @media (width <= 36rem) {
-    &__organization {
+    &__navigation::before,
+    &__navigation::after {
       display: none;
     }
-    &__navigation a {
-      padding-inline: var(--mg-spacing-100);
-    }
-  }
 
-  @media (forced-colors: active) {
-    &__navigation a[aria-current] {
-      border-block-end-color: Highlight;
+    // System scrollbars remain the overflow affordance when fades disappear.
+    &__navigation ul {
+      scrollbar-width: auto;
     }
   }
 }

@@ -1,23 +1,16 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { VerticalCard } from '../../Components/Cards/Card/VerticalCard';
+import { IconCard } from '../../Components/Cards/IconCard/IconCard';
 import { TextCta } from '../../Components/TextCta/TextCta';
+import { Hero } from '../../Components/Hero/Hero';
+import TableOfContents from '../../Components/TableOfContents/TableOfContents';
+import { UndrrChrome } from '../_shared/UndrrChrome';
 
 const words = {
   english: {
-    parent: 'UNDRR home',
-    site: 'United Nations Office for Disaster Risk Reduction',
-    all: 'Explore UNDRR',
-    global: ['About UNDRR', 'Our work', 'News'],
     hub: 'Sendai Framework Monitor',
-    sections: [
-      'Overview',
-      'About',
-      'Indicators',
-      'Reporting',
-      'Reports',
-      'Data',
-    ],
+    sections: ['About', 'Indicators', 'Reporting', 'Reports', 'Data'],
     home: 'Tracking progress towards a more resilient world',
     intro:
       'Understand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.',
@@ -48,7 +41,20 @@ const words = {
     focalText:
       'A national focal point coordinates contributions from the institutions involved. Agree who collects the evidence, who reviews it and who approves the final submission.',
     next: 'Continue with data validation',
-    related: 'Explore the Monitor',
+    related: 'What would you like to do?',
+    relatedIntro:
+      'Three routes into the Monitor, whether you want to understand what is measured, prepare a report, or look at what countries have reported.',
+    aboutHeading: 'What is the Sendai Framework Monitor?',
+    aboutText:
+      'The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.',
+    facts: [
+      'The official monitoring system for the Sendai Framework',
+      'Tracking progress in disaster risk reduction',
+      'Based on internationally agreed indicators',
+      'Connected to the Sustainable Development Goals',
+      'Country-owned and country-reported data',
+      'Open, transparent and publicly accessible',
+    ],
     open: 'Open the Monitor',
     cards: [
       'Learn how progress is measured and explore the global indicators.',
@@ -57,8 +63,7 @@ const words = {
     ],
     back: 'Back to reporting',
     breadcrumbs: 'Breadcrumbs',
-    hubNav: 'Monitor sections',
-    parentNav: 'UNDRR navigation',
+    hubNav: 'Sendai Framework Monitor sections',
     skip: 'Skip to page content',
     resources: 'Resources and guidance',
     reportLink: 'Visit the Sendai Framework Monitor',
@@ -67,13 +72,8 @@ const words = {
       'Explore guidance and resources for this part of the Monitor.',
   },
   arabic: {
-    parent: 'الصفحة الرئيسية للمكتب',
-    site: 'مكتب الأمم المتحدة للحد من مخاطر الكوارث',
-    all: 'استكشف موقع المكتب',
-    global: ['عن المكتب', 'عملنا', 'الأخبار'],
     hub: 'مرصد إطار سنداي',
     sections: [
-      'نظرة عامة',
       'عن المرصد',
       'المؤشرات',
       'إعداد التقارير',
@@ -109,7 +109,20 @@ const words = {
     focalText:
       'تنسق جهة الاتصال الوطنية مساهمات المؤسسات المعنية. اتفق على الجهات المسؤولة عن جمع الأدلة ومراجعتها واعتماد التقرير النهائي.',
     next: 'متابعة التحقق من صحة البيانات',
-    related: 'استكشف المرصد',
+    related: 'ماذا تريد أن تفعل؟',
+    relatedIntro:
+      'ثلاثة مسارات للدخول إلى المرصد، سواء أردت فهم ما يُقاس أو إعداد تقرير أو الاطلاع على ما أبلغت عنه الدول.',
+    aboutHeading: 'ما هو مرصد إطار سنداي؟',
+    aboutText:
+      'مرصد إطار سنداي هو النظام الرسمي للإبلاغ عن الحد من مخاطر الكوارث. تستخدمه الدول الأعضاء لتسجيل التقدم المحرز نحو الغايات العالمية السبع لإطار سنداي، باستخدام مجموعة من 38 مؤشراً متفقاً عليها دولياً.',
+    facts: [
+      'النظام الرسمي لرصد إطار سنداي',
+      'متابعة التقدم في الحد من مخاطر الكوارث',
+      'يستند إلى مؤشرات متفق عليها دولياً',
+      'مرتبط بأهداف التنمية المستدامة',
+      'بيانات مملوكة للدول ومقدمة منها',
+      'مفتوح وشفاف ومتاح للجميع',
+    ],
     open: 'افتح المرصد',
     cards: [
       'تعرّف على كيفية قياس التقدم واستكشف المؤشرات العالمية.',
@@ -118,8 +131,7 @@ const words = {
     ],
     back: 'العودة إلى إعداد التقارير',
     breadcrumbs: 'مسار التنقل',
-    hubNav: 'أقسام المرصد',
-    parentNav: 'التنقل في موقع المكتب',
+    hubNav: 'أقسام مرصد إطار سنداي',
     skip: 'انتقل إلى محتوى الصفحة',
     resources: 'الموارد والإرشادات',
     reportLink: 'زيارة مرصد إطار سنداي',
@@ -128,29 +140,34 @@ const words = {
   },
 };
 
-const sections = [
+// Same demonstration image the Hero stories use.
+const heroImage =
+  'https://www.undrr.org/sites/default/files/2023-11/resilient-infrastructure-pikoso-kz-shutterstock.jpg';
+
+const sections = ['about', 'indicators', 'reporting', 'reports', 'data'];
+const routes = [
+  'landing',
   'overview',
-  'about',
-  'indicators',
-  'reporting',
-  'reports',
-  'data',
+  ...sections,
+  'how-to-report',
+  'validate-data',
 ];
-const routes = ['landing', ...sections, 'how-to-report', 'validate-data'];
 
 /** Story-only composition. Hash routes keep navigation inside each mounted example. */
 export function ContentHub({
   initialPage = 'overview',
-  parentNavigation = 'compact',
   locale = 'english',
   showOnThisPage = true,
+  withHero = false,
+  routeCards = 'vertical',
   routePrefix,
 }) {
   const text = words[locale] || words.english;
+  const arabic = locale === 'arabic';
   const instanceId = useId();
   const prefix = routePrefix || `hub-${instanceId.replace(/:/g, '')}`;
   const [page, setPage] = useState(initialPage);
-  const heading = useRef(null);
+  const content = useRef(null);
   const navigation = useRef(null);
   const visited = useRef(false);
   const href = route => `#${prefix}/${route}`;
@@ -187,13 +204,15 @@ export function ContentHub({
   }, [prefix, initialPage]);
 
   useEffect(() => {
-    if (visited.current) heading.current?.focus();
+    if (visited.current) content.current?.focus();
   }, [page]);
 
   useEffect(() => {
+    const nav = navigation.current;
+    const rail = nav?.querySelector('ul');
     const revealSection = () => {
-      const rail = navigation.current;
-      const selected = rail?.querySelector('[aria-current]');
+      if (!rail) return;
+      const selected = rail.querySelector('[aria-current]');
       if (!selected || !rail.scrollBy) return;
       const viewport = rail.getBoundingClientRect();
       const item = selected.getBoundingClientRect();
@@ -205,107 +224,128 @@ export function ContentHub({
             : 0;
       if (offset) rail.scrollBy({ left: offset, behavior: 'instant' });
     };
-    revealSection();
+    // Drives the edge fades: CSS cannot detect overflow on its own.
+    const markOverflow = () => {
+      if (!nav || !rail) return;
+      const start = Math.abs(rail.scrollLeft) > 1;
+      const end =
+        Math.abs(rail.scrollLeft) + rail.clientWidth < rail.scrollWidth - 1;
+      nav.toggleAttribute('data-overflow-start', start);
+      nav.toggleAttribute('data-overflow-end', end);
+    };
+    const update = () => {
+      revealSection();
+      markOverflow();
+    };
+    update();
     // Font and theme changes can resize labels after the first paint.
     const observer =
-      typeof ResizeObserver === 'undefined'
-        ? null
-        : new ResizeObserver(revealSection);
-    const rail = navigation.current;
-    if (rail) {
-      observer?.observe(rail);
-      const list = rail.querySelector('ul');
-      if (list) observer?.observe(list);
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
+    if (nav) {
+      observer?.observe(nav);
+      if (rail) observer?.observe(rail);
     }
-    window.addEventListener('resize', revealSection);
+    rail?.addEventListener('scroll', markOverflow, { passive: true });
+    window.addEventListener('resize', update);
     return () => {
       observer?.disconnect();
-      window.removeEventListener('resize', revealSection);
+      rail?.removeEventListener('scroll', markOverflow);
+      window.removeEventListener('resize', update);
     };
   }, [page, locale]);
 
+  const intro =
+    page === 'landing'
+      ? text.landingIntro
+      : page === 'overview'
+        ? text.intro
+        : page === 'how-to-report'
+          ? text.howIntro
+          : page === 'validate-data'
+            ? text.validationIntro
+            : page === 'reporting'
+              ? text.reportingIntro
+              : text.sectionIntro;
+  // Ancestry is only worth a row when it says something the identity row and the
+  // page heading do not. On the hub home, a section page or a first-level detail
+  // page the trail merely repeats them. It earns its place on the landing page,
+  // which has no hub navigation, and on pages deep enough to have an
+  // intermediate parent that the section strip cannot show.
+  const showBreadcrumbs = page === 'landing' || page === 'validate-data';
+  // A hero is only offered on the pages that would carry one in production.
+  const hero = withHero && (page === 'overview' || detail);
   const articleHeadings =
     page === 'validate-data'
       ? text.validationSections
       : [text.cycle, text.quality, text.focal];
-  const groupCards = [2, 3, 4].map((index, i) => ({
+  const routeIcons = ['tags', 'file-alt', 'chart-bar'];
+  const factIcons = [
+    'globe',
+    'chart-bar',
+    'tags',
+    'cubes',
+    'lightbulb',
+    'info-circle',
+  ];
+  const groupCards = [1, 2, 3].map((index, i) => ({
     title: text.sections[index],
     summaryText: text.cards[i],
     link: href(sections[index]),
+    ...(routeCards === 'icon' && {
+      icon: `mg-icon mg-icon-${routeIcons[i]}`,
+      imageScale: 'small',
+    }),
   }));
+  const RouteCards = routeCards === 'icon' ? IconCard : VerticalCard;
 
   return (
     <div
       className="mg-hub-example"
-      lang={locale === 'arabic' ? 'ar' : 'en'}
-      dir={locale === 'arabic' ? 'rtl' : undefined}
+      lang={arabic ? 'ar' : 'en'}
+      dir={arabic ? 'rtl' : undefined}
     >
       <a className="mg-hub-example__skip" href={`#${prefix}-content`}>
         {text.skip}
       </a>
-      <header className="mg-hub-example__parent">
-        <a
-          className="mg-hub-example__brand"
-          href="https://www.undrr.org/"
-          aria-label={text.parent}
-        >
-          UNDRR
-        </a>
-        <span className="mg-hub-example__organization">{text.site}</span>
-        <a className="mg-hub-example__escape" href="https://www.undrr.org/">
-          {text.all}
-        </a>
-      </header>
-      {parentNavigation === 'full' && (
-        <nav className="mg-hub-example__global" aria-label={text.parentNav}>
-          {text.global.map((label, index) => (
-            <a
-              key={label}
-              href={
-                [
-                  'https://www.undrr.org/about-undrr',
-                  'https://www.undrr.org/our-work',
-                  'https://www.undrr.org/news',
-                ][index]
-              }
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-      )}
-      <div className="mg-hub-example__shell">
-        <nav
-          className="mg-breadcrumb mg-hub-example__breadcrumbs"
-          aria-label={text.breadcrumbs}
-        >
-          <ul>
-            <li>
-              <a href="https://www.undrr.org/">UNDRR</a>
-            </li>
-            {page !== 'landing' && (
+      <UndrrChrome locale={locale} id={`${prefix}-header`} />
+      <div className="mg-hub-example__shell | mg-container">
+        {showBreadcrumbs && (
+          <nav
+            className="mg-breadcrumb mg-hub-example__breadcrumbs"
+            aria-label={text.breadcrumbs}
+          >
+            <ul>
               <li>
-                <a href={href('landing')}>{text.landing}</a>
+                <a href="https://www.undrr.org/">UNDRR</a>
               </li>
-            )}
-            {detail && (
-              <li>
-                <a href={href('reporting')}>{text.sections[3]}</a>
+              {page !== 'landing' && (
+                <li>
+                  <a href={href('landing')}>{text.landing}</a>
+                </li>
+              )}
+              {detail && (
+                <li>
+                  <a href={href('reporting')}>{text.sections[2]}</a>
+                </li>
+              )}
+              {page === 'validate-data' && (
+                <li>
+                  <a href={href('how-to-report')}>{text.how}</a>
+                </li>
+              )}
+              <li aria-current="page">
+                {page === 'overview' ? text.hub : title}
               </li>
-            )}
-            {page === 'validate-data' && (
-              <li>
-                <a href={href('how-to-report')}>{text.how}</a>
-              </li>
-            )}
-            <li aria-current="page">
-              {page === 'overview' ? text.sections[0] : title}
-            </li>
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        )}
         {page !== 'landing' && (
           <div className="mg-hub-example__identity">
-            <a className="mg-hub-example__name" href={href('overview')}>
+            <a
+              className="mg-hub-example__name"
+              href={href('overview')}
+              aria-current={page === 'overview' ? 'page' : undefined}
+            >
               {text.hub}
             </a>
             <nav
@@ -335,28 +375,33 @@ export function ContentHub({
           </div>
         )}
         <main
+          ref={content}
           id={`${prefix}-content`}
           className="mg-hub-example__main"
           tabIndex={-1}
         >
-          <div className="mg-hub-example__intro">
-            <h1 ref={heading} tabIndex={-1}>
-              {title}
-            </h1>
-            <p>
-              {page === 'landing'
-                ? text.landingIntro
-                : page === 'overview'
-                  ? text.intro
-                  : page === 'how-to-report'
-                    ? text.howIntro
-                    : page === 'validate-data'
-                      ? text.validationIntro
-                      : page === 'reporting'
-                        ? text.reportingIntro
-                        : text.sectionIntro}
-            </p>
-          </div>
+          {hero ? (
+            <Hero
+              layout="split"
+              split="2/3"
+              headingLevel="h1"
+              data={[
+                {
+                  title,
+                  summaryText: intro,
+                  // The label slot stays empty: the identity row a few pixels
+                  // above already names the hub, and the section name here
+                  // would give "which section am I in" a second home.
+                  media: { type: 'image', src: heroImage, alt: '' },
+                },
+              ]}
+            />
+          ) : (
+            <div className="mg-hub-example__intro">
+              <h1>{title}</h1>
+              <p>{intro}</p>
+            </div>
+          )}
           {(page === 'landing' || page === 'overview') && (
             <>
               {page === 'landing' && (
@@ -370,10 +415,34 @@ export function ContentHub({
               )}
               <section className="mg-hub-example__section">
                 <h2>{text.related}</h2>
-                <div className="mg-hub-example__cards">
-                  <VerticalCard data={groupCards} />
+                <p className="mg-hub-example__lede">{text.relatedIntro}</p>
+                <div
+                  className={`mg-hub-example__cards mg-hub-example__cards--${routeCards}`}
+                >
+                  <RouteCards data={groupCards} />
                 </div>
               </section>
+              {page === 'overview' && (
+                // Full-width tinted band, the alternating rhythm real UNDRR
+                // landing pages are built from.
+                <section className="mg-hub-example__band | mg-container-full-width">
+                  <div className="mg-hub-example__band-inner">
+                    <h2>{text.aboutHeading}</h2>
+                    <p className="mg-hub-example__lede">{text.aboutText}</p>
+                    <ul className="mg-hub-example__facts">
+                      {text.facts.map((fact, index) => (
+                        <li key={fact}>
+                          <span
+                            className={`mg-icon mg-icon-${factIcons[index]}`}
+                            aria-hidden="true"
+                          />
+                          {fact}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </section>
+              )}
             </>
           )}
           {page === 'reporting' && (
@@ -399,19 +468,14 @@ export function ContentHub({
               className={`mg-hub-example__reading${showOnThisPage ? ' mg-hub-example__reading--with-contents' : ''}`}
             >
               {showOnThisPage && (
-                <nav
-                  className="mg-hub-example__contents"
-                  aria-label={text.onPage}
-                >
-                  <p>{text.onPage}</p>
-                  <ul>
-                    {articleHeadings.map((label, index) => (
-                      <li key={label}>
-                        <a href={`${href(page)}/${index}`}>{label}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
+                <TableOfContents
+                  key={`${page}-${locale}`}
+                  title={text.onPage}
+                  tocData={articleHeadings.map((label, index) => ({
+                    id: `${prefix}/${page}/${index}`,
+                    text: label,
+                  }))}
+                />
               )}
               <div className="mg-hub-example__article">
                 {articleHeadings.map((label, index) => (
@@ -450,9 +514,16 @@ export function ContentHub({
 }
 
 ContentHub.propTypes = {
+  /** Page to render first, and the page the demo returns to on browser Back. */
   initialPage: PropTypes.oneOf(routes),
-  parentNavigation: PropTypes.oneOf(['compact', 'full']),
+  /** Storybook locale key. `arabic` switches copy and sets `dir="rtl"`. */
   locale: PropTypes.string,
+  /** Give the page a split hero that carries the `h1` instead of a plain intro. */
+  withHero: PropTypes.bool,
+  /** Presentation for the route card group. Destinations are identical either way. */
+  routeCards: PropTypes.oneOf(['vertical', 'icon']),
+  /** Render the On this page sidebar on detail pages. */
   showOnThisPage: PropTypes.bool,
+  /** Namespace for the demo's hash routes, so several examples can share a page. */
   routePrefix: PropTypes.string,
 };
