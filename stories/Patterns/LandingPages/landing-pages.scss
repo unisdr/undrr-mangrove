@@ -58,25 +58,6 @@
     min-inline-size: 0;
   }
 
-  // Icon routes read as a row: icon at the inline start, content beside it.
-  &__routes .mg-card__icon {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    column-gap: var(--mg-spacing-150);
-    max-width: none;
-
-    .mg-card__visual {
-      inline-size: auto;
-      aspect-ratio: 1;
-      block-size: 3rem;
-    }
-
-    .mg-card__content {
-      min-inline-size: 0;
-    }
-  }
-
   // Index pages put a row of book covers under each subsection heading.
   &__books {
     display: grid;

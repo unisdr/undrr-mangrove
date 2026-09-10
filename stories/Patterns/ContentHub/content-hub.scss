@@ -27,26 +27,4 @@
   &__cards .mg-card {
     min-inline-size: 0;
   }
-
-  // Icon route cards, laid out the way undrr.org already presents them: icon at
-  // the inline start, title and summary beside it. IconCard ships column-only,
-  // so this is a story-local override until a horizontal variant is added to
-  // the component itself.
-  &__cards--icon .mg-card__icon {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    column-gap: var(--mg-spacing-150);
-    max-width: none;
-
-    .mg-card__visual {
-      inline-size: auto;
-      aspect-ratio: 1;
-      block-size: 3rem;
-    }
-
-    .mg-card__content {
-      min-inline-size: 0;
-    }
-  }
 }

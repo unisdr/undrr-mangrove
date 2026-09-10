@@ -342,12 +342,12 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 <p className="mg-landing-example__lede">{page.routesIntro}</p>
                 <div className="mg-landing-example__routes">
                   <IconCard
+                    orientation="horizontal"
                     data={page.routes.map(([title, summaryText, icon], i) => ({
                       title,
                       summaryText,
                       link: links.routes[i],
                       icon: `mg-icon mg-icon-${icon}`,
-                      imageScale: 'small',
                     }))}
                   />
                 </div>

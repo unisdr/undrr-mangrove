@@ -328,7 +328,6 @@ export function ContentHub({
     link: href(sections[index]),
     ...(routeCards === 'icon' && {
       icon: `mg-icon mg-icon-${routeIcons[i]}`,
-      imageScale: 'small',
     }),
   }));
   const RouteCards = routeCards === 'icon' ? IconCard : VerticalCard;
@@ -446,7 +445,12 @@ export function ContentHub({
                 <div
                   className={`mg-hub-example__cards mg-hub-example__cards--${routeCards}`}
                 >
-                  <RouteCards data={groupCards} />
+                  <RouteCards
+                    data={groupCards}
+                    {...(routeCards === 'icon' && {
+                      orientation: 'horizontal',
+                    })}
+                  />
                 </div>
               </section>
               {page === 'overview' && (

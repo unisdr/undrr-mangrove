@@ -54,15 +54,6 @@ export const HubDetailDetachedHeader = {
     headerSurface: 'detached',
   },
 };
-export const HubDetailWithVideoHero = {
-  name: 'Hub detail with a video hero',
-  args: {
-    initialPage: 'how-to-report',
-    withHero: true,
-    heroSource: 'page',
-    pageHeroMedia: 'video',
-  },
-};
 export const HubHomeIconRoutes = {
   name: 'Hub home with icon routes',
   args: { initialPage: 'overview', withHero: true, routeCards: 'icon' },

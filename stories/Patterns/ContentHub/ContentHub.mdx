@@ -114,32 +114,18 @@ navigation's contrast predictable.
 
 <Canvas of={Stories.HubDetailDetachedHeader} />
 
-### The same page with a video hero
+`heroSource` makes the other half of that comparison. `header` lets the hub
+header's banner be the hero, so it is chrome. `page` keeps the header compact
+and puts a separate `Hero` block below it, the way body content would. With the
+same image the two look nearly identical — the banner was built to resemble a
+hero, and `mg-hero--split` sets `aspect-ratio: unset`, so both are
+content-height driven. What differs is capability: `Hero` takes an image, a
+video or author-supplied HTML plus immersive and tone variants, while a
+chrome-owned banner takes an image. Set `pageHeroMedia` to `video` on any story
+to see the case a chrome-owned banner could not carry.
 
-The comparison worth making, and the reason it is a video. Here the hub header
-stays `compact` and a `Hero` block sits below it, the way body content would.
-
-If the page hero carried the same photograph, this example and the one above
-would look almost identical — the banner was built to resemble a hero, and
-`mg-hero--split` sets `aspect-ratio: unset`, so both are content-height driven.
-A screenshot would show you nothing. **What actually differs is capability.**
-`Hero` accepts `media.type` of `image`, `video` or `html`, plus immersive and
-tone variants. The hub header's banner accepts an image. That is the price of
-making it chrome, and it is easier to judge when you can see it.
-
-<Canvas of={Stories.HubDetailWithVideoHero} />
-
-So the choice is editorial rather than visual:
-
-- **Who configures the hero?** If the banner is chrome, hub pages get their hero
-  from the hub rather than from the page body — consistent by construction, but
-  an editor's knowledge of heroes elsewhere stops transferring.
-- **What is a hub page's hero allowed to be?** A chrome-owned banner supports
-  what the hub header supports, today and whenever `Hero` grows something new.
-  This page could not exist under that model without extending the banner too.
-
-Flip `heroSource` on any story to compare the two directly, and `pageHeroMedia`
-to see the same page with a photograph instead.
+The choice is editorial rather than visual: who configures a hub page's hero,
+and what that hero is allowed to be.
 
 ### Icon routes
 
