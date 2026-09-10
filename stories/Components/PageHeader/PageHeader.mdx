@@ -252,6 +252,7 @@ The PageHeader component follows accessibility best practices:
 | --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | variant     | String  | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
 | className   | String  | undefined                                                               | Additional CSS classes to apply                                                  |
+| idPrefix    | String  | ''                                                                      | Namespace for the header's element ids (`header`, `block-undrrlogo`, `edit-lang-dropdown-select`, ...). Ids are emitted verbatim by default; set a distinct prefix on each header when a page renders more than one |
 | logoUrl     | String  | 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
 | logoAlt     | String  | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
 | logoTitle   | String  | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
@@ -282,6 +283,8 @@ The PageHeader component follows accessibility best practices:
 - Useful for footers, section dividers, or other decorative contexts
 
 ## Changelog
+
+- **1.6.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): **Fixed:** every header emitted the same hard-coded element ids, so a page rendering two of them produced duplicate ids and every language `<label>` after the first pointed at the wrong `<select>` (WCAG 1.3.1, 4.1.1). The new `idPrefix` prop namespaces `header`, `block-undrrlogo`, the language form, its select and its no-script submit. Output is byte-for-byte unchanged when `idPrefix` is omitted, so existing Drupal styling and scripting that targets these ids keeps working.
 
 - **1.5.1** — 2026-09-09: The default logo URL now uses the canonical assets CDN root. Custom logo URLs remain supported.
 

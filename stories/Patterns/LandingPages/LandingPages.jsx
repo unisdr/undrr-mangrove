@@ -300,7 +300,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
       <a className="mg-demo-skip-link" href={`#${id}-content`}>
         {text.skip}
       </a>
-      <UndrrChrome locale={locale} id={`${id}-header`} />
+      <UndrrChrome locale={locale} id={id} />
 
       <div className="mg-demo-shell | mg-container">
         <Breadcrumbs

@@ -54,11 +54,11 @@ describe('PageHeader', () => {
     const { container } = render(<PageHeader variant="decoration-only" />);
 
     expect(
-      container.querySelector('.mg-page-header__decoration'),
+      container.querySelector('.mg-page-header__decoration')
     ).toBeInTheDocument();
     // No toolbar, no logo, no account, no language
     expect(
-      container.querySelector('.mg-page-header__toolbar-wrapper'),
+      container.querySelector('.mg-page-header__toolbar-wrapper')
     ).toBeNull();
     expect(screen.queryByAltText('UNDRR Logo')).toBeNull();
     expect(screen.queryByText('My account')).toBeNull();
@@ -74,7 +74,7 @@ describe('PageHeader', () => {
         logoUrl="/custom-logo.svg"
         logoAlt="Custom logo"
         homeUrl="/home"
-      />,
+      />
     );
 
     const img = screen.getByAltText('Custom logo');
@@ -117,5 +117,36 @@ describe('PageHeader', () => {
   it('has no a11y violations in decoration-only variant', async () => {
     const { container } = render(<PageHeader variant="decoration-only" />);
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('keeps the shipped Drupal ids when no idPrefix is given', () => {
+    const { container } = render(<PageHeader />);
+    expect(container.querySelector('#header')).not.toBeNull();
+    expect(container.querySelector('#block-undrrlogo')).not.toBeNull();
+    expect(screen.getByLabelText('Select your language')).toHaveAttribute(
+      'id',
+      'edit-lang-dropdown-select'
+    );
+  });
+
+  // Two stacked headers still leave two banner landmarks, which is inherent to
+  // the demo composition rather than to the ids; axe is not asserted here.
+  it('namespaces its ids so two headers on a page stay valid and labelled', () => {
+    const { container } = render(
+      <div>
+        <PageHeader idPrefix="one" />
+        <PageHeader idPrefix="two" />
+      </div>
+    );
+
+    const ids = Array.from(container.querySelectorAll('[id]')).map(
+      node => node.id
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+
+    const selects = screen.getAllByLabelText('Select your language');
+    expect(selects).toHaveLength(2);
+    expect(selects[0]).toHaveAttribute('id', 'one-edit-lang-dropdown-select');
+    expect(selects[1]).toHaveAttribute('id', 'two-edit-lang-dropdown-select');
   });
 });

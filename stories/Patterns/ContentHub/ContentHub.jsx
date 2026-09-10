@@ -337,7 +337,7 @@ export function ContentHub({
       <a className="mg-demo-skip-link" href={`#${prefix}-content`}>
         {text.skip}
       </a>
-      <UndrrChrome locale={locale} id={`${prefix}-header`} />
+      <UndrrChrome locale={locale} id={prefix} />
       <div className="mg-demo-shell | mg-container">
         {showBreadcrumbs && (
           <nav

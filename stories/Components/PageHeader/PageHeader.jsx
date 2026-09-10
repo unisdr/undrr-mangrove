@@ -12,6 +12,7 @@ const cls = (...classes) =>
 export function PageHeader({
   variant = 'default',
   className,
+  idPrefix = '',
   logoUrl = 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
@@ -26,6 +27,12 @@ export function PageHeader({
   ],
   ...args
 }) {
+  // Element ids are Drupal-derived and consumers style and script against
+  // them, so they stay verbatim by default. `idPrefix` namespaces them for
+  // pages that render more than one header, where duplicate ids would break
+  // the language `label`/`select` pairing (WCAG 1.3.1, 4.1.1).
+  const id = name => (idPrefix ? `${idPrefix}-${name}` : name);
+
   const headerClasses = cls(
     'mg-page-header',
     variant && `mg-page-header--${variant}`,
@@ -45,7 +52,7 @@ export function PageHeader({
   }
 
   return (
-    <header id="header" className={headerClasses} {...args}>
+    <header id={id('header')} className={headerClasses} {...args}>
       {/* Decoration stripe */}
       <div className="mg-page-header__decoration">
         <div></div>
@@ -62,7 +69,7 @@ export function PageHeader({
             {/* UNDRR Logo Section */}
             {showLogo && (
               <div
-                id="block-undrrlogo"
+                id={id('block-undrrlogo')}
                 className="mg-page-header__block mg-page-header__block--logo"
               >
                 <a href={homeUrl}>
@@ -92,7 +99,7 @@ export function PageHeader({
               <div className="mg-page-header__block mg-page-header__block--language">
                 <form
                   className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
-                  id="lang_dropdown_form_lang-dropdown-form"
+                  id={id('lang_dropdown_form_lang-dropdown-form')}
                   action="/"
                   method="post"
                   acceptCharset="UTF-8"
@@ -100,7 +107,7 @@ export function PageHeader({
                 >
                   <div className="mg-page-header__form-item form-item js-form-item form-type-select js-form-type-select form-item-lang-dropdown-select js-form-item-lang-dropdown-select form-no-label">
                     <label
-                      htmlFor="edit-lang-dropdown-select"
+                      htmlFor={id('edit-lang-dropdown-select')}
                       className="mg-u-sr-only"
                     >
                       Select your language
@@ -111,7 +118,7 @@ export function PageHeader({
                         style={{ width: '165px' }}
                         className="mg-page-header__select lang-dropdown-select-element form-select form-control"
                         data-lang-dropdown-id="lang-dropdown-form"
-                        id="edit-lang-dropdown-select"
+                        id={id('edit-lang-dropdown-select')}
                         name="lang_dropdown_select"
                         defaultValue={
                           languages.find(lang => lang.selected)?.value ||
@@ -131,7 +138,7 @@ export function PageHeader({
                     <div>
                       <button
                         type="submit"
-                        id="edit-submit"
+                        id={id('edit-submit')}
                         name="op"
                         value="Go"
                         className="button js-form-submit form-submit btn"
@@ -155,6 +162,8 @@ PageHeader.propTypes = {
   variant: PropTypes.oneOf(['default', 'decoration-only']),
   /** Additional CSS classes */
   className: PropTypes.string,
+  /** Namespace for the header's element ids. Required when a page renders more than one PageHeader. */
+  idPrefix: PropTypes.string,
   /** URL for the UNDRR logo image */
   logoUrl: PropTypes.string,
   /** Alt text for the logo image */

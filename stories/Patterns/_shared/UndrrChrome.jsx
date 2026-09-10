@@ -162,7 +162,7 @@ export function UndrrChrome({ locale = 'english', id }) {
   return (
     <>
       <PageHeader
-        id={id}
+        idPrefix={id}
         homeUrl={arabic ? 'https://www.undrr.org/ar' : 'https://www.undrr.org/'}
         logoAlt={words.home}
         logoTitle={words.home}
@@ -188,6 +188,6 @@ export function UndrrChrome({ locale = 'english', id }) {
 UndrrChrome.propTypes = {
   /** Storybook locale key. `arabic` switches the menu copy and labels. */
   locale: PropTypes.string,
-  /** Unique id for the header element, so several examples can share a page. */
+  /** Unique prefix for the header's element ids, so several examples can share a page. */
   id: PropTypes.string,
 };
