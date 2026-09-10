@@ -30,3 +30,24 @@
 .mg-demo-band--feature {
   padding-block: var(--mg-spacing-400);
 }
+
+// ArticleStory's header image. There is no aspect-ratio or object-fit
+// utility, so both variants declare their own here. The 21:9 and 16:9 ratios
+// are the visual variable under test in undrr/web-backlog#3060, not settled
+// values, so they belong to the demo rather than the library.
+.mg-demo-article-image {
+  inline-size: 100%;
+  object-fit: cover;
+}
+
+.mg-demo-article-header .mg-container-full-width .mg-demo-article-image {
+  aspect-ratio: 21 / 9;
+}
+
+.mg-demo-article-media--compact {
+  max-inline-size: 46rem;
+}
+
+.mg-demo-article-media--compact .mg-demo-article-image {
+  aspect-ratio: 16 / 9;
+}

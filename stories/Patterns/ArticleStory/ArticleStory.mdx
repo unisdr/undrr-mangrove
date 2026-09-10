@@ -1,0 +1,91 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './ArticleStory.stories';
+
+<Meta of={Stories} />
+
+# Article story
+
+> **Note:** Reference design for [undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+A news or event article page: headline, header image, reading body and
+related content. The ticket compares undrr.org's current story pages against
+news.un.org, UNESCO and UNDP, which run a large image above the headline
+rather than a small one beside it. This pattern makes that comparison
+directly testable, and separates two questions the ticket raises that are
+easy to conflate:
+
+- **How prominent is the header image?** `imageProminence` — `large` bleeds
+  it full width; `compact` keeps it inside the reading column.
+- **Is the header image the same one used for teasers and social cards?**
+  `heroImage` — `main` reuses that image, `alternate` shows a different one
+  in that position, `none` drops it from the article page entirely without
+  affecting what a teaser card or an Open Graph tag uses.
+
+## Large, prominent image
+
+<Canvas of={Stories.LargeImage} />
+
+<Controls of={Stories.LargeImage} />
+
+## Compact image in the reading column
+
+<Canvas of={Stories.CompactImage} />
+
+Closer to the current undrr.org treatment: the image sits at the same width
+as the headline and body rather than bleeding to the screen edge.
+
+## No image on the article page
+
+<Canvas of={Stories.NoHeroImage} />
+
+The headline carries the page on its own. A teaser card for this same story
+could still show the main image — that choice lives with the teaser, not
+here.
+
+## A different image than the teaser
+
+<Canvas of={Stories.AlternateHeroImage} />
+
+Demonstrates the decoupling directly: the image here is not the one a card
+or social preview for this story would use.
+
+## Building one
+
+The header composes existing pieces rather than introducing a new component:
+`mg-container-full-width` for the bleed, `mg-reading`/`mg-reading__article`
+for the body and `TableOfContents`, and `VerticalCard` in an `mg-grid` for
+related content — the same building blocks `ContentHub` uses. What is new is
+demonstration-only: the `mg-demo-article-*` classes that size the header
+image, loaded only with these stories.
+
+## Design decisions
+
+**`imageProminence` and `heroImage` are independent props.** Collapsing them
+into one variant (e.g. "big hero" vs "no hero") would hide that a small
+image can still be the wrong one, and a full-bleed image can still be the
+right one. Keeping them separate lets each be decided on its own evidence.
+
+**No real image-compression work here.** The ticket also asks to revisit
+Drupal's compression settings once a layout is chosen — that depends on
+which `imageProminence` ships, so it is out of scope until this reference
+design is reviewed.
+
+## Still to test
+
+- Which `imageProminence` reviewers actually prefer once seen next to the
+  comparison screenshots in the ticket, or whether both ship as editor
+  choices.
+- Whether `heroImage: "none"` needs a fallback treatment (a coloured band, a
+  pull quote) rather than going straight from identity chrome to the
+  headline.
+- How this composes with `HubHeader` for an article that also belongs to a
+  content hub.
+- The Drupal side: whether `heroImage` maps to a real "use main image on this
+  page" toggle on the content type, and what that does to existing content.
+
+## Changelog
+
+- **1.0** — 2026-09-10: Initial reference design for the news/event article
+  layout — large and compact image variants, and a `heroImage` toggle
+  decoupling the header image from the teaser/social image, in English and
+  Arabic. ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))

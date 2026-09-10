@@ -1132,6 +1132,11 @@ npm run build</code></pre>
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
   },
 
+  'patterns-article-story': {
+    description:
+      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls whether the header image bleeds full width or stays in the reading column; heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+  },
+
   'patterns-landing-pages': {
     description:
       'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
