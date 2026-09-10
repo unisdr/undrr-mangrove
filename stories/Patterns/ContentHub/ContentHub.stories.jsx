@@ -23,7 +23,10 @@ export default {
   ),
 };
 
-export const HubHome = { name: 'Hub home', args: { initialPage: 'overview' } };
+export const HubHome = {
+  name: 'Hub home',
+  args: { initialPage: 'overview', withHero: true },
+};
 export const HubDetailWithHero = {
   name: 'Hub detail with a hero',
   args: { initialPage: 'how-to-report', withHero: true },
@@ -38,5 +41,5 @@ export const DeeperPage = {
 };
 export const HubHomeIconRoutes = {
   name: 'Hub home with icon routes',
-  args: { initialPage: 'overview', routeCards: 'icon' },
+  args: { initialPage: 'overview', withHero: true, routeCards: 'icon' },
 };

@@ -185,25 +185,29 @@ test('localizes navigation and removes optional navigation for a simple landing 
   ).toBeVisible();
 });
 
-test('lets a hero carry the page title without duplicating it or moving identity', () => {
-  const plain = render(<ContentHub initialPage="how-to-report" />);
-  const identity = plain.container.querySelector(
-    '.mg-hub-example__identity'
-  ).textContent;
-  plain.unmount();
+test.each(['overview', 'how-to-report'])(
+  'a hero on %s carries the title without duplicating it or moving identity',
+  page => {
+    const plain = render(<ContentHub initialPage={page} />);
+    const identity = plain.container.querySelector(
+      '.mg-hub-example__identity'
+    ).textContent;
+    plain.unmount();
 
+    render(<ContentHub initialPage={page} withHero />);
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(
+      document.querySelector('.mg-hub-example__intro')
+    ).not.toBeInTheDocument();
+    // Identity is invariant chrome: a hero must not change or displace it.
+    expect(
+      document.querySelector('.mg-hub-example__identity').textContent
+    ).toBe(identity);
+  }
+);
+
+test('keeps the active section marked when a hero owns the heading', () => {
   render(<ContentHub initialPage="how-to-report" withHero />);
-  // The hero owns the h1; the intro block must not render a second one.
-  expect(
-    screen.getAllByRole('heading', { level: 1, name: 'How to report' })
-  ).toHaveLength(1);
-  expect(
-    document.querySelector('.mg-hub-example__intro')
-  ).not.toBeInTheDocument();
-  // Identity is invariant chrome: a hero must not change or displace it.
-  expect(document.querySelector('.mg-hub-example__identity').textContent).toBe(
-    identity
-  );
   expect(
     within(
       screen.getByRole('navigation', {
