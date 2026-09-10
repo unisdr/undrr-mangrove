@@ -173,7 +173,7 @@ export function ContentHub({
   heroSource = 'header',
   pageHeroMedia = 'image',
   headerSurface = 'primary',
-  routeCards = 'vertical',
+  routeCards = 'icon',
   routePrefix,
 }) {
   const text = words[locale] || words.english;

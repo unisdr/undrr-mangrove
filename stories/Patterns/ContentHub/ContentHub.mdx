@@ -127,120 +127,61 @@ to see the case a chrome-owned banner could not carry.
 The choice is editorial rather than visual: who configures a hub page's hero,
 and what that hero is allowed to be.
 
-### Icon routes
-
-`routeCards` swaps the vertical cards for icon cards, which is how undrr.org
-already presents "what would you like to do" routes on the live Monitor pages.
-The destinations are identical; only the presentation changes. This uses
-`IconCard`'s `orientation="horizontal"`, which was added for exactly this
-arrangement — the pattern faked it with a story-local override first, and the
-override lost, because it was fighting the component's own icon sizing rather
-than replacing it.
-
-<Canvas of={Stories.HubHomeIconRoutes} />
-
 ## Design decisions
 
-The identity row and section links come from
-[Hub header](?path=/docs/example-hub-header--docs), which owns them for every
-page type and adds the banner on pages that want it.
+`HubHeader` owns the hub's identity and section links for every page type and
+adds the banner on pages that want it. Identity and navigation are its required
+parts and hero-like presentation is a variant of it, so a page that should not
+lead with a photograph drops to `compact` and keeps its navigation. Its
+`surface` shares the banner's colour by default; `detached` returns the bar to
+the page background. Four constraints are checked in development rather than
+documented: the section limit, that only one section is `current`, that a
+section is not both `current` and `ancestor`, and that `navLabel` names the hub.
 
-> **Implementation note (for contributors):** the rest of this section records why the pattern looks the way it does. Consumers reviewing the examples above do not need it. The fuller [information architecture brief](https://github.com/unisdr/undrr-mangrove/blob/950f2f5695ff253eb6a447362d188e0de35d0957/docs/design/content-hubs.md) carries the research behind it, including alternative mobile and deep-section sketches and the questions still worth testing.
+**The section strip is not a tab set.** A 3px bottom border is how `Tab`, the
+MegaMenu topbar and `OnThisPageNav` all mark their active item, so it says
+nothing about what kind of navigation this is. The current item stops looking
+like a link instead — near-black, bold, and underlined against the word rather
+than under the item's padding box, which is the difference between link language
+and tab language. The strongest evidence is behavioural: on the deeper page the
+active item is two levels above the page being read, which no tab can do.
 
-### Why the section strip does not look like tabs
+**Identity is chrome, not a title.** The hub name is a fixed size and the
+identity row is the same height on every hub page. That invariance is the
+mechanism: something that never changes size or position stops being read as a
+heading, so it does not compete with the page's own `h1`. A hero sits below it
+and carries the `h1` itself; the hero's label slot stays empty, because the row
+above already names the hub. Identity is never merged into the hero — `mg-hero`
+forces white text over an editor-chosen photograph and is absent from most hub
+pages, so identity would move around — and never suppressed by it, or someone
+arriving from search would get neither identity nor lateral navigation.
 
-The strip is a row of ordinary page links carrying `aria-current`. It previously
-marked the active item with a 3px bottom border and a tinted fill, which is tab
-language — and, as it turns out, is also how `Tab`, the MegaMenu topbar and
-`OnThisPageNav` all mark their active item. A bottom border in this library says
-"a horizontal strip of something is active"; it does not say what kind of
-navigation you are looking at.
+**Breadcrumbs appear only where they say something new.** On three of the four
+hub pages the trail merely repeats the hub name, the active section link or the
+page heading. They are shown on a page deep enough to have an intermediate
+parent the strip cannot show. The cost is the route up to the hub's parent
+landing page, which nothing else offers — a rule to test rather than a settled
+default.
 
-So the active item here is marked the other way round. It stops looking like a
-link: near-black instead of interactive blue, bold, and underlined — but the
-underline hugs the word rather than sitting under the item's padding box. That
-distinction is the whole point. The padding box is what the three components
-above underline, and it is what reads as a tab; an underline against the word is
-link language, and it is what the legacy UNDRR on-this-page bar already used.
-Two signals that never depend on colour, so the state holds on any surface and
-survives forced-colors mode.
+> **Implementation note (for contributors):** the [information architecture
+> brief](https://github.com/unisdr/undrr-mangrove/blob/950f2f5695ff253eb6a447362d188e0de35d0957/docs/design/content-hubs.md)
+> carries the research: the alternatives rejected and why, what Germany's
+> Dachmarke and France's DSFR do with the same problem, and the questions still
+> worth testing.
 
-The hub name shares the row with the links rather than sitting above them. A
-named lead-in followed by links reads as navigation within a named resource; tab
-sets do not carry a title inside the bar.
+## Composition
 
-Reusing the MegaMenu topbar's classes was considered and rejected. Its
-`--active` modifier is the dropdown trigger and carries the same 3px underline,
-it sets `pointer-events: none` on its items below tablet so the sidebar can own
-mobile, and its `role="menubar"`/`role="menuitem"` markup would collapse these
-page links into a single tab stop. Taking only its CSS would leave a lookalike
-fork held together by coincidence. What is reused instead is the `Tab` rail's
-overflow _mechanics_ — edge fades, scroll padding, hidden scrollbar, the
-forced-colors fallback — without its indicator.
+Story-only compositions of shipped components: `Hero`, `IconCard`,
+`VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton` and breadcrumb
+styling, with the parent chrome from the shared `UndrrChrome` helper. The
+`mg-hub-example` and `mg-hub-header` styles load only with these stories. No
+production exports, hydration API or distributed CSS classes.
 
-### Hub identity and page heroes
-
-Identity is chrome, not a title. The hub name is fixed at 1.125rem in near-black
-and the identity row is the same height on every hub page. That invariance is
-the mechanism: something that never changes size or position stops being read as
-a heading, so it does not compete with the page's own `h1`.
-
-Turn on the `withHero` control to see the case this was designed for. It uses
-the split hero at 2/3, matching how undrr.org presents these pages today. The
-hero sits below identity, keeps its full bleed, and carries the `h1` itself — the intro block does not render a second one. The
-hero's label slot is deliberately left empty: putting the hub name there would
-duplicate identity a few pixels below itself, and putting the section name there
-would give the "which section am I in" signal two homes that can drift apart.
-
-The On this page links use the shipped `TableOfContents` component rather than a
-bespoke rail.
-
-One judgement worth revisiting: the live Monitor pages put the parent name in
-the hero's label slot, because there is no persistent identity row to carry it.
-Here there is one, directly above, so the label is left empty rather than
-printing the hub name twice within a few pixels.
-
-Identity is never merged into the hero and never suppressed by it. Merging fails
-because `mg-hero` forces white text over an editor-chosen photograph, sizes its
-label smaller than the name needs, and is absent from most hub pages — so
-identity would move around, destroying the persistence that is the point of a
-hub. Suppressing fails because someone arriving from search would get no
-identity and no lateral navigation. Do not use `size="immersive"` inside a hub:
-at `clamp(496px, 62vw, 688px)` it pushes the section links off the first screen.
-
-Breadcrumbs sit above the identity row when they appear, matching how the live
-Monitor pages order them. They do not appear on most hub pages. On the hub home
-the trail's last crumb repeats the hub name a few pixels below it; on a section
-page and a first-level detail page it repeats the active section link and the
-page heading. It is shown where it says something nothing else does: on a page
-deep enough to have an intermediate parent the section strip cannot show, and on
-the hub's parent landing page, which has no hub navigation at all.
-
-The cost of hiding it is the route up to the hub's parent landing page, which
-nothing else offers — the hub name links to the hub home and the logo links to
-UNDRR. Whether that matters depends on whether a given hub has a meaningful
-parent page, so this is a rule to test rather than a settled default.
-
-## Composition and possible components
-
-| Already available                               | Explored here                                                              |
-| ----------------------------------------------- | -------------------------------------------------------------------------- |
-| Vertical cards for grouped routes               | Persistent hub identity and section navigation                             |
-| Soft CTA for a route into the reporting tool    | Hub identity sitting below the standard UNDRR header and global navigation |
-| Breadcrumb styling, typography and theme tokens | Page hierarchy, optional contents links and responsive placement           |
-
-The prototype uses native breadcrumb links with existing styles, plus VerticalCard
-and TextCta. Its `mg-hub-example` layout styles load only with these stories. It adds
-no production exports, hydration API or distributed CSS classes, so existing pages
-and components retain their behaviour. A small hub identity/navigation component
-could graduate from this exploration after testing real labels and page depth.
-
-The hash routing is demonstration code. A production site should supply canonical
-page URLs, current-page and active-ancestor state, and its own rendering or routing.
-Use distinct navigation labels and `aria-current="page"` for an exact current
-page. An active ancestor is styled but carries no `aria-current` at all, so it
-cannot tell a screen reader the reader is on a page they are not — the line
-GOV.UK's service navigation draws, and the one this follows.
+Hash routing and illustrative content are demonstration material. A production
+site supplies canonical URLs, current-page state and its own routing. Use
+`aria-current="page"` for the exact page; an active ancestor is styled and
+carries no `aria-current`, so it cannot tell a screen reader the reader is on a
+page they are not.
 
 ## Questions for the next iteration
 
@@ -258,18 +199,8 @@ content hubs, not a requirement to copy a transactional service header.
 
 ## Changelog
 
-- **1.0** — 2026-09-09: Added hub home, detail and deeper-page explorations with English and Arabic content. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
-  - Placed every example under the standard UNDRR `PageHeader` and `MegaMenu`, and dropped the compact parent-header comparison as out of scope for version one.
-  - Replaced the tab-like active state with a leading-rule marker, moved the hub name onto the section row as invariant chrome, and removed the duplicate Overview label.
-  - Added a split-hero example, an icon-card option for route groups, and the shipped `TableOfContents` in place of a bespoke rail.
-  - Showed breadcrumbs only where they add ancestry the hub navigation cannot.
-  - Gave the hub home the alternating tinted band real UNDRR landing pages are built from, and moved the parent chrome into a shared `UndrrChrome` helper.
-  - Dropped the basic landing page example and the layers diagram; landing pages now have their own story set, and the diagram belongs with the research brief.
-  - Moved identity and section navigation into a `HubHeader` organism, whose expressive variant carries the banner instead of composing a separate `Hero`.
-  - Added a `heroSource` comparison between a chrome-owned banner and a separate page hero, using a video to show what a chrome-owned banner cannot be.
-  - Fixed the full-width bands, whose bleed was hidden behind the pattern wrapper's own background.
-  - Unified the navigation bar with the banner below it by default, without nesting one in the other, and added `headerSurface: "detached"` as the opt-out.
-  - Moved the layout these patterns share into one partial, and grouped the alternatives under Variations.
-  - Announced only the exact current page, leaving an active ancestor styled but unannounced, after checking DSFR and GOV.UK.
-  - Replaced the story-local icon-card override with `IconCard`'s own `orientation="horizontal"`, and dropped the video hero story as a demonstration of a `Hero` capability already documented there.
-  - Gave the hub home and the reporting detail page a call to action, on whichever hero the page is using.
+- **1.0** — 2026-09-10: Content hub exploration — hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
+  - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options.
+  - Section links are marked as links rather than tabs, and only the exact current page is announced.
+  - Breadcrumbs appear only where they add ancestry the strip cannot show.
+  - Variations for a detached header and vertical route cards.

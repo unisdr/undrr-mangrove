@@ -7,7 +7,7 @@ export default {
   title: 'Example/Content hub',
   component: ContentHub,
   parameters: { layout: 'fullscreen' },
-  args: { showOnThisPage: true, withHero: false, routeCards: 'vertical' },
+  args: { showOnThisPage: true, withHero: false, routeCards: 'icon' },
   argTypes: {
     routeCards: { control: 'inline-radio', options: ['vertical', 'icon'] },
     heroSource: { control: 'inline-radio', options: ['header', 'page'] },
@@ -53,8 +53,4 @@ export const HubDetailDetachedHeader = {
     withHero: true,
     headerSurface: 'detached',
   },
-};
-export const HubHomeIconRoutes = {
-  name: 'Hub home with icon routes',
-  args: { initialPage: 'overview', withHero: true, routeCards: 'icon' },
 };

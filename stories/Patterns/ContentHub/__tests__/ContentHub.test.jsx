@@ -277,15 +277,17 @@ test('shows ancestry only where it says something the hub navigation cannot', ()
   expect(crumbs()).toBeInTheDocument();
 });
 
-test('offers icon route cards as an alternative to vertical cards', () => {
+test('routes are horizontal icon cards by default, vertical on request', () => {
   const { container, rerender } = render(<ContentHub initialPage="overview" />);
-  expect(container.querySelector('.mg-card__icon')).not.toBeInTheDocument();
-
-  rerender(<ContentHub initialPage="overview" routeCards="icon" />);
   const cards = container.querySelector('.mg-hub-example__cards--icon');
-  expect(cards.querySelectorAll('.mg-card__icon')).toHaveLength(3);
+  expect(cards.querySelectorAll('.mg-card__icon--horizontal')).toHaveLength(3);
   // Same destinations either way; only the presentation changes.
   expect(within(cards).getByRole('link', { name: 'Reporting' })).toBeVisible();
+
+  rerender(<ContentHub initialPage="overview" routeCards="vertical" />);
+  expect(
+    container.querySelector('.mg-card__icon--horizontal')
+  ).not.toBeInTheDocument();
 });
 
 test('has no detectable accessibility violations on a detail page', async () => {
