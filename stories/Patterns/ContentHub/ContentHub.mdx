@@ -3,13 +3,16 @@ import * as Stories from './ContentHub.stories';
 
 <Meta of={Stories} />
 
-# Landing pages and content hubs
+# Content hubs
 
 > **Note:** A Storybook exploration for [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112), not a published component or a new CMS content type. Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
 A content hub gives a substantial group of pages a shared identity and a reliable
 route between sections. Breadcrumbs explain ancestry; hub navigation makes sibling
-content discoverable without a return trip to the landing page.
+content discoverable without a return trip to the landing page. Its identity and
+section links come from [Hub header](?path=/docs/example-hub-header--docs);
+landing pages, including the topic page a hub usually grows out of, are in
+[Landing page patterns](?path=/docs/example-landing-pages--docs).
 
 These examples use illustrative Sendai Framework Monitor content. They are not
 reporting instructions or a proposed final site map. Internal links navigate within
@@ -51,43 +54,6 @@ hub home's, even though the two pages differ in everything below it. Compare wit
 the plain detail page below — the chrome above the content is the same in all three.
 
 <Canvas of={Stories.HubDetailWithHero} />
-
-## A detached header
-
-The header shares the banner's surface by default, so the two read as one block.
-`headerSurface: "detached"` is the opt-out: the navigation bar returns to the
-page background and the banner keeps its own colour, so they read as separate
-blocks. They stay separate containers either way — which is what keeps the
-navigation's contrast predictable.
-
-<Canvas of={Stories.HubDetailDetachedHeader} />
-
-## The same page with a video hero
-
-The comparison worth making, and the reason it is a video. Here the hub header
-stays `compact` and a `Hero` block sits below it, the way body content would.
-
-If the page hero carried the same photograph, this example and the one above
-would look almost identical — the banner was built to resemble a hero, and
-`mg-hero--split` sets `aspect-ratio: unset`, so both are content-height driven.
-A screenshot would show you nothing. **What actually differs is capability.**
-`Hero` accepts `media.type` of `image`, `video` or `html`, plus immersive and
-tone variants. The hub header's banner accepts an image. That is the price of
-making it chrome, and it is easier to judge when you can see it.
-
-<Canvas of={Stories.HubDetailWithVideoHero} />
-
-So the choice is editorial rather than visual:
-
-- **Who configures the hero?** If the banner is chrome, hub pages get their hero
-  from the hub rather than from the page body — consistent by construction, but
-  an editor's knowledge of heroes elsewhere stops transferring.
-- **What is a hub page's hero allowed to be?** A chrome-owned banner supports
-  what the hub header supports, today and whenever `Hero` grows something new.
-  This page could not exist under that model without extending the banner too.
-
-Flip `heroSource` on any story to compare the two directly, and `pageHeroMedia`
-to see the same page with a photograph instead.
 
 ## Hub detail
 
@@ -131,7 +97,49 @@ valid alternative: avoid adding both a full section rail and a full in-page rail
 without a clear need. A labelled mobile Sections disclosure is another option to
 compare when the section strip grows long.
 
-## Icon routes
+## Variations
+
+Alternatives worth comparing before any of this is settled. Each changes one
+thing about the examples above.
+
+### A detached header
+
+The header shares the banner's surface by default, so the two read as one block.
+`headerSurface: "detached"` is the opt-out: the navigation bar returns to the
+page background and the banner keeps its own colour, so they read as separate
+blocks. They stay separate containers either way — which is what keeps the
+navigation's contrast predictable.
+
+<Canvas of={Stories.HubDetailDetachedHeader} />
+
+### The same page with a video hero
+
+The comparison worth making, and the reason it is a video. Here the hub header
+stays `compact` and a `Hero` block sits below it, the way body content would.
+
+If the page hero carried the same photograph, this example and the one above
+would look almost identical — the banner was built to resemble a hero, and
+`mg-hero--split` sets `aspect-ratio: unset`, so both are content-height driven.
+A screenshot would show you nothing. **What actually differs is capability.**
+`Hero` accepts `media.type` of `image`, `video` or `html`, plus immersive and
+tone variants. The hub header's banner accepts an image. That is the price of
+making it chrome, and it is easier to judge when you can see it.
+
+<Canvas of={Stories.HubDetailWithVideoHero} />
+
+So the choice is editorial rather than visual:
+
+- **Who configures the hero?** If the banner is chrome, hub pages get their hero
+  from the hub rather than from the page body — consistent by construction, but
+  an editor's knowledge of heroes elsewhere stops transferring.
+- **What is a hub page's hero allowed to be?** A chrome-owned banner supports
+  what the hub header supports, today and whenever `Hero` grows something new.
+  This page could not exist under that model without extending the banner too.
+
+Flip `heroSource` on any story to compare the two directly, and `pageHeroMedia`
+to see the same page with a photograph instead.
+
+### Icon routes
 
 `routeCards` swaps the vertical cards for icon cards, which is how undrr.org
 already presents "what would you like to do" routes on the live Monitor pages.
@@ -268,3 +276,4 @@ content hubs, not a requirement to copy a transactional service header.
   - Added a `heroSource` comparison between a chrome-owned banner and a separate page hero, using a video to show what a chrome-owned banner cannot be.
   - Fixed the full-width bands, whose bleed was hidden behind the pattern wrapper's own background.
   - Unified the navigation bar with the banner below it by default, without nesting one in the other, and added `headerSurface: "detached"` as the opt-out.
+  - Moved the layout these patterns share into one partial, and grouped the alternatives under Variations.

@@ -38,6 +38,14 @@ export const HubDetailWithHero = {
   name: 'Hub detail with a hero',
   args: { initialPage: 'how-to-report', withHero: true },
 };
+export const HubDetail = {
+  name: 'Hub detail',
+  args: { initialPage: 'how-to-report' },
+};
+export const DeeperPage = {
+  name: 'Deeper page',
+  args: { initialPage: 'validate-data' },
+};
 export const HubDetailDetachedHeader = {
   name: 'Hub detail with a detached header',
   args: {
@@ -54,14 +62,6 @@ export const HubDetailWithVideoHero = {
     heroSource: 'page',
     pageHeroMedia: 'video',
   },
-};
-export const HubDetail = {
-  name: 'Hub detail',
-  args: { initialPage: 'how-to-report' },
-};
-export const DeeperPage = {
-  name: 'Deeper page',
-  args: { initialPage: 'validate-data' },
 };
 export const HubHomeIconRoutes = {
   name: 'Hub home with icon routes',
