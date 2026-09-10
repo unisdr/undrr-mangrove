@@ -16,6 +16,45 @@ import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
  * sitting on the image. `mg-hero` forces every descendant anchor to white, so
  * links placed over editor-chosen media have contrast nobody can predict.
  */
+
+// DSFR states its equivalent limit in the type rather than the prose —
+// `There should be at most three of them` sits on Header's quickAccessItems.
+// Borrowing the discipline, but not the mechanism: React 19 no longer calls
+// propTypes at all, so a validator declared there would never run. This is
+// checked during render instead, in development only.
+const MAX_SECTIONS = 7;
+
+function warnAboutContract({ sections, navLabel, name }) {
+  if (process.env.NODE_ENV === 'production') return;
+  const complain = message => console.error(`HubHeader: ${message}`);
+
+  if (sections.length > MAX_SECTIONS) {
+    complain(
+      `${sections.length} sections is past the ${MAX_SECTIONS} this row can carry. ` +
+        'Long translated labels push it into scrolling; consider fewer, better-named sections.'
+    );
+  }
+  const marked = sections.filter(section => section.current);
+  if (marked.length > 1) {
+    complain(
+      `${marked.length} sections are marked \`current\`. Only one can be the page the reader is on.`
+    );
+  }
+  const both = sections.find(section => section.current && section.ancestor);
+  if (both) {
+    complain(
+      `"${both.label}" is marked both \`current\` and \`ancestor\`. ` +
+        'A page cannot contain itself — use `current` alone.'
+    );
+  }
+  if (name && !navLabel.includes(name)) {
+    complain(
+      `\`navLabel\` should name the hub, as in "${name} sections". ` +
+        'A page can carry several navigation landmarks, and a generic label leaves them indistinguishable.'
+    );
+  }
+}
+
 export function HubHeader({
   name,
   nameHref,
@@ -32,6 +71,7 @@ export function HubHeader({
   navRef,
 }) {
   const expressive = variant === 'expressive';
+  warnAboutContract({ sections, navLabel, name });
 
   return (
     <div
@@ -120,11 +160,12 @@ HubHeader.propTypes = {
   /** Mark the name as the current page, on the hub home itself. */
   nameCurrent: PropTypes.bool,
   /**
-   * Section links. `current` marks the exact page and is announced as
-   * `aria-current="page"`. `ancestor` marks a section that merely contains the
-   * current page: styled the same, announced not at all, because a second
-   * "current" in one landmark tells a screen-reader user they are somewhere
-   * they are not. GOV.UK's service navigation draws the line the same way.
+   * Section links, at most seven. `current` marks the exact page and is
+   * announced as `aria-current="page"`. `ancestor` marks a section that merely
+   * contains the current page: styled the same, announced not at all, because a
+   * second "current" in one landmark tells a screen-reader user they are
+   * somewhere they are not. GOV.UK's service navigation draws the line the same
+   * way.
    */
   sections: PropTypes.arrayOf(
     PropTypes.shape({
@@ -134,7 +175,7 @@ HubHeader.propTypes = {
       ancestor: PropTypes.bool,
     })
   ).isRequired,
-  /** Accessible name for the navigation landmark. Name the hub, not just "sections". */
+  /** Accessible name for the navigation landmark. Must name the hub. */
   navLabel: PropTypes.string.isRequired,
   /** `compact` is identity and links only; `expressive` adds the banner. */
   variant: PropTypes.oneOf(['compact', 'expressive']),

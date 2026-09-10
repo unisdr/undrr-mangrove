@@ -88,10 +88,23 @@ the same way: `current` sets `aria-current`, `active` is styled only. Consumers
 that need to find the marked item without reading the ARIA — to scroll it into
 view, say — should use the `data-hub-current` attribute, which is set for both.
 
-Keep the section list short. Five is comfortable and seven is the point at which
-Arabic labels start forcing the strip to scroll on a laptop; DSFR caps the
-equivalent row at three by contract. A hub needing more sections probably needs
-fewer, better-named ones.
+Keep the section list short. Five is comfortable; seven is the point at which
+Arabic labels start forcing the strip to scroll on a laptop. A hub needing more
+sections usually needs fewer, better-named ones.
+
+That limit is checked rather than merely written down, along with three others:
+two sections cannot both be `current`, one section cannot be both `current` and
+`ancestor`, and `navLabel` must name the hub. Each logs in development and is
+silent in production.
+
+> **Implementation note (for contributors):** the idea is borrowed from
+> [DSFR](https://github.com/codegouvfr/react-dsfr), which states its equivalent
+> limit in the type itself — `There should be at most three of them` sits on
+> `Header`'s `quickAccessItems` — rather than leaving it to prose. The mechanism
+> is not borrowed: React 19 no longer calls `propTypes`, so a custom validator
+> declared there would never run. Every `PropTypes` block in this repo is
+> documentation that feeds the AI manifest, not runtime validation. The checks
+> here run during render instead, guarded on `NODE_ENV`.
 
 Give `navLabel` the hub's own name rather than a generic "sections", so a page
 carrying several navigation landmarks keeps them distinguishable.

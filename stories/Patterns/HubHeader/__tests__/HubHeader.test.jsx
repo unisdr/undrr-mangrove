@@ -162,6 +162,64 @@ test('renders banner actions as links, and only when given', () => {
   ).toBeVisible();
 });
 
+describe('the section contract is enforced, not just documented', () => {
+  // DSFR states its equivalent limit in the type. These assert ours actually
+  // fires: a validator nobody has watched fail is a validator that does not.
+  let warn;
+
+  beforeEach(() => {
+    warn = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => warn.mockRestore());
+
+  const message = () => warn.mock.calls.map(call => call.join(' ')).join('\n');
+
+  test('rejects more sections than the row can carry', () => {
+    const many = Array.from({ length: 8 }, (unused, i) => ({
+      label: `Section ${i}`,
+      href: `#s${i}`,
+    }));
+    render(<HubHeader {...base} sections={many} />);
+    expect(message()).toMatch(/8 sections is past the 7/);
+  });
+
+  test('rejects two current sections', () => {
+    render(
+      <HubHeader
+        {...base}
+        sections={[
+          { label: 'About', href: '#about', current: true },
+          { label: 'Data', href: '#data', current: true },
+        ]}
+      />
+    );
+    expect(message()).toMatch(/Only one can be the page the reader is on/);
+  });
+
+  test('rejects a section that is both the page and its own ancestor', () => {
+    render(
+      <HubHeader
+        {...base}
+        sections={[
+          { label: 'About', href: '#about', current: true, ancestor: true },
+        ]}
+      />
+    );
+    expect(message()).toMatch(/A page cannot contain itself/);
+  });
+
+  test('rejects a navigation label that does not name the hub', () => {
+    render(<HubHeader {...base} navLabel="Sections" />);
+    expect(message()).toMatch(/should name the hub/);
+  });
+
+  test('accepts the shapes the stories actually use', () => {
+    render(<HubHeader {...base} />);
+    expect(warn).not.toHaveBeenCalled();
+  });
+});
+
 test('has no detectable accessibility violations', async () => {
   const { container } = render(
     <HubHeader
