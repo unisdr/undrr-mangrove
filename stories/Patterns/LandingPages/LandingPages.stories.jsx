@@ -3,7 +3,7 @@ import { LandingPage } from './LandingPages';
 import './landing-pages.scss';
 
 export default {
-  title: 'Example/Landing pages',
+  title: 'Patterns/Landing pages',
   component: LandingPage,
   parameters: { layout: 'fullscreen' },
   argTypes: {

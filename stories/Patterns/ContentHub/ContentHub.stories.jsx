@@ -4,7 +4,7 @@ import '../HubHeader/hub-header.scss';
 import './content-hub.scss';
 
 export default {
-  title: 'Example/Content hub',
+  title: 'Patterns/Content hub',
   component: ContentHub,
   parameters: { layout: 'fullscreen' },
   args: { showOnThisPage: true, withHero: false, routeCards: 'icon' },

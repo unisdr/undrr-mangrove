@@ -244,6 +244,7 @@ const preview = {
           ],
           'Design decisions',
           'Components',
+          'Patterns',
           'Utilities',
         ],
         includeName: true,
