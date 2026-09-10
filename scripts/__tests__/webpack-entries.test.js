@@ -63,4 +63,34 @@ describe('webpack component entries', () => {
 
     expect(offenders).toEqual([]);
   });
+
+  test('every entry wrapper re-exports its source module in full', () => {
+    // `export *` does not re-export a default binding, so a wrapper over a
+    // module that has one must forward it explicitly or the bundle silently
+    // loses an export it used to have.
+    const wrappers = Object.values(entries).filter(file =>
+      file.endsWith('.entry.js')
+    );
+    expect(wrappers.length).toBeGreaterThan(0);
+
+    for (const wrapper of wrappers) {
+      const wrapperSource = fs.readFileSync(wrapper, 'utf8');
+      const reExport = wrapperSource.match(/export\s+\*\s+from\s+'([^']+)'/);
+      expect(reExport).not.toBeNull();
+
+      const target = resolveImport(wrapper, reExport[1]);
+      expect(target).not.toBeNull();
+
+      const hasDefault = /^export default /m.test(
+        fs.readFileSync(target, 'utf8')
+      );
+      const forwardsDefault = /export\s*\{\s*default\s*\}\s*from/.test(
+        wrapperSource
+      );
+      expect({ wrapper: path.basename(wrapper), forwardsDefault }).toEqual({
+        wrapper: path.basename(wrapper),
+        forwardsDefault: hasDefault,
+      });
+    }
+  });
 });
