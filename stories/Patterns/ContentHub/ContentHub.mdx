@@ -7,195 +7,157 @@ import * as Stories from './ContentHub.stories';
 
 > **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-A content hub gives a substantial group of pages a shared identity and a reliable
-route between sections. Breadcrumbs explain ancestry; hub navigation makes sibling
-content discoverable without a return trip to the landing page. Landing pages,
-including the topic page a hub usually grows out of, are in
-[Landing page patterns](?path=/docs/patterns-landing-pages--docs).
+A content hub is a named group of pages people move between: the Sendai Framework
+Monitor, a programme, a guidance collection. Every page carries the same name and
+the same section links, so a reader can go sideways without returning to the
+landing page first.
 
-## Landing page, hub or microsite
+Use one when people come back repeatedly and move between sections. If they
+arrive, read and leave, a [landing page](?path=/docs/patterns-landing-pages--docs)
+is enough.
 
-Three landing page shapes are drawn out separately in
-[Landing page patterns](?path=/docs/patterns-landing-pages--docs), including the
-topic page that is the usual precursor to a hub.
-
-| Pattern      | Its job                                                 | Navigation emphasis                               |
-| ------------ | ------------------------------------------------------- | ------------------------------------------------- |
-| Landing page | Introduce a subject and direct people to useful content | Parent navigation and grouped routes              |
-| Content hub  | Support repeated movement across related pages          | Shared resource name and section links            |
-| Microsite    | Support a more distinct experience or subbrand          | Its own navigation with a clear parent connection |
-
-Publishing is a separate choice. Drupal, a static build or another application can
-support these experiences. A hub can also link to a tool with its own task-oriented
-navigation without adopting that tool's interface.
+|                | Landing page                       | Content hub                            | Microsite                                |
+| -------------- | ---------------------------------- | -------------------------------------- | ---------------------------------------- |
+| **Job**        | Introduce a subject, point onward  | Support repeated movement across pages | A distinct experience or sub-brand       |
+| **Navigation** | Parent site's, plus grouped routes | Hub name and sections on every page    | Its own, with a route back to the parent |
 
 ## Hub home
 
-A stable resource name and short set of section links establish a place within the
-parent site. The banner carries a call to action into the reporting tool; the
-deeper reference pages deliberately carry none, having no single next step worth
-a button. The home page is the most expressive page in the hub: a split hero
-carries the title, and the routes and supporting band sit below it.
-
-Note what does not change. The identity row above the hero is the same height and
-the same treatment it has on every other page in this set. That is what lets the
-hero be expressive here without costing the reader their sense of where they are.
-
 <Canvas of={Stories.HubHome} />
+
+The most expressive page: a banner with the title, lede and a call to action,
+then route cards and a supporting band. The identity row above the banner is the
+same height and treatment as on every other page — that is what lets the banner
+be expressive without costing the reader their bearings.
 
 ## A detail page with a hero
 
-The case the identity row is designed for. The hero keeps its full bleed and
-carries the page's only `h1`; the identity row above it is byte-identical to the
-hub home's, even though the two pages differ in everything below it. Compare with
-the plain detail page below — the chrome above the content is the same in all three.
-
 <Canvas of={Stories.HubDetailWithHero} />
 
-## Hub detail
+The same identity row, byte for byte, with an entirely different page below it.
 
-Try moving from Reporting to How to report, then to another section. Reporting stays
-active on descendants, while the page heading and breadcrumbs identify the exact page.
-These are ordinary navigation links, not controls for tab panels.
+## Hub detail
 
 <Canvas of={Stories.HubDetail} />
 
 <Controls of={Stories.HubDetail} />
 
-Every example sits under the standard UNDRR chrome: the `PageHeader` black bar with
-the UNDRR logo and language access, then the `MegaMenu` global navigation strip. The
-hub identity and section links begin below that, so the examples show the real
-vertical budget a hub has to work with rather than an idealized one.
+Move from Reporting to How to report, then to another section. Reporting stays
+marked while you are on its descendants; the heading and breadcrumb say which
+page you are actually on. These are page links, not tab controls.
 
-A compact or focused brand header is out of scope for version one. Reworking the
-parent masthead is expensive in Drupal templating and would have to hold for
-PreventionWeb and the other sub-brands as well. The most that is likely worth
-considering later is suppressing the global navigation strip on hub pages, and even
-that needs a case made for it. Version one keeps the parent chrome exactly as the
-rest of the site renders it.
-
-Use the locale toolbar for Arabic and resize the canvas for mobile. The section
-strip scrolls horizontally, keeps ordinary keyboard link navigation and indicates
-the current section. The theme toolbar applies Mangrove's shared tokens.
+Use the locale toolbar for Arabic, the theme toolbar for the other brands, and
+resize the canvas for mobile — the section strip scrolls, keeps ordinary keyboard
+link behaviour, and bleeds to the screen edges once it wraps.
 
 ## A deeper page
 
-The breadcrumb trail retains the parent guidance page while Reporting remains the
-active hub section. This initial example tests a shallow hierarchy without another
-permanent navigation rail.
-
 <Canvas of={Stories.DeeperPage} />
 
-This story is also the argument that the strip is not a tab set: its active item
-is two levels above the page you are reading. No tab can do that.
-
-A dense reference section may benefit from a scoped sibling rail. That remains a
-valid alternative: avoid adding both a full section rail and a full in-page rail
-without a clear need. A labelled mobile Sections disclosure is another option to
-compare when the section strip grows long.
+Two levels down, and Reporting is still the marked section. No tab set can do
+that, which is the clearest evidence this is navigation rather than tabs. A dense
+reference section may eventually want a sibling rail; avoid adding both that and
+a full in-page rail without a reason.
 
 ## Variations
 
-Alternatives worth comparing before any of this is settled. Each changes one
-thing about the examples above.
-
 ### A detached header
-
-The header shares the banner's surface by default, so the two read as one block.
-`headerSurface: "detached"` is the opt-out: the navigation bar returns to the
-page background and the banner keeps its own colour, so they read as separate
-blocks. They stay separate containers either way — which is what keeps the
-navigation's contrast predictable.
 
 <Canvas of={Stories.HubDetailDetachedHeader} />
 
-`heroSource` makes the other half of that comparison. `header` lets the hub
-header's banner be the hero, so it is chrome. `page` keeps the header compact
-and puts a separate `Hero` block below it, the way body content would. With the
-same image the two look nearly identical — the banner was built to resemble a
-hero, and `mg-hero--split` sets `aspect-ratio: unset`, so both are
-content-height driven. What differs is capability: `Hero` takes an image, a
-video or author-supplied HTML plus immersive and tone variants, while a
-chrome-owned banner takes an image. Set `pageHeroMedia` to `video` on any story
-to see the case a chrome-owned banner could not carry.
+By default the navigation bar shares the banner's colour, so the header reads as
+one block. `headerSurface: "detached"` returns the bar to the page background and
+leaves the banner its own colour. Either way they stay separate containers, which
+keeps the navigation's contrast predictable rather than dependent on a photograph.
 
-The choice is editorial rather than visual: who configures a hub page's hero,
-and what that hero is allowed to be.
+`heroSource` is the other half of the comparison. `header` makes the hub header's
+banner the hero, so it is chrome. `page` keeps the header compact and puts a
+`Hero` block below it, the way body content would. The visible difference is
+small; the real one is capability — `Hero` takes a video or author-supplied HTML,
+a chrome-owned banner takes an image. Set `pageHeroMedia` to `video` to see it.
+
+## Building one
+
+`HubHeader` carries the identity row and section links, and ships in the
+stylesheet:
+
+```jsx
+<HubHeader
+  name="Sendai Framework Monitor"
+  nameHref="/monitor"
+  navLabel="Sendai Framework Monitor sections"
+  variant="expressive"
+  title="Tracking progress towards a more resilient world"
+  summary="Understand disaster risk and find guidance for reporting."
+  media={{ src: '/hero.jpg', alt: '' }}
+  actions={[
+    { label: 'Open the Monitor', url: 'https://sendaimonitor.undrr.org/' },
+  ]}
+  sections={[
+    { label: 'About', href: '/monitor/about' },
+    { label: 'Reporting', href: '/monitor/reporting', ancestor: true },
+    { label: 'Data', href: '/monitor/data' },
+  ]}
+/>
+```
+
+| Prop                   | Notes                                                              |
+| ---------------------- | ------------------------------------------------------------------ |
+| `variant`              | `expressive` adds the banner; `compact` is identity and links only |
+| `surface`              | `primary` (default), `secondary`, `tertiary`, or `detached`        |
+| `media`, `actions`     | Both optional — a banner works as text alone                       |
+| `current` / `ancestor` | The exact page, or a section containing it                         |
+
+Pass `current` for the page the reader is on and `ancestor` for a section that
+merely contains it. Both look the same; only `current` is announced, as
+`aria-current="page"`. Announcing an ancestor would tell a screen reader the
+reader is on a page they are not. Five sections is comfortable and seven is the
+limit; past that the strip scrolls on a laptop once labels are translated.
+
+The rest of these pages compose shipped components — `Hero`, `IconCard`,
+`VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton`, `mg-grid` and
+breadcrumb styling. Their `mg-hub-example` layout is demonstration scaffolding
+and loads only with these stories; the hash routing and Monitor copy are
+illustrative.
 
 ## Design decisions
 
-`HubHeader` owns the hub's identity and section links for every page type and
-adds the banner on pages that want it. Identity and navigation are its required
-parts and hero-like presentation is a variant of it, so a page that should not
-lead with a photograph drops to `compact` and keeps its navigation. Its
-`surface` shares the banner's colour by default; `detached` returns the bar to
-the page background. Four constraints are checked in development rather than
-documented: the section limit, that only one section is `current`, that a
-section is not both `current` and `ancestor`, and that `navLabel` names the hub.
+**The section strip is not styled as tabs.** A 3px bottom border is how `Tab`,
+the MegaMenu topbar and `OnThisPageNav` all mark their active item, so it says
+nothing about what kind of navigation this is. Here the current item stops
+looking like a link instead: near-black, bold, and underlined against the word
+rather than under the item's padding box.
 
-**The section strip is not a tab set.** A 3px bottom border is how `Tab`, the
-MegaMenu topbar and `OnThisPageNav` all mark their active item, so it says
-nothing about what kind of navigation this is. The current item stops looking
-like a link instead — near-black, bold, and underlined against the word rather
-than under the item's padding box, which is the difference between link language
-and tab language. The strongest evidence is behavioural: on the deeper page the
-active item is two levels above the page being read, which no tab can do.
+**Identity is chrome, not a title.** The hub name is a fixed size and its row is
+the same height on every page. Something that never moves stops being read as a
+heading, so it does not compete with the page's `h1`. It is never merged into the
+hero — `mg-hero` forces white text over an editor's photograph and is absent from
+most pages, so identity would move around — and never suppressed, or a reader
+arriving from search would get neither identity nor navigation.
 
-**Identity is chrome, not a title.** The hub name is a fixed size and the
-identity row is the same height on every hub page. That invariance is the
-mechanism: something that never changes size or position stops being read as a
-heading, so it does not compete with the page's own `h1`. A hero sits below it
-and carries the `h1` itself; the hero's label slot stays empty, because the row
-above already names the hub. Identity is never merged into the hero — `mg-hero`
-forces white text over an editor-chosen photograph and is absent from most hub
-pages, so identity would move around — and never suppressed by it, or someone
-arriving from search would get neither identity nor lateral navigation.
+**Breadcrumbs appear only where they add something.** On three of the four pages
+here the trail just repeats the hub name, the marked section or the heading. They
+show on a page deep enough to have an intermediate parent the strip cannot.
 
-**Breadcrumbs appear only where they say something new.** On three of the four
-hub pages the trail merely repeats the hub name, the active section link or the
-page heading. They are shown on a page deep enough to have an intermediate
-parent the strip cannot show. The cost is the route up to the hub's parent
-landing page, which nothing else offers — a rule to test rather than a settled
-default.
+**The parent chrome is untouched.** A compact brand header is out of scope: the
+masthead comes from Drupal templating that has to hold for PreventionWeb and the
+other sub-brands too.
 
-> **Implementation note (for contributors):** the fuller information
-> architecture research — the alternatives rejected and why, and how Germany's
-> Dachmarke and France's DSFR handle the same layering — belongs with the
-> discussion on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112)
-> rather than in this library.
+> **Implementation note (for contributors):** the rejected alternatives, and how
+> Germany's Dachmarke and France's DSFR handle the same layering, are on
+> [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112).
 
-## Composition
+## Still to test
 
-Story-only compositions of shipped components: `Hero`, `IconCard`,
-`VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton` and breadcrumb
-styling, with the parent chrome from the shared `UndrrChrome` helper. The
-`mg-hub-example` and `mg-hub-header` styles load only with these stories. No
-production exports, hydration API or distributed CSS classes.
-
-Hash routing and illustrative content are demonstration material. A production
-site supplies canonical URLs, current-page state and its own routing. Use
-`aria-current="page"` for the exact page; an active ancestor is styled and
-carries no `aria-current`, so it cannot tell a screen reader the reader is on a
-page they are not.
-
-## Questions for the next iteration
-
-- Can someone entering on a detail page identify the resource and reach a sibling section?
-- With the full UNDRR header and mega menu above it, does the hub's own navigation still read as a distinct place?
-- When does a section need a sibling rail or mobile disclosure rather than a scrolling strip?
-- Which pages are long enough to benefit from On this page links?
-- Can shared content belong to several collections without duplicating its canonical page?
-
-The [GOV.UK service navigation pattern](https://design-system.service.gov.uk/patterns/navigate-a-service/)
-provides a useful reference for separating parent identity from local navigation.
-Its [current-page and active-section states](https://design-system.service.gov.uk/components/service-navigation/)
-help distinguish a section landing page from its descendants. This is an analogy for
-content hubs, not a requirement to copy a transactional service header.
+- Can someone landing on a detail page identify the hub and reach a sibling section?
+- With the UNDRR header and mega menu above it, does the hub still read as its own place?
+- When does a section need a sibling rail rather than a scrolling strip?
+- Can shared content belong to several hubs without duplicating its canonical page?
 
 ## Changelog
 
 - **1.0** — 2026-09-10: Content hub pattern — hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
-  - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options.
+  - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options, and ships in the stylesheet.
   - Section links are marked as links rather than tabs, and only the exact current page is announced.
   - Breadcrumbs appear only where they add ancestry the strip cannot show.
   - Variations for a detached header and vertical route cards.

@@ -340,7 +340,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
               <section className="mg-landing-example__section">
                 <h2>{page.routesHeading}</h2>
                 <p className="mg-landing-example__lede">{page.routesIntro}</p>
-                <div className="mg-landing-example__routes">
+                <div className="mg-landing-example__routes | mg-grid mg-grid__col-3">
                   <IconCard
                     orientation="horizontal"
                     data={page.routes.map(([title, summaryText, icon], i) => ({
@@ -373,7 +373,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
               <section className="mg-landing-example__section">
                 <h2>{page.relatedHeading}</h2>
-                <div className="mg-landing-example__cards">
+                <div className="mg-landing-example__cards | mg-grid mg-grid__col-3">
                   <VerticalCard
                     data={page.related.map(([title, summaryText]) => ({
                       title,
@@ -440,7 +440,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                   <p>
                     <a href={links.collection}>{page.groupLink}</a>
                   </p>
-                  <div className="mg-landing-example__books">
+                  <div className="mg-landing-example__books | mg-grid mg-grid__col-3">
                     <BookCard
                       data={titles.map(title => ({
                         title,

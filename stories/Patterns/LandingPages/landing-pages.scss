@@ -45,24 +45,8 @@
     margin-block: 0 var(--mg-spacing-150);
   }
 
-  &__cards,
-  &__routes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-    gap: var(--mg-spacing-200);
-    margin-block-start: var(--mg-spacing-200);
-  }
-
   &__cards .mg-card,
   &__routes .mg-card {
     min-inline-size: 0;
-  }
-
-  // Index pages put a row of book covers under each subsection heading.
-  &__books {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
-    gap: var(--mg-spacing-200);
-    margin-block-start: var(--mg-spacing-200);
   }
 }

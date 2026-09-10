@@ -319,8 +319,10 @@
     padding-block: var(--mg-spacing-350);
   }
 
+  // No font-family: this renders as an h1, which inherits `text` from body and
+  // picks up `heading` in Arabic from _fonts.scss. `display` is reserved for
+  // the hero title, per the review checklist.
   &__title {
-    font-family: var(--mg-font-family-display);
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.15;
     text-wrap: balance;

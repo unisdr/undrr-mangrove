@@ -19,11 +19,6 @@
 
   // A tinted full-width band. Real UNDRR landing pages alternate plain and
   // tinted bands down the page.
-  &__cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-    gap: var(--mg-spacing-200);
-  }
   &__cards .mg-card {
     min-inline-size: 0;
   }

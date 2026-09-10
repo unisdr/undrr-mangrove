@@ -443,7 +443,7 @@ export function ContentHub({
                 <h2>{text.related}</h2>
                 <p className="mg-hub-example__lede">{text.relatedIntro}</p>
                 <div
-                  className={`mg-hub-example__cards mg-hub-example__cards--${routeCards}`}
+                  className={`mg-hub-example__cards mg-hub-example__cards--${routeCards} | mg-grid mg-grid__col-3`}
                 >
                   <RouteCards
                     data={groupCards}
@@ -477,7 +477,7 @@ export function ContentHub({
             </>
           )}
           {page === 'reporting' && (
-            <div className="mg-hub-example__cards">
+            <div className="mg-hub-example__cards | mg-grid mg-grid__col-2">
               <VerticalCard
                 data={[
                   {

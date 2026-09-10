@@ -1,6 +1,5 @@
 import React from 'react';
 import { ContentHub } from './ContentHub';
-import '../HubHeader/hub-header.scss';
 import './content-hub.scss';
 
 export default {
