@@ -515,6 +515,32 @@ describe('channel triplets are never used raw in a colour position', () => {
   });
 });
 
+describe('brand-owned surfaces resolve from semantic tokens', () => {
+  // A raw palette alias in a themed surface compiles and looks right in the
+  // brand it was written for, so nothing catches it until someone opens another
+  // theme. --mg-hero-gradient-color was blue-900 for exactly that reason: the
+  // line above it already used --mg-color-hero, and every non-blue brand drew a
+  // UNDRR-blue hero. See unisdr/undrr-mangrove#1115.
+  const PALETTE =
+    /var\(\s*--mg-color-(blue|green|teal|orange|red|purple|yellow|neutral)-\d{2,3}\s*\)/;
+
+  test.each([
+    ['stories/Components/Hero/hero.scss', '--mg-hero-gradient-color'],
+    ['stories/Components/Hero/hero.scss', '--mg-hero-cta-color'],
+  ])('%s does not set %s from the raw palette', (file, prop) => {
+    const source = fs.readFileSync(
+      path.resolve(__dirname, '../../../../', file),
+      'utf8'
+    );
+    const offenders = source
+      .split('\n')
+      .map((line, index) => ({ line, index }))
+      .filter(({ line }) => line.includes(`${prop}:`) && PALETTE.test(line))
+      .map(({ index }) => `${file}:${index + 1}`);
+    expect(offenders).toEqual([]);
+  });
+});
+
 // The page itself. Asserted rather than assumed, because every pair whose
 // lowest layer is translucent composites down onto it.
 const PAGE = '--mg-color-neutral-0';

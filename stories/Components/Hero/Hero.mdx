@@ -77,6 +77,9 @@ Use `size="immersive"` for a tall editorial feature and `contained` when the Her
 
 ## Changelog
 
+- **1.6.3** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)):
+  - The background gradient resolves from `--mg-color-hero` instead of a hardcoded `--mg-color-blue-900`, so it follows the active theme. Every non-blue brand — PreventionWeb, IRP, MCR2030 — drew a UNDRR-blue hero; the split layout and the secondary, tertiary and quaternary variants were already correct and are unchanged. ([#1115](https://github.com/unisdr/undrr-mangrove/issues/1115))
+  - The link colour no longer reaches into `__media`. `.mg-hero a` was an unscoped descendant selector, so an anchor an author placed in the `type: "html"` media slot was forced white regardless of what it sat on. Scoped to `__overlay` and `__content`, and `--mg-hero-link-color` lets a surface that is not a dark photograph retarget these links.
 - **1.6.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic hero labels now render in Noto Sans Arabic; the hero title keeps Noto Kufi Arabic. `.mg-hero__title` reads the `display` font role and `.mg-hero__label` the `ui` role, rather than naming a typeface, and the component's `:lang(ar)` block is gone. A heading nested inside `.mg-hero__title` needs no special handling and none is declared. Latin rendering is unchanged.
 - **1.6.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a hero title or label whose own language is not Arabic.
 - **1.6** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
