@@ -167,12 +167,13 @@ language — and, as it turns out, is also how `Tab`, the MegaMenu topbar and
 navigation you are looking at.
 
 So the active item here is marked the other way round. It stops looking like a
-link: near-black instead of interactive blue, bold, and preceded by a short
-leading rule. That leading rule is an existing Mangrove idiom for "the
-destination you are on" — `mg-mega-content__section-list-link--active` and the
-On this page rail below both use one. Three signals, so the state never rests on
-colour alone, and the marker is a border rather than a background so it survives
-forced-colors mode.
+link: near-black instead of interactive blue, bold, and underlined — but the
+underline hugs the word rather than sitting under the item's padding box. That
+distinction is the whole point. The padding box is what the three components
+above underline, and it is what reads as a tab; an underline against the word is
+link language, and it is what the legacy UNDRR on-this-page bar already used.
+Two signals that never depend on colour, so the state holds on any surface and
+survives forced-colors mode.
 
 The hub name shares the row with the links rather than sitting above them. A
 named lead-in followed by links reads as navigation within a named resource; tab

@@ -210,23 +210,27 @@
 
     // Three signals, so the state never rests on colour alone: the current item
     // stops looking like a link, gains weight, and gains a leading rule.
-    a[aria-current] {
-      font-weight: 700;
-      color: rgb(var(--mg-hub-header-ink));
-    }
-
-    a[aria-current]::before {
-      content: "";
-      display: inline-block;
-      block-size: 0.85em;
-      border-inline-start: var(--mg-spacing-25) solid
-        rgb(var(--mg-hub-header-marker));
-      margin-inline-end: var(--mg-spacing-50);
-    }
-
     a:hover {
       color: rgb(var(--mg-hub-header-link-hover));
       text-decoration: underline;
+    }
+
+    // An underline that hugs the word, not the item's padding box. The padding
+    // box is what Tab, the MegaMenu topbar and OnThisPageNav all underline, and
+    // it is what reads as a tab; hugging the word is link language.
+    // A leading rule was tried first and had to go: on a coloured surface the
+    // marker and the label are both white, so it read as a stray pipe next to
+    // the text rather than a mark — and the row already has a divider after the
+    // hub name.
+    a[aria-current] {
+      font-weight: 700;
+      color: rgb(var(--mg-hub-header-ink));
+      text-decoration: underline;
+      text-decoration-color: rgb(var(--mg-hub-header-marker));
+      text-decoration-thickness: var(--mg-spacing-25);
+
+      // Clears Noto Sans Arabic descenders, which sit lower than Latin ones.
+      text-underline-offset: 0.4em;
     }
 
     // Active wins over hover: the current item must not restyle itself into
@@ -308,10 +312,9 @@
   }
 
   @media (forced-colors: active) {
-    // A border takes system colours; a background would be forced to Canvas
-    // and the marker would disappear.
-    &__nav a[aria-current]::before {
-      border-inline-start-color: Highlight;
+    // The underline survives forced colours; only its colour needs restating.
+    &__nav a[aria-current] {
+      text-decoration-color: Highlight;
     }
 
     &__nav::before,

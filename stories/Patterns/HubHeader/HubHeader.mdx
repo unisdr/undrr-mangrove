@@ -96,6 +96,13 @@ active section scrolled into view.
 > colour — weight and the leading rule carry it, and neither was
 > colour-dependent to begin with.
 >
+> The current item is marked by an underline that hugs the word, not the item's
+> padding box. The padding box is what `Tab`, the MegaMenu topbar and
+> `OnThisPageNav` all underline, and it is what reads as a tab; hugging the word
+> is link language. A leading rule was tried first and had to go — on a coloured
+> surface the marker and the label are both white, so it read as a stray pipe
+> beside the text, and the row already carries a divider after the hub name.
+>
 > Hover is stated explicitly rather than left to inherit. The global `a:hover`
 > in `_foundational.scss` sets `--mg-color-interactive-active`, and at `(0,2,1)`
 > it outspecifies a plain link rule — unstated, that lands a dark hover colour
@@ -119,3 +126,4 @@ active section scrolled into view.
   - Added `surface` variants. Unified is the default; `detached` keeps the navigation on the page background.
   - Tinted the bar so it stratifies from the banner without a divider.
   - Stated the link hover colour, which the global `a:hover` was otherwise darkening into near-invisibility on a coloured surface.
+  - Marked the current section with a word-hugging underline instead of a leading rule, which read as a stray pipe on a coloured surface.
