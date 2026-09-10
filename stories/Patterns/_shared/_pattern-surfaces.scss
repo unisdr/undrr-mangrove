@@ -1,0 +1,130 @@
+// Layout shared by the story-only page patterns. These stylesheets are imported
+// straight from their stories files, so each compiles standalone with no access
+// to the SCSS mixin or variable layer — everything here is a custom property.
+// Include inside a pattern block and the `&__*` selectors resolve against it,
+// for example `.mg-landing-example { @include mg-pattern-surfaces; }`.
+// A pattern keeps its own rules for anything it genuinely does differently;
+// only what was byte-identical across patterns lives here.
+@mixin mg-pattern-surfaces {
+  &__lede {
+    max-inline-size: 49rem;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  &__intro {
+    max-inline-size: 49rem;
+    margin-block-end: var(--mg-spacing-250);
+  }
+
+  &__intro h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin-block: 0 var(--mg-spacing-150);
+  }
+
+  &__intro > p {
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+
+  // A tinted full-width band. Real UNDRR landing pages alternate plain and
+  // tinted bands down the page, and a prototype without them reads thinner than
+  // the real thing.
+  // The breakout is self-contained on purpose. mg-container-full-width paints
+  // its bleed with a z-index:-1 pseudo-element, which disappears behind any
+  // ancestor carrying its own opaque background — as these pattern wrappers do.
+  &__band {
+    background-color: rgb(var(--mg-color-neutral-50));
+    margin-block-start: var(--mg-spacing-400);
+    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100vw;
+  }
+
+  &__band-inner {
+    padding-block: var(--mg-spacing-300);
+  }
+
+  &__band h2 {
+    margin-block-start: 0;
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--mg-spacing-150) var(--mg-spacing-250);
+    list-style: none;
+    padding: 0;
+    margin-block: var(--mg-spacing-200) 0;
+
+    li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--mg-spacing-100);
+      margin: 0;
+      font-family: var(--mg-font-family-ui);
+      font-weight: 700;
+    }
+
+    .mg-icon {
+      color: rgb(var(--mg-color-interactive));
+      font-size: 1.75rem;
+    }
+  }
+
+  &__reading {
+    display: grid;
+    gap: var(--mg-spacing-250);
+  }
+
+  &__article {
+    min-inline-size: 0;
+    max-inline-size: 46rem;
+  }
+
+  &__article section {
+    margin-block-end: var(--mg-spacing-300);
+    scroll-margin-block-start: var(--mg-spacing-200);
+  }
+
+  &__article p {
+    line-height: 1.75;
+  }
+
+  &__skip {
+    position: absolute;
+    clip-path: inset(50%);
+
+    &:focus {
+      position: static;
+      clip-path: none;
+      display: block;
+      padding: var(--mg-spacing-100);
+    }
+  }
+
+  // On this page belongs in a right-hand sidebar wherever there is room for one;
+  // it only stacks above the article on narrow viewports.
+  @media (width >= 48rem) {
+    &__reading--with-contents {
+      grid-template-columns: minmax(0, 1fr) 16rem;
+      column-gap: var(--mg-spacing-300);
+      align-items: start;
+    }
+
+    // TableOfContents renders its own wrapper div around the section.
+    &__reading--with-contents > div:has(.mg-table-of-contents) {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      inset-block-start: var(--mg-spacing-200);
+    }
+
+    &__reading--with-contents &__article {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+}
