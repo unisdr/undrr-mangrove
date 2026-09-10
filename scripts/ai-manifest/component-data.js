@@ -1080,6 +1080,16 @@ npm run build</code></pre>
   },
 
   // --- Page templates ---
+  'patterns-content-hub': {
+    description:
+      'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+  },
+
+  'patterns-landing-pages': {
+    description:
+      'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
+  },
+
   'example-page-template-example': {
     description:
       'Complete page templates showing how to compose Mangrove components into working UNDRR-branded pages with all required scripts and assets.',

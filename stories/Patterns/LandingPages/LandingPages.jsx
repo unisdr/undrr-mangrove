@@ -262,10 +262,7 @@ const words = {
 const factIcons = ['globe', 'cubes', 'tags', 'chart-bar'];
 function Breadcrumbs({ label, home, trail, current }) {
   return (
-    <nav
-      className="mg-breadcrumb mg-landing-example__breadcrumbs"
-      aria-label={label}
-    >
+    <nav className="mg-breadcrumb mg-page-breadcrumbs" aria-label={label}>
       <ul>
         <li>
           <a href="https://www.undrr.org/">{home}</a>
@@ -299,17 +296,13 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
   const page = text[archetype];
 
   return (
-    <div
-      className="mg-landing-example"
-      lang={arabic ? 'ar' : 'en'}
-      dir={arabic ? 'rtl' : undefined}
-    >
-      <a className="mg-landing-example__skip" href={`#${id}-content`}>
+    <div lang={arabic ? 'ar' : 'en'} dir={arabic ? 'rtl' : undefined}>
+      <a className="mg-skip-link" href={`#${id}-content`}>
         {text.skip}
       </a>
       <UndrrChrome locale={locale} id={`${id}-header`} />
 
-      <div className="mg-landing-example__shell | mg-container">
+      <div className="mg-page-shell | mg-container">
         <Breadcrumbs
           label={text.breadcrumbs}
           home={text.home}
@@ -317,11 +310,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
           current={page.title}
         />
 
-        <main
-          id={`${id}-content`}
-          className="mg-landing-example__main"
-          tabIndex={-1}
-        >
+        <main id={`${id}-content`} className="mg-page-main" tabIndex={-1}>
           {archetype === 'topic' && (
             <>
               <Hero
@@ -337,10 +326,10 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 ]}
               />
 
-              <section className="mg-landing-example__section">
+              <section className="mg-section">
                 <h2>{page.routesHeading}</h2>
-                <p className="mg-landing-example__lede">{page.routesIntro}</p>
-                <div className="mg-landing-example__routes | mg-grid mg-grid__col-3">
+                <p className="mg-lede">{page.routesIntro}</p>
+                <div className="mg-grid mg-grid__col-3">
                   <IconCard
                     orientation="horizontal"
                     data={page.routes.map(([title, summaryText, icon], i) => ({
@@ -353,11 +342,11 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 </div>
               </section>
 
-              <section className="mg-landing-example__band">
-                <div className="mg-landing-example__band-inner | mg-container">
+              <section className="mg-band">
+                <div className="mg-band__inner | mg-container">
                   <h2>{page.bandHeading}</h2>
-                  <p className="mg-landing-example__lede">{page.bandText}</p>
-                  <ul className="mg-landing-example__facts">
+                  <p className="mg-lede">{page.bandText}</p>
+                  <ul className="mg-facts">
                     {page.facts.map((fact, index) => (
                       <li key={fact}>
                         <span
@@ -371,9 +360,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 </div>
               </section>
 
-              <section className="mg-landing-example__section">
+              <section className="mg-section">
                 <h2>{page.relatedHeading}</h2>
-                <div className="mg-landing-example__cards | mg-grid mg-grid__col-3">
+                <div className="mg-grid mg-grid__col-3">
                   <VerticalCard
                     data={page.related.map(([title, summaryText]) => ({
                       title,
@@ -401,13 +390,13 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
           {archetype === 'report' && (
             <>
-              <div className="mg-landing-example__masthead">
-                <div className="mg-landing-example__masthead-inner | mg-container">
+              <div className="mg-band mg-band--feature">
+                <div className="mg-band__inner | mg-container">
                   <h1>{page.title}</h1>
-                  <p className="mg-landing-example__lede">{page.intro}</p>
+                  <p className="mg-lede">{page.intro}</p>
                 </div>
               </div>
-              <div className="mg-landing-example__reading mg-landing-example__reading--with-contents">
+              <div className="mg-reading mg-reading--with-contents">
                 <TableOfContents
                   key={locale}
                   title={text.onPage}
@@ -416,7 +405,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                     text: heading,
                   }))}
                 />
-                <div className="mg-landing-example__article">
+                <div className="mg-reading__article">
                   {page.sections.map(([heading, body], index) => (
                     <section key={heading} id={`${id}-section-${index}`}>
                       <h2>{heading}</h2>
@@ -430,17 +419,17 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
           {archetype === 'index' && (
             <>
-              <div className="mg-landing-example__intro">
+              <div className="mg-page-intro">
                 <h1>{page.title}</h1>
-                <p className="mg-landing-example__lede">{page.intro}</p>
+                <p className="mg-lede">{page.intro}</p>
               </div>
               {page.groups.map(([heading, titles]) => (
-                <section key={heading} className="mg-landing-example__section">
+                <section key={heading} className="mg-section">
                   <h2>{heading}</h2>
                   <p>
                     <a href={links.collection}>{page.groupLink}</a>
                   </p>
-                  <div className="mg-landing-example__books | mg-grid mg-grid__col-3">
+                  <div className="mg-grid mg-grid__col-3">
                     <BookCard
                       data={titles.map(title => ({
                         title,

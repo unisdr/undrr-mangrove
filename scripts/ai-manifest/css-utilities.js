@@ -87,7 +87,8 @@ export default {
         },
         {
           class: 'mg-container--padded',
-          description: 'Adds 2rem vertical padding (top and bottom) to the container.',
+          description:
+            'Adds 2rem vertical padding (top and bottom) to the container.',
           usage:
             '<div class="mg-container mg-container--padded">Padded content</div>',
         },
@@ -109,6 +110,81 @@ export default {
     },
 
     // ---------------------------------------------------------------
+    // 1b. Page composition
+    // ---------------------------------------------------------------
+    {
+      name: 'Page composition',
+      description:
+        'Layout pieces a full page is assembled from: the reading column, tinted full-width bands, and the supporting text around them. Used by the content hub and landing page patterns.',
+      classes: [
+        {
+          class: 'mg-page-shell',
+          description:
+            'Page content wrapper. Pair with mg-container; widens its gutter below 48rem so text does not sit against the screen edge.',
+          usage: '<div class="mg-page-shell | mg-container">…</div>',
+        },
+        {
+          class: 'mg-page-intro',
+          description:
+            'Page title and lede block. Constrains the measure and sizes the h1 responsively.',
+          usage:
+            '<div class="mg-page-intro">\n  <h1>Page title</h1>\n  <p>Supporting lede.</p>\n</div>',
+        },
+        {
+          class: 'mg-lede',
+          description:
+            'A supporting paragraph at a slightly larger size, constrained to a readable measure.',
+          usage: '<p class="mg-lede">Supporting text.</p>',
+        },
+        {
+          class: 'mg-section',
+          description: 'Vertical rhythm between the sections of a page.',
+          usage: '<section class="mg-section">…</section>',
+        },
+        {
+          class: 'mg-band',
+          description:
+            'Tinted full-width band. Breaks out to the viewport edges without relying on a negative z-index, so it survives an ancestor with its own background. Pair the inner element with mg-container.',
+          usage:
+            '<section class="mg-band">\n  <div class="mg-band__inner | mg-container">…</div>\n</section>',
+        },
+        {
+          class: 'mg-band--feature',
+          description:
+            'A band carrying the page title rather than a supporting section: hero colour, light text.',
+          usage:
+            '<div class="mg-band mg-band--feature">\n  <div class="mg-band__inner | mg-container"><h1>Report title</h1></div>\n</div>',
+        },
+        {
+          class: 'mg-facts',
+          description:
+            'Responsive grid of short icon-and-label facts, for the supporting band on a landing page.',
+          usage:
+            '<ul class="mg-facts">\n  <li><span class="mg-icon mg-icon-globe" aria-hidden="true"></span>A short fact</li>\n</ul>',
+        },
+        {
+          class: 'mg-reading',
+          description:
+            'Reading column. Add mg-reading--with-contents to place a table of contents in a sticky right sidebar above 48rem.',
+          usage:
+            '<div class="mg-reading mg-reading--with-contents">\n  <div class="mg-table-of-contents">…</div>\n  <div class="mg-reading__article">…</div>\n</div>',
+        },
+        {
+          class: 'mg-skip-link',
+          description:
+            'Visually hidden skip link that appears on focus. Place first inside the page wrapper.',
+          usage:
+            '<a class="mg-skip-link" href="#content">Skip to page content</a>',
+        },
+        {
+          class: 'mg-page-breadcrumbs',
+          description:
+            'Spacing and size for a breadcrumb trail above page content. Pair with mg-breadcrumb.',
+          usage: '<nav class="mg-breadcrumb mg-page-breadcrumbs">…</nav>',
+        },
+      ],
+    },
+
     // 2. Grid
     // ---------------------------------------------------------------
     {
@@ -129,7 +205,8 @@ export default {
         },
         {
           class: 'mg-grid__col-2',
-          description: 'Two-column grid at tablet and above. Single column on mobile.',
+          description:
+            'Two-column grid at tablet and above. Single column on mobile.',
           usage:
             '<div class="mg-grid mg-grid__col-2">\n  <div>Column 1</div>\n  <div>Column 2</div>\n</div>',
         },
@@ -213,7 +290,8 @@ export default {
         },
         {
           class: 'mg-grid__col--span-all',
-          description: 'Child element spans the full width of the grid (grid-column: 1 / -1).',
+          description:
+            'Child element spans the full width of the grid (grid-column: 1 / -1).',
           usage:
             '<div class="mg-grid mg-grid__col-3">\n  <div class="mg-grid__col--span-all">Full-width row</div>\n  <div>Col 1</div>\n  <div>Col 2</div>\n  <div>Col 3</div>\n</div>',
         },
@@ -249,7 +327,8 @@ export default {
     // ---------------------------------------------------------------
     {
       name: 'Responsive display',
-      description: 'Toggle element visibility based on viewport width. Breakpoint: 900px (tablet).',
+      description:
+        'Toggle element visibility based on viewport width. Breakpoint: 900px (tablet).',
       classes: [
         {
           class: 'mg-u-responsive--show-large',
@@ -275,11 +354,13 @@ export default {
           class: 'mg-u-text-wrap-balanced',
           description:
             'Applies CSS text-wrap: balance for more even line breaks in headings.',
-          usage: '<h2 class="mg-u-text-wrap-balanced">A heading that wraps evenly across lines</h2>',
+          usage:
+            '<h2 class="mg-u-text-wrap-balanced">A heading that wraps evenly across lines</h2>',
         },
         {
           class: 'mg-u-text-wrap-pretty',
-          description: 'Applies CSS text-wrap: pretty to optimize wrapping for readability.',
+          description:
+            'Applies CSS text-wrap: pretty to optimize wrapping for readability.',
         },
         {
           class: 'mg-u-comma-between',
@@ -346,7 +427,8 @@ export default {
         },
         {
           class: 'mg-u-align-items-center',
-          description: 'Vertically centers flex children (align-items: center).',
+          description:
+            'Vertically centers flex children (align-items: center).',
         },
         {
           class: 'mg-u-gap-100',
@@ -377,8 +459,7 @@ export default {
         },
         {
           class: 'mg-u-push-center',
-          description:
-            'Centers element horizontally via margin-inline: auto.',
+          description: 'Centers element horizontally via margin-inline: auto.',
         },
       ],
     },
@@ -396,12 +477,20 @@ export default {
         ...colorScale('blue', 'Blue'),
         ...colorScale('orange', 'Orange'),
         ...colorScale('red', 'Red'),
-        { class: 'mg-u-background-color--neutral-0', description: 'Neutral 0 (white) background' },
-        { class: 'mg-u-background-color--neutral-25', description: 'Neutral 25 background' },
-        ...colorShades.filter(s => s >= 50).map(s => ({
-          class: `mg-u-background-color--neutral-${s}`,
-          description: `Neutral ${s} background`,
-        })),
+        {
+          class: 'mg-u-background-color--neutral-0',
+          description: 'Neutral 0 (white) background',
+        },
+        {
+          class: 'mg-u-background-color--neutral-25',
+          description: 'Neutral 25 background',
+        },
+        ...colorShades
+          .filter(s => s >= 50)
+          .map(s => ({
+            class: `mg-u-background-color--neutral-${s}`,
+            description: `Neutral ${s} background`,
+          })),
         bgClass('accent-100', 'Accent 100 background'),
         bgClass('accent-200', 'Accent 200 background'),
         bgClass('accent-300', 'Accent 300 background'),
@@ -409,9 +498,18 @@ export default {
         deprecatedSendaiClass('mg-u-background-color--sendai-red', 'red'),
         deprecatedSendaiClass('mg-u-background-color--sendai-orange', 'orange'),
         deprecatedSendaiClass('mg-u-background-color--sendai-purple', 'purple'),
-        deprecatedSendaiClass('mg-u-background-color--sendai-turquoise', 'turquoise'),
-        bgClass('interactive', 'Interactive color background (default: blue-900)'),
-        bgClass('interactive-active', 'Interactive active color background (default: blue-700)'),
+        deprecatedSendaiClass(
+          'mg-u-background-color--sendai-turquoise',
+          'turquoise'
+        ),
+        bgClass(
+          'interactive',
+          'Interactive color background (default: blue-900)'
+        ),
+        bgClass(
+          'interactive-active',
+          'Interactive active color background (default: blue-700)'
+        ),
       ],
     },
 
@@ -429,10 +527,12 @@ export default {
         ...textColorScale('orange', 'Orange'),
         ...textColorScale('red', 'Red'),
         { class: 'mg-u-color--neutral-0', description: 'Neutral 0 text color' },
-        ...colorShades.filter(s => s >= 50).map(s => ({
-          class: `mg-u-color--neutral-${s}`,
-          description: `Neutral ${s} text color`,
-        })),
+        ...colorShades
+          .filter(s => s >= 50)
+          .map(s => ({
+            class: `mg-u-color--neutral-${s}`,
+            description: `Neutral ${s} text color`,
+          })),
         textClass('accent-100', 'Accent 100 text color'),
         textClass('accent-200', 'Accent 200 text color'),
         textClass('accent-300', 'Accent 300 text color'),
@@ -442,7 +542,10 @@ export default {
         deprecatedSendaiClass('mg-u-color--sendai-purple', 'purple'),
         deprecatedSendaiClass('mg-u-color--sendai-turquoise', 'turquoise'),
         textClass('interactive', 'Interactive color text (default: blue-900)'),
-        textClass('interactive-active', 'Interactive active color text (default: blue-700)'),
+        textClass(
+          'interactive-active',
+          'Interactive active color text (default: blue-700)'
+        ),
       ],
     },
 

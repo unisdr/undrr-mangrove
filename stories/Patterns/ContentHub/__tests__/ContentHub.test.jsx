@@ -200,9 +200,7 @@ test.each(['overview', 'how-to-report'])(
 
     render(<ContentHub initialPage={page} withHero />);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
-    expect(
-      document.querySelector('.mg-hub-example__intro')
-    ).not.toBeInTheDocument();
+    expect(document.querySelector('.mg-page-intro')).not.toBeInTheDocument();
     // Identity is invariant chrome: a hero must not change or displace it.
     expect(document.querySelector('.mg-hub-header__identity').textContent).toBe(
       identity
@@ -279,10 +277,10 @@ test('shows ancestry only where it says something the hub navigation cannot', ()
 
 test('routes are horizontal icon cards by default, vertical on request', () => {
   const { container, rerender } = render(<ContentHub initialPage="overview" />);
-  const cards = container.querySelector('.mg-hub-example__cards--icon');
-  expect(cards.querySelectorAll('.mg-card__icon--horizontal')).toHaveLength(3);
+  const routes = container.querySelector('.mg-grid');
+  expect(routes.querySelectorAll('.mg-card__icon--horizontal')).toHaveLength(3);
   // Same destinations either way; only the presentation changes.
-  expect(within(cards).getByRole('link', { name: 'Reporting' })).toBeVisible();
+  expect(within(routes).getByRole('link', { name: 'Reporting' })).toBeVisible();
 
   rerender(<ContentHub initialPage="overview" routeCards="vertical" />);
   expect(
@@ -298,6 +296,6 @@ test('has no detectable accessibility violations on a detail page', async () => 
   // this composition cannot correct from the outside. Remove this scoping once
   // MegaMenu is fixed.
   expect(
-    await axe(container.querySelector('.mg-hub-example__shell'))
+    await axe(container.querySelector('.mg-page-shell'))
   ).toHaveNoViolations();
 });

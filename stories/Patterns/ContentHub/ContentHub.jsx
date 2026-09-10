@@ -333,19 +333,15 @@ export function ContentHub({
   const RouteCards = routeCards === 'icon' ? IconCard : VerticalCard;
 
   return (
-    <div
-      className="mg-hub-example"
-      lang={arabic ? 'ar' : 'en'}
-      dir={arabic ? 'rtl' : undefined}
-    >
-      <a className="mg-hub-example__skip" href={`#${prefix}-content`}>
+    <div lang={arabic ? 'ar' : 'en'} dir={arabic ? 'rtl' : undefined}>
+      <a className="mg-skip-link" href={`#${prefix}-content`}>
         {text.skip}
       </a>
       <UndrrChrome locale={locale} id={`${prefix}-header`} />
-      <div className="mg-hub-example__shell | mg-container">
+      <div className="mg-page-shell | mg-container">
         {showBreadcrumbs && (
           <nav
-            className="mg-breadcrumb mg-hub-example__breadcrumbs"
+            className="mg-breadcrumb mg-page-breadcrumbs"
             aria-label={text.breadcrumbs}
           >
             <ul>
@@ -397,7 +393,7 @@ export function ContentHub({
         <main
           ref={content}
           id={`${prefix}-content`}
-          className="mg-hub-example__main"
+          className="mg-page-main"
           tabIndex={-1}
         >
           {pageHero && (
@@ -423,7 +419,7 @@ export function ContentHub({
             />
           )}
           {!hero && (
-            <div className="mg-hub-example__intro">
+            <div className="mg-page-intro">
               <h1>{title}</h1>
               <p>{intro}</p>
             </div>
@@ -439,12 +435,10 @@ export function ContentHub({
                   buttons={[{ label: text.open, url: href('overview') }]}
                 />
               )}
-              <section className="mg-hub-example__section">
+              <section className="mg-section">
                 <h2>{text.related}</h2>
-                <p className="mg-hub-example__lede">{text.relatedIntro}</p>
-                <div
-                  className={`mg-hub-example__cards mg-hub-example__cards--${routeCards} | mg-grid mg-grid__col-3`}
-                >
+                <p className="mg-lede">{text.relatedIntro}</p>
+                <div className={`mg-grid mg-grid__col-3`}>
                   <RouteCards
                     data={groupCards}
                     {...(routeCards === 'icon' && {
@@ -456,11 +450,11 @@ export function ContentHub({
               {page === 'overview' && (
                 // Full-width tinted band, the alternating rhythm real UNDRR
                 // landing pages are built from.
-                <section className="mg-hub-example__band">
-                  <div className="mg-hub-example__band-inner | mg-container">
+                <section className="mg-band">
+                  <div className="mg-band__inner | mg-container">
                     <h2>{text.aboutHeading}</h2>
-                    <p className="mg-hub-example__lede">{text.aboutText}</p>
-                    <ul className="mg-hub-example__facts">
+                    <p className="mg-lede">{text.aboutText}</p>
+                    <ul className="mg-facts">
                       {text.facts.map((fact, index) => (
                         <li key={fact}>
                           <span
@@ -477,7 +471,7 @@ export function ContentHub({
             </>
           )}
           {page === 'reporting' && (
-            <div className="mg-hub-example__cards | mg-grid mg-grid__col-2">
+            <div className="mg-grid mg-grid__col-2">
               <VerticalCard
                 data={[
                   {
@@ -496,7 +490,7 @@ export function ContentHub({
           )}
           {detail && (
             <div
-              className={`mg-hub-example__reading${showOnThisPage ? ' mg-hub-example__reading--with-contents' : ''}`}
+              className={`mg-reading${showOnThisPage ? ' mg-reading--with-contents' : ''}`}
             >
               {showOnThisPage && (
                 <TableOfContents
@@ -508,7 +502,7 @@ export function ContentHub({
                   }))}
                 />
               )}
-              <div className="mg-hub-example__article">
+              <div className="mg-reading__article">
                 {articleHeadings.map((label, index) => (
                   <section key={label} id={`${prefix}/${page}/${index}`}>
                     <h2>{label}</h2>
@@ -532,7 +526,7 @@ export function ContentHub({
             </div>
           )}
           {['about', 'indicators', 'reports', 'data'].includes(page) && (
-            <section className="mg-hub-example__section">
+            <section className="mg-section">
               <h2>{text.resources}</h2>
               <p>{text.reportText}</p>
               <a href="https://sendaimonitor.undrr.org/">{text.reportLink}</a>
