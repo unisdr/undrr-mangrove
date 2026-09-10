@@ -23,7 +23,7 @@ describe('Checkbox', () => {
 
   it('renders label before checkbox when labelPosition is "before"', () => {
     const { container } = render(
-      <Checkbox label="Accept terms" value="terms" labelPosition="before" />,
+      <Checkbox label="Accept terms" value="terms" labelPosition="before" />
     );
     const wrapper = container.querySelector('.mg-form-check');
     const children = Array.from(wrapper.children);
@@ -33,7 +33,7 @@ describe('Checkbox', () => {
 
   it('renders label after checkbox by default', () => {
     const { container } = render(
-      <Checkbox label="Accept terms" value="terms" />,
+      <Checkbox label="Accept terms" value="terms" />
     );
     const wrapper = container.querySelector('.mg-form-check');
     const children = Array.from(wrapper.children);
@@ -54,7 +54,7 @@ describe('Checkbox', () => {
   it('calls onChange when clicked', () => {
     const handleChange = jest.fn();
     render(
-      <Checkbox label="Accept terms" value="terms" onChange={handleChange} />,
+      <Checkbox label="Accept terms" value="terms" onChange={handleChange} />
     );
     fireEvent.click(screen.getByRole('checkbox'));
     expect(handleChange).toHaveBeenCalled();
@@ -62,22 +62,19 @@ describe('Checkbox', () => {
 
   it('uses aria-label from value when no label is provided', () => {
     render(<Checkbox value="terms" />);
-    expect(screen.getByRole('checkbox')).toHaveAttribute(
-      'aria-label',
-      'terms',
-    );
+    expect(screen.getByRole('checkbox')).toHaveAttribute('aria-label', 'terms');
   });
 
   it('applies BEM class names', () => {
     const { container } = render(
-      <Checkbox label="Accept terms" value="terms" />,
+      <Checkbox label="Accept terms" value="terms" />
     );
     expect(container.querySelector('.mg-form-check')).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-check__input--checkbox'),
+      container.querySelector('.mg-form-check__input--checkbox')
     ).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-check__label'),
+      container.querySelector('.mg-form-check__label')
     ).toBeInTheDocument();
   });
 
@@ -92,12 +89,12 @@ describe('Checkbox', () => {
         value="terms"
         error
         errorText="You must accept the terms"
-      />,
+      />
     );
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'You must accept the terms',
+      'You must accept the terms'
     );
   });
 
@@ -108,13 +105,13 @@ describe('Checkbox', () => {
         value="terms"
         error
         errorText="You must accept the terms"
-      />,
+      />
     );
     const checkbox = screen.getByRole('checkbox');
     const describedBy = checkbox.getAttribute('aria-describedby');
     expect(describedBy).toBeTruthy();
     expect(document.getElementById(describedBy)).toHaveTextContent(
-      'You must accept the terms',
+      'You must accept the terms'
     );
   });
 
@@ -125,17 +122,21 @@ describe('Checkbox', () => {
 
   it('does not render error text when error is false', () => {
     render(
-      <Checkbox label="Accept terms" value="terms" errorText="Should not appear" />,
+      <Checkbox
+        label="Accept terms"
+        value="terms"
+        errorText="Should not appear"
+      />
     );
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('applies error BEM class to input', () => {
     const { container } = render(
-      <Checkbox label="Accept terms" value="terms" error errorText="Error" />,
+      <Checkbox label="Accept terms" value="terms" error errorText="Error" />
     );
     expect(
-      container.querySelector('.mg-form-check__input--error'),
+      container.querySelector('.mg-form-check__input--error')
     ).toBeInTheDocument();
   });
 
@@ -145,7 +146,7 @@ describe('Checkbox', () => {
 
   it('has no a11y violations', async () => {
     const { container } = render(
-      <Checkbox label="Accept terms" value="terms" />,
+      <Checkbox label="Accept terms" value="terms" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -157,7 +158,7 @@ describe('Checkbox', () => {
         value="terms"
         error
         errorText="You must accept the terms"
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -167,7 +168,7 @@ describe('Checkbox', () => {
       <FormGroup legend="Interests">
         <Checkbox label="Option A" value="a" name="group" />
         <Checkbox label="Option B" value="b" name="group" />
-      </FormGroup>,
+      </FormGroup>
     );
     expect(await axe(container)).toHaveNoViolations();
   });

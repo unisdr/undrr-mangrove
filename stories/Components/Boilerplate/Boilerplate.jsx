@@ -22,7 +22,13 @@ import PropTypes from 'prop-types';
  * @param {'primary'|'secondary'} [props.variant='primary']  Visual variant
  * @returns {JSX.Element} Rendered Boilerplate component
  */
-export function Boilerplate({ title, href, children, variant = 'primary', ...props }) {
+export function Boilerplate({
+  title,
+  href,
+  children,
+  variant = 'primary',
+  ...props
+}) {
   return (
     <div className={`mg-boilerplate mg-boilerplate--${variant}`} {...props}>
       <h2 className="mg-boilerplate__title">

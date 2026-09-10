@@ -5,7 +5,11 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ResultItem, swapCardVariant, stripHiddenTeaserFields } from '../components/ResultItem';
+import {
+  ResultItem,
+  swapCardVariant,
+  stripHiddenTeaserFields,
+} from '../components/ResultItem';
 
 // Sample teaser HTML mimicking Elasticsearch output
 const TEASER_HC = [
@@ -80,14 +84,16 @@ describe('swapCardVariant', () => {
   });
 
   it('rewrites Drupal image style to portrait for card-book mode', () => {
-    const html = '<img src="https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc">';
+    const html =
+      '<img src="https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc">';
     const result = swapCardVariant(html, 'card-book');
     expect(result).toContain('/styles/por/public/');
     expect(result).not.toContain('landscape_16_9');
   });
 
   it('rewrites Drupal image style to landscape for card mode', () => {
-    const html = '<img src="https://www.undrr.org/sites/default/files/styles/por/public/2023-06/photo.jpg?itok=abc">';
+    const html =
+      '<img src="https://www.undrr.org/sites/default/files/styles/por/public/2023-06/photo.jpg?itok=abc">';
     const result = swapCardVariant(html, 'card');
     expect(result).toContain('/styles/landscape_16_9/public/');
     expect(result).not.toContain('/styles/por/');
@@ -101,7 +107,10 @@ describe('stripHiddenTeaserFields', () => {
   });
 
   it('removes elements matching hidden field selectors', () => {
-    const result = stripHiddenTeaserFields(TEASER_HC, { image: false, summary: false });
+    const result = stripHiddenTeaserFields(TEASER_HC, {
+      image: false,
+      summary: false,
+    });
     expect(result).not.toContain('mg-card__visual');
     expect(result).not.toContain('mg-card__description');
     expect(result).toContain('mg-card__date');
@@ -210,6 +219,8 @@ describe('ResultItem', () => {
     );
 
     const link = screen.getByRole('link', { name: 'Org' });
-    expect(link.getAttribute('href')).toBe('https://www.preventionweb.net/node/456');
+    expect(link.getAttribute('href')).toBe(
+      'https://www.preventionweb.net/node/456'
+    );
   });
 });

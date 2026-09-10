@@ -59,9 +59,12 @@ First focusable element inside the page wrapper, before the brand bar. Anything 
 
 Not by default, but it can on request. `PageHeader` takes two optional props:
 
-<Source language="jsx" code={`
+<Source
+  language="jsx"
+  code={`
 <PageHeader skipLinkTarget="main-content" skipLinkLabel="Skip to main content" />
-`} />
+`}
+/>
 
 With `skipLinkTarget` set, the header renders the skip link immediately before its own `<header>` element. Omit the prop and the output is exactly what it was before, so nothing existing changes.
 
@@ -77,28 +80,31 @@ import { SkipLink } from '@undrr/undrr-mangrove';
 <SkipLink targetId="main-content" label="Skip to main content" />
 `} />
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `targetId` | string | `'main-content'` | Id of the `<main>` element to skip to. That element also needs `tabIndex={-1}`. |
-| `label` | string | `'Skip to main content'` | Visible link text. Supply a translated string on non-English pages. |
-| `className` | string | — | Additional CSS classes |
-| `onClick` | function | — | Additional click handler, called after focus moves to the target |
+| Prop        | Type     | Default                  | Description                                                                     |
+| ----------- | -------- | ------------------------ | ------------------------------------------------------------------------------- |
+| `targetId`  | string   | `'main-content'`         | Id of the `<main>` element to skip to. That element also needs `tabIndex={-1}`. |
+| `label`     | string   | `'Skip to main content'` | Visible link text. Supply a translated string on non-English pages.             |
+| `className` | string   | —                        | Additional CSS classes                                                          |
+| `onClick`   | function | —                        | Additional click handler, called after focus moves to the target                |
 
 ## Plain HTML
 
 The component is one anchor and one class, so a Twig template or a static page can emit it directly:
 
-<Source language="html" code={`
+<Source
+  language="html"
+  code={`
 <a class="mg-skip-link" href="#main-content">Skip to main content</a>
-`} />
+`}
+/>
 
 ## CSS
 
-| Class | Description |
-|---|---|
+| Class          | Description                                                                         |
+| -------------- | ----------------------------------------------------------------------------------- |
 | `mg-skip-link` | Visually hidden until focused, then shown in normal flow with a bordered white band |
 
-`mg-skip-link` is deliberately not built on `mg-u-sr-only`. That utility has no `:focus` reveal — correct for permanently hidden text, wrong for a link whose whole behaviour is *becomes visible when focused*.
+`mg-skip-link` is deliberately not built on `mg-u-sr-only`. That utility has no `:focus` reveal — correct for permanently hidden text, wrong for a link whose whole behaviour is _becomes visible when focused_.
 
 Colours come from `--mg-color-neutral-0` and `--mg-color-text`, the same theme-invariant pair body copy uses, so the revealed link grades in all five themes whatever it happens to sit on. The focus ring is the inset variant, because the link spans the full width at the very top of the viewport where an outward ring would be drawn off-screen.
 

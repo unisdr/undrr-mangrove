@@ -48,54 +48,126 @@
 // Bare fa-* selectors (specificity 0,1,1) are safe because the base mask rule
 // uses :not([class*="fa-"]) (specificity 0,2,1) and is excluded for these elements.
 
-.fa-rss:before { content: "\f09e"; }
-.fa-file-alt:before { content: "\f15c"; }
-.fa-file:before { content: "\f15b"; }
-.fa-facebook:before { content: "\f230"; }
+.fa-rss:before {
+  content: "\f09e";
+}
+.fa-file-alt:before {
+  content: "\f15c";
+}
+.fa-file:before {
+  content: "\f15b";
+}
+.fa-facebook:before {
+  content: "\f230";
+}
 
 .fa-x-social:before,
-.fa-twitter:before { content: "\f099"; }
+.fa-twitter:before {
+  content: "\f099";
+}
 
-.fa-linkedin:before { content: "\f0e1"; }
-.fa-flickr:before { content: "\f16e"; }
-.fa-youtube:before { content: "\f16a"; }
-.fa-search:before { content: "\e808"; }
+.fa-linkedin:before {
+  content: "\f0e1";
+}
+.fa-flickr:before {
+  content: "\f16e";
+}
+.fa-youtube:before {
+  content: "\f16a";
+}
+.fa-search:before {
+  content: "\e808";
+}
 
 .fa-envelope:before,
-.fa-envelope-o:before { content: "\e806"; }
+.fa-envelope-o:before {
+  content: "\e806";
+}
 
-.fa-newspaper:before { content: "\f1ea"; }
+.fa-newspaper:before {
+  content: "\f1ea";
+}
 
 .fa-chart-bar:before,
-.fa-bar-chart:before { content: "\e80B"; }
+.fa-bar-chart:before {
+  content: "\e80B";
+}
 
-.fa-graduation-cap:before { content: "\f19D"; }
-.fa-calendar-alt:before { content: "\f133"; }
-.fa-building:before { content: "\f0F7"; }
-.fa-landmark:before { content: "\f19c"; }
-.fa-pen-nib:before { content: "\f0f6"; }
-.fa-business-time:before { content: "\e809"; }
-.fa-code-branch:before { content: "\f126"; }
-.fa-life-ring:before { content: "\f1cd"; }
-.fa-lightbulb:before { content: "\f0eb"; }
-.fa-cubes:before { content: "\f1b3"; }
+.fa-graduation-cap:before {
+  content: "\f19D";
+}
+.fa-calendar-alt:before {
+  content: "\f133";
+}
+.fa-building:before {
+  content: "\f0F7";
+}
+.fa-landmark:before {
+  content: "\f19c";
+}
+.fa-pen-nib:before {
+  content: "\f0f6";
+}
+.fa-business-time:before {
+  content: "\e809";
+}
+.fa-code-branch:before {
+  content: "\f126";
+}
+.fa-life-ring:before {
+  content: "\f1cd";
+}
+.fa-lightbulb:before {
+  content: "\f0eb";
+}
+.fa-cubes:before {
+  content: "\f1b3";
+}
 
 .fa-sort-alpha-down:before,
-.fa-tags:before { content: "\e800"; }
+.fa-tags:before {
+  content: "\e800";
+}
 
-.fa-power-off:before { content: "\f090"; }
-.fa-user:before { content: "\e805"; }
-.fa-times:before { content: "\f00d"; }
-.fa-link:before { content: "\e802"; }
-.fa-clone:before { content: "\f24d"; }
-.fa-share:before { content: "\f1e0"; }
-.fa-globe:before { content: "\f0ac"; }
-.fa-qrcode:before { content: "\e899"; }
-.fa-left:before { content: "\f177"; }
-.fa-right:before { content: "\f178"; }
-.fa-angle-circled-right:before { content: "\f138"; }
-.fa-angle-circled-left:before { content: "\f137"; }
-.fa-menu:before { content: "\f0c9"; }
+.fa-power-off:before {
+  content: "\f090";
+}
+.fa-user:before {
+  content: "\e805";
+}
+.fa-times:before {
+  content: "\f00d";
+}
+.fa-link:before {
+  content: "\e802";
+}
+.fa-clone:before {
+  content: "\f24d";
+}
+.fa-share:before {
+  content: "\f1e0";
+}
+.fa-globe:before {
+  content: "\f0ac";
+}
+.fa-qrcode:before {
+  content: "\e899";
+}
+.fa-left:before {
+  content: "\f177";
+}
+.fa-right:before {
+  content: "\f178";
+}
+.fa-angle-circled-right:before {
+  content: "\f138";
+}
+.fa-angle-circled-left:before {
+  content: "\f137";
+}
+.fa-menu:before {
+  content: "\f0c9";
+}
 
 // Mask-image icon system
 // content: "" and background-color: currentColor live in .mg-icon:not([class*="fa-"])::before

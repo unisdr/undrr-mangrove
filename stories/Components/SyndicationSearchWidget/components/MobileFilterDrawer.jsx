@@ -23,7 +23,11 @@
  */
 
 import React, { useEffect, useRef, useCallback } from 'react';
-import { useSearchState, useSearchLabels, interpolateLabel } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchLabels,
+  interpolateLabel,
+} from '../context/SearchContext';
 import FacetsSidebar from './FacetsSidebar';
 
 /**
@@ -51,7 +55,8 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
       const originalPaddingRight = document.body.style.paddingRight;
 
       // Prevent layout shift from scrollbar removal
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
@@ -78,7 +83,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (e.key === 'Escape') {
         onClose();
       }
@@ -89,7 +94,7 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   }, [isOpen, onClose]);
 
   // Focus trap - keep focus within drawer
-  const handleKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback(e => {
     if (e.key !== 'Tab' || !drawerRef.current) return;
 
     const focusableElements = drawerRef.current.querySelectorAll(
@@ -108,12 +113,15 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   }, []);
 
   // Handle backdrop click - closes drawer
-  const handleBackdropClick = useCallback((e) => {
-    // Only close if clicking the backdrop itself, not the drawer
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }, [onClose]);
+  const handleBackdropClick = useCallback(
+    e => {
+      // Only close if clicking the backdrop itself, not the drawer
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   if (!isOpen) {
     return null;
@@ -135,7 +143,10 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
       >
         {/* Drawer header - sticky */}
         <header className="mg-search__drawer-header">
-          <h2 id={`${widgetId}-drawer-title`} className="mg-search__drawer-title">
+          <h2
+            id={`${widgetId}-drawer-title`}
+            className="mg-search__drawer-title"
+          >
             {labels.drawerTitle}
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-count">
@@ -184,7 +195,9 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
             {activeFilterCount > 0 && (
               <span className="mg-search__drawer-apply-count">
                 {interpolateLabel(
-                  activeFilterCount !== 1 ? labels.filtersAppliedPlural : labels.filtersApplied,
+                  activeFilterCount !== 1
+                    ? labels.filtersAppliedPlural
+                    : labels.filtersApplied,
                   { count: activeFilterCount }
                 )}
               </span>

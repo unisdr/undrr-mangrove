@@ -69,10 +69,16 @@ Load the compiled CSS from UNDRR's CDN. Pick the theme that matches your site:
 
 ```html
 <!-- UNDRR default theme -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css"
+/>
 
 <!-- Or a site-specific theme -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style-preventionweb.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style-preventionweb.css"
+/>
 ```
 
 Available theme files: `style.css`, `style-preventionweb.css`, `style-mcr.css`, `style-irp.css`, `style-delta.css`, and the combined `style-all.css` (base plus all sub-brand theme blocks, switched by body class). The legacy 10px-root variants were removed in 2.0 — Mangrove now assumes a standard 16px document root. See the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs) (breaking change #5) if you are migrating from the old 10px root.
@@ -87,23 +93,23 @@ If your build pipeline supports Sass, you can import the source SCSS files direc
 
 All exports from `@undrr/undrr-mangrove`:
 
-| Export | Description |
-|--------|-------------|
-| `BarChart` | Configurable bar chart built on d3 |
-| `CookieConsentBanner` | UNDRR cookie consent banner (loads from CDN) |
-| `Fetcher` | Data-fetching wrapper with loading state and render prop |
-| `Gallery` | Image/video gallery with thumbnails and lightbox |
-| `IconCard` | Card with icon, heading, and description |
-| `MapComponent` | Leaflet-based map with marker clustering |
-| `MegaMenu` | Multi-level navigation with sections, banners, and optional branded logo |
-| `Pager` | Pagination with centered and bar layouts, jump-to, and range display |
-| `QuoteHighlight` | Blockquote with attribution, portrait, and background variants |
-| `ScrollContainer` | Horizontally scrollable container with arrow navigation |
-| `ShareButtons` | Social sharing buttons (LinkedIn, Facebook, X, email, QR code) |
-| `Snackbar` | Toast notification with severity levels and auto-dismiss |
-| `StatsCard` | Statistics display with icon, value, labels, and optional links |
-| `SyndicationSearchWidget` | PreventionWeb syndication search interface |
-| `createHydrator` | Runtime for mounting React components into server-rendered DOM containers |
+| Export                    | Description                                                               |
+| ------------------------- | ------------------------------------------------------------------------- |
+| `BarChart`                | Configurable bar chart built on d3                                        |
+| `CookieConsentBanner`     | UNDRR cookie consent banner (loads from CDN)                              |
+| `Fetcher`                 | Data-fetching wrapper with loading state and render prop                  |
+| `Gallery`                 | Image/video gallery with thumbnails and lightbox                          |
+| `IconCard`                | Card with icon, heading, and description                                  |
+| `MapComponent`            | Leaflet-based map with marker clustering                                  |
+| `MegaMenu`                | Multi-level navigation with sections, banners, and optional branded logo  |
+| `Pager`                   | Pagination with centered and bar layouts, jump-to, and range display      |
+| `QuoteHighlight`          | Blockquote with attribution, portrait, and background variants            |
+| `ScrollContainer`         | Horizontally scrollable container with arrow navigation                   |
+| `ShareButtons`            | Social sharing buttons (LinkedIn, Facebook, X, email, QR code)            |
+| `Snackbar`                | Toast notification with severity levels and auto-dismiss                  |
+| `StatsCard`               | Statistics display with icon, value, labels, and optional links           |
+| `SyndicationSearchWidget` | PreventionWeb syndication search interface                                |
+| `createHydrator`          | Runtime for mounting React components into server-rendered DOM containers |
 
 ## Usage examples
 
@@ -150,11 +156,7 @@ function PaginatedList() {
   return (
     <div>
       {/* Your list content here */}
-      <Pager
-        page={page}
-        totalPages={10}
-        onPageChange={setPage}
-      />
+      <Pager page={page} totalPages={10} onPageChange={setPage} />
     </div>
   );
 }
@@ -237,8 +239,8 @@ The following example shows the **Drupal wrapper pattern**, where a small script
 
 ```jsx
 // Drupal wrapper script — uses @mangrove/* import map aliases (resolved by mangrove-components.js)
-import createHydrator from "@mangrove/hydrate";
-import ShareButtons, { fromElement } from "@mangrove/ShareButtons";
+import createHydrator from '@mangrove/hydrate';
+import ShareButtons, { fromElement } from '@mangrove/ShareButtons';
 
 const hydrator = createHydrator({
   selector: '[data-mg-share-buttons]',
@@ -314,19 +316,25 @@ import { Pager } from '@undrr/undrr-mangrove';
 test('renders pagination with correct page', () => {
   const handlePageChange = jest.fn();
 
-  render(
-    <Pager page={3} totalPages={10} onPageChange={handlePageChange} />
-  );
+  render(<Pager page={3} totalPages={10} onPageChange={handlePageChange} />);
 
-  expect(screen.getByRole('navigation', { name: /pagination/i })).toBeInTheDocument();
+  expect(
+    screen.getByRole('navigation', { name: /pagination/i })
+  ).toBeInTheDocument();
 });
 ```
 
 ## Next steps
 
 - Browse the component library sidebar for interactive examples and prop documentation
-- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration</LinkTo> for customizing theme variables
-- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> for component usage patterns
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">
+    Sass integration
+  </LinkTo>
+  for customizing theme variables
+- <LinkTo kind="getting-started-best-practices" story="docs">
+    Best practices
+  </LinkTo>
+  for component usage patterns
 - [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for server-rendered frameworks like Drupal
 
 ---

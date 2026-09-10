@@ -78,7 +78,10 @@ The default Behaviors are:
    - Guidance text explaining how to use the QR code
    - Options to copy the image or close the modal
 
-<Canvas of={ShareButtonsStories.DefaultShareButtons} meta={ShareButtonsStories} />
+<Canvas
+  of={ShareButtonsStories.DefaultShareButtons}
+  meta={ShareButtonsStories}
+/>
 
 ### Usage
 
@@ -95,12 +98,13 @@ ShareButtons supports hydration from server-rendered HTML using `createHydrator`
 The server renders a container with localized labels as data attributes:
 
 ```html
-<section data-mg-share-buttons
+<section
+  data-mg-share-buttons
   data-main-label="Share this"
   data-on-copy-label="Link copied"
   data-sharing-subject="Sharing Link"
-  data-sharing-body="Check out this link: ">
-</section>
+  data-sharing-body="Check out this link: "
+></section>
 ```
 
 The client script mounts the React component in three lines:
@@ -108,7 +112,11 @@ The client script mounts the React component in three lines:
 ```js
 import createHydrator from './hydrate.js';
 import ShareButtons, { fromElement } from './ShareButtons.js';
-createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
+createHydrator({
+  selector: '[data-mg-share-buttons]',
+  component: ShareButtons,
+  fromElement,
+});
 ```
 
 `fromElement` extracts labels and sharing config from data attributes, with sensible English defaults for any missing attributes.

@@ -106,7 +106,12 @@ On smaller screens, this converts to a card-like layout using `.mg-table--stacke
 For wide tables, `responsive="scroll"` now renders a `.mg-table-scroll-region` around the native table. The region is keyboard-focusable and has an accessible name; translate the optional `scrollLabel` prop for the page language. Default and stacked markup remain unchanged. The legacy `.mg-table--scroll` class is retained, but new plain HTML should use a wrapper:
 
 ```html
-<div class="mg-table-scroll-region" role="region" aria-label="Disaster records" tabindex="0">
+<div
+  class="mg-table-scroll-region"
+  role="region"
+  aria-label="Disaster records"
+  tabindex="0"
+>
   <table class="mg-table"><!-- headers and cells --></table>
 </div>
 ```

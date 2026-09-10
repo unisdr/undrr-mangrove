@@ -20,11 +20,13 @@ A plain dark block — use when no language label is needed:
 <Canvas of={CodeBlockStories.Plain} />
 
 **HTML pattern:**
+
 ```html
 <pre><code>your code here</code></pre>
 ```
 
 Add `data-language="Bash"` to `<pre>` to show a language badge without syntax colouring:
+
 ```html
 <pre data-language="Bash"><code>npm install</code></pre>
 ```
@@ -54,6 +56,7 @@ Pass a `filename` prop to wrap the block in a `<figure class="mg-code-block">` w
 <Canvas of={CodeBlockStories.WithFilenameAndLanguage} />
 
 **HTML pattern:**
+
 ```html
 <figure class="mg-code-block">
   <figcaption>MyComponent.jsx</figcaption>

@@ -33,7 +33,11 @@
 
     @each $name, $color in $colors {
       &.mg-author-image--#{$name}::before {
-        @include background-image(45deg, var(--mg-color-yellow), transparent 53%);
+        @include background-image(
+          45deg,
+          var(--mg-color-yellow),
+          transparent 53%
+        );
       }
     }
   }

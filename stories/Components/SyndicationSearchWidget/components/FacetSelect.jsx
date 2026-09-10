@@ -12,7 +12,13 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useSearchState, useSearchDispatch, useSearchLabels, interpolateLabel, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
 
 const EMPTY_BUCKETS = [];
 import { SelectDropdown } from './SelectDropdown';
@@ -62,9 +68,7 @@ export function FacetSelect({
   // Determine if operator toggle should be shown
   // Only show for multi-select facets with 2+ values that aren't in ALWAYS_OR_FACETS
   const showOperatorToggle =
-    isMultiple &&
-    selectedValues.length >= 2 &&
-    !ALWAYS_OR_FACETS.includes(key);
+    isMultiple && selectedValues.length >= 2 && !ALWAYS_OR_FACETS.includes(key);
 
   const currentOperator = facetOperators[key] || 'OR';
 
@@ -72,7 +76,7 @@ export function FacetSelect({
    * Handle operator toggle change.
    */
   const handleOperatorChange = useCallback(
-    (newOperator) => {
+    newOperator => {
       dispatch(actions.setFacetOperator(key, newOperator));
     },
     [dispatch, key]
@@ -90,7 +94,7 @@ export function FacetSelect({
 
     // Build options from buckets
     const bucketOptions = buckets
-      .filter((bucket) => {
+      .filter(bucket => {
         // Filter by allowed types if configured
         if (isTypeFacet && allowedTypes) {
           const bucketKey = String(bucket.key);
@@ -99,7 +103,9 @@ export function FacetSelect({
           if (bucket.isVocabulary) {
             if (typeof allowedTypes === 'object' && allowedTypes.vocabularies) {
               // Extract vocabulary ID from the vid: prefix
-              const vocabId = bucketKey.startsWith('vid:') ? bucketKey.slice(4) : bucketKey;
+              const vocabId = bucketKey.startsWith('vid:')
+                ? bucketKey.slice(4)
+                : bucketKey;
               return allowedTypes.vocabularies.includes(vocabId);
             }
             // No vocabulary restriction configured: show all
@@ -113,7 +119,10 @@ export function FacetSelect({
               return allowedTypes.includes(bucket.parentType);
             }
             if (typeof allowedTypes === 'object') {
-              if (allowedTypes.types && !allowedTypes.types.includes(bucket.parentType)) {
+              if (
+                allowedTypes.types &&
+                !allowedTypes.types.includes(bucket.parentType)
+              ) {
                 return false;
               }
               const parsed = parseTypeValue(bucketKey);
@@ -134,7 +143,7 @@ export function FacetSelect({
         }
         return true;
       })
-      .map((bucket) => {
+      .map(bucket => {
         const bucketKey = String(bucket.key);
         const isSelected = selectedValues.includes(bucketKey);
 
@@ -175,12 +184,12 @@ export function FacetSelect({
       .filter(Boolean);
 
     // Track which values we have from buckets
-    const bucketValues = new Set(bucketOptions.map((o) => o.value));
+    const bucketValues = new Set(bucketOptions.map(o => o.value));
 
     // Add selected values that aren't in buckets (so users can deselect them)
     const missingSelectedOptions = selectedValues
-      .filter((v) => !bucketValues.has(v))
-      .map((value) => {
+      .filter(v => !bucketValues.has(v))
+      .map(value => {
         // For type facet, use parseTypeValue
         let optionLabel;
         let isSubtype = false;
@@ -239,7 +248,7 @@ export function FacetSelect({
    * Handle selection change from SelectDropdown.
    */
   const handleChange = useCallback(
-    (newValue) => {
+    newValue => {
       if (isMultiple) {
         // newValue is an array for multi-select
         const values = Array.isArray(newValue) ? newValue : [newValue];
@@ -273,7 +282,9 @@ export function FacetSelect({
       <SelectDropdown
         id={selectId}
         label={label}
-        placeholder={interpolateLabel(labels.selectPlaceholder, { label: label.toLowerCase() })}
+        placeholder={interpolateLabel(labels.selectPlaceholder, {
+          label: label.toLowerCase(),
+        })}
         options={options}
         value={isMultiple ? selectedValues : selectedValues[0] || ''}
         onChange={handleChange}
@@ -285,7 +296,9 @@ export function FacetSelect({
       {showOperatorToggle && (
         <div className="mg-search__facet-operator">
           <div className="mg-search__facet-operator-row">
-            <span className="mg-search__facet-operator-label">{labels.matchModeGroupLabel}</span>
+            <span className="mg-search__facet-operator-label">
+              {labels.matchModeGroupLabel}
+            </span>
             <div
               className="mg-search__facet-operator-toggle"
               role="radiogroup"

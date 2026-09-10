@@ -6,7 +6,12 @@
  */
 
 import React, { useMemo } from 'react';
-import { useSearchState, useSearchConfig, useSearchLabels, interpolateLabel } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchConfig,
+  useSearchLabels,
+  interpolateLabel,
+} from '../context/SearchContext';
 import { buildHiddenFieldClasses } from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
@@ -45,7 +50,17 @@ export function SearchResults({
     isInitialized,
   } = state;
 
-  const { showResultsCount, showSearchTimer, showSearchMetrics, showPager, resultsPerPage, minSearchLength, displayMode, visibleTeaserFields, gridColumns } = config;
+  const {
+    showResultsCount,
+    showSearchTimer,
+    showSearchMetrics,
+    showPager,
+    resultsPerPage,
+    minSearchLength,
+    displayMode,
+    visibleTeaserFields,
+    gridColumns,
+  } = config;
 
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
   const cardGridCols = isCardMode
@@ -89,7 +104,11 @@ export function SearchResults({
         aria-busy="true"
         aria-live="polite"
       >
-        <SearchSkeleton count={resultsPerPage} displayMode={displayMode} gridColumns={cardGridCols} />
+        <SearchSkeleton
+          count={resultsPerPage}
+          displayMode={displayMode}
+          gridColumns={cardGridCols}
+        />
       </div>
     );
   }
@@ -101,7 +120,9 @@ export function SearchResults({
         <p>{labels.enterSearchTerm}</p>
         {minSearchLength > 1 && (
           <p className="mg-search__results-hint">
-            {interpolateLabel(labels.minimumCharacters, { min: minSearchLength })}
+            {interpolateLabel(labels.minimumCharacters, {
+              min: minSearchLength,
+            })}
           </p>
         )}
       </div>
@@ -116,9 +137,7 @@ export function SearchResults({
         role="status"
         aria-live="polite"
       >
-        <p>
-          {interpolateLabel(labels.noResults, { query })}
-        </p>
+        <p>{interpolateLabel(labels.noResults, { query })}</p>
         <p>{labels.noResultsHint}</p>
       </div>
     );
@@ -141,15 +160,27 @@ export function SearchResults({
         {!isLoading && totalResults !== null && (
           <>
             {totalResults === 0
-              ? interpolateLabel(query ? labels.srNoResultsForQuery : labels.srNoResults, { query })
+              ? interpolateLabel(
+                  query ? labels.srNoResultsForQuery : labels.srNoResults,
+                  { query }
+                )
               : totalResultsRelation === 'gte'
-              ? interpolateLabel(query ? labels.srResultsFoundApproxForQuery : labels.srResultsFoundApprox, { count: totalResults.toLocaleString(), query })
-              : interpolateLabel(
-                  totalResults !== 1
-                    ? (query ? labels.srResultsFoundPluralForQuery : labels.srResultsFoundPlural)
-                    : (query ? labels.srResultsFoundForQuery : labels.srResultsFound),
-                  { count: totalResults.toLocaleString(), query }
-                )}
+                ? interpolateLabel(
+                    query
+                      ? labels.srResultsFoundApproxForQuery
+                      : labels.srResultsFoundApprox,
+                    { count: totalResults.toLocaleString(), query }
+                  )
+                : interpolateLabel(
+                    totalResults !== 1
+                      ? query
+                        ? labels.srResultsFoundPluralForQuery
+                        : labels.srResultsFoundPlural
+                      : query
+                        ? labels.srResultsFoundForQuery
+                        : labels.srResultsFound,
+                    { count: totalResults.toLocaleString(), query }
+                  )}
           </>
         )}
       </div>
@@ -157,28 +188,30 @@ export function SearchResults({
       {/* Results header */}
       <div className="mg-search__results-header">
         {showResultsCount && (
-          <p className="mg-search__results-count" role="status" aria-live="polite">
+          <p
+            className="mg-search__results-count"
+            role="status"
+            aria-live="polite"
+          >
             {(() => {
               const startResult = (page - 1) * resultsPerPage + 1;
-              const endResult = Math.min(page * resultsPerPage, totalResults || 0);
-              const countLabel = totalResultsRelation === 'gte'
-                ? labels.showingResultsApprox
-                : labels.showingResults;
+              const endResult = Math.min(
+                page * resultsPerPage,
+                totalResults || 0
+              );
+              const countLabel =
+                totalResultsRelation === 'gte'
+                  ? labels.showingResultsApprox
+                  : labels.showingResults;
               return interpolateLabel(countLabel, {
                 start: startResult.toLocaleString(),
                 end: endResult.toLocaleString(),
-                total: (totalResults?.toLocaleString() || 0),
+                total: totalResults?.toLocaleString() || 0,
               });
             })()}
-            {query && (
-              <>
-                {' '}{interpolateLabel(labels.forQuery, { query })}
-              </>
-            )}
+            {query && <> {interpolateLabel(labels.forQuery, { query })}</>}
             {showSearchTimer && searchTime !== null && (
-              <span className="mg-search__results-time">
-                {' '}({searchTime}ms)
-              </span>
+              <span className="mg-search__results-time"> ({searchTime}ms)</span>
             )}
           </p>
         )}
@@ -189,9 +222,13 @@ export function SearchResults({
             type="button"
             className="mg-search__filter-btn"
             onClick={onOpenFilters}
-            aria-label={activeFilterCount > 0
-              ? interpolateLabel(labels.filtersButtonActive, { count: activeFilterCount })
-              : labels.filtersButton}
+            aria-label={
+              activeFilterCount > 0
+                ? interpolateLabel(labels.filtersButtonActive, {
+                    count: activeFilterCount,
+                  })
+                : labels.filtersButton
+            }
           >
             <svg
               className="mg-search__filter-btn-icon"
@@ -227,7 +264,12 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultItem hit={hit} displayMode={displayMode} showMetrics={showSearchMetrics} visibleTeaserFields={visibleTeaserFields} />
+              <ResultItem
+                hit={hit}
+                displayMode={displayMode}
+                showMetrics={showSearchMetrics}
+                visibleTeaserFields={visibleTeaserFields}
+              />
             </div>
           ))}
         </div>
@@ -239,7 +281,11 @@ export function SearchResults({
         >
           {results?.map((hit, index) => (
             <div key={hit._id || index} role="listitem">
-              <ResultItem hit={hit} showMetrics={showSearchMetrics} visibleTeaserFields={visibleTeaserFields} />
+              <ResultItem
+                hit={hit}
+                showMetrics={showSearchMetrics}
+                visibleTeaserFields={visibleTeaserFields}
+              />
             </div>
           ))}
         </div>
@@ -261,11 +307,16 @@ export function SearchResults({
  */
 function SearchSkeleton({ count = 3, displayMode = 'list', gridColumns }) {
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
-  const cols = isCardMode ? Math.min(Math.max(gridColumns ?? count, 2), 6) : undefined;
+  const cols = isCardMode
+    ? Math.min(Math.max(gridColumns ?? count, 2), 6)
+    : undefined;
 
   if (isCardMode) {
     return (
-      <div className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`} aria-hidden="true">
+      <div
+        className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`}
+        aria-hidden="true"
+      >
         {Array.from({ length: count }).map((_, i) => (
           <div key={i} className="mg-search__skeleton-card">
             <div className="mg-search__skeleton-card-image" />

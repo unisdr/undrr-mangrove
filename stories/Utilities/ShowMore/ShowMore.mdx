@@ -34,6 +34,7 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 </div>
 
 <!-- Toggle button (can be anywhere on the page) -->
+
 <a href="#"
    class="mg-button mg-button-primary mg-show-more--button"
    data-mg-show-more="true"
@@ -46,13 +47,13 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 
 ### Data attributes
 
-| Attribute | Required | Description |
-|---|---|---|
-| `data-mg-show-more` | Yes | Set to `"true"` on the toggle button to register it |
-| `data-mg-show-more-target` | No | CSS selector for the content container. Defaults to `".mg-show-more--container"` |
-| `data-mg-show-more-label-collapsed` | No | Button text when content is collapsed. Defaults to "Show more" |
-| `data-mg-show-more-label-open` | No | Button text when content is expanded. Defaults to "Show less" |
-| `data-mg-show-more-skip-auto-init` | No | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually. |
+| Attribute                           | Required | Description                                                                                              |
+| ----------------------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
+| `data-mg-show-more`                 | Yes      | Set to `"true"` on the toggle button to register it                                                      |
+| `data-mg-show-more-target`          | No       | CSS selector for the content container. Defaults to `".mg-show-more--container"`                         |
+| `data-mg-show-more-label-collapsed` | No       | Button text when content is collapsed. Defaults to "Show more"                                           |
+| `data-mg-show-more-label-open`      | No       | Button text when content is expanded. Defaults to "Show less"                                            |
+| `data-mg-show-more-skip-auto-init`  | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually. |
 
 ### JavaScript initialization
 
@@ -76,8 +77,8 @@ mgShowMore([myButton]);
 
 ### API
 
-| Function | Description |
-|----------|-------------|
+| Function             | Description                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `mgShowMore(scope?)` | Initializes show-more buttons. `scope` is an optional `NodeList` or array of elements; defaults to all `[data-mg-show-more]` elements. |
 
 ### Skipping auto-initialization
@@ -89,10 +90,12 @@ Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This i
    data-mg-show-more-target=".my-content">Show more</a>
 
 <script type="module">
-  import { mgShowMore } from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/show-more.js';
-  // Initialize after other setup is complete
+  import {mgShowMore} from
+  'https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/show-more.js'; //
+  Initialize after other setup is complete
   mgShowMore([document.querySelector('[data-mg-show-more-skip-auto-init]')]);
 </script>
+
 `} />
 
 When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
@@ -107,9 +110,9 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
   --mg-show-more-height: 150px;
 }
 
-/* Or per instance */
+/_ Or per instance _/
 .my-content {
-  --mg-show-more-height: 300px;
+--mg-show-more-height: 300px;
 }
 `} />
 

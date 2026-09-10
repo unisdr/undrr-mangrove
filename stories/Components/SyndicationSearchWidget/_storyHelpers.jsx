@@ -9,7 +9,14 @@
  */
 
 import React from 'react';
-import { LABELS_ES, LABELS_FR, LABELS_JA, LABELS_ZH, LABELS_AR, LABELS_RU } from './_labels';
+import {
+  LABELS_ES,
+  LABELS_FR,
+  LABELS_JA,
+  LABELS_ZH,
+  LABELS_AR,
+  LABELS_RU,
+} from './_labels';
 
 const LOCALE_LABELS = {
   spanish: LABELS_ES,

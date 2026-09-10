@@ -9,7 +9,6 @@
  */
 @import "deprecated-teaser-hide";
 
-
 // Component-specific variables (using Mangrove tokens)
 // Colors
 $search-primary: rgb(var(--mg-color-interactive));
@@ -106,7 +105,9 @@ $search-input-padding-x: var(--mg-spacing-250);
 
   // Override padding-right to leave room for the clear button
   padding-right: $search-input-padding-x;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 
   &::placeholder {
     color: $search-text-muted;
@@ -193,7 +194,9 @@ $search-input-padding-x: var(--mg-spacing-250);
   border: 1px solid $search-border;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 
   &:hover {
     background: $search-chip-hover;
@@ -220,7 +223,9 @@ $search-input-padding-x: var(--mg-spacing-250);
   border: 1px solid $search-primary;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 
   &:hover {
     color: #fff;
@@ -329,7 +334,9 @@ $search-input-padding-x: var(--mg-spacing-250);
   border: 1px solid $search-border;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
   white-space: nowrap;
 
   &:hover {
@@ -485,7 +492,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__result-domain,
 .mg-search__result-date {
   &::before {
-    content: '•';
+    content: "•";
     margin-right: var(--mg-spacing-50);
     color: $search-border;
   }
@@ -534,7 +541,12 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__skeleton-title,
 .mg-search__skeleton-meta,
 .mg-search__skeleton-text {
-  background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
+  background: linear-gradient(
+    90deg,
+    $search-skeleton-bg 25%,
+    #e8e8e8 50%,
+    $search-skeleton-bg 75%
+  );
   background-size: 200% 100%;
   animation: mg-search-shimmer 1.5s infinite;
   border-radius: $search-radius;
@@ -579,7 +591,12 @@ $search-input-padding-x: var(--mg-spacing-250);
 
 .mg-search__skeleton-card-image {
   aspect-ratio: 16 / 9;
-  background: linear-gradient(90deg, $search-skeleton-bg 25%, #e8e8e8 50%, $search-skeleton-bg 75%);
+  background: linear-gradient(
+    90deg,
+    $search-skeleton-bg 25%,
+    #e8e8e8 50%,
+    $search-skeleton-bg 75%
+  );
   background-size: 200% 100%;
   animation: mg-search-shimmer 1.5s infinite;
 }
@@ -735,7 +752,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   border-radius: $search-radius;
 }
 
-
 // Error result styling
 .mg-search__result--error {
   padding: var(--mg-spacing-100);
@@ -796,7 +812,9 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__result--visible {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
 }
 
 // Stale state - dim results while loading new data
@@ -810,7 +828,7 @@ $search-input-padding-x: var(--mg-spacing-250);
   position: relative;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: rgb(255 255 255 / 0.4);
@@ -820,7 +838,8 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 @keyframes mg-search-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
   }
   50% {
@@ -936,7 +955,9 @@ $search-input-padding-x: var(--mg-spacing-250);
   border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
   border-radius: var(--mg-radius-form-input);
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 
   &:hover {
     border-color: $search-primary;
@@ -978,7 +999,10 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-select__backdrop {
   position: fixed;
   inset: 0;
-  z-index: calc(var(--mg-z-index-modal) - 1); // portaled select backdrop: uses modal layer to clear all page chrome
+  z-index: calc(
+    var(--mg-z-index-modal) - 1
+  ); // portaled select backdrop: uses modal layer to clear all page chrome
+
   background: transparent;
   cursor: default;
 }
@@ -988,7 +1012,10 @@ $search-input-padding-x: var(--mg-spacing-250);
   top: 100%;
   left: 0;
   right: 0;
-  z-index: var(--mg-z-index-modal); // portaled select dropdown: uses modal layer to clear all page chrome
+  z-index: var(
+    --mg-z-index-modal
+  ); // portaled select dropdown: uses modal layer to clear all page chrome
+
   background: #fff;
   border: 1px solid $search-primary;
   border-top: none;
@@ -1298,7 +1325,9 @@ $search-input-padding-x: var(--mg-spacing-250);
   border: none;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 
   &:hover {
     background: $search-chip-bg;
@@ -1448,7 +1477,9 @@ $search-input-padding-x: var(--mg-spacing-250);
   align-items: center;
   padding: var(--mg-spacing-25) var(--mg-spacing-50);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
   font-weight: 400;
   font-size: $mg-font-size-200;
   user-select: none;

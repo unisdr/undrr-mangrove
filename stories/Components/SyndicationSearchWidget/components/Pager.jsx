@@ -7,7 +7,13 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { Pager } from '../../Pager/Pager';
-import { useSearchState, useSearchDispatch, useSearchConfig, useSearchLabels, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchDispatch,
+  useSearchConfig,
+  useSearchLabels,
+  actions,
+} from '../context/SearchContext';
 
 /**
  * SearchPager: search-context-aware pagination.
@@ -27,14 +33,14 @@ export function SearchPager({ widgetId = '' }) {
   }, [totalResults, resultsPerPage]);
 
   const handlePageChange = useCallback(
-    (newPage) => {
+    newPage => {
       dispatch(actions.setPage(newPage));
       const widget = document.querySelector('[data-mg-search-widget]');
       if (widget) {
         widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     },
-    [dispatch],
+    [dispatch]
   );
 
   if (totalPages <= 1) return null;

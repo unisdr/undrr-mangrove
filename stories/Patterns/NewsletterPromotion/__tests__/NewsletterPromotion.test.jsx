@@ -15,20 +15,36 @@ test('validates email, simulates confirmation, and restores focus for another ad
   expect(email).toHaveFocus();
   fireEvent.change(email, { target: { value: 'reader@example.org' } });
   fireEvent.click(screen.getByRole('button', { name: 'Subscribe' }));
-  expect(screen.getByRole('button', { name: 'Sending…' })).toHaveAttribute('aria-disabled', 'true');
-  await waitFor(() => expect(screen.getByRole('heading', { name: 'Check your inbox' })).toHaveFocus());
-  fireEvent.click(screen.getByRole('button', { name: 'Use another email address' }));
+  expect(screen.getByRole('button', { name: 'Sending…' })).toHaveAttribute(
+    'aria-disabled',
+    'true'
+  );
+  await waitFor(() =>
+    expect(
+      screen.getByRole('heading', { name: 'Check your inbox' })
+    ).toHaveFocus()
+  );
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Use another email address' })
+  );
   expect(screen.getByLabelText('Email address')).toHaveValue('');
   expect(screen.getByLabelText('Email address')).toHaveFocus();
 });
 
 test('preserves address and preferences after a simulated service error', async () => {
   render(ServiceError.render({ response: 'error' }, context));
-  fireEvent.change(screen.getByLabelText('Email address'), { target: { value: 'reader@example.org' } });
+  fireEvent.change(screen.getByLabelText('Email address'), {
+    target: { value: 'reader@example.org' },
+  });
   fireEvent.click(screen.getByLabelText('Early warning'));
   fireEvent.click(screen.getByRole('button', { name: 'Subscribe' }));
   await screen.findByRole('alert');
-  expect(screen.getByLabelText('Email address')).toHaveValue('reader@example.org');
+  expect(screen.getByLabelText('Email address')).toHaveValue(
+    'reader@example.org'
+  );
   expect(screen.getByLabelText('Early warning')).toBeChecked();
-  expect(screen.getByRole('button', { name: 'Subscribe' })).toHaveAttribute('aria-disabled', 'false');
+  expect(screen.getByRole('button', { name: 'Subscribe' })).toHaveAttribute(
+    'aria-disabled',
+    'false'
+  );
 });

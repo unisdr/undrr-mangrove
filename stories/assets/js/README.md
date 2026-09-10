@@ -18,12 +18,12 @@ The GitHub Actions publish workflow (`npm-publish.yml`) copies `dist/assets/js/*
 
 ## Current scripts
 
-| File | Component | Purpose |
-|------|-----------|---------|
-| `on-this-page-nav.js` | [OnThisPageNav](../../Components/OnThisPageNav/) | Sticky horizontal "On this page" navigation with scroll-spy |
-| `tabs.js` | [Tab](../../Components/Tab/) | Tabbed content with keyboard navigation and deep linking |
-| `show-more.js` | [ShowMore](../../../Utilities/ShowMore/) | Expand/collapse toggle for content sections |
-| `undrr.js` | — | Shared constants (key codes, breakpoints) and `window.UNDRR` namespace |
+| File                  | Component                                        | Purpose                                                                |
+| --------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
+| `on-this-page-nav.js` | [OnThisPageNav](../../Components/OnThisPageNav/) | Sticky horizontal "On this page" navigation with scroll-spy            |
+| `tabs.js`             | [Tab](../../Components/Tab/)                     | Tabbed content with keyboard navigation and deep linking               |
+| `show-more.js`        | [ShowMore](../../../Utilities/ShowMore/)         | Expand/collapse toggle for content sections                            |
+| `undrr.js`            | —                                                | Shared constants (key codes, breakpoints) and `window.UNDRR` namespace |
 
 ## Adding a new script
 
@@ -46,12 +46,12 @@ No webpack config or `src/index.js` changes are needed. The file is picked up au
 
 ## Differences from React components
 
-| | Vanilla JS (this directory) | React components |
-|---|---|---|
-| Entry discovery | Auto (glob) | Manual (webpack.config.js) |
-| Output | `dist/js/*.min.js` (UMD) | `dist/components/*.js` (ESM) |
-| npm location | `@undrr/undrr-mangrove/js/` | `@undrr/undrr-mangrove/components/` |
-| React dependency | None | Externalized (provided by import map) |
+|                    | Vanilla JS (this directory)       | React components                         |
+| ------------------ | --------------------------------- | ---------------------------------------- |
+| Entry discovery    | Auto (glob)                       | Manual (webpack.config.js)               |
+| Output             | `dist/js/*.min.js` (UMD)          | `dist/components/*.js` (ESM)             |
+| npm location       | `@undrr/undrr-mangrove/js/`       | `@undrr/undrr-mangrove/components/`      |
+| React dependency   | None                              | Externalized (provided by import map)    |
 | Drupal integration | Load script directly as a library | Wrapper + hydration via `createHydrator` |
 
 See [ARCHITECTURE.md](../../../docs/ARCHITECTURE.md) for the full build system documentation.

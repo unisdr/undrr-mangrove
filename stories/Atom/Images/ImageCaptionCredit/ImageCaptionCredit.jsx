@@ -13,7 +13,10 @@ export const Images = ({
   caption = 'true',
   credit = 'true',
 }) => {
-  const sizeModifiers = { medium: 'mg-image-figcaption--medium', portrait: 'mg-image-figcaption--portrait' };
+  const sizeModifiers = {
+    medium: 'mg-image-figcaption--medium',
+    portrait: 'mg-image-figcaption--portrait',
+  };
   const size = sizeModifiers[sizeProp] || '';
 
   const cls = (...classes) =>

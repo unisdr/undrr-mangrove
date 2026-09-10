@@ -13,7 +13,8 @@ export const DEFAULT_SHARE_LABELS = {
   mainLabel: 'Share this',
   onCopy: 'Copied',
   qrCodeTitle: 'QR code',
-  qrCodeDescription: 'This QR code contains the link below. You can copy the image or add it to your printed or display materials.',
+  qrCodeDescription:
+    'This QR code contains the link below. You can copy the image or add it to your printed or display materials.',
   closeModal: 'Close modal',
   copyImage: 'Copy image',
   downloadImage: 'Download image',
@@ -327,8 +328,8 @@ const ShareButtons = ({
         margin: 2,
         color: {
           dark: '#000000',
-          light: '#FFFFFF'
-        }
+          light: '#FFFFFF',
+        },
       });
 
       setQrCodeDataUrl(dataUrl);
@@ -357,7 +358,7 @@ const ShareButtons = ({
     }
   };
 
-    const downloadQRCode = async () => {
+  const downloadQRCode = async () => {
     try {
       if (qrCodeDataUrl) {
         // Convert data URL back to blob
@@ -446,7 +447,10 @@ const ShareButtons = ({
             className="mg-share__button"
             title={l.shareOnLinkedIn}
           >
-            <span className="mg-icon mg-icon-linkedin" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-linkedin"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: Facebook"
@@ -455,7 +459,10 @@ const ShareButtons = ({
             title={l.shareOnFacebook}
             className="mg-share__button"
           >
-            <span className="mg-icon mg-icon-facebook" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-facebook"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: X"
@@ -464,7 +471,10 @@ const ShareButtons = ({
             className="mg-share__button"
             title={l.shareOnX}
           >
-            <span className="mg-icon mg-icon-x-social" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-x-social"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: Mail"
@@ -473,7 +483,10 @@ const ShareButtons = ({
             className="mg-share__button"
             title={l.shareViaEmail}
           >
-            <span className="mg-icon mg-icon-envelope" aria-hidden="true"></span>
+            <span
+              className="mg-icon mg-icon-envelope"
+              aria-hidden="true"
+            ></span>
           </button>
           <button
             data-vf-analytics-label="Social share: QR Code"
@@ -518,7 +531,12 @@ const ShareButtons = ({
  *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
  *  @param {string} sharedLink - the link that will be copied
  */
-export function CopyButton({ copiedLabel, sharedLink, className, copyToClipboardLabel = 'Copy to Clipboard' }) {
+export function CopyButton({
+  copiedLabel,
+  sharedLink,
+  className,
+  copyToClipboardLabel = 'Copy to Clipboard',
+}) {
   const [coppied, setCoppied] = useState(false);
 
   // visibleLink is fully derived from sharedLink: strip the leading http(s)://

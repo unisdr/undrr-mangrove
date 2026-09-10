@@ -58,38 +58,39 @@ import { MegaMenu } from '@components';
 Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Arabic). In Drupal, output this from Twig into the `data-mg-mega-menu-logo-href` attribute:
 
 ```html
-<div data-mg-mega-menu
-     data-mg-mega-menu-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
-     data-mg-mega-menu-logo-alt="PreventionWeb"
-     data-mg-mega-menu-logo-href="/ar/">
-</div>
+<div
+  data-mg-mega-menu
+  data-mg-mega-menu-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
+  data-mg-mega-menu-logo-alt="PreventionWeb"
+  data-mg-mega-menu-logo-href="/ar/"
+></div>
 ```
 
 `logoHref` defaults to `'/'` unless your CMS or wrapper provides a different value. If logo asset data attributes are not set, the Drupal wrapper resolves `logoSrc` and `logoAlt` from the page's body class (for example, `mg-current-domain--www-preventionweb-net`). `logoHref` is not inferred from the body class — it must be passed explicitly for language-prefixed URLs.
 
 ## Props
 
-| Prop       | Type   | Default | Description                                                                                              |
-| ---------- | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
-| sections   | array  | []      | Array of menu sections to display                                                                        |
-| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave                                                 |
-| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens)                                    |
-| logoSrc    | string | —       | Image URL for the logo. When provided, enables the branded variant                                       |
-| logoAlt    | string | ''      | Alt text for the logo image                                                                              |
+| Prop       | Type   | Default | Description                                                                                                 |
+| ---------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------- |
+| sections   | array  | []      | Array of menu sections to display                                                                           |
+| delay      | number | 300     | Delay in milliseconds before closing menu on mouse leave                                                    |
+| hoverDelay | number | 180     | Delay in milliseconds before opening menu (prevents accidental opens)                                       |
+| logoSrc    | string | —       | Image URL for the logo. When provided, enables the branded variant                                          |
+| logoAlt    | string | ''      | Alt text for the logo image                                                                                 |
 | logoHref   | string | '/'     | Where the logo links to. For multilingual sites, pass the language-prefixed root from the CMS (e.g. `/ar/`) |
-| logoWidth  | number | —       | Optional explicit width for CLS prevention                                                               |
-| logoHeight | number | —       | Optional explicit height for CLS prevention                                                              |
+| logoWidth  | number | —       | Optional explicit width for CLS prevention                                                                  |
+| logoHeight | number | —       | Optional explicit height for CLS prevention                                                                 |
 
 ### Section object properties
 
-| Property         | Type   | Required | Description                                                         |
-| ---------------- | ------ | -------- | ------------------------------------------------------------------- |
-| title            | string | Yes      | Top-level menu item label                                           |
-| icon             | string | No       | Icon class name shown before the title (e.g., `"mg-icon mg-icon-chart-bar"`). Desktop topbar only; hidden in mobile sidebar. |
-| bannerHeading    | string | No       | Heading text shown in the mega content panel                        |
-| bannerDescription| string | No       | Description text shown in the mega content panel                    |
-| bannerButton     | object | No       | `{ url, label }` — when present, the top-level item renders as an `<a>` link |
-| items            | array  | No       | Array of sub-items (triggers mega dropdown when present)            |
+| Property          | Type   | Required | Description                                                                                                                  |
+| ----------------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| title             | string | Yes      | Top-level menu item label                                                                                                    |
+| icon              | string | No       | Icon class name shown before the title (e.g., `"mg-icon mg-icon-chart-bar"`). Desktop topbar only; hidden in mobile sidebar. |
+| bannerHeading     | string | No       | Heading text shown in the mega content panel                                                                                 |
+| bannerDescription | string | No       | Description text shown in the mega content panel                                                                             |
+| bannerButton      | object | No       | `{ url, label }` — when present, the top-level item renders as an `<a>` link                                                 |
+| items             | array  | No       | Array of sub-items (triggers mega dropdown when present)                                                                     |
 
 ## Accessibility
 
@@ -133,30 +134,37 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 MegaMenu supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). This is a complex-tier component: in most integrations the `sections` prop comes from an API or server-side builder, not from static HTML. The `fromElement` function extracts timing props and an optional inline JSON sections attribute. Consumer wrappers typically override `sections`.
 
 ```html
-<div data-mg-mega-menu
+<div
+  data-mg-mega-menu
   data-delay="300"
   data-hover-delay="180"
-  data-sections='[{"title":"About","items":[...]}]'>
-</div>
+  data-sections='[{"title":"About","items":[...]}]'
+></div>
 ```
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-delay` | `300` | Delay in ms before closing the menu on mouse leave |
-| `data-hover-delay` | `180` | Delay in ms before opening the menu on hover |
-| `data-sections` | — | JSON array of menu sections (optional; most consumers provide this via API) |
-| `data-logo-src` | — | Logo image URL |
-| `data-logo-alt` | `''` | Alt text for the logo image |
-| `data-logo-href` | `'/'` | Where the logo links to (e.g., `/ar/` for language-prefixed root) |
-| `data-logo-width` | — | Explicit width for CLS prevention |
-| `data-logo-height` | — | Explicit height for CLS prevention |
+| Attribute          | Default | Description                                                                 |
+| ------------------ | ------- | --------------------------------------------------------------------------- |
+| `data-delay`       | `300`   | Delay in ms before closing the menu on mouse leave                          |
+| `data-hover-delay` | `180`   | Delay in ms before opening the menu on hover                                |
+| `data-sections`    | —       | JSON array of menu sections (optional; most consumers provide this via API) |
+| `data-logo-src`    | —       | Logo image URL                                                              |
+| `data-logo-alt`    | `''`    | Alt text for the logo image                                                 |
+| `data-logo-href`   | `'/'`   | Where the logo links to (e.g., `/ar/` for language-prefixed root)           |
+| `data-logo-width`  | —       | Explicit width for CLS prevention                                           |
+| `data-logo-height` | —       | Explicit height for CLS prevention                                          |
 
 > **Drupal note:** The Drupal wrapper reads prefixed attribute names (`data-mg-mega-menu-logo-src`, etc.) and falls back to a `SITE_LOGOS` body-class map when no logo attributes are set. CDN / vanilla HTML consumers use the short `data-logo-*` names above.
 
 ```js
-import createHydrator from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js";
-import MegaMenu, { fromElement } from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/MegaMenu.js";
-createHydrator({ selector: "[data-mg-mega-menu]", component: MegaMenu, fromElement });
+import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js';
+import MegaMenu, {
+  fromElement,
+} from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/MegaMenu.js';
+createHydrator({
+  selector: '[data-mg-mega-menu]',
+  component: MegaMenu,
+  fromElement,
+});
 ```
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.

@@ -24,11 +24,7 @@ describe('Select', () => {
 
   it('renders placeholder as disabled first option', () => {
     render(
-      <Select
-        label="Country"
-        options={options}
-        placeholder="Select one"
-      />,
+      <Select label="Country" options={options} placeholder="Select one" />
     );
     const placeholder = screen.getByText('Select one');
     expect(placeholder.tagName).toBe('OPTION');
@@ -37,7 +33,7 @@ describe('Select', () => {
 
   it('renders help text with aria-describedby', () => {
     render(
-      <Select label="Country" options={options} helpText="Choose wisely" />,
+      <Select label="Country" options={options} helpText="Choose wisely" />
     );
     const select = screen.getByLabelText('Country');
     const helpId = select.getAttribute('aria-describedby');
@@ -47,12 +43,7 @@ describe('Select', () => {
 
   it('renders error text with aria-invalid and role="alert"', () => {
     render(
-      <Select
-        label="Country"
-        options={options}
-        error
-        errorText="Required"
-      />,
+      <Select label="Country" options={options} error errorText="Required" />
     );
     const select = screen.getByLabelText('Country');
     expect(select).toHaveAttribute('aria-invalid', 'true');
@@ -62,7 +53,7 @@ describe('Select', () => {
   it('does not set aria-invalid when error is false', () => {
     render(<Select label="Country" options={options} />);
     expect(screen.getByLabelText('Country')).not.toHaveAttribute(
-      'aria-invalid',
+      'aria-invalid'
     );
   });
 
@@ -88,7 +79,7 @@ describe('Select', () => {
   it('calls onChange when selection changes', () => {
     const handleChange = jest.fn();
     render(
-      <Select label="Country" options={options} onChange={handleChange} />,
+      <Select label="Country" options={options} onChange={handleChange} />
     );
     fireEvent.change(screen.getByLabelText('Country'), {
       target: { value: 'b' },
@@ -100,20 +91,18 @@ describe('Select', () => {
     render(<Select options={options} placeholder="Pick one" />);
     expect(screen.getByRole('combobox')).toHaveAttribute(
       'aria-label',
-      'Pick one',
+      'Pick one'
     );
   });
 
   it('has no a11y violations', async () => {
-    const { container } = render(
-      <Select label="Country" options={options} />,
-    );
+    const { container } = render(<Select label="Country" options={options} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it('has no a11y violations in error state', async () => {
     const { container } = render(
-      <Select label="Country" options={options} error errorText="Required" />,
+      <Select label="Country" options={options} error errorText="Required" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

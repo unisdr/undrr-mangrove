@@ -111,13 +111,13 @@ If none of the existing categories fit, discuss with the team before creating a 
 
    Follow these conventions when naming props:
 
-   | Category | Convention | Examples |
-   |----------|-----------|---------|
-   | General props | `camelCase` | `backgroundColor`, `imageSrc`, `imageAlt` |
-   | Booleans | `is`/`has`/`show` prefix | `isLoading`, `hasError`, `showArrows` |
-   | Event handlers | `on` prefix | `onClick`, `onPageChange`, `onClose` |
-   | CSS class props | `className` | `className="custom-class"` |
-   | Children content | `children` | Standard React children prop |
+   | Category         | Convention               | Examples                                  |
+   | ---------------- | ------------------------ | ----------------------------------------- |
+   | General props    | `camelCase`              | `backgroundColor`, `imageSrc`, `imageAlt` |
+   | Booleans         | `is`/`has`/`show` prefix | `isLoading`, `hasError`, `showArrows`     |
+   | Event handlers   | `on` prefix              | `onClick`, `onPageChange`, `onClose`      |
+   | CSS class props  | `className`              | `className="custom-class"`                |
+   | Children content | `children`               | Standard React children prop              |
 
    Avoid generic names like `data` or `info` — use descriptive names that convey meaning (e.g., `chartData`, `userProfile`).
 
@@ -537,13 +537,13 @@ There are two approaches for handling directional layout in SCSS. Prefer logical
 
 Use logical properties instead of physical ones. These automatically flip in RTL contexts with no extra CSS:
 
-| Physical property | Logical replacement |
-|---|---|
-| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
+| Physical property                | Logical replacement                           |
+| -------------------------------- | --------------------------------------------- |
+| `margin-left` / `margin-right`   | `margin-inline-start` / `margin-inline-end`   |
 | `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
-| `left` / `right` | `inset-inline-start` / `inset-inline-end` |
-| `text-align: left` | `text-align: start` |
-| `float: left` | `float: inline-start` |
+| `left` / `right`                 | `inset-inline-start` / `inset-inline-end`     |
+| `text-align: left`               | `text-align: start`                           |
+| `float: left`                    | `float: inline-start`                         |
 
 Shorthand forms like `margin-inline`, `padding-inline`, and `inset-inline` set both sides at once. See `mega-menu.scss` for extensive use of this approach.
 
@@ -556,7 +556,7 @@ When logical properties cannot express the override (e.g., flipping a `transform
   transform: rotate(0deg);
 }
 
-[dir="rtl"] .mg-component__arrow {
+[dir='rtl'] .mg-component__arrow {
   transform: rotate(180deg);
 }
 ```
@@ -567,7 +567,7 @@ Or nest with `&` when the override is scoped to the block:
 .mg-component__separator {
   border-left: 2px solid $mg-color-neutral-400;
 
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     border-left: none;
     border-right: 2px solid $mg-color-neutral-400;
   }
@@ -731,10 +731,10 @@ MDX files are rendered inside Storybook's iframe. Relative file paths (e.g. `../
 3. Replace spaces and slashes with hyphens
 4. Append `--docs`
 
-| Story title | Path ID |
-|-------------|---------|
-| `Components/Tabs` | `?path=/docs/components-tabs--docs` |
-| `Components/On this page nav` | `?path=/docs/components-on-this-page-nav--docs` |
+| Story title                     | Path ID                                           |
+| ------------------------------- | ------------------------------------------------- |
+| `Components/Tabs`               | `?path=/docs/components-tabs--docs`               |
+| `Components/On this page nav`   | `?path=/docs/components-on-this-page-nav--docs`   |
 | `Getting started/Accessibility` | `?path=/docs/getting-started-accessibility--docs` |
 
 For external URLs (GitHub, GitLab, external sites), use a standard absolute URL. Do not use relative paths for anything outside the MDX file's own imports.
@@ -945,6 +945,7 @@ Apply all three of the following:
 
    ```mdx
    {/* ComponentName.mdx */}
+
    > **Deprecated:** This component will be removed in the next major version.
    > Use [NewComponent](?path=/docs/components-category-newcomponent--docs) instead.
    ```

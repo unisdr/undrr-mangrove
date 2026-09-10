@@ -8,7 +8,12 @@ import PropTypes from 'prop-types';
  * @param {Array<{text: string}>} props.data  Ordered breadcrumb items; the last item is the current page
  * @param {string} [props.Color]              Color variant ('White' applies the white modifier class)
  */
-export function Breadcrumbcomponent({ data, Color, navLabel = 'breadcrumbs', ...args }) {
+export function Breadcrumbcomponent({
+  data,
+  Color,
+  navLabel = 'breadcrumbs',
+  ...args
+}) {
   const lastIndex = data.length - 1;
 
   let colorClass = '';
@@ -33,9 +38,7 @@ export function Breadcrumbcomponent({ data, Color, navLabel = 'breadcrumbs', ...
 
           return (
             <li key={i}>
-              <a href="#">
-                {item.text}
-              </a>
+              <a href="#">{item.text}</a>
             </li>
           );
         })}

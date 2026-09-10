@@ -11,8 +11,10 @@
 // but lacks aria-current support and cross-browser coverage - revisit when
 // browsers ship native accessibility semantics for :target-current.
 
-const CHEVRON_LEFT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M11 4L6 8l5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const CHEVRON_RIGHT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M5 4l5 4-5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEVRON_LEFT_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M11 4L6 8l5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEVRON_RIGHT_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M5 4l5 4-5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 /**
  * Read the offset CSS custom property from the nav element.
@@ -63,12 +65,18 @@ function scrollLinkToCenter(link, list) {
  */
 export function mgOnThisPageNav(scope) {
   const containers = scope
-    ? (scope instanceof HTMLElement ? [scope] : scope)
+    ? scope instanceof HTMLElement
+      ? [scope]
+      : scope
     : document.querySelectorAll('[data-mg-on-this-page-nav]');
 
   containers.forEach(container => {
     // Skip auto-init if the element opts out
-    if (!scope && container.hasAttribute('data-mg-on-this-page-nav-skip-auto-init')) return;
+    if (
+      !scope &&
+      container.hasAttribute('data-mg-on-this-page-nav-skip-auto-init')
+    )
+      return;
     if (container.dataset.mgOnThisPageNavInitialized) return;
     container.dataset.mgOnThisPageNavInitialized = 'true';
 
@@ -124,7 +132,9 @@ export function mgOnThisPageNavDestroy(container) {
     container._mgOnThisPageNavResizeObserver.disconnect();
     delete container._mgOnThisPageNavResizeObserver;
   }
-  container.querySelectorAll('.mg-on-this-page-nav__scroll-btn').forEach(btn => btn.remove());
+  container
+    .querySelectorAll('.mg-on-this-page-nav__scroll-btn')
+    .forEach(btn => btn.remove());
   container.classList.remove('mg-on-this-page-nav--has-left-overflow');
   delete container.dataset.mgOnThisPageNavInitialized;
 }
@@ -156,7 +166,8 @@ function buildNavFromHeadings(container) {
 
   // Filter out excluded headings and the TableOfContents "On this page" header
   const filteredHeadings = Array.from(headings).filter(heading => {
-    if (heading.classList.contains('mg-on-this-page-nav--exclude')) return false;
+    if (heading.classList.contains('mg-on-this-page-nav--exclude'))
+      return false;
     if (heading.classList.contains('mg-u-sr-only')) return false;
     if (heading.id === 'on-this-page') return false;
     return true;
@@ -258,11 +269,14 @@ function openContainingTabs(target) {
   // panels is innermost-first; reverse to open outermost first so inner
   // panels become reachable before we try to open them.
   for (const panel of panels.reverse()) {
-    const isHidden = panel.hidden || panel.getAttribute('hidden') === 'until-found';
+    const isHidden =
+      panel.hidden || panel.getAttribute('hidden') === 'until-found';
     if (!isHidden) continue;
     const tabsContainer = panel.closest('[data-mg-js-tabs]');
     if (!tabsContainer) continue;
-    const trigger = tabsContainer.querySelector(`[data-tabs__item="${panel.id}"]`);
+    const trigger = tabsContainer.querySelector(
+      `[data-tabs__item="${panel.id}"]`
+    );
     if (trigger) trigger.click();
   }
 }
@@ -274,49 +288,56 @@ function openContainingTabs(target) {
  * @param {AbortSignal} signal - Signal to remove listener on destroy
  */
 function setupClickHandlers(container, signal) {
-  container.addEventListener('click', e => {
-    const link = e.target.closest('.mg-on-this-page-nav__link');
-    if (!link) return;
+  container.addEventListener(
+    'click',
+    e => {
+      const link = e.target.closest('.mg-on-this-page-nav__link');
+      if (!link) return;
 
-    const hash = link.getAttribute('href');
-    if (!hash || !hash.startsWith('#')) return;
+      const hash = link.getAttribute('href');
+      if (!hash || !hash.startsWith('#')) return;
 
-    const targetId = hash.slice(1);
-    const target = document.getElementById(targetId);
-    if (!target) return;
+      const targetId = hash.slice(1);
+      const target = document.getElementById(targetId);
+      if (!target) return;
 
-    e.preventDefault();
+      e.preventDefault();
 
-    // Open any containing collapsed tab panel before measuring scroll position.
-    // The tab switch is synchronous, so getBoundingClientRect() is accurate
-    // immediately after the call.
-    openContainingTabs(target);
+      // Open any containing collapsed tab panel before measuring scroll position.
+      // The tab switch is synchronous, so getBoundingClientRect() is accurate
+      // immediately after the call.
+      openContainingTabs(target);
 
-    // Read offset per click — the custom property may change at breakpoints
-    const offset = getOffset(container);
-    const navHeight = container.offsetHeight || 0;
-    const top =
-      target.getBoundingClientRect().top + window.scrollY - offset - navHeight;
+      // Read offset per click — the custom property may change at breakpoints
+      const offset = getOffset(container);
+      const navHeight = container.offsetHeight || 0;
+      const top =
+        target.getBoundingClientRect().top +
+        window.scrollY -
+        offset -
+        navHeight;
 
-    window.scrollTo({
-      top,
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-    });
+      window.scrollTo({
+        top,
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      });
 
-    // Update URL hash without triggering scroll
-    if (window.history && window.history.pushState) {
-      window.history.pushState(null, null, `#${targetId}`);
-    }
+      // Update URL hash without triggering scroll
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, `#${targetId}`);
+      }
 
-    // Move focus to target for keyboard users; remove tabindex on blur
-    target.setAttribute('tabindex', '-1');
-    target.focus({ preventScroll: true });
-    target.addEventListener(
-      'blur',
-      () => target.removeAttribute('tabindex'),
-      { once: true }
-    );
-  }, { signal });
+      // Move focus to target for keyboard users; remove tabindex on blur
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+      target.addEventListener(
+        'blur',
+        () => target.removeAttribute('tabindex'),
+        { once: true }
+      );
+    },
+    { signal }
+  );
 }
 
 /**
@@ -400,24 +421,29 @@ function setupScrollButtons(container, signal) {
   }
 
   // Remove any previously injected buttons so re-init never duplicates them
-  container.querySelectorAll('.mg-on-this-page-nav__scroll-btn').forEach(btn => btn.remove());
+  container
+    .querySelectorAll('.mg-on-this-page-nav__scroll-btn')
+    .forEach(btn => btn.remove());
 
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
-  prevBtn.className = 'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--prev';
+  prevBtn.className =
+    'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--prev';
   // Direction-neutral labels avoid confusion for RTL screen reader users
   // ("left"/"right" are ambiguous when the reading direction is reversed).
   // Override via data-mg-on-this-page-nav-scroll-prev-label for translated text.
   prevBtn.setAttribute(
     'aria-label',
-    container.dataset.mgOnThisPageNavScrollPrevLabel || 'Previous navigation items'
+    container.dataset.mgOnThisPageNavScrollPrevLabel ||
+      'Previous navigation items'
   );
   prevBtn.hidden = true;
   prevBtn.innerHTML = CHEVRON_LEFT_SVG;
 
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
-  nextBtn.className = 'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--next';
+  nextBtn.className =
+    'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--next';
   // Override via data-mg-on-this-page-nav-scroll-next-label for translated text.
   nextBtn.setAttribute(
     'aria-label',
@@ -430,26 +456,40 @@ function setupScrollButtons(container, signal) {
   list.insertAdjacentElement('afterend', nextBtn);
 
   // prevBtn scrolls toward the visual start: left in LTR (-), right in RTL (+).
-  prevBtn.addEventListener('click', () => {
-    const isRTL = getComputedStyle(list).direction === 'rtl';
-    list.scrollBy({
-      left: (isRTL ? 1 : -1) * (list.offsetWidth * 0.5),
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-    });
-  }, { signal });
+  prevBtn.addEventListener(
+    'click',
+    () => {
+      const isRTL = getComputedStyle(list).direction === 'rtl';
+      list.scrollBy({
+        left: (isRTL ? 1 : -1) * (list.offsetWidth * 0.5),
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      });
+    },
+    { signal }
+  );
 
   // nextBtn scrolls toward the visual end: right in LTR (+), left in RTL (-).
-  nextBtn.addEventListener('click', () => {
-    const isRTL = getComputedStyle(list).direction === 'rtl';
-    list.scrollBy({
-      left: (isRTL ? -1 : 1) * (list.offsetWidth * 0.5),
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-    });
-  }, { signal });
+  nextBtn.addEventListener(
+    'click',
+    () => {
+      const isRTL = getComputedStyle(list).direction === 'rtl';
+      list.scrollBy({
+        left: (isRTL ? -1 : 1) * (list.offsetWidth * 0.5),
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      });
+    },
+    { signal }
+  );
 
-  list.addEventListener('scroll', () => updateScrollButtons(container, list, prevBtn, nextBtn), { signal, passive: true });
+  list.addEventListener(
+    'scroll',
+    () => updateScrollButtons(container, list, prevBtn, nextBtn),
+    { signal, passive: true }
+  );
 
-  const ro = new ResizeObserver(() => updateScrollButtons(container, list, prevBtn, nextBtn));
+  const ro = new ResizeObserver(() =>
+    updateScrollButtons(container, list, prevBtn, nextBtn)
+  );
   ro.observe(list);
   container._mgOnThisPageNavResizeObserver = ro;
   signal.addEventListener('abort', () => ro.disconnect(), { once: true });
@@ -468,10 +508,14 @@ function setupFocusScrolling(container, signal) {
   const list = container.querySelector('.mg-on-this-page-nav__list');
   if (!list) return;
 
-  list.addEventListener('focusin', e => {
-    const link = e.target.closest('.mg-on-this-page-nav__link');
-    if (link) scrollLinkToCenter(link, list);
-  }, { signal });
+  list.addEventListener(
+    'focusin',
+    e => {
+      const link = e.target.closest('.mg-on-this-page-nav__link');
+      if (link) scrollLinkToCenter(link, list);
+    },
+    { signal }
+  );
 }
 
 /**

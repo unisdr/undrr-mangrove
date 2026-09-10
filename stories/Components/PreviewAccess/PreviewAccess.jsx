@@ -96,10 +96,16 @@ export default function PreviewAccess({
       aria-describedby="mg-preview-access-body-preview"
     >
       <p className="mg-preview-access__eyebrow">{eyebrow}</p>
-      <h2 className="mg-preview-access__title" id="mg-preview-access-title-preview">
+      <h2
+        className="mg-preview-access__title"
+        id="mg-preview-access-title-preview"
+      >
         {title}
       </h2>
-      <p className="mg-preview-access__body" id="mg-preview-access-body-preview">
+      <p
+        className="mg-preview-access__body"
+        id="mg-preview-access-body-preview"
+      >
         {message}
       </p>
       <form
@@ -107,7 +113,10 @@ export default function PreviewAccess({
         noValidate
         onSubmit={e => e.preventDefault()}
       >
-        <label className="mg-preview-access__label" htmlFor="mg-preview-access-pin-preview">
+        <label
+          className="mg-preview-access__label"
+          htmlFor="mg-preview-access-pin-preview"
+        >
           {pinLabel}
         </label>
         <div className="mg-preview-access__field">

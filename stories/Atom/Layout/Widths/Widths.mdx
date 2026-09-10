@@ -24,15 +24,33 @@ export const WIDTH_TOKENS = [
 ];
 
 export function WidthRow({ token }) {
-  const value = typeof document !== 'undefined'
-    ? getComputedStyle(document.documentElement).getPropertyValue(token).trim()
-    : '';
+  const value =
+    typeof document !== 'undefined'
+      ? getComputedStyle(document.documentElement)
+          .getPropertyValue(token)
+          .trim()
+      : '';
   return (
     <tr>
-      <td style={{ padding: '6px 12px', fontFamily: 'monospace', fontSize: '13px' }}>{token}</td>
+      <td
+        style={{
+          padding: '6px 12px',
+          fontFamily: 'monospace',
+          fontSize: '13px',
+        }}
+      >
+        {token}
+      </td>
       <td style={{ padding: '6px 12px', fontSize: '13px' }}>{value || '—'}</td>
       <td style={{ padding: '6px 12px' }}>
-        <div style={{ width: value || 0, height: '16px', background: 'var(--mg-color-interactive, #004f91)', borderRadius: '2px' }} />
+        <div
+          style={{
+            width: value || 0,
+            height: '16px',
+            background: 'var(--mg-color-interactive, #004f91)',
+            borderRadius: '2px',
+          }}
+        />
       </td>
     </tr>
   );
@@ -47,6 +65,8 @@ export function WidthRow({ token }) {
     </tr>
   </thead>
   <tbody>
-    {WIDTH_TOKENS.map(t => <WidthRow key={t} token={t} />)}
+    {WIDTH_TOKENS.map(t => (
+      <WidthRow key={t} token={t} />
+    ))}
   </tbody>
 </table>

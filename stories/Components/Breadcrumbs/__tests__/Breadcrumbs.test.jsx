@@ -46,7 +46,7 @@ describe('Breadcrumbs', () => {
 
   it('works correctly with a single item', () => {
     const { container } = render(
-      <Breadcrumbcomponent data={[{ text: 'Home' }]} />,
+      <Breadcrumbcomponent data={[{ text: 'Home' }]} />
     );
     const items = container.querySelectorAll('li');
     expect(items).toHaveLength(1);
@@ -59,7 +59,7 @@ describe('Breadcrumbs', () => {
 
   it('applies white modifier class when Color="White"', () => {
     const { container } = render(
-      <Breadcrumbcomponent data={defaultData} Color="White" />,
+      <Breadcrumbcomponent data={defaultData} Color="White" />
     );
     expect(container.querySelector('nav')).toHaveClass('mg-breadcrumb--white');
   });
@@ -75,7 +75,7 @@ describe('Breadcrumbs', () => {
 
   it('has no a11y violations (White variant)', async () => {
     const { container } = render(
-      <Breadcrumbcomponent data={defaultData} Color="White" />,
+      <Breadcrumbcomponent data={defaultData} Color="White" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

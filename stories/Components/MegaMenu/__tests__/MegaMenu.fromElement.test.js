@@ -40,9 +40,7 @@ describe('megaMenuFromElement', () => {
   });
 
   it('returns empty sections array for invalid JSON', () => {
-    const props = megaMenuFromElement(
-      makeContainer({ sections: '{broken' })
-    );
+    const props = megaMenuFromElement(makeContainer({ sections: '{broken' }));
     expect(props.sections).toEqual([]);
   });
 

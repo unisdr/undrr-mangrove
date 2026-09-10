@@ -116,7 +116,9 @@ export function Pager({
         <div className="mg-u-sr-only" aria-live="polite">
           {typeof pageOfLabel === 'function'
             ? pageOfLabel({ page, total: totalPages ?? '' })
-            : String(pageOfLabel).replace(/\{page\}/g, page).replace(/\{total\}/g, totalPages ?? '')}
+            : String(pageOfLabel)
+                .replace(/\{page\}/g, page)
+                .replace(/\{total\}/g, totalPages ?? '')}
         </div>
       </nav>
     );
@@ -140,7 +142,9 @@ export function Pager({
 
       {/* Screen reader announcement */}
       <div className="mg-u-sr-only" aria-live="polite">
-        {String(pageOfLabel).replace(/\{page\}/g, page).replace(/\{total\}/g, totalPages ?? '')}
+        {String(pageOfLabel)
+          .replace(/\{page\}/g, page)
+          .replace(/\{total\}/g, totalPages ?? '')}
       </div>
     </nav>
   );

@@ -54,7 +54,7 @@ pre > code {
 // data-language: hand-authored HTML (<pre data-language="Bash">)
 // :has selector: react-syntax-highlighter puts language-X on <code>, not <pre>
 pre[data-language],
-pre:has(> code[class*='language-']) {
+pre:has(> code[class*="language-"]) {
   > code {
     padding-block-start: var(--mg-spacing-250); // room for badge
   }
@@ -80,9 +80,15 @@ pre[data-language]::after {
 }
 
 // Per-language badge labels for react-syntax-highlighter output
-pre:has(> code.language-bash)::after       { content: "Bash"; }
-pre:has(> code.language-javascript)::after { content: "JavaScript"; }
-pre:has(> code.language-jsx)::after        { content: "JSX"; }
+pre:has(> code.language-bash)::after {
+  content: "Bash";
+}
+pre:has(> code.language-javascript)::after {
+  content: "JavaScript";
+}
+pre:has(> code.language-jsx)::after {
+  content: "JSX";
+}
 
 // Vercel-inspired filename header: figure.mg-code-block > figcaption + pre
 figure.mg-code-block {
@@ -105,20 +111,22 @@ figure.mg-code-block {
 
     // Badge suppressed — figcaption already labels the block
     &[data-language]::after,
-    &:has(> code[class*='language-'])::after {
+    &:has(> code[class*="language-"])::after {
       display: none;
     }
 
     > code {
       border-radius: 0;
-      padding-block-start: var(--mg-spacing-150); // restore normal padding — no badge needed
+      padding-block-start: var(
+        --mg-spacing-150
+      ); // restore normal padding — no badge needed
     }
   }
 }
 
-[dir='rtl'] {
+[dir="rtl"] {
   pre[data-language],
-  pre:has(> code[class*='language-']) {
+  pre:has(> code[class*="language-"]) {
     &::after {
       left: var(--mg-spacing-100);
       right: auto;

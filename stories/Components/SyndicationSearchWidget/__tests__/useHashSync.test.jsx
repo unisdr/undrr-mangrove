@@ -27,7 +27,9 @@ describe('useHashSync: URL parameter migration', () => {
 
   beforeEach(() => {
     // Mock replaceState so the hook doesn't overwrite our test URL
-    replaceStateSpy = jest.spyOn(window.history, 'replaceState').mockImplementation(() => {});
+    replaceStateSpy = jest
+      .spyOn(window.history, 'replaceState')
+      .mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -44,7 +46,9 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('climate');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null, '', expect.stringContaining('#query=climate')
+      null,
+      '',
+      expect.stringContaining('#query=climate')
     );
   });
 
@@ -56,7 +60,9 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('disaster');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null, '', expect.stringContaining('#query=disaster')
+      null,
+      '',
+      expect.stringContaining('#query=disaster')
     );
   });
 
@@ -68,7 +74,9 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('from-text');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null, '', expect.stringContaining('#query=from-text')
+      null,
+      '',
+      expect.stringContaining('#query=from-text')
     );
   });
 
@@ -80,7 +88,9 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('climate');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null, '', expect.stringMatching(/\?lang=fr&page=2#query=climate$/)
+      null,
+      '',
+      expect.stringMatching(/\?lang=fr&page=2#query=climate$/)
     );
   });
 
@@ -94,14 +104,21 @@ describe('useHashSync: URL parameter migration', () => {
   });
 
   it('encodes special characters in migrated query', async () => {
-    window.history.pushState({}, '', '/search?text=' + encodeURIComponent('risk reduction & resilience'));
+    window.history.pushState(
+      {},
+      '',
+      '/search?text=' + encodeURIComponent('risk reduction & resilience')
+    );
     renderWithHashSync();
 
     await waitFor(() => {
-      expect(screen.getByTestId('query').textContent).toBe('risk reduction & resilience');
+      expect(screen.getByTestId('query').textContent).toBe(
+        'risk reduction & resilience'
+      );
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null, '',
+      null,
+      '',
       expect.stringContaining('#query=risk%20reduction%20%26%20resilience')
     );
   });

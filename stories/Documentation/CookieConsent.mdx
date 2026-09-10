@@ -16,7 +16,10 @@ Mangrove provides a shared cookie consent banner that loads from the UNDRR CDN. 
 The banner can be added to any page with three script/link tags -- no React required:
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/cookie-banner/v1/cookieconsent.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/cookie-banner/v1/cookieconsent.css"
+/>
 <script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent.umd.js"></script>
 <script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent-undrr.js"></script>
 ```
@@ -26,7 +29,7 @@ For React applications, import the `CookieConsentBanner` component:
 ```jsx
 import { CookieConsentBanner } from '@undrr/undrr-mangrove';
 
-<CookieConsentBanner />
+<CookieConsentBanner />;
 ```
 
 See the <LinkTo kind="components-cookieconsentbanner" story="docs">CookieConsentBanner component</LinkTo> for full documentation, props, custom configuration, and CDN details.

@@ -10,7 +10,13 @@
  */
 
 import React, { useMemo } from 'react';
-import { getContentType, getTaxonomyVocabulary, isTaxonomyTermResult, DOMAIN_MAP, TEASER_FIELDS } from '../utils/constants';
+import {
+  getContentType,
+  getTaxonomyVocabulary,
+  isTaxonomyTermResult,
+  DOMAIN_MAP,
+  TEASER_FIELDS,
+} from '../utils/constants';
 import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
 
 /**
@@ -34,17 +40,18 @@ export function swapCardVariant(html, displayMode) {
     .replace(/\bmg-card__(?:vc|hc)\b/g, '')
     .replace(/\bmg-card-book__hc\b/g, '')
     .replace(/\bmg-card__book\b/g, '');
-  const variant = displayMode === 'card-book'
-    ? 'mg-card__vc mg-card__book'
-    : 'mg-card__vc';
+  const variant =
+    displayMode === 'card-book' ? 'mg-card__vc mg-card__book' : 'mg-card__vc';
   const classWithCardRegex = /class="([^"]*\bmg-card\b[^"]*)"/;
   if (classWithCardRegex.test(result)) {
-    result = result.replace(classWithCardRegex, (_, cls) =>
-      `class="${cls.trim()} ${variant}"`
+    result = result.replace(
+      classWithCardRegex,
+      (_, cls) => `class="${cls.trim()} ${variant}"`
     );
   } else {
-    result = result.replace(/class="([^"]*)"/, (_, cls) =>
-      `class="${cls.trim()} ${variant}"`
+    result = result.replace(
+      /class="([^"]*)"/,
+      (_, cls) => `class="${cls.trim()} ${variant}"`
     );
   }
 
@@ -141,12 +148,18 @@ export function stripHiddenTeaserFields(html, visibleTeaserFields) {
 function ScoreMetrics({ hit, source }) {
   return (
     <span className="mg-search__result-metrics">
-      <span className="mg-search__result-metric">Score: {hit._score?.toFixed(2)}</span>
+      <span className="mg-search__result-metric">
+        Score: {hit._score?.toFixed(2)}
+      </span>
       {source.field_meta_interestingness?.[0] !== undefined && (
-        <span className="mg-search__result-metric">Int: {source.field_meta_interestingness[0]}</span>
+        <span className="mg-search__result-metric">
+          Int: {source.field_meta_interestingness[0]}
+        </span>
       )}
       {source.field_meta_longevity?.[0] !== undefined && (
-        <span className="mg-search__result-metric">Long: {source.field_meta_longevity[0]}</span>
+        <span className="mg-search__result-metric">
+          Long: {source.field_meta_longevity[0]}
+        </span>
       )}
     </span>
   );
@@ -166,7 +179,12 @@ function ScoreMetrics({ hit, source }) {
  * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
  * @param {Object|null} props.visibleTeaserFields - Teaser field visibility map from config
  */
-export function ResultItem({ hit, showMetrics = false, displayMode = 'list', visibleTeaserFields = null }) {
+export function ResultItem({
+  hit,
+  showMetrics = false,
+  displayMode = 'list',
+  visibleTeaserFields = null,
+}) {
   const labels = useSearchLabels();
   const source = hit._source || {};
   const highlight = hit.highlight || {};
@@ -196,7 +214,9 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
     ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
     : type === 'organization'
       ? 'www_preventionweb_net'
-      : (Array.isArray(domainArray) ? domainArray[0] : domainArray);
+      : Array.isArray(domainArray)
+        ? domainArray[0]
+        : domainArray;
   const domainInfo = domainId ? DOMAIN_MAP.get(domainId) : null;
   const baseUrl = domainInfo?.url || 'https://www.preventionweb.net';
 
@@ -209,8 +229,13 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
       <article className="mg-search__result mg-search__result--error">
         {showMetrics && <ScoreMetrics hit={hit} source={source} />}
         <p className="mg-search__result-error">
-          {interpolateLabel(labels.domainAccessError, { nid: nid || 'unknown' })}{' '}
-          <a href="https://www.undrr.org/contact-us">{labels.reportErrorLink}</a>.
+          {interpolateLabel(labels.domainAccessError, {
+            nid: nid || 'unknown',
+          })}{' '}
+          <a href="https://www.undrr.org/contact-us">
+            {labels.reportErrorLink}
+          </a>
+          .
         </p>
       </article>
     );
@@ -249,9 +274,13 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
 
     let finalHtml = resolvedTeaser;
     if (!skipBadges) {
-      let titleFieldIndex = finalHtml.indexOf('<div class="field field--name-node-title');
+      let titleFieldIndex = finalHtml.indexOf(
+        '<div class="field field--name-node-title'
+      );
       if (titleFieldIndex === -1) {
-        titleFieldIndex = finalHtml.indexOf('<div class="field field--name-name');
+        titleFieldIndex = finalHtml.indexOf(
+          '<div class="field field--name-name'
+        );
       }
       if (titleFieldIndex !== -1) {
         // Organizations show a content type tag; everything else shows a site name.
@@ -271,7 +300,10 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
         }
         if (badgeContent) {
           const badgeHtml = `<div class="mg-search__result-badges">${badgeContent}</div>`;
-          finalHtml = finalHtml.slice(0, titleFieldIndex) + badgeHtml + finalHtml.slice(titleFieldIndex);
+          finalHtml =
+            finalHtml.slice(0, titleFieldIndex) +
+            badgeHtml +
+            finalHtml.slice(titleFieldIndex);
         }
       }
     }
@@ -366,10 +398,7 @@ export function ResultItem({ hit, showMetrics = false, displayMode = 'list', vis
               )}
               {/* Taxonomy terms don't have published_at, so skip date */}
               {!hideDate && !isTerm && formattedDate && (
-                <time
-                  className="mg-search__result-date"
-                  dateTime={publishedAt}
-                >
+                <time className="mg-search__result-date" dateTime={publishedAt}>
                   {formattedDate}
                 </time>
               )}

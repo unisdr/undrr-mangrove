@@ -10,7 +10,9 @@ describe('FooterIcons', () => {
 
   it('renders a <ul> with class mg-footer--social-links', () => {
     const { container } = render(<FooterIcons />);
-    expect(container.querySelector('ul.mg-footer--social-links')).toBeInTheDocument();
+    expect(
+      container.querySelector('ul.mg-footer--social-links')
+    ).toBeInTheDocument();
   });
 
   it('renders all five social links', () => {

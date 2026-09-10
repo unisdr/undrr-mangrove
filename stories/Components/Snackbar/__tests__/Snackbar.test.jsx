@@ -27,7 +27,7 @@ describe('Snackbar', () => {
   it('renders a close button', () => {
     render(<Snackbar {...defaultProps} />);
     expect(
-      screen.getByRole('button', { name: 'Close notification' }),
+      screen.getByRole('button', { name: 'Close notification' })
     ).toBeInTheDocument();
   });
 
@@ -38,7 +38,9 @@ describe('Snackbar', () => {
 
   it('renders aria-live="assertive" on wrapper', () => {
     const { container } = render(<Snackbar {...defaultProps} />);
-    expect(container.querySelector('[aria-live="assertive"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[aria-live="assertive"]')
+    ).toBeInTheDocument();
   });
 
   // --------------------------------------------------
@@ -49,12 +51,12 @@ describe('Snackbar', () => {
     'applies correct class for %s severity',
     severity => {
       const { container } = render(
-        <Snackbar {...defaultProps} severity={severity} />,
+        <Snackbar {...defaultProps} severity={severity} />
       );
       expect(
-        container.querySelector(`.mg-snackbar__${severity}`),
+        container.querySelector(`.mg-snackbar__${severity}`)
       ).toBeInTheDocument();
-    },
+    }
   );
 
   it('renders screen reader text with severity', () => {
@@ -68,9 +70,7 @@ describe('Snackbar', () => {
 
   it('calls onClose when close button is clicked', () => {
     render(<Snackbar {...defaultProps} />);
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Close notification' }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Close notification' }));
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
@@ -127,14 +127,14 @@ describe('Snackbar', () => {
   it('applies open class when opened is true', () => {
     const { container } = render(<Snackbar {...defaultProps} opened={true} />);
     expect(
-      container.querySelector('.mg-snackbar-wrapper__open'),
+      container.querySelector('.mg-snackbar-wrapper__open')
     ).toBeInTheDocument();
   });
 
   it('does not apply open class when opened is false', () => {
     const { container } = render(<Snackbar {...defaultProps} opened={false} />);
     expect(
-      container.querySelector('.mg-snackbar-wrapper__open'),
+      container.querySelector('.mg-snackbar-wrapper__open')
     ).not.toBeInTheDocument();
   });
 

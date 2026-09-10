@@ -25,11 +25,7 @@ export function FooterIcons({ variant = 'default', ...args }) {
       {SOCIAL_LINKS.map(({ key, label, icon }) => (
         <li key={key}>
           <a href="#" aria-label={label}>
-            {icon ? (
-              <Icon name={icon} />
-            ) : (
-              <span>{label}</span>
-            )}
+            {icon ? <Icon name={icon} /> : <span>{label}</span>}
           </a>
         </li>
       ))}

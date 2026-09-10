@@ -64,7 +64,6 @@ describe('taxonomy helpers (constants.js)', () => {
       expect(result.isVocabulary).toBe(true);
     });
   });
-
 });
 
 describe('getMergedTypeBuckets (facetUtils.js)', () => {
@@ -84,8 +83,16 @@ describe('getMergedTypeBuckets (facetUtils.js)', () => {
 
     const result = getMergedTypeBuckets(aggregations);
     expect(result).toHaveLength(2);
-    expect(result[0]).toMatchObject({ key: 'news', isSubtype: false, parentType: null });
-    expect(result[1]).toMatchObject({ key: 'event', isSubtype: false, parentType: null });
+    expect(result[0]).toMatchObject({
+      key: 'news',
+      isSubtype: false,
+      parentType: null,
+    });
+    expect(result[1]).toMatchObject({
+      key: 'event',
+      isSubtype: false,
+      parentType: null,
+    });
   });
 
   it('appends vocabulary buckets with vid: prefix', () => {
@@ -102,8 +109,14 @@ describe('getMergedTypeBuckets (facetUtils.js)', () => {
     const result = getMergedTypeBuckets(aggregations);
     const vocabBuckets = result.filter(b => b.isVocabulary);
     expect(vocabBuckets).toHaveLength(2);
-    expect(vocabBuckets[0]).toMatchObject({ key: 'vid:hazard', isVocabulary: true });
-    expect(vocabBuckets[1]).toMatchObject({ key: 'vid:theme', isVocabulary: true });
+    expect(vocabBuckets[0]).toMatchObject({
+      key: 'vid:hazard',
+      isVocabulary: true,
+    });
+    expect(vocabBuckets[1]).toMatchObject({
+      key: 'vid:theme',
+      isVocabulary: true,
+    });
   });
 
   it('interleaves subtypes after their parent type', () => {
@@ -126,8 +139,16 @@ describe('getMergedTypeBuckets (facetUtils.js)', () => {
     const result = getMergedTypeBuckets(aggregations);
     // news → subtypes → event
     expect(result[0]).toMatchObject({ key: 'news', isSubtype: false });
-    expect(result[1]).toMatchObject({ key: 'field_news_type:751', isSubtype: true, parentType: 'news' });
-    expect(result[2]).toMatchObject({ key: 'field_news_type:752', isSubtype: true, parentType: 'news' });
+    expect(result[1]).toMatchObject({
+      key: 'field_news_type:751',
+      isSubtype: true,
+      parentType: 'news',
+    });
+    expect(result[2]).toMatchObject({
+      key: 'field_news_type:752',
+      isSubtype: true,
+      parentType: 'news',
+    });
     expect(result[3]).toMatchObject({ key: 'event', isSubtype: false });
   });
 

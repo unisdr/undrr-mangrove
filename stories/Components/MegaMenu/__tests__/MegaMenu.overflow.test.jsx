@@ -29,7 +29,8 @@ const sections = [
   {
     title: 'Overflow Test',
     bannerHeading: 'Overflow Test',
-    bannerDescription: 'Tests panel overflow behaviour with many groups and items.',
+    bannerDescription:
+      'Tests panel overflow behaviour with many groups and items.',
     items: groups,
   },
 ];
@@ -42,7 +43,9 @@ describe('MegaMenu panel overflow', () => {
     // the active class. All groups must be present regardless of panel height.
     const nav = document.querySelector('.mg-mega-content__section-list');
     expect(nav).not.toBeNull();
-    expect(nav.querySelectorAll('.mg-mega-content__section-list-item')).toHaveLength(GROUP_COUNT);
+    expect(
+      nav.querySelectorAll('.mg-mega-content__section-list-item')
+    ).toHaveLength(GROUP_COUNT);
 
     groups.forEach(({ title }) => {
       expect(within(nav).getByText(title)).toBeInTheDocument();
@@ -57,10 +60,14 @@ describe('MegaMenu panel overflow', () => {
     const groupFiveItem = screen
       .getAllByRole('menuitem', { name: /^Group 5$/ })
       .find(el => el.closest('.mg-mega-content__section-list-item'));
-    fireEvent.mouseEnter(groupFiveItem.closest('.mg-mega-content__section-list-item'));
+    fireEvent.mouseEnter(
+      groupFiveItem.closest('.mg-mega-content__section-list-item')
+    );
 
     // All 8 items for Group 5 should now appear in the desktop right pane
-    const desktopMenu = document.querySelector('.mg-mega-content__menu--desktop');
+    const desktopMenu = document.querySelector(
+      '.mg-mega-content__menu--desktop'
+    );
     expect(desktopMenu).not.toBeNull();
 
     groups[4].items.forEach(({ title }) => {
