@@ -18,17 +18,39 @@ Mangrove uses named z-index tokens instead of magic numbers. When adding a new c
 
 One token per UI concept. Backdrops and sub-layers are expressed as arithmetic offsets (`$token - 1`) inside the component's own SCSS rather than as separate variables.
 
-| Token | Value | Used by |
-|-------|-------|---------|
-| `$mg-z-index-behind` | -1 | Pseudo-element backgrounds placed behind sibling content (e.g. `.mg-container-full-width::before`) |
-| `$mg-z-index-nav` | 10 | MegaMenu navigation bar, topbar, sidebar (mobile overlay uses `nav - 1` = 9) |
-| `$mg-z-index-sticky` | 11 | Secondary sticky bars above the nav bar (OnThisPageNav) |
-| `$mg-z-index-nav-toggle` | 14 | Mobile nav hamburger toggle (floats above all nav layers) |
-| `$mg-z-index-header` | 22 | PageHeader (above nav and sticky bar) |
-| `$mg-z-index-drawer` | 2000 | Drawer / side panel (backdrop uses `drawer - 1` = 1999) |
-| `$mg-z-index-dropdown` | 2500 | Dropdowns and inline menus (above drawers) |
-| `$mg-z-index-modal` | 5000 | Modal and dialog foreground (backdrop uses `modal - 1` = 4999) |
-| `$mg-z-index-toast` | 5500 | Toast notifications (Snackbar), above modals |
+| Token                    | Value | Used by                                                                                                                                                            |
+| ------------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `$mg-z-index-behind`     | -1    | Pseudo-element backgrounds placed behind sibling content (e.g. `.mg-container-full-width::before`). Only behind _siblings_ — see [the limit](#the-limit-of-behind) |
+| `$mg-z-index-nav`        | 10    | MegaMenu navigation bar, topbar, sidebar (mobile overlay uses `nav - 1` = 9)                                                                                       |
+| `$mg-z-index-sticky`     | 11    | Secondary sticky bars above the nav bar (OnThisPageNav)                                                                                                            |
+| `$mg-z-index-nav-toggle` | 14    | Mobile nav hamburger toggle (floats above all nav layers)                                                                                                          |
+| `$mg-z-index-header`     | 22    | PageHeader (above nav and sticky bar)                                                                                                                              |
+| `$mg-z-index-drawer`     | 2000  | Drawer / side panel (backdrop uses `drawer - 1` = 1999)                                                                                                            |
+| `$mg-z-index-dropdown`   | 2500  | Dropdowns and inline menus (above drawers)                                                                                                                         |
+| `$mg-z-index-modal`      | 5000  | Modal and dialog foreground (backdrop uses `modal - 1` = 4999)                                                                                                     |
+| `$mg-z-index-toast`      | 5500  | Toast notifications (Snackbar), above modals                                                                                                                       |
+
+## The limit of `behind`
+
+`$mg-z-index-behind` puts a pseudo-element behind its **siblings**. It does not put it behind an **ancestor**, and an ancestor with its own opaque `background` will cover it completely.
+
+This is CSS painting order, not a quirk of the token. A negative-`z-index` descendant is painted after the background of the stacking context it belongs to, but before the block backgrounds of the in-flow ancestors between it and that stacking context. So the ancestor's background lands on top.
+
+```html
+<!-- The ::before is invisible: the wrapper's background paints over it -->
+<div style="background: #fff">
+  <div class="my-section">…</div>
+</div>
+```
+
+It fails silently. Nothing warns and nothing shifts — the background is simply absent.
+
+If you need a background that survives an ancestor background, use one of these instead:
+
+- **`isolation: isolate` on the element itself.** The element becomes its own stacking context, so the pseudo-element is painted with the element rather than behind the ancestor. Do not use it if a descendant has to escape the element — a dropdown, a sticky bar, a menu panel — because a stacking context traps those at the element's own layer.
+- **A real background on the element**, with the content pushed above it by `position: relative` rather than the pseudo-element pushed below.
+
+This affects `.mg-container-full-width`; its documentation covers the diagnosis and workarounds in full ([full-width utility](?path=/docs/components-fullwidth--docs)).
 
 ## Design decisions
 
@@ -51,8 +73,12 @@ Rather than a separate token for every sub-layer (backdrop, panel, overlay), Man
 
 ```scss
 // In syndication-search-widget.scss
-.mg-search__drawer-backdrop { z-index: $mg-z-index-drawer - 1; }
-.mg-search__drawer           { z-index: $mg-z-index-drawer; }
+.mg-search__drawer-backdrop {
+  z-index: $mg-z-index-drawer - 1;
+}
+.mg-search__drawer {
+  z-index: $mg-z-index-drawer;
+}
 ```
 
 Changing the token value automatically updates all related elements in that component.
@@ -75,14 +101,19 @@ These components use small raw values (1, 2, 3) within their own `position: rela
 }
 
 // Backdrop pattern: derive from the foreground token
-.my-drawer-backdrop { z-index: $mg-z-index-drawer - 1; }
-.my-drawer          { z-index: $mg-z-index-drawer; }
+.my-drawer-backdrop {
+  z-index: $mg-z-index-drawer - 1;
+}
+.my-drawer {
+  z-index: $mg-z-index-drawer;
+}
 
-// Negative background: pseudo-element behind sibling content
+// Negative background: pseudo-element behind sibling content.
+// Note: this is defeated by any ancestor with an opaque background.
 .my-section::before {
   position: absolute;
   inset: 0;
-  z-index: $mg-z-index-behind; // stays behind sibling content
+  z-index: $mg-z-index-behind; // stays behind sibling content, not ancestors
 }
 
 // Local stacking: raw value + comment (inside an isolated stacking context)

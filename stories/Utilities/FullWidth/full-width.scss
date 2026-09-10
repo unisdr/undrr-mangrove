@@ -1,3 +1,12 @@
+// Full-bleed background without moving the element's box: a 100vw pseudo-element
+// is painted behind the element, so content alignment is untouched.
+
+// Constraint: the bleed is hidden by any ancestor between this element and the
+// page background that has its own opaque background, because negative-z-index
+// descendants paint before the block backgrounds of their in-flow ancestors.
+// The workarounds (move the ancestor background, add isolation: isolate here, or
+// use a self-contained breakout) are documented in FullWidth.mdx. See
+// unisdr/undrr-mangrove#1118.
 .mg-container-full-width {
   position: relative;
 }
@@ -15,7 +24,7 @@
   position: absolute;
   top: 0;
   width: 100vw;
-  z-index: var(--mg-z-index-behind); // pseudo-element background sits behind sibling content
+  z-index: var(--mg-z-index-behind); // behind siblings, not behind ancestors
 }
 
 [dir="rtl"] .mg-container-full-width::before {

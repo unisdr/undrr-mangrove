@@ -102,7 +102,7 @@ export default {
         {
           class: 'mg-container-full-width',
           description:
-            'Makes an element break out of its container to span the full viewport width while preserving document flow. Uses CSS Grid and calc(50% - 50vw) margin trick. RTL-safe.',
+            "Paints an element's background across the full viewport width while the element's own box stays inside the container, so content alignment is preserved. RTL-safe. Constraint: the bleed is hidden by any ancestor with an opaque background, because it is painted by a z-index:-1 pseudo-element. Fix by moving that background, adding isolation:isolate to the element, or using margin-inline-start:calc(50% - 50vw) with inline-size:100vw plus an inner mg-container.",
           usage:
             '<div class="mg-container-full-width" style="background-color: #e6edf4;">\n  <div class="mg-container">Full-bleed section content</div>\n</div>',
         },

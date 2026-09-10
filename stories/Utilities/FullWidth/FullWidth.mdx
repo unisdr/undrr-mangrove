@@ -1,5 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { FullWidth } from './FullWidth';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as FullWidthStories from './FullWidth.stories';
 
 <Meta of={FullWidthStories} />
@@ -8,20 +7,134 @@ import * as FullWidthStories from './FullWidth.stories';
 
 # Full-width utility
 
-This takes a container element and attempts to stretch it to the full width of the browser, inheriting the background colour.
+`mg-container-full-width` paints an element's background edge to edge across the viewport while the element itself stays inside its container. Use it for tinted bands, coloured section breaks, and navigation bars that need a full-bleed background but container-aligned content.
+
+Because the element's box does not move, the content inside it stays aligned with the rest of the page. You do not need an inner wrapper to re-align it.
+
+> **Note:** The bleed is hidden if any ancestor between this element and the page background has its own opaque background. See [when the bleed does not appear](#when-the-bleed-does-not-appear).
 
 <Canvas of={FullWidthStories.DefaultFullWidth} meta={FullWidthStories} />
 
-### Usage
+## Usage
 
-To use this component, follow these steps:
+Put the class on the element that carries the background. Set the background on that same element — the bleed inherits it.
 
-- Include the CSS
+### HTML
 
-#### Interactions
+```html
+<div class="mg-container">
+  <section class="mg-container-full-width mg-u-background-color--neutral-50">
+    <h2>Section heading</h2>
+    <p>
+      This text stays aligned with the container. The tint runs edge to edge.
+    </p>
+  </section>
+</div>
+```
 
-- No interactions are needed with the loader
+### React
+
+The class is the API. Apply it to whichever element carries the background.
+
+```jsx
+<div className="mg-container">
+  <section className="mg-container-full-width mg-u-background-color--neutral-50">
+    <h2>Section heading</h2>
+  </section>
+</div>
+```
+
+This directory also holds a small `FullWidth` wrapper component that renders a `<section>` with the class applied. It is not exported from `@undrr/undrr-mangrove`, so it is only available inside this repository — use the class in consuming code.
+
+## When the bleed does not appear
+
+The utility fails silently. There is no console warning and no layout shift — the background simply stops at the container edge, which looks like the class did nothing.
+
+**Symptom:** the background is the width of `mg-container` instead of the width of the browser window.
+
+**Cause:** an ancestor between the utility and the page background has its own opaque `background`. The bleed is painted by a pseudo-element sitting behind the element, and a background on any ancestor paints on top of it.
+
+```html
+<!-- Broken: the wrapper's white background covers the bleed -->
+<div style="background: #fff">
+  <div class="mg-container">
+    <div class="mg-container-full-width" style="background: #eee">
+      No bleed.
+    </div>
+  </div>
+</div>
+```
+
+**How to check:** in browser dev tools, select the element and walk up the ancestor chain looking at `background-color`. The first ancestor with a value other than `rgba(0, 0, 0, 0)` is the one covering the bleed. An ancestor with `overflow: hidden` clips the bleed the same way.
+
+<Canvas
+  of={FullWidthStories.BlockedByAncestorBackground}
+  meta={FullWidthStories}
+/>
+
+> **Note:** Storybook's docs canvas is itself an opaque, clipped box, so no story on this page can show a true edge-to-edge bleed. The example above shows the width difference, not the real result. Open a story in its own tab to see the bleed against the browser window.
+
+### What to do instead
+
+Pick the first of these that fits.
+
+**1. Remove the background from the ancestor.** Move it onto the full-width element, or onto `<body>`. This keeps every advantage of the utility and is usually the right answer for a page shell that only sets a background because it needs one somewhere.
+
+**2. Add `isolation: isolate` to the full-width element.** This makes the element a stacking context of its own, so the bleed is painted with the element rather than behind the ancestor. Nothing moves and no markup changes.
+
+```css
+.my-band {
+  isolation: isolate;
+}
+```
+
+Do not do this if the element contains something that has to escape it — a dropdown, a sticky bar, a menu panel. A stacking context traps those at the element's own layer.
+
+**3. Switch to a self-contained breakout.** The element moves to the full viewport width itself, which no ancestor can defeat, and the content needs an inner `mg-container` to line back up.
+
+```css
+.my-band {
+  margin-inline-start: calc(50% - 50vw);
+  inline-size: 100vw;
+}
+```
+
+```html
+<div class="my-band">
+  <div class="mg-container">Content, re-aligned.</div>
+</div>
+```
+
+This is what `mg-hub-header` does, because its pattern wrappers set their own backgrounds.
+
+### Two other symptoms
+
+These look like the same fault but have different causes.
+
+**The bleed appears but is offset to one side, and the page scrolls sideways.** `text-align: center` is set on the full-width element itself. Centring moves the pseudo-element's starting point to the middle of the line box, so the bleed shifts by half the element's width. Set the alignment on a child instead.
+
+**A small horizontal scrollbar appears on a page that scrolls vertically.** `100vw` counts the width of the vertical scrollbar, so the bleed is a scrollbar-width wider than the visible page. Set `overflow-x: hidden` on the page wrapper, as `mg-mega-topbar` does.
+
+## Right-to-left
+
+The bleed flips automatically under `[dir="rtl"]`. No extra class is needed.
+
+## Theme behaviour
+
+The utility has no colour of its own — it inherits `background-color` and `background-image` from the element it is on. It behaves the same across the UNDRR, PreventionWeb, IRP, and MCR2030 themes.
+
+<details>
+<summary>Why it works this way (for contributors)</summary>
+
+The bleed comes from a `::before` pseudo-element at `z-index: var(--mg-z-index-behind)` (`-1`), sized to `100vw` and pulled left by `calc(50% - 50vw)`.
+
+Negative-`z-index` descendants are painted early — after the backgrounds of the stacking context they belong to, but before the block backgrounds of the in-flow ancestors between them and that stacking context. So an ancestor background always wins. This is CSS painting order, not a bug in the rule, and it applies to every `--mg-z-index-behind` use. See [Z-index layers](?path=/docs/design-decisions-z-index-layers--docs).
+
+The alternative — moving the box with `margin-inline-start: calc(50% - 50vw)` — is immune to ancestors but relocates the element, so every consumer would need an inner `mg-container` to restore content alignment. The current mechanism was kept because that would be a breaking change for `mg-mega-topbar`, `mg-mega-content`, and every Drupal site using the class today.
+
+</details>
 
 ## Changelog
 
+- **1.1** — 2026-09-10 ([#1118](https://github.com/unisdr/undrr-mangrove/issues/1118)): Documented the ancestor-background constraint, how to diagnose it, the three ways to work around it, and two symptoms that look like it but are not. No CSS behaviour change.
 - **1.0** — 2023-03-16: Released component
