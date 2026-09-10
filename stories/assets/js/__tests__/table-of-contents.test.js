@@ -188,9 +188,7 @@ describe('mgTableOfContentsInit', () => {
     const { toc } = setupPage({ contentSelector: '.nonexistent' });
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     mgTableOfContentsInit();
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('.nonexistent')
-    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('.nonexistent'));
     // Should still mark as initialized (no retry without clearing flag)
     expect(toc.dataset.mgTableOfContentsInitialized).toBe('true');
     warn.mockRestore();

@@ -1,9 +1,7 @@
 export default function galleryFromElement(container) {
   const { dataset } = container;
   const props = {
-    initialIndex: dataset.initialIndex
-      ? parseInt(dataset.initialIndex, 10)
-      : 0,
+    initialIndex: dataset.initialIndex ? parseInt(dataset.initialIndex, 10) : 0,
     showThumbnails: dataset.showThumbnails !== 'false',
     thumbnailPosition: dataset.thumbnailPosition || 'left',
     showArrows: dataset.showArrows !== 'false',

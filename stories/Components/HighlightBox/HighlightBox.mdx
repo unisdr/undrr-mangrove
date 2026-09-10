@@ -99,7 +99,9 @@ In RTL contexts, float-end appears on the left side of the content.
 </div>
 
 <!-- Combining variants -->
-<div class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered">
+<div
+  class="mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered"
+>
   <p>Purple background, centered layout</p>
 </div>
 ```
@@ -108,20 +110,20 @@ In RTL contexts, float-end appears on the left side of the content.
 
 ### Tone variants
 
-| Variant | Class | Description |
-|---------|-------|-------------|
-| Default | `mg-highlight-box` | Light background with dark border and shadow |
-| Primary | `mg-highlight-box--primary` | Corporate blue background with white text |
-| Secondary | `mg-highlight-box--secondary` | Sendai purple background with white text |
+| Variant   | Class                         | Description                                  |
+| --------- | ----------------------------- | -------------------------------------------- |
+| Default   | `mg-highlight-box`            | Light background with dark border and shadow |
+| Primary   | `mg-highlight-box--primary`   | Corporate blue background with white text    |
+| Secondary | `mg-highlight-box--secondary` | Sendai purple background with white text     |
 
 ### Layout variants
 
-| Variant | Class | Description |
-|---------|-------|-------------|
-| Full | (default) | 100% width |
-| Centered | `mg-highlight-box--centered` | 80% width, horizontally centered |
+| Variant     | Class                           | Description                                                   |
+| ----------- | ------------------------------- | ------------------------------------------------------------- |
+| Full        | (default)                       | 100% width                                                    |
+| Centered    | `mg-highlight-box--centered`    | 80% width, horizontally centered                              |
 | Float start | `mg-highlight-box--float-start` | 30% width, floats to inline-start (left in LTR, right in RTL) |
-| Float end | `mg-highlight-box--float-end` | 30% width, floats to inline-end (right in LTR, left in RTL) |
+| Float end   | `mg-highlight-box--float-end`   | 30% width, floats to inline-end (right in LTR, left in RTL)   |
 
 ### Responsive behavior
 
@@ -138,12 +140,12 @@ Float variants automatically stack to full width on screens below the tablet bre
 
 ## Styling details
 
-| Property | Value |
-|----------|-------|
-| Padding | 1rem block, 1.5rem inline, 2rem bottom |
-| Border | 1px solid rgba(0, 0, 0, 0.3) for default tone |
-| Shadow | Inset bottom shadow for depth effect |
-| Video | Use `.mg-embed-container` wrapper for responsive embeds |
+| Property | Value                                                   |
+| -------- | ------------------------------------------------------- |
+| Padding  | 1rem block, 1.5rem inline, 2rem bottom                  |
+| Border   | 1px solid rgba(0, 0, 0, 0.3) for default tone           |
+| Shadow   | Inset bottom shadow for depth effect                    |
+| Video    | Use `.mg-embed-container` wrapper for responsive embeds |
 
 ## Browser support
 

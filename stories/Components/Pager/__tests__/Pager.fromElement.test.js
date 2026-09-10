@@ -61,7 +61,9 @@ describe('pagerFromElement', () => {
   });
 
   it('returns undefined for label props when absent', () => {
-    const props = pagerFromElement(createContainer({ page: '1', 'total-pages': '10' }));
+    const props = pagerFromElement(
+      createContainer({ page: '1', 'total-pages': '10' })
+    );
     expect(props.prevLabel).toBeUndefined();
     expect(props.nextLabel).toBeUndefined();
     expect(props.goPrevLabel).toBeUndefined();

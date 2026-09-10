@@ -21,25 +21,25 @@ describe('Textarea', () => {
     const helpId = textarea.getAttribute('aria-describedby');
     expect(helpId).toBeTruthy();
     expect(document.getElementById(helpId)).toHaveTextContent(
-      'Max 500 characters',
+      'Max 500 characters'
     );
   });
 
   it('renders error text with aria-invalid and role="alert"', () => {
     render(
-      <Textarea label="Description" error errorText="This field is required" />,
+      <Textarea label="Description" error errorText="This field is required" />
     );
     const textarea = screen.getByLabelText('Description');
     expect(textarea).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'This field is required',
+      'This field is required'
     );
   });
 
   it('does not set aria-invalid when error is false', () => {
     render(<Textarea label="Description" />);
     expect(screen.getByLabelText('Description')).not.toHaveAttribute(
-      'aria-invalid',
+      'aria-invalid'
     );
   });
 
@@ -71,7 +71,7 @@ describe('Textarea', () => {
     render(<Textarea placeholder="Enter text..." />);
     expect(screen.getByPlaceholderText('Enter text...')).toHaveAttribute(
       'aria-label',
-      'Enter text...',
+      'Enter text...'
     );
   });
 
@@ -84,14 +84,14 @@ describe('Textarea', () => {
 
   it('has no a11y violations', async () => {
     const { container } = render(
-      <Textarea label="Description" placeholder="Enter text" />,
+      <Textarea label="Description" placeholder="Enter text" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it('has no a11y violations in error state', async () => {
     const { container } = render(
-      <Textarea label="Description" error errorText="Required" />,
+      <Textarea label="Description" error errorText="Required" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

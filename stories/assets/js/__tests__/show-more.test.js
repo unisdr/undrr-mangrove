@@ -37,11 +37,15 @@ describe('mgShowMore', () => {
       mgShowMore();
       // After first call, flag is set and button has been clicked once (collapsed → expanded)
       const target = document.querySelector('.mg-show-more--container');
-      const classAfterFirst = target.classList.contains('mg-show-more--collapsed');
+      const classAfterFirst = target.classList.contains(
+        'mg-show-more--collapsed'
+      );
 
       mgShowMore();
       // Second call should be a no-op — collapsed state must not change
-      expect(target.classList.contains('mg-show-more--collapsed')).toBe(classAfterFirst);
+      expect(target.classList.contains('mg-show-more--collapsed')).toBe(
+        classAfterFirst
+      );
       expect(btn.dataset.mgShowMoreInitialized).toBe('true');
     });
   });

@@ -6,7 +6,13 @@
  */
 
 import React, { useCallback, useId } from 'react';
-import { useSearchConfig, useSearchDispatch, useSearchLabels, interpolateLabel, actions } from '../context/SearchContext';
+import {
+  useSearchConfig,
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
 
 /**
  * SearchForm component.
@@ -19,7 +25,13 @@ import { useSearchConfig, useSearchDispatch, useSearchLabels, interpolateLabel, 
  * @param {boolean} props.isLoading - Whether search is loading
  * @param {string} props.widgetId - Unique widget ID for accessibility
  */
-export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' }) {
+export function SearchForm({
+  value,
+  onChange,
+  isStale,
+  isLoading,
+  widgetId = '',
+}) {
   const config = useSearchConfig();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
@@ -28,15 +40,18 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
 
   const { showSearchBox, minSearchLength } = config;
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback(e => {
     e.preventDefault();
     // Form submission doesn't need special handling -
     // the search is triggered by the value change
   }, []);
 
-  const handleChange = useCallback((e) => {
-    onChange(e.target.value);
-  }, [onChange]);
+  const handleChange = useCallback(
+    e => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
 
   const handleClear = useCallback(() => {
     onChange('');
@@ -103,7 +118,9 @@ export function SearchForm({ value, onChange, isStale, isLoading, widgetId = '' 
         <span className="mg-search__submit-icon" aria-hidden="true">
           <span className="mg-icon mg-icon-search" />
         </span>
-        <span className="mg-search__submit-text">{labels.submitSearchText}</span>
+        <span className="mg-search__submit-text">
+          {labels.submitSearchText}
+        </span>
       </button>
     </form>
   );

@@ -94,17 +94,22 @@ export function PagerList({
 }) {
   const visiblePages = useMemo(
     () => getVisiblePages(page, totalPages),
-    [page, totalPages],
+    [page, totalPages]
   );
 
   const handlePageChange = useCallback(
-    (newPage) => {
+    newPage => {
       if (newPage < 1) return;
-      if (totalPages !== null && totalPages !== undefined && newPage > totalPages) return;
+      if (
+        totalPages !== null &&
+        totalPages !== undefined &&
+        newPage > totalPages
+      )
+        return;
       if (newPage === page) return;
       onPageChange(newPage);
     },
-    [onPageChange, page, totalPages],
+    [onPageChange, page, totalPages]
   );
 
   const handleKeyDown = useCallback(
@@ -114,7 +119,7 @@ export function PagerList({
         handlePageChange(targetPage);
       }
     },
-    [handlePageChange],
+    [handlePageChange]
   );
 
   if (totalPages !== null && totalPages !== undefined && totalPages <= 1) {
@@ -122,7 +127,8 @@ export function PagerList({
   }
 
   const hasPrevious = page > 1;
-  const hasNext = totalPages === null || totalPages === undefined || page < totalPages;
+  const hasNext =
+    totalPages === null || totalPages === undefined || page < totalPages;
 
   return (
     <ul className="mg-pager__list">
@@ -132,7 +138,7 @@ export function PagerList({
           type="button"
           className={`mg-pager__link mg-pager__link--prev ${!hasPrevious ? 'mg-pager__link--disabled' : ''}`}
           onClick={() => handlePageChange(page - 1)}
-          onKeyDown={(e) => handleKeyDown(e, page - 1)}
+          onKeyDown={e => handleKeyDown(e, page - 1)}
           disabled={!hasPrevious || isLoading}
           aria-label={goPrevLabel}
           aria-disabled={!hasPrevious}
@@ -157,7 +163,7 @@ export function PagerList({
       </li>
 
       {/* Page numbers */}
-      {visiblePages.map((item) => {
+      {visiblePages.map(item => {
         if (item.type === 'ellipsis') {
           return (
             <li
@@ -177,9 +183,11 @@ export function PagerList({
               type="button"
               className={`mg-pager__link mg-pager__link--number ${isCurrentPage ? 'mg-pager__link--current' : ''}`}
               onClick={() => handlePageChange(item.number)}
-              onKeyDown={(e) => handleKeyDown(e, item.number)}
+              onKeyDown={e => handleKeyDown(e, item.number)}
               disabled={isLoading}
-              aria-label={String(isCurrentPage ? currentPageLabel : pageLabel).replace(/\{page\}/g, item.number)}
+              aria-label={String(
+                isCurrentPage ? currentPageLabel : pageLabel
+              ).replace(/\{page\}/g, item.number)}
               aria-current={isCurrentPage ? 'page' : undefined}
             >
               {item.number}
@@ -194,7 +202,7 @@ export function PagerList({
           type="button"
           className={`mg-pager__link mg-pager__link--next ${!hasNext ? 'mg-pager__link--disabled' : ''}`}
           onClick={() => handlePageChange(page + 1)}
-          onKeyDown={(e) => handleKeyDown(e, page + 1)}
+          onKeyDown={e => handleKeyDown(e, page + 1)}
           disabled={!hasNext || isLoading}
           aria-label={goNextLabel}
           aria-disabled={!hasNext}

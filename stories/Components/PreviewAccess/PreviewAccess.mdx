@@ -39,13 +39,19 @@ You need three things in the page:
 
 ```html
 <!-- 1. CSS in <head> -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css" />
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style.css"
+/>
 
 <!-- 2. Trigger as the first element in <body> -->
 <div data-mg-preview-access></div>
 
 <!-- 3. Script before </body> as type="module" (the file uses ESM exports) -->
-<script type="module" src="https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/preview-access.js"></script>
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/2.0.0-alpha.4/js/preview-access.js"
+></script>
 ```
 
 That is the minimum: with nothing else set, the gate uses the default PIN `5498`, default UNDRR copy, and the contact link points to `undrr.org/contact-us`.
@@ -55,50 +61,52 @@ That is the minimum: with nothing else set, the gate uses the default PIN `5498`
 ### Realistic example
 
 ```html
-<div data-mg-preview-access
-     data-mg-preview-pin="5498"
-     data-mg-preview-id="delta-2026-preview"
-     data-mg-preview-eyebrow="DELTA Resilience · Preview"
-     data-mg-preview-title="This page is a preview"
-     data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>
+<div
+  data-mg-preview-access
+  data-mg-preview-pin="5498"
+  data-mg-preview-id="delta-2026-preview"
+  data-mg-preview-eyebrow="DELTA Resilience · Preview"
+  data-mg-preview-title="This page is a preview"
+  data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."
+></div>
 ```
 
 ## Data attributes
 
 All attributes go on the trigger element. All optional except the bare `data-mg-preview-access`.
 
-| Attribute | Default | Purpose |
-| --- | --- | --- |
-| `data-mg-preview-access` | — | Presence activates the gate. No value needed. |
-| `data-mg-preview-pin` | `5498` | The PIN that unlocks the page. |
-| `data-mg-preview-id` | `location.pathname` | Scope key for the `sessionStorage` unlock. Set the same id on multiple pages to share an unlock across them. |
-| `data-mg-preview-eyebrow` | `UNDRR · Preview` | Small label above the title. Useful for naming the product. |
-| `data-mg-preview-title` | `Preview access required` | Modal heading. |
-| `data-mg-preview-message` | Generic UNDRR preview copy | Body paragraph explaining what the page is and how to get in. |
-| `data-mg-preview-contact-url` | `https://www.undrr.org/contact-us` | Where the help link goes. |
-| `data-mg-preview-contact-label` | `Need help? Contact UNDRR` | Visible text of the help link. |
-| `data-mg-preview-pin-label` | `Access PIN` | Form label for the PIN input. Override for translation. |
-| `data-mg-preview-submit-label` | `Unlock` | Submit button label. Override for translation. |
-| `data-mg-preview-error-message` | `That PIN is not correct. Please try again.` | Error copy on a wrong PIN. Override for translation. |
-| `data-mg-preview-access-skip-auto-init` | — | Skips this gate during auto-init. Call `mgPreviewAccess([element])` manually when ready. |
+| Attribute                               | Default                                      | Purpose                                                                                                      |
+| --------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `data-mg-preview-access`                | —                                            | Presence activates the gate. No value needed.                                                                |
+| `data-mg-preview-pin`                   | `5498`                                       | The PIN that unlocks the page.                                                                               |
+| `data-mg-preview-id`                    | `location.pathname`                          | Scope key for the `sessionStorage` unlock. Set the same id on multiple pages to share an unlock across them. |
+| `data-mg-preview-eyebrow`               | `UNDRR · Preview`                            | Small label above the title. Useful for naming the product.                                                  |
+| `data-mg-preview-title`                 | `Preview access required`                    | Modal heading.                                                                                               |
+| `data-mg-preview-message`               | Generic UNDRR preview copy                   | Body paragraph explaining what the page is and how to get in.                                                |
+| `data-mg-preview-contact-url`           | `https://www.undrr.org/contact-us`           | Where the help link goes.                                                                                    |
+| `data-mg-preview-contact-label`         | `Need help? Contact UNDRR`                   | Visible text of the help link.                                                                               |
+| `data-mg-preview-pin-label`             | `Access PIN`                                 | Form label for the PIN input. Override for translation.                                                      |
+| `data-mg-preview-submit-label`          | `Unlock`                                     | Submit button label. Override for translation.                                                               |
+| `data-mg-preview-error-message`         | `That PIN is not correct. Please try again.` | Error copy on a wrong PIN. Override for translation.                                                         |
+| `data-mg-preview-access-skip-auto-init` | —                                            | Skips this gate during auto-init. Call `mgPreviewAccess([element])` manually when ready.                     |
 
 ## CSS classes
 
-| Class | Element | Purpose |
-| --- | --- | --- |
-| `mg-preview-access--unlocked` | trigger `<div>` | Set on success; releases the gate's CSS rule |
-| `mg-preview-access__overlay` | injected `<div>` | Fixed full-viewport scrim with the modal centred inside |
-| `mg-preview-access__modal` | injected `<div>` | The modal panel |
-| `mg-preview-access__eyebrow` | `<p>` | Small product label above the title |
-| `mg-preview-access__title` | `<h1>` | Modal heading |
-| `mg-preview-access__body` | `<p>` | Modal body copy |
-| `mg-preview-access__form` | `<form>` | Form wrapper |
-| `mg-preview-access__label` | `<label>` | PIN input label |
-| `mg-preview-access__field` | `<div>` | Input and submit row |
-| `mg-preview-access__input` | `<input>` | PIN input |
-| `mg-preview-access__submit` | `<button>` | Submit button |
-| `mg-preview-access__error` | `<p>` | Live region for the wrong-PIN error |
-| `mg-preview-access__contact` | `<p>` | Contact link footer |
+| Class                         | Element          | Purpose                                                 |
+| ----------------------------- | ---------------- | ------------------------------------------------------- |
+| `mg-preview-access--unlocked` | trigger `<div>`  | Set on success; releases the gate's CSS rule            |
+| `mg-preview-access__overlay`  | injected `<div>` | Fixed full-viewport scrim with the modal centred inside |
+| `mg-preview-access__modal`    | injected `<div>` | The modal panel                                         |
+| `mg-preview-access__eyebrow`  | `<p>`            | Small product label above the title                     |
+| `mg-preview-access__title`    | `<h1>`           | Modal heading                                           |
+| `mg-preview-access__body`     | `<p>`            | Modal body copy                                         |
+| `mg-preview-access__form`     | `<form>`         | Form wrapper                                            |
+| `mg-preview-access__label`    | `<label>`        | PIN input label                                         |
+| `mg-preview-access__field`    | `<div>`          | Input and submit row                                    |
+| `mg-preview-access__input`    | `<input>`        | PIN input                                               |
+| `mg-preview-access__submit`   | `<button>`       | Submit button                                           |
+| `mg-preview-access__error`    | `<p>`            | Live region for the wrong-PIN error                     |
+| `mg-preview-access__contact`  | `<p>`            | Contact link footer                                     |
 
 ## JavaScript API
 
@@ -152,7 +160,9 @@ function Gate() {
   useEffect(() => {
     const gate = ref.current;
     if (gate) mgPreviewAccess([gate]);
-    return () => { if (gate) mgPreviewAccessDestroy(gate); };
+    return () => {
+      if (gate) mgPreviewAccessDestroy(gate);
+    };
   }, []);
   return <div ref={ref} data-mg-preview-access data-mg-preview-pin="5498" />;
 }

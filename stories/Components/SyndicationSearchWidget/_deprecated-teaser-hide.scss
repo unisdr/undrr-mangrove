@@ -10,10 +10,24 @@
 
 @warn "The .mg-search--hide-* CSS classes in syndication-search-widget.scss are deprecated and scheduled for removal in November 2026 (see https://github.com/unisdr/undrr-mangrove/pull/1077). Use React's visibleTeaserFields prop for programmatic DOM stripping instead.";
 
-.mg-search--hide-image .mg-card__visual { display: none; }
-.mg-search--hide-contentType .mg-card__label { display: none; }
-.mg-search--hide-publicationType .mg-card__publication-type { display: none; }
-.mg-search--hide-date .mg-card__date { display: none; }
-.mg-search--hide-siteName .mg-search__result-site-name { display: none; }
-.mg-search--hide-summary .mg-card__description { display: none; }
-.mg-search--hide-organization .mg-card__organization { display: none; }
+.mg-search--hide-image .mg-card__visual {
+  display: none;
+}
+.mg-search--hide-contentType .mg-card__label {
+  display: none;
+}
+.mg-search--hide-publicationType .mg-card__publication-type {
+  display: none;
+}
+.mg-search--hide-date .mg-card__date {
+  display: none;
+}
+.mg-search--hide-siteName .mg-search__result-site-name {
+  display: none;
+}
+.mg-search--hide-summary .mg-card__description {
+  display: none;
+}
+.mg-search--hide-organization .mg-card__organization {
+  display: none;
+}

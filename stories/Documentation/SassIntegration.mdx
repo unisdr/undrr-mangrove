@@ -28,7 +28,10 @@ Before customizing, review **<LinkTo kind="getting-started-about-mangrove" story
     { id: 'scss-variables-reference', text: 'SCSS variables reference' },
     { id: 'mixins-reference', text: 'Mixins reference' },
     { id: 'overriding-tokens', text: 'Overriding tokens' },
-    { id: 'importing-individual-component-styles', text: 'Importing individual component styles' },
+    {
+      id: 'importing-individual-component-styles',
+      text: 'Importing individual component styles',
+    },
     { id: 'build-tool-configuration', text: 'Build tool configuration' },
     { id: 'migrating-from-1x', text: 'Migrating from 1.x' },
   ]}
@@ -50,7 +53,7 @@ The SCSS source files are in `stories/assets/scss/` within the installed package
 
 In Mangrove 2.0, colour, spacing, radius and every component token are **CSS custom properties**, generated from `tokens/*.yaml`. You do not override them in Sass — you declare them in a selector. See the <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo> for the full explanation and the recipe.
 
-Sass still owns the values that cannot be resolved at runtime, because `@media`, `@if`, `@font-face` and interpolation cannot read `var()`. That is the whole of the remaining SCSS variable API, [listed below](#scss-variables-reference) — breakpoints, the type scale, font families and two compile-time constants. Everything else that used to be a `$mg-*` variable is gone: referencing one fails the build, and *assigning* one compiles cleanly and does nothing. `_variables.scss` emits a Sass `@warn` for the names consumers are known to set, so watch your build log.
+Sass still owns the values that cannot be resolved at runtime, because `@media`, `@if`, `@font-face` and interpolation cannot read `var()`. That is the whole of the remaining SCSS variable API, [listed below](#scss-variables-reference) — breakpoints, the type scale, font families and two compile-time constants. Everything else that used to be a `$mg-*` variable is gone: referencing one fails the build, and _assigning_ one compiles cleanly and does nothing. `_variables.scss` emits a Sass `@warn` for the names consumers are known to set, so watch your build log.
 
 ## SCSS file structure
 
@@ -81,14 +84,14 @@ stories/assets/scss/
 Each theme entry point follows the same import order:
 
 ```scss
-@import "./variables";        // SCSS variables + the :root custom property block
-@import "./theme-{name}";     // .mg-theme-{name} { } token overrides (omitted in the default)
-@import "./fonts";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
-@import "./foundational";
-@import "./components";
+@import './variables'; // SCSS variables + the :root custom property block
+@import './theme-{name}'; // .mg-theme-{name} { } token overrides (omitted in the default)
+@import './fonts';
+@import './breakpoints';
+@import './mixins';
+@import './utility';
+@import './foundational';
+@import './components';
 ```
 
 The generated token partials are build output. `yarn scss` runs `yarn build:tokens` first, so a fresh clone compiles without a separate step.
@@ -100,8 +103,8 @@ Mangrove assumes the browser-standard 16px document root. The compiled CSS does 
 Spacing, font-size and width values are authored in pixels and converted at build time by `mg-rem($px)`:
 
 ```scss
-padding: mg-rem(15);       // 0.9375rem
-font-size: mg-rem(16);     // 1rem
+padding: mg-rem(15); // 0.9375rem
+font-size: mg-rem(16); // 1rem
 ```
 
 `$mg-html-font-size` is the anchor `mg-rem()` divides by. **In 2.0 it is fixed at `16` and can no longer be overridden** — the `!default` is gone, and the `style-*-legacy.css` builds that served a 10px root are deleted. Sites on a 10px root must serve a 16px root and convert their own rem-based CSS to a 16px basis. See the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs) (breaking change #5).
@@ -114,31 +117,31 @@ This is the complete surviving SCSS variable API. Everything else is a CSS custo
 
 Static because `@media` cannot read `var()`. Note that these are the raw values; the `devicebreak()` mixin [below](#mixins-reference) uses its own em-based set and is what component SCSS actually uses.
 
-| Variable | Value |
-|----------|-------|
-| `$mg-breakpoint-mobile` | `480px` |
-| `$mg-breakpoint-tablet` | `900px` |
-| `$mg-breakpoint-desktop` | `1164px` |
+| Variable                      | Value    |
+| ----------------------------- | -------- |
+| `$mg-breakpoint-mobile`       | `480px`  |
+| `$mg-breakpoint-tablet`       | `900px`  |
+| `$mg-breakpoint-desktop`      | `1164px` |
 | `$mg-breakpoint-desktop-wide` | `1440px` |
 
 ### Font sizes
 
 Generated from `tokens/mangrove.yaml` into `generated/_tokens-mangrove.scss`, and exported as Sass because they are interpolated and passed to Sass functions at compile time.
 
-| Variable | Value | Pixels at a 16px root | Notes |
-|----------|-------|----------------------|-------|
-| `$mg-font-size-100` | `0.625rem` | 10px | |
-| `$mg-font-size-150` | `0.703125rem` | 11.25px | |
-| `$mg-font-size-200` | `0.78125rem` | 12.5px | |
-| `$mg-font-size-250` | `0.875rem` | 14px | |
-| `$mg-font-size-300` | `1rem` | 16px | Regular body text |
-| `$mg-font-size-400` | `1.125rem` | 18px | |
-| `$mg-font-size-500` | `1.4375rem` | 23px | |
-| `$mg-font-size-600` | `2rem` | 32px | |
-| `$mg-font-size-800` | `2.25rem` | 36px | |
-| `$mg-font-size-900` | `2.5rem` | 40px | |
-| `$mg-font-size-1000` | `3rem` | 48px | |
-| `$mg-font-size-1100` | `4rem` | 64px | |
+| Variable             | Value         | Pixels at a 16px root | Notes             |
+| -------------------- | ------------- | --------------------- | ----------------- |
+| `$mg-font-size-100`  | `0.625rem`    | 10px                  |                   |
+| `$mg-font-size-150`  | `0.703125rem` | 11.25px               |                   |
+| `$mg-font-size-200`  | `0.78125rem`  | 12.5px                |                   |
+| `$mg-font-size-250`  | `0.875rem`    | 14px                  |                   |
+| `$mg-font-size-300`  | `1rem`        | 16px                  | Regular body text |
+| `$mg-font-size-400`  | `1.125rem`    | 18px                  |                   |
+| `$mg-font-size-500`  | `1.4375rem`   | 23px                  |                   |
+| `$mg-font-size-600`  | `2rem`        | 32px                  |                   |
+| `$mg-font-size-800`  | `2.25rem`     | 36px                  |                   |
+| `$mg-font-size-900`  | `2.5rem`      | 40px                  |                   |
+| `$mg-font-size-1000` | `3rem`        | 48px                  |                   |
+| `$mg-font-size-1100` | `4rem`        | 64px                  |                   |
 
 Aliases over that scale: `$mg-font-body` (`$mg-font-size-300`), `$mg-font-tag` (`$mg-font-size-250`), `$mg-font-line-height-500` (`1.25em`), `$mg-font-line-height-700` (`1.5em`).
 
@@ -148,23 +151,23 @@ Type is the one place where the SCSS layer and the custom-property layer both ma
 
 **Faces** are Sass variables — one per typeface Mangrove ships a `@font-face` for. All `!default`.
 
-| Variable | Value |
-|----------|-------|
-| `$mg-font-face-sans` | `"Roboto", sans-serif` |
-| `$mg-font-face-sans-condensed` | `"Roboto Condensed", sans-serif` |
-| `$mg-font-face-mono` | `ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace` |
-| `$mg-font-face-arabic-display` | `"Noto Kufi Arabic", sans-serif` |
-| `$mg-font-face-arabic-sans` | `"Noto Sans Arabic", sans-serif` |
+| Variable                       | Value                                                                               |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| `$mg-font-face-sans`           | `"Roboto", sans-serif`                                                              |
+| `$mg-font-face-sans-condensed` | `"Roboto Condensed", sans-serif`                                                    |
+| `$mg-font-face-mono`           | `ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace` |
+| `$mg-font-face-arabic-display` | `"Noto Kufi Arabic", sans-serif`                                                    |
+| `$mg-font-face-arabic-sans`    | `"Noto Sans Arabic", sans-serif`                                                    |
 
 **Roles** are CSS custom properties. Every component stylesheet reads a role; none reads a face. `_fonts.scss` re-points the roles for Arabic, which is why no component carries a `:lang(ar)` font rule.
 
-| Role | Latin | Arabic |
-|------|-------|--------|
-| `--mg-font-family-text` | `$mg-font-face-sans` | `$mg-font-face-arabic-sans` |
-| `--mg-font-family-heading` | `$mg-font-face-sans` | `$mg-font-face-arabic-display` |
+| Role                       | Latin                          | Arabic                         |
+| -------------------------- | ------------------------------ | ------------------------------ |
+| `--mg-font-family-text`    | `$mg-font-face-sans`           | `$mg-font-face-arabic-sans`    |
+| `--mg-font-family-heading` | `$mg-font-face-sans`           | `$mg-font-face-arabic-display` |
 | `--mg-font-family-display` | `$mg-font-face-sans-condensed` | `$mg-font-face-arabic-display` |
-| `--mg-font-family-ui` | `$mg-font-face-sans-condensed` | `$mg-font-face-arabic-sans` |
-| `--mg-font-family-code` | `$mg-font-face-mono` | `$mg-font-face-mono` |
+| `--mg-font-family-ui`      | `$mg-font-face-sans-condensed` | `$mg-font-face-arabic-sans`    |
+| `--mg-font-family-code`    | `$mg-font-face-mono`           | `$mg-font-face-mono`           |
 
 Latin resolves exactly as it did before the roles existed, and no new `font-family` declaration matches a Latin element, so a theme that sets its own face on `h1`–`h3` keeps it. To re-point a role for one brand, override the custom property in a `.mg-theme-*` block — but a role can only point at a face Mangrove already loads. To introduce a typeface Mangrove does not ship, assign the face variable before the import and load the font yourself; quote any family name that is not a plain CSS identifier. Note that faces sit outside the brand mixins, so a Sass override applies to every brand in `style-all.css`.
 
@@ -174,10 +177,10 @@ Arabic pairs Noto Kufi Arabic display type with Noto Sans Arabic body text, repl
 
 ### Compile-time constants
 
-| Variable | Value | Purpose |
-|----------|-------|---------|
-| `$mg-html-font-size` | `16` | The rem anchor for `mg-rem()`. Fixed; not overridable. |
-| `$mg-tabs-border-bottom` | `true` (`!default`) | Drives an `@if` in the tab styles. |
+| Variable                 | Value               | Purpose                                                |
+| ------------------------ | ------------------- | ------------------------------------------------------ |
+| `$mg-html-font-size`     | `16`                | The rem anchor for `mg-rem()`. Fixed; not overridable. |
+| `$mg-tabs-border-bottom` | `true` (`!default`) | Drives an `@if` in the tab styles.                     |
 
 ## Mixins reference
 
@@ -185,13 +188,13 @@ Arabic pairs Noto Kufi Arabic display type with Noto Sans Arabic body text, repl
 
 The responsive media query mixin used throughout Mangrove.
 
-| Name | Media query | Approximate size |
-|------|------------|-----------------|
-| `small` | `width <= 47.9375em` | Up to ~767px |
-| `mediumonlytab` | `width <= 89.9375em` | Up to ~1439px |
-| `medium` | `width >= 48em` | 768px and up |
-| `large` | `width >= 64em` | 1024px and up |
-| `xlarge` | `width >= 90em` | 1440px and up |
+| Name            | Media query          | Approximate size |
+| --------------- | -------------------- | ---------------- |
+| `small`         | `width <= 47.9375em` | Up to ~767px     |
+| `mediumonlytab` | `width <= 89.9375em` | Up to ~1439px    |
+| `medium`        | `width >= 48em`      | 768px and up     |
+| `large`         | `width >= 64em`      | 1024px and up    |
+| `xlarge`        | `width >= 90em`      | 1440px and up    |
 
 ```scss
 .my-component {
@@ -207,9 +210,9 @@ The responsive media query mixin used throughout Mangrove.
 
 Mangrove's keyboard focus indicator is two bands — a light separator against the control, then the ring itself — with the ring drawn as an `outline` so it survives forced-colours mode. Use the mixin rather than restating the geometry; that is what keeps the indicator consistent and theme-aware.
 
-| Mixin | Use for |
-|-------|---------|
-| `mg-focus-ring` | The default outside-the-control ring |
+| Mixin                 | Use for                                          |
+| --------------------- | ------------------------------------------------ |
+| `mg-focus-ring`       | The default outside-the-control ring             |
 | `mg-focus-ring-inset` | Controls that cannot paint outside their own box |
 
 ```scss
@@ -220,19 +223,19 @@ Mangrove's keyboard focus indicator is two bands — a light separator against t
 
 ### Other mixins (from `_mixins.scss`)
 
-| Mixin | Signature | Purpose |
-|-------|-----------|---------|
-| `mg-card-image-zoom` | `@include mg-card-image-zoom` | Shared card image hover zoom, reduced-motion aware |
-| `transition` | `@include transition($transitions...)` | Prefixed `transition` |
-| `transform` | `@include transform($transforms)` | Prefixed `transform` |
-| `rotate` | `@include rotate($deg)` | Shorthand for `transform: rotate()` |
-| `translate` | `@include translate($x, $y)` | Shorthand for `transform: translate()` |
-| `scale` | `@include scale($scale)` | Shorthand for `transform: scale()` |
-| `skew` | `@include skew($x, $y)` | Shorthand for `transform: skew()` |
-| `animation` | `@include animation($animation)` | Prefixed `animation` |
-| `gradient` | `@include gradient($direction, $list)` | Prefixed `linear-gradient` background |
-| `background-image` | `@include background-image($deg, $colorname, $opacity)` | `linear-gradient` background |
-| `x-appearance` | `@include x-appearance($value)` | Prefixed `appearance` |
+| Mixin                | Signature                                               | Purpose                                            |
+| -------------------- | ------------------------------------------------------- | -------------------------------------------------- |
+| `mg-card-image-zoom` | `@include mg-card-image-zoom`                           | Shared card image hover zoom, reduced-motion aware |
+| `transition`         | `@include transition($transitions...)`                  | Prefixed `transition`                              |
+| `transform`          | `@include transform($transforms)`                       | Prefixed `transform`                               |
+| `rotate`             | `@include rotate($deg)`                                 | Shorthand for `transform: rotate()`                |
+| `translate`          | `@include translate($x, $y)`                            | Shorthand for `transform: translate()`             |
+| `scale`              | `@include scale($scale)`                                | Shorthand for `transform: scale()`                 |
+| `skew`               | `@include skew($x, $y)`                                 | Shorthand for `transform: skew()`                  |
+| `animation`          | `@include animation($animation)`                        | Prefixed `animation`                               |
+| `gradient`           | `@include gradient($direction, $list)`                  | Prefixed `linear-gradient` background              |
+| `background-image`   | `@include background-image($deg, $colorname, $opacity)` | `linear-gradient` background                       |
+| `x-appearance`       | `@include x-appearance($value)`                         | Prefixed `appearance`                              |
 
 The vendor-prefix mixins predate Autoprefixer. If your pipeline already runs it, you do not need them.
 
@@ -242,7 +245,7 @@ Sets font size with the matching padding for heading-like elements. Sizes: `"ext
 
 ```scss
 .my-heading {
-  @include mg-typography("large");
+  @include mg-typography('large');
   // font-size: 2rem; padding-top: var(--mg-spacing-250); padding-bottom: var(--mg-spacing-150)
 }
 ```
@@ -251,15 +254,15 @@ Sets font size with the matching padding for heading-like elements. Sizes: `"ext
 
 Use with `@extend`:
 
-| Placeholder | Purpose |
-|-------------|---------|
+| Placeholder                                    | Purpose                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------ |
 | `%paragraph-font-100` to `%paragraph-font-300` | Responsive font sizes (smaller on mobile, larger on desktop) |
-| `%border-bottom` | `border-bottom: 1px solid rgb(var(--mg-color-neutral-400))` |
-| `%border-none` | `border: none` plus `background-image: none` |
-| `%img-cover` | Full-width cover-fit image |
-| `%img_none` | `background-image: none` |
-| `%absolute__content` | Absolutely positioned `::before`/`::after` content |
-| `%background-white` | `background-color: white` |
+| `%border-bottom`                               | `border-bottom: 1px solid rgb(var(--mg-color-neutral-400))`  |
+| `%border-none`                                 | `border: none` plus `background-image: none`                 |
+| `%img-cover`                                   | Full-width cover-fit image                                   |
+| `%img_none`                                    | `background-image: none`                                     |
+| `%absolute__content`                           | Absolutely positioned `::before`/`::after` content           |
+| `%background-white`                            | `background-color: white`                                    |
 
 ## Overriding tokens
 
@@ -268,7 +271,7 @@ Tokens are CSS custom properties, so you override them by declaring them in a se
 ```scss
 // Applies to the whole document
 :root {
-  --mg-color-interactive: 46 125 50;      // bare RGB channels
+  --mg-color-interactive: 46 125 50; // bare RGB channels
 }
 
 // Or scoped to one brand
@@ -291,17 +294,17 @@ If you only need specific components, import the partials directly. The full lis
 
 ```scss
 // Import base dependencies first
-@import "stories/assets/scss/variables";
-@import "stories/assets/scss/fonts";
-@import "stories/assets/scss/breakpoints";
-@import "stories/assets/scss/mixins";
-@import "stories/assets/scss/foundational";
+@import 'stories/assets/scss/variables';
+@import 'stories/assets/scss/fonts';
+@import 'stories/assets/scss/breakpoints';
+@import 'stories/assets/scss/mixins';
+@import 'stories/assets/scss/foundational';
 
 // Then import only the components you need
-@import "stories/Components/Buttons/CtaButton/buttons";
-@import "stories/Components/Cards/Card/card";
-@import "stories/Components/Forms/form-base";
-@import "stories/Components/Tab/tab";
+@import 'stories/Components/Buttons/CtaButton/buttons';
+@import 'stories/Components/Cards/Card/card';
+@import 'stories/Components/Forms/form-base';
+@import 'stories/Components/Tab/tab';
 ```
 
 Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Import those first or the build fails.
@@ -355,9 +358,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        includePaths: [
-          'node_modules/@undrr/undrr-mangrove',
-        ],
+        includePaths: ['node_modules/@undrr/undrr-mangrove'],
       },
     },
   },
@@ -367,30 +368,39 @@ export default defineConfig({
 With `includePaths` configured, imports resolve relative to the package root:
 
 ```scss
-@import "stories/assets/scss/variables";
-@import "stories/assets/scss/breakpoints";
-@import "stories/assets/scss/mixins";
+@import 'stories/assets/scss/variables';
+@import 'stories/assets/scss/breakpoints';
+@import 'stories/assets/scss/mixins';
 ```
 
 ## Migrating from 1.x
 
-| 1.x | 2.0 |
-|-----|-----|
-| `$mg-color-interactive: #2e7d32;` before the import | `:root { --mg-color-interactive: 46 125 50; }` in any stylesheet |
-| `color: $mg-color-interactive` | `color: rgb(var(--mg-color-interactive))` |
-| `rgba($mg-color-interactive, 0.5)` | `rgb(var(--mg-color-interactive) / 0.5)` |
-| `padding: $mg-spacing-150` | `padding: var(--mg-spacing-150)` |
-| `darken($mg-color-interactive, 10%)` | a computed literal, or a second token — Sass colour functions cannot take a `var()` |
-| `@import "./variables-irp"` | `@import "./theme-irp"` |
-| `$mg-html-font-size: 10` | not supported; serve a 16px root |
+| 1.x                                                 | 2.0                                                                                 |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `$mg-color-interactive: #2e7d32;` before the import | `:root { --mg-color-interactive: 46 125 50; }` in any stylesheet                    |
+| `color: $mg-color-interactive`                      | `color: rgb(var(--mg-color-interactive))`                                           |
+| `rgba($mg-color-interactive, 0.5)`                  | `rgb(var(--mg-color-interactive) / 0.5)`                                            |
+| `padding: $mg-spacing-150`                          | `padding: var(--mg-spacing-150)`                                                    |
+| `darken($mg-color-interactive, 10%)`                | a computed literal, or a second token — Sass colour functions cannot take a `var()` |
+| `@import "./variables-irp"`                         | `@import "./theme-irp"`                                                             |
+| `$mg-html-font-size: 10`                            | not supported; serve a 16px root                                                    |
 
 Referencing a removed variable fails the build. Assigning one does not, so check your Sass log for `Mangrove 2.0:` warnings before assuming an override took effect. The complete list of breaking changes is in the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs).
 
 ## Next steps
 
-- <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo> -- the token system and how to create a theme
-- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> -- pre-built CSS URLs if you don't need Sass
-- <LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo> -- architecture and styling patterns
+- <LinkTo kind="getting-started-integration-theming-guide" story="docs">
+    Theming guide
+  </LinkTo>
+  -- the token system and how to create a theme
+- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">
+    CDN reference
+  </LinkTo>
+  -- pre-built CSS URLs if you don't need Sass
+- <LinkTo kind="getting-started-best-practices" story="docs">
+    Best practices
+  </LinkTo>
+  -- architecture and styling patterns
 
 ---
 

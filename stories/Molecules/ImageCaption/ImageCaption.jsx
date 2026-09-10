@@ -16,7 +16,12 @@ export const credit_options = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function Imagecaption({ label, paragraph, caption = 'true', credit = 'true' }) {
+export function Imagecaption({
+  label,
+  paragraph,
+  caption = 'true',
+  credit = 'true',
+}) {
   const caption_variant = caption_options[caption];
   const credit_variant = credit_options[credit];
 
@@ -26,11 +31,7 @@ export function Imagecaption({ label, paragraph, caption = 'true', credit = 'tru
         <></>
       ) : (
         <figcaption
-          className={cls(
-            'mg-image-caption',
-            caption_variant,
-            credit_variant
-          )}
+          className={cls('mg-image-caption', caption_variant, credit_variant)}
         >
           {caption === 'true' && <P label={paragraph} />}
           {credit === 'true' && <Imagecredit label={label} name={name} />}

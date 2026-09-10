@@ -4,8 +4,17 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { SyndicationSearchWidget, SearchWidget } from '../SyndicationSearchWidget';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
+import {
+  SyndicationSearchWidget,
+  SearchWidget,
+} from '../SyndicationSearchWidget';
 
 // Suppress console.error for expected async warnings
 const originalError = console.error;
@@ -100,9 +109,7 @@ describe('SyndicationSearchWidget', () => {
     it('renders facets sidebar when showFacets is true', () => {
       render(<SyndicationSearchWidget config={{ showFacets: true }} />);
 
-      expect(
-        document.querySelector('.mg-search__sidebar')
-      ).toBeInTheDocument();
+      expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
     });
 
     it('does not render facets sidebar when showFacets is false', () => {
@@ -117,19 +124,29 @@ describe('SyndicationSearchWidget', () => {
     it('renders sidebar when facets is "sidebar"', () => {
       render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
       expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
-      expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).not.toBeInTheDocument();
     });
 
     it('renders horizontal strip when facets is "horizontal"', () => {
       render(<SyndicationSearchWidget config={{ facets: 'horizontal' }} />);
-      expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
-      expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__sidebar')
+      ).not.toBeInTheDocument();
     });
 
     it('hides facets entirely when facets is false', () => {
       render(<SyndicationSearchWidget config={{ facets: false }} />);
-      expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
-      expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__sidebar')
+      ).not.toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).not.toBeInTheDocument();
     });
 
     it('treats facets prop as taking precedence over legacy showFacets', () => {
@@ -139,7 +156,9 @@ describe('SyndicationSearchWidget', () => {
         />
       );
       // facets wins: horizontal strip renders even though showFacets is false
-      expect(document.querySelector('.mg-search__facets-strip')).toBeInTheDocument();
+      expect(
+        document.querySelector('.mg-search__facets-strip')
+      ).toBeInTheDocument();
     });
 
     // facetsTarget, AC2: portal facets to an external DOM region
@@ -156,8 +175,12 @@ describe('SyndicationSearchWidget', () => {
         );
 
         // Portal renders facets inside the external target, not the sidebar
-        expect(target.querySelector('.mg-search__facets-external')).toBeInTheDocument();
-        expect(document.querySelector('.mg-search__sidebar')).not.toBeInTheDocument();
+        expect(
+          target.querySelector('.mg-search__facets-external')
+        ).toBeInTheDocument();
+        expect(
+          document.querySelector('.mg-search__sidebar')
+        ).not.toBeInTheDocument();
       } finally {
         target.remove();
       }
@@ -174,9 +197,13 @@ describe('SyndicationSearchWidget', () => {
         );
 
         // No portal element anywhere
-        expect(document.querySelector('.mg-search__facets-external')).not.toBeInTheDocument();
+        expect(
+          document.querySelector('.mg-search__facets-external')
+        ).not.toBeInTheDocument();
         // In-widget sidebar still rendered
-        expect(document.querySelector('.mg-search__sidebar')).toBeInTheDocument();
+        expect(
+          document.querySelector('.mg-search__sidebar')
+        ).toBeInTheDocument();
         // Warning logged once
         expect(warnSpy).toHaveBeenCalledWith(
           expect.stringContaining('facetsTarget selector "#does-not-exist"')
@@ -194,12 +221,19 @@ describe('SyndicationSearchWidget', () => {
       try {
         render(
           <SyndicationSearchWidget
-            config={{ facets: 'horizontal', facetsTarget: '#external-facets-h' }}
+            config={{
+              facets: 'horizontal',
+              facetsTarget: '#external-facets-h',
+            }}
           />
         );
 
-        expect(target.querySelector('.mg-search__facets-external')).toBeInTheDocument();
-        expect(document.querySelector('.mg-search__facets-strip')).not.toBeInTheDocument();
+        expect(
+          target.querySelector('.mg-search__facets-external')
+        ).toBeInTheDocument();
+        expect(
+          document.querySelector('.mg-search__facets-strip')
+        ).not.toBeInTheDocument();
       } finally {
         target.remove();
       }
@@ -220,10 +254,14 @@ describe('SyndicationSearchWidget', () => {
 
         // Search form ends up in the external target
         expect(target.querySelector('form[role="search"]')).toBeInTheDocument();
-        expect(target.querySelector('input[type="search"]')).toBeInTheDocument();
+        expect(
+          target.querySelector('input[type="search"]')
+        ).toBeInTheDocument();
         // ...and not as a direct child of the widget container
         const widget = document.querySelector('[data-mg-search-widget]');
-        expect(widget.querySelector(':scope > form[role="search"]')).not.toBeInTheDocument();
+        expect(
+          widget.querySelector(':scope > form[role="search"]')
+        ).not.toBeInTheDocument();
       } finally {
         target.remove();
       }

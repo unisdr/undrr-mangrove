@@ -132,8 +132,10 @@
   .mg-card__image {
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        opacity var(--mg-motion-duration-medium) var(--mg-motion-easing-standard),
-        transform var(--mg-motion-duration-medium) var(--mg-motion-easing-standard);
+        opacity var(--mg-motion-duration-medium)
+          var(--mg-motion-easing-standard),
+        transform var(--mg-motion-duration-medium)
+          var(--mg-motion-easing-standard);
     }
   }
 
@@ -203,7 +205,6 @@
 %img_none {
   background-image: none;
 }
-
 
 // --- Removed placeholders ---
 // %checkbox-radio-before, %select_default — REMOVED (February 2026).

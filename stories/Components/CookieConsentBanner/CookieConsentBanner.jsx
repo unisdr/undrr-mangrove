@@ -82,7 +82,7 @@ const loadScript = src => {
 
 /**
  * Cookie Consent Banner Component
- * 
+ *
  * @param {Object} props - Component props
  * @param {Object} props.config - Custom configuration to override the default CDN configuration
  * @param {boolean} props.debug - Enable debug logging for troubleshooting
@@ -120,9 +120,8 @@ const CookieConsentBanner = ({
         await loadCSS(COOKIECONSENT_CSS_URL);
         await loadScript(COOKIECONSENT_JS_URL);
 
-        const { default: fallbackConfig } = await import(
-          './cookieconsent-config.js'
-        );
+        const { default: fallbackConfig } =
+          await import('./cookieconsent-config.js');
         console.log('Successfully loaded local fallback configuration');
         if (
           window.CookieConsent &&

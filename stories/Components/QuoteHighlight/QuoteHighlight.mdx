@@ -47,7 +47,10 @@ import { QuoteHighlight } from '@undrr/undrr-mangrove';
 
 This variant shows the portrait image inline with the attribution.
 
-<Canvas of={QuoteHighlightStories.LineVariantWithPortrait} meta={QuoteHighlightStories} />
+<Canvas
+  of={QuoteHighlightStories.LineVariantWithPortrait}
+  meta={QuoteHighlightStories}
+/>
 
 ### Image variant
 
@@ -57,15 +60,24 @@ This variant displays a larger image to the side of the quote content.
 
 ### Dark background
 
-<Canvas of={QuoteHighlightStories.LineVariantDark} meta={QuoteHighlightStories} />
+<Canvas
+  of={QuoteHighlightStories.LineVariantDark}
+  meta={QuoteHighlightStories}
+/>
 
 ### Bright background
 
-<Canvas of={QuoteHighlightStories.LineVariantBright} meta={QuoteHighlightStories} />
+<Canvas
+  of={QuoteHighlightStories.LineVariantBright}
+  meta={QuoteHighlightStories}
+/>
 
 ### Without attribution
 
-<Canvas of={QuoteHighlightStories.WithoutAttribution} meta={QuoteHighlightStories} />
+<Canvas
+  of={QuoteHighlightStories.WithoutAttribution}
+  meta={QuoteHighlightStories}
+/>
 
 ## Alignment options
 
@@ -79,28 +91,40 @@ The QuoteHighlight component supports three alignment options:
 
 <div style={{ display: 'grid' }}>
   {/* Grid container used to fix layout issues in demo page */}
-  <Canvas of={QuoteHighlightStories.LeftAlignedQuote} meta={QuoteHighlightStories} />
+  <Canvas
+    of={QuoteHighlightStories.LeftAlignedQuote}
+    meta={QuoteHighlightStories}
+  />
 </div>
 
 ### Left aligned quote with portrait
 
 <div style={{ display: 'grid' }}>
   {/* Grid container used to fix layout issues in demo page */}
-  <Canvas of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait} meta={QuoteHighlightStories} />
+  <Canvas
+    of={QuoteHighlightStories.LeftAlignedQuoteWithPortrait}
+    meta={QuoteHighlightStories}
+  />
 </div>
 
 ### Right aligned quote
 
 <div style={{ display: 'grid' }}>
   {/* Grid container used to fix layout issues in demo page */}
-  <Canvas of={QuoteHighlightStories.RightAlignedQuote} meta={QuoteHighlightStories} />
+  <Canvas
+    of={QuoteHighlightStories.RightAlignedQuote}
+    meta={QuoteHighlightStories}
+  />
 </div>
 
 ### Right aligned quote with portrait
 
 <div style={{ display: 'grid' }}>
   {/* Grid container used to fix layout issues in demo page */}
-  <Canvas of={QuoteHighlightStories.RightAlignedQuoteWithPortrait} meta={QuoteHighlightStories} />
+  <Canvas
+    of={QuoteHighlightStories.RightAlignedQuoteWithPortrait}
+    meta={QuoteHighlightStories}
+  />
 </div>
 
 ## RTL support
@@ -115,14 +139,20 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 
 <div style={{ display: 'grid' }}>
   {/* Grid container used to fix layout issues in demo page */}
-  <Canvas of={QuoteHighlightStories.RTLLeftAlignedQuote} meta={QuoteHighlightStories} />
+  <Canvas
+    of={QuoteHighlightStories.RTLLeftAlignedQuote}
+    meta={QuoteHighlightStories}
+  />
 </div>
 
 ### RTL example with right alignment (appears on left)
 
 <div style={{ display: 'grid' }}>
   {/* Grid container used to fix layout issues in demo page */}
-  <Canvas of={QuoteHighlightStories.RTLRightAlignedQuote} meta={QuoteHighlightStories} />
+  <Canvas
+    of={QuoteHighlightStories.RTLRightAlignedQuote}
+    meta={QuoteHighlightStories}
+  />
 </div>
 
 ## Design guidelines
@@ -167,7 +197,8 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 QuoteHighlight supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
-<div data-mg-quote-highlight
+<div
+  data-mg-quote-highlight
   data-quote="One doesn't have to look hard to find examples."
   data-attribution="Mami Mizutori"
   data-attribution-title="SRSG for Disaster Risk Reduction"
@@ -175,25 +206,31 @@ QuoteHighlight supports [layered hydration](https://github.com/unisdr/undrr-mang
   data-image-alt="Mami Mizutori portrait"
   data-background-color="light"
   data-variant="line"
-  data-alignment="full">
-</div>
+  data-alignment="full"
+></div>
 ```
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-quote` | `''` | Quote text (required) |
-| `data-attribution` | — | Attribution name |
-| `data-attribution-title` | — | Attribution title or role |
-| `data-image-src` | — | Portrait or side image URL |
-| `data-image-alt` | — | Alt text for the image |
-| `data-background-color` | `'light'` | `'light'`, `'dark'`, or `'bright'` |
-| `data-variant` | `'line'` | `'line'` or `'image'` |
-| `data-alignment` | `'full'` | `'full'`, `'left'`, or `'right'` |
+| Attribute                | Default   | Description                        |
+| ------------------------ | --------- | ---------------------------------- |
+| `data-quote`             | `''`      | Quote text (required)              |
+| `data-attribution`       | —         | Attribution name                   |
+| `data-attribution-title` | —         | Attribution title or role          |
+| `data-image-src`         | —         | Portrait or side image URL         |
+| `data-image-alt`         | —         | Alt text for the image             |
+| `data-background-color`  | `'light'` | `'light'`, `'dark'`, or `'bright'` |
+| `data-variant`           | `'line'`  | `'line'` or `'image'`              |
+| `data-alignment`         | `'full'`  | `'full'`, `'left'`, or `'right'`   |
 
 ```js
-import createHydrator from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js";
-import QuoteHighlight, { fromElement } from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/QuoteHighlight.js";
-createHydrator({ selector: "[data-mg-quote-highlight]", component: QuoteHighlight, fromElement });
+import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js';
+import QuoteHighlight, {
+  fromElement,
+} from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/QuoteHighlight.js';
+createHydrator({
+  selector: '[data-mg-quote-highlight]',
+  component: QuoteHighlight,
+  fromElement,
+});
 ```
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.

@@ -85,35 +85,35 @@ The gallery handles landscape, portrait, square, and panoramic images gracefully
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `media` | array | *required* | Array of media items (see Media item object below) |
-| `initialIndex` | number | `0` | Index of the initially displayed image |
-| `showThumbnails` | boolean | `true` | Show/hide thumbnail list |
-| `thumbnailPosition` | string | `'left'` | Position of thumbnails: `'left'` or `'bottom'` |
-| `showArrows` | boolean | `true` | Show/hide navigation arrows |
-| `showDescription` | boolean | `true` | Show/hide image titles and captions |
-| `enableKeyboard` | boolean | `true` | Enable/disable keyboard navigation |
-| `loop` | boolean | `false` | Enable infinite loop navigation |
-| `arrowStyle` | string | `'overlay'` | Arrow style: `'overlay'` or `'corner'` |
-| `onMediaChange` | function | `undefined` | Callback when media item changes: `(index, item) => {}` |
+| Prop                | Type     | Default     | Description                                             |
+| ------------------- | -------- | ----------- | ------------------------------------------------------- |
+| `media`             | array    | _required_  | Array of media items (see Media item object below)      |
+| `initialIndex`      | number   | `0`         | Index of the initially displayed image                  |
+| `showThumbnails`    | boolean  | `true`      | Show/hide thumbnail list                                |
+| `thumbnailPosition` | string   | `'left'`    | Position of thumbnails: `'left'` or `'bottom'`          |
+| `showArrows`        | boolean  | `true`      | Show/hide navigation arrows                             |
+| `showDescription`   | boolean  | `true`      | Show/hide image titles and captions                     |
+| `enableKeyboard`    | boolean  | `true`      | Enable/disable keyboard navigation                      |
+| `loop`              | boolean  | `false`     | Enable infinite loop navigation                         |
+| `arrowStyle`        | string   | `'overlay'` | Arrow style: `'overlay'` or `'corner'`                  |
+| `onMediaChange`     | function | `undefined` | Callback when media item changes: `(index, item) => {}` |
 
 ### Media item object
 
 Each item in the `media` array should have:
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `id` | string | Yes | Unique identifier for the item |
-| `type` | string | No | Media type: `'image'` (default), `'video'`, `'embed'`, or `'html'` |
-| `src` | string | Conditional | Source URL for image or video (required for image/video types) |
-| `alt` | string | Conditional | Alternative text for accessibility (required for image/video types) |
-| `title` | string | No | Title displayed below main content |
-| `description` | string | No | Description/caption text |
-| `thumbnail` | string | No | Thumbnail image URL (falls back to `src` for images) |
-| `poster` | string | No | Video poster image (video type only) |
-| `embedUrl` | string | No | Embed source URL (embed type only, falls back to `src`) |
-| `html` | string | Conditional | Raw HTML content (required for html type) |
+| Property      | Type   | Required    | Description                                                         |
+| ------------- | ------ | ----------- | ------------------------------------------------------------------- |
+| `id`          | string | Yes         | Unique identifier for the item                                      |
+| `type`        | string | No          | Media type: `'image'` (default), `'video'`, `'embed'`, or `'html'`  |
+| `src`         | string | Conditional | Source URL for image or video (required for image/video types)      |
+| `alt`         | string | Conditional | Alternative text for accessibility (required for image/video types) |
+| `title`       | string | No          | Title displayed below main content                                  |
+| `description` | string | No          | Description/caption text                                            |
+| `thumbnail`   | string | No          | Thumbnail image URL (falls back to `src` for images)                |
+| `poster`      | string | No          | Video poster image (video type only)                                |
+| `embedUrl`    | string | No          | Embed source URL (embed type only, falls back to `src`)             |
+| `html`        | string | Conditional | Raw HTML content (required for html type)                           |
 
 ### Security note for HTML content
 
@@ -151,17 +151,20 @@ The component follows WAI-ARIA best practices:
 ## Responsive behavior
 
 **Desktop (≥ 768px):**
+
 - Thumbnails displayed vertically on the left
 - Main image takes remaining space
 - Description below main image
 - Arrows visible on hover
 
 **Mobile (< 768px):**
+
 - Vertical stack: Main image → Description → Thumbnails
 - Thumbnails scroll horizontally
 - Arrows always visible (smaller size)
 
 **Thumbnail Position Bottom:**
+
 - Same responsive behavior, but thumbnails always at bottom
 
 ## Usage example
@@ -250,7 +253,8 @@ function MyGallery() {
 Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
-<div data-mg-gallery
+<div
+  data-mg-gallery
   data-media='[{"id":"1","src":"/photo1.jpg","alt":"Landscape","title":"Mountain View"}]'
   data-initial-index="0"
   data-show-thumbnails="true"
@@ -259,26 +263,33 @@ Gallery supports [layered hydration](https://github.com/unisdr/undrr-mangrove/bl
   data-arrow-style="overlay"
   data-show-description="true"
   data-enable-keyboard="true"
-  data-loop="false">
-</div>
+  data-loop="false"
+></div>
 ```
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-media` | `[]` | JSON array of media item objects (required). Each object with `type` of `'image'` or `'video'` (or no `type`, since `'image'` is the default) must include an `alt` property with descriptive text per WCAG 1.1.1 (Non-text Content). |
-| `data-initial-index` | `0` | Index of the initially displayed item |
-| `data-show-thumbnails` | `'true'` | Show thumbnail navigation (`'true'` or `'false'`) |
-| `data-thumbnail-position` | `'left'` | `'left'` or `'bottom'` |
-| `data-show-arrows` | `'true'` | Show navigation arrows |
-| `data-arrow-style` | `'overlay'` | `'overlay'` or `'corner'` |
-| `data-show-description` | `'true'` | Show title and caption below content |
-| `data-enable-keyboard` | `'true'` | Enable keyboard navigation |
-| `data-loop` | `'false'` | Enable infinite loop navigation |
+| Attribute                 | Default     | Description                                                                                                                                                                                                                           |
+| ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-media`              | `[]`        | JSON array of media item objects (required). Each object with `type` of `'image'` or `'video'` (or no `type`, since `'image'` is the default) must include an `alt` property with descriptive text per WCAG 1.1.1 (Non-text Content). |
+| `data-initial-index`      | `0`         | Index of the initially displayed item                                                                                                                                                                                                 |
+| `data-show-thumbnails`    | `'true'`    | Show thumbnail navigation (`'true'` or `'false'`)                                                                                                                                                                                     |
+| `data-thumbnail-position` | `'left'`    | `'left'` or `'bottom'`                                                                                                                                                                                                                |
+| `data-show-arrows`        | `'true'`    | Show navigation arrows                                                                                                                                                                                                                |
+| `data-arrow-style`        | `'overlay'` | `'overlay'` or `'corner'`                                                                                                                                                                                                             |
+| `data-show-description`   | `'true'`    | Show title and caption below content                                                                                                                                                                                                  |
+| `data-enable-keyboard`    | `'true'`    | Enable keyboard navigation                                                                                                                                                                                                            |
+| `data-loop`               | `'false'`   | Enable infinite loop navigation                                                                                                                                                                                                       |
 
 ```js
-import createHydrator from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js";
-import { Gallery, fromElement } from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/Gallery.js";
-createHydrator({ selector: "[data-mg-gallery]", component: Gallery, fromElement });
+import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js';
+import {
+  Gallery,
+  fromElement,
+} from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/Gallery.js';
+createHydrator({
+  selector: '[data-mg-gallery]',
+  component: Gallery,
+  fromElement,
+});
 ```
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.

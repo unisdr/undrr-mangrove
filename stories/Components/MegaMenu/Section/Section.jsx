@@ -190,54 +190,48 @@ export default function Section({
                 className="mg-mega-content__menu--mobile"
               >
                 {section.items.map((item, index) => (
-                      <li key={index} role="none">
-                        <a
-                          href={item.url}
-                          role="menuitem"
-                          aria-haspopup={item.items ? 'true' : undefined}
-                        >
-                          {item.title}
-                        </a>
-                        {item.items && item.items.length > 0 && (
-                          <ul
-                            role="menu"
-                            aria-label={`${item.title} submenu`}
-                          >
-                            {item.items.map((subItem, subIndex) => (
-                              <li key={subIndex} role="none">
-                                <a
-                                  href={subItem.url}
-                                  role="menuitem"
-                                  aria-haspopup={subItem.items ? 'true' : undefined}
-                                >
-                                  {subItem.title}
-                                </a>
-                                {/* Render third level if exists */}
-                                {subItem.items && (
-                                  <ul
-                                    role="menu"
-                                    aria-label={`${subItem.title} nested submenu`}
-                                  >
-                                    {subItem.items.map(
-                                      (nestedItem, nestedIndex) => (
-                                        <li key={nestedIndex} role="none">
-                                          <a
-                                            href={nestedItem.url}
-                                            role="menuitem"
-                                          >
-                                            {nestedItem.title}
-                                          </a>
-                                        </li>
-                                      )
-                                    )}
-                                  </ul>
+                  <li key={index} role="none">
+                    <a
+                      href={item.url}
+                      role="menuitem"
+                      aria-haspopup={item.items ? 'true' : undefined}
+                    >
+                      {item.title}
+                    </a>
+                    {item.items && item.items.length > 0 && (
+                      <ul role="menu" aria-label={`${item.title} submenu`}>
+                        {item.items.map((subItem, subIndex) => (
+                          <li key={subIndex} role="none">
+                            <a
+                              href={subItem.url}
+                              role="menuitem"
+                              aria-haspopup={subItem.items ? 'true' : undefined}
+                            >
+                              {subItem.title}
+                            </a>
+                            {/* Render third level if exists */}
+                            {subItem.items && (
+                              <ul
+                                role="menu"
+                                aria-label={`${subItem.title} nested submenu`}
+                              >
+                                {subItem.items.map(
+                                  (nestedItem, nestedIndex) => (
+                                    <li key={nestedIndex} role="none">
+                                      <a href={nestedItem.url} role="menuitem">
+                                        {nestedItem.title}
+                                      </a>
+                                    </li>
+                                  )
                                 )}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
+                              </ul>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
               </ul>
 
               {/* Desktop version - shows items based on hover state */}
@@ -249,38 +243,31 @@ export default function Section({
                 className="mg-mega-content__menu--desktop"
               >
                 {section.items[itemIndex]?.items
-                  ? section.items[itemIndex].items.map(
-                        (subItem, subIndex) => (
-                          <li key={subIndex} role="none">
-                            <a
-                              href={subItem.url}
-                              role="menuitem"
-                              aria-haspopup={subItem.items ? 'true' : undefined}
-                            >
-                              {subItem.title}
-                            </a>
-                            {subItem.items && (
-                              <ul
-                                role="menu"
-                                aria-label={`${subItem.title} submenu`}
-                              >
-                                {subItem.items.map(
-                                  (nestedItem, nestedIndex) => (
-                                    <li key={nestedIndex} role="none">
-                                      <a
-                                        href={nestedItem.url}
-                                        role="menuitem"
-                                      >
-                                        {nestedItem.title}
-                                      </a>
-                                    </li>
-                                  )
-                                )}
-                              </ul>
-                            )}
-                          </li>
-                        )
-                      )
+                  ? section.items[itemIndex].items.map((subItem, subIndex) => (
+                      <li key={subIndex} role="none">
+                        <a
+                          href={subItem.url}
+                          role="menuitem"
+                          aria-haspopup={subItem.items ? 'true' : undefined}
+                        >
+                          {subItem.title}
+                        </a>
+                        {subItem.items && (
+                          <ul
+                            role="menu"
+                            aria-label={`${subItem.title} submenu`}
+                          >
+                            {subItem.items.map((nestedItem, nestedIndex) => (
+                              <li key={nestedIndex} role="none">
+                                <a href={nestedItem.url} role="menuitem">
+                                  {nestedItem.title}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))
                   : section.items.map((item, index) => (
                       <li key={index} role="none">
                         <a href={item.url} role="menuitem">

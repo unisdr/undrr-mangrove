@@ -42,15 +42,34 @@ export const SPACING_TOKENS = [
 ];
 
 export function SpacingRow({ token }) {
-  const value = typeof document !== 'undefined'
-    ? getComputedStyle(document.documentElement).getPropertyValue(token).trim()
-    : '';
+  const value =
+    typeof document !== 'undefined'
+      ? getComputedStyle(document.documentElement)
+          .getPropertyValue(token)
+          .trim()
+      : '';
   return (
     <tr>
-      <td style={{ padding: '6px 12px', fontFamily: 'monospace', fontSize: '13px' }}>{token}</td>
+      <td
+        style={{
+          padding: '6px 12px',
+          fontFamily: 'monospace',
+          fontSize: '13px',
+        }}
+      >
+        {token}
+      </td>
       <td style={{ padding: '6px 12px', fontSize: '13px' }}>{value || '—'}</td>
       <td style={{ padding: '6px 12px' }}>
-        <div style={{ width: value || 0, height: '16px', background: 'var(--mg-color-interactive, #004f91)', borderRadius: '2px', minWidth: parseFloat(value) > 0 ? '2px' : 0 }} />
+        <div
+          style={{
+            width: value || 0,
+            height: '16px',
+            background: 'var(--mg-color-interactive, #004f91)',
+            borderRadius: '2px',
+            minWidth: parseFloat(value) > 0 ? '2px' : 0,
+          }}
+        />
       </td>
     </tr>
   );
@@ -65,7 +84,9 @@ export function SpacingRow({ token }) {
     </tr>
   </thead>
   <tbody>
-    {SPACING_TOKENS.map(t => <SpacingRow key={t} token={t} />)}
+    {SPACING_TOKENS.map(t => (
+      <SpacingRow key={t} token={t} />
+    ))}
   </tbody>
 </table>
 

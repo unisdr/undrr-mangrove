@@ -11,7 +11,12 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { useSearchState, useSearchDispatch, useSearchLabels, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchDispatch,
+  useSearchLabels,
+  actions,
+} from '../context/SearchContext';
 import { SelectDropdown } from './SelectDropdown';
 
 /**
@@ -25,11 +30,14 @@ export function SortOptions({ widgetId = 'search' }) {
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
 
-  const sortOptions = useMemo(() => [
-    { value: 'relevance', label: labels.sortRelevance },
-    { value: 'newest', label: labels.sortNewest },
-    { value: 'oldest', label: labels.sortOldest },
-  ], [labels.sortRelevance, labels.sortNewest, labels.sortOldest]);
+  const sortOptions = useMemo(
+    () => [
+      { value: 'relevance', label: labels.sortRelevance },
+      { value: 'newest', label: labels.sortNewest },
+      { value: 'oldest', label: labels.sortOldest },
+    ],
+    [labels.sortRelevance, labels.sortNewest, labels.sortOldest]
+  );
 
   const handleChange = useCallback(
     value => {

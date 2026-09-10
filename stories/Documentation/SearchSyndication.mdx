@@ -16,12 +16,13 @@ Mangrove includes a full-featured search interface for querying content across U
 A search widget can be embedded on any page with a container element:
 
 ```html
-<div data-mg-search-widget
+<div
+  data-mg-search-widget
   data-search-endpoint="https://www.undrr.org/search-endpoint"
   data-results-per-page="50"
   data-show-facets="true"
-  data-default-filters='[{"key":"_language","value":"en"}]'>
-</div>
+  data-default-filters='[{"key":"_language","value":"en"}]'
+></div>
 ```
 
 The search scope can be constrained with `customFilters` (hidden Elasticsearch queries) and extended with `customFacets` (user-selectable dropdowns). Content types, date ranges, and taxonomies can all be filtered.

@@ -11,7 +11,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { useSearchState, useSearchConfig, useSearchLabels } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchConfig,
+  useSearchLabels,
+} from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   FACET_FIELDS,
@@ -36,7 +40,12 @@ export function FacetsSidebar({ widgetId = 'search' }) {
   const labels = useSearchLabels();
   const { getLabel, isLoading: taxonomiesLoading } = useTaxonomies();
 
-  const { visibleFilters, allowedTypes, customFacets = [], facetFields } = config;
+  const {
+    visibleFilters,
+    allowedTypes,
+    customFacets = [],
+    facetFields,
+  } = config;
 
   // Use config facet fields or default
   const fields = facetFields || FACET_FIELDS;
@@ -62,7 +71,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
    */
   const renderFacets = useMemo(() => {
     return fields
-      .filter((field) => {
+      .filter(field => {
         // Skip hidden filters
         if (!isFilterVisible(field.key, visibleFilters)) {
           return false;
@@ -73,7 +82,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
         }
         return true;
       })
-      .map((field) => {
+      .map(field => {
         // Special handling for merged type/news_type
         if (field.key === 'type') {
           return (
@@ -101,7 +110,16 @@ export function FacetsSidebar({ widgetId = 'search' }) {
           />
         );
       });
-  }, [fields, aggregations, visibleFilters, allowedTypes, subtypeFields, mergedTypeBuckets, getLabel, widgetId]);
+  }, [
+    fields,
+    aggregations,
+    visibleFilters,
+    allowedTypes,
+    subtypeFields,
+    mergedTypeBuckets,
+    getLabel,
+    widgetId,
+  ]);
 
   /**
    * Render custom facets (editor-defined dropdowns).
@@ -116,12 +134,8 @@ export function FacetsSidebar({ widgetId = 'search' }) {
       (a, b) => (a.weight || 50) - (b.weight || 50)
     );
 
-    return sorted.map((facet) => (
-      <CustomFacetSelect
-        key={facet.id}
-        facet={facet}
-        widgetId={widgetId}
-      />
+    return sorted.map(facet => (
+      <CustomFacetSelect key={facet.id} facet={facet} widgetId={widgetId} />
     ));
   }, [customFacets, widgetId]);
 

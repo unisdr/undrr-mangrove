@@ -887,7 +887,6 @@
     font-family: var(--mg-font-family-text);
     text-align: start;
     cursor: pointer;
-
   }
 
   .mg-mega-mobile-sidebar__close {
@@ -909,7 +908,6 @@
     margin: 0 0 var(--mg-spacing-150);
     text-wrap: balance;
     overflow-wrap: anywhere;
-
   }
 
   .mg-mega-sidebar__list {
@@ -942,7 +940,6 @@
     text-decoration: none;
     overflow-wrap: anywhere;
 
-
     &:hover {
       background: rgb(var(--mg-color-interactive) / 0.08);
     }
@@ -955,7 +952,6 @@
     font-size: $mg-font-size-300;
     font-weight: 400;
     line-height: 1.5;
-
   }
 
   .mg-mega-mobile-sidebar__title-link {
@@ -1098,7 +1094,10 @@
 // Existing plain HTML navigation needs no hamburger gutter or JS enhancement.
 // Keep overflow local to the rail so every destination remains reachable.
 @media screen and (max-width: $mg-breakpoint-tablet) {
-  .mg-mega-topbar:not(.mg-mega-topbar--branded, :has(.mg-mega-topbar-mobile__icon-button)) {
+  .mg-mega-topbar:not(
+    .mg-mega-topbar--branded,
+    :has(.mg-mega-topbar-mobile__icon-button)
+  ) {
     padding-inline: 0;
     overflow-x: auto;
     overscroll-behavior-inline: contain;

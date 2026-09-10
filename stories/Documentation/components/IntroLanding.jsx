@@ -7,7 +7,8 @@ import ScrollContainer from '../../Components/ScrollContainer/ScrollContainer';
 import { TextCta } from '../../Components/TextCta/TextCta';
 import { INLINE_CTA_ARGS } from '../../Components/TextCta/_fixtures';
 
-const heroImage = 'https://www.undrr.org/sites/default/files/2021-04/WiA-childyouthengage.jpg';
+const heroImage =
+  'https://www.undrr.org/sites/default/files/2021-04/WiA-childyouthengage.jpg';
 import figcaptionImage from '../../assets/images/figcaption.jpg';
 import logo from '../../assets/images/undrr-logo-white.svg';
 import './intro-landing.css';

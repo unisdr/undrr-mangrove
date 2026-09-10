@@ -37,7 +37,10 @@ import {
  * @param {Object} config - Widget configuration
  * @returns {Object} Elasticsearch query body
  */
-export function buildQuery({ query, facets, facetOperators, customFacets, sortBy, page = 1 }, config) {
+export function buildQuery(
+  { query, facets, facetOperators, customFacets, sortBy, page = 1 },
+  config
+) {
   const scoring = config.scoring || SCORING_CONFIG;
   const highlight = config.highlight || HIGHLIGHT_CONFIG;
   const resultsPerPage = config.resultsPerPage || 50;
@@ -58,7 +61,8 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
   // there are active values to apply. See unisdr/undrr-mangrove#1031.
   const facetsActive = resolveFacetsLayout(config) !== false;
   const hasActiveFacets =
-    (facets && Object.values(facets).some(v => Array.isArray(v) && v.length > 0)) ||
+    (facets &&
+      Object.values(facets).some(v => Array.isArray(v) && v.length > 0)) ||
     (customFacets &&
       Object.values(customFacets).some(v => Array.isArray(v) && v.length > 0));
   const postFilter =
@@ -66,7 +70,8 @@ export function buildQuery({ query, facets, facetOperators, customFacets, sortBy
       ? buildPostFilter(facets, facetOperators, customFacets, config)
       : null;
 
-  const isCardMode = config.displayMode === 'card' || config.displayMode === 'card-book';
+  const isCardMode =
+    config.displayMode === 'card' || config.displayMode === 'card-book';
   const summaryHidden = config.visibleTeaserFields?.summary === false;
 
   const result = {

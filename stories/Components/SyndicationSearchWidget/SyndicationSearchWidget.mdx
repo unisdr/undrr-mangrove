@@ -34,13 +34,19 @@ The **UNDRR syndication search widget** lets users search and filter content acr
 
 A basic search widget with default configuration.
 
-<Canvas of={SyndicationSearchWidgetStories.Default} meta={SyndicationSearchWidgetStories} />
+<Canvas
+  of={SyndicationSearchWidgetStories.Default}
+  meta={SyndicationSearchWidgetStories}
+/>
 
 ## Default query
 
 A search widget initialized with a pre-filled search query.
 
-<Canvas of={SyndicationSearchWidgetStories.DefaultQuery} meta={SyndicationSearchWidgetStories} />
+<Canvas
+  of={SyndicationSearchWidgetStories.DefaultQuery}
+  meta={SyndicationSearchWidgetStories}
+/>
 
 ## Hidden facets
 
@@ -52,7 +58,10 @@ A search widget with the facets sidebar hidden.
 
 Search-only mode without result counts, timers, or filters.
 
-<Canvas of={SyndicationSearchWidgetStories.Minimal} meta={SyndicationSearchWidgetStories} />
+<Canvas
+  of={SyndicationSearchWidgetStories.Minimal}
+  meta={SyndicationSearchWidgetStories}
+/>
 
 ## Debug metrics
 
@@ -76,7 +85,10 @@ Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-ca
 
 Hide specific fields from search results using `visibleTeaserFields`. Set a field key to `false` to hide it; `null` (default) shows all fields. Programmatically strips hidden DOM elements from pre-rendered teaser HTML and conditionally omits JSX fields in fallback mode, preventing unnecessary image asset downloads and avoiding CSS specificity conflicts.
 
-<Canvas of={DisplayModesStories.HiddenTeaserFields} meta={DisplayModesStories} />
+<Canvas
+  of={DisplayModesStories.HiddenTeaserFields}
+  meta={DisplayModesStories}
+/>
 
 **Toggleable fields:** `image`, `contentType`, `publicationType`, `date`, `siteName`, `summary`, `organization`. Title is intentionally not toggleable.
 
@@ -86,16 +98,18 @@ Hide specific fields from search results using `visibleTeaserFields`. Set a fiel
 Users cannot see or remove these filters - they constrain the search scope.
 
 **This example uses:**
+
 ```js
 customFilters: [
-  'type:(news OR publication)',      // Only news and publications
-  'published_at:[2023-01-01 TO *]',  // Content from 2023 onwards
-]
+  'type:(news OR publication)', // Only news and publications
+  'published_at:[2023-01-01 TO *]', // Content from 2023 onwards
+];
 ```
 
 <Canvas of={FiltersStories.CustomFilters} meta={FiltersStories} />
 
 **Common filter patterns:**
+
 - `type:news` - Restrict to content type
 - `type:(news OR publication)` - Multiple types (OR)
 - `published_at:[2023-01-01 TO *]` - Date range
@@ -108,6 +122,7 @@ customFilters: [
 Each facet maps labels to Elasticsearch queries.
 
 **This example uses:**
+
 ```js
 customFacets: [
   {
@@ -123,44 +138,44 @@ customFacets: [
   {
     id: 'hazard_type',
     title: 'Hazard Type',
-    multiSelect: true,  // Multiple selections allowed
+    multiSelect: true, // Multiple selections allowed
     options: [
       { label: 'Earthquake', query: 'field_hazards:101' },
       { label: 'Flood', query: 'field_hazards:102' },
       // ...
     ],
   },
-]
+];
 ```
 
 <Canvas of={FiltersStories.CustomFacets} meta={FiltersStories} />
 
 **Structure:**
+
 ```json
 {
   "id": "unique_id",
   "title": "Display Title",
   "weight": 10,
   "multiSelect": false,
-  "options": [
-    { "label": "Option Label", "query": "field_name:value" }
-  ]
+  "options": [{ "label": "Option Label", "query": "field_name:value" }]
 }
 ```
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `id` | string | Unique identifier for the facet |
-| `title` | string | Label shown in the sidebar |
-| `weight` | number | Sort order (lower = higher) |
-| `multiSelect` | boolean | Allow multiple selections |
-| `options` | array | Array of `{label, query}` pairs |
+| Property      | Type    | Description                     |
+| ------------- | ------- | ------------------------------- |
+| `id`          | string  | Unique identifier for the facet |
+| `title`       | string  | Label shown in the sidebar      |
+| `weight`      | number  | Sort order (lower = higher)     |
+| `multiSelect` | boolean | Allow multiple selections       |
+| `options`     | array   | Array of `{label, query}` pairs |
 
 ## Custom filters and facets
 
 Use both together: `customFilters` for hidden constraints, `customFacets` for user choices.
 
 **This example uses:**
+
 ```js
 // Hidden constraint - users only see publications
 customFilters: ['type:publication'],
@@ -195,6 +210,7 @@ customFacets: [
 Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content, it limits the filter UI options.
 
 **This example uses:**
+
 ```js
 allowedTypes: {
   types: ['news', 'publication', 'event'],  // Only these in Type dropdown
@@ -212,7 +228,10 @@ allowedTypes: {
 
 Demonstrates mixed search results containing both content nodes and taxonomy terms (Hazard, Country, Theme). Taxonomy terms display differently: vocabulary name as type badge, no date, defaults to preventionweb.net.
 
-<Canvas of={IntegrationsStories.TaxonomyTermResults} meta={IntegrationsStories} />
+<Canvas
+  of={IntegrationsStories.TaxonomyTermResults}
+  meta={IntegrationsStories}
+/>
 
 ## Custom endpoint
 
@@ -232,84 +251,84 @@ The search input uses Elasticsearch `query_string` syntax, forwarded directly to
 
 ### Basic queries
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `climate change` | Simple multi-word | Matches docs with both words (AND), stop words removed, fuzziness added |
-| `disaster risk reduction` | Common phrase | Stop words "the", "of" etc. removed for consistent matching |
-| `The Draft Articles on the Protection` | With stop words | Same results as "Draft Articles Protection" |
+| Query                                  | Description       | Expected behaviour                                                      |
+| -------------------------------------- | ----------------- | ----------------------------------------------------------------------- |
+| `climate change`                       | Simple multi-word | Matches docs with both words (AND), stop words removed, fuzziness added |
+| `disaster risk reduction`              | Common phrase     | Stop words "the", "of" etc. removed for consistent matching             |
+| `The Draft Articles on the Protection` | With stop words   | Same results as "Draft Articles Protection"                             |
 
 ### Exact phrase matching
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `"climate change"` | Exact phrase | Matches exact phrase, no fuzziness, no stop word removal |
-| `"Draft Articles"` | Exact phrase | Finds documents with "Draft Articles" as consecutive words |
-| `"disaster risk reduction"` | Exact phrase | Stricter matching than without quotes |
+| Query                       | Description  | Expected behaviour                                         |
+| --------------------------- | ------------ | ---------------------------------------------------------- |
+| `"climate change"`          | Exact phrase | Matches exact phrase, no fuzziness, no stop word removal   |
+| `"Draft Articles"`          | Exact phrase | Finds documents with "Draft Articles" as consecutive words |
+| `"disaster risk reduction"` | Exact phrase | Stricter matching than without quotes                      |
 
 ### Wildcards and fuzzy
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `ris?` | Single char wildcard | Matches "risk", "rise", etc. |
-| `red*` | Multi-char wildcard | Matches "reduction", "reduce", "red", etc. |
-| `evnt~1` | Fuzzy (edit distance 1) | Matches "event" (typo tolerance) |
-| `earthquke~2` | Fuzzy (edit distance 2) | Matches "earthquake" |
+| Query         | Description             | Expected behaviour                         |
+| ------------- | ----------------------- | ------------------------------------------ |
+| `ris?`        | Single char wildcard    | Matches "risk", "rise", etc.               |
+| `red*`        | Multi-char wildcard     | Matches "reduction", "reduce", "red", etc. |
+| `evnt~1`      | Fuzzy (edit distance 1) | Matches "event" (typo tolerance)           |
+| `earthquke~2` | Fuzzy (edit distance 2) | Matches "earthquake"                       |
 
 ### Boolean operators
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `flood AND drought` | AND operator | Both terms required |
-| `flood OR drought` | OR operator | Either term matches |
-| `flood NOT tsunami` | NOT operator | Excludes tsunami results |
-| `-"Red Cross"` | Exclude phrase | Excludes exact phrase |
-| `(UNDRR AND "New York")` | Grouped | Parentheses for grouping |
+| Query                    | Description    | Expected behaviour       |
+| ------------------------ | -------------- | ------------------------ |
+| `flood AND drought`      | AND operator   | Both terms required      |
+| `flood OR drought`       | OR operator    | Either term matches      |
+| `flood NOT tsunami`      | NOT operator   | Excludes tsunami results |
+| `-"Red Cross"`           | Exclude phrase | Excludes exact phrase    |
+| `(UNDRR AND "New York")` | Grouped        | Parentheses for grouping |
 
 ### Field-specific searches
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `title:sendai` | Search title only | Matches "sendai" in title field |
-| `_language:en` | Language filter | English content only |
-| `type:landing` | Content type | Landing pages only |
-| `type:(news OR publication)` | Multiple types | News or publications |
+| Query                        | Description       | Expected behaviour              |
+| ---------------------------- | ----------------- | ------------------------------- |
+| `title:sendai`               | Search title only | Matches "sendai" in title field |
+| `_language:en`               | Language filter   | English content only            |
+| `type:landing`               | Content type      | Landing pages only              |
+| `type:(news OR publication)` | Multiple types    | News or publications            |
 
 ### Date ranges
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `published_at:[2023-01-01 TO 2023-12-31]` | Date range | Content from 2023 |
-| `published_at:[2020-01-01 TO *]` | Open range | Content from 2020 onwards |
-| `published_at:[* TO 2022-12-31]` | Open range | Content before 2023 |
+| Query                                     | Description | Expected behaviour        |
+| ----------------------------------------- | ----------- | ------------------------- |
+| `published_at:[2023-01-01 TO 2023-12-31]` | Date range  | Content from 2023         |
+| `published_at:[2020-01-01 TO *]`          | Open range  | Content from 2020 onwards |
+| `published_at:[* TO 2022-12-31]`          | Open range  | Content before 2023       |
 
 ### Boosting
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `history^1.1 review` | Term boosting | "history" weighted 1.1x higher |
-| `title:sendai^2 body:sendai` | Field boosting | Title matches weighted 2x |
+| Query                        | Description    | Expected behaviour             |
+| ---------------------------- | -------------- | ------------------------------ |
+| `history^1.1 review`         | Term boosting  | "history" weighted 1.1x higher |
+| `title:sendai^2 body:sendai` | Field boosting | Title matches weighted 2x      |
 
 ### Edge cases verified by the query builder
 
-| Query | Description | Expected behaviour |
-|-------|-------------|--------------------|
-| `a` | Too short | Should not trigger search (min 3 chars) |
-| `   spaces   ` | Extra whitespace | Trimmed and searched as `spaces` |
-| `:` | Special char only | Handled gracefully |
-| `""` | Empty quotes | Handled gracefully |
+| Query          | Description       | Expected behaviour                      |
+| -------------- | ----------------- | --------------------------------------- |
+| `a`            | Too short         | Should not trigger search (min 3 chars) |
+| `   spaces   ` | Extra whitespace  | Trimmed and searched as `spaces`        |
+| `:`            | Special char only | Handled gracefully                      |
+| `""`           | Empty quotes      | Handled gracefully                      |
 
 ### Query sanitisation (auto-fixed)
 
 These malformed queries are automatically sanitised to prevent Elasticsearch errors:
 
-| Query | Problem | Auto-corrected to |
-|-------|---------|-------------------|
-| `"local` | Unclosed quote | `local` |
-| `local OR ` | Trailing operator | `local` |
-| `AND climate` | Leading operator | `climate` |
-| `flood OR` | Trailing OR | `flood` |
-| `AND` | Standalone operator | (empty, no search) |
-| `climate-` | Trailing special char | `climate` |
+| Query         | Problem               | Auto-corrected to  |
+| ------------- | --------------------- | ------------------ |
+| `"local`      | Unclosed quote        | `local`            |
+| `local OR `   | Trailing operator     | `local`            |
+| `AND climate` | Leading operator      | `climate`          |
+| `flood OR`    | Trailing OR           | `flood`            |
+| `AND`         | Standalone operator   | (empty, no search) |
+| `climate-`    | Trailing special char | `climate`          |
 
 ## Static markup reference
 
@@ -319,8 +338,11 @@ For CSS testing without making API calls, here is the canonical HTML the widget 
 <div class="mg-search-widget">
   <form class="mg-search__form" role="search">
     <div class="mg-search__input-wrapper">
-      <input type="search" class="mg-search__input form-control"
-             placeholder="Search..." />
+      <input
+        type="search"
+        class="mg-search__input form-control"
+        placeholder="Search..."
+      />
     </div>
     <button type="submit" class="mg-button mg-button-primary mg-search__submit">
       <span class="mg-search__submit-icon" aria-hidden="true">
@@ -345,7 +367,11 @@ For CSS testing without making API calls, here is the canonical HTML the widget 
 
   <div class="mg-search__results">
     <p class="mg-search__results-count">
-      Showing <strong>2</strong> of <strong>1,234</strong> results
+      Showing
+      <strong>2</strong>
+      of
+      <strong>1,234</strong>
+      results
       <span class="mg-search__results-time">(42ms)</span>
     </p>
 
@@ -353,7 +379,9 @@ For CSS testing without making API calls, here is the canonical HTML the widget 
       <article class="mg-search__result">
         <div class="mg-search__result-content">
           <div class="mg-search__result-text">
-            <h4 class="mg-search__result-title"><a href="#">Result title</a></h4>
+            <h4 class="mg-search__result-title">
+              <a href="#">Result title</a>
+            </h4>
             <div class="mg-search__result-meta">
               <span class="mg-search__result-type">publication</span>
               <span class="mg-search__result-date">2024-06-15</span>
@@ -378,7 +406,7 @@ import { SyndicationSearchWidget } from '@undrr/undrr-mangrove';
     resultsPerPage: 5,
     defaultFilters: [{ key: '_language', value: 'en' }],
   }}
-/>
+/>;
 ```
 
 ### Integration with Drupal
@@ -403,32 +431,32 @@ The component is loaded automatically on pages containing a container with `data
 
 ### Config object
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `searchEndpoint` | string | `/search-endpoint` | API endpoint for Elasticsearch queries |
-| `resultsPerPage` | number | 50 | Number of results to display per page |
-| `debounceDelay` | number | 500 | Milliseconds to wait before executing search |
-| `minSearchLength` | number | 3 | Minimum characters required to trigger search |
-| `defaultQuery` | string | `''` | Initial search query |
-| `defaultSort` | string | `'relevance'` | Initial sort order (`relevance`, `newest`, `oldest`) |
-| `defaultFilters` | array | `[]` | Default facet filters (array of `{key, value}`) |
-| `showSearchBox` | boolean | `true` | Show the search input |
-| `showResultsCount` | boolean | `true` | Show "Showing X of Y results" |
-| `showSearchTimer` | boolean | `true` | Show search execution time |
-| `showFacets` | boolean | `true` | Show the facets sidebar |
-| `showActiveFilters` | boolean | `true` | Show active filter chips |
-| `showSearchMetrics` | boolean | `false` | Show debug metrics (score, etc.) |
-| `enableHashSync` | string/boolean | `'auto'` | Sync search state to URL hash |
-| `visibleFilters` | object | `null` | Control which filters are visible |
-| `allowedTypes` | object | `null` | Restrict content types shown |
-| `customFilters` | array | `[]` | Additional Elasticsearch filters |
-| `customFacets` | array | `[]` | Custom facet definitions |
-| `displayMode` | string | `'list'` | Result rendering style: `'list'`, `'card'`, or `'card-book'` |
-| `gridColumns` | number | `null` | Grid columns for card modes (2-6). `null` = use `resultsPerPage` |
-| `visibleTeaserFields` | object | `null` | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
-| `requireImage` | boolean | `false` | Only return results that have an image (`has_image:true` ES filter) |
-| `interestingnessTiers` | array | `[]` | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`) |
-| `longevityTiers` | array | `[]` | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`) |
+| Prop                   | Type           | Default            | Description                                                                  |
+| ---------------------- | -------------- | ------------------ | ---------------------------------------------------------------------------- |
+| `searchEndpoint`       | string         | `/search-endpoint` | API endpoint for Elasticsearch queries                                       |
+| `resultsPerPage`       | number         | 50                 | Number of results to display per page                                        |
+| `debounceDelay`        | number         | 500                | Milliseconds to wait before executing search                                 |
+| `minSearchLength`      | number         | 3                  | Minimum characters required to trigger search                                |
+| `defaultQuery`         | string         | `''`               | Initial search query                                                         |
+| `defaultSort`          | string         | `'relevance'`      | Initial sort order (`relevance`, `newest`, `oldest`)                         |
+| `defaultFilters`       | array          | `[]`               | Default facet filters (array of `{key, value}`)                              |
+| `showSearchBox`        | boolean        | `true`             | Show the search input                                                        |
+| `showResultsCount`     | boolean        | `true`             | Show "Showing X of Y results"                                                |
+| `showSearchTimer`      | boolean        | `true`             | Show search execution time                                                   |
+| `showFacets`           | boolean        | `true`             | Show the facets sidebar                                                      |
+| `showActiveFilters`    | boolean        | `true`             | Show active filter chips                                                     |
+| `showSearchMetrics`    | boolean        | `false`            | Show debug metrics (score, etc.)                                             |
+| `enableHashSync`       | string/boolean | `'auto'`           | Sync search state to URL hash                                                |
+| `visibleFilters`       | object         | `null`             | Control which filters are visible                                            |
+| `allowedTypes`         | object         | `null`             | Restrict content types shown                                                 |
+| `customFilters`        | array          | `[]`               | Additional Elasticsearch filters                                             |
+| `customFacets`         | array          | `[]`               | Custom facet definitions                                                     |
+| `displayMode`          | string         | `'list'`           | Result rendering style: `'list'`, `'card'`, or `'card-book'`                 |
+| `gridColumns`          | number         | `null`             | Grid columns for card modes (2-6). `null` = use `resultsPerPage`             |
+| `visibleTeaserFields`  | object         | `null`             | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
+| `requireImage`         | boolean        | `false`            | Only return results that have an image (`has_image:true` ES filter)          |
+| `interestingnessTiers` | array          | `[]`               | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)       |
+| `longevityTiers`       | array          | `[]`               | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`) |
 
 ## Accessibility
 
@@ -442,7 +470,8 @@ The component is loaded automatically on pages containing a container with `data
 SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element to configure the widget from server-rendered HTML (all attributes are optional):
 
 ```html
-<div data-mg-search-widget
+<div
+  data-mg-search-widget
   data-search-endpoint="/search-endpoint"
   data-results-per-page="50"
   data-default-query=""
@@ -454,45 +483,51 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/unisdr/u
   data-show-active-filters="true"
   data-show-pager="true"
   data-enable-hash-sync="true"
-  data-default-filters='[{"key":"_language","value":"en"}]'>
-</div>
+  data-default-filters='[{"key":"_language","value":"en"}]'
+></div>
 ```
 
-| Attribute | Default | Description |
-|-----------|---------|-------------|
-| `data-search-endpoint` |  | Elasticsearch proxy URL |
-| `data-results-per-page` |  | Number of results per page |
-| `data-debounce-delay` |  | Milliseconds before executing search |
-| `data-min-search-length` |  | Minimum characters to trigger search |
-| `data-default-query` |  | Initial search query |
-| `data-default-sort` |  | Initial sort order |
-| `data-display-mode` |  | `'list'`, `'card'`, or `'card-book'` |
-| `data-grid-columns` |  | Grid columns for card modes (2-6) |
-| `data-query-append` |  | Query string to append to all searches |
-| `data-show-search-box` |  | Show search input |
-| `data-show-results-count` |  | Show result count |
-| `data-show-facets` |  | Show facets sidebar |
-| `data-show-active-filters` |  | Show active filter chips |
-| `data-show-pager` |  | Show pagination |
-| `data-show-search-metrics` |  | Show debug metrics |
-| `data-show-search-timer` |  | Show search execution time |
-| `data-enable-hash-sync` |  | Sync search state to URL hash |
-| `data-default-filters` |  | JSON array of `{key, value}` filter objects |
-| `data-allowed-types` |  | JSON object restricting content type options |
-| `data-require-image` |  | Only return results with images (`true`/`false`) |
-| `data-interestingness-tiers` |  | JSON array of tier names (e.g., `'["promoted","announced"]'`) |
-| `data-longevity-tiers` |  | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
-| `data-custom-filters` |  | JSON array of custom filter strings (e.g., `'["type:news"]'`) |
-| `data-custom-facets` |  | JSON array of custom facet objects |
-| `data-visible-teaser-fields` |  | JSON array of teaser field names to show |
-| `data-labels` |  | JSON object of UI label overrides (see [UI labels](#ui-labels)) |
+| Attribute                    | Default | Description                                                       |
+| ---------------------------- | ------- | ----------------------------------------------------------------- |
+| `data-search-endpoint`       |         | Elasticsearch proxy URL                                           |
+| `data-results-per-page`      |         | Number of results per page                                        |
+| `data-debounce-delay`        |         | Milliseconds before executing search                              |
+| `data-min-search-length`     |         | Minimum characters to trigger search                              |
+| `data-default-query`         |         | Initial search query                                              |
+| `data-default-sort`          |         | Initial sort order                                                |
+| `data-display-mode`          |         | `'list'`, `'card'`, or `'card-book'`                              |
+| `data-grid-columns`          |         | Grid columns for card modes (2-6)                                 |
+| `data-query-append`          |         | Query string to append to all searches                            |
+| `data-show-search-box`       |         | Show search input                                                 |
+| `data-show-results-count`    |         | Show result count                                                 |
+| `data-show-facets`           |         | Show facets sidebar                                               |
+| `data-show-active-filters`   |         | Show active filter chips                                          |
+| `data-show-pager`            |         | Show pagination                                                   |
+| `data-show-search-metrics`   |         | Show debug metrics                                                |
+| `data-show-search-timer`     |         | Show search execution time                                        |
+| `data-enable-hash-sync`      |         | Sync search state to URL hash                                     |
+| `data-default-filters`       |         | JSON array of `{key, value}` filter objects                       |
+| `data-allowed-types`         |         | JSON object restricting content type options                      |
+| `data-require-image`         |         | Only return results with images (`true`/`false`)                  |
+| `data-interestingness-tiers` |         | JSON array of tier names (e.g., `'["promoted","announced"]'`)     |
+| `data-longevity-tiers`       |         | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
+| `data-custom-filters`        |         | JSON array of custom filter strings (e.g., `'["type:news"]'`)     |
+| `data-custom-facets`         |         | JSON array of custom facet objects                                |
+| `data-visible-teaser-fields` |         | JSON array of teaser field names to show                          |
+| `data-labels`                |         | JSON object of UI label overrides (see [UI labels](#ui-labels))   |
 
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
 ```js
-import createHydrator from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js";
-import SyndicationSearchWidget, { fromElement } from "https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/SyndicationSearchWidget.js";
-createHydrator({ selector: "[data-mg-search-widget]", component: SyndicationSearchWidget, fromElement });
+import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/hydrate.js';
+import SyndicationSearchWidget, {
+  fromElement,
+} from 'https://assets.undrr.org/mangrove/2.0.0-alpha.4/components/SyndicationSearchWidget.js';
+createHydrator({
+  selector: '[data-mg-search-widget]',
+  component: SyndicationSearchWidget,
+  fromElement,
+});
 ```
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
@@ -524,10 +559,11 @@ The full list of keys and their English defaults is in `DEFAULT_LABELS` (exporte
 In a Drupal Twig template, supply translated labels via the `data-labels` JSON attribute:
 
 ```html
-<div data-mg-search-widget
+<div
+  data-mg-search-widget
   data-search-endpoint="/search-endpoint"
-  data-labels='{"searchPlaceholder":"Rechercher…","submitSearchText":"Rechercher","noResults":"Aucun résultat trouvé pour \"{query}\"."}'>
-</div>
+  data-labels='{"searchPlaceholder":"Rechercher…","submitSearchText":"Rechercher","noResults":"Aucun résultat trouvé pour \"{query}\"."}'
+></div>
 ```
 
 `fromElement` parses the JSON and passes it through as the `labels` prop. Unspecified keys fall back to English.
@@ -568,14 +604,14 @@ SyndicationSearchWidget
 
 The facet dropdowns use a custom `SelectDropdown` component instead of Chosen.js, with the same core functionality and no external dependencies:
 
-| Feature | Description |
-|---------|-------------|
-| **Searchable** | Filter input shown when options > 8 |
-| **Multi-select** | Checkbox indicators, multiple selections |
-| **Single-select** | Radio indicators, one selection |
-| **Keyboard navigation** | Arrow keys, Enter, Escape |
-| **Touch-friendly** | 44px trigger height, 40px option height |
-| **Accessible** | ARIA listbox pattern, screen reader support |
+| Feature                 | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| **Searchable**          | Filter input shown when options > 8         |
+| **Multi-select**        | Checkbox indicators, multiple selections    |
+| **Single-select**       | Radio indicators, one selection             |
+| **Keyboard navigation** | Arrow keys, Enter, Escape                   |
+| **Touch-friendly**      | 44px trigger height, 40px option height     |
+| **Accessible**          | ARIA listbox pattern, screen reader support |
 
 This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
 

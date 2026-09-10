@@ -25,7 +25,10 @@ const Snackbar = ({
   openedMiliseconds,
   labels = {},
 }) => {
-  const { closeLabel, closeAriaLabel } = { ...DEFAULT_SNACKBAR_LABELS, ...labels };
+  const { closeLabel, closeAriaLabel } = {
+    ...DEFAULT_SNACKBAR_LABELS,
+    ...labels,
+  };
   let icon;
   const closeButtonRef = useRef(null);
   const onCloseRef = useRef(onClose);

@@ -171,7 +171,8 @@
 
     // Custom scrollbar styling
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--mg-color-neutral-500)) rgb(var(--mg-color-neutral-100));
+    scrollbar-color: rgb(var(--mg-color-neutral-500))
+      rgb(var(--mg-color-neutral-100));
 
     &::-webkit-scrollbar {
       width: var(--mg-spacing-50);

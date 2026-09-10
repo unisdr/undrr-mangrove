@@ -29,14 +29,16 @@ describe('resolveFacetsLayout', () => {
     expect(
       resolveFacetsLayout({ facets: 'horizontal', showFacets: false })
     ).toBe('horizontal');
-    expect(
-      resolveFacetsLayout({ facets: false, showFacets: true })
-    ).toBe(false);
+    expect(resolveFacetsLayout({ facets: false, showFacets: true })).toBe(
+      false
+    );
   });
 
   it('ignores invalid facets values and falls back', () => {
     // Defensive: an unknown string should not become the layout
     expect(resolveFacetsLayout({ facets: 'inline' })).toBe('sidebar');
-    expect(resolveFacetsLayout({ facets: 'inline', showFacets: false })).toBe(false);
+    expect(resolveFacetsLayout({ facets: 'inline', showFacets: false })).toBe(
+      false
+    );
   });
 });

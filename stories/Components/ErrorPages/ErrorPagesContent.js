@@ -16,10 +16,11 @@ export const DEFAULT_COPY = {
   },
   403: {
     title: 'You do not have permission to view this page',
-    description: 'You don\'t have permission to view this page. If you need access, contact the website team.',
+    description:
+      "You don't have permission to view this page. If you need access, contact the website team.",
   },
   404: {
-    title: 'We can\'t find the page you\'re looking for',
+    title: "We can't find the page you're looking for",
     description:
       'If you typed the web address, check that it\'s correct. If you followed a link, it may be out of date. <br /> Go to the <a href="/">homepage</a>, browse the <a href="https://www.undrr.org/undrr-directory">UNDRR directory</a>, or search:',
   },
@@ -31,7 +32,7 @@ export const DEFAULT_COPY = {
   500: {
     title: 'Something went wrong on our side',
     description:
-      'We couldn\'t complete your request. Try again in a few minutes. If the problem continues, contact us.',
+      "We couldn't complete your request. Try again in a few minutes. If the problem continues, contact us.",
   },
   502: {
     title: 'Bad gateway',
@@ -89,13 +90,13 @@ export const CHALLENGE_COPY = {
  */
 export const CLOUDFLARE_TOKENS = {
   // General information tokens
-  RAY_ID: '::RAY_ID::',           // Unique request identifier for support tickets
-  CLIENT_IP: '::CLIENT_IP::',     // Visitor's IP address
-  GEO: '::GEO::',                 // Visitor's country/region
+  RAY_ID: '::RAY_ID::', // Unique request identifier for support tickets
+  CLIENT_IP: '::CLIENT_IP::', // Visitor's IP address
+  GEO: '::GEO::', // Visitor's country/region
 
   // Page-specific tokens (required for certain error types)
-  CAPTCHA_BOX: '::CAPTCHA_BOX::',                         // Interactive Challenge / Managed Challenge
-  IM_UNDER_ATTACK_BOX: '::IM_UNDER_ATTACK_BOX::',         // Non-Interactive Challenge (JS Challenge)
+  CAPTCHA_BOX: '::CAPTCHA_BOX::', // Interactive Challenge / Managed Challenge
+  IM_UNDER_ATTACK_BOX: '::IM_UNDER_ATTACK_BOX::', // Non-Interactive Challenge (JS Challenge)
   CLOUDFLARE_ERROR_500S_BOX: '::CLOUDFLARE_ERROR_500S_BOX::', // Server error details (5xx errors)
   CLOUDFLARE_ERROR_1000S_BOX: '::CLOUDFLARE_ERROR_1000S_BOX::', // Cloudflare-specific error codes
 };
@@ -109,5 +110,3 @@ export const EXAMPLE_REQUEST_DETAILS = {
   clientIp: '203.0.113.42',
   geo: 'United States',
 };
-
-

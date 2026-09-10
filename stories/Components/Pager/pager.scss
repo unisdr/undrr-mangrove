@@ -195,8 +195,10 @@
 
   @media (prefers-reduced-motion: no-preference) {
     transition:
-      background-color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
-      border-color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
       scale var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
   }
 

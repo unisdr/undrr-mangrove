@@ -1,4 +1,8 @@
-import { buildHiddenFieldClasses, TEASER_FIELDS, allTeaserFieldsVisible } from '../utils/constants';
+import {
+  buildHiddenFieldClasses,
+  TEASER_FIELDS,
+  allTeaserFieldsVisible,
+} from '../utils/constants';
 
 describe('buildHiddenFieldClasses', () => {
   it('returns empty string for null', () => {
@@ -55,7 +59,13 @@ describe('buildHiddenFieldClasses', () => {
 describe('TEASER_FIELDS', () => {
   it('defines all seven toggleable fields', () => {
     expect(Object.keys(TEASER_FIELDS)).toEqual([
-      'image', 'contentType', 'publicationType', 'date', 'summary', 'siteName', 'organization',
+      'image',
+      'contentType',
+      'publicationType',
+      'date',
+      'summary',
+      'siteName',
+      'organization',
     ]);
   });
 

@@ -22,7 +22,10 @@ Mangrove ships five built-in themes. Colour, spacing, radius and component token
     { id: 'built-in-themes', text: 'Built-in themes' },
     { id: 'two-token-systems', text: 'Two token systems' },
     { id: 'how-to-override-a-token', text: 'How to override a token' },
-    { id: 'token-shapes-channels-vs-colours', text: 'Token shapes: channels vs colours' },
+    {
+      id: 'token-shapes-channels-vs-colours',
+      text: 'Token shapes: channels vs colours',
+    },
     { id: 'where-the-token-values-live', text: 'Where the token values live' },
     { id: 'creating-a-new-theme', text: 'Creating a new theme' },
     { id: 'migrating-1x-overrides', text: 'Migrating 1.x overrides' },
@@ -33,13 +36,13 @@ Mangrove ships five built-in themes. Colour, spacing, radius and component token
 
 ## Built-in themes
 
-| Theme | Stylesheet | Body class | Interactive colour |
-|-------|-----------|------------|--------------------|
-| **Global UNDRR** | `style.css` | none — the `:root` default | `#004f91` |
-| **PreventionWeb** | `style-preventionweb.css` | `mg-theme-preventionweb` | `#0a6969` |
-| **IRP** | `style-irp.css` | `mg-theme-irp` | `#0f78bf` |
-| **MCR2030** | `style-mcr.css` | `mg-theme-mcr` | `#591a61` |
-| **DELTA Resilience** | `style-delta.css` | `mg-theme-delta` | `#004f91` |
+| Theme                | Stylesheet                | Body class                 | Interactive colour |
+| -------------------- | ------------------------- | -------------------------- | ------------------ |
+| **Global UNDRR**     | `style.css`               | none — the `:root` default | `#004f91`          |
+| **PreventionWeb**    | `style-preventionweb.css` | `mg-theme-preventionweb`   | `#0a6969`          |
+| **IRP**              | `style-irp.css`           | `mg-theme-irp`             | `#0f78bf`          |
+| **MCR2030**          | `style-mcr.css`           | `mg-theme-mcr`             | `#591a61`          |
+| **DELTA Resilience** | `style-delta.css`         | `mg-theme-delta`           | `#004f91`          |
 
 A sub-brand stylesheet carries both the `:root` defaults and its own `.mg-theme-*` block. **The class is what activates the brand** — without it, components render in the default UNDRR palette. `style-all.css` carries every brand block at once, for pages that host more than one brand or switch brand at runtime. Load one Mangrove stylesheet per page; two bundles fight over the same `:root` globals.
 
@@ -57,14 +60,14 @@ Mangrove has two, and the split is deliberate.
 
 **SCSS variables — the handful that cannot be resolved at runtime.** A `@media` query cannot read `var()`, so breakpoints have to be static at compile time. Neither can `@if`, `@font-face`, or interpolation into a selector. These are the survivors, and the whole list:
 
-| Variable | Why it stays SCSS |
-|----------|-------------------|
-| `$mg-breakpoint-mobile`, `$mg-breakpoint-tablet`, `$mg-breakpoint-desktop`, `$mg-breakpoint-desktop-wide` | `@media` needs a static value |
-| `$mg-font-size-100` … `$mg-font-size-1100` (12 steps) | interpolated and passed to Sass functions at compile time |
-| `$mg-font-body`, `$mg-font-tag`, `$mg-font-line-height-500`, `$mg-font-line-height-700` | aliases over the type scale |
-| `$mg-font-face-sans`, `$mg-font-face-sans-condensed`, `$mg-font-face-mono`, `$mg-font-face-arabic-display`, `$mg-font-face-arabic-sans` | `@font-face` and Sass interpolation need a compile-time value. These are the *faces*; the *roles* components actually read (`--mg-font-family-text`, `-heading`, `-display`, `-ui`, `-code`) are custom properties and are themable at runtime |
-| `$mg-html-font-size` | the rem anchor `mg-rem()` divides by; fixed at `16` in 2.0 and no longer overridable |
-| `$mg-tabs-border-bottom` | drives an `@if`, which is compile-time |
+| Variable                                                                                                                                | Why it stays SCSS                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `$mg-breakpoint-mobile`, `$mg-breakpoint-tablet`, `$mg-breakpoint-desktop`, `$mg-breakpoint-desktop-wide`                               | `@media` needs a static value                                                                                                                                                                                                                  |
+| `$mg-font-size-100` … `$mg-font-size-1100` (12 steps)                                                                                   | interpolated and passed to Sass functions at compile time                                                                                                                                                                                      |
+| `$mg-font-body`, `$mg-font-tag`, `$mg-font-line-height-500`, `$mg-font-line-height-700`                                                 | aliases over the type scale                                                                                                                                                                                                                    |
+| `$mg-font-face-sans`, `$mg-font-face-sans-condensed`, `$mg-font-face-mono`, `$mg-font-face-arabic-display`, `$mg-font-face-arabic-sans` | `@font-face` and Sass interpolation need a compile-time value. These are the _faces_; the _roles_ components actually read (`--mg-font-family-text`, `-heading`, `-display`, `-ui`, `-code`) are custom properties and are themable at runtime |
+| `$mg-html-font-size`                                                                                                                    | the rem anchor `mg-rem()` divides by; fixed at `16` in 2.0 and no longer overridable                                                                                                                                                           |
+| `$mg-tabs-border-bottom`                                                                                                                | drives an `@if`, which is compile-time                                                                                                                                                                                                         |
 
 Anything else you remember as a `$mg-*` variable — every `$mg-color-*`, `$mg-spacing-*`, `$mg-radius-*`, `$mg-width-*` and component variable — no longer exists. Referencing one fails the build. **Assigning one does nothing at all**, which is the dangerous case, so `_variables.scss` emits a Sass `@warn` for the names consumers are known to set:
 
@@ -72,7 +75,7 @@ Anything else you remember as a `$mg-*` variable — every `$mg-color-*`, `$mg-s
 
 The same warning covers the six font-family variables removed by the role model: `$mg-font-family`, `$mg-font-family-condensed`, `$mg-font-family-headings`, `$mg-font-family-icons`, `$mg-font-family-arabic-headings` and `$mg-font-family-arabic-body`. Each message names the role that replaced it. See [Fonts](?path=/docs/design-decisions-fonts--docs).
 
-Overriding a variable *not* on that list gets no warning and no effect. Watch your Sass build log, and treat "my brand colour reverted to UNDRR blue and the build was green" as the signature of this mistake.
+Overriding a variable _not_ on that list gets no warning and no effect. Watch your Sass build log, and treat "my brand colour reverted to UNDRR blue and the build was green" as the signature of this mistake.
 
 ## How to override a token
 
@@ -122,7 +125,7 @@ Assign these a finished colour, never channels:
 
 ```css
 .mg-theme-myorg {
-  --mg-color-interactive: 46 125 50;                              /* channels */
+  --mg-color-interactive: 46 125 50; /* channels */
   --mg-color-button-background: rgb(var(--mg-color-interactive)); /* colour   */
 }
 ```
@@ -137,31 +140,31 @@ Focus rings do not follow `--mg-color-interactive`. They read `--mg-color-focus-
 
 Mangrove declares more than 350 distinct custom properties across the five themes. A table here would be stale within a release, so this page points at the sources instead.
 
-| To find | Look at |
-|---------|---------|
-| The authoritative value of any token | `tokens/mangrove.yaml` (brand-neutral base) and `tokens/undrr.yaml`, `tokens/preventionweb.yaml`, `tokens/irp.yaml`, `tokens/mcr.yaml`, `tokens/delta.yaml` |
-| What a theme actually emits | `stories/assets/scss/generated/_tokens-{brand}.scss`, or the `.mg-theme-{brand}` block in the compiled `stories/assets/css/style-{brand}.css` |
-| Swatches and scales you can browse | <LinkTo kind="design-decisions-colors" story="docs">Colors</LinkTo>, <LinkTo kind="design-decisions-spacing" story="docs">Spacing</LinkTo>, <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>, <LinkTo kind="design-decisions-widths" story="docs">Widths</LinkTo> |
-| Which token a component reads | that component's `.scss` file |
+| To find                              | Look at                                                                                                                                                                                                                                                                                      |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The authoritative value of any token | `tokens/mangrove.yaml` (brand-neutral base) and `tokens/undrr.yaml`, `tokens/preventionweb.yaml`, `tokens/irp.yaml`, `tokens/mcr.yaml`, `tokens/delta.yaml`                                                                                                                                  |
+| What a theme actually emits          | `stories/assets/scss/generated/_tokens-{brand}.scss`, or the `.mg-theme-{brand}` block in the compiled `stories/assets/css/style-{brand}.css`                                                                                                                                                |
+| Swatches and scales you can browse   | <LinkTo kind="design-decisions-colors" story="docs">Colors</LinkTo>, <LinkTo kind="design-decisions-spacing" story="docs">Spacing</LinkTo>, <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>, <LinkTo kind="design-decisions-widths" story="docs">Widths</LinkTo> |
+| Which token a component reads        | that component's `.scss` file                                                                                                                                                                                                                                                                |
 
-The YAML sources are the truth. `yarn build:tokens` compiles them into the generated partials; `yarn scss` runs it first. Editing a generated partial is pointless — the next build overwrites it. A brand file is merged *over* the base before references resolve, so overriding one primitive cascades to everything derived from it.
+The YAML sources are the truth. `yarn build:tokens` compiles them into the generated partials; `yarn scss` runs it first. Editing a generated partial is pointless — the next build overwrites it. A brand file is merged _over_ the base before references resolve, so overriding one primitive cascades to everything derived from it.
 
 ### The tokens you are most likely to change
 
 Verified against the compiled output. Every one is a channel triple unless marked.
 
-| Token | Controls |
-|-------|----------|
-| `--mg-color-interactive` | links, primary actions; most other colour tokens chain to it |
-| `--mg-color-interactive-active` | hover and active states |
-| `--mg-color-secondary`, `--mg-color-tertiary`, `--mg-color-quaternary` | hero and card colour variants |
-| `--mg-color-button-background`, `--mg-color-button-background--hover` | button fill (**full colour**) |
-| `--mg-border-color-button` | button border (**full colour**, may be `transparent`) |
-| `--mg-radius-button`, `--mg-radius-tag`, `--mg-radius-form-input`, `--mg-radius-tab` | corner geometry (lengths) |
-| `--mg-color-tag`, `--mg-color-tag--hover` | tag text and border |
-| `--mg-color-form-check`, `--mg-color-form-focus` | checkbox/radio colour, focused field border |
-| `--mg-color-hero`, `--mg-opacity-hero` | hero overlay colour and opacity |
-| `--mg-color-focus-ring` | keyboard focus indicator — override with care |
+| Token                                                                                | Controls                                                     |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `--mg-color-interactive`                                                             | links, primary actions; most other colour tokens chain to it |
+| `--mg-color-interactive-active`                                                      | hover and active states                                      |
+| `--mg-color-secondary`, `--mg-color-tertiary`, `--mg-color-quaternary`               | hero and card colour variants                                |
+| `--mg-color-button-background`, `--mg-color-button-background--hover`                | button fill (**full colour**)                                |
+| `--mg-border-color-button`                                                           | button border (**full colour**, may be `transparent`)        |
+| `--mg-radius-button`, `--mg-radius-tag`, `--mg-radius-form-input`, `--mg-radius-tab` | corner geometry (lengths)                                    |
+| `--mg-color-tag`, `--mg-color-tag--hover`                                            | tag text and border                                          |
+| `--mg-color-form-check`, `--mg-color-form-focus`                                     | checkbox/radio colour, focused field border                  |
+| `--mg-color-hero`, `--mg-opacity-hero`                                               | hero overlay colour and opacity                              |
+| `--mg-color-focus-ring`                                                              | keyboard focus indicator — override with care                |
 
 ## Creating a new theme
 
@@ -207,7 +210,7 @@ Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scs
 `stories/assets/scss/_theme-myorg.scss` wraps the generated mixin in the brand selector:
 
 ```scss
-@import "./generated/tokens-myorg";
+@import './generated/tokens-myorg';
 
 .mg-theme-myorg {
   @include mg-tokens-tabs;
@@ -218,21 +221,21 @@ Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scs
 `stories/assets/scss/style-myorg.scss` is the entry point:
 
 ```scss
-@import "./variables";
-@import "./theme-myorg";
-@import "./fonts";
-@import "./breakpoints";
-@import "./mixins";
-@import "./utility";
-@import "./foundational";
-@import "./components";
+@import './variables';
+@import './theme-myorg';
+@import './fonts';
+@import './breakpoints';
+@import './mixins';
+@import './utility';
+@import './foundational';
+@import './components';
 ```
 
 Run `yarn scss`, then apply `class="mg-theme-myorg"` to `<body>` or any wrapping element. The class can sit on any ancestor, and different subtrees can carry different theme classes.
 
 ### Not contributing to Mangrove?
 
-If the theme belongs to your own project rather than to the library, you do not need the token pipeline at all. Write the `.mg-theme-myorg { }` block by hand in your own stylesheet, load it after Mangrove's, and skip both steps above. The pipeline exists so that *Mangrove's* brands stay in sync with a source; a consumer theme has no such source to stay in sync with.
+If the theme belongs to your own project rather than to the library, you do not need the token pipeline at all. Write the `.mg-theme-myorg { }` block by hand in your own stylesheet, load it after Mangrove's, and skip both steps above. The pipeline exists so that _Mangrove's_ brands stay in sync with a source; a consumer theme has no such source to stay in sync with.
 
 **Contributing a new official theme?** You also need to register it in Storybook, build the CSS and deploy it to Drupal. See the <LinkTo kind="contributing-architecture" story="docs">Architecture guide</LinkTo>.
 
@@ -244,7 +247,7 @@ If you arrive with a 1.x theme, the mechanical change is this:
 // 1.x — reassign the SCSS variable before importing Mangrove
 $mg-color-interactive: #2e7d32 !default;
 $mg-color-button-background: #2e7d32 !default;
-@import "@undrr/undrr-mangrove/stories/assets/scss/style";
+@import '@undrr/undrr-mangrove/stories/assets/scss/style';
 
 // 2.0 — declare custom properties in a selector, order irrelevant
 .mg-theme-myorg {
@@ -272,11 +275,11 @@ RTL layout is activated by the `dir="rtl"` attribute on the `<html>` element. In
 
 The locale toolbar provides three options:
 
-| Locale | Language code | Direction |
-|--------|---------------|-----------|
-| English | `en` | LTR |
-| Arabic | `ar` | RTL |
-| Japanese | `ja` | LTR |
+| Locale   | Language code | Direction |
+| -------- | ------------- | --------- |
+| English  | `en`          | LTR       |
+| Arabic   | `ar`          | RTL       |
+| Japanese | `ja`          | LTR       |
 
 Arabic is the only locale that triggers RTL. The decorator in `preview.js` sets `lang` and `dir` attributes on `<html>` and `#storybook-root`, and updates `window.UNDRR.langCode` and `window.UNDRR.dir`.
 
@@ -294,9 +297,18 @@ Burmese-specific font-size overrides (`:lang(my)`) were removed in v1.4 as they 
 
 ## Next steps
 
-- <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration</LinkTo> -- build configuration, mixins and the surviving SCSS API
-- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> -- pre-built theme CSS URLs
-- <LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo> -- Storybook theme registration and Drupal CSS deployment
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">
+    Sass integration
+  </LinkTo>
+  -- build configuration, mixins and the surviving SCSS API
+- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">
+    CDN reference
+  </LinkTo>
+  -- pre-built theme CSS URLs
+- <LinkTo kind="contributing-architecture" story="docs">
+    Architecture
+  </LinkTo>
+  -- Storybook theme registration and Drupal CSS deployment
 
 ---
 

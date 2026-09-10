@@ -18,10 +18,24 @@
  * @module SyndicationSearchWidget
  */
 
-import React, { useState, useEffect, useDeferredValue, Suspense, useId, useCallback, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useDeferredValue,
+  Suspense,
+  useId,
+  useCallback,
+  useRef,
+} from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import { SearchProvider, useSearchDispatch, useSearchConfig, useSearchState, actions } from './context/SearchContext';
+import {
+  SearchProvider,
+  useSearchDispatch,
+  useSearchConfig,
+  useSearchState,
+  actions,
+} from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
 import { resolveFacetsLayout } from './utils/constants';
@@ -59,7 +73,10 @@ SyndicationSearchWidget.propTypes = {
     /** Minimum characters before a search is triggered. */
     minSearchLength: PropTypes.number,
     /** Whether to synchronize search state with the URL hash. */
-    enableHashSync: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['auto'])]),
+    enableHashSync: PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.oneOf(['auto']),
+    ]),
     /** Initial search query string. */
     defaultQuery: PropTypes.string,
     /** Default sort order. */
@@ -112,10 +129,12 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to display pagination controls. */
     showPager: PropTypes.bool,
     /** Filters applied by default on initialization. */
-    defaultFilters: PropTypes.arrayOf(PropTypes.shape({
-      key: PropTypes.string,
-      value: PropTypes.string,
-    })),
+    defaultFilters: PropTypes.arrayOf(
+      PropTypes.shape({
+        key: PropTypes.string,
+        value: PropTypes.string,
+      })
+    ),
     /** Facet keys to show; null shows all available facets. */
     visibleFilters: PropTypes.arrayOf(PropTypes.string),
     /** Content type restrictions; null allows all types. */
@@ -191,12 +210,19 @@ function SyndicationSearchWidgetInner() {
 
   // Initialize widget on mount
   useEffect(() => {
-    dispatch(actions.initialize({
-      defaultFilters: config.defaultFilters,
-      defaultQuery: config.defaultQuery,
-      defaultSort: config.defaultSort,
-    }));
-  }, [dispatch, config.defaultFilters, config.defaultQuery, config.defaultSort]);
+    dispatch(
+      actions.initialize({
+        defaultFilters: config.defaultFilters,
+        defaultQuery: config.defaultQuery,
+        defaultSort: config.defaultSort,
+      })
+    );
+  }, [
+    dispatch,
+    config.defaultFilters,
+    config.defaultQuery,
+    config.defaultSort,
+  ]);
 
   // Sync input with state (e.g., from URL hash)
   useEffect(() => {
@@ -205,7 +231,8 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
-  const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } = config;
+  const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } =
+    config;
   const facetsLayout = resolveFacetsLayout(config);
   const facetsActive = facetsLayout !== false;
   const showSearchBox = config.showSearchBox !== false;
@@ -312,7 +339,15 @@ function SyndicationSearchWidgetInner() {
           data-vf-google-analytics-region="undrr-search-results"
           aria-busy={isLoading || isPending}
         >
-          <Suspense fallback={<SearchResultsSkeleton displayMode={config.displayMode} count={config.resultsPerPage} gridColumns={config.gridColumns} />}>
+          <Suspense
+            fallback={
+              <SearchResultsSkeleton
+                displayMode={config.displayMode}
+                count={config.resultsPerPage}
+                gridColumns={config.gridColumns}
+              />
+            }
+          >
             <SearchResults
               isStale={isPending}
               widgetId={widgetId}
@@ -338,8 +373,8 @@ function SyndicationSearchWidgetInner() {
           DOM node, render the SearchForm there instead of inside the
           widget. The React tree spans the portal so SearchContext (and
           therefore live input state) still flows. */}
-      {searchPortaled
-        && createPortal(
+      {searchPortaled &&
+        createPortal(
           <div className="mg-search__form-external">
             <SearchForm
               value={inputValue}
@@ -355,8 +390,8 @@ function SyndicationSearchWidgetInner() {
       {/* External facets portal: when facetsTarget resolves to a DOM node,
           render the facets there instead of inside the widget. The React
           tree spans the portal so SearchContext still flows. */}
-      {facetsPortaled
-        && createPortal(
+      {facetsPortaled &&
+        createPortal(
           <div
             className="mg-search__facets-external"
             data-vf-google-analytics-region="undrr-search-facets"
@@ -384,13 +419,23 @@ function SyndicationSearchWidgetInner() {
  * Loading skeleton for search results.
  * Renders a card grid skeleton for card/card-book modes, list skeleton otherwise.
  */
-function SearchResultsSkeleton({ displayMode = 'list', count = 5, gridColumns }) {
+function SearchResultsSkeleton({
+  displayMode = 'list',
+  count = 5,
+  gridColumns,
+}) {
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
-  const cols = isCardMode ? Math.min(Math.max(gridColumns ?? count, 2), 6) : undefined;
+  const cols = isCardMode
+    ? Math.min(Math.max(gridColumns ?? count, 2), 6)
+    : undefined;
 
   if (isCardMode) {
     return (
-      <div className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`} aria-busy="true" aria-label="Loading results">
+      <div
+        className={`mg-search__skeleton mg-search__skeleton--card mg-grid mg-grid__col-${cols}`}
+        aria-busy="true"
+        aria-label="Loading results"
+      >
         {Array.from({ length: count }).map((_, i) => (
           <div key={i} className="mg-search__skeleton-card">
             <div className="mg-search__skeleton-card-image" />
@@ -405,7 +450,11 @@ function SearchResultsSkeleton({ displayMode = 'list', count = 5, gridColumns })
   }
 
   return (
-    <div className="mg-search__skeleton" aria-busy="true" aria-label="Loading results">
+    <div
+      className="mg-search__skeleton"
+      aria-busy="true"
+      aria-label="Loading results"
+    >
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="mg-search__skeleton-item">
           <div className="mg-search__skeleton-title" />

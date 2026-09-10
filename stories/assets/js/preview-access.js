@@ -72,8 +72,7 @@ function readConfig(el) {
     submitLabel:
       el.getAttribute('data-mg-preview-submit-label') || DEFAULTS.submitLabel,
     errorMessage:
-      el.getAttribute('data-mg-preview-error-message') ||
-      DEFAULTS.errorMessage,
+      el.getAttribute('data-mg-preview-error-message') || DEFAULTS.errorMessage,
   };
 }
 
@@ -98,13 +97,17 @@ function markUnlocked(gate) {
 }
 
 function escapeText(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  })[c]);
+  return String(value).replace(
+    /[&<>"']/g,
+    c =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[c]
+  );
 }
 
 function buildOverlay(config) {
@@ -115,26 +118,26 @@ function buildOverlay(config) {
   // panel, not the overlay scrim — the scrim is presentational.
   overlay.innerHTML =
     `<div class="mg-preview-access__modal" role="dialog" aria-modal="true" ` +
-      `aria-labelledby="${TITLE_ID}" aria-describedby="${BODY_ID}">` +
-      `<p class="mg-preview-access__eyebrow">${escapeText(config.eyebrow)}</p>` +
-      `<h2 class="mg-preview-access__title" id="${TITLE_ID}">${escapeText(config.title)}</h2>` +
-      `<p class="mg-preview-access__body" id="${BODY_ID}">${escapeText(config.message)}</p>` +
-      `<form class="mg-preview-access__form" novalidate>` +
-        `<label class="mg-preview-access__label" for="${INPUT_ID}">${escapeText(config.pinLabel)}</label>` +
-        `<div class="mg-preview-access__field">` +
-          `<input class="mg-preview-access__input" id="${INPUT_ID}" ` +
-            `type="text" inputmode="numeric" autocomplete="off" ` +
-            `autocapitalize="off" spellcheck="false" ` +
-            `aria-describedby="${ERROR_ID}" />` +
-          `<button class="mg-preview-access__submit" type="submit">${escapeText(config.submitLabel)}</button>` +
-        `</div>` +
-        // role="alert" implies aria-live="assertive" + aria-atomic="true"; do
-        // not also set aria-live, that creates undefined behaviour.
-        `<p class="mg-preview-access__error" id="${ERROR_ID}" role="alert"></p>` +
-      `</form>` +
-      `<p class="mg-preview-access__contact">` +
-        `<a href="${escapeText(config.contactUrl)}">${escapeText(config.contactLabel)}</a>` +
-      `</p>` +
+    `aria-labelledby="${TITLE_ID}" aria-describedby="${BODY_ID}">` +
+    `<p class="mg-preview-access__eyebrow">${escapeText(config.eyebrow)}</p>` +
+    `<h2 class="mg-preview-access__title" id="${TITLE_ID}">${escapeText(config.title)}</h2>` +
+    `<p class="mg-preview-access__body" id="${BODY_ID}">${escapeText(config.message)}</p>` +
+    `<form class="mg-preview-access__form" novalidate>` +
+    `<label class="mg-preview-access__label" for="${INPUT_ID}">${escapeText(config.pinLabel)}</label>` +
+    `<div class="mg-preview-access__field">` +
+    `<input class="mg-preview-access__input" id="${INPUT_ID}" ` +
+    `type="text" inputmode="numeric" autocomplete="off" ` +
+    `autocapitalize="off" spellcheck="false" ` +
+    `aria-describedby="${ERROR_ID}" />` +
+    `<button class="mg-preview-access__submit" type="submit">${escapeText(config.submitLabel)}</button>` +
+    `</div>` +
+    // role="alert" implies aria-live="assertive" + aria-atomic="true"; do
+    // not also set aria-live, that creates undefined behaviour.
+    `<p class="mg-preview-access__error" id="${ERROR_ID}" role="alert"></p>` +
+    `</form>` +
+    `<p class="mg-preview-access__contact">` +
+    `<a href="${escapeText(config.contactUrl)}">${escapeText(config.contactLabel)}</a>` +
+    `</p>` +
     `</div>`;
 
   return overlay;
@@ -222,7 +225,8 @@ export function mgPreviewAccess(scope) {
   }
 
   gates.forEach(gate => {
-    if (!scope && gate.hasAttribute('data-mg-preview-access-skip-auto-init')) return;
+    if (!scope && gate.hasAttribute('data-mg-preview-access-skip-auto-init'))
+      return;
     if (gate.dataset.mgPreviewAccessInitialized) return;
     gate.dataset.mgPreviewAccessInitialized = 'true';
 
@@ -238,7 +242,7 @@ export function mgPreviewAccess(scope) {
       gate,
       document.activeElement && document.activeElement !== document.body
         ? document.activeElement
-        : null,
+        : null
     );
 
     const overlay = buildOverlay(config);

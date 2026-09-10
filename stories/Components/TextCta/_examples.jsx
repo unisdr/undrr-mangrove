@@ -123,4 +123,3 @@ export function CtaExampleForm({ text, preferences = false, tone = 'strong' }) {
     </form>
   );
 }
-

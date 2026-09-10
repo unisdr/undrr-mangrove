@@ -36,7 +36,7 @@ describe('Pager', () => {
 
   it('hides pagination when totalPages is 1', () => {
     const { container } = render(
-      <Pager page={1} totalPages={1} onPageChange={onPageChange} />,
+      <Pager page={1} totalPages={1} onPageChange={onPageChange} />
     );
 
     // PagerList returns null, so the list should not be present
@@ -136,11 +136,11 @@ describe('Pager', () => {
 
   it('disables all controls when isLoading is true', () => {
     render(
-      <Pager page={3} totalPages={20} isLoading onPageChange={onPageChange} />,
+      <Pager page={3} totalPages={20} isLoading onPageChange={onPageChange} />
     );
 
     const buttons = screen.getAllByRole('button');
-    buttons.forEach((btn) => {
+    buttons.forEach(btn => {
       expect(btn).toBeDisabled();
     });
   });
@@ -171,7 +171,7 @@ describe('Pager', () => {
         layout="bar"
         range={{ start: 21, end: 30 }}
         showJumpTo
-      />,
+      />
     );
 
     expect(container.querySelector('.mg-pager__bar')).toBeInTheDocument();
@@ -193,7 +193,7 @@ describe('Pager', () => {
         layout="bar"
         range={{ start: 21, end: 30 }}
         rangeLabel="Showing {start}–{end}"
-      />,
+      />
     );
 
     expect(screen.getByText(/Showing 21–30/)).toBeInTheDocument();
@@ -211,7 +211,7 @@ describe('Pager', () => {
         onPageChange={onPageChange}
         layout="bar"
         showJumpTo
-      />,
+      />
     );
 
     const input = screen.getByLabelText('Go to page');
@@ -231,7 +231,7 @@ describe('Pager', () => {
         onPageChange={onPageChange}
         layout="bar"
         showJumpTo
-      />,
+      />
     );
 
     const input = screen.getByLabelText('Go to page');
@@ -254,7 +254,7 @@ describe('Pager', () => {
         page={1}
         onPageChange={onPageChange}
         emptyState="No results found."
-      />,
+      />
     );
 
     expect(screen.getByText('No results found.')).toBeInTheDocument();
@@ -270,7 +270,7 @@ describe('Pager', () => {
         onPageChange={onPageChange}
         emptyState="No results found."
         emptyAction={{ label: 'Reset', onClick: actionFn }}
-      />,
+      />
     );
 
     const actionBtn = screen.getByText('Reset');
@@ -284,7 +284,7 @@ describe('Pager', () => {
 
   it('has no a11y violations', async () => {
     const { container } = render(
-      <Pager page={3} totalPages={20} onPageChange={onPageChange} />,
+      <Pager page={3} totalPages={20} onPageChange={onPageChange} />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -298,7 +298,7 @@ describe('Pager', () => {
         layout="bar"
         range={{ start: 21, end: 30 }}
         showJumpTo
-      />,
+      />
     );
     expect(await axe(container)).toHaveNoViolations();
   });

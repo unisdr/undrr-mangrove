@@ -117,6 +117,7 @@ To use the PageHeader component in your React application:
    ```
 
 4. With custom configuration:
+
    ```jsx
    <PageHeader
      logoUrl="https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg"
@@ -248,20 +249,20 @@ The PageHeader component follows accessibility best practices:
 
 ### Props
 
-| Prop      | Type   | Default                                                                 | Description                                                                      |
-| --------- | ------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| variant     | String  | 'default'                                                               | Component variant ('default' for full header, 'decoration-only' for stripe only) |
-| className   | String  | undefined                                                               | Additional CSS classes to apply                                                  |
-| idPrefix    | String  | ''                                                                      | Namespace for the header's element ids (`header`, `block-undrrlogo`, `edit-lang-dropdown-select`, ...). Ids are emitted verbatim by default; set a distinct prefix on each header when a page renders more than one |
-| logoUrl     | String  | 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                |
-| logoAlt     | String  | 'UNDRR Logo'                                                            | Alt text for the logo image (ignored in decoration-only variant)                 |
-| logoTitle   | String  | 'UNDRR Logo'                                                            | Title attribute for the logo image (ignored in decoration-only variant)          |
-| homeUrl     | String  | '/'                                                                     | URL for the logo link (ignored in decoration-only variant)                       |
-| showLogo    | Boolean | true                                                                    | Show or hide the UNDRR logo section                                              |
-| showAccount | Boolean | true                                                                    | Show or hide the "My account" link                                               |
-| showLanguage | Boolean | true                                                                    | Show or hide the language switcher dropdown                                      |
-| languages   | Array   | [English, Spanish, Arabic]                                              | Array of language objects (ignored in decoration-only variant)                   |
-| ...args     | Object  | {}                                                                      | Additional props passed to the root element                                      |
+| Prop         | Type    | Default                                                          | Description                                                                                                                                                                                                         |
+| ------------ | ------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| variant      | String  | 'default'                                                        | Component variant ('default' for full header, 'decoration-only' for stripe only)                                                                                                                                    |
+| className    | String  | undefined                                                        | Additional CSS classes to apply                                                                                                                                                                                     |
+| idPrefix     | String  | ''                                                               | Namespace for the header's element ids (`header`, `block-undrrlogo`, `edit-lang-dropdown-select`, ...). Ids are emitted verbatim by default; set a distinct prefix on each header when a page renders more than one |
+| logoUrl      | String  | 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg' | URL for the UNDRR logo image (ignored in decoration-only variant)                                                                                                                                                   |
+| logoAlt      | String  | 'UNDRR Logo'                                                     | Alt text for the logo image (ignored in decoration-only variant)                                                                                                                                                    |
+| logoTitle    | String  | 'UNDRR Logo'                                                     | Title attribute for the logo image (ignored in decoration-only variant)                                                                                                                                             |
+| homeUrl      | String  | '/'                                                              | URL for the logo link (ignored in decoration-only variant)                                                                                                                                                          |
+| showLogo     | Boolean | true                                                             | Show or hide the UNDRR logo section                                                                                                                                                                                 |
+| showAccount  | Boolean | true                                                             | Show or hide the "My account" link                                                                                                                                                                                  |
+| showLanguage | Boolean | true                                                             | Show or hide the language switcher dropdown                                                                                                                                                                         |
+| languages    | Array   | [English, Spanish, Arabic]                                       | Array of language objects (ignored in decoration-only variant)                                                                                                                                                      |
+| ...args      | Object  | {}                                                               | Additional props passed to the root element                                                                                                                                                                         |
 
 ### Integration Notes
 

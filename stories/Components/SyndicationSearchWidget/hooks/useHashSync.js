@@ -9,7 +9,12 @@
  */
 
 import { useEffect, useRef, useCallback } from 'react';
-import { useSearchState, useSearchDispatch, useSearchConfig, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchDispatch,
+  useSearchConfig,
+  actions,
+} from '../context/SearchContext';
 
 /**
  * Hook for synchronizing search state with URL hash.
@@ -39,11 +44,11 @@ export function useHashSync({ enabled = true } = {}) {
   // through Drupal data attributes (data-enable-hash-sync) it always arrives
   // as a string, so a strict === true check would silently disable hash sync
   // for editors who pick "Always enabled" in the Gutenberg block.
-  const isEnabled = enabled && (
-    enableHashSync === true ||
-    enableHashSync === 'true' ||
-    (enableHashSync === 'auto' && typeof window !== 'undefined')
-  );
+  const isEnabled =
+    enabled &&
+    (enableHashSync === true ||
+      enableHashSync === 'true' ||
+      (enableHashSync === 'auto' && typeof window !== 'undefined'));
 
   /**
    * Parse URL hash into state object.
@@ -66,39 +71,50 @@ export function useHashSync({ enabled = true } = {}) {
   /**
    * Update URL hash from current query and page.
    */
-  const updateHash = useCallback((searchQuery, searchPage) => {
-    if (!isEnabled || typeof window === 'undefined') return;
+  const updateHash = useCallback(
+    (searchQuery, searchPage) => {
+      if (!isEnabled || typeof window === 'undefined') return;
 
-    const params = new URLSearchParams();
-    if (searchQuery) {
-      params.set('query', searchQuery);
-    }
-    // Only include page if > 1 (page 1 is the default)
-    if (searchPage && searchPage > 1) {
-      params.set('page', searchPage.toString());
-    }
+      const params = new URLSearchParams();
+      if (searchQuery) {
+        params.set('query', searchQuery);
+      }
+      // Only include page if > 1 (page 1 is the default)
+      if (searchPage && searchPage > 1) {
+        params.set('page', searchPage.toString());
+      }
 
-    const newHash = params.toString();
+      const newHash = params.toString();
 
-    // Avoid unnecessary updates
-    if (newHash === lastHashRef.current) return;
+      // Avoid unnecessary updates
+      if (newHash === lastHashRef.current) return;
 
-    lastHashRef.current = newHash;
+      lastHashRef.current = newHash;
 
-    if (newHash) {
-      window.history.replaceState(null, '', `#${newHash}`);
-    } else {
-      // Clear hash without causing a scroll jump
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
-  }, [isEnabled]);
+      if (newHash) {
+        window.history.replaceState(null, '', `#${newHash}`);
+      } else {
+        // Clear hash without causing a scroll jump
+        window.history.replaceState(
+          null,
+          '',
+          window.location.pathname + window.location.search
+        );
+      }
+    },
+    [isEnabled]
+  );
 
   /**
    * Handle initial URL state on mount.
    * Migrates legacy ?text= param and reads hash state.
    */
   useEffect(() => {
-    if (!isEnabled || typeof window === 'undefined' || isInitializedRef.current) {
+    if (
+      !isEnabled ||
+      typeof window === 'undefined' ||
+      isInitializedRef.current
+    ) {
       return;
     }
 
@@ -112,9 +128,12 @@ export function useHashSync({ enabled = true } = {}) {
       urlParams.delete('text');
       urlParams.delete('query');
       const remainingParams = urlParams.toString();
-      const newUrl = window.location.origin + window.location.pathname
-        + (remainingParams ? '?' + remainingParams : '')
-        + '#' + newHash;
+      const newUrl =
+        window.location.origin +
+        window.location.pathname +
+        (remainingParams ? '?' + remainingParams : '') +
+        '#' +
+        newHash;
       window.history.replaceState(null, '', newUrl);
 
       // Set query in state

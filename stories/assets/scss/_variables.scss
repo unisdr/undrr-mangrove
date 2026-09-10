@@ -51,9 +51,8 @@
 @each $_legacy in "mg-color-interactive", "mg-color-interactive-active",
   "mg-color-button-background", "mg-color-button-background--hover",
   "mg-border-color-button", "mg-color-tag", "mg-color-form-check",
-  "mg-color-form-focus",
-  "mg-color-hero", "mg-color-hero--secondary", "mg-spacing-150",
-  "mg-spacing-300"
+  "mg-color-form-focus", "mg-color-hero", "mg-color-hero--secondary",
+  "mg-spacing-150", "mg-spacing-300"
 {
   @if meta.variable-exists($_legacy) {
     @warn "Mangrove 2.0: `$#{$_legacy}` no longer has any effect — color and spacing tokens are CSS custom properties now. Move the override into a `.mg-theme-* { --#{$_legacy}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
@@ -65,15 +64,16 @@
 // different replacement role and the message has to say which.
 // $mg-font-family is the one a consumer is most likely to have set: it carried
 // 22 declarations before the migration.
-@each $_legacy, $_role
-  in (
-    "mg-font-family": "text",
-    "mg-font-family-headings": "ui",
-    "mg-font-family-condensed": "ui",
-    "mg-font-family-icons": "",
-    "mg-font-family-arabic-headings": "heading",
-    "mg-font-family-arabic-body": "text"
-  )
+@each $_legacy,
+  $_role
+    in (
+      "mg-font-family": "text",
+      "mg-font-family-headings": "ui",
+      "mg-font-family-condensed": "ui",
+      "mg-font-family-icons": "",
+      "mg-font-family-arabic-headings": "heading",
+      "mg-font-family-arabic-body": "text"
+    )
 {
   @if meta.variable-exists($_legacy) {
     @if $_role == "" {
@@ -187,8 +187,9 @@ $mg-font-line-height-700: 1.5em;
 // emitted custom property; see the note on that function.
 $mg-font-face-sans: "Roboto", sans-serif !default;
 $mg-font-face-sans-condensed: "Roboto Condensed", sans-serif !default;
-$mg-font-face-mono: ui-monospace, "SFMono-Regular", "Consolas",
-  "Liberation Mono", "Menlo", monospace !default;
+$mg-font-face-mono:
+  ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo",
+  monospace !default;
 
 // Arabic fonts
 // Noto Kufi Arabic for headings, Noto Sans Arabic for body. Decided in

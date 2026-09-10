@@ -6,7 +6,14 @@
  */
 
 import React, { useCallback, useMemo, useId } from 'react';
-import { useSearchState, useSearchConfig, useSearchDispatch, useSearchLabels, interpolateLabel, actions } from '../context/SearchContext';
+import {
+  useSearchState,
+  useSearchConfig,
+  useSearchDispatch,
+  useSearchLabels,
+  interpolateLabel,
+  actions,
+} from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
 import {
   getDomain,
@@ -47,7 +54,9 @@ export function ActiveFilters() {
       if (!values || values.length === 0) continue;
 
       // Find field config
-      const fieldConfig = (facetFields || FACET_FIELDS).find(f => f.key === key);
+      const fieldConfig = (facetFields || FACET_FIELDS).find(
+        f => f.key === key
+      );
       if (!fieldConfig) continue;
 
       // Skip hidden filters
@@ -55,7 +64,11 @@ export function ActiveFilters() {
 
       // Skip if matches default value
       const defaultFilter = defaultFilters?.find(f => f.key === key);
-      if (defaultFilter && values.length === 1 && values[0] === defaultFilter.value) {
+      if (
+        defaultFilter &&
+        values.length === 1 &&
+        values[0] === defaultFilter.value
+      ) {
         continue;
       }
 
@@ -65,7 +78,12 @@ export function ActiveFilters() {
       // Add chip for each value
       for (let i = 0; i < values.length; i++) {
         const value = values[i];
-        const label = getLabelForValue(key, value, fieldConfig.vocabulary, getTaxonomyLabel);
+        const label = getLabelForValue(
+          key,
+          value,
+          fieldConfig.vocabulary,
+          getTaxonomyLabel
+        );
         result.push({
           key,
           value,
@@ -83,7 +101,9 @@ export function ActiveFilters() {
 
     // Process custom facets
     if (customFacetSelections && customFacetConfigs) {
-      for (const [facetId, selectedIndices] of Object.entries(customFacetSelections)) {
+      for (const [facetId, selectedIndices] of Object.entries(
+        customFacetSelections
+      )) {
         if (!selectedIndices || selectedIndices.length === 0) continue;
 
         const customFacet = customFacetConfigs.find(f => f.id === facetId);
@@ -106,16 +126,28 @@ export function ActiveFilters() {
     }
 
     return result;
-  }, [facets, facetOperators, customFacetSelections, facetFields, visibleFilters, defaultFilters, customFacetConfigs, getTaxonomyLabel]);
+  }, [
+    facets,
+    facetOperators,
+    customFacetSelections,
+    facetFields,
+    visibleFilters,
+    defaultFilters,
+    customFacetConfigs,
+    getTaxonomyLabel,
+  ]);
 
   // Handle chip removal
-  const handleRemove = useCallback((chip) => {
-    if (chip.isCustomFacet) {
-      dispatch(actions.removeCustomFacet(chip.key));
-    } else {
-      dispatch(actions.removeFacet(chip.key, chip.value));
-    }
-  }, [dispatch]);
+  const handleRemove = useCallback(
+    chip => {
+      if (chip.isCustomFacet) {
+        dispatch(actions.removeCustomFacet(chip.key));
+      } else {
+        dispatch(actions.removeFacet(chip.key, chip.value));
+      }
+    },
+    [dispatch]
+  );
 
   // Handle clear all
   const handleClearAll = useCallback(() => {
@@ -159,10 +191,16 @@ export function ActiveFilters() {
               type="button"
               className="mg-search__filter-chip"
               onClick={() => handleRemove(chip)}
-              aria-label={interpolateLabel(labels.removeFilter, { field: chip.fieldLabel, value: chip.label })}
+              aria-label={interpolateLabel(labels.removeFilter, {
+                field: chip.fieldLabel,
+                value: chip.label,
+              })}
             >
               <span className="mg-search__filter-chip-label">{chip.label}</span>
-              <span className="mg-search__filter-chip-remove" aria-hidden="true">
+              <span
+                className="mg-search__filter-chip-remove"
+                aria-hidden="true"
+              >
                 &times;
               </span>
             </button>
@@ -175,7 +213,9 @@ export function ActiveFilters() {
           type="button"
           className="mg-search__clear-all"
           onClick={handleClearAll}
-          aria-label={interpolateLabel(labels.clearAllFiltersLabel, { count: chips.length })}
+          aria-label={interpolateLabel(labels.clearAllFiltersLabel, {
+            count: chips.length,
+          })}
         >
           {labels.clearAllFilters}
         </button>
@@ -184,7 +224,9 @@ export function ActiveFilters() {
       {/* Screen reader announcement */}
       <span className="mg-u-sr-only" role="status" aria-live="polite">
         {interpolateLabel(
-          chips.length !== 1 ? labels.activeFiltersCountPlural : labels.activeFiltersCount,
+          chips.length !== 1
+            ? labels.activeFiltersCountPlural
+            : labels.activeFiltersCount,
           { count: chips.length }
         )}
       </span>

@@ -106,52 +106,58 @@ export function useTaxonomies() {
    * @param {string} vocabulary - The vocabulary to search in
    * @returns {string} The label or the raw value if not found
    */
-  const getLabel = useCallback((fieldKey, value, vocabulary) => {
-    const valueStr = String(value);
+  const getLabel = useCallback(
+    (fieldKey, value, vocabulary) => {
+      const valueStr = String(value);
 
-    // Special case: year is just a number
-    if (fieldKey === 'year') {
+      // Special case: year is just a number
+      if (fieldKey === 'year') {
+        return valueStr;
+      }
+
+      // Check static lookups first (faster)
+      if (
+        vocabulary === 'field_domain_access' ||
+        fieldKey === 'field_domain_access'
+      ) {
+        const domain = DOMAIN_MAP.get(valueStr);
+        return domain ? domain.name : valueStr;
+      }
+
+      if (vocabulary === 'type' || fieldKey === 'type') {
+        // Use parseTypeValue to handle both content types and namespaced subtypes
+        const parsed = parseTypeValue(valueStr);
+        return parsed.label;
+      }
+
+      if (vocabulary === 'languages' || fieldKey === '_language') {
+        const lang = LANGUAGE_MAP.get(valueStr);
+        return lang ? lang.name : valueStr;
+      }
+
+      // Check vocabulary names (for taxonomy term results)
+      if (vocabulary === 'vid' || fieldKey === 'vid') {
+        const vocab = TAXONOMY_VOCABULARY_MAP.get(valueStr);
+        return vocab ? vocab.name : valueStr;
+      }
+
+      // Check news types (these come from field_news_type aggregation)
+      if (fieldKey === 'field_news_type') {
+        const newsType = NEWS_TYPE_MAP.get(valueStr);
+        if (newsType) return newsType.name;
+      }
+
+      // Check fetched terms (countries, hazards, themes)
+      if (taxonomies.terms) {
+        const term = taxonomies.terms.find(t => String(t.id) === valueStr);
+        if (term) return term.name;
+      }
+
+      // Fallback to raw value
       return valueStr;
-    }
-
-    // Check static lookups first (faster)
-    if (vocabulary === 'field_domain_access' || fieldKey === 'field_domain_access') {
-      const domain = DOMAIN_MAP.get(valueStr);
-      return domain ? domain.name : valueStr;
-    }
-
-    if (vocabulary === 'type' || fieldKey === 'type') {
-      // Use parseTypeValue to handle both content types and namespaced subtypes
-      const parsed = parseTypeValue(valueStr);
-      return parsed.label;
-    }
-
-    if (vocabulary === 'languages' || fieldKey === '_language') {
-      const lang = LANGUAGE_MAP.get(valueStr);
-      return lang ? lang.name : valueStr;
-    }
-
-    // Check vocabulary names (for taxonomy term results)
-    if (vocabulary === 'vid' || fieldKey === 'vid') {
-      const vocab = TAXONOMY_VOCABULARY_MAP.get(valueStr);
-      return vocab ? vocab.name : valueStr;
-    }
-
-    // Check news types (these come from field_news_type aggregation)
-    if (fieldKey === 'field_news_type') {
-      const newsType = NEWS_TYPE_MAP.get(valueStr);
-      if (newsType) return newsType.name;
-    }
-
-    // Check fetched terms (countries, hazards, themes)
-    if (taxonomies.terms) {
-      const term = taxonomies.terms.find(t => String(t.id) === valueStr);
-      if (term) return term.name;
-    }
-
-    // Fallback to raw value
-    return valueStr;
-  }, [taxonomies.terms]);
+    },
+    [taxonomies.terms]
+  );
 
   /**
    * Get domain URL for link resolution.
@@ -159,7 +165,7 @@ export function useTaxonomies() {
    * @param {string} domainId - The domain ID
    * @returns {string} The domain URL
    */
-  const getDomainUrl = useCallback((domainId) => {
+  const getDomainUrl = useCallback(domainId => {
     const domain = DOMAIN_MAP.get(domainId);
     return domain ? domain.url : 'https://www.preventionweb.net';
   }, []);

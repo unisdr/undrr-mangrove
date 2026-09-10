@@ -14,92 +14,150 @@ export const PALETTE_GROUPS = [
   {
     label: 'Blue',
     tokens: [
-      '--mg-color-blue-50','--mg-color-blue-100','--mg-color-blue-200',
-      '--mg-color-blue-300','--mg-color-blue-400','--mg-color-blue-500',
-      '--mg-color-blue-600','--mg-color-blue-700','--mg-color-blue-800',
+      '--mg-color-blue-50',
+      '--mg-color-blue-100',
+      '--mg-color-blue-200',
+      '--mg-color-blue-300',
+      '--mg-color-blue-400',
+      '--mg-color-blue-500',
+      '--mg-color-blue-600',
+      '--mg-color-blue-700',
+      '--mg-color-blue-800',
       '--mg-color-blue-900',
     ],
   },
   {
     label: 'Orange',
     tokens: [
-      '--mg-color-orange-50','--mg-color-orange-100','--mg-color-orange-200',
-      '--mg-color-orange-300','--mg-color-orange-400','--mg-color-orange-500',
-      '--mg-color-orange-600','--mg-color-orange-700','--mg-color-orange-800',
+      '--mg-color-orange-50',
+      '--mg-color-orange-100',
+      '--mg-color-orange-200',
+      '--mg-color-orange-300',
+      '--mg-color-orange-400',
+      '--mg-color-orange-500',
+      '--mg-color-orange-600',
+      '--mg-color-orange-700',
+      '--mg-color-orange-800',
       '--mg-color-orange-900',
     ],
   },
   {
     label: 'Red',
     tokens: [
-      '--mg-color-red-50','--mg-color-red-100','--mg-color-red-200',
-      '--mg-color-red-300','--mg-color-red-400','--mg-color-red-500',
-      '--mg-color-red-600','--mg-color-red-700','--mg-color-red-800',
+      '--mg-color-red-50',
+      '--mg-color-red-100',
+      '--mg-color-red-200',
+      '--mg-color-red-300',
+      '--mg-color-red-400',
+      '--mg-color-red-500',
+      '--mg-color-red-600',
+      '--mg-color-red-700',
+      '--mg-color-red-800',
       '--mg-color-red-900',
     ],
   },
   {
     label: 'Neutral',
     tokens: [
-      '--mg-color-neutral-0','--mg-color-neutral-25','--mg-color-neutral-50',
-      '--mg-color-neutral-100','--mg-color-neutral-200','--mg-color-neutral-300',
-      '--mg-color-neutral-400','--mg-color-neutral-500','--mg-color-neutral-600',
-      '--mg-color-neutral-700','--mg-color-neutral-800','--mg-color-neutral-900',
+      '--mg-color-neutral-0',
+      '--mg-color-neutral-25',
+      '--mg-color-neutral-50',
+      '--mg-color-neutral-100',
+      '--mg-color-neutral-200',
+      '--mg-color-neutral-300',
+      '--mg-color-neutral-400',
+      '--mg-color-neutral-500',
+      '--mg-color-neutral-600',
+      '--mg-color-neutral-700',
+      '--mg-color-neutral-800',
+      '--mg-color-neutral-900',
     ],
   },
   {
     label: 'Accent',
     tokens: [
-      '--mg-color-accent-100','--mg-color-accent-200',
-      '--mg-color-accent-300','--mg-color-accent-400',
+      '--mg-color-accent-100',
+      '--mg-color-accent-200',
+      '--mg-color-accent-300',
+      '--mg-color-accent-400',
     ],
   },
   {
     label: 'Interactive',
     tokens: [
-      '--mg-color-interactive','--mg-color-interactive-active',
-      '--mg-color-secondary','--mg-color-tertiary','--mg-color-quaternary',
+      '--mg-color-interactive',
+      '--mg-color-interactive-active',
+      '--mg-color-secondary',
+      '--mg-color-tertiary',
+      '--mg-color-quaternary',
     ],
   },
   {
     label: 'Sendai Framework',
     tokens: [
-      '--sendai-red','--sendai-orange','--sendai-purple','--sendai-turquoise',
-      '--sendai-red-400','--sendai-red-600','--sendai-red-800','--sendai-red-900',
-      '--sendai-orange-400','--sendai-orange-600','--sendai-orange-800','--sendai-orange-900',
-      '--sendai-purple-400','--sendai-purple-600','--sendai-purple-800','--sendai-purple-900',
-      '--sendai-turquoise-400','--sendai-turquoise-600','--sendai-turquoise-800','--sendai-turquoise-900',
+      '--sendai-red',
+      '--sendai-orange',
+      '--sendai-purple',
+      '--sendai-turquoise',
+      '--sendai-red-400',
+      '--sendai-red-600',
+      '--sendai-red-800',
+      '--sendai-red-900',
+      '--sendai-orange-400',
+      '--sendai-orange-600',
+      '--sendai-orange-800',
+      '--sendai-orange-900',
+      '--sendai-purple-400',
+      '--sendai-purple-600',
+      '--sendai-purple-800',
+      '--sendai-purple-900',
+      '--sendai-turquoise-400',
+      '--sendai-turquoise-600',
+      '--sendai-turquoise-800',
+      '--sendai-turquoise-900',
     ],
   },
   {
     label: 'UNDRR',
-    tokens: [
-      '--undrr-color-corporate-blue',
-    ],
+    tokens: ['--undrr-color-corporate-blue'],
   },
 ];
 
 export function ColorSwatch({ token }) {
-  const raw = typeof document !== 'undefined'
-    ? getComputedStyle(document.documentElement).getPropertyValue(token).trim()
-    : '';
+  const raw =
+    typeof document !== 'undefined'
+      ? getComputedStyle(document.documentElement)
+          .getPropertyValue(token)
+          .trim()
+      : '';
   // Space-separated RGB channels (e.g. "0 79 145") need wrapping in rgb().
   // Hex, named colors, oklch, etc. can be used directly.
   const isChannels = /^\d/.test(raw);
   const color = isChannels ? `rgb(${raw})` : raw || 'transparent';
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-      <div style={{
-        width: '48px',
-        height: '48px',
-        borderRadius: '4px',
-        background: color,
-        border: '1px solid rgba(0,0,0,0.1)',
-        flexShrink: 0,
-      }} />
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        marginBottom: '8px',
+      }}
+    >
+      <div
+        style={{
+          width: '48px',
+          height: '48px',
+          borderRadius: '4px',
+          background: color,
+          border: '1px solid rgba(0,0,0,0.1)',
+          flexShrink: 0,
+        }}
+      />
       <div>
         <code style={{ display: 'block', fontSize: '13px' }}>{token}</code>
-        <span style={{ fontSize: '12px', color: '#666' }}>{raw || '(not resolved)'}</span>
+        <span style={{ fontSize: '12px', color: '#666' }}>
+          {raw || '(not resolved)'}
+        </span>
       </div>
     </div>
   );
@@ -108,8 +166,18 @@ export function ColorSwatch({ token }) {
 export function PaletteGroup({ label, tokens }) {
   return (
     <div style={{ marginBottom: '32px' }}>
-      <h3 style={{ marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>{label}</h3>
-      {tokens.map(t => <ColorSwatch key={t} token={t} />)}
+      <h3
+        style={{
+          marginBottom: '16px',
+          borderBottom: '1px solid #eee',
+          paddingBottom: '8px',
+        }}
+      >
+        {label}
+      </h3>
+      {tokens.map(t => (
+        <ColorSwatch key={t} token={t} />
+      ))}
     </div>
   );
 }

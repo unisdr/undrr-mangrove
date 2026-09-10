@@ -4,7 +4,12 @@
  */
 
 import { buildQuery, getAggregationBuckets } from '../utils/queryBuilder';
-import { DEFAULT_CONFIG, SCORING_CONFIG, buildTierRanges, buildTierFilter } from '../utils/constants';
+import {
+  DEFAULT_CONFIG,
+  SCORING_CONFIG,
+  buildTierRanges,
+  buildTierFilter,
+} from '../utils/constants';
 
 describe('queryBuilder', () => {
   const defaultState = {
@@ -281,7 +286,9 @@ describe('queryBuilder', () => {
 
       const postFilter = result.post_filter;
       expect(postFilter.bool.should).toContainEqual({ term: { type: 'news' } });
-      expect(postFilter.bool.should).toContainEqual({ term: { vid: 'hazard' } });
+      expect(postFilter.bool.should).toContainEqual({
+        term: { vid: 'hazard' },
+      });
     });
 
     it('uses script filter for year facet', () => {
@@ -381,10 +388,7 @@ describe('queryBuilder', () => {
         queryAppend: 'field_featured:true',
       };
 
-      const result = buildQuery(
-        { ...defaultState, query: 'disaster' },
-        config
-      );
+      const result = buildQuery({ ...defaultState, query: 'disaster' }, config);
 
       const must = result.query.function_score.query.bool.must;
       expect(must.query_string.query).toContain('field_featured:true');
@@ -463,8 +467,8 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
       const filters = result.query.function_score.query.bool.filter;
 
-      const tierFilter = filters.find(
-        f => f.bool?.should?.some(s => s.range?.field_meta_interestingness)
+      const tierFilter = filters.find(f =>
+        f.bool?.should?.some(s => s.range?.field_meta_interestingness)
       );
       expect(tierFilter).toBeDefined();
       expect(tierFilter.bool.should).toHaveLength(2);
@@ -478,8 +482,8 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
       const filters = result.query.function_score.query.bool.filter;
 
-      const tierFilter = filters.find(
-        f => f.bool?.should?.some(s => s.range?.field_meta_longevity)
+      const tierFilter = filters.find(f =>
+        f.bool?.should?.some(s => s.range?.field_meta_longevity)
       );
       expect(tierFilter).toBeDefined();
       expect(tierFilter.bool.should).toHaveLength(2);
@@ -512,7 +516,11 @@ describe('queryBuilder', () => {
         f =>
           f.range?.field_meta_interestingness ||
           f.range?.field_meta_longevity ||
-          f.bool?.should?.some(s => s.range?.field_meta_interestingness || s.range?.field_meta_longevity)
+          f.bool?.should?.some(
+            s =>
+              s.range?.field_meta_interestingness ||
+              s.range?.field_meta_longevity
+          )
       );
       expect(hasTierFilter).toBe(false);
     });
@@ -666,8 +674,8 @@ describe('queryBuilder', () => {
     it('includes content type boost for landing pages', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
 
-      const landingBoost = result.query.function_score.functions.find(
-        f => f.filter?.terms?.type?.includes('landing')
+      const landingBoost = result.query.function_score.functions.find(f =>
+        f.filter?.terms?.type?.includes('landing')
       );
       expect(landingBoost).toBeDefined();
     });
@@ -675,8 +683,8 @@ describe('queryBuilder', () => {
     it('includes recency boost with script_score', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
 
-      const recencyBoost = result.query.function_score.functions.find(
-        f => f.script_score?.script?.source?.includes('published_at')
+      const recencyBoost = result.query.function_score.functions.find(f =>
+        f.script_score?.script?.source?.includes('published_at')
       );
       expect(recencyBoost).toBeDefined();
     });

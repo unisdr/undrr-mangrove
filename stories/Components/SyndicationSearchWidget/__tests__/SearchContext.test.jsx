@@ -317,9 +317,7 @@ describe('SearchContext', () => {
       act(() => {
         dispatch(actions.setQuery('test'));
         dispatch(actions.setSort('newest'));
-        dispatch(
-          actions.setFacet('type', 'news')
-        );
+        dispatch(actions.setFacet('type', 'news'));
       });
 
       expect(state.query).toBe('test');

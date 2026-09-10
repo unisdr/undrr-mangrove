@@ -51,7 +51,7 @@ function GalleryComponent({
 
   // Handle thumbnail click
   const handleThumbnailClick = useCallback(
-    (index) => {
+    index => {
       setActiveIndex(index);
       if (onMediaChange) {
         onMediaChange(index, media[index]);
@@ -89,7 +89,7 @@ function GalleryComponent({
 
   // Keyboard navigation (scoped to gallery when focused)
   const handleKeyDown = useCallback(
-    (e) => {
+    e => {
       if (!enableKeyboard) return;
 
       switch (e.key) {
@@ -113,16 +113,22 @@ function GalleryComponent({
           break;
       }
     },
-    [enableKeyboard, handleNext, handlePrevious, handleThumbnailClick, media.length]
+    [
+      enableKeyboard,
+      handleNext,
+      handlePrevious,
+      handleThumbnailClick,
+      media.length,
+    ]
   );
 
   // Touch/swipe handlers for mobile
-  const handleTouchStart = (e) => {
+  const handleTouchStart = e => {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
   };
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = e => {
     touchEndX.current = e.touches[0].clientX;
   };
 
@@ -174,7 +180,11 @@ function GalleryComponent({
               src={activeItem.src}
               alt={activeItem.alt}
               className="mg-gallery__image"
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             />
           )}
           {activeItem.type === 'video' && (
@@ -186,7 +196,11 @@ function GalleryComponent({
               poster={activeItem.poster}
               onLoadedData={() => setIsLoading(false)}
               onLoadStart={() => setIsLoading(true)}
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             >
               <track kind="captions" />
               Your browser does not support the video tag.
@@ -200,7 +214,11 @@ function GalleryComponent({
               title={activeItem.title || activeItem.alt}
               allowFullScreen
               onLoad={() => setIsLoading(false)}
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             />
           )}
           {activeItem.type === 'html' && (
@@ -208,11 +226,19 @@ function GalleryComponent({
               ref={mainImageRef}
               className="mg-gallery__image mg-gallery__html"
               dangerouslySetInnerHTML={{ __html: activeItem.html }}
-              aria-describedby={showDescription && activeItem.description ? 'gallery-description' : undefined}
+              aria-describedby={
+                showDescription && activeItem.description
+                  ? 'gallery-description'
+                  : undefined
+              }
             />
           )}
           {isLoading && (
-            <div className="mg-gallery__loading" aria-live="polite" aria-label={loadingLabel}>
+            <div
+              className="mg-gallery__loading"
+              aria-live="polite"
+              aria-label={loadingLabel}
+            >
               <div className="mg-gallery__spinner"></div>
             </div>
           )}
@@ -268,8 +294,12 @@ function GalleryComponent({
       {/* Description area */}
       {showDescription && (activeItem.title || activeItem.description) && (
         <div className="mg-gallery__description" id="gallery-description">
-          {activeItem.title && <div className="mg-gallery__title">{activeItem.title}</div>}
-          {activeItem.description && <p className="mg-gallery__caption">{activeItem.description}</p>}
+          {activeItem.title && (
+            <div className="mg-gallery__title">{activeItem.title}</div>
+          )}
+          {activeItem.description && (
+            <p className="mg-gallery__caption">{activeItem.description}</p>
+          )}
         </div>
       )}
 
@@ -284,11 +314,13 @@ function GalleryComponent({
           {media.map((item, index) => (
             <button
               key={item.id}
-              ref={(el) => (thumbnailRefs.current[index] = el)}
+              ref={el => (thumbnailRefs.current[index] = el)}
               className={cls(
                 'mg-gallery__thumbnail',
                 index === activeIndex && 'mg-gallery__thumbnail--active',
-                item.type === 'html' && !item.thumbnail && 'mg-gallery__thumbnail--html'
+                item.type === 'html' &&
+                  !item.thumbnail &&
+                  'mg-gallery__thumbnail--html'
               )}
               onClick={() => handleThumbnailClick(index)}
               role="tab"
@@ -298,21 +330,30 @@ function GalleryComponent({
               type="button"
             >
               {item.type === 'html' && !item.thumbnail && item.html ? (
-                <div className="mg-gallery__thumbnail-html-preview" aria-hidden="true">
+                <div
+                  className="mg-gallery__thumbnail-html-preview"
+                  aria-hidden="true"
+                >
                   <div
                     className="mg-gallery__thumbnail-html-content"
                     dangerouslySetInnerHTML={{ __html: item.html }}
                   />
                 </div>
-              ) : (item.thumbnail || item.src) ? (
+              ) : item.thumbnail || item.src ? (
                 <img src={item.thumbnail || item.src} alt="" loading="lazy" />
               ) : (
-                <span className="mg-gallery__thumbnail-placeholder" aria-hidden="true">
+                <span
+                  className="mg-gallery__thumbnail-placeholder"
+                  aria-hidden="true"
+                >
                   ◫
                 </span>
               )}
               {(item.type === 'video' || item.type === 'embed') && (
-                <span className="mg-gallery__thumbnail-indicator" aria-hidden="true">
+                <span
+                  className="mg-gallery__thumbnail-indicator"
+                  aria-hidden="true"
+                >
                   ▶
                 </span>
               )}

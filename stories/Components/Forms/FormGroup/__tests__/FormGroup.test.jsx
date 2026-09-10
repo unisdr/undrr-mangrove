@@ -8,7 +8,7 @@ describe('FormGroup', () => {
     render(
       <FormGroup legend="Choose an option">
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     expect(screen.getByRole('group')).toBeInTheDocument();
     expect(screen.getByText('Choose an option')).toBeInTheDocument();
@@ -20,7 +20,7 @@ describe('FormGroup', () => {
         <label>
           <input type="checkbox" /> Option A
         </label>
-      </FormGroup>,
+      </FormGroup>
     );
     expect(screen.getByText('Option A')).toBeInTheDocument();
   });
@@ -29,11 +29,11 @@ describe('FormGroup', () => {
     const { container } = render(
       <FormGroup legend="Options">
         <span>child</span>
-      </FormGroup>,
+      </FormGroup>
     );
     expect(container.querySelector('.mg-form-group')).toBeInTheDocument();
     expect(
-      container.querySelector('.mg-form-group__legend'),
+      container.querySelector('.mg-form-group__legend')
     ).toBeInTheDocument();
   });
 
@@ -41,7 +41,7 @@ describe('FormGroup', () => {
     const { container } = render(
       <FormGroup legend="Options" disabled>
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     const fieldset = container.querySelector('fieldset');
     expect(fieldset).toBeDisabled();
@@ -52,7 +52,7 @@ describe('FormGroup', () => {
     render(
       <FormGroup legend="Options" disabled>
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     expect(screen.getByRole('checkbox')).toBeDisabled();
   });
@@ -61,9 +61,11 @@ describe('FormGroup', () => {
     const { container } = render(
       <FormGroup legend="Options" error errorText="Select at least one">
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
-    expect(container.querySelector('.mg-form-group--error')).toBeInTheDocument();
+    expect(
+      container.querySelector('.mg-form-group--error')
+    ).toBeInTheDocument();
     expect(screen.getByRole('alert')).toHaveTextContent('Select at least one');
   });
 
@@ -71,13 +73,13 @@ describe('FormGroup', () => {
     render(
       <FormGroup legend="Options" error errorText="Select at least one">
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     const fieldset = screen.getByRole('group');
     const describedBy = fieldset.getAttribute('aria-describedby');
     expect(describedBy).toBeTruthy();
     expect(document.getElementById(describedBy)).toHaveTextContent(
-      'Select at least one',
+      'Select at least one'
     );
   });
 
@@ -85,7 +87,7 @@ describe('FormGroup', () => {
     render(
       <FormGroup legend="Options">
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     expect(screen.getByRole('group')).not.toHaveAttribute('aria-describedby');
   });
@@ -94,7 +96,7 @@ describe('FormGroup', () => {
     render(
       <FormGroup legend="Options" errorText="Select at least one">
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
@@ -103,7 +105,7 @@ describe('FormGroup', () => {
     const { container } = render(
       <FormGroup legend="Options" hideLegend>
         <input type="checkbox" aria-label="A" />
-      </FormGroup>,
+      </FormGroup>
     );
     const legend = container.querySelector('legend');
     expect(legend).toHaveClass('mg-u-sr-only');
@@ -115,7 +117,7 @@ describe('FormGroup', () => {
     const { container } = render(
       <FormGroup legend="Options" className="my-custom-class">
         <span>child</span>
-      </FormGroup>,
+      </FormGroup>
     );
     expect(container.querySelector('.my-custom-class')).toBeInTheDocument();
   });
@@ -129,7 +131,7 @@ describe('FormGroup', () => {
         <label>
           <input type="checkbox" /> Climate change
         </label>
-      </FormGroup>,
+      </FormGroup>
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -140,7 +142,7 @@ describe('FormGroup', () => {
         <label>
           <input type="checkbox" /> Disaster risk reduction
         </label>
-      </FormGroup>,
+      </FormGroup>
     );
     expect(await axe(container)).toHaveNoViolations();
   });

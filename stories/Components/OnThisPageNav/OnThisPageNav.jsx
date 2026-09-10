@@ -67,10 +67,7 @@ export default function OnThisPageNav({
         </ul>
       )}
       {ctaHref && ctaText && (
-        <a
-          href={ctaHref}
-          className="mg-on-this-page-nav__cta"
-        >
+        <a href={ctaHref} className="mg-on-this-page-nav__cta">
           {ctaText}
         </a>
       )}

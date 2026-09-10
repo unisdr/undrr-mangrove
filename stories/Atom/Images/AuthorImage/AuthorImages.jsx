@@ -16,7 +16,12 @@ export const hover_color_options = {
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
-export function Authorimg({ image, alt, variant = 'Large', hovercolor = 'yellow' }) {
+export function Authorimg({
+  image,
+  alt,
+  variant = 'Large',
+  hovercolor = 'yellow',
+}) {
   const size_variant = size_options[variant];
   const Hovercolors = hover_color_options[hovercolor];
   return (

@@ -19,10 +19,10 @@ Submit the form with empty fields to trigger validation. Use the **errorDisplay*
 
 Use the `errorDisplay` control to compare two approaches:
 
-| Mode | Component | Behaviour |
-|------|-----------|-----------|
-| **block** (default) | `FormErrorSummary` | Persistent error list at the top of the form with anchor links to each field. Best for long forms. |
-| **toast** | `Snackbar` | Temporary toast notification summarising the error count. Inline field errors still appear. Best for short forms or non-critical feedback. |
+| Mode                | Component          | Behaviour                                                                                                                                  |
+| ------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **block** (default) | `FormErrorSummary` | Persistent error list at the top of the form with anchor links to each field. Best for long forms.                                         |
+| **toast**           | `Snackbar`         | Temporary toast notification summarising the error count. Inline field errors still appear. Best for short forms or non-critical feedback. |
 
 Both modes always show inline field-level errors via each component's `error` / `errorText` props.
 
@@ -65,7 +65,7 @@ Both modes always show inline field-level errors via each component's `error` / 
 Validate on submit, clear on change:
 
 ```js
-const handleSubmit = (e) => {
+const handleSubmit = e => {
   e.preventDefault();
   const next = validate(); // returns { fieldId: "message", ... }
   if (Object.keys(next).length > 0) {
@@ -96,15 +96,15 @@ See the [FormErrorSummary docs](?path=/docs/components-forms-formerrorsummary--d
 
 ## Components used
 
-| Component | Docs |
-|-----------|------|
+| Component        | Docs                                                        |
+| ---------------- | ----------------------------------------------------------- |
 | FormErrorSummary | [Docs](?path=/docs/components-forms-formerrorsummary--docs) |
-| Snackbar | [Docs](?path=/docs/components-snackbar--docs) |
-| TextInput | [Docs](?path=/docs/components-forms-text-input--docs) |
-| Textarea | [Docs](?path=/docs/components-forms-textarea--docs) |
-| Select | [Docs](?path=/docs/components-forms-select--docs) |
-| FormGroup | [Docs](?path=/docs/components-forms-formgroup--docs) |
-| Checkbox | [Docs](?path=/docs/components-forms-checkbox--docs) |
+| Snackbar         | [Docs](?path=/docs/components-snackbar--docs)               |
+| TextInput        | [Docs](?path=/docs/components-forms-text-input--docs)       |
+| Textarea         | [Docs](?path=/docs/components-forms-textarea--docs)         |
+| Select           | [Docs](?path=/docs/components-forms-select--docs)           |
+| FormGroup        | [Docs](?path=/docs/components-forms-formgroup--docs)        |
+| Checkbox         | [Docs](?path=/docs/components-forms-checkbox--docs)         |
 
 ## Accessibility
 

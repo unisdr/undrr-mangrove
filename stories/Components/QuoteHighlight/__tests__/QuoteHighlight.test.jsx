@@ -28,46 +28,46 @@ describe('QuoteHighlight', () => {
 
   it('applies background color class', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} backgroundColor="dark" />,
+      <QuoteHighlight {...defaultProps} backgroundColor="dark" />
     );
     expect(
-      container.querySelector('.mg-quote-highlight--dark'),
+      container.querySelector('.mg-quote-highlight--dark')
     ).toBeInTheDocument();
   });
 
   it('applies variant class', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} variant="image" />,
+      <QuoteHighlight {...defaultProps} variant="image" />
     );
     expect(
-      container.querySelector('.mg-quote-highlight--image'),
+      container.querySelector('.mg-quote-highlight--image')
     ).toBeInTheDocument();
   });
 
   it('applies alignment class', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} alignment="left" />,
+      <QuoteHighlight {...defaultProps} alignment="left" />
     );
     expect(
-      container.querySelector('.mg-quote-highlight--left'),
+      container.querySelector('.mg-quote-highlight--left')
     ).toBeInTheDocument();
   });
 
   it('renders separator line for line variant', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} variant="line" />,
+      <QuoteHighlight {...defaultProps} variant="line" />
     );
     expect(
-      container.querySelector('.mg-quote-highlight__separator'),
+      container.querySelector('.mg-quote-highlight__separator')
     ).toBeInTheDocument();
   });
 
   it('does not render separator for image variant', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} variant="image" />,
+      <QuoteHighlight {...defaultProps} variant="image" />
     );
     expect(
-      container.querySelector('.mg-quote-highlight__separator'),
+      container.querySelector('.mg-quote-highlight__separator')
     ).toBeNull();
   });
 
@@ -77,7 +77,7 @@ describe('QuoteHighlight', () => {
         {...defaultProps}
         imageSrc="https://example.com/photo.jpg"
         imageAlt="Author photo"
-      />,
+      />
     );
     const img = screen.getByAltText('Author photo');
     expect(img).toBeInTheDocument();
@@ -94,14 +94,14 @@ describe('QuoteHighlight', () => {
       <QuoteHighlight
         {...defaultProps}
         quote="Quote with <a href='#'>link</a>"
-      />,
+      />
     );
     expect(container.querySelector('a')).toBeInTheDocument();
   });
 
   it('renders plain text quotes in a <p> element', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} quote="Plain text quote" />,
+      <QuoteHighlight {...defaultProps} quote="Plain text quote" />
     );
     const blockquote = container.querySelector('.mg-quote-highlight__quote');
     expect(blockquote.querySelector('p')).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('QuoteHighlight', () => {
 
   it('adds custom className', () => {
     const { container } = render(
-      <QuoteHighlight {...defaultProps} className="custom-class" />,
+      <QuoteHighlight {...defaultProps} className="custom-class" />
     );
     expect(container.querySelector('.custom-class')).toBeInTheDocument();
   });
@@ -124,10 +124,10 @@ describe('QuoteHighlight', () => {
       <QuoteHighlight
         {...defaultProps}
         imageSrc="https://example.com/photo.jpg"
-      />,
+      />
     );
     expect(
-      container.querySelector('.mg-quote-highlight--has-image'),
+      container.querySelector('.mg-quote-highlight--has-image')
     ).toBeInTheDocument();
   });
 
@@ -138,7 +138,7 @@ describe('QuoteHighlight', () => {
         variant="image"
         imageSrc="https://example.com/photo.jpg"
         imageAlt="Large photo"
-      />,
+      />
     );
     const images = screen.getAllByAltText('Large photo');
     // Should render both portrait and large image in image variant

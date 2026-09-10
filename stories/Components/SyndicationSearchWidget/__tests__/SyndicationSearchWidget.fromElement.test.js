@@ -240,7 +240,10 @@ describe('syndicationSearchWidgetFromElement', () => {
 
   describe('data-labels', () => {
     it('returns labels object when valid JSON is provided', () => {
-      const labelOverrides = { searchPlaceholder: 'Buscar…', submitSearchText: 'Buscar' };
+      const labelOverrides = {
+        searchPlaceholder: 'Buscar…',
+        submitSearchText: 'Buscar',
+      };
       const result = syndicationSearchWidgetFromElement(
         makeContainer({ labels: JSON.stringify(labelOverrides) })
       );

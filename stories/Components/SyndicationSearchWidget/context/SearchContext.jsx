@@ -278,7 +278,8 @@ function searchReducer(state, action) {
       // If no value specified, remove entire facet
       if (value === undefined) {
         const { [key]: removed, ...remainingFacets } = state.facets;
-        const { [key]: removedOp, ...remainingOperators } = state.facetOperators;
+        const { [key]: removedOp, ...remainingOperators } =
+          state.facetOperators;
         return {
           ...state,
           facets: remainingFacets,
@@ -293,7 +294,8 @@ function searchReducer(state, action) {
 
       if (newValues.length === 0) {
         const { [key]: removed, ...remainingFacets } = state.facets;
-        const { [key]: removedOp, ...remainingOperators } = state.facetOperators;
+        const { [key]: removedOp, ...remainingOperators } =
+          state.facetOperators;
         return {
           ...state,
           facets: remainingFacets,
@@ -349,7 +351,8 @@ function searchReducer(state, action) {
 
     case ActionTypes.REMOVE_CUSTOM_FACET: {
       const { facetId } = action.payload;
-      const { [facetId]: removed, ...remainingCustomFacets } = state.customFacets;
+      const { [facetId]: removed, ...remainingCustomFacets } =
+        state.customFacets;
 
       return {
         ...state,
@@ -398,7 +401,11 @@ function searchReducer(state, action) {
       };
 
     case ActionTypes.INITIALIZE: {
-      const { defaultFilters = [], defaultQuery = '', defaultSort = 'relevance' } = action.payload;
+      const {
+        defaultFilters = [],
+        defaultQuery = '',
+        defaultSort = 'relevance',
+      } = action.payload;
 
       // Convert defaultFilters array to facets object
       const facets = {};
@@ -460,18 +467,28 @@ const SearchDispatchContext = createContext(null);
  * @param {Object} props.config - Search widget configuration
  * @param {React.ReactNode} props.children - Child components
  */
-export function SearchProvider({ config: userConfig, labels: userLabels, children }) {
+export function SearchProvider({
+  config: userConfig,
+  labels: userLabels,
+  children,
+}) {
   // Merge user config with defaults
-  const config = useMemo(() => ({
-    ...DEFAULT_CONFIG,
-    ...userConfig,
-  }), [userConfig]);
+  const config = useMemo(
+    () => ({
+      ...DEFAULT_CONFIG,
+      ...userConfig,
+    }),
+    [userConfig]
+  );
 
   // Merge user labels with defaults
-  const labels = useMemo(() => ({
-    ...DEFAULT_LABELS,
-    ...userLabels,
-  }), [userLabels]);
+  const labels = useMemo(
+    () => ({
+      ...DEFAULT_LABELS,
+      ...userLabels,
+    }),
+    [userLabels]
+  );
 
   // Initialize reducer with config-based initial state
   const [state, dispatch] = useReducer(searchReducer, initialState);
@@ -551,7 +568,7 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
-  setQuery: (query) => ({
+  setQuery: query => ({
     type: ActionTypes.SET_QUERY,
     payload: query,
   }),
@@ -580,37 +597,37 @@ export const actions = {
     payload: { facetId, value },
   }),
 
-  removeCustomFacet: (facetId) => ({
+  removeCustomFacet: facetId => ({
     type: ActionTypes.REMOVE_CUSTOM_FACET,
     payload: { facetId },
   }),
 
-  setSort: (sortBy) => ({
+  setSort: sortBy => ({
     type: ActionTypes.SET_SORT,
     payload: sortBy,
   }),
 
-  setPage: (page) => ({
+  setPage: page => ({
     type: ActionTypes.SET_PAGE,
     payload: page,
   }),
 
-  setResults: (results) => ({
+  setResults: results => ({
     type: ActionTypes.SET_RESULTS,
     payload: results,
   }),
 
-  setLoading: (isLoading) => ({
+  setLoading: isLoading => ({
     type: ActionTypes.SET_LOADING,
     payload: isLoading,
   }),
 
-  setError: (error) => ({
+  setError: error => ({
     type: ActionTypes.SET_ERROR,
     payload: error,
   }),
 
-  initialize: (config) => ({
+  initialize: config => ({
     type: ActionTypes.INITIALIZE,
     payload: config,
   }),

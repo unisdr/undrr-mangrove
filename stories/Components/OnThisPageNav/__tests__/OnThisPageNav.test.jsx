@@ -1,7 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import { mgOnThisPageNav, mgOnThisPageNavDestroy } from '../../../assets/js/on-this-page-nav';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '../../../assets/js/on-this-page-nav';
 
 // Track observer callbacks so we can fire mock entries in tests
 let observerCallbacks = [];
@@ -49,11 +52,13 @@ function setupAutoDetect({ depth, excludeClass, headings, ctaHtml } = {}) {
       class="mg-on-this-page-nav"
     >${ctaHtml || ''}</nav>
     <main class="content">
-      ${(headings || [
-        { tag: 'h2', id: 'sec-1', text: 'Section one' },
-        { tag: 'h2', id: 'sec-2', text: 'Section two' },
-        { tag: 'h2', id: 'sec-3', text: 'Section three' },
-      ])
+      ${(
+        headings || [
+          { tag: 'h2', id: 'sec-1', text: 'Section one' },
+          { tag: 'h2', id: 'sec-2', text: 'Section two' },
+          { tag: 'h2', id: 'sec-3', text: 'Section three' },
+        ]
+      )
         .map(
           h =>
             `<${h.tag} id="${h.id}"${excludeClass && h.exclude ? ` class="${excludeClass}"` : ''}>${h.text}</${h.tag}>`
@@ -208,14 +213,16 @@ describe('OnThisPageNav', () => {
   describe('idempotency', () => {
     it('does not double-initialize', () => {
       const nav = setupAutoDetect();
-      const linksBefore = nav.querySelectorAll('.mg-on-this-page-nav__link')
-        .length;
+      const linksBefore = nav.querySelectorAll(
+        '.mg-on-this-page-nav__link'
+      ).length;
 
       // Try to init again without clearing the flag
       mgOnThisPageNav([nav]);
 
-      const linksAfter = nav.querySelectorAll('.mg-on-this-page-nav__link')
-        .length;
+      const linksAfter = nav.querySelectorAll(
+        '.mg-on-this-page-nav__link'
+      ).length;
       expect(linksAfter).toBe(linksBefore);
     });
   });
@@ -379,14 +386,22 @@ describe('OnThisPageNav', () => {
   describe('scroll buttons', () => {
     it('injects prev and next buttons after init', () => {
       const nav = setupAutoDetect();
-      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev')).not.toBeNull();
-      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--next')).not.toBeNull();
+      expect(
+        nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev')
+      ).not.toBeNull();
+      expect(
+        nav.querySelector('.mg-on-this-page-nav__scroll-btn--next')
+      ).not.toBeNull();
     });
 
     it('buttons are hidden when no overflow (jsdom has no layout)', () => {
       const nav = setupAutoDetect();
-      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
-      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      const prevBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--prev'
+      );
+      const nextBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--next'
+      );
       // jsdom reports scrollWidth === clientWidth === 0, so no overflow
       expect(prevBtn.hidden).toBe(true);
       expect(nextBtn.hidden).toBe(true);
@@ -394,13 +409,19 @@ describe('OnThisPageNav', () => {
 
     it('prev button has direction-neutral default aria-label', () => {
       const nav = setupAutoDetect();
-      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
-      expect(prevBtn.getAttribute('aria-label')).toBe('Previous navigation items');
+      const prevBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--prev'
+      );
+      expect(prevBtn.getAttribute('aria-label')).toBe(
+        'Previous navigation items'
+      );
     });
 
     it('next button has direction-neutral default aria-label', () => {
       const nav = setupAutoDetect();
-      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      const nextBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--next'
+      );
       expect(nextBtn.getAttribute('aria-label')).toBe('Next navigation items');
     });
 
@@ -420,19 +441,38 @@ describe('OnThisPageNav', () => {
       `;
       const nav = document.querySelector('[data-mg-on-this-page-nav]');
       mgOnThisPageNav([nav]);
-      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev').getAttribute('aria-label')).toBe('عناصر التنقل السابقة');
-      expect(nav.querySelector('.mg-on-this-page-nav__scroll-btn--next').getAttribute('aria-label')).toBe('عناصر التنقل التالية');
+      expect(
+        nav
+          .querySelector('.mg-on-this-page-nav__scroll-btn--prev')
+          .getAttribute('aria-label')
+      ).toBe('عناصر التنقل السابقة');
+      expect(
+        nav
+          .querySelector('.mg-on-this-page-nav__scroll-btn--next')
+          .getAttribute('aria-label')
+      ).toBe('عناصر التنقل التالية');
     });
 
     it('next button appears when list has right overflow', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
-      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      const nextBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--next'
+      );
 
       // Simulate overflow: make scrollWidth larger than clientWidth
-      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      Object.defineProperty(list, 'scrollWidth', {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'clientWidth', {
+        value: 200,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 0,
+        configurable: true,
+      });
 
       // Trigger the update
       list.dispatchEvent(new Event('scroll'));
@@ -443,11 +483,22 @@ describe('OnThisPageNav', () => {
     it('prev button appears when list is scrolled right', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
-      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+      const prevBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--prev'
+      );
 
-      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-      Object.defineProperty(list, 'scrollLeft', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollWidth', {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'clientWidth', {
+        value: 200,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 200,
+        configurable: true,
+      });
 
       list.dispatchEvent(new Event('scroll'));
 
@@ -458,13 +509,24 @@ describe('OnThisPageNav', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
 
-      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-      Object.defineProperty(list, 'scrollLeft', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollWidth', {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'clientWidth', {
+        value: 200,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 200,
+        configurable: true,
+      });
 
       list.dispatchEvent(new Event('scroll'));
 
-      expect(nav.classList.contains('mg-on-this-page-nav--has-left-overflow')).toBe(true);
+      expect(
+        nav.classList.contains('mg-on-this-page-nav--has-left-overflow')
+      ).toBe(true);
     });
 
     it('next button (LTR) calls scrollBy with positive left', () => {
@@ -472,9 +534,14 @@ describe('OnThisPageNav', () => {
       const list = nav.querySelector('.mg-on-this-page-nav__list');
       list.scrollBy = jest.fn();
       // jsdom has no layout — give the list a width so scrollBy gets a non-zero left
-      Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+      Object.defineProperty(list, 'offsetWidth', {
+        value: 400,
+        configurable: true,
+      });
 
-      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      const nextBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--next'
+      );
       nextBtn.hidden = false;
       nextBtn.click();
 
@@ -486,9 +553,14 @@ describe('OnThisPageNav', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
       list.scrollBy = jest.fn();
-      Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+      Object.defineProperty(list, 'offsetWidth', {
+        value: 400,
+        configurable: true,
+      });
 
-      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+      const prevBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--prev'
+      );
       prevBtn.hidden = false;
       prevBtn.click();
 
@@ -523,9 +595,14 @@ describe('OnThisPageNav', () => {
         const nav = setupAutoDetect();
         const list = nav.querySelector('.mg-on-this-page-nav__list');
         list.scrollBy = jest.fn();
-        Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+        Object.defineProperty(list, 'offsetWidth', {
+          value: 400,
+          configurable: true,
+        });
 
-        const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+        const nextBtn = nav.querySelector(
+          '.mg-on-this-page-nav__scroll-btn--next'
+        );
         nextBtn.hidden = false;
         nextBtn.click();
 
@@ -537,9 +614,14 @@ describe('OnThisPageNav', () => {
         const nav = setupAutoDetect();
         const list = nav.querySelector('.mg-on-this-page-nav__list');
         list.scrollBy = jest.fn();
-        Object.defineProperty(list, 'offsetWidth', { value: 400, configurable: true });
+        Object.defineProperty(list, 'offsetWidth', {
+          value: 400,
+          configurable: true,
+        });
 
-        const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+        const prevBtn = nav.querySelector(
+          '.mg-on-this-page-nav__scroll-btn--prev'
+        );
         prevBtn.hidden = false;
         prevBtn.click();
 
@@ -550,12 +632,23 @@ describe('OnThisPageNav', () => {
       it('nextBtn shown at RTL initial position (canScrollFurther = true)', () => {
         const nav = setupAutoDetect();
         const list = nav.querySelector('.mg-on-this-page-nav__list');
-        const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+        const nextBtn = nav.querySelector(
+          '.mg-on-this-page-nav__scroll-btn--next'
+        );
 
         // RTL initial: scrollLeft = 0 (at visual start / right edge)
-        Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-        Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-        Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+        Object.defineProperty(list, 'scrollWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'clientWidth', {
+          value: 200,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'scrollLeft', {
+          value: 0,
+          configurable: true,
+        });
 
         list.dispatchEvent(new Event('scroll'));
 
@@ -565,12 +658,23 @@ describe('OnThisPageNav', () => {
       it('prevBtn shown in RTL after scrolling left (scrolledFromStart = true)', () => {
         const nav = setupAutoDetect();
         const list = nav.querySelector('.mg-on-this-page-nav__list');
-        const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+        const prevBtn = nav.querySelector(
+          '.mg-on-this-page-nav__scroll-btn--prev'
+        );
 
         // RTL: negative scrollLeft means scrolled away from visual start
-        Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-        Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-        Object.defineProperty(list, 'scrollLeft', { value: -200, configurable: true });
+        Object.defineProperty(list, 'scrollWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'clientWidth', {
+          value: 200,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'scrollLeft', {
+          value: -200,
+          configurable: true,
+        });
 
         list.dispatchEvent(new Event('scroll'));
 
@@ -582,24 +686,39 @@ describe('OnThisPageNav', () => {
         const list = nav.querySelector('.mg-on-this-page-nav__list');
 
         // RTL initial state: distFromStart = 0, canScrollFurther = true
-        Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-        Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-        Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+        Object.defineProperty(list, 'scrollWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'clientWidth', {
+          value: 200,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'scrollLeft', {
+          value: 0,
+          configurable: true,
+        });
 
         list.dispatchEvent(new Event('scroll'));
 
         // In RTL, has-left-overflow reflects canScrollFurther (items to the left)
-        expect(nav.classList.contains('mg-on-this-page-nav--has-left-overflow')).toBe(true);
+        expect(
+          nav.classList.contains('mg-on-this-page-nav--has-left-overflow')
+        ).toBe(true);
       });
     });
 
     it('destroy removes injected scroll buttons', () => {
       const nav = setupAutoDetect();
-      expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(2);
+      expect(
+        nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')
+      ).toHaveLength(2);
 
       mgOnThisPageNavDestroy(nav);
 
-      expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(0);
+      expect(
+        nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')
+      ).toHaveLength(0);
     });
 
     it('does not duplicate buttons on re-init after destroy', () => {
@@ -610,26 +729,43 @@ describe('OnThisPageNav', () => {
       mgOnThisPageNavDestroy(nav);
       mgOnThisPageNav([nav]);
 
-      expect(nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')).toHaveLength(2);
+      expect(
+        nav.querySelectorAll('.mg-on-this-page-nav__scroll-btn')
+      ).toHaveLength(2);
     });
 
     it('focus moves to CTA (not last link) when next button hides while focused', () => {
       const nav = setupAutoDetect({
-        ctaHtml: '<a href="#download" class="mg-on-this-page-nav__cta">Download</a>',
+        ctaHtml:
+          '<a href="#download" class="mg-on-this-page-nav__cta">Download</a>',
       });
       const list = nav.querySelector('.mg-on-this-page-nav__list');
-      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      const nextBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--next'
+      );
 
       // Simulate overflow so nextBtn is visible
-      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      Object.defineProperty(list, 'scrollWidth', {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'clientWidth', {
+        value: 200,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 0,
+        configurable: true,
+      });
       list.dispatchEvent(new Event('scroll'));
 
       // Focus nextBtn then scroll to the end so it should hide
       nextBtn.hidden = false;
       nextBtn.focus();
-      Object.defineProperty(list, 'scrollLeft', { value: 300, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 300,
+        configurable: true,
+      });
       list.dispatchEvent(new Event('scroll'));
 
       const cta = nav.querySelector('.mg-on-this-page-nav__cta');
@@ -639,16 +775,30 @@ describe('OnThisPageNav', () => {
     it('focus moves to last link when next button hides while focused and no CTA', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
-      const nextBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--next');
+      const nextBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--next'
+      );
 
-      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      Object.defineProperty(list, 'scrollWidth', {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'clientWidth', {
+        value: 200,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 0,
+        configurable: true,
+      });
       list.dispatchEvent(new Event('scroll'));
 
       nextBtn.hidden = false;
       nextBtn.focus();
-      Object.defineProperty(list, 'scrollLeft', { value: 300, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 300,
+        configurable: true,
+      });
       list.dispatchEvent(new Event('scroll'));
 
       const links = nav.querySelectorAll('.mg-on-this-page-nav__link');
@@ -658,18 +808,32 @@ describe('OnThisPageNav', () => {
     it('focus moves to first link when prev button hides while focused', () => {
       const nav = setupAutoDetect();
       const list = nav.querySelector('.mg-on-this-page-nav__list');
-      const prevBtn = nav.querySelector('.mg-on-this-page-nav__scroll-btn--prev');
+      const prevBtn = nav.querySelector(
+        '.mg-on-this-page-nav__scroll-btn--prev'
+      );
 
       // Simulate being scrolled so prevBtn is visible
-      Object.defineProperty(list, 'scrollWidth', { value: 500, configurable: true });
-      Object.defineProperty(list, 'clientWidth', { value: 200, configurable: true });
-      Object.defineProperty(list, 'scrollLeft', { value: 200, configurable: true });
+      Object.defineProperty(list, 'scrollWidth', {
+        value: 500,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'clientWidth', {
+        value: 200,
+        configurable: true,
+      });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 200,
+        configurable: true,
+      });
       list.dispatchEvent(new Event('scroll'));
 
       // Focus prevBtn then scroll back to the start so it should hide
       prevBtn.hidden = false;
       prevBtn.focus();
-      Object.defineProperty(list, 'scrollLeft', { value: 0, configurable: true });
+      Object.defineProperty(list, 'scrollLeft', {
+        value: 0,
+        configurable: true,
+      });
       list.dispatchEvent(new Event('scroll'));
 
       const links = nav.querySelectorAll('.mg-on-this-page-nav__link');
@@ -749,7 +913,9 @@ describe('OnThisPageNav', () => {
       const nav = document.querySelector('[data-mg-on-this-page-nav]');
       mgOnThisPageNav([nav]);
 
-      const trigger = document.getElementById('mg-tabs__section-stacked1--trigger');
+      const trigger = document.getElementById(
+        'mg-tabs__section-stacked1--trigger'
+      );
       const triggerClickSpy = jest.fn();
       trigger.addEventListener('click', triggerClickSpy);
 
@@ -862,9 +1028,11 @@ describe('OnThisPageNav', () => {
       mgOnThisPageNav([nav]);
 
       const callOrder = [];
-      document.getElementById('mg-tabs__section-outer--trigger')
+      document
+        .getElementById('mg-tabs__section-outer--trigger')
         .addEventListener('click', () => callOrder.push('outer'));
-      document.getElementById('mg-tabs__section-inner--trigger')
+      document
+        .getElementById('mg-tabs__section-inner--trigger')
         .addEventListener('click', () => callOrder.push('inner'));
 
       const link = nav.querySelector('[href="#deep-heading"]');

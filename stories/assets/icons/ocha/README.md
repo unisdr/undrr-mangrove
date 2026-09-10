@@ -15,6 +15,7 @@ Curated subset of the [OCHA Humanitarian Icons](https://github.com/rodekruis/OCH
 ## Adding more
 
 To add an OCHA icon:
+
 1. Download the SVG from the source repo's `svg/` directory
 2. Save it here with a lowercase filename
 3. Add an entry to `scripts/icon-map.cjs` using `OCHA('filename')`
