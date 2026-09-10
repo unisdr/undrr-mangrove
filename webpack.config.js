@@ -102,7 +102,7 @@ export default [
       TextCta: './stories/Components/TextCta/TextCta.hydrate.js',
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
-      CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.jsx',
+      CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
       TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
       Select: './stories/Components/Forms/Select/Select.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
@@ -127,7 +127,7 @@ export default [
       FullWidth: './stories/Utilities/FullWidth/FullWidth.jsx',
       Loader: './stories/Utilities/Loader/Loader.jsx',
       ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
-      SkipLink: './stories/Utilities/SkipLink/SkipLink.jsx',
+      SkipLink: './stories/Utilities/SkipLink/SkipLink.entry.js',
     },
     externals: {
       react: 'react',
