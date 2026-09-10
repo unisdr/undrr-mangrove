@@ -76,8 +76,7 @@
       padding: clamp(mg-rem(32), 6vw, mg-rem(80));
     }
 
-    .mg-hero__title,
-    .mg-hero__title .text-xxl {
+    .mg-hero__title {
       font-size: clamp(mg-rem(38), 6vw, mg-rem(80));
       letter-spacing: -0.045em;
       line-height: 0.98;
@@ -198,84 +197,32 @@
     }
   }
 
-  // Title styles (for both <h1> and <a>)
+  // Title styles. `&__title` is applied directly to the heading tag (h1-h3)
+  // itself, not a wrapper around it — there is no nested heading and no
+  // inline span to re-target, so this is the only place the title's
+  // typography is declared. `text-xxl`/`text-xl` and the span- and
+  // nested-heading-targeting rules that used to live here were dead weight:
+  // HeroTitle only ever rendered `text-xxl`, unconditionally, on the one
+  // heading it produces, so `$mg-font-size-800` (what `text-xxl` resolved
+  // to) is simply the title's font size now.
   &__title {
     color: rgb(var(--mg-color-hero-title));
     margin-bottom: var(--mg-spacing-25);
     display: inline-block;
     font-family: var(--mg-font-family-display);
     font-weight: bold;
-    font-size: $mg-font-size-600;
+    font-size: $mg-font-size-800;
     line-height: 1.2;
-    max-width: 18ch;
     text-wrap: balance;
+
+    @media (max-width: $mg-breakpoint-mobile) {
+      font-size: $mg-font-size-600;
+    }
 
     a,
     a:hover,
     a:visited {
       color: rgb(var(--mg-color-hero-title));
-    }
-
-    // General text styles for larger text
-    .text-xxl {
-      font-size: $mg-font-size-800;
-
-      @media (max-width: $mg-breakpoint-mobile) {
-        font-size: $mg-font-size-600;
-      }
-    }
-
-    .text-xl {
-      @include mg-typography("large");
-
-      @media (max-width: $mg-breakpoint-mobile) {
-        @include mg-typography("medium");
-      }
-    }
-
-    // Specific styles for the <h1> element (when there's no link)
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      color: rgb(var(--mg-color-hero-title));
-      font-weight: bold;
-      font-size: $mg-font-size-600;
-
-      // Match the text-xxl and text-xl styling
-      &.text-xxl {
-        font-size: $mg-font-size-800;
-
-        @media (max-width: $mg-breakpoint-mobile) {
-          font-size: $mg-font-size-600;
-        }
-      }
-
-      &.text-xl {
-        @include mg-typography("large");
-
-        @media (max-width: $mg-breakpoint-mobile) {
-          @include mg-typography("medium");
-        }
-      }
-    }
-
-    // Preserve heading typography when CMS content is wrapped in the inline
-    // span used by HeroTitle; host-page span rules must not shrink the title.
-    h1 > span,
-    h2 > span,
-    h3 > span,
-    h4 > span,
-    h5 > span,
-    h6 > span,
-    a > span {
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      letter-spacing: inherit;
-      line-height: inherit;
     }
   }
 
@@ -438,12 +385,14 @@ $variant-colour-props: (
     outline-offset: 2px;
   }
 
+  // Max-width and centring come from the `mg-container` class paired onto
+  // this element in the markup, so split content lines up on the same edge
+  // as every other `mg-container` on the page instead of its own independent
+  // (and previously narrower) breakpoint.
   .mg-hero__split-grid {
     display: grid;
     grid-template-columns: 2fr 1fr; // default 2/3
     align-items: stretch;
-    max-width: $mg-breakpoint-desktop;
-    margin: 0 auto;
 
     @media (max-width: $mg-breakpoint-tablet) {
       grid-template-columns: 1fr;
@@ -469,7 +418,7 @@ $variant-colour-props: (
   .mg-hero__content {
     display: grid;
     row-gap: mg-rem(10);
-    padding: var(--mg-spacing-200) var(--mg-spacing-100);
+    padding-block: var(--mg-spacing-200);
     align-content: center;
   }
 

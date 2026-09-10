@@ -19,18 +19,15 @@ const splitSuffixMap = {
 };
 
 function HeroTitle({ item, HeadingTag }) {
-  return (
-    <header className="mg-hero__title">
-      <HeadingTag className="text-xxl">
-        {item.link ? (
-          <a href={item.link}>
-            <span dangerouslySetInnerHTML={{ __html: item.title }} />
-          </a>
-        ) : (
-          <span dangerouslySetInnerHTML={{ __html: item.title }} />
-        )}
-      </HeadingTag>
-    </header>
+  return item.link ? (
+    <HeadingTag className="mg-hero__title">
+      <a href={item.link} dangerouslySetInnerHTML={{ __html: item.title }} />
+    </HeadingTag>
+  ) : (
+    <HeadingTag
+      className="mg-hero__title"
+      dangerouslySetInnerHTML={{ __html: item.title }}
+    />
   );
 }
 
@@ -160,7 +157,7 @@ export function Hero({
               variantActive && `mg-hero--${variantActive}`
             )}
           >
-            <div className="mg-hero__split-grid">
+            <div className="mg-hero__split-grid mg-container">
               <HeroContent item={item} HeadingTag={HeadingTag} />
               <HeroMedia media={item.media} />
             </div>
