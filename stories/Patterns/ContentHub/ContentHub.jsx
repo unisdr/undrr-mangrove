@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { VerticalCard } from '../../Components/Cards/Card/VerticalCard';
 import { IconCard } from '../../Components/Cards/IconCard/IconCard';
 import { TextCta } from '../../Components/TextCta/TextCta';
-import { Hero } from '../../Components/Hero/Hero';
 import TableOfContents from '../../Components/TableOfContents/TableOfContents';
+import { HubHeader } from '../HubHeader/HubHeader';
 import { UndrrChrome } from '../_shared/UndrrChrome';
 
 const words = {
@@ -340,39 +340,23 @@ export function ContentHub({
           </nav>
         )}
         {page !== 'landing' && (
-          <div className="mg-hub-example__identity">
-            <a
-              className="mg-hub-example__name"
-              href={href('overview')}
-              aria-current={page === 'overview' ? 'page' : undefined}
-            >
-              {text.hub}
-            </a>
-            <nav
-              ref={navigation}
-              className="mg-hub-example__navigation"
-              aria-label={text.hubNav}
-            >
-              <ul>
-                {sections.map((section, index) => (
-                  <li key={section}>
-                    <a
-                      href={href(section)}
-                      aria-current={
-                        active === section
-                          ? detail
-                            ? 'location'
-                            : 'page'
-                          : undefined
-                      }
-                    >
-                      {text.sections[index]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
+          <HubHeader
+            navRef={navigation}
+            name={text.hub}
+            nameHref={href('overview')}
+            nameCurrent={page === 'overview'}
+            navLabel={text.hubNav}
+            variant={hero ? 'expressive' : 'compact'}
+            title={title}
+            summary={intro}
+            media={{ src: heroImage, alt: '' }}
+            sections={sections.map((section, index) => ({
+              label: text.sections[index],
+              href: href(section),
+              current:
+                active === section ? (detail ? 'location' : 'page') : undefined,
+            }))}
+          />
         )}
         <main
           ref={content}
@@ -380,23 +364,7 @@ export function ContentHub({
           className="mg-hub-example__main"
           tabIndex={-1}
         >
-          {hero ? (
-            <Hero
-              layout="split"
-              split="2/3"
-              headingLevel="h1"
-              data={[
-                {
-                  title,
-                  summaryText: intro,
-                  // The label slot stays empty: the identity row a few pixels
-                  // above already names the hub, and the section name here
-                  // would give "which section am I in" a second home.
-                  media: { type: 'image', src: heroImage, alt: '' },
-                },
-              ]}
-            />
-          ) : (
+          {!hero && (
             <div className="mg-hub-example__intro">
               <h1>{title}</h1>
               <p>{intro}</p>

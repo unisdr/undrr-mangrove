@@ -106,6 +106,10 @@ than a component variant.
 
 ## Design decisions
 
+The identity row and section links come from
+[Hub header](?path=/docs/example-hub-header--docs), which owns them for every
+page type and adds the banner on pages that want it.
+
 > **Implementation note (for contributors):** the rest of this section records why the pattern looks the way it does. Consumers reviewing the examples above do not need it. The fuller [information architecture brief](https://github.com/unisdr/undrr-mangrove/blob/950f2f5695ff253eb6a447362d188e0de35d0957/docs/design/content-hubs.md) carries the research behind it, including alternative mobile and deep-section sketches and the questions still worth testing.
 
 ### Why the section strip does not look like tabs
@@ -223,3 +227,4 @@ content hubs, not a requirement to copy a transactional service header.
   - Showed breadcrumbs only where they add ancestry the hub navigation cannot.
   - Gave the hub home the alternating tinted band real UNDRR landing pages are built from, and moved the parent chrome into a shared `UndrrChrome` helper.
   - Dropped the basic landing page example and the layers diagram; landing pages now have their own story set, and the diagram belongs with the research brief.
+  - Moved identity and section navigation into a `HubHeader` organism, whose expressive variant carries the banner instead of composing a separate `Hero`.

@@ -137,8 +137,8 @@ test('reveals the selected section after delayed label resizing and disconnects 
     );
     const observed = selector =>
       observe.mock.calls.some(([element]) => element?.matches?.(selector));
-    expect(observed('.mg-hub-example__navigation')).toBe(true);
-    expect(observed('.mg-hub-example__navigation ul')).toBe(true);
+    expect(observed('.mg-hub-header__nav')).toBe(true);
+    expect(observed('.mg-hub-header__nav ul')).toBe(true);
     expect(scrollBy).not.toHaveBeenCalled();
     loaded = true;
     act(() => notifyResize());
@@ -190,7 +190,7 @@ test.each(['overview', 'how-to-report'])(
   page => {
     const plain = render(<ContentHub initialPage={page} />);
     const identity = plain.container.querySelector(
-      '.mg-hub-example__identity'
+      '.mg-hub-header__identity'
     ).textContent;
     plain.unmount();
 
@@ -200,9 +200,9 @@ test.each(['overview', 'how-to-report'])(
       document.querySelector('.mg-hub-example__intro')
     ).not.toBeInTheDocument();
     // Identity is invariant chrome: a hero must not change or displace it.
-    expect(
-      document.querySelector('.mg-hub-example__identity').textContent
-    ).toBe(identity);
+    expect(document.querySelector('.mg-hub-header__identity').textContent).toBe(
+      identity
+    );
   }
 );
 

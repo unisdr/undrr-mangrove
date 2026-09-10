@@ -1,0 +1,71 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './HubHeader.stories';
+
+<Meta of={Stories} />
+
+# Hub header
+
+> **Note:** A Storybook exploration for [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112), not a published component. Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+One organism that owns a content hub's identity and its section navigation, with
+an optional expressive treatment for pages that want the weight of a hero. See it
+in a whole page in [Content hub](?path=/docs/example-content-hub--docs).
+
+**The required parts are identity and navigation. Hero-like presentation is a
+variant of this component, not the other way round.** That direction is the whole
+point. A page that should not lead with a photograph — a deep guidance page, say —
+drops to `compact` and keeps its navigation. If the links lived inside a hero,
+that page would have to choose between a decoration it does not want and the
+navigation it needs.
+
+## Expressive
+
+The hub home, and any page that wants gravity at the top. The banner carries the
+title and lede; media is optional.
+
+<Canvas of={Stories.Expressive} />
+
+<Controls of={Stories.Expressive} />
+
+## Expressive without media
+
+Most UNDRR pages carry a hero even with no photograph to show, because the top of
+the page is where readers look. The banner works without media, so a page can have
+that weight without inventing an image for it.
+
+<Canvas of={Stories.ExpressiveWithoutMedia} />
+
+## Compact
+
+Everything the hub still needs, and nothing it does not. Identical in height and
+treatment to the identity row of the expressive variant, which is what lets a
+reader keep their bearings moving between page types.
+
+<Canvas of={Stories.Compact} />
+
+## Behaviour
+
+Section links are ordinary page links. Pass `current: "page"` for the exact
+current page and `current: "location"` for an ancestor whose descendant is open —
+the distinction GOV.UK's service navigation draws, and the reason this is not a
+tab set. Give `navLabel` the hub's own name rather than a generic "sections", so
+a page carrying several navigation landmarks keeps them distinguishable.
+
+`navRef` exposes the navigation element, so the consuming page can keep the
+active section scrolled into view.
+
+> **Implementation note (for contributors):** the navigation keeps its own solid
+> surface above the banner instead of sitting on it. `mg-hero` sets
+> `color: neutral-0` on the element and, until recently, forced every descendant
+> anchor to white — links placed over editor-chosen media have contrast nobody
+> can predict, and the active-state marker would disappear against a light
+> photograph. Keeping the two surfaces separate is what makes the active state
+> safe to draw at all.
+>
+> The banner reuses hero _tokens and layout_, not `.mg-hero` itself. Taking the
+> class would inherit the full-bleed breakout, the forced text colour and the
+> fixed aspect ratio — three things this component immediately overrides.
+
+## Changelog
+
+- **1.0** — 2026-09-10: Added the hub header with compact and expressive variants. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))

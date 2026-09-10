@@ -1,0 +1,236 @@
+// Story-only exploration: intentionally excluded from the distributed stylesheet.
+// Deliberately not a tab set and deliberately not the mega menu topbar. Both
+// mark the active item with a 3px bottom border; so does OnThisPageNav. A
+// leading rule is the repo's existing idiom for "the destination you are on"
+// (see mg-mega-content__section-list-link--active), and it is the one
+// horizontal-strip treatment not already spoken for.
+.mg-hub-header {
+  // Identity is chrome: this row is the same height and treatment on every page
+  // of the hub, whether or not a banner follows it. Invariance is what stops it
+  // reading as a heading, and what makes it a landmark readers can rely on.
+  &__identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--mg-spacing-100) var(--mg-spacing-150);
+    padding-block: var(--mg-spacing-100);
+  }
+
+  &__name {
+    flex: 0 0 auto;
+    font-size: 1.125rem;
+    font-family: var(--mg-font-family-ui);
+    font-weight: 700;
+    color: rgb(var(--mg-color-text));
+    text-decoration: none;
+    padding-block: var(--mg-spacing-75);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--mg-focus-ring-offset)
+        rgb(var(--mg-color-neutral-0));
+      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-focus-ring));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
+
+    @media (width >= 48rem) {
+      padding-inline-end: var(--mg-spacing-150);
+      border-inline-end: 1px solid rgb(var(--mg-color-neutral-300));
+    }
+  }
+
+  &__nav {
+    flex: 1 1 20rem;
+    min-inline-size: 0;
+    position: relative;
+    isolation: isolate;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--mg-spacing-300);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 3;
+    }
+
+    &::before {
+      inset-inline-start: 0;
+      background: linear-gradient(
+        to right,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &::after {
+      inset-inline-end: 0;
+      background: linear-gradient(
+        to left,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::before {
+      background: linear-gradient(
+        to left,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &:dir(rtl)::after {
+      background: linear-gradient(
+        to right,
+        rgb(var(--mg-color-neutral-0)),
+        transparent
+      );
+    }
+
+    &[data-overflow-start]::before,
+    &[data-overflow-end]::after {
+      opacity: 1;
+    }
+
+    // Keep labels and the focus ring clear during keyboard navigation.
+    &:has(:focus-visible)::before,
+    &:has(:focus-visible)::after {
+      opacity: 0;
+    }
+
+    ul {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-padding-inline: var(--mg-spacing-150);
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: var(--mg-spacing-50);
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      min-block-size: 2.75rem;
+      padding: var(--mg-spacing-100) var(--mg-spacing-150);
+      scroll-margin-inline: var(--mg-spacing-150);
+      color: rgb(var(--mg-color-interactive));
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    // Three signals, so the state never rests on colour alone: the current item
+    // stops looking like a link, gains weight, and gains a leading rule.
+    a[aria-current] {
+      font-weight: 700;
+      color: rgb(var(--mg-color-text));
+    }
+
+    a[aria-current]::before {
+      content: "";
+      display: inline-block;
+      block-size: 0.85em;
+      border-inline-start: var(--mg-spacing-25) solid
+        rgb(var(--mg-color-interactive));
+      margin-inline-end: var(--mg-spacing-50);
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    // Inset, because the list is a scrollport: an outward ring on the first or
+    // last item would be clipped.
+    a:focus-visible {
+      box-shadow:
+        inset 0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0)),
+        inset 0 0 0
+          calc(var(--mg-focus-ring-offset) + var(--mg-focus-ring-width))
+          rgb(var(--mg-color-focus-ring));
+      outline: 0;
+
+      @media (forced-colors: active) {
+        outline: var(--mg-focus-ring-width) solid Highlight;
+        outline-offset: calc(var(--mg-focus-ring-width) * -1);
+      }
+    }
+  }
+
+  // The expressive banner. It sits below the navigation on its own surface, so
+  // no link is ever placed over editor-chosen media.
+  &__banner {
+    background-color: rgb(var(--mg-color-interactive));
+    color: rgb(var(--mg-color-neutral-0));
+  }
+
+  &__banner-inner {
+    display: grid;
+    gap: var(--mg-spacing-250);
+    align-items: center;
+    padding-block: var(--mg-spacing-350);
+  }
+
+  &__title {
+    font-family: var(--mg-font-family-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin-block: 0 var(--mg-spacing-150);
+    max-inline-size: 18ch;
+  }
+
+  &__summary {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    max-inline-size: 46ch;
+    margin: 0;
+  }
+
+  &__media img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+  }
+
+  @media (width >= 48rem) {
+    &__banner-inner {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+
+    &__media img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media (forced-colors: active) {
+    // A border takes system colours; a background would be forced to Canvas
+    // and the marker would disappear.
+    &__nav a[aria-current]::before {
+      border-inline-start-color: Highlight;
+    }
+
+    &__nav::before,
+    &__nav::after {
+      display: none;
+    }
+
+    // System scrollbars remain the overflow affordance when fades disappear.
+    &__nav ul {
+      scrollbar-width: auto;
+    }
+  }
+}
