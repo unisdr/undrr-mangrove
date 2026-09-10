@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
 
 /**
  * Identity and section navigation for a content hub, with an optional
@@ -26,6 +27,7 @@ export function HubHeader({
   title,
   summary,
   media,
+  actions,
   headingLevel: Heading = 'h1',
   navRef,
 }) {
@@ -68,6 +70,19 @@ export function HubHeader({
             <div className="mg-hub-header__copy">
               <Heading className="mg-hub-header__title">{title}</Heading>
               {summary && <p className="mg-hub-header__summary">{summary}</p>}
+              {actions?.length > 0 && (
+                <div className="mg-hub-header__actions">
+                  {actions.map(action => (
+                    <CtaButton
+                      key={action.url}
+                      Type={action.type || 'Primary'}
+                      Variant="CTA"
+                      label={action.label}
+                      href={action.url}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             {media && (
               <div className="mg-hub-header__media">
@@ -112,6 +127,17 @@ HubHeader.propTypes = {
   title: PropTypes.string,
   /** Banner supporting text. */
   summary: PropTypes.string,
+  /**
+   * Calls to action for the banner, at most two. Uses the same `CtaButton` the
+   * hero does, so a hub page's primary action looks like one anywhere else.
+   */
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['Primary', 'Secondary']),
+    })
+  ),
   /** Banner image. Omit for a text-only banner that still carries weight. */
   media: PropTypes.shape({
     src: PropTypes.string.isRequired,

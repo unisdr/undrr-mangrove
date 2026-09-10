@@ -118,6 +118,41 @@ test('marks exactly one current section, whatever the surface', () => {
   // load the stylesheet and getComputedStyle returns nothing for them.
 });
 
+test('renders banner actions as links, and only when given', () => {
+  const plain = render(
+    <HubHeader {...base} variant="expressive" title="A title" />
+  );
+  expect(
+    plain.container.querySelector('.mg-hub-header__actions')
+  ).not.toBeInTheDocument();
+  plain.unmount();
+
+  render(
+    <HubHeader
+      {...base}
+      variant="expressive"
+      title="A title"
+      actions={[
+        { label: 'Open the Monitor', url: 'https://sendaimonitor.undrr.org/' },
+        { label: 'Reporting guidance', url: '#reporting', type: 'Secondary' },
+      ]}
+    />
+  );
+  const cta = screen.getByRole('link', { name: 'Open the Monitor' });
+  expect(cta).toHaveAttribute('href', 'https://sendaimonitor.undrr.org/');
+  // Actions belong to the banner, not the navigation landmark.
+  expect(
+    within(
+      screen.getByRole('navigation', {
+        name: 'Sendai Framework Monitor sections',
+      })
+    ).queryByRole('link', { name: 'Open the Monitor' })
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getByRole('link', { name: 'Reporting guidance' })
+  ).toBeVisible();
+});
+
 test('has no detectable accessibility violations', async () => {
   const { container } = render(
     <HubHeader
@@ -126,6 +161,7 @@ test('has no detectable accessibility violations', async () => {
       title="A title"
       summary="A summary."
       media={{ src: 'https://example.com/photo.jpg', alt: '' }}
+      actions={[{ label: 'Open the Monitor', url: '#open' }]}
     />
   );
   expect(await axe(container)).toHaveNoViolations();

@@ -35,6 +35,10 @@ export default {
 
 export const Expressive = {
   args: {
+    actions: [
+      { label: 'Open the Monitor', url: 'https://sendaimonitor.undrr.org/' },
+      { label: 'Reporting guidance', url: '#reporting', type: 'Secondary' },
+    ],
     variant: 'expressive',
     nameCurrent: true,
     title: 'Tracking progress towards a more resilient world',

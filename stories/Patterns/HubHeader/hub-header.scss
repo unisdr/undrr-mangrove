@@ -286,6 +286,13 @@
     max-inline-size: 18ch;
   }
 
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-150);
+    margin-block-start: var(--mg-spacing-250);
+  }
+
   &__summary {
     font-size: 1.0625rem;
     line-height: 1.65;

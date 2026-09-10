@@ -21,8 +21,12 @@ navigation it needs.
 ## Expressive
 
 The hub home, and any page that wants gravity at the top. The banner carries the
-title and lede; media is optional. The bar shares the banner's surface by
-default, so the header reads as one block.
+title and lede; media and `actions` are both optional. The bar shares the
+banner's surface by default, so the header reads as one block.
+
+`actions` takes at most two calls to action and renders them with the same
+`CtaButton` the hero uses, so a hub page's primary action looks like one
+anywhere else on the site.
 
 <Canvas of={Stories.Expressive} />
 
@@ -127,3 +131,4 @@ active section scrolled into view.
   - Tinted the bar so it stratifies from the banner without a divider.
   - Stated the link hover colour, which the global `a:hover` was otherwise darkening into near-invisibility on a coloured surface.
   - Marked the current section with a word-hugging underline instead of a leading rule, which read as a stray pipe on a coloured surface.
+  - Added optional banner `actions`, rendered with the shared `CtaButton`.

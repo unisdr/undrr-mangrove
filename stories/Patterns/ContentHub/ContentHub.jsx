@@ -57,6 +57,8 @@ const words = {
       'Open, transparent and publicly accessible',
     ],
     open: 'Open the Monitor',
+    startReport: 'Start a report',
+    reportingGuidance: 'Reporting guidance',
     cards: [
       'Learn how progress is measured and explore the global indicators.',
       'Prepare evidence and work through the reporting guidance.',
@@ -125,6 +127,8 @@ const words = {
       'مفتوح وشفاف ومتاح للجميع',
     ],
     open: 'افتح المرصد',
+    startReport: 'ابدأ تقريراً',
+    reportingGuidance: 'إرشادات إعداد التقارير',
     cards: [
       'تعرّف على كيفية قياس التقدم واستكشف المؤشرات العالمية.',
       'جهّز الأدلة واتبع إرشادات إعداد التقارير.',
@@ -282,6 +286,25 @@ export function ContentHub({
   // which has no hub navigation, and on pages deep enough to have an
   // intermediate parent that the section strip cannot show.
   const showBreadcrumbs = page === 'landing' || page === 'validate-data';
+  // Not every hero earns a call to action: an overview page routes into the
+  // tool, a reporting page starts the task, and a deeper reference page has no
+  // single next step worth a button.
+  const actions =
+    page === 'overview'
+      ? [{ label: text.open, url: 'https://sendaimonitor.undrr.org/' }]
+      : page === 'how-to-report'
+        ? [
+            {
+              label: text.startReport,
+              url: 'https://sendaimonitor.undrr.org/',
+            },
+            {
+              label: text.reportingGuidance,
+              url: href('reporting'),
+              type: 'Secondary',
+            },
+          ]
+        : undefined;
   // A hero is only offered on the pages that would carry one in production.
   const hero = withHero && (page === 'overview' || detail);
   const headerHero = hero && heroSource === 'header';
@@ -359,6 +382,7 @@ export function ContentHub({
             nameCurrent={page === 'overview'}
             navLabel={text.hubNav}
             variant={headerHero ? 'expressive' : 'compact'}
+            actions={headerHero ? actions : undefined}
             surface={headerSurface}
             title={title}
             summary={intro}
@@ -386,6 +410,11 @@ export function ContentHub({
                 {
                   title,
                   summaryText: intro,
+                  buttons: actions?.map(a => ({
+                    label: a.label,
+                    url: a.url,
+                    type: a.type || 'Primary',
+                  })),
                   media:
                     pageHeroMedia === 'video'
                       ? heroVideo
