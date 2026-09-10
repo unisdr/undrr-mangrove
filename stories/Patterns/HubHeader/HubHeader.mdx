@@ -76,11 +76,25 @@ reader keep their bearings moving between page types.
 
 ## Behaviour
 
-Section links are ordinary page links. Pass `current: "page"` for the exact
-current page and `current: "location"` for an ancestor whose descendant is open —
-the distinction GOV.UK's service navigation draws, and the reason this is not a
-tab set. Give `navLabel` the hub's own name rather than a generic "sections", so
-a page carrying several navigation landmarks keeps them distinguishable.
+Section links are ordinary page links. Pass `current` for the exact current page
+and `ancestor` for a section whose descendant is open. Both look the same; only
+`current` is announced, as `aria-current="page"`.
+
+That asymmetry is deliberate. An ancestor is not the page you are on, and a
+second "current" in one landmark tells a screen-reader user they are somewhere
+they are not — on a deep page the ancestor would be the _only_ announced item,
+which is worse than saying nothing. GOV.UK's service navigation draws the line
+the same way: `current` sets `aria-current`, `active` is styled only. Consumers
+that need to find the marked item without reading the ARIA — to scroll it into
+view, say — should use the `data-hub-current` attribute, which is set for both.
+
+Keep the section list short. Five is comfortable and seven is the point at which
+Arabic labels start forcing the strip to scroll on a laptop; DSFR caps the
+equivalent row at three by contract. A hub needing more sections probably needs
+fewer, better-named ones.
+
+Give `navLabel` the hub's own name rather than a generic "sections", so a page
+carrying several navigation landmarks keeps them distinguishable.
 
 `navRef` exposes the navigation element, so the consuming page can keep the
 active section scrolled into view.
@@ -141,4 +155,6 @@ active section scrolled into view.
   - Stated the link hover colour, which the global `a:hover` was otherwise darkening into near-invisibility on a coloured surface.
   - Marked the current section with a word-hugging underline instead of a leading rule, which read as a stray pipe on a coloured surface.
   - Added optional banner `actions`, rendered with the shared `CtaButton`.
+  - Announced only the exact current page, leaving an active ancestor styled but unannounced, after checking the reference systems.
+  - Mirrored the hero's inverse CTA treatment, which is scoped to `.mg-hero` and so did not reach a banner action.
   - Gave the hub name a full 44px box, which centres its divider against the row and brings the link's touch target up to the recommended size.

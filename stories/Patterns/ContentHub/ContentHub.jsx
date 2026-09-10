@@ -226,7 +226,7 @@ export function ContentHub({
     const rail = nav?.querySelector('ul');
     const revealSection = () => {
       if (!rail) return;
-      const selected = rail.querySelector('[aria-current]');
+      const selected = rail.querySelector('[data-hub-current]');
       if (!selected || !rail.scrollBy) return;
       const viewport = rail.getBoundingClientRect();
       const item = selected.getBoundingClientRect();
@@ -390,8 +390,8 @@ export function ContentHub({
             sections={sections.map((section, index) => ({
               label: text.sections[index],
               href: href(section),
-              current:
-                active === section ? (detail ? 'location' : 'page') : undefined,
+              current: active === section && !detail,
+              ancestor: active === section && detail,
             }))}
           />
         )}

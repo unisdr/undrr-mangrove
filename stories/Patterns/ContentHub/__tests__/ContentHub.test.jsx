@@ -39,9 +39,13 @@ test('uses page links for lateral navigation and keeps Reporting active on a chi
   expect(
     screen.getByRole('heading', { level: 1, name: 'How to report' })
   ).toBeVisible();
+  // An ancestor is styled, not announced — see HubHeader.
   expect(
     within(navigation).getByRole('link', { name: 'Reporting' })
-  ).toHaveAttribute('aria-current', 'location');
+  ).not.toHaveAttribute('aria-current');
+  expect(
+    navigation.querySelector('.mg-hub-header__nav-item--ancestor')
+  ).toHaveTextContent('Reporting');
   expect(screen.getByRole('link', { name: 'UNDRR home' })).toHaveAttribute(
     'href',
     'https://www.undrr.org/'
@@ -95,7 +99,7 @@ test('restores a stable story route on reload and reveals an offscreen active se
   const bounds = jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
     .mockImplementation(function () {
-      return this.hasAttribute('aria-current')
+      return this.hasAttribute('data-hub-current')
         ? { left: 350, right: 440 }
         : { left: 0, right: 320 };
     });
@@ -127,7 +131,7 @@ test('reveals the selected section after delayed label resizing and disconnects 
   const bounds = jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
     .mockImplementation(function () {
-      return this.hasAttribute('aria-current') && loaded
+      return this.hasAttribute('data-hub-current') && loaded
         ? { left: -20, right: 87 }
         : { left: 16, right: 344 };
     });
@@ -244,12 +248,10 @@ test('offers the hero as header chrome or as a separate page block', () => {
 test('keeps the active section marked when a hero owns the heading', () => {
   render(<ContentHub initialPage="how-to-report" withHero />);
   expect(
-    within(
-      screen.getByRole('navigation', {
-        name: 'Sendai Framework Monitor sections',
-      })
-    ).getByRole('link', { name: 'Reporting' })
-  ).toHaveAttribute('aria-current', 'location');
+    screen
+      .getByRole('navigation', { name: 'Sendai Framework Monitor sections' })
+      .querySelector('.mg-hub-header__nav-item--ancestor')
+  ).toHaveTextContent('Reporting');
 });
 
 test('shows ancestry only where it says something the hub navigation cannot', () => {

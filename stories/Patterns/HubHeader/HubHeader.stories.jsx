@@ -59,7 +59,7 @@ export const ExpressiveWithoutMedia = {
     summary:
       'Prepare and review a national report. Work through the guidance with the people who collect and validate your data.',
     sections: sections.map(s =>
-      s.label === 'Reporting' ? { ...s, current: 'location' } : s
+      s.label === 'Reporting' ? { ...s, ancestor: true } : s
     ),
   },
 };
@@ -76,7 +76,7 @@ export const Detached = {
       alt: '',
     },
     sections: sections.map(s =>
-      s.label === 'Reporting' ? { ...s, current: 'location' } : s
+      s.label === 'Reporting' ? { ...s, ancestor: true } : s
     ),
   },
 };
@@ -90,7 +90,7 @@ export const SecondarySurface = {
     summary:
       'Prepare and review a national report. Work through the guidance with the people who collect and validate your data.',
     sections: sections.map(s =>
-      s.label === 'Reporting' ? { ...s, current: 'location' } : s
+      s.label === 'Reporting' ? { ...s, ancestor: true } : s
     ),
   },
 };
@@ -99,7 +99,7 @@ export const Compact = {
   args: {
     variant: 'compact',
     sections: sections.map(s =>
-      s.label === 'Reporting' ? { ...s, current: 'location' } : s
+      s.label === 'Reporting' ? { ...s, ancestor: true } : s
     ),
   },
 };

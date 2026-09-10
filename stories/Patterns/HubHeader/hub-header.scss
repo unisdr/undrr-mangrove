@@ -239,7 +239,8 @@
     // marker and the label are both white, so it read as a stray pipe next to
     // the text rather than a mark — and the row already has a divider after the
     // hub name.
-    a[aria-current] {
+    a[aria-current],
+    &-item--ancestor a {
       font-weight: 700;
       color: rgb(var(--mg-hub-header-ink));
       text-decoration: underline;
@@ -252,7 +253,8 @@
 
     // Active wins over hover: the current item must not restyle itself into
     // looking like an ordinary link when the pointer crosses it.
-    a[aria-current]:hover {
+    a[aria-current]:hover,
+    &-item--ancestor a:hover {
       color: rgb(var(--mg-hub-header-ink));
     }
 
@@ -308,6 +310,31 @@
     flex-wrap: wrap;
     gap: var(--mg-spacing-150);
     margin-block-start: var(--mg-spacing-250);
+
+    // CtaButton's inverse treatment is scoped to .mg-hero, so a CTA on any
+    // other dark surface falls back to styling meant for a light background:
+    // a dark label on a dark banner, and a label that disappears on hover.
+    // Mirrored here against this component's own surface tokens.
+    a.mg-button.mg-button-cta,
+    a.mg-button.mg-button-cta:hover,
+    a.mg-button.mg-button-cta:visited {
+      background: transparent;
+      border-color: transparent;
+      color: rgb(var(--mg-color-neutral-0));
+
+      &::after {
+        background: rgb(var(--mg-color-neutral-0));
+        color: rgb(var(--mg-hub-header-banner-surface));
+      }
+    }
+
+    a.mg-button:focus-visible {
+      box-shadow: 0 0 0 var(--mg-focus-ring-offset)
+        rgb(var(--mg-color-neutral-0));
+      outline: var(--mg-focus-ring-width) solid
+        rgb(var(--mg-color-focus-ring-inverse));
+      outline-offset: var(--mg-focus-ring-offset);
+    }
   }
 
   &__summary {
@@ -337,7 +364,8 @@
 
   @media (forced-colors: active) {
     // The underline survives forced colours; only its colour needs restating.
-    &__nav a[aria-current] {
+    &__nav a[aria-current],
+    &__nav-item--ancestor a {
       text-decoration-color: Highlight;
     }
 

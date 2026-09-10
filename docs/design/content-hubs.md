@@ -94,7 +94,7 @@ Introduction                             Reporting cycle
 Main content                             Focal points
 ```
 
-“Reporting” remains visibly active on descendants. It is a page link, not a tab-panel control. Its active-ancestor state must not falsely claim that its destination is the current page. This page carries no breadcrumb: the trail would only repeat the active section link and the heading.
+“Reporting” remains visibly active on descendants. It is a page link, not a tab-panel control. Its active-ancestor state is styled but not announced, so it cannot claim to a screen reader that its destination is the current page. This page carries no breadcrumb: the trail would only repeat the active section link and the heading.
 
 ### Deep section
 
@@ -177,6 +177,20 @@ Keep shared content in its canonical location. Linking a report from several hub
 5. Can the longest translated labels fit without making content difficult to reach?
 6. With the full parent header and global menu above it, does the hub's own navigation still read as a distinct place, or does it get lost?
 7. When users move from guidance into a tool, is the transition clear and the return route useful?
+
+## What comparable state systems do
+
+Two national systems solve a version of this problem, and both are worth weighing before defaults are settled.
+
+**Germany's Dachmarke** ([dachmarke.gov.de](https://dachmarke.gov.de/)) is the strongest argument against giving a hub its own visual identity at all. Its four building blocks are a uniform narrow header bar (*Kopfzeile*) reading "Offizielle Website – Bundesrepublik Deutschland", a centrally controlled `.gov.de` domain, a shared wordmark, and the KERN design system. A constituent body differentiates itself through its **domain name and its content**, not through visual deviation. Identity is enforced by URL plus a thin invariant strip rather than by letting each entity express itself.
+
+That validates treating hub identity as thin, invariant chrome. It also challenges the coloured surface variants: on a strict Dachmarke reading, a hub should look exactly like the parent site and be distinguished by its name and address alone. The counter-argument for UNDRR is that PreventionWeb, MCR2030 and IRP already hold real brand equity that Dachmarke's constituent agencies were asked to give up, so the situations are not equivalent — but the position deserves to be argued rather than assumed away.
+
+**France's DSFR** solves the layering explicitly, and closer to our shape. Its `Header` component takes three identities as separate properties rather than as stacked components: `brandTop` (the State block), `serviceTitle` with `serviceTagline` (the service's own name and strapline), and an optional `operatorLogo` for the body running it. Our hub name is essentially DSFR's `serviceTitle`, with the difference that ours sits in a component *below* the parent header rather than inside it. Whether the two should merge is an open question; DSFR suggests they can.
+
+Three pieces of DSFR discipline transfer directly. Quick-access items are capped at three by contract, not convention. An operator logo carries a mandated aspect ratio and an alt-text rule requiring that any text in the image also appear in the alternative. And like Dachmarke, use of the system is tied to the domain: applications are expected on `.gouv.fr`, and using it elsewhere requires an agreement.
+
+On marking the current item, neither reference uses `aria-current="location"` for a section that merely contains the current page. DSFR marks a leaf link `aria-current="page"` and an expandable section `aria-current="true"`. GOV.UK's service navigation announces only the exact page and conveys the containing section visually, with `current` taking precedence over `active`. The prototype follows GOV.UK: the exact page is announced, an ancestor is styled but not announced, because on a deep page an announced ancestor would be the only "current" item a screen reader reports and would name a page the reader is not on.
 
 ## Reference lessons
 

@@ -5,7 +5,7 @@ import { HubHeader } from '../HubHeader';
 
 const sections = [
   { label: 'About', href: '#about' },
-  { label: 'Reporting', href: '#reporting', current: 'location' },
+  { label: 'Reporting', href: '#reporting', ancestor: true },
   { label: 'Data', href: '#data' },
 ];
 
@@ -28,9 +28,14 @@ test('carries identity and navigation in both variants', () => {
       name: 'Sendai Framework Monitor sections',
     });
     expect(within(nav).getAllByRole('link')).toHaveLength(3);
+    // An ancestor is styled, not announced: a second "current" in one landmark
+    // would tell a screen-reader user they are somewhere they are not.
     expect(
       within(nav).getByRole('link', { name: 'Reporting' })
-    ).toHaveAttribute('aria-current', 'location');
+    ).not.toHaveAttribute('aria-current');
+    expect(
+      nav.querySelector('.mg-hub-header__nav-item--ancestor')
+    ).toBeInTheDocument();
     unmount();
   }
 });
@@ -96,8 +101,8 @@ test('carries a surface variant onto the bar without losing the navigation', () 
     const bar = container.querySelector('.mg-hub-header__bar');
     expect(bar.querySelector('.mg-hub-header__nav')).toBeInTheDocument();
     expect(
-      within(bar).getByRole('link', { name: 'Reporting' })
-    ).toHaveAttribute('aria-current', 'location');
+      bar.querySelector('.mg-hub-header__nav-item--ancestor')
+    ).toBeInTheDocument();
   }
 });
 
@@ -107,10 +112,14 @@ test('marks exactly one current section, whatever the surface', () => {
       <HubHeader {...base} surface={surface} />
     );
     const marked = container.querySelectorAll(
-      '.mg-hub-header__nav a[aria-current]'
+      '.mg-hub-header__nav-item--ancestor'
     );
     expect(marked).toHaveLength(1);
     expect(marked[0]).toHaveTextContent('Reporting');
+    // Nothing in the strip claims to be the current page on a descendant.
+    expect(
+      container.querySelectorAll('.mg-hub-header__nav a[aria-current]')
+    ).toHaveLength(0);
     unmount();
   }
   // The visual signals on a coloured ground — weight and the leading rule —

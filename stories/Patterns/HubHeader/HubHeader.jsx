@@ -53,8 +53,24 @@ export function HubHeader({
           >
             <ul>
               {sections.map(section => (
-                <li key={section.href}>
-                  <a href={section.href} aria-current={section.current}>
+                <li
+                  key={section.href}
+                  className={
+                    section.ancestor
+                      ? 'mg-hub-header__nav-item--ancestor'
+                      : undefined
+                  }
+                >
+                  <a
+                    href={section.href}
+                    aria-current={section.current ? 'page' : undefined}
+                    // Marks both states for the consumer's scroll-into-view,
+                    // which must not depend on the ARIA semantics now that an
+                    // ancestor is deliberately not announced.
+                    data-hub-current={
+                      section.current || section.ancestor ? '' : undefined
+                    }
+                  >
                     {section.label}
                   </a>
                 </li>
@@ -103,12 +119,19 @@ HubHeader.propTypes = {
   nameHref: PropTypes.string.isRequired,
   /** Mark the name as the current page, on the hub home itself. */
   nameCurrent: PropTypes.bool,
-  /** Section links. `current` takes `page` for the exact page, `location` for an ancestor. */
+  /**
+   * Section links. `current` marks the exact page and is announced as
+   * `aria-current="page"`. `ancestor` marks a section that merely contains the
+   * current page: styled the same, announced not at all, because a second
+   * "current" in one landmark tells a screen-reader user they are somewhere
+   * they are not. GOV.UK's service navigation draws the line the same way.
+   */
   sections: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       href: PropTypes.string.isRequired,
-      current: PropTypes.oneOf(['page', 'location']),
+      current: PropTypes.bool,
+      ancestor: PropTypes.bool,
     })
   ).isRequired,
   /** Accessible name for the navigation landmark. Name the hub, not just "sections". */
