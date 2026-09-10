@@ -284,7 +284,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 ## Changelog
 
 - **1.4** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)):
-  - Added `orientation="horizontal"`, which places the icon beside the content rather than above it — the arrangement undrr.org already uses for "what would you like to do" route rows. It owns the visual's size, so `imageScale` does not apply.
+  - Added `orientation="horizontal"`, which places the icon beside the content rather than above it — the arrangement undrr.org already uses for "what would you like to do" route rows. It owns the visual's size via `--mg-card-icon-size` (default `3rem`), so `imageScale` does not apply.
   - Fixed `centered`, which centred the text but left the icon pinned left. The visual is a column flex container, so its horizontal axis is the cross axis; the variant set `justify-content` and needed `align-items`.
 
 - **1.3.4** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Added the mixed-content card group to the docs with a browser assertion for equal sibling heights. Fixed-size coloured badges no longer reserve an oversized illustration frame above their titles.

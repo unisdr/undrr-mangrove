@@ -131,9 +131,11 @@ and what that hero is allowed to be.
 
 `routeCards` swaps the vertical cards for icon cards, which is how undrr.org
 already presents "what would you like to do" routes on the live Monitor pages.
-The destinations are identical; only the presentation changes. IconCard ships
-column-only, so the horizontal arrangement here is a story-local override rather
-than a component variant.
+The destinations are identical; only the presentation changes. This uses
+`IconCard`'s `orientation="horizontal"`, which was added for exactly this
+arrangement — the pattern faked it with a story-local override first, and the
+override lost, because it was fighting the component's own icon sizing rather
+than replacing it.
 
 <Canvas of={Stories.HubHomeIconRoutes} />
 
@@ -235,8 +237,10 @@ could graduate from this exploration after testing real labels and page depth.
 
 The hash routing is demonstration code. A production site should supply canonical
 page URLs, current-page and active-ancestor state, and its own rendering or routing.
-Use distinct navigation labels and `aria-current="page"` for an exact current page;
-the prototype uses `aria-current="location"` for its active ancestor section.
+Use distinct navigation labels and `aria-current="page"` for an exact current
+page. An active ancestor is styled but carries no `aria-current` at all, so it
+cannot tell a screen reader the reader is on a page they are not — the line
+GOV.UK's service navigation draws, and the one this follows.
 
 ## Questions for the next iteration
 
@@ -266,4 +270,6 @@ content hubs, not a requirement to copy a transactional service header.
   - Fixed the full-width bands, whose bleed was hidden behind the pattern wrapper's own background.
   - Unified the navigation bar with the banner below it by default, without nesting one in the other, and added `headerSurface: "detached"` as the opt-out.
   - Moved the layout these patterns share into one partial, and grouped the alternatives under Variations.
+  - Announced only the exact current page, leaving an active ancestor styled but unannounced, after checking DSFR and GOV.UK.
+  - Replaced the story-local icon-card override with `IconCard`'s own `orientation="horizontal"`, and dropped the video hero story as a demonstration of a `Hero` capability already documented there.
   - Gave the hub home and the reporting detail page a call to action, on whichever hero the page is using.
