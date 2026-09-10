@@ -56,6 +56,6 @@ test('has no detectable accessibility violations in the page body', async () => 
   // Scoped to the pattern. The parent chrome is shipped MegaMenu markup, whose
   // desktop topbar has its own pre-existing axe failures.
   expect(
-    await axe(container.querySelector('.mg-page-shell'))
+    await axe(container.querySelector('.mg-demo-shell'))
   ).toHaveNoViolations();
 });

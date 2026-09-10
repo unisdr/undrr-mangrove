@@ -1,5 +1,6 @@
 import React from 'react';
 import { ContentHub } from './ContentHub';
+import '../_shared/pattern-demo.scss';
 
 export default {
   title: 'Patterns/Content hub',

@@ -1,6 +1,8 @@
-// Page-level layout shared by the content hub and landing page patterns.
-// Distributed: these are the pieces a real page is assembled from, so a
-// consumer building one of these patterns has them without copying CSS.
+// Page composition: the tinted band, the reading column and the fact grid.
+// Distributed, because a consumer building one of these pages needs them and
+// none is obvious enough to expect them to rewrite. Anything thinner than this
+// — a margin, a font size — stays in the demo stylesheet rather than becoming
+// public API nobody can rename later.
 // Everything here is a custom property rather than a SCSS variable, so the file
 // also compiles standalone if it is ever imported directly from a story.
 // mg-container's gutter is 10px at every width. That is fine for content
@@ -9,47 +11,9 @@
 // where the viewport is narrow; above that the container's own max-widths
 // take over and the gutter stops being what limits the line.
 @media (width < 48rem) {
-  // Named explicitly rather than as a descendant `.mg-container`: PageHeader
-  // uses that class too, so the loose selector reached into shipped chrome.
-  .mg-page-shell,
-  .mg-band__inner,
-  .mg-band--feature .mg-band__inner {
+  .mg-band__inner {
     padding-inline: var(--mg-spacing-200);
   }
-}
-
-// A quiet ancestry trail above the page content.
-.mg-page-breadcrumbs {
-  padding-block: var(--mg-spacing-150);
-  font-size: 0.875rem;
-}
-
-// Rhythm between the sections of a composed page.
-.mg-section {
-  margin-block-start: var(--mg-spacing-300);
-}
-
-.mg-lede {
-  max-inline-size: 49rem;
-  font-size: 1.0625rem;
-  line-height: 1.65;
-}
-
-.mg-page-intro {
-  max-inline-size: 49rem;
-  margin-block-end: var(--mg-spacing-250);
-}
-
-.mg-page-intro h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.15;
-  text-wrap: balance;
-  margin-block: 0 var(--mg-spacing-150);
-}
-
-.mg-page-intro > p {
-  font-size: 1.125rem;
-  line-height: 1.65;
 }
 
 // A tinted full-width band. Real UNDRR landing pages alternate plain and
@@ -131,18 +95,6 @@
 
 .mg-reading__article p {
   line-height: 1.75;
-}
-
-.mg-skip-link {
-  position: absolute;
-  clip-path: inset(50%);
-
-  &:focus {
-    position: static;
-    clip-path: none;
-    display: block;
-    padding: var(--mg-spacing-100);
-  }
 }
 
 // On this page belongs in a right-hand sidebar wherever there is room for one;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { LandingPage } from './LandingPages';
+import '../_shared/pattern-demo.scss';
 
 export default {
   title: 'Patterns/Landing pages',

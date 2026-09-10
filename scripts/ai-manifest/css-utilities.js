@@ -115,32 +115,8 @@ export default {
     {
       name: 'Page composition',
       description:
-        'Layout pieces a full page is assembled from: the reading column, tinted full-width bands, and the supporting text around them. Used by the content hub and landing page patterns.',
+        'Layout pieces a full page is assembled from: tinted full-width bands, a reading column with an optional sticky contents sidebar, and a grid of short icon facts.',
       classes: [
-        {
-          class: 'mg-page-shell',
-          description:
-            'Page content wrapper. Pair with mg-container; widens its gutter below 48rem so text does not sit against the screen edge.',
-          usage: '<div class="mg-page-shell | mg-container">…</div>',
-        },
-        {
-          class: 'mg-page-intro',
-          description:
-            'Page title and lede block. Constrains the measure and sizes the h1 responsively.',
-          usage:
-            '<div class="mg-page-intro">\n  <h1>Page title</h1>\n  <p>Supporting lede.</p>\n</div>',
-        },
-        {
-          class: 'mg-lede',
-          description:
-            'A supporting paragraph at a slightly larger size, constrained to a readable measure.',
-          usage: '<p class="mg-lede">Supporting text.</p>',
-        },
-        {
-          class: 'mg-section',
-          description: 'Vertical rhythm between the sections of a page.',
-          usage: '<section class="mg-section">…</section>',
-        },
         {
           class: 'mg-band',
           description:
@@ -168,19 +144,6 @@ export default {
             'Reading column. Add mg-reading--with-contents to place a table of contents in a sticky right sidebar above 48rem.',
           usage:
             '<div class="mg-reading mg-reading--with-contents">\n  <div class="mg-table-of-contents">…</div>\n  <div class="mg-reading__article">…</div>\n</div>',
-        },
-        {
-          class: 'mg-skip-link',
-          description:
-            'Visually hidden skip link that appears on focus. Place first inside the page wrapper.',
-          usage:
-            '<a class="mg-skip-link" href="#content">Skip to page content</a>',
-        },
-        {
-          class: 'mg-page-breadcrumbs',
-          description:
-            'Spacing and size for a breadcrumb trail above page content. Pair with mg-breadcrumb.',
-          usage: '<nav class="mg-breadcrumb mg-page-breadcrumbs">…</nav>',
         },
       ],
     },

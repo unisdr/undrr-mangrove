@@ -1,0 +1,55 @@
+// Demo scaffolding for the pattern stories. Deliberately not distributed and
+// deliberately prefixed mg-demo-, so nothing here reads as public API: it is a
+// margin, a measure and a couple of font sizes, which a consuming page sets for
+// itself. The pieces worth distributing live in Utilities/PagePatterns.
+// A quiet ancestry trail above the page content.
+.mg-demo-breadcrumbs {
+  padding-block: var(--mg-spacing-150);
+  font-size: 0.875rem;
+}
+
+// Rhythm between the sections of a composed page.
+.mg-demo-section {
+  margin-block-start: var(--mg-spacing-300);
+}
+
+.mg-demo-lede {
+  max-inline-size: 49rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.mg-demo-intro {
+  max-inline-size: 49rem;
+  margin-block-end: var(--mg-spacing-250);
+}
+
+.mg-demo-intro h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.15;
+  text-wrap: balance;
+  margin-block: 0 var(--mg-spacing-150);
+}
+
+.mg-demo-intro > p {
+  font-size: 1.125rem;
+  line-height: 1.65;
+}
+
+.mg-demo-skip-link {
+  position: absolute;
+  clip-path: inset(50%);
+
+  &:focus {
+    position: static;
+    clip-path: none;
+    display: block;
+    padding: var(--mg-spacing-100);
+  }
+}
+
+.mg-demo-shell {
+  @media (width < 48rem) {
+    padding-inline: var(--mg-spacing-200);
+  }
+}

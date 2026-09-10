@@ -200,7 +200,7 @@ test.each(['overview', 'how-to-report'])(
 
     render(<ContentHub initialPage={page} withHero />);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
-    expect(document.querySelector('.mg-page-intro')).not.toBeInTheDocument();
+    expect(document.querySelector('.mg-demo-intro')).not.toBeInTheDocument();
     // Identity is invariant chrome: a hero must not change or displace it.
     expect(document.querySelector('.mg-hub-header__identity').textContent).toBe(
       identity
@@ -296,6 +296,6 @@ test('has no detectable accessibility violations on a detail page', async () => 
   // this composition cannot correct from the outside. Remove this scoping once
   // MegaMenu is fixed.
   expect(
-    await axe(container.querySelector('.mg-page-shell'))
+    await axe(container.querySelector('.mg-demo-shell'))
   ).toHaveNoViolations();
 });

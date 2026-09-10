@@ -262,7 +262,7 @@ const words = {
 const factIcons = ['globe', 'cubes', 'tags', 'chart-bar'];
 function Breadcrumbs({ label, home, trail, current }) {
   return (
-    <nav className="mg-breadcrumb mg-page-breadcrumbs" aria-label={label}>
+    <nav className="mg-breadcrumb mg-demo-breadcrumbs" aria-label={label}>
       <ul>
         <li>
           <a href="https://www.undrr.org/">{home}</a>
@@ -297,12 +297,12 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
   return (
     <div lang={arabic ? 'ar' : 'en'} dir={arabic ? 'rtl' : undefined}>
-      <a className="mg-skip-link" href={`#${id}-content`}>
+      <a className="mg-demo-skip-link" href={`#${id}-content`}>
         {text.skip}
       </a>
       <UndrrChrome locale={locale} id={`${id}-header`} />
 
-      <div className="mg-page-shell | mg-container">
+      <div className="mg-demo-shell | mg-container">
         <Breadcrumbs
           label={text.breadcrumbs}
           home={text.home}
@@ -326,9 +326,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 ]}
               />
 
-              <section className="mg-section">
+              <section className="mg-demo-section">
                 <h2>{page.routesHeading}</h2>
-                <p className="mg-lede">{page.routesIntro}</p>
+                <p className="mg-demo-lede">{page.routesIntro}</p>
                 <div className="mg-grid mg-grid__col-3">
                   <IconCard
                     orientation="horizontal"
@@ -345,7 +345,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
               <section className="mg-band">
                 <div className="mg-band__inner | mg-container">
                   <h2>{page.bandHeading}</h2>
-                  <p className="mg-lede">{page.bandText}</p>
+                  <p className="mg-demo-lede">{page.bandText}</p>
                   <ul className="mg-facts">
                     {page.facts.map((fact, index) => (
                       <li key={fact}>
@@ -360,7 +360,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 </div>
               </section>
 
-              <section className="mg-section">
+              <section className="mg-demo-section">
                 <h2>{page.relatedHeading}</h2>
                 <div className="mg-grid mg-grid__col-3">
                   <VerticalCard
@@ -393,7 +393,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
               <div className="mg-band mg-band--feature">
                 <div className="mg-band__inner | mg-container">
                   <h1>{page.title}</h1>
-                  <p className="mg-lede">{page.intro}</p>
+                  <p className="mg-demo-lede">{page.intro}</p>
                 </div>
               </div>
               <div className="mg-reading mg-reading--with-contents">
@@ -419,12 +419,12 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
           {archetype === 'index' && (
             <>
-              <div className="mg-page-intro">
+              <div className="mg-demo-intro">
                 <h1>{page.title}</h1>
-                <p className="mg-lede">{page.intro}</p>
+                <p className="mg-demo-lede">{page.intro}</p>
               </div>
               {page.groups.map(([heading, titles]) => (
-                <section key={heading} className="mg-section">
+                <section key={heading} className="mg-demo-section">
                   <h2>{heading}</h2>
                   <p>
                     <a href={links.collection}>{page.groupLink}</a>

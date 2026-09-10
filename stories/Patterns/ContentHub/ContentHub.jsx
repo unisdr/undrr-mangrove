@@ -334,14 +334,14 @@ export function ContentHub({
 
   return (
     <div lang={arabic ? 'ar' : 'en'} dir={arabic ? 'rtl' : undefined}>
-      <a className="mg-skip-link" href={`#${prefix}-content`}>
+      <a className="mg-demo-skip-link" href={`#${prefix}-content`}>
         {text.skip}
       </a>
       <UndrrChrome locale={locale} id={`${prefix}-header`} />
-      <div className="mg-page-shell | mg-container">
+      <div className="mg-demo-shell | mg-container">
         {showBreadcrumbs && (
           <nav
-            className="mg-breadcrumb mg-page-breadcrumbs"
+            className="mg-breadcrumb mg-demo-breadcrumbs"
             aria-label={text.breadcrumbs}
           >
             <ul>
@@ -419,7 +419,7 @@ export function ContentHub({
             />
           )}
           {!hero && (
-            <div className="mg-page-intro">
+            <div className="mg-demo-intro">
               <h1>{title}</h1>
               <p>{intro}</p>
             </div>
@@ -435,9 +435,9 @@ export function ContentHub({
                   buttons={[{ label: text.open, url: href('overview') }]}
                 />
               )}
-              <section className="mg-section">
+              <section className="mg-demo-section">
                 <h2>{text.related}</h2>
-                <p className="mg-lede">{text.relatedIntro}</p>
+                <p className="mg-demo-lede">{text.relatedIntro}</p>
                 <div className={`mg-grid mg-grid__col-3`}>
                   <RouteCards
                     data={groupCards}
@@ -453,7 +453,7 @@ export function ContentHub({
                 <section className="mg-band">
                   <div className="mg-band__inner | mg-container">
                     <h2>{text.aboutHeading}</h2>
-                    <p className="mg-lede">{text.aboutText}</p>
+                    <p className="mg-demo-lede">{text.aboutText}</p>
                     <ul className="mg-facts">
                       {text.facts.map((fact, index) => (
                         <li key={fact}>
@@ -526,7 +526,7 @@ export function ContentHub({
             </div>
           )}
           {['about', 'indicators', 'reports', 'data'].includes(page) && (
-            <section className="mg-section">
+            <section className="mg-demo-section">
               <h2>{text.resources}</h2>
               <p>{text.reportText}</p>
               <a href="https://sendaimonitor.undrr.org/">{text.reportLink}</a>
