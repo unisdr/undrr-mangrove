@@ -5,18 +5,13 @@ import * as Stories from './ContentHub.stories';
 
 # Content hubs
 
-> **Note:** A Storybook exploration for [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112), not a published component or a new CMS content type. Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+> **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
 A content hub gives a substantial group of pages a shared identity and a reliable
 route between sections. Breadcrumbs explain ancestry; hub navigation makes sibling
-content discoverable without a return trip to the landing page. Its identity and
-section links come from [Hub header](?path=/docs/example-hub-header--docs);
-landing pages, including the topic page a hub usually grows out of, are in
+content discoverable without a return trip to the landing page. Landing pages,
+including the topic page a hub usually grows out of, are in
 [Landing page patterns](?path=/docs/patterns-landing-pages--docs).
-
-These examples use illustrative Sendai Framework Monitor content. They are not
-reporting instructions or a proposed final site map. Internal links navigate within
-the example; the header, global menu and reporting-platform links leave the demo.
 
 ## Landing page, hub or microsite
 
@@ -199,7 +194,7 @@ content hubs, not a requirement to copy a transactional service header.
 
 ## Changelog
 
-- **1.0** — 2026-09-10: Content hub exploration — hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
+- **1.0** — 2026-09-10: Content hub pattern — hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
   - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options.
   - Section links are marked as links rather than tabs, and only the exact current page is announced.
   - Breadcrumbs appear only where they add ancestry the strip cannot show.
