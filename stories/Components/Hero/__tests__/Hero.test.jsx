@@ -163,6 +163,31 @@ describe('Hero — split layout', () => {
     ).toBeInTheDocument();
   });
 
+  it('does not force its link colour into the author-supplied media slot', () => {
+    const { container } = render(
+      <Hero
+        layout="split"
+        data={[
+          {
+            title: 'Split hero',
+            summaryText: 'Lede <a href="/lede">in the copy</a>.',
+            media: {
+              type: 'html',
+              html: '<p><a href="/credit" id="credit">Photo credit</a></p>',
+            },
+          },
+        ]}
+      />
+    );
+    // The rule must reach the hero's own copy...
+    expect(container.querySelector('.mg-hero__content a')).toBeInTheDocument();
+    // ...and stop at the media subtree, which is the author's.
+    const credit = container.querySelector('#credit');
+    expect(credit).toBeInTheDocument();
+    expect(credit.closest('.mg-hero__content')).toBeNull();
+    expect(credit.closest('.mg-hero__overlay')).toBeNull();
+  });
+
   it('renders media image', () => {
     render(<Hero data={[splitItem]} layout="split" />);
     const img = screen.getByRole('img', { name: 'A test photo' });
