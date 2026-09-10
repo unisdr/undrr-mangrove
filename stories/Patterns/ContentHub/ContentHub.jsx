@@ -341,7 +341,7 @@ export function ContentHub({
       <div className="mg-demo-shell | mg-container">
         {showBreadcrumbs && (
           <nav
-            className="mg-breadcrumb mg-demo-breadcrumbs"
+            className="mg-breadcrumb mg-demo-breadcrumbs | mg-u-font-size-250"
             aria-label={text.breadcrumbs}
           >
             <ul>
@@ -437,7 +437,9 @@ export function ContentHub({
               )}
               <section className="mg-demo-section">
                 <h2>{text.related}</h2>
-                <p className="mg-demo-lede">{text.relatedIntro}</p>
+                <p className="mg-demo-lede | mg-u-font-size-500">
+                  {text.relatedIntro}
+                </p>
                 <div className={`mg-grid mg-grid__col-3`}>
                   <RouteCards
                     data={groupCards}
@@ -453,7 +455,9 @@ export function ContentHub({
                 <section className="mg-band">
                   <div className="mg-band__inner | mg-container">
                     <h2>{text.aboutHeading}</h2>
-                    <p className="mg-demo-lede">{text.aboutText}</p>
+                    <p className="mg-demo-lede | mg-u-font-size-500">
+                      {text.aboutText}
+                    </p>
                     <ul className="mg-facts">
                       {text.facts.map((fact, index) => (
                         <li key={fact}>

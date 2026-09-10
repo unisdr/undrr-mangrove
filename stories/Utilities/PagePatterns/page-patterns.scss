@@ -45,13 +45,6 @@
   .mg-band__inner {
     padding-block: var(--mg-spacing-400);
   }
-
-  h1 {
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.15;
-    text-wrap: balance;
-    margin-block: 0 var(--mg-spacing-150);
-  }
 }
 
 .mg-facts {
@@ -91,10 +84,6 @@
 .mg-reading__article section {
   margin-block-end: var(--mg-spacing-300);
   scroll-margin-block-start: var(--mg-spacing-200);
-}
-
-.mg-reading__article p {
-  line-height: 1.75;
 }
 
 // On this page belongs in a right-hand sidebar wherever there is room for one;

@@ -262,7 +262,10 @@ const words = {
 const factIcons = ['globe', 'cubes', 'tags', 'chart-bar'];
 function Breadcrumbs({ label, home, trail, current }) {
   return (
-    <nav className="mg-breadcrumb mg-demo-breadcrumbs" aria-label={label}>
+    <nav
+      className="mg-breadcrumb mg-demo-breadcrumbs | mg-u-font-size-250"
+      aria-label={label}
+    >
       <ul>
         <li>
           <a href="https://www.undrr.org/">{home}</a>
@@ -328,7 +331,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
               <section className="mg-demo-section">
                 <h2>{page.routesHeading}</h2>
-                <p className="mg-demo-lede">{page.routesIntro}</p>
+                <p className="mg-demo-lede | mg-u-font-size-500">
+                  {page.routesIntro}
+                </p>
                 <div className="mg-grid mg-grid__col-3">
                   <IconCard
                     orientation="horizontal"
@@ -345,7 +350,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
               <section className="mg-band">
                 <div className="mg-band__inner | mg-container">
                   <h2>{page.bandHeading}</h2>
-                  <p className="mg-demo-lede">{page.bandText}</p>
+                  <p className="mg-demo-lede | mg-u-font-size-500">
+                    {page.bandText}
+                  </p>
                   <ul className="mg-facts">
                     {page.facts.map((fact, index) => (
                       <li key={fact}>
@@ -393,7 +400,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
               <div className="mg-band mg-band--feature">
                 <div className="mg-band__inner | mg-container">
                   <h1>{page.title}</h1>
-                  <p className="mg-demo-lede">{page.intro}</p>
+                  <p className="mg-demo-lede | mg-u-font-size-500">
+                    {page.intro}
+                  </p>
                 </div>
               </div>
               <div className="mg-reading mg-reading--with-contents">
@@ -421,7 +430,9 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
             <>
               <div className="mg-demo-intro">
                 <h1>{page.title}</h1>
-                <p className="mg-demo-lede">{page.intro}</p>
+                <p className="mg-demo-lede | mg-u-font-size-500">
+                  {page.intro}
+                </p>
               </div>
               {page.groups.map(([heading, titles]) => (
                 <section key={heading} className="mg-demo-section">
