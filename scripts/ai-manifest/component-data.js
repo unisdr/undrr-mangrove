@@ -1080,6 +1080,16 @@ npm run build</code></pre>
   },
 
   // --- Page templates ---
+  'components-reading-column': {
+    description:
+      'Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that.',
+    cssClasses: [
+      'mg-reading',
+      'mg-reading--with-contents',
+      'mg-reading__article',
+    ],
+  },
+
   'patterns-content-hub': {
     description:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
