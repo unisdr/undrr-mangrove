@@ -21,6 +21,13 @@
   --mg-hub-header-rule-alpha: 0.4;
   --mg-hub-header-focus: var(--mg-color-focus-ring-inverse);
 
+  // A slight tint stratifies the bar from the banner without drawing a rule
+  // between them. Without it the two are the same flat colour, and a hero image
+  // meeting that slab reads as a rendering fault rather than a boundary.
+  // Darkening only raises the contrast of the white links above it.
+  --mg-hub-header-bar-tint: 0 0 0;
+  --mg-hub-header-bar-tint-alpha: 0.14;
+
   &--surface-secondary {
     --mg-hub-header-surface: var(--mg-color-hero--secondary);
     --mg-hub-header-banner-surface: var(--mg-color-hero--secondary);
@@ -29,6 +36,10 @@
   &--surface-tertiary {
     --mg-hub-header-surface: var(--mg-color-hero--tertiary);
     --mg-hub-header-banner-surface: var(--mg-color-hero--tertiary);
+
+    // Near-black already: darkening further would not read, so lift instead.
+    --mg-hub-header-bar-tint: 255 255 255;
+    --mg-hub-header-bar-tint-alpha: 0.1;
   }
 
   // Detached: the navigation sits on the page background and the banner keeps
@@ -41,12 +52,19 @@
     --mg-hub-header-rule: var(--mg-color-neutral-300);
     --mg-hub-header-rule-alpha: 1;
     --mg-hub-header-focus: var(--mg-color-focus-ring);
+
+    // Nothing to stratify from: the bar and the page share a surface.
+    --mg-hub-header-bar-tint-alpha: 0;
   }
 
   // The bar bleeds so a coloured header meets the banner or hero below it with
   // no seam, while staying its own container.
   &__bar {
     background-color: rgb(var(--mg-hub-header-surface));
+    background-image: linear-gradient(
+      rgb(var(--mg-hub-header-bar-tint) / var(--mg-hub-header-bar-tint-alpha)),
+      rgb(var(--mg-hub-header-bar-tint) / var(--mg-hub-header-bar-tint-alpha))
+    );
 
     // Self-contained breakout. mg-container-full-width paints its bleed with a
     // z-index:-1 pseudo-element, which disappears behind any ancestor that has

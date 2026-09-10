@@ -47,6 +47,12 @@ of at the mercy of a photograph.
 `detached` is the opt-out: the navigation sits on the page background and the
 banner keeps its own colour, so the two read as separate blocks.
 
+The bar carries a slight tint over the shared surface, so it stratifies from the
+banner without a rule drawn between them. Without it the two are one flat slab,
+and a hero image meeting that slab reads as a rendering fault rather than a
+boundary. Tune it with `--mg-hub-header-bar-tint` and
+`--mg-hub-header-bar-tint-alpha`.
+
 <Canvas of={Stories.Detached} />
 
 ## Secondary surface
@@ -90,6 +96,11 @@ active section scrolled into view.
 > colour — weight and the leading rule carry it, and neither was
 > colour-dependent to begin with.
 >
+> The tint darkens rather than lightens, which raises the contrast of the white
+> links above it in every theme — IRP gains the most, from 4.71:1 to 6.01:1,
+> having been the closest to failing AA. Tertiary is the exception: its surface
+> is pure black, so it lifts instead, and still clears 17:1.
+>
 > The banner reuses hero _tokens and layout_, not `.mg-hero` itself. Taking the
 > class would inherit the full-bleed breakout, the forced text colour and the
 > fixed aspect ratio — three things this component immediately overrides.
@@ -98,3 +109,4 @@ active section scrolled into view.
 
 - **1.0** — 2026-09-10: Added the hub header with compact and expressive variants. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
   - Added `surface` variants. Unified is the default; `detached` keeps the navigation on the page background.
+  - Tinted the bar so it stratifies from the banner without a divider.
