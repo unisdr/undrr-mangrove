@@ -353,8 +353,8 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                 </div>
               </section>
 
-              <section className="mg-landing-example__band | mg-container-full-width">
-                <div className="mg-landing-example__band-inner">
+              <section className="mg-landing-example__band">
+                <div className="mg-landing-example__band-inner | mg-container">
                   <h2>{page.bandHeading}</h2>
                   <p className="mg-landing-example__lede">{page.bandText}</p>
                   <ul className="mg-landing-example__facts">
@@ -401,8 +401,8 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
 
           {archetype === 'report' && (
             <>
-              <div className="mg-landing-example__masthead | mg-container-full-width">
-                <div className="mg-landing-example__masthead-inner">
+              <div className="mg-landing-example__masthead">
+                <div className="mg-landing-example__masthead-inner | mg-container">
                   <h1>{page.title}</h1>
                   <p className="mg-landing-example__lede">{page.intro}</p>
                 </div>

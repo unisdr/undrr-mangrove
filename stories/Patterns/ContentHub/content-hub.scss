@@ -34,11 +34,16 @@
   }
 
   // A tinted full-width band. Real UNDRR landing pages alternate plain and
-  // tinted bands down the page; mg-container-full-width bleeds the inherited
-  // background out to the viewport edges.
+  // tinted bands down the page.
   &__band {
     background-color: rgb(var(--mg-color-neutral-50));
     margin-block-start: var(--mg-spacing-400);
+
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
+    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100vw;
   }
 
   &__band-inner {

@@ -173,6 +173,12 @@
   &__banner {
     background-color: rgb(var(--mg-color-interactive));
     color: rgb(var(--mg-color-neutral-0));
+
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
+    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100vw;
   }
 
   &__banner-inner {

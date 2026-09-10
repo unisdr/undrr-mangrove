@@ -54,8 +54,8 @@ export function HubHeader({
       </div>
 
       {expressive && (
-        <div className="mg-hub-header__banner | mg-container-full-width">
-          <div className="mg-hub-header__banner-inner">
+        <div className="mg-hub-header__banner">
+          <div className="mg-hub-header__banner-inner | mg-container">
             <div className="mg-hub-header__copy">
               <Heading className="mg-hub-header__title">{title}</Heading>
               {summary && <p className="mg-hub-header__summary">{summary}</p>}

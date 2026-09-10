@@ -4,6 +4,7 @@ import { VerticalCard } from '../../Components/Cards/Card/VerticalCard';
 import { IconCard } from '../../Components/Cards/IconCard/IconCard';
 import { TextCta } from '../../Components/TextCta/TextCta';
 import TableOfContents from '../../Components/TableOfContents/TableOfContents';
+import { Hero } from '../../Components/Hero/Hero';
 import { HubHeader } from '../HubHeader/HubHeader';
 import { UndrrChrome } from '../_shared/UndrrChrome';
 
@@ -159,6 +160,7 @@ export function ContentHub({
   locale = 'english',
   showOnThisPage = true,
   withHero = false,
+  heroSource = 'header',
   routeCards = 'vertical',
   routePrefix,
 }) {
@@ -274,6 +276,8 @@ export function ContentHub({
   const showBreadcrumbs = page === 'landing' || page === 'validate-data';
   // A hero is only offered on the pages that would carry one in production.
   const hero = withHero && (page === 'overview' || detail);
+  const headerHero = hero && heroSource === 'header';
+  const pageHero = hero && heroSource === 'page';
   const articleHeadings =
     page === 'validate-data'
       ? text.validationSections
@@ -346,7 +350,7 @@ export function ContentHub({
             nameHref={href('overview')}
             nameCurrent={page === 'overview'}
             navLabel={text.hubNav}
-            variant={hero ? 'expressive' : 'compact'}
+            variant={headerHero ? 'expressive' : 'compact'}
             title={title}
             summary={intro}
             media={{ src: heroImage, alt: '' }}
@@ -364,6 +368,20 @@ export function ContentHub({
           className="mg-hub-example__main"
           tabIndex={-1}
         >
+          {pageHero && (
+            <Hero
+              layout="split"
+              split="2/3"
+              headingLevel="h1"
+              data={[
+                {
+                  title,
+                  summaryText: intro,
+                  media: { type: 'image', src: heroImage, alt: '' },
+                },
+              ]}
+            />
+          )}
           {!hero && (
             <div className="mg-hub-example__intro">
               <h1>{title}</h1>
@@ -393,8 +411,8 @@ export function ContentHub({
               {page === 'overview' && (
                 // Full-width tinted band, the alternating rhythm real UNDRR
                 // landing pages are built from.
-                <section className="mg-hub-example__band | mg-container-full-width">
-                  <div className="mg-hub-example__band-inner">
+                <section className="mg-hub-example__band">
+                  <div className="mg-hub-example__band-inner | mg-container">
                     <h2>{text.aboutHeading}</h2>
                     <p className="mg-hub-example__lede">{text.aboutText}</p>
                     <ul className="mg-hub-example__facts">
@@ -486,8 +504,14 @@ ContentHub.propTypes = {
   initialPage: PropTypes.oneOf(routes),
   /** Storybook locale key. `arabic` switches copy and sets `dir="rtl"`. */
   locale: PropTypes.string,
-  /** Give the page a split hero that carries the `h1` instead of a plain intro. */
+  /** Give the page a hero that carries the `h1` instead of a plain intro. */
   withHero: PropTypes.bool,
+  /**
+   * Where that hero comes from. `header` lets the hub header's banner be the
+   * hero, so it is chrome. `page` keeps the header compact and places a separate
+   * `Hero` block below it, the way body content would.
+   */
+  heroSource: PropTypes.oneOf(['header', 'page']),
   /** Presentation for the route card group. Destinations are identical either way. */
   routeCards: PropTypes.oneOf(['vertical', 'icon']),
   /** Render the On this page sidebar on detail pages. */

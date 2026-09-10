@@ -10,6 +10,7 @@ export default {
   args: { showOnThisPage: true, withHero: false, routeCards: 'vertical' },
   argTypes: {
     routeCards: { control: 'inline-radio', options: ['vertical', 'icon'] },
+    heroSource: { control: 'inline-radio', options: ['header', 'page'] },
     initialPage: { control: false },
     locale: { table: { disable: true } },
     routePrefix: { table: { disable: true } },
@@ -31,6 +32,10 @@ export const HubHome = {
 export const HubDetailWithHero = {
   name: 'Hub detail with a hero',
   args: { initialPage: 'how-to-report', withHero: true },
+};
+export const HubDetailWithPageHero = {
+  name: 'Hub detail with a separate page hero',
+  args: { initialPage: 'how-to-report', withHero: true, heroSource: 'page' },
 };
 export const HubDetail = {
   name: 'Hub detail',
