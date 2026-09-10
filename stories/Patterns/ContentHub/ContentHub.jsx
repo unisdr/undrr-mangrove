@@ -452,8 +452,8 @@ export function ContentHub({
               {page === 'overview' && (
                 // Full-width tinted band, the alternating rhythm real UNDRR
                 // landing pages are built from.
-                <section className="mg-band">
-                  <div className="mg-band__inner | mg-container">
+                <section className="mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50">
+                  <div>
                     <h2>{text.aboutHeading}</h2>
                     <p className="mg-demo-lede | mg-u-font-size-500">
                       {text.aboutText}

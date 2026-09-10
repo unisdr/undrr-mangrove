@@ -41,3 +41,18 @@
     padding-inline: var(--mg-spacing-200);
   }
 }
+
+// Vertical padding for a full-width band. mg-container-full-width supplies the
+// bleed and a background utility the colour; Mangrove has no spacing utility,
+// so the padding is the one thing left to declare.
+.mg-demo-band {
+  padding-block: var(--mg-spacing-300);
+}
+
+.mg-demo-band--feature {
+  padding-block: var(--mg-spacing-400);
+}
+
+.mg-demo-band h2 {
+  margin-block-start: 0;
+}

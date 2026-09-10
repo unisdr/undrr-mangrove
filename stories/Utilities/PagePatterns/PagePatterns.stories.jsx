@@ -1,5 +1,5 @@
 import React from 'react';
-import { Band, Facts, Reading } from './PagePatterns';
+import { Facts, Reading } from './PagePatterns';
 
 export default {
   title: 'Components/Page composition',
@@ -13,32 +13,13 @@ const facts = [
   ['cubes', 'Connected to the Sustainable Development Goals'],
 ];
 
-export const TintedBand = {
+export const FactsGrid = {
   render: () => (
     <div className="mg-container">
-      <p>Content at container width.</p>
-      <Band>
+      <div className="mg-container-full-width mg-u-background-color--neutral-50">
         <h2>Why this matters</h2>
-        <p className="mg-u-font-size-500">
-          The band bleeds to the viewport edges while its content stays aligned
-          with everything above it.
-        </p>
         <Facts items={facts} />
-      </Band>
-      <p>Container width again.</p>
-    </div>
-  ),
-};
-
-export const FeatureBand = {
-  render: () => (
-    <div className="mg-container">
-      <Band feature>
-        <h1>Global assessment report</h1>
-        <p className="mg-u-font-size-500">
-          A band carrying the page title rather than a supporting section.
-        </p>
-      </Band>
+      </div>
     </div>
   ),
 };

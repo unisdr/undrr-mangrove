@@ -7,43 +7,14 @@ import * as Stories from './PagePatterns.stories';
 
 # Page composition
 
-CSS classes for assembling a full page: full-width tinted bands, a reading
-column with an optional sticky contents sidebar, and a grid of short icon facts.
+CSS classes for assembling a full page: a reading column with an optional sticky
+contents sidebar, and a grid of short icon facts. For a full-width tinted band,
+combine `mg-container-full-width` with a background utility.
 Used by the [content hub](?path=/docs/patterns-content-hub--docs) and
 [landing page](?path=/docs/patterns-landing-pages--docs) patterns.
 
 These are classes, not components. The React wrappers in this story exist only
 so the classes can be seen; use the markup directly.
-
-## Tinted band
-
-<Canvas of={Stories.TintedBand} />
-
-```html
-<section class="mg-band">
-  <div class="mg-band__inner | mg-container">…</div>
-</section>
-```
-
-The band bleeds to the viewport edges while its content stays aligned with
-everything above it, which is what the inner `mg-container` is for. Real UNDRR
-landing pages alternate plain and tinted bands down their length, and a page
-without them reads thinner than the published article.
-
-> **Implementation note (for contributors):** this breaks out with a logical
-> margin and `inline-size: 100vw` rather than using `mg-container-full-width`.
-> That utility paints its bleed with a `z-index: -1` pseudo-element, which is
-> invisible behind any ancestor carrying a background — see
-> [#1118](https://github.com/unisdr/undrr-mangrove/issues/1118). The trade is
-> that this moves the whole box, hence the inner container.
-
-## Feature band
-
-<Canvas of={Stories.FeatureBand} />
-
-`mg-band--feature` carries the page title rather than a supporting section: hero
-colour, light text. It sets no type size, so the heading renders at the scale
-every other `h1` on the site does.
 
 ## Reading column
 
@@ -62,6 +33,8 @@ below that.
 
 ## Facts
 
+<Canvas of={Stories.FactsGrid} />
+
 ```html
 <ul class="mg-facts">
   <li>
@@ -77,4 +50,4 @@ content.
 
 ## Changelog
 
-- **1.0** — 2026-09-10: Added `mg-band`, `mg-reading` and `mg-facts` as distributed page composition utilities. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
+- **1.0** — 2026-09-10: Added `mg-reading` and `mg-facts` as distributed page composition utilities. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))

@@ -116,7 +116,8 @@ limit; past that the strip scrolls on a laptop once labels are translated.
 
 The rest of these pages compose shipped components and utilities — `Hero`,
 `IconCard`, `VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton`,
-`mg-grid`, and `mg-band`, `mg-reading` and `mg-facts` for the page layout. What
+`mg-grid`, `mg-container-full-width`, and `mg-reading` and `mg-facts` for the
+page layout. What
 is left is demonstration scaffolding: `mg-demo-` classes that load only with
 these stories, the hash routing, and the Monitor copy.
 
@@ -158,7 +159,7 @@ other sub-brands too.
 
 - **1.0** — 2026-09-10: Content hub pattern — hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
   - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options, and ships in the stylesheet.
-  - Adds `mg-band`, `mg-reading` and `mg-facts` as distributed page-layout utilities.
+  - Adds `mg-reading` and `mg-facts` as distributed page-layout utilities.
   - Section links are marked as links rather than tabs, and only the exact current page is announced.
   - Breadcrumbs appear only where they add ancestry the strip cannot show.
   - Variations for a detached header and vertical route cards.

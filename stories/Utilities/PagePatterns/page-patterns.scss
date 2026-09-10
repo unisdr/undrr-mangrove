@@ -1,4 +1,4 @@
-// Page composition: the tinted band, the reading column and the fact grid.
+// Page composition: the reading column and the fact grid.
 // Distributed, because a consumer building one of these pages needs them and
 // none is obvious enough to expect them to rewrite. Anything thinner than this
 // — a margin, a font size — stays in the demo stylesheet rather than becoming
@@ -10,42 +10,6 @@
 // it, and on a phone the result sits almost on the screen edge. Widen it
 // where the viewport is narrow; above that the container's own max-widths
 // take over and the gutter stops being what limits the line.
-@media (width < 48rem) {
-  .mg-band__inner {
-    padding-inline: var(--mg-spacing-200);
-  }
-}
-
-// A tinted full-width band. Real UNDRR landing pages alternate plain and
-// tinted bands down the page, and a prototype without them reads thinner than
-// the real thing.
-// The breakout is self-contained on purpose. mg-container-full-width paints
-// its bleed with a z-index:-1 pseudo-element, which disappears behind any
-// ancestor carrying its own opaque background — as these pattern wrappers do.
-.mg-band {
-  background-color: rgb(var(--mg-color-neutral-50));
-  margin-block-start: var(--mg-spacing-400);
-  margin-inline-start: calc(50% - 50vw);
-  inline-size: 100vw;
-}
-
-.mg-band__inner {
-  padding-block: var(--mg-spacing-300);
-}
-
-.mg-band h2 {
-  margin-block-start: 0;
-}
-
-// A band that carries the page title rather than a supporting section.
-.mg-band--feature {
-  background-color: rgb(var(--mg-color-hero));
-  color: rgb(var(--mg-color-neutral-0));
-
-  .mg-band__inner {
-    padding-block: var(--mg-spacing-400);
-  }
-}
 
 .mg-facts {
   display: grid;

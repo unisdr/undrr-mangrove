@@ -5,20 +5,6 @@ import PropTypes from 'prop-types';
  * Demonstrates the page composition utilities. These are CSS classes, not a
  * component — this exists so the classes have somewhere to be seen and reviewed.
  */
-export function Band({ feature = false, children }) {
-  return (
-    <section className={`mg-band${feature ? ' mg-band--feature' : ''}`}>
-      <div className="mg-band__inner | mg-container">{children}</div>
-    </section>
-  );
-}
-
-Band.propTypes = {
-  /** Carry the page title rather than a supporting section: hero colour, light text. */
-  feature: PropTypes.bool,
-  children: PropTypes.node,
-};
-
 export function Facts({ items }) {
   return (
     <ul className="mg-facts">

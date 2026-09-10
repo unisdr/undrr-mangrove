@@ -115,22 +115,8 @@ export default {
     {
       name: 'Page composition',
       description:
-        'Layout pieces a full page is assembled from: tinted full-width bands, a reading column with an optional sticky contents sidebar, and a grid of short icon facts.',
+        'Layout pieces a full page is assembled from: a reading column with an optional sticky contents sidebar, and a grid of short icon facts.',
       classes: [
-        {
-          class: 'mg-band',
-          description:
-            'Tinted full-width band. Breaks out to the viewport edges without relying on a negative z-index, so it survives an ancestor with its own background. Pair the inner element with mg-container.',
-          usage:
-            '<section class="mg-band">\n  <div class="mg-band__inner | mg-container">…</div>\n</section>',
-        },
-        {
-          class: 'mg-band--feature',
-          description:
-            'A band carrying the page title rather than a supporting section: hero colour, light text.',
-          usage:
-            '<div class="mg-band mg-band--feature">\n  <div class="mg-band__inner | mg-container"><h1>Report title</h1></div>\n</div>',
-        },
         {
           class: 'mg-facts',
           description:
