@@ -67,7 +67,8 @@
   // Matches the wider narrow-viewport gutter the page patterns use, so the
   // header's own content lines up with the content below it.
   @media (width < 48rem) {
-    .mg-container {
+    &__identity,
+    &__banner-inner {
       padding-inline: var(--mg-spacing-200);
     }
 

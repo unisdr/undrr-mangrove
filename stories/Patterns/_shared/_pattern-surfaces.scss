@@ -12,7 +12,11 @@
   // where the viewport is narrow; above that the container's own max-widths
   // take over and the gutter stops being what limits the line.
   @media (width < 48rem) {
-    .mg-container {
+    // Named explicitly rather than as a descendant `.mg-container`: PageHeader
+    // uses that class too, so the loose selector reached into shipped chrome.
+    &__shell,
+    &__band-inner,
+    &__masthead-inner {
       padding-inline: var(--mg-spacing-200);
     }
   }
