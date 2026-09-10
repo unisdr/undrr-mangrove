@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { CtaButton } from '../../Buttons/CtaButton/CtaButton';
+import { CardLabel, CardTitle, resolveCardLink } from './cardParts';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
@@ -12,69 +13,67 @@ export function VerticalCard({ data, variant = 'primary', className }) {
     variant && variant !== 'primary' ? `mg-card--${variant}` : null;
   return (
     <>
-      {data.map((item, index) => (
-        <article
-          key={index}
-          className={cls('mg-card', 'mg-card__vc', variantClass, className)}
-        >
-          {item.imgback && (
-            <div className="mg-card__visual">
-              <img
-                src={item.imgback}
-                alt={item.imgalt}
-                className="mg-card__image"
-              />
-            </div>
-          )}
+      {data.map((item, index) => {
+        const link = resolveCardLink(item.link);
+        const buttonLink = resolveCardLink(item.buttonLink) ?? link;
 
-          <div className="mg-card__content">
-            {(item.label1 || item.label2) && (
-              <div className="mg-card__meta">
-                {item.link && item.label1 && (
-                  <a
-                    href={item.link}
-                    className="mg-card__label mg-card__label--active"
-                  >
-                    {item.label1}
-                  </a>
-                )}
-                {item.link && item.label2 && (
-                  <a
-                    href={item.link}
-                    className="mg-card__label mg-card__label--active"
-                  >
-                    {item.label2}
-                  </a>
-                )}
+        return (
+          <article
+            key={index}
+            className={cls(
+              'mg-card',
+              'mg-card__vc',
+              variantClass,
+              !link && 'mg-card--no-link',
+              className
+            )}
+          >
+            {item.imgback && (
+              <div className="mg-card__visual">
+                <img
+                  src={item.imgback}
+                  alt={item.imgalt}
+                  className="mg-card__image"
+                />
               </div>
             )}
 
-            <header className="mg-card__title">
-              <a href={item.link} target={item.target} rel={item.rel}>
-                {item.title?.trim()}
-              </a>
-            </header>
-            {item.summaryText && (
-              <p
-                className="mg-card__summary"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(item.summaryText),
-                }}
-              />
-            )}
-            {item.button && (
-              <CtaButton
-                Type="Primary"
-                Variant="CTA"
-                label={item.button}
-                href={item.link}
+            <div className="mg-card__content">
+              {(item.label1 || item.label2) && (
+                <div className="mg-card__meta">
+                  <CardLabel label={item.label1} link={link} />
+                  <CardLabel label={item.label2} link={link} />
+                </div>
+              )}
+
+              <CardTitle
+                title={item.title}
+                link={link}
                 target={item.target}
                 rel={item.rel}
               />
-            )}
-          </div>
-        </article>
-      ))}
+              {item.summaryText && (
+                <p
+                  className="mg-card__summary"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(item.summaryText),
+                  }}
+                />
+              )}
+              {item.button && buttonLink && (
+                <CtaButton
+                  Type="Primary"
+                  Variant="CTA"
+                  label={item.button}
+                  href={buttonLink}
+                  target={item.target}
+                  rel={item.rel}
+                />
+              )}
+            </div>
+          </article>
+        );
+      })}
     </>
   );
 }
@@ -92,6 +91,8 @@ VerticalCard.propTypes = {
       label1: PropTypes.string,
       label2: PropTypes.string,
       button: PropTypes.string,
+      /** CTA destination. Defaults to `link`; set it to give an unlinked card a button. */
+      buttonLink: PropTypes.string,
     })
   ).isRequired,
   variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),

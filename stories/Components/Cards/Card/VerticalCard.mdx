@@ -109,6 +109,57 @@ This removes the blue color, underline, and chevron. The card remains clickable 
 
 > **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
 
+## Cards without links
+
+A card should almost always be a link. The whole surface is a click target, the title carries the affordances, and a reader who has understood the card knows what activating it will do. Prefer that.
+
+In practice unlinked cards happen anyway — an editor leaves the link field empty, a referenced node is unpublished, or the card exists only to carry a button. Mangrove handles that case explicitly rather than leaving it to chance.
+
+Omit `link` (or pass an empty string) and the card renders its title as plain text. There is no anchor, so there is no chevron, no underline, no interactive colour, no stretched click target, and no hover elevation. Labels stay visible but drop the interactive modifier. The card still sits at the same height as its linked neighbours in a group.
+
+<Canvas of={VerticalCardStories.NoLinkVerticalCard} />
+
+### A button instead of a card link
+
+For a card whose only destination is its button, set `buttonLink` and leave `link` empty. The title stays plain text and the CTA is an ordinary in-flow link, so there is exactly one thing to click and it is visibly the thing you meant to click.
+
+```jsx
+<VerticalCard
+  data={[
+    {
+      title: 'Jobs and Careers',
+      summaryText: 'Stay current on the latest vacancies.',
+      button: 'Browse vacancies',
+      buttonLink: 'https://www.preventionweb.net/community/careers',
+    },
+  ]}
+/>
+```
+
+`buttonLink` falls back to `link` when omitted, so a card that sets only `link` behaves exactly as before.
+
+<Canvas of={VerticalCardStories.ButtonOnlyVerticalCard} />
+
+### Mixed groups
+
+Linked and unlinked cards frequently sit in the same row. They should read as one family: same height, same spacing, same type — differing only in whether the title is interactive.
+
+<Canvas of={VerticalCardStories.MixedLinkVerticalCards} />
+
+### Repairing `href=""` from Drupal Gutenberg
+
+Drupal Gutenberg has been emitting `<a href="">` for unlinked cards. An empty `href` is not "no link" to a browser — it resolves to the current page, so the title takes keyboard focus, activating it reloads the page, and the stretched overlay covers the card and swallows clicks aimed at the button beside it.
+
+`card.scss` neutralises that markup: `.mg-card__title a[href=""]` and `.mg-card__title a:not([href])` lose the chevron, the stretched overlay, the interactive colour and the pointer cursor. Already-published content is repaired without an upstream change.
+
+CSS cannot remove the anchor from the tab order, so this is mitigation, not a fix. Producers of card markup should emit a plain-text title when there is no destination:
+
+```html
+<header class="mg-card__title">Jobs and Careers</header>
+```
+
+<Canvas of={VerticalCardStories.LegacyEmptyHrefMarkup} />
+
 ## Props
 
 | Prop        | Type   | Default     | Description                                                             |
@@ -119,22 +170,23 @@ This removes the blue color, underline, and chevron. The card remains clickable 
 
 ### Data object properties
 
-| Property      | Type   | Description                                                  |
-| ------------- | ------ | ------------------------------------------------------------ |
-| `title`       | String | Card heading text                                            |
-| `link`        | String | URL for the title link and stretched link                    |
-| `target`      | String | Optional browsing context shared by the title and CTA links  |
-| `rel`         | String | Optional link relationship shared by the title and CTA links |
-| `imgback`     | String | Image URL                                                    |
-| `imgalt`      | String | Alt text for the image                                       |
-| `summaryText` | String | Body text (HTML supported)                                   |
-| `label1`      | String | First category label                                         |
-| `label2`      | String | Second category label                                        |
-| `button`      | String | CTA button label                                             |
+| Property      | Type   | Description                                                                                             |
+| ------------- | ------ | ------------------------------------------------------------------------------------------------------- |
+| `title`       | String | Card heading text                                                                                       |
+| `link`        | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
+| `target`      | String | Optional browsing context shared by the title and CTA links                                             |
+| `rel`         | String | Optional link relationship shared by the title and CTA links                                            |
+| `imgback`     | String | Image URL                                                                                               |
+| `imgalt`      | String | Alt text for the image                                                                                  |
+| `summaryText` | String | Body text (HTML supported)                                                                              |
+| `label1`      | String | First category label                                                                                    |
+| `label2`      | String | Second category label                                                                                   |
+| `button`      | String | CTA button label                                                                                        |
+| `buttonLink`  | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
 
 ## Accessibility
 
-- The entire card surface is clickable as a single link (via the title link)
+- The entire card surface is clickable as a single link (via the title link) — but only when the card has a destination. An unlinked card renders a plain-text title, so it exposes no link role and takes no place in the tab order
 - Inline links in the summary remain independently clickable (`z-index: 2`) — they are not overridden by the card link
 - Focus states are visible on all interactive elements
 - RTL layout is automatic when `dir="rtl"` is set on the document
@@ -143,6 +195,7 @@ This removes the blue color, underline, and chevron. The card remains clickable 
 
 ## Changelog
 
+- **1.5.0** — 2026-09-10: A card without a destination now renders its title as plain text instead of an anchor with no `href`, so it no longer looks or behaves like a link. An empty or whitespace-only `link` counts as no link. Labels stay visible on unlinked cards rather than disappearing, and the article gains `mg-card--no-link`. Added `buttonLink` for cards whose only destination is their CTA. `card.scss` also strips the link affordances from `a[href=""]` and `a:not([href])` to repair markup already published through Drupal Gutenberg.
 - **1.4.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Vertical cards use the height supplied by grid and flex rows, keeping images intrinsic and aligning final CTAs at the bottom. Added mixed-content grid, wrapped flex and scrolling examples. Standalone sizing and existing markup remain supported.
 
 - **1.4.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic card titles and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-card__title` and `.mg-card__label` read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.

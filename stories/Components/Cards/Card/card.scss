@@ -282,6 +282,59 @@ $card-variant-colours: (
   }
 }
 
+// Unlinked cards — a card with no destination must not promise a click.
+// Two shapes arrive here. This library renders an unlinked title as plain text
+// and marks the article `.mg-card--no-link`, which needs no repair. Upstream
+// systems are less careful: Drupal Gutenberg emits `<a href="">`, which the
+// browser treats as a link to the current page — it takes focus, navigating
+// reloads the page, and the stretched `::before` overlay covers the whole card
+// and swallows clicks aimed at the card's own button. Neutralising it here
+// repairs already-published content without an upstream change.
+// CSS can strip the affordances but not the focusability of an `href=""`
+// anchor, so emitting a plain-text title remains the correct fix at the source.
+.mg-card__title a:not([href]),
+.mg-card__title a[href=""] {
+  color: rgb(var(--mg-color-text));
+  cursor: default;
+  pointer-events: none;
+  text-decoration: none;
+
+  // Drop the stretched click target so the card's real controls stay reachable.
+  &::before {
+    content: none;
+  }
+
+  // Drop the chevron: there is nowhere to go.
+  &::after {
+    content: none;
+  }
+}
+
+// A label rendered as a span is metadata, not a control: `.mg-card__label`
+// sets `cursor: pointer` for the linked case, which would otherwise leave an
+// unlinked label offering a click it cannot answer.
+span.mg-card__label {
+  cursor: auto;
+}
+
+// Whole-card hover affordances belong to cards that are clickable. Doubled
+// classes keep these above the variant and horizontal-card hover rules above.
+.mg-card.mg-card--no-link,
+.mg-card:has(.mg-card__title a:not([href])),
+.mg-card:has(.mg-card__title a[href=""]) {
+  &:hover {
+    box-shadow: var(--mg-card-shadow);
+  }
+
+  &:hover .mg-card__image {
+    opacity: 1;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform: none;
+    }
+  }
+}
+
 .mg-card__summary {
   padding-bottom: var(--mg-spacing-50);
   text-wrap: pretty;

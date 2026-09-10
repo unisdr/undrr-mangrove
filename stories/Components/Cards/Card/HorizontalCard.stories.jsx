@@ -107,6 +107,54 @@ export const DefaultHorizontalCard = {
   name: 'Horizontal Card',
 };
 
+// Cards should normally be links. These stories cover the cases where they
+// aren't, so the unlinked treatment is exercised alongside the linked one.
+
+export const NoLinkHorizontalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      button: null,
+    }));
+
+    return <HorizontalCard data={unlinked} {...args}></HorizontalCard>;
+  },
+
+  name: 'Without a link',
+};
+
+export const ButtonOnlyHorizontalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const buttonOnly = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      buttonLink: 'javascript:void(0)',
+    }));
+
+    return <HorizontalCard data={buttonOnly} {...args}></HorizontalCard>;
+  },
+
+  name: 'Button only, no card link',
+};
+
+export const MixedLinkHorizontalCards = {
+  render: (args, { globals: { locale } }) => {
+    const [item] = getCaptionForLocale(locale).contentdata;
+    const mixed = [
+      { ...item },
+      { ...item, link: null, buttonLink: 'javascript:void(0)' },
+      { ...item, link: null, button: null },
+    ];
+
+    return <HorizontalCard data={mixed} {...args}></HorizontalCard>;
+  },
+
+  name: 'Mixed group (linked, button only, unlinked)',
+};
+
 export const LongContent = {
   render: (args, { globals: { locale } }) => {
     const base = getCaptionForLocale(locale).contentdata[0];

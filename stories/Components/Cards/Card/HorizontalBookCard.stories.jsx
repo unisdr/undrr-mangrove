@@ -125,3 +125,38 @@ export const HorizontalBookCardNoImageVerticalCard = {
 
   name: 'Horizontal Book Card Without Image',
 };
+
+// Cards should normally be links. These stories cover the cases where they
+// aren't, so the unlinked treatment is exercised alongside the linked one.
+
+export const NoLinkHorizontalBookCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      button: null,
+    }));
+
+    return <HorizontalBookCard data={unlinked} {...args}></HorizontalBookCard>;
+  },
+
+  name: 'Without a link',
+};
+
+export const ButtonOnlyHorizontalBookCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const buttonOnly = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      buttonLink: 'javascript:void(0)',
+    }));
+
+    return (
+      <HorizontalBookCard data={buttonOnly} {...args}></HorizontalBookCard>
+    );
+  },
+
+  name: 'Button only, no card link',
+};

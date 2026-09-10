@@ -98,6 +98,31 @@ export const DefaultBookCard = {
   name: 'Book Card',
 };
 
+// Cards should normally be links. A book cover without a destination still
+// needs a readable title, just without the link affordances.
+
+export const NoLinkBookCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+    }));
+
+    return (
+      <div
+        style={{
+          maxWidth: '200px',
+        }}
+      >
+        <BookCard data={unlinked} {...args}></BookCard>
+      </div>
+    );
+  },
+
+  name: 'Without a link',
+};
+
 export const MixedTitleLengths = {
   render: (args, { globals: { locale } }) => {
     const base = getCaptionForLocale(locale).contentdata[0];

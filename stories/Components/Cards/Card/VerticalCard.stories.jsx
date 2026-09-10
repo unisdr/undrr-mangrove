@@ -162,6 +162,107 @@ export const NoImageVerticalCard = {
   name: 'Vertical Card Without Image',
 };
 
+// Cards should normally be links. These stories cover the cases where they
+// aren't, so the unlinked treatment is exercised alongside the linked one.
+
+export const NoLinkVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const unlinked = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      button: null,
+    }));
+
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard data={unlinked} {...args}></VerticalCard>
+      </div>
+    );
+  },
+
+  name: 'Without a link',
+};
+
+export const ButtonOnlyVerticalCard = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    const buttonOnly = caption.contentdata.map(item => ({
+      ...item,
+      link: null,
+      buttonLink: 'javascript:void(0)',
+    }));
+
+    return (
+      <div
+        style={{
+          maxWidth: '300px',
+        }}
+      >
+        <VerticalCard data={buttonOnly} {...args}></VerticalCard>
+      </div>
+    );
+  },
+
+  name: 'Button only, no card link',
+};
+
+export const MixedLinkVerticalCards = {
+  render: (args, { globals: { locale } }) => {
+    const [item] = getCaptionForLocale(locale).contentdata;
+    const mixed = [
+      { ...item },
+      { ...item, link: null, buttonLink: 'javascript:void(0)' },
+      { ...item, link: null, button: null },
+    ];
+
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+        }}
+      >
+        <VerticalCard data={mixed} {...args}></VerticalCard>
+      </div>
+    );
+  },
+
+  name: 'Mixed group (linked, button only, unlinked)',
+};
+
+// Reference for content already published through Drupal Gutenberg, which
+// emits `<a href="">` and a sibling button rather than a plain-text title.
+// Rendered as raw markup on purpose: it is what the CSS has to repair.
+export const LegacyEmptyHrefMarkup = {
+  render: () => (
+    <div
+      style={{
+        maxWidth: '300px',
+      }}
+      dangerouslySetInnerHTML={{
+        __html: `<article class="wp-block-undrr-undrr-card mg-card mg-card__vc">
+  <div class="mg-card__visual">
+    <img src="https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg" alt="illustration" class="mg-card__image" loading="lazy">
+  </div>
+  <div class="mg-card__content">
+    <header class="mg-card__title"><a href="">Jobs and Careers</a></header>
+    <div class="mg-card__summary">Stay current on the latest vacancies and current job trends in disaster risk reduction.</div>
+    <a href="javascript:void(0)" class="mg-button mg-button-primary mg-button-arrow" role="button" type="Primary">BUTTON</a>
+  </div>
+</article>`,
+      }}
+    />
+  ),
+
+  name: 'Legacy Gutenberg markup (empty href)',
+};
+
 // Mixed content deliberately exercises wrapping, missing media and missing CTAs.
 const groupedCards = scrollCardExamples.map((card, index) => ({
   title: card.title,

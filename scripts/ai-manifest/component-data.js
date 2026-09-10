@@ -213,6 +213,7 @@ export default {
       'mg-card--secondary',
       'mg-card--tertiary',
       'mg-card--quaternary',
+      'mg-card--no-link',
       'mg-card__visual',
       'mg-card__image',
       'mg-card__content',
@@ -252,6 +253,22 @@ export default {
     </header>
     <p class="mg-card__summary">The flagship report on global efforts to reduce disaster risk.</p>
     <a class="mg-button mg-button-primary" href="/reports/gar-2024">Read the report</a>
+  </div>
+</article>`,
+      },
+      {
+        name: 'Vertical card without a link',
+        html: `<article class="mg-card mg-card__vc mg-card--no-link">
+  <div class="mg-card__visual">
+    <img src="https://picsum.photos/600/400" alt="Careers information session" class="mg-card__image" />
+  </div>
+  <div class="mg-card__content">
+    <div class="mg-card__meta">
+      <span class="mg-card__label">Careers</span>
+    </div>
+    <header class="mg-card__title">Jobs and careers</header>
+    <p class="mg-card__summary">Stay current on the latest vacancies.</p>
+    <a class="mg-button mg-button-primary" href="/community/careers">Browse vacancies</a>
   </div>
 </article>`,
       },
@@ -297,6 +314,7 @@ export default {
       'mg-card',
       'mg-card__hc',
       'mg-card--secondary',
+      'mg-card--no-link',
       'mg-card__visual',
       'mg-card__image',
       'mg-card__content',
@@ -343,6 +361,7 @@ export default {
       'mg-card',
       'mg-card__hc',
       'mg-card-book__hc',
+      'mg-card--no-link',
       'mg-card__visual',
       'mg-card__image',
       'mg-card__content',

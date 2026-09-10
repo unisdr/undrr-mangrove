@@ -65,6 +65,18 @@ Card titles display blue color, underline, and a chevron indicator by default. A
 
 The book card is constrained to `200px` max-width by default, expanding to `400px` on desktop. When used in a grid, let the grid column width control the card size.
 
+## Cards without links
+
+A card should almost always be a link, but unlinked ones happen: an editor leaves the link field empty, a referenced node is unpublished, or the card exists only to carry a button.
+
+Omit `link` (or pass an empty string) and the card renders its title as plain text — no chevron, no underline, no interactive colour, no stretched click target, no hover elevation. The article gains `mg-card--no-link` so themes have a hook.
+
+<Canvas of={BookCardStories.NoLinkBookCard} />
+
+Drupal Gutenberg emits `<a href="">` for unlinked cards, which a browser treats as a link to the current page: it takes focus, activating it reloads the page, and the stretched overlay swallows clicks aimed at the card's own button. `card.scss` neutralises that markup so published content is repaired without an upstream change, but CSS cannot take the anchor out of the tab order — emit a plain-text title at the source.
+
+See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full rationale and the `href=""` reference case.
+
 ## Props
 
 | Prop        | Type   | Default     | Description                                                             |
@@ -75,15 +87,16 @@ The book card is constrained to `200px` max-width by default, expanding to `400p
 
 ### Data object properties
 
-| Property  | Type   | Description                               |
-| --------- | ------ | ----------------------------------------- |
-| `title`   | String | Card heading text                         |
-| `link`    | String | URL for the title link and stretched link |
-| `imgback` | String | Cover image URL                           |
-| `imgalt`  | String | Alt text for the cover image              |
+| Property  | Type   | Description                                                                                             |
+| --------- | ------ | ------------------------------------------------------------------------------------------------------- |
+| `title`   | String | Card heading text                                                                                       |
+| `link`    | String | URL for the title link and stretched link. Omit it, or pass an empty string, to render an unlinked card |
+| `imgback` | String | Cover image URL                                                                                         |
+| `imgalt`  | String | Alt text for the cover image                                                                            |
 
 ## Changelog
 
+- **1.4.0** — 2026-09-10: A card without a destination now renders its title as plain text instead of an anchor with no `href`, so it no longer looks or behaves like a link. An empty or whitespace-only `link` counts as no link. `card.scss` also strips the link affordances from `a[href=""]` and `a:not([href])` to repair markup already published through Drupal Gutenberg. See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full guidance.
 - **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Added a responsive collection with varied title lengths to demonstrate sibling heights without changing cover sizing.
 
 - **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic card titles and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-card__title` and `.mg-card__label` read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
