@@ -12,6 +12,10 @@ export default {
     routeCards: { control: 'inline-radio', options: ['vertical', 'icon'] },
     heroSource: { control: 'inline-radio', options: ['header', 'page'] },
     pageHeroMedia: { control: 'inline-radio', options: ['image', 'video'] },
+    headerBackground: {
+      control: 'inline-radio',
+      options: ['none', 'primary', 'secondary', 'tertiary'],
+    },
     initialPage: { control: false },
     locale: { table: { disable: true } },
     routePrefix: { table: { disable: true } },
@@ -33,6 +37,14 @@ export const HubHome = {
 export const HubDetailWithHero = {
   name: 'Hub detail with a hero',
   args: { initialPage: 'how-to-report', withHero: true },
+};
+export const HubDetailUnifiedHeader = {
+  name: 'Hub detail with a unified header',
+  args: {
+    initialPage: 'how-to-report',
+    withHero: true,
+    headerBackground: 'primary',
+  },
 };
 export const HubDetailWithVideoHero = {
   name: 'Hub detail with a video hero',

@@ -22,6 +22,7 @@ export function HubHeader({
   sections,
   navLabel,
   variant = 'compact',
+  background = 'none',
   title,
   summary,
   media,
@@ -31,26 +32,34 @@ export function HubHeader({
   const expressive = variant === 'expressive';
 
   return (
-    <div className={`mg-hub-header mg-hub-header--${variant}`}>
-      <div className="mg-hub-header__identity">
-        <a
-          className="mg-hub-header__name"
-          href={nameHref}
-          aria-current={nameCurrent ? 'page' : undefined}
-        >
-          {name}
-        </a>
-        <nav ref={navRef} className="mg-hub-header__nav" aria-label={navLabel}>
-          <ul>
-            {sections.map(section => (
-              <li key={section.href}>
-                <a href={section.href} aria-current={section.current}>
-                  {section.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+    <div
+      className={`mg-hub-header mg-hub-header--${variant} mg-hub-header--bg-${background}`}
+    >
+      <div className="mg-hub-header__bar">
+        <div className="mg-hub-header__identity | mg-container">
+          <a
+            className="mg-hub-header__name"
+            href={nameHref}
+            aria-current={nameCurrent ? 'page' : undefined}
+          >
+            {name}
+          </a>
+          <nav
+            ref={navRef}
+            className="mg-hub-header__nav"
+            aria-label={navLabel}
+          >
+            <ul>
+              {sections.map(section => (
+                <li key={section.href}>
+                  <a href={section.href} aria-current={section.current}>
+                    {section.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
 
       {expressive && (
@@ -91,6 +100,13 @@ HubHeader.propTypes = {
   navLabel: PropTypes.string.isRequired,
   /** `compact` is identity and links only; `expressive` adds the banner. */
   variant: PropTypes.oneOf(['compact', 'expressive']),
+  /**
+   * Surface for the whole header. `none` keeps the navigation on the page
+   * background. The colour variants use the same tokens `Hero` does, so the
+   * navigation and a banner or hero below it read as one block while staying
+   * separate containers.
+   */
+  background: PropTypes.oneOf(['none', 'primary', 'secondary', 'tertiary']),
   /** Banner heading. Required when `variant` is `expressive`. */
   title: PropTypes.string,
   /** Banner supporting text. */

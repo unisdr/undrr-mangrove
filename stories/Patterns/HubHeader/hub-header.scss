@@ -5,6 +5,59 @@
 // (see mg-mega-content__section-list-link--active), and it is the one
 // horizontal-strip treatment not already spoken for.
 .mg-hub-header {
+  // Every surface-dependent value is a variable, so a background variant only
+  // has to retarget these and the contrast follows. The colour variants reuse
+  // Hero's own tokens, which are theme-aware, so a header and a hero set to the
+  // same variant match in all five themes without hardcoding anything.
+  --mg-hub-header-surface: var(--mg-color-neutral-0);
+  --mg-hub-header-ink: var(--mg-color-text);
+  --mg-hub-header-link: var(--mg-color-interactive);
+  --mg-hub-header-marker: var(--mg-color-interactive);
+  --mg-hub-header-rule: var(--mg-color-neutral-300);
+  --mg-hub-header-rule-alpha: 1;
+  --mg-hub-header-focus: var(--mg-color-focus-ring);
+  --mg-hub-header-banner-surface: var(--mg-color-hero);
+
+  &--bg-primary {
+    --mg-hub-header-surface: var(--mg-color-hero);
+  }
+
+  &--bg-secondary {
+    --mg-hub-header-surface: var(--mg-color-hero--secondary);
+    --mg-hub-header-banner-surface: var(--mg-color-hero--secondary);
+  }
+
+  &--bg-tertiary {
+    --mg-hub-header-surface: var(--mg-color-hero--tertiary);
+    --mg-hub-header-banner-surface: var(--mg-color-hero--tertiary);
+  }
+
+  // On a coloured ground every link goes white, so the current item can no
+  // longer be marked by colour. Weight and the leading rule carry it instead —
+  // two signals that were never colour-dependent to begin with.
+  &--bg-primary,
+  &--bg-secondary,
+  &--bg-tertiary {
+    --mg-hub-header-ink: var(--mg-color-neutral-0);
+    --mg-hub-header-link: var(--mg-color-neutral-0);
+    --mg-hub-header-marker: var(--mg-color-neutral-0);
+    --mg-hub-header-rule: var(--mg-color-neutral-0);
+    --mg-hub-header-rule-alpha: 0.4;
+    --mg-hub-header-focus: var(--mg-color-focus-ring-inverse);
+  }
+
+  // The bar bleeds so a coloured header meets the banner or hero below it with
+  // no seam, while staying its own container.
+  &__bar {
+    background-color: rgb(var(--mg-hub-header-surface));
+
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
+    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100vw;
+  }
+
   // Identity is chrome: this row is the same height and treatment on every page
   // of the hub, whether or not a banner follows it. Invariance is what stops it
   // reading as a heading, and what makes it a landmark readers can rely on.
@@ -21,7 +74,7 @@
     font-size: 1.125rem;
     font-family: var(--mg-font-family-ui);
     font-weight: 700;
-    color: rgb(var(--mg-color-text));
+    color: rgb(var(--mg-hub-header-ink));
     text-decoration: none;
     padding-block: var(--mg-spacing-75);
 
@@ -31,14 +84,15 @@
 
     &:focus-visible {
       box-shadow: 0 0 0 var(--mg-focus-ring-offset)
-        rgb(var(--mg-color-neutral-0));
-      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-focus-ring));
+        rgb(var(--mg-hub-header-surface));
+      outline: var(--mg-focus-ring-width) solid rgb(var(--mg-hub-header-focus));
       outline-offset: var(--mg-focus-ring-offset);
     }
 
     @media (width >= 48rem) {
       padding-inline-end: var(--mg-spacing-150);
-      border-inline-end: 1px solid rgb(var(--mg-color-neutral-300));
+      border-inline-end: 1px solid
+        rgb(var(--mg-hub-header-rule) / var(--mg-hub-header-rule-alpha));
     }
   }
 
@@ -63,7 +117,7 @@
       inset-inline-start: 0;
       background: linear-gradient(
         to right,
-        rgb(var(--mg-color-neutral-0)),
+        rgb(var(--mg-hub-header-surface)),
         transparent
       );
     }
@@ -72,7 +126,7 @@
       inset-inline-end: 0;
       background: linear-gradient(
         to left,
-        rgb(var(--mg-color-neutral-0)),
+        rgb(var(--mg-hub-header-surface)),
         transparent
       );
     }
@@ -80,7 +134,7 @@
     &:dir(rtl)::before {
       background: linear-gradient(
         to left,
-        rgb(var(--mg-color-neutral-0)),
+        rgb(var(--mg-hub-header-surface)),
         transparent
       );
     }
@@ -88,7 +142,7 @@
     &:dir(rtl)::after {
       background: linear-gradient(
         to right,
-        rgb(var(--mg-color-neutral-0)),
+        rgb(var(--mg-hub-header-surface)),
         transparent
       );
     }
@@ -126,7 +180,7 @@
       min-block-size: 2.75rem;
       padding: var(--mg-spacing-100) var(--mg-spacing-150);
       scroll-margin-inline: var(--mg-spacing-150);
-      color: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-hub-header-link));
       text-decoration: none;
       white-space: nowrap;
     }
@@ -135,7 +189,7 @@
     // stops looking like a link, gains weight, and gains a leading rule.
     a[aria-current] {
       font-weight: 700;
-      color: rgb(var(--mg-color-text));
+      color: rgb(var(--mg-hub-header-ink));
     }
 
     a[aria-current]::before {
@@ -143,7 +197,7 @@
       display: inline-block;
       block-size: 0.85em;
       border-inline-start: var(--mg-spacing-25) solid
-        rgb(var(--mg-color-interactive));
+        rgb(var(--mg-hub-header-marker));
       margin-inline-end: var(--mg-spacing-50);
     }
 
@@ -155,10 +209,11 @@
     // last item would be clipped.
     a:focus-visible {
       box-shadow:
-        inset 0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0)),
+        inset 0 0 0 var(--mg-focus-ring-offset)
+          rgb(var(--mg-hub-header-surface)),
         inset 0 0 0
           calc(var(--mg-focus-ring-offset) + var(--mg-focus-ring-width))
-          rgb(var(--mg-color-focus-ring));
+          rgb(var(--mg-hub-header-focus));
       outline: 0;
 
       @media (forced-colors: active) {
@@ -171,7 +226,7 @@
   // The expressive banner. It sits below the navigation on its own surface, so
   // no link is ever placed over editor-chosen media.
   &__banner {
-    background-color: rgb(var(--mg-color-interactive));
+    background-color: rgb(var(--mg-hub-header-banner-surface));
     color: rgb(var(--mg-color-neutral-0));
 
     // Self-contained breakout. mg-container-full-width paints its bleed with a

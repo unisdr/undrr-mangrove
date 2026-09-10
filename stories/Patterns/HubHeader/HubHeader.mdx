@@ -35,6 +35,25 @@ that weight without inventing an image for it.
 
 <Canvas of={Stories.ExpressiveWithoutMedia} />
 
+## Unified with the banner
+
+`background` sets the surface for the whole header. On a colour, the bar bleeds
+to the viewport edges and meets the banner below it with no seam, so the two read
+as one block — while staying separate containers, which is what keeps the
+navigation's contrast under control instead of at the mercy of a photograph.
+
+The colour variants use `Hero`'s own tokens, so a header and a hero set to the
+same variant match across all five themes without anything being hardcoded.
+
+<Canvas of={Stories.UnifiedWithBanner} />
+
+## Compact on a colour
+
+The same surface without a banner, for pages that want the hub to carry a key
+colour without the weight of a banner.
+
+<Canvas of={Stories.CompactOnColour} />
+
 ## Compact
 
 Everything the hub still needs, and nothing it does not. Identical in height and
@@ -62,6 +81,13 @@ active section scrolled into view.
 > photograph. Keeping the two surfaces separate is what makes the active state
 > safe to draw at all.
 >
+> Every surface-dependent value is a custom property, so a background variant
+> only retargets those and the rest follows: the edge fades, the name divider and
+> both focus rings all read the surface rather than assuming white. On a coloured
+> ground each link goes white, so the current item can no longer be marked by
+> colour — weight and the leading rule carry it, and neither was
+> colour-dependent to begin with.
+>
 > The banner reuses hero _tokens and layout_, not `.mg-hero` itself. Taking the
 > class would inherit the full-bleed breakout, the forced text colour and the
 > fixed aspect ratio — three things this component immediately overrides.
@@ -69,3 +95,4 @@ active section scrolled into view.
 ## Changelog
 
 - **1.0** — 2026-09-10: Added the hub header with compact and expressive variants. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
+  - Added `background` variants, so the header can carry a key colour or unify with a banner or hero below it.

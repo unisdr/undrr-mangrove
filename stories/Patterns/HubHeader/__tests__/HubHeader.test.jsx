@@ -80,6 +80,43 @@ test('marks the hub name as the current page on the hub home', () => {
   ).toHaveAttribute('aria-current', 'page');
 });
 
+test('carries a background variant onto the bar without losing the navigation', () => {
+  const { container, rerender } = render(<HubHeader {...base} />);
+  expect(
+    container.querySelector('.mg-hub-header--bg-none')
+  ).toBeInTheDocument();
+
+  for (const background of ['primary', 'secondary', 'tertiary']) {
+    rerender(<HubHeader {...base} background={background} />);
+    expect(
+      container.querySelector(`.mg-hub-header--bg-${background}`)
+    ).toBeInTheDocument();
+    // The bar is the surface; the navigation stays inside it either way.
+    const bar = container.querySelector('.mg-hub-header__bar');
+    expect(bar.querySelector('.mg-hub-header__nav')).toBeInTheDocument();
+    expect(
+      within(bar).getByRole('link', { name: 'Reporting' })
+    ).toHaveAttribute('aria-current', 'location');
+  }
+});
+
+test('marks exactly one current section, whatever the background', () => {
+  for (const background of ['none', 'primary']) {
+    const { container, unmount } = render(
+      <HubHeader {...base} background={background} />
+    );
+    const marked = container.querySelectorAll(
+      '.mg-hub-header__nav a[aria-current]'
+    );
+    expect(marked).toHaveLength(1);
+    expect(marked[0]).toHaveTextContent('Reporting');
+    unmount();
+  }
+  // The visual signals on a coloured ground — weight and the leading rule —
+  // are CSS, so they are verified by review rather than here: jsdom does not
+  // load the stylesheet and getComputedStyle returns nothing for them.
+});
+
 test('has no detectable accessibility violations', async () => {
   const { container } = render(
     <HubHeader
