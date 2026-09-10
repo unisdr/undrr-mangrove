@@ -6,6 +6,17 @@
 // A pattern keeps its own rules for anything it genuinely does differently;
 // only what was byte-identical across patterns lives here.
 @mixin mg-pattern-surfaces {
+  // mg-container's gutter is 10px at every width. That is fine for content
+  // inside a card, but these patterns put text and navigation directly against
+  // it, and on a phone the result sits almost on the screen edge. Widen it
+  // where the viewport is narrow; above that the container's own max-widths
+  // take over and the gutter stops being what limits the line.
+  @media (width < 48rem) {
+    .mg-container {
+      padding-inline: var(--mg-spacing-200);
+    }
+  }
+
   &__lede {
     max-inline-size: 49rem;
     font-size: 1.0625rem;

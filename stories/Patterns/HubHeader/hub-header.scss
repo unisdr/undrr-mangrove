@@ -64,6 +64,14 @@
     --mg-hub-header-bar-tint-alpha: 0;
   }
 
+  // Matches the wider narrow-viewport gutter the page patterns use, so the
+  // header's own content lines up with the content below it.
+  @media (width < 48rem) {
+    .mg-container {
+      padding-inline: var(--mg-spacing-200);
+    }
+  }
+
   // The bar bleeds so a coloured header meets the banner or hero below it with
   // no seam, while staying its own container.
   &__bar {

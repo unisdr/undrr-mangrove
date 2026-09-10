@@ -170,11 +170,17 @@
     padding-block-end: 0.06em; // optically centres the asymmetric chevron
     padding-inline-start: 0.03em;
     position: absolute;
-    translate: 0 -50%;
+
+    // The shift is a custom property so RTL can flip its direction without
+    // restating the vertical centring that shares this shorthand.
+    translate: var(--mg-cta-arrow-shift, 0) -50%;
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: background-color var(--mg-motion-duration-fast)
-        var(--mg-motion-easing-standard);
+      transition:
+        background-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        translate var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard);
     }
   }
 
@@ -188,6 +194,14 @@
     &::after {
       background: rgb(var(--mg-color-interactive-active));
     }
+
+    // Nudges toward its destination. Only where motion is welcome: without the
+    // transition this is a jump rather than a gesture, which says nothing.
+    @media (prefers-reduced-motion: no-preference) {
+      &::after {
+        --mg-cta-arrow-shift: #{mg-rem(3)};
+      }
+    }
   }
 
   &:active::after {
@@ -197,6 +211,12 @@
 
 [dir="rtl"] .mg-button.mg-button-cta::after {
   content: "‹";
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [dir="rtl"] .mg-button.mg-button-cta:hover::after {
+    --mg-cta-arrow-shift: #{mg-rem(-3)};
+  }
 }
 
 // [dir='rtl'] {
