@@ -22,7 +22,7 @@ export function HubHeader({
   sections,
   navLabel,
   variant = 'compact',
-  background = 'none',
+  surface = 'primary',
   title,
   summary,
   media,
@@ -33,7 +33,7 @@ export function HubHeader({
 
   return (
     <div
-      className={`mg-hub-header mg-hub-header--${variant} mg-hub-header--bg-${background}`}
+      className={`mg-hub-header mg-hub-header--${variant} mg-hub-header--surface-${surface}`}
     >
       <div className="mg-hub-header__bar">
         <div className="mg-hub-header__identity | mg-container">
@@ -101,12 +101,13 @@ HubHeader.propTypes = {
   /** `compact` is identity and links only; `expressive` adds the banner. */
   variant: PropTypes.oneOf(['compact', 'expressive']),
   /**
-   * Surface for the whole header. `none` keeps the navigation on the page
-   * background. The colour variants use the same tokens `Hero` does, so the
-   * navigation and a banner or hero below it read as one block while staying
-   * separate containers.
+   * Surface for the whole header. Unified by default: the bar shares the
+   * banner's colour and bleeds to the viewport edges, so the two read as one
+   * block while staying separate containers. `detached` keeps the navigation on
+   * the page background instead. The colour values use the same tokens `Hero`
+   * does, so a header and a hero set to the same one match in every theme.
    */
-  background: PropTypes.oneOf(['none', 'primary', 'secondary', 'tertiary']),
+  surface: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'detached']),
   /** Banner heading. Required when `variant` is `expressive`. */
   title: PropTypes.string,
   /** Banner supporting text. */

@@ -21,7 +21,8 @@ navigation it needs.
 ## Expressive
 
 The hub home, and any page that wants gravity at the top. The banner carries the
-title and lede; media is optional.
+title and lede; media is optional. The bar shares the banner's surface by
+default, so the header reads as one block.
 
 <Canvas of={Stories.Expressive} />
 
@@ -35,24 +36,25 @@ that weight without inventing an image for it.
 
 <Canvas of={Stories.ExpressiveWithoutMedia} />
 
-## Unified with the banner
+## Detached
 
-`background` sets the surface for the whole header. On a colour, the bar bleeds
-to the viewport edges and meets the banner below it with no seam, so the two read
-as one block — while staying separate containers, which is what keeps the
-navigation's contrast under control instead of at the mercy of a photograph.
+`surface` takes `primary` (the default), `secondary`, `tertiary` or `detached`.
+The colour values put the bar on the same surface as the banner and bleed it to
+the viewport edges, so the two meet with no seam — while staying separate
+containers, which is what keeps the navigation's contrast under control instead
+of at the mercy of a photograph.
 
-The colour variants use `Hero`'s own tokens, so a header and a hero set to the
-same variant match across all five themes without anything being hardcoded.
+`detached` is the opt-out: the navigation sits on the page background and the
+banner keeps its own colour, so the two read as separate blocks.
 
-<Canvas of={Stories.UnifiedWithBanner} />
+<Canvas of={Stories.Detached} />
 
-## Compact on a colour
+## Secondary surface
 
-The same surface without a banner, for pages that want the hub to carry a key
-colour without the weight of a banner.
+The colour values reuse `Hero`'s own tokens, so a header and a hero set to the
+same surface match across all five themes without anything being hardcoded.
 
-<Canvas of={Stories.CompactOnColour} />
+<Canvas of={Stories.SecondarySurface} />
 
 ## Compact
 
@@ -81,7 +83,7 @@ active section scrolled into view.
 > photograph. Keeping the two surfaces separate is what makes the active state
 > safe to draw at all.
 >
-> Every surface-dependent value is a custom property, so a background variant
+> Every surface-dependent value is a custom property, so a surface variant
 > only retargets those and the rest follows: the edge fades, the name divider and
 > both focus rings all read the surface rather than assuming white. On a coloured
 > ground each link goes white, so the current item can no longer be marked by
@@ -95,4 +97,4 @@ active section scrolled into view.
 ## Changelog
 
 - **1.0** — 2026-09-10: Added the hub header with compact and expressive variants. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
-  - Added `background` variants, so the header can carry a key colour or unify with a banner or hero below it.
+  - Added `surface` variants. Unified is the default; `detached` keeps the navigation on the page background.

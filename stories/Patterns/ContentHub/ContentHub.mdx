@@ -52,14 +52,15 @@ the plain detail page below — the chrome above the content is the same in all 
 
 <Canvas of={Stories.HubDetailWithHero} />
 
-## A unified header
+## A detached header
 
-`headerBackground` puts the navigation bar on the same surface as the banner
-below it, so they read as one block instead of a white strip abutting a coloured
-one. The two stay separate containers — which is what keeps the navigation's
-contrast predictable — but the seam disappears.
+The header shares the banner's surface by default, so the two read as one block.
+`headerSurface: "detached"` is the opt-out: the navigation bar returns to the
+page background and the banner keeps its own colour, so they read as separate
+blocks. They stay separate containers either way — which is what keeps the
+navigation's contrast predictable.
 
-<Canvas of={Stories.HubDetailUnifiedHeader} />
+<Canvas of={Stories.HubDetailDetachedHeader} />
 
 ## The same page with a video hero
 
@@ -266,4 +267,4 @@ content hubs, not a requirement to copy a transactional service header.
   - Moved identity and section navigation into a `HubHeader` organism, whose expressive variant carries the banner instead of composing a separate `Hero`.
   - Added a `heroSource` comparison between a chrome-owned banner and a separate page hero, using a video to show what a chrome-owned banner cannot be.
   - Fixed the full-width bands, whose bleed was hidden behind the pattern wrapper's own background.
-  - Added `headerBackground`, unifying the navigation bar with the banner below it without nesting one in the other.
+  - Unified the navigation bar with the banner below it by default, without nesting one in the other, and added `headerSurface: "detached"` as the opt-out.

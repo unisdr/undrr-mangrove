@@ -12,9 +12,9 @@ export default {
     routeCards: { control: 'inline-radio', options: ['vertical', 'icon'] },
     heroSource: { control: 'inline-radio', options: ['header', 'page'] },
     pageHeroMedia: { control: 'inline-radio', options: ['image', 'video'] },
-    headerBackground: {
+    headerSurface: {
       control: 'inline-radio',
-      options: ['none', 'primary', 'secondary', 'tertiary'],
+      options: ['primary', 'secondary', 'tertiary', 'detached'],
     },
     initialPage: { control: false },
     locale: { table: { disable: true } },
@@ -38,12 +38,12 @@ export const HubDetailWithHero = {
   name: 'Hub detail with a hero',
   args: { initialPage: 'how-to-report', withHero: true },
 };
-export const HubDetailUnifiedHeader = {
-  name: 'Hub detail with a unified header',
+export const HubDetailDetachedHeader = {
+  name: 'Hub detail with a detached header',
   args: {
     initialPage: 'how-to-report',
     withHero: true,
-    headerBackground: 'primary',
+    headerSurface: 'detached',
   },
 };
 export const HubDetailWithVideoHero = {

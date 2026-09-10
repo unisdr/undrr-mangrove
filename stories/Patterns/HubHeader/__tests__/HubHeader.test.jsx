@@ -80,16 +80,17 @@ test('marks the hub name as the current page on the hub home', () => {
   ).toHaveAttribute('aria-current', 'page');
 });
 
-test('carries a background variant onto the bar without losing the navigation', () => {
+test('carries a surface variant onto the bar without losing the navigation', () => {
   const { container, rerender } = render(<HubHeader {...base} />);
+  // Unified by default.
   expect(
-    container.querySelector('.mg-hub-header--bg-none')
+    container.querySelector('.mg-hub-header--surface-primary')
   ).toBeInTheDocument();
 
-  for (const background of ['primary', 'secondary', 'tertiary']) {
-    rerender(<HubHeader {...base} background={background} />);
+  for (const surface of ['secondary', 'tertiary', 'detached']) {
+    rerender(<HubHeader {...base} surface={surface} />);
     expect(
-      container.querySelector(`.mg-hub-header--bg-${background}`)
+      container.querySelector(`.mg-hub-header--surface-${surface}`)
     ).toBeInTheDocument();
     // The bar is the surface; the navigation stays inside it either way.
     const bar = container.querySelector('.mg-hub-header__bar');
@@ -100,10 +101,10 @@ test('carries a background variant onto the bar without losing the navigation', 
   }
 });
 
-test('marks exactly one current section, whatever the background', () => {
-  for (const background of ['none', 'primary']) {
+test('marks exactly one current section, whatever the surface', () => {
+  for (const surface of ['primary', 'detached']) {
     const { container, unmount } = render(
-      <HubHeader {...base} background={background} />
+      <HubHeader {...base} surface={surface} />
     );
     const marked = container.querySelectorAll(
       '.mg-hub-header__nav a[aria-current]'

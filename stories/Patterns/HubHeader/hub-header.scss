@@ -5,45 +5,42 @@
 // (see mg-mega-content__section-list-link--active), and it is the one
 // horizontal-strip treatment not already spoken for.
 .mg-hub-header {
-  // Every surface-dependent value is a variable, so a background variant only
-  // has to retarget these and the contrast follows. The colour variants reuse
-  // Hero's own tokens, which are theme-aware, so a header and a hero set to the
-  // same variant match in all five themes without hardcoding anything.
-  --mg-hub-header-surface: var(--mg-color-neutral-0);
-  --mg-hub-header-ink: var(--mg-color-text);
-  --mg-hub-header-link: var(--mg-color-interactive);
-  --mg-hub-header-marker: var(--mg-color-interactive);
-  --mg-hub-header-rule: var(--mg-color-neutral-300);
-  --mg-hub-header-rule-alpha: 1;
-  --mg-hub-header-focus: var(--mg-color-focus-ring);
+  // Every surface-dependent value is a variable, so a surface variant only has
+  // to retarget these and the contrast follows. The colour values reuse Hero's
+  // own tokens, which are theme-aware, so a header and a hero set to the same
+  // surface match in all five themes without hardcoding anything.
+  // Unified is the default. On a colour every link goes white, so the current
+  // item can no longer be marked by colour — weight and the leading rule carry
+  // it, and neither was colour-dependent to begin with.
+  --mg-hub-header-surface: var(--mg-color-hero);
   --mg-hub-header-banner-surface: var(--mg-color-hero);
+  --mg-hub-header-ink: var(--mg-color-neutral-0);
+  --mg-hub-header-link: var(--mg-color-neutral-0);
+  --mg-hub-header-marker: var(--mg-color-neutral-0);
+  --mg-hub-header-rule: var(--mg-color-neutral-0);
+  --mg-hub-header-rule-alpha: 0.4;
+  --mg-hub-header-focus: var(--mg-color-focus-ring-inverse);
 
-  &--bg-primary {
-    --mg-hub-header-surface: var(--mg-color-hero);
-  }
-
-  &--bg-secondary {
+  &--surface-secondary {
     --mg-hub-header-surface: var(--mg-color-hero--secondary);
     --mg-hub-header-banner-surface: var(--mg-color-hero--secondary);
   }
 
-  &--bg-tertiary {
+  &--surface-tertiary {
     --mg-hub-header-surface: var(--mg-color-hero--tertiary);
     --mg-hub-header-banner-surface: var(--mg-color-hero--tertiary);
   }
 
-  // On a coloured ground every link goes white, so the current item can no
-  // longer be marked by colour. Weight and the leading rule carry it instead —
-  // two signals that were never colour-dependent to begin with.
-  &--bg-primary,
-  &--bg-secondary,
-  &--bg-tertiary {
-    --mg-hub-header-ink: var(--mg-color-neutral-0);
-    --mg-hub-header-link: var(--mg-color-neutral-0);
-    --mg-hub-header-marker: var(--mg-color-neutral-0);
-    --mg-hub-header-rule: var(--mg-color-neutral-0);
-    --mg-hub-header-rule-alpha: 0.4;
-    --mg-hub-header-focus: var(--mg-color-focus-ring-inverse);
+  // Detached: the navigation sits on the page background and the banner keeps
+  // its own colour, so the two read as separate blocks.
+  &--surface-detached {
+    --mg-hub-header-surface: var(--mg-color-neutral-0);
+    --mg-hub-header-ink: var(--mg-color-text);
+    --mg-hub-header-link: var(--mg-color-interactive);
+    --mg-hub-header-marker: var(--mg-color-interactive);
+    --mg-hub-header-rule: var(--mg-color-neutral-300);
+    --mg-hub-header-rule-alpha: 1;
+    --mg-hub-header-focus: var(--mg-color-focus-ring);
   }
 
   // The bar bleeds so a coloured header meets the banner or hero below it with

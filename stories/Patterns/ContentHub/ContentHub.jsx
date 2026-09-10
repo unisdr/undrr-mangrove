@@ -168,7 +168,7 @@ export function ContentHub({
   withHero = false,
   heroSource = 'header',
   pageHeroMedia = 'image',
-  headerBackground = 'none',
+  headerSurface = 'primary',
   routeCards = 'vertical',
   routePrefix,
 }) {
@@ -359,7 +359,7 @@ export function ContentHub({
             nameCurrent={page === 'overview'}
             navLabel={text.hubNav}
             variant={headerHero ? 'expressive' : 'compact'}
-            background={headerBackground}
+            surface={headerSurface}
             title={title}
             summary={intro}
             media={{ src: heroImage, alt: '' }}
@@ -529,12 +529,12 @@ ContentHub.propTypes = {
    * something a chrome-owned banner cannot be, so it makes the trade concrete.
    */
   pageHeroMedia: PropTypes.oneOf(['image', 'video']),
-  /** Surface for the hub header, for unifying it with the banner below. */
-  headerBackground: PropTypes.oneOf([
-    'none',
+  /** Surface for the hub header. `detached` separates it from the banner below. */
+  headerSurface: PropTypes.oneOf([
     'primary',
     'secondary',
     'tertiary',
+    'detached',
   ]),
   /** Presentation for the route card group. Destinations are identical either way. */
   routeCards: PropTypes.oneOf(['vertical', 'icon']),
