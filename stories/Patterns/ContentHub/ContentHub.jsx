@@ -341,7 +341,7 @@ export function ContentHub({
       <div className="mg-demo-shell | mg-container">
         {showBreadcrumbs && (
           <nav
-            className="mg-breadcrumb mg-demo-breadcrumbs | mg-u-font-size-250"
+            className="mg-breadcrumb | mg-u-font-size-250"
             aria-label={text.breadcrumbs}
           >
             <ul>
@@ -458,17 +458,15 @@ export function ContentHub({
                     <p className="mg-demo-lede | mg-u-font-size-500">
                       {text.aboutText}
                     </p>
-                    <ul className="mg-facts">
-                      {text.facts.map((fact, index) => (
-                        <li key={fact}>
-                          <span
-                            className={`mg-icon mg-icon-${factIcons[index]}`}
-                            aria-hidden="true"
-                          />
-                          {fact}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="mg-grid mg-grid__col-3">
+                      <IconCard
+                        orientation="horizontal"
+                        data={text.facts.map((fact, index) => ({
+                          title: fact,
+                          icon: `mg-icon mg-icon-${factIcons[index]}`,
+                        }))}
+                      />
+                    </div>
                   </div>
                 </section>
               )}

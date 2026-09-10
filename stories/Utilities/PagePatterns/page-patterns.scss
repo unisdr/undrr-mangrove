@@ -1,4 +1,4 @@
-// Page composition: the reading column and the fact grid.
+// Page composition: the reading column.
 // Distributed, because a consumer building one of these pages needs them and
 // none is obvious enough to expect them to rewrite. Anything thinner than this
 // — a margin, a font size — stays in the demo stylesheet rather than becoming
@@ -10,30 +10,6 @@
 // it, and on a phone the result sits almost on the screen edge. Widen it
 // where the viewport is narrow; above that the container's own max-widths
 // take over and the gutter stops being what limits the line.
-
-.mg-facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-  gap: var(--mg-spacing-150) var(--mg-spacing-250);
-  list-style: none;
-  padding: 0;
-  margin-block: var(--mg-spacing-200) 0;
-
-  li {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: var(--mg-spacing-100);
-    margin: 0;
-    font-family: var(--mg-font-family-ui);
-    font-weight: 700;
-  }
-
-  .mg-icon {
-    color: rgb(var(--mg-color-interactive));
-    font-size: 1.75rem;
-  }
-}
 
 .mg-reading {
   display: grid;

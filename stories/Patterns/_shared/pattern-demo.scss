@@ -1,26 +1,23 @@
 // Demo scaffolding for the pattern stories. Not distributed, and prefixed
-// mg-demo- so nothing here reads as public API. What is left is margins, two
-// measures and a gutter — layout a consuming page sets for itself. There is no
-// typography: the base scale and the mg-u-font-size utilities cover it, and a
-// demo that overrides them is a demo not trusting the library. The pieces worth
-// distributing live in Utilities/PagePatterns.
-
-// A quiet ancestry trail above the page content.
-.mg-demo-breadcrumbs {
-  padding-block: var(--mg-spacing-150);
-}
+// mg-demo- so nothing here reads as public API.
+// Everything left is a margin, a measure or a padding, and every one of them is
+// here because Mangrove ships no spacing utility and no measure utility — see
+// unisdr/undrr-mangrove#1119. Given those, most of this file would be classes
+// in the markup instead. There is deliberately no typography: the base scale and
+// the mg-u-font-size utilities cover it, and a demo that overrides them is a
+// demo not trusting the library.
 
 // Rhythm between the sections of a composed page.
 .mg-demo-section {
   margin-block-start: var(--mg-spacing-300);
 }
 
-.mg-demo-lede {
+.mg-demo-lede,
+.mg-demo-intro {
   max-inline-size: 49rem;
 }
 
 .mg-demo-intro {
-  max-inline-size: 49rem;
   margin-block-end: var(--mg-spacing-250);
 }
 

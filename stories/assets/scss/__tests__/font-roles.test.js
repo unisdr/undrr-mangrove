@@ -720,7 +720,6 @@ describe('every component names the role it is meant to', () => {
       '.mg-mega-mobile-sidebar--progressive .mg-mega-sidebar-section__item',
       'ui',
     ],
-    ['.mg-facts li', 'ui'],
     ['.mg-hub-header__name', 'ui'],
     ['.mg-mega-topbar__item-link', 'ui'],
     ['.mg-on-this-page-nav__cta', 'ui'],

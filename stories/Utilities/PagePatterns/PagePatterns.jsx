@@ -5,24 +5,6 @@ import PropTypes from 'prop-types';
  * Demonstrates the page composition utilities. These are CSS classes, not a
  * component — this exists so the classes have somewhere to be seen and reviewed.
  */
-export function Facts({ items }) {
-  return (
-    <ul className="mg-facts">
-      {items.map(([icon, label]) => (
-        <li key={label}>
-          <span className={`mg-icon mg-icon-${icon}`} aria-hidden="true" />
-          {label}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-Facts.propTypes = {
-  /** `[icon name, label]` pairs. */
-  items: PropTypes.arrayOf(PropTypes.array).isRequired,
-};
-
 export function Reading({ contents, children }) {
   return (
     <div

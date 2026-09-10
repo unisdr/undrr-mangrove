@@ -262,10 +262,7 @@ const words = {
 const factIcons = ['globe', 'cubes', 'tags', 'chart-bar'];
 function Breadcrumbs({ label, home, trail, current }) {
   return (
-    <nav
-      className="mg-breadcrumb mg-demo-breadcrumbs | mg-u-font-size-250"
-      aria-label={label}
-    >
+    <nav className="mg-breadcrumb | mg-u-font-size-250" aria-label={label}>
       <ul>
         <li>
           <a href="https://www.undrr.org/">{home}</a>
@@ -353,17 +350,15 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                   <p className="mg-demo-lede | mg-u-font-size-500">
                     {page.bandText}
                   </p>
-                  <ul className="mg-facts">
-                    {page.facts.map((fact, index) => (
-                      <li key={fact}>
-                        <span
-                          className={`mg-icon mg-icon-${factIcons[index]}`}
-                          aria-hidden="true"
-                        />
-                        {fact}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mg-grid mg-grid__col-2">
+                    <IconCard
+                      orientation="horizontal"
+                      data={page.facts.map((fact, index) => ({
+                        title: fact,
+                        icon: `mg-icon mg-icon-${factIcons[index]}`,
+                      }))}
+                    />
+                  </div>
                 </div>
               </section>
 

@@ -283,8 +283,12 @@ test('routes are horizontal icon cards by default, vertical on request', () => {
   expect(within(routes).getByRole('link', { name: 'Reporting' })).toBeVisible();
 
   rerender(<ContentHub initialPage="overview" routeCards="vertical" />);
+  // Scoped to the routes grid: the supporting band below also uses horizontal
+  // icon cards, and always does.
   expect(
-    container.querySelector('.mg-card__icon--horizontal')
+    container
+      .querySelector('.mg-grid')
+      .querySelector('.mg-card__icon--horizontal')
   ).not.toBeInTheDocument();
 });
 

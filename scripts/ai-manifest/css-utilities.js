@@ -113,17 +113,10 @@ export default {
     // 1b. Page composition
     // ---------------------------------------------------------------
     {
-      name: 'Page composition',
+      name: 'Reading column',
       description:
-        'Layout pieces a full page is assembled from: a reading column with an optional sticky contents sidebar, and a grid of short icon facts.',
+        'A reading column with an optional sticky contents sidebar, for a long page whose sections readers arrive wanting.',
       classes: [
-        {
-          class: 'mg-facts',
-          description:
-            'Responsive grid of short icon-and-label facts, for the supporting band on a landing page.',
-          usage:
-            '<ul class="mg-facts">\n  <li><span class="mg-icon mg-icon-globe" aria-hidden="true"></span>A short fact</li>\n</ul>',
-        },
         {
           class: 'mg-reading',
           description:

@@ -1,27 +1,9 @@
 import React from 'react';
-import { Facts, Reading } from './PagePatterns';
+import { Reading } from './PagePatterns';
 
 export default {
-  title: 'Components/Page composition',
+  title: 'Components/Reading column',
   parameters: { layout: 'fullscreen' },
-};
-
-const facts = [
-  ['globe', 'The official monitoring system'],
-  ['chart-bar', 'Tracking progress in disaster risk reduction'],
-  ['tags', 'Based on internationally agreed indicators'],
-  ['cubes', 'Connected to the Sustainable Development Goals'],
-];
-
-export const FactsGrid = {
-  render: () => (
-    <div className="mg-container">
-      <div className="mg-container-full-width mg-u-background-color--neutral-50">
-        <h2>Why this matters</h2>
-        <Facts items={facts} />
-      </div>
-    </div>
-  ),
 };
 
 export const ReadingColumn = {
