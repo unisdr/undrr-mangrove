@@ -8,6 +8,16 @@
   overflow: hidden;
 }
 
+/*
+ * Storybook's docs typography reset ties in specificity with .mg-hero__title
+ * (both are a single class selector, since :where() zeroes everything inside
+ * it) and wins the tie because it's injected later, turning the immersive
+ * hero title black. Bump specificity to restore the hero's own title color.
+ */
+.mg-intro .mg-hero__title {
+  color: rgb(var(--mg-color-hero-title));
+}
+
 .mg-intro__statement {
   padding-block: clamp(var(--mg-spacing-300), 8vw, var(--mg-spacing-600));
 }
