@@ -120,7 +120,7 @@ test('share actions live in the margin rail alongside "On this page", with or wi
     expect(
       within(header).queryByRole('button', { name: 'Share on LinkedIn' })
     ).not.toBeInTheDocument();
-    const rail = container.querySelector('.mg-demo-article-rail');
+    const rail = container.querySelector('.mg-u-flex-column');
     expect(
       within(rail).getByRole('button', { name: 'Share on LinkedIn' })
     ).toBeInTheDocument();

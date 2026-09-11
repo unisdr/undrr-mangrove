@@ -451,11 +451,17 @@ $colors-solid: (
 .mg-u-flex-wrap {
   flex-wrap: wrap;
 }
+.mg-u-flex-column {
+  flex-direction: column;
+}
 .mg-u-align-items-center {
   align-items: center;
 }
 .mg-u-gap-100 {
   gap: var(--mg-spacing-100);
+}
+.mg-u-gap-200 {
+  gap: var(--mg-spacing-200);
 }
 
 // RTL-safe push utilities using CSS logical properties.

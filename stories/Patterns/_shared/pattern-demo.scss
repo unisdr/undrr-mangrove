@@ -1,18 +1,9 @@
 // Demo scaffolding for the pattern stories. Not distributed, and prefixed
-// mg-demo- so nothing here reads as public API.
+// `mg-demo-`.
 // Imported directly by each pattern's stories.jsx (not through the combined
 // style-all/-.scss chain that component partials rely on), so it needs its
 // own variables import for $mg-breakpoint-mobile below.
 @import '../../assets/scss/variables';
-
-// Four declarations, each of which the library has no way to express:
-//   - a measure, because there is no max-width utility for running text
-//   - the skip link's focus reveal, because there is no skip link (#1117)
-//   - a mobile gutter, because mg-container's is 10px at every width
-//   - band padding, because there is no spacing utility
-// Inter-element spacing and typography are the library's: mg-container--spacer
-// handles the rhythm between sections, and the base scale plus mg-u-font-size
-// handle the type. Nothing here overrides either.
 
 .mg-demo-lede,
 .mg-demo-intro {
@@ -36,38 +27,19 @@
   padding-block: var(--mg-spacing-400);
 }
 
-// ArticleStory's header image. Shown at its natural aspect ratio rather than
-// cropped to a fixed one — how much of the photo survives a crop is exactly
-// the kind of image-compression/quality trade-off undrr/web-backlog#3060
-// asks to revisit, so this reference design doesn't presume an answer.
+// ArticleStory's demo header image.
 .mg-demo-article-image {
   inline-size: 100%;
   block-size: auto;
 }
 
-// Capped at the same width as the reading grid below it (a real, shared
-// value from page-patterns.scss — see its own `--mg-reading-with-contents-width`
-// custom property) so the two read as one centred column.
+// Capped at the same width as the reading grid below it.
 .mg-demo-article-media--compact {
   max-inline-size: var(--mg-reading-with-contents-width);
 }
 
-// Caption and credit are the shared `Imagecaption` component's own
-// `.mg-image-caption` (bordered divider, RTL-aware) — no demo CSS needed.
-// It has no top margin on its own, so ArticleStory's header image gets one
-// scoped rule for breathing room between image and caption.
 .mg-demo-article-image + .mg-image-caption {
   margin-block-start: var(--mg-spacing-100);
-}
-
-// Share and "On this page" live together in the reading grid's rail column in
-// every variant — a full-bleed image has no natural "beside" for share icons
-// to sit in, so a single margin-rail placement is a simpler contract than one
-// that depends on whether an image is present. display: flex is the mg-u-flex
-// class in the markup; there's no flex-direction utility, so that stays here.
-.mg-demo-article-rail {
-  flex-direction: column;
-  gap: var(--mg-spacing-200);
 }
 
 // The reading grid below self-caps to its natural width (see

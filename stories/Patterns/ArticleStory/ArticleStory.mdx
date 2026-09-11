@@ -75,20 +75,7 @@ than a large image above or below the text. This reuses the shipped `Hero`
 component's `layout="split"` (already used by `ContentHub`) rather than
 introducing a new header treatment: `split="2/3"` keeps the text column
 dominant, and `data[0].media` is omitted when `heroImage` is `"none"`, so
-`Hero` falls back to a text-only band gracefully. Known gap: `Hero` has no
-caption slot, so this variant loses the photo credit the other three show.
-
-Building this surfaced real bugs in `Hero` itself — a title measure that
-wrapped headlines too aggressively, a hardcoded width instead of the shared
-`mg-container` utility, and a forced padding — fixed at the source rather
-than patched around here. See `Hero`'s own changelog (v1.6.4) for detail.
-
-## Share lives in the margin rail
-
-`ShareButtons` sits in the same rail as "On this page", in every variant —
-not beside the photo. An earlier version anchored share to the image, but a
-full-bleed image has no natural "beside" for it to sit in, and a rail
-placement doesn't need a separate fallback for `heroImage: "none"`.
+`Hero` falls back to a text-only band gracefully.
 
 ## Building one
 
@@ -104,34 +91,9 @@ and `TableOfContents`, `VerticalCard` in an `mg-grid` for related content,
 page needs that a hub page doesn't. The body also scatters `QuoteHighlight`,
 `HighlightBox` and `EmbedContainer` as a rough positioning experiment — see
 "Still to test". What is new is demonstration-only: the `mg-demo-article-*`
-classes that size the header image and lay out the rail, loaded only with
-these stories. "Editors' recommendations" is plain markup — there is no
-shipped component for it yet.
-
-## Design decisions
-
-**`imageProminence` and `heroImage` are independent props.** Collapsing them
-into one variant (e.g. "big hero" vs "no hero") would hide that a small
-image can still be the wrong one, and a full-bleed image can still be the
-right one. Keeping them separate lets each be decided on its own evidence.
-
-**No real image-compression work here.** The ticket also asks to revisit
-Drupal's compression settings once a layout is chosen — that depends on
-which `imageProminence` ships, so it is out of scope until this reference
-design is reviewed.
-
-## Still to test
-
-- Which `imageProminence` reviewers actually prefer once seen next to the
-  comparison screenshots in the ticket, or whether both ship as editor
-  choices.
-- Whether `heroImage: "none"` needs a fallback treatment (a coloured band, a
-  pull quote) rather than going straight from identity chrome to the
-  headline.
-- How this composes with `HubHeader` for an article that also belongs to a
-  content hub.
-- The Drupal side: whether `heroImage` maps to a real "use main image on this
-  page" toggle on the content type, and what that does to existing content.
+classes that size the header image, loaded only with these stories.
+"Editors' recommendations" is plain markup — there is no shipped component
+for it yet.
 
 ## Changelog
 
@@ -139,40 +101,8 @@ design is reviewed.
   layout — large and compact image variants, and a `heroImage` toggle
   decoupling the header image from the teaser/social image, in English and
   Arabic. ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))
-  Current state and rationale are covered in the sections above; this log
-  only tracks what changed and when.
-  - Replaced synthetic content with the real undrr.org story, and the pull
-    quote above the header image with `ShareButtons`.
-  - Design review against the four reference sites: dropped centering the
-    headline/lede/byline over the image in favour of left alignment, and
-    unified `ShareButtons` into the margin rail in every variant. Scattered
-    `QuoteHighlight`, `HighlightBox` and `EmbedContainer` through the body as
-    a positioning experiment (English only).
-  - Added the `split` `imageProminence` variant, and fixed the `Hero` bugs it
-    surfaced at the source (see "Split hero" above and `Hero`'s own
-    changelog).
-  - Audited the demo-only CSS against `mg-grid`: none of `mg-grid`'s existing
-    equal-fraction column classes fit the rail/article split or the
-    caption/credit row, both asymmetric shapes.
-  - Extracted the rail/article split into a new shared `mg-grid--article`
-    variant (see `Grid`'s own changelog) instead of leaving it as
-    `mg-reading--with-contents`'s own bespoke, undiscoverable grid — it now
-    pairs with the plain `mg-grid` class the same way every other `mg-grid`
-    variant does, and `ContentHub`/`LandingPages`/the shared `Reading` demo
-    component were updated to the new markup alongside it.
-  - Replaced the caption/credit row entirely with the shared `Imagecaption`
-    component (`stories/Molecules/ImageCaption`), fixing real bugs in it at
-    the source rather than continuing to hand-roll a demo-only equivalent:
-    `caption`/`credit` were stringly-typed (`"true"`/`"false"`) with a dead
-    no-op variant-class system behind them, and `Imagecaption` passed an
-    undefined `name` variable into `Imagecredit`, which doesn't even accept
-    that prop. Now real booleans, no dead code, and one less demo-only class
-    family (`mg-demo-article-caption`/`-credit`/`-media-foot` are gone).
-  - Removed `$mg-demo-article-column-width`: `mg-reading--with-contents` now
-    self-caps to its own natural width at the source (`page-patterns.scss`'s
-    `--mg-reading-with-contents-width` custom property — see its own
-    changelog), fixing a dead-gap bug `ContentHub`/`LandingPages` had too,
-    not just working around it here. The intro block and the split hero's
-    media grid, which sit outside the reading grid as siblings, now
-    reference that same real custom property instead of a demo-only Sass
-    variable duplicating its literals.
+  Iterated through content-review, split-hero, `Hero`/`Imagecaption` fixes at
+  the source, and an `mg-grid--article` extraction — see `Hero`, `Grid` and
+  `PagePatterns`'s own changelogs for the shared-component side of those. The
+  margin rail's vertical stack was the last demo-only CSS to graduate: it's
+  now `mg-u-flex-column`/`mg-u-gap-200` (see the utility CSS reference).

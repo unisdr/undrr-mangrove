@@ -530,7 +530,7 @@ export function ArticleStory({
             )}
           </header>
           <div className="mg-reading mg-reading--with-contents | mg-container mg-grid mg-grid--article">
-            <div className="mg-demo-article-rail | mg-u-flex">
+            <div className="mg-u-flex mg-u-flex-column mg-u-gap-200">
               {/* Share lives in the margin rail regardless of image state,
                   rather than competing for space beside the photo. */}
               {shareButtons}
