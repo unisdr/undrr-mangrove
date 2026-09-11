@@ -7,34 +7,31 @@ import * as FooterStories from './Footer.stories.jsx';
 
 # Footer
 
-> **Note:** This is beta integration will evolve as Mangrove and the Syndication feature become tightly integrated.
+> **Note:** This component is in beta and will evolve as Mangrove and Syndication become more integrated.
 
-The Footer component is primarily a wrapper for the UNDRR Syndication feature's JavaScript embed code, combining site-specific content with UNDRR's global syndicated footer. This gives you the flexibility to add complementary information while maintaining consistent UNDRR branding across all network sites.
+The Footer component wraps the UNDRR Syndication feature's JavaScript, combining site-specific content with UNDRR's global syndicated footer for consistent UNDRR branding across network sites.
 
 ## Overview
 
-This component solves the challenge of providing both local site information and consistent UNDRR network content in your footer. You can add your own complementary content (like social links, organization descriptions, or site-specific information) above the automatically-loaded UNDRR global footer.
+Add site-specific content (social links, org descriptions, or site info) above the automatically-loaded UNDRR footer. For page-level feedback, place the standalone [`UserFeedback`](?path=/docs/components-user-feedback--docs) component immediately before `Footer` as a sibling—don't nest them.
 
-For page-level usefulness reporting, stack the standalone [`UserFeedback`](?path=/docs/components-user-feedback--docs) component immediately before `Footer` as an adjacent sibling. Do not nest them. Keeping them separate leaves feedback URLs, analytics and consent product-owned.
+### When to use
 
-### When to use:
-
-- **Network sites** that need consistent UNDRR footer content
-- **Organization pages** wanting to add their own footer information
-- **Landing pages** requiring both local and global footer elements
-- **Any site** that wants to participate in the UNDRR footer syndication network
+- **Network sites** needing consistent UNDRR footer content
+- **Organization pages** adding their own footer information
+- **Landing pages** combining local and global footer elements
 
 ## Examples
 
 ### Default footer with syndication
 
-The simplest implementation loads only the UNDRR syndicated content:
+Simplest implementation loads only UNDRR syndicated content:
 
 <Canvas of={FooterStories.Default} meta={FooterStories} />
 
 ### Footer with complementary content
 
-This shows how sites can add their own content above the syndicated footer:
+Shows how to add site-specific content above the syndicated footer:
 
 <Canvas of={FooterStories.WithComplementaryContent} meta={FooterStories} />
 
@@ -42,7 +39,7 @@ This shows how sites can add their own content above the syndicated footer:
 
 ### UNDRR syndication integration
 
-The footer automatically loads content from the UNDRR syndication system using the PreventionWeb widget. The component injects the necessary JavaScript directly into the page:
+The footer automatically loads content from the UNDRR syndication system using the PreventionWeb widget:
 
 ```jsx
 <Footer
@@ -60,17 +57,13 @@ The footer automatically loads content from the UNDRR syndication system using t
 
 ### Complementary content support
 
-Add your own footer content using either the `complementaryContent` prop or `children`:
+Add your own footer content using `complementaryContent` or `children`:
 
 ```jsx
 <Footer>
-  <div className="custom-footer-content">
-    <section className="mg-footer--about-footer">
-      <article className="container">
-        <p>Your organization's footer content here</p>
-      </article>
-    </section>
-  </div>
+  <section className="site-footer">
+    <p>Your organization's footer content here</p>
+  </section>
 </Footer>
 ```
 
@@ -99,10 +92,10 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 
 ## Interactions
 
-- **Syndicated content** loads automatically after component mounts
-- **Links in complementary content** work as standard anchor tags
-- **Error handling** displays fallback message if syndication fails
-- **Loading states** provide visual feedback during content loading
+- Syndicated content loads automatically after component mounts
+- Links in complementary content work as standard anchor tags
+- Error handling displays fallback if syndication fails
+- Loading states provide visual feedback
 
 ## Working example
 
@@ -110,9 +103,9 @@ Add your own footer content using either the `complementaryContent` prop or `chi
 
 ## Utility footer bar
 
-> **Note:** This component is new and may change as DELTA and other sub-branded sites evolve.
+> **Note:** This is new and may change as DELTA and other sub-branded sites evolve.
 
-The `mg-footer-bar` is a CSS-only utility component that renders a secondary navigation bar below the main footer. It is used by sub-branded sites (e.g. DELTA Resilience) for product-level links, disclaimers, and legal links.
+The `mg-footer-bar` is a CSS-only utility component for secondary navigation below the main footer, used by sub-branded sites for product links, disclaimers, and legal information.
 
 ```html
 <footer class="mg-footer-bar">
@@ -149,7 +142,7 @@ The `mg-footer-bar` is a CSS-only utility component that renders a secondary nav
 
 ### JavaScript approach
 
-The component uses a simplified JavaScript approach that directly injects the required scripts:
+The component uses a simplified JavaScript approach that injects required scripts:
 
 ```html
 <!-- Widget loader script -->
@@ -171,50 +164,34 @@ The component uses a simplified JavaScript approach that directly injects the re
 </script>
 ```
 
-This approach automatically handles CSS loading when `includecss` is set to `true`, eliminating the need for manual stylesheet management.
+This approach automatically handles CSS loading when `includecss` is set to `true`, eliminating manual stylesheet management.
 
 #### Partial configuration support
 
-You can provide only the syndication options you want to override. The component automatically merges your partial configuration with the defaults:
+Provide only the options you want to override; the component merges them with defaults:
 
 ```jsx
-// Only override the suffixID, keep all other defaults
-<Footer
-  syndicationConfig={{
-    suffixID: 'my-custom-footer'
-  }}
-/>
+// Override suffixID only, keep other defaults
+<Footer syndicationConfig={{ suffixID: 'my-footer' }} />
 
 // Override multiple options
-<Footer
-  syndicationConfig={{
-    pageid: '12345',
-    suffixID: 'special-footer',
-    includecss: true
-  }}
-/>
+<Footer syndicationConfig={{ pageid: '12345', suffixID: 'special-footer', includecss: true }} />
 ```
 
 ### Site integration
 
-When implementing in your site, consider this structure:
+Typical site footer implementation:
 
 ```jsx
-// Typical site footer implementation
 <Footer
   complementaryContent={
     <section className="site-footer">
       <div className="container">
-        {/* Your site's social links */}
         <p className="social-links">
           <a href="https://facebook.com/yourorg">Facebook</a>
           <a href="https://twitter.com/yourorg">Twitter</a>
         </p>
-
-        {/* Your organization description */}
-        <p className="org-description">
-          Your organization works on [mission statement].
-        </p>
+        <p className="org-description">Your organization's mission statement.</p>
       </div>
     </section>
   }

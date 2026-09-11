@@ -2,9 +2,9 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs).
 
-This page provides an overview of UNDRR's CDN structure and common asset paths. For a complete listing of all available files and versions, explore the CDN directly at [assets.undrr.org](https://assets.undrr.org/sitemap.html).
+Authoritative path reference for UNDRR CDN assets. Browse the full index at [assets.undrr.org](https://assets.undrr.org/sitemap.html).
 
-UNDRR assets are served from `https://assets.undrr.org/` with versioned endpoints for stability.
+Base host: `https://assets.undrr.org/`
 
 ## Mangrove component library
 
@@ -21,9 +21,7 @@ Base URL: `https://assets.undrr.org/mangrove/{version}/`
 | DELTA Resilience | `/css/style-delta.css` | deltaresilience.org |
 | Gutenberg editor | `/css/style-gutenberg.css` | Drupal Gutenberg block previews |
 
-#### Legacy theme variants
-
-Legacy variants keep the pre-1.4 behavior (`html { font-size: 10px }`). Use these if your site has custom CSS written for the 10px root. See the [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for migration details.
+Legacy variants keep pre-1.4 behavior (`html { font-size: 10px }`). Use when migrating sites with CSS that depends on a 10px root. See [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change).
 
 | Theme | Legacy path |
 |-------|-------------|
@@ -34,7 +32,6 @@ Legacy variants keep the pre-1.4 behavior (`html { font-size: 10px }`). Use thes
 
 The DELTA Resilience theme has no legacy variant.
 
-**Example:**
 ```html
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.1/css/style.css" />
 ```
@@ -44,11 +41,10 @@ The DELTA Resilience theme has no legacy variant.
 | Module | Path | Purpose |
 |--------|------|---------|
 | Tabs | `/js/tabs.js` | Tab component interactivity |
-| Show More | `/js/show-more.js` | Expand/collapse content sections |
+| Show More | `/js/show-more.js` | Expand/collapse sections |
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 
-**Example:**
 ```html
 <script type="module">
   import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0-beta.1/js/tabs.js';
@@ -56,9 +52,9 @@ The DELTA Resilience theme has no legacy variant.
 </script>
 ```
 
-### React components
+### React components (no build step)
 
-Precompiled React components for use without a build process. The `hydrate.js` runtime handles mounting and error recovery.
+Runtime: `/components/hydrate.js`
 
 | Module | Path |
 |--------|------|
@@ -77,9 +73,7 @@ Precompiled React components for use without a build process. The `hydrate.js` r
 | StatsCard | `/components/StatsCard.js` |
 | Pager | `/components/Pager.js` |
 
-**Example:**
-
-React 19 dropped UMD builds. Use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/):
+React 19 removed UMD builds. Use import maps with esm.sh:
 
 ```html
 <!-- Note: react/jsx-runtime only needed if components use automatic JSX runtime. Unused entries don't trigger requests. -->
@@ -95,19 +89,15 @@ React 19 dropped UMD builds. Use [import maps](https://developer.mozilla.org/en-
 </script>
 ```
 
-Then import the Mangrove component as an ES module:
-
 ```html
 <script type="module">
   import React from 'react';
   import { createRoot } from 'react-dom/client';
 
-  // Load component from CDN
   const MegaMenuModule = await import(
     'https://assets.undrr.org/mangrove/2.0.0-beta.1/components/MegaMenu.js'
   );
 
-  // Unwrap ESM/CJS interop - bundle may be double-wrapped
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
   if (typeof MegaMenu !== 'function' && MegaMenu?.default) {
     MegaMenu = MegaMenu.default;
@@ -115,9 +105,7 @@ Then import the Mangrove component as an ES module:
 </script>
 ```
 
-See the [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs) for complete usage examples.
-
-All bundled components export a `fromElement` function for automatic prop extraction. The `hydrate.js` runtime (`/components/hydrate.js`) eliminates the manual `createRoot` boilerplate. See the [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) for details.
+Bundled components export `fromElement`; pair with `/components/hydrate.js` to avoid manual `createRoot` lifecycle code. See [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 ## Analytics
 
@@ -128,7 +116,6 @@ Base URL: `https://assets.undrr.org/analytics/{version}/`
 | GA4 Enhancements | `/google_analytics_enhancements.js` | Analytics bootstrap and tracking |
 | Documentation | `/index.html` | Full implementation guide |
 
-**Example:**
 ```html
 <script
   src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
@@ -136,15 +123,13 @@ Base URL: `https://assets.undrr.org/analytics/{version}/`
 ></script>
 ```
 
-See [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs) for configuration options.
-
 ## Favicons
 
 Base URL: `https://assets.undrr.org/favicons/{brand}/v1/`
 
-Canonical favicon sets for all 10 UNDRR brands. Each brand directory contains `favicon.ico`, `apple-touch-icon.png`, `favicon-192.png`, and `favicon-512.png`.
+Canonical set per brand: `favicon.ico`, `apple-touch-icon.png`, `favicon-192.png`, `favicon-512.png`.
 
-See [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) for the full brand list, recommended markup, and integration details.
+See [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) for all 10 brand directories and markup guidance.
 
 ## Logos
 
@@ -166,7 +151,7 @@ Base URL: `https://assets.undrr.org/logos/`
 
 ### Production (recommended)
 
-Pin to a specific version for stability:
+Pin exact versions:
 
 ```
 https://assets.undrr.org/mangrove/2.0.0-beta.1/css/style.css
@@ -174,74 +159,23 @@ https://assets.undrr.org/mangrove/2.0.0-beta.1/css/style.css
 
 ### Latest (testing only)
 
-The `/latest/` endpoint always points to the most recent release:
-
 ```
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 ```
 
-**Note:** Only use `/latest/` for development and testing. Production sites should pin to specific versions.
+Use `/latest/` only for development/testing. Production should always pin specific versions.
 
 ### Test environment
 
-Pre-release assets are available at:
+Pre-release assets:
 
 ```
 https://assets.undrr.org/testing/static/mangrove/{version}/
 ```
 
-## URL structure
-
-```
-https://assets.undrr.org/
-├── mangrove/
-│   └── {version}/
-│       ├── css/
-│       │   ├── style.css
-│       │   ├── style-preventionweb.css
-│       │   ├── style-mcr.css
-│       │   ├── style-irp.css
-│       │   └── style-delta.css
-│       ├── js/
-│       │   ├── tabs.js
-│       │   ├── show-more.js
-│       │   ├── on-this-page-nav.js
-│       │   └── table-of-contents.js
-│       └── components/
-│           ├── hydrate.js
-│           ├── ShareButtons.js
-│           ├── MegaMenu.js
-│           ├── ScrollContainer.js
-│           ├── BarChart.js
-│           ├── MapComponent.js
-│           ├── QuoteHighlight.js
-│           ├── Fetcher.js
-│           ├── SyndicationSearchWidget.js
-│           ├── IconCard.js
-│           ├── Gallery.js
-│           ├── StatsCard.js
-│           └── Pager.js
-├── analytics/
-│   └── {version}/
-│       ├── google_analytics_enhancements.js
-│       └── index.html
-├── favicons/
-│   └── {brand}/
-│       └── v1/
-│           ├── favicon.ico
-│           ├── apple-touch-icon.png
-│           ├── favicon-192.png
-│           └── favicon-512.png
-├── logos/
-│   └── undrr/
-│       ├── undrr-logo-horizontal.svg
-│       └── undrr-logo-vertical.svg
-└── sitemap.html
-```
-
 ## See also
 
-- [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) — brand favicon sets for all UNDRR properties
 - [Vanilla HTML/CSS integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
+- [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs)
 - [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs)
 - [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs)

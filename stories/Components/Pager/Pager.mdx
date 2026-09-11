@@ -7,19 +7,19 @@ import * as PagerStories from './Pager.stories';
 
 # Pager
 
-Pagination for multi-page content. Also usable as CSS/HTML markup for server-rendered pages like Drupal views.
+Pagination for multi-page content. Also usable as CSS/HTML for server-rendered pages like Drupal views.
 
 ## Features
 
 - Sliding 5-page window with first/last page and ellipsis indicators
 - Previous / Next navigation with SVG chevron icons
 - Bar layout with result range and jump-to-page form
-- Mini-pager mode when the total number of pages is unknown
+- Mini-pager mode when total pages is unknown
 - Empty state with optional action button
-- Loading state that disables all controls
+- Loading state disables all controls
 - RTL (right-to-left) support
-- Hides text labels on narrow viewports
-- `aria-current`, `aria-label`, and keyboard navigation
+- Hidden text labels on narrow viewports
+- ARIA navigation with keyboard support
 
 ## Usage
 
@@ -130,7 +130,7 @@ Three-zone layout with result range, page list, and jump-to-page form.
 
 ### Unknown total (mini-pager)
 
-When `totalPages` is `null`, the last-page link is hidden and Next is always available.
+When `totalPages` is `null`, the last-page link hides and Next is always available.
 
 <Canvas of={PagerStories.UnknownTotal} />
 
@@ -152,13 +152,13 @@ Chevron icons are automatically mirrored in RTL contexts.
 
 ### Few pages
 
-When there are only a few pages, no ellipsis is shown.
+When there are only a few pages, no ellipsis appears.
 
 <Canvas of={PagerStories.FewPages} />
 
 ### Many pages
 
-The sliding window and ellipsis keep the list short on high page counts.
+The sliding window and ellipsis keep the list compact at high page counts.
 
 <Canvas of={PagerStories.ManyPages} />
 
@@ -182,7 +182,7 @@ The sliding window and ellipsis keep the list short on high page counts.
 
 ## Drupal integration
 
-The Pager supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering into server-generated HTML containers.
+The Pager supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for rendering into server-generated HTML.
 
 ### Data attributes
 

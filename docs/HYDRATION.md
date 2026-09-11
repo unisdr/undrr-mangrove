@@ -2,16 +2,16 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
-Mangrove React components can be rendered into server-generated HTML containers. The server renders HTML with `data-mg-*` attributes; a wrapper script imports the component and `createHydrator`, which handles DOM querying, prop extraction, and React root lifecycle -- with automatic fallback to the original HTML on error.
+Mangrove hydrates React components into server-rendered containers (`data-mg-*`). Use `createHydrator` to query DOM nodes, extract props with `fromElement`, manage roots, and recover original HTML on mount errors.
 
-Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803) · **Building a component?** See [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) for the `fromElement` patterns, barrel files, and tests.
+Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803) · Component authoring guide: [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
 
-## How it works
+## Hydration flow
 
-1. Server renders an HTML container with data attributes (e.g., `<div data-mg-share-buttons data-main-label="Share">`)
-2. A wrapper script imports `createHydrator`, the component, and its `fromElement` function
-3. `createHydrator` finds matching containers, calls `fromElement` to extract props, and mounts the React component
-4. On error, the original HTML is restored automatically
+1. Server renders container HTML (for example: `<div data-mg-share-buttons data-main-label="Share">`)
+2. Wrapper imports `createHydrator`, component, and `fromElement`
+3. `createHydrator` finds matching containers, builds props via `fromElement`, mounts React
+4. If rendering fails, previous HTML is restored automatically
 
 ## Integration examples
 
@@ -38,7 +38,6 @@ Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803
 ### Drupal
 
 ```js
-// Uses @mangrove/* import map aliases (resolved by mangrove-components.js in undrr_common theme)
 import createHydrator from "@mangrove/hydrate";
 import Component, { fromElement } from "@mangrove/ComponentName";
 
@@ -68,76 +67,42 @@ createHydrator({
 });
 ```
 
----
+## `createHydrator` API
 
-## createHydrator API
-
-Exported from `src/hydrate.js` and from the npm package as `createHydrator`.
+Exported from `src/hydrate.js` and package root.
 
 ```js
 import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
-// or in Drupal: import createHydrator from './hydrate.js';
 ```
-
-**Config:**
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `selector` | `string` | Yes | CSS selector for container elements |
+| `selector` | `string` | Yes | CSS selector for containers |
 | `component` | `Function \| object` | Yes | React component or module with `.default` |
 | `fromElement` | `Function` | Yes | `(container: Element) => props` |
-| `options.clearContainer` | `boolean` | No | Clear innerHTML before rendering (default: `true`) |
-| `options.debugLabel` | `string` | No | Label for error messages (default: `selector`) |
+| `options.clearContainer` | `boolean` | No | Clear `innerHTML` before render (default: `true`) |
+| `options.debugLabel` | `string` | No | Error label (default: `selector`) |
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
-| `options.identifierPrefix` | `string` | No | Prefix for React `useId()` hooks (default: derived from `selector`) |
+| `options.identifierPrefix` | `string` | No | `useId()` prefix override |
 
-**Returns:** `{ roots, update, unmountAll }`
+Returns: `{ roots, update, unmountAll }`
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `roots` | `ReactRoot[]` | All React roots created (accumulates across `update()` calls) |
-| `update(context?)` | `(Element?) => ReactRoot[]` | Scan for new containers, mount them. Scopes to `context` if provided, otherwise `document`. Returns newly created roots. |
-| `unmountAll()` | `() => void` | Unmount all roots and clear hydration markers |
+| `roots` | `ReactRoot[]` | Roots created across calls |
+| `update(context?)` | `(Element?) => ReactRoot[]` | Mounts new matches in `context` or `document` |
+| `unmountAll()` | `() => void` | Unmounts roots and clears hydration markers |
 
-**Lifecycle:**
+## Runtime behavior and caveats
 
-1. Queries all elements matching `selector`
-2. Skips containers with `data-mg-hydrated="true"`
-3. Saves `innerHTML` (for error recovery)
-4. Calls `fromElement(container)` to extract props
-5. Clears the container (if `clearContainer` is true)
-6. Creates a React root with `identifierPrefix` and error callbacks, renders the component
-7. Sets `data-mg-hydrated="true"` on success
-8. On error: logs to console, restores saved HTML, calls `onError` if provided
+- Skips already hydrated containers via `data-mg-hydrated="true"`
+- Saves original `innerHTML` before rendering for rollback
+- Applies React root error hooks:
+  - `onCaughtError` and `onUncaughtError`: `console.error` + optional `onError`
+  - `onRecoverableError`: `console.warn`
+- Prevents `useId()` collisions across multiple independent roots by deriving unique `identifierPrefix` values (override with `options.identifierPrefix`)
 
-**Error handling:**
-
-Each React root is created with three error callbacks:
-
-- **`onCaughtError`** — fires when an Error Boundary catches an error. Logs to `console.error` and calls `onError` if provided.
-- **`onUncaughtError`** — fires when an error is thrown and not caught by any Error Boundary. Logs to `console.error` and calls `onError` if provided.
-- **`onRecoverableError`** — fires when React automatically recovers from an error (e.g., hydration mismatch fallback). Logs to `console.warn`.
-
-**`useId()` collision prevention:**
-
-Drupal pages often render many independent React roots. Each root receives a unique `identifierPrefix` (derived from the selector and container index) so that React's `useId()` hook never produces duplicate IDs across roots. You can override this with `options.identifierPrefix` if needed.
-
-**Drupal integration with `update(context)`:**
-
-```js
-const hydrator = createHydrator({ selector, component, fromElement });
-
-// Re-scan when Drupal injects new DOM
-Drupal.behaviors.mangroveComponent = {
-  attach(context) {
-    hydrator.update(context);
-  },
-};
-```
-
----
-
-## Components with hydration support
+## Supported hydrated components
 
 | Component | Tier | Selector | Key attributes |
 |-----------|------|----------|---------------|
@@ -151,25 +116,20 @@ Drupal.behaviors.mangroveComponent = {
 | SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 | Pager | Medium | `[data-mg-pager]` | `data-page`, `data-total-pages`, `data-show-jump-to`, `data-aria-label` |
 
-**Tier meanings:**
+Tier definitions:
+- **Simple**: scalar attributes
+- **Medium**: scalar + JSON blobs
+- **Complex**: wrapper supplies non-DOM props (API/config)
 
-- **Simple** — all props from individual data attributes, no JSON, minimal defaults
-- **Medium** — mix of individual attributes and JSON blobs for arrays/objects
-- **Complex** — `fromElement` extracts only DOM-available props; consumer wrapper provides the rest (API data, config modifiers, etc.)
+## Bridging consumer-specific HTML contracts
 
-## When the consumer's HTML doesn't match
-
-The `fromElement` functions use clean attribute names (`data-media`, `data-stats`). But existing consumer HTML may use different conventions (Drupal Gutenberg blocks use `data-mg-gallery-data`, `data-mg-stats-card-data`, etc.).
-
-In this case, the consumer wrapper provides its own `fromElement` that bridges the existing HTML contract:
+If consumer markup differs from component `fromElement` expectations (for example Drupal Gutenberg attributes like `data-mg-gallery-data`), keep `createHydrator` and replace only prop extraction in the consumer wrapper.
 
 ```js
-// Gallery-wrapper.js — Drupal's attributes differ from the generic fromElement
 import createHydrator from "@mangrove/hydrate";
 import { Gallery } from "@mangrove/Gallery";
 
 function fromElement(container) {
-  // Drupal outputs two JSON blobs instead of individual attributes
   const dataAttr = container.getAttribute("data-mg-gallery-data");
   const optionsAttr = container.getAttribute("data-mg-gallery-options");
   const media = dataAttr ? JSON.parse(dataAttr) : [];
@@ -179,31 +139,26 @@ function fromElement(container) {
     media,
     showThumbnails: options.showThumbnails !== false,
     showArrows: options.showArrows !== false,
-    // ...
   };
 }
 
 createHydrator({ selector: "[data-mg-gallery]", component: Gallery, fromElement });
 ```
 
-This is the Layer 3 pattern -- the consumer takes control of prop extraction while still using `createHydrator` for mount lifecycle.
+This is Layer 3: consumer-owned mapping logic on top of shared hydration lifecycle.
 
----
-
-## Architecture
+## Architecture layers
 
 | Layer | Responsibility | Lives in |
 |-------|---------------|----------|
-| **Layer 1** — `createHydrator` | DOM querying, error handling, `createRoot` lifecycle, hydration markers | `src/hydrate.js` (Mangrove) |
-| **Layer 2** — `fromElement` | Extract component props from a DOM element | Per-component `*.fromElement.js` (Mangrove) |
-| **Layer 3** — Consumer glue | Selector choice, prop overrides, site-specific logic | Consumer repo (Drupal, Astro, etc.) |
+| Layer 1 — `createHydrator` | DOM query, root lifecycle, error recovery, hydration markers | `src/hydrate.js` |
+| Layer 2 — `fromElement` | DOM-to-props extraction | Component `*.fromElement.js` |
+| Layer 3 — Consumer glue | Selectors, prop overrides, site-specific mapping | Consumer repo |
 
-**Adding hydration support to a new component?** See the [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) guide for the step-by-step walkthrough, `fromElement` patterns, barrel files, and tests.
+## Related docs
 
-## Related documentation
-
-- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs) — overview of all integration approaches
-- [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs) — CDN usage with import maps
-- [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs) — npm package usage
-- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) — all available CDN paths
-- [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) — contributor guide for adding `fromElement` and barrel files
+- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)
+- [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
+- [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs)
+- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs)
+- [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs)

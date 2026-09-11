@@ -8,7 +8,7 @@ import {
 
 # Scroll container
 
-The Scroll Container component provides a responsive horizontal scrolling container for content that exceeds the available width.
+`ScrollContainer` provides responsive horizontal scrolling for content wider than its container.
 
 <Meta of={ScrollContainerStories} />
 
@@ -16,13 +16,13 @@ The Scroll Container component provides a responsive horizontal scrolling contai
 
 ## Default
 
-A basic scroll container implementation with default settings.
+Basic implementation with default settings.
 
 <Canvas of={ScrollContainerStories.Default} meta={ScrollContainerStories} />
 
 ## With custom height
 
-A scroll container with a custom height setting.
+Sets a custom container height.
 
 <Canvas
   of={ScrollContainerStories.CustomHeight}
@@ -31,7 +31,7 @@ A scroll container with a custom height setting.
 
 ## With minimum width
 
-A scroll container with a minimum width setting.
+Sets a minimum container width.
 
 <Canvas
   of={ScrollContainerStories.WithMinWidth}
@@ -40,7 +40,7 @@ A scroll container with a minimum width setting.
 
 ## With navigation arrows
 
-A scroll container with navigation arrows for easier scrolling. The arrows appear at the top of the container when content overflows horizontally and the `showArrows` prop is set to `true`. The arrows will only be visible when there is content to scroll to in that direction.
+A scroll container with navigation arrows. Arrows appear when content overflows horizontally and `showArrows={true}`, and only when scrolling is available in that direction.
 
 <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
   <ScrollContainer showArrows={true} itemWidth="350px">
@@ -50,11 +50,11 @@ A scroll container with navigation arrows for easier scrolling. The arrows appea
   </ScrollContainer>
 </div>
 
-> **Note:** Arrows only appear when content overflows horizontally and will be hidden on mobile devices.
+> **Note:** Arrows show only on horizontal overflow and are hidden on mobile devices.
 
 ## With custom step size
 
-A scroll container with custom step size for navigation arrows. By default, clicking an arrow scrolls by half the container width, but you can customize this with the `stepSize` prop (in pixels).
+Sets a custom arrow step size. By default, arrows scroll by half the container width; override with `stepSize` (pixels).
 
 <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
   <ScrollContainer showArrows={true} stepSize={200}>
@@ -64,11 +64,11 @@ A scroll container with custom step size for navigation arrows. By default, clic
   </ScrollContainer>
 </div>
 
-> **Note:** In this example, clicking an arrow will scroll by 200 pixels instead of the default container width.
+> **Note:** Here, each arrow click scrolls 200px.
 
 ## With single child
 
-This demonstrates a use case of where a single div may wrap all the child content, providing its own grid functionality.
+Demonstrates wrapping all child content in one element (for example, your own grid container).
 
 <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
   <ScrollContainer showArrows={true}>
@@ -126,7 +126,7 @@ const MyComponent = () => (
 
 ### Arrow button labels
 
-When `showArrows` is enabled, the left and right navigation buttons have `aria-label="Scroll left"` and `aria-label="Scroll right"` respectively. Buttons are automatically `disabled` when there is no content to scroll in that direction, which prevents activation and communicates state to assistive technologies.
+When `showArrows` is enabled, the buttons use `aria-label="Scroll left"` and `aria-label="Scroll right"`. They are automatically `disabled` when no further scrolling is available in that direction.
 
 ### Container semantics
 
@@ -135,7 +135,7 @@ When `showArrows` is enabled, the left and right navigation buttons have `aria-l
 
 ### Keyboard support
 
-The scroll container itself does not implement custom keyboard event handlers. Users can scroll horizontally using native browser mechanisms (e.g., Shift+scroll wheel on desktop). The arrow buttons are standard `<button>` elements and are reachable via Tab and activatable with Enter or Space.
+The container does not add custom keyboard handlers. Users rely on native browser horizontal scrolling (for example, Shift+scroll wheel on desktop). Arrow controls are standard `<button>` elements, reachable by Tab and activatable with Enter/Space.
 
 ### Known limitations
 
@@ -147,7 +147,7 @@ These are gaps that affect users or accessibility auditors:
 - No keyboard equivalent for mouse drag scrolling beyond the arrow buttons
 - Arrow buttons may be hidden on devices classified as mobile by the component's JavaScript touch/user-agent detection, including some iPads or other misclassified devices
 
-> **Implementation note (for contributors):** The `<section>` and `<nav>` elements lack ARIA labels; there is no `role="region"` or live region on the scroll container itself. Arrow button visibility is controlled by a JavaScript mobile-detection check (`ontouchstart` plus a mobile/iPad user-agent match), not by viewport size or CSS breakpoints, so the limitation affects devices detected as mobile rather than all small screens.
+> **Implementation note (for contributors):** The `<section>` and `<nav>` are intentionally unlabelled (no `role="region"` or live region). Arrow visibility is controlled by JavaScript mobile detection (`ontouchstart` plus mobile/iPad user-agent matching), not viewport breakpoints, so any detected-mobile device may hide arrows.
 
 ## Server-rendered / CDN usage
 
