@@ -8,19 +8,21 @@ import * as HeroStories from './Hero.stories';
 
 # Mangrove hero (main)
 
-The Hero component is a full-width page section with a title, summary text, and optional CTA buttons. It supports two layout modes and four colour variants.
+Hero is a full-width page section with title, summary, and optional CTA buttons.
+It supports two layouts and four color variants.
 
 ## Overview
 
 ### Layouts
 
-**`layout="background"` (default):** A full-bleed background image with a semi-transparent coloured overlay. Use at the top of campaign or homepage-style pages.
+**`layout="background"` (default):** Full-bleed background image plus overlay; use for campaign/homepage moments.
 
-**`layout="split"`:** A solid theme-coloured background with a content column on the left and a media image on the right. Use for topic pages, section introductions, or any page where rich body copy and a representative image are equally important. The content column always comes first in the DOM (and visually in LTR/RTL both).
+**`layout="split"`:** Theme-colored background with text and media columns; use for topic pages and section intros. Content stays first in DOM order (LTR/RTL).
 
 ### Heading level
 
-The `headingLevel` prop controls the HTML heading element used for the title (`h1`, `h2`, or `h3`; default `h1`). Set it to `h1` when the Hero is the page's primary heading, or `h2`/`h3` when it appears mid-page below another heading.
+`headingLevel` sets the title element (`h1`, `h2`, `h3`; default `h1`). Use
+`h1` for page-primary heading and `h2`/`h3` for mid-page heroes.
 
 ### Media slot (split layout only)
 
@@ -32,7 +34,7 @@ The media column accepts three shapes, discriminated by `media.type`:
 | `"video"`           | `src` (iframe-embeddable URL), `title`     | Rendered as a 16:9 `<iframe>`. Use the provider's embed URL (e.g. `https://www.youtube.com/embed/…`). `title` is required for screen reader users.                                                                                                                                                                                                                                                                                                                                                |
 | `"html"`            | `html` (pre-sanitized HTML string)         | Rendered via `dangerouslySetInnerHTML`. The **consumer must sanitize** — Mangrove does not escape this string. Use for custom embeds, figures with attribution overlays, or any markup that doesn't fit image/video. A `<figure>` dropped directly into the slot is styled by Mangrove as a full-bleed image with an attribution strip overlay. Wrap content in your own container (as in the example below) to add padding, decoration, or composition on top of the hero's coloured background. |
 
-Omitting `media.type` falls back to `image` for backwards compatibility with existing content.
+If `media.type` is omitted, Hero falls back to `image` for backward compatibility.
 
 ### Column split (split layout only)
 
@@ -67,27 +69,28 @@ The `split` prop controls the content/media column ratio, aligned to the MG 12-c
 
 ## Example — immersive and contained
 
-Use `size="immersive"` for a tall editorial feature and `contained` when the Hero should respect its parent width. Content items may include a `logo` and a structured `buttons` array with URLs or click handlers.
+Use `size="immersive"` for tall editorial layouts and `contained` when Hero
+should respect parent width. Content can include `logo` and `buttons`.
 
 <Canvas of={HeroStories.ImmersiveContained} meta={HeroStories} />
 
 ## Interactions
 
-- Clicking the title (if a `link` is provided) or CTA buttons navigates to the linked destination.
+- Title links (when `link` is set) and CTA buttons navigate to their destinations.
 
 ## Changelog
 
 - **1.6.4** — 2026-09-10 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)):
-  - Removed restrictive title width caps and cleaned up split-layout spacing/alignment so text aligns with shared container rhythm.
-  - Simplified title markup/styles by removing dead classes/wrappers and applying `mg-hero__title` directly to the heading.
+  - Removed restrictive title width caps and aligned split-layout spacing to shared container rhythm.
+  - Simplified title markup/styles by removing dead wrappers and applying `mg-hero__title` directly to the heading.
 - **1.6.3** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)):
   - Background gradient now follows `--mg-color-hero` instead of a hardcoded blue, so themed brands render correctly. ([#1115](https://github.com/unisdr/undrr-mangrove/issues/1115))
   - Scoped link color rules to hero text regions (`__overlay`/`__content`) so consumer HTML media content is not unintentionally restyled.
 - **1.6.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic typography now follows font roles (`display` for title, `ui` for label) with non-Arabic rendering unchanged.
 - **1.6.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a hero title or label whose own language is not Arabic.
 - **1.6** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
-  - Introduced a directional gradient refresh for better contrast and theme control in LTR/RTL.
-  - Improved CTA spacing/responsiveness and preserved CTA variant behavior across hero variants.
+  - Refreshed directional gradient for better contrast and theme control in LTR/RTL.
+  - Improved CTA spacing/responsiveness while preserving variant behavior.
   - Added contained/immersive options, logo support, and structured CTA data.
 - **1.5** — 2026-04-15 ([#942](https://github.com/unisdr/undrr-mangrove/issues/942)): Added `layout="split"` with `headingLevel` and `split` controls, plus image/video/html media slot support.
 - **1.4** — 2026-04-13: `.mg-hero__title` and `.mg-hero__label` now use `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing both to `$mg-font-family-arabic-headings`.

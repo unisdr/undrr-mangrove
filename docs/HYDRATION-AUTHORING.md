@@ -2,11 +2,13 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
 
-How to add layered hydration support to a Mangrove component so it can be rendered into server-generated HTML containers. For how consumers use hydrated components, see the [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
+How to add layered hydration support so a Mangrove component can render into
+server-generated HTML containers. For consumer usage, see the
+[Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 ## Quick reference
 
-To add hydration support to a component, you create **3 files** in Mangrove and update **1 config**:
+Add hydration support by creating **3 files** and updating **1 config**:
 
 ```
 ComponentName/
@@ -26,7 +28,8 @@ ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
 
 ## Step-by-step walkthrough
 
-This walks through adding hydration to a hypothetical `AlertBanner` component that accepts `message`, `variant`, and `dismissible` props.
+Example below uses a hypothetical `AlertBanner` with `message`, `variant`, and
+`dismissible` props.
 
 ### 1. Write fromElement
 
@@ -59,7 +62,8 @@ export { default } from './AlertBanner.jsx';
 export { default as fromElement } from './AlertBanner.fromElement.js';
 ```
 
-This lets the built bundle (`dist/components/AlertBanner.js`) export both the component and `fromElement` from a single import.
+This makes the built bundle (`dist/components/AlertBanner.js`) export both the
+component and `fromElement` from one import path.
 
 **If the component uses a named export instead of default:**
 
@@ -80,7 +84,7 @@ Change the component's entry point from the `.jsx` to the `.hydrate.js` barrel:
  },
 ```
 
-Existing named exports are preserved — the barrel re-exports everything the component did.
+Existing named exports are preserved through the barrel.
 
 ### 4. Write tests
 
@@ -172,7 +176,7 @@ dismissible: dataset.dismissible === 'true',
 resultsPerPage: dataset.resultsPerPage ? parseInt(dataset.resultsPerPage, 10) : 50,
 ```
 
-### JSON arrays
+### JSON arrays (with fallback)
 
 ```js
 try {
@@ -182,7 +186,7 @@ try {
 }
 ```
 
-### Optional props (undefined when absent)
+### Optional props (`undefined` when absent)
 
 ```js
 // Only include if explicitly set — lets the component use its own default
@@ -202,7 +206,7 @@ if (contentWrapper) {
 
 ---
 
-## Related documentation
+## Related docs
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist

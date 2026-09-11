@@ -6,11 +6,15 @@ This guide explains the release process for the UNDRR Mangrove component library
 
 ## Overview
 
-Releases use **manual versioning** with automated npm publishing. You choose the version number, update `package.json`, tag the release, and CI handles the rest.
+Releases use **manual versioning** with automated npm publishing: choose the
+version, update `package.json`, tag, and let CI publish.
 
 ### Why not automated semantic-release?
 
-We follow Conventional Commits for consistent, readable commit history, but we don't use semantic-release for automated version bumps. As a rapidly evolving component library, strict semver automation would produce excessive major version bumps — individual component breaking changes happen frequently during active development, but don't warrant a major library release when the change is scoped to a single component. Manual versioning gives us control over when to signal a significant release to consumers.
+We use Conventional Commits for readable history, but not semantic-release for
+automatic bumps. In an actively evolving component library, strict automation
+would trigger too many major bumps for scoped component-level breaks. Manual
+versioning keeps release signaling intentional.
 
 ## Release steps
 
@@ -90,7 +94,8 @@ The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr
 
 Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag.
 
-Write the release notes as a **curated, themed narrative** — not a flat list of commits. Start by reviewing the commit log since the previous tag:
+Write release notes as a **curated, themed narrative**, not a flat commit list.
+Start from commits since the previous tag:
 
 ```bash
 git log v1.7.0..v1.8.0 --oneline
@@ -105,7 +110,9 @@ Group the work into themed sections that match what actually landed. Common sect
 - **Documentation & code quality** — significant doc or internal quality improvements
 - **Dependencies** — batched dep updates (one line is fine)
 
-Each bullet should be **bold component or feature name** followed by PR link(s) and a one-sentence description of what changed and why it matters to a consumer. GitHub's "Generate release notes" button produces a useful raw list of PR titles — use it as a checklist to ensure nothing is missed, then rewrite into themed prose.
+Each bullet should use a **bold component/feature name**, PR link(s), and one
+sentence explaining consumer impact. Use GitHub "Generate release notes" as a
+checklist, then rewrite into themed prose.
 
 Close with a CDN snippet so consumers can copy-paste the new version:
 
@@ -143,18 +150,22 @@ If a tag-push publish fails but **Actions is still available**, re-run it manual
 
 ## Break-glass: fully local release (CI/Actions unavailable)
 
-Use this **only** when GitHub Actions cannot run at all — e.g. the `unisdr` org is flagged/suspended and every workflow (`npm-publish`, `dist`, `storybook`, `chromatic`) is dark. This path trades away the guarantees CI normally provides; read the trade-offs before committing to it.
+Use this **only** when GitHub Actions cannot run at all (for example, org
+flag/suspension and all workflows down). This path trades away normal CI
+guarantees.
 
 ### Prerequisites
 
 - npm account with **publish rights to the `@undrr` scope** and 2FA configured.
 - Local checkout on the exact commit you intend to tag, fully built and passing (`yarn test`, `yarn lint`, `yarn build`, `yarn validate-manifest`).
 
-### The gate: is a token publish even allowed?
+### Gate: is token publish allowed?
 
 The package uses [OIDC trusted publishing](#npm-trusted-publishing). If its **Publishing access** setting is "Require two-factor authentication or an automation/granular access token" that's fine, but if it is set to **require trusted publishing**, a `npm login` (token) publish is rejected and this path is impossible — you wait for CI.
 
-**`npm publish --dry-run` does NOT test this.** Dry-run packs the tarball and reports what it *would* upload, but never contacts the registry for authorization — so it cannot reveal a trusted-publisher rejection. There are only two ways to know:
+**`npm publish --dry-run` does NOT test this.** It packs the tarball but does
+not contact npm auth endpoints, so it cannot reveal trusted-publisher rejection.
+Only two checks are reliable:
 
 1. Check **Settings → Publishing access** on [the package page](https://www.npmjs.com/package/@undrr/undrr-mangrove/access) before starting.
 2. Just attempt the real publish (step 4). A rejected publish **does not consume the version number**, so it is safe to try — it either succeeds or 403s with a clear message.
@@ -215,9 +226,12 @@ npm publish --access public --tag next   # MUST use --tag next, or a plain
                                          # resolves to the unstable build.
 ```
 
-Run this in a **real interactive terminal**, not a non-interactive/`!`-style shell: with account 2FA enabled, npm prompts for a one-time password, and a shell that can't accept stdin will hang. (Alternatively pass `--otp=<code>`.)
+Run this in a **real interactive terminal**: with 2FA enabled, npm prompts for
+OTP and non-interactive shells hang. (Alternative: `--otp=<code>`.)
 
-This is also the real test of [the gate](#the-gate-is-a-token-publish-even-allowed): success means token publishing was allowed; a 403/trusted-publisher error means it wasn't, and you stop here. A rejected attempt does not burn the version number.
+This is also the real [gate](#gate-is-token-publish-allowed): success means
+token publishing is allowed; 403/trusted-publisher means stop. A rejected
+attempt does not consume the version number.
 
 ### 5. Update the CDN `dist` branch by hand
 

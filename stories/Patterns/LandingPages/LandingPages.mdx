@@ -7,42 +7,31 @@ import * as Stories from './LandingPages.stories';
 
 > **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-UNDRR publishes several distinct landing page shapes, and they are usually
-discussed one page at a time. These examples put three of them side by side so
-the structural differences are visible: what carries the title, whether the page
-needs contents links, and how content is grouped below the fold.
-
-The copy is illustrative. The structures follow the compositions in the
+These examples compare three common UNDRR landing page structures side by side:
+where the title sits, whether in-page navigation is needed, and how content is
+grouped below the fold. Copy is illustrative; structure follows the
 [Gutenberg content guide](https://assets.undrr.org/docs/gutenberg-content-guide/CONTENT_GUIDE.md)
-and the pages currently published on undrr.org.
+and current undrr.org patterns.
 
 ## Topic or initiative
 
-A subject with several routes into it. A split hero carries the title, an icon
-row answers "what would you like to do?", a tinted band explains why the subject
-matters, and cards below it carry recent material.
-
-This is the shape most likely to grow into a content hub. When people begin
-returning to it repeatedly and moving sideways between its sections, it has
-outgrown a landing page — see [Content hub](?path=/docs/patterns-content-hub--docs).
+A subject with several routes into it. Use a split hero for context, an icon row
+for routes, and cards for recent material. If users start navigating repeatedly
+between sections, graduate to a [Content hub](?path=/docs/patterns-content-hub--docs).
 
 <Canvas of={Stories.TopicLanding} />
 
 ## Report or publication
 
-One long document with a stable structure. A coloured masthead carries the title
-and lede, and the contents sidebar is doing real work here rather than
-decorating: the page is long, its sections are named, and readers arrive wanting
-a specific one.
+One long document with stable sections. A coloured masthead carries title and
+lede, and a contents sidebar helps readers jump to specific sections.
 
 <Canvas of={Stories.ReportLanding} />
 
 ## Collection index
 
-A route to many items rather than a subject in its own right. Subsection
-headings group covers into rows; each group links onward to its full collection.
-There is no hero, because the page is a directory and the covers are the
-content.
+A directory to many items, not a subject page. Group covers into labelled rows
+that link onward; skip the hero because the listings are the content.
 
 <Canvas of={Stories.IndexLanding} />
 
@@ -57,25 +46,20 @@ content.
 | Exists to reach many items                                        | Collection index                                      | Grouped rows scan faster than prose, and no hero is needed         |
 | Is returned to repeatedly, with lateral movement between sections | [Content hub](?path=/docs/patterns-content-hub--docs) | It needs persistent identity and section navigation                |
 
-Use the locale toolbar for Arabic and the theme toolbar for the other brands.
-Every example sits under the standard UNDRR page header and global navigation,
-so the vertical budget below the chrome is honest.
+Use the locale toolbar for Arabic and the theme toolbar for other brands. Each
+example sits under standard UNDRR header/global navigation so spacing is realistic.
 
 ## Composition
 
-These pages compose shipped components only: `Hero`, `IconCard`, `VerticalCard`,
-`BookCard`, `TableOfContents`, `TextCta` and the breadcrumb styling. Their
-`mg-landing-example` layout styles load only with these stories, and the parent
-chrome comes from the shared `UndrrChrome` helper the content hub examples also
-use. There are no production exports, hydration APIs or distributed CSS classes.
+These pages compose shipped components (`Hero`, `IconCard`, `VerticalCard`,
+`BookCard`, `TableOfContents`, `TextCta`, breadcrumb styles). `mg-landing-example`
+styles and `UndrrChrome` are story-only scaffolding; no production exports or
+hydration APIs are introduced here.
 
-> **Implementation note (for contributors):** the tinted band and the report
-> masthead both rely on `mg-container-full-width`, which bleeds an inherited
-> background to the viewport edges from inside `mg-container`. That is the same
-> mechanism the Gutenberg `wp:columns` background wrapper produces, so these
-> examples stay honest about what an editor can actually build. The alternating
-> plain and tinted bands are the main thing that makes a real UNDRR page feel
-> substantial, and they are easy to leave out of a prototype.
+> **Implementation note (for contributors):** the tinted band and report masthead
+> use `mg-container-full-width` to bleed inherited background to viewport edges
+> from inside `mg-container`. This mirrors Gutenberg `wp:columns` wrappers and
+> keeps examples aligned with real editor output.
 
 ## Changelog
 

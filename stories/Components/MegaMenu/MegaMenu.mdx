@@ -3,9 +3,9 @@ import * as MegaMenuStories from './MegaMenu.stories';
 
 # Mega menu
 
-The Mega Menu component provides a navigation menu with multiple levels and sections.
+MegaMenu is a multi-level navigation component for primary site navigation.
 
-> **Note:** This component is currently in beta and subject to breaking changes in future releases.
+> **Note:** This component is in beta and may change in future releases.
 
 <Meta of={MegaMenuStories} />
 
@@ -13,27 +13,27 @@ The Mega Menu component provides a navigation menu with multiple levels and sect
 
 ## Default
 
-A basic mega menu implementation with default settings.
+Default MegaMenu behavior.
 
 <Canvas of={MegaMenuStories.Default} meta={MegaMenuStories} />
 
 ## With custom delay
 
-A mega menu with customized hover delay timing.
+Custom hover delay timings.
 
 <Canvas of={MegaMenuStories.WithCustomDelay} meta={MegaMenuStories} />
 
 ## RTL (Right-to-Left)
 
-The mega menu fully supports RTL languages with automatic layout mirroring.
+RTL layout mirroring.
 
 <Canvas of={MegaMenuStories.RTL} meta={MegaMenuStories} />
 
 ## With logo (branded variant)
 
-Sub-branded sites (PreventionWeb, MCR2030, Global Platform, etc.) can pass `logoSrc` to put a logo inline with the nav items. This replaces the separate logo row you'd otherwise need between the PageHeader and navigation, so the header stays two tiers instead of three.
-
-Switch between logos with the **brand** control below.
+Sub-branded sites can pass `logoSrc` to show an inline logo and avoid adding a
+separate logo row between PageHeader and navigation. Use the **brand** control
+to switch logos.
 
 <Canvas of={MegaMenuStories.WithLogo} meta={MegaMenuStories} />
 
@@ -66,7 +66,9 @@ Pass the language-prefixed root path to `logoHref` (for example, `"/ar/"` for Ar
 ></div>
 ```
 
-`logoHref` defaults to `'/'` unless your CMS or wrapper provides a different value. If logo asset data attributes are not set, the Drupal wrapper resolves `logoSrc` and `logoAlt` from the page's body class (for example, `mg-current-domain--www-preventionweb-net`). `logoHref` is not inferred from the body class — it must be passed explicitly for language-prefixed URLs.
+`logoHref` defaults to `'/'`. If logo asset attributes are absent, the Drupal
+wrapper resolves `logoSrc` and `logoAlt` from body class; it does not infer
+`logoHref`, so pass language-prefixed roots explicitly.
 
 ## Props
 
@@ -171,34 +173,27 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Mobile progressive navigation
 
-Below 900px, the existing navigation strip opens a bounded overlay menu. Each group
-opens a new level on the same surface, with a labelled back button and a separate
-Close action. Section headings link directly to their landing pages; there is no separate Overview link. Introductory
-banner content appears directly beneath the links without an extra disclosure; desktop banners
-remain unchanged. Returning restores the previous row focus and scroll position.
-Escape and tapping the exposed page close the menu and return focus to the opener.
-Back appears directly above the section title. The panel has a 400px minimum where
-space permits, capped at the smaller of 700px or 90% of the dynamic viewport.
-It uses a lightly translucent, blurred surface with an opaque fallback when blur
-is unsupported. Reduced motion, reduced transparency, increased contrast and
-forced colours use an opaque, unblurred surface without transitions. Normal
-entry and exit use a short fade and sideways motion, mirrored in RTL. An exiting
-panel becomes inert immediately and releases focus and page scrolling.
+Below 900px, the nav strip opens a bounded overlay. Groups drill into nested
+levels on the same surface with labeled Back/Close controls. Section headings
+link directly to landing pages; banner content appears inline under links.
 
-This is a drop-in update: existing `sections`, logo and timing props, Drupal
-attributes and hydration entry points require no changes. The existing `labels`
-object also accepts `backLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`
-and `toggleMobileNavLabel`; omitted keys use English defaults. The legacy `menuLabel` key remains accepted but is no longer displayed. Rich banner HTML
-retains the existing caller-sanitised contract.
+Focus and scroll are restored on back/close; Escape and tapping exposed page
+close the menu and return focus to opener. The panel uses a translucent blurred
+surface with opaque fallback and switches to opaque/no-transition for reduced
+motion/transparency, increased contrast, and forced colors.
+
+This is a drop-in update: existing `sections`, logo/timing props, Drupal
+attributes, and hydration entry points are unchanged. `labels` also accepts
+`backLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`,
+`toggleMobileNavLabel`; omitted keys use English defaults. Legacy `menuLabel`
+is still accepted but no longer displayed.
 
 <Canvas of={MegaMenuStories.ProgressiveMobile} />
 
 ## Changelog
 
 - **1.4.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed desktop a11y semantics (landmarks, nav roles, and `aria-expanded`) and added a desktop-state axe assertion. Also fixed mobile overlay clipping in constrained containers by anchoring it to the top bar instead of `100vw`.
-
 - **1.3.0** — 2026-09-08 ([#1099](https://github.com/unisdr/undrr-mangrove/issues/1099)): Added progressive mobile navigation (nested levels, back/close controls, translated labels, focus/scroll restoration, and reduced-motion handling) while keeping existing data/integration contracts compatible.
-
 - **1.2.6** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Fixed Arabic top-bar link typography by switching to the `ui` font role (`Noto Sans Arabic`) instead of a broken `:lang(ar)` class override. Latin rendering is unchanged.
 - **1.2.5** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a menu link whose own language is not Arabic.
 - **1.2.4** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed desktop navigation with an underline active state, an opaque high-clarity menu surface, lighter dividers, and restrained panel elevation. Removed redundant per-language story exports in favour of the global locale toolbar.

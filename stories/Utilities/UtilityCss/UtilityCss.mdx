@@ -7,7 +7,7 @@ import * as UtilityCssStories from './UtilityCss.stories';
 
 # Utility classes
 
-Mangrove provides a growing collection of utility classes for common styling and layout needs.
+Mangrove ships utility classes for common layout, visibility, and color tasks.
 
 ## Sass
 
@@ -15,7 +15,7 @@ Sass/CSS is located at `stories/assets/scss/_utility.scss`
 
 ## Screen reader only (.mg-u-sr-only)
 
-This utility class hides content visually while keeping it accessible to screen readers.
+Hides content visually while keeping it available to screen readers.
 
 ```html
 <span class="mg-u-sr-only">Screen reader only text</span>
@@ -23,11 +23,11 @@ This utility class hides content visually while keeping it accessible to screen 
 
 ## Responsive display utilities
 
-Control element visibility based on screen size.
+Control visibility by breakpoint.
 
 ### Show on large screens only (.mg-u-responsive--show-large)
 
-Hides content on small screens, shows on medium screens and up.
+Hide on small screens; show from medium up.
 
 ```html
 <div class="mg-u-responsive--show-large">
@@ -37,7 +37,7 @@ Hides content on small screens, shows on medium screens and up.
 
 ### Show on small screens only (.mg-u-responsive--show-small)
 
-Shows content on small screens, hides on medium screens and up.
+Show on small screens; hide from medium up.
 
 ```html
 <div class="mg-u-responsive--show-small">
@@ -67,7 +67,7 @@ Hides content that overflows the container boundaries.
 
 ### Balanced text wrap (.mg-u-text-wrap-balanced)
 
-Creates balanced line breaks for more aesthetically pleasing text layout.
+Creates balanced line breaks for more even text layout.
 
 ```html
 <div class="mg-u-text-wrap-balanced">Your text content here</div>
@@ -75,7 +75,7 @@ Creates balanced line breaks for more aesthetically pleasing text layout.
 
 ### Pretty text wrap (.mg-u-text-wrap-pretty)
 
-Optimizes text wrapping for improved readability.
+Optimizes wrapping for readability.
 
 ```html
 <div class="mg-u-text-wrap-pretty">Your text content here</div>
@@ -83,7 +83,7 @@ Optimizes text wrapping for improved readability.
 
 ### Comma separator (.mg-u-comma-between)
 
-Automatically adds commas between child elements, useful for lists.
+Adds commas between child elements (useful for inline lists).
 
 ```html
 <div class="mg-u-comma-between">
@@ -95,7 +95,7 @@ Automatically adds commas between child elements, useful for lists.
 
 ## Background color utilities
 
-Comprehensive background color utilities based on the Mangrove color system.
+Background-color utilities follow Mangrove color tokens.
 
 ### Basic colors
 
@@ -107,24 +107,15 @@ Comprehensive background color utilities based on the Mangrove color system.
 
 ### Blue shades (.mg-u-background-color--blue-\*)
 
-Available in shades from 50 (lightest) to 900 (darkest):
-
 ```html
 <div class="mg-u-background-color--blue-50">Blue 50</div>
-<div class="mg-u-background-color--blue-100">Blue 100</div>
-<div class="mg-u-background-color--blue-200">Blue 200</div>
-<div class="mg-u-background-color--blue-300">Blue 300</div>
-<div class="mg-u-background-color--blue-400">Blue 400</div>
 <div class="mg-u-background-color--blue-500">Blue 500</div>
-<div class="mg-u-background-color--blue-600">Blue 600</div>
-<div class="mg-u-background-color--blue-700">Blue 700</div>
-<div class="mg-u-background-color--blue-800">Blue 800</div>
 <div class="mg-u-background-color--blue-900">Blue 900</div>
 ```
 
 ### Orange shades (.mg-u-background-color--orange-\*)
 
-Available in shades from 50 (lightest) to 900 (darkest):
+Shades follow the same `-50` to `-900` scale:
 
 ```html
 <div class="mg-u-background-color--orange-50">Orange 50</div>
@@ -133,7 +124,7 @@ Available in shades from 50 (lightest) to 900 (darkest):
 
 ### Red shades (.mg-u-background-color--red-\*)
 
-Available in shades from 50 (lightest) to 900 (darkest):
+Shades follow the same `-50` to `-900` scale:
 
 ```html
 <div class="mg-u-background-color--red-50">Red 50</div>
@@ -142,7 +133,7 @@ Available in shades from 50 (lightest) to 900 (darkest):
 
 ### Neutral shades (.mg-u-background-color--neutral-\*)
 
-Available from neutral-0 (white) to neutral-900 (black):
+Neutral shades run from `neutral-0` (white) to `neutral-900` (black):
 
 ```html
 <div class="mg-u-background-color--neutral-0">Neutral 0</div>
@@ -155,7 +146,7 @@ Available from neutral-0 (white) to neutral-900 (black):
 
 ### Accent colors (.mg-u-background-color--accent-\*)
 
-Special accent colors for highlighting:
+Accent colors for highlighting:
 
 ```html
 <div class="mg-u-background-color--accent-100">Accent 100</div>
@@ -166,7 +157,7 @@ Special accent colors for highlighting:
 
 ### Sendai framework colors (.mg-u-background-color--sendai-\*)
 
-Colors from the Sendai Framework for Disaster Risk Reduction:
+Sendai framework colors:
 
 ```html
 <div class="mg-u-background-color--sendai-red">Sendai red</div>
@@ -177,7 +168,7 @@ Colors from the Sendai Framework for Disaster Risk Reduction:
 
 ### Interactive colors (.mg-u-background-color--interactive\*)
 
-Colors for interactive elements like buttons and links:
+Interactive state colors:
 
 ```html
 <div class="mg-u-background-color--interactive">Interactive default</div>
@@ -188,7 +179,7 @@ Colors for interactive elements like buttons and links:
 
 ## Text color utilities
 
-Text color utilities follow the same color system as background utilities.
+Text-color utilities follow the same token patterns as background utilities.
 
 ### Basic colors
 
@@ -245,7 +236,7 @@ Text color utilities follow the same color system as background utilities.
 
 ### Interactive text colors (.mg-u-color--interactive\*)
 
-Text colors for interactive elements:
+Interactive text-state colors:
 
 ```html
 <span class="mg-u-color--interactive">Interactive text</span>

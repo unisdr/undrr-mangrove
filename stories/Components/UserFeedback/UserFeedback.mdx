@@ -7,19 +7,24 @@ import * as UserFeedbackStories from './UserFeedback.stories';
 
 # User feedback
 
-A compact page-level prompt that lets people say whether a page was useful or report a more detailed issue. It was distilled from the [UNDRR microsites pattern](https://gitlab.com/undrr/drupal-microsites/-/commit/d74d9ab342fec6cbbaeeebf026f116e4da3bbecf) and aligned with Mangrove's theme, translation and hydration contracts.
+A compact page-level prompt for quick usefulness feedback plus an optional
+issue-report link. It is distilled from the
+[UNDRR microsites pattern](https://gitlab.com/undrr/drupal-microsites/-/commit/d74d9ab342fec6cbbaeeebf026f116e4da3bbecf)
+and aligned with Mangrove theme, translation, and hydration contracts.
 
 ## When to use
 
-- Place it near the end of a content page, generally as the sibling immediately before `Footer`.
-- Use the binary response for low-friction page analytics, not as a substitute for user research.
+- Place it near the end of a content page, typically immediately before `Footer`.
+- Use the binary response for low-friction analytics, not as a substitute for user research.
 - Keep the issue link available when a product has a team or workflow that can act on reports.
 
-User feedback and Footer remain separate components. Stack them as adjacent siblings in a page template; do not nest either component inside the other. Neither one imports or configures the other.
+UserFeedback and Footer remain separate components. Stack them as adjacent
+siblings; do not nest one inside the other.
 
 <Canvas of={UserFeedbackStories.Default} meta={UserFeedbackStories} />
 
-The locale toolbar supplies translated labels to the same story. The long-label story exists only as a distinct layout stress condition.
+The locale toolbar supplies translated labels. The long-label story is a layout
+stress case.
 
 <Canvas of={UserFeedbackStories.LongLabels} meta={UserFeedbackStories} />
 
@@ -46,7 +51,8 @@ export default function PageEnd() {
 }
 ```
 
-`onResponse` receives either `"yes"` or `"no"`. Mangrove does not send, store or persist the answer; the consuming product owns analytics, consent and retention.
+`onResponse` receives `"yes"` or `"no"`. Mangrove does not store responses; the
+consuming product owns analytics, consent, and retention.
 
 ## Hydration
 
@@ -120,4 +126,4 @@ When JavaScript is unavailable, render the initial prompt as useful static HTML 
 ## Changelog
 
 - **1.0.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to the feedback question whose own language is not Arabic.
-- **1.0** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Distilled the UNDRR microsites page-feedback pattern into a standalone, pre-footer React component with progressive static HTML guidance, Drupal-friendly hydration, product-owned response callbacks, seven toolbar locales, logical RTL layout, responsive long-label handling and accessible confirmation focus.
+- **1.0** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Introduced the standalone pre-footer page-feedback component with progressive static HTML guidance, Drupal-friendly hydration, product-owned response callbacks, seven locales, RTL support, long-label handling, and accessible confirmation focus.

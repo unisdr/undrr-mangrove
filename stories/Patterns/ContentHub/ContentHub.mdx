@@ -7,14 +7,13 @@ import * as Stories from './ContentHub.stories';
 
 > **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-A content hub is a named group of pages people move between: the Sendai Framework
-Monitor, a programme, a guidance collection. Every page carries the same name and
-the same section links, so a reader can go sideways without returning to the
-landing page first.
+A content hub is a named set of related pages people move between repeatedly
+(for example, Sendai Framework Monitor sections). Every page keeps the same hub
+identity and section links so readers can move laterally without returning to a
+landing page.
 
-Use one when people come back repeatedly and move between sections. If they
-arrive, read and leave, a [landing page](?path=/docs/patterns-landing-pages--docs)
-is enough.
+Use this pattern for repeated cross-section navigation. If users mostly arrive,
+read, and leave, a [landing page](?path=/docs/patterns-landing-pages--docs) is enough.
 
 |                | Landing page                       | Content hub                            | Microsite                                |
 | -------------- | ---------------------------------- | -------------------------------------- | ---------------------------------------- |
@@ -25,10 +24,9 @@ is enough.
 
 <Canvas of={Stories.HubHome} />
 
-The most expressive page: a banner with the title, lede and a call to action,
-then route cards and a supporting band. The identity row above the banner is the
-same height and treatment as on every other page — that is what lets the banner
-be expressive without costing the reader their bearings.
+Most expressive page type: banner, title/lede/CTA, then route cards and a
+supporting band. The identity row stays consistent with other pages so the
+layout can be expressive without losing orientation.
 
 ## A detail page with a hero
 
@@ -42,22 +40,20 @@ The same identity row, byte for byte, with an entirely different page below it.
 
 <Controls of={Stories.HubDetail} />
 
-Move from Reporting to How to report, then to another section. Reporting stays
-marked while you are on its descendants; the heading and breadcrumb say which
-page you are actually on. These are page links, not tab controls.
+Move from Reporting to How to report, then to another section: Reporting stays
+marked for descendants while heading/breadcrumb identify the exact page. These
+are page links, not tab controls.
 
-Use the locale toolbar for Arabic, the theme toolbar for the other brands, and
-resize the canvas for mobile — the section strip scrolls, keeps ordinary keyboard
-link behaviour, and bleeds to the screen edges once it wraps.
+Use locale/theme toolbars and resize for mobile: the section strip scrolls,
+keeps standard keyboard link behavior, and bleeds to screen edges when wrapped.
 
 ## A deeper page
 
 <Canvas of={Stories.DeeperPage} />
 
-Two levels down, and Reporting is still the marked section. No tab set can do
-that, which is the clearest evidence this is navigation rather than tabs. A dense
-reference section may eventually want a sibling rail; avoid adding both that and
-a full in-page rail without a reason.
+Two levels down, Reporting remains the marked section. That persistence confirms
+this is navigation (not tabs). Dense reference sections may eventually need a
+sibling rail; avoid combining that with a full in-page rail without a clear need.
 
 ## Variations
 
@@ -65,16 +61,13 @@ a full in-page rail without a reason.
 
 <Canvas of={Stories.HubDetailDetachedHeader} />
 
-By default the navigation bar shares the banner's colour, so the header reads as
-one block. `headerSurface: "detached"` returns the bar to the page background and
-leaves the banner its own colour. Either way they stay separate containers, which
-keeps the navigation's contrast predictable rather than dependent on a photograph.
+By default, the nav bar shares the banner color so the header reads as one block.
+`headerSurface: "detached"` moves the bar back to page background. Both remain
+separate containers so nav contrast is predictable.
 
-`heroSource` is the other half of the comparison. `header` makes the hub header's
-banner the hero, so it is chrome. `page` keeps the header compact and puts a
-`Hero` block below it, the way body content would. The visible difference is
-small; the real one is capability — `Hero` takes a video or author-supplied HTML,
-a chrome-owned banner takes an image. Set `pageHeroMedia` to `video` to see it.
+`heroSource` controls where hero media lives: `header` treats the hub banner as
+chrome; `page` keeps the header compact and renders a `Hero` in page content.
+`Hero` supports video/custom HTML; header-owned banner supports image only.
 
 ## Building one
 
@@ -108,17 +101,15 @@ stylesheet:
 | `media`, `actions`     | Both optional — a banner works as text alone                       |
 | `current` / `ancestor` | The exact page, or a section containing it                         |
 
-Pass `current` for the page the reader is on and `ancestor` for a section that
-merely contains it. Both look the same; only `current` is announced, as
-`aria-current="page"`. Announcing an ancestor would tell a screen reader the
-reader is on a page they are not. Five sections is comfortable and seven is the
-limit; past that the strip scrolls on a laptop once labels are translated.
+Pass `current` for the exact page and `ancestor` for containing section. Both
+render similarly, but only `current` announces `aria-current="page"`. Keep
+section count modest: ~5 is comfortable, ~7 is practical upper bound before
+desktop scrolling (especially with translated labels).
 
-The rest of these pages compose shipped components and utilities — `Hero`,
-`IconCard`, `VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton`,
-`mg-grid`, `mg-container-full-width` and `mg-reading`. What
-is left is demonstration scaffolding: `mg-demo-` classes that load only with
-these stories, the hash routing, and the Monitor copy.
+These pages compose shipped components/utilities (`Hero`, `IconCard`,
+`VerticalCard`, `TableOfContents`, `TextCta`, `CtaButton`, `mg-grid`,
+`mg-container-full-width`, `mg-reading`). Remaining pieces are demo scaffolding:
+story-only `mg-demo-` classes, hash routing, and Monitor sample copy.
 
 ## Design decisions
 

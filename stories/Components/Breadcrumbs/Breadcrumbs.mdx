@@ -85,13 +85,13 @@ export const getCaptionForLocale = locale => {
 
 # Breadcrumbs
 
-The Breadcrumb provides links to each of the previously visited pages and indicates the location of the current page.
-
-The Breadcrumb component creates navigation links for the current pathname based on an opinionated configuration object. Drop it anywhere on the page; it requires minimal configuration to generate breadcrumbs automatically.
+Breadcrumbs show the current page location and provide links back through
+parent pages. The component generates links from pathname/config with minimal
+setup.
 
 ## When to use
 
-- To indicate the location of the current page and to navigate back to each of the previously visited pages.
+- Show where the current page sits and let users move back up the hierarchy.
 
 ## Formatting
 
@@ -123,7 +123,7 @@ The final item receives `aria-current="page"` and renders as plain text (not a l
 
 ## Interactions
 
-- By clicking on the breadcrumb, the current page is redirected to the respective previous page.
+- Clicking a breadcrumb link navigates to that ancestor page.
 
 ## Changelog
 

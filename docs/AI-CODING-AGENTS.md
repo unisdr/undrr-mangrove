@@ -2,15 +2,15 @@
 
 > This file is GitHub-only: no MDX imports it, so it does not appear in Storybook. (`docs/AI-MCP-INTEGRATION.md` is the one `docs/*.md` file that is wrapped into a Storybook page.)
 
-Practical guidance for AI coding agents (Claude Code, Cursor, Copilot, etc.) working on Mangrove. This covers the specific gaps between how human developers and AI agents approach code changes — the edge cases where an agent naturally drifts from the project's workflow.
-
-Human developers absorb process by reading docs once and internalizing the habits. AI agents start fresh each session and tend to focus on the immediate code change, missing the surrounding process steps. This document bridges that gap.
+Practical guidance for AI coding agents (Claude Code, Cursor, Copilot, etc.)
+working on Mangrove. It focuses on workflow gaps that commonly cause drift in
+agent-generated changes.
 
 ## Before modifying any component
 
 When you touch a component's JSX, SCSS, stories, or tests, read the [review checklist](REVIEW-CHECKLIST.md) **before committing**. The checklist is referenced in every component's MDX file, but agents typically don't read MDX until late in the process — by then the commit is already made.
 
-Key items agents commonly miss:
+Common misses:
 
 - **Changelog entry** in the component's MDX file (date + what changed)
 - **No `defaultProps`** — use destructured default parameters (deprecated in React 19)
@@ -35,9 +35,12 @@ After changes, run `yarn build` to regenerate the compiled manifest and verify i
 
 ### Side-effect components: return an empty Fragment, not `null`
 
-Storybook is configured to use `react-docgen` (the basic, faster variant — see `.storybook/main.js`). `react-docgen` uses JSX presence to identify React components. A component whose render body only does `return null;` — a common shape for purely side-effect components that manage external libraries via `useEffect` — is **not classified as a component** by `react-docgen`, so its `propTypes` are silently dropped from the AI manifest.
+Storybook uses `react-docgen`, which relies on JSX presence to classify React
+components. Pure side-effect components that `return null` may be skipped and
+lose `propTypes` in the AI manifest.
 
-Fix: return `<></>` (an empty Fragment) instead of `null`. Empty Fragments render nothing in the DOM — behaviourally identical to `null` from a consumer's perspective — but `react-docgen` sees the JSX and extracts the component's `propTypes` correctly. `CookieConsentBanner` is the canonical example.
+Fix: return `<></>` instead. Runtime behavior is the same (renders nothing), but
+docgen detects the component correctly. `CookieConsentBanner` is the reference.
 
 ```jsx
 // Won't be picked up by react-docgen → manifest reports 0 props
@@ -49,7 +52,9 @@ return <></>;
 
 ### PropTypes coverage: there is a practical ceiling
 
-`yarn validate-manifest` reports the share of components with documented `propTypes`. As of v2.0.0-alpha.4 it stands at **83% (57 of 69)**; reaching the earlier ceiling took two scoped passes (#1005, #1007). The remaining 12 entries are *not* PropTypes gaps to chase — they are manifest entries that do not have a React prop contract by design. Don't open PRs trying to push the percentage higher unless you're changing what the manifest classifies as a "component".
+`yarn validate-manifest` reports PropTypes coverage. Some entries are
+intentionally non-React or story-only, so coverage has a practical ceiling.
+Treat those as expected unless classification changes.
 
 The 12 currently exempt entries, grouped by why (re-derive the count with `yarn validate-manifest` rather than trusting this number):
 
@@ -60,9 +65,9 @@ The 12 currently exempt entries, grouped by why (re-derive the count with `yarn 
 | **Story-only examples / page templates** (single-shot demonstrations, not reusable components) | `TypographyIntegrationExample`, `Formvalidation`, `PageTemplateExample`, `LanguageBoundaryDemo` |
 | **Intentional empty stubs** (design-token / layout demos with `Component.propTypes = {}`) | `Grid` |
 
-If you add a new entry that falls into one of these buckets, expect it to keep the percentage flat — that's correct behaviour, not coverage drift. If you add a *real* React component, declaring `propTypes` (or fixing the docgen-friendliness of an existing one — see the empty-Fragment gotcha above) is the path to raising the floor.
-
-If at some future point this list shifts (e.g. a vanilla pattern becomes a React component, or an example graduates into a reusable component), update this table in the same PR.
+If you add a real React component, declare `propTypes` (and ensure docgen can
+see it) to raise coverage. If category membership changes, update the table in
+the same PR.
 
 ## CSS class rename gotchas
 
@@ -91,13 +96,15 @@ See [#865](https://github.com/unisdr/undrr-mangrove/issues/865) for the ongoing 
 
 ## Component quality checks with react-doctor
 
-`react-doctor` is the project's component-quality linter. It bundles a curated set of correctness, performance, accessibility, and architecture rules that complement ESLint and `oxc`. Run it before submitting non-trivial component changes:
+`react-doctor` is the component-quality linter and complements ESLint/`oxc`.
+Run it before non-trivial component changes:
 
 ```sh
 npx -y react-doctor@latest .
 ```
 
-It prints a 0–100 health score, a categorised list of findings, and writes a full per-rule report to a temp directory. PRs #985, #987, #988, #989 systematically cleared the most mechanical findings (em-dashes, three-period ellipses, `defaultProps`, default `[]`/`{}` props, `useContext`, inline render helpers, etc.). Tracker issue [#986](https://github.com/unisdr/undrr-mangrove/issues/986) tracks remaining categories.
+It outputs a 0–100 score and categorized findings. Tracker issue
+[#986](https://github.com/unisdr/undrr-mangrove/issues/986) tracks remaining categories.
 
 ### Refreshing the score badge
 
@@ -106,12 +113,12 @@ A React Doctor badge appears in two places:
 - `README.md` — for GitHub / npm visitors
 - `stories/Documentation/Intro.mdx` — for Storybook visitors (rendered on the *Introduction* page)
 
-Both are manually-pinned snapshots, not live. Refresh them in lockstep after an audit sweep (or any PR that materially moves the score) by:
+Both are manual snapshots. Refresh them together after any score-moving audit:
 
 1. Run `npx -y react-doctor@latest .` and note the share URL printed at the bottom — it embeds `s` (score), `e` (errors), `w` (warnings), `f` (files affected).
 2. Update the four query-string params in both the badge image and the link target in **both files** so they stay in sync.
 
-There is no CI step that does this automatically, so a stale badge is a sign the audit hasn't been refreshed recently — that's by design, since the score itself is most useful as a deliberate periodic check rather than a per-commit signal.
+There is no CI auto-refresh for this badge.
 
 ### House conventions enforced by react-doctor
 
@@ -127,7 +134,9 @@ Beyond standard React linting, these conventions have been codified through the 
 - **Lazy-init `useState` from computed values.** `useState(data.map(…))` re-runs the initializer every render — use `useState(() => data.map(…))`.
 - **Always return a cleanup from `useEffect`** for `setTimeout` / `setInterval` / `addEventListener` / subscriptions. Anything that registers must unregister on re-run and unmount.
 
-The editorial rules in this list (em-dashes, ellipses, English locale) operationalise the brand-voice policy. The editorial source of truth is `stories/Documentation/ComponentContribution.mdx`, plus the `Brand/Brand guidelines` Storybook page. (An earlier revision of this doc pointed at `stories/Documentation/Brand/WrittenVoice.mdx`; no such file exists in the tree.) When the brand docs and this section drift, the brand docs win — this section is the developer-tooling view of those rules.
+For editorial policy source of truth, use
+`stories/Documentation/ComponentContribution.mdx` and the Brand guidelines
+Storybook page. If this file drifts, brand docs win.
 
 ### Findings to triage carefully
 
@@ -135,11 +144,12 @@ Not every react-doctor finding wants fixing. Two flavours show up:
 
 #### Intentional patterns
 
-Rules that fire correctly on patterns Mangrove deliberately uses. Don't suppress blindly, but also don't try to refactor them away.
+Rules that fire on deliberate Mangrove patterns. Do not suppress blindly, and do
+not refactor away valid patterns.
 
 - **`react/no-danger` (`dangerouslySetInnerHTML`), ~30 call sites.** Mangrove is a Drupal component library; Hero, QuoteHighlight, Gallery, TextCta, MegaMenu/Section and ScrollContainer accept rich HTML authored in Drupal's text editor (sanitised at save time by Drupal's text-format pipeline). The rule will keep firing on legitimate call sites. Two acceptable patterns:
-  - **Sanitise inline** (gold standard) — `dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.summaryText) }}`. The component owns the sanitisation contract; callers can pass any string. See `IconCard.jsx`, `TextCta.jsx`.
-  - **Caller-sanitised, documented contract** — `dangerouslySetInnerHTML={{ __html: item.html }}` with the PropTypes JSDoc explicitly declaring the prop pre-sanitised. The component trusts the caller; the contract must be stated in the prop documentation. See `Hero.jsx` — the `html` media variant documents: *"is a pre-sanitised HTML string rendered via dangerouslySetInnerHTML. The consumer (e.g. Drupal) must sanitise."*
+  - **Sanitize inline** — component owns sanitization (see `IconCard.jsx`, `TextCta.jsx`).
+  - **Caller-sanitized contract** — documented pre-sanitized input contract (see `Hero.jsx` `html` media variant).
 
   Triage checklist for each call site:
   - Where does the HTML come from? Drupal editor field (trusted, Drupal sanitises at save) / DOMPurify-sanitised (trusted) / user form input / external API (default to untrusted).
@@ -155,7 +165,7 @@ Rules that fire but aren't actionable as written.
 - **`iframe-has-title`** when `title={a || 'fallback'}` — the static analyzer can't see through the `||` fallback. Titles are present and valid.
 - **`rendering-conditional-render`** flagged on identifiers prefixed with `show` / `is` (e.g. `showResultsCount`) — the rule infers from the variable name pattern and may fire on booleans.
 
-When you skip a finding, leave a one-line comment explaining why (or note it in the PR's *Out of scope* section) so the next agent doesn't re-investigate.
+When skipping a finding, add a one-line rationale in code or PR notes.
 
 ## Process differences: humans vs. agents
 

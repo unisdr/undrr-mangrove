@@ -92,13 +92,11 @@ import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 
 ### Write for two audiences
 
-Component MDX docs serve two very different readers. Structure content so each can get what they need without wading through what they don't.
+Component MDX docs serve two audiences:
+- **Consumers** need quick integration details (what it does, working example, props).
+- **Maintainers** need context (`why`, edge cases, limitations, history).
 
-**Consumers** (people integrating the component) scan, not read. Lead with a one-sentence description, a working `<Canvas>` example, and a props table. One sentence of context is enough — they don't need to know how it works internally.
-
-**Maintainers** (contributors, reviewers, on-call debuggers) need the "why": design decisions, edge cases, known limitations, and historical context. This belongs at the end of the document, or in a clearly labelled section.
-
-Structure your MDX in this order:
+Put consumer content first and maintainer depth near the end. Use this order:
 1. What it does (one sentence)
 2. Live examples (`<Canvas>`)
 3. How to use it (usage snippet + props table)
@@ -108,9 +106,11 @@ Structure your MDX in this order:
 7. Server-rendered / CDN usage (if applicable)
 8. Changelog
 
-The CDN/server-rendered section (step 7) belongs near the end because most consumers don't need it. Exception: if the server-rendered path is the primary integration for your component, move it to step 2 and note why in a comment.
+Keep CDN/server-rendered guidance near the end unless it is the primary
+integration path, in which case move it up and note why.
 
-Avoid explaining implementation internals in the usage or props sections. If you find yourself writing "internally, this component does X because Y", that belongs at the bottom or in a code comment — not in the consumer-facing usage guide.
+Avoid implementation internals in usage/props sections; move those to maintainer
+notes or code comments.
 
 For contributor-only content within a section, use a labelled blockquote:
 
@@ -118,7 +118,8 @@ For contributor-only content within a section, use a labelled blockquote:
 > **Implementation note (for contributors):** Why this works the way it does.
 ```
 
-For large multi-subsection contributor blocks, use a separate section with a contributor callout at the top, or split into multiple callout blockquotes. See [Writing guidelines — Callout labels](WRITING.md) for the full label conventions.
+For larger contributor-only content, use a dedicated section or multiple labeled
+callouts. See [Writing guidelines — Callout labels](WRITING.md).
 
 See [Writing guidelines — Write for two audiences](WRITING.md) for the full principle.
 
@@ -194,7 +195,8 @@ See the [distribution channels table](ARCHITECTURE.md#component-distribution-cha
 
 ## Step 8: AI manifest (optional)
 
-The AI manifest provides machine-readable component metadata for coding agents. How much you need to do depends on your component:
+The AI manifest provides machine-readable component metadata for coding agents.
+Required work depends on component type:
 
 **Vanilla HTML component (auto-rendered):**
 If your component renders cleanly in Node.js (no `window`/`document` APIs):
