@@ -81,18 +81,22 @@
     -webkit-overflow-scrolling: touch;
 
     // Keep Firefox scrollbar styling aligned with the WebKit rules below.
-    // Uses the brand interactive colour (same token the nav buttons below
-    // use) rather than a neutral grey, so the scrollbar reads as themed
-    // instead of looking like an unstyled default. Firefox's scrollbar-color
-    // is a single static pair with no hover state, unlike the WebKit
-    // pseudo-elements below, so it gets the same resting tint throughout.
-    // The track is a low-alpha dark wash rather than a flat light grey, so
-    // it reads correctly whether the container sits on a white or a themed
-    // colour background — a fixed light hex would look like an opaque box
-    // on anything darker or saturated.
+    // Fixed literal colours, not var(--mg-color-*) tokens: scrollbar-color
+    // and the ::-webkit-scrollbar-* pseudo-elements below have inconsistent
+    // support for CSS custom properties across engines — in at least one
+    // WebKit version, a var()-based value here is silently treated as
+    // invalid, dropping the whole declaration and falling back to the
+    // native scrollbar rather than partially applying it. The blue matches
+    // --mg-color-blue-900 (the UNDRR theme's --mg-color-interactive), and
+    // the track wash matches --mg-color-neutral-900 at low alpha — reading
+    // as themed for the base UNDRR theme without depending on token
+    // resolution actually working. Sub-brand themes get this same blue
+    // rather than their own tint, which is an accepted trade-off for
+    // cross-browser reliability. Firefox's scrollbar-color is a single
+    // static pair with no hover state, unlike the WebKit pseudo-elements
+    // below, so it gets the same resting tint throughout.
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--mg-color-interactive) / 0.35)
-      rgb(var(--mg-color-neutral-900) / 0.06);
+    scrollbar-color: rgb(0 79 145 / 0.35) rgb(0 0 0 / 0.005);
 
     @include devicebreak(small) {
       height: auto;
@@ -123,13 +127,15 @@
     &::-webkit-scrollbar-track {
       // Barely-there, not a flat light grey box, so it reads as "mostly
       // transparent" rather than a visible bar — atop a themed colour
-      // background as well as white.
-      background: rgb(var(--mg-color-neutral-900) / 0.06);
+      // background as well as white. Fixed literal colour — see the
+      // scrollbar-color comment above for why.
+      background: rgb(0 0 0 / 0.06);
       border-radius: var(--mg-radius-form-input);
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgb(var(--mg-color-interactive) / 0.35);
+      // Fixed literal colour — see the scrollbar-color comment above.
+      background: rgb(0 79 145 / 0.35);
       border-radius: var(--mg-radius-form-input);
 
       @media (prefers-reduced-motion: no-preference) {
@@ -138,7 +144,7 @@
       }
 
       &:hover {
-        background: rgb(var(--mg-color-interactive));
+        background: rgb(0 79 145);
       }
     }
 
