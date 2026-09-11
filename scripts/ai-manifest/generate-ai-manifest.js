@@ -1640,15 +1640,15 @@ Icons:
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
 - stories/Utilities/     CSS utilities, loaders, show/more
-- stories/Patterns/      Full-page compositions (ContentHub, LandingPages) — demonstrate assembling components into a page, not reusable exports themselves. See "Composing a page pattern" below.
+- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page, not reusable exports themselves. See "Composing a page pattern" below.
 - stories/assets/scss/   Theme stylesheets and design tokens
 
 ### Composing a page pattern
 
-stories/Patterns/* (ContentHub, LandingPages, and future additions) are not components: nothing there is exported from the npm package or hydrated. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
+stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions) are not components: nothing there is exported from the npm package or hydrated. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
 
-- **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns only — every track is \`1fr\`. Use it for repeating card grids. It cannot express an asymmetric split (a wide column next to a narrow one); do not reach for it for rail/article or caption/credit shapes.
-- **The reading grid** (\`stories/Utilities/PagePatterns/page-patterns.scss\`, classes \`mg-reading\`, \`mg-reading--with-contents\`): the asymmetric rail/article split for a long-form page — a \`minmax(0, 1fr) 16rem\` two-column grid with the contents rail sticky on the right from 48rem up, stacking above the article below that. Deliberately not built on mg-grid, which cannot express this asymmetry. Use it for reading-column layouts with an optional table-of-contents rail.
+- **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns — every numbered track is \`1fr\`. Use it for repeating card grids. \`mg-grid--article\` (below) is a different, asymmetric variant on the same base class — the numbered/span classes are still equal-fraction only.
+- **mg-grid's \`--article\` variant** (\`mg-grid mg-grid--article\`, defined in \`stories/Atom/Layout/Grid/grid.scss\`): the asymmetric rail/article split — a flexible \`minmax(0, 1fr)\` column plus a fixed 16rem rail. This is what \`mg-reading--with-contents\` (\`stories/Utilities/PagePatterns/page-patterns.scss\`) pairs with for a long-form reading column with a sticky table-of-contents rail from 48rem up, stacking above the article below that; \`page-patterns.scss\` itself only supplies the item-placement rules (which child is the sidebar vs. the article), not the column shape. Reach for \`mg-grid--article\` directly if you need the same asymmetric shape outside that pattern.
 - **Plain CSS grid**, written locally in a component's own stylesheet: for a one-off asymmetric shape that belongs to a single component and isn't meant to be reused elsewhere — e.g. Hero's \`.mg-hero__split-grid\` (\`2fr 1fr\` split for \`layout="split"\`) or Card's horizontal-card grid with explicit \`grid-column\`/\`grid-row\` placement. Use this when the shape is specific to one component, not a page-level layout primitive; don't promote it to a shared class unless a second consumer actually needs it.
 `;
 
