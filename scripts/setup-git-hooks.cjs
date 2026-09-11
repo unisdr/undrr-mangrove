@@ -1,13 +1,9 @@
 #!/usr/bin/env node
-/**
- * Points git at the checked-in `githooks/` directory so the commit-msg hook
- * (Conventional Commits + no AI/bot attribution) runs for every contributor.
- *
- * Wired to the package.json "prepare" script, so it runs automatically on
- * `yarn install`. It is deliberately a no-op when there is no local git repo
- * or no githooks/ directory — e.g. when this package is installed as a
- * dependency from a tarball — so it never breaks a consumer's install.
- */
+/* Points git at the checked-in `githooks/` directory so the commit-msg hook (Conventional
+ * Commits + no AI/bot attribution) runs for every contributor. Wired to the package.json
+ * "prepare" script, so it runs automatically on `yarn install`. It is deliberately a no-op
+ * when there is no local git repo or no githooks/ directory — e.g. when this package is
+ * installed as a dependency from a tarball — so it never breaks a consumer's install. / */
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');

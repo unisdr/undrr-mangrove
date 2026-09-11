@@ -1,12 +1,7 @@
-/**
- * @file useSearch.js
- * @description React hook for executing Elasticsearch searches.
- *
- * Provides search execution with AbortController for request cancellation,
- * integrates with React 19's useTransition for non-blocking updates.
- *
- * @module SearchWidget/hooks/useSearch
- */
+/* @file useSearch.js @description React hook for executing Elasticsearch searches.
+ * Provides search execution with AbortController for request cancellation, integrates with
+ * React 19's useTransition for non-blocking updates. @module SearchWidget/hooks/useSearch
+ * / */
 
 import { useEffect, useRef, useCallback, useTransition } from 'react';
 import {
@@ -17,20 +12,12 @@ import {
 } from '../context/SearchContext';
 import { buildQuery } from '../utils/queryBuilder';
 
-/**
- * Hook for executing searches against the Elasticsearch endpoint.
- *
- * Features:
- * - AbortController for cancelling in-flight requests
- * - Automatic debouncing via useEffect dependencies
- * - useTransition for non-blocking result updates
- * - Error handling with retry support
- *
- * @returns {Object} Search utilities
- * @returns {Function} returns.executeSearch - Manually trigger a search
- * @returns {boolean} returns.isPending - Whether a transition is pending
- * @returns {Function} returns.refresh - Re-run the current search
- */
+/* Hook for executing searches against the Elasticsearch endpoint. Features: -
+ * AbortController for cancelling in-flight requests - Automatic debouncing via useEffect
+ * dependencies - useTransition for non-blocking result updates - Error handling with retry
+ * support @returns {Object} Search utilities @returns {Function} returns.executeSearch -
+ * Manually trigger a search @returns {boolean} returns.isPending - Whether a transition is
+ * pending @returns {Function} returns.refresh - Re-run the current search / */
 export function useSearch() {
   const config = useSearchConfig();
   const state = useSearchState();
@@ -49,18 +36,15 @@ export function useSearch() {
   } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
 
-  /**
-   * Execute a search request.
-   * @param {Object} options - Search options
-   * @param {boolean} options.force - Force search even if query is short
-   */
+  /* Execute a search request. @param {Object} options - Search options @param {boolean}
+   * options.force - Force search even if query is short / */
   const executeSearch = useCallback(
     async (options = {}) => {
       const { force = false } = options;
 
-      // Check minimum query length (unless forced, has facets, or query is empty)
-      // Empty queries are allowed - they return all results (match_all)
-      // Short queries (1-2 chars) are blocked unless forced or has facets
+      // Check minimum query length (unless forced, has facets, or query is empty) Empty queries
+      // are allowed - they return all results (match_all) Short queries (1-2 chars) are blocked
+      // unless forced or has facets
       const hasActiveFacets =
         Object.keys(facets).length > 0 ||
         Object.keys(customFacets || {}).length > 0;
@@ -183,12 +167,8 @@ export function useSearch() {
   };
 }
 
-/**
- * Hook for search with optimistic updates.
- * Wraps useSearch with React 19's useOptimistic pattern.
- *
- * @returns {Object} Search utilities with optimistic state
- */
+/* Hook for search with optimistic updates. Wraps useSearch with React 19's useOptimistic
+ * pattern. @returns {Object} Search utilities with optimistic state / */
 export function useOptimisticSearch() {
   const { executeSearch, isPending, refresh } = useSearch();
   const dispatch = useSearchDispatch();

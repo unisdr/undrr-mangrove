@@ -1,13 +1,7 @@
-/**
- * @file CustomFacetSelect.jsx
- * @description Custom facet dropdown component for editor-defined filters.
- *
- * Custom facets are defined in the Gutenberg block configuration and
- * provide predefined query options that are applied as Elasticsearch
- * query_string filters.
- *
- * @module SearchWidget/components/CustomFacetSelect
- */
+/* @file CustomFacetSelect.jsx @description Custom facet dropdown component for editor-
+ * defined filters. Custom facets are defined in the Gutenberg block configuration and
+ * provide predefined query options that are applied as Elasticsearch query_string filters.
+ * @module SearchWidget/components/CustomFacetSelect / */
 
 import React, { useCallback, useMemo } from 'react';
 import {
@@ -20,19 +14,13 @@ import {
 import { SelectDropdown } from './SelectDropdown';
 import { FACET_SEARCH_THRESHOLD } from '../utils/constants';
 
-/**
- * CustomFacetSelect component.
- * Renders a custom SelectDropdown for a custom (editor-defined) facet.
- *
- * @param {Object} props - Component props
- * @param {Object} props.facet - Custom facet config
- * @param {string} props.facet.id - Unique facet ID
- * @param {string} props.facet.title - Display title
- * @param {Array} props.facet.options - Array of {label, query} options
- * @param {boolean} props.facet.multiSelect - Allow multiple selections
- * @param {number} props.facet.weight - Sort weight for ordering
- * @param {string} props.widgetId - Unique widget ID for accessibility
- */
+/* CustomFacetSelect component. Renders a custom SelectDropdown for a custom (editor-
+ * defined) facet. @param {Object} props - Component props @param {Object} props.facet -
+ * Custom facet config @param {string} props.facet.id - Unique facet ID @param {string}
+ * props.facet.title - Display title @param {Array} props.facet.options - Array of {label,
+ * query} options @param {boolean} props.facet.multiSelect - Allow multiple selections
+ * @param {number} props.facet.weight - Sort weight for ordering @param {string}
+ * props.widgetId - Unique widget ID for accessibility / */
 export function CustomFacetSelect({ facet, widgetId = 'search' }) {
   const { customFacets } = useSearchState();
   const dispatch = useSearchDispatch();
@@ -51,11 +39,9 @@ export function CustomFacetSelect({ facet, widgetId = 'search' }) {
     );
   }, [options]);
 
-  /**
-   * Handle selection change from SelectDropdown.
-   * Custom facets store option indices (not query strings) in state.
-   * The query builder looks up the actual query strings from config.
-   */
+  /* Handle selection change from SelectDropdown. Custom facets store option indices (not
+   * query strings) in state. The query builder looks up the actual query strings from
+   * config. / */
   const handleChange = useCallback(
     newValue => {
       if (multiSelect) {

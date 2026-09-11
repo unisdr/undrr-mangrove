@@ -1,9 +1,5 @@
-/**
- * @file Pager.jsx
- * @description Props-driven pagination for React and server-rendered markup.
- *
- * @module Pager
- */
+/* @file Pager.jsx @description Props-driven pagination for React and server-rendered
+ * markup. @module Pager / */
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -11,31 +7,26 @@ import { PagerList } from './components/PagerList';
 import { PagerRange } from './components/PagerRange';
 import { PagerJump } from './components/PagerJump';
 
-/**
- * Pager component.
- *
- * @param {Object} props
- * @param {number} props.page                Current page (1-based)
- * @param {number|null} [props.totalPages]   Total pages (null = unknown / mini-pager)
- * @param {Function} props.onPageChange      Called with new page number
- * @param {boolean} [props.isLoading=false]  Disables all controls
- * @param {string} [props.layout='centered'] Layout mode: 'centered' or 'bar'
- * @param {string} [props.ariaLabel]         Custom aria-label for the nav element
- * @param {{ start: number, end: number }} [props.range]  Result range for bar layout
- * @param {string} [props.rangeLabel]        Template string with {start}/{end} placeholders
- * @param {boolean} [props.showJumpTo=false] Show the jump-to-page form
- * @param {string} [props.jumpToLabel]       Label for jump-to input
- * @param {string} [props.jumpToAction]      Button text for jump-to submit
- * @param {string} [props.emptyState]        Message to show instead of pagination
- * @param {{ label: string, onClick: Function }} [props.emptyAction]  Action for the empty state
- * @param {string|Function} [props.prevLabel]       Visible text for Previous button
- * @param {string|Function} [props.nextLabel]       Visible text for Next button
- * @param {string|Function} [props.goPrevLabel]     aria-label for Previous button
- * @param {string|Function} [props.goNextLabel]     aria-label for Next button
- * @param {string|Function} [props.pageLabel]       aria-label template for numbered page buttons ({page} token)
- * @param {string|Function} [props.currentPageLabel] aria-label for the current page button ({page} token)
- * @param {string|Function} [props.pageOfLabel]     Screen-reader announcement template ({page}, {total} tokens)
- */
+/* Pager component. @param {Object} props @param {number} props.page Current page (1-based)
+ * @param {number|null} [props.totalPages] Total pages (null = unknown / mini-pager) @param
+ * {Function} props.onPageChange Called with new page number @param {boolean}
+ * [props.isLoading=false] Disables all controls @param {string} [props.layout='centered']
+ * Layout mode: 'centered' or 'bar' @param {string} [props.ariaLabel] Custom aria-label for
+ * the nav element @param {{ start: number, end: number }} [props.range] Result range for
+ * bar layout @param {string} [props.rangeLabel] Template string with {start}/{end}
+ * placeholders @param {boolean} [props.showJumpTo=false] Show the jump-to-page form @param
+ * {string} [props.jumpToLabel] Label for jump-to input @param {string}
+ * [props.jumpToAction] Button text for jump-to submit @param {string} [props.emptyState]
+ * Message to show instead of pagination @param {{ label: string, onClick: Function }}
+ * [props.emptyAction] Action for the empty state @param {string|Function}
+ * [props.prevLabel] Visible text for Previous button @param {string|Function}
+ * [props.nextLabel] Visible text for Next button @param {string|Function}
+ * [props.goPrevLabel] aria-label for Previous button @param {string|Function}
+ * [props.goNextLabel] aria-label for Next button @param {string|Function}
+ * [props.pageLabel] aria-label template for numbered page buttons ({page} token) @param
+ * {string|Function} [props.currentPageLabel] aria-label for the current page button
+ * ({page} token) @param {string|Function} [props.pageOfLabel] Screen-reader announcement
+ * template ({page}, {total} tokens) / */
 export function Pager({
   page,
   totalPages = null,

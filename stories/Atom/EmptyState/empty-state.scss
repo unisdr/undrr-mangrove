@@ -1,24 +1,14 @@
-// Empty state — what a list, table, chart or dashboard tile shows when it has
-// no content to show.
-// -
-// Sourced from the DELTA design system boards "Empty State – Indicators and
-// Charts", "Empty State – Records List" and "Empty State – Analysis": a
-// centred grey glyph above a short message, with a compact form for indicator
-// tiles and chart wells.
-// -
-// Two deliberate departures from those boards, both for WCAG 2.2 AA:
-//   * the boards set "No data" in black at 25% opacity (1.6:1). The text token
-//     here is neutral-500 (5.74:1 on white).
-//   * the boards show only a message. This adds an optional action slot,
-//     because an empty state that cannot be acted on is a dead end.
-// -
-// Usage:
-//   <div class="mg-empty-state">
-//     <div class="mg-empty-state__media" aria-hidden="true"><svg …></svg></div>
-//     <h2 class="mg-empty-state__title">No records yet</h2>
-//     <p class="mg-empty-state__description">…</p>
-//     <div class="mg-empty-state__actions"><a class="mg-button" …>Add</a></div>
-//   </div>
+// Empty state — what a list, table, chart or dashboard tile shows when it has no content
+// to show. - Sourced from the DELTA design system boards "Empty State – Indicators and
+// Charts", "Empty State – Records List" and "Empty State – Analysis": a centred grey glyph
+// above a short message, with a compact form for indicator tiles and chart wells. - Two
+// deliberate departures from those boards, both for WCAG 2.2 AA: * the boards set "No
+// data" in black at 25% opacity (1.6:1). The text token here is neutral-500 (5.74:1 on
+// white). * the boards show only a message. This adds an optional action slot, because an
+// empty state that cannot be acted on is a dead end. - Usage: <div class="mg-empty-state">
+// <div class="mg-empty-state__media" aria-hidden="true"><svg …></svg></div> <h2 class="mg-
+// empty-state__title">No records yet</h2> <p class="mg-empty-state__description">…</p>
+// <div class="mg-empty-state__actions"><a class="mg-button" …>Add</a></div> </div>
 
 .mg-empty-state {
   display: flex;

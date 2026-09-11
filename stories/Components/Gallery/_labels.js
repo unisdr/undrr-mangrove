@@ -1,13 +1,8 @@
-/**
- * @file _labels.js
- * @description Translated label sets for the Gallery component.
- *
- * Imported by Gallery.stories.jsx for the global locale toolbar.
- * Never import from .stories files.
- */
+/* @file _labels.js @description Translated label sets for the Gallery component. Imported
+ * by Gallery.stories.jsx for the global locale toolbar. Never import from .stories files.
+ * / */
 
-// ---------------------------------------------------------------------------
-// Spanish (es)
+// --------------------------------------------------------------------------- Spanish (es)
 // ---------------------------------------------------------------------------
 export const LABELS_ES = {
   galleryAriaLabel: 'Galería',
@@ -16,8 +11,7 @@ export const LABELS_ES = {
   loadingLabel: 'Cargando medio',
 };
 
-// ---------------------------------------------------------------------------
-// French (fr)
+// --------------------------------------------------------------------------- French (fr)
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
   galleryAriaLabel: 'Galerie',
@@ -26,9 +20,8 @@ export const LABELS_FR = {
   loadingLabel: 'Chargement du média',
 };
 
-// ---------------------------------------------------------------------------
-// Japanese (ja)
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------- Japanese
+// (ja) ---------------------------------------------------------------------------
 export const LABELS_JA = {
   galleryAriaLabel: 'ギャラリー',
   prevLabel: '前のアイテム',
@@ -36,9 +29,8 @@ export const LABELS_JA = {
   loadingLabel: 'メディアを読み込んでいます…',
 };
 
-// ---------------------------------------------------------------------------
-// Simplified Chinese (zh)
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------- Simplified
+// Chinese (zh) ---------------------------------------------------------------------------
 export const LABELS_ZH = {
   galleryAriaLabel: '图库',
   prevLabel: '上一项',
@@ -46,8 +38,8 @@ export const LABELS_ZH = {
   loadingLabel: '正在加载媒体',
 };
 
-// ---------------------------------------------------------------------------
-// Arabic (ar) — Modern Standard Arabic
+// --------------------------------------------------------------------------- Arabic (ar)
+// — Modern Standard Arabic
 // ---------------------------------------------------------------------------
 export const LABELS_AR = {
   galleryAriaLabel: 'معرض الصور',
@@ -56,8 +48,7 @@ export const LABELS_AR = {
   loadingLabel: 'جارٍ تحميل الوسائط',
 };
 
-// ---------------------------------------------------------------------------
-// Russian (ru)
+// --------------------------------------------------------------------------- Russian (ru)
 // ---------------------------------------------------------------------------
 export const LABELS_RU = {
   galleryAriaLabel: 'Галерея',

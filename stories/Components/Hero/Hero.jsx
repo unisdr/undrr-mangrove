@@ -124,11 +124,9 @@ function HeroContent({ item, HeadingTag }) {
   );
 }
 
-/**
- * Full-width hero banner. Supports two layouts:
- * - `background` (default): full-bleed background image with coloured overlay.
- * - `split`: solid theme-colour background with a content column and a media column side by side.
- */
+/* Full-width hero banner. Supports two layouts: - `background` (default): full-bleed
+ * background image with coloured overlay. - `split`: solid theme-colour background with a
+ * content column and a media column side by side. / */
 export function Hero({
   data,
   variant = 'primary',
@@ -202,18 +200,13 @@ Hero.propTypes = {
     PropTypes.shape({
       imgback: PropTypes.string,
       label: PropTypes.string,
-      /**
-       * Heading text. Rendered via `dangerouslySetInnerHTML` to allow inline
-       * markup (e.g. `<em>`, `<br>`) from CMS-authored content. The consumer
-       * (e.g. Drupal text-format pipeline) must sanitise.
-       */
+      /* Heading text. Rendered via `dangerouslySetInnerHTML` to allow inline markup (e.g.
+       * `<em>`, `<br>`) from CMS-authored content. The consumer (e.g. Drupal text-format
+       * pipeline) must sanitise. / */
       title: PropTypes.string.isRequired,
       link: PropTypes.string,
-      /**
-       * Summary / lede text. Rendered via `dangerouslySetInnerHTML` to allow
-       * inline markup from CMS-authored content. The consumer (e.g. Drupal
-       * text-format pipeline) must sanitise.
-       */
+      /* Summary / lede text. Rendered via `dangerouslySetInnerHTML` to allow inline markup from
+       * CMS-authored content. The consumer (e.g. Drupal text-format pipeline) must sanitise. / */
       summaryText: PropTypes.string,
       detail: PropTypes.string,
       primary_button: PropTypes.string,
@@ -234,12 +227,11 @@ Hero.propTypes = {
           rel: PropTypes.string,
         })
       ),
-      /**
-       * Media for split layout. Discriminated by `type`:
-       * - `image` (default): `src` (required), `alt` (optional; empty string for decorative).
-       * - `video`: `src` is an iframe-embeddable URL (e.g. `https://www.youtube.com/embed/…`), `title` is required for a11y.
-       * - `html`: `html` is a pre-sanitized HTML string rendered via `dangerouslySetInnerHTML`. The consumer (e.g. Drupal) must sanitize.
-       */
+      /* Media for split layout. Discriminated by `type`: - `image` (default): `src` (required),
+       * `alt` (optional; empty string for decorative). - `video`: `src` is an iframe-embeddable
+       * URL (e.g. `https://www.youtube.com/embed/…`), `title` is required for a11y. - `html`:
+       * `html` is a pre-sanitized HTML string rendered via `dangerouslySetInnerHTML`. The
+       * consumer (e.g. Drupal) must sanitize. / */
       media: PropTypes.shape({
         type: PropTypes.oneOf(['image', 'video', 'html']),
         src: PropTypes.string,

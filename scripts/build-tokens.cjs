@@ -1,40 +1,21 @@
 #!/usr/bin/env node
-/**
- * Mangrove design-token generator.
- *
- * ONE source per brand, ONE generator, every downstream form emitted from it.
- *
- *   tokens/mangrove.yaml       brand-neutral base (system defaults only)
- *   tokens/undrr.yaml          UNDRR identity — a sub-brand like any other
- *   tokens/preventionweb.yaml
- *   tokens/irp.yaml
- *   tokens/mcr.yaml
- *   tokens/delta.yaml
- *
- * A brand layer is merged OVER the base and only then are references
- * resolved, so a brand that overrides one primitive cascades to everything
- * derived from it. That is the property the previous generator could not
- * express and the reason the hand-written theme files were sixty lines of
- * near-duplicates.
- *
- * Emitted per brand:
- *   stories/assets/scss/generated/_tokens-<brand>.scss
- *       @mixin mg-tokens-<brand>  the theme block (:root / .mg-theme-*)
- *       plus any Sass variables the build still needs
- *
- * Usage:
- *   node scripts/build-tokens.cjs            write the generated partials
- *   node scripts/build-tokens.cjs --check    exit 1 if any are stale
- *   node scripts/build-tokens.cjs --baseline update tokens/output-baseline.json
- *
- * The partials are build output and are NOT committed, so the only committed
- * record of what this generator produces is tokens/output-baseline.json — a
- * SHA-256 per emitted file, checked by tokens-source.test.js. A deliberate
- * token change moves it; regenerate it in the same commit with --baseline.
- *
- * Wired into package.json as `yarn build:tokens`, which `yarn scss` and
- * `yarn scss-watch` both run first.
- */
+/* Mangrove design-token generator. ONE source per brand, ONE generator, every downstream
+ * form emitted from it. tokens/mangrove.yaml brand-neutral base (system defaults only)
+ * tokens/undrr.yaml UNDRR identity — a sub-brand like any other tokens/preventionweb.yaml
+ * tokens/irp.yaml tokens/mcr.yaml tokens/delta.yaml A brand layer is merged OVER the base
+ * and only then are references resolved, so a brand that overrides one primitive cascades
+ * to everything derived from it. That is the property the previous generator could not
+ * express and the reason the hand-written theme files were sixty lines of near-duplicates.
+ * Emitted per brand: stories/assets/scss/generated/_tokens-<brand>.scss @mixin mg-
+ * tokens-<brand> the theme block (:root / .mg-theme-*) plus any Sass variables the build
+ * still needs Usage: node scripts/build-tokens.cjs write the generated partials node
+ * scripts/build-tokens.cjs --check exit 1 if any are stale node scripts/build-tokens.cjs
+ * --baseline update tokens/output-baseline.json The partials are build output and are NOT
+ * committed, so the only committed record of what this generator produces is
+ * tokens/output-baseline.json — a SHA-256 per emitted file, checked by tokens-
+ * source.test.js. A deliberate token change moves it; regenerate it in the same commit
+ * with --baseline. Wired into package.json as `yarn build:tokens`, which `yarn scss` and
+ * `yarn scss-watch` both run first. / */
 'use strict';
 
 const crypto = require('crypto');
@@ -50,14 +31,11 @@ const BASELINE_PATH = path.join(TOKENS_DIR, 'output-baseline.json');
 
 class TokenError extends Error {}
 
-/* ------------------------------------------------------------------ *
- * Value formats.
- *
- * `format` is the whole reason this generator exists. Mangrove writes a
- * colour BOTH as bare sRGB channels ("0 79 145", composable via
- * `rgb(var(--x) / 0.5)`) and as a finished colour value ("rgb(0 79 145)").
- * A triplet dropped into a colour position is invalid CSS and is discarded
- * silently — a bug this repository has shipped three times. The source
+/* ------------------------------------------------------------------ * Value formats.
+ * `format` is the whole reason this generator exists. Mangrove writes a colour BOTH as
+ * bare sRGB channels ("0 79 145", composable via `rgb(var(--x) / 0.5)`) and as a finished
+ * colour value ("rgb(0 79 145)"). A triplet dropped into a colour position is invalid CSS
+ * and is discarded silently — a bug this repository has shipped three times. The source
  * states the colour once; each output declares the shape it needs.
  * ------------------------------------------------------------------ */
 const GENERIC_FAMILIES = new Set([
@@ -85,29 +63,23 @@ const FORMATS = new Set([
   'font-family-stack',
 ]);
 
-/**
- * Formats whose Sass value is CSS syntax rather than a bare token, so it has
- * to travel as a Sass *string* and be interpolated at the use site. Assigning
- * `"Dubai", sans-serif` to a Sass variable makes a list whose interpolation
- * drops the quotes, silently changing the compiled CSS.
- */
+/* Formats whose Sass value is CSS syntax rather than a bare token, so it has to travel as
+ * a Sass *string* and be interpolated at the use site. Assigning `"Dubai", sans-serif` to
+ * a Sass variable makes a list whose interpolation drops the quotes, silently changing the
+ * compiled CSS. / */
 const SASS_STRING_FORMATS = new Set(['font-family-stack']);
 
-/**
- * stylelint runs with --fix over stories/**\/*.scss and would rewrite some
- * generated values, putting the linter and the generator in a loop.
- * `value-keyword-case` lowercases `Dubai` to `dubai` in a Sass variable value.
- */
+/* stylelint runs with --fix over stories/**\/*.scss and would rewrite some generated
+ * values, putting the linter and the generator in a loop. `value-keyword-case` lowercases
+ * `Dubai` to `dubai` in a Sass variable value. / */
 const FORMAT_STYLELINT_DISABLE = {
   'font-family-name': 'value-keyword-case',
 };
 
-/**
- * Some rem conversions are exact only at six decimal places: 11.25px / 16 is
- * 0.703125rem, and stylelint's number-max-precision would round it to
- * 0.70313rem — a different value. The rule is suppressed for those
- * declarations rather than letting the linter silently retune the type scale.
- */
+/* Some rem conversions are exact only at six decimal places: 11.25px / 16 is 0.703125rem,
+ * and stylelint's number-max-precision would round it to 0.70313rem — a different value.
+ * The rule is suppressed for those declarations rather than letting the linter silently
+ * retune the type scale. / */
 const HIGH_PRECISION = /\d*\.\d{6,}/;
 
 function stylelintDisableFor(format, value) {
@@ -116,9 +88,9 @@ function stylelintDisableFor(format, value) {
   return null;
 }
 
-// Build-time rem conversion, mirroring mg-rem() in _variables.scss. The 10px
-// root was removed in 2.0; consumers use the browser-standard 16px document
-// root and this is the only place the number appears in the token pipeline.
+// Build-time rem conversion, mirroring mg-rem() in _variables.scss. The 10px root was
+// removed in 2.0; consumers use the browser-standard 16px document root and this is the
+// only place the number appears in the token pipeline.
 const HTML_FONT_SIZE = 16;
 
 function toRem(px) {
@@ -142,13 +114,10 @@ function channels(hex) {
   return [0, 2, 4].map(i => parseInt(match[1].slice(i, i + 2), 16)).join(' ');
 }
 
-/**
- * A value emitted in a channel shape must actually BE channels — either a
- * literal triplet or a link to a token that is one. Anything else (a named
- * CSS colour, an oklch() value, a finished rgb()) would produce a
- * declaration that is invalid the moment it is wrapped in rgb(), and CSS
- * discards those silently. Such a value has to declare $format: literal.
- */
+/* A value emitted in a channel shape must actually BE channels — either a literal triplet
+ * or a link to a token that is one. Anything else (a named CSS colour, an oklch() value, a
+ * finished rgb()) would produce a declaration that is invalid the moment it is wrapped in
+ * rgb(), and CSS discards those silently. Such a value has to declare $format: literal. / */
 const CHANNEL_SHAPE = /^(?:\d{1,3} \d{1,3} \d{1,3}|var\(--[a-z0-9-]+\))$/;
 
 function assertChannels(token, value, brandLabel) {
@@ -182,9 +151,9 @@ function flatten(node, trail, inherited, tokens, file) {
 
   if (Object.prototype.hasOwnProperty.call(node, '$value')) {
     const id = trail.join('.');
-    // A YAML key with nothing after it parses as null, which used to reach the
-    // emitter and print the string "null" -- invalid CSS the browser drops
-    // without complaint. Same class as the shape bugs above: fail loudly.
+    // A YAML key with nothing after it parses as null, which used to reach the emitter and
+    // print the string "null" -- invalid CSS the browser drops without complaint. Same class
+    // as the shape bugs above: fail loudly.
     if (node.$value === null || node.$value === undefined) {
       throw new TokenError(
         `${id} has a $value with nothing after it. Give it a value, or ` +
@@ -192,10 +161,10 @@ function flatten(node, trail, inherited, tokens, file) {
         file
       );
     }
-    // `private` is deliberately left undefined when nothing states it, rather
-    // than defaulted to false: `mergeLayers` has to be able to tell "this
-    // source said public" from "this source said nothing". Every consumer
-    // tests it for truthiness, so undefined behaves as false everywhere.
+    // `private` is deliberately left undefined when nothing states it, rather than defaulted
+    // to false: `mergeLayers` has to be able to tell "this source said public" from "this
+    // source said nothing". Every consumer tests it for truthiness, so undefined behaves as
+    // false everywhere.
     tokens.set(id, {
       id,
       file,
@@ -291,39 +260,26 @@ function loadSources(dir) {
   return { base, brands };
 }
 
-/* ------------------------------------------------------------------ *
- * Merge + resolution
- *
- * The brand layer is merged over the base FIRST; references resolve
- * afterwards, against the merged table. That ordering is the point: a brand
- * that redefines one primitive moves every token derived from it.
+/* ------------------------------------------------------------------ * Merge + resolution
+ * The brand layer is merged over the base FIRST; references resolve afterwards, against
+ * the merged table. That ordering is the point: a brand that redefines one primitive moves
+ * every token derived from it.
  * ------------------------------------------------------------------ */
-/**
- * Properties of a token that describe its SHAPE and its IDENTITY rather than
- * its value, and therefore survive an override that only re-values it.
- *
- * A plain `{ ...inherited, ...token }` spread cannot express this: `flatten`
- * writes every key, so a key the override did not state arrives as
- * `undefined` and DELETES what the base declared. Three live bugs came out of
- * that, each one silent:
- *
- *   - `format`: a sub-brand that re-values a colour without restating
- *     `$format: srgb-rgb-function` reverted it to bare channels. That is
- *     precisely the `.mg-button-outline` failure documented in
- *     tokens/mangrove.yaml — a triplet in a colour position is invalid CSS
- *     and is discarded without a word;
- *   - `name`: an override that omitted `$name` stopped writing the property
- *     its consumers actually read and wrote `--mg-<id>` instead, so the
- *     override became a no-op;
- *   - `private`: an override of a brand primitive that omitted `$private`
- *     leaked it into the emitted CSS as a public custom property.
- *
- * `value`, `alpha` and `description` are deliberately NOT here. They belong
- * to the specific value a layer states: an override supplies its own colour,
- * its own opacity and its own reasoning, and inheriting the base's prose onto
- * a different value is how a comment comes to describe something that is no
- * longer true.
- */
+/* Properties of a token that describe its SHAPE and its IDENTITY rather than its value,
+ * and therefore survive an override that only re-values it. A plain `{ ...inherited,
+ * ...token }` spread cannot express this: `flatten` writes every key, so a key the
+ * override did not state arrives as `undefined` and DELETES what the base declared. Three
+ * live bugs came out of that, each one silent: - `format`: a sub-brand that re-values a
+ * colour without restating `$format: srgb-rgb-function` reverted it to bare channels. That
+ * is precisely the `.mg-button-outline` failure documented in tokens/mangrove.yaml — a
+ * triplet in a colour position is invalid CSS and is discarded without a word; - `name`:
+ * an override that omitted `$name` stopped writing the property its consumers actually
+ * read and wrote `--mg-<id>` instead, so the override became a no-op; - `private`: an
+ * override of a brand primitive that omitted `$private` leaked it into the emitted CSS as
+ * a public custom property. `value`, `alpha` and `description` are deliberately NOT here.
+ * They belong to the specific value a layer states: an override supplies its own colour,
+ * its own opacity and its own reasoning, and inheriting the base's prose onto a different
+ * value is how a comment comes to describe something that is no longer true. / */
 const CARRIED = ['type', 'format', 'private', 'sass', 'name'];
 
 function mergeLayers(layers) {
@@ -345,14 +301,11 @@ function mergeLayers(layers) {
   return merged;
 }
 
-/**
- * The layer stack for a brand: the base, then its `extends` chain, then the
- * brand itself. Sub-brands default to extending the default brand because
- * that is the runtime truth — a `.mg-theme-*` block is a delta applied on
- * top of Mangrove's `:root`, and IRP's theme really does link to UNDRR's
- * --mg-color-orange-900. A brand that wants none of that sets
- * `$brand.extends: mangrove`.
- */
+/* The layer stack for a brand: the base, then its `extends` chain, then the brand itself.
+ * Sub-brands default to extending the default brand because that is the runtime truth — a
+ * `.mg-theme-*` block is a delta applied on top of Mangrove's `:root`, and IRP's theme
+ * really does link to UNDRR's --mg-color-orange-900. A brand that wants none of that sets
+ * `$brand.extends: mangrove`. / */
 function layersFor(brand, base, byId, seen = new Set()) {
   if (seen.has(brand.meta.id)) {
     throw new TokenError(
@@ -418,13 +371,10 @@ function parseReference(body) {
   };
 }
 
-/**
- * Resolves one brand's merged token table into emitted values.
- *
- * Every failure here is loud: an unknown reference, a reference to a token
- * with no custom property to link to, a cycle, or an unknown format. Silent
- * wrong output is the failure mode this whole architecture exists to prevent.
- */
+/* Resolves one brand's merged token table into emitted values. Every failure here is loud:
+ * an unknown reference, a reference to a token with no custom property to link to, a
+ * cycle, or an unknown format. Silent wrong output is the failure mode this whole
+ * architecture exists to prevent. / */
 function resolve(tokens, brandLabel) {
   const emitted = new Map(); // id -> { name, value, literal, token }
   const visiting = new Set();
@@ -539,10 +489,10 @@ function resolve(tokens, brandLabel) {
       literalBase = substitute(token.value, token.id, { flattenAll: true });
     }
 
-    // A token whose whole value is one build-time reference inherits the
-    // referenced token's reasoning. Brand primitives are $private, so
-    // without this the "DELTA's hover is deliberately lighter" and "this
-    // WCAG divergence is sourced" notes would never reach a generated file.
+    // A token whose whole value is one build-time reference inherits the referenced token's
+    // reasoning. Brand primitives are $private, so without this the "DELTA's hover is
+    // deliberately lighter" and "this WCAG divergence is sourced" notes would never reach a
+    // generated file.
     const lone = /^\{=([^{}|/]+)\}$/.exec(String(token.value).trim());
     const inherited =
       token.description ??
@@ -673,10 +623,9 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
   const { base, brands } = loadSources(tokensDir);
   const files = new Map();
 
-  // The default brand is merged into the base's own :root block, because
-  // that is what Mangrove's :root has always been. Keeping UNDRR in its own
-  // source is what makes "adopt Mangrove without adopting UNDRR branding" an
-  // expressible position rather than a rewrite.
+  // The default brand is merged into the base's own :root block, because that is what
+  // Mangrove's :root has always been. Keeping UNDRR in its own source is what makes "adopt
+  // Mangrove without adopting UNDRR branding" an expressible position rather than a rewrite.
   const defaultBrand = brands.find(brand => brand.meta.default);
   if (!defaultBrand) {
     throw new TokenError(
@@ -711,27 +660,19 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
   return files;
 }
 
-/* ------------------------------------------------------------------ *
- * Output baseline
- *
- * The generated partials are build output and are NOT committed. That leaves
- * nothing in the repository to compare the generator against: on a fresh
- * clone Jest's globalSetup writes the partials from `build()`, and a test
- * that then compares `build()` to those files compares the generator to
- * itself and cannot fail. Every CI run is a fresh clone, so "the generator's
- * output changed" was caught by nothing at all.
- *
- * tokens/output-baseline.json closes that. It is a lockfile: one SHA-256 per
- * emitted file, committed, and independent of whether the partials exist.
- * A full golden copy of the partials would say more on failure, but it is
- * ~1500 lines that churn on every legitimate colour change and it would
- * re-commit exactly the build output this PR stopped committing. The digest
- * says only THAT the output moved — which, paired with the contributor's own
- * `git diff` of tokens/ and of the regenerated partials, is enough.
- *
- * Update it deliberately, in the same commit as the token change:
- *
- *     node scripts/build-tokens.cjs --baseline
+/* ------------------------------------------------------------------ * Output baseline The
+ * generated partials are build output and are NOT committed. That leaves nothing in the
+ * repository to compare the generator against: on a fresh clone Jest's globalSetup writes
+ * the partials from `build()`, and a test that then compares `build()` to those files
+ * compares the generator to itself and cannot fail. Every CI run is a fresh clone, so "the
+ * generator's output changed" was caught by nothing at all. tokens/output-baseline.json
+ * closes that. It is a lockfile: one SHA-256 per emitted file, committed, and independent
+ * of whether the partials exist. A full golden copy of the partials would say more on
+ * failure, but it is ~1500 lines that churn on every legitimate colour change and it would
+ * re-commit exactly the build output this PR stopped committing. The digest says only THAT
+ * the output moved — which, paired with the contributor's own `git diff` of tokens/ and of
+ * the regenerated partials, is enough. Update it deliberately, in the same commit as the
+ * token change: node scripts/build-tokens.cjs --baseline
  * ------------------------------------------------------------------ */
 const BASELINE_NOTE =
   'GENERATED FILE - DO NOT EDIT BY HAND. SHA-256 of every file ' +
@@ -808,9 +749,9 @@ function main(argv) {
     const current = fs.existsSync(absolute)
       ? fs.readFileSync(absolute, 'utf8')
       : null;
-    // Only write when the content actually changed. Rewriting identical bytes
-    // still bumps mtime, which makes webpack rebuild and invalidates the chunk
-    // hash held by any open Storybook tab, producing a ChunkLoadError loop.
+    // Only write when the content actually changed. Rewriting identical bytes still bumps
+    // mtime, which makes webpack rebuild and invalidates the chunk hash held by any open
+    // Storybook tab, producing a ChunkLoadError loop.
     if (current === contents) continue;
     if (check) {
       stale.push(relative);

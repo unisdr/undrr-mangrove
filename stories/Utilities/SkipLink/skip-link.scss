@@ -1,14 +1,13 @@
 // Skip link.
 
-// Visually hidden until focused. Deliberately not .mg-u-sr-only: that utility
-// is permanently hidden text for assistive technology and has no :focus
-// reveal, so an anchor carrying it stays invisible when tabbed to.
+// Visually hidden until focused. Deliberately not .mg-u-sr-only: that utility is
+// permanently hidden text for assistive technology and has no :focus reveal, so an anchor
+// carrying it stays invisible when tabbed to.
 
-// On focus the link returns to normal flow rather than overlaying the page, so
-// the header below moves down and nothing is obscured. Colours are the two
-// theme-invariant tokens — neutral-0 and text — so the same pair that grades
-// for body copy grades here in all five themes, whatever the link happens to
-// sit on.
+// On focus the link returns to normal flow rather than overlaying the page, so the header
+// below moves down and nothing is obscured. Colours are the two theme-invariant tokens —
+// neutral-0 and text — so the same pair that grades for body copy grades here in all five
+// themes, whatever the link happens to sit on.
 
 .mg-skip-link {
   block-size: 1px;

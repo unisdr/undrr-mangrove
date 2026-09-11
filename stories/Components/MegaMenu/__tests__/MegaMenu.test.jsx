@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import MegaMenu from '../MegaMenu';
 
-// React 19 no longer invokes PropTypes validation at runtime, but the
-// declarations on MegaMenu.propTypes still drive react-docgen output,
-// Storybook autodocs, and the AI manifest — so the contract needs to
-// stay accurate. These tests invoke checkPropTypes directly to verify
-// the declared shape matches the documented section-object contract.
+// React 19 no longer invokes PropTypes validation at runtime, but the declarations on
+// MegaMenu.propTypes still drive react-docgen output, Storybook autodocs, and the AI
+// manifest — so the contract needs to stay accurate. These tests invoke checkPropTypes
+// directly to verify the declared shape matches the documented section-object contract.
 describe('MegaMenu propTypes', () => {
   let consoleSpy;
 

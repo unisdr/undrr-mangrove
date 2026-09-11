@@ -78,8 +78,7 @@ describe('Checkbox', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Error state
+  // -------------------------------------------------- Error state
   // --------------------------------------------------
 
   it('renders error text with aria-invalid and role="alert"', () => {
@@ -140,8 +139,7 @@ describe('Checkbox', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Accessibility
+  // -------------------------------------------------- Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

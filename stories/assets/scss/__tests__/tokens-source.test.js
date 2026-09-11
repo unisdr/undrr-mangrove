@@ -1,31 +1,21 @@
-/**
- * Design-token source contract.
- *
- * `tokens/*.yaml` is the single source every brand is built from;
- * `scripts/build-tokens.cjs` emits the Sass partials Mangrove's own stylesheet
- * compiles against. Three ways that can rot, all silent:
- *
- *   1. someone edits a generated partial, or edits the YAML without
- *      rebuilding, so the working copy the SCSS compiles against and the YAML
- *      disagree. The partials are build output and are not committed, so this
- *      no longer guards a file in the repo; it guards the tree the rest of the
- *      suite — and `yarn storybook` — actually compiles. Jest's globalSetup
- *      writes them only when they are MISSING, precisely so a stale one still
- *      fails here instead of being repaired behind the developer's back;
- *   2. someone re-hardcodes a brand value into a hand-written Sass file,
- *      which is exactly how _theme-delta.scss came to hold a second,
- *      independent copy of the DELTA brand;
- *   3. the generated partials are build output and are not committed, so
- *      nothing in the repository records what the generator produces. On a
- *      fresh clone — every CI run — globalSetup writes the partials from
- *      `build()`, and comparing `build()` to them compares the generator to
- *      itself. tokens/output-baseline.json is the committed digest that makes
- *      "the generator's output moved" fail somewhere;
- *   4. the generator quietly produces wrong output instead of failing —
- *      the failure mode the whole architecture exists to prevent. The
- *      second half of this file mutation-tests each guard, because a guard
- *      nobody has watched fail is not a guard.
- */
+/* Design-token source contract. `tokens/*.yaml` is the single source every brand is built
+ * from; `scripts/build-tokens.cjs` emits the Sass partials Mangrove's own stylesheet
+ * compiles against. Three ways that can rot, all silent: 1. someone edits a generated
+ * partial, or edits the YAML without rebuilding, so the working copy the SCSS compiles
+ * against and the YAML disagree. The partials are build output and are not committed, so
+ * this no longer guards a file in the repo; it guards the tree the rest of the suite — and
+ * `yarn storybook` — actually compiles. Jest's globalSetup writes them only when they are
+ * MISSING, precisely so a stale one still fails here instead of being repaired behind the
+ * developer's back; 2. someone re-hardcodes a brand value into a hand-written Sass file,
+ * which is exactly how _theme-delta.scss came to hold a second, independent copy of the
+ * DELTA brand; 3. the generated partials are build output and are not committed, so
+ * nothing in the repository records what the generator produces. On a fresh clone — every
+ * CI run — globalSetup writes the partials from `build()`, and comparing `build()` to them
+ * compares the generator to itself. tokens/output-baseline.json is the committed digest
+ * that makes "the generator's output moved" fail somewhere; 4. the generator quietly
+ * produces wrong output instead of failing — the failure mode the whole architecture
+ * exists to prevent. The second half of this file mutation-tests each guard, because a
+ * guard nobody has watched fail is not a guard. / */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -48,17 +38,16 @@ describe('design-token generator', () => {
       if (actual !== expected) stale.push(relative);
     }
 
-    // Run `yarn build:tokens` to fix. (A partial that is absent entirely
-    // cannot reach here: globalSetup generates missing ones before any suite
-    // runs, so a fresh clone starts from an up-to-date tree.)
+    // Run `yarn build:tokens` to fix. (A partial that is absent entirely cannot reach here:
+    // globalSetup generates missing ones before any suite runs, so a fresh clone starts from
+    // an up-to-date tree.)
     expect(stale).toEqual([]);
   });
 
   test('emitted bytes match the committed baseline', () => {
-    // The stale-partial test above cannot catch this. On a fresh clone the
-    // partials are written from `build()` by globalSetup, so it compares the
-    // generator to its own output. This compares it to a digest committed at
-    // the time the output was last reviewed.
+    // The stale-partial test above cannot catch this. On a fresh clone the partials are
+    // written from `build()` by globalSetup, so it compares the generator to its own output.
+    // This compares it to a digest committed at the time the output was last reviewed.
     const baseline = readBaseline();
     const actual = baselineOf(build());
     expect(actual.algorithm).toBe(baseline.algorithm);
@@ -115,9 +104,8 @@ describe('design-token generator', () => {
   });
 
   test('writes are idempotent: a second build changes no bytes', () => {
-    // Generated output sits inside webpack's watch scope. Rewriting identical
-    // bytes bumps mtime, rebuilds, and invalidates the chunk hash held by any
-    // open Storybook tab.
+    // Generated output sits inside webpack's watch scope. Rewriting identical bytes bumps
+    // mtime, rebuilds, and invalidates the chunk hash held by any open Storybook tab.
     const first = build();
     const second = build();
     for (const [relative, contents] of first) {
@@ -126,9 +114,8 @@ describe('design-token generator', () => {
   });
 
   test('$description reasoning survives into the generated files', () => {
-    // These record real decisions — a hover step that is deliberately lighter
-    // than its base, and a deliberate WCAG divergence. Losing them would make
-    // the next reader "fix" them.
+    // These record real decisions — a hover step that is deliberately lighter than its base,
+    // and a deliberate WCAG divergence. Losing them would make the next reader "fix" them.
     const delta = build().get(
       'stories/assets/scss/generated/_tokens-delta.scss'
     );
@@ -149,11 +136,10 @@ describe('design-token generator', () => {
     }
     expect(literals.length).toBeGreaterThan(10);
 
-    // Scoped to the hand-written theme files, which are where the duplication
-    // actually happened: _theme-delta.scss held an independent copy of the
-    // DELTA brand alongside the generated one. (_tokens-data-viz.scss does
-    // re-state neutral and DELTA channel values; that palette is a separate
-    // concern and is not migrated here.)
+    // Scoped to the hand-written theme files, which are where the duplication actually
+    // happened: _theme-delta.scss held an independent copy of the DELTA brand alongside the
+    // generated one. (_tokens-data-viz.scss does re-state neutral and DELTA channel values;
+    // that palette is a separate concern and is not migrated here.)
     const hardcoded = [];
     const guarded = [
       ...['preventionweb', 'irp', 'mcr', 'delta'].map(
@@ -180,11 +166,9 @@ describe('design-token generator', () => {
   });
 });
 
-/**
- * Mutation tests for the loud-failure guards. Each writes a deliberately
- * broken token source into a temporary directory and asserts the generator
- * refuses it rather than emitting something plausible-looking.
- */
+/* Mutation tests for the loud-failure guards. Each writes a deliberately broken token
+ * source into a temporary directory and asserts the generator refuses it rather than
+ * emitting something plausible-looking. / */
 describe('the generator fails loudly', () => {
   let dir;
 
@@ -254,9 +238,9 @@ color: { $type: color, tag: { $value: '{color.interactive}' } }`
   });
 
   test('a $value with nothing after it', () => {
-    // A YAML key with an empty value parses as null. It used to reach the
-    // emitter and print the string "null" -- invalid CSS a browser drops in
-    // silence, which is the failure mode this whole suite exists to prevent.
+    // A YAML key with an empty value parses as null. It used to reach the emitter and print
+    // the string "null" -- invalid CSS a browser drops in silence, which is the failure mode
+    // this whole suite exists to prevent.
     write(
       'x.yaml',
       `$brand: { id: x, title: X, selector: '.x' }
@@ -287,9 +271,9 @@ color: { $type: color, tag: { $value: '{brand.primary}' } }`
   });
 
   test('a colour that cannot be expressed in the shape it is emitted in', () => {
-    // The value-type trap, caught at the source. A named colour, an oklch()
-    // value or a finished rgb() cannot be channels; a triplet in a colour
-    // position is invalid CSS and is discarded silently.
+    // The value-type trap, caught at the source. A named colour, an oklch() value or a
+    // finished rgb() cannot be channels; a triplet in a colour position is invalid CSS and is
+    // discarded silently.
     write(
       'x.yaml',
       `$brand: { id: x, title: X, selector: '.x' }
@@ -342,11 +326,10 @@ color: { $type: color, tag: { $value: '{color.interactive}' } }`
   });
 
   test('an override that re-values a rem token as a link', () => {
-    // The shape an override inherits is enforced, not quietly abandoned.
-    // tokens/delta.yaml did exactly this: it re-valued a `$format: rem`
-    // token as `{width.600}`, and because the missing $format silently
-    // reverted the token to `literal` the generator emitted a var() chain
-    // where the base declared a rem conversion. Now it says so.
+    // The shape an override inherits is enforced, not quietly abandoned. tokens/delta.yaml did
+    // exactly this: it re-valued a `$format: rem` token as `{width.600}`, and because the
+    // missing $format silently reverted the token to `literal` the generator emitted a var()
+    // chain where the base declared a rem conversion. Now it says so.
     write(
       'mangrove.yaml',
       `${BASE}
@@ -365,14 +348,11 @@ size: { $type: dimension, gap: { $value: '{size.wide}' } }`
   });
 });
 
-/**
- * An override states a new VALUE. Everything else the base declared about the
- * token — the shape it is emitted in, the property it is emitted as, whether
- * it is emitted at all — carries, because `flatten` writes every key and a
- * key the override did not state used to arrive at `mergeLayers` as
- * `undefined` and delete the base's. Same fixture style as the suite above:
- * a deliberately minimal source tree, built through the real generator.
- */
+/* An override states a new VALUE. Everything else the base declared about the token — the
+ * shape it is emitted in, the property it is emitted as, whether it is emitted at all —
+ * carries, because `flatten` writes every key and a key the override did not state used to
+ * arrive at `mergeLayers` as `undefined` and delete the base's. Same fixture style as the
+ * suite above: a deliberately minimal source tree, built through the real generator. / */
 describe('an override inherits the shape it does not restate', () => {
   let dir;
 

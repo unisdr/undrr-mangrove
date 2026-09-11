@@ -1,9 +1,5 @@
-/**
- * Extract UserFeedback props from a hydration container.
- *
- * All label attributes are optional; the React component supplies English
- * defaults for omitted values.
- */
+/* Extract UserFeedback props from a hydration container. All label attributes are
+ * optional; the React component supplies English defaults for omitted values. / */
 export default function userFeedbackFromElement(container) {
   const { dataset } = container;
   const labels = {

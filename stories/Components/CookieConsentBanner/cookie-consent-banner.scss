@@ -1,6 +1,6 @@
-// Mangrove theme bridge for the externally loaded vanilla-cookieconsent UI.
-// The CDN stylesheet is appended after the local bundle and declares the same
-// custom properties, so these token mappings intentionally carry importance.
+// Mangrove theme bridge for the externally loaded vanilla-cookieconsent UI. The CDN
+// stylesheet is appended after the local bundle and declares the same custom properties,
+// so these token mappings intentionally carry importance.
 #cc-main {
   --cc-bg: var(--mg-surface-raised) !important;
   --cc-primary-color: rgb(var(--mg-color-text)) !important;

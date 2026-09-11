@@ -1,54 +1,31 @@
-/**
- * Data-visualisation tokens.
- *
- * Mangrove had no charting palette, so every UNDRR product that charts
- * disaster-risk data invented one. This file collects the values that are
- * actually documented somewhere and gives them token names.
- *
- * PROVENANCE — every value below is copied from one of three sources. No
- * colour here was invented, and nothing is interpolated:
- *
- *   [FIG]   The DELTA design file, "Color and Tint Stacks" board on the
- *           "Read Me" page (Sendai target ramps, "Maps" ramp) and the
- *           "Map Colours and Map Tabs" board on "Elements & Patterns".
- *   [DELTA] the DELTA product's chart component (`colorSchemes`)
- *           (the `cerulean` and `violet` 5-stop chart ramps).
- *   [BRAND] The UNDRR brand blue stack in the same Figma board, which is
- *           already Mangrove's --mg-color-blue-* palette.
- *
- * FORMAT — values are space-separated sRGB channel triplets, per repo
- * convention, and MUST be consumed as `rgb(var(--token))`. A bare triplet in
- * a colour position is invalid CSS and the whole declaration is dropped
- * silently; `stories/assets/scss/__tests__/tokens-contract.test.js` guards
- * this.
- *
- * THREE DIFFERENT JOBS — do not mix them:
- *   categorical  unordered series (countries, hazard types, sectors)
- *   sequential   ordered magnitude (a choropleth, a density ramp)
- *   sendai       fixed semantic identity of a Sendai Framework target
- *
- * Using a sequential ramp for unordered series implies a magnitude that is
- * not in the data; using categorical hues for magnitude destroys the ordering
- * the reader is meant to see.
- */
+/* Data-visualisation tokens. Mangrove had no charting palette, so every UNDRR product that
+ * charts disaster-risk data invented one. This file collects the values that are actually
+ * documented somewhere and gives them token names. PROVENANCE — every value below is
+ * copied from one of three sources. No colour here was invented, and nothing is
+ * interpolated: [FIG] The DELTA design file, "Color and Tint Stacks" board on the "Read
+ * Me" page (Sendai target ramps, "Maps" ramp) and the "Map Colours and Map Tabs" board on
+ * "Elements & Patterns". [DELTA] the DELTA product's chart component (`colorSchemes`) (the
+ * `cerulean` and `violet` 5-stop chart ramps). [BRAND] The UNDRR brand blue stack in the
+ * same Figma board, which is already Mangrove's --mg-color-blue-* palette. FORMAT — values
+ * are space-separated sRGB channel triplets, per repo convention, and MUST be consumed as
+ * `rgb(var(--token))`. A bare triplet in a colour position is invalid CSS and the whole
+ * declaration is dropped silently; `stories/assets/scss/__tests__/tokens-contract.test.js`
+ * guards this. THREE DIFFERENT JOBS — do not mix them: categorical unordered series
+ * (countries, hazard types, sectors) sequential ordered magnitude (a choropleth, a density
+ * ramp) sendai fixed semantic identity of a Sendai Framework target Using a sequential
+ * ramp for unordered series implies a magnitude that is not in the data; using categorical
+ * hues for magnitude destroys the ordering the reader is meant to see. / */
 
-/* -------------------------------------------------------------------------
- * CATEGORICAL — unordered series.
- *
- * Slots are ordered so that a short series is safe and a long one degrades
- * predictably. The worst colour-blind pair (min of deuteranope and protanope
- * CIEDE2000, Viénot 1999 simulation) for the first N slots:
- *
- *   N=2  ΔE 56.8   N=3  ΔE 19.5   N=4  ΔE 19.5
- *   N=5  ΔE 11.1   N=6  ΔE  8.3   N=7  ΔE  3.2
- *
- * Read that as: up to 4 series, colour alone is sufficient. At 5 it is
- * marginal. At 6 or 7 colour alone is NOT sufficient — slots 1 and 7 are
- * near-identical to a protanope (ΔE 3.2) — so a chart using more than five
- * series must add a second channel: direct labels, patterns, or shape.
- *
- * Values are the documented Sendai target base colours plus the UNDRR brand
- * blue. Nothing new was mixed; the only design decision here is the ORDER.
+/* ------------------------------------------------------------------------- CATEGORICAL —
+ * unordered series. Slots are ordered so that a short series is safe and a long one
+ * degrades predictably. The worst colour-blind pair (min of deuteranope and protanope
+ * CIEDE2000, Viénot 1999 simulation) for the first N slots: N=2 ΔE 56.8 N=3 ΔE 19.5 N=4 ΔE
+ * 19.5 N=5 ΔE 11.1 N=6 ΔE 8.3 N=7 ΔE 3.2 Read that as: up to 4 series, colour alone is
+ * sufficient. At 5 it is marginal. At 6 or 7 colour alone is NOT sufficient — slots 1 and
+ * 7 are near-identical to a protanope (ΔE 3.2) — so a chart using more than five series
+ * must add a second channel: direct labels, patterns, or shape. Values are the documented
+ * Sendai target base colours plus the UNDRR brand blue. Nothing new was mixed; the only
+ * design decision here is the ORDER.
  * ------------------------------------------------------------------------- */
 :root {
   --mg-dataviz-categorical-1: 0 79 145; // #004F91  [BRAND] UNDRR blue
@@ -63,11 +40,9 @@
   // this to decide when to switch on patterns/direct labels.
   --mg-dataviz-categorical-safe-count: 4;
 
-  /**
-   * Label colour that reaches 4.5:1 on each categorical slot (SC 1.4.3).
-   * Slot 2 is the only one that needs dark text: #D87838 is 3.15:1 against
-   * white and 6.66:1 against black. Every other slot is >= 4.63:1 on white.
-   */
+  /* Label colour that reaches 4.5:1 on each categorical slot (SC 1.4.3). Slot 2 is the only
+   * one that needs dark text: #D87838 is 3.15:1 against white and 6.66:1 against black.
+   * Every other slot is >= 4.63:1 on white. / */
   --mg-dataviz-on-categorical-1: 255 255 255; // 8.31:1
   --mg-dataviz-on-categorical-2: 0 0 0; // 6.66:1
   --mg-dataviz-on-categorical-3: 255 255 255; // 4.83:1
@@ -77,16 +52,12 @@
   --mg-dataviz-on-categorical-7: 255 255 255; // 6.12:1
 }
 
-/* -------------------------------------------------------------------------
- * SEQUENTIAL — ordered magnitude.
- *
- * Stop 1 is the high end (darkest), stop N the low end (lightest). Every
- * ramp below is monotonic in relative luminance, which is what makes the
- * ordering survive greyscale printing and all three dichromacies.
- *
- * The two 5-stop ramps are DELTA's shipped chart schemes, verbatim. They are
- * FIVE stops. If a chart needs more classes, bin the data to five or use the
- * 10-stop map ramp — do not interpolate these silently.
+/* ------------------------------------------------------------------------- SEQUENTIAL —
+ * ordered magnitude. Stop 1 is the high end (darkest), stop N the low end (lightest).
+ * Every ramp below is monotonic in relative luminance, which is what makes the ordering
+ * survive greyscale printing and all three dichromacies. The two 5-stop ramps are DELTA's
+ * shipped chart schemes, verbatim. They are FIVE stops. If a chart needs more classes, bin
+ * the data to five or use the 10-stop map ramp — do not interpolate these silently.
  * ------------------------------------------------------------------------- */
 :root {
   // [DELTA] colorSchemes.cerulean. Identical to the UNDRR brand blue stack
@@ -97,9 +68,9 @@
   --mg-dataviz-sequential-blue-4: 154 187 214; // #9ABBD6  Y 0.473
   --mg-dataviz-sequential-blue-5: 221 232 240; // #DDE8F0  Y 0.794
 
-  // [DELTA] colorSchemes.violet. These five stops are exactly stops 6-10 of
-  // the Figma Target B ramp, so DELTA's second chart scheme is the light half
-  // of "Human Direct Effects" reused as a generic ramp.
+  // [DELTA] colorSchemes.violet. These five stops are exactly stops 6-10 of the Figma Target
+  // B ramp, so DELTA's second chart scheme is the light half of "Human Direct Effects"
+  // reused as a generic ramp.
   --mg-dataviz-sequential-magenta-1: 173 102 161; // #AD66A1  Y 0.210
   --mg-dataviz-sequential-magenta-2: 189 132 179; // #BD84B3  Y 0.306
   --mg-dataviz-sequential-magenta-3: 214 179 208; // #D6B3D0  Y 0.511
@@ -121,18 +92,13 @@
   --mg-dataviz-sequential-map: var(--mg-dataviz-sequential-map-500);
 }
 
-/* -------------------------------------------------------------------------
- * SENDAI TARGET RAMPS — semantic, not decorative.
- *
- * These are Sendai Framework identities (Target A..G), so they belong to
- * every UNDRR product reporting against the framework, not to DELTA. A chart
- * of "damage" uses Target D whether or not teal suits the page.
- *
- * [FIG] All ten stops of each ramp, verbatim. 900 is darkest, 50 lightest,
- * 500 is the swatch the design file labels with the target name.
- *
- * Contrast note: on white, stop 500 is 4.5:1 or better for every target
- * except C (#D87838, 3.15:1). Target C text on white must use stop 600
+/* ------------------------------------------------------------------------- SENDAI TARGET
+ * RAMPS — semantic, not decorative. These are Sendai Framework identities (Target A..G),
+ * so they belong to every UNDRR product reporting against the framework, not to DELTA. A
+ * chart of "damage" uses Target D whether or not teal suits the page. [FIG] All ten stops
+ * of each ramp, verbatim. 900 is darkest, 50 lightest, 500 is the swatch the design file
+ * labels with the target name. Contrast note: on white, stop 500 is 4.5:1 or better for
+ * every target except C (#D87838, 3.15:1). Target C text on white must use stop 600
  * (#9D5423, 5.64:1) or darker; the 500 stop is fill-only.
  * ------------------------------------------------------------------------- */
 :root {
@@ -214,18 +180,14 @@
   --mg-dataviz-sendai-g-50: 243 235 236; // #F3EBEC
   --mg-dataviz-sendai-g: var(--mg-dataviz-sendai-g-500);
 
-  /**
-   * Target A is DELIBERATELY SHORT. The design file draws ten swatches for
-   * it, but the four darkest (#002323 #004646 #006968 #008C8B) are teal —
-   * they are unedited copy-paste residue from the UNDRR teal stack sitting in
-   * a ramp whose labelled colour is #000000. Importing them would ship a
-   * ramp that jumps from teal to black. Only the six swatches that are
-   * genuinely part of the neutral ramp are tokenised; 900/800/700/600 are
-   * left undefined until the design file is corrected.
-   *
-   * Target A at 500 is pure black, so it must not be used as a chart fill
-   * next to axis lines or body text. Prefer 400 (#333333) for marks.
-   */
+  /* Target A is DELIBERATELY SHORT. The design file draws ten swatches for it, but the four
+   * darkest (#002323 #004646 #006968 #008C8B) are teal — they are unedited copy-paste
+   * residue from the UNDRR teal stack sitting in a ramp whose labelled colour is #000000.
+   * Importing them would ship a ramp that jumps from teal to black. Only the six swatches
+   * that are genuinely part of the neutral ramp are tokenised; 900/800/700/600 are left
+   * undefined until the design file is corrected. Target A at 500 is pure black, so it must
+   * not be used as a chart fill next to axis lines or body text. Prefer 400 (#333333) for
+   * marks. / */
   --mg-dataviz-sendai-a-500: 0 0 0; // #000000  documented base
   --mg-dataviz-sendai-a-400: 51 51 51; // #333333
   --mg-dataviz-sendai-a-300: 90 90 90; // #5A5A5A
@@ -235,18 +197,15 @@
   --mg-dataviz-sendai-a: var(--mg-dataviz-sendai-a-500);
 }
 
-/* -------------------------------------------------------------------------
- * CHART CHROME — the non-data furniture, aliased to the existing neutral
- * palette so a theme swap carries it. Gridlines are intentionally BELOW the
- * 3:1 non-text threshold: they are decoration, and SC 1.4.11 does not apply
- * to them. The axis line and tick labels are informational and are not.
- *
- * Chrome follows the neutral ramp and is therefore cool-tinted from 2.0.0-
- * alpha.3 onward; the Sendai target A DATA ramp above is a separate,
- * deliberately achromatic series read off the design file and is NOT
- * retinted, because moving a categorical data colour changes what a reader
- * decodes from a chart. Chrome and target A will read fractionally
- * differently side by side. That is intended.
+/* ------------------------------------------------------------------------- CHART CHROME —
+ * the non-data furniture, aliased to the existing neutral palette so a theme swap carries
+ * it. Gridlines are intentionally BELOW the 3:1 non-text threshold: they are decoration,
+ * and SC 1.4.11 does not apply to them. The axis line and tick labels are informational
+ * and are not. Chrome follows the neutral ramp and is therefore cool-tinted from 2.0.0-
+ * alpha.3 onward; the Sendai target A DATA ramp above is a separate, deliberately
+ * achromatic series read off the design file and is NOT retinted, because moving a
+ * categorical data colour changes what a reader decodes from a chart. Chrome and target A
+ * will read fractionally differently side by side. That is intended.
  * ------------------------------------------------------------------------- */
 :root {
   --mg-dataviz-surface: var(--mg-color-neutral-0); // the page, plain white
@@ -256,20 +215,14 @@
   --mg-dataviz-muted-label: var(--mg-color-neutral-500); // 102 102 102, 5.74:1
 }
 
-/* ---------------------------------------------------------------------------
- * Sendai Framework target colours
- *
- * These are FRAMEWORK SEMANTICS, not brand styling. Target D means "damage" in
- * every UNDRR product that reports against the Sendai Framework, so the colour
- * must not vary by sub-brand. They live here, outside the brand token sources,
- * for that reason.
- *
- * Values and target labels are read from the DLDTS design system's own
- * "Sendai target ramps" board.
- *
- * Not to be confused with the older --sendai-red|orange|purple|turquoise
- * tokens, which are brand accent hues named by colour and carry no target
- * meaning. Those are deprecated; see _deprecated-sendai-accents.scss.
+/* --------------------------------------------------------------------------- Sendai
+ * Framework target colours These are FRAMEWORK SEMANTICS, not brand styling. Target D
+ * means "damage" in every UNDRR product that reports against the Sendai Framework, so the
+ * colour must not vary by sub-brand. They live here, outside the brand token sources, for
+ * that reason. Values and target labels are read from the DLDTS design system's own
+ * "Sendai target ramps" board. Not to be confused with the older --sendai-
+ * red|orange|purple|turquoise tokens, which are brand accent hues named by colour and
+ * carry no target meaning. Those are deprecated; see _deprecated-sendai-accents.scss.
  * ------------------------------------------------------------------------- */
 :root {
   /* Target A. Label contrast: white 21.00:1. */

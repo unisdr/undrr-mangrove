@@ -13,14 +13,11 @@ export const variantOptions = {
   quaternary: 'quaternary',
 };
 
-/**
- * @deprecated Planned for removal by end of 2026. Never adopted in production
- * across UNDRR sites; the main Hero component covers the same use cases via
- * `headingLevel="h2"`/`"h3"` and `layout="split"`. Do not adopt in new work.
- *
- * Smaller hero banner for child/section pages with linked label, title, and single CTA button.
- * Renders one section per item in the data array (typically one).
- */
+/* @deprecated Planned for removal by end of 2026. Never adopted in production across UNDRR
+ * sites; the main Hero component covers the same use cases via `headingLevel="h2"`/`"h3"`
+ * and `layout="split"`. Do not adopt in new work. Smaller hero banner for child/section
+ * pages with linked label, title, and single CTA button. Renders one section per item in
+ * the data array (typically one). / */
 export function ChildHero({ data, variant = 'primary' }) {
   let variantActive = variantOptions[`${variant}`];
   return (

@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Code renders inline `<code>` snippets in a prose paragraph.
- *
- * For full syntax-highlighted code blocks, use the `CodeBlock` component
- * (Components/CodeBlock) instead.
- */
+/* Code renders inline `<code>` snippets in a prose paragraph. For full syntax-highlighted
+ * code blocks, use the `CodeBlock` component (Components/CodeBlock) instead. / */
 export const Code = ({ detail1, detail2, detail3, detail4, detail5 }) => {
   return (
     <p>

@@ -1,28 +1,19 @@
-// mg-on-this-page-nav
-// https://gitlab.com/undrr/web-backlog/-/issues/337
-//
-// Sticky horizontal "On this page" navigation with scroll-spy.
-// Two modes:
-//   Auto-detect: scans headings from the page and generates nav links
-//   Explicit: uses author-provided <ul> with <a> elements
-//
-// Scroll-spy uses IntersectionObserver. CSS-only scroll-spy
-// (scroll-target-group + :target-current) is emerging in CSS Overflow L5
-// but lacks aria-current support and cross-browser coverage - revisit when
-// browsers ship native accessibility semantics for :target-current.
+// mg-on-this-page-nav https://gitlab.com/undrr/web-backlog/-/issues/337 Sticky horizontal
+// "On this page" navigation with scroll-spy. Two modes: Auto-detect: scans headings from
+// the page and generates nav links Explicit: uses author-provided <ul> with <a> elements
+// Scroll-spy uses IntersectionObserver. CSS-only scroll-spy (scroll-target-group +
+// :target-current) is emerging in CSS Overflow L5 but lacks aria-current support and
+// cross-browser coverage - revisit when browsers ship native accessibility semantics for
+// :target-current.
 
 const CHEVRON_LEFT_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M11 4L6 8l5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const CHEVRON_RIGHT_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M5 4l5 4-5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-/**
- * Read the offset CSS custom property from the nav element.
- * Returns the pixel value (number). Falls back to 0.
- *
- * @param {HTMLElement} container - The nav element
- * @returns {number} Offset in pixels
- */
+/* Read the offset CSS custom property from the nav element. Returns the pixel value
+ * (number). Falls back to 0. @param {HTMLElement} container - The nav element @returns
+ * {number} Offset in pixels / */
 function getOffset(container) {
   const raw = getComputedStyle(container)
     .getPropertyValue('--mg-on-this-page-nav-offset')
@@ -40,12 +31,9 @@ function prefersReducedMotion() {
   );
 }
 
-/**
- * Horizontally scroll a link to the center of its list container.
- *
- * @param {HTMLElement} link - The link element to center
- * @param {HTMLElement} list - The scrollable list container
- */
+/* Horizontally scroll a link to the center of its list container. @param {HTMLElement}
+ * link - The link element to center @param {HTMLElement} list - The scrollable list
+ * container / */
 function scrollLinkToCenter(link, list) {
   if (!list.scrollTo) return;
   const scrollTarget =
@@ -56,13 +44,10 @@ function scrollLinkToCenter(link, list) {
   });
 }
 
-/**
- * Initializes "On this page" sticky navigation bars.
- *
- * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
- *   Accepts a NodeList, array, or a single HTMLElement.
- *   Defaults to all [data-mg-on-this-page-nav] in the document.
- */
+/* Initializes "On this page" sticky navigation bars. @param
+ * {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init. Accepts a NodeList,
+ * array, or a single HTMLElement. Defaults to all [data-mg-on-this-page-nav] in the
+ * document. / */
 export function mgOnThisPageNav(scope) {
   const containers = scope
     ? scope instanceof HTMLElement
@@ -113,12 +98,9 @@ export function mgOnThisPageNav(scope) {
   });
 }
 
-/**
- * Disconnects the observer, removes event listeners, and clears the
- * initialized flag so the component can be re-initialized or garbage-collected.
- *
- * @param {HTMLElement} container - The nav element to tear down
- */
+/* Disconnects the observer, removes event listeners, and clears the initialized flag so
+ * the component can be re-initialized or garbage-collected. @param {HTMLElement} container
+ * - The nav element to tear down / */
 export function mgOnThisPageNavDestroy(container) {
   if (container._mgOnThisPageNavAbort) {
     container._mgOnThisPageNavAbort.abort();
@@ -139,12 +121,9 @@ export function mgOnThisPageNavDestroy(container) {
   delete container.dataset.mgOnThisPageNavInitialized;
 }
 
-/**
- * Auto-detect mode: scan headings from the page and generate nav links.
- * Preserves any existing CTA element in the container.
- *
- * @param {HTMLElement} container - The nav element with [data-mg-on-this-page-nav]
- */
+/* Auto-detect mode: scan headings from the page and generate nav links. Preserves any
+ * existing CTA element in the container. @param {HTMLElement} container - The nav element
+ * with [data-mg-on-this-page-nav] / */
 function buildNavFromHeadings(container) {
   const depth = parseInt(container.dataset.mgOnThisPageNavDepth || '2', 10);
   const contentSelector = container.dataset.mgOnThisPageNavContent;
@@ -214,15 +193,10 @@ function buildNavFromHeadings(container) {
   }
 }
 
-/**
- * Generate a URL-safe ID from text, ensuring uniqueness.
- * Uses Unicode-aware regex so Arabic, Japanese, and other non-Latin
- * heading text produces meaningful IDs instead of falling back to "section".
- *
- * @param {string} text - Heading text to slugify
- * @param {Set<string>} usedIds - Set of IDs already in use
- * @returns {string} A unique ID
- */
+/* Generate a URL-safe ID from text, ensuring uniqueness. Uses Unicode-aware regex so
+ * Arabic, Japanese, and other non-Latin heading text produces meaningful IDs instead of
+ * falling back to "section". @param {string} text - Heading text to slugify @param
+ * {Set<string>} usedIds - Set of IDs already in use @returns {string} A unique ID / */
 function generateId(text, usedIds) {
   let base = text
     .trim()
@@ -243,20 +217,14 @@ function generateId(text, usedIds) {
   return id;
 }
 
-/**
- * If the target element is inside one or more hidden tab panels (.mg-tabs__section),
- * open them before scrolling so the heading is visible and measurable.
- * Walks the DOM upward to handle nested tabs, opening outer panels first.
- *
- * Works with both horizontal tabs (panel.hidden === true) and stacked/disclosure
- * tabs (panel.getAttribute('hidden') === 'until-found').
- *
- * Tabs are opened by programmatically clicking the corresponding trigger element
- * ([data-tabs__item]), which runs the mg-tabs switch logic synchronously so
- * getBoundingClientRect() reflects the heading's true position immediately after.
- *
- * @param {HTMLElement} target - The element to scroll to
- */
+/* If the target element is inside one or more hidden tab panels (.mg-tabs__section), open
+ * them before scrolling so the heading is visible and measurable. Walks the DOM upward to
+ * handle nested tabs, opening outer panels first. Works with both horizontal tabs
+ * (panel.hidden === true) and stacked/disclosure tabs (panel.getAttribute('hidden') ===
+ * 'until-found'). Tabs are opened by programmatically clicking the corresponding trigger
+ * element ([data-tabs__item]), which runs the mg-tabs switch logic synchronously so
+ * getBoundingClientRect() reflects the heading's true position immediately after. @param
+ * {HTMLElement} target - The element to scroll to / */
 function openContainingTabs(target) {
   const panels = [];
   let el = target.parentElement;
@@ -281,12 +249,9 @@ function openContainingTabs(target) {
   }
 }
 
-/**
- * Set up click handlers for smooth scrolling and hash updates.
- *
- * @param {HTMLElement} container - The nav element
- * @param {AbortSignal} signal - Signal to remove listener on destroy
- */
+/* Set up click handlers for smooth scrolling and hash updates. @param {HTMLElement}
+ * container - The nav element @param {AbortSignal} signal - Signal to remove listener on
+ * destroy / */
 function setupClickHandlers(container, signal) {
   container.addEventListener(
     'click',
@@ -303,9 +268,8 @@ function setupClickHandlers(container, signal) {
 
       e.preventDefault();
 
-      // Open any containing collapsed tab panel before measuring scroll position.
-      // The tab switch is synchronous, so getBoundingClientRect() is accurate
-      // immediately after the call.
+      // Open any containing collapsed tab panel before measuring scroll position. The tab switch
+      // is synchronous, so getBoundingClientRect() is accurate immediately after the call.
       openContainingTabs(target);
 
       // Read offset per click — the custom property may change at breakpoints
@@ -340,32 +304,25 @@ function setupClickHandlers(container, signal) {
   );
 }
 
-/**
- * Update scroll button visibility based on the current scroll position of
- * the list. Also manages keyboard focus if a button is hidden while focused,
- * and toggles the left-overflow modifier class so the SCSS can add a
- * left-side gradient mask when content is off-screen to the left.
- *
- * RTL: browsers report scrollLeft as 0 at the right edge (visual start) and
- * decreasing (negative) as the user scrolls left. Math.abs(scrollLeft)
- * normalises "distance from visual start" across both directions.
- *
- * Accepts pre-resolved element references so callers on the scroll/resize hot
- * path avoid repeated querySelector lookups on every event.
- *
- * @param {HTMLElement} container - The nav element
- * @param {HTMLElement} list - The scrollable list element
- * @param {HTMLButtonElement} prevBtn - The previous/start scroll button
- * @param {HTMLButtonElement} nextBtn - The next/end scroll button
- */
+/* Update scroll button visibility based on the current scroll position of the list. Also
+ * manages keyboard focus if a button is hidden while focused, and toggles the left-
+ * overflow modifier class so the SCSS can add a left-side gradient mask when content is
+ * off-screen to the left. RTL: browsers report scrollLeft as 0 at the right edge (visual
+ * start) and decreasing (negative) as the user scrolls left. Math.abs(scrollLeft)
+ * normalises "distance from visual start" across both directions. Accepts pre-resolved
+ * element references so callers on the scroll/resize hot path avoid repeated querySelector
+ * lookups on every event. @param {HTMLElement} container - The nav element @param
+ * {HTMLElement} list - The scrollable list element @param {HTMLButtonElement} prevBtn -
+ * The previous/start scroll button @param {HTMLButtonElement} nextBtn - The next/end
+ * scroll button / */
 function updateScrollButtons(container, list, prevBtn, nextBtn) {
   const sl = list.scrollLeft;
   const maxScroll = list.scrollWidth - list.clientWidth;
   const rtl = getComputedStyle(list).direction === 'rtl';
 
-  // distFromStart: absolute distance scrolled from the visual start edge.
-  // The asymmetric thresholds (> 1 vs < maxScroll - 1) absorb sub-pixel
-  // rounding that can prevent scrollLeft from reaching exactly 0 or maxScroll.
+  // distFromStart: absolute distance scrolled from the visual start edge. The asymmetric
+  // thresholds (> 1 vs < maxScroll - 1) absorb sub-pixel rounding that can prevent
+  // scrollLeft from reaching exactly 0 or maxScroll.
   const distFromStart = Math.abs(sl);
   const scrolledFromStart = distFromStart > 1;
   const canScrollFurther = maxScroll > 1 && distFromStart < maxScroll - 1;
@@ -378,10 +335,10 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
   }
   prevBtn.hidden = !scrolledFromStart;
 
-  // nextBtn lives at the visual-end edge (right in LTR, left in RTL via flex).
-  // It is shown whenever more content exists in the scroll-forward direction.
-  // When it hides while focused, prefer the CTA (the DOM-adjacent element after
-  // nextBtn) over the last list link, so focus follows natural tab order.
+  // nextBtn lives at the visual-end edge (right in LTR, left in RTL via flex). It is shown
+  // whenever more content exists in the scroll-forward direction. When it hides while
+  // focused, prefer the CTA (the DOM-adjacent element after nextBtn) over the last list
+  // link, so focus follows natural tab order.
   if (!canScrollFurther && nextBtn === document.activeElement) {
     const cta = container.querySelector('.mg-on-this-page-nav__cta');
     const links = list.querySelectorAll('.mg-on-this-page-nav__link');
@@ -391,24 +348,19 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
   }
   nextBtn.hidden = !canScrollFurther;
 
-  // has-left-overflow drives the left-edge gradient in SCSS.
-  // Content is physically off-screen to the left when:
-  //   LTR: the user has scrolled right past the start (scrolledFromStart)
-  //   RTL: more visual-end content sits to the left (canScrollFurther)
+  // has-left-overflow drives the left-edge gradient in SCSS. Content is physically off-
+  // screen to the left when: LTR: the user has scrolled right past the start
+  // (scrolledFromStart) RTL: more visual-end content sits to the left (canScrollFurther)
   container.classList.toggle(
     'mg-on-this-page-nav--has-left-overflow',
     rtl ? canScrollFurther : scrolledFromStart
   );
 }
 
-/**
- * Inject prev/next scroll buttons and wire scroll and resize listeners.
- * Buttons start hidden and become visible only when the list overflows in
- * the corresponding direction.
- *
- * @param {HTMLElement} container - The nav element
- * @param {AbortSignal} signal - Signal to remove listeners on destroy
- */
+/* Inject prev/next scroll buttons and wire scroll and resize listeners. Buttons start
+ * hidden and become visible only when the list overflows in the corresponding direction.
+ * @param {HTMLElement} container - The nav element @param {AbortSignal} signal - Signal to
+ * remove listeners on destroy / */
 function setupScrollButtons(container, signal) {
   const list = container.querySelector('.mg-on-this-page-nav__list');
   if (!list) return;
@@ -429,9 +381,9 @@ function setupScrollButtons(container, signal) {
   prevBtn.type = 'button';
   prevBtn.className =
     'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--prev';
-  // Direction-neutral labels avoid confusion for RTL screen reader users
-  // ("left"/"right" are ambiguous when the reading direction is reversed).
-  // Override via data-mg-on-this-page-nav-scroll-prev-label for translated text.
+  // Direction-neutral labels avoid confusion for RTL screen reader users ("left"/"right" are
+  // ambiguous when the reading direction is reversed). Override via data-mg-on-this-page-
+  // nav-scroll-prev-label for translated text.
   prevBtn.setAttribute(
     'aria-label',
     container.dataset.mgOnThisPageNavScrollPrevLabel ||
@@ -497,13 +449,9 @@ function setupScrollButtons(container, signal) {
   updateScrollButtons(container, list, prevBtn, nextBtn);
 }
 
-/**
- * Ensure keyboard users can scroll overflowing nav links into view.
- * Browsers may not auto-scroll a hidden-scrollbar container on focus.
- *
- * @param {HTMLElement} container - The nav element
- * @param {AbortSignal} signal - Signal to remove listener on destroy
- */
+/* Ensure keyboard users can scroll overflowing nav links into view. Browsers may not auto-
+ * scroll a hidden-scrollbar container on focus. @param {HTMLElement} container - The nav
+ * element @param {AbortSignal} signal - Signal to remove listener on destroy / */
 function setupFocusScrolling(container, signal) {
   const list = container.querySelector('.mg-on-this-page-nav__list');
   if (!list) return;
@@ -518,11 +466,8 @@ function setupFocusScrolling(container, signal) {
   );
 }
 
-/**
- * Set up IntersectionObserver-based scroll-spy to highlight the active link.
- *
- * @param {HTMLElement} container - The nav element
- */
+/* Set up IntersectionObserver-based scroll-spy to highlight the active link. @param
+ * {HTMLElement} container - The nav element / */
 function setupScrollSpy(container) {
   const links = container.querySelectorAll('.mg-on-this-page-nav__link');
   const list = container.querySelector('.mg-on-this-page-nav__list');
@@ -562,17 +507,17 @@ function setupScrollSpy(container) {
       newLink.classList.add('mg-on-this-page-nav__link--active');
       newLink.setAttribute('aria-current', 'true');
 
-      // Scroll the nav list horizontally to keep active link visible.
-      // ONS user research found independently-scrolling ToC lists confused users;
-      // auto-scrolling to the active link avoids that. We use scrollTo on the
-      // list (not scrollIntoView on the link) to avoid vertical page scrolling.
+      // Scroll the nav list horizontally to keep active link visible. ONS user research found
+      // independently-scrolling ToC lists confused users; auto-scrolling to the active link
+      // avoids that. We use scrollTo on the list (not scrollIntoView on the link) to avoid
+      // vertical page scrolling.
       if (list) scrollLinkToCenter(newLink, list);
     }
   }
 
-  // rootMargin is static after construction — if the offset custom property
-  // changes at a breakpoint, the observer will use the value from init time.
-  // The click handler re-reads offset per click to stay responsive.
+  // rootMargin is static after construction — if the offset custom property changes at a
+  // breakpoint, the observer will use the value from init time. The click handler re-reads
+  // offset per click to stay responsive.
   const offset = getOffset(container);
   const observer = new IntersectionObserver(
     entries => {

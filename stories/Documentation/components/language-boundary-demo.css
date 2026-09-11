@@ -1,11 +1,7 @@
-/**
- * Styles for the language-boundary demo.
- *
- * Deliberately declares no `font-family` anywhere. The whole point of the demo
- * is to show which family the library's own cascade resolves to, so any
- * declaration here would mask the thing under observation. The wrapper carries
- * `lang="en"` so the demo chrome reads in the Latin family by inheritance.
- */
+/* Styles for the language-boundary demo. Deliberately declares no `font-family` anywhere.
+ * The whole point of the demo is to show which family the library's own cascade resolves
+ * to, so any declaration here would mask the thing under observation. The wrapper carries
+ * `lang="en"` so the demo chrome reads in the Latin family by inheritance. / */
 
 .mg-lang-demo {
   border: 1px solid rgb(var(--mg-color-neutral-300, 200 200 200));
@@ -87,11 +83,9 @@
   white-space: nowrap;
 }
 
-/*
- * Status is carried by the words "matches" / "does not match", not by colour.
- * Mangrove has no semantic success/error colour token, and status conveyed by
- * colour alone fails WCAG 1.4.1 anyway.
- */
+/* Status is carried by the words "matches" / "does not match", not by colour. Mangrove has
+ * no semantic success/error colour token, and status conveyed by colour alone fails WCAG
+ * 1.4.1 anyway. / */
 .mg-lang-demo__status--mismatch {
   font-weight: 700;
   text-decoration: underline;

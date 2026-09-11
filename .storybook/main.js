@@ -34,18 +34,13 @@ export default {
   ],
 
   webpackFinal: async config => {
-    // remove hash from the static file names
-    // find the existing rule and override the name property
-    // config.module.rules.forEach(function(rule, index) {
-    //   if (String(rule.test).search('svg') > 0) {
-    //     if (typeof config.module.rules[index].options == 'undefined') {
-    //       config.module.rules[index].options = {};
-    //     }
-    //     config.module.rules[index].options.name = 'static/media/[name].[ext]';
-    //   }
-    // });
-    // SCSS support with lazy loading for theme files (enables hot reload + theme switching)
-    // Theme files use lazyStyleTag so we can toggle them on/off
+    // remove hash from the static file names find the existing rule and override the name
+    // property config.module.rules.forEach(function(rule, index) { if
+    // (String(rule.test).search('svg') > 0) { if (typeof config.module.rules[index].options ==
+    // 'undefined') { config.module.rules[index].options = {}; }
+    // config.module.rules[index].options.name = 'static/media/[name].[ext]'; } }); SCSS
+    // support with lazy loading for theme files (enables hot reload + theme switching) Theme
+    // files use lazyStyleTag so we can toggle them on/off
     config.module.rules.push({
       test: /style(-[\w-]+)?\.scss$/,
       exclude: /node_modules/,
@@ -86,10 +81,9 @@ export default {
       "crypto": false,
     };
 
-    // Provide process global for browser compatibility
-    // Note: do NOT define 'process.env' here — Storybook's own DefinePlugin
-    // already defines process.env.* keys and webpack disallows both parent and
-    // child keys in the same DefinePlugin pass (WebpackCompilationError).
+    // Provide process global for browser compatibility Note: do NOT define 'process.env' here
+    // — Storybook's own DefinePlugin already defines process.env.* keys and webpack disallows
+    // both parent and child keys in the same DefinePlugin pass (WebpackCompilationError).
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.version': '"v20.0.0"',

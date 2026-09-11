@@ -1,20 +1,12 @@
-/**
- * @file PagerList.jsx
- * @description Page number list with ellipsis logic and prev/next navigation.
- *
- * @module Pager/components/PagerList
- */
+/* @file PagerList.jsx @description Page number list with ellipsis logic and prev/next
+ * navigation. @module Pager/components/PagerList / */
 
 import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Calculate the visible page entries (numbers + ellipses).
- *
- * @param {number} page        Current page (1-based)
- * @param {number|null} totalPages  Total pages (null = unknown)
- * @returns {Array<{type: string, number?: number, key?: string}>}
- */
+/* Calculate the visible page entries (numbers + ellipses). @param {number} page Current
+ * page (1-based) @param {number|null} totalPages Total pages (null = unknown) @returns
+ * {Array<{type: string, number?: number, key?: string}>} / */
 function getVisiblePages(page, totalPages) {
   // Unknown total — just show current page
   if (totalPages === null || totalPages === undefined) {
@@ -65,21 +57,15 @@ function getVisiblePages(page, totalPages) {
   return pages;
 }
 
-/**
- * PagerList — renders page numbers with prev/next buttons.
- *
- * @param {Object} props
- * @param {number} props.page           Current page (1-based)
- * @param {number|null} props.totalPages  Total number of pages (null = unknown)
- * @param {Function} props.onPageChange  Called with new page number
- * @param {boolean} [props.isLoading]    Disables all controls when true
- * @param {string} [props.prevLabel]     Visible text for Previous button
- * @param {string} [props.nextLabel]     Visible text for Next button
- * @param {string} [props.goPrevLabel]   aria-label for Previous button
- * @param {string} [props.goNextLabel]   aria-label for Next button
- * @param {string} [props.pageLabel]     aria-label template for page buttons ({page} token)
- * @param {string} [props.currentPageLabel] aria-label for current page ({page} token)
- */
+/* PagerList — renders page numbers with prev/next buttons. @param {Object} props @param
+ * {number} props.page Current page (1-based) @param {number|null} props.totalPages Total
+ * number of pages (null = unknown) @param {Function} props.onPageChange Called with new
+ * page number @param {boolean} [props.isLoading] Disables all controls when true @param
+ * {string} [props.prevLabel] Visible text for Previous button @param {string}
+ * [props.nextLabel] Visible text for Next button @param {string} [props.goPrevLabel] aria-
+ * label for Previous button @param {string} [props.goNextLabel] aria-label for Next button
+ * @param {string} [props.pageLabel] aria-label template for page buttons ({page} token)
+ * @param {string} [props.currentPageLabel] aria-label for current page ({page} token) / */
 export function PagerList({
   page,
   totalPages,

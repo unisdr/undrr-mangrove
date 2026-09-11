@@ -1,25 +1,15 @@
-/**
- * @file FormErrorSummary.jsx
- * @description Form-level error summary that lists all validation errors with
- * links to the corresponding fields. Follows the GOV.UK error summary pattern
- * for WCAG 3.3.1 and 3.3.3 compliance.
- *
- * @module FormErrorSummary
- */
+/* @file FormErrorSummary.jsx @description Form-level error summary that lists all
+ * validation errors with links to the corresponding fields. Follows the GOV.UK error
+ * summary pattern for WCAG 3.3.1 and 3.3.3 compliance. @module FormErrorSummary / */
 
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * FormErrorSummary displays a persistent, accessible error summary at the top
- * of a form. Each error links to the corresponding field so users can jump
- * directly to the problem.
- *
- * @param {Object} props
- * @param {string} [props.title='There is a problem'] Heading text for the summary
- * @param {Array<{id: string, message: string}>} props.errors List of field errors
- * @param {string} [props.className] Additional CSS class
- */
+/* FormErrorSummary displays a persistent, accessible error summary at the top of a form.
+ * Each error links to the corresponding field so users can jump directly to the problem.
+ * @param {Object} props @param {string} [props.title='There is a problem'] Heading text
+ * for the summary @param {Array<{id: string, message: string}>} props.errors List of field
+ * errors @param {string} [props.className] Additional CSS class / */
 export function FormErrorSummary({
   title = 'There is a problem',
   errors,

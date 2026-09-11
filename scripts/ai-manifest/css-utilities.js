@@ -1,14 +1,8 @@
-/**
- * @file css-utilities.js
- * @source manual
- *
- * Curated inventory of CSS utility classes provided by UNDRR Mangrove.
- * Used by generate-ai-manifest.js to produce ai-components/utilities.json.
- *
- * Maintenance: update this file when adding, renaming, or removing utility
- * classes in _utility.scss, container.scss, grid.scss, or the Utilities/
- * component SCSS files.
- */
+/* @file css-utilities.js @source manual Curated inventory of CSS utility classes provided
+ * by UNDRR Mangrove. Used by generate-ai-manifest.js to produce ai-
+ * components/utilities.json. Maintenance: update this file when adding, renaming, or
+ * removing utility classes in _utility.scss, container.scss, grid.scss, or the Utilities/
+ * component SCSS files. / */
 
 const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 
@@ -22,17 +16,13 @@ function textClass(suffix, desc) {
   return { class: `mg-u-color--${suffix}`, description: desc };
 }
 
-/**
- * The pre-2.0 Sendai accent utilities. Still shipped, still working, and
- * scheduled for removal in 2.1 — but an agent asked for "Sendai colours" will
- * reach for these on the name alone, so every entry has to carry the warning
- * with it rather than relying on a note somewhere else in the file.
- *
- * They are named by colour rather than by Sendai meaning: --sendai-red-900 is
- * byte-identical to --mg-color-red-900, three of the seven framework targets
- * have no counterpart here at all, and --sendai-turquoise sits 16.0 dE00 from
- * Target D as the framework's own design system defines it.
- */
+/* The pre-2.0 Sendai accent utilities. Still shipped, still working, and scheduled for
+ * removal in 2.1 — but an agent asked for "Sendai colours" will reach for these on the
+ * name alone, so every entry has to carry the warning with it rather than relying on a
+ * note somewhere else in the file. They are named by colour rather than by Sendai meaning:
+ * --sendai-red-900 is byte-identical to --mg-color-red-900, three of the seven framework
+ * targets have no counterpart here at all, and --sendai-turquoise sits 16.0 dE00 from
+ * Target D as the framework's own design system defines it. / */
 function deprecatedSendaiClass(className, hue) {
   return {
     class: className,
@@ -66,8 +56,7 @@ export default {
     'CSS utility classes provided by UNDRR Mangrove. Include the Mangrove CSS bundle to use these. All classes use the mg- prefix and follow BEM conventions.',
   cdnBaseUrl: `${CDN_BASE}/css/`,
   categories: [
-    // ---------------------------------------------------------------
-    // 1. Layout
+    // --------------------------------------------------------------- 1. Layout
     // ---------------------------------------------------------------
     {
       name: 'Layout',
@@ -109,8 +98,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 1b. Page composition
+    // --------------------------------------------------------------- 1b. Page composition
     // ---------------------------------------------------------------
     {
       name: 'Reading column',
@@ -264,8 +252,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 3. Responsive display
+    // --------------------------------------------------------------- 3. Responsive display
     // ---------------------------------------------------------------
     {
       name: 'Responsive display',
@@ -285,8 +272,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 4. Text utilities
+    // --------------------------------------------------------------- 4. Text utilities
     // ---------------------------------------------------------------
     {
       name: 'Text utilities',
@@ -314,8 +300,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 5. Accessibility
+    // --------------------------------------------------------------- 5. Accessibility
     // ---------------------------------------------------------------
     {
       name: 'Accessibility',
@@ -331,8 +316,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 6. Overflow and sizing
+    // --------------------------------------------------------------- 6. Overflow and sizing
     // ---------------------------------------------------------------
     {
       name: 'Overflow and sizing',
@@ -350,8 +334,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 7. Flex layout
+    // --------------------------------------------------------------- 7. Flex layout
     // ---------------------------------------------------------------
     {
       name: 'Flex layout',
@@ -379,8 +362,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 8. Push alignment
+    // --------------------------------------------------------------- 8. Push alignment
     // ---------------------------------------------------------------
     {
       name: 'Push alignment',
@@ -406,8 +388,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 9. Background colors
+    // --------------------------------------------------------------- 9. Background colors
     // ---------------------------------------------------------------
     {
       name: 'Background colors',
@@ -455,8 +436,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 10. Text colors
+    // --------------------------------------------------------------- 10. Text colors
     // ---------------------------------------------------------------
     {
       name: 'Text colors',
@@ -491,8 +471,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 11. Font sizes
+    // --------------------------------------------------------------- 11. Font sizes
     // ---------------------------------------------------------------
     {
       name: 'Font sizes',
@@ -543,8 +522,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 12. Embed containers
+    // --------------------------------------------------------------- 12. Embed containers
     // ---------------------------------------------------------------
     {
       name: 'Embed containers',
@@ -572,8 +550,7 @@ export default {
       ],
     },
 
-    // ---------------------------------------------------------------
-    // 14. Show more / collapse
+    // --------------------------------------------------------------- 14. Show more / collapse
     // ---------------------------------------------------------------
     {
       name: 'Show more',

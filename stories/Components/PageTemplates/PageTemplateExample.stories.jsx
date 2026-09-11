@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-/**
- * UNDRR Required Scripts
- *
- * All UNDRR production pages should include these scripts before </body>:
- *
- * <!-- UNDRR Analytics - GA4 bootstrap and enhancements -->
- * <script
- *   src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js"
- *   defer
- * ></script>
- *
- * <!-- UNDRR Critical Messaging - emergency broadcasts -->
- * <script src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script>
- *
- * Optional: Add a container for message placement:
- * <div class="mg-critical-messaging"></div>
- *
- * See documentation:
- * - Analytics: /?path=/docs/platform-services-analytics-enhancements--docs
- * - Messaging: /?path=/docs/platform-services-critical-messaging--docs
- */
+/* UNDRR Required Scripts All UNDRR production pages should include these scripts before
+ * </body>: <!-- UNDRR Analytics - GA4 bootstrap and enhancements --> <script
+ * src="https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js" defer
+ * ></script> <!-- UNDRR Critical Messaging - emergency broadcasts --> <script
+ * src="https://messaging.undrr.org/src/undrr-messaging.js" defer></script> Optional: Add a
+ * container for message placement: <div class="mg-critical-messaging"></div> See
+ * documentation: - Analytics: /?path=/docs/platform-services-analytics-enhancements--docs
+ * - Messaging: /?path=/docs/platform-services-critical-messaging--docs / */
 
 // Import your components
 import MegaMenu from '../MegaMenu/MegaMenu';

@@ -1,10 +1,6 @@
-/**
- * @file _labels.js
- * @description Translated label sets for SyndicationSearchWidget.
- *
- * Imported by _storyHelpers.jsx for global locale-toolbar integration across
- * the widget stories. Never import from .stories files.
- */
+/* @file _labels.js @description Translated label sets for SyndicationSearchWidget.
+ * Imported by _storyHelpers.jsx for global locale-toolbar integration across the widget
+ * stories. Never import from .stories files. / */
 
 export const LABELS_ES = {
   searchFormLabel: 'Buscar contenido',
@@ -78,8 +74,8 @@ export const LABELS_ES = {
   reportErrorLink: 'Notificar este error',
 };
 
-// ---------------------------------------------------------------------------
-// French (fr) — standard international French, UN register
+// --------------------------------------------------------------------------- French (fr)
+// — standard international French, UN register
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
   searchFormLabel: 'Rechercher du contenu',
@@ -153,8 +149,8 @@ export const LABELS_FR = {
   reportErrorLink: 'Signaler cette erreur',
 };
 
-// ---------------------------------------------------------------------------
-// Japanese (ja) — polite register (丁寧語); no singular/plural distinction
+// --------------------------------------------------------------------------- Japanese
+// (ja) — polite register (丁寧語); no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_JA = {
   searchFormLabel: 'コンテンツを検索',
@@ -228,8 +224,8 @@ export const LABELS_JA = {
   reportErrorLink: 'このエラーを報告する',
 };
 
-// ---------------------------------------------------------------------------
-// Simplified Chinese (zh-Hans) — no singular/plural distinction
+// --------------------------------------------------------------------------- Simplified
+// Chinese (zh-Hans) — no singular/plural distinction
 // ---------------------------------------------------------------------------
 export const LABELS_ZH = {
   searchFormLabel: '搜索内容',
@@ -300,16 +296,10 @@ export const LABELS_ZH = {
   reportErrorLink: '报告此错误',
 };
 
-// ---------------------------------------------------------------------------
-// Arabic (ar) — Modern Standard Arabic (MSA), UN register; RTL script
-// Arabic has 6 CLDR plural forms selected by Intl.PluralRules('ar'):
-//   zero  → 0
-//   one   → 1
-//   two   → 2
-//   few   → 3–10
-//   many  → 11–99
-//   other → 100+
-// Count-based keys use functions to cover all forms correctly.
+// --------------------------------------------------------------------------- Arabic (ar)
+// — Modern Standard Arabic (MSA), UN register; RTL script Arabic has 6 CLDR plural forms
+// selected by Intl.PluralRules('ar'): zero → 0 one → 1 two → 2 few → 3–10 many → 11–99
+// other → 100+ Count-based keys use functions to cover all forms correctly.
 // ---------------------------------------------------------------------------
 
 const arPlural = new Intl.PluralRules('ar');
@@ -422,13 +412,10 @@ export const LABELS_AR = {
   reportErrorLink: 'الإبلاغ عن هذا الخطأ',
 };
 
-// ---------------------------------------------------------------------------
-// Russian (ru)
-// Russian has three plural forms selected by Intl.PluralRules('ru'):
-//   one  → 1, 21, 31 … (nominative singular)
-//   few  → 2–4, 22–24 … (genitive singular)
-//   many → 5–20, 25–30 … (genitive plural)
-// Count-based keys use functions so all three forms render correctly.
+// --------------------------------------------------------------------------- Russian (ru)
+// Russian has three plural forms selected by Intl.PluralRules('ru'): one → 1, 21, 31 …
+// (nominative singular) few → 2–4, 22–24 … (genitive singular) many → 5–20, 25–30 …
+// (genitive plural) Count-based keys use functions so all three forms render correctly.
 // ---------------------------------------------------------------------------
 
 const ruResults = new Intl.PluralRules('ru');

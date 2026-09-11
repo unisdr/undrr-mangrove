@@ -1,32 +1,15 @@
-/**
- * @file SelectDropdown.jsx
- * @description Lightweight custom select dropdown with Chosen-like functionality.
- *
- * A self-contained, accessible dropdown that provides Chosen.js-style features
- * without requiring the Chosen.js library. This allows the component to work
- * in any environment (Drupal, Storybook, standalone) without external dependencies.
- *
- * **Why not Chosen.js?**
- * - Chosen.js is ~30KB and requires jQuery
- * - Host pages may have conflicting Chosen instances
- * - This component is ~3KB and has zero dependencies
- *
- * **Features (Chosen-like):**
- * - Searchable filter input (shown when options > threshold)
- * - Single-select with radio button indicators
- * - Multi-select with checkbox indicators
- * - Keyboard navigation (↑↓ arrows, Enter to select, Escape to close)
- * - Click outside to close
- * - Doc count badges on options
- *
- * **Accessibility:**
- * - ARIA listbox pattern
- * - Focus management
- * - Screen reader announcements
- * - Touch-friendly sizing (44px trigger, 40px options)
- *
- * @module SearchWidget/components/SelectDropdown
- */
+/* @file SelectDropdown.jsx @description Lightweight custom select dropdown with Chosen-
+ * like functionality. A self-contained, accessible dropdown that provides Chosen.js-style
+ * features without requiring the Chosen.js library. This allows the component to work in
+ * any environment (Drupal, Storybook, standalone) without external dependencies. **Why not
+ * Chosen.js?** - Chosen.js is ~30KB and requires jQuery - Host pages may have conflicting
+ * Chosen instances - This component is ~3KB and has zero dependencies **Features (Chosen-
+ * like):** - Searchable filter input (shown when options > threshold) - Single-select with
+ * radio button indicators - Multi-select with checkbox indicators - Keyboard navigation
+ * (↑↓ arrows, Enter to select, Escape to close) - Click outside to close - Doc count
+ * badges on options **Accessibility:** - ARIA listbox pattern - Focus management - Screen
+ * reader announcements - Touch-friendly sizing (44px trigger, 40px options) @module
+ * SearchWidget/components/SelectDropdown / */
 
 import React, {
   useState,
@@ -41,19 +24,13 @@ import { createPortal } from 'react-dom';
 const EMPTY_OPTIONS = [];
 const EMPTY_VALUE = [];
 
-/**
- * SelectDropdown component.
- *
- * @param {Object} props - Component props
- * @param {string} props.id - Unique ID for the select
- * @param {string} props.label - Label for the select
- * @param {string} props.placeholder - Placeholder text when nothing selected
- * @param {Array} props.options - Array of { value, label, count } objects
- * @param {Array|string} props.value - Selected value(s)
- * @param {Function} props.onChange - Callback when selection changes
- * @param {boolean} props.multiple - Enable multi-select mode
- * @param {number} props.searchThreshold - Show search when options exceed this (default: 8)
- */
+/* SelectDropdown component. @param {Object} props - Component props @param {string}
+ * props.id - Unique ID for the select @param {string} props.label - Label for the select
+ * @param {string} props.placeholder - Placeholder text when nothing selected @param
+ * {Array} props.options - Array of { value, label, count } objects @param {Array|string}
+ * props.value - Selected value(s) @param {Function} props.onChange - Callback when
+ * selection changes @param {boolean} props.multiple - Enable multi-select mode @param
+ * {number} props.searchThreshold - Show search when options exceed this (default: 8) / */
 export function SelectDropdown({
   id,
   label,

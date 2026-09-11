@@ -1,35 +1,24 @@
-/**
- * @file Select.jsx
- * @description Native select dropdown with label, help text, and error states.
- *
- * @module Select
- */
+/* @file Select.jsx @description Native select dropdown with label, help text, and error
+ * states. @module Select / */
 
 import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 
 const EMPTY_OPTIONS = [];
 
-/**
- * Select component.
- *
- * @param {Object} props
- * @param {string} [props.id]              Custom id for the select element
- * @param {string} [props.name]            Name attribute
- * @param {string} [props.label]           Visible label text
- * @param {boolean} [props.hideLabel=false] Visually hide the label (still accessible)
- * @param {Array<{value: string, label: string, disabled?: boolean}>} [props.options=[]] Dropdown options
- * @param {string} [props.placeholder]     Placeholder text for the empty first option
- * @param {string} [props.value]           Controlled value
- * @param {string} [props.defaultValue]    Uncontrolled default value
- * @param {Function} [props.onChange]       Change handler
- * @param {boolean} [props.disabled=false]  Disable the select
- * @param {boolean} [props.required=false]  Mark as required
- * @param {string} [props.helpText]        Help text displayed below the select
- * @param {boolean} [props.error=false]    Whether the select is in an error state
- * @param {string} [props.errorText]       Error message displayed below the select
- * @param {string} [props.className]       Additional CSS class for the wrapper
- */
+/* Select component. @param {Object} props @param {string} [props.id] Custom id for the
+ * select element @param {string} [props.name] Name attribute @param {string} [props.label]
+ * Visible label text @param {boolean} [props.hideLabel=false] Visually hide the label
+ * (still accessible) @param {Array<{value: string, label: string, disabled?: boolean}>}
+ * [props.options=[]] Dropdown options @param {string} [props.placeholder] Placeholder text
+ * for the empty first option @param {string} [props.value] Controlled value @param
+ * {string} [props.defaultValue] Uncontrolled default value @param {Function}
+ * [props.onChange] Change handler @param {boolean} [props.disabled=false] Disable the
+ * select @param {boolean} [props.required=false] Mark as required @param {string}
+ * [props.helpText] Help text displayed below the select @param {boolean}
+ * [props.error=false] Whether the select is in an error state @param {string}
+ * [props.errorText] Error message displayed below the select @param {string}
+ * [props.className] Additional CSS class for the wrapper / */
 export function Select({
   id,
   name,

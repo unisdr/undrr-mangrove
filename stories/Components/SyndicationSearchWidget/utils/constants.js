@@ -1,12 +1,6 @@
-/**
- * @file constants.js
- * @description Static configuration data for the UNDRR Search Widget.
- *
- * Contains domain mappings, content types, languages, and facet definitions.
- * Ported from vanilla JS SearchWidgetConfig.js.
- *
- * @module SearchWidget/utils/constants
- */
+/* @file constants.js @description Static configuration data for the UNDRR Search Widget.
+ * Contains domain mappings, content types, languages, and facet definitions. Ported from
+ * vanilla JS SearchWidgetConfig.js. @module SearchWidget/utils/constants / */
 
 /**
  * Domain configuration - maps domain IDs to display info.
@@ -108,13 +102,9 @@ export const CONTENT_TYPES = [
   { id: 'people', name: 'People' },
 ];
 
-/**
- * Taxonomy vocabulary configuration for term results.
- * Maps vocabulary machine names (from ES `vid` field) to display info.
- * Only vocabularies that should appear in search results are listed here.
- *
- * @type {Array<{id: string, name: string, domain: string}>}
- */
+/* Taxonomy vocabulary configuration for term results. Maps vocabulary machine names (from
+ * ES `vid` field) to display info. Only vocabularies that should appear in search results
+ * are listed here. @type {Array<{id: string, name: string, domain: string}>} / */
 export const TAXONOMY_VOCABULARIES = [
   {
     id: 'prevention_web_regions',
@@ -125,17 +115,12 @@ export const TAXONOMY_VOCABULARIES = [
   { id: 'theme', name: 'Theme', domain: 'www_preventionweb_net' },
 ];
 
-/**
- * Content subtype configuration.
- * Maps parent content types to their subtype fields and options.
- * Subtypes appear as indented children under parent types in the Type dropdown.
- *
- * Each value may be a single subtype config object or an array of configs
- * when a parent type has multiple subtype fields (e.g. publication has both
- * UNDRR-specific types and PW-specific types).
- *
- * @type {Object.<string, ({field: string, options: Array<{id: string, name: string}>}|Array<{field: string, options: Array<{id: string, name: string}>}>)>}
- */
+/* Content subtype configuration. Maps parent content types to their subtype fields and
+ * options. Subtypes appear as indented children under parent types in the Type dropdown.
+ * Each value may be a single subtype config object or an array of configs when a parent
+ * type has multiple subtype fields (e.g. publication has both UNDRR-specific types and PW-
+ * specific types). @type {Object.<string, ({field: string, options: Array<{id: string,
+ * name: string}>}|Array<{field: string, options: Array<{id: string, name: string}>}>)>} / */
 export const CONTENT_SUBTYPES = {
   // Only field_news_type is currently indexed in Elasticsearch.
   // Other subtype fields need to be added to the search_api index before enabling.
@@ -159,10 +144,10 @@ export const CONTENT_SUBTYPES = {
       { id: '880', name: 'Interview' },
     ],
   },
-  // Publication subtypes - three fields for different sites:
-  // - field_undrr_publication_types: taxonomy term IDs, used on UNDRR.org
-  // - field_publication_type: list_string values, used on PreventionWeb
-  // - field_irp_publication_subtype: taxonomy term IDs, used on IRP
+  // Publication subtypes - three fields for different sites: -
+  // field_undrr_publication_types: taxonomy term IDs, used on UNDRR.org -
+  // field_publication_type: list_string values, used on PreventionWeb -
+  // field_irp_publication_subtype: taxonomy term IDs, used on IRP
   publication: [
     {
       field: 'field_undrr_publication_types',
@@ -253,35 +238,19 @@ export const CONTENT_SUBTYPES = {
       { id: 'arise_network', name: 'ARISE network' },
     ],
   },
-  // Policy subtypes - field_policy_type indexed in ES (used by publications)
-  // Note: This may overlap with publication subtypes - consider if both are needed
-  // policy: {
-  //   field: 'field_policy_type',
-  //   options: [
-  //     { id: '946', name: 'Intergovernmental declarations' },
-  //     { id: '821', name: 'Local policies and plans' },
-  //     { id: '819', name: 'National legal frameworks' },
-  //     { id: '818', name: 'National policies and plans' },
-  //     { id: '820', name: 'Regional policies and plans' },
-  //   ],
-  // },
-  //
-  // ----- NOT YET INDEXED IN ES -----
-  // Event subtypes - field_event_type_term needs to be added to search_api index
-  // event: {
-  //   field: 'field_event_type_term',
-  //   options: [
-  //     { id: '783', name: 'Meetings and conferences' },
-  //     { id: '784', name: 'Training event' },
-  //   ],
-  // },
+  // Policy subtypes - field_policy_type indexed in ES (used by publications) Note: This may
+  // overlap with publication subtypes - consider if both are needed policy: { field:
+  // 'field_policy_type', options: [ { id: '946', name: 'Intergovernmental declarations' }, {
+  // id: '821', name: 'Local policies and plans' }, { id: '819', name: 'National legal
+  // frameworks' }, { id: '818', name: 'National policies and plans' }, { id: '820', name:
+  // 'Regional policies and plans' }, ], }, ----- NOT YET INDEXED IN ES ----- Event subtypes
+  // - field_event_type_term needs to be added to search_api index event: { field:
+  // 'field_event_type_term', options: [ { id: '783', name: 'Meetings and conferences' }, {
+  // id: '784', name: 'Training event' }, ], },
 };
 
-/**
- * News subtypes (merged into type filter via field_news_type).
- * @deprecated Use CONTENT_SUBTYPES.news.options instead
- * @type {Array<{id: string, name: string}>}
- */
+/* News subtypes (merged into type filter via field_news_type). @deprecated Use
+ * CONTENT_SUBTYPES.news.options instead @type {Array<{id: string, name: string}>} / */
 export const NEWS_TYPES = CONTENT_SUBTYPES.news.options;
 
 /**
@@ -305,14 +274,9 @@ export const LANGUAGES = [
   { id: 'zxx', name: 'No language specified' },
 ];
 
-/**
- * Facets that always use OR logic (no toggle shown).
- * These are facets where AND doesn't make semantic sense:
- * - Content can't be in multiple languages simultaneously
- * - Single website/domain selection
- * - Content can only have one type
- * @type {Array<string>}
- */
+/* Facets that always use OR logic (no toggle shown). These are facets where AND doesn't
+ * make semantic sense: - Content can't be in multiple languages simultaneously - Single
+ * website/domain selection - Content can only have one type @type {Array<string>} / */
 export const ALWAYS_OR_FACETS = [
   '_language',
   'field_domain_access',
@@ -382,10 +346,11 @@ export const FACET_FIELDS = [
     vocabulary: 'list',
     type: 'select-multiple',
   },
-  // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES)
-  // { key: 'field_policy_type', label: 'Policy type', vocabulary: 'terms', type: 'select-multiple' },
-  // Not indexed yet - needs to be added to search_api.index.multidomain.yml:
-  // { key: 'field_event_type_term', label: 'Event type', vocabulary: 'terms', type: 'select-multiple' },
+  // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES) {
+  // key: 'field_policy_type', label: 'Policy type', vocabulary: 'terms', type: 'select-
+  // multiple' }, Not indexed yet - needs to be added to search_api.index.multidomain.yml: {
+  // key: 'field_event_type_term', label: 'Event type', vocabulary: 'terms', type: 'select-
+  // multiple' },
   { key: 'year', label: 'Year', type: 'select-multiple' },
   {
     key: 'field_country_region',
@@ -413,11 +378,8 @@ export const FACET_FIELDS = [
   },
 ];
 
-/**
- * Default taxonomy API endpoint.
- * Always points to PreventionWeb as the canonical source for taxonomy terms.
- * @type {string}
- */
+/* Default taxonomy API endpoint. Always points to PreventionWeb as the canonical source
+ * for taxonomy terms. @type {string} / */
 export const TAXONOMY_API_URL =
   'https://www.preventionweb.net/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
 
@@ -439,11 +401,10 @@ export const SCORING_CONFIG = {
     body: 1.0,
     saa_field_attachment: 0.1,
   },
-  // Phrase boosting for exact and near-exact phrase matches
-  // These boost documents where search terms appear together in order
-  // - match: partial word matching
-  // - exactPhrase: slop 0, words must be in exact order
-  // - nearPhrase: slop 2, allows minor variations (missing articles, word swaps)
+  // Phrase boosting for exact and near-exact phrase matches These boost documents where
+  // search terms appear together in order - match: partial word matching - exactPhrase: slop
+  // 0, words must be in exact order - nearPhrase: slop 2, allows minor variations (missing
+  // articles, word swaps)
   phraseBoosts: {
     teaser: { match: 1, exactPhrase: 5, nearPhrase: 3 },
     title: { match: 2, exactPhrase: 15, nearPhrase: 10 },
@@ -452,9 +413,9 @@ export const SCORING_CONFIG = {
   },
   // Slop value for near-phrase matching (allows N word transpositions/gaps)
   nearPhraseSlop: 2,
-  // Stop words to remove from queries for better phrase matching
-  // These common words are stripped to improve exact phrase matching
-  // e.g., "Draft Articles on the Protection" → "Draft Articles Protection"
+  // Stop words to remove from queries for better phrase matching These common words are
+  // stripped to improve exact phrase matching e.g., "Draft Articles on the Protection" →
+  // "Draft Articles Protection"
   stopWords: [
     'the',
     'a',
@@ -583,28 +544,21 @@ export const DEFAULT_CONFIG = {
   // Tier filters: array of tier names to restrict results by editorial weight or freshness.
   // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.
   // Interestingness tiers: 'demoted', 'deferred', 'average', 'promoted', 'announced'
-  // Longevity tiers: 'today', 'days', 'week', 'month', 'year', 'longtime', 'always'
-  // e.g., interestingnessTiers: ['promoted', 'announced'] only returns high-priority content
+  // Longevity tiers: 'today', 'days', 'week', 'month', 'year', 'longtime', 'always' e.g.,
+  // interestingnessTiers: ['promoted', 'announced'] only returns high-priority content
   interestingnessTiers: [],
   longevityTiers: [],
 };
 
-/**
- * Resolve the facets layout from a (merged or partial) config object.
- *
- * The component exposes a single union prop `facets` for layout:
- *   - `false`        : facets are not rendered at all
- *   - `'sidebar'`    : facets render in the right-hand sidebar (default)
- *   - `'horizontal'` : facets render as a horizontal strip above results
- *
- * Older consumers used a boolean `showFacets`. When `facets` is unset, this
- * helper falls back to `showFacets` so existing configs keep working without
- * change. Callers that just need a yes/no answer can compare the result to
- * `false` (e.g. for skipping aggregation queries when facets are off).
- *
- * @param {Object} config - Widget config (merged with DEFAULT_CONFIG or partial)
- * @returns {false | 'sidebar' | 'horizontal'}
- */
+/* Resolve the facets layout from a (merged or partial) config object. The component
+ * exposes a single union prop `facets` for layout: - `false` : facets are not rendered at
+ * all - `'sidebar'` : facets render in the right-hand sidebar (default) - `'horizontal'` :
+ * facets render as a horizontal strip above results Older consumers used a boolean
+ * `showFacets`. When `facets` is unset, this helper falls back to `showFacets` so existing
+ * configs keep working without change. Callers that just need a yes/no answer can compare
+ * the result to `false` (e.g. for skipping aggregation queries when facets are off).
+ * @param {Object} config - Widget config (merged with DEFAULT_CONFIG or partial) @returns
+ * {false | 'sidebar' | 'horizontal'} / */
 export function resolveFacetsLayout(config) {
   if (
     config.facets === false ||
@@ -630,11 +584,9 @@ export const TAXONOMY_VOCABULARY_MAP = new Map(
   TAXONOMY_VOCABULARIES.map(v => [v.id, v])
 );
 
-/**
- * Build a map of all subtype options across all parent types.
- * Key format: "field:id" (e.g., "field_news_type:751")
- * @type {Map<string, {id: string, name: string, field: string, parentType: string}>}
- */
+/* Build a map of all subtype options across all parent types. Key format: "field:id"
+ * (e.g., "field_news_type:751") @type {Map<string, {id: string, name: string, field:
+ * string, parentType: string}>} / */
 export const SUBTYPE_MAP = new Map(
   Object.entries(CONTENT_SUBTYPES).flatMap(([parentType, config]) => {
     const configs = Array.isArray(config) ? config : [config];
@@ -658,85 +610,57 @@ export const SUBTYPE_FIELD_TO_PARENT = new Map(
   })
 );
 
-/**
- * Get domain info by ID.
- * @param {string} domainId - The domain ID
- * @returns {Object|undefined} Domain info or undefined if not found
- */
+/* Get domain info by ID. @param {string} domainId - The domain ID @returns
+ * {Object|undefined} Domain info or undefined if not found / */
 export function getDomain(domainId) {
   return DOMAIN_MAP.get(domainId);
 }
 
-/**
- * Get content type info by ID.
- * @param {string} typeId - The content type ID
- * @returns {Object|undefined} Content type info or undefined if not found
- */
+/* Get content type info by ID. @param {string} typeId - The content type ID @returns
+ * {Object|undefined} Content type info or undefined if not found / */
 export function getContentType(typeId) {
   return CONTENT_TYPE_MAP.get(typeId);
 }
 
-/**
- * Get news type info by ID.
- * @param {string} newsTypeId - The news type ID
- * @returns {Object|undefined} News type info or undefined if not found
- */
+/* Get news type info by ID. @param {string} newsTypeId - The news type ID @returns
+ * {Object|undefined} News type info or undefined if not found / */
 export function getNewsType(newsTypeId) {
   return NEWS_TYPE_MAP.get(newsTypeId);
 }
 
-/**
- * Get language info by ID.
- * @param {string} langId - The language ID
- * @returns {Object|undefined} Language info or undefined if not found
- */
+/* Get language info by ID. @param {string} langId - The language ID @returns
+ * {Object|undefined} Language info or undefined if not found / */
 export function getLanguage(langId) {
   return LANGUAGE_MAP.get(langId);
 }
 
-/**
- * Get taxonomy vocabulary info by ID.
- * @param {string} vid - The vocabulary machine name
- * @returns {Object|undefined} Vocabulary info or undefined if not found
- */
+/* Get taxonomy vocabulary info by ID. @param {string} vid - The vocabulary machine name
+ * @returns {Object|undefined} Vocabulary info or undefined if not found / */
 export function getTaxonomyVocabulary(vid) {
   return TAXONOMY_VOCABULARY_MAP.get(vid);
 }
 
-/**
- * Check if a search result is a taxonomy term (vs a node).
- * Taxonomy terms have `vid` (vocabulary) but no `type` (content type).
- * @param {Object} source - Elasticsearch _source object
- * @returns {boolean} True if the result is a taxonomy term
- */
+/* Check if a search result is a taxonomy term (vs a node). Taxonomy terms have `vid`
+ * (vocabulary) but no `type` (content type). @param {Object} source - Elasticsearch
+ * _source object @returns {boolean} True if the result is a taxonomy term / */
 export function isTaxonomyTermResult(source) {
   return source?.vid !== undefined && source?.nid === undefined;
 }
 
-/**
- * Check if a filter should be visible based on config.
- * @param {string} key - The filter key
- * @param {Object|null} visibleFilters - The visibility configuration
- * @returns {boolean} True if filter should be visible
- */
+/* Check if a filter should be visible based on config. @param {string} key - The filter
+ * key @param {Object|null} visibleFilters - The visibility configuration @returns
+ * {boolean} True if filter should be visible / */
 export function isFilterVisible(key, visibleFilters) {
   if (!visibleFilters) return true;
   return visibleFilters[key] !== false;
 }
 
-/**
- * Toggleable teaser fields and the BEM selectors they control.
- * This is the single source of truth: the SCSS rules, buildHiddenFieldClasses(),
- * and story configs all derive from this list.
- *
- * Each entry maps a config key (used in `visibleTeaserFields`) to:
- * - `label`: human-readable name for Storybook / docs
- * - `selector`: CSS selector targeted by `mg-search--hide-{key}`
- *
- * Title (.mg-card__title) is intentionally not toggleable.
- *
- * @type {Object.<string, {label: string, selector: string}>}
- */
+/* Toggleable teaser fields and the BEM selectors they control. This is the single source
+ * of truth: the SCSS rules, buildHiddenFieldClasses(), and story configs all derive from
+ * this list. Each entry maps a config key (used in `visibleTeaserFields`) to: - `label`:
+ * human-readable name for Storybook / docs - `selector`: CSS selector targeted by `mg-
+ * search--hide-{key}` Title (.mg-card__title) is intentionally not toggleable. @type
+ * {Object.<string, {label: string, selector: string}>} / */
 export const TEASER_FIELDS = {
   image: { label: 'Image', selector: '.mg-card__visual' },
   contentType: { label: 'Content type', selector: '.mg-card__label' },
@@ -750,35 +674,24 @@ export const TEASER_FIELDS = {
   organization: { label: 'Organization', selector: '.mg-card__organization' },
 };
 
-/**
- * Build a visibleTeaserFields object with all fields set to `true`.
- * Useful as a starting point when you want to hide only specific fields.
- *
- * @returns {Object.<string, boolean>}
- * @example
- * const fields = allTeaserFieldsVisible();
- * // => { image: true, contentType: true, publicationType: true, date: true, summary: true, siteName: true, organization: true }
- */
+/* Build a visibleTeaserFields object with all fields set to `true`. Useful as a starting
+ * point when you want to hide only specific fields. @returns {Object.<string, boolean>}
+ * @example const fields = allTeaserFieldsVisible(); // => { image: true, contentType:
+ * true, publicationType: true, date: true, summary: true, siteName: true, organization:
+ * true } / */
 export function allTeaserFieldsVisible() {
   return Object.fromEntries(Object.keys(TEASER_FIELDS).map(k => [k, true]));
 }
 
-/**
- * Build CSS modifier classes to hide teaser fields based on visibility config.
- *
- * The corresponding SCSS rules target standard mg-card__* BEM wrapper classes
- * (e.g., .mg-card__visual, .mg-card__date, .mg-card__description).
- * Drupal teaser templates add these classes (see web-backlog#2660), and
- * Elasticsearch indexes the pre-rendered markup with them intact.
- *
- * @param {Object|null} visibleTeaserFields - Map of field keys to booleans. null = all visible.
- * @returns {string} Space-separated CSS class string (e.g., 'mg-search--hide-image mg-search--hide-date')
- *
- * @example
- * buildHiddenFieldClasses(null) // => ''
- * buildHiddenFieldClasses({ image: false, date: false }) // => 'mg-search--hide-image mg-search--hide-date'
- * buildHiddenFieldClasses({ image: true }) // => ''
- */
+/* Build CSS modifier classes to hide teaser fields based on visibility config. The
+ * corresponding SCSS rules target standard mg-card__* BEM wrapper classes (e.g., .mg-
+ * card__visual, .mg-card__date, .mg-card__description). Drupal teaser templates add these
+ * classes (see web-backlog#2660), and Elasticsearch indexes the pre-rendered markup with
+ * them intact. @param {Object|null} visibleTeaserFields - Map of field keys to booleans.
+ * null = all visible. @returns {string} Space-separated CSS class string (e.g., 'mg-search
+ * --hide-image mg-search--hide-date') @example buildHiddenFieldClasses(null) // => ''
+ * buildHiddenFieldClasses({ image: false, date: false }) // => 'mg-search--hide-image mg-
+ * search--hide-date' buildHiddenFieldClasses({ image: true }) // => '' / */
 export function buildHiddenFieldClasses(visibleTeaserFields) {
   if (!visibleTeaserFields) return '';
   return Object.entries(visibleTeaserFields)
@@ -787,20 +700,14 @@ export function buildHiddenFieldClasses(visibleTeaserFields) {
     .join(' ');
 }
 
-/**
- * Parse a type value that may be namespaced (e.g., "field_news_type:751").
- * Used for unified handling of content types and their subtypes.
- *
- * @param {string} value - The type value (plain like "news" or namespaced like "field_news_type:751")
- * @returns {{field: string, value: string, label: string, isSubtype: boolean, parentType: string|null}}
- *
- * @example
- * parseTypeValue('news')
- * // => { field: 'type', value: 'news', label: 'News', isSubtype: false, parentType: null }
- *
- * parseTypeValue('field_news_type:751')
- * // => { field: 'field_news_type', value: '751', label: 'Update', isSubtype: true, parentType: 'news' }
- */
+/* Parse a type value that may be namespaced (e.g., "field_news_type:751"). Used for
+ * unified handling of content types and their subtypes. @param {string} value - The type
+ * value (plain like "news" or namespaced like "field_news_type:751") @returns {{field:
+ * string, value: string, label: string, isSubtype: boolean, parentType: string|null}}
+ * @example parseTypeValue('news') // => { field: 'type', value: 'news', label: 'News',
+ * isSubtype: false, parentType: null } parseTypeValue('field_news_type:751') // => {
+ * field: 'field_news_type', value: '751', label: 'Update', isSubtype: true, parentType:
+ * 'news' } / */
 export function parseTypeValue(value) {
   const valueStr = String(value);
 
@@ -855,49 +762,35 @@ export function parseTypeValue(value) {
   };
 }
 
-/**
- * Create a namespaced type value for a subtype.
- *
- * @param {string} field - The ES field name (e.g., "field_news_type")
- * @param {string} id - The subtype ID (e.g., "751")
- * @returns {string} Namespaced value (e.g., "field_news_type:751")
- */
+/* Create a namespaced type value for a subtype. @param {string} field - The ES field name
+ * (e.g., "field_news_type") @param {string} id - The subtype ID (e.g., "751") @returns
+ * {string} Namespaced value (e.g., "field_news_type:751") / */
 export function createSubtypeValue(field, id) {
   return `${field}:${id}`;
 }
 
-/**
- * Get the parent content type for a subtype field.
- *
- * @param {string} field - The subtype field name (e.g., "field_news_type")
- * @returns {string|null} Parent type ID or null if not found
- */
+/* Get the parent content type for a subtype field. @param {string} field - The subtype
+ * field name (e.g., "field_news_type") @returns {string|null} Parent type ID or null if
+ * not found / */
 export function getParentTypeForField(field) {
   return SUBTYPE_FIELD_TO_PARENT.get(field) || null;
 }
 
-/**
- * Get subtype configuration for a parent content type.
- *
- * @param {string} parentType - The parent type ID (e.g., "news")
- * @returns {Array<{field: string, options: Array}>|null} Subtype config array or null if none
- */
+/* Get subtype configuration for a parent content type. @param {string} parentType - The
+ * parent type ID (e.g., "news") @returns {Array<{field: string, options: Array}>|null}
+ * Subtype config array or null if none / */
 export function getSubtypesForType(parentType) {
   const config = CONTENT_SUBTYPES[parentType];
   if (!config) return null;
   return Array.isArray(config) ? config : [config];
 }
 
-/**
- * Convert scoring tier config (cumulative max values) to filter ranges (min/max).
- *
- * SCORING_CONFIG stores tiers as `{ tierName: { max, weight|scale } }` where each
- * tier's min is implicitly the previous tier's max + 1. This function derives
- * explicit `{ min, max }` ranges for use in ES query_string range filters.
- *
- * @param {Object} tiers - Tier config from SCORING_CONFIG (e.g., SCORING_CONFIG.interestingness)
- * @returns {Object} Map of tier name → { min, max }
- */
+/* Convert scoring tier config (cumulative max values) to filter ranges (min/max).
+ * SCORING_CONFIG stores tiers as `{ tierName: { max, weight|scale } }` where each tier's
+ * min is implicitly the previous tier's max + 1. This function derives explicit `{ min,
+ * max }` ranges for use in ES query_string range filters. @param {Object} tiers - Tier
+ * config from SCORING_CONFIG (e.g., SCORING_CONFIG.interestingness) @returns {Object} Map
+ * of tier name → { min, max } / */
 export function buildTierRanges(tiers) {
   // Sort by max to guarantee correct min/max derivation regardless of
   // Object.entries() iteration order.
@@ -911,16 +804,12 @@ export function buildTierRanges(tiers) {
   return ranges;
 }
 
-/**
- * Build an Elasticsearch filter for selected tier names.
- * Returns a `range` query (single tier) or `bool.should` of `range` queries
- * (multiple tiers): avoids query_string parsing overhead and escaping risks.
- *
- * @param {string} field - ES field name (e.g., 'field_meta_interestingness')
- * @param {Array<string>} tierNames - Selected tier keys (e.g., ['promoted', 'announced'])
- * @param {Object} tierRanges - Tier ranges with { min, max } per key (from buildTierRanges)
- * @returns {Object|null} ES filter clause or null
- */
+/* Build an Elasticsearch filter for selected tier names. Returns a `range` query (single
+ * tier) or `bool.should` of `range` queries (multiple tiers): avoids query_string parsing
+ * overhead and escaping risks. @param {string} field - ES field name (e.g.,
+ * 'field_meta_interestingness') @param {Array<string>} tierNames - Selected tier keys
+ * (e.g., ['promoted', 'announced']) @param {Object} tierRanges - Tier ranges with { min,
+ * max } per key (from buildTierRanges) @returns {Object|null} ES filter clause or null / */
 export function buildTierFilter(field, tierNames, tierRanges) {
   if (!Array.isArray(tierNames) || tierNames.length === 0) return null;
 

@@ -23,8 +23,7 @@ jest.mock('react-syntax-highlighter/dist/esm/languages/prism/jsx', () => ({}));
 import { CodeBlock } from '../CodeBlock';
 
 describe('CodeBlock', () => {
-  // --------------------------------------------------
-  // Rendering — plain
+  // -------------------------------------------------- Rendering — plain
   // --------------------------------------------------
 
   it('renders code in a pre/code block', () => {
@@ -41,8 +40,7 @@ describe('CodeBlock', () => {
     expect(container.querySelector('figure')).toBeNull();
   });
 
-  // --------------------------------------------------
-  // Rendering — with language
+  // -------------------------------------------------- Rendering — with language
   // --------------------------------------------------
 
   it('applies language class when language prop is provided', () => {
@@ -61,8 +59,7 @@ describe('CodeBlock', () => {
     expect(container.querySelector('code').textContent).toBe('plain code');
   });
 
-  // --------------------------------------------------
-  // Rendering — with filename
+  // -------------------------------------------------- Rendering — with filename
   // --------------------------------------------------
 
   it('renders figure.mg-code-block when filename is provided', () => {
@@ -88,8 +85,7 @@ describe('CodeBlock', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Line numbers
+  // -------------------------------------------------- Line numbers
   // --------------------------------------------------
 
   it('applies showLineNumbers when lineNumbers prop is true', () => {
@@ -110,8 +106,7 @@ describe('CodeBlock', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  // --------------------------------------------------
-  // Accessibility — plain
+  // -------------------------------------------------- Accessibility — plain
   // --------------------------------------------------
 
   it('has no a11y violations (plain)', async () => {
@@ -119,8 +114,7 @@ describe('CodeBlock', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  // --------------------------------------------------
-  // Accessibility — with language
+  // -------------------------------------------------- Accessibility — with language
   // --------------------------------------------------
 
   it('has no a11y violations (with language)', async () => {
@@ -130,8 +124,7 @@ describe('CodeBlock', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  // --------------------------------------------------
-  // Accessibility — with filename
+  // -------------------------------------------------- Accessibility — with filename
   // --------------------------------------------------
 
   it('has no a11y violations (with filename)', async () => {
@@ -141,8 +134,7 @@ describe('CodeBlock', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  // --------------------------------------------------
-  // Accessibility — filename + language
+  // -------------------------------------------------- Accessibility — filename + language
   // --------------------------------------------------
 
   it('has no a11y violations (filename + language)', async () => {

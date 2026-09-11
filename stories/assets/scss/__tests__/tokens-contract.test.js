@@ -1,13 +1,9 @@
-/**
- * Mangrove 2.0 token contract — compiled-CSS assertions.
- *
- * The 2.0 migration's safety claim is "the compiled output is equivalent and
- * each brand's tokens live in a `.mg-theme-{brand}` block." Nothing else
- * verifies that, so a mistyped token or a vanished theme block would ship
- * silently. This suite compiles the SCSS entry points and asserts the
- * structural invariants the release depends on. It intentionally checks
- * compiled output (not source) because that is what consumers actually load.
- */
+/* Mangrove 2.0 token contract — compiled-CSS assertions. The 2.0 migration's safety claim
+ * is "the compiled output is equivalent and each brand's tokens live in a `.mg-
+ * theme-{brand}` block." Nothing else verifies that, so a mistyped token or a vanished
+ * theme block would ship silently. This suite compiles the SCSS entry points and asserts
+ * the structural invariants the release depends on. It intentionally checks compiled
+ * output (not source) because that is what consumers actually load. / */
 const fs = require('fs');
 const path = require('path');
 const sass = require('sass');
@@ -19,13 +15,10 @@ const { version } = require('../../../../package.json');
 
 const SCSS_DIR = path.resolve(__dirname, '..');
 const BRANDS = ['preventionweb', 'irp', 'mcr', 'delta'];
-/**
- * Mangrove's v2 tab colours are var() chains onto theme-owned values, so they
- * are re-emitted inside every runtime theme block rather than declared once at
- * :root — see stories/assets/scss/_tokens-tabs.scss for why. If that mixin
- * ever stops being included in a theme, the tab silently keeps the base
- * theme's colours.
- */
+/* Mangrove's v2 tab colours are var() chains onto theme-owned values, so they are re-
+ * emitted inside every runtime theme block rather than declared once at :root — see
+ * stories/assets/scss/_tokens-tabs.scss for why. If that mixin ever stops being included
+ * in a theme, the tab silently keeps the base theme's colours. / */
 const RUNTIME_TAB_TOKENS = [
   'color',
   'color--hover',
@@ -134,14 +127,12 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
   );
 });
 
-/* -------------------------------------------------------------------------
- * Shared contrast machinery.
- *
- * Contrast is a property of the RESOLVED token chain, not of any one file, so
- * it cannot be reviewed by reading the stylesheet. Everything below resolves a
- * token the way a browser would — walking var() chains with balanced-paren
- * parsing, honouring theme-block shadowing, and compositing alpha — so the two
- * contrast suites that follow measure what is actually painted.
+/* ------------------------------------------------------------------------- Shared
+ * contrast machinery. Contrast is a property of the RESOLVED token chain, not of any one
+ * file, so it cannot be reviewed by reading the stylesheet. Everything below resolves a
+ * token the way a browser would — walking var() chains with balanced-paren parsing,
+ * honouring theme-block shadowing, and compositing alpha — so the two contrast suites that
+ * follow measure what is actually painted.
  * ---------------------------------------------------------------------- */
 const srgb = channel => {
   const c = channel / 255;
@@ -164,9 +155,9 @@ const flatten = (fg, bg) =>
         a: 1,
       };
 
-// oklch() reaches the token layer from design-tool exports (DELTA's hero title
-// arrives that way). Without this it would parse as null and be reported as a
-// missing token, which is a false alarm rather than a finding.
+// oklch() reaches the token layer from design-tool exports (DELTA's hero title arrives
+// that way). Without this it would parse as null and be reported as a missing token, which
+// is a false alarm rather than a finding.
 const oklchToRgb = (L, C, H) => {
   const hue = (H * Math.PI) / 180;
   const a = C * Math.cos(hue);
@@ -289,17 +280,13 @@ const WHITE = { r: 255, g: 255, b: 255, a: 1 };
 const ALL_THEMES = ['base', ...BRANDS];
 const THEME_BLOCK = /\.mg-theme-[a-z0-9-]+\s*\{[^}]*\}/g;
 
-/**
- * Resolve a theme's token table the way a browser would.
- *
- * Deliberately read out of the COMBINED style-all bundle, not the per-brand
- * one. A per-brand bundle contains exactly one theme block, so a flat
- * last-declaration-wins scan happens to land on the right values whether or
- * not the scan is theme-aware — which means a theme-scoping bug would not
- * show up. style-all carries all four blocks, so the two steps below have to
- * be right: strip every brand block to get the `:root` layer, then overlay
- * only the requested brand's.
- */
+/* Resolve a theme's token table the way a browser would. Deliberately read out of the
+ * COMBINED style-all bundle, not the per-brand one. A per-brand bundle contains exactly
+ * one theme block, so a flat last-declaration-wins scan happens to land on the right
+ * values whether or not the scan is theme-aware — which means a theme-scoping bug would
+ * not show up. style-all carries all four blocks, so the two steps below have to be right:
+ * strip every brand block to get the `:root` layer, then overlay only the requested
+ * brand's. / */
 const themeVars = theme => {
   const css = compile('style-all');
   const vars = declarations(css.replace(THEME_BLOCK, ''), null);
@@ -311,32 +298,23 @@ const themeVars = theme => {
   return vars;
 };
 
-/* -------------------------------------------------------------------------
- * The second measure.
- *
- * WCAG 2's ratio compares relative luminance, which is not perceptually
- * uniform, so it misjudges mid-tones, warm hues and light-on-dark. Every pair
- * defined in this file is therefore graded TWICE — once with WCAG 2 (the
- * assertions that were already here, unchanged) and once with the Oklab
- * lightness measure in scripts/lib/perceptual-contrast.cjs.
- *
- * The two measures share one pair list and one resolved colour, so a
- * disagreement between them can only ever be about the maths, never about
- * measuring different things. `docs/COLOUR-CONTRAST-METHODOLOGY.md` explains
- * the calibration and the limitations.
- * ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- The second
+ * measure. WCAG 2's ratio compares relative luminance, which is not perceptually uniform,
+ * so it misjudges mid-tones, warm hues and light-on-dark. Every pair defined in this file
+ * is therefore graded TWICE — once with WCAG 2 (the assertions that were already here,
+ * unchanged) and once with the Oklab lightness measure in scripts/lib/perceptual-
+ * contrast.cjs. The two measures share one pair list and one resolved colour, so a
+ * disagreement between them can only ever be about the maths, never about measuring
+ * different things. `docs/COLOUR-CONTRAST-METHODOLOGY.md` explains the calibration and the
+ * limitations. ---------------------------------------------------------------------- */
 
-/**
- * Which perceptual threshold a pair is graded against.
- *
- * Derived from the WCAG role the pair ALREADY declares, rather than restated:
- * a 4.5 minimum is SC 1.4.3 normal text, and a 3 minimum is either SC 1.4.3
- * large text or SC 1.4.11 non-text, which the `why` field distinguishes.
- * BODY_TEXT and LARGE_TEXT/NON_TEXT are the two calibrated anchors (#767676
- * and #949494 on white); LARGE_TEXT and NON_TEXT happen to share a value
- * because WCAG 2's 3:1 boundary serves both, so they are kept apart by name
- * only, to keep the reported role honest.
- */
+/* Which perceptual threshold a pair is graded against. Derived from the WCAG role the pair
+ * ALREADY declares, rather than restated: a 4.5 minimum is SC 1.4.3 normal text, and a 3
+ * minimum is either SC 1.4.3 large text or SC 1.4.11 non-text, which the `why` field
+ * distinguishes. BODY_TEXT and LARGE_TEXT/NON_TEXT are the two calibrated anchors (#767676
+ * and #949494 on white); LARGE_TEXT and NON_TEXT happen to share a value because WCAG 2's
+ * 3:1 boundary serves both, so they are kept apart by name only, to keep the reported role
+ * honest. / */
 const perceptualRole = (min, why = '') => {
   if (min >= 4.5) return ['BODY_TEXT', THRESHOLD.BODY_TEXT];
   return /large text/i.test(why)
@@ -348,14 +326,10 @@ const triple = ({ r, g, b }) => [r, g, b];
 const perceptual = (fg, bg) =>
   Number(perceptualContrast(triple(fg), triple(bg)).toFixed(1));
 
-/**
- * Every measured pair in this file, graded by both measures, computed once.
- *
- * The two contrast suites and the disagreement report all read this table, so
- * the WCAG verdict and the perceptual verdict are guaranteed to describe the
- * same composited pixels. Memoised because compositing is cheap but the Sass
- * compile behind `compile()` is not.
- */
+/* Every measured pair in this file, graded by both measures, computed once. The two
+ * contrast suites and the disagreement report all read this table, so the WCAG verdict and
+ * the perceptual verdict are guaranteed to describe the same composited pixels. Memoised
+ * because compositing is cheap but the Sass compile behind `compile()` is not. / */
 let MEASUREMENTS = null;
 const measurements = () => {
   if (MEASUREMENTS) return MEASUREMENTS;
@@ -426,11 +400,9 @@ const measurement = key => {
   return row;
 };
 
-/**
- * The perceptual half of a pair's verdict, asserted the same way the WCAG half
- * is: a recorded exception must STILL fail and must not get worse, so a fix
- * deletes the exception rather than hiding behind it.
- */
+/* The perceptual half of a pair's verdict, asserted the same way the WCAG half is: a
+ * recorded exception must STILL fail and must not get worse, so a fix deletes the
+ * exception rather than hiding behind it. / */
 const assertPerceptual = (row, exception) => {
   const label = `${row.score} — ${row.role} needs ${row.floor} — ${row.why}`;
   if (!exception) {
@@ -451,18 +423,13 @@ const assertPerceptual = (row, exception) => {
   expect(row.score).toBeGreaterThanOrEqual(recorded - 0.1);
 };
 
-/**
- * Mangrove stores colours as channel triplets ("0 79 145") so they can be used
- * with an alpha via `rgb(var(--x) / 0.5)`. A triplet is only valid inside
- * rgb(); dropped raw into a colour position it makes the whole declaration
- * invalid, and CSS discards it silently.
- *
- * That is not theoretical. `--mg-border-color-button` was a triplet consumed
- * inside a `border:` shorthand, so border-style fell back to none and
- * .mg-button-outline, which relies on that border for its entire shape,
- * rendered as bare coloured text. The variant was broken from the day it
- * shipped and no test caught it.
- */
+/* Mangrove stores colours as channel triplets ("0 79 145") so they can be used with an
+ * alpha via `rgb(var(--x) / 0.5)`. A triplet is only valid inside rgb(); dropped raw into
+ * a colour position it makes the whole declaration invalid, and CSS discards it silently.
+ * That is not theoretical. `--mg-border-color-button` was a triplet consumed inside a
+ * `border:` shorthand, so border-style fell back to none and .mg-button-outline, which
+ * relies on that border for its entire shape, rendered as bare coloured text. The variant
+ * was broken from the day it shipped and no test caught it. / */
 describe('channel triplets are never used raw in a colour position', () => {
   const TRIPLET = /^\d{1,3}\s+\d{1,3}\s+\d{1,3}$/;
   const COLOUR_PROP =
@@ -516,11 +483,11 @@ describe('channel triplets are never used raw in a colour position', () => {
 });
 
 describe('brand-owned surfaces resolve from semantic tokens', () => {
-  // A raw palette alias in a themed surface compiles and looks right in the
-  // brand it was written for, so nothing catches it until someone opens another
-  // theme. --mg-hero-gradient-color was blue-900 for exactly that reason: the
-  // line above it already used --mg-color-hero, and every non-blue brand drew a
-  // UNDRR-blue hero. See unisdr/undrr-mangrove#1115.
+  // A raw palette alias in a themed surface compiles and looks right in the brand it was
+  // written for, so nothing catches it until someone opens another theme. --mg-hero-
+  // gradient-color was blue-900 for exactly that reason: the line above it already used
+  // --mg-color-hero, and every non-blue brand drew a UNDRR-blue hero. See unisdr/undrr-
+  // mangrove#1115.
   const PALETTE =
     /var\(\s*--mg-color-(blue|green|teal|orange|red|purple|yellow|neutral)-\d{2,3}\s*\)/;
 
@@ -545,11 +512,9 @@ describe('brand-owned surfaces resolve from semantic tokens', () => {
 // lowest layer is translucent composites down onto it.
 const PAGE = '--mg-color-neutral-0';
 
-/**
- * fg  — the painted foreground token, or a literal the component hardcodes.
- * bg  — background layers, nearest first; the page is the implicit floor.
- * min — 4.5 (SC 1.4.3 normal text) or 3 (SC 1.4.3 large text / SC 1.4.11).
- */
+/* fg — the painted foreground token, or a literal the component hardcodes. bg — background
+ * layers, nearest first; the page is the implicit floor. min — 4.5 (SC 1.4.3 normal text)
+ * or 3 (SC 1.4.3 large text / SC 1.4.11). / */
 const COMPONENT_PAIRS = [
   // --- Buttons: cta-button.scss ------------------------------------------
   {
@@ -866,20 +831,16 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — buttons and fields draw the ring on the page, inside a --mg-color-neutral-0 separator',
   },
 
-  // --- Focus ring: every surface it is actually painted on ---------------
-  //
-  // The headline change of 2.0.0-alpha.3 is that the focus ring stopped being
-  // the brand colour, and until now only the two pairs above tested it. These
-  // pairs measure the ring where the stylesheets actually paint it, so the
-  // numbers stop living as hand-computed prose in code comments.
-  //
-  // The load-bearing one is the first: mg-focus-ring draws a
-  // --mg-color-neutral-0 separator band immediately inside the ring, so the
-  // indicator is judged against that band rather than against whatever it
-  // happens to sit on. That pair is what makes the ring safe on an arbitrary
-  // consumer background, and it is the contract the two-band geometry rests
-  // on. The surface pairs below it are defence in depth: they say what the
-  // ring would measure if the band were ever removed.
+  // --- Focus ring: every surface it is actually painted on --------------- The headline
+  // change of 2.0.0-alpha.3 is that the focus ring stopped being the brand colour, and until
+  // now only the two pairs above tested it. These pairs measure the ring where the
+  // stylesheets actually paint it, so the numbers stop living as hand-computed prose in code
+  // comments. The load-bearing one is the first: mg-focus-ring draws a --mg-color-neutral-0
+  // separator band immediately inside the ring, so the indicator is judged against that band
+  // rather than against whatever it happens to sit on. That pair is what makes the ring safe
+  // on an arbitrary consumer background, and it is the contract the two-band geometry rests
+  // on. The surface pairs below it are defence in depth: they say what the ring would
+  // measure if the band were ever removed.
   {
     name: 'focus ring against its own separator band',
     fg: '--mg-color-focus-ring',
@@ -897,9 +858,9 @@ const COMPONENT_PAIRS = [
   {
     name: 'focus ring on the mega-menu section link tint',
     fg: '--mg-color-focus-ring',
-    // The tint is written inline as rgb(var(--mg-color-blue-900) / 0.15).
-    // blue-900 is a UNDRR primitive that no sub-brand overrides, so the
-    // composited value is the same in all five themes.
+    // The tint is written inline as rgb(var(--mg-color-blue-900) / 0.15). blue-900 is a UNDRR
+    // primitive that no sub-brand overrides, so the composited value is the same in all five
+    // themes.
     bg: ['rgb(0 79 145 / 0.15)'],
     min: 3,
     why: 'SC 1.4.11 — .mg-mega-content__section-list-link tints its own background on focus, and the ring is drawn on that tint',
@@ -911,11 +872,11 @@ const COMPONENT_PAIRS = [
     min: 3,
     why: 'SC 1.4.11 — .mg-form-error-summary takes focus programmatically after a failed submit, and the ring lands on its red-50 fill',
   },
-  // Both of these fail on their own, and that is the whole reason the ring is
-  // two-band. They are exposed to consumers as .mg-u-background-color--*
-  // utilities, so any component can be dropped onto them; the separator band
-  // is what rescues the indicator. Recorded rather than deleted so that if the
-  // band is ever removed from mg-focus-ring, the suite says what breaks.
+  // Both of these fail on their own, and that is the whole reason the ring is two-band. They
+  // are exposed to consumers as .mg-u-background-color--* utilities, so any component can be
+  // dropped onto them; the separator band is what rescues the indicator. Recorded rather
+  // than deleted so that if the band is ever removed from mg-focus-ring, the suite says what
+  // breaks.
   {
     name: 'focus ring on the neutral-200 utility background',
     fg: '--mg-color-focus-ring',
@@ -930,9 +891,9 @@ const COMPONENT_PAIRS = [
     min: 3,
     why: 'SC 1.4.11 — .mg-u-background-color--neutral-300 under a focused control; rescued by the separator band, not by this pair',
   },
-  // The inverse ring is the other half of the story: it is correct on a filled
-  // brand surface and wrong on a light one. Pairing it against the letterbox
-  // records why Gallery keeps the default ring rather than the inverse.
+  // The inverse ring is the other half of the story: it is correct on a filled brand surface
+  // and wrong on a light one. Pairing it against the letterbox records why Gallery keeps the
+  // default ring rather than the inverse.
   {
     name: 'inverse focus ring on the gallery letterbox',
     fg: '--mg-color-focus-ring-inverse',
@@ -955,21 +916,15 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — records why Snackbar, Hero and TextCta use the inverse ring: the default ring cannot reach 3:1 on a filled brand surface',
   },
 
-  // --- Data visualisation: _tokens-data-viz.scss -------------------------
-  //
-  // ~700 lines of new colour arrived in this release with no contrast
-  // coverage at all. The only thing measuring it was
-  // stories/Atom/DataVizColors/data-viz-colors.mdx, which computes ratios
-  // live in the browser -- useful documentation, but it renders in a story
-  // rather than failing a build, so nothing stops a regression landing.
-  //
-  // These tokens are declared :root-only (no .mg-theme-* block redefines
-  // them), so every theme measures identically. They are still graded in all
-  // five, because that is what proves they are theme-independent rather than
-  // merely assumed to be.
-  //
-  // Chart chrome: the axis is non-text furniture under SC 1.4.11; the two
-  // label tokens carry real text.
+  // --- Data visualisation: _tokens-data-viz.scss ------------------------- ~700 lines of
+  // new colour arrived in this release with no contrast coverage at all. The only thing
+  // measuring it was stories/Atom/DataVizColors/data-viz-colors.mdx, which computes ratios
+  // live in the browser -- useful documentation, but it renders in a story rather than
+  // failing a build, so nothing stops a regression landing. These tokens are declared :root-
+  // only (no .mg-theme-* block redefines them), so every theme measures identically. They
+  // are still graded in all five, because that is what proves they are theme-independent
+  // rather than merely assumed to be. Chart chrome: the axis is non-text furniture under SC
+  // 1.4.11; the two label tokens carry real text.
   {
     name: 'dataviz axis line on the chart surface',
     fg: '--mg-dataviz-axis',
@@ -999,9 +954,9 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — secondary chart annotations and footnotes',
   },
 
-  // Every categorical fill that can carry a label, against the "on" colour
-  // paired with it. Slot 2 is the one that inverts to black; the pairing is
-  // the whole point of the on-* tokens, so it is what gets asserted.
+  // Every categorical fill that can carry a label, against the "on" colour paired with it.
+  // Slot 2 is the one that inverts to black; the pairing is the whole point of the on-*
+  // tokens, so it is what gets asserted.
   ...Array.from({ length: 7 }, (unused, index) => index + 1).map(slot => ({
     name: `dataviz label on categorical fill ${slot}`,
     fg: `--mg-dataviz-on-categorical-${slot}`,
@@ -1173,25 +1128,19 @@ const COMPONENT_PAIRS = [
   },
 ];
 
-/**
- * Known, unfixed contrast failures — a to-do list, not a waiver.
- *
- * Keyed `theme|pair name`, each entry carries the measured ratio so the
- * assertion still bites: the pair must STILL fail (a fix makes this test
- * fail with "remove this exception") and must not get worse. Nothing here is
- * an exemption from WCAG; every line is a brand-colour decision that belongs
- * to a human, which is why no colour was changed to make a test pass.
- */
+/* Known, unfixed contrast failures — a to-do list, not a waiver. Keyed `theme|pair name`,
+ * each entry carries the measured ratio so the assertion still bites: the pair must STILL
+ * fail (a fix makes this test fail with "remove this exception") and must not get worse.
+ * Nothing here is an exemption from WCAG; every line is a brand-colour decision that
+ * belongs to a human, which is why no colour was changed to make a test pass. / */
 const WCAG_EXCEPTIONS = {
-  // --- Focus ring exceptions -------------------------------------------
-  //
-  // These four pairs are RECORDED FAILURES BY DESIGN. Each one measures the
-  // ring against a surface it is never actually judged against, because
-  // mg-focus-ring always paints a --mg-color-neutral-0 separator band between
-  // the ring and the surface -- see the 'focus ring against its own separator
-  // band' pair, which is the one that has to pass. They are kept so that if
-  // the band is ever dropped from the mixin, the suite names exactly which
-  // surfaces stop working rather than going quiet.
+  // --- Focus ring exceptions ------------------------------------------- These four pairs
+  // are RECORDED FAILURES BY DESIGN. Each one measures the ring against a surface it is
+  // never actually judged against, because mg-focus-ring always paints a --mg-color-
+  // neutral-0 separator band between the ring and the surface -- see the 'focus ring against
+  // its own separator band' pair, which is the one that has to pass. They are kept so that
+  // if the band is ever dropped from the mixin, the suite names exactly which surfaces stop
+  // working rather than going quiet.
   ...Object.fromEntries(
     ALL_THEMES.flatMap(theme => [
       [
@@ -1231,11 +1180,10 @@ const WCAG_EXCEPTIONS = {
     'why Snackbar/Hero/TextCta use the inverse ring',
   ],
 
-  // The gridline is deliberately below 3:1. SC 1.4.11 exempts objects that
-  // are purely decorative, and a gridline is readable-by-position rather than
-  // by contrast -- the axis and the labels carry the information. Recorded
-  // rather than raised so the choice is visible and cannot drift darker or
-  // lighter unnoticed.
+  // The gridline is deliberately below 3:1. SC 1.4.11 exempts objects that are purely
+  // decorative, and a gridline is readable-by-position rather than by contrast -- the axis
+  // and the labels carry the information. Recorded rather than raised so the choice is
+  // visible and cannot drift darker or lighter unnoticed.
   ...Object.fromEntries(
     ALL_THEMES.map(theme => [
       `${theme}|dataviz gridline on the chart surface`,
@@ -1370,19 +1318,14 @@ const WCAG_EXCEPTIONS = {
   ],
 };
 
-/**
- * Known perceptual failures, on the same terms as the WCAG table above: a
- * to-do list, not a waiver. Keyed `theme|pair name`, carrying the measured
- * Oklab score so the assertion still bites.
- *
- * A pair can appear here, in EXCEPTIONS, or in both. Where it appears in only
- * one, the two measures disagree about it, and the disagreement report at the
- * bottom of this file is the list of exactly those pairs.
- */
+/* Known perceptual failures, on the same terms as the WCAG table above: a to-do list, not
+ * a waiver. Keyed `theme|pair name`, carrying the measured Oklab score so the assertion
+ * still bites. A pair can appear here, in EXCEPTIONS, or in both. Where it appears in only
+ * one, the two measures disagree about it, and the disagreement report at the bottom of
+ * this file is the list of exactly those pairs. / */
 const PERCEPTUAL_EXCEPTIONS = {
-  // Mirrors of the focus-ring and dataviz WCAG exceptions above: each pair
-  // that is a recorded failure on the WCAG measure is also one here, for the
-  // same reason.
+  // Mirrors of the focus-ring and dataviz WCAG exceptions above: each pair that is a
+  // recorded failure on the WCAG measure is also one here, for the same reason.
   ...Object.fromEntries(
     ALL_THEMES.flatMap(theme => [
       [
@@ -1401,10 +1344,9 @@ const PERCEPTUAL_EXCEPTIONS = {
         `${theme}|dataviz gridline on the chart surface`,
         [-2.6, 'decorative by design; the axis and labels carry the meaning'],
       ],
-      // Warm mid-tones are exactly where WCAG 2 and the Oklab measure part
-      // company: black on orange clears 4.5 comfortably (6.66) but sits below
-      // the perceptual body-text floor. The disagreement is the finding; both
-      // are recorded so neither measure gets to hide it.
+      // Warm mid-tones are exactly where WCAG 2 and the Oklab measure part company: black on
+      // orange clears 4.5 comfortably (6.66) but sits below the perceptual body-text floor. The
+      // disagreement is the finding; both are recorded so neither measure gets to hide it.
       [
         `${theme}|dataviz label on categorical fill 2`,
         [
@@ -1589,51 +1531,35 @@ const PERCEPTUAL_EXCEPTIONS = {
   ],
 };
 
-/**
- * The union of both exception tables, keyed the same way. The disagreement
- * report reads this to prove that whichever measure fails a disagreeing pair
- * has actually recorded it, rather than the pair slipping between the two.
- */
+/* The union of both exception tables, keyed the same way. The disagreement report reads
+ * this to prove that whichever measure fails a disagreeing pair has actually recorded it,
+ * rather than the pair slipping between the two. / */
 const EXCEPTION_KEYS = new Set([
   ...Object.keys(WCAG_EXCEPTIONS),
   ...Object.keys(PERCEPTUAL_EXCEPTIONS),
 ]);
 
-/**
- * Component-token contrast, including INTERACTIVE STATES.
- *
- * A resting-state check is a narrow slice of the design system: a hover
- * background is a different colour from the base one, and a WCAG 1.4.3 failure
- * shipped through that gap — white on DELTA's secondary-button hover at
- * 3.40:1 — because nothing here measured a `--hover` token.
- *
- * Every pair below is derived from a component stylesheet: the foreground
- * token is one a rule actually paints on the background token beneath it, read
- * out of cta-button.scss, tag.scss, tab.scss, _form-base.scss, card.scss,
- * hero.scss and _variables.scss. Pairs that merely look related by name are
- * noise and are not here.
- *
- * Thresholds are per-pair, not global:
- *   4.5 — SC 1.4.3 Contrast (Minimum), normal text.
- *   3   — SC 1.4.3 for LARGE text (>=24px, or >=18.66px bold), or SC 1.4.11
- *         Non-text Contrast for a border, control boundary, state indicator or
- *         meaningful glyph.
- * The per-pair `why` field records which of those applies and why.
- *
- * NOT asserted, deliberately:
- *   - `.mg-button.disabled`, `.mg-form-*--disabled`, `[data-disabled]`. SC
- *     1.4.3 and 1.4.11 both exempt inactive components.
- *   - `--mg-color-tab-border--active` / `--hover` against the tab bar. The
- *     legacy tab's state is carried redundantly by background AND label colour
- *     (both asserted), the underline sits on the link with the section below
- *     it rather than the bar, and picking a single backdrop for it would be
- *     inventing an adjacency the CSS does not have.
- *   - The status-label dots. _variables.scss states the case: the label text
- *     always names the status, so the swatch is decoration under SC 1.4.1 and
- *     its 1px ring is what needs the 3:1 — that ring IS asserted.
- *   - Hero titles over a photographic gradient. No token pair exists there;
- *     it needs a rendered-pixel check, not a token check.
- */
+/* Component-token contrast, including INTERACTIVE STATES. A resting-state check is a
+ * narrow slice of the design system: a hover background is a different colour from the
+ * base one, and a WCAG 1.4.3 failure shipped through that gap — white on DELTA's
+ * secondary-button hover at 3.40:1 — because nothing here measured a `--hover` token.
+ * Every pair below is derived from a component stylesheet: the foreground token is one a
+ * rule actually paints on the background token beneath it, read out of cta-button.scss,
+ * tag.scss, tab.scss, _form-base.scss, card.scss, hero.scss and _variables.scss. Pairs
+ * that merely look related by name are noise and are not here. Thresholds are per-pair,
+ * not global: 4.5 — SC 1.4.3 Contrast (Minimum), normal text. 3 — SC 1.4.3 for LARGE text
+ * (>=24px, or >=18.66px bold), or SC 1.4.11 Non-text Contrast for a border, control
+ * boundary, state indicator or meaningful glyph. The per-pair `why` field records which of
+ * those applies and why. NOT asserted, deliberately: - `.mg-button.disabled`, `.mg-
+ * form-*--disabled`, `[data-disabled]`. SC 1.4.3 and 1.4.11 both exempt inactive
+ * components. - `--mg-color-tab-border--active` / `--hover` against the tab bar. The
+ * legacy tab's state is carried redundantly by background AND label colour (both
+ * asserted), the underline sits on the link with the section below it rather than the bar,
+ * and picking a single backdrop for it would be inventing an adjacency the CSS does not
+ * have. - The status-label dots. _variables.scss states the case: the label text always
+ * names the status, so the swatch is decoration under SC 1.4.1 and its 1px ring is what
+ * needs the 3:1 — that ring IS asserted. - Hero titles over a photographic gradient. No
+ * token pair exists there; it needs a rendered-pixel check, not a token check. / */
 describe('component token contrast, including hover and active states', () => {
   const PAIRS = COMPONENT_PAIRS;
 
@@ -1720,19 +1646,14 @@ describe('component token contrast, including hover and active states', () => {
   });
 });
 
-/* -------------------------------------------------------------------------
- * The disagreements.
- *
- * This is the artefact the second measure exists to produce. Everywhere the
- * two agree, nothing has been learned. The pairs below are the ones where
- * WCAG 2's luminance ratio and the Oklab lightness measure reach OPPOSITE
- * verdicts, and each is a place where one of the two is wrong about something
- * a person has to read.
- *
- * The list is checked in rather than merely printed, so it cannot drift
- * silently: adding a colour that WCAG 2 over-rates, or fixing one, fails this
- * test with the full before/after table in the diff.
- * ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- The
+ * disagreements. This is the artefact the second measure exists to produce. Everywhere the
+ * two agree, nothing has been learned. The pairs below are the ones where WCAG 2's
+ * luminance ratio and the Oklab lightness measure reach OPPOSITE verdicts, and each is a
+ * place where one of the two is wrong about something a person has to read. The list is
+ * checked in rather than merely printed, so it cannot drift silently: adding a colour that
+ * WCAG 2 over-rates, or fixing one, fails this test with the full before/after table in
+ * the diff. ---------------------------------------------------------------------- */
 describe('where the two contrast measures disagree', () => {
   const line = row =>
     [
@@ -1745,15 +1666,11 @@ describe('where the two contrast measures disagree', () => {
         : `perceptual fails ${row.score} (${row.role} needs ${row.floor})`,
     ].join(' | ');
 
-  /**
-   * Every disagreement, in measurement order.
-   *
-   * Direction matters. They all run the same way — WCAG 2 passes a pair the
-   * perceptual measure fails — which is WCAG 2 OVER-rating readability, the
-   * failure mode with a user behind it. Nothing here runs the other way: no
-   * pair that WCAG 2 rejects is perceptually fine, so adopting the second
-   * measure loosens nothing.
-   */
+  /* Every disagreement, in measurement order. Direction matters. They all run the same way —
+   * WCAG 2 passes a pair the perceptual measure fails — which is WCAG 2 OVER-rating
+   * readability, the failure mode with a user behind it. Nothing here runs the other way: no
+   * pair that WCAG 2 rejects is perceptually fine, so adopting the second measure loosens
+   * nothing. / */
   const DISAGREEMENTS = [
     'base | legacy tab label, active | WCAG 2 PASSES 7.47:1 (min 4.5) | perceptual fails 60.8 (BODY_TEXT needs 63)',
     'base | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
@@ -1783,9 +1700,9 @@ describe('where the two contrast measures disagree', () => {
   });
 
   test('every disagreement is recorded as an exception on the failing side', () => {
-    // A disagreement is only honest if the failing measure still records it as
-    // an unfixed failure. This binds the report to the two exception tables:
-    // a pair cannot appear here and be silently unlisted there.
+    // A disagreement is only honest if the failing measure still records it as an unfixed
+    // failure. This binds the report to the two exception tables: a pair cannot appear here
+    // and be silently unlisted there.
     const unrecorded = measurements()
       .filter(row => row.wcagPasses !== row.perceptualPasses)
       .filter(row => !EXCEPTION_KEYS.has(`${row.theme}|${row.name}`))
@@ -1795,9 +1712,9 @@ describe('where the two contrast measures disagree', () => {
   });
 
   test('no pair is failed by WCAG 2 and passed perceptually', () => {
-    // Stated as its own guard because the day this stops being true is the day
-    // the perceptual measure starts WAIVING something the standard rejects,
-    // and that needs a human decision rather than a green suite.
+    // Stated as its own guard because the day this stops being true is the day the perceptual
+    // measure starts WAIVING something the standard rejects, and that needs a human decision
+    // rather than a green suite.
     const loosened = measurements()
       .filter(row => !row.wcagPasses && row.perceptualPasses)
       .map(line);

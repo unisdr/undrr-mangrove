@@ -1,8 +1,8 @@
-// PreventionWeb theme — runtime CSS custom property overrides.
-// Applied when .mg-theme-preventionweb is present on <body> or a wrapping element.
-// ---------------------------------------------------------------------
-// Every token in this block is generated from tokens/preventionweb.yaml, merged over
-// tokens/mangrove.yaml and tokens/undrr.yaml.
+// PreventionWeb theme — runtime CSS custom property overrides. Applied when .mg-theme-
+// preventionweb is present on <body> or a wrapping element.
+// --------------------------------------------------------------------- Every token in
+// this block is generated from tokens/preventionweb.yaml, merged over tokens/mangrove.yaml
+// and tokens/undrr.yaml.
 @import "./generated/tokens-preventionweb";
 
 .mg-theme-preventionweb {

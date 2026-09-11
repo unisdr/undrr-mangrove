@@ -137,10 +137,10 @@ describe('useHashSync: URL parameter migration', () => {
     expect(screen.getByTestId('query').textContent).toBe('');
   });
 
-  // Regression: Drupal data attributes are always strings, so enableHashSync
-  // arrives as 'true' / 'false' / 'auto'. The hook must treat the string
-  // 'true' the same as the boolean true; otherwise editors who pick "Always
-  // enabled" in Gutenberg get hash sync silently disabled.
+  // Regression: Drupal data attributes are always strings, so enableHashSync arrives as
+  // 'true' / 'false' / 'auto'. The hook must treat the string 'true' the same as the boolean
+  // true; otherwise editors who pick "Always enabled" in Gutenberg get hash sync silently
+  // disabled.
   it('treats enableHashSync: "true" (string) the same as boolean true', async () => {
     window.history.pushState({}, '', '/search#query=resilience');
     renderWithHashSync({ enableHashSync: 'true' });

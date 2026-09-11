@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Renders a breadcrumb navigation trail from an array of link items.
- *
- * @param {Object} props
- * @param {Array<{text: string}>} props.data  Ordered breadcrumb items; the last item is the current page
- * @param {string} [props.Color]              Color variant ('White' applies the white modifier class)
- */
+/* Renders a breadcrumb navigation trail from an array of link items. @param {Object} props
+ * @param {Array<{text: string}>} props.data Ordered breadcrumb items; the last item is the
+ * current page @param {string} [props.Color] Color variant ('White' applies the white
+ * modifier class) / */
 export function Breadcrumbcomponent({
   data,
   Color,

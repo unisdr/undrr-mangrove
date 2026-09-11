@@ -200,9 +200,9 @@ describe('ResultItem', () => {
   });
 
   it('routes organization results through PreventionWeb regardless of field_domain_access', () => {
-    // Organizations are indexed against every domain; field_domain_access[0]
-    // is arbitrary (often alphabetically first, e.g. AFRP). Organizations are
-    // served authoritatively only through PreventionWeb. See undrr/web-backlog#2906.
+    // Organizations are indexed against every domain; field_domain_access[0] is arbitrary
+    // (often alphabetically first, e.g. AFRP). Organizations are served authoritatively only
+    // through PreventionWeb. See undrr/web-backlog#2906.
     const orgTeaser = [
       '<div class="mg-card mg-card__hc">',
       '<div class="field field--name-node-title"><a href="/node/456">Org</a></div>',

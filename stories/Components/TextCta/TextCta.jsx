@@ -7,28 +7,23 @@ const cls = (...classes) => classes.filter(Boolean).join(' ') || null;
 
 const EMPTY_BUTTONS = [];
 
-/**
- * Call-to-action banner with heading, rich text, and action buttons.
- *
- * Supports the same color variant system as Hero (primary, secondary,
- * tertiary, quaternary) plus a `backgroundColor` prop for custom colors.
- *
- * @param {Object} props
- * @param {string} props.eyebrow - Optional short label above the headline
- * @param {string} props.headline - Banner heading text
- * @param {string} props.text - Body text (HTML supported, rendered via dangerouslySetInnerHTML)
- * @param {Array}  props.buttons - Array of button objects: { label, url, type }
- * @param {string} props.variant - Color variant: 'primary' (default), 'secondary', 'tertiary', 'quaternary'
- * @param {string} props.backgroundColor - Custom CSS background color (overrides variant)
- * @param {string} props.image - Optional image URL displayed alongside the text content
- * @param {string} props.imageAlt - Alt text for the image
- * @param {string} props.headlineSize - Font size token for headline (e.g. '600', '800'). Maps to `mg-u-font-size-{value}`
- * @param {number} props.headlineLevel - Semantic heading level (2–6). Controls the HTML element (h2, h3, etc.) independently of visual size
- * @param {string} props.padding - Custom CSS padding (overrides theme token)
- * @param {boolean} props.centered - Center-align content (default: true; auto-disabled when image is set)
- * @param {'stacked'|'inline'} props.layout - Content and action arrangement
- * @param {string} props.className - Additional CSS classes
- */
+/* Call-to-action banner with heading, rich text, and action buttons. Supports the same
+ * color variant system as Hero (primary, secondary, tertiary, quaternary) plus a
+ * `backgroundColor` prop for custom colors. @param {Object} props @param {string}
+ * props.eyebrow - Optional short label above the headline @param {string} props.headline -
+ * Banner heading text @param {string} props.text - Body text (HTML supported, rendered via
+ * dangerouslySetInnerHTML) @param {Array} props.buttons - Array of button objects: {
+ * label, url, type } @param {string} props.variant - Color variant: 'primary' (default),
+ * 'secondary', 'tertiary', 'quaternary' @param {string} props.backgroundColor - Custom CSS
+ * background color (overrides variant) @param {string} props.image - Optional image URL
+ * displayed alongside the text content @param {string} props.imageAlt - Alt text for the
+ * image @param {string} props.headlineSize - Font size token for headline (e.g. '600',
+ * '800'). Maps to `mg-u-font-size-{value}` @param {number} props.headlineLevel - Semantic
+ * heading level (2–6). Controls the HTML element (h2, h3, etc.) independently of visual
+ * size @param {string} props.padding - Custom CSS padding (overrides theme token) @param
+ * {boolean} props.centered - Center-align content (default: true; auto-disabled when image
+ * is set) @param {'stacked'|'inline'} props.layout - Content and action arrangement @param
+ * {string} props.className - Additional CSS classes / */
 export function TextCta({
   eyebrow,
   headline,

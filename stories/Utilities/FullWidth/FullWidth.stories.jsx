@@ -18,11 +18,10 @@ export const DefaultFullWidth = {
   name: 'FullWidth',
 };
 
-// Demo scaffolding. The band colour and the wrapper backgrounds are inline so
-// the two cases can be read side by side without a stylesheet; nothing here is
-// public API.
-// Note: no text-align here. Centring text on the utility also moves the
-// pseudo-element's static position, which pushes the bleed off to one side.
+// Demo scaffolding. The band colour and the wrapper backgrounds are inline so the two
+// cases can be read side by side without a stylesheet; nothing here is public API. Note:
+// no text-align here. Centring text on the utility also moves the pseudo-element's static
+// position, which pushes the bleed off to one side.
 const band = {
   background: '#2e7d32',
   color: '#fff',
@@ -35,13 +34,10 @@ const label = {
   padding: '0 0.5rem',
 };
 
-/**
- * Side-by-side demonstration of the ancestor-background constraint.
- *
- * The two cases are identical apart from the wrapper's background. The first
- * wrapper is opaque, so it paints over the bleed and the band stops at the
- * container edge. The second wrapper is transparent, so the bleed shows.
- */
+/* Side-by-side demonstration of the ancestor-background constraint. The two cases are
+ * identical apart from the wrapper's background. The first wrapper is opaque, so it paints
+ * over the bleed and the band stops at the container edge. The second wrapper is
+ * transparent, so the bleed shows. / */
 export const BlockedByAncestorBackground = {
   name: 'Blocked by an ancestor background',
   parameters: {

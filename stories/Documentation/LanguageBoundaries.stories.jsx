@@ -1,19 +1,12 @@
-/**
- * @file LanguageBoundaries.stories.jsx
- * @description Integration demo for Mangrove's Arabic `:lang(ar)` typography
- * rules at a nested language boundary.
- *
- * These stories are a deliberate exception to the "no story per language"
- * rule in CONTRIBUTING.md. The locale toolbar sets a single `lang` on the
- * `<html>` element, so it can render a page as Arabic or as English but never
- * as both at once. A language boundary only exists when two languages are on
- * the page simultaneously, which is the condition these rules govern, so the
- * toolbar cannot demonstrate it by construction. Each specimen declares its own
- * `lang` on a subtree and therefore reads correctly whichever locale the
- * toolbar is set to.
- *
- * See unisdr/undrr-mangrove#1092.
- */
+/* @file LanguageBoundaries.stories.jsx @description Integration demo for Mangrove's Arabic
+ * `:lang(ar)` typography rules at a nested language boundary. These stories are a
+ * deliberate exception to the "no story per language" rule in CONTRIBUTING.md. The locale
+ * toolbar sets a single `lang` on the `<html>` element, so it can render a page as Arabic
+ * or as English but never as both at once. A language boundary only exists when two
+ * languages are on the page simultaneously, which is the condition these rules govern, so
+ * the toolbar cannot demonstrate it by construction. Each specimen declares its own `lang`
+ * on a subtree and therefore reads correctly whichever locale the toolbar is set to. See
+ * unisdr/undrr-mangrove#1092. / */
 
 import React from 'react';
 import { LanguageBoundaryDemo } from './components/LanguageBoundaryDemo';
@@ -149,11 +142,9 @@ export const LatinPageWithArabicIsland = {
   ),
 };
 
-/**
- * The sharp edge. The boundary rules reassert one family, so a language switch
- * on a generic element inside component chrome falls back to the base body
- * face instead of the component's own face.
- */
+/* The sharp edge. The boundary rules reassert one family, so a language switch on a
+ * generic element inside component chrome falls back to the base body face instead of the
+ * component's own face. / */
 export const InsideComponentChrome = {
   name: 'Switching language inside component chrome',
   render: args => (

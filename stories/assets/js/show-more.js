@@ -1,13 +1,9 @@
 // mg-show-more
 // https://gitlab.com/undrr/web-backlog/-/issues/1082
 
-/**
- * Initializes "show more" toggle buttons.
- *
- * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
- *   Accepts a NodeList, array, or a single HTMLElement.
- *   Defaults to all [data-mg-show-more] in the document.
- */
+/* Initializes "show more" toggle buttons. @param {NodeList|HTMLElement[]|HTMLElement}
+ * [scope] - Elements to init. Accepts a NodeList, array, or a single HTMLElement. Defaults
+ * to all [data-mg-show-more] in the document. / */
 export function mgShowMore(scope) {
   const mgShowMoreButtons = scope
     ? scope instanceof HTMLElement

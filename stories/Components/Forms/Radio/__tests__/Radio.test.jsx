@@ -90,8 +90,7 @@ describe('Radio', () => {
     expect(radios[1]).not.toBeChecked();
   });
 
-  // --------------------------------------------------
-  // Error state
+  // -------------------------------------------------- Error state
   // --------------------------------------------------
 
   it('renders error text with aria-invalid and role="alert"', () => {
@@ -155,8 +154,7 @@ describe('Radio', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Accessibility
+  // -------------------------------------------------- Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

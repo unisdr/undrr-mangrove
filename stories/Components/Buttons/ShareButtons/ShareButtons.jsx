@@ -49,9 +49,9 @@ const QRCodeModal = ({
   const modalRef = useRef(null);
   const [qrCodeCopied, setQrCodeCopied] = useState(false);
 
-  // Reset the "copied" confirmation when the modal reopens. Tracking the
-  // previous isOpen in a ref lets us detect the false→true transition during
-  // render — no extra useEffect round-trip needed.
+  // Reset the "copied" confirmation when the modal reopens. Tracking the previous isOpen in
+  // a ref lets us detect the false→true transition during render — no extra useEffect round-
+  // trip needed.
   const prevIsOpenRef = useRef(isOpen);
   if (isOpen !== prevIsOpenRef.current) {
     prevIsOpenRef.current = isOpen;
@@ -249,14 +249,11 @@ const QRCodeModal = ({
   );
 };
 
-/**
- *  ShareButtons is a Component that renders buttons to share on platforms like twitter, facebook, linkedin and others
- *  @param {Object} labels - should contain language specific values like:
- *                           mainLabel: "SHARE THIS "
- *                           onCopy: "Copied"
- *  @param {string} SharingSubject - subject of the Email that will be prefilled to the user
- *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
- */
+/* ShareButtons is a Component that renders buttons to share on platforms like twitter,
+ * facebook, linkedin and others @param {Object} labels - should contain language specific
+ * values like: mainLabel: "SHARE THIS " onCopy: "Copied" @param {string} SharingSubject -
+ * subject of the Email that will be prefilled to the user @param {string} SharingTextBody
+ * - body of the Email that will be prefilled and appended with LINK to the site / */
 const ShareButtons = ({
   labels = {},
   SharingSubject,
@@ -526,11 +523,9 @@ const ShareButtons = ({
   );
 };
 
-/**
- *  CopyButton
- *  @param {string} copiedLabel - the label that will be shown when the link is coppied(should be in the right language)
- *  @param {string} sharedLink - the link that will be copied
- */
+/* CopyButton @param {string} copiedLabel - the label that will be shown when the link is
+ * coppied(should be in the right language) @param {string} sharedLink - the link that will
+ * be copied / */
 export function CopyButton({
   copiedLabel,
   sharedLink,

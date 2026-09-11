@@ -220,9 +220,9 @@ test('renders the Arabic locale right-to-left with translated copy', () => {
   expect(
     screen.getByRole('heading', { level: 1 })
   ).toHaveTextContent(/\p{Script=Arabic}/u);
-  // The lede/summary is a separate field from the title, translated
-  // independently — assert it directly rather than only the heading, so a
-  // missing Arabic `summary` key (rendering as an empty paragraph) fails here.
+  // The lede/summary is a separate field from the title, translated independently — assert
+  // it directly rather than only the heading, so a missing Arabic `summary` key (rendering
+  // as an empty paragraph) fails here.
   const lede = container.querySelector('.mg-demo-lede');
   expect(lede).toHaveTextContent(/\p{Script=Arabic}/u);
 });

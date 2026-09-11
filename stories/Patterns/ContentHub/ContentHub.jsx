@@ -281,15 +281,15 @@ export function ContentHub({
             : page === 'reporting'
               ? text.reportingIntro
               : text.sectionIntro;
-  // Ancestry is only worth a row when it says something the identity row and the
-  // page heading do not. On the hub home, a section page or a first-level detail
-  // page the trail merely repeats them. It earns its place on the landing page,
-  // which has no hub navigation, and on pages deep enough to have an
-  // intermediate parent that the section strip cannot show.
+  // Ancestry is only worth a row when it says something the identity row and the page
+  // heading do not. On the hub home, a section page or a first-level detail page the trail
+  // merely repeats them. It earns its place on the landing page, which has no hub
+  // navigation, and on pages deep enough to have an intermediate parent that the section
+  // strip cannot show.
   const showBreadcrumbs = page === 'landing' || page === 'validate-data';
-  // Not every hero earns a call to action: an overview page routes into the
-  // tool, a reporting page starts the task, and a deeper reference page has no
-  // single next step worth a button.
+  // Not every hero earns a call to action: an overview page routes into the tool, a
+  // reporting page starts the task, and a deeper reference page has no single next step
+  // worth a button.
   const actions =
     page === 'overview'
       ? [{ label: text.open, url: 'https://sendaimonitor.undrr.org/' }]
@@ -546,11 +546,9 @@ ContentHub.propTypes = {
   locale: PropTypes.string,
   /** Give the page a hero that carries the `h1` instead of a plain intro. */
   withHero: PropTypes.bool,
-  /**
-   * Where that hero comes from. `header` lets the hub header's banner be the
-   * hero, so it is chrome. `page` keeps the header compact and places a separate
-   * `Hero` block below it, the way body content would.
-   */
+  /* Where that hero comes from. `header` lets the hub header's banner be the hero, so it is
+   * chrome. `page` keeps the header compact and places a separate `Hero` block below it, the
+   * way body content would. / */
   heroSource: PropTypes.oneOf(['header', 'page']),
   /**
    * Media for a `page` hero. `video` is the point of the comparison: it is

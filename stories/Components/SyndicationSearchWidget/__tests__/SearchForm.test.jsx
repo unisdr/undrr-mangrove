@@ -81,11 +81,10 @@ describe('SearchForm', () => {
   });
 
   describe('loading states', () => {
-    // The submit button keeps a stable label and icon during search; loading
-    // is conveyed by aria-busy and the widget-level progress strip, not by
-    // swapping the button label or icon. This avoids stacking three animated
-    // indicators (input spinner + button spinner + progress strip) on top of
-    // each other when a search is running.
+    // The submit button keeps a stable label and icon during search; loading is conveyed by
+    // aria-busy and the widget-level progress strip, not by swapping the button label or icon.
+    // This avoids stacking three animated indicators (input spinner + button spinner +
+    // progress strip) on top of each other when a search is running.
     it('sets aria-busy on the submit button when isLoading is true', () => {
       renderWithProvider({ isLoading: true });
 

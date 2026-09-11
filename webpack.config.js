@@ -167,9 +167,8 @@ Compiled on: ${new Date().toISOString()}`,
           use: {
             loader: 'babel-loader',
             options: {
-              // Ignore project-level .babelrc.json and babel.config.js so
-              // the ESM component bundles don't get core-js polyfill
-              // require() calls injected by babel-plugin-polyfill-corejs3.
+              // Ignore project-level .babelrc.json and babel.config.js so the ESM component bundles
+              // don't get core-js polyfill require() calls injected by babel-plugin-polyfill-corejs3.
               cacheDirectory: packMode === 'development',
               configFile: false,
               babelrc: false,

@@ -1,15 +1,9 @@
-/**
- * Overflow boundary tests for MegaMenu panel layout.
- *
- * JSDOM does not compute CSS layout, so we cannot assert scroll bars or
- * pixel heights. What we CAN assert is that the React layer never truncates
- * content: all groups and all items must be present in the DOM. Any future
- * regression that limits rendered items (JS pagination, slice(), etc.) will
- * fail here before it reaches CSS.
- *
- * The fixture uses 12 groups × 8 items — enough to overflow a 70vh panel
- * at every standard desktop resolution.
- */
+/* Overflow boundary tests for MegaMenu panel layout. JSDOM does not compute CSS layout, so
+ * we cannot assert scroll bars or pixel heights. What we CAN assert is that the React
+ * layer never truncates content: all groups and all items must be present in the DOM. Any
+ * future regression that limits rendered items (JS pagination, slice(), etc.) will fail
+ * here before it reaches CSS. The fixture uses 12 groups × 8 items — enough to overflow a
+ * 70vh panel at every standard desktop resolution. / */
 import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import MegaMenu from '../MegaMenu';
 

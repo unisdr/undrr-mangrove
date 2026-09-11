@@ -1,23 +1,9 @@
-/**
- * Layer 2: Extract ScrollContainer props from a DOM container.
- *
- * Expected HTML:
- * <div data-mg-scroll-container
- *   data-height="300px"
- *   data-min-width="200px"
- *   data-item-width="250px"
- *   data-padding="16"
- *   data-show-arrows="true"
- *   data-step-size="300">
- *   <div class="mg-scroll__content">
- *     <div class="card">...</div>
- *     <div class="card">...</div>
- *   </div>
- * </div>
- *
- * @param {Element} container - DOM element with data attributes and server-rendered content
- * @returns {object} Props for the ScrollContainer component
- */
+/* Layer 2: Extract ScrollContainer props from a DOM container. Expected HTML: <div data-
+ * mg-scroll-container data-height="300px" data-min-width="200px" data-item-width="250px"
+ * data-padding="16" data-show-arrows="true" data-step-size="300"> <div class="mg-
+ * scroll__content"> <div class="card">...</div> <div class="card">...</div> </div> </div>
+ * @param {Element} container - DOM element with data attributes and server-rendered
+ * content @returns {object} Props for the ScrollContainer component / */
 export default function scrollContainerFromElement(container) {
   const { dataset } = container;
   const props = {

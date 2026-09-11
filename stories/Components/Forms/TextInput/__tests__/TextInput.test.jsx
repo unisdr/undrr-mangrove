@@ -4,8 +4,7 @@ import { axe } from 'jest-axe';
 import { TextInput } from '../TextInput';
 
 describe('TextInput', () => {
-  // --------------------------------------------------
-  // Rendering
+  // -------------------------------------------------- Rendering
   // --------------------------------------------------
 
   it('renders with a label', () => {
@@ -51,8 +50,7 @@ describe('TextInput', () => {
     expect(screen.queryByRole('alert')).toBeNull();
   });
 
-  // --------------------------------------------------
-  // States
+  // -------------------------------------------------- States
   // --------------------------------------------------
 
   it('renders as disabled', () => {
@@ -65,8 +63,7 @@ describe('TextInput', () => {
     expect(screen.getByLabelText(/Name/)).toBeRequired();
   });
 
-  // --------------------------------------------------
-  // Interactions
+  // -------------------------------------------------- Interactions
   // --------------------------------------------------
 
   it('calls onChange when typing', () => {
@@ -78,8 +75,7 @@ describe('TextInput', () => {
     expect(handleChange).toHaveBeenCalled();
   });
 
-  // --------------------------------------------------
-  // Fallbacks
+  // -------------------------------------------------- Fallbacks
   // --------------------------------------------------
 
   it('uses aria-label from placeholder when no label is provided', () => {
@@ -96,8 +92,7 @@ describe('TextInput', () => {
     expect(input).toHaveAttribute('maxlength', '50');
   });
 
-  // --------------------------------------------------
-  // Hidden label
+  // -------------------------------------------------- Hidden label
   // --------------------------------------------------
 
   it('visually hides label when hideLabel is true', () => {
@@ -107,8 +102,7 @@ describe('TextInput', () => {
     expect(label).toHaveTextContent('Search');
   });
 
-  // --------------------------------------------------
-  // Accessibility
+  // -------------------------------------------------- Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

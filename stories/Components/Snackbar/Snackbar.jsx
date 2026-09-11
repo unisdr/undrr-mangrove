@@ -2,16 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorIcon, WarningIcon, InfoIcon, SuccessIcon } from './SnackbarIcons';
 
-/**
- * snackbar component, should be used with react state to control the opened prop and the onClose callback
- *
- * @param {String} severity severity of the snackbar, can be error, warning, info, success, unspecified
- * @param {Boolean} opened boolean that determines if the snackbar is opened or not
- * @param {String} message text that is displayed in the snackbar
- * @param {Function} onClose on close callback that is triggered when the close button is clicked (or when the snackbar is closed)
- * @param {Number} openedMiliseconds time after opening before the snackbar automatically disappears (in milliseconds)
- * @returns Component that renders a snackbar based on opened, severity, message and onClose props
- */
+/* snackbar component, should be used with react state to control the opened prop and the
+ * onClose callback @param {String} severity severity of the snackbar, can be error,
+ * warning, info, success, unspecified @param {Boolean} opened boolean that determines if
+ * the snackbar is opened or not @param {String} message text that is displayed in the
+ * snackbar @param {Function} onClose on close callback that is triggered when the close
+ * button is clicked (or when the snackbar is closed) @param {Number} openedMiliseconds
+ * time after opening before the snackbar automatically disappears (in milliseconds)
+ * @returns Component that renders a snackbar based on opened, severity, message and
+ * onClose props / */
 export const DEFAULT_SNACKBAR_LABELS = {
   closeLabel: 'Close',
   closeAriaLabel: 'Close notification',

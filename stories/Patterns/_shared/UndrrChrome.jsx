@@ -6,11 +6,9 @@ import MegaMenu, {
 } from '../../Components/MegaMenu/MegaMenu';
 import { LABELS_AR } from '../../Components/MegaMenu/_labels';
 
-/**
- * The parent-site chrome every UNDRR page carries: the black brand bar and the
- * global navigation strip. Shared by the pattern examples so they all sit in
- * the same context a production page would.
- */
+/* The parent-site chrome every UNDRR page carries: the black brand bar and the global
+ * navigation strip. Shared by the pattern examples so they all sit in the same context a
+ * production page would. / */
 const MENUS = {
   english: [
     {

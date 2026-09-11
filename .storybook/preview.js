@@ -57,9 +57,9 @@ const getLangCode = (Story, context) => {
     return () => clearTimeout(loadEventTimer);
   }, [activeLang, context.globals.addonRtl]);
 
-  // The RTL addon writes canvas.dir during every render, including theme/args
-  // changes. Apply locale attributes after each render so it cannot reset an
-  // Arabic canvas to LTR. Keep the manual RTL toggle for other languages.
+  // The RTL addon writes canvas.dir during every render, including theme/args changes. Apply
+  // locale attributes after each render so it cannot reset an Arabic canvas to LTR. Keep the
+  // manual RTL toggle for other languages.
   React.useLayoutEffect(() => {
     const canvas = context.canvasElement;
     if (canvas) {

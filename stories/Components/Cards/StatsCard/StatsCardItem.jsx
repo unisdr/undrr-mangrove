@@ -3,15 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 
-/**
- * StatsCardItem Component
- *
- * Displays an individual statistic with optional icon, labels, description,
- * and link. Used as a child component within StatsCard.
- *
- * When a `link` prop is provided, the entire stat item becomes clickable
- * while still allowing inline links in the description to work independently.
- */
+/* StatsCardItem Component Displays an individual statistic with optional icon, labels,
+ * description, and link. Used as a child component within StatsCard. When a `link` prop is
+ * provided, the entire stat item becomes clickable while still allowing inline links in
+ * the description to work independently. / */
 export function StatsCardItem({
   icon,
   label,

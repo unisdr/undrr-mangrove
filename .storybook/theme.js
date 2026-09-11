@@ -1,11 +1,8 @@
 import { create } from 'storybook/theming';
 
-/**
- * Mangrove-branded Storybook theme
- *
- * Color values sourced from stories/assets/scss/_variables.scss
- * so the Storybook chrome matches the component library itself.
- */
+/* Mangrove-branded Storybook theme Color values sourced from
+ * stories/assets/scss/_variables.scss so the Storybook chrome matches the component
+ * library itself. / */
 export default create({
   base: 'light',
 

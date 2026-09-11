@@ -1,20 +1,11 @@
-/**
- * Extract MegaMenu props from a DOM container.
- *
- * MegaMenu is a complex-tier component: in most integrations (Drupal, Astro)
- * the `sections` prop comes from an API call or server-side tree builder, not
- * from static HTML. This fromElement covers the DOM-extractable portion —
- * timing props, logo props, and an optional inline JSON sections attribute for
- * static use cases. Consumer wrappers (Layer 3) typically override `sections`.
- *
- * @example
- * <div data-mg-mega-menu
- *   data-delay="300"
- *   data-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
- *   data-logo-alt="PreventionWeb"
- *   data-logo-href="/ar/">
- * </div>
- */
+/* Extract MegaMenu props from a DOM container. MegaMenu is a complex-tier component: in
+ * most integrations (Drupal, Astro) the `sections` prop comes from an API call or server-
+ * side tree builder, not from static HTML. This fromElement covers the DOM-extractable
+ * portion — timing props, logo props, and an optional inline JSON sections attribute for
+ * static use cases. Consumer wrappers (Layer 3) typically override `sections`. @example
+ * <div data-mg-mega-menu data-delay="300" data-logo-
+ * src="https://assets.undrr.org/logos/pw/pw-logo.svg" data-logo-alt="PreventionWeb" data-
+ * logo-href="/ar/"> </div> / */
 export default function megaMenuFromElement(container) {
   const { dataset } = container;
   const props = {

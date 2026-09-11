@@ -1,31 +1,21 @@
-// Component data: curated metadata, HTML examples, and flags for the AI manifest.
-//
-// Each entry is keyed by the Storybook component ID (derived from the story title:
-// 'Components/Cards/Vertical card' → 'components-cards-vertical-card').
-//
-// Entry schema:
-//   description      (string, required)  — What the component does. Fallback when
-//                     Storybook/react-docgen has no description.
-//   cssClasses       (string[], optional) — BEM class names for the component.
-//   examples         (array, optional)    — [{ name: string, html: string }] curated HTML.
-//                     Only needed for components that can't auto-render in Node.js.
-//   doNotModify      (string, optional)   — Warning text for branding-critical components.
-//   vanillaHtmlEmbed (object, optional)   — Embed instructions for syndication widgets.
-//
-// Auto-rendered entry (minimal):
-//   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons.' },
-//
-// Curated entry (when auto-render is not possible):
-//   'components-table': {
-//     description: 'Styled HTML table with responsive options.',
-//     cssClasses: ['mg-table', 'mg-table--striped'],
-//     examples: [{ name: 'Default table', html: '<table class="mg-table">...</table>' }],
-//   },
-//
-// Components not listed in REQUIRES_REACT are treated as vanilla HTML by default.
+// Component data: curated metadata, HTML examples, and flags for the AI manifest. Each
+// entry is keyed by the Storybook component ID (derived from the story title:
+// 'Components/Cards/Vertical card' → 'components-cards-vertical-card'). Entry schema:
+// description (string, required) — What the component does. Fallback when Storybook/react-
+// docgen has no description. cssClasses (string[], optional) — BEM class names for the
+// component. examples (array, optional) — [{ name: string, html: string }] curated HTML.
+// Only needed for components that can't auto-render in Node.js. doNotModify (string,
+// optional) — Warning text for branding-critical components. vanillaHtmlEmbed (object,
+// optional) — Embed instructions for syndication widgets. Auto-rendered entry (minimal):
+// 'components-buttons-buttons': { description: 'Primary and secondary CTA buttons.' },
+// Curated entry (when auto-render is not possible): 'components-table': { description:
+// 'Styled HTML table with responsive options.', cssClasses: ['mg-table', 'mg-table--
+// striped'], examples: [{ name: 'Default table', html: '<table class="mg-
+// table">...</table>' }], }, Components not listed in REQUIRES_REACT are treated as
+// vanilla HTML by default.
 
-// ---------------------------------------------------------------------------
-// React-only components (everything else is vanilla HTML by default)
+// --------------------------------------------------------------------------- React-only
+// components (everything else is vanilla HTML by default)
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
@@ -86,8 +76,8 @@ export const REQUIRES_REACT = {
     'Tab translation label sets for ES, FR, JA, ZH, AR, RU. Pass filterPlaceholder prop.',
 };
 
-// ---------------------------------------------------------------------------
-// Curated component data (descriptions, HTML examples, flags)
+// --------------------------------------------------------------------------- Curated
+// component data (descriptions, HTML examples, flags)
 // ---------------------------------------------------------------------------
 
 export default {
@@ -460,10 +450,9 @@ export default {
       },
       {
         name: 'Inside a table',
-        // The empty state goes in one td with colspan so the column headers
-        // survive for screen readers. role="status" belongs here only because
-        // the emptiness is the result of a filter the user just applied; a
-        // table that renders empty on first load must omit it.
+        // The empty state goes in one td with colspan so the column headers survive for screen
+        // readers. role="status" belongs here only because the emptiness is the result of a filter
+        // the user just applied; a table that renders empty on first load must omit it.
         html: '<table class="mg-table">\n  <caption class="mg-u-sr-only">Disaster records</caption>\n  <thead>\n    <tr>\n      <th scope="col">Record</th>\n      <th scope="col">Updated</th>\n      <th scope="col">Status</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td class="mg-empty-state-cell" colspan="3">\n        <div class="mg-empty-state" role="status">\n          <p class="mg-empty-state__title">No records match your filters</p>\n          <p class="mg-empty-state__description">\n            Clear the country filter to see all records.\n          </p>\n        </div>\n      </td>\n    </tr>\n  </tbody>\n</table>',
       },
     ],
@@ -720,9 +709,9 @@ For inline \`<code>\` snippets in prose, use the bare HTML element — the globa
       'mg-code-block', // <figure> wrapper with filename header
       'mg-code--block', // standalone block variant (e.g. ShareButtons URL display)
       // Prism.js token classes (styled by Mangrove, emitted by Prism/react-syntax-highlighter):
-      // .token.comment .token.keyword .token.string .token.number .token.function
-      // .token.class-name .token.tag .token.attr-name .token.attr-value
-      // .token.operator .token.punctuation .token.boolean
+      // .token.comment .token.keyword .token.string .token.number .token.function .token.class-
+      // name .token.tag .token.attr-name .token.attr-value .token.operator .token.punctuation
+      // .token.boolean
     ],
     examples: [
       {

@@ -15,8 +15,7 @@ describe('Snackbar', () => {
     defaultProps.onClose.mockClear();
   });
 
-  // --------------------------------------------------
-  // Rendering
+  // -------------------------------------------------- Rendering
   // --------------------------------------------------
 
   it('renders the message when opened', () => {
@@ -43,8 +42,7 @@ describe('Snackbar', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Severity variants
+  // -------------------------------------------------- Severity variants
   // --------------------------------------------------
 
   it.each(['error', 'warning', 'info', 'success'])(
@@ -64,8 +62,7 @@ describe('Snackbar', () => {
     expect(screen.getByText('error notification:')).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Close behavior
+  // -------------------------------------------------- Close behavior
   // --------------------------------------------------
 
   it('calls onClose when close button is clicked', () => {
@@ -86,8 +83,7 @@ describe('Snackbar', () => {
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
 
-  // --------------------------------------------------
-  // Auto-dismiss
+  // -------------------------------------------------- Auto-dismiss
   // --------------------------------------------------
 
   it('auto-dismisses after openedMiliseconds', () => {
@@ -120,8 +116,7 @@ describe('Snackbar', () => {
     jest.useRealTimers();
   });
 
-  // --------------------------------------------------
-  // Open/close state classes
+  // -------------------------------------------------- Open/close state classes
   // --------------------------------------------------
 
   it('applies open class when opened is true', () => {
@@ -138,8 +133,7 @@ describe('Snackbar', () => {
     ).not.toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Accessibility
+  // -------------------------------------------------- Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {
