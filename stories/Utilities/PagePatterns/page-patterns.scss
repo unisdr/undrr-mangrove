@@ -1,15 +1,9 @@
-// Page composition: the reading column.
-// Distributed, because a consumer building one of these pages needs them and
-// none is obvious enough to expect them to rewrite. Anything thinner than this
-// — a margin, a font size — stays in the demo stylesheet rather than becoming
-// public API nobody can rename later.
-// Everything here is a custom property rather than a SCSS variable, so the file
-// also compiles standalone if it is ever imported directly from a story.
-// mg-container's gutter is 10px at every width. That is fine for content
-// inside a card, but these patterns put text and navigation directly against
-// it, and on a phone the result sits almost on the screen edge. Widen it
-// where the viewport is narrow; above that the container's own max-widths
-// take over and the gutter stops being what limits the line.
+// Reading-page layout tokens and placement rules.
+
+:root {
+  // Shared width for the article+rail reading layout.
+  --mg-reading-with-contents-width: calc(46rem + var(--mg-spacing-300) + 16rem);
+}
 
 .mg-reading {
   display: grid;
@@ -26,13 +20,11 @@
   scroll-margin-block-start: var(--mg-spacing-200);
 }
 
-// On this page belongs in a right-hand sidebar wherever there is room for one;
-// it only stacks above the article on narrow viewports.
+// Sidebar-on-wide, stacked-on-narrow placement for table of contents.
 @media (width >= 48rem) {
+  // Prevent unused horizontal space between the text measure and side rail.
   .mg-reading--with-contents {
-    grid-template-columns: minmax(0, 1fr) 16rem;
-    column-gap: var(--mg-spacing-300);
-    align-items: start;
+    max-inline-size: var(--mg-reading-with-contents-width);
   }
 
   // TableOfContents renders its own wrapper div around the section.

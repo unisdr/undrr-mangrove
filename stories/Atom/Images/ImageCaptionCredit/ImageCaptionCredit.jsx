@@ -10,8 +10,8 @@ export const Images = ({
   label,
   paragraph,
   size: sizeProp = 'wide',
-  caption = 'true',
-  credit = 'true',
+  caption = true,
+  credit = true,
 }) => {
   const sizeModifiers = {
     medium: 'mg-image-figcaption--medium',
@@ -32,9 +32,7 @@ export const Images = ({
         {sizeProp === 'portrait' && <img src={imagesm} alt={alt} />}
       </div>
 
-      {caption === 'false' && credit === 'false' ? (
-        <></>
-      ) : (
+      {(caption || credit) && (
         <Imagecaption
           label={label}
           paragraph={paragraph}

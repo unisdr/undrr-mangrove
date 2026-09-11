@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 export function Reading({ contents, children }) {
   return (
     <div
-      className={`mg-reading${contents ? ' mg-reading--with-contents' : ''}`}
+      className={`mg-reading${contents ? ' mg-reading--with-contents mg-grid mg-grid--article' : ''}`}
     >
       {contents}
       <div className="mg-reading__article">{children}</div>
@@ -17,7 +17,11 @@ export function Reading({ contents, children }) {
 }
 
 Reading.propTypes = {
-  /** A contents element. When present it sits in a sticky sidebar above 48rem. */
+  /**
+   * A contents element. When present it sits in a sticky sidebar above 48rem,
+   * using `mg-grid`'s `--article` variant (an asymmetric flexible/fixed-width
+   * grid) for the split.
+   */
   contents: PropTypes.node,
   children: PropTypes.node,
 };

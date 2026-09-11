@@ -133,10 +133,11 @@ export default {
 
   'design-decisions-grid-layout': {
     description:
-      'Responsive CSS grid system. 1-12 column layouts with column and row spanning, plus a single-row auto-fit fallback. Flexbox fallback for older browsers.',
+      'Responsive CSS grid system. 1-12 equal-fraction column layouts with column and row spanning, plus a single-row auto-fit fallback, for card-style grids. mg-grid--article is a different shape: an asymmetric flexible-column-plus-fixed-rail split (used by the mg-reading--with-contents reading grid), not an equal-fraction layout. Flexbox fallback for older browsers.',
     cssClasses: [
       'mg-grid',
       'mg-grid--auto-fit',
+      'mg-grid--article',
       'mg-grid__col-1',
       'mg-grid__col-2',
       'mg-grid__col-3',
@@ -1119,7 +1120,7 @@ npm run build</code></pre>
   // --- Page templates ---
   'components-reading-column': {
     description:
-      'Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that.',
+      'Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid\'s --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup.',
     cssClasses: [
       'mg-reading',
       'mg-reading--with-contents',
@@ -1130,6 +1131,11 @@ npm run build</code></pre>
   'patterns-content-hub': {
     description:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+  },
+
+  'patterns-article-story': {
+    description:
+      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
   'patterns-landing-pages': {

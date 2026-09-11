@@ -147,11 +147,7 @@ g-grid {
     }
   }
 
-  // Extended column counts (7–12). The numbered classes above stop at 6, so a
-  // component that derives its column class from a dynamic item count (e.g.
-  // StatsCard) would otherwise match no rule past 6 and collapse to a single
-  // stacked column. Modern grid only — the flex/IE11 path leaves items at
-  // `flex: 1`, which already distributes them across one row.
+  // Support dynamic column counts beyond 6 in modern grid layouts.
   @media (min-width: $mg-breakpoint-tablet) {
     @for $i from 7 through 12 {
       .mg-grid__col-#{$i} {
@@ -168,13 +164,23 @@ g-grid {
     }
   }
 
-  // Single-row fallback for an arbitrary item count. Distributes every child
-  // across one row of equal tracks without needing a dedicated class per count,
-  // for grids with more items than the numbered column classes cover.
+  // Equal-width fallback when item count has no dedicated column class.
   @media (min-width: $mg-breakpoint-tablet) {
     .mg-grid--auto-fit {
       grid-auto-flow: column;
       grid-auto-columns: minmax(0, 1fr);
+    }
+  }
+
+  // Reading layout variant: flexible content column plus fixed rail.
+  $mg-grid-article-breakpoint: 48rem;
+  $mg-grid-article-rail-width: 16rem;
+
+  @media (min-width: $mg-grid-article-breakpoint) {
+    .mg-grid--article {
+      grid-template-columns: minmax(0, 1fr) $mg-grid-article-rail-width;
+      column-gap: var(--mg-spacing-300);
+      align-items: start;
     }
   }
 

@@ -403,7 +403,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                   </p>
                 </div>
               </div>
-              <div className="mg-reading mg-reading--with-contents">
+              <div className="mg-reading mg-reading--with-contents mg-grid mg-grid--article">
                 <TableOfContents
                   key={locale}
                   title={text.onPage}

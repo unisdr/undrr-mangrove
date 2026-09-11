@@ -76,8 +76,7 @@
       padding: clamp(mg-rem(32), 6vw, mg-rem(80));
     }
 
-    .mg-hero__title,
-    .mg-hero__title .text-xxl {
+    .mg-hero__title {
       font-size: clamp(mg-rem(38), 6vw, mg-rem(80));
       letter-spacing: -0.045em;
       line-height: 0.98;
@@ -175,20 +174,10 @@
     }
   }
 
-  // Link styles (anchor).
-  // Scoped to the hero's own text regions rather than every descendant. As a
-  // bare `.mg-hero a` this reached into `__media`, whose `type: "html"` slot
-  // takes author-supplied markup: any anchor an author placed there was forced
-  // white regardless of what it sat on. Same over-reach as a descendant
-  // `:lang()` rule — the pseudo-class matched the root, so the declaration
-  // applied far past the element it was written for.
-  // --mg-hero-link-color lets a surface that is not a dark photograph retarget
-  // these links instead of fighting a hardcoded value.
+  // Link styling for hero text regions (not arbitrary author-provided media HTML).
   --mg-hero-link-color: var(--mg-color-neutral-0);
 
-  // __content carries the label, meta, summary and CTAs in both layouts, and
-  // __overlay wraps it in the background layout. __media is deliberately not
-  // listed: that subtree is the author's.
+  // Keep link color scoping out of the media slot.
   &__overlay,
   &__content {
     a,
@@ -198,84 +187,25 @@
     }
   }
 
-  // Title styles (for both <h1> and <a>)
+  // Hero title typography.
   &__title {
     color: rgb(var(--mg-color-hero-title));
     margin-bottom: var(--mg-spacing-25);
     display: inline-block;
     font-family: var(--mg-font-family-display);
     font-weight: bold;
-    font-size: $mg-font-size-600;
+    font-size: $mg-font-size-800;
     line-height: 1.2;
-    max-width: 18ch;
     text-wrap: balance;
+
+    @media (max-width: $mg-breakpoint-mobile) {
+      font-size: $mg-font-size-600;
+    }
 
     a,
     a:hover,
     a:visited {
       color: rgb(var(--mg-color-hero-title));
-    }
-
-    // General text styles for larger text
-    .text-xxl {
-      font-size: $mg-font-size-800;
-
-      @media (max-width: $mg-breakpoint-mobile) {
-        font-size: $mg-font-size-600;
-      }
-    }
-
-    .text-xl {
-      @include mg-typography("large");
-
-      @media (max-width: $mg-breakpoint-mobile) {
-        @include mg-typography("medium");
-      }
-    }
-
-    // Specific styles for the <h1> element (when there's no link)
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      color: rgb(var(--mg-color-hero-title));
-      font-weight: bold;
-      font-size: $mg-font-size-600;
-
-      // Match the text-xxl and text-xl styling
-      &.text-xxl {
-        font-size: $mg-font-size-800;
-
-        @media (max-width: $mg-breakpoint-mobile) {
-          font-size: $mg-font-size-600;
-        }
-      }
-
-      &.text-xl {
-        @include mg-typography("large");
-
-        @media (max-width: $mg-breakpoint-mobile) {
-          @include mg-typography("medium");
-        }
-      }
-    }
-
-    // Preserve heading typography when CMS content is wrapped in the inline
-    // span used by HeroTitle; host-page span rules must not shrink the title.
-    h1 > span,
-    h2 > span,
-    h3 > span,
-    h4 > span,
-    h5 > span,
-    h6 > span,
-    a > span {
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      letter-spacing: inherit;
-      line-height: inherit;
     }
   }
 
@@ -438,12 +368,14 @@ $variant-colour-props: (
     outline-offset: 2px;
   }
 
+  // Split grid inherits width and centering from its paired mg-container.
   .mg-hero__split-grid {
     display: grid;
     grid-template-columns: 2fr 1fr; // default 2/3
     align-items: stretch;
-    max-width: $mg-breakpoint-desktop;
-    margin: 0 auto;
+
+    // Keep an explicit inter-column gap.
+    column-gap: var(--mg-spacing-200);
 
     @media (max-width: $mg-breakpoint-tablet) {
       grid-template-columns: 1fr;
@@ -466,10 +398,15 @@ $variant-colour-props: (
     }
   }
 
+  // Collapse to one column when no media is rendered.
+  .mg-hero__split-grid.mg-hero__split-grid--no-media {
+    grid-template-columns: 1fr;
+  }
+
   .mg-hero__content {
     display: grid;
     row-gap: mg-rem(10);
-    padding: var(--mg-spacing-200) var(--mg-spacing-100);
+    padding-block: var(--mg-spacing-200);
     align-content: center;
   }
 
@@ -494,9 +431,7 @@ $variant-colour-props: (
       width: 100%;
     }
 
-    // First-class rendering for a <figure> + <figcaption> composition inside
-    // the slot (image with an attribution overlay). Consumers get this for free
-    // by dropping in semantic markup.
+    // Support figure + figcaption overlays in the HTML media slot.
     > figure {
       position: relative;
       margin: 0;

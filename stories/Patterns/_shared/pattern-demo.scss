@@ -1,13 +1,5 @@
-// Demo scaffolding for the pattern stories. Not distributed, and prefixed
-// mg-demo- so nothing here reads as public API.
-// Four declarations, each of which the library has no way to express:
-//   - a measure, because there is no max-width utility for running text
-//   - the skip link's focus reveal, because there is no skip link (#1117)
-//   - a mobile gutter, because mg-container's is 10px at every width
-//   - band padding, because there is no spacing utility
-// Inter-element spacing and typography are the library's: mg-container--spacer
-// handles the rhythm between sections, and the base scale plus mg-u-font-size
-// handle the type. Nothing here overrides either.
+// Demo-only story scaffolding (`mg-demo-*`), imported directly by pattern stories.
+@import '../../assets/scss/variables';
 
 .mg-demo-lede,
 .mg-demo-intro {
@@ -20,13 +12,36 @@
   }
 }
 
-// Vertical padding for a full-width band. mg-container-full-width supplies the
-// bleed and a background utility the colour; Mangrove has no spacing utility,
-// so the padding is the one thing left to declare.
+// Vertical padding for full-width demo bands.
 .mg-demo-band {
   padding-block: var(--mg-spacing-300);
 }
 
 .mg-demo-band--feature {
   padding-block: var(--mg-spacing-400);
+}
+
+// ArticleStory's demo header image.
+.mg-demo-article-image {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+// Capped at the same width as the reading grid below it.
+.mg-demo-article-media--compact {
+  max-inline-size: var(--mg-reading-with-contents-width);
+}
+
+.mg-demo-article-image + .mg-image-caption {
+  margin-block-start: var(--mg-spacing-100);
+}
+
+// Keep intro width aligned with the reading layout width token.
+.mg-demo-article-header .mg-demo-intro {
+  max-inline-size: var(--mg-reading-with-contents-width);
+}
+
+// Align split-hero grid width with the reading layout width token.
+.mg-demo-article-header .mg-hero__split-grid {
+  max-inline-size: var(--mg-reading-with-contents-width);
 }

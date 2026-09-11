@@ -1,0 +1,69 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './ArticleStory.stories';
+
+<Meta of={Stories} />
+
+# Article story
+
+> **Note:** Reference design for [undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+A full article-page pattern (not just a header): headline, hero image, share,
+body, related content, recommendations, taxonomy tags and feedback. It is a
+reference implementation for comparing hero treatments in
+[undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060).
+
+- **Header prominence** (`imageProminence`): `large` (full bleed), `compact`
+  (reading-column width), `split` (text and image side-by-side).
+- **Header image source** (`heroImage`): `main`, `alternate`, or `none`,
+  independent of teaser/social image choices.
+
+Fixture content is based on a real undrr.org story:
+[Towards knowledge, action and resolve to address non-economic losses in the Pacific Indigenous Communities Nadi, Fiji](https://www.undrr.org/news/towards-knowledge-action-and-resolve-address-non-economic-losses-pacific-indigenous).
+Metadata and media are reproduced from a saved copy; body text is placeholder
+content sized for realistic reading-column evaluation.
+
+## Large, prominent image
+
+<Canvas of={Stories.LargeImage} />
+
+<Controls of={Stories.LargeImage} />
+
+## Compact image in the reading column
+
+<Canvas of={Stories.CompactImage} />
+
+Image aligns with headline/body width rather than full bleed.
+
+## No image on the article page
+
+<Canvas of={Stories.NoHeroImage} />
+
+Article renders without a hero image; teaser/social image selection stays separate.
+
+## A different image than the teaser
+
+<Canvas of={Stories.AlternateHeroImage} />
+
+Demonstrates decoupling from teaser/social image usage.
+
+## Split hero (text and image side by side)
+
+<Canvas of={Stories.SplitHero} />
+
+Alternative two-column hero using the existing `Hero` component
+(`layout="split"` and `split="2/3"`). Omitting `data[0].media` in `heroImage="none"`
+falls back to a text-only band.
+
+## Building one
+
+Composes existing pieces (`Hero`, `TableOfContents`, `ShareButtons`,
+`VerticalCard`, `Imagecaption`, `UserFeedback`, reading/grid utilities) plus
+story-only `mg-demo-article-*` sizing classes. "Editors' recommendations"
+remains plain markup.
+
+## Changelog
+
+- **1.0** — 2026-09-10: Initial article-story reference design with
+  `imageProminence` and `heroImage` controls in English and Arabic, then
+  iterated with split-hero support and shared-style extraction.
+  ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))
