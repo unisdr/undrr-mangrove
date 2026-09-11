@@ -645,8 +645,27 @@ function parseJsDocParams(jsDocTags) {
   return params;
 }
 
-/** Get the best description for a component, with curated fallback. */
-function getDescription(component, data) {
+/**
+ * Get the best description for a component, with curated fallback.
+ *
+ * For most entries JSDoc wins over component-data.js: the source-level doc
+ * comment was written to describe that specific export and is normally more
+ * accurate/current than a hand-maintained manifest entry, which is why this
+ * order is the default rather than something to "fix" globally.
+ *
+ * stories/Patterns/* is the deliberate exception. Each pattern's exported
+ * function already carries a JSDoc comment written for Storybook's docs page
+ * (describing the demo, not the manifest), so under the default order a
+ * curated component-data.js description for a pattern is silently never
+ * used — see undrr-mangrove#1129. A pattern also isn't a reusable export the
+ * way a Component/Atom/Molecule is: it exists to demonstrate a composition,
+ * so the manifest-facing description is worth curating deliberately rather
+ * than inheriting Storybook's docs-page copy. Curated data therefore wins
+ * for `patterns-*` ids when present, before JSDoc is even considered.
+ */
+function getDescription(id, component, data) {
+  if (id.startsWith('patterns-') && data?.description) return data.description;
+
   if (component.description) return component.description;
 
   if (component.reactDocgen?.description) {
@@ -1280,7 +1299,7 @@ async function main() {
     const data = curatedData[id];
     const isReact = REQUIRES_REACT[id];
     const isVanilla = !isReact;
-    const description = getDescription(component, data);
+    const description = getDescription(id, component, data);
 
     // --- Validated import statement ---
     // Storybook's react-docgen auto-generates import statements for every
@@ -1621,7 +1640,16 @@ Icons:
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
 - stories/Utilities/     CSS utilities, loaders, show/more
+- stories/Patterns/      Full-page compositions (ContentHub, LandingPages) — demonstrate assembling components into a page, not reusable exports themselves. See "Composing a page pattern" below.
 - stories/assets/scss/   Theme stylesheets and design tokens
+
+### Composing a page pattern
+
+stories/Patterns/* (ContentHub, LandingPages, and future additions) are not components: nothing there is exported from the npm package or hydrated. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
+
+- **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns only — every track is \`1fr\`. Use it for repeating card grids. It cannot express an asymmetric split (a wide column next to a narrow one); do not reach for it for rail/article or caption/credit shapes.
+- **The reading grid** (\`stories/Utilities/PagePatterns/page-patterns.scss\`, classes \`mg-reading\`, \`mg-reading--with-contents\`): the asymmetric rail/article split for a long-form page — a \`minmax(0, 1fr) 16rem\` two-column grid with the contents rail sticky on the right from 48rem up, stacking above the article below that. Deliberately not built on mg-grid, which cannot express this asymmetry. Use it for reading-column layouts with an optional table-of-contents rail.
+- **Plain CSS grid**, written locally in a component's own stylesheet: for a one-off asymmetric shape that belongs to a single component and isn't meant to be reused elsewhere — e.g. Hero's \`.mg-hero__split-grid\` (\`2fr 1fr\` split for \`layout="split"\`) or Card's horizontal-card grid with explicit \`grid-column\`/\`grid-row\` placement. Use this when the shape is specific to one component, not a page-level layout primitive; don't promote it to a shared class unless a second consumer actually needs it.
 `;
 
   fs.writeFileSync(llmsTxtPath, llmsTxt);
