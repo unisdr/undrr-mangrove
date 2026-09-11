@@ -21,24 +21,25 @@ const generateCacheBuster = () => {
 /**
  * Dynamically loads a CSS file
  * @param {string} href - The URL of the CSS file
+ * @param {Function} debugLog - Optional debug logging function
  * @returns {Promise} - Promise that resolves when the CSS is loaded
  */
-const loadCSS = href => {
+const loadCSS = (href, debugLog) => {
   return new Promise((resolve, reject) => {
     // Check if CSS is already loaded
     const existingLink = document.querySelector(`link[href="${href}"]`);
     if (existingLink) {
-      console.log(`CSS already loaded: ${href}`);
+      debugLog?.(`CSS already loaded: ${href}`);
       resolve();
       return;
     }
 
-    console.log(`Loading CSS: ${href}`);
+    debugLog?.(`Loading CSS: ${href}`);
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = href;
     link.onload = () => {
-      console.log(`CSS loaded successfully: ${href}`);
+      debugLog?.(`CSS loaded successfully: ${href}`);
       resolve();
     };
     link.onerror = error => {
@@ -52,24 +53,25 @@ const loadCSS = href => {
 /**
  * Dynamically loads a JavaScript file
  * @param {string} src - The URL of the JavaScript file
+ * @param {Function} debugLog - Optional debug logging function
  * @returns {Promise} - Promise that resolves when the script is loaded
  */
-const loadScript = src => {
+const loadScript = (src, debugLog) => {
   return new Promise((resolve, reject) => {
     // Check if script is already loaded
     const existingScript = document.querySelector(`script[src="${src}"]`);
     if (existingScript) {
-      console.log(`Script already loaded: ${src}`);
+      debugLog?.(`Script already loaded: ${src}`);
       resolve();
       return;
     }
 
-    console.log(`Loading script: ${src}`);
+    debugLog?.(`Loading script: ${src}`);
     const script = document.createElement('script');
     script.src = src;
     script.async = true;
     script.onload = () => {
-      console.log(`Script loaded successfully: ${src}`);
+      debugLog?.(`Script loaded successfully: ${src}`);
       resolve();
     };
     script.onerror = error => {
@@ -105,38 +107,29 @@ const CookieConsentBanner = ({
     const COOKIECONSENT_JS_URL = `${cdnBaseUrl}/cookieconsent.umd.js?cacheBuster=${CACHE_BUSTER}`;
     const COOKIECONSENT_CONFIG_URL = `${cdnBaseUrl}/cookieconsent-undrr.js?cacheBuster=${CACHE_BUSTER}`;
 
-    // Debug toggle: Suppress logs unless debug prop is true
-    const originalLog = console.log;
-    const originalWarn = console.warn;
-    if (!debug) {
-      console.log = () => {};
-      console.warn = () => {};
-    }
+    // Local debug helpers gated by debug prop
+    const log = debug ? console.log : () => {};
+    const warn = debug ? console.warn : () => {};
 
     const loadFallbackConfig = async () => {
-      console.warn('Loading local fallback configuration');
+      warn('Loading local fallback configuration');
       try {
         // Ensure CSS and core library are loaded
-        await loadCSS(COOKIECONSENT_CSS_URL);
-        await loadScript(COOKIECONSENT_JS_URL);
+        await loadCSS(COOKIECONSENT_CSS_URL, log);
+        await loadScript(COOKIECONSENT_JS_URL, log);
 
         const { default: fallbackConfig } =
           await import('./cookieconsent-config.js');
-        console.log('Successfully loaded local fallback configuration');
+        log('Successfully loaded local fallback configuration');
         if (
           window.CookieConsent &&
           typeof window.CookieConsent.run === 'function'
         ) {
           window.CookieConsent.run(fallbackConfig);
-          console.log(
-            'Cookie Banner initialized with fallback config successfully'
-          );
+          log('Cookie Banner initialized with fallback config successfully');
         } else {
           console.error('CookieConsent library not available in fallback path');
         }
-        console.log(
-          'Cookie Banner initialized with fallback config successfully'
-        );
       } catch (fallbackError) {
         console.error('Failed to load local fallback config:', fallbackError);
         // Ultimate fallback - minimal config
@@ -169,132 +162,23 @@ const CookieConsentBanner = ({
           },
         };
         window.CookieConsent.run(minimalConfig);
-        console.log('Cookie Banner initialized with minimal fallback config');
+        log('Cookie Banner initialized with minimal fallback config');
       }
     };
 
     const initializeCookieBanner = async () => {
       try {
         // Load CSS first
-        await loadCSS(COOKIECONSENT_CSS_URL);
+        await loadCSS(COOKIECONSENT_CSS_URL, log);
 
         // Load the main cookieconsent library
-        await loadScript(COOKIECONSENT_JS_URL);
+        await loadScript(COOKIECONSENT_JS_URL, log);
 
         // Load the UNDRR configuration
-        await loadScript(COOKIECONSENT_CONFIG_URL);
+        await loadScript(COOKIECONSENT_CONFIG_URL, log);
 
-        // Also fetch and examine the script content to understand what it does
-        try {
-          const response = await fetch(COOKIECONSENT_CONFIG_URL);
-          const scriptContent = await response.text();
-          console.log('UNDRR script full content:', scriptContent);
-          console.log(
-            'UNDRR script contains "config":',
-            scriptContent.includes('config')
-          );
-          console.log(
-            'UNDRR script contains "window":',
-            scriptContent.includes('window')
-          );
-          console.log(
-            'UNDRR script contains global assignments:',
-            scriptContent.match(/window\.\w+\s*=/g) || 'none found'
-          );
-          console.log(
-            'UNDRR script function declarations:',
-            scriptContent.match(/function\s+\w+/g) || 'none found'
-          );
-          console.log(
-            'UNDRR script window function assignments:',
-            scriptContent.match(/window\.\w+\s*=\s*function/g) || 'none found'
-          );
-        } catch (fetchError) {
-          console.warn(
-            'Could not fetch script content for analysis:',
-            fetchError
-          );
-        }
-
-        // Check if the UNDRR script has exposed any initialization functions
-        console.log('UNDRR script functions available:', {
-          undrrInit: typeof window.undrrInit,
-          initUndrrCookies: typeof window.initUndrrCookies,
-          loadUndrrConfig: typeof window.loadUndrrConfig,
-          undrrCookieInit: typeof window.undrrCookieInit,
-          // Check for functions containing 'undrr' or 'cookie'
-          undrrFunctions: Object.keys(window).filter(
-            key =>
-              typeof window[key] === 'function' &&
-              (key.toLowerCase().includes('undrr') ||
-                key.toLowerCase().includes('cookie'))
-          ),
-        });
-
-        // Wait a bit for scripts to be fully available and for UNDRR config to initialize
+        // Wait a bit for scripts to be fully available
         await new Promise(resolve => setTimeout(resolve, 300));
-
-        // Debug: Check what globals the UNDRR script might have set
-        const possibleConfigKeys = Object.keys(window).filter(
-          key =>
-            key.toLowerCase().includes('cookie') ||
-            key.toLowerCase().includes('undrr') ||
-            key.toLowerCase().includes('config')
-        );
-
-        console.log('Window globals after UNDRR script load:', {
-          undrr_cookieconsent_config: window.undrr_cookieconsent_config,
-          cookieConsentConfig: window.cookieConsentConfig,
-          undrrConfig: window.undrrConfig,
-          CookieConsentConfig: window.CookieConsentConfig,
-          possibleConfigsCount: possibleConfigKeys.length,
-          possibleConfigKeys: possibleConfigKeys,
-          possibleConfigValues: possibleConfigKeys.reduce((acc, key) => {
-            acc[key] = {
-              type: typeof window[key],
-              value: window[key],
-              isObject: typeof window[key] === 'object' && window[key] !== null,
-              hasKeys:
-                typeof window[key] === 'object' && window[key] !== null
-                  ? Object.keys(window[key]).length
-                  : 0,
-            };
-            return acc;
-          }, {}),
-        });
-
-        // Check if UNDRR config is available, if not wait a bit more
-        if (typeof window.undrr_cookieconsent_config === 'undefined') {
-          console.log('UNDRR config not ready, waiting additional time...');
-          await new Promise(resolve => setTimeout(resolve, 500));
-
-          // Debug: Check again after additional wait
-          const laterPossibleConfigKeys = Object.keys(window).filter(
-            key =>
-              key.toLowerCase().includes('cookie') ||
-              key.toLowerCase().includes('undrr') ||
-              key.toLowerCase().includes('config')
-          );
-
-          console.log('Window globals after additional wait:', {
-            undrr_cookieconsent_config: window.undrr_cookieconsent_config,
-            possibleConfigsCount: laterPossibleConfigKeys.length,
-            possibleConfigKeys: laterPossibleConfigKeys,
-            possibleConfigValues: laterPossibleConfigKeys.reduce((acc, key) => {
-              acc[key] = {
-                type: typeof window[key],
-                value: window[key],
-                isObject:
-                  typeof window[key] === 'object' && window[key] !== null,
-                hasKeys:
-                  typeof window[key] === 'object' && window[key] !== null
-                    ? Object.keys(window[key]).length
-                    : 0,
-              };
-              return acc;
-            }, {}),
-          });
-        }
 
         // Initialize the cookie banner
         if (
@@ -307,12 +191,10 @@ const CookieConsentBanner = ({
             typeof customConfig === 'object' &&
             Object.keys(customConfig).length > 0
           ) {
-            console.log('Using custom configuration provided via props');
+            log('Using custom configuration provided via props');
             try {
               window.CookieConsent.run(customConfig);
-              console.log(
-                'Cookie Banner initialized with custom config successfully'
-              );
+              log('Cookie Banner initialized with custom config successfully');
             } catch (configError) {
               console.error(
                 'Failed to initialize with custom config:',
@@ -323,12 +205,10 @@ const CookieConsentBanner = ({
           } else {
             // Check if UNDRR script has its own initialization function
             if (typeof window.initializeCookieBanner === 'function') {
-              console.log("Using UNDRR script's own initialization function");
+              log("Using UNDRR script's own initialization function");
               try {
                 await window.initializeCookieBanner();
-                console.log(
-                  'UNDRR Cookie Banner initialized via UNDRR script successfully'
-                );
+                log('UNDRR Cookie Banner initialized via UNDRR script successfully');
               } catch (undrrError) {
                 console.error(
                   'UNDRR initializeCookieBanner failed:',
@@ -338,7 +218,7 @@ const CookieConsentBanner = ({
                 await loadFallbackConfig();
               }
             } else {
-              console.log(
+              log(
                 'UNDRR initializeCookieBanner not available, using fallback config'
               );
               await loadFallbackConfig();
@@ -355,17 +235,13 @@ const CookieConsentBanner = ({
     };
 
     if (forceFallback) {
-      console.warn('Force fallback mode enabled, skipping CDN initialization');
+      warn('Force fallback mode enabled, skipping CDN initialization');
       loadFallbackConfig();
     } else {
       initializeCookieBanner();
     }
 
     return () => {
-      // Restore original console methods on cleanup
-      console.log = originalLog;
-      console.warn = originalWarn;
-
       // Cleanup CookieConsent banner when component unmounts
       if (window.CookieConsent) {
         try {

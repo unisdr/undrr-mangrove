@@ -236,7 +236,7 @@ export const WithCallback = {
     showDescription: true,
     enableKeyboard: true,
     onMediaChange: (index, item) => {
-      console.log('Media changed:', index, item.title);
+      // Callback fires when media changes; use for analytics or state updates
     },
   },
   name: 'With onChange Callback',

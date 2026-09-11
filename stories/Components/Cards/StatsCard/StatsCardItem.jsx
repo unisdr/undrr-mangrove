@@ -1,4 +1,3 @@
-/* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
@@ -57,6 +56,7 @@ export function StatsCardItem({
         <strong className={`${baseClass}__bottom-label`}>{bottomLabel}</strong>
       )}
       {summaryText && (
+        // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
         <p
           className={`${baseClass}__summary`}
           dangerouslySetInnerHTML={{

@@ -19,7 +19,7 @@
   &__nav {
     position: absolute;
 
-    // TODO: Review this and ensure it works across all containers
+    // Keep the nav just below the scroll area; offset matches nav button size.
     bottom: mg-rem(-48);
     inset-inline-end: 0;
     display: flex;
@@ -80,8 +80,7 @@
     scroll-snap-type: inline proximity;
     -webkit-overflow-scrolling: touch;
 
-    // TODO: Review - do we need it
-    // Firefox scrollbar styling
+    // Keep Firefox scrollbar styling aligned with the WebKit rules below.
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--mg-color-neutral-500))
       rgb(var(--mg-color-neutral-100));

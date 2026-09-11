@@ -40,8 +40,6 @@ export const WithResetButton = {
         if (typeof window.CookieConsent.showConsentModal === 'function') {
           window.CookieConsent.showConsentModal();
         }
-      } else {
-        console.log('CookieConsent library not loaded yet from UNDRR CDN.');
       }
     };
 
