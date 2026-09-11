@@ -453,7 +453,7 @@ export function ArticleStory({
           alt={image.alt[locale] || image.alt.english}
           className="mg-demo-article-image"
         />
-        <figcaption className="mg-demo-article-media-foot | mg-u-flex mg-u-flex-wrap">
+        <figcaption className="mg-demo-article-media-foot">
           <span className="mg-demo-article-caption | mg-u-font-size-250">
             {image.caption[locale] || image.caption.english}
           </span>

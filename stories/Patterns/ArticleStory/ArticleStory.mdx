@@ -178,3 +178,10 @@ design is reviewed.
     class, its always-unreachable `text-xl` sibling, the inline `<span>`
     wrapper it needed, and the now-redundant `<header>` — `mg-hero__title`
     is applied to the heading tag directly.
+  - Audited the demo-only CSS against `mg-grid` and the rest of the library:
+    the rail/article split and the caption/credit row are both asymmetric
+    (fixed+flexible, flexible+capped) shapes `mg-grid`'s equal-fraction
+    columns can't express, so neither changes. The one real simplification —
+    the caption/credit row's flex-basis math — is now a plain two-column CSS
+    grid (`1fr auto`), dropping to a single stacked column below tablet
+    width.
