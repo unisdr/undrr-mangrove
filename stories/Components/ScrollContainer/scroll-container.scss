@@ -86,9 +86,13 @@
     // instead of looking like an unstyled default. Firefox's scrollbar-color
     // is a single static pair with no hover state, unlike the WebKit
     // pseudo-elements below, so it gets the same resting tint throughout.
+    // The track is a low-alpha dark wash rather than a flat light grey, so
+    // it reads correctly whether the container sits on a white or a themed
+    // colour background — a fixed light hex would look like an opaque box
+    // on anything darker or saturated.
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--mg-color-interactive) / 0.35)
-      rgb(var(--mg-color-neutral-100));
+      rgb(var(--mg-color-neutral-900) / 0.12);
 
     @include devicebreak(small) {
       height: auto;
@@ -112,7 +116,9 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: rgb(var(--mg-color-neutral-100));
+      // Translucent, not a flat light grey, so it works atop a themed
+      // colour background as well as white.
+      background: rgb(var(--mg-color-neutral-900) / 0.12);
       border-radius: var(--mg-radius-form-input);
     }
 
