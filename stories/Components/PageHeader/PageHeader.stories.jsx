@@ -19,6 +19,10 @@ export default {
     logoAlt: { control: 'text' },
     logoTitle: { control: 'text' },
     homeUrl: { control: 'text' },
+    languageDisplay: {
+      options: ['dropdown', 'links'],
+      control: { type: 'radio' },
+    },
     languages: { control: 'object' },
   },
 };
@@ -53,24 +57,23 @@ export const WithCustomLanguages = {
   },
 };
 
+export const WithLanguageLinks = {
+  name: 'With language links',
+  args: {
+    variant: 'default',
+    languageDisplay: 'links',
+    languages: [
+      { value: 'en', label: 'English', selected: true },
+      { value: 'ar', label: 'العربية' },
+      { value: 'es', label: 'Español' },
+      { value: 'fr', label: 'Français' },
+    ],
+  },
+};
+
 export const WithCustomClass = {
   args: {
     variant: 'default',
     className: 'custom-header-class',
-  },
-};
-
-export const NarrowHeader = {
-  name: 'Narrow header',
-  render: args => (
-    <div style={{ width: '320px', maxWidth: '100%' }}>
-      <PageHeader {...args} />
-    </div>
-  ),
-  args: {
-    languages: [
-      { value: 'en', label: 'English', selected: true },
-      { value: 'ar', label: 'العربية' },
-    ],
   },
 };

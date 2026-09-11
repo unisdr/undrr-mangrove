@@ -47,6 +47,12 @@ The language switcher can be configured with different language options.
 
 <Canvas of={PageHeaderStories.WithCustomLanguages} meta={PageHeaderStories} />
 
+#### With Language Links
+
+`languageDisplay="links"` shows each language inline in the toolbar as its own button instead of behind the icon-only dropdown — one click instead of open-then-select. Best for 2-4 languages; a longer list won't fit and should stay on `languageDisplay="dropdown"` (the default). The current language is bold; below the tablet breakpoint each button collapses to its 2-letter language code (the same value already used as the `<option>`'s `value`) to save space. This mode requires JavaScript — the buttons drive the same hidden native `<select>` used by the dropdown variant rather than each linking to a real URL, since `languages` doesn't carry per-language URLs.
+
+<Canvas of={PageHeaderStories.WithLanguageLinks} meta={PageHeaderStories} />
+
 #### With Custom Class
 
 The component supports additional CSS classes for custom styling.
@@ -271,7 +277,8 @@ The PageHeader component follows accessibility best practices:
 | homeUrl      | String  | '/'                                                              | URL for the logo link (ignored in decoration-only variant)                                                                                                                                                          |
 | showLogo     | Boolean | true                                                             | Show or hide the UNDRR logo section                                                                                                                                                                                 |
 | showAccount  | Boolean | true                                                             | Show or hide the "My account" link                                                                                                                                                                                  |
-| showLanguage | Boolean | true                                                             | Show or hide the language switcher dropdown                                                                                                                                                                         |
+| showLanguage | Boolean | true                                                             | Show or hide the language switcher                                                                                                                                                                                  |
+| languageDisplay | String | 'dropdown'                                                    | 'dropdown' (icon-only, opens a native `<select>`) or 'links' (each language inline as its own button — best for 2-4 languages, requires JavaScript)                                                                |
 | languages    | Array   | [English, Spanish, Arabic]                                       | Array of language objects (ignored in decoration-only variant)                                                                                                                                                      |
 | ...args      | Object  | {}                                                               | Additional props passed to the root element                                                                                                                                                                         |
 
@@ -297,6 +304,8 @@ The PageHeader component follows accessibility best practices:
 ## Changelog
 
 - **1.6.1** — 2026-09-11 ([PR #1134](https://github.com/unisdr/undrr-mangrove/pull/1134)): Resurrected the pre-2.0 mobile/tablet logo cropping (v2 had switched to `object-fit: contain`, shrinking the logo instead), with the crop box measured against the current logo asset rather than the old pixel values, which sliced into the subtitle text. Added `layout: 'fullscreen'` to the story so it renders full-bleed like MegaMenu instead of inside Storybook's padded docs canvas. Both the account link and the language switcher are now icon-only at every width, not just below tablet — the current language no longer needs to stay visibly spelled out, and the account link's "My account" text moved from a CSS-hidden `<span>` to a proper `mg-u-sr-only` one, so its accessible name no longer depends solely on the `title` attribute. Both icons are ~20% larger and now match each other in size. The language `<select>` stays in the DOM at full size, invisibly overlaid on its icon, so it's still a real, keyboard- and screen-reader-operable native control, not a custom-built menu.
+  - Added `languageDisplay="links"`: an alternative to the icon-only dropdown that shows each language inline in the toolbar as its own button, for sites with few enough languages (2-4) that spelling them out is worth the space — one click instead of open-then-select. The current language is bold; below the tablet breakpoint each button collapses to its 2-letter language code. The buttons drive the same underlying `<select>` (fully hidden from pointer/keyboard/screen reader in this mode, unlike the dropdown variant) rather than linking to real URLs, so this mode requires JavaScript — `dropdown` remains the default for progressive enhancement.
+  - Removed the `Narrow header` story — Storybook's own viewport/canvas resize already demonstrates any width, so a story fixed to a hardcoded 320px wrapper added nothing the toolbar-driven stories can't already show.
 
 - **1.6.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed duplicate hard-coded IDs by adding `idPrefix` namespacing for header/language elements. Default output remains unchanged when `idPrefix` is omitted, preserving existing Drupal selectors.
 

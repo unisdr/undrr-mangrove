@@ -114,6 +114,81 @@
     pointer-events: none;
   }
 
+  // languageDisplay="links" — an inline list of language buttons instead of
+  // the icon-only dropdown, for sites with few enough languages that
+  // spelling them out directly is worth the toolbar space (see
+  // .mg-page-header__language-links below). The <select>/<form> pair stays
+  // in the DOM (the buttons drive it via JS) but is fully hidden here,
+  // unlike the dropdown variant's sr-only-but-focusable treatment — it's a
+  // redundant implementation detail in this mode, not a second way to
+  // reach the same control, so it should be reachable by neither pointer
+  // nor keyboard nor screen reader.
+  &__block--language-links {
+    display: flex;
+    align-items: center;
+    margin-inline-start: var(--mg-spacing-75);
+
+    .mg-page-header__lang-form {
+      display: none;
+    }
+  }
+
+  &__language-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-100);
+  }
+
+  &__language-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: mg-rem(40);
+    padding-inline: var(--mg-spacing-75);
+    border: none;
+    border-radius: var(--mg-radius-button);
+    background: none;
+    color: rgb(var(--mg-color-neutral-0));
+    font-family: inherit;
+    font-size: $mg-font-tag;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+
+    // Bold, matching how the account link's text used to read before it
+    // went icon-only — the current language is the one piece of state this
+    // control needs to communicate at a glance.
+    &[aria-current='true'] {
+      font-weight: bold;
+    }
+  }
+
+  &__language-link-code {
+    display: none;
+  }
+
+  // Below tablet, swap the full language name for its 2-letter code — the
+  // same value already used as the <option>'s value (and, by convention in
+  // this component's examples, an ISO 639-1 code), so no separate prop is
+  // needed. Both spans carry aria-hidden="true": the button's own
+  // aria-label (the full name) is what a screen reader announces either
+  // way, so this swap is purely visual.
+  @media (max-width: $mg-breakpoint-tablet) {
+    &__language-link-full {
+      display: none;
+    }
+
+    &__language-link-code {
+      display: inline;
+    }
+  }
+
   &__logo-img {
     display: block;
     max-inline-size: 100%;

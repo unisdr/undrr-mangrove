@@ -106,6 +106,90 @@ describe('PageHeader', () => {
   });
 
   // --------------------------------------------------
+  // languageDisplay="links"
+  // --------------------------------------------------
+
+  describe('languageDisplay="links"', () => {
+    const languages = [
+      { value: 'en', label: 'English', selected: true },
+      { value: 'ar', label: 'العربية' },
+      { value: 'es', label: 'Español' },
+    ];
+
+    it('renders a button per language instead of the native select', () => {
+      render(<PageHeader languageDisplay="links" languages={languages} />);
+
+      expect(
+        screen.getByRole('button', { name: 'English' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'العربية' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Español' })
+      ).toBeInTheDocument();
+      // The select stays in the DOM (it's what actually gets submitted) but
+      // is removed from both the accessibility tree and the tab order —
+      // the buttons are the only way to reach language selection here.
+      const select = screen.getByDisplayValue('English');
+      expect(select.tagName).toBe('SELECT');
+      expect(select).toHaveAttribute('aria-hidden', 'true');
+      expect(select).toHaveAttribute('tabindex', '-1');
+    });
+
+    it('marks the selected language with aria-current', () => {
+      render(<PageHeader languageDisplay="links" languages={languages} />);
+
+      expect(
+        screen.getByRole('button', { name: 'English' })
+      ).toHaveAttribute('aria-current', 'true');
+      expect(
+        screen.getByRole('button', { name: 'العربية' })
+      ).not.toHaveAttribute('aria-current');
+    });
+
+    it('defaults to the first language when none is marked selected', () => {
+      render(
+        <PageHeader
+          languageDisplay="links"
+          languages={[
+            { value: 'fr', label: 'Français' },
+            { value: 'de', label: 'Deutsch' },
+          ]}
+        />
+      );
+
+      expect(
+        screen.getByRole('button', { name: 'Français' })
+      ).toHaveAttribute('aria-current', 'true');
+      expect(
+        screen.getByRole('button', { name: 'Deutsch' })
+      ).not.toHaveAttribute('aria-current');
+    });
+
+    it('drives the underlying select and submits the form on click', () => {
+      render(<PageHeader languageDisplay="links" languages={languages} />);
+
+      const form = document.querySelector('.mg-page-header__lang-form');
+      const requestSubmit = jest.fn();
+      form.requestSubmit = requestSubmit;
+
+      screen.getByRole('button', { name: 'Español' }).click();
+
+      const select = document.querySelector('.mg-page-header__select');
+      expect(select.value).toBe('es');
+      expect(requestSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it('has no a11y violations', async () => {
+      const { container } = render(
+        <PageHeader languageDisplay="links" languages={languages} />
+      );
+      expect(await axe(container)).toHaveNoViolations();
+    });
+  });
+
+  // --------------------------------------------------
   // Skip link
   // --------------------------------------------------
 
