@@ -233,7 +233,6 @@ function SyndicationSearchWidgetInner() {
 
   const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } =
     config;
-  const shouldWarnPortalFallback = showSearchMetrics === true;
   const facetsLayout = resolveFacetsLayout(config);
   const facetsActive = facetsLayout !== false;
   const showSearchBox = config.showSearchBox !== false;
@@ -255,14 +254,12 @@ function SyndicationSearchWidgetInner() {
       setFacetsTargetEl(el);
     } else {
       setFacetsTargetEl(null);
-      if (shouldWarnPortalFallback) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[SyndicationSearchWidget] facetsTarget selector "${facetsTarget}" did not match any element; falling back to in-widget facets layout.`
-        );
-      }
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[SyndicationSearchWidget] facetsTarget selector "${facetsTarget}" did not match any element; falling back to in-widget facets layout.`
+      );
     }
-  }, [facetsActive, facetsTarget, shouldWarnPortalFallback]);
+  }, [facetsActive, facetsTarget]);
 
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
@@ -280,14 +277,12 @@ function SyndicationSearchWidgetInner() {
       setSearchTargetEl(el);
     } else {
       setSearchTargetEl(null);
-      if (shouldWarnPortalFallback) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[SyndicationSearchWidget] searchTarget selector "${searchTarget}" did not match any element; falling back to in-widget search input.`
-        );
-      }
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[SyndicationSearchWidget] searchTarget selector "${searchTarget}" did not match any element; falling back to in-widget search input.`
+      );
     }
-  }, [showSearchBox, searchTarget, shouldWarnPortalFallback]);
+  }, [showSearchBox, searchTarget]);
 
   const searchPortaled = showSearchBox && searchTargetEl !== null;
 
