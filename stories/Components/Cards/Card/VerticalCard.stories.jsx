@@ -302,6 +302,57 @@ const checkCardRows = async ({ canvasElement }) => {
   });
 };
 
+export const InSeparateColumns = {
+  name: 'In separate columns (uneven content)',
+  play: async ({ canvasElement }) => {
+    await canvasElement.ownerDocument.fonts.ready;
+    const columns = Array.from(
+      canvasElement.querySelectorAll('.mg-story-column')
+    );
+    expect(columns).toHaveLength(3);
+    columns.forEach(column => {
+      const card = column.querySelector('.mg-card__vc');
+      const columnBottom = column.getBoundingClientRect().bottom;
+      const cardBottom = card.getBoundingClientRect().bottom;
+      // The card fills its own column's full height, not just its own
+      // content's height — even though the columns are separate boxes with
+      // no shared flex/grid row of their own to stretch against.
+      expect(Math.abs(columnBottom - cardBottom)).toBeLessThan(1);
+    });
+  },
+  render: args => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '1rem',
+        maxWidth: '900px',
+      }}
+    >
+      {/* Each card sits in its own plain <div> column rather than as a
+          direct flex/grid sibling of the others — a common pattern for
+          CMS-templated three-up layouts. CSS Grid's own align-items:
+          stretch still equalises the three column <div>s to the same
+          height (the middle one has extra content), but nothing makes the
+          card inside each column fill that column's height without this
+          component's own block-size: 100%. */}
+      <div className="mg-story-column">
+        <VerticalCard {...args} data={[groupedCards[0]]} />
+      </div>
+      <div className="mg-story-column">
+        <VerticalCard {...args} data={[groupedCards[1]]} />
+        <p>
+          Extra content below the card makes this column taller than its
+          neighbours.
+        </p>
+      </div>
+      <div className="mg-story-column">
+        <VerticalCard {...args} data={[groupedCards[2]]} />
+      </div>
+    </div>
+  ),
+};
+
 export const GridOfCards = {
   play: checkCardRows,
   render: args => (
