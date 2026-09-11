@@ -15,9 +15,13 @@ export const DEFAULT_USER_FEEDBACK_LABELS = {
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 
-/* A compact pre-footer prompt for page-level feedback. Keep the response callback separate
- * from the report link: products can send the binary response to their own analytics
- * service without Mangrove owning storage or consent decisions. / */
+/**
+ * A compact pre-footer prompt for page-level feedback.
+ *
+ * Keep the response callback separate from the report link: products can send
+ * the binary response to their own analytics service without Mangrove owning
+ * storage or consent decisions.
+ */
 const UserFeedback = ({
   feedbackUrl = 'https://www.undrr.org/contact/website-feedback',
   labels = {},

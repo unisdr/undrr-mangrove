@@ -1,19 +1,28 @@
-/* @file LanguageBoundaryDemo.jsx @description Renders a nested multi-language specimen and
- * reports the font family the library's own cascade resolves to for each marked element.
- * Why this measures instead of labelling: a hardcoded "should be Roboto" caption still
- * reads as correct after the CSS regresses, which is exactly the failure this demo exists
- * to catch. Every value shown here is read back from `getComputedStyle` at runtime, and
- * the expected values are themselves read from reference elements rendered in the legend
- * rather than written down. If the Latin or Arabic tokens are ever remapped, the demo
- * follows them instead of going stale. See unisdr/undrr-mangrove#1092. / */
+/**
+ * @file LanguageBoundaryDemo.jsx
+ * @description Renders a nested multi-language specimen and reports the
+ * font family the library's own cascade resolves to for each marked element.
+ *
+ * Why this measures instead of labelling: a hardcoded "should be Roboto"
+ * caption still reads as correct after the CSS regresses, which is exactly the
+ * failure this demo exists to catch. Every value shown here is read back from
+ * `getComputedStyle` at runtime, and the expected values are themselves read
+ * from reference elements rendered in the legend rather than written down. If
+ * the Latin or Arabic tokens are ever remapped, the demo follows them instead
+ * of going stale.
+ *
+ * See unisdr/undrr-mangrove#1092.
+ */
 
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './language-boundary-demo.css';
 
-/* The four families the library resolves to, each derived from a live reference element
- * rather than a literal. `data-ref` marks the element whose computed family defines the
- * reference. / */
+/**
+ * The four families the library resolves to, each derived from a live
+ * reference element rather than a literal. `data-ref` marks the element whose
+ * computed family defines the reference.
+ */
 const REFERENCE_KEYS = [
   'latinBody',
   'latinChrome',
@@ -70,15 +79,21 @@ function depthWithin(element, stage) {
   return depth;
 }
 
-/* A nested-language specimen with a live font-family readout. Mark any element inside
- * `children` with `data-expect="<reference key>"` to add it to the readout. Add `data-
- * note="..."` to annotate a row. @param {object} props Component props. @param {string}
- * props.heading Short title for the specimen. @param {React.ReactNode} props.intro Prose
- * shown above the specimen. @param {string} props.lang Language of the specimen root.
- * @param {string} props.dir Text direction of the specimen root. @param {string}
- * props.remeasureKey Changing this re-runs the measurement, so the readout follows the
- * Storybook theme and locale toolbars. @param {React.ReactNode} props.children The
- * specimen markup. / */
+/**
+ * A nested-language specimen with a live font-family readout.
+ *
+ * Mark any element inside `children` with `data-expect="<reference key>"` to
+ * add it to the readout. Add `data-note="..."` to annotate a row.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.heading Short title for the specimen.
+ * @param {React.ReactNode} props.intro Prose shown above the specimen.
+ * @param {string} props.lang Language of the specimen root.
+ * @param {string} props.dir Text direction of the specimen root.
+ * @param {string} props.remeasureKey Changing this re-runs the measurement,
+ *   so the readout follows the Storybook theme and locale toolbars.
+ * @param {React.ReactNode} props.children The specimen markup.
+ */
 export function LanguageBoundaryDemo({
   heading,
   intro = null,

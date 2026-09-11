@@ -1,8 +1,12 @@
-/* @file _storyHelpers.jsx @description Shared helpers for the SyndicationSearchWidget
- * story files. The widget's stories are split across several files (Widget, Layouts,
- * Display modes, Filters, Integrations, Toggles) so the Storybook sidebar groups the
- * variants logically. The shared decorator and default config live here so each file stays
- * small. / */
+/**
+ * @file _storyHelpers.jsx
+ * @description Shared helpers for the SyndicationSearchWidget story files.
+ *
+ * The widget's stories are split across several files (Widget, Layouts,
+ * Display modes, Filters, Integrations, Toggles) so the Storybook sidebar
+ * groups the variants logically. The shared decorator and default config
+ * live here so each file stays small.
+ */
 
 import React from 'react';
 import {
@@ -30,9 +34,11 @@ const withLocaleLabels = (Story, context) => {
   return <Story {...context} args={{ ...context.args, labels }} />;
 };
 
-/* Decorator that renders the story description inline above the component. Extracts
- * markdown from `parameters.docs.description.story` and renders the prose portion
- * (everything before the first triple-backtick block). / */
+/**
+ * Decorator that renders the story description inline above the component.
+ * Extracts markdown from `parameters.docs.description.story` and renders
+ * the prose portion (everything before the first triple-backtick block).
+ */
 export const withInlineDescription = (Story, context) => {
   const description = context.parameters?.docs?.description?.story;
 
@@ -93,9 +99,11 @@ export const defaultConfig = {
   defaultFilters: [{ key: '_language', value: 'en' }],
 };
 
-/* Component-level docs description used by every widget story file's meta. Centralised so
- * the autodocs landing page reads the same regardless of which file Storybook hits first.
- * / */
+/**
+ * Component-level docs description used by every widget story file's
+ * meta. Centralised so the autodocs landing page reads the same regardless
+ * of which file Storybook hits first.
+ */
 export const widgetDocsDescription = `
 # UNDRR Syndication Search Widget
 
@@ -125,10 +133,13 @@ import { SyndicationSearchWidget } from '@undrr/mangrove/SyndicationSearchWidget
 \`\`\`
 `;
 
-/* Shared meta fragment (decorators, parameters, argTypes) for the split widget story
- * files. Each file inlines a literal default export so Storybook's CSF indexer can
- * statically read `title` and `component`, but spreads in this fragment to keep the docs
- * description and config controls consistent. / */
+/**
+ * Shared meta fragment (decorators, parameters, argTypes) for the split
+ * widget story files. Each file inlines a literal default export so
+ * Storybook's CSF indexer can statically read `title` and `component`,
+ * but spreads in this fragment to keep the docs description and config
+ * controls consistent.
+ */
 export const widgetMetaShared = {
   decorators: [withInlineDescription, withLocaleLabels],
   parameters: {

@@ -1,13 +1,26 @@
-/* @file MobileFilterDrawer.jsx @description Mobile-friendly left-side slide-in drawer for
- * filter facets. Implements a slide-in drawer pattern (Amazon-style) with: - Left-side
- * slide-in animation - Backdrop overlay with click-to-close - Focus trapping for
- * accessibility - Scroll lock on body when open - Sticky footer with "View Results" button
- * UX patterns informed by: @see https://www.pencilandpaper.io/articles/ux-pattern-
- * analysis-mobile-filters Key UX decisions: - Sidebar overlay: Maintains left-side
- * visibility for context, feels safer - Batch filtering: Users refine filters then apply
- * once (vs live filtering) - Sticky Apply button: Always visible, no scrolling required -
- * Progressive disclosure: Collapsible sections avoid overwhelm - Generous touch targets:
- * 44px minimum for finger interaction @module SearchWidget/components/MobileFilterDrawer / */
+/**
+ * @file MobileFilterDrawer.jsx
+ * @description Mobile-friendly left-side slide-in drawer for filter facets.
+ *
+ * Implements a slide-in drawer pattern (Amazon-style) with:
+ * - Left-side slide-in animation
+ * - Backdrop overlay with click-to-close
+ * - Focus trapping for accessibility
+ * - Scroll lock on body when open
+ * - Sticky footer with "View Results" button
+ *
+ * UX patterns informed by:
+ * @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
+ *
+ * Key UX decisions:
+ * - Sidebar overlay: Maintains left-side visibility for context, feels safer
+ * - Batch filtering: Users refine filters then apply once (vs live filtering)
+ * - Sticky Apply button: Always visible, no scrolling required
+ * - Progressive disclosure: Collapsible sections avoid overwhelm
+ * - Generous touch targets: 44px minimum for finger interaction
+ *
+ * @module SearchWidget/components/MobileFilterDrawer
+ */
 
 import React, { useEffect, useRef, useCallback } from 'react';
 import {
@@ -17,10 +30,15 @@ import {
 } from '../context/SearchContext';
 import FacetsSidebar from './FacetsSidebar';
 
-/* MobileFilterDrawer component. A left-side slide-in drawer containing filter facets for
- * mobile devices. @param {Object} props - Component props @param {boolean} props.isOpen -
- * Whether the drawer is open @param {Function} props.onClose - Callback to close the
- * drawer @param {string} props.widgetId - Unique widget ID for accessibility / */
+/**
+ * MobileFilterDrawer component.
+ * A left-side slide-in drawer containing filter facets for mobile devices.
+ *
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the drawer is open
+ * @param {Function} props.onClose - Callback to close the drawer
+ * @param {string} props.widgetId - Unique widget ID for accessibility
+ */
 export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   const drawerRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -191,8 +209,11 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   );
 }
 
-/* Count total active filters (facets + custom facets). @param {Object} state - Search
- * state @returns {number} Count of active filters / */
+/**
+ * Count total active filters (facets + custom facets).
+ * @param {Object} state - Search state
+ * @returns {number} Count of active filters
+ */
 function countActiveFilters(state) {
   let count = 0;
 

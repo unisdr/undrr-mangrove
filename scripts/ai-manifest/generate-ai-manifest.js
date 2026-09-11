@@ -1,40 +1,57 @@
 #!/usr/bin/env node
 
-/* generate-ai-manifest.js — AI-friendly component manifest for UNDRR Mangrove Single entry
- * point that: 1. Auto-renders React components from dist/components/ via
- * renderToStaticMarkup 2. Merges Storybook metadata, auto-rendered HTML, and curated data
- * 3. Validates curated data keys, a11y patterns, and PropTypes coverage 4. Writes output
- * files deployed alongside the Storybook site: llms.txt — plain-text discovery file for AI
- * agents llms.json — structured version of llms.txt ai-components/index.json — lightweight
- * component index ai-components/{id}.json — full details per component ai-
- * components/utilities.json — CSS utility class inventory Usage: node scripts/ai-
- * manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate] Flags:
- * --validate Check curated data keys and a11y lint. Exits non-zero on failure. To remove
- * this pipeline: 1. Delete scripts/ai-manifest/ 2. Remove generate-ai-manifest from
- * package.json build/scripts 3. Remove scripts/ai-manifest/** from
- * .github/workflows/storybook.yml paths 4. Remove validate step from the workflow's Build
- * Storybook step 5. Remove AI manifest references from: CONTRIBUTING.md, docs/RELEASES.md,
- * docs/ARCHITECTURE.md, docs/COMPONENT-GUIDE.md, scripts/README.md,
- * .github/pull_request_template.md 6. Optionally delete
- * stories/Documentation/AiMcpIntegration.mdx 7. Delete docs-build-temp/ai-components/
- * output / */
+/**
+ * generate-ai-manifest.js — AI-friendly component manifest for UNDRR Mangrove
+ *
+ * Single entry point that:
+ *   1. Auto-renders React components from dist/components/ via renderToStaticMarkup
+ *   2. Merges Storybook metadata, auto-rendered HTML, and curated data
+ *   3. Validates curated data keys, a11y patterns, and PropTypes coverage
+ *   4. Writes output files deployed alongside the Storybook site:
+ *
+ *        llms.txt                       — plain-text discovery file for AI agents
+ *        llms.json                      — structured version of llms.txt
+ *        ai-components/index.json       — lightweight component index
+ *        ai-components/{id}.json        — full details per component
+ *        ai-components/utilities.json   — CSS utility class inventory
+ *
+ * Usage:
+ *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
+ *
+ * Flags:
+ *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *
+ * To remove this pipeline:
+ *   1. Delete scripts/ai-manifest/
+ *   2. Remove generate-ai-manifest from package.json build/scripts
+ *   3. Remove scripts/ai-manifest/** from .github/workflows/storybook.yml paths
+ *   4. Remove validate step from the workflow's Build Storybook step
+ *   5. Remove AI manifest references from: CONTRIBUTING.md, docs/RELEASES.md,
+ *      docs/ARCHITECTURE.md, docs/COMPONENT-GUIDE.md, scripts/README.md,
+ *      .github/pull_request_template.md
+ *   6. Optionally delete stories/Documentation/AiMcpIntegration.mdx
+ *   7. Delete docs-build-temp/ai-components/ output
+ */
 
 import fs from 'fs';
 import path from 'path';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 
-// --------------------------------------------------------------------------- Constants
+// ---------------------------------------------------------------------------
+// Constants
 // ---------------------------------------------------------------------------
 
 const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
 const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
 
-// One bundle per theme, plus the combined bundle. Each single-theme bundle carries its own
-// token block and nothing else, so style.css has no .mg-theme-* rules at all: adding
-// class="mg-theme-irp" to a page that loaded style.css changes nothing. Use that theme's
-// own bundle, or style-all.css if the page has to switch themes at runtime.
+// One bundle per theme, plus the combined bundle.
+//
+// Each single-theme bundle carries its own token block and nothing else, so
+// style.css has no .mg-theme-* rules at all: adding class="mg-theme-irp" to a
+// page that loaded style.css changes nothing. Use that theme's own bundle, or
+// style-all.css if the page has to switch themes at runtime.
 const THEME_CSS = {
   undrr: `${CDN_BASE}/css/style.css`,
   preventionweb: `${CDN_BASE}/css/style-preventionweb.css`,
@@ -96,18 +113,21 @@ const LOGOS = {
   squareBlue: `${ASSETS_BASE}/static/logos/undrr/undrr-logo-square-blue.svg`,
 };
 
-// --------------------------------------------------------------------------- Component
-// rendering: ID mapping and sample props
+// ---------------------------------------------------------------------------
+// Component rendering: ID mapping and sample props
 // ---------------------------------------------------------------------------
 
 // Maps webpack output filenames (from dist/components/) to Storybook component IDs.
-// Required for auto-rendering. The script imports dist/components/{FileName}.js, renders
-// it with props from buildSampleProps(), and stores the HTML under this ID. To add a new
-// auto-rendered component: 1. Add a webpack entry in webpack.config.js (second config
-// block) 2. Add a COMPONENT_IDS entry below (FileName → storybook-id) 3. Add a
-// buildSampleProps() entry if the component needs non-empty props 4. Add a component-
-// data.js entry with at least { description: '...' } (or a REQUIRES_REACT entry for React-
-// only components) 5. Run `yarn build && yarn validate-manifest` to verify
+// Required for auto-rendering. The script imports dist/components/{FileName}.js,
+// renders it with props from buildSampleProps(), and stores the HTML under this ID.
+//
+// To add a new auto-rendered component:
+// 1. Add a webpack entry in webpack.config.js (second config block)
+// 2. Add a COMPONENT_IDS entry below (FileName → storybook-id)
+// 3. Add a buildSampleProps() entry if the component needs non-empty props
+// 4. Add a component-data.js entry with at least { description: '...' }
+//    (or a REQUIRES_REACT entry for React-only components)
+// 5. Run `yarn build && yarn validate-manifest` to verify
 
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
@@ -462,8 +482,9 @@ function buildSampleProps(React) {
   };
 }
 
-// --------------------------------------------------------------------------- CLI args and
-// file reading ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// CLI args and file reading
+// ---------------------------------------------------------------------------
 
 const args = process.argv.slice(2);
 const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split(
@@ -499,13 +520,15 @@ const requiredStylesheets = replaceVersion(REQUIRED_STYLESHEETS);
 const logos = replaceVersion(LOGOS);
 const generatedAt = new Date().toISOString();
 
-// --------------------------------------------------------------------------- Parse actual
-// npm exports from src/index.js
+// ---------------------------------------------------------------------------
+// Parse actual npm exports from src/index.js
 // ---------------------------------------------------------------------------
 
-/* Reads src/index.js and returns a Set of export names that consumers can actually import
- * from the npm package. This prevents the manifest from advertising imports that don't
- * exist. / */
+/**
+ * Reads src/index.js and returns a Set of export names that consumers can
+ * actually import from the npm package. This prevents the manifest from
+ * advertising imports that don't exist.
+ */
 function parseNpmExports() {
   const indexPath = path.resolve(process.cwd(), 'src/index.js');
   if (!fs.existsSync(indexPath)) {
@@ -526,9 +549,10 @@ function parseNpmExports() {
 
 const npmExports = parseNpmExports();
 
-// Reverse lookup: Storybook ID → webpack entry name (which matches the npm export name).
-// Derived from COMPONENT_IDS so it self-heals when new components are added. Used as a
-// fallback when Storybook's internal function name differs from the npm export name.
+// Reverse lookup: Storybook ID → webpack entry name (which matches the npm
+// export name). Derived from COMPONENT_IDS so it self-heals when new
+// components are added. Used as a fallback when Storybook's internal function
+// name differs from the npm export name.
 const storybookIdToWebpackName = Object.fromEntries(
   Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name])
 );
@@ -539,10 +563,15 @@ const NPM_NAME_OVERRIDES = {
   ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs npm export
 };
 
-/* Build a valid import statement for a component, or return empty string if the component
- * is not exported from the npm package. Tries the Storybook name first, then the
- * COMPONENT_IDS reverse lookup, then NPM_NAME_OVERRIDES. Supported src/index.js export
- * shapes: export { default as Foo } from '...'; export { Foo } from '...'; / */
+/**
+ * Build a valid import statement for a component, or return empty string if
+ * the component is not exported from the npm package. Tries the Storybook
+ * name first, then the COMPONENT_IDS reverse lookup, then NPM_NAME_OVERRIDES.
+ *
+ * Supported src/index.js export shapes:
+ *   export { default as Foo } from '...';
+ *   export { Foo } from '...';
+ */
 function buildImportStatement(componentName, componentId) {
   const candidates = [
     componentName,
@@ -556,7 +585,8 @@ function buildImportStatement(componentName, componentId) {
   return '';
 }
 
-// --------------------------------------------------------------------------- Helpers
+// ---------------------------------------------------------------------------
+// Helpers
 // ---------------------------------------------------------------------------
 
 /** Flatten a react-docgen type object into a readable string. */
@@ -637,8 +667,8 @@ function docsUrl(componentId) {
   return `${DOCS_BASE}?path=/docs/${componentId}--docs`;
 }
 
-// --------------------------------------------------------------------------- Auto-render
-// React components from dist/
+// ---------------------------------------------------------------------------
+// Auto-render React components from dist/
 // ---------------------------------------------------------------------------
 
 async function renderComponents() {
@@ -722,8 +752,9 @@ async function renderComponents() {
   return results;
 }
 
-// --------------------------------------------------------------------------- Validate
-// curated data ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Validate curated data
+// ---------------------------------------------------------------------------
 
 const manifestIds = new Set(Object.values(manifest.components).map(c => c.id));
 
@@ -745,14 +776,16 @@ if (uncoveredIds.length > 0) {
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
 }
 
-// --------------------------------------------------------------------------- Check
-// curated example shape `examples` must be [{ name, html }]. A bare array of HTML strings
-// still reaches the output — it is just assigned to renderedHtml — so it looks like it
-// worked, but the a11y lint below skips it (`if (!example.html) continue`), the drift
-// check reads no classes from it, and consumers that read `renderedHtml[n].html` get
-// undefined for that component alone. StatusLabel and EmptyState shipped in exactly that
-// state: present in the manifest, but in a shape nothing else in the file uses and no
-// check could see.
+// ---------------------------------------------------------------------------
+// Check curated example shape
+//
+// `examples` must be [{ name, html }]. A bare array of HTML strings still
+// reaches the output — it is just assigned to renderedHtml — so it looks like
+// it worked, but the a11y lint below skips it (`if (!example.html) continue`),
+// the drift check reads no classes from it, and consumers that read
+// `renderedHtml[n].html` get undefined for that component alone. StatusLabel
+// and EmptyState shipped in exactly that state: present in the manifest, but
+// in a shape nothing else in the file uses and no check could see.
 // ---------------------------------------------------------------------------
 const malformedExamples = [];
 for (const [componentId, data] of Object.entries(curatedData)) {
@@ -784,18 +817,23 @@ if (malformedExamples.length > 0) {
   for (const problem of malformedExamples) console.warn(`  ${problem}`);
 }
 
-// --------------------------------------------------------------------------- Check that
-// every documented CSS class actually exists A class list in component-data.js is hand-
-// maintained, so it drifts when a component is renamed and it is wrong from the start when
-// a class is mistyped. Nothing checked this before, so the manifest could advertise a
-// class that had never existed and no build would notice. "Exists" cannot mean "has a rule
-// in the compiled CSS". Several real classes deliberately carry no styles: mg-card__meta
-// and mg-card__label--active are structural hooks the card components render, mg-hero--
-// split-2-3 is the default split that needs no override, mg-on-this-page-nav--exclude is a
-// marker the nav's JS reads, and the scroll-button modifiers are injected at runtime. So a
-// class passes if it is styled OR if it appears in the story sources — and fails only when
-// it exists nowhere in the library, which is the typo-and-rename case this is actually
-// for. ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Check that every documented CSS class actually exists
+//
+// A class list in component-data.js is hand-maintained, so it drifts when a
+// component is renamed and it is wrong from the start when a class is
+// mistyped. Nothing checked this before, so the manifest could advertise a
+// class that had never existed and no build would notice.
+//
+// "Exists" cannot mean "has a rule in the compiled CSS". Several real classes
+// deliberately carry no styles: mg-card__meta and mg-card__label--active are
+// structural hooks the card components render, mg-hero--split-2-3 is the
+// default split that needs no override, mg-on-this-page-nav--exclude is a
+// marker the nav's JS reads, and the scroll-button modifiers are injected at
+// runtime. So a class passes if it is styled OR if it appears in the story
+// sources — and fails only when it exists nowhere in the library, which is
+// the typo-and-rename case this is actually for.
+// ---------------------------------------------------------------------------
 const compiledCssPath = path.resolve(
   process.cwd(),
   'stories/assets/css/style.css'
@@ -874,8 +912,8 @@ if (orphanedIds.length > 0) {
   for (const entry of orphanedIds) console.warn(`  - ${entry}`);
 }
 
-// --------------------------------------------------------------------------- Check 1:
-// A11y lint of curated HTML examples
+// ---------------------------------------------------------------------------
+// Check 1: A11y lint of curated HTML examples
 // ---------------------------------------------------------------------------
 
 const a11yRules = [
@@ -998,8 +1036,8 @@ if (a11yViolations.length > 0) {
   }
 }
 
-// --------------------------------------------------------------------------- Check 2:
-// PropTypes coverage warning
+// ---------------------------------------------------------------------------
+// Check 2: PropTypes coverage warning
 // ---------------------------------------------------------------------------
 
 const totalComponents = Object.keys(manifest.components).length;
@@ -1013,12 +1051,15 @@ console.log(
   `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`
 );
 
-// --------------------------------------------------------------------------- Check 3:
-// Curated HTML drift detection For components with curated HTML, auto-render them from
-// dist/ and compare the BEM classes (mg-*) used in each. If the curated HTML references
-// classes that don't appear in the auto-rendered output (or vice versa), flag it as
-// potential drift. This catches structural/class renames without requiring per-component
-// test files. ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Check 3: Curated HTML drift detection
+//
+// For components with curated HTML, auto-render them from dist/ and compare
+// the BEM classes (mg-*) used in each. If the curated HTML references classes
+// that don't appear in the auto-rendered output (or vice versa), flag it as
+// potential drift. This catches structural/class renames without requiring
+// per-component test files.
+// ---------------------------------------------------------------------------
 
 /** Extract mg-* BEM classes from class="" attribute values in an HTML string. */
 function extractBemClasses(html) {
@@ -1085,9 +1126,9 @@ async function checkCuratedDrift() {
 
       if (renderedClasses.size === 0 && curatedClasses.size === 0) continue;
 
-      // Compare only BEM blocks/elements (not modifiers, which are prop-dependent). Curated HTML
-      // often shows multiple variants, but auto-render only produces one, so modifier
-      // differences (mg-card--secondary etc.) are expected noise.
+      // Compare only BEM blocks/elements (not modifiers, which are prop-dependent).
+      // Curated HTML often shows multiple variants, but auto-render only produces one,
+      // so modifier differences (mg-card--secondary etc.) are expected noise.
       const staleInCurated = [...curatedClasses].filter(
         c => !isBemModifier(c) && !renderedClasses.has(c)
       );
@@ -1121,8 +1162,9 @@ function findDevelopmentJsxBundles() {
   });
 }
 
-// --------------------------------------------------------------------------- Validate-
-// only exit ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Validate-only exit
+// ---------------------------------------------------------------------------
 
 if (validateOnly) {
   let failed = false;
@@ -1203,8 +1245,9 @@ if (validateOnly) {
   process.exit(0);
 }
 
-// --------------------------------------------------------------------------- Main: render
-// + generate ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Main: render + generate
+// ---------------------------------------------------------------------------
 
 async function main() {
   // Auto-render React components (on failure, continue with empty map)
@@ -1218,8 +1261,9 @@ async function main() {
     renderedHtml = new Map();
   }
 
-  // ------------------------------------------------------------------------- Transform each
-  // component -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Transform each component
+  // -------------------------------------------------------------------------
 
   const indexEntries = [];
   const componentFiles = [];
@@ -1227,10 +1271,10 @@ async function main() {
 
   for (const [, component] of Object.entries(manifest.components)) {
     const id = component.id;
-    // Storybook derives `name` from meta.component, and falls back to a squashed filename when
-    // a story file has none — which every CSS-only component does, giving "Statuslabel" for
-    // StatusLabel. A curated `name` overrides that so the index reads as the component is
-    // actually called.
+    // Storybook derives `name` from meta.component, and falls back to a
+    // squashed filename when a story file has none — which every CSS-only
+    // component does, giving "Statuslabel" for StatusLabel. A curated `name`
+    // overrides that so the index reads as the component is actually called.
     const name = curatedData[id]?.name || component.name || id;
     const jsDocParams = parseJsDocParams(component.jsDocTags);
     const data = curatedData[id];
@@ -1238,10 +1282,11 @@ async function main() {
     const isVanilla = !isReact;
     const description = getDescription(component, data);
 
-    // --- Validated import statement --- Storybook's react-docgen auto-generates import
-    // statements for every component, but only components exported from src/index.js are
-    // actually importable from the npm package. Use buildImportStatement() which checks
-    // against real exports instead of trusting Storybook's guess.
+    // --- Validated import statement ---
+    // Storybook's react-docgen auto-generates import statements for every
+    // component, but only components exported from src/index.js are actually
+    // importable from the npm package. Use buildImportStatement() which
+    // checks against real exports instead of trusting Storybook's guess.
     const validImport = buildImportStatement(name, id);
     if (component.import && !validImport) droppedImportCount++;
 
@@ -1329,8 +1374,8 @@ async function main() {
     componentFiles.push({ id, content: detail });
   }
 
-  // ------------------------------------------------------------------------- Write ai-
-  // components/index.json
+  // -------------------------------------------------------------------------
+  // Write ai-components/index.json
   // -------------------------------------------------------------------------
 
   fs.mkdirSync(outputDir, { recursive: true });
@@ -1384,8 +1429,8 @@ async function main() {
   const indexJson = JSON.stringify(index, null, 2);
   fs.writeFileSync(path.join(outputDir, 'index.json'), indexJson);
 
-  // ------------------------------------------------------------------------- Write ai-
-  // components/{id}.json for each component
+  // -------------------------------------------------------------------------
+  // Write ai-components/{id}.json for each component
   // -------------------------------------------------------------------------
 
   for (const { id, content } of componentFiles) {
@@ -1395,8 +1440,8 @@ async function main() {
     );
   }
 
-  // ------------------------------------------------------------------------- Write ai-
-  // components/utilities.json
+  // -------------------------------------------------------------------------
+  // Write ai-components/utilities.json
   // -------------------------------------------------------------------------
 
   const utilities = replaceVersion({
@@ -1415,7 +1460,8 @@ async function main() {
     0
   );
 
-  // ------------------------------------------------------------------------- Write llms.txt
+  // -------------------------------------------------------------------------
+  // Write llms.txt
   // -------------------------------------------------------------------------
 
   const llmsTxt = `# UNDRR Mangrove
@@ -1580,8 +1626,9 @@ Icons:
 
   fs.writeFileSync(llmsTxtPath, llmsTxt);
 
-  // ------------------------------------------------------------------------- Write
-  // llms.json -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Write llms.json
+  // -------------------------------------------------------------------------
 
   const llmsJson = JSON.stringify(
     {
@@ -1628,7 +1675,8 @@ Icons:
 
   fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
 
-  // ------------------------------------------------------------------------- Summary
+  // -------------------------------------------------------------------------
+  // Summary
   // -------------------------------------------------------------------------
 
   const indexSizeKB = (Buffer.byteLength(indexJson) / 1024).toFixed(1);

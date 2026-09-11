@@ -1,8 +1,11 @@
-/* Desktop-state accessibility tests for MegaMenu. The mobile sidebar is covered by
- * MegaMenu.progressive.test.jsx, which opens the dialog and scopes axe to it — so the
- * desktop topbar went unchecked and shipped three axe failures (unisdr/undrr-
- * mangrove#1114). These assertions run against the whole container in its default,
- * unopened state. / */
+/**
+ * Desktop-state accessibility tests for MegaMenu.
+ *
+ * The mobile sidebar is covered by MegaMenu.progressive.test.jsx, which opens
+ * the dialog and scopes axe to it — so the desktop topbar went unchecked and
+ * shipped three axe failures (unisdr/undrr-mangrove#1114). These assertions
+ * run against the whole container in its default, unopened state.
+ */
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import MegaMenu from '../MegaMenu';

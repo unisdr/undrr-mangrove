@@ -1,5 +1,11 @@
-/* @file index.js @description Entry point for SyndicationSearchWidget component. Exports
- * all public components and utilities. @module SyndicationSearchWidget / */
+/**
+ * @file index.js
+ * @description Entry point for SyndicationSearchWidget component.
+ *
+ * Exports all public components and utilities.
+ *
+ * @module SyndicationSearchWidget
+ */
 
 // Main component
 export {

@@ -1,5 +1,9 @@
-/* @file facetUtils.js @description Pure data transformations for facet aggregation
- * buckets. @module SearchWidget/utils/facetUtils / */
+/**
+ * @file facetUtils.js
+ * @description Pure data transformations for facet aggregation buckets.
+ *
+ * @module SearchWidget/utils/facetUtils
+ */
 
 import {
   CONTENT_SUBTYPES,
@@ -7,13 +11,21 @@ import {
   createSubtypeValue,
 } from './constants';
 
-/* Merge content types, subtypes, and taxonomy vocabularies into a flat list for the
- * unified Type dropdown. Parent types keep their original keys (e.g., "news"). Subtypes
- * get namespaced keys (e.g., "field_news_type:751"). Vocabularies get namespaced keys
- * (e.g., "vid:hazard"). Returns buckets organized as: 1. Content types with their subtypes
- * grouped after them 2. Taxonomy vocabularies (Countries, Hazards, Themes) appended at the
- * end @param {Object} aggregations - Elasticsearch aggregation results @returns {Array}
- * Merged bucket list for the Type dropdown / */
+/**
+ * Merge content types, subtypes, and taxonomy vocabularies into a flat list
+ * for the unified Type dropdown.
+ *
+ * Parent types keep their original keys (e.g., "news").
+ * Subtypes get namespaced keys (e.g., "field_news_type:751").
+ * Vocabularies get namespaced keys (e.g., "vid:hazard").
+ *
+ * Returns buckets organized as:
+ * 1. Content types with their subtypes grouped after them
+ * 2. Taxonomy vocabularies (Countries, Hazards, Themes) appended at the end
+ *
+ * @param {Object} aggregations - Elasticsearch aggregation results
+ * @returns {Array} Merged bucket list for the Type dropdown
+ */
 export function getMergedTypeBuckets(aggregations) {
   if (!aggregations) return [];
 
@@ -35,10 +47,10 @@ export function getMergedTypeBuckets(aggregations) {
       const configs = Array.isArray(subtypeConfig)
         ? subtypeConfig
         : [subtypeConfig];
-      // Collect subtypes from all fields for this parent, then sort globally by count so mixed-
-      // field parents (e.g. publication with field_publication_type +
-      // field_undrr_publication_types + field_irp_publication_subtype) render in a single count-
-      // ordered list rather than per-field groups.
+      // Collect subtypes from all fields for this parent, then sort globally by
+      // count so mixed-field parents (e.g. publication with field_publication_type
+      // + field_undrr_publication_types + field_irp_publication_subtype) render
+      // in a single count-ordered list rather than per-field groups.
       const allSubtypes = [];
       for (const config of configs) {
         const subtypeBuckets = aggregations[config.field]?.buckets || [];

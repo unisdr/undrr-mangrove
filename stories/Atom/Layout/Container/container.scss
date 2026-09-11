@@ -1,6 +1,8 @@
-// Define your breakpoints if not already defined $mg-breakpoint-mobile: 480px; $mg-
-// breakpoint-tablet: 768px; $mg-breakpoint-desktop: 1024px; $mg-breakpoint-desktop:
-// 1440px;
+// Define your breakpoints if not already defined
+// $mg-breakpoint-mobile: 480px;
+// $mg-breakpoint-tablet: 768px;
+// $mg-breakpoint-desktop: 1024px;
+// $mg-breakpoint-desktop: 1440px;
 
 .mg-container {
   padding-right: mg-rem(10);
@@ -53,9 +55,10 @@
     --mg-container-spacer: 0;
   }
 
-  // Between element spacing This will replace --mg-gutenberg-spacer
-  // https://git.un.org/undrr/web-backlog/-/issues/623 https://gitlab.com/undrr/web-
-  // backlog/-/issues/1221
+  // Between element spacing
+  // This will replace --mg-gutenberg-spacer
+  // https://git.un.org/undrr/web-backlog/-/issues/623
+  // https://gitlab.com/undrr/web-backlog/-/issues/1221
   > * {
     margin-top: var(--mg-container-spacer);
   }

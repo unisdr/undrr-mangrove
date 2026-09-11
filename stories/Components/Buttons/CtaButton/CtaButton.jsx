@@ -2,10 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import './cta-button.scss';
 
-/* Call-to-action button rendered as a styled anchor link. @param {Object} props @param
- * {string} props.label Button text @param {'Primary'|'Secondary'} [props.Type] Visual
- * emphasis variant @param {boolean} [props.Outline] Whether to use the transparent
- * treatment @param {'Default'|'Disabled'} [props.State] Enabled or disabled state / */
+/**
+ * Call-to-action button rendered as a styled anchor link.
+ *
+ * @param {Object} props
+ * @param {string} props.label                 Button text
+ * @param {'Primary'|'Secondary'} [props.Type] Visual emphasis variant
+ * @param {boolean} [props.Outline] Whether to use the transparent treatment
+ * @param {'Default'|'Disabled'} [props.State] Enabled or disabled state
+ */
 export function CtaButton({
   label,
   Type = 'Primary',

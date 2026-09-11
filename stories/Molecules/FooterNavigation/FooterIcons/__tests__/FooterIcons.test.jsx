@@ -4,7 +4,8 @@ import { axe } from 'jest-axe';
 import { FooterIcons } from '../FooterIcons';
 
 describe('FooterIcons', () => {
-  // -------------------------------------------------- Structure
+  // --------------------------------------------------
+  // Structure
   // --------------------------------------------------
 
   it('renders a <ul> with class mg-footer--social-links', () => {
@@ -19,7 +20,8 @@ describe('FooterIcons', () => {
     expect(container.querySelectorAll('li')).toHaveLength(5);
   });
 
-  // -------------------------------------------------- Accessible names on icon-only links
+  // --------------------------------------------------
+  // Accessible names on icon-only links
   // --------------------------------------------------
 
   it('every social link has an aria-label', () => {
@@ -40,7 +42,8 @@ describe('FooterIcons', () => {
     });
   });
 
-  // -------------------------------------------------- Inverted variant
+  // --------------------------------------------------
+  // Inverted variant
   // --------------------------------------------------
 
   it('applies inverted class when variant="inverted"', () => {
@@ -48,7 +51,8 @@ describe('FooterIcons', () => {
     expect(container.querySelector('ul')).toHaveClass('inverted');
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations (default)', async () => {

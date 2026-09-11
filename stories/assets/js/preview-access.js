@@ -1,10 +1,15 @@
-// mg-preview-access Soft preview gate for unfinished UNDRR pages. The presence of an
-// element with [data-mg-preview-access] in the body activates the gate. CSS hides the page
-// on parse via :has(); this script layers a modal over it and asks for a PIN. On success,
-// the gate is marked unlocked and the unlock is persisted in sessionStorage. Not a
-// security mechanism. The PIN lives in the DOM. Treat this as a "wet paint" sign: strong,
-// unmissable, but trivial to bypass for anyone who wants to. If a page genuinely must not
-// be seen, gate it at the edge (for example, Cloudflare Access).
+// mg-preview-access
+// Soft preview gate for unfinished UNDRR pages.
+//
+// The presence of an element with [data-mg-preview-access] in the body
+// activates the gate. CSS hides the page on parse via :has(); this script
+// layers a modal over it and asks for a PIN. On success, the gate is marked
+// unlocked and the unlock is persisted in sessionStorage.
+//
+// Not a security mechanism. The PIN lives in the DOM. Treat this as a
+// "wet paint" sign: strong, unmissable, but trivial to bypass for anyone
+// who wants to. If a page genuinely must not be seen, gate it at the edge
+// (for example, Cloudflare Access).
 
 const DEFAULTS = {
   pin: '5498',
@@ -30,9 +35,9 @@ const INPUT_ID = 'mg-preview-access-pin';
 // is rejected to the default UNDRR contact page.
 const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:'];
 
-// Module-scoped registry of overlays and the elements that previously held focus. WeakMap
-// keyed by gate avoids stashing DOM-side expandos and lets the entries drop when a gate is
-// detached and unreferenced.
+// Module-scoped registry of overlays and the elements that previously held focus.
+// WeakMap keyed by gate avoids stashing DOM-side expandos and lets the entries
+// drop when a gate is detached and unreferenced.
 const overlays = new WeakMap();
 const previousFocus = new WeakMap();
 
@@ -138,10 +143,12 @@ function buildOverlay(config) {
   return overlay;
 }
 
-/* Set/unset `inert` on every direct child of <body> except the overlay. Snapshots the
- * children up front so subsequent DOM mutations cannot skew the iteration. `inert` already
- * implies aria-hidden for assistive tech, so the redundant aria-hidden writes are
- * intentionally omitted (ARIA 1.2). / */
+/**
+ * Set/unset `inert` on every direct child of <body> except the overlay.
+ * Snapshots the children up front so subsequent DOM mutations cannot skew
+ * the iteration. `inert` already implies aria-hidden for assistive tech,
+ * so the redundant aria-hidden writes are intentionally omitted (ARIA 1.2).
+ */
 function setSiblingsInert(overlay, on) {
   Array.from(document.body.children).forEach(child => {
     if (child === overlay) return;
@@ -160,10 +167,10 @@ function unlockGate(gate, overlay, config) {
   overlay.remove();
   overlays.delete(gate);
 
-  // Return focus to a known landmark so keyboard and screen reader users are not dropped on
-  // document.body with no announcement of the state change. The previously focused element
-  // (often body itself before mount) is the safest fallback; otherwise focus the now-
-  // revealed <main> or first heading.
+  // Return focus to a known landmark so keyboard and screen reader users are
+  // not dropped on document.body with no announcement of the state change.
+  // The previously focused element (often body itself before mount) is the
+  // safest fallback; otherwise focus the now-revealed <main> or first heading.
   const restore =
     previousFocus.get(gate) ||
     document.querySelector('main, [role="main"]') ||
@@ -201,9 +208,13 @@ function bindHandlers(overlay, gate, config) {
   });
 }
 
-/* Initialise preview-access gates. @param {NodeList|HTMLElement[]|HTMLElement} [scope] -
- * Elements to init. Accepts a NodeList, array, or single HTMLElement. Defaults to the
- * first [data-mg-preview-access] in the document. / */
+/**
+ * Initialise preview-access gates.
+ *
+ * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
+ *   Accepts a NodeList, array, or single HTMLElement. Defaults to the first
+ *   [data-mg-preview-access] in the document.
+ */
 export function mgPreviewAccess(scope) {
   let gates;
   if (scope) {
@@ -248,9 +259,12 @@ export function mgPreviewAccess(scope) {
   });
 }
 
-/* Tear down a preview-access gate. Removes the overlay (if still mounted), restores body
- * siblings, and clears the init flag. @param {HTMLElement} gate - The [data-mg-preview-
- * access] element. / */
+/**
+ * Tear down a preview-access gate. Removes the overlay (if still mounted),
+ * restores body siblings, and clears the init flag.
+ *
+ * @param {HTMLElement} gate - The [data-mg-preview-access] element.
+ */
 export function mgPreviewAccessDestroy(gate) {
   if (!gate) return;
   const overlay = overlays.get(gate);
@@ -270,9 +284,10 @@ if (typeof window !== 'undefined') {
   window.mgPreviewAccess = mgPreviewAccess;
 }
 
-// Auto-init only when a gate is already in the document. The guard prevents the side
-// effect of attaching an overlay if the module is imported by a React/Storybook consumer
-// that has not yet rendered (or may never render) a real gate.
+// Auto-init only when a gate is already in the document. The guard prevents
+// the side effect of attaching an overlay if the module is imported by a
+// React/Storybook consumer that has not yet rendered (or may never render) a
+// real gate.
 function autoInit() {
   if (
     typeof document !== 'undefined' &&

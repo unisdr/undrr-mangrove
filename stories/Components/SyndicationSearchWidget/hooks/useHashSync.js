@@ -1,6 +1,12 @@
-/* @file useHashSync.js @description React hook for URL hash synchronization. Syncs search
- * state (query, filters) to/from the URL hash fragment, enabling bookmarkable search
- * results and browser history navigation. @module SearchWidget/hooks/useHashSync / */
+/**
+ * @file useHashSync.js
+ * @description React hook for URL hash synchronization.
+ *
+ * Syncs search state (query, filters) to/from the URL hash fragment,
+ * enabling bookmarkable search results and browser history navigation.
+ *
+ * @module SearchWidget/hooks/useHashSync
+ */
 
 import { useEffect, useRef, useCallback } from 'react';
 import {
@@ -10,12 +16,19 @@ import {
   actions,
 } from '../context/SearchContext';
 
-/* Hook for synchronizing search state with URL hash. Supports: - #query=<search term> -
- * Search query - #page=<number> - Page number (1-based) - #label=<page title> - Optional
- * page title override - ?text=<query> or ?query=<query> parameter migration (converted to
- * hash format; ?text= takes precedence) @param {Object} options - Hook options @param
- * {boolean} options.enabled - Whether hash sync is enabled @returns {Object} Hash sync
- * utilities / */
+/**
+ * Hook for synchronizing search state with URL hash.
+ *
+ * Supports:
+ * - #query=<search term> - Search query
+ * - #page=<number> - Page number (1-based)
+ * - #label=<page title> - Optional page title override
+ * - ?text=<query> or ?query=<query> parameter migration (converted to hash format; ?text= takes precedence)
+ *
+ * @param {Object} options - Hook options
+ * @param {boolean} options.enabled - Whether hash sync is enabled
+ * @returns {Object} Hash sync utilities
+ */
 export function useHashSync({ enabled = true } = {}) {
   const config = useSearchConfig();
   const state = useSearchState();
@@ -26,9 +39,10 @@ export function useHashSync({ enabled = true } = {}) {
   const { query, page, isInitialized } = state;
   const { enableHashSync } = config;
 
-  // Determine if hash sync should be active. Accept both boolean true and string 'true':
-  // when the value is forwarded through Drupal data attributes (data-enable-hash-sync) it
-  // always arrives as a string, so a strict === true check would silently disable hash sync
+  // Determine if hash sync should be active.
+  // Accept both boolean true and string 'true': when the value is forwarded
+  // through Drupal data attributes (data-enable-hash-sync) it always arrives
+  // as a string, so a strict === true check would silently disable hash sync
   // for editors who pick "Always enabled" in the Gutenberg block.
   const isEnabled =
     enabled &&

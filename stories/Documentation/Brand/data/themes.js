@@ -1,12 +1,17 @@
-/* @file themes.js @description Theme metadata and logo URLs for brand pages. Color values
- * are read live from the compiled CSS via getComputedStyle probes in ColorSwatch — no
- * hardcoded hex values to maintain. / */
+/**
+ * @file themes.js
+ * @description Theme metadata and logo URLs for brand pages.
+ * Color values are read live from the compiled CSS via getComputedStyle
+ * probes in ColorSwatch — no hardcoded hex values to maintain.
+ */
 
 const CDN = 'https://assets.undrr.org/logos';
 
-/* CSS class → property mappings for probing theme colors from the DOM. Each entry becomes
- * a ColorSwatch on the brand identity page. The resolved color comes from the active
- * Storybook theme's compiled CSS. / */
+/**
+ * CSS class → property mappings for probing theme colors from the DOM.
+ * Each entry becomes a ColorSwatch on the brand identity page.
+ * The resolved color comes from the active Storybook theme's compiled CSS.
+ */
 export const colorProbes = {
   brand: [
     {
@@ -99,10 +104,17 @@ export const themes = {
     name: 'MCR2030',
     url: 'mcr2030.undrr.org',
     tagline: 'Making Cities Resilient 2030',
-    // To add the MCR2030 logo: 1. Upload the SVG to the CDN at: logos/mcr2030/mcr2030-logo.svg
-    // 2. Replace `null` below with: { src: `${CDN}/mcr2030/mcr2030-logo.svg`, srcWhite:
-    // `${CDN}/mcr2030/mcr2030-logo-white.svg`, alt: 'MCR2030 logo', variants: [ { label: 'Logo
-    // (SVG)', url: `${CDN}/mcr2030/mcr2030-logo.svg` }, ], }
+    // To add the MCR2030 logo:
+    // 1. Upload the SVG to the CDN at: logos/mcr2030/mcr2030-logo.svg
+    // 2. Replace `null` below with:
+    //    {
+    //      src: `${CDN}/mcr2030/mcr2030-logo.svg`,
+    //      srcWhite: `${CDN}/mcr2030/mcr2030-logo-white.svg`,
+    //      alt: 'MCR2030 logo',
+    //      variants: [
+    //        { label: 'Logo (SVG)', url: `${CDN}/mcr2030/mcr2030-logo.svg` },
+    //      ],
+    //    }
     logo: null,
   },
   'IRP Theme': {

@@ -464,8 +464,9 @@ $colors-solid: (
   gap: var(--mg-spacing-200);
 }
 
-// RTL-safe push utilities using CSS logical properties. Push an element toward the inline-
-// end, inline-start, or center by collapsing the opposite margin with auto.
+// RTL-safe push utilities using CSS logical properties.
+// Push an element toward the inline-end, inline-start, or center
+// by collapsing the opposite margin with auto.
 .mg-u-push-end {
   margin-inline-start: auto;
 }

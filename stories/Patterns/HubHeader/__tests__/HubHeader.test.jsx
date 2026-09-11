@@ -122,9 +122,9 @@ test('marks exactly one current section, whatever the surface', () => {
     ).toHaveLength(0);
     unmount();
   }
-  // The visual signals on a coloured ground — weight and the leading rule — are CSS, so they
-  // are verified by review rather than here: jsdom does not load the stylesheet and
-  // getComputedStyle returns nothing for them.
+  // The visual signals on a coloured ground — weight and the leading rule —
+  // are CSS, so they are verified by review rather than here: jsdom does not
+  // load the stylesheet and getComputedStyle returns nothing for them.
 });
 
 test('renders banner actions as links, and only when given', () => {

@@ -9,7 +9,8 @@ function createContainer(attrs = {}) {
 }
 
 describe('textCtaFromElement', () => {
-  // -------------------------------------------------- Full extraction
+  // --------------------------------------------------
+  // Full extraction
   // --------------------------------------------------
 
   it('extracts all attributes from a fully-populated element', () => {
@@ -56,7 +57,8 @@ describe('textCtaFromElement', () => {
     expect(props.className).toBe('my-custom');
   });
 
-  // -------------------------------------------------- Defaults for bare element
+  // --------------------------------------------------
+  // Defaults for bare element
   // --------------------------------------------------
 
   it('returns defaults for a bare element', () => {
@@ -78,7 +80,8 @@ describe('textCtaFromElement', () => {
     expect(props.className).toBeUndefined();
   });
 
-  // -------------------------------------------------- JSON button parsing
+  // --------------------------------------------------
+  // JSON button parsing
   // --------------------------------------------------
 
   it('parses buttons JSON from data-buttons attribute', () => {
@@ -89,7 +92,8 @@ describe('textCtaFromElement', () => {
     expect(Array.isArray(props.buttons)).toBe(true);
   });
 
-  // -------------------------------------------------- Malformed JSON
+  // --------------------------------------------------
+  // Malformed JSON
   // --------------------------------------------------
 
   it('handles malformed JSON gracefully', () => {
@@ -100,7 +104,8 @@ describe('textCtaFromElement', () => {
     expect(props.buttons).toEqual([]);
   });
 
-  // -------------------------------------------------- Boolean centered attribute
+  // --------------------------------------------------
+  // Boolean centered attribute
   // --------------------------------------------------
 
   it('treats missing centered as true', () => {
@@ -118,7 +123,8 @@ describe('textCtaFromElement', () => {
     expect(props.centered).toBe(true);
   });
 
-  // -------------------------------------------------- Headline level parsing
+  // --------------------------------------------------
+  // Headline level parsing
   // --------------------------------------------------
 
   it('clamps invalid headline-level to 2', () => {

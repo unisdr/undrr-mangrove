@@ -1,33 +1,45 @@
-/* Arabic typography must respect language boundaries. Mangrove's Arabic overrides used to
- * be written as descendant selectors — `:lang(ar) { h1 { ... } }`, which compiles to
- * `:lang(ar) h1`. `:lang()` there matches the *root* and the `h1` is merely a descendant,
- * so the rule fired on every heading beneath an Arabic root regardless of that heading's
- * own language. An English island inside an Arabic page — a quotation, a citation, an
- * untranslated widget — rendered in Arabic typography. The fix anchors the pseudo-class to
- * the element itself, which matches on *computed* language and therefore stops at a
- * `lang="en"` boundary, and adds a boundary rule that restores the Latin family to the
- * island (anchoring alone is not enough — `font-family` still inherits down from the
- * Arabic root). unisdr/undrr-mangrove#1098 replaced the per-component `:lang(ar)` blocks
- * with five font *roles* (`--mg-font-family-text` / `-heading` / `-display` / `-ui` /
- * `-code`). Script routing now happens in one place: the roles are bound to Latin faces on
- * `:root` and re-pointed to Arabic faces on `:root:lang(ar)` and at each boundary. The
- * shape being protected is unchanged — `:lang(ar)` stays anchored to the styled element,
- * and the boundary rules stay on the switch point — but what the boundary rules *carry* is
- * now four role values plus the inherited `font-family` itself. See unisdr/undrr-
- * mangrove#1092, #1093 and #1098. Assertions run against compiled CSS, not source, because
- * compiled output is what consumers load. / */
+/**
+ * Arabic typography must respect language boundaries.
+ *
+ * Mangrove's Arabic overrides used to be written as descendant selectors —
+ * `:lang(ar) { h1 { ... } }`, which compiles to `:lang(ar) h1`. `:lang()` there
+ * matches the *root* and the `h1` is merely a descendant, so the rule fired on
+ * every heading beneath an Arabic root regardless of that heading's own
+ * language. An English island inside an Arabic page — a quotation, a citation,
+ * an untranslated widget — rendered in Arabic typography.
+ *
+ * The fix anchors the pseudo-class to the element itself, which matches on
+ * *computed* language and therefore stops at a `lang="en"` boundary, and adds a
+ * boundary rule that restores the Latin family to the island (anchoring alone
+ * is not enough — `font-family` still inherits down from the Arabic root).
+ *
+ * unisdr/undrr-mangrove#1098 replaced the per-component `:lang(ar)` blocks with
+ * five font *roles* (`--mg-font-family-text` / `-heading` / `-display` / `-ui` /
+ * `-code`). Script routing now happens in one place: the roles are bound to
+ * Latin faces on `:root` and re-pointed to Arabic faces on `:root:lang(ar)` and
+ * at each boundary. The shape being protected is unchanged — `:lang(ar)` stays
+ * anchored to the styled element, and the boundary rules stay on the switch
+ * point — but what the boundary rules *carry* is now four role values plus the
+ * inherited `font-family` itself.
+ *
+ * See unisdr/undrr-mangrove#1092, #1093 and #1098. Assertions run against
+ * compiled CSS, not source, because compiled output is what consumers load.
+ */
 const path = require('path');
 const sass = require('sass');
 
 const SCSS_DIR = path.resolve(__dirname, '..');
 const ENTRIES = ['style', 'style-all'];
 
-/* The zero-specificity language-boundary rules added by #1092/#1093. Both use a CHILD
- * combinator on purpose: they must match only the element that declares the new language,
- * never its descendants. A descendant form would also match component children meant to
- * inherit their container's family (a `.mg-card__title` link, a `.mg-hero__title` heading)
- * and a matched declaration beats an inherited one at any specificity, so those would lose
- * Roboto Condensed. / */
+/**
+ * The zero-specificity language-boundary rules added by #1092/#1093. Both use a
+ * CHILD combinator on purpose: they must match only the element that declares
+ * the new language, never its descendants. A descendant form would also match
+ * component children meant to inherit their container's family (a
+ * `.mg-card__title` link, a `.mg-hero__title` heading) and a matched
+ * declaration beats an inherited one at any specificity, so those would lose
+ * Roboto Condensed.
+ */
 const BOUNDARY_TO_LATIN =
   ':where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar)))';
 const BOUNDARY_TO_ARABIC =
@@ -37,19 +49,25 @@ const BOUNDARY_SELECTORS = [BOUNDARY_TO_LATIN, BOUNDARY_TO_ARABIC];
 /** The Arabic document root. Re-points the roles for the whole page. */
 const ARABIC_ROOT = ':root:lang(ar)';
 
-/* The only `:lang(ar)` font-family rule outside the role map, and the only consumer of the
- * `heading` role. Anchored to the heading itself, like every other `:lang(ar)` rule here,
- * so it stops at a `lang="en"` boundary. / */
+/**
+ * The only `:lang(ar)` font-family rule outside the role map, and the only
+ * consumer of the `heading` role. Anchored to the heading itself, like every
+ * other `:lang(ar)` rule here, so it stops at a `lang="en"` boundary.
+ */
 const ARABIC_HEADINGS = ['h1:lang(ar)', 'h2:lang(ar)', 'h3:lang(ar)'];
 
-/* Compiled role values, derived from the face variables in `_variables.scss` rather than
- * retyped, so a deliberate face change is edited in one place. What these tables pin is
- * the role-to-face ASSIGNMENT on each side of a boundary — the decision — not the font
- * names, which are Task 1's to choose. The faces are read back through `mg-font-stack()`,
- * the same helper the role map uses, so both sides of every comparison are rendered
- * identically. That helper exists because plain interpolation strips a list's quotes,
- * which turns a face override such as `"Frutiger 55 Roman", sans-serif` into an invalid
- * custom-ident and silently drops the whole declaration. / */
+/**
+ * Compiled role values, derived from the face variables in `_variables.scss`
+ * rather than retyped, so a deliberate face change is edited in one place. What
+ * these tables pin is the role-to-face ASSIGNMENT on each side of a boundary —
+ * the decision — not the font names, which are Task 1's to choose.
+ *
+ * The faces are read back through `mg-font-stack()`, the same helper the role
+ * map uses, so both sides of every comparison are rendered identically. That
+ * helper exists because plain interpolation strips a list's quotes, which turns
+ * a face override such as `"Frutiger 55 Roman", sans-serif` into an invalid
+ * custom-ident and silently drops the whole declaration.
+ */
 const FACES = [
   'mg-font-face-sans',
   'mg-font-face-sans-condensed',
@@ -72,8 +90,9 @@ const face = (() => {
   const found = {};
   for (const name of FACES) {
     const match = new RegExp(`--${name}\\s*:\\s*([^;}]+)`).exec(css);
-    // Left null when the probe fails to read a face. The tests below compare against these
-    // values, so a null makes every one of them fail loudly rather than pass against a hole.
+    // Left null when the probe fails to read a face. The tests below compare
+    // against these values, so a null makes every one of them fail loudly
+    // rather than pass against a hole.
     found[name] = match && match[1].trim().replace(/\s+/g, ' ');
   }
   return found;
@@ -107,9 +126,11 @@ function compile(entry) {
   return compiled.get(entry);
 }
 
-/* Split a selector list on top-level commas only. A selector may contain commas inside
- * `:not()`, `:is()` or `:where()` — stylelint normalises `:not(a):not(b)` to `:not(a, b)`
- * — so a naive `split(',')` tears those apart. / */
+/**
+ * Split a selector list on top-level commas only. A selector may contain
+ * commas inside `:not()`, `:is()` or `:where()` — stylelint normalises
+ * `:not(a):not(b)` to `:not(a, b)` — so a naive `split(',')` tears those apart.
+ */
 function splitSelectorList(list) {
   const parts = [];
   let depth = 0;
@@ -152,9 +173,11 @@ function blockFor(css, selector) {
   return null;
 }
 
-/* `blockFor` parsed into `{ property: value }`. Asserting on the declarations, not just
- * the selector text, is what gives this suite teeth: a rule with the right selector and
- * the wrong family must fail. Last-wins, as the cascade is. / */
+/**
+ * `blockFor` parsed into `{ property: value }`. Asserting on the declarations,
+ * not just the selector text, is what gives this suite teeth: a rule with the
+ * right selector and the wrong family must fail. Last-wins, as the cascade is.
+ */
 function declarationsFor(css, selector) {
   const block = blockFor(css, selector);
   if (block === null) return null;
@@ -186,17 +209,18 @@ describe('Arabic typography selectors (compiled CSS)', () => {
   );
 
   test.each(ENTRIES)('%s.scss re-points the roles on an Arabic root', entry => {
-    // Every Arabic face substitution now happens through this one rule. It is deliberately NOT
-    // wrapped in `:where()`: `:root` also matches `html`, so a zero-specificity Arabic rule
-    // would lose to the Latin `:root` block.
+    // Every Arabic face substitution now happens through this one rule. It is
+    // deliberately NOT wrapped in `:where()`: `:root` also matches `html`, so a
+    // zero-specificity Arabic rule would lose to the Latin `:root` block.
     expect(declarationsFor(compile(entry), ARABIC_ROOT)).toEqual(ARABIC_ROLES);
   });
 
   test.each(ENTRIES)('%s.scss puts Arabic h1-h3 on the heading role', entry => {
-    // Noto Kufi Arabic is a display face and is reserved for narrative h1-h3 and the hero
-    // title; everything at or below body size takes Noto Sans Arabic. This rule is what keeps
-    // Kufi in the product at all — delete it and Latin is unchanged, the suite is green, and
-    // Arabic headings quietly become body text.
+    // Noto Kufi Arabic is a display face and is reserved for narrative h1-h3
+    // and the hero title; everything at or below body size takes Noto Sans
+    // Arabic. This rule is what keeps Kufi in the product at all — delete it
+    // and Latin is unchanged, the suite is green, and Arabic headings quietly
+    // become body text.
     const css = compile(entry);
     for (const selector of ARABIC_HEADINGS)
       expect(declarationsFor(css, selector)).toEqual({
@@ -207,12 +231,14 @@ describe('Arabic typography selectors (compiled CSS)', () => {
   test.each(ENTRIES)(
     '%s.scss resets to the Latin roles at a boundary',
     entry => {
-      // Anchoring stops the Arabic rules matching non-Arabic elements, but the roles are custom
-      // properties and custom properties inherit, so an English island would still resolve every
-      // role to an Arabic face. `font-family` is restated as well, and must be: it is an
-      // inherited property in its own right, so an element carrying no font-family declaration —
-      // a plain `<section lang="en">`, or a `p` inside it — keeps inheriting the *used* Arabic
-      // family however the roles below it resolve.
+      // Anchoring stops the Arabic rules matching non-Arabic elements, but the
+      // roles are custom properties and custom properties inherit, so an
+      // English island would still resolve every role to an Arabic face.
+      //
+      // `font-family` is restated as well, and must be: it is an inherited
+      // property in its own right, so an element carrying no font-family
+      // declaration — a plain `<section lang="en">`, or a `p` inside it — keeps
+      // inheriting the *used* Arabic family however the roles below it resolve.
       expect(declarationsFor(compile(entry), BOUNDARY_TO_LATIN)).toEqual({
         ...LATIN_ROLES,
         'font-family': 'var(--mg-font-family-text)',
@@ -223,9 +249,9 @@ describe('Arabic typography selectors (compiled CSS)', () => {
   test.each(ENTRIES)(
     '%s.scss restores the Arabic roles at a boundary',
     entry => {
-      // The mirror case: Arabic resuming inside a non-Arabic island, and an Arabic island on an
-      // otherwise Latin page. Without this rule Arabic text inherits Roboto, which has no Arabic
-      // coverage.
+      // The mirror case: Arabic resuming inside a non-Arabic island, and an
+      // Arabic island on an otherwise Latin page. Without this rule Arabic text
+      // inherits Roboto, which has no Arabic coverage.
       expect(declarationsFor(compile(entry), BOUNDARY_TO_ARABIC)).toEqual({
         ...ARABIC_ROLES,
         'font-family': 'var(--mg-font-family-text)',
@@ -252,16 +278,19 @@ describe('Arabic typography selectors (compiled CSS)', () => {
   test.each(ENTRIES)(
     '%s.scss routes every script substitution through the role map',
     entry => {
-      // #1098's central claim: no component stylesheet carries a `:lang(ar)` font override any
-      // more. A component names a role; the three map rules re-point the roles. A new `:lang(ar)
-      // { font-family: ... }` block in a component would restore the per-component drift this
-      // replaced, and would be invisible to every other assertion here. `h1:lang(ar),
-      // h2:lang(ar), h3:lang(ar)` is the one allowed exception, and it is not a component
-      // override: it is the `heading` role's only consumer. The rule is scoped to Arabic because
-      // in Latin `heading` and `text` are both Roboto, so an unconditional `h1, h2, h3` bought
-      // nothing and cost two production themes their brand face — it is a matched declaration at
-      // (0,0,1) that ties with the consumer's own `h1` rule and wins on source order. Its VALUE
-      // is asserted below.
+      // #1098's central claim: no component stylesheet carries a `:lang(ar)`
+      // font override any more. A component names a role; the three map rules
+      // re-point the roles. A new `:lang(ar) { font-family: ... }` block in a
+      // component would restore the per-component drift this replaced, and
+      // would be invisible to every other assertion here.
+      //
+      // `h1:lang(ar), h2:lang(ar), h3:lang(ar)` is the one allowed exception,
+      // and it is not a component override: it is the `heading` role's only
+      // consumer. The rule is scoped to Arabic because in Latin `heading` and
+      // `text` are both Roboto, so an unconditional `h1, h2, h3` bought nothing
+      // and cost two production themes their brand face — it is a matched
+      // declaration at (0,0,1) that ties with the consumer's own `h1` rule and
+      // wins on source order. Its VALUE is asserted below.
       const css = compile(entry);
       const ROLE_MAP = [ARABIC_ROOT, ...BOUNDARY_SELECTORS, ...ARABIC_HEADINGS];
 
@@ -348,12 +377,13 @@ describe('Arabic typography at a language boundary (DOM)', () => {
   });
 
   test('only the island root is a language switch point', () => {
-    // jsdom's selector engine (nwsapi) cannot evaluate `:where()` across a combinator, so the
-    // boundary selectors are asserted against compiled CSS above and their *shape* is asserted
-    // here through the equivalent plain form. What matters is that the island root matches and
-    // its descendants do not — a descendant match is what broke Roboto Condensed inheritance,
-    // and under the role model it would also hand every descendant its own matched `font-
-    // family`, overriding the container it sits in.
+    // jsdom's selector engine (nwsapi) cannot evaluate `:where()` across a
+    // combinator, so the boundary selectors are asserted against compiled CSS
+    // above and their *shape* is asserted here through the equivalent plain
+    // form. What matters is that the island root matches and its descendants
+    // do not — a descendant match is what broke Roboto Condensed inheritance,
+    // and under the role model it would also hand every descendant its own
+    // matched `font-family`, overriding the container it sits in.
     const SWITCH_POINT = ':lang(ar) > [lang]:not([lang=""]):not(:lang(ar))';
 
     expect(island.matches(SWITCH_POINT)).toBe(true);

@@ -4,7 +4,8 @@ import { axe } from 'jest-axe';
 import { PageHeader } from '../PageHeader';
 
 describe('PageHeader', () => {
-  // -------------------------------------------------- Default rendering
+  // --------------------------------------------------
+  // Default rendering
   // --------------------------------------------------
 
   it('renders all sections by default', () => {
@@ -18,7 +19,8 @@ describe('PageHeader', () => {
     expect(screen.getByLabelText('Select your language')).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Visibility toggles
+  // --------------------------------------------------
+  // Visibility toggles
   // --------------------------------------------------
 
   it('hides the logo section when showLogo is false', () => {
@@ -44,7 +46,8 @@ describe('PageHeader', () => {
     expect(screen.getByAltText('UNDRR Logo')).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Decoration-only variant
+  // --------------------------------------------------
+  // Decoration-only variant
   // --------------------------------------------------
 
   it('renders only the decoration stripe for decoration-only variant', () => {
@@ -61,7 +64,8 @@ describe('PageHeader', () => {
     expect(screen.queryByText('My account')).toBeNull();
   });
 
-  // -------------------------------------------------- Custom logo and home URL props
+  // --------------------------------------------------
+  // Custom logo and home URL props
   // --------------------------------------------------
 
   it('applies custom logoUrl, logoAlt, and homeUrl', () => {
@@ -78,7 +82,8 @@ describe('PageHeader', () => {
     expect(img.closest('a')).toHaveAttribute('href', '/home');
   });
 
-  // -------------------------------------------------- Language options
+  // --------------------------------------------------
+  // Language options
   // --------------------------------------------------
 
   it('renders language options from the languages prop', () => {
@@ -100,7 +105,8 @@ describe('PageHeader', () => {
     expect(select.value).toBe('en');
   });
 
-  // -------------------------------------------------- Skip link
+  // --------------------------------------------------
+  // Skip link
   // --------------------------------------------------
 
   it('emits no skip link unless a target is given', () => {
@@ -132,7 +138,8 @@ describe('PageHeader', () => {
     ).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations in default variant', async () => {

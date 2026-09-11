@@ -1,6 +1,13 @@
-/* Default copy for error pages These messages follow UNDRR writing guidelines: - Sentence
- * case headings - Calm, actionable guidance - No blame or technical jargon @see
- * https://gitlab.com/undrr/web-backlog/-/issues/2556 / */
+/**
+ * Default copy for error pages
+ *
+ * These messages follow UNDRR writing guidelines:
+ * - Sentence case headings
+ * - Calm, actionable guidance
+ * - No blame or technical jargon
+ *
+ * @see https://gitlab.com/undrr/web-backlog/-/issues/2556
+ */
 export const DEFAULT_COPY = {
   401: {
     title: 'You are not signed in',
@@ -44,9 +51,14 @@ export const DEFAULT_COPY = {
   },
 };
 
-/* Default copy for Cloudflare challenge pages Challenge pages verify visitors before
- * granting access. They are not errors, so the tone is neutral and reassuring rather than
- * apologetic. @see https://gitlab.com/undrr/web-backlog/-/issues/2615 / */
+/**
+ * Default copy for Cloudflare challenge pages
+ *
+ * Challenge pages verify visitors before granting access. They are not errors,
+ * so the tone is neutral and reassuring rather than apologetic.
+ *
+ * @see https://gitlab.com/undrr/web-backlog/-/issues/2615
+ */
 export const CHALLENGE_COPY = {
   challenge: {
     title: 'Security check',
@@ -60,13 +72,22 @@ export const CHALLENGE_COPY = {
   },
 };
 
-/* Cloudflare error tokens for custom error pages These tokens are replaced by Cloudflare
- * at runtime when serving custom error pages. See:
- * https://developers.cloudflare.com/rules/custom-errors/reference/error-tokens/ To use
- * these in static HTML templates, include the token string directly in your HTML.
- * Cloudflare will substitute the actual values when serving the page. Example usage in
- * HTML: <dl class="mg-error-page__details"> <dt>Ray ID:</dt><dd>::RAY_ID::</dd> <dt>Your
- * IP:</dt><dd>::CLIENT_IP::</dd> <dt>Location:</dt><dd>::GEO::</dd> </dl> / */
+/**
+ * Cloudflare error tokens for custom error pages
+ *
+ * These tokens are replaced by Cloudflare at runtime when serving custom error pages.
+ * See: https://developers.cloudflare.com/rules/custom-errors/reference/error-tokens/
+ *
+ * To use these in static HTML templates, include the token string directly in your HTML.
+ * Cloudflare will substitute the actual values when serving the page.
+ *
+ * Example usage in HTML:
+ *   <dl class="mg-error-page__details">
+ *     <dt>Ray ID:</dt><dd>::RAY_ID::</dd>
+ *     <dt>Your IP:</dt><dd>::CLIENT_IP::</dd>
+ *     <dt>Location:</dt><dd>::GEO::</dd>
+ *   </dl>
+ */
 export const CLOUDFLARE_TOKENS = {
   // General information tokens
   RAY_ID: '::RAY_ID::', // Unique request identifier for support tickets

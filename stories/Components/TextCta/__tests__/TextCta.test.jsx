@@ -9,7 +9,8 @@ describe('TextCta', () => {
     { label: 'Contact us', url: '/contact', type: 'Secondary' },
   ];
 
-  // -------------------------------------------------- Headline rendering
+  // --------------------------------------------------
+  // Headline rendering
   // --------------------------------------------------
 
   it('renders headline text', () => {
@@ -53,7 +54,8 @@ describe('TextCta', () => {
     expect(heading.tagName).toBe('H3');
   });
 
-  // -------------------------------------------------- Text (dangerouslySetInnerHTML)
+  // --------------------------------------------------
+  // Text (dangerouslySetInnerHTML)
   // --------------------------------------------------
 
   it('renders sanitized HTML in text prop', () => {
@@ -75,7 +77,8 @@ describe('TextCta', () => {
     expect(textEl.innerHTML).not.toContain('<script>');
   });
 
-  // -------------------------------------------------- Buttons
+  // --------------------------------------------------
+  // Buttons
   // --------------------------------------------------
 
   it('renders buttons as links', () => {
@@ -121,7 +124,8 @@ describe('TextCta', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  // -------------------------------------------------- Variant classes
+  // --------------------------------------------------
+  // Variant classes
   // --------------------------------------------------
 
   it('applies variant class', () => {
@@ -136,7 +140,8 @@ describe('TextCta', () => {
     expect(container.firstChild).toHaveClass('mg-cta--primary');
   });
 
-  // -------------------------------------------------- Image layout
+  // --------------------------------------------------
+  // Image layout
   // --------------------------------------------------
 
   it('adds mg-cta--with-image class when image is set', () => {
@@ -151,7 +156,8 @@ describe('TextCta', () => {
     expect(img).toHaveAttribute('src', 'https://example.com/photo.jpg');
   });
 
-  // -------------------------------------------------- Centered layout
+  // --------------------------------------------------
+  // Centered layout
   // --------------------------------------------------
 
   it('adds mg-cta--centered class when centered and no image', () => {
@@ -175,7 +181,8 @@ describe('TextCta', () => {
     expect(container.firstChild).not.toHaveClass('mg-cta--centered');
   });
 
-  // -------------------------------------------------- Custom background color
+  // --------------------------------------------------
+  // Custom background color
   // --------------------------------------------------
 
   it('sets --mg-cta-bg CSS variable from backgroundColor', () => {
@@ -190,7 +197,8 @@ describe('TextCta', () => {
     expect(container.firstChild).toHaveStyle({ padding: '8rem 0' });
   });
 
-  // -------------------------------------------------- Additional className
+  // --------------------------------------------------
+  // Additional className
   // --------------------------------------------------
 
   it('appends custom className', () => {
@@ -199,7 +207,8 @@ describe('TextCta', () => {
     expect(container.firstChild).toHaveClass('mg-cta', 'my-custom');
   });
 
-  // -------------------------------------------------- Accessible name on section
+  // --------------------------------------------------
+  // Accessible name on section
   // --------------------------------------------------
 
   it('labels section via aria-labelledby when headline is present', () => {
@@ -217,7 +226,8 @@ describe('TextCta', () => {
     expect(section).toHaveAttribute('aria-label', 'Call to action');
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

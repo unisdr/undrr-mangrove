@@ -1,16 +1,27 @@
-/* @file Boilerplate.jsx @description Example component to clone when creating new
- * components. @module Boilerplate / */
+/**
+ * @file Boilerplate.jsx
+ * @description Example component to clone when creating new components.
+ *
+ * @module Boilerplate
+ */
 
 import React from 'react';
 import PropTypes from 'prop-types';
 // import './boilerplate.scss'; // Import in components.scss instead
 
-/* Boilerplate component. Clone this directory when creating a new component. Replace the
- * name, props, and markup with your own. @param {Object} props @param {string} props.title
- * Heading text @param {string} [props.href] Optional link URL for the title @param
- * {React.ReactNode} props.children Body content @param {'primary'|'secondary'}
- * [props.variant='primary'] Visual variant @returns {JSX.Element} Rendered Boilerplate
- * component / */
+/**
+ * Boilerplate component.
+ *
+ * Clone this directory when creating a new component. Replace the name,
+ * props, and markup with your own.
+ *
+ * @param {Object} props
+ * @param {string} props.title        Heading text
+ * @param {string} [props.href]       Optional link URL for the title
+ * @param {React.ReactNode} props.children  Body content
+ * @param {'primary'|'secondary'} [props.variant='primary']  Visual variant
+ * @returns {JSX.Element} Rendered Boilerplate component
+ */
 export function Boilerplate({
   title,
   href,

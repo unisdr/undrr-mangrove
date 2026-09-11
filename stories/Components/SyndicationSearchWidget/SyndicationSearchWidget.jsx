@@ -1,11 +1,22 @@
-/* @file SyndicationSearchWidget.jsx @description UNDRR Syndication Search Widget - React
- * 19 component. A feature-rich search widget tightly coupled with the UNDRR web platform.
- * Integrates with Elasticsearch via the UNDRR /search-endpoint proxy. Uses React 19's
- * concurrent features for optimal user experience. Features: - useDeferredValue for
- * responsive input - useTransition for non-blocking result updates - Suspense boundaries
- * for loading states - Full accessibility (ARIA, keyboard navigation) - Faceted search
- * with active filter chips - URL hash synchronization - Pre-rendered teaser HTML support
- * @module SyndicationSearchWidget / */
+/**
+ * @file SyndicationSearchWidget.jsx
+ * @description UNDRR Syndication Search Widget - React 19 component.
+ *
+ * A feature-rich search widget tightly coupled with the UNDRR web platform.
+ * Integrates with Elasticsearch via the UNDRR /search-endpoint proxy.
+ * Uses React 19's concurrent features for optimal user experience.
+ *
+ * Features:
+ * - useDeferredValue for responsive input
+ * - useTransition for non-blocking result updates
+ * - Suspense boundaries for loading states
+ * - Full accessibility (ARIA, keyboard navigation)
+ * - Faceted search with active filter chips
+ * - URL hash synchronization
+ * - Pre-rendered teaser HTML support
+ *
+ * @module SyndicationSearchWidget
+ */
 
 import React, {
   useState,
@@ -34,10 +45,14 @@ import ActiveFilters from './components/ActiveFilters';
 import FacetsSidebar from './components/FacetsSidebar';
 import MobileFilterDrawer from './components/MobileFilterDrawer';
 
-/* SyndicationSearchWidget component. Main entry point for the UNDRR Syndication Search
- * Widget. @param {Object} props - Component props @param {Object} props.config - Widget
- * configuration @param {Object} [props.labels] - UI label overrides; merged with
- * DEFAULT_LABELS / */
+/**
+ * SyndicationSearchWidget component.
+ * Main entry point for the UNDRR Syndication Search Widget.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.config - Widget configuration
+ * @param {Object} [props.labels] - UI label overrides; merged with DEFAULT_LABELS
+ */
 export function SyndicationSearchWidget({ config, labels }) {
   return (
     <SearchProvider config={config} labels={labels}>
@@ -72,29 +87,40 @@ SyndicationSearchWidget.propTypes = {
     showResultsCount: PropTypes.bool,
     /** Whether to display the search timer. */
     showSearchTimer: PropTypes.bool,
-    /* Facets layout: visibility and placement. `false` hides facets entirely; `'sidebar'`
-     * (default) renders them in the right-hand sidebar; `'horizontal'` renders them as a
-     * horizontal strip above the results region. / */
+    /**
+     * Facets layout: visibility and placement.
+     * `false` hides facets entirely; `'sidebar'` (default) renders them in
+     * the right-hand sidebar; `'horizontal'` renders them as a horizontal
+     * strip above the results region.
+     */
     facets: PropTypes.oneOf([false, 'sidebar', 'horizontal']),
     /** @deprecated Use `facets` instead. Boolean shorthand: false hides, true → 'sidebar'. */
     showFacets: PropTypes.bool,
-    /* CSS selector for a DOM element outside the widget where the facets UI should be rendered
-     * (via React portal). Useful when a consuming page wants to place facets in a left rail or
-     * other region that is not a child of the widget container. When set and the element is
-     * found, the in-widget sidebar / strip is suppressed and the facets are rendered into the
-     * target instead. The widget's React tree spans the portal so search context still flows.
-     * If the target element is not present at mount time, the widget falls back to the in-
-     * widget layout chosen by `facets` and a warning is logged. / */
+    /**
+     * CSS selector for a DOM element outside the widget where the facets
+     * UI should be rendered (via React portal). Useful when a consuming
+     * page wants to place facets in a left rail or other region that is
+     * not a child of the widget container. When set and the element is
+     * found, the in-widget sidebar / strip is suppressed and the facets
+     * are rendered into the target instead. The widget's React tree spans
+     * the portal so search context still flows. If the target element is
+     * not present at mount time, the widget falls back to the in-widget
+     * layout chosen by `facets` and a warning is logged.
+     */
     facetsTarget: PropTypes.string,
-    /* CSS selector for a DOM element outside the widget where the search input should be
-     * rendered (via React portal). Lets a consuming page place a "hero" search input in a
-     * banner region while results render where the widget is mounted. The same React tree
-     * spans the portal, so the input, facets, and results all share `SearchContext`, with no
-     * separate component, no URL-hash bridge needed for the same-page case. If the target
-     * element is not present at mount time the widget falls back to rendering the input in-
-     * place and logs a console warning. For cross-page hero patterns (input on landing,
-     * results on `/search`), use a plain HTML form posting to the results page with a
-     * `#query=...` fragment instead. / */
+    /**
+     * CSS selector for a DOM element outside the widget where the search
+     * input should be rendered (via React portal). Lets a consuming page
+     * place a "hero" search input in a banner region while results render
+     * where the widget is mounted. The same React tree spans the portal,
+     * so the input, facets, and results all share `SearchContext`, with no
+     * separate component, no URL-hash bridge needed for the same-page
+     * case. If the target element is not present at mount time the
+     * widget falls back to rendering the input in-place and logs a
+     * console warning. For cross-page hero patterns (input on landing,
+     * results on `/search`), use a plain HTML form posting to the
+     * results page with a `#query=...` fragment instead.
+     */
     searchTarget: PropTypes.string,
     /** Whether to display active filter chips above results. */
     showActiveFilters: PropTypes.bool,
@@ -128,9 +154,11 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
   }).isRequired,
-  /* UI label overrides merged with DEFAULT_LABELS. Pass any subset to translate or customise
-   * individual strings. Dynamic strings use `{placeholder}` tokens — see `interpolateLabel`.
-   * / */
+  /**
+   * UI label overrides merged with DEFAULT_LABELS.
+   * Pass any subset to translate or customise individual strings.
+   * Dynamic strings use `{placeholder}` tokens — see `interpolateLabel`.
+   */
   labels: PropTypes.object,
 };
 
@@ -166,9 +194,10 @@ function SyndicationSearchWidgetInner() {
   // This keeps the input responsive while search runs in background
   const deferredQuery = useDeferredValue(inputValue);
 
-  // Update context when deferred query changes. Skip the first render: on initial mount,
-  // useHashSync may have already dispatched setQuery from the URL hash (e.g. #query=news).
-  // If we ran an unconditional setQuery('') here on mount we would stomp that value before
+  // Update context when deferred query changes.
+  // Skip the first render: on initial mount, useHashSync may have already
+  // dispatched setQuery from the URL hash (e.g. #query=news). If we ran an
+  // unconditional setQuery('') here on mount we would stomp that value before
   // INITIALIZE could preserve it. Subsequent renders sync user input as normal.
   const isFirstQuerySync = useRef(true);
   useEffect(() => {
@@ -209,10 +238,11 @@ function SyndicationSearchWidgetInner() {
   const showSearchBox = config.showSearchBox !== false;
   const { isLoading } = state;
 
-  // Resolve external facets target (AC2: facets in a separate DOM region). Looked up once on
-  // mount when a selector is configured. If the target node isn't in the document, fall back
-  // to the in-widget layout and log a single console warning so editors and developers can
-  // see why the portal didn't take effect.
+  // Resolve external facets target (AC2: facets in a separate DOM region).
+  // Looked up once on mount when a selector is configured. If the target
+  // node isn't in the document, fall back to the in-widget layout and log
+  // a single console warning so editors and developers can see why the
+  // portal didn't take effect.
   const [facetsTargetEl, setFacetsTargetEl] = useState(null);
   useEffect(() => {
     if (!facetsActive || !facetsTarget || typeof document === 'undefined') {
@@ -233,9 +263,9 @@ function SyndicationSearchWidgetInner() {
 
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
-  // Resolve external search-input target (AC3: search input rendered in a separate DOM
-  // region, typically a hero/banner region while results render lower on the page). Same
-  // pattern as facetsTarget.
+  // Resolve external search-input target (AC3: search input rendered in a
+  // separate DOM region, typically a hero/banner region while results
+  // render lower on the page). Same pattern as facetsTarget.
   const [searchTargetEl, setSearchTargetEl] = useState(null);
   useEffect(() => {
     if (!showSearchBox || !searchTarget || typeof document === 'undefined') {
@@ -437,8 +467,11 @@ function SearchResultsSkeleton({
   );
 }
 
-/* Count total active filters (facets + custom facets). @param {Object} state - Search
- * state @returns {number} Count of active filters / */
+/**
+ * Count total active filters (facets + custom facets).
+ * @param {Object} state - Search state
+ * @returns {number} Count of active filters
+ */
 function countActiveFilters(state) {
   let count = 0;
 

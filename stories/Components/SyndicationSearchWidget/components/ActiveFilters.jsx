@@ -1,5 +1,9 @@
-/* @file ActiveFilters.jsx @description Active filter chips component with removal
- * functionality. @module SearchWidget/components/ActiveFilters / */
+/**
+ * @file ActiveFilters.jsx
+ * @description Active filter chips component with removal functionality.
+ *
+ * @module SearchWidget/components/ActiveFilters
+ */
 
 import React, { useCallback, useMemo, useId } from 'react';
 import {
@@ -230,10 +234,14 @@ export function ActiveFilters() {
   );
 }
 
-/* Get human-readable label for a facet value. @param {string} key - Facet key @param
- * {string} value - Facet value @param {string} vocabulary - Vocabulary type @param
- * {Function} getTaxonomyLabel - Function to look up taxonomy term labels @returns {string}
- * Human-readable label / */
+/**
+ * Get human-readable label for a facet value.
+ * @param {string} key - Facet key
+ * @param {string} value - Facet value
+ * @param {string} vocabulary - Vocabulary type
+ * @param {Function} getTaxonomyLabel - Function to look up taxonomy term labels
+ * @returns {string} Human-readable label
+ */
 function getLabelForValue(key, value, vocabulary, getTaxonomyLabel) {
   // Year is just the numeric value
   if (key === 'year') {

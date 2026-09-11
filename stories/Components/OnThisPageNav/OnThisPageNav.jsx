@@ -9,13 +9,19 @@ export const DEFAULT_ON_THIS_PAGE_LABELS = {
   label: 'On this page',
 };
 
-/* Storybook wrapper for the OnThisPageNav vanilla JS component. Renders the HTML structure
- * and calls mgOnThisPageNav() via useEffect. This is not intended as a production React
- * component. @param {Object} props @param {string} [props.depth] Max heading level to scan
- * ("2", "3", "4") @param {string} [props.contentSelector] CSS selector for heading scan
- * scope @param {object} [props.labels] UI label overrides @param {Array<{href: string,
- * text: string}>} [props.items] Explicit nav items (skips auto-detect) @param {string}
- * [props.ctaHref] CTA link URL @param {string} [props.ctaText] CTA link text / */
+/**
+ * Storybook wrapper for the OnThisPageNav vanilla JS component.
+ * Renders the HTML structure and calls mgOnThisPageNav() via useEffect.
+ * This is not intended as a production React component.
+ *
+ * @param {Object} props
+ * @param {string} [props.depth]            Max heading level to scan ("2", "3", "4")
+ * @param {string} [props.contentSelector]  CSS selector for heading scan scope
+ * @param {object} [props.labels]           UI label overrides
+ * @param {Array<{href: string, text: string}>} [props.items] Explicit nav items (skips auto-detect)
+ * @param {string} [props.ctaHref]          CTA link URL
+ * @param {string} [props.ctaText]          CTA link text
+ */
 export default function OnThisPageNav({
   depth = '2',
   contentSelector = null,

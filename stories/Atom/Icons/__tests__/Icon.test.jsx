@@ -4,7 +4,8 @@ import { axe } from 'jest-axe';
 import { Icon } from '../Icon';
 
 describe('Icon', () => {
-  // -------------------------------------------------- Class name normalisation
+  // --------------------------------------------------
+  // Class name normalisation
   // --------------------------------------------------
 
   it('renders plain name as mg-icon mg-icon-{name}', () => {
@@ -33,7 +34,8 @@ describe('Icon', () => {
     expect(container.firstChild.className).toBe('mg-icon fa-globe');
   });
 
-  // -------------------------------------------------- Size modifier
+  // --------------------------------------------------
+  // Size modifier
   // --------------------------------------------------
 
   it('appends the size modifier class when size is provided', () => {
@@ -46,7 +48,8 @@ describe('Icon', () => {
     expect(container.firstChild).toHaveClass(`mg-icon--${size}`);
   });
 
-  // -------------------------------------------------- Additional className
+  // --------------------------------------------------
+  // Additional className
   // --------------------------------------------------
 
   it('appends extra className to the class list', () => {
@@ -57,8 +60,9 @@ describe('Icon', () => {
     expect(container.firstChild).toHaveClass('mg-icon', 'mg-icon-globe');
   });
 
-  // -------------------------------------------------- Accessibility — decorative icon
-  // contract --------------------------------------------------
+  // --------------------------------------------------
+  // Accessibility — decorative icon contract
+  // --------------------------------------------------
 
   it('always renders aria-hidden="true"', () => {
     const { container } = render(<Icon name="globe" />);
@@ -76,7 +80,8 @@ describe('Icon', () => {
     expect(results).toHaveNoViolations();
   });
 
-  // -------------------------------------------------- Edge cases
+  // --------------------------------------------------
+  // Edge cases
   // --------------------------------------------------
 
   it('returns null when name is not provided', () => {

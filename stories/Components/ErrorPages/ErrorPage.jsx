@@ -25,12 +25,16 @@ function renderAction(action) {
   );
 }
 
-/* ErrorPage component: standardized UX for common HTTP error states. - Uses sentence case
- * headings and calm, actionable guidance per writing standards - Provides sensible default
- * copy for common error codes - Allows override of title, description, and actions -
- * Supports showing request details (Ray ID, IP, location) for debugging For Cloudflare
- * integration, static HTML templates are available in the static/ directory with
- * Cloudflare tokens pre-configured. / */
+/**
+ * ErrorPage component: standardized UX for common HTTP error states.
+ * - Uses sentence case headings and calm, actionable guidance per writing standards
+ * - Provides sensible default copy for common error codes
+ * - Allows override of title, description, and actions
+ * - Supports showing request details (Ray ID, IP, location) for debugging
+ *
+ * For Cloudflare integration, static HTML templates are available in the
+ * static/ directory with Cloudflare tokens pre-configured.
+ */
 export function ErrorPage({
   code = 404,
   variant = 'error',

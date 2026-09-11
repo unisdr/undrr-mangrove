@@ -7,15 +7,17 @@ export const DEFAULT_TAB_LABELS = {
   tabListLabel: 'Sections',
 };
 
-/* Renders a tab component with either stacked or horizontal layout. @param {Object} props
- * - The component props. @param {Array} props.tabdata - An array of tab objects containing
- * text, text_id, and data. @param {string} [props.variant='horizontal'] - The layout
- * variant, either 'stacked' or 'horizontal'. @param {boolean} [props.defaultOpen] -
- * Whether stacked panels start open (true), closed (false), or default (undefined = open
- * first). @param {boolean} [props.singleOpen=false] - When true, only one stacked panel
- * can be open at a time. @param {boolean} [props.filterable=false] - When true, renders a
- * search input to filter stacked sections. @param {object} [props.labels] - UI label
- * overrides. @returns {JSX.Element} A React component representing the tab structure. / */
+/**
+ * Renders a tab component with either stacked or horizontal layout.
+ * @param {Object} props - The component props.
+ * @param {Array} props.tabdata - An array of tab objects containing text, text_id, and data.
+ * @param {string} [props.variant='horizontal'] - The layout variant, either 'stacked' or 'horizontal'.
+ * @param {boolean} [props.defaultOpen] - Whether stacked panels start open (true), closed (false), or default (undefined = open first).
+ * @param {boolean} [props.singleOpen=false] - When true, only one stacked panel can be open at a time.
+ * @param {boolean} [props.filterable=false] - When true, renders a search input to filter stacked sections.
+ * @param {object} [props.labels] - UI label overrides.
+ * @returns {JSX.Element} A React component representing the tab structure.
+ */
 export function Tab({
   tabdata,
   variant = 'horizontal',

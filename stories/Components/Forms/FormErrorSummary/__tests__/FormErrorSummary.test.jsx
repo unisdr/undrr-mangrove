@@ -10,7 +10,8 @@ const errors = [
 ];
 
 describe('FormErrorSummary', () => {
-  // -------------------------------------------------- Rendering
+  // --------------------------------------------------
+  // Rendering
   // --------------------------------------------------
 
   it('renders the title and error messages', () => {
@@ -46,7 +47,8 @@ describe('FormErrorSummary', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  // -------------------------------------------------- BEM classes
+  // --------------------------------------------------
+  // BEM classes
   // --------------------------------------------------
 
   it('applies BEM class names', () => {
@@ -72,7 +74,8 @@ describe('FormErrorSummary', () => {
     ).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has role="alert"', () => {
@@ -137,7 +140,8 @@ describe('FormErrorSummary', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  // -------------------------------------------------- Rest props
+  // --------------------------------------------------
+  // Rest props
   // --------------------------------------------------
 
   it('spreads rest props to the container', () => {

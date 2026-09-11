@@ -1,5 +1,9 @@
-/* @file _labels.js @description Translated label sets for ShareButtons. Imported by
- * ShareButtons.stories.jsx for the locale toolbar decorator. / */
+/**
+ * @file _labels.js
+ * @description Translated label sets for ShareButtons.
+ *
+ * Imported by ShareButtons.stories.jsx for the locale toolbar decorator.
+ */
 
 export const LABELS_ES = {
   mainLabel: 'Compartir',

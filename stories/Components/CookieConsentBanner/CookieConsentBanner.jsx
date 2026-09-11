@@ -18,8 +18,11 @@ const generateCacheBuster = () => {
   return `${year}${month}${day}${hour}${minute}`;
 };
 
-/* Dynamically loads a CSS file @param {string} href - The URL of the CSS file @returns
- * {Promise} - Promise that resolves when the CSS is loaded / */
+/**
+ * Dynamically loads a CSS file
+ * @param {string} href - The URL of the CSS file
+ * @returns {Promise} - Promise that resolves when the CSS is loaded
+ */
 const loadCSS = href => {
   return new Promise((resolve, reject) => {
     // Check if CSS is already loaded
@@ -46,8 +49,11 @@ const loadCSS = href => {
   });
 };
 
-/* Dynamically loads a JavaScript file @param {string} src - The URL of the JavaScript file
- * @returns {Promise} - Promise that resolves when the script is loaded / */
+/**
+ * Dynamically loads a JavaScript file
+ * @param {string} src - The URL of the JavaScript file
+ * @returns {Promise} - Promise that resolves when the script is loaded
+ */
 const loadScript = src => {
   return new Promise((resolve, reject) => {
     // Check if script is already loaded
@@ -74,12 +80,16 @@ const loadScript = src => {
   });
 };
 
-/* Cookie Consent Banner Component @param {Object} props - Component props @param {Object}
- * props.config - Custom configuration to override the default CDN configuration @param
- * {boolean} props.debug - Enable debug logging for troubleshooting @param {boolean}
- * props.forceFallback - Force the component to use local fallback configuration instead of
- * CDN @param {string} props.cdnBaseUrl - Base URL for the CDN resources (defaults to UNDRR
- * CDN) @returns {null} - This component does not render anything itself / */
+/**
+ * Cookie Consent Banner Component
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.config - Custom configuration to override the default CDN configuration
+ * @param {boolean} props.debug - Enable debug logging for troubleshooting
+ * @param {boolean} props.forceFallback - Force the component to use local fallback configuration instead of CDN
+ * @param {string} props.cdnBaseUrl - Base URL for the CDN resources (defaults to UNDRR CDN)
+ * @returns {null} - This component does not render anything itself
+ */
 const CookieConsentBanner = ({
   config: customConfig = null,
   debug = false,
@@ -375,12 +385,13 @@ const CookieConsentBanner = ({
     };
   }, [customConfig, debug, forceFallback, cdnBaseUrl]);
 
-  // Returning an empty Fragment instead of `null` so the Storybook docgen pass (which is
-  // configured to use `react-docgen`, see .storybook/main.js) can classify this as a React
-  // component and extract its prop contract. `react-docgen` uses JSX presence to identify
-  // components; a pure side-effect component that only returns `null` would otherwise have
-  // its `propTypes` dropped from the AI manifest. Empty Fragments render nothing in the DOM
-  // — behaviourally identical to `return null` for consumers. See #1006.
+  // Returning an empty Fragment instead of `null` so the Storybook docgen pass
+  // (which is configured to use `react-docgen`, see .storybook/main.js) can
+  // classify this as a React component and extract its prop contract.
+  // `react-docgen` uses JSX presence to identify components; a pure side-effect
+  // component that only returns `null` would otherwise have its `propTypes`
+  // dropped from the AI manifest. Empty Fragments render nothing in the DOM —
+  // behaviourally identical to `return null` for consumers. See #1006.
   return <></>;
 };
 

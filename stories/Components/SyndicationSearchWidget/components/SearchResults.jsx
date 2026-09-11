@@ -1,5 +1,9 @@
-/* @file SearchResults.jsx @description Search results list component with accessibility.
- * @module SearchWidget/components/SearchResults / */
+/**
+ * @file SearchResults.jsx
+ * @description Search results list component with accessibility.
+ *
+ * @module SearchWidget/components/SearchResults
+ */
 
 import React, { useMemo } from 'react';
 import {
@@ -12,12 +16,17 @@ import { buildHiddenFieldClasses } from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
-/* SearchResults component. Renders the list of search results with count and timing.
- * @param {Object} props - Component props @param {boolean} props.isStale - Whether results
- * are stale (search pending) @param {string} props.widgetId - Unique widget ID for
- * accessibility @param {boolean} props.showMobileFilterButton - Whether to show mobile
- * filter button @param {Function} props.onOpenFilters - Callback to open filter drawer
- * @param {number} props.activeFilterCount - Number of active filters / */
+/**
+ * SearchResults component.
+ * Renders the list of search results with count and timing.
+ *
+ * @param {Object} props - Component props
+ * @param {boolean} props.isStale - Whether results are stale (search pending)
+ * @param {string} props.widgetId - Unique widget ID for accessibility
+ * @param {boolean} props.showMobileFilterButton - Whether to show mobile filter button
+ * @param {Function} props.onOpenFilters - Callback to open filter drawer
+ * @param {number} props.activeFilterCount - Number of active filters
+ */
 export function SearchResults({
   isStale = false,
   widgetId = '',
@@ -288,10 +297,14 @@ export function SearchResults({
   );
 }
 
-/* Loading skeleton component. Renders a card grid skeleton for card/card-book modes, list
- * skeleton otherwise. @param {Object} props - Component props @param {number} props.count
- * - Number of skeleton items @param {string} props.displayMode - Display mode: 'list',
- * 'card', or 'card-book' @param {number} props.gridColumns - Grid columns for card modes / */
+/**
+ * Loading skeleton component.
+ * Renders a card grid skeleton for card/card-book modes, list skeleton otherwise.
+ * @param {Object} props - Component props
+ * @param {number} props.count - Number of skeleton items
+ * @param {string} props.displayMode - Display mode: 'list', 'card', or 'card-book'
+ * @param {number} props.gridColumns - Grid columns for card modes
+ */
 function SearchSkeleton({ count = 3, displayMode = 'list', gridColumns }) {
   const isCardMode = displayMode === 'card' || displayMode === 'card-book';
   const cols = isCardMode

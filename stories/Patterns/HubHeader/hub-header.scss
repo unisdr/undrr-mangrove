@@ -1,34 +1,36 @@
 // Story-only exploration: intentionally excluded from the distributed stylesheet.
-// Deliberately not a tab set and deliberately not the mega menu topbar. Both mark the
-// active item with a 3px bottom border; so does OnThisPageNav. A leading rule is the
-// repo's existing idiom for "the destination you are on" (see mg-mega-content__section-
-// list-link--active), and it is the one horizontal-strip treatment not already spoken for.
+// Deliberately not a tab set and deliberately not the mega menu topbar. Both
+// mark the active item with a 3px bottom border; so does OnThisPageNav. A
+// leading rule is the repo's existing idiom for "the destination you are on"
+// (see mg-mega-content__section-list-link--active), and it is the one
+// horizontal-strip treatment not already spoken for.
 .mg-hub-header {
-  // Every surface-dependent value is a variable, so a surface variant only has to retarget
-  // these and the contrast follows. The colour values reuse Hero's own tokens, which are
-  // theme-aware, so a header and a hero set to the same surface match in all five themes
-  // without hardcoding anything. Unified is the default. On a colour every link goes white,
-  // so the current item can no longer be marked by colour — weight and the leading rule
-  // carry it, and neither was colour-dependent to begin with.
+  // Every surface-dependent value is a variable, so a surface variant only has
+  // to retarget these and the contrast follows. The colour values reuse Hero's
+  // own tokens, which are theme-aware, so a header and a hero set to the same
+  // surface match in all five themes without hardcoding anything.
+  // Unified is the default. On a colour every link goes white, so the current
+  // item can no longer be marked by colour — weight and the leading rule carry
+  // it, and neither was colour-dependent to begin with.
   --mg-hub-header-surface: var(--mg-color-hero);
   --mg-hub-header-banner-surface: var(--mg-color-hero);
   --mg-hub-header-ink: var(--mg-color-neutral-0);
   --mg-hub-header-link: var(--mg-color-neutral-0);
 
-  // The global `a:hover` sets --mg-color-interactive-active, and at (0,2,1) it outspecifies
-  // a plain link rule. Unstated, that lands a dark hover colour meant for white backgrounds
-  // on a coloured bar. On a colour the link holds its colour and the underline carries the
-  // hover instead.
+  // The global `a:hover` sets --mg-color-interactive-active, and at (0,2,1) it
+  // outspecifies a plain link rule. Unstated, that lands a dark hover colour
+  // meant for white backgrounds on a coloured bar. On a colour the link holds
+  // its colour and the underline carries the hover instead.
   --mg-hub-header-link-hover: var(--mg-color-neutral-0);
   --mg-hub-header-marker: var(--mg-color-neutral-0);
   --mg-hub-header-rule: var(--mg-color-neutral-0);
   --mg-hub-header-rule-alpha: 0.4;
   --mg-hub-header-focus: var(--mg-color-focus-ring-inverse);
 
-  // A slight tint stratifies the bar from the banner without drawing a rule between them.
-  // Without it the two are the same flat colour, and a hero image meeting that slab reads as
-  // a rendering fault rather than a boundary. Darkening only raises the contrast of the
-  // white links above it.
+  // A slight tint stratifies the bar from the banner without drawing a rule
+  // between them. Without it the two are the same flat colour, and a hero image
+  // meeting that slab reads as a rendering fault rather than a boundary.
+  // Darkening only raises the contrast of the white links above it.
   --mg-hub-header-bar-tint: 0 0 0;
   --mg-hub-header-bar-tint-alpha: 0.14;
 
@@ -70,9 +72,9 @@
       padding-inline: var(--mg-spacing-200);
     }
 
-    // Once the links wrap to their own line the strip should behave like any mobile scroller:
-    // out to the screen edges, so the fade sits at the edge and shows there is more to reach
-    // rather than stopping short of it.
+    // Once the links wrap to their own line the strip should behave like any
+    // mobile scroller: out to the screen edges, so the fade sits at the edge
+    // and shows there is more to reach rather than stopping short of it.
     &__nav {
       margin-inline: calc(var(--mg-spacing-200) * -1);
     }
@@ -94,16 +96,16 @@
       rgb(var(--mg-hub-header-bar-tint) / var(--mg-hub-header-bar-tint-alpha))
     );
 
-    // Self-contained breakout. mg-container-full-width paints its bleed with a z-index:-1
-    // pseudo-element, which disappears behind any ancestor that has its own opaque background
-    // — as these pattern wrappers do.
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
     margin-inline-start: calc(50% - 50vw);
     inline-size: 100vw;
   }
 
-  // Identity is chrome: this row is the same height and treatment on every page of the hub,
-  // whether or not a banner follows it. Invariance is what stops it reading as a heading,
-  // and what makes it a landmark readers can rely on.
+  // Identity is chrome: this row is the same height and treatment on every page
+  // of the hub, whether or not a banner follows it. Invariance is what stops it
+  // reading as a heading, and what makes it a landmark readers can rely on.
   &__identity {
     display: flex;
     flex-wrap: wrap;
@@ -120,9 +122,9 @@
     display: flex;
     align-items: center;
 
-    // Matches the section links. At 1.125rem on a 1.5em line plus the old padding the target
-    // was 42px, under the 44px the review checklist asks for, and the divider it carries fell
-    // 2px short of the row.
+    // Matches the section links. At 1.125rem on a 1.5em line plus the old
+    // padding the target was 42px, under the 44px the review checklist asks
+    // for, and the divider it carries fell 2px short of the row.
     min-block-size: 2.75rem;
     padding-block: 0;
     font-size: 1.125rem;
@@ -143,12 +145,13 @@
       outline-offset: var(--mg-focus-ring-offset);
     }
 
-    // The same hairline the mega menu uses between its columns. Suppressed once the links wrap
-    // to their own line, where the line break is the separator and a trailing rule would hang
-    // at the end of a line with nothing after it — the orphan mark this row already had to
-    // design out once. The links carry 15px of their own inline padding, so the wider padding
-    // here is what puts the rule near the middle of the gap rather than at its first third,
-    // where it read as a mark trailing the name.
+    // The same hairline the mega menu uses between its columns. Suppressed once
+    // the links wrap to their own line, where the line break is the separator
+    // and a trailing rule would hang at the end of a line with nothing after
+    // it — the orphan mark this row already had to design out once.
+    // The links carry 15px of their own inline padding, so the wider padding
+    // here is what puts the rule near the middle of the gap rather than at its
+    // first third, where it read as a mark trailing the name.
     @media (width >= 48rem) {
       padding-inline-end: var(--mg-spacing-250);
       border-inline-end: 1px solid
@@ -252,12 +255,13 @@
       text-decoration: underline;
     }
 
-    // An underline that hugs the word, not the item's padding box. The padding box is what
-    // Tab, the MegaMenu topbar and OnThisPageNav all underline, and it is what reads as a tab;
-    // hugging the word is link language. A leading rule was tried first and had to go: on a
-    // coloured surface the marker and the label are both white, so it read as a stray pipe
-    // next to the text rather than a mark — and the row already has a divider after the hub
-    // name.
+    // An underline that hugs the word, not the item's padding box. The padding
+    // box is what Tab, the MegaMenu topbar and OnThisPageNav all underline, and
+    // it is what reads as a tab; hugging the word is link language.
+    // A leading rule was tried first and had to go: on a coloured surface the
+    // marker and the label are both white, so it read as a stray pipe next to
+    // the text rather than a mark — and the row already has a divider after the
+    // hub name.
     a[aria-current],
     &-item--ancestor a {
       font-weight: 700;
@@ -301,9 +305,9 @@
     background-color: rgb(var(--mg-hub-header-banner-surface));
     color: rgb(var(--mg-color-neutral-0));
 
-    // Self-contained breakout. mg-container-full-width paints its bleed with a z-index:-1
-    // pseudo-element, which disappears behind any ancestor that has its own opaque background
-    // — as these pattern wrappers do.
+    // Self-contained breakout. mg-container-full-width paints its bleed with a
+    // z-index:-1 pseudo-element, which disappears behind any ancestor that has
+    // its own opaque background — as these pattern wrappers do.
     margin-inline-start: calc(50% - 50vw);
     inline-size: 100vw;
   }
@@ -315,9 +319,9 @@
     padding-block: var(--mg-spacing-350);
   }
 
-  // No font-family: this renders as an h1, which inherits `text` from body and picks up
-  // `heading` in Arabic from _fonts.scss. `display` is reserved for the hero title, per the
-  // review checklist.
+  // No font-family: this renders as an h1, which inherits `text` from body and
+  // picks up `heading` in Arabic from _fonts.scss. `display` is reserved for
+  // the hero title, per the review checklist.
   &__title {
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.15;
@@ -332,10 +336,10 @@
     gap: var(--mg-spacing-150);
     margin-block-start: var(--mg-spacing-250);
 
-    // CtaButton's inverse treatment is scoped to .mg-hero, so a CTA on any other dark surface
-    // falls back to styling meant for a light background: a dark label on a dark banner, and a
-    // label that disappears on hover. Mirrored here against this component's own surface
-    // tokens.
+    // CtaButton's inverse treatment is scoped to .mg-hero, so a CTA on any
+    // other dark surface falls back to styling meant for a light background:
+    // a dark label on a dark banner, and a label that disappears on hover.
+    // Mirrored here against this component's own surface tokens.
     a.mg-button.mg-button-cta,
     a.mg-button.mg-button-cta:hover,
     a.mg-button.mg-button-cta:visited {

@@ -1,14 +1,23 @@
-/* @file PagerJump.jsx @description Jump-to-page form with number input. @module
- * Pager/components/PagerJump / */
+/**
+ * @file PagerJump.jsx
+ * @description Jump-to-page form with number input.
+ *
+ * @module Pager/components/PagerJump
+ */
 
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-/* PagerJump — form that lets users jump to a specific page. @param {Object} props @param
- * {string} [props.jumpToLabel] Label text for the input @param {string}
- * [props.jumpToAction] Button text @param {Function} props.onPageChange Called with the
- * target page number @param {number|null} [props.totalPages] Total pages (null = unknown)
- * @param {boolean} [props.isLoading] Disables the form when true / */
+/**
+ * PagerJump — form that lets users jump to a specific page.
+ *
+ * @param {Object} props
+ * @param {string} [props.jumpToLabel]   Label text for the input
+ * @param {string} [props.jumpToAction]  Button text
+ * @param {Function} props.onPageChange  Called with the target page number
+ * @param {number|null} [props.totalPages]  Total pages (null = unknown)
+ * @param {boolean} [props.isLoading]    Disables the form when true
+ */
 export function PagerJump({
   jumpToLabel = 'Go to page',
   jumpToAction = 'Go',

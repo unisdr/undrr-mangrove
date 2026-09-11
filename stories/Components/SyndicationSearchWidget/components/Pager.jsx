@@ -1,5 +1,9 @@
-/* @file Pager.jsx @description Thin wrapper connecting the standalone Pager to
- * SearchContext. @module SearchWidget/components/Pager / */
+/**
+ * @file Pager.jsx
+ * @description Thin wrapper connecting the standalone Pager to SearchContext.
+ *
+ * @module SearchWidget/components/Pager
+ */
 
 import React, { useCallback, useMemo } from 'react';
 import { Pager } from '../../Pager/Pager';
@@ -11,8 +15,12 @@ import {
   actions,
 } from '../context/SearchContext';
 
-/* SearchPager: search-context-aware pagination. @param {Object} props @param {string}
- * [props.widgetId] Unique widget ID for accessibility / */
+/**
+ * SearchPager: search-context-aware pagination.
+ *
+ * @param {Object} props
+ * @param {string} [props.widgetId] Unique widget ID for accessibility
+ */
 export function SearchPager({ widgetId = '' }) {
   const { page, totalResults, isLoading } = useSearchState();
   const dispatch = useSearchDispatch();

@@ -2,20 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
 
-/* Identity and section navigation for a content hub, with an optional expressive treatment
- * for pages that want the weight of a hero. The dependency runs this way deliberately.
- * Identity and navigation are the required parts; hero-like presentation is a variant of
- * this component rather than this component being a variant of `Hero`. A page that should
- * not lead with a photograph — a deep guidance page, say — drops to `compact` and keeps
- * its navigation, which would not be possible if the links lived inside a hero. The
- * navigation keeps its own solid surface above the banner rather than sitting on the
- * image. `mg-hero` forces every descendant anchor to white, so links placed over editor-
- * chosen media have contrast nobody can predict. / */
+/**
+ * Identity and section navigation for a content hub, with an optional
+ * expressive treatment for pages that want the weight of a hero.
+ *
+ * The dependency runs this way deliberately. Identity and navigation are the
+ * required parts; hero-like presentation is a variant of this component rather
+ * than this component being a variant of `Hero`. A page that should not lead
+ * with a photograph — a deep guidance page, say — drops to `compact` and keeps
+ * its navigation, which would not be possible if the links lived inside a hero.
+ *
+ * The navigation keeps its own solid surface above the banner rather than
+ * sitting on the image. `mg-hero` forces every descendant anchor to white, so
+ * links placed over editor-chosen media have contrast nobody can predict.
+ */
 
-// DSFR states its equivalent limit in the type rather than the prose — `There should be at
-// most three of them` sits on Header's quickAccessItems. Borrowing the discipline, but not
-// the mechanism: React 19 no longer calls propTypes at all, so a validator declared there
-// would never run. This is checked during render instead, in development only.
+// DSFR states its equivalent limit in the type rather than the prose —
+// `There should be at most three of them` sits on Header's quickAccessItems.
+// Borrowing the discipline, but not the mechanism: React 19 no longer calls
+// propTypes at all, so a validator declared there would never run. This is
+// checked during render instead, in development only.
 const MAX_SECTIONS = 7;
 
 function warnAboutContract({ sections, navLabel, name }) {
@@ -98,8 +104,9 @@ export function HubHeader({
                   <a
                     href={section.href}
                     aria-current={section.current ? 'page' : undefined}
-                    // Marks both states for the consumer's scroll-into-view, which must not depend on the ARIA
-                    // semantics now that an ancestor is deliberately not announced.
+                    // Marks both states for the consumer's scroll-into-view,
+                    // which must not depend on the ARIA semantics now that an
+                    // ancestor is deliberately not announced.
                     data-hub-current={
                       section.current || section.ancestor ? '' : undefined
                     }
@@ -152,11 +159,14 @@ HubHeader.propTypes = {
   nameHref: PropTypes.string.isRequired,
   /** Mark the name as the current page, on the hub home itself. */
   nameCurrent: PropTypes.bool,
-  /* Section links, at most seven. `current` marks the exact page and is announced as `aria-
-   * current="page"`. `ancestor` marks a section that merely contains the current page:
-   * styled the same, announced not at all, because a second "current" in one landmark tells
-   * a screen-reader user they are somewhere they are not. GOV.UK's service navigation draws
-   * the line the same way. / */
+  /**
+   * Section links, at most seven. `current` marks the exact page and is
+   * announced as `aria-current="page"`. `ancestor` marks a section that merely
+   * contains the current page: styled the same, announced not at all, because a
+   * second "current" in one landmark tells a screen-reader user they are
+   * somewhere they are not. GOV.UK's service navigation draws the line the same
+   * way.
+   */
   sections: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
@@ -169,11 +179,13 @@ HubHeader.propTypes = {
   navLabel: PropTypes.string.isRequired,
   /** `compact` is identity and links only; `expressive` adds the banner. */
   variant: PropTypes.oneOf(['compact', 'expressive']),
-  /* Surface for the whole header. Unified by default: the bar shares the banner's colour and
-   * bleeds to the viewport edges, so the two read as one block while staying separate
-   * containers. `detached` keeps the navigation on the page background instead. The colour
-   * values use the same tokens `Hero` does, so a header and a hero set to the same one match
-   * in every theme. / */
+  /**
+   * Surface for the whole header. Unified by default: the bar shares the
+   * banner's colour and bleeds to the viewport edges, so the two read as one
+   * block while staying separate containers. `detached` keeps the navigation on
+   * the page background instead. The colour values use the same tokens `Hero`
+   * does, so a header and a hero set to the same one match in every theme.
+   */
   surface: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'detached']),
   /** Banner heading. Required when `variant` is `expressive`. */
   title: PropTypes.string,

@@ -5,12 +5,15 @@ const path = require('path');
 const root = path.resolve(__dirname, '../..');
 const config = fs.readFileSync(path.join(root, 'webpack.config.js'), 'utf8');
 
-/* The component build emits one ES module per entry. A module that is both an entry point
- * and a dependency of another entry is not duplicated into the consumer's chunk, so the
- * consumer's bundle ends up referencing a chunk it never imports and the component
- * resolves to `undefined` at render time -- which is how it surfaced: Hero rendered
- * without its CTA button. Shared components therefore get a thin `*.entry.js` wrapper so
- * the shared module itself stays an ordinary module. / */
+/**
+ * The component build emits one ES module per entry. A module that is both an
+ * entry point and a dependency of another entry is not duplicated into the
+ * consumer's chunk, so the consumer's bundle ends up referencing a chunk it
+ * never imports and the component resolves to `undefined` at render time --
+ * which is how it surfaced: Hero rendered without its CTA button. Shared
+ * components therefore get a thin `*.entry.js` wrapper so the shared module
+ * itself stays an ordinary module.
+ */
 function readEntries() {
   const start = config.indexOf('hydrate:');
   const block = config.slice(start, config.indexOf('externals', start));
@@ -62,8 +65,9 @@ describe('webpack component entries', () => {
   });
 
   test('every entry wrapper re-exports its source module in full', () => {
-    // `export *` does not re-export a default binding, so a wrapper over a module that has one
-    // must forward it explicitly or the bundle silently loses an export it used to have.
+    // `export *` does not re-export a default binding, so a wrapper over a
+    // module that has one must forward it explicitly or the bundle silently
+    // loses an export it used to have.
     const wrappers = Object.values(entries).filter(file =>
       file.endsWith('.entry.js')
     );

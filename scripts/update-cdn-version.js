@@ -26,8 +26,9 @@ const targetBase = useTesting
   ? `https://assets.undrr.org/testing/mangrove/${version}/`
   : `https://assets.undrr.org/mangrove/${version}/`;
 
-// URL matchers for any existing forms Canonical versioned URLs plus legacy static/testing
-// forms as inputs. Replacements always use the canonical path; latest remains unpinned.
+// URL matchers for any existing forms
+// Canonical versioned URLs plus legacy static/testing forms as inputs.
+// Replacements always use the canonical path; latest remains unpinned.
 const urlPatterns = [
   /https:\/\/assets\.undrr\.org\/(?:testing\/)?mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
   /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
@@ -59,9 +60,11 @@ const allowedExtensions = new Set([
   '.twig', '.php',
 ]);
 
-/* Returns true if the file should be excluded from CDN version rewriting. Historical
- * release notes (docs/RELEASE-X.Y.md for older versions) contain fixed CDN URLs that
- * document a specific release and must not be updated. / */
+/**
+ * Returns true if the file should be excluded from CDN version rewriting.
+ * Historical release notes (docs/RELEASE-X.Y.md for older versions) contain
+ * fixed CDN URLs that document a specific release and must not be updated.
+ */
 function isIgnoredFile(filePath) {
   const rel = path.relative(rootDir, filePath).replace(/\\/g, '/');
   const releaseNoteMatch = rel.match(/^docs\/RELEASE-(.+)\.md$/);

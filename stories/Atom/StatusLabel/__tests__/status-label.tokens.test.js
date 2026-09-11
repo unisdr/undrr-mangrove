@@ -1,10 +1,15 @@
-/* Status label and empty state — resolved-token assertions. Both components are CSS only,
- * so there is no render to test. What can go wrong is the token chain: a colour swapped
- * for one that no longer clears WCAG 2.2 AA, or a modifier that stops pointing at its
- * status colour. Neither is visible by reading the stylesheet, because the value only
- * exists once :root, the theme block and the component file are resolved together. Mirrors
- * the resolution and contrast helpers in stories/assets/scss/__tests__/tokens-
- * contract.test.js. / */
+/**
+ * Status label and empty state — resolved-token assertions.
+ *
+ * Both components are CSS only, so there is no render to test. What can go
+ * wrong is the token chain: a colour swapped for one that no longer clears
+ * WCAG 2.2 AA, or a modifier that stops pointing at its status colour. Neither
+ * is visible by reading the stylesheet, because the value only exists once
+ * :root, the theme block and the component file are resolved together.
+ *
+ * Mirrors the resolution and contrast helpers in
+ * stories/assets/scss/__tests__/tokens-contract.test.js.
+ */
 const path = require('path');
 const sass = require('sass');
 

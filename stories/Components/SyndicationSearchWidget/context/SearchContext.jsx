@@ -1,19 +1,31 @@
-/* @file SearchContext.jsx @description React Context and reducer for SearchWidget state
- * management. Provides centralized state management using useReducer with React 19
- * patterns. Separates configuration (static) from state (dynamic). @module
- * SearchWidget/context/SearchContext / */
+/**
+ * @file SearchContext.jsx
+ * @description React Context and reducer for SearchWidget state management.
+ *
+ * Provides centralized state management using useReducer with React 19 patterns.
+ * Separates configuration (static) from state (dynamic).
+ *
+ * @module SearchWidget/context/SearchContext
+ */
 
 import React, { createContext, use, useReducer, useMemo } from 'react';
 
-/* Default English UI labels for the search widget. Pass a partial object via the `labels`
- * prop to SyndicationSearchWidget to override any subset of keys. Unspecified keys fall
- * back to these defaults. String keys may contain `{token}` placeholders; pass `vars` to
- * `interpolateLabel(key, vars)` to substitute values at render time. Function keys receive
- * a `vars` object and return a string. Use this form for languages with plural rules
- * requiring more than two forms (Russian, Arabic). NOTE: function-valued keys cannot be
- * serialized to JSON and are therefore not usable via the `data-labels` HTML attribute —
- * they must be provided as a React prop or bundled JS module. @type {Object<string,
- * string|function(Object): string>} / */
+/**
+ * Default English UI labels for the search widget.
+ * Pass a partial object via the `labels` prop to SyndicationSearchWidget to
+ * override any subset of keys. Unspecified keys fall back to these defaults.
+ *
+ * String keys may contain `{token}` placeholders; pass `vars` to
+ * `interpolateLabel(key, vars)` to substitute values at render time.
+ *
+ * Function keys receive a `vars` object and return a string. Use this form for
+ * languages with plural rules requiring more than two forms (Russian, Arabic).
+ * NOTE: function-valued keys cannot be serialized to JSON and are therefore
+ * not usable via the `data-labels` HTML attribute — they must be provided as
+ * a React prop or bundled JS module.
+ *
+ * @type {Object<string, string|function(Object): string>}
+ */
 export const DEFAULT_LABELS = {
   // SearchForm
   searchFormLabel: 'Search content',
@@ -112,23 +124,39 @@ export const DEFAULT_LABELS = {
   // Used in the sr-only live region: 'Page {page} of {total}'
   pagerPageOf: 'Page {page} of {total}',
 
-  // ResultItem — content unavailable (no domain assignment in CMS) This is an
-  // admin/configuration error state; end users see a friendly message. The {nid} token is
-  // available for debug builds but omit it in production labels.
+  // ResultItem — content unavailable (no domain assignment in CMS)
+  // This is an admin/configuration error state; end users see a friendly message.
+  // The {nid} token is available for debug builds but omit it in production labels.
   domainAccessError: 'This content is currently unavailable.',
   reportErrorLink: 'Report this issue',
 };
 
-/* Resolve a label value and substitute `{key}` tokens. `template` may be: - A plain string
- * with optional `{key}` tokens — tokens are substituted from `vars`. - A function `(vars)
- * => string` — called with `vars` and expected to return a fully resolved string. Use this
- * for languages with complex plural rules (Russian, Arabic, etc.) where two static keys
- * are not enough. @param {string|Function} template @param {Object} [vars={}] @returns
- * {string} @example — static string interpolateLabel('{count} results found', { count: 5
- * }) // '5 results found' @example — function for Russian plurals interpolateLabel( ({
- * count }) => { const form = new Intl.PluralRules('ru').select(count); const forms = {
- * one: 'результат', few: 'результата', other: 'результатов' }; return `Найдено ${count}
- * ${forms[form] ?? forms.other}`; }, { count: 3 } ) // 'Найдено 3 результата' / */
+/**
+ * Resolve a label value and substitute `{key}` tokens.
+ *
+ * `template` may be:
+ *   - A plain string with optional `{key}` tokens — tokens are substituted from `vars`.
+ *   - A function `(vars) => string` — called with `vars` and expected to return a
+ *     fully resolved string. Use this for languages with complex plural rules (Russian,
+ *     Arabic, etc.) where two static keys are not enough.
+ *
+ * @param {string|Function} template
+ * @param {Object} [vars={}]
+ * @returns {string}
+ *
+ * @example — static string
+ *   interpolateLabel('{count} results found', { count: 5 }) // '5 results found'
+ *
+ * @example — function for Russian plurals
+ *   interpolateLabel(
+ *     ({ count }) => {
+ *       const form = new Intl.PluralRules('ru').select(count);
+ *       const forms = { one: 'результат', few: 'результата', other: 'результатов' };
+ *       return `Найдено ${count} ${forms[form] ?? forms.other}`;
+ *     },
+ *     { count: 3 }
+ *   ) // 'Найдено 3 результата'
+ */
 export function interpolateLabel(template, vars = {}) {
   if (typeof template === 'function') {
     return String(template(vars));
@@ -206,8 +234,12 @@ export const ActionTypes = {
   RESET: 'RESET',
 };
 
-/* Reducer function for search state. @param {Object} state - Current state @param {Object}
- * action - Action to perform @returns {Object} New state / */
+/**
+ * Reducer function for search state.
+ * @param {Object} state - Current state
+ * @param {Object} action - Action to perform
+ * @returns {Object} New state
+ */
 function searchReducer(state, action) {
   switch (action.type) {
     case ActionTypes.SET_QUERY:
@@ -427,9 +459,14 @@ const SearchStateContext = createContext(null);
  */
 const SearchDispatchContext = createContext(null);
 
-/* SearchProvider component. Provides search context to child components. @param {Object}
- * props - Component props @param {Object} props.config - Search widget configuration
- * @param {React.ReactNode} props.children - Child components / */
+/**
+ * SearchProvider component.
+ * Provides search context to child components.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.config - Search widget configuration
+ * @param {React.ReactNode} props.children - Child components
+ */
 export function SearchProvider({
   config: userConfig,
   labels: userLabels,
@@ -472,8 +509,11 @@ export function SearchProvider({
   );
 }
 
-/* Hook to access search configuration. @returns {Object} Search configuration @throws
- * {Error} If used outside SearchProvider / */
+/**
+ * Hook to access search configuration.
+ * @returns {Object} Search configuration
+ * @throws {Error} If used outside SearchProvider
+ */
 export function useSearchConfig() {
   const config = use(SearchConfigContext);
   if (config === null) {
@@ -490,8 +530,11 @@ export function useSearchLabels() {
   return use(SearchLabelsContext);
 }
 
-/* Hook to access search state. @returns {Object} Search state @throws {Error} If used
- * outside SearchProvider / */
+/**
+ * Hook to access search state.
+ * @returns {Object} Search state
+ * @throws {Error} If used outside SearchProvider
+ */
 export function useSearchState() {
   const state = use(SearchStateContext);
   if (state === null) {
@@ -500,8 +543,11 @@ export function useSearchState() {
   return state;
 }
 
-/* Hook to access search dispatch. @returns {Function} Dispatch function @throws {Error} If
- * used outside SearchProvider / */
+/**
+ * Hook to access search dispatch.
+ * @returns {Function} Dispatch function
+ * @throws {Error} If used outside SearchProvider
+ */
 export function useSearchDispatch() {
   const dispatch = use(SearchDispatchContext);
   if (dispatch === null) {

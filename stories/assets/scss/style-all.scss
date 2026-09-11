@@ -1,10 +1,11 @@
-// Combined multi-brand bundle: the base UNDRR palette on :root plus every sub-brand theme
-// block (.mg-theme-preventionweb / -irp / -mcr / -delta) in one stylesheet. Component CSS
-// is brand-neutral (it reads var(--mg-color-*) rather than baked values), so a single file
-// serves every brand — pick one by adding the matching `mg-theme-{brand}` class to <body>
-// or a wrapping element, with no rebuild needed to switch brands. Prefer a per-brand entry
-// (style-preventionweb.scss, etc.) for single-brand sites; use this bundle for multi-brand
-// or runtime-switching pages. See docs/RELEASE-2.0.md.
+// Combined multi-brand bundle: the base UNDRR palette on :root plus every
+// sub-brand theme block (.mg-theme-preventionweb / -irp / -mcr / -delta) in one
+// stylesheet. Component CSS is brand-neutral (it reads var(--mg-color-*) rather
+// than baked values), so a single file serves every brand — pick one by adding
+// the matching `mg-theme-{brand}` class to <body> or a wrapping element, with no
+// rebuild needed to switch brands. Prefer a per-brand entry
+// (style-preventionweb.scss, etc.) for single-brand sites; use this bundle for
+// multi-brand or runtime-switching pages. See docs/RELEASE-2.0.md.
 @import "./variables";
 @import "./theme-preventionweb";
 @import "./theme-irp";

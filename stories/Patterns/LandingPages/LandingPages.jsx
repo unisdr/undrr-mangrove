@@ -286,9 +286,11 @@ Breadcrumbs.propTypes = {
   current: PropTypes.string,
 };
 
-/* Story-only compositions of three landing page shapes UNDRR publishes today. They exist
- * so higher-level page structure can be discussed and compared, not as components: no
- * exports, hydration API or distributed CSS classes. / */
+/**
+ * Story-only compositions of three landing page shapes UNDRR publishes today.
+ * They exist so higher-level page structure can be discussed and compared, not
+ * as components: no exports, hydration API or distributed CSS classes.
+ */
 export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
   const text = words[locale] || words.english;
   const arabic = locale === 'arabic';

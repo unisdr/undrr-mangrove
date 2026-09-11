@@ -1,7 +1,12 @@
-/* @file useTaxonomies.js @description React hook for fetching taxonomy data from the UNDRR
- * API. Fetches taxonomy terms for facet labels (countries, hazards, themes, etc.) and
- * caches them in state to avoid repeated requests. @module
- * SearchWidget/hooks/useTaxonomies / */
+/**
+ * @file useTaxonomies.js
+ * @description React hook for fetching taxonomy data from the UNDRR API.
+ *
+ * Fetches taxonomy terms for facet labels (countries, hazards, themes, etc.)
+ * and caches them in state to avoid repeated requests.
+ *
+ * @module SearchWidget/hooks/useTaxonomies
+ */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
@@ -18,11 +23,16 @@ import {
   parseTypeValue,
 } from '../utils/constants';
 
-/* Hook for fetching and caching taxonomy data. @returns {Object} Taxonomy utilities
- * @returns {Object} returns.taxonomies - Map of vocabulary -> terms @returns {boolean}
- * returns.isLoading - Whether taxonomies are loading @returns {string|null} returns.error
- * - Error message if fetch failed @returns {Function} returns.getLabel - Get label for a
- * facet value @returns {Function} returns.refresh - Re-fetch taxonomies / */
+/**
+ * Hook for fetching and caching taxonomy data.
+ *
+ * @returns {Object} Taxonomy utilities
+ * @returns {Object} returns.taxonomies - Map of vocabulary -> terms
+ * @returns {boolean} returns.isLoading - Whether taxonomies are loading
+ * @returns {string|null} returns.error - Error message if fetch failed
+ * @returns {Function} returns.getLabel - Get label for a facet value
+ * @returns {Function} returns.refresh - Re-fetch taxonomies
+ */
 export function useTaxonomies() {
   const [taxonomies, setTaxonomies] = useState({
     terms: null, // Combined terms from API (countries, hazards, themes)
@@ -88,9 +98,14 @@ export function useTaxonomies() {
     };
   }, [fetchTaxonomies]);
 
-  /* Get human-readable label for a facet value. @param {string} fieldKey - The facet field
-   * key @param {string|number} value - The value to look up @param {string} vocabulary - The
-   * vocabulary to search in @returns {string} The label or the raw value if not found / */
+  /**
+   * Get human-readable label for a facet value.
+   *
+   * @param {string} fieldKey - The facet field key
+   * @param {string|number} value - The value to look up
+   * @param {string} vocabulary - The vocabulary to search in
+   * @returns {string} The label or the raw value if not found
+   */
   const getLabel = useCallback(
     (fieldKey, value, vocabulary) => {
       const valueStr = String(value);
@@ -144,8 +159,12 @@ export function useTaxonomies() {
     [taxonomies.terms]
   );
 
-  /* Get domain URL for link resolution. @param {string} domainId - The domain ID @returns
-   * {string} The domain URL / */
+  /**
+   * Get domain URL for link resolution.
+   *
+   * @param {string} domainId - The domain ID
+   * @returns {string} The domain URL
+   */
   const getDomainUrl = useCallback(domainId => {
     const domain = DOMAIN_MAP.get(domainId);
     return domain ? domain.url : 'https://www.preventionweb.net';

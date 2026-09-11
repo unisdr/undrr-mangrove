@@ -5,9 +5,13 @@ import { StatsCardItem } from './StatsCardItem';
 
 const EMPTY_STATS = [];
 
-/* StatsCard Component A flexible card component for displaying statistics and key metrics
- * in an engaging, scannable format. Displays individual stat cards in a grid layout with
- * optional icons, dual labels, descriptions, and call-to-action links. / */
+/**
+ * StatsCard Component
+ *
+ * A flexible card component for displaying statistics and key metrics in an engaging,
+ * scannable format. Displays individual stat cards in a grid layout with optional
+ * icons, dual labels, descriptions, and call-to-action links.
+ */
 export function StatsCard({
   title,
   stats = EMPTY_STATS,
@@ -18,9 +22,9 @@ export function StatsCard({
   const baseClass = 'mg-stats-card';
   const statsCount = stats.length;
 
-  // Use mg-grid system for layout. The numbered column classes cover 1–12; past that, fall
-  // back to the single-row auto-fit modifier so a large stat set still fits one row instead
-  // of collapsing to a stacked single column.
+  // Use mg-grid system for layout. The numbered column classes cover 1–12; past
+  // that, fall back to the single-row auto-fit modifier so a large stat set
+  // still fits one row instead of collapsing to a stacked single column.
   const MAX_GRID_COLUMNS = 12;
   let gridClasses = 'mg-grid';
   if (statsCount > 0 && statsCount <= MAX_GRID_COLUMNS) {

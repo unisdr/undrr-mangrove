@@ -55,9 +55,11 @@ export function mgTabsRuntime(scope = document, activateDeepLinkOnLoad = true) {
   mgTabs(scope, activateDeepLinkOnLoad);
 }
 
-/* Remove enhancement, listeners and observers so a container can be initialised again. Set
- * preserveState for a same-layout refresh; unmounting or an explicit reset should use the
- * default. Retained state is keyed weakly and consumed once. / */
+/**
+ * Remove enhancement, listeners and observers so a container can be initialised again.
+ * Set preserveState for a same-layout refresh; unmounting or an explicit reset
+ * should use the default. Retained state is keyed weakly and consumed once.
+ */
 export function mgTabsDestroy(scope = document, preserveState = false) {
   containersIn(scope)
     .reverse()
@@ -587,10 +589,15 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     },
   });
 }
-/* Apply default open/close state for stacked tabs. Priority: per-item `data-mg-js-tabs-
- * default` > container `data-mg-js-tabs-default-open` > open first. @param {Element}
- * container - the [data-mg-js-tabs] element @param {NodeList|Array} tabs - the trigger
- * links @param {NodeList|Array} panels - the section panels / */
+/**
+ * Apply default open/close state for stacked tabs.
+ *
+ * Priority: per-item `data-mg-js-tabs-default` > container `data-mg-js-tabs-default-open` > open first.
+ *
+ * @param {Element} container - the [data-mg-js-tabs] element
+ * @param {NodeList|Array} tabs - the trigger links
+ * @param {NodeList|Array} panels - the section panels
+ */
 export function mgTabsApplyStackedDefaults(container, tabs, panels) {
   const defaultOpen = container.dataset.mgJsTabsDefaultOpen;
 
@@ -625,11 +632,16 @@ export function mgTabsApplyStackedDefaults(container, tabs, panels) {
   });
 }
 
-/* Initialize filter input for stacked tabs. Injects a search input, sr-only hint, and
- * status region before the tab list. Handles debounced filtering, show/hide via CSS
- * classes, panel expand/collapse, focus rescue, and live region announcements. @param
- * {Element} container - the [data-mg-js-tabs] element @param {NodeList} tabs - the trigger
- * links @param {NodeList} panels - the section panels / */
+/**
+ * Initialize filter input for stacked tabs.
+ * Injects a search input, sr-only hint, and status region before the tab list.
+ * Handles debounced filtering, show/hide via CSS classes, panel expand/collapse,
+ * focus rescue, and live region announcements.
+ *
+ * @param {Element} container - the [data-mg-js-tabs] element
+ * @param {NodeList} tabs - the trigger links
+ * @param {NodeList} panels - the section panels
+ */
 function mgTabsInitFilter(container, tabs, panels, initialFilter) {
   const placeholder =
     container.dataset.mgJsTabsFilterPlaceholder || 'Filter sections\u2026';

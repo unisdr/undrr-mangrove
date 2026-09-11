@@ -1,8 +1,15 @@
-/* @file FacetSelect.jsx @description Individual facet dropdown component. Renders a custom
- * select dropdown for a single facet with options from Elasticsearch aggregations and
- * labels from taxonomy data. Uses the lightweight SelectDropdown component instead of
- * Chosen.js, making it work in any environment (Drupal, Storybook, standalone). @module
- * SearchWidget/components/FacetSelect / */
+/**
+ * @file FacetSelect.jsx
+ * @description Individual facet dropdown component.
+ *
+ * Renders a custom select dropdown for a single facet with options from
+ * Elasticsearch aggregations and labels from taxonomy data.
+ *
+ * Uses the lightweight SelectDropdown component instead of Chosen.js,
+ * making it work in any environment (Drupal, Storybook, standalone).
+ *
+ * @module SearchWidget/components/FacetSelect
+ */
 
 import React, { useMemo, useCallback } from 'react';
 import {
@@ -22,20 +29,27 @@ import {
   getContentType,
 } from '../utils/constants';
 
-/* Maps ES subtype field names to their corresponding allowedTypes key. Used to filter
- * individual subtypes when an editor restricts specific subtype values (e.g.
- * allowedTypes.publicationTypes for PW publications). / */
+/**
+ * Maps ES subtype field names to their corresponding allowedTypes key.
+ * Used to filter individual subtypes when an editor restricts specific
+ * subtype values (e.g. allowedTypes.publicationTypes for PW publications).
+ */
 const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
   field_news_type: 'newsTypes',
   field_publication_type: 'publicationTypes',
 };
 
-/* FacetSelect component. Renders a custom dropdown for a facet field. @param {Object}
- * props - Component props @param {Object} props.field - Facet field config { key, label,
- * vocabulary, type } @param {Array} props.buckets - Elasticsearch aggregation buckets
- * @param {Function} props.getLabel - Function to get label for a value @param {string}
- * props.widgetId - Unique widget ID for accessibility @param {Object} props.allowedTypes -
- * Optional type restrictions / */
+/**
+ * FacetSelect component.
+ * Renders a custom dropdown for a facet field.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.field - Facet field config { key, label, vocabulary, type }
+ * @param {Array} props.buckets - Elasticsearch aggregation buckets
+ * @param {Function} props.getLabel - Function to get label for a value
+ * @param {string} props.widgetId - Unique widget ID for accessibility
+ * @param {Object} props.allowedTypes - Optional type restrictions
+ */
 export function FacetSelect({
   field,
   buckets = EMPTY_BUCKETS,
@@ -68,10 +82,13 @@ export function FacetSelect({
     [dispatch, key]
   );
 
-  /* Filter and map buckets to options with labels. Ensures selected values are always
-   * visible even if not in aggregation results. For the type facet, options may include
-   * subtypes with namespaced keys (e.g., "field_news_type:751") that are rendered indented
-   * under their parent. / */
+  /**
+   * Filter and map buckets to options with labels.
+   * Ensures selected values are always visible even if not in aggregation results.
+   *
+   * For the type facet, options may include subtypes with namespaced keys
+   * (e.g., "field_news_type:751") that are rendered indented under their parent.
+   */
   const options = useMemo(() => {
     const isTypeFacet = key === 'type';
 

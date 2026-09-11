@@ -89,9 +89,9 @@
     margin: 0;
     list-style: none;
 
-    // Clip overflow on mobile so the scrolling content hint works correctly. pointer-events is
-    // left as auto here — it is restricted only when JS has initialised the full mega menu
-    // (see .mg-mega-wrapper--js-active below).
+    // Clip overflow on mobile so the scrolling content hint works correctly.
+    // pointer-events is left as auto here — it is restricted only when JS has
+    // initialised the full mega menu (see .mg-mega-wrapper--js-active below).
     @media screen and (max-width: $mg-breakpoint-tablet) {
       overflow: hidden;
       flex: 1;
@@ -253,10 +253,11 @@
 .mg-mega-content__left,
 .mg-mega-content__right,
 .mg-mega-topbar__item-link {
-  // Was `-webkit-focus-ring-color auto 1px`, which hands the indicator to the browser: a
-  // WebKit/Blink-only keyword that renders nothing in Firefox, and that no Mangrove token
-  // can reach. These panels and topbar links sit on --mg-color-neutral-0, so the two-band
-  // ring is legible and consistent with every other focusable surface in the library.
+  // Was `-webkit-focus-ring-color auto 1px`, which hands the indicator to the
+  // browser: a WebKit/Blink-only keyword that renders nothing in Firefox, and
+  // that no Mangrove token can reach. These panels and topbar links sit on
+  // --mg-color-neutral-0, so the two-band ring is legible and consistent with
+  // every other focusable surface in the library.
   &:focus-visible {
     @include mg-focus-ring;
   }
@@ -418,11 +419,12 @@
 
   // Desktop: Hide mobile menu, show desktop menu
   @media screen and (min-width: $mg-breakpoint-tablet) {
-    // Don't stretch the menu ul to the panel's fixed height. Without this, CSS multicol fills
-    // both columns to 350 px then pushes surplus items into a third column that overflows and
-    // gets clipped by the parent's overflow: hidden. align-items: flex-start lets the ul be
-    // its natural (content-driven) height so multicol never needs to generate overflow
-    // columns. See https://github.com/unisdr/undrr-mangrove/issues/970.
+    // Don't stretch the menu ul to the panel's fixed height. Without this,
+    // CSS multicol fills both columns to 350 px then pushes surplus items
+    // into a third column that overflows and gets clipped by the parent's
+    // overflow: hidden. align-items: flex-start lets the ul be its natural
+    // (content-driven) height so multicol never needs to generate
+    // overflow columns. See https://github.com/unisdr/undrr-mangrove/issues/970.
     align-items: flex-start;
     min-height: 0; // allow flex child to shrink below content height for scroll
     min-width: 0; // prevent flex item from overflowing its allocated width
@@ -456,18 +458,19 @@
     padding: var(--mg-spacing-150);
     list-style: none;
 
-    // Multicolumn layout only on desktop. This is primarily a Safari fix: on mobile Safari,
-    // descendants with opacity < 1 inside a multicolumn container are not painted (space
-    // reserved, text invisible). Other browsers render fine either way, and at mobile widths
-    // the columns collapse to 1 anyway, so scoping to tablet+ loses nothing. See
-    // https://github.com/unisdr/undrr-mangrove/issues/939.
+    // Multicolumn layout only on desktop. This is primarily a Safari fix:
+    // on mobile Safari, descendants with opacity < 1 inside a multicolumn
+    // container are not painted (space reserved, text invisible). Other
+    // browsers render fine either way, and at mobile widths the columns
+    // collapse to 1 anyway, so scoping to tablet+ loses nothing.
+    // See https://github.com/unisdr/undrr-mangrove/issues/939.
     @media screen and (min-width: $mg-breakpoint-tablet) {
       column-count: auto;
 
-      // 280px lets 3 columns appear once the right pane reaches ~940px (i.e. at the $mg-
-      // breakpoint-desktop-wide max-width of 1440px). 300px was too wide — 3 columns never
-      // formed within the normal constrained layout. See https://github.com/unisdr/undrr-
-      // mangrove/issues/970.
+      // 280px lets 3 columns appear once the right pane reaches ~940px
+      // (i.e. at the $mg-breakpoint-desktop-wide max-width of 1440px).
+      // 300px was too wide — 3 columns never formed within the normal
+      // constrained layout. See https://github.com/unisdr/undrr-mangrove/issues/970.
       column-width: 280px;
       column-gap: var(--mg-spacing-200);
       column-fill: balance;
@@ -598,10 +601,11 @@
     color: rgb(var(--mg-color-white));
   }
 
-  // Was `-webkit-focus-ring-color auto 2px` inset by 1px. On mobile this row is filled with
-  // --mg-color-interactive, so an inset brand-adjacent ring is drawn straight onto the brand
-  // colour; the inset two-band keeps the ring inside the full-bleed row (an outward ring
-  // would be clipped by the sidebar) while giving it a separator to be judged against.
+  // Was `-webkit-focus-ring-color auto 2px` inset by 1px. On mobile this row
+  // is filled with --mg-color-interactive, so an inset brand-adjacent ring is
+  // drawn straight onto the brand colour; the inset two-band keeps the ring
+  // inside the full-bleed row (an outward ring would be clipped by the
+  // sidebar) while giving it a separator to be judged against.
   &:focus-visible {
     @include mg-focus-ring-inset;
   }
@@ -692,9 +696,10 @@
   // Mobile-first: Display by default
   position: absolute;
 
-  // Anchored to both edges of the topbar rather than assumed to be viewport-wide: a `100vw`
-  // overlay overhangs and is clipped by the parent's `overflow-x` wherever the topbar is
-  // narrower than the viewport (a docs canvas, an embed, any constrained page).
+  // Anchored to both edges of the topbar rather than assumed to be
+  // viewport-wide: a `100vw` overlay overhangs and is clipped by the parent's
+  // `overflow-x` wherever the topbar is narrower than the viewport (a docs
+  // canvas, an embed, any constrained page).
   inset-inline: 0; // RTL-friendly
   background: rgb(
     0 0 0 / 0
@@ -794,10 +799,10 @@
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
-// Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be interactive
-// on small screens. This class is added by the React component on mount (useEffect), so it
-// is absent when JS fails or has not yet hydrated, preserving a clickable fallback for
-// server-rendered nav markup.
+// Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be
+// interactive on small screens. This class is added by the React component on
+// mount (useEffect), so it is absent when JS fails or has not yet hydrated,
+// preserving a clickable fallback for server-rendered nav markup.
 .mg-mega-wrapper--js-active {
   @media screen and (max-width: $mg-breakpoint-tablet) {
     .mg-mega-topbar__nav {

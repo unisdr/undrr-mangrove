@@ -1,7 +1,13 @@
-/* @file _labels.js @description Translated label sets for MegaMenu. Imported by
- * MegaMenu.stories.jsx for the global locale toolbar. Never import from .stories files. / */
+/**
+ * @file _labels.js
+ * @description Translated label sets for MegaMenu.
+ *
+ * Imported by MegaMenu.stories.jsx for the global locale toolbar. Never import
+ * from .stories files.
+ */
 
-// --------------------------------------------------------------------------- Spanish (es)
+// ---------------------------------------------------------------------------
+// Spanish (es)
 // ---------------------------------------------------------------------------
 export const LABELS_ES = {
   backLabel: 'Atrás',
@@ -15,7 +21,8 @@ export const LABELS_ES = {
   closeMobileNavLabel: 'Cerrar navegación móvil',
 };
 
-// --------------------------------------------------------------------------- French (fr)
+// ---------------------------------------------------------------------------
+// French (fr)
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
   backLabel: 'Retour',
@@ -29,8 +36,9 @@ export const LABELS_FR = {
   closeMobileNavLabel: 'Fermer la navigation mobile',
 };
 
-// --------------------------------------------------------------------------- Japanese
-// (ja) ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Japanese (ja)
+// ---------------------------------------------------------------------------
 export const LABELS_JA = {
   backLabel: '戻る',
   menuLabel: 'メニュー',
@@ -43,8 +51,9 @@ export const LABELS_JA = {
   closeMobileNavLabel: 'モバイルナビゲーションを閉じる',
 };
 
-// --------------------------------------------------------------------------- Simplified
-// Chinese (zh) ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Simplified Chinese (zh)
+// ---------------------------------------------------------------------------
 export const LABELS_ZH = {
   backLabel: '返回',
   menuLabel: '菜单',
@@ -57,8 +66,8 @@ export const LABELS_ZH = {
   closeMobileNavLabel: '关闭移动导航',
 };
 
-// --------------------------------------------------------------------------- Arabic (ar)
-// — Modern Standard Arabic
+// ---------------------------------------------------------------------------
+// Arabic (ar) — Modern Standard Arabic
 // ---------------------------------------------------------------------------
 export const LABELS_AR = {
   backLabel: 'رجوع',
@@ -72,7 +81,8 @@ export const LABELS_AR = {
   closeMobileNavLabel: 'إغلاق قائمة التنقل للجوال',
 };
 
-// --------------------------------------------------------------------------- Russian (ru)
+// ---------------------------------------------------------------------------
+// Russian (ru)
 // ---------------------------------------------------------------------------
 export const LABELS_RU = {
   backLabel: 'Назад',

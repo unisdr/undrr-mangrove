@@ -9,7 +9,8 @@ function makeData(overrides = {}) {
 }
 
 describe('IconCard', () => {
-  // -------------------------------------------------- Basic rendering
+  // --------------------------------------------------
+  // Basic rendering
   // --------------------------------------------------
 
   it('renders title and summary text', () => {
@@ -19,7 +20,8 @@ describe('IconCard', () => {
     expect(screen.getByText('Card description')).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Icon rendering
+  // --------------------------------------------------
+  // Icon rendering
   // --------------------------------------------------
 
   it('renders icon span when data item has icon classes', () => {
@@ -35,7 +37,8 @@ describe('IconCard', () => {
     expect(glyph).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Image rendering
+  // --------------------------------------------------
+  // Image rendering
   // --------------------------------------------------
 
   it('renders image when imgback is set', () => {
@@ -53,7 +56,8 @@ describe('IconCard', () => {
     expect(img).toHaveClass('mg-card__image');
   });
 
-  // -------------------------------------------------- iconColor / iconFgColor
+  // --------------------------------------------------
+  // iconColor / iconFgColor
   // --------------------------------------------------
 
   it('applies --mg-icon-bg custom property and --colored modifier for iconColor', () => {
@@ -83,7 +87,8 @@ describe('IconCard', () => {
     expect(iconWrap).toHaveStyle({ '--mg-icon-fg': '#333' });
   });
 
-  // -------------------------------------------------- borderColor
+  // --------------------------------------------------
+  // borderColor
   // --------------------------------------------------
 
   it('applies --mg-card-border custom property and --bordered modifier for borderColor', () => {
@@ -96,7 +101,8 @@ describe('IconCard', () => {
     expect(article).toHaveStyle({ '--mg-card-border': '#e8963a' });
   });
 
-  // -------------------------------------------------- visualLabel
+  // --------------------------------------------------
+  // visualLabel
   // --------------------------------------------------
 
   it('renders visualLabel inside .mg-card__visual', () => {
@@ -150,7 +156,8 @@ describe('IconCard', () => {
     expect(contentLabel).toHaveTextContent('Category');
   });
 
-  // -------------------------------------------------- srOnlyTitle
+  // --------------------------------------------------
+  // srOnlyTitle
   // --------------------------------------------------
 
   it('renders screen-reader-only title when srOnlyTitle is true', () => {
@@ -195,7 +202,8 @@ describe('IconCard', () => {
     expect(onClick).toHaveBeenCalledTimes(2);
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {
@@ -263,8 +271,9 @@ const ruleFor = selector => {
 
 describe('icon card layout', () => {
   test("centred cards centre the icon on the visual's cross axis", () => {
-    // The visual is a column flex container, so justify-content centres it vertically. Without
-    // align-items the icon stays pinned left while the text centres — which is what shipped.
+    // The visual is a column flex container, so justify-content centres it
+    // vertically. Without align-items the icon stays pinned left while the
+    // text centres — which is what shipped.
     const rule = ruleFor('.mg-card__icon--centered .mg-card__visual');
     expect(rule).toMatch(/align-items:\s*center/);
   });

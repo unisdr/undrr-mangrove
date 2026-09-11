@@ -1,6 +1,6 @@
-// Compact taxonomy labels. Keep legacy theme overrides and container markup. :where()
-// gives auto-styled children the same specificity as .mg-tag, so explicit modifiers win
-// regardless of which markup a Drupal view emits.
+// Compact taxonomy labels. Keep legacy theme overrides and container markup.
+// :where() gives auto-styled children the same specificity as .mg-tag, so
+// explicit modifiers win regardless of which markup a Drupal view emits.
 .mg-tag,
 .mg-tag-container > :where(span, div, a, li) {
   --mg-tag-background: var(--tag-color-background, rgb(var(--mg-color-tag)));

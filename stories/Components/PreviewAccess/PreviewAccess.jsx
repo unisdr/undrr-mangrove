@@ -9,21 +9,32 @@ const DEFAULT_MESSAGE =
   'This page is in preview and is not yet ready for general distribution. ' +
   'Please enter the access PIN provided by UNDRR to continue.';
 
-/* Storybook / docs preview of the preview-access modal panel. Renders a static visual
- * preview of the modal markup, useful for previewing copy, theme, and RTL without actually
- * gating Storybook. To activate the real body-level gate behaviour, pass `live`. In `live`
- * mode the runtime appends the overlay to `document.body` (not into the React tree). On
- * unmount it removes the overlay and restores body siblings. For production pages, prefer
- * dropping `<div data-mg-preview-access>` into the HTML directly and loading js/preview-
- * access.js. The gate is fundamentally a page-level concern, not a subtree component.
- * @param {Object} props @param {boolean} [props.live] When true, mounts the real gate.
- * @param {string} [props.pin] Unlock PIN. @param {string} [props.id] sessionStorage scope
- * key. @param {string} [props.eyebrow] Small label above the title. @param {string}
- * [props.title] Modal heading. @param {string} [props.message] Modal body copy. @param
- * {string} [props.contactUrl] Help link URL. @param {string} [props.contactLabel] Help
- * link visible text. @param {string} [props.pinLabel] Form label for the PIN input. @param
- * {string} [props.submitLabel] Submit button label. @param {string} [props.errorMessage]
- * Error message text on a wrong PIN. / */
+/**
+ * Storybook / docs preview of the preview-access modal panel.
+ *
+ * Renders a static visual preview of the modal markup, useful for previewing
+ * copy, theme, and RTL without actually gating Storybook. To activate the
+ * real body-level gate behaviour, pass `live`. In `live` mode the runtime
+ * appends the overlay to `document.body` (not into the React tree). On
+ * unmount it removes the overlay and restores body siblings.
+ *
+ * For production pages, prefer dropping `<div data-mg-preview-access>` into
+ * the HTML directly and loading js/preview-access.js. The gate is
+ * fundamentally a page-level concern, not a subtree component.
+ *
+ * @param {Object}  props
+ * @param {boolean} [props.live]            When true, mounts the real gate.
+ * @param {string}  [props.pin]             Unlock PIN.
+ * @param {string}  [props.id]              sessionStorage scope key.
+ * @param {string}  [props.eyebrow]         Small label above the title.
+ * @param {string}  [props.title]           Modal heading.
+ * @param {string}  [props.message]         Modal body copy.
+ * @param {string}  [props.contactUrl]      Help link URL.
+ * @param {string}  [props.contactLabel]    Help link visible text.
+ * @param {string}  [props.pinLabel]        Form label for the PIN input.
+ * @param {string}  [props.submitLabel]     Submit button label.
+ * @param {string}  [props.errorMessage]    Error message text on a wrong PIN.
+ */
 export default function PreviewAccess({
   live = false,
   pin = '5498',
@@ -39,10 +50,10 @@ export default function PreviewAccess({
 }) {
   const gateRef = useRef(null);
 
-  // Only mount/unmount on `live` toggles; copy-prop edits update the data attributes in
-  // place via React's normal render path. The runtime reads attributes once at init, so
-  // changing copy after mount is intentionally a no-op — keeping the gate stable avoids
-  // overlay flicker and lost focus.
+  // Only mount/unmount on `live` toggles; copy-prop edits update the data
+  // attributes in place via React's normal render path. The runtime reads
+  // attributes once at init, so changing copy after mount is intentionally
+  // a no-op — keeping the gate stable avoids overlay flicker and lost focus.
   useEffect(() => {
     if (!live) return undefined;
     const gate = gateRef.current;
@@ -73,9 +84,9 @@ export default function PreviewAccess({
     );
   }
 
-  // Static preview: mirrors the runtime's modal panel structure so reviewers see the same
-  // markup that ships in production. Form is wired to no-op so the user can still tab
-  // through, but the gate behaviour is not active.
+  // Static preview: mirrors the runtime's modal panel structure so reviewers
+  // see the same markup that ships in production. Form is wired to no-op so
+  // the user can still tab through, but the gate behaviour is not active.
   return (
     <div
       className="mg-preview-access__modal"

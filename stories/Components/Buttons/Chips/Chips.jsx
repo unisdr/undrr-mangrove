@@ -2,10 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import './chips.scss';
 
-/* Small interactive tag-like element for filters and selections. The default variant links
- * to a topic; the dismiss ("With X") variant renders a button that removes a filter.
- * @param {Object} props @param {string} props.label Visible text for the chip @param
- * {string} [props.Type='Default'] Variant: 'Default' (link) or 'With X' (dismiss button) / */
+/**
+ * Small interactive tag-like element for filters and selections.
+ *
+ * The default variant links to a topic; the dismiss ("With X") variant
+ * renders a button that removes a filter.
+ *
+ * @param {Object} props
+ * @param {string} props.label  Visible text for the chip
+ * @param {string} [props.Type='Default']  Variant: 'Default' (link) or 'With X' (dismiss button)
+ */
 export function Chips({
   label,
   Type = 'Default',

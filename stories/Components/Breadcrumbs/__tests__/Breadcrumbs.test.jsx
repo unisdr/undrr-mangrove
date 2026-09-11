@@ -10,7 +10,8 @@ const defaultData = [
 ];
 
 describe('Breadcrumbs', () => {
-  // -------------------------------------------------- Structure
+  // --------------------------------------------------
+  // Structure
   // --------------------------------------------------
 
   it('renders a <nav> with aria-label="breadcrumbs"', () => {
@@ -25,7 +26,8 @@ describe('Breadcrumbs', () => {
     expect(container.querySelectorAll('li')).toHaveLength(defaultData.length);
   });
 
-  // -------------------------------------------------- aria-current
+  // --------------------------------------------------
+  // aria-current
   // --------------------------------------------------
 
   it('marks the last <li> with aria-current="page"', () => {
@@ -51,7 +53,8 @@ describe('Breadcrumbs', () => {
     expect(items[0]).toHaveAttribute('aria-current', 'page');
   });
 
-  // -------------------------------------------------- White variant
+  // --------------------------------------------------
+  // White variant
   // --------------------------------------------------
 
   it('applies white modifier class when Color="White"', () => {
@@ -61,7 +64,8 @@ describe('Breadcrumbs', () => {
     expect(container.querySelector('nav')).toHaveClass('mg-breadcrumb--white');
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations (default)', async () => {

@@ -1,10 +1,12 @@
-// ======================================== DEPRECATED: Teaser Field Hiding Modifier
-// Classes ======================================== Target removal date: November 2026 (see
-// https://github.com/unisdr/undrr-mangrove/pull/1077) Teaser field hiding is now handled
-// programmatically in DOM output via React's visibleTeaserFields config (using DOMParser
-// for pre-rendered teaser HTML and conditional React rendering in fallback mode). These
-// CSS modifier classes are preserved as a FOUC prevention layer during initial page load
-// and for legacy non-React compatibility until November 2026.
+// ========================================
+// DEPRECATED: Teaser Field Hiding Modifier Classes
+// ========================================
+// Target removal date: November 2026 (see https://github.com/unisdr/undrr-mangrove/pull/1077)
+// Teaser field hiding is now handled programmatically in DOM output via React's
+// visibleTeaserFields config (using DOMParser for pre-rendered teaser HTML and
+// conditional React rendering in fallback mode).
+// These CSS modifier classes are preserved as a FOUC prevention layer during
+// initial page load and for legacy non-React compatibility until November 2026.
 
 @warn "The .mg-search--hide-* CSS classes in syndication-search-widget.scss are deprecated and scheduled for removal in November 2026 (see https://github.com/unisdr/undrr-mangrove/pull/1077). Use React's visibleTeaserFields prop for programmatic DOM stripping instead.";
 

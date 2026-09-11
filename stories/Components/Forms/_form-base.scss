@@ -1,14 +1,16 @@
 // Shared BEM-scoped form styles for Mangrove form components.
 // All form components import this partial for consistent base styling.
 
-// ----------------------------------------------------------------------------- Field
-// wrapper -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Field wrapper
+// -----------------------------------------------------------------------------
 .mg-form-field {
   display: block;
   margin-bottom: var(--mg-spacing-100);
 }
 
-// ----------------------------------------------------------------------------- Label
+// -----------------------------------------------------------------------------
+// Label
 // -----------------------------------------------------------------------------
 .mg-form-label {
   display: block;
@@ -24,7 +26,8 @@
   }
 }
 
-// ----------------------------------------------------------------------------- Text input
+// -----------------------------------------------------------------------------
+// Text input
 // -----------------------------------------------------------------------------
 %mg-form-input-base {
   appearance: none;
@@ -41,9 +44,10 @@
   padding: var(--mg-form-input-padding);
   width: 100%;
 
-  // Filled: a field holding a value lifts off the tinted rest surface, so a form reads as
-  // answered at a glance. The [placeholder] guard matters - without it the selector matches
-  // every field that has no placeholder, so everything would look filled.
+  // Filled: a field holding a value lifts off the tinted rest surface, so a
+  // form reads as answered at a glance. The [placeholder] guard matters -
+  // without it the selector matches every field that has no placeholder, so
+  // everything would look filled.
   &[placeholder]:not(:placeholder-shown) {
     background-color: var(--mg-form-input-background--focus);
   }
@@ -78,7 +82,8 @@
   }
 }
 
-// ----------------------------------------------------------------------------- Textarea
+// -----------------------------------------------------------------------------
+// Textarea
 // -----------------------------------------------------------------------------
 .mg-form-textarea {
   @extend %mg-form-input-base;
@@ -102,7 +107,8 @@
   }
 }
 
-// ----------------------------------------------------------------------------- Select
+// -----------------------------------------------------------------------------
+// Select
 // -----------------------------------------------------------------------------
 .mg-form-select {
   appearance: none;
@@ -145,8 +151,8 @@
   }
 }
 
-// ----------------------------------------------------------------------------- Checkbox /
-// Radio shared (check group)
+// -----------------------------------------------------------------------------
+// Checkbox / Radio shared (check group)
 // -----------------------------------------------------------------------------
 .mg-form-check {
   align-items: center;
@@ -167,11 +173,11 @@
       border-color: rgb(var(--mg-color-form-check--hover));
     }
 
-    // Was a 4px glow in --mg-color-form-focus with `outline: 0`. Two problems: the glow
-    // bypassed --mg-color-focus-ring entirely, and because it was a box-shadow it was silently
-    // replaced by the radio's centre-dot shadow in `.mg-form-check__input--radio:checked`
-    // below -- equal specificity, declared later -- so a CHECKED RADIO had no focus indicator
-    // at all.
+    // Was a 4px glow in --mg-color-form-focus with `outline: 0`. Two problems:
+    // the glow bypassed --mg-color-focus-ring entirely, and because it was a
+    // box-shadow it was silently replaced by the radio's centre-dot shadow in
+    // `.mg-form-check__input--radio:checked` below -- equal specificity,
+    // declared later -- so a CHECKED RADIO had no focus indicator at all.
     &:focus-visible {
       @include mg-focus-ring;
     }
@@ -224,18 +230,19 @@
   box-shadow: inset 0 0 0 3px rgb(var(--mg-color-white));
 }
 
-// A checked radio owns its box-shadow (the centre dot), and the focus ring's separator
-// band is also a box-shadow, so the two cannot both be declared by the rules above --
-// whichever came last would win, and it was the dot, which is how the checked radio ended
-// up with no focus indicator. Declaring both here, at higher specificity, keeps the dot
-// and the band.
+// A checked radio owns its box-shadow (the centre dot), and the focus ring's
+// separator band is also a box-shadow, so the two cannot both be declared by
+// the rules above -- whichever came last would win, and it was the dot, which
+// is how the checked radio ended up with no focus indicator. Declaring both
+// here, at higher specificity, keeps the dot and the band.
 .mg-form-check__input--radio:checked:focus-visible {
   box-shadow:
     inset 0 0 0 3px rgb(var(--mg-color-white)),
     0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0));
 }
 
-// ----------------------------------------------------------------------------- Help text
+// -----------------------------------------------------------------------------
+// Help text
 // -----------------------------------------------------------------------------
 .mg-form-help {
   color: rgb(var(--mg-color-neutral-500));
@@ -244,7 +251,8 @@
   margin-top: var(--mg-spacing-25);
 }
 
-// ----------------------------------------------------------------------------- Error text
+// -----------------------------------------------------------------------------
+// Error text
 // -----------------------------------------------------------------------------
 .mg-form-error {
   color: rgb(var(--mg-color-red-900));
@@ -253,17 +261,18 @@
   margin-top: var(--mg-spacing-25);
 }
 
-// ----------------------------------------------------------------------------- Form error
-// summary -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Form error summary
+// -----------------------------------------------------------------------------
 .mg-form-error-summary {
   background-color: rgb(var(--mg-color-red-50));
   border-left: 4px solid rgb(var(--mg-color-red-900));
   margin-bottom: var(--mg-spacing-200);
   padding: var(--mg-spacing-150);
 
-  // blue-800 is a UNDRR primitive and no sub-brand overrides it, so this shared rule was
-  // painting UNDRR blue in PreventionWeb, IRP, MCR2030 and DELTA -- and bypassing the focus-
-  // ring token entirely.
+  // blue-800 is a UNDRR primitive and no sub-brand overrides it, so this
+  // shared rule was painting UNDRR blue in PreventionWeb, IRP, MCR2030 and
+  // DELTA -- and bypassing the focus-ring token entirely.
   &:focus {
     @include mg-focus-ring;
   }
@@ -296,8 +305,8 @@
   }
 }
 
-// ----------------------------------------------------------------------------- Screen-
-// reader-only utility
+// -----------------------------------------------------------------------------
+// Screen-reader-only utility
 // -----------------------------------------------------------------------------
 .mg-u-sr-only {
   border: 0;
@@ -311,8 +320,9 @@
   width: 1px;
 }
 
-// ----------------------------------------------------------------------------- RTL
-// overrides -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// RTL overrides
+// -----------------------------------------------------------------------------
 [dir="rtl"] {
   .mg-form-select {
     background-position: left mg-rem(6.25) center;

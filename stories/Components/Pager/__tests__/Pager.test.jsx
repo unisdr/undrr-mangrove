@@ -10,7 +10,8 @@ describe('Pager', () => {
     onPageChange.mockClear();
   });
 
-  // -------------------------------------------------- Rendering page numbers
+  // --------------------------------------------------
+  // Rendering page numbers
   // --------------------------------------------------
 
   it('renders correct page numbers for page 3 of 20', () => {
@@ -52,7 +53,8 @@ describe('Pager', () => {
     expect(screen.getByLabelText('Page 3')).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Navigation callbacks
+  // --------------------------------------------------
+  // Navigation callbacks
   // --------------------------------------------------
 
   it('calls onPageChange with correct page on button click', () => {
@@ -76,7 +78,8 @@ describe('Pager', () => {
     expect(onPageChange).toHaveBeenCalledWith(4);
   });
 
-  // -------------------------------------------------- Disabled states
+  // --------------------------------------------------
+  // Disabled states
   // --------------------------------------------------
 
   it('disables Previous on page 1', () => {
@@ -91,7 +94,8 @@ describe('Pager', () => {
     expect(screen.getByLabelText('Go to next page')).toBeDisabled();
   });
 
-  // -------------------------------------------------- Keyboard navigation
+  // --------------------------------------------------
+  // Keyboard navigation
   // --------------------------------------------------
 
   it('responds to Enter key on page button', () => {
@@ -108,7 +112,8 @@ describe('Pager', () => {
     expect(onPageChange).toHaveBeenCalledWith(5);
   });
 
-  // -------------------------------------------------- aria-current
+  // --------------------------------------------------
+  // aria-current
   // --------------------------------------------------
 
   it('sets aria-current="page" on active page', () => {
@@ -125,7 +130,8 @@ describe('Pager', () => {
     expect(otherBtn).not.toHaveAttribute('aria-current');
   });
 
-  // -------------------------------------------------- Loading state
+  // --------------------------------------------------
+  // Loading state
   // --------------------------------------------------
 
   it('disables all controls when isLoading is true', () => {
@@ -139,7 +145,8 @@ describe('Pager', () => {
     });
   });
 
-  // -------------------------------------------------- Mini pager (unknown total)
+  // --------------------------------------------------
+  // Mini pager (unknown total)
   // --------------------------------------------------
 
   it('renders mini pager when totalPages is null', () => {
@@ -151,7 +158,8 @@ describe('Pager', () => {
     expect(screen.getByLabelText('Go to next page')).not.toBeDisabled();
   });
 
-  // -------------------------------------------------- Bar layout
+  // --------------------------------------------------
+  // Bar layout
   // --------------------------------------------------
 
   it('renders bar layout with three zones', () => {
@@ -172,7 +180,8 @@ describe('Pager', () => {
     expect(container.querySelector('.mg-pager__jump')).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Range display
+  // --------------------------------------------------
+  // Range display
   // --------------------------------------------------
 
   it('shows range text when range prop is provided', () => {
@@ -190,7 +199,8 @@ describe('Pager', () => {
     expect(screen.getByText(/Showing 21–30/)).toBeInTheDocument();
   });
 
-  // -------------------------------------------------- Jump-to-page form
+  // --------------------------------------------------
+  // Jump-to-page form
   // --------------------------------------------------
 
   it('calls onPageChange on jump form submit', () => {
@@ -234,7 +244,8 @@ describe('Pager', () => {
     expect(onPageChange).toHaveBeenCalledWith(10);
   });
 
-  // -------------------------------------------------- Empty / notice state
+  // --------------------------------------------------
+  // Empty / notice state
   // --------------------------------------------------
 
   it('shows notice when emptyState is provided', () => {
@@ -267,7 +278,8 @@ describe('Pager', () => {
     expect(actionFn).toHaveBeenCalled();
   });
 
-  // -------------------------------------------------- Accessibility
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

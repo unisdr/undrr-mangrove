@@ -47,10 +47,12 @@ function getPanel(container, textId) {
   return container.querySelector(`section#mg-tabs__section-${textId}`);
 }
 
-/* Render the Tab component and run the real tabs runtime. @param {string} variant -
- * 'horizontal' or 'stacked' @param {boolean} activateDeepLink - whether to run deep link
- * activation (default false) @param {object} extraProps - additional props to pass to Tab
- * / */
+/**
+ * Render the Tab component and run the real tabs runtime.
+ * @param {string} variant - 'horizontal' or 'stacked'
+ * @param {boolean} activateDeepLink - whether to run deep link activation (default false)
+ * @param {object} extraProps - additional props to pass to Tab
+ */
 function renderAndInit(
   variant = 'horizontal',
   activateDeepLink = false,
@@ -71,7 +73,8 @@ function renderAndInit(
   return { ...result, container: result.container, tabContainer };
 }
 
-// ------------------------------------------------------- Tests
+// -------------------------------------------------------
+// Tests
 // -------------------------------------------------------
 
 describe('Tab', () => {
@@ -113,7 +116,8 @@ describe('Tab', () => {
     expect(container.querySelector('.mg-tabs')).not.toBeInTheDocument();
   });
 
-  // ------------------------------------------------------- Horizontal ARIA
+  // -------------------------------------------------------
+  // Horizontal ARIA
   // -------------------------------------------------------
 
   describe('horizontal tabs ARIA', () => {
@@ -160,7 +164,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- Stacked / disclosure ARIA
+  // -------------------------------------------------------
+  // Stacked / disclosure ARIA
   // -------------------------------------------------------
 
   describe('stacked tabs ARIA (disclosure pattern)', () => {
@@ -591,7 +596,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- Stacked toggle behavior
+  // -------------------------------------------------------
+  // Stacked toggle behavior
   // -------------------------------------------------------
 
   describe('stacked toggle behavior', () => {
@@ -652,7 +658,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- Keyboard navigation
+  // -------------------------------------------------------
+  // Keyboard navigation
   // -------------------------------------------------------
 
   describe('keyboard navigation', () => {
@@ -719,7 +726,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- defaultOpen
+  // -------------------------------------------------------
+  // defaultOpen
   // -------------------------------------------------------
 
   describe('defaultOpen', () => {
@@ -796,7 +804,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- singleOpen
+  // -------------------------------------------------------
+  // singleOpen
   // -------------------------------------------------------
 
   describe('singleOpen', () => {
@@ -855,7 +864,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- filterable
+  // -------------------------------------------------------
+  // filterable
   // -------------------------------------------------------
 
   describe('filterable', () => {
@@ -1013,8 +1023,9 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- mgTabs lifecycle (wrapper
-  // function) -------------------------------------------------------
+  // -------------------------------------------------------
+  // mgTabs lifecycle (wrapper function)
+  // -------------------------------------------------------
 
   describe('mgTabs lifecycle', () => {
     const { mgTabs: realMgTabs } = jest.requireActual(
@@ -1048,7 +1059,8 @@ describe('Tab', () => {
     });
   });
 
-  // ------------------------------------------------------- Accessibility (jest-axe)
+  // -------------------------------------------------------
+  // Accessibility (jest-axe)
   // -------------------------------------------------------
 
   describe('optional mobile stacking', () => {

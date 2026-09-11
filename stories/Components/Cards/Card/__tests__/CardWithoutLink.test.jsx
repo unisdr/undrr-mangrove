@@ -6,10 +6,10 @@ import { HorizontalCard } from '../HorizontalCard';
 import { BookCard } from '../BookCard';
 import { HorizontalBookCard } from '../HorizontalBookCard';
 
-// Every card shape shares one rule: a card is a link only when it has a usable
-// destination. Drupal Gutenberg has been emitting `<a href="">` for unlinked cards, which
-// resolves to the current page and swallows clicks aimed at the card's own button, so the
-// empty string counts as "no link".
+// Every card shape shares one rule: a card is a link only when it has a
+// usable destination. Drupal Gutenberg has been emitting `<a href="">` for
+// unlinked cards, which resolves to the current page and swallows clicks
+// aimed at the card's own button, so the empty string counts as "no link".
 const CARDS = [
   ['VerticalCard', VerticalCard],
   ['HorizontalCard', HorizontalCard],

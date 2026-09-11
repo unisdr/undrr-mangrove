@@ -1,7 +1,14 @@
-/* @file FacetsSidebar.jsx @description Facets sidebar component with sort options and
- * filters. Renders the right sidebar containing: - Sort options (relevance, newest,
- * oldest) - Facet dropdowns for filtering (type, country, hazard, theme, etc.) - Custom
- * facets defined in configuration @module SearchWidget/components/FacetsSidebar / */
+/**
+ * @file FacetsSidebar.jsx
+ * @description Facets sidebar component with sort options and filters.
+ *
+ * Renders the right sidebar containing:
+ * - Sort options (relevance, newest, oldest)
+ * - Facet dropdowns for filtering (type, country, hazard, theme, etc.)
+ * - Custom facets defined in configuration
+ *
+ * @module SearchWidget/components/FacetsSidebar
+ */
 
 import React, { useMemo } from 'react';
 import {
@@ -20,9 +27,13 @@ import SortOptions from './SortOptions';
 import FacetSelect from './FacetSelect';
 import CustomFacetSelect from './CustomFacetSelect';
 
-/* FacetsSidebar component. Container for sort options and all facet filters. @param
- * {Object} props - Component props @param {string} props.widgetId - Unique widget ID for
- * accessibility / */
+/**
+ * FacetsSidebar component.
+ * Container for sort options and all facet filters.
+ *
+ * @param {Object} props - Component props
+ * @param {string} props.widgetId - Unique widget ID for accessibility
+ */
 export function FacetsSidebar({ widgetId = 'search' }) {
   const config = useSearchConfig();
   const { aggregations } = useSearchState();

@@ -17,8 +17,11 @@ export function Reading({ contents, children }) {
 }
 
 Reading.propTypes = {
-  /* A contents element. When present it sits in a sticky sidebar above 48rem, using `mg-
-   * grid`'s `--article` variant (an asymmetric flexible/fixed-width grid) for the split. / */
+  /**
+   * A contents element. When present it sits in a sticky sidebar above 48rem,
+   * using `mg-grid`'s `--article` variant (an asymmetric flexible/fixed-width
+   * grid) for the split.
+   */
   contents: PropTypes.node,
   children: PropTypes.node,
 };

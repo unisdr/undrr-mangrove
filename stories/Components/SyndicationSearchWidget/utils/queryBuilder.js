@@ -1,7 +1,12 @@
-/* @file queryBuilder.js @description Elasticsearch query builder for the UNDRR Search
- * Widget. Ported from vanilla JS SearchWidgetQuery.js for React 19 integration. Builds
- * Elasticsearch Query DSL from widget state and configuration. @module
- * SearchWidget/utils/queryBuilder / */
+/**
+ * @file queryBuilder.js
+ * @description Elasticsearch query builder for the UNDRR Search Widget.
+ *
+ * Ported from vanilla JS SearchWidgetQuery.js for React 19 integration.
+ * Builds Elasticsearch Query DSL from widget state and configuration.
+ *
+ * @module SearchWidget/utils/queryBuilder
+ */
 
 import {
   SCORING_CONFIG,
@@ -14,17 +19,24 @@ import {
   resolveFacetsLayout,
 } from './constants';
 
-/* Build a complete Elasticsearch query from state and config. Uses post_filter pattern for
- * disjunctive faceting: - Facet filters are applied via post_filter (after aggregations) -
- * This allows each facet dropdown to show ALL available options - Non-facet filters
- * (status, customFilters) remain in the main query @param {Object} params - Query
- * parameters @param {string} params.query - Search query string @param {Object}
- * params.facets - Active facet filters { [key]: [values] } @param {Object}
- * params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' } @param {Object}
- * params.customFacets - Custom facet selections { [facetId]: [indices] } @param {string}
- * params.sortBy - Sort order: 'newest', 'oldest', 'relevance' @param {number} params.page
- * - Current page number (1-based) @param {Object} config - Widget configuration @returns
- * {Object} Elasticsearch query body / */
+/**
+ * Build a complete Elasticsearch query from state and config.
+ *
+ * Uses post_filter pattern for disjunctive faceting:
+ * - Facet filters are applied via post_filter (after aggregations)
+ * - This allows each facet dropdown to show ALL available options
+ * - Non-facet filters (status, customFilters) remain in the main query
+ *
+ * @param {Object} params - Query parameters
+ * @param {string} params.query - Search query string
+ * @param {Object} params.facets - Active facet filters { [key]: [values] }
+ * @param {Object} params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' }
+ * @param {Object} params.customFacets - Custom facet selections { [facetId]: [indices] }
+ * @param {string} params.sortBy - Sort order: 'newest', 'oldest', 'relevance'
+ * @param {number} params.page - Current page number (1-based)
+ * @param {Object} config - Widget configuration
+ * @returns {Object} Elasticsearch query body
+ */
 export function buildQuery(
   { query, facets, facetOperators, customFacets, sortBy, page = 1 },
   config
@@ -41,11 +53,12 @@ export function buildQuery(
   // Build the main query (excludes facet filters for disjunctive faceting)
   const mainQuery = buildMainQuery(query, scoring, config);
 
-  // Build post_filter with all facet filters (applied after aggregations). The facet UI
-  // being hidden only means no *user-driven* selections will appear; programmatic default
-  // filters (defaultFilters, config-modifier injected) still arrive as facet/customFacet
-  // state and must reach Elasticsearch. So build the post_filter whenever the facet UI is
-  // shown OR there are active values to apply. See unisdr/undrr-mangrove#1031.
+  // Build post_filter with all facet filters (applied after aggregations).
+  // The facet UI being hidden only means no *user-driven* selections will
+  // appear; programmatic default filters (defaultFilters, config-modifier
+  // injected) still arrive as facet/customFacet state and must reach
+  // Elasticsearch. So build the post_filter whenever the facet UI is shown OR
+  // there are active values to apply. See unisdr/undrr-mangrove#1031.
   const facetsActive = resolveFacetsLayout(config) !== false;
   const hasActiveFacets =
     (facets &&
@@ -68,8 +81,9 @@ export function buildQuery(
     query: mainQuery,
   };
 
-  // Skip highlights in card mode when summary is hidden: card teasers use pre-rendered HTML
-  // and don't show body text, so highlight fragments are wasted response payload.
+  // Skip highlights in card mode when summary is hidden: card teasers use
+  // pre-rendered HTML and don't show body text, so highlight fragments are
+  // wasted response payload.
   if (!(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
@@ -88,8 +102,11 @@ export function buildQuery(
   return result;
 }
 
-/* Build sort configuration. @param {string} sortBy - Sort order @returns {Array}
- * Elasticsearch sort array / */
+/**
+ * Build sort configuration.
+ * @param {string} sortBy - Sort order
+ * @returns {Array} Elasticsearch sort array
+ */
 function buildSort(sortBy) {
   switch (sortBy) {
     case 'newest':
@@ -102,8 +119,11 @@ function buildSort(sortBy) {
   }
 }
 
-/* Build the main query structure with function_score. Excludes facet filters (those go in
- * post_filter for disjunctive faceting). @private / */
+/**
+ * Build the main query structure with function_score.
+ * Excludes facet filters (those go in post_filter for disjunctive faceting).
+ * @private
+ */
 function buildMainQuery(searchQuery, scoring, config) {
   const boolQuery = {
     must: buildMustClause(searchQuery, scoring, config),
@@ -126,14 +146,18 @@ function buildMainQuery(searchQuery, scoring, config) {
   };
 }
 
-/* Build base filters that are NOT facet filters. These stay in the main query (not moved
- * to post_filter). @private / */
+/**
+ * Build base filters that are NOT facet filters.
+ * These stay in the main query (not moved to post_filter).
+ * @private
+ */
 function buildBaseFilters(config) {
   const filters = [];
 
-  // Filter by published status for nodes. Taxonomy terms don't have a `status` field in the
-  // index (it's node-only), so we must also allow documents where status doesn't exist,
-  // otherwise all taxonomy term results would be silently excluded.
+  // Filter by published status for nodes.
+  // Taxonomy terms don't have a `status` field in the index (it's node-only),
+  // so we must also allow documents where status doesn't exist, otherwise
+  // all taxonomy term results would be silently excluded.
   filters.push({
     bool: {
       should: [
@@ -161,11 +185,11 @@ function buildBaseFilters(config) {
     filters.push({ term: { has_image: 'true' } });
   }
 
-  // Interestingness and longevity tier filters: restrict results by editorial weight or
-  // content freshness category. Tier boundaries are derived from SCORING_CONFIG (which also
-  // drives relevance scoring), so the same tier names work for both ranking and filtering
-  // without duplicating definitions. buildTierFilter returns ES range queries (single or
-  // bool.should of ranges).
+  // Interestingness and longevity tier filters: restrict results by editorial
+  // weight or content freshness category. Tier boundaries are derived from
+  // SCORING_CONFIG (which also drives relevance scoring), so the same tier
+  // names work for both ranking and filtering without duplicating definitions.
+  // buildTierFilter returns ES range queries (single or bool.should of ranges).
   const scoring = config.scoring || SCORING_CONFIG;
   const interestingnessFilter = buildTierFilter(
     'field_meta_interestingness',
@@ -189,8 +213,11 @@ function buildBaseFilters(config) {
   return filters;
 }
 
-/* Build post_filter containing all facet filters. Applied after aggregations for
- * disjunctive faceting. @private / */
+/**
+ * Build post_filter containing all facet filters.
+ * Applied after aggregations for disjunctive faceting.
+ * @private
+ */
 function buildPostFilter(facets, facetOperators, customFacets, config) {
   const filters = [];
 
@@ -256,8 +283,9 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
       continue;
     }
 
-    // Type facet: values may include subtypes with namespaced keys e.g., "news" (content type)
-    // or "field_news_type:751" (subtype) We need to split and route to correct ES fields
+    // Type facet: values may include subtypes with namespaced keys
+    // e.g., "news" (content type) or "field_news_type:751" (subtype)
+    // We need to split and route to correct ES fields
     if (key === 'type') {
       // Group values by their target ES field
       const fieldGroups = {};
@@ -330,8 +358,12 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
   };
 }
 
-/* Build the must clause for the query. Includes queryAppend (hidden terms added to all
- * searches). Removes stop words from the query for more consistent results. @private / */
+/**
+ * Build the must clause for the query.
+ * Includes queryAppend (hidden terms added to all searches).
+ * Removes stop words from the query for more consistent results.
+ * @private
+ */
 function buildMustClause(searchQuery, scoring, config) {
   const queryAppend = config.queryAppend || '';
   const stopWords = scoring.stopWords || [];
@@ -360,8 +392,9 @@ function buildMustClause(searchQuery, scoring, config) {
     };
   }
 
-  // Remove stop words for more consistent matching e.g., "The Draft Articles on the
-  // Protection" and "Draft Articles on Protection" will both search for the same core terms
+  // Remove stop words for more consistent matching
+  // e.g., "The Draft Articles on the Protection" and "Draft Articles on Protection"
+  // will both search for the same core terms
   const cleanedQuery = removeStopWords(combinedQuery, stopWords);
 
   return {
@@ -376,9 +409,13 @@ function buildMustClause(searchQuery, scoring, config) {
   };
 }
 
-/* Sanitize a query string to prevent Elasticsearch errors. Handles common issues like
- * unclosed quotes and trailing operators. @param {string} query - Raw query string
- * @returns {string} Sanitized query string / */
+/**
+ * Sanitize a query string to prevent Elasticsearch errors.
+ * Handles common issues like unclosed quotes and trailing operators.
+ *
+ * @param {string} query - Raw query string
+ * @returns {string} Sanitized query string
+ */
 function sanitizeQuery(query) {
   if (!query) return query;
 
@@ -410,12 +447,18 @@ function sanitizeQuery(query) {
   return sanitized.trim();
 }
 
-/* Remove common stop words from query for better phrase matching. e.g., Draft Articles on
- * the Protection → Draft Articles Protection IMPORTANT: If the query contains quotes
- * (explicit phrase search), stop words are NOT removed to preserve user intent. e.g., "The
- * Draft Articles" stays as "The Draft Articles" @param {string} query - Search query
- * @param {Array<string>} stopWords - List of stop words to remove @returns {string} Query
- * with stop words removed (unless quoted) / */
+/**
+ * Remove common stop words from query for better phrase matching.
+ * e.g., Draft Articles on the Protection → Draft Articles Protection
+ *
+ * IMPORTANT: If the query contains quotes (explicit phrase search),
+ * stop words are NOT removed to preserve user intent.
+ * e.g., "The Draft Articles" stays as "The Draft Articles"
+ *
+ * @param {string} query - Search query
+ * @param {Array<string>} stopWords - List of stop words to remove
+ * @returns {string} Query with stop words removed (unless quoted)
+ */
 function removeStopWords(query, stopWords = []) {
   if (!stopWords || stopWords.length === 0 || !query) {
     return query;
@@ -441,9 +484,12 @@ function removeStopWords(query, stopWords = []) {
   return filtered.length > 0 ? filtered.join(' ') : query;
 }
 
-/* Add fuzziness to search query for typo tolerance. @param {string} query - Search query
- * @param {number} fuzzinessLevel - Fuzziness level (default: 1) @returns {string} Query
- * with fuzziness / */
+/**
+ * Add fuzziness to search query for typo tolerance.
+ * @param {string} query - Search query
+ * @param {number} fuzzinessLevel - Fuzziness level (default: 1)
+ * @returns {string} Query with fuzziness
+ */
 function addFuzziness(query, fuzzinessLevel = 1) {
   // Don't add fuzziness to quoted phrases (user wants exact match)
   if (query.includes('"')) {
@@ -460,12 +506,19 @@ function addFuzziness(query, fuzzinessLevel = 1) {
   return terms.map(term => `${term}~${fuzzinessLevel}`).join(' ');
 }
 
-/* Build phrase boosting clauses for relevance. Improves relevance when search terms appear
- * together in order. Uses three tiers of matching (all with stop words removed): - match:
- * partial word matching - exactPhrase: slop 0, words must be in exact order - nearPhrase:
- * slop 2, allows minor word order variations @param {string} searchQuery - The search
- * query @param {Object} scoring - Scoring configuration @returns {Array} Array of should
- * clauses for phrase boosting @private / */
+/**
+ * Build phrase boosting clauses for relevance.
+ * Improves relevance when search terms appear together in order.
+ * Uses three tiers of matching (all with stop words removed):
+ * - match: partial word matching
+ * - exactPhrase: slop 0, words must be in exact order
+ * - nearPhrase: slop 2, allows minor word order variations
+ *
+ * @param {string} searchQuery - The search query
+ * @param {Object} scoring - Scoring configuration
+ * @returns {Array} Array of should clauses for phrase boosting
+ * @private
+ */
 function buildPhraseBoosting(searchQuery, scoring) {
   const should = [];
 
@@ -539,8 +592,11 @@ function buildPhraseBoosting(searchQuery, scoring) {
   return should;
 }
 
-/* Build filter clauses from custom facet selections. Custom facets store option indices in
- * state; we look up query strings from config. @private / */
+/**
+ * Build filter clauses from custom facet selections.
+ * Custom facets store option indices in state; we look up query strings from config.
+ * @private
+ */
 function buildCustomFacetFilters(customFacets, config) {
   const filters = [];
   const customFacetConfigs = config.customFacets || [];
@@ -587,8 +643,11 @@ function buildCustomFacetFilters(customFacets, config) {
   return filters;
 }
 
-/* Strip quotes from a query string. @param {string} query - Query that may contain quotes
- * @returns {string} Query with quotes removed / */
+/**
+ * Strip quotes from a query string.
+ * @param {string} query - Query that may contain quotes
+ * @returns {string} Query with quotes removed
+ */
 function stripQuotes(query) {
   return query ? query.replace(/"/g, '') : query;
 }
@@ -638,8 +697,11 @@ function buildTerminologyBoost(scoring) {
   };
 }
 
-/* Build recency boost with longevity-based decay. Documents with higher longevity values
- * decay slower. @private / */
+/**
+ * Build recency boost with longevity-based decay.
+ * Documents with higher longevity values decay slower.
+ * @private
+ */
 function buildRecencyBoost(scoring) {
   const longevity = scoring.longevity;
   const defaultLongevity = scoring.defaultLongevity;
@@ -687,8 +749,11 @@ function buildRecencyBoost(scoring) {
   };
 }
 
-/* Build interestingness boost. Documents with higher interestingness values rank higher.
- * @private / */
+/**
+ * Build interestingness boost.
+ * Documents with higher interestingness values rank higher.
+ * @private
+ */
 function buildInterestingnessBoost(scoring) {
   const interest = scoring.interestingness;
 
@@ -742,8 +807,12 @@ function buildHighlight(highlight) {
   };
 }
 
-/* Build aggregations for facets. Uses simple aggregations scoped to the main query.
- * Selected values are preserved in dropdowns via the UI component. @private / */
+/**
+ * Build aggregations for facets.
+ * Uses simple aggregations scoped to the main query.
+ * Selected values are preserved in dropdowns via the UI component.
+ * @private
+ */
 function buildAggregations(facetFields, facetCount) {
   const aggs = {};
 
@@ -759,9 +828,9 @@ function buildAggregations(facetFields, facetCount) {
     };
   }
 
-  // Vocabulary aggregation for taxonomy term results. This runs alongside the `type`
-  // aggregation (which is node-only). The `vid` field only exists on taxonomy term
-  // documents.
+  // Vocabulary aggregation for taxonomy term results.
+  // This runs alongside the `type` aggregation (which is node-only).
+  // The `vid` field only exists on taxonomy term documents.
   if (!aggs.vid) {
     aggs.vid = {
       terms: {
@@ -789,11 +858,15 @@ function buildAggregations(facetFields, facetCount) {
   return aggs;
 }
 
-/* Extract buckets from aggregation response. Handles both old format (aggs.field.buckets)
- * and new global+filter format (aggs.field.filtered.values.buckets). @param {Object}
- * aggregations - Elasticsearch aggregations response @param {string} fieldKey - The field
- * key to extract buckets for @returns {Array} Array of bucket objects with key and
- * doc_count / */
+/**
+ * Extract buckets from aggregation response.
+ * Handles both old format (aggs.field.buckets) and new global+filter format
+ * (aggs.field.filtered.values.buckets).
+ *
+ * @param {Object} aggregations - Elasticsearch aggregations response
+ * @param {string} fieldKey - The field key to extract buckets for
+ * @returns {Array} Array of bucket objects with key and doc_count
+ */
 export function getAggregationBuckets(aggregations, fieldKey) {
   if (!aggregations || !aggregations[fieldKey]) {
     return [];

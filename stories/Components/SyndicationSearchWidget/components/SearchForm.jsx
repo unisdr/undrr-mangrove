@@ -1,5 +1,9 @@
-/* @file SearchForm.jsx @description Search input form component with accessibility
- * features. @module SearchWidget/components/SearchForm / */
+/**
+ * @file SearchForm.jsx
+ * @description Search input form component with accessibility features.
+ *
+ * @module SearchWidget/components/SearchForm
+ */
 
 import React, { useCallback, useId } from 'react';
 import {
@@ -10,11 +14,17 @@ import {
   actions,
 } from '../context/SearchContext';
 
-/* SearchForm component. Renders the search input and submit button. @param {Object} props
- * - Component props @param {string} props.value - Current query value @param {Function}
- * props.onChange - Query change handler @param {boolean} props.isStale - Whether results
- * are stale (search pending) @param {boolean} props.isLoading - Whether search is loading
- * @param {string} props.widgetId - Unique widget ID for accessibility / */
+/**
+ * SearchForm component.
+ * Renders the search input and submit button.
+ *
+ * @param {Object} props - Component props
+ * @param {string} props.value - Current query value
+ * @param {Function} props.onChange - Query change handler
+ * @param {boolean} props.isStale - Whether results are stale (search pending)
+ * @param {boolean} props.isLoading - Whether search is loading
+ * @param {string} props.widgetId - Unique widget ID for accessibility
+ */
 export function SearchForm({
   value,
   onChange,
