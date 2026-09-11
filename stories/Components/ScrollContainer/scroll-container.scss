@@ -92,7 +92,7 @@
     // on anything darker or saturated.
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--mg-color-interactive) / 0.35)
-      rgb(var(--mg-color-neutral-900) / 0.12);
+      rgb(var(--mg-color-neutral-900) / 0.06);
 
     @include devicebreak(small) {
       height: auto;
@@ -113,12 +113,18 @@
     // Custom scrollbar styling
     &::-webkit-scrollbar {
       height: var(--mg-spacing-50);
+
+      // The scrollbar's own box, distinct from -track below — WebKit can
+      // paint this with an opaque default, which would otherwise show
+      // through as a solid box even once the track itself is transparent.
+      background: transparent;
     }
 
     &::-webkit-scrollbar-track {
-      // Translucent, not a flat light grey, so it works atop a themed
-      // colour background as well as white.
-      background: rgb(var(--mg-color-neutral-900) / 0.12);
+      // Barely-there, not a flat light grey box, so it reads as "mostly
+      // transparent" rather than a visible bar — atop a themed colour
+      // background as well as white.
+      background: rgb(var(--mg-color-neutral-900) / 0.06);
       border-radius: var(--mg-radius-form-input);
     }
 
