@@ -57,12 +57,18 @@
     block-size: auto;
     object-fit: contain;
 
+    // Pre-2.0 behavior: crop to a fixed box on mobile/tablet instead of
+    // letterboxing, so the logo stays legible at small sizes.
     @media (max-width: $mg-breakpoint-desktop) {
       inline-size: mg-rem(190);
+      block-size: mg-rem(48);
+      object-fit: cover;
+      object-position: 0% 50%;
     }
 
     @media (max-width: $mg-breakpoint-tablet) {
       inline-size: mg-rem(110);
+      block-size: mg-rem(30);
     }
   }
 
