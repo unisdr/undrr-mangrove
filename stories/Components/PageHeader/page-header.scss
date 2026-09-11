@@ -95,7 +95,11 @@
   &__language-icon {
     flex-shrink: 0;
     color: rgb(var(--mg-color-neutral-0));
-    font-size: $mg-font-size-400;
+
+    // No explicit font-size: inherits the same ambient size as the account
+    // link's <Icon name="user"> (also unset), so both toolbar icons render
+    // at the same size instead of the account icon looking smaller next to
+    // this one.
 
     @media (max-width: $mg-breakpoint-tablet) {
       position: absolute;
@@ -168,7 +172,12 @@
     padding-inline: var(--mg-spacing-50) var(--mg-spacing-250);
     border: none;
     border-radius: var(--mg-radius-button);
-    font-size: $mg-font-size-300;
+
+    // Matches .mg-page-header__label ("My account") — same size/weight
+    // toolbar utility text, previously mismatched (1rem regular here vs.
+    // 0.875rem bold there).
+    font-size: $mg-font-tag;
+    font-weight: bold;
     background-color: transparent;
     color: rgb(var(--mg-color-neutral-0));
     direction: inherit;
