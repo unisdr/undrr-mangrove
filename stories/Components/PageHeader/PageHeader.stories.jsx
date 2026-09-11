@@ -5,6 +5,11 @@ import { PageHeader } from './PageHeader';
 export default {
   title: 'Components/PageHeader',
   component: PageHeader,
+  parameters: {
+    // Full-bleed site chrome, same as MegaMenu — the default padded docs
+    // canvas puts a visible margin around it that isn't part of the design.
+    layout: 'fullscreen',
+  },
   argTypes: {
     variant: {
       options: ['default', 'decoration-only'],
