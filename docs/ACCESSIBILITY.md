@@ -2,9 +2,7 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-accessibility--docs).
 
-Accessible design not only helps users with disabilities; it also provides a better user experience for everyone. All components follow the [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA standard.
-
-All patterns are perceivable, operable, and understandable to users, even when using a screen reader or other assistive technology. However, how you use these elements also affects the accessibility of a product.
+Accessible design improves usability for everyone. Mangrove components target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA, but product-level implementation still determines final accessibility.
 
 For the full specification, see the [Web Content Accessibility Guidelines (WCAG) 2.2](https://www.w3.org/TR/WCAG22/).
 
@@ -135,9 +133,9 @@ $mg-error-color: #dc3545; // High contrast red
 
 ### 5. Focus management for dynamic content
 
-When content appears dynamically (modals, drawers, notification banners), you must move focus so keyboard and screen reader users know something changed. Move focus to the new content when it opens, and return focus to the trigger element when it closes.
+When content appears dynamically (modals, drawers, notification banners), move focus to the new content and return it to the trigger on close.
 
-For modals, trap focus inside the dialog so Tab and Shift+Tab cycle through only the modal's interactive elements. Use `aria-modal="true"` and `role="dialog"` so screen readers announce the boundary.
+For modals, trap focus within the dialog and use `aria-modal="true"` with `role="dialog"`.
 
 ```jsx
 // Return focus to the trigger when a modal closes
@@ -163,7 +161,7 @@ function ModalTrigger() {
 
 ### 6. Reduced motion
 
-Some users experience motion sickness or distraction from animations. Respect the `prefers-reduced-motion` media query by wrapping transitions and animations so they only run when the user has not requested reduced motion.
+Respect `prefers-reduced-motion` so animations run only when users have not requested reduced motion.
 
 ```scss
 // Only animate when the user allows it
@@ -176,7 +174,7 @@ Some users experience motion sickness or distraction from animations. Respect th
 
 ### 7. Touch target sizes
 
-WCAG 2.2 criterion 2.5.8 requires interactive targets to be at least 24x24 CSS pixels, with 44x44px recommended. This matters for mobile users and people with motor impairments.
+WCAG 2.2 criterion 2.5.8 requires interactive targets of at least 24x24 CSS pixels (44x44px recommended).
 
 ```scss
 // Ensure minimum touch target size
@@ -193,7 +191,7 @@ If the visual design requires a smaller target (for example, an inline text link
 
 ### 8. Image alt text
 
-Every `<img>` needs an `alt` attribute, but not every image needs descriptive text. Use empty alt (`alt=""`) for decorative images that add no information — icons next to labels, background flourishes, or purely visual separators. For informative images, describe the content and purpose, not the appearance.
+Every `<img>` needs an `alt` attribute. Use empty alt (`alt=""`) for decorative images; use meaningful alt text for informative images.
 
 ```jsx
 // Decorative: icon next to text that already conveys the meaning
@@ -211,7 +209,7 @@ Avoid alt text that starts with "Image of" or "Photo of" — screen readers alre
 
 ### 9. Error identification
 
-When form validation fails, tell users what happened, which field has the problem, and how to fix it. Connect error messages to their fields with `aria-describedby` so screen readers announce the error when the field receives focus. Use `aria-invalid="true"` on the field itself.
+When validation fails, explain what went wrong, identify the field, and explain how to fix it. Use `aria-describedby` and `aria-invalid="true"` so assistive tech announces the error correctly.
 
 ```jsx
 <label htmlFor="email">Email address</label>

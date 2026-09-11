@@ -5,13 +5,14 @@ import LinkTo from '@storybook/addon-links/react';
 
 # Fonts
 
-Mangrove has two layers of type token, and the distinction is the whole model.
+Mangrove uses two type-token layers:
 
-**Faces say what fonts exist.** Five Sass variables, one per typeface Mangrove ships a `@font-face` for.
+- **Faces** define which typefaces exist (`@font-face`, via Sass variables).
+- **Roles** define how type is used (`text`, `heading`, `display`, `ui`, `code`, via CSS custom properties).
 
-**Roles say what job the type is doing.** Five CSS custom properties — text, heading, display, ui, code. A component stylesheet names a role and never a face, because the role is what changes between scripts. Introduced in [unisdr/undrr-mangrove#1098](https://github.com/unisdr/undrr-mangrove/issues/1098).
+Components should reference roles, not faces. This model was introduced in [unisdr/undrr-mangrove#1098](https://github.com/unisdr/undrr-mangrove/issues/1098).
 
-**Latin rendering did not change when the roles landed.** Every Latin element resolves to exactly the face it resolved to before: text and heading are both Roboto, display and ui are both Roboto Condensed. No new `font-family` declaration matches a Latin element, which is why a consuming theme that sets its own face on `h1`–`h3` still wins. The indirection buys correct Arabic, not a new Latin look.
+Latin rendering did not change with roles; the model primarily enables correct Arabic routing without hardcoding faces in component styles.
 
 ## Font roles
 
@@ -33,15 +34,15 @@ Consume a role the same way as any other Mangrove token:
 
 The roles are defined on `:root` in `_variables.scss`, and the Arabic script map lives in `_fonts.scss` alongside the `@font-face` blocks. Between them, every supported build path gets both halves — including the per-component Sass recipe in the <LinkTo kind="getting-started-integration-sass-integration" story="docs">Sass integration guide</LinkTo>, which imports no `style*.scss` entry point. That matters more than it sounds: the shared import list every UNDRR Drupal theme compiles reaches `_foundational.scss` and no entry point, and a build with the role definitions but no script map renders Arabic in Roboto, which has no Arabic coverage at all. Component stylesheets carry no `var()` fallbacks and do not need any.
 
-### Why the roles split the way they do
+### Why roles split this way
 
-**`text` and `heading` are the same face in Latin and different faces in Arabic.** Latin narrative headings deliberately use the body face: Roboto Condensed at heading size feels too tight for sustained reading. Arabic has a genuine display face in Noto Kufi Arabic, so `heading` uses it. Keeping the two roles separate is what lets those two facts coexist without a `:lang()` rule in a component.
+**`text` and `heading` use the same face in Latin but different faces in Arabic.** Latin narrative headings stay on Roboto, while Arabic headings use Noto Kufi Arabic.
 
 Because the two are identical in Latin, the `heading` declaration in `_foundational.scss` is scoped to `:lang(ar)`. An unconditional `h1, h2, h3 { font-family: ... }` would change nothing in Latin and would silently override a consuming theme's brand face: at (0,0,1) it ties with the theme's own `h1` rule and wins on source order, because `mangrove.css` loads last. Latin `h1`–`h3` are therefore left to inherit, as they were before the roles landed.
 
-**`ui` and `display` are the same face in Latin and different faces in Arabic.** Roboto Condensed serves both the hero title and compact chrome. Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic while `display` keeps Kufi. This is the single change most visible to an Arabic reader: card titles, tags, tabs, navigation links and stat labels moved from Kufi to Noto Sans Arabic, and Latin did not move at all.
+**`ui` and `display` use the same face in Latin and different faces in Arabic.** Latin uses Roboto Condensed for both; Arabic maps `ui` to Noto Sans Arabic and `display` to Noto Kufi Arabic.
 
-**Narrowing was measured, not assumed.** Arabic chrome set in Noto Sans Arabic was expected to run wider than Latin Roboto Condensed and does not: a representative navigation row measures 849px in Arabic against 952px in Latin, about **10.8% narrower**, and 9% narrower than the same row in Kufi. No width compensation was needed anywhere.
+**Narrowing was measured.** Arabic chrome in Noto Sans Arabic tested narrower than Latin Roboto Condensed in representative nav rows, so no width compensation was needed.
 
 **`code` is not remapped.** The monospace stack is script-independent, so Arabic inherits it from `:root` unchanged.
 
@@ -63,7 +64,7 @@ Do not reference a face from a component stylesheet. Faces exist so the role map
 
 ## Overriding type
 
-There are two override paths and they do different things. Pick by asking whether the font you want is one Mangrove already loads.
+There are two override paths; choose based on whether Mangrove already ships the target typeface.
 
 **Re-point a role — runtime, per brand, shipped faces only.** A CSS custom property override in a `.mg-theme-*` block (or `:root`) can send a role to any face Mangrove emits a `@font-face` for. No rebuild, and it affects only the brand you scope it to.
 
@@ -81,7 +82,7 @@ $mg-font-face-sans-condensed: 'Barlow Condensed', sans-serif;
 @import '@undrr/undrr-mangrove/scss/assets/scss/style';
 ```
 
-Per-brand typefaces driven from `tokens/*.yaml` are not available. Faces stayed in Sass deliberately — `@font-face` and Sass interpolation both need a compile-time value — and moving them into the token pipeline is a separate piece of work.
+Per-brand typefaces from `tokens/*.yaml` are not available yet; faces stay in Sass because `@font-face` and interpolation are compile-time concerns.
 
 ## Font sources
 
