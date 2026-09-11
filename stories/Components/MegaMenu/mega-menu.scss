@@ -18,7 +18,7 @@
     max-width: $mg-breakpoint-desktop-wide;
   }
 
-  // these are note "mobile first" as they seem to cause a glitch with firefox and .mg-container-full-width
+  // Kept max-width based to avoid a Firefox glitch with .mg-container-full-width.
   @media screen and (max-width: $mg-breakpoint-tablet) {
     padding-left: mg-rem(40); // space for the icon button
     overflow-x: hidden; // primarily for mobile
@@ -105,26 +105,14 @@
       display: block;
     }
 
-    // Mobile: no desktop flyout markup is shown at all — matches the
-    // pre-animation behavior exactly, so an invisible-but-laid-out panel
-    // never adds height inside the horizontally-scrolling mobile nav.
+    // Keep desktop flyout markup hidden on mobile to avoid phantom nav height.
     .mg-mega-content {
       display: none;
     }
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
-      // Closed state, transition-capable. display: none can't be
-      // transitioned in the browsers this library supports (no
-      // @starting-style reliance — see
-      // stories/Documentation/Browsersupport.mdx), so hide via
-      // visibility/opacity/clip-path instead once the panel is desktop-only.
-      // display: flex here overrides .mg-mega-content's own desktop
-      // display: none default so the box exists for the transition to
-      // animate — it's position: absolute, so this doesn't affect layout
-      // while closed. visibility keeps the panel out of hit-testing and the
-      // accessibility tree while closed, same as display: none did; the
-      // transition-delay on visibility lets it flip to hidden only after
-      // the opacity/clip-path close animation finishes.
+      // Desktop closed state: keep the panel in the render tree so clip/opacity
+      // can animate, while visibility + pointer-events keep it non-interactive.
       .mg-mega-content {
         display: flex;
         visibility: hidden;
@@ -179,10 +167,7 @@
           text-decoration: none;
         }
 
-        // Open state: reveal with an elliptical clip-path expanding from
-        // the top edge, plus opacity — quick and shape-based rather than a
-        // slide/translate. visibility flips to visible immediately (0s
-        // delay) so the un-hide happens before the rest animates in.
+        // Desktop open state: reveal via clip-path + opacity.
         .mg-mega-content {
           visibility: visible;
           opacity: 1;
@@ -1134,9 +1119,7 @@
     animation: none;
   }
 
-  // Desktop flyout: fall back to an instant show/hide with no clip-path
-  // reveal or opacity fade — the closed/open visibility, opacity and
-  // clip-path values above still apply, just without animating between them.
+  // Reduced motion: keep states, remove transition animation.
   .mg-mega-content {
     transition: none;
   }

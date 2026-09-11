@@ -37,6 +37,8 @@ Development releases:
 - [2.0.0-alpha.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.3)
 - [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) (release candidate)
 
+- Pre-beta.1 paper-cuts pass: PageHeader adds `languageDisplay="links"` and tighter icon-only accessibility semantics, MegaMenu desktop flyout/refined reduced-motion behavior lands, and Storybook/docs guidance adds screenshot workflow and token-generation reminders. ([#1134](https://github.com/unisdr/undrr-mangrove/pull/1134))
+
 ## 1.8.2 — 2026-08-27
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v1.8.2) for full details.
