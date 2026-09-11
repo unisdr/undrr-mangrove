@@ -174,20 +174,10 @@
     }
   }
 
-  // Link styles (anchor).
-  // Scoped to the hero's own text regions rather than every descendant. As a
-  // bare `.mg-hero a` this reached into `__media`, whose `type: "html"` slot
-  // takes author-supplied markup: any anchor an author placed there was forced
-  // white regardless of what it sat on. Same over-reach as a descendant
-  // `:lang()` rule — the pseudo-class matched the root, so the declaration
-  // applied far past the element it was written for.
-  // --mg-hero-link-color lets a surface that is not a dark photograph retarget
-  // these links instead of fighting a hardcoded value.
+  // Link styling for hero text regions (not arbitrary author-provided media HTML).
   --mg-hero-link-color: var(--mg-color-neutral-0);
 
-  // __content carries the label, meta, summary and CTAs in both layouts, and
-  // __overlay wraps it in the background layout. __media is deliberately not
-  // listed: that subtree is the author's.
+  // Keep link color scoping out of the media slot.
   &__overlay,
   &__content {
     a,
@@ -197,14 +187,7 @@
     }
   }
 
-  // Title styles. `&__title` is applied directly to the heading tag (h1-h3)
-  // itself, not a wrapper around it — there is no nested heading and no
-  // inline span to re-target, so this is the only place the title's
-  // typography is declared. `text-xxl`/`text-xl` and the span- and
-  // nested-heading-targeting rules that used to live here were dead weight:
-  // HeroTitle only ever rendered `text-xxl`, unconditionally, on the one
-  // heading it produces, so `$mg-font-size-800` (what `text-xxl` resolved
-  // to) is simply the title's font size now.
+  // Hero title typography.
   &__title {
     color: rgb(var(--mg-color-hero-title));
     margin-bottom: var(--mg-spacing-25);
@@ -385,19 +368,13 @@ $variant-colour-props: (
     outline-offset: 2px;
   }
 
-  // Max-width and centring come from the `mg-container` class paired onto
-  // this element in the markup, so split content lines up on the same edge
-  // as every other `mg-container` on the page instead of its own independent
-  // (and previously narrower) breakpoint.
+  // Split grid inherits width and centering from its paired mg-container.
   .mg-hero__split-grid {
     display: grid;
     grid-template-columns: 2fr 1fr; // default 2/3
     align-items: stretch;
 
-    // .mg-hero__content's own inline padding used to be the only thing
-    // separating the two columns; removing that padding (above) left them
-    // with no gap at all. Declared here instead, on the grid itself, so it
-    // doesn't depend on the content column's own spacing.
+    // Keep an explicit inter-column gap.
     column-gap: var(--mg-spacing-200);
 
     @media (max-width: $mg-breakpoint-tablet) {
@@ -421,10 +398,7 @@ $variant-colour-props: (
     }
   }
 
-  // Without a media column, a fixed-ratio grid still reserves the media
-  // track's width even though nothing renders into it — collapse to one
-  // column instead. Same specificity as the split-ratio rules above, so this
-  // must stay declared after them to win on source order.
+  // Collapse to one column when no media is rendered.
   .mg-hero__split-grid.mg-hero__split-grid--no-media {
     grid-template-columns: 1fr;
   }
@@ -457,9 +431,7 @@ $variant-colour-props: (
       width: 100%;
     }
 
-    // First-class rendering for a <figure> + <figcaption> composition inside
-    // the slot (image with an attribution overlay). Consumers get this for free
-    // by dropping in semantic markup.
+    // Support figure + figcaption overlays in the HTML media slot.
     > figure {
       position: relative;
       margin: 0;

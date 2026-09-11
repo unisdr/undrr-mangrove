@@ -1,8 +1,4 @@
-// Demo scaffolding for the pattern stories. Not distributed, and prefixed
-// `mg-demo-`.
-// Imported directly by each pattern's stories.jsx (not through the combined
-// style-all/-.scss chain that component partials rely on), so it needs its
-// own variables import for $mg-breakpoint-mobile below.
+// Demo-only story scaffolding (`mg-demo-*`), imported directly by pattern stories.
 @import '../../assets/scss/variables';
 
 .mg-demo-lede,
@@ -16,9 +12,7 @@
   }
 }
 
-// Vertical padding for a full-width band. mg-container-full-width supplies the
-// bleed and a background utility the colour; Mangrove has no spacing utility,
-// so the padding is the one thing left to declare.
+// Vertical padding for full-width demo bands.
 .mg-demo-band {
   padding-block: var(--mg-spacing-300);
 }
@@ -42,20 +36,12 @@
   margin-block-start: var(--mg-spacing-100);
 }
 
-// The reading grid below self-caps to its natural width (see
-// page-patterns.scss's `--mg-reading-with-contents-width`), so it no longer
-// needs a demo-only override here. The intro block and the split hero's
-// media grid sit outside the reading grid as siblings, though, so they still
-// need to be told to match it explicitly.
+// Keep intro width aligned with the reading layout width token.
 .mg-demo-article-header .mg-demo-intro {
   max-inline-size: var(--mg-reading-with-contents-width);
 }
 
-// Hero's `.mg-hero__split-grid` carries plain `mg-container` (fixed in
-// hero.scss), which centres at mg-container's own breakpoint scale — wider
-// than this pattern's own column. Narrowed to match here so the `split`
-// variant's header lines up with the reading grid below it, not just with
-// generic `mg-container` siblings elsewhere on the page.
+// Align split-hero grid width with the reading layout width token.
 .mg-demo-article-header .mg-hero__split-grid {
   max-inline-size: var(--mg-reading-with-contents-width);
 }

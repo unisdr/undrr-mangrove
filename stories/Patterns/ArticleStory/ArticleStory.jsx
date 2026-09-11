@@ -14,40 +14,18 @@ import { EmbedContainer } from '../../Utilities/EmbedContainer/EmbedContainer';
 import { UndrrChrome } from '../_shared/UndrrChrome';
 import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
-// Reference design for undrr/web-backlog#3060: is the header image full-bleed
-// and prominent, or kept inside the reading column? `heroImage` is the
-// separate question of whether the image used for teasers and social cards
-// also has to be the one shown here. The label, title, lede and byline always
-// sit above the image, left-aligned, matching every comparison site in the
-// ticket — none of them centers headline text over an image, and an initial
-// centered treatment here didn't survive a design review against them.
-// Share and "On this page" live together in a margin rail in every variant,
-// rather than sitting beside the photo — a full-bleed image has no natural
-// "beside", and a single rail placement is a simpler contract than one that
-// depends on whether an image is present.
-//
-// Content is drawn from a real undrr.org story (see the mdx doc for the
-// source URL) so reviewers are judging the layout against a real case, not a
-// synthetic one. The live page returns a bot-check 403 to automated fetches,
-// so this was built from a saved copy of the page rather than scraped. The
-// headline, date, source line, two-sentence summary, both images and their
-// captions, editors' recommendations and taxonomy tags are reproduced as
-// published. The reading body below is placeholder text, not the article.
+// Story fixture for undrr/web-backlog#3060, based on real article metadata.
 const images = {
   main: {
     src: 'https://www.undrr.org/sites/default/files/2026-09/Group_photo_IMG_2626.jpg',
-    // Alt text describes the photo itself, distinct from the caption below
-    // it (which names the event, not what the image shows) — a screen-reader
-    // user shouldn't hear the same string twice.
+    // Keep alt text distinct from visible caption text.
     alt: {
       english:
         'Group photo from the non-economic losses consultation with Pacific Indigenous Peoples and local communities, Nadi, Fiji.',
       arabic:
         'صورة جماعية من مشاورة الخسائر غير الاقتصادية مع الشعوب الأصلية والمجتمعات المحلية في المحيط الهادئ، نادي، فيجي.',
     },
-    // The real caption follows a "Description/Credit" convention; split into
-    // two fields so each can have its own layout below the image, rather
-    // than one string with a slash in it.
+    // Caption and credit are rendered separately.
     caption: {
       english: 'Group photo from NELs Consultation',
       arabic: 'صورة جماعية من مشاورة الخسائر غير الاقتصادية',
@@ -58,18 +36,13 @@ const images = {
     },
   },
   alternate: {
-    // The article's second inline image — a real photo from the same story,
-    // used here only to demonstrate that the header image can differ from
-    // the teaser/social image, not as this story's actual second image slot.
+    // Alternate image for testing header/teaser image divergence.
     src: 'https://www.undrr.org/sites/default/files/2026-09/rsz_2rsz_11rsz_nel_pic_2.jpg',
     alt: {
       english: 'Discussions during the NELs Consultation/UNDRR',
       arabic: 'نقاشات خلال مشاورة الخسائر غير الاقتصادية/مكتب الأمم المتحدة للحد من مخاطر الكوارث',
     },
-    // Lorem ipsum caption/credit, so the caption/credit layout can be judged
-    // with a generic placeholder rather than a developer note about the
-    // heroImage toggle. Credit text is deliberately longer than the real
-    // image's, to check how a long credit behaves in its own layout.
+    // Placeholder caption/credit for layout testing.
     caption: {
       english: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       arabic: 'لوريم إيبسوم دولور سيت أميت، كونسيكتيتور أديبيسكينغ إيليت.',
@@ -108,10 +81,7 @@ const words = {
     sections: [
       {
         heading: 'About the consultation',
-        // Placeholder copy: sized to roughly the real article's body length,
-        // with inline links (like the real page has), so the reading column
-        // can be judged at realistic length. It is generic filler text, not
-        // the article. See the mdx doc.
+        // Placeholder body copy for reading-length layout checks.
         paragraphs: [
           <>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -285,9 +255,7 @@ const words = {
     sections: [
       {
         heading: 'عن المشاورة',
-        // نص تجريبي بطول مماثل تقريباً لطول المقال الحقيقي، مع روابط داخلية
-        // (كما في الصفحة الحقيقية)، لاختبار عمود القراءة بطول واقعي — وليس
-        // نص المقال نفسه. راجع ملف mdx للتفاصيل.
+        // نص تجريبي لاختبار طول عمود القراءة.
         paragraphs: [
           <>
             هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد
@@ -414,12 +382,7 @@ const words = {
   },
 };
 
-/**
- * Story-only composition: a news/event article page for the layout question
- * in undrr/web-backlog#3060 — how prominent should the header image be, and
- * does the full page have to show the same image used for teasers and social
- * cards?
- */
+/** Story-only article layout fixture for undrr/web-backlog#3060. */
 export function ArticleStory({
   imageProminence = 'large',
   heroImage = 'main',
@@ -440,8 +403,7 @@ export function ArticleStory({
     />
   );
 
-  // Only built for the non-split layouts — the split layout renders its own
-  // media column via `Hero`'s `data[0].media` instead.
+  // Non-split layouts render the standalone header figure.
   const headerImage =
     !split && heroImage !== 'none' ? (
       <figure
@@ -487,10 +449,7 @@ export function ArticleStory({
                     label: text.label,
                     title: text.title,
                     summaryText: text.summary,
-                    // Hero's `detail` slot is plain text only — no room for
-                    // real links here. The non-split header links the
-                    // organisation names; this is a known gap of reusing
-                    // Hero for the split variant. See the mdx doc.
+                    // Hero detail is plain text; links are shown in non-split layout.
                     detail: `${text.date} · ${text.sourceLabel} ${text.sources.map(source => source.name).join(', ')}`,
                     media:
                       heroImage !== 'none'
@@ -531,8 +490,7 @@ export function ArticleStory({
           </header>
           <div className="mg-reading mg-reading--with-contents | mg-container mg-grid mg-grid--article">
             <div className="mg-u-flex mg-u-flex-column mg-u-gap-200">
-              {/* Share lives in the margin rail regardless of image state,
-                  rather than competing for space beside the photo. */}
+              {/* Keep share controls in the side rail. */}
               {shareButtons}
               <TableOfContents
                 key={locale}
@@ -551,10 +509,7 @@ export function ArticleStory({
                     // eslint-disable-next-line react/no-array-index-key
                     <p key={paragraphIndex}>{paragraph}</p>
                   ))}
-                  {/* Positioning experiment only, per undrr/web-backlog#3060:
-                      how do a quote, a callout and an embed sit inside this
-                      reading column once real content types get involved?
-                      English only for now — not translated yet. */}
+                  {/* Story-only content-placement samples (English only). */}
                   {!arabic && index === 0 && (
                     <QuoteHighlight
                       quote="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore."
@@ -632,21 +587,9 @@ export function ArticleStory({
 }
 
 ArticleStory.propTypes = {
-  /**
-   * `large` bleeds the header image full width, the way news.un.org, UNESCO
-   * and UNDP's story pages do. `compact` keeps it inside the reading column,
-   * closer to the current undrr.org treatment. `split` runs a two-column
-   * hero — text column and image column side by side on a tinted band,
-   * reusing the shipped `Hero` component's `layout="split"` — the treatment
-   * education.gouv.fr uses on its news pages.
-   */
+  /** Header treatment variant. */
   imageProminence: PropTypes.oneOf(['large', 'compact', 'split']),
-  /**
-   * Which image the header shows, independent of `imageProminence`. `main`
-   * reuses the image a teaser/social card would use for this story. `alternate`
-   * shows a different image in that position, so the teaser image and the
-   * on-page image can diverge. `none` drops the header image entirely.
-   */
+  /** Header image selector, independent of prominence mode. */
   heroImage: PropTypes.oneOf(['main', 'alternate', 'none']),
   /** Storybook locale key. `arabic` switches copy and sets `dir="rtl"`. */
   locale: PropTypes.string,
