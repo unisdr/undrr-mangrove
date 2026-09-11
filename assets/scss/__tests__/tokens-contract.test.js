@@ -515,6 +515,32 @@ describe('channel triplets are never used raw in a colour position', () => {
   });
 });
 
+describe('brand-owned surfaces resolve from semantic tokens', () => {
+  // A raw palette alias in a themed surface compiles and looks right in the
+  // brand it was written for, so nothing catches it until someone opens another
+  // theme. --mg-hero-gradient-color was blue-900 for exactly that reason: the
+  // line above it already used --mg-color-hero, and every non-blue brand drew a
+  // UNDRR-blue hero. See unisdr/undrr-mangrove#1115.
+  const PALETTE =
+    /var\(\s*--mg-color-(blue|green|teal|orange|red|purple|yellow|neutral)-\d{2,3}\s*\)/;
+
+  test.each([
+    ['stories/Components/Hero/hero.scss', '--mg-hero-gradient-color'],
+    ['stories/Components/Hero/hero.scss', '--mg-hero-cta-color'],
+  ])('%s does not set %s from the raw palette', (file, prop) => {
+    const source = fs.readFileSync(
+      path.resolve(__dirname, '../../../../', file),
+      'utf8'
+    );
+    const offenders = source
+      .split('\n')
+      .map((line, index) => ({ line, index }))
+      .filter(({ line }) => line.includes(`${prop}:`) && PALETTE.test(line))
+      .map(({ index }) => `${file}:${index + 1}`);
+    expect(offenders).toEqual([]);
+  });
+});
+
 // The page itself. Asserted rather than assumed, because every pair whose
 // lowest layer is translucent composites down onto it.
 const PAGE = '--mg-color-neutral-0';
@@ -611,48 +637,62 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — .mg-button-cta:hover::after retints the badge',
   },
 
+  // --- Quiet sharing controls ------------------------------------------
+  {
+    name: 'share copy label',
+    fg: '--mg-color-text',
+    bg: ['--mg-color-neutral-25'],
+    min: 4.5,
+    why: 'SC 1.4.3 — URL and copied feedback on the quiet copy surface',
+  },
+  {
+    name: 'share control hover',
+    fg: '--mg-color-text',
+    bg: ['--mg-color-neutral-50'],
+    min: 4.5,
+    why: 'SC 1.4.3 — copy text and icons on the neutral hover surface',
+  },
+
   // --- Tags: tag.scss ----------------------------------------------------
-  // tag.scss paints `color: #fff` literally, not through a token, so the
-  // literal is what gets measured. `tag.scss still paints its label #fff`
-  // below pins that so the pairing cannot go stale silently.
+  // Filled tags use neutral-0; outline tags keep the themed foreground.
   {
     name: 'tag label',
-    fg: '#fff',
+    fg: '--mg-color-neutral-0',
     bg: ['--mg-color-tag'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag label text',
   },
   {
     name: 'tag label, hover',
-    fg: '#fff',
+    fg: '--mg-color-neutral-0',
     bg: ['--mg-color-tag--hover'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag:hover',
   },
   {
     name: 'secondary tag label',
-    fg: '#fff',
+    fg: '--mg-color-neutral-0',
     bg: ['--mg-color-tag-secondary'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag--secondary',
   },
   {
     name: 'secondary tag label, hover',
-    fg: '#fff',
+    fg: '--mg-color-neutral-0',
     bg: ['--mg-color-tag-secondary--hover'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag--secondary:hover',
   },
   {
     name: 'accent tag label',
-    fg: '#fff',
+    fg: '--mg-color-neutral-0',
     bg: ['--mg-color-tag-accent'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag--accent',
   },
   {
     name: 'accent tag label, hover',
-    fg: '#fff',
+    fg: '--mg-color-neutral-0',
     bg: ['--mg-color-tag-accent--hover'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag--accent:hover',
@@ -1609,14 +1649,14 @@ describe('component token contrast, including hover and active states', () => {
     }
   );
 
-  test('tag.scss still paints its label #fff rather than through a token', () => {
-    // The tag pairs above measure a literal. If the component moves to a
-    // token, they would silently measure the wrong foreground.
+  test('tag.scss uses the foreground token measured by the filled tag pairs', () => {
     const source = fs.readFileSync(
       path.resolve(__dirname, '../../../Atom/Tag/tag.scss'),
       'utf8'
     );
-    expect(source).toMatch(/color:\s*#fff;/);
+    expect(source).toMatch(
+      /--mg-tag-foreground:\s*rgb\(var\(--mg-color-neutral-0\)\);/
+    );
   });
 
   describe.each(ALL_THEMES)('%s theme', theme => {

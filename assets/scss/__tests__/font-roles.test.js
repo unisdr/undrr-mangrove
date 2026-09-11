@@ -368,7 +368,8 @@ describe('the documented per-component Sass recipe', () => {
   const recipe = () => {
     const source = fs.readFileSync(MDX, 'utf8');
     for (const block of source.matchAll(/```scss\n([\s\S]*?)```/g)) {
-      const imports = block[1].match(/^@import\s+"[^"]+";$/gm) || [];
+      // Quote style is Prettier's to choose; match either.
+      const imports = block[1].match(/^@import\s+['"][^'"]+['"];/gm) || [];
       if (
         imports.some(line => line.includes('scss/variables')) &&
         imports.some(line => line.includes('scss/foundational'))
@@ -720,6 +721,7 @@ describe('every component names the role it is meant to', () => {
       '.mg-mega-mobile-sidebar--progressive .mg-mega-sidebar-section__item',
       'ui',
     ],
+    ['.mg-hub-header__name', 'ui'],
     ['.mg-mega-topbar__item-link', 'ui'],
     ['.mg-on-this-page-nav__cta', 'ui'],
     ['.mg-on-this-page-nav__link', 'ui'],
@@ -733,6 +735,7 @@ describe('every component names the role it is meant to', () => {
     ['.mg-preview-access__title', 'ui'],
     ['.mg-search__input', 'text'],
     ['.mg-share__copy-button', 'text'],
+    ['.mg-skip-link:focus', 'ui'],
     ['.mg-share__header', 'text'],
     ['.mg-stats-card-item__bottom-label', 'ui'],
     ['.mg-stats-card-item__label', 'ui'],
@@ -756,6 +759,7 @@ describe('every component names the role it is meant to', () => {
     ],
     ['.mg-tabs__link', 'ui'],
     ['.mg-tag', 'ui'],
+    ['.mg-tag-container > :where(span, div, a, li)', 'ui'],
     ['.mg-user-feedback__question', 'text'],
     [':where(:lang(ar)) > :where([lang]:not([lang=""], :lang(ar)))', 'text'],
     [
