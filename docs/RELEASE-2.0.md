@@ -1,6 +1,17 @@
 # Mangrove 2.0 release notes
 
-Mangrove 2.0 combines four related workstreams: the runtime theming foundation published in `2.0.0-alpha.1`, the experience and interaction baseline in `2.0.0-alpha.2`, the design token pipeline introduced in `2.0.0-alpha.3`, and the typography and navigation refinements prepared for `2.0.0-alpha.4`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for the first alpha, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2 and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3. The tagged `v1.8.2...v2.0.0` comparison lands with the stable release.
+Mangrove 2.0 now spans five phases: the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, and the additional feature/accessibility wave now queued for `2.0.0-beta.1`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
+
+## Key changes for 2.0
+
+If you only need the release highlights, start here:
+
+- **Theming moved to CSS custom properties** with runtime `.mg-theme-*` selectors (alpha.1).
+- **Shared component interaction and surface baseline was refreshed** across forms, cards, hero, tabs, menus and table patterns (alpha.2).
+- **Design tokens now come from YAML sources** with baseline checks that fail tests on unintended token-output drift (alpha.3).
+- **Three system-wide visual defaults changed** in every theme: cool-tinted neutral surfaces, a non-brand gold focus ring, and a two-band focus treatment (alpha.3).
+- **Arabic typography and font roles were finalized**; legacy font-family SCSS variables are removed and language-boundary rendering is fixed (alpha.4).
+- **Beta.1 adds new pattern and accessibility work**: SkipLink bypass block, Content Hub/Landing Page/Article Story reference patterns, card-link semantics, and desktop a11y fixes in MegaMenu/PageHeader.
 
 > **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the alpha.1 theming migration requires no integration change. Alpha.2 intentionally refreshes component presentation and interaction while retaining existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal.
 >
@@ -14,9 +25,9 @@ Mangrove 2.0 combines four related workstreams: the runtime theming foundation p
 
 > _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs)._
 
-## Try the alpha
+## Try the prerelease
 
-2.0 ships as a **prerelease** under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. This release candidate is `2.0.0-alpha.4`; until it is published, `@next` continues to resolve to `2.0.0-alpha.3`. The alpha.4 CDN links below become available after the versioned assets are deployed.
+2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-alpha.4` is the latest documented candidate, and the next prerelease target is `2.0.0-beta.1`.
 
 ```bash
 # npm (prerelease tag — does not become your default version)
@@ -29,7 +40,7 @@ npm install @undrr/undrr-mangrove@next
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-alpha.4/css/style-preventionweb.css">
 ```
 
-For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and — for a sub-brand — add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
+For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and for a sub-brand add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
 
 ## Alpha roadmap
 
@@ -39,6 +50,17 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 | `2.0.0-alpha.2` | Published under `next` | Experience principles, component surfaces, interaction states, responsive behaviour and multilingual resilience |
 | `2.0.0-alpha.3` | Published under `next` | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
 | `2.0.0-alpha.4` | Release candidate; not yet published | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles; centred responsive tabs and progressive mobile navigation |
+| `2.0.0-beta.1` | In preparation | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates |
+
+## Planned for 2.0.0-beta.1 (since alpha.4)
+
+The following changes landed after `v2.0.0-alpha.4` and are expected to be called out in the next prerelease notes:
+
+- **New/expanded patterns:** Content Hub and Landing Page pattern suite ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)), and Article Story reference pattern ([#1125](https://github.com/unisdr/undrr-mangrove/pull/1125)).
+- **Accessibility and navigation:** bypass-block SkipLink component and pattern wiring ([#1119](https://github.com/unisdr/undrr-mangrove/pull/1119)); desktop accessibility fixes and duplicate-id resolution in MegaMenu/PageHeader ([#1120](https://github.com/unisdr/undrr-mangrove/pull/1120)).
+- **Cards and CTA behavior:** unlinked cards now render plain text rather than faux links ([#1116](https://github.com/unisdr/undrr-mangrove/pull/1116)); card spacing/locale fixes ([#1110](https://github.com/unisdr/undrr-mangrove/pull/1110)); CTA soft tone and composed content enhancements ([#1111](https://github.com/unisdr/undrr-mangrove/pull/1111)).
+- **Cross-cutting UI and documentation:** v2 UI refresh across tags/sharing/navigation/header/tables ([#1106](https://github.com/unisdr/undrr-mangrove/pull/1106)); canonical CDN URL migration ([#1107](https://github.com/unisdr/undrr-mangrove/pull/1107)); curated AI manifest updates for pattern descriptions ([#1130](https://github.com/unisdr/undrr-mangrove/pull/1130)).
+- **Tooling and runtime updates:** dependency maintenance and webpack entry-point regression fix ([#1124](https://github.com/unisdr/undrr-mangrove/pull/1124)); publishing workflow lockfile install ([#1127](https://github.com/unisdr/undrr-mangrove/pull/1127)); React/ReactDOM `19.3.0` ([#1128](https://github.com/unisdr/undrr-mangrove/pull/1128)).
 
 ### Alpha.2 experience and interaction baseline
 
