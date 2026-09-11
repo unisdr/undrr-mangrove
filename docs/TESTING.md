@@ -70,23 +70,10 @@ yarn test --verbose
 
 ### Testing best practices
 
-1. **Test behavior, not implementation**
-   - Focus on what users see and do
-   - Avoid testing internal state or methods
-
-2. **Use Testing Library queries appropriately**
-   - Prefer `getByRole`, `getByLabelText`, `getByText`
-   - Avoid `getByTestId` unless necessary
-
-3. **Keep tests isolated**
-   - Each test should be independent
-   - Use `beforeEach` for common setup
-
-4. **Test edge cases**
-   - Empty states
-   - Error conditions
-   - Loading states
-   - Boundary values
+1. **Test behavior, not implementation.** Focus on visible output and user interactions.
+2. **Prefer semantic queries.** Use `getByRole`, `getByLabelText`, then `getByText`; use `getByTestId` only when needed.
+3. **Keep tests isolated.** Each test should run independently.
+4. **Cover edge cases.** Include empty, error, loading, and boundary states.
 
 ### Common testing patterns
 
@@ -154,20 +141,9 @@ it('has no accessibility violations', async () => {
 
 ### Manual testing
 
-1. **Keyboard navigation**
-   - Tab through all interactive elements
-   - Ensure focus indicators are visible
-   - Test keyboard shortcuts
-
-2. **Screen reader testing**
-   - Use NVDA (Windows) or VoiceOver (Mac)
-   - Verify announcements make sense
-   - Check form labels and descriptions
-
-3. **Color contrast**
-   - Use browser DevTools
-   - Verify WCAG AA compliance
-   - Test with different color blindness simulations
+1. **Keyboard navigation:** tab through interactive elements and verify visible focus.
+2. **Screen reader testing:** check announcements and form labeling in NVDA or VoiceOver.
+3. **Color contrast:** verify WCAG AA using browser tooling.
 
 ## Testing components with external dependencies
 
@@ -217,20 +193,9 @@ open coverage/lcov-report/index.html
 
 ### Common issues
 
-1. **Component not rendering**
-   - Check import paths
-   - Verify props are correct
-   - Use `screen.debug()` to see output
-
-2. **Element not found**
-   - Use `screen.debug()` to see current DOM
-   - Check query method is appropriate
-   - Verify element is actually rendered
-
-3. **Async issues**
-   - Use `waitFor` for async updates
-   - Increase timeout if needed
-   - Check promises are properly handled
+1. **Component not rendering:** verify imports and props, then inspect output with `screen.debug()`.
+2. **Element not found:** check query choice and confirm the element is actually rendered.
+3. **Async failures:** use `waitFor`, ensure promises resolve, and adjust timeout only when needed.
 
 ### Debugging tools
 

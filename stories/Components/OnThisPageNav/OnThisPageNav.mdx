@@ -15,11 +15,7 @@ A sticky horizontal navigation bar that links to page sections, with scroll-spy 
 
 ## When to use
 
-Use **On this page nav** for long-form content pages (landing pages, reports, directories) where readers benefit from:
-
-- Seeing the page structure at a glance
-- Jumping quickly between sections
-- Tracking where they are as they scroll
+Use **On this page nav** for long-form pages (landing pages, reports, directories) where readers need quick section jumps and scroll-position context.
 
 ### On this page nav vs Table of contents
 
@@ -63,15 +59,15 @@ Provide your own `<ul>` with links. The script activates scroll-spy without scan
 
 ## Data attributes
 
-| Attribute                                    | Values              | Default                       | Purpose                                                                                                           |
-| -------------------------------------------- | ------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `data-mg-on-this-page-nav`                   | (presence)          | —                             | Activates the component                                                                                           |
-| `data-mg-on-this-page-nav-depth`             | `"2"`, `"3"`, `"4"` | `"2"`                         | Max heading level to scan (auto-detect mode)                                                                      |
-| `data-mg-on-this-page-nav-content`           | CSS selector        | `document.body`               | Scope element for heading scan                                                                                    |
-| `data-mg-on-this-page-nav-label`             | string              | `"On this page"`              | `aria-label` for the nav element                                                                                  |
-| `data-mg-on-this-page-nav-scroll-prev-label` | string              | `"Previous navigation items"` | `aria-label` for the prev scroll button. Override for translated text (e.g., `"عناصر التنقل السابقة"` in Arabic). |
-| `data-mg-on-this-page-nav-scroll-next-label` | string              | `"Next navigation items"`     | `aria-label` for the next scroll button. Override for translated text (e.g., `"عناصر التنقل التالية"` in Arabic). |
-| `data-mg-on-this-page-nav-skip-auto-init`    | (presence)          | —                             | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually.                    |
+| Attribute                                    | Values              | Default                       | Purpose                                                                                        |
+| -------------------------------------------- | ------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------- |
+| `data-mg-on-this-page-nav`                   | (presence)          | —                             | Activates the component                                                                        |
+| `data-mg-on-this-page-nav-depth`             | `"2"`, `"3"`, `"4"` | `"2"`                         | Max heading level to scan (auto-detect mode)                                                   |
+| `data-mg-on-this-page-nav-content`           | CSS selector        | `document.body`               | Scope element for heading scan                                                                 |
+| `data-mg-on-this-page-nav-label`             | string              | `"On this page"`              | `aria-label` for the nav element                                                               |
+| `data-mg-on-this-page-nav-scroll-prev-label` | string              | `"Previous navigation items"` | `aria-label` for the prev scroll button (override for translations).                           |
+| `data-mg-on-this-page-nav-scroll-next-label` | string              | `"Next navigation items"`     | `aria-label` for the next scroll button (override for translations).                           |
+| `data-mg-on-this-page-nav-skip-auto-init`    | (presence)          | —                             | Skips this element during auto-init. Call `mgOnThisPageNav([element])` to initialize manually. |
 
 ## CSS custom properties
 
@@ -162,7 +158,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 ## Skipping auto-initialization
 
-Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init. This is useful when another script must run first or when content is injected dynamically:
+Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init (for script ordering or dynamically injected content):
 
 ```html
 <nav
@@ -181,7 +177,7 @@ Add `data-mg-on-this-page-nav-skip-auto-init` to skip a nav during auto-init. Th
 </script>
 ```
 
-When you pass elements explicitly via `scope`, the skip attribute is ignored — the consumer is intentionally initializing.
+When you pass elements explicitly via `scope`, the skip attribute is ignored.
 
 ## JavaScript API
 

@@ -58,14 +58,9 @@ stories/assets/scss/
 └── _mixins.scss                → Shared SCSS mixins
 ```
 
-**How it works:**
+**How it works:** component SCSS files are imported into `_components.scss`, `_components.scss` is imported by each theme entry file, and `yarn scss` compiles all theme outputs to `stories/assets/css/`.
 
-1. Each component has its own `.scss` file (e.g., `stories/Components/Pager/pager.scss`)
-2. That file is `@import`-ed in `stories/assets/scss/_components.scss`
-3. `_components.scss` is imported by each theme stylesheet
-4. `yarn scss` compiles all five theme files to `stories/assets/css/`
-
-**When adding a new component's SCSS:** Add the `@import` to `_components.scss`. The component's styles will then be included in all five theme outputs automatically.
+**When adding a new component SCSS file:** add its `@import` to `_components.scss` so it ships in all theme builds.
 
 **Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. Build-time-only tokens (breakpoints, font sizes, font families, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
 
@@ -173,18 +168,14 @@ The specific child themes that use Mangrove CSS include: undrr, pw, mcr, irp, ar
 
 ## Storybook theme registration
 
-To add a new theme to Storybook (either a new official theme or a development preview), follow these steps after creating the override file and entry point (see the [Theming guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-theming-guide--docs) for steps 1-2).
-
-### Register in preview.js
-
-In `.storybook/preview.js`, add an import and register the theme:
+After creating the theme entry file, register it in `.storybook/preview.js`:
 
 ```js
 // Add import at the top with the other theme imports
 import themeMyTheme from '../stories/assets/scss/style-mytheme.scss';
 ```
 
-Add the theme to the `themeStyles` map:
+Add it to the `themeStyles` map:
 
 ```js
 const themeStyles = {
@@ -210,7 +201,7 @@ items: [
 ],
 ```
 
-The theme entry file name must match the pattern `style(-\w+)?\.scss$` so Storybook's webpack config applies `lazyStyleTag` injection (see `.storybook/main.js`). This gives the imported module `.use()` and `.unuse()` methods that the theme decorator calls to swap stylesheets at runtime.
+Theme entry filenames must match `style(-\w+)?\.scss$` so Storybook applies lazy style loading and the theme decorator can swap active styles.
 
 ### Build and test
 
@@ -221,11 +212,7 @@ yarn dev    # Start Storybook — use the paintbrush toolbar to switch themes
 
 ### Storybook theme switcher internals
 
-1. `.storybook/main.js` configures a webpack rule that matches `style(-\w+)?\.scss$` files in `stories/assets/scss/` and applies `style-loader` with `injectType: 'lazyStyleTag'`. This compiles each theme file into a module with `.use()` and `.unuse()` methods instead of injecting the styles immediately.
-
-2. `.storybook/preview.js` imports all theme SCSS files. A `themeDecorator` function listens for changes to the `theme` global (set by the toolbar) and calls `.unuse()` on the previous theme, then `.use()` on the new one.
-
-3. The default theme (`Global UNDRR Theme`) is loaded on initial render. Only one theme's styles are active at any time.
+`.storybook/main.js` applies `lazyStyleTag` to theme SCSS entry files. `.storybook/preview.js` imports those files and switches themes by calling `.unuse()` on the previous stylesheet and `.use()` on the selected one. Only one theme is active at a time.
 
 ## AI manifest pipeline
 

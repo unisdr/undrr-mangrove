@@ -68,15 +68,12 @@ make run
 
 ## Development Workflow
 
-### Branch Strategy
+### Branch and commit workflow
 
-- `main` - Primary branch, auto-deploys to GitHub Pages
-- Feature branches - Create from `main` for new work
-- No `dev` branch is used
-
-### Branch naming convention
-
-Branch names use a conventional prefix matching the commit type, followed by a short kebab-case description:
+- `main` is the primary branch and auto-deploys to GitHub Pages.
+- Create short-lived feature branches from `main`.
+- No `dev` branch is used.
+- Name branches with a conventional prefix plus short kebab-case description:
 
 ```
 feat/short-description       — new features
@@ -86,30 +83,16 @@ docs/short-description       — documentation only
 refactor/short-description   — code restructuring
 ```
 
-### Creating features
+Typical flow:
 
-1. Create a branch from `main`
+1. Create a branch from `main`.
+2. Implement your changes.
+3. Run `yarn test` and `yarn lint`.
+4. Open a PR to `main` with linked issues and passing CI.
 
-   ```bash
-   git checkout -b feat/your-feature-name
-   ```
+### Commit message convention
 
-2. Make your changes following the coding standards
-
-3. Test your changes
-
-   ```bash
-   yarn test
-   yarn lint
-   ```
-
-4. Create a pull request against `main`
-   - Reference relevant GitHub or GitLab issues
-   - Ensure CI passes
-
-### Commit Message Convention
-
-We use conventional commits for readable history and PR title validation:
+Use conventional commits for readable history and PR-title validation:
 
 - `fix:` - Bug fixes (patch release)
 - `feat:` - New features (minor release)
@@ -121,14 +104,7 @@ We use conventional commits for readable history and PR title validation:
 
 Include `BREAKING CHANGE:` in the commit body for major releases.
 
-A `commit-msg` git hook enforces this format locally. It is installed
-automatically on `yarn install` (the `prepare` script points
-`core.hooksPath` at the checked-in `githooks/` directory); run
-`yarn hooks:install` to (re)install it manually. The hook also rejects
-AI-assistant attribution — robot-emoji "Generated with …" lines,
-`Claude-Session:` trailers, and bot/AI `Co-authored-by:` lines
-(`[bot]`, Copilot, Claude, etc.). Human `Co-authored-by:` trailers are
-allowed. Bypass only in a genuine emergency with `git commit --no-verify`.
+A local `commit-msg` hook enforces this format. It is installed by `yarn install` (via `prepare` and `core.hooksPath`) or manually with `yarn hooks:install`. The hook also rejects AI-assistant attribution trailers/lines (bot `Co-authored-by`, `Claude-Session:`, and "Generated with …"). Use `--no-verify` only in emergencies.
 
 ## Available Scripts
 

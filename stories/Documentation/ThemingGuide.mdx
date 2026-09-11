@@ -44,7 +44,7 @@ Mangrove ships five built-in themes. Colour, spacing, radius and component token
 | **MCR2030**          | `style-mcr.css`           | `mg-theme-mcr`             | `#591a61`          |
 | **DELTA Resilience** | `style-delta.css`         | `mg-theme-delta`           | `#004f91`          |
 
-A sub-brand stylesheet carries both the `:root` defaults and its own `.mg-theme-*` block. **The class is what activates the brand** — without it, components render in the default UNDRR palette. `style-all.css` carries every brand block at once, for pages that host more than one brand or switch brand at runtime. Load one Mangrove stylesheet per page; two bundles fight over the same `:root` globals.
+A sub-brand stylesheet includes both `:root` defaults and a `.mg-theme-*` block. **The class activates the brand**; without it, components use the default UNDRR palette. `style-all.css` includes all brand blocks for multi-brand pages or runtime switching. Load one Mangrove stylesheet per page.
 
 DELTA's interactive colour is UNDRR blue by design: alpha.3 replaced the navy Mangrove had been using with DELTA's real sourced palette. See [DELTA's palette is corrected](/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes.
 
@@ -54,11 +54,12 @@ The `-legacy` theme variants and the 10px root font-size they preserved were rem
 
 ## Two token systems
 
-Mangrove has two, and the split is deliberate.
+Mangrove uses two token systems:
 
-**CSS custom properties — everything a theme restyles.** Colour, spacing, radius, border, shadow, opacity and every component token (`--mg-color-*`, `--mg-spacing-*`, `--mg-radius-*`, …). Components read them at runtime, so a theme changes them by re-declaring them under a selector. That is what makes brand switching possible without a rebuild, and what makes a single component stylesheet serve five brands.
+- **CSS custom properties** for runtime theming (`--mg-color-*`, `--mg-spacing-*`, `--mg-radius-*`, and component tokens).
+- **SCSS variables** only where runtime variables cannot work (`@media`, `@if`, `@font-face`, selector interpolation).
 
-**SCSS variables — the handful that cannot be resolved at runtime.** A `@media` query cannot read `var()`, so breakpoints have to be static at compile time. Neither can `@if`, `@font-face`, or interpolation into a selector. These are the survivors, and the whole list:
+Remaining SCSS variables:
 
 | Variable                                                                                                                                | Why it stays SCSS                                                                                                                                                                                                                              |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -69,13 +70,13 @@ Mangrove has two, and the split is deliberate.
 | `$mg-html-font-size`                                                                                                                    | the rem anchor `mg-rem()` divides by; fixed at `16` in 2.0 and no longer overridable                                                                                                                                                           |
 | `$mg-tabs-border-bottom`                                                                                                                | drives an `@if`, which is compile-time                                                                                                                                                                                                         |
 
-Anything else you remember as a `$mg-*` variable — every `$mg-color-*`, `$mg-spacing-*`, `$mg-radius-*`, `$mg-width-*` and component variable — no longer exists. Referencing one fails the build. **Assigning one does nothing at all**, which is the dangerous case, so `_variables.scss` emits a Sass `@warn` for the names consumers are known to set:
+Other legacy `$mg-*` variables no longer exist. Referencing one fails the build; assigning one compiles but has no effect. `_variables.scss` warns for common migrated names:
 
 `$mg-color-interactive`, `$mg-color-interactive-active`, `$mg-color-button-background`, `$mg-color-button-background--hover`, `$mg-border-color-button`, `$mg-color-tag`, `$mg-color-form-check`, `$mg-color-form-focus`, `$mg-color-hero--secondary`, `$mg-spacing-150`, `$mg-spacing-300`.
 
 The same warning covers the six font-family variables removed by the role model: `$mg-font-family`, `$mg-font-family-condensed`, `$mg-font-family-headings`, `$mg-font-family-icons`, `$mg-font-family-arabic-headings` and `$mg-font-family-arabic-body`. Each message names the role that replaced it. See [Fonts](?path=/docs/design-decisions-fonts--docs).
 
-Overriding a variable _not_ on that list gets no warning and no effect. Watch your Sass build log, and treat "my brand colour reverted to UNDRR blue and the build was green" as the signature of this mistake.
+A legacy variable not on that warning list can still fail silently, so watch build logs closely.
 
 ## How to override a token
 

@@ -8,21 +8,17 @@ import * as TableOfContentsStories from './TableOfContents.stories';
 
 # Table of contents (on this page navigation)
 
-The TableOfContents component is used to provide an overview of the content structure and allow quick navigation to different sections of a page.
+The TableOfContents component provides a quick, inline index of page sections.
 
 ### Overview
 
-The TableOfContents component displays a list of links to the main sections of a page. It helps users understand the structure of the content and quickly navigate to the section they're interested in.
-
-#### When to use:
-
-Use the TableOfContents component for long-form content, documentation, or any page with multiple distinct sections that users might want to jump between.
+Use TableOfContents on long-form pages with multiple sections where readers may jump between headings.
 
 ### Formatting
 
 #### Default
 
-It consists of a title "On this page" followed by a list of links to the page sections. The list can be either numbered or unnumbered, depending on the `showNumbers` prop.
+It renders an optional title ("On this page") plus a numbered or unnumbered list of section links.
 
 ### Props
 
@@ -137,10 +133,9 @@ if (contentElement && tocElement) {
 Notes:
 
 - See the Scraped Content story for an example.
-- This only selects h2 headings.
-  - In the future we may support nested levels, but this is not currently implemented.
-- Exclude headings by adding a class of `.mg-table-of-contents--exclude`.
-- Ensure you have the CSS styles mentioned in the CSS References section applied to your page.
+- Only `h2` headings are included.
+- Exclude headings with `.mg-table-of-contents--exclude`.
+- Ensure the component CSS is loaded.
 
 ### Interactions
 
@@ -153,7 +148,7 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 
 ## Changelog
 
-- **1.8** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Added a restrained inline divider, consistent list rhythm and explicit link focus. Indentation follows writing direction; React anchor scrolling now honours reduced motion, matching the vanilla implementation.
+- **1.8** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Added divider/rhythm/focus refinements and aligned React anchor scrolling with reduced-motion behavior.
 
 - **1.7** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Removed redundant per-language story exports; use the global Storybook locale toolbar for translated content and RTL direction.
 - **1.6** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Locale map extended to all 6 languages (ES, FR, JA, ZH, AR, RU); locale toolbar now switches translated strings in stories.

@@ -14,11 +14,9 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 # About Mangrove
 
-Mangrove defines shared content structures for UNDRR web properties. A card has an image, a title, a link, and summary text. A hero has a heading, a subline, and an optional call to action. A footer pulls in shared links. These content patterns are what Mangrove provides.
+Mangrove defines shared content structures for UNDRR web properties (for example cards, heroes, menus, and footer slots). Brand styling and application-level UI remain project-owned.
 
-Everything else stays yours: brand colors, component treatments, UI framework, application-specific interfaces like forms, data workflows, and dashboards. Properties share a visual baseline (typography, interaction patterns, element styling) but control their own color identity and surface treatments.
-
-If your project uses those same content structures, everything that depends on them works: syndicated content renders correctly, accessibility fixes propagate, and content updates don't break across sites. Your project won't look identical to undrr.org -- the result is shared behavior and structure, not a uniform straitjacket.
+When projects keep those structures, syndicated content renders correctly, accessibility fixes propagate, and cross-site updates stay compatible. The goal is shared behavior and structure, not identical visual design.
 
 <TableOfContents
   tocData={[
@@ -47,13 +45,9 @@ If your project uses those same content structures, everything that depends on t
 
 ## Content structure vs. visual style
 
-Think about a card component. The content structure is: image, title, link, summary text, maybe a date and a content type tag. That structure is what Mangrove defines. The visual treatment -- rounded corners or square, drop shadow or flat, serif or sans-serif -- is up to your theme.
+Mangrove defines **what components carry** (card link/title/summary, hero structure, menu section model). Themes define **how they look** (color, radius, shadow, typography treatment).
 
-You can redesign how a card looks without touching Mangrove. You cannot remove the link from a card without breaking every content feed that expects cards to have links.
-
-Content structure is the hard part. Changing CSS is a few variables. Changing what a component carries is a breaking change that affects every site using it.
-
-The same principle applies to the mega menu (sections, groups, links are shared; visual treatment is per-theme), the footer (content slots are shared; layout can vary), and every other shared component. If you need to rethink how something looks, that's a conversation with your designer. If you need to rethink what content a component carries, that's a conversation with the Mangrove team, because it affects everyone.
+You can redesign presentation without breaking compatibility. Changing required structure (for example removing card links) is a breaking change for every consumer.
 
 ## What stays the same, what doesn't
 
@@ -83,11 +77,9 @@ Mangrove does define an accessible interaction and baseline geometry contract th
 
 ## Why this approach
 
-UNDRR is a small organization with a smaller web team supporting many properties. Before Mangrove, PreventionWeb, MCR, IRP, and others each maintained their own UI. The same bug got fixed three times on three platforms. That alone would justify a shared library.
+UNDRR supports many web properties with a small team. Shared component structure prevents duplicate fixes and keeps syndicated Drupal content compatible across sites.
 
-But the stronger reason is content. UNDRR publishes news, publications, and partner listings in Drupal. That content gets syndicated across sites as cards, search results, and content feeds, all with `mg-` CSS class names baked into the markup. If your property doesn't use the same content structure, that syndicated content renders unstyled or not at all.
-
-And when UNDRR rebrands -- which will happen eventually -- properties using Mangrove update a CSS import. Properties with their own content components do that work alone. Work that any property puts into Mangrove benefits every other property that uses it. (The [shared infrastructure](#shared-infrastructure) section below describes the specific services that depend on this alignment.)
+When brand changes happen, properties using Mangrove can update via shared CSS/token layers instead of reworking independent component structures.
 
 ## Mangrove alongside application frameworks
 

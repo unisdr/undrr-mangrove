@@ -40,17 +40,12 @@ This guide helps anyone contributing to Mangrove write interface copy, documenta
 
 ## Write for two audiences
 
-Technical documentation — especially component docs — serves two distinct audiences with different needs. Confusing them produces documentation that serves neither.
+Component docs serve two audiences:
 
-**Consumers** (integrators, builders) scan like a menu. They want to know: does this component do what I need, and what props does it take? Give them a one-line description, a working example, and a props table. That is often enough. Resist the urge to explain your internals.
+- **Consumers** (integrators/builders): one-line purpose, working example, props table.
+- **Maintainers** (contributors/on-call): rationale and edge cases that explain why the implementation works this way.
 
-**Maintainers** (library contributors, on-call debuggers) need the full picture: why a prop exists, why there are two data sources, why a field is sometimes null, what a past breaking change affected. This context prevents future developers from “fixing” things that weren’t broken.
-
-The failure mode is writing one document that tries to serve both equally — too deep to skim, not structured enough to dig into. Instead:
-
-- Lead with what it does
-- Follow with how to use it (example first, then props)
-- Place the “why” at the end, or in a collapsed details block
+Structure docs to serve both: lead with what it does, then how to use it, then deeper implementation context.
 
 ### Callout labels
 
@@ -66,7 +61,7 @@ Use consistent callout labels so readers can skim and know exactly what to skip 
 > “Too much information and no information accomplish the same goal.”
 > — Ibrahim Diallo, [How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 
-Also apply this at the API/component design level: consistent naming patterns mean consumers can guess correctly without reading anything. When `/user/orders` works, `/user/orders/123` should just work too.
+Apply the same principle to API and component naming: consistent patterns reduce documentation overhead and make behavior easier to predict.
 
 Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https://idiallo.com/blog/how-do-we-get-developers-to-read-the-docs)
 

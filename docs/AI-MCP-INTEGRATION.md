@@ -209,18 +209,15 @@ The [PageTemplateExample](https://unisdr.github.io/undrr-mangrove/ai-components/
 
 ### Expected agent workflow
 
-**For vanilla HTML consumers:**
+**Vanilla HTML consumers**
+1. Fetch `llms.json` for URLs and conventions.
+2. Fetch `ai-components/index.json` and filter `vanillaHtml: true`.
+3. Use `quickstart` + `requiredAssets`, then component `renderedHtml`.
 
-1. Fetch `llms.json` for all URLs and conventions
-2. Fetch `ai-components/index.json`, filter by `vanillaHtml: true`
-3. Use the `quickstart` and `requiredAssets` fields to set up the page shell
-4. Fetch component detail files and use `renderedHtml` examples
-
-**For React consumers:**
-
-1. Fetch `ai-components/index.json`
-2. Fetch component detail files for props, types, and story code examples
-3. Import components via npm: `import { ComponentName } from "@undrr/undrr-mangrove"`
+**React consumers**
+1. Fetch `ai-components/index.json`.
+2. Fetch component detail files for props/types/examples.
+3. Import from npm: `import { ComponentName } from "@undrr/undrr-mangrove"`.
 
 ### How it's generated
 
@@ -253,12 +250,12 @@ Several tools exist for connecting Storybook to LLMs. We evaluated them and foun
 | [`@fluentui/storybook-llms-extractor`](https://www.npmjs.com/package/@fluentui/storybook-llms-extractor) | Extracts Storybook metadata into llms.txt format using Playwright. Per-component text files with props and stories. | Provide rendered HTML output. Include page recipes, required scripts, or branding constraints. |
 | [Storybook component manifest](https://github.com/storybookjs/storybook/issues/32276) | Built-in JSON manifest with props, types, and story snippets. | Include rendered HTML, CSS class inventories, or integration guidance. Storybook's own research explicitly excluded visual rendering. |
 
-Our pipeline fills the gaps:
+Our pipeline adds what those tools do not provide:
 
-- **Rendered HTML** for vanilla consumers who use Mangrove via CDN without React. No other tool provides this.
-- **UNDRR page recipes** — required scripts (analytics, messaging, cookie consent), syndication embed instructions, branding-critical markup flagged as `doNotModify`.
-- **Static deployment** alongside GitHub Pages. No running server needed.
-- **CSS utility inventory** with utility classes grouped by category.
+- **Rendered HTML** for vanilla/CDN consumers.
+- **UNDRR page recipes** (required scripts, syndication patterns, branding constraints).
+- **Static deploy artifacts** on GitHub Pages (no runtime server required).
+- **CSS utility inventory** grouped by category.
 
 The ecosystem tools are complementary, not competing. We recommend `@storybook/mcp` for local development alongside our static pipeline for deployed documentation.
 

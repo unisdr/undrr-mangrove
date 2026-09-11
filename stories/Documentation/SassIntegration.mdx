@@ -51,9 +51,9 @@ The SCSS source files are in `stories/assets/scss/` within the installed package
 
 ## What is still Sass
 
-In Mangrove 2.0, colour, spacing, radius and every component token are **CSS custom properties**, generated from `tokens/*.yaml`. You do not override them in Sass — you declare them in a selector. See the <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo> for the full explanation and the recipe.
+In Mangrove 2.0, colour, spacing, radius, and component tokens are **CSS custom properties** generated from `tokens/*.yaml`. Override them in selectors, not Sass. See the <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo>.
 
-Sass still owns the values that cannot be resolved at runtime, because `@media`, `@if`, `@font-face` and interpolation cannot read `var()`. That is the whole of the remaining SCSS variable API, [listed below](#scss-variables-reference) — breakpoints, the type scale, font families and two compile-time constants. Everything else that used to be a `$mg-*` variable is gone: referencing one fails the build, and _assigning_ one compiles cleanly and does nothing. `_variables.scss` emits a Sass `@warn` for the names consumers are known to set, so watch your build log.
+Sass variables remain only for compile-time needs (`@media`, `@if`, `@font-face`, interpolation): breakpoints, type scale, font faces, and a few constants. Other legacy `$mg-*` variables are removed; assigning them appears to compile but has no effect. Watch `_variables.scss` warnings in your build log.
 
 ## SCSS file structure
 
@@ -94,7 +94,7 @@ Each theme entry point follows the same import order:
 @import './components';
 ```
 
-The generated token partials are build output. `yarn scss` runs `yarn build:tokens` first, so a fresh clone compiles without a separate step.
+Generated token partials are build output. `yarn scss` runs `yarn build:tokens` first, so fresh clones compile without a separate token step.
 
 ## Root font-size and mg-rem()
 

@@ -129,11 +129,7 @@ The QuoteHighlight component supports three alignment options:
 
 ## RTL support
 
-The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When used in an RTL context:
-
-- Left-aligned quotes will appear on the right side of the content
-- Right-aligned quotes will appear on the left side of the content
-- The component's internal layout will automatically adjust for RTL reading direction
+The component supports RTL layouts automatically: left/right alignments mirror, and internal layout follows reading direction.
 
 ### RTL example with left alignment (appears on right)
 
@@ -157,17 +153,12 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 
 ## Design guidelines
 
-- Use the QuoteHighlight component to emphasize important quotes from key stakeholders.
-- The line variant is more subtle and can be used within text content.
-- The image variant is more prominent and works well as a standalone element.
-- Choose background colors that complement the surrounding content.
-- Always provide attribution when available to give proper credit to the source.
-- Use the portrait image feature to add a personal touch to the quote.
-- Ensure images are high quality and properly cropped to fit the designated space.
-- Use alignment options to create more dynamic layouts:
-  - Full width for standalone, prominent quotes
-  - Left or right alignment to integrate quotes within text content
-- For RTL languages, the component will automatically mirror its layout.
+- Use this component for high-signal quotes from key stakeholders.
+- Prefer `line` inside body content; use `image` for more prominent standalone callouts.
+- Include attribution whenever available.
+- Use high-quality, correctly cropped images with meaningful alt text.
+- Choose alignment by context: `full` for standalone emphasis, `left`/`right` for inline flow.
+- RTL layouts are mirrored automatically.
 
 ## Accessibility
 
@@ -185,10 +176,9 @@ The QuoteHighlight component fully supports Right-to-Left (RTL) languages. When 
 
 ### Known limitations
 
-- Screen readers announce this as an unlabelled section — the `<section>` wrapper has no `aria-label` or `aria-labelledby`
-- Screen readers cannot programmatically link the quote text to its attribution — there is no `<cite>`, `<footer>`, or `aria-describedby` connecting them within the `<blockquote>`
-- Screen readers may not identify the attribution text as the source of the quote
-- The auto-generated fallback alt text (e.g., "Mami Mizutori image") may not be descriptive enough for images that convey meaningful content
+- Screen readers announce an unlabeled section (`<section>` has no `aria-label`/`aria-labelledby`).
+- Quote text and attribution are not programmatically linked (`<cite>`, `<footer>`, or `aria-describedby` are not used).
+- Auto-generated fallback alt text may be too generic for meaningful images.
 
 > **Implementation note (for contributors):** The outer wrapper is a `<section>` with no `aria-label` or `aria-labelledby`. The quote and attribution use `<p>` elements within `<blockquote>` rather than a `<figure>`/`<figcaption>` or `<footer>`/`<cite>` pattern, so there is no programmatic association between the quote and its source.
 
