@@ -96,7 +96,8 @@ The page composes existing, shipped pieces rather than introducing new ones:
 `mg-container-full-width` for the header image's bleed, `mg-reading`/
 `mg-reading__article` for the body and `TableOfContents`, `VerticalCard` in an
 `mg-grid` for related content, `ShareButtons` in the margin rail,
-`mg-tag-container` for the taxonomy links under "Explore further", and
+`mg-tag-container` for the taxonomy links under "Explore further",
+`Imagecaption` for the header image's caption and credit, and
 `UserFeedback` for the "Is this page useful?" prompt and report-an-issue link
 — the same building blocks `ContentHub` uses, plus the ones a full article
 page needs that a hub page doesn't. The body also scatters `QuoteHighlight`,
@@ -150,5 +151,13 @@ design is reviewed.
     surfaced at the source (see "Split hero" above and `Hero`'s own
     changelog).
   - Audited the demo-only CSS against `mg-grid`: none of it fits `mg-grid`'s
-    equal-fraction columns, but the caption/credit row simplified from
-    flex-basis math to a plain two-column grid (`1fr auto`).
+    equal-fraction columns; the rail/article split and the caption/credit row
+    are both asymmetric shapes it can't express.
+  - Replaced the caption/credit row entirely with the shared `Imagecaption`
+    component (`stories/Molecules/ImageCaption`), fixing real bugs in it at
+    the source rather than continuing to hand-roll a demo-only equivalent:
+    `caption`/`credit` were stringly-typed (`"true"`/`"false"`) with a dead
+    no-op variant-class system behind them, and `Imagecaption` passed an
+    undefined `name` variable into `Imagecredit`, which doesn't even accept
+    that prop. Now real booleans, no dead code, and one less demo-only class
+    family (`mg-demo-article-caption`/`-credit`/`-media-foot` are gone).

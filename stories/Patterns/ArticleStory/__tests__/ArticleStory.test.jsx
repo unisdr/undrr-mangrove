@@ -31,12 +31,12 @@ test('links the source organisations in the byline', () => {
   );
 });
 
-test('caption and credit sit under the image as separate elements, each with its own layout', () => {
+test('caption and credit sit under the image as separate elements, using the shared Imagecaption component', () => {
   const { container } = render(<ArticleStory heroImage="main" />);
-  const foot = container.querySelector('.mg-demo-article-media-foot');
+  const foot = container.querySelector('.mg-image-caption');
   expect(foot.tagName).toBe('FIGCAPTION');
-  const caption = foot.querySelector('.mg-demo-article-caption');
-  const credit = foot.querySelector('.mg-demo-article-credit');
+  const caption = foot.querySelector('p');
+  const credit = foot.querySelector('.mg-credits');
   expect(caption).toBeInTheDocument();
   expect(credit).toBeInTheDocument();
   expect(caption).not.toBe(credit);

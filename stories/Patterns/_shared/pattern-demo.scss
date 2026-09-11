@@ -65,39 +65,12 @@ $mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
   max-inline-size: $mg-demo-article-column-width;
 }
 
-// Caption (what the photo shows) and credit (who took it) are different
-// kinds of information and get their own layout rather than one string with
-// a slash in it. A two-column CSS grid, not `mg-grid` (which only offers
-// equal-fraction columns): caption takes the flexible remaining space and
-// wraps normally, credit gets its own capped, right-aligned column, so a
-// long credit (organisation names can run long) wraps within its own column
-// instead of stretching edge to edge on the large/full-bleed image or
-// crowding the caption. Wraps to a single column below tablet width, where
-// there isn't room for two.
-.mg-demo-article-media-foot {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--mg-spacing-100) var(--mg-spacing-200);
-  margin-block: var(--mg-spacing-50) var(--mg-spacing-300);
-
-  @media (max-width: $mg-breakpoint-mobile) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.mg-demo-article-caption {
-  min-inline-size: 0;
-  text-align: start;
-}
-
-.mg-demo-article-credit {
-  max-inline-size: 20rem;
-  text-align: end;
-  color: rgb(var(--mg-color-neutral-700));
-
-  @media (max-width: $mg-breakpoint-mobile) {
-    text-align: start;
-  }
+// Caption and credit are the shared `Imagecaption` component's own
+// `.mg-image-caption` (bordered divider, RTL-aware) — no demo CSS needed.
+// It has no top margin on its own, so ArticleStory's header image gets one
+// scoped rule for breathing room between image and caption.
+.mg-demo-article-image + .mg-image-caption {
+  margin-block-start: var(--mg-spacing-100);
 }
 
 // Share and "On this page" live together in the reading grid's rail column in

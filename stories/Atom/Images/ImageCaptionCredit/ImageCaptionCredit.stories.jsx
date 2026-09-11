@@ -67,23 +67,13 @@ export default {
     },
 
     caption: {
-      options: ['true', 'false'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'true',
+      control: { type: 'boolean' },
+      defaultValue: true,
     },
 
     credit: {
-      options: ['true', 'false'],
-
-      control: {
-        type: 'inline-radio',
-      },
-
-      defaultValue: 'true',
+      control: { type: 'boolean' },
+      defaultValue: true,
     },
   },
 };

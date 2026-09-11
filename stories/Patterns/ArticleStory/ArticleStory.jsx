@@ -7,6 +7,7 @@ import ShareButtons from '../../Components/Buttons/ShareButtons/ShareButtons';
 import { LABELS_AR as SHARE_LABELS_AR } from '../../Components/Buttons/ShareButtons/_labels';
 import UserFeedback from '../../Components/UserFeedback/UserFeedback';
 import { LABELS_AR as FEEDBACK_LABELS_AR } from '../../Components/UserFeedback/_labels';
+import { Imagecaption } from '../../Molecules/ImageCaption/ImageCaption';
 import { HighlightBox } from '../../Components/HighlightBox/HighlightBox';
 import QuoteHighlight from '../../Components/QuoteHighlight/QuoteHighlight';
 import { EmbedContainer } from '../../Utilities/EmbedContainer/EmbedContainer';
@@ -455,14 +456,10 @@ export function ArticleStory({
           alt={image.alt[locale] || image.alt.english}
           className="mg-demo-article-image"
         />
-        <figcaption className="mg-demo-article-media-foot">
-          <span className="mg-demo-article-caption | mg-u-font-size-250">
-            {image.caption[locale] || image.caption.english}
-          </span>
-          <span className="mg-demo-article-credit | mg-u-font-size-250">
-            {image.credit[locale] || image.credit.english}
-          </span>
-        </figcaption>
+        <Imagecaption
+          paragraph={image.caption[locale] || image.caption.english}
+          label={image.credit[locale] || image.credit.english}
+        />
       </figure>
     ) : null;
 
