@@ -72,7 +72,8 @@ export const getCaptionForLocaleHeading = locale => {
 
 # Base typography
 
-Basic elements which the design system has some styling listed here, you can use the elements as it is, without any specific CSS classes.
+Base HTML typography elements with Mangrove baseline styling. Use these tags
+without extra utility classes unless a pattern calls for them.
 
 <Anchor storyId="foundation-typography-basetypography--abbreviation" />
 
@@ -114,9 +115,8 @@ export const getCaptionForLocaleAbbr = locale => {
   }
 };
 
-Abbreviation component defines an abbreviation or an acronym, like "HTML", "CSS", "Mr.", "Dr.", "ASAP", "ATM".
-
-- We can use the <code>abbr tag</code> in any component, to display as a tooltip when you hover over the element.
+Use `<abbr>` for abbreviations or acronyms such as HTML, CSS, or UNDRR terms.
+Provide the expanded form in the `title` attribute.
 
 Typographic scale when using abbreviation in text component:
 
@@ -161,9 +161,7 @@ export const getCaptionForLocaleBlockquote = locale => {
   }
 };
 
-The Blockquote component specifies a section that is quoted from another source.
-
-- We can use <code>blockquote</code> in any component to render the text found within the <code>blockquote tag</code> as indented text
+Use `<blockquote>` for quoted content from another source.
 
 Typographic scale when using blockquote in text component:
 
@@ -192,9 +190,7 @@ export const getCaptionForLocaleCite = locale => {
   }
 };
 
-The Cite component defines the title of a creative work (e.g. a book, a poem, a song, a movie, a painting, a sculpture, etc.).
-
-- We can use <code>cite</code> in any component to render the text found within the <code>cite tag</code>.
+Use `<cite>` for the title/source of a creative work.
 
 Typographic scale when using cite in text component:
 
@@ -264,9 +260,9 @@ For syntax-highlighted blocks, plain dark blocks, and filename-header wrappers, 
 
 ## Details
 
-The details tag creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the `summary` element.
-
-Mangrove applies a light baseline to all `<details>` elements — a pointer cursor on the summary and a branded focus ring — keeping the browser's native disclosure marker intact. For a richer card treatment, add the `mg-details` class.
+`<details>` creates a disclosure widget with a required `<summary>` label.
+Mangrove adds baseline pointer/focus styling while preserving native disclosure
+behavior. For richer card treatment, add `mg-details`.
 
 export const getLocaleForDetails = locale => {
   switch (locale) {
@@ -315,7 +311,7 @@ Bare `<details>` with Mangrove's baseline styling — native disclosure marker, 
 
 ## Figcaption
 
-The <code>figcaption</code> tag is used to caption the image. The <code>figcaption</code> tag is used with the <code>figure</code> tag.
+Use `<figcaption>` with `<figure>` to provide media captions.
 
 export const getLocaleForFigcaption = locale => {
   switch (locale) {
@@ -354,7 +350,7 @@ export const getLocaleForFigcaption = locale => {
 
 ## Headings
 
-We can use the <code>h1/h2/h3/h4/h5/h6 tags</code> in any component to display the headings. h1 for most important heading to h6 for least important heading.
+Use heading tags `<h1>` through `<h6>` in semantic order.
 
 Typographic scale when using headings in text component:
 
@@ -395,9 +391,7 @@ export const getCaptionForLocaleHr = locale => {
   }
 };
 
-The Hr component defines a thematic break in an HTML page (e.g. a shift of topic).
-
-- We can use the <code>hr tag</code> in any component to display the horizontal break.
+Use `<hr>` for thematic breaks between content sections.
 
 Typographic scale when using hr in text component:
 
@@ -423,9 +417,7 @@ export const getCaptionForLocaleMark = locale => {
   }
 };
 
-The Mark component define the marked text. It is used to highlight the part of the text in a paragraph.
-
-- We can use the <code>mark</code> in any component to render the text found within the <code>mark tag</code> as text with a light yellow background
+Use `<mark>` to highlight inline text within a paragraph.
 
 Typographic scale when using mark in text component:
 
@@ -438,11 +430,7 @@ Typographic scale when using mark in text component:
 
 ## Ordered List
 
-An ordered list is used if there is a relation/hierarchy between list items. Ordered list items begin with a number generally.
-
-Start an ordered list with the <code>o1</code> tag.
-
-Add a <code>li</code> tag for each list item
+Use ordered lists (`<ol>`) when item order matters.
 
 <Canvas
   of={BaseTypographyStories.TypographyListOrdered}
@@ -453,11 +441,7 @@ Add a <code>li</code> tag for each list item
 
 ## Unordered List
 
-An unordered list is used if there is no hierarchy required. Unordered lists start with a bullet.
-
-Start an unordered list with the <code>u1</code> tag.
-
-Add a <code>li</code> tag for each list item
+Use unordered lists (`<ul>`) when item order does not matter.
 
 <Canvas
   of={BaseTypographyStories.TypographyListUnordered}
@@ -468,9 +452,7 @@ Add a <code>li</code> tag for each list item
 
 ## Description List
 
-A description list is a list of terms, with a description of each term.
-
-The <code>dl</code> tag defines the description list, the <code>dt</code> tag defines the term (name), and the <code>dd</code> tag describes each term.
+Use description lists (`<dl>`) for term/definition pairs with `<dt>` and `<dd>`.
 
 <Canvas
   of={BaseTypographyStories.TypographyListDescription}
@@ -509,9 +491,7 @@ export const getCaptionForLocaleParagraph = locale => {
   }
 };
 
-The Paragraph component defines a paragraph.
-
-- We can use the <code>p tag</code> in any component to define a paragraph.
+Use `<p>` for standard paragraph text.
 
 ### Size prop
 
@@ -570,9 +550,7 @@ export const getCaptionForLocaleQuotation = locale => {
   }
 };
 
-The Quotation component defines a short quotation.
-
-- We can use the <code>q</code> in any component to render quotation marks around the text found within the <code>q tag</code>.
+Use `<q>` for short inline quotations.
 
 Typographic scale when using quotation in text component:
 
@@ -605,9 +583,7 @@ export const getCaptionForLocaleSmall = locale => {
   }
 };
 
-The Small component defines smaller text (like copyright and other side-comments).
-
-- We can use the <code>small</code> in any component to makes text one font size smaller in the HTML document.
+Use `<small>` for secondary text such as legal notes or side comments.
 
 Typographic scale when using small in text component:
 
