@@ -81,8 +81,13 @@
     -webkit-overflow-scrolling: touch;
 
     // Keep Firefox scrollbar styling aligned with the WebKit rules below.
+    // Uses the brand interactive colour (same token the nav buttons below
+    // use) rather than a neutral grey, so the scrollbar reads as themed
+    // instead of looking like an unstyled default. Firefox's scrollbar-color
+    // is a single static pair with no hover state, unlike the WebKit
+    // pseudo-elements below, so it gets the same resting tint throughout.
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--mg-color-neutral-500))
+    scrollbar-color: rgb(var(--mg-color-interactive) / 0.35)
       rgb(var(--mg-color-neutral-100));
 
     @include devicebreak(small) {
@@ -112,11 +117,16 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgb(var(--mg-color-neutral-500));
+      background: rgb(var(--mg-color-interactive) / 0.35);
       border-radius: var(--mg-radius-form-input);
 
+      @media (prefers-reduced-motion: no-preference) {
+        transition: background-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard);
+      }
+
       &:hover {
-        background: rgb(var(--mg-color-neutral-600));
+        background: rgb(var(--mg-color-interactive));
       }
     }
 
