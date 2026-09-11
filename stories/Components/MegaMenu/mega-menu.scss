@@ -101,6 +101,9 @@
 
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
+    // Anchor for the active-tab underline pseudo-element below.
+    position: relative;
+
     @media screen and (min-width: $mg-breakpoint-tablet) {
       display: block;
     }
@@ -153,8 +156,34 @@
     }
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
+      // The active-tab underline: a pseudo-element rather than the previous
+      // box-shadow so it can transition. Grows in from the centre on
+      // activation and fades/shrinks back out when another tab takes over,
+      // instead of an instant on/off flip between neighbouring tabs.
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        block-size: 3px;
+        background: rgb(var(--mg-color-interactive));
+        opacity: 0;
+        transform: scaleX(0);
+
+        @media (prefers-reduced-motion: no-preference) {
+          transition:
+            transform var(--mg-motion-duration-fast)
+              var(--mg-motion-easing-standard),
+            opacity var(--mg-motion-duration-fast)
+              var(--mg-motion-easing-standard);
+        }
+      }
+
       &--active {
-        box-shadow: inset 0 -3px 0 rgb(var(--mg-color-interactive));
+        &::after {
+          opacity: 1;
+          transform: scaleX(1);
+        }
 
         a,
         .mg-mega-topbar__item-link {
