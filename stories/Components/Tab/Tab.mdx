@@ -17,7 +17,10 @@ Don't use tabs for site navigation. Use links or menus instead.
 
 ## Variants
 
-There are two layouts. **Horizontal** is a tab bar along the top, best for 2-5 tabs with short labels. **Stacked** is a vertical, accordion-style layout that works better for longer labels or many sections. Horizontal tabs stay in one row at every viewport width: the group centres when it fits, and the tab rail scrolls horizontally when it overflows. Choose stacked explicitly for FAQs, many sections or exceptionally long labels. Set `stackOnMobile` to opt horizontal tabs into stacked disclosures below 480px.
+Two layouts are available. **Horizontal** is best for 2-5 short labels.
+**Stacked** (accordion-style) is better for long labels or many sections.
+Horizontal tabs stay in one row and scroll when needed; use `stackOnMobile` to
+switch horizontal tabs to stacked disclosures below 480px.
 
 <Canvas of={TabStories.CentredGroup} meta={TabStories} />
 
@@ -31,7 +34,10 @@ The tab rail scrolls independently of the content below. Faded edges indicate mo
 
 ### Optional mobile stacking
 
-Horizontal scrolling is the default. For the previous mobile disclosure layout, pass `stackOnMobile` or add the presence-based `data-mg-js-tabs-stack-on-mobile` attribute to existing HTML. At widths below 480px, the component switches its layout, accessibility roles and keyboard navigation together. At 480px and above it returns to horizontal tabs. The current section opens when entering the mobile layout. When returning to the rail, the focused section or the section you last used is selected, reopening it if necessary. Mobile sections can be toggled independently. Options such as filtering, `defaultOpen` and `singleOpen` remain specific to the explicit stacked variant. Panel content stays mounted, preserving form values; focus stays in the panel or transfers to its equivalent tab control.
+Horizontal scrolling is the default. To restore the older mobile disclosure
+behavior, pass `stackOnMobile` (or `data-mg-js-tabs-stack-on-mobile`). Below
+480px, layout/roles/keyboard behavior switch together; at 480px+ tabs return to
+horizontal. Panels stay mounted so form values persist.
 
 ```jsx
 <Tab tabdata={tabdata} stackOnMobile />
@@ -85,9 +91,15 @@ URL hashes work as deep links in both variants, e.g. `#mg-tabs__section-tab-2` o
 
 ## Accessibility
 
-**Horizontal tabs** follow the standard ARIA tab pattern (`role="tablist"`, `role="tab"` with `aria-selected`, `role="tabpanel"` on panels; roving tabindex). Only the active tab is in the Tab order; use arrow keys to navigate between tabs. Panels sit outside the tablist. Give each group a meaningful accessible name using `labels.tabListLabel` (React) or `data-mg-js-tabs-label` (HTML), which defaults to "Sections". Without JavaScript, all panel content remains visible.
+**Horizontal tabs** follow the ARIA tab pattern (`tablist`, `tab`,
+`tabpanel`, roving tabindex). Only the active tab is in Tab order; arrow keys
+navigate tabs. Name each group with `labels.tabListLabel` (React) or
+`data-mg-js-tabs-label` (HTML, default "Sections"). Without JavaScript, all
+panel content remains visible.
 
-**Stacked tabs** use an accessible disclosure pattern: each trigger has `aria-expanded` and `aria-controls` to communicate open/closed state; panels have `role="region"` with `aria-labelledby`. In Chromium browsers (Chrome, Edge), collapsed panels can be found via Ctrl+F (browser find-in-page). Firefox and Safari treat collapsed panels as hidden — they are still accessible via the trigger but are not findable via Ctrl+F.
+**Stacked tabs** use an accessible disclosure pattern (`aria-expanded`,
+`aria-controls`, `region`, `aria-labelledby`). In Chromium, collapsed panels are
+findable via Ctrl+F; Firefox/Safari treat them as hidden to find-in-page.
 
 > **Implementation note (for contributors):** Horizontal tabs use `role="tablist"` on the list, `role="tab"` with `aria-selected` on triggers, and `role="tabpanel"` on panels (roving tabindex). Stacked tabs use `role="button"` with `aria-expanded` and `aria-controls` on triggers, `role="region"` with `aria-labelledby` on panels. The `hidden="until-found"` attribute on stacked panels enables Ctrl+F discoverability in Chromium; other browsers fall back to standard `hidden` behavior.
 
@@ -95,7 +107,8 @@ The filter input has an `aria-label` and an `aria-describedby` hint ("Results wi
 
 ## Usage
 
-Tabs are vanilla JavaScript. No React, no build step, just HTML and a script import. If you're already working in React with the Mangrove source, there's also a `<Tab>` wrapper ([see below](#react-usage)).
+Tabs are vanilla JavaScript: HTML plus a module script. A `<Tab>` React wrapper
+is also available in Mangrove source ([see below](#react-usage)).
 
 ### Vanilla JS (recommended)
 
@@ -375,9 +388,14 @@ Each tab object in `tabdata`:
 
 ### v2.10: centred, scrollable horizontal tabs
 
-Horizontal tabs now stay horizontal below 480px by default. To restore automatic mobile stacking, set `stackOnMobile` (HTML: `data-mg-js-tabs-stack-on-mobile`). Choose `variant="stacked"` (HTML: `mg-tabs--stacked` and `data-mg-js-tabs-variant="stacked"`) when disclosure behaviour is required. Existing stacked options are unchanged.
+Horizontal tabs now stay horizontal below 480px by default. To restore automatic
+mobile stacking, set `stackOnMobile` (`data-mg-js-tabs-stack-on-mobile`).
+Choose `variant="stacked"` (`mg-tabs--stacked` + `data-mg-js-tabs-variant="stacked"`)
+when disclosure behavior is required.
 
-The React wrapper renders a separate rail and panel container. Existing vanilla markup is enhanced automatically, preserving panel IDs and hash links; custom selectors that expect panels inside `.mg-tabs__list` must be updated. Pair the updated stylesheet with the updated runtime. Use the canonical horizontal HTML above for new integrations.
+The React wrapper renders separate rail/panel containers. Existing vanilla
+markup is enhanced automatically with preserved panel IDs/hash links, but
+custom selectors expecting panels inside `.mg-tabs__list` must be updated.
 
 Horizontal tabs use `--mg-tab-background--active` and `--mg-tab-indicator--active` for the selected pill. Keep overrides scoped to the theme and check text, selected-state and focus contrast together. For dynamically removed vanilla components, call `mgTabsDestroy(container)` before removing their DOM. React performs this cleanup automatically.
 

@@ -12,7 +12,8 @@ import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
 
 # UNDRR syndication search widget
 
-The **UNDRR syndication search widget** lets users search and filter content across UNDRR domains: undrr.org, preventionweb.net, and related sites. It provides keyword search, faceted filtering, and multiple display modes (list, card, or book card) in a single embeddable component.
+The **UNDRR syndication search widget** provides keyword search, faceted
+filtering, and list/card/book-card display modes across UNDRR domains.
 
 > **Platform dependency:** This component requires access to the UNDRR search backend via `/search-endpoint`. It includes domain configurations, content type mappings, and taxonomy endpoints specific to the UNDRR platform. It is **not** a general-purpose search component.
 
@@ -20,13 +21,13 @@ The **UNDRR syndication search widget** lets users search and filter content acr
 
 ## Features
 
-- Keyword search with responsive input: results update as you type
-- Non-blocking result updates keep the page interactive while results load
+- Keyword search with responsive input and live result updates
+- Non-blocking updates keep the page interactive while loading
 - Removable filter chips for active filters
 - Full ARIA support, keyboard navigation, screen reader announcements
-- Styled with Mangrove design tokens
+- Mangrove token-based styling
 - Left-slide filter drawer on mobile, inline sidebar on desktop
-- Custom select dropdowns (searchable, multi-select) with no external dependencies like Chosen.js
+- Custom searchable/multi-select dropdowns (no Chosen.js dependency)
 
 > **Implementation note (for contributors):** The non-blocking search experience is powered by React 19's concurrent rendering features: `useDeferredValue` keeps the search input responsive while results load in the background; `useTransition` marks filter changes as non-urgent to prevent UI blocking.
 
@@ -94,8 +95,8 @@ Hide specific fields from search results using `visibleTeaserFields`. Set a fiel
 
 ## Custom filters
 
-`customFilters` are raw Elasticsearch query_string filters applied invisibly to all searches.
-Users cannot see or remove these filters - they constrain the search scope.
+`customFilters` are raw Elasticsearch query-string constraints applied
+invisibly to all searches. Users cannot see or remove them.
 
 **This example uses:**
 
@@ -118,8 +119,8 @@ customFilters: [
 
 ## Custom facets
 
-`customFacets` create user-selectable dropdown filters in the sidebar.
-Each facet maps labels to Elasticsearch queries.
+`customFacets` create user-selectable sidebar dropdown filters. Each option maps
+label text to an Elasticsearch query.
 
 **This example uses:**
 
@@ -172,7 +173,8 @@ customFacets: [
 
 ## Custom filters and facets
 
-Use both together: `customFilters` for hidden constraints, `customFacets` for user choices.
+Use both together: hidden constraints via `customFilters`, visible choices via
+`customFacets`.
 
 **This example uses:**
 
@@ -207,7 +209,8 @@ customFacets: [
 
 ## Allowed types
 
-Restricts which content types appear in the **Type** dropdown filter. Unlike `customFilters`, this doesn't hide content, it limits the filter UI options.
+Restricts content types shown in the **Type** dropdown. Unlike `customFilters`,
+this changes filter UI options, not search scope.
 
 **This example uses:**
 
@@ -226,7 +229,8 @@ allowedTypes: {
 
 ## Taxonomy term results
 
-Demonstrates mixed search results containing both content nodes and taxonomy terms (Hazard, Country, Theme). Taxonomy terms display differently: vocabulary name as type badge, no date, defaults to preventionweb.net.
+Shows mixed results with both content nodes and taxonomy terms (Hazard, Country,
+Theme). Terms render with vocabulary badge, no date, and preventionweb.net default.
 
 <Canvas
   of={IntegrationsStories.TaxonomyTermResults}
@@ -235,7 +239,8 @@ Demonstrates mixed search results containing both content nodes and taxonomy ter
 
 ## Custom endpoint
 
-Override `searchEndpoint` to point at a different Elasticsearch proxy (DDEV, staging, etc.).
+Override `searchEndpoint` to target a different Elasticsearch proxy (DDEV,
+staging, etc.).
 
 <Canvas of={IntegrationsStories.CustomEndpoint} meta={IntegrationsStories} />
 
@@ -532,11 +537,15 @@ createHydrator({
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
-> **Integration note:** This is a complex-tier component. `fromElement` extracts only the attributes present on the container: Drupal modules and other consumer wrappers can merge additional config (`customFacets`, `customFilters`, etc.) that is too complex to express as data attributes.
+> **Integration note:** This is a complex-tier component. `fromElement` extracts
+> only container attributes; Drupal/consumer wrappers can merge additional
+> config (`customFacets`, `customFilters`, etc.) that is too complex for
+> attributes alone.
 
 ## UI labels
 
-Every user-visible string in the widget can be overridden via the `labels` prop. Pass any subset of keys — unspecified keys fall back to the English defaults in `DEFAULT_LABELS`.
+Every user-visible string can be overridden via `labels`. Unspecified keys fall
+back to `DEFAULT_LABELS`.
 
 ```jsx
 <SyndicationSearchWidget
@@ -568,7 +577,9 @@ In a Drupal Twig template, supply translated labels via the `data-labels` JSON a
 
 `fromElement` parses the JSON and passes it through as the `labels` prop. Unspecified keys fall back to English.
 
-> **Important:** Function-valued labels (required for Arabic and Russian plural forms) cannot be expressed in JSON. For those languages, either bundle a custom JS module that provides the labels object directly, or accept English-fallback plural strings via `data-labels` and handle pluralization server-side.
+> **Important:** Function-valued labels (needed for Arabic/Russian plural forms)
+> cannot be expressed in JSON. Use a custom JS labels object, or accept fallback
+> plural strings and handle pluralization server-side.
 
 > **Drupal Twig note:** Use single quotes for the `data-labels` attribute value so that the JSON's double quotes remain unescaped. If any translated string itself contains an apostrophe (common in French), encode it as `’` (the Unicode right single quotation mark) in the JSON, or escape it as `&#39;` in the HTML attribute.
 
@@ -576,7 +587,8 @@ In a Drupal Twig template, supply translated labels via the `data-labels` JSON a
 
 ### `labels` prop vs `config` prop
 
-`labels` contains UI strings only. All search behaviour — endpoint, facets, filters, pagination — belongs in `config`. The two props are independent and can be used together.
+`labels` contains UI text only. Search behavior (endpoint, facets, filters,
+pagination) belongs in `config`.
 
 ## Architecture
 
@@ -613,7 +625,7 @@ The facet dropdowns use a custom `SelectDropdown` component instead of Chosen.js
 | **Touch-friendly**      | 44px trigger height, 40px option height     |
 | **Accessible**          | ARIA listbox pattern, screen reader support |
 
-This means the component works in any environment (Drupal, Storybook, standalone) without requiring Chosen.js to be loaded.
+This works in Drupal, Storybook, and standalone usage without Chosen.js.
 
 ### Mobile filter drawer
 

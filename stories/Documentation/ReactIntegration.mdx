@@ -29,9 +29,9 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
   showNumbers={false}
 />
 
-Use Mangrove React components in your application for props-driven UI with built-in accessibility and UNDRR brand compliance.
-
-This guide assumes familiarity with **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>**. Review that first if you're working on a project that may need custom approaches.
+Use Mangrove React components for props-driven UI with built-in accessibility
+and UNDRR branding. For broader context, review
+**<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>**.
 
 ## Installation
 
@@ -61,7 +61,8 @@ import { createHydrator } from '@undrr/undrr-mangrove';
 
 ## Including styles
 
-Mangrove does not ship pre-built CSS in the npm package at a conventional `dist/css/` path. There are two ways to include styles:
+Mangrove does not expose CSS at a conventional npm `dist/css/` path. Use one of
+these:
 
 **Option A: CDN (recommended for most consumers)**
 
@@ -81,7 +82,10 @@ Load the compiled CSS from UNDRR's CDN. Pick the theme that matches your site:
 />
 ```
 
-Available theme files: `style.css`, `style-preventionweb.css`, `style-mcr.css`, `style-irp.css`, `style-delta.css`, and the combined `style-all.css` (base plus all sub-brand theme blocks, switched by body class). The legacy 10px-root variants were removed in 2.0 — Mangrove now assumes a standard 16px document root. See the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs) (breaking change #5) if you are migrating from the old 10px root.
+Available theme files: `style.css`, `style-preventionweb.css`, `style-mcr.css`,
+`style-irp.css`, `style-delta.css`, and combined `style-all.css`. Legacy 10px-root
+variants were removed in 2.0; Mangrove now assumes a 16px root. See
+[v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs) for migration.
 
 See the <LinkTo kind="getting-started-integration-cdn-reference" story="docs">CDN reference</LinkTo> for the full list of available assets and versioned URLs.
 
@@ -233,9 +237,13 @@ Props: `severity` (`"error"` | `"warning"` | `"info"` | `"success"`), `opened` (
 
 ## Server-rendered hydration
 
-If you are rendering HTML on the server (Drupal, Astro, or any other framework) and need React to take over specific DOM containers, Mangrove provides `createHydrator`. This scans the page for elements matching a CSS selector, extracts props from `data-` attributes, and mounts the component.
+For server-rendered HTML (Drupal, Astro, etc.), use `createHydrator` to scan
+matching containers, extract props from `data-` attributes, and mount
+components.
 
-The following example shows the **Drupal wrapper pattern**, where a small script imports component bundles via import map aliases (`@mangrove/*`) that resolve to CDN URLs at runtime. The import map is injected by `mangrove-components.js` in the `undrr_common` theme. In a typical React app, you would import from `@undrr/undrr-mangrove` instead and pass props directly (see the [usage examples](#usage-examples) above).
+Example below shows the **Drupal wrapper pattern** with `@mangrove/*` import-map
+aliases (injected by `mangrove-components.js` in `undrr_common`). In standard
+React apps, import directly from `@undrr/undrr-mangrove` and pass props.
 
 ```jsx
 // Drupal wrapper script — uses @mangrove/* import map aliases (resolved by mangrove-components.js)
@@ -256,13 +264,15 @@ Drupal.behaviors.mangroveShareButtons = {
 };
 ```
 
-The `fromElement` function exported by ShareButtons extracts props from the container's data attributes (`data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body`). Each component with hydration support ships its own `fromElement` — you do not need to write one by hand.
+`fromElement` maps container data attributes to props. Components with hydration
+support already ship their own `fromElement`.
 
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API, including `update()`, `unmountAll()`, and error handling options.
 
 ## TypeScript
 
-TypeScript is supported in the Mangrove development environment, but the published npm package does not yet ship type declarations (`.d.ts` files). If you use TypeScript in your consuming project, you can declare the module yourself:
+TypeScript works in development, but the published package does not yet include
+`.d.ts` files. In consuming projects, declare the module locally:
 
 ```ts
 // mangrove.d.ts
@@ -303,7 +313,7 @@ declare module '@undrr/undrr-mangrove' {
 }
 ```
 
-Refer to each component's PropTypes (visible in Storybook's controls panel) for the full list of accepted props.
+Use component PropTypes (Storybook controls) as the source of accepted props.
 
 ## Testing
 
