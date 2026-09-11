@@ -104,6 +104,10 @@ export function PageHeader({
               {/* Language Dropdown Section */}
               {showLanguage && (
                 <div className="mg-page-header__block mg-page-header__block--language">
+                  <Icon
+                    name="languages"
+                    className="mg-page-header__language-icon"
+                  />
                   <form
                     className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
                     id={id('lang_dropdown_form_lang-dropdown-form')}

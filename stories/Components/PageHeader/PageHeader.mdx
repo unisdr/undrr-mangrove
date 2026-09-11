@@ -285,6 +285,8 @@ The PageHeader component follows accessibility best practices:
 
 ## Changelog
 
+- **1.6.1** — 2026-09-11 ([PR #1134](https://github.com/unisdr/undrr-mangrove/pull/1134)): Resurrected the pre-2.0 mobile/tablet logo cropping (v2 had switched to `object-fit: contain`, shrinking the logo instead), with the crop box measured against the current logo asset rather than the old pixel values, which sliced into the subtitle text. Added `layout: 'fullscreen'` to the story so it renders full-bleed like MegaMenu instead of inside Storybook's padded docs canvas. Fixed the language `<select>` wrapping onto its own row when the selected language's label was long — it now truncates in place instead, and gained a `languages` icon next to it as a visual cue once truncated.
+
 - **1.6.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed duplicate hard-coded IDs by adding `idPrefix` namespacing for header/language elements. Default output remains unchanged when `idPrefix` is omitted, preserving existing Drupal selectors.
 
 - **1.5.1** — 2026-09-09: The default logo URL now uses the canonical assets CDN root. Custom logo URLs remain supported.

@@ -24,6 +24,7 @@ module.exports = {
   // Lucide — general UI icons
   // -------------------------------------------------------------------------
   'globe': LUCIDE('globe'),
+  'languages': LUCIDE('languages'),
   'search': LUCIDE('search'),
   'calendar-alt': LUCIDE('calendar-days'),
   'chart-bar': LUCIDE('bar-chart-3'),

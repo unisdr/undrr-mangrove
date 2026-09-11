@@ -85,6 +85,11 @@
       "source": "lucide"
     },
     { "name": "globe", "label": "Globe, World, Earth", "source": "lucide" },
+    {
+      "name": "languages",
+      "label": "Languages, Translate, Language Switcher",
+      "source": "lucide"
+    },
     { "name": "share", "label": "Share, Social Media", "source": "lucide" },
     {
       "name": "qrcode",

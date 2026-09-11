@@ -57,11 +57,27 @@
   // moment the toolbar gets tight — instead of truncating in place like
   // the logo and account link already do.
   &__block--language {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-25);
     min-inline-size: 0;
+
+    // Flex items default to min-width: auto (content-based), which would
+    // let the form ignore this block's max-inline-size below and keep the
+    // <select> at its full, untruncated content width.
+    > form {
+      min-inline-size: 0;
+    }
 
     @media (max-width: $mg-breakpoint-tablet) {
       max-inline-size: mg-rem(140);
     }
+  }
+
+  &__language-icon {
+    flex-shrink: 0;
+    color: rgb(var(--mg-color-neutral-0));
+    font-size: $mg-font-size-400;
   }
 
   &__logo-img {
