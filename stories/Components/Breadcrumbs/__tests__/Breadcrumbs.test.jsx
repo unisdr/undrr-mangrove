@@ -11,6 +11,8 @@ const defaultData = [
 
 describe('Breadcrumbs', () => {
   // --------------------------------------------------
+  // Structure
+  // --------------------------------------------------
 
   it('renders a <nav> with aria-label="breadcrumbs"', () => {
     const { container } = render(<Breadcrumbcomponent data={defaultData} />);
@@ -24,6 +26,8 @@ describe('Breadcrumbs', () => {
     expect(container.querySelectorAll('li')).toHaveLength(defaultData.length);
   });
 
+  // --------------------------------------------------
+  // aria-current
   // --------------------------------------------------
 
   it('marks the last <li> with aria-current="page"', () => {
@@ -50,6 +54,8 @@ describe('Breadcrumbs', () => {
   });
 
   // --------------------------------------------------
+  // White variant
+  // --------------------------------------------------
 
   it('applies white modifier class when Color="White"', () => {
     const { container } = render(
@@ -58,6 +64,8 @@ describe('Breadcrumbs', () => {
     expect(container.querySelector('nav')).toHaveClass('mg-breadcrumb--white');
   });
 
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations (default)', async () => {

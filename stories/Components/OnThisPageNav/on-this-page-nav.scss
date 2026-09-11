@@ -1,4 +1,8 @@
 // On this page nav
+// https://gitlab.com/undrr/web-backlog/-/issues/337
+// A sticky horizontal navigation bar that links to page sections.
+// Supports auto-detected headings or explicit author-provided links,
+// with optional CTA button and scroll-spy active state.
 
 .mg-on-this-page-nav {
   // --mg-on-this-page-nav-offset: docking offset for fixed headers (default: 0px).
@@ -18,6 +22,8 @@
   margin-inline-start: calc(50% - 50vw);
 
   // Un-stick on short viewports so the bar doesn't dominate the screen.
+  // GOV.UK accessibility research found sticky elements at 400% zoom consumed
+  // 30%+ of viewport — this prevents that. (technology.blog.gov.uk/2018/05/21)
   @media screen and (height <= 400px) {
     position: static;
     box-shadow: none;
@@ -43,6 +49,8 @@
     flex: 1 1 auto;
 
     // Fade gradient on the trailing edge signals more content is scrollable.
+    // Uses mask-image so the fade is transparent (works on any background).
+    // padding-inline-end gives the fade space so text isn't masked mid-character.
     padding-inline-end: var(--mg-spacing-300);
     -webkit-mask-image: linear-gradient(
       to right,
@@ -197,6 +205,8 @@
     }
 
     // In RTL, flex reversal places prevBtn on the right and nextBtn on the left,
+    // so the chevron icons point in the opposite physical direction from the scroll.
+    // Flip them so each icon still points toward its scroll destination.
     [dir="rtl"] & {
       svg {
         transform: scaleX(-1);
@@ -206,3 +216,7 @@
 }
 
 // RTL: flex layout places prevBtn at the right (visual-start) edge and nextBtn
+// at the left (visual-end) edge. The JS scrollBy direction, button visibility,
+// and chevron icon direction are all RTL-aware. The mask-image gradient uses
+// physical `to right` which fades the correct edge in LTR; RTL gradient
+// correction is a known open item.

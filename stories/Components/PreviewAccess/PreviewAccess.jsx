@@ -51,6 +51,9 @@ export default function PreviewAccess({
   const gateRef = useRef(null);
 
   // Only mount/unmount on `live` toggles; copy-prop edits update the data
+  // attributes in place via React's normal render path. The runtime reads
+  // attributes once at init, so changing copy after mount is intentionally
+  // a no-op — keeping the gate stable avoids overlay flicker and lost focus.
   useEffect(() => {
     if (!live) return undefined;
     const gate = gateRef.current;
@@ -82,6 +85,8 @@ export default function PreviewAccess({
   }
 
   // Static preview: mirrors the runtime's modal panel structure so reviewers
+  // see the same markup that ships in production. Form is wired to no-op so
+  // the user can still tab through, but the gate behaviour is not active.
   return (
     <div
       className="mg-preview-access__modal"

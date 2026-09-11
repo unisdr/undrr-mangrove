@@ -27,6 +27,8 @@ const targetBase = useTesting
   : `https://assets.undrr.org/mangrove/${version}/`;
 
 // URL matchers for any existing forms
+// Canonical versioned URLs plus legacy static/testing forms as inputs.
+// Replacements always use the canonical path; latest remains unpinned.
 const urlPatterns = [
   /https:\/\/assets\.undrr\.org\/(?:testing\/)?mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,
   /https:\/\/assets\.undrr\.org\/static\/mangrove\/[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\//g,

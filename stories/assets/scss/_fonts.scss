@@ -1,18 +1,68 @@
 // The font entry point. This file owns everything about type FACES: the asset
+// paths, the `@font-face` declarations, and the script routing that re-points
+// the font roles for Arabic. There is one font import, not two —
+// _font-roles.scss was folded in here by unisdr/undrr-mangrove#1098.
 
 // The roles themselves are NOT defined here. They are declared on the top-level
+// `:root` block in _variables.scss, because every supported build path reaches
+// _variables.scss — including the per-component Sass recipe in
+// SassIntegration.mdx. A role reference with no definition is invalid at
+// computed-value time, so a build that reached the components but not the
+// definitions would render every element in Times.
 
 // The roles, and what belongs on each:
 
-// text     running text and anything read as prose: body, buttons, form
+//   text     running text and anything read as prose: body, buttons, form
+//            fields, chips, status labels, share and feedback text. `p`,
+//            `h4`-`h6`, `th`, `td` and the bare `header` element are on this
+//            role too, but by INHERITING from `body` — none of them carries a
+//            declaration, so a heading placed inside a `ui` container keeps
+//            that container's face.
+//   heading  narrative h1-h3, and only in Arabic. In Latin `heading` and `text`
+//            are the same face, so h1-h3 are left to inherit rather than given
+//            a matched declaration that would beat a consuming theme's own
+//            brand face. See the note in _foundational.scss.
+//   display  the hero title, and nothing else.
+//   ui       scanned chrome, where space efficiency or visual chrome is the
+//            design intent: card, gallery and empty-state titles, labels,
+//            stats values, tags, tabs, breadcrumbs, the mega topbar and
+//            on-this-page nav links, and the hero LABEL. Not buttons — those
+//            read as prose and take `text`.
+//   code     code / pre
 
 // IMPORT _variables.scss BEFORE THIS FILE. The script routing at the bottom
+// builds its values with `mg-font-stack()` and the `$mg-font-face-*` variables,
+// all of which _variables.scss owns, so this file does not compile on its own.
+// The failure is a hard `Undefined variable` error rather than a silent
+// fallback, but not every build path names both files in the same place — see
+// the Drupal list below.
 
 // IMPORT THIS FILE EXACTLY ONCE PER BUILD. Sass's legacy `@import` re-emits,
+// and `@import` is not allowed inside `@if`, so the `@font-face` partials below
+// cannot be guarded — a second visit would duplicate all 32 blocks. Every
+// supported build path reaches it once and only once:
 
-// - the seven style*.scss entry points import _variables.scss and then this
+//   - the seven style*.scss entry points import _variables.scss and then this
+//     file, both directly;
+//   - the shared import list every UNDRR Drupal theme compiles
+//     (undrr_common/scss/_mangrove-components.scss) names `fonts` in its own
+//     right — first in the list, ahead of breakpoints, mixins, foundational and
+//     utility. It does NOT name `variables` anywhere: the theme entry point one
+//     level up supplies that, either as `@use "variables" as *` or as a plain
+//     `@import`, before it reaches the list. So the ordering rule above is a
+//     contract across two files, and copying or reordering that list without
+//     carrying its entry point's `variables` import is a compile error;
+//   - the per-component recipe in SassIntegration.mdx names both, in order.
 
 // _foundational.scss therefore does NOT import it. It used to import
+// _font-roles.scss, because that file was reachable from the entry points only
+// and every production site was compiling the roles with no Arabic map behind
+// them: Arabic text asked for Roboto, which has no Arabic coverage, and every
+// glyph fell back to the OS default. Silently. Folding the map into the file
+// consumers already import closes that hole at the source instead of routing
+// around it. A test in __tests__/font-roles.test.js counts the `@font-face`
+// blocks in every compiled bundle and in the consumer import list, so adding a
+// second import of this file fails the suite rather than shipping quietly.
 
 /* Roboto */
 $font-path-roboto: "https://assets.undrr.org/fonts/roboto/v1.0.0" !default;

@@ -40,6 +40,10 @@ export function useHashSync({ enabled = true } = {}) {
   const { enableHashSync } = config;
 
   // Determine if hash sync should be active.
+  // Accept both boolean true and string 'true': when the value is forwarded
+  // through Drupal data attributes (data-enable-hash-sync) it always arrives
+  // as a string, so a strict === true check would silently disable hash sync
+  // for editors who pick "Always enabled" in the Gutenberg block.
   const isEnabled =
     enabled &&
     (enableHashSync === true ||

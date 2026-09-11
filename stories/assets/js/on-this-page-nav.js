@@ -1,4 +1,15 @@
 // mg-on-this-page-nav
+// https://gitlab.com/undrr/web-backlog/-/issues/337
+//
+// Sticky horizontal "On this page" navigation with scroll-spy.
+// Two modes:
+//   Auto-detect: scans headings from the page and generates nav links
+//   Explicit: uses author-provided <ul> with <a> elements
+//
+// Scroll-spy uses IntersectionObserver. CSS-only scroll-spy
+// (scroll-target-group + :target-current) is emerging in CSS Overflow L5
+// but lacks aria-current support and cross-browser coverage - revisit when
+// browsers ship native accessibility semantics for :target-current.
 
 const CHEVRON_LEFT_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M11 4L6 8l5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -293,6 +304,8 @@ function setupClickHandlers(container, signal) {
       e.preventDefault();
 
       // Open any containing collapsed tab panel before measuring scroll position.
+      // The tab switch is synchronous, so getBoundingClientRect() is accurate
+      // immediately after the call.
       openContainingTabs(target);
 
       // Read offset per click — the custom property may change at breakpoints
@@ -351,6 +364,8 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
   const rtl = getComputedStyle(list).direction === 'rtl';
 
   // distFromStart: absolute distance scrolled from the visual start edge.
+  // The asymmetric thresholds (> 1 vs < maxScroll - 1) absorb sub-pixel
+  // rounding that can prevent scrollLeft from reaching exactly 0 or maxScroll.
   const distFromStart = Math.abs(sl);
   const scrolledFromStart = distFromStart > 1;
   const canScrollFurther = maxScroll > 1 && distFromStart < maxScroll - 1;
@@ -364,6 +379,9 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
   prevBtn.hidden = !scrolledFromStart;
 
   // nextBtn lives at the visual-end edge (right in LTR, left in RTL via flex).
+  // It is shown whenever more content exists in the scroll-forward direction.
+  // When it hides while focused, prefer the CTA (the DOM-adjacent element after
+  // nextBtn) over the last list link, so focus follows natural tab order.
   if (!canScrollFurther && nextBtn === document.activeElement) {
     const cta = container.querySelector('.mg-on-this-page-nav__cta');
     const links = list.querySelectorAll('.mg-on-this-page-nav__link');
@@ -374,6 +392,9 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
   nextBtn.hidden = !canScrollFurther;
 
   // has-left-overflow drives the left-edge gradient in SCSS.
+  // Content is physically off-screen to the left when:
+  //   LTR: the user has scrolled right past the start (scrolledFromStart)
+  //   RTL: more visual-end content sits to the left (canScrollFurther)
   container.classList.toggle(
     'mg-on-this-page-nav--has-left-overflow',
     rtl ? canScrollFurther : scrolledFromStart
@@ -409,6 +430,8 @@ function setupScrollButtons(container, signal) {
   prevBtn.className =
     'mg-on-this-page-nav__scroll-btn mg-on-this-page-nav__scroll-btn--prev';
   // Direction-neutral labels avoid confusion for RTL screen reader users
+  // ("left"/"right" are ambiguous when the reading direction is reversed).
+  // Override via data-mg-on-this-page-nav-scroll-prev-label for translated text.
   prevBtn.setAttribute(
     'aria-label',
     container.dataset.mgOnThisPageNavScrollPrevLabel ||
@@ -540,11 +563,16 @@ function setupScrollSpy(container) {
       newLink.setAttribute('aria-current', 'true');
 
       // Scroll the nav list horizontally to keep active link visible.
+      // ONS user research found independently-scrolling ToC lists confused users;
+      // auto-scrolling to the active link avoids that. We use scrollTo on the
+      // list (not scrollIntoView on the link) to avoid vertical page scrolling.
       if (list) scrollLinkToCenter(newLink, list);
     }
   }
 
   // rootMargin is static after construction — if the offset custom property
+  // changes at a breakpoint, the observer will use the value from init time.
+  // The click handler re-reads offset per click to stay responsive.
   const offset = getOffset(container);
   const observer = new IntersectionObserver(
     entries => {

@@ -48,6 +48,9 @@ export function getMergedTypeBuckets(aggregations) {
         ? subtypeConfig
         : [subtypeConfig];
       // Collect subtypes from all fields for this parent, then sort globally by
+      // count so mixed-field parents (e.g. publication with field_publication_type
+      // + field_undrr_publication_types + field_irp_publication_subtype) render
+      // in a single count-ordered list rather than per-field groups.
       const allSubtypes = [];
       for (const config of configs) {
         const subtypeBuckets = aggregations[config.field]?.buckets || [];

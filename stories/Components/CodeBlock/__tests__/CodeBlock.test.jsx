@@ -24,6 +24,8 @@ import { CodeBlock } from '../CodeBlock';
 
 describe('CodeBlock', () => {
   // --------------------------------------------------
+  // Rendering — plain
+  // --------------------------------------------------
 
   it('renders code in a pre/code block', () => {
     render(<CodeBlock code="const x = 1;" />);
@@ -39,6 +41,8 @@ describe('CodeBlock', () => {
     expect(container.querySelector('figure')).toBeNull();
   });
 
+  // --------------------------------------------------
+  // Rendering — with language
   // --------------------------------------------------
 
   it('applies language class when language prop is provided', () => {
@@ -57,6 +61,8 @@ describe('CodeBlock', () => {
     expect(container.querySelector('code').textContent).toBe('plain code');
   });
 
+  // --------------------------------------------------
+  // Rendering — with filename
   // --------------------------------------------------
 
   it('renders figure.mg-code-block when filename is provided', () => {
@@ -83,6 +89,8 @@ describe('CodeBlock', () => {
   });
 
   // --------------------------------------------------
+  // Line numbers
+  // --------------------------------------------------
 
   it('applies showLineNumbers when lineNumbers prop is true', () => {
     const { container } = render(
@@ -103,12 +111,16 @@ describe('CodeBlock', () => {
   });
 
   // --------------------------------------------------
+  // Accessibility — plain
+  // --------------------------------------------------
 
   it('has no a11y violations (plain)', async () => {
     const { container } = render(<CodeBlock code="const x = 1;" />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  // --------------------------------------------------
+  // Accessibility — with language
   // --------------------------------------------------
 
   it('has no a11y violations (with language)', async () => {
@@ -119,6 +131,8 @@ describe('CodeBlock', () => {
   });
 
   // --------------------------------------------------
+  // Accessibility — with filename
+  // --------------------------------------------------
 
   it('has no a11y violations (with filename)', async () => {
     const { container } = render(
@@ -127,6 +141,8 @@ describe('CodeBlock', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  // --------------------------------------------------
+  // Accessibility — filename + language
   // --------------------------------------------------
 
   it('has no a11y violations (filename + language)', async () => {

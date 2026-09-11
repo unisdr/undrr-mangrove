@@ -50,6 +50,8 @@ const QRCodeModal = ({
   const [qrCodeCopied, setQrCodeCopied] = useState(false);
 
   // Reset the "copied" confirmation when the modal reopens. Tracking the
+  // previous isOpen in a ref lets us detect the false→true transition during
+  // render — no extra useEffect round-trip needed.
   const prevIsOpenRef = useRef(isOpen);
   if (isOpen !== prevIsOpenRef.current) {
     prevIsOpenRef.current = isOpen;

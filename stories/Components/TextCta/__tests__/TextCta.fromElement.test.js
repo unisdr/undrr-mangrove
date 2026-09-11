@@ -10,6 +10,8 @@ function createContainer(attrs = {}) {
 
 describe('textCtaFromElement', () => {
   // --------------------------------------------------
+  // Full extraction
+  // --------------------------------------------------
 
   it('extracts all attributes from a fully-populated element', () => {
     const buttons = JSON.stringify([
@@ -56,6 +58,8 @@ describe('textCtaFromElement', () => {
   });
 
   // --------------------------------------------------
+  // Defaults for bare element
+  // --------------------------------------------------
 
   it('returns defaults for a bare element', () => {
     const props = textCtaFromElement(createContainer());
@@ -77,6 +81,8 @@ describe('textCtaFromElement', () => {
   });
 
   // --------------------------------------------------
+  // JSON button parsing
+  // --------------------------------------------------
 
   it('parses buttons JSON from data-buttons attribute', () => {
     const buttons = JSON.stringify([{ label: 'Go', url: '/go' }]);
@@ -87,6 +93,8 @@ describe('textCtaFromElement', () => {
   });
 
   // --------------------------------------------------
+  // Malformed JSON
+  // --------------------------------------------------
 
   it('handles malformed JSON gracefully', () => {
     const props = textCtaFromElement(
@@ -96,6 +104,8 @@ describe('textCtaFromElement', () => {
     expect(props.buttons).toEqual([]);
   });
 
+  // --------------------------------------------------
+  // Boolean centered attribute
   // --------------------------------------------------
 
   it('treats missing centered as true', () => {
@@ -113,6 +123,8 @@ describe('textCtaFromElement', () => {
     expect(props.centered).toBe(true);
   });
 
+  // --------------------------------------------------
+  // Headline level parsing
   // --------------------------------------------------
 
   it('clamps invalid headline-level to 2', () => {

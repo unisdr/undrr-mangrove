@@ -28,6 +28,8 @@ const config = {
   testRegex: ['(/__tests__/.*|\\.(test|spec))\\.(js|jsx)$'],
 
   // Build output contains copies of the source tree, including its test files.
+  // Those copies compile against a flattened directory layout and fail, so
+  // `yarn test` would break for anyone who had previously run `yarn build`.
   testPathIgnorePatterns: [
     '/node_modules/',
     '/dist/',

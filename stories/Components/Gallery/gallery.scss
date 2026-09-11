@@ -369,6 +369,9 @@
     }
 
     // The pill is dark --mg-color-neutral-700, but the ring is offset 2px, so
+    // it is drawn clear of the pill on the --mg-color-neutral-50 letterbox of
+    // __image-wrapper, not on the pill. Measured there the default ring is
+    // 4.50:1 and an inverse ring 1.24:1 -- invisible. Keep the default ring.
     &:focus-visible {
       @include mg-focus-ring;
     }
@@ -436,6 +439,9 @@
     }
 
     // The pill is dark --mg-color-neutral-700, but the ring is offset 2px, so
+    // it is drawn clear of the pill on the --mg-color-neutral-50 letterbox of
+    // __image-wrapper, not on the pill. Measured there the default ring is
+    // 4.50:1 and an inverse ring 1.24:1 -- invisible. Keep the default ring.
     &:focus-visible {
       @include mg-focus-ring;
     }

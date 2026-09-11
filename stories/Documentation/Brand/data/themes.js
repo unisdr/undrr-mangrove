@@ -105,6 +105,16 @@ export const themes = {
     url: 'mcr2030.undrr.org',
     tagline: 'Making Cities Resilient 2030',
     // To add the MCR2030 logo:
+    // 1. Upload the SVG to the CDN at: logos/mcr2030/mcr2030-logo.svg
+    // 2. Replace `null` below with:
+    //    {
+    //      src: `${CDN}/mcr2030/mcr2030-logo.svg`,
+    //      srcWhite: `${CDN}/mcr2030/mcr2030-logo-white.svg`,
+    //      alt: 'MCR2030 logo',
+    //      variants: [
+    //        { label: 'Logo (SVG)', url: `${CDN}/mcr2030/mcr2030-logo.svg` },
+    //      ],
+    //    }
     logo: null,
   },
   'IRP Theme': {

@@ -91,6 +91,8 @@ describe('Radio', () => {
   });
 
   // --------------------------------------------------
+  // Error state
+  // --------------------------------------------------
 
   it('renders error text with aria-invalid and role="alert"', () => {
     render(
@@ -153,6 +155,8 @@ describe('Radio', () => {
     ).toBeInTheDocument();
   });
 
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

@@ -1,6 +1,12 @@
 // Preview access
+// Soft preview gate for unfinished UNDRR pages. CSS hides the page on parse
+// (via :has()); the runtime layers a modal over it and asks for a PIN.
+// Not a security mechanism (see preview-access.js header).
 
 // 1. The gate. While a [data-mg-preview-access] element exists in the document
+//    and has not been marked unlocked, hide all direct children of <body>
+//    except the overlay. visibility (not display) preserves layout so the
+//    page does not reflow on unlock.
 body:has([data-mg-preview-access]:not(.mg-preview-access--unlocked))
   > *:not(.mg-preview-access__overlay) {
   visibility: hidden !important;
@@ -96,6 +102,8 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     border-radius: 0;
 
     // Two signals, two tokens, matching _form-base.scss: the border says
+    // "this field is active" and stays brand-coloured (--mg-color-form-focus);
+    // the ring says "the keyboard is here" and reads the shared focus token.
     &:focus {
       @include mg-focus-ring;
 
@@ -107,6 +115,11 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     padding: var(--mg-spacing-100) var(--mg-spacing-200);
 
     // Buttons take `text`, not `ui` — the rule is uniform across the library
+    // (REVIEW-CHECKLIST.md) and `_foundational.scss` puts bare `button` there
+    // too. This one carried `ui` only because it predated the role model and
+    // used $mg-font-family-headings. Both roles resolve to Noto Sans Arabic in
+    // Arabic, so the change is Latin-only: Roboto Condensed to Roboto, which is
+    // what every other Mangrove button already renders in.
     font-family: var(--mg-font-family-text);
     font-size: $mg-font-size-300;
     font-weight: 600;
@@ -117,6 +130,8 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     cursor: pointer;
 
     // rgb(var(--mg-color-interactive-active)) equals rgb(var(--mg-color-interactive)) in several
+    // themes (PW, IRP, MCR, DELTA), so layer a brightness shift to ensure
+    // the hover affordance is visible everywhere.
     &:hover {
       background: rgb(var(--mg-color-interactive-active));
       filter: brightness(0.92);

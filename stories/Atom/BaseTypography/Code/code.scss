@@ -51,6 +51,8 @@ pre > code {
 }
 
 // Language badge — shared positioning rules
+// data-language: hand-authored HTML (<pre data-language="Bash">)
+// :has selector: react-syntax-highlighter puts language-X on <code>, not <pre>
 pre[data-language],
 pre:has(> code[class*="language-"]) {
   > code {
@@ -145,6 +147,12 @@ figure.mg-code-block {
 }
 
 // Prism token colours — used by react-syntax-highlighter in Storybook/React.
+// These rules are also available if Prism.js is separately loaded (e.g. via
+// a Drupal module), but Mangrove does not load Prism itself. Background is
+// rgb(var(--mg-color-neutral-800)).
+// NOTE: .token.* class names are Prism.js's API — they are emitted by the
+// tokeniser, not defined by Mangrove. Do not rename or add mg- prefixes.
+// Mangrove owns only the colour values applied here.
 .token.comment,
 .token.prolog,
 .token.doctype,

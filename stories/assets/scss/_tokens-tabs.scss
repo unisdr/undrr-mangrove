@@ -1,6 +1,13 @@
 // Mangrove's v2 tab colours.
 
 // A mixin rather than a plain :root block, and included inside EACH runtime
+// theme block as well as at :root, because these tokens are var() chains onto
+// theme-owned values. A custom property declared at :root resolves its inner
+// var() against :root and then inherits the already-resolved value, so a
+// theme override never reaches it: `.mg-theme-mcr` repointing
+// --mg-color-interactive would leave --mg-tab-color--active still holding the
+// UNDRR blue it resolved to at :root. Re-emitting the declarations inside the
+// theme block is what makes them re-resolve against that theme's values.
 
 // Horizontal pills use readable theme text on a light brand tint. The legacy filled
 // tab tokens remain available to older markup and explicit stacked sections.

@@ -1,8 +1,17 @@
 // .mg-buttons {
+//   margin-bottom: 1em;
+//   //Media queries
 
-// @media (max-width: $mg-breakpoint-mobile) {
+//   @media (max-width: $mg-breakpoint-mobile) {
+//     display: flex;
+//     flex-direction: column;
+//   }
 
-// @media (max-width: $mg-breakpoint-tablet) {
+//   @media (max-width: $mg-breakpoint-tablet) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+// }
 
 .mg-button {
   align-items: center;
@@ -32,6 +41,9 @@
   }
 
   // Visible, token-driven focus ring. A neutral separator ring plus a
+  // focus-coloured ring reads clearly on any button background (unlike a
+  // same-colour glow), follows the button's border-radius, and is not clipped
+  // by overflow like an outline can be.
   &:focus-visible {
     @include mg-focus-ring;
   }
@@ -52,8 +64,16 @@
 // var(--mg-color-button-background); outline: 0; }` rule used to live here.
 
 // Two things were wrong with it. It was an unscoped element selector, so it
+// stripped the user-agent focus ring from every <button> in a consuming page,
+// including buttons Mangrove does not own and cannot style back. And what it
+// put in place was a glow in the button's own fill colour -- invisible against
+// the thing it surrounds -- which is the exact pattern the comment above
+// argues against.
 
 // It is not replaced with a scoped equivalent because none is needed:
+// .mg-button-primary/-secondary/-outline are only ever used alongside
+// .mg-button, which already takes the two-band ring above. Deleting the rule
+// hands unowned buttons back their UA outline, which is the correct default.
 
 .mg-button-primary {
   background-color: var(--mg-color-button-background);
@@ -74,6 +94,8 @@
 }
 
 // The outline modifier composes with the existing emphasis variants:
+// .mg-button.mg-button-primary.mg-button-outline or
+// .mg-button.mg-button-secondary.mg-button-outline.
 .mg-button-outline {
   background-color: transparent;
 }
@@ -105,6 +127,8 @@
 }
 
 // Compact editorial CTA: text plus a circular directional badge. Consumers opt
+// into this modifier so form submits and utility actions retain their
+// conventional button treatment.
 .mg-button.mg-button-cta {
   background: transparent;
   border-color: transparent;
@@ -196,7 +220,20 @@
 }
 
 // [dir='rtl'] {
+//   .button {
+//     &.button-primary {
+//       &.button-arrow {
+//         &::after {
+//           @include transform(rotate(180deg));
 
-// margin-left: 0;
+//           margin-left: 0;
+//           margin-right: var(--mg-spacing-25);
+//         }
 
-// &:hover::after {
+//         &:hover::after {
+//           @include transform(translate(-50%, 0) rotate(180deg));
+//         }
+//       }
+//     }
+//   }
+// }

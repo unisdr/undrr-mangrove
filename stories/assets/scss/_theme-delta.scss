@@ -1,4 +1,8 @@
 // Delta Resilience theme — runtime CSS custom property overrides.
+// Applied when .mg-theme-delta is present on <body> or a wrapping element.
+// ---------------------------------------------------------------------
+// Every token in this block is generated from tokens/delta.yaml, merged over
+// tokens/mangrove.yaml and tokens/undrr.yaml.
 @import "./generated/tokens-delta";
 
 .mg-theme-delta {

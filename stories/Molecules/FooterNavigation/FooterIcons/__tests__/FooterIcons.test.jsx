@@ -5,6 +5,8 @@ import { FooterIcons } from '../FooterIcons';
 
 describe('FooterIcons', () => {
   // --------------------------------------------------
+  // Structure
+  // --------------------------------------------------
 
   it('renders a <ul> with class mg-footer--social-links', () => {
     const { container } = render(<FooterIcons />);
@@ -18,6 +20,8 @@ describe('FooterIcons', () => {
     expect(container.querySelectorAll('li')).toHaveLength(5);
   });
 
+  // --------------------------------------------------
+  // Accessible names on icon-only links
   // --------------------------------------------------
 
   it('every social link has an aria-label', () => {
@@ -39,12 +43,16 @@ describe('FooterIcons', () => {
   });
 
   // --------------------------------------------------
+  // Inverted variant
+  // --------------------------------------------------
 
   it('applies inverted class when variant="inverted"', () => {
     const { container } = render(<FooterIcons variant="inverted" />);
     expect(container.querySelector('ul')).toHaveClass('inverted');
   });
 
+  // --------------------------------------------------
+  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations (default)', async () => {

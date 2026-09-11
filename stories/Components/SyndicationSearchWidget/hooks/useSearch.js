@@ -59,6 +59,8 @@ export function useSearch() {
       const { force = false } = options;
 
       // Check minimum query length (unless forced, has facets, or query is empty)
+      // Empty queries are allowed - they return all results (match_all)
+      // Short queries (1-2 chars) are blocked unless forced or has facets
       const hasActiveFacets =
         Object.keys(facets).length > 0 ||
         Object.keys(customFacets || {}).length > 0;

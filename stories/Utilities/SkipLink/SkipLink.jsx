@@ -43,6 +43,9 @@ export function SkipLink({
   const classes = ['mg-skip-link', className].filter(Boolean).join(' ');
 
   // Fragment navigation alone moves the scroll position; whether it also moves
+  // focus has never been consistent across browsers. Moving it here makes the
+  // behaviour the same everywhere, and the href still works without
+  // JavaScript.
   const handleClick = event => {
     const target =
       typeof document === 'undefined'

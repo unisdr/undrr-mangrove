@@ -66,12 +66,34 @@
 }
 
 // Focus ring — token-driven two-band visible focus for keyboard users.
+// Emits a consistent WCAG 2.2 AA focus indicator wherever an interactive
+// element needs one. The ring colour is --mg-color-focus-ring (gold-800),
+// which is deliberately NOT a brand colour: a brand-coloured ring vanishes
+// against the brand's own filled surfaces.
 
 // Two bands, not one. A bare gold ring is only legible where it happens to
+// land on the page: it measures 5.58:1 on --mg-color-neutral-0 but 2.68:1 on
+// --mg-color-neutral-200 and 1.95:1 on -300, and consumers can put any
+// component on those via the .mg-u-background-color--* utilities. The white
+// separator band hugs the element and the gold ring sits immediately outside
+// it, so the indicator is judged against the band (5.58:1) rather than against
+// whatever surface it happens to land on. That is what makes it safe
+// everywhere, and it is why this is the default rather than the exception.
 
 // The ring is an `outline` and only the band is a `box-shadow`, deliberately:
+// forced-colors mode drops box-shadow entirely (even inside a media query) but
+// keeps outlines and repaints them in system colours. So in forced colours the
+// band falls away and the ring survives — degrading to the single-band
+// behaviour rather than to no indicator at all.
 
 // Callers that paint their own box-shadow (an inset indicator bar, a radio's
+// centre dot) must re-declare it alongside the band, or the band will replace
+// it. On links, pair with an explicit `text-decoration: underline` so the
+// affordance is not colour-only.
+// Deliberately sets no `border-radius`. Both the outline and the box-shadow
+// spread already follow the element's own radius, so declaring one here would
+// reshape every element it is included on -- a .mg-button would snap from
+// --mg-radius-button to the ring radius the moment it took focus.
 @mixin mg-focus-ring {
   // --mg-color-neutral-0 is the separator, matching the two-band rules
   // .mg-button, .mg-chip and _form-base.scss already ship.
@@ -81,8 +103,14 @@
 }
 
 // Inset variant, for full-bleed rows that cannot afford an outward ring — a
+// mega-menu sidebar row or a tab sitting flush in its bar, where a ring drawn
+// outside the element would be clipped by the container or would overlap its
+// neighbour.
 
 // Both bands are inset box-shadows here, because an inset ring cannot be an
+// outline. That means forced-colors drops the whole indicator, so unlike
+// mg-focus-ring this variant has to restore one explicitly — hence the media
+// query. Highlight matches what .mg-chip already uses.
 @mixin mg-focus-ring-inset {
   box-shadow:
     inset 0 0 0 var(--mg-focus-ring-offset) rgb(var(--mg-color-neutral-0)),
@@ -97,6 +125,9 @@
 }
 
 // Card image hover zoom — a subtle, modern "state affordance". Include inside
+// a card variant whose visual has `overflow: hidden` so the scale stays framed.
+// Motion is gated behind prefers-reduced-motion so it never animates for users
+// who opt out.
 @mixin mg-card-image-zoom {
   .mg-card__image {
     @media (prefers-reduced-motion: no-preference) {
@@ -176,5 +207,13 @@
 }
 
 // --- Removed placeholders ---
+// %checkbox-radio-before, %select_default — REMOVED (February 2026).
+//   Migrated to .mg-form-check__input and .mg-form-select in _form-base.scss.
+// %ctaimg, %chevron-right-expanded, %pseudo-icon — REMOVED (March 2026, #854). CtaLink removed.
+// %paragraph-font-400, %footer-block, %arrow, %language_switcher, %absolute__overflow,
+// %select_option, %select_rtl, %select_rtl_after, %no-animation, %header,
+// %sub-external, %external, %footerlink, %footerlinkinvert, %selectoption, %logo
+//   — REMOVED (March 2026, #856). Zero consumers.
+// @mixin background() — REMOVED (March 2026, #856). Zero callers; duplicated @mixin background-image().
 
 /* placeholder end */

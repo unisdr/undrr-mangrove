@@ -195,6 +195,10 @@ function SyndicationSearchWidgetInner() {
   const deferredQuery = useDeferredValue(inputValue);
 
   // Update context when deferred query changes.
+  // Skip the first render: on initial mount, useHashSync may have already
+  // dispatched setQuery from the URL hash (e.g. #query=news). If we ran an
+  // unconditional setQuery('') here on mount we would stomp that value before
+  // INITIALIZE could preserve it. Subsequent renders sync user input as normal.
   const isFirstQuerySync = useRef(true);
   useEffect(() => {
     if (isFirstQuerySync.current) {
@@ -235,6 +239,10 @@ function SyndicationSearchWidgetInner() {
   const { isLoading } = state;
 
   // Resolve external facets target (AC2: facets in a separate DOM region).
+  // Looked up once on mount when a selector is configured. If the target
+  // node isn't in the document, fall back to the in-widget layout and log
+  // a single console warning so editors and developers can see why the
+  // portal didn't take effect.
   const [facetsTargetEl, setFacetsTargetEl] = useState(null);
   useEffect(() => {
     if (!facetsActive || !facetsTarget || typeof document === 'undefined') {
@@ -256,6 +264,8 @@ function SyndicationSearchWidgetInner() {
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
   // Resolve external search-input target (AC3: search input rendered in a
+  // separate DOM region, typically a hero/banner region while results
+  // render lower on the page). Same pattern as facetsTarget.
   const [searchTargetEl, setSearchTargetEl] = useState(null);
   useEffect(() => {
     if (!showSearchBox || !searchTarget || typeof document === 'undefined') {

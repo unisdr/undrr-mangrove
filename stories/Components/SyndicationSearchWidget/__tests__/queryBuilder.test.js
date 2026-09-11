@@ -561,6 +561,8 @@ describe('queryBuilder', () => {
 
     it('applies post_filter for programmatic default filters when facets are hidden', () => {
       // Regression: default filters (e.g. injected via defaultFilters / config
+      // modifier) land in facet state and must still reach Elasticsearch even
+      // though the facet UI is hidden. See unisdr/undrr-mangrove#1031.
       const config = { ...DEFAULT_CONFIG, showFacets: false };
       const result = buildQuery(
         { ...defaultState, facets: { field_country_region: ['75'] } },

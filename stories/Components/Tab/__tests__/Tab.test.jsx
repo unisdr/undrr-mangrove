@@ -74,6 +74,8 @@ function renderAndInit(
 }
 
 // -------------------------------------------------------
+// Tests
+// -------------------------------------------------------
 
 describe('Tab', () => {
   beforeEach(() => {
@@ -114,6 +116,8 @@ describe('Tab', () => {
     expect(container.querySelector('.mg-tabs')).not.toBeInTheDocument();
   });
 
+  // -------------------------------------------------------
+  // Horizontal ARIA
   // -------------------------------------------------------
 
   describe('horizontal tabs ARIA', () => {
@@ -160,6 +164,8 @@ describe('Tab', () => {
     });
   });
 
+  // -------------------------------------------------------
+  // Stacked / disclosure ARIA
   // -------------------------------------------------------
 
   describe('stacked tabs ARIA (disclosure pattern)', () => {
@@ -591,6 +597,8 @@ describe('Tab', () => {
   });
 
   // -------------------------------------------------------
+  // Stacked toggle behavior
+  // -------------------------------------------------------
 
   describe('stacked toggle behavior', () => {
     it('reveals a find-in-page match and synchronises the disclosure trigger', () => {
@@ -650,6 +658,8 @@ describe('Tab', () => {
     });
   });
 
+  // -------------------------------------------------------
+  // Keyboard navigation
   // -------------------------------------------------------
 
   describe('keyboard navigation', () => {
@@ -716,6 +726,8 @@ describe('Tab', () => {
     });
   });
 
+  // -------------------------------------------------------
+  // defaultOpen
   // -------------------------------------------------------
 
   describe('defaultOpen', () => {
@@ -793,6 +805,8 @@ describe('Tab', () => {
   });
 
   // -------------------------------------------------------
+  // singleOpen
+  // -------------------------------------------------------
 
   describe('singleOpen', () => {
     it('opening one panel closes the previously open panel', () => {
@@ -850,6 +864,8 @@ describe('Tab', () => {
     });
   });
 
+  // -------------------------------------------------------
+  // filterable
   // -------------------------------------------------------
 
   describe('filterable', () => {
@@ -1008,6 +1024,8 @@ describe('Tab', () => {
   });
 
   // -------------------------------------------------------
+  // mgTabs lifecycle (wrapper function)
+  // -------------------------------------------------------
 
   describe('mgTabs lifecycle', () => {
     const { mgTabs: realMgTabs } = jest.requireActual(
@@ -1041,6 +1059,8 @@ describe('Tab', () => {
     });
   });
 
+  // -------------------------------------------------------
+  // Accessibility (jest-axe)
   // -------------------------------------------------------
 
   describe('optional mobile stacking', () => {

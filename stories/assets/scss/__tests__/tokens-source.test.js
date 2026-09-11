@@ -49,11 +49,16 @@ describe('design-token generator', () => {
     }
 
     // Run `yarn build:tokens` to fix. (A partial that is absent entirely
+    // cannot reach here: globalSetup generates missing ones before any suite
+    // runs, so a fresh clone starts from an up-to-date tree.)
     expect(stale).toEqual([]);
   });
 
   test('emitted bytes match the committed baseline', () => {
     // The stale-partial test above cannot catch this. On a fresh clone the
+    // partials are written from `build()` by globalSetup, so it compares the
+    // generator to its own output. This compares it to a digest committed at
+    // the time the output was last reviewed.
     const baseline = readBaseline();
     const actual = baselineOf(build());
     expect(actual.algorithm).toBe(baseline.algorithm);
@@ -111,6 +116,8 @@ describe('design-token generator', () => {
 
   test('writes are idempotent: a second build changes no bytes', () => {
     // Generated output sits inside webpack's watch scope. Rewriting identical
+    // bytes bumps mtime, rebuilds, and invalidates the chunk hash held by any
+    // open Storybook tab.
     const first = build();
     const second = build();
     for (const [relative, contents] of first) {
@@ -120,6 +127,8 @@ describe('design-token generator', () => {
 
   test('$description reasoning survives into the generated files', () => {
     // These record real decisions — a hover step that is deliberately lighter
+    // than its base, and a deliberate WCAG divergence. Losing them would make
+    // the next reader "fix" them.
     const delta = build().get(
       'stories/assets/scss/generated/_tokens-delta.scss'
     );
@@ -141,6 +150,10 @@ describe('design-token generator', () => {
     expect(literals.length).toBeGreaterThan(10);
 
     // Scoped to the hand-written theme files, which are where the duplication
+    // actually happened: _theme-delta.scss held an independent copy of the
+    // DELTA brand alongside the generated one. (_tokens-data-viz.scss does
+    // re-state neutral and DELTA channel values; that palette is a separate
+    // concern and is not migrated here.)
     const hardcoded = [];
     const guarded = [
       ...['preventionweb', 'irp', 'mcr', 'delta'].map(
@@ -242,6 +255,8 @@ color: { $type: color, tag: { $value: '{color.interactive}' } }`
 
   test('a $value with nothing after it', () => {
     // A YAML key with an empty value parses as null. It used to reach the
+    // emitter and print the string "null" -- invalid CSS a browser drops in
+    // silence, which is the failure mode this whole suite exists to prevent.
     write(
       'x.yaml',
       `$brand: { id: x, title: X, selector: '.x' }
@@ -273,6 +288,8 @@ color: { $type: color, tag: { $value: '{brand.primary}' } }`
 
   test('a colour that cannot be expressed in the shape it is emitted in', () => {
     // The value-type trap, caught at the source. A named colour, an oklch()
+    // value or a finished rgb() cannot be channels; a triplet in a colour
+    // position is invalid CSS and is discarded silently.
     write(
       'x.yaml',
       `$brand: { id: x, title: X, selector: '.x' }
@@ -326,6 +343,10 @@ color: { $type: color, tag: { $value: '{color.interactive}' } }`
 
   test('an override that re-values a rem token as a link', () => {
     // The shape an override inherits is enforced, not quietly abandoned.
+    // tokens/delta.yaml did exactly this: it re-valued a `$format: rem`
+    // token as `{width.600}`, and because the missing $format silently
+    // reverted the token to `literal` the generator emitted a var() chain
+    // where the base declared a rem conversion. Now it says so.
     write(
       'mangrove.yaml',
       `${BASE}

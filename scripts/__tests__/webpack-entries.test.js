@@ -66,6 +66,8 @@ describe('webpack component entries', () => {
 
   test('every entry wrapper re-exports its source module in full', () => {
     // `export *` does not re-export a default binding, so a wrapper over a
+    // module that has one must forward it explicitly or the bundle silently
+    // loses an export it used to have.
     const wrappers = Object.values(entries).filter(file =>
       file.endsWith('.entry.js')
     );
