@@ -7,34 +7,20 @@ import * as Stories from './ArticleStory.stories';
 
 > **Note:** Reference design for [undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-A news or event article page: headline, header image, social share, reading
-body, related content, editors' recommendations, taxonomy tags and page
-feedback — the full page, not just the header. The ticket compares
-undrr.org's current story pages against news.un.org, UNESCO and UNDP, which
-run a large image above the headline rather than a small one beside it. This
-pattern makes that comparison directly testable, and separates two questions
-the ticket raises that are easy to conflate:
+A full article-page pattern (not just a header): headline, hero image, share,
+body, related content, recommendations, taxonomy tags and feedback. It is a
+reference implementation for comparing hero treatments in
+[undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060).
 
-- **How prominent is the header image?** `imageProminence` — `large` bleeds
-  it full width; `compact` keeps it inside the reading column.
-- **Is the header image the same one used for teasers and social cards?**
-  `heroImage` — `main` reuses that image, `alternate` shows a different one
-  in that position, `none` drops it from the article page entirely without
-  affecting what a teaser card or an Open Graph tag uses.
+- **Header prominence** (`imageProminence`): `large` (full bleed), `compact`
+  (reading-column width), `split` (text and image side-by-side).
+- **Header image source** (`heroImage`): `main`, `alternate`, or `none`,
+  independent of teaser/social image choices.
 
-The content is a real undrr.org story — [Towards knowledge, action and resolve
-to address non-economic losses in the Pacific Indigenous Communities Nadi,
-Fiji](https://www.undrr.org/news/towards-knowledge-action-and-resolve-address-non-economic-losses-pacific-indigenous) —
-so reviewers are judging the layout against an actual case rather than a
-synthetic one. The live page returns a bot-check 403 to automated fetches, so
-this was built from a saved copy of the page. The headline, date, source
-line, two-sentence summary, editors' recommendations, taxonomy tags
-and both images (including the article's second inline photo, used here for
-the `alternate` `heroImage` state) are reproduced as published. The reading
-body is placeholder (lorem ipsum) text, not the article — sized to roughly
-the same length, with inline links in the same places a real body would carry
-them, so the `mg-reading` column can be judged at a realistic length without
-reproducing the article's text.
+Fixture content is based on a real undrr.org story:
+[Towards knowledge, action and resolve to address non-economic losses in the Pacific Indigenous Communities Nadi, Fiji](https://www.undrr.org/news/towards-knowledge-action-and-resolve-address-non-economic-losses-pacific-indigenous).
+Metadata and media are reproduced from a saved copy; body text is placeholder
+content sized for realistic reading-column evaluation.
 
 ## Large, prominent image
 
@@ -46,63 +32,38 @@ reproducing the article's text.
 
 <Canvas of={Stories.CompactImage} />
 
-Closer to the current undrr.org treatment: the image sits at the same width
-as the headline and body rather than bleeding to the screen edge.
+Image aligns with headline/body width rather than full bleed.
 
 ## No image on the article page
 
 <Canvas of={Stories.NoHeroImage} />
 
-The headline carries the page on its own. A teaser card for this same story
-could still show the main image — that choice lives with the teaser, not
-here.
+Article renders without a hero image; teaser/social image selection stays separate.
 
 ## A different image than the teaser
 
 <Canvas of={Stories.AlternateHeroImage} />
 
-Demonstrates the decoupling directly: the image here is not the one a card
-or social preview for this story would use.
+Demonstrates decoupling from teaser/social image usage.
 
 ## Split hero (text and image side by side)
 
 <Canvas of={Stories.SplitHero} />
 
-A third `imageProminence`, added as a "left field" comparison point:
-education.gouv.fr runs its news pages with a two-column hero on a tinted
-band — headline/lede/byline in one column, a smaller image beside it, rather
-than a large image above or below the text. This reuses the shipped `Hero`
-component's `layout="split"` (already used by `ContentHub`) rather than
-introducing a new header treatment: `split="2/3"` keeps the text column
-dominant, and `data[0].media` is omitted when `heroImage` is `"none"`, so
-`Hero` falls back to a text-only band gracefully.
+Alternative two-column hero using the existing `Hero` component
+(`layout="split"` and `split="2/3"`). Omitting `data[0].media` in `heroImage="none"`
+falls back to a text-only band.
 
 ## Building one
 
-The page composes existing, shipped pieces rather than introducing new ones:
-`mg-container-full-width` for the header image's bleed, `mg-reading`/
-`mg-reading__article`/`mg-grid mg-grid--article` for the sidebar/article split
-and `TableOfContents`, `VerticalCard` in an `mg-grid` for related content,
-`ShareButtons` in the margin rail,
-`mg-tag-container` for the taxonomy links under "Explore further",
-`Imagecaption` for the header image's caption and credit, and
-`UserFeedback` for the "Is this page useful?" prompt and report-an-issue link
-— the same building blocks `ContentHub` uses, plus the ones a full article
-page needs that a hub page doesn't. The body also scatters `QuoteHighlight`,
-`HighlightBox` and `EmbedContainer` as a rough positioning experiment — see
-"Still to test". What is new is demonstration-only: the `mg-demo-article-*`
-classes that size the header image, loaded only with these stories.
-"Editors' recommendations" is plain markup — there is no shipped component
-for it yet.
+Composes existing pieces (`Hero`, `TableOfContents`, `ShareButtons`,
+`VerticalCard`, `Imagecaption`, `UserFeedback`, reading/grid utilities) plus
+story-only `mg-demo-article-*` sizing classes. "Editors' recommendations"
+remains plain markup.
 
 ## Changelog
 
-- **1.0** — 2026-09-10: Initial reference design for the news/event article
-  layout — large and compact image variants, and a `heroImage` toggle
-  decoupling the header image from the teaser/social image, in English and
-  Arabic. ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))
-  Iterated through content-review, split-hero, `Hero`/`Imagecaption` fixes at
-  the source, and an `mg-grid--article` extraction — see `Hero`, `Grid` and
-  `PagePatterns`'s own changelogs for the shared-component side of those. The
-  margin rail's vertical stack was the last demo-only CSS to graduate: it's
-  now `mg-u-flex-column`/`mg-u-gap-200` (see the utility CSS reference).
+- **1.0** — 2026-09-10: Initial article-story reference design with
+  `imageProminence` and `heroImage` controls in English and Arabic, then
+  iterated with split-hero support and shared-style extraction.
+  ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))
