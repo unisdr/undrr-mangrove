@@ -27,7 +27,7 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 ## What is Mangrove?
 
-Mangrove is UNDRR's component library for consistent, accessible web development. Read **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** to understand what's shared across UNDRR web properties and where your project fits.
+Mangrove is UNDRR's component library for consistent, accessible web development. Read **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** for platform context.
 
 Mangrove provides:
 
@@ -40,7 +40,7 @@ Mangrove provides:
 
 ## Integration approaches
 
-Choose the approach that fits your project. Each guide has its own quick start with working code examples.
+Choose the integration path that matches your stack.
 
 ### Vanilla HTML/CSS (simplest)
 
@@ -81,7 +81,7 @@ yarn add @undrr/undrr-mangrove
 
 ### Hydration
 
-For Drupal, Astro, or any server-rendered framework that needs React interactivity. Server renders HTML containers with `data-mg-*` attributes; the `createHydrator` runtime mounts React components into them.
+For Drupal, Astro, or other server-rendered frameworks. The server renders HTML containers with `data-mg-*` attributes, then `createHydrator` mounts React behavior.
 
 - <LinkTo kind="getting-started-integration-hydration-guide" story="docs">
     Hydration guide
@@ -100,7 +100,7 @@ All assets are served from versioned CDN endpoints. See the <LinkTo kind="gettin
 - Supports modern evergreen browsers -- see <LinkTo kind="getting-started-browser-support" story="docs">browser support</LinkTo>
 - Supports right-to-left (RTL) layouts -- components adapt automatically when `dir="rtl"` is set on the document
 
-For the full architectural picture, see the <LinkTo kind="contributing-architecture" story="docs">architecture guide</LinkTo>.
+For deeper context, see the <LinkTo kind="contributing-architecture" story="docs">architecture guide</LinkTo>.
 
 ## Further reading
 

@@ -1,41 +1,37 @@
-# Mangrove documentation
+# Mangrove documentation index
 
-Guides for building, testing, and maintaining components in the Mangrove library. All guides in this directory are also published in [Storybook](https://unisdr.github.io/undrr-mangrove/).
+This directory holds the source files for documentation published in Storybook.
 
-## Creating a component
+## Start here
 
-Start here when building a new component. Follow these guides in order:
+1. [Development setup](DEVELOPMENT.md)
+2. [Component guide](COMPONENT-GUIDE.md)
+3. [Testing guide](TESTING.md)
+4. [Review checklist](REVIEW-CHECKLIST.md)
 
-1. [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial from scaffolding to registration
-2. [Testing guide](TESTING.md) — unit, visual, and accessibility testing
-3. [Hydration authoring](HYDRATION-AUTHORING.md) — adding Drupal integration via `fromElement` and `createHydrator`
-4. [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
+## Core references
 
-## Standards
+| Topic | File |
+|---|---|
+| Architecture and delivery model | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Accessibility requirements | [ACCESSIBILITY.md](ACCESSIBILITY.md) |
+| Writing standards | [WRITING.md](WRITING.md) |
+| Hydration API and patterns | [HYDRATION.md](HYDRATION.md) |
+| CDN usage | [CDN-REFERENCE.md](CDN-REFERENCE.md) |
+| Release process | [RELEASES.md](RELEASES.md) |
 
-- [Accessibility](ACCESSIBILITY.md) — WCAG 2.2 AA requirements and testing methodology
-- [Writing guidelines](WRITING.md) — UX writing standards and UN terminology
-- [Writing guidelines (short)](WRITING-SHORT.md) — quick-reference writing rules
+## Specialist guides
 
-## Architecture
+- [ANALYTICS.md](ANALYTICS.md)
+- [CRITICAL-MESSAGING.md](CRITICAL-MESSAGING.md)
+- [BROWSER-SUPPORT.md](BROWSER-SUPPORT.md)
+- [AI-MCP-INTEGRATION.md](AI-MCP-INTEGRATION.md)
+- [AI-CODING-AGENTS.md](AI-CODING-AGENTS.md)
+- [AGENTS.md](AGENTS.md)
+- [DESIGN-SYSTEM-RESEARCH.md](DESIGN-SYSTEM-RESEARCH.md)
 
-- [Architecture](ARCHITECTURE.md) — build system, distribution channels, and Drupal integration
-- [Hydration guide](HYDRATION.md) — consumer-facing `createHydrator` API and integration examples
-- [CDN reference](CDN-REFERENCE.md) — using Mangrove via CDN without npm
+## Historical release notes
 
-## Releasing
-
-- [Release process](RELEASES.md) — versioning, tagging, and publishing to npm
-- [Release 1.5](RELEASE-1.5.md) — icon system change, new OnThisPageNav component, 1.5.1 brand guide addendum
-- [Release 1.4](RELEASE-1.4.md) — migration notes for the 1.4 release (may be removed after 2026)
-
-## Other guides
-
-- [Development setup](DEVELOPMENT.md) — local environment, Docker, and common commands
-- [Browser support](BROWSER-SUPPORT.md) — supported browsers and testing matrix
-- [Analytics](ANALYTICS.md) — event tracking and analytics integration
-- [Critical messaging](CRITICAL-MESSAGING.md) — emergency banner and alert patterns
-- [AI and MCP integration](AI-MCP-INTEGRATION.md) — AI manifest and MCP server configuration
-- [AI coding agent guidelines](AI-CODING-AGENTS.md) — practical guidance for AI agents modifying components
-- [Agents](AGENTS.md) — specialized Claude Code agent prompts
-- [Design system research](DESIGN-SYSTEM-RESEARCH.md) — survey of UN agency design systems
+- [RELEASE-2.0.md](RELEASE-2.0.md)
+- [RELEASE-1.5.md](RELEASE-1.5.md)
+- [RELEASE-1.4.md](RELEASE-1.4.md)

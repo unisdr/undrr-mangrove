@@ -1,4 +1,4 @@
-import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
@@ -16,350 +16,80 @@ import TableOfContents from '../Components/TableOfContents/TableOfContents';
 
 <TableOfContents
   tocData={[
-    { id: 'architecture-best-practices', text: 'Architecture best practices' },
-    { id: 'styling-best-practices', text: 'Styling best practices' },
+    { id: 'architecture', text: 'Architecture' },
+    { id: 'styling', text: 'Styling' },
     { id: 'progressive-enhancement', text: 'Progressive enhancement' },
+    { id: 'quality-checks', text: 'Quality checks' },
   ]}
   showNumbers={false}
 />
 
-Follow these guidelines to get the most out of Mangrove while building maintainable, accessible, and performant applications.
+Use these rules to keep integrations maintainable, accessible, and consistent across UNDRR sites.
 
-These practices keep your implementation consistent with the rest of Mangrove. See **<LinkTo kind="getting-started-about-mangrove" story="docs">About Mangrove</LinkTo>** for background on what's shared and why.
+## Architecture
 
-## Architecture best practices
+- Keep domain logic in your app and treat Mangrove as a UI layer.
+- Wrap Mangrove components where your product needs local defaults or analytics hooks.
+- Preserve semantic HTML structure from Storybook examples so accessibility and syndication assumptions stay valid.
+- For server-rendered apps, use `createHydrator` + `fromElement` rather than custom boot code.
 
-### 1. Component organization
+See:
 
-**File Structure**
+- <LinkTo kind="contributing-architecture" story="docs">
+    Architecture
+  </LinkTo>
+- <LinkTo kind="getting-started-integration-hydration-guide" story="docs">
+    Hydration guide
+  </LinkTo>
 
-```
-src/
-├── components/
-│   ├── ui/                    # Mangrove wrapper components
-│   │   ├── Button/
-│   │   │   ├── Button.jsx
-│   │   │   ├── Button.test.jsx
-│   │   │   └── Button.stories.jsx
-│   │   └── Card/
-│   │       ├── Card.jsx
-│   │       └── Card.test.jsx
-│   ├── features/              # Domain-specific components
-│   │   ├── ReportCard/
-│   │   ├── ContactForm/
-│   │   └── StatsOverview/
-│   └── layouts/               # Page layouts
-│       ├── Header/
-│       ├── Footer/
-│       └── MainLayout/
-├── hooks/                     # Custom hooks
-├── utils/                     # Utility functions
-└── styles/                    # Global styles
-    ├── base/                  # Base styles
-    ├── components/            # Component overrides
-    └── themes/                # Theme variants
-```
+## Styling
 
-**Wrapper Components**
+- Prefer Mangrove tokens (`--mg-*`) over hard-coded colors, spacing, and z-index values.
+- Keep overrides scoped and minimal; avoid broad global resets that can break component states.
+- Use `mg-` classnames as authored; avoid renaming or flattening BEM structures.
+- Pin production sites to a versioned CDN URL, not `latest`.
 
-```jsx
-// components/ui/Button/Button.jsx
-import React from 'react';
-import { CtaButton } from '@undrr/undrr-mangrove';
+See:
 
-const Button = ({
-  children,
-  variant = 'primary',
-  size = 'medium',
-  loading = false,
-  ...props
-}) => {
-  return (
-    <CtaButton
-      label={children}
-      Type={variant === 'primary' ? 'Primary' : 'Secondary'}
-      State={loading ? 'Disabled' : 'Active'}
-      {...props}
-    />
-  );
-};
-
-export default Button;
-```
-
-### 2. State management
-
-**Local State with useState**
-
-```jsx
-function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = useCallback(
-    field => e => {
-      setFormData(prev => ({
-        ...prev,
-        [field]: e.target.value,
-      }));
-
-      // Clear error when user starts typing
-      if (errors[field]) {
-        setErrors(prev => ({
-          ...prev,
-          [field]: '',
-        }));
-      }
-    },
-    [errors]
-  );
-
-  // ... rest of component
-}
-```
-
-**Global State with Context**
-
-```jsx
-// contexts/ThemeContext.jsx
-const ThemeContext = createContext();
-
-export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light');
-
-  const toggleTheme = useCallback(() => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
-  }, []);
-
-  useEffect(() => {
-    document.body.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
-  }
-  return context;
-};
-```
-
-### 3. Error handling
-
-**Error Boundaries**
-
-```jsx
-class MangroveErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('Mangrove component error:', error, errorInfo);
-    // Log to error reporting service
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="mg-alert mg-alert--error">
-          <h3 className="mg-heading mg-heading--4">Something went wrong</h3>
-          <p className="mg-paragraph">
-            We're sorry, but there was an error loading this component.
-          </p>
-          <CtaButton
-            label="Reload Page"
-            Type="Secondary"
-            onClick={() => window.location.reload()}
-          />
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-```
-
-**Graceful Degradation**
-
-```jsx
-function ReportCard({ report }) {
-  const [imageError, setImageError] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  return (
-    <VerticalCard
-      data={[
-        {
-          ...report,
-          imgback: imageError ? '/images/fallback-report.jpg' : report.image,
-          onImageError: () => setImageError(true),
-          onImageLoad: () => setLoading(false),
-        },
-      ]}
-      variant="primary"
-    />
-  );
-}
-```
-
-## Styling best practices
-
-### 1. CSS Custom Properties
-
-**Theme Variables**
-
-```css
-:root {
-  /* Mangrove overrides */
-  --mg-primary-color: #0066cc;
-  --mg-secondary-color: #28a745;
-  --mg-font-family-base: 'Inter', 'Roboto', sans-serif;
-
-  /* Custom variables */
-  --org-brand-blue: #003366;
-  --org-brand-green: #228b22;
-  --org-shadow-subtle: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme='dark'] {
-  --mg-primary-color: #4d9fff;
-  --mg-background-color: #1a1a1a;
-  --mg-text-color: #ffffff;
-}
-```
-
-**Component-Specific Variables**
-
-```scss
-.mg-custom-card {
-  // Use Mangrove variables
-  padding: var(--mg-spacing-4);
-  border-radius: var(--mg-border-radius);
-  box-shadow: var(--mg-shadow-sm);
-
-  // Define component-specific variables
-  --card-hover-transform: translateY(-2px);
-  --card-transition-duration: 0.2s;
-
-  transition: transform var(--card-transition-duration) ease;
-
-  &:hover {
-    transform: var(--card-hover-transform);
-  }
-}
-```
+- <LinkTo kind="getting-started-integration-cdn-reference" story="docs">
+    CDN reference
+  </LinkTo>
+- <LinkTo kind="getting-started-integration-sass-integration" story="docs">
+    Sass integration
+  </LinkTo>
 
 ## Progressive enhancement
 
-### 1. JavaScript enhancement
+- Baseline first: ensure content and key actions work without JavaScript.
+- Enhance interactions after hydration; do not make JS-only controls the sole path for core tasks.
+- Keep native controls where practical (form fields, focus order, keyboard behavior).
+- In hydration code, keep failure fallback behavior so server HTML still renders on client errors.
 
-**Base functionality without JS**
+See:
 
-```html
-<!-- Works without JavaScript -->
-<form action="/submit-contact" method="POST" class="mg-form">
-  <input type="text" name="name" class="mg-form__input" required />
-  <textarea name="message" class="mg-form__textarea" required></textarea>
-  <button type="submit" class="mg-cta-button mg-cta-button--primary">
-    Send Message
-  </button>
-</form>
-```
-
-**Enhanced with JavaScript**
-
-```jsx
-function ContactForm() {
-  const [isEnhanced, setIsEnhanced] = useState(false);
-
-  useEffect(() => {
-    // Enable enhanced features after hydration
-    setIsEnhanced(true);
-  }, []);
-
-  return (
-    <form onSubmit={isEnhanced ? handleEnhancedSubmit : undefined}>
-      <TextInput type="text" name="name" label="Name" required />
-      {isEnhanced && (
-        <div className="mg-form__validation">Real-time validation enabled</div>
-      )}
-      <CtaButton
-        label={isEnhanced ? 'Send Message' : 'Send Message (Enhanced)'}
-        Type="Primary"
-        type="submit"
-      />
-    </form>
-  );
-}
-```
-
-For server-rendered frameworks like Drupal, the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) shows how to progressively enhance static HTML with React components using `createHydrator`. The server renders the HTML container; the client extracts props and mounts the React component — with automatic fallback to the original HTML on error.
-
-### 2. Graceful fallbacks
-
-**Image fallbacks**
-
-```jsx
-<VerticalCard
-  data={[
-    {
-      title: 'Report Title',
-      imgback: 'report-image.webp',
-      imgFallback: 'report-image.jpg',
-      onImageError: handleImageError,
-    },
-  ]}
-/>
-```
-
-**Font fallbacks**
-
-```css
-.mg-heading {
-  font-family:
-    'Inter',
-    /* Custom font */ 'Roboto',
-    /* Mangrove fallback */ -apple-system,
-    /* System font */ BlinkMacSystemFont,
-    sans-serif; /* Generic fallback */
-}
-```
-
-## Next steps
-
-- <LinkTo kind="getting-started-about-mangrove" story="docs">
-    About Mangrove
+- <LinkTo kind="getting-started-integration-vanilla-html-and-css" story="docs">
+    Vanilla HTML and CSS
   </LinkTo>
-  -- what's shared across UNDRR properties
-- <LinkTo kind="getting-started-accessibility" story="docs">
-    Accessibility
+- <LinkTo kind="getting-started-integration-react-integration" story="docs">
+    React integration
   </LinkTo>
-  -- WCAG requirements and patterns
+
+## Quality checks
+
+- Run tests and linting before opening a PR.
+- For CSS-heavy changes, verify in a real browser (not only jsdom tests).
+- Update component changelog sections in MDX when behavior, API, or visuals change.
+- If structure or utility usage changes, update AI manifest docs (`scripts/ai-manifest/`).
+
+See:
+
+- <LinkTo kind="contributing-review-checklist" story="docs">
+    Review checklist
+  </LinkTo>
 - <LinkTo kind="contributing-component-standards" story="docs">
     Component standards
   </LinkTo>
-  -- code conventions for contributors
 
 ---
 
-Last updated: 18 March 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/BestPractices.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 11 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/BestPractices.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
