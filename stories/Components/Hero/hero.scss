@@ -421,6 +421,14 @@ $variant-colour-props: (
     }
   }
 
+  // Without a media column, a fixed-ratio grid still reserves the media
+  // track's width even though nothing renders into it — collapse to one
+  // column instead. Same specificity as the split-ratio rules above, so this
+  // must stay declared after them to win on source order.
+  .mg-hero__split-grid.mg-hero__split-grid--no-media {
+    grid-template-columns: 1fr;
+  }
+
   .mg-hero__content {
     display: grid;
     row-gap: mg-rem(10);

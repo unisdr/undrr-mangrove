@@ -157,9 +157,15 @@ export function Hero({
               variantActive && `mg-hero--${variantActive}`
             )}
           >
-            <div className="mg-hero__split-grid mg-container">
+            <div
+              className={cls(
+                'mg-hero__split-grid',
+                'mg-container',
+                !item.media && 'mg-hero__split-grid--no-media'
+              )}
+            >
               <HeroContent item={item} HeadingTag={HeadingTag} />
-              <HeroMedia media={item.media} />
+              {item.media && <HeroMedia media={item.media} />}
             </div>
           </section>
         ))}

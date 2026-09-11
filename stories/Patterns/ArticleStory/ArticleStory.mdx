@@ -78,16 +78,10 @@ dominant, and `data[0].media` is omitted when `heroImage` is `"none"`, so
 `Hero` falls back to a text-only band gracefully. Known gap: `Hero` has no
 caption slot, so this variant loses the photo credit the other three show.
 
-Building this surfaced real bugs in `Hero` itself, fixed at the source rather
-than patched around here: the title was capped at `max-width: 18ch` (about
-three words) with no responsive step-down, which wrapped a real news headline
-into a cramped stack with a mid-word break — even short titles in `Hero`'s own
-stories wrapped harder than intended. The split content column also carried
-its own hardcoded `max-width` instead of the shared `mg-container` utility
-every other centred element on the page uses, and its inner content had a
-small forced inline padding pushing text off that column's edge. All three
-are now fixed in `Hero`/`hero.scss` directly, so every `Hero` consumer
-benefits, not just this pattern.
+Building this surfaced real bugs in `Hero` itself — a title measure that
+wrapped headlines too aggressively, a hardcoded width instead of the shared
+`mg-container` utility, and a forced padding — fixed at the source rather
+than patched around here. See `Hero`'s own changelog (v1.6.4) for detail.
 
 ## Share lives in the margin rail
 
@@ -143,45 +137,18 @@ design is reviewed.
   layout — large and compact image variants, and a `heroImage` toggle
   decoupling the header image from the teaser/social image, in English and
   Arabic. ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060))
-  - Title, lede and byline sit above the header image, not below it, matching
-    undrr.org and the comparison sites.
-  - Adds `ShareButtons` under the byline, and an editors' recommendations
-    list, taxonomy tags and `UserFeedback` at the foot of the page.
-  - Content replaced with a real undrr.org story so the layout is judged
-    against an actual case.
-  - Body copy replaced with an original summary written from the full
-    article, and the `alternate` `heroImage` state now uses the article's
-    real second inline photo instead of an unrelated stock image.
-  - Header image no longer forced to a fixed aspect ratio (was cropping the
-    photo); the reading body is now placeholder text sized to the article's
-    real length, with inline links, and the article's two-sentence summary
-    sits above the header image as the lede.
-  - Removed the pull quote above the header image. `ShareButtons` moved from
-    the byline block to sit beside the header image, falling back to the
-    byline only when `heroImage` is `"none"`.
+  Current state and rationale are covered in the sections above; this log
+  only tracks what changed and when.
+  - Replaced synthetic content with the real undrr.org story, and the pull
+    quote above the header image with `ShareButtons`.
   - Design review against the four reference sites: dropped centering the
-    headline/lede/byline over the image (no reference site centers article
-    text) in favour of left alignment, and increased the headline's type
-    scale. Unified `ShareButtons` into the same margin rail as "On this page"
-    in every variant, rather than beside the photo only when one exists.
-    Scattered `QuoteHighlight`, `HighlightBox` and `EmbedContainer` through
-    the body as a rough positioning experiment, English only for now.
-  - Added a `split` `imageProminence`: a two-column hero (text and image side
-    by side on a tinted band), reusing `Hero`'s `layout="split"`, after
-    education.gouv.fr's news-page treatment.
-  - Fixed the underlying `Hero` component rather than papering over it in this
-    pattern: removed the title's unconditional `max-width: 18ch` (and the
-    duplicate rule in the immersive variant), dropped the split content
-    column's forced inline padding, and paired `.mg-hero__split-grid` with
-    `mg-container` so it shares the page's real centred measure instead of
-    its own hardcoded breakpoint. Also removed `HeroTitle`'s dead `text-xxl`
-    class, its always-unreachable `text-xl` sibling, the inline `<span>`
-    wrapper it needed, and the now-redundant `<header>` — `mg-hero__title`
-    is applied to the heading tag directly.
-  - Audited the demo-only CSS against `mg-grid` and the rest of the library:
-    the rail/article split and the caption/credit row are both asymmetric
-    (fixed+flexible, flexible+capped) shapes `mg-grid`'s equal-fraction
-    columns can't express, so neither changes. The one real simplification —
-    the caption/credit row's flex-basis math — is now a plain two-column CSS
-    grid (`1fr auto`), dropping to a single stacked column below tablet
-    width.
+    headline/lede/byline over the image in favour of left alignment, and
+    unified `ShareButtons` into the margin rail in every variant. Scattered
+    `QuoteHighlight`, `HighlightBox` and `EmbedContainer` through the body as
+    a positioning experiment (English only).
+  - Added the `split` `imageProminence` variant, and fixed the `Hero` bugs it
+    surfaced at the source (see "Split hero" above and `Hero`'s own
+    changelog).
+  - Audited the demo-only CSS against `mg-grid`: none of it fits `mg-grid`'s
+    equal-fraction columns, but the caption/credit row simplified from
+    flex-basis math to a plain two-column grid (`1fr auto`).

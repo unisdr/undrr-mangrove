@@ -1134,7 +1134,7 @@ npm run build</code></pre>
 
   'patterns-article-story': {
     description:
-      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls whether the header image bleeds full width or stays in the reading column; heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
   'patterns-landing-pages': {

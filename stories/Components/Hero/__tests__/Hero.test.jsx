@@ -209,6 +209,13 @@ describe('Hero — split layout', () => {
     expect(container.querySelector('.mg-hero__media')).not.toBeInTheDocument();
   });
 
+  it('collapses the split grid to one column without media, instead of leaving an empty track', () => {
+    const { container } = render(<Hero data={[baseItem]} layout="split" />);
+    expect(
+      container.querySelector('.mg-hero__split-grid--no-media')
+    ).toBeInTheDocument();
+  });
+
   it('renders headingLevel inside split layout', () => {
     render(<Hero data={[splitItem]} layout="split" headingLevel="h2" />);
     expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();

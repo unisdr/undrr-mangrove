@@ -439,8 +439,10 @@ export function ArticleStory({
     />
   );
 
+  // Only built for the non-split layouts — the split layout renders its own
+  // media column via `Hero`'s `data[0].media` instead.
   const headerImage =
-    heroImage !== 'none' ? (
+    !split && heroImage !== 'none' ? (
       <figure
         className={
           large
