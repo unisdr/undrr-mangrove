@@ -21,47 +21,21 @@ _Notable cross-cutting changes between releases land here. Per-component changes
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
 
-Detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
-- **Font families are now five script-mapped roles.** Component stylesheets declare `font-family: var(--mg-font-family-ui)` and never name a typeface; `_fonts.scss` re-points the roles for Arabic. Latin rendering is unchanged; Arabic chrome moves from Noto Kufi Arabic to Noto Sans Arabic. **Breaking:** all six `$mg-font-family-*` variables are removed. Closes [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098) and, as a side effect, [#1095](https://github.com/unisdr/undrr-mangrove/issues/1095). See [breaking change #8](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs).
-- **Arabic typography now respects language boundaries.** `:lang(ar)` overrides are anchored to the styled element and the family is reasserted at the language switch point, so an English island inside an Arabic page no longer renders in Arabic typography. Closes [issue #1092](https://github.com/unisdr/undrr-mangrove/issues/1092).
-- **Arabic typefaces changed: Dubai is replaced by Noto Kufi Arabic and Noto Sans Arabic.** **Breaking:** Mangrove no longer emits a Dubai `@font-face`, so a theme that wants Dubai must declare its own. Closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089).
-
-### Navigation and release tooling
-
-- **Tabs:** centred groups, horizontal scrolling, soft active states and optional mobile stacking, with legacy HTML enhancement and retained panel state. ([#1097](https://github.com/unisdr/undrr-mangrove/pull/1097))
-- **MegaMenu:** progressive mobile navigation with Back above the heading, linked section headings, distinct section/link typography, a bounded translucent surface, outside dismissal and accessible RTL-aware transitions. Existing section data and hydration contracts remain supported; Simple Nav gains mobile overflow scrolling. ([#1100](https://github.com/unisdr/undrr-mangrove/pull/1100))
-- **Build and release tooling:** exclude `_site` output from Jest discovery ([#1090](https://github.com/unisdr/undrr-mangrove/pull/1090)) and update prerelease CDN URLs during release preparation.
+- Arabic typography and font roles were finalized for v2.0 (including removal of legacy font-family SCSS variables). ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089), [#1092](https://github.com/unisdr/undrr-mangrove/issues/1092), [#1098](https://github.com/unisdr/undrr-mangrove/issues/1098))
+- Tabs and MegaMenu received the alpha.4 navigation refinements. ([#1097](https://github.com/unisdr/undrr-mangrove/pull/1097), [#1100](https://github.com/unisdr/undrr-mangrove/pull/1100))
+- Release tooling updates included `_site` Jest exclusion and prerelease CDN URL updates. ([#1090](https://github.com/unisdr/undrr-mangrove/pull/1090))
 
 ## 2.0.0 — unreleased
 
-Development releases began with `2.0.0-alpha.1` under the npm `next` dist-tag: [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for the first alpha, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2 ([GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.2)) and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3 ([GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.3)). The tagged stable GitHub Release link lands with 2.0.0.
+This section is intentionally brief. The complete 2.0 record, migration guidance, and numbered breaking changes are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
-**[`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md) is the detailed record for the whole 2.0 line** — per-token values, contrast measurements, rationale and migration steps. It is published as the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs). What follows is the overview.
-
-### At a glance
-
-- **Theming moved to CSS custom properties** (alpha.1). Colour and spacing tokens live on `:root`, palette colours hold space-separated RGB channels for alpha compositing, and sub-brand theming is a runtime `.mg-theme-*` selector block instead of compile-time SCSS `!default` overrides.
-- **Component surfaces and interactions were rebaselined** (alpha.2), with new `FormAction` and `UserFeedback` components, and Drupal hydration contracts and BEM APIs preserved.
-- **Brand palettes are generated from YAML token sources** (alpha.3) by `scripts/build-tokens.cjs`, with a committed output baseline so an unintended change to compiled output fails `yarn test`.
-- **Three system-wide defaults changed** (alpha.3), visible to every consumer in every theme: the neutral ramp's surface half is cool-tinted, the keyboard focus ring is gold rather than the brand colour, and the ring is drawn as two bands. Two accessibility defects were fixed with the last of these.
-- **DELTA's palette was corrected** (alpha.3) against DELTA's own sources: 26 of its 57 tokens change, and its buttons go from unfilled navy text to white on brand blue. The other four themes are unaffected.
-- **New `StatusLabel` and `EmptyState` components and a Sendai-target data-visualisation palette** (alpha.3). The `--sendai-*` accent colours and their utility classes are deprecated, for removal in 2.1.
-- **Colour contrast is graded twice** (alpha.3), on WCAG 2 and an Oklab perceptual measure, across every theme and state.
-- **Arabic typography was settled and font families rebuilt as roles** (alpha.4) — see [alpha.4](#200-alpha4--2026-09-09) above.
-
-### Breaking changes
-
-Numbered as in the release notes, where each has its migration steps:
-
-1. `$mg-color-*` and `$mg-spacing-*` SCSS aliases removed.
-2. Sub-brand `_variables-*.scss` files deleted, replaced by `_theme-*.scss` selector blocks.
-3. `hero.scss` stores variant colours as custom property name strings.
-4. The `storybook-design-token` plugin is removed.
-5. The legacy 10px root is removed: the `*-legacy.scss` entry points and their compiled builds are gone and `$mg-html-font-size` is fixed at `16`.
-6. The deprecated `Pagination` component is removed; use `Pager`.
-7. Three button tokens changed shape, from channel triples to complete colours.
-8. All six font-family SCSS variables are replaced by five role custom properties.
+Development releases:
+- [2.0.0-alpha.1](https://github.com/unisdr/undrr-mangrove/pull/1061)
+- [2.0.0-alpha.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.2)
+- [2.0.0-alpha.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.3)
+- [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) (release candidate)
 
 ## 1.8.2 — 2026-08-27
 
