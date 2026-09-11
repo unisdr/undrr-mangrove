@@ -13,9 +13,15 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
-- Storybook inline Docs canvases now receive the selected locale’s language and direction, fixing Arabic examples that inherited an explicit English canvas boundary and preserving RTL across theme or control changes. ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109))
+## 2.0.0-beta.1 — 2026-09-11
 
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
+
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+
+- Storybook inline Docs canvases now receive the selected locale’s language and direction, fixing Arabic examples that inherited an explicit English canvas boundary and preserving RTL across theme or control changes. ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109))
 - CDN references now use the canonical `assets.undrr.org/` root across documentation, examples, font URLs and component defaults. The release URL updater emits canonical paths while continuing to accept legacy paths as migration inputs.
+- Pre-beta.1 paper-cuts pass: PageHeader adds `languageDisplay="links"` and tighter icon-only accessibility semantics, MegaMenu desktop flyout/refined reduced-motion behavior lands, and Storybook/docs guidance adds screenshot workflow and token-generation reminders. ([#1134](https://github.com/unisdr/undrr-mangrove/pull/1134))
 
 ## 2.0.0-alpha.4 — 2026-09-09
 
@@ -35,9 +41,8 @@ Development releases:
 - [2.0.0-alpha.1](https://github.com/unisdr/undrr-mangrove/pull/1061)
 - [2.0.0-alpha.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.2)
 - [2.0.0-alpha.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.3)
-- [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) (release candidate)
-
-- Pre-beta.1 paper-cuts pass: PageHeader adds `languageDisplay="links"` and tighter icon-only accessibility semantics, MegaMenu desktop flyout/refined reduced-motion behavior lands, and Storybook/docs guidance adds screenshot workflow and token-generation reminders. ([#1134](https://github.com/unisdr/undrr-mangrove/pull/1134))
+- [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4)
+- [2.0.0-beta.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) (release candidate)
 
 ## 1.8.2 — 2026-08-27
 
