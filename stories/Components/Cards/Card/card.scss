@@ -43,11 +43,21 @@
       inline-size: 100%;
     }
 
-    // Let the parent grid/flex row determine height; keep media intrinsic and
-    // give any remaining space to the content. Book covers keep their grid.
+    // Fill the available height of whatever contains it by default, not just
+    // when a shared flex/grid row's own align-items: stretch happens to do
+    // it — that only stretches direct siblings in the same row. A card
+    // placed in its own column (three separate <div> wrappers, each sized
+    // by its own content) has no such row to inherit height from, so it
+    // stayed short next to a taller neighbour with nothing visually tying
+    // them together. block-size: 100% resolves against the nearest ancestor
+    // with a real height and falls back to auto with no explicit ancestor
+    // height (the common "one card, nothing to fill" case), so this is safe
+    // to apply unconditionally. Keep media intrinsic and give any remaining
+    // space to the content. Book covers keep their grid.
     &:not(.mg-card__book) {
       display: flex;
       flex-direction: column;
+      block-size: 100%;
 
       > .mg-card__visual {
         flex-shrink: 0;
