@@ -24,13 +24,13 @@ export const getCaptionForLocale = locale => {
 
 # Buttons
 
-Mangrove's standard button component. Buttons are designed as call-to-action (CTA) elements — they should always direct the user toward a clear next step such as "Read more", "Sign up", or "View documentation."
+Mangrove's standard button component for call-to-action elements like "Read more", "Sign up", or "View documentation."
 
-#### When to use:
+## When to use
 
-- Use buttons to drive a specific user action, not for navigation between pages (use links instead)
-- Each page should have one primary action. Secondary and tertiary options should be used sparingly
-- If there are multiple choices, one button should be the default (primary) and the others secondary or tertiary
+- Drive specific user actions (use links for page navigation)
+- One primary action per page; secondary/tertiary should be sparse
+- For multiple choices, mark one as primary and others secondary/tertiary
 
 #### Variants
 
@@ -43,38 +43,37 @@ Mangrove's standard button component. Buttons are designed as call-to-action (CT
 | `.mg-button.mg-button-primary.mg-button-cta`       | Editorial navigation with a circular direction badge   |
 | `.mg-button.disabled`                              | Inactive state — not clickable                         |
 
-### Content
+## Content
 
-- Use clear, action-oriented labels: "Download report", "Sign up", not "Click here"
-- Keep labels short — ideally 2-3 words
+- Use clear, action-oriented labels: "Download report", "Sign up" (not "Click here")
+- Keep labels to 2–3 words
 
 ## Behaviors
 
-Button colors adapt to the active theme (UNDRR, PreventionWeb, DELTA, etc.). In dark contexts like heroes and CTAs, buttons invert to ensure contrast.
+Button colors adapt to the active theme. In dark contexts, buttons invert for contrast.
 
 <Canvas of={CtaButtonStories.DefaultButtons} meta={CtaButtonStories} />
 
-### Editorial CTA
+## Editorial CTA
 
-Use `Variant="CTA"` for navigational prompts in cards, heroes, and section
-headers. Keep consent, form submission, and utility actions on the default
-filled-button treatment.
+Use `Variant="CTA"` for navigational prompts in cards, heroes, and section headers. Use the default filled-button treatment for consent, form submission, and utility actions.
 
 <Canvas of={CtaButtonStories.EditorialCta} meta={CtaButtonStories} />
 
-### All variants
+## All variants
 
-Primary, secondary, and disabled buttons on light and dark backgrounds for easy comparison. Switch themes in the toolbar to see how each variant adapts.
+Primary, secondary, and disabled buttons on light and dark backgrounds. Switch themes in the toolbar to see how each variant adapts.
 
 <Canvas of={CtaButtonStories.AllVariants} meta={CtaButtonStories} />
 
-### Usage
+## Usage
 
-- Apply `.mg-button` as the base class, then add an emphasis class (`.mg-button-primary`, `.mg-button-secondary`). Add `.mg-button-outline` when the action needs an unfilled treatment.
-- Wrap adjacent actions in `.mg-buttons` to get consistent, wrapping and RTL-safe spacing. Do not add margins directly to individual buttons.
-- Copy the HTML from the HTML tab of the canvas
+- Apply `.mg-button` as the base class, then add an emphasis class (`.mg-button-primary` or `.mg-button-secondary`)
+- Add `.mg-button-outline` for unfilled treatment
+- Wrap adjacent actions in `.mg-buttons` for consistent, RTL-safe spacing (don't add margins to individual buttons)
+- Copy HTML from the HTML tab in the canvas
 
-### Interactions
+## Interactions
 
 - Hover state applies to the entire button
 

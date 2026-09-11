@@ -37,59 +37,44 @@ export const getCaptionForLocale = locale => {
 
 # ShareButtons
 
-A Widget with share buttons for social media
+A widget with share buttons for social media that open new tabs or copy the link to clipboard.
 
-### Overview
+## Overview
 
-This widget contains share buttons for social media that are clickable and each one of them opens a new tab with the link to the social media page.
-Also, there is an option to just copy the link to the clipboard, and generate a QR code for easy sharing.
+Clickable share buttons for LinkedIn, Facebook, Twitter, Email, and QR code. Includes a copy-to-clipboard option and optional QR code modal with UTM parameters.
 
-### Formatting
+## Configuration
 
-#### default
+- **Default body**: "Check out this link: " + URL
+- **Default subject**: "Sharing Link"
+- Custom message body and subject can be configured
 
-default format is a list of share buttons for social media.
-default text body is: "Check out this link: " + automatically appending the link at the end
-default subject is: "Sharing Link"
+### Shortlink preference
 
-#### Custom
-
-1. Format of the body of the message before the link
-2. Subject of the Message(only for Email)
-
-### Shortlink is favored
-
-The component will favor using a shortlink if a `<link rel="shortlink" href="{url here}" />` is present in the document. If no shortlink is available, it will default to using the full page URL.
+The component uses shortlinks when a `<link rel="shortlink" href="{url here}" />` is present. Defaults to the full page URL if unavailable.
 
 ## Behaviors
 
-The default Behaviors are:
-
-1. Clicking on the button opens a new tab with the link to the social media page.
-   - LinkedIn
-   - Facebook
-   - Twitter
-   - Email
-   - QR Code (opens a modal with the QR code image)
-2. Clicking on the copy button copies the link to the clipboard.
-3. Clicking on the QR code button opens a modal displaying:
-   - The QR code image
-   - The URL with UTM tracking parameters
-   - Guidance text explaining how to use the QR code
-   - Options to copy the image or close the modal
+- Clicking a social button opens a new tab with the sharing link
+- Clicking the copy button copies the link to clipboard
+- Clicking the QR code button opens a modal with:
+  - QR code image
+  - URL with UTM tracking parameters
+  - Guidance text and copy/close options
 
 <Canvas
   of={ShareButtonsStories.DefaultShareButtons}
   meta={ShareButtonsStories}
 />
 
-### Usage
+## Usage
 
-Drop in and configure. custom message if needed
+Drop in and configure custom message if needed.
 
-### Interactions
+## Interactions
 
-- The hover state is applied for each button when the mouse hovers over it.
+- Hover state applies to each button
+
 
 ## Server-rendered usage
 

@@ -14,25 +14,19 @@ import * as SnackbarStories from './Snackbar.stories';
 
 # Snackbar
 
-Snackbars provide brief notifications or feedback messages to users about an operation's status.
-They appear temporarily at the top of the screen and automatically disappear after a set time.
-
-## Overview
-
-The Snackbar component is designed for displaying short, non-blocking notifications to users.
-It's particularly useful for conveying status information without interrupting the user's workflow.
+Brief notifications or feedback messages about an operation's status. Appears temporarily at the top of the screen and automatically disappears after a set time.
 
 <Primary />
 <Controls />
 
 ## Features
 
-- **Multiple Severity Levels**: Supports error, warning, info, and success states with appropriate color coding and icons
-- **Automatic Dismissal**: Disappears automatically after a configurable time
-- **Manual Dismissal**: Can be dismissed by clicking the close button
-- **Keyboard Accessibility**: Supports keyboard navigation and can be dismissed with the Escape key
-- **Screen Reader Support**: Enhanced for screen reader users with appropriate ARIA attributes
-- **Responsive Design**: Works well on both desktop and mobile devices
+- **Multiple severity levels** — Error, warning, info, success with appropriate icons and colors
+- **Automatic dismissal** — Disappears after configurable time
+- **Manual dismissal** — Close button available
+- **Keyboard accessible** — Dismissible with Escape key
+- **Screen reader support** — ARIA attributes for announcements
+- **Responsive** — Works on desktop and mobile
 
 ## Visual examples
 
@@ -65,8 +59,6 @@ It's particularly useful for conveying status information without interrupting t
 />
 
 ## Interactive example
-
-The example below shows an interactive Snackbar that you can show and hide with the button:
 
 <Canvas of={SnackbarStories.Snackbar} meta={SnackbarStories} />
 
@@ -101,35 +93,30 @@ function MyComponent() {
 }
 ```
 
-### Component props
+## Component props
 
-| Prop              | Type     | Default | Description                                                                                                                             |
-| ----------------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| severity          | string   | -       | Determines the appearance and icon of the snackbar. Options: 'error', 'warning', 'info', 'success'                                      |
-| opened            | boolean  | false   | Controls whether the snackbar is visible                                                                                                |
-| message           | string   | -       | The text content to display in the snackbar                                                                                             |
-| onClose           | function | -       | Callback function executed when the snackbar is closed (via button click or timeout)                                                    |
-| openedMiliseconds | number   | -       | Duration in milliseconds before the snackbar automatically closes. If not provided, the snackbar will remain open until manually closed |
+| Prop              | Type     | Default | Description                                                                                         |
+| ----------------- | -------- | ------- | --------------------------------------------------------------------------------------------------- |
+| severity          | string   | —       | Appearance and icon: 'error', 'warning', 'info', 'success'                                         |
+| opened            | boolean  | false   | Controls visibility                                                                                 |
+| message           | string   | —       | Text content to display                                                                             |
+| onClose           | function | —       | Callback when closed (button click or timeout)                                                      |
+| openedMiliseconds | number   | —       | Duration before auto-closing. If not provided, remains open until manually closed                  |
 
-## Accessibility considerations
+## Accessibility
 
-The Snackbar component follows accessibility best practices:
-
-- Uses appropriate ARIA roles (`role="alert"`)
-- Announces message severity for screen readers
-- Supports keyboard navigation (close button is focusable)
-- Can be dismissed with the Escape key
-- Maintains sufficient color contrast for readability
-- Auto-focuses the close button when opened for easy dismissal
+- Uses `role="alert"` to announce messages
+- Announces severity for screen readers
+- Close button is focusable
+- Dismissible with Escape key
+- Sufficient color contrast for readability
+- Close button auto-focuses for easy dismissal
 
 ## Mobile considerations
 
-The component is designed to be fully responsive:
-
-- Adapts to smaller screen sizes
-- Provides larger touch targets on mobile devices
-- Ensures buttons meet minimum size requirements (44px) for touch interactions
-- Uses appropriate spacing for mobile viewports
+- Responsive layout adapts to smaller screens
+- Touch targets sized appropriately (min 44px)
+- Proper spacing for mobile viewports
 
 ## See also
 

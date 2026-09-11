@@ -13,22 +13,20 @@ A compact card variant for publications and brochures. Displays a portrait cover
 
 - Publication and report listings
 - Library/resource pages with cover images
-- Any grid of items with portrait-oriented visuals (book covers, posters, brochures)
+- Grids with portrait-oriented visuals
 
 ## Anatomy
 
-- **Cover image**: 3:4 aspect ratio with a subtle border
-- **Title**: Linked heading with smaller font size than other card variants
+- **Cover image**: 3:4 aspect ratio with subtle border
+- **Title**: Linked heading with smaller font than other card variants
 
-The card has no summary text or labels. The entire card is clickable via a stretched link on the title.
+The entire card is clickable via a stretched link on the title.
 
 <Canvas of={BookCardStories.DefaultBookCard} />
 
 ## Books together
 
-Different title lengths share equal card heights within each grid row. Covers
-keep their existing proportions, and titles start directly below the cover.
-Resize the example to test wrapping into separate rows.
+Different title lengths share equal heights within each row. Covers keep proportions, titles start below cover. Resize to test wrapping.
 
 <Canvas of={BookCardStories.MixedTitleLengths} />
 
@@ -45,37 +43,23 @@ Use the `variant` prop to change the title accent color.
 
 ## Title link visibility
 
-Card titles display blue color, underline, and a chevron indicator by default. Add `mg-card--plain-title` to disable these signals.
+Card titles show: blue color, underline, and a chevron indicator. Add `mg-card--plain-title` to disable these signals.
 
-**In React:**
+**React:** `<BookCard data={data} className="mg-card--plain-title" />`
 
-```jsx
-<BookCard data={data} className="mg-card--plain-title" />
-```
-
-**In Drupal templates or static HTML:**
-
-```html
-<article class="mg-card mg-card__vc mg-card__book mg-card--plain-title">
-  ...
-</article>
-```
+**HTML:** `<article class="mg-card mg-card__vc mg-card__book mg-card--plain-title">...</article>`
 
 ## Sizing
 
-The book card is constrained to `200px` max-width by default, expanding to `400px` on desktop. When used in a grid, let the grid column width control the card size.
+Card is constrained to 200px max-width by default, expanding to 400px on desktop. In a grid, grid column width controls card size.
 
 ## Cards without links
 
-A card should almost always be a link, but unlinked ones happen: an editor leaves the link field empty, a referenced node is unpublished, or the card exists only to carry a button.
-
-Omit `link` (or pass an empty string) and the card renders its title as plain text — no chevron, no underline, no interactive colour, no stretched click target, no hover elevation. The article gains `mg-card--no-link` so themes have a hook.
+Omit `link` (or pass empty string) and the card renders a plain-text title: no chevron, underline, color, stretched link, or hover effect.
 
 <Canvas of={BookCardStories.NoLinkBookCard} />
 
-Drupal Gutenberg emits `<a href="">` for unlinked cards, which a browser treats as a link to the current page: it takes focus, activating it reloads the page, and the stretched overlay swallows clicks aimed at the card's own button. `card.scss` neutralises that markup so published content is repaired without an upstream change, but CSS cannot take the anchor out of the tab order — emit a plain-text title at the source.
-
-See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full rationale and the `href=""` reference case.
+See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full rationale and `href=""` reference.
 
 ## Props
 
@@ -96,19 +80,16 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 ## Changelog
 
-- **1.4.0** — 2026-09-10: Unlinked cards now render plain-text titles (not empty anchors), and `card.scss` removes link affordances from empty/missing `href` markup. See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links).
-- **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Added a responsive collection with varied title lengths to demonstrate sibling heights without changing cover sizing.
-
-- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic title/label typography now follows the `ui` font role (`Noto Sans Arabic`), and the component-level `:lang(ar)` override was removed. Latin rendering is unchanged.
-- **1.3.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a card title or label whose own language is not Arabic.
-- **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
-  - Unified focus states behind the theme-adaptive `mg-focus-ring` mixin and added a matching 2px radius to title-link focus rings.
-  - Added the shared raised card surface, elevation motion, and improved title/body wrapping through semantic modernisation tokens.
-- **1.3.1** — 2026-07-08: Fixed z-index conflict with global navigation (MegaMenu) by creating local stacking context via `isolation: isolate` and lowering card-local z-indices from 100/101 to 1/2.
-- **1.3** — 2026-04-13: `.mg-card__title` and `.mg-card__label` now use `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing both to `$mg-font-family-arabic-headings`. Same change applies to all card variants.
-- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`). Defaults to transparent/no padding; themes override for tinted card backgrounds (e.g., DELTA uses light gray with padding and rounded corners).
-- **1.1.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
-- **1.1** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
-- **1.0.2** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)
-- **1.0.1** — 2025-01-09: Responsive fixes
-- **1.0** — 2023-03-01: Released component
+- **1.4.0** — 2026-09-10: Plain-text titles for unlinked cards, and `card.scss` fixes for empty `href`.
+- **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Responsive collection with varied title lengths.
+- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic titles use `ui` font role.
+- **1.3.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Language-specific Arabic typography.
+- **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Unified focus states, raised surface, elevation.
+- **1.3.1** — 2026-07-08: Fix z-index conflict with MegaMenu.
+- **1.3** — 2026-04-13: Roboto Condensed headings; add `variant` prop.
+- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Themeable card tokens.
+- **1.1.1** — 2026-03-12: Fix chevron orphaning; trim title whitespace.
+- **1.1** — 2026-03-05: Link affordances; `variant` prop; `mg-card--plain-title` modifier.
+- **1.0.2** — 2025-12-12: Remove card share support.
+- **1.0.1** — 2025-01-09: Responsive fixes.
+- **1.0** — 2023-03-01: Initial release.

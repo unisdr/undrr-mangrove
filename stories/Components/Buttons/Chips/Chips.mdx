@@ -28,19 +28,17 @@ Compact pill-shaped controls used for category navigation and active filters. Th
 
 ## When to use
 
-- Showing which filters or search terms are currently active
-- Letting users remove individual selections without clearing everything
-- Linking to a category or tag in a content listing
+- Show active filters or search terms
+- Let users remove individual selections
+- Link to related content categories/tags
 
 ## States
 
-**Category link** — The chip navigates to related content. Use the default variant and provide a meaningful `href`.
+**Category link** — Navigates to related content; use the default variant with a meaningful `href`.
 
-**Dismissible filter** — The chip is a single button with a visible ×. Activating any part of the button removes the filter or selection.
+**Dismissible filter** — Single button with visible × that removes the filter.
 
-**Hover and focus** — The surface changes on hover, while keyboard focus uses the shared token-driven focus ring.
-
-**Pressed** — The chip uses the shared subtle press feedback when reduced motion is not requested.
+**Hover, focus, pressed** — Surface changes on hover; keyboard focus uses shared token-driven focus ring; reduced-motion-aware subtle press feedback.
 
 <Canvas of={ChipsStories.DefaultChips} meta={ChipsStories} />
 
@@ -82,10 +80,10 @@ Copy from the HTML tab in the canvas above for the full rendered output with any
 
 ## Accessibility
 
-- The dismissal mark is decorative because the visible label is part of the same button. Provide a localised action name with `removeLabel`, such as `Remove filter: Sendai Framework`.
-- Keyboard users activate the dismiss button with **Enter** or **Space**.
-- After a chip is dismissed, move focus to the next chip or the related search input — do not drop focus.
-- Interactive chips provide a 40px target and preserve explicit boundaries in forced-colours mode.
+- The dismissal mark is decorative; provide a localized action name with `removeLabel` (e.g., "Remove filter: Sendai Framework")
+- Keyboard users activate dismiss with **Enter** or **Space**
+- Move focus to the next chip or related input after dismissal
+- Interactive chips provide 40px targets and preserve explicit boundaries in forced-colors mode
 
 ## Changelog
 

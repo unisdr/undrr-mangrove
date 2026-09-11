@@ -11,9 +11,9 @@ A content teaser card in landscape/side-by-side layout. Image on the left, text 
 
 ## When to use
 
-- List-style content pages (search results, filtered listings)
-- Layouts where vertical space is limited and horizontal reading flow is preferred
-- Content with longer titles or summaries that benefit from a wider text area
+- List-style content pages
+- Layouts where horizontal reading flow is preferred
+- Content with longer titles/summaries
 
 ## Anatomy
 
@@ -29,8 +29,7 @@ The entire card is clickable via a stretched link on the title.
 
 ### Longer content
 
-When text makes the card taller, the photograph fills its outlined frame using
-`object-fit: cover`. Resize this example to test the side-by-side and stacked layouts.
+Photos fill their frame when adjacent content makes the card taller, using `object-fit: cover`. Resize to test side-by-side and stacked layouts.
 
 <Canvas of={HorizontalCardStories.LongContent} />
 
@@ -49,31 +48,15 @@ Use the variant control below the canvas to preview each option.
 
 ## Title link visibility
 
-By default, card titles display three signals that they are clickable:
-
-1. **Blue color** matching the theme's interactive color (adapts per theme)
-2. **Underline** with a 3px offset
-3. **Chevron indicator** pointing right (flips left automatically in RTL layouts)
-
-On hover, the underline intensifies.
+Card titles show: blue color, underline (3px offset), and a right-pointing chevron (flips in RTL). On hover, underline intensifies.
 
 ### Opting out
 
 Add `mg-card--plain-title` to disable all link signals while keeping the card clickable.
 
-**In React:**
+**React:** `<HorizontalCard data={data} className="mg-card--plain-title" />`
 
-```jsx
-<HorizontalCard data={data} className="mg-card--plain-title" />
-```
-
-**In Drupal templates or static HTML:**
-
-```html
-<article class="mg-card mg-card__hc mg-card--plain-title">...</article>
-```
-
-> **Implementation note (for contributors):** The chevron is a CSS border triangle rendered via the `::after` pseudo-element on the title link. On hover, the underline stroke increases to `2px`. RTL flipping is applied via a `[dir="rtl"]` CSS selector.
+**HTML:** `<article class="mg-card mg-card__hc mg-card--plain-title">...</article>`
 
 ## Responsive behavior
 
@@ -85,21 +68,17 @@ Add `mg-card--plain-title` to disable all link signals while keeping the card cl
 
 ## Cards without links
 
-A card should almost always be a link, but unlinked ones happen: an editor leaves the link field empty, a referenced node is unpublished, or the card exists only to carry a button.
-
-Omit `link` (or pass an empty string) and the card renders its title as plain text — no chevron, no underline, no interactive colour, no stretched click target, no hover elevation. Labels stay visible but drop the interactive modifier. The article gains `mg-card--no-link` so themes have a hook.
+Omit `link` (or pass empty string) and the card renders a plain-text title: no chevron, underline, color, stretched link, or hover effect. Labels stay visible.
 
 <Canvas of={HorizontalCardStories.NoLinkHorizontalCard} />
 
 ### A button instead of a card link
 
-For a card whose only destination is its button, set `buttonLink` and leave `link` empty. The title stays plain text and the CTA is an ordinary in-flow link. `buttonLink` falls back to `link` when omitted, so existing cards are unaffected.
+Set `buttonLink` and leave `link` empty. The title stays plain text and the CTA is an in-flow link.
 
 <Canvas of={HorizontalCardStories.ButtonOnlyHorizontalCard} />
 
-Drupal Gutenberg emits `<a href="">` for unlinked cards, which a browser treats as a link to the current page: it takes focus, activating it reloads the page, and the stretched overlay swallows clicks aimed at the card's own button. `card.scss` neutralises that markup so published content is repaired without an upstream change, but CSS cannot take the anchor out of the tab order — emit a plain-text title at the source.
-
-See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full rationale and the `href=""` reference case.
+See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full rationale and `href=""` reference.
 
 ## Props
 
@@ -125,19 +104,15 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 ## Changelog
 
-- **1.4.0** — 2026-09-10: Unlinked cards now render plain-text titles (not empty anchors), keep labels visible, and support `buttonLink` for CTA-only destinations. `card.scss` also removes link affordances from empty/missing `href` markup. See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links).
-- **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Photos fill the height of their visual frame when adjacent content makes the row taller, removing the empty strip inside the image outline. Book covers retain their existing sizing.
-
-- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic title/label typography now follows the `ui` font role (`Noto Sans Arabic`), and the component-level `:lang(ar)` override was removed. Latin rendering is unchanged.
-- **1.3.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a card title or label whose own language is not Arabic.
-- **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
-  - Unified focus states behind the theme-adaptive `mg-focus-ring` mixin and added a matching 2px radius to title-link focus rings.
-  - Added a reduced-motion-aware `scale(1.04)` image hover treatment, contained by the visual; book covers remain excluded.
-  - Added a raised surface, responsive hover elevation, subtle image edge treatment, and balanced title/body wrapping through shared modernisation tokens.
-- **1.3.1** — 2026-07-08: Fixed z-index conflict with global navigation (MegaMenu) by creating local stacking context via `isolation: isolate` and lowering card-local z-indices from 100/101 to 1/2.
-- **1.3** — 2026-04-13: `.mg-card__title` and `.mg-card__label` now use `$mg-font-family-headings` (Roboto Condensed). Added a `:lang(ar)` block routing both to `$mg-font-family-arabic-headings`. Same change applies to all card variants.
-- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added themeable card container tokens (`$mg-card-background`, `$mg-card-padding`, `$mg-card-border-radius`). Defaults to transparent/no padding; themes override for tinted card backgrounds (e.g., DELTA uses light gray with padding and rounded corners).
-- **1.1.1** — 2026-03-12: Fix chevron caret orphaning on its own line. Trim trailing whitespace from title text.
-- **1.1** — 2026-03-05: Title links now show blue color, underline, and chevron indicator for better affordance. Added `variant` prop (primary/secondary/tertiary/quaternary) matching the Hero color system. Removed dead `Hovercolors` prop. Added `mg-card--plain-title` CSS opt-out modifier.
-- **1.0.1** — 2025-12-12: Removed unused card share support (`item.share` / `mg-card__share`)
-- **1.0** — 2023-01-24: Released component
+- **1.4.0** — 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
+- **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Photos fill frame height when adjacent content is taller.
+- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic titles/labels use `ui` font role.
+- **1.3.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Language-specific Arabic typography.
+- **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Unified focus states, image hover (book covers excluded), raised surface, elevation.
+- **1.3.1** — 2026-07-08: Fix z-index conflict with MegaMenu.
+- **1.3** — 2026-04-13: Roboto Condensed headings; add `variant` prop.
+- **1.2** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Themeable card tokens.
+- **1.1.1** — 2026-03-12: Fix chevron orphaning; trim title whitespace.
+- **1.1** — 2026-03-05: Link affordances; `variant` prop; `mg-card--plain-title` modifier.
+- **1.0.1** — 2025-12-12: Remove card share support.
+- **1.0** — 2023-01-24: Initial release.
