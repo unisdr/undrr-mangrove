@@ -8,33 +8,20 @@ import * as TextCtaStories from './TextCta.stories';
 
 # CTA
 
-A call-to-action block brings a heading, supporting copy and a next step together.
-Use it for an invitation, a resource, a campaign or a short signup form. TextCta
-provides the layout and visual treatment; its contents determine the purpose.
-
-Use `buttons` for action links, or compose a form or other content through
-`children`. The block does not submit forms, manage subscriptions or connect to a
-service. For an individual action without a promotional block, use
-
-<LinkTo kind="Components/Buttons/Buttons" story="Editorial CTA">
-  a CTA button
-</LinkTo>
-.
+A promotional block combining heading, copy, and next step. Use for invitations, resources, campaigns, or signup forms. TextCta provides layout and visual treatment; `buttons` link to actions. Compose richer content (forms, custom layouts) with `children`. For single action links without a block, use <LinkTo kind="Components/Buttons/Buttons" story="Editorial CTA">a CTA button</LinkTo>.
 
 ## Choose the emphasis
 
-Colour and emphasis are separate decisions. `variant` chooses the theme accent;
-`tone` chooses how strongly it appears. Existing CTAs keep the strong default.
+Colour (`variant`) and emphasis (`tone`) are separate. `variant` chooses the theme accent; `tone` chooses emphasis strength.
 
 | Treatment                 | Useful for                                                             | Text and actions                                                                |
 | ------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `tone="soft"`             | Newsletter promotion, supporting invitations, blocks within an article | Pale accent surface, dark text and ordinary button styling                      |
-| `tone="strong"` (default) | Campaigns, prominent invitations, major next steps                     | Solid accent surface, light text and buttons styled for the coloured background |
+| `tone="soft"`             | Newsletter, supporting invitations, article blocks     | Pale surface, dark text, standard button styling                      |
+| `tone="strong"` (default) | Campaigns, prominent invitations, key actions          | Solid surface, light text, buttons styled for coloured background |
 
 ### Soft
 
-A quieter block can invite action without dominating the surrounding content.
-Change `variant` to compare accent colours, or `tone` to compare emphasis.
+A quieter block invites action without dominating surrounding content. Change `variant` to compare colours or `tone` to compare emphasis.
 
 <Canvas of={TextCtaStories.Soft} />
 <Controls of={TextCtaStories.Soft} include={['tone', 'variant', 'centered']} />
@@ -45,10 +32,7 @@ Change `variant` to compare accent colours, or `tone` to compare emphasis.
 
 ## Compose a form
 
-A newsletter signup is one use of the block. The example below supplies an
-independent FormAction as `children`, using the soft tone and start-aligned copy.
-Its submission is a local demonstration only: it sends no data and creates no
-subscription.
+A newsletter signup is one use. The example below supplies an independent FormAction as `children`, using soft tone and start-aligned copy. Submission is a local demonstration only (no data sent, no subscription created).
 
 <Canvas of={TextCtaStories.Newsletter} />
 
@@ -63,9 +47,7 @@ subscription.
 </TextCta>
 ```
 
-For several fields, supply a regular form layout with its action after the fields.
-The site owns its choices, validation, privacy information and submission service;
-none of those require newsletter-specific CTA props.
+For multiple fields, use a regular form layout with action after fields. The site owns form choices, validation, privacy and service integration — none require newsletter-specific CTA props.
 
 <Canvas of={TextCtaStories.NewsletterWithPreferences} />
 
@@ -76,9 +58,7 @@ for article placement, preferences and simulated validation, failure and confirm
 
 ### With an image
 
-An optional image sits at the inline end of the copy and stacks on narrow screens.
-Its placement follows text direction. Supply meaningful `imageAlt` text, or an
-empty string for a decorative image.
+Optional image at the inline end (stacks on narrow screens). Placement follows text direction. Provide meaningful `imageAlt` or empty string for decorative images.
 
 <Canvas of={TextCtaStories.WithImage} />
 
@@ -92,28 +72,13 @@ buttons each retain the full available width.
 
 ### Alignment and size
 
-Text-only CTAs are centred by default. Set `centered={false}` to align content to
-the start edge; this is generally easier to scan for forms and longer copy. An
-image or inline layout disables centring automatically.
+Text-only CTAs are centred by default. Set `centered={false}` for start-aligned content (better for forms and longer copy). Image or inline layout disables centring automatically.
 
-`headlineLevel` chooses the semantic heading level independently of
-`headlineSize`. `padding` can override the theme spacing when a placement needs
-more or less room. Body copy and images are optional.
+`headlineLevel` sets semantic heading independently of `headlineSize`. `padding` overrides theme spacing when placement needs adjustment.
 
 ## Accent colours
 
-All four accents support both tones and follow the selected site theme. Secondary
-is a colour choice, not a synonym for the soft tone.
-
-| `variant`           | Accent source           |
-| ------------------- | ----------------------- |
-| `primary` (default) | Main theme accent       |
-| `secondary`         | Secondary theme accent  |
-| `tertiary`          | Tertiary theme accent   |
-| `quaternary`        | Quaternary theme accent |
-
-Use the controls above to compare them. Prefer theme accents over custom colours
-so text and action treatments stay coordinated across sites.
+All four accents support both tones and follow the site theme. Prefer theme accents over custom colours to keep text and action treatments coordinated.
 
 ## Props
 
@@ -150,15 +115,9 @@ so text and action treatments stay coordinated across sites.
 
 ## Integration guidance
 
-Pass a form or other React content as `children` to reuse the CTA shell. Its
-heading, copy, optional image and existing button API stay independent of the
-content. Use `centered={false}` for form compositions and give the form an
-appropriate contrasting surface. Supplying content selects a stacked layout even when `layout="inline"`. Form behaviour, validation and service integration belong to the
-caller.
+Pass React content as `children` to reuse the CTA shell. Heading, copy, optional image, and button API remain independent. Use `centered={false}` for forms and supply appropriate contrasting surfaces. Composed content selects stacked layout even when `layout="inline"`.
 
-For Drupal-owned forms, render the CTA classes directly around the native form.
-Do not apply `data-mg-text-cta` hydration to custom form content: the current
-hydrator supports the existing text/button data model, not arbitrary children.
+Form behaviour, validation, and service integration belong to the caller. For Drupal-owned forms, render CTA classes directly around the native form — do not apply `data-mg-text-cta` hydration to custom form content (current hydrator supports text/button model only, not arbitrary children).
 
 ## Server-rendered / CDN usage
 

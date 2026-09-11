@@ -4,9 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Favicons
 
-Canonical favicon sets for UNDRR web properties, hosted on the CDN at `assets.undrr.org/favicons/`. All Drupal sites and static microsites share a single source of truth for favicons.
-
-See [web-backlog#2757](https://gitlab.com/undrr/web-backlog/-/work_items/2757) for the full initiative.
+Canonical favicon sets for UNDRR web properties, hosted on the CDN at `assets.undrr.org/favicons/`. See [web-backlog#2757](https://gitlab.com/undrr/web-backlog/-/work_items/2757).
 
 ## Brands
 
@@ -27,88 +25,26 @@ See [web-backlog#2757](https://gitlab.com/undrr/web-backlog/-/work_items/2757) f
 
 ## Files per brand
 
-Each brand directory contains:
-
-| File                   | Size    | Purpose                                                          |
-| ---------------------- | ------- | ---------------------------------------------------------------- |
-| `source-icon.png`      | 512px+  | Source artwork for regeneration — not intended for use in markup |
-| `favicon.ico`          | 32x32   | Legacy browser fallback                                          |
-| `apple-touch-icon.png` | 180x180 | iOS home screen                                                  |
-| `favicon-192.png`      | 192x192 | Android / PWA                                                    |
-| `favicon-512.png`      | 512x512 | PWA splash screen                                                |
+| File                   | Size    |
+| ---------------------- | ------- |
+| `source-icon.png`      | 512px+  |
+| `favicon.ico`          | 32x32   |
+| `apple-touch-icon.png` | 180x180 |
+| `favicon-192.png`      | 192x192 |
+| `favicon-512.png`      | 512x512 |
 
 ## Example
 
-The full set of files for the UNDRR brand (the same structure applies to every brand — substitute the directory name):
+UNDRR favicon files (same structure for all brands):
 
-| File                 | URL                                                                                                                        |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| favicon.ico          | [assets.undrr.org/favicons/undrr/v1/favicon.ico](https://assets.undrr.org/favicons/undrr/v1/favicon.ico)                   |
-| apple-touch-icon.png | [assets.undrr.org/favicons/undrr/v1/apple-touch-icon.png](https://assets.undrr.org/favicons/undrr/v1/apple-touch-icon.png) |
-| favicon-192.png      | [assets.undrr.org/favicons/undrr/v1/favicon-192.png](https://assets.undrr.org/favicons/undrr/v1/favicon-192.png)           |
-| favicon-512.png      | [assets.undrr.org/favicons/undrr/v1/favicon-512.png](https://assets.undrr.org/favicons/undrr/v1/favicon-512.png)           |
-
-Preview at each size:
-
-<div
-  style={{
-    display: 'flex',
-    gap: '2rem',
-    alignItems: 'end',
-    padding: '1rem',
-    background: '#f5f5f5',
-    borderRadius: '8px',
-  }}
->
-  <div style={{ textAlign: 'center' }}>
-    <img
-      src="https://assets.undrr.org/favicons/undrr/v1/favicon.ico"
-      width="32"
-      height="32"
-      alt="UNDRR favicon at 32 pixels"
-    />
-    <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem', color: '#333' }}>
-      32px (.ico)
-    </div>
-  </div>
-  <div style={{ textAlign: 'center' }}>
-    <img
-      src="https://assets.undrr.org/favicons/undrr/v1/apple-touch-icon.png"
-      width="90"
-      height="90"
-      alt="UNDRR favicon at 180 pixels"
-    />
-    <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem', color: '#333' }}>
-      180px (apple-touch)
-    </div>
-  </div>
-  <div style={{ textAlign: 'center' }}>
-    <img
-      src="https://assets.undrr.org/favicons/undrr/v1/favicon-192.png"
-      width="96"
-      height="96"
-      alt="UNDRR favicon at 192 pixels"
-    />
-    <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem', color: '#333' }}>
-      192px (Android)
-    </div>
-  </div>
-  <div style={{ textAlign: 'center' }}>
-    <img
-      src="https://assets.undrr.org/favicons/undrr/v1/favicon-512.png"
-      width="128"
-      height="128"
-      alt="UNDRR favicon at 512 pixels"
-    />
-    <div style={{ fontSize: '0.8125rem', marginTop: '0.25rem', color: '#333' }}>
-      512px (PWA splash)
-    </div>
-  </div>
-</div>
+- [favicon.ico](https://assets.undrr.org/favicons/undrr/v1/favicon.ico) — 32px
+- [apple-touch-icon.png](https://assets.undrr.org/favicons/undrr/v1/apple-touch-icon.png) — 180px (iOS)
+- [favicon-192.png](https://assets.undrr.org/favicons/undrr/v1/favicon-192.png) — 192px (Android/PWA)
+- [favicon-512.png](https://assets.undrr.org/favicons/undrr/v1/favicon-512.png) — 512px (PWA splash)
 
 ## Recommended markup
 
-Replace `{brand}` with the directory name from the table above (`arise`, `gp`, `iddrr`, `irp`, `mcr`, `pw`, `sfvc`, `stop-disasters`, `undrr`, `wtad`):
+Replace `{brand}` with the directory name from the Brands table above:
 
 ```html
 <link
@@ -171,20 +107,18 @@ For PWA `manifest.json`:
 
 ### Drupal themes
 
-No action required — CDN favicons are injected automatically by `undrr_common_page_attachments_alter()` for all child themes. The active Drupal theme is mapped to its favicon brand.
-
-The `mangrove_cdn_environment` Drupal setting controls whether favicons load from the production CDN (`assets.undrr.org/favicons/`) or the testing CDN (`assets.undrr.org/testing/static/favicons/`). This is configured in each environment's `settings.php`.
+CDN favicons are injected automatically by `undrr_common_page_attachments_alter()` for all child themes. The `mangrove_cdn_environment` setting controls whether favicons load from production or testing CDN.
 
 ### Astro microsites
 
-`BaseLayout.astro` maps the `theme` prop to CDN favicon URLs via `faviconBaseUrl()` in `src/lib/mangrove.ts`. An optional `favicon` prop overrides the default mapping when the visual theme differs from the favicon brand.
+Use `BaseLayout.astro` with the `theme` prop. Optional `favicon` prop overrides the default:
 
 ```astro
-<!-- Default: favicon matches theme -->
-<BaseLayout theme="preventionweb">
+<!-- Favicon matches theme -->
+<BaseLayout theme="preventionweb" />
 
-<!-- Override: IRP styling but UNDRR favicon -->
-<BaseLayout theme="irp" favicon="undrr">
+<!-- Override favicon -->
+<BaseLayout theme="irp" favicon="undrr" />
 ```
 
 ### Other consumers
@@ -193,15 +127,15 @@ Any site can reference the CDN paths directly. Use the recommended markup above 
 
 ## Adding a new brand
 
-1. Add a `favicons/{brand}/v1/` directory in the [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets) repo
+1. Add a `favicons/{brand}/v1/` directory in [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets)
 2. Place a square `source-icon.png` (512px minimum, transparent background)
 3. Run `npm run generate-favicons -- {brand}` (requires ImageMagick 7+)
 4. Commit and push — CI deploys to CDN
-5. Update the Drupal theme mapping in `undrr_common.theme` and/or the microsites mapping in `src/lib/mangrove.ts`
+5. Update the Drupal theme mapping and/or the microsites mapping
 
 ## Versioning
 
-Follow the CDN repo's immutability rule: never modify files in an existing version directory. To update a brand's favicons, create a `v2/` directory.
+Never modify files in an existing version directory. Create a `v2/` directory to update a brand's favicons.
 
 ---
 
@@ -215,6 +149,3 @@ Follow the CDN repo's immutability rule: never modify files in an existing versi
 - [Favicon CDN source repo](https://gitlab.com/undrr/common/shared-web-assets/-/tree/main/favicons)
 - [Web Backlog Issue #2757](https://gitlab.com/undrr/web-backlog/-/work_items/2757)
 
----
-
-Last updated: 10 April 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/Favicons.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

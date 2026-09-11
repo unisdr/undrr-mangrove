@@ -12,18 +12,18 @@ An accessible, responsive gallery component for images, videos, embeds, and cust
 
 ## Overview
 
-The Gallery component displays a collection of media items with thumbnail navigation on the left (desktop) or bottom (mobile). Users can navigate through items by clicking thumbnails, using navigation arrows, or with keyboard controls.
+The Gallery displays a collection of media items with thumbnail navigation (left on desktop, bottom on mobile). Navigate via thumbnail clicks, arrow keys (Left/Right/Home/End), or keyboard.
 
 ### Key features
 
-- Multiple media types: images, videos, embeds (YouTube, Vimeo), and custom HTML
-- Clickable thumbnails on left or bottom
-- Keyboard navigation with arrow keys, Home, End
-- Responsive layout that adapts from desktop to mobile
-- Handles mixed aspect ratios (landscape, portrait, square, panoramic)
-- Full ARIA support and screen reader friendly
-- Optional titles and captions below content
-- Configurable visibility of thumbnails, arrows, and descriptions
+- Multiple media types: images, videos, embeds (YouTube, Vimeo), custom HTML
+- Left or bottom thumbnail navigation
+- Full keyboard support with arrow keys, Home, End
+- Responsive layout adapting desktop to mobile
+- Mixed aspect ratios (landscape, portrait, square, panoramic)
+- Full ARIA support and screen reader accessible
+- Optional titles and captions
+- Configurable thumbnails, arrows, descriptions
 
 ## Basic usage
 
@@ -37,19 +37,19 @@ The default gallery layout with thumbnails on the left, navigation arrows, and d
 
 <Canvas of={GalleryStories.BasicGallery} />
 
-Best for desktop viewing with vertical thumbnail scrolling.
+Vertical layout optimized for desktop.
 
 ### Thumbnails at bottom
 
 <Canvas of={GalleryStories.ThumbnailsBottom} />
 
-Alternative layout with thumbnails below the main image.
+Horizontal layout for mobile-first designs.
 
-## Scrolling with many images
+### Scrolling with many images
 
 <Canvas of={GalleryStories.ManyImages} />
 
-When there are many images, the thumbnail list becomes scrollable. Selected thumbnails automatically scroll into view.
+Thumbnail lists scroll automatically; selected items stay in view.
 
 ## Configuration options
 
@@ -57,25 +57,19 @@ When there are many images, the thumbnail list becomes scrollable. Selected thum
 
 <Canvas of={GalleryStories.WithoutThumbnails} />
 
-Show only the main image with arrow navigation.
-
 ### Without arrows
 
 <Canvas of={GalleryStories.WithoutArrows} />
-
-Navigate only via thumbnail clicks or keyboard.
 
 ### Without descriptions
 
 <Canvas of={GalleryStories.WithoutDescriptions} />
 
-Show images without titles or captions.
-
 ### Minimal configuration
 
 <Canvas of={GalleryStories.Minimal} />
 
-Simplest gallery with only essential features.
+Simplest setup: main image only.
 
 ## Handling different image dimensions
 
@@ -150,22 +144,11 @@ The component follows WAI-ARIA best practices:
 
 ## Responsive behavior
 
-**Desktop (≥ 768px):**
+**Desktop (≥ 768px):** Thumbnails left, main image right, description below, arrows on hover.
 
-- Thumbnails displayed vertically on the left
-- Main image takes remaining space
-- Description below main image
-- Arrows visible on hover
+**Mobile (< 768px):** Vertical stack (image → description → thumbnails), horizontal thumbnail scroll, always-visible arrows.
 
-**Mobile (< 768px):**
-
-- Vertical stack: Main image → Description → Thumbnails
-- Thumbnails scroll horizontally
-- Arrows always visible (smaller size)
-
-**Thumbnail Position Bottom:**
-
-- Same responsive behavior, but thumbnails always at bottom
+**Thumbnail Position Bottom:** Thumbnails always at bottom (mobile and desktop).
 
 ## Usage example
 
@@ -234,11 +217,11 @@ function MyGallery() {
 
 ### Don't
 
-- Use identical `id` values for different images
+- Use duplicate `id` values
 - Omit `alt` text
-- Disable keyboard navigation without good reason
-- Use extremely large images without optimization
-- Mix very different image qualities
+- Disable keyboard navigation unnecessarily
+- Use unoptimized images
+- Mix varying image qualities
 
 ## Browser support
 
