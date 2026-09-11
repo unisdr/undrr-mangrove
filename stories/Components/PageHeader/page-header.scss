@@ -51,6 +51,19 @@
     padding-block: var(--mg-spacing-50);
   }
 
+  // Without this, the language <select>'s content-based min-width (its
+  // longest option's rendered width, e.g. a long translated language name)
+  // keeps the whole block from shrinking, so it drops to its own row the
+  // moment the toolbar gets tight — instead of truncating in place like
+  // the logo and account link already do.
+  &__block--language {
+    min-inline-size: 0;
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      max-inline-size: mg-rem(140);
+    }
+  }
+
   &__logo-img {
     display: block;
     max-inline-size: 100%;
@@ -85,6 +98,7 @@
     margin: 0;
     background: transparent;
     min-width: auto;
+    max-inline-size: 100%;
 
     &:before {
       height: 30px;
@@ -103,6 +117,7 @@
   &__select {
     width: auto !important;
     min-width: auto;
+    max-inline-size: 100%;
     min-height: mg-rem(40);
     height: auto;
     padding-inline: var(--mg-spacing-50) var(--mg-spacing-250);
@@ -113,6 +128,20 @@
     color: rgb(var(--mg-color-neutral-0));
     direction: inherit;
     line-height: mg-rem(20);
+
+    // Truncate a long selected-language label instead of forcing the block
+    // to grow past its max-inline-size (which pushed it, and everything
+    // after it, onto a wrapped second row). Native <select> rendering means
+    // this ellipsis is Chromium/Firefox behavior; some WebKit builds theme
+    // the box and may not visibly truncate — the max-inline-size clamp
+    // still holds either way, so layout doesn't break, it just doesn't get
+    // the ellipsis cue there.
+    @media (max-width: $mg-breakpoint-tablet) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-inline-end: var(--mg-spacing-200);
+    }
 
     &:focus-visible {
       @include mg-focus-ring;
