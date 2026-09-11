@@ -132,11 +132,11 @@
         pointer-events: none;
         clip-path: ellipse(55% 0% at 50% 0%);
         transition:
-          opacity var(--mg-motion-duration-fast)
+          opacity var(--mg-motion-duration-medium)
             var(--mg-motion-easing-standard),
-          clip-path var(--mg-motion-duration-fast)
+          clip-path var(--mg-motion-duration-medium)
             var(--mg-motion-easing-standard),
-          visibility 0s linear var(--mg-motion-duration-fast);
+          visibility 0s linear var(--mg-motion-duration-medium);
       }
     }
 
@@ -189,9 +189,9 @@
           pointer-events: auto;
           clip-path: ellipse(150% 150% at 50% 0%);
           transition:
-            opacity var(--mg-motion-duration-fast)
+            opacity var(--mg-motion-duration-medium)
               var(--mg-motion-easing-standard),
-            clip-path var(--mg-motion-duration-fast)
+            clip-path var(--mg-motion-duration-medium)
               var(--mg-motion-easing-standard),
             visibility 0s linear 0s;
         }
