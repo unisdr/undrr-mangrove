@@ -28,11 +28,24 @@
       color: rgb(var(--mg-color-neutral-0));
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       min-block-size: mg-rem(40);
       min-inline-size: mg-rem(40);
 
+      // Ring the icon, not the full 40x40 tap target — now that the
+      // account link is icon-only (no visible text filling that box), a
+      // ring on the <a> itself reads as oversized against the icon. Same
+      // pattern as .mg-page-header__block--language:focus-within below.
+      // The base `a:focus-visible` rule in _foundational.scss still rings
+      // the anchor itself (that rule applies to every link site-wide) —
+      // cancel it here or the two rings stack.
       &:focus-visible {
-        @include mg-focus-ring;
+        outline: none;
+        box-shadow: none;
+
+        .mg-page-header__toolbar-icon {
+          @include mg-focus-ring;
+        }
       }
     }
 
@@ -51,66 +64,54 @@
     padding-block: var(--mg-spacing-50);
   }
 
-  // Without this, the language <select>'s content-based min-width (its
-  // longest option's rendered width, e.g. a long translated language name)
-  // keeps the whole block from shrinking, so it drops to its own row the
-  // moment the toolbar gets tight — instead of collapsing in place like
-  // the logo and account link already do.
+  // Shared by the account and language icons so they scale together —
+  // ~20% larger than plain inherited text size, since they're now the
+  // toolbar's only visible affordance for each control (no adjacent label).
+  &__toolbar-icon {
+    font-size: 1.2em;
+  }
+
+  // Icon-only trigger at every width — language is a settings action, not
+  // primary content, so the current selection doesn't need to stay visibly
+  // spelled out (compare the account link, which is icon-only below tablet
+  // for the same reason). The native <select> stays in the DOM at full
+  // size, just visually hidden and overlaid on top of the icon, so it's
+  // still a real, keyboard- and screen-reader-operable control: clicking
+  // or tapping the icon opens the actual native dropdown, not a
+  // custom-built menu/panel.
   &__block--language {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: var(--mg-spacing-25);
-    min-inline-size: 0;
+    inline-size: mg-rem(40); // matches the account link's tap target
+    block-size: mg-rem(40);
 
-    // Flex items default to min-width: auto (content-based), which would
-    // let the form ignore this block's sizing below and keep the <select>
-    // at its full, untruncated content width.
+    // Extra breathing room from the account link, on top of the toolbar's
+    // shared gap (--mg-spacing-50) — this boundary separates two distinct
+    // controls and reads as cramped at the same gap used for icon-to-label
+    // spacing within a single control.
+    margin-inline-start: var(--mg-spacing-75);
+
     > form {
-      min-inline-size: 0;
+      position: absolute;
+      inset: 0;
     }
 
-    // Below tablet, collapse to icon-only — the same breakpoint the
-    // account link's text label already disappears at
-    // (.mg-page-header__label). The native <select> stays in the DOM at
-    // full size, just visually hidden and overlaid on top of the icon, so
-    // it's still a real, keyboard- and screen-reader-operable control:
-    // tapping/clicking the icon opens the actual native dropdown, not a
-    // custom-built menu.
-    @media (max-width: $mg-breakpoint-tablet) {
-      position: relative;
-      inline-size: mg-rem(40); // matches the account link's tap target
-      block-size: mg-rem(40);
-
-      > form {
-        position: absolute;
-        inset: 0;
-      }
-
-      &:focus-within .mg-page-header__language-icon {
-        @include mg-focus-ring;
-      }
+    &:focus-within .mg-page-header__language-icon {
+      @include mg-focus-ring;
     }
   }
 
   &__language-icon {
-    flex-shrink: 0;
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    transform: translate(-50%, -50%);
     color: rgb(var(--mg-color-neutral-0));
 
-    // No explicit font-size: inherits the same ambient size as the account
-    // link's <Icon name="user"> (also unset), so both toolbar icons render
-    // at the same size instead of the account icon looking smaller next to
-    // this one.
-
-    @media (max-width: $mg-breakpoint-tablet) {
-      position: absolute;
-      inset-inline-start: 50%;
-      inset-block-start: 50%;
-      transform: translate(-50%, -50%);
-
-      // The invisible <select> sits on top and handles the actual click —
-      // let pointer events pass through the icon to it.
-      pointer-events: none;
-    }
+    // The invisible <select> sits on top and handles the actual click —
+    // let pointer events pass through the icon to it.
+    pointer-events: none;
   }
 
   &__logo-img {
@@ -147,7 +148,6 @@
     margin: 0;
     background: transparent;
     min-width: auto;
-    max-inline-size: 100%;
 
     &:before {
       height: 30px;
@@ -163,46 +163,30 @@
     }
   }
 
+  // Always an invisible tap target exactly the size of the icon above it
+  // (see .mg-page-header__block--language) — a real, focusable,
+  // screen-reader- and keyboard-operable native <select>, just not
+  // visually rendered. opacity (not display/visibility) is what keeps it
+  // operable; the focus ring shows on the icon instead
+  // (.mg-page-header__block--language:focus-within), since a ring on an
+  // invisible element wouldn't be visible. direction: inherit and a
+  // readable font-size still matter here even though the closed box is
+  // invisible: browsers render the open dropdown's option list using
+  // these, so RTL languages and legible option text still depend on them.
   &__select {
-    width: auto !important;
-    min-width: auto;
-    max-inline-size: 100%;
-    min-height: mg-rem(40);
-    height: auto;
-    padding-inline: var(--mg-spacing-50) var(--mg-spacing-250);
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    min-width: 0;
+    padding: 0;
     border: none;
-    border-radius: var(--mg-radius-button);
-
-    // Matches .mg-page-header__label ("My account") — same size/weight
-    // toolbar utility text, previously mismatched (1rem regular here vs.
-    // 0.875rem bold there).
-    font-size: $mg-font-tag;
-    font-weight: bold;
     background-color: transparent;
-    color: rgb(var(--mg-color-neutral-0));
     direction: inherit;
-    line-height: mg-rem(20);
-
-    // Below tablet the whole control becomes an invisible tap target
-    // exactly the size of the icon above it (see
-    // .mg-page-header__block--language) — width: auto !important above
-    // sizes to content otherwise, so force it to fill instead. opacity (not
-    // display/visibility) keeps it a real, focusable, screen-reader- and
-    // keyboard-operable native <select>; the focus ring shows on the icon
-    // instead (.mg-page-header__block--language:focus-within), since a
-    // ring on an invisible element wouldn't be visible.
-    @media (max-width: $mg-breakpoint-tablet) {
-      inline-size: 100% !important;
-      block-size: 100%;
-      padding: 0;
-      opacity: 0;
-      cursor: pointer;
-      outline: none;
-    }
-
-    &:focus-visible {
-      @include mg-focus-ring;
-    }
+    font-size: $mg-font-size-300;
+    opacity: 0;
+    cursor: pointer;
+    outline: none;
 
     option {
       color: rgb(var(--mg-color-text));
@@ -242,23 +226,3 @@
   }
 }
 
-.mg-page-header__label {
-  display: inline-block;
-  font-size: $mg-font-tag;
-  font-weight: bold;
-  margin-inline-start: var(--mg-spacing-25);
-  padding: var(--mg-spacing-25) 0;
-
-  @media (max-width: $mg-breakpoint-tablet) {
-    display: none;
-  }
-}
-
-// Label for mobile
-.mg-page-header__label-mobile {
-  display: none;
-
-  @media (max-width: $mg-breakpoint-tablet) {
-    display: unset;
-  }
-}

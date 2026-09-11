@@ -65,7 +65,7 @@ The PageHeader component includes several content areas:
 
 **Language Switcher:**
 
-- Dropdown with available languages (English, Spanish, Arabic by default)
+- Icon-only trigger (a `languages` icon, no visible current-selection text) — a real native `<select>` is invisibly overlaid on the icon, so clicking or tapping it opens the actual browser dropdown with available languages (English, Spanish, Arabic by default)
 - Maintains Drupal form structure for backend integration
 - Includes all necessary data attributes for form processing
 
@@ -82,8 +82,8 @@ The PageHeader component includes several content areas:
 The PageHeader component maintains static display with interactive elements:
 
 1. **Logo**: Clickable link to homepage (default variant only)
-2. **Language Switcher**: Interactive dropdown for language selection (default variant only)
-3. **Responsive**: Adapts logo size on mobile devices (≤500px)
+2. **Language Switcher**: Icon-only trigger that opens a native language dropdown (default variant only)
+3. **Responsive**: Logo crops to a smaller fixed box at ≤1164px and again at ≤900px, instead of shrinking; account and language controls are icon-only at every width
 4. **Decoration Only**: Renders only the colored stripe when variant is set to 'decoration-only'
 
 #### Google Analytics integration
@@ -174,11 +174,21 @@ For non-React applications, use these HTML structures:
           </a>
         </section>
 
-        <!-- Language Dropdown Section -->
+        <!-- Account link — icon-only, with a visually hidden (not display:
+             none) text node for its accessible name -->
+        <a title="My account" href="/user">
+          <span class="mg-icon mg-icon-user mg-page-header__toolbar-icon" aria-hidden="true"></span>
+          <span class="mg-u-sr-only">My account</span>
+        </a>
+
+        <!-- Language Dropdown Section — also icon-only; the <select> is a
+             real, full-size native control, just invisibly overlaid on the
+             icon so it still opens the actual browser dropdown -->
         <section
           id="block-languagedropdownswitcher"
           class="mg-page-header__block mg-page-header__block--language "
         >
+          <span class="mg-icon mg-icon-languages mg-page-header__toolbar-icon mg-page-header__language-icon" aria-hidden="true"></span>
           <form
             class="mg-page-header__lang-form lang-dropdown-form"
             action="/"
@@ -190,7 +200,6 @@ For non-React applications, use these HTML structures:
               </label>
               <div class="mg-page-header__select-wrapper">
                 <select
-                  style="width:165px"
                   class="mg-page-header__select"
                   id="edit-lang-dropdown-select"
                 >
@@ -243,6 +252,8 @@ The PageHeader component follows accessibility best practices:
 - Uses `<div>` element for decoration-only variant as it's purely decorative
 - Includes proper `<section>` elements for each functional area
 - Language switcher has proper form labeling with `sr-only` class for screen readers
+- Both the account link and the language switcher are icon-only visually, but keep a real accessible name in the DOM via an `mg-u-sr-only` (visually hidden, not `display: none`) text node — not just a `title` attribute, which some screen readers don't reliably announce
+- The language switcher's focus ring appears on its icon via `:focus-within`, since the underlying `<select>` is itself invisible (`opacity: 0`) and its own focus ring wouldn't be seen
 - Logo image includes proper alt text and title attributes
 - Maintains keyboard navigation for all interactive elements
 - Color contrast meets WCAG AA standards
@@ -285,7 +296,7 @@ The PageHeader component follows accessibility best practices:
 
 ## Changelog
 
-- **1.6.1** — 2026-09-11 ([PR #1134](https://github.com/unisdr/undrr-mangrove/pull/1134)): Resurrected the pre-2.0 mobile/tablet logo cropping (v2 had switched to `object-fit: contain`, shrinking the logo instead), with the crop box measured against the current logo asset rather than the old pixel values, which sliced into the subtitle text. Added `layout: 'fullscreen'` to the story so it renders full-bleed like MegaMenu instead of inside Storybook's padded docs canvas. Fixed the language `<select>` wrapping onto its own row when the selected language's label was long — below the tablet breakpoint it now collapses to a `languages` icon, matching how the account link's text label already collapses there, with the native `<select>` invisibly overlaid on the icon so it's still a real, keyboard- and screen-reader-operable control.
+- **1.6.1** — 2026-09-11 ([PR #1134](https://github.com/unisdr/undrr-mangrove/pull/1134)): Resurrected the pre-2.0 mobile/tablet logo cropping (v2 had switched to `object-fit: contain`, shrinking the logo instead), with the crop box measured against the current logo asset rather than the old pixel values, which sliced into the subtitle text. Added `layout: 'fullscreen'` to the story so it renders full-bleed like MegaMenu instead of inside Storybook's padded docs canvas. Both the account link and the language switcher are now icon-only at every width, not just below tablet — the current language no longer needs to stay visibly spelled out, and the account link's "My account" text moved from a CSS-hidden `<span>` to a proper `mg-u-sr-only` one, so its accessible name no longer depends solely on the `title` attribute. Both icons are ~20% larger and now match each other in size. The language `<select>` stays in the DOM at full size, invisibly overlaid on its icon, so it's still a real, keyboard- and screen-reader-operable native control, not a custom-built menu.
 
 - **1.6.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed duplicate hard-coded IDs by adding `idPrefix` namespacing for header/language elements. Default output remains unchanged when `idPrefix` is omitted, preserving existing Drupal selectors.
 

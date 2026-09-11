@@ -1176,10 +1176,11 @@ npm run build</code></pre>
             </a>
           </div>
           <a title="My account" href="/user">
-            <span class="mg-icon mg-icon-user" aria-hidden="true"></span>
-            <span class="mg-page-header__label">My account</span>
+            <span class="mg-icon mg-icon-user mg-page-header__toolbar-icon" aria-hidden="true"></span>
+            <span class="mg-u-sr-only">My account</span>
           </a>
           <div class="mg-page-header__block mg-page-header__block--language">
+            <span class="mg-icon mg-icon-languages mg-page-header__toolbar-icon mg-page-header__language-icon" aria-hidden="true"></span>
             <form class="mg-page-header__lang-form" action="/" method="post">
               <div class="mg-page-header__form-item">
                 <label for="lang-select" class="mg-u-sr-only">Select your language</label>

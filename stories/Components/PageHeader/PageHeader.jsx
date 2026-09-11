@@ -95,9 +95,11 @@ export function PageHeader({
               {/* User icon */}
               {showAccount && (
                 <a title="My account" href="/user">
-                  <Icon name="user" />{' '}
-                  <span className="mg-page-header__label">My account</span>
-                  {/* <span className="mg-page-header__label-mobile">Login</span> */}
+                  <Icon
+                    name="user"
+                    className="mg-page-header__toolbar-icon"
+                  />{' '}
+                  <span className="mg-u-sr-only">My account</span>
                 </a>
               )}
 
@@ -106,7 +108,7 @@ export function PageHeader({
                 <div className="mg-page-header__block mg-page-header__block--language">
                   <Icon
                     name="languages"
-                    className="mg-page-header__language-icon"
+                    className="mg-page-header__toolbar-icon mg-page-header__language-icon"
                   />
                   <form
                     className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
@@ -126,7 +128,6 @@ export function PageHeader({
 
                       <div className="mg-page-header__select-wrapper">
                         <select
-                          style={{ width: '165px' }}
                           title="Select your language"
                           className="mg-page-header__select lang-dropdown-select-element form-select form-control"
                           data-lang-dropdown-id="lang-dropdown-form"
