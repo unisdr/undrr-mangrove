@@ -22,7 +22,7 @@ it can be seen; use the markup directly.
 <Canvas of={Stories.ReadingColumn} />
 
 ```html
-<div class="mg-reading mg-reading--with-contents">
+<div class="mg-reading mg-reading--with-contents mg-grid mg-grid--article">
   <div><!-- contents --></div>
   <div class="mg-reading__article">…</div>
 </div>
@@ -30,8 +30,13 @@ it can be seen; use the markup directly.
 
 Constrains the article to a readable measure. With `--with-contents` the first
 child becomes a sticky right sidebar from 48rem up and stacks above the article
-below that.
+below that — the flexible/fixed-width split itself is `mg-grid`'s `--article`
+variant (see [Grid layout](?path=/docs/design-decisions-grid-layout--docs)),
+so `mg-grid mg-grid--article` must be paired with `mg-reading--with-contents`
+for the sidebar split to render; `mg-reading--with-contents` alone only
+supplies the item placement.
 
 ## Changelog
 
+- **1.1** — 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): The sidebar/article split's column shape moved out of this file's own bespoke grid and into `mg-grid`'s new `--article` variant, so it's shared, shipped, and reusable outside this pattern rather than living only here. `mg-reading--with-contents` now needs `mg-grid mg-grid--article` alongside it in markup — this file keeps only the item-placement rules specific to its own sidebar/article semantics.
 - **1.0** — 2026-09-10: Added `mg-reading` as a distributed layout utility. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))

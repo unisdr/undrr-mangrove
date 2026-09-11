@@ -178,6 +178,25 @@ g-grid {
     }
   }
 
+  // Asymmetric variant: a flexible reading column plus a fixed-width rail,
+  // for a page layout like a reading column with a sticky sidebar — as
+  // opposed to the equal-fraction card grids above. Pair with the plain
+  // `.mg-grid` class the same as every other variant here, so it shares the
+  // same gap/IE11-fallback mechanics; only the column shape differs. Its own
+  // breakpoint and rail width are separate Sass variables rather than the
+  // shared `$mg-breakpoint-*` scale, matching the reading grid's existing,
+  // deliberately independent breakpoint (see page-patterns.scss).
+  $mg-grid-article-breakpoint: 48rem;
+  $mg-grid-article-rail-width: 16rem;
+
+  @media (min-width: $mg-grid-article-breakpoint) {
+    .mg-grid--article {
+      grid-template-columns: minmax(0, 1fr) $mg-grid-article-rail-width;
+      column-gap: var(--mg-spacing-300);
+      align-items: start;
+    }
+  }
+
   // Grid Spans
 
   .mg-grid__col--span-2 {

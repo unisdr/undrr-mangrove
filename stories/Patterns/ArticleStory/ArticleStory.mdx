@@ -94,8 +94,9 @@ placement doesn't need a separate fallback for `heroImage: "none"`.
 
 The page composes existing, shipped pieces rather than introducing new ones:
 `mg-container-full-width` for the header image's bleed, `mg-reading`/
-`mg-reading__article` for the body and `TableOfContents`, `VerticalCard` in an
-`mg-grid` for related content, `ShareButtons` in the margin rail,
+`mg-reading__article`/`mg-grid mg-grid--article` for the sidebar/article split
+and `TableOfContents`, `VerticalCard` in an `mg-grid` for related content,
+`ShareButtons` in the margin rail,
 `mg-tag-container` for the taxonomy links under "Explore further",
 `Imagecaption` for the header image's caption and credit, and
 `UserFeedback` for the "Is this page useful?" prompt and report-an-issue link
@@ -150,9 +151,15 @@ design is reviewed.
   - Added the `split` `imageProminence` variant, and fixed the `Hero` bugs it
     surfaced at the source (see "Split hero" above and `Hero`'s own
     changelog).
-  - Audited the demo-only CSS against `mg-grid`: none of it fits `mg-grid`'s
-    equal-fraction columns; the rail/article split and the caption/credit row
-    are both asymmetric shapes it can't express.
+  - Audited the demo-only CSS against `mg-grid`: none of `mg-grid`'s existing
+    equal-fraction column classes fit the rail/article split or the
+    caption/credit row, both asymmetric shapes.
+  - Extracted the rail/article split into a new shared `mg-grid--article`
+    variant (see `Grid`'s own changelog) instead of leaving it as
+    `mg-reading--with-contents`'s own bespoke, undiscoverable grid — it now
+    pairs with the plain `mg-grid` class the same way every other `mg-grid`
+    variant does, and `ContentHub`/`LandingPages`/the shared `Reading` demo
+    component were updated to the new markup alongside it.
   - Replaced the caption/credit row entirely with the shared `Imagecaption`
     component (`stories/Molecules/ImageCaption`), fixing real bugs in it at
     the source rather than continuing to hand-roll a demo-only equivalent:

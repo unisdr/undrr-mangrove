@@ -27,14 +27,13 @@
 }
 
 // On this page belongs in a right-hand sidebar wherever there is room for one;
-// it only stacks above the article on narrow viewports.
+// it only stacks above the article on narrow viewports. The column shape
+// itself (the flexible/fixed-width split and its breakpoint) is
+// `mg-grid`'s `--article` variant (see grid.scss) — pair `mg-reading--with-contents`
+// with `mg-grid mg-grid--article` in markup. Only the item placement, which is
+// specific to this reading-grid's semantics (which child is the sidebar vs.
+// the article), stays here.
 @media (width >= 48rem) {
-  .mg-reading--with-contents {
-    grid-template-columns: minmax(0, 1fr) 16rem;
-    column-gap: var(--mg-spacing-300);
-    align-items: start;
-  }
-
   // TableOfContents renders its own wrapper div around the section.
   .mg-reading--with-contents > div:has(.mg-table-of-contents) {
     grid-column: 2;

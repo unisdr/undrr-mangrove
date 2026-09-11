@@ -491,7 +491,7 @@ export function ContentHub({
           )}
           {detail && (
             <div
-              className={`mg-reading${showOnThisPage ? ' mg-reading--with-contents' : ''}`}
+              className={`mg-reading${showOnThisPage ? ' mg-reading--with-contents mg-grid mg-grid--article' : ''}`}
             >
               {showOnThisPage && (
                 <TableOfContents
