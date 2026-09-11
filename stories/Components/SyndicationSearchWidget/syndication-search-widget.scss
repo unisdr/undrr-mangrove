@@ -50,8 +50,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Loading Progress Bar
-// ========================================
 
 .mg-search__progress {
   position: absolute;
@@ -84,8 +82,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // Search form (used by both the in-widget SearchForm and the standalone
-// SyndicationSearchBar). Layout primitives are shared between the two so
-// the detached bar matches the widget's input visually.
 .mg-search__form,
 .mg-search-bar {
   display: flex;
@@ -144,9 +140,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // Submit button: visual styling comes from .mg-button / .mg-button-primary.
-// Only layout-specific spacing for the icon + label is defined here.
-// Loading state is conveyed by the widget-level progress strip
-// (.mg-search__progress) and aria-busy, not by a button-side spinner.
 .mg-search__submit {
   gap: 0.5rem;
 }
@@ -204,9 +197,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   }
 
   // The one rule in this file left on $search-primary when its seven siblings
-  // moved to the focus-ring token, so the widget drew two different focus
-  // colours depending on which control you tabbed to. Also keyed on :focus
-  // rather than :focus-visible, so it fired on mouse clicks too.
   &:focus-visible {
     @include mg-focus-ring;
   }
@@ -254,18 +244,10 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // Horizontal facets strip: used when config.facets === 'horizontal'.
-// Renders the same FacetsSidebar contents as a row above results. On
-// narrow viewports the strip is hidden and the mobile filter drawer
-// handles facet selection (same pattern as the sidebar layout).
 .mg-search__facets-strip {
   margin-bottom: var(--mg-spacing-150);
 
   // Treat Sort and every facet as direct siblings of the same flex row so
-  // they share a consistent track width and wrap together. Without
-  // display:contents on .mg-search__facet-containers the facets would
-  // share a single nested column, getting squeezed when the row is wide
-  // enough to fit them inline but not wide enough to give each one a
-  // readable width.
   .mg-search__facets {
     flex-direction: row;
     flex-wrap: wrap;
@@ -278,10 +260,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   }
 
   // Sort and each facet become equal-width flex cells. The flex-basis of
-  // 200px is the preferred size; min-width keeps them from squeezing
-  // narrower than the longest legend / placeholder, and the flex-grow of
-  // 1 lets them fill the trailing slack on the last wrapped row instead
-  // of leaving a ragged right edge.
   .mg-search__sort,
   .mg-search__facet {
     flex: 1 1 mg-rem(200);
@@ -575,8 +553,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // Card skeleton: layout is controlled by mg-grid classes applied in JSX.
-// Reset the flex declarations inherited from .mg-search__skeleton so they
-// don't fight mg-grid's own flex fallback / CSS grid (@supports) path.
 .mg-search__skeleton--card {
   flex-direction: initial;
 }
@@ -637,8 +613,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   text-align: center;
 }
 
-// ========================================
-// Facets Sidebar
 // ========================================
 
 .mg-search__facets {
@@ -719,14 +693,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // Custom facet styling
-// .mg-search__facet--custom {
-//   background: $search-chip-bg;
-//   padding: var(--mg-spacing-100);
-//   border-radius: $search-radius;
-// }
 
-// ========================================
-// Result teaser HTML overrides
 // ========================================
 
 // Type badge and site name badges injected before the title in teaser results
@@ -771,14 +738,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Teaser Field Visibility (DEPRECATED)
-// ========================================
-// Teaser field hiding is handled programmatically in DOM output via React.
-// Legacy CSS modifier rules are imported from _deprecated-teaser-hide.scss and
-// scheduled for removal in November 2026.
 
-// ========================================
-// Card Display Mode (mg-grid layout)
 // ========================================
 
 .mg-search__results-grid {
@@ -796,10 +756,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   }
 }
 
-// ========================================
-// Result Animations
-// Sequential fade-in and slide from left for search results.
-// Animation classes applied via JS (which checks prefers-reduced-motion).
 // ========================================
 
 // Initial hidden state - applied before animation
@@ -847,8 +803,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   }
 }
 
-// ========================================
-// Collapsible Filter Sections
 // ========================================
 
 // Hide overflow items by default (when fieldset doesn't have .facet-expanded)
@@ -904,8 +858,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Loading Spinner (full-page initial load)
-// ========================================
 
 .mg-search__loader {
   display: flex;
@@ -930,10 +882,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Custom Select Dropdown (replaces Chosen.js)
-// ========================================
-// Lightweight, self-contained dropdown that works in any environment.
-// No external dependencies required.
 
 .mg-select {
   position: relative;
@@ -1171,8 +1119,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Enhanced Facet Option Styling
-// ========================================
 
 .mg-search__facet-option {
   display: grid;
@@ -1227,15 +1173,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Mobile Filter Drawer (Left Slide-in)
-// ========================================
-// UX patterns informed by:
-// @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
-// Key decisions:
-// - Sidebar overlay: Maintains context, click outside to close
-// - Sticky header/footer: Always visible, no scrolling required
-// - 44px minimum touch targets: Finger-friendly interaction
-// - Batch filtering: Apply all filters at once (View Results button)
 
 .mg-search__drawer-backdrop {
   position: fixed;
@@ -1386,8 +1323,6 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Mobile Responsive Styles
-// ========================================
 
 @media (width <= 800px) {
   // Show compact filter button in results header
@@ -1417,16 +1352,12 @@ $search-input-padding-x: var(--mg-spacing-250);
 }
 
 // ========================================
-// Accessibility Focus States
-// ========================================
 
 .mg-search__facet-select:focus-visible,
 .mg-search__facet input:focus-visible {
   @include mg-focus-ring;
 }
 
-// ========================================
-// Debug Mode
 // ========================================
 
 .mg-search-debug {
@@ -1437,8 +1368,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   display: block;
 }
 
-// ========================================
-// Facet Operator Toggle (AND/OR)
 // ========================================
 
 .mg-search__facet-operator {
@@ -1512,8 +1441,6 @@ $search-input-padding-x: var(--mg-spacing-250);
   }
 }
 
-// ========================================
-// Active Filter Chip Connector (AND grouping)
 // ========================================
 
 .mg-search__filter-chip-connector {

@@ -11,8 +11,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Rendering page numbers
-  // --------------------------------------------------
 
   it('renders correct page numbers for page 3 of 20', () => {
     render(<Pager page={3} totalPages={20} onPageChange={onPageChange} />);
@@ -54,8 +52,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Navigation callbacks
-  // --------------------------------------------------
 
   it('calls onPageChange with correct page on button click', () => {
     render(<Pager page={3} totalPages={20} onPageChange={onPageChange} />);
@@ -79,8 +75,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Disabled states
-  // --------------------------------------------------
 
   it('disables Previous on page 1', () => {
     render(<Pager page={1} totalPages={20} onPageChange={onPageChange} />);
@@ -94,8 +88,6 @@ describe('Pager', () => {
     expect(screen.getByLabelText('Go to next page')).toBeDisabled();
   });
 
-  // --------------------------------------------------
-  // Keyboard navigation
   // --------------------------------------------------
 
   it('responds to Enter key on page button', () => {
@@ -113,8 +105,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // aria-current
-  // --------------------------------------------------
 
   it('sets aria-current="page" on active page', () => {
     render(<Pager page={3} totalPages={20} onPageChange={onPageChange} />);
@@ -131,8 +121,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Loading state
-  // --------------------------------------------------
 
   it('disables all controls when isLoading is true', () => {
     render(
@@ -146,8 +134,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Mini pager (unknown total)
-  // --------------------------------------------------
 
   it('renders mini pager when totalPages is null', () => {
     render(<Pager page={5} totalPages={null} onPageChange={onPageChange} />);
@@ -158,8 +144,6 @@ describe('Pager', () => {
     expect(screen.getByLabelText('Go to next page')).not.toBeDisabled();
   });
 
-  // --------------------------------------------------
-  // Bar layout
   // --------------------------------------------------
 
   it('renders bar layout with three zones', () => {
@@ -181,8 +165,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Range display
-  // --------------------------------------------------
 
   it('shows range text when range prop is provided', () => {
     render(
@@ -199,8 +181,6 @@ describe('Pager', () => {
     expect(screen.getByText(/Showing 21–30/)).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Jump-to-page form
   // --------------------------------------------------
 
   it('calls onPageChange on jump form submit', () => {
@@ -245,8 +225,6 @@ describe('Pager', () => {
   });
 
   // --------------------------------------------------
-  // Empty / notice state
-  // --------------------------------------------------
 
   it('shows notice when emptyState is provided', () => {
     render(
@@ -278,8 +256,6 @@ describe('Pager', () => {
     expect(actionFn).toHaveBeenCalled();
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

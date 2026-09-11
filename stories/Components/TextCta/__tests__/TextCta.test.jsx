@@ -10,8 +10,6 @@ describe('TextCta', () => {
   ];
 
   // --------------------------------------------------
-  // Headline rendering
-  // --------------------------------------------------
 
   it('renders headline text', () => {
     render(<TextCta headline="Join the platform" />);
@@ -55,8 +53,6 @@ describe('TextCta', () => {
   });
 
   // --------------------------------------------------
-  // Text (dangerouslySetInnerHTML)
-  // --------------------------------------------------
 
   it('renders sanitized HTML in text prop', () => {
     const { container } = render(
@@ -77,8 +73,6 @@ describe('TextCta', () => {
     expect(textEl.innerHTML).not.toContain('<script>');
   });
 
-  // --------------------------------------------------
-  // Buttons
   // --------------------------------------------------
 
   it('renders buttons as links', () => {
@@ -125,8 +119,6 @@ describe('TextCta', () => {
   });
 
   // --------------------------------------------------
-  // Variant classes
-  // --------------------------------------------------
 
   it('applies variant class', () => {
     const { container } = render(<TextCta variant="secondary" />);
@@ -141,8 +133,6 @@ describe('TextCta', () => {
   });
 
   // --------------------------------------------------
-  // Image layout
-  // --------------------------------------------------
 
   it('adds mg-cta--with-image class when image is set', () => {
     const { container } = render(
@@ -156,8 +146,6 @@ describe('TextCta', () => {
     expect(img).toHaveAttribute('src', 'https://example.com/photo.jpg');
   });
 
-  // --------------------------------------------------
-  // Centered layout
   // --------------------------------------------------
 
   it('adds mg-cta--centered class when centered and no image', () => {
@@ -182,8 +170,6 @@ describe('TextCta', () => {
   });
 
   // --------------------------------------------------
-  // Custom background color
-  // --------------------------------------------------
 
   it('sets --mg-cta-bg CSS variable from backgroundColor', () => {
     const { container } = render(<TextCta backgroundColor="#2c5f2d" />);
@@ -198,8 +184,6 @@ describe('TextCta', () => {
   });
 
   // --------------------------------------------------
-  // Additional className
-  // --------------------------------------------------
 
   it('appends custom className', () => {
     const { container } = render(<TextCta className="my-custom" />);
@@ -207,8 +191,6 @@ describe('TextCta', () => {
     expect(container.firstChild).toHaveClass('mg-cta', 'my-custom');
   });
 
-  // --------------------------------------------------
-  // Accessible name on section
   // --------------------------------------------------
 
   it('labels section via aria-labelledby when headline is present', () => {
@@ -226,8 +208,6 @@ describe('TextCta', () => {
     expect(section).toHaveAttribute('aria-label', 'Call to action');
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

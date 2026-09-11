@@ -31,9 +31,6 @@ export function PageHeader({
   ...args
 }) {
   // Element ids are Drupal-derived and consumers style and script against
-  // them, so they stay verbatim by default. `idPrefix` namespaces them for
-  // pages that render more than one header, where duplicate ids would break
-  // the language `label`/`select` pairing (WCAG 1.3.1, 4.1.1).
   const id = name => (idPrefix ? `${idPrefix}-${name}` : name);
 
   const headerClasses = cls(

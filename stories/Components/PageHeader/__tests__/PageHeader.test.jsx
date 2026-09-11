@@ -5,8 +5,6 @@ import { PageHeader } from '../PageHeader';
 
 describe('PageHeader', () => {
   // --------------------------------------------------
-  // Default rendering
-  // --------------------------------------------------
 
   it('renders all sections by default', () => {
     render(<PageHeader />);
@@ -19,8 +17,6 @@ describe('PageHeader', () => {
     expect(screen.getByLabelText('Select your language')).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Visibility toggles
   // --------------------------------------------------
 
   it('hides the logo section when showLogo is false', () => {
@@ -47,8 +43,6 @@ describe('PageHeader', () => {
   });
 
   // --------------------------------------------------
-  // Decoration-only variant
-  // --------------------------------------------------
 
   it('renders only the decoration stripe for decoration-only variant', () => {
     const { container } = render(<PageHeader variant="decoration-only" />);
@@ -65,8 +59,6 @@ describe('PageHeader', () => {
   });
 
   // --------------------------------------------------
-  // Custom logo and home URL props
-  // --------------------------------------------------
 
   it('applies custom logoUrl, logoAlt, and homeUrl', () => {
     render(
@@ -82,8 +74,6 @@ describe('PageHeader', () => {
     expect(img.closest('a')).toHaveAttribute('href', '/home');
   });
 
-  // --------------------------------------------------
-  // Language options
   // --------------------------------------------------
 
   it('renders language options from the languages prop', () => {
@@ -105,8 +95,6 @@ describe('PageHeader', () => {
     expect(select.value).toBe('en');
   });
 
-  // --------------------------------------------------
-  // Skip link
   // --------------------------------------------------
 
   it('emits no skip link unless a target is given', () => {
@@ -138,8 +126,6 @@ describe('PageHeader', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations in default variant', async () => {

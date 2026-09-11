@@ -80,9 +80,9 @@ Primary, secondary, and disabled buttons on light and dark backgrounds for easy 
 
 ## Changelog
 
-- **1.4** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)): The arrow bubble slides a few pixels toward its destination on hover, flipped in RTL and suppressed under `prefers-reduced-motion`, where the shift would be a jump rather than a gesture.
+- **1.4** — 2026-09-10 ([#1113](https: //github.com/unisdr/undrr-mangrove/pull/1113)): The arrow bubble slides a few pixels toward its destination on hover, flipped in RTL and suppressed under `prefers-reduced-motion`, where the shift would be a jump rather than a gesture.
 
-- **1.3.2** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a button whose own language is not Arabic.
+- **1.3.2** — 2026-09-08 ([#1092](https: //github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a button whose own language is not Arabic.
 - **1.3.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Refreshed React `CtaButton` instances as compact editorial links with an optically aligned circular direction badge, tactile press state, RTL direction, context-aware hero colours, and safe wrapping for narrow German, French and Arabic labels.
   - Made the editorial treatment an explicit `Variant="CTA"` option; conventional form and utility actions retain their filled button treatment.
@@ -94,6 +94,6 @@ Primary, secondary, and disabled buttons on light and dark backgrounds for easy 
   - Kept the public anchor markup flat by applying CTA wrapping directly to the link instead of introducing a label-only child element.
   - Corrected the all-variants story's Hero fixture so its gradient overlay stays behind the dark-context controls instead of covering the Storybook canvas, and added the missing editorial CTA treatment to both light and Hero comparisons.
 - **1.3** — 2026-08-26: Add composable `.mg-button-outline` modifier for primary and secondary emphasis variants.
-- **1.2** — 2026-04-13: `.mg-button` now declares an explicit `font-family: $mg-font-family-headings;` (was inheriting body Roboto). Aligns with the existing `:lang(ar)` override which already used `$mg-font-family-arabic-headings` — Latin and Arabic now match.
-- **1.1** — 2026-03-22: Add "All variants" comparison story (light + dark backgrounds). Fix secondary button contrast to meet WCAG AA (blue-800/blue-700, was blue-600/blue-400). Fix disabled button contrast (neutral-500 bg + white text). Remove dead `mg-button-arrow` class and `For_Primary` prop. Add `:focus-visible` ring for buttons on dark backgrounds. Tokenize secondary button and hero secondary button colors for theme overriding.
+- **1.2** — 2026-04-13: `.mg-button` now declares an explicit `font-family: $mg-font-family-headings;` (was inheriting body Roboto).
+- **1.1** — 2026-03-22: Add "All variants" comparison story (light + dark backgrounds).
 - **1.0** — 2022-12-12: Released component

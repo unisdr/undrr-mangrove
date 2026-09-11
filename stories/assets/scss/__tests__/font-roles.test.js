@@ -135,13 +135,8 @@ describe('every font-family names a role', () => {
    */
   const EXCEPTIONS = {
     // Vendored normalize.css. Not Mangrove's typography — it restores the
-    // browser default for `pre` / `code` / `kbd` / `samp` before Mangrove's own
-    // code styling (which does use --mg-font-family-code) lands on top.
     monospace: ['pre', 'code, kbd, samp'],
     // FontAwesome is an icon font, not a text face. It has no reader-task role
-    // and no Arabic counterpart; icons.scss names it directly (ruling 3 of
-    // unisdr/undrr-mangrove#1098, which is also why $mg-font-family-icons was
-    // removed with no replacement).
     'FontAwesome, sans-serif': ['.mg-icon, .fa-before:before, .fab, .fas, .fa'],
   };
 
@@ -180,10 +175,6 @@ describe('every font-family names a role', () => {
 describe('the roles are defined in every bundle', () => {
   test.each(BUNDLES)('%s.css defines all five roles', entry => {
     // style-gutenberg.scss skips _foundational.scss, which is why the role
-    // definitions live in _variables.scss rather than there. A regression here
-    // does not fail the build or the Latin diff: the references stay, the
-    // definitions go, and every element in the bundle silently renders in the
-    // browser's default serif. Two rounds of #1098 shipped exactly that bug.
     const css = withoutComments(compile(entry));
     const defined = ROLES.filter(role =>
       new RegExp(`--mg-font-family-${role}\\s*:`).test(css)
@@ -203,9 +194,6 @@ describe('the roles are defined in every bundle', () => {
       );
       if (usedAt === -1) continue;
       // Custom properties do not depend on source order for *cascade*, but a
-      // reference is only valid if the property is in scope on the element, and
-      // the ordering check is a cheap proxy for "the map is in this bundle at
-      // all" that also catches a map emitted inside a media query or theme.
       expect({ role, declaredAt: declaredAt !== -1 }).toEqual({
         role,
         declaredAt: true,
@@ -273,8 +261,6 @@ describe('the roles resolve to the intended faces', () => {
 
   test('the face probe resolved every face variable', () => {
     // Guards the guard. The expectations below build their expected side out of
-    // this object, so an empty read has to be caught here rather than produce a
-    // comparison of undefined against undefined downstream.
     expect(faces).toEqual(
       Object.fromEntries(FACES.map(name => [name, expect.stringMatching(/\S/)]))
     );
@@ -299,9 +285,6 @@ describe('the roles resolve to the intended faces', () => {
     '%s.css re-points the roles onto Arabic faces on an Arabic root',
     entry => {
       // Exhaustive, not a subset: `code` must be ABSENT here. The monospace
-      // stack is the same in both scripts, so it inherits from `:root`, and a
-      // stray Arabic `code` value would be a silently wrong face for every code
-      // block on an Arabic page.
       expect(roleMap(entry, ':root:lang(ar)')).toEqual({
         text: faces['mg-font-face-arabic-sans'],
         heading: faces['mg-font-face-arabic-display'],
@@ -313,13 +296,6 @@ describe('the roles resolve to the intended faces', () => {
 
   test('a face override that needs quotes survives into the role', () => {
     // The `!default` on the face variables exists so a consumer compiling from
-    // source can drop in a licensed brand face. Frutiger, Univers and Helvetica
-    // Neue LT Std all name weights numerically, so the family name MUST stay
-    // quoted: `Frutiger 55 Roman` is not a valid custom-ident, the custom
-    // property is invalid at computed-value time, the role is never defined,
-    // and every element that references it renders in the browser's default
-    // serif. That is what plain `#{$face}` interpolation emitted, and it is
-    // silent — the build is clean and the page is Times.
     const css = sass.compileString(
       '$mg-font-face-sans: "Frutiger 55 Roman", sans-serif;\n' +
         '@import "variables";\n',
@@ -338,9 +314,6 @@ describe('the roles resolve to the intended faces', () => {
 
   test('the two scripts disagree about ui, which is why the role exists', () => {
     // `ui` is the whole point of the split: Latin chrome is condensed, Arabic
-    // has no condensed axis and collapses onto the body face. A map where the
-    // two scripts agreed would still satisfy every assertion above if the faces
-    // were edited to match, and would mean the role model had been abandoned.
     const latin = roleMap('style', ':root');
     const arabic = roleMap('style', ':root:lang(ar)');
 
@@ -408,9 +381,6 @@ describe('the documented per-component Sass recipe', () => {
 
   test('carries the Arabic script map too', () => {
     // Defining the roles is not enough: a build with the Latin map and no
-    // Arabic map asks for Roboto on an Arabic page, and Roboto has no Arabic
-    // coverage, so every glyph falls back to whatever the OS supplies. It is
-    // silent — no warning, no invalid declaration, correct-looking Latin.
     const css = sass.compileString(recipe().join('\n'), {
       loadPaths: [REPO_ROOT],
       silenceDeprecations: ['import'],
@@ -512,9 +482,6 @@ describe('the shared Drupal import list', () => {
     'compiles under a %s theme entry, list starting at `fonts`',
     (_flavour, prelude) => {
       // The whole point of starting the list at `fonts`: if `_fonts.scss` grows
-      // a dependency the entry point's `variables` does not satisfy, this is
-      // where a real theme's build breaks, and the failure is a thrown
-      // `Undefined variable` rather than a missing declaration.
       expect(roleMapIn(compileConsumer(prelude), ':root:lang(ar)')).toEqual({
         text: expect.stringContaining('Noto Sans Arabic'),
         heading: expect.stringContaining('Noto Kufi Arabic'),
@@ -534,9 +501,6 @@ describe('the shared Drupal import list', () => {
 
   test('carries both language-boundary rules', () => {
     // Custom properties inherit, so a `lang="en"` island inside an Arabic page
-    // keeps resolving the roles to Arabic faces unless they are restated at the
-    // switch point — and `font-family` itself inherits as a used value, so the
-    // boundary has to restate that too. See unisdr/undrr-mangrove#1093.
     const boundaries = rules(consumerCss()).filter(rule =>
       rule.selector.includes('[lang]:not([lang=""]')
     );
@@ -548,10 +512,6 @@ describe('the shared Drupal import list', () => {
 
   test('emits the script map exactly once', () => {
     // `_fonts.scss` carries the map and the `@font-face` blocks, and Sass's
-    // legacy `@import` re-emits, so any build path that reaches it twice would
-    // duplicate both. Duplicated rules are not a rendering bug, but they are
-    // dead weight in a file every UNDRR page loads, and a second copy would
-    // mask an ordering mistake in the first.
     const once = css => (css.match(/:root:lang\(ar\)\s*\{/g) || []).length;
 
     expect(once(consumerCss())).toBe(1);
@@ -560,11 +520,6 @@ describe('the shared Drupal import list', () => {
 
   test('emits every @font-face block exactly once', () => {
     // The guard the map used to carry cannot be extended to the faces: Sass
-    // forbids `@import` inside `@if`, so `_fonts.scss` cannot make itself
-    // idempotent. Importing it twice — from an entry point and again from a
-    // partial that entry point pulls in — silently doubles 32 `@font-face`
-    // blocks in a file every UNDRR page loads. Counting them here is what
-    // keeps "import _fonts.scss exactly once" enforceable.
     const faceKeys = css =>
       [...css.matchAll(/@font-face\s*\{([\s\S]*?)\}/g)].map(block =>
         ['font-family', 'font-weight', 'font-style', 'src', 'unicode-range']
@@ -802,8 +757,6 @@ describe('every component names the role it is meant to', () => {
 
   test('style-gutenberg.css is a subset, with the same roles', () => {
     // It compiles container, grid, cta-button, card, hero, tab and full-width
-    // and skips _foundational.scss, so it carries fewer selectors — but a
-    // selector it does carry must not have drifted to a different role.
     const found = roleBySelector('style-gutenberg');
 
     expect(found.size).toBeGreaterThan(0);
@@ -817,10 +770,6 @@ describe('every component names the role it is meant to', () => {
 
   test('every role has at least one consumer', () => {
     // `heading` is the one at risk: after unisdr/undrr-mangrove#1098's fix wave
-    // its only consumer is `h1:lang(ar), h2:lang(ar), h3:lang(ar)` in
-    // _foundational.scss. Deleting that rule is invisible in Latin — heading
-    // and text are both Roboto — and silently takes Noto Kufi Arabic out of the
-    // product. A role no one asks for is a role that has been abandoned.
     const consumers = Object.fromEntries(
       ROLES.map(role => [
         role,

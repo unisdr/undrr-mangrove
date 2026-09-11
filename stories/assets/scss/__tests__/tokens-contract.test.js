@@ -165,8 +165,6 @@ const flatten = (fg, bg) =>
       };
 
 // oklch() reaches the token layer from design-tool exports (DELTA's hero title
-// arrives that way). Without this it would parse as null and be reported as a
-// missing token, which is a false alarm rather than a finding.
 const oklchToRgb = (L, C, H) => {
   const hue = (H * Math.PI) / 180;
   const a = C * Math.cos(hue);
@@ -517,10 +515,6 @@ describe('channel triplets are never used raw in a colour position', () => {
 
 describe('brand-owned surfaces resolve from semantic tokens', () => {
   // A raw palette alias in a themed surface compiles and looks right in the
-  // brand it was written for, so nothing catches it until someone opens another
-  // theme. --mg-hero-gradient-color was blue-900 for exactly that reason: the
-  // line above it already used --mg-color-hero, and every non-blue brand drew a
-  // UNDRR-blue hero. See unisdr/undrr-mangrove#1115.
   const PALETTE =
     /var\(\s*--mg-color-(blue|green|teal|orange|red|purple|yellow|neutral)-\d{2,3}\s*\)/;
 
@@ -867,19 +861,6 @@ const COMPONENT_PAIRS = [
   },
 
   // --- Focus ring: every surface it is actually painted on ---------------
-  //
-  // The headline change of 2.0.0-alpha.3 is that the focus ring stopped being
-  // the brand colour, and until now only the two pairs above tested it. These
-  // pairs measure the ring where the stylesheets actually paint it, so the
-  // numbers stop living as hand-computed prose in code comments.
-  //
-  // The load-bearing one is the first: mg-focus-ring draws a
-  // --mg-color-neutral-0 separator band immediately inside the ring, so the
-  // indicator is judged against that band rather than against whatever it
-  // happens to sit on. That pair is what makes the ring safe on an arbitrary
-  // consumer background, and it is the contract the two-band geometry rests
-  // on. The surface pairs below it are defence in depth: they say what the
-  // ring would measure if the band were ever removed.
   {
     name: 'focus ring against its own separator band',
     fg: '--mg-color-focus-ring',
@@ -898,8 +879,6 @@ const COMPONENT_PAIRS = [
     name: 'focus ring on the mega-menu section link tint',
     fg: '--mg-color-focus-ring',
     // The tint is written inline as rgb(var(--mg-color-blue-900) / 0.15).
-    // blue-900 is a UNDRR primitive that no sub-brand overrides, so the
-    // composited value is the same in all five themes.
     bg: ['rgb(0 79 145 / 0.15)'],
     min: 3,
     why: 'SC 1.4.11 — .mg-mega-content__section-list-link tints its own background on focus, and the ring is drawn on that tint',
@@ -912,10 +891,6 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — .mg-form-error-summary takes focus programmatically after a failed submit, and the ring lands on its red-50 fill',
   },
   // Both of these fail on their own, and that is the whole reason the ring is
-  // two-band. They are exposed to consumers as .mg-u-background-color--*
-  // utilities, so any component can be dropped onto them; the separator band
-  // is what rescues the indicator. Recorded rather than deleted so that if the
-  // band is ever removed from mg-focus-ring, the suite says what breaks.
   {
     name: 'focus ring on the neutral-200 utility background',
     fg: '--mg-color-focus-ring',
@@ -931,8 +906,6 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — .mg-u-background-color--neutral-300 under a focused control; rescued by the separator band, not by this pair',
   },
   // The inverse ring is the other half of the story: it is correct on a filled
-  // brand surface and wrong on a light one. Pairing it against the letterbox
-  // records why Gallery keeps the default ring rather than the inverse.
   {
     name: 'inverse focus ring on the gallery letterbox',
     fg: '--mg-color-focus-ring-inverse',
@@ -956,20 +929,6 @@ const COMPONENT_PAIRS = [
   },
 
   // --- Data visualisation: _tokens-data-viz.scss -------------------------
-  //
-  // ~700 lines of new colour arrived in this release with no contrast
-  // coverage at all. The only thing measuring it was
-  // stories/Atom/DataVizColors/data-viz-colors.mdx, which computes ratios
-  // live in the browser -- useful documentation, but it renders in a story
-  // rather than failing a build, so nothing stops a regression landing.
-  //
-  // These tokens are declared :root-only (no .mg-theme-* block redefines
-  // them), so every theme measures identically. They are still graded in all
-  // five, because that is what proves they are theme-independent rather than
-  // merely assumed to be.
-  //
-  // Chart chrome: the axis is non-text furniture under SC 1.4.11; the two
-  // label tokens carry real text.
   {
     name: 'dataviz axis line on the chart surface',
     fg: '--mg-dataviz-axis',
@@ -1000,8 +959,6 @@ const COMPONENT_PAIRS = [
   },
 
   // Every categorical fill that can carry a label, against the "on" colour
-  // paired with it. Slot 2 is the one that inverts to black; the pairing is
-  // the whole point of the on-* tokens, so it is what gets asserted.
   ...Array.from({ length: 7 }, (unused, index) => index + 1).map(slot => ({
     name: `dataviz label on categorical fill ${slot}`,
     fg: `--mg-dataviz-on-categorical-${slot}`,
@@ -1184,14 +1141,6 @@ const COMPONENT_PAIRS = [
  */
 const WCAG_EXCEPTIONS = {
   // --- Focus ring exceptions -------------------------------------------
-  //
-  // These four pairs are RECORDED FAILURES BY DESIGN. Each one measures the
-  // ring against a surface it is never actually judged against, because
-  // mg-focus-ring always paints a --mg-color-neutral-0 separator band between
-  // the ring and the surface -- see the 'focus ring against its own separator
-  // band' pair, which is the one that has to pass. They are kept so that if
-  // the band is ever dropped from the mixin, the suite names exactly which
-  // surfaces stop working rather than going quiet.
   ...Object.fromEntries(
     ALL_THEMES.flatMap(theme => [
       [
@@ -1232,10 +1181,6 @@ const WCAG_EXCEPTIONS = {
   ],
 
   // The gridline is deliberately below 3:1. SC 1.4.11 exempts objects that
-  // are purely decorative, and a gridline is readable-by-position rather than
-  // by contrast -- the axis and the labels carry the information. Recorded
-  // rather than raised so the choice is visible and cannot drift darker or
-  // lighter unnoticed.
   ...Object.fromEntries(
     ALL_THEMES.map(theme => [
       `${theme}|dataviz gridline on the chart surface`,
@@ -1381,8 +1326,6 @@ const WCAG_EXCEPTIONS = {
  */
 const PERCEPTUAL_EXCEPTIONS = {
   // Mirrors of the focus-ring and dataviz WCAG exceptions above: each pair
-  // that is a recorded failure on the WCAG measure is also one here, for the
-  // same reason.
   ...Object.fromEntries(
     ALL_THEMES.flatMap(theme => [
       [
@@ -1402,9 +1345,6 @@ const PERCEPTUAL_EXCEPTIONS = {
         [-2.6, 'decorative by design; the axis and labels carry the meaning'],
       ],
       // Warm mid-tones are exactly where WCAG 2 and the Oklab measure part
-      // company: black on orange clears 4.5 comfortably (6.66) but sits below
-      // the perceptual body-text floor. The disagreement is the finding; both
-      // are recorded so neither measure gets to hide it.
       [
         `${theme}|dataviz label on categorical fill 2`,
         [
@@ -1784,8 +1724,6 @@ describe('where the two contrast measures disagree', () => {
 
   test('every disagreement is recorded as an exception on the failing side', () => {
     // A disagreement is only honest if the failing measure still records it as
-    // an unfixed failure. This binds the report to the two exception tables:
-    // a pair cannot appear here and be silently unlisted there.
     const unrecorded = measurements()
       .filter(row => row.wcagPasses !== row.perceptualPasses)
       .filter(row => !EXCEPTION_KEYS.has(`${row.theme}|${row.name}`))
@@ -1796,8 +1734,6 @@ describe('where the two contrast measures disagree', () => {
 
   test('no pair is failed by WCAG 2 and passed perceptually', () => {
     // Stated as its own guard because the day this stops being true is the day
-    // the perceptual measure starts WAIVING something the standard rejects,
-    // and that needs a human decision rather than a green suite.
     const loosened = measurements()
       .filter(row => !row.wcagPasses && row.perceptualPasses)
       .map(line);

@@ -56,9 +56,6 @@ export function swapCardVariant(html, displayMode) {
   }
 
   // Rewrite Drupal image styles to match the card aspect ratio.
-  // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).
-  // Card mode needs 16:9 (landscape_16_9), book card mode needs 3:4 (por).
-  // The itok token is not validated for anonymous image style requests.
   if (displayMode === 'card-book') {
     result = result.replace(
       /\/styles\/[^/]+\/public\//g,
@@ -204,12 +201,6 @@ export function ResultItem({
   const type = Array.isArray(rawType) ? rawType[0] : rawType;
 
   // Get domain info.
-  // Taxonomy terms don't have field_domain_access, so use their vocabulary's
-  // default domain (typically preventionweb.net).
-  // Organizations are assigned to every domain, so field_domain_access[0] is
-  // arbitrary (often alphabetically first, e.g. AFRP); they're served
-  // authoritatively only through PreventionWeb, so pin them there.
-  // See undrr/web-backlog#2906.
   const domainId = isTerm
     ? getTaxonomyVocabulary(vid)?.domain || 'www_preventionweb_net'
     : type === 'organization'
@@ -262,12 +253,6 @@ export function ResultItem({
     );
 
     // Inject badges before the title field.
-    // Node teasers use "field--name-node-title"; taxonomy term teasers use
-    // "field--name-name" for the term name field. Both selectors are coupled
-    // to Drupal's teaser view template class names.
-    //
-    // Skip badge injection entirely when both siteName and contentType are
-    // hidden via visibleTeaserFields: avoids rendering an empty wrapper div.
     const hideSiteName = visibleTeaserFields?.siteName === false;
     const hideContentType = visibleTeaserFields?.contentType === false;
     const skipBadges = hideSiteName && hideContentType;
@@ -284,8 +269,6 @@ export function ResultItem({
       }
       if (titleFieldIndex !== -1) {
         // Organizations show a content type tag; everything else shows a site name.
-        // Respect visibleTeaserFields: skip the individual badge if its field is hidden,
-        // and skip the wrapper entirely if the relevant badge would be empty.
         let badgeContent = '';
         if (isOrganization) {
           if (!hideContentType) {

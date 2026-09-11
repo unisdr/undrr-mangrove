@@ -2,11 +2,6 @@ const sass = require('sass');
 const path = require('path');
 
 // The Gutenberg repair lives entirely in CSS. Content already published with
-// `<a href="">` cannot be re-rendered, so the stylesheet has to neutralise the
-// link affordances itself — and it has to do so in the Gutenberg bundle, which
-// is the one Drupal loads in the editor and on the rendered page. jsdom never
-// applies a stylesheet, so the component tests cannot see any of this; guard
-// the compiled output instead.
 const compiled = {};
 
 /** Compiled once per entry point: sass compilation is the slow part. */

@@ -117,8 +117,6 @@ function stylelintDisableFor(format, value) {
 }
 
 // Build-time rem conversion, mirroring mg-rem() in _variables.scss. The 10px
-// root was removed in 2.0; consumers use the browser-standard 16px document
-// root and this is the only place the number appears in the token pipeline.
 const HTML_FONT_SIZE = 16;
 
 function toRem(px) {
@@ -183,8 +181,6 @@ function flatten(node, trail, inherited, tokens, file) {
   if (Object.prototype.hasOwnProperty.call(node, '$value')) {
     const id = trail.join('.');
     // A YAML key with nothing after it parses as null, which used to reach the
-    // emitter and print the string "null" -- invalid CSS the browser drops
-    // without complaint. Same class as the shape bugs above: fail loudly.
     if (node.$value === null || node.$value === undefined) {
       throw new TokenError(
         `${id} has a $value with nothing after it. Give it a value, or ` +
@@ -193,9 +189,6 @@ function flatten(node, trail, inherited, tokens, file) {
       );
     }
     // `private` is deliberately left undefined when nothing states it, rather
-    // than defaulted to false: `mergeLayers` has to be able to tell "this
-    // source said public" from "this source said nothing". Every consumer
-    // tests it for truthiness, so undefined behaves as false everywhere.
     tokens.set(id, {
       id,
       file,
@@ -540,9 +533,6 @@ function resolve(tokens, brandLabel) {
     }
 
     // A token whose whole value is one build-time reference inherits the
-    // referenced token's reasoning. Brand primitives are $private, so
-    // without this the "DELTA's hover is deliberately lighter" and "this
-    // WCAG divergence is sourced" notes would never reach a generated file.
     const lone = /^\{=([^{}|/]+)\}$/.exec(String(token.value).trim());
     const inherited =
       token.description ??
@@ -674,9 +664,6 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
   const files = new Map();
 
   // The default brand is merged into the base's own :root block, because
-  // that is what Mangrove's :root has always been. Keeping UNDRR in its own
-  // source is what makes "adopt Mangrove without adopting UNDRR branding" an
-  // expressible position rather than a rewrite.
   const defaultBrand = brands.find(brand => brand.meta.default);
   if (!defaultBrand) {
     throw new TokenError(
@@ -809,8 +796,6 @@ function main(argv) {
       ? fs.readFileSync(absolute, 'utf8')
       : null;
     // Only write when the content actually changed. Rewriting identical bytes
-    // still bumps mtime, which makes webpack rebuild and invalidates the chunk
-    // hash held by any open Storybook tab, producing a ChunkLoadError loop.
     if (current === contents) continue;
     if (check) {
       stale.push(relative);

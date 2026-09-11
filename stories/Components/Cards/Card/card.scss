@@ -32,9 +32,6 @@
       overflow: hidden;
 
       // Not a focus indicator: a decorative hairline that keeps a pale image
-      // from bleeding into the card surface. Deliberately does NOT read
-      // --mg-color-focus-ring; it is painted on the visual at rest, on every
-      // card, whether or not anything is focused.
       outline: 1px solid rgb(var(--mg-color-neutral-900) / 0.1);
     }
 
@@ -116,9 +113,6 @@
       overflow: hidden;
 
       // Not a focus indicator: a decorative hairline that keeps a pale image
-      // from bleeding into the card surface. Deliberately does NOT read
-      // --mg-color-focus-ring; it is painted on the visual at rest, on every
-      // card, whether or not anything is focused.
       outline: 1px solid rgb(var(--mg-color-neutral-900) / 0.1);
     }
 
@@ -283,15 +277,6 @@ $card-variant-colours: (
 }
 
 // Unlinked cards — a card with no destination must not promise a click.
-// Two shapes arrive here. This library renders an unlinked title as plain text
-// and marks the article `.mg-card--no-link`, which needs no repair. Upstream
-// systems are less careful: Drupal Gutenberg emits `<a href="">`, which the
-// browser treats as a link to the current page — it takes focus, navigating
-// reloads the page, and the stretched `::before` overlay covers the whole card
-// and swallows clicks aimed at the card's own button. Neutralising it here
-// repairs already-published content without an upstream change.
-// CSS can strip the affordances but not the focusability of an `href=""`
-// anchor, so emitting a plain-text title remains the correct fix at the source.
 .mg-card__title a:not([href]),
 .mg-card__title a[href=""] {
   color: rgb(var(--mg-color-text));
@@ -311,8 +296,6 @@ $card-variant-colours: (
 }
 
 // A label rendered as a span is metadata, not a control: `.mg-card__label`
-// sets `cursor: pointer` for the linked case, which would otherwise leave an
-// unlinked label offering a click it cannot answer.
 span.mg-card__label {
   cursor: auto;
 }
@@ -386,8 +369,6 @@ span.mg-card__label {
 // END of CARD
 
 // Icon Card variant
-// Uses shared .mg-card__visual, .mg-card__content, .mg-card__title, etc.
-// RTL is automatic via [dir="rtl"] - no manual alignment prop needed
 .mg-card__icon {
   display: flex;
   flex-direction: column;
@@ -634,8 +615,6 @@ span.mg-card__label {
 
     .mg-card__visual {
       // The visual is a column flex container, so its horizontal axis is the
-      // cross axis: justify-content centres it vertically and leaves the icon
-      // pinned left by the inherited align-items: flex-start.
       align-items: center;
       justify-content: center;
     }
@@ -650,12 +629,6 @@ span.mg-card__label {
   }
 
   // Icon beside the content rather than above it, the arrangement undrr.org
-  // uses for "what would you like to do" route rows.
-  // This owns the visual's size rather than deferring to the imageScale
-  // aspect-ratio rules. Those size the icon from the visual's width via a
-  // container query, and pin --small to a fixed 72px; in a row that leaves an
-  // auto grid column held open at 72px while the glyph draws smaller, which
-  // reads as dead space between the icon and the text.
   &--horizontal {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);

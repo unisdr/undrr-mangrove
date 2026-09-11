@@ -54,11 +54,6 @@ export function buildQuery(
   const mainQuery = buildMainQuery(query, scoring, config);
 
   // Build post_filter with all facet filters (applied after aggregations).
-  // The facet UI being hidden only means no *user-driven* selections will
-  // appear; programmatic default filters (defaultFilters, config-modifier
-  // injected) still arrive as facet/customFacet state and must reach
-  // Elasticsearch. So build the post_filter whenever the facet UI is shown OR
-  // there are active values to apply. See unisdr/undrr-mangrove#1031.
   const facetsActive = resolveFacetsLayout(config) !== false;
   const hasActiveFacets =
     (facets &&
@@ -82,8 +77,6 @@ export function buildQuery(
   };
 
   // Skip highlights in card mode when summary is hidden: card teasers use
-  // pre-rendered HTML and don't show body text, so highlight fragments are
-  // wasted response payload.
   if (!(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
@@ -155,9 +148,6 @@ function buildBaseFilters(config) {
   const filters = [];
 
   // Filter by published status for nodes.
-  // Taxonomy terms don't have a `status` field in the index (it's node-only),
-  // so we must also allow documents where status doesn't exist, otherwise
-  // all taxonomy term results would be silently excluded.
   filters.push({
     bool: {
       should: [
@@ -186,10 +176,6 @@ function buildBaseFilters(config) {
   }
 
   // Interestingness and longevity tier filters: restrict results by editorial
-  // weight or content freshness category. Tier boundaries are derived from
-  // SCORING_CONFIG (which also drives relevance scoring), so the same tier
-  // names work for both ranking and filtering without duplicating definitions.
-  // buildTierFilter returns ES range queries (single or bool.should of ranges).
   const scoring = config.scoring || SCORING_CONFIG;
   const interestingnessFilter = buildTierFilter(
     'field_meta_interestingness',
@@ -284,8 +270,6 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
     }
 
     // Type facet: values may include subtypes with namespaced keys
-    // e.g., "news" (content type) or "field_news_type:751" (subtype)
-    // We need to split and route to correct ES fields
     if (key === 'type') {
       // Group values by their target ES field
       const fieldGroups = {};
@@ -393,8 +377,6 @@ function buildMustClause(searchQuery, scoring, config) {
   }
 
   // Remove stop words for more consistent matching
-  // e.g., "The Draft Articles on the Protection" and "Draft Articles on Protection"
-  // will both search for the same core terms
   const cleanedQuery = removeStopWords(combinedQuery, stopWords);
 
   return {
@@ -829,8 +811,6 @@ function buildAggregations(facetFields, facetCount) {
   }
 
   // Vocabulary aggregation for taxonomy term results.
-  // This runs alongside the `type` aggregation (which is node-only).
-  // The `vid` field only exists on taxonomy term documents.
   if (!aggs.vid) {
     aggs.vid = {
       terms: {

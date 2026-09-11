@@ -5,8 +5,6 @@ import { Icon } from '../Icon';
 
 describe('Icon', () => {
   // --------------------------------------------------
-  // Class name normalisation
-  // --------------------------------------------------
 
   it('renders plain name as mg-icon mg-icon-{name}', () => {
     const { container } = render(<Icon name="globe" />);
@@ -35,8 +33,6 @@ describe('Icon', () => {
   });
 
   // --------------------------------------------------
-  // Size modifier
-  // --------------------------------------------------
 
   it('appends the size modifier class when size is provided', () => {
     const { container } = render(<Icon name="globe" size="lg" />);
@@ -49,8 +45,6 @@ describe('Icon', () => {
   });
 
   // --------------------------------------------------
-  // Additional className
-  // --------------------------------------------------
 
   it('appends extra className to the class list', () => {
     const { container } = render(
@@ -60,8 +54,6 @@ describe('Icon', () => {
     expect(container.firstChild).toHaveClass('mg-icon', 'mg-icon-globe');
   });
 
-  // --------------------------------------------------
-  // Accessibility — decorative icon contract
   // --------------------------------------------------
 
   it('always renders aria-hidden="true"', () => {
@@ -80,8 +72,6 @@ describe('Icon', () => {
     expect(results).toHaveNoViolations();
   });
 
-  // --------------------------------------------------
-  // Edge cases
   // --------------------------------------------------
 
   it('returns null when name is not provided', () => {

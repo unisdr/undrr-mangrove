@@ -282,14 +282,8 @@ export function ContentHub({
               ? text.reportingIntro
               : text.sectionIntro;
   // Ancestry is only worth a row when it says something the identity row and the
-  // page heading do not. On the hub home, a section page or a first-level detail
-  // page the trail merely repeats them. It earns its place on the landing page,
-  // which has no hub navigation, and on pages deep enough to have an
-  // intermediate parent that the section strip cannot show.
   const showBreadcrumbs = page === 'landing' || page === 'validate-data';
   // Not every hero earns a call to action: an overview page routes into the
-  // tool, a reporting page starts the task, and a deeper reference page has no
-  // single next step worth a button.
   const actions =
     page === 'overview'
       ? [{ label: text.open, url: 'https://sendaimonitor.undrr.org/' }]

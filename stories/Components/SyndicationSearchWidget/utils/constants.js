@@ -160,9 +160,6 @@ export const CONTENT_SUBTYPES = {
     ],
   },
   // Publication subtypes - three fields for different sites:
-  // - field_undrr_publication_types: taxonomy term IDs, used on UNDRR.org
-  // - field_publication_type: list_string values, used on PreventionWeb
-  // - field_irp_publication_subtype: taxonomy term IDs, used on IRP
   publication: [
     {
       field: 'field_undrr_publication_types',
@@ -254,27 +251,6 @@ export const CONTENT_SUBTYPES = {
     ],
   },
   // Policy subtypes - field_policy_type indexed in ES (used by publications)
-  // Note: This may overlap with publication subtypes - consider if both are needed
-  // policy: {
-  //   field: 'field_policy_type',
-  //   options: [
-  //     { id: '946', name: 'Intergovernmental declarations' },
-  //     { id: '821', name: 'Local policies and plans' },
-  //     { id: '819', name: 'National legal frameworks' },
-  //     { id: '818', name: 'National policies and plans' },
-  //     { id: '820', name: 'Regional policies and plans' },
-  //   ],
-  // },
-  //
-  // ----- NOT YET INDEXED IN ES -----
-  // Event subtypes - field_event_type_term needs to be added to search_api index
-  // event: {
-  //   field: 'field_event_type_term',
-  //   options: [
-  //     { id: '783', name: 'Meetings and conferences' },
-  //     { id: '784', name: 'Training event' },
-  //   ],
-  // },
 };
 
 /**
@@ -383,9 +359,6 @@ export const FACET_FIELDS = [
     type: 'select-multiple',
   },
   // field_policy_type is indexed but not used as subtypes currently (see CONTENT_SUBTYPES)
-  // { key: 'field_policy_type', label: 'Policy type', vocabulary: 'terms', type: 'select-multiple' },
-  // Not indexed yet - needs to be added to search_api.index.multidomain.yml:
-  // { key: 'field_event_type_term', label: 'Event type', vocabulary: 'terms', type: 'select-multiple' },
   { key: 'year', label: 'Year', type: 'select-multiple' },
   {
     key: 'field_country_region',
@@ -440,10 +413,6 @@ export const SCORING_CONFIG = {
     saa_field_attachment: 0.1,
   },
   // Phrase boosting for exact and near-exact phrase matches
-  // These boost documents where search terms appear together in order
-  // - match: partial word matching
-  // - exactPhrase: slop 0, words must be in exact order
-  // - nearPhrase: slop 2, allows minor variations (missing articles, word swaps)
   phraseBoosts: {
     teaser: { match: 1, exactPhrase: 5, nearPhrase: 3 },
     title: { match: 2, exactPhrase: 15, nearPhrase: 10 },
@@ -453,8 +422,6 @@ export const SCORING_CONFIG = {
   // Slop value for near-phrase matching (allows N word transpositions/gaps)
   nearPhraseSlop: 2,
   // Stop words to remove from queries for better phrase matching
-  // These common words are stripped to improve exact phrase matching
-  // e.g., "Draft Articles on the Protection" → "Draft Articles Protection"
   stopWords: [
     'the',
     'a',
@@ -581,10 +548,6 @@ export const DEFAULT_CONFIG = {
   requireImage: false,
 
   // Tier filters: array of tier names to restrict results by editorial weight or freshness.
-  // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.
-  // Interestingness tiers: 'demoted', 'deferred', 'average', 'promoted', 'announced'
-  // Longevity tiers: 'today', 'days', 'week', 'month', 'year', 'longtime', 'always'
-  // e.g., interestingnessTiers: ['promoted', 'announced'] only returns high-priority content
   interestingnessTiers: [],
   longevityTiers: [],
 };

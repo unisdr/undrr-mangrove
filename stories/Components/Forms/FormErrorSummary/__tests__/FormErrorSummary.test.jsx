@@ -11,8 +11,6 @@ const errors = [
 
 describe('FormErrorSummary', () => {
   // --------------------------------------------------
-  // Rendering
-  // --------------------------------------------------
 
   it('renders the title and error messages', () => {
     render(<FormErrorSummary errors={errors} />);
@@ -48,8 +46,6 @@ describe('FormErrorSummary', () => {
   });
 
   // --------------------------------------------------
-  // BEM classes
-  // --------------------------------------------------
 
   it('applies BEM class names', () => {
     const { container } = render(<FormErrorSummary errors={errors} />);
@@ -74,8 +70,6 @@ describe('FormErrorSummary', () => {
     ).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has role="alert"', () => {
@@ -140,8 +134,6 @@ describe('FormErrorSummary', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  // --------------------------------------------------
-  // Rest props
   // --------------------------------------------------
 
   it('spreads rest props to the container', () => {

@@ -18,10 +18,6 @@ import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
  */
 
 // DSFR states its equivalent limit in the type rather than the prose —
-// `There should be at most three of them` sits on Header's quickAccessItems.
-// Borrowing the discipline, but not the mechanism: React 19 no longer calls
-// propTypes at all, so a validator declared there would never run. This is
-// checked during render instead, in development only.
 const MAX_SECTIONS = 7;
 
 function warnAboutContract({ sections, navLabel, name }) {
@@ -105,8 +101,6 @@ export function HubHeader({
                     href={section.href}
                     aria-current={section.current ? 'page' : undefined}
                     // Marks both states for the consumer's scroll-into-view,
-                    // which must not depend on the ARIA semantics now that an
-                    // ancestor is deliberately not announced.
                     data-hub-current={
                       section.current || section.ancestor ? '' : undefined
                     }

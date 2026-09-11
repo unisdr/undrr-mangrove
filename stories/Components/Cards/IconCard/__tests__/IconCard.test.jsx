@@ -10,8 +10,6 @@ function makeData(overrides = {}) {
 
 describe('IconCard', () => {
   // --------------------------------------------------
-  // Basic rendering
-  // --------------------------------------------------
 
   it('renders title and summary text', () => {
     render(<IconCard data={makeData({ summaryText: 'Card description' })} />);
@@ -20,8 +18,6 @@ describe('IconCard', () => {
     expect(screen.getByText('Card description')).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Icon rendering
   // --------------------------------------------------
 
   it('renders icon span when data item has icon classes', () => {
@@ -37,8 +33,6 @@ describe('IconCard', () => {
     expect(glyph).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Image rendering
   // --------------------------------------------------
 
   it('renders image when imgback is set', () => {
@@ -56,8 +50,6 @@ describe('IconCard', () => {
     expect(img).toHaveClass('mg-card__image');
   });
 
-  // --------------------------------------------------
-  // iconColor / iconFgColor
   // --------------------------------------------------
 
   it('applies --mg-icon-bg custom property and --colored modifier for iconColor', () => {
@@ -88,8 +80,6 @@ describe('IconCard', () => {
   });
 
   // --------------------------------------------------
-  // borderColor
-  // --------------------------------------------------
 
   it('applies --mg-card-border custom property and --bordered modifier for borderColor', () => {
     const { container } = render(
@@ -101,8 +91,6 @@ describe('IconCard', () => {
     expect(article).toHaveStyle({ '--mg-card-border': '#e8963a' });
   });
 
-  // --------------------------------------------------
-  // visualLabel
   // --------------------------------------------------
 
   it('renders visualLabel inside .mg-card__visual', () => {
@@ -157,8 +145,6 @@ describe('IconCard', () => {
   });
 
   // --------------------------------------------------
-  // srOnlyTitle
-  // --------------------------------------------------
 
   it('renders screen-reader-only title when srOnlyTitle is true', () => {
     const { container } = render(
@@ -202,8 +188,6 @@ describe('IconCard', () => {
     expect(onClick).toHaveBeenCalledTimes(2);
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {
@@ -272,8 +256,6 @@ const ruleFor = selector => {
 describe('icon card layout', () => {
   test("centred cards centre the icon on the visual's cross axis", () => {
     // The visual is a column flex container, so justify-content centres it
-    // vertically. Without align-items the icon stays pinned left while the
-    // text centres — which is what shipped.
     const rule = ruleFor('.mg-card__icon--centered .mg-card__visual');
     expect(rule).toMatch(/align-items:\s*center/);
   });

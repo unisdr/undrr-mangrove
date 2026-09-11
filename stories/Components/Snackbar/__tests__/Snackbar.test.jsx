@@ -16,8 +16,6 @@ describe('Snackbar', () => {
   });
 
   // --------------------------------------------------
-  // Rendering
-  // --------------------------------------------------
 
   it('renders the message when opened', () => {
     render(<Snackbar {...defaultProps} />);
@@ -44,8 +42,6 @@ describe('Snackbar', () => {
   });
 
   // --------------------------------------------------
-  // Severity variants
-  // --------------------------------------------------
 
   it.each(['error', 'warning', 'info', 'success'])(
     'applies correct class for %s severity',
@@ -64,8 +60,6 @@ describe('Snackbar', () => {
     expect(screen.getByText('error notification:')).toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Close behavior
   // --------------------------------------------------
 
   it('calls onClose when close button is clicked', () => {
@@ -86,8 +80,6 @@ describe('Snackbar', () => {
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
 
-  // --------------------------------------------------
-  // Auto-dismiss
   // --------------------------------------------------
 
   it('auto-dismisses after openedMiliseconds', () => {
@@ -121,8 +113,6 @@ describe('Snackbar', () => {
   });
 
   // --------------------------------------------------
-  // Open/close state classes
-  // --------------------------------------------------
 
   it('applies open class when opened is true', () => {
     const { container } = render(<Snackbar {...defaultProps} opened={true} />);
@@ -138,8 +128,6 @@ describe('Snackbar', () => {
     ).not.toBeInTheDocument();
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

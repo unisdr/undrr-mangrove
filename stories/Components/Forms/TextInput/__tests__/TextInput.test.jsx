@@ -5,8 +5,6 @@ import { TextInput } from '../TextInput';
 
 describe('TextInput', () => {
   // --------------------------------------------------
-  // Rendering
-  // --------------------------------------------------
 
   it('renders with a label', () => {
     render(<TextInput label="Full name" />);
@@ -52,8 +50,6 @@ describe('TextInput', () => {
   });
 
   // --------------------------------------------------
-  // States
-  // --------------------------------------------------
 
   it('renders as disabled', () => {
     render(<TextInput label="Name" disabled />);
@@ -66,8 +62,6 @@ describe('TextInput', () => {
   });
 
   // --------------------------------------------------
-  // Interactions
-  // --------------------------------------------------
 
   it('calls onChange when typing', () => {
     const handleChange = jest.fn();
@@ -78,8 +72,6 @@ describe('TextInput', () => {
     expect(handleChange).toHaveBeenCalled();
   });
 
-  // --------------------------------------------------
-  // Fallbacks
   // --------------------------------------------------
 
   it('uses aria-label from placeholder when no label is provided', () => {
@@ -97,8 +89,6 @@ describe('TextInput', () => {
   });
 
   // --------------------------------------------------
-  // Hidden label
-  // --------------------------------------------------
 
   it('visually hides label when hideLabel is true', () => {
     render(<TextInput label="Search" hideLabel />);
@@ -107,8 +97,6 @@ describe('TextInput', () => {
     expect(label).toHaveTextContent('Search');
   });
 
-  // --------------------------------------------------
-  // Accessibility
   // --------------------------------------------------
 
   it('has no a11y violations', async () => {

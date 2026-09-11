@@ -125,8 +125,6 @@ export const DEFAULT_LABELS = {
   pagerPageOf: 'Page {page} of {total}',
 
   // ResultItem — content unavailable (no domain assignment in CMS)
-  // This is an admin/configuration error state; end users see a friendly message.
-  // The {nid} token is available for debug builds but omit it in production labels.
   domainAccessError: 'This content is currently unavailable.',
   reportErrorLink: 'Report this issue',
 };

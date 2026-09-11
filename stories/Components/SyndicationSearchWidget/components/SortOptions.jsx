@@ -42,8 +42,6 @@ export function SortOptions({ widgetId = 'search' }) {
   const handleChange = useCallback(
     value => {
       // Sort always has a value; falling back to 'relevance' guards
-      // against the consumer clearing the selection (the SelectDropdown
-      // emits '' when cleared).
       dispatch(actions.setSort(value || 'relevance'));
     },
     [dispatch]

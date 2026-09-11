@@ -1,7 +1,4 @@
 // Highlight box component (RTL-safe)
-// https://gitlab.com/undrr/web-backlog/-/issues/1678
-// Variables and mixins are imported at the theme level via @use in mangrove.scss
-// Do not import them here to avoid duplication
 
 .mg-highlight-box {
   padding-block: mg-rem(10);
@@ -35,18 +32,12 @@
   color: rgb(var(--mg-color-white));
 
   // Force every descendant to inherit the variant's white color. The double
-  // class selector and descendant `*` give us specificity (0,2,1) so we beat
-  // Storybook's `.sbdocs-content p { color: ... }` (0,1,1) and any host-site
-  // bare-element typography rules.
   * {
     color: inherit;
   }
 }
 
 // Width / layout variants
-// .mg-highlight-box--full {
-//   // nothing special, leaving as a footnote
-// }
 
 .mg-highlight-box--centered {
   width: 80%;
@@ -54,8 +45,6 @@
 }
 
 // Float variants default to stacked on small screens
-// and support for CKEditor's specific image float functionality
-// https://gitlab.com/undrr/web-backlog/-/issues/2520
 .align-left.custom-media,
 .align-right.custom-media,
 figure.align-right,

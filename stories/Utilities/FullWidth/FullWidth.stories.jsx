@@ -19,10 +19,6 @@ export const DefaultFullWidth = {
 };
 
 // Demo scaffolding. The band colour and the wrapper backgrounds are inline so
-// the two cases can be read side by side without a stylesheet; nothing here is
-// public API.
-// Note: no text-align here. Centring text on the utility also moves the
-// pseudo-element's static position, which pushes the bleed off to one side.
 const band = {
   background: '#2e7d32',
   color: '#fff',

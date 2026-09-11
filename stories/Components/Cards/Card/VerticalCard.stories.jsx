@@ -237,8 +237,6 @@ export const MixedLinkVerticalCards = {
 };
 
 // Reference for content already published through Drupal Gutenberg, which
-// emits `<a href="">` and a sibling button rather than a plain-text title.
-// Rendered as raw markup on purpose: it is what the CSS has to repair.
 export const LegacyEmptyHrefMarkup = {
   render: () => (
     <div

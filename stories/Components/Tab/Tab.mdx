@@ -392,16 +392,16 @@ You can also select triggers by class (`.mg-tabs__link`) — this works in all v
 
 ## Changelog
 
-- **2.10.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tab links now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-tabs__link` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
-- **2.10.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tab link whose own language is not Arabic.
-- **2.10** — 2026-09-08 ([#1094](https://github.com/unisdr/undrr-mangrove/issues/1094)): Centred horizontal tab groups with soft active pills, independent mobile scrolling, overflow fades, RTL-aware keyboard navigation and selection reveal. Separated panels from the tablist, added accessible group labels and lifecycle cleanup, and retained explicit stacked disclosures. React data and label updates preserve selection, open disclosures, filter state and unchanged panel content. Horizontal tabs scroll below 480px by default; the optional `stackOnMobile` prop / `data-mg-js-tabs-stack-on-mobile` attribute restores responsive disclosure behaviour.
+- **2.10.2** — 2026-09-09 ([#1098](https: //github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tab links now render in Noto Sans Arabic instead of Noto Kufi Arabic.
+- **2.10.1** — 2026-09-08 ([#1092](https: //github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tab link whose own language is not Arabic.
+- **2.10** — 2026-09-08 ([#1094](https: //github.com/unisdr/undrr-mangrove/issues/1094)): Centred horizontal tab groups with soft active pills, independent mobile scrolling, overflow fades, RTL-aware keyboard navigation and selection reveal.
   - Arabic typography ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic tab links render in Noto Kufi Arabic. The `:lang(ar)` override on `.mg-tabs__link` points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic, so the override once again selects a different family from Arabic body text.
 
-- **2.9** — 2026-08-31 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed horizontal tabs as a flat navigation rail with a continuous baseline, precise active underline, and non-shifting hover/focus states. Simplified stacked tabs into clean disclosure rows with quiet separators, circular plus/minus controls, larger hit areas, and token-driven motion. Removed redundant per-language story exports in favour of the global locale toolbar.
-- **2.8** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` prop into a `labels` object with `DEFAULT_TAB_LABELS` export. Pass `labels={{ filterPlaceholder: '...' }}` instead of `filterPlaceholder` directly. Backwards compatible — `DEFAULT_TAB_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
+- **2.9** — 2026-08-31 ([#1086](https: //github.com/unisdr/undrr-mangrove/pull/1086)): Refreshed horizontal tabs as a flat navigation rail with a continuous baseline, precise active underline.
+- **2.8** — 2026-06-19 ([mangrove#1056](https: //github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `filterPlaceholder` prop into a `labels` object with `DEFAULT_TAB_LABELS` export.
 
-- **2.7** — 2026-04-13: `.mg-tabs__link` now uses `$mg-font-family-headings` (Roboto Condensed) instead of `$mg-font-family` (Roboto). The `:lang(ar)` override switched from `$mg-font-family-arabic-body` (Dubai) to `$mg-font-family-arabic-headings` (then Noto Kufi Arabic) to match. Since 2.0.0-alpha.3 both Arabic tokens resolve to Dubai, so this override no longer changes the family.
-- **2.6** — 2026-03-27: Added `data-mg-js-tabs-skip-auto-init` attribute, `type="module"` self-init, single-element scope support (`mgTabs` wrapper already accepted scope; this release adds the manual-init check and single-element handling)
+- **2.7** — 2026-04-13: `.mg-tabs__link` now uses `$mg-font-family-headings` (Roboto Condensed) instead of `$mg-font-family` (Roboto).
+- **2.6** — 2026-03-27: Added `data-mg-js-tabs-skip-auto-init` attribute, `type="module"` self-init, single-element scope support (`mgTabs` wrapper already accepted scope.
 - **2.5** — 2026-03-20:
   - Added `defaultOpen`, `singleOpen`, and `filterable` props (React) and corresponding `data-mg-js-tabs-*` attributes (vanilla JS)
   - ARIA disclosure pattern for stacked tabs (`role="button"`, `aria-expanded`, `aria-controls`, `hidden="until-found"`)
@@ -412,7 +412,7 @@ You can also select triggers by class (`.mg-tabs__link`) — this works in all v
   - Exported `setDisclosureState()` and `mgTabsApplyStackedDefaults()` helpers
 - **2.4.1** — 2026-03-02: Rewrote usage docs with vanilla JS and React examples, CDN links, HTML markup, and API reference
 - **2.4** — 2026-02-23: Removed deprecated `Version1Tabs` story
-- **2.3** — 2025-09-15: New `mgTabsRuntime()` function; multi-tab-set support; default tab selection via `data-mg-js-tabs-default`; smooth scroll deep linking; stacked open state tracking
+- **2.3** — 2025-09-15: New `mgTabsRuntime()` function.
 - **2.2** — 2025-02-05: Append URL hash on clicking a tab
 - **2.1** — 2024-11-07: Allow stacked tabs to be more accordion-like
 - **2.0** — 2024-10-18: **Breaking:** Added `mg-tabs--stacked` and `mg-tabs--horizontal` variants; tab content now inside parent `li`
