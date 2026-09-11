@@ -61,6 +61,6 @@ Add the base layout style from
 
 ## Changelog
 
-- **1.2** — 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): Added `.mg-grid--article`, an asymmetric flexible-column-plus-16rem-rail variant, pairing with the plain `.mg-grid` class the same way as every other variant here. Extracted from `mg-reading--with-contents`'s own bespoke grid (`stories/Utilities/PagePatterns/page-patterns.scss`), which now defers the column shape to this variant instead of duplicating it — that file keeps only the item-placement rules specific to its own sidebar/article semantics.
-- **1.1** — 2026-08-27: Extended the numbered column classes to `.mg-grid__col-7` through `.mg-grid__col-12`, and added the `.mg-grid--auto-fit` modifier that distributes any item count across a single row. Prevents grids whose column class is derived from a dynamic item count (e.g. StatsCard) from collapsing to a stacked single column past 6.
+- **1.2** — 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): Added `.mg-grid--article` for reading-layout column splits (flexible content column + fixed rail), extracted for reuse from page-pattern-specific CSS.
+- **1.1** — 2026-08-27: Added `.mg-grid__col-7` through `.mg-grid__col-12` and `.mg-grid--auto-fit` to support larger or dynamic item counts.
 - **1.0** — 2022-12-12: Released component
