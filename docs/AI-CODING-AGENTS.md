@@ -169,6 +169,8 @@ When you skip a finding, leave a one-line comment explaining why (or note it in 
 | Compiled output | Inspects the result | Trusts the build succeeded | Verify class names in `stories/assets/css/style.css` after build |
 | Z-index values | Knows the layer system | Uses raw numbers | Use `--mg-z-index-*` custom properties for global stacking (fixed/sticky/portaled); derive backdrops with `calc(var(--token) - 1)`; use raw values + comments for local stacking inside a component's own stacking context |
 | Quality linter | Runs lint and tests | Skips additional component-quality checks | Run `npx -y react-doctor@latest .` after non-trivial changes; aim to leave the score equal or higher than where you found it |
+| Local Storybook boot | Already has it running | Hits a `sass-loader` "Can't find stylesheet to import" error in a fresh clone/worktree | Run `npm run build:tokens` (or `npm run scss`) first — `stories/assets/scss/generated/*.scss` is gitignored and generated on demand |
+| CSS-only changes | Eyeballs the result in a browser | Trusts passing `jest`/`stylelint` as proof it works | jsdom never loads external SCSS, so cascade bugs (wrong specificity, a rule that never sets `display`, a crop tuned for the wrong asset) pass tests silently — verify in a real browser with `node scripts/storybook-screenshot.mjs`, not just green CI |
 
 ## Related documentation
 
