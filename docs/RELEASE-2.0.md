@@ -1,23 +1,44 @@
 # Mangrove 2.0 release notes
 
-Mangrove 2.0 now spans five phases: the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, and the additional feature/accessibility wave now queued for `2.0.0-beta.1`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
+Mangrove 2.0 is a major refresh of the library: theming moved to runtime CSS custom properties, design tokens now come from versioned sources with automated drift checks, every core component received a coordinated accessibility and interaction pass, and the pattern library expanded with new page-level compositions. This page describes 2.0 as a whole rather than prerelease by prerelease — for the underlying PR history, see each section's links or `git log`.
 
-## Key changes for 2.0
+`2.0.0-beta.1` is the latest prerelease. Testing is ongoing before a stable `2.0.0`; this document will keep evolving alongside it.
 
-If you only need the release highlights, start here:
+## What's new in 2.0
 
-- **Theming moved to CSS custom properties** with runtime `.mg-theme-*` selectors (alpha.1).
-- **Shared component interaction and surface baseline was refreshed** across forms, cards, hero, tabs, menus and table patterns (alpha.2).
-- **Design tokens now come from YAML sources** with baseline checks that fail tests on unintended token-output drift (alpha.3).
-- **Three system-wide visual defaults changed** in every theme: cool-tinted neutral surfaces, a non-brand gold focus ring, and a two-band focus treatment (alpha.3).
-- **Arabic typography and font roles were finalized**; legacy font-family SCSS variables are removed and language-boundary rendering is fixed (alpha.4).
-- **Beta.1 adds new pattern and accessibility work**: SkipLink bypass block, Content Hub/Landing Page/Article Story reference patterns, card-link semantics, and desktop a11y fixes in MegaMenu/PageHeader. A pre-beta.1 paper-cuts pass also makes PageHeader's account link and language switcher icon-only at every width (with a new `languageDisplay="links"` alternative for short language lists) and adds an open/close animation to the MegaMenu desktop flyout.
+If you only need the highlights, start here — each links to the fuller technical detail further down.
 
-> **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the alpha.1 theming migration requires no integration change. Alpha.2 intentionally refreshes component presentation and interaction while retaining existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal.
+**Theming and design tokens**
+- Theming moved from compiled SCSS variables to runtime CSS custom properties with `.mg-theme-*` selectors, so a page can switch brand at runtime instead of needing a separately compiled stylesheet per brand.
+- Design tokens now come from versioned YAML sources (`tokens/*.yaml`), compiled by a generator that fails the build on a malformed or circular token, with a committed baseline manifest that catches unintended compiled-output drift in tests.
+- Three system-wide visual defaults changed, in every theme: cool-tinted neutral surfaces, a non-brand gold focus ring, and a two-band focus treatment. DELTA's palette was also corrected against its actual production sources. See [Design tokens and colour](#design-tokens-and-colour).
+- A perceptual (Oklab) colour-contrast methodology now runs alongside WCAG 2 on every token pair, including the focus ring and data-visualisation palette for the first time.
+
+**Component experience and interaction**
+- Buttons, forms, cards, hero compositions, tabs, disclosures, menus, on-page navigation, tables, Pager, ScrollContainer and Text CTA received a coordinated responsive and interaction refresh. See [Component experience and interaction refresh](#component-experience-and-interaction-refresh).
+- Tabs now centre when they fit and scroll when they overflow; MegaMenu's mobile navigation reveals one level at a time and its desktop flyout now animates open and close.
+- PageHeader's account link and language switcher are icon-only at every width, with a new `languageDisplay="links"` mode for sites with a short language list.
+
+**Typography, language and accessibility**
+- Arabic typography is finalized: Noto Kufi Arabic headings paired with Noto Sans Arabic body text, and Arabic/Latin font overrides now correctly respect language boundaries instead of leaking across them. See [Typography and navigation](#typography-and-navigation).
+- Font families across the library are now five script-mapped roles instead of six ad hoc SCSS variables.
+- Every focused control gets a real, forced-colours-safe indicator; two accessibility defects are fixed (an invisible checked-radio focus state, and no forced-colours focus indicator on buttons, chips and form fields).
+- A new SkipLink bypass-block component is wired into the reference patterns.
+
+**New patterns and components**
+- Content Hub, Landing Page and Article Story reference patterns give consumers composable, production-ready page-level layouts.
+- `FormAction`, `UserFeedback`, `StatusLabel` and `EmptyState` are new components.
+- Cards now distinguish unlinked content (plain text) from linked content (a real link), and gained a soft-tone CTA variant.
+
+**Documentation and tooling**
+- Storybook's introduction and Component Laboratory pages demonstrate production compositions; the AI manifest and component changelogs are kept in sync with every markup change.
+- CDN URLs are canonicalized to a single asset root; the npm package now has a working `files` allowlist; React and ReactDOM are updated to 19.3.
+
+> **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the theming migration requires no integration change, and the component refresh retains existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal. Three visual defaults change everywhere regardless — see below.
 >
-> **Alpha.3 adds no required integration change, but it does change three system-wide defaults that every consumer will see, in every theme:** the neutral ramp's surface half is now cool-tinted, the keyboard focus ring is no longer the brand colour, and the focus ring is drawn as two bands. See [Alpha.3](#alpha3-token-pipeline-and-colour-methodology).
+> **Three system-wide defaults change, in every theme, with no integration change required:** the neutral ramp's surface half is now cool-tinted, the keyboard focus ring is no longer the brand colour, and the focus ring is drawn as two bands. See [Design tokens and colour](#design-tokens-and-colour).
 >
-> **DELTA consumers: your palette changed.** DELTA was built on a navy that appears nowhere in DELTA's own codebase. Alpha.3 replaces it with DELTA's real sourced palette. This is the one theme whose compiled output moves beyond the three shared defaults. See [DELTA's palette is corrected](#deltas-palette-is-corrected).
+> **DELTA consumers: your palette changed.** DELTA was built on a navy that appears nowhere in DELTA's own codebase. 2.0 replaces it with DELTA's real sourced palette — the one theme whose compiled output moves beyond the three shared defaults above. See [DELTA's palette is corrected](#deltas-palette-is-corrected).
 >
 > **If you consume a sub-brand compiled stylesheet** (PreventionWeb, IRP, MCR, DELTA): one required change — add the matching `mg-theme-*` class to `<body>` or a wrapping element, or components fall back to the default UNDRR palette. See [Sub-brand theming migration](#sub-brand-theming-migration).
 >
@@ -27,7 +48,7 @@ If you only need the release highlights, start here:
 
 ## Try the prerelease
 
-2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-beta.1` is the latest documented candidate.
+2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-beta.1` is the latest prerelease.
 
 ```bash
 # npm (prerelease tag — does not become your default version)
@@ -42,28 +63,7 @@ npm install @undrr/undrr-mangrove@next
 
 For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and for a sub-brand add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
 
-## Alpha roadmap
-
-| Prerelease | Status | Focus |
-|---|---|---|
-| `2.0.0-alpha.1` | Published under `next` | CSS custom-property theming, 16px root and sub-brand runtime selectors |
-| `2.0.0-alpha.2` | Published under `next` | Experience principles, component surfaces, interaction states, responsive behaviour and multilingual resilience |
-| `2.0.0-alpha.3` | Published under `next` | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
-| `2.0.0-alpha.4` | Release candidate; not yet published | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles; centred responsive tabs and progressive mobile navigation |
-| `2.0.0-beta.1` | Release candidate; not yet published | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates, plus a pre-beta.1 paper-cuts pass (PageHeader `languageDisplay="links"` and icon-only nav polish, animated MegaMenu desktop flyout) |
-
-## Planned for 2.0.0-beta.1 (since alpha.4)
-
-The following changes landed after `v2.0.0-alpha.4` and are expected to be called out in the next prerelease notes:
-
-- **New/expanded patterns:** Content Hub and Landing Page pattern suite ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)), and Article Story reference pattern ([#1125](https://github.com/unisdr/undrr-mangrove/pull/1125)).
-- **Accessibility and navigation:** bypass-block SkipLink component and pattern wiring ([#1119](https://github.com/unisdr/undrr-mangrove/pull/1119)); desktop accessibility fixes and duplicate-id resolution in MegaMenu/PageHeader ([#1120](https://github.com/unisdr/undrr-mangrove/pull/1120)).
-- **Cards and CTA behavior:** unlinked cards now render plain text rather than faux links ([#1116](https://github.com/unisdr/undrr-mangrove/pull/1116)); card spacing/locale fixes ([#1110](https://github.com/unisdr/undrr-mangrove/pull/1110)); CTA soft tone and composed content enhancements ([#1111](https://github.com/unisdr/undrr-mangrove/pull/1111)).
-- **Cross-cutting UI and documentation:** v2 UI refresh across tags/sharing/navigation/header/tables ([#1106](https://github.com/unisdr/undrr-mangrove/pull/1106)); canonical CDN URL migration ([#1107](https://github.com/unisdr/undrr-mangrove/pull/1107)); curated AI manifest updates for pattern descriptions ([#1130](https://github.com/unisdr/undrr-mangrove/pull/1130)).
-- **Pre-beta.1 paper cuts and polish** ([#1134](https://github.com/unisdr/undrr-mangrove/pull/1134)): PageHeader's account link and language switcher are icon-only at every width with a new `languageDisplay="links"` alternative for short language lists; resurrected pre-2.0 mobile logo cropping; animated the MegaMenu desktop flyout open/close; removed the stray top border on Pager.
-- **Tooling and runtime updates:** dependency maintenance and webpack entry-point regression fix ([#1124](https://github.com/unisdr/undrr-mangrove/pull/1124)); publishing workflow lockfile install ([#1127](https://github.com/unisdr/undrr-mangrove/pull/1127)); React/ReactDOM `19.3.0` ([#1128](https://github.com/unisdr/undrr-mangrove/pull/1128)).
-
-### Alpha.2 experience and interaction baseline
+## Component experience and interaction refresh
 
 Alpha.2 applies a shared experience direction without mechanically homogenising components or overriding theme-owned expression:
 
@@ -84,7 +84,7 @@ Alpha.2 applies a shared experience direction without mechanically homogenising 
 
 Alpha.2 has been checked across desktop and mobile layouts, Chromium and Firefox, RTL, long labels, keyboard focus, reduced motion, forced colours and representative UNDRR themes. See the [Experience principles](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-experience-principles--docs) for the design guardrails behind these changes.
 
-### Alpha.3 token pipeline and colour methodology
+## Design tokens and colour
 
 A foundation release. No required integration change, but **three defaults change for every consumer in every theme**, and DELTA's palette is corrected further.
 
@@ -283,18 +283,18 @@ Arabic headings were Noto Kufi Arabic and body was Dubai. Both became Dubai in a
 
 A caveat was stated at the time: dropping Kufi was a judgement rather than a correction, because the UAE Federal Design System and OCHA's own base theme both set Noto Kufi for body. A second question was left open — the Dubai EULA requires the font be embedded so an end user cannot extract it and forbids redistribution, while Mangrove served it as a plain WOFF2 from an open CDN, referenced by an Apache-2.0 library that pointed other organisations at that copy.
 
-**Both have since been settled the other way** — see [Arabic typography settled](#alpha4-arabic-typography-settled) below. Dubai is no longer shipped.
+**Both have since been settled the other way** — see [Arabic typography settled](#arabic-typography-settled) below. Dubai is no longer shipped.
 
 #### Not yet resolved
 
-These are known and deliberately unfinished in alpha.3:
+These are known and deliberately unfinished as of this token pipeline work:
 
 - Sub-brand tab colours are not wired into the alpha.2 underline tab treatment. The brands designed a filled tab (white on a solid brand background); piping those colours into an underline on a white page measures 1.00:1. Resolving it is a design decision, not a wiring change.
 - The accent ramp is the largest remaining accessibility debt and is the reason most of the 65 WCAG exceptions exist. Retuning it is a brand decision.
 - Forced-colours behaviour has not been verified in real Windows High Contrast, only in emulation. The two-band mixins are built to degrade correctly there, but that is reasoned, not observed.
 - `--mg-color-focus-ring-inverse` resolves to white in all five themes, so it is a seam with nothing behind it yet. It earns its keep only when a theme retunes it.
 
-### Alpha.4 typography and navigation
+## Typography and navigation
 
 #### Arabic typography settled
 
@@ -358,26 +358,54 @@ This is a selector fix, not a font change. It predates the Noto move above and b
 
 Compiled-CSS consumers do not need a markup migration for these navigation updates. Sass consumers must apply the font-role migration in [breaking change #8](#8-font-family-variables-replaced-by-five-roles), and themes depending on Dubai must supply their own font declaration.
 
+## New patterns, components and accessibility
+
+The newest work in 2.0, layered on top of the theming, token and typography foundations above: page-level patterns for consumers building on Mangrove, plus a further accessibility pass on the two components every page includes.
+
+#### Page-level patterns
+
+[Content Hub and Landing Page pattern suite (#1113)](https://github.com/unisdr/undrr-mangrove/pull/1113) and [Article Story reference pattern (#1125)](https://github.com/unisdr/undrr-mangrove/pull/1125) give consumers composable, production-ready page-level layouts instead of assembling one from individual components each time — hero, card collections and section headings are wired together with the same responsive and accessibility behaviour components already have on their own.
+
+[SkipLink (#1119)](https://github.com/unisdr/undrr-mangrove/pull/1119) is a new bypass-block component, wired into the reference patterns above so a keyboard user can jump straight to the main content.
+
+#### Cards and calls to action
+
+Cards now distinguish unlinked content from linked content: an unlinked card renders as plain text instead of a faux link that goes nowhere ([#1116](https://github.com/unisdr/undrr-mangrove/pull/1116)). Card spacing, collection alignment and docs-locale fixes landed alongside it ([#1110](https://github.com/unisdr/undrr-mangrove/pull/1110)). The Text CTA gained a soft-tone variant and composed form content ([#1111](https://github.com/unisdr/undrr-mangrove/pull/1111)).
+
+#### MegaMenu and PageHeader
+
+Desktop accessibility fixes and duplicate-id resolution landed in both components ([#1114](https://github.com/unisdr/undrr-mangrove/pull/1114), [#1120](https://github.com/unisdr/undrr-mangrove/pull/1120)), alongside a v2 UI refresh across tags, sharing, navigation, header and tables ([#1106](https://github.com/unisdr/undrr-mangrove/pull/1106)).
+
+A further paper-cuts pass ([#1134](https://github.com/unisdr/undrr-mangrove/pull/1134)) went further on both components:
+
+- **PageHeader's account link and language switcher are icon-only at every width**, not just below tablet — the current language doesn't need to stay visibly spelled out. A new `languageDisplay="links"` mode shows languages inline instead, for sites with a short list, with each collapsing to its 2-letter code below the tablet breakpoint. The native `<select>` stays in the DOM, invisibly overlaid on its icon, so it remains a real keyboard- and screen-reader-operable control rather than a custom-built menu. The account link's accessible name moved from a CSS-hidden `<span>` (`display: none`, which also hides it from screen readers) to a proper visually-hidden one, so it no longer depends solely on the `title` attribute.
+- **MegaMenu's desktop flyout now animates open and close**, with a quick opacity + clip-path reveal instead of an instant `display` toggle, on the shared motion-duration and easing tokens other components already use. Falls back to an instant, un-animated show/hide for `prefers-reduced-motion`, increased contrast, reduced transparency and forced-colors.
+- The pre-2.0 mobile logo cropping behaviour was resurrected in PageHeader, corrected against the current logo asset's proportions, and the stray top border on the standalone Pager was removed.
+
+#### Tooling and CDN
+
+CDN URLs are canonicalized to a single `assets.undrr.org` root across documentation, examples, font URLs and component defaults ([#1107](https://github.com/unisdr/undrr-mangrove/pull/1107)). The AI manifest's curated pattern descriptions and layout-system docs were updated to match ([#1130](https://github.com/unisdr/undrr-mangrove/pull/1130)). React and ReactDOM are updated to `19.3.0` ([#1128](https://github.com/unisdr/undrr-mangrove/pull/1128)), and the publishing workflows now install from the lockfile ([#1127](https://github.com/unisdr/undrr-mangrove/pull/1127)).
+
 ## Find your path
 
 | I am... | Go to... |
 |---|---|
-| A **base UNDRR** Drupal/CDN consumer, no custom SCSS | [What changed visually](#what-changed-visually) and [the alpha.2 baseline](#alpha2-experience-and-interaction-baseline) |
+| A **base UNDRR** Drupal/CDN consumer, no custom SCSS | [What changed visually](#what-changed-visually) and [Component experience and interaction refresh](#component-experience-and-interaction-refresh) |
 | A **sub-brand** Drupal/CDN consumer (PW, IRP, MCR, DELTA) | [Sub-brand theming migration](#sub-brand-theming-migration) — add the `mg-theme-*` body class |
 | A **DELTA** consumer | [DELTA's palette is corrected](#deltas-palette-is-corrected) — your brand colours changed |
 | A developer who imports Mangrove SCSS | [Breaking changes](#breaking-changes) |
 | A developer who overrides a **font-family** variable | [Breaking change #8](#8-font-family-variables-replaced-by-five-roles) — all six were removed |
 | A developer who overrides sub-brand tokens | [Sub-brand theming migration](#sub-brand-theming-migration) |
-| A developer who uses the **`--sendai-*` accent colours** | [Alpha.3](#alpha3-token-pipeline-and-colour-methodology) — deprecated, replaced by `--mg-sendai-target-a`…`-g` |
+| A developer who uses the **`--sendai-*` accent colours** | [Design tokens and colour](#design-tokens-and-colour) — deprecated, replaced by `--mg-sendai-target-a`…`-g` |
 | An AI agent or tool reading this for API context | [Token API summary](#token-api-summary) |
 
 ## What changed visually
 
-In **alpha.1**, colors and spacing remain visually equivalent for base UNDRR consumers: the values moved from SCSS variables to CSS custom properties, but the compiled `style.css` output is equivalent.
+For base UNDRR consumers, colors and spacing are visually equivalent to 1.x in the parts of the system that didn't deliberately change: the values moved from SCSS variables to CSS custom properties, but where nothing else changed, the compiled `style.css` output is equivalent.
 
-**Alpha.2** intentionally refreshes the presentation and interaction of core components. It introduces softer theme-aware surfaces, clearer focus and hover states, more consistent responsive spacing, joined form actions and stronger multilingual behaviour. Semantic shapes remain component-specific: carousel controls stay circular, chips retain meaningful pill geometry and institutional chrome continues to express its owning theme.
+The component refresh intentionally changes the presentation and interaction of core components. It introduces softer theme-aware surfaces, clearer focus and hover states, more consistent responsive spacing, joined form actions and stronger multilingual behaviour. Semantic shapes remain component-specific: carousel controls stay circular, chips retain meaningful pill geometry and institutional chrome continues to express its owning theme.
 
-**Alpha.3** changes three things in every theme — the neutral ramp's surface half is cool-tinted, the focus ring is gold rather than the brand colour, and that ring is now two bands — plus DELTA's palette, corrected against its own design sources. The tint is subtle per surface and cumulative across a page. DELTA's buttons in particular go from unfilled navy text to white on brand blue. See [Alpha.3](#alpha3-token-pipeline-and-colour-methodology).
+The token pipeline work changes three things in every theme — the neutral ramp's surface half is cool-tinted, the focus ring is gold rather than the brand colour, and that ring is now two bands — plus DELTA's palette, corrected against its own design sources. The tint is subtle per surface and cumulative across a page. DELTA's buttons in particular go from unfilled navy text to white on brand blue. See [Design tokens and colour](#design-tokens-and-colour).
 
 Otherwise the token rewrite carries the values it started with, apart from [three tokens that changed shape](#7-three-button-tokens-changed-shape). `StatusLabel` and `EmptyState` are additions no existing component uses.
 
@@ -476,11 +504,11 @@ There is no compatibility build; the 16px root is the only supported basis.
 
 ### 6. Deprecated Pagination component removed
 
-The deprecated `Pagination` component, its stories and documentation are removed in alpha.2. Use `Pager`, which is the supported 2.0 pagination pattern. Existing consumers that still import or render `Pagination` must migrate before adopting this prerelease.
+The deprecated `Pagination` component, its stories and documentation are removed. Use `Pager`, which is the supported 2.0 pagination pattern. Existing consumers that still import or render `Pagination` must migrate before adopting this prerelease.
 
 ### 7. Three button tokens changed shape
 
-Added in alpha.3. Three tokens moved from a bare RGB channel triple to a complete colour value. Components consumed them as `rgb(var(--token))` and now consume them as `var(--token)` directly.
+Added in the token pipeline rewrite. Three tokens moved from a bare RGB channel triple to a complete colour value. Components consumed them as `rgb(var(--token))` and now consume them as `var(--token)` directly.
 
 | Token | Before (base) | After (base) |
 |---|---|---|
@@ -502,7 +530,7 @@ This is not a blanket conversion. Sibling tokens are still channel triples where
 
 ### 8. Font-family variables replaced by five roles
 
-Added in alpha.4, closing [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098). All six font-family SCSS variables are removed and replaced by five CSS custom properties.
+Closes [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098). All six font-family SCSS variables are removed and replaced by five CSS custom properties.
 
 | Removed | Replacement role |
 |---|---|
