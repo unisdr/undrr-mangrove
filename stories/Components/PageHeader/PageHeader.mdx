@@ -285,11 +285,11 @@ The PageHeader component follows accessibility best practices:
 
 ## Changelog
 
-- **1.6.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): **Fixed:** every header emitted the same hard-coded element ids, so a page rendering two of them produced duplicate ids and every language `<label>` after the first pointed at the wrong `<select>` (WCAG 1.3.1, 4.1.1). The new `idPrefix` prop namespaces `header`, `block-undrrlogo`, the language form, its select and its no-script submit. Output is byte-for-byte unchanged when `idPrefix` is omitted, so existing Drupal styling and scripting that targets these ids keeps working.
+- **1.6.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed duplicate hard-coded IDs by adding `idPrefix` namespacing for header/language elements. Default output remains unchanged when `idPrefix` is omitted, preserving existing Drupal selectors.
 
 - **1.5.1** — 2026-09-09: The default logo URL now uses the canonical assets CDN root. Custom logo URLs remain supported.
 
-- **1.5** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refined toolbar spacing and divider, added visible focus and 40px controls, and corrected duplicate logo breakpoints without cropping the logo. Language controls follow writing direction; the toolbar retains its 10px inline gutter at every breakpoint, including desktop. Existing decoration and toolbar background are retained.
+- **1.5** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refined toolbar spacing/dividers, improved visible focus and control sizing, and corrected logo breakpoint behavior without cropping. RTL direction handling and existing decoration/background remain unchanged.
 
 - **1.4** — 2026-05-15: Replaced bare `<i>` icon element with `<Icon>` component for correct `aria-hidden` semantics ([#908](https://github.com/unisdr/undrr-mangrove/issues/908))
 - **1.3** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): Added `showLogo`, `showAccount`, and `showLanguage` boolean props to toggle individual toolbar sections. All default to `true` for backward compatibility. Useful for sub-branded sites (e.g., DELTA) that provide their own navigation and only need the decoration stripe.

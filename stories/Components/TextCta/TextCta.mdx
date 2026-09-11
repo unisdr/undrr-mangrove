@@ -222,10 +222,10 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
-- **1.2** — 2026-09-09: Added an optional composed-content slot for forms and other CTA uses, preserving existing button-only markup. Added a reusable soft accent tone with dark text, normal buttons and `data-tone` support. Reworked the main CTA guide around emphasis, composed forms and responsive layouts, and consolidated the form examples into the CTA stories. The newsletter pattern retains the complete simulated journey. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
+- **1.2** — 2026-09-09: Added an optional composed-content slot (for forms and richer CTA layouts), a reusable soft-accent `data-tone`, and consolidated CTA form examples into shared stories. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
 
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Added an optional eyebrow and responsive inline content/action layout for wide promotional banners.
   - Composed action links through `CtaButton`, including editorial, outline and external-link options; hardened text contrast against surrounding typography and made outline borders reliable on dark CTA surfaces.
-- **1.0** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release. Full-width banner with BEM class structure (`mg-cta`). Supports `variant` prop (primary/secondary/tertiary/quaternary) matching Hero color system, `backgroundColor` for custom colors, `buttons` array prop (multiple buttons with Primary/Secondary types), `text` prop with HTML support (sanitized via DOMPurify), optional `image` for side-by-side layout, `centered` prop, and configurable `headlineSize`/`padding`.
+- **1.0** — 2026-03-14 ([web-backlog#2630](https://gitlab.com/undrr/web-backlog/-/work_items/2630)): First production release of the `mg-cta` banner with theme variants, custom background color, button arrays, sanitized HTML text, optional image layout, centered mode, and configurable headline size/padding.
 - **0.1** — 2022-12-12: Initial placeholder (never used in production)

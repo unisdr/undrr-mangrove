@@ -132,9 +132,9 @@ Container children and individually classed tags share the same styling. Explici
 
 ## Changelog
 
-- **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed spacing, line height and base radius for v2; aligned auto-styled children with the UI font role and modifier styling. Static and linked tags share compact geometry (28px minimum height, 24px minimum width); linked tags gain keyboard focus, reduced-motion transitions and forced-colour support; static labels no longer react to hover. Long labels wrap and container spacing works in RTL without double margins. Existing classes and legacy colour overrides remain supported; corrected runtime theming guidance.
+- **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed v2 spacing/geometry and aligned auto-styled tags with UI font/modifier rules. Added stronger focus/forced-colour handling for links, disabled hover treatment on static tags, and improved RTL/long-label wrapping behavior.
 
-- **1.1.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tags now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-tag` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
+- **1.1.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tag typography now follows the `ui` font role (`Noto Sans Arabic`), and the component-level `:lang(ar)` override was removed. Latin rendering is unchanged.
 - **1.1.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tag whose own language is not Arabic.
 - **1.1** — 2026-04-13: `.mg-tag` now uses `$mg-font-family-headings` (Roboto Condensed) and a matching `:lang(ar)` override to `$mg-font-family-arabic-headings`. Brings tags into alignment with the wider compact-UI-label font treatment.
 - **1.0** — 2026-02-26: Initial release; replaces legacy `.st-tag--spl` class with Mangrove-native BEM pattern, hover state, `--secondary`/`--outline`/`--accent` variants, and `.mg-tag-container` for auto-styling children

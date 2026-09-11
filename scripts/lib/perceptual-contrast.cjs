@@ -1,57 +1,18 @@
 /**
  * Perceptual lightness contrast, on Oklab.
  *
- * WHY THIS EXISTS
- * WCAG 2's contrast ratio compares relative luminance, which is not
- * perceptually uniform. It misjudges mid-tones and light-on-dark badly, so two
- * pairs with the same ratio can be visibly different to read. This measures
- * lightness difference in Oklab, where a given numeric step is intended to look
- * like the same step anywhere on the scale.
+ * Purpose: supplement WCAG 2 contrast checks with an Oklab lightness-distance
+ * measure that tracks perceived differences more consistently across tones.
  *
- * WHY OKLAB
- * Oklab (Björn Ottosson, 2020) is defined in CSS Color Level 4, a W3C
- * specification in the public domain, and browsers compute oklab()/oklch()
- * natively. There is no licence, patent or trademark attached to using it.
+ * Scope and limits:
+ * - Not APCA, and does not claim APCA compliance.
+ * - Polarity-insensitive (dark-on-light and light-on-dark are symmetric here).
+ * - Not font-size/weight aware beyond the coarse LARGE_TEXT threshold.
+ * - Assumes sRGB on a typical lit display environment.
  *
- * PRECEDENT
- * Canonical reached the same conclusion independently while building Ubuntu's
- * palette: they explored an APCA-inspired generator, then shipped a
- * WCAG-anchored approach, noting "I'm not sure if what I did is compatible with
- * the APCA trademark license, so I'll refrain from claiming that my result is
- * APCA-compliant".
- * https://canonical.design/blog/generating-color-palettes-for-design-systems-inspired-by-apca
- *
- * ServiceNow's Horizon design system layers a perceptual measure on top of
- * WCAG 2 rather than replacing it. Nobody credible has swapped WCAG 2 out,
- * because there is no successor standard to swap to.
- *
- * WHAT THIS IS NOT
- * This is not APCA and does not claim to be. APCA is patent-pending, carries a
- * restrictive licence and a trademark condition, and was removed from WCAG 3 in
- * 2023 without replacement - the April 2026 Editor's Draft still says "the
- * contrast algorithm used in WCAG 3 is yet to be determined". Nor is this
- * WCAG 2: it will disagree with it, which is the point.
- *
- * KNOWN LIMITATIONS, stated rather than buried
- * - Polarity-insensitive. Dark-on-light and light-on-dark of the same pair score
- *   the same. Real perception is not symmetric; APCA models that and this does
- *   not.
- * - Not size or weight aware. Thresholds below assume body text. Large or bold
- *   text is genuinely readable lower down, and this does not model that beyond
- *   the coarse LARGE_TEXT threshold.
- * - Assumes sRGB, a lit screen and an average viewing environment.
- *
- * CALIBRATION, which is the methodology
- * Thresholds are anchored to the two boundaries the field already agrees on,
- * then the perceptual curve governs between and beyond them:
- *
- *   #767676 on white is exactly WCAG 2's 4.5:1 body-text boundary -> 63.3 here
- *   #949494 on white is exactly WCAG 2's 3.0:1 non-text boundary  -> 50.0 here
- *
- * So a pair that WCAG 2 puts precisely on a boundary lands on the same boundary
- * here, and the two measures diverge only where WCAG 2 is unreliable. That is
- * deliberate: it means adopting this does not silently re-baseline every colour
- * decision already made.
+ * Calibration anchors (to keep existing WCAG boundaries intuitive):
+ * - #767676 on white (WCAG 4.5:1 body text) maps to ~63 here.
+ * - #949494 on white (WCAG 3.0:1 non-text/large-text) maps to ~50 here.
  */
 
 const P = 1.618; // phi

@@ -96,10 +96,10 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 ## Changelog
 
-- **1.4.0** — 2026-09-10: A card without a destination now renders its title as plain text instead of an anchor with no `href`, so it no longer looks or behaves like a link. An empty or whitespace-only `link` counts as no link. `card.scss` also strips the link affordances from `a[href=""]` and `a:not([href])` to repair markup already published through Drupal Gutenberg. See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links) for the full guidance.
+- **1.4.0** — 2026-09-10: Unlinked cards now render plain-text titles (not empty anchors), and `card.scss` removes link affordances from empty/missing `href` markup. See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-without-links).
 - **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Added a responsive collection with varied title lengths to demonstrate sibling heights without changing cover sizing.
 
-- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic card titles and labels now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-card__title` and `.mg-card__label` read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
+- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic title/label typography now follows the `ui` font role (`Noto Sans Arabic`), and the component-level `:lang(ar)` override was removed. Latin rendering is unchanged.
 - **1.3.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a card title or label whose own language is not Arabic.
 - **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Unified focus states behind the theme-adaptive `mg-focus-ring` mixin and added a matching 2px radius to title-link focus rings.
