@@ -127,6 +127,7 @@ export function PageHeader({
                       <div className="mg-page-header__select-wrapper">
                         <select
                           style={{ width: '165px' }}
+                          title="Select your language"
                           className="mg-page-header__select lang-dropdown-select-element form-select form-control"
                           data-lang-dropdown-id="lang-dropdown-form"
                           id={id('edit-lang-dropdown-select')}

@@ -54,7 +54,7 @@
   // Without this, the language <select>'s content-based min-width (its
   // longest option's rendered width, e.g. a long translated language name)
   // keeps the whole block from shrinking, so it drops to its own row the
-  // moment the toolbar gets tight — instead of truncating in place like
+  // moment the toolbar gets tight — instead of collapsing in place like
   // the logo and account link already do.
   &__block--language {
     display: flex;
@@ -63,14 +63,32 @@
     min-inline-size: 0;
 
     // Flex items default to min-width: auto (content-based), which would
-    // let the form ignore this block's max-inline-size below and keep the
-    // <select> at its full, untruncated content width.
+    // let the form ignore this block's sizing below and keep the <select>
+    // at its full, untruncated content width.
     > form {
       min-inline-size: 0;
     }
 
+    // Below tablet, collapse to icon-only — the same breakpoint the
+    // account link's text label already disappears at
+    // (.mg-page-header__label). The native <select> stays in the DOM at
+    // full size, just visually hidden and overlaid on top of the icon, so
+    // it's still a real, keyboard- and screen-reader-operable control:
+    // tapping/clicking the icon opens the actual native dropdown, not a
+    // custom-built menu.
     @media (max-width: $mg-breakpoint-tablet) {
-      max-inline-size: mg-rem(140);
+      position: relative;
+      inline-size: mg-rem(40); // matches the account link's tap target
+      block-size: mg-rem(40);
+
+      > form {
+        position: absolute;
+        inset: 0;
+      }
+
+      &:focus-within .mg-page-header__language-icon {
+        @include mg-focus-ring;
+      }
     }
   }
 
@@ -78,6 +96,17 @@
     flex-shrink: 0;
     color: rgb(var(--mg-color-neutral-0));
     font-size: $mg-font-size-400;
+
+    @media (max-width: $mg-breakpoint-tablet) {
+      position: absolute;
+      inset-inline-start: 50%;
+      inset-block-start: 50%;
+      transform: translate(-50%, -50%);
+
+      // The invisible <select> sits on top and handles the actual click —
+      // let pointer events pass through the icon to it.
+      pointer-events: none;
+    }
   }
 
   &__logo-img {
@@ -145,18 +174,21 @@
     direction: inherit;
     line-height: mg-rem(20);
 
-    // Truncate a long selected-language label instead of forcing the block
-    // to grow past its max-inline-size (which pushed it, and everything
-    // after it, onto a wrapped second row). Native <select> rendering means
-    // this ellipsis is Chromium/Firefox behavior; some WebKit builds theme
-    // the box and may not visibly truncate — the max-inline-size clamp
-    // still holds either way, so layout doesn't break, it just doesn't get
-    // the ellipsis cue there.
+    // Below tablet the whole control becomes an invisible tap target
+    // exactly the size of the icon above it (see
+    // .mg-page-header__block--language) — width: auto !important above
+    // sizes to content otherwise, so force it to fill instead. opacity (not
+    // display/visibility) keeps it a real, focusable, screen-reader- and
+    // keyboard-operable native <select>; the focus ring shows on the icon
+    // instead (.mg-page-header__block--language:focus-within), since a
+    // ring on an invisible element wouldn't be visible.
     @media (max-width: $mg-breakpoint-tablet) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding-inline-end: var(--mg-spacing-200);
+      inline-size: 100% !important;
+      block-size: 100%;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+      outline: none;
     }
 
     &:focus-visible {
