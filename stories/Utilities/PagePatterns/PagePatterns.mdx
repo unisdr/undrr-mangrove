@@ -34,9 +34,17 @@ below that — the flexible/fixed-width split itself is `mg-grid`'s `--article`
 variant (see [Grid layout](?path=/docs/design-decisions-grid-layout--docs)),
 so `mg-grid mg-grid--article` must be paired with `mg-reading--with-contents`
 for the sidebar split to render; `mg-reading--with-contents` alone only
-supplies the item placement.
+supplies the item placement. It also self-caps to its own natural width
+(`--mg-reading-with-contents-width`, a real custom property, not a demo
+value) — without that, the flexible article column stretches to fill
+whatever a wide `mg-container` leaves available, while the article's own
+46rem measure caps the text regardless, opening a dead gap before the rail.
+Anything else that needs to visually align with the reading grid's rendered
+width (a full-bleed image or intro block sitting outside it as a sibling,
+for instance) can reference the same custom property.
 
 ## Changelog
 
+- **1.2** — 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): `.mg-reading--with-contents` now self-caps to its natural combined width via a new `--mg-reading-with-contents-width` custom property, fixing a dead gap between the article and the rail on any viewport wider than the two columns' combined measure — previously only patched around in one consumer's own demo CSS, not fixed here, so `ContentHub` and `LandingPages` had the same gap unaddressed until now.
 - **1.1** — 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): The sidebar/article split's column shape moved out of this file's own bespoke grid and into `mg-grid`'s new `--article` variant, so it's shared, shipped, and reusable outside this pattern rather than living only here. `mg-reading--with-contents` now needs `mg-grid mg-grid--article` alongside it in markup — this file keeps only the item-placement rules specific to its own sidebar/article semantics.
 - **1.0** — 2026-09-10: Added `mg-reading` as a distributed layout utility. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))

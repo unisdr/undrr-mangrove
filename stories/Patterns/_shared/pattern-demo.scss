@@ -19,20 +19,6 @@
   max-inline-size: 49rem;
 }
 
-// The width of ArticleStory's centred content column: the reading article's
-// own 46rem measure, plus the gap and the 16rem rail. Shared by the intro
-// block, the compact header image and the reading grid so they read as one
-// column. Centring itself is `mg-container`'s own job (`margin: 0 auto`) —
-// each of these elements carries the `mg-container` class in the markup, and
-// this file only adds the one thing `mg-container` doesn't already provide:
-// a narrower measure than its own breakpoint scale.
-// The 46rem and 16rem here are copied from `.mg-reading__article`'s measure
-// and the "On this page" rail column, both declared independently in
-// `stories/Utilities/PagePatterns/page-patterns.scss` — there is no shared
-// variable to reference instead. If either changes there, this drifts out of
-// sync silently; check both files together.
-$mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
-
 .mg-demo-shell {
   @media (width < 48rem) {
     padding-inline: var(--mg-spacing-200);
@@ -59,10 +45,11 @@ $mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
   block-size: auto;
 }
 
-// Capped at the same column width as the intro and reading grid (see
-// `mg-container` note above) so all three read as one centred column.
+// Capped at the same width as the reading grid below it (a real, shared
+// value from page-patterns.scss — see its own `--mg-reading-with-contents-width`
+// custom property) so the two read as one centred column.
 .mg-demo-article-media--compact {
-  max-inline-size: $mg-demo-article-column-width;
+  max-inline-size: var(--mg-reading-with-contents-width);
 }
 
 // Caption and credit are the shared `Imagecaption` component's own
@@ -83,21 +70,13 @@ $mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
   gap: var(--mg-spacing-200);
 }
 
-// The reading grid's 1fr article column stretches to fill whatever width is
-// left in its container, so on a wide viewport the ~46rem article sits flush
-// left while the rail drifts out to the far edge — a dead gap opens up
-// between them instead of one at a predictable edge. Capping the grid (and
-// the intro block, below) at their shared column width, both carrying
-// `mg-container` for the actual centring, keeps article and rail adjacent as
-// a single visually centred unit. Scoped to ArticleStory specifically —
-// `mg-reading--with-contents` is also `ContentHub`'s, which shares this
-// stylesheet but isn't part of this fix.
-.mg-demo-article-header ~ .mg-reading--with-contents {
-  max-inline-size: $mg-demo-article-column-width;
-}
-
+// The reading grid below self-caps to its natural width (see
+// page-patterns.scss's `--mg-reading-with-contents-width`), so it no longer
+// needs a demo-only override here. The intro block and the split hero's
+// media grid sit outside the reading grid as siblings, though, so they still
+// need to be told to match it explicitly.
 .mg-demo-article-header .mg-demo-intro {
-  max-inline-size: $mg-demo-article-column-width;
+  max-inline-size: var(--mg-reading-with-contents-width);
 }
 
 // Hero's `.mg-hero__split-grid` carries plain `mg-container` (fixed in
@@ -106,5 +85,5 @@ $mg-demo-article-column-width: calc(46rem + var(--mg-spacing-300) + 16rem);
 // variant's header lines up with the reading grid below it, not just with
 // generic `mg-container` siblings elsewhere on the page.
 .mg-demo-article-header .mg-hero__split-grid {
-  max-inline-size: $mg-demo-article-column-width;
+  max-inline-size: var(--mg-reading-with-contents-width);
 }

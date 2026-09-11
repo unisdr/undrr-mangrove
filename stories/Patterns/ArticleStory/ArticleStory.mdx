@@ -168,3 +168,11 @@ design is reviewed.
     undefined `name` variable into `Imagecredit`, which doesn't even accept
     that prop. Now real booleans, no dead code, and one less demo-only class
     family (`mg-demo-article-caption`/`-credit`/`-media-foot` are gone).
+  - Removed `$mg-demo-article-column-width`: `mg-reading--with-contents` now
+    self-caps to its own natural width at the source (`page-patterns.scss`'s
+    `--mg-reading-with-contents-width` custom property — see its own
+    changelog), fixing a dead-gap bug `ContentHub`/`LandingPages` had too,
+    not just working around it here. The intro block and the split hero's
+    media grid, which sit outside the reading grid as siblings, now
+    reference that same real custom property instead of a demo-only Sass
+    variable duplicating its literals.

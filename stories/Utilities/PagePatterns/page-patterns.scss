@@ -11,6 +11,18 @@
 // where the viewport is narrow; above that the container's own max-widths
 // take over and the gutter stops being what limits the line.
 
+:root {
+  // .mg-reading--with-contents's natural combined width: .mg-reading__article's
+  // own measure below, plus the gap, plus mg-grid--article's fixed rail width
+  // (16rem — see grid.scss's $mg-grid-article-rail-width; kept as a literal
+  // here, matching this file's custom-property-only convention). Exposed so
+  // any element that needs to visually align with the reading grid's rendered
+  // width — a full-bleed image or intro block sitting outside the grid as a
+  // sibling, for instance — has one real value to reference instead of a
+  // locally duplicated calc().
+  --mg-reading-with-contents-width: calc(46rem + var(--mg-spacing-300) + 16rem);
+}
+
 .mg-reading {
   display: grid;
   gap: var(--mg-spacing-250);
@@ -34,6 +46,16 @@
 // specific to this reading-grid's semantics (which child is the sidebar vs.
 // the article), stays here.
 @media (width >= 48rem) {
+  // Without this, the grid's flexible `1fr` article column stretches to fill
+  // whatever width its container (typically a much wider mg-container) leaves
+  // available, while .mg-reading__article's own measure caps the text at
+  // 46rem regardless — leaving a dead gap between the capped text and the
+  // rail. Self-cap the grid to its two children's natural combined width
+  // instead, so article and rail stay adjacent at every viewport.
+  .mg-reading--with-contents {
+    max-inline-size: var(--mg-reading-with-contents-width);
+  }
+
   // TableOfContents renders its own wrapper div around the section.
   .mg-reading--with-contents > div:has(.mg-table-of-contents) {
     grid-column: 2;
