@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '../../Atom/Icons/Icon';
+import { Logo } from '../../Atom/Logo/Logo';
 import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
 const cls = (...classes) =>
@@ -82,12 +83,13 @@ export function PageHeader({
                   className="mg-page-header__block mg-page-header__block--logo"
                 >
                   <a href={homeUrl}>
-                    <img
+                    <Logo
                       alt={logoAlt}
                       src={logoUrl}
                       width="324"
                       height="47"
                       title={logoTitle}
+                      autocrop
                       className="mg-page-header__logo-img"
                     />
                   </a>

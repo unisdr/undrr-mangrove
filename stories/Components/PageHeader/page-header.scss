@@ -189,34 +189,9 @@
     }
   }
 
-  &__logo-img {
-    display: block;
-    max-inline-size: 100%;
-    block-size: auto;
-    object-fit: contain;
-
-    // Pre-2.0 behavior: crop to a fixed box on mobile/tablet instead of
-    // letterboxing, so the logo stays legible at small sizes. The box
-    // aspect ratio (~3.75:1) is tuned to the current logo asset
-    // (assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg, natural
-    // aspect ~6.92:1): it crops right after the "UNDRR" wordmark, before
-    // the "United Nations Office for..." subtitle starts. The pre-2.0
-    // dimensions (190x48 / 110x30, ~3.96:1) were tuned for a different,
-    // differently-proportioned logo asset and sliced mid-glyph into the
-    // subtitle on this one — if the logo asset changes again, re-check
-    // this crop rather than assuming the ratio still holds.
-    @media (max-width: $mg-breakpoint-desktop) {
-      inline-size: mg-rem(180);
-      block-size: mg-rem(48);
-      object-fit: cover;
-      object-position: 0% 50%;
-    }
-
-    @media (max-width: $mg-breakpoint-tablet) {
-      inline-size: mg-rem(112);
-      block-size: mg-rem(30);
-    }
-  }
+  // Sizing and crop behavior now live on the Logo atom itself
+  // (stories/Atom/Logo/logo.scss, .mg-logo--autocrop) — this class is kept
+  // as a styling hook for consumers targeting the header's logo image.
 
   &__select-wrapper {
     height: auto;

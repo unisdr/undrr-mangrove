@@ -62,10 +62,33 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
 
 <Canvas of={LogoStories.DefaultUndrrLogoSquareWhite} meta={LogoStories} />
 
+### Translated logos
+
+Language-specific wordmarks are published to [assets.undrr.org](https://assets.undrr.org/logos/undrr/), one raster PNG per language/color combination (`undrr-logo-{lang}-{color}.png`). Color coverage varies by language:
+
+| Language | Colors available |
+| --- | --- |
+| Arabic (`ar`) | black, blue |
+| Spanish (`es`) | black, blue, white |
+| French (`fr`) | black, blue |
+| Russian (`ru`) | black, blue |
+| Chinese (`zh`) | black |
+
+Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) so screen readers pronounce the alt text correctly — it does not need to match the surrounding page's language.
+
+<Canvas of={LogoStories.TranslatedUndrrLogos} meta={LogoStories} />
+
+### Autocropping variant
+
+Set `autocrop` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses. The crop box is tuned for the horizontal UNDRR wordmark's aspect ratio — re-check it in `logo.scss` if a differently-proportioned asset is used.
+
+<Canvas of={LogoStories.AutocroppingUndrrLogo} meta={LogoStories} />
+
 #### Interactions
 
 - By clicking on the logo, the website is _always_ redirected to the UNDRR.org homepage.
 
 ## Changelog
 
+- **1.1** — 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh) and an `autocrop` variant (`mg-logo--autocrop`), now also used by the page header ("black bar") instead of a duplicated crop rule. Added `title`, `width`, `height`, `lang`, and `className` props.
 - **1.0** — 2024-09-12: Released component
