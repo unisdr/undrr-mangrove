@@ -1448,6 +1448,7 @@ async function main() {
         wide: '1440px',
       },
       utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
+      iconsUrl: `${DOCS_BASE}?path=/docs/components-icons--docs`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -1515,6 +1516,7 @@ async function main() {
 - Storybook: ${DOCS_BASE}
 - Repository: https://github.com/unisdr/undrr-mangrove
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Icons gallery: ${DOCS_BASE}?path=/docs/components-icons--docs
 
 ## For AI agents
 
@@ -1525,6 +1527,9 @@ ${DOCS_BASE}ai-components/index.json
 
 CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
+
+Icons gallery and inventory:
+${DOCS_BASE}?path=/docs/components-icons--docs
 
 ### Vanilla HTML quick start
 
