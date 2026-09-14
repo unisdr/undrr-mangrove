@@ -3,6 +3,7 @@
 .mg-author-image {
   --mg-author-image-accent: rgb(var(--mg-color-interactive));
   --mg-author-image-avatar-size: 80px;
+  --mg-author-image-hover-tint: rgb(var(--mg-color-interactive) / 0.14);
 
   align-items: center;
   background: transparent;
@@ -38,8 +39,39 @@
   color: inherit;
   display: grid;
   gap: inherit;
+  position: relative;
+  isolation: isolate;
   width: 100%;
   text-decoration: none;
+}
+
+.mg-author-image__link::before {
+  background: linear-gradient(
+    135deg,
+    var(--mg-author-image-hover-tint) 0%,
+    rgb(var(--mg-color-neutral-0) / 0) 72%
+  );
+  content: "";
+  inset: calc(-1 * var(--mg-spacing-50));
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  transform: translateY(2px);
+  z-index: 0;
+}
+
+.mg-author-image__link > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mg-author-image__link:hover::before,
+.mg-author-image__link:focus-visible::before {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .mg-author-image__link:focus-visible {
@@ -88,6 +120,10 @@
   color: rgb(var(--mg-color-neutral-0));
 }
 
+.mg-author-image--inverse {
+  --mg-author-image-hover-tint: rgb(var(--mg-color-neutral-0) / 0.1);
+}
+
 .mg-author-image--inverse .mg-author-image__title {
   color: rgb(var(--mg-color-neutral-100));
 }
@@ -107,10 +143,12 @@
 
 .mg-author-image--secondary {
   --mg-author-image-accent: rgb(var(--mg-color-secondary));
+  --mg-author-image-hover-tint: rgb(var(--mg-color-secondary) / 0.14);
 }
 
 .mg-author-image--tertiary {
   --mg-author-image-accent: rgb(var(--mg-color-tertiary));
+  --mg-author-image-hover-tint: rgb(var(--mg-color-tertiary) / 0.14);
 }
 
 .mg-author-image--small {
