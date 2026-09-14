@@ -137,6 +137,11 @@ Stripe-only toolbar context (no logo/account/language):
    <PageHeader showLogo={false} showAccount={false} showLanguage={false} />
    ```
 
+Locale-driven logo (no `logoUrl` needed — resolves the Spanish translated logo automatically):
+   ```jsx
+   <PageHeader locale="spanish" homeUrl="https://www.undrr.org/es" />
+   ```
+
 #### Vanilla HTML/CSS
 
 For non-React usage, use these HTML structures:
@@ -267,7 +272,8 @@ The PageHeader component follows accessibility best practices:
 | logoWidth    | String/Number | '324'                                                       | Native width of the logo image. Update alongside `logoHeight` if `logoUrl` points to a differently-proportioned asset                                                                                              |
 | logoHeight   | String/Number | '47'                                                        | Native height of the logo image                                                                                                                                                                                     |
 | logoLang     | String  | undefined                                                        | BCP 47 language tag for the logo image, when `logoUrl` points to a translated wordmark                                                                                                                             |
-| logoCrop     | 'autocrop' \| null | 'autocrop'                                                 | Crop variant passed to the underlying [Logo](?path=/docs/components-logos--docs) component. Pass `null` (not `undefined`) when `logoUrl` points to a translated or other differently-proportioned logo — `'autocrop'` is tuned for the default wordmark only and crops the translated logos' subtitle line |
+| logoCrop     | 'autocrop' \| null | undefined (resolves to 'autocrop', or to `null` when `locale` resolves a translated logo) | Crop variant passed to the underlying [Logo](?path=/docs/components-logos--docs) component. Set explicitly to override either resolution — e.g. `null` alongside a custom, differently-proportioned `logoUrl` |
+| locale       | String  | 'english'                                                        | Storybook locale key (`'english'`, `'arabic'`, `'french'`, `'japanese'`, `'russian'`, `'spanish'`, `'chinese'`) used to resolve a translated `logoUrl`/`logoLang`/`logoCrop` automatically when `logoUrl` is not set. Only swaps in an asset actually published in white — today, Spanish only — so it's a safe no-op for every other locale rather than a low-contrast logo |
 | homeUrl      | String  | '/'                                                              | URL for the logo link (ignored in decoration-only variant)                                                                                                                                                          |
 | showLogo     | Boolean | true                                                             | Show or hide the UNDRR logo section                                                                                                                                                                                 |
 | showAccount  | Boolean | true                                                             | Show or hide the "My account" link                                                                                                                                                                                  |
@@ -289,6 +295,7 @@ structure.
 ## Changelog
 
 - **1.7** — 2026-09-14: The logo now renders via the [Logo](?path=/docs/components-logos--docs) atom (`crop="autocrop"`) instead of a raw `<img>` with its own duplicated crop CSS. Markup, class names, and default sizing are unchanged. Added `logoWidth`, `logoHeight`, `logoLang`, and `logoCrop` props so a consumer swapping in a translated or differently-proportioned `logoUrl` can match its native dimensions and opt out of the crop, which is tuned to the default wordmark only.
+  - Added a `locale` prop: when `logoUrl` is not set, the header now resolves a translated logo automatically for locales with a published white asset (Spanish today) via `getUndrrLogoAsset` — see [Logo's changelog](?path=/docs/components-logos--docs). `UndrrChrome` passes its `locale` through, so pattern examples pick this up for free. Every other locale is an intentional no-op, keeping the English default rather than risking a low-contrast logo.
 
 - **1.6.1** — 2026-09-11 ([PR #1134](https://github.com/unisdr/undrr-mangrove/pull/1134)):
   - Restored pre-2.0 logo crop behavior on tablet/mobile breakpoints (instead of shrinking with `object-fit: contain`), retuned for the current logo asset.

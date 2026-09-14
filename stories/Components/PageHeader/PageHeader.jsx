@@ -2,10 +2,14 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '../../Atom/Icons/Icon';
 import { Logo } from '../../Atom/Logo/Logo';
+import { getUndrrLogoAsset } from '../../Atom/Logo/undrr-logo-assets';
 import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
+
+const DEFAULT_LOGO_URL =
+  'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg';
 
 /**
  * UNDRR page header with logo, user account link, and language selector.
@@ -17,13 +21,14 @@ export function PageHeader({
   idPrefix = '',
   skipLinkTarget,
   skipLinkLabel = 'Skip to main content',
-  logoUrl = 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
+  logoUrl,
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
-  logoWidth = '324',
-  logoHeight = '47',
+  logoWidth,
+  logoHeight,
   logoLang,
-  logoCrop = 'autocrop',
+  logoCrop,
+  locale = 'english',
   homeUrl = '/',
   showAccount = true,
   showLanguage = true,
@@ -48,6 +53,25 @@ export function PageHeader({
     variant && `mg-page-header--${variant}`,
     className
   );
+
+  // An explicit logoUrl always wins. Otherwise, resolve a translated asset
+  // for `locale` — getUndrrLogoAsset only ever substitutes a real published
+  // white-on-transparent asset (today, Spanish only), so this is a safe,
+  // contrast-preserving no-op for every other locale rather than swapping in
+  // a black/blue image invisible against the dark toolbar background. Its
+  // fallback result (translated: false) is the bundled English SVG module,
+  // not this component's own default URL string — check `.translated`
+  // rather than truthiness so an untranslated locale keeps DEFAULT_LOGO_URL
+  // instead of silently swapping to that different asset.
+  const asset = !logoUrl ? getUndrrLogoAsset(locale, 'white') : null;
+  const translatedLogo = asset?.translated ? asset : null;
+  const resolvedLogoUrl = logoUrl || translatedLogo?.src || DEFAULT_LOGO_URL;
+  const resolvedLogoLang =
+    logoLang !== undefined ? logoLang : translatedLogo?.lang;
+  const resolvedLogoWidth = logoWidth || translatedLogo?.width || '324';
+  const resolvedLogoHeight = logoHeight || translatedLogo?.height || '47';
+  const resolvedLogoCrop =
+    logoCrop !== undefined ? logoCrop : translatedLogo ? null : 'autocrop';
 
   // If decoration-only variant, render only the decoration stripe
   if (variant === 'decoration-only') {
@@ -89,12 +113,12 @@ export function PageHeader({
                   <a href={homeUrl}>
                     <Logo
                       alt={logoAlt}
-                      src={logoUrl}
-                      width={logoWidth}
-                      height={logoHeight}
+                      src={resolvedLogoUrl}
+                      width={resolvedLogoWidth}
+                      height={resolvedLogoHeight}
                       title={logoTitle}
-                      lang={logoLang}
-                      crop={logoCrop}
+                      lang={resolvedLogoLang}
+                      crop={resolvedLogoCrop}
                       className="mg-page-header__logo-img"
                     />
                   </a>
@@ -255,28 +279,52 @@ PageHeader.propTypes = {
   skipLinkTarget: PropTypes.string,
   /** Label for that skip link. */
   skipLinkLabel: PropTypes.string,
-  /** URL for the UNDRR logo image */
+  /**
+   * URL for the UNDRR logo image. Explicit `logoUrl` always wins over
+   * `locale` — set it directly to fully control the logo, or leave it unset
+   * and use `locale` to pick up a translated asset automatically.
+   */
   logoUrl: PropTypes.string,
   /** Alt text for the logo image */
   logoAlt: PropTypes.string,
   /** Title attribute for the logo image */
   logoTitle: PropTypes.string,
-  /** Native width of the logo image. Update alongside `logoHeight` if swapping in an asset with different proportions than the default (see `logoCrop`). */
+  /**
+   * Native width of the logo image. Defaults to '324' (the English
+   * wordmark's proportions) unless `locale` resolves a translated asset,
+   * whose real dimensions are used instead. Update alongside `logoHeight`
+   * if also setting a custom `logoUrl` with different proportions.
+   */
   logoWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  /** Native height of the logo image. */
+  /** Native height of the logo image. See `logoWidth`. */
   logoHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  /** BCP 47 language tag for the logo image, when `logoUrl` points to a translated wordmark. */
+  /**
+   * BCP 47 language tag for the logo image. Resolved automatically from
+   * `locale` when a translated asset is used; set explicitly alongside a
+   * custom `logoUrl`.
+   */
   logoLang: PropTypes.string,
   /**
-   * Crop variant passed to the underlying Logo component. Defaults to
-   * `'autocrop'`, tuned for the default English horizontal wordmark's
-   * proportions (~6.6:1). Pass `null` (not `undefined` — that falls back to
-   * the default) when providing a translated or other
-   * differently-proportioned `logoUrl`: verified against the translated
-   * UNDRR logos (~2.3-2.9:1), `'autocrop'` crops their subtitle line off
-   * vertically rather than fitting them.
+   * Crop variant passed to the underlying Logo component. Resolves to
+   * `'autocrop'` for the default English wordmark (tuned for its ~6.6:1
+   * proportions) and to `null` when `locale` resolves a translated asset
+   * (~2.3-2.9:1 — `'autocrop'` would crop their subtitle line off
+   * vertically). Set explicitly to override either resolution, e.g. `null`
+   * when providing a custom, differently-proportioned `logoUrl`.
    */
   logoCrop: PropTypes.oneOf(['autocrop', null]),
+  /**
+   * Storybook locale key (matches Mangrove's other locale-aware components,
+   * e.g. ArticleStory), used to resolve a translated logo asset when
+   * `logoUrl` is not set (see `undrr-logo-assets.js`) — 'english' (default),
+   * 'arabic', 'french', 'japanese', 'russian', 'spanish', 'chinese'. Only
+   * resolves to a translated asset when one is actually published for this
+   * locale in white (the toolbar background is dark) — today that's Spanish
+   * only; every other locale (and any unrecognized value) is an intentional
+   * no-op that keeps the English default rather than risk a low-contrast
+   * logo.
+   */
+  locale: PropTypes.string,
   /** URL for the logo link */
   homeUrl: PropTypes.string,
   /** Show or hide the UNDRR logo section */

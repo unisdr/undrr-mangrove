@@ -40,7 +40,7 @@ A well-established and consistently presented identity is a very valuable asset.
 
 [Download](images/undrr-logo-blue.svg)
 
-This is the default logo and is used primarily in the header of every page as well as country sites.
+This is the default logo and is used primarily in the header of every page as well as country sites. **This story is locale-smart**: switch Storybook's Locale toolbar and it swaps in the translated wordmark for any language with a published blue asset (Arabic, Spanish, French, Russian). Chinese has no blue asset and Japanese has no translated asset at all, so both fall back to the English default — see `getUndrrLogoAsset` in `undrr-logo-assets.js`.
 
 <Canvas of={LogoStories.DefaultUndrrLogoBlue} meta={LogoStories} />
 
@@ -50,7 +50,7 @@ This is the default logo and is used primarily in the header of every page as we
 
 [Download](images/undrr-logo-white.svg)
 
-Used when the logo is placed on a dark background.
+Used when the logo is placed on a dark background. Also locale-smart, but only Spanish has a published white asset today — every other locale intentionally stays on the English default rather than swap in a black/blue translated image that would be invisible here.
 
 <Canvas of={LogoStories.DefaultUndrrLogoWhite} meta={LogoStories} />
 
@@ -93,4 +93,5 @@ Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoi
 ## Changelog
 
 - **1.1** — 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh) and a `crop="autocrop"` variant (`mg-logo--autocrop`), now also used by the page header ("black bar") instead of a duplicated crop rule. Added `title`, `width`, `height`, `lang`, `crop`, and `className` props. `crop` is intentionally an enum (not a boolean) to leave room for other crop treatments without a breaking change; it is verified safe only for the default English horizontal wordmark, not the translated logos added in this release.
+  - Added `undrr-logo-assets.js` (`getUndrrLogoAsset(locale, color)`), a locale → translated-asset resolver with verified pixel dimensions per asset and a color-aware fallback to the English default. The "UNDRR logo - blue/white" stories and [page header](?path=/docs/components-pageheader--docs)'s new `locale` prop both use it, so switching Storybook's Locale toolbar (or passing `locale` in production) now shows the correct translated wordmark automatically wherever one is safely available.
 - **1.0** — 2024-09-12: Released component

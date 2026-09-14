@@ -1,11 +1,9 @@
 import { Logo } from './Logo';
+import { UNDRR_LOGO_LOCALES, getUndrrLogoAsset } from './undrr-logo-assets';
 
-import logo from '../../assets/images/undrr-logo-blue.svg';
 import logoWhite from '../../assets/images/undrr-logo-white.svg';
 import logoSquare from '../../assets/images/undrr-logo-square-blue.svg';
 import logoSquareWhite from '../../assets/images/undrr-logo-square-white.svg';
-
-const ASSET_BASE = 'https://assets.undrr.org/logos/undrr/';
 
 export default {
   title: 'Components/Logos',
@@ -30,18 +28,31 @@ export default {
 };
 
 export const DefaultUndrrLogoBlue = {
-  render: () => <Logo src={logo} alt={'UNDRR logo'} />,
+  render: (args, { globals }) => {
+    const asset = getUndrrLogoAsset(globals.locale, 'blue');
+    return <Logo src={asset.src} alt={'UNDRR logo'} lang={asset.lang} />;
+  },
   name: 'UNDRR logo - blue',
 
   parameters: {
     backgrounds: {
       default: 'white',
     },
+
+    docs: {
+      description: {
+        story:
+          'Follows the Storybook locale toolbar: switch it to see the translated wordmark for languages with a published blue asset (Arabic, Spanish, French, Russian). Chinese has no blue asset and falls back to English; Japanese has no translated asset at all and always falls back to English.',
+      },
+    },
   },
 };
 
 export const DefaultUndrrLogoWhite = {
-  render: () => <Logo src={logoWhite} alt={'UNDRR logo'} />,
+  render: (args, { globals }) => {
+    const asset = getUndrrLogoAsset(globals.locale, 'white');
+    return <Logo src={asset.src} alt={'UNDRR logo'} lang={asset.lang} />;
+  },
   name: 'UNDRR logo - white',
 
   parameters: {
@@ -52,6 +63,10 @@ export const DefaultUndrrLogoWhite = {
     docs: {
       inlineStories: false,
       iframeHeight: '200px',
+      description: {
+        story:
+          'Follows the Storybook locale toolbar. Spanish is the only language with a published white asset today — every other locale falls back to the English default so the logo stays visible on this dark background rather than swapping in a low-contrast black/blue translated image.',
+      },
     },
   },
 };
@@ -104,13 +119,13 @@ export const DefaultUndrrLogoSquareWhite = {
   },
 };
 
-const TRANSLATED_LOGOS = [
-  { lang: 'ar', label: 'Arabic', colors: ['black', 'blue'] },
-  { lang: 'es', label: 'Spanish', colors: ['black', 'blue', 'white'] },
-  { lang: 'fr', label: 'French', colors: ['black', 'blue'] },
-  { lang: 'ru', label: 'Russian', colors: ['black', 'blue'] },
-  { lang: 'zh', label: 'Chinese', colors: ['black'] },
-];
+const LOCALE_LABELS = {
+  arabic: 'Arabic',
+  spanish: 'Spanish',
+  french: 'French',
+  russian: 'Russian',
+  chinese: 'Chinese',
+};
 
 export const TranslatedUndrrLogos = {
   render: () => (
@@ -122,26 +137,29 @@ export const TranslatedUndrrLogos = {
         </tr>
       </thead>
       <tbody>
-        {TRANSLATED_LOGOS.map(({ lang, label, colors }) =>
-          colors.map(color => (
-            <tr key={`${lang}-${color}`}>
-              <td style={{ padding: '8px' }}>
-                {label} — {color}
-              </td>
-              <td
-                style={{
-                  padding: '8px',
-                  background: color === 'white' ? '#004f91' : '#fff',
-                }}
-              >
-                <Logo
-                  src={`${ASSET_BASE}undrr-logo-${lang}-${color}.png`}
-                  alt={`UNDRR logo (${label})`}
-                  lang={lang}
-                />
-              </td>
-            </tr>
-          ))
+        {Object.entries(UNDRR_LOGO_LOCALES).map(([locale, { colors }]) =>
+          Object.keys(colors).map(color => {
+            const asset = getUndrrLogoAsset(locale, color);
+            return (
+              <tr key={`${locale}-${color}`}>
+                <td style={{ padding: '8px' }}>
+                  {LOCALE_LABELS[locale]} — {color}
+                </td>
+                <td
+                  style={{
+                    padding: '8px',
+                    background: color === 'white' ? '#004f91' : '#fff',
+                  }}
+                >
+                  <Logo
+                    src={asset.src}
+                    alt={`UNDRR logo (${LOCALE_LABELS[locale]})`}
+                    lang={asset.lang}
+                  />
+                </td>
+              </tr>
+            );
+          })
         )}
       </tbody>
     </table>

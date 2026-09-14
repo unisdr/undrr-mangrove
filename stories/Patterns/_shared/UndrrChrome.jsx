@@ -163,6 +163,7 @@ export function UndrrChrome({ locale = 'english', id }) {
     <>
       <PageHeader
         idPrefix={id}
+        locale={locale}
         homeUrl={arabic ? 'https://www.undrr.org/ar' : 'https://www.undrr.org/'}
         logoAlt={words.home}
         logoTitle={words.home}

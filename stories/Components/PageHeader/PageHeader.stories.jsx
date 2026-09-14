@@ -18,6 +18,18 @@ export default {
     logoUrl: { control: 'text' },
     logoAlt: { control: 'text' },
     logoTitle: { control: 'text' },
+    locale: {
+      options: [
+        'english',
+        'arabic',
+        'french',
+        'japanese',
+        'russian',
+        'spanish',
+        'chinese',
+      ],
+      control: { type: 'select' },
+    },
     homeUrl: { control: 'text' },
     languageDisplay: {
       options: ['dropdown', 'links'],
@@ -75,5 +87,22 @@ export const WithCustomClass = {
   args: {
     variant: 'default',
     className: 'custom-header-class',
+  },
+};
+
+export const LocaleDrivenLogo = {
+  name: 'Locale-driven logo',
+  args: {
+    variant: 'default',
+    locale: 'spanish',
+    homeUrl: 'https://www.undrr.org/es',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "No `logoUrl` is set here — the header resolves the translated Spanish logo automatically from `locale` (the only locale with a published white asset today; every other locale falls back to the English default rather than risk a low-contrast logo). Also try Storybook's own Locale toolbar — `UndrrChrome`-based pattern stories pick that global up the same way.",
+      },
+    },
   },
 };

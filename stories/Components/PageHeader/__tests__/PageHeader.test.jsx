@@ -83,6 +83,74 @@ describe('PageHeader', () => {
   });
 
   // --------------------------------------------------
+  // Locale-driven logo (translated logos)
+  // --------------------------------------------------
+
+  it('keeps the default English logo when no locale is given', () => {
+    render(<PageHeader />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg'
+    );
+    expect(img).not.toHaveAttribute('lang');
+    expect(img).toHaveClass('mg-logo--autocrop');
+  });
+
+  it('resolves the Spanish translated logo (the only published white asset), without autocrop', () => {
+    render(<PageHeader locale="spanish" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.png'
+    );
+    expect(img).toHaveAttribute('lang', 'es');
+    expect(img).toHaveAttribute('width', '971');
+    expect(img).toHaveAttribute('height', '387');
+    expect(img).not.toHaveClass('mg-logo--autocrop');
+  });
+
+  it('falls back to the default English logo for a locale with no published white asset', () => {
+    // Arabic has black/blue translated logos, but no white one — using it
+    // here would be invisible against the header's dark background.
+    render(<PageHeader locale="arabic" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg'
+    );
+    expect(img).not.toHaveAttribute('lang');
+  });
+
+  it('an explicit logoUrl always wins over locale', () => {
+    render(<PageHeader locale="spanish" logoUrl="/custom-logo.svg" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute('src', '/custom-logo.svg');
+    expect(img).not.toHaveAttribute('lang');
+  });
+
+  it('lets logoCrop, logoLang, logoWidth, and logoHeight override the locale-resolved values', () => {
+    render(
+      <PageHeader
+        locale="spanish"
+        logoCrop={null}
+        logoLang="es-MX"
+        logoWidth="500"
+        logoHeight="200"
+      />
+    );
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute('lang', 'es-MX');
+    expect(img).toHaveAttribute('width', '500');
+    expect(img).toHaveAttribute('height', '200');
+  });
+
+  // --------------------------------------------------
   // Language options
   // --------------------------------------------------
 
