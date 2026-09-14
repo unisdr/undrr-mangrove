@@ -68,8 +68,24 @@ export function PageHeader({
   const resolvedLogoUrl = logoUrl || translatedLogo?.src || DEFAULT_LOGO_URL;
   const resolvedLogoLang =
     logoLang !== undefined ? logoLang : translatedLogo?.lang;
-  const resolvedLogoWidth = logoWidth || translatedLogo?.width || '324';
-  const resolvedLogoHeight = logoHeight || translatedLogo?.height || '47';
+  // The header's logo slot is a fixed DISPLAY height (47, matching the
+  // English default), not the source file's raw pixel size — the browser
+  // renders an <img> at its width/height attribute values verbatim, so
+  // passing a translated PNG's real dimensions (e.g. 971x387) rendered it
+  // at that literal, oversized pixel size instead of scaled to fit the
+  // header. Derive width from the target height and the asset's own aspect
+  // ratio instead.
+  const resolvedLogoHeight = logoHeight || '47';
+  const resolvedLogoWidth =
+    logoWidth ||
+    (translatedLogo
+      ? String(
+          Math.round(
+            (translatedLogo.width / translatedLogo.height) *
+              Number(resolvedLogoHeight)
+          )
+        )
+      : '324');
   const resolvedLogoCrop =
     logoCrop !== undefined ? logoCrop : translatedLogo ? null : 'autocrop';
 

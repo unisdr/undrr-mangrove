@@ -107,8 +107,11 @@ describe('PageHeader', () => {
       'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.png'
     );
     expect(img).toHaveAttribute('lang', 'es');
-    expect(img).toHaveAttribute('width', '971');
-    expect(img).toHaveAttribute('height', '387');
+    // Scaled to the header's fixed display height (47, matching the English
+    // default) using the asset's real aspect ratio (971x387) — NOT its raw
+    // pixel dimensions, which would render far larger than the header slot.
+    expect(img).toHaveAttribute('height', '47');
+    expect(img).toHaveAttribute('width', '118');
     expect(img).not.toHaveClass('mg-logo--autocrop');
   });
 
