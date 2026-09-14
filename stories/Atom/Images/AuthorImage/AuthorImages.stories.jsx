@@ -193,3 +193,20 @@ export const InverseAuthorImage = {
 
   name: 'Inverse author image',
 };
+
+export const NoImageAuthorImage = {
+  render: args => (
+    <AuthorImage
+      name="Author Three"
+      title="Contributor"
+      org="Example organisation"
+      highlight="secondary"
+      layout="vertical"
+      tone="default"
+      href="#author-three"
+      {...args}
+    />
+  ),
+
+  name: 'No image author image',
+};

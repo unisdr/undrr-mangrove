@@ -38,6 +38,7 @@ export function AuthorImage({
       ? 'mg-author-image--horizontal'
       : 'mg-author-image--vertical';
   const toneVariant = tone === 'inverse' ? 'mg-author-image--inverse' : null;
+  const hasImage = Boolean(image);
   const altText = imageAlt || alt || '';
   const hasMeta = Boolean(title || org);
   const linkRel =
@@ -59,13 +60,16 @@ export function AuthorImage({
         sizeVariant,
         highlightVariant,
         layoutVariant,
+        !hasImage && 'mg-author-image--no-image',
         toneVariant
       )}
     >
       <Wrapper {...wrapperProps}>
-        <div className="mg-author-image__avatar">
-          <img src={image} alt={altText} title={altText || undefined} />
-        </div>
+        {hasImage && (
+          <div className="mg-author-image__avatar">
+            <img src={image} alt={altText} title={altText || undefined} />
+          </div>
+        )}
 
         <figcaption className="mg-author-image__content">
           {name && <p className="mg-author-image__name">{name}</p>}
@@ -89,7 +93,7 @@ export function AuthorImage({
 
 AuthorImage.propTypes = {
   /** Avatar image URL */
-  image: PropTypes.string.isRequired,
+  image: PropTypes.string,
   /** Accessible alt text for the avatar image */
   imageAlt: PropTypes.string,
   /** Backward-compatible alt prop */

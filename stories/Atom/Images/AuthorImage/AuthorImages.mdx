@@ -15,6 +15,7 @@ Use it for author bylines, speaker cards, and profile callouts where the photo a
 The Storybook examples use seeded Random User portraits so the images stay deterministic.
 Pass `href` to make the whole block behave like a link.
 Use `tone="inverse"` when the block sits on a dark background.
+Leave `image` empty when you want a text-only author variant.
 
 ### Formatting
 
@@ -32,6 +33,7 @@ The component supports Small and Large sizes, horizontal and vertical layouts, p
 - vertical
 - linked
 - inverse
+- no image
 - primary
 - secondary
 - tertiary
@@ -56,8 +58,14 @@ The component supports Small and Large sizes, horizontal and vertical layouts, p
   meta={AuthorImagesStories}
 />
 
+<Canvas
+  of={AuthorImagesStories.NoImageAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
 ## Changelog
 
+- **1.5** — 2026-09-14: Moved the hover gradient onto the avatar circle itself, and added a no-image author variant for text-only bylines.
 - **1.4** — 2026-09-14: Restored the toned hover gradient on linked author blocks, with theme-aware tinting so the effect works on light and dark surfaces.
 - **1.3** — 2026-09-14: Added `tone="inverse"` so the author block can render with light text on dark backgrounds, including inverse focus treatment for linked cards.
 - **1.2** — 2026-09-14: Reworked the component into a compact author block with name and title/org text, and added horizontal/vertical layouts plus primary/secondary/tertiary highlight variants.

@@ -21,8 +21,33 @@
     0 0 0 2px rgb(var(--mg-color-neutral-0)),
     0 0 0 4px var(--mg-author-image-accent);
   height: var(--mg-author-image-avatar-size);
+  position: relative;
   overflow: hidden;
   width: var(--mg-author-image-avatar-size);
+}
+
+.mg-author-image__avatar::before {
+  background: linear-gradient(
+    135deg,
+    var(--mg-author-image-hover-tint) 0%,
+    rgb(var(--mg-color-neutral-0) / 0) 72%
+  );
+  content: "";
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  transform: translateY(2px);
+}
+
+.mg-author-image:hover .mg-author-image__avatar::before,
+.mg-author-image__link:hover .mg-author-image__avatar::before,
+.mg-author-image__link:focus-visible .mg-author-image__avatar::before {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .mg-author-image__avatar img {
@@ -39,39 +64,8 @@
   color: inherit;
   display: grid;
   gap: inherit;
-  position: relative;
-  isolation: isolate;
   width: 100%;
   text-decoration: none;
-}
-
-.mg-author-image__link::before {
-  background: linear-gradient(
-    135deg,
-    var(--mg-author-image-hover-tint) 0%,
-    rgb(var(--mg-color-neutral-0) / 0) 72%
-  );
-  content: "";
-  inset: calc(-1 * var(--mg-spacing-50));
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-  transform: translateY(2px);
-  z-index: 0;
-}
-
-.mg-author-image__link > * {
-  position: relative;
-  z-index: 1;
-}
-
-.mg-author-image__link:hover::before,
-.mg-author-image__link:focus-visible::before {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .mg-author-image__link:focus-visible {
@@ -187,4 +181,19 @@
 
 .mg-author-image--vertical .mg-author-image__meta {
   justify-content: center;
+}
+
+.mg-author-image--no-image {
+  --mg-author-image-avatar-size: 0px;
+}
+
+.mg-author-image--no-image .mg-author-image__body,
+.mg-author-image--no-image .mg-author-image__link {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.mg-author-image--no-image .mg-author-image__content {
+  justify-items: center;
+  text-align: center;
 }
