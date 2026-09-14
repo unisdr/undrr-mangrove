@@ -14,7 +14,7 @@ export const Default = {
   args: {
     headline: 'Turn knowledge into action',
     text: '<p>Discover practical resources and connect with people working to reduce disaster risk.</p>',
-    buttons: [{ label: 'Read more', url: '#' }],
+    buttons: [{ label: 'Read more', url: '#', variant: 'CTA' }],
   },
 };
 
