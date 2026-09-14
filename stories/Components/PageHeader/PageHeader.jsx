@@ -54,29 +54,14 @@ export function PageHeader({
     className
   );
 
-  // An explicit logoUrl always wins. Otherwise, resolve a translated asset
-  // for `locale` — getUndrrLogoAsset only ever substitutes a white-on-
-  // transparent asset listed in UNDRR_LOGO_LOCALES, so this is a safe,
-  // contrast-preserving no-op for a locale with no such asset rather than
-  // swapping in a black/blue image invisible against the dark toolbar
-  // background. (arabic/french/russian/chinese white assets are committed
-  // pending a CDN publish — see undrr-logo-assets.js.) Its fallback result
-  // (translated: false) is the bundled English SVG module, not this
-  // component's own default URL string — check `.translated` rather than
-  // truthiness so an untranslated locale keeps DEFAULT_LOGO_URL instead of
-  // silently swapping to that different asset.
+  // Explicit logoUrl wins. Otherwise resolve the locale-specific white asset
+  // or fall back to the bundled English SVG.
   const asset = !logoUrl ? getUndrrLogoAsset(locale, 'white') : null;
   const translatedLogo = asset?.translated ? asset : null;
   const resolvedLogoUrl = logoUrl || translatedLogo?.src || DEFAULT_LOGO_URL;
   const resolvedLogoLang =
     logoLang !== undefined ? logoLang : translatedLogo?.lang;
-  // The header's logo slot is a fixed DISPLAY height (47, matching the
-  // English default), not the source file's raw pixel size — the browser
-  // renders an <img> at its width/height attribute values verbatim, so
-  // passing a translated PNG's real dimensions (e.g. 971x387) rendered it
-  // at that literal, oversized pixel size instead of scaled to fit the
-  // header. Derive width from the target height and the asset's own aspect
-  // ratio instead.
+  // Keep the fixed header height and derive width from the asset ratio.
   const resolvedLogoHeight = logoHeight || '47';
   const resolvedLogoWidth =
     logoWidth ||
@@ -146,10 +131,7 @@ export function PageHeader({
               {/* User icon */}
               {showAccount && (
                 <a title="My account" href="/user">
-                  <Icon
-                    name="user"
-                    className="mg-page-header__toolbar-icon"
-                  />{' '}
+                  <Icon name="user" className="mg-page-header__toolbar-icon" />{' '}
                   <span className="mg-u-sr-only">My account</span>
                 </a>
               )}
@@ -241,7 +223,9 @@ export function PageHeader({
                           data-lang-dropdown-id="lang-dropdown-form"
                           id={id('edit-lang-dropdown-select')}
                           name="lang_dropdown_select"
-                          tabIndex={languageDisplay === 'links' ? -1 : undefined}
+                          tabIndex={
+                            languageDisplay === 'links' ? -1 : undefined
+                          }
                           aria-hidden={languageDisplay === 'links' || undefined}
                           defaultValue={
                             languages.find(lang => lang.selected)?.value ||

@@ -115,7 +115,7 @@ describe('PageHeader', () => {
     expect(img).not.toHaveClass('mg-logo--autocrop');
   });
 
-  it('resolves the Arabic translated logo (committed, pending CDN publish)', () => {
+  it('resolves the Arabic translated logo', () => {
     render(<PageHeader locale="arabic" />);
 
     const img = screen.getByAltText('UNDRR Logo');
@@ -128,7 +128,6 @@ describe('PageHeader', () => {
   });
 
   it('falls back to the default English logo for a locale with no white asset at all', () => {
-    // Japanese has no translated asset published or even committed yet.
     render(<PageHeader locale="japanese" />);
 
     const img = screen.getByAltText('UNDRR Logo');
@@ -222,9 +221,10 @@ describe('PageHeader', () => {
     it('marks the selected language with aria-current', () => {
       render(<PageHeader languageDisplay="links" languages={languages} />);
 
-      expect(
-        screen.getByRole('button', { name: 'English' })
-      ).toHaveAttribute('aria-current', 'true');
+      expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute(
+        'aria-current',
+        'true'
+      );
       expect(
         screen.getByRole('button', { name: 'العربية' })
       ).not.toHaveAttribute('aria-current');
@@ -241,9 +241,10 @@ describe('PageHeader', () => {
         />
       );
 
-      expect(
-        screen.getByRole('button', { name: 'Français' })
-      ).toHaveAttribute('aria-current', 'true');
+      expect(screen.getByRole('button', { name: 'Français' })).toHaveAttribute(
+        'aria-current',
+        'true'
+      );
       expect(
         screen.getByRole('button', { name: 'Deutsch' })
       ).not.toHaveAttribute('aria-current');
