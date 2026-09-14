@@ -14,10 +14,10 @@ A promotional block combining heading, copy, and next step. Use for invitations,
 
 Colour (`variant`) and emphasis (`tone`) are separate. `variant` chooses the theme accent; `tone` chooses emphasis strength.
 
-| Treatment                 | Useful for                                                             | Text and actions                                                                |
-| ------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `tone="soft"`             | Newsletter, supporting invitations, article blocks     | Pale surface, dark text, standard button styling                      |
-| `tone="strong"` (default) | Campaigns, prominent invitations, key actions          | Solid surface, light text, buttons styled for coloured background |
+| Treatment                 | Useful for                                         | Text and actions                                                  |
+| ------------------------- | -------------------------------------------------- | ----------------------------------------------------------------- |
+| `tone="soft"`             | Newsletter, supporting invitations, article blocks | Pale surface, dark text, standard button styling                  |
+| `tone="strong"` (default) | Campaigns, prominent invitations, key actions      | Solid surface, light text, buttons styled for coloured background |
 
 ### Soft
 
@@ -180,6 +180,8 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 - Composed forms need visible labels, correctly grouped choices and accessible error/confirmation feedback supplied by their owner.
 
 ## Changelog
+
+- **1.2.1** — 2026-09-14: Strong-tone `TextCta` now applies dedicated editorial CTA link colours for `mg-button-cta`, so the label and arrow badge keep proper contrast on dark accent surfaces instead of inheriting generic button link colouring.
 
 - **1.2** — 2026-09-09: Added an optional composed-content slot (for forms and richer CTA layouts), a reusable soft-accent `data-tone`, and consolidated CTA form examples into shared stories. ([web-backlog #2412](https://gitlab.com/undrr/web-backlog/-/work_items/2412))
 

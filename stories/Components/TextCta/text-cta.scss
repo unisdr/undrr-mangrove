@@ -182,19 +182,33 @@
   // Strong surfaces need inverse buttons; soft surfaces use normal buttons.
   &:where(:not(.mg-cta--soft)) {
     // Button overrides for dark backgrounds (matches Hero pattern)
-    a.mg-button,
-    a.mg-button:hover,
-    a.mg-button:visited {
+    a.mg-button:not(.mg-button-cta),
+    a.mg-button:not(.mg-button-cta):hover,
+    a.mg-button:not(.mg-button-cta):visited {
       color: rgb(var(--mg-color-hero));
     }
 
-    a.mg-button-primary {
+    a.mg-button-primary:not(.mg-button-cta) {
       background-color: rgb(var(--mg-color-neutral-0));
     }
 
-    a.mg-button-secondary,
-    a.mg-button-secondary:hover,
-    a.mg-button-secondary:visited {
+    // Editorial link-style CTA used by CtaButton.
+    a.mg-button.mg-button-cta,
+    a.mg-button.mg-button-cta:hover,
+    a.mg-button.mg-button-cta:visited {
+      background: transparent;
+      border-color: transparent;
+      color: rgb(var(--mg-color-neutral-0));
+
+      &::after {
+        background: rgb(var(--mg-color-neutral-0));
+        color: rgb(var(--mg-cta-accent));
+      }
+    }
+
+    a.mg-button-secondary:not(.mg-button-cta),
+    a.mg-button-secondary:not(.mg-button-cta):hover,
+    a.mg-button-secondary:not(.mg-button-cta):visited {
       background-color: var(--mg-color-hero-button-secondary-background);
       color: rgb(var(--mg-color-hero-button-secondary-color));
       border-color: rgb(var(--mg-border-color-hero-button-secondary));
