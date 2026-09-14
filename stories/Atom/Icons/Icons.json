@@ -97,6 +97,50 @@
       "source": "lucide"
     },
     {
+      "name": "analysis",
+      "label": "Analysis, Insight, Research",
+      "source": "ocha"
+    },
+    {
+      "name": "assessment",
+      "label": "Assessment, Evaluation, Appraisal",
+      "source": "ocha"
+    },
+    {
+      "name": "coordination",
+      "label": "Coordination, Collaboration, Joint Work",
+      "source": "ocha"
+    },
+    { "name": "data", "label": "Data, Dataset, Information", "source": "ocha" },
+    { "name": "help", "label": "Help, Support, Assistance", "source": "ocha" },
+    {
+      "name": "information-management",
+      "label": "Information Management, Data Management",
+      "source": "ocha"
+    },
+    { "name": "location", "label": "Location, Place, Site", "source": "ocha" },
+    {
+      "name": "monitoring",
+      "label": "Monitoring, Observation, Tracking",
+      "source": "ocha"
+    },
+    {
+      "name": "notification",
+      "label": "Notification, Alert, Announcement",
+      "source": "ocha"
+    },
+    { "name": "print", "label": "Print, Hard Copy, Output", "source": "ocha" },
+    {
+      "name": "public-information",
+      "label": "Public Information, Awareness, Communication",
+      "source": "ocha"
+    },
+    {
+      "name": "report",
+      "label": "Report, Summary, Findings",
+      "source": "ocha"
+    },
+    {
       "name": "clone",
       "label": "Clone, Copy, Duplicate, Clipboard",
       "source": "lucide"

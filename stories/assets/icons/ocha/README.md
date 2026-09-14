@@ -12,6 +12,8 @@ Curated subset of the [OCHA Humanitarian Icons](https://github.com/rodekruis/OCH
 
 **DRR and humanitarian response:** resilience, preparedness, response, affected-population, people-in-need, internally-displaced, refugee, shelter, infrastructure
 
+**Utility and information:** analysis, assessment, coordination, data, help, information-management, location, monitoring, notification, print, public-information, report
+
 ## Adding more
 
 To add an OCHA icon:
