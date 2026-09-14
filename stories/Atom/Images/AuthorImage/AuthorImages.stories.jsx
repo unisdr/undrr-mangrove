@@ -52,20 +52,20 @@ function SeededAuthorImage({ seed, imageAlt, ...props }) {
 
 const defaultPeople = [
   {
-    name: 'Kamal Kishore',
+    name: 'Author One',
     title: 'Special Representative',
-    org: 'UNDRR',
+    org: 'Example organisation',
     highlight: 'primary',
     layout: 'horizontal',
-    seed: 'kamal-kishore',
+    seed: 'author-one',
   },
   {
-    name: 'Mami Mizutori',
+    name: 'Author Two',
     title: 'Director',
-    org: 'UNDRR',
+    org: 'Example organisation',
     highlight: 'tertiary',
     layout: 'vertical',
-    seed: 'mami-mizutori',
+    seed: 'author-two',
   },
 ];
 
@@ -135,11 +135,11 @@ export const DefaultAuthorImage = {
 export const HorizontalAuthorImage = {
   render: args => (
     <SeededAuthorImage
-      seed="kamal-kishore-horizontal"
-      imageAlt="Kamal Kishore, Special Representative, UNDRR"
-      name="Kamal Kishore"
+      seed="author-one-horizontal"
+      imageAlt="Author One, Special Representative, Example organisation"
+      name="Author One"
       title="Special Representative"
-      org="UNDRR"
+      org="Example organisation"
       highlight="primary"
       layout="horizontal"
       {...args}
@@ -152,11 +152,11 @@ export const HorizontalAuthorImage = {
 export const VerticalAuthorImage = {
   render: args => (
     <SeededAuthorImage
-      seed="mami-mizutori-vertical"
-      imageAlt="Mami Mizutori, Director, UNDRR"
-      name="Mami Mizutori"
+      seed="author-two-vertical"
+      imageAlt="Author Two, Director, Example organisation"
+      name="Author Two"
       title="Director"
-      org="UNDRR"
+      org="Example organisation"
       highlight="secondary"
       layout="vertical"
       {...args}
