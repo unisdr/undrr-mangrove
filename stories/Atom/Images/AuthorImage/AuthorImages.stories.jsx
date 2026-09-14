@@ -142,6 +142,7 @@ export const HorizontalAuthorImage = {
       org="Example organisation"
       highlight="primary"
       layout="horizontal"
+      href="#author-one"
       {...args}
     />
   ),
@@ -159,6 +160,7 @@ export const VerticalAuthorImage = {
       org="Example organisation"
       highlight="secondary"
       layout="vertical"
+      href="#author-two"
       {...args}
     />
   ),

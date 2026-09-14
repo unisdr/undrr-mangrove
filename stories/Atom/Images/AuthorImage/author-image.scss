@@ -27,8 +27,24 @@
 .mg-author-image__avatar img {
   display: block;
   height: 100%;
+  object-position: center center;
   object-fit: cover;
+  transform: scale(1.02);
+  transform-origin: center center;
   width: 100%;
+}
+
+.mg-author-image__body,
+.mg-author-image__link {
+  color: inherit;
+  display: grid;
+  gap: inherit;
+  text-decoration: none;
+}
+
+.mg-author-image__link:focus-visible {
+  outline: 2px solid var(--mg-author-image-accent);
+  outline-offset: 4px;
 }
 
 .mg-author-image__content {

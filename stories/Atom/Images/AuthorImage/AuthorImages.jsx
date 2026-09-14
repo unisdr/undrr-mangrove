@@ -26,6 +26,9 @@ export function AuthorImage({
   variant = 'Large',
   highlight = 'primary',
   layout = 'vertical',
+  href = '',
+  target,
+  rel,
 }) {
   const sizeVariant = size_options[variant];
   const highlightVariant = highlight_options[highlight];
@@ -35,6 +38,17 @@ export function AuthorImage({
       : 'mg-author-image--vertical';
   const altText = imageAlt || alt || '';
   const hasMeta = Boolean(title || org);
+  const linkRel =
+    rel || (target === '_blank' ? 'noreferrer noopener' : undefined);
+  const Wrapper = href ? 'a' : 'div';
+  const wrapperProps = href
+    ? {
+        href,
+        target,
+        rel: linkRel,
+        className: 'mg-author-image__link',
+      }
+    : { className: 'mg-author-image__body' };
 
   return (
     <figure
@@ -45,25 +59,27 @@ export function AuthorImage({
         layoutVariant
       )}
     >
-      <div className="mg-author-image__avatar">
-        <img src={image} alt={altText} title={altText || undefined} />
-      </div>
+      <Wrapper {...wrapperProps}>
+        <div className="mg-author-image__avatar">
+          <img src={image} alt={altText} title={altText || undefined} />
+        </div>
 
-      <figcaption className="mg-author-image__content">
-        {name && <p className="mg-author-image__name">{name}</p>}
+        <figcaption className="mg-author-image__content">
+          {name && <p className="mg-author-image__name">{name}</p>}
 
-        {hasMeta && (
-          <p className="mg-author-image__meta">
-            {title && <span className="mg-author-image__title">{title}</span>}
-            {title && org && (
-              <span className="mg-author-image__separator" aria-hidden="true">
-                ·
-              </span>
-            )}
-            {org && <span className="mg-author-image__org">{org}</span>}
-          </p>
-        )}
-      </figcaption>
+          {hasMeta && (
+            <p className="mg-author-image__meta">
+              {title && <span className="mg-author-image__title">{title}</span>}
+              {title && org && (
+                <span className="mg-author-image__separator" aria-hidden="true">
+                  ·
+                </span>
+              )}
+              {org && <span className="mg-author-image__org">{org}</span>}
+            </p>
+          )}
+        </figcaption>
+      </Wrapper>
     </figure>
   );
 }
@@ -87,6 +103,12 @@ AuthorImage.propTypes = {
   highlight: PropTypes.oneOf(['primary', 'secondary', 'tertiary']),
   /** Layout direction */
   layout: PropTypes.oneOf(['vertical', 'horizontal']),
+  /** Link destination */
+  href: PropTypes.string,
+  /** Link target */
+  target: PropTypes.string,
+  /** Link rel attribute */
+  rel: PropTypes.string,
 };
 
 export const Authorimg = AuthorImage;
