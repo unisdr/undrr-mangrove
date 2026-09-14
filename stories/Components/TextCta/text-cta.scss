@@ -213,6 +213,13 @@
       border-color: rgb(var(--mg-border-color-hero-button-secondary));
     }
 
+    .mg-cta__text code,
+    .mg-cta__text .mg-code {
+      background: rgb(var(--mg-color-neutral-0) / 0.12);
+      box-shadow: inset 0 0 0 1px rgb(var(--mg-color-neutral-0) / 0.24);
+      color: rgb(var(--mg-color-neutral-0));
+    }
+
     a.mg-button.mg-button-outline,
     a.mg-button.mg-button-outline:hover,
     a.mg-button.mg-button-outline:visited {
