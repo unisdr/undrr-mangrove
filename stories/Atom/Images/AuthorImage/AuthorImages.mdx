@@ -1,22 +1,5 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import { Authorimg } from './AuthorImages';
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as AuthorImagesStories from './AuthorImages.stories';
-
-export const getCaptionForLocale = locale => {
-  switch (locale) {
-    case 'english':
-      const engText = {};
-      return engText;
-    case 'arabic':
-      const arabicText = {};
-      return arabicText;
-    case 'japanese':
-      const japaneseText = {};
-      return japaneseText;
-    default:
-      return {};
-  }
-};
 
 <Meta of={AuthorImagesStories} />
 
@@ -24,30 +7,27 @@ export const getCaptionForLocale = locale => {
 
 # Author image
 
-The Author Image component reveals the photo of the author.
+The Author image component now acts as a compact author card: portrait, name, job title, and organisation in one composable block.
 
 ### Overview
 
-The Author Image component displays the author's image but does not contain any information.
-
-#### When to use:
-
-- When the image of the author is to be displayed.
+Use it for author bylines, speaker cards, and profile callouts where the photo and the identity text need to stay together.
 
 ### Formatting
 
 #### Default
 
-It's circular shaped with an image inside it.
+The card uses a portrait frame, a prominent name line, and a secondary line for title/org. The top accent can be primary, secondary, or tertiary.
 
 ### Behaviors
 
 #### States
 
-There are two states in the Author Image component: Small and Large.
+The component supports Small and Large sizes, plus three highlight colours:
 
-- Small
-- Large
+- primary
+- secondary
+- tertiary
 
 <Canvas
   of={AuthorImagesStories.DefaultAuthorImage}
@@ -56,5 +36,6 @@ There are two states in the Author Image component: Small and Large.
 
 ## Changelog
 
+- **1.2** — 2026-09-14: Reworked the component into a compact author card with name and title/org text, and added primary/secondary/tertiary highlight variants so the docs page can show a clearer author hierarchy.
 - **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`author__img` → `mg-author-image`). Added BEM modifiers for size (`mg-author-image--large`) and hover color (`mg-author-image--yellow`, etc.). Replaced `defaultProps` with destructured defaults.
 - **1.0** — 2022-12-12: Released component

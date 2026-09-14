@@ -1,61 +1,94 @@
 /* author image */
 
 .mg-author-image {
-  border-radius: var(--mg-author-image-radius);
-  height: 80px;
-  min-width: 80px;
-  overflow: hidden;
+  --mg-author-image-accent: rgb(var(--mg-color-interactive));
+  --mg-author-image-avatar-size: 80px;
+
+  align-items: center;
+  background: rgb(var(--mg-color-neutral-0));
+  border: 1px solid rgb(var(--mg-color-neutral-200));
+  border-top: 4px solid var(--mg-author-image-accent);
+  border-radius: var(--mg-radius-card);
+  display: grid;
+  gap: var(--mg-spacing-100);
+  grid-template-columns: auto 1fr;
+  max-width: 32rem;
+  padding: var(--mg-spacing-100);
   position: relative;
-  width: 80px;
-
-  &::before {
-    @extend %absolute__content;
-    @include transition(all 0.6s);
-
-    border-radius: var(--mg-author-image-radius);
-    opacity: 0;
-    overflow: hidden;
-  }
-
-  &:hover {
-    $colors: (
-      "yellow": var(--mg-color-yellow),
-      "red": rgb(var(--mg-color-red-900)),
-      "green": var(--mg-color-green),
-      "blue": var(--mg-color-azure),
-    );
-
-    &::before {
-      @include background-image(45deg, var(--mg-color-yellow), transparent 53%);
-
-      opacity: 0.75;
-    }
-
-    @each $name, $color in $colors {
-      &.mg-author-image--#{$name}::before {
-        @include background-image(
-          45deg,
-          var(--mg-color-yellow),
-          transparent 53%
-        );
-      }
-    }
-  }
-
-  img {
-    @extend %img-cover;
-  }
-
-  &.mg-author-image--large {
-    height: 180px;
-    width: 180px;
-  }
 }
 
-[dir="rtl"] {
-  .mg-author-image {
-    &::before {
-      @include transform(scaleX(-1));
-    }
-  }
+.mg-author-image__avatar {
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px rgb(var(--mg-color-neutral-0)),
+    0 0 0 4px var(--mg-author-image-accent);
+  height: var(--mg-author-image-avatar-size);
+  overflow: hidden;
+  width: var(--mg-author-image-avatar-size);
+}
+
+.mg-author-image__avatar img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.mg-author-image__content {
+  display: grid;
+  gap: var(--mg-spacing-25);
+  min-width: 0;
+}
+
+.mg-author-image__name {
+  color: rgb(var(--mg-color-neutral-900));
+  font-size: var(--mg-font-size-600);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.mg-author-image__meta {
+  color: rgb(var(--mg-color-neutral-700));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--mg-spacing-50);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.mg-author-image__title {
+  color: var(--mg-author-image-accent);
+  font-weight: 700;
+}
+
+.mg-author-image__org {
+  font-weight: 500;
+}
+
+.mg-author-image__separator {
+  color: rgb(var(--mg-color-neutral-500));
+}
+
+.mg-author-image--primary {
+  --mg-author-image-accent: rgb(var(--mg-color-interactive));
+}
+
+.mg-author-image--secondary {
+  --mg-author-image-accent: rgb(var(--mg-color-secondary));
+}
+
+.mg-author-image--tertiary {
+  --mg-author-image-accent: rgb(var(--mg-color-tertiary));
+}
+
+.mg-author-image--small {
+  --mg-author-image-avatar-size: 64px;
+}
+
+.mg-author-image--large {
+  --mg-author-image-avatar-size: 104px;
+
+  gap: var(--mg-spacing-150);
+  padding: var(--mg-spacing-150);
 }
