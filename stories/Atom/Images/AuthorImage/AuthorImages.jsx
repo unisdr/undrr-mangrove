@@ -26,6 +26,7 @@ export function AuthorImage({
   variant = 'Large',
   highlight = 'primary',
   layout = 'vertical',
+  tone = 'default',
   href = '',
   target,
   rel,
@@ -36,6 +37,7 @@ export function AuthorImage({
     layout === 'horizontal'
       ? 'mg-author-image--horizontal'
       : 'mg-author-image--vertical';
+  const toneVariant = tone === 'inverse' ? 'mg-author-image--inverse' : null;
   const altText = imageAlt || alt || '';
   const hasMeta = Boolean(title || org);
   const linkRel =
@@ -56,7 +58,8 @@ export function AuthorImage({
         'mg-author-image',
         sizeVariant,
         highlightVariant,
-        layoutVariant
+        layoutVariant,
+        toneVariant
       )}
     >
       <Wrapper {...wrapperProps}>
@@ -103,6 +106,8 @@ AuthorImage.propTypes = {
   highlight: PropTypes.oneOf(['primary', 'secondary', 'tertiary']),
   /** Layout direction */
   layout: PropTypes.oneOf(['vertical', 'horizontal']),
+  /** Text tone */
+  tone: PropTypes.oneOf(['default', 'inverse']),
   /** Link destination */
   href: PropTypes.string,
   /** Link target */

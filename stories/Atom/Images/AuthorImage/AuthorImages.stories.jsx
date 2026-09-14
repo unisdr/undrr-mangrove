@@ -167,3 +167,29 @@ export const VerticalAuthorImage = {
 
   name: 'Vertical author image',
 };
+
+export const InverseAuthorImage = {
+  render: args => (
+    <div
+      style={{
+        background: 'rgb(var(--mg-color-neutral-900))',
+        padding: 'var(--mg-spacing-200)',
+      }}
+    >
+      <SeededAuthorImage
+        seed="author-one-inverse"
+        imageAlt="Author One, Special Representative, Example organisation"
+        name="Author One"
+        title="Special Representative"
+        org="Example organisation"
+        highlight="primary"
+        layout="horizontal"
+        tone="inverse"
+        href="#author-one"
+        {...args}
+      />
+    </div>
+  ),
+
+  name: 'Inverse author image',
+};
