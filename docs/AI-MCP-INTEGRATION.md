@@ -154,9 +154,9 @@ Storybook is a single-page app. If an agent fetches the deployed URL, it gets an
 
 ### Entry points: `llms.txt` and `llms.json`
 
-The site root has a [`llms.txt`](https://preventionweb.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, CDN theme URLs, conventions, and links to the component index, utilities, and Icons gallery.
+The site root has a [`llms.txt`](https://preventionweb.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, CDN theme URLs, conventions, and links to the component index, utilities, Icons gallery, and the machine-readable icon inventory.
 
-A structured [`llms.json`](https://preventionweb.github.io/undrr-mangrove/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version. It now includes an `iconsUrl` field that points directly to the Icons docs page.
+A structured [`llms.json`](https://preventionweb.github.io/undrr-mangrove/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version. It now includes an `iconsUrl` field that points directly to the static icon inventory JSON.
 
 ### Component index (`ai-components/index.json`)
 
@@ -179,7 +179,7 @@ The index also includes library-level metadata:
 - **`breakpoints`** — mobile (480px), tablet (900px), desktop (1164px), wide (1440px)
 - **`requiredAssets`** — every stylesheet, script, and logo URL a UNDRR page needs, with load order and `defer`/`async` attributes
 - **`utilitiesUrl`** — link to the CSS utility class reference
-- **`iconsUrl`** — link to the authoritative Icons gallery and inventory page
+- **`iconsUrl`** — link to the authoritative static icon inventory JSON
 
 Agents can filter by `vanillaHtml: true` (works as plain HTML/CSS) or `requiresReact: true` (needs React runtime).
 

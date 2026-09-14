@@ -115,6 +115,13 @@
       "status": "new"
     },
     {
+      "name": "reload",
+      "label": "Reload, Refresh (alias for refresh)",
+      "source": "lucide",
+      "availableSince": "2026-09-14",
+      "status": "alias"
+    },
+    {
       "name": "analysis",
       "label": "Analysis, Insight, Research",
       "source": "ocha",
@@ -197,6 +204,13 @@
       "source": "ocha",
       "availableSince": "2026-09-14",
       "status": "new"
+    },
+    {
+      "name": "twitter",
+      "label": "Twitter / X (alias for x-social)",
+      "source": "custom",
+      "availableSince": "2026-09-14",
+      "status": "alias"
     },
     {
       "name": "clone",

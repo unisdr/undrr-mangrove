@@ -515,6 +515,13 @@ const pkg = JSON.parse(
   fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
 );
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const iconInventoryPath = path.resolve(
+  process.cwd(),
+  'stories/Atom/Icons/Icons.json'
+);
+const iconInventory = fs.existsSync(iconInventoryPath)
+  ? JSON.parse(fs.readFileSync(iconInventoryPath, 'utf8'))
+  : null;
 
 // Replace {{version}} tokens with actual version from package.json
 const replaceVersion = obj =>
@@ -1409,6 +1416,10 @@ async function main() {
       detail.doNotModify = data.doNotModify;
     }
 
+    if (id === 'components-icons' && iconInventory?.icons?.length) {
+      detail.availableIcons = iconInventory.icons;
+    }
+
     componentFiles.push({ id, content: detail });
   }
 
@@ -1448,7 +1459,7 @@ async function main() {
         wide: '1440px',
       },
       utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
-      iconsUrl: `${DOCS_BASE}?path=/docs/components-icons--docs`,
+      iconsUrl: `${DOCS_BASE}ai-components/components-icons.json`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -1516,7 +1527,7 @@ async function main() {
 - Storybook: ${DOCS_BASE}
 - Repository: https://github.com/unisdr/undrr-mangrove
 - npm: https://www.npmjs.com/package/${pkg.name}
-- Icons gallery: ${DOCS_BASE}?path=/docs/components-icons--docs
+- Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 
 ## For AI agents
 
@@ -1528,8 +1539,11 @@ ${DOCS_BASE}ai-components/index.json
 CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
 
-Icons gallery and inventory:
+Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
+
+Static icon inventory (machine-readable):
+${DOCS_BASE}ai-components/components-icons.json
 
 ### Vanilla HTML quick start
 
