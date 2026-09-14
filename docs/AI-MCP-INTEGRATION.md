@@ -1,6 +1,6 @@
 # AI and MCP integration
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs).
 
 Mangrove publishes structured component data so AI coding agents can look up components, props, rendered HTML, and usage examples. This page shows you how to point your agent at that data.
 
@@ -14,7 +14,7 @@ The quickest way to get any agent up to speed. This works with any tool that can
 
 ```
 Fetch the component library metadata from:
-https://unisdr.github.io/undrr-mangrove/llms.txt
+https://preventionweb.github.io/undrr-mangrove/llms.txt
 
 Use these components to build the requested UI.
 ```
@@ -36,7 +36,7 @@ If you know which component you need, point straight at its detail file:
 
 ```
 Fetch the Pager component metadata:
-https://unisdr.github.io/undrr-mangrove/ai-components/components-pager.json
+https://preventionweb.github.io/undrr-mangrove/ai-components/components-pager.json
 
 Create a similar paginated list using this component.
 ```
@@ -51,8 +51,8 @@ For consuming projects, add to your `CLAUDE.md`:
 ## Component library
 
 This project uses the UNDRR Mangrove component library.
-- AI manifest: https://unisdr.github.io/undrr-mangrove/llms.txt
-- Component index: https://unisdr.github.io/undrr-mangrove/ai-components/index.json
+- AI manifest: https://preventionweb.github.io/undrr-mangrove/llms.txt
+- Component index: https://preventionweb.github.io/undrr-mangrove/ai-components/index.json
 - CSS prefix: mg-
 - Naming: BEM (e.g., mg-card__title, mg-card__icon--bordered); buttons are single-dash (mg-button-primary)
 ```
@@ -63,8 +63,8 @@ Add to your `.cursor/rules` or project instructions:
 
 ```
 Use the UNDRR Mangrove component library for all UI components.
-AI manifest: https://unisdr.github.io/undrr-mangrove/llms.txt
-Component index: https://unisdr.github.io/undrr-mangrove/ai-components/index.json
+AI manifest: https://preventionweb.github.io/undrr-mangrove/llms.txt
+Component index: https://preventionweb.github.io/undrr-mangrove/ai-components/index.json
 CSS prefix: mg-
 ```
 
@@ -74,7 +74,7 @@ Add a comment at the top of your file:
 
 ```jsx
 // Using UNDRR Mangrove components
-// Component index: https://unisdr.github.io/undrr-mangrove/ai-components/index.json
+// Component index: https://preventionweb.github.io/undrr-mangrove/ai-components/index.json
 // CSS prefix: mg-, BEM naming
 ```
 
@@ -154,13 +154,13 @@ Storybook is a single-page app. If an agent fetches the deployed URL, it gets an
 
 ### Entry points: `llms.txt` and `llms.json`
 
-The site root has a [`llms.txt`](https://unisdr.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, CDN theme URLs, conventions, and links to the component index and utilities.
+The site root has a [`llms.txt`](https://preventionweb.github.io/undrr-mangrove/llms.txt) file following the [llms.txt convention](https://llmstxt.org/). It is plain text with a project summary, CDN theme URLs, conventions, and links to the component index and utilities.
 
-A structured [`llms.json`](https://unisdr.github.io/undrr-mangrove/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version.
+A structured [`llms.json`](https://preventionweb.github.io/undrr-mangrove/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version.
 
 ### Component index (`ai-components/index.json`)
 
-The [component index](https://unisdr.github.io/undrr-mangrove/ai-components/index.json) lists every component with:
+The [component index](https://preventionweb.github.io/undrr-mangrove/ai-components/index.json) lists every component with:
 
 ```json
 {
@@ -196,11 +196,11 @@ Components with syndication support (Footer) include a `vanillaHtmlEmbed` field 
 
 ### CSS utilities (`ai-components/utilities.json`)
 
-The [utilities reference](https://unisdr.github.io/undrr-mangrove/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.
+The [utilities reference](https://preventionweb.github.io/undrr-mangrove/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.
 
 ### Page templates
 
-The [PageTemplateExample](https://unisdr.github.io/undrr-mangrove/ai-components/example-page-template-example.json) detail file includes four complete page templates:
+The [PageTemplateExample](https://preventionweb.github.io/undrr-mangrove/ai-components/example-page-template-example.json) detail file includes four complete page templates:
 
 1. **Canonical UNDRR page shell** — full HTML boilerplate with PageHeader, content area, Footer, and all required scripts in the correct load order
 2. **Listing page** — breadcrumbs, filter chips, card grid, pagination
@@ -237,8 +237,11 @@ The pipeline is 3 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `c
 To regenerate by hand:
 
 ```bash
+MANGROVE_DOCS_BASE_URL=https://preventionweb.github.io/undrr-mangrove/ \
 node scripts/ai-manifest/generate-ai-manifest.js
 ```
+
+The generator also accepts `--docs-base=...` when you need a different host.
 
 ### Why a custom pipeline
 
@@ -300,5 +303,5 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 - [Supercharge Your Design System with LLMs and Storybook MCP (Codrops)](https://tympanus.net/codrops/2025/12/09/supercharge-your-design-system-with-llms-and-storybook-mcp/)
 - [Dear LLM, here's how my design system works (UX Collective)](https://uxdesign.cc/dear-llm-heres-how-my-design-system-works-b59fb9a342b7)
 - [Claude Code agent prompts](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AGENTS.md) — specialized agents for accessibility auditing, code review, and other contributor tasks
-- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)
-- [React integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs)
+- [Getting started guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)
+- [React integration](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs)

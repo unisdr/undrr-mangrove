@@ -1,5 +1,5 @@
 [![npm version](https://img.shields.io/npm/v/@undrr/undrr-mangrove.svg)](https://www.npmjs.com/package/@undrr/undrr-mangrove)
-[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://unisdr.github.io/undrr-mangrove/)
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://preventionweb.github.io/undrr-mangrove/)
 [![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
 [![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
 <!-- React Doctor score is a periodic snapshot, not live. Refresh after audit sweeps by re-running `npx -y react-doctor@latest .` and updating the s/e/w/f params below. See docs/AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor. -->
@@ -10,7 +10,7 @@
 
 Mangrove is UNDRR's component library for accessible, reusable UI across React and server-rendered sites.
 
-- Storybook docs and live examples: <https://unisdr.github.io/undrr-mangrove/>
+- Storybook docs and live examples: <https://preventionweb.github.io/undrr-mangrove/>
 - npm package: <https://www.npmjs.com/package/@undrr/undrr-mangrove>
 - Issue tracker: <https://github.com/unisdr/undrr-mangrove/issues>
 
@@ -71,8 +71,8 @@ yarn build
 
 Mangrove publishes static metadata for coding agents after Storybook deploy:
 
-- `llms.txt`: <https://unisdr.github.io/undrr-mangrove/llms.txt>
-- component index: <https://unisdr.github.io/undrr-mangrove/ai-components/index.json>
+- `llms.txt`: <https://preventionweb.github.io/undrr-mangrove/llms.txt>
+- component index: <https://preventionweb.github.io/undrr-mangrove/ai-components/index.json>
 - per-component details: `ai-components/{id}.json`
 
 Guide: [`docs/AI-MCP-INTEGRATION.md`](docs/AI-MCP-INTEGRATION.md)

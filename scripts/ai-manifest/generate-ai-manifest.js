@@ -16,10 +16,12 @@
  *        ai-components/utilities.json   — CSS utility class inventory
  *
  * Usage:
- *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--validate]
+ *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--docs-base=https://preventionweb.github.io/undrr-mangrove/] [--validate]
  *
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
+ *   --docs-base  Public Storybook/docs base URL used in generated links.
+ *                Can also be set with MANGROVE_DOCS_BASE_URL.
  *
  * To remove this pipeline:
  *   1. Delete scripts/ai-manifest/
@@ -44,7 +46,7 @@ import cssUtilities from './css-utilities.js';
 
 const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
-const DOCS_BASE = 'https://unisdr.github.io/undrr-mangrove/';
+const DEFAULT_DOCS_BASE = 'https://preventionweb.github.io/undrr-mangrove/';
 
 // One bundle per theme, plus the combined bundle.
 //
@@ -345,8 +347,7 @@ function buildSampleProps(React) {
     },
     PageHeader: {
       variant: 'default',
-      logoUrl:
-        'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
+      logoUrl: 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
       homeUrl: '/',
       languages: [
         { value: 'en', label: 'English', selected: true },
@@ -490,8 +491,14 @@ const args = process.argv.slice(2);
 const buildDirArg = (args.find(a => a.startsWith('--build-dir=')) || '').split(
   '='
 )[1];
+const docsBaseArg = (args.find(a => a.startsWith('--docs-base=')) || '').split(
+  '='
+)[1];
 const buildDir = path.resolve(process.cwd(), buildDirArg || 'docs-build-temp');
 const validateOnly = args.includes('--validate');
+const docsBaseInput =
+  docsBaseArg || process.env.MANGROVE_DOCS_BASE_URL || DEFAULT_DOCS_BASE;
+const DOCS_BASE = normalizeDocsBase(docsBaseInput);
 
 const manifestPath = path.join(buildDir, 'manifests', 'components.json');
 const outputDir = path.join(buildDir, 'ai-components');
@@ -519,6 +526,18 @@ const requiredScripts = replaceVersion(REQUIRED_SCRIPTS);
 const requiredStylesheets = replaceVersion(REQUIRED_STYLESHEETS);
 const logos = replaceVersion(LOGOS);
 const generatedAt = new Date().toISOString();
+
+/**
+ * Normalize docs base URL to an absolute origin+path with one trailing slash.
+ * Throws on invalid input so broken links fail fast during generation.
+ */
+function normalizeDocsBase(url) {
+  const parsed = new URL(url);
+  parsed.pathname = parsed.pathname.endsWith('/')
+    ? parsed.pathname
+    : `${parsed.pathname}/`;
+  return parsed.toString();
+}
 
 // ---------------------------------------------------------------------------
 // Parse actual npm exports from src/index.js
@@ -824,15 +843,15 @@ for (const [componentId, data] of Object.entries(curatedData)) {
         `${componentId}: examples[${index}] has no html string`
       );
     } else if (typeof example.name !== 'string' || example.name.length === 0) {
-      malformedExamples.push(
-        `${componentId}: examples[${index}] has no name`
-      );
+      malformedExamples.push(`${componentId}: examples[${index}] has no name`);
     }
   });
 }
 
 if (malformedExamples.length > 0) {
-  console.warn('Curated examples in the wrong shape (expected { name, html }):');
+  console.warn(
+    'Curated examples in the wrong shape (expected { name, html }):'
+  );
   for (const problem of malformedExamples) console.warn(`  ${problem}`);
 }
 
