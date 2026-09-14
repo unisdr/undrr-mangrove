@@ -3,7 +3,7 @@
 .mg-author-image {
   --mg-author-image-accent: rgb(var(--mg-color-interactive));
   --mg-author-image-avatar-size: 80px;
-  --mg-author-image-hover-tint: rgb(var(--mg-color-interactive) / 0.14);
+  --mg-author-image-hover-tint: rgb(var(--mg-color-interactive) / 0.5);
 
   align-items: center;
   background: transparent;
@@ -29,8 +29,9 @@
 .mg-author-image__avatar::before {
   background: linear-gradient(
     135deg,
-    rgb(var(--mg-color-neutral-0) / 0.28) 0%,
-    rgb(var(--mg-color-neutral-0) / 0) 72%
+    var(--mg-author-image-hover-tint) 0%,
+    rgb(var(--mg-color-neutral-0) / 0.12) 58%,
+    rgb(var(--mg-color-neutral-0) / 0) 100%
   );
   content: "";
   inset: 0;
@@ -118,7 +119,7 @@
 }
 
 .mg-author-image--inverse {
-  --mg-author-image-hover-tint: rgb(var(--mg-color-neutral-0) / 0.1);
+  --mg-author-image-hover-tint: rgb(var(--mg-color-neutral-0) / 0.5);
 }
 
 .mg-author-image--inverse .mg-author-image__title {
@@ -140,12 +141,12 @@
 
 .mg-author-image--secondary {
   --mg-author-image-accent: rgb(var(--mg-color-secondary));
-  --mg-author-image-hover-tint: rgb(var(--mg-color-secondary) / 0.14);
+  --mg-author-image-hover-tint: rgb(var(--mg-color-secondary) / 0.5);
 }
 
 .mg-author-image--tertiary {
   --mg-author-image-accent: rgb(var(--mg-color-tertiary));
-  --mg-author-image-hover-tint: rgb(var(--mg-color-tertiary) / 0.14);
+  --mg-author-image-hover-tint: rgb(var(--mg-color-tertiary) / 0.5);
 }
 
 .mg-author-image--small {
