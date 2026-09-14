@@ -59,7 +59,7 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
 
 ### Translated logos
 
-Language-specific wordmarks are published to [assets.undrr.org](https://assets.undrr.org/logos/undrr/), one raster PNG per language/color combination (`undrr-logo-{lang}-{color}.png`). Color coverage varies by language:
+Language-specific wordmarks are published to [assets.undrr.org](https://assets.undrr.org/logos/undrr/): black/blue as raster PNGs (`undrr-logo-{lang}-{color}.png`), white as SVG (`undrr-logo-{lang}-white.svg`). Color coverage varies by language:
 
 | Language       | Colors available   | Published     |
 | -------------- | ------------------ | ------------- |
@@ -73,7 +73,7 @@ The blue and white stories resolve these automatically via `getUndrrLogoAsset` (
 
 Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) as correct, valid markup — treat it as a hint rather than a guarantee, since screen readers generally read `alt` text using the page's ambient language and support for honoring `lang` set directly on an `<img>` varies by browser/AT combination.
 
-**Do not combine translated logos with `crop="autocrop"`** (below): the translated PNGs are much closer to square than the default English wordmark, so the crop box cuts off the subtitle line.
+**Do not combine translated logos with `crop="autocrop"`** (below): the translated assets are much closer to square than the default English wordmark, so the crop box cuts off the subtitle line.
 
 ### Autocropping variant
 

@@ -29,10 +29,10 @@ describe('getUndrrLogoAsset', () => {
     expect(asset.translated).toBe(false);
   });
 
-  it('resolves the Spanish white variant', () => {
+  it('resolves the Spanish white variant as an SVG', () => {
     const asset = getUndrrLogoAsset('spanish', 'white');
     expect(asset).toEqual({
-      src: 'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.png',
+      src: 'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.svg',
       lang: 'es',
       width: 971,
       height: 387,
@@ -40,17 +40,22 @@ describe('getUndrrLogoAsset', () => {
     });
   });
 
-  it('resolves the Arabic/French/Russian/Chinese white variants', () => {
+  it('resolves the Arabic/French/Russian/Chinese white variants as SVGs', () => {
     expect(getUndrrLogoAsset('arabic', 'white')).toEqual({
-      src: 'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.png',
+      src: 'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.svg',
       lang: 'ar',
       width: 1318,
       height: 490,
       translated: true,
     });
-    expect(getUndrrLogoAsset('french', 'white').translated).toBe(true);
-    expect(getUndrrLogoAsset('russian', 'white').translated).toBe(true);
-    expect(getUndrrLogoAsset('chinese', 'white').translated).toBe(true);
+    expect(getUndrrLogoAsset('french', 'white').src).toMatch(/\.svg$/);
+    expect(getUndrrLogoAsset('russian', 'white').src).toMatch(/\.svg$/);
+    expect(getUndrrLogoAsset('chinese', 'white').src).toMatch(/\.svg$/);
+  });
+
+  it('keeps black/blue variants as PNGs', () => {
+    expect(getUndrrLogoAsset('arabic', 'black').src).toMatch(/\.png$/);
+    expect(getUndrrLogoAsset('arabic', 'blue').src).toMatch(/\.png$/);
   });
 
   it('defaults to the blue color when none is given', () => {

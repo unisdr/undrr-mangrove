@@ -104,7 +104,7 @@ describe('PageHeader', () => {
     const img = screen.getByAltText('UNDRR Logo');
     expect(img).toHaveAttribute(
       'src',
-      'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.png'
+      'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.svg'
     );
     expect(img).toHaveAttribute('lang', 'es');
     // Scaled to the header's fixed display height (47, matching the English
@@ -121,7 +121,7 @@ describe('PageHeader', () => {
     const img = screen.getByAltText('UNDRR Logo');
     expect(img).toHaveAttribute(
       'src',
-      'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.png'
+      'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.svg'
     );
     expect(img).toHaveAttribute('lang', 'ar');
     expect(img).not.toHaveClass('mg-logo--autocrop');

@@ -10,7 +10,7 @@ const cls = (...classes) =>
  * instead of shrinking the whole image, so the logo stays legible at small
  * sizes — used by the page header ("black bar"). It is tuned to the
  * proportions of the default English horizontal wordmark only: verified
- * against the translated PNGs (assets.undrr.org/logos/undrr/), it cuts the
+ * against the translated assets (assets.undrr.org/logos/undrr/), it cuts the
  * bottom off their subtitle line, since those assets are ~2.3-2.9:1
  * (roughly square) rather than the ~6.6:1 the crop box assumes. Do not use
  * `crop="autocrop"` with a translated or otherwise differently-proportioned

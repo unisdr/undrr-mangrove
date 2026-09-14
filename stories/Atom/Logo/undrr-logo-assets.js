@@ -6,9 +6,15 @@ const ASSET_BASE = 'https://assets.undrr.org/logos/undrr/';
 /**
  * Locale keys match Storybook's `locale` toolbar and the `locale` prop used by
  * other locale-aware Mangrove components. Each listed color maps to the
- * translated asset at assets.undrr.org/logos/undrr/ for that language, with
- * real pixel dimensions for the source file. Unlisted locale/color pairs fall
- * back to the bundled English default for that color.
+ * translated asset at assets.undrr.org/logos/undrr/ for that language —
+ * black/blue as `.png`, white as `.svg` (all white variants are moving to
+ * SVG; getUndrrLogoAsset picks the extension from `color`). The `width`/
+ * `height` on each entry are for deriving display size by aspect ratio (see
+ * getUndrrLogoAsset), not necessarily a file's exact pixel dimensions — the
+ * white/SVG values below are carried over from the matching black/blue PNG
+ * as the best available aspect-ratio estimate ahead of the real SVG file;
+ * re-verify them once it exists. Unlisted locale/color pairs fall back to
+ * the bundled English default for that color.
  */
 export const UNDRR_LOGO_LOCALES = {
   arabic: {
@@ -59,16 +65,18 @@ const ENGLISH_DEFAULT = {
 
 /**
  * Resolves the UNDRR wordmark asset for a locale + color, falling back to the
- * bundled English SVG when no translated asset exists. Translated assets are
- * raster PNGs with different proportions than the English wordmark, so use
- * the returned `width`/`height` rather than values tuned for the English SVG.
+ * bundled English SVG when no translated asset exists. Black/blue translated
+ * assets are raster PNGs; white translated assets are SVGs. Either way their
+ * proportions differ from the English wordmark, so use the returned
+ * `width`/`height` rather than values tuned for the English SVG.
  */
 export function getUndrrLogoAsset(locale, color = 'blue') {
   const entry = UNDRR_LOGO_LOCALES[locale];
   const dims = entry?.colors[color];
   if (entry && dims) {
+    const ext = color === 'white' ? 'svg' : 'png';
     return {
-      src: `${ASSET_BASE}undrr-logo-${entry.code}-${color}.png`,
+      src: `${ASSET_BASE}undrr-logo-${entry.code}-${color}.${ext}`,
       lang: entry.code,
       width: dims.width,
       height: dims.height,
