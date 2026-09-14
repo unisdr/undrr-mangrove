@@ -74,13 +74,15 @@ Language-specific wordmarks are published to [assets.undrr.org](https://assets.u
 | Russian (`ru`) | black, blue |
 | Chinese (`zh`) | black |
 
-Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) so screen readers pronounce the alt text correctly — it does not need to match the surrounding page's language.
+Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) as correct, valid markup — treat it as a hint rather than a guarantee, since screen readers generally read `alt` text using the page's ambient language and support for honoring `lang` set directly on an `<img>` varies by browser/AT combination.
+
+**Do not combine translated logos with `crop="autocrop"`** (below): the translated PNGs are ~2.3-2.9:1 (roughly square, with the localized subtitle stacked on its own line), not the ~6.6:1 of the default English horizontal wordmark the crop box is tuned for. Verified by simulating the crop: it cuts the bottom off the subtitle line rather than fitting it.
 
 <Canvas of={LogoStories.TranslatedUndrrLogos} meta={LogoStories} />
 
 ### Autocropping variant
 
-Set `autocrop` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses. The crop box is tuned for the horizontal UNDRR wordmark's aspect ratio — re-check it in `logo.scss` if a differently-proportioned asset is used.
+Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses by default. The crop box is tuned for the default English horizontal wordmark's aspect ratio only — re-check it in `logo.scss` before applying it to any other asset, and do not use it with the translated logos above.
 
 <Canvas of={LogoStories.AutocroppingUndrrLogo} meta={LogoStories} />
 
@@ -90,5 +92,5 @@ Set `autocrop` to crop the logo to a fixed box below the desktop breakpoint inst
 
 ## Changelog
 
-- **1.1** — 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh) and an `autocrop` variant (`mg-logo--autocrop`), now also used by the page header ("black bar") instead of a duplicated crop rule. Added `title`, `width`, `height`, `lang`, and `className` props.
+- **1.1** — 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh) and a `crop="autocrop"` variant (`mg-logo--autocrop`), now also used by the page header ("black bar") instead of a duplicated crop rule. Added `title`, `width`, `height`, `lang`, `crop`, and `className` props. `crop` is intentionally an enum (not a boolean) to leave room for other crop treatments without a breaking change; it is verified safe only for the default English horizontal wordmark, not the translated logos added in this release.
 - **1.0** — 2024-09-12: Released component

@@ -20,6 +20,10 @@ export function PageHeader({
   logoUrl = 'https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg',
   logoAlt = 'UNDRR Logo',
   logoTitle = 'UNDRR Logo',
+  logoWidth = '324',
+  logoHeight = '47',
+  logoLang,
+  logoCrop = 'autocrop',
   homeUrl = '/',
   showAccount = true,
   showLanguage = true,
@@ -86,10 +90,11 @@ export function PageHeader({
                     <Logo
                       alt={logoAlt}
                       src={logoUrl}
-                      width="324"
-                      height="47"
+                      width={logoWidth}
+                      height={logoHeight}
                       title={logoTitle}
-                      autocrop
+                      lang={logoLang}
+                      crop={logoCrop}
                       className="mg-page-header__logo-img"
                     />
                   </a>
@@ -256,6 +261,22 @@ PageHeader.propTypes = {
   logoAlt: PropTypes.string,
   /** Title attribute for the logo image */
   logoTitle: PropTypes.string,
+  /** Native width of the logo image. Update alongside `logoHeight` if swapping in an asset with different proportions than the default (see `logoCrop`). */
+  logoWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /** Native height of the logo image. */
+  logoHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /** BCP 47 language tag for the logo image, when `logoUrl` points to a translated wordmark. */
+  logoLang: PropTypes.string,
+  /**
+   * Crop variant passed to the underlying Logo component. Defaults to
+   * `'autocrop'`, tuned for the default English horizontal wordmark's
+   * proportions (~6.6:1). Pass `null` (not `undefined` — that falls back to
+   * the default) when providing a translated or other
+   * differently-proportioned `logoUrl`: verified against the translated
+   * UNDRR logos (~2.3-2.9:1), `'autocrop'` crops their subtitle line off
+   * vertically rather than fitting them.
+   */
+  logoCrop: PropTypes.oneOf(['autocrop', null]),
   /** URL for the logo link */
   homeUrl: PropTypes.string,
   /** Show or hide the UNDRR logo section */

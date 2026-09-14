@@ -159,7 +159,7 @@ export const TranslatedUndrrLogos = {
 export const AutocroppingUndrrLogo = {
   render: () => (
     <div style={{ background: '#004f91', padding: '8px' }}>
-      <Logo src={logoWhite} alt={'UNDRR logo'} autocrop />
+      <Logo src={logoWhite} alt={'UNDRR logo'} crop="autocrop" />
     </div>
   ),
 
@@ -174,7 +174,7 @@ export const AutocroppingUndrrLogo = {
       inlineStories: false,
       description: {
         story:
-          'The `autocrop` variant crops to a fixed box below the desktop breakpoint instead of shrinking the whole image, so the wordmark stays legible at small sizes. This is what the page header ("black bar") uses — switch to a tablet/mobile viewport (Storybook viewport toolbar) to see the crop take effect.',
+          'The `crop="autocrop"` variant crops to a fixed box below the desktop breakpoint instead of shrinking the whole image, so the wordmark stays legible at small sizes. This is what the page header ("black bar") uses — switch to a tablet/mobile viewport (Storybook viewport toolbar) to see the crop take effect. Tuned for the default English horizontal wordmark only — do not use with translated logos (see the "UNDRR logo - translated" story), which have very different proportions and get cropped incorrectly.',
       },
     },
   },

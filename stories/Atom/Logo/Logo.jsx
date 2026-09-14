@@ -6,9 +6,15 @@ const cls = (...classes) =>
 
 /**
  * Renders a logo image with alt text.
- * The `autocrop` variant crops to a fixed box on mobile/tablet instead of
- * shrinking the whole image, so the logo stays legible at small sizes — used
- * by the page header ("black bar").
+ * The `crop="autocrop"` variant crops to a fixed box on mobile/tablet
+ * instead of shrinking the whole image, so the logo stays legible at small
+ * sizes — used by the page header ("black bar"). It is tuned to the
+ * proportions of the default English horizontal wordmark only: verified
+ * against the translated PNGs (assets.undrr.org/logos/undrr/), it cuts the
+ * bottom off their subtitle line, since those assets are ~2.3-2.9:1
+ * (roughly square) rather than the ~6.6:1 the crop box assumes. Do not use
+ * `crop="autocrop"` with a translated or otherwise differently-proportioned
+ * logo asset.
  */
 export const Logo = ({
   src,
@@ -17,7 +23,7 @@ export const Logo = ({
   width,
   height,
   lang,
-  autocrop = false,
+  crop,
   className,
 }) => (
   <img
@@ -27,7 +33,7 @@ export const Logo = ({
     width={width}
     height={height}
     lang={lang}
-    className={cls('mg-logo', autocrop && 'mg-logo--autocrop', className)}
+    className={cls('mg-logo', crop && `mg-logo--${crop}`, className)}
   />
 );
 
@@ -44,16 +50,21 @@ Logo.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   /**
    * BCP 47 language tag of the wordmark's text (e.g. `ar`, `es`, `fr`, `ru`,
-   * `zh`), so screen readers pronounce the alt text in the right language.
-   * Omit for the default English logo, which inherits the page language.
+   * `zh`). Correct, valid usage on an `<img>`, but treat it as a hint rather
+   * than a guarantee: screen readers generally read `alt` text using the
+   * page's ambient language, and support for honoring `lang` set directly on
+   * an `<img>` varies by browser/AT combination. Omit for the default
+   * English logo, which inherits the page language.
    */
   lang: PropTypes.string,
   /**
-   * Crop to a fixed box on mobile/tablet instead of letterboxing with
-   * `object-fit: contain`. Tuned for the horizontal UNDRR wordmark; re-check
-   * the crop box in `logo.scss` if a differently-proportioned asset is used.
+   * Crop variant. `"autocrop"` crops to a fixed box below the desktop
+   * breakpoint instead of letterboxing with `object-fit: contain`. Tuned for
+   * the default English horizontal wordmark's proportions — do not use with
+   * translated or other differently-proportioned assets (see component
+   * doc-comment above). Unset renders the uncropped default.
    */
-  autocrop: PropTypes.bool,
+  crop: PropTypes.oneOf(['autocrop']),
   /** Additional CSS classes. */
   className: PropTypes.string,
 };

@@ -13,7 +13,14 @@
   // (190x48 / 110x30, ~3.96:1) were tuned for a different,
   // differently-proportioned logo asset and sliced mid-glyph into the
   // subtitle on this one — if the logo asset changes again, re-check this
-  // crop rather than assuming the ratio still holds.
+  // crop rather than assuming the ratio still holds. Confirmed against the
+  // translated logos (assets.undrr.org/logos/undrr/): they're ~2.3-2.9:1,
+  // not ~6.6:1+, so this box crops their subtitle line off vertically
+  // instead of horizontally — do not apply this modifier to them (see the
+  // `crop` prop doc in Logo.jsx). `object-position`'s horizontal anchor
+  // (0%, i.e. left) also assumes LTR crop framing; it isn't exercised by
+  // any asset in use today (translated logos don't use this modifier), but
+  // revisit it before pairing autocrop with an RTL-only asset.
   &--autocrop {
     @media (max-width: $mg-breakpoint-desktop) {
       inline-size: mg-rem(180);
