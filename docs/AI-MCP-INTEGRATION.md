@@ -102,6 +102,7 @@ The things agents most often get wrong: CSS class prefix, naming pattern, and th
 - Components use semantic HTML for accessibility
 - Five themes: undrr (default), preventionweb, irp, mcr2030, delta
 - RTL is supported for Arabic and other right-to-left languages
+- Some components have optional variants that matter for AI output, such as linked blocks, inverse dark-surface treatments, or text-only states with no image. For example, the Author image supports horizontal and vertical layouts, optional linking, `tone="inverse"`, and a no-image variant; check the Storybook canvas examples and component detail file before inventing a new markup shape.
 
 ### Check what you get back
 
