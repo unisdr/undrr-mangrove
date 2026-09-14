@@ -25,14 +25,26 @@ export function AuthorImage({
   org = '',
   variant = 'Large',
   highlight = 'primary',
+  layout = 'vertical',
 }) {
   const sizeVariant = size_options[variant];
   const highlightVariant = highlight_options[highlight];
+  const layoutVariant =
+    layout === 'horizontal'
+      ? 'mg-author-image--horizontal'
+      : 'mg-author-image--vertical';
   const altText = imageAlt || alt || '';
   const hasMeta = Boolean(title || org);
 
   return (
-    <figure className={cls('mg-author-image', sizeVariant, highlightVariant)}>
+    <figure
+      className={cls(
+        'mg-author-image',
+        sizeVariant,
+        highlightVariant,
+        layoutVariant
+      )}
+    >
       <div className="mg-author-image__avatar">
         <img src={image} alt={altText} title={altText || undefined} />
       </div>
@@ -73,6 +85,8 @@ AuthorImage.propTypes = {
   variant: PropTypes.oneOf(['Large', 'Small']),
   /** Accent colour */
   highlight: PropTypes.oneOf(['primary', 'secondary', 'tertiary']),
+  /** Layout direction */
+  layout: PropTypes.oneOf(['vertical', 'horizontal']),
 };
 
 export const Authorimg = AuthorImage;

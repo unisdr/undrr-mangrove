@@ -7,7 +7,7 @@ import * as AuthorImagesStories from './AuthorImages.stories';
 
 # Author image
 
-The Author image component now acts as a compact author card: portrait, name, job title, and organisation in one composable block.
+The Author image component now acts as a compact author block: portrait, name, job title, and organisation in one composable unit.
 
 ### Overview
 
@@ -17,14 +17,16 @@ Use it for author bylines, speaker cards, and profile callouts where the photo a
 
 #### Default
 
-The card uses a portrait frame, a prominent name line, and a secondary line for title/org. The top accent can be primary, secondary, or tertiary.
+The block supports horizontal and vertical stacked layouts. The portrait stays paired with a prominent name line and a secondary line for title/org. The accent can be primary, secondary, or tertiary.
 
 ### Behaviors
 
 #### States
 
-The component supports Small and Large sizes, plus three highlight colours:
+The component supports Small and Large sizes, horizontal and vertical layouts, plus three highlight colours:
 
+- horizontal
+- vertical
 - primary
 - secondary
 - tertiary
@@ -34,8 +36,18 @@ The component supports Small and Large sizes, plus three highlight colours:
   meta={AuthorImagesStories}
 />
 
+<Canvas
+  of={AuthorImagesStories.HorizontalAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
+<Canvas
+  of={AuthorImagesStories.VerticalAuthorImage}
+  meta={AuthorImagesStories}
+/>
+
 ## Changelog
 
-- **1.2** — 2026-09-14: Reworked the component into a compact author card with name and title/org text, and added primary/secondary/tertiary highlight variants so the docs page can show a clearer author hierarchy.
+- **1.2** — 2026-09-14: Reworked the component into a compact author block with name and title/org text, and added horizontal/vertical layouts plus primary/secondary/tertiary highlight variants.
 - **1.1** — 2026-03-21: Renamed CSS classes to `mg-` prefix (`author__img` → `mg-author-image`). Added BEM modifiers for size (`mg-author-image--large`) and hover color (`mg-author-image--yellow`, etc.). Replaced `defaultProps` with destructured defaults.
 - **1.0** — 2022-12-12: Released component
