@@ -1,8 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthorImage } from './AuthorImages';
 
-const user =
-  'https://www.undrr.org/sites/default/files/styles/por/public/2024-05/Kamal-Kishore_UNDRR-SRSG-C-A.Tardy_min.jpg';
+const portraitPlaceholder =
+  'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22240%22 height=%22240%22 viewBox=%220 0 240 240%22%3E%3Crect width=%22240%22 height=%22240%22 rx=%22120%22 fill=%22%23dfe5ec%22/%3E%3Ccircle cx=%22120%22 cy=%2295%22 r=%2240%22 fill=%22%23b0bcc9%22/%3E%3Cpath d=%22M52 204c12-37 44-56 68-56s56 19 68 56%22 fill=%22%23b0bcc9%22/%3E%3C/svg%3E';
+
+const seededUserPortrait = async seed => {
+  const response = await fetch(
+    `https://randomuser.me/api/?seed=${seed}&inc=picture`
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to load seeded portrait for ${seed}`);
+  }
+
+  const data = await response.json();
+
+  return data.results[0].picture.large;
+};
+
+function SeededAuthorImage({ seed, imageAlt, ...props }) {
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+
+    seededUserPortrait(seed)
+      .then(src => {
+        if (active) {
+          setImage(src);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setImage('');
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [seed]);
+
+  return (
+    <AuthorImage
+      image={image || portraitPlaceholder}
+      imageAlt={imageAlt}
+      {...props}
+    />
+  );
+}
 
 const defaultPeople = [
   {
@@ -11,6 +57,7 @@ const defaultPeople = [
     org: 'UNDRR',
     highlight: 'primary',
     layout: 'horizontal',
+    seed: 'kamal-kishore',
   },
   {
     name: 'Mami Mizutori',
@@ -18,6 +65,7 @@ const defaultPeople = [
     org: 'UNDRR',
     highlight: 'tertiary',
     layout: 'vertical',
+    seed: 'mami-mizutori',
   },
 ];
 
@@ -66,9 +114,9 @@ export const DefaultAuthorImage = {
   render: args => (
     <StoryGrid>
       {defaultPeople.map(person => (
-        <AuthorImage
+        <SeededAuthorImage
           key={person.name}
-          image={user}
+          seed={person.seed}
           imageAlt={`${person.name}, ${person.title}, ${person.org}`}
           name={person.name}
           title={person.title}
@@ -86,8 +134,8 @@ export const DefaultAuthorImage = {
 
 export const HorizontalAuthorImage = {
   render: args => (
-    <AuthorImage
-      image={user}
+    <SeededAuthorImage
+      seed="kamal-kishore-horizontal"
       imageAlt="Kamal Kishore, Special Representative, UNDRR"
       name="Kamal Kishore"
       title="Special Representative"
@@ -103,8 +151,8 @@ export const HorizontalAuthorImage = {
 
 export const VerticalAuthorImage = {
   render: args => (
-    <AuthorImage
-      image={user}
+    <SeededAuthorImage
+      seed="mami-mizutori-vertical"
       imageAlt="Mami Mizutori, Director, UNDRR"
       name="Mami Mizutori"
       title="Director"
