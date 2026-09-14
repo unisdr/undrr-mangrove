@@ -74,15 +74,15 @@ Language-specific wordmarks are published to [assets.undrr.org](https://assets.u
 | Russian (`ru`) | black, blue |
 | Chinese (`zh`) | black |
 
+The blue/white stories above resolve these automatically via `getUndrrLogoAsset` (`undrr-logo-assets.js`) — switch Storybook's Locale toolbar rather than reaching for a language/color combination directly. The `black` color isn't surfaced by any story (only `blue`/`white` are used by the default logo and page header); call `getUndrrLogoAsset(locale, 'black')` directly if you need it.
+
 Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) as correct, valid markup — treat it as a hint rather than a guarantee, since screen readers generally read `alt` text using the page's ambient language and support for honoring `lang` set directly on an `<img>` varies by browser/AT combination.
 
 **Do not combine translated logos with `crop="autocrop"`** (below): the translated PNGs are ~2.3-2.9:1 (roughly square, with the localized subtitle stacked on its own line), not the ~6.6:1 of the default English horizontal wordmark the crop box is tuned for. Verified by simulating the crop: it cuts the bottom off the subtitle line rather than fitting it.
 
-<Canvas of={LogoStories.TranslatedUndrrLogos} meta={LogoStories} />
-
 ### Autocropping variant
 
-Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses by default. The crop box is tuned for the default English horizontal wordmark's aspect ratio only — re-check it in `logo.scss` before applying it to any other asset, and do not use it with the translated logos above.
+Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses by default. The crop box is tuned for the default English horizontal wordmark's aspect ratio only — re-check it in `logo.scss` before applying it to any other asset. This story is also locale-smart, and deliberately drops `autocrop` whenever the Locale toolbar resolves a translated asset (Spanish today) rather than crop it incorrectly — the same resolution `PageHeader`'s `locale` prop does.
 
 <Canvas of={LogoStories.AutocroppingUndrrLogo} meta={LogoStories} />
 
@@ -93,5 +93,6 @@ Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoi
 ## Changelog
 
 - **1.1** — 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh) and a `crop="autocrop"` variant (`mg-logo--autocrop`), now also used by the page header ("black bar") instead of a duplicated crop rule. Added `title`, `width`, `height`, `lang`, `crop`, and `className` props. `crop` is intentionally an enum (not a boolean) to leave room for other crop treatments without a breaking change; it is verified safe only for the default English horizontal wordmark, not the translated logos added in this release.
-  - Added `undrr-logo-assets.js` (`getUndrrLogoAsset(locale, color)`), a locale → translated-asset resolver with verified pixel dimensions per asset and a color-aware fallback to the English default. The "UNDRR logo - blue/white" stories and [page header](?path=/docs/components-pageheader--docs)'s new `locale` prop both use it, so switching Storybook's Locale toolbar (or passing `locale` in production) now shows the correct translated wordmark automatically wherever one is safely available.
+  - Added `undrr-logo-assets.js` (`getUndrrLogoAsset(locale, color)`), a locale → translated-asset resolver with verified pixel dimensions per asset and a color-aware fallback to the English default. The "UNDRR logo - blue/white" and "UNDRR logo - autocropping" stories and [page header](?path=/docs/components-pageheader--docs)'s new `locale` prop all use it, so switching Storybook's Locale toolbar (or passing `locale` in production) now shows the correct translated wordmark automatically wherever one is safely available — the autocropping story also drops `autocrop` automatically when a translated asset would be cropped incorrectly.
+  - Removed the standalone "UNDRR logo - translated" reference story: the language/color coverage table above and the now locale-smart blue/white/autocropping stories cover it. The `black` color (not used by any story) stays documented in the table; call `getUndrrLogoAsset` directly if you need it.
 - **1.0** — 2024-09-12: Released component

@@ -5,6 +5,13 @@ import { PageHeader } from './PageHeader';
 export default {
   title: 'Components/PageHeader',
   component: PageHeader,
+  // Every story below follows Storybook's Locale toolbar for the logo,
+  // matching the active page language a real site would render with —
+  // unless a story sets its own `locale` arg (e.g. LocaleDrivenLogo below),
+  // which always wins over the toolbar.
+  render: (args, { globals }) => (
+    <PageHeader {...args} locale={args.locale ?? globals.locale} />
+  ),
   parameters: {
     // Full-bleed site chrome, same as MegaMenu — the default padded docs
     // canvas puts a visible margin around it that isn't part of the design.
@@ -101,7 +108,7 @@ export const LocaleDrivenLogo = {
     docs: {
       description: {
         story:
-          "No `logoUrl` is set here — the header resolves the translated Spanish logo automatically from `locale` (the only locale with a published white asset today; every other locale falls back to the English default rather than risk a low-contrast logo). Also try Storybook's own Locale toolbar — `UndrrChrome`-based pattern stories pick that global up the same way.",
+          "Pins `locale` to Spanish (overriding the Locale toolbar) for a stable demo — but every story on this page actually follows the toolbar the same way by default (see this file's meta-level `render`), since a real page passes its active language the same way. No `logoUrl` is set here — the header resolves the translated Spanish logo automatically (the only locale with a published white asset today; every other locale falls back to the English default rather than risk a low-contrast logo).",
       },
     },
   },

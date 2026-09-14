@@ -1,7 +1,6 @@
 import { Logo } from './Logo';
-import { UNDRR_LOGO_LOCALES, getUndrrLogoAsset } from './undrr-logo-assets';
+import { getUndrrLogoAsset } from './undrr-logo-assets';
 
-import logoWhite from '../../assets/images/undrr-logo-white.svg';
 import logoSquare from '../../assets/images/undrr-logo-square-blue.svg';
 import logoSquareWhite from '../../assets/images/undrr-logo-square-white.svg';
 
@@ -119,67 +118,20 @@ export const DefaultUndrrLogoSquareWhite = {
   },
 };
 
-const LOCALE_LABELS = {
-  arabic: 'Arabic',
-  spanish: 'Spanish',
-  french: 'French',
-  russian: 'Russian',
-  chinese: 'Chinese',
-};
-
-export const TranslatedUndrrLogos = {
-  render: () => (
-    <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-      <thead>
-        <tr>
-          <th style={{ textAlign: 'left', padding: '8px' }}>Language</th>
-          <th style={{ textAlign: 'left', padding: '8px' }}>Logo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.entries(UNDRR_LOGO_LOCALES).map(([locale, { colors }]) =>
-          Object.keys(colors).map(color => {
-            const asset = getUndrrLogoAsset(locale, color);
-            return (
-              <tr key={`${locale}-${color}`}>
-                <td style={{ padding: '8px' }}>
-                  {LOCALE_LABELS[locale]} — {color}
-                </td>
-                <td
-                  style={{
-                    padding: '8px',
-                    background: color === 'white' ? '#004f91' : '#fff',
-                  }}
-                >
-                  <Logo
-                    src={asset.src}
-                    alt={`UNDRR logo (${LOCALE_LABELS[locale]})`}
-                    lang={asset.lang}
-                  />
-                </td>
-              </tr>
-            );
-          })
-        )}
-      </tbody>
-    </table>
-  ),
-
-  name: 'UNDRR logo - translated',
-
-  parameters: {
-    docs: {
-      inlineStories: false,
-    },
-  },
-};
-
 export const AutocroppingUndrrLogo = {
-  render: () => (
-    <div style={{ background: '#004f91', padding: '8px' }}>
-      <Logo src={logoWhite} alt={'UNDRR logo'} crop="autocrop" />
-    </div>
-  ),
+  render: (args, { globals }) => {
+    const asset = getUndrrLogoAsset(globals.locale, 'white');
+    return (
+      <div style={{ background: '#004f91', padding: '8px' }}>
+        <Logo
+          src={asset.src}
+          alt={'UNDRR logo'}
+          lang={asset.lang}
+          crop={asset.translated ? undefined : 'autocrop'}
+        />
+      </div>
+    );
+  },
 
   name: 'UNDRR logo - autocropping',
 
@@ -192,7 +144,7 @@ export const AutocroppingUndrrLogo = {
       inlineStories: false,
       description: {
         story:
-          'The `crop="autocrop"` variant crops to a fixed box below the desktop breakpoint instead of shrinking the whole image, so the wordmark stays legible at small sizes. This is what the page header ("black bar") uses — switch to a tablet/mobile viewport (Storybook viewport toolbar) to see the crop take effect. Tuned for the default English horizontal wordmark only — do not use with translated logos (see the "UNDRR logo - translated" story), which have very different proportions and get cropped incorrectly.',
+          'The `crop="autocrop"` variant crops to a fixed box below the desktop breakpoint instead of shrinking the whole image, so the wordmark stays legible at small sizes. This is what the page header ("black bar") uses by default — switch to a tablet/mobile viewport (Storybook viewport toolbar) to see the crop take effect. This story also follows the Locale toolbar, but deliberately drops `autocrop` whenever it resolves a translated asset (Spanish is the only locale that changes anything here): translated PNGs are ~2.3-2.9:1, not the ~6.6:1 `autocrop`\'s box is tuned for, and pairing the two would crop the wordmark incorrectly rather than fit it — exactly what PageHeader\'s own `locale` resolution does.',
       },
     },
   },
