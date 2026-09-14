@@ -38,6 +38,7 @@
   color: inherit;
   display: grid;
   gap: inherit;
+  width: 100%;
   text-decoration: none;
 }
 
@@ -106,6 +107,11 @@
 
 .mg-author-image--vertical {
   grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.mg-author-image--vertical .mg-author-image__body,
+.mg-author-image--vertical .mg-author-image__link {
   justify-items: center;
 }
 
