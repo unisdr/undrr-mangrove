@@ -45,6 +45,7 @@ const Template = args => (
         <th scope="col">Icon</th>
         <th scope="col">Label</th>
         <th scope="col">Class</th>
+        <th scope="col">Available as of</th>
         <th scope="col">Source</th>
       </tr>
     </thead>
@@ -57,6 +58,26 @@ const Template = args => (
           <td>{item.label}</td>
           <td>
             <code>{`mg-icon mg-icon-${item.name}`}</code>
+          </td>
+          <td>
+            {item.availableSince ? (
+              <>
+                <code>{item.availableSince}</code>
+                <span
+                  style={{
+                    display: 'block',
+                    fontSize: '0.75em',
+                    marginTop: '0.15rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {item.status || 'new'}
+                </span>
+              </>
+            ) : (
+              'Existing'
+            )}
           </td>
           <td>{item.source && <SourceBadge source={item.source} />}</td>
         </tr>

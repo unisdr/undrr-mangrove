@@ -82,63 +82,121 @@
     {
       "name": "download",
       "label": "Download, Save, Export",
-      "source": "lucide"
+      "source": "lucide",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "external-link",
       "label": "External Link, Open New Tab",
-      "source": "lucide"
+      "source": "lucide",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
-    { "name": "filter", "label": "Filter, Funnel, Refine", "source": "lucide" },
-    { "name": "eye", "label": "Eye, View, Visibility", "source": "lucide" },
+    {
+      "name": "filter",
+      "label": "Filter, Funnel, Refine",
+      "source": "lucide",
+      "availableSince": "2026-09-14",
+      "status": "new"
+    },
+    {
+      "name": "eye",
+      "label": "Eye, View, Visibility",
+      "source": "lucide",
+      "availableSince": "2026-09-14",
+      "status": "new"
+    },
     {
       "name": "refresh",
       "label": "Refresh, Reload, Repeat",
-      "source": "lucide"
+      "source": "lucide",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "analysis",
       "label": "Analysis, Insight, Research",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "assessment",
       "label": "Assessment, Evaluation, Appraisal",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "coordination",
       "label": "Coordination, Collaboration, Joint Work",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
-    { "name": "data", "label": "Data, Dataset, Information", "source": "ocha" },
-    { "name": "help", "label": "Help, Support, Assistance", "source": "ocha" },
+    {
+      "name": "data",
+      "label": "Data, Dataset, Information",
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
+    },
+    {
+      "name": "help",
+      "label": "Help, Support, Assistance",
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
+    },
     {
       "name": "information-management",
       "label": "Information Management, Data Management",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
-    { "name": "location", "label": "Location, Place, Site", "source": "ocha" },
+    {
+      "name": "location",
+      "label": "Location, Place, Site",
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
+    },
     {
       "name": "monitoring",
       "label": "Monitoring, Observation, Tracking",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "notification",
       "label": "Notification, Alert, Announcement",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
-    { "name": "print", "label": "Print, Hard Copy, Output", "source": "ocha" },
+    {
+      "name": "print",
+      "label": "Print, Hard Copy, Output",
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
+    },
     {
       "name": "public-information",
       "label": "Public Information, Awareness, Communication",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "report",
       "label": "Report, Summary, Findings",
-      "source": "ocha"
+      "source": "ocha",
+      "availableSince": "2026-09-14",
+      "status": "new"
     },
     {
       "name": "clone",
