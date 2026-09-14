@@ -67,6 +67,14 @@ const defaultPeople = [
     layout: 'vertical',
     seed: 'author-two',
   },
+  {
+    name: 'Author Three',
+    title: 'Contributor',
+    org: 'Example organisation',
+    highlight: 'secondary',
+    layout: 'vertical',
+    noImage: true,
+  },
 ];
 
 const StoryGrid = ({ children }) => (
@@ -113,19 +121,31 @@ export default {
 export const DefaultAuthorImage = {
   render: args => (
     <StoryGrid>
-      {defaultPeople.map(person => (
-        <SeededAuthorImage
-          key={person.name}
-          seed={person.seed}
-          imageAlt={`${person.name}, ${person.title}, ${person.org}`}
-          name={person.name}
-          title={person.title}
-          org={person.org}
-          highlight={person.highlight}
-          layout={person.layout}
-          {...args}
-        />
-      ))}
+      {defaultPeople.map(person =>
+        person.noImage ? (
+          <AuthorImage
+            key={person.name}
+            name={person.name}
+            title={person.title}
+            org={person.org}
+            highlight={person.highlight}
+            layout={person.layout}
+            {...args}
+          />
+        ) : (
+          <SeededAuthorImage
+            key={person.name}
+            seed={person.seed}
+            imageAlt={`${person.name}, ${person.title}, ${person.org}`}
+            name={person.name}
+            title={person.title}
+            org={person.org}
+            highlight={person.highlight}
+            layout={person.layout}
+            {...args}
+          />
+        )
+      )}
     </StoryGrid>
   ),
 
