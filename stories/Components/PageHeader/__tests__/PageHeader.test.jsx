@@ -98,7 +98,7 @@ describe('PageHeader', () => {
     expect(img).toHaveClass('mg-logo--autocrop');
   });
 
-  it('resolves the Spanish translated logo (the only published white asset), without autocrop', () => {
+  it('resolves the Spanish translated logo, without autocrop', () => {
     render(<PageHeader locale="spanish" />);
 
     const img = screen.getByAltText('UNDRR Logo');
@@ -115,10 +115,21 @@ describe('PageHeader', () => {
     expect(img).not.toHaveClass('mg-logo--autocrop');
   });
 
-  it('falls back to the default English logo for a locale with no published white asset', () => {
-    // Arabic has black/blue translated logos, but no white one — using it
-    // here would be invisible against the header's dark background.
+  it('resolves the Arabic translated logo (committed, pending CDN publish)', () => {
     render(<PageHeader locale="arabic" />);
+
+    const img = screen.getByAltText('UNDRR Logo');
+    expect(img).toHaveAttribute(
+      'src',
+      'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.png'
+    );
+    expect(img).toHaveAttribute('lang', 'ar');
+    expect(img).not.toHaveClass('mg-logo--autocrop');
+  });
+
+  it('falls back to the default English logo for a locale with no white asset at all', () => {
+    // Japanese has no translated asset published or even committed yet.
+    render(<PageHeader locale="japanese" />);
 
     const img = screen.getByAltText('UNDRR Logo');
     expect(img).toHaveAttribute(

@@ -25,12 +25,12 @@ describe('getUndrrLogoAsset', () => {
   });
 
   it('falls back to the English default when the color is not published for that locale', () => {
-    // Arabic has black/blue but no white variant.
-    const asset = getUndrrLogoAsset('arabic', 'white');
+    // Chinese has no blue variant (not available in a web-ready format).
+    const asset = getUndrrLogoAsset('chinese', 'blue');
     expect(asset.translated).toBe(false);
   });
 
-  it('resolves the Spanish white variant (the only translated white asset)', () => {
+  it('resolves the Spanish white variant', () => {
     const asset = getUndrrLogoAsset('spanish', 'white');
     expect(asset).toEqual({
       src: 'https://assets.undrr.org/logos/undrr/undrr-logo-es-white.png',
@@ -39,6 +39,19 @@ describe('getUndrrLogoAsset', () => {
       height: 387,
       translated: true,
     });
+  });
+
+  it('resolves the Arabic/French/Russian/Chinese white variants (committed, pending CDN publish)', () => {
+    expect(getUndrrLogoAsset('arabic', 'white')).toEqual({
+      src: 'https://assets.undrr.org/logos/undrr/undrr-logo-ar-white.png',
+      lang: 'ar',
+      width: 1318,
+      height: 490,
+      translated: true,
+    });
+    expect(getUndrrLogoAsset('french', 'white').translated).toBe(true);
+    expect(getUndrrLogoAsset('russian', 'white').translated).toBe(true);
+    expect(getUndrrLogoAsset('chinese', 'white').translated).toBe(true);
   });
 
   it('defaults to the blue color when none is given', () => {

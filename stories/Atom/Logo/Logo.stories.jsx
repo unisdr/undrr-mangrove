@@ -64,7 +64,7 @@ export const DefaultUndrrLogoWhite = {
       iframeHeight: '200px',
       description: {
         story:
-          'Follows the Storybook locale toolbar. Spanish is the only language with a published white asset today — every other locale falls back to the English default so the logo stays visible on this dark background rather than swapping in a low-contrast black/blue translated image.',
+          "Follows the Storybook locale toolbar. Arabic/French/Russian/Chinese white assets are committed but not yet published to assets.undrr.org (undrr/web-backlog#3061) — until then, selecting one of those here loads a broken image rather than falling back, since the catalog can't tell the difference from here. Japanese and any locale with no white entry fall back to the English default so the logo stays visible on this dark background rather than swapping in a low-contrast black/blue translated image.",
       },
     },
   },
@@ -144,7 +144,7 @@ export const AutocroppingUndrrLogo = {
       inlineStories: false,
       description: {
         story:
-          'The `crop="autocrop"` variant crops to a fixed box below the desktop breakpoint instead of shrinking the whole image, so the wordmark stays legible at small sizes. This is what the page header ("black bar") uses by default — switch to a tablet/mobile viewport (Storybook viewport toolbar) to see the crop take effect. This story also follows the Locale toolbar, but deliberately drops `autocrop` whenever it resolves a translated asset (Spanish is the only locale that changes anything here): translated PNGs are ~2.3-2.9:1, not the ~6.6:1 `autocrop`\'s box is tuned for, and pairing the two would crop the wordmark incorrectly rather than fit it — exactly what PageHeader\'s own `locale` resolution does.',
+          'The `crop="autocrop"` variant crops to a fixed box below the desktop breakpoint instead of shrinking the whole image, so the wordmark stays legible at small sizes. This is what the page header ("black bar") uses by default — switch to a tablet/mobile viewport (Storybook viewport toolbar) to see the crop take effect. This story also follows the Locale toolbar, but deliberately drops `autocrop` whenever it resolves a translated asset: translated PNGs are ~2.3-2.9:1, not the ~6.6:1 `autocrop`\'s box is tuned for, and pairing the two would crop the wordmark incorrectly rather than fit it — exactly what PageHeader\'s own `locale` resolution does. Arabic/French/Russian/Chinese white assets are committed but not yet published to assets.undrr.org (undrr/web-backlog#3061), so selecting one of those loads a broken image today rather than demonstrating the crop-dropping behavior — try Spanish, or wait for those to ship.',
       },
     },
   },

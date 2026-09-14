@@ -50,7 +50,7 @@ This is the default logo and is used primarily in the header of every page as we
 
 [Download](images/undrr-logo-white.svg)
 
-Used when the logo is placed on a dark background. Also locale-smart, but only Spanish has a published white asset today — every other locale intentionally stays on the English default rather than swap in a black/blue translated image that would be invisible here.
+Used when the logo is placed on a dark background. Also locale-smart. Arabic, French, Russian, and Chinese have white assets committed but not yet published to assets.undrr.org (undrr/web-backlog#3061) — until then, selecting one of those here loads a broken image; every locale without a listed white asset at all (e.g. Japanese) intentionally stays on the English default rather than swap in a black/blue translated image that would be invisible here.
 
 <Canvas of={LogoStories.DefaultUndrrLogoWhite} meta={LogoStories} />
 
@@ -66,13 +66,15 @@ The horizontal variant is preferred, but not always suitable. Therefore a "squar
 
 Language-specific wordmarks are published to [assets.undrr.org](https://assets.undrr.org/logos/undrr/), one raster PNG per language/color combination (`undrr-logo-{lang}-{color}.png`). Color coverage varies by language:
 
-| Language | Colors available |
-| --- | --- |
-| Arabic (`ar`) | black, blue |
-| Spanish (`es`) | black, blue, white |
-| French (`fr`) | black, blue |
-| Russian (`ru`) | black, blue |
-| Chinese (`zh`) | black |
+| Language | Colors available | Published |
+| --- | --- | --- |
+| Arabic (`ar`) | black, blue, white | white pending CDN publish (undrr/web-backlog#3061) |
+| Spanish (`es`) | black, blue, white | yes |
+| French (`fr`) | black, blue, white | white pending CDN publish (undrr/web-backlog#3061) |
+| Russian (`ru`) | black, blue, white | white pending CDN publish (undrr/web-backlog#3061) |
+| Chinese (`zh`) | black, white | white pending CDN publish (undrr/web-backlog#3061); no blue (not available in a web-ready format) |
+
+The "pending CDN publish" white assets are already wired into `undrr-logo-assets.js` — the URL, `lang`, and dimensions are correct, but the file doesn't exist at assets.undrr.org yet, so requesting one of those today loads a broken image rather than falling back to English. This is deliberate: the catalog can't distinguish "not published yet" from "never will be," so it treats a listed entry as real. Remove the `white` entry for a language from `UNDRR_LOGO_LOCALES` if that turns out to be the wrong call before these ship.
 
 The blue/white stories above resolve these automatically via `getUndrrLogoAsset` (`undrr-logo-assets.js`) — switch Storybook's Locale toolbar rather than reaching for a language/color combination directly. The `black` color isn't surfaced by any story (only `blue`/`white` are used by the default logo and page header); call `getUndrrLogoAsset(locale, 'black')` directly if you need it.
 
@@ -82,7 +84,7 @@ Pass the `lang` prop (a BCP 47 tag matching the wordmark's language) as correct,
 
 ### Autocropping variant
 
-Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses by default. The crop box is tuned for the default English horizontal wordmark's aspect ratio only — re-check it in `logo.scss` before applying it to any other asset. This story is also locale-smart, and deliberately drops `autocrop` whenever the Locale toolbar resolves a translated asset (Spanish today) rather than crop it incorrectly — the same resolution `PageHeader`'s `locale` prop does.
+Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoint instead of shrinking the whole image with `object-fit: contain`. This keeps the wordmark legible at small sizes and is what the [page header](?path=/docs/components-pageheader--docs) ("black bar") uses by default. The crop box is tuned for the default English horizontal wordmark's aspect ratio only — re-check it in `logo.scss` before applying it to any other asset. This story is also locale-smart, and deliberately drops `autocrop` whenever the Locale toolbar resolves a translated asset rather than crop it incorrectly — the same resolution `PageHeader`'s `locale` prop does. Note Spanish is the only translated white asset actually live today (see the coverage table above).
 
 <Canvas of={LogoStories.AutocroppingUndrrLogo} meta={LogoStories} />
 
@@ -95,4 +97,5 @@ Set `crop="autocrop"` to crop the logo to a fixed box below the desktop breakpoi
 - **1.1** — 2026-09-14: Added translated logo assets (ar, es, fr, ru, zh) and a `crop="autocrop"` variant (`mg-logo--autocrop`), now also used by the page header ("black bar") instead of a duplicated crop rule. Added `title`, `width`, `height`, `lang`, `crop`, and `className` props. `crop` is intentionally an enum (not a boolean) to leave room for other crop treatments without a breaking change; it is verified safe only for the default English horizontal wordmark, not the translated logos added in this release.
   - Added `undrr-logo-assets.js` (`getUndrrLogoAsset(locale, color)`), a locale → translated-asset resolver with verified pixel dimensions per asset and a color-aware fallback to the English default. The "UNDRR logo - blue/white" and "UNDRR logo - autocropping" stories and [page header](?path=/docs/components-pageheader--docs)'s new `locale` prop all use it, so switching Storybook's Locale toolbar (or passing `locale` in production) now shows the correct translated wordmark automatically wherever one is safely available — the autocropping story also drops `autocrop` automatically when a translated asset would be cropped incorrectly.
   - Removed the standalone "UNDRR logo - translated" reference story: the language/color coverage table above and the now locale-smart blue/white/autocropping stories cover it. The `black` color (not used by any story) stays documented in the table; call `getUndrrLogoAsset` directly if you need it.
+  - Wired white asset paths for Arabic, French, Russian, and Chinese into `UNDRR_LOGO_LOCALES` (undrr/web-backlog#3061) ahead of their CDN publish, so translation support comes online automatically once those files ship — no further Mangrove change needed. Until then, selecting one of those locales on a white-background story or `PageHeader` loads a broken image rather than falling back, since the catalog can't distinguish "not published yet" from "never will be." See the coverage table above.
 - **1.0** — 2024-09-12: Released component

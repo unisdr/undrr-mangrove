@@ -55,14 +55,16 @@ export function PageHeader({
   );
 
   // An explicit logoUrl always wins. Otherwise, resolve a translated asset
-  // for `locale` — getUndrrLogoAsset only ever substitutes a real published
-  // white-on-transparent asset (today, Spanish only), so this is a safe,
-  // contrast-preserving no-op for every other locale rather than swapping in
-  // a black/blue image invisible against the dark toolbar background. Its
-  // fallback result (translated: false) is the bundled English SVG module,
-  // not this component's own default URL string — check `.translated`
-  // rather than truthiness so an untranslated locale keeps DEFAULT_LOGO_URL
-  // instead of silently swapping to that different asset.
+  // for `locale` — getUndrrLogoAsset only ever substitutes a white-on-
+  // transparent asset listed in UNDRR_LOGO_LOCALES, so this is a safe,
+  // contrast-preserving no-op for a locale with no such asset rather than
+  // swapping in a black/blue image invisible against the dark toolbar
+  // background. (arabic/french/russian/chinese white assets are committed
+  // pending a CDN publish — see undrr-logo-assets.js.) Its fallback result
+  // (translated: false) is the bundled English SVG module, not this
+  // component's own default URL string — check `.translated` rather than
+  // truthiness so an untranslated locale keeps DEFAULT_LOGO_URL instead of
+  // silently swapping to that different asset.
   const asset = !logoUrl ? getUndrrLogoAsset(locale, 'white') : null;
   const translatedLogo = asset?.translated ? asset : null;
   const resolvedLogoUrl = logoUrl || translatedLogo?.src || DEFAULT_LOGO_URL;
@@ -334,11 +336,12 @@ PageHeader.propTypes = {
    * e.g. ArticleStory), used to resolve a translated logo asset when
    * `logoUrl` is not set (see `undrr-logo-assets.js`) — 'english' (default),
    * 'arabic', 'french', 'japanese', 'russian', 'spanish', 'chinese'. Only
-   * resolves to a translated asset when one is actually published for this
-   * locale in white (the toolbar background is dark) — today that's Spanish
-   * only; every other locale (and any unrecognized value) is an intentional
-   * no-op that keeps the English default rather than risk a low-contrast
-   * logo.
+   * resolves to a translated asset when one is listed there in white (the
+   * toolbar background is dark) — 'japanese' and any unrecognized value are
+   * an intentional no-op that keeps the English default rather than risk a
+   * low-contrast logo. The arabic/french/russian/chinese white assets are
+   * committed pending a CDN publish (undrr/web-backlog#3061) — until then
+   * those locales resolve to a URL that 404s rather than falling back.
    */
   locale: PropTypes.string,
   /** URL for the logo link */
