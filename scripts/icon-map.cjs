@@ -15,61 +15,68 @@
 
 const path = require('path');
 
-const LUCIDE = (name) => path.join('node_modules/lucide-static/icons', `${name}.svg`);
-const OCHA = (name) => path.join('stories/assets/icons/ocha', `${name}.svg`);
-const CUSTOM = (name) => path.join('stories/assets/icons/custom', `${name}.svg`);
+const LUCIDE = name =>
+  path.join('node_modules/lucide-static/icons', `${name}.svg`);
+const OCHA = name => path.join('stories/assets/icons/ocha', `${name}.svg`);
+const CUSTOM = name => path.join('stories/assets/icons/custom', `${name}.svg`);
 
 module.exports = {
   // -------------------------------------------------------------------------
   // Lucide — general UI icons
   // -------------------------------------------------------------------------
-  'globe': LUCIDE('globe'),
-  'languages': LUCIDE('languages'),
-  'search': LUCIDE('search'),
+  globe: LUCIDE('globe'),
+  languages: LUCIDE('languages'),
+  search: LUCIDE('search'),
   'calendar-alt': LUCIDE('calendar-days'),
   'chart-bar': LUCIDE('bar-chart-3'),
-  'envelope': LUCIDE('mail'),
-  'newspaper': LUCIDE('newspaper'),
-  'building': LUCIDE('building-2'),
-  'landmark': LUCIDE('landmark'),
+  envelope: LUCIDE('mail'),
+  newspaper: LUCIDE('newspaper'),
+  building: LUCIDE('building-2'),
+  landmark: LUCIDE('landmark'),
   'graduation-cap': LUCIDE('graduation-cap'),
   'business-time': LUCIDE('briefcase-business'),
   'pen-nib': LUCIDE('pen-tool'),
   'code-branch': LUCIDE('git-branch'),
   'life-ring': LUCIDE('life-buoy'),
-  'lightbulb': LUCIDE('lightbulb'),
-  'cubes': LUCIDE('boxes'),
+  lightbulb: LUCIDE('lightbulb'),
+  cubes: LUCIDE('boxes'),
   'sort-alpha-down': LUCIDE('arrow-down-a-z'),
-  'tags': LUCIDE('tags'),
+  tags: LUCIDE('tags'),
   'power-off': LUCIDE('power'),
-  'user': LUCIDE('user'),
-  'file': LUCIDE('file'),
+  user: LUCIDE('user'),
+  file: LUCIDE('file'),
   'file-alt': LUCIDE('file-text'),
-  'times': LUCIDE('x'),
-  'link': LUCIDE('link'),
-  'clone': LUCIDE('copy'),
-  'share': LUCIDE('share-2'),
-  'qrcode': LUCIDE('qr-code'),
-  'rss': LUCIDE('rss'),
-  'left': LUCIDE('arrow-left'),
-  'right': LUCIDE('arrow-right'),
+  times: LUCIDE('x'),
+  link: LUCIDE('link'),
+  download: LUCIDE('download'),
+  'external-link': LUCIDE('external-link'),
+  filter: LUCIDE('filter'),
+  eye: LUCIDE('eye'),
+  refresh: LUCIDE('refresh-cw'),
+  clone: LUCIDE('copy'),
+  share: LUCIDE('share-2'),
+  qrcode: LUCIDE('qr-code'),
+  rss: LUCIDE('rss'),
+  left: LUCIDE('arrow-left'),
+  right: LUCIDE('arrow-right'),
   'angle-circled-left': LUCIDE('circle-chevron-left'),
   'angle-circled-right': LUCIDE('circle-chevron-right'),
-  'menu': LUCIDE('menu'),
+  menu: LUCIDE('menu'),
   // Icons used in component stories (MegaMenu, StatsCard)
   'info-circle': LUCIDE('info'),
-  'handshake': LUCIDE('handshake'),
-  'map': LUCIDE('map'),
+  handshake: LUCIDE('handshake'),
+  map: LUCIDE('map'),
 
   // Legacy aliases — preserve backward compat with old mg-icon-* names.
   // Paths are relative to the project root. Run via yarn build:icons.
-  'bar-chart': LUCIDE('bar-chart-3'),           // alias for chart-bar
-  'close': LUCIDE('x'),                     // alias for times
-  'copy': LUCIDE('copy'),                   // alias for clone
-  'arrow-left': LUCIDE('arrow-left'),       // alias for left
-  'arrow-right': LUCIDE('arrow-right'),     // alias for right
-  'hamburger': LUCIDE('menu'),              // alias for menu
-  'calendar': LUCIDE('calendar-days'),      // alias for calendar-alt
+  'bar-chart': LUCIDE('bar-chart-3'), // alias for chart-bar
+  close: LUCIDE('x'), // alias for times
+  copy: LUCIDE('copy'), // alias for clone
+  'arrow-left': LUCIDE('arrow-left'), // alias for left
+  'arrow-right': LUCIDE('arrow-right'), // alias for right
+  hamburger: LUCIDE('menu'), // alias for menu
+  calendar: LUCIDE('calendar-days'), // alias for calendar-alt
+  reload: LUCIDE('refresh-cw'), // alias for refresh
 
   // Drupal-needed icons (not in current Mangrove set, but referenced in templates)
   'exclamation-triangle': LUCIDE('triangle-alert'),
@@ -85,43 +92,43 @@ module.exports = {
   // -------------------------------------------------------------------------
 
   // Natural hazards
-  'earthquake': OCHA('earthquake'),
-  'tsunami': OCHA('tsunami'),
-  'flood': OCHA('flood'),
+  earthquake: OCHA('earthquake'),
+  tsunami: OCHA('tsunami'),
+  flood: OCHA('flood'),
   'flash-flood': OCHA('flash-flood'),
-  'cyclone': OCHA('cyclone'),
-  'drought': OCHA('drought'),
-  'volcano': OCHA('volcano'),
-  'landslide': OCHA('landslide-mudslide'),
+  cyclone: OCHA('cyclone'),
+  drought: OCHA('drought'),
+  volcano: OCHA('volcano'),
+  landslide: OCHA('landslide-mudslide'),
   'storm-surge': OCHA('storm-surge'),
-  'tornado': OCHA('tornado'),
-  'heatwave': OCHA('heatwave'),
+  tornado: OCHA('tornado'),
+  heatwave: OCHA('heatwave'),
   'cold-wave': OCHA('cold-wave'),
   'heavy-rain': OCHA('heavy-rain'),
-  'snowfall': OCHA('snowfall'),
-  'fire': OCHA('fire'),
-  'epidemic': OCHA('epidemic'),
+  snowfall: OCHA('snowfall'),
+  fire: OCHA('fire'),
+  epidemic: OCHA('epidemic'),
 
   // DRR and humanitarian response
-  'resilience': OCHA('resilience'),
-  'preparedness': OCHA('preparedness'),
-  'response': OCHA('response'),
+  resilience: OCHA('resilience'),
+  preparedness: OCHA('preparedness'),
+  response: OCHA('response'),
   'affected-population': OCHA('affected-population'),
   'people-in-need': OCHA('people-in-need'),
   'internally-displaced': OCHA('internally-displaced'),
-  'refugee': OCHA('refugee'),
-  'shelter': OCHA('shelter'),
-  'infrastructure': OCHA('infrastructure'),
+  refugee: OCHA('refugee'),
+  shelter: OCHA('shelter'),
+  infrastructure: OCHA('infrastructure'),
 
   // -------------------------------------------------------------------------
   // Custom — brand logos and UNDRR-specific
   // Social media icons use custom SVGs, not Lucide approximations.
   // -------------------------------------------------------------------------
-  'facebook': CUSTOM('facebook'),
+  facebook: CUSTOM('facebook'),
   'x-social': CUSTOM('x-social'),
-  'twitter': CUSTOM('x-social'),            // legacy alias for x-social
-  'linkedin': CUSTOM('linkedin'),
-  'youtube': CUSTOM('youtube'),
-  'flickr': CUSTOM('flickr'),
+  twitter: CUSTOM('x-social'), // legacy alias for x-social
+  linkedin: CUSTOM('linkedin'),
+  youtube: CUSTOM('youtube'),
+  flickr: CUSTOM('flickr'),
   'sdg-wheel': CUSTOM('sdg-wheel'),
 };

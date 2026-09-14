@@ -80,6 +80,23 @@
     { "name": "times", "label": "Times, Close, Cancel", "source": "lucide" },
     { "name": "link", "label": "Link, URL, Connection", "source": "lucide" },
     {
+      "name": "download",
+      "label": "Download, Save, Export",
+      "source": "lucide"
+    },
+    {
+      "name": "external-link",
+      "label": "External Link, Open New Tab",
+      "source": "lucide"
+    },
+    { "name": "filter", "label": "Filter, Funnel, Refine", "source": "lucide" },
+    { "name": "eye", "label": "Eye, View, Visibility", "source": "lucide" },
+    {
+      "name": "refresh",
+      "label": "Refresh, Reload, Repeat",
+      "source": "lucide"
+    },
+    {
       "name": "clone",
       "label": "Clone, Copy, Duplicate, Clipboard",
       "source": "lucide"
