@@ -60,9 +60,9 @@ The following changes landed after `v2.0.0-beta.2` and are queued for the next p
 
 - **Sub-brand button tokens:** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes in `tokens/*.yaml`. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))
 - **Hero title:** removed the `max-width: 12ch` constraint from `.mg-hero--immersive:not(.mg-hero--split) .mg-hero__title` so headings flow naturally across the overlay container. ([#1151](https://github.com/unisdr/undrr-mangrove/pull/1151))
-- **Card layout:** vertical cards now fill container height by default (`block-size: 100%`), ensuring equal height when rendered in separate column wrappers; added reference story.
-- **MegaMenu interaction:** desktop active-tab indicator now smoothly transitions with an animated `::after` underline (opacity + scaleX reveal) instead of an instant box-shadow switch.
-- **ScrollContainer:** desktop horizontal scrollbar now carries a themed interactive brand thumb and subtle translucent track across WebKit and Firefox engines.
+- **Card layout:** vertical cards now fill container height by default (`block-size: 100%`), ensuring equal height when rendered in separate column wrappers; added reference story. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
+- **MegaMenu interaction:** desktop active-tab indicator now smoothly transitions with an animated `::after` underline (opacity + scaleX reveal) instead of an instant box-shadow switch. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
+- **ScrollContainer:** desktop horizontal scrollbar now carries a themed interactive brand thumb and subtle translucent track across WebKit and Firefox engines. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
 - **Code style:** completed a formatting sweep bringing all files in `stories/` into compliance with Prettier. ([#1152](https://github.com/unisdr/undrr-mangrove/pull/1152))
 
 ### Alpha.2 experience and interaction baseline
