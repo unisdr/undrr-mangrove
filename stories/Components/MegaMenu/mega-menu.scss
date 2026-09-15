@@ -101,9 +101,6 @@
 
   // Hide desktop menu items on mobile/tablet, show on desktop
   &__item {
-    // Anchor for the active-tab underline pseudo-element below.
-    position: relative;
-
     @media screen and (min-width: $mg-breakpoint-tablet) {
       display: block;
     }
@@ -152,35 +149,38 @@
 
       @media screen and (min-width: $mg-breakpoint-tablet) {
         width: unset;
+
+        // Anchor for the active-tab underline pseudo-element.
+        // Anchored here on the link/button rather than on &__item so &__item
+        // remains position: static, allowing the .mg-mega-content desktop panel
+        // to span the full header wrapper width instead of collapsing to the tab width.
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset-inline: 0;
+          bottom: 0;
+          block-size: 3px;
+          background: rgb(var(--mg-color-interactive));
+          opacity: 0;
+          transform: scaleX(0);
+
+          @media (prefers-reduced-motion: no-preference) {
+            transition:
+              transform var(--mg-motion-duration-fast)
+                var(--mg-motion-easing-standard),
+              opacity var(--mg-motion-duration-fast)
+                var(--mg-motion-easing-standard);
+          }
+        }
       }
     }
 
     @media screen and (min-width: $mg-breakpoint-tablet) {
-      // The active-tab underline: a pseudo-element rather than the previous
-      // box-shadow so it can transition. Grows in from the centre on
-      // activation and fades/shrinks back out when another tab takes over,
-      // instead of an instant on/off flip between neighbouring tabs.
-      &::after {
-        content: '';
-        position: absolute;
-        inset-inline: 0;
-        bottom: 0;
-        block-size: 3px;
-        background: rgb(var(--mg-color-interactive));
-        opacity: 0;
-        transform: scaleX(0);
-
-        @media (prefers-reduced-motion: no-preference) {
-          transition:
-            transform var(--mg-motion-duration-fast)
-              var(--mg-motion-easing-standard),
-            opacity var(--mg-motion-duration-fast)
-              var(--mg-motion-easing-standard);
-        }
-      }
-
       &--active {
-        &::after {
+        > a::after,
+        > button::after {
           opacity: 1;
           transform: scaleX(1);
         }
