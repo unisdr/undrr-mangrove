@@ -76,7 +76,9 @@ test('the main and alternate hero images are visibly different photos', () => {
   expect(alternateImg.getAttribute('src')).not.toBe(
     mainImg.getAttribute('src')
   );
-  expect(alternateImg.getAttribute('alt')).not.toBe(mainImg.getAttribute('alt'));
+  expect(alternateImg.getAttribute('alt')).not.toBe(
+    mainImg.getAttribute('alt')
+  );
 });
 
 test('the large treatment bleeds the header image full width; compact keeps it in the reading column', () => {
@@ -100,7 +102,9 @@ test('the large treatment bleeds the header image full width; compact keeps it i
 });
 
 test('the split treatment runs the headline and image side by side, in a Hero split layout', () => {
-  const { container } = render(<ArticleStory imageProminence="split" heroImage="main" />);
+  const { container } = render(
+    <ArticleStory imageProminence="split" heroImage="main" />
+  );
   const header = container.querySelector('.mg-demo-article-header');
   expect(header.querySelector('.mg-hero--split')).toBeInTheDocument();
   expect(within(header).getByRole('heading', { level: 1 })).toBeVisible();
@@ -108,14 +112,18 @@ test('the split treatment runs the headline and image side by side, in a Hero sp
 });
 
 test('the split treatment drops the media column when there is no header image', () => {
-  const { container } = render(<ArticleStory imageProminence="split" heroImage="none" />);
+  const { container } = render(
+    <ArticleStory imageProminence="split" heroImage="none" />
+  );
   const header = container.querySelector('.mg-demo-article-header');
   expect(within(header).queryByRole('img')).not.toBeInTheDocument();
 });
 
 test('share actions live in the margin rail alongside "On this page", with or without a header image', () => {
   for (const heroImage of ['main', 'none']) {
-    const { container, unmount } = render(<ArticleStory heroImage={heroImage} />);
+    const { container, unmount } = render(
+      <ArticleStory heroImage={heroImage} />
+    );
     const header = container.querySelector('.mg-demo-article-header');
     expect(
       within(header).queryByRole('button', { name: 'Share on LinkedIn' })
@@ -150,9 +158,13 @@ test('positioning experiment: a quote, a callout and a video embed sit inside th
 
 test('the positioning experiment is not translated yet, by design', () => {
   const { container } = render(<ArticleStory locale="arabic" />);
-  expect(container.querySelector('.mg-quote-highlight')).not.toBeInTheDocument();
+  expect(
+    container.querySelector('.mg-quote-highlight')
+  ).not.toBeInTheDocument();
   expect(container.querySelector('.mg-highlight-box')).not.toBeInTheDocument();
-  expect(container.querySelector('.mg-embed-container')).not.toBeInTheDocument();
+  expect(
+    container.querySelector('.mg-embed-container')
+  ).not.toBeInTheDocument();
 });
 
 test('lists editors’ recommendations as links', () => {
@@ -217,9 +229,9 @@ test('renders the Arabic locale right-to-left with translated copy', () => {
   const { container } = render(<ArticleStory locale="arabic" />);
   expect(container.firstChild).toHaveAttribute('dir', 'rtl');
   expect(container.firstChild).toHaveAttribute('lang', 'ar');
-  expect(
-    screen.getByRole('heading', { level: 1 })
-  ).toHaveTextContent(/\p{Script=Arabic}/u);
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+    /\p{Script=Arabic}/u
+  );
   // The lede/summary is a separate field from the title, translated
   // independently — assert it directly rather than only the heading, so a
   // missing Arabic `summary` key (rendering as an empty paragraph) fails here.

@@ -164,7 +164,7 @@
     // Bold, matching how the account link's text used to read before it
     // went icon-only — the current language is the one piece of state this
     // control needs to communicate at a glance.
-    &[aria-current='true'] {
+    &[aria-current="true"] {
       font-weight: bold;
     }
   }
@@ -275,4 +275,3 @@
     }
   }
 }
-

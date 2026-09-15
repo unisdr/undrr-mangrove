@@ -208,7 +208,9 @@ const CookieConsentBanner = ({
               log("Using UNDRR script's own initialization function");
               try {
                 await window.initializeCookieBanner();
-                log('UNDRR Cookie Banner initialized via UNDRR script successfully');
+                log(
+                  'UNDRR Cookie Banner initialized via UNDRR script successfully'
+                );
               } catch (undrrError) {
                 console.error(
                   'UNDRR initializeCookieBanner failed:',

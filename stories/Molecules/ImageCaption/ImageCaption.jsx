@@ -3,7 +3,12 @@ import React from 'react';
 import { Imagecredit } from '../../Atom/Images/ImageCredit/ImageCredit';
 import { P } from '../../Atom/BaseTypography/Paragraph/Paragraph';
 
-export function Imagecaption({ label, paragraph, caption = true, credit = true }) {
+export function Imagecaption({
+  label,
+  paragraph,
+  caption = true,
+  credit = true,
+}) {
   if (!caption && !credit) return null;
 
   return (

@@ -40,7 +40,8 @@ const images = {
     src: 'https://www.undrr.org/sites/default/files/2026-09/rsz_2rsz_11rsz_nel_pic_2.jpg',
     alt: {
       english: 'Discussions during the NELs Consultation/UNDRR',
-      arabic: 'نقاشات خلال مشاورة الخسائر غير الاقتصادية/مكتب الأمم المتحدة للحد من مخاطر الكوارث',
+      arabic:
+        'نقاشات خلال مشاورة الخسائر غير الاقتصادية/مكتب الأمم المتحدة للحد من مخاطر الكوارث',
     },
     // Placeholder caption/credit for layout testing.
     caption: {
@@ -96,8 +97,8 @@ const words = {
             officia deserunt mollit anim id est laborum.
           </>,
           <>
-            Curabitur pretium tincidunt lacus, nulla gravida orci a odio.
-            Nullam varius, turpis et commodo pharetra,{' '}
+            Curabitur pretium tincidunt lacus, nulla gravida orci a odio. Nullam
+            varius, turpis et commodo pharetra,{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               est eros bibendum elit
             </a>
@@ -107,15 +108,15 @@ const words = {
             congue, eros est euismod turpis, id tincidunt sapien risus a quam.
           </>,
           <>
-            Maecenas fermentum consequat mi. Pellentesque malesuada nulla a
-            mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis,
-            neque. Aliquam faucibus, elit ut dictum aliquet,{' '}
+            Maecenas fermentum consequat mi. Pellentesque malesuada nulla a mi.
+            Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque.
+            Aliquam faucibus, elit ut dictum aliquet,{' '}
             <a href="https://www.undrr.org/taxonomy">
               felis nisl adipiscing sapien
             </a>
-            , sed malesuada diam lacus eget erat. Cras mollis scelerisque
-            nunc. Nullam arcu. Aliquam consequat. Curabitur augue lorem,
-            dapibus quis, laoreet et, pretium ac, nisi.
+            , sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc.
+            Nullam arcu. Aliquam consequat. Curabitur augue lorem, dapibus quis,
+            laoreet et, pretium ac, nisi.
           </>,
         ],
       },
@@ -123,19 +124,18 @@ const words = {
         heading: 'Non-economic losses',
         paragraphs: [
           <>
-            Aliquam eget maximus est, id dignissim quam. Proin gravida nibh
-            vel velit auctor aliquet.{' '}
+            Aliquam eget maximus est, id dignissim quam. Proin gravida nibh vel
+            velit auctor aliquet.{' '}
             <a href="https://www.undrr.org/words-into-action">
               Aenean sollicitudin, lorem quis bibendum auctor
             </a>
-            , nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis
-            sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi
+            , nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed
+            odio sit amet nibh vulputate cursus a sit amet mauris. Morbi
             accumsan ipsum velit.
           </>,
           <>
-            Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non
-            mauris vitae erat consequat auctor eu in elit. Mauris in erat
-            justo.{' '}
+            Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris
+            vitae erat consequat auctor eu in elit. Mauris in erat justo.{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               Nullam ac urna eu felis dapibus condimentum
             </a>{' '}
@@ -159,19 +159,17 @@ const words = {
         heading: 'What happens next',
         paragraphs: [
           <>
-            Sed vel lectus sed nunc consequat feugiat. Integer imperdiet
-            lectus quam, ut porttitor lectus lacinia consectetur.{' '}
+            Sed vel lectus sed nunc consequat feugiat. Integer imperdiet lectus
+            quam, ut porttitor lectus lacinia consectetur.{' '}
             <a href="https://www.undrr.org/words-into-action">
               Donec ut libero sed arcu vehicula ultricies
             </a>{' '}
             a non tortor. Vestibulum ante ipsum primis in faucibus orci luctus
-            et ultrices posuere cubilia curae. In hac habitasse platea
-            dictumst.
+            et ultrices posuere cubilia curae. In hac habitasse platea dictumst.
           </>,
           <>
-            Suspendisse potenti. Nullam eget mi in purus lobortis eleifend.
-            Sed nec ante dictum sem condimentum ullamcorper quis venenatis
-            nisi.{' '}
+            Suspendisse potenti. Nullam eget mi in purus lobortis eleifend. Sed
+            nec ante dictum sem condimentum ullamcorper quis venenatis nisi.{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               Duis aute irure dolor in reprehenderit
             </a>{' '}
@@ -181,8 +179,8 @@ const words = {
           <>
             Quisque euismod, urna eu tincidunt consectetur, nisi nisl aliquam
             enim, nec fringilla justo nisl eget arcu. Aliquam erat volutpat.
-            Class aptent taciti sociosqu ad litora torquent per conubia
-            nostra, per inceptos himenaeos.{' '}
+            Class aptent taciti sociosqu ad litora torquent per conubia nostra,
+            per inceptos himenaeos.{' '}
             <a href="https://www.undrr.org/taxonomy">
               Nam nec ligula fringilla
             </a>
@@ -194,7 +192,8 @@ const words = {
     related: 'Related news and events',
     relatedCards: [
       {
-        title: 'Santiago Network expands support for loss and damage in the Pacific',
+        title:
+          'Santiago Network expands support for loss and damage in the Pacific',
         summaryText:
           'New technical assistance helps Pacific communities document and respond to non-economic losses.',
       },
@@ -258,8 +257,8 @@ const words = {
         // نص تجريبي لاختبار طول عمود القراءة.
         paragraphs: [
           <>
-            هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد
-            هذا النص من{' '}
+            هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا
+            النص من{' '}
             <a href="https://www.undrr.org/words-into-action">
               مولد النص العربى
             </a>
@@ -267,18 +266,18 @@ const words = {
             إلى زيادة عدد الحروف التى يولدها التطبيق.
           </>,
           <>
-            إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى
-            زيادة عدد الفقرات كما تريد،{' '}
+            إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة
+            عدد الفقرات كما تريد،{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               النص لن يبدو مقسما ولا يحوي أخطاء لغوية
             </a>
             ، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص.
           </>,
           <>
-            حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية
-            لتصميم الموقع، ويستخدم{' '}
-            <a href="https://www.undrr.org/taxonomy">مولد النص العربى</a>{' '}
-            لتوليد جمل تشبه الجمل الحقيقية من حيث طول الفقرة وعدد الكلمات.
+            حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية لتصميم
+            الموقع، ويستخدم{' '}
+            <a href="https://www.undrr.org/taxonomy">مولد النص العربى</a> لتوليد
+            جمل تشبه الجمل الحقيقية من حيث طول الفقرة وعدد الكلمات.
           </>,
         ],
       },
@@ -294,8 +293,8 @@ const words = {
             لتوليد جمل تشبه الجمل الحقيقية من حيث طول الفقرة وعدد الكلمات.
           </>,
           <>
-            فيبدو التصميم مألوفاً وواضحاً للعميل بشكل أفضل من الاعتماد على
-            نصوص لا تشبه في شكلها النص الطبيعي.{' '}
+            فيبدو التصميم مألوفاً وواضحاً للعميل بشكل أفضل من الاعتماد على نصوص
+            لا تشبه في شكلها النص الطبيعي.{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               يمكن أن تجد العديد من الأدوات الحرة
             </a>{' '}
@@ -315,17 +314,17 @@ const words = {
         heading: 'ماذا يحدث بعد ذلك',
         paragraphs: [
           <>
-            يمكن أن تجد العديد من الأدوات الحرة على شبكة الإنترنت لتوليد
-            نصوص تجريبية بأطوال مختلفة، وتُستخدم هذه النصوص عادة في{' '}
+            يمكن أن تجد العديد من الأدوات الحرة على شبكة الإنترنت لتوليد نصوص
+            تجريبية بأطوال مختلفة، وتُستخدم هذه النصوص عادة في{' '}
             <a href="https://www.undrr.org/words-into-action">
               مراحل التصميم الأولى
             </a>{' '}
             قبل توفر المحتوى الفعلي.
           </>,
           <>
-            مما يتيح للمصممين والمطورين تقييم شكل الصفحة وتوزيع العناصر
-            عليها بشكل واقعي دون الانتظار حتى اكتمال كتابة المحتوى النهائي،
-            وهذا ما تتيحه{' '}
+            مما يتيح للمصممين والمطورين تقييم شكل الصفحة وتوزيع العناصر عليها
+            بشكل واقعي دون الانتظار حتى اكتمال كتابة المحتوى النهائي، وهذا ما
+            تتيحه{' '}
             <a href="https://www.undrr.org/publication/thematic-report-local-indigenous-and-traditional-knowledge-disaster-risk-reduction">
               الأدوات الحرة المتاحة على الإنترنت
             </a>
@@ -347,7 +346,8 @@ const words = {
           'مساعدة تقنية جديدة تساعد مجتمعات المحيط الهادئ على توثيق الخسائر غير الاقتصادية والاستجابة لها.',
       },
       {
-        title: 'كيف تعزز المعرفة التقليدية الحد من مخاطر الكوارث المرتكز على المجتمع',
+        title:
+          'كيف تعزز المعرفة التقليدية الحد من مخاطر الكوارث المرتكز على المجتمع',
         summaryText:
           'تُشكّل أنظمة المعرفة المحلية والأصلية طريقة تخطيط مجتمعات المحيط الهادئ لمخاطر الكوارث.',
       },
@@ -430,11 +430,7 @@ export function ArticleStory({
       <SkipLink targetId={`${prefix}-content`} label={text.skip} />
       <UndrrChrome locale={locale} id={prefix} />
       <div className="mg-demo-shell | mg-container mg-container--spacer">
-        <main
-          id={`${prefix}-content`}
-          className="mg-page-main"
-          tabIndex={-1}
-        >
+        <main id={`${prefix}-content`} className="mg-page-main" tabIndex={-1}>
           <header
             className="mg-demo-article-header"
             data-image-prominence={imageProminence}
@@ -503,7 +499,10 @@ export function ArticleStory({
             </div>
             <div className="mg-reading__article">
               {text.sections.map((section, index) => (
-                <section key={section.heading} id={`${prefix}/section/${index}`}>
+                <section
+                  key={section.heading}
+                  id={`${prefix}/section/${index}`}
+                >
                   <h2>{section.heading}</h2>
                   {section.paragraphs.map((paragraph, paragraphIndex) => (
                     // eslint-disable-next-line react/no-array-index-key
