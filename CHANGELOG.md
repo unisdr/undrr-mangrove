@@ -13,6 +13,16 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+## 2.0.0-beta.2 — 2026-09-15
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
+
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+
+- **Translated logos and PageHeader** now resolve locale-specific wordmarks through the shared asset helper, with `crop="autocrop"` kept for the default English wordmark only. ([#1148](https://github.com/unisdr/undrr-mangrove/pull/1148))
+- **Author image and icons** gained the new stacked/link/no-image layout options plus the higher-value utility and OCHA icon additions. ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147), [#1145](https://github.com/unisdr/undrr-mangrove/pull/1145))
+- **CTA, AI manifest, and docs cleanup** tightened strong-surface contrast, made the docs-base URL configurable, and trimmed stale release notes noise. ([#1142](https://github.com/unisdr/undrr-mangrove/pull/1142), [#1143](https://github.com/unisdr/undrr-mangrove/pull/1143), [#1144](https://github.com/unisdr/undrr-mangrove/pull/1144))
+
 ## 2.0.0-beta.1 — 2026-09-11
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
@@ -38,11 +48,13 @@ This section is intentionally brief. Full detail and migration steps are in the 
 This section is intentionally brief. The complete 2.0 record, migration guidance, and numbered breaking changes are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 Development releases:
+
 - [2.0.0-alpha.1](https://github.com/unisdr/undrr-mangrove/pull/1061)
 - [2.0.0-alpha.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.2)
 - [2.0.0-alpha.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.3)
 - [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4)
 - [2.0.0-beta.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) (release candidate)
+- [2.0.0-beta.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) (release candidate)
 
 ## 1.8.2 — 2026-08-27
 
