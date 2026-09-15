@@ -27,6 +27,11 @@ brand:
   primary:
     $value: '#0a6969'
     $description: PreventionWeb teal. The one primitive this brand states.
+  teal-800:
+    $value: '#0c7575'
+    $description: >-
+      Lighter partner of the brand teal for secondary button fill, meeting
+      WCAG AA (5.5:1) while providing lower visual weight than primary.
 
 color:
   $type: color
@@ -40,6 +45,8 @@ color:
   button-background--hover:
     $value: '{color.orange-900}'
     $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.teal-800}' }
+  button-secondary-background--hover: { $value: '{=brand.primary}' }
   button-outline-primary: { $value: '{=color.interactive}' }
   button-outline-primary--hover: { $value: '{color.orange-900}' }
   button-outline-secondary:

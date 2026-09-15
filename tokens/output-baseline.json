@@ -3,9 +3,9 @@
   "algorithm": "sha256",
   "files": {
     "stories/assets/scss/generated/_tokens-delta.scss": "b9770b7f5c081e2cc89aadc8cd1ff58826455ee53ea1bc206d42753276e72e3f",
-    "stories/assets/scss/generated/_tokens-irp.scss": "a1eda9af157f4a0ebe22145cd228d5fe022f6478406faab81187bb78b02d8cf6",
-    "stories/assets/scss/generated/_tokens-mcr.scss": "1b6581b29c5e3d5d51e6a758038228adefa7a942371b7783700462dbed2edd72",
-    "stories/assets/scss/generated/_tokens-preventionweb.scss": "56af25215f3a0c23264e9635d5c36d90aac16d7d8545b7ec512d2183b2a16007",
+    "stories/assets/scss/generated/_tokens-irp.scss": "d07b20beab9b335116fcd1eba45f927c9a2945cad28039f1372295065a172586",
+    "stories/assets/scss/generated/_tokens-mcr.scss": "15bda46008f081b367c451b8302f847028761da5382e8bbfa517227d4383f2d3",
+    "stories/assets/scss/generated/_tokens-preventionweb.scss": "6137060035e76a36496b1bc6fb422bf59bfddfea3b1229b4cc628dbd29786fd9",
     "stories/assets/scss/generated/_tokens-mangrove.scss": "eef6d21066c4dcec4f6dd1c59649916e05d1b84c5a88183796b1193a2b0b09fc"
   }
 }

@@ -42,6 +42,8 @@ color:
   button-background--hover:
     $value: '{=brand.purple-800}'
     $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.purple-800}' }
+  button-secondary-background--hover: { $value: '{=brand.purple}' }
   button-outline-primary: { $value: '{=color.interactive}' }
   button-outline-primary--hover: { $value: '{=brand.purple-800}' }
   button-outline-secondary:

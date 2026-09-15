@@ -23,6 +23,11 @@ brand:
   primary:
     $value: '#0f78bf'
     $description: IRP blue. The interactive colour.
+  blue-800:
+    $value: '#0d67a3'
+    $description: >-
+      Deeper partner of the IRP interactive blue for secondary button fill,
+      meeting WCAG AA (6.0:1).
   green:
     $value: '#8cc63f'
     $description: >-
@@ -41,6 +46,8 @@ color:
   button-background--hover:
     $value: '{color.orange-900}'
     $format: srgb-rgb-function
+  button-secondary-background: { $value: '{=brand.blue-800}' }
+  button-secondary-background--hover: { $value: '{=brand.primary}' }
   button-outline-primary: { $value: '{=color.interactive}' }
   button-outline-primary--hover: { $value: '{color.orange-900}' }
   button-outline-secondary:

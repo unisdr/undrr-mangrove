@@ -106,6 +106,17 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
         expect(themeBlock).toMatch(new RegExp(`--mg-tab-${token}:`));
       });
     });
+
+    test('declares brand-owned secondary button tokens inside the runtime theme', () => {
+      const themeBlock = brandCss[brand].match(
+        new RegExp(`\\.mg-theme-${brand}\\s*\\{([^}]*)\\}`)
+      )?.[1];
+
+      expect(themeBlock).toMatch(/--mg-color-button-secondary-background:/);
+      expect(themeBlock).toMatch(
+        /--mg-color-button-secondary-background--hover:/
+      );
+    });
   });
 
   test('combined style-all bundle carries every brand theme', () => {
