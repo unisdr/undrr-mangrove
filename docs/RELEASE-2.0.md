@@ -1,6 +1,6 @@
 # Mangrove 2.0 release notes
 
-Mangrove 2.0 now spans five phases: the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, and the final beta work queued for `2.0.0-beta.2`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
+Mangrove 2.0 spans the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, beta polish in `2.0.0-beta.2`, and the round-up queued for `2.0.0-beta.3`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
 
 ## Key changes for 2.0
 
@@ -12,6 +12,7 @@ If you only need the release highlights, start here:
 - **Three system-wide visual defaults changed** in every theme: cool-tinted neutral surfaces, a non-brand gold focus ring, and a two-band focus treatment (alpha.3).
 - **Arabic typography and font roles were finalized**; legacy font-family SCSS variables are removed and language-boundary rendering is fixed (alpha.4).
 - **Beta.2 adds release polish**: translated logos and locale-aware PageHeader resolution, stronger CTA contrast, the higher-value utility and OCHA icon additions, Author image layout/link/no-image variants, and AI-manifest/docs cleanup.
+- **Beta.3 queues polish and paper cuts**: sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, and Prettier formatting.
 
 > **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the alpha.1 theming migration requires no integration change. Alpha.2 intentionally refreshes component presentation and interaction while retaining existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal.
 >
@@ -53,6 +54,14 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 | `2.0.0-beta.1` | Release candidate; not yet published | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates, plus a pre-beta.1 paper-cuts pass (PageHeader `languageDisplay="links"` and icon-only nav polish, animated MegaMenu desktop flyout) |
 | `2.0.0-beta.2` | Published under `next` | Translated logos and locale-aware PageHeader resolution, CTA contrast fixes, higher-value utility and OCHA icons, Author image layout/link/no-image variants, and docs/AI manifest cleanup |
 | `2.0.0-beta.3` | Release candidate; queued for next prerelease | Sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, code formatting |
+
+## 2.0.0-beta.2 (since beta.1)
+
+The following changes landed in `v2.0.0-beta.2`:
+
+- **Translated logos and header behavior:** locale-aware wordmarks, fixed-height header rendering, and `crop="autocrop"` kept for the default English logo only. ([#1148](https://github.com/unisdr/undrr-mangrove/pull/1148))
+- **UI polish:** Author image now supports stacked layouts, links, inverse tone, and a text-only variant; CTA and icon surfaces got contrast and inventory cleanup. ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147), [#1145](https://github.com/unisdr/undrr-mangrove/pull/1145), [#1144](https://github.com/unisdr/undrr-mangrove/pull/1144), [#1142](https://github.com/unisdr/undrr-mangrove/pull/1142))
+- **Docs and manifest:** the AI manifest now points at the canonical docs base URL, and the release notes/docs were tightened to match the final beta.2 scope. ([#1143](https://github.com/unisdr/undrr-mangrove/pull/1143), [#1141](https://github.com/unisdr/undrr-mangrove/pull/1141))
 
 ## Planned for 2.0.0-beta.3 (since beta.2)
 
