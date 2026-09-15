@@ -13,6 +13,17 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+## 2.0.0-beta.3 — 2026-09-15
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
+
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+
+- **Sub-brand button tokens** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))
+- **Hero title** removed the `max-width: 12ch` constraint from `.mg-hero--immersive:not(.mg-hero--split) .mg-hero__title` so headings flow naturally across the overlay container. ([#1151](https://github.com/unisdr/undrr-mangrove/pull/1151))
+- **Card layout, MegaMenu, and ScrollContainer** gained height fill (`block-size: 100%`) for vertical cards in separate column wrappers, animated active-tab underline transitions for MegaMenu, and themed desktop scrollbars. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
+- **Code style** swept all story and doc files into compliance with Prettier. ([#1152](https://github.com/unisdr/undrr-mangrove/pull/1152))
+
 ## 2.0.0-beta.2 — 2026-09-15
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
@@ -55,6 +66,7 @@ Development releases:
 - [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4)
 - [2.0.0-beta.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) (release candidate)
 - [2.0.0-beta.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) (release candidate)
+- [2.0.0-beta.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3) (release candidate)
 
 ## 1.8.2 — 2026-08-27
 

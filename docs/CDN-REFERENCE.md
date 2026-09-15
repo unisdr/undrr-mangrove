@@ -33,7 +33,7 @@ Legacy variants keep pre-1.4 behavior (`html { font-size: 10px }`). Use when mig
 The DELTA Resilience theme has no legacy variant.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.2/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -47,7 +47,7 @@ The DELTA Resilience theme has no legacy variant.
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0-beta.2/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0-beta.3/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -95,7 +95,7 @@ React 19 removed UMD builds. Use import maps with esm.sh:
   import { createRoot } from 'react-dom/client';
 
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/mangrove/2.0.0-beta.2/components/MegaMenu.js'
+    'https://assets.undrr.org/mangrove/2.0.0-beta.3/components/MegaMenu.js'
   );
 
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
@@ -154,7 +154,7 @@ Base URL: `https://assets.undrr.org/logos/`
 Pin exact versions:
 
 ```
-https://assets.undrr.org/mangrove/2.0.0-beta.2/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style.css
 ```
 
 ### Latest (testing only)

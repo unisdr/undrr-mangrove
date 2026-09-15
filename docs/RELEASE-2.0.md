@@ -37,8 +37,8 @@ npm install @undrr/undrr-mangrove@next
 
 ```html
 <!-- CDN, versioned path (pick the base or a sub-brand stylesheet) -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.2/css/style.css">
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.2/css/style-preventionweb.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style-preventionweb.css">
 ```
 
 For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and for a sub-brand add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
@@ -53,7 +53,7 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 | `2.0.0-alpha.4` | Release candidate; not yet published | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles; centred responsive tabs and progressive mobile navigation |
 | `2.0.0-beta.1` | Release candidate; not yet published | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates, plus a pre-beta.1 paper-cuts pass (PageHeader `languageDisplay="links"` and icon-only nav polish, animated MegaMenu desktop flyout) |
 | `2.0.0-beta.2` | Published under `next` | Translated logos and locale-aware PageHeader resolution, CTA contrast fixes, higher-value utility and OCHA icons, Author image layout/link/no-image variants, and docs/AI manifest cleanup |
-| `2.0.0-beta.3` | Release candidate; queued for next prerelease | Sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, code formatting |
+| `2.0.0-beta.3` | Release candidate; not yet published | Sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, code formatting |
 
 ## 2.0.0-beta.2 (since beta.1)
 
@@ -65,7 +65,7 @@ The following changes landed in `v2.0.0-beta.2`:
 
 ## Planned for 2.0.0-beta.3 (since beta.2)
 
-The following changes landed after `v2.0.0-beta.2` and are queued for the next prerelease:
+The following changes landed after `v2.0.0-beta.2` and are expected to be called out in the next prerelease notes:
 
 - **Sub-brand button tokens:** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes in `tokens/*.yaml`. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))
 - **Hero title:** removed the `max-width: 12ch` constraint from `.mg-hero--immersive:not(.mg-hero--split) .mg-hero__title` so headings flow naturally across the overlay container. ([#1151](https://github.com/unisdr/undrr-mangrove/pull/1151))
