@@ -107,7 +107,11 @@ export const DarkTheme = {
     Story => (
       <div
         className="mg-theme-dark"
-        style={{ padding: '2rem', background: '#000', color: '#fff' }}
+        style={{
+          padding: '2rem',
+          backgroundColor: 'rgb(var(--mg-color-background))',
+          color: 'rgb(var(--mg-color-neutral-900))',
+        }}
       >
         <Story />
       </div>

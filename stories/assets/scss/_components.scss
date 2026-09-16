@@ -45,7 +45,6 @@
 @import "../../Components/Forms/Checkbox/checkbox";
 @import "../../Components/Forms/Radio/radio";
 @import "../../Components/Forms/Select/select";
-@import "../../Components/Forms/Range/range";
 @import "../../Components/Breadcrumbs/breadcrumbs";
 
 // Deprecated (February 2026) — removal planned by end of 2026. Use Pager instead.
@@ -56,7 +55,6 @@
 @import "../../Components/Buttons/Chips/chips";
 @import "../../Components/Buttons/CtaButton/cta-button";
 @import "../../Components/Buttons/ShareButtons/share-buttons";
-@import "../../Components/Buttons/CopyButton/copy-button";
 @import "../../Components/MegaMenu/mega-menu";
 @import "../../Patterns/HubHeader/hub-header";
 @import "../../Utilities/PagePatterns/page-patterns";
@@ -90,6 +88,4 @@
 @import "../../Utilities/FullWidth/full-width";
 @import "../../Utilities/ShowMore/show-more";
 @import "../../Utilities/SkipLink/skip-link";
-@import "../../Components/Navigation/Drawer/drawer";
-@import "../../Components/Navigation/Tree/tree";
 @import "../../Components/DataViz/Legend/legend";
