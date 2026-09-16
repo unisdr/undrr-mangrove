@@ -1,0 +1,114 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as NoticeStories from './Notice.stories';
+
+<Meta of={NoticeStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Notice / Alert Banner
+
+A universal container for in-page informational notices, contextual warnings, error alerts, and emergency broadcast messages.
+
+Provides consistent token-driven styling across all severity states (`info`, `warning`, `negative`, `positive`), with support for compact card slots, prominent sitewide emergency banners, and canvas overlays.
+
+## Integration
+
+### 1. Pure HTML / CSS
+
+```html
+<div class="mg-notice mg-notice--warning" role="status" aria-live="polite">
+  <div class="mg-notice__header">
+    <span
+      class="mg-icon mg-icon-exclamation-triangle mg-notice__icon"
+      aria-hidden="true"
+    ></span>
+    <h3 class="mg-notice__title">Data feed delayed</h3>
+  </div>
+  <div class="mg-notice__description">
+    <p>Live hazard updates are operating with a 15-minute delay.</p>
+  </div>
+  <div class="mg-notice__actions">
+    <button type="button" class="mg-button mg-button-primary">
+      Refresh data
+    </button>
+  </div>
+</div>
+```
+
+### 2. Emergency Broadcast Banner (`.mg-notice--prominent`)
+
+```html
+<div
+  class="mg-notice mg-notice--emergency mg-notice--prominent"
+  role="alert"
+  aria-live="assertive"
+>
+  <div class="mg-notice__header">
+    <span
+      class="mg-icon mg-icon-close mg-notice__icon"
+      aria-hidden="true"
+    ></span>
+    <h3 class="mg-notice__title">Severe Weather Advisory</h3>
+  </div>
+  <div class="mg-notice__description">
+    <p>High winds and localized flooding expected in coastal regions.</p>
+  </div>
+</div>
+```
+
+### 3. React Component
+
+```jsx
+import { Notice } from '@undrr/undrr-mangrove';
+
+function MyPage() {
+  return (
+    <Notice
+      variant="warning"
+      title="Unsaved changes"
+      description="You have modified draft indicators that have not yet been published."
+      isDismissible
+      onDismiss={() => console.log('dismissed')}
+      actions={
+        <button type="button" className="mg-button mg-button-primary">
+          Save now
+        </button>
+      }
+    />
+  );
+}
+```
+
+## Storybook Variations
+
+### Info Notice
+
+<Canvas of={NoticeStories.InfoNotice} />
+
+### Warning Banner
+
+<Canvas of={NoticeStories.WarningBanner} />
+
+### Negative Alert
+
+<Canvas of={NoticeStories.NegativeAlert} />
+
+### Emergency Broadcast
+
+<Canvas of={NoticeStories.EmergencyBroadcast} />
+
+### Positive Confirmation
+
+<Canvas of={NoticeStories.PositiveConfirmation} />
+
+### Compact Mode
+
+<Canvas of={NoticeStories.CompactMode} />
+
+### Dismissible
+
+<Canvas of={NoticeStories.Dismissible} />
+
+## Component Props
+
+<Controls />

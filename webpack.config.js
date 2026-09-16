@@ -136,6 +136,7 @@ export default [
       Range: './stories/Components/Forms/Range/Range.jsx',
       Legend: './stories/Components/DataViz/Legend/Legend.jsx',
       Tree: './stories/Components/Navigation/Tree/Tree.jsx',
+      Notice: './stories/Components/Notice/Notice.jsx',
     },
     externals: {
       react: 'react',

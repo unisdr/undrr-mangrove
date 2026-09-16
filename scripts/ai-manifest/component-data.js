@@ -873,6 +873,29 @@ npm run build</code></pre>
     ],
   },
 
+  // --- Notice / Alert Banner (auto-rendered) ---
+  'components-notice': {
+    description:
+      'Universal in-page notice and alert banner container for informational callouts, contextual warnings, error alerts, and emergency broadcast messages.',
+    cssClasses: [
+      'mg-notice',
+      'mg-notice--info',
+      'mg-notice--warning',
+      'mg-notice--negative',
+      'mg-notice--emergency',
+      'mg-notice--positive',
+      'mg-notice--compact',
+      'mg-notice--prominent',
+      'mg-notice--overlay',
+      'mg-notice__header',
+      'mg-notice__icon',
+      'mg-notice__title',
+      'mg-notice__description',
+      'mg-notice__actions',
+      'mg-notice__dismiss',
+    ],
+  },
+
   // --- Footer (auto-rendered + embed) ---
   'components-footer': {
     description:

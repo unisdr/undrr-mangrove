@@ -730,6 +730,8 @@ describe('every component names the role it is meant to', () => {
     ['.mg-legend__title', 'ui'],
     ['.mg-legend__value', 'ui'],
     ['.mg-mega-topbar__item-link', 'ui'],
+    ['.mg-notice', 'text'],
+    ['.mg-notice__title', 'ui'],
     ['.mg-on-this-page-nav__cta', 'ui'],
     ['.mg-on-this-page-nav__link', 'ui'],
     ['.mg-preview-access__body', 'text'],

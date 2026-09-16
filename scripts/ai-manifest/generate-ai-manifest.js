@@ -233,6 +233,7 @@ const COMPONENT_IDS = {
   Drawer: 'components-navigation-drawer',
   Tree: 'components-navigation-tree',
   ServiceNotice: 'components-servicenotice',
+  Notice: 'components-notice',
   Range: 'components-forms-range',
   Legend: 'components-dataviz-legend',
 };
@@ -354,6 +355,12 @@ function buildSampleProps(React) {
         'Showing cached data from 10 minutes ago. Live updates will resume automatically.',
       onRetry: () => {},
       statusUrl: 'https://status.example.org',
+    },
+    Notice: {
+      variant: 'warning',
+      title: 'Scheduled maintenance advisory',
+      description:
+        'Platform services will undergo brief routine updates tonight.',
     },
     VerticalCard: {
       data: [

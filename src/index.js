@@ -46,6 +46,10 @@ export {
   DEFAULT_SERVICE_NOTICE_LABELS,
   default as ServiceNoticeDefault,
 } from '../stories/Components/ServiceNotice/ServiceNotice';
+export {
+  Notice,
+  default as NoticeDefault,
+} from '../stories/Components/Notice/Notice';
 export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
 
 // Import global styles

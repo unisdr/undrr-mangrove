@@ -22,7 +22,7 @@ For placement control, add this div where messages should appear:
 <div class="mg-critical-messaging"></div>
 ```
 
-Default: injected at top of `<body>`.
+Default: injected at top of `<body>`. Uses the prominent `.mg-notice.mg-notice--prominent` styling with severity variants (`info`, `warning`, `emergency`).
 
 ## Features
 
