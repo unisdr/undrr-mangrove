@@ -1,3 +1,10 @@
+/**
+ * @file
+ * Drawer component stylesheet.
+ * Off-canvas drawer and floating panel component with backdrop overlay and positioning.
+ * @see https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Drawer/Drawer.mdx
+ */
+
 .mg-drawer {
   position: fixed;
   z-index: var(--mg-z-index-drawer, 2000);

@@ -84,6 +84,12 @@ export const REQUIRES_REACT = {
     'FormErrorSummary translation label sets for ES, FR, JA, ZH, AR, RU. Pass title prop.',
   'components-tab-translations':
     'Tab translation label sets for ES, FR, JA, ZH, AR, RU. Pass filterPlaceholder prop.',
+  'components-buttons-copybutton':
+    'CopyButton provides a one-click copy button with micro-feedback tooltip and aria-live announcements. Requires React for clipboard interaction and feedback state.',
+  'components-navigation-drawer':
+    'Drawer provides an off-canvas drawer and floating panel with backdrop overlay and keyboard navigation. Requires React for open/close state and keyboard events.',
+  'components-navigation-tree':
+    'Tree provides an accessible hierarchical tree navigation with expand/collapse toggles and optional links. Requires React for expand/collapse state.',
 };
 
 // ---------------------------------------------------------------------------
@@ -202,6 +208,15 @@ export default {
   'components-buttons-chips': {
     description:
       'Compact pill-shaped controls for categories and active filters. The default variant is a link; the dismissible variant is a button with a visible X and a localisable accessible name.',
+  },
+  'components-buttons-copybutton': {
+    description:
+      'One-click copy button with micro-feedback tooltip and aria-live announcements.',
+    cssClasses: [
+      'mg-copy-button',
+      'mg-copy-button__feedback',
+      'mg-copy-button__feedback--visible',
+    ],
   },
 
   // --- Cards ---
@@ -946,6 +961,11 @@ npm run build</code></pre>
     description:
       'Error summary box listing all form validation errors with anchor links to each field.',
   },
+  'components-forms-range': {
+    description:
+      'Range slider component supporting continuous and stepped intervals with datalist tick marks.',
+    cssClasses: ['mg-range', 'mg-range__ticks'],
+  },
 
   // --- CTA ---
   'components-cta': {
@@ -1498,10 +1518,35 @@ npm run build</code></pre>
       'Interactive newsletter promotion pattern demonstrating email input validation, topic preferences checkboxes, submission states, and confirmation messaging.',
   },
 
+  // --- Data Viz (v1 prototypes) ---
+  'components-dataviz-legend': {
+    description:
+      'Map and chart data visualization legend supporting continuous ramps, stepped intervals, and categorical swatches.',
+    cssClasses: [
+      'mg-legend',
+      'mg-legend__title',
+      'mg-legend__label',
+      'mg-legend__value',
+      'mg-legend__tick-label',
+      'mg-legend__bar-wrapper',
+      'mg-legend__bar',
+      'mg-legend__bar--stepped',
+      'mg-legend__step',
+      'mg-legend__ticks',
+      'mg-legend__tick',
+      'mg-legend__list',
+      'mg-legend__item',
+      'mg-legend__swatch',
+      'mg-legend--vertical',
+      'mg-legend--inline',
+      'mg-legend--grid',
+    ],
+  },
+
   // --- Navigation (v1 prototypes) ---
   'components-navigation-drawer': {
     description:
-      'Off-canvas drawer and floating panel component. Supports start/end/bottom positioning, backdrop overlay, and Escape key to close. Can be hydrated on vanilla HTML pages.',
+      'Off-canvas drawer and floating panel component. Supports start/end/bottom positioning, backdrop overlay, and Escape key to close.',
     cssClasses: [
       'mg-drawer',
       'mg-drawer--start',
@@ -1514,13 +1559,19 @@ npm run build</code></pre>
       'mg-drawer__close',
       'mg-drawer__body',
       'mg-drawer__footer',
+      'mg-floating-panel',
+      'mg-floating-panel__header',
+      'mg-floating-panel__title',
+      'mg-floating-panel__close',
+      'mg-floating-panel__body',
     ],
   },
   'components-navigation-tree': {
     description:
-      'Accessible tree/nested hierarchy view. Parent items can be links with separate toggle behavior. Supports expand/collapse with arrow icon and optional selection state.',
+      'Accessible tree and nested hierarchy view. Parent items can be links with separate toggle behavior. Supports expand/collapse with arrow icon and optional selection state.',
     cssClasses: [
       'mg-tree',
+      'mg-tree__group',
       'mg-tree--guides',
       'mg-tree__item',
       'mg-tree__item--selected',
@@ -1529,7 +1580,6 @@ npm run build</code></pre>
       'mg-tree__icon',
       'is-expanded',
       'mg-tree__label',
-      'mg-tree__group',
     ],
   },
 };

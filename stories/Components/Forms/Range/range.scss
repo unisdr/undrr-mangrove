@@ -1,3 +1,10 @@
+/**
+ * @file
+ * Range component stylesheet.
+ * Range slider component supporting continuous and stepped intervals with datalist tick marks.
+ * @see https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/Range/Range.mdx
+ */
+
 @use "sass:math";
 
 .mg-range {
@@ -16,7 +23,7 @@
     height: 1.5rem;
     width: 1.5rem;
     margin-top: calc(-0.75rem + 2px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
     transition:
       background-color 0.2s,
       transform 0.1s;

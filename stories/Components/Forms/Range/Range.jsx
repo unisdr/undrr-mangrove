@@ -5,12 +5,12 @@ import classNames from 'classnames';
 export const Range = ({
   id,
   name,
-  min,
-  max,
+  min = 0,
+  max = 100,
   step,
   value,
   defaultValue,
-  disabled,
+  disabled = false,
   onChange,
   className,
   ticks,
@@ -79,10 +79,4 @@ Range.propTypes = {
       label: PropTypes.string,
     })
   ),
-};
-
-Range.defaultProps = {
-  min: 0,
-  max: 100,
-  disabled: false,
 };

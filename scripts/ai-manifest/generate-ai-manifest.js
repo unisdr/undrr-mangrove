@@ -229,6 +229,10 @@ const COMPONENT_IDS = {
   Pager: 'components-pager',
   ShareButtons: 'components-buttons-sharebuttons',
   UserFeedback: 'components-user-feedback',
+  Drawer: 'components-navigation-drawer',
+  Tree: 'components-navigation-tree',
+  Range: 'components-forms-range',
+  Legend: 'components-dataviz-legend',
 };
 
 function buildSampleProps(React) {
@@ -307,6 +311,39 @@ function buildSampleProps(React) {
         { id: 'email', message: 'Enter a valid email address' },
         { id: 'org', message: 'Organization name is required' },
       ],
+    },
+    Drawer: {
+      isOpen: true,
+      onClose: () => {},
+      title: 'Drawer title',
+      position: 'start',
+      children: React.createElement('p', null, 'Drawer content'),
+    },
+    Tree: {
+      children: React.createElement(
+        'li',
+        { className: 'mg-tree__item', role: 'treeitem' },
+        React.createElement(
+          'div',
+          { className: 'mg-tree__label-container' },
+          React.createElement('span', { className: 'mg-tree__label' }, 'Item 1')
+        )
+      ),
+    },
+    Range: {
+      id: 'sample-range',
+      min: 0,
+      max: 100,
+      defaultValue: 50,
+    },
+    Legend: {
+      type: 'continuous',
+      ticks: [
+        { position: '0%', label: 'Low' },
+        { position: '50%', label: 'Medium' },
+        { position: '100%', label: 'High' },
+      ],
+      title: 'Hazard level',
     },
     VerticalCard: {
       data: [

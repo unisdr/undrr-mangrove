@@ -128,6 +128,10 @@ export default [
       Loader: './stories/Utilities/Loader/Loader.jsx',
       ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
       SkipLink: './stories/Utilities/SkipLink/SkipLink.entry.js',
+      Range: './stories/Components/Forms/Range/Range.jsx',
+      Legend: './stories/Components/DataViz/Legend/Legend.jsx',
+      Drawer: './stories/Components/Navigation/Drawer/Drawer.jsx',
+      Tree: './stories/Components/Navigation/Tree/Tree.jsx',
     },
     externals: {
       react: 'react',
