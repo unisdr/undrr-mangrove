@@ -1,16 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { DEFAULT_COPY_BUTTON_LABELS } from './_labels';
+
+export { DEFAULT_COPY_BUTTON_LABELS };
 
 export const CopyButton = ({
   textToCopy = '',
   className,
-  ariaLabel = 'Copy to clipboard',
-  copiedLabel = 'Copied to clipboard.',
-  tooltipLabel = 'Copied!',
+  labels = {},
+  ariaLabel: customAriaLabel,
+  copiedLabel: customCopiedLabel,
+  tooltipLabel: customTooltipLabel,
   variant = 'outline',
   size,
 }) => {
+  const ariaLabel =
+    customAriaLabel || labels.ariaLabel || DEFAULT_COPY_BUTTON_LABELS.ariaLabel;
+  const copiedLabel =
+    customCopiedLabel ||
+    labels.copiedLabel ||
+    DEFAULT_COPY_BUTTON_LABELS.copiedLabel;
+  const tooltipLabel =
+    customTooltipLabel ||
+    labels.tooltipLabel ||
+    DEFAULT_COPY_BUTTON_LABELS.tooltipLabel;
+
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef(null);
 
@@ -95,6 +110,11 @@ export const CopyButton = ({
 CopyButton.propTypes = {
   textToCopy: PropTypes.string,
   className: PropTypes.string,
+  labels: PropTypes.shape({
+    ariaLabel: PropTypes.string,
+    copiedLabel: PropTypes.string,
+    tooltipLabel: PropTypes.string,
+  }),
   ariaLabel: PropTypes.string,
   copiedLabel: PropTypes.string,
   tooltipLabel: PropTypes.string,

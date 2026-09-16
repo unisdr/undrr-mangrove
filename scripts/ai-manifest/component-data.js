@@ -205,12 +205,22 @@ export default {
   },
   'components-buttons-copybutton': {
     description:
-      'One-click copy button with micro-feedback tooltip and aria-live announcements.',
+      'One-click copy button with micro-feedback tooltip and aria-live announcements. Supports zero-dependency vanilla JS (dist/js/copy-button.min.js), Layer 2 React hydration via createHydrator, and React JSX.',
     cssClasses: [
       'mg-copy-button',
       'mg-copy-button--copied',
       'mg-copy-button__feedback',
       'mg-copy-button__feedback--visible',
+    ],
+    examples: [
+      {
+        name: 'Default copy button',
+        html: `<button type="button" class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button" data-mg-copy-button data-text-to-copy="https://preventionweb.net" aria-label="Copy link to clipboard">
+  <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
+  <span class="mg-copy-button__feedback" role="status" aria-hidden="true">Copied!</span>
+  <span class="mg-u-sr-only" aria-live="polite"></span>
+</button>`,
+      },
     ],
   },
 
@@ -1538,10 +1548,10 @@ npm run build</code></pre>
     ],
   },
 
-  // --- Navigation (v1 prototypes) ---
+  // --- Navigation ---
   'components-navigation-drawer': {
     description:
-      'Off-canvas drawer and floating panel component. Supports start/end/bottom positioning, backdrop overlay, and Escape key to close.',
+      'Off-canvas drawer and floating panel component. Supports start/end/bottom positioning, backdrop overlay, Escape key dismissal, and Layer 2 progressive hydration.',
     cssClasses: [
       'mg-drawer',
       'mg-drawer--start',
@@ -1560,10 +1570,39 @@ npm run build</code></pre>
       'mg-floating-panel__close',
       'mg-floating-panel__body',
     ],
+    examples: [
+      {
+        name: 'Drawer (off-canvas)',
+        html: `<div class="mg-drawer mg-drawer--start is-open" data-mg-drawer role="complementary" aria-hidden="false">
+  <div class="mg-drawer__header">
+    <h2 class="mg-drawer__title">Filter options</h2>
+    <button type="button" class="mg-drawer__close" aria-label="Close">&times;</button>
+  </div>
+  <div class="mg-drawer__body">
+    <p>Drawer body content.</p>
+  </div>
+  <div class="mg-drawer__footer">
+    <button type="button" class="mg-button mg-button-primary">Apply</button>
+  </div>
+</div>`,
+      },
+      {
+        name: 'Floating panel',
+        html: `<div class="mg-floating-panel is-open" data-mg-drawer data-is-floating-panel="true" role="dialog" aria-hidden="false">
+  <div class="mg-floating-panel__header">
+    <h2 class="mg-floating-panel__title">Quick settings</h2>
+    <button type="button" class="mg-floating-panel__close" aria-label="Close">&times;</button>
+  </div>
+  <div class="mg-floating-panel__body">
+    <p>Floating panel content.</p>
+  </div>
+</div>`,
+      },
+    ],
   },
   'components-navigation-tree': {
     description:
-      'Accessible tree and nested hierarchy view. Parent items can be links with separate toggle behavior. Supports expand/collapse with arrow icon and optional selection state.',
+      'Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, and separate toggle buttons for linked parent sections.',
     cssClasses: [
       'mg-tree',
       'mg-tree__group',
@@ -1575,6 +1614,38 @@ npm run build</code></pre>
       'mg-tree__icon',
       'is-expanded',
       'mg-tree__label',
+    ],
+    examples: [
+      {
+        name: 'Tree navigation with guides',
+        html: `<ul class="mg-tree mg-tree--guides" role="tree">
+  <li class="mg-tree__item" role="treeitem" aria-expanded="true" tabindex="0">
+    <div class="mg-tree__label-container">
+      <button type="button" class="mg-tree__toggle" tabindex="-1" aria-label="Collapse" aria-expanded="true">
+        <span class="mg-tree__icon mg-icon mg-icon-right is-expanded" aria-hidden="true"></span>
+      </button>
+      <span class="mg-tree__label">Disaster Risk Reduction</span>
+    </div>
+    <ul class="mg-tree__group" role="group">
+      <li class="mg-tree__item mg-tree__item--selected" role="treeitem" aria-selected="true" tabindex="-1">
+        <div class="mg-tree__label-container">
+          <span class="mg-tree__label">Early Warning Systems</span>
+        </div>
+      </li>
+      <li class="mg-tree__item" role="treeitem" tabindex="-1">
+        <div class="mg-tree__label-container">
+          <span class="mg-tree__label">Climate Adaptation</span>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li class="mg-tree__item" role="treeitem" tabindex="-1">
+    <div class="mg-tree__label-container">
+      <span class="mg-tree__label">Global Frameworks</span>
+    </div>
+  </li>
+</ul>`,
+      },
     ],
   },
 };

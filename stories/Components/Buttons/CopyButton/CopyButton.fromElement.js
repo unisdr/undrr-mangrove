@@ -16,12 +16,39 @@
  */
 export default function copyButtonFromElement(container) {
   const { dataset } = container;
+
+  let parsedLabels = {};
+  if (dataset.labels) {
+    try {
+      parsedLabels = JSON.parse(dataset.labels);
+    } catch {
+      parsedLabels = {};
+    }
+  }
+
+  const ariaLabel =
+    dataset.ariaLabel ||
+    dataset.label ||
+    dataset.copyLabel ||
+    parsedLabels.ariaLabel ||
+    undefined;
+  const copiedLabel =
+    dataset.copiedLabel ||
+    dataset.ariaLiveText ||
+    parsedLabels.copiedLabel ||
+    undefined;
+  const tooltipLabel =
+    dataset.tooltipLabel ||
+    dataset.feedbackText ||
+    parsedLabels.tooltipLabel ||
+    undefined;
+
   return {
     textToCopy: dataset.textToCopy || dataset.text || dataset.copyText || '',
-    ariaLabel:
-      dataset.ariaLabel || dataset.label || dataset.copyLabel || undefined,
-    copiedLabel: dataset.copiedLabel || dataset.ariaLiveText || undefined,
-    tooltipLabel: dataset.tooltipLabel || dataset.feedbackText || undefined,
+    ariaLabel,
+    copiedLabel,
+    tooltipLabel,
+    labels: Object.keys(parsedLabels).length > 0 ? parsedLabels : undefined,
     variant: dataset.variant || 'outline',
     size: dataset.size || undefined,
     className: dataset.className || undefined,

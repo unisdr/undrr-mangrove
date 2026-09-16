@@ -24,7 +24,10 @@ export { default as Pager } from '../stories/Components/Pager/Pager';
 export { default as FormAction } from '../stories/Components/Forms/FormAction/FormAction';
 export { default as TextCta } from '../stories/Components/TextCta/TextCta';
 export { default as Snackbar } from '../stories/Components/Snackbar/Snackbar';
-export { default as CopyButton } from '../stories/Components/Buttons/CopyButton/CopyButton';
+export {
+  default as CopyButton,
+  DEFAULT_COPY_BUTTON_LABELS,
+} from '../stories/Components/Buttons/CopyButton/CopyButton';
 export { Drawer, default as DrawerDefault } from '../stories/Components/Navigation/Drawer/Drawer';
 export {
   Tree,

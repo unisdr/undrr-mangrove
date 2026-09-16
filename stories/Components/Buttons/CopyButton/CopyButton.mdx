@@ -20,9 +20,13 @@ Typically used alongside code blocks, citation blocks, or shareable URLs.
 
 <Canvas of={CopyButtonStories.InContext} />
 
-## Drupal / Server-rendered HTML (Layer 2 Hydration)
+## Integration options
 
-In Drupal Twig templates or server-rendered pages, output a button with `data-mg-copy-button` attributes:
+Mangrove offers three integration paths depending on your project setup:
+
+### Option 1: Standalone Vanilla JS (Zero React Dependency)
+
+For Drupal Twig templates, static HTML pages, or server-rendered layouts where React is not used, load the standalone script `@undrr/undrr-mangrove/js/copy-button.js` (or `dist/js/copy-button.min.js`). It automatically initializes all `[data-mg-copy-button]` elements on the page.
 
 ```html
 <button
@@ -39,7 +43,28 @@ In Drupal Twig templates or server-rendered pages, output a button with `data-mg
   </span>
   <span class="mg-u-sr-only" aria-live="polite"></span>
 </button>
+
+<!-- Standalone vanilla UMD script -->
+<script src="dist/js/copy-button.min.js"></script>
 ```
+
+In Drupal behaviors or SPAs, you can manually re-initialize dynamically inserted content:
+
+```js
+import { mgCopyButton } from '@undrr/undrr-mangrove/js/copy-button.js';
+
+Drupal.behaviors.copyButton = {
+  attach(context) {
+    mgCopyButton(context);
+  },
+};
+```
+
+<Canvas of={CopyButtonStories.VanillaHtmlLiveIntegration} />
+
+### Option 2: Layer 2 React Hydration (`createHydrator`)
+
+If your Drupal site uses Mangrove's shared React hydration runtime with import maps:
 
 ```js
 import createHydrator from '@undrr/undrr-mangrove/hydrate';
@@ -53,6 +78,22 @@ createHydrator({
   fromElement,
 });
 ```
+
+### Option 3: React JSX Component
+
+In React applications:
+
+```jsx
+import { CopyButton } from '@undrr/undrr-mangrove';
+
+<CopyButton
+  textToCopy="https://preventionweb.net/drr-glossary"
+  ariaLabel="Copy glossary link"
+  variant="outline"
+/>;
+```
+
+## Data attributes reference
 
 | Attribute            | Default                  | Description                                                   |
 | -------------------- | ------------------------ | ------------------------------------------------------------- |
@@ -69,5 +110,5 @@ createHydrator({
 
 ## Changelog
 
-- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Added `CopyButton.fromElement.js` and `CopyButton.hydrate.js` for vanilla HTML and Drupal progressive hydration.
+- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Added standalone zero-dependency vanilla JS script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`).
 - **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.

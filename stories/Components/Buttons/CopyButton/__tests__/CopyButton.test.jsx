@@ -77,6 +77,25 @@ describe('CopyButton', () => {
     }
   });
 
+  it('supports translated labels object prop', async () => {
+    render(
+      <CopyButton
+        textToCopy="https://undrr.org"
+        labels={{
+          ariaLabel: 'نسخ إلى الحافظة',
+          copiedLabel: 'تم النسخ إلى الحافظة.',
+          tooltipLabel: 'تم النسخ!',
+        }}
+      />
+    );
+
+    const button = screen.getByRole('button', { name: 'نسخ إلى الحافظة' });
+    expect(button).toBeInTheDocument();
+
+    fireEvent.click(button);
+    expect(screen.getByText('تم النسخ!')).toBeInTheDocument();
+  });
+
   it('has no automated accessibility violations', async () => {
     const { container } = render(
       <CopyButton textToCopy="https://undrr.org" ariaLabel="Copy link" />

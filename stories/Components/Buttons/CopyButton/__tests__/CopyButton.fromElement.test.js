@@ -61,4 +61,20 @@ describe('copyButtonFromElement', () => {
     expect(props.tooltipLabel).toBe('Copied!');
     expect(props.copiedLabel).toBe('Text copied');
   });
+
+  it('parses data-labels JSON attribute', () => {
+    const el = makeContainer({
+      text: 'Sample',
+      labels: JSON.stringify({
+        ariaLabel: 'Copiar al portapapeles',
+        tooltipLabel: '¡Copiado!',
+        copiedLabel: 'Copiado al portapapeles.',
+      }),
+    });
+    const props = copyButtonFromElement(el);
+
+    expect(props.ariaLabel).toBe('Copiar al portapapeles');
+    expect(props.tooltipLabel).toBe('¡Copiado!');
+    expect(props.copiedLabel).toBe('Copiado al portapapeles.');
+  });
 });
