@@ -21,7 +21,7 @@ Mangrove is UNDRR's component library for accessible, reusable UI across React a
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style.css"
+  href="https://assets.undrr.org/mangrove/2.0.0-rc.1/css/style.css"
 />
 ```
 

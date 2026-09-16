@@ -1,6 +1,6 @@
 # Mangrove 2.0 release notes
 
-Mangrove 2.0 spans the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, beta polish in `2.0.0-beta.2`, and the round-up queued for `2.0.0-beta.3`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
+Mangrove 2.0 spans the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, beta polish in `2.0.0-beta.2`, the round-up in `2.0.0-beta.3`, and the component, token and discoverability additions in the first release candidate, `2.0.0-rc.1`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
 
 ## Key changes for 2.0
 
@@ -13,6 +13,7 @@ If you only need the release highlights, start here:
 - **Arabic typography and font roles were finalized**; legacy font-family SCSS variables are removed and language-boundary rendering is fixed (alpha.4).
 - **Beta.2 adds release polish**: translated logos and locale-aware PageHeader resolution, stronger CTA contrast, the higher-value utility and OCHA icon additions, Author image layout/link/no-image variants, and AI-manifest/docs cleanup.
 - **Beta.3 queues polish and paper cuts**: sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, and Prettier formatting.
+- **RC.1 adds components, a public type scale and discoverability**: the Notice foundation with ServiceNotice (Snackbar now renders through it), `--mg-font-size-*` custom properties with a check for undefined tokens, prototype Drawer, Tree, Legend, Range and CopyButton, machine-readable `releases.json` and `tokens.json`, and regrouped Storybook navigation.
 
 > **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the alpha.1 theming migration requires no integration change. Alpha.2 intentionally refreshes component presentation and interaction while retaining existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal.
 >
@@ -28,7 +29,7 @@ If you only need the release highlights, start here:
 
 ## Try the prerelease
 
-2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-beta.2` is the latest documented candidate.
+2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-rc.1` is the latest documented candidate.
 
 ```bash
 # npm (prerelease tag — does not become your default version)
@@ -37,23 +38,24 @@ npm install @undrr/undrr-mangrove@next
 
 ```html
 <!-- CDN, versioned path (pick the base or a sub-brand stylesheet) -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style.css">
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-beta.3/css/style-preventionweb.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.1/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.1/css/style-preventionweb.css">
 ```
 
 For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and for a sub-brand add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
 
-## Alpha roadmap
+## Prerelease roadmap
 
 | Prerelease | Status | Focus |
 |---|---|---|
 | `2.0.0-alpha.1` | Published under `next` | CSS custom-property theming, 16px root and sub-brand runtime selectors |
 | `2.0.0-alpha.2` | Published under `next` | Experience principles, component surfaces, interaction states, responsive behaviour and multilingual resilience |
 | `2.0.0-alpha.3` | Published under `next` | Design token pipeline, status and empty-state components, data-visualisation palette and a perceptual colour-contrast methodology |
-| `2.0.0-alpha.4` | Release candidate; not yet published | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles; centred responsive tabs and progressive mobile navigation |
-| `2.0.0-beta.1` | Release candidate; not yet published | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates, plus a pre-beta.1 paper-cuts pass (PageHeader `languageDisplay="links"` and icon-only nav polish, animated MegaMenu desktop flyout) |
-| `2.0.0-beta.2` | Published under `next` | Translated logos and locale-aware PageHeader resolution, CTA contrast fixes, higher-value utility and OCHA icons, Author image layout/link/no-image variants, and docs/AI manifest cleanup |
-| `2.0.0-beta.3` | Release candidate; not yet published | Sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, code formatting |
+| `2.0.0-alpha.4` | Published under `next` | Arabic typography settled on Noto Kufi Arabic and Noto Sans Arabic, replacing Dubai; Arabic overrides anchored to language boundaries; font families rebuilt as five script-mapped roles; centred responsive tabs and progressive mobile navigation |
+| `2.0.0-beta.1` | Published under `next` | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates, plus a pre-beta.1 paper-cuts pass (PageHeader `languageDisplay="links"` and icon-only nav polish, animated MegaMenu desktop flyout) |
+| `2.0.0-beta.2` | Tagged; not published to npm | Translated logos and locale-aware PageHeader resolution, CTA contrast fixes, higher-value utility and OCHA icons, Author image layout/link/no-image variants, and docs/AI manifest cleanup |
+| `2.0.0-beta.3` | Published under `next` | Sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, code formatting |
+| `2.0.0-rc.1` | Release candidate; not yet published | Notice and ServiceNotice (Snackbar rendered through Notice), public `--mg-font-size-*` type scale, prototype Drawer, Tree, Legend, Range and CopyButton, data table/badge/accordion/switch/icon-button styles, `releases.json` and `tokens.json`, Storybook regrouping |
 
 ## 2.0.0-beta.2 (since beta.1)
 
@@ -63,9 +65,9 @@ The following changes landed in `v2.0.0-beta.2`:
 - **UI polish:** Author image now supports stacked layouts, links, inverse tone, and a text-only variant; CTA and icon surfaces got contrast and inventory cleanup. ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147), [#1145](https://github.com/unisdr/undrr-mangrove/pull/1145), [#1144](https://github.com/unisdr/undrr-mangrove/pull/1144), [#1142](https://github.com/unisdr/undrr-mangrove/pull/1142))
 - **Docs and manifest:** the AI manifest now points at the canonical docs base URL, and the release notes/docs were tightened to match the final beta.2 scope. ([#1143](https://github.com/unisdr/undrr-mangrove/pull/1143), [#1141](https://github.com/unisdr/undrr-mangrove/pull/1141))
 
-## Planned for 2.0.0-beta.3 (since beta.2)
+## 2.0.0-beta.3 (since beta.2)
 
-The following changes landed after `v2.0.0-beta.2` and are expected to be called out in the next prerelease notes:
+The following changes landed in `v2.0.0-beta.3`:
 
 - **Sub-brand button tokens:** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes in `tokens/*.yaml`. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))
 - **Hero title:** removed the `max-width: 12ch` constraint from `.mg-hero--immersive:not(.mg-hero--split) .mg-hero__title` so headings flow naturally across the overlay container. ([#1151](https://github.com/unisdr/undrr-mangrove/pull/1151))
@@ -73,6 +75,24 @@ The following changes landed after `v2.0.0-beta.2` and are expected to be called
 - **MegaMenu interaction:** desktop active-tab indicator now smoothly transitions with an animated `::after` underline (opacity + scaleX reveal) instead of an instant box-shadow switch. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
 - **ScrollContainer:** desktop horizontal scrollbar now carries a themed interactive brand thumb and subtle translucent track across WebKit and Firefox engines. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
 - **Code style:** completed a formatting sweep bringing all files in `stories/` into compliance with Prettier. ([#1152](https://github.com/unisdr/undrr-mangrove/pull/1152))
+
+## Planned for 2.0.0-rc.1 (since beta.3)
+
+The following changes landed after `v2.0.0-beta.3` and are expected to be called out in the release candidate notes:
+
+- **Notice foundation:** new `Notice` component (`info`, `warning`, `negative`, `positive`; compact, prominent and overlay modifiers; hydration) with `ServiceNotice` for degraded or offline embeds, including capped automatic retry. **Snackbar now renders through Notice** (visual change). StatusLabel gains `--warning` / `--negative`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164))
+- **Type scale is public:** `--mg-font-size-100` … `--mg-font-size-1100` custom properties are emitted in every theme and read by all components with `var()`; compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` are deprecated Sass aliases until 3.0. A new test fails the build on any `var(--mg-*)` that nothing defines. ([#1168](https://github.com/unisdr/undrr-mangrove/pull/1168), [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167))
+- **New prototype primitives:** Drawer and Tree navigation ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)), map and chart Legend ([#1159](https://github.com/unisdr/undrr-mangrove/pull/1159)), Range slider and CopyButton ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)), with hydration for Drawer and CopyButton and full keyboard navigation for Tree ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). Before rc.1 these were hardened: Drawer renders strings as text, is inert when closed, manages focus and hydrates with trigger buttons; Tree mirrors in RTL; Legend and Range gained accessibility fixes and tests; CopyButton reports failed copies. ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166))
+- **New styles:** data table, badge, accordion, switch and icon-button styles. ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157))
+- **Discoverability:** machine-readable `releases.json` and `tokens.json`, CSS/JS banners and SCSS docblocks linking to Storybook and `llms.txt`, and expanded AI manifest coverage. ([#1156](https://github.com/unisdr/undrr-mangrove/pull/1156), [#1157](https://github.com/unisdr/undrr-mangrove/pull/1157), [#1162](https://github.com/unisdr/undrr-mangrove/pull/1162))
+- **Storybook organisation and docs:** messaging components are grouped under Components/Notice and page navigation under Components/Navigation, so those Storybook URLs and AI manifest ids changed. Documentation links now point at `preventionweb.github.io/undrr-mangrove`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164), [#1166](https://github.com/unisdr/undrr-mangrove/pull/1166))
+
+**Upgrade notes for rc.1:**
+
+- **Snackbar** keeps its props, but the toast now uses Notice's light surface, icons and colours instead of a filled coloured bar. `severity` now defaults to `info` (it was previously unset). `info` and `success` toasts announce politely (`role="status"`), a toast with `openedMiliseconds` no longer takes focus, and focus returns to its previous element on close.
+- **Type scale:** use `var(--mg-font-size-*)` in new styles. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` still compile but are deprecated; overriding `$mg-font-tag` no longer changes Mangrove's own components.
+- **Prototypes:** Drawer, Tree, Legend and Range are prototypes. Their APIs may change before 2.0 is stable. Drawer's `children` and `footer` strings now render as text; pass markup through `bodyHtml` / `footerHtml`, which are sanitised.
+- **Storybook links:** bookmarks or external docs pointing at `components-snackbar`, `components-cookieconsentbanner`, `components-megamenu`, `components-pager`, `components-on-this-page-nav`, `components-table-of-contents` or `components-skip-link` need the new `components-notice-*` or `components-navigation-*` ids. Storybook itself is published at `preventionweb.github.io/undrr-mangrove`.
 
 ### Alpha.2 experience and interaction baseline
 

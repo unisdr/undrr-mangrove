@@ -13,7 +13,18 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
-- **Type scale is now public custom properties:** `--mg-font-size-100` … `--mg-font-size-1100` are emitted in every theme, and all component stylesheets read them with `var()` instead of the Sass variables. Compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` remain as deprecated Sass aliases until 3.0; overriding `$mg-font-tag` no longer affects Mangrove's own components. A new test fails the build on any `var(--mg-*)` that nothing defines, apart from documented input hooks. This also resolves dormant references in AuthorImage, Details and several Storybook examples without changing how they render. ([#1167](https://github.com/unisdr/undrr-mangrove/issues/1167))
+## 2.0.0-rc.1 — 2026-09-16
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
+
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+
+- **Notice foundation:** new `Notice` component (`info`, `warning`, `negative`, `positive`; compact, prominent and overlay modifiers; hydration) with `ServiceNotice` for degraded or offline embeds, including capped automatic retry. **Snackbar now renders through Notice** (visual change). StatusLabel gains `--warning` / `--negative`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164))
+- **Type scale is public:** `--mg-font-size-100` … `--mg-font-size-1100` custom properties are emitted in every theme and read by all components with `var()`; compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` are deprecated Sass aliases until 3.0. A new test fails the build on any `var(--mg-*)` that nothing defines. ([#1168](https://github.com/unisdr/undrr-mangrove/pull/1168), [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167))
+- **New prototype primitives:** Drawer and Tree navigation ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)), map and chart Legend ([#1159](https://github.com/unisdr/undrr-mangrove/pull/1159)), Range slider and CopyButton ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)), with hydration for Drawer and CopyButton and full keyboard navigation for Tree ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). Before rc.1 these were hardened: Drawer renders strings as text, is inert when closed, manages focus and hydrates with trigger buttons; Tree mirrors in RTL; Legend and Range gained accessibility fixes and tests; CopyButton reports failed copies. ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166))
+- **New styles:** data table, badge, accordion, switch and icon-button styles. ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157))
+- **Discoverability:** machine-readable `releases.json` and `tokens.json`, CSS/JS banners and SCSS docblocks linking to Storybook and `llms.txt`, and expanded AI manifest coverage. ([#1156](https://github.com/unisdr/undrr-mangrove/pull/1156), [#1157](https://github.com/unisdr/undrr-mangrove/pull/1157), [#1162](https://github.com/unisdr/undrr-mangrove/pull/1162))
+- **Storybook organisation and docs:** messaging components are grouped under Components/Notice and page navigation under Components/Navigation, so those Storybook URLs and AI manifest ids changed. Documentation links now point at `preventionweb.github.io/undrr-mangrove`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164), [#1166](https://github.com/unisdr/undrr-mangrove/pull/1166))
 
 ## 2.0.0-beta.3 — 2026-09-15
 
@@ -69,6 +80,7 @@ Development releases:
 - [2.0.0-beta.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) (release candidate)
 - [2.0.0-beta.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) (release candidate)
 - [2.0.0-beta.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3) (release candidate)
+- [2.0.0-rc.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) (release candidate)
 
 ## 1.8.2 — 2026-08-27
 
