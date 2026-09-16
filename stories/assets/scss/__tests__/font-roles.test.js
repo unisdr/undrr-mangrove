@@ -693,6 +693,7 @@ describe('every component names the role it is meant to', () => {
     ['.mg-card__title', 'ui'],
     ['.mg-chip', 'text'],
     ['.mg-code', 'code'],
+    ['.mg-copy-button__feedback', 'ui'],
     ['.mg-empty-state', 'text'],
     ['.mg-empty-state__title', 'ui'],
     ['.mg-footer--about-footer--links', 'ui'],

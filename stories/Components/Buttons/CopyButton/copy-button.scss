@@ -6,51 +6,31 @@
  */
 
 .mg-copy-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
-  background: transparent;
-  border: 1px solid rgb(var(--mg-color-neutral-300));
-  border-radius: var(--mg-radius-small);
-  padding: var(--mg-spacing-50) var(--mg-spacing-100);
-  color: rgb(var(--mg-color-interactive));
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover,
-  &:focus-visible {
-    background-color: rgb(var(--mg-color-neutral-100));
-    border-color: rgb(var(--mg-color-interactive));
-  }
-
-  &:focus-visible {
-    outline: none;
-
-    @include mg-focus-ring;
-  }
-
-  i.mg-icon-copy {
-    font-size: 1.25rem;
-  }
 
   &__feedback {
     position: absolute;
-    bottom: 120%;
+    bottom: calc(100% + var(--mg-spacing-100));
     left: 50%;
-    transform: translateX(-50%);
-    background-color: rgb(var(--mg-color-neutral-800));
+    transform: translateX(-50%) translateY(4px);
+    background-color: rgb(var(--mg-color-neutral-900));
     color: rgb(var(--mg-color-white));
     padding: var(--mg-spacing-50) var(--mg-spacing-100);
-    border-radius: var(--mg-radius-small);
-    font-size: var(--mg-text-size-xs);
+    border-radius: var(--mg-radius-button);
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-100);
+    font-weight: 500;
+    line-height: 1.2;
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
-    transition:
-      opacity 0.2s,
-      visibility 0.2s;
     pointer-events: none;
+    z-index: var(--mg-z-index-tooltip, 3000);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+    transition:
+      opacity 150ms ease,
+      transform 150ms ease,
+      visibility 150ms ease;
 
     &::after {
       content: "";
@@ -60,13 +40,18 @@
       transform: translateX(-50%);
       border-width: 4px;
       border-style: solid;
-      border-color: rgb(var(--mg-color-neutral-800)) transparent transparent
+      border-color: rgb(var(--mg-color-neutral-900)) transparent transparent
         transparent;
     }
 
     &--visible {
       opacity: 1;
       visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
+  }
+
+  &--copied {
+    border-color: rgb(var(--mg-color-interactive));
   }
 }

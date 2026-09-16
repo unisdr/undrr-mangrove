@@ -214,6 +214,7 @@ export default {
       'One-click copy button with micro-feedback tooltip and aria-live announcements.',
     cssClasses: [
       'mg-copy-button',
+      'mg-copy-button--copied',
       'mg-copy-button__feedback',
       'mg-copy-button__feedback--visible',
     ],
