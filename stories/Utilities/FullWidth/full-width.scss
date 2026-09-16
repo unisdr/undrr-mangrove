@@ -1,3 +1,11 @@
+/**
+ * Full Width Bleed
+ *
+ * Breakout utility allowing content within constrained containers to bleed full width to viewport edges.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Utilities/FullWidth/FullWidth.mdx
+ */
 // Full-bleed background without moving the element's box: a 100vw pseudo-element
 // is painted behind the element, so content alignment is untouched.
 

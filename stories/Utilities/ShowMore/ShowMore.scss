@@ -1,3 +1,11 @@
+/**
+ * Show More (Alias)
+ *
+ * CamelCase alias forwarding to show-more.scss.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Utilities/ShowMore/ShowMore.mdx
+ */
 // ShowMore.scss — DEPRECATED, use show-more.scss
 @import "./show-more";
 @warn "ShowMore.scss is deprecated. Import show-more.scss instead.";

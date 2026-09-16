@@ -1,3 +1,11 @@
+/**
+ * Small Text
+ *
+ * Reduced scale typography styles for fine print and secondary metadata (<small>).
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
+ */
 small {
   @extend %paragraph-font-100;
 }

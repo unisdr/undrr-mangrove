@@ -1,3 +1,11 @@
+/**
+ * Preview Access
+ *
+ * Protected preview bar and password gate interface for staging and draft content views.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/PreviewAccess/PreviewAccess.mdx
+ */
 // Preview access
 // Soft preview gate for unfinished UNDRR pages. CSS hides the page on parse
 // (via :has()); the runtime layers a modal over it and asks for a PIN.

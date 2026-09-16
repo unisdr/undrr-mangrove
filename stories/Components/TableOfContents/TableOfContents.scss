@@ -1,3 +1,11 @@
+/**
+ * Table of Contents (Alias)
+ *
+ * CamelCase alias forwarding to table-of-contents.scss.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/TableOfContents/TableOfContents.mdx
+ */
 // TableOfContents.scss — DEPRECATED, use table-of-contents.scss
 @import "./table-of-contents";
 @warn "TableOfContents.scss is deprecated. Import table-of-contents.scss instead.";

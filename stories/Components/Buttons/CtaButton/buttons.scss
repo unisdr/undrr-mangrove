@@ -1,3 +1,11 @@
+/**
+ * Buttons (Deprecated alias)
+ *
+ * Legacy stylesheet forwarding to cta-button.scss.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/CtaButton.mdx
+ */
 // buttons.scss — DEPRECATED, use cta-button.scss
 @import "./cta-button";
 @warn "buttons.scss is deprecated. Import cta-button.scss instead.";

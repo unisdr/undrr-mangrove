@@ -1,3 +1,11 @@
+/**
+ * Abbreviation (Abbr)
+ *
+ * Styles for HTML <abbr> elements with subtle dotted underlines and accessible expansion styling.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
+ */
 abbr[title] {
   border-bottom: 2px dashed rgb(var(--mg-color-red-900));
   text-decoration: none;

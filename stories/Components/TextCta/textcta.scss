@@ -1,3 +1,11 @@
+/**
+ * Text CTA (Deprecated alias)
+ *
+ * Legacy stylesheet forwarding to text-cta.scss.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/TextCta/TextCta.mdx
+ */
 // textcta.scss — DEPRECATED, use text-cta.scss
 @import "./text-cta";
 @warn "textcta.scss is deprecated. Import text-cta.scss instead.";

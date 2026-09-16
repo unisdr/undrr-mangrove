@@ -143,8 +143,11 @@ export default [
     },
     plugins: [
       new webpack.BannerPlugin({
-        banner: `This is a UNDRR Mangrove component: https://github.com/unisdr/undrr-mangrove?tab=readme-ov-file
-Compiled on: ${new Date().toISOString()}`,
+        banner: `UNDRR Mangrove component library
+Storybook:    https://preventionweb.github.io/undrr-mangrove/
+LLMs context: https://preventionweb.github.io/undrr-mangrove/llms.txt
+Repository:   https://github.com/unisdr/undrr-mangrove
+Compiled on:  ${new Date().toISOString()}`,
         raw: false,
         entryOnly: false,
         stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,

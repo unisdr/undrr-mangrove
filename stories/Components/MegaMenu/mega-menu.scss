@@ -1,3 +1,11 @@
+/**
+ * Mega Menu
+ *
+ * Responsive header navigation bar with multi-level dropdown menus, mobile drawer, and keyboard accessibility.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/MegaMenu/MegaMenu.mdx
+ */
 .mg-mega-wrapper {
   position: relative;
   background: rgb(var(--mg-color-white));
@@ -157,7 +165,7 @@
         position: relative;
 
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           inset-inline: 0;
           bottom: 0;
