@@ -25,6 +25,12 @@ This section is intentionally brief.
 - **Sub-brand button tokens** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))
 - **Hero title** removed max-width constraint. (#1151)
 
+## 2.0.0 — unreleased
+
+Planning notes for the stable release.
+
+- [2.0.0-beta.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3) (release candidate)
+
 ## 1.8.2 — 2026-08-27
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v1.8.2) for full details.
@@ -37,6 +43,12 @@ See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v
 
 - **Card z-index.** No longer conflicts with mega menu. ([#1075](https://github.com/unisdr/undrr-mangrove/pull/1075))
 `;
+
+  it('skips undated planning headings such as "2.0.0 — unreleased"', () => {
+    const releases = parseChangelog(sampleMarkdown);
+    expect(releases.map(release => release.version)).not.toContain('2.0.0');
+    expect(releases.find(r => r.version === '1.8.2').changes).toHaveLength(2);
+  });
 
   it('parses releases, tags, prerelease flags, and categories', () => {
     const releases = parseChangelog(sampleMarkdown);

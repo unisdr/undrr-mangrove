@@ -40,6 +40,14 @@ export function parseChangelog(markdown) {
         releaseHeaderMatch[2] ||
         (line.toLowerCase().includes('unreleased') ? 'unreleased' : null);
 
+      // Only dated headings are releases. `## 2.0.0 — unreleased` is a planning
+      // section; publishing it would advertise a stable version and tag that
+      // do not exist. Stop collecting until the next real release heading.
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(rawDate || '')) {
+        currentRelease = null;
+        continue;
+      }
+
       currentRelease = {
         version: rawVersion,
         date: rawDate,
